@@ -18,7 +18,7 @@
 import cairo
 import wx
 from const import UI_COLORS, DEF_SIZE, TOP, BOTTOM, LEFT, RIGHT
-from sk1.widgets.const import is_msw
+from const import is_msw
 
 def copy_surface_to_bitmap(surface):
 	"""
