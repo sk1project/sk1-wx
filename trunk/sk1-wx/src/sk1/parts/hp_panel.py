@@ -17,8 +17,9 @@
 
 import wx
 
+from wal import const, HPanel, ImageButton, ImageLabel
+
 from sk1 import _
-from sk1.widgets import const, HPanel, ImageButton, ImageLabel
 from sk1.pwidgets import HPalette
 from sk1.resources import CMYK_PALETTE, icons
 

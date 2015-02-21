@@ -15,9 +15,10 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from wal import const, ALL, EXPAND, VPanel, HLine
+from wal import ImageButton, ImageToggleButton, LEFT, RIGHT
+
 from sk1.resources import pdids
-from sk1.widgets import const, ALL, EXPAND, VPanel, HLine
-from sk1.widgets import ImageButton, ImageToggleButton, LEFT, RIGHT
 
 BUTTONS = (pdids.SELECT_MODE, pdids.SHAPER_MODE, pdids.ZOOM_MODE,
 		pdids.FLEUR_MODE, pdids.LINE_MODE, pdids.CURVE_MODE, pdids.RECT_MODE,

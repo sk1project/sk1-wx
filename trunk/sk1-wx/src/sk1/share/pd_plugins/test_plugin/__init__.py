@@ -1,7 +1,7 @@
 
-from sk1.app_plugins import RS_Plugin
+from wal import Label, CENTER
 
-from sk1.widgets import Label, CENTER
+from sk1.app_plugins import RS_Plugin
 
 def get_plugin(app):
 	return Test_Plugin(app)

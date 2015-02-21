@@ -18,9 +18,10 @@
 import os
 import wx
 
+from wal.const import DEF_SIZE, is_msw, is_mac
+
 from sk1 import config
 from sk1.resources import icons
-from sk1.widgets.const import DEF_SIZE, is_msw, is_mac
 
 class AbstractArtProvider(wx.ArtProvider):
 

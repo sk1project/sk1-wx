@@ -17,9 +17,10 @@
 
 import wx
 
+from wal import const
+
 from sk1 import config
 from sk1.resources import pdids
-from sk1.widgets import const
 from sk1.pwidgets import MacTB_ActionButton, MacTB_ActionNestedButtons
 
 TBFLAGS = (wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)

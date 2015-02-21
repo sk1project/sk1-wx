@@ -17,8 +17,8 @@
 
 import wx
 
-from sk1.widgets import BOTTOM, EXPAND, ALL, VERTICAL, HORIZONTAL
-from sk1.widgets import const, HPanel, VPanel
+from wal import BOTTOM, EXPAND, ALL, VERTICAL, HORIZONTAL
+from wal import const, HPanel, VPanel
 
 class GenericDialog(wx.Dialog):
 

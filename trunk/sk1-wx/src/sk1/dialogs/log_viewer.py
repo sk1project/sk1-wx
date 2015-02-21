@@ -18,9 +18,10 @@
 import os
 import wx
 
+from wal import BOTTOM, EXPAND, ALL, VERTICAL, HORIZONTAL
+from wal import const, HPanel, VPanel, Button, HLine
+
 from sk1 import _, appconst
-from sk1.widgets import BOTTOM, EXPAND, ALL, VERTICAL, HORIZONTAL
-from sk1.widgets import const, HPanel, VPanel, Button, HLine
 from msgdlgs import error_dialog
 
 class LogViewerDialog(wx.Dialog):

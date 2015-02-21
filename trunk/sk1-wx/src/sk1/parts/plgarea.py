@@ -16,7 +16,7 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
-from sk1.widgets import HPanel, VPanel, ALL, EXPAND, VLine
+from wal import HPanel, VPanel, ALL, EXPAND, VLine
 from sk1.parts.plgtabpanel import PlgTabsPanel
 
 class PlgArea(HPanel):

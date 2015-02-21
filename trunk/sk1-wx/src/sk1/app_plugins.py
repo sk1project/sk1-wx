@@ -17,8 +17,9 @@
 
 import os, sys
 
+from wal import VPanel
+
 from sk1 import _, config
-from sk1.widgets import VPanel
 
 def check_package(path, name):
 	full_path = os.path.join(path, name)

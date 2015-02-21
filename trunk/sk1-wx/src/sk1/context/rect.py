@@ -17,9 +17,10 @@
 
 import wx
 
+from wal import LEFT, CENTER, FloatSpin, Slider, VPanel, HORIZONTAL
+
 from sk1 import _, config, events
 from sk1.resources import icons, get_bmp
-from sk1.widgets import LEFT, CENTER, FloatSpin, Slider, VPanel, HORIZONTAL
 from sk1.pwidgets import RatioToggle, BitmapToggle
 from generic import CtxPlugin
 

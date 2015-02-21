@@ -24,8 +24,9 @@ from uc2.formats.pdxf import model, const
 from uc2.formats.pdxf.crenderer import CairoRenderer
 from uc2 import libcairo, libgeom
 
+from wal import copy_surface_to_bitmap
+
 from sk1 import config
-from sk1.widgets import copy_surface_to_bitmap
 
 CAIRO_BLACK = [0.0, 0.0, 0.0]
 CAIRO_GRAY = [0.5, 0.5, 0.5]

@@ -15,8 +15,8 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from sk1.widgets import ALL, EXPAND
-from sk1.widgets import HPanel, VLine
+from wal import ALL, EXPAND
+from wal import HPanel, VLine
 
 class CtxPlugin(HPanel):
 

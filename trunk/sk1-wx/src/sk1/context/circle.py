@@ -19,10 +19,11 @@ import math
 
 from uc2.formats.pdxf.const import ARC_ARC, ARC_CHORD, ARC_PIE_SLICE
 
+from wal import const, LEFT, CENTER
+from wal import ImageToggleButton, Slider
+
 from sk1 import _, events
 from sk1.resources import icons
-from sk1.widgets import const, LEFT, CENTER
-from sk1.widgets import ImageToggleButton, Slider
 from sk1.pwidgets import BitmapToggle
 from sk1.pwidgets import AngleSpin
 from generic import CtxPlugin

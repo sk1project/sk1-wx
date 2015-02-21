@@ -17,9 +17,10 @@
 
 import wx
 
+from wal import const, Label
+from wal.generic import Widget
+
 from sk1.resources import icons
-from sk1.widgets import const, Label
-from sk1.widgets.generic import Widget
 
 
 def render_tb_icon(surface_bmp, bmp, x=0, y=0, disabled=False):

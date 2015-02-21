@@ -19,9 +19,10 @@ import wx
 
 from uc2 import uc2const
 
+from wal import ALL, VERTICAL, const
+from wal import Label, FloatSpin, HPanel, VPanel, Radiobutton
+
 from sk1 import _, config
-from sk1.widgets import ALL, VERTICAL, const
-from sk1.widgets import Label, FloatSpin, HPanel, VPanel, Radiobutton
 from generic import GenericDialog
 
 class GotoPageDialog(GenericDialog):

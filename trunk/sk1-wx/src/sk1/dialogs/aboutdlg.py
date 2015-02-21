@@ -17,13 +17,12 @@
 
 import wx
 
+from wal import const, EXPAND, ALL, LEFT, CENTER
+from wal import HPanel, VPanel, Notebook, Label, HtmlLabel
+from wal import Entry
+
 from sk1 import _
 from sk1.resources import icons
-
-from sk1.widgets import const, EXPAND, ALL, LEFT, CENTER
-from sk1.widgets import HPanel, VPanel, Notebook, Label, HtmlLabel
-from sk1.widgets import Entry
-
 from sk1.dialogs.license import LICENSE
 from sk1.dialogs.credits import CREDITS
 

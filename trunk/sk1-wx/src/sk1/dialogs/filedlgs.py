@@ -22,8 +22,9 @@ from uc2 import uc2const
 from uc2.formats import data
 from uc2.utils.fs import path_system
 
+from wal.const import is_mac
+
 from sk1 import _
-from sk1.widgets.const import is_mac
 
 def _get_open_filters():
 	wildcard = ''
