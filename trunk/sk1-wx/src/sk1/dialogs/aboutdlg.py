@@ -126,9 +126,9 @@ class AuthorsPage(VPanel):
 		VPanel.__init__(self, parent)
 		sep = "------------------------------\n"
 		dev = "\nIgor E. Novikov\n"
-		dev += "(PrintDesign, wxWidgets version; sK1, Tk version)\n"
+		dev += "(sK1 2.0, wxWidgets version; sK1, Tk version)\n"
 		dev += "<igor.e.novikov@gmail.com>\n\n" + sep
-		dev += 'PrintDesign is based on sK1 0.9.x and Skencil 0.6.x experience.'
+		dev += 'sK1 2.0 is based on sK1 0.9.x and Skencil 0.6.x experience.'
 		dev += '\n' + sep
 		dev += "Bernhard Herzog (Skencil, Tk version)\n"
 		dev += "<bernhard@users.sourceforge.net>\n" + sep
