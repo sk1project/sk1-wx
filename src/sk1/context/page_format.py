@@ -17,10 +17,11 @@
 
 from uc2.uc2const import PAGE_FORMATS, PAGE_FORMAT_NAMES, PORTRAIT, LANDSCAPE
 
+from wal import const
+from wal import Combolist, LEFT, CENTER, ImageToggleButton
+
 from sk1 import _, events
 from sk1.resources import icons, get_bmp, pdids
-from sk1.widgets import const
-from sk1.widgets import Combolist, LEFT, CENTER, ImageToggleButton
 from sk1.pwidgets import UnitSpin, ActionButton
 from generic import CtxPlugin
 

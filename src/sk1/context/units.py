@@ -17,9 +17,10 @@
 
 from uc2.uc2const import unit_names, unit_full_names, UNIT_MM
 
+from wal import Combolist, LEFT, CENTER
+
 from sk1 import _, events
 from sk1.resources import icons, get_bmp
-from sk1.widgets import Combolist, LEFT, CENTER
 from generic import CtxPlugin
 
 class UnitsPlugin(CtxPlugin):

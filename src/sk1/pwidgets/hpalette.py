@@ -19,7 +19,8 @@ import copy
 import wx
 
 from uc2.cms import verbose_color
-from sk1.widgets import HPanel, Label
+
+from wal import HPanel, Label
 
 CELL_WIDTH = 40.0
 CELL_HEIGHT = 18.0

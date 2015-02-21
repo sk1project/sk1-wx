@@ -17,9 +17,10 @@
 
 import wx
 
+from wal import const, ALL, EXPAND, HPanel, RIGHT, LEFT
+
 from sk1 import _, config
 from sk1.resources import icons
-from sk1.widgets import const, ALL, EXPAND, HPanel, RIGHT, LEFT
 
 TAB_HEIGHT = 25
 TAB_MARGIN = 1

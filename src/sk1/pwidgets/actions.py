@@ -17,8 +17,9 @@
 
 import wx
 
+from wal import const, ImageButton
+
 from sk1 import events, resources
-from sk1.widgets import const, ImageButton
 
 class AppAction:
 

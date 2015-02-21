@@ -17,9 +17,10 @@
 
 import wx
 
+from wal import ALL, EXPAND, TOP, LEFT, CENTER, const
+from wal import HPanel, Label, VLine, ImageButton
+
 from sk1 import _, config, events
-from sk1.widgets import ALL, EXPAND, TOP, LEFT, CENTER, const
-from sk1.widgets import HPanel, Label, VLine, ImageButton
 from sk1.pwidgets import FillSwatch, StrokeSwatch
 from sk1.resources import get_bmp, icons
 

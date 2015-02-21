@@ -17,8 +17,9 @@
 
 import wx
 
-from sk1.widgets import ALL, EXPAND, HORIZONTAL, VERTICAL, LEFT, TOP
-from sk1.widgets import const, VPanel
+from wal import ALL, EXPAND, HORIZONTAL, VERTICAL, LEFT, TOP
+from wal import const, VPanel
+
 from sk1.document.ruler import Ruler, RulerCorner
 from sk1.document.canvas import AppCanvas
 from sk1.document.viewer import DocViewer

@@ -1,8 +1,10 @@
 
 
 import os, wx
+
+from wal import Label, CENTER
+
 from sk1.app_plugins import RS_Plugin
-from sk1.widgets import Label, CENTER
 
 PLG_DIR = __path__[0]
 IMG_DIR = os.path.join(PLG_DIR, 'images')

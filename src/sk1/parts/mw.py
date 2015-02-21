@@ -18,9 +18,10 @@
 import os
 import wx
 
+from wal import ALL, EXPAND
+from wal import MainWindow
+
 from sk1 import config
-from sk1.widgets import ALL, EXPAND
-from sk1.widgets import MainWindow
 from sk1.parts.menubar import AppMenuBar
 from sk1.parts.toolbar import ToolbarCreator
 from sk1.parts.mdiarea import MDIArea

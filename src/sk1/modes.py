@@ -18,8 +18,9 @@
 import os
 import wx
 
+from wal import const 
+
 from sk1 import config
-from sk1.widgets import const
 
 #Canvas mode enumeration
 SELECT_MODE = 0

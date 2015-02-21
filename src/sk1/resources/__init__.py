@@ -17,7 +17,7 @@
 
 import wx
 
-from sk1.widgets import const
+from wal import const
 
 from cmyk_palette import CMYK_PALETTE
 from artids import ART_IDS

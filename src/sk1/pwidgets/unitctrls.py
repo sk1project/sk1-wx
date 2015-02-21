@@ -21,8 +21,9 @@ import wx
 from uc2 import uc2const
 from uc2.uc2const import point_dict, unit_dict, unit_accuracy
 
+from wal import Label, FloatSpin, const
+
 from sk1 import _, config, events
-from sk1.widgets import Label, FloatSpin, const
 from sk1.resources import icons, get_icon
 
 class UnitLabel(Label):

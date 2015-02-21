@@ -17,9 +17,10 @@
 
 import wx
 
+from wal import const
+
 from sk1 import _, appconst, events
 from sk1.resources import icons, get_icon, pdids
-from sk1.widgets import const
 
 
 class AppStubPanel(wx.Panel):

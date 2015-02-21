@@ -17,8 +17,9 @@
 
 import wx
 
+from wal import const, ALL, EXPAND, VPanel, HPanel, HLine
+
 from sk1 import events
-from sk1.widgets import const, ALL, EXPAND, VPanel, HPanel, HLine
 from sk1.parts.ctxpanel import AppCtxPanel
 from sk1.parts.tools import AppTools
 from sk1.parts.doctabpanel import DocTabsPanel

@@ -15,9 +15,10 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from wal import LEFT, CENTER, FloatSpin
+
 from sk1 import _, config, events
 from sk1.resources import icons, get_bmp
-from sk1.widgets import LEFT, CENTER, FloatSpin
 from generic import CtxPlugin
 
 class PolygonPlugin(CtxPlugin):

@@ -23,12 +23,13 @@ from uc2 import uc2const
 from uc2.formats.pdxf.const import DOC_ORIGIN_CENTER, DOC_ORIGIN_LL, \
 DOC_ORIGIN_LU, ORIGINS
 
+from wal.const import HORIZONTAL, VERTICAL, is_mac, is_msw
+from wal import HPanel
+from wal import copy_surface_to_bitmap
+
 from sk1 import config, modes
 from sk1.appconst import RENDERING_DELAY
 from sk1.resources import get_icon, icons
-from sk1.widgets.const import HORIZONTAL, VERTICAL, is_mac, is_msw
-from sk1.widgets import HPanel
-from sk1.widgets import copy_surface_to_bitmap
 
 HFONT = {}
 VFONT = {}

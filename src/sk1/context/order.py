@@ -15,8 +15,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from wal import LEFT, CENTER
+
 from sk1.resources import pdids
-from sk1.widgets import LEFT, CENTER
 from sk1.pwidgets import ActionButton
 from generic import CtxPlugin
 

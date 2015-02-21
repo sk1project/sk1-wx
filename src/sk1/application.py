@@ -22,6 +22,8 @@ from uc2 import uc2const
 from uc2.utils.fs import path_unicode
 from uc2.application import UCApplication
 
+from wal import Application 
+
 from sk1 import _, config, events, modes, dialogs, appconst
 from sk1 import app_plugins, app_actions
 from sk1.app_conf import AppData
@@ -30,7 +32,6 @@ from sk1.app_insp import AppInspector
 from sk1.app_proxy import AppProxy
 from sk1.parts.mw import AppMainWindow
 from sk1.parts.artprovider import create_artprovider
-from sk1.widgets import Application
 from sk1.app_cms import AppColorManager
 from sk1.document import PD_Presenter
 from sk1.clipboard import AppClipboard

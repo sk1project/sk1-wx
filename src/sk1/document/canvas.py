@@ -22,9 +22,10 @@ from uc2.uc2const import mm_to_pt, point_dict
 from uc2.libcairo import normalize_bbox
 from uc2.formats.pdxf.const import DOC_ORIGIN_LL, DOC_ORIGIN_LU
 
+from wal import const
+
 from sk1 import events, modes, config
 from sk1.appconst import PAGEFIT, ZOOM_IN, ZOOM_OUT
-from sk1.widgets import const
 from sk1.document.renderer import PDRenderer
 from sk1.document import controllers
 
