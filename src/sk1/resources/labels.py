@@ -119,5 +119,5 @@ pdids.ID_REPORT_BUG:(_('&Report bug'),),
 pdids.ID_APP_WEBSITE:(_('Project web site'),),
 pdids.ID_APP_FORUM:(_('Project forum'),),
 pdids.ID_APP_FBPAGE:(_('Project page on Face&book'),),
-wx.ID_ABOUT:(_('&About PrintDesign'),),
+wx.ID_ABOUT:(_('&About sK1'),),
 }
