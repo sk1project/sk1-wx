@@ -1,3 +1,4 @@
+#! /usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #	Copyright (C) 2013 by Igor E. Novikov
@@ -15,38 +16,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 
-from sk1.app_conf import get_app_config
+import sk1
 
-global config
-
-def dummy_translator(text):
-	return text
-
-_ = dummy_translator
-config = None
-
-def init_config():
-
-	"""sK1 config initialization"""
-
-	global config
-	config = get_app_config()
-	config.resource_dir = os.path.join(__path__[0], 'share')
-
-
-def sk1_run():
-
-	"""sK1 application launch routine"""
-
-	_pkgdir = __path__[0]
-	init_config()
-
-	os.environ["UBUNTU_MENUPROXY"] = "0"
-	os.environ["LIBOVERLAY_SCROLLBAR"] = "0"
-
-	from sk1.application import pdApplication
-
-	app = pdApplication(_pkgdir)
-	app.run()
+sk1.sk1_run()

@@ -30,17 +30,17 @@ from sk1 import events, appconst
 
 class AppData(UCData):
 
-	app_name = 'PrintDesign'
-	app_proc = 'print-design'
+	app_name = 'sK1'
+	app_proc = 'sk1'
 	app_org = 'sK1 Project'
 	app_domain = 'sk1project.org'
 	app_icon = None
 	doc_icon = None
-	version = "1.0"
-	revision = 'rev.824'
-	app_config_dir = os.path.expanduser(os.path.join('~', '.config', 'pdesign'))
-	plugin_dir = os.path.expanduser(os.path.join('~', '.config', 'pdesign', \
-												'pd_custom_plugins'))
+	version = "2.0"
+	revision = 'rev.1935'
+	app_config_dir = os.path.expanduser(os.path.join('~', '.config', 'sk1-wx'))
+	plugin_dir = os.path.expanduser(os.path.join('~', '.config', 'sk1-wx', \
+												'sk1_custom_plugins'))
 	components = []
 
 	def __init__(self):
