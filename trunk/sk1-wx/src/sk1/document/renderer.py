@@ -20,8 +20,8 @@ from copy import deepcopy
 import cairo, math, wx
 
 from uc2 import uc2const
-from uc2.formats.pdxf import model, const
-from uc2.formats.pdxf.crenderer import CairoRenderer
+from uc2.formats.sk2 import sk2_model, sk2_const
+from uc2.formats.sk2.crenderer import CairoRenderer
 from uc2 import libcairo, libgeom
 
 from wal import copy_surface_to_bitmap
@@ -131,7 +131,7 @@ class PDRenderer(CairoRenderer):
 		guide_layer = methods.get_guide_layer()
 		if not methods.is_layer_visible(guide_layer): return
 		for child in guide_layer.childs:
-			if child.cid == model.GUIDE:
+			if child.cid == sk2_model.GUIDE:
 				guides.append(child)
 		if guides:
 			self.ctx.set_matrix(self.direct_matrix)
@@ -165,9 +165,9 @@ class PDRenderer(CairoRenderer):
 		w, h = self.presenter.get_page_size()
 		x, y, dx, dy = grid_layer.grid
 		origin = self.presenter.model.doc_origin
-		if origin == const.DOC_ORIGIN_LL:
+		if origin == sk2_const.DOC_ORIGIN_LL:
 			x0, y0 = self.canvas.point_doc_to_win([-w / 2.0 + x, -h / 2.0 + y])
-		elif origin == const.DOC_ORIGIN_LU:
+		elif origin == sk2_const.DOC_ORIGIN_LU:
 			x0, y0 = self.canvas.point_doc_to_win([-w / 2.0 + x, h / 2.0 + y])
 		else:
 			x0, y0 = self.canvas.point_doc_to_win([x, y])

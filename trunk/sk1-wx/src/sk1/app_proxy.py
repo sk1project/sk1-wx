@@ -18,7 +18,7 @@
 import math
 
 from uc2 import uc2const
-from uc2.formats.pdxf import model
+from uc2.formats.sk2 import sk2_model
 
 from sk1 import _, dialogs, modes
 from sk1.dialogs import yesno_dialog
@@ -244,7 +244,7 @@ class AppProxy:
 
 	def select_container(self, obj):
 		selection = self.app.current_doc.selection
-		if len(obj) == 1 and obj[0].cid > model.PRIMITIVE_CLASS and not \
+		if len(obj) == 1 and obj[0].cid > sk2_model.PRIMITIVE_CLASS and not \
 		obj[0] in selection.objs:
 			self.app.current_doc.api.pack_container(obj[0])
 			return False

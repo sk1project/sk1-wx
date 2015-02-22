@@ -20,10 +20,10 @@ import wx
 import cairo
 
 from uc2 import uc2const
-from uc2.formats.pdxf.const import DOC_ORIGIN_CENTER, DOC_ORIGIN_LL, \
+from uc2.formats.sk2.sk2_const import DOC_ORIGIN_CENTER, DOC_ORIGIN_LL, \
 DOC_ORIGIN_LU, ORIGINS
 
-from wal.const import HORIZONTAL, VERTICAL, is_mac, is_msw
+from wal.const import HORIZONTAL, is_mac, is_msw
 from wal import HPanel
 from wal import copy_surface_to_bitmap
 

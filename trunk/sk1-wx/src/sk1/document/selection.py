@@ -17,7 +17,7 @@
 
 from uc2.libgeom import sum_bbox, is_bbox_in_rect
 from uc2 import libcairo
-from uc2.formats.pdxf import model
+from uc2.formats.sk2 import sk2_model
 
 from sk1 import _, config
 from sk1 import events
@@ -53,7 +53,7 @@ class Selection:
 		eventloop.emit(eventloop.SELECTION_CHANGED)
 		if len(self.objs) == 1:
 			cid = self.objs[0].cid
-			msg = model.CID_TO_NAME[cid] + _(' object in selection')
+			msg = sk2_model.CID_TO_NAME[cid] + _(' object in selection')
 		elif not len(self.objs):
 			msg = _('No selection')
 		else:

@@ -18,8 +18,8 @@
 from copy import deepcopy
 import types, math
 
-from uc2.formats.pdxf import model
-from uc2.formats.pdxf import const
+from uc2.formats.sk2 import sk2_model as model
+from uc2.formats.sk2 import sk2_const
 from uc2 import libgeom, uc2const
 
 from sk1 import events, config
@@ -38,7 +38,7 @@ class AbstractAPI:
 	undo_marked = False
 	selection = None
 	callback = None
-	pdxf_cfg = None
+	sk2_cfg = None
 
 	def do_undo(self):
 		transaction_list = self.undo[-1][0]
@@ -187,10 +187,10 @@ class AbstractAPI:
 				fill = style[0]
 				new_fill = []
 				if not fill:
-					new_fill.append(self.pdxf_cfg.default_fill_rule)
+					new_fill.append(self.sk2_cfg.default_fill_rule)
 				else:
 					new_fill.append(fill[0])
-				new_fill.append(const.FILL_SOLID)
+				new_fill.append(sk2_const.FILL_SOLID)
 				new_fill.append(deepcopy(color))
 				style[0] = new_fill
 			else:
@@ -239,7 +239,7 @@ class AbstractAPI:
 			if color:
 				stroke = style[1]
 				if not stroke:
-					new_stroke = deepcopy(self.pdxf_cfg.default_stroke)
+					new_stroke = deepcopy(self.sk2_cfg.default_stroke)
 				else:
 					new_stroke = deepcopy(stroke)
 				new_stroke[2] = deepcopy(color)
@@ -264,7 +264,7 @@ class PresenterAPI(AbstractAPI):
 		self.selection = presenter.selection
 		self.methods = self.presenter.methods
 		self.model = presenter.model
-		self.pdxf_cfg = presenter.doc_presenter.config
+		self.sk2_cfg = presenter.doc_presenter.config
 		self.view = presenter.canvas
 
 		self.eventloop = presenter.eventloop
@@ -416,7 +416,7 @@ class PresenterAPI(AbstractAPI):
 	def create_rectangle(self, rect):
 		rect = self._normalize_rect(rect)
 		parent = self.presenter.active_layer
-		obj = model.Rectangle(self.pdxf_cfg, parent, rect)
+		obj = model.Rectangle(self.sk2_cfg, parent, rect)
 		obj.style = deepcopy(self.model.styles['Default Style'])
 		obj.update()
 		self.insert_object(obj, parent, len(parent.childs))
@@ -424,7 +424,7 @@ class PresenterAPI(AbstractAPI):
 	def create_ellipse(self, rect):
 		rect = self._normalize_rect(rect)
 		parent = self.presenter.active_layer
-		obj = model.Circle(self.pdxf_cfg, parent, rect)
+		obj = model.Circle(self.sk2_cfg, parent, rect)
 		obj.style = deepcopy(self.model.styles['Default Style'])
 		obj.update()
 		self.insert_object(obj, parent, len(parent.childs))
@@ -432,7 +432,7 @@ class PresenterAPI(AbstractAPI):
 	def create_polygon(self, rect):
 		rect = self._normalize_rect(rect)
 		parent = self.presenter.active_layer
-		obj = model.Polygon(self.pdxf_cfg, parent, rect,
+		obj = model.Polygon(self.sk2_cfg, parent, rect,
 						corners_num=config.default_polygon_num)
 		obj.style = deepcopy(self.model.styles['Default Style'])
 		obj.update()
@@ -444,14 +444,14 @@ class PresenterAPI(AbstractAPI):
 #		if width == 0: width = rect[2]
 #		text = dialogs.text_edit_dialog(self.app.mw)
 #		if text:
-#			obj = model.Text(self.pdxf_cfg, parent, rect, text, width)
+#			obj = model.Text(self.sk2_cfg, parent, rect, text, width)
 #			obj.style = deepcopy(self.model.styles['Default Style'])
 #			obj.update()
 #			self.insert_object(obj, parent, len(parent.childs))
 
 	def create_curve(self, paths):
 		parent = self.presenter.active_layer
-		obj = model.Curve(self.pdxf_cfg, parent, paths)
+		obj = model.Curve(self.sk2_cfg, parent, paths)
 		obj.style = deepcopy(self.model.styles['Default Style'])
 		obj.update()
 		self.insert_object(obj, parent, len(parent.childs))
@@ -479,7 +479,7 @@ class PresenterAPI(AbstractAPI):
 			parent = self.methods.get_guide_layer()
 			for val in vals:
 				pos, orient = val
-				obj = model.Guide(self.pdxf_cfg, parent, pos, orient)
+				obj = model.Guide(self.sk2_cfg, parent, pos, orient)
 				objs_list.append([obj, parent, -1])
 				obj.update()
 			self._insert_objects(objs_list)

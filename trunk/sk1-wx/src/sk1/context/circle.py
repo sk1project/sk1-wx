@@ -17,7 +17,7 @@
 
 import math
 
-from uc2.formats.pdxf.const import ARC_ARC, ARC_CHORD, ARC_PIE_SLICE
+from uc2.formats.sk2.sk2_const import ARC_ARC, ARC_CHORD, ARC_PIE_SLICE
 
 from wal import const, LEFT, CENTER
 from wal import ImageToggleButton, Slider

@@ -24,7 +24,7 @@ from uc2.cms import libcms
 from uc2.uc_conf import UCConfig, UCData
 from uc2 import uc2const#, libtrace
 from uc2.utils import system
-from uc2.formats.pdxf.const import DOC_STRUCTURE
+from uc2.formats.sk2.sk2_const import DOC_STRUCTURE
 
 from sk1 import events, appconst
 
