@@ -41,6 +41,7 @@ ALL_FORMATS = 0
 PDXF = 1
 SK1 = 2
 SK = 3
+SK2 = 4
 
 SVG = 5
 SVGZ = 6
@@ -93,7 +94,8 @@ XPM = 316
 FORMAT_DESCRIPTION = {
 ALL_FORMATS : _("All supported formats"),
 PDXF : _("PDXF - PrintDesign XML Format graphics"),
-SK1 : _("SK1 - sK1 graphics /ver.0.9 and older/"),
+SK1 : _("SK1 - sK1 graphics files"),
+SK2 : _("SK2 - sK1 2.x graphics files"),
 SK : _("SK - Sketch/Skencil files"),
 SVG : _("SVG - Scalable Vector Graphics files"),
 SVGZ : _("SVGZ - Compressed Scalable Vector Graphics files"),
@@ -143,6 +145,7 @@ FORMAT_NAMES = {
 ALL_FORMATS : "",
 PDXF : "PDXF",
 SK1 : "SK1",
+SK2 : "SK2",
 SK : "SK",
 SVG : "SVG",
 SVGZ : "SVGZ",
@@ -190,7 +193,7 @@ XPM: "XPM",
 
 FORMAT_EXTENSION = {
 ALL_FORMATS : '',
-PDXF : ('pdxf',), SK1 : ('sk1',), SK : ('sk',),
+PDXF : ('pdxf',), SK1 : ('sk1',), SK2 : ('sk2',), SK : ('sk',),
 SVG : ('svg',), SVGZ : ('svgz',), ODG : ('odg',), ORA : ('ora',),
 XCF : ('xcf',), SLA : ('sla',), FIG : ('fig',),
 CDR : ('cdr',), CDT : ('cdt',), CDRZ : ('cdr',), CDTZ : ('cdt',), CMX : ('cmx',),
