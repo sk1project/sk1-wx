@@ -55,6 +55,13 @@ class AbstractLoader:
 
 	def do_load(self):pass
 
+	def check_loading(self):
+		position = float(self.file.tell()) / float(self.file_size) * 0.95
+		if position - self.position > 0.02:
+			self.position = position
+			msg = _('Parsing in process...')
+			events.emit(events.FILTER_INFO, msg, position)
+
 	def parsing_msg(self, val):
 		msg = _('Parsing in progress...')
 		self.send_progress_message(msg, val)
