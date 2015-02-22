@@ -18,7 +18,7 @@
 import math
 
 from uc2 import libgeom, uc2const
-from uc2.formats.pdxf import const, model
+from uc2.formats.sk2 import sk2_const, sk2_model
 
 from sk1 import config
 from sk1.appconst import SNAP_TO_GRID, SNAP_TO_GUIDES, SNAP_TO_OBJECTS, SNAP_TO_PAGE
@@ -89,7 +89,7 @@ class SnapManager:
 		guide_layer = self.methods.get_guide_layer()
 		if not self.methods.is_layer_visible(guide_layer): return
 		for child in guide_layer.childs:
-			if child.cid == model.GUIDE:
+			if child.cid == sk2_model.GUIDE:
 				if child.orientation == uc2const.HORIZONTAL:
 					self.guides_grid[1].append(child.position)
 				else:
@@ -113,10 +113,10 @@ class SnapManager:
 		w, h = self.presenter.get_page_size()
 		x, y, dx, dy = grid_layer.grid
 		origin = self.presenter.model.doc_origin
-		if origin == const.DOC_ORIGIN_LL:
+		if origin == sk2_const.DOC_ORIGIN_LL:
 			x0, y0 = self.canvas.point_doc_to_win([-w / 2.0 + x, -h / 2.0 + y])
 			x0_doc, y0_doc = [-w / 2.0 + x, -h / 2.0 + y]
-		elif origin == const.DOC_ORIGIN_LU:
+		elif origin == sk2_const.DOC_ORIGIN_LU:
 			x0, y0 = self.canvas.point_doc_to_win([-w / 2.0 + x, h / 2.0 + y])
 			x0_doc, y0_doc = [-w / 2.0 + x, h / 2.0 + y]
 		else:
@@ -279,7 +279,7 @@ class SnapManager:
 		guide_layer = self.methods.get_guide_layer()
 		if not self.methods.is_layer_visible(guide_layer): return
 		for child in guide_layer.childs:
-			if child.cid == model.GUIDE:
+			if child.cid == sk2_model.GUIDE:
 				if child.orientation == orient and child.position == pos:
 					return child
 		return None

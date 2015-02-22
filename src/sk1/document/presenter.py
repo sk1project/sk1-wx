@@ -18,7 +18,7 @@
 import os, sys
 
 from uc2.formats import get_loader, get_saver
-from uc2.formats.pdxf.presenter import PDXF_Presenter
+from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2 import uc2const
 from uc2.utils.fs import change_file_extension
 
@@ -83,9 +83,9 @@ class PD_Presenter:
 			self.doc_file = self.doc_presenter.doc_file
 			self.doc_name = os.path.basename(self.doc_file)
 			self.doc_name = change_file_extension(self.doc_name,
-									uc2const.FORMAT_EXTENSION[uc2const.PDXF][0])
+									uc2const.FORMAT_EXTENSION[uc2const.SK2][0])
 		else:
-			self.doc_presenter = PDXF_Presenter(app.appdata)
+			self.doc_presenter = SK2_Presenter(app.appdata)
 			self.doc_name = self.app.get_new_docname()
 
 		self.methods = self.doc_presenter.methods
@@ -93,8 +93,8 @@ class PD_Presenter:
 		self.set_active_page()
 
 
-		self.cms = self.doc_presenter.cms
-		self.app.default_cms.registry_cm(self.cms)
+		self.cms = self.doc_presenter.cms = self.app.default_cms
+		#self.app.default_cms.registry_cm(self.cms)
 
 		self.api = PresenterAPI(self)
 		self.docarea = self.app.mdi.create_docarea(self)
@@ -150,7 +150,7 @@ class PD_Presenter:
 
 	def close(self):
 		self.app.mdi.remove_doc(self)
-		self.app.default_cms.unregistry_cm(self.cms)
+#		self.app.default_cms.unregistry_cm(self.cms)
 		self.eventloop.destroy()
 		self.api.destroy()
 		self.doc_presenter.close()

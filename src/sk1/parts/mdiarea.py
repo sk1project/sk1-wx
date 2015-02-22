@@ -44,7 +44,7 @@ class MDIArea(VPanel):
 
 		#----- Context panel
 		self.ctxpanel = AppCtxPanel(self.app, self)
-		self.add(self.ctxpanel, 0, ALL | EXPAND)
+		self.add(self.ctxpanel, 0, ALL)
 
 		#----- Doc tabs
 		self.dtp = DocTabsPanel(self)

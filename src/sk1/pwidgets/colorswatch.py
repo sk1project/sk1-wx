@@ -20,7 +20,7 @@ import wx
 from uc2 import uc2const
 from uc2.cms import verbose_color
 from uc2.uc2const import point_dict
-from uc2.formats.pdxf.const import FILL_SOLID
+from uc2.formats.sk2.sk2_const import FILL_SOLID
 
 from wal import HPanel
 

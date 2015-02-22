@@ -17,7 +17,8 @@
 
 from uc2.libgeom import contra_point, bezier_base_point
 from uc2.libgeom import apply_trafo_to_paths, is_point_in_rect2
-from uc2.formats.pdxf import const, model
+from uc2.formats.sk2 import sk2_const as const
+from uc2.formats.sk2 import sk2_model as model
 
 from sk1 import modes, config
 from sk1.appconst import RENDERING_DELAY

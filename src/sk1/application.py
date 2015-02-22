@@ -22,7 +22,7 @@ from uc2 import uc2const
 from uc2.utils.fs import path_unicode
 from uc2.application import UCApplication
 
-from wal import Application 
+from wal import Application
 
 from sk1 import _, config, events, modes, dialogs, appconst
 from sk1 import app_plugins, app_actions
@@ -141,7 +141,7 @@ class pdApplication(Application, UCApplication):
 		if not doc.doc_file:
 			return self.save_as()
 		ext = os.path.splitext(self.current_doc.doc_file)[1]
-		if not ext == "." + uc2const.FORMAT_EXTENSION[uc2const.PDXF][0]:
+		if not ext == "." + uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
 			return self.save_as()
 		if not os.path.lexists(os.path.dirname(self.current_doc.doc_file)):
 			return self.save_as()
@@ -167,9 +167,9 @@ class pdApplication(Application, UCApplication):
 		if not doc_file:
 			doc_file = '' + self.current_doc.doc_name
 		if not os.path.splitext(doc_file)[1] == "." + \
-					uc2const.FORMAT_EXTENSION[uc2const.PDXF][0]:
+					uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
 			doc_file = os.path.splitext(doc_file)[0] + "." + \
-					uc2const.FORMAT_EXTENSION[uc2const.PDXF][0]
+					uc2const.FORMAT_EXTENSION[uc2const.SK2][0]
 		if not os.path.lexists(os.path.dirname(doc_file)):
 			doc_file = os.path.join(config.save_dir,
 								os.path.basename(doc_file))

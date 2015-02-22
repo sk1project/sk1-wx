@@ -15,7 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2.formats.pdxf import model
+from uc2.formats.sk2 import sk2_model as model
 
 class AppInspector:
 
