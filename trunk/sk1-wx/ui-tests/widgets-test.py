@@ -187,7 +187,7 @@ class WidgetPanel(VPanel):
 
 
 app = Application('wxWidgets')
-mw = MainWindow('Basic widgets', (700, 550))
+mw = MainWindow('Basic widgets', (750, 550))
 p = VPanel(mw)
 mw.add(p, 1, ALL | EXPAND)
 panel = WidgetPanel(mw)
