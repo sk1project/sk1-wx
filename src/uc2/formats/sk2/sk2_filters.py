@@ -15,22 +15,96 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import sys
 
+from uc2 import _, events, msgconst
 from uc2.formats.loader import AbstractLoader
+from uc2.formats.sk2 import sk2_model, sk2_const
+
+GENERIC_FIELDS = ['cid', 'childs', 'parent', 'config']
 
 class SK2_Loader(AbstractLoader):
 
-	name = 'SK1_Loader'
+	name = 'SK2_Loader'
+	model = None
+	parent_stack = []
 
-	def do_load(self):pass
+	def do_load(self):
+		self.file.readline()
+		while True:
+			self.line = self.file.readline()
+			if not self.line: break
+			self.line = self.line.rstrip('\r\n')
+
+			self.check_loading()
+
+			if self.line:
+				try:
+					code = compile('self.' + self.line, '<string>', 'exec')
+					exec code
+				except:
+					print 'error>>', self.line
+					errtype, value, traceback = sys.exc_info()
+					print errtype, value, traceback
+
+		return self.model
+
+	def obj(self, tag):
+		obj_cid = sk2_model.TAGNAME_TO_CID[tag]
+		obj = sk2_model.CID_TO_CLASS[obj_cid](self.config)
+		if self.model is None:
+			self.model = obj
+			self.parent_stack.append(obj)
+		else:
+			self.parent_stack[-1].childs.append(obj)
+			self.parent_stack.append(obj)
+
+	def set_field(self, item, val):
+		obj = self.parent_stack[-1]
+		obj.__dict__[item] = val
+
+	def obj_end(self):
+		self.parent_stack = self.parent_stack[:-1]
+
 
 class SK2_Saver:
 
 	name = 'SK2_Saver'
+	fileptr = None
 
 	def __init__(self):
 		pass
 
-	def save(self, presenter, path):pass
+	def write_line(self, line):
+		self.fileptr.write(line + '\n')
+
+	def save(self, presenter, path):
+
+		try:
+			self.fileptr = open(path, 'wb')
+		except:
+			errtype, value, traceback = sys.exc_info()
+			msg = _('Cannot open %s file for writing') % (path)
+			events.emit(events.MESSAGES, msgconst.ERROR, msg)
+			raise IOError(errtype, msg + '\n' + value, traceback)
+
+		presenter.update()
+		self.write_line(sk2_const.DOC_HEADER)
+		self.save_obj(presenter.model)
+		self.fileptr.close()
+		self.fileptr = None
+
+	def save_obj(self, obj):
+		self.write_line("obj('%s')" % sk2_model.CID_TO_TAGNAME[obj.cid])
+		props = obj.__dict__
+		for item in props.keys():
+			if not item in GENERIC_FIELDS and not item[:5] == 'cache':
+				item_str = props[item].__str__()
+				if isinstance(props[item], str):
+					item_str = "'%s'" % item_str.replace("'", "\\'")
+				self.write_line("set_field('%s',%s)" % (item, item_str))
+		for child in obj.childs:
+			self.save_obj(child)
+		self.write_line("obj_end()")
+
+
