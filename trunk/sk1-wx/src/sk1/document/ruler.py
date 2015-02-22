@@ -71,6 +71,7 @@ class RulerCorner(HPanel):
 		self.Bind(wx.EVT_PAINT, self._on_paint, self)
 		self.eventloop.connect(self.eventloop.DOC_MODIFIED, self.changes)
 		self.Bind(wx.EVT_LEFT_UP, self.left_click)
+		self.changes()
 
 	def changes(self, *args):
 		if not self.origin == self.presenter.model.doc_origin:
