@@ -65,6 +65,7 @@ class AppProxy:
 
 	def zoom_in(self): self.app.current_doc.canvas.zoom_in()
 	def zoom_out(self): self.app.current_doc.canvas.zoom_out()
+	def previous_zoom(self): self.app.current_doc.canvas.zoom_previous()
 	def fit_zoom_to_page(self): self.app.current_doc.canvas.zoom_fit_to_page()
 	def zoom_100(self): self.app.current_doc.canvas.zoom_100()
 	def zoom_selected(self): self.app.current_doc.canvas.zoom_selected()

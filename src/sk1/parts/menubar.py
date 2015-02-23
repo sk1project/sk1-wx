@@ -34,7 +34,7 @@ class AppMenuBar(wx.MenuBar):
 				None,
 				wx.ID_SAVE, wx.ID_SAVEAS,
 				pdids.ID_SAVEALL, None, wx.ID_CLOSE, wx.ID_CLOSE_ALL, None,
-				pdids.ID_VIEW_LOG, None, wx.ID_PRINT_SETUP, wx.ID_PRINT, 
+				pdids.ID_VIEW_LOG, None, wx.ID_PRINT_SETUP, wx.ID_PRINT,
 				None, wx.ID_EXIT,)
 		entry = (_("&File"), sub)
 		self.entries.append(entry)
@@ -49,7 +49,8 @@ class AppMenuBar(wx.MenuBar):
 
 		#---View menu
 		sub = (pdids.ID_STROKE_VIEW, pdids.ID_DRAFT_VIEW, None,
-				wx.ID_ZOOM_100, wx.ID_ZOOM_IN, wx.ID_ZOOM_OUT, None,
+				wx.ID_ZOOM_100, wx.ID_ZOOM_IN, wx.ID_ZOOM_OUT,
+				pdids.ID_PREV_ZOOM, None,
 				pdids.ID_ZOOM_PAGE, wx.ID_ZOOM_FIT,
 				None,
 				(_("&Show"), (pdids.ID_SHOW_GRID, pdids.ID_SHOW_GUIDES,

@@ -88,6 +88,7 @@ def create_actions(app):
 (wx.ID_ZOOM_100, proxy.zoom_100, doc_chnls, insp.is_doc),
 (wx.ID_ZOOM_IN, proxy.zoom_in, doc_chnls, insp.is_doc),
 (wx.ID_ZOOM_OUT, proxy.zoom_out, doc_chnls, insp.is_doc),
+(pdids.ID_PREV_ZOOM, proxy.previous_zoom, doc_chnls, insp.is_doc),
 (pdids.ID_ZOOM_PAGE, proxy.fit_zoom_to_page, doc_chnls, insp.is_doc),
 (wx.ID_ZOOM_FIT, proxy.zoom_selected, sel_chnls, insp.is_selection),
 	(pdids.ID_SHOW_GRID, proxy.show_grid, doc_chnls, insp.is_doc, insp.is_grid_visible),
