@@ -56,6 +56,7 @@ class AppCanvas(wx.Panel):
 	matrix = None
 	trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
 	zoom = 1.0
+	zoom_stack = []
 	width = 0
 	height = 0
 	orig_cursor = None
@@ -321,6 +322,7 @@ class AppCanvas(wx.Panel):
 		dx += cdx
 		dy += cdy
 		self.trafo = [m11, m12, m21, m22, dx, dy]
+		self.zoom_stack.append([] + self.trafo)
 		self.matrix = cairo.Matrix(*self.trafo)
 		self.update_scrolls()
 		self.force_redraw()
@@ -338,6 +340,7 @@ class AppCanvas(wx.Panel):
 		dx = w / 2.0
 		dy = h / 2.0
 		self.trafo = [zoom, 0, 0, -zoom, dx, dy]
+		self.zoom_stack.append([] + self.trafo)
 		self.matrix = cairo.Matrix(zoom, 0, 0, -zoom, dx, dy)
 		self.zoom = zoom
 		self.update_scrolls()
@@ -353,6 +356,7 @@ class AppCanvas(wx.Panel):
 		dx = dx * dzoom - _dx
 		dy = dy * dzoom - _dy
 		self.trafo = [m11 * dzoom, m12, m21, m22 * dzoom, dx, dy]
+		self.zoom_stack.append([] + self.trafo)
 		self.matrix = cairo.Matrix(*self.trafo)
 		self.zoom = m11 * dzoom
 		self.update_scrolls()
@@ -373,6 +377,7 @@ class AppCanvas(wx.Panel):
 		dx = dx * zoom - x * zoom + x
 		dy = dy * zoom - y * zoom + y
 		self.trafo = [m11 * zoom, m12, m21, m22 * zoom, dx, dy]
+		self.zoom_stack.append([] + self.trafo)
 		self.matrix = cairo.Matrix(*self.trafo)
 		self.zoom = m11 * zoom
 		self.update_scrolls()
@@ -397,6 +402,15 @@ class AppCanvas(wx.Panel):
 		start = self.doc_to_win([x0, y0])
 		end = self.doc_to_win([x1, y1])
 		self.zoom_to_rectangle(start, end)
+
+	def zoom_previous(self):
+		if len(self.zoom_stack) > 1:
+			self.zoom_stack = self.zoom_stack[:-1]
+			self.trafo = [] + self.zoom_stack[-1]
+			self.zoom = self.trafo[0]
+			self.matrix = cairo.Matrix(*self.trafo)
+			self.update_scrolls()
+			self.force_redraw()
 
 	#----- SELECTION STUFF
 

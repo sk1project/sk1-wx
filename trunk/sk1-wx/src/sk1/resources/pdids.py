@@ -49,6 +49,7 @@ ID_DUPLICATE = wx.NewId()
 #----- View menu
 ID_STROKE_VIEW = wx.NewId()
 ID_DRAFT_VIEW = wx.NewId()
+ID_PREV_ZOOM = wx.NewId()
 ID_ZOOM_PAGE = wx.NewId()
 ID_SHOW_GRID = wx.NewId()
 ID_SHOW_GUIDES = wx.NewId()
