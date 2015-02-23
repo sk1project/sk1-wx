@@ -30,23 +30,23 @@ class CDR_to_SK2_Translator:
 	fill_props = {}
 	font_props = {}
 
-	def translate(self, cdr_doc, pdxf_doc):
-		self.pdxf_doc = pdxf_doc
-		self.methods = pdxf_doc.methods
+	def translate(self, cdr_doc, sk2_doc):
+		self.pdxf_doc = sk2_doc
+		self.methods = sk2_doc.methods
 		self.methods.delete_pages()
 		self.stroke_props = {}
 		self.fill_props = {}
 		self.font_props = {}
 		self.parent_stack = []
 
-		self.default_style = [deepcopy(pdxf_doc.config.default_fill),
-				deepcopy(pdxf_doc.config.default_stroke),
-				deepcopy(pdxf_doc.config.default_text_style),
-				deepcopy(pdxf_doc.config.default_structural_style)]
+		self.default_style = [deepcopy(sk2_doc.config.default_fill),
+				deepcopy(sk2_doc.config.default_stroke),
+				deepcopy(sk2_doc.config.default_text_style),
+				deepcopy(sk2_doc.config.default_structural_style)]
 
 		cdr_doc.model.translate(self)
 
-		pdxf_doc.model.do_update()
+		sk2_doc.model.do_update()
 
 	def set_doc_properties(self, obj):
 		self.methods.set_default_page_size(obj.page_width, obj.page_height)
@@ -57,10 +57,10 @@ class CDR_to_SK2_Translator:
 		else:
 			self.fill_props[obj.fill_id] = []
 
-	def get_fill_prop(self, id):
+	def get_fill_prop(self, lid):
 		res = []
-		if self.fill_props.has_key(id):
-			res = deepcopy(self.fill_props[id])
+		if self.fill_props.has_key(lid):
+			res = deepcopy(self.fill_props[lid])
 		return res
 
 	def add_stroke_prop(self, obj):
@@ -97,19 +97,19 @@ class CDR_to_SK2_Translator:
 					self.pdxf_doc.config.default_stroke_markers
 											]
 
-	def get_stroke_prop(self, id):
+	def get_stroke_prop(self, lid):
 		res = []
-		if self.stroke_props.has_key(id):
-			res = deepcopy(self.stroke_props[id])
+		if self.stroke_props.has_key(lid):
+			res = deepcopy(self.stroke_props[lid])
 		return res
 
 	def add_font_prop(self, obj):
 		self.font_props[obj.font_id] = obj.font_name
 
-	def get_font_prop(self, id):
+	def get_font_prop(self, lid):
 		res = ''
-		if self.font_props.has_key(id):
-			res = deepcopy(self.stroke_props[id])
+		if self.font_props.has_key(lid):
+			res = deepcopy(self.stroke_props[lid])
 		return res
 
 	def start_page(self, obj):
