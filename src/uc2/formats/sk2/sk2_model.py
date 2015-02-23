@@ -149,8 +149,8 @@ class DocumentObject(ModelObject):
 
 class Document(DocumentObject):
 	"""
-	Represents PrintDesign Document object.
-	This is a root DOM instance of PDXF file format.
+	Represents sK1 Document object.
+	This is a root DOM instance of SK2 file format.
 	"""
 	cid = DOCUMENT
 	metainfo = None
