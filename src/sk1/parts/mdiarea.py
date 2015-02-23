@@ -24,6 +24,8 @@ from sk1.parts.ctxpanel import AppCtxPanel
 from sk1.parts.tools import AppTools
 from sk1.parts.doctabpanel import DocTabsPanel
 from sk1.parts.plgarea import PlgArea
+from sk1.parts.statusbar import AppStatusbar
+from sk1.parts.hp_panel import AppPalettePanel
 from sk1.document import DocArea
 
 class MDIArea(VPanel):
@@ -70,6 +72,14 @@ class MDIArea(VPanel):
 		self.splitter.SetSashGravity(1.0)
 		self.splitter.Unsplit(None)
 		hpanel.add(self.splitter, 1, ALL | EXPAND)
+
+		#----- Palette panel
+		self.palette_panel = AppPalettePanel(self)
+		self.add(self.palette_panel, 0, ALL | EXPAND)
+
+		#----- Status bar
+		self.statusbar = AppStatusbar(self)
+		self.add(self.statusbar, 0, ALL | EXPAND)
 
 		self.Layout()
 		events.connect(events.DOC_CHANGED, self.set_active)

@@ -26,8 +26,6 @@ from sk1.parts.menubar import AppMenuBar
 from sk1.parts.toolbar import ToolbarCreator
 from sk1.parts.mdiarea import MDIArea
 from sk1.parts.stubpanel import AppStubPanel
-from sk1.parts.statusbar import AppStatusbar
-from sk1.parts.hp_panel import AppPalettePanel
 
 class AppMainWindow(MainWindow):
 
@@ -63,14 +61,6 @@ class AppMainWindow(MainWindow):
 		self.stub = AppStubPanel(self)
 		self.add(self.stub, 1, ALL | EXPAND)
 		if config.new_doc_on_start:self.stub.hide()
-
-		#----- Palette panel
-		self.palette_panel = AppPalettePanel(self)
-		self.add(self.palette_panel, 0, ALL | EXPAND)
-
-		#----- Status bar
-		self.statusbar = AppStatusbar(self)
-		self.add(self.statusbar, 0, ALL | EXPAND)
 
 		self.Layout()
 
