@@ -1,55 +1,55 @@
 # -*- coding: utf-8 -*-
 #
 #	Copyright (C) 2012 by Igor E. Novikov
-#	
+#
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
 #	the Free Software Foundation, either version 3 of the License, or
 #	(at your option) any later version.
-#	
+#
 #	This program is distributed in the hope that it will be useful,
 #	but WITHOUT ANY WARRANTY; without even the implied warranty of
 #	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #	GNU General Public License for more details.
-#	
+#
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from copy import deepcopy
 
 from uc2 import _, events
-from uc2.formats import pdxf
+from uc2.formats.sk2 import sk2_model
 from uc2.formats.plt import model
-from uc2.formats.plt.pltconst import PDXF_to_PLT_TRAFO, PLT_to_PDXF_TRAFO
+from uc2.formats.plt.pltconst import SK2_to_PLT_TRAFO, PLT_to_SK2_TRAFO
 from uc2 import libgeom
 
 
 
 
-class PLT_to_PDXF_Translator:
+class PLT_to_SK2_Translator:
 
-	def translate(self, plt_doc, pdxf_doc):
+	def translate(self, plt_doc, sk2_doc):
 		jobs = plt_doc.get_jobs()
-		page = pdxf_doc.methods.get_page()
-		layer = pdxf_doc.methods.get_layer(page)
+		page = sk2_doc.methods.get_page()
+		layer = sk2_doc.methods.get_layer(page)
 
-		style = [deepcopy(pdxf_doc.config.default_fill),
-				deepcopy(pdxf_doc.config.default_stroke),
-				deepcopy(pdxf_doc.config.default_text_style),
-				deepcopy(pdxf_doc.config.default_structural_style)]
+		style = [deepcopy(sk2_doc.config.default_fill),
+				deepcopy(sk2_doc.config.default_stroke),
+				deepcopy(sk2_doc.config.default_text_style),
+				deepcopy(sk2_doc.config.default_structural_style)]
 
 		for job in jobs:
 			if job.cid == model.JOB:
-				curve = pdxf.model.Curve(pdxf_doc.config)
+				curve = sk2_model.Curve(sk2_doc.config)
 				curve.paths = [deepcopy(job.cache_path), ]
-				curve.trafo = [] + PLT_to_PDXF_TRAFO
+				curve.trafo = [] + PLT_to_SK2_TRAFO
 				curve.style = deepcopy(style)
-				pdxf_doc.methods.append_object(curve, layer)
+				sk2_doc.methods.append_object(curve, layer)
 
-		pdxf_doc.model.do_update()
+		sk2_doc.model.do_update()
 
 
-class PDXF_to_PLT_Translator:
+class SK2_to_PLT_Translator:
 
 	jobs = []
 	plt_doc = None
@@ -67,13 +67,13 @@ class PDXF_to_PLT_Translator:
 
 	def recursive_processing(self, objs):
 		for obj in objs:
-			if obj.cid > pdxf.model.PRIMITIVE_CLASS:
+			if obj.cid > sk2_model.PRIMITIVE_CLASS:
 				self.obj_stack.append(obj)
 			self.recursive_processing(obj.childs)
 
 	def create_jobs(self):
 		if self.obj_stack:
-			m11, m21, m12, m22, dx, dy = PDXF_to_PLT_TRAFO
+			m11, m21, m12, m22, dx, dy = SK2_to_PLT_TRAFO
 
 			if self.plt_doc.config.force_zero:
 				bbox = []
