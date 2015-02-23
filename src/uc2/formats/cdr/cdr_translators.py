@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 #
 #	Copyright (C) 2012 by Igor E. Novikov
-#	
+#
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
 #	the Free Software Foundation, either version 3 of the License, or
 #	(at your option) any later version.
-#	
+#
 #	This program is distributed in the hope that it will be useful,
 #	but WITHOUT ANY WARRANTY; without even the implied warranty of
 #	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #	GNU General Public License for more details.
-#	
+#
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from copy import deepcopy
 
-from uc2.formats.pdxf.const import FILL_EVENODD, FILL_SOLID, STROKE_MIDDLE
-from uc2.formats.pdxf import model
+from uc2.formats.sk2.sk2_const import FILL_EVENODD, FILL_SOLID, STROKE_MIDDLE
+from uc2.formats.sk2 import sk2_model
 
-class CDR_to_PDXF_Translator:
+class CDR_to_SK2_Translator:
 
 	default_style = None
 	parent_stack = []
@@ -136,7 +136,7 @@ class CDR_to_PDXF_Translator:
 	def start_group(self):
 		parent = self.parent_stack[-1]
 		config = self.pdxf_doc.config
-		group = model.Group(config, parent)
+		group = sk2_model.Group(config, parent)
 		self.methods.append_object(group, parent)
 		self.parent_stack.append(group)
 
@@ -159,7 +159,7 @@ class CDR_to_PDXF_Translator:
 			if obj.outl_id is None:	stroke = []
 			else: stroke = self.get_stroke_prop(obj.outl_id)
 			style = [fill, stroke, [], []]
-		curve = model.Curve(config, parent, paths, trafo, style)
+		curve = sk2_model.Curve(config, parent, paths, trafo, style)
 		self.methods.append_object(curve, parent)
 
 	def create_rectangle(self, obj):
@@ -184,7 +184,7 @@ class CDR_to_PDXF_Translator:
 			else: stroke = self.get_stroke_prop(obj.outl_id)
 			style = [fill, stroke, [], []]
 
-		rect = model.Rectangle(config, parent, [x, y, w, h], trafo, style, radiuses)
+		rect = sk2_model.Rectangle(config, parent, [x, y, w, h], trafo, style, radiuses)
 		self.methods.append_object(rect, parent)
 
 	def create_ellipse(self, obj):pass
