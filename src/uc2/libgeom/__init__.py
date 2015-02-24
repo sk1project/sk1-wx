@@ -19,7 +19,7 @@ from copy import deepcopy
 import math
 
 from uc2 import libcairo
-from uc2.formats.pdxf import const
+from uc2.formats.sk2 import sk2_const as const
 
 
 """
