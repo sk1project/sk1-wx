@@ -31,7 +31,7 @@ _ = dummy_translator
 
 def sword_run():
 
-	"""Formats Explorer application launch routine."""
+	"""SWord application launch routine."""
 
 	global config
 
