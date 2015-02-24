@@ -62,6 +62,7 @@ class AppProxy:
 	def duplicate(self): self.app.current_doc.api.duplicate_selected()
 	def select_all(self): self.app.current_doc.selection.select_all()
 	def deselect(self, *args): self.app.current_doc.selection.clear()
+	def invert_selection(self): self.app.current_doc.selection.invert_selection()
 
 	def zoom_in(self): self.app.current_doc.canvas.zoom_in()
 	def zoom_out(self): self.app.current_doc.canvas.zoom_out()

@@ -154,6 +154,15 @@ class Selection:
 			result += layer.childs
 		self.set(result)
 
+	def invert_selection(self):
+		result = []
+		layers = self.presenter.get_editable_layers()
+		for layer in layers:
+			for child in layer.childs:
+				if child not in self.objs:
+					result.append(child)
+		self.set(result)
+
 	def is_point_over(self, point):
 		result = False
 		if not self.objs:
