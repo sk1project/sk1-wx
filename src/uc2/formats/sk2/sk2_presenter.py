@@ -22,7 +22,6 @@ from uc2.formats.generic import TextModelPresenter
 from uc2.formats.sk2.sk2_config import SK2_Config
 from uc2.formats.sk2.sk2_methods import create_new_doc, SK2_Methods
 from uc2.formats.sk2.sk2_filters import SK2_Loader, SK2_Saver
-from uc2.formats.sk2.sk2_cms import SK2_ColorManager
 
 class SK2_Presenter(TextModelPresenter):
 
