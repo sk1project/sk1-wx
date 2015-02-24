@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2013 by Igor E. Novikov
+#	Copyright (C) 2015 by Igor E. Novikov
 #
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@ import os
 import sys
 
 from uc2 import _, events, msgconst
-from uc2.formats.sk1 import model
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 
 def sk2_loader(appdata, filename, translate=True, cnf={}, **kw):
