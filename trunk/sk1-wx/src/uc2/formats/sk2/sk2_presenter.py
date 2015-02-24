@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2013 by Igor E. Novikov
+#	Copyright (C) 2013-2015 by Igor E. Novikov
 #
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ from uc2.formats.sk2.sk2_cms import SK2_ColorManager
 
 class SK2_Presenter(TextModelPresenter):
 
-	cid = uc2const.SK1
+	cid = uc2const.SK2
 
 	config = None
 	doc_file = ''
@@ -51,16 +51,6 @@ class SK2_Presenter(TextModelPresenter):
 	def new(self):
 		self.model = create_new_doc(self.config)
 		self.update()
-
-#	def traslate_from_pdxf(self, pdxf_doc):
-#		translator = PDXF_to_SK1_Translator()
-#		model = pdxf_doc.model
-#		objs = [] + model.childs[0].childs[0].childs + model.childs[1].childs
-#		translator.translate(objs, self)
-#
-#	def traslate_to_pdxf(self, pdxf_doc):
-#		translator = SK1_to_PDXF_Translator()
-#		translator.translate(self, pdxf_doc)
 
 	def update(self):
 		TextModelPresenter.update(self)
