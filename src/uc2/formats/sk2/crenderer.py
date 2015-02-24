@@ -55,24 +55,24 @@ class CairoRenderer:
 			for obj in objs:
 				self.render_object(ctx, obj)
 
-	def render_object(self, ctx, object):
-		if object.cid > model.PRIMITIVE_CLASS:
-			self.render_primitives(ctx, object)
-		elif object.cid == model.GROUP:
-			for obj in object.childs:
+	def render_object(self, ctx, obj):
+		if obj.cid > model.PRIMITIVE_CLASS:
+			self.render_primitives(ctx, obj)
+		elif obj.cid == model.GROUP:
+			for obj in obj.childs:
 				self.render_object(ctx, obj)
-		elif object.cid == model.CONTAINER:
-				self.render_container(ctx, object)
+		elif obj.cid == model.CONTAINER:
+				self.render_container(ctx, obj)
 		else:
 			pass
 
-	def render_container(self, ctx, object):
+	def render_container(self, ctx, obj):
 		ctx.save()
-		container = object.cache_container
+		container = obj.cache_container
 		ctx.new_path()
 		ctx.append_path(container.cache_cpath)
 		ctx.clip()
-		for obj in object.childs:
+		for obj in obj.childs:
 			self.render_object(ctx, obj)
 		ctx.restore()
 		if container.style[1] and not self.contour_flag:
@@ -81,24 +81,24 @@ class CairoRenderer:
 			ctx.append_path(container.cache_cpath)
 			ctx.stroke()
 
-	def render_primitives(self, ctx, object):
-		if object.cache_cpath is None:
-			object.update()
+	def render_primitives(self, ctx, obj):
+		if obj.cache_cpath is None:
+			obj.update()
 		if self.contour_flag:
 			ctx.new_path()
 			self.process_stroke(ctx, self.stroke_style)
-			ctx.append_path(object.cache_cpath)
+			ctx.append_path(obj.cache_cpath)
 			ctx.stroke()
 		else:
-			if object.style[0]:
+			if obj.style[0]:
 				ctx.new_path()
-				self.process_fill(ctx, object.style)
-				ctx.append_path(object.cache_cpath)
+				self.process_fill(ctx, obj.style)
+				ctx.append_path(obj.cache_cpath)
 				ctx.fill()
-			if object.style[1]:
+			if obj.style[1]:
 				ctx.new_path()
-				self.process_stroke(ctx, object.style)
-				ctx.append_path(object.cache_cpath)
+				self.process_stroke(ctx, obj.style)
+				ctx.append_path(obj.cache_cpath)
 				ctx.stroke()
 
 	def process_fill(self, ctx, style):
