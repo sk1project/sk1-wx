@@ -23,6 +23,7 @@ GENERIC_KEYS = {
 wx.ID_NEW:(wx.ACCEL_CTRL, ord('N')),
 wx.ID_OPEN:(wx.ACCEL_CTRL, ord('O')),
 wx.ID_SAVE:(wx.ACCEL_CTRL, ord('S')),
+pdids.ID_SAVE_SEL:(wx.ACCEL_SHIFT | wx.ACCEL_CTRL, ord('S')),
 wx.ID_CLOSE:(wx.ACCEL_CTRL, ord('W')),
 wx.ID_PRINT:(wx.ACCEL_CTRL, ord('P')),
 wx.ID_EXIT:(wx.ACCEL_CTRL, ord('Q')),

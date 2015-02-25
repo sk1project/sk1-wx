@@ -43,6 +43,7 @@ class AppProxy:
 	def view_log(self): dialogs.log_viewer_dlg(self.mw)
 	def save(self): self.app.save()
 	def save_as(self): self.app.save_as()
+	def save_selected(self): self.app.save_selected()
 	def save_all(self): self.app.save_all()
 	def close(self): self.app.close()
 	def close_all(self): self.app.close_all()

@@ -32,7 +32,7 @@ class AppMenuBar(wx.MenuBar):
 		sub = (wx.ID_NEW, None, wx.ID_OPEN,
 				(_("Open &Recent"), (HistoryMenu(self.app, self.mw),)),
 				None,
-				wx.ID_SAVE, wx.ID_SAVEAS,
+				wx.ID_SAVE, wx.ID_SAVEAS, pdids.ID_SAVE_SEL,
 				pdids.ID_SAVEALL, None, wx.ID_CLOSE, wx.ID_CLOSE_ALL, None,
 				pdids.ID_VIEW_LOG, None, wx.ID_PRINT_SETUP, wx.ID_PRINT,
 				None, wx.ID_EXIT,)
