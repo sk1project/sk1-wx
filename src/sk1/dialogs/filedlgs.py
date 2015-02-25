@@ -53,9 +53,9 @@ def _get_open_filters():
 
 	return wildcard
 
-def get_open_file_name(parent, app, start_dir):
+def get_open_file_name(parent, app, start_dir, msg=''):
 	ret = ''
-	msg = _('Open document')
+	if not msg: msg = _('Open document')
 	if is_mac(): msg = ''
 
 	if start_dir == '~': start_dir = os.path.expanduser(start_dir)
@@ -65,6 +65,53 @@ def get_open_file_name(parent, app, start_dir):
 		defaultDir=start_dir,
 		defaultFile="",
 		wildcard=_get_open_filters(),
+		style=wx.OPEN | wx.CHANGE_DIR | wx.FILE_MUST_EXIST
+		)
+	dlg.CenterOnParent()
+	if dlg.ShowModal() == wx.ID_OK:
+		ret = path_system(dlg.GetPath())
+	dlg.Destroy()
+	return ret
+
+def _get_import_filters():
+	wildcard = ''
+	descr = uc2const.FORMAT_DESCRIPTION
+	ext = uc2const.FORMAT_EXTENSION
+	items = [] + data.LOADER_FORMATS
+	wildcard += _('All supported formats') + '|'
+	for item in items:
+		for extension in ext[item]:
+			wildcard += '*.' + extension + ';'
+			wildcard += '*.' + extension.upper() + ';'
+	if is_mac():return wildcard
+
+	wildcard += '|'
+
+	wildcard += _('All files (*.*)') + '|'
+	wildcard += '*;*.*|'
+
+	for item in items:
+		wildcard += descr[item] + '|'
+		for extension in ext[item]:
+			wildcard += '*.' + extension + ';'
+			wildcard += '*.' + extension.upper() + ';'
+		if not item == items[-1]:
+			wildcard += '|'
+
+	return wildcard
+
+def get_import_file_name(parent, app, start_dir, msg=''):
+	ret = ''
+	if not msg: msg = _('Select file to import')
+	if is_mac(): msg = ''
+
+	if start_dir == '~': start_dir = os.path.expanduser(start_dir)
+
+	dlg = wx.FileDialog(
+		parent, message=msg,
+		defaultDir=start_dir,
+		defaultFile="",
+		wildcard=_get_import_filters(),
 		style=wx.OPEN | wx.CHANGE_DIR | wx.FILE_MUST_EXIST
 		)
 	dlg.CenterOnParent()

@@ -34,6 +34,7 @@ class AppMenuBar(wx.MenuBar):
 				None,
 				wx.ID_SAVE, wx.ID_SAVEAS, pdids.ID_SAVE_SEL,
 				pdids.ID_SAVEALL, None, wx.ID_CLOSE, wx.ID_CLOSE_ALL, None,
+				pdids.ID_IMPORT, None,
 				pdids.ID_VIEW_LOG, None, wx.ID_PRINT_SETUP, wx.ID_PRINT,
 				None, wx.ID_EXIT,)
 		entry = (_("&File"), sub)

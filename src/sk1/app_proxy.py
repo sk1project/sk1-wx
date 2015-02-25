@@ -47,6 +47,7 @@ class AppProxy:
 	def save_all(self): self.app.save_all()
 	def close(self): self.app.close()
 	def close_all(self): self.app.close_all()
+	def import_file(self): self.app.import_file()
 	def exit(self): self.app.exit()
 
 	def set_mode(self, mode): self.app.current_doc.canvas.set_mode(mode)

@@ -265,6 +265,26 @@ class pdApplication(Application, UCApplication):
 				if not result: break
 		return result
 
+	def import_file(self):
+		doc_file = dialogs.get_import_file_name(self.mw, self, config.open_dir)
+		if os.path.lexists(doc_file) and os.path.isfile(doc_file):
+			try:
+				ret = self.current_doc.import_file(doc_file)
+				if not ret:
+					msg = _('Cannot import graphics from file:')
+					msg = "%s\n'%s'" % (msg, doc_file) + '\n'
+					msg += _('It seems the document is empty or contains unsupported objects.')
+					dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
+			except:
+				msg = _('Cannot import file')
+				msg = "%s '%s'" % (msg, doc_file) + '\n'
+				msg += _('The file may be corrupted or not supported format')
+				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
+				if config.print_stacktrace:
+					print sys.exc_info()[1].__str__()
+					print sys.exc_info()[2].__str__()
+
+
 	def exit(self, *args):
 		if not self.insp.is_any_doc_not_saved(): self.mw.Hide()
 		if self.close_all():
