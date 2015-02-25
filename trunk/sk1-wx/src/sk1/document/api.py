@@ -393,8 +393,8 @@ class PresenterAPI(AbstractAPI):
 		if self.selection.objs:
 			self.app.clipboard.set(self.selection.objs)
 
-	def paste_selected(self):
-		objs = self.app.clipboard.get()
+	def paste_selected(self, objs=None):
+		if objs is None: objs = self.app.clipboard.get()
 		sel_before = [] + self.selection.objs
 		before = self._get_layers_snapshot()
 		self.methods.append_objects(objs, self.presenter.active_layer)

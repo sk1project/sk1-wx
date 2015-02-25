@@ -9,6 +9,7 @@ encoding//src/sk1/app_proxy.py=utf-8
 encoding//src/sk1/application.py=utf-8
 encoding//src/sk1/context/__init__.py=utf-8
 encoding//src/sk1/context/circle.py=utf-8
+encoding//src/sk1/dialogs/__init__.py=utf-8
 encoding//src/sk1/dialogs/aboutdlg.py=utf-8
 encoding//src/sk1/dialogs/credits.py=utf-8
 encoding//src/sk1/dialogs/filedlgs.py=utf-8

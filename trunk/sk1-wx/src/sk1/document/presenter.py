@@ -69,7 +69,7 @@ class PD_Presenter:
 				self.doc_presenter = loader(app.appdata, doc_file)
 			else:
 				pd = ProgressDialog(_('Opening file...'), self.app.mw)
-				ret = pd.run(loader, [app.appdata, doc_file])
+				ret = pd.run(loader, [self.app.appdata, doc_file])
 				if ret:
 					if pd.result is None:
 						pd.destroy()
@@ -197,6 +197,39 @@ class PD_Presenter:
 		items = self.__dict__.keys()
 		for item in items:
 			self.__dict__[item] = None
+
+	def import_file(self, doc_file):
+		retval = True
+		loader = get_loader(doc_file)
+		if loader is None:
+			raise IOError(_('Unknown file format'), doc_file)
+		pd = ProgressDialog(_('Opening file...'), self.app.mw)
+		ret = pd.run(loader, [self.app.appdata, doc_file])
+		if ret:
+			if pd.result is None:
+				pd.destroy()
+				raise IOError(*pd.error_info)
+
+			doc_presenter = pd.result
+			pd.destroy()
+		else:
+			pd.destroy()
+			raise IOError(_('Error while opening'), doc_file)
+		pages = doc_presenter.methods.get_pages()
+		if len(pages) == 1:
+			page = doc_presenter.methods.get_page()
+			objs = []
+			for layer in page.childs:
+				for child in layer.childs:
+					objs.append(child.copy())
+			if objs:
+				self.api.paste_selected(objs)
+			else:
+				retval = False
+		else:
+			pass
+		doc_presenter.close()
+		return retval
 
 	def modified(self, *args):
 		self.saved = False
