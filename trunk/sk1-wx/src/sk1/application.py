@@ -17,13 +17,10 @@
 
 import os, sys
 import webbrowser
-from copy import deepcopy
 
 from uc2 import uc2const
 from uc2.utils.fs import path_unicode
 from uc2.application import UCApplication
-from uc2.formats import get_saver
-from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 
 from wal import Application
 
@@ -38,7 +35,6 @@ from sk1.parts.artprovider import create_artprovider
 from sk1.app_cms import AppColorManager
 from sk1.document import PD_Presenter
 from sk1.clipboard import AppClipboard
-from sk1.dialogs import ProgressDialog
 
 class pdApplication(Application, UCApplication):
 
@@ -216,35 +212,9 @@ class pdApplication(Application, UCApplication):
 		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
 							_('Save selected objects only as...'))
 		if doc_file:
-			doc = SK2_Presenter(self.appdata)
-			origin = self.current_doc.doc_presenter.model.doc_origin
-			doc.methods.set_doc_origin(origin)
-			doc_units = self.current_doc.doc_presenter.model.doc_units
-			doc.methods.set_doc_units(doc_units)
-			page = doc.methods.get_page()
-			page_format = deepcopy(self.current_doc.active_page.page_format)
-			doc.methods.set_page_format(page, page_format)
-			objs = []
-			for item in self.current_doc.selection.objs:
-				objs.append(item.copy())
-			layer = doc.methods.get_layer(page)
-			layer.childs = objs
 			try:
-				saver = get_saver(doc_file)
-				if saver is None:
-					raise IOError(_('Unknown file format is requested for saving!'),
-								 self.doc_file)
-
-				pd = ProgressDialog(_('Saving file...'), self.mw)
-				ret = pd.run(saver, [doc, doc_file], False)
-				if ret:
-					if not pd.error_info is None:
-						pd.destroy()
-						raise IOError(*pd.error_info)
-					pd.destroy()
-				else:
-					pd.destroy()
-					raise IOError(_('Error while saving'), doc_file)
+				self.current_doc.save_selected(doc_file)
+				self.history.add_entry(doc_file, appconst.SAVED)
 			except:
 				first = _('Cannot save document')
 				msg = ("%s '%s'.") % (first, doc_file) + '\n'
@@ -253,7 +223,6 @@ class pdApplication(Application, UCApplication):
 				if config.print_stacktrace:
 					print sys.exc_info()[1].__str__()
 					print sys.exc_info()[2].__str__()
-			doc.close()
 
 	def save_all(self):
 		for doc in self.docs:

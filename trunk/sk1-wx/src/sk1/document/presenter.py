@@ -16,6 +16,7 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, sys
+from copy import deepcopy
 
 from uc2.formats import get_loader, get_saver
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
@@ -147,6 +148,41 @@ class PD_Presenter:
 		except IOError:
 			raise IOError(*sys.exc_info())
 		self.reflect_saving()
+
+	def save_selected(self, doc_file):
+		doc = SK2_Presenter(self.app.appdata)
+		origin = self.doc_presenter.model.doc_origin
+		doc.methods.set_doc_origin(origin)
+		doc_units = self.doc_presenter.model.doc_units
+		doc.methods.set_doc_units(doc_units)
+		page = doc.methods.get_page()
+		page_format = deepcopy(self.active_page.page_format)
+		doc.methods.set_page_format(page, page_format)
+		objs = []
+		for item in self.selection.objs:
+			objs.append(item.copy())
+		layer = doc.methods.get_layer(page)
+		layer.childs = objs
+
+		saver = get_saver(doc_file)
+		if saver is None:
+			doc.close()
+			raise IOError(_('Unknown file format is requested for saving!'),
+						 self.doc_file)
+
+		pd = ProgressDialog(_('Saving file...'), self.app.mw)
+		ret = pd.run(saver, [doc, doc_file], False)
+		if ret:
+			if not pd.error_info is None:
+				pd.destroy()
+				doc.close()
+				raise IOError(*pd.error_info)
+			pd.destroy()
+			doc.close()
+		else:
+			pd.destroy()
+			doc.close()
+			raise IOError(_('Error while saving'), doc_file)
 
 	def close(self):
 		self.app.mdi.remove_doc(self)
