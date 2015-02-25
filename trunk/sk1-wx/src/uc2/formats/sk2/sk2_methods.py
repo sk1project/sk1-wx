@@ -84,6 +84,9 @@ class SK2_Methods:
 		for obj in objs:
 			obj.parent = parent
 
+	def get_pages_obj(self):
+		return self.model.childs[0]
+
 	def get_pages(self):
 		return self.model.childs[0].childs
 
