@@ -87,9 +87,9 @@ def _get_save_fiters():
 			wildcard += '|'
 	return wildcard
 
-def get_save_file_name(parent, app, path):
+def get_save_file_name(parent, app, path, msg=''):
 	ret = ''
-	msg = _('Save document As...')
+	if not msg: msg = _('Save document As...')
 	if is_mac(): msg = ''
 
 	if path == '~': path = os.path.expanduser(path)

@@ -39,6 +39,7 @@ COPY_MODE = wx.NewId()
 
 
 #----- File menu
+ID_SAVE_SEL = wx.NewId()
 ID_SAVEALL = wx.NewId()
 ID_CLEAR_LOG = wx.NewId()
 ID_VIEW_LOG = wx.NewId()

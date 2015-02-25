@@ -62,6 +62,7 @@ def create_actions(app):
 (pdids.ID_CLEAR_LOG, proxy.clear_log),
 (wx.ID_SAVE, proxy.save, doc_save_chnls, insp.is_doc_not_saved),
 (wx.ID_SAVEAS, proxy.save_as, doc_chnls, insp.is_doc),
+(pdids.ID_SAVE_SEL, proxy.save_selected, sel_chnls, insp.is_selection),
 (pdids.ID_SAVEALL, proxy.save_all, doc_save_chnls, insp.is_any_doc_not_saved),
 (wx.ID_CLOSE, proxy.close, doc_chnls, insp.is_doc),
 (wx.ID_CLOSE_ALL, proxy.close_all, doc_chnls, insp.is_doc),
