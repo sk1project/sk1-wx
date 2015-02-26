@@ -992,6 +992,36 @@ class PresenterAPI(AbstractAPI):
 		self.add_undo(transaction)
 		self.selection.update()
 
+	def add_pages(self, new_pages):
+		pages = self.presenter.get_pages()
+		parent = pages[0].parent
+
+		before = self._get_pages_snapshot()
+		sel_before = [] + self.selection.objs
+		active_index_before = pages.index(self.presenter.active_page)
+
+		active_index_after = len(pages)
+
+		pages += new_pages
+		parent.do_update()
+
+		self.selection.clear()
+		self.presenter.set_active_page(active_index_after)
+
+		after = self._get_pages_snapshot()
+
+		transaction = [
+			[[self._set_pages_snapshot, before],
+			[self._set_selection, sel_before],
+			[self.presenter.set_active_page, active_index_before]],
+			[[self._set_pages_snapshot, after],
+			[self._set_selection, []],
+			[self.presenter.set_active_page, active_index_after]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+
 	def set_layer_properties(self, layer, prop):
 		before = layer.properties
 		after = prop

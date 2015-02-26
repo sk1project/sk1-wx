@@ -227,7 +227,13 @@ class PD_Presenter:
 			else:
 				retval = False
 		else:
-			pass
+			pages = doc_presenter.methods.get_pages()
+			pages_obj = doc_presenter.methods.get_pages_obj()
+			pages_obj.childs = []
+			if pages:
+				self.api.add_pages(pages)
+			else:
+				retval = False
 		doc_presenter.close()
 		return retval
 
