@@ -1,0 +1,83 @@
+COLOR LIST DEFINITION:
+
+[type, values, alpha, name]
+
+type - 'CMYK', 'RGB' etc.
+values - list of according float values (0.0-1.0). 
+		CMYK example: [1.0, 1.0, 1.0, 0.0]
+alpha - opacity value (0.0-1.0)
+name - string color name
+
+Complete example: ['CMYK', [0.0, 0.0, 0.0, 0.9], 1.0, '90% Black','palette']
+
+For spot color:
+['SPOT', [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 1.0]], 1.0, 'Black','palette']
+i.e. values list contains RGB and CMYK values
+
+'palette' - this field is optional and used to identify palette
+
+-------------------------------------------------------------------------------
+
+STYLE DEFINITION:
+
+[fill, stroke, text, structural]
+
+-------------------------------------------------------------------------------
+
+FILL DEFINITION:
+
+[] empty fill
+
+[fill rule,
+ FILL_SOLID,
+ color]
+
+[fill rule,
+ FILL_GRADIENT,
+ gradient]
+
+[fill rule,
+ FILL_TILED,
+ pattern]
+
+-------------------------------------------------------------------------------
+
+STROKE DEFINITION:
+
+[] - empty stroke
+
+[stroke rule,
+ stroke width,
+ color,
+ dash,
+ caps,
+ joint,
+ miter limit, - miter limit = 1/sin(angle/2)
+ behind flag,
+ scalable flag,
+ markers,
+ ]
+
+-------------------------------------------------------------------------------
+
+PATHS DEFINITION:
+[path0, path1, ...]
+
+PATH DEFINITION:
+[start_point, points, end_marker]
+start_pont - [x,y]
+end_marker - is closed CURVE_CLOSED = 1, if not CURVE_OPENED = 0
+
+POINTS DEFINITION:
+[point0, point1,...]
+line point - [x,y]
+curve point - [[x1,y1],[x2,y2],[x3,y3], marker]
+marker - NODE_CUSP = 0; NODE_SMOOTH = 1; NODE_SYMMETRICAL = 2 
+
+-------------------------------------------------------------------------------
+PAGE FORMAT
+[format name,(width, height),orientation]
+
+-------------------------------------------------------------------------------
+LAYER PROPETIES
+[visible, editable, printable]
