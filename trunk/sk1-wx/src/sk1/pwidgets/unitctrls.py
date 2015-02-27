@@ -68,6 +68,7 @@ class UnitSpin(FloatSpin):
 						onchange=self.update_point_value, onenter=onenter,
 						spin_overlay=config.spin_overlay)
 		events.connect(events.DOC_MODIFIED, self.update_units)
+		events.connect(events.DOC_CHANGED, self.update_units)
 
 	def update_point_value(self, *args):
 		self.point_value = self.get_value() * unit_dict[self.units]
