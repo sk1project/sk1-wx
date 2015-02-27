@@ -20,9 +20,9 @@ import StringIO
 
 from PIL import Image
 
-from uc2 import _, events, msgconst
+from uc2 import _, events, msgconst, uc2const
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
-from uc2.formats.sk2 import sk2_model
+from uc2.formats.sk2 import sk2_model, sk2_const
 
 
 def png_loader(appdata, filename, translate=True, cnf={}, **kw):
@@ -38,10 +38,24 @@ def png_loader(appdata, filename, translate=True, cnf={}, **kw):
 	fileptr.close()
 	bitmap = base64.b32encode(content)
 	raw_image = Image.open(StringIO.StringIO(content))
+
 	sk2_doc = SK2_Presenter(appdata, cnf)
+	sk2_doc.doc_file = filename
+	sk2_doc.methods.set_doc_origin(sk2_const.DOC_ORIGIN_LU)
+	sk2_doc.methods.set_doc_units(uc2const.UNIT_PX)
 	page = sk2_doc.methods.get_page()
+
+	orient = uc2const.PORTRAIT
+	w = raw_image.size[0] * uc2const.px_to_pt
+	h = raw_image.size[1] * uc2const.px_to_pt
+	if raw_image.size[0] > raw_image.size[1]:orient = uc2const.LANDSCAPE
+
+	sk2_doc.methods.set_page_format(page, ['Custom', (w, h), orient])
+	sk2_doc.methods.set_default_page_format(['Custom', (w, h), orient])
+
 	layer = sk2_doc.methods.get_layer(page)
-	pxm = sk2_model.Pixmap(sk2_doc.config, bitmap=bitmap, size=raw_image.size)
+	pxm = sk2_model.Pixmap(sk2_doc.config, bitmap=bitmap, size=raw_image.size,
+						trafo=[1.0, 0.0, 0.0, 1.0, -w / 2.0, -h / 2.0])
 	layer.childs.append(pxm)
 	sk2_doc.update()
 	return sk2_doc

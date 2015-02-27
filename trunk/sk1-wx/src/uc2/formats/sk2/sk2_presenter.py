@@ -38,6 +38,7 @@ class SK2_Presenter(TextModelPresenter):
 		self.config.load(config_file)
 		self.config.update(cnf)
 		self.appdata = appdata
+		self.cms = self.appdata.app.default_cms
 		self.loader = SK2_Loader()
 		self.saver = SK2_Saver()
 		self.methods = SK2_Methods(self)

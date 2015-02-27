@@ -537,6 +537,11 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 		self.digits = digits
 		self.set_range(self.range_val)
 
+	def set_value(self, val):
+		self.flag = True
+		self._set_value(val)
+		self.flag = False
+
 	#----- Native API emulation
 	def SetValue(self, val):
 		self.flag = True
