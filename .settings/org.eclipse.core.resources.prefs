@@ -34,6 +34,7 @@ encoding//src/sk1/resources/artids.py=utf-8
 encoding//src/sk1/resources/labels.py=utf-8
 encoding//src/sk1/resources/pdids.py=utf-8
 encoding//src/sword/__init__.py=utf-8
+encoding//src/uc2/__init__.py=utf-8
 encoding//src/uc2/application.py=utf-8
 encoding//src/uc2/formats/cdr/__init__.py=utf-8
 encoding//src/uc2/formats/cdr/cdr_translators.py=utf-8
