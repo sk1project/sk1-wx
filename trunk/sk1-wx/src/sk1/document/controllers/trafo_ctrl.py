@@ -106,6 +106,9 @@ class MoveController(AbstractController):
 				self.canvas.select_at_point(self.start, True)
 				if not self.selection.is_point_over(self.start):
 					self.canvas.restore_mode()
+			else:
+				sel = self.presenter.selection.objs
+				self.presenter.selection.set(sel)
 			if self.copy:
 				self.canvas.restore_cursor()
 			self.moved = False
