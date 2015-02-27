@@ -19,9 +19,11 @@ from uc2.uc2const import PDXF, SK1, SK2, SK, SVG, SVGZ, ODG, ORA, \
 XCF, SLA, FIG, CDR, CDT, CDRZ, CDTZ, CMX, CCX, CDRX, XAR, AI_PS, AI_PDF, PS, \
 EPS, PDF, PSD, CGM, WMF, EMF, XPS, VSD, PLT, HPGL , DXF, DWG, RIFF
 
+from uc2.uc2const import PNG
+
 
 SIMPLE_LOADERS = []
-MODEL_LOADERS = [SK2, PDXF, PLT, CDR ]
+MODEL_LOADERS = [SK2, PDXF, PLT, CDR, PNG ]
 EXPERIMENTAL_LOADERS = [SK1, WMF, RIFF, CDRZ]
 
 SIMPLE_SAVERS = []
@@ -44,6 +46,8 @@ from uc2.formats.cdr import cdr_loader, cdr_saver, check_cdr
 from uc2.formats.cdrz import cdrz_loader, check_cdrz
 from uc2.formats.riff import riff_loader, riff_saver, check_riff
 
+from uc2.formats.png import png_loader, check_png
+
 
 LOADERS = {
 SK2 : sk2_loader, PDXF : pdxf_loader, SK1 : sk1_loader, SK : SK_Loader,
@@ -54,6 +58,7 @@ AI_PS : None, AI_PDF : None, PS : None, EPS : None, PDF : None, PSD : None,
 CGM : None, WMF : wmf_loader, EMF : None, XPS : None, VSD : None,
 PLT : plt_loader, HPGL : None, DXF : None, DWG : None,
 RIFF: riff_loader,
+PNG: png_loader,
 }
 
 SAVERS = {
@@ -65,6 +70,7 @@ AI_PS : None, AI_PDF : None, PS : None, EPS : None, PDF : None, PSD : None,
 CGM : None, WMF : wmf_saver, EMF : None, XPS : None, VSD : None,
 PLT : plt_saver, HPGL : None, DXF : None, DWG : None,
 RIFF: riff_saver,
+PNG: None,
 }
 
 CHECKERS = {
@@ -76,5 +82,6 @@ AI_PS : None, AI_PDF : None, PS : None, EPS : None, PDF : None, PSD : None,
 CGM : None, WMF : check_wmf, EMF : None, XPS : None, VSD : None,
 PLT : check_plt, HPGL : None, DXF : None, DWG : None,
 RIFF: check_riff,
+PNG: check_png,
 }
 
