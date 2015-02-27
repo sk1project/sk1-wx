@@ -414,9 +414,9 @@ class AppCanvas(wx.Panel):
 
 	#----- SELECTION STUFF
 
-	def select_at_point(self, point, flag=False):
+	def select_at_point(self, point, add_flag=False):
 		point = self.win_to_doc(point)
-		self.presenter.selection.select_at_point(point, flag)
+		self.presenter.selection.select_at_point(point, add_flag)
 
 	def pick_at_point(self, point):
 		point = self.win_to_doc(point)

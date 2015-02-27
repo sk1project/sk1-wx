@@ -137,9 +137,9 @@ class Selection:
 						break
 		return result
 
-	def select_at_point(self, point, flag=False):
+	def select_at_point(self, point, add_flag=False):
 		result = self._select_at_point(point)
-		if flag:
+		if add_flag:
 			self.add(result)
 		else:
 			self.set(result)
