@@ -82,7 +82,6 @@ class UCApplication:
 		self.path = path
 		self.config = UCConfig()
 		self.appdata = UCData(self)
-		self.default_cms = cms.ColorManager()
 		setattr(uc2, "config", self.config)
 		setattr(uc2, "appdata", self.appdata)
 
@@ -127,6 +126,8 @@ class UCApplication:
 				if value == 'yes':value = True
 				if value == 'no':value = False
 				options[key] = value
+
+		self.default_cms = cms.ColorManager()
 
 		print ''
 		msg = _('Translation of') + ' "%s" ' % (files[0]) + _('into "%s"') % (files[1])
