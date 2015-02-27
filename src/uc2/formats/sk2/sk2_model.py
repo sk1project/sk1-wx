@@ -54,9 +54,6 @@ COMPOUND_CLASS = 101
 GROUP = 102
 CONTAINER = 103
 
-BITMAP_CLASS = 150
-PIXMAP = 151
-
 PRIMITIVE_CLASS = 200
 RECTANGLE = 201
 CIRCLE = 202
@@ -64,6 +61,9 @@ POLYGON = 203
 CURVE = 204
 TEXT_BLOCK = 205
 TEXT_COLUMN = 206
+
+BITMAP_CLASS = 250
+PIXMAP = 251
 
 CID_TO_NAME = {
 	DOCUMENT: _('Document'),
@@ -509,11 +509,8 @@ class Container(Group):
 		info = '%d' % (len(self.childs))
 		return (is_leaf, name, info)
 
-#---------------Bitmap objects-----------------------
 
-class Pixmap(SelectableObject):pass
 
-#---------------Primitives---------------------------
 class PrimitiveObject(SelectableObject):
 
 	cid = PRIMITIVE_CLASS
@@ -558,6 +555,7 @@ class PrimitiveObject(SelectableObject):
 	def set_trafo_snapshot(self, snapshot):
 		self.trafo, self.cache_bbox, self.cache_cpath = snapshot[1:]
 
+#---------------Primitives---------------------------
 
 class Rectangle(PrimitiveObject):
 
@@ -760,6 +758,44 @@ class Text(PrimitiveObject):
 		return libgeom.get_text_path(self.text, self.width, self.style,
 										self.attributes)
 
+#---------------Bitmap objects-----------------------
+
+class Pixmap(PrimitiveObject):
+
+	cid = PIXMAP
+
+	bitmap = ''
+	alpha_channel = ''
+	size = (100, 100)
+
+	cache_paths = None
+	cache_cpath = None
+	cache_cdata = None
+
+	def __init__(self, config, parent=None,
+				bitmap='',
+				alpha_channel='',
+				size=(100, 100),
+				trafo=[] + sk2_const.NORMAL_TRAFO
+				):
+		self.bitmap = bitmap
+		self.alpha_channel = alpha_channel
+		self.size = size
+		self.trafo = trafo
+
+	def copy(self):
+		pixmap = Pixmap(self.config)
+		pixmap.bitmap = '' + self.bitmap
+		pixmap.alpha_channel = self.alpha_channel
+		pixmap.size = () + self.size
+		pixmap.trafo = [] + self.trafo
+		return pixmap
+
+	def get_initial_paths(self):
+		width = float(self.size[0]) * uc2const.px_to_pt
+		height = float(self.size[1]) * uc2const.px_to_pt
+		return libgeom.get_rect_path([0, 0], width, height,
+									[] + sk2_const.CORNERS)
 
 CID_TO_CLASS = {
 	DOCUMENT: Document,

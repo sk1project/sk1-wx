@@ -94,7 +94,7 @@ class PD_Presenter:
 		self.set_active_page()
 
 
-		self.cms = self.doc_presenter.cms = self.app.default_cms
+		self.cms = self.doc_presenter.cms
 		#self.app.default_cms.registry_cm(self.cms)
 
 		self.api = PresenterAPI(self)

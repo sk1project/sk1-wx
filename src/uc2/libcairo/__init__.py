@@ -225,6 +225,8 @@ def _draw_object(obj, trafo, stroke_width, fill_flag):
 		if obj.cid == 204 and len(obj.paths) > 100:
 			path = convert_bbox_to_cpath(obj.cache_bbox)
 			fill_anyway = True
+		if obj.cid == 251:
+			fill_anyway = True
 
 		CTX.set_matrix(get_matrix_from_trafo(trafo))
 		CTX.set_source_rgb(0, 0, 0)

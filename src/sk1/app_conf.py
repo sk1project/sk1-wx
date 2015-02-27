@@ -43,9 +43,9 @@ class AppData(UCData):
 												'sk1_custom_plugins'))
 	components = []
 
-	def __init__(self):
+	def __init__(self, app):
 
-		UCData.__init__(self)
+		UCData.__init__(self, app)
 
 		#----------------Check clipboard directory
 		self.app_clipboard_dir = os.path.join(self.app_config_dir, 'clipboard')

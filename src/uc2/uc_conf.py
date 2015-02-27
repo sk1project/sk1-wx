@@ -35,7 +35,9 @@ class UCData:
 	revision = 'rev.359'
 	app_config_dir = os.path.expanduser(os.path.join('~', '.config', 'uc2'))
 
-	def __init__(self):
+	def __init__(self, app):
+
+		self.app = app
 
 		if not os.path.lexists(self.app_config_dir):
 			os.makedirs(self.app_config_dir)

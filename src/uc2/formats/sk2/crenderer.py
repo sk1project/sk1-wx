@@ -81,9 +81,14 @@ class CairoRenderer:
 			ctx.append_path(container.cache_cpath)
 			ctx.stroke()
 
+	def render_image(self, ctx, obj):pass
+
 	def render_primitives(self, ctx, obj):
 		if obj.cache_cpath is None:
 			obj.update()
+		if obj.cid == model.PIXMAP:
+			self.render_image(ctx, obj)
+			return
 		if self.contour_flag:
 			ctx.new_path()
 			self.process_stroke(ctx, self.stroke_style)
