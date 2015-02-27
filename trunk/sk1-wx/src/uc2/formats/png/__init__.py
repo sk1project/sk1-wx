@@ -18,12 +18,11 @@
 import os, sys, base64
 import StringIO
 
-from PIL import Image
 
 from uc2 import _, events, msgconst, uc2const
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2.formats.sk2 import sk2_model, sk2_const
-
+from uc2 import libimg
 
 def png_loader(appdata, filename, translate=True, cnf={}, **kw):
 	try:
@@ -36,8 +35,6 @@ def png_loader(appdata, filename, translate=True, cnf={}, **kw):
 
 	content = fileptr.read()
 	fileptr.close()
-	bitmap = base64.b32encode(content)
-	raw_image = Image.open(StringIO.StringIO(content))
 
 	sk2_doc = SK2_Presenter(appdata, cnf)
 	sk2_doc.doc_file = filename
@@ -45,18 +42,22 @@ def png_loader(appdata, filename, translate=True, cnf={}, **kw):
 	sk2_doc.methods.set_doc_units(uc2const.UNIT_PX)
 	page = sk2_doc.methods.get_page()
 
+	image_obj = sk2_model.Pixmap(sk2_doc.config)
+	libimg.set_image_data(sk2_doc.cms, image_obj, content)
+
 	orient = uc2const.PORTRAIT
-	w = raw_image.size[0] * uc2const.px_to_pt
-	h = raw_image.size[1] * uc2const.px_to_pt
-	if raw_image.size[0] > raw_image.size[1]:orient = uc2const.LANDSCAPE
+	w = image_obj.size[0] * uc2const.px_to_pt
+	h = image_obj.size[1] * uc2const.px_to_pt
+	if image_obj.size[0] > image_obj.size[1]:orient = uc2const.LANDSCAPE
+
+	image_obj.trafo = [1.0, 0.0, 0.0, 1.0, -w / 2.0, -h / 2.0]
 
 	sk2_doc.methods.set_page_format(page, ['Custom', (w, h), orient])
 	sk2_doc.methods.set_default_page_format(['Custom', (w, h), orient])
 
 	layer = sk2_doc.methods.get_layer(page)
-	pxm = sk2_model.Pixmap(sk2_doc.config, bitmap=bitmap, size=raw_image.size,
-						trafo=[1.0, 0.0, 0.0, 1.0, -w / 2.0, -h / 2.0])
-	layer.childs.append(pxm)
+
+	layer.childs.append(image_obj)
 	sk2_doc.update()
 	return sk2_doc
 
