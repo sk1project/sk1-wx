@@ -94,7 +94,7 @@ XPM = 316
 FORMAT_DESCRIPTION = {
 ALL_FORMATS : _("All supported formats"),
 PDXF : _("PDXF - PrintDesign XML Format graphics"),
-SK1 : _("SK1 - sK1 graphics files"),
+SK1 : _("SK1 - sK1 0.9.x graphics files"),
 SK2 : _("SK2 - sK1 2.x graphics files"),
 SK : _("SK - Sketch/Skencil files"),
 SVG : _("SVG - Scalable Vector Graphics files"),
