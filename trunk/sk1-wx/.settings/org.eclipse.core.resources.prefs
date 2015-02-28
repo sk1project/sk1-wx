@@ -59,6 +59,7 @@ encoding//src/uc2/formats/sk1/sk1_filters.py=utf-8
 encoding//src/uc2/formats/sk1/sk1_loaders.py=utf-8
 encoding//src/uc2/formats/sk2/__init__.py=utf-8
 encoding//src/uc2/formats/sk2/crenderer.py=utf-8
+encoding//src/uc2/formats/sk2/sk2_cids.py=utf-8
 encoding//src/uc2/formats/sk2/sk2_cms.py=utf-8
 encoding//src/uc2/formats/sk2/sk2_config.py=utf-8
 encoding//src/uc2/formats/sk2/sk2_const.py=utf-8
