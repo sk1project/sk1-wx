@@ -671,6 +671,7 @@ class Pixmap(PrimitiveObject):
 	cache_paths = None
 	cache_cpath = None
 	cache_cdata = None
+	cache_gray_cdata = None
 
 	def __init__(self, config, parent=None,
 				bitmap='',
@@ -686,7 +687,7 @@ class Pixmap(PrimitiveObject):
 	def copy(self):
 		pixmap = Pixmap(self.config)
 		pixmap.bitmap = '' + self.bitmap
-		pixmap.alpha_channel = self.alpha_channel
+		pixmap.alpha_channel = '' + self.alpha_channel
 		pixmap.size = () + self.size
 		pixmap.trafo = [] + self.trafo
 		return pixmap
@@ -696,6 +697,12 @@ class Pixmap(PrimitiveObject):
 		height = float(self.size[1]) * uc2const.px_to_pt
 		return libgeom.get_rect_path([0, 0], width, height,
 									[] + sk2_const.CORNERS)
+
+	def update(self):
+		cache_cdata = None
+		cache_gray_cdata = None
+		PrimitiveObject.update(self)
+
 
 CID_TO_CLASS = {
 	DOCUMENT: Document,
