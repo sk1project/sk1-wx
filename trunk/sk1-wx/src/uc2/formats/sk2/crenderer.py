@@ -17,6 +17,7 @@
 
 import cairo
 
+from uc2 import libimg, libcairo, libgeom
 from uc2.formats.sk2 import sk2_model as model
 
 CAIRO_BLACK = [0.0, 0.0, 0.0]
@@ -81,7 +82,36 @@ class CairoRenderer:
 			ctx.append_path(container.cache_cpath)
 			ctx.stroke()
 
-	def render_image(self, ctx, obj):pass
+	def render_image(self, ctx, obj):
+		if not obj.cache_cdata: libimg.update_image(self.cms, obj)
+
+		canvas_matrix = self.ctx.get_matrix()
+		canvas_trafo = libcairo.get_trafo_from_matrix(canvas_matrix)
+		zoom = canvas_trafo[0]
+
+		h = obj.size[1]
+		lu_corner = libgeom.apply_trafo_to_point([0.0, float(h)], obj.trafo)
+		x0, y0 = libgeom.apply_trafo_to_point(lu_corner, canvas_trafo)
+
+		m11, m12, m21, m22 = obj.trafo[:4]
+		matrix = cairo.Matrix(zoom * m11, -zoom * m12,
+							- zoom * m21, zoom * m22, x0, y0)
+		self.ctx.set_matrix(matrix)
+
+		if self.contour_flag:
+			if not obj.cache_gray_cdata:
+				libimg.update_gray_image(self.cms, obj)
+			self.ctx.set_source_surface(obj.cache_gray_cdata)
+			if zoom * abs(m11) > .8:
+				self.ctx.get_source().set_filter(cairo.FILTER_NEAREST)
+			self.ctx.paint_with_alpha(0.3)
+		else:
+			self.ctx.set_source_surface(obj.cache_cdata)
+			if zoom * abs(m11) > .8:
+				self.ctx.get_source().set_filter(cairo.FILTER_NEAREST)
+			self.ctx.paint()
+
+		self.ctx.set_matrix(canvas_matrix)
 
 	def render_primitives(self, ctx, obj):
 		if obj.cache_cpath is None:
