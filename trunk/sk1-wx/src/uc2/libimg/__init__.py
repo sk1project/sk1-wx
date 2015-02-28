@@ -19,29 +19,49 @@ import cStringIO, base64, sys
 import cairo
 from PIL import Image
 
-def update_image(image_obj, raw_image=None):
+def update_image(cms, image_obj):
 
 	png_data = cStringIO.StringIO()
 
-	if not raw_image:
-		raw_content = base64.b32decode(image_obj.bitmap)
-		raw_image = Image.open(cStringIO.StringIO(raw_content))
-		raw_image.load()
+	raw_content = base64.b32decode(image_obj.bitmap)
+	raw_image = Image.open(cStringIO.StringIO(raw_content))
+	raw_image.load()
 
-	if raw_image.mode in ['RGB', 'RGBA']:
-		raw_image.save(png_data, format='PNG')
-	else:
-		if image_obj.alpha_channel:
-			raw_alpha = base64.b32decode(image_obj.alpha_channel)
-			raw_alpha = Image.open(cStringIO.StringIO(raw_alpha))
-			rgb_image = raw_image.convert('RGBA')
-			rgb_image.putalpha(raw_alpha)
-		else:
-			rgb_image = raw_image.convert('RGB')
-		rgb_image.save(png_data, format='PNG')
+	rgb_image = raw_image.convert('RGB')
+
+	if image_obj.alpha_channel:
+		raw_alpha = base64.b32decode(image_obj.alpha_channel)
+		raw_alpha = Image.open(cStringIO.StringIO(raw_alpha))
+		rgb_image = rgb_image.convert('RGBA')
+		rgb_image.putalpha(raw_alpha)
+
+	rgb_image.save(png_data, format='PNG')
 
 	png_data.seek(0)
 	image_obj.cache_cdata = cairo.ImageSurface.create_from_png(png_data)
+
+def update_gray_image(cms, image_obj):
+
+	png_data = cStringIO.StringIO()
+
+	raw_content = base64.b32decode(image_obj.bitmap)
+	raw_image = Image.open(cStringIO.StringIO(raw_content))
+	raw_image.load()
+
+	raw_image = raw_image.convert('L')
+
+	if image_obj.alpha_channel:
+		raw_alpha = base64.b32decode(image_obj.alpha_channel)
+		raw_alpha = Image.open(cStringIO.StringIO(raw_alpha))
+		rgb_image = raw_image.convert('RGBA')
+		rgb_image.putalpha(raw_alpha)
+	else:
+		rgb_image = raw_image.convert('RGB')
+
+	rgb_image.save(png_data, format='PNG')
+
+	png_data.seek(0)
+	image_obj.cache_gray_cdata = cairo.ImageSurface.create_from_png(png_data)
 
 
 def set_image_data(cms, image_obj, raw_content):
@@ -69,7 +89,7 @@ def set_image_data(cms, image_obj, raw_content):
 
 	image_obj.bitmap = bmp
 	image_obj.alpha_channel = alpha
-	update_image(image_obj, raw_image)
+	update_image(cms, image_obj)
 
 
 
