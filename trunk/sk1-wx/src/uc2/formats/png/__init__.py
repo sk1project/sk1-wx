@@ -15,9 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, sys, base64
-import StringIO
-
+import sys
 
 from uc2 import _, events, msgconst, uc2const
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
@@ -54,6 +52,9 @@ def png_loader(appdata, filename, translate=True, cnf={}, **kw):
 
 	sk2_doc.methods.set_page_format(page, ['Custom', (w, h), orient])
 	sk2_doc.methods.set_default_page_format(['Custom', (w, h), orient])
+	grid_layer = sk2_doc.methods.get_gird_layer()
+	grid_layer.grid = [0, 0, uc2const.px_to_pt, uc2const.px_to_pt]
+	grid_layer.properties = [1, 0, 0]
 
 	layer = sk2_doc.methods.get_layer(page)
 
