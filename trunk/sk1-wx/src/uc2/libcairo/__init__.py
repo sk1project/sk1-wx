@@ -18,6 +18,7 @@
 import cairo
 #import pangocairo
 import _libcairo
+from uc2.formats.sk2 import sk2_cids
 
 
 SURFACE = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
@@ -219,13 +220,13 @@ def _draw_object(obj, trafo, stroke_width, fill_flag):
 		fill_anyway = False
 		path = obj.cache_cpath
 
-		if obj.cid in [205, 206]:
+		if obj.cid in [sk2_cids.TEXT_BLOCK, sk2_cids.TEXT_COLUMN]:
 			path = convert_bbox_to_cpath(obj.cache_bbox)
 			fill_anyway = True
-		if obj.cid == 204 and len(obj.paths) > 100:
+		if obj.cid == sk2_cids.CURVE and len(obj.paths) > 100:
 			path = convert_bbox_to_cpath(obj.cache_bbox)
 			fill_anyway = True
-		if obj.cid == 251:
+		if obj.cid == sk2_cids.PIXMAP:
 			fill_anyway = True
 
 		CTX.set_matrix(get_matrix_from_trafo(trafo))
