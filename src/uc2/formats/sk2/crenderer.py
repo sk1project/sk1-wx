@@ -102,12 +102,12 @@ class CairoRenderer:
 			if not obj.cache_gray_cdata:
 				libimg.update_gray_image(self.cms, obj)
 			self.ctx.set_source_surface(obj.cache_gray_cdata)
-			if zoom * abs(m11) > .8:
+			if zoom * abs(m11) > .98:
 				self.ctx.get_source().set_filter(cairo.FILTER_NEAREST)
 			self.ctx.paint_with_alpha(0.3)
 		else:
 			self.ctx.set_source_surface(obj.cache_cdata)
-			if zoom * abs(m11) > .8:
+			if zoom * abs(m11) > .98:
 				self.ctx.get_source().set_filter(cairo.FILTER_NEAREST)
 			self.ctx.paint()
 
