@@ -266,7 +266,7 @@ class pdApplication(Application, UCApplication):
 		return result
 
 	def import_file(self):
-		doc_file = dialogs.get_import_file_name(self.mw, self, config.open_dir)
+		doc_file = dialogs.get_import_file_name(self.mw, self, config.import_dir)
 		if os.path.lexists(doc_file) and os.path.isfile(doc_file):
 			try:
 				ret = self.current_doc.import_file(doc_file)
@@ -275,6 +275,7 @@ class pdApplication(Application, UCApplication):
 					msg = "%s\n'%s'" % (msg, doc_file) + '\n'
 					msg += _('It seems the document is empty or contains unsupported objects.')
 					dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
+				config.import_dir = str(os.path.dirname(doc_file))
 			except:
 				msg = _('Cannot import file')
 				msg = "%s '%s'" % (msg, doc_file) + '\n'
