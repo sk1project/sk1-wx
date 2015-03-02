@@ -36,9 +36,9 @@ class AppData(UCData):
 	app_config_dir = expanduser_unicode(os.path.join('~', '.config', 's-word'))
 	app_temp_dir = os.path.join(app_config_dir, 'temp')
 
-	def __init__(self):
+	def __init__(self, app):
 
-		UCData.__init__(self)
+		UCData.__init__(self, app)
 
 		if not os.path.lexists(self.app_temp_dir):
 			os.makedirs(self.app_temp_dir)
