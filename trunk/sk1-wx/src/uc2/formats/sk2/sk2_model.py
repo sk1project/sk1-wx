@@ -23,10 +23,10 @@ from uc2 import _, cms
 from uc2 import libgeom
 from uc2.formats.sk2 import sk2_const
 from uc2.formats.sk2.sk2_cids import *
-from uc2.formats.generic import ModelObject
+from uc2.formats.generic import TextModelObject
 
 
-class DocumentObject(ModelObject):
+class DocumentObject(TextModelObject):
 	"""
 	Abstract parent class for all document 
 	objects. Provides common object properties.
@@ -672,6 +672,7 @@ class Pixmap(PrimitiveObject):
 	cache_cpath = None
 	cache_cdata = None
 	cache_gray_cdata = None
+	cache_image = None
 
 	def __init__(self, config, parent=None,
 				bitmap='',
@@ -699,8 +700,8 @@ class Pixmap(PrimitiveObject):
 									[] + sk2_const.CORNERS)
 
 	def update(self):
-		cache_cdata = None
-		cache_gray_cdata = None
+#		self.cache_cdata = None
+#		self.cache_gray_cdata = None
 		PrimitiveObject.update(self)
 
 
