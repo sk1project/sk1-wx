@@ -20,7 +20,8 @@ import traceback
 import gtk
 
 import uc2
-from uc2.utils import system, fs
+from uc2.utils import system
+from uc2 import cms
 
 from sword.app_conf import AppData
 from sword import events
@@ -50,7 +51,9 @@ class Application:
 
 		self.path = path
 
-		self.appdata = AppData()
+		self.default_cms = cms.ColorManager()
+
+		self.appdata = AppData(self)
 		config.load(self.appdata.app_config)
 		config.save(self.appdata.app_config)
 		config.resource_dir = os.path.join(self.path, 'share')
