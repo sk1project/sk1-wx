@@ -221,7 +221,8 @@ class PD_Presenter:
 			objs = []
 			for layer in page.childs:
 				for child in layer.childs:
-					objs.append(child.copy())
+					objs.append(child)
+				layer.childs = []
 			if objs:
 				self.api.paste_selected(objs)
 			else:
