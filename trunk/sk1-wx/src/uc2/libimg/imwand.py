@@ -31,12 +31,16 @@ def process_image(raw_content):
 
 	if img.alpha_channel:
 		img_png = img.convert('png')
+		img_png.type = 'truecolormatte'
 		img.alpha_channel = False
 		alpha = StringIO()
 		img_png.save(file=alpha)
 		alpha.seek(0)
 
-	base_img = img#.convert('tiff')
+	if img.type == 'colorseparation':
+		base_img = img.convert('tiff')
+	else:
+		base_img = img.convert('png')
 	base = StringIO()
 	base_img.save(file=base)
 	base.seek(0)

@@ -15,24 +15,23 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import cStringIO, base64, sys
+import base64, sys
 import cairo
+from cStringIO import StringIO
 from PIL import Image
 
+from uc2.libimg.imwand import check_image_file, process_image
+
 def check_image(path):
-	try:
-		Image.open(path)
-		return True
-	except:
-		return False
+	return check_image_file
 
 def update_image(cms, image_obj):
 
-	png_data = cStringIO.StringIO()
+	png_data = StringIO()
 
 	if not image_obj.cache_image:
 		raw_content = base64.b64decode(image_obj.bitmap)
-		raw_image = Image.open(cStringIO.StringIO(raw_content))
+		raw_image = Image.open(StringIO(raw_content))
 		raw_image.load()
 
 		if raw_image.mode == 'RGB':
@@ -42,7 +41,7 @@ def update_image(cms, image_obj):
 
 		if image_obj.alpha_channel:
 			raw_alpha = base64.b64decode(image_obj.alpha_channel)
-			raw_alpha = Image.open(cStringIO.StringIO(raw_alpha))
+			raw_alpha = Image.open(StringIO(raw_alpha))
 			image_obj.cache_image = image_obj.cache_image.convert('RGBA')
 			image_obj.cache_image.putalpha(raw_alpha)
 
@@ -54,17 +53,17 @@ def update_image(cms, image_obj):
 
 def update_gray_image(cms, image_obj):
 
-	png_data = cStringIO.StringIO()
+	png_data = StringIO()
 
 	raw_content = base64.b64decode(image_obj.bitmap)
-	raw_image = Image.open(cStringIO.StringIO(raw_content))
+	raw_image = Image.open(StringIO(raw_content))
 	raw_image.load()
 
 	raw_image = raw_image.convert('L')
 
 	if image_obj.alpha_channel:
 		raw_alpha = base64.b64decode(image_obj.alpha_channel)
-		raw_alpha = Image.open(cStringIO.StringIO(raw_alpha))
+		raw_alpha = Image.open(StringIO(raw_alpha))
 		rgb_image = raw_image.convert('RGBA')
 		rgb_image.putalpha(raw_alpha)
 	else:
@@ -77,29 +76,37 @@ def update_gray_image(cms, image_obj):
 
 
 def set_image_data(cms, image_obj, raw_content):
-	bmp = ''
+
 	alpha = ''
-	raw_image = Image.open(cStringIO.StringIO(raw_content))
-	raw_image.load()
 
-	image_obj.size = () + raw_image.size
-	if raw_image.mode in ['YCbCr', 'P', 'I', 'F']:
-		raw_image = raw_image.convert('RGB')
+	base_stream, alpha_stream = process_image(raw_content)
+	base_image = Image.open(base_stream)
+	base_image.load()
 
-	if raw_image.mode == 'RGBA':
-		bands = raw_image.split()
-		fobj = cStringIO.StringIO()
-		bands[3].save(fobj, format='PNG')
-		alpha = base64.b64encode(fobj.getvalue())
-
-		fobj = cStringIO.StringIO()
-		bmp = Image.merge('RGB', bands[:3])
-		bmp.save(fobj, format='PNG')
-		bmp = base64.b64encode(fobj.getvalue())
+	image_obj.size = () + base_image.size
+	if base_image.mode in ['YCbCr', 'P', 'I', 'F']:
+		base_image = base_image.convert('RGB')
+	fobj = StringIO()
+	if base_image.mode == 'CMYK':
+		bmp = base64.b64encode(base_stream.getvalue())
 	else:
-		bmp = base64.b64encode(raw_content)
+		base_image.save(fobj, format='PNG')
+		bmp = base64.b64encode(fobj.getvalue())
 
-	image_obj.cache_image = raw_image
+	if alpha_stream:
+		alpha_image = Image.open(alpha_stream)
+		alpha_image.load()
+		if alpha_image.mode == 'P':
+			alpha_image = alpha_image.convert('RGBA')
+		if alpha_image.mode in ['LA', 'RGBA']:
+			if alpha_image.mode == 'LA':
+				band = alpha_image.split()[1]
+			else:
+				band = alpha_image.split()[3]
+			fobj = StringIO()
+			band.save(fobj, format='PNG')
+			alpha = base64.b64encode(fobj.getvalue())
+
 	image_obj.bitmap = bmp
 	image_obj.alpha_channel = alpha
 	update_image(cms, image_obj)
