@@ -34,10 +34,12 @@ def update_image(cms, image_obj):
 		raw_image = Image.open(StringIO(raw_content))
 		raw_image.load()
 
-		if raw_image.mode == 'RGB':
-			image_obj.cache_image = raw_image
-		else:
-			image_obj.cache_image = raw_image.convert('RGB')
+		image_obj.cache_image = cms.get_display_image(raw_image)
+
+#		if raw_image.mode == 'RGB':
+#			image_obj.cache_image = raw_image
+#		else:
+#			image_obj.cache_image = raw_image.convert('RGB')
 
 		if image_obj.alpha_channel:
 			raw_alpha = base64.b64decode(image_obj.alpha_channel)
