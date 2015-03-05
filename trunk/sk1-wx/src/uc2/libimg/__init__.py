@@ -84,8 +84,10 @@ def set_image_data(cms, image_obj, raw_content):
 	base_image.load()
 
 	image_obj.size = () + base_image.size
-	if base_image.mode in ['YCbCr', 'P', 'I', 'F']:
+	if not base_image.mode in ['1', 'L', 'RGB', 'CMYK', 'LAB']:
 		base_image = base_image.convert('RGB')
+	image_obj.colorspace = '' + base_image.mode
+
 	fobj = StringIO()
 	if base_image.mode == 'CMYK':
 		bmp = base64.b64encode(base_stream.getvalue())
@@ -109,7 +111,7 @@ def set_image_data(cms, image_obj, raw_content):
 
 	image_obj.bitmap = bmp
 	image_obj.alpha_channel = alpha
-	update_image(cms, image_obj)
+#	update_image(cms, image_obj)
 
 
 
