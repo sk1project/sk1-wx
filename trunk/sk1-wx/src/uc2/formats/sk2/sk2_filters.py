@@ -21,8 +21,6 @@ from uc2 import _, events, msgconst
 from uc2.formats.loader import AbstractLoader
 from uc2.formats.sk2 import sk2_model, sk2_const
 
-GENERIC_FIELDS = ['cid', 'childs', 'parent', 'config']
-
 class SK2_Loader(AbstractLoader):
 
 	name = 'SK2_Loader'
@@ -98,7 +96,7 @@ class SK2_Saver:
 		self.write_line("obj('%s')" % sk2_model.CID_TO_TAGNAME[obj.cid])
 		props = obj.__dict__
 		for item in props.keys():
-			if not item in GENERIC_FIELDS and not item[:5] == 'cache':
+			if not item in sk2_model.GENERIC_FIELDS and not item[:5] == 'cache':
 				item_str = props[item].__str__()
 				if isinstance(props[item], str):
 					item_str = "'%s'" % item_str.replace("'", "\\'")
