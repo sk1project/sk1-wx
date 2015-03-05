@@ -17,6 +17,8 @@
 
 import wx
 
+from uc2.uc2const import IMAGE_NAMES
+
 from wal import ALL, EXPAND, TOP, LEFT, CENTER, const
 from wal import HPanel, Label, VLine, ImageButton
 
@@ -78,6 +80,7 @@ class AppStatusbar(HPanel):
 
 class ColorMonitor(HPanel):
 
+	image_txt = None
 	fill_txt = None
 	fill_swatch = None
 	stroke_txt = None
@@ -88,11 +91,13 @@ class ColorMonitor(HPanel):
 		self.parent = parent
 		HPanel.__init__(self, parent)
 
-		self.fill_txt = Label(self.panel, text='Fill:', fontsize=FONTSIZE[0])
+		self.image_txt = Label(self.panel, text=_('Image type: '), fontsize=FONTSIZE[0])
+		self.add(self.image_txt, 0, LEFT | CENTER)
+		self.fill_txt = Label(self.panel, text=_('Fill:'), fontsize=FONTSIZE[0])
 		self.add(self.fill_txt, 0, LEFT | CENTER)
 		self.fill_swatch = FillSwatch(self.panel, self.app, self.fill_txt)
 		self.add(self.fill_swatch, 0, LEFT | CENTER, 2)
-		self.stroke_txt = Label(self.panel, text='Stroke:', fontsize=FONTSIZE[0])
+		self.stroke_txt = Label(self.panel, text=_('Stroke:'), fontsize=FONTSIZE[0])
 		self.add(self.stroke_txt, 0, LEFT | CENTER, 10)
 		self.stroke_swatch = StrokeSwatch(self.panel, self.app, self.stroke_txt)
 		self.add(self.stroke_swatch, 0, LEFT | CENTER, 2)
@@ -102,13 +107,30 @@ class ColorMonitor(HPanel):
 		events.connect(events.NO_DOCS, self.update)
 
 	def update(self, *args):
-		if self.app.insp.is_doc() and self.app.insp.is_selection():
+		if self.app.insp.is_selection():
 			sel = self.app.current_doc.selection.objs
 			if len(sel) == 1 and self.app.insp.is_obj_primitive(sel[0]):
-				self.fill_swatch.update_from_obj(sel[0])
-				self.stroke_swatch.update_from_obj(sel[0])
-				self.show(True)
-				return
+				if self.app.insp.is_obj_pixmap(sel[0]):
+					txt = _('Image type: ') + IMAGE_NAMES[sel[0].colorspace]
+					if sel[0].alpha_channel: txt += 'A'
+					self.image_txt.set_text(txt)
+					self.image_txt.show()
+					self.fill_txt.hide()
+					self.fill_swatch.hide()
+					self.stroke_txt.hide()
+					self.stroke_swatch.hide()
+					self.show(True)
+					return
+				else:
+					self.fill_swatch.update_from_obj(sel[0])
+					self.stroke_swatch.update_from_obj(sel[0])
+					self.image_txt.hide()
+					self.fill_txt.show()
+					self.fill_swatch.show()
+					self.stroke_txt.show()
+					self.stroke_swatch.show()
+					self.show(True)
+					return
 		self.hide(True)
 
 class MouseMonitor(HPanel):
