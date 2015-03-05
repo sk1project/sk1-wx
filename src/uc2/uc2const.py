@@ -81,6 +81,7 @@ DXF = 120
 DWG = 121
 
 JPG = 300
+JP2 = 301
 TIF = 305
 BMP = 310
 PCX = 311
@@ -131,6 +132,7 @@ RIFF: _("RIFF files"),
 
 #Bitmap file formats
 JPG: _("JPEG - Joint Photographic Experts Group files"),
+JP2: _("JPEG2000 - Joint Photographic Experts Group files"),
 TIF: _("TIFF - Tagged Image File Format files"),
 BMP: _("BMP -  Bitmap Picture files"),
 PCX: _("PCX - PCExchange files"),
@@ -181,6 +183,7 @@ RIFF: "RIFF",
 
 #Bitmap file formats
 JPG: "JPEG",
+JP2: "JP2",
 TIF: "TIFF",
 BMP: "BMP",
 PCX: "PCX",
@@ -203,8 +206,9 @@ AI_PS : ('ai',), AI_PDF : ('ai',), PS : ('ps',), EPS : ('eps',), PDF : ('pdf',),
 CGM : ('cgm',), WMF : ('wmf',), EMF : ('emf',), XPS : ('xps',), VSD : ('vsd',),
 PLT : ('plt',), HPGL : ('hgl',), DXF : ('dxf',), DWG : ('dwg',),
 RIFF: ('riff',),
-JPG: ('jpg', 'jpeg', 'jpe'), TIF: ('tif', 'tiff'), BMP: ('bmp', 'dib'), PCX: ('pcx',),
-GIF: ('gif',), PNG: ('png',), PPM: ('pbm', 'pgm', 'pgm'), XBM: ('xbm',), XPM: ('xpm',),
+JPG: ('jpg', 'jpeg', 'jpe', 'jfif'), TIF: ('tif', 'tiff'), BMP: ('bmp', 'dib'),
+PCX: ('pcx',), GIF: ('gif',), PNG: ('png',), PPM: ('pbm', 'pgm', 'pgm'),
+XBM: ('xbm',), XPM: ('xpm',), JP2: ('jp2', 'jpx', 'jpf'),
 }
 
 IMAGE_FORMATS = [JPG, TIF, BMP, PCX, GIF, PNG, PPM, XBM, XPM, ]
@@ -362,7 +366,12 @@ COLOR_RGB = 'RGB'
 COLOR_CMYK = 'CMYK'
 COLOR_LAB = 'LAB'
 COLOR_SPOT = 'SPOT'
-COLOR_MONO = 'MONO'
+
+IMAGE_MONO = '1'
+IMAGE_GRAY = 'L'
+IMAGE_RGB = 'RGB'
+IMAGE_CMYK = 'CMYK'
+IMAGE_LAB = 'LAB'
 
 COLOR_DISPLAY = 'Display'
 
