@@ -24,6 +24,8 @@ from uc2 import uc2const
 from uc2.uc2const import COLOR_RGB, COLOR_CMYK, COLOR_LAB, COLOR_GRAY, \
 COLOR_SPOT, COLOR_DISPLAY
 
+from uc2.uc2const import IMAGE_MONO, IMAGE_GRAY, IMAGE_RGB, IMAGE_CMYK, \
+IMAGE_LAB, IMAGE_TO_COLOR
 
 CS = [COLOR_RGB, COLOR_CMYK, COLOR_LAB, COLOR_GRAY]
 
@@ -413,7 +415,7 @@ class ColorManager:
 	def do_transform(self, color, cs_in, cs_out):
 		"""
 		Converts color between colorspaces.
-		Return list of color values.
+		Returns list of color values.
 		"""
 		if not self.use_cms:
 			return do_simple_transform(color[1], cs_in, cs_out)
@@ -423,16 +425,38 @@ class ColorManager:
 		libcms.cms_do_transform(transform, in_color, out_color)
 		return decode_colorb(out_color, cs_out)
 
+	def do_bitmap_transform(self, img, mode, cs_out=None):
+		"""
+		Does image proof transform.
+		Returns new image instance.
+		"""
+		if not self.use_cms and not img.mode == IMAGE_LAB:
+			return img.convert(mode)
+		cs_in = IMAGE_TO_COLOR[img.mode]
+		if not cs_out: cs_out = IMAGE_TO_COLOR[mode]
+		transform = self.get_transform(cs_in, cs_out)
+		return libcms.cms_do_bitmap_transform(transform, img, img.mode, mode)
+
 	def do_proof_transform(self, color, cs_in):
 		"""
 		Does color proof transform.
-		Return list of color values.
+		Returns list of color values.
 		"""
 		in_color = colorb(color)
 		out_color = colorb()
 		transform = self.get_proof_transform(cs_in)
 		libcms.cms_do_transform(transform, in_color, out_color)
 		return decode_colorb(out_color, COLOR_RGB)
+
+	def do_proof_bitmap_transform(self, img):
+		"""
+		Does image proof transform.
+		Returns new image instance.
+		"""
+		cs_in = IMAGE_TO_COLOR[img.mode]
+		mode = IMAGE_RGB
+		transform = self.get_proof_transform(cs_in)
+		return libcms.cms_do_bitmap_transform(transform, img, img.mode, mode)
 
 	#Color management API
 	def get_rgb_color(self, color):
@@ -523,5 +547,40 @@ class ColorManager:
 			else:
 				ret = self.do_transform(color, cs_in, cs_out)
 		return ret
+
+	def convert_image(self, img, outmode, cs_out=None):
+		"""
+		Converts image between colorspaces.
+		Returns new image instance.
+		"""
+		if img.mode == IMAGE_MONO:
+			img = img.convert(IMAGE_GRAY)
+		if img.mode == outmode:
+			return img.copy()
+		return self.do_bitmap_transform(img, outmode, cs_out)
+
+	def get_display_image(self, img):
+		"""
+		Calcs display image representation.
+		Returns new image instance.
+		"""
+
+		outmode = IMAGE_RGB
+		cs_out = None
+
+		if not self.use_cms:
+			return self.convert_image(img, outmode)
+
+		if self.use_display_profile and self.handles.has_key(COLOR_DISPLAY):
+			cs_out = COLOR_DISPLAY
+
+		if self.proofing:
+			if img.mode == IMAGE_CMYK:
+				return self.convert_image(img, outmode, cs_out)
+			else:
+				return self.do_proof_bitmap_transform(img)
+		else:
+			return self.convert_image(img, outmode, cs_out)
+
 
 
