@@ -22,6 +22,8 @@ import os
 import types
 import _cms
 
+from PIL import Image
+
 from uc2 import uc2const
 
 
@@ -344,7 +346,35 @@ def cms_do_transform(hTransform, inputBuffer, outputBuffer, buffersSizeInPixels=
 	else:
 		raise CmsError, "inputBuffer and outputBuffer must be Python 4-member list objects"
 
+def cms_do_bitmap_transform(hTransform, inImage, inMode, outMode):
+	"""
+	The method provides PIL images support for color management.
 
+	hTransform - a valid lcms transformation handle
+	inImage - a valid PIL image object
+	inMode, outMode -  - predefined string constant (i.e. valid PIL mode)
+	Currently supports L, RGB, CMYK and LAB modes only.
+	Returns new PIL image object in outMode colorspace.
+	"""
+	if not inImage.mode == inMode:
+		raise CmsError, "incorrect inMode"
+
+	if not inImage.mode in uc2const.IMAGE_COLORSPACES:
+		raise CmsError, "unsupported image type: %s" % inImage.mode
+
+	if not inMode in uc2const.IMAGE_COLORSPACES:
+		raise CmsError, "unsupported inMode type: %s" % inMode
+
+	if not outMode in uc2const.IMAGE_COLORSPACES:
+		raise CmsError, "unsupported outMode type: %s" % outMode
+
+	w, h = inImage.size
+	inImage.load()
+	outImage = Image.new(outMode, (w, h))
+
+	_cms.transformBitmap(hTransform, inImage.im, outImage.im, w, h)
+
+	return outImage
 
 def cms_get_profile_name(profile):
 	"""
@@ -390,95 +420,4 @@ def cms_close_profile(profile):
 	"""
 	pass
 
-#==========================UNREFACTORED=========================================
-#==========================UNREFACTORED=========================================
-#==========================UNREFACTORED=========================================
 
-
-
-#def cmsDoBitmapTransform(hTransform, inImage, inMode, outMode):
-#	"""
-#	The method provides PIL images support for color management.
-#
-#	hTransform - a valid lcms transformation handle
-#	inImage - a valid PIL image object
-#	inMode, outMode -  - predefined string constant (i.e. TYPE_RGB_8, TYPE_RGBA_8, TYPE_CMYK_8) or valid PIL mode
-#	Currently supports RGB, RGBA and CMYK modes only.
-#	Returns new PIL image object in outMode colorspace.
-#	"""
-#	if not inImage.mode == inMode:
-#		raise CmsError, "incorrect inMode"
-#
-#	if not inImage.mode in [TYPE_RGB_8, TYPE_RGBA_8, TYPE_CMYK_8]:
-#		raise CmsError, "unsupported image type: %s"%inImage.mode
-#
-#	if not inMode in [TYPE_RGB_8, TYPE_RGBA_8, TYPE_CMYK_8]:
-#		raise CmsError, "unsupported inMode type: %s"%inMode
-#
-#	if not outMode in [TYPE_RGB_8, TYPE_RGBA_8, TYPE_CMYK_8]:
-#		raise CmsError, "unsupported outMode type: %s"%outMode
-#
-#	w, h = inImage.size
-#	inImage.load()
-#	outImage=Image.new(outMode, (w, h))
-#
-#	_cms.transformBitmap(hTransform, inImage.im, outImage.im, w, h)
-#
-#	return outImage
-
-##############################################################
-#              Pixels API
-##############################################################
-#  Best color management performance can be achieved for plane
-#  pixel arrays (i.e. for unsigned char* on native side)
-#  Also pixel arrays can be used for Cairo and ImageMagick
-#  integration.
-##############################################################
-
-#def getPixelsFromImage(image):
-#	"""
-#	Creates pixel array using provided image. Accepts any valid PIL image.
-#
-#	image - any valid PIL image.
-#	Returns pixel array handle wrapped as a python object.
-#	"""
-#	image.load()
-#	width,height = image.size
-#	pixel = image.getpixel((0,0))
-#	bytes_per_pixel = 1
-#	if type(pixel) is types.TupleType:
-#		bytes_per_pixel = len(pixel)
-#	if image.mode == TYPE_RGB_8:
-#		bytes_per_pixel = 4
-#	return _cms.getPixelsFromImage(image.im, width, height, bytes_per_pixel)
-#
-#def getImageFromPixels(pixels, mode, width, height):
-#	"""
-#	Creates new image using provided pixel array.
-#
-#	pixels - pixel array wrapped as a python object.
-#	mode - pixel array appropriate PIL mode.
-#	width, height - pixel array appropriate image size.
-#	Returns new PIL image object.
-#	"""
-#	image=Image.new(mode,(width,height))
-#	pixel = image.getpixel((0,0))
-#	bytes_per_pixel = 1
-#	if type(pixel) is types.TupleType:
-#		bytes_per_pixel = len(pixel)
-#	if image.mode == TYPE_RGB_8:
-#		bytes_per_pixel = 4
-#	_cms.setImagePixels(pixels, image.im, width, height, bytes_per_pixel)
-#	return image
-#
-#def cmsDoPixelsTransform(hTransform, pixels, width):
-#	"""
-#	Transforms pixel array using provided lcms transform handle.
-#	Supports TYPE_RGB_8, TYPE_RGBA_8, and TYPE_CMYK_8 transforms only.
-#
-#	hTransform - valid lcms transform handle
-#	pixels - pixel array wrapped as a python object.
-#	width - pixel array width.
-#	Returns handle to new pixel array.
-#	"""
-#	return _cms.transformPixels(hTransform, pixels, width)
