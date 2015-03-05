@@ -25,6 +25,7 @@ from uc2.formats.sk2 import sk2_const
 from uc2.formats.sk2.sk2_cids import *
 from uc2.formats.generic import TextModelObject
 
+GENERIC_FIELDS = ['cid', 'childs', 'parent', 'config']
 
 class DocumentObject(TextModelObject):
 	"""
@@ -44,7 +45,14 @@ class DocumentObject(TextModelObject):
 		return []
 
 	def copy(self, src=None, dst=None):
-		return None
+		obj_copy = CID_TO_CLASS[self.cid](self.config)
+		props = self.__dict__
+		for item in props.keys():
+			if not item in GENERIC_FIELDS and not item[:5] == 'cache':
+				obj_copy.__dict__[item] = deepcopy(props[item])
+		for child in self.childs:
+			obj_copy.childs.append(child.copy())
+		return obj_copy
 
 
 class Document(DocumentObject):
@@ -336,12 +344,6 @@ class Group(SelectableObject):
 		self.parent = parent
 		self.childs += childs
 
-	def copy(self):
-		childs_copy = []
-		for child in self.childs:
-			childs_copy.append(child.copy())
-		return Group(self.config, None, childs_copy)
-
 	def apply_trafo(self, trafo):
 		for child in self.childs:
 			child.apply_trafo(trafo)
@@ -393,12 +395,6 @@ class Container(Group):
 			child.update()
 		self.update_bbox()
 
-	def copy(self):
-		childs_copy = []
-		for child in self.childs:
-			childs_copy.append(child.copy())
-		return Container(self.config, None, childs_copy)
-
 	def update_bbox(self):
 		self.cache_container = self.childs[0]
 		self.cache_bbox = deepcopy(self.cache_container.cache_bbox)
@@ -418,7 +414,6 @@ class PrimitiveObject(SelectableObject):
 	cache_paths = None
 	cache_cpath = None
 
-	def copy(self):pass
 	def get_initial_paths(self): pass
 
 	def destroy(self):
@@ -481,16 +476,6 @@ class Rectangle(PrimitiveObject):
 		self.corners = corners
 		self.style = style
 
-	def copy(self):
-		rect = Rectangle(self.config)
-		rect.start = [] + self.start
-		rect.width = self.width
-		rect.height = self.height
-		rect.trafo = [] + self.trafo
-		rect.corners = [] + self.corners
-		rect.style = deepcopy(self.style)
-		return rect
-
 	def get_initial_paths(self):
 		return libgeom.get_rect_path(self.start, self.width,
 									self.height, self.corners)
@@ -520,16 +505,6 @@ class Circle(PrimitiveObject):
 		self.initial_trafo = [] + self.trafo
 		self.circle_type = circle_type
 		self.style = style
-
-	def copy(self):
-		circle = Circle(self.config)
-		circle.trafo = [] + self.trafo
-		circle.initial_trafo = [] + self.initial_trafo
-		circle.angle1 = self.angle1
-		circle.angle2 = self.angle2
-		circle.circle_type = self.circle_type
-		circle.style = deepcopy(self.style)
-		return circle
 
 	def get_initial_paths(self):
 		return libgeom.get_circle_path(self.angle1, self.angle2, self.circle_type)
@@ -569,18 +544,6 @@ class Polygon(PrimitiveObject):
 		self.initial_trafo = [] + self.trafo
 		self.style = style
 
-	def copy(self):
-		polygon = Polygon(self.config)
-		polygon.trafo = [] + self.trafo
-		polygon.initial_trafo = [] + self.initial_trafo
-		polygon.corners_num = self.corners_num
-		polygon.angle1 = self.angle1
-		polygon.angle2 = self.angle2
-		polygon.coef1 = self.coef1
-		polygon.coef2 = self.coef2
-		polygon.style = deepcopy(self.style)
-		return polygon
-
 	def get_initial_paths(self):
 		return libgeom.get_polygon_path(self.corners_num,
 									self.angle1, self.angle2,
@@ -601,13 +564,6 @@ class Curve(PrimitiveObject):
 		self.paths = paths
 		self.trafo = trafo
 		self.style = style
-
-	def copy(self):
-		curve = Curve(self.config)
-		curve.paths = deepcopy(self.paths)
-		curve.style = deepcopy(self.style)
-		curve.trafo = [] + self.trafo
-		return curve
 
 	def get_initial_paths(self):
 		return self.paths
@@ -644,16 +600,6 @@ class Text(PrimitiveObject):
 		self.style = style
 		self.attributes = []
 
-	def copy(self):
-		text = Text(self.config)
-		text.cid = self.cid
-		text.width = self.width
-		text.trafo = [] + self.trafo
-		text.text = "" + self.text
-		text.attributes = deepcopy(self.attributes)
-		text.style = deepcopy(self.style)
-		return text
-
 	def get_initial_paths(self):
 		return libgeom.get_text_path(self.text, self.width, self.style,
 										self.attributes)
@@ -667,6 +613,7 @@ class Pixmap(PrimitiveObject):
 	bitmap = ''
 	alpha_channel = ''
 	size = (100, 100)
+	colorspace = None
 
 	cache_paths = None
 	cache_cpath = None
@@ -685,14 +632,6 @@ class Pixmap(PrimitiveObject):
 		self.size = size
 		self.trafo = trafo
 
-	def copy(self):
-		pixmap = Pixmap(self.config)
-		pixmap.bitmap = '' + self.bitmap
-		pixmap.alpha_channel = '' + self.alpha_channel
-		pixmap.size = () + self.size
-		pixmap.trafo = [] + self.trafo
-		return pixmap
-
 	def get_initial_paths(self):
 		width = float(self.size[0]) * uc2const.px_to_pt
 		height = float(self.size[1]) * uc2const.px_to_pt
@@ -700,8 +639,8 @@ class Pixmap(PrimitiveObject):
 									[] + sk2_const.CORNERS)
 
 	def update(self):
-#		self.cache_cdata = None
-#		self.cache_gray_cdata = None
+		self.cache_cdata = None
+		self.cache_gray_cdata = None
 		PrimitiveObject.update(self)
 
 
