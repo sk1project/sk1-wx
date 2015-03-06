@@ -1,0 +1,15 @@
+#! /usr/bin/python
+#
+# Wrapper script to start a sK1 application
+#
+# Copyright (C) 2007-2015 Igor E. Novikov
+#
+# This library is covered by GNU Library General Public License.
+# For more info see COPYRIGHTS file in sK1 root directory.
+
+import sys
+
+sys.path.insert(1, '$SK1_INSTALL_PATH')
+
+from sk1 import sk1_run
+sk1_run()
