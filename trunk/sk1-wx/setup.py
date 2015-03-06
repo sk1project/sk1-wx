@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 #
-# Setup script for UniConvertor 2.x
+# Setup script for sK1 2.x
 #
-# Copyright (C) 2013 Igor E. Novikov
+# Copyright (C) 2013-2015 Igor E. Novikov
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
