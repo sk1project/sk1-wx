@@ -106,7 +106,7 @@ os.environ["SK1_INSTALL_PATH"] = "%s" % (install_path,)
 src_path = 'src'
 include_path = '/usr/include'
 modules = []
-scripts = ['src/script/sk1', 'src/script/sword', ]
+scripts = ['src/script/sk1', ]
 deb_scripts = []
 data_files = [
 ('/usr/share/applications', ['src/sk1.desktop', ]),
@@ -114,7 +114,7 @@ data_files = [
 ]
 deb_depends = 'liblcms2, python (>=2.4), python (<<3.0), python-wxgtk2.8, '
 deb_depends += 'python-cairo, python-gtk2, python-reportlab, python-imaging, '
-deb_depends += 'python-wand, '
+deb_depends += 'python-wand'
 
 dirs = libutils.get_dirs_tree('src/sk1/share')
 share_dirs = []
