@@ -106,21 +106,27 @@ os.environ["SK1_INSTALL_PATH"] = "%s" % (install_path,)
 src_path = 'src'
 include_path = '/usr/include'
 modules = []
-scripts = ['src/script/sk1', ]
+scripts = ['src/script/sk1', 'src/script/sword', ]
 deb_scripts = []
 data_files = [
 ('/usr/share/applications', ['src/sk1.desktop', ]),
 ('/usr/share/pixmaps', ['src/sk1.png', 'src/sk1.xpm', ]),
 ]
-deb_depends = 'python (>=2.4), python (<<3.0), python-imaging, python-wand, '
-deb_depends += 'python-cairo, python-gtk2, python-reportlab, liblcms2'
+deb_depends = 'liblcms2, python (>=2.4), python (<<3.0), python-wxgtk2.8, '
+deb_depends += 'python-cairo, python-gtk2, python-reportlab, python-imaging, '
+deb_depends += 'python-wand, '
 
 dirs = libutils.get_dirs_tree('src/sk1/share')
 share_dirs = []
 for item in dirs: share_dirs.append(os.path.join(item[8:], '*.*'))
 
+dirs = libutils.get_dirs_tree('src/sword/share')
+share_dirs_sword = []
+for item in dirs: share_dirs_sword.append(os.path.join(item[8:], '*.*'))
+
 package_data = {
 'sk1': share_dirs,
+'sword': share_dirs_sword,
 }
 
 #Preparing start script
