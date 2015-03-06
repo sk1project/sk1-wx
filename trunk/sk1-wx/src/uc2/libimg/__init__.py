@@ -15,8 +15,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import base64, sys
+import sys
 import cairo
+from base64 import b64decode, b64encode
 from cStringIO import StringIO
 from PIL import Image
 
@@ -30,19 +31,14 @@ def update_image(cms, image_obj):
 	png_data = StringIO()
 
 	if not image_obj.cache_image:
-		raw_content = base64.b64decode(image_obj.bitmap)
+		raw_content = b64decode(image_obj.bitmap)
 		raw_image = Image.open(StringIO(raw_content))
 		raw_image.load()
 
 		image_obj.cache_image = cms.get_display_image(raw_image)
 
-#		if raw_image.mode == 'RGB':
-#			image_obj.cache_image = raw_image
-#		else:
-#			image_obj.cache_image = raw_image.convert('RGB')
-
 		if image_obj.alpha_channel:
-			raw_alpha = base64.b64decode(image_obj.alpha_channel)
+			raw_alpha = b64decode(image_obj.alpha_channel)
 			raw_alpha = Image.open(StringIO(raw_alpha))
 			image_obj.cache_image = image_obj.cache_image.convert('RGBA')
 			image_obj.cache_image.putalpha(raw_alpha)
@@ -57,14 +53,14 @@ def update_gray_image(cms, image_obj):
 
 	png_data = StringIO()
 
-	raw_content = base64.b64decode(image_obj.bitmap)
+	raw_content = b64decode(image_obj.bitmap)
 	raw_image = Image.open(StringIO(raw_content))
 	raw_image.load()
 
 	raw_image = raw_image.convert('L')
 
 	if image_obj.alpha_channel:
-		raw_alpha = base64.b64decode(image_obj.alpha_channel)
+		raw_alpha = b64decode(image_obj.alpha_channel)
 		raw_alpha = Image.open(StringIO(raw_alpha))
 		rgb_image = raw_image.convert('RGBA')
 		rgb_image.putalpha(raw_alpha)
@@ -76,10 +72,21 @@ def update_gray_image(cms, image_obj):
 	png_data.seek(0)
 	image_obj.cache_gray_cdata = cairo.ImageSurface.create_from_png(png_data)
 
+def extract_profile(raw_content):
+	profile = None
+	mode = None
+	try:
+		img = Image.open(StringIO(raw_content))
+		if 'icc_profile' in img.info.keys():
+			profile = img.info.get('icc_profile')
+			mode = img.mode
+	except:pass
+	return profile, mode
 
 def set_image_data(cms, image_obj, raw_content):
 
 	alpha = ''
+	profile, mode = extract_profile(raw_content)
 
 	base_stream, alpha_stream = process_image(raw_content)
 	base_image = Image.open(base_stream)
@@ -88,14 +95,16 @@ def set_image_data(cms, image_obj, raw_content):
 	image_obj.size = () + base_image.size
 	if not base_image.mode in ['1', 'L', 'RGB', 'CMYK', 'LAB']:
 		base_image = base_image.convert('RGB')
+		profile = mode = None
+
 	image_obj.colorspace = '' + base_image.mode
 
 	fobj = StringIO()
 	if base_image.mode == 'CMYK':
-		bmp = base64.b64encode(base_stream.getvalue())
+		bmp = b64encode(base_stream.getvalue())
 	else:
 		base_image.save(fobj, format='PNG')
-		bmp = base64.b64encode(fobj.getvalue())
+		bmp = b64encode(fobj.getvalue())
 
 	if alpha_stream:
 		alpha_image = Image.open(alpha_stream)
@@ -109,11 +118,10 @@ def set_image_data(cms, image_obj, raw_content):
 				band = alpha_image.split()[3]
 			fobj = StringIO()
 			band.save(fobj, format='PNG')
-			alpha = base64.b64encode(fobj.getvalue())
+			alpha = b64encode(fobj.getvalue())
 
 	image_obj.bitmap = bmp
 	image_obj.alpha_channel = alpha
-#	update_image(cms, image_obj)
 
 
 
