@@ -102,7 +102,7 @@ LONG_DEB_DESCRIPTION = ''' .
 #
 ############################################################
 install_path = '/usr/lib/%s-wx-%s' % (NAME, VERSION)
-os.environ["SK1_INSTALL_PATH"] = "%s" % (install_path,)
+os.environ["APP_INSTALL_PATH"] = "%s" % (install_path,)
 src_path = 'src'
 include_path = '/usr/include'
 modules = []
@@ -135,8 +135,8 @@ fileptr2 = open('src/script/sk1', 'wb')
 while True:
 	line = fileptr.readline()
 	if line == '': break
-	if '$SK1_INSTALL_PATH' in line:
-		line = line.replace('$SK1_INSTALL_PATH', install_path)
+	if '$APP_INSTALL_PATH' in line:
+		line = line.replace('$APP_INSTALL_PATH', install_path)
 	fileptr2.write(line)
 fileptr.close()
 fileptr2.close()
