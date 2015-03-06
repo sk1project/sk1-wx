@@ -54,9 +54,9 @@ CLEAR_BUILD = False
 # Package description
 #
 ############################################################
-NAME = 'sk1'
+NAME = 'uniconvertor'
 VERSION = '2.0'
-DESCRIPTION = 'Vector graphics editor for prepress'
+DESCRIPTION = 'Universal vector graphics translator'
 AUTHOR = 'Igor E. Novikov'
 AUTHOR_EMAIL = 'igor.e.novikov@gmail.com'
 MAINTAINER = AUTHOR
@@ -65,8 +65,8 @@ LICENSE = 'GPL v3'
 URL = 'http://sk1project.org'
 DOWNLOAD_URL = URL
 CLASSIFIERS = [
-'Development Status :: 5 - Stable',
-'Environment :: Desktop',
+'Development Status :: 6 - Mature',
+'Environment :: Console',
 'Intended Audience :: End Users/Desktop',
 'License :: OSI Approved :: LGPL v2',
 'License :: OSI Approved :: GPL v3',
@@ -75,24 +75,36 @@ CLASSIFIERS = [
 'Operating System :: Microsoft :: Windows',
 'Programming Language :: Python',
 'Programming Language :: C',
-"Topic :: Multimedia :: Graphics :: Editors :: Vector-Based",
+"Topic :: Multimedia :: Graphics :: Graphics Conversion",
 ]
 LONG_DESCRIPTION = '''
-sK1 is an open source vector graphics editor similar to CorelDRAW, 
-Adobe Illustrator, or Freehand. First of all sK1 is oriented for prepress 
-industry, therefore works with CMYK colorspace and produces CMYK-based PDF 
-and postscript output.
+UniConvertor is a multiplatform universal vector graphics translator.
+Uses PDXF model to convert one format to another. 
+
 sK1 Project (http://sk1project.org),
-Copyright (C) 2007-2015 by Igor E. Novikov 
+Copyright (C) 2007-2015 by Igor E. Novikov
+--------------------------------------------------------------------------------
+Supported input formats:  
+ PDXF, CDR, CDT, CCX, CDRX, CMX, AI, PS, EPS, CGM, WMF, XFIG, SVG, SK, SK1, 
+ AFF, PLT, DXF, DST, PES, EXP, PCS
+--------------------------------------------------------------------------------
+Supported output formats: 
+ PDXF, AI, SVG, SK, SK1, CGM, WMF, PDF, PS, PLT    
+--------------------------------------------------------------------------------
 '''
 LONG_DEB_DESCRIPTION = ''' .
- sK1 is an open source vector graphics editor similar to CorelDRAW, 
- Adobe Illustrator, or Freehand. First of all sK1 is oriented for prepress 
- industry, therefore works with CMYK colorspace and produces CMYK-based PDF 
- and postscript output.
+ UniConvertor is a multiplatform universal vector graphics translator.
+ Uses PDXF model to convert one format to another. 
  . 
  sK1 Project (http://sk1project.org),
  Copyright (C) 2007-2015 by Igor E. Novikov 
+ .
+ Supported input formats:  
+ PDXF, CDR, CDT, CCX, CDRX, CMX, AI, PS, EPS, CGM, WMF, XFIG, SVG, SK, SK1, 
+ AFF, PLT, DXF, DST, PES, EXP, PCS
+ .
+ Supported output formats: 
+ PDXF, AI, SVG, SK, SK1, CGM, WMF, PDF, PS, PLT
  .
 '''
 
@@ -101,12 +113,12 @@ LONG_DEB_DESCRIPTION = ''' .
 # Build data
 #
 ############################################################
-install_path = '/usr/lib/%s-wx-%s' % (NAME, VERSION)
+install_path = '/usr/lib/%s-%s' % (NAME, VERSION)
 os.environ["SK1_INSTALL_PATH"] = "%s" % (install_path,)
 src_path = 'src'
 include_path = '/usr/include'
 modules = []
-scripts = ['src/script/sk1', ]
+scripts = ['src/script/uniconvertor', ]
 deb_scripts = []
 data_files = [
 ('/usr/share/applications', ['src/sk1.desktop', ]),
