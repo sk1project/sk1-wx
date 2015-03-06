@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Setup script for sK1 2.x
+# Setup script for UniConvertor 2.x
 #
 # Copyright (C) 2013-2015 Igor E. Novikov
 #
@@ -114,7 +114,7 @@ LONG_DEB_DESCRIPTION = ''' .
 #
 ############################################################
 install_path = '/usr/lib/%s-%s' % (NAME, VERSION)
-os.environ["SK1_INSTALL_PATH"] = "%s" % (install_path,)
+os.environ["APP_INSTALL_PATH"] = "%s" % (install_path,)
 src_path = 'src'
 include_path = '/usr/include'
 modules = []
@@ -133,8 +133,8 @@ fileptr2 = open('src/script/uniconvertor', 'wb')
 while True:
 	line = fileptr.readline()
 	if line == '': break
-	if '$SK1_INSTALL_PATH' in line:
-		line = line.replace('$SK1_INSTALL_PATH', install_path)
+	if '$APP_INSTALL_PATH' in line:
+		line = line.replace('$APP_INSTALL_PATH', install_path)
 	fileptr2.write(line)
 fileptr.close()
 fileptr2.close()
@@ -188,7 +188,7 @@ if len(sys.argv) > 1:
 			os.system('update-desktop-database')
 			print 'DONE!'
 		else:
-			print 'sK1 installation is not found!'
+			print 'UniConvertor installation is not found!'
 		sys.exit(0)
 
 from distutils.core import setup, Extension
@@ -244,8 +244,8 @@ setup(name=NAME,
 	download_url=DOWNLOAD_URL,
 	long_description=LONG_DESCRIPTION,
 	classifiers=CLASSIFIERS,
-	packages=libutils.get_source_structure(),
-	package_dir=libutils.get_package_dirs(),
+	packages=libutils.get_source_structure('src/uc2'),
+	package_dir=libutils.get_package_dirs('src/uc2'),
 	package_data=package_data,
 	data_files=data_files,
 	scripts=scripts,
@@ -277,7 +277,7 @@ if DEB_PACKAGE:
 					homepage=URL,
 					description=DESCRIPTION,
 					long_description=LONG_DEB_DESCRIPTION,
-					package_dirs=libutils.get_package_dirs(),
+					package_dirs=libutils.get_package_dirs('src/uc2'),
 					package_data=package_data,
 					scripts=scripts,
 					data_files=data_files,
@@ -288,4 +288,4 @@ if DEB_PACKAGE:
 if CLEAR_BUILD: libutils.clear_build()
 
 os.system('rm -rf MANIFEST')
-os.system('rm -rf src/script/sk1')
+os.system('rm -rf src/script/uniconvertor')
