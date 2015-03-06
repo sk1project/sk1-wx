@@ -120,30 +120,16 @@ include_path = '/usr/include'
 modules = []
 scripts = ['src/script/uniconvertor', ]
 deb_scripts = []
-data_files = [
-('/usr/share/applications', ['src/sk1.desktop', ]),
-('/usr/share/pixmaps', ['src/sk1.png', 'src/sk1.xpm', ]),
-]
-deb_depends = 'liblcms2, python (>=2.4), python (<<3.0), python-wxgtk2.8, '
+data_files = []
+deb_depends = 'liblcms2, python (>=2.4), python (<<3.0), '
 deb_depends += 'python-cairo, python-gtk2, python-reportlab, python-imaging, '
 deb_depends += 'python-wand'
 
-dirs = libutils.get_dirs_tree('src/sk1/share')
-share_dirs = []
-for item in dirs: share_dirs.append(os.path.join(item[8:], '*.*'))
-
-dirs = libutils.get_dirs_tree('src/sword/share')
-share_dirs_sword = []
-for item in dirs: share_dirs_sword.append(os.path.join(item[8:], '*.*'))
-
-package_data = {
-'sk1': share_dirs,
-'sword': share_dirs_sword,
-}
+package_data = {}
 
 #Preparing start script
-fileptr = open('src/script/sk1.tmpl', 'rb')
-fileptr2 = open('src/script/sk1', 'wb')
+fileptr = open('src/script/uniconvertor.tmpl', 'rb')
+fileptr2 = open('src/script/uniconvertor', 'wb')
 while True:
 	line = fileptr.readline()
 	if line == '': break
@@ -235,15 +221,6 @@ cairo_module = Extension('uc2.libcairo._libcairo',
 		sources=files, include_dirs=include_dirs,
 		libraries=['cairo'])
 modules.append(cairo_module)
-
-#trace_src = os.path.join(src_path, 'uc2', 'libtrace')
-#files = make_source_list(trace_src, ['_libtrace.c', ])
-#trace_module = Extension('uc2.libtrace._libtrace',
-#		define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
-#		sources=files,
-#		libraries=['potrace'])
-#modules.append(trace_module)
-
 
 pycms_src = os.path.join(src_path, 'uc2', 'cms')
 files = make_source_list(pycms_src, ['_cms2.c', ])
