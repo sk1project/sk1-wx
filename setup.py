@@ -22,17 +22,17 @@
 """
 Usage: 
 --------------------------------------------------------------------------
- to build package:   python setup.py build
- to install package:   python setup.py install
+ to build package:       python setup.py build
+ to install package:     python setup.py install
+ to remove installation: python setup.py uninstall
 --------------------------------------------------------------------------
  to create source distribution:   python setup.py sdist
 --------------------------------------------------------------------------
  to create binary RPM distribution:  python setup.py bdist_rpm
 --------------------------------------------------------------------------
  to create binary DEB distribution:  python setup.py bdist_deb
---------------------------------------------------------------------------
-
-help on available distribution formats: python setup.py bdist --help-formats
+--------------------------------------------------------------------------.
+ Help on available distribution formats: --help-formats
 """
 
 import os, sys
@@ -40,7 +40,11 @@ import os, sys
 import libutils
 from libutils import make_source_list, DEB_Builder
 
-#Flags
+############################################################
+#
+# Flags
+#
+############################################################
 UPDATE_MODULES = False
 DEB_PACKAGE = False
 CLEAR_BUILD = False
@@ -74,19 +78,12 @@ CLASSIFIERS = [
 "Topic :: Multimedia :: Graphics :: Editors :: Vector-Based",
 ]
 LONG_DESCRIPTION = '''
-UniConvertor is a multiplatform universal vector graphics translator.
-Uses PDXF model to convert one format to another. 
-
+sK1 is an open source vector graphics editor similar to CorelDRAW, 
+Adobe Illustrator, or Freehand. First of all sK1 is oriented for prepress 
+industry, therefore works with CMYK colorspace and produces CMYK-based PDF 
+and postscript output.
 sK1 Project (http://sk1project.org),
-Copyright (C) 2007-2013 by Igor E. Novikov
---------------------------------------------------------------------------------
-Supported input formats:  
- PDXF, CDR, CDT, CCX, CDRX, CMX, AI, PS, EPS, CGM, WMF, XFIG, SVG, SK, SK1, 
- AFF, PLT, DXF, DST, PES, EXP, PCS
---------------------------------------------------------------------------------
-Supported output formats: 
- PDXF, AI, SVG, SK, SK1, CGM, WMF, PDF, PS, PLT    
---------------------------------------------------------------------------------
+Copyright (C) 2007-2015 by Igor E. Novikov 
 '''
 LONG_DEB_DESCRIPTION = ''' .
  sK1 is an open source vector graphics editor similar to CorelDRAW, 
@@ -104,16 +101,39 @@ LONG_DEB_DESCRIPTION = ''' .
 # Build data
 #
 ############################################################
+install_path = '/usr/lib/%s-wx-%s' % (NAME, VERSION)
+os.environ["SK1_INSTALL_PATH"] = "%s" % (install_path,)
 src_path = 'src'
 include_path = '/usr/include'
 modules = []
-scripts = ['src/uniconvertor', ]
+scripts = ['src/script/sk1', ]
+deb_scripts = []
 data_files = [
-('/usr/share/mime/packages/', ['src/vnd.sk1project.pdxf-graphics.xml', ]),
-('/usr/share/mime-info/', ['src/sk1project.keys', 'src/sk1project.mime'])
+('/usr/share/applications', ['src/sk1.desktop', ]),
+('/usr/share/pixmaps', ['src/sk1.png', 'src/sk1.xpm', ]),
 ]
-deb_depends = 'python (>=2.4), python (<<3.0), '
-deb_depends += 'python-imaging, python-cairo, python-gtk2'
+deb_depends = 'python (>=2.4), python (<<3.0), python-imaging, python-wand, '
+deb_depends += 'python-cairo, python-gtk2, python-reportlab, liblcms2'
+
+dirs = libutils.get_dirs_tree('src/sk1/share')
+share_dirs = []
+for item in dirs: share_dirs.append(os.path.join(item[8:], '*.*'))
+
+package_data = {
+'sk1': share_dirs,
+}
+
+#Preparing start script
+fileptr = open('src/script/sk1.tmpl', 'rb')
+fileptr2 = open('src/script/sk1', 'wb')
+while True:
+	line = fileptr.readline()
+	if line == '': break
+	if '$SK1_INSTALL_PATH' in line:
+		line = line.replace('$SK1_INSTALL_PATH', install_path)
+	fileptr2.write(line)
+fileptr.close()
+fileptr2.close()
 
 ############################################################
 #
@@ -126,18 +146,46 @@ if len(sys.argv) == 1:
 	print __doc__
 	sys.exit(0)
 
-if len(sys.argv) > 1 and sys.argv[1] == 'bdist_rpm':
-	CLEAR_BUILD = True
+if len(sys.argv) > 1:
 
-if len(sys.argv) > 1 and sys.argv[1] == 'build_update':
-	UPDATE_MODULES = True
-	CLEAR_BUILD = True
-	sys.argv[1] = 'build'
+	if sys.argv[1] == 'bdist_rpm':
+		CLEAR_BUILD = True
 
-if len(sys.argv) > 1 and sys.argv[1] == 'bdist_deb':
-	DEB_PACKAGE = True
-	CLEAR_BUILD = True
-	sys.argv[1] = 'build'
+	if sys.argv[1] == 'build_update':
+		UPDATE_MODULES = True
+		CLEAR_BUILD = True
+		sys.argv[1] = 'build'
+
+	if sys.argv[1] == 'bdist_deb':
+		DEB_PACKAGE = True
+		CLEAR_BUILD = True
+		sys.argv[1] = 'build'
+
+	if sys.argv[1] == 'uninstall':
+		if os.path.isdir(install_path):
+			#removing sk1 folder
+			print 'REMOVE: ' + install_path
+			os.system('rm -rf ' + install_path)
+			#removing scripts
+			for item in scripts:
+				filename = os.path.basename(item)
+				print 'REMOVE: /usr/bin/' + filename
+				os.system('rm -rf /usr/bin/' + filename)
+			#removing data files
+			for item in data_files:
+				location = item[0]
+				file_list = item[1]
+				for file_item in file_list:
+					filename = os.path.basename(file_item)
+					filepath = os.path.join(location, filename)
+					print 'REMOVE: ' + filepath
+					os.system('rm -rf ' + filepath)
+			print 'Desktop database update: ',
+			os.system('update-desktop-database')
+			print 'DONE!'
+		else:
+			print 'sK1 installation is not found!'
+		sys.exit(0)
 
 from distutils.core import setup, Extension
 
@@ -178,39 +226,16 @@ modules.append(cairo_module)
 #		libraries=['potrace'])
 #modules.append(trace_module)
 
-#libimg_src = os.path.join(src_path, 'uc2', 'libimg')
-#files = make_source_list(libimg_src, ['_libimg.c', ])
-#include_dirs = make_source_list(include_path, ['ImageMagick', ])
-#libimg_module = Extension('uc2.libimg._libimg',
-#		define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
-#		sources=files, include_dirs=include_dirs,
-#		libraries=['MagickWand'])
-#modules.append(libimg_module)
 
-if os.path.isfile(os.path.join(include_path, 'lcms2.h')):
- 	pycms_src = os.path.join(src_path, 'uc2', 'cms')
- 	files = make_source_list(pycms_src, ['_cms2.c', ])
-	pycms_module = Extension('uc2.cms._cms',
-			define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
-			sources=files,
-			libraries=['lcms2'],
-			extra_compile_args=["-Wall"])
-	modules.append(pycms_module)
-	deb_depends = 'liblcms2, ' + deb_depends
-elif os.path.isfile(os.path.join(include_path, 'lcms.h')):
- 	pycms_src = os.path.join(src_path, 'uc2', 'cms')
- 	files = make_source_list(pycms_src, ['_cms.c', ])
-	pycms_module = Extension('uc2.cms._cms',
-			define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
-			sources=files,
-			libraries=['lcms'],
-			extra_compile_args=["-Wall"])
-	modules.append(pycms_module)
-	deb_depends = 'liblcms1, ' + deb_depends
-else:
-	msg = 'LittleCMS header file is not found! '
-	print 'ERROR>>> %s' % msg
-	sys.exit()
+pycms_src = os.path.join(src_path, 'uc2', 'cms')
+files = make_source_list(pycms_src, ['_cms2.c', ])
+pycms_module = Extension('uc2.cms._cms',
+		define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
+		sources=files,
+		libraries=['lcms2'],
+		extra_compile_args=["-Wall"])
+modules.append(pycms_module)
+
 
 setup(name=NAME,
 	version=VERSION,
@@ -226,6 +251,7 @@ setup(name=NAME,
 	classifiers=CLASSIFIERS,
 	packages=libutils.get_source_structure(),
 	package_dir=libutils.get_package_dirs(),
+	package_data=package_data,
 	data_files=data_files,
 	scripts=scripts,
 	ext_modules=modules)
@@ -257,9 +283,14 @@ if DEB_PACKAGE:
 					description=DESCRIPTION,
 					long_description=LONG_DEB_DESCRIPTION,
 					package_dirs=libutils.get_package_dirs(),
+					package_data=package_data,
 					scripts=scripts,
 					data_files=data_files,
-					deb_scripts=deb_scripts)
+					deb_scripts=deb_scripts,
+					dst=install_path)
 	bld.build()
 
 if CLEAR_BUILD: libutils.clear_build()
+
+os.system('rm -rf MANIFEST')
+os.system('rm -rf src/script/sk1')
