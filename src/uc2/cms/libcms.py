@@ -383,7 +383,7 @@ def cms_get_profile_name(profile):
 	profile - a valid lcms profile handle
 	Returns profile name as a string value.	
 	"""
-	return _cms.getProfileName(profile)
+	return _cms.getProfileName(profile).strip()
 
 def cms_get_profile_info(profile):
 	"""
@@ -392,7 +392,16 @@ def cms_get_profile_info(profile):
 	profile - a valid lcms profile handle
 	Returns profile description info as a string value.	
 	"""
-	return _cms.getProfileInfo(profile)
+	return _cms.getProfileInfo(profile).strip()
+
+def cms_get_profile_copyright(profile):
+	"""
+	This function is given mainly for building user interfaces.
+	
+	profile - a valid lcms profile handle
+	Returns profile copyright info as a string value.	
+	"""
+	return _cms.getProfileInfoCopyright(profile).strip()
 
 def cms_do_transform2(hTransform, channel1, channel2, channel3, channel4=0):
 	"""
