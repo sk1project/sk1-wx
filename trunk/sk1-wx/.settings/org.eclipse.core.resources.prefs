@@ -88,4 +88,6 @@ encoding//src/wal/const.py=utf-8
 encoding//src/wal/gctrls.py=utf-8
 encoding//src/wal/generic.py=utf-8
 encoding//src/wal/renderer.py=utf-8
+encoding//unit-tests/cms_tests/__init__.py=utf-8
+encoding//unit-tests/cms_testsuite.py=utf-8
 encoding/libutils.py=utf-8
