@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 #
-#	cms - module which provides binding
-#	to LittleCMS library.
+#	cms - module which provides binding to LittleCMS library.
 #
-#	Copyright (C) 2012 by Igor E. Novikov
+#	Copyright (C) 2012-2015 by Igor E. Novikov
 #
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
