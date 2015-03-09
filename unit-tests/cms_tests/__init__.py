@@ -49,10 +49,10 @@ class TestCmsFunctions(unittest.TestCase):
 	def test01_open_profile(self):
 		self.assertNotEqual(None, self.inProfile)
 		self.assertNotEqual(None, self.outProfile)
-# 		self.assertNotEqual(None, libcms.cms_create_srgb_profile())
-# 		self.assertNotEqual(None, libcms.cms_create_cmyk_profile())
-# 		self.assertNotEqual(None, libcms.cms_create_lab_profile())
-# 		self.assertNotEqual(None, libcms.cms_create_gray_profile())
+ 		self.assertNotEqual(None, libcms.cms_create_srgb_profile())
+ 		self.assertNotEqual(None, libcms.cms_create_cmyk_profile())
+ 		self.assertNotEqual(None, libcms.cms_create_lab_profile())
+ 		self.assertNotEqual(None, libcms.cms_create_gray_profile())
 
 	def test02_open_invalid_profile(self):
 		try:
