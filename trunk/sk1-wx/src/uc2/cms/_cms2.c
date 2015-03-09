@@ -91,6 +91,28 @@ pycms_OpenProfile(PyObject *self, PyObject *args) {
 }
 
 static PyObject *
+pycms_OpenProfileFromString(PyObject *self, PyObject *args) {
+
+	long size;
+	char *profile = NULL;
+	cmsHPROFILE hProfile;
+
+	if (!PyArg_ParseTuple(args, "sl", &profile, &size)){
+		Py_INCREF(Py_None);
+		return Py_None;
+	}
+
+	hProfile = 	cmsOpenProfileFromMem(profile, size);
+
+	if(hProfile==NULL) {
+		Py_INCREF(Py_None);
+		return Py_None;
+	}
+
+	return Py_BuildValue("O", PyCObject_FromVoidPtr((void *)hProfile, (void *)cmsCloseProfile));
+}
+
+static PyObject *
 pycms_CreateRGBProfile(PyObject *self, PyObject *args) {
 
 	cmsHPROFILE hProfile;
@@ -480,6 +502,7 @@ static
 PyMethodDef pycms_methods[] = {
 	{"getVersion", pycms_GetVersion, METH_VARARGS},
 	{"openProfile", pycms_OpenProfile, METH_VARARGS},
+	{"openProfileFromString", pycms_OpenProfileFromString, METH_VARARGS},
 	{"createRGBProfile", pycms_CreateRGBProfile, METH_VARARGS},
 	{"createLabProfile", pycms_CreateLabProfile, METH_VARARGS},
 	{"createGrayProfile", pycms_CreateGrayProfile, METH_VARARGS},
