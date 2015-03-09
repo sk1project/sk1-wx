@@ -35,8 +35,8 @@ Usage:
 
 import os, sys
 
-import libutils
-from libutils import make_source_list, DEB_Builder
+import buildutils
+from buildutils import make_source_list, DEB_Builder
 
 ############################################################
 #
@@ -114,11 +114,11 @@ deb_depends = 'liblcms2, python (>=2.4), python (<<3.0), python-wxgtk2.8, '
 deb_depends += 'python-cairo, python-gtk2, python-reportlab, python-imaging, '
 deb_depends += 'python-wand'
 
-dirs = libutils.get_dirs_tree('src/sk1/share')
+dirs = buildutils.get_dirs_tree('src/sk1/share')
 share_dirs = []
 for item in dirs: share_dirs.append(os.path.join(item[8:], '*.*'))
 
-dirs = libutils.get_dirs_tree('src/sword/share')
+dirs = buildutils.get_dirs_tree('src/sword/share')
 share_dirs_sword = []
 for item in dirs: share_dirs_sword.append(os.path.join(item[8:], '*.*'))
 
@@ -244,8 +244,8 @@ setup(name=NAME,
 	download_url=DOWNLOAD_URL,
 	long_description=LONG_DESCRIPTION,
 	classifiers=CLASSIFIERS,
-	packages=libutils.get_source_structure(),
-	package_dir=libutils.get_package_dirs(),
+	packages=buildutils.get_source_structure(),
+	package_dir=buildutils.get_package_dirs(),
 	package_data=package_data,
 	data_files=data_files,
 	scripts=scripts,
@@ -254,7 +254,7 @@ setup(name=NAME,
 #################################################
 # .py source compiling
 #################################################
-libutils.compile_sources()
+buildutils.compile_sources()
 
 
 ##############################################
@@ -263,7 +263,7 @@ libutils.compile_sources()
 # automating build and native extension copying
 # into package directory
 ##############################################
-if UPDATE_MODULES: libutils.copy_modules(modules)
+if UPDATE_MODULES: buildutils.copy_modules(modules)
 
 
 #################################################
@@ -277,7 +277,7 @@ if DEB_PACKAGE:
 					homepage=URL,
 					description=DESCRIPTION,
 					long_description=LONG_DEB_DESCRIPTION,
-					package_dirs=libutils.get_package_dirs(),
+					package_dirs=buildutils.get_package_dirs(),
 					package_data=package_data,
 					scripts=scripts,
 					data_files=data_files,
@@ -285,7 +285,7 @@ if DEB_PACKAGE:
 					dst=install_path)
 	bld.build()
 
-if CLEAR_BUILD: libutils.clear_build()
+if CLEAR_BUILD: buildutils.clear_build()
 
 os.system('rm -rf MANIFEST')
 os.system('rm -rf src/script/sk1')
