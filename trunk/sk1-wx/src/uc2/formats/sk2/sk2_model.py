@@ -33,12 +33,14 @@ class DocumentObject(TextModelObject):
 	objects. Provides common object properties.
 	"""
 
-	def resolve(self):
+	def resolve(self, name=''):
 		is_leaf = True
-		if self.cid < PRIMITIVE_CLASS: is_leaf = False
-		if self.cid == GUIDE: is_leaf = True
-		name = CID_TO_NAME[self.cid]
 		info = ''
+		if self.cid < PRIMITIVE_CLASS:
+			is_leaf = False
+			info = '%d' % (len(self.childs))
+		if self.cid == GUIDE: is_leaf = True
+		if not name: name = CID_TO_NAME[self.cid]
 		return (is_leaf, name, info)
 
 	def get_resources(self):
@@ -150,10 +152,7 @@ class Page(StructuralObject):
 			self.page_format = deepcopy(parent.page_format)
 
 	def resolve(self):
-		is_leaf = False
-		name = '%s' % (self.name)
-		info = '%d' % (len(self.childs))
-		return (is_leaf, name, info)
+		return StructuralObject.resolve(self, '%s' % (self.name))
 
 
 class Layer(StructuralObject):
@@ -184,10 +183,7 @@ class Layer(StructuralObject):
 		self.childs = []
 
 	def resolve(self):
-		is_leaf = False
-		name = '%s' % (self.name)
-		info = '%d' % (len(self.childs))
-		return (is_leaf, name, info)
+		return StructuralObject.resolve(self, '%s' % (self.name))
 
 	def update(self):
 		if isinstance(self.color, str):
@@ -215,12 +211,6 @@ class GuideLayer(Layer):
 		self.color = '' + self.config.guide_layer_color
 		self.properties = [] + self.config.guide_layer_propeties
 
-	def resolve(self):
-		is_leaf = False
-		name = '%s' % (CID_TO_NAME[self.cid])
-		info = '%d' % (len(self.childs))
-		return (is_leaf, name, info)
-
 class GridLayer(Layer):
 	"""
 	Represents guide line layer.
@@ -238,12 +228,6 @@ class GridLayer(Layer):
 		self.color = [] + self.config.grid_layer_color
 		self.grid = [] + self.config.grid_layer_geometry
 		self.properties = [] + self.config.grid_layer_propeties
-
-	def resolve(self):
-		is_leaf = False
-		name = '%s' % (CID_TO_NAME[self.cid])
-		info = '%d' % (len(self.childs))
-		return (is_leaf, name, info)
 
 class LayerGroup(StructuralObject):
 	"""
@@ -274,12 +258,6 @@ class MasterLayers(LayerGroup):
 		self.cid = MASTER_LAYERS
 		self.childs = []
 
-	def resolve(self):
-		is_leaf = False
-		name = '%s' % (CID_TO_NAME[self.cid])
-		info = '%d' % (len(self.childs))
-		return (is_leaf, name, info)
-
 class DesktopLayers(LayerGroup):
 	"""
 	Represents container for desktop layers applied for all pages.
@@ -292,12 +270,6 @@ class DesktopLayers(LayerGroup):
 		LayerGroup.__init__(self, config, parent)
 		self.cid = DESKTOP_LAYERS
 		self.childs = []
-
-	def resolve(self):
-		is_leaf = False
-		name = '%s' % (CID_TO_NAME[self.cid])
-		info = '%d' % (len(self.childs))
-		return (is_leaf, name, info)
 
 class Guide(StructuralObject):
 	"""
@@ -372,12 +344,6 @@ class Group(SelectableObject):
 		for item in childs_snapshots:
 			item[0].set_trafo_snapshot(item)
 
-	def resolve(self):
-		is_leaf = False
-		name = '%s' % (CID_TO_NAME[self.cid])
-		info = '%d' % (len(self.childs))
-		return (is_leaf, name, info)
-
 class Container(Group):
 
 	cid = CONTAINER
@@ -398,13 +364,6 @@ class Container(Group):
 	def update_bbox(self):
 		self.cache_container = self.childs[0]
 		self.cache_bbox = deepcopy(self.cache_container.cache_bbox)
-
-	def resolve(self):
-		is_leaf = False
-		name = '%s' % (CID_TO_NAME[self.cid])
-		info = '%d' % (len(self.childs))
-		return (is_leaf, name, info)
-
 
 
 class PrimitiveObject(SelectableObject):
