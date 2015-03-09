@@ -83,8 +83,7 @@ def cms_open_profile_from_string(profilestr):
 	profilestr - ICC profile in python string
 	"""
 	ln = len(profilestr)
-	if not ln:
-		raise CmsError, "Empty profile string provided"
+	if not ln: raise CmsError, "Empty profile string provided"
 
 	result = _cms.openProfileFromString(profilestr, ln)
 
@@ -334,15 +333,17 @@ def cms_create_proofing_transform(inputProfile, inMode,
 	if proofingIntent not in (0, 1, 2, 3):
 		raise CmsError, "proofingIntent must be an integer between 0 and 3"
 
-	result = _cms.buildProofingTransform(inputProfile, inMode, outputProfile, outMode,
-										proofingProfile, renderingIntent, proofingIntent, flags)
+	result = _cms.buildProofingTransform(inputProfile, inMode,
+										outputProfile, outMode,
+										proofingProfile, renderingIntent,
+										proofingIntent, flags)
 
 	if result is None:
 		raise CmsError, "Cannot create requested proofing transform: %s %s" % (inMode, outMode)
 
 	return result
 
-def cms_do_transform(hTransform, inputBuffer, outputBuffer, buffersSizeInPixels=None):
+def cms_do_transform(hTransform, inbuff, outbuff, buffersSizeInPixels=None):
 	"""
 	Transform color values from inputBuffer to outputBuffer using provided lcms transform handle.
 	
@@ -352,14 +353,12 @@ def cms_do_transform(hTransform, inputBuffer, outputBuffer, buffersSizeInPixels=
 	             Can be [0,0,0,0].
 	buffersSizeInPixels - parameter for python-lcms compatibility. Can be skipped.               
 	"""
-
-	if type(inputBuffer) is types.ListType and type(outputBuffer) is types.ListType:
-
-		outputBuffer[0], outputBuffer[1], outputBuffer[2], outputBuffer[3] = _cms.transformPixel(hTransform,
-																									inputBuffer[0],
-																									inputBuffer[1],
-																									inputBuffer[2],
-																									inputBuffer[3])
+	if type(inbuff) is types.ListType and type(outbuff) is types.ListType:
+		ret = _cms.transformPixel(hTransform, *inbuff)
+		outbuff[0] = ret[0]
+		outbuff[1] = ret[1]
+		outbuff[2] = ret[2]
+		outbuff[3] = ret[3]
 		return
 
 	else:
@@ -375,8 +374,6 @@ def cms_do_bitmap_transform(hTransform, inImage, inMode, outMode):
 	Currently supports L, RGB, CMYK and LAB modes only.
 	Returns new PIL image object in outMode colorspace.
 	"""
-	if not inImage.mode == inMode:
-		raise CmsError, "incorrect inMode"
 
 	if not inImage.mode in uc2const.IMAGE_COLORSPACES:
 		raise CmsError, "unsupported image type: %s" % inImage.mode
