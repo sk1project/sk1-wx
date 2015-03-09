@@ -42,6 +42,7 @@ encoding//src/uc2/__init__.py=utf-8
 encoding//src/uc2/application.py=utf-8
 encoding//src/uc2/cms/__init__.py=utf-8
 encoding//src/uc2/cms/libcms.py=utf-8
+encoding//src/uc2/cms/srgb_profile_rc.py=utf-8
 encoding//src/uc2/formats/__init__.py=utf-8
 encoding//src/uc2/formats/cdr/__init__.py=utf-8
 encoding//src/uc2/formats/cdr/cdr_translators.py=utf-8
