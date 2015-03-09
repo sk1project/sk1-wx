@@ -39,18 +39,14 @@ import libutils
 from libutils import make_source_list, DEB_Builder
 
 ############################################################
-#
 # Flags
-#
 ############################################################
 UPDATE_MODULES = False
 DEB_PACKAGE = False
 CLEAR_BUILD = False
 
 ############################################################
-#
 # Package description
-#
 ############################################################
 NAME = 'uniconvertor'
 VERSION = '2.0'
@@ -107,9 +103,7 @@ LONG_DEB_DESCRIPTION = ''' .
 '''
 
 ############################################################
-#
 # Build data
-#
 ############################################################
 install_path = '/usr/lib/%s-%s' % (NAME, VERSION)
 os.environ["APP_INSTALL_PATH"] = "%s" % (install_path,)
@@ -138,9 +132,7 @@ fileptr.close()
 fileptr2.close()
 
 ############################################################
-#
 # Main build procedure
-#
 ############################################################
 
 if len(sys.argv) == 1:
@@ -190,6 +182,10 @@ if len(sys.argv) > 1:
 		sys.exit(0)
 
 from distutils.core import setup, Extension
+
+############################################################
+# Native extensions
+############################################################
 
 filter_src = os.path.join(src_path, 'uc2', 'utils', 'streamfilter')
 files = ['streamfilter.c', 'filterobj.c', 'linefilter.c',
@@ -249,24 +245,24 @@ setup(name=NAME,
 	scripts=scripts,
 	ext_modules=modules)
 
-#################################################
+############################################################
 # .py source compiling
-#################################################
+############################################################
 libutils.compile_sources()
 
 
-##############################################
+############################################################
 # This section for developing purpose only
 # Command 'python setup.py build_update' allows
 # automating build and native extension copying
 # into package directory
-##############################################
+############################################################
 if UPDATE_MODULES: libutils.copy_modules(modules)
 
 
-#################################################
+############################################################
 # Implementation of bdist_deb command
-#################################################
+############################################################
 if DEB_PACKAGE:
 	bld = DEB_Builder(name=NAME,
 					version=VERSION,
