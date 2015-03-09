@@ -74,6 +74,26 @@ def cms_open_profile_from_file(profileFilename, mode=None):
 
 	return result
 
+def cms_open_profile_from_string(profilestr):
+	"""	
+	Returns a handle to lcms profile wrapped as a Python object. 
+	The handle doesn't require to be closed after usage because
+	on object delete operation Python calls native cms_close_profile()
+	function automatically  
+
+	profilestr - ICC profile in python string
+	"""
+	ln = len(profilestr)
+	if not ln:
+		raise CmsError, "Empty profile string provided"
+
+	result = _cms.openProfileFromString(profilestr, ln)
+
+	if result is None:
+		raise CmsError, "It seems provided profile string is invalid!"
+
+	return result
+
 def cms_create_srgb_profile():
 	"""	
 	Artificial functionality. The function emulates built-in sRGB
