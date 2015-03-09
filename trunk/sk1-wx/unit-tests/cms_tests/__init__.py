@@ -16,17 +16,22 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest, os
+from PIL import Image
+
 from uc2 import uc2const
 from uc2.cms import libcms
 
 _pkgdir = __path__[0]
 
+def get_filepath(filename):
+	return os.path.join(_pkgdir, 'cms_data', filename)
+
 class TestCmsFunctions(unittest.TestCase):
 
 	def setUp(self):
-		rgb_profile = os.path.join(_pkgdir, 'cms_data', 'sRGB.icm')
+		rgb_profile = get_filepath('sRGB.icm')
 		self.inProfile = libcms.cms_open_profile_from_file(rgb_profile)
-		cmyk_profile = os.path.join(_pkgdir, 'cms_data', 'GenericCMYK.icm')
+		cmyk_profile = get_filepath('GenericCMYK.icm')
 		self.outProfile = libcms.cms_open_profile_from_file(cmyk_profile)
 		self.transform = libcms.cms_create_transform(self.inProfile,
 						uc2const.TYPE_RGBA_8, self.outProfile, uc2const.TYPE_CMYK_8,
@@ -39,6 +44,7 @@ class TestCmsFunctions(unittest.TestCase):
 	def tearDown(self):
 		pass
 
+	#---Profile management tests
 
 	def test01_open_profile(self):
 		self.assertNotEqual(None, self.inProfile)
@@ -50,7 +56,7 @@ class TestCmsFunctions(unittest.TestCase):
 
 	def test02_open_invalid_profile(self):
 		try:
-			profile = os.path.join(_pkgdir, 'cms_data', 'empty.icm')
+			profile = get_filepath('empty.icm')
 			libcms.cms_open_profile_from_file(profile)
 		except libcms.CmsError:
 			return
@@ -58,11 +64,13 @@ class TestCmsFunctions(unittest.TestCase):
 
 	def test03_open_absent_profile(self):
 		try:
-			profile = os.path.join(_pkgdir, 'cms_data', 'xxx.icm')
+			profile = get_filepath('xxx.icm')
 			libcms.cms_open_profile_from_file(profile)
 		except libcms.CmsError:
 			return
 		self.fail()
+
+	#---Transform related tests
 
 	def test04_create_transform(self):
 		self.assertNotEqual(None, libcms.cms_create_transform(self.inProfile,
@@ -115,6 +123,8 @@ class TestCmsFunctions(unittest.TestCase):
 		except libcms.CmsError:
 			return
 		self.fail()
+
+	#---Proof transform related tests
 
 	def test08_create_proofing_transform(self):
 		self.assertNotEqual(None, libcms.cms_create_proofing_transform(self.inProfile,
@@ -192,6 +202,8 @@ class TestCmsFunctions(unittest.TestCase):
 			return
 		self.fail()
 
+	#---Alarmcodes related tests
+
 	def test14_set_alarm_codes_with_null_values(self):
 		try:
 			libcms.cms_set_alarm_codes(0, 1, 1)
@@ -262,6 +274,8 @@ class TestCmsFunctions(unittest.TestCase):
 
 		self.assertEqual(counter, 10)
 
+	#---Color transformation related tests
+
 	def test17_do_transform_with_null_input(self):
 		rgb = libcms.COLORB()
 		cmyk = libcms.COLORB()
@@ -328,6 +342,8 @@ class TestCmsFunctions(unittest.TestCase):
 			return
 		self.fail()
 
+	#---Pixmap related tests
+
 	def test23_do_transform2_with_null_input(self):
 		cmyk = libcms.cms_do_transform2(self.transform, 0, 0, 0)
 		self.assertNotEqual(0, cmyk[0])
@@ -349,14 +365,72 @@ class TestCmsFunctions(unittest.TestCase):
 		self.assertNotEqual(0, cmyk[2])
 		self.assertNotEqual(0, cmyk[3])
 
-	def test26_get_profile_name(self):
+	#---Bitmap related tests
+
+	def test26_DoBitmapTransform(self):
+		inImage = Image.open(get_filepath('black100x100.png'))
+		pixel = inImage.getpixel((1, 1))
+		self.assertEqual(3, len(pixel))
+		outImage = libcms.cms_do_bitmap_transform(self.transform2,
+							inImage, uc2const.TYPE_RGB_8, uc2const.TYPE_CMYK_8)
+		pixel = outImage.getpixel((1, 1))
+		self.assertEqual(4, len(pixel))
+
+		inImage = Image.open(get_filepath('white100x100.png'))
+		pixel = inImage.getpixel((1, 1))
+		self.assertEqual(3, len(pixel))
+		outImage = libcms.cms_do_bitmap_transform(self.transform2,
+							inImage, uc2const.TYPE_RGB_8, uc2const.TYPE_CMYK_8)
+		pixel = outImage.getpixel((1, 1))
+		self.assertEqual(4, len(pixel))
+
+		inImage = Image.open(get_filepath('color100x100.png'))
+		pixel = inImage.getpixel((1, 1))
+		self.assertEqual(3, len(pixel))
+		outImage = libcms.cms_do_bitmap_transform(self.transform2,
+							inImage, uc2const.TYPE_RGB_8, uc2const.TYPE_CMYK_8)
+		pixel = outImage.getpixel((1, 1))
+		self.assertEqual(4, len(pixel))
+
+	def test27_DoBitmapTransformWithUnsupportedImage(self):
+		inImage = Image.open(get_filepath('black100x100.png'))
+		inImage.load()
+		inImage = inImage.convert("YCbCr")
+		try:
+			outImage = libcms.cms_do_bitmap_transform(self.transform2,
+							inImage, uc2const.TYPE_RGB_8, uc2const.TYPE_CMYK_8)
+		except libcms.CmsError:
+			return
+		self.fail()
+
+	def test28_DoBitmapTransformWithUnsupportedInMode(self):
+		inImage = Image.open(get_filepath('black100x100.png'))
+		try:
+			outImage = libcms.cms_do_bitmap_transform(self.transform2,
+							inImage, "YCbCr", uc2const.TYPE_CMYK_8)
+		except libcms.CmsError:
+			return
+		self.fail()
+
+	def test29_DoBitmapTransformWithUnsupportedOutMode(self):
+		inImage = Image.open(get_filepath('black100x100.png'))
+		try:
+			outImage = libcms.cms_do_bitmap_transform(self.transform2,
+							inImage, uc2const.TYPE_RGB_8, "YCbCr")
+		except libcms.CmsError:
+			return
+		self.fail()
+
+	#---Profile info related tests
+
+	def test30_get_profile_name(self):
 		name = libcms.cms_get_profile_name(self.outProfile)
 		self.assertEqual(name, 'Fogra27L CMYK Coated Press')
 
-	def test27_get_profile_info(self):
+	def test31_get_profile_info(self):
 		name = libcms.cms_get_profile_info(self.outProfile)
 		self.assertEqual(name[:15], 'Offset printing')
 
-	def test28_get_profile_copyright(self):
+	def test32_get_profile_copyright(self):
 		name = libcms.cms_get_profile_copyright(self.outProfile)
 		self.assertEqual(name, 'Public Domain')
