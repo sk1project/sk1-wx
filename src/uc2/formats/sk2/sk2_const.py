@@ -15,6 +15,8 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from uc2 import uc2const
+
 #PDXF file structure elements
 DOC_MIME = 'application/vnd.sk1project.pdxf-graphics'
 
@@ -47,6 +49,7 @@ ORIGINS = [DOC_ORIGIN_CENTER, DOC_ORIGIN_LL, DOC_ORIGIN_LU]
 NORMAL_TRAFO = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
 CORNERS = [0.0, 0.0, 0.0, 0.0]
 EMPTY_STYLE = [[], [], [], []]
+EMPTY_IMAGE_STYLE = [[], []]
 
 CURVE_CLOSED = 1
 CURVE_OPENED = 0
@@ -95,3 +98,8 @@ JOIN_BEVEL = 2
 CAP_BUTT = 1
 CAP_ROUND = 2
 CAP_SQUARE = 3
+
+CMYK_BLACK = [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, 'Black']
+CMYK_WHITE = [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 0.0], 1.0, 'White']
+RGB_BLACK = [uc2const.COLOR_RGB, [0.0, 0.0, 0.0], 1.0, 'Black']
+RGB_WHITE = [uc2const.COLOR_RGB, [1.0, 1.0, 1.0], 1.0, 'White']
