@@ -20,8 +20,9 @@ import cairo
 from copy import deepcopy
 from base64 import b64decode, b64encode
 from cStringIO import StringIO
-from PIL import Image
+from PIL import Image, ImageOps
 
+from uc2.cms import rgb_to_hexcolor
 from uc2.libimg.imwand import check_image_file, process_image
 
 def check_image(path):
@@ -30,21 +31,46 @@ def check_image(path):
 def update_image(cms, image_obj):
 	png_data = StringIO()
 
-	if not image_obj.cache_image:
-		raw_content = b64decode(image_obj.bitmap)
-		raw_image = Image.open(StringIO(raw_content))
-		raw_image.load()
+	raw_content = b64decode(image_obj.bitmap)
+	raw_image = Image.open(StringIO(raw_content))
+	raw_image.load()
 
-		image_obj.cache_image = cms.get_display_image(raw_image)
+	cache_image = None
 
-		if image_obj.alpha_channel:
-			raw_alpha = b64decode(image_obj.alpha_channel)
-			raw_alpha = Image.open(StringIO(raw_alpha))
-			image_obj.cache_image = image_obj.cache_image.convert('RGBA')
-			image_obj.cache_image.putalpha(raw_alpha)
+	if image_obj.colorspace in ['1', 'L']:
+		if image_obj.colorspace == '1':
+			raw_image = raw_image.convert('L')
+		fg = image_obj.style[3][0]
+		bg = image_obj.style[3][1]
 
+		if fg and bg:
+			fg = rgb_to_hexcolor(cms.get_display_color(fg))
+			bg = rgb_to_hexcolor(cms.get_display_color(bg))
+			cache_image = Image.new('RGB', image_obj.size, fg)
+			bg_image = Image.new('RGB', image_obj.size, bg)
+			cache_image.paste(bg_image, (0, 0), raw_image)
+		elif fg and not bg:
+			fg = rgb_to_hexcolor(cms.get_display_color(fg))
+			cache_image = Image.new('RGBA', image_obj.size, fg)
+			cache_image.putalpha(ImageOps.invert(raw_image))
+		elif bg and not fg:
+			bg = rgb_to_hexcolor(cms.get_display_color(bg))
+			cache_image = Image.new('RGBA', image_obj.size, bg)
+			cache_image.putalpha(raw_image)
+		else:
+			cache_image = Image.new('RGBA', image_obj.size, '#000000')
+			cache_image.putalpha(Image.new('L', image_obj.size, 0))
+	else:
+		cache_image = cms.get_display_image(raw_image)
 
-	image_obj.cache_image.save(png_data, format='PNG')
+	if image_obj.alpha_channel:
+		raw_alpha = b64decode(image_obj.alpha_channel)
+		raw_alpha = Image.open(StringIO(raw_alpha))
+		cache_image = cache_image.convert('RGBA')
+		cache_image.putalpha(raw_alpha)
+
+	if cache_image:
+		cache_image.save(png_data, format='PNG')
 
 	png_data.seek(0)
 	image_obj.cache_cdata = cairo.ImageSurface.create_from_png(png_data)
@@ -109,9 +135,9 @@ def set_image_data(cms, image_obj, raw_content):
 		base_image.save(fobj, format='PNG')
 		bmp = b64encode(fobj.getvalue())
 
-	style = deepcopy(image_obj.config.default_cmyk_image_style)
+	style = deepcopy(image_obj.config.default_image_style)
 	if base_image.mode in ['RGB', 'LAB']:
-		style = deepcopy(image_obj.config.default_rgb_image_style)
+		style[3] = deepcopy(image_obj.config.default_rgb_image_style)
 
 	if alpha_stream:
 		alpha_image = Image.open(alpha_stream)
@@ -129,7 +155,7 @@ def set_image_data(cms, image_obj, raw_content):
 
 	image_obj.bitmap = bmp
 	image_obj.alpha_channel = alpha
-	image_obj.image_style = style
+	image_obj.style = style
 
 
 

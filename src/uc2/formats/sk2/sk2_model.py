@@ -573,13 +573,11 @@ class Pixmap(PrimitiveObject):
 	alpha_channel = ''
 	size = (100, 100)
 	colorspace = None
-	image_style = []
 
 	cache_paths = None
 	cache_cpath = None
 	cache_cdata = None
 	cache_gray_cdata = None
-	cache_image = None
 
 	def __init__(self, config, parent=None,
 				bitmap='',

@@ -179,22 +179,31 @@ class AbstractAPI:
 	def _set_objs_styles(self, objs_styles):
 		for obj, style in objs_styles:
 			obj.style = style
+			if obj.cid == model.PIXMAP:
+				obj.cache_cdata = None
 
 	def _fill_objs(self, objs, color):
 		for obj in objs:
 			style = deepcopy(obj.style)
-			if color:
-				fill = style[0]
-				new_fill = []
-				if not fill:
-					new_fill.append(self.sk2_cfg.default_fill_rule)
+			if obj.cid == model.PIXMAP:
+				if color:
+					style[3][0] = deepcopy(color)
 				else:
-					new_fill.append(fill[0])
-				new_fill.append(sk2_const.FILL_SOLID)
-				new_fill.append(deepcopy(color))
-				style[0] = new_fill
+					style[3][0] = []
+				obj.cache_cdata = None
 			else:
-				style[0] = []
+				if color:
+					fill = style[0]
+					new_fill = []
+					if not fill:
+						new_fill.append(self.sk2_cfg.default_fill_rule)
+					else:
+						new_fill.append(fill[0])
+					new_fill.append(sk2_const.FILL_SOLID)
+					new_fill.append(deepcopy(color))
+					style[0] = new_fill
+				else:
+					style[0] = []
 			obj.style = style
 
 	def _set_paths_and_trafo(self, obj, paths, trafo):
@@ -236,16 +245,23 @@ class AbstractAPI:
 	def _stroke_objs(self, objs, color):
 		for obj in objs:
 			style = deepcopy(obj.style)
-			if color:
-				stroke = style[1]
-				if not stroke:
-					new_stroke = deepcopy(self.sk2_cfg.default_stroke)
+			if obj.cid == model.PIXMAP:
+				if color:
+					style[3][1] = deepcopy(color)
 				else:
-					new_stroke = deepcopy(stroke)
-				new_stroke[2] = deepcopy(color)
-				style[1] = new_stroke
+					style[3][1] = []
+				obj.cache_cdata = None
 			else:
-				style[1] = []
+				if color:
+					stroke = style[1]
+					if not stroke:
+						new_stroke = deepcopy(self.sk2_cfg.default_stroke)
+					else:
+						new_stroke = deepcopy(stroke)
+					new_stroke[2] = deepcopy(color)
+					style[1] = new_stroke
+				else:
+					style[1] = []
 			obj.style = style
 
 	def _set_parent(self, objs, parent):
