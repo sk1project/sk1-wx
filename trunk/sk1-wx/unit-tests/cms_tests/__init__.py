@@ -434,3 +434,19 @@ class TestCmsFunctions(unittest.TestCase):
 	def test32_get_profile_copyright(self):
 		name = libcms.cms_get_profile_copyright(self.outProfile)
 		self.assertEqual(name, 'Public Domain')
+
+	#---Embedded profile related tests
+	def test33_get_embedded_profile(self):
+		img = Image.open(get_filepath('CustomRGB.jpg'))
+		profile = img.info.get('icc_profile')
+		try:
+			custom_profile = libcms.cms_open_profile_from_string(profile)
+			transform = libcms.cms_create_transform(custom_profile,
+							uc2const.TYPE_RGB_8, self.inProfile, uc2const.TYPE_RGB_8,
+							uc2const.INTENT_PERCEPTUAL, uc2const.cmsFLAGS_NOTPRECALC)
+			img2 = libcms.cms_do_bitmap_transform(transform,
+										img, uc2const.TYPE_RGB_8, uc2const.TYPE_RGB_8)
+		except libcms.CmsError:
+			self.fail()
+
+
