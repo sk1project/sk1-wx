@@ -79,6 +79,7 @@ class SK2_Config(XmlConfigParser):
 	default_structural_style = []
 	default_cmyk_image_style = [sk2_const.CMYK_BLACK, sk2_const.CMYK_WHITE]
 	default_rgb_image_style = [sk2_const.RGB_BLACK, sk2_const.RGB_WHITE]
+	default_image_style = [[], [], [], default_cmyk_image_style]
 
 	#============== COLOR MANAGEMENT SECTION ===================
 	default_rgb_profile = ''

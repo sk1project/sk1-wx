@@ -15,12 +15,17 @@ For spot color:
 i.e. values list contains RGB and CMYK values
 
 'palette' - this field is optional and used to identify palette
-
 -------------------------------------------------------------------------------
 
 STYLE DEFINITION:
 
-[fill, stroke, text, structural]
+[fill, stroke, text, image_style]
+
+-------------------------------------------------------------------------------
+
+IMAGE STYLE DEFINITION:
+
+[foreground color, background color]
 
 -------------------------------------------------------------------------------
 
