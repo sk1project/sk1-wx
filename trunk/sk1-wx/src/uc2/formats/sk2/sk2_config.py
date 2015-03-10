@@ -52,7 +52,7 @@ class SK2_Config(XmlConfigParser):
 
 	default_stroke_rule = sk2_const.STROKE_MIDDLE
 	default_stroke_width = 0.1 * uc2const.mm_to_pt
-	default_stroke_color = [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, 'Black']
+	default_stroke_color = sk2_const.CMYK_BLACK
 	default_stroke_dash = []
 	default_stroke_cap = sk2_const.CAP_BUTT
 	default_stroke_join = sk2_const.JOIN_MITER
@@ -77,6 +77,8 @@ class SK2_Config(XmlConfigParser):
 
 	default_text_style = []
 	default_structural_style = []
+	default_cmyk_image_style = [sk2_const.CMYK_BLACK, sk2_const.CMYK_WHITE]
+	default_rgb_image_style = [sk2_const.RGB_BLACK, sk2_const.RGB_WHITE]
 
 	#============== COLOR MANAGEMENT SECTION ===================
 	default_rgb_profile = ''

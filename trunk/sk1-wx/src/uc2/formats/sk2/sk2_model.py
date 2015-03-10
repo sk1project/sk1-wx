@@ -573,6 +573,7 @@ class Pixmap(PrimitiveObject):
 	alpha_channel = ''
 	size = (100, 100)
 	colorspace = None
+	image_style = []
 
 	cache_paths = None
 	cache_cpath = None
@@ -584,8 +585,11 @@ class Pixmap(PrimitiveObject):
 				bitmap='',
 				alpha_channel='',
 				size=(100, 100),
-				trafo=[] + sk2_const.NORMAL_TRAFO
-				):
+				trafo=[] + sk2_const.NORMAL_TRAFO,
+				image_style=[] + sk2_const.EMPTY_IMAGE_STYLE):
+		self.cid = PIXMAP
+		self.config = config
+		self.parent = parent
 		self.bitmap = bitmap
 		self.alpha_channel = alpha_channel
 		self.size = size
