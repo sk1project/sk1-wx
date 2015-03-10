@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 #
 #	Copyright (C) 2012 by Igor E. Novikov
-#	
+#
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
 #	the Free Software Foundation, either version 3 of the License, or
 #	(at your option) any later version.
-#	
+#
 #	This program is distributed in the hope that it will be useful,
 #	but WITHOUT ANY WARRANTY; without even the implied warranty of
 #	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #	GNU General Public License for more details.
-#	
+#
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -22,6 +22,7 @@ from uc2.formats.generic import GENERIC_TAGS
 LIST_FIELDS = ['cache_paths', 'cache_path', 'path', 'paths', 'style', 'styles',
 			'cache_fields']
 BIN_FIELDS = ['chunk']
+B64_FIELDS = ['bitmap', 'alpha_channel']
 
 class FieldListModel(gtk.TreeStore):
 
@@ -77,6 +78,8 @@ class FieldListModel(gtk.TreeStore):
 						if not len(value) == 4 and not value[:3] in ['CDR', 'CMX']:
 							value = value.encode('hex')
 							if len(value) > 20:value = value[:20] + '...'
+					if key in B64_FIELDS:
+						if len(value) > 50:value = value[:50] + '...'
 					self.set(child_iter, 0, key + ' ', 1, value)
 
 
