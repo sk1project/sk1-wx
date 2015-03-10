@@ -559,6 +559,22 @@ class ColorManager:
 			return img.copy()
 		return self.do_bitmap_transform(img, outmode, cs_out)
 
+	def adjust_image(self, img, profilestr):
+		"""
+		Adjust image with embedded profile to similar colorspace
+		defined by current profile.
+		profilestr - embedded profile as a python string.
+		Returns new image instance.
+		"""
+		custom_profile = libcms.cms_open_profile_from_string(profilestr)
+		cs_in = cs_out = IMAGE_TO_COLOR[img.mode]
+		out_profile = self.handles[cs_in]
+		intent = self.rgb_intent
+		if cs_out == COLOR_CMYK:intent = self.cmyk_intent
+		transform = libcms.cms_create_transform(custom_profile, cs_in,
+							out_profile, cs_out, intent, self.flags)
+		return libcms.cms_do_bitmap_transform(transform, img, cs_in, cs_out)
+
 	def get_display_image(self, img):
 		"""
 		Calcs display image representation.

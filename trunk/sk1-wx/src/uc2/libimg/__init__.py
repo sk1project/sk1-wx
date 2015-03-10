@@ -27,7 +27,6 @@ def check_image(path):
 	return check_image_file
 
 def update_image(cms, image_obj):
-
 	png_data = StringIO()
 
 	if not image_obj.cache_image:
@@ -50,7 +49,6 @@ def update_image(cms, image_obj):
 	image_obj.cache_cdata = cairo.ImageSurface.create_from_png(png_data)
 
 def update_gray_image(cms, image_obj):
-
 	png_data = StringIO()
 
 	raw_content = b64decode(image_obj.bitmap)
@@ -84,7 +82,6 @@ def extract_profile(raw_content):
 	return profile, mode
 
 def set_image_data(cms, image_obj, raw_content):
-
 	alpha = ''
 	profile, mode = extract_profile(raw_content)
 
@@ -95,7 +92,12 @@ def set_image_data(cms, image_obj, raw_content):
 	image_obj.size = () + base_image.size
 	if not base_image.mode in ['1', 'L', 'RGB', 'CMYK', 'LAB']:
 		base_image = base_image.convert('RGB')
+
+	if not base_image.mode in ['RGB', 'CMYK', 'LAB']:
 		profile = mode = None
+
+	if profile and base_image.mode == mode:
+		base_image = cms.adjust_image(base_image, profile)
 
 	image_obj.colorspace = '' + base_image.mode
 
