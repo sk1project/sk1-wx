@@ -17,6 +17,7 @@
 
 import sys
 import cairo
+from copy import deepcopy
 from base64 import b64decode, b64encode
 from cStringIO import StringIO
 from PIL import Image
@@ -108,6 +109,10 @@ def set_image_data(cms, image_obj, raw_content):
 		base_image.save(fobj, format='PNG')
 		bmp = b64encode(fobj.getvalue())
 
+	style = deepcopy(image_obj.config.default_cmyk_image_style)
+	if base_image.mode in ['RGB', 'LAB']:
+		style = deepcopy(image_obj.config.default_rgb_image_style)
+
 	if alpha_stream:
 		alpha_image = Image.open(alpha_stream)
 		alpha_image.load()
@@ -124,6 +129,7 @@ def set_image_data(cms, image_obj, raw_content):
 
 	image_obj.bitmap = bmp
 	image_obj.alpha_channel = alpha
+	image_obj.image_style = style
 
 
 
