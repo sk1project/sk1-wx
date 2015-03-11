@@ -81,6 +81,8 @@ class AppCtxPanel(HPanel):
 				ret = CURVE
 			elif self.insp.can_be_ungrouped():
 				ret = GROUP
+			elif self.insp.is_obj_pixmap(sel[0]):
+				ret = PIXMAP
 			else:
 				ret = DEFAULT
 		if self.insp.is_mode(modes.POLYGON_MODE):
