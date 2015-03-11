@@ -18,22 +18,33 @@
 import wx
 
 from uc2 import uc2const
-from uc2.cms import verbose_color
+from uc2.cms import verbose_color, val_255
 from uc2.uc2const import point_dict
 from uc2.formats.sk2.sk2_const import FILL_SOLID
 
 from wal import HPanel
 
-from sk1 import _, config
+from sk1 import _
 
 class ColorSwatch(HPanel):
 
+	app = None
+	label = None
 	rgb_color = (255, 0, 0)
 
-	def __init__(self, parent, size=(35, 16)):
+	def __init__(self, parent, app, label, size=(35, 16)):
+		self.app = app
+		self.label = label
 		HPanel.__init__(self, parent)
 		self.add(size)
 		self.Bind(wx.EVT_PAINT, self._on_paint, self)
+
+	def set_rgb_color(self, color):
+		if color:
+			cms = self.app.current_doc.cms.get_display_color
+			self.rgb_color = tuple(val_255(cms(color)))
+		else:
+			self.rgb_color = ()
 
 	def refresh(self, x=0, y=0, w=0, h=0):
 		if not w: w, h = self.GetSize()
@@ -74,81 +85,90 @@ class FillSwatch(ColorSwatch):
 	color = []
 	alpha = 1.0
 	color_name = ''
+	pixmap = False
 
 
 	def __init__(self, parent, app, label, size=(35, 16)):
-		self.app = app
-		self.label = label
-		ColorSwatch.__init__(self, parent, size)
+		ColorSwatch.__init__(self, parent, app, label, size)
 
 	def update_from_obj(self, obj):
-		fill = obj.style[0]
-		if fill:
-			if fill[1] == FILL_SOLID:
-				self.non_solid = False
-				self.colorspace = fill[2][0]
-				self.color = [] + fill[2][1]
-				self.alpha = fill[2][2]
-				self.color_name = '' + fill[2][3]
-			else:
-				self.non_solid = True
-				self.color = []
-		else:
-			self.colorspace = None
-			self.color = []
-			self.alpha = 1.0
-			self.color_name = ''
-			self.non_solid = False
-
-		if self.color:
-			cms = self.app.current_doc.cms
-			r, g, b = cms.get_display_color(fill[2])
-			self.rgb_color = (int(r * 255), int(g * 255), int(b * 255))
-			self.update_label(fill[2])
-		else:
-			self.rgb_color = ()
+		self.pixmap = self.app.insp.is_obj_pixmap(obj)
+		if self.pixmap:
+			self.set_rgb_color(obj.style[3][0])
 			self.update_label()
+		else:
+			fill = obj.style[0]
+			if fill:
+				if fill[1] == FILL_SOLID:
+					self.non_solid = False
+					self.colorspace = fill[2][0]
+					self.color = [] + fill[2][1]
+					self.alpha = fill[2][2]
+					self.color_name = '' + fill[2][3]
+				else:
+					self.non_solid = True
+					self.color = []
+			else:
+				self.colorspace = None
+				self.color = []
+				self.alpha = 1.0
+				self.color_name = ''
+				self.non_solid = False
+
+			if self.color:
+				self.set_rgb_color(fill[2])
+				self.update_label(fill[2])
+			else:
+				self.rgb_color = ()
+				self.update_label()
 		self.refresh()
 
 	def update_label(self, color=[]):
-		text = _('Fill:')
-		if self.non_solid:
-			pass
-		elif self.colorspace is None:
-			text += ' ' + _('None')
+		if self.pixmap:
+			text = _('Fg:')
 		else:
-			text += ' ' + verbose_color(color)
+			text = _('Fill:')
+			if self.non_solid:
+				pass
+			elif self.colorspace is None:
+				text += ' ' + _('None')
+			else:
+				text += ' ' + verbose_color(color)
 		self.label.set_text(text)
 
 class StrokeSwatch(ColorSwatch):
 
 	point_val = 0
+	pixmap = False
 
 	def __init__(self, parent, app, label, size=(35, 16)):
-		self.app = app
-		self.label = label
-		ColorSwatch.__init__(self, parent, size)
+		ColorSwatch.__init__(self, parent, app, label, size)
 
 	def update_from_obj(self, obj):
-		stroke = obj.style[1]
-		if stroke:
-			self.point_val = stroke[1]
-			cms = self.app.current_doc.cms
-			r, g, b = cms.get_display_color(stroke[2])
-			self.rgb_color = (int(r * 255), int(g * 255), int(b * 255))
+		self.pixmap = self.app.insp.is_obj_pixmap(obj)
+		if self.pixmap:
+			self.set_rgb_color(obj.style[3][1])
 		else:
-			self.point_val = 0
-			self.rgb_color = ()
+			stroke = obj.style[1]
+			if stroke:
+				self.point_val = stroke[1]
+				self.set_rgb_color(stroke[2])
+			else:
+				self.point_val = 0
+				self.rgb_color = ()
 		self.update_val()
 		self.refresh()
 
 	def update_val(self):
-		text = _('Stroke:')
-		if self.point_val:
-			unit = self.app.current_doc.model.doc_units
-			val = str(round(self.point_val * point_dict[unit], 3))
-			text += (' %s ') % (val)
-			text += uc2const.unit_short_names[unit]
+		if self.pixmap:
+			text = _('Bg:')
 		else:
-			text += ' ' + _('None')
+			text = _('Stroke:')
+			if self.point_val:
+				unit = self.app.current_doc.model.doc_units
+				val = str(round(self.point_val * point_dict[unit], 3))
+				text += (' %s ') % (val)
+				text += uc2const.unit_short_names[unit]
+			else:
+				text += ' ' + _('None')
 		self.label.set_text(text)
