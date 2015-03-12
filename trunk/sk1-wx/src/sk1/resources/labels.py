@@ -113,6 +113,8 @@ pdids.ID_TO_CURVES:(_('Con&vert to curves'),),
 pdids.ID_TO_CONTAINER:(_('&Place into container'),),
 pdids.ID_FROM_CONTAINER:(_('&Extract from container'),),
 
+pdids.ID_INVERT_BITMAP:(_('Invert bitmap'),),
+
 pdids.ID_EDIT_TEXT:(_('&Edit text'),),
 
 pdids.ID_TOOL_PAGES:(_('Pages'),),

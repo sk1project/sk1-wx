@@ -91,7 +91,7 @@ class AppMenuBar(wx.MenuBar):
 		self.entries.append(entry)
 
 		#---Bitmaps menu
-		sub = ()
+		sub = (pdids.ID_INVERT_BITMAP,)
 		entry = (_("&Bitmaps"), sub)
 		self.entries.append(entry)
 

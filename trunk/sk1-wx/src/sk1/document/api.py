@@ -20,7 +20,7 @@ import types, math
 
 from uc2.formats.sk2 import sk2_model as model
 from uc2.formats.sk2 import sk2_const
-from uc2 import libgeom, uc2const
+from uc2 import libgeom, uc2const, libimg
 
 from sk1 import events, config
 
@@ -271,6 +271,11 @@ class AbstractAPI:
 	def _restore_parents(self, parent_list):
 		for obj, parent in parent_list:
 			obj.parent = parent
+
+	def _set_bitmap(self, obj, bmpstr):
+		obj.bitmap = bmpstr
+		obj.cache_cdata = None
+		obj.cache_gray_cdata = None
 
 
 class PresenterAPI(AbstractAPI):
@@ -1212,6 +1217,20 @@ class PresenterAPI(AbstractAPI):
 		self.add_undo(transaction)
 		self.selection.update()
 
+	def invert_bitmap(self):
+		sel_before = [] + self.selection.objs
+		obj = sel_before[0]
+		old_bmpstr = obj.bitmap
+		new_bmpstr = libimg.invert_image(old_bmpstr)
+		self._set_bitmap(obj, new_bmpstr)
+		transaction = [
+			[[self._set_bitmap, obj, old_bmpstr],
+			[self._set_selection, sel_before]],
+			[[self._set_bitmap, obj, new_bmpstr],
+			[self._set_selection, sel_before]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
 
 
 
