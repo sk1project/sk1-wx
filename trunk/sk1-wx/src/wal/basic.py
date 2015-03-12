@@ -429,13 +429,15 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 				self.entry = Entry(self, '', size=size, width=width,
 						onchange=self._check_entry, onenter=self._entry_enter)
 				size = (-1, self.entry.GetSize()[1])
+				self.entry.SetPosition((0, 0))
 				self.line = HPanel(self)
 				self.sb = SpinButton(self, size=size, onchange=self._check_spin)
 				w_pos = self.entry.GetSize()[0] - 5
-				self.line.SetSize((1, self.sb.GetSize()[1] - 1))
+				self.line.SetSize((1, self.sb.GetSize()[1] - 2))
 				self.line.set_bg(const.UI_COLORS['dark_shadow'])
-				self.line.SetPosition((w_pos - 1, -1))
-				self.sb.SetPosition((w_pos, -1))
+				self.line.SetPosition((w_pos - 1, 1))
+				self.sb.SetPosition((w_pos, 0))
+				self.SetSize((-1, self.entry.GetSize()[1]))
 			elif const.is_msw():
 				width += 2
 				self.entry = Entry(self, '', size=size, width=width,
@@ -454,6 +456,8 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 			self.sb = SpinButton(self, size=size, onchange=self._check_spin)
 			self.box.Add(self.sb, 0, wx.ALL)
 
+#		self.SetBackgroundColour(wx.CYAN)
+
 		if check_focus:
 			self.entry.Bind(wx.EVT_KILL_FOCUS, self._entry_lost_focus, self.entry)
 
@@ -462,6 +466,7 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 		self._set_digits(digits)
 		self._set_value(value)
 		self.flag = False
+		self.Fit()
 
 	def set_enable(self, val):
 		self.entry.Enable(val)
