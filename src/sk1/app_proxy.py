@@ -267,6 +267,8 @@ class AppProxy:
 
 	def unpack_container(self):self.app.current_doc.api.unpack_container()
 
+	def invert_bitmap(self):self.app.current_doc.api.invert_bitmap()
+
 	def fill_selected(self, color):
 		if self.app.current_doc is None:
 			#FIXME: here should be default style changing

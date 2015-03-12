@@ -28,11 +28,26 @@ from uc2.libimg.imwand import check_image_file, process_image
 def check_image(path):
 	return check_image_file
 
-def update_image(cms, image_obj):
-	png_data = StringIO()
+def invert_image(bmpstr):
+	image_stream = StringIO()
+	raw_image = Image.open(StringIO(b64decode(bmpstr)))
+	raw_image.load()
 
-	raw_content = b64decode(image_obj.bitmap)
-	raw_image = Image.open(StringIO(raw_content))
+	if raw_image.mode == '1':
+		raw_image = ImageOps.invert(raw_image.convert('L')).convert('1')
+	else:
+		raw_image = ImageOps.invert(raw_image)
+
+	if raw_image.mode == 'CMYK':
+		raw_image.save(image_stream, format='JPEG', quality='100')
+	else:
+		raw_image.save(image_stream, format='PNG')
+	return b64encode(image_stream.getvalue())
+
+def update_image(cms, image_obj):
+	png_stream = StringIO()
+
+	raw_image = Image.open(StringIO(b64decode(image_obj.bitmap)))
 	raw_image.load()
 
 	cache_image = None
@@ -70,16 +85,15 @@ def update_image(cms, image_obj):
 		cache_image.putalpha(raw_alpha)
 
 	if cache_image:
-		cache_image.save(png_data, format='PNG')
+		cache_image.save(png_stream, format='PNG')
 
-	png_data.seek(0)
-	image_obj.cache_cdata = cairo.ImageSurface.create_from_png(png_data)
+	png_stream.seek(0)
+	image_obj.cache_cdata = cairo.ImageSurface.create_from_png(png_stream)
 
 def update_gray_image(cms, image_obj):
-	png_data = StringIO()
+	png_stream = StringIO()
 
-	raw_content = b64decode(image_obj.bitmap)
-	raw_image = Image.open(StringIO(raw_content))
+	raw_image = Image.open(StringIO(b64decode(image_obj.bitmap)))
 	raw_image.load()
 
 	raw_image = raw_image.convert('L')
@@ -92,10 +106,10 @@ def update_gray_image(cms, image_obj):
 	else:
 		rgb_image = raw_image.convert('RGB')
 
-	rgb_image.save(png_data, format='PNG')
+	rgb_image.save(png_stream, format='PNG')
 
-	png_data.seek(0)
-	image_obj.cache_gray_cdata = cairo.ImageSurface.create_from_png(png_data)
+	png_stream.seek(0)
+	image_obj.cache_gray_cdata = cairo.ImageSurface.create_from_png(png_stream)
 
 def extract_profile(raw_content):
 	profile = None

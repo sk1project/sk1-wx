@@ -133,6 +133,7 @@ def create_actions(app):
 (pdids.ID_TO_CONTAINER, proxy.set_container, sel_chnls, insp.is_selection),
 (pdids.ID_FROM_CONTAINER, proxy.unpack_container, sel_chnls, insp.is_container_selected),
 #------ Bitmaps menu -------
+(pdids.ID_INVERT_BITMAP, proxy.invert_bitmap, sel_chnls, insp.is_pixmap_selected),
 #------ Text menu -------
 (pdids.ID_EDIT_TEXT, proxy.stub),
 #------ Tools menu -------
