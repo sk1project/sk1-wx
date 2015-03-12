@@ -74,7 +74,7 @@ CID_TO_NAME = {
 
 	RECTANGLE: _('Rectangle'), CIRCLE: _('Ellipse'),
 	POLYGON: _('Polygon'), CURVE: _('Curve'),
-	PIXMAP: _('Pixmap'),
+	PIXMAP: _('Bitmap'),
 	}
 
 
