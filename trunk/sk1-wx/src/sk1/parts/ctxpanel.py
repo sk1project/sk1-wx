@@ -15,7 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from wal import const, ALL, EXPAND, HPanel
+from wal import const, ALL, EXPAND, HPanel, LEFT, CENTER
 
 from sk1 import events, modes
 from sk1.context import PLUGINS, NO_DOC, DEFAULT, MULTIPLE, GROUP, \
@@ -54,10 +54,11 @@ class AppCtxPanel(HPanel):
 		self.plugins = []
 		if mode:
 			for item in mode:
-				self.add(self.plugins_dict[item], 0, ALL | EXPAND)
+				self.add(self.plugins_dict[item], 0, CENTER | LEFT)
 				self.plugins_dict[item].show()
 				self.plugins.append(self.plugins_dict[item])
 		self.Layout()
+		self.Fit()
 		self.mode = mode
 
 	def get_mode(self):
