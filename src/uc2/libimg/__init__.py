@@ -28,18 +28,26 @@ from uc2.libimg.imwand import check_image_file, process_image
 def check_image(path):
 	return check_image_file
 
-def invert_image(bmpstr):
+def invert_image(cms, bmpstr):
 	image_stream = StringIO()
 	raw_image = Image.open(StringIO(b64decode(bmpstr)))
 	raw_image.load()
 
 	if raw_image.mode == '1':
 		raw_image = ImageOps.invert(raw_image.convert('L')).convert('1')
+	elif raw_image.mode == 'CMYK':
+		raw_image = cms.convert_image(raw_image, 'RGB')
+		inv_image = ImageOps.invert(raw_image)
+		raw_image = cms.convert_image(inv_image, 'CMYK')
+	elif raw_image.mode == 'LAB':
+		raw_image = cms.convert_image(raw_image, 'RGB')
+		inv_image = ImageOps.invert(raw_image)
+		raw_image = cms.convert_image(inv_image, 'LAB')
 	else:
 		raw_image = ImageOps.invert(raw_image)
 
-	if raw_image.mode == 'CMYK':
-		raw_image.save(image_stream, format='JPEG', quality='100')
+	if raw_image.mode in ['CMYK', 'LAB']:
+		raw_image.save(image_stream, format='TIFF')
 	else:
 		raw_image.save(image_stream, format='PNG')
 	return b64encode(image_stream.getvalue())

@@ -37,7 +37,7 @@ def process_image(raw_content):
 		img_png.save(file=alpha)
 		alpha.seek(0)
 
-	if img.type == 'colorseparation':
+	if img.type == 'colorseparation' or img.colorspace == 'lab':
 		base_img = img.convert('tiff')
 	else:
 		base_img = img.convert('png')
