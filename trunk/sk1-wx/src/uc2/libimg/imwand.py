@@ -41,6 +41,8 @@ def process_image(raw_content):
 		base_img = img.convert('tiff')
 	else:
 		base_img = img.convert('png')
+
+#	base_img = img.convert('tiff')
 	base = StringIO()
 	base_img.save(file=base)
 	base.seek(0)

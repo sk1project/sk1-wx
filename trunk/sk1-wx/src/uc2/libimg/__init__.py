@@ -46,10 +46,15 @@ def invert_image(cms, bmpstr):
 	else:
 		raw_image = ImageOps.invert(raw_image)
 
-	if raw_image.mode in ['CMYK', 'LAB']:
-		raw_image.save(image_stream, format='TIFF')
-	else:
-		raw_image.save(image_stream, format='PNG')
+	raw_image.save(image_stream, format='TIFF')
+	return b64encode(image_stream.getvalue())
+
+def convert_image(cms, bmpstr, colorspace):
+	image_stream = StringIO()
+	raw_image = Image.open(StringIO(b64decode(bmpstr)))
+	raw_image.load()
+	raw_image = cms.convert_image(raw_image, colorspace)
+	raw_image.save(image_stream, format='TIFF')
 	return b64encode(image_stream.getvalue())
 
 def update_image(cms, image_obj):
@@ -142,7 +147,7 @@ def set_image_data(cms, image_obj, raw_content):
 	if not base_image.mode in ['1', 'L', 'RGB', 'CMYK', 'LAB']:
 		base_image = base_image.convert('RGB')
 
-	if not base_image.mode in ['RGB', 'CMYK', 'LAB']:
+	if not base_image.mode in ['L', 'RGB', 'CMYK', 'LAB']:
 		profile = mode = None
 
 	if profile and base_image.mode == mode:
@@ -151,11 +156,9 @@ def set_image_data(cms, image_obj, raw_content):
 	image_obj.colorspace = '' + base_image.mode
 
 	fobj = StringIO()
-	if base_image.mode == 'CMYK':
-		bmp = b64encode(base_stream.getvalue())
-	else:
-		base_image.save(fobj, format='PNG')
-		bmp = b64encode(fobj.getvalue())
+	base_image = base_image.copy()
+	base_image.save(fobj, format='TIFF')
+	bmp = b64encode(fobj.getvalue())
 
 	style = deepcopy(image_obj.config.default_image_style)
 	if base_image.mode in ['RGB', 'LAB']:
