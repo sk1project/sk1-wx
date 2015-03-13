@@ -114,6 +114,8 @@ pdids.ID_TO_CONTAINER:(_('&Place into container'),),
 pdids.ID_FROM_CONTAINER:(_('&Extract from container'),),
 
 pdids.ID_INVERT_BITMAP:(_('Invert bitmap'),),
+pdids.ID_REMOVE_ALPHA:(_('Remove alpha-channel'),),
+pdids.ID_INVERT_ALPHA:(_('Invert alpha-channel'),),
 
 pdids.ID_EDIT_TEXT:(_('&Edit text'),),
 

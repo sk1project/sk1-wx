@@ -268,6 +268,8 @@ class AppProxy:
 	def unpack_container(self):self.app.current_doc.api.unpack_container()
 
 	def invert_bitmap(self):self.app.current_doc.api.invert_bitmap()
+	def remove_alpha(self):self.app.current_doc.api.remove_alpha()
+	def invert_alpha(self):self.app.current_doc.api.invert_alpha()
 
 	def fill_selected(self, color):
 		if self.app.current_doc is None:

@@ -277,6 +277,11 @@ class AbstractAPI:
 		obj.cache_cdata = None
 		obj.cache_gray_cdata = None
 
+	def _set_alpha(self, obj, alphastr):
+		obj.alpha_channel = alphastr
+		obj.cache_cdata = None
+		obj.cache_gray_cdata = None
+
 
 class PresenterAPI(AbstractAPI):
 
@@ -1227,6 +1232,36 @@ class PresenterAPI(AbstractAPI):
 			[[self._set_bitmap, obj, old_bmpstr],
 			[self._set_selection, sel_before]],
 			[[self._set_bitmap, obj, new_bmpstr],
+			[self._set_selection, sel_before]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def remove_alpha(self):
+		sel_before = [] + self.selection.objs
+		obj = sel_before[0]
+		old_alphastr = obj.alpha_channel
+		new_alphastr = ''
+		self._set_alpha(obj, new_alphastr)
+		transaction = [
+			[[self._set_alpha, obj, old_alphastr],
+			[self._set_selection, sel_before]],
+			[[self._set_alpha, obj, new_alphastr],
+			[self._set_selection, sel_before]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def invert_alpha(self):
+		sel_before = [] + self.selection.objs
+		obj = sel_before[0]
+		old_alphastr = obj.alpha_channel
+		new_alphastr = libimg.invert_image(self.presenter.cms, old_alphastr)
+		self._set_alpha(obj, new_alphastr)
+		transaction = [
+			[[self._set_alpha, obj, old_alphastr],
+			[self._set_selection, sel_before]],
+			[[self._set_alpha, obj, new_alphastr],
 			[self._set_selection, sel_before]],
 			False]
 		self.add_undo(transaction)

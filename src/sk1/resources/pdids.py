@@ -93,6 +93,8 @@ ID_TO_CONTAINER = wx.NewId()
 ID_FROM_CONTAINER = wx.NewId()
 #----- Bitmaps menu
 ID_INVERT_BITMAP = wx.NewId()
+ID_REMOVE_ALPHA = wx.NewId()
+ID_INVERT_ALPHA = wx.NewId()
 #----- Text menu
 ID_EDIT_TEXT = wx.NewId()
 #----- Tools menu
