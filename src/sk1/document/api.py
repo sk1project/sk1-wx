@@ -1221,7 +1221,7 @@ class PresenterAPI(AbstractAPI):
 		sel_before = [] + self.selection.objs
 		obj = sel_before[0]
 		old_bmpstr = obj.bitmap
-		new_bmpstr = libimg.invert_image(old_bmpstr)
+		new_bmpstr = libimg.invert_image(self.presenter.cms, old_bmpstr)
 		self._set_bitmap(obj, new_bmpstr)
 		transaction = [
 			[[self._set_bitmap, obj, old_bmpstr],
