@@ -272,10 +272,12 @@ class AbstractAPI:
 		for obj, parent in parent_list:
 			obj.parent = parent
 
-	def _set_bitmap(self, obj, bmpstr):
+	def _set_bitmap(self, obj, bmpstr, colorspace=None):
 		obj.bitmap = bmpstr
 		obj.cache_cdata = None
 		obj.cache_gray_cdata = None
+		if colorspace:
+			obj.colorspace = colorspace
 
 	def _set_alpha(self, obj, alphastr):
 		obj.alpha_channel = alphastr
@@ -1217,6 +1219,27 @@ class PresenterAPI(AbstractAPI):
 			[[self._set_layers_snapshot, before],
 			[self._set_selection, sel_before]],
 			[[self._set_layers_snapshot, after],
+			[self._set_selection, sel_before]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def convert_bitmap(self, colorspace):
+		cms = self.presenter.cms
+		sel_before = [] + self.selection.objs
+		obj = sel_before[0]
+		old_bmpstr = obj.bitmap
+		old_colorspace = obj.colorspace
+		new_bmpstr = libimg.convert_image(cms, old_bmpstr, colorspace)
+		self._set_bitmap(obj, new_bmpstr, colorspace)
+		old_alphastr = new_alphastr = obj.alpha_channel
+		if colorspace == uc2const.IMAGE_MONO: new_alphastr = ''
+		transaction = [
+			[[self._set_bitmap, obj, old_bmpstr, old_colorspace],
+			[self._set_alpha, obj, old_alphastr],
+			[self._set_selection, sel_before]],
+			[[self._set_bitmap, obj, new_bmpstr, colorspace],
+			[self._set_alpha, obj, new_alphastr],
 			[self._set_selection, sel_before]],
 			False]
 		self.add_undo(transaction)

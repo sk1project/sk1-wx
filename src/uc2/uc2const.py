@@ -374,7 +374,7 @@ IMAGE_CMYK = 'CMYK'
 IMAGE_LAB = 'LAB'
 
 IMAGE_NAMES = {
-IMAGE_MONO: _('Monochrome'),
+IMAGE_MONO: _('Black and White'),
 IMAGE_GRAY: _('Grayscale'),
 IMAGE_RGB: _('RGB'),
 IMAGE_CMYK: _('CMYK'),

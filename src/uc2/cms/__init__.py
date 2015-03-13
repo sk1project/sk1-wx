@@ -557,6 +557,9 @@ class ColorManager:
 			img = img.convert(IMAGE_GRAY)
 		if img.mode == outmode:
 			return img.copy()
+		if outmode == IMAGE_MONO:
+			ret = self.do_bitmap_transform(img, IMAGE_GRAY, cs_out)
+			return ret.convert(IMAGE_MONO)
 		return self.do_bitmap_transform(img, outmode, cs_out)
 
 	def adjust_image(self, img, profilestr):
