@@ -134,6 +134,8 @@ def create_actions(app):
 (pdids.ID_FROM_CONTAINER, proxy.unpack_container, sel_chnls, insp.is_container_selected),
 #------ Bitmaps menu -------
 (pdids.ID_INVERT_BITMAP, proxy.invert_bitmap, sel_chnls, insp.is_pixmap_selected),
+(pdids.ID_REMOVE_ALPHA, proxy.remove_alpha, sel_chnls, insp.is_pixmap_alpha),
+(pdids.ID_INVERT_ALPHA, proxy.invert_alpha, sel_chnls, insp.is_pixmap_alpha),
 #------ Text menu -------
 (pdids.ID_EDIT_TEXT, proxy.stub),
 #------ Tools menu -------
