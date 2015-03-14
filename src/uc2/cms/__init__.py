@@ -508,12 +508,10 @@ class ColorManager:
 		Convert color into requested colorspace.
 		Stores alpha channel and color name.
 		"""
-		METHOD_TO_CS = {
-					COLOR_RGB:self.get_rgb_color,
-					COLOR_LAB:self.get_lab_color,
-					COLOR_CMYK:self.get_cmyk_color,
-					COLOR_GRAY:self.get_grayscale_color,
-					}
+		METHOD_TO_CS = {COLOR_RGB:self.get_rgb_color,
+						COLOR_LAB:self.get_lab_color,
+						COLOR_CMYK:self.get_cmyk_color,
+						COLOR_GRAY:self.get_grayscale_color}
 		return METHOD_TO_CS[cs](color)
 
 	def get_display_color(self, color):
