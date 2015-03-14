@@ -187,6 +187,18 @@ class SK2_Methods:
 	def get_guide_layer(self):
 		return self.model.childs[4]
 
+	def get_visible_layers(self, page, special=False):
+		layers = []
+		layers += self.get_desktop_layers() + page.childs
+		layers += self.get_master_layers()
+		if special:
+			layers += [self.get_gird_layer(), self.get_guide_layer()]
+		ret = []
+		for item in layers:
+			if self.is_layer_visible(item):
+				ret.append(item)
+		return ret
+
 	def set_rect_corners(self, obj, corners):
 		obj.corners = corners
 		obj.update()
