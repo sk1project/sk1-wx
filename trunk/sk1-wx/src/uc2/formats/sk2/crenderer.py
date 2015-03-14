@@ -85,7 +85,7 @@ class CairoRenderer:
 	def render_image(self, ctx, obj):
 		if not obj.cache_cdata: libimg.update_image(self.cms, obj)
 
-		canvas_matrix = self.ctx.get_matrix()
+		canvas_matrix = ctx.get_matrix()
 		canvas_trafo = libcairo.get_trafo_from_matrix(canvas_matrix)
 		zoom = canvas_trafo[0]
 
@@ -96,22 +96,22 @@ class CairoRenderer:
 		m11, m12, m21, m22 = obj.trafo[:4]
 		matrix = cairo.Matrix(zoom * m11, -zoom * m12,
 							- zoom * m21, zoom * m22, x0, y0)
-		self.ctx.set_matrix(matrix)
+		ctx.set_matrix(matrix)
 
 		if self.contour_flag:
 			if not obj.cache_gray_cdata:
 				libimg.update_gray_image(self.cms, obj)
-			self.ctx.set_source_surface(obj.cache_gray_cdata)
+			ctx.set_source_surface(obj.cache_gray_cdata)
 			if zoom * abs(m11) > .98:
-				self.ctx.get_source().set_filter(cairo.FILTER_NEAREST)
-			self.ctx.paint_with_alpha(0.3)
+				ctx.get_source().set_filter(cairo.FILTER_NEAREST)
+			ctx.paint_with_alpha(0.3)
 		else:
-			self.ctx.set_source_surface(obj.cache_cdata)
+			ctx.set_source_surface(obj.cache_cdata)
 			if zoom * abs(m11) > .98:
-				self.ctx.get_source().set_filter(cairo.FILTER_NEAREST)
-			self.ctx.paint()
+				ctx.get_source().set_filter(cairo.FILTER_NEAREST)
+			ctx.paint()
 
-		self.ctx.set_matrix(canvas_matrix)
+		ctx.set_matrix(canvas_matrix)
 
 	def render_primitives(self, ctx, obj):
 		if obj.cache_cpath is None:
