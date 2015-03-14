@@ -16,7 +16,7 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from uc2.libgeom import sum_bbox, is_bbox_in_rect
-from uc2 import libcairo
+from uc2 import libcairo, uc2const
 from uc2.formats.sk2 import sk2_model
 
 from sk1 import _, config
@@ -54,6 +54,9 @@ class Selection:
 		if len(self.objs) == 1:
 			cid = self.objs[0].cid
 			msg = sk2_model.CID_TO_NAME[cid] + _(' object in selection')
+			if cid == sk2_model.PIXMAP:
+				h_dpi, v_dpi = self.objs[0].get_resolution()
+				msg += ', %ix%i dpi' % (h_dpi, v_dpi)
 		elif not len(self.objs):
 			msg = _('No selection')
 		else:
