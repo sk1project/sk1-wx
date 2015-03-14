@@ -81,6 +81,11 @@ def is_equal_points(p1, p0):
 		ret = True
 	return ret
 
+def distance(p0, p1):
+	x0, y0 = p0
+	x1, y1 = p1
+	return math.sqrt(math.pow((x1 - x0), 2) + math.pow((y1 - y0), 2))
+
 #------------- Bbox operations -------------
 
 def normalize_bbox(bbox):
