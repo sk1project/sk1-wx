@@ -599,6 +599,17 @@ class Pixmap(PrimitiveObject):
 		return libgeom.get_rect_path([0, 0], width, height,
 									[] + sk2_const.CORNERS)
 
+	def get_resolution(self):
+		path = libgeom.apply_trafo_to_paths(self.cache_paths, self.trafo)[0]
+		p0 = path[0]
+		p1 = path[1][0]
+		p2, p3 = path[1][-2:]
+		m11 = (libgeom.distance(p0, p1)) / float(self.size[1])
+		m22 = (libgeom.distance(p2, p3)) / float(self.size[0])
+		v_dpi = int(round(uc2const.in_to_pt / m11))
+		h_dpi = int(round(uc2const.in_to_pt / m22))
+		return (h_dpi, v_dpi)
+
 	def update(self):
 		self.cache_cdata = None
 		self.cache_gray_cdata = None
