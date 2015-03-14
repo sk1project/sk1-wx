@@ -503,6 +503,19 @@ class ColorManager:
 		res = self.do_transform(color, color[0], COLOR_GRAY)
 		return [COLOR_GRAY, res, color[2], '' + color[3]]
 
+	def get_color(self, color, cs=COLOR_RGB):
+		"""
+		Convert color into requested colorspace.
+		Stores alpha channel and color name.
+		"""
+		METHOD_TO_CS = {
+					COLOR_RGB:self.get_rgb_color,
+					COLOR_LAB:self.get_lab_color,
+					COLOR_CMYK:self.get_cmyk_color,
+					COLOR_GRAY:self.get_grayscale_color,
+					}
+		return METHOD_TO_CS[cs](color)
+
 	def get_display_color(self, color):
 		"""
 		Calcs display color representation.
