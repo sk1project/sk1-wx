@@ -17,7 +17,7 @@
 
 import wx
 
-from uc2.uc2const import IMAGE_NAMES
+from uc2.uc2const import IMAGE_NAMES, IMAGE_CMYK, IMAGE_RGB
 
 from wal import ALL, EXPAND, TOP, LEFT, CENTER, RIGHT, const
 from wal import HPanel, Label, VLine, ImageButton
@@ -114,7 +114,11 @@ class ColorMonitor(HPanel):
 				self.stroke_swatch.update_from_obj(sel[0])
 				if self.app.insp.is_obj_pixmap(sel[0]):
 					txt = _('Image type: ') + IMAGE_NAMES[sel[0].colorspace]
-					if sel[0].alpha_channel: txt += 'A'
+					if sel[0].alpha_channel:
+						if sel[0].colorspace in [IMAGE_CMYK, IMAGE_RGB]:
+							txt += 'A'
+						else:
+							txt += '+A'
 					self.image_txt.set_text(txt)
 					self.image_txt.show()
 				else:

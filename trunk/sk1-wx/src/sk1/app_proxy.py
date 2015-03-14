@@ -267,6 +267,11 @@ class AppProxy:
 
 	def unpack_container(self):self.app.current_doc.api.unpack_container()
 
+	def conv_to_cmyk(self):self.app.current_doc.api.convert_bitmap(uc2const.IMAGE_CMYK)
+	def conv_to_rgb(self):self.app.current_doc.api.convert_bitmap(uc2const.IMAGE_RGB)
+	def conv_to_lab(self):self.app.current_doc.api.convert_bitmap(uc2const.IMAGE_LAB)
+	def conv_to_gray(self):self.app.current_doc.api.convert_bitmap(uc2const.IMAGE_GRAY)
+	def conv_to_bw(self):self.app.current_doc.api.convert_bitmap(uc2const.IMAGE_MONO)
 	def invert_bitmap(self):self.app.current_doc.api.invert_bitmap()
 	def remove_alpha(self):self.app.current_doc.api.remove_alpha()
 	def invert_alpha(self):self.app.current_doc.api.invert_alpha()
