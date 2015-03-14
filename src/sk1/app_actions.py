@@ -133,6 +133,11 @@ def create_actions(app):
 (pdids.ID_TO_CONTAINER, proxy.set_container, sel_chnls, insp.is_selection),
 (pdids.ID_FROM_CONTAINER, proxy.unpack_container, sel_chnls, insp.is_container_selected),
 #------ Bitmaps menu -------
+(pdids.ID_CONV_TO_CMYK, proxy.conv_to_cmyk, sel_chnls, insp.can_be_cmyk),
+(pdids.ID_CONV_TO_RGB, proxy.conv_to_rgb, sel_chnls, insp.can_be_rgb),
+(pdids.ID_CONV_TO_LAB, proxy.conv_to_lab, sel_chnls, insp.can_be_lab),
+(pdids.ID_CONV_TO_GRAY, proxy.conv_to_gray, sel_chnls, insp.can_be_gray),
+(pdids.ID_CONV_TO_BW, proxy.conv_to_bw, sel_chnls, insp.can_be_bw),
 (pdids.ID_INVERT_BITMAP, proxy.invert_bitmap, sel_chnls, insp.is_pixmap_selected),
 (pdids.ID_REMOVE_ALPHA, proxy.remove_alpha, sel_chnls, insp.is_pixmap_alpha),
 (pdids.ID_INVERT_ALPHA, proxy.invert_alpha, sel_chnls, insp.is_pixmap_alpha),

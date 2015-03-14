@@ -16,6 +16,7 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from uc2.formats.sk2 import sk2_model as model
+from uc2 import uc2const
 
 class AppInspector:
 
@@ -221,6 +222,61 @@ class AppInspector:
 			cid = objs[0].cid
 			if len(objs) == 1 and cid == model.PIXMAP:
 				if objs[0].alpha_channel:
+					return True
+		return False
+
+	def can_be_cmyk(self, doc=None):
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		elif self.is_selection(doc):
+			objs = doc.selection.objs
+			obj = objs[0]
+			if len(objs) == 1 and obj.cid == model.PIXMAP:
+				if not obj.colorspace == uc2const.IMAGE_CMYK:
+					return True
+		return False
+
+	def can_be_rgb(self, doc=None):
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		elif self.is_selection(doc):
+			objs = doc.selection.objs
+			obj = objs[0]
+			if len(objs) == 1 and obj.cid == model.PIXMAP:
+				if not obj.colorspace == uc2const.IMAGE_RGB:
+					return True
+		return False
+
+	def can_be_lab(self, doc=None):
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		elif self.is_selection(doc):
+			objs = doc.selection.objs
+			obj = objs[0]
+			if len(objs) == 1 and obj.cid == model.PIXMAP:
+				if not obj.colorspace == uc2const.IMAGE_LAB:
+					return True
+		return False
+
+	def can_be_gray(self, doc=None):
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		elif self.is_selection(doc):
+			objs = doc.selection.objs
+			obj = objs[0]
+			if len(objs) == 1 and obj.cid == model.PIXMAP:
+				if not obj.colorspace == uc2const.IMAGE_GRAY:
+					return True
+		return False
+
+	def can_be_bw(self, doc=None):
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		elif self.is_selection(doc):
+			objs = doc.selection.objs
+			obj = objs[0]
+			if len(objs) == 1 and obj.cid == model.PIXMAP:
+				if not obj.colorspace == uc2const.IMAGE_MONO:
 					return True
 		return False
 

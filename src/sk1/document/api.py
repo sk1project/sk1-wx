@@ -1230,16 +1230,12 @@ class PresenterAPI(AbstractAPI):
 		obj = sel_before[0]
 		old_bmpstr = obj.bitmap
 		old_colorspace = obj.colorspace
-		new_bmpstr = libimg.convert_image(cms, old_bmpstr, colorspace)
+		new_bmpstr = libimg.convert_image(cms, obj, colorspace)
 		self._set_bitmap(obj, new_bmpstr, colorspace)
-		old_alphastr = new_alphastr = obj.alpha_channel
-		if colorspace == uc2const.IMAGE_MONO: new_alphastr = ''
 		transaction = [
 			[[self._set_bitmap, obj, old_bmpstr, old_colorspace],
-			[self._set_alpha, obj, old_alphastr],
 			[self._set_selection, sel_before]],
 			[[self._set_bitmap, obj, new_bmpstr, colorspace],
-			[self._set_alpha, obj, new_alphastr],
 			[self._set_selection, sel_before]],
 			False]
 		self.add_undo(transaction)
