@@ -16,15 +16,42 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
+import cairo
 
 from uc2 import _, events, msgconst
 from uc2.formats.fallback import im_loader
+from uc2.formats.sk2.crenderer import CairoRenderer
 
 def png_loader(appdata, filename, translate=True, cnf={}, **kw):
 	return im_loader(appdata, filename, translate, cnf, **kw)
 
-def png_saver(doc, filename, translate=True, cnf={}, **kw):
-	pass
+def png_saver(sk2_doc, filename, translate=True, cnf={}, **kw):
+	try:
+		fileptr = open(filename, 'wb')
+	except:
+		errtype, value, traceback = sys.exc_info()
+		msg = _('Cannot open %s fileptr for writing') % (filename)
+		events.emit(events.MESSAGES, msgconst.ERROR, msg)
+		raise IOError(errtype, msg + '\n' + value, traceback)
+
+	page = sk2_doc.methods.get_page()
+	w, h = page.page_format[1]
+	trafo = (1.0, 0, 0, -1.0, w / 2.0, h / 2.0)
+
+	canvas_matrix = cairo.Matrix(*trafo)
+	surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(w), int(h))
+	ctx = cairo.Context(surface)
+	ctx.set_matrix(canvas_matrix)
+
+	rend = CairoRenderer(sk2_doc.cms)
+	layers = sk2_doc.methods.get_visible_layers(page)
+	objs = []
+	for item in layers:objs += item.childs
+	rend.render(ctx, objs)
+
+	surface.write_to_png(fileptr)
+	fileptr.close()
+
 
 def check_png(path):
 	try:

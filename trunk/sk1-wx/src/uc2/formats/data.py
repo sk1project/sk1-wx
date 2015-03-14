@@ -28,7 +28,7 @@ MODEL_LOADERS = [SK2, PDXF, PLT, CDR, CDT] + \
 EXPERIMENTAL_LOADERS = [SK1, WMF, RIFF, CDRZ]
 
 SIMPLE_SAVERS = []
-MODEL_SAVERS = [SK2, PDXF, PLT, ]
+MODEL_SAVERS = [SK2, PDXF, PLT, PNG]
 EXPERIMENTAL_SAVERS = [SK1, RIFF, CDR]
 
 
@@ -47,7 +47,7 @@ from uc2.formats.cdr import cdr_loader, cdr_saver, check_cdr
 from uc2.formats.cdrz import cdrz_loader, check_cdrz
 from uc2.formats.riff import riff_loader, riff_saver, check_riff
 
-from uc2.formats.png import png_loader, check_png
+from uc2.formats.png import png_loader, check_png, png_saver
 from uc2.formats.fallback import im_loader, fallback_check
 
 
@@ -73,7 +73,7 @@ AI_PS : None, AI_PDF : None, PS : None, EPS : None, PDF : None, PSD : None,
 CGM : None, WMF : wmf_saver, EMF : None, XPS : None, VSD : None,
 PLT : plt_saver, HPGL : None, DXF : None, DWG : None,
 RIFF: riff_saver,
-PNG: None,
+PNG: png_saver,
 }
 
 CHECKERS = {
