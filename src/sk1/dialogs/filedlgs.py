@@ -26,11 +26,12 @@ from wal.const import is_mac
 
 from sk1 import _
 
-def _get_open_filters():
+def _get_open_filters(items=[]):
 	wildcard = ''
 	descr = uc2const.FORMAT_DESCRIPTION
 	ext = uc2const.FORMAT_EXTENSION
-	items = [] + data.LOADER_FORMATS
+	if not items:
+		items = [] + data.LOADER_FORMATS
 	wildcard += _('All supported formats') + '|'
 	for item in items:
 		for extension in ext[item]:
@@ -53,7 +54,7 @@ def _get_open_filters():
 
 	return wildcard
 
-def get_open_file_name(parent, app, start_dir, msg=''):
+def get_open_file_name(parent, app, start_dir, msg='', file_types=[]):
 	ret = ''
 	if not msg: msg = _('Open document')
 	if is_mac(): msg = ''
@@ -64,7 +65,7 @@ def get_open_file_name(parent, app, start_dir, msg=''):
 		parent, message=msg,
 		defaultDir=start_dir,
 		defaultFile="",
-		wildcard=_get_open_filters(),
+		wildcard=_get_open_filters(file_types),
 		style=wx.OPEN | wx.CHANGE_DIR | wx.FILE_MUST_EXIST
 		)
 	dlg.CenterOnParent()
@@ -73,58 +74,12 @@ def get_open_file_name(parent, app, start_dir, msg=''):
 	dlg.Destroy()
 	return ret
 
-def _get_import_filters():
+def _get_save_fiters(items=[]):
 	wildcard = ''
 	descr = uc2const.FORMAT_DESCRIPTION
 	ext = uc2const.FORMAT_EXTENSION
-	items = [] + data.LOADER_FORMATS
-	wildcard += _('All supported formats') + '|'
-	for item in items:
-		for extension in ext[item]:
-			wildcard += '*.' + extension + ';'
-			wildcard += '*.' + extension.upper() + ';'
-	if is_mac():return wildcard
-
-	wildcard += '|'
-
-	wildcard += _('All files (*.*)') + '|'
-	wildcard += '*;*.*|'
-
-	for item in items:
-		wildcard += descr[item] + '|'
-		for extension in ext[item]:
-			wildcard += '*.' + extension + ';'
-			wildcard += '*.' + extension.upper() + ';'
-		if not item == items[-1]:
-			wildcard += '|'
-
-	return wildcard
-
-def get_import_file_name(parent, app, start_dir, msg=''):
-	ret = ''
-	if not msg: msg = _('Select file to import')
-	if is_mac(): msg = ''
-
-	if start_dir == '~': start_dir = os.path.expanduser(start_dir)
-
-	dlg = wx.FileDialog(
-		parent, message=msg,
-		defaultDir=start_dir,
-		defaultFile="",
-		wildcard=_get_import_filters(),
-		style=wx.OPEN | wx.CHANGE_DIR | wx.FILE_MUST_EXIST
-		)
-	dlg.CenterOnParent()
-	if dlg.ShowModal() == wx.ID_OK:
-		ret = path_system(dlg.GetPath())
-	dlg.Destroy()
-	return ret
-
-def _get_save_fiters():
-	wildcard = ''
-	descr = uc2const.FORMAT_DESCRIPTION
-	ext = uc2const.FORMAT_EXTENSION
-	items = [data.SK2]#+ data.SAVER_FORMATS
+	if not items:
+		items = [data.SK2]#+ data.SAVER_FORMATS
 	for item in items:
 		wildcard += descr[item] + '|'
 		for extension in ext[item]:
@@ -134,7 +89,7 @@ def _get_save_fiters():
 			wildcard += '|'
 	return wildcard
 
-def get_save_file_name(parent, app, path, msg=''):
+def get_save_file_name(parent, app, path, msg='', file_types=[]):
 	ret = ''
 	if not msg: msg = _('Save document As...')
 	if is_mac(): msg = ''
@@ -148,44 +103,7 @@ def get_save_file_name(parent, app, path, msg=''):
 		parent, message=msg,
 		defaultDir=doc_folder,
 		defaultFile=doc_name,
-		wildcard=_get_save_fiters(),
-		style=wx.SAVE | wx.CHANGE_DIR | wx.FD_OVERWRITE_PROMPT
-	)
-	dlg.CenterOnParent()
-	if dlg.ShowModal() == wx.ID_OK:
-		ret = path_system(dlg.GetPath())
-	dlg.Destroy()
-	return ret
-
-def _get_export_fiters():
-	wildcard = ''
-	descr = uc2const.FORMAT_DESCRIPTION
-	ext = uc2const.FORMAT_EXTENSION
-	items = [] + data.SAVER_FORMATS[1:]
-	for item in items:
-		wildcard += descr[item] + '|'
-		for extension in ext[item]:
-			wildcard += '*.' + extension + ';'
-			wildcard += '*.' + extension.upper() + ';'
-		if not item == items[-1]:
-			wildcard += '|'
-	return wildcard
-
-def get_export_file_name(parent, app, path, msg=''):
-	ret = ''
-	if not msg: msg = _('Export document As...')
-	if is_mac(): msg = ''
-
-	if path == '~': path = os.path.expanduser(path)
-
-	doc_folder = os.path.dirname(path)
-	doc_name = os.path.basename(path)
-
-	dlg = wx.FileDialog(
-		parent, message=msg,
-		defaultDir=doc_folder,
-		defaultFile=doc_name,
-		wildcard=_get_export_fiters(),
+		wildcard=_get_save_fiters(file_types),
 		style=wx.SAVE | wx.CHANGE_DIR | wx.FD_OVERWRITE_PROMPT
 	)
 	dlg.CenterOnParent()

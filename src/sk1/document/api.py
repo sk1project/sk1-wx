@@ -1291,11 +1291,14 @@ class PresenterAPI(AbstractAPI):
 		self.selection.update()
 
 	def set_bitmap_dpi(self, h_dpi, v_dpi=None):
+		#TODO: finish implementation
 		if not v_dpi:v_dpi = h_dpi
 		sel_before = [] + self.selection.objs
 		obj = sel_before[0]
 		trafo_before = obj.trafo
 		trafo_after = [] + obj.trafo
+
+
 
 
 

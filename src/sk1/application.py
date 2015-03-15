@@ -18,9 +18,10 @@
 import os, sys
 import webbrowser
 
-from uc2 import uc2const
+from uc2 import uc2const, libimg
 from uc2.utils.fs import path_unicode
 from uc2.application import UCApplication
+from uc2.formats import data
 
 from wal import Application
 
@@ -287,7 +288,8 @@ class pdApplication(Application, UCApplication):
 		return result
 
 	def import_file(self):
-		doc_file = dialogs.get_import_file_name(self.mw, self, config.import_dir)
+		doc_file = dialogs.get_open_file_name(self.mw, self, config.import_dir,
+											_('Select file to import'))
 		if os.path.lexists(doc_file) and os.path.isfile(doc_file):
 			try:
 				ret = self.current_doc.import_file(doc_file)
@@ -317,7 +319,9 @@ class pdApplication(Application, UCApplication):
 		if not os.path.lexists(os.path.dirname(doc_file)):
 			doc_file = os.path.join(config.export_dir,
 								os.path.basename(doc_file))
-		doc_file = dialogs.get_export_file_name(self.mw, self, doc_file)
+		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
+							_('Export document As...'),
+							file_types=data.SAVER_FORMATS[1:])
 		if doc_file:
 			try:
 				self.current_doc.export_as(doc_file)
@@ -329,14 +333,33 @@ class pdApplication(Application, UCApplication):
 				if config.print_stacktrace:
 					print sys.exc_info()[1].__str__()
 					print sys.exc_info()[2].__str__()
-				return False
+				return
 			config.export_dir = str(os.path.dirname(doc_file))
 			self.history.add_entry(doc_file, appconst.SAVED)
 			events.emit(events.APP_STATUS, _('Document is successfully exported'))
-			return True
-		else:
-			return False
 
+	def extract_bitmap(self):
+		doc_file = 'image.tiff'
+		doc_file = os.path.join(config.save_dir, doc_file)
+		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
+							_('Extract selected bitmap as...'),
+							file_types=[data.TIF])
+		if doc_file:
+			try:
+				pixmap = self.current_doc.selection.objs[0]
+				libimg.extract_bitmap(pixmap, doc_file)
+			except IOError:
+				first = _('Cannot save document')
+				msg = ("%s '%s'.") % (first, self.current_doc.doc_name) + '\n'
+				msg += _('Please check file name and write permissions')
+				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
+				if config.print_stacktrace:
+					print sys.exc_info()[1].__str__()
+					print sys.exc_info()[2].__str__()
+				return
+			config.save_dir = str(os.path.dirname(doc_file))
+			self.history.add_entry(doc_file, appconst.SAVED)
+			events.emit(events.APP_STATUS, _('Bitmap is successfully extracted'))
 
 	def exit(self, *args):
 		if not self.insp.is_any_doc_not_saved(): self.mw.Hide()
