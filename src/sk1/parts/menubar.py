@@ -29,7 +29,7 @@ class AppMenuBar(wx.MenuBar):
 		self.entries = []
 
 		#---File menu
-		sub = (wx.ID_NEW, None, wx.ID_OPEN,
+		sub = (wx.ID_NEW, pdids.ID_NEW_FROM_TEMPLATE, None, wx.ID_OPEN,
 				(_("Open &Recent"), (HistoryMenu(self.app, self.mw),)),
 				None,
 				wx.ID_SAVE, wx.ID_SAVEAS, pdids.ID_SAVE_SEL,

@@ -21,13 +21,14 @@ from sk1.resources import pdids
 GENERIC_KEYS = {
 #----- File menu
 wx.ID_NEW:(wx.ACCEL_CTRL, ord('N')),
+pdids.ID_NEW_FROM_TEMPLATE:(wx.ACCEL_SHIFT | wx.ACCEL_CTRL, ord('N')),
 wx.ID_OPEN:(wx.ACCEL_CTRL, ord('O')),
 wx.ID_SAVE:(wx.ACCEL_CTRL, ord('S')),
 pdids.ID_SAVE_SEL:(wx.ACCEL_SHIFT | wx.ACCEL_CTRL, ord('S')),
 pdids.ID_IMPORT:(wx.ACCEL_CTRL, ord('I')),
 wx.ID_CLOSE:(wx.ACCEL_CTRL, ord('W')),
 wx.ID_PRINT:(wx.ACCEL_CTRL, ord('P')),
-wx.ID_EXIT:(wx.ACCEL_CTRL, ord('Q')),
+wx.ID_EXIT:(wx.ACCEL_ALT, wx.WXK_F4),
 #----- Edit menu
 wx.ID_UNDO:(wx.ACCEL_CTRL, ord('Z')),
 wx.ID_REDO:(wx.ACCEL_SHIFT | wx.ACCEL_CTRL, ord('Z')),
@@ -64,7 +65,7 @@ pdids.ID_LOWER_TO_BOTTOM:(wx.ACCEL_CTRL | wx.ACCEL_SHIFT, wx.WXK_PAGEDOWN),
 pdids.ID_GROUP:(wx.ACCEL_CTRL, ord('G')),
 pdids.ID_UNGROUP:(wx.ACCEL_CTRL, ord('U')),
 pdids.ID_UNGROUPALL:(wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord('U')),
-pdids.ID_TO_CURVES:(wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord('Q')),
+pdids.ID_TO_CURVES:(wx.ACCEL_CTRL , ord('Q')),
 #----- Text menu
 pdids.ID_EDIT_TEXT:(wx.ACCEL_NORMAL, wx.WXK_F8),
 #----- Tools menu

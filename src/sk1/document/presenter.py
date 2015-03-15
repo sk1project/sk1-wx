@@ -54,7 +54,7 @@ class PD_Presenter:
 	traced_objects = None
 	snap = None
 
-	def __init__(self, app, doc_file='', silent=False):
+	def __init__(self, app, doc_file='', silent=False, template=False):
 		self.app = app
 
 		self.eventloop = EventLoop(self)
@@ -80,11 +80,14 @@ class PD_Presenter:
 				else:
 					pd.destroy()
 					raise IOError(_('Error while opening'), doc_file)
-
-			self.doc_file = self.doc_presenter.doc_file
-			self.doc_name = os.path.basename(self.doc_file)
-			self.doc_name = change_file_extension(self.doc_name,
-									uc2const.FORMAT_EXTENSION[uc2const.SK2][0])
+			if not template:
+				self.doc_file = self.doc_presenter.doc_file
+				self.doc_name = os.path.basename(self.doc_file)
+				self.doc_name = change_file_extension(self.doc_name,
+								uc2const.FORMAT_EXTENSION[uc2const.SK2][0])
+			else:
+				self.doc_name = self.app.get_new_docname()
+				self.doc_presenter.doc_file = ''
 		else:
 			self.doc_presenter = SK2_Presenter(app.appdata)
 			self.doc_name = self.app.get_new_docname()
@@ -252,7 +255,7 @@ class PD_Presenter:
 				raise IOError(_('Unknown file format is requested for export!'),
 							 doc_file)
 
-			if config.make_backup:
+			if config.make_export_backup:
 				if os.path.lexists(doc_file):
 					if os.path.lexists(doc_file + '~'):
 						os.remove(doc_file + '~')

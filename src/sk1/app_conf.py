@@ -105,7 +105,9 @@ class AppConfig(UCConfig):
 	save_dir = '~'
 	import_dir = '~'
 	export_dir = '~'
+	template_dir = '~'
 	make_backup = True
+	make_export_backup = False
 	resource_dir = ''
 	plugin_dirs = []
 	profile_import_dir = '~'

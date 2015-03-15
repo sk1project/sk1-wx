@@ -38,6 +38,7 @@ pdids.MOVE_MODE: (_('Move mode'),),
 pdids.COPY_MODE: (_('Copy mode'),),
 
 wx.ID_NEW: (_('&New'), _('New document')),
+pdids.ID_NEW_FROM_TEMPLATE: (_('New From Template...'), _('New document from template...')),
 wx.ID_OPEN: (_('&Open...'), _('Open document')),
 pdids.ID_CLEAR_LOG: (_('&Clear history'),),
 wx.ID_SAVE:(_('&Save'), _('Save document')),
