@@ -123,6 +123,7 @@ pdids.ID_CONV_TO_BW:(_('Convert to B&&W'),),
 pdids.ID_INVERT_BITMAP:(_('Invert bitmap'),),
 pdids.ID_REMOVE_ALPHA:(_('Remove alpha-channel'),),
 pdids.ID_INVERT_ALPHA:(_('Invert alpha-channel'),),
+pdids.ID_EXTRACT_BITMAP:(_('Extract embedded bitmap'),),
 
 pdids.ID_EDIT_TEXT:(_('&Edit text'),),
 

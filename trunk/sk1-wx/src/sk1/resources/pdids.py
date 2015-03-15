@@ -102,6 +102,7 @@ ID_CONV_TO_BW = wx.NewId()
 ID_INVERT_BITMAP = wx.NewId()
 ID_REMOVE_ALPHA = wx.NewId()
 ID_INVERT_ALPHA = wx.NewId()
+ID_EXTRACT_BITMAP = wx.NewId()
 #----- Text menu
 ID_EDIT_TEXT = wx.NewId()
 #----- Tools menu

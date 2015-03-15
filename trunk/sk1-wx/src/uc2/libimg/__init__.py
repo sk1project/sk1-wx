@@ -15,7 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
+import sys, os
 import cairo
 from copy import deepcopy
 from base64 import b64decode, b64encode
@@ -62,6 +62,18 @@ def convert_image(cms, pixmap, colorspace):
 	raw_image = cms.convert_image(raw_image, colorspace)
 	raw_image.save(image_stream, format='TIFF')
 	return b64encode(image_stream.getvalue())
+
+def extract_bitmap(pixmap, filepath):
+	if not os.path.splitext(filepath)[1] == '.tiff':
+		filepath = os.path.splitext(filepath)[0] + '.tiff'
+	fileptr = open(filepath, 'wb')
+	fileptr.write(b64decode(pixmap.bitmap))
+	fileptr.close()
+	if pixmap.alpha_channel:
+		filepath = os.path.splitext(filepath)[0] + '_alphachannel.tiff'
+		fileptr = open(filepath, 'wb')
+		fileptr.write(b64decode(pixmap.alpha_channel))
+		fileptr.close()
 
 def update_image(cms, pixmap):
 	png_stream = StringIO()

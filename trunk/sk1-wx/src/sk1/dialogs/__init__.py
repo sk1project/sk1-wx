@@ -17,8 +17,7 @@
 
 from msgdlgs import msg_dialog, error_dialog, stop_dialog, ync_dialog, \
 yesno_dialog
-from filedlgs import get_open_file_name, get_save_file_name, \
-get_import_file_name, get_export_file_name
+from filedlgs import get_open_file_name, get_save_file_name
 from progressdlg import ProgressDialog
 from aboutdlg import about_dialog
 from page_dlg import goto_page_dlg, delete_page_dlg, insert_page_dlg
