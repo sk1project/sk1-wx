@@ -124,7 +124,7 @@ def _get_save_fiters():
 	wildcard = ''
 	descr = uc2const.FORMAT_DESCRIPTION
 	ext = uc2const.FORMAT_EXTENSION
-	items = [] + data.SAVER_FORMATS
+	items = [data.SK2]#+ data.SAVER_FORMATS
 	for item in items:
 		wildcard += descr[item] + '|'
 		for extension in ext[item]:
@@ -149,6 +149,43 @@ def get_save_file_name(parent, app, path, msg=''):
 		defaultDir=doc_folder,
 		defaultFile=doc_name,
 		wildcard=_get_save_fiters(),
+		style=wx.SAVE | wx.CHANGE_DIR | wx.FD_OVERWRITE_PROMPT
+	)
+	dlg.CenterOnParent()
+	if dlg.ShowModal() == wx.ID_OK:
+		ret = path_system(dlg.GetPath())
+	dlg.Destroy()
+	return ret
+
+def _get_export_fiters():
+	wildcard = ''
+	descr = uc2const.FORMAT_DESCRIPTION
+	ext = uc2const.FORMAT_EXTENSION
+	items = [] + data.SAVER_FORMATS[1:]
+	for item in items:
+		wildcard += descr[item] + '|'
+		for extension in ext[item]:
+			wildcard += '*.' + extension + ';'
+			wildcard += '*.' + extension.upper() + ';'
+		if not item == items[-1]:
+			wildcard += '|'
+	return wildcard
+
+def get_export_file_name(parent, app, path, msg=''):
+	ret = ''
+	if not msg: msg = _('Export document As...')
+	if is_mac(): msg = ''
+
+	if path == '~': path = os.path.expanduser(path)
+
+	doc_folder = os.path.dirname(path)
+	doc_name = os.path.basename(path)
+
+	dlg = wx.FileDialog(
+		parent, message=msg,
+		defaultDir=doc_folder,
+		defaultFile=doc_name,
+		wildcard=_get_export_fiters(),
 		style=wx.SAVE | wx.CHANGE_DIR | wx.FD_OVERWRITE_PROMPT
 	)
 	dlg.CenterOnParent()

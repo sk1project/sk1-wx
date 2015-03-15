@@ -221,6 +221,10 @@ class AbstractAPI:
 		self.selection.update_bbox()
 		return (before, after)
 
+	def _set_bitmap_trafo(self, obj, trafo):
+		obj.trafo = trafo
+		obj.update()
+
 	def _clear_trafo(self, objs):
 		normal_trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
 		before = []
@@ -1285,6 +1289,13 @@ class PresenterAPI(AbstractAPI):
 			False]
 		self.add_undo(transaction)
 		self.selection.update()
+
+	def set_bitmap_dpi(self, h_dpi, v_dpi=None):
+		if not v_dpi:v_dpi = h_dpi
+		sel_before = [] + self.selection.objs
+		obj = sel_before[0]
+		trafo_before = obj.trafo
+		trafo_after = [] + obj.trafo
 
 
 
