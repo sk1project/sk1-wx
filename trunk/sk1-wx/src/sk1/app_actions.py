@@ -57,8 +57,9 @@ def create_actions(app):
 (pdids.GRADIENT_MODE, proxy.stub, tool_chnls, insp.is_doc),
 
 #------ File menu -------
-(wx.ID_NEW, proxy.new),
-(wx.ID_OPEN, proxy.open),
+(wx.ID_NEW, app.new),
+(pdids.ID_NEW_FROM_TEMPLATE, app.new_from_template),
+(wx.ID_OPEN, app.open),
 (pdids.ID_CLEAR_LOG, proxy.clear_log),
 (wx.ID_SAVE, proxy.save, doc_save_chnls, insp.is_doc_not_saved),
 (wx.ID_SAVEAS, proxy.save_as, doc_chnls, insp.is_doc),

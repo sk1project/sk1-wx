@@ -114,6 +114,27 @@ class pdApplication(Application, UCApplication):
 		self.set_current_doc(doc)
 		events.emit(events.APP_STATUS, _('New document created'))
 
+	def new_from_template(self):
+		msg = _('Select Template')
+		doc_file = dialogs.get_open_file_name(self.mw, self,
+								config.template_dir, msg)
+		if os.path.lexists(doc_file) and os.path.isfile(doc_file):
+			try:
+				doc = PD_Presenter(self, doc_file, template=True)
+			except:
+				msg = _('Cannot parse file')
+				msg = "%s '%s'" % (msg, doc_file) + '\n'
+				msg += _('The file may be corrupted or not supported format')
+				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
+				if config.print_stacktrace:
+					print sys.exc_info()[1].__str__()
+					print sys.exc_info()[2].__str__()
+				return
+			self.docs.append(doc)
+			config.template_dir = str(os.path.dirname(doc_file))
+			self.set_current_doc(doc)
+			events.emit(events.APP_STATUS, _('New document from template'))
+
 	def open(self, doc_file='', silent=False):
 		if not doc_file:
 			doc_file = dialogs.get_open_file_name(self.mw, self, config.open_dir)
