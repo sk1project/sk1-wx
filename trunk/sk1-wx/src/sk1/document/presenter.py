@@ -124,15 +124,16 @@ class PD_Presenter:
 
 	def save(self):
 		try:
+			saver = get_saver(self.doc_file)
+			if saver is None:
+				raise IOError(_('Unknown file format is requested for saving!'),
+							 self.doc_file)
+
 			if config.make_backup:
 				if os.path.lexists(self.doc_file):
 					if os.path.lexists(self.doc_file + '~'):
 						os.remove(self.doc_file + '~')
 					os.rename(self.doc_file, self.doc_file + '~')
-			saver = get_saver(self.doc_file)
-			if saver is None:
-				raise IOError(_('Unknown file format is requested for saving!'),
-							 self.doc_file)
 
 			pd = ProgressDialog(_('Saving file...'), self.app.mw)
 			ret = pd.run(saver, [self.doc_presenter, self.doc_file], False)
@@ -168,7 +169,13 @@ class PD_Presenter:
 		if saver is None:
 			doc.close()
 			raise IOError(_('Unknown file format is requested for saving!'),
-						 self.doc_file)
+						 doc_file)
+
+		if config.make_backup:
+			if os.path.lexists(doc_file):
+				if os.path.lexists(doc_file + '~'):
+					os.remove(doc_file + '~')
+				os.rename(doc_file, doc_file + '~')
 
 		pd = ProgressDialog(_('Saving file...'), self.app.mw)
 		ret = pd.run(saver, [doc, doc_file], False)
@@ -237,6 +244,33 @@ class PD_Presenter:
 				retval = False
 		doc_presenter.close()
 		return retval
+
+	def export_as(self, doc_file):
+		try:
+			saver = get_saver(doc_file)
+			if saver is None:
+				raise IOError(_('Unknown file format is requested for export!'),
+							 doc_file)
+
+			if config.make_backup:
+				if os.path.lexists(doc_file):
+					if os.path.lexists(doc_file + '~'):
+						os.remove(doc_file + '~')
+					os.rename(doc_file, doc_file + '~')
+
+			pd = ProgressDialog(_('Exporting...'), self.app.mw)
+			ret = pd.run(saver, [self.doc_presenter, doc_file], False)
+			if ret:
+				if not pd.error_info is None:
+					pd.destroy()
+					raise IOError(*pd.error_info)
+				pd.destroy()
+			else:
+				pd.destroy()
+				raise IOError(_('Error while exporting'), doc_file)
+
+		except IOError:
+			raise IOError(*sys.exc_info())
 
 	def modified(self, *args):
 		self.saved = False

@@ -285,6 +285,37 @@ class pdApplication(Application, UCApplication):
 					print sys.exc_info()[1].__str__()
 					print sys.exc_info()[2].__str__()
 
+	def export_as(self):
+		doc_file = '' + self.current_doc.doc_file
+		if not doc_file:
+			doc_file = '' + self.current_doc.doc_name
+		if os.path.splitext(doc_file)[1] == "." + \
+					uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
+			doc_file = os.path.splitext(doc_file)[0] + "." + \
+					uc2const.FORMAT_EXTENSION[uc2const.PNG][0]
+		if not os.path.lexists(os.path.dirname(doc_file)):
+			doc_file = os.path.join(config.export_dir,
+								os.path.basename(doc_file))
+		doc_file = dialogs.get_export_file_name(self.mw, self, doc_file)
+		if doc_file:
+			try:
+				self.current_doc.export_as(doc_file)
+			except IOError:
+				first = _('Cannot save document')
+				msg = ("%s '%s'.") % (first, self.current_doc.doc_name) + '\n'
+				msg += _('Please check file name and write permissions')
+				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
+				if config.print_stacktrace:
+					print sys.exc_info()[1].__str__()
+					print sys.exc_info()[2].__str__()
+				return False
+			config.export_dir = str(os.path.dirname(doc_file))
+			self.history.add_entry(doc_file, appconst.SAVED)
+			events.emit(events.APP_STATUS, _('Document is successfully exported'))
+			return True
+		else:
+			return False
+
 
 	def exit(self, *args):
 		if not self.insp.is_any_doc_not_saved(): self.mw.Hide()

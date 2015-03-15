@@ -67,6 +67,7 @@ def create_actions(app):
 (wx.ID_CLOSE, proxy.close, doc_chnls, insp.is_doc),
 (wx.ID_CLOSE_ALL, proxy.close_all, doc_chnls, insp.is_doc),
 (pdids.ID_IMPORT, proxy.import_file, doc_chnls, insp.is_doc),
+(pdids.ID_EXPORT, proxy.export_as, doc_chnls, insp.is_doc),
 (wx.ID_PRINT_SETUP, proxy.stub, doc_chnls, insp.is_doc),
 (wx.ID_PRINT, proxy.stub, doc_chnls, insp.is_doc),
 (wx.ID_EXIT, proxy.exit),
