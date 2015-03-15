@@ -87,6 +87,13 @@ pdids.ID_GROUP:icons.PD_GROUP,
 pdids.ID_UNGROUP:icons.PD_UNGROUP,
 pdids.ID_UNGROUPALL:icons.PD_UNGROUP_ALL,
 pdids.ID_TO_CURVES:icons.PD_TO_CURVES,
+#----- Bitmaps menu
+pdids.ID_CONV_TO_CMYK:icons.PD_CONV_TO_CMYK,
+pdids.ID_CONV_TO_RGB:icons.PD_CONV_TO_RGB,
+pdids.ID_CONV_TO_LAB:icons.PD_CONV_TO_LAB,
+pdids.ID_CONV_TO_GRAY:icons.PD_CONV_TO_GRAY,
+pdids.ID_CONV_TO_BW:icons.PD_CONV_TO_BW,
+pdids.ID_INVERT_BITMAP:icons.PD_INVERT_BITMAP,
 #----- Tools menu
 pdids.ID_TOOL_PAGES:icons.PD_TOOL_PAGES,
 pdids.ID_TOOL_LAYERS:icons.PD_TOOL_LAYERS,

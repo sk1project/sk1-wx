@@ -61,9 +61,18 @@ PD_LOWER_TO_BOTTOM = 'action-lower-to-bottom'
 PD_GROUP = 'action-group'
 PD_UNGROUP = 'action-ungroup'
 PD_UNGROUP_ALL = 'action-ungroup-all'
+
+PD_CONV_TO_CMYK = 'action-to-cmyk'
+PD_CONV_TO_RGB = 'action-to-rgb'
+PD_CONV_TO_LAB = 'action-to-lab'
+PD_CONV_TO_GRAY = 'action-to-gray'
+PD_CONV_TO_BW = 'action-to-bw'
+PD_INVERT_BITMAP = 'action-invert-bitmap'
+
 PD_TOOL_PAGES = 'pdesign-tool-pages'
 PD_TOOL_LAYERS = 'pdesign-tool-layers'
 PD_TOOL_OBJBROWSER = 'pdesign-tool-objbrowser'
+
 PD_WARNING = 'gtk-dialog-warning'
 PD_HOME = 'gtk-home'
 PD_FBPAGE = 'pdesign-fb'
@@ -140,7 +149,9 @@ GENERICS = [PDESIGN_ICON16, PDESIGN_ICON22, PDESIGN_ICON32, PDESIGN_ICON48,
 		PD_INSERT_PAGE, PD_DELETE_PAGE, PD_GOTO_PAGE, PD_NEXT_PAGE, PD_PREV_PAGE,
 		PD_PAGE_FRAME, PD_PAGE_GUIDE_FRAME, PD_REMOVE_ALL_GUIDES,
 		PD_RAISE_TO_TOP, PD_RAISE, PD_LOWER, PD_LOWER_TO_BOTTOM,
-		PD_STUB_NEW, PD_STUB_OPEN, PD_STUB_RECENT, ]
+		PD_STUB_NEW, PD_STUB_OPEN, PD_STUB_RECENT, PD_CONV_TO_CMYK,
+		PD_CONV_TO_RGB, PD_CONV_TO_LAB, PD_CONV_TO_GRAY, PD_CONV_TO_BW,
+		PD_INVERT_BITMAP]
 
 TOOL_CREATE_CURVE = 'tool-create-curve'
 TOOL_CREATE_ELLIPSE = 'tool-create-ellipse'
