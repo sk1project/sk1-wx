@@ -193,7 +193,7 @@ def set_image_data(cms, pixmap, raw_content):
 			else:
 				band = alpha_image.split()[3]
 			fobj = StringIO()
-			band.save(fobj, format='PNG')
+			band.save(fobj, format='TIFF')
 			alpha = b64encode(fobj.getvalue())
 
 	pixmap.bitmap = bmp
