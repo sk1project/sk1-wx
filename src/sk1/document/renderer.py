@@ -179,15 +179,15 @@ class PDRenderer(CairoRenderer):
 		while dx < sdist + 3:
 			i = i + 0.5
 			dx = dx * 10.0 * i
-		if dx / 2.0 > sdist + 3:
-			dx = dx / 2.0
+#		if dx / 2.0 > sdist + 3:
+#			dx = dx / 2.0
 
 		i = 0.0
 		while dy < sdist + 3:
 			i = i + 0.5
 			dy = dy * 10.0 * i
-		if dy / 2.0 > sdist + 3:
-			dy = dy / 2.0
+#		if dy / 2.0 > sdist + 3:
+#			dy = dy / 2.0
 
 		sx = (x0 / dx - math.floor(x0 / dx)) * dx
 		sy = (y0 / dy - math.floor(y0 / dy)) * dy
