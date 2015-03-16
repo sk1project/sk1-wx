@@ -17,7 +17,7 @@
 
 import wx
 
-from wal import const, ALL, EXPAND, VPanel, HPanel, HLine
+from wal import const, VPanel, HPanel, HLine
 
 from sk1 import events
 from sk1.parts.ctxpanel import AppCtxPanel
@@ -42,23 +42,23 @@ class MDIArea(VPanel):
 		self.docareas = []
 		VPanel.__init__(self, parent)
 
-		if not const.is_mac(): self.add(HLine(self), 0, ALL | EXPAND)
+		if not const.is_mac(): self.pack(HLine(self), fill=True)
 
 		#----- Context panel
 		self.ctxpanel = AppCtxPanel(self.app, self)
-		self.add(self.ctxpanel, 0)
+		self.pack(self.ctxpanel, fill=True, padding=1)
 
 		#----- Doc tabs
 		self.dtp = DocTabsPanel(self)
 		self.doc_tabs = self.dtp.doc_tabs
-		self.add(self.dtp, 0, ALL | EXPAND)
+		self.pack(self.dtp, fill=True)
 
 		hpanel = HPanel(self)
-		self.add(hpanel, 1, ALL | EXPAND)
+		self.pack(hpanel, expand=True, fill=True)
 
 		#----- Tools
 		self.tools = AppTools(self.app, hpanel)
-		hpanel.add(self.tools, 0, ALL | EXPAND)
+		hpanel.pack(self.tools, fill=True)
 
 		self.splitter = wx.SplitterWindow(hpanel, -1, style=wx.SP_LIVE_UPDATE)
 		self.doc_keeper = VPanel(self.splitter)
@@ -71,15 +71,17 @@ class MDIArea(VPanel):
 		self.splitter.SetMinimumPaneSize(200)
 		self.splitter.SetSashGravity(1.0)
 		self.splitter.Unsplit(None)
-		hpanel.add(self.splitter, 1, ALL | EXPAND)
+		hpanel.pack(self.splitter, expand=True, fill=True)
 
-		#----- Palette panel
+		#----- Horizontal Palette panel
+		self.pack(HLine(self), fill=True, padding=2)
 		self.palette_panel = AppPalettePanel(self)
-		self.add(self.palette_panel, 0, ALL | EXPAND)
+		self.pack(self.palette_panel, fill=True)
 
 		#----- Status bar
+		self.pack(HLine(self), fill=True, padding=2)
 		self.statusbar = AppStatusbar(self)
-		self.add(self.statusbar, 0, ALL | EXPAND)
+		self.pack(self.statusbar, fill=True)
 
 		self.Layout()
 		events.connect(events.DOC_CHANGED, self.set_active)
@@ -92,7 +94,7 @@ class MDIArea(VPanel):
 		docarea.Hide()
 		docarea.doc_tab = self.doc_tabs.add_new_tab(doc)
 		self.docareas.append(docarea)
-		self.doc_keeper.add(docarea, 1, ALL | EXPAND)
+		self.doc_keeper.pack(docarea, expand=True, fill=True)
 		return docarea
 
 	def remove_doc(self, doc):

@@ -79,6 +79,7 @@ class MainWindow(wx.Frame):
 
 		wx.Frame.__init__(self, None, wx.ID_ANY, title, pos=DEF_SIZE, size=size,
 						name=title)
+		self.orientation = orientation
 		self.Centre()
 		self.box = wx.BoxSizer(orientation)
 		self.SetSizer(self.box)
@@ -89,6 +90,22 @@ class MainWindow(wx.Frame):
 	def add(self, *args, **kw):
 		"""Arguments: object, expandable (0 or 1), flag, border"""
 		self.box.Add(*args, **kw)
+
+	def pack(self, obj, expand=False, fill=False, padding=0):
+		if self.orientation == wx.VERTICAL:
+			if expand:expand = 1
+			else: expand = 0
+			flags = wx.ALIGN_TOP | wx.ALIGN_CENTER_HORIZONTAL
+			if padding: flags = flags | wx.TOP | wx.BOTTOM
+			if fill: flags = flags | wx.EXPAND
+			self.box.Add(obj, expand, flags, padding)
+		else:
+			if expand:expand = 1
+			else: expand = 0
+			flags = wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL
+			if padding: flags = flags | wx.LEFT | wx.RIGHT
+			if fill: flags = flags | wx.EXPAND
+			self.box.Add(obj, expand, flags, padding)
 
 	def set_title(self, title):
 		self.SetTitle(title)

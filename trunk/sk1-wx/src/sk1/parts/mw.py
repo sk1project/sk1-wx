@@ -18,7 +18,6 @@
 import os
 import wx
 
-from wal import ALL, EXPAND
 from wal import MainWindow
 
 from sk1 import config
@@ -54,12 +53,12 @@ class AppMainWindow(MainWindow):
 
 		#----- MDI Area
 		self.mdi = MDIArea(self.app, self)
-		self.add(self.mdi, 1, ALL | EXPAND)
+		self.pack(self.mdi, expand=True, fill=True)
 		if not config.new_doc_on_start:self.mdi.hide()
 
 		#----- Stub panel
 		self.stub = AppStubPanel(self)
-		self.add(self.stub, 1, ALL | EXPAND)
+		self.pack(self.stub, expand=True, fill=True)
 		if config.new_doc_on_start:self.stub.hide()
 
 		self.Layout()

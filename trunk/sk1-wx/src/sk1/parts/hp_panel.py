@@ -36,7 +36,7 @@ class AppPalettePanel(HPanel):
 		self.app = mw.app
 		self.mw = mw
 		HPanel.__init__(self, mw, const.TOP)
-		self.add((1, 20))
+		self.pack((1, 20))
 
 		self.palette = HPalette(self.panel, self.app.default_cms, CMYK_PALETTE,
 							onleftclick=self.app.proxy.fill_selected,
@@ -51,29 +51,29 @@ class AppPalettePanel(HPanel):
 		self.dleft_but = ImageButton(self.panel, icons.DOUBLE_ARROW_LEFT,
 								tooltip=tip, decoration_padding=4, native=native,
 								onclick=self.palette.dscroll_left, repeat=True)
-		self.add(self.dleft_but)
+		self.pack(self.dleft_but)
 		self.left_but = ImageButton(self.panel, icons.ARROW_LEFT, tooltip=tip,
 								decoration_padding=4, native=native,
 								onclick=self.palette.scroll_left, repeat=True)
-		self.add(self.left_but)
+		self.pack(self.left_but)
 
 		tip = _('Empty pattern')
 		self.no_color = ImageLabel(self.panel, icons.NO_COLOR, tooltip=tip,
 								 onclick=self.set_no_fill)
 		self.no_color.Bind(wx.EVT_RIGHT_UP, self.set_no_stroke, self.no_color)
-		self.add(self.no_color)
+		self.pack(self.no_color)
 
-		self.add(self.palette, 1, const.ALL | const.EXPAND, 1)
+		self.pack(self.palette, expand=True, fill=True, padding=1)
 
 		tip = _('Scroll palette to right')
 		self.right_but = ImageButton(self.panel, icons.ARROW_RIGHT, tooltip=tip,
 								decoration_padding=4, native=native,
 								onclick=self.palette.scroll_right, repeat=True)
-		self.add(self.right_but)
+		self.pack(self.right_but)
 		self.dright_but = ImageButton(self.panel, icons.DOUBLE_ARROW_RIGHT,
 								tooltip=tip, decoration_padding=4, native=native,
 								onclick=self.palette.dscroll_right, repeat=True)
-		self.add(self.dright_but)
+		self.pack(self.dright_but)
 		self.left_enable(False)
 
 
