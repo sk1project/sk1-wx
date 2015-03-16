@@ -195,7 +195,7 @@ class pdApplication(Application, UCApplication):
 		if not os.path.lexists(os.path.dirname(doc_file)):
 			doc_file = os.path.join(config.save_dir,
 								os.path.basename(doc_file))
-		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file)
+		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file)[0]
 		if doc_file:
 			old_file = self.current_doc.doc_file
 			old_name = self.current_doc.doc_name
@@ -232,7 +232,7 @@ class pdApplication(Application, UCApplication):
 			doc_file = os.path.join(config.save_dir,
 								os.path.basename(doc_file))
 		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
-							_('Save selected objects only as...'))
+							_('Save selected objects only as...'))[0]
 		if doc_file:
 			try:
 				self.current_doc.save_selected(doc_file)
@@ -321,7 +321,7 @@ class pdApplication(Application, UCApplication):
 								os.path.basename(doc_file))
 		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
 							_('Export document As...'),
-							file_types=data.SAVER_FORMATS[1:])
+							file_types=data.SAVER_FORMATS[1:])[0]
 		if doc_file:
 			try:
 				self.current_doc.export_as(doc_file)
@@ -343,7 +343,7 @@ class pdApplication(Application, UCApplication):
 		doc_file = os.path.join(config.save_dir, doc_file)
 		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
 							_('Extract selected bitmap as...'),
-							file_types=[data.TIF])
+							file_types=[data.TIF])[0]
 		if doc_file:
 			try:
 				pixmap = self.current_doc.selection.objs[0]

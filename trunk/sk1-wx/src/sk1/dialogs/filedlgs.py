@@ -108,6 +108,6 @@ def get_save_file_name(parent, app, path, msg='', file_types=[]):
 	)
 	dlg.CenterOnParent()
 	if dlg.ShowModal() == wx.ID_OK:
-		ret = path_system(dlg.GetPath())
+		ret = (path_system(dlg.GetPath()), dlg.GetFilterIndex())
 	dlg.Destroy()
 	return ret
