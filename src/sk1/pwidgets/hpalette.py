@@ -55,7 +55,7 @@ class HPalette(HPanel):
 		self.onmax = onmax
 		HPanel.__init__(self, parent)
 		self.set_palette(palette)
-		self.add((CELL_WIDTH, CELL_HEIGHT))
+		self.pack((CELL_WIDTH, CELL_HEIGHT))
 		self.tooltipwin = PaletteToolTip(self)
 		self.Bind(wx.EVT_PAINT, self._on_paint, self)
 		self.Bind(wx.EVT_SIZE, self._on_resize, self)

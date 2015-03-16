@@ -19,7 +19,7 @@ import wx
 
 from uc2.uc2const import IMAGE_NAMES, IMAGE_CMYK, IMAGE_RGB
 
-from wal import ALL, EXPAND, TOP, LEFT, CENTER, RIGHT, const
+from wal import const
 from wal import HPanel, Label, VLine, ImageButton
 
 from sk1 import _, config, events
@@ -49,28 +49,28 @@ class AppStatusbar(HPanel):
 				FONTSIZE[0] = str(font.GetPointSize())
 
 		self.mw = mw
-		HPanel.__init__(self, mw, border=TOP)
-		self.add((1, 20))
+		HPanel.__init__(self, mw)
+		self.pack((1, 20))
 		panel1 = HPanel(self.panel)
-		panel1.add((5, 20))
+		panel1.pack((5, 20))
 
 		self.mouse_info = MouseMonitor(self.mw.app, panel1)
-		panel1.add(self.mouse_info, 0, ALL | EXPAND)
+		panel1.pack(self.mouse_info)
 		self.mouse_info.hide()
 
 		self.page_info = PageMonitor(self.mw.app, panel1)
-		panel1.add(self.page_info, 0, ALL | EXPAND)
+		panel1.pack(self.page_info)
 		self.page_info.hide()
 
-		panel1.add(get_bmp(panel1.panel, icons.PD_APP_STATUS), 0, LEFT | CENTER)
-		panel1.add((5, 3))
+		panel1.pack(get_bmp(panel1.panel, icons.PD_APP_STATUS))
+		panel1.pack((5, 3))
 
 		self.info = Label(panel1.panel, text='', fontsize=FONTSIZE[0])
-		panel1.add(self.info, 0, LEFT | CENTER)
-		self.add(panel1, 1, ALL | EXPAND)
+		panel1.pack(self.info)
+		self.pack(panel1, expand=True, fill=True)
 
 		self.clr_monitor = ColorMonitor(self.mw.app, self.panel)
-		self.add(self.clr_monitor, 0, ALL | EXPAND)
+		self.pack(self.clr_monitor)
 		self.clr_monitor.hide()
 		events.connect(events.APP_STATUS, self._on_event)
 
@@ -92,16 +92,17 @@ class ColorMonitor(HPanel):
 		HPanel.__init__(self, parent)
 
 		self.image_txt = Label(self.panel, text=_('Image type: '), fontsize=FONTSIZE[0])
-		self.add(self.image_txt, 0, LEFT | CENTER | RIGHT, 4)
+		self.pack(self.image_txt, padding=4)
 		self.fill_txt = Label(self.panel, text=_('Fill:'), fontsize=FONTSIZE[0])
-		self.add(self.fill_txt, 0, LEFT | CENTER)
+		self.pack(self.fill_txt)
 		self.fill_swatch = FillSwatch(self.panel, self.app, self.fill_txt)
-		self.add(self.fill_swatch, 0, LEFT | CENTER, 2)
+		self.pack(self.fill_swatch, padding=2)
+		self.pack((10, 5))
 		self.stroke_txt = Label(self.panel, text=_('Stroke:'), fontsize=FONTSIZE[0])
-		self.add(self.stroke_txt, 0, LEFT | CENTER, 10)
+		self.pack(self.stroke_txt)
 		self.stroke_swatch = StrokeSwatch(self.panel, self.app, self.stroke_txt)
-		self.add(self.stroke_swatch, 0, LEFT | CENTER, 2)
-		self.add((5, 5))
+		self.pack(self.stroke_swatch, padding=2)
+		self.pack((5, 5))
 		events.connect(events.SELECTION_CHANGED, self.update)
 		events.connect(events.DOC_CHANGED, self.update)
 		events.connect(events.NO_DOCS, self.update)
@@ -132,22 +133,21 @@ class MouseMonitor(HPanel):
 	def __init__(self, app, parent):
 		self.app = app
 		HPanel.__init__(self, parent)
-		self.add(get_bmp(self.panel, icons.PD_MOUSE_MONITOR), 0, LEFT | CENTER)
+		self.pack(get_bmp(self.panel, icons.PD_MOUSE_MONITOR))
 
 		width = 100
-		if const.is_mac():
-			width = 130
+		if const.is_mac(): width = 130
 
 		self.pointer_txt = Label(self.panel, text=' ', fontsize=FONTSIZE[0])
 		self.pointer_txt.SetMinSize((width, -1))
-		self.add(self.pointer_txt, 0, LEFT | CENTER)
-		self.add(VLine(self.panel), 0, ALL | EXPAND, 2)
+		self.pack(self.pointer_txt)
+		self.pack(VLine(self.panel), fill=True, padding=2)
 		events.connect(events.MOUSE_STATUS, self.set_value)
 		events.connect(events.NO_DOCS, self.hide_monitor)
 		events.connect(events.DOC_CHANGED, self.doc_changed)
 
 	def clear(self):
-		self.pointer_txt.set_text(' No coords')
+		self.pointer_txt.set_text(' ' + _('No coords'))
 
 	def hide_monitor(self, *args):
 		self.hide(True)
@@ -178,7 +178,7 @@ class PageMonitor(HPanel):
 							decoration_padding=4,
 							native=native,
 							onclick=callback)
-		self.add(self.start_but, 0, LEFT | CENTER)
+		self.pack(self.start_but)
 
 		callback = self.app.proxy.previous_page
 		self.prev_but = ImageButton(self.panel,
@@ -187,10 +187,10 @@ class PageMonitor(HPanel):
 							decoration_padding=4,
 							native=native,
 							onclick=callback)
-		self.add(self.prev_but, 0, LEFT | CENTER)
+		self.pack(self.prev_but)
 
 		self.page_txt = Label(self.panel, text=' ', fontsize=FONTSIZE[0])
-		self.add(self.page_txt, 0, LEFT | CENTER)
+		self.pack(self.page_txt)
 
 		callback = self.app.proxy.next_page
 		self.next_but = ImageButton(self.panel,
@@ -199,7 +199,7 @@ class PageMonitor(HPanel):
 							decoration_padding=4,
 							native=native,
 							onclick=callback)
-		self.add(self.next_but, 0, LEFT | CENTER)
+		self.pack(self.next_but)
 
 		callback = self.app.proxy.goto_end
 		self.end_but = ImageButton(self.panel,
@@ -208,10 +208,10 @@ class PageMonitor(HPanel):
 							decoration_padding=4,
 							native=native,
 							onclick=callback)
-		self.add(self.end_but, 0, LEFT | CENTER)
+		self.pack(self.end_but)
 
 
-		self.add(VLine(self.panel), 0, ALL | EXPAND, 4)
+		self.pack(VLine(self.panel), fill=True, padding=4)
 		events.connect(events.NO_DOCS, self.hide_monitor)
 		events.connect(events.DOC_CHANGED, self.update)
 		events.connect(events.DOC_MODIFIED, self.update)

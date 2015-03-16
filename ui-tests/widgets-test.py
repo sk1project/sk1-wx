@@ -44,7 +44,7 @@ class WidgetPanel(VPanel):
 		flags = LEFT | CENTER
 		pflags = ALL | EXPAND
 		#---------Labels
-		p = HPanel(self, border=BOTTOM, space=2)
+		p = HPanel(self)
 		props = [
 			('Normal font', False, 0),
 			('Bold font', True, 0),
@@ -55,35 +55,39 @@ class WidgetPanel(VPanel):
 			('+2 red bold font', True, 2, (255, 0, 0)),
 			]
 		for item in props:
-			p.add(Label(p, *item), 0, flags, 5)
+			p.pack(Label(p, *item), padding=5)
 
-		self.add(p, 0, pflags)
+		self.pack(p, fill=True)
+		self.pack(HLine(self), fill=True, padding=5)
 
 		#---------HtmlLabels
-		p = HPanel(self, border=BOTTOM, space=2)
+		p = HPanel(self)
 
-		p.add(HtmlLabel(p, 'http://junona.org'), 0, flags, 5)
-		p.add(HtmlLabel(p, 'Download site', 'http://sk1project.org'), 0, flags, 5)
+		p.pack(HtmlLabel(p, 'http://sk1project.org'), padding=5)
+		p.pack(HtmlLabel(p, 'Download site', 'http://sk1project.org'), padding=5)
 
-		self.add(p, 0, pflags)
+		self.pack(p, fill=True)
+		self.pack(HLine(self), fill=True, padding=5)
 
 		#---------Buttons
-		p = HPanel(self, border=BOTTOM, space=2)
+		p = HPanel(self)
 
-		p.add(Button(p, 'Native button'), 0, flags, 5)
+		p.pack(Button(p, 'Native button'), padding=5)
 		txt = 'Native default button'
-		p.add(Button(p, 'Native default button', default=True, tooltip=txt), 0, flags, 5)
-		p.add(Button(p, 'Native button with callback', onclick=self.test), 0, flags, 5)
+		p.pack(Button(p, 'Native default button', default=True, tooltip=txt), padding=5)
+		p.pack(Button(p, 'Native button with callback', onclick=self.test), padding=5)
 
-		self.add(p, 0, pflags)
+		self.pack(p, fill=True)
+		self.pack(HLine(self), fill=True, padding=5)
 
 		#---------Checkboxes
-		p = HPanel(self, border=BOTTOM, space=2)
+		p = HPanel(self)
 
 		p.add(Checkbox(p, 'Native checkbox'), 0, flags, 5)
 		p.add(Checkbox(p, 'Native checkbox (checked)', True), 0, flags, 5)
 		p.add(Checkbox(p, 'Checkbox with callback', onclick=self.test), 0, flags, 5)
-		self.add(p, 0, pflags)
+		self.pack(p, fill=True, padding=5)
+		self.pack(HLine(self), fill=True, padding=5)
 
 		#---------Radiobuttons
 		p = HPanel(self, border=BOTTOM, space=2)
