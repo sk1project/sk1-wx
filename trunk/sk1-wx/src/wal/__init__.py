@@ -17,10 +17,10 @@
 
 from const import TOP, BOTTOM, LEFT, RIGHT
 from const import ALL, EXPAND, CENTER , HORIZONTAL, VERTICAL
-from basic import Application, MainWindow, Notebook, Panel, VPanel, HPanel
-from basic import Label, HLine, VLine, HtmlLabel, Button, Checkbox, Radiobutton
-from basic import Combolist, Combobox, Entry, Spin, FloatSpin, Slider
-from basic import LabeledPanel
+from basic import Application, MainWindow, Panel, VPanel, HPanel, LabeledPanel
+from widgets import Label, HLine, VLine, HtmlLabel, Button, Checkbox
+from widgets import Combolist, Combobox, Entry, Spin, FloatSpin, Radiobutton
+from widgets import Slider, Notebook
 
 from gctrls import ImageLabel, ImageButton, ImageToggleButton
 from renderer import copy_bitmap_to_surface, copy_surface_to_bitmap
