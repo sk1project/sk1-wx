@@ -22,7 +22,7 @@ from wal import BOTTOM, EXPAND, ALL, VERTICAL, HORIZONTAL
 from wal import const, HPanel, VPanel, Button, HLine
 
 from sk1 import _, appconst
-from msgdlgs import error_dialog
+from wal import error_dialog
 
 class LogViewerDialog(wx.Dialog):
 

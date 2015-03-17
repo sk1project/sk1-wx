@@ -37,8 +37,7 @@ class ProgressDialog(wx.ProgressDialog):
 		self.dlg = wx.ProgressDialog(self.caption,
 						' ' * 80,
 						parent=self.parent,
-						style=wx.PD_APP_MODAL | wx.PD_AUTO_HIDE
-						)
+						style=wx.PD_APP_MODAL | wx.PD_AUTO_HIDE)
 
 		try:
 			if save_result: self.result = executable(*args)
