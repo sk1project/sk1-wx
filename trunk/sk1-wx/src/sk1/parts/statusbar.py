@@ -32,7 +32,6 @@ FONTSIZE = [str(config.statusbar_fontsize), ]
 class AppStatusbar(HPanel):
 
 	mw = None
-	panel1 = None
 	mouse_info = None
 	page_info = None
 	info = None
@@ -50,26 +49,25 @@ class AppStatusbar(HPanel):
 
 		self.mw = mw
 		HPanel.__init__(self, mw)
-		self.pack((1, 20))
-		panel1 = HPanel(self.panel)
-		panel1.pack((5, 20))
+		self.pack((5, 20))
 
-		self.mouse_info = MouseMonitor(self.mw.app, panel1)
-		panel1.pack(self.mouse_info)
+		self.mouse_info = MouseMonitor(self.mw.app, self)
+		self.pack(self.mouse_info)
 		self.mouse_info.hide()
 
-		self.page_info = PageMonitor(self.mw.app, panel1)
-		panel1.pack(self.page_info)
+		self.page_info = PageMonitor(self.mw.app, self)
+		self.pack(self.page_info)
 		self.page_info.hide()
 
-		panel1.pack(get_bmp(panel1.panel, icons.PD_APP_STATUS))
-		panel1.pack((5, 3))
+		info_panel = HPanel(self)
+		info_panel.pack(get_bmp(info_panel, icons.PD_APP_STATUS))
+		info_panel.pack((5, 3))
+		self.info = Label(info_panel, text='', fontsize=FONTSIZE[0])
+		info_panel.pack(self.info)
+		self.pack(info_panel, expand=True)
 
-		self.info = Label(panel1.panel, text='', fontsize=FONTSIZE[0])
-		panel1.pack(self.info)
-		self.pack(panel1, expand=True, fill=True)
 
-		self.clr_monitor = ColorMonitor(self.mw.app, self.panel)
+		self.clr_monitor = ColorMonitor(self.mw.app, self)
 		self.pack(self.clr_monitor)
 		self.clr_monitor.hide()
 		events.connect(events.APP_STATUS, self._on_event)
@@ -77,6 +75,7 @@ class AppStatusbar(HPanel):
 	def _on_event(self, *args):
 		self.info.set_text(args[0])
 		self.Layout()
+		self.show()
 
 class ColorMonitor(HPanel):
 
@@ -91,18 +90,19 @@ class ColorMonitor(HPanel):
 		self.parent = parent
 		HPanel.__init__(self, parent)
 
-		self.image_txt = Label(self.panel, text=_('Image type: '), fontsize=FONTSIZE[0])
+		self.image_txt = Label(self, text=_('Image type: '), fontsize=FONTSIZE[0])
 		self.pack(self.image_txt, padding=4)
-		self.fill_txt = Label(self.panel, text=_('Fill:'), fontsize=FONTSIZE[0])
+		self.fill_txt = Label(self, text=_('Fill:'), fontsize=FONTSIZE[0])
 		self.pack(self.fill_txt)
-		self.fill_swatch = FillSwatch(self.panel, self.app, self.fill_txt)
+		self.fill_swatch = FillSwatch(self, self.app, self.fill_txt)
 		self.pack(self.fill_swatch, padding=2)
-		self.pack((10, 5))
-		self.stroke_txt = Label(self.panel, text=_('Stroke:'), fontsize=FONTSIZE[0])
+		self.pack((5, 5))
+		self.stroke_txt = Label(self, text=_('Stroke:'), fontsize=FONTSIZE[0])
 		self.pack(self.stroke_txt)
-		self.stroke_swatch = StrokeSwatch(self.panel, self.app, self.stroke_txt)
+		self.stroke_swatch = StrokeSwatch(self, self.app, self.stroke_txt)
 		self.pack(self.stroke_swatch, padding=2)
 		self.pack((5, 5))
+		self.Layout()
 		events.connect(events.SELECTION_CHANGED, self.update)
 		events.connect(events.DOC_CHANGED, self.update)
 		events.connect(events.NO_DOCS, self.update)
@@ -124,9 +124,10 @@ class ColorMonitor(HPanel):
 					self.image_txt.show()
 				else:
 					self.image_txt.hide()
-				self.show(True)
+				self.hide()
+				self.show()
 				return
-		self.hide(True)
+		self.hide()
 
 class MouseMonitor(HPanel):
 
@@ -150,7 +151,7 @@ class MouseMonitor(HPanel):
 		self.pointer_txt.set_text(' ' + _('No coords'))
 
 	def hide_monitor(self, *args):
-		self.hide(True)
+		self.hide()
 		self.clear()
 
 	def set_value(self, *args):
@@ -159,7 +160,7 @@ class MouseMonitor(HPanel):
 	def doc_changed(self, *args):
 		self.clear()
 		if not self.is_shown():
-			self.show(True)
+			self.show()
 
 class PageMonitor(HPanel):
 
@@ -223,6 +224,9 @@ class PageMonitor(HPanel):
 		if self.app.current_doc:
 			presenter = self.app.current_doc
 			pages = presenter.get_pages()
+			if len(pages) == 1:
+				self.hide()
+				return
 			current_index = pages.index(presenter.active_page)
 
 			if current_index:
@@ -239,10 +243,10 @@ class PageMonitor(HPanel):
 
 			text = _(" Page %i of %i ") % (current_index + 1, len(pages))
 			self.page_txt.set_text(text)
-			self.show(True)
+			self.show()
 
 	def hide_monitor(self, *args):
-		self.hide(True)
+		self.hide()
 
 
 
