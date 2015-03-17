@@ -63,7 +63,7 @@ class AppPalettePanel(HPanel):
 		self.no_color.Bind(wx.EVT_RIGHT_UP, self.set_no_stroke, self.no_color)
 		self.pack(self.no_color)
 
-		self.pack(self.palette, expand=True, fill=True, padding=1)
+		self.pack(self.palette, expand=True, padding=1)
 
 		tip = _('Scroll palette to right')
 		self.right_but = ImageButton(self.panel, icons.ARROW_RIGHT, tooltip=tip,
