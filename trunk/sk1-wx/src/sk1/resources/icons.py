@@ -94,6 +94,15 @@ PD_PM_ARROW_LEFT = "pager-arrow-left"
 PD_PM_ARROW_RIGHT = "pager-arrow-right"
 PD_PM_ARROW_START = "pager-arrow-start"
 
+PD_SNAP_TO_GRID_OFF = 'snap-to-grid-off'
+PD_SNAP_TO_GRID_ON = 'snap-to-grid-on'
+PD_SNAP_TO_GUIDE_OFF = 'snap-to-guide-off'
+PD_SNAP_TO_GUIDE_ON = 'snap-to-guide-on'
+PD_SNAP_TO_OBJ_OFF = 'snap-to-obj-off'
+PD_SNAP_TO_OBJ_ON = 'snap-to-obj-on'
+PD_SNAP_TO_PAGE_OFF = 'snap-to-page-off'
+PD_SNAP_TO_PAGE_ON = 'snap-to-page-on'
+
 #----- MacOS X specific bitmaps
 MAC_TBB_NORMAL = 'tbb-normal'
 MAC_TBB_PRESSED = 'tbb-pressed'
@@ -151,7 +160,9 @@ GENERICS = [PDESIGN_ICON16, PDESIGN_ICON22, PDESIGN_ICON32, PDESIGN_ICON48,
 		PD_RAISE_TO_TOP, PD_RAISE, PD_LOWER, PD_LOWER_TO_BOTTOM,
 		PD_STUB_NEW, PD_STUB_OPEN, PD_STUB_RECENT, PD_CONV_TO_CMYK,
 		PD_CONV_TO_RGB, PD_CONV_TO_LAB, PD_CONV_TO_GRAY, PD_CONV_TO_BW,
-		PD_INVERT_BITMAP]
+		PD_INVERT_BITMAP, PD_SNAP_TO_GRID_OFF, PD_SNAP_TO_GRID_ON,
+		PD_SNAP_TO_GUIDE_OFF, PD_SNAP_TO_GUIDE_ON, PD_SNAP_TO_OBJ_OFF,
+		PD_SNAP_TO_OBJ_ON, PD_SNAP_TO_PAGE_OFF, PD_SNAP_TO_PAGE_ON]
 
 TOOL_CREATE_CURVE = 'tool-create-curve'
 TOOL_CREATE_ELLIPSE = 'tool-create-ellipse'
