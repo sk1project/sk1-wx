@@ -24,15 +24,19 @@ class Widget:
 	shown = True
 	enabled = True
 
-	def show(self, update=False):
+	def show(self, update=True):
 		self.Show()
 		self.shown = True
-		if update: self.parent.Layout()
+		if update:
+			parent = self.GetParent()
+			parent.Layout()
 
-	def hide(self, update=False):
+	def hide(self, update=True):
 		self.Hide()
 		self.shown = False
-		if update: self.parent.Layout()
+		if update:
+			parent = self.GetParent()
+			parent.Layout()
 
 	def is_shown(self):
 		return self.IsShown()

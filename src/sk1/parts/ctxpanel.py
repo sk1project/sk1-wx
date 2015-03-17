@@ -55,7 +55,7 @@ class AppCtxPanel(HPanel):
 		if mode:
 			for item in mode:
 				self.pack(self.plugins_dict[item])
-				self.plugins_dict[item].show()
+				self.plugins_dict[item].show(update=False)
 				self.plugins.append(self.plugins_dict[item])
 		self.Layout()
 		self.Fit()
