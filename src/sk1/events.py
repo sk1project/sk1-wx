@@ -34,6 +34,7 @@ MODE_CHANGED	  arg[0] - canvas MODE value
 SELECTION_CHANGED arg[0] - presenter instance
 CLIPBOARD		  no args 
 PAGE_CHANGED      arg[0] - presenter instance
+SNAP_CHANGED	  no args 
 """
 
 #Signal channels
@@ -55,6 +56,7 @@ MODE_CHANGED = ['MODE_CHANGED']
 SELECTION_CHANGED = ['SELECTION_CHANGED']
 CLIPBOARD = ['CLIPBOARD']
 PAGE_CHANGED = ['PAGE_CHANGED']
+SNAP_CHANGED = ['PAGE_CHANGED']
 
 
 

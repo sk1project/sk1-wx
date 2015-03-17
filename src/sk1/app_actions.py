@@ -24,7 +24,8 @@ from sk1.modes import SELECT_MODE, SHAPER_MODE, ZOOM_MODE, FLEUR_MODE, \
 LINE_MODE, CURVE_MODE, RECT_MODE, ELLIPSE_MODE, TEXT_MODE, POLYGON_MODE, \
 ZOOM_OUT_MODE
 from sk1.events import CLIPBOARD, DOC_CHANGED, PAGE_CHANGED, \
-DOC_MODIFIED, DOC_SAVED, NO_DOCS, SELECTION_CHANGED, MODE_CHANGED, HISTORY_CHANGED
+DOC_MODIFIED, DOC_SAVED, NO_DOCS, SELECTION_CHANGED, MODE_CHANGED, \
+HISTORY_CHANGED, SNAP_CHANGED
 
 def create_actions(app):
 	# action_id, callback, channels, validator, checker,
@@ -35,6 +36,7 @@ def create_actions(app):
 	doc_save_chnls = [NO_DOCS, DOC_CHANGED, DOC_MODIFIED, DOC_SAVED]
 	sel_chnls = [NO_DOCS, DOC_CHANGED, SELECTION_CHANGED]
 	page_chnls = [NO_DOCS, DOC_CHANGED, DOC_MODIFIED, PAGE_CHANGED]
+	snap_chnls = doc_chnls + [SNAP_CHANGED]
 	insp = app.insp
 	proxy = app.proxy
 	actions = {}
@@ -100,10 +102,10 @@ def create_actions(app):
 	(pdids.ID_SHOW_GUIDES, proxy.show_guides, doc_chnls, insp.is_doc, insp.is_guides_visible),
 	(pdids.ID_SHOW_SNAP, proxy.show_snapping, doc_chnls, insp.is_doc, insp.is_show_snapping),
 	(pdids.ID_SHOW_PAGE_BORDER, proxy.draw_page_border, doc_chnls, insp.is_doc, insp.is_draw_page_border),
-	(pdids.ID_SNAP_TO_GRID, proxy.snap_to_grid, doc_chnls, insp.is_doc, insp.is_snap_to_grid),
-	(pdids.ID_SNAP_TO_GUIDE, proxy.snap_to_guides, doc_chnls, insp.is_doc, insp.is_snap_to_guides),
-	(pdids.ID_SNAP_TO_OBJ, proxy.snap_to_objects, doc_chnls, insp.is_doc, insp.is_snap_to_objects),
-	(pdids.ID_SNAP_TO_PAGE, proxy.snap_to_page, doc_chnls, insp.is_doc, insp.is_snap_to_page),
+	(pdids.ID_SNAP_TO_GRID, proxy.snap_to_grid, snap_chnls, insp.is_doc, insp.is_snap_to_grid),
+	(pdids.ID_SNAP_TO_GUIDE, proxy.snap_to_guides, snap_chnls, insp.is_doc, insp.is_snap_to_guides),
+	(pdids.ID_SNAP_TO_OBJ, proxy.snap_to_objects, snap_chnls, insp.is_doc, insp.is_snap_to_objects),
+	(pdids.ID_SNAP_TO_PAGE, proxy.snap_to_page, snap_chnls, insp.is_doc, insp.is_snap_to_page),
 (wx.ID_REFRESH, proxy.force_redraw, doc_chnls, insp.is_doc),
 #------ Layout menu -------
 (pdids.ID_INSERT_PAGE, proxy.insert_page, page_chnls, insp.is_doc),
