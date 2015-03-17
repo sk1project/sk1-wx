@@ -17,7 +17,7 @@
 
 import wx
 
-from wal import const, VPanel, HPanel, HLine
+from wal import const, VPanel, HPanel, HLine, VLine
 
 from sk1 import events
 from sk1.parts.ctxpanel import AppCtxPanel
@@ -59,6 +59,7 @@ class MDIArea(VPanel):
 		#----- Tools
 		self.tools = AppTools(self.app, hpanel)
 		hpanel.pack(self.tools, fill=True)
+		hpanel.pack(VLine(hpanel), fill=True)
 
 		self.splitter = wx.SplitterWindow(hpanel, -1, style=wx.SP_LIVE_UPDATE)
 		self.doc_keeper = VPanel(self.splitter)
