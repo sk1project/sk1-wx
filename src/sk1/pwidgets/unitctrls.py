@@ -139,6 +139,18 @@ class RatioToggle(BitmapToggle):
 	def __init__(self, parent, state=True, onchange=None):
 		BitmapToggle.__init__(self, parent, state, {}, onchange)
 
+class ActionImageSwitch(BitmapToggle):
+
+	action = None
+
+	def __init__(self, parent, action, icons_dict={}, state=False):
+		self.action = action
+		BitmapToggle.__init__(self, parent, state, icons_dict,
+							onchange=action.do_call)
+		action.register(self)
+
+	def update(self):
+		self.set_active(self.action.active)
 
 class AngleSpin(FloatSpin):
 
