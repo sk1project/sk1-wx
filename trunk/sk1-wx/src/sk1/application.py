@@ -382,4 +382,5 @@ class pdApplication(Application, UCApplication):
 		config.save(self.appdata.app_config)
 
 	def open_url(self, url):
-		webbrowser.open_new(url)
+		webbrowser.open(url, new=1, autoraise=True)
+		events.emit(events.APP_STATUS, _('Requested page is opened in default browser'))
