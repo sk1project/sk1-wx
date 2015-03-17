@@ -23,7 +23,8 @@ from wal import const
 from wal import HPanel, Label, VLine, ImageButton
 
 from sk1 import _, config, events
-from sk1.pwidgets import FillSwatch, StrokeSwatch
+from sk1.resources import pdids, get_tooltip_text
+from sk1.pwidgets import FillSwatch, StrokeSwatch, ActionImageSwitch
 from sk1.resources import get_bmp, icons
 
 
@@ -55,6 +56,9 @@ class AppStatusbar(HPanel):
 		self.pack(self.mouse_info)
 		self.mouse_info.hide()
 
+		self.snap_monitor = SnapMonitor(self.mw.app, self)
+		self.pack(self.snap_monitor)
+
 		self.page_info = PageMonitor(self.mw.app, self)
 		self.pack(self.page_info)
 		self.page_info.hide()
@@ -76,6 +80,48 @@ class AppStatusbar(HPanel):
 		self.info.set_text(args[0])
 		self.Layout()
 		self.show()
+
+class SnapMonitor(HPanel):
+
+	def __init__(self, app, parent):
+		self.app = app
+		actions = app.actions
+		HPanel.__init__(self, parent)
+
+		action_id = pdids.ID_SNAP_TO_GRID
+		tooltip_txt = get_tooltip_text(action_id)
+		icons_dict = {
+			True:[icons.PD_SNAP_TO_GRID_ON, tooltip_txt],
+			False:[icons.PD_SNAP_TO_GRID_OFF, tooltip_txt]}
+		sw = ActionImageSwitch(self, actions[action_id], icons_dict)
+		self.pack(sw, padding=2)
+
+		action_id = pdids.ID_SNAP_TO_GUIDE
+		tooltip_txt = get_tooltip_text(action_id)
+		icons_dict = {
+			True:[icons.PD_SNAP_TO_GUIDE_ON, tooltip_txt],
+			False:[icons.PD_SNAP_TO_GUIDE_OFF, tooltip_txt]}
+		sw = ActionImageSwitch(self, actions[action_id], icons_dict)
+		self.pack(sw, padding=2)
+
+		action_id = pdids.ID_SNAP_TO_OBJ
+		tooltip_txt = get_tooltip_text(action_id)
+		icons_dict = {
+			True:[icons.PD_SNAP_TO_OBJ_ON, tooltip_txt],
+			False:[icons.PD_SNAP_TO_OBJ_OFF, tooltip_txt]}
+		sw = ActionImageSwitch(self, actions[action_id], icons_dict)
+		self.pack(sw, padding=2)
+
+		action_id = pdids.ID_SNAP_TO_PAGE
+		tooltip_txt = get_tooltip_text(action_id)
+		icons_dict = {
+			True:[icons.PD_SNAP_TO_PAGE_ON, tooltip_txt],
+			False:[icons.PD_SNAP_TO_PAGE_OFF, tooltip_txt]}
+		sw = ActionImageSwitch(self, actions[action_id], icons_dict)
+		self.pack(sw, padding=2)
+
+		self.pack(VLine(self.panel), fill=True, padding=2)
+
 
 class ColorMonitor(HPanel):
 
