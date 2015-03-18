@@ -118,8 +118,6 @@ class Selection:
 		else:
 			self.set(result)
 
-
-
 	def _select_at_point(self, point):
 		result = []
 		layers = self.presenter.get_editable_layers()
