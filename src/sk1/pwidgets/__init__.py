@@ -16,7 +16,7 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from colorswatch import ColorSwatch, FillSwatch, StrokeSwatch
-from hpalette import HPalette
+from palette import HPalette
 from actions import AppAction, ActionButton
 from unitctrls import UnitLabel, UnitSpin, AngleSpin, RatioToggle, BitmapToggle
 from unitctrls import ActionImageSwitch
