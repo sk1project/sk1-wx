@@ -25,7 +25,7 @@ from sk1.parts.tools import AppTools
 from sk1.parts.doctabpanel import DocTabsPanel
 from sk1.parts.plgarea import PlgArea
 from sk1.parts.statusbar import AppStatusbar
-from sk1.parts.hp_panel import AppPalettePanel
+from sk1.parts.hp_panel import AppHPalette
 from sk1.document import DocArea
 
 class MDIArea(VPanel):
@@ -76,7 +76,7 @@ class MDIArea(VPanel):
 
 		#----- Horizontal Palette panel
 		self.pack(HLine(self), fill=True, padding=2)
-		self.palette_panel = AppPalettePanel(self)
+		self.palette_panel = AppHPalette(self)
 		self.pack(self.palette_panel, fill=True)
 
 		#----- Status bar

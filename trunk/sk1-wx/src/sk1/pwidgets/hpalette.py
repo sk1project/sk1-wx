@@ -20,10 +20,8 @@ import wx
 
 from uc2.cms import verbose_color
 
-from wal import HPanel, Label
-
-CELL_WIDTH = 40.0
-CELL_HEIGHT = 18.0
+from wal import HPanel, VPanel, Label
+from sk1 import config, events
 
 class HPalette(HPanel):
 
@@ -33,6 +31,8 @@ class HPalette(HPanel):
 	position = 0
 	max_pos = 0
 	screen_num = 10
+	cell_width = 40.0
+	cell_height = 18.0
 
 	onleftclick = None
 	onrightclick = None
@@ -46,8 +46,9 @@ class HPalette(HPanel):
 	tip = ''
 	timer = None
 
-	def __init__(self, parent, cms, palette=None,
+	def __init__(self, parent, app, cms, palette=None,
 				onleftclick=None, onrightclick=None, onmin=None, onmax=None):
+		self.app = app
 		self.cms = cms
 		self.onleftclick = onleftclick
 		self.onrightclick = onrightclick
@@ -55,7 +56,9 @@ class HPalette(HPanel):
 		self.onmax = onmax
 		HPanel.__init__(self, parent)
 		self.set_palette(palette)
-		self.pack((CELL_WIDTH, CELL_HEIGHT))
+		self.cell_width = config.palette_hcell_horizontal
+		self.cell_height = config.palette_hcell_vertical
+		self.pack((self.cell_width, self.cell_height))
 		self.tooltipwin = PaletteToolTip(self)
 		self.Bind(wx.EVT_PAINT, self._on_paint, self)
 		self.Bind(wx.EVT_SIZE, self._on_resize, self)
@@ -68,6 +71,13 @@ class HPalette(HPanel):
 		self.timer = wx.Timer(self)
 		self.Bind(wx.EVT_TIMER, self._on_timer)
 		self.SetDoubleBuffered(True)
+		events.connect(events.CONFIG_MODIFIED, self.config_update)
+
+	def config_update(self, attr, value):
+		if not attr[:7] == 'palette':return
+		self.cell_width = config.palette_hcell_horizontal
+		self.cell_height = config.palette_hcell_vertical
+		self.refresh()
 
 	def refresh(self, x=0, y=0, w=0, h=0):
 		if not w: w, h = self.GetSize()
@@ -76,10 +86,10 @@ class HPalette(HPanel):
 	def set_adjustment(self):
 		w = self.GetSize()[0]
 		if w:
-			self.screen_num = int(w / CELL_WIDTH)
-			self.max_pos = len(self.colors) * CELL_WIDTH / w - 1.0
-			self.max_pos *= w / CELL_WIDTH
-			self.max_pos += 1.0 / CELL_WIDTH
+			self.screen_num = int(w / self.cell_width)
+			self.max_pos = len(self.colors) * self.cell_width / w - 1.0
+			self.max_pos *= w / self.cell_width
+			self.max_pos += 1.0 / self.cell_width
 
 	def set_cms(self, cms):
 		self.cms = cms
@@ -118,7 +128,7 @@ class HPalette(HPanel):
 			self.colors.append(clr)
 
 	def get_color_on_x(self, x):
-		index = int((self.position * CELL_WIDTH + x) / CELL_WIDTH)
+		index = int((self.position * self.cell_width + x) / self.cell_width)
 		return copy.deepcopy(self.palette[2][index])
 
 	def set_tip(self, tip=()):
@@ -187,8 +197,199 @@ class HPalette(HPanel):
 		dc.BeginDrawing()
 		pdc.BeginDrawing()
 
-		w = CELL_WIDTH
-		h = CELL_HEIGHT
+		w = self.cell_width
+		h = self.cell_height
+		x = -1 * self.position * w
+		for color in self.colors:
+			if x > -w and x < width:
+				pdc.SetPen(wx.Pen(wx.Colour(0, 0, 0), 1))
+				pdc.SetBrush(wx.Brush(wx.Colour(*color)))
+				pdc.DrawRectangle(x, 0, w + 1, h)
+			x += w
+
+		if not pdc == dc:
+			dc.EndDrawing()
+			pdc.EndDrawing()
+		else:
+			dc.EndDrawing()
+		pdc = dc = None
+
+class VPalette(VPanel):
+
+	cms = None
+	palette = None
+	colors = []
+	position = 0
+	max_pos = 0
+	screen_num = 10
+	cell_width = 40.0
+	cell_height = 18.0
+
+	onleftclick = None
+	onrightclick = None
+	onmin = None
+	onmax = None
+
+	tooltipwin = None
+	mouse_pos = ()
+	mouse_screen_pos = ()
+	last_mouse_pos = ()
+	tip = ''
+	timer = None
+
+	def __init__(self, parent, app, cms, palette=None,
+				onleftclick=None, onrightclick=None, onmin=None, onmax=None):
+		self.app = app
+		self.cms = cms
+		self.onleftclick = onleftclick
+		self.onrightclick = onrightclick
+		self.onmin = onmin
+		self.onmax = onmax
+		HPanel.__init__(self, parent)
+		self.set_palette(palette)
+		self.cell_width = config.palette_hcell_horizontal
+		self.cell_height = config.palette_hcell_vertical
+		self.pack((self.cell_width, self.cell_height))
+		self.tooltipwin = PaletteToolTip(self)
+		self.Bind(wx.EVT_PAINT, self._on_paint, self)
+		self.Bind(wx.EVT_SIZE, self._on_resize, self)
+		self.Bind(wx.EVT_MOUSEWHEEL, self._on_scroll, self)
+		self.Bind(wx.EVT_MOTION, self._on_move, self)
+		if onrightclick:
+			self.Bind(wx.EVT_RIGHT_UP, self._on_right_click, self)
+		if onleftclick:
+			self.Bind(wx.EVT_LEFT_UP, self._on_left_click, self)
+		self.timer = wx.Timer(self)
+		self.Bind(wx.EVT_TIMER, self._on_timer)
+		self.SetDoubleBuffered(True)
+		events.connect(events.CONFIG_MODIFIED, self.config_update)
+
+	def config_update(self, attr, value):
+		if not attr[:7] == 'palette':return
+		self.cell_width = config.palette_hcell_horizontal
+		self.cell_height = config.palette_hcell_vertical
+		self.refresh()
+
+	def refresh(self, x=0, y=0, w=0, h=0):
+		if not w: w, h = self.GetSize()
+		self.Refresh(rect=wx.Rect(x, y, w, h))
+
+	def set_adjustment(self):
+		w = self.GetSize()[0]
+		if w:
+			self.screen_num = int(w / self.cell_width)
+			self.max_pos = len(self.colors) * self.cell_width / w - 1.0
+			self.max_pos *= w / self.cell_width
+			self.max_pos += 1.0 / self.cell_width
+
+	def set_cms(self, cms):
+		self.cms = cms
+		self.update_colors()
+
+	def set_palette(self, palette):
+		self.palette = palette
+		self.update_colors()
+
+	def set_position(self, position):
+		self.position = position
+		self.change_position(0)
+
+	def scroll_left(self):self.change_position(-1)
+	def scroll_right(self):self.change_position(1)
+	def dscroll_left(self):self.change_position(-self.screen_num)
+	def dscroll_right(self):self.change_position(self.screen_num)
+
+	def change_position(self, incr):
+		val = self.position + incr
+		if val < 0:val = 0
+		if val > self.max_pos:val = self.max_pos
+		if not self.position == val:
+				self.position = val
+				self.refresh()
+		if not self.position and self.onmin: self.onmin(False)
+		if self.position and self.onmin: self.onmin(True)
+		if self.position == self.max_pos and self.onmax: self.onmax(False)
+		if not self.position == self.max_pos and self.onmax: self.onmax(True)
+
+	def update_colors(self):
+		self.colors = []
+		for color in self.palette[2]:
+			r, g, b = self.cms.get_display_color(color)
+			clr = (int(r * 255), int(g * 255), int(b * 255))
+			self.colors.append(clr)
+
+	def get_color_on_x(self, x):
+		index = int((self.position * self.cell_width + x) / self.cell_width)
+		return copy.deepcopy(self.palette[2][index])
+
+	def set_tip(self, tip=()):
+		if tip:
+			self.tooltipwin.set_text(tip)
+			self.tooltipwin.Show(True)
+			self.tooltipwin.set_position(self.mouse_screen_pos)
+		elif self.tooltipwin:
+			self.tooltipwin.Hide()
+
+	def _on_timer(self, event):
+		mouse_pos = wx.GetMousePosition()
+		x, y = self.GetScreenPosition()
+		w, h = self.GetSize()
+		rect = wx.Rect(x, y, w, h)
+		if not rect.Inside(mouse_pos):
+			self.timer.Stop()
+			self.set_tip()
+		else:
+			if self.mouse_screen_pos == self.last_mouse_pos:
+				if not self.tip:
+					color = self.get_color_on_x(self.mouse_pos[0])
+					color_name = ''
+					color_txt = verbose_color(color)
+					if not color[0] == 'SPOT' and color[3]:
+						color_name = '' + color[3]
+					self.tip = (color_name, color_txt)
+					self.set_tip(self.tip)
+			else:
+				self.last_mouse_pos = self.mouse_screen_pos
+				self.tip = ''
+				self.set_tip()
+
+	def _on_left_click(self, event):
+		self.onleftclick(self.get_color_on_x(event.GetPosition()[0]))
+
+	def _on_right_click(self, event):
+		self.onrightclick(self.get_color_on_x(event.GetPosition()[0]))
+
+	def _on_move(self, event):
+		self.mouse_pos = event.GetPosition()
+		self.mouse_screen_pos = event.GetEventObject().ClientToScreen(self.mouse_pos)
+		self.SetFocus()
+		self.set_tip()
+		if not self.timer.IsRunning():
+			self.timer.Start(500)
+
+	def _on_resize(self, event):
+		self.set_adjustment()
+		self.refresh()
+
+	def _on_scroll(self, event):
+		self.set_tip()
+		if event.GetWheelRotation() > 0:
+			self.dscroll_right()
+		else:
+			self.dscroll_left()
+
+	def _on_paint(self, event):
+		if not self.palette:return
+		width = self.GetSize()[0]
+		pdc = wx.PaintDC(self)
+		try:
+			dc = wx.GCDC(self.pdc)
+		except:dc = pdc
+		dc.BeginDrawing()
+		pdc.BeginDrawing()
+
+		w = self.cell_width
+		h = self.cell_height
 		x = -1 * self.position * w
 		for color in self.colors:
 			if x > -w and x < width:
