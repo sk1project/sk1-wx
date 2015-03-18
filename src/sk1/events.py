@@ -20,20 +20,20 @@ The package provides Qt-like signal-slot functionality
 for internal events processing.
 
 Signal arguments:
-CONFIG_MODIFIED   arg[0] - [attr, value]
-APP_STATUS		  arg[0] - statusbar message
-MOUSE_STATUS	  arg[0] - mouse status msg
+CONFIG_MODIFIED   attr, value - modified config field
+APP_STATUS		  msg - statusbar message
+MOUSE_STATUS	  msg - mouse status msg
 CMS_CHANGED		  no args 
 HISTORY_CHANGED	  no args 
 NO_DOCS		      no args
-DOC_MODIFIED	  arg[0] - presenter instance
-DOC_CHANGED	      arg[0] - actual presenter instance
-DOC_SAVED		  arg[0] - saved presenter instance
+DOC_MODIFIED	  doc - presenter instance
+DOC_CHANGED	      doc - actual presenter instance
+DOC_SAVED		  doc - saved presenter instance
 DOC_CLOSED		  no args
-MODE_CHANGED	  arg[0] - canvas MODE value
-SELECTION_CHANGED arg[0] - presenter instance
+MODE_CHANGED	  mode - canvas MODE value
+SELECTION_CHANGED doc - presenter instance
 CLIPBOARD		  no args 
-PAGE_CHANGED      arg[0] - presenter instance
+PAGE_CHANGED      doc - presenter instance
 SNAP_CHANGED	  no args 
 """
 

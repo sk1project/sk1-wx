@@ -25,7 +25,7 @@ from sk1.parts.tools import AppTools
 from sk1.parts.doctabpanel import DocTabsPanel
 from sk1.parts.plgarea import PlgArea
 from sk1.parts.statusbar import AppStatusbar
-from sk1.parts.hp_panel import AppHPalette
+from sk1.parts.palettepanel import AppHPalette
 from sk1.document import DocArea
 
 class MDIArea(VPanel):
