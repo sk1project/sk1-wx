@@ -19,14 +19,15 @@ import wx
 
 from wal import const, VPanel, HPanel, HLine, VLine
 
-from sk1 import events
+from sk1 import events, config
 from sk1.parts.ctxpanel import AppCtxPanel
 from sk1.parts.tools import AppTools
 from sk1.parts.doctabpanel import DocTabsPanel
 from sk1.parts.plgarea import PlgArea
 from sk1.parts.statusbar import AppStatusbar
-from sk1.parts.palettepanel import AppHPalette
+from sk1.parts.palettepanel import AppHPalette, AppVPalette
 from sk1.document import DocArea
+from uc2 import uc2const
 
 class MDIArea(VPanel):
 
@@ -74,10 +75,23 @@ class MDIArea(VPanel):
 		self.splitter.Unsplit(None)
 		hpanel.pack(self.splitter, expand=True, fill=True)
 
+		#----- Vertical Palette panel
+		self.vp_panel = HPanel(hpanel)
+		self.vp_panel.pack(VLine(self.vp_panel), fill=True, padding=2)
+		vpalette_panel = AppVPalette(self.vp_panel, self.app)
+		self.vp_panel.pack(vpalette_panel, fill=True, padding=1)
+		hpanel.pack(self.vp_panel, fill=True)
+		if config.palette_orientation == uc2const.HORIZONTAL:
+			self.vp_panel.hide()
+
 		#----- Horizontal Palette panel
-		self.pack(HLine(self), fill=True, padding=2)
-		self.palette_panel = AppHPalette(self)
-		self.pack(self.palette_panel, fill=True)
+		self.hp_panel = VPanel(self)
+		self.hp_panel.pack(HLine(self.hp_panel), fill=True, padding=2)
+		hpalette_panel = AppHPalette(self.hp_panel, self.app)
+		self.hp_panel.pack(hpalette_panel, fill=True)
+		self.pack(self.hp_panel, fill=True)
+		if config.palette_orientation == uc2const.VERTICAL:
+			self.hp_panel.hide()
 
 		#----- Status bar
 		self.pack(HLine(self), fill=True, padding=2)
@@ -86,9 +100,6 @@ class MDIArea(VPanel):
 
 		self.Layout()
 		events.connect(events.DOC_CHANGED, self.set_active)
-
-	def hide(self):
-		self.Hide()
 
 	def create_docarea(self, doc):
 		docarea = DocArea(doc, self.doc_keeper)

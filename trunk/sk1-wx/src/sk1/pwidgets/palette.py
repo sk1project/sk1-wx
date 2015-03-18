@@ -294,10 +294,10 @@ class VPalette(VPanel):
 		self.position = position
 		self.change_position(0)
 
-	def scroll_left(self):self.change_position(-1)
-	def scroll_right(self):self.change_position(1)
-	def dscroll_left(self):self.change_position(-self.screen_num)
-	def dscroll_right(self):self.change_position(self.screen_num)
+	def scroll_top(self):self.change_position(-1)
+	def scroll_bottom(self):self.change_position(1)
+	def dscroll_top(self):self.change_position(-self.screen_num)
+	def dscroll_bottom(self):self.change_position(self.screen_num)
 
 	def change_position(self, incr):
 		val = self.position + incr
@@ -374,9 +374,9 @@ class VPalette(VPanel):
 	def _on_scroll(self, event):
 		self.set_tip()
 		if event.GetWheelRotation() > 0:
-			self.dscroll_right()
+			self.dscroll_top()
 		else:
-			self.dscroll_left()
+			self.dscroll_bottom()
 
 	def _on_paint(self, event):
 		if not self.palette:return

@@ -148,7 +148,7 @@ class AppConfig(UCConfig):
 	palette_hcell_horizontal = 40.0
 	palette_vcell_vertical = 18.0
 	palette_vcell_horizontal = 18.0
-	palette_orientation = uc2const.HORIZONTAL
+	palette_orientation = uc2const.VERTICAL
 	palette = ''
 
 	#============== CANVAS OPTIONS ================
