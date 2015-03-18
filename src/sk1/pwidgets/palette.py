@@ -222,7 +222,7 @@ class VPalette(VPanel):
 	position = 0
 	max_pos = 0
 	screen_num = 10
-	cell_width = 40.0
+	cell_width = 18.0
 	cell_height = 18.0
 
 	onleftclick = None
@@ -245,10 +245,10 @@ class VPalette(VPanel):
 		self.onrightclick = onrightclick
 		self.onmin = onmin
 		self.onmax = onmax
-		HPanel.__init__(self, parent)
+		VPanel.__init__(self, parent)
 		self.set_palette(palette)
-		self.cell_width = config.palette_hcell_horizontal
-		self.cell_height = config.palette_hcell_vertical
+		self.cell_width = config.palette_vcell_horizontal
+		self.cell_height = config.palette_vcell_vertical
 		self.pack((self.cell_width, self.cell_height))
 		self.tooltipwin = PaletteToolTip(self)
 		self.Bind(wx.EVT_PAINT, self._on_paint, self)
@@ -266,8 +266,8 @@ class VPalette(VPanel):
 
 	def config_update(self, attr, value):
 		if not attr[:7] == 'palette':return
-		self.cell_width = config.palette_hcell_horizontal
-		self.cell_height = config.palette_hcell_vertical
+		self.cell_width = config.palette_vcell_horizontal
+		self.cell_height = config.palette_vcell_vertical
 		self.refresh()
 
 	def refresh(self, x=0, y=0, w=0, h=0):
@@ -275,12 +275,12 @@ class VPalette(VPanel):
 		self.Refresh(rect=wx.Rect(x, y, w, h))
 
 	def set_adjustment(self):
-		w = self.GetSize()[0]
-		if w:
-			self.screen_num = int(w / self.cell_width)
-			self.max_pos = len(self.colors) * self.cell_width / w - 1.0
-			self.max_pos *= w / self.cell_width
-			self.max_pos += 1.0 / self.cell_width
+		h = self.GetSize()[1]
+		if h:
+			self.screen_num = int(h / self.cell_height)
+			self.max_pos = len(self.colors) * self.cell_height / h - 1.0
+			self.max_pos *= h / self.cell_height
+			self.max_pos += 1.0 / self.cell_height
 
 	def set_cms(self, cms):
 		self.cms = cms
@@ -318,8 +318,8 @@ class VPalette(VPanel):
 			clr = (int(r * 255), int(g * 255), int(b * 255))
 			self.colors.append(clr)
 
-	def get_color_on_x(self, x):
-		index = int((self.position * self.cell_width + x) / self.cell_width)
+	def get_color_on_y(self, y):
+		index = int((self.position * self.cell_height + y) / self.cell_height)
 		return copy.deepcopy(self.palette[2][index])
 
 	def set_tip(self, tip=()):
@@ -341,7 +341,7 @@ class VPalette(VPanel):
 		else:
 			if self.mouse_screen_pos == self.last_mouse_pos:
 				if not self.tip:
-					color = self.get_color_on_x(self.mouse_pos[0])
+					color = self.get_color_on_y(self.mouse_pos[1])
 					color_name = ''
 					color_txt = verbose_color(color)
 					if not color[0] == 'SPOT' and color[3]:
@@ -354,10 +354,10 @@ class VPalette(VPanel):
 				self.set_tip()
 
 	def _on_left_click(self, event):
-		self.onleftclick(self.get_color_on_x(event.GetPosition()[0]))
+		self.onleftclick(self.get_color_on_y(event.GetPosition()[1]))
 
 	def _on_right_click(self, event):
-		self.onrightclick(self.get_color_on_x(event.GetPosition()[0]))
+		self.onrightclick(self.get_color_on_y(event.GetPosition()[1]))
 
 	def _on_move(self, event):
 		self.mouse_pos = event.GetPosition()
@@ -380,7 +380,7 @@ class VPalette(VPanel):
 
 	def _on_paint(self, event):
 		if not self.palette:return
-		width = self.GetSize()[0]
+		height = self.GetSize()[1]
 		pdc = wx.PaintDC(self)
 		try:
 			dc = wx.GCDC(self.pdc)
@@ -390,13 +390,13 @@ class VPalette(VPanel):
 
 		w = self.cell_width
 		h = self.cell_height
-		x = -1 * self.position * w
+		y = -1 * self.position * h
 		for color in self.colors:
-			if x > -w and x < width:
+			if y > -h and y < height:
 				pdc.SetPen(wx.Pen(wx.Colour(0, 0, 0), 1))
 				pdc.SetBrush(wx.Brush(wx.Colour(*color)))
-				pdc.DrawRectangle(x, 0, w + 1, h)
-			x += w
+				pdc.DrawRectangle(0, y, w, h + 1)
+			y += h
 
 		if not pdc == dc:
 			dc.EndDrawing()
