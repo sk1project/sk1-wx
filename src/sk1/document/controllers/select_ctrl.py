@@ -37,6 +37,8 @@ class SelectController(AbstractController):
 				dpoint = self.canvas.win_to_doc(point)
 				if self.selection.is_point_over(dpoint):
 					self.canvas.set_temp_mode(modes.MOVE_MODE)
+				elif self.selection.pick_at_point(dpoint):
+					self.canvas.set_temp_mode(modes.MOVE_MODE)
 				elif self.selection.is_point_over_marker(dpoint):
 					mark = self.selection.is_point_over_marker(dpoint)[0]
 					self.canvas.resize_marker = mark

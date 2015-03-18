@@ -42,9 +42,21 @@ class MoveController(AbstractController):
 		self.snap = self.presenter.snap
 		self.start = list(event.GetPositionTuple())
 		self.move = True
+
+		dpoint = self.canvas.win_to_doc(self.start)
+		sel = self.selection.pick_at_point(dpoint)
+		if sel and sel[0] not in self.selection.objs:
+			self.selection.clear()
+			self.canvas.renderer.paint_selection()
+			self.canvas.selection_repaint = False
+			self.selection.set(sel)
+
 		self.canvas.selection_repaint = False
 		self.canvas.renderer.cdc_paint_doc()
+
 		self.timer.Start(RENDERING_DELAY)
+
+
 
 	def repaint(self):
 		if self.end:
@@ -81,7 +93,7 @@ class MoveController(AbstractController):
 					self.canvas.resize_marker = mark
 					self.canvas.restore_mode()
 					self.canvas.set_temp_mode(modes.RESIZE_MODE)
-			else:
+			elif not self.selection.pick_at_point(dpoint):
 				self.canvas.restore_mode()
 
 	def mouse_up(self, event):
