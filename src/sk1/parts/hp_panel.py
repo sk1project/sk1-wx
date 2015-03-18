@@ -23,22 +23,21 @@ from sk1 import _
 from sk1.pwidgets import HPalette
 from sk1.resources import CMYK_PALETTE, icons
 
-class AppPalettePanel(HPanel):
+class AppHPalette(HPanel):
 
 	left_but = None
-	dleft_but = None
 	no_color = None
 	palette = None
 	right_but = None
-	dright_but = None
 
 	def __init__(self, mw):
 		self.app = mw.app
 		self.mw = mw
 		HPanel.__init__(self, mw, const.TOP)
-		self.pack((1, 20))
+		self.pack((1, 1))
 
-		self.palette = HPalette(self.panel, self.app.default_cms, CMYK_PALETTE,
+		self.palette = HPalette(self.panel, self.app,
+							self.app.default_cms, CMYK_PALETTE,
 							onleftclick=self.app.proxy.fill_selected,
 							onrightclick=self.app.proxy.stroke_selected,
 							onmin=self.left_enable,
@@ -48,10 +47,6 @@ class AppPalettePanel(HPanel):
 		if const.is_gtk(): native = True
 
 		tip = _('Scroll palette to left')
-		self.dleft_but = ImageButton(self.panel, icons.DOUBLE_ARROW_LEFT,
-								tooltip=tip, decoration_padding=4, native=native,
-								onclick=self.palette.dscroll_left, repeat=True)
-		self.pack(self.dleft_but)
 		self.left_but = ImageButton(self.panel, icons.ARROW_LEFT, tooltip=tip,
 								decoration_padding=4, native=native,
 								onclick=self.palette.scroll_left, repeat=True)
@@ -70,10 +65,6 @@ class AppPalettePanel(HPanel):
 								decoration_padding=4, native=native,
 								onclick=self.palette.scroll_right, repeat=True)
 		self.pack(self.right_but)
-		self.dright_but = ImageButton(self.panel, icons.DOUBLE_ARROW_RIGHT,
-								tooltip=tip, decoration_padding=4, native=native,
-								onclick=self.palette.dscroll_right, repeat=True)
-		self.pack(self.dright_but)
 		self.left_enable(False)
 
 
@@ -89,9 +80,7 @@ class AppPalettePanel(HPanel):
 	def left_enable(self, value):
 		if not value == self.left_but.get_enabled():
 			self.left_but.set_enable(value)
-			self.dleft_but.set_enable(value)
 
 	def right_enable(self, value):
 		if not value == self.right_but.get_enabled():
 			self.right_but.set_enable(value)
-			self.dright_but.set_enable(value)

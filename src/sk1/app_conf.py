@@ -124,7 +124,6 @@ class AppConfig(UCConfig):
 	statusbar_fontsize = 0
 	tabs_fontsize = 0
 	tabs_use_bold = True
-	palette = ''
 	show_splash = False
 	menu_size = (16, 16)
 	toolbar_size = (24, 24)
@@ -145,9 +144,12 @@ class AppConfig(UCConfig):
 	ruler_max_text_step = 100
 
 	#============== PALETTE OPTIONS ================
-	palette_cell_vertical = 18
-	palette_cell_horizontal = 40
+	palette_hcell_vertical = 18.0
+	palette_hcell_horizontal = 40.0
+	palette_vcell_vertical = 18.0
+	palette_vcell_horizontal = 18.0
 	palette_orientation = uc2const.HORIZONTAL
+	palette = ''
 
 	#============== CANVAS OPTIONS ================
 	default_unit = uc2const.UNIT_MM
