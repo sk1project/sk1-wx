@@ -19,9 +19,10 @@ import os
 
 from uc2 import uc2const
 from uc2.formats.generic import TextModelPresenter
-from uc2.formats.sk2.sk2_config import SK2_Config
-from uc2.formats.sk2.sk2_methods import create_new_doc, SK2_Methods
-from uc2.formats.sk2.sk2_filters import SK2_Loader, SK2_Saver
+from uc2.formats.skp.skp_config import SKP_Config
+from uc2.formats.skp.skp_filters import SKP_Loader, SKP_Saver
+
+def create_new_palette(config):pass
 
 class SKP_Presenter(TextModelPresenter):
 
@@ -33,26 +34,25 @@ class SKP_Presenter(TextModelPresenter):
 	cms = None
 
 	def __init__(self, appdata, cnf={}, filepath=None):
-		self.config = SK2_Config()
-		config_file = os.path.join(appdata.app_config_dir, 'sk2_config.xml')
+		self.config = SKP_Config()
+		config_file = os.path.join(appdata.app_config_dir, 'skp_config.xml')
 		self.config.load(config_file)
 		self.config.update(cnf)
 		self.appdata = appdata
 		self.cms = self.appdata.app.default_cms
-		self.loader = SK2_Loader()
-		self.saver = SK2_Saver()
-		self.methods = None
-		self.resources = {}
+		self.loader = SKP_Loader()
+		self.saver = SKP_Saver()
 		if filepath is None:
 			self.new()
 		else:
 			self.load(filepath)
 
 	def new(self):
-		self.model = create_new_doc(self.config)
+		self.model = create_new_palette(self.config)
 		self.update()
 
 	def update(self):
 		TextModelPresenter.update(self)
 		if not self.model is None:
 			self.methods.update()
+
