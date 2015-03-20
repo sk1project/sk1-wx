@@ -91,6 +91,10 @@ PPM = 314
 XBM = 315
 XPM = 316
 
+SKP = 500
+GPL = 501
+CPL = 502
+
 
 FORMAT_DESCRIPTION = {
 ALL_FORMATS : _("All supported formats"),
@@ -141,6 +145,11 @@ PNG: _("PNG - Portable Network Graphics files"),
 PPM: _("PPM - Netpbm Color Image format  files"),
 XBM: _("XBM - X bitmap files"),
 XPM: _("XPM - X pixmap files"),
+
+#Palette file formats
+SKP: _("SKP - sK1 palette files"),
+GPL: _("GPL - GIMP palette files"),
+CPL: _("CPL - CorelDRAW palette files"),
 }
 
 FORMAT_NAMES = {
@@ -192,6 +201,11 @@ PNG: "PNG",
 PPM: "PPM",
 XBM: "XBM",
 XPM: "XPM",
+
+#Palette file formats
+SKP: "SKP",
+GPL: "GPL",
+CPL: "CPL",
 }
 
 FORMAT_EXTENSION = {
@@ -206,9 +220,12 @@ AI_PS : ('ai',), AI_PDF : ('ai',), PS : ('ps',), EPS : ('eps',), PDF : ('pdf',),
 CGM : ('cgm',), WMF : ('wmf',), EMF : ('emf',), XPS : ('xps',), VSD : ('vsd',),
 PLT : ('plt',), HPGL : ('hgl',), DXF : ('dxf',), DWG : ('dwg',),
 RIFF: ('riff',),
+
 JPG: ('jpg', 'jpeg', 'jpe', 'jfif'), TIF: ('tif', 'tiff'), BMP: ('bmp', 'dib'),
 PCX: ('pcx',), GIF: ('gif',), PNG: ('png',), PPM: ('pbm', 'pgm', 'pgm'),
 XBM: ('xbm',), XPM: ('xpm',), JP2: ('jp2', 'jpx', 'jpf'),
+
+SKP: ('skp',), GPL: ('gpl',), CPL: ('cpl',),
 }
 
 IMAGE_FORMATS = [JPG, TIF, BMP, PCX, GIF, PNG, PPM, XBM, XPM, ]

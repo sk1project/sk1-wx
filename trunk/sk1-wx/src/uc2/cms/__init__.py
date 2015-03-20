@@ -332,7 +332,7 @@ def get_profile_info(filepath):
 	return ret
 
 
-class ColorManager:
+class ColorManager(object):
 	"""
 	The class provides abstract color manager.
 	On CM object instantiation default built-in profiles

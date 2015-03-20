@@ -65,7 +65,7 @@ class SK2_Loader(AbstractLoader):
 		self.parent_stack = self.parent_stack[:-1]
 
 
-class SK2_Saver:
+class SK2_Saver(object):
 
 	name = 'SK2_Saver'
 	fileptr = None

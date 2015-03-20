@@ -19,7 +19,7 @@ import sys, os
 
 from uc2 import _, events, msgconst
 
-class AbstractLoader:
+class AbstractLoader(object):
 	name = 'Abstract Loader'
 
 	presenter = None
