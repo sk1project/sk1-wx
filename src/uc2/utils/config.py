@@ -42,7 +42,7 @@ def escape_quote(line):
 
 
 
-class XmlConfigParser:
+class XmlConfigParser(object):
 	"""
 	Represents parent class for application config.
 	"""
