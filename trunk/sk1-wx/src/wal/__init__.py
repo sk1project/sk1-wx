@@ -21,7 +21,7 @@ from const import is_gtk, is_mac, is_msw, is_winxp
 from basic import Application, MainWindow, Panel, VPanel, HPanel, LabeledPanel
 from widgets import Label, HLine, VLine, HtmlLabel, Button, Checkbox
 from widgets import Combolist, Combobox, Entry, Spin, FloatSpin, Radiobutton
-from widgets import Slider, Notebook
+from widgets import Slider, Notebook, Bitmap
 
 from gctrls import ImageLabel, ImageButton, ImageToggleButton
 from renderer import copy_bitmap_to_surface, copy_surface_to_bitmap
