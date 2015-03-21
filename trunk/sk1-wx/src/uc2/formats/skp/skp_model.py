@@ -16,13 +16,21 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-class SK1Palette:
+from uc2.formats.generic import TextModelObject
+
+class SK1Palette(TextModelObject):
+	"""
+	Represents sK1 palette object.
+	This is a single and root DOM instance of SKP file format.
+	All palette colors are members of colors field list.
+	"""
 
 	name = ''
-	colors = ''
 	source = ''
 	comments = ''
 	columns = 1
+	colors = []
+	builtin = False
 
 	def __init__(self, name='', colors=[]):
 		self.name = name

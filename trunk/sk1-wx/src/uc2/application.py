@@ -69,14 +69,16 @@ from uc2 import _, cms
 from uc2 import events, msgconst
 from uc2.uc_conf import UCData, UCConfig
 from uc2.formats import get_loader, get_saver
+from uc2.palettes import PaletteManager
 
 
-class UCApplication:
+class UCApplication(object):
 
 	path = ''
 	config = None
 	appdata = None
 	default_cms = None
+	palettes = None
 
 	def __init__(self, path=''):
 		self.path = path
@@ -128,6 +130,7 @@ class UCApplication:
 				options[key] = value
 
 		self.default_cms = cms.ColorManager()
+		self.palettes = PaletteManager(self)
 
 		print ''
 		msg = _('Translation of') + ' "%s" ' % (files[0]) + _('into "%s"') % (files[1])

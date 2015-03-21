@@ -33,10 +33,10 @@ class SnapManager:
 	active_snap = [None, None]
 	active_guide = None
 
-	snap_to_grid = config.snap_to_grid
-	snap_to_guides = config.snap_to_guides
-	snap_to_objects = config.snap_to_objects
-	snap_to_page = config.snap_to_page
+	snap_to_grid = False
+	snap_to_guides = False
+	snap_to_objects = False
+	snap_to_page = False
 	snap_dict = {}
 	snap_point_dict = {}
 
@@ -57,6 +57,10 @@ class SnapManager:
 		self.doc = self.presenter.doc_presenter
 		self.methods = self.presenter.methods
 		self.canvas = self.presenter.canvas
+		self.snap_to_grid = config.snap_to_grid
+		self.snap_to_guides = config.snap_to_guides
+		self.snap_to_objects = config.snap_to_objects
+		self.snap_to_page = config.snap_to_page
 		self.snap_point_dict = {SNAP_TO_GRID:self.snap_point_to_grid,
 						SNAP_TO_GUIDES:self.snap_point_to_guides,
 						SNAP_TO_OBJECTS:self.snap_point_to_objects,

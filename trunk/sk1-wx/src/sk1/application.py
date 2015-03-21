@@ -34,6 +34,7 @@ from sk1.app_proxy import AppProxy
 from sk1.parts.mw import AppMainWindow
 from sk1.parts.artprovider import create_artprovider
 from sk1.app_cms import AppColorManager
+from sk1.app_palettes import AppPaletteManager
 from sk1.document import PD_Presenter
 from sk1.clipboard import AppClipboard
 
@@ -84,6 +85,7 @@ class pdApplication(Application, UCApplication):
 
 		self.mw = AppMainWindow(self)
 		self.default_cms = AppColorManager(self)
+		self.palettes = AppPaletteManager(self)
 		self.clipboard = AppClipboard(self)
 
 		self.proxy.update()
@@ -105,9 +107,10 @@ class pdApplication(Application, UCApplication):
 	def set_current_doc(self, doc):
 		self.current_doc = doc
 		self.current_doc.set_title()
+		self.mw.mdi.set_active(doc)
 		events.emit(events.DOC_CHANGED, doc)
-		msg = _('Document is changed')
-		events.emit(events.APP_STATUS, msg)
+		events.emit(events.SNAP_CHANGED)
+		events.emit(events.APP_STATUS, _('Document is changed'))
 
 	def new(self):
 		doc = PD_Presenter(self)

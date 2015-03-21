@@ -36,7 +36,7 @@ def create_actions(app):
 	doc_save_chnls = [NO_DOCS, DOC_CHANGED, DOC_MODIFIED, DOC_SAVED]
 	sel_chnls = [NO_DOCS, DOC_CHANGED, SELECTION_CHANGED]
 	page_chnls = [NO_DOCS, DOC_CHANGED, DOC_MODIFIED, PAGE_CHANGED]
-	snap_chnls = doc_chnls + [SNAP_CHANGED]
+	snap_chnls = [NO_DOCS, DOC_CHANGED, SNAP_CHANGED]
 	insp = app.insp
 	proxy = app.proxy
 	actions = {}

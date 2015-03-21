@@ -99,7 +99,6 @@ class MDIArea(VPanel):
 		self.pack(self.statusbar, fill=True)
 
 		self.Layout()
-		events.connect(events.DOC_CHANGED, self.set_active)
 
 	def create_docarea(self, doc):
 		docarea = DocArea(doc, self.doc_keeper)
