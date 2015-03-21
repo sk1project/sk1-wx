@@ -294,12 +294,13 @@ def multiply_trafo(trafo1, trafo2):
 	return libcairo.multiply_trafo(trafo1, trafo2)
 
 def get_flattened_path(obj, trafo, tolerance=0.5):
-	if obj.cache_cpath is None:
+	if obj.cache_paths is None:
 		obj.update()
-	if obj.cache_cpath is None: return None
+	if obj.cache_paths is None: return None
 
-	cpath = libcairo.apply_trafo(obj.cache_cpath, trafo, True)
-	paths = libcairo._libcairo.get_path_from_cpath(cpath)
+#	cpath = libcairo.apply_trafo(obj.cache_cpath, trafo, True)
+#	paths = libcairo._libcairo.get_path_from_cpath(cpath)
+	paths = apply_trafo_to_paths(obj.cache_paths, trafo)
 
 	return flat_paths(paths, tolerance)
 
