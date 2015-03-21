@@ -19,8 +19,7 @@ import os
 import sys
 
 from uc2 import _, events, msgconst
-from uc2.formats.plt import model
-from uc2.formats.plt.presenter import PLT_Presenter
+from uc2.formats.plt.plt_presenter import PLT_Presenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 
 

@@ -20,7 +20,7 @@ import os
 from uc2 import uc2const
 from uc2.formats.generic import TextModelPresenter
 from uc2.formats.plt.plt_config import PLT_Config
-from uc2.formats.plt import model
+from uc2.formats.plt import plt_model
 from uc2.formats.plt.plt_filters import PLT_Loader, PLT_Saver
 from uc2.formats.plt.plt_translators import SK2_to_PLT_Translator
 from uc2.formats.plt.plt_translators import PLT_to_SK2_Translator
@@ -44,11 +44,11 @@ class PLT_Presenter(TextModelPresenter):
 		self.new()
 
 	def new(self):
-		self.model = model.PltHeader()
+		self.model = plt_model.PltHeader()
 		childs = []
-		childs.append(model.PltStart())
-		childs.append(model.PltJobs())
-		childs.append(model.PltEnd())
+		childs.append(plt_model.PltStart())
+		childs.append(plt_model.PltJobs())
+		childs.append(plt_model.PltEnd())
 		self.model.childs = childs
 
 	def get_jobs(self):
