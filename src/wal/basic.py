@@ -91,19 +91,34 @@ class MainWindow(wx.Frame):
 		"""Arguments: object, expandable (0 or 1), flag, border"""
 		self.box.Add(*args, **kw)
 
-	def pack(self, obj, expand=False, fill=False, padding=0):
+	def pack(self, obj, expand=False, fill=False,
+			padding=0, start_padding=0, end_padding=0):
 		if self.orientation == wx.VERTICAL:
 			if expand:expand = 1
 			else: expand = 0
 			flags = wx.ALIGN_TOP | wx.ALIGN_CENTER_HORIZONTAL
-			if padding: flags = flags | wx.TOP | wx.BOTTOM
+			if padding:
+				flags = flags | wx.TOP | wx.BOTTOM
+			elif start_padding:
+				flags = flags | wx.TOP
+				padding = start_padding
+			elif end_padding:
+				flags = flags | wx.BOTTOM
+				padding = end_padding
 			if fill: flags = flags | wx.EXPAND
 			self.box.Add(obj, expand, flags, padding)
 		else:
 			if expand:expand = 1
 			else: expand = 0
 			flags = wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL
-			if padding: flags = flags | wx.LEFT | wx.RIGHT
+			if padding:
+				flags = flags | wx.LEFT | wx.RIGHT
+			elif start_padding:
+				flags = flags | wx.LEFT
+				padding = start_padding
+			elif end_padding:
+				flags = flags | wx.RIGHT
+				padding = end_padding
 			if fill: flags = flags | wx.EXPAND
 			self.box.Add(obj, expand, flags, padding)
 
@@ -215,7 +230,8 @@ class HPanel(SizedPanel):
 		if expand:expand = 1
 		else: expand = 0
 		flags = wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL
-		if padding: flags = flags | wx.LEFT | wx.RIGHT
+		if padding:
+			flags = flags | wx.LEFT | wx.RIGHT
 		elif start_padding:
 			flags = flags | wx.LEFT
 			padding = start_padding
@@ -234,7 +250,8 @@ class VPanel(SizedPanel):
 		if expand:expand = 1
 		else: expand = 0
 		flags = wx.ALIGN_TOP | wx.ALIGN_CENTER_HORIZONTAL
-		if padding: flags = flags | wx.TOP | wx.BOTTOM
+		if padding:
+			flags = flags | wx.TOP | wx.BOTTOM
 		elif start_padding:
 			flags = flags | wx.TOP
 			padding = start_padding
@@ -250,7 +267,7 @@ class LabeledPanel(wx.StaticBox, Widget):
 	sizer = None
 
 	def __init__(self, parent, text='', size=DEF_SIZE,
-				 orientation=wx.HORIZONTAL):
+				 orientation=wx.VERTICAL):
 		wx.StaticBox.__init__(self, parent, wx.ID_ANY, text,
 							pos=DEF_SIZE, size=size)
 		self.box = wx.StaticBoxSizer(self, orientation)
