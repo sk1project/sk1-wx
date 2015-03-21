@@ -20,7 +20,7 @@ from copy import deepcopy
 from uc2 import _, events
 from uc2.formats.sk2 import sk2_model
 from uc2.formats.plt import model
-from uc2.formats.plt.pltconst import SK2_to_PLT_TRAFO, PLT_to_SK2_TRAFO
+from uc2.formats.plt.plt_const import SK2_to_PLT_TRAFO, PLT_to_SK2_TRAFO
 from uc2 import libgeom
 
 
