@@ -18,17 +18,11 @@
 import wx
 
 import const
-from const import BOTTOM, EXPAND, ALL, VERTICAL, HORIZONTAL
+from const import EXPAND, ALL, VERTICAL, HORIZONTAL
 from basic import HPanel, VPanel
 from widgets import HLine
 
-class OkCancelDialog(wx.Dialog):
-
-	sizer = None
-	box = None
-	button_box = None
-	ok_btn = None
-	cancel_btn = None
+class SimpleDialog(wx.Dialog):
 
 	def __init__(self, parent, title, size=(-1, -1), style=VERTICAL):
 
@@ -41,7 +35,7 @@ class OkCancelDialog(wx.Dialog):
 		if not const.is_gtk(): margin = 10
 
 		self.box = VPanel(self)
-		sizer.Add(self.box, 0, ALL | EXPAND, margin)
+		sizer.Add(self.box, 1, ALL | EXPAND, margin)
 
 		if style == HORIZONTAL:
 			self.panel = HPanel(self.box)
@@ -50,7 +44,36 @@ class OkCancelDialog(wx.Dialog):
 		self.box.pack(self.panel, expand=True, fill=True)
 
 		self.build()
+		self.set_dialog_buttons()
+		if size == (-1, -1):self.Fit()
+		self.CenterOnParent()
 
+	def build(self):pass
+	def set_dialog_buttons(self):pass
+	def get_result(self): return None
+
+	def pack(self, *args, **kw):
+		obj = args[0]
+		if not obj.GetParent() == self.panel:
+			obj.Reparent(self.panel)
+		self.panel.pack(*args, **kw)
+
+	def show(self):
+		self.ShowModal()
+		self.Destroy()
+
+class OkCancelDialog(SimpleDialog):
+
+	sizer = None
+	box = None
+	button_box = None
+	ok_btn = None
+	cancel_btn = None
+
+	def __init__(self, parent, title, size=(-1, -1), style=VERTICAL):
+		SimpleDialog.__init__(self, parent, title, size, style)
+
+	def set_dialog_buttons(self):
 		self.box.pack(HLine(self.box), fill=True, padding=5)
 
 		self.button_box = HPanel(self.box)
@@ -64,7 +87,8 @@ class OkCancelDialog(wx.Dialog):
 								wx.DefaultPosition, wx.DefaultSize, 0)
 		self.Bind(wx.EVT_BUTTON, self.on_cancel, self.cancel_btn)
 
-		self.button_box.pack(HPanel(self.button_box), expand=True, fill=True)
+		self.left_button_box = HPanel(self.button_box)
+		self.button_box.pack(self.left_button_box, expand=True, fill=True)
 
 		if const.is_gtk():
 			self.button_box.pack(self.cancel_btn, padding=2)
@@ -77,18 +101,6 @@ class OkCancelDialog(wx.Dialog):
 			self.button_box.pack(self.cancel_btn, padding=5)
 
 		self.cancel_btn.SetDefault()
-		self.Fit()
-		self.CenterOnParent()
-
-	def pack(self, *args, **kw):
-		obj = args[0]
-		if not obj.GetParent() == self.panel:
-			obj.Reparent(self.panel)
-		self.panel.pack(*args, **kw)
-
-	def build(self):pass
-
-	def get_result(self): return None
 
 	def on_ok(self, event):
 		self.EndModal(wx.ID_OK)
@@ -100,8 +112,5 @@ class OkCancelDialog(wx.Dialog):
 		ret = None
 		if self.ShowModal() == wx.ID_OK:
 			ret = self.get_result()
-		self.destroy()
-		return ret
-
-	def destroy(self):
 		self.Destroy()
+		return ret

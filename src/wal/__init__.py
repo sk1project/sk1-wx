@@ -27,6 +27,6 @@ from gctrls import ImageLabel, ImageButton, ImageToggleButton
 from renderer import copy_bitmap_to_surface, copy_surface_to_bitmap
 
 from msgdlgs import msg_dialog, error_dialog, stop_dialog, ync_dialog, yesno_dialog
-from modaldlgs import OkCancelDialog
+from modaldlgs import SimpleDialog, OkCancelDialog
 
 
