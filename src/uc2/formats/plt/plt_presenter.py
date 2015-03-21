@@ -54,7 +54,7 @@ class PLT_Presenter(TextModelPresenter):
 	def get_jobs(self):
 		return self.model.childs[1].childs
 
-	def traslate_from_pdxf(self, sk2_doc):
+	def traslate_from_sk2(self, sk2_doc):
 		translator = SK2_to_PLT_Translator()
 		model = sk2_doc.model
 		objs = [] + model.childs[0].childs[0].childs + model.childs[1].childs
