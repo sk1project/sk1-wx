@@ -19,7 +19,7 @@ from copy import deepcopy
 
 from uc2 import _, events
 from uc2.formats.sk2 import sk2_model
-from uc2.formats.plt import model
+from uc2.formats.plt import plt_model
 from uc2.formats.plt.plt_const import SK2_to_PLT_TRAFO, PLT_to_SK2_TRAFO
 from uc2 import libgeom
 
@@ -39,7 +39,7 @@ class PLT_to_SK2_Translator:
 				deepcopy(sk2_doc.config.default_structural_style)]
 
 		for job in jobs:
-			if job.cid == model.JOB:
+			if job.cid == plt_model.JOB:
 				curve = sk2_model.Curve(sk2_doc.config)
 				curve.paths = [deepcopy(job.cache_path), ]
 				curve.trafo = [] + PLT_to_SK2_TRAFO
@@ -102,7 +102,7 @@ class SK2_to_PLT_Translator:
 
 				for path in paths:
 					if path and path[1]:
-						self.jobs.append(model.PltJob('', path))
+						self.jobs.append(plt_model.PltJob('', path))
 
 
 
