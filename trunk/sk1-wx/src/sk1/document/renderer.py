@@ -41,6 +41,7 @@ class PDRenderer(CairoRenderer):
 	win_ctx = None
 	surface = None
 	presenter = None
+	for_display = True
 
 	frame = []
 	snap = []
