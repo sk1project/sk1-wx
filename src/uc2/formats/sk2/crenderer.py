@@ -30,6 +30,7 @@ class CairoRenderer:
 	antialias_flag = True
 	contour_flag = False
 	stroke_style = []
+	for_display = False
 
 	def __init__(self, cms):
 		self.cms = cms
@@ -40,7 +41,10 @@ class CairoRenderer:
 		"""
 		Provides Cairo suitable, CMS processed color values. 
 		"""
-		r, g, b = self.cms.get_display_color(color)
+		if self.for_display:
+			r, g, b = self.cms.get_display_color(color)
+		else:
+			r, g, b = self.cms.get_rgb_color(color)[1]
 		return r, g, b, color[2]
 
 	#-------DOCUMENT RENDERING
