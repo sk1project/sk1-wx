@@ -206,24 +206,22 @@ class BorderedPanel(SizedPanel):
 					self.inner_box.Add(line, 0, wx.ALL | wx.EXPAND)
 			self.panel = self
 
-#class HPanel(BorderedPanel):
-#	def __init__(self, parent, border=None, space=0):
-#		BorderedPanel.__init__(self, parent, wx.HORIZONTAL, border, space)
-#
-#
-#class VPanel(BorderedPanel):
-#	def __init__(self, parent, border=None, space=0):
-#		BorderedPanel.__init__(self, parent, wx.VERTICAL, border, space)
-
 class HPanel(SizedPanel):
 	def __init__(self, parent, border=None, space=0):
 		SizedPanel.__init__(self, parent, wx.HORIZONTAL)
 
-	def pack(self, obj, expand=False, fill=False, padding=0):
+	def pack(self, obj, expand=False, fill=False,
+			padding=0, start_padding=0, end_padding=0):
 		if expand:expand = 1
 		else: expand = 0
 		flags = wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL
 		if padding: flags = flags | wx.LEFT | wx.RIGHT
+		elif start_padding:
+			flags = flags | wx.LEFT
+			padding = start_padding
+		elif end_padding:
+			flags = flags | wx.RIGHT
+			padding = end_padding
 		if fill: flags = flags | wx.EXPAND
 		self.box.Add(obj, expand, flags, padding)
 
@@ -231,11 +229,18 @@ class VPanel(SizedPanel):
 	def __init__(self, parent, border=None, space=0):
 		SizedPanel.__init__(self, parent, wx.VERTICAL)
 
-	def pack(self, obj, expand=False, fill=False, padding=0):
+	def pack(self, obj, expand=False, fill=False,
+			padding=0, start_padding=0, end_padding=0):
 		if expand:expand = 1
 		else: expand = 0
 		flags = wx.ALIGN_TOP | wx.ALIGN_CENTER_HORIZONTAL
 		if padding: flags = flags | wx.TOP | wx.BOTTOM
+		elif start_padding:
+			flags = flags | wx.TOP
+			padding = start_padding
+		elif end_padding:
+			flags = flags | wx.BOTTOM
+			padding = end_padding
 		if fill: flags = flags | wx.EXPAND
 		self.box.Add(obj, expand, flags, padding)
 

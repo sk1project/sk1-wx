@@ -77,9 +77,9 @@ class MDIArea(VPanel):
 
 		#----- Vertical Palette panel
 		self.vp_panel = HPanel(hpanel)
-		self.vp_panel.pack(VLine(self.vp_panel), fill=True, padding=2)
+		self.vp_panel.pack(VLine(self.vp_panel), fill=True, start_padding=2)
 		vpalette_panel = AppVPalette(self.vp_panel, self.app)
-		self.vp_panel.pack(vpalette_panel, fill=True, padding=1)
+		self.vp_panel.pack(vpalette_panel, fill=True, padding=2)
 		hpanel.pack(self.vp_panel, fill=True)
 		if config.palette_orientation == uc2const.HORIZONTAL:
 			self.vp_panel.hide()
@@ -94,9 +94,9 @@ class MDIArea(VPanel):
 			self.hp_panel.hide()
 
 		#----- Status bar
-		self.pack(HLine(self), fill=True, padding=2)
+		self.pack(HLine(self), fill=True, start_padding=2)
 		self.statusbar = AppStatusbar(self)
-		self.pack(self.statusbar, fill=True)
+		self.pack(self.statusbar, fill=True, padding=2)
 
 		self.Layout()
 
