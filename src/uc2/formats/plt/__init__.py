@@ -38,11 +38,8 @@ def plt_loader(appdata, filename, translate=True, cnf={}, **kw):
 def plt_saver(doc, filename, translate=True, cnf={}, **kw):
 	if kw: cnf.update(kw)
 	if translate:
-		print 'here'
 		plt_doc = PLT_Presenter(doc.appdata, cnf)
-		print 'here1'
 		plt_doc.traslate_from_sk2(doc)
-		print 'here2'
 		plt_doc.save(filename)
 		plt_doc.close()
 	else:
