@@ -85,7 +85,7 @@ class AppAction:
 		if self.validator_args:
 			self.set_enable(self.validator(*self.validator_args))
 		else: self.set_enable(self.validator())
-		if self.is_toggle():
+		if self.is_toggle() and self.enabled:
 			if self.checker_args:
 				self.set_active(self.checker(*self.checker_args))
 			else: self.set_active(self.checker())

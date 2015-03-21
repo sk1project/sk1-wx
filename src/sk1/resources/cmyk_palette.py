@@ -16,7 +16,6 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from uc2.uc2const import COLOR_CMYK as CMYK
-from sk1 import _
 
 colors = [
 [CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, 'Black'],
@@ -446,11 +445,3 @@ colors = [
 [CMYK, [0.031000, 0.125000, 0.122000, 0.004000], 1.0, 'Misty Rose'],
 ]
 
-palette_name = _('Default CMYK palette')
-palette_descr = """
-Default application palette. 
-"""
-for color in colors:
-	color.append(palette_name)
-
-CMYK_PALETTE = [palette_name, palette_descr, colors]

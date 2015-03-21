@@ -21,7 +21,7 @@ from wal import const, HPanel, VPanel, ImageButton, ImageLabel
 
 from sk1 import _
 from sk1.pwidgets import HPalette, VPalette
-from sk1.resources import CMYK_PALETTE, icons
+from sk1.resources import icons
 
 class AppHPalette(HPanel):
 
@@ -36,7 +36,7 @@ class AppHPalette(HPanel):
 		self.pack((1, 1))
 
 		self.palette = HPalette(self.panel, self.app,
-							self.app.default_cms, CMYK_PALETTE,
+							self.app.default_cms,
 							onleftclick=self.app.proxy.fill_selected,
 							onrightclick=self.app.proxy.stroke_selected,
 							onmin=self.left_enable,
@@ -97,7 +97,7 @@ class AppVPalette(VPanel):
 		self.pack((1, 1))
 
 		self.palette = VPalette(self.panel, self.app,
-							self.app.default_cms, CMYK_PALETTE,
+							self.app.default_cms,
 							onleftclick=self.app.proxy.fill_selected,
 							onrightclick=self.app.proxy.stroke_selected,
 							onmin=self.left_enable,

@@ -46,7 +46,7 @@ class HPalette(HPanel):
 	tip = ''
 	timer = None
 
-	def __init__(self, parent, app, cms, palette=None,
+	def __init__(self, parent, app, cms,
 				onleftclick=None, onrightclick=None, onmin=None, onmax=None):
 		self.app = app
 		self.cms = cms
@@ -55,7 +55,7 @@ class HPalette(HPanel):
 		self.onmin = onmin
 		self.onmax = onmax
 		HPanel.__init__(self, parent)
-		self.set_palette(palette)
+		self.set_palette(app.palettes.palette_in_use.model.colors)
 		self.cell_width = config.palette_hcell_horizontal
 		self.cell_height = config.palette_hcell_vertical
 		self.pack((self.cell_width, self.cell_height))
@@ -122,14 +122,14 @@ class HPalette(HPanel):
 
 	def update_colors(self):
 		self.colors = []
-		for color in self.palette[2]:
+		for color in self.palette:
 			r, g, b = self.cms.get_display_color(color)
 			clr = (int(r * 255), int(g * 255), int(b * 255))
 			self.colors.append(clr)
 
 	def get_color_on_x(self, x):
 		index = int((self.position * self.cell_width + x) / self.cell_width)
-		return copy.deepcopy(self.palette[2][index])
+		return copy.deepcopy(self.palette[index])
 
 	def set_tip(self, tip=()):
 		if tip:
@@ -237,7 +237,7 @@ class VPalette(VPanel):
 	tip = ''
 	timer = None
 
-	def __init__(self, parent, app, cms, palette=None,
+	def __init__(self, parent, app, cms,
 				onleftclick=None, onrightclick=None, onmin=None, onmax=None):
 		self.app = app
 		self.cms = cms
@@ -246,7 +246,7 @@ class VPalette(VPanel):
 		self.onmin = onmin
 		self.onmax = onmax
 		VPanel.__init__(self, parent)
-		self.set_palette(palette)
+		self.set_palette(app.palettes.palette_in_use.model.colors)
 		self.cell_width = config.palette_vcell_horizontal
 		self.cell_height = config.palette_vcell_vertical
 		self.pack((self.cell_width, self.cell_height))
@@ -313,14 +313,14 @@ class VPalette(VPanel):
 
 	def update_colors(self):
 		self.colors = []
-		for color in self.palette[2]:
+		for color in self.palette:
 			r, g, b = self.cms.get_display_color(color)
 			clr = (int(r * 255), int(g * 255), int(b * 255))
 			self.colors.append(clr)
 
 	def get_color_on_y(self, y):
 		index = int((self.position * self.cell_height + y) / self.cell_height)
-		return copy.deepcopy(self.palette[2][index])
+		return copy.deepcopy(self.palette[index])
 
 	def set_tip(self, tip=()):
 		if tip:

@@ -21,6 +21,7 @@ from uc2 import uc2const
 from uc2.formats.generic import TextModelPresenter
 from uc2.formats.skp.skp_config import SKP_Config
 from uc2.formats.skp.skp_filters import SKP_Loader, SKP_Saver
+from uc2.formats.skp.skp_model import SK1Palette
 
 def create_new_palette(config):pass
 
@@ -48,11 +49,9 @@ class SKP_Presenter(TextModelPresenter):
 			self.load(filepath)
 
 	def new(self):
-		self.model = create_new_palette(self.config)
+		self.model = SK1Palette(self.config)
 		self.update()
 
 	def update(self):
 		TextModelPresenter.update(self)
-		if not self.model is None:
-			self.methods.update()
 
