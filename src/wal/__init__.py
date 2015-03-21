@@ -17,6 +17,7 @@
 
 from const import TOP, BOTTOM, LEFT, RIGHT
 from const import ALL, EXPAND, CENTER , HORIZONTAL, VERTICAL
+from const import is_gtk, is_mac, is_msw, is_winxp
 from basic import Application, MainWindow, Panel, VPanel, HPanel, LabeledPanel
 from widgets import Label, HLine, VLine, HtmlLabel, Button, Checkbox
 from widgets import Combolist, Combobox, Entry, Spin, FloatSpin, Radiobutton
@@ -26,5 +27,6 @@ from gctrls import ImageLabel, ImageButton, ImageToggleButton
 from renderer import copy_bitmap_to_surface, copy_surface_to_bitmap
 
 from msgdlgs import msg_dialog, error_dialog, stop_dialog, ync_dialog, yesno_dialog
+from modaldlgs import OkCancelDialog
 
 
