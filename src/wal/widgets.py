@@ -22,6 +22,11 @@ import const
 from const import DEF_SIZE
 from basic import HPanel
 
+class Bitmap(wx.StaticBitmap):
+
+	def __init__(self, parent, bitmap):
+		wx.StaticBitmap.__init__(self, parent, -1, bitmap)
+
 class Notebook(wx.Notebook, Widget):
 
 	childs = []
