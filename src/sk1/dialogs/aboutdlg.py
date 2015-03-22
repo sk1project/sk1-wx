@@ -15,11 +15,8 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx
-
 import wal
-from wal import const, EXPAND
-from wal import VPanel
+from wal import const
 
 from sk1 import _
 from sk1.resources import icons, get_bmp
@@ -33,7 +30,7 @@ class AboutDialog(wal.SimpleDialog):
 
 	def __init__(self, app, parent, title, size=(500, 350)):
 		self.app = app
-		if const.is_mac(): size = (550, 400)
+		if wal.is_mac(): size = (550, 400)
 		wal.SimpleDialog.__init__(self, parent, title, size)
 
 	def build(self):
@@ -89,29 +86,13 @@ class AboutPage(wal.HPanel):
 		p.pack(wal.HtmlLabel(p, 'http://sk1project.org'))
 		box.pack(p, fill=True)
 
-class ComponentsPage(VPanel):
+class ComponentsPage(wal.VPanel):
 
 	def __init__(self, app, parent):
-		odd_color = wx.Colour(240, 240, 240)
-		VPanel.__init__(self, parent)
-		lc = wx.ListCtrl(self, -1, style=wx.LC_REPORT)
-		lc.InsertColumn(0, _('Library'))
-		lc.InsertColumn(1, _('Version'))
-		data = app.appdata.components
-		i = 0
-		odd = False
-		for item in data:
-			lc.Append(item)
-			if odd:
-				item = lc.GetItem(i)
-				item.SetBackgroundColour(odd_color)
-				lc.SetItem(item)
-			odd = not odd
-			i += 1
-
-		self.add(lc, 1, EXPAND, 5)
-		lc.SetColumnWidth(0, wx.LIST_AUTOSIZE)
-		lc.SetColumnWidth(1, 500)
+		wal.VPanel.__init__(self, parent)
+		data = [[_('Component'), _('Version')]] + app.appdata.components
+		slist = wal.ReportList(self, data, border=False)
+		self.pack(slist, expand=True, fill=True)
 
 class AuthorsPage(wal.VPanel):
 
