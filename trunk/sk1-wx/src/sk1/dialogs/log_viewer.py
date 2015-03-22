@@ -16,15 +16,12 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import wx
 
-from wal import BOTTOM, EXPAND, ALL, VERTICAL, HORIZONTAL
-from wal import const, HPanel, VPanel, Button, HLine
+import wal
 
-from sk1 import _, appconst
-from wal import error_dialog
+from sk1 import _, config, appconst
 
-class LogViewerDialog(wx.Dialog):
+class LogViewerDialog(wal.OkCancelDialog):
 
 	sizer = None
 	box = None
@@ -35,128 +32,73 @@ class LogViewerDialog(wx.Dialog):
 	data = []
 	ret = ''
 
-	def __init__(self, parent, title, size=(500, 350)):
-
+	def __init__(self, parent, title):
 		self.app = parent.app
-
-		wx.Dialog.__init__(self, parent, -1, title, wx.DefaultPosition, size)
-
-		self.sizer = wx.BoxSizer(VERTICAL)
-		self.SetSizer(self.sizer)
-
-		self.box = VPanel(self)
-		self.sizer.Add(self.box, 1, ALL | EXPAND)
-
-		self.build()
-
-		self.box.add(HLine(self.box), 0, ALL | EXPAND)
-
-		self.bottom_box = HPanel(self)
-		self.sizer.Add(self.bottom_box, 0, EXPAND, 5)
-
-		self.clear_btn = Button(self.bottom_box, _('Clear history'),
-							onclick=self.clear_history)
-		self.bottom_box.add(self.clear_btn, 0, ALL , 5)
-
-		expander = HPanel(self)
-		self.bottom_box.add(expander, 1, ALL , 5)
-
-
-		self.open_btn = wx.Button(self.bottom_box, wx.ID_OPEN, "",
-								wx.DefaultPosition, wx.DefaultSize, 0)
-		self.Bind(wx.EVT_BUTTON, self.on_open, self.open_btn)
-
-		self.cancel_btn = wx.Button(self.bottom_box, wx.ID_CANCEL, "",
-								wx.DefaultPosition, wx.DefaultSize, 0)
-		self.Bind(wx.EVT_BUTTON, self.on_cancel, self.cancel_btn)
-
-		if const.is_gtk():
-			self.bottom_box.add(self.cancel_btn, 0, ALL, 5)
-			self.bottom_box.add(self.open_btn, 0, ALL, 5)
-		elif const.is_msw():
-			self.bottom_box.add(self.open_btn, 0, ALL, 5)
-			self.bottom_box.add(self.cancel_btn, 0, ALL, 5)
-		else:
-			self.bottom_box.add(self.open_btn, 0, ALL , 5)
-			self.bottom_box.add(self.cancel_btn, 0, ALL , 5)
-
-		self.cancel_btn.SetDefault()
-		self.open_btn.Enable(False)
+		size = config.history_dlg_size
+		wal.OkCancelDialog.__init__(self, parent, title, size, resizable=True,
+								action_button=wal.const.BUTTON_OPEN)
+		self.SetMinSize(config.history_dlg_minsize)
+		self.ok_btn.Enable(False)
 		self.update_list()
 
 	def build(self):
-		margin = 0
-		if const.is_msw(): margin = 5
-		self.lc = wx.ListCtrl(self.box, -1, style=wx.LC_REPORT)
-		self.box.add(self.lc, 1, ALL | EXPAND, margin)
-		self.lc.Bind(wx.EVT_LIST_ITEM_SELECTED, self.update, self.lc)
-		self.lc.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.update, self.lc)
-		self.lc.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.on_open, self.lc)
+		self.lc = wal.ReportList(self.panel, on_select=self.update,
+								on_activate=self.on_ok)
+		self.panel.pack(self.lc, expand=True, fill=True)
 
-	def update(self, *args):
-		item = self.lc.GetFocusedItem()
-		if not item < 0:self.open_btn.Enable(True)
-		else:self.open_btn.Enable(False)
+	def set_dialog_buttons(self):
+		wal.OkCancelDialog.set_dialog_buttons(self)
+		self.clear_btn = wal.Button(self.left_button_box, _('Clear log'),
+								onclick=self.clear_history)
+		self.left_button_box.pack(self.clear_btn)
+
+	def update(self, value):
+		if value:self.ok_btn.Enable(True)
+		else:self.ok_btn.Enable(False)
 		if self.data: self.clear_btn.Enable(True)
 		else:self.clear_btn.Enable(False)
 
 	def update_list(self):
-		self.lc.ClearAll()
-		self.lc.InsertColumn(0, _(' '))
-		self.lc.InsertColumn(1, _('File name'))
-		self.lc.InsertColumn(2, _('Path'))
-		self.lc.InsertColumn(3, _('Time'))
-		self.data = self.app.history.get_history_entries()
-
-		ldata = []
-		for item in self.data:
-			op = 'O'
-			if item[0] == appconst.SAVED:op = 'S'
-			ldata.append([op, item[1], item[2], item[4]])
-
-		odd_color = wx.Colour(240, 240, 240)
-		i = 0
-		odd = False
-		for item in ldata:
-			self.lc.Append(item)
-			if odd:
-				item = self.lc.GetItem(i)
-				item.SetBackgroundColour(odd_color)
-				self.lc.SetItem(item)
-			odd = not odd
-			i += 1
-
-		self.lc.SetColumnWidth(0, 20)
-		if self.data: self.lc.SetColumnWidth(1, wx.LIST_AUTOSIZE)
-		else: self.lc.SetColumnWidth(1, 100)
-		self.lc.SetColumnWidth(2, 200)
-		self.lc.SetColumnWidth(3, 500)
-		self.update()
+		header = [_('Status'), _('File name'), _('Path'), _('Time')]
+		data = self.app.history.get_history_entries()
+		self.data = []
+		for item in data:
+			op = _('Opened')
+			if item[0] == appconst.SAVED:op = _('Saved')
+			self.data.append([op, item[1], item[2], item[4]])
+		data = [header] + self.data
+		self.lc.update(data)
+		self.lc.set_column_width(0, wal.const.LIST_AUTOSIZE)
+		self.lc.set_column_width(1, wal.const.LIST_AUTOSIZE)
+		self.lc.set_column_width(2, wal.const.LIST_AUTOSIZE)
+		self.lc.set_column_width(3, wal.const.LIST_AUTOSIZE)
+		self.update(False)
 
 	def clear_history(self, *args):
 		self.app.history.clear_history()
 		self.update_list()
 
-	def on_open(self, *args):
-		item = self.lc.GetFocusedItem()
-		if not item < 0:
-			path = self.data[item][3]
+	def on_ok(self, value):
+		if value:
+			path = value[2]
 			if os.path.isfile(path):
 				self.ret = path
-				self.EndModal(wx.ID_OK)
+				self.EndModal(wal.const.BUTTON_OK)
 			else:
 				txt = "%s '%s' %s" % (_('File'), path, _('is not found.'))
-				error_dialog(self, _('File not found'), txt)
-
-	def on_cancel(self, event):
-		self.EndModal(wx.ID_CANCEL)
+				wal.error_dialog(self, _('File not found'), txt)
 
 	def get_result(self): return self.ret
 
+	def show(self):
+		ret = None
+		if self.ShowModal() == wal.const.BUTTON_OK:
+			ret = self.get_result()
+		config.history_dlg_size = self.GetSize()
+		self.Destroy()
+		return ret
+
 def log_viewer_dlg(parent):
-	ret = ''
 	dlg = LogViewerDialog(parent, _("Recent documents"))
-	dlg.Centre()
-	if dlg.ShowModal() == wx.ID_OK: ret = dlg.get_result()
-	dlg.Destroy()
+	ret = dlg.show()
 	if ret:parent.app.open(ret)
