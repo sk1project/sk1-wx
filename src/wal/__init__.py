@@ -23,6 +23,8 @@ from widgets import Label, HLine, VLine, HtmlLabel, Button, Checkbox
 from widgets import Combolist, Combobox, Entry, Spin, FloatSpin, Radiobutton
 from widgets import Slider, Notebook, Bitmap
 
+from listwidgets import SimpleList, ReportList
+
 from gctrls import ImageLabel, ImageButton, ImageToggleButton
 from renderer import copy_bitmap_to_surface, copy_surface_to_bitmap
 
