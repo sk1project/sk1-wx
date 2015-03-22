@@ -93,6 +93,7 @@ class ComponentsPage(wal.VPanel):
 		data = [[_('Component'), _('Version')]] + app.appdata.components
 		slist = wal.ReportList(self, data, border=False)
 		self.pack(slist, expand=True, fill=True)
+		slist.set_column_width(0, const.LIST_AUTOSIZE)
 
 class AuthorsPage(wal.VPanel):
 
