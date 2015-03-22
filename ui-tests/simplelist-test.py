@@ -4,11 +4,11 @@ TESTLIST = ['Value1', 'Value2', 'Value3', 'Value4', 'Value5', 'Value6']
 
 TESTMULTILIST = [
 		['Name1', 'Name2', 'Name3'],
-		['Value1', 'Value2', 'Value3'],
-		['Value1', 'Value2', 'Value3'],
-		['Value1', 'Value2', 'Value3'],
-		['Value1', 'Value2', 'Value3'],
-		['Value1', 'Value2', 'Value3'],
+		['Value1a', 'Value2a', 'Value3a'],
+		['Value1b', 'Value2b', 'Value3b'],
+		['Value1c', 'Value2c', 'Value3c'],
+		['Value1d', 'Value2d', 'Value3d'],
+		['Value1f', 'Value2f', 'Value3f'],
 ]
 class WidgetPanel(wal.HPanel):
 	def __init__(self, parent):
