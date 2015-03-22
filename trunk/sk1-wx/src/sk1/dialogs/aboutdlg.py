@@ -20,8 +20,8 @@ from wal import const
 
 from sk1 import _
 from sk1.resources import icons, get_bmp
-from sk1.dialogs.license import LICENSE
-from sk1.dialogs.credits import CREDITS
+from sk1.dialogs.aboutdlg_license import LICENSE
+from sk1.dialogs.aboutdlg_credits import CREDITS
 
 class AboutDialog(wal.SimpleDialog):
 
