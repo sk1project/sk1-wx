@@ -19,7 +19,7 @@ import wx
 
 from const import FONT_SIZE, is_msw
 
-class Widget:
+class Widget(object):
 
 	shown = True
 	enabled = True

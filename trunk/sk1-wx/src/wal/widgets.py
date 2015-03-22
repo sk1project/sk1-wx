@@ -25,7 +25,7 @@ from basic import HPanel
 class Bitmap(wx.StaticBitmap):
 
 	def __init__(self, parent, bitmap):
-		wx.StaticBitmap.__init__(self, parent, -1, bitmap)
+		wx.StaticBitmap.__init__(self, parent, wx.ID_ANY, bitmap)
 
 class Notebook(wx.Notebook, Widget):
 
