@@ -25,19 +25,20 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
 	data = []
 	select_cmd = None
 	activate_cmd = None
+	alt_color = False
 
 	def __init__(self, parent, data=[], border=True, header=False,
 				single_sel=True, alt_color=False,
 				on_select=None, on_activate=None):
 		self.data = data
+		self.alt_color = alt_color
 		style = wx.LC_REPORT
 		if border: style |= wx.BORDER_MASK
 		if not header: style |= wx.LC_NO_HEADER
 		if single_sel: style |= wx.LC_SINGLE_SEL
 		wx.ListCtrl.__init__(self, parent, wx.ID_ANY, style=style)
 		listmix.ListCtrlAutoWidthMixin.__init__(self)
-		self.set_columns()
-		self.set_data(self.data, alt_color)
+		if self.data: self.update(self.data)
 		if on_select:
 			self.select_cmd = on_select
 			self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.on_select, self)
@@ -45,6 +46,17 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
 			self.activate_cmd = on_activate
 			self.Bind(wx.wx.EVT_LIST_ITEM_ACTIVATED, self.on_activate, self)
 
+	def clear_all(self):
+		self.ClearAll()
+
+	def set_column_width(self, index, width):
+		self.SetColumnWidth(index, width)
+
+	def update(self, data):
+		self.ClearAll()
+		self.data = data
+		self.set_columns()
+		self.set_data(self.data, self.alt_color)
 
 	def set_columns(self):
 		self.InsertColumn(0, '')
