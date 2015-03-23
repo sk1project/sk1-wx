@@ -15,12 +15,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx
-
 from uc2.uc2const import IMAGE_NAMES, IMAGE_CMYK, IMAGE_RGB
 
-from wal import const
-from wal import HPanel, Label, VLine, ImageButton
+import wal
 
 from sk1 import _, config, events
 from sk1.resources import pdids, get_tooltip_text
@@ -30,7 +27,7 @@ from sk1.resources import get_bmp, icons
 
 FONTSIZE = [str(config.statusbar_fontsize), ]
 
-class AppStatusbar(HPanel):
+class AppStatusbar(wal.HPanel):
 
 	mw = None
 	mouse_info = None
@@ -42,14 +39,10 @@ class AppStatusbar(HPanel):
 	def __init__(self, mw):
 
 		if not config.statusbar_fontsize:
-			font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-			if font.IsUsingSizeInPixels():
-				FONTSIZE[0] = str(font.GetPixelSize())
-			else:
-				FONTSIZE[0] = str(font.GetPointSize())
+			FONTSIZE[0] = wal.get_system_fontsize()
 
 		self.mw = mw
-		HPanel.__init__(self, mw)
+		wal.HPanel.__init__(self, mw)
 		self.pack((5, 20))
 
 		self.mouse_info = MouseMonitor(self.mw.app, self)
@@ -63,10 +56,10 @@ class AppStatusbar(HPanel):
 		self.pack(self.page_info)
 		self.page_info.hide()
 
-		info_panel = HPanel(self)
+		info_panel = wal.HPanel(self)
 		info_panel.pack(get_bmp(info_panel, icons.PD_APP_STATUS))
 		info_panel.pack((5, 3))
-		self.info = Label(info_panel, text='', fontsize=FONTSIZE[0])
+		self.info = wal.Label(info_panel, text='', fontsize=FONTSIZE[0])
 		info_panel.pack(self.info)
 		self.pack(info_panel, expand=True)
 
@@ -81,12 +74,12 @@ class AppStatusbar(HPanel):
 		self.Layout()
 		self.show()
 
-class SnapMonitor(HPanel):
+class SnapMonitor(wal.HPanel):
 
 	def __init__(self, app, parent):
 		self.app = app
 		actions = app.actions
-		HPanel.__init__(self, parent)
+		wal.HPanel.__init__(self, parent)
 
 		action_id = pdids.ID_SNAP_TO_GRID
 		tooltip_txt = get_tooltip_text(action_id)
@@ -120,10 +113,10 @@ class SnapMonitor(HPanel):
 		sw = ActionImageSwitch(self, actions[action_id], icons_dict)
 		self.pack(sw, padding=2)
 
-		self.pack(VLine(self.panel), fill=True, padding=2)
+		self.pack(wal.VLine(self.panel), fill=True, padding=2)
 
 
-class ColorMonitor(HPanel):
+class ColorMonitor(wal.HPanel):
 
 	image_txt = None
 	fill_txt = None
@@ -134,16 +127,16 @@ class ColorMonitor(HPanel):
 	def __init__(self, app, parent):
 		self.app = app
 		self.parent = parent
-		HPanel.__init__(self, parent)
+		wal.HPanel.__init__(self, parent)
 
-		self.image_txt = Label(self, text=_('Image type: '), fontsize=FONTSIZE[0])
+		self.image_txt = wal.Label(self, text=_('Image type: '), fontsize=FONTSIZE[0])
 		self.pack(self.image_txt, padding=4)
-		self.fill_txt = Label(self, text=_('Fill:'), fontsize=FONTSIZE[0])
+		self.fill_txt = wal.Label(self, text=_('Fill:'), fontsize=FONTSIZE[0])
 		self.pack(self.fill_txt)
 		self.fill_swatch = FillSwatch(self, self.app, self.fill_txt)
 		self.pack(self.fill_swatch, padding=2)
 		self.pack((5, 5))
-		self.stroke_txt = Label(self, text=_('Stroke:'), fontsize=FONTSIZE[0])
+		self.stroke_txt = wal.Label(self, text=_('Stroke:'), fontsize=FONTSIZE[0])
 		self.pack(self.stroke_txt)
 		self.stroke_swatch = StrokeSwatch(self, self.app, self.stroke_txt)
 		self.pack(self.stroke_swatch, padding=2)
@@ -175,20 +168,20 @@ class ColorMonitor(HPanel):
 				return
 		self.hide()
 
-class MouseMonitor(HPanel):
+class MouseMonitor(wal.HPanel):
 
 	def __init__(self, app, parent):
 		self.app = app
-		HPanel.__init__(self, parent)
+		wal.HPanel.__init__(self, parent)
 		self.pack(get_bmp(self.panel, icons.PD_MOUSE_MONITOR))
 
 		width = 100
-		if const.is_mac(): width = 130
+		if wal.is_mac(): width = 130
 
-		self.pointer_txt = Label(self.panel, text=' ', fontsize=FONTSIZE[0])
+		self.pointer_txt = wal.Label(self.panel, text=' ', fontsize=FONTSIZE[0])
 		self.pointer_txt.SetMinSize((width, -1))
 		self.pack(self.pointer_txt)
-		self.pack(VLine(self.panel), fill=True, padding=2)
+		self.pack(wal.VLine(self.panel), fill=True, padding=2)
 		events.connect(events.MOUSE_STATUS, self.set_value)
 		events.connect(events.NO_DOCS, self.hide_monitor)
 		events.connect(events.DOC_CHANGED, self.doc_changed)
@@ -208,18 +201,18 @@ class MouseMonitor(HPanel):
 		if not self.is_shown():
 			self.show()
 
-class PageMonitor(HPanel):
+class PageMonitor(wal.HPanel):
 
 	def __init__(self, app, parent):
 		self.app = app
 		self.parent = parent
-		HPanel.__init__(self, parent)
+		wal.HPanel.__init__(self, parent)
 
 		native = False
-		if const.is_gtk(): native = True
+		if wal.is_gtk(): native = True
 
 		callback = self.app.proxy.goto_start
-		self.start_but = ImageButton(self.panel,
+		self.start_but = wal.ImageButton(self.panel,
 							icons.PD_PM_ARROW_START,
 							tooltip=_('Go to fist page'),
 							decoration_padding=4,
@@ -228,7 +221,7 @@ class PageMonitor(HPanel):
 		self.pack(self.start_but)
 
 		callback = self.app.proxy.previous_page
-		self.prev_but = ImageButton(self.panel,
+		self.prev_but = wal.ImageButton(self.panel,
 							icons.PD_PM_ARROW_LEFT,
 							tooltip=_('Go to previous page'),
 							decoration_padding=4,
@@ -236,11 +229,11 @@ class PageMonitor(HPanel):
 							onclick=callback)
 		self.pack(self.prev_but)
 
-		self.page_txt = Label(self.panel, text=' ', fontsize=FONTSIZE[0])
+		self.page_txt = wal.Label(self.panel, text=' ', fontsize=FONTSIZE[0])
 		self.pack(self.page_txt)
 
 		callback = self.app.proxy.next_page
-		self.next_but = ImageButton(self.panel,
+		self.next_but = wal.ImageButton(self.panel,
 							icons.PD_PM_ARROW_RIGHT,
 							tooltip=_('Go to next page'),
 							decoration_padding=4,
@@ -249,7 +242,7 @@ class PageMonitor(HPanel):
 		self.pack(self.next_but)
 
 		callback = self.app.proxy.goto_end
-		self.end_but = ImageButton(self.panel,
+		self.end_but = wal.ImageButton(self.panel,
 							icons.PD_PM_ARROW_END,
 							tooltip=_('Go to last page'),
 							decoration_padding=4,
@@ -258,7 +251,7 @@ class PageMonitor(HPanel):
 		self.pack(self.end_but)
 
 
-		self.pack(VLine(self.panel), fill=True, padding=4)
+		self.pack(wal.VLine(self.panel), fill=True, padding=4)
 		events.connect(events.NO_DOCS, self.hide_monitor)
 		events.connect(events.DOC_CHANGED, self.update)
 		events.connect(events.DOC_MODIFIED, self.update)
