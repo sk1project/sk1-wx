@@ -66,7 +66,7 @@ class RS_Plugin:
 
 	def activate(self):
 		if not self.activated:
-			self.panel = VPanel(self.app.plg_area)
+			self.panel = VPanel(self.app.plg_area.container)
 			self.activated = True
 			self.build_ui()
 
