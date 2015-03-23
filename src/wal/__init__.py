@@ -15,9 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from const import TOP, BOTTOM, LEFT, RIGHT
-from const import ALL, EXPAND, CENTER , HORIZONTAL, VERTICAL
-from const import is_gtk, is_mac, is_msw, is_winxp
+from const import *
 from basic import Application, MainWindow, Panel, VPanel, HPanel, LabeledPanel
 from widgets import Label, HLine, VLine, HtmlLabel, Button, Checkbox
 from widgets import Combolist, Combobox, Entry, Spin, FloatSpin, Radiobutton
