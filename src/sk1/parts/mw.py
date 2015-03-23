@@ -16,9 +16,8 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import wx
 
-from wal import MainWindow
+import wal
 
 from sk1 import config
 from sk1.parts.menubar import AppMenuBar
@@ -26,7 +25,7 @@ from sk1.parts.toolbar import ToolbarCreator
 from sk1.parts.mdiarea import MDIArea
 from sk1.parts.stubpanel import AppStubPanel
 
-class AppMainWindow(MainWindow):
+class AppMainWindow(wal.MainWindow):
 
 	menubar = None
 	mdi = None
@@ -39,11 +38,11 @@ class AppMainWindow(MainWindow):
 		height = max(config.mw_min_height, config.mw_height)
 		width = max(config.mw_min_width, config.mw_width)
 		size = (width, height)
-		MainWindow.__init__(self, '', size, maximized=config.mw_maximized)
+		wal.MainWindow.__init__(self, '', size, maximized=config.mw_maximized,
+							on_close=self.app.exit)
 		self.set_minsize(config.mw_min_width, config.mw_min_height)
-		self.icons = self.create_icon_bundle()
-		self.SetIcons(self.icons)
-		self.Bind(wx.EVT_CLOSE, self.app.exit, self)
+		self.set_icons(os.path.join(config.resource_dir, 'icons',
+								'generic', 'sk1-icon.ico'))
 
 	def build(self):
 		#----- Menubar
@@ -61,22 +60,13 @@ class AppMainWindow(MainWindow):
 		self.pack(self.stub, expand=True, fill=True)
 		if config.new_doc_on_start:self.stub.hide()
 
-		self.Layout()
+		self.layout()
 
 	def set_title(self, title=''):
 		appname = self.app.appdata.app_name
-		if title: self.SetTitle('[%s] - %s' % (title, appname))
-		else: self.SetTitle(appname)
-
-	def create_icon_bundle(self):
-		iconset_path = os.path.join(config.resource_dir, 'icons', 'generic')
-		ret = wx.IconBundle()
-		filename = 'pdesign-icon.ico'
-		path = os.path.join(iconset_path, filename)
-		ret.AddIconFromFile(path, wx.BITMAP_TYPE_ANY)
-		return ret
-
-	def test(self, event):pass
+		if title: title = '[%s] - %s' % (title, appname)
+		else: title = appname
+		wal.MainWindow.set_title(self, title)
 
 	def show_mdi(self, value):
 		if value and not self.mdi.is_shown():
@@ -85,4 +75,4 @@ class AppMainWindow(MainWindow):
 		elif not value and self.mdi.is_shown():
 			self.stub.show()
 			self.mdi.hide()
-		self.Layout()
+		self.layout()

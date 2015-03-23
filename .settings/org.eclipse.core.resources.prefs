@@ -47,6 +47,7 @@ encoding//src/sk1/parts/mw.py=utf-8
 encoding//src/sk1/parts/palettepanel.py=utf-8
 encoding//src/sk1/parts/statusbar.py=utf-8
 encoding//src/sk1/parts/stubpanel.py=utf-8
+encoding//src/sk1/parts/toolbar.py=utf-8
 encoding//src/sk1/parts/tools.py=utf-8
 encoding//src/sk1/pwidgets/__init__.py=utf-8
 encoding//src/sk1/pwidgets/actions.py=utf-8
