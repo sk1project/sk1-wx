@@ -149,6 +149,8 @@ class Panel(wx.Panel, Widget):
 	def set_bg(self, color):
 		self.SetBackgroundColour(wx.Colour(*color))
 
+	def layout(self):self.Layout()
+
 class SizedPanel(Panel):
 
 	panel = None

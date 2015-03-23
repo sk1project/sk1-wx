@@ -15,11 +15,11 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx
-from wal import HPanel, VPanel, ALL, EXPAND, VLine
+import wal
+
 from sk1.parts.plgtabpanel import PlgTabsPanel
 
-class PlgArea(HPanel):
+class PlgArea(wal.HPanel):
 
 	app = None
 	active_plg = None
@@ -29,14 +29,13 @@ class PlgArea(HPanel):
 
 	def __init__(self, app, parent):
 		self.app = app
-		HPanel.__init__(self, parent)
-		line = VLine(self)
-		self.add(line, 0, ALL | EXPAND)
-		self.container = VPanel(self)
-		self.add(self.container, 1, ALL | EXPAND)
+		wal.HPanel.__init__(self, parent)
+		self.pack(wal.VLine(self), fill=True)
+		self.container = wal.VPanel(self)
+		self.pack(self.container, expand=True, fill=True)
 		self.tabs = PlgTabsPanel(app, self)
-		self.add(self.tabs, 0, ALL | EXPAND)
-		self.Layout()
+		self.pack(self.tabs, fill=True)
+		self.layout()
 
 	def check_pid(self, pid):
 		for item in self.plugins:
@@ -59,14 +58,14 @@ class PlgArea(HPanel):
 			self.active_plg.hide()
 		if not item:
 			item = self.load_plugin(pid)
-			self.container.add(item.panel, 1, ALL | EXPAND)
+			self.container.pack(item.panel, expand=True, fill=True)
 			self.tabs.plg_tabs.add_new_tab(item)
 		else:
 			self.tabs.plg_tabs.set_active(item)
 		self.active_plg = item
 		self.active_plg.show()
-		self.container.Layout()
-		self.Layout()
+		self.layout()
+		self.container.layout()
 
 	def close_plugin(self, pid):
 		item = self.check_pid(pid)
