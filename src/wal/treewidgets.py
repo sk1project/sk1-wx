@@ -47,8 +47,10 @@ class TreeWidget(wx.TreeCtrl):
 	file_ico = 0
 	imagelist = None
 
+	select_cmd = None
+
 	def __init__(self, parent, data=[], border=True, alt_color=True,
-				use_icons=True):
+				use_icons=True, on_select=None):
 		style = wx.TR_DEFAULT_STYLE | wx.TR_HAS_BUTTONS
 		style |= wx.TR_FULL_ROW_HIGHLIGHT | wx.TR_HIDE_ROOT
 		if border: style |= wx.BORDER_MASK
@@ -57,20 +59,22 @@ class TreeWidget(wx.TreeCtrl):
 		self.items_ref = []
 		self.alt_color = alt_color
 		self.use_icons = use_icons
+		self.select_cmd = on_select
 		self.init_icons()
 
 		self.Bind(wx.EVT_TREE_ITEM_EXPANDED, self.recolor_items, self)
 		self.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.recolor_items, self)
-		self.Bind(wx.EVT_TREE_SEL_CHANGED, self.sel_changed, self)
+		if self.select_cmd:
+			self.Bind(wx.EVT_TREE_SEL_CHANGED, self.sel_changed, self)
 
 		self.update(data)
 		self.recolor_items()
 
 	def sel_changed(self, event):
 		item = event.GetItem()
-		if item:
-			print self.items_ref[self.items.index(item)]
 		event.Skip()
+		if item:
+			self.select_cmd(self.items_ref[self.items.index(item)])
 
 	def init_icons(self):
 		self.imagelist = wx.ImageList(self.icon_size[0], self.icon_size[1])
