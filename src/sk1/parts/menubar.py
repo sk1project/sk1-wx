@@ -17,6 +17,8 @@
 
 import wx
 
+import wal
+
 from sk1 import _, config, events
 from sk1.resources import pdids
 
@@ -29,30 +31,30 @@ class AppMenuBar(wx.MenuBar):
 		self.entries = []
 
 		#---File menu
-		sub = (wx.ID_NEW, pdids.ID_NEW_FROM_TEMPLATE, None, wx.ID_OPEN,
+		sub = (wal.ID_NEW, pdids.ID_NEW_FROM_TEMPLATE, None, wal.ID_OPEN,
 				(_("Open &Recent"), (HistoryMenu(self.app, self.mw),)),
 				None,
-				wx.ID_SAVE, wx.ID_SAVEAS, pdids.ID_SAVE_SEL,
-				pdids.ID_SAVEALL, None, wx.ID_CLOSE, wx.ID_CLOSE_ALL, None,
+				wal.ID_SAVE, wal.ID_SAVEAS, pdids.ID_SAVE_SEL,
+				pdids.ID_SAVEALL, None, wal.ID_CLOSE, wal.ID_CLOSE_ALL, None,
 				pdids.ID_IMPORT, pdids.ID_EXPORT, None,
-				pdids.ID_VIEW_LOG, None, wx.ID_PRINT_SETUP, wx.ID_PRINT,
-				None, wx.ID_EXIT,)
+				pdids.ID_VIEW_LOG, None, wal.ID_PRINT_SETUP, wal.ID_PRINT,
+				None, wal.ID_EXIT,)
 		entry = (_("&File"), sub)
 		self.entries.append(entry)
 
 		#---Edit menu
-		sub = (wx.ID_UNDO, wx.ID_REDO, pdids.ID_CLEAR_UNDO, None, wx.ID_CUT,
-				wx.ID_COPY, wx.ID_PASTE, wx.ID_DELETE, pdids.ID_DUPLICATE,
-				None, wx.ID_SELECTALL, pdids.ID_DESELECT, pdids.ID_INV_SELECT,
-				None, wx.ID_PROPERTIES, wx.ID_PREFERENCES,)
+		sub = (wal.ID_UNDO, wal.ID_REDO, pdids.ID_CLEAR_UNDO, None, wal.ID_CUT,
+				wal.ID_COPY, wal.ID_PASTE, wal.ID_DELETE, pdids.ID_DUPLICATE,
+				None, wal.ID_SELECTALL, pdids.ID_DESELECT, pdids.ID_INV_SELECT,
+				None, wal.ID_PROPERTIES, wal.ID_PREFERENCES,)
 		entry = (_("&Edit"), sub)
 		self.entries.append(entry)
 
 		#---View menu
 		sub = (pdids.ID_STROKE_VIEW, pdids.ID_DRAFT_VIEW, None,
-				wx.ID_ZOOM_100, wx.ID_ZOOM_IN, wx.ID_ZOOM_OUT,
+				wal.ID_ZOOM_100, wal.ID_ZOOM_IN, wal.ID_ZOOM_OUT,
 				pdids.ID_PREV_ZOOM, None,
-				pdids.ID_ZOOM_PAGE, wx.ID_ZOOM_FIT,
+				pdids.ID_ZOOM_PAGE, wal.ID_ZOOM_FIT,
 				None,
 				(_("&Show"), (pdids.ID_SHOW_GRID, pdids.ID_SHOW_GUIDES,
 				pdids.ID_SHOW_SNAP, pdids.ID_SHOW_PAGE_BORDER)),
@@ -60,7 +62,7 @@ class AppMenuBar(wx.MenuBar):
 				(_("S&nap to"), (pdids.ID_SNAP_TO_GRID, pdids.ID_SNAP_TO_GUIDE,
 				pdids.ID_SNAP_TO_OBJ, pdids.ID_SNAP_TO_PAGE)),
 				None,
-				wx.ID_REFRESH,)
+				wal.ID_REFRESH,)
 		entry = (_("&View"), sub)
 		self.entries.append(entry)
 
@@ -111,7 +113,7 @@ class AppMenuBar(wx.MenuBar):
 
 		#---Help menu
 		sub = (pdids.ID_REPORT_BUG, None, pdids.ID_APP_WEBSITE,
-			pdids.ID_APP_FORUM, pdids.ID_APP_FBPAGE, None, wx.ID_ABOUT,)
+			pdids.ID_APP_FORUM, pdids.ID_APP_FBPAGE, None, wal.ID_ABOUT,)
 		entry = (_("&Help"), sub)
 		self.entries.append(entry)
 

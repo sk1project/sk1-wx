@@ -15,22 +15,19 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx
-
-from wal import const
+import wal
 
 from sk1 import config
 from sk1.resources import pdids
 from sk1.pwidgets import MacTB_ActionButton, MacTB_ActionNestedButtons
 
-TBFLAGS = (wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
 
-BUTTONS = [(wx.ID_NEW,), None, (wx.ID_OPEN, wx.ID_SAVE, wx.ID_SAVEAS,
-		wx.ID_CLOSE), None, (wx.ID_PRINT,), None, (wx.ID_UNDO, wx.ID_REDO),
-		None, (wx.ID_CUT, wx.ID_COPY, wx.ID_PASTE, wx.ID_DELETE), None,
-		(wx.ID_REFRESH,), None, (wx.ID_ZOOM_IN, wx.ID_ZOOM_OUT,
-		pdids.ID_ZOOM_PAGE, wx.ID_ZOOM_100, wx.ID_ZOOM_FIT), None,
-		(wx.ID_PROPERTIES, wx.ID_PREFERENCES)]
+BUTTONS = [(wal.ID_NEW,), None, (wal.ID_OPEN, wal.ID_SAVE, wal.ID_SAVEAS,
+		wal.ID_CLOSE), None, (wal.ID_PRINT,), None, (wal.ID_UNDO, wal.ID_REDO),
+		None, (wal.ID_CUT, wal.ID_COPY, wal.ID_PASTE, wal.ID_DELETE), None,
+		(wal.ID_REFRESH,), None, (wal.ID_ZOOM_IN, wal.ID_ZOOM_OUT,
+		pdids.ID_ZOOM_PAGE, wal.ID_ZOOM_100, wal.ID_ZOOM_FIT), None,
+		(wal.ID_PROPERTIES, wal.ID_PREFERENCES)]
 
 class ToolbarCreator:
 
@@ -39,11 +36,11 @@ class ToolbarCreator:
 		self.build_toolbar()
 
 	def build_toolbar(self):
-		self.tb = self.mw.CreateToolBar(TBFLAGS)
+		self.tb = self.mw.CreateToolBar(wal.TBFLAGS)
 		icon_size = config.toolbar_icon_size
 		self.tb.SetToolBitmapSize(config.toolbar_size)
 
-		if const.is_mac():
+		if wal.is_mac():
 			for items in BUTTONS:
 				if not items is None:
 					if len(items) == 1:
@@ -64,7 +61,7 @@ class ToolbarCreator:
 						aid = action.action_id
 						label_txt = action.get_tooltip_text()
 						hlp_txt = action.get_descr_text()
-						bmp = action.get_icon(icon_size, wx.ART_TOOLBAR)
+						bmp = action.get_icon(icon_size, wal.ART_TOOLBAR)
 						if not bmp: continue
 						self.tb.AddLabelTool(aid, label_txt, bmp,
 											shortHelp=hlp_txt)
