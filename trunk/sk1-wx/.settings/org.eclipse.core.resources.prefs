@@ -137,6 +137,7 @@ encoding//src/wal/listwidgets.py=utf-8
 encoding//src/wal/modaldlgs.py=utf-8
 encoding//src/wal/msgdlgs.py=utf-8
 encoding//src/wal/renderer.py=utf-8
+encoding//src/wal/treewidgets.py=utf-8
 encoding//src/wal/widgets.py=utf-8
 encoding//unit-tests/cms_tests/__init__.py=utf-8
 encoding//unit-tests/cms_testsuite.py=utf-8
