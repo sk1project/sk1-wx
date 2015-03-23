@@ -116,10 +116,14 @@ class AppConfig(UCConfig):
 
 	#============== UI SECTION ===================
 	mw_maximized = 0
+
+	mw_size = (1000, 700)
+	mw_min_size = (1000, 700)
 	mw_width = 1000
 	mw_height = 700
 	mw_min_width = 1000
 	mw_min_height = 700
+
 	spin_overlay = True
 	statusbar_fontsize = 0
 	tabs_fontsize = 0

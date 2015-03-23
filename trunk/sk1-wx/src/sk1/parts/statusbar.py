@@ -15,10 +15,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2.uc2const import IMAGE_NAMES, IMAGE_CMYK, IMAGE_RGB
-
 import wal
 
+from uc2.uc2const import IMAGE_NAMES, IMAGE_CMYK, IMAGE_RGB
 from sk1 import _, config, events
 from sk1.resources import pdids, get_tooltip_text
 from sk1.pwidgets import FillSwatch, StrokeSwatch, ActionImageSwitch

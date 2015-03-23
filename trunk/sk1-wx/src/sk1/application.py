@@ -18,12 +18,12 @@
 import os, sys
 import webbrowser
 
+import wal
+
 from uc2 import uc2const, libimg
 from uc2.utils.fs import path_unicode
 from uc2.application import UCApplication
 from uc2.formats import data
-
-from wal import Application
 
 from sk1 import _, config, events, modes, dialogs, appconst
 from sk1 import app_plugins, app_actions
@@ -38,7 +38,7 @@ from sk1.app_palettes import AppPaletteManager
 from sk1.document import PD_Presenter
 from sk1.clipboard import AppClipboard
 
-class pdApplication(Application, UCApplication):
+class pdApplication(wal.Application, UCApplication):
 
 	appdata = None
 	history = None
@@ -61,7 +61,7 @@ class pdApplication(Application, UCApplication):
 
 		self.path = path
 
-		Application.__init__(self)
+		wal.Application.__init__(self)
 		UCApplication.__init__(self, path)
 
 		self.appdata = AppData(self)
@@ -130,9 +130,7 @@ class pdApplication(Application, UCApplication):
 				msg = "%s '%s'" % (msg, doc_file) + '\n'
 				msg += _('The file may be corrupted or not supported format')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-				if config.print_stacktrace:
-					print sys.exc_info()[1].__str__()
-					print sys.exc_info()[2].__str__()
+				self.print_stacktrace()
 				return
 			self.docs.append(doc)
 			config.template_dir = str(os.path.dirname(doc_file))
@@ -150,9 +148,7 @@ class pdApplication(Application, UCApplication):
 				msg = "%s '%s'" % (msg, doc_file) + '\n'
 				msg += _('The file may be corrupted or not supported format')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-				if config.print_stacktrace:
-					print sys.exc_info()[1].__str__()
-					print sys.exc_info()[2].__str__()
+				self.print_stacktrace()
 				return
 			self.docs.append(doc)
 			config.open_dir = str(os.path.dirname(doc_file))
@@ -180,9 +176,7 @@ class pdApplication(Application, UCApplication):
 			msg = "%s '%s'" % (msg, self.current_doc.doc_file) + '\n'
 			msg += _('Please check file write permissions')
 			dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-			if config.print_stacktrace:
-				print sys.exc_info()[1].__str__()
-				print sys.exc_info()[2].__str__()
+			self.print_stacktrace()
 			return False
 		events.emit(events.APP_STATUS, _('Document saved'))
 		return True
@@ -211,9 +205,7 @@ class pdApplication(Application, UCApplication):
 				msg = ("%s '%s'.") % (first, self.current_doc.doc_name) + '\n'
 				msg += _('Please check file name and write permissions')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-				if config.print_stacktrace:
-					print sys.exc_info()[1].__str__()
-					print sys.exc_info()[2].__str__()
+				self.print_stacktrace()
 				return False
 			config.save_dir = str(os.path.dirname(doc_file))
 			self.history.add_entry(doc_file, appconst.SAVED)
@@ -245,9 +237,7 @@ class pdApplication(Application, UCApplication):
 				msg = ("%s '%s'.") % (first, doc_file) + '\n'
 				msg += _('Please check requested file format and write permissions')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-				if config.print_stacktrace:
-					print sys.exc_info()[1].__str__()
-					print sys.exc_info()[2].__str__()
+				self.print_stacktrace()
 
 	def save_all(self):
 		for doc in self.docs:
@@ -307,9 +297,7 @@ class pdApplication(Application, UCApplication):
 				msg = "%s '%s'" % (msg, doc_file) + '\n'
 				msg += _('The file may be corrupted or not supported format')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-				if config.print_stacktrace:
-					print sys.exc_info()[1].__str__()
-					print sys.exc_info()[2].__str__()
+				self.print_stacktrace()
 
 	def export_as(self):
 		doc_file = '' + self.current_doc.doc_file
@@ -333,9 +321,7 @@ class pdApplication(Application, UCApplication):
 				msg = ("%s '%s'.") % (first, self.current_doc.doc_name) + '\n'
 				msg += _('Please check file name and write permissions')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-				if config.print_stacktrace:
-					print sys.exc_info()[1].__str__()
-					print sys.exc_info()[2].__str__()
+				self.print_stacktrace()
 				return
 			config.export_dir = str(os.path.dirname(doc_file))
 			self.history.add_entry(doc_file, appconst.SAVED)
@@ -356,34 +342,34 @@ class pdApplication(Application, UCApplication):
 				msg = ("%s '%s'.") % (first, self.current_doc.doc_name) + '\n'
 				msg += _('Please check file name and write permissions')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-				if config.print_stacktrace:
-					print sys.exc_info()[1].__str__()
-					print sys.exc_info()[2].__str__()
+				self.print_stacktrace()
 				return
 			config.save_dir = str(os.path.dirname(doc_file))
 			self.history.add_entry(doc_file, appconst.SAVED)
 			events.emit(events.APP_STATUS, _('Bitmap is successfully extracted'))
 
 	def exit(self, *args):
-		if not self.insp.is_any_doc_not_saved(): self.mw.Hide()
+		if not self.insp.is_any_doc_not_saved(): self.mw.hide()
 		if self.close_all():
 			self.update_config()
-			self.mw.Destroy()
+			self.mw.destroy()
 			self.Exit()
 			return True
 		return False
 
 	def update_config(self):
 		config.resource_dir = ''
-		w, h = self.mw.GetSize()
-		config.mw_maximized = self.mw.IsMaximized()
-		if self.mw.IsMaximized():
-			w = config.mw_min_width
-			h = config.mw_min_height
-		config.mw_width = w
-		config.mw_height = h
+		config.mw_size = self.mw.get_size()
+		config.mw_maximized = self.mw.is_maximized()
+		if self.mw.is_maximized(): config.mw_size = config.mw_min_size
 		config.save(self.appdata.app_config)
+
+	def print_stacktrace(self):
+		if config.print_stacktrace:
+			print sys.exc_info()[1].__str__()
+			print sys.exc_info()[2].__str__()
 
 	def open_url(self, url):
 		webbrowser.open(url, new=1, autoraise=True)
-		events.emit(events.APP_STATUS, _('Requested page is opened in default browser'))
+		msg = _('Requested page is opened in default browser')
+		events.emit(events.APP_STATUS, msg)

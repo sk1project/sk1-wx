@@ -89,6 +89,11 @@ class MainWindow(wx.Frame):
 	def build(self):pass
 
 	def layout(self): self.Layout()
+	def get_size(self): return self.GetSize()
+	def is_maximized(self): return self.IsMaximized()
+	def destroy(self): self.Destroy()
+	def hide(self): self.Hide()
+	def show(self): self.Show()
 
 	def add(self, *args, **kw):
 		"""Arguments: object, expandable (0 or 1), flag, border"""
@@ -128,8 +133,8 @@ class MainWindow(wx.Frame):
 	def set_title(self, title):
 		self.SetTitle(title)
 
-	def set_minsize(self, w, h):
-		self.SetMinSize((w, h))
+	def set_minsize(self, size):
+		self.SetMinSize(size)
 
 	def set_icons(self, filepath):
 		icons = wx.IconBundle()
