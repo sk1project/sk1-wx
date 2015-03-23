@@ -68,4 +68,3 @@ class ToolbarCreator:
 						action.register_as_tool(self.tb)
 		self.tb.Realize()
 
-	def repeat_test(self, *args):print 'event'
