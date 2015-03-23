@@ -15,8 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from wal import const, ALL, EXPAND, VPanel, HLine
-from wal import ImageButton, ImageToggleButton, LEFT, RIGHT
+import wal
 
 from sk1.resources import pdids
 
@@ -25,46 +24,44 @@ BUTTONS = (pdids.SELECT_MODE, pdids.SHAPER_MODE, pdids.ZOOM_MODE,
 		pdids. ELLIPSE_MODE, pdids.POLYGON_MODE, pdids.TEXT_MODE,
 		pdids.GRADIENT_MODE, None, pdids.FILL_MODE, pdids.STROKE_MODE, None)
 
-class AppTools(VPanel):
+class AppTools(wal.VPanel):
 
 	buttons = []
 
 	def __init__(self, app, parent):
 		self.app = app
 		self.buttons = []
-		VPanel.__init__(self, parent, border=RIGHT)
-		self.add((5, 5))
-		border = 1
+		wal.VPanel.__init__(self, parent)
+		self.pack((5, 5))
 		for item in BUTTONS:
-			if item is None: self.add(HLine(self.panel), 0, ALL | EXPAND)
+			if item is None: self.pack(wal.HLine(self.panel), fill=True)
 			else:
 				action = self.app.actions[item]
 				if action.is_toggle(): but = ActionTool(self.panel, action)
 				else: but = ActionToolButton(self.panel, action)
 				self.buttons.append(but)
-				self.add(but, 0, LEFT | RIGHT, border)
-				if const.is_msw(): self.add((1, 1))
+				self.pack(but, padding=1)
 
 
-class ActionTool(ImageToggleButton):
+class ActionTool(wal.ImageToggleButton):
 
 	def __init__(self, parent, action):
 		self.action = action
 		value = False
 		art_id = action.get_artid()
-		art_size = const.DEF_SIZE
+		art_size = wal.DEF_SIZE
 		text = ''
 		tooltip = action.get_tooltip_text()
 		padding = 0
 		decoration_padding = 4
 		native = True
 
-		if const.is_msw():
+		if wal.is_msw():
 			decoration_padding = 2
 			native = False
 
-		ImageToggleButton.__init__(self, parent, value, art_id, art_size, text,
-								tooltip, padding, decoration_padding,
+		wal.ImageToggleButton.__init__(self, parent, value, art_id, art_size,
+								text, tooltip, padding, decoration_padding,
 								True, native, onchange=action.do_call)
 		self.action.register(self)
 
@@ -81,23 +78,23 @@ class ActionTool(ImageToggleButton):
 				if self.onchange: self.onchange()
 		self.refresh()
 
-class ActionToolButton(ImageButton):
+class ActionToolButton(wal.ImageButton):
 
 	def __init__(self, parent, action):
 		self.action = action
 		art_id = action.get_artid()
-		art_size = const.DEF_SIZE
+		art_size = wal.DEF_SIZE
 		text = ''
 		tooltip = action.get_tooltip_text()
 		padding = 0
 		decoration_padding = 4
 		native = True
 
-		if const.is_msw():
+		if wal.is_msw():
 			decoration_padding = 2
 			native = False
 
-		ImageButton.__init__(self, parent, art_id, art_size, text, tooltip,
+		wal.ImageButton.__init__(self, parent, art_id, art_size, text, tooltip,
 							padding, decoration_padding, True, native,
 							onclick=action.do_call)
 		self.action.register(self)
