@@ -15,15 +15,14 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx
 
-from wal import const, HPanel, VPanel, ImageButton, ImageLabel
+import wal
 
 from sk1 import _
 from sk1.pwidgets import HPalette, VPalette
 from sk1.resources import icons
 
-class AppHPalette(HPanel):
+class AppHPalette(wal.HPanel):
 
 	left_but = None
 	no_color = None
@@ -32,7 +31,7 @@ class AppHPalette(HPanel):
 
 	def __init__(self, parent, app):
 		self.app = app
-		HPanel.__init__(self, parent, const.TOP)
+		wal.HPanel.__init__(self, parent)
 		self.pack((1, 1))
 
 		self.palette = HPalette(self.panel, self.app,
@@ -43,25 +42,25 @@ class AppHPalette(HPanel):
 							onmax=self.right_enable)
 
 		native = False
-		if const.is_gtk(): native = True
+		if wal.is_gtk(): native = True
 
 		tip = _('Scroll palette to left')
-		self.left_but = ImageButton(self.panel, icons.ARROW_LEFT, tooltip=tip,
-								decoration_padding=4, native=native,
+		self.left_but = wal.ImageButton(self.panel, icons.ARROW_LEFT,
+								tooltip=tip, decoration_padding=4, native=native,
 								onclick=self.palette.scroll_left, repeat=True)
 		self.pack(self.left_but)
 
 		tip = _('Empty pattern')
-		self.no_color = ImageLabel(self.panel, icons.NO_COLOR, tooltip=tip,
-								 onclick=self.set_no_fill)
-		self.no_color.Bind(wx.EVT_RIGHT_UP, self.set_no_stroke, self.no_color)
+		self.no_color = wal.ImageLabel(self.panel, icons.NO_COLOR, tooltip=tip,
+								 onclick=self.set_no_fill,
+								 onrightclick=self.set_no_stroke)
 		self.pack(self.no_color)
 
 		self.pack(self.palette, expand=True, padding=1)
 
 		tip = _('Scroll palette to right')
-		self.right_but = ImageButton(self.panel, icons.ARROW_RIGHT, tooltip=tip,
-								decoration_padding=4, native=native,
+		self.right_but = wal.ImageButton(self.panel, icons.ARROW_RIGHT,
+								tooltip=tip, decoration_padding=4, native=native,
 								onclick=self.palette.scroll_right, repeat=True)
 		self.pack(self.right_but)
 		self.left_enable(False)
@@ -84,7 +83,7 @@ class AppHPalette(HPanel):
 		if not value == self.right_but.get_enabled():
 			self.right_but.set_enable(value)
 
-class AppVPalette(VPanel):
+class AppVPalette(wal.VPanel):
 
 	left_but = None
 	no_color = None
@@ -93,7 +92,7 @@ class AppVPalette(VPanel):
 
 	def __init__(self, parent, app):
 		self.app = app
-		VPanel.__init__(self, parent, const.TOP)
+		wal.VPanel.__init__(self, parent)
 		self.pack((1, 1))
 
 		self.palette = VPalette(self.panel, self.app,
@@ -104,24 +103,25 @@ class AppVPalette(VPanel):
 							onmax=self.right_enable)
 
 		native = False
-		if const.is_gtk(): native = True
+		if wal.is_gtk(): native = True
 
 		tip = _('Scroll palette to top')
-		self.left_but = ImageButton(self.panel, icons.ARROW_TOP, tooltip=tip,
+		self.left_but = wal.ImageButton(self.panel, icons.ARROW_TOP, tooltip=tip,
 								decoration_padding=4, native=native,
 								onclick=self.palette.scroll_top, repeat=True)
 		self.pack(self.left_but)
 
 		tip = _('Empty pattern')
-		self.no_color = ImageLabel(self.panel, icons.NO_COLOR, tooltip=tip,
-								 onclick=self.set_no_fill)
-		self.no_color.Bind(wx.EVT_RIGHT_UP, self.set_no_stroke, self.no_color)
+		self.no_color = wal.ImageLabel(self.panel, icons.NO_COLOR, tooltip=tip,
+								 onclick=self.set_no_fill,
+								 onrightclick=self.set_no_stroke)
+
 		self.pack(self.no_color)
 
 		self.pack(self.palette, expand=True, padding=1)
 
 		tip = _('Scroll palette to bottom')
-		self.right_but = ImageButton(self.panel, icons.ARROW_BOTTOM, tooltip=tip,
+		self.right_but = wal.ImageButton(self.panel, icons.ARROW_BOTTOM, tooltip=tip,
 								decoration_padding=4, native=native,
 								onclick=self.palette.scroll_bottom, repeat=True)
 		self.pack(self.right_but)

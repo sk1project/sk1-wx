@@ -15,6 +15,8 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import wx
+
 import renderer
 from const import DEF_SIZE, RIGHT
 from generic import GenericGWidget
@@ -22,16 +24,22 @@ from generic import GenericGWidget
 
 class ImageLabel(GenericGWidget):
 
+	rightclick_cmd = None
+
 	def __init__(self, parent, art_id=None, art_size=DEF_SIZE, text='',
 				tooltip='', padding=0,
 				fontbold=False, fontsize=0, textplace=RIGHT,
-				onclick=None, repeat=False):
+				onclick=None, onrightclick=None, repeat=False):
 
 		self.flat = True
 
 		GenericGWidget.__init__(self, parent, tooltip, onclick, repeat)
 		self.renderer = renderer.LabelRenderer(self, art_id, art_size, text,
 				padding, fontbold, fontsize, textplace)
+
+		if onrightclick:
+			self.Bind(wx.EVT_RIGHT_UP, onrightclick, self)
+
 
 	def _on_paint(self, event):
 		if self.enabled:
