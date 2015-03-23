@@ -15,13 +15,13 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from wal import HPanel
+import wal
 
 from sk1 import events, modes
 from sk1.context import PLUGINS, NO_DOC, DEFAULT, MULTIPLE, GROUP, \
 RECTANGLE, CIRCLE, POLYGON, CURVE, TEXT, PIXMAP
 
-class AppCtxPanel(HPanel):
+class AppCtxPanel(wal.HPanel):
 
 	app = None
 	mode = None
@@ -31,7 +31,7 @@ class AppCtxPanel(HPanel):
 	def __init__(self, app, parent):
 		self.app = app
 		self.insp = app.insp
-		HPanel.__init__(self, parent)
+		wal.HPanel.__init__(self, parent)
 		spacer = (5, 30)
 		self.add(spacer)
 
