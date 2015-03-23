@@ -74,7 +74,7 @@ class MainWindow(wx.Frame):
 	maximized = False
 
 	def __init__(self, title='Frame', size=(100, 100), orientation=wx.VERTICAL,
-				maximized=False):
+				maximized=False, on_close=None):
 		self.maximized = maximized
 
 		wx.Frame.__init__(self, None, wx.ID_ANY, title, pos=DEF_SIZE, size=size,
@@ -84,8 +84,11 @@ class MainWindow(wx.Frame):
 		self.box = wx.BoxSizer(orientation)
 		self.SetSizer(self.box)
 		self.set_title(title)
+		if on_close: self.Bind(wx.EVT_CLOSE, on_close, self)
 
 	def build(self):pass
+
+	def layout(self): self.Layout()
 
 	def add(self, *args, **kw):
 		"""Arguments: object, expandable (0 or 1), flag, border"""
@@ -127,6 +130,11 @@ class MainWindow(wx.Frame):
 
 	def set_minsize(self, w, h):
 		self.SetMinSize((w, h))
+
+	def set_icons(self, filepath):
+		icons = wx.IconBundle()
+		icons.AddIconFromFile(filepath, wx.BITMAP_TYPE_ANY)
+		self.SetIcons(icons)
 
 class Panel(wx.Panel, Widget):
 
