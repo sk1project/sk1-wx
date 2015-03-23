@@ -19,6 +19,8 @@ import wx
 
 import wal
 
+from uc2 import uc2const
+
 from sk1 import config
 from sk1.parts.ctxpanel import AppCtxPanel
 from sk1.parts.tools import AppTools
@@ -27,7 +29,6 @@ from sk1.parts.plgarea import PlgArea
 from sk1.parts.statusbar import AppStatusbar
 from sk1.parts.palettepanel import AppHPalette, AppVPalette
 from sk1.document import DocArea
-from uc2 import uc2const
 
 class MDIArea(wal.VPanel):
 
