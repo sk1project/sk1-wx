@@ -18,6 +18,8 @@
 import wx
 import wx.lib.mixins.listctrl as listmix
 
+import const
+
 ODD_COLOR = wx.Colour(240, 240, 240)
 
 class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
@@ -68,7 +70,7 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
 			self.Append([item])
 			if odd and alt_color:
 				list_item = self.GetItem(i)
-				list_item.SetBackgroundColour(ODD_COLOR)
+				list_item.SetBackgroundColour(const.ODD_COLOR)
 				self.SetItem(list_item)
 			odd = not odd
 			i += 1
@@ -106,7 +108,7 @@ class ReportList(SimpleList):
 			self.Append(item)
 			if odd and alt_color:
 				list_item = self.GetItem(i)
-				list_item.SetBackgroundColour(ODD_COLOR)
+				list_item.SetBackgroundColour(const.ODD_COLOR)
 				self.SetItem(list_item)
 			odd = not odd
 			i += 1
