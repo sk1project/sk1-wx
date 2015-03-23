@@ -62,6 +62,15 @@ SIZE_48 = (48, 48)
 SIZE_64 = (64, 64)
 SIZE_128 = (128, 128)
 
+def get_system_fontsize():
+	fontsize = 8
+	font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+	if font.IsUsingSizeInPixels():
+		fontsize = str(font.GetPixelSize())
+	else:
+		fontsize = str(font.GetPointSize())
+	return fontsize
+
 def mix_colors(fg, bg, alpha):
 	r1, g1, b1 = fg
 	r2, g2, b2 = bg
