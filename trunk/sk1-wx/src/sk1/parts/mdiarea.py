@@ -17,9 +17,9 @@
 
 import wx
 
-from wal import const, VPanel, HPanel, HLine, VLine
+import wal
 
-from sk1 import events, config
+from sk1 import config
 from sk1.parts.ctxpanel import AppCtxPanel
 from sk1.parts.tools import AppTools
 from sk1.parts.doctabpanel import DocTabsPanel
@@ -29,7 +29,7 @@ from sk1.parts.palettepanel import AppHPalette, AppVPalette
 from sk1.document import DocArea
 from uc2 import uc2const
 
-class MDIArea(VPanel):
+class MDIArea(wal.VPanel):
 
 	app = None
 	mw = None
@@ -41,9 +41,9 @@ class MDIArea(VPanel):
 		self.app = app
 		self.mw = parent
 		self.docareas = []
-		VPanel.__init__(self, parent)
+		wal.VPanel.__init__(self, parent)
 
-		if not const.is_mac(): self.pack(HLine(self), fill=True)
+		if not wal.is_mac(): self.pack(wal.HLine(self), fill=True)
 
 		#----- Context panel
 		self.ctxpanel = AppCtxPanel(self.app, self)
@@ -54,16 +54,16 @@ class MDIArea(VPanel):
 		self.doc_tabs = self.dtp.doc_tabs
 		self.pack(self.dtp, fill=True)
 
-		hpanel = HPanel(self)
+		hpanel = wal.HPanel(self)
 		self.pack(hpanel, expand=True, fill=True)
 
 		#----- Tools
 		self.tools = AppTools(self.app, hpanel)
 		hpanel.pack(self.tools, fill=True)
-		hpanel.pack(VLine(hpanel), fill=True)
+		hpanel.pack(wal.VLine(hpanel), fill=True)
 
 		self.splitter = wx.SplitterWindow(hpanel, -1, style=wx.SP_LIVE_UPDATE)
-		self.doc_keeper = VPanel(self.splitter)
+		self.doc_keeper = wal.VPanel(self.splitter)
 		self.doc_keeper.SetBackgroundColour(wx.Colour(255, 255, 255))
 		self.plg_area = PlgArea(self.app, self.splitter)
 		self.app.mdiarea = self
@@ -76,8 +76,8 @@ class MDIArea(VPanel):
 		hpanel.pack(self.splitter, expand=True, fill=True)
 
 		#----- Vertical Palette panel
-		self.vp_panel = HPanel(hpanel)
-		self.vp_panel.pack(VLine(self.vp_panel), fill=True, start_padding=2)
+		self.vp_panel = wal.HPanel(hpanel)
+		self.vp_panel.pack(wal.VLine(self.vp_panel), fill=True, start_padding=2)
 		vpalette_panel = AppVPalette(self.vp_panel, self.app)
 		self.vp_panel.pack(vpalette_panel, fill=True, padding=2)
 		hpanel.pack(self.vp_panel, fill=True)
@@ -85,8 +85,8 @@ class MDIArea(VPanel):
 			self.vp_panel.hide()
 
 		#----- Horizontal Palette panel
-		self.hp_panel = VPanel(self)
-		self.hp_panel.pack(HLine(self.hp_panel), fill=True, padding=2)
+		self.hp_panel = wal.VPanel(self)
+		self.hp_panel.pack(wal.HLine(self.hp_panel), fill=True, padding=2)
 		hpalette_panel = AppHPalette(self.hp_panel, self.app)
 		self.hp_panel.pack(hpalette_panel, fill=True)
 		self.pack(self.hp_panel, fill=True)
@@ -94,7 +94,7 @@ class MDIArea(VPanel):
 			self.hp_panel.hide()
 
 		#----- Status bar
-		self.pack(HLine(self), fill=True, start_padding=2)
+		self.pack(wal.HLine(self), fill=True, start_padding=2)
 		self.statusbar = AppStatusbar(self)
 		self.pack(self.statusbar, fill=True, padding=2)
 
