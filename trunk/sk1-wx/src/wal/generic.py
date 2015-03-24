@@ -38,6 +38,9 @@ class Widget(object):
 			parent = self.GetParent()
 			parent.Layout()
 
+	def get_size(self):
+		return self.GetSize()
+
 	def is_shown(self):
 		return self.IsShown()
 
