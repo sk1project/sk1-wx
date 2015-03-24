@@ -102,6 +102,7 @@ def get_system_fontsize():
 
 EVEN_COLOR = wx.Colour(255, 255, 255)
 ODD_COLOR = wx.Colour(240, 240, 240)
+WHITE = wx.Colour(255, 255, 255)
 
 def mix_colors(fg, bg, alpha):
 	r1, g1, b1 = fg
