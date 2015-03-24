@@ -32,6 +32,7 @@ encoding//src/sk1/document/controllers/generic.py=utf-8
 encoding//src/sk1/document/controllers/paint_ctrl.py=utf-8
 encoding//src/sk1/document/controllers/select_ctrl.py=utf-8
 encoding//src/sk1/document/controllers/trafo_ctrl.py=utf-8
+encoding//src/sk1/document/docarea.py=utf-8
 encoding//src/sk1/document/presenter.py=utf-8
 encoding//src/sk1/document/renderer.py=utf-8
 encoding//src/sk1/document/ruler.py=utf-8
