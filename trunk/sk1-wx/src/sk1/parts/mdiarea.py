@@ -15,8 +15,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx
-
 import wal
 
 from uc2 import uc2const
@@ -63,17 +61,17 @@ class MDIArea(wal.VPanel):
 		hpanel.pack(self.tools, fill=True)
 		hpanel.pack(wal.VLine(hpanel), fill=True)
 
-		self.splitter = wx.SplitterWindow(hpanel, -1, style=wx.SP_LIVE_UPDATE)
+		self.splitter = wal.Splitter(hpanel)
 		self.doc_keeper = wal.VPanel(self.splitter)
-		self.doc_keeper.SetBackgroundColour(wx.Colour(255, 255, 255))
+		self.doc_keeper.SetBackgroundColour(wal.WHITE)
 		self.plg_area = PlgArea(self.app, self.splitter)
 		self.app.mdiarea = self
 		self.app.plg_area = self.plg_area
 
-		self.splitter.SplitVertically(self.doc_keeper, self.plg_area, 0)
-		self.splitter.SetMinimumPaneSize(200)
-		self.splitter.SetSashGravity(1.0)
-		self.splitter.Unsplit(None)
+		self.splitter.split_vertically(self.doc_keeper, self.plg_area)
+		self.splitter.set_min_size(200)
+		self.splitter.set_sash_gravity(1.0)
+		self.splitter.unsplit()
 		hpanel.pack(self.splitter, expand=True, fill=True)
 
 		#----- Vertical Palette panel
@@ -103,7 +101,7 @@ class MDIArea(wal.VPanel):
 
 	def create_docarea(self, doc):
 		docarea = DocArea(doc, self.doc_keeper)
-		docarea.Hide()
+		docarea.hide()
 		docarea.doc_tab = self.doc_tabs.add_new_tab(doc)
 		self.docareas.append(docarea)
 		self.doc_keeper.pack(docarea, expand=True, fill=True)
@@ -112,7 +110,7 @@ class MDIArea(wal.VPanel):
 	def remove_doc(self, doc):
 		docarea = doc.docarea
 		self.docareas.remove(docarea)
-		self.doc_keeper.box.Detach(docarea)
+		self.doc_keeper.remove(docarea)
 		self.doc_tabs.remove_tab(doc)
 		docarea.Hide()
 		if not self.docareas:
@@ -124,25 +122,25 @@ class MDIArea(wal.VPanel):
 
 	def set_tab_title(self, docarea, title):
 		docarea.doc_tab.set_title(title)
-		self.doc_tabs.Layout()
+		self.doc_tabs.layout()
 
 	def set_active(self, doc):
 		doc_area = doc.docarea
-		if self.current_docarea: self.current_docarea.Hide()
-		doc_area.Show()
+		if self.current_docarea: self.current_docarea.hide()
+		doc_area.show()
 		self.current_docarea = doc_area
 		self.doc_tabs.set_active(doc)
 		if len(self.docareas) == 1: self.mw.show_mdi(True)
-		if self.plg_area.GetSize()[0] > 400:
-			self.splitter.SetSashPosition(-250)
-		self.doc_keeper.Layout()
+		if self.plg_area.get_size()[0] > 400:
+			self.splitter.set_sash_position(-250)
+		self.doc_keeper.layout()
 
 	def show_plugin_area(self, value=True):
 		if value:
 			if not self.plg_area.is_shown():
-				self.splitter.SplitVertically(self.doc_keeper,
+				self.splitter.split_vertically(self.doc_keeper,
 											self.plg_area, -100)
 		else:
 			if self.plg_area.is_shown():
-				self.splitter.Unsplit(None)
+				self.splitter.unsplit()
 
