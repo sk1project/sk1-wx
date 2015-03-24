@@ -17,9 +17,7 @@
 
 from const import *
 from basic import Application, MainWindow, Panel, VPanel, HPanel, LabeledPanel
-from widgets import Label, HLine, VLine, HtmlLabel, Button, Checkbox
-from widgets import Combolist, Combobox, Entry, Spin, FloatSpin, Radiobutton
-from widgets import Slider, Notebook, Bitmap
+from widgets import *
 
 from listwidgets import SimpleList, ReportList
 from treewidgets import TreeElement, TreeWidget
@@ -27,7 +25,7 @@ from treewidgets import TreeElement, TreeWidget
 from gctrls import ImageLabel, ImageButton, ImageToggleButton
 from renderer import copy_bitmap_to_surface, copy_surface_to_bitmap
 
-from msgdlgs import msg_dialog, error_dialog, stop_dialog, ync_dialog, yesno_dialog
+from msgdlgs import *
 from modaldlgs import SimpleDialog, OkCancelDialog
 
 
