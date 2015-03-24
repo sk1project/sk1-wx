@@ -403,3 +403,28 @@ class Slider(wx.Slider, RangeDataWidget):
 						end, size=size, style=style)
 		if onchange:
 			self.Bind(wx.EVT_SCROLL, onchange, self)
+
+class Splitter(wx.SplitterWindow, Widget):
+
+	def __init__(self, parent, live_update=True):
+		style = wx.SP_NOBORDER
+		if live_update: style |= wx.SP_LIVE_UPDATE
+		wx.SplitterWindow.__init__(self, parent, wx.ID_ANY, style=style)
+
+	def split_vertically(self, win1, win2, sash_pos=0):
+		self.SplitVertically(win1, win2, sash_pos)
+
+	def split_horizontally(self, win1, win2, sash_pos=0):
+		self.SplitHorizontally(win1, win2, sash_pos)
+
+	def set_min_size(self, size):
+		self.SetMinimumPaneSize(size)
+
+	def unsplit(self, remove_win=None):
+		self.Unsplit(remove_win)
+
+	def set_sash_gravity(self, val):
+		self.SetSashGravity(val)
+
+	def set_sash_position(self, val):
+		self.SetSashPosition(val)
