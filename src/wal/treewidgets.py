@@ -23,13 +23,11 @@ NO_ICON = -1
 
 class TreeElement(object):
 
-	reference = None
 	name = ''
 	icon = None
 	childs = []
 
-	def __init__(self, name='', icon=None, reference=None):
-		self.reference = reference
+	def __init__(self, name='', icon=None):
 		self.name = name
 		self.icon = icon
 		self.childs = []
@@ -50,9 +48,10 @@ class TreeWidget(wx.TreeCtrl):
 	select_cmd = None
 
 	def __init__(self, parent, data=[], border=True, alt_color=True,
-				use_icons=True, on_select=None):
-		style = wx.TR_DEFAULT_STYLE | wx.TR_HAS_BUTTONS
-		style |= wx.TR_FULL_ROW_HIGHLIGHT | wx.TR_HIDE_ROOT
+				use_icons=True, on_select=None, highlight_row=True):
+		style = wx.TR_DEFAULT_STYLE | wx.TR_HAS_BUTTONS | wx.TR_HIDE_ROOT
+		if highlight_row: style |= wx.TR_FULL_ROW_HIGHLIGHT
+		if not highlight_row:alt_color = False
 		if border: style |= wx.BORDER_MASK
 		wx.TreeCtrl.__init__(self, parent, wx.ID_ANY, style=style)
 		self.items = []

@@ -20,8 +20,6 @@ import wx.lib.mixins.listctrl as listmix
 
 import const
 
-ODD_COLOR = wx.Colour(240, 240, 240)
-
 class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
 
 	data = []
@@ -34,7 +32,7 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
 				on_select=None, on_activate=None):
 		self.data = data
 		self.alt_color = alt_color
-		style = wx.LC_REPORT
+		style = wx.LC_REPORT | wx.LC_VRULES
 		if border: style |= wx.BORDER_MASK
 		if not header: style |= wx.LC_NO_HEADER
 		if single_sel: style |= wx.LC_SINGLE_SEL
