@@ -88,7 +88,7 @@ def create_actions(app):
 (pdids.ID_INV_SELECT, proxy.invert_selection, doc_chnls, insp.is_doc),
 (pdids.ID_VIEW_LOG, proxy.view_log, [HISTORY_CHANGED, ] + doc_chnls, insp.is_file_history),
 (wx.ID_PROPERTIES, proxy.stub, doc_chnls, insp.is_doc),
-(wx.ID_PREFERENCES, proxy.stub),
+(wx.ID_PREFERENCES, proxy.preferences),
 #------ View menu -------
 (pdids.ID_STROKE_VIEW, proxy.stroke_view, doc_chnls, insp.is_doc, insp.is_stroke_view),
 (pdids.ID_DRAFT_VIEW, proxy.draft_view, doc_chnls, insp.is_doc, insp.is_draft_view),

@@ -133,9 +133,14 @@ class AppConfig(UCConfig):
 	toolbar_size = (24, 24)
 	toolbar_icon_size = (24, 24)
 	set_doc_icon = True
+
 	history_list_size = 10
 	history_dlg_minsize = (500, 350)
 	history_dlg_size = (500, 350)
+
+	prefs_dlg_minsize = (700, 430)
+	prefs_dlg_size = (700, 430)
+
 
 	default_polygon_num = 5
 
