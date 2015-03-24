@@ -54,12 +54,9 @@ class TreeWidget(wx.TreeCtrl):
 		if not highlight_row:alt_color = False
 		if border: style |= wx.BORDER_MASK
 		wx.TreeCtrl.__init__(self, parent, wx.ID_ANY, style=style)
-		self.items = []
-		self.items_ref = []
 		self.alt_color = alt_color
 		self.use_icons = use_icons
 		self.select_cmd = on_select
-		self.init_icons()
 
 		self.Bind(wx.EVT_TREE_ITEM_EXPANDED, self.recolor_items, self)
 		self.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.recolor_items, self)
@@ -67,7 +64,6 @@ class TreeWidget(wx.TreeCtrl):
 			self.Bind(wx.EVT_TREE_SEL_CHANGED, self.sel_changed, self)
 
 		self.update(data)
-		self.recolor_items()
 
 	def sel_changed(self, event):
 		item = event.GetItem()
@@ -84,12 +80,17 @@ class TreeWidget(wx.TreeCtrl):
 		self.file_ico = self.imagelist.Add(icon)
 		self.SetImageList(self.imagelist)
 
-	def update(self, data):
+	def clear_all(self):
 		self.DeleteAllItems()
 		self.items = []
-		self.items_dict = {}
+		self.items_ref = []
+		self.init_icons()
+
+	def update(self, data):
+		self.clear_all()
 		tid = self.AddRoot('root', NO_ICON, NO_ICON)
 		self.add_childs(tid, data)
+		self.recolor_items()
 
 	def add_childs(self, parent, childs):
 		for item in childs:
