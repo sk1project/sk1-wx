@@ -17,8 +17,7 @@ class WidgetPanel(wal.HPanel):
 		data.append(root)
 		data.append(root)
 
-		self.tree = wal.TreeWidget(self, data, highlight_row=False,
-								 on_select=self.selected)
+		self.tree = wal.TreeWidget(self, data, on_select=self.selected)
 		self.pack(self.tree, expand=True, fill=True, padding=10)
 		self.tree.expand_all()
 
