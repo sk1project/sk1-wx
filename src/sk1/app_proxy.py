@@ -22,6 +22,7 @@ from uc2.formats.sk2 import sk2_model
 
 from sk1 import _, dialogs, modes, events
 from sk1.dialogs import yesno_dialog
+from sk1.prefs import get_prefs_dialog
 
 class AppProxy:
 
@@ -74,6 +75,7 @@ class AppProxy:
 	def zoom_100(self): self.app.current_doc.canvas.zoom_100()
 	def zoom_selected(self): self.app.current_doc.canvas.zoom_selected()
 	def force_redraw(self): self.app.current_doc.canvas.force_redraw()
+	def preferences(self): get_prefs_dialog(self.mw)
 
 	def stroke_view(self):
 		if self.insp.is_doc():

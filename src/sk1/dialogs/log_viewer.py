@@ -68,10 +68,10 @@ class LogViewerDialog(wal.OkCancelDialog):
 			self.data.append([op, item[1], item[2], item[4]])
 		data = [header] + self.data
 		self.lc.update(data)
-		self.lc.set_column_width(0, wal.const.LIST_AUTOSIZE)
-		self.lc.set_column_width(1, wal.const.LIST_AUTOSIZE)
-		self.lc.set_column_width(2, wal.const.LIST_AUTOSIZE)
-		self.lc.set_column_width(3, wal.const.LIST_AUTOSIZE)
+		self.lc.set_column_width(0, wal.LIST_AUTOSIZE)
+		self.lc.set_column_width(1, wal.LIST_AUTOSIZE)
+		self.lc.set_column_width(2, wal.LIST_AUTOSIZE)
+		self.lc.set_column_width(3, wal.LIST_AUTOSIZE)
 		self.update(False)
 
 	def clear_history(self, *args):
@@ -92,7 +92,7 @@ class LogViewerDialog(wal.OkCancelDialog):
 
 	def show(self):
 		ret = None
-		if self.ShowModal() == wal.const.BUTTON_OK:
+		if self.ShowModal() == wal.BUTTON_OK:
 			ret = self.get_result()
 		config.history_dlg_size = self.GetSize()
 		self.Destroy()
