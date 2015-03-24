@@ -97,7 +97,7 @@ class MDIArea(wal.VPanel):
 		self.statusbar = AppStatusbar(self)
 		self.pack(self.statusbar, fill=True, padding=2)
 
-		self.Layout()
+		self.layout()
 
 	def create_docarea(self, doc):
 		docarea = DocArea(doc, self.doc_keeper)
@@ -112,7 +112,7 @@ class MDIArea(wal.VPanel):
 		self.docareas.remove(docarea)
 		self.doc_keeper.remove(docarea)
 		self.doc_tabs.remove_tab(doc)
-		docarea.Hide()
+		docarea.hide()
 		if not self.docareas:
 			self.mw.show_mdi(False)
 			self.current_docarea = None
