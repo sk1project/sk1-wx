@@ -17,14 +17,12 @@ class WidgetPanel(wal.HPanel):
 		data.append(root)
 		data.append(root)
 
-		self.tree = wal.TreeWidget(self, data)
+		self.tree = wal.TreeWidget(self, data, highlight_row=False,
+								 on_select=self.selected)
 		self.pack(self.tree, expand=True, fill=True, padding=10)
 		self.tree.expand_all()
 
 	def selected(self, item):
-		print item
-
-	def activated(self, item):
 		print item
 
 app = wal.Application('wxWidgets')
