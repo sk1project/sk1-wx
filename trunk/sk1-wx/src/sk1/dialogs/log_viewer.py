@@ -76,7 +76,7 @@ class LogViewerDialog(wal.OkCancelDialog):
 
 	def clear_history(self, *args):
 		self.app.history.clear_history()
-		self.update_list()
+		self.lc.clear_all()
 
 	def on_ok(self, value):
 		if value:
