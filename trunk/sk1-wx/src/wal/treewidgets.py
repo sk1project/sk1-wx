@@ -137,4 +137,7 @@ class TreeWidget(wx.TreeCtrl):
 					self.SetItemBackgroundColour(item, const.EVEN_COLOR)
 				even = not even
 
+	def set_indent(self, val): self.SetIndent(val)
+	def get_indent(self): return self.GetIndent()
+
 

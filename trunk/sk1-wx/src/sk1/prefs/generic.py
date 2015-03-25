@@ -17,7 +17,7 @@
 
 import wal
 
-from sk1.resources import get_bitmap_by_id
+from sk1.resources import get_icon
 
 class RootItem(object):
 
@@ -31,7 +31,7 @@ class RootItem(object):
 	leaf = False
 
 	def __init__(self, data=[]):
-		if self.icon_id: self.icon = get_bitmap_by_id(self.icon_id)
+		if self.icon_id: self.icon = get_icon(self.icon_id)
 		self.childs = data
 
 	def init_prefs(self):

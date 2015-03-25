@@ -55,7 +55,7 @@ class AboutHeader(wal.VPanel):
 		panel = wal.HPanel(self)
 		color = const.lighter_color(const.UI_COLORS['bg'], 0.9)
 		panel.set_bg(color)
-		panel.pack(get_bmp(panel, icons.PDESIGN_ICON32), padding=5)
+		panel.pack(get_bmp(panel, icons.SK1_ICON32), padding=5)
 
 		data = app.appdata
 
