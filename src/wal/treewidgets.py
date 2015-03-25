@@ -116,6 +116,10 @@ class TreeWidget(wx.TreeCtrl):
 		self.CollapseAll()
 		self.recolor_items()
 
+	def set_item_by_reference(self, ref):
+		if ref in self.items_ref:
+			self.SelectItem(self.items[self.items_ref.index(ref)])
+
 	def recolor_all_items(self):
 		if not self.alt_color:return
 		even = False
