@@ -19,11 +19,12 @@ import wal
 
 from sk1 import _, config
 from sk1.resources import icons
-from generic import RootItem, PrefPanel
+from generic import RootItem
+from prefs_general import GeneralPrefs, CMSPrefs, RulersPrefs, PalettesPrefs
+from prefs_general import GridPrefs
 
-
-PREFS_APP = [wal.TreeElement, wal.TreeElement, wal.TreeElement, wal.TreeElement]
-PREFS_DOC = [wal.TreeElement, wal.TreeElement, wal.TreeElement]
+PREFS_APP = [GeneralPrefs, CMSPrefs, RulersPrefs, PalettesPrefs]
+PREFS_DOC = [GridPrefs, ]
 
 class PrefsAppItem(RootItem):
 
@@ -48,11 +49,15 @@ PREFS_DATA = []
 
 class PrefsDialog(wal.OkCancelDialog):
 
-	def __init__(self, parent, title):
+	current_plugin = None
+
+	def __init__(self, parent, title, pid=''):
 		self.app = parent.app
 		size = config.prefs_dlg_size
 		wal.OkCancelDialog.__init__(self, parent, title, size, resizable=True)
 		self.set_minsize(config.prefs_dlg_minsize)
+		if not pid: pid = 'General'
+		self.tree.set_item_by_reference(self.get_plugin_by_pid(pid))
 
 	def build(self):
 		self.splitter = wal.Splitter(self.panel)
@@ -61,9 +66,10 @@ class PrefsDialog(wal.OkCancelDialog):
 			PREFS_DATA.append(PrefsAppItem(PREFS_APP))
 			PREFS_DATA.append(PrefsDocItem(PREFS_DOC))
 			for item in PREFS_DATA:
-				item.init_prefs()
-		self.tree = wal.TreeWidget(self.splitter, data=PREFS_DATA)
-		self.container = wal.VPanel(self.splitter)
+				item.init_prefs(self.app, self)
+		self.tree = wal.TreeWidget(self.splitter, data=PREFS_DATA,
+								on_select=self.on_select)
+		self.container = wal.HPanel(self.splitter)
 		self.splitter.split_vertically(self.tree, self.container, 200)
 		self.splitter.set_min_size(150)
 		self.tree.set_indent(5)
@@ -76,6 +82,29 @@ class PrefsDialog(wal.OkCancelDialog):
 								onclick=self.restore_defaults)
 		self.left_button_box.pack(self.redo_btn)
 
+	def on_select(self, plugin):
+		if not self.current_plugin == plugin and plugin.leaf:
+			if self.current_plugin:
+				self.container.remove(self.current_plugin)
+				self.current_plugin.hide()
+			self.container.pack(plugin, fill=True, expand=True, padding=5)
+			self.current_plugin = plugin
+			self.current_plugin.show()
+			self.container.layout()
+#		elif not plugin.leaf:
+#			self.tree.set_item_by_reference(self.current_plugin)
+
+	def get_plugin_by_pid(self, pid):
+		ret = None
+		plugins = []
+		for item in PREFS_DATA:
+			plugins += item.childs
+		for item in plugins:
+			if item.pid == pid:
+				ret = item
+				break
+		return ret
+
 	def apply_changes(self):pass
 	def restore_defaults(self, event):pass
 
@@ -85,6 +114,8 @@ class PrefsDialog(wal.OkCancelDialog):
 		config.prefs_dlg_size = self.get_size()
 		self.destroy()
 
-def get_prefs_dialog(parent):
-	dlg = PrefsDialog(parent, _("sK1 Preferences"))
+def get_prefs_dialog(parent, pid=''):
+	dlg = PrefsDialog(parent, _("sK1 Preferences"), pid)
 	dlg.show()
+	PREFS_DATA.remove(PREFS_DATA[1])
+	PREFS_DATA.remove(PREFS_DATA[0])

@@ -34,10 +34,12 @@ class RootItem(object):
 		if self.icon_id: self.icon = get_icon(self.icon_id)
 		self.childs = data
 
-	def init_prefs(self):
+	def init_prefs(self, app, dlg, fmt_config=None):
 		new_childs = []
 		for item in self.childs:
-			new_childs.append(item(name='Tree Item'))
+			new_item = item(app, dlg, fmt_config)
+			new_item.hide()
+			new_childs.append(new_item)
 		self.childs = new_childs
 
 
@@ -57,16 +59,18 @@ class PrefPanel(wal.VPanel):
 	dlg = None
 	fmt_config = None
 
-	def __init__(self, app, dlg, fmt_config):
+	def __init__(self, app, dlg, fmt_config=None):
 		wal.VPanel.__init__(self, dlg)
 		self.fmt_config = fmt_config
 		self.app = app
 		self.dlg = dlg
-		self.icon = get_bitmap_by_id(self.icon_id)
-		fsize = wal.get_system_fontsize()
-		self.pack(wal.Label(self, self.title, fontsize=fsize + 2))
-		self.pack(wal.HLine(self))
+		if self.icon_id:self.icon = get_icon(self.icon_id)
+		if not self.title: self.title = self.name
+		fsize = str(int(wal.get_system_fontsize()) + 3)
+		self.pack(wal.Label(self, self.title, fontsize=fsize, fontbold=True))
+		self.pack(wal.HLine(self), fill=True, padding=5)
 
 	def build(self):pass
+	def update(self):pass
 	def apply_changes(self):pass
 	def restore_defaults(self):pass
