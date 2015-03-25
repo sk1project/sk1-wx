@@ -28,7 +28,7 @@ PREFS_DOC = [wal.TreeElement, wal.TreeElement, wal.TreeElement]
 class PrefsAppItem(RootItem):
 
 	pid = 'Application'
-	name = 'Application'
+	name = _('Application')
 	icon_id = icons.SK1_ICON16
 
 	def __init__(self, data=[]):
@@ -37,7 +37,7 @@ class PrefsAppItem(RootItem):
 class PrefsDocItem(RootItem):
 
 	pid = 'NewDocument'
-	name = 'New document'
+	name = _('New document')
 	icon_id = icons.PD_NEW
 
 	def __init__(self, data=[]):
@@ -52,6 +52,7 @@ class PrefsDialog(wal.OkCancelDialog):
 		self.app = parent.app
 		size = config.prefs_dlg_size
 		wal.OkCancelDialog.__init__(self, parent, title, size, resizable=True)
+		self.set_minsize(config.prefs_dlg_minsize)
 
 	def build(self):
 		self.splitter = wal.Splitter(self.panel)
@@ -77,6 +78,12 @@ class PrefsDialog(wal.OkCancelDialog):
 
 	def apply_changes(self):pass
 	def restore_defaults(self, event):pass
+
+	def show(self):
+		if self.show_modal() == wal.BUTTON_OK:
+			self.apply_changes()
+		config.prefs_dlg_size = self.get_size()
+		self.destroy()
 
 def get_prefs_dialog(parent):
 	dlg = PrefsDialog(parent, _("sK1 Preferences"))
