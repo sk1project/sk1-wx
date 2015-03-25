@@ -75,7 +75,7 @@ PD_TOOL_OBJBROWSER = 'pdesign-tool-objbrowser'
 
 PD_WARNING = 'gtk-dialog-warning'
 PD_HOME = 'gtk-home'
-PD_FBPAGE = 'pdesign-fb'
+PD_FBPAGE = 'sk1-fb'
 PD_ABOUT = 'gtk-about'
 PD_STUB_NEW = 'stub-new'
 PD_STUB_OPEN = 'stub-open'
@@ -131,12 +131,12 @@ ICON_MATCH = {
 	wx.ART_WARNING:PD_WARNING,
 	}
 
-PDESIGN_ICON16 = 'pdesign-icon-16x16'
-PDESIGN_ICON22 = 'pdesign-icon-22x22'
-PDESIGN_ICON32 = 'pdesign-icon-32x32'
-PDESIGN_ICON48 = 'pdesign-icon-48x48'
-PDESIGN_ICON64 = 'pdesign-icon-64x64'
-PDESIGN_ICON128 = 'pdesign-icon-128x128'
+SK1_ICON16 = 'sk1-icon-16x16'
+SK1_ICON22 = 'sk1-icon-22x22'
+SK1_ICON32 = 'sk1-icon-32x32'
+SK1_ICON48 = 'sk1-icon-48x48'
+SK1_ICON64 = 'sk1-icon-64x64'
+SK1_ICON128 = 'sk1-icon-128x128'
 CAIRO_BANNER = 'cairo-banner'
 DOCUMENT_ICON = 'document-icon'
 PLUGIN_ICON = 'plugin-icon'
@@ -148,8 +148,7 @@ DOUBLE_ARROW_LEFT = 'double-arrow-left'
 DOUBLE_ARROW_RIGHT = 'double-arrow-right'
 NO_COLOR = 'no-color'
 
-GENERICS = [PDESIGN_ICON16, PDESIGN_ICON22, PDESIGN_ICON32, PDESIGN_ICON48,
-		PDESIGN_ICON64, PDESIGN_ICON64,
+GENERICS = [SK1_ICON16, SK1_ICON22, SK1_ICON32, SK1_ICON48, SK1_ICON64, SK1_ICON128,
 		CAIRO_BANNER, DOCUMENT_ICON, ARROW_LEFT, ARROW_RIGHT, PLUGIN_ICON,
 		ARROW_TOP, ARROW_BOTTOM,
 		DOUBLE_ARROW_LEFT, DOUBLE_ARROW_RIGHT, NO_COLOR, PD_TO_CURVES,

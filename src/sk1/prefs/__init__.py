@@ -18,7 +18,7 @@
 import wal
 
 from sk1 import _, config
-from sk1.resources import pdids
+from sk1.resources import icons
 from generic import RootItem, PrefPanel
 
 
@@ -37,7 +37,7 @@ class PrefsDocItem(RootItem):
 
 	pid = 'NewDocument'
 	name = 'New document'
-	icon_id = wal.ID_NEW
+	icon_id = icons.PD_NEW
 
 	def __init__(self, data=[]):
 		RootItem.__init__(self, data)
@@ -63,6 +63,7 @@ class PrefsDialog(wal.OkCancelDialog):
 		self.tree = wal.TreeWidget(self.splitter, data=PREFS_DATA)
 		self.container = wal.VPanel(self.splitter)
 		self.splitter.split_vertically(self.tree, self.container, 200)
+		self.tree.set_indent(5)
 		self.tree.expand_all()
 
 	def set_dialog_buttons(self):
