@@ -119,6 +119,7 @@ class TreeWidget(wx.TreeCtrl):
 	def set_item_by_reference(self, ref):
 		if ref in self.items_ref:
 			self.SelectItem(self.items[self.items_ref.index(ref)])
+			self.SetFocus()
 
 	def recolor_all_items(self):
 		if not self.alt_color:return
