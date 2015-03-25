@@ -82,16 +82,18 @@ class AppData(UCData):
 
 class AppConfig(UCConfig):
 
+	def __init__(self):
+		UCConfig.__init__(self)
+
 	def __setattr__(self, attr, value):
 		if attr == 'filename': return
 		if not hasattr(self, attr) or getattr(self, attr) != value:
 			self.__dict__[attr] = value
 			events.emit(events.CONFIG_MODIFIED, attr, value)
 
-
 	def get_defaults(self):
-		defaults = AppConfig.__dict__
-		defaults.update(UCConfig.get_defaults())
+		defaults = AppConfig.__dict__.copy()
+		defaults.update(UCConfig.get_defaults(self))
 		return defaults
 
 	#============== GENERIC SECTION ===================
