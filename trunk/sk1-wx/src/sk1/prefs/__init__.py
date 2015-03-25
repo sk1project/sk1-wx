@@ -20,8 +20,8 @@ import wal
 from sk1 import _, config
 from sk1.resources import icons
 from generic import RootItem
-from prefs_general import GeneralPrefs, CMSPrefs, RulersPrefs, PalettesPrefs
-from prefs_general import GridPrefs
+from prefs_general import GeneralPrefs
+from templates import GridPrefs, CMSPrefs, RulersPrefs, PalettesPrefs
 
 PREFS_APP = [GeneralPrefs, CMSPrefs, RulersPrefs, PalettesPrefs]
 PREFS_DOC = [GridPrefs, ]
@@ -89,10 +89,10 @@ class PrefsDialog(wal.OkCancelDialog):
 				self.current_plugin.hide()
 			self.container.pack(plugin, fill=True, expand=True, padding=5)
 			self.current_plugin = plugin
+			if not self.current_plugin.built:
+				self.current_plugin.build()
 			self.current_plugin.show()
 			self.container.layout()
-#		elif not plugin.leaf:
-#			self.tree.set_item_by_reference(self.current_plugin)
 
 	def get_plugin_by_pid(self, pid):
 		ret = None
@@ -105,8 +105,17 @@ class PrefsDialog(wal.OkCancelDialog):
 				break
 		return ret
 
-	def apply_changes(self):pass
-	def restore_defaults(self, event):pass
+	def apply_changes(self):
+		plugins = []
+		for item in PREFS_DATA:
+			plugins += item.childs
+		for item in plugins:
+			if item.built:
+				item.apply_changes()
+
+	def restore_defaults(self, event):
+		if self.current_plugin:
+			self.current_plugin.restore_defaults()
 
 	def show(self):
 		if self.show_modal() == wal.BUTTON_OK:

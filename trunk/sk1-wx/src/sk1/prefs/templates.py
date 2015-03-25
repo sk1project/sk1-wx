@@ -15,33 +15,46 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wal
-
-from sk1 import _, config
+from sk1 import _
 from sk1.resources import icons
 
 from generic import PrefPanel
 
-class GeneralPrefs(PrefPanel):
+class CMSPrefs(PrefPanel):
 
-	pid = 'General'
-	name = _('General')
-	title = _('General application preferences')
-	icon_id = icons.PD_PROPERTIES
+	pid = 'CMS'
+	name = _('Color management')
+	title = _('Color management and color profiles')
+	icon_id = icons.PD_PREFS_CMS
 
 	def __init__(self, app, dlg, fmt_config=None):
 		PrefPanel.__init__(self, app, dlg)
 
-	def build(self):
-		title = _('Create new document on start')
-		self.newdoc_check = wal.Checkbox(self, title, config.new_doc_on_start)
-		self.pack(self.newdoc_check, fill=True, padding=5)
+class RulersPrefs(PrefPanel):
 
-		self.built = True
+	pid = 'Rulers'
+	name = _('Rulers preferences')
+	icon_id = icons.PD_PREFS_RULER
 
-	def apply_changes(self):
-		config.new_doc_on_start = self.newdoc_check.get_value()
+	def __init__(self, app, dlg, fmt_config=None):
+		PrefPanel.__init__(self, app, dlg)
 
-	def restore_defaults(self):
-		defaults = config.get_defaults()
-		self.newdoc_check.set_value(defaults['new_doc_on_start'])
+class PalettesPrefs(PrefPanel):
+
+	pid = 'Palettes'
+	name = _('Palettes')
+	title = _('Palette options and palette management')
+	icon_id = icons.PD_PREFS_PALETTE
+
+	def __init__(self, app, dlg, fmt_config=None):
+		PrefPanel.__init__(self, app, dlg)
+
+class GridPrefs(PrefPanel):
+
+	pid = 'Grid'
+	name = _('Grid and guides')
+	title = _('Grid and guides options')
+	icon_id = icons.PD_PREFS_GRID
+
+	def __init__(self, app, dlg, fmt_config=None):
+		PrefPanel.__init__(self, app, dlg)
