@@ -23,12 +23,13 @@ from generic import RootItem, PrefPanel
 
 
 PREFS_APP = [wal.TreeElement, wal.TreeElement, wal.TreeElement, wal.TreeElement]
-PREFS_DOC = [wal.TreeElement, wal.TreeElement, wal.TreeElement, wal.TreeElement]
+PREFS_DOC = [wal.TreeElement, wal.TreeElement, wal.TreeElement]
 
 class PrefsAppItem(RootItem):
 
 	pid = 'Application'
 	name = 'Application'
+	icon_id = icons.SK1_ICON16
 
 	def __init__(self, data=[]):
 		RootItem.__init__(self, data)
@@ -63,6 +64,7 @@ class PrefsDialog(wal.OkCancelDialog):
 		self.tree = wal.TreeWidget(self.splitter, data=PREFS_DATA)
 		self.container = wal.VPanel(self.splitter)
 		self.splitter.split_vertically(self.tree, self.container, 200)
+		self.splitter.set_min_size(150)
 		self.tree.set_indent(5)
 		self.tree.expand_all()
 
