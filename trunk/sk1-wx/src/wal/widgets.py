@@ -99,6 +99,8 @@ class Button(wx.Button, Widget):
 		if onclick: self.Bind(wx.EVT_BUTTON, onclick, self)
 		if tooltip: self.SetToolTipString(tooltip)
 
+	def set_default(self):self.SetDefault()
+
 
 class Checkbox(wx.CheckBox, DataWidget):
 

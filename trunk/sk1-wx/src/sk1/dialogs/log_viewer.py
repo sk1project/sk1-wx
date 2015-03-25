@@ -36,9 +36,9 @@ class LogViewerDialog(wal.OkCancelDialog):
 		self.app = parent.app
 		size = config.history_dlg_size
 		wal.OkCancelDialog.__init__(self, parent, title, size, resizable=True,
-								action_button=wal.const.BUTTON_OPEN)
-		self.SetMinSize(config.history_dlg_minsize)
-		self.ok_btn.Enable(False)
+								action_button=wal.BUTTON_OPEN)
+		self.set_minsize(config.history_dlg_minsize)
+		self.ok_btn.set_enable(False)
 		self.update_list()
 
 	def build(self):
@@ -53,10 +53,10 @@ class LogViewerDialog(wal.OkCancelDialog):
 		self.left_button_box.pack(self.clear_btn)
 
 	def update(self, value):
-		if value:self.ok_btn.Enable(True)
-		else:self.ok_btn.Enable(False)
-		if self.data: self.clear_btn.Enable(True)
-		else:self.clear_btn.Enable(False)
+		if value:self.ok_btn.set_enable(True)
+		else:self.ok_btn.set_enable(False)
+		if self.data: self.clear_btn.set_enable(True)
+		else:self.clear_btn.set_enable(False)
 
 	def update_list(self):
 		header = [_('Status'), _('File name'), _('Path'), _('Time')]
@@ -83,7 +83,7 @@ class LogViewerDialog(wal.OkCancelDialog):
 			path = value[2]
 			if os.path.isfile(path):
 				self.ret = path
-				self.EndModal(wal.const.BUTTON_OK)
+				self.end_modal(wal.const.BUTTON_OK)
 			else:
 				txt = "%s '%s' %s" % (_('File'), path, _('is not found.'))
 				wal.error_dialog(self, _('File not found'), txt)
@@ -92,10 +92,10 @@ class LogViewerDialog(wal.OkCancelDialog):
 
 	def show(self):
 		ret = None
-		if self.ShowModal() == wal.BUTTON_OK:
+		if self.show_modal() == wal.BUTTON_OK:
 			ret = self.get_result()
 		config.history_dlg_size = self.GetSize()
-		self.Destroy()
+		self.destroy()
 		return ret
 
 def log_viewer_dlg(parent):

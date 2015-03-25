@@ -20,7 +20,7 @@ import wx
 import const
 from const import EXPAND, ALL, VERTICAL, HORIZONTAL
 from basic import HPanel, VPanel
-from widgets import HLine
+from widgets import HLine, Button
 
 class SimpleDialog(wx.Dialog):
 
@@ -51,10 +51,20 @@ class SimpleDialog(wx.Dialog):
 		self.set_dialog_buttons()
 		if size == (-1, -1):self.Fit()
 		self.CenterOnParent()
+		self.Bind(wx.EVT_CLOSE, self.on_close, self)
 
 	def build(self):pass
 	def set_dialog_buttons(self):pass
 	def get_result(self): return None
+	def on_close(self, event):
+		self.end_modal(const.BUTTON_CANCEL)
+		self.destroy()
+
+	def set_title(self, title): self.SetTitle(title)
+	def set_minsize(self, size): self.SetMinSize(size)
+	def show_modal(self):return self.ShowModal()
+	def end_modal(self, ret): self.EndModal(ret)
+	def destroy(self): self.Destroy()
 
 	def pack(self, *args, **kw):
 		obj = args[0]
@@ -63,8 +73,8 @@ class SimpleDialog(wx.Dialog):
 		self.panel.pack(*args, **kw)
 
 	def show(self):
-		self.ShowModal()
-		self.Destroy()
+		self.show_modal()
+		self.destroy()
 
 class OkCancelDialog(SimpleDialog):
 
@@ -76,7 +86,7 @@ class OkCancelDialog(SimpleDialog):
 	action_button = None
 
 	def __init__(self, parent, title, size=(-1, -1), style=VERTICAL,
-				resizable=False, action_button=wx.ID_OK):
+				resizable=False, action_button=const.BUTTON_OK):
 		self.action_button = action_button
 		SimpleDialog.__init__(self, parent, title, size, style, resizable)
 
@@ -86,13 +96,10 @@ class OkCancelDialog(SimpleDialog):
 		self.button_box = HPanel(self.box)
 		self.box.pack(self.button_box, fill=True)
 
-		self.ok_btn = wx.Button(self.button_box, self.action_button, '',
-							wx.DefaultPosition, wx.DefaultSize, 0)
-		self.Bind(wx.EVT_BUTTON, self.on_ok, self.ok_btn)
-
-		self.cancel_btn = wx.Button(self.button_box, wx.ID_CANCEL, '',
-								wx.DefaultPosition, wx.DefaultSize, 0)
-		self.Bind(wx.EVT_BUTTON, self.on_cancel, self.cancel_btn)
+		self.ok_btn = Button(self.button_box, '', onclick=self.on_ok,
+							pid=self.action_button)
+		self.cancel_btn = Button(self.button_box, '', onclick=self.on_cancel,
+							default=True, pid=const.BUTTON_CANCEL)
 
 		self.left_button_box = HPanel(self.button_box)
 		self.button_box.pack(self.left_button_box, expand=True, fill=True)
@@ -107,17 +114,15 @@ class OkCancelDialog(SimpleDialog):
 			self.button_box.pack(self.cancel_btn, padding=2)
 			self.button_box.pack(self.ok_btn)
 
-		self.cancel_btn.SetDefault()
-
 	def on_ok(self, event):
-		self.EndModal(wx.ID_OK)
+		self.end_modal(const.BUTTON_OK)
 
 	def on_cancel(self, event):
-		self.EndModal(wx.ID_CANCEL)
+		self.end_modal(const.BUTTON_CANCEL)
 
 	def show(self):
 		ret = None
-		if self.ShowModal() == wx.ID_OK:
+		if self.show_modal() == const.BUTTON_OK:
 			ret = self.get_result()
-		self.Destroy()
+		self.destroy()
 		return ret
