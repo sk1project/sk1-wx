@@ -133,6 +133,7 @@ encoding//src/uc2/palettes.py=utf-8
 encoding//src/uc2/uc2const.py=utf-8
 encoding//src/uc2/uc_conf.py=utf-8
 encoding//src/uc2/utils/config.py=utf-8
+encoding//src/uc2/utils/system.py=utf-8
 encoding//src/wal/__init__.py=utf-8
 encoding//src/wal/basic.py=utf-8
 encoding//src/wal/const.py=utf-8
