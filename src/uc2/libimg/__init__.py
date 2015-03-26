@@ -30,6 +30,9 @@ from uc2.uc2const import IMAGE_GRAY, IMAGE_MONO
 DUOTONES = [IMAGE_GRAY, IMAGE_MONO]
 SUPPORTED_CS = [IMAGE_MONO, IMAGE_GRAY, IMAGE_RGB, IMAGE_CMYK, IMAGE_LAB]
 
+def get_version():
+	return Image.VERSION
+
 def check_image(path):
 	return check_image_file
 

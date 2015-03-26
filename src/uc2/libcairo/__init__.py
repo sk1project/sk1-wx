@@ -18,7 +18,8 @@
 import cairo
 #import pangocairo
 import _libcairo
-from uc2.formats.sk2 import sk2_cids
+
+from uc2 import sk2_cids
 
 
 SURFACE = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
@@ -50,6 +51,17 @@ FAMILIES_DICT = {}
 #	families_list.sort()
 #
 #get_fonts(FAMILIES_LIST, FAMILIES_DICT)
+
+def seq_to_str(seq):
+	ret = ''
+	for item in seq: ret += str(item) + '.'
+	return ret[:-1]
+
+def get_version():
+	cairo_ver = cairo.cairo_version_string()
+	pycairo_ver = ''
+	for item in cairo.version_info: pycairo_ver += str(item) + '.'
+	return (cairo_ver, pycairo_ver)
 
 def create_cpath(paths, cmatrix=None):
 	CTX.set_matrix(DIRECT_MATRIX)

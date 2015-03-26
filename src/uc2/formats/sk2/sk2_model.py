@@ -22,7 +22,7 @@ from uc2 import uc2const
 from uc2 import _, cms
 from uc2 import libgeom
 from uc2.formats.sk2 import sk2_const
-from uc2.formats.sk2.sk2_cids import *
+from uc2.sk2_cids import *
 from uc2.formats.generic import TextModelObject
 
 GENERIC_FIELDS = ['cid', 'childs', 'parent', 'config']
