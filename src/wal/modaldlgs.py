@@ -26,12 +26,11 @@ class SimpleDialog(wx.Dialog):
 
 	def __init__(self, parent, title, size=(-1, -1), style=VERTICAL,
 				resizable=False):
-		panel_style = style
-		style = wx.DEFAULT_DIALOG_STYLE
-		if resizable:style |= wx.RESIZE_BORDER
+		dlg_style = wx.DEFAULT_DIALOG_STYLE
+		if resizable:dlg_style |= wx.RESIZE_BORDER
 
 		wx.Dialog.__init__(self, parent, -1, title, wx.DefaultPosition,
-						size, style=style)
+						size, style=dlg_style)
 
 		sizer = wx.BoxSizer(wx.VERTICAL)
 		self.SetSizer(sizer)
@@ -42,7 +41,7 @@ class SimpleDialog(wx.Dialog):
 		self.box = VPanel(self)
 		sizer.Add(self.box, 1, ALL | EXPAND, margin)
 
-		if panel_style == HORIZONTAL:
+		if style == HORIZONTAL:
 			self.panel = HPanel(self.box)
 		else:
 			self.panel = VPanel(self.box)
