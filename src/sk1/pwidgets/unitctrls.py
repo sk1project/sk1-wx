@@ -17,6 +17,7 @@
 
 import math
 import wx
+import wal
 
 from uc2 import uc2const
 from uc2.uc2const import point_dict, unit_dict, unit_accuracy
@@ -89,7 +90,7 @@ class UnitSpin(FloatSpin):
 		self._set_digits(unit_accuracy[self.units])
 		self.set_value(self.point_value * point_dict[self.units])
 
-class BitmapToggle(wx.StaticBitmap):
+class BitmapToggle(wal.Bitmap):
 
 	onchange = None
 	state = True
@@ -104,7 +105,7 @@ class BitmapToggle(wx.StaticBitmap):
 			self.icons_dict = { True:[icons.CTX_RATIO, _("Keep ratio")],
 					False:[icons.CTX_NO_RATIO, _("Don't keep ratio")]}
 		self.update_icons()
-		wx.StaticBitmap.__init__(self, parent, -1, self.icons_dict[self.state][0])
+		wal.Bitmap.__init__(self, parent, self.icons_dict[self.state][0])
 		self.Bind(wx.EVT_LEFT_UP, self.change, self)
 		self.SetToolTipString(self.icons_dict[self.state][1])
 
