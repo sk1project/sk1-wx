@@ -22,10 +22,17 @@ import const
 from const import DEF_SIZE
 from basic import HPanel
 
-class Bitmap(wx.StaticBitmap):
+class Bitmap(wx.StaticBitmap, Widget):
 
-	def __init__(self, parent, bitmap):
+	def __init__(self, parent, bitmap, on_left_click=None, on_right_click=None):
 		wx.StaticBitmap.__init__(self, parent, wx.ID_ANY, bitmap)
+		if on_left_click:
+			self.Bind(wx.EVT_LEFT_UP, on_left_click, self)
+		if on_right_click:
+			self.Bind(wx.EVT_RIGHT_UP, on_right_click, self)
+
+	def set_bitmap(self, bmp):
+		self.SetBitmap(bmp)
 
 class Notebook(wx.Notebook, Widget):
 
@@ -45,12 +52,12 @@ class Notebook(wx.Notebook, Widget):
 		self.RemovePage(index)
 
 
-class VLine(wx.StaticLine):
+class VLine(wx.StaticLine, Widget):
 	def __init__(self, parent):
 		wx.StaticLine.__init__(self, parent, style=wx.VERTICAL)
 
 
-class HLine(wx.StaticLine):
+class HLine(wx.StaticLine, Widget):
 	def __init__(self, parent):
 		wx.StaticLine.__init__(self, parent, style=wx.HORIZONTAL)
 
