@@ -78,9 +78,10 @@ class GeneralPrefs(PrefPanel):
 			self.pack(self.ubuntu_overlay, align_center=False)
 
 
-		self.pack(wal.HPanel(self), expand=True, fill=True)
-		txt = _('(*) - These options require application restart')
-		self.pack(wal.Label(grid, txt, fontsize=-1), align_center=False)
+		if not config.is_mac():
+			self.pack(wal.HPanel(self), expand=True, fill=True)
+			txt = _('(*) - These options require application restart')
+			self.pack(wal.Label(grid, txt, fontsize=-1), align_center=False)
 
 		self.built = True
 
