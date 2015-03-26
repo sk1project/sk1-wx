@@ -33,15 +33,27 @@ class GeneralPrefs(PrefPanel):
 		PrefPanel.__init__(self, app, dlg)
 
 	def build(self):
-		title = _('Create new document on start')
-		self.newdoc_check = wal.Checkbox(self, title, config.new_doc_on_start)
-		self.pack(self.newdoc_check, fill=True, padding=5)
+		txt = _('Create new document on start')
+		self.newdoc = wal.Checkbox(self, txt, config.new_doc_on_start)
+		self.pack(self.newdoc, fill=True, start_padding=5)
+
+		txt = _('Make backup on document save')
+		self.backup = wal.Checkbox(self, txt, config.make_backup)
+		self.pack(self.backup, fill=True)
+
+		txt = _('Make backup on export')
+		self.expbackup = wal.Checkbox(self, txt, config.make_export_backup)
+		self.pack(self.expbackup, fill=True)
 
 		self.built = True
 
 	def apply_changes(self):
-		config.new_doc_on_start = self.newdoc_check.get_value()
+		config.new_doc_on_start = self.newdoc.get_value()
+		config.make_backup = self.backup.get_value()
+		config.make_export_backup = self.expbackup.get_value()
 
 	def restore_defaults(self):
 		defaults = config.get_defaults()
-		self.newdoc_check.set_value(defaults['new_doc_on_start'])
+		self.newdoc.set_value(defaults['new_doc_on_start'])
+		self.backup.set_value(defaults['make_backup'])
+		self.expbackup.set_value(defaults['make_export_backup'])
