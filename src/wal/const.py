@@ -27,6 +27,8 @@ GTK = '__WXGTK__'
 MAC = '__WXMAC__'
 PLATFORM = wx.Platform
 
+def get_version(): return wx.version()
+
 def is_mac(): return PLATFORM == MAC
 def is_msw(): return PLATFORM == MSW
 def is_winxp(): return platform.release() == 'XP'
