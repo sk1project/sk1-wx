@@ -16,7 +16,7 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
-import wx
+
 import wal
 
 from uc2 import uc2const
@@ -105,11 +105,11 @@ class BitmapToggle(wal.Bitmap):
 			self.icons_dict = { True:[icons.CTX_RATIO, _("Keep ratio")],
 					False:[icons.CTX_NO_RATIO, _("Don't keep ratio")]}
 		self.update_icons()
-		wal.Bitmap.__init__(self, parent, self.icons_dict[self.state][0])
-		self.Bind(wx.EVT_LEFT_UP, self.change, self)
-		self.SetToolTipString(self.icons_dict[self.state][1])
+		wal.Bitmap.__init__(self, parent, self.icons_dict[self.state][0],
+						on_left_click=self.change)
+		self.set_tooltip(self.icons_dict[self.state][1])
 
-	def change(self, *args):
+	def change(self, event):
 		self.set_active(not self.state)
 		if not self.onchange is None: self.onchange()
 
@@ -118,8 +118,8 @@ class BitmapToggle(wal.Bitmap):
 
 	def set_active(self, state):
 		self.state = state
-		self.SetBitmap(self.icons_dict[self.state][0])
-		self.SetToolTipString(self.icons_dict[self.state][1])
+		self.set_bitmap(self.icons_dict[self.state][0])
+		self.set_tooltip(self.icons_dict[self.state][1])
 
 	def update_icons(self):
 		self.icons_dict[True] = [get_icon(self.icons_dict[True][0],
