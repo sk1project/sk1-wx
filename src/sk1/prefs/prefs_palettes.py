@@ -15,36 +15,28 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import wal
+
 from sk1 import _
 from sk1.resources import icons
 
 from generic import PrefPanel
 
-class CMSPrefs(PrefPanel):
+class PalettesPrefs(PrefPanel):
 
-	pid = 'CMS'
-	name = _('Color management')
-	title = _('Color management and color profiles')
-	icon_id = icons.PD_PREFS_CMS
-
-	def __init__(self, app, dlg, fmt_config=None):
-		PrefPanel.__init__(self, app, dlg)
-
-class RulersPrefs(PrefPanel):
-
-	pid = 'Rulers'
-	name = _('Rulers preferences')
-	icon_id = icons.PD_PREFS_RULER
+	pid = 'Palettes'
+	name = _('Palettes')
+	title = _('Palette options and palette management')
+	icon_id = icons.PD_PREFS_PALETTE
 
 	def __init__(self, app, dlg, fmt_config=None):
 		PrefPanel.__init__(self, app, dlg)
 
-class GridPrefs(PrefPanel):
+		self.nb = wal.Notebook(self)
+		pal_opt = wal.VPanel(self.nb)
+		self.nb.add_page(pal_opt, _('Palette options'))
 
-	pid = 'Grid'
-	name = _('Grid and guides')
-	title = _('Grid and guides options')
-	icon_id = icons.PD_PREFS_GRID
+		pal_mngr = wal.VPanel(self.nb)
+		self.nb.add_page(pal_mngr, _('Palette management'))
 
-	def __init__(self, app, dlg, fmt_config=None):
-		PrefPanel.__init__(self, app, dlg)
+		self.pack(self.nb, expand=True, fill=True)
