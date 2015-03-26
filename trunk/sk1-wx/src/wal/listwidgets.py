@@ -19,8 +19,9 @@ import wx
 import wx.lib.mixins.listctrl as listmix
 
 import const
+from generic import Widget
 
-class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
+class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, Widget):
 
 	data = []
 	select_cmd = None

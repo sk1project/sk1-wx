@@ -18,6 +18,7 @@
 import wx
 
 import const
+from generic import Widget
 
 NO_ICON = -1
 
@@ -32,7 +33,7 @@ class TreeElement(object):
 		self.icon = icon
 		self.childs = []
 
-class TreeWidget(wx.TreeCtrl):
+class TreeWidget(wx.TreeCtrl, Widget):
 
 	data = None
 	items = []
