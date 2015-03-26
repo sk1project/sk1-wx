@@ -98,27 +98,25 @@ class AppConfig(UCConfig):
 
 	#============== GENERIC SECTION ===================
 	os = system.LINUX
+	os_name = system.UBUNTU
 	system_encoding = 'utf-8'# default encoding (GUI uses utf-8 only)
-	new_doc_on_start = False
 	print_stacktrace = True
 
-	#============== I/O SECTION ===================
-	open_dir = '~'
-	save_dir = '~'
-	import_dir = '~'
-	export_dir = '~'
-	template_dir = '~'
+	show_splash = False
+
+	new_doc_on_start = False
+	history_size = 100
+	history_list_size = 10
+	spin_overlay = True
 	make_backup = True
 	make_export_backup = False
-	resource_dir = ''
-	plugin_dirs = []
-	profile_import_dir = '~'
 
-	history_size = 100
+	#===Ubuntu features
+	ubuntu_use_global_menu = False
+	ubuntu_allow_scrollbar_overlay = False
 
 	#============== UI SECTION ===================
 	mw_maximized = 0
-
 	mw_size = (1000, 700)
 	mw_min_size = (1000, 700)
 	mw_width = 1000
@@ -126,25 +124,29 @@ class AppConfig(UCConfig):
 	mw_min_width = 1000
 	mw_min_height = 700
 
-	spin_overlay = True
-	statusbar_fontsize = 0
-	tabs_fontsize = 0
-	tabs_use_bold = True
-	show_splash = False
-	menu_size = (16, 16)
-	toolbar_size = (24, 24)
-	toolbar_icon_size = (24, 24)
-	set_doc_icon = True
-
-	history_list_size = 10
 	history_dlg_minsize = (500, 350)
 	history_dlg_size = (500, 350)
 
 	prefs_dlg_minsize = (700, 430)
 	prefs_dlg_size = (700, 430)
 
+	statusbar_fontsize = 0
+	tabs_fontsize = 0
+	tabs_use_bold = True
+	set_doc_icon = True
+	menu_size = (16, 16)
+	toolbar_size = (24, 24)
+	toolbar_icon_size = (24, 24)
 
-	default_polygon_num = 5
+	#============== I/O SECTION ===================
+	open_dir = '~'
+	save_dir = '~'
+	import_dir = '~'
+	export_dir = '~'
+	template_dir = '~'
+	resource_dir = ''
+	plugin_dirs = []
+	profile_import_dir = '~'
 
 	#============== MOUSE OPTIONS ================
 	mouse_scroll_sensitivity = 3.0
@@ -240,8 +242,16 @@ class AppConfig(UCConfig):
 	control_line_stroke_width = 0.7
 	control_line_stroke_dash = [5, 5]
 
+	#===UNSORTED===
+	default_polygon_num = 5
+
+
 	def is_linux(self):
 		if self.os == system.LINUX: return True
+		return False
+
+	def is_ubuntu(self):
+		if self.os_name == system.UBUNTU: return True
 		return False
 
 	def is_mac(self):
@@ -257,18 +267,21 @@ class AppConfig(UCConfig):
 
 class LinuxConfig(AppConfig):
 	os = system.LINUX
+	os_name = system.get_os_name()
 	statusbar_fontsize = 9
 	tabs_fontsize = 9
 	tabs_use_bold = False
 
 class MacosxConfig(AppConfig):
 	os = system.MACOSX
+	os_name = system.get_os_name()
 	toolbar_size = (16, 16)
 	toolbar_icon_size = (16, 16)
 	spin_overlay = False
 
 class WinConfig(AppConfig):
 	os = system.WINDOWS
+	os_name = system.get_os_name()
 	toolbar_size = (24, 24)
 	toolbar_icon_size = (16, 16)
 	statusbar_fontsize = 0
