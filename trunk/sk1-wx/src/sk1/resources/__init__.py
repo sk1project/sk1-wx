@@ -16,6 +16,7 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
+import wal
 
 from wal import const
 
@@ -55,7 +56,7 @@ def get_icon(icon_id, client=wx.ART_OTHER, size=const.SIZE_16):
 def get_bmp(parent, icon_id, tooltip=''):
 	bmp = wx.ArtProvider.GetBitmap(icon_id, wx.ART_OTHER, const.DEF_SIZE)
 	if bmp == wx.NullBitmap: return None
-	sb = wx.StaticBitmap(parent, -1, bmp)
+	sb = wal.Bitmap(parent, bmp)
 	if tooltip: sb.SetToolTipString(tooltip)
 	return sb
 
