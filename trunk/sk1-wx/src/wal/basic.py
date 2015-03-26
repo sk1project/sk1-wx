@@ -207,11 +207,13 @@ class VPanel(SizedPanel):
 	def __init__(self, parent):
 		SizedPanel.__init__(self, parent, wx.VERTICAL)
 
-	def pack(self, obj, expand=False, fill=False,
+	def pack(self, obj, expand=False, fill=False, align_center=True,
 			padding=0, start_padding=0, end_padding=0):
 		if expand:expand = 1
 		else: expand = 0
-		flags = wx.ALIGN_TOP | wx.ALIGN_CENTER_HORIZONTAL
+		flags = wx.ALIGN_TOP
+		if align_center:
+			flags |= wx.ALIGN_CENTER_HORIZONTAL
 		if padding:
 			flags = flags | wx.TOP | wx.BOTTOM
 		elif start_padding:
@@ -243,9 +245,9 @@ class LabeledPanel(wx.StaticBox, Widget):
 
 class GridPanel(Panel, Widget):
 
-	def __init__(self, parent, rows=2, cols=2, hgap=0, vgap=0):
+	def __init__(self, parent, rows=2, cols=2, vgap=0, hgap=0):
 		Panel.__init__(self, parent)
-		self.grid = wx.GridSizer(self, rows=2, cols=2, hgap=0, vgap=0)
+		self.grid = wx.FlexGridSizer(rows, cols, vgap, hgap)
 		self.SetSizer(self.grid)
 
 	def set_vgap(self, val):self.grid.SetVGap(val)
@@ -253,33 +255,28 @@ class GridPanel(Panel, Widget):
 	def sel_cols(self, val):self.grid.SetCols(val)
 	def sel_rows(self, val):self.grid.SetRows(val)
 
-	def pack(self, obj, expand=False, fill=False, align_right=True,
-			padding=0, start_padding=0, end_padding=0):
+	def pack(self, obj, expand=False, fill=False, align_right=False, \
+			align_left=True):
 		if expand:expand = 1
 		else: expand = 0
 		if align_right:
 			flags = wx.ALIGN_RIGHT
-		else:
+		elif align_left:
 			flags = wx.ALIGN_LEFT
+		else:
+			flags = wx.ALIGN_CENTER_HORIZONTAL
 		flags |= wx.ALIGN_CENTER_VERTICAL
-		if padding:
-			flags = flags | wx.LEFT | wx.RIGHT
-		elif start_padding:
-			flags = flags | wx.LEFT
-			padding = start_padding
-		elif end_padding:
-			flags = flags | wx.RIGHT
-			padding = end_padding
+
 		if fill: flags = flags | wx.EXPAND
-		self.add(obj, expand, flags, padding)
+		self.add(obj, expand, flags)
 
 	def add(self, *args, **kw):
-		"""Arguments: object, expandable (0 or 1), flag, border"""
+		"""Arguments: object, expandable (0 or 1), flag"""
 		obj = args[0]
 		if not isinstance(obj, tuple):
-			if not obj.GetParent() == self.panel:
-				obj.Reparent(self.panel)
-		self.box.Add(*args, **kw)
+			if not obj.GetParent() == self:
+				obj.Reparent(self)
+		self.grid.Add(*args, **kw)
 		if not isinstance(obj, tuple) and not isinstance(obj, int):
 			obj.show()
 
