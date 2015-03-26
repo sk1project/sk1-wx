@@ -66,8 +66,7 @@ class PrefPanel(wal.VPanel):
 		self.dlg = dlg
 		if self.icon_id:self.icon = get_icon(self.icon_id)
 		if not self.title: self.title = self.name
-		fsize = str(int(wal.get_system_fontsize()) + 3)
-		self.pack(wal.Label(self, self.title, fontsize=fsize, fontbold=True))
+		self.pack(wal.Label(self, self.title, fontsize=3, fontbold=True))
 		self.pack(wal.HLine(self), fill=True, padding=5)
 
 	def build(self):pass

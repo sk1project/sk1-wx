@@ -18,6 +18,9 @@
 import platform
 import wx
 
+#Editable preference list
+#[OVERLAY,]
+CFG = [True, ]
 
 MSW = '__WXMSW__'
 GTK = '__WXGTK__'
@@ -92,12 +95,11 @@ TBFLAGS = (wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
 ART_TOOLBAR = wx.ART_TOOLBAR
 
 def get_system_fontsize():
-	fontsize = 8
 	font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
 	if font.IsUsingSizeInPixels():
-		fontsize = str(font.GetPixelSize())
+		fontsize = font.GetPixelSize()
 	else:
-		fontsize = str(font.GetPointSize())
+		fontsize = font.GetPointSize()
 	return fontsize
 
 EVEN_COLOR = wx.Colour(255, 255, 255)

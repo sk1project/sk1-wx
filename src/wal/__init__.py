@@ -16,7 +16,7 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from const import *
-from basic import Application, MainWindow, Panel, VPanel, HPanel, LabeledPanel
+from basic import *
 from widgets import *
 
 from listwidgets import SimpleList, ReportList
@@ -26,6 +26,6 @@ from gctrls import ImageLabel, ImageButton, ImageToggleButton
 from renderer import copy_bitmap_to_surface, copy_surface_to_bitmap
 
 from msgdlgs import *
-from modaldlgs import SimpleDialog, OkCancelDialog
+from modaldlgs import *
 
 

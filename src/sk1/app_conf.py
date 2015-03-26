@@ -112,8 +112,8 @@ class AppConfig(UCConfig):
 	make_export_backup = False
 
 	#===Ubuntu features
-	ubuntu_use_global_menu = False
-	ubuntu_allow_scrollbar_overlay = False
+	ubuntu_global_menu = False
+	ubuntu_scrollbar_overlay = False
 
 	#============== UI SECTION ===================
 	mw_maximized = 0

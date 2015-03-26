@@ -33,6 +33,9 @@ def init_config():
 
 	global config
 	config = get_app_config()
+	cfg_dir = os.path.expanduser(os.path.join('~', '.config', 'sk1-wx'))
+	cfg_path = os.path.join(cfg_dir, 'preferences.cfg')
+	config.load(cfg_path)
 	config.resource_dir = os.path.join(__path__[0], 'share')
 
 
@@ -43,8 +46,10 @@ def sk1_run():
 	_pkgdir = __path__[0]
 	init_config()
 
-	os.environ["UBUNTU_MENUPROXY"] = "0"
-	os.environ["LIBOVERLAY_SCROLLBAR"] = "0"
+	if not config.ubuntu_global_menu:
+		os.environ["UBUNTU_MENUPROXY"] = "0"
+	if not config.ubuntu_scrollbar_overlay:
+		os.environ["LIBOVERLAY_SCROLLBAR"] = "0"
 
 	from sk1.application import pdApplication
 
