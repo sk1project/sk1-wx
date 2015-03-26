@@ -17,12 +17,11 @@
 
 import os, sys
 
-import cairo, wx
-from PIL import Image
+import wal
 
 from uc2.cms import libcms
 from uc2.uc_conf import UCConfig, UCData
-from uc2 import uc2const#, libtrace
+from uc2 import uc2const, libimg, libcairo
 from uc2.utils import system
 from uc2.formats.sk2.sk2_const import DOC_STRUCTURE
 
@@ -63,21 +62,16 @@ class AppData(UCData):
 			fp.close()
 		self.check_components()
 
-	def seq_to_str(self, seq):
-		ret = ''
-		for item in seq: ret += str(item) + '.'
-		return ret[:-1]
 
 	def check_components(self):
 		comp = self.components
 		comp.append(['Python', sys.version])
-		comp.append(['wxWidgets', wx.version()])
+		comp.append(['wxWidgets', wal.get_version()])
 		comp.append(['UniConvertor', UCData.version + ' ' + UCData.revision])
-		comp.append(['Cairo', cairo.cairo_version_string()])
-		comp.append(['pycairo', self.seq_to_str(cairo.version_info)])
-		comp.append(['PIL', Image.VERSION])
+		comp.append(['Cairo', libcairo.get_version()[0]])
+		comp.append(['pycairo', libcairo.get_version()[1]])
+		comp.append(['PIL', libimg.get_version()])
 		comp.append(['LittleCMS', libcms.get_version()])
-#		comp.append(['Potrace', libtrace.get_version()])
 
 
 class AppConfig(UCConfig):
@@ -159,10 +153,10 @@ class AppConfig(UCConfig):
 	ruler_max_text_step = 100
 
 	#============== PALETTE OPTIONS ================
-	palette_hcell_vertical = 18.0
-	palette_hcell_horizontal = 40.0
-	palette_vcell_vertical = 18.0
-	palette_vcell_horizontal = 18.0
+	palette_hcell_vertical = 18
+	palette_hcell_horizontal = 40
+	palette_vcell_vertical = 18
+	palette_vcell_horizontal = 18
 	palette_orientation = uc2const.HORIZONTAL
 	palette = ''
 
