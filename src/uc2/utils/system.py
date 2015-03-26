@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 #
 #	Copyright (C) 2010, 2011 by Igor E. Novikov
-#	
+#
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
 #	the Free Software Foundation, either version 3 of the License, or
 #	(at your option) any later version.
-#	
+#
 #	This program is distributed in the hope that it will be useful,
 #	but WITHOUT ANY WARRANTY; without even the implied warranty of
 #	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #	GNU General Public License for more details.
-#	
+#
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -36,84 +36,84 @@ def get_os_family():
 		return MACOSX
 	else:
 		return GENERIC
-	
 
-p32bit = '32bit'
-p64bit = '64bit'
-p128bit = '128bit'
-pxxbit = 'unknown'
-	
+
+P32BIT = '32bit'
+P64BIT = '64bit'
+P128BIT = '128bit'
+PXXBIT = 'unknown'
+
 def get_os_arch():
 	"""
 	Detects OS architecture and returns module predefined architecture type.
 	"""
-	arch, bin = platform.architecture()
-	if arch == p32bit:
-		return p32bit
-	elif arch == p64bit:
-		return p64bit
-	elif arch == p128bit:
-		return p128bit
+	arch = platform.architecture()[0]
+	if arch == P32BIT:
+		return P32BIT
+	elif arch == P64BIT:
+		return P64BIT
+	elif arch == P128BIT:
+		return P128BIT
 	else:
-		return pxxbit
-	
+		return PXXBIT
+
 #Supported OS'es:
-WinXP = 'XP'
-WinVista = 'Vista'#???
-Win7 = 'Win7'#???
-WinOther = 'WinOther'
+WINXP = 'XP'
+WINVISTA = 'Vista'#???
+WIN7 = 'Win7'#???
+WINOTHER = 'WinOther'
 
-Ubuntu = 'Ubuntu'
-Mint = 'LinuxMint'
-Mandriva = 'mandrake'
-Fedora = 'fedora'
-Suse = 'SuSE'
-LinuxOther = 'LinuxOther'
+UBUNTU = 'Ubuntu'
+MINT = 'LinuxMint'
+MANDRIVA = 'mandrake'
+FEDORA = 'fedora'
+SUSE = 'SuSE'
+LINUXOTHER = 'LinuxOther'
 
-Leopard = '10.5'
-SnowLeopard = '10.6'
-MacOther = 'MacOther'
+LEOPARD = '10.5'
+SNOWLEOPARD = '10.6'
+MACOTHER = 'MacOther'
 
-Unix = 'unix'
+UNIX = 'unix'
 
 def get_os_name():
 	"""
 	Detects OS name and returns module predefined constant.
 	"""
 	if get_os_family() == WINDOWS:
-		if platform.release() == WinXP:
-			return WinXP
-		elif platform.release() == WinVista:
-			return WinVista
-		elif platform.release() == Win7:
-			return Win7
+		if platform.release() == WINXP:
+			return WINXP
+		elif platform.release() == WINVISTA:
+			return WINVISTA
+		elif platform.release() == WIN7:
+			return WIN7
 		else:
-			return WinOther
-		
+			return WINOTHER
+
 	elif get_os_family() == LINUX:
-		if not (platform.platform()).find(Ubuntu) == -1:
-			return Ubuntu
-		elif not (platform.platform()).find(Mint) == -1:
-			return Mint
-		elif not (platform.platform()).find(Mandriva) == -1:
-			return Mandriva
-		elif not (platform.platform()).find(Fedora) == -1:
-			return Fedora
-		elif not (platform.platform()).find(Suse) == -1:
-			return Suse
+		if not (platform.platform()).find(UBUNTU) == -1:
+			return UBUNTU
+		elif not (platform.platform()).find(MINT) == -1:
+			return MINT
+		elif not (platform.platform()).find(MANDRIVA) == -1:
+			return MANDRIVA
+		elif not (platform.platform()).find(FEDORA) == -1:
+			return FEDORA
+		elif not (platform.platform()).find(SUSE) == -1:
+			return SUSE
 		else:
-			return LinuxOther
-		
+			return LINUXOTHER
+
 	elif get_os_family() == MACOSX:
-		if not ((platform.mac_ver())[0]).find(Leopard) == -1:
-			return Leopard
-		elif not ((platform.mac_ver())[0]).find(SnowLeopard) == -1:
-			return SnowLeopard
+		if not ((platform.mac_ver())[0]).find(LEOPARD) == -1:
+			return LEOPARD
+		elif not ((platform.mac_ver())[0]).find(SNOWLEOPARD) == -1:
+			return SNOWLEOPARD
 		else:
-			return MacOther
-		
+			return MACOTHER
+
 	else:
-		return Unix
+		return UNIX
 
 
 
