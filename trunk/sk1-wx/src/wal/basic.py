@@ -188,19 +188,27 @@ class HPanel(SizedPanel):
 		SizedPanel.__init__(self, parent, wx.HORIZONTAL)
 
 	def pack(self, obj, expand=False, fill=False,
-			padding=0, start_padding=0, end_padding=0):
+			padding=0, start_padding=0, end_padding=0, padding_all=0):
+
 		if expand:expand = 1
 		else: expand = 0
+
 		flags = wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL
+
 		if padding:
 			flags = flags | wx.LEFT | wx.RIGHT
+		elif padding_all:
+			flags = flags | wx.ALL
+			padding = padding_all
 		elif start_padding:
 			flags = flags | wx.LEFT
 			padding = start_padding
 		elif end_padding:
 			flags = flags | wx.RIGHT
 			padding = end_padding
+
 		if fill: flags = flags | wx.EXPAND
+
 		self.add(obj, expand, flags, padding)
 
 class VPanel(SizedPanel):
@@ -208,21 +216,29 @@ class VPanel(SizedPanel):
 		SizedPanel.__init__(self, parent, wx.VERTICAL)
 
 	def pack(self, obj, expand=False, fill=False, align_center=True,
-			padding=0, start_padding=0, end_padding=0):
+			padding=0, start_padding=0, end_padding=0, padding_all=0):
+
 		if expand:expand = 1
 		else: expand = 0
+
 		flags = wx.ALIGN_TOP
 		if align_center:
 			flags |= wx.ALIGN_CENTER_HORIZONTAL
+
 		if padding:
 			flags = flags | wx.TOP | wx.BOTTOM
+		elif padding_all:
+			flags = flags | wx.ALL
+			padding = padding_all
 		elif start_padding:
 			flags = flags | wx.TOP
 			padding = start_padding
 		elif end_padding:
 			flags = flags | wx.BOTTOM
 			padding = end_padding
+
 		if fill: flags = flags | wx.EXPAND
+
 		self.add(obj, expand, flags, padding)
 
 
@@ -254,6 +270,8 @@ class GridPanel(Panel, Widget):
 	def set_hgap(self, val):self.grid.SetHGap(val)
 	def sel_cols(self, val):self.grid.SetCols(val)
 	def sel_rows(self, val):self.grid.SetRows(val)
+	def add_growable_col(self, index): self.grid.AddGrowableCol(index)
+	def add_growable_row(self, index): self.grid.AddGrowableRow(index)
 
 	def pack(self, obj, expand=False, fill=False, align_right=False, \
 			align_left=True):
