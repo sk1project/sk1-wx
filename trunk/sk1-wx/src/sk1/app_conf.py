@@ -23,7 +23,6 @@ from uc2.cms import libcms
 from uc2.uc_conf import UCConfig, UCData
 from uc2 import uc2const, libimg, libcairo
 from uc2.utils import system
-from uc2.formats.sk2.sk2_const import DOC_STRUCTURE
 
 from sk1 import events, appconst
 
@@ -46,14 +45,10 @@ class AppData(UCData):
 
 		UCData.__init__(self, app)
 
-		#----------------Check clipboard directory
-		self.app_clipboard_dir = os.path.join(self.app_config_dir, 'clipboard')
-		if not os.path.lexists(self.app_clipboard_dir):
-			os.makedirs(self.app_clipboard_dir)
-		for item in DOC_STRUCTURE:
-			path = os.path.join(self.app_clipboard_dir, item)
-			if not os.path.lexists(path):
-				os.makedirs(path)
+		#----------------Check config directories
+		self.app_palette_dir = os.path.join(self.app_config_dir, 'palettes')
+		if not os.path.lexists(self.app_palette_dir):
+			os.makedirs(self.app_palette_dir)
 		if not os.path.lexists(self.plugin_dir):
 			os.makedirs(self.plugin_dir)
 		plugin_dir_init = os.path.join(self.plugin_dir, '__init__.py')
