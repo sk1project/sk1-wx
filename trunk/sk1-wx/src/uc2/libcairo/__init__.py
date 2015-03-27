@@ -52,16 +52,11 @@ FAMILIES_DICT = {}
 #
 #get_fonts(FAMILIES_LIST, FAMILIES_DICT)
 
-def seq_to_str(seq):
-	ret = ''
-	for item in seq: ret += str(item) + '.'
-	return ret[:-1]
-
 def get_version():
 	cairo_ver = cairo.cairo_version_string()
 	pycairo_ver = ''
 	for item in cairo.version_info: pycairo_ver += str(item) + '.'
-	return (cairo_ver, pycairo_ver)
+	return (cairo_ver, pycairo_ver[:-1])
 
 def create_cpath(paths, cmatrix=None):
 	CTX.set_matrix(DIRECT_MATRIX)
