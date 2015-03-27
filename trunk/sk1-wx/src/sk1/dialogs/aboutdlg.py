@@ -49,11 +49,11 @@ class AboutDialog(wal.SimpleDialog):
 class AboutHeader(wal.VPanel):
 
 	def __init__(self, app, parent):
-		wal.VPanel.__init__(self, parent)
-		self.set_bg(const.UI_COLORS['pressed_border'])
+		wal.VPanel.__init__(self, parent, border=True)
+		color = const.lighter_color(const.UI_COLORS['bg'], 0.9)
+		self.set_bg(color)
 
 		panel = wal.HPanel(self)
-		color = const.lighter_color(const.UI_COLORS['bg'], 0.9)
 		panel.set_bg(color)
 		panel.pack(get_bmp(panel, icons.SK1_ICON32), padding=5)
 
@@ -66,7 +66,7 @@ class AboutHeader(wal.VPanel):
 		p.pack(wal.Label(p, txt), fill=True)
 		panel.pack(p)
 
-		self.add(panel, 1, wal.ALL | wal.EXPAND , 1)
+		self.pack(panel, expand=True, fill=True, padding_all=3)
 
 class AboutPage(wal.HPanel):
 
