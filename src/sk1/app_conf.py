@@ -62,7 +62,7 @@ class AppData(UCData):
 		comp = self.components
 		comp.append(['Python', sys.version])
 		comp.append(['wxWidgets', wal.get_version()])
-		comp.append(['UniConvertor', UCData.version + ' ' + UCData.revision])
+		comp.append(['UniConvertor', UCData.version])
 		comp.append(['Cairo', libcairo.get_version()[0]])
 		comp.append(['pycairo', libcairo.get_version()[1]])
 		comp.append(['PIL', libimg.get_version()])
