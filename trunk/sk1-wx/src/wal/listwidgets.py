@@ -30,9 +30,12 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, Widget):
 
 	def __init__(self, parent, data=[], border=True, header=False,
 				single_sel=True, alt_color=False,
+				even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
 				on_select=None, on_activate=None):
 		self.data = data
 		self.alt_color = alt_color
+		self.odd_color = odd_color
+		self.even_color = even_color
 		style = wx.LC_REPORT | wx.LC_VRULES
 		if border: style |= wx.BORDER_MASK
 		if not header: style |= wx.LC_NO_HEADER
@@ -63,16 +66,17 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, Widget):
 		self.InsertColumn(0, '')
 
 	def set_data(self, data, alt_color=True):
-		odd = False
+		even = False
 		i = 0
 		for item in data:
 			self.Append([item])
-			if odd and alt_color:
+			if alt_color:
 				list_item = self.GetItem(i)
-				list_item.SetBackgroundColour(const.ODD_COLOR)
+				if even: list_item.SetBackgroundColour(self.even_color)
+				else:list_item.SetBackgroundColour(self.odd_color)
 				self.SetItem(list_item)
-			odd = not odd
-			i += 1
+				even = not even
+				i += 1
 
 	def on_select(self, *args):
 		ret = None
@@ -91,9 +95,12 @@ class ReportList(SimpleList):
 
 	def __init__(self, parent, data=[], border=True, header=True,
 				single_sel=True, alt_color=True,
+				even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
 				on_select=None, on_activate=None):
+
 		SimpleList.__init__(self, parent, data, border, header,
-						single_sel, alt_color, on_select, on_activate)
+						single_sel, alt_color, even_color, odd_color,
+						on_select, on_activate)
 
 	def set_columns(self):
 		for item in self.data[0]:
@@ -101,16 +108,17 @@ class ReportList(SimpleList):
 			self.InsertColumn(index, item)
 
 	def set_data(self, data, alt_color=True):
-		odd = False
+		even = False
 		i = 0
 		for item in data[1:]:
 			self.Append(item)
-			if odd and alt_color:
+			if alt_color:
 				list_item = self.GetItem(i)
-				list_item.SetBackgroundColour(const.ODD_COLOR)
+				if even: list_item.SetBackgroundColour(self.even_color)
+				else:list_item.SetBackgroundColour(self.odd_color)
 				self.SetItem(list_item)
-			odd = not odd
-			i += 1
+				even = not even
+				i += 1
 
 	def on_select(self, *args):
 		ret = None
