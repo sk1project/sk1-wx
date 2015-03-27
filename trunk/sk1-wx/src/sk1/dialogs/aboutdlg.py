@@ -91,7 +91,8 @@ class ComponentsPage(wal.VPanel):
 	def __init__(self, app, parent):
 		wal.VPanel.__init__(self, parent)
 		data = [[_('Component'), _('Version')]] + app.appdata.components
-		slist = wal.ReportList(self, data, border=False)
+		slist = wal.ReportList(self, data, border=False,
+							odd_color=wal.YELLOW_ODD_COLOR)
 		self.pack(slist, expand=True, fill=True)
 		slist.set_column_width(0, const.LIST_AUTOSIZE)
 
