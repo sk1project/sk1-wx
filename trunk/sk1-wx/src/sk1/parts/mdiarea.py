@@ -19,7 +19,7 @@ import wal
 
 from uc2 import uc2const
 
-from sk1 import config
+from sk1 import config, events
 from sk1.parts.ctxpanel import AppCtxPanel
 from sk1.parts.tools import AppTools
 from sk1.parts.doctabpanel import DocTabsPanel
@@ -89,8 +89,8 @@ class MDIArea(wal.VPanel):
 		hpalette_panel = AppHPalette(self.hp_panel, self.app)
 		self.hp_panel.pack(hpalette_panel, fill=True)
 		self.pack(self.hp_panel, fill=True)
-		if config.palette_orientation == uc2const.VERTICAL:
-			self.hp_panel.hide()
+
+		self.change_palette()
 
 		#----- Status bar
 		self.pack(wal.HLine(self), fill=True, start_padding=2)
@@ -98,6 +98,18 @@ class MDIArea(wal.VPanel):
 		self.pack(self.statusbar, fill=True, padding=2)
 
 		self.layout()
+		events.connect(events.CONFIG_MODIFIED, self.config_update)
+
+	def config_update(self, attr, value):
+		if attr == 'palette_orientation': self.change_palette()
+
+	def change_palette(self):
+		if config.palette_orientation == uc2const.VERTICAL:
+			self.hp_panel.hide()
+			self.vp_panel.show()
+		else:
+			self.hp_panel.show()
+			self.vp_panel.hide()
 
 	def create_docarea(self, doc):
 		docarea = DocArea(doc, self.doc_keeper)
