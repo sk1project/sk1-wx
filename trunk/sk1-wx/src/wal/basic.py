@@ -143,8 +143,10 @@ class MainWindow(wx.Frame):
 
 class Panel(wx.Panel, Widget):
 
-	def __init__(self, parent):
-		wx.Panel.__init__(self, parent, wx.ID_ANY)
+	def __init__(self, parent, border=False):
+		style = wx.TAB_TRAVERSAL
+		if border:style |= wx.BORDER_MASK
+		wx.Panel.__init__(self, parent, wx.ID_ANY, style)
 
 	def set_bg(self, color):
 		self.SetBackgroundColour(wx.Colour(*color))
@@ -155,10 +157,11 @@ class SizedPanel(Panel):
 
 	panel = None
 
-	def __init__(self, parent, orientation=wx.HORIZONTAL):
+	def __init__(self, parent, orientation=wx.HORIZONTAL,
+				border=False):
 		self.parent = parent
 		self.orientation = orientation
-		Panel.__init__(self, parent)
+		Panel.__init__(self, parent, border)
 		self.box = wx.BoxSizer(orientation)
 		self.SetSizer(self.box)
 		self.panel = self
@@ -184,8 +187,8 @@ class SizedPanel(Panel):
 
 
 class HPanel(SizedPanel):
-	def __init__(self, parent):
-		SizedPanel.__init__(self, parent, wx.HORIZONTAL)
+	def __init__(self, parent, border=False):
+		SizedPanel.__init__(self, parent, wx.HORIZONTAL, border)
 
 	def pack(self, obj, expand=False, fill=False,
 			padding=0, start_padding=0, end_padding=0, padding_all=0):
@@ -212,8 +215,8 @@ class HPanel(SizedPanel):
 		self.add(obj, expand, flags, padding)
 
 class VPanel(SizedPanel):
-	def __init__(self, parent):
-		SizedPanel.__init__(self, parent, wx.VERTICAL)
+	def __init__(self, parent, border=False):
+		SizedPanel.__init__(self, parent, wx.VERTICAL, border)
 
 	def pack(self, obj, expand=False, fill=False, align_center=True,
 			padding=0, start_padding=0, end_padding=0, padding_all=0):
@@ -261,8 +264,8 @@ class LabeledPanel(wx.StaticBox, Widget):
 
 class GridPanel(Panel, Widget):
 
-	def __init__(self, parent, rows=2, cols=2, vgap=0, hgap=0):
-		Panel.__init__(self, parent)
+	def __init__(self, parent, rows=2, cols=2, vgap=0, hgap=0, border=False):
+		Panel.__init__(self, parent, border)
 		self.grid = wx.FlexGridSizer(rows, cols, vgap, hgap)
 		self.SetSizer(self.grid)
 
@@ -273,7 +276,7 @@ class GridPanel(Panel, Widget):
 	def add_growable_col(self, index): self.grid.AddGrowableCol(index)
 	def add_growable_row(self, index): self.grid.AddGrowableRow(index)
 
-	def pack(self, obj, expand=False, fill=False, align_right=False, \
+	def pack(self, obj, expand=False, fill=False, align_right=False,
 			align_left=True):
 		if expand:expand = 1
 		else: expand = 0
