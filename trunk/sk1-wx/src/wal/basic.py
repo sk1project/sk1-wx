@@ -152,6 +152,7 @@ class Panel(wx.Panel, Widget):
 		self.SetBackgroundColour(wx.Colour(*color))
 
 	def layout(self):self.Layout()
+	def fit(self):self.Fit()
 
 class SizedPanel(Panel):
 
