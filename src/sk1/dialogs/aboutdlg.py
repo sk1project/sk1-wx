@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2013-2014 by Igor E. Novikov
+#	Copyright (C) 2013-2015 by Igor E. Novikov
 #
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 import wal
 from wal import const
 
-from sk1 import _
+from sk1 import _, events
 from sk1.resources import icons, get_bmp
 from sk1.dialogs.aboutdlg_license import LICENSE
 from sk1.dialogs.aboutdlg_credits import CREDITS
@@ -43,6 +43,8 @@ class AboutDialog(wal.SimpleDialog):
 		nb.add_page(AuthorsPage(nb), _('Authors'))
 		nb.add_page(ThanksPage(nb), _('Thanks to'))
 		nb.add_page(LicensePage(nb), _('License'))
+
+#		nb.add_page(EvetLoopMonitor(nb), 'Event loops')
 		self.pack(nb, expand=True, fill=True, padding=5)
 
 
@@ -124,6 +126,17 @@ class LicensePage(wal.VPanel):
 		wal.VPanel.__init__(self, parent)
 		entry = wal.Entry(self, LICENSE, multiline=True, editable=False)
 		self.pack(entry, expand=True, fill=True, padding=5)
+
+class EvetLoopMonitor(wal.VPanel):
+	def __init__(self, parent):
+		wal.VPanel.__init__(self, parent)
+		data = [['EventLoop', 'Connections']]
+		for item in events.ALL_CHANNELS:
+			data.append([item[0], str(len(item) - 1)])
+		slist = wal.ReportList(self, data, border=False)
+		self.pack(slist, expand=True, fill=True)
+		slist.set_column_width(0, const.LIST_AUTOSIZE)
+
 
 def about_dialog(app, parent):
 	title = _('About') + ' ' + app.appdata.app_name
