@@ -35,6 +35,7 @@ class ScrolledPalette(wal.ScrolledPanel):
 		self.set_bg(wal.WHITE)
 
 	def on_paint(self, event):
+		if not self.colors:return
 		cms = self.app.default_cms
 
 		self.height = round(1.0 * len(self.colors) / self.cell_in_line) + 1

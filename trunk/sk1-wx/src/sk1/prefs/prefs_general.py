@@ -47,11 +47,13 @@ class GeneralPrefs(PrefPanel):
 
 		grid = wal.GridPanel(self, rows=2, cols=3, hgap=5, vgap=3)
 		grid.pack(wal.Label(grid, _('History log size:')))
-		self.hist_size = wal.Spin(grid, config.history_size, (10, 1000))
+		self.hist_size = wal.IntSpin(grid, config.history_size,
+								(10, 1000), spin_overlay=config.spin_overlay)
 		grid.pack(self.hist_size)
 		grid.pack(wal.Label(grid, _('records')))
 		grid.pack(wal.Label(grid, _('History menu size:')))
-		self.hist_menu_size = wal.Spin(grid, config.history_list_size, (5, 20))
+		self.hist_menu_size = wal.IntSpin(grid, config.history_list_size,
+									(5, 20), spin_overlay=config.spin_overlay)
 		grid.pack(self.hist_menu_size)
 		grid.pack(wal.Label(grid, _('records')))
 		self.pack(grid, align_center=False, padding=5)
