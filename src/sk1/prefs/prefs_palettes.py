@@ -19,6 +19,7 @@ import wal
 
 from sk1 import _, config
 from sk1.resources import icons
+from sk1.pwidgets import PaletteViewer
 
 from generic import PrefPanel
 
@@ -45,10 +46,13 @@ class PalettesPrefs(PrefPanel):
 
 		txt = _('Current palette:')
 		grid.pack(wal.Label(grid, txt))
-		pal_list = self.app.palettes.palettes.keys()
-		self.pal = wal.Combolist(grid, items=pal_list, onchange=None)
-		curent_palette = self.app.palettes.palette_in_use.model.name
-		self.pal.set_active(pal_list.index(curent_palette))
+
+		pal_list = self.get_palette_list()
+		self.pal = wal.Combolist(grid, items=pal_list,
+								onchange=self.change_palette)
+		current_palette = self.get_current_palette()
+		current_palette_name = current_palette.model.name
+		self.pal.set_active(pal_list.index(current_palette_name))
 		grid.pack(self.pal, fill=True)
 
 		txt = _('Palette orientation:')
@@ -59,6 +63,15 @@ class PalettesPrefs(PrefPanel):
 
 		pal_opt.pack(grid, fill=True, padding_all=5)
 
+		btm_panel = wal.HPanel(pal_opt)
+		pal_opt.pack(btm_panel, expand=True, fill=True)
+
+		cell_panel = wal.VPanel(btm_panel)
+		btm_panel.pack(cell_panel, expand=True, fill=True)
+
+		self.palviewer = PaletteViewer(self.app, btm_panel, current_palette)
+		btm_panel.pack(self.palviewer, fill=True, padding_all=5)
+
 
 		self.nb.add_page(pal_opt, _('Palette options'))
 
@@ -68,10 +81,45 @@ class PalettesPrefs(PrefPanel):
 		self.pack(self.nb, expand=True, fill=True)
 		self.built = True
 
+	def get_current_palette(self):
+		current_palette_name = config.palette
+		if not current_palette_name:
+			return self.app.palettes.palette_in_use
+		return self.get_palette_by_name(current_palette_name)
+
+	def get_palette_list(self):
+		palettes = self.app.palettes.palettes
+		pal_list = palettes.keys()
+		pal_list.sort()
+		return pal_list
+
+	def get_palette_by_name(self, name):
+		palettes = self.app.palettes.palettes
+		pal_list = self.get_palette_list()
+		if not name in pal_list:
+			name = self.app.palettes.get_default_palette_name()
+		return palettes[name]
+
+	def get_palette_name_by_index(self, index):
+		pal_list = self.get_palette_list()
+		return pal_list[index]
+
+	def get_index_by_palette_name(self, name=''):
+		pal_list = self.get_palette_list()
+		if not name in pal_list:
+			name = self.app.palettes.get_default_palette_name()
+		return pal_list.index(name)
+
+	def change_palette(self, event):
+		palette_name = self.get_palette_name_by_index(self.pal.get_active())
+		current_palette = self.get_palette_by_name(palette_name)
+		self.palviewer.draw_palette(current_palette)
+
 	def apply_changes(self):
-		print self.pal_orient.get_active()
+		config.palette = self.get_palette_name_by_index(self.pal.get_active())
 		config.palette_orientation = self.pal_orient.get_active()
 
 	def restore_defaults(self):
 		defaults = config.get_defaults()
-		self.pal_orient.get_active(defaults['palette_orientation'])
+		self.pal.set_active(self.get_index_by_palette_name(defaults['palette']))
+		self.pal_orient.set_active(defaults['palette_orientation'])
