@@ -83,10 +83,11 @@ class pdApplication(wal.Application, UCApplication):
 		self.plugins = app_plugins.scan_plugins(self)
 		self.actions = app_actions.create_actions(self)
 
-		self.mw = AppMainWindow(self)
 		self.default_cms = AppColorManager(self)
 		self.palettes = AppPaletteManager(self)
 		self.clipboard = AppClipboard(self)
+
+		self.mw = AppMainWindow(self)
 
 		self.proxy.update()
 		self.insp.update()
@@ -95,7 +96,7 @@ class pdApplication(wal.Application, UCApplication):
 		if self.docs: return
 		if config.new_doc_on_start: self.new();return
 		events.emit(events.NO_DOCS)
-		txt = _('To start create new document or open existing')
+		txt = _('To start, create new document or open existing')
 		events.emit(events.APP_STATUS, txt)
 
 	def stub(self, *args):pass

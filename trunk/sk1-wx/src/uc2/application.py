@@ -69,7 +69,7 @@ from uc2 import _, cms
 from uc2 import events, msgconst
 from uc2.uc_conf import UCData, UCConfig
 from uc2.formats import get_loader, get_saver
-from uc2.palettes import PaletteManager
+from uc2.app_palettes import PaletteManager
 
 
 class UCApplication(object):

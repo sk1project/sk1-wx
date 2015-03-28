@@ -77,6 +77,7 @@ class HPalette(HPanel):
 		if not attr[:7] == 'palette':return
 		self.cell_width = config.palette_hcell_horizontal
 		self.cell_height = config.palette_hcell_vertical
+		self.set_palette(self.app.palettes.palette_in_use.model.colors)
 		self.refresh()
 
 	def refresh(self, x=0, y=0, w=0, h=0):
@@ -268,6 +269,7 @@ class VPalette(VPanel):
 		if not attr[:7] == 'palette':return
 		self.cell_width = config.palette_vcell_horizontal
 		self.cell_height = config.palette_vcell_vertical
+		self.set_palette(self.app.palettes.palette_in_use.model.colors)
 		self.refresh()
 
 	def refresh(self, x=0, y=0, w=0, h=0):
