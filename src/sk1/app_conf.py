@@ -148,11 +148,12 @@ class AppConfig(UCConfig):
 	ruler_max_text_step = 100
 
 	#============== PALETTE OPTIONS ================
-	palette_hcell_vertical = 18
-	palette_hcell_horizontal = 40
-	palette_vcell_vertical = 18
-	palette_vcell_horizontal = 18
+	palette_hcell_height = 18
+	palette_hcell_width = 40
+	palette_vcell_height = 18
+	palette_vcell_width = 18
 	palette_orientation = uc2const.HORIZONTAL
+	palette_expand = False
 	palette = ''
 
 	#============== CANVAS OPTIONS ================

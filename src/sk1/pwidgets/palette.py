@@ -56,8 +56,8 @@ class HPalette(HPanel):
 		self.onmax = onmax
 		HPanel.__init__(self, parent)
 		self.set_palette(app.palettes.palette_in_use.model.colors)
-		self.cell_width = config.palette_hcell_horizontal
-		self.cell_height = config.palette_hcell_vertical
+		self.cell_width = config.palette_hcell_width
+		self.cell_height = config.palette_hcell_height
 		self.pack((self.cell_width, self.cell_height))
 		self.tooltipwin = PaletteToolTip(self)
 		self.Bind(wx.EVT_PAINT, self._on_paint, self)
@@ -75,8 +75,8 @@ class HPalette(HPanel):
 
 	def config_update(self, attr, value):
 		if not attr[:7] == 'palette':return
-		self.cell_width = config.palette_hcell_horizontal
-		self.cell_height = config.palette_hcell_vertical
+		self.cell_width = config.palette_hcell_width
+		self.cell_height = config.palette_hcell_height
 		self.set_palette(self.app.palettes.palette_in_use.model.colors)
 		self.refresh()
 
@@ -248,8 +248,8 @@ class VPalette(VPanel):
 		self.onmax = onmax
 		VPanel.__init__(self, parent)
 		self.set_palette(app.palettes.palette_in_use.model.colors)
-		self.cell_width = config.palette_vcell_horizontal
-		self.cell_height = config.palette_vcell_vertical
+		self.cell_width = config.palette_vcell_width
+		self.cell_height = config.palette_vcell_height
 		self.pack((self.cell_width, self.cell_height))
 		self.tooltipwin = PaletteToolTip(self)
 		self.Bind(wx.EVT_PAINT, self._on_paint, self)
@@ -267,8 +267,8 @@ class VPalette(VPanel):
 
 	def config_update(self, attr, value):
 		if not attr[:7] == 'palette':return
-		self.cell_width = config.palette_vcell_horizontal
-		self.cell_height = config.palette_vcell_vertical
+		self.cell_width = config.palette_vcell_width
+		self.cell_height = config.palette_vcell_height
 		self.set_palette(self.app.palettes.palette_in_use.model.colors)
 		self.refresh()
 
