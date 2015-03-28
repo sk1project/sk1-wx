@@ -50,6 +50,10 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, Widget):
 			self.activate_cmd = on_activate
 			self.Bind(wx.wx.EVT_LIST_ITEM_ACTIVATED, self.on_activate, self)
 
+	def set_active(self, index):
+		if len(self.data) - 1 >= index:
+			self.Select(index, True)
+
 	def clear_all(self):
 		self.ClearAll()
 

@@ -246,22 +246,49 @@ class VPanel(SizedPanel):
 		self.add(obj, expand, flags, padding)
 
 
-class LabeledPanel(wx.StaticBox, Widget):
+class LabeledPanel(wx.StaticBox):
 
 	sizer = None
 
 	def __init__(self, parent, text='', size=DEF_SIZE,
 				 orientation=wx.VERTICAL):
+		self.parent = parent
 		wx.StaticBox.__init__(self, parent, wx.ID_ANY, text,
 							pos=DEF_SIZE, size=size)
 		self.box = wx.StaticBoxSizer(self, orientation)
 
+	def pack(self, obj, expand=False, fill=False, align_center=True,
+			padding=0, start_padding=0, end_padding=0, padding_all=0):
+
+		if expand:expand = 1
+		else: expand = 0
+
+		flags = wx.ALIGN_TOP
+		if align_center:
+			flags |= wx.ALIGN_CENTER_HORIZONTAL
+
+		if padding:
+			flags = flags | wx.TOP | wx.BOTTOM
+		elif padding_all:
+			flags = flags | wx.ALL
+			padding = padding_all
+		elif start_padding:
+			flags = flags | wx.TOP
+			padding = start_padding
+		elif end_padding:
+			flags = flags | wx.BOTTOM
+			padding = end_padding
+
+		if fill: flags = flags | wx.EXPAND
+
+		self.add(obj, expand, flags, padding)
+
 	def add(self, *args, **kw):
 		"""Arguments: object, expandable (0 or 1), flag, border"""
-		obj = args[0]
-		if not obj.GetParent() == self:
-			obj.Reparent(self)
 		self.box.Add(*args, **kw)
+	def show(self):pass
+	def hide(self):pass
+	def layout(self): pass
 
 class GridPanel(Panel, Widget):
 
