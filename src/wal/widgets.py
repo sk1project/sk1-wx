@@ -397,6 +397,19 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 		self._set_digits(digits)
 		self.SetValue(self.value)
 
+
+class IntSpin(FloatSpin):
+
+	def __init__(self, parent, value=0, range_val=(0, 1), size=DEF_SIZE,
+				width=0, spin_overlay=True,
+				onchange=None, onenter=None, check_focus=True):
+		step = 1
+		digits = 0
+		FloatSpin.__init__(self, parent, value, range_val,
+						step, digits, size, width, spin_overlay,
+						onchange, onenter, check_focus)
+
+
 class Slider(wx.Slider, RangeDataWidget):
 
 	def __init__(self, parent, value=0, range_val=(1, 100),
