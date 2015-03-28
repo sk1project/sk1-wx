@@ -150,7 +150,7 @@ class Panel(wx.Panel, Widget):
 
 	def set_bg(self, color):
 		self.SetBackgroundColour(wx.Colour(*color))
-
+	def set_size(self, size): self.SetSize(size)
 	def layout(self):self.Layout()
 	def fit(self):self.Fit()
 
@@ -302,6 +302,25 @@ class GridPanel(Panel, Widget):
 		if not isinstance(obj, tuple) and not isinstance(obj, int):
 			obj.show()
 
+class ScrolledPanel(wx.ScrolledWindow, Widget):
+
+	def __init__(self, parent, border=False, drawable=False):
+		style = wx.NO_BORDER
+		if border:style = wx.BORDER_MASK
+		wx.ScrolledWindow.__init__(self, parent, wx.ID_ANY, style=style)
+		self.set_scroll_rate()
+		self.SetDoubleBuffered(True)
+		if drawable:
+			self.Bind(wx.EVT_PAINT, self.on_paint)
+
+	def set_virtual_size(self, size): self.SetVirtualSize(size)
+	def set_scroll_rate(self, h=20, v=20): self.SetScrollRate(h, v)
+	def set_bg(self, color): self.SetBackgroundColour(wx.Colour(*color))
+	def on_paint(self, event):pass
+	def refresh(self, x=0, y=0, w=0, h=0):
+		if not w: w, h = self.GetVirtualSize()
+		self.Refresh(rect=wx.Rect(x, y, w, h))
+	def set_size(self, size): self.SetSize(size)
 
 
 
