@@ -559,6 +559,9 @@ class ColorManager(object):
 				ret = self.do_transform(color, cs_in, cs_out)
 		return ret
 
+	def get_display_color255(self, color):
+		return val_255(self.get_display_color(color))
+
 	def convert_image(self, img, outmode, cs_out=None):
 		"""
 		Converts image between colorspaces.
