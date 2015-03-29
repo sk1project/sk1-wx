@@ -70,13 +70,10 @@ class PalettesPrefs(PrefPanel):
 		btm_panel.pack(cell_panel, expand=True, fill=True, padding_all=5)
 
 		#===
-		vcell_panel = wal.HPanel(cell_panel)
-		cell_panel.pack(vcell_panel, fill=True, padding=5)
 		txt = _('Vertical palette')
-		vcell_panel.pack(wal.Label(vcell_panel, txt), padding=5)
-		vcell_panel.pack(wal.HLine(vcell_panel), expand=True, fill=True)
+		vcell_panel = wal.LabeledPanel(cell_panel, text=txt)
 
-		grid = wal.GridPanel(cell_panel, cols=3, hgap=5, vgap=2)
+		grid = wal.GridPanel(vcell_panel, cols=3, hgap=5, vgap=2)
 
 		grid.pack((20, 1))
 		grid.pack(wal.Label(grid, _('Cell width:')))
@@ -91,16 +88,14 @@ class PalettesPrefs(PrefPanel):
 									(10, 100), spin_overlay=config.spin_overlay)
 		grid.pack(self.vcell_height)
 
-		cell_panel.pack(grid, align_center=False)
+		vcell_panel.pack(grid, align_center=False, padding=10)
+		cell_panel.pack(vcell_panel, fill=True)
 
 		#===
-		hcell_panel = wal.HPanel(cell_panel)
-		cell_panel.pack(hcell_panel, fill=True, padding=5)
 		txt = _('Horizontal palette')
-		hcell_panel.pack(wal.Label(vcell_panel, txt), padding=5)
-		hcell_panel.pack(wal.HLine(vcell_panel), expand=True, fill=True)
+		hcell_panel = wal.LabeledPanel(cell_panel, text=txt)
 
-		grid = wal.GridPanel(cell_panel, cols=3, hgap=5, vgap=2)
+		grid = wal.GridPanel(hcell_panel, cols=3, hgap=5, vgap=2)
 
 		grid.pack((20, 1))
 		grid.pack(wal.Label(grid, _('Cell width:')))
@@ -115,14 +110,15 @@ class PalettesPrefs(PrefPanel):
 		self.hcell_height.set_enable(False)
 		grid.pack(self.hcell_height)
 
-		cell_panel.pack(grid, align_center=False)
-		cell_panel.pack(wal.HLine(vcell_panel), fill=True, padding=10)
+		hcell_panel.pack(grid, align_center=False, padding=10)
+		cell_panel.pack(hcell_panel, fill=True, padding=5)
+		#===
 
 		txt = _('Expand short palettes')
 		self.expand = wal.Checkbox(cell_panel, txt, config.palette_expand)
 		cell_panel.pack(self.expand, align_center=False)
 
-		cell_panel.pack(wal.HPanel(cell_panel), expand=True, fill=True)
+#		cell_panel.pack(wal.HPanel(cell_panel), expand=True, fill=True)
 
 		self.palviewer = PaletteViewer(self.app, btm_panel, current_palette)
 		btm_panel.pack(self.palviewer, fill=True, padding_all=5)
