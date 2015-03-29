@@ -18,7 +18,7 @@ class WidgetPanel(wal.HPanel):
 		print item
 
 app = wal.Application('wxWidgets')
-mw = wal.MainWindow('List widget', (250, 350))
+mw = wal.MainWindow('ScrolledPanel widget', (250, 350))
 panel = WidgetPanel(mw)
 mw.pack(panel, expand=True, fill=True, padding=10)
 app.mw = mw
