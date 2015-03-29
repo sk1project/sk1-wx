@@ -252,12 +252,9 @@ class LabeledPanel(VPanel):
 	widget_panel = None
 	widget = None
 
-	def __init__(self, parent, text='', widget=None, orientation=wx.VERTICAL):
+	def __init__(self, parent, text='', widget=None):
 		VPanel.__init__(self, parent)
-		if orientation == wx.VERTICAL:
-			self.inner_panel = VPanel(self, True)
-		else:
-			self.inner_panel = HPanel(self, True)
+		self.inner_panel = VPanel(self, True)
 
 		if widget or text:
 			self.widget_panel = HPanel(self)
@@ -272,6 +269,7 @@ class LabeledPanel(VPanel):
 		padding = 0
 		if self.widget_panel:
 			padding = round(self.widget_panel.get_size()[1] / 2.0)
+			self.inner_panel.pack((1, padding))
 		VPanel.pack(self, self.inner_panel, expand=True, fill=True,
 				start_padding=padding)
 
