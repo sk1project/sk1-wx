@@ -254,7 +254,6 @@ class LabeledPanel(VPanel):
 
 	def __init__(self, parent, text='', widget=None, orientation=wx.VERTICAL):
 		VPanel.__init__(self, parent)
-		self.SetMinSize((20, 20))
 		if orientation == wx.VERTICAL:
 			self.inner_panel = VPanel(self, True)
 		else:
