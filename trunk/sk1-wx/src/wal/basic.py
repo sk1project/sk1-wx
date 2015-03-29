@@ -175,7 +175,7 @@ class SizedPanel(Panel):
 				obj.Reparent(self.panel)
 		self.box.Add(*args, **kw)
 		if not isinstance(obj, tuple) and not isinstance(obj, int):
-			obj.show()
+			obj.Show()
 
 	def box_add(self, *args, **kw):
 		"""Arguments: object, expandable (0 or 1), flag, border"""
@@ -184,7 +184,7 @@ class SizedPanel(Panel):
 	def remove(self, obj):
 		self.box.Detach(obj)
 		if not isinstance(obj, tuple) and not isinstance(obj, int):
-			obj.hide()
+			obj.Hide()
 
 
 class HPanel(SizedPanel):
@@ -246,49 +246,43 @@ class VPanel(SizedPanel):
 		self.add(obj, expand, flags, padding)
 
 
-class LabeledPanel(wx.StaticBox):
+class LabeledPanel(VPanel):
 
-	sizer = None
+	panel = None
+	widget_panel = None
+	widget = None
 
-	def __init__(self, parent, text='', size=DEF_SIZE,
-				 orientation=wx.VERTICAL):
-		self.parent = parent
-		wx.StaticBox.__init__(self, parent, wx.ID_ANY, text,
-							pos=DEF_SIZE, size=size)
-		self.box = wx.StaticBoxSizer(self, orientation)
+	def __init__(self, parent, text='', widget=None, orientation=wx.VERTICAL):
+		VPanel.__init__(self, parent)
+		self.SetMinSize((20, 20))
+		if orientation == wx.VERTICAL:
+			self.inner_panel = VPanel(self, True)
+		else:
+			self.inner_panel = HPanel(self, True)
 
-	def pack(self, obj, expand=False, fill=False, align_center=True,
-			padding=0, start_padding=0, end_padding=0, padding_all=0):
+		if widget or text:
+			self.widget_panel = HPanel(self)
+			if widget:
+				self.widget = widget
+			elif text:
+				self.widget = wx.StaticText(self.widget_panel, wx.ID_ANY, text)
+			self.widget_panel.pack(self.widget, padding=5)
+			self.widget_panel.SetPosition((10, 0))
+			self.widget_panel.Fit()
 
-		if expand:expand = 1
-		else: expand = 0
+		padding = 0
+		if self.widget_panel:
+			padding = round(self.widget_panel.get_size()[1] / 2.0)
+		VPanel.pack(self, self.inner_panel, expand=True, fill=True,
+				start_padding=padding)
 
-		flags = wx.ALIGN_TOP
-		if align_center:
-			flags |= wx.ALIGN_CENTER_HORIZONTAL
+	def pack(self, *args, **kw):
+		obj = args[0]
+		self.inner_panel.pack(*args, **kw)
+		if not isinstance(obj, tuple) and not isinstance(obj, int):
+			obj.show()
 
-		if padding:
-			flags = flags | wx.TOP | wx.BOTTOM
-		elif padding_all:
-			flags = flags | wx.ALL
-			padding = padding_all
-		elif start_padding:
-			flags = flags | wx.TOP
-			padding = start_padding
-		elif end_padding:
-			flags = flags | wx.BOTTOM
-			padding = end_padding
 
-		if fill: flags = flags | wx.EXPAND
-
-		self.add(obj, expand, flags, padding)
-
-	def add(self, *args, **kw):
-		"""Arguments: object, expandable (0 or 1), flag, border"""
-		self.box.Add(*args, **kw)
-	def show(self):pass
-	def hide(self):pass
-	def layout(self): pass
 
 class GridPanel(Panel, Widget):
 
