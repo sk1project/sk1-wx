@@ -20,6 +20,7 @@ import sys
 
 from uc2 import _, events, msgconst, uc2const
 from uc2.formats.skp.skp_presenter import SKP_Presenter
+from uc2.formats.skp.skp_const import SKP_HEADER
 from uc2.formats.generic_filters import get_fileptr
 
 def skp_loader(appdata, filename=None, fileptr=None, translate=True,
@@ -46,5 +47,5 @@ def check_skp(path):
 	fileptr = get_fileptr(path)
 	string = fileptr.read(13)
 	fileptr.close()
-	return string == '##sK1 palette'
+	return string == SKP_HEADER
 

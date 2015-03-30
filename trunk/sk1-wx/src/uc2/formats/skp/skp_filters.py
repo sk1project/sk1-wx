@@ -27,3 +27,6 @@ class SKP_Loader(AbstractLoader):
 class SKP_Saver(AbstractSaver):
 
 	name = 'SK2_Saver'
+
+	def do_save(self):
+		pass
