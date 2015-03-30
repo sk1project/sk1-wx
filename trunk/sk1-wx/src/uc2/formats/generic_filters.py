@@ -125,6 +125,7 @@ class AbstractSaver(object):
 
 	def save(self, presenter, path=None, fileptr=None):
 		self.presenter = presenter
+		self.model = presenter.model
 		if path:
 			self.fileptr = get_fileptr(path, True)
 		elif fileptr:

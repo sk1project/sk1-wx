@@ -76,9 +76,6 @@ class SK2_Saver(AbstractSaver):
 		self.write_line(sk2_const.DOC_HEADER)
 		self.save_obj(self.model)
 
-	def write_line(self, line):
-		self.fileptr.write(line + '\n')
-
 	def save_obj(self, obj):
 		self.write_line("obj('%s')" % sk2_model.CID_TO_TAGNAME[obj.cid])
 		props = obj.__dict__
