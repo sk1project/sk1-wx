@@ -19,6 +19,7 @@ import sys
 
 from uc2 import events, msgconst
 from uc2.formats.riff.presenter import RIFF_Presenter
+from uc2.formats.generic_filters import get_fileptr
 
 def riff_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	if kw: cnf.update(kw)
@@ -31,16 +32,7 @@ def riff_saver(riff_doc, filename=None, fileptr=None, translate=True, cnf={}, **
 	riff_doc.save(filename, fileptr)
 
 def check_riff(path):
-	try:
-		file = open(path, 'rb')
-	except:
-		errtype, value, traceback = sys.exc_info()
-		msg = _('Cannot open %s file for reading') % (path)
-		events.emit(events.MESSAGES, msgconst.ERROR, msg)
-		raise IOError(errtype, msg + '\n' + value, traceback)
-
-	fourcc = file.read(4)
-	file.close()
-	if fourcc == 'RIFF':
-		return True
-	return False
+	fileptr = get_fileptr(path)
+	fourcc = fileptr.read(4)
+	fileptr.close()
+	return fourcc == 'RIFF'
