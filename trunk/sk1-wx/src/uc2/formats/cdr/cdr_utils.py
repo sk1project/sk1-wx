@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 #
 #	Copyright (C) 2012 by Igor E. Novikov
-#	
+#
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
 #	the Free Software Foundation, either version 3 of the License, or
 #	(at your option) any later version.
-#	
+#
 #	This program is distributed in the hope that it will be useful,
 #	but WITHOUT ANY WARRANTY; without even the implied warranty of
 #	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #	GNU General Public License for more details.
-#	
+#
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -19,11 +19,10 @@ from colorsys import yiq_to_rgb, hls_to_rgb, hsv_to_rgb
 
 from uc2 import uc2const
 from uc2.formats.riff.utils import double2py_float, word2py_int, long2py_float
-from uc2.formats.cdr.const import cdrunit_to_pt, \
-								CDR_COLOR_CMYK, CDR_COLOR_BGR, CDR_COLOR_CMY, \
-								CDR_COLOR_CMYK255, CDR_COLOR_GRAY, CDR_COLOR_LAB, \
-								CDR_COLOR_REGISTRATION, CDR_COLOR_CMYK2, CDR_COLOR_HSB, CDR_COLOR_HLS, \
-	CDR_COLOR_YIQ
+from uc2.formats.cdr.cdr_const import cdrunit_to_pt, \
+CDR_COLOR_CMYK, CDR_COLOR_BGR, CDR_COLOR_CMY, CDR_COLOR_CMYK255, \
+CDR_COLOR_GRAY, CDR_COLOR_LAB, CDR_COLOR_REGISTRATION, CDR_COLOR_CMYK2, \
+CDR_COLOR_HSB, CDR_COLOR_HLS, CDR_COLOR_YIQ
 
 def parse_matrix(data):
 	"""

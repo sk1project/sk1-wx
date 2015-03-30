@@ -18,7 +18,7 @@
 from uc2 import _, events
 from uc2.formats.riff import model
 from uc2.formats.riff.utils import get_chunk_size, dword2py_int, py_int2dword
-from uc2.formats.cdr.model import generic_dict
+from uc2.formats.cdr.cdr_model import generic_dict
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 
 class CDR_Loader(AbstractLoader):

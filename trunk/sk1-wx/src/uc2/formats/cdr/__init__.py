@@ -18,8 +18,8 @@
 import sys
 
 from uc2 import events, msgconst
-from uc2.formats.cdr.presenter import CDR_Presenter
-from uc2.formats.cdr import const
+from uc2.formats.cdr.cdr_presenter import CDR_Presenter
+from uc2.formats.cdr import cdr_const
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2.formats.generic_filters import get_fileptr
 
@@ -44,5 +44,5 @@ def check_cdr(path):
 	header = fileptr.read(12)
 	fileptr.close()
 	if not header[:4] == 'RIFF': return False
-	if header[8:] in const.CDR_VERSIONS: return True
+	if header[8:] in cdr_const.CDR_VERSIONS: return True
 	else: return False
