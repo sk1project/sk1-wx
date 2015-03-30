@@ -35,6 +35,8 @@ class PalettesPrefs(PrefPanel):
 	def __init__(self, app, dlg, fmt_config=None):
 		PrefPanel.__init__(self, app, dlg)
 
+	def build(self):
+
 		self.nb = wal.Notebook(self)
 
 		#========Palette options
@@ -88,7 +90,7 @@ class PalettesPrefs(PrefPanel):
 									(10, 100), spin_overlay=config.spin_overlay)
 		grid.pack(self.vcell_height)
 
-		vcell_panel.pack(grid, align_center=False, padding=10)
+		vcell_panel.pack(grid, align_center=False, padding=5)
 		cell_panel.pack(vcell_panel, fill=True)
 
 		#===
@@ -110,7 +112,7 @@ class PalettesPrefs(PrefPanel):
 		self.hcell_height.set_enable(False)
 		grid.pack(self.hcell_height)
 
-		hcell_panel.pack(grid, align_center=False, padding=10)
+		hcell_panel.pack(grid, align_center=False, padding=5)
 		cell_panel.pack(hcell_panel, fill=True, padding=5)
 		#===
 
@@ -126,7 +128,8 @@ class PalettesPrefs(PrefPanel):
 		self.nb.add_page(pal_opt, _('Palette options'))
 
 		#========Palette management
-		self.nb.add_page(PaletteEditor(app, self, self.nb), _('Palette management'))
+		self.nb.add_page(PaletteEditor(self.app, self, self.nb),
+						_('Palette management'))
 
 		self.pack(self.nb, expand=True, fill=True)
 		self.built = True
