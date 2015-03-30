@@ -24,7 +24,7 @@ from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 class CDR_Loader(AbstractLoader):
 
 	name = 'CDR_Loader'
-	version = 'CDR12'
+	version = 'CDRC'
 	obj_map = {}
 
 	tr_objs = 0
@@ -48,7 +48,8 @@ class CDR_Loader(AbstractLoader):
 		self.file_position = position
 
 	def report_stream_position(self, position):
-		position = self.stream_start + self.stream_size * position / self.stream_decompr_size
+		position = self.stream_start
+		position += self.stream_size * position / self.stream_decompr_size
 		self.report_position(position)
 
 	def parse_file(self, fileptr):
