@@ -94,6 +94,11 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, Widget):
 		if not index < 0:
 			self.activate_cmd(self.data[index])
 
+	def get_selected(self):
+		index = self.GetFocusedItem()
+		if not index < 0:
+			return self.data[index]
+		return None
 
 class ReportList(SimpleList):
 
@@ -135,3 +140,9 @@ class ReportList(SimpleList):
 		index = self.GetFocusedItem()
 		if not index < 0:
 			self.activate_cmd(self.data[index + 1])
+
+	def get_selected(self):
+		index = self.GetFocusedItem()
+		if not index < 0:
+			return self.data[index + 1]
+		return None
