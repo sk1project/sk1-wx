@@ -80,7 +80,7 @@ class LogViewerDialog(wal.OkCancelDialog):
 
 	def on_ok(self, value):
 		if value:
-			path = value[2]
+			path = self.lc.get_selected()[2]
 			if os.path.isfile(path):
 				self.ret = path
 				self.end_modal(wal.const.BUTTON_OK)
