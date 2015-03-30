@@ -17,6 +17,13 @@
 
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 
-class SKP_Loader(AbstractLoader):pass
+class SKP_Loader(AbstractLoader):
 
-class SKP_Saver(object):pass
+	name = 'SK2_Loader'
+
+	def do_load(self):
+		pass
+
+class SKP_Saver(AbstractSaver):
+
+	name = 'SK2_Saver'

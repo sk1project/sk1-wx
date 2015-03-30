@@ -49,10 +49,10 @@ class SK1_Loader(AbstractLoader):
 
 	def do_load(self):
 		self.model = None
-		self.file.readline()
+		self.fileptr.readline()
 		self.style = Style()
 		while True:
-			self.line = self.file.readline()
+			self.line = self.fileptr.readline()
 			if not self.line: break
 			self.line = self.line.rstrip('\r\n')
 
@@ -109,10 +109,10 @@ class SK1_Loader(AbstractLoader):
 	def phs(self, color, background, dx, dy, dist, width):
 		self.pattern = HatchingPattern(color, background, Point(dx, dy), dist, width)
 
-	def pit(self, id, trafo):
+	def pit(self, obj_id, trafo):
 		trafo = Trafo(*trafo)
-		if self.presenter.resources.has_key(id):
-			image = self.presenter.resources[id]
+		if self.presenter.resources.has_key(obj_id):
+			image = self.presenter.resources[obj_id]
 			self.pattern = ImageTilePattern(image, trafo)
 
 	def fp(self, color=None):
@@ -124,8 +124,8 @@ class SK1_Loader(AbstractLoader):
 	def fe(self):
 		self.style.fill_pattern = EmptyPattern
 
-	def ft(self, bool):
-		self.style.fill_transform = bool
+	def ft(self, val):
+		self.style.fill_transform = val
 
 	def lp(self, color=None):
 		if color is None:
@@ -179,20 +179,20 @@ class SK1_Loader(AbstractLoader):
 
 	def layout(self, *args):
 		if len(args) > 2:
-			format = args[0]
+			pformat = args[0]
 			size = args[1]
 			orientation = args[2]
 		else:
 			if isinstance(args[0], str):
-				format = args[0]
+				pformat = args[0]
 				orientation = args[1]
-				if not format in uc2const.PAGE_FORMAT_NAMES: format = 'A4'
+				if not format in uc2const.PAGE_FORMAT_NAMES: pformat = 'A4'
 				size = uc2const.PAGE_FORMATS[format]
 			else:
-				format = ''
+				pformat = ''
 				size = args[0]
 				orientation = args[1]
-		obj = SK1Layout(format, size, orientation)
+		obj = SK1Layout(pformat, size, orientation)
 		self.add_object(obj, self.model)
 		self.model.layout = obj
 
@@ -206,14 +206,14 @@ class SK1_Loader(AbstractLoader):
 		self.add_object(self.pages, self.model)
 		self.model.pages = self.pages
 
-	def page(self, name='', format='', size='', orientation=0):
+	def page(self, name='', pformat='', size='', orientation=0):
 		if self.pages is None:
 			self.add_pages()
-		if not format and not size:
-			format = '' + self.model.layout.format
+		if not pformat and not size:
+			pformat = '' + self.model.layout.format
 			size = () + self.model.layout.size
 			orientation = self.model.layout.orientation
-		page = SK1Page(name, format, size, orientation)
+		page = SK1Page(name, pformat, size, orientation)
 		self.active_page = page
 		self.active_layer = None
 		self.parent_stack = []
@@ -352,23 +352,23 @@ class SK1_Loader(AbstractLoader):
 					output += chr(int(num)).decode('latin1')
 		return output
 
-	def bm(self, id):
-		bmd_obj = SK1BitmapData(id)
+	def bm(self, obj_id):
+		bmd_obj = SK1BitmapData(obj_id)
 		self.add_object(bmd_obj)
 		try:
-			bmd_obj.read_data(self.file)
+			bmd_obj.read_data(self.fileptr)
 		except:
 			print 'error>>', self.line
 			errtype, value, traceback = sys.exc_info()
 			print errtype, value, traceback
-		self.presenter.resources[id] = bmd_obj.raw_image
+		self.presenter.resources[obj_id] = bmd_obj.raw_image
 
-	def im(self, trafo, id):
+	def im(self, trafo, obj_id):
 		trafo = Trafo(*trafo)
 		image = None
-		if self.presenter.resources.has_key(id):
-			image = self.presenter.resources[id]
-		self.add_object(SK1Image(trafo, id, image))
+		if self.presenter.resources.has_key(obj_id):
+			image = self.presenter.resources[obj_id]
+		self.add_object(SK1Image(trafo, obj_id, image))
 
 	def eps(self, *args):self.string = ''
 

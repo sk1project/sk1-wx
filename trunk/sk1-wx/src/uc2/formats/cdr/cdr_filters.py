@@ -39,7 +39,7 @@ class CDR_Loader(AbstractLoader):
 
 	def do_load(self):
 		self.parent_stack = []
-		self.model = self.parse_file(self.file)
+		self.model = self.parse_file(self.fileptr)
 
 	def report_position(self, position):
 		if 100.0 * (position - self.file_position) / self.file_size > 3.0:
@@ -51,17 +51,17 @@ class CDR_Loader(AbstractLoader):
 		position = self.stream_start + self.stream_size * position / self.stream_decompr_size
 		self.report_position(position)
 
-	def parse_file(self, file):
-		identifier = file.read(4)
-		size_field = file.read(4)
-		list_identifier = file.read(4)
+	def parse_file(self, fileptr):
+		identifier = fileptr.read(4)
+		size_field = fileptr.read(4)
+		list_identifier = fileptr.read(4)
 		self.version = list_identifier
 		self.obj_map = generic_dict
 		obj = model.RiffRootList(identifier + size_field + list_identifier)
 
 		size = get_chunk_size(size_field)
-		while file.tell() < size + 8:
-			ret = self.parse_stream(file)
+		while fileptr.tell() < size + 8:
+			ret = self.parse_stream(fileptr)
 			obj.childs.append(ret)
 
 		return obj
@@ -78,36 +78,36 @@ class CDR_Loader(AbstractLoader):
 			else:
 				return model.RiffObject
 
-	def parse_stream(self, file):
-		identifier = file.read(4)
+	def parse_stream(self, fileptr):
+		identifier = fileptr.read(4)
 		if identifier == 'LIST':
-			return self.parse_list(file, identifier)
+			return self.parse_list(fileptr, identifier)
 		else:
-			return self.parse_object(file, identifier)
+			return self.parse_object(fileptr, identifier)
 
-	def parse_list(self, file, identifier):
-		size_field = file.read(4)
-		list_identifier = file.read(4)
+	def parse_list(self, fileptr, identifier):
+		size_field = fileptr.read(4)
+		list_identifier = fileptr.read(4)
 
 		size = get_chunk_size(size_field)
-		offset = file.tell()
+		offset = fileptr.tell()
 
 		if list_identifier == 'cmpr':
-			file.seek(offset)
+			fileptr.seek(offset)
 			self.stream_start = offset
 			self.stream_size = get_chunk_size(size_field)
-			chunk = file.read(size - 4)
+			chunk = fileptr.read(size - 4)
 			return self.parse_cmpr_list(identifier + size_field + \
 									list_identifier + chunk)
 
 		class_ = self.get_class(identifier, list_identifier)
 		obj = class_(identifier + size_field + list_identifier)
 
-		while file.tell() <= offset + size - 8:
-			ret = self.parse_stream(file)
+		while fileptr.tell() <= offset + size - 8:
+			ret = self.parse_stream(fileptr)
 			if ret is None:
-				file.seek(offset)
-				chunk = file.read(size - 4)
+				fileptr.seek(offset)
+				chunk = fileptr.read(size - 4)
 				return model.RiffUnparsedList(identifier + size_field + \
 										list_identifier + chunk)
 			else:
@@ -115,25 +115,25 @@ class CDR_Loader(AbstractLoader):
 
 		return obj
 
-	def parse_object(self, file, identifier):
+	def parse_object(self, fileptr, identifier):
 		if not identifier[:3].isalnum():
 			return None
-		size_field = file.read(4)
+		size_field = fileptr.read(4)
 		size = get_chunk_size(size_field)
-		chunk = file.read(size)
-		self.report_position(file.tell())
+		chunk = fileptr.read(size)
+		self.report_position(fileptr.tell())
 		class_ = self.get_class(identifier)
 		return class_(identifier + size_field + chunk)
 
-	def parse_cmpr_list(self, buffer):
-		obj = model.RiffCmprList(buffer)
+	def parse_cmpr_list(self, buff):
+		obj = model.RiffCmprList(buff)
 		import StringIO, zlib
-		compressedsize = dword2py_int(buffer[12:16])
+		compressedsize = dword2py_int(buff[12:16])
 
 		decomp = zlib.decompressobj()
-		uncompresseddata = decomp.decompress(buffer[36:])
+		uncompresseddata = decomp.decompress(buff[36:])
 
-		blocksizesdata = zlib.decompress(buffer[36 + compressedsize:])
+		blocksizesdata = zlib.decompress(buff[36 + compressedsize:])
 		blocksizes = []
 		for i in range(0, len(blocksizesdata), 4):
 			blocksizes.append(dword2py_int(blocksizesdata[i:i + 4]))

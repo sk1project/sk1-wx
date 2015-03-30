@@ -50,7 +50,7 @@ class AbstractLoader(object):
 	model = None
 
 	filepath = ''
-	file = None
+	fileptr = None
 	position = 0
 	file_size = 0
 
@@ -63,26 +63,26 @@ class AbstractLoader(object):
 		if path:
 			self.filepath = path
 			self.file_size = os.path.getsize(path)
-			self.file = get_fileptr(path)
+			self.fileptr = get_fileptr(path)
 		elif fileptr:
-			self.file = fileptr
-			self.file.seek(0, 2)
-			self.file_size = self.file.tell()
-			self.file.seek(0)
+			self.fileptr = fileptr
+			self.fileptr.seek(0, 2)
+			self.file_size = self.fileptr.tell()
+			self.fileptr.seek(0)
 		else:
 			msg = _('There is no file for reading')
 			raise IOError(errno.ENODATA, msg, '')
 
 		self.do_load()
 
-		self.file.close()
+		self.fileptr.close()
 		self.position = 0
 		return self.model
 
 	def do_load(self):pass
 
 	def check_loading(self):
-		position = float(self.file.tell()) / float(self.file_size) * 0.95
+		position = float(self.fileptr.tell()) / float(self.file_size) * 0.95
 		if position - self.position > 0.02:
 			self.position = position
 			self.parsing_msg(position)
