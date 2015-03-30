@@ -23,7 +23,6 @@ from uc2.formats.sk2 import sk2_model, sk2_const
 class SK2_Loader(AbstractLoader):
 
 	name = 'SK2_Loader'
-	model = None
 	parent_stack = []
 
 	def do_load(self):
