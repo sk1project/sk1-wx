@@ -15,42 +15,23 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-
 from uc2 import _, events, msgconst
 from uc2.formats.plt import plt_model
+from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 
 PLT_CMDS = ['PU', 'PD']
 
-class PLT_Loader:
+class PLT_Loader(AbstractLoader):
+
 	name = 'PLT_Loader'
-	presenter = None
-	path = None
-	options = {}
-	model = None
 
-	def __init__(self):
-		pass
-
-	def load(self, presenter, path):
-		self.presenter = presenter
-		self.path = path
-		self.model = presenter.model
+	def do_load(self):
 		self.jobs = []
 
-		try:
-			file = open(path, 'rb')
-		except:
-			errtype, value, traceback = sys.exc_info()
-			msg = _('Cannot open %s file for writing') % (path)
-			events.emit(events.MESSAGES, msgconst.ERROR, msg)
-			raise IOError(errtype, msg + '\n' + value, traceback)
-
-		res = file.read().split('IN;')
-		file.close()
+		res = self.file.read().split('IN;')
 
 		if not len(res) == 2:
-			msg = _('Wrong content in %s file: "IN;" instruction should be unique') % (path)
+			msg = _('Wrong content: "IN;" instruction should be unique')
 			events.emit(events.MESSAGES, msgconst.ERROR, msg)
 			raise IOError(msg)
 
@@ -80,26 +61,12 @@ class PLT_Loader:
 			self.jobs.append(plt_model.PltJob(string))
 
 		self.model.childs[1].childs = self.jobs
-		return self.model
 
 
-class PLT_Saver:
+class PLT_Saver(AbstractSaver):
 
 	name = 'PLT_Saver'
 
-	def __init__(self):
-		pass
-
-	def save(self, presenter, path):
-
-		try:
-			file = open(path, 'wb')
-		except:
-			errtype, value, traceback = sys.exc_info()
-			msg = _('Cannot open %s file for writing') % (path)
-			events.emit(events.MESSAGES, msgconst.ERROR, msg)
-			raise IOError(errtype, msg + '\n' + value, traceback)
-
-		file.write(presenter.model.get_content())
-		file.close()
+	def do_save(self):
+		self.fileptr.write(self.model.get_content())
 

@@ -17,8 +17,7 @@
 
 import sys
 
-from uc2 import _, events, msgconst
-from uc2.formats.loader import AbstractLoader
+from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 from uc2.formats.sk2 import sk2_model, sk2_const
 
 class SK2_Loader(AbstractLoader):
@@ -28,6 +27,7 @@ class SK2_Loader(AbstractLoader):
 	parent_stack = []
 
 	def do_load(self):
+		self.parent_stack = []
 		self.file.readline()
 		while True:
 			self.line = self.file.readline()
@@ -41,11 +41,10 @@ class SK2_Loader(AbstractLoader):
 					code = compile('self.' + self.line, '<string>', 'exec')
 					exec code
 				except:
-					print 'error>>', self.line
+					msg = 'error>> %s' % self.line
 					errtype, value, traceback = sys.exc_info()
-					print errtype, value, traceback
-
-		return self.model
+					self.send_error(msg)
+					raise IOError(errtype, msg + '\n' + value, traceback)
 
 	def obj(self, tag):
 		obj_cid = sk2_model.TAGNAME_TO_CID[tag]
@@ -65,7 +64,7 @@ class SK2_Loader(AbstractLoader):
 		self.parent_stack = self.parent_stack[:-1]
 
 
-class SK2_Saver(object):
+class SK2_Saver(AbstractSaver):
 
 	name = 'SK2_Saver'
 	fileptr = None
@@ -73,24 +72,13 @@ class SK2_Saver(object):
 	def __init__(self):
 		pass
 
+	def do_save(self):
+		self.presenter.update()
+		self.write_line(sk2_const.DOC_HEADER)
+		self.save_obj(self.model)
+
 	def write_line(self, line):
 		self.fileptr.write(line + '\n')
-
-	def save(self, presenter, path):
-
-		try:
-			self.fileptr = open(path, 'wb')
-		except:
-			errtype, value, traceback = sys.exc_info()
-			msg = _('Cannot open %s file for writing') % (path)
-			events.emit(events.MESSAGES, msgconst.ERROR, msg)
-			raise IOError(errtype, msg + '\n' + value, traceback)
-
-		presenter.update()
-		self.write_line(sk2_const.DOC_HEADER)
-		self.save_obj(presenter.model)
-		self.fileptr.close()
-		self.fileptr = None
 
 	def save_obj(self, obj):
 		self.write_line("obj('%s')" % sk2_model.CID_TO_TAGNAME[obj.cid])

@@ -15,21 +15,19 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2 import _
-
 import os
 import sys
 
 from uc2 import _, events, msgconst
 from uc2.formats.skp.skp_presenter import SKP_Presenter
 
-def skp_loader(appdata, filename, translate=True, cnf={}, **kw):
+def skp_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	if kw: cnf.update(kw)
 	doc = SKP_Presenter(appdata, cnf)
 	doc.load(filename)
 	return doc
 
-def skp_saver(sk2_doc, filename, translate=True, cnf={}, **kw):
+def skp_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	if kw: cnf.update(kw)
 	sk2_doc.save(filename)
 

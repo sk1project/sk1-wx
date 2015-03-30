@@ -15,7 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2.formats.loader import AbstractLoader
+from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 
 class SKP_Loader(AbstractLoader):pass
 

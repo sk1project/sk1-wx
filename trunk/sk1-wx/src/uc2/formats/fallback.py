@@ -23,14 +23,15 @@ from uc2.formats.sk2 import sk2_model, sk2_const
 from uc2 import libimg
 
 
-def im_loader(appdata, filename, translate=True, cnf={}, **kw):
-	try:
-		fileptr = open(filename, 'rb')
-	except:
-		errtype, value, traceback = sys.exc_info()
-		msg = _('Cannot open %s fileptr for reading') % (filename)
-		events.emit(events.MESSAGES, msgconst.ERROR, msg)
-		raise IOError(errtype, msg + '\n' + value, traceback)
+def im_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
+	if filename and not fileptr:
+		try:
+			fileptr = open(filename, 'rb')
+		except:
+			errtype, value, traceback = sys.exc_info()
+			msg = _('Cannot read %s file') % (filename)
+			events.emit(events.MESSAGES, msgconst.ERROR, msg)
+			raise IOError(errtype, msg + '\n' + value, traceback)
 
 	content = fileptr.read()
 	fileptr.close()

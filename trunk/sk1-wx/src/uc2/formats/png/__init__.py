@@ -22,17 +22,18 @@ from uc2 import _, events, msgconst
 from uc2.formats.fallback import im_loader
 from uc2.formats.sk2.crenderer import CairoRenderer
 
-def png_loader(appdata, filename, translate=True, cnf={}, **kw):
-	return im_loader(appdata, filename, translate, cnf, **kw)
+def png_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
+	return im_loader(appdata, filename, fileptr, translate, cnf, **kw)
 
-def png_saver(sk2_doc, filename, translate=True, cnf={}, **kw):
-	try:
-		fileptr = open(filename, 'wb')
-	except:
-		errtype, value, traceback = sys.exc_info()
-		msg = _('Cannot open %s fileptr for writing') % (filename)
-		events.emit(events.MESSAGES, msgconst.ERROR, msg)
-		raise IOError(errtype, msg + '\n' + value, traceback)
+def png_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf={}, **kw):
+	if filename and not fileptr:
+		try:
+			fileptr = open(filename, 'wb')
+		except:
+			errtype, value, traceback = sys.exc_info()
+			msg = _('Cannot open %s fileptr for writing') % (filename)
+			events.emit(events.MESSAGES, msgconst.ERROR, msg)
+			raise IOError(errtype, msg + '\n' + value, traceback)
 
 	page = sk2_doc.methods.get_page()
 	w, h = page.page_format[1]

@@ -15,12 +15,12 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys, os
+import sys
 
-from uc2 import _, events, msgconst, uc2const
+from uc2 import uc2const
 from uc2.formats.pdxf import const
 from uc2.formats.sk1 import sk1const
-from uc2.formats.loader import AbstractLoader
+from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 from uc2.formats.sk1.model import SK1Document, SK1Layout, SK1Grid, SK1Pages, \
 SK1Page, SK1Layer, SK1MasterLayer, SK1GuideLayer, SK1Guide, SK1Group, \
 SK1MaskGroup, Rectangle, Ellipse, PolyBezier, SK1Text, SK1BitmapData, SK1Image, \
@@ -372,23 +372,9 @@ class SK1_Loader(AbstractLoader):
 	def eps(self, *args):self.string = ''
 
 
-class SK1_Saver:
+class SK1_Saver(AbstractSaver):
 
 	name = 'SK1_Saver'
 
-	def __init__(self):
-		pass
-
-	def save(self, presenter, path):
-
-		try:
-			file = open(path, 'wb')
-		except:
-			errtype, value, traceback = sys.exc_info()
-			msg = _('Cannot open %s file for writing') % (path)
-			events.emit(events.MESSAGES, msgconst.ERROR, msg)
-			raise IOError(errtype, msg + '\n' + value, traceback)
-
-		presenter.update()
-		presenter.model.write_content(file)
-		file.close()
+	def do_save(self):
+		self.model.write_content(self.fileptr)
