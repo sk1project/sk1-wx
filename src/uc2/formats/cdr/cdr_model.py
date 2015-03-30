@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 #
 #	Copyright (C) 2012 by Igor E. Novikov
-#	
+#
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
 #	the Free Software Foundation, either version 3 of the License, or
 #	(at your option) any later version.
-#	
+#
 #	This program is distributed in the hope that it will be useful,
 #	but WITHOUT ANY WARRANTY; without even the implied warranty of
 #	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #	GNU General Public License for more details.
-#	
+#
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -20,11 +20,11 @@ from copy import deepcopy
 
 from uc2.formats.riff.model import RiffList, RiffObject
 from uc2.formats.riff.utils import dword2py_int, long2py_float, word2py_int
-from uc2.formats.cdr.const import CDR6, CDR7, CDR8, CDR9, CDR12, CDR13
-from uc2.formats.cdr import const
-from uc2.formats.pdxf.const import NODE_CUSP, NODE_SMOOTH, NODE_SYMMETRICAL, \
+from uc2.formats.cdr.cdr_const import CDR6, CDR7, CDR8, CDR9, CDR12, CDR13
+from uc2.formats.cdr import cdr_const as const
+from uc2.formats.sk2.sk2_const import NODE_CUSP, NODE_SMOOTH, NODE_SYMMETRICAL, \
 									CURVE_CLOSED, CURVE_OPENED
-from uc2.formats.cdr.utils import parse_matrix, parse_size_value, \
+from uc2.formats.cdr.cdr_utils import parse_matrix, parse_size_value, \
 							parse_cdr_color
 
 
@@ -52,7 +52,7 @@ def parse_trafo(obj):
 	Finds <trfd> chunk, parses trafo value and stores the value
 	in object trafo field. 
 	"""
-	#Finds <loda> and <trfd> chunks 
+	#Finds <loda> and <trfd> chunks
 	lgob_chunk = find_chunk(obj.childs, 'lgob')
 	trfl_chunk = find_chunk(lgob_chunk.childs, 'trfl')
 	obj.trfd = find_chunk(trfl_chunk.childs, 'trfd')
@@ -78,7 +78,7 @@ def parse_rectangle(obj):
 		if item[0] == const.DATA_COORDS:
 			offset = item[1]
 
-	#Rectangle size 
+	#Rectangle size
 	w = parse_size_value(data[offset:offset + 4])
 	h = parse_size_value(data[offset + 4:offset + 8])
 	obj.rect_size = [w, h]
@@ -102,7 +102,7 @@ def parse_ellipse(obj):
 		if item[0] == const.DATA_COORDS:
 			offset = item[1] + 8
 
-	#Ellipse size 
+	#Ellipse size
 	w = parse_size_value(data[offset:offset + 4])
 	h = parse_size_value(data[offset + 4:offset + 8])
 	obj.ellipse_size = [w, h]
@@ -195,7 +195,7 @@ def parse_curve(obj):
 def parse_text(obj):pass
 def parse_image(obj):pass
 
-##############################################	
+##############################################
 #            Graphics objects
 ##############################################
 
@@ -213,7 +213,7 @@ class CdrGraphObj(RiffList):
 		RiffList.__init__(self, chunk)
 
 	def update(self):
-		#Finds <loda> and <trfd> chunks 
+		#Finds <loda> and <trfd> chunks
 		lgob_chunk = find_chunk(self.childs, 'lgob')
 		trfl_chunk = find_chunk(lgob_chunk.childs, 'trfl')
 		self.trfd = find_chunk(trfl_chunk.childs, 'trfd')
@@ -252,7 +252,7 @@ class CdrRectangle(CdrGraphObj):
 			if item[0] == const.DATA_COORDS:
 				offset = item[1]
 
-		#Rectangle size 
+		#Rectangle size
 		w = parse_size_value(data[offset:offset + 4])
 		h = parse_size_value(data[offset + 4:offset + 8])
 		self.rect_size = [w, h]
@@ -292,7 +292,7 @@ class CdrEllipse(CdrGraphObj):
 			if item[0] == const.DATA_COORDS:
 				offset = item[1] + 8
 
-		#Ellipse size 
+		#Ellipse size
 		w = parse_size_value(data[offset:offset + 4])
 		h = parse_size_value(data[offset + 4:offset + 8])
 		self.ellipse_size = [w, h]
@@ -465,7 +465,7 @@ obj_dict = {
 		CDR_POLYGON:CdrPolygon,
 		}
 
-##############################################	
+##############################################
 #            Universal CDR object
 ##############################################
 obj_parse = {
@@ -527,7 +527,7 @@ class CdrUniObject(RiffList):
 			translator.create_polygon(self)
 
 
-##############################################	
+##############################################
 #            Structural objects
 ##############################################
 class CdrPage(RiffList):
@@ -680,7 +680,7 @@ class CdrObject(RiffList):
 		else:
 			RiffList.do_update(self, presenter)
 
-##############################################	
+##############################################
 #            Property objects
 ##############################################
 
