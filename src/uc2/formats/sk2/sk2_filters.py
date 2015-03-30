@@ -27,6 +27,7 @@ class SK2_Loader(AbstractLoader):
 	parent_stack = []
 
 	def do_load(self):
+		self.model = None
 		self.parent_stack = []
 		self.file.readline()
 		while True:
