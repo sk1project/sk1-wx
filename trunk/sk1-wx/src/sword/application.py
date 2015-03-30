@@ -20,7 +20,7 @@ import traceback
 import gtk
 
 import uc2
-from uc2.utils import system
+from uc2.utils import system, fs
 from uc2 import cms
 
 from sword.app_conf import AppData
