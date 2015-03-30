@@ -15,7 +15,7 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, sys
+import os, sys, traceback
 import webbrowser
 
 import wal
@@ -200,7 +200,7 @@ class pdApplication(wal.Application, UCApplication):
 			self.current_doc.set_doc_file(doc_file)
 			try:
 				self.current_doc.save()
-			except IOError:
+			except:
 				self.current_doc.set_doc_file(old_file, old_name)
 				first = _('Cannot save document')
 				msg = ("%s '%s'.") % (first, self.current_doc.doc_name) + '\n'
@@ -317,7 +317,7 @@ class pdApplication(wal.Application, UCApplication):
 		if doc_file:
 			try:
 				self.current_doc.export_as(doc_file)
-			except IOError:
+			except:
 				first = _('Cannot save document')
 				msg = ("%s '%s'.") % (first, self.current_doc.doc_name) + '\n'
 				msg += _('Please check file name and write permissions')
@@ -338,7 +338,7 @@ class pdApplication(wal.Application, UCApplication):
 			try:
 				pixmap = self.current_doc.selection.objs[0]
 				libimg.extract_bitmap(pixmap, doc_file)
-			except IOError:
+			except:
 				first = _('Cannot save document')
 				msg = ("%s '%s'.") % (first, self.current_doc.doc_name) + '\n'
 				msg += _('Please check file name and write permissions')
@@ -368,7 +368,7 @@ class pdApplication(wal.Application, UCApplication):
 	def print_stacktrace(self):
 		if config.print_stacktrace:
 			print sys.exc_info()[1].__str__()
-			print sys.exc_info()[2].__str__()
+			print traceback.format_tb(sys.exc_info()[2])
 
 	def open_url(self, url):
 		webbrowser.open(url, new=1, autoraise=True)
