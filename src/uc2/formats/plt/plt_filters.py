@@ -28,7 +28,7 @@ class PLT_Loader(AbstractLoader):
 	def do_load(self):
 		self.jobs = []
 
-		res = self.file.read().split('IN;')
+		res = self.fileptr.read().split('IN;')
 
 		if not len(res) == 2:
 			msg = _('Wrong content: "IN;" instruction should be unique')

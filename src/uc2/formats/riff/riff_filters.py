@@ -26,7 +26,7 @@ class RIFF_Loader(AbstractLoader):
 	def do_load(self):
 		self.model = None
 		self.parent_stack = []
-		self.model = self.parse_file(self.file)
+		self.model = self.parse_file(self.fileptr)
 
 	def parse_file(self, fileptr):
 		identifier = fileptr.read(4)

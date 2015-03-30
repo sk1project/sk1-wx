@@ -28,9 +28,9 @@ class SK2_Loader(AbstractLoader):
 	def do_load(self):
 		self.model = None
 		self.parent_stack = []
-		self.file.readline()
+		self.fileptr.readline()
 		while True:
-			self.line = self.file.readline()
+			self.line = self.fileptr.readline()
 			if not self.line: break
 			self.line = self.line.rstrip('\r\n')
 
@@ -67,7 +67,6 @@ class SK2_Loader(AbstractLoader):
 class SK2_Saver(AbstractSaver):
 
 	name = 'SK2_Saver'
-	fileptr = None
 
 	def __init__(self):
 		pass
