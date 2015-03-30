@@ -48,6 +48,7 @@ class SK1_Loader(AbstractLoader):
 	gradient = None
 
 	def do_load(self):
+		self.model = None
 		self.file.readline()
 		self.style = Style()
 		while True:

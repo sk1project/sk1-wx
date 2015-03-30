@@ -58,6 +58,7 @@ class AbstractLoader(object):
 
 	def load(self, presenter, path=None, fileptr=None):
 		self.presenter = presenter
+		self.model = presenter.model
 		self.config = self.presenter.config
 		if path:
 			self.filepath = path
