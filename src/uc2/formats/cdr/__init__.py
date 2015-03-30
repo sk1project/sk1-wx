@@ -22,7 +22,7 @@ from uc2.formats.cdr.presenter import CDR_Presenter
 from uc2.formats.cdr import const
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 
-def cdr_loader(appdata, filename, translate=True, cnf={}, **kw):
+def cdr_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	if kw: cnf.update(kw)
 	doc = CDR_Presenter(appdata, cnf)
 	doc.load(filename)
@@ -34,7 +34,7 @@ def cdr_loader(appdata, filename, translate=True, cnf={}, **kw):
 		doc = sk2_doc
 	return doc
 
-def cdr_saver(cdr_doc, filename, translate=True, cnf={}, **kw):
+def cdr_saver(cdr_doc, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	if kw: cnf.update(kw)
 	cdr_doc.save(filename)
 

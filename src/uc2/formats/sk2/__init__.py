@@ -21,15 +21,15 @@ import sys
 from uc2 import _, events, msgconst
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 
-def sk2_loader(appdata, filename, translate=True, cnf={}, **kw):
+def sk2_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	if kw: cnf.update(kw)
 	doc = SK2_Presenter(appdata, cnf)
-	doc.load(filename)
+	doc.load(filename, fileptr)
 	return doc
 
-def sk2_saver(sk2_doc, filename, translate=True, cnf={}, **kw):
+def sk2_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	if kw: cnf.update(kw)
-	sk2_doc.save(filename)
+	sk2_doc.save(filename, fileptr)
 
 def check_sk2(path):
 	try:

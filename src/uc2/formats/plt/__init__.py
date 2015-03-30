@@ -23,7 +23,7 @@ from uc2.formats.plt.plt_presenter import PLT_Presenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 
 
-def plt_loader(appdata, filename, translate=True, cnf={}, **kw):
+def plt_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	if kw: cnf.update(kw)
 	doc = PLT_Presenter(appdata, cnf)
 	doc.load(filename)
@@ -35,7 +35,7 @@ def plt_loader(appdata, filename, translate=True, cnf={}, **kw):
 		doc = sk2_doc
 	return doc
 
-def plt_saver(doc, filename, translate=True, cnf={}, **kw):
+def plt_saver(doc, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	if kw: cnf.update(kw)
 	if translate:
 		plt_doc = PLT_Presenter(doc.appdata, cnf)
