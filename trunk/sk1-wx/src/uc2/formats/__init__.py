@@ -25,6 +25,14 @@ from uc2.utils.fs import get_file_extension
 from uc2.formats import data
 from uc2.formats.fallback import fallback_check, im_loader
 
+def get_loader_by_id(pid):
+	loader = None
+	if pid in data.LOADERS.keys():
+		loader = data.LOADERS[pid]
+	else:
+		msg = _('Loader is not found for id %u') % (pid)
+		events.emit(events.MESSAGES, msgconst.ERROR, msg)
+	return loader
 
 def get_loader(path, experimental=False):
 
@@ -70,9 +78,19 @@ def get_loader(path, experimental=False):
 		msg = _('Loader is not found for %s') % (path)
 		events.emit(events.MESSAGES, msgconst.ERROR, msg)
 	else:
-		msg = _('Loader is found for %s') % (path)
+		loader_name = loader.__str__().split(' ')[1]
+		msg = _('Loader <%s> is found for %s') % (loader_name, path)
 		events.emit(events.MESSAGES, msgconst.OK, msg)
 	return loader
+
+def get_saver_by_id(pid):
+	saver = None
+	if pid in data.SAVERS.keys():
+		saver = data.SAVERS[pid]
+	else:
+		msg = _('Saver is not found for id %u') % (pid)
+		events.emit(events.MESSAGES, msgconst.ERROR, msg)
+	return saver
 
 def get_saver(path, experimental=False):
 	ext = get_file_extension(path)
@@ -96,10 +114,3 @@ def get_saver(path, experimental=False):
 		events.emit(events.MESSAGES, msgconst.OK, msg)
 	return saver
 
-
-def _test():
-	print get_saver('/home/igor/TEST/canada.pdxf')
-
-
-if __name__ == '__main__':
-	_test()
