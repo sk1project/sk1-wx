@@ -19,6 +19,29 @@ import sys, os, errno
 
 from uc2 import _, events, msgconst
 
+def get_fileptr(path, write=False):
+	fileptr = None
+	if not file:
+		msg = _('There is no file path')
+		raise IOError(errno.ENODATA, msg, '')
+	if write:
+		try:
+			fileptr = open(path, 'wb')
+		except:
+			errtype, value, traceback = sys.exc_info()
+			msg = _('Cannot open %s file for writing') % (path)
+			events.emit(events.MESSAGES, msgconst.ERROR, msg)
+			raise IOError(errtype, msg + '\n' + value, traceback)
+	else:
+		try:
+			fileptr = open(path, 'rb')
+		except:
+			errtype, value, traceback = sys.exc_info()
+			msg = _('Cannot open %s file for reading') % (path)
+			events.emit(events.MESSAGES, msgconst.ERROR, msg)
+			raise IOError(errtype, msg + '\n' + value, traceback)
+	return fileptr
+
 class AbstractLoader(object):
 	name = 'Abstract Loader'
 
@@ -39,13 +62,7 @@ class AbstractLoader(object):
 		if path:
 			self.filepath = path
 			self.file_size = os.path.getsize(path)
-			try:
-				self.file = open(path, 'rb')
-			except:
-				errtype, value, traceback = sys.exc_info()
-				msg = _('Cannot open %s file for reading') % (path)
-				self.send_error(msg)
-				raise IOError(errtype, msg + '\n' + value, traceback)
+			self.file = get_fileptr(path)
 		elif fileptr:
 			self.file = fileptr
 			self.file.seek(0, 2)
@@ -108,13 +125,7 @@ class AbstractSaver(object):
 	def save(self, presenter, path=None, fileptr=None):
 		self.presenter = presenter
 		if path:
-			try:
-				self.fileptr = open(path, 'wb')
-			except:
-				errtype, value, traceback = sys.exc_info()
-				msg = _('Cannot open %s file for writing') % (path)
-				events.emit(events.MESSAGES, msgconst.ERROR, msg)
-				raise IOError(errtype, msg + '\n' + value, traceback)
+			self.fileptr = get_fileptr(path, True)
 		elif fileptr:
 			self.fileptr = fileptr
 		else:

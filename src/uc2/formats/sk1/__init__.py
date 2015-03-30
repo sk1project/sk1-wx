@@ -22,6 +22,7 @@ from uc2 import _, events, msgconst
 from uc2.formats.sk1 import model
 from uc2.formats.sk1.presenter import SK1_Presenter
 from uc2.formats.pdxf.presenter import PDXF_Presenter
+from uc2.formats.generic_filters import get_fileptr
 
 def sk1_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	if kw: cnf.update(kw)
@@ -43,16 +44,7 @@ def sk1_saver(pdxf_doc, filename=None, fileptr=None, translate=True, cnf={}, **k
 	sk1_doc.close()
 
 def check_sk1(path):
-	try:
-		file = open(path, 'rb')
-	except:
-		errtype, value, traceback = sys.exc_info()
-		msg = _('Cannot open %s file for reading') % (path)
-		events.emit(events.MESSAGES, msgconst.ERROR, msg)
-		raise IOError(errtype, msg + '\n' + value, traceback)
-
-	string = file.read(7)
-
-	file.close()
-	if string == '##sK1 1': return True
-	return False
+	fileptr = get_fileptr(path)
+	string = fileptr.read(7)
+	fileptr.close()
+	return string == '##sK1 1'

@@ -21,7 +21,7 @@ import sys
 from uc2 import _, events, msgconst
 from uc2.formats.plt.plt_presenter import PLT_Presenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
-
+from uc2.formats.generic_filters import get_fileptr
 
 def plt_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	if kw: cnf.update(kw)
@@ -47,14 +47,7 @@ def plt_saver(doc, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 
 def check_plt(path):
 	file_size = os.path.getsize(path)
-
-	try:
-		fileptr = open(path, 'rb')
-	except:
-		errtype, value, traceback = sys.exc_info()
-		msg = _('Cannot open %s fileptr for reading') % (path)
-		events.emit(events.MESSAGES, msgconst.ERROR, msg)
-		raise IOError(errtype, msg + '\n' + value, traceback)
+	fileptr = get_fileptr(path)
 
 	if file_size > 200:
 		string = fileptr.read(200)
