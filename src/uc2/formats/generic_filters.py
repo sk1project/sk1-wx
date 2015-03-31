@@ -19,12 +19,12 @@ import sys, os, errno
 
 from uc2 import _, events, msgconst
 
-def get_fileptr(path, write=False):
+def get_fileptr(path, writable=False):
 	fileptr = None
 	if not file:
 		msg = _('There is no file path')
 		raise IOError(errno.ENODATA, msg, '')
-	if write:
+	if writable:
 		try:
 			fileptr = open(path, 'wb')
 		except:
@@ -141,8 +141,14 @@ class AbstractSaver(object):
 
 	def do_save(self):pass
 
-	def write_line(self, line):
+	def writeln(self, line):
 		self.fileptr.write(line + '\n')
+
+	def field_to_str(self, val):
+		val_str = val.__str__()
+		if isinstance(val, str):
+			val_str = "'%s'" % val_str.replace("'", "\\'")
+		return val_str
 
 	def send_progress_message(self, msg, val):
 		events.emit(events.FILTER_INFO, msg, val)
