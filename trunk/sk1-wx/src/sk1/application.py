@@ -431,6 +431,11 @@ class pdApplication(wal.Application, UCApplication):
 					raise IOError(_('Error while opening'), doc_file)
 
 				if palette:
+					pname = '' + palette.model.name
+					i = 1
+					while palette.model.name in self.palettes.palettes.keys():
+						palette.model.name = pname + '(%u)' % i
+						i += 1
 					self.palettes.add_palette(palette)
 					config.import_dir = str(os.path.dirname(doc_file))
 					msg = _('Palette is successfully imported')
