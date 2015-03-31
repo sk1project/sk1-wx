@@ -21,3 +21,4 @@ from progressdlg import ProgressDialog
 from aboutdlg import about_dialog
 from page_dlg import goto_page_dlg, delete_page_dlg, insert_page_dlg
 from log_viewer import log_viewer_dlg
+from palette_inf import palette_info_dlg

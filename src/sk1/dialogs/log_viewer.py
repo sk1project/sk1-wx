@@ -83,7 +83,7 @@ class LogViewerDialog(wal.OkCancelDialog):
 			path = self.lc.get_selected()[2]
 			if os.path.isfile(path):
 				self.ret = path
-				self.end_modal(wal.const.BUTTON_OK)
+				self.end_modal(wal.BUTTON_OK)
 			else:
 				txt = "%s '%s' %s" % (_('File'), path, _('is not found.'))
 				wal.error_dialog(self, _('File not found'), txt)

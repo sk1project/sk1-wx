@@ -20,6 +20,7 @@ import wal
 from sk1 import _, config
 from sk1.resources import icons
 from sk1.pwidgets import PaletteViewer
+from sk1.dialogs import palette_info_dlg
 
 from generic import PrefPanel
 
@@ -203,16 +204,22 @@ class PaletteEditor(wal.HPanel):
 
 		btn_box = wal.VPanel(self)
 		self.pack(btn_box, fill=True, padding_all=5)
+
 		btn_box.pack(wal.Button(btn_box, _('Import'),
 							onclick=self.import_palette),
 							fill=True, end_padding=5)
+
 		btn_box.pack(wal.Button(btn_box, _('Export'),
 							onclick=self.export_palette),
 							fill=True, end_padding=5)
+
 		self.remove_btn = wal.Button(btn_box, _('Remove'),
 							onclick=self.remove_palette)
 		btn_box.pack(self.remove_btn, fill=True, end_padding=5)
-		btn_box.pack(wal.Button(btn_box, _('Edit info')), fill=True, end_padding=5)
+
+		self.edit_btn = wal.Button(btn_box, _('Edit info'),
+							onclick=self.edit_info)
+		btn_box.pack(self.edit_btn, fill=True, end_padding=5)
 
 		self.update_palette_list()
 
@@ -239,6 +246,7 @@ class PaletteEditor(wal.HPanel):
 		current_palette = self.get_palette_by_name(palette_name)
 		self.pal_viewer.draw_palette(current_palette)
 		self.remove_btn.set_enable(not current_palette.model.builtin)
+		self.edit_btn.set_enable(not current_palette.model.builtin)
 
 	def export_palette(self, event):
 		palette_name = self.pal_list.get_selected()
@@ -253,6 +261,16 @@ class PaletteEditor(wal.HPanel):
 		palette_name = self.pal_list.get_selected()
 		self.app.palettes.remove_palette(palette_name)
 		self.update_palette_list()
+
+	def edit_info(self, event):
+		palette_name = self.pal_list.get_selected()
+		palette = self.get_palette_by_name(palette_name)
+		if palette_info_dlg(self.prefpanel.dlg, palette):
+			self.app.palettes.remove_palette(palette_name)
+			self.app.palettes.add_palette(palette)
+			self.update_palette_list()
+
+
 
 
 
