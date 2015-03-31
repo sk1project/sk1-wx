@@ -42,7 +42,6 @@ class AppData(UCData):
 	components = []
 
 	def __init__(self, app):
-
 		UCData.__init__(self, app)
 
 		#----------------Check config directories
@@ -72,6 +71,7 @@ class AppData(UCData):
 class AppConfig(UCConfig):
 
 	def __init__(self):
+		self.palette_files = {}
 		UCConfig.__init__(self)
 
 	def __setattr__(self, attr, value):
@@ -155,6 +155,7 @@ class AppConfig(UCConfig):
 	palette_orientation = uc2const.HORIZONTAL
 	palette_expand = False
 	palette = ''
+	palette_files = {}
 
 	#============== CANVAS OPTIONS ================
 	default_unit = uc2const.UNIT_MM
