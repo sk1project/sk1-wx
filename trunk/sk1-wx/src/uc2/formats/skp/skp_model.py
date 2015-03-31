@@ -34,4 +34,10 @@ class SK1Palette(TextModelObject):
 
 	def __init__(self, name='', colors=[]):
 		self.name = name
-		self.colors = colors
+		if not colors: self.colors = []
+
+	def resolve(self, name=''):
+		is_leaf = False
+		info = '%d' % (len(self.colors))
+		name = 'SK1Palette'
+		return (is_leaf, name, info)
