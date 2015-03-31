@@ -73,20 +73,18 @@ class SK2_Saver(AbstractSaver):
 
 	def do_save(self):
 		self.presenter.update()
-		self.write_line(sk2_const.DOC_HEADER)
+		self.writeln(sk2_const.DOC_HEADER)
 		self.save_obj(self.model)
 
 	def save_obj(self, obj):
-		self.write_line("obj('%s')" % sk2_model.CID_TO_TAGNAME[obj.cid])
+		self.writeln("obj('%s')" % sk2_model.CID_TO_TAGNAME[obj.cid])
 		props = obj.__dict__
 		for item in props.keys():
 			if not item in sk2_model.GENERIC_FIELDS and not item[:5] == 'cache':
-				item_str = props[item].__str__()
-				if isinstance(props[item], str):
-					item_str = "'%s'" % item_str.replace("'", "\\'")
-				self.write_line("set_field('%s',%s)" % (item, item_str))
+				item_str = self.field_to_str(props[item])
+				self.writeln("set_field('%s',%s)" % (item, item_str))
 		for child in obj.childs:
 			self.save_obj(child)
-		self.write_line("obj_end()")
+		self.writeln("obj_end()")
 
 
