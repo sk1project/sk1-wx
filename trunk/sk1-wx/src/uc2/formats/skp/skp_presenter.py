@@ -49,7 +49,7 @@ class SKP_Presenter(TextModelPresenter):
 			self.load(filepath)
 
 	def new(self):
-		self.model = SK1Palette(self.config)
+		self.model = SK1Palette()
 		self.update()
 
 	def update(self):
