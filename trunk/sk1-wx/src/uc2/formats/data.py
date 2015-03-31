@@ -21,19 +21,19 @@ EPS, PDF, PSD, CGM, WMF, EMF, XPS, VSD, PLT, HPGL , DXF, DWG, RIFF
 
 from uc2.uc2const import JPG, JP2, TIF, BMP, PCX, GIF, PNG, PPM, XBM, XPM
 
-from uc2.uc2const import SKP
+from uc2.uc2const import SKP, GPL
 
 
 SIMPLE_LOADERS = []
 MODEL_LOADERS = [SK2, PDXF, PLT, CDR, CDT] + \
 [PNG, JPG, JP2, TIF, GIF, BMP, PCX, PPM, XBM, XPM]
 EXPERIMENTAL_LOADERS = [SK1, WMF, RIFF, CDRZ, SKP, ]
-PALETTE_LOADERS = [SKP, ]
+PALETTE_LOADERS = [SKP, GPL]
 
 SIMPLE_SAVERS = []
 MODEL_SAVERS = [SK2, PNG, PDXF, PLT]
 EXPERIMENTAL_SAVERS = [SK1, RIFF, CDR, ]
-PALETTE_SAVERS = [SKP, ]
+PALETTE_SAVERS = [SKP, GPL]
 
 
 LOADER_FORMATS = SIMPLE_LOADERS + MODEL_LOADERS + PALETTE_LOADERS
@@ -55,6 +55,7 @@ from uc2.formats.png import png_loader, check_png, png_saver
 from uc2.formats.fallback import im_loader, fallback_check
 
 from uc2.formats.skp import skp_loader, skp_saver, check_skp
+from uc2.formats.gpl import gpl_loader, gpl_saver, check_gpl
 
 
 LOADERS = {
@@ -70,7 +71,7 @@ RIFF: riff_loader,
 PNG: png_loader, JPG: im_loader, JP2: im_loader, TIF: im_loader, GIF: im_loader,
 BMP: im_loader, PCX: im_loader, PPM: im_loader, XBM: im_loader, XPM: im_loader,
 
-SKP: skp_loader,
+SKP: skp_loader, GPL:gpl_loader,
 }
 
 SAVERS = {
@@ -85,7 +86,7 @@ RIFF: riff_saver,
 
 PNG: png_saver,
 
-SKP: skp_saver,
+SKP: skp_saver, GPL:gpl_saver,
 }
 
 CHECKERS = {
@@ -101,6 +102,6 @@ PNG: check_png, JPG: fallback_check, JP2: fallback_check, TIF: fallback_check,
 GIF: fallback_check, BMP: fallback_check, PCX: fallback_check,
 PPM: fallback_check, XBM: fallback_check, XPM: fallback_check,
 
-SKP: check_skp,
+SKP: check_skp, GPL: check_gpl,
 }
 
