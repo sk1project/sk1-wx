@@ -55,13 +55,11 @@ class SKP_Saver(AbstractSaver):
 	def do_save(self):
 		self.writeln(SKP_HEADER)
 		self.writeln('palette()')
-		self.writeln('set_name(%s)' % self.field_to_str(self.model.name))
-		self.writeln('set_source(%s)' % self.field_to_str(self.model.source))
+		self.writeln("set_name(%s)" % self.field_to_str(self.model.name))
+		self.writeln("set_source(%s)" % self.field_to_str(self.model.source))
 		for item in self.model.comments.splitlines():
-			item = item.strip()
-			if item:
-				self.writeln('add_comments(%s)' % self.field_to_str(item))
-		self.writeln('set_columns(%s)' % self.field_to_str(self.model.columns))
+			self.writeln("add_comments(%s)" % self.field_to_str(item))
+		self.writeln("set_columns(%s)" % self.field_to_str(self.model.columns))
 		for item in self.model.colors:
 			self.writeln('color(%s)' % self.field_to_str(item))
 		self.writeln('palette_end()')
