@@ -61,9 +61,10 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, Widget):
 		self.SetColumnWidth(index, width)
 
 	def update(self, data):
-		self.ClearAll()
+		self.DeleteAllItems()
 		self.data = data
-		self.set_columns()
+		if not self.GetColumnCount():
+			self.set_columns()
 		self.set_data(self.data, self.alt_color)
 
 	def set_columns(self):

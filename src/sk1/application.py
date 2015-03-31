@@ -23,7 +23,7 @@ import wal
 from uc2 import uc2const, libimg
 from uc2.utils.fs import path_unicode
 from uc2.application import UCApplication
-from uc2.formats import data
+from uc2.formats import data, get_saver_by_id, get_loader
 
 from sk1 import _, config, events, modes, dialogs, appconst
 from sk1 import app_plugins, app_actions
@@ -101,6 +101,22 @@ class pdApplication(wal.Application, UCApplication):
 
 	def stub(self, *args):pass
 
+	def update_config(self):
+		config.resource_dir = ''
+		config.mw_size = self.mw.get_size()
+		config.mw_maximized = self.mw.is_maximized()
+		if self.mw.is_maximized(): config.mw_size = config.mw_min_size
+		config.save(self.appdata.app_config)
+
+	def exit(self, *args):
+		if not self.insp.is_any_doc_not_saved(): self.mw.hide()
+		if self.close_all():
+			self.update_config()
+			self.mw.destroy()
+			self.Exit()
+			return True
+		return False
+
 	def get_new_docname(self):
 		self.doc_counter += 1
 		return _('Untitled') + ' ' + str(self.doc_counter)
@@ -169,6 +185,7 @@ class pdApplication(wal.Application, UCApplication):
 			return self.save_as()
 
 		try:
+			self.make_backup(self.current_doc.doc_file)
 			doc.save()
 			self.history.add_entry(self.current_doc.doc_file, appconst.SAVED)
 			events.emit(events.DOC_SAVED, doc)
@@ -199,6 +216,7 @@ class pdApplication(wal.Application, UCApplication):
 			old_name = self.current_doc.doc_name
 			self.current_doc.set_doc_file(doc_file)
 			try:
+				self.make_backup(doc_file)
 				self.current_doc.save()
 			except:
 				self.current_doc.set_doc_file(old_file, old_name)
@@ -231,6 +249,7 @@ class pdApplication(wal.Application, UCApplication):
 							_('Save selected objects only as...'))[0]
 		if doc_file:
 			try:
+				self.make_backup(doc_file)
 				self.current_doc.save_selected(doc_file)
 				self.history.add_entry(doc_file, appconst.SAVED)
 			except:
@@ -316,6 +335,7 @@ class pdApplication(wal.Application, UCApplication):
 							file_types=data.SAVER_FORMATS[1:])[0]
 		if doc_file:
 			try:
+				self.make_backup(doc_file, True)
 				self.current_doc.export_as(doc_file)
 			except:
 				first = _('Cannot save document')
@@ -349,21 +369,87 @@ class pdApplication(wal.Application, UCApplication):
 			self.history.add_entry(doc_file, appconst.SAVED)
 			events.emit(events.APP_STATUS, _('Bitmap is successfully extracted'))
 
-	def exit(self, *args):
-		if not self.insp.is_any_doc_not_saved(): self.mw.hide()
-		if self.close_all():
-			self.update_config()
-			self.mw.destroy()
-			self.Exit()
-			return True
-		return False
+	def export_palette(self, palette, parent=None):
+		if not parent: parent = self.mw
+		doc_file = '' + palette.model.name
+		doc_file = os.path.splitext(doc_file)[0] + "." + \
+					uc2const.FORMAT_EXTENSION[uc2const.SKP][0]
+		doc_file = os.path.join(config.export_dir,
+								os.path.basename(doc_file))
+		doc_file, index = dialogs.get_save_file_name(parent, self, doc_file,
+							_('Export palette as...'),
+							file_types=data.PALETTE_SAVERS)
+		saver_id = data.PALETTE_SAVERS[index]
 
-	def update_config(self):
-		config.resource_dir = ''
-		config.mw_size = self.mw.get_size()
-		config.mw_maximized = self.mw.is_maximized()
-		if self.mw.is_maximized(): config.mw_size = config.mw_min_size
-		config.save(self.appdata.app_config)
+		if doc_file:
+			try:
+				saver = get_saver_by_id(saver_id)
+				if saver is None:
+					raise IOError(_('Unknown file format is requested for export!'),
+								 doc_file)
+
+				self.make_backup(doc_file, True)
+
+				pd = dialogs.ProgressDialog(_('Exporting...'), parent)
+				ret = pd.run(saver, [palette, doc_file], False)
+				if ret:
+					if not pd.error_info is None:
+						pd.destroy()
+						raise IOError(*pd.error_info)
+					pd.destroy()
+				else:
+					pd.destroy()
+					raise IOError(_('Error while exporting'), doc_file)
+
+			except IOError:
+				raise IOError(*sys.exc_info())
+
+			config.export_dir = str(os.path.dirname(doc_file))
+			events.emit(events.APP_STATUS, _('Palette is successfully exported'))
+
+	def import_palette(self, parent=None):
+		if not parent: parent = self.mw
+		doc_file = dialogs.get_open_file_name(parent, self, config.import_dir,
+											_('Select palette to import'),
+											file_types=data.PALETTE_LOADERS)
+		if os.path.lexists(doc_file) and os.path.isfile(doc_file):
+			try:
+				palette = None
+				loader = get_loader(doc_file)
+				pd = dialogs.ProgressDialog(_('Opening file...'), parent)
+				ret = pd.run(loader, [self.appdata, doc_file])
+				if ret:
+					if pd.result is None:
+						pd.destroy()
+						raise IOError(*pd.error_info)
+
+					palette = pd.result
+					ret = True
+					pd.destroy()
+				else:
+					pd.destroy()
+					raise IOError(_('Error while opening'), doc_file)
+
+				if palette:
+					self.palettes.add_palette(palette)
+					config.import_dir = str(os.path.dirname(doc_file))
+					msg = _('Palette is successfully imported')
+					events.emit(events.APP_STATUS, msg)
+
+			except:
+				msg = _('Cannot import file')
+				msg = "%s '%s'" % (msg, doc_file) + '\n'
+				msg += _('The file may be corrupted or not supported format')
+				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
+				self.print_stacktrace()
+
+	def make_backup(self, doc_file, export=False):
+		if not export and not config.make_backup:return
+		if export and not config.make_export_backup:return
+		if os.path.lexists(doc_file):
+			if os.path.lexists(doc_file + '~'):
+				os.remove(doc_file + '~')
+			os.rename(doc_file, doc_file + '~')
 
 	def print_stacktrace(self):
 		if config.print_stacktrace:

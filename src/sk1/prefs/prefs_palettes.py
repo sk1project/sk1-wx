@@ -203,12 +203,21 @@ class PaletteEditor(wal.HPanel):
 
 		btn_box = wal.VPanel(self)
 		self.pack(btn_box, fill=True, padding_all=5)
-		btn_box.pack(wal.Button(btn_box, _('Import')), fill=True, end_padding=5)
-		btn_box.pack(wal.Button(btn_box, _('Export')), fill=True, end_padding=5)
-		self.remove_btn = wal.Button(btn_box, _('Remove'))
+		btn_box.pack(wal.Button(btn_box, _('Import'),
+							onclick=self.import_palette),
+							fill=True, end_padding=5)
+		btn_box.pack(wal.Button(btn_box, _('Export'),
+							onclick=self.export_palette),
+							fill=True, end_padding=5)
+		self.remove_btn = wal.Button(btn_box, _('Remove'),
+							onclick=self.remove_palette)
 		btn_box.pack(self.remove_btn, fill=True, end_padding=5)
 		btn_box.pack(wal.Button(btn_box, _('Edit info')), fill=True, end_padding=5)
 
+		self.update_palette_list()
+
+	def update_palette_list(self):
+		self.pal_list.update(self.get_palette_list())
 		self.pal_list.set_active(0)
 
 	def get_palette_list(self):
@@ -230,6 +239,20 @@ class PaletteEditor(wal.HPanel):
 		current_palette = self.get_palette_by_name(palette_name)
 		self.pal_viewer.draw_palette(current_palette)
 		self.remove_btn.set_enable(not current_palette.model.builtin)
+
+	def export_palette(self, event):
+		palette_name = self.pal_list.get_selected()
+		palette = self.get_palette_by_name(palette_name)
+		self.app.export_palette(palette, self.prefpanel.dlg)
+
+	def import_palette(self, event):
+		self.app.import_palette(self.prefpanel.dlg)
+		self.update_palette_list()
+
+	def remove_palette(self, event):
+		palette_name = self.pal_list.get_selected()
+		self.app.palettes.remove_palette(palette_name)
+		self.update_palette_list()
 
 
 

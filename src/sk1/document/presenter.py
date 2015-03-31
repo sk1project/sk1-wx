@@ -62,8 +62,6 @@ class PD_Presenter:
 
 		if doc_file:
 			loader = get_loader(doc_file)
-			if loader is None:
-				raise IOError(_('Unknown file format'), doc_file)
 
 			if silent:
 				self.doc_presenter = loader(app.appdata, doc_file)
@@ -132,12 +130,6 @@ class PD_Presenter:
 				raise IOError(_('Unknown file format is requested for saving!'),
 							 self.doc_file)
 
-			if config.make_backup:
-				if os.path.lexists(self.doc_file):
-					if os.path.lexists(self.doc_file + '~'):
-						os.remove(self.doc_file + '~')
-					os.rename(self.doc_file, self.doc_file + '~')
-
 			pd = ProgressDialog(_('Saving file...'), self.app.mw)
 			ret = pd.run(saver, [self.doc_presenter, self.doc_file], False)
 			if ret:
@@ -174,12 +166,6 @@ class PD_Presenter:
 			raise IOError(_('Unknown file format is requested for saving!'),
 						 doc_file)
 
-		if config.make_backup:
-			if os.path.lexists(doc_file):
-				if os.path.lexists(doc_file + '~'):
-					os.remove(doc_file + '~')
-				os.rename(doc_file, doc_file + '~')
-
 		pd = ProgressDialog(_('Saving file...'), self.app.mw)
 		ret = pd.run(saver, [doc, doc_file], False)
 		if ret:
@@ -211,8 +197,6 @@ class PD_Presenter:
 	def import_file(self, doc_file):
 		retval = True
 		loader = get_loader(doc_file)
-		if loader is None:
-			raise IOError(_('Unknown file format'), doc_file)
 		pd = ProgressDialog(_('Opening file...'), self.app.mw)
 		ret = pd.run(loader, [self.app.appdata, doc_file])
 		if ret:
@@ -254,12 +238,6 @@ class PD_Presenter:
 			if saver is None:
 				raise IOError(_('Unknown file format is requested for export!'),
 							 doc_file)
-
-			if config.make_export_backup:
-				if os.path.lexists(doc_file):
-					if os.path.lexists(doc_file + '~'):
-						os.remove(doc_file + '~')
-					os.rename(doc_file, doc_file + '~')
 
 			pd = ProgressDialog(_('Exporting...'), self.app.mw)
 			ret = pd.run(saver, [self.doc_presenter, doc_file], False)
