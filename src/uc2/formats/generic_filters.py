@@ -147,6 +147,7 @@ class AbstractSaver(object):
 	def field_to_str(self, val):
 		val_str = val.__str__()
 		if isinstance(val, str):
+			val_str = val_str.replace("\n", " ").replace("\r", " ")
 			val_str = "'%s'" % val_str.replace("'", "\\'")
 		return val_str
 

@@ -81,10 +81,12 @@ class SK2_Saver(AbstractSaver):
 		props = obj.__dict__
 		for item in props.keys():
 			if not item in sk2_model.GENERIC_FIELDS and not item[:5] == 'cache':
-				item_str = self.field_to_str(props[item])
+				if item in ['bitmap', 'alpha_channel']:
+					item_str = "'%s'" % props[item]
+				else:
+					item_str = self.field_to_str(props[item])
 				self.writeln("set_field('%s',%s)" % (item, item_str))
 		for child in obj.childs:
 			self.save_obj(child)
 		self.writeln("obj_end()")
-
 
