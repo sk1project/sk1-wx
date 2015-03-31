@@ -198,6 +198,9 @@ class Entry(wx.TextCtrl, DataWidget):
 		self.my_changes = True
 		self.SetValue(self.value)
 
+	def get_value(self):
+		return str(self.GetValue())
+
 
 class Spin(wx.SpinCtrl, RangeDataWidget):
 
