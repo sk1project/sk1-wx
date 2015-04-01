@@ -55,3 +55,9 @@ class SKP_Presenter(TextModelPresenter):
 	def update(self):
 		TextModelPresenter.update(self)
 
+	def translate_from_sk2(self, sk2_doc):
+		pass
+
+	def translate_to_sk2(self, sk2_doc):
+		pass
+

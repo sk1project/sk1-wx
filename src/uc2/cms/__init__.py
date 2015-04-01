@@ -41,6 +41,18 @@ def val_255(vals):
 		ret.append(int(255 * item))
 	return ret
 
+def val_255_to_dec(vals):
+	ret = []
+	for item in vals:
+		ret.append(item / 255.0)
+	return ret
+
+def val_100_to_dec(vals):
+	ret = []
+	for item in vals:
+		ret.append(item / 100.0)
+	return ret
+
 def rgb_to_hexcolor(color):
 	"""
 	Converts list of RGB float values to hex color string.
@@ -469,6 +481,9 @@ class ColorManager(object):
 			return [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
 		res = self.do_transform(color, color[0], COLOR_RGB)
 		return [COLOR_RGB, res, color[2], '' + color[3]]
+
+	def get_rgb_color255(self, color):
+		return val_255(self.get_rgb_color(color)[1])
 
 	def get_cmyk_color(self, color):
 		"""

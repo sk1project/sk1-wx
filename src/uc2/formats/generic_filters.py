@@ -81,6 +81,11 @@ class AbstractLoader(object):
 
 	def do_load(self):pass
 
+	def readln(self, strip=True):
+		line = self.fileptr.readline()
+		if strip:line = line.strip()
+		return line
+
 	def check_loading(self):
 		position = float(self.fileptr.tell()) / float(self.file_size) * 0.95
 		if position - self.position > 0.02:

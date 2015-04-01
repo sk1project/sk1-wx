@@ -54,13 +54,13 @@ class PLT_Presenter(TextModelPresenter):
 	def get_jobs(self):
 		return self.model.childs[1].childs
 
-	def traslate_from_sk2(self, sk2_doc):
+	def translate_from_sk2(self, sk2_doc):
 		translator = SK2_to_PLT_Translator()
 		model = sk2_doc.model
 		objs = [] + model.childs[0].childs[0].childs + model.childs[1].childs
 		translator.translate(objs, self)
 
-	def traslate_to_sk2(self, sk2_doc):
+	def translate_to_sk2(self, sk2_doc):
 		translator = PLT_to_SK2_Translator()
 		translator.translate(self, sk2_doc)
 

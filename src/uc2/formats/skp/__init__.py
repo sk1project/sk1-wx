@@ -22,6 +22,7 @@ from uc2 import _, events, msgconst, uc2const
 from uc2.formats.skp.skp_presenter import SKP_Presenter
 from uc2.formats.skp.skp_const import SKP_HEADER
 from uc2.formats.generic_filters import get_fileptr
+from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 
 def skp_loader(appdata, filename=None, fileptr=None, translate=True,
 			convert=False, cnf={}, **kw):
@@ -29,19 +30,22 @@ def skp_loader(appdata, filename=None, fileptr=None, translate=True,
 	doc = SKP_Presenter(appdata, cnf)
 	doc.load(filename)
 	if translate:
-		pass
-		#Here should be translation to sk2 document
+		sk2_doc = SK2_Presenter(appdata, cnf)
+		doc.translate_to_sk2(sk2_doc)
+		doc.close()
+		return sk2_doc
 	return doc
 
 def skp_saver(doc, filename=None, fileptr=None, translate=True,
 			convert=False, cnf={}, **kw):
 	if kw: cnf.update(kw)
 	if translate:
-		if doc.cid == uc2const.SKP:
-			doc.save(filename, fileptr)
-		else:
-			pass
-			#Here should be translation to palette
+		skp_doc = SKP_Presenter(doc.appdata, cnf)
+		skp_doc.translate_from_sk2(doc)
+		skp_doc.save(filename, fileptr)
+		skp_doc.close()
+	else:
+		doc.save(filename, fileptr)
 
 def check_skp(path):
 	fileptr = get_fileptr(path)

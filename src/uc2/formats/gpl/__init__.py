@@ -22,26 +22,52 @@ from uc2 import _, events, msgconst, uc2const
 from uc2.formats.gpl.gpl_const import GPL_HEADER
 from uc2.formats.gpl.gpl_presenter import GPL_Presenter
 from uc2.formats.generic_filters import get_fileptr
+from uc2.formats.skp.skp_presenter import SKP_Presenter
+from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 
 def gpl_loader(appdata, filename=None, fileptr=None, translate=True,
 			convert=False, cnf={}, **kw):
 	if kw: cnf.update(kw)
 	doc = GPL_Presenter(appdata, cnf)
-	doc.load(filename)
+	doc.load(filename, fileptr)
+	if convert:
+		skp_doc = SKP_Presenter(appdata, cnf)
+		doc.convert_to_skp(skp_doc)
+		doc.close()
+		return skp_doc
 	if translate:
-		pass
-		#Here should be translation to sk2 document
+		skp_doc = SKP_Presenter(appdata, cnf)
+		doc.convert_to_skp(skp_doc)
+		sk2_doc = SK2_Presenter(appdata, cnf)
+		skp_doc.translate_to_sk2(sk2_doc)
+		doc.close()
+		skp_doc.close()
+		return sk2_doc
 	return doc
 
 def gpl_saver(doc, filename=None, fileptr=None, translate=True,
 			convert=False, cnf={}, **kw):
 	if kw: cnf.update(kw)
+	appdata = doc.appdata
 	if translate:
-		if doc.cid == uc2const.GPL:
-			doc.save(filename, fileptr)
-		else:
-			pass
-			#Here should be translation to palette
+		skp_doc = SKP_Presenter(appdata, cnf)
+		skp_doc.translate_from_sk2(doc)
+		gpl_doc = GPL_Presenter(appdata, cnf)
+		gpl_doc.convert_from_skp(skp_doc)
+		gpl_doc.save(filename, fileptr)
+		gpl_doc.close()
+		skp_doc.close()
+	elif convert:
+		print 'here'
+		gpl_doc = GPL_Presenter(appdata, cnf)
+		gpl_doc.convert_from_skp(doc)
+		print 'here1'
+		gpl_doc.save(filename, fileptr)
+		print 'here2'
+		gpl_doc.close()
+		print 'here3'
+	else:
+		doc.save(filename, fileptr)
 
 def check_gpl(path):
 	fileptr = get_fileptr(path)
