@@ -25,14 +25,19 @@ class ScrolledPalette(wal.ScrolledPanel):
 	cell_height = 16
 	cell_in_line = 10
 	colors = None
+	sb_width = 1
 
 	def __init__(self, app, parent):
 		self.app = app
 		self.parent = parent
 		wal.ScrolledPanel.__init__(self, parent, drawable=True)
-		self.width = (self.cell_width - 1) * self.cell_in_line
-		self.set_size((self.width + self.cell_width, -1))
+		sb = wal.ScrollBar(self)
+		self.sb_width = sb.get_size()[0]
+		sb.Destroy()
+		self.width = (self.cell_width - 1) * self.cell_in_line + 3 + self.sb_width
+		self.set_size((self.width, -1))
 		self.set_bg(wal.WHITE)
+
 
 	def on_paint(self, event):
 		if not self.colors:return
@@ -40,7 +45,7 @@ class ScrolledPalette(wal.ScrolledPanel):
 
 		self.height = round(1.0 * len(self.colors) / self.cell_in_line) + 1
 		self.height = self.height * (self.cell_height - 1)
-		self.set_virtual_size((self.width, self.height))
+		self.set_virtual_size((self.width - self.sb_width, self.height))
 		self.set_scroll_rate(self.cell_width - 1, self.cell_height - 1)
 
 		pdc = wx.PaintDC(self)
@@ -64,6 +69,16 @@ class ScrolledPalette(wal.ScrolledPanel):
 			if x > (w - 1) * self.cell_in_line:
 				x = 1
 				y += h - 1
+
+			color = wal.UI_COLORS['dark_shadow']
+			dc.SetPen(wx.TRANSPARENT_PEN)
+			dc.SetBrush(wx.Brush(wx.Colour(*color)))
+			dc.DrawRectangle(self.width - self.sb_width, 0,
+							self.sb_width, self.get_size()[1])
+			color = wal.UI_COLORS['bg']
+			dc.SetBrush(wx.Brush(wx.Colour(*color)))
+			dc.DrawRectangle(self.width - self.sb_width + 1, 0,
+							self.sb_width, self.get_size()[1])
 
 		if not pdc == dc:
 			dc.EndDrawing()
