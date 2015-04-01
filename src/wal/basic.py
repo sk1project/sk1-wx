@@ -245,6 +245,33 @@ class VPanel(SizedPanel):
 
 		self.add(obj, expand, flags, padding)
 
+class RoundedPanel(VPanel):
+
+	def __init__(self, parent):
+		VPanel.__init__(self, parent)
+		self.Bind(wx.EVT_PAINT, self._on_paint, self)
+
+	def _on_paint(self, event):
+		w, h = self.GetSize()
+		if not w or not h: return
+		pdc = wx.PaintDC(self)
+		try:
+			dc = wx.GCDC(self.pdc)
+		except:dc = pdc
+
+		dc.BeginDrawing()
+		color = const.UI_COLORS['dark_shadow']
+		dc.SetPen(wx.Pen(wx.Colour(*color), 1))
+		dc.SetBrush(wx.TRANSPARENT_BRUSH)
+		dc.DrawRoundedRectangle(0, 0, w, h, 4.0)
+
+		if not pdc == dc:
+			dc.EndDrawing()
+			pdc.EndDrawing()
+		else:
+			dc.EndDrawing()
+		pdc = dc = None
+
 
 class LabeledPanel(VPanel):
 
@@ -254,7 +281,7 @@ class LabeledPanel(VPanel):
 
 	def __init__(self, parent, text='', widget=None):
 		VPanel.__init__(self, parent)
-		self.inner_panel = VPanel(self, True)
+		self.inner_panel = RoundedPanel(self)
 
 		if widget or text:
 			self.widget_panel = HPanel(self)
@@ -278,7 +305,6 @@ class LabeledPanel(VPanel):
 		self.inner_panel.pack(*args, **kw)
 		if not isinstance(obj, tuple) and not isinstance(obj, int):
 			obj.show()
-
 
 
 class GridPanel(Panel, Widget):
