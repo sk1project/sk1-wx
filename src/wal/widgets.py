@@ -453,3 +453,10 @@ class Splitter(wx.SplitterWindow, Widget):
 
 	def set_sash_position(self, val):
 		self.SetSashPosition(val)
+
+class ScrollBar(wx.ScrollBar, Widget):
+
+	def __init__(self, parent, vertical=True):
+		style = wx.SB_VERTICAL
+		if not vertical: style = wx.SB_HORIZONTAL
+		wx.ScrollBar.__init__(self, parent, wx.ID_ANY, style=style)
