@@ -290,7 +290,7 @@ class LabeledPanel(VPanel):
 			elif text:
 				self.widget = wx.StaticText(self.widget_panel, wx.ID_ANY, text)
 			self.widget_panel.pack(self.widget, padding=5)
-			self.widget_panel.SetPosition((10, 0))
+			self.widget_panel.SetPosition((7, 0))
 			self.widget_panel.Fit()
 
 		padding = 0
