@@ -15,13 +15,13 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, sys
+import os
 
 from uc2 import uc2const
 from uc2.app_palettes import PaletteManager
 from uc2.formats.skp.skp_presenter import SKP_Presenter
 from uc2.utils import generate_id
-from uc2.formats import get_saver_by_id, get_loader_by_id
+from uc2.formats import get_loader_by_id
 
 from sk1 import config, events
 from sk1.resources import cmyk_palette, rgb_palette
@@ -65,7 +65,8 @@ class AppPaletteManager(PaletteManager):
 		for item in config.palette_files.keys():
 			filepath = os.path.join(paldir, config.palette_files[item])
 			try:
-				self.palettes[item] = loader(self.app.appdata, filepath, False)
+				self.palettes[item] = loader(self.app.appdata, filepath, False,
+											False, True)
 			except:
 				if os.path.isfile(filepath): os.remove(filepath)
 				del config.palette_files[item]
@@ -88,8 +89,7 @@ class AppPaletteManager(PaletteManager):
 		self.palettes[name] = palette
 		pf = generate_id() + "." + uc2const.FORMAT_EXTENSION[uc2const.SKP][0]
 		filepath = os.path.join(self.app.appdata.app_palette_dir, pf)
-		saver = get_saver_by_id(uc2const.SKP)
-		saver(palette, filepath)
+		palette.save(filepath)
 		if config.palette_files:
 			config.palette_files[name] = pf
 		else:

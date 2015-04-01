@@ -391,7 +391,7 @@ class pdApplication(wal.Application, UCApplication):
 				self.make_backup(doc_file, True)
 
 				pd = dialogs.ProgressDialog(_('Exporting...'), parent)
-				ret = pd.run(saver, [palette, doc_file], False)
+				ret = pd.run(saver, [palette, doc_file, None, False, True], False)
 				if ret:
 					if not pd.error_info is None:
 						pd.destroy()
@@ -417,7 +417,7 @@ class pdApplication(wal.Application, UCApplication):
 				palette = None
 				loader = get_loader(doc_file)
 				pd = dialogs.ProgressDialog(_('Opening file...'), parent)
-				ret = pd.run(loader, [self.appdata, doc_file])
+				ret = pd.run(loader, [self.appdata, doc_file, None, False, True])
 				if ret:
 					if pd.result is None:
 						pd.destroy()
