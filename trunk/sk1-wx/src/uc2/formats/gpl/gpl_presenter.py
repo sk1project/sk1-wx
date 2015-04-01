@@ -17,11 +17,12 @@
 
 import os
 
-from uc2 import uc2const
+from uc2 import uc2const, cms
 from uc2.formats.generic import TextModelPresenter
 from uc2.formats.gpl.gpl_config import GPL_Config
 from uc2.formats.gpl.gpl_filters import GPL_Loader, GPL_Saver
 from uc2.formats.gpl.gpl_model import GPL_Palette
+from uc2.uc2const import COLOR_RGB
 
 def create_new_palette(config):pass
 
@@ -52,6 +53,26 @@ class GPL_Presenter(TextModelPresenter):
 		self.model = GPL_Palette()
 		self.update()
 
-	def update(self):
-		TextModelPresenter.update(self)
+	def update(self):pass
+
+	def convert_from_skp(self, skp_doc):
+		skp_model = skp_doc.model
+		self.model.name = '' + skp_model.name
+		self.model.columns = skp_model.columns
+		self.model.comments = '' + skp_model.comments
+		for item in skp_model.colors:
+			r, g, b = self.cms.get_rgb_color255(item)
+			self.model.colors.append([r, g, b, '' + item[3]])
+
+	def convert_to_skp(self, skp_doc):
+		skp_model = skp_doc.model
+		skp_model.name = '' + self.model.name
+		skp_model.columns = self.model.columns
+		skp_model.source = 'GIMP'
+		skp_model.comments = '' + self.model.comments
+		for item in self.model.colors:
+			r, g, b, name = item
+			r, g, b = cms.val_255_to_dec((r, g, b))
+			skp_model.colors.append([COLOR_RGB, [r, g, b], 1.0, name])
+
 

@@ -100,9 +100,9 @@ class ModelPresenter(object):
 
 	def new(self):pass
 
-	def load(self, path=None, fileptr=None):
-		if path and os.path.lexists(path):
-			self.doc_file = path
+	def load(self, filename=None, fileptr=None):
+		if filename and os.path.lexists(filename):
+			self.doc_file = filename
 		elif not fileptr:
 			msg = _('Error while loading:') + ' ' + _('No file')
 			self.send_error(msg)
@@ -111,10 +111,10 @@ class ModelPresenter(object):
 		try:
 			self.parsing_msg(0.03)
 			self.send_info(_('Parsing is started...'))
-			self.model = self.loader.load(self, path, fileptr)
+			self.model = self.loader.load(self, filename, fileptr)
 		except:
 			self.close()
-			raise IOError(_('Error while loading') + ' ' + path,
+			raise IOError(_('Error while loading') + ' ' + filename,
 						sys.exc_info()[1], sys.exc_info()[2])
 
 		self.send_ok(_('Document model is created'))
@@ -137,9 +137,9 @@ class ModelPresenter(object):
 			self.send_progress_message(msg, 0.99)
 			self.send_ok(msg)
 
-	def save(self, path=None, fileptr=None):
-		if path:
-			self.doc_file = path
+	def save(self, filename=None, fileptr=None):
+		if filename:
+			self.doc_file = filename
 		elif not fileptr:
 			msg = _('Error while saving:') + ' ' + _('No file data')
 			self.send_error(msg)
@@ -148,9 +148,9 @@ class ModelPresenter(object):
 		try:
 			self.saving_msg(0.03)
 			self.send_info(_('Saving is started...'))
-			self.saver.save(self, path, fileptr)
+			self.saver.save(self, filename, fileptr)
 		except:
-			msg = _('Error while saving') + ' ' + path
+			msg = _('Error while saving') + ' ' + filename
 			self.send_error(msg)
 			raise IOError(msg, sys.exc_info()[1], sys.exc_info()[2])
 

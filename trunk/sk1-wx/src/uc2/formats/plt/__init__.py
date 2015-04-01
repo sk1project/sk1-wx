@@ -30,7 +30,7 @@ def plt_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **k
 	if translate:
 		sk2_doc = SK2_Presenter(appdata, cnf)
 		sk2_doc.doc_file = filename
-		doc.traslate_to_sk2(sk2_doc)
+		doc.translate_to_sk2(sk2_doc)
 		doc.close()
 		doc = sk2_doc
 	return doc
@@ -39,7 +39,7 @@ def plt_saver(doc, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	if kw: cnf.update(kw)
 	if translate:
 		plt_doc = PLT_Presenter(doc.appdata, cnf)
-		plt_doc.traslate_from_sk2(doc)
+		plt_doc.translate_from_sk2(doc)
 		plt_doc.save(filename)
 		plt_doc.close()
 	else:
