@@ -41,6 +41,7 @@ encoding//src/sk1/document/renderer.py=utf-8
 encoding//src/sk1/document/ruler.py=utf-8
 encoding//src/sk1/document/selection.py=utf-8
 encoding//src/sk1/document/snapping.py=utf-8
+encoding//src/sk1/document/viewer.py=utf-8
 encoding//src/sk1/events.py=utf-8
 encoding//src/sk1/parts/artprovider.py=utf-8
 encoding//src/sk1/parts/ctxpanel.py=utf-8
