@@ -478,7 +478,11 @@ class ColorManager(object):
 		"""
 		if color[0] == COLOR_RGB: return deepcopy(color)
 		if color[0] == COLOR_SPOT:
-			return [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
+			if color[1][0]:
+				return [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
+			else:
+				clr = [COLOR_CMYK, [] + color[1][1], color[2], '' + color[3]]
+			return self.get_rgb_color(clr)
 		res = self.do_transform(color, color[0], COLOR_RGB)
 		return [COLOR_RGB, res, color[2], '' + color[3]]
 
@@ -492,7 +496,11 @@ class ColorManager(object):
 		"""
 		if color[0] == COLOR_CMYK: return deepcopy(color)
 		if color[0] == COLOR_SPOT:
-			return [COLOR_CMYK, [] + color[1][1], color[2], '' + color[3]]
+			if color[1][1]:
+				return [COLOR_CMYK, [] + color[1][1], color[2], '' + color[3]]
+			else:
+				clr = [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
+				return self.get_cmyk_color(clr)
 		res = self.do_transform(color, color[0], COLOR_CMYK)
 		return [COLOR_CMYK, res, color[2], '' + color[3]]
 
@@ -503,7 +511,10 @@ class ColorManager(object):
 		"""
 		if color[0] == COLOR_LAB: return deepcopy(color)
 		if color[0] == COLOR_SPOT:
-			color = [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
+			if color[1][0]:
+				color = [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
+			else:
+				color = [COLOR_CMYK, [] + color[1][1], color[2], '' + color[3]]
 		res = self.do_transform(color, color[0], COLOR_LAB)
 		return [COLOR_LAB, res, color[2], '' + color[3]]
 
@@ -514,7 +525,10 @@ class ColorManager(object):
 		"""
 		if color[0] == COLOR_GRAY: return deepcopy(color)
 		if color[0] == COLOR_SPOT:
-			color = [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
+			if color[1][0]:
+				color = [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
+			else:
+				color = [COLOR_CMYK, [] + color[1][1], color[2], '' + color[3]]
 		res = self.do_transform(color, color[0], COLOR_GRAY)
 		return [COLOR_GRAY, res, color[2], '' + color[3]]
 
@@ -539,9 +553,9 @@ class ColorManager(object):
 
 		if color == COLOR_SPOT:
 			if self.proof_for_spot:
-				color = [COLOR_CMYK, [] + color[1][1], color[2], '' + color[3]]
+				color = self.get_cmyk_color(color)
 			else:
-				color = [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
+				color = self.get_rgb_color(color)
 
 		cs_in = color[0]
 		cs_out = COLOR_RGB
