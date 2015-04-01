@@ -24,9 +24,7 @@ from uc2.formats.plt.plt_const import SK2_to_PLT_TRAFO, PLT_to_SK2_TRAFO
 from uc2 import libgeom
 
 
-
-
-class PLT_to_SK2_Translator:
+class PLT_to_SK2_Translator(object):
 
 	def translate(self, plt_doc, sk2_doc):
 		jobs = plt_doc.get_jobs()
@@ -49,7 +47,7 @@ class PLT_to_SK2_Translator:
 		sk2_doc.model.do_update()
 
 
-class SK2_to_PLT_Translator:
+class SK2_to_PLT_Translator(object):
 
 	jobs = []
 	plt_doc = None
