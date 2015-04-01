@@ -59,7 +59,7 @@ class GeneralPrefs(PrefPanel):
 		self.pack(grid, align_center=False, padding=5)
 
 		if not config.is_mac():
-			txt = _('Use overlay for float spinbox widgets (*)')
+			txt = _('Use overlay for spinbox widgets (*)')
 			self.spin_overlay = wal.Checkbox(self, txt, config.spin_overlay)
 			self.pack(self.spin_overlay, align_center=False)
 
