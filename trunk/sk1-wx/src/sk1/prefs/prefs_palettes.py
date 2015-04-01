@@ -76,44 +76,48 @@ class PalettesPrefs(PrefPanel):
 		txt = _('Vertical palette')
 		vcell_panel = wal.LabeledPanel(cell_panel, text=txt)
 
-		grid = wal.GridPanel(vcell_panel, cols=3, hgap=5, vgap=2)
+		grid = wal.GridPanel(vcell_panel, cols=4, hgap=5, vgap=2)
 
-		grid.pack((20, 1))
+		grid.pack((15, 1))
 		grid.pack(wal.Label(grid, _('Cell width:')))
 		self.vcell_width = wal.IntSpin(grid, config.palette_vcell_width,
 									(10, 20), spin_overlay=config.spin_overlay)
 		self.vcell_width.set_enable(False)
 		grid.pack(self.vcell_width)
+		grid.pack(wal.Label(grid, _('px')))
 
-		grid.pack((20, 1))
+		grid.pack((15, 1))
 		grid.pack(wal.Label(grid, _('Cell height:')))
 		self.vcell_height = wal.IntSpin(grid, config.palette_vcell_height,
 									(10, 100), spin_overlay=config.spin_overlay)
 		grid.pack(self.vcell_height)
+		grid.pack(wal.Label(grid, _('px')))
 
-		vcell_panel.pack(grid, align_center=False, padding=5)
+		vcell_panel.pack(grid, align_center=False, padding_all=5)
 		cell_panel.pack(vcell_panel, fill=True)
 
 		#===
 		txt = _('Horizontal palette')
 		hcell_panel = wal.LabeledPanel(cell_panel, text=txt)
 
-		grid = wal.GridPanel(hcell_panel, cols=3, hgap=5, vgap=2)
+		grid = wal.GridPanel(hcell_panel, cols=4, hgap=5, vgap=2)
 
-		grid.pack((20, 1))
+		grid.pack((15, 1))
 		grid.pack(wal.Label(grid, _('Cell width:')))
 		self.hcell_width = wal.IntSpin(grid, config.palette_hcell_width,
 									(10, 100), spin_overlay=config.spin_overlay)
 		grid.pack(self.hcell_width)
+		grid.pack(wal.Label(grid, _('px')))
 
-		grid.pack((20, 1))
+		grid.pack((15, 1))
 		grid.pack(wal.Label(grid, _('Cell height:')))
 		self.hcell_height = wal.IntSpin(grid, config.palette_hcell_height,
 									(10, 20), spin_overlay=config.spin_overlay)
 		self.hcell_height.set_enable(False)
 		grid.pack(self.hcell_height)
+		grid.pack(wal.Label(grid, _('px')))
 
-		hcell_panel.pack(grid, align_center=False, padding=5)
+		hcell_panel.pack(grid, align_center=False, padding_all=5)
 		cell_panel.pack(hcell_panel, fill=True, padding=5)
 		#===
 
@@ -134,6 +138,14 @@ class PalettesPrefs(PrefPanel):
 
 		self.pack(self.nb, expand=True, fill=True)
 		self.built = True
+
+	def update_palette_list(self):
+		pal_list = self.get_palette_list()
+		self.pal.set_items(pal_list)
+		current_palette = self.get_current_palette()
+		current_palette_name = current_palette.model.name
+		self.pal.set_active(pal_list.index(current_palette_name))
+		self.palviewer.draw_palette(current_palette)
 
 	def change_palette(self, event=None):
 		palette_name = self.get_palette_name_by_index(self.pal.get_active())
@@ -226,6 +238,7 @@ class PaletteEditor(wal.HPanel):
 	def update_palette_list(self):
 		self.pal_list.update(self.get_palette_list())
 		self.pal_list.set_active(0)
+		self.prefpanel.update_palette_list()
 
 	def get_palette_list(self):
 		palettes = self.app.palettes.palettes
