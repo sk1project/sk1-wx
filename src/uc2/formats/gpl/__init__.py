@@ -58,14 +58,10 @@ def gpl_saver(doc, filename=None, fileptr=None, translate=True,
 		gpl_doc.close()
 		skp_doc.close()
 	elif convert:
-		print 'here'
 		gpl_doc = GPL_Presenter(appdata, cnf)
 		gpl_doc.convert_from_skp(doc)
-		print 'here1'
 		gpl_doc.save(filename, fileptr)
-		print 'here2'
 		gpl_doc.close()
-		print 'here3'
 	else:
 		doc.save(filename, fileptr)
 
