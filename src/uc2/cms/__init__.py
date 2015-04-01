@@ -68,7 +68,7 @@ def rgba_to_hexcolor(color):
 	"""
 	r, g, b, a = color
 	return '#%02x%02x%02x%02x' % (int(255 * r), int(255 * g),
-								int(255 * b), int(65535 * a))
+								int(255 * b), int(255 * a))
 
 def hexcolor_to_rgb(hexcolor):
 	"""
@@ -83,7 +83,7 @@ def hexcolor_to_rgb(hexcolor):
 def hexcolor_to_rgba(hexcolor):
 	"""
 	Converts hex color string as a list of float values.
-	For example: #ff00ff => [1.0, 0.0, 1.0, 1.0]
+	For example: #ff00ffff => [1.0, 0.0, 1.0, 1.0]
 	"""
 	if len(hexcolor) == 7:
 		r = int(hexcolor[1:3], 0x10) / 255.0
@@ -477,7 +477,7 @@ class ColorManager(object):
 		Stores alpha channel and color name.
 		"""
 		if color[0] == COLOR_RGB: return deepcopy(color)
-		if color == COLOR_SPOT:
+		if color[0] == COLOR_SPOT:
 			return [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
 		res = self.do_transform(color, color[0], COLOR_RGB)
 		return [COLOR_RGB, res, color[2], '' + color[3]]
@@ -491,7 +491,7 @@ class ColorManager(object):
 		Stores alpha channel and color name.
 		"""
 		if color[0] == COLOR_CMYK: return deepcopy(color)
-		if color == COLOR_SPOT:
+		if color[0] == COLOR_SPOT:
 			return [COLOR_CMYK, [] + color[1][1], color[2], '' + color[3]]
 		res = self.do_transform(color, color[0], COLOR_CMYK)
 		return [COLOR_CMYK, res, color[2], '' + color[3]]
@@ -502,7 +502,7 @@ class ColorManager(object):
 		Stores alpha channel and color name.
 		"""
 		if color[0] == COLOR_LAB: return deepcopy(color)
-		if color == COLOR_SPOT:
+		if color[0] == COLOR_SPOT:
 			color = [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
 		res = self.do_transform(color, color[0], COLOR_LAB)
 		return [COLOR_LAB, res, color[2], '' + color[3]]
@@ -513,7 +513,7 @@ class ColorManager(object):
 		Stores alpha channel and color name.
 		"""
 		if color[0] == COLOR_GRAY: return deepcopy(color)
-		if color == COLOR_SPOT:
+		if color[0] == COLOR_SPOT:
 			color = [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
 		res = self.do_transform(color, color[0], COLOR_GRAY)
 		return [COLOR_GRAY, res, color[2], '' + color[3]]
