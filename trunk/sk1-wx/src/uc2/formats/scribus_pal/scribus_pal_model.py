@@ -18,7 +18,21 @@
 
 from uc2.formats.generic import TaggedModelObject
 
-class ScribusPalette(TaggedModelObject):
+class SPObject(TaggedModelObject):
+	"""
+	Represents unknown/generic Scribus palette object.
+	"""
+
+	def __init__(self):
+		self.childs = []
+
+	def resolve(self):
+		is_node = len(self.childs)
+		info = ''
+		if is_node:info = '%d' % (len(self.childs))
+		return (not is_node, self.tag, info)
+
+class ScribusPalette(SPObject):
 	"""
 	Represents Scribus palette object.
 	This is a root DOM instance of Scribus palette file format.
@@ -26,14 +40,9 @@ class ScribusPalette(TaggedModelObject):
 	"""
 	tag = 'SCRIBUSCOLORS'
 	Name = ''
+	comments = ''
 
-	def __init__(self):
-		self.childs = []
-
-	def resolve(self):
-		return (True, self.tag, '%d' % (len(self.childs)))
-
-class ScribusColor(TaggedModelObject):
+class SPColor(SPObject):
 	"""
 	Represents Scribus palette color object.
 	"""
@@ -44,8 +53,3 @@ class ScribusColor(TaggedModelObject):
 	RGB = ''
 	Spot = '0'
 	Register = '0'
-
-	def __init__(self):pass
-
-	def resolve(self):
-		return (False, self.tag, '')
