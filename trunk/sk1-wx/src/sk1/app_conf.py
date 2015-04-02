@@ -156,7 +156,7 @@ class AppConfig(UCConfig):
 	palette_vcell_height = 18
 	palette_vcell_width = 18
 	palette_orientation = uc2const.HORIZONTAL
-	palette_expand = False
+	palette_expand = True
 	palette = ''
 	palette_files = {}
 
