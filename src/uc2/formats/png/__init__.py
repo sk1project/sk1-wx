@@ -21,20 +21,14 @@ import cairo
 from uc2 import _, events, msgconst
 from uc2.formats.fallback import im_loader
 from uc2.formats.sk2.crenderer import CairoRenderer
+from uc2.formats.generic_filters import get_fileptr
 
 def png_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	return im_loader(appdata, filename, fileptr, translate, cnf, **kw)
 
 def png_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	if filename and not fileptr:
-		try:
-			fileptr = open(filename, 'wb')
-		except:
-			errtype, value, traceback = sys.exc_info()
-			msg = _('Cannot open %s fileptr for writing') % (filename)
-			events.emit(events.MESSAGES, msgconst.ERROR, msg)
-			raise IOError(errtype, msg + '\n' + value, traceback)
-
+		fileptr = get_fileptr(filename, True)
 	page = sk2_doc.methods.get_page()
 	w, h = page.page_format[1]
 	trafo = (1.0, 0, 0, -1.0, w / 2.0, h / 2.0)
@@ -53,16 +47,8 @@ def png_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf={}, **kw
 	surface.write_to_png(fileptr)
 	fileptr.close()
 
-
 def check_png(path):
-	try:
-		fileptr = open(path, 'rb')
-	except:
-		errtype, value, traceback = sys.exc_info()
-		msg = _('Cannot open %s fileptr for reading') % (path)
-		events.emit(events.MESSAGES, msgconst.ERROR, msg)
-		raise IOError(errtype, msg + '\n' + value, traceback)
-
+	fileptr = get_fileptr(path)
 	mstr = fileptr.read(4)[1:]
 	fileptr.close()
 	if mstr == 'PNG': return True
