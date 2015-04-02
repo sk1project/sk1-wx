@@ -50,7 +50,7 @@ class SW_Presenter:
 				raise IOError(_('Unknown file format'), doc_file)
 
 			pd = ProgressDialog(_('Opening file...'), self.app.mw)
-			ret = pd.run(loader, [app.appdata, doc_file, None, False, False])
+			ret = pd.run(loader, [app.appdata, doc_file, None, False])
 			if ret == gtk.RESPONSE_OK:
 				if pd.result is None:
 					pd.destroy()
