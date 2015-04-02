@@ -15,17 +15,36 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
+from uc2.formats.generic_filters import AbstractXMLLoader, AbstractSaver
+from uc2.formats.scribus_pal.scribus_pal_model import ScribusPalette, SPColor, SPObject
 
-from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
-
-class ScribusPalette_Loader(AbstractLoader):
+class ScribusPalette_Loader(AbstractXMLLoader):
 
 	name = 'ScribusPalette_Loader'
+	stack = []
 
 	def do_load(self):
-		pass
+		self.stack = []
+		self.start_parsing()
 
+	def start_element(self, name, attrs):
+		if name == ScribusPalette.tag:
+			obj = self.model
+		elif name == SPColor.tag:
+			obj = SPColor()
+		else:
+			obj = SPObject()
+			obj.tag = name
+
+		for item in attrs._attrs.keys():
+			obj.__dict__[item] = attrs._attrs[item]
+
+		if self.stack: self.stack[-1].childs.append(obj)
+		self.stack.append(obj)
+
+	def end_element(self, name):
+		if self.stack and self.stack[-1].tag == name:
+			self.stack = self.stack[:-1]
 
 class ScribusPalette_Saver(AbstractSaver):
 
@@ -33,6 +52,10 @@ class ScribusPalette_Saver(AbstractSaver):
 
 	def do_save(self):
 		self.writeln('<?xml version="1.0" encoding="UTF-8"?>')
+		if self.model.comments:
+			self.writeln('<!--')
+			self.fileptr.write(self.model.comments)
+			self.writeln('-->')
 		self.writeln('<%s Name="%s" >' % (self.model.tag, self.model.Name))
 		for item in self.model.childs:
 			self.write_color(item)
