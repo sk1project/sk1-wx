@@ -17,6 +17,7 @@
 
 
 from uc2.formats.generic import TextModelObject
+from uc2.formats.soc.soc_const import SOURCE_LO
 
 
 class SOC_Palette(TextModelObject):
@@ -27,17 +28,18 @@ class SOC_Palette(TextModelObject):
 	Color sample: ['#ffffff','White']
 	"""
 
+	source = SOURCE_LO
 	name = ''
 	comments = ''
 	columns = 1
 	colors = []
 
-	def __init__(self, name='', colors=[]):
-		self.name = name
-		if not colors: self.colors = []
+	def __init__(self, source=SOURCE_LO):
+		self.source = source
+		self.colors = []
 
 	def resolve(self, name=''):
 		is_leaf = False
 		info = '%d' % (len(self.colors))
-		name = 'LibreOffice Palette'
+		name = 'SOC Palette'
 		return (is_leaf, name, info)

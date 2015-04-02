@@ -19,6 +19,8 @@ SOURCE_LO = 'LibreOffice, The Document Foundation (http://www.libreoffice.org/)'
 SOURCE_OO = 'Apache OpenOffice (http://www.openoffice.org/)'
 
 SOC_PAL_TAG = 'office:color-table'
+SOC_PAL_OO_TAG = 'ooo:color-table'
+
 SOC_COLOR_TAG = 'draw:color'
 SOC_COLOR_NAME_ATTR = 'draw:name'
 SOC_COLOR_VAL_ATTR = 'draw:color'
@@ -41,4 +43,12 @@ SOC_PAL_ATTRS = {
 "xmlns:form":"http://openoffice.org/2000/form",
 "xmlns:script":"http://openoffice.org/2000/script",
 "xmlns:config":"http://openoffice.org/2001/config",
+}
+
+SOC_PAL_OO_ATTRS = {
+"xmlns:office":"urn:oasis:names:tc:opendocument:xmlns:office:1.0",
+"xmlns:draw":"urn:oasis:names:tc:opendocument:xmlns:drawing:1.0",
+"xmlns:xlink":"http://www.w3.org/1999/xlink",
+"xmlns:svg":"http://www.w3.org/2000/svg",
+"xmlns:ooo":"http://openoffice.org/2004/office",
 }
