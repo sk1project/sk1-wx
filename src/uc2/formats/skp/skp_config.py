@@ -20,6 +20,7 @@ from uc2.utils.config import XmlConfigParser
 class SKP_Config(XmlConfigParser):
 
 	system_encoding = 'utf-8'
+	filename = 'skp_config.xml'
 
 
 
