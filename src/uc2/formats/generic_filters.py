@@ -18,6 +18,9 @@
 import sys, os, errno
 
 from uc2 import _, events, msgconst
+import xml.sax
+from xml.sax.xmlreader import InputSource
+from xml.sax import handler
 
 def get_fileptr(path, writable=False):
 	fileptr = None
@@ -73,11 +76,14 @@ class AbstractLoader(object):
 			msg = _('There is no file for reading')
 			raise IOError(errno.ENODATA, msg, '')
 
-		self.do_load()
+		self.init_load()
 
 		self.fileptr.close()
 		self.position = 0
 		return self.model
+
+	def init_load(self):
+		self.do_load()
 
 	def do_load(self):pass
 
@@ -111,6 +117,41 @@ class AbstractLoader(object):
 	def send_error(self, msg):
 		events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
+
+class ErrorHandler(handler.ErrorHandler): pass
+class EntityResolver(handler.EntityResolver): pass
+class DTDHandler(handler.DTDHandler): pass
+
+class AbstractXMLLoader(AbstractLoader, handler.ContentHandler):
+
+	xml_reader = None
+	input_source = None
+
+	def init_load(self):
+		self.input_source = InputSource()
+		self.input_source.setByteStream(self.fileptr)
+		self.xml_reader = xml.sax.make_parser()
+		self.xml_reader.setContentHandler(self)
+		self.xml_reader.setErrorHandler(ErrorHandler())
+		self.xml_reader.setEntityResolver(EntityResolver())
+		self.xml_reader.setDTDHandler(DTDHandler())
+		self.do_load()
+
+	def start_parsing(self):
+		self.xml_reader.parse(self.input_source)
+
+	def startElement(self, name, attrs):
+		self.start_element(name, attrs)
+
+	def endElement(self, name):
+		self.end_element(name)
+
+	def characters(self, data):
+		self.element_data(data)
+
+	def start_element(self, name, attrs):pass
+	def end_element(self, name):pass
+	def element_data(self, data):pass
 
 class AbstractSaver(object):
 
