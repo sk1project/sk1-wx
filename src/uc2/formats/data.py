@@ -56,6 +56,8 @@ from uc2.formats.fallback import im_loader, fallback_check
 
 from uc2.formats.skp import skp_loader, skp_saver, check_skp
 from uc2.formats.gpl import gpl_loader, gpl_saver, check_gpl
+from uc2.formats.scribus_pal import scribus_pal_loader, scribus_pal_saver, \
+check_scribus_pal
 
 
 LOADERS = {
@@ -71,7 +73,7 @@ RIFF: riff_loader,
 PNG: png_loader, JPG: im_loader, JP2: im_loader, TIF: im_loader, GIF: im_loader,
 BMP: im_loader, PCX: im_loader, PPM: im_loader, XBM: im_loader, XPM: im_loader,
 
-SKP: skp_loader, GPL:gpl_loader,
+SKP: skp_loader, GPL:gpl_loader, SCRIBUS_PAL:scribus_pal_loader,
 }
 
 SAVERS = {
@@ -86,7 +88,7 @@ RIFF: riff_saver,
 
 PNG: png_saver,
 
-SKP: skp_saver, GPL:gpl_saver,
+SKP: skp_saver, GPL:gpl_saver, SCRIBUS_PAL:scribus_pal_saver,
 }
 
 CHECKERS = {
@@ -102,6 +104,6 @@ PNG: check_png, JPG: fallback_check, JP2: fallback_check, TIF: fallback_check,
 GIF: fallback_check, BMP: fallback_check, PCX: fallback_check,
 PPM: fallback_check, XBM: fallback_check, XPM: fallback_check,
 
-SKP: check_skp, GPL: check_gpl,
+SKP: check_skp, GPL: check_gpl, SCRIBUS_PAL:check_scribus_pal,
 }
 
