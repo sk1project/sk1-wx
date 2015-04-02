@@ -70,7 +70,7 @@ def check_scribus_pal(path):
 	fileptr = get_fileptr(path)
 	ret = False
 	i = 0
-	while i < 10:
+	while i < 20:
 		line = fileptr.readline()
 		if not line.find(SP_TAG) == -1:
 			ret = True
