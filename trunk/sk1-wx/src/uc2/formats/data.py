@@ -21,18 +21,18 @@ EPS, PDF, PSD, CGM, WMF, EMF, XPS, VSD, PLT, HPGL , DXF, DWG, RIFF
 
 from uc2.uc2const import JPG, JP2, TIF, BMP, PCX, GIF, PNG, PPM, XBM, XPM
 
-from uc2.uc2const import SKP, GPL, SCRIBUS_PAL
+from uc2.uc2const import SKP, GPL, SCRIBUS_PAL, SOC
 
 
 SIMPLE_LOADERS = []
 MODEL_LOADERS = [SK2, PDXF, PLT, CDR, CDT] + \
 [PNG, JPG, JP2, TIF, GIF, BMP, PCX, PPM, XBM, XPM]
-PALETTE_LOADERS = [SKP, GPL, SCRIBUS_PAL]
+PALETTE_LOADERS = [SKP, GPL, SCRIBUS_PAL, SOC]
 EXPERIMENTAL_LOADERS = [SK1, WMF, RIFF, CDRZ, ] + PALETTE_LOADERS
 
 SIMPLE_SAVERS = []
 MODEL_SAVERS = [SK2, PNG, PDXF, PLT]
-PALETTE_SAVERS = [SKP, GPL, SCRIBUS_PAL]
+PALETTE_SAVERS = [SKP, GPL, SCRIBUS_PAL, SOC]
 EXPERIMENTAL_SAVERS = [SK1, RIFF, CDR, ] + PALETTE_SAVERS
 
 
@@ -58,6 +58,7 @@ from uc2.formats.skp import skp_loader, skp_saver, check_skp
 from uc2.formats.gpl import gpl_loader, gpl_saver, check_gpl
 from uc2.formats.scribus_pal import scribus_pal_loader, scribus_pal_saver, \
 check_scribus_pal
+from uc2.formats.soc import soc_loader, soc_saver, check_soc
 
 
 LOADERS = {
@@ -73,7 +74,7 @@ RIFF: riff_loader,
 PNG: png_loader, JPG: im_loader, JP2: im_loader, TIF: im_loader, GIF: im_loader,
 BMP: im_loader, PCX: im_loader, PPM: im_loader, XBM: im_loader, XPM: im_loader,
 
-SKP: skp_loader, GPL:gpl_loader, SCRIBUS_PAL:scribus_pal_loader,
+SKP: skp_loader, GPL:gpl_loader, SCRIBUS_PAL:scribus_pal_loader, SOC:soc_loader,
 }
 
 SAVERS = {
@@ -88,7 +89,7 @@ RIFF: riff_saver,
 
 PNG: png_saver,
 
-SKP: skp_saver, GPL:gpl_saver, SCRIBUS_PAL:scribus_pal_saver,
+SKP: skp_saver, GPL:gpl_saver, SCRIBUS_PAL:scribus_pal_saver, SOC:soc_saver,
 }
 
 CHECKERS = {
@@ -104,6 +105,6 @@ PNG: check_png, JPG: fallback_check, JP2: fallback_check, TIF: fallback_check,
 GIF: fallback_check, BMP: fallback_check, PCX: fallback_check,
 PPM: fallback_check, XBM: fallback_check, XPM: fallback_check,
 
-SKP: check_skp, GPL: check_gpl, SCRIBUS_PAL:check_scribus_pal,
+SKP: check_skp, GPL: check_gpl, SCRIBUS_PAL:check_scribus_pal, SOC:check_soc,
 }
 
