@@ -20,3 +20,6 @@ from uc2.utils.config import XmlConfigParser
 class ScribusPalette_Config(XmlConfigParser):
 
 	system_encoding = 'utf-8'
+	filename = 'scribus_pal_config.xml'
+	default_name = 'Scribus palette'
+	source = 'Scribus (http://wiki.scribus.net/)'
