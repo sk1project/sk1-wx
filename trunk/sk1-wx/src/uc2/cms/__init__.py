@@ -22,12 +22,15 @@ from copy import deepcopy
 import libcms
 from uc2 import uc2const
 from uc2.uc2const import COLOR_RGB, COLOR_CMYK, COLOR_LAB, COLOR_GRAY, \
-COLOR_SPOT, COLOR_DISPLAY
+COLOR_SPOT, COLOR_DISPLAY, COLOR_REG
 
 from uc2.uc2const import IMAGE_MONO, IMAGE_GRAY, IMAGE_RGB, IMAGE_CMYK, \
 IMAGE_LAB, IMAGE_TO_COLOR
 
 CS = [COLOR_RGB, COLOR_CMYK, COLOR_LAB, COLOR_GRAY]
+
+def get_registration_black():
+	return [COLOR_SPOT, [[0.0, 0.0, 0.0], [1.0, 1.0, 1.0, 1.0]], 1.0, COLOR_REG]
 
 def val_100(vals):
 	ret = []
@@ -70,6 +73,9 @@ def rgba_to_hexcolor(color):
 	return '#%02x%02x%02x%02x' % (int(255 * r), int(255 * g),
 								int(255 * b), int(255 * a))
 
+def cmyk_to_hexcolor(color):
+	return rgba_to_hexcolor(color)
+
 def hexcolor_to_rgb(hexcolor):
 	"""
 	Converts hex color string as a list of float values.
@@ -98,6 +104,9 @@ def hexcolor_to_rgba(hexcolor):
 		return [r, g, b, a]
 	else:
 		return [0.0, 0.0, 0.0, 1.0]
+
+def hexcolor_to_cmyk(hexcolor):
+	return hexcolor_to_rgba(hexcolor)
 
 def gdk_hexcolor_to_rgb(hexcolor):
 	"""
