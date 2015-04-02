@@ -267,8 +267,9 @@ class PaletteEditor(wal.HPanel):
 		self.app.export_palette(palette, self.prefpanel.dlg)
 
 	def import_palette(self, event):
-		self.app.import_palette(self.prefpanel.dlg)
+		palette_name = self.app.import_palette(self.prefpanel.dlg)
 		self.update_palette_list()
+		self.pal_list.set_active(self.get_palette_list().index(palette_name))
 
 	def remove_palette(self, event):
 		palette_name = self.pal_list.get_selected()
