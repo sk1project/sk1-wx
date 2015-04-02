@@ -22,8 +22,8 @@ from uc2.formats.generic import TaggedModelPresenter
 from uc2.formats.scribus_pal.scribus_pal_config import ScribusPalette_Config
 from uc2.formats.scribus_pal.scribus_pal_filters import ScribusPalette_Loader, \
 ScribusPalette_Saver
-from uc2.formats.scribus_pal.scribus_pal_model import ScribusPalette
-from uc2.uc2const import COLOR_RGB
+from uc2.formats.scribus_pal.scribus_pal_model import ScribusPalette, SPColor
+from uc2.uc2const import COLOR_RGB, COLOR_CMYK, COLOR_SPOT, COLOR_REG
 
 def create_new_palette(config):pass
 
@@ -38,8 +38,7 @@ class ScribusPalette_Presenter(TaggedModelPresenter):
 
 	def __init__(self, appdata, cnf={}, filepath=None):
 		self.config = ScribusPalette_Config()
-		config_file = os.path.join(appdata.app_config_dir,
-								'scribus_pal_config.xml')
+		config_file = os.path.join(appdata.app_config_dir, self.config.filename)
 		self.config.load(config_file)
 		self.config.update(cnf)
 		self.appdata = appdata
@@ -57,7 +56,69 @@ class ScribusPalette_Presenter(TaggedModelPresenter):
 
 	def update(self):pass
 
-	def convert_from_skp(self, skp_doc):pass
+	def convert_from_skp(self, skp_doc):
+		sp = self.model
+		skp = skp_doc.model
+		sp.Name = '' + skp.name
+		if skp.source: sp.comments += 'Palette source: ' + skp.source + '\n'
+		if skp.comments:
+			for item in skp.comments.splitlines():
+				sp.comments += item + '\n'
+		for item in skp.colors:
+			obj = SPColor()
+			if item[0] == COLOR_SPOT:
+				obj.Spot = '1'
+				if item[1][1]: obj.CMYK = cms.cmyk_to_hexcolor(item[1][1])
+				else: obj.RGB = cms.rgb_to_hexcolor(item[1][0])
+				obj.NAME = '' + item[3]
+				if item[3] == COLOR_REG:
+					obj.Register = '1'
+			elif item[0] == COLOR_CMYK:
+				obj.CMYK = cms.cmyk_to_hexcolor(item[1])
+				obj.NAME = '' + item[3]
+			elif item[0] == COLOR_RGB:
+				obj.RGB = cms.rgb_to_hexcolor(item[1])
+				obj.NAME = '' + item[3]
+			else:
+				clr = self.cms.get_rgb_color(item)
+				obj.RGB = cms.rgb_to_hexcolor(clr[1])
+				obj.NAME = '' + clr[3]
+			sp.childs.append(obj)
 
-	def convert_to_skp(self, skp_doc):pass
+	def convert_to_skp(self, skp_doc):
+		skp = skp_doc.model
+		skp.name = '' + self.model.Name
+		if not skp.name:
+			if self.doc_file:
+				name = os.path.basename(self.doc_file)
+				skp.name = name.replace('.xml', '').replace('_', ' ')
+			else:
+				skp.name = self.config.default_name
+		if self.doc_file:
+			filename = os.path.basename(self.doc_file)
+			skp.comments = 'Converted from %s' % filename
+		skp.source = '' + self.config.source
+		for item in self.model.childs:
+			color = None
+			if item.Register == '1':
+				color = cms.get_registration_black()
+			if item.Spot == '1':
+				rgb = []
+				cmyk = []
+				if item.RGB: rgb = cms.hexcolor_to_rgb(item.RGB)
+				if item.CMYK: cmyk = cms.hexcolor_to_cmyk(item.CMYK)
+				name = '' + item.NAME
+				color = [COLOR_SPOT, [rgb, cmyk], 1.0, name]
+			elif item.CMYK:
+				cmyk = cms.hexcolor_to_cmyk(item.CMYK)
+				name = '' + item.NAME
+				color = [COLOR_CMYK, cmyk, 1.0, name]
+			elif item.RGB:
+				rgb = cms.hexcolor_to_rgb(item.RGB)
+				name = '' + item.NAME
+				color = [COLOR_RGB, rgb, 1.0, name]
+			else:
+				continue
+			skp.colors.append(color)
+
 

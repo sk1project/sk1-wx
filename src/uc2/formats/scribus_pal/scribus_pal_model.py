@@ -18,6 +18,9 @@
 
 from uc2.formats.generic import TaggedModelObject
 
+SP_TAG = 'SCRIBUSCOLORS'
+SPCOLOR_TAG = 'COLOR'
+
 class SPObject(TaggedModelObject):
 	"""
 	Represents unknown/generic Scribus palette object.
@@ -38,7 +41,7 @@ class ScribusPalette(SPObject):
 	This is a root DOM instance of Scribus palette file format.
 	All palette colors are members of childs list.
 	"""
-	tag = 'SCRIBUSCOLORS'
+	tag = SP_TAG
 	Name = ''
 	comments = ''
 
@@ -46,7 +49,7 @@ class SPColor(SPObject):
 	"""
 	Represents Scribus palette color object.
 	"""
-	tag = 'COLOR'
+	tag = SPCOLOR_TAG
 
 	NAME = ''
 	CMYK = ''

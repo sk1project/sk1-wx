@@ -23,8 +23,8 @@ from uc2.formats.scribus_pal.scribus_pal_presenter import ScribusPalette_Present
 from uc2.formats.generic_filters import get_fileptr
 from uc2.formats.skp.skp_presenter import SKP_Presenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
+from uc2.formats.scribus_pal.scribus_pal_model import SP_TAG
 
-SCRIBUS_TAG = '<SCRIBUSCOLORS'
 
 def scribus_pal_loader(appdata, filename=None, fileptr=None, translate=True,
 			convert=False, cnf={}, **kw):
@@ -72,9 +72,10 @@ def check_scribus_pal(path):
 	i = 0
 	while i < 10:
 		line = fileptr.readline()
-		if not line.find(SCRIBUS_TAG) == -1:
+		if not line.find(SP_TAG) == -1:
 			ret = True
 			break
+		i += 1
 	fileptr.close()
 	return ret
 
