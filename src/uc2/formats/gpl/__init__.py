@@ -67,7 +67,7 @@ def gpl_saver(doc, filename=None, fileptr=None, translate=True,
 
 def check_gpl(path):
 	fileptr = get_fileptr(path)
-	string = fileptr.read(12)
+	string = fileptr.read(len(GPL_HEADER))
 	fileptr.close()
 	return string == GPL_HEADER
 

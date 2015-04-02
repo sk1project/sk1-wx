@@ -18,6 +18,7 @@
 
 from uc2.formats.generic import TextModelObject
 
+
 class GPL_Palette(TextModelObject):
 	"""
 	Represents GPL palette object.
