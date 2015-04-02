@@ -440,6 +440,7 @@ class pdApplication(wal.Application, UCApplication):
 					config.import_dir = str(os.path.dirname(doc_file))
 					msg = _('Palette is successfully imported')
 					events.emit(events.APP_STATUS, msg)
+					return palette.model.name
 
 			except:
 				msg = _('Cannot import file')
