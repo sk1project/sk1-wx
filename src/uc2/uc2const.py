@@ -95,6 +95,7 @@ SKP = 500
 GPL = 501
 CPL = 502
 SCRIBUS_PAL = 503
+SOC = 504
 
 
 FORMAT_DESCRIPTION = {
@@ -151,7 +152,8 @@ XPM: _("XPM - X pixmap files"),
 SKP: _("SKP - sK1 palette files"),
 GPL: _("GPL - GIMP palette files"),
 CPL: _("CPL - CorelDRAW palette files"),
-SCRIBUS_PAL: _("XML - Scribus palette files")
+SCRIBUS_PAL: _("XML - Scribus palette files"),
+SOC: _("SOC - LibreOffice palette files"),
 }
 
 FORMAT_NAMES = {
@@ -209,6 +211,7 @@ SKP: "SKP",
 GPL: "GPL",
 CPL: "CPL",
 SCRIBUS_PAL: "SCRIBUS_PAL",
+SOC: "SOC",
 }
 
 FORMAT_EXTENSION = {
@@ -228,7 +231,7 @@ JPG: ('jpg', 'jpeg', 'jpe', 'jfif'), TIF: ('tif', 'tiff'), BMP: ('bmp', 'dib'),
 PCX: ('pcx',), GIF: ('gif',), PNG: ('png',), PPM: ('pbm', 'pgm', 'pgm'),
 XBM: ('xbm',), XPM: ('xpm',), JP2: ('jp2', 'jpx', 'jpf'),
 
-SKP: ('skp',), GPL: ('gpl',), CPL: ('cpl',), SCRIBUS_PAL:('xml',),
+SKP: ('skp',), GPL: ('gpl',), CPL: ('cpl',), SCRIBUS_PAL:('xml',), SOC:('soc',),
 }
 
 IMAGE_FORMATS = [JPG, TIF, BMP, PCX, GIF, PNG, PPM, XBM, XPM, ]
