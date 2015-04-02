@@ -20,7 +20,7 @@ import os
 from uc2 import uc2const, cms
 from uc2.formats.generic import TextModelPresenter
 from uc2.formats.soc.soc_config import SOC_Config
-from uc2.formats.gpl.gpl_filters import GPL_Loader, GPL_Saver
+from uc2.formats.soc.soc_filters import SOC_Loader, SOC_Saver
 from uc2.formats.soc.soc_model import SOC_Palette
 from uc2.uc2const import COLOR_RGB
 
@@ -41,15 +41,14 @@ class SOC_Presenter(TextModelPresenter):
 		self.config.update(cnf)
 		self.appdata = appdata
 		self.cms = self.appdata.app.default_cms
-		self.loader = GPL_Loader()
-		self.saver = GPL_Saver()
-		if filepath is None:
-			self.new()
-		else:
+		self.loader = SOC_Loader()
+		self.saver = SOC_Saver()
+		self.new()
+		if filepath:
 			self.load(filepath)
 
 	def new(self):
-		self.model = SOC_Palette()
+		self.model = SOC_Palette(self.config.source)
 		self.update()
 
 	def update(self):pass
@@ -70,8 +69,8 @@ class SOC_Presenter(TextModelPresenter):
 			skp_model.name = os.path.basename(self.doc_file).replace('.soc', '')
 			skp_model.name += ' palette'
 		else:
-			skp_model.name = 'LibreOffice palette'
-		skp_model.source = '' + self.config.source
+			skp_model.name = 'SOC palette'
+		skp_model.source = '' + self.model.source
 		skp_model.columns = self.model.columns
 		skp_model.comments = '' + self.model.comments
 		if self.doc_file:

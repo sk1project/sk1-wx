@@ -19,7 +19,7 @@ import os
 import sys
 
 from uc2 import _, events, msgconst, uc2const
-from uc2.formats.soc.soc_const import SOC_PAL_TAG
+from uc2.formats.soc.soc_const import SOC_PAL_TAG, SOC_PAL_OO_TAG
 from uc2.formats.soc.soc_presenter import SOC_Presenter
 from uc2.formats.generic_filters import get_fileptr
 from uc2.formats.skp.skp_presenter import SKP_Presenter
@@ -72,6 +72,9 @@ def check_soc(path):
 	while i < 20:
 		line = fileptr.readline()
 		if not line.find(SOC_PAL_TAG) == -1:
+			ret = True
+			break
+		if not line.find(SOC_PAL_OO_TAG) == -1:
 			ret = True
 			break
 		i += 1

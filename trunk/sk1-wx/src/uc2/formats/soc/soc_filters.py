@@ -17,7 +17,8 @@
 
 from uc2.formats.generic_filters import AbstractXMLLoader, AbstractSaver
 from uc2.formats.soc.soc_const import SOC_COLOR_TAG, SOC_COLOR_NAME_ATTR, \
-SOC_COLOR_VAL_ATTR, SOC_PAL_TAG, SOC_PAL_ATTRS
+SOC_COLOR_VAL_ATTR, SOC_PAL_TAG, SOC_PAL_ATTRS, SOC_PAL_OO_TAG, SOURCE_LO, \
+SOC_PAL_OO_ATTRS, SOURCE_OO
 
 class SOC_Loader(AbstractXMLLoader):
 
@@ -27,6 +28,8 @@ class SOC_Loader(AbstractXMLLoader):
 		self.start_parsing()
 
 	def start_element(self, name, attrs):
+		if name == SOC_PAL_OO_TAG:
+			self.model.source = SOURCE_OO
 		if name == SOC_COLOR_TAG:
 			self.model.colors.append([attrs._attrs[SOC_COLOR_VAL_ATTR],
 				attrs._attrs[SOC_COLOR_NAME_ATTR]])
@@ -37,15 +40,21 @@ class SOC_Saver(AbstractSaver):
 
 	def do_save(self):
 		self.writeln('<?xml version="1.0" encoding="UTF-8"?>')
-		self.writeln('')
 		if self.model.comments:
 			self.writeln('<!--')
 			self.fileptr.write(self.model.comments)
 			self.writeln('-->')
 
-		line = '<%' % SOC_PAL_TAG
-		for item in SOC_PAL_ATTRS.keys():
-			line += ' %s="%s"' % (item, SOC_PAL_ATTRS[item])
+		if self.model.source == SOURCE_LO:
+			pal_tag = SOC_PAL_TAG
+			pal_attr = SOC_PAL_ATTRS
+		else:
+			pal_tag = SOC_PAL_OO_TAG
+			pal_attr = SOC_PAL_OO_ATTRS
+
+		line = '<%' % pal_tag
+		for item in pal_attr.keys():
+			line += ' %s="%s"' % (item, pal_attr[item])
 		self.writeln(line + '>')
 
 		for item in self.model.colors:
