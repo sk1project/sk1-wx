@@ -20,6 +20,7 @@ import sys
 
 from uc2 import _, events, msgconst
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
+from uc2.formats.sk2.sk2_const import DOC_HEADER
 from uc2.formats.generic_filters import get_fileptr
 
 def sk2_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
@@ -34,6 +35,6 @@ def sk2_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf={}, **kw
 
 def check_sk2(path):
 	fileptr = get_fileptr(path)
-	string = fileptr.read(7)
+	string = fileptr.read(len(DOC_HEADER))
 	fileptr.close()
-	return string == '##sK1 2'
+	return string == DOC_HEADER
