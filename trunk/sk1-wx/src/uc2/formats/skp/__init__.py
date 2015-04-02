@@ -49,7 +49,7 @@ def skp_saver(doc, filename=None, fileptr=None, translate=True,
 
 def check_skp(path):
 	fileptr = get_fileptr(path)
-	string = fileptr.read(13)
+	string = fileptr.read(len(SKP_HEADER))
 	fileptr.close()
 	return string == SKP_HEADER
 

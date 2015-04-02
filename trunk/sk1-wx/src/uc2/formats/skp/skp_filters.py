@@ -30,15 +30,12 @@ class SKP_Loader(AbstractLoader):
 			self.line = self.fileptr.readline()
 			if not self.line: break
 			self.line = self.line.rstrip('\r\n')
-
 			self.check_loading()
-
 			if self.line:
 				try:
 					code = compile('self.' + self.line, '<string>', 'exec')
 					exec code
-				except:
-					pass
+				except:pass
 
 	def palette(self):pass
 	def set_name(self, name): self.model.name = name

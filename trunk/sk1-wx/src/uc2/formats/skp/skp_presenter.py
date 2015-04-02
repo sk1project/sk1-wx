@@ -36,7 +36,7 @@ class SKP_Presenter(TextModelPresenter):
 
 	def __init__(self, appdata, cnf={}, filepath=None):
 		self.config = SKP_Config()
-		config_file = os.path.join(appdata.app_config_dir, 'skp_config.xml')
+		config_file = os.path.join(appdata.app_config_dir, self.config.filename)
 		self.config.load(config_file)
 		self.config.update(cnf)
 		self.appdata = appdata
