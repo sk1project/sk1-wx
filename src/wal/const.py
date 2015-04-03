@@ -105,12 +105,6 @@ def get_system_fontsize():
 		fontsize = font.GetPointSize()
 	return fontsize
 
-EVEN_COLOR = wx.Colour(240, 240, 240)
-ODD_COLOR = wx.Colour(255, 255, 255)
-YELLOW_EVEN_COLOR = wx.Colour(255, 255, 191)
-YELLOW_ODD_COLOR = wx.Colour(255, 255, 222)
-WHITE = wx.Colour(255, 255, 255)
-
 def mix_colors(fg, bg, alpha):
 	r1, g1, b1 = fg
 	r2, g2, b2 = bg
@@ -195,3 +189,11 @@ def set_ui_colors(kw):
 	else: _init_gtk_colors(kw)
 
 UI_COLORS = {}
+
+
+EVEN_COLOR = wx.Colour(240, 240, 240)
+ODD_COLOR = wx.Colour(255, 255, 255)
+YELLOW_EVEN_COLOR = wx.Colour(255, 255, 191)
+YELLOW_ODD_COLOR = wx.Colour(255, 255, 222)
+WHITE = wx.Colour(255, 255, 255)
+BLACK = wx.Colour(0, 0, 0)
