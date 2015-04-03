@@ -448,6 +448,7 @@ class pdApplication(wal.Application, UCApplication):
 				msg += _('The file may be corrupted or not supported format')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
 				self.print_stacktrace()
+		return None
 
 	def make_backup(self, doc_file, export=False):
 		if not export and not config.make_backup:return
