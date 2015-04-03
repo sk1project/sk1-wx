@@ -5,7 +5,7 @@ class WidgetPanel(wal.HPanel):
 	def __init__(self, parent):
 		wal.HPanel.__init__(self, parent)
 
-		panel = wal.LabeledPanel(self, text='Test')
+		panel = wal.LabeledPanel(self, text='LabeledPanel')
 		self.pack(panel, fill=True, expand=True, padding_all=10)
 
 		panel.pack(wal.Label(panel, 'Internal widget'))

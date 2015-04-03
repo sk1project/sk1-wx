@@ -245,32 +245,69 @@ class VPanel(SizedPanel):
 
 		self.add(obj, expand, flags, padding)
 
-class RoundedPanel(VPanel):
+class Canvas(object):
 
-	def __init__(self, parent):
-		VPanel.__init__(self, parent)
+	dc = None
+	pdc = None
+
+	def __init__(self):
 		self.Bind(wx.EVT_PAINT, self._on_paint, self)
 
 	def _on_paint(self, event):
 		w, h = self.GetSize()
 		if not w or not h: return
-		pdc = wx.PaintDC(self)
+		self.pdc = wx.PaintDC(self)
 		try:
-			dc = wx.GCDC(self.pdc)
-		except:dc = pdc
+			self.dc = wx.GCDC(self.pdc)
+		except:self.dc = self.pdc
+		self.dc.BeginDrawing()
 
-		dc.BeginDrawing()
-		color = const.UI_COLORS['dark_shadow']
-		dc.SetPen(wx.Pen(wx.Colour(*color), 1))
-		dc.SetBrush(wx.TRANSPARENT_BRUSH)
-		dc.DrawRoundedRectangle(0, 0, w, h, 4.0)
+		self.paint()
 
-		if not pdc == dc:
-			dc.EndDrawing()
-			pdc.EndDrawing()
+		if not self.pdc == self.dc:
+			self.dc.EndDrawing()
+			self.pdc.EndDrawing()
 		else:
-			dc.EndDrawing()
-		pdc = dc = None
+			self.dc.EndDrawing()
+		self.pdc = self.dc = None
+
+	#Paint method for inherited class
+	def paint(self):pass
+
+	def set_stroke(self, color=None, width=1):
+		if color is None:
+			self.dc.SetPen(wx.TRANSPARENT_PEN)
+		else:
+			self.dc.SetPen(wx.Pen(wx.Colour(*color), width))
+
+	def set_fill(self, color=None):
+		if color is None:
+			self.dc.SetBrush(wx.TRANSPARENT_BRUSH)
+		else:
+			self.dc.SetBrush(wx.Brush(wx.Colour(*color)))
+
+	def draw_line(self, x0, y0, x1, y1):
+		self.dc.DrawLine(self, x0, y0, x1, y1)
+
+	def draw_rounded_rect(self, x=0, y=0, w=1, h=1, radius=1.0):
+		self.dc.DrawRoundedRectangle(x, y, w, h, radius)
+
+	def draw_rect(self, x=0, y=0, w=1, h=1):
+		self.dc.DrawRectangle(x, y, w, h)
+
+
+class RoundedPanel(VPanel, Canvas):
+
+	def __init__(self, parent):
+		VPanel.__init__(self, parent)
+		Canvas.__init__(self)
+
+	def paint(self):
+		w, h = self.get_size()
+		color = const.UI_COLORS['dark_shadow']
+		self.set_stroke(color, 1)
+		self.set_fill(None)
+		self.draw_rounded_rect(0, 0, w, h, 7.0)
 
 
 class LabeledPanel(VPanel):
