@@ -268,6 +268,7 @@ class PaletteEditor(wal.HPanel):
 
 	def import_palette(self, event):
 		palette_name = self.app.import_palette(self.prefpanel.dlg)
+		if not palette_name:return
 		self.update_palette_list()
 		self.pal_list.set_active(self.get_palette_list().index(palette_name))
 
