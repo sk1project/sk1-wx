@@ -22,8 +22,8 @@ import zipfile
 from zipfile import ZipFile
 
 from uc2 import events, msgconst
+from uc2.utils import get_chunk_size, dword2py_int, py_int2dword
 from uc2.formats.riff import model
-from uc2.formats.riff.utils import get_chunk_size, dword2py_int, py_int2dword
 from uc2.formats.cdrz.model import generic_dict
 
 class CDRZ_Loader:

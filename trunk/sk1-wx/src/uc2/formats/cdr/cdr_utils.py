@@ -18,7 +18,7 @@
 from colorsys import yiq_to_rgb, hls_to_rgb, hsv_to_rgb
 
 from uc2 import uc2const
-from uc2.formats.riff.utils import double2py_float, word2py_int, long2py_float
+from uc2.utils import double2py_float, word2py_int, long2py_float
 from uc2.formats.cdr.cdr_const import cdrunit_to_pt, \
 CDR_COLOR_CMYK, CDR_COLOR_BGR, CDR_COLOR_CMY, CDR_COLOR_CMYK255, \
 CDR_COLOR_GRAY, CDR_COLOR_LAB, CDR_COLOR_REGISTRATION, CDR_COLOR_CMYK2, \

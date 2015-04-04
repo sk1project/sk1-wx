@@ -18,8 +18,8 @@
 import math
 from copy import deepcopy
 
+from uc2.utils import dword2py_int, long2py_float, word2py_int
 from uc2.formats.riff.model import RiffList, RiffObject
-from uc2.formats.riff.utils import dword2py_int, long2py_float, word2py_int
 from uc2.formats.cdr.cdr_const import CDR6, CDR7, CDR8, CDR9, CDR12, CDR13
 from uc2.formats.cdr import cdr_const as const
 from uc2.formats.sk2.sk2_const import NODE_CUSP, NODE_SMOOTH, NODE_SYMMETRICAL, \
