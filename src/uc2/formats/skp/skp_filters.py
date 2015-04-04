@@ -17,12 +17,14 @@
 
 import os
 
+from uc2 import cms, uc2const
 from uc2.formats.skp.skp_const import SKP_HEADER
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 
 class SKP_Loader(AbstractLoader):
 
 	name = 'SKP_Loader'
+	stop_flag = False
 
 	def do_load(self):
 		self.fileptr.readline()
@@ -36,14 +38,26 @@ class SKP_Loader(AbstractLoader):
 					code = compile('self.' + self.line, '<string>', 'exec')
 					exec code
 				except:pass
+				if self.stop_flag: break
 
-	def palette(self):pass
+	def palette(self):self.stop_flag = False
 	def set_name(self, name): self.model.name = name
 	def set_source(self, source): self.model.source = source
 	def add_comments(self, txt): self.model.comments += txt + os.linesep
 	def set_columns(self, val): self.model.columns = val
 	def color(self, color): self.model.colors.append(color)
-	def palette_end(self):pass
+
+	def hexcolor(self, hexcolor, name=''):
+		rgb = cms.hexcolor_to_rgb(hexcolor)
+		if not name: name = '' + hexcolor
+		self.model.colors.append([uc2const.COLOR_RGB, rgb, 1.0, name])
+
+	def rgbcolor(self, r, g, b, name=''):
+		rgb = cms.val_255_to_dec([r, g, b])
+		if not name: name = cms.rgb_to_hexcolor(rgb)
+		self.model.colors.append([uc2const.COLOR_RGB, rgb, 1.0, name])
+
+	def palette_end(self):self.stop_flag = True
 
 class SKP_Saver(AbstractSaver):
 
