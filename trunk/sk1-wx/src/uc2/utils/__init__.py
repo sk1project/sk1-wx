@@ -35,6 +35,11 @@ def generate_id():
 	time.sleep(0.001)
 	return str(int(time.time() * 100000))
 
+def generate_guid():
+	import uuid
+	time.sleep(0.001)
+	return uuid.uuid1()
+
 def word2py_int(data):
 	"""
 	Converts word of bytes to Python int value.
