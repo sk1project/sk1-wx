@@ -17,7 +17,7 @@
 
 import os
 
-from uc2.formats.gpl.gpl_const import GPL_HEADER
+from uc2.formats.gpl.gpl_const import GPL_HEADER, COL_STR, NAME_STR
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 
 class GPL_Loader(AbstractLoader):
@@ -27,10 +27,10 @@ class GPL_Loader(AbstractLoader):
 	def do_load(self):
 		comments = ''
 		self.readln()
-		self.model.name = self.readln().split('Name:')[1].strip()
+		self.model.name = self.readln().split(NAME_STR)[1].strip()
 		line = self.readln()
-		if line[:8] == 'Columns:':
-			self.model.columns = int(line.split('Columns:')[1].strip())
+		if line[:len(COL_STR)] == COL_STR:
+			self.model.columns = int(line.split(COL_STR)[1].strip())
 		while True:
 			line = self.readln(False)
 			if not line[0] == '#':break
@@ -69,9 +69,9 @@ class GPL_Saver(AbstractSaver):
 
 	def do_save(self):
 		self.writeln(GPL_HEADER)
-		self.writeln('Name: %s' % self.model.name)
+		self.writeln('%s %s' % (NAME_STR, self.model.name))
 		if self.model.columns > 1:
-			self.writeln('Columns: %u' % self.model.columns)
+			self.writeln('%s %u' % (COL_STR, self.model.columns))
 		self.writeln('#')
 		if self.model.comments:
 			lines = self.model.comments.splitlines()
