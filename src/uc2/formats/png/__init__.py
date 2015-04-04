@@ -23,6 +23,8 @@ from uc2.formats.fallback import im_loader
 from uc2.formats.sk2.crenderer import CairoRenderer
 from uc2.formats.generic_filters import get_fileptr
 
+PNG_ID = '\x89\x50\x4e\x47'
+
 def png_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	return im_loader(appdata, filename, fileptr, translate, cnf, **kw)
 
@@ -49,7 +51,7 @@ def png_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf={}, **kw
 
 def check_png(path):
 	fileptr = get_fileptr(path)
-	mstr = fileptr.read(4)[1:]
+	mstr = fileptr.read(len(PNG_ID))
 	fileptr.close()
-	if mstr == 'PNG': return True
+	if mstr == PNG_ID: return True
 	return False
