@@ -62,7 +62,8 @@ class GPL_Loader(AbstractLoader):
 		if len(line) > 11:
 			name = line[12:].strip()
 		else:
-			name = cms.rgb_to_hexcolor(cms.val_255_to_dec((r, g, b)))
+			if self.config.set_color_name:
+				name = cms.rgb_to_hexcolor(cms.val_255_to_dec((r, g, b)))
 		self.model.colors.append([r, g, b, name])
 
 

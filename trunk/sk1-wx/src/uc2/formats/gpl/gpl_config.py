@@ -23,4 +23,4 @@ class GPL_Config(XmlConfigParser):
 	system_encoding = 'utf-8'
 	filename = 'gpl_config.xml'
 	source = gpl_const.GIMP_SOURCE
-
+	set_color_name = True
