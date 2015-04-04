@@ -15,9 +15,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from uc2.utils import get_chunk_size, dword2py_int, py_int2dword
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 from uc2.formats.riff import model
-from uc2.formats.riff.utils import get_chunk_size, dword2py_int, py_int2dword
 
 class RIFF_Loader(AbstractLoader):
 
