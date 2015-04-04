@@ -43,6 +43,6 @@ def check_cdr(path):
 	fileptr = get_fileptr(path)
 	header = fileptr.read(12)
 	fileptr.close()
-	if not header[:4] == 'RIFF': return False
+	if not header[:4] == cdr_const.RIFF_ID: return False
 	if header[8:] in cdr_const.CDR_VERSIONS: return True
 	else: return False
