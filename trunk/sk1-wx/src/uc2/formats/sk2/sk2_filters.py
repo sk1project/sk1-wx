@@ -73,7 +73,7 @@ class SK2_Saver(AbstractSaver):
 
 	def do_save(self):
 		self.presenter.update()
-		self.writeln(sk2_const.DOC_HEADER)
+		self.writeln(sk2_const.SK2DOC_ID)
 		self.save_obj(self.model)
 
 	def save_obj(self, obj):
