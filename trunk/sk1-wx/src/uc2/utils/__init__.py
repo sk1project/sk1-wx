@@ -40,19 +40,23 @@ def generate_guid():
 	time.sleep(0.001)
 	return uuid.uuid1()
 
+def byte2py_int(data):
+	"""
+	Converts byte to Python int value.
+	"""
+	return struct.unpack('B', data)[0]
+
 def word2py_int(data):
 	"""
 	Converts word of bytes to Python int value.
 	"""
-	val, = struct.unpack('<H', data)
-	return val
+	return struct.unpack('<H', data)[0]
 
 def dword2py_int(data):
 	"""
 	Converts double word of bytes to Python int value.
 	"""
-	val, = struct.unpack('<I', data)
-	return val
+	return struct.unpack('<I', data)[0]
 
 def py_int2dword(val):
 	"""
@@ -64,8 +68,7 @@ def double2py_float(data):
 	"""
 	Converts 8 bytes to Python float value.
 	"""
-	val, = struct.unpack('<d', data)
-	return val
+	return struct.unpack('<d', data)[0]
 
 def py_float2double(val):
 	"""
@@ -77,8 +80,21 @@ def long2py_float(data):
 	"""
 	Converts 4 bytes to Python float value.
 	"""
-	val, = struct.unpack('<l', data)
-	return val
+	return struct.unpack('<l', data)[0]
+
+def latin1_bytes_2str(data):
+	"""
+	Converts Latin1 bytes to Python string value.
+	"""
+	length = len(data)
+	return unicode(struct.unpack(str(length) + 's', data)[0], 'latin1')
+
+def utf_16_le_bytes_2str(data):
+	"""
+	Converts utf16 bytes to Python string value.
+	"""
+	length = len(data)
+	return unicode(struct.unpack(str(length) + 's', data)[0], 'utf_16_le')
 
 def get_chunk_size(size_field):
 	size = dword2py_int(size_field)

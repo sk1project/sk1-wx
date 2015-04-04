@@ -17,7 +17,7 @@
 
 import sys, os, errno
 
-from uc2 import _, events, msgconst
+from uc2 import _, events, msgconst, utils
 import xml.sax
 from xml.sax.xmlreader import InputSource
 from xml.sax import handler
@@ -116,6 +116,23 @@ class AbstractLoader(object):
 
 	def send_error(self, msg):
 		events.emit(events.MESSAGES, msgconst.ERROR, msg)
+
+class AbstractBinaryLoader(AbstractLoader):
+
+	def readbytes(self, size):
+		return self.fileptr.read(size)
+
+	def readbyte(self):
+		return utils.byte2py_int(self.fileptr.read(1))
+
+	def readword(self):
+		return utils.word2py_int(self.fileptr.read(2))
+
+	def readstr(self, size):
+		return utils.latin1_bytes_2str(self.fileptr.read(size))
+
+	def readustr(self, size):
+		return utils.utf_16_le_bytes_2str(self.fileptr.read(size * 2))
 
 
 class ErrorHandler(handler.ErrorHandler): pass
