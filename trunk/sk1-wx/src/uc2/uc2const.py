@@ -151,7 +151,7 @@ XPM: _("XPM - X pixmap files"),
 #Palette file formats
 SKP: _("SKP - sK1 palette files"),
 GPL: _("GPL - GIMP palette files"),
-CPL: _("CPL - CorelDRAW palette files"),
+CPL: _("CPL - CorelDRAW palette files (v7-X4)"),
 SCRIBUS_PAL: _("XML - Scribus palette files"),
 SOC: _("SOC - LibreOffice palette files"),
 }
