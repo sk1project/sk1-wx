@@ -33,6 +33,14 @@ class CPL10_Palette(BinaryModelObject):
 
 	def __init__(self):
 		self.childs = []
+		self.cache_fields = []
+
+	def update(self):
+		size = len(self.name)
+		self.cache_fields.append((0, 2, 'version'))
+		self.cache_fields.append((2, 1, 'palette name size'))
+		self.cache_fields.append((3, size, 'palette name'))
+		self.cache_fields.append((3 + size, 2, 'number of palette colors'))
 
 	def resolve(self, name=''):
 		is_leaf = False
@@ -49,6 +57,15 @@ class CPL10_Color(BinaryModelObject):
 	model = 0
 	name = ''
 	valbytes = ''
+	def __init__(self):
+		self.cache_fields = []
+
+	def update(self):
+		self.cache_fields.append((0, 2, 'color model'))
+		self.cache_fields.append((2, 10, 'color values'))
+		self.cache_fields.append((12, 1, 'color name size'))
+		self.cache_fields.append((13, len(self.name), 'color name'))
 
 	def resolve(self, name=''):
-		return (True, 'CPL10_Color', '')
+		name = cpl_const.CDR_COLOR_NAMES[self.model]
+		return (True, '%s color' % name, '')
