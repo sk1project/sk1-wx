@@ -108,6 +108,7 @@ encoding//src/uc2/formats/cpl/__init__.py=utf-8
 encoding//src/uc2/formats/cpl/cpl_config.py=utf-8
 encoding//src/uc2/formats/cpl/cpl_const.py=utf-8
 encoding//src/uc2/formats/cpl/cpl_filters.py=utf-8
+encoding//src/uc2/formats/cpl/cpl_model.py=utf-8
 encoding//src/uc2/formats/cpl/cpl_presenter.py=utf-8
 encoding//src/uc2/formats/data.py=utf-8
 encoding//src/uc2/formats/fallback.py=utf-8
