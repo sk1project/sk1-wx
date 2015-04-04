@@ -17,7 +17,7 @@
 
 from uc2 import uc2const
 
-DOC_HEADER = '##sK1 2 0'
+SK2DOC_ID = '##sK1 2 0'
 
 DOC_ORIGIN_CENTER = 0
 DOC_ORIGIN_LL = 1
