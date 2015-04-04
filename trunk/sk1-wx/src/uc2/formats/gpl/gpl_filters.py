@@ -17,6 +17,7 @@
 
 import os
 
+from uc2 import cms
 from uc2.formats.gpl.gpl_const import GPL_HEADER, COL_STR, NAME_STR
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 
@@ -60,6 +61,8 @@ class GPL_Loader(AbstractLoader):
 		name = ''
 		if len(line) > 11:
 			name = line[12:].strip()
+		else:
+			name = cms.rgb_to_hexcolor(cms.val_255_to_dec((r, g, b)))
 		self.model.colors.append([r, g, b, name])
 
 
