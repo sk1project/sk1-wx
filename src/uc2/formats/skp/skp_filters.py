@@ -18,7 +18,7 @@
 import os
 
 from uc2 import cms, uc2const
-from uc2.formats.skp.skp_const import SKP_HEADER
+from uc2.formats.skp.skp_const import SKP_ID
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 
 class SKP_Loader(AbstractLoader):
@@ -64,13 +64,13 @@ class SKP_Saver(AbstractSaver):
 	name = 'SKP_Saver'
 
 	def do_save(self):
-		self.writeln(SKP_HEADER)
+		self.writeln(SKP_ID)
 		self.writeln('palette()')
-		self.writeln("set_name(%s)" % self.field_to_str(self.model.name))
-		self.writeln("set_source(%s)" % self.field_to_str(self.model.source))
+		self.writeln('set_name(%s)' % self.field_to_str(self.model.name))
+		self.writeln('set_source(%s)' % self.field_to_str(self.model.source))
 		for item in self.model.comments.splitlines():
-			self.writeln("add_comments(%s)" % self.field_to_str(item))
-		self.writeln("set_columns(%s)" % self.field_to_str(self.model.columns))
+			self.writeln('add_comments(%s)' % self.field_to_str(item))
+		self.writeln('set_columns(%s)' % self.field_to_str(self.model.columns))
 		for item in self.model.colors:
 			self.writeln('color(%s)' % self.field_to_str(item))
 		self.writeln('palette_end()')

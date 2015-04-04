@@ -20,7 +20,7 @@ import sys
 
 from uc2 import _, events, msgconst, uc2const
 from uc2.formats.skp.skp_presenter import SKP_Presenter
-from uc2.formats.skp.skp_const import SKP_HEADER
+from uc2.formats.skp.skp_const import SKP_ID
 from uc2.formats.generic_filters import get_fileptr
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 
@@ -49,7 +49,7 @@ def skp_saver(doc, filename=None, fileptr=None, translate=True,
 
 def check_skp(path):
 	fileptr = get_fileptr(path)
-	string = fileptr.read(len(SKP_HEADER))
+	string = fileptr.read(len(SKP_ID))
 	fileptr.close()
-	return string == SKP_HEADER
+	return string == SKP_ID
 
