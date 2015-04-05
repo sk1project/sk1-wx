@@ -68,7 +68,7 @@ class SW_Presenter:
 			#FIXME: Here should be new model creation
 			self.doc_name = self.app.get_new_docname()
 
-
+		self.doc_presenter.update(True)
 		self.selection = ModelSelection(self)
 		self.docarea = DocArea(self.app, self)
 		self.app.mw.add_tab(self.docarea)
