@@ -17,10 +17,9 @@
 
 import os
 
-from uc2 import cms
 from uc2.formats.generic_filters import AbstractBinaryLoader, AbstractSaver
 from uc2.formats.cpl import cpl_const
-from uc2.formats.cpl.cpl_model import CPL10_Palette, CPL10_Color
+from uc2.formats.cpl.cpl_model import CPL8_Palette, CPL7_Palette
 
 class CPL_Loader(AbstractBinaryLoader):
 
@@ -28,28 +27,15 @@ class CPL_Loader(AbstractBinaryLoader):
 
 	def do_load(self):
 		ver = self.readbytes(2)
-		if ver == cpl_const.CPL10: self.do_cpl10_load()
-		if not self.model.name and self.doc_file:
-			name = os.path.basename(self.filepath).replace('.cpl', '')
-			self.model.name = name + ' palette'
-
-	def do_cpl10_load(self):
-		self.model = CPL10_Palette()
-		size = self.readbyte()
-		self.model.name = self.readstr(size)
-		ncolors = self.readword()
-		self.fileptr.seek(0)
-		self.model.chunk = self.readbytes(2 + 1 + size + 2)
-		for i in range(ncolors):
-			color = CPL10_Color()
-			color.model = self.readword()
-			color.valbytes = self.readbytes(10)
-			size = self.readbyte()
-			color.name = self.readstr(size)
-			ln = 2 + 10 + 1 + size
-			self.fileptr.seek(-ln, 1)
-			color.chunk = self.readbytes(ln)
-			self.model.childs.append(color)
+		if ver == cpl_const.CPL8:
+			self.model = CPL8_Palette()
+		elif ver == cpl_const.CPL7:
+			self.model = CPL7_Palette()
+		if self.model:
+			self.model.parse(self)
+			if not self.model.name and self.filepath:
+				name = os.path.basename(self.filepath).replace('.cpl', '')
+				self.model.name = '%s palette' % name
 
 
 
