@@ -55,6 +55,9 @@ class AppConfig(UCConfig):
 	#============== GENERIC SECTION ===================
 	system_encoding = 'utf-8'# default encoding (GUI uses utf-8 only)
 
+	fixed_font = 'Courier 10 Pitch'
+	fixed_font_size = 10
+
 	#============== EXTERNAL TOOLS ==================
 
 	ext_image_view = 'eog $file'

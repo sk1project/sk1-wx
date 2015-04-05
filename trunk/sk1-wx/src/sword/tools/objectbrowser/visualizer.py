@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 #
 #	Copyright (C) 2012 by Igor E. Novikov
-#	
+#
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
 #	the Free Software Foundation, either version 3 of the License, or
 #	(at your option) any later version.
-#	
+#
 #	This program is distributed in the hope that it will be useful,
 #	but WITHOUT ANY WARRANTY; without even the implied warranty of
 #	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #	GNU General Public License for more details.
-#	
+#
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -21,7 +21,7 @@ import pango
 from uc2 import uc2const
 from uc2.formats.generic import GENERIC_TAGS, IDENT
 
-from sword import _, events
+from sword import _, events, config
 from sword.tools.objectbrowser.toolbar import OIToolbar
 
 class ObjectVisualizerWidget(gtk.VBox):
@@ -273,7 +273,7 @@ COLORS = [
 	]
 
 LABEL_FG = '#BF5C00'
-LABEL_FNT = "Courier New 10"
+LABEL_FNT = "%s %u" % (config.fixed_font, config.fixed_font_size)
 
 class BinaryDataViewer(gtk.HBox):
 
@@ -429,5 +429,5 @@ class BinaryDataViewer(gtk.HBox):
 	def set_tags(self):
 		self.tb.create_tag("hex",
                     weight=pango.WEIGHT_NORMAL,
-                    font='Courier New',
-                    size=10 * pango.SCALE)
+                    font=config.fixed_font,
+                    size=config.fixed_font_size * pango.SCALE)
