@@ -16,16 +16,16 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 CPL12 = '\xdd\xdc'
-CPL10 = '\xdc\xdc'
+CPL8 = '\xdc\xdc'
 
-CPL9 = '\xcd\xdd'#?
-CPL8 = '\xcd\xdc',#?
-CPL8b = '\xcd\xbc',#?
+CPLdd = '\xcd\xdd'#?
+CPLdc = '\xcd\xdc',#?
+CPLbc = '\xcd\xbc',#?
 
 CPL7 = '\xcc\xdc'
-CPL6 = '\xcc\xbc'#?
+CPL6 = '\xcc\xbc'
 
-CPL_IDs = [CPL12, CPL10, CPL9, CPL8, CPL8b, CPL7, CPL6]
+CPL_IDs = [CPL12, CPL8, CPL7, CPL6]
 
 
 CDR_COLOR_SPOT = 1
