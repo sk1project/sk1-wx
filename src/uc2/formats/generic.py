@@ -41,13 +41,15 @@ class ModelObject(object):
 			fields[item] = None
 
 	def update(self): pass
+	def update_for_sword(self):pass
 
-	def do_update(self, presenter=None):
+	def do_update(self, presenter=None, action=False):
 		for child in self.childs:
 			child.parent = self
 			child.config = self.config
-			child.do_update(presenter)
+			child.do_update(presenter, action)
 		self.update()
+		if action: self.update_for_sword()
 
 	def count(self):
 		val = len(self.childs)
@@ -120,13 +122,13 @@ class ModelPresenter(object):
 		self.send_ok(_('Document model is created'))
 		self.update()
 
-	def update(self):
+	def update(self, action=False):
 		if not self.model is None:
 			self.obj_num = self.model.count() + 1
 			self.update_msg(0.0)
 			try:
 				self.model.config = self.config
-				self.model.do_update(self)
+				self.model.do_update(self, action)
 			except:
 				print sys.exc_info()[1], sys.exc_info()[2]
 				msg = _('Exception while document model update')
