@@ -253,6 +253,10 @@ class Canvas(object):
 	def __init__(self):
 		self.Bind(wx.EVT_PAINT, self._on_paint, self)
 
+	def refresh(self, x=0, y=0, w=0, h=0):
+		if not w: w, h = self.GetSize()
+		self.Refresh(rect=wx.Rect(x, y, w, h))
+
 	def _on_paint(self, event):
 		w, h = self.GetSize()
 		if not w or not h: return
@@ -287,12 +291,18 @@ class Canvas(object):
 			self.dc.SetBrush(wx.Brush(wx.Colour(*color)))
 
 	def draw_line(self, x0, y0, x1, y1):
-		self.dc.DrawLine(self, x0, y0, x1, y1)
+		self.pdc.DrawLine(x0, y0, x1, y1)
+
+	def gc_draw_line(self, x0, y0, x1, y1):
+		self.dc.DrawLine(x0, y0, x1, y1)
 
 	def draw_rounded_rect(self, x=0, y=0, w=1, h=1, radius=1.0):
 		self.dc.DrawRoundedRectangle(x, y, w, h, radius)
 
 	def draw_rect(self, x=0, y=0, w=1, h=1):
+		self.pdc.DrawRectangle(x, y, w, h)
+
+	def gc_draw_rect(self, x=0, y=0, w=1, h=1):
 		self.dc.DrawRectangle(x, y, w, h)
 
 
@@ -402,6 +412,61 @@ class ScrolledPanel(wx.ScrolledWindow, Widget):
 		if not w: w, h = self.GetVirtualSize()
 		self.Refresh(rect=wx.Rect(x, y, w, h))
 	def set_size(self, size): self.SetSize(size)
+
+
+class Expander(VPanel, Canvas):
+
+	state = False
+	callback = None
+
+	def __init__(self, parent, on_click=None):
+		VPanel.__init__(self, parent)
+		Canvas.__init__(self)
+		self.pack((13, 13))
+		if on_click:
+			self.callback = on_click
+			self.Bind(wx.EVT_LEFT_UP, self._click, self)
+			self.Bind(wx.EVT_RIGHT_UP, self._click, self)
+		self.refresh()
+
+	def _click(self, event):
+		self.callback()
+
+	def change(self, val=False):
+		self.state = val
+		self.refresh()
+
+	def paint(self):
+		w, h = self.get_size()
+		self.set_stroke(const.BLACK, 1)
+		self.set_fill(const.WHITE)
+		self.draw_rect(3, 3, w - 4, h - 4)
+		half = int(w / 2.0) + 1
+		self.draw_line(5, half, w - 3, half)
+		if not self.state:
+			self.draw_line(half, 5, half, h - 3)
+
+class ExpandedPanel(VPanel):
+
+	def __init__(self, parent, txt=''):
+		VPanel.__init__(self, parent)
+		header = HPanel(self)
+		self.expander = Expander(header, on_click=self.expand)
+		header.pack(self.expander, padding=2)
+		if txt: header.pack(wx.StaticText(header, wx.ID_ANY, txt))
+		VPanel.pack(self, header, fill=True)
+		self.container = VPanel(self)
+		VPanel.pack(self, self.container, fill=True)
+		self.container.set_visible(False)
+		self.layout()
+
+	def expand(self):
+		self.container.set_visible(not self.container.is_shown())
+		self.parent.layout()
+		self.expander.change(self.container.is_shown())
+
+	def pack(self, *args, **kw):
+		self.container.pack(*args, **kw)
 
 
 

@@ -2,9 +2,13 @@ import wx
 import wal
 
 
-class WidgetPanel(wal.HPanel):
+class WidgetPanel(wal.VPanel):
 	def __init__(self, parent):
-		wal.HPanel.__init__(self, parent)
+		wal.VPanel.__init__(self, parent)
+
+		exp = wal.ExpandedPanel(self, 'Test options')
+		self.pack(exp, fill=True)
+		exp.pack(wal.Button(exp, 'Test button'))
 
 		data = []
 		root = wal.TreeElement('root')
@@ -18,7 +22,7 @@ class WidgetPanel(wal.HPanel):
 		data.append(root)
 
 		self.tree = wal.TreeWidget(self, data, on_select=self.selected)
-		self.pack(self.tree, expand=True, fill=True, padding=10)
+		self.pack(self.tree, expand=True, fill=True, padding=2)
 		self.tree.expand_all()
 
 	def selected(self, item):
