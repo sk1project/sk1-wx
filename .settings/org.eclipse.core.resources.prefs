@@ -86,6 +86,7 @@ encoding//src/sword/presenter.py=utf-8
 encoding//src/sword/tools/objectbrowser/introspector.py=utf-8
 encoding//src/sword/tools/objectbrowser/objectintrospection.py=utf-8
 encoding//src/sword/tools/objectbrowser/objectviewer.py=utf-8
+encoding//src/sword/tools/objectbrowser/visualizer.py=utf-8
 encoding//src/uc2/__init__.py=utf-8
 encoding//src/uc2/app_palettes.py=utf-8
 encoding//src/uc2/application.py=utf-8
