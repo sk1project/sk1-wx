@@ -280,27 +280,42 @@ class Canvas(object):
 
 	def set_stroke(self, color=None, width=1):
 		if color is None:
+			self.pdc.SetPen(wx.TRANSPARENT_PEN)
+		else:
+			self.pdc.SetPen(wx.Pen(wx.Colour(*color), width))
+
+	def set_fill(self, color=None):
+		if color is None:
+			self.pdc.SetBrush(wx.TRANSPARENT_BRUSH)
+		else:
+			self.pdc.SetBrush(wx.Brush(wx.Colour(*color)))
+
+	def draw_line(self, x0, y0, x1, y1):
+		self.pdc.DrawLine(x0, y0, x1, y1)
+
+	def draw_rounded_rect(self, x=0, y=0, w=1, h=1, radius=1.0):
+		self.pdc.DrawRoundedRectangle(x, y, w, h, radius)
+
+	def draw_rect(self, x=0, y=0, w=1, h=1):
+		self.pdc.DrawRectangle(x, y, w, h)
+
+	def set_gc_stroke(self, color=None, width=1):
+		if color is None:
 			self.dc.SetPen(wx.TRANSPARENT_PEN)
 		else:
 			self.dc.SetPen(wx.Pen(wx.Colour(*color), width))
 
-	def set_fill(self, color=None):
+	def set_gc_fill(self, color=None):
 		if color is None:
 			self.dc.SetBrush(wx.TRANSPARENT_BRUSH)
 		else:
 			self.dc.SetBrush(wx.Brush(wx.Colour(*color)))
 
-	def draw_line(self, x0, y0, x1, y1):
-		self.pdc.DrawLine(x0, y0, x1, y1)
+	def gc_draw_rounded_rect(self, x=0, y=0, w=1, h=1, radius=1.0):
+		self.dc.DrawRoundedRectangle(x, y, w, h, radius)
 
 	def gc_draw_line(self, x0, y0, x1, y1):
 		self.dc.DrawLine(x0, y0, x1, y1)
-
-	def draw_rounded_rect(self, x=0, y=0, w=1, h=1, radius=1.0):
-		self.dc.DrawRoundedRectangle(x, y, w, h, radius)
-
-	def draw_rect(self, x=0, y=0, w=1, h=1):
-		self.pdc.DrawRectangle(x, y, w, h)
 
 	def gc_draw_rect(self, x=0, y=0, w=1, h=1):
 		self.dc.DrawRectangle(x, y, w, h)
@@ -314,10 +329,13 @@ class RoundedPanel(VPanel, Canvas):
 
 	def paint(self):
 		w, h = self.get_size()
-		color = const.UI_COLORS['dark_shadow']
-		self.set_stroke(color, 1)
 		self.set_fill(None)
-		self.draw_rounded_rect(0, 0, w, h, 7.0)
+		color = const.UI_COLORS['light_shadow']
+		self.set_stroke(color)
+		self.draw_rounded_rect(1, 1, w - 1, h - 1, 7.0)
+		color = const.UI_COLORS['dark_shadow']
+		self.set_stroke(color)
+		self.draw_rounded_rect(0, 0, w - 1, h - 1, 7.0)
 
 
 class LabeledPanel(VPanel):
@@ -395,23 +413,21 @@ class GridPanel(Panel, Widget):
 
 class ScrolledPanel(wx.ScrolledWindow, Widget):
 
-	def __init__(self, parent, border=False, drawable=False):
+	def __init__(self, parent, border=False):
 		style = wx.NO_BORDER
 		if border:style = wx.BORDER_MASK
 		wx.ScrolledWindow.__init__(self, parent, wx.ID_ANY, style=style)
 		self.set_scroll_rate()
 		self.SetDoubleBuffered(True)
-		if drawable:
-			self.Bind(wx.EVT_PAINT, self.on_paint)
 
 	def set_virtual_size(self, size): self.SetVirtualSize(size)
 	def set_scroll_rate(self, h=20, v=20): self.SetScrollRate(h, v)
 	def set_bg(self, color): self.SetBackgroundColour(wx.Colour(*color))
-	def on_paint(self, event):pass
 	def refresh(self, x=0, y=0, w=0, h=0):
 		if not w: w, h = self.GetVirtualSize()
 		self.Refresh(rect=wx.Rect(x, y, w, h))
 	def set_size(self, size): self.SetSize(size)
+	def prepare_dc(self, dc): self.PrepareDC(dc)
 
 
 class Expander(VPanel, Canvas):
@@ -439,7 +455,7 @@ class Expander(VPanel, Canvas):
 	def paint(self):
 		w, h = self.get_size()
 		self.set_stroke(const.BLACK, 1)
-		self.set_fill(const.WHITE)
+		self.set_fill(None)
 		self.draw_rect(3, 3, w - 4, h - 4)
 		half = int(w / 2.0) + 1
 		self.draw_line(5, half, w - 3, half)
