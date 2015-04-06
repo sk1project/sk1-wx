@@ -128,6 +128,12 @@ class AbstractBinaryLoader(AbstractLoader):
 	def readword(self):
 		return utils.word2py_int(self.fileptr.read(2))
 
+	def readdword(self):
+		return utils.dword2py_int(self.fileptr.read(4))
+
+	def read_pair_dword(self):
+		return utils.pair_dword2py_int(self.fileptr.read(8))
+
 	def readstr(self, size):
 		return utils.latin1_bytes_2str(self.fileptr.read(size))
 
