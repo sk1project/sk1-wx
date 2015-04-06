@@ -132,3 +132,43 @@ class CPL8_Color(CPL7_Color):
 	"""
 	def __init__(self):
 		CPL7_Color.__init__(self)
+
+
+class CPL12_Palette(BinaryModelObject):
+	"""
+	Represents CPL12 palette object (CDR12-X4 versions).
+	This is a root DOM instance of CPL12 file format.
+	All palette colors are members of childs list.
+	"""
+
+	version = cpl_const.CPL12
+	nheaders = 0
+	headers = {}
+	name = ''
+
+	def __init__(self):
+		self.childs = []
+		self.cache_fields = []
+
+	def parse(self, loader):
+		self.nheaders = loader.readdword()
+		self.headers = {}
+		for i in range(self.nheaders):
+			hid, offset = loader.read_pair_dword()
+			self.headers[hid] = offset
+
+		loader.fileptr.seek(0)
+		size = self.nheaders * 8
+		self.chunk = loader.readbytes(2 + 4 + size)
+
+	def update_for_sword(self):
+		self.cache_fields.append((0, 2, 'version'))
+		self.cache_fields.append((2, 4, 'number of headers'))
+		size = self.nheaders * 8
+		self.cache_fields.append((6, size, 'header offsets'))
+
+	def resolve(self, name=''):
+		is_leaf = False
+		info = '%d' % (len(self.childs))
+		name = 'CPL12 Palette'
+		return (is_leaf, name, info)
