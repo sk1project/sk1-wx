@@ -63,6 +63,9 @@ class Widget(object):
 	def set_tooltip(self, tip):
 		self.SetToolTipString(tip)
 
+	def destroy(self):
+		self.Destroy()
+
 
 class DataWidget(Widget):
 
