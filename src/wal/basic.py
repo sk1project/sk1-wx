@@ -311,6 +311,25 @@ class Canvas(object):
 		else:
 			self.dc.SetBrush(wx.Brush(wx.Colour(*color)))
 
+	def set_gc_font(self, bold=False, size_incr=0):
+		font = self.GetFont()
+		if bold:
+			font.SetWeight(wx.FONTWEIGHT_BOLD)
+		else:
+			font.SetWeight(wx.FONTWEIGHT_NORMAL)
+		if size_incr:
+			if font.IsUsingSizeInPixels():
+				sz = font.GetPixelSize() + size_incr
+				font.SetPixelSize(sz)
+			else:
+				sz = font.GetPointSize() + size_incr
+				font.SetPointSize(sz)
+		self.dc.SetFont(font)
+		return self.dc.GetCharHeight()
+
+	def set_gc_text_color(self, color):
+		self.dc.SetTextForeground(wx.Colour(*color))
+
 	def gc_draw_rounded_rect(self, x=0, y=0, w=1, h=1, radius=1.0):
 		self.dc.DrawRoundedRectangle(x, y, w, h, radius)
 
@@ -319,6 +338,9 @@ class Canvas(object):
 
 	def gc_draw_rect(self, x=0, y=0, w=1, h=1):
 		self.dc.DrawRectangle(x, y, w, h)
+
+	def gc_draw_text(self, text, x, y):
+		self.dc.DrawText(text, x, y)
 
 
 class RoundedPanel(VPanel, Canvas):
