@@ -59,35 +59,36 @@ class ScribusPalette_Presenter(TaggedModelPresenter):
 	def convert_from_skp(self, skp_doc):
 		sp = self.model
 		skp = skp_doc.model
-		sp.Name = '' + skp.name
+		sp.Name = skp.name.encode('utf-8')
 		if skp.source: sp.comments += 'Palette source: ' + skp.source + '\n'
 		if skp.comments:
 			for item in skp.comments.splitlines():
 				sp.comments += item + '\n'
+		sp.comments = sp.comments.encode('utf-8')
 		for item in skp.colors:
 			obj = SPColor()
 			if item[0] == COLOR_SPOT:
 				obj.Spot = '1'
 				if item[1][1]: obj.CMYK = cms.cmyk_to_hexcolor(item[1][1])
 				else: obj.RGB = cms.rgb_to_hexcolor(item[1][0])
-				obj.NAME = '' + item[3]
+				obj.NAME = '' + item[3].encode('utf-8')
 				if item[3] == COLOR_REG:
 					obj.Register = '1'
 			elif item[0] == COLOR_CMYK:
 				obj.CMYK = cms.cmyk_to_hexcolor(item[1])
-				obj.NAME = '' + item[3]
+				obj.NAME = '' + item[3].encode('utf-8')
 			elif item[0] == COLOR_RGB:
 				obj.RGB = cms.rgb_to_hexcolor(item[1])
-				obj.NAME = '' + item[3]
+				obj.NAME = '' + item[3].encode('utf-8')
 			else:
 				clr = self.cms.get_rgb_color(item)
 				obj.RGB = cms.rgb_to_hexcolor(clr[1])
-				obj.NAME = '' + clr[3]
+				obj.NAME = '' + clr[3].encode('utf-8')
 			sp.childs.append(obj)
 
 	def convert_to_skp(self, skp_doc):
 		skp = skp_doc.model
-		skp.name = '' + self.model.Name
+		skp.name = self.model.Name.decode('utf-8')
 		if not skp.name:
 			if self.doc_file:
 				name = os.path.basename(self.doc_file)
@@ -107,15 +108,15 @@ class ScribusPalette_Presenter(TaggedModelPresenter):
 				cmyk = []
 				if item.RGB: rgb = cms.hexcolor_to_rgb(item.RGB)
 				if item.CMYK: cmyk = cms.hexcolor_to_cmyk(item.CMYK)
-				name = '' + item.NAME
+				name = item.NAME.decode('utf-8')
 				color = [COLOR_SPOT, [rgb, cmyk], 1.0, name]
 			elif item.CMYK:
 				cmyk = cms.hexcolor_to_cmyk(item.CMYK)
-				name = '' + item.NAME
+				name = item.NAME.decode('utf-8')
 				color = [COLOR_CMYK, cmyk, 1.0, name]
 			elif item.RGB:
 				rgb = cms.hexcolor_to_rgb(item.RGB)
-				name = '' + item.NAME
+				name = item.NAME.decode('utf-8')
 				color = [COLOR_RGB, rgb, 1.0, name]
 			else:
 				continue
