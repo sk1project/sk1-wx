@@ -19,7 +19,7 @@ import math
 
 from uc2.formats.sk2.sk2_const import ARC_ARC, ARC_CHORD, ARC_PIE_SLICE
 
-from wal import const, LEFT, CENTER
+from wal import LEFT, CENTER
 from wal import ImageToggleButton, Slider
 
 from sk1 import _, events
@@ -45,24 +45,22 @@ class CirclePlugin(CtxPlugin):
 		events.connect(events.SELECTION_CHANGED, self.update)
 
 	def build(self):
-		native = True
-		if const.is_msw():native = False
 
 		self.toggles[ARC_ARC] = ImageToggleButton(self, False,
 								icons.CTX_CIRCLE_ARC,
-								onchange=self.toggled, native=native,
+								onchange=self.toggled,
 								tooltip=_('Arc'))
 		self.add(self.toggles[ARC_ARC], 0, LEFT | CENTER)
 
 		self.toggles[ARC_CHORD] = ImageToggleButton(self, False,
 								icons.CTX_CIRCLE_CHORD,
-								onchange=self.toggled, native=native,
+								onchange=self.toggled,
 								tooltip=_('Chord'))
 		self.add(self.toggles[ARC_CHORD], 0, LEFT | CENTER)
 
 		self.toggles[ARC_PIE_SLICE] = ImageToggleButton(self, False,
 								icons.CTX_CIRCLE_PIE_SLICE,
-								onchange=self.toggled, native=native,
+								onchange=self.toggled,
 								tooltip=_('Pie slice'))
 		self.add(self.toggles[ARC_PIE_SLICE], 0, LEFT | CENTER)
 

@@ -54,15 +54,13 @@ class ActionTool(wal.ImageToggleButton):
 		tooltip = action.get_tooltip_text()
 		padding = 0
 		decoration_padding = 4
-		native = True
 
 		if wal.is_msw():
 			decoration_padding = 2
-			native = False
 
 		wal.ImageToggleButton.__init__(self, parent, value, art_id, art_size,
 								text, tooltip, padding, decoration_padding,
-								True, native, onchange=action.do_call)
+								True, onchange=action.do_call)
 		self.action.register(self)
 
 	def update(self):
