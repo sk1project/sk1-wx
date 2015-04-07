@@ -56,16 +56,13 @@ class PagePlugin(CtxPlugin):
 
 		self.add((2, 2))
 
-		native = True
-		if const.is_msw():native = False
-
 		self.portrait = ImageToggleButton(self, True, icons.CTX_PAGE_PORTRAIT,
-								onchange=self.portrait_toggled, native=native,
+								onchange=self.portrait_toggled,
 								tooltip=_('Portrait'))
 		self.add(self.portrait, 0, LEFT | CENTER, 2)
 
 		self.landscape = ImageToggleButton(self, False, icons.CTX_PAGE_LANDSCAPE,
-								onchange=self.landscape_toggled, native=native,
+								onchange=self.landscape_toggled,
 								tooltip=_('Landscape'))
 		self.add(self.landscape, 0, LEFT | CENTER, 2)
 

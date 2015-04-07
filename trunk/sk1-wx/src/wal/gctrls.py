@@ -17,7 +17,7 @@
 
 import wx
 
-import renderer
+import renderer, const
 from const import DEF_SIZE, RIGHT
 from generic import GenericGWidget
 
@@ -86,7 +86,7 @@ class ImageToggleButton(GenericGWidget):
 
 	def __init__(self, parent, value=False, art_id=None, art_size=DEF_SIZE,
 				text='', tooltip='', padding=0, decoration_padding=6,
-				flat=True, native=True,
+				flat=True, native=not const.is_mac(),
 				fontbold=False, fontsize=0, textplace=RIGHT,
 				onchange=None):
 
