@@ -55,13 +55,13 @@ class SOC_Presenter(TextModelPresenter):
 
 	def convert_from_skp(self, skp_doc):
 		skp_model = skp_doc.model
-		self.model.name = '' + skp_model.name
+		self.model.name = '' + skp_model.name.encode('utf-8')
 		self.model.columns = skp_model.columns
-		self.model.comments = '' + skp_model.comments
+		self.model.comments = '' + skp_model.comments.encode('utf-8')
 		for item in skp_model.colors:
 			color = self.cms.get_rgb_color(item)
 			rgb = cms.rgb_to_hexcolor(color)
-			self.model.colors.append([rgb, '' + item[3]])
+			self.model.colors.append([rgb, item[3].encode('utf-8')])
 
 	def convert_to_skp(self, skp_doc):
 		skp_model = skp_doc.model
@@ -72,7 +72,7 @@ class SOC_Presenter(TextModelPresenter):
 			skp_model.name = 'SOC palette'
 		skp_model.source = '' + self.model.source
 		skp_model.columns = self.model.columns
-		skp_model.comments = '' + self.model.comments
+		skp_model.comments = '' + self.model.comments.decode('utf-8')
 		if self.doc_file:
 			filename = os.path.basename(self.doc_file)
 			if skp_model.comments:skp_model.comments += 'n'
@@ -81,6 +81,6 @@ class SOC_Presenter(TextModelPresenter):
 		for item in self.model.colors:
 			rgb, name = item
 			clr = cms.hexcolor_to_rgb(rgb)
-			skp_model.colors.append([COLOR_RGB, clr, 1.0, name])
+			skp_model.colors.append([COLOR_RGB, clr, 1.0, name.decode('utf-8')])
 
 
