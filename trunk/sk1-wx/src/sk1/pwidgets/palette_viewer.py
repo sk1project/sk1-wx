@@ -132,7 +132,6 @@ class ScrolledPalette(wal.ScrolledPanel, wal.Canvas):
 		self.set_scroll_rate(self.cell_width - 1, self.cell_height - 1)
 
 		self.prepare_dc(self.pdc)
-		self.prepare_dc(self.dc)
 
 		w = self.cell_width
 		h = self.cell_height
