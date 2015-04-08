@@ -137,15 +137,17 @@ class ScrolledPalette(wal.ScrolledPanel, wal.Canvas):
 		w = self.cell_width
 		h = self.cell_height
 		i = 0
-		txt_height = self.set_gc_font()
+		txt_height = self.set_font()
 		txt_x = 5 + self.cell_width + 5
 		txt_y = 2 + round((self.cell_height - txt_height) / 2.0)
+		self.set_text_color(wal.BLACK)
+
 		for color in self.colors:
 			self.set_stroke(wal.BLACK)
 			self.set_fill(cms.get_display_color255(color))
 			self.draw_rect(5, 2 + row * i, w, h)
 			txt = color[3]
-			if txt: self.gc_draw_text(txt, txt_x, txt_y + row * i)
+			if txt: self.draw_text(txt, txt_x, txt_y + row * i)
 			i += 1
 
 class ModeToggleButton(wal.ImageToggleButton):
