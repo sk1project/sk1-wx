@@ -278,6 +278,8 @@ class Canvas(object):
 	#Paint method for inherited class
 	def paint(self):pass
 
+	#========PaintDC
+
 	def set_stroke(self, color=None, width=1):
 		if color is None:
 			self.pdc.SetPen(wx.TRANSPARENT_PEN)
@@ -290,6 +292,25 @@ class Canvas(object):
 		else:
 			self.pdc.SetBrush(wx.Brush(wx.Colour(*color)))
 
+	def set_font(self, bold=False, size_incr=0):
+		font = self.GetFont()
+		if bold:
+			font.SetWeight(wx.FONTWEIGHT_BOLD)
+		else:
+			font.SetWeight(wx.FONTWEIGHT_NORMAL)
+		if size_incr:
+			if font.IsUsingSizeInPixels():
+				sz = font.GetPixelSize() + size_incr
+				font.SetPixelSize(sz)
+			else:
+				sz = font.GetPointSize() + size_incr
+				font.SetPointSize(sz)
+		self.pdc.SetFont(font)
+		return self.pdc.GetCharHeight()
+
+	def set_text_color(self, color):
+		self.pdc.SetTextForeground(wx.Colour(*color))
+
 	def draw_line(self, x0, y0, x1, y1):
 		self.pdc.DrawLine(x0, y0, x1, y1)
 
@@ -298,6 +319,11 @@ class Canvas(object):
 
 	def draw_rect(self, x=0, y=0, w=1, h=1):
 		self.pdc.DrawRectangle(x, y, w, h)
+
+	def draw_text(self, text, x, y):
+		self.pdc.DrawText(text, x, y)
+
+	#=========GC device
 
 	def set_gc_stroke(self, color=None, width=1):
 		if color is None:
