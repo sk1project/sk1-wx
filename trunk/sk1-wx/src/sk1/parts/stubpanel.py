@@ -16,8 +16,7 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
-
-from wal import const
+import wal
 
 from sk1 import _, appconst, events
 from sk1.resources import icons, get_icon, pdids
@@ -32,16 +31,15 @@ class AppStubPanel(wx.Panel):
 	def __init__(self, parent):
 		self.app = parent.app
 		wx.Panel.__init__(self, parent)
-		color = wx.Colour(*const.UI_COLORS['workspace'])
-		self.SetBackgroundColour(color)
-		self.bmp = get_icon(icons.CAIRO_BANNER, size=const.DEF_SIZE)
+		self.SetBackgroundColour(wal.DARK_GRAY)
+		self.bmp = get_icon(icons.CAIRO_BANNER, size=wal.DEF_SIZE)
 		self.bmp_size = self.bmp.GetSize()
 
-		action = self.app.actions[wx.ID_NEW]
+		action = self.app.actions[wal.ID_NEW]
 		tooltip = action.get_descr_text()
 		self.new_btn = StubButton(self, icons.PD_STUB_NEW, action, tooltip)
 
-		action = self.app.actions[wx.ID_OPEN]
+		action = self.app.actions[wal.ID_OPEN]
 		tooltip = action.get_descr_text()
 		self.open_btn = StubButton(self, icons.PD_STUB_OPEN, action, tooltip)
 
@@ -102,9 +100,8 @@ class StubButton(wx.Panel):
 	def __init__(self, parent, icon, action, tooltip=''):
 		self.action = action
 		wx.Panel.__init__(self, parent)
-		color = wx.Colour(*const.UI_COLORS['workspace'])
-		self.SetBackgroundColour(color)
-		self.icon = get_icon(icon, size=const.DEF_SIZE)
+		self.SetBackgroundColour(wal.DARK_GRAY)
+		self.icon = get_icon(icon, size=wal.DEF_SIZE)
 		self._set_bmp()
 		self.SetSize(self.icon.GetSize())
 
