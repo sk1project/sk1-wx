@@ -20,21 +20,12 @@ from sk1.resources import icons
 
 from generic import PrefPanel
 
-class RulersPrefs(PrefPanel):
+class CMSPrefs(PrefPanel):
 
-	pid = 'Rulers'
-	name = _('Rulers preferences')
-	icon_id = icons.PD_PREFS_RULER
-
-	def __init__(self, app, dlg, fmt_config=None):
-		PrefPanel.__init__(self, app, dlg)
-
-class GridPrefs(PrefPanel):
-
-	pid = 'Grid'
-	name = _('Grid and guides')
-	title = _('Grid and guides options')
-	icon_id = icons.PD_PREFS_GRID
+	pid = 'CMS'
+	name = _('Color management')
+	title = _('Color management and color profiles')
+	icon_id = icons.PD_PREFS_CMS
 
 	def __init__(self, app, dlg, fmt_config=None):
 		PrefPanel.__init__(self, app, dlg)

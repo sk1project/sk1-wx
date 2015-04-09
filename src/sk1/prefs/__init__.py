@@ -22,7 +22,8 @@ from sk1.resources import icons
 from generic import RootItem
 from prefs_general import GeneralPrefs
 from prefs_palettes import PalettesPrefs
-from templates import GridPrefs, CMSPrefs, RulersPrefs
+from prefs_cms import CMSPrefs
+from templates import GridPrefs, RulersPrefs
 
 PREFS_APP = [GeneralPrefs, CMSPrefs, RulersPrefs, PalettesPrefs]
 PREFS_DOC = [GridPrefs, ]
