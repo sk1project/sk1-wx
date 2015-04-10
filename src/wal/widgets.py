@@ -111,12 +111,20 @@ class Button(wx.Button, Widget):
 
 class Checkbox(wx.CheckBox, DataWidget):
 
+	callback = None
+
 	def __init__(self, parent, text='', value=False, onclick=None, right=False):
 		style = 0
 		if right:style = wx.ALIGN_RIGHT
 		wx.CheckBox.__init__(self, parent, wx.ID_ANY, text, style=style)
 		if value: self.SetValue(value)
-		if onclick:self.Bind(wx.EVT_CHECKBOX, onclick, self)
+		if onclick:
+			self.Bind(wx.EVT_CHECKBOX, onclick, self)
+			self.callback = onclick
+
+	def set_value(self, val):
+		self.SetValue(val)
+		if self.callback:self.callback(None)
 
 
 class Radiobutton(wx.RadioButton, DataWidget):
