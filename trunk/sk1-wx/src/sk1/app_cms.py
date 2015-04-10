@@ -35,9 +35,8 @@ class AppColorManager(ColorManager):
 		ColorManager.__init__(self)
 		events.connect(events.CONFIG_MODIFIED, self.config_changed)
 
-	def config_changed(self, *args):
-		field = args[0][0]
-		if field[0:4] == 'cms_':
+	def config_changed(self, attr, value):
+		if attr[0:4] == 'cms_':
 			self.update()
 			self.update_mngrs()
 			events.emit(events.CMS_CHANGED)
