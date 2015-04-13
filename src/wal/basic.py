@@ -150,6 +150,9 @@ class Panel(wx.Panel, Widget):
 
 	def set_bg(self, color):
 		self.SetBackgroundColour(wx.Colour(*color))
+	def get_bg(self):
+		return self.GetBackgroundColour().Get()
+
 	def set_size(self, size): self.SetSize(size)
 	def layout(self):self.Layout()
 	def fit(self):self.Fit()
@@ -185,6 +188,9 @@ class SizedPanel(Panel):
 		self.box.Detach(obj)
 		if not isinstance(obj, tuple) and not isinstance(obj, int):
 			obj.Hide()
+
+	def remove_all(self):
+		self.box.Clear()
 
 
 class HPanel(SizedPanel):
@@ -252,6 +258,10 @@ class Canvas(object):
 
 	def __init__(self):
 		self.Bind(wx.EVT_PAINT, self._on_paint, self)
+		self.Bind(wx.EVT_SIZE, self._on_size_change, self)
+
+	def _on_size_change(self, event):
+		self.refresh()
 
 	def refresh(self, x=0, y=0, w=0, h=0):
 		if not w: w, h = self.GetSize()
@@ -279,6 +289,9 @@ class Canvas(object):
 	def paint(self):pass
 
 	#========PaintDC
+
+	def set_origin(self, x=0, y=0):
+		self.pdc.SetDeviceOrigin(x, y)
 
 	def set_stroke(self, color=None, width=1):
 		if color is None:
@@ -325,6 +338,9 @@ class Canvas(object):
 
 	#=========GC device
 
+	def set_gc_origin(self, x=0, y=0):
+		self.dc.SetDeviceOrigin(x, y)
+
 	def set_gc_stroke(self, color=None, width=1):
 		if color is None:
 			self.dc.SetPen(wx.TRANSPARENT_PEN)
@@ -367,6 +383,27 @@ class Canvas(object):
 
 	def gc_draw_text(self, text, x, y):
 		self.dc.DrawText(text, x, y)
+
+class SensitiveCanvas(Canvas):
+
+	def __init__(self):
+		Canvas.__init__(self)
+		self.Bind(wx.EVT_LEFT_UP, self._mouse_left_up)
+		self.Bind(wx.EVT_MOUSEWHEEL, self._mouse_wheel)
+		self.Bind(wx.EVT_RIGHT_UP, self._mouse_right_up)
+
+	def _mouse_left_up(self, event):
+		self.mouse_left_up(event.GetPositionTuple())
+
+	def _mouse_right_up(self, event):
+		self.mouse_right_up(event.GetPositionTuple())
+
+	def _mouse_wheel(self, event):
+		self.mouse_wheel(event.GetWheelRotation())
+
+	def mouse_left_up(self, point):pass
+	def mouse_right_up(self, point):pass
+	def mouse_wheel(self, val):pass
 
 
 class RoundedPanel(VPanel, Canvas):
