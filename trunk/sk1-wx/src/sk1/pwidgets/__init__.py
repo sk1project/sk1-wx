@@ -16,11 +16,10 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from colorswatch import ColorSwatch, FillSwatch, StrokeSwatch
-from palette import HPalette, VPalette
 from actions import AppAction, ActionButton
 from unitctrls import UnitLabel, UnitSpin, AngleSpin, RatioToggle, BitmapToggle
 from unitctrls import ActionImageSwitch
 from mactoolbar import MacTB_ActionButton, MacTB_ActionNestedButtons
 from palette_viewer import PaletteViewer
-from palette_new import Palette
+from palette import Palette
 
