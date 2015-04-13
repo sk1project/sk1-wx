@@ -19,7 +19,7 @@
 import wal
 
 from sk1 import _
-from sk1.pwidgets import HPalette, VPalette
+from sk1.pwidgets import Palette
 from sk1.resources import icons
 
 class AppHPalette(wal.HPanel):
@@ -34,10 +34,9 @@ class AppHPalette(wal.HPanel):
 		wal.HPanel.__init__(self, parent)
 		self.pack((1, 1))
 
-		self.palette = HPalette(self.panel, self.app,
-							self.app.default_cms,
-							onleftclick=self.app.proxy.fill_selected,
-							onrightclick=self.app.proxy.stroke_selected,
+		self.palette = Palette(self.panel, self.app,
+							on_left_click=self.app.proxy.fill_selected,
+							on_right_click=self.app.proxy.stroke_selected,
 							onmin=self.left_enable,
 							onmax=self.right_enable)
 
@@ -47,7 +46,7 @@ class AppHPalette(wal.HPanel):
 		tip = _('Scroll palette to left')
 		self.left_but = wal.ImageButton(self.panel, icons.ARROW_LEFT,
 								tooltip=tip, decoration_padding=4, native=native,
-								onclick=self.palette.scroll_left, repeat=True)
+								onclick=self.palette.scroll_start, repeat=True)
 		self.pack(self.left_but)
 
 		tip = _('Empty pattern')
@@ -61,10 +60,8 @@ class AppHPalette(wal.HPanel):
 		tip = _('Scroll palette to right')
 		self.right_but = wal.ImageButton(self.panel, icons.ARROW_RIGHT,
 								tooltip=tip, decoration_padding=4, native=native,
-								onclick=self.palette.scroll_right, repeat=True)
+								onclick=self.palette.scroll_end, repeat=True)
 		self.pack(self.right_but)
-		self.left_enable(False)
-
 
 	def set_no_fill(self): self.app.proxy.fill_selected([])
 	def set_no_stroke(self, event): self.app.proxy.stroke_selected([])
@@ -95,10 +92,10 @@ class AppVPalette(wal.VPanel):
 		wal.VPanel.__init__(self, parent)
 		self.pack((1, 1))
 
-		self.palette = VPalette(self.panel, self.app,
-							self.app.default_cms,
-							onleftclick=self.app.proxy.fill_selected,
-							onrightclick=self.app.proxy.stroke_selected,
+
+		self.palette = Palette(self.panel, self.app, hpal=False,
+							on_left_click=self.app.proxy.fill_selected,
+							on_right_click=self.app.proxy.stroke_selected,
 							onmin=self.left_enable,
 							onmax=self.right_enable)
 
@@ -108,7 +105,7 @@ class AppVPalette(wal.VPanel):
 		tip = _('Scroll palette to top')
 		self.left_but = wal.ImageButton(self.panel, icons.ARROW_TOP, tooltip=tip,
 								decoration_padding=4, native=native,
-								onclick=self.palette.scroll_top, repeat=True)
+								onclick=self.palette.scroll_start, repeat=True)
 		self.pack(self.left_but)
 
 		tip = _('Empty pattern')
@@ -123,9 +120,8 @@ class AppVPalette(wal.VPanel):
 		tip = _('Scroll palette to bottom')
 		self.right_but = wal.ImageButton(self.panel, icons.ARROW_BOTTOM, tooltip=tip,
 								decoration_padding=4, native=native,
-								onclick=self.palette.scroll_bottom, repeat=True)
+								onclick=self.palette.scroll_end, repeat=True)
 		self.pack(self.right_but)
-		self.left_enable(False)
 
 
 	def set_no_fill(self): self.app.proxy.fill_selected([])
