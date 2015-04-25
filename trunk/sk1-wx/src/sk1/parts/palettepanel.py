@@ -64,7 +64,7 @@ class AppHPalette(wal.HPanel):
 		self.pack(self.right_but)
 
 	def set_no_fill(self): self.app.proxy.fill_selected([])
-	def set_no_stroke(self, event): self.app.proxy.stroke_selected([])
+	def set_no_stroke(self): self.app.proxy.stroke_selected([])
 
 	def set_fill(self, color):
 		print color
@@ -125,7 +125,7 @@ class AppVPalette(wal.VPanel):
 
 
 	def set_no_fill(self): self.app.proxy.fill_selected([])
-	def set_no_stroke(self, event): self.app.proxy.stroke_selected([])
+	def set_no_stroke(self): self.app.proxy.stroke_selected([])
 
 	def set_fill(self, color):
 		print color

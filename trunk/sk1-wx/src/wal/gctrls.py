@@ -38,8 +38,11 @@ class ImageLabel(GenericGWidget):
 				padding, fontbold, fontsize, textplace)
 
 		if onrightclick:
-			self.Bind(wx.EVT_RIGHT_UP, onrightclick, self)
+			self.rightclick_cmd = onrightclick
+			self.Bind(wx.EVT_RIGHT_UP, self._on_rightclick, self)
 
+	def _on_rightclick(self, event):
+		if self.rightclick_cmd: self.rightclick_cmd()
 
 	def _on_paint(self, event):
 		if self.enabled:
