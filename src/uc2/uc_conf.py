@@ -61,7 +61,10 @@ class UCConfig(XmlConfigParser):
 	uc_version = '2.0'
 	system_encoding = 'utf-8'# default encoding (GUI uses utf-8 only)
 
-	#============== COLOR PROFILES ================
+
+
+	#============== COLOR MANAGEMENT SECTION ===================
+
 	cms_use = True
 	cms_display_profiles = {}
 	cms_rgb_profiles = {}
@@ -69,7 +72,12 @@ class UCConfig(XmlConfigParser):
 	cms_lab_profiles = {}
 	cms_gray_profiles = {}
 
+	cms_rgb_profile = ''
+	cms_cmyk_profile = ''
+	cms_lab_profile = ''
+	cms_gray_profile = ''
 	cms_display_profile = ''
+
 	cms_rgb_intent = uc2const.INTENT_RELATIVE_COLORIMETRIC
 	cms_cmyk_intent = uc2const.INTENT_PERCEPTUAL
 	cms_flags = uc2const.cmsFLAGS_NOTPRECALC
