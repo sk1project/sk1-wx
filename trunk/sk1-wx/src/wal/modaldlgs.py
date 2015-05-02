@@ -74,6 +74,22 @@ class SimpleDialog(wx.Dialog):
 		self.show_modal()
 		self.destroy()
 
+class CloseDialog(SimpleDialog):
+
+	def __init__(self, parent, title, size=(-1, -1), style=VERTICAL,
+				resizable=True):
+		SimpleDialog.__init__(self, parent, title, size, style, resizable)
+
+	def set_dialog_buttons(self):
+		self.box.pack(HLine(self.box), fill=True, padding=5)
+
+		self.button_box = HPanel(self.box)
+		self.box.pack(self.button_box, fill=True)
+
+		self.close_btn = Button(self.button_box, '', onclick=self.on_close,
+							default=True, pid=const.BUTTON_CLOSE)
+		self.button_box.pack(self.close_btn, padding=5)
+
 class OkCancelDialog(SimpleDialog):
 
 	sizer = None
