@@ -133,7 +133,7 @@ class PalettesPrefs(PrefPanel):
 		self.nb.add_page(pal_opt, _('Palette options'))
 
 		#========Palette management
-		self.nb.add_page(PaletteEditor(self.app, self, self.nb),
+		self.nb.add_page(PaletteManager(self.app, self, self.nb),
 						_('Palette management'))
 
 		self.pack(self.nb, expand=True, fill=True)
@@ -200,7 +200,7 @@ class PalettesPrefs(PrefPanel):
 		return pal_list.index(name)
 
 
-class PaletteEditor(wal.HPanel):
+class PaletteManager(wal.HPanel):
 
 	def __init__(self, app, prefpanel, parent):
 		self.app = app
