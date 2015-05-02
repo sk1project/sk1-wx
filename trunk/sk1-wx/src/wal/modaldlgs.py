@@ -88,6 +88,9 @@ class CloseDialog(SimpleDialog):
 
 		self.close_btn = Button(self.button_box, '', onclick=self.on_close,
 							default=True, pid=const.BUTTON_CLOSE)
+
+		self.left_button_box = HPanel(self.button_box)
+		self.button_box.pack(self.left_button_box, expand=True, fill=True)
 		self.button_box.pack(self.close_btn, padding=5)
 
 class OkCancelDialog(SimpleDialog):
