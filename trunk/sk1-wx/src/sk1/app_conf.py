@@ -116,8 +116,8 @@ class AppConfig(UCConfig):
 	history_dlg_minsize = (500, 350)
 	history_dlg_size = (500, 350)
 
-	prefs_dlg_minsize = (700, 430)
-	prefs_dlg_size = (700, 430)
+	prefs_dlg_minsize = (700, 460)
+	prefs_dlg_size = (700, 460)
 
 	palinfo_dlg_size = (400, 350)
 	palinfo_dlg_minsize = (400, 350)
