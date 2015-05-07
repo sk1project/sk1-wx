@@ -78,8 +78,11 @@ class UCConfig(XmlConfigParser):
 	cms_gray_profile = ''
 	cms_display_profile = ''
 
+	cms_use_display_profile = False
+
 	cms_rgb_intent = uc2const.INTENT_RELATIVE_COLORIMETRIC
 	cms_cmyk_intent = uc2const.INTENT_PERCEPTUAL
+
 	cms_flags = uc2const.cmsFLAGS_NOTPRECALC
 	cms_proofing = False
 	cms_gamutcheck = False
