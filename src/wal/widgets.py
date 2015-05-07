@@ -137,7 +137,6 @@ class Checkbox(wx.CheckBox, DataWidget):
 		if self.callback:self.callback()
 
 
-
 class Radiobutton(wx.RadioButton, DataWidget):
 
 	callback = None
@@ -157,13 +156,19 @@ class Radiobutton(wx.RadioButton, DataWidget):
 class Combolist(wx.Choice, Widget):
 
 	items = []
+	callback = None
 
 	def __init__(self, parent, size=DEF_SIZE, width=0, items=[], onchange=None):
 		self.items = []
 		if items: self.items = items
 		size = self._set_width(size, width)
 		wx.Choice.__init__(self, parent, wx.ID_ANY, size, choices=self.items)
-		if onchange:self.Bind(wx.EVT_CHOICE, onchange, self)
+		if onchange:
+			self.callback = onchange
+			self.Bind(wx.EVT_CHOICE, self.on_change, self)
+
+	def on_change(self, event):
+		if self.callback: self.callback()
 
 	def set_items(self, items):
 		self.SetItems(items)
