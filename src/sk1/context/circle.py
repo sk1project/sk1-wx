@@ -17,10 +17,9 @@
 
 import math
 
-from uc2.formats.sk2.sk2_const import ARC_ARC, ARC_CHORD, ARC_PIE_SLICE
+import wal
 
-from wal import LEFT, CENTER
-from wal import ImageToggleButton, Slider
+from uc2.formats.sk2.sk2_const import ARC_ARC, ARC_CHORD, ARC_PIE_SLICE
 
 from sk1 import _, events
 from sk1.resources import icons
@@ -46,36 +45,36 @@ class CirclePlugin(CtxPlugin):
 
 	def build(self):
 
-		self.toggles[ARC_ARC] = ImageToggleButton(self, False,
+		self.toggles[ARC_ARC] = wal.ImageToggleButton(self, False,
 								icons.CTX_CIRCLE_ARC,
 								onchange=self.toggled,
 								tooltip=_('Arc'))
-		self.add(self.toggles[ARC_ARC], 0, LEFT | CENTER)
+		self.add(self.toggles[ARC_ARC], 0, wal.LEFT | wal.CENTER)
 
-		self.toggles[ARC_CHORD] = ImageToggleButton(self, False,
+		self.toggles[ARC_CHORD] = wal.ImageToggleButton(self, False,
 								icons.CTX_CIRCLE_CHORD,
 								onchange=self.toggled,
 								tooltip=_('Chord'))
-		self.add(self.toggles[ARC_CHORD], 0, LEFT | CENTER)
+		self.add(self.toggles[ARC_CHORD], 0, wal.LEFT | wal.CENTER)
 
-		self.toggles[ARC_PIE_SLICE] = ImageToggleButton(self, False,
+		self.toggles[ARC_PIE_SLICE] = wal.ImageToggleButton(self, False,
 								icons.CTX_CIRCLE_PIE_SLICE,
 								onchange=self.toggled,
 								tooltip=_('Pie slice'))
-		self.add(self.toggles[ARC_PIE_SLICE], 0, LEFT | CENTER)
+		self.add(self.toggles[ARC_PIE_SLICE], 0, wal.LEFT | wal.CENTER)
 
-		self.slider = Slider(self, 0, (0, 360), onchange=self.slider_changes)
-		self.add(self.slider, 0, LEFT | CENTER, 2)
+		self.slider = wal.Slider(self, 0, (0, 360), onchange=self.slider_changes)
+		self.add(self.slider, 0, wal.LEFT | wal.CENTER, 2)
 
 		self.angle_spin = AngleSpin(self, onchange=self.angle_changes)
-		self.add(self.angle_spin, 0, LEFT | CENTER, 2)
+		self.add(self.angle_spin, 0, wal.LEFT | wal.CENTER, 2)
 
 		txt1 = _('Start angle')
 		txt2 = _('End angle')
 		icons_dict = {True:[icons.CTX_CIRCLE_START_ANGLE, txt1, ],
 				False:[icons.CTX_CIRCLE_END_ANGLE, txt2, ], }
 		self.switch = BitmapToggle(self, True, icons_dict, self.switched)
-		self.add(self.switch, 0, LEFT | CENTER, 2)
+		self.add(self.switch, 0, wal.LEFT | wal.CENTER, 2)
 
 	def update(self, *args):
 		if self.insp.is_selection():
