@@ -70,8 +70,7 @@ class GeneralPrefs(PrefPanel):
 			self.pack(wal.HLine(self), fill=True, padding=2)
 
 			txt = _('Use Unity Global Menu (*)')
-			self.ubuntu_gm = wal.Checkbox(self, txt,
-										config.ubuntu_global_menu)
+			self.ubuntu_gm = wal.Checkbox(self, txt, config.ubuntu_global_menu)
 			self.pack(self.ubuntu_gm, align_center=False)
 
 			txt = _('Allow overlay for scrollbars (*)')
