@@ -99,14 +99,21 @@ class HtmlLabel(wx.HyperlinkCtrl, Widget):
 
 class Button(wx.Button, Widget):
 
+	callback = None
+
 	def __init__(self, parent, text, size=DEF_SIZE,
 				onclick=None, tooltip='', default=False, pid=wx.ID_ANY):
 		wx.Button.__init__(self, parent, pid, text, size=size)
 		if default: self.SetDefault()
-		if onclick: self.Bind(wx.EVT_BUTTON, onclick, self)
+		if onclick:
+			self.callback = onclick
+			self.Bind(wx.EVT_BUTTON, self.on_click, self)
 		if tooltip: self.SetToolTipString(tooltip)
 
 	def set_default(self):self.SetDefault()
+
+	def on_click(self, event):
+		if self.callback: self.callback()
 
 
 class Checkbox(wx.CheckBox, DataWidget):

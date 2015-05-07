@@ -115,7 +115,7 @@ class PrefsDialog(wal.OkCancelDialog):
 			if item.built:
 				item.apply_changes()
 
-	def restore_defaults(self, event):
+	def restore_defaults(self):
 		if self.current_plugin:
 			self.current_plugin.restore_defaults()
 

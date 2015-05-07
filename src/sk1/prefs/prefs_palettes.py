@@ -261,23 +261,23 @@ class PaletteManager(wal.HPanel):
 		self.remove_btn.set_enable(not current_palette.model.builtin)
 		self.edit_btn.set_enable(not current_palette.model.builtin)
 
-	def export_palette(self, event):
+	def export_palette(self):
 		palette_name = self.pal_list.get_selected()
 		palette = self.get_palette_by_name(palette_name)
 		self.app.export_palette(palette, self.prefpanel.dlg)
 
-	def import_palette(self, event):
+	def import_palette(self):
 		palette_name = self.app.import_palette(self.prefpanel.dlg)
 		if not palette_name:return
 		self.update_palette_list()
 		self.pal_list.set_active(self.get_palette_list().index(palette_name))
 
-	def remove_palette(self, event):
+	def remove_palette(self):
 		palette_name = self.pal_list.get_selected()
 		self.app.palettes.remove_palette(palette_name)
 		self.update_palette_list()
 
-	def edit_info(self, event):
+	def edit_info(self):
 		palette_name = self.pal_list.get_selected()
 		palette = self.get_palette_by_name(palette_name)
 		if palette_info_dlg(self.prefpanel.dlg, palette):
