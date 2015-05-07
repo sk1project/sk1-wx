@@ -147,7 +147,7 @@ class PalettesPrefs(PrefPanel):
 		self.pal.set_active(pal_list.index(current_palette_name))
 		self.palviewer.draw_palette(current_palette)
 
-	def change_palette(self, event=None):
+	def change_palette(self):
 		palette_name = self.get_palette_name_by_index(self.pal.get_active())
 		current_palette = self.get_palette_by_name(palette_name)
 		self.palviewer.draw_palette(current_palette)
