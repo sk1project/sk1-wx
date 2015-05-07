@@ -27,7 +27,6 @@ from sk1 import config, events
 class AppColorManager(ColorManager):
 
 	color_mngrs = []
-	use_display_profile = True
 
 	def __init__(self, app):
 		self.app = app
@@ -79,6 +78,7 @@ class AppColorManager(ColorManager):
 				self.handles[item] = libcms.cms_open_profile_from_file(path)
 			index += 1
 		self.use_cms = config.cms_use
+		self.use_display_profile = config.cms_use_display_profile
 		self.rgb_intent = config.cms_rgb_intent
 		self.cmyk_intent = config.cms_cmyk_intent
 		self.flags = config.cms_flags
