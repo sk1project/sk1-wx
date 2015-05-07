@@ -188,6 +188,7 @@ class Combolist(wx.Choice, Widget):
 class Combobox(wx.ComboBox, DataWidget):
 
 	items = []
+	callback = None
 
 	def __init__(self, parent, value='', pos=(-1, 1), size=DEF_SIZE, width=0,
 				items=[], onchange=None):
@@ -197,8 +198,12 @@ class Combobox(wx.ComboBox, DataWidget):
 		size = self._set_width(size, width)
 		wx.ComboBox.__init__(self, parent, wx.ID_ANY, value, pos, size, items, flags)
 		if onchange:
-			self.Bind(wx.EVT_COMBOBOX, onchange, self)
-			self.Bind(wx.EVT_TEXT_ENTER, onchange, self)
+			self.callback = onchange
+			self.Bind(wx.EVT_COMBOBOX, self.on_change, self)
+			self.Bind(wx.EVT_TEXT_ENTER, self.on_change, self)
+
+	def on_change(self, event):
+		if self.callback: self.callback()
 
 	def set_items(self, items):
 		self.SetItems(items)
@@ -236,6 +241,8 @@ class Entry(wx.TextCtrl, DataWidget):
 
 class Spin(wx.SpinCtrl, RangeDataWidget):
 
+	callback = None
+
 	def __init__(self, parent, value=0, range_val=(0, 1), size=DEF_SIZE, width=0,
 				 onchange=None):
 		self.range_val = range_val
@@ -244,7 +251,11 @@ class Spin(wx.SpinCtrl, RangeDataWidget):
 		self.SetRange(*range_val)
 		self.SetValue(value)
 		if onchange:
+			self.callback = onchange
 			self.Bind(wx.EVT_SPINCTRL, onchange, self)
+
+	def on_change(self, event):
+		if self.callback: self.callback()
 
 class SpinButton(wx.SpinButton, RangeDataWidget):
 
@@ -313,8 +324,6 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 			size = (-1, self.entry.GetSize()[1])
 			self.sb = SpinButton(self, size=size, onchange=self._check_spin)
 			self.box.Add(self.sb, 0, wx.ALL)
-
-#		self.SetBackgroundColour(wx.CYAN)
 
 		if check_focus:
 			self.entry.Bind(wx.EVT_KILL_FOCUS, self._entry_lost_focus, self.entry)
