@@ -126,8 +126,8 @@ class Checkbox(wx.CheckBox, DataWidget):
 		wx.CheckBox.__init__(self, parent, wx.ID_ANY, text, style=style)
 		if value: self.SetValue(value)
 		if onclick:
-			self.Bind(wx.EVT_CHECKBOX, self.on_click, self)
 			self.callback = onclick
+			self.Bind(wx.EVT_CHECKBOX, self.on_click, self)
 
 	def set_value(self, val, action=True):
 		self.SetValue(val)
@@ -139,11 +139,19 @@ class Checkbox(wx.CheckBox, DataWidget):
 
 
 class Radiobutton(wx.RadioButton, DataWidget):
+
+	callback = None
+
 	def __init__(self, parent, text='', onclick=None, group=False):
 		style = 0
 		if group:style = wx.RB_GROUP
 		wx.RadioButton.__init__(self, parent, wx.ID_ANY, text, style=style)
-		if onclick:self.Bind(wx.wx.EVT_RADIOBUTTON, onclick, self)
+		if onclick:
+			self.callback = onclick
+			self.Bind(wx.wx.EVT_RADIOBUTTON, self.on_click, self)
+
+	def on_click(self, event):
+		if self.callback: self.callback()
 
 
 class Combolist(wx.Choice, Widget):
