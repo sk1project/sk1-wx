@@ -332,11 +332,11 @@ def get_profile_name(filepath):
 	If file is not suitable profile or doesn't exist
 	returns None. 
 	"""
-	ret = None
 	try:
 		profile = libcms.cms_open_profile_from_file(filepath)
 		ret = libcms.cms_get_profile_name(profile)
-	except:pass
+	except:
+		ret = None
 	return ret
 
 def get_profile_info(filepath):
@@ -345,13 +345,27 @@ def get_profile_info(filepath):
 	If file is not suitable profile or doesn't exist
 	returns None. 
 	"""
-	ret = None
 	try:
 		profile = libcms.cms_open_profile_from_file(filepath)
 		ret = libcms.cms_get_profile_info(profile)
-	except:pass
+	except:
+		ret = None
 	return ret
 
+def get_profile_descr(filepath):
+	"""
+	Returns profile description tuple (name, copyright, info).
+	If file is not suitable profile or doesn't exist
+	returns None. 
+	"""
+	try:
+		profile = libcms.cms_open_profile_from_file(filepath)
+		ret = (libcms.cms_get_profile_name(profile),)
+		ret += (libcms.cms_get_profile_copyright(profile),)
+		ret += (libcms.cms_get_profile_info(profile),)
+	except:
+		ret = ('', '', '')
+	return ret
 
 class ColorManager(object):
 	"""
