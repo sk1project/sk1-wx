@@ -501,3 +501,33 @@ class ScrollBar(wx.ScrollBar, Widget):
 		style = wx.SB_VERTICAL
 		if not vertical: style = wx.SB_HORIZONTAL
 		wx.ScrollBar.__init__(self, parent, wx.ID_ANY, style=style)
+
+class ColorButton(wx.ColourPickerCtrl, Widget):
+
+	callback = None
+
+	def __init__(self, parent, color=(), onchange=None):
+		if not color:
+			color = const.BLACK
+		else:
+			color = wx.Colour(*self.val255(color))
+		wx.ColourPickerCtrl.__init__(self, parent, wx.ID_ANY, color)
+		if onchange:
+			self.callback = onchange
+			self.Bind(wx.EVT_SCROLL, self.on_change, self)
+
+	def on_change(self, event):
+		if self.callback:self.callback()
+
+	def val255(self, vals):
+		ret = []
+		for item in vals: ret.append(int(item * 255))
+		return tuple(ret)
+
+	def val255_to_dec(self, vals):
+		ret = []
+		for item in vals: ret.append(item / 255.0)
+		return tuple(ret)
+
+	def set_value(self, color): self.SetColour(wx.Colour(*self.val255(color)))
+	def get_value(self): return self.val255_to_dec(self.GetColour().Get())
