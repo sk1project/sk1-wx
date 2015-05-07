@@ -131,10 +131,10 @@ class OkCancelDialog(SimpleDialog):
 			self.button_box.pack(self.cancel_btn, padding=2)
 			self.button_box.pack(self.ok_btn)
 
-	def on_ok(self, event):
+	def on_ok(self):
 		self.end_modal(const.BUTTON_OK)
 
-	def on_cancel(self, event):
+	def on_cancel(self):
 		self.end_modal(const.BUTTON_CANCEL)
 
 	def show(self):
