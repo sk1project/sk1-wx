@@ -97,6 +97,9 @@ CPL = 502
 SCRIBUS_PAL = 503
 SOC = 504
 
+ICC = 600
+ICM = 601
+
 
 FORMAT_DESCRIPTION = {
 ALL_FORMATS : _("All supported formats"),
@@ -154,6 +157,10 @@ GPL: _("GPL - GIMP palette files"),
 CPL: _("CPL - CorelDRAW palette files (v7-X4)"),
 SCRIBUS_PAL: _("XML - Scribus palette files"),
 SOC: _("SOC - LibreOffice palette files"),
+
+#Color profiles
+ICC: _("ICC - International Color Consortium profiles"),
+ICM: _("ICM - Image Color Matching profiles"),
 }
 
 FORMAT_NAMES = {
@@ -212,6 +219,8 @@ GPL: "GPL",
 CPL: "CPL",
 SCRIBUS_PAL: "SCRIBUS_PAL",
 SOC: "SOC",
+ICC: "ICC",
+ICM: "ICM",
 }
 
 FORMAT_EXTENSION = {
@@ -232,6 +241,8 @@ PCX: ('pcx',), GIF: ('gif',), PNG: ('png',), PPM: ('pbm', 'pgm', 'pgm'),
 XBM: ('xbm',), XPM: ('xpm',), JP2: ('jp2', 'jpx', 'jpf'),
 
 SKP: ('skp',), GPL: ('gpl',), CPL: ('cpl',), SCRIBUS_PAL:('xml',), SOC:('soc',),
+
+ICC: ('icc',), ICM: ('icm',),
 }
 
 IMAGE_FORMATS = [JPG, TIF, BMP, PCX, GIF, PNG, PPM, XBM, XPM, ]
