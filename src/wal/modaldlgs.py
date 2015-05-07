@@ -56,7 +56,7 @@ class SimpleDialog(wx.Dialog):
 	def build(self):pass
 	def set_dialog_buttons(self):pass
 	def get_result(self): return None
-	def on_close(self, event): self.end_modal(const.BUTTON_CANCEL)
+	def on_close(self, event=None): self.end_modal(const.BUTTON_CANCEL)
 	def set_title(self, title): self.SetTitle(title)
 	def set_minsize(self, size): self.SetMinSize(size)
 	def get_size(self):return self.GetSize()
