@@ -74,7 +74,7 @@ class LogViewerDialog(wal.OkCancelDialog):
 		self.lc.set_column_width(3, wal.LIST_AUTOSIZE)
 		self.update(False)
 
-	def clear_history(self, *args):
+	def clear_history(self):
 		self.app.history.clear_history()
 		self.lc.clear_all()
 
