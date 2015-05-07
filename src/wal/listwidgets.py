@@ -101,6 +101,9 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, Widget):
 			return self.data[index]
 		return None
 
+	def get_active(self):
+		return self.GetFocusedItem()
+
 class ReportList(SimpleList):
 
 	def __init__(self, parent, data=[], border=True, header=True,
