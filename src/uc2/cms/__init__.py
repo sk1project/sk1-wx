@@ -414,7 +414,6 @@ class ColorManager(object):
 		intent = self.rgb_intent
 		if cs_out == COLOR_CMYK:intent = self.cmyk_intent
 		if not self.transforms.has_key(tr_type):
-			print tr_type
 			handle_in = self.handles[cs_in]
 			handle_out = self.handles[cs_out]
 			if cs_out == COLOR_DISPLAY: cs_out = COLOR_RGB
@@ -443,8 +442,6 @@ class ColorManager(object):
 										handle_proof,
 										self.cmyk_intent,
 										self.rgb_intent, self.flags)
-			if self.gamutcheck:
-				libcms.cms_set_alarm_codes(*val_255(self.alarm_codes))
 			self.proof_transforms[tr_type] = tr
 		return self.proof_transforms[tr_type]
 
