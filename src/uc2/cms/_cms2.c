@@ -235,16 +235,16 @@ static PyObject *
 pycms_SetAlarmCodes (PyObject *self, PyObject *args) {
 
 	int red, green, blue;
-	cmsUInt16Number alarm_codes[cmsMAXCHANNELS];
+	cmsUInt16Number alarm_codes[cmsMAXCHANNELS] = { 0, };
 
 	if (!PyArg_ParseTuple(args, "iii", &red, &green, &blue)) {
 		Py_INCREF(Py_None);
 		return Py_None;
 	}
 
-	alarm_codes[0] = (cmsUInt16Number) red;
-	alarm_codes[1] = (cmsUInt16Number) green;
-	alarm_codes[2] = (cmsUInt16Number) blue;
+	alarm_codes[0] = (cmsUInt16Number) red * 256;
+	alarm_codes[1] = (cmsUInt16Number) green * 256;
+	alarm_codes[2] = (cmsUInt16Number) blue * 256;
 
 	cmsSetAlarmCodes(alarm_codes);
 
