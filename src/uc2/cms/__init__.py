@@ -272,7 +272,7 @@ def colorb(color=None, cmyk=False):
 		values = color[1]
 	result = []
 	for value in values:
-		result.append(int(round(value, 3) * 255))
+		result.append(int(round(value * 255)))
 	if len(result) == 1:
 		result += [0, 0, 0]
 	elif len(result) == 3:
@@ -291,7 +291,7 @@ def decode_colorb(colorb, color_type):
 	else:
 		values = colorb[:3]
 	for value in values:
-		result.append(round(value / 255.0, 3))
+		result.append(value / 255.0)
 	return result
 
 def verbose_color(color):
@@ -414,6 +414,7 @@ class ColorManager(object):
 		intent = self.rgb_intent
 		if cs_out == COLOR_CMYK:intent = self.cmyk_intent
 		if not self.transforms.has_key(tr_type):
+			print tr_type
 			handle_in = self.handles[cs_in]
 			handle_out = self.handles[cs_out]
 			if cs_out == COLOR_DISPLAY: cs_out = COLOR_RGB
@@ -443,7 +444,7 @@ class ColorManager(object):
 										self.cmyk_intent,
 										self.rgb_intent, self.flags)
 			if self.gamutcheck:
-				libcms.cms_set_alarm_codes(*self.alarm_codes)
+				libcms.cms_set_alarm_codes(*val_255(self.alarm_codes))
 			self.proof_transforms[tr_type] = tr
 		return self.proof_transforms[tr_type]
 
