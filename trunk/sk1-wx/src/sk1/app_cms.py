@@ -20,8 +20,7 @@ import os
 from uc2 import uc2const
 from uc2.uc2const import COLOR_DISPLAY
 
-from uc2.cms import ColorManager, CS, libcms
-from uc2.formats.sk2.sk2_config import SK2_Config
+from uc2.cms import ColorManager, CS, libcms, val_255
 from sk1 import config, events
 
 class AppColorManager(ColorManager):
@@ -39,23 +38,16 @@ class AppColorManager(ColorManager):
 			self.update()
 			self.update_mngrs()
 			events.emit(events.CMS_CHANGED)
-
-	def get_profiles(self):
-		sk2_config = SK2_Config()
-		filename = 'sk2_config.xml'
-		config_file = os.path.join(self.app.appdata.app_config_dir, filename)
-		sk2_config.load(config_file)
-		profiles = [sk2_config.default_rgb_profile,
-				sk2_config.default_cmyk_profile,
-				sk2_config.default_lab_profile,
-				sk2_config.default_gray_profile]
-		profiles.append(config.cms_display_profile)
-		return profiles
+			self.app.current_doc.canvas.force_redraw()
 
 	def update(self):
 		self.handles = {}
 		self.clear_transforms()
-		profiles = self.get_profiles()
+		profiles = [config.cms_rgb_profile,
+					config.cms_cmyk_profile,
+					config.cms_lab_profile,
+					config.cms_gray_profile,
+					config.cms_display_profile]
 		profile_dicts = [config.cms_rgb_profiles,
 						config.cms_cmyk_profiles,
 						config.cms_lab_profiles,
@@ -85,6 +77,8 @@ class AppColorManager(ColorManager):
 		self.proofing = config.cms_proofing
 		self.alarm_codes = config.cms_alarmcodes
 		self.gamutcheck = config.cms_gamutcheck
+		if self.gamutcheck:
+			libcms.cms_set_alarm_codes(*val_255(self.alarm_codes))
 		self.proof_for_spot = config.cms_proof_for_spot
 		if self.proofing:
 			self.flags = self.flags | uc2const.cmsFLAGS_SOFTPROOFING
