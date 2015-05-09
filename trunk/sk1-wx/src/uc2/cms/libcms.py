@@ -442,7 +442,7 @@ def cms_get_profile_name(profile):
 	profile - a valid lcms profile handle
 	Returns profile name as a string value.	
 	"""
-	return _cms.getProfileName(profile).strip().decode('cp1252')
+	return str(_cms.getProfileName(profile).strip().decode('cp1252'))
 
 
 def cms_get_profile_info(profile):
@@ -452,7 +452,7 @@ def cms_get_profile_info(profile):
 	profile - a valid lcms profile handle
 	Returns profile description info as a string value.	
 	"""
-	return _cms.getProfileInfo(profile).strip().decode('cp1252')
+	return str(_cms.getProfileInfo(profile).strip().decode('cp1252'))
 
 
 def cms_get_profile_copyright(profile):
@@ -462,7 +462,7 @@ def cms_get_profile_copyright(profile):
 	profile - a valid lcms profile handle
 	Returns profile copyright info as a string value.	
 	"""
-	return _cms.getProfileInfoCopyright(profile).strip().decode('cp1252')
+	return str(_cms.getProfileInfoCopyright(profile).strip().decode('cp1252'))
 
 
 def cms_do_transform2(hTransform, chnl1, chnl2, chnl3, chnl4=0):
