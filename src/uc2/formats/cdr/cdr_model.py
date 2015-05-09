@@ -498,7 +498,7 @@ class CdrUniObject(RiffList):
 			name = obj_parse[self.obj_type][1]
 		return (False, name, str(self.chunk_size))
 
-	def do_update(self, presenter):
+	def do_update(self, presenter, action=False):
 		RiffList.do_update(self, presenter)
 		self.obj_type = None
 
@@ -659,7 +659,7 @@ class CdrObject(RiffList):
 		name = 'Object'
 		return (False, name, str(self.chunk_size))
 
-	def do_update(self, presenter):
+	def do_update(self, presenter, action=False):
 		type = None
 
 		lgob_chunk = find_chunk(self.childs, 'lgob')

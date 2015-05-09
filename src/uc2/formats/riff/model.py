@@ -56,7 +56,7 @@ class RiffModelObject(BinaryModelObject):
 
 	def update(self):pass
 
-	def do_update(self, presenter):
+	def do_update(self, presenter, action=False):
 		for child in self.childs:
 			child.parent = self
 			child.version = self.version
