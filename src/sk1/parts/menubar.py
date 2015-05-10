@@ -93,7 +93,7 @@ class AppMenuBar(wx.MenuBar):
 		self.entries.append(entry)
 
 		#---Bitmaps menu
-		sub = (pdids.ID_CONV_TO_CMYK, pdids.ID_CONV_TO_RGB, pdids.ID_CONV_TO_LAB,
+		sub = (pdids.ID_CONV_TO_CMYK, pdids.ID_CONV_TO_RGB,#pdids.ID_CONV_TO_LAB,
 			pdids.ID_CONV_TO_GRAY, pdids.ID_CONV_TO_BW, None,
 			pdids.ID_INVERT_BITMAP, None, pdids.ID_REMOVE_ALPHA,
 			pdids.ID_INVERT_ALPHA, None, pdids.ID_EXTRACT_BITMAP)

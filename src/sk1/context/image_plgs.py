@@ -29,7 +29,9 @@ class ImageTypePlugin(CtxPlugin):
 		CtxPlugin.__init__(self, app, parent)
 
 	def build(self):
-		for item in [pdids.ID_CONV_TO_CMYK, pdids.ID_CONV_TO_RGB,
-					pdids.ID_CONV_TO_LAB, pdids.ID_CONV_TO_GRAY,
+		for item in [pdids.ID_CONV_TO_CMYK,
+					pdids.ID_CONV_TO_RGB,
+#					pdids.ID_CONV_TO_LAB,
+					pdids.ID_CONV_TO_GRAY,
 					pdids.ID_CONV_TO_BW]:
 			self.add(ActionButton(self, self.actions[item]), 0, LEFT | CENTER, 2)
