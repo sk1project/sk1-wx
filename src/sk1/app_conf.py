@@ -129,6 +129,7 @@ class AppConfig(UCConfig):
 	menu_size = (16, 16)
 	toolbar_size = (24, 24)
 	toolbar_icon_size = (24, 24)
+	show_stub_buttons = True
 
 	#============== I/O SECTION ===================
 	open_dir = '~'

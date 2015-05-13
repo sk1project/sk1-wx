@@ -18,7 +18,7 @@
 import wx
 import wal
 
-from sk1 import _, appconst, events
+from sk1 import _, appconst, events, config
 from sk1.resources import icons, get_icon, pdids
 
 
@@ -51,6 +51,11 @@ class AppStubPanel(wx.Panel):
 		self.Bind(wx.EVT_PAINT, self._on_paint, self)
 		self.Bind(wx.EVT_SIZE, self._on_resize, self)
 		events.connect(events.HISTORY_CHANGED, self.check_history)
+		events.connect(events.CONFIG_MODIFIED, self.update)
+
+	def update(self, attr, val):
+		if attr == 'show_stub_buttons':
+			self.refresh()
 
 	def check_history(self, *args):
 		self.recent_btn.set_active(self.app.history.is_history())
@@ -62,6 +67,9 @@ class AppStubPanel(wx.Panel):
 		self.Show()
 
 	def refresh(self, x=0, y=0, w=0, h=0):
+		self.new_btn.set_visible(config.show_stub_buttons)
+		self.open_btn.set_visible(config.show_stub_buttons)
+		self.recent_btn.set_visible(config.show_stub_buttons)
 		if not w: w, h = self.GetSize()
 		self.Refresh(rect=wx.Rect(x, y, w, h))
 
@@ -128,6 +136,10 @@ class StubButton(wx.Panel):
 		self.active_bmp = image.ConvertToBitmap()
 		image = image.Blur(5)
 		self.pressed_bmp = image.ConvertToBitmap()
+
+	def set_visible(self, val):
+		if val: self.Show()
+		else: self.Hide()
 
 	def set_active(self, val):
 		if val: self.state = appconst.NORMAL

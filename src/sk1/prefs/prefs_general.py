@@ -58,6 +58,10 @@ class GeneralPrefs(PrefPanel):
 		grid.pack(wal.Label(grid, _('records')))
 		self.pack(grid, align_center=False, padding=5)
 
+		txt = _('Show quick access buttons')
+		self.stub_buttons = wal.Checkbox(self, txt, config.show_stub_buttons)
+		self.pack(self.stub_buttons, align_center=False)
+
 		if not config.is_mac():
 			txt = _('Use overlay for spinbox widgets (*)')
 			self.spin_overlay = wal.Checkbox(self, txt, config.spin_overlay)
@@ -92,6 +96,7 @@ class GeneralPrefs(PrefPanel):
 		config.make_export_backup = self.expbackup.get_value()
 		config.history_size = self.hist_size.get_value()
 		config.history_list_size = self.hist_menu_size.get_value()
+		config.show_stub_buttons = self.stub_buttons.get_value()
 		if not config.is_mac():
 			config.spin_overlay = self.spin_overlay.get_value()
 		if config.is_ubuntu():
@@ -105,6 +110,7 @@ class GeneralPrefs(PrefPanel):
 		self.expbackup.set_value(defaults['make_export_backup'])
 		self.hist_size.set_value(defaults['history_size'])
 		self.hist_menu_size.set_value(defaults['history_list_size'])
+		self.stub_buttons.set_value(defaults['show_stub_buttons'])
 		if not config.is_mac():
 			self.spin_overlay.set_value(defaults['spin_overlay'])
 		if config.is_ubuntu():
