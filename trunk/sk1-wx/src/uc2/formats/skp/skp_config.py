@@ -22,5 +22,11 @@ class SKP_Config(XmlConfigParser):
 	system_encoding = 'utf-8'
 	filename = 'skp_config.xml'
 
+	small_cell = 16
+	large_cell = 32
+
+	short_palette_size = 50
+	palette_width = 160
+
 
 
