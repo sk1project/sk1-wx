@@ -59,7 +59,22 @@ class SKP_Presenter(TextModelPresenter):
 		TextModelPresenter.update(self)
 
 	def translate_from_sk2(self, sk2_doc):
-		pass
+		doc_name = sk2_doc.doc_file.split('.')[0]
+		if not doc_name: doc_name = 'Untitled'
+		self.model.name = doc_name + ' palette'
+		self.model.comments = 'The palette is extracted from "'
+		self.model.comments += doc_name + '" document'
+		self.model.source = 'Custom'
+		self._extract_color(sk2_doc.model)
+
+	def _extract_color(self, obj):
+		if obj.cid > sk2_model.PRIMITIVE_CLASS:
+			fill = obj.style[0]
+			if fill and fill[1] == sk2_const.FILL_SOLID:
+				if fill[2] not in self.model.colors:
+					self.model.colors.append(deepcopy(fill[2]))
+		for child in obj.childs:
+			self._extract_color(child)
 
 	def translate_to_sk2(self, sk2_doc):
 		ncells = len(self.model.colors)
@@ -67,7 +82,10 @@ class SKP_Presenter(TextModelPresenter):
 		cellsize = self.config.large_cell
 		if ncells > self.config.short_palette_size:
 			cellsize = self.config.small_cell
-		columns = int(self.config.palette_width / cellsize)
+		if self.model.columns < 2:
+			columns = int(self.config.palette_width / cellsize)
+		else:
+			columns = self.model.columns
 		rows = 1.0 * ncells / columns
 		if rows > int(rows):
 			rows = int(rows) + 1
