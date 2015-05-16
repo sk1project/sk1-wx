@@ -55,7 +55,7 @@ class PaletteInfoDialog(wal.OkCancelDialog):
 									multiline=True)
 		grid.pack(self.comm_entry, fill=True)
 
-	def on_ok(self, event):
+	def on_ok(self, *args):
 		self.end_modal(wal.BUTTON_OK)
 
 	def show(self):
