@@ -60,7 +60,8 @@ class ScribusPalette_Presenter(TaggedModelPresenter):
 		sp = self.model
 		skp = skp_doc.model
 		sp.Name = skp.name.encode('utf-8')
-		if skp.source: sp.comments += 'Palette source: ' + skp.source + '\n'
+		if skp.source:
+			sp.comments += 'Palette source: ' + skp.source + '\n'
 		if skp.comments:
 			for item in skp.comments.splitlines():
 				sp.comments += item + '\n'
