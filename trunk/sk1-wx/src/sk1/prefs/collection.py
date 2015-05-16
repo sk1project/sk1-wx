@@ -19,8 +19,9 @@ import os
 
 import wal
 
-from uc2.uc2const import FORMAT_EXTENSION, SKP, GPL, SCRIBUS_PAL, SOC
-from uc2.formats import data, get_saver_by_id
+from uc2.uc2const import FORMAT_EXTENSION, SKP, GPL, SCRIBUS_PAL, SOC, PNG, SK2
+from uc2.formats import get_saver_by_id
+from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 
 from sk1 import config
 from sk1.resources import icons
@@ -60,4 +61,10 @@ class CollectionButton(wal.ImageButton):
 			doc_file = os.path.join(dir_path, palette_filename + ext)
 			saver(palette, doc_file, None, False, True)
 
+		sk2_doc = SK2_Presenter(self.app.appdata)
+		palette.translate_to_sk2(sk2_doc)
 
+		saver = get_saver_by_id(PNG)
+		doc_file = os.path.join(dir_path, 'preview.png')
+		saver(sk2_doc, doc_file, None, True, False, antialiasing=False)
+		sk2_doc.close()
