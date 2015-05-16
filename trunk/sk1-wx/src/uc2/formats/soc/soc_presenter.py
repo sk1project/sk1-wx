@@ -59,7 +59,7 @@ class SOC_Presenter(TextModelPresenter):
 		self.model.columns = skp_model.columns
 		self.model.comments = '' + skp_model.comments.encode('utf-8')
 		for item in skp_model.colors:
-			color = self.cms.get_rgb_color(item)
+			color = self.cms.get_rgb_color(item)[1]
 			rgb = cms.rgb_to_hexcolor(color)
 			self.model.colors.append([rgb, item[3].encode('utf-8')])
 
