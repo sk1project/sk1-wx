@@ -55,13 +55,18 @@ class SOC_Presenter(TextModelPresenter):
 
 	def convert_from_skp(self, skp_doc):
 		skp_model = skp_doc.model
-		self.model.name = '' + skp_model.name.encode('utf-8')
-		self.model.columns = skp_model.columns
-		self.model.comments = '' + skp_model.comments.encode('utf-8')
+		soc = self.model
+		soc.name = '' + skp_model.name.encode('utf-8')
+		soc.columns = skp_model.columns
+		soc.comments = ''
+		if skp_model.source:
+			soc.comments += 'Palette source: ' + skp_model.source + '\n'
+		soc.comments += skp_model.comments
+		soc.comments = soc.comments.encode('utf-8')
 		for item in skp_model.colors:
 			color = self.cms.get_rgb_color(item)[1]
 			rgb = cms.rgb_to_hexcolor(color)
-			self.model.colors.append([rgb, item[3].encode('utf-8')])
+			soc.colors.append([rgb, item[3].encode('utf-8')])
 
 	def convert_to_skp(self, skp_doc):
 		skp_model = skp_doc.model
