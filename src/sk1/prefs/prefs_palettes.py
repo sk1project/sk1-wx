@@ -23,6 +23,7 @@ from sk1.pwidgets import PaletteViewer
 from sk1.dialogs import palette_info_dlg
 
 from generic import PrefPanel
+from collection import CollectionButton
 
 PAL_ORIENT = [_('Horizontal'), _('Vertical')]
 
@@ -232,6 +233,11 @@ class PaletteManager(wal.HPanel):
 		self.edit_btn = wal.Button(btn_box, _('Edit info'),
 							onclick=self.edit_info)
 		btn_box.pack(self.edit_btn, fill=True, end_padding=5)
+
+		btn_box.pack(wal.VPanel(btn_box), fill=True, expand=True)
+
+		btn_box.pack(CollectionButton(btn_box, self.app, self,
+							self.prefpanel.dlg), fill=True, end_padding=5)
 
 		self.update_palette_list()
 
