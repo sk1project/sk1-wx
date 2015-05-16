@@ -111,3 +111,21 @@ def get_save_file_name(parent, app, path, msg='', file_types=[]):
 		ret = (path_system(dlg.GetPath()), dlg.GetFilterIndex())
 	dlg.Destroy()
 	return ret
+
+def get_dir_path(parent, app, path='~', msg=''):
+	ret = ''
+	if not msg: msg = _('Select directory')
+	if is_mac(): msg = ''
+
+	if path == '~': path = os.path.expanduser(path)
+
+	dlg = wx.DirDialog(
+		parent, message=msg,
+		defaultPath=path,
+		style=wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST
+	)
+	dlg.CenterOnParent()
+	if dlg.ShowModal() == wx.ID_OK:
+		ret = path_system(dlg.GetPath())
+	dlg.Destroy()
+	return ret
