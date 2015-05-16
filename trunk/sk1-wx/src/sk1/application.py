@@ -382,6 +382,12 @@ class pdApplication(wal.Application, UCApplication):
 		saver_id = data.PALETTE_SAVERS[index]
 
 		if doc_file:
+
+			if not os.path.splitext(doc_file)[1] == "." + \
+						uc2const.FORMAT_EXTENSION[saver_id][0]:
+				doc_file = os.path.splitext(doc_file)[0] + "." + \
+						uc2const.FORMAT_EXTENSION[saver_id][0]
+
 			try:
 				saver = get_saver_by_id(saver_id)
 				if saver is None:
