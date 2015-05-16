@@ -41,6 +41,8 @@ def png_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf={}, **kw
 	ctx.set_matrix(canvas_matrix)
 
 	rend = CairoRenderer(sk2_doc.cms)
+	if 'antialiasing' in kw.keys():
+		rend.antialias_flag = kw['antialiasing']
 	layers = sk2_doc.methods.get_visible_layers(page)
 	objs = []
 	for item in layers:objs += item.childs
