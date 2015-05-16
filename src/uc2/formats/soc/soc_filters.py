@@ -52,13 +52,13 @@ class SOC_Saver(AbstractSaver):
 			pal_tag = SOC_PAL_OO_TAG
 			pal_attr = SOC_PAL_OO_ATTRS
 
-		line = '<%' % pal_tag
+		line = '<%s' % pal_tag
 		for item in pal_attr.keys():
 			line += ' %s="%s"' % (item, pal_attr[item])
 		self.writeln(line + '>')
 
 		for item in self.model.colors:
-			self.writeln(' <%s %s="%s" %s="%"/>' % (SOC_COLOR_TAG,
+			self.writeln(' <%s %s="%s" %s="%s"/>' % (SOC_COLOR_TAG,
 				SOC_COLOR_NAME_ATTR, item[1], SOC_COLOR_VAL_ATTR, item[0]))
 
-		self.writeln('</%s>' % SOC_PAL_TAG)
+		self.writeln('</%s>' % pal_tag)
