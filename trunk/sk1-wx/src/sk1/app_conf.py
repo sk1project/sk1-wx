@@ -140,6 +140,7 @@ class AppConfig(UCConfig):
 	resource_dir = ''
 	plugin_dirs = []
 	profile_import_dir = '~'
+	collection_dir = '~'
 
 	#============== MOUSE OPTIONS ================
 	mouse_scroll_sensitivity = 3.0
