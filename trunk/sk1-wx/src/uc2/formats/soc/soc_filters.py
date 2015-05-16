@@ -42,7 +42,7 @@ class SOC_Saver(AbstractSaver):
 		self.writeln('<?xml version="1.0" encoding="UTF-8"?>')
 		if self.model.comments:
 			self.writeln('<!--')
-			self.fileptr.write(self.model.comments)
+			self.writeln(self.model.comments)
 			self.writeln('-->')
 
 		if self.model.source == SOURCE_LO:
