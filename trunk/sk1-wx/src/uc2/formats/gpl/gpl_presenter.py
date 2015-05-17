@@ -58,7 +58,8 @@ class GPL_Presenter(TextModelPresenter):
 		skp_model = skp_doc.model
 		self.model.name = '' + skp_model.name
 		self.model.columns = skp_model.columns
-		self.model.comments = '' + skp_model.comments
+		self.model.comments = 'Palette source: ' + skp_model.source
+		self.model.comments += '\n' + skp_model.comments
 		for item in skp_model.colors:
 			r, g, b = self.cms.get_rgb_color255(item)
 			self.model.colors.append([r, g, b, '' + item[3]])
