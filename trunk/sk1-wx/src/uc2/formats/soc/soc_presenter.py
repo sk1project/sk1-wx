@@ -51,7 +51,7 @@ class SOC_Presenter(TextModelPresenter):
 		self.model = SOC_Palette(self.config.source)
 		self.update()
 
-	def update(self):pass
+	def update(self, action=False):pass
 
 	def convert_from_skp(self, skp_doc):
 		skp_model = skp_doc.model

@@ -59,7 +59,7 @@ class SK1_Presenter(TextModelPresenter):
 		translator = SK1_to_PDXF_Translator()
 		translator.translate(self, pdxf_doc)
 
-	def update(self):
-		TextModelPresenter.update(self)
+	def update(self, action=False):
+		TextModelPresenter.update(self, action)
 		if not self.model is None:
 			self.methods.update()
