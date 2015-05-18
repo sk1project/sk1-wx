@@ -55,8 +55,8 @@ class SKP_Presenter(TextModelPresenter):
 		self.model = SK1Palette()
 		self.update()
 
-	def update(self):
-		TextModelPresenter.update(self)
+	def update(self, action=False):
+		TextModelPresenter.update(self, action)
 
 	def translate_from_sk2(self, sk2_doc):
 		doc_name = sk2_doc.doc_file.split('.')[0]

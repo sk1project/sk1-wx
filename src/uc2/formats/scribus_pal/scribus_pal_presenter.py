@@ -54,7 +54,7 @@ class ScribusPalette_Presenter(TaggedModelPresenter):
 		self.model = ScribusPalette()
 		self.update()
 
-	def update(self):pass
+	def update(self, action=False):pass
 
 	def convert_from_skp(self, skp_doc):
 		sp = self.model

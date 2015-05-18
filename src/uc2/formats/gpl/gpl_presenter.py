@@ -52,7 +52,7 @@ class GPL_Presenter(TextModelPresenter):
 		self.model = GPL_Palette()
 		self.update()
 
-	def update(self):pass
+	def update(self, action=False):pass
 
 	def convert_from_skp(self, skp_doc):
 		skp_model = skp_doc.model

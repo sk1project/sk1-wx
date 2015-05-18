@@ -52,7 +52,7 @@ class SK2_Presenter(TextModelPresenter):
 		self.model = create_new_doc(self.config)
 		self.update()
 
-	def update(self):
-		TextModelPresenter.update(self)
+	def update(self, action=False):
+		TextModelPresenter.update(self, action)
 		if not self.model is None:
 			self.methods.update()
