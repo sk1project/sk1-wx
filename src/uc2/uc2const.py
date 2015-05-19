@@ -101,6 +101,8 @@ COREL_PAL = 505
 ICC = 600
 ICM = 601
 
+XML = 700
+
 
 FORMAT_DESCRIPTION = {
 ALL_FORMATS : _("All supported formats"),
@@ -163,6 +165,8 @@ COREL_PAL: _("XML - CorelDRAW x5-X7 palette files"),
 #Color profiles
 ICC: _("ICC - International Color Consortium profiles"),
 ICM: _("ICM - Image Color Matching profiles"),
+
+XML: _("XML - eXtensible Markup Language files")
 }
 
 FORMAT_NAMES = {
@@ -225,6 +229,8 @@ COREL_PAL: "COREL_PAL",
 
 ICC: "ICC",
 ICM: "ICM",
+
+XML: "XML",
 }
 
 FORMAT_EXTENSION = {
@@ -248,6 +254,8 @@ SKP: ('skp',), GPL: ('gpl',), CPL: ('cpl',), SCRIBUS_PAL:('xml',), SOC:('soc',),
 COREL_PAL:('xml',),
 
 ICC: ('icc',), ICM: ('icm',),
+
+XML: ('xml',),
 }
 
 IMAGE_FORMATS = [JPG, TIF, BMP, PCX, GIF, PNG, PPM, XBM, XPM, ]
