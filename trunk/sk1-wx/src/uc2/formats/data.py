@@ -17,7 +17,7 @@
 
 from uc2.uc2const import PDXF, SK1, SK2, SK, SVG, SVGZ, ODG, ORA, \
 XCF, SLA, FIG, CDR, CDT, CDRZ, CDTZ, CMX, CCX, CDRX, XAR, AI_PS, AI_PDF, PS, \
-EPS, PDF, PSD, CGM, WMF, EMF, XPS, VSD, PLT, HPGL , DXF, DWG, RIFF
+EPS, PDF, PSD, CGM, WMF, EMF, XPS, VSD, PLT, HPGL , DXF, DWG, RIFF, XML
 
 from uc2.uc2const import JPG, JP2, TIF, BMP, PCX, GIF, PNG, PPM, XBM, XPM
 
@@ -28,12 +28,12 @@ SIMPLE_LOADERS = []
 MODEL_LOADERS = [SK2, PDXF, PLT, CDR, CDT] + \
 [PNG, JPG, JP2, TIF, GIF, BMP, PCX, PPM, XBM, XPM]
 PALETTE_LOADERS = [SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL]
-EXPERIMENTAL_LOADERS = [SK1, WMF, RIFF, CDRZ, ] + PALETTE_LOADERS
+EXPERIMENTAL_LOADERS = [SK1, WMF, RIFF, CDRZ, XML]
 
 SIMPLE_SAVERS = []
 PALETTE_SAVERS = [SKP, GPL, SCRIBUS_PAL, SOC, CPL]
 MODEL_SAVERS = [SK2, PNG, PDXF, PLT]
-EXPERIMENTAL_SAVERS = [SK1, RIFF, CDR, ]
+EXPERIMENTAL_SAVERS = [SK1, RIFF, CDR, XML ]
 
 
 LOADER_FORMATS = SIMPLE_LOADERS + MODEL_LOADERS + PALETTE_LOADERS
@@ -63,6 +63,8 @@ from uc2.formats.cpl import cpl_loader, cpl_saver, check_cpl
 from uc2.formats.corel_pal import corel_pal_loader, corel_pal_saver, \
 check_corel_pal
 
+from uc2.formats.xml_ import xml_loader, xml_saver, check_xml
+
 
 LOADERS = {
 SK2 : sk2_loader, PDXF : pdxf_loader, SK1 : sk1_loader, SK : SK_Loader,
@@ -79,6 +81,8 @@ BMP: im_loader, PCX: im_loader, PPM: im_loader, XBM: im_loader, XPM: im_loader,
 
 SKP: skp_loader, GPL:gpl_loader, SCRIBUS_PAL:scribus_pal_loader, SOC:soc_loader,
 CPL: cpl_loader, COREL_PAL: corel_pal_loader,
+
+XML: xml_loader,
 }
 
 SAVERS = {
@@ -95,6 +99,8 @@ PNG: png_saver,
 
 SKP: skp_saver, GPL:gpl_saver, SCRIBUS_PAL:scribus_pal_saver, SOC:soc_saver,
 CPL: cpl_saver, COREL_PAL: corel_pal_saver,
+
+XML: xml_saver,
 }
 
 CHECKERS = {
@@ -112,5 +118,7 @@ PPM: fallback_check, XBM: fallback_check, XPM: fallback_check,
 
 SKP: check_skp, GPL: check_gpl, SCRIBUS_PAL:check_scribus_pal, SOC:check_soc,
 CPL: check_cpl, COREL_PAL: check_corel_pal,
+
+XML: check_xml,
 }
 
