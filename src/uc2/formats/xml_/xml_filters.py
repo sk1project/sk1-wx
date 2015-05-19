@@ -51,7 +51,35 @@ class XML_Saver(AbstractSaver):
 	indent = 0
 
 	def do_save(self):
-		self.writeln('<?xml version="1.0"?>')
+		self.writeln('<?xml version="1.0" encoding="utf-8"?>')
 		self.write_obj(self.model)
 
-	def write_obj(self, obj):pass
+	def write_obj(self, obj):
+		ind = self.indent * ' '
+		if obj.comments:
+			self.writeln('<!--')
+			self.writeln(obj.comments)
+			self.writeln('-->')
+
+		attrs = self.get_obj_attrs(obj)
+		if obj.content or obj.childs:
+			start = ind + '<%s%s>%s' % (obj.tag, attrs, obj.content)
+			if obj.childs:
+				self.writeln(start)
+				self.indent += 1
+				for child in obj.childs: self.write_obj(child)
+				self.indent -= 1
+				self.writeln(ind + '</%s>' % obj.tag)
+			else:
+				self.writeln(start + '</%s>' % obj.tag)
+		else:
+			self.writeln(ind + '<%s%s />' % (obj.tag, attrs))
+
+	def get_obj_attrs(self, obj):
+		line = ''
+		if not obj.attrs:return
+		for item in obj.attrs.keys():
+			line += ' %s="%s"' % (item, obj.attrs[item])
+		return line
+
+
