@@ -210,7 +210,7 @@ class AbstractSaver(object):
 
 	def do_save(self):pass
 
-	def writeln(self, line):
+	def writeln(self, line=''):
 		self.fileptr.write(line + '\n')
 
 	def field_to_str(self, val):
