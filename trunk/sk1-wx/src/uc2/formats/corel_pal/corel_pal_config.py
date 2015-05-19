@@ -20,6 +20,7 @@ from uc2.utils.config import XmlConfigParser
 class CorelPalette_Config(XmlConfigParser):
 
 	system_encoding = 'utf-8'
+	encoding = 'utf-8'
 	filename = 'corel_pal_config.xml'
 	default_name = 'CorelDRAW palette'
 	source = 'Corel (http://corel.com/)'
