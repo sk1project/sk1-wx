@@ -20,8 +20,7 @@ import os
 from uc2 import uc2const
 from uc2.formats.generic import TaggedModelPresenter
 from uc2.formats.corel_pal.corel_pal_config import CorelPalette_Config
-from uc2.formats.corel_pal.corel_pal_filters import CorelPalette_Loader, \
-CorelPalette_Saver
+from uc2.formats.xml_.xml_filters import XML_Loader, XML_Saver
 
 def create_new_palette(config):pass
 
@@ -41,8 +40,8 @@ class CorelPalette_Presenter(TaggedModelPresenter):
 		self.config.update(cnf)
 		self.appdata = appdata
 		self.cms = self.appdata.app.default_cms
-		self.loader = CorelPalette_Loader()
-		self.saver = CorelPalette_Saver()
+		self.loader = XML_Loader()
+		self.saver = XML_Saver()
 		if filepath is None:
 			self.new()
 		else:
