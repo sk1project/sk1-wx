@@ -31,9 +31,7 @@ def xml_saver(doc, filename=None, fileptr=None, translate=False,
 	if kw: cnf.update(kw)
 	doc.save(filename, fileptr)
 
-
 def check_xml(path):
-	print 'here'
 	fileptr = get_fileptr(path)
 	ret = False
 	i = 0
