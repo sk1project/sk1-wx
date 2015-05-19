@@ -20,4 +20,5 @@ from uc2.utils.config import XmlConfigParser
 class XML_Config(XmlConfigParser):
 
 	system_encoding = 'utf-8'
+	encoding = 'utf-8'
 	filename = 'xml_config.xml'

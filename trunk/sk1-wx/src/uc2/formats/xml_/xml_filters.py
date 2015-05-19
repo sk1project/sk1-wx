@@ -51,7 +51,7 @@ class XML_Saver(AbstractSaver):
 	indent = 0
 
 	def do_save(self):
-		self.writeln('<?xml version="1.0" encoding="utf-8"?>')
+		self.writeln('<?xml version="1.0" encoding="%s"?>' % self.config.encoding)
 		self.write_obj(self.model)
 
 	def write_obj(self, obj):
