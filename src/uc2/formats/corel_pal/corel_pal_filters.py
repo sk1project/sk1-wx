@@ -38,9 +38,13 @@ class CorelPalette_Loader(AbstractXMLLoader):
 		if self.stack: self.stack[-1].childs.append(obj)
 		self.stack.append(obj)
 
+	def element_data(self, data):
+		self.stack[-1].content = data
+
 	def end_element(self, name):
 		if self.stack and self.stack[-1].tag == name:
 			self.stack = self.stack[:-1]
+
 
 class CorelPalette_Saver(AbstractSaver):
 
