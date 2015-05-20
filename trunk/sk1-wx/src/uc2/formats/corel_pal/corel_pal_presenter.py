@@ -21,8 +21,9 @@ from uc2 import uc2const
 from uc2.formats.generic import TaggedModelPresenter
 from uc2.formats.corel_pal.corel_pal_config import CorelPalette_Config
 from uc2.formats.xml_.xml_filters import XML_Loader, XML_Saver
+from uc2.formats.corel_pal.corel_pal_methods import CorelPalette_Methods, \
+create_new_palette
 
-def create_new_palette(config):pass
 
 class CorelPalette_Presenter(TaggedModelPresenter):
 
@@ -42,6 +43,7 @@ class CorelPalette_Presenter(TaggedModelPresenter):
 		self.cms = self.appdata.app.default_cms
 		self.loader = XML_Loader()
 		self.saver = XML_Saver()
+		self.methods = CorelPalette_Methods(self)
 		if filepath is None:
 			self.new()
 		else:
@@ -51,9 +53,26 @@ class CorelPalette_Presenter(TaggedModelPresenter):
 		self.model = create_new_palette(self.config)
 		self.update()
 
-	def update(self, action=False):pass
+	def update(self, action=False):
+		TaggedModelPresenter.update(self, action)
+		self.methods.update()
 
-	def convert_from_skp(self, skp_doc):pass
+	def convert_from_skp(self, skp_doc):
+		cp = self.model
+		mtds = self.methods
+		skp = skp_doc.model
+		encoding = self.config.encoding
+		mtds.set_palette_name(skp.name.encode(encoding))
+
+		comments = ''
+		if skp.source:
+			comments += 'Palette source: ' + skp.source + '\n'
+		if skp.comments:
+			for item in skp.comments.splitlines():
+				comments += item + '\n'
+		mtds.set_palette_comments(comments.encode(encoding))
+		for item in skp.colors:
+			mtds.add_color(item)
 
 	def convert_to_skp(self, skp_doc):pass
 

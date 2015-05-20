@@ -52,16 +52,16 @@ def corel_pal_saver(doc, filename=None, fileptr=None, translate=True,
 	if translate:
 		skp_doc = SKP_Presenter(appdata, cnf)
 		skp_doc.translate_from_sk2(doc)
-		scrb_doc = CorelPalette_Presenter(appdata, cnf)
-		scrb_doc.convert_from_skp(skp_doc)
-		scrb_doc.save(filename, fileptr)
-		scrb_doc.close()
+		crl_doc = CorelPalette_Presenter(appdata, cnf)
+		crl_doc.convert_from_skp(skp_doc)
+		crl_doc.save(filename, fileptr)
+		crl_doc.close()
 		skp_doc.close()
 	elif convert:
-		scrb_doc = CorelPalette_Presenter(appdata, cnf)
-		scrb_doc.convert_from_skp(doc)
-		scrb_doc.save(filename, fileptr)
-		scrb_doc.close()
+		crl_doc = CorelPalette_Presenter(appdata, cnf)
+		crl_doc.convert_from_skp(doc)
+		crl_doc.save(filename, fileptr)
+		crl_doc.close()
 	else:
 		doc.save(filename, fileptr)
 
