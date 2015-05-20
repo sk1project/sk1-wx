@@ -26,11 +26,12 @@ class XMLObject(TaggedModelObject):
 	attrs = {}
 	content = ''
 
-	def __init__(self):
+	def __init__(self, tag=''):
 		self.childs = []
 		self.attrs = {}
 		self.content = ''
 		self.comments = ''
+		if tag: self.tag = tag
 
 	def resolve(self):
 		is_node = len(self.childs)
