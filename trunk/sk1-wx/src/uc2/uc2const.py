@@ -251,11 +251,11 @@ PCX: ('pcx',), GIF: ('gif',), PNG: ('png',), PPM: ('pbm', 'pgm', 'pgm'),
 XBM: ('xbm',), XPM: ('xpm',), JP2: ('jp2', 'jpx', 'jpf'),
 
 SKP: ('skp',), GPL: ('gpl',), CPL: ('cpl',), SCRIBUS_PAL:('xml',), SOC:('soc',),
-COREL_PAL:('xml',),
+COREL_PAL: ('xml',),
 
 ICC: ('icc',), ICM: ('icm',),
 
-XML: ('xml',),
+XML: ('xml', 'svg', 'sla',),
 }
 
 IMAGE_FORMATS = [JPG, TIF, BMP, PCX, GIF, PNG, PPM, XBM, XPM, ]
