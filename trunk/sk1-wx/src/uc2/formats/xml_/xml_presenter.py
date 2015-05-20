@@ -48,7 +48,6 @@ class XML_Presenter(TaggedModelPresenter):
 			self.load(filepath)
 
 	def new(self):
-		self.model = XMLObject()
-		self.model.tag = 'root'
+		self.model = XMLObject('root')
 
 
