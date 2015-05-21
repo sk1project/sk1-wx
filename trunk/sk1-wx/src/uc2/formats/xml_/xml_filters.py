@@ -51,12 +51,12 @@ class XML_Saver(AbstractSaver):
 	indent = 0
 
 	def do_save(self):
-		cfg = self.presenter.config.encoding
+		cfg = self.model.config.encoding
 		self.writeln('<?xml version="1.0" encoding="%s"?>' % cfg)
 		self.write_obj(self.model)
 
 	def write_obj(self, obj):
-		ind = self.indent * ' '
+		ind = self.indent * self.model.config.indent
 		if obj.comments:
 			self.writeln('<!--')
 			self.writeln(obj.comments)
