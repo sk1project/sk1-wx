@@ -22,3 +22,4 @@ class XML_Config(XmlConfigParser):
 	system_encoding = 'utf-8'
 	encoding = 'utf-8'
 	filename = 'xml_config.xml'
+	indent = '\t'

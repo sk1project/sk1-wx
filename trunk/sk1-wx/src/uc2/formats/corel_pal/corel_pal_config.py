@@ -15,12 +15,10 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2.utils.config import XmlConfigParser
+from uc2.formats.xml_.xml_config import XML_Config
 
-class CorelPalette_Config(XmlConfigParser):
+class CorelPalette_Config(XML_Config):
 
-	system_encoding = 'utf-8'
-	encoding = 'utf-8'
 	filename = 'corel_pal_config.xml'
 	default_name = 'CorelDRAW palette'
 	source = 'Corel (http://corel.com/)'
