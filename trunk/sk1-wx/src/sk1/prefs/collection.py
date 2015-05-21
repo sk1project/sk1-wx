@@ -19,7 +19,8 @@ import os
 
 import wal
 
-from uc2.uc2const import FORMAT_EXTENSION, SKP, GPL, SCRIBUS_PAL, SOC, PNG, SK2
+from uc2.uc2const import FORMAT_EXTENSION, SK2
+from uc2.uc2const import SKP, GPL, SCRIBUS_PAL, SOC, COREL_PAL, PNG
 from uc2.formats import get_saver_by_id
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 
@@ -27,7 +28,7 @@ from sk1 import config
 from sk1.resources import icons
 from sk1.dialogs import get_dir_path
 
-saver_ids = [SKP, GPL, SOC, SCRIBUS_PAL]
+saver_ids = [SKP, GPL, SOC, SCRIBUS_PAL, COREL_PAL]
 
 class CollectionButton(wal.ImageButton):
 
@@ -56,8 +57,8 @@ class CollectionButton(wal.ImageButton):
 		for sid in saver_ids:
 			saver = get_saver_by_id(sid)
 			ext = '.' + FORMAT_EXTENSION[sid][0]
-			if sid == SCRIBUS_PAL:
-				ext = '(Scribus)' + ext
+			if sid == SCRIBUS_PAL: ext = '(Scribus)' + ext
+			if sid == COREL_PAL: ext = '(CorelDRAW)' + ext
 			doc_file = os.path.join(dir_path, palette_filename + ext)
 			saver(palette, doc_file, None, False, True)
 
