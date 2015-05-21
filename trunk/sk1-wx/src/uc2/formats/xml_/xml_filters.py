@@ -51,7 +51,8 @@ class XML_Saver(AbstractSaver):
 	indent = 0
 
 	def do_save(self):
-		self.writeln('<?xml version="1.0" encoding="%s"?>' % self.config.encoding)
+		cfg = self.presenter.config.encoding
+		self.writeln('<?xml version="1.0" encoding="%s"?>' % cfg)
 		self.write_obj(self.model)
 
 	def write_obj(self, obj):
@@ -77,7 +78,7 @@ class XML_Saver(AbstractSaver):
 
 	def get_obj_attrs(self, obj):
 		line = ''
-		if not obj.attrs:return
+		if not obj.attrs:return line
 		for item in obj.attrs.keys():
 			line += ' %s="%s"' % (item, obj.attrs[item])
 		return line
