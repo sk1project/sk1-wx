@@ -114,6 +114,7 @@ encoding//src/uc2/formats/cdrz/presenter.py=utf-8
 encoding//src/uc2/formats/cmx/__init__.py=utf-8
 encoding//src/uc2/formats/corel_pal/__init__.py=utf-8
 encoding//src/uc2/formats/corel_pal/corel_pal_config.py=utf-8
+encoding//src/uc2/formats/corel_pal/corel_pal_methods.py=utf-8
 encoding//src/uc2/formats/corel_pal/corel_pal_presenter.py=utf-8
 encoding//src/uc2/formats/cpl/__init__.py=utf-8
 encoding//src/uc2/formats/cpl/cpl_config.py=utf-8
