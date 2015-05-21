@@ -84,11 +84,11 @@ class CorelPalette_Methods:
 		if not color[0] in [COLOR_RGB, COLOR_CMYK, COLOR_GRAY]:
 			color = self.cms.get_rgb_color(color)
 		page = self.get_page_obj()
-		color = XMLObject('color')
-		color.attrs['cs'] = CS_MATCH[color[0]].encode(self.config.encoding)
+		clr = XMLObject('color')
+		clr.attrs['cs'] = CS_MATCH[color[0]].encode(self.config.encoding)
 		name = self.get_color_name(color)
-		color.attrs['name'] = name.encode(self.config.encoding)
-		color.attrs['tints'] = self.get_tints(color[1])
-		page.childs.append(color)
+		clr.attrs['name'] = name.encode(self.config.encoding)
+		clr.attrs['tints'] = self.get_tints(color[1])
+		page.childs.append(clr)
 
 	def add_spot_color(self, color):pass
