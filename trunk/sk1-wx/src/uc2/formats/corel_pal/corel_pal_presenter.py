@@ -58,7 +58,6 @@ class CorelPalette_Presenter(TaggedModelPresenter):
 		self.methods.update()
 
 	def convert_from_skp(self, skp_doc):
-		cp = self.model
 		mtds = self.methods
 		skp = skp_doc.model
 		encoding = self.config.encoding
@@ -73,7 +72,19 @@ class CorelPalette_Presenter(TaggedModelPresenter):
 		mtds.set_palette_comments(comments.encode(encoding))
 		for item in skp.colors:
 			mtds.add_color(item)
+		mtds.clear_model()
 
-	def convert_to_skp(self, skp_doc):pass
+	def convert_to_skp(self, skp_doc):
+		skp = skp_doc.model
+		mtds = self.methods
+		encoding = self.config.encoding
+
+		skp.name = mtds.get_palette_name().decode(encoding)
+		if self.doc_file:
+			filename = os.path.basename(self.doc_file)
+			skp.comments = 'Converted from %s' % filename
+		skp.source = '' + self.config.source
+		skp.colors = mtds.get_colors()
+
 
 
