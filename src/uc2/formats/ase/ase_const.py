@@ -16,3 +16,14 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ASEF = 'ASEF'
+ASE_VER = '\x00\x01'
+ASE_GROUP = '\xc0\x01'
+ASE_GROUP_END = '\xc0\x02'
+ASE_COLOR = '\x00\x01'
+
+ASE_NAMES = {
+ASE_GROUP:'ASE Group',
+ASE_GROUP_END:'ASE Group End',
+ASE_COLOR:'ASE Color',
+}
+

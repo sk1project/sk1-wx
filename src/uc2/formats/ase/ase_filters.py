@@ -24,7 +24,8 @@ class ASE_Loader(AbstractBinaryLoader):
 
 	name = 'CPL_Loader'
 
-	def do_load(self):pass
+	def do_load(self):
+		self.model.parse(self)
 
 
 class ASE_Saver(AbstractSaver):

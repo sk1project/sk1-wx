@@ -20,7 +20,7 @@ import os
 from uc2 import uc2const
 from uc2.formats.generic import BinaryModelPresenter
 from uc2.formats.ase.ase_config import ASE_Config
-from uc2.formats.riff import model
+from uc2.formats.ase.ase_model import ASE_Palette
 from uc2.formats.ase.ase_filters import ASE_Loader, ASE_Saver
 
 class ASE_Presenter(BinaryModelPresenter):
@@ -42,7 +42,7 @@ class ASE_Presenter(BinaryModelPresenter):
 		self.new()
 
 	def new(self):
-		self.model = model.RiffRootList()
+		self.model = ASE_Palette()
 		self.model.childs = []
 
 	def convert_from_skp(self, skp_doc):
