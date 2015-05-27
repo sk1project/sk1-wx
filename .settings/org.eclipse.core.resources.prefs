@@ -105,6 +105,7 @@ encoding//src/uc2/formats/ase/__init__.py=utf-8
 encoding//src/uc2/formats/ase/ase_config.py=utf-8
 encoding//src/uc2/formats/ase/ase_const.py=utf-8
 encoding//src/uc2/formats/ase/ase_filters.py=utf-8
+encoding//src/uc2/formats/ase/ase_model.py=utf-8
 encoding//src/uc2/formats/ase/ase_presenter.py=utf-8
 encoding//src/uc2/formats/cdr/__init__.py=utf-8
 encoding//src/uc2/formats/cdr/cdr_config.py=utf-8
