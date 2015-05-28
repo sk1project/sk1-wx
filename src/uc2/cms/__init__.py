@@ -270,9 +270,16 @@ def colorb(color=None, cmyk=False):
 		else: values = color[1][0]
 	else:
 		values = color[1]
+
 	result = []
-	for value in values:
-		result.append(int(round(value * 255)))
+	if color[0] == uc2const.COLOR_LAB:
+		result.append(int(round(values[0] * 100)))
+		result.append(int(round(values[1] * 255)))
+		result.append(int(round(values[2] * 255)))
+	else:
+		for value in values:
+			result.append(int(round(value * 255)))
+
 	if len(result) == 1:
 		result += [0, 0, 0]
 	elif len(result) == 3:
@@ -290,8 +297,14 @@ def decode_colorb(colorb, color_type):
 		values = [colorb[0], ]
 	else:
 		values = colorb[:3]
-	for value in values:
-		result.append(value / 255.0)
+
+	if color_type == uc2const.COLOR_LAB:
+		result.append(values[0] / 100.0)
+		result.append(values[1] / 255.0)
+		result.append(values[2] / 255.0)
+	else:
+		for value in values:
+			result.append(value / 255.0)
 	return result
 
 def verbose_color(color):
