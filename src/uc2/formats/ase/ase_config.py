@@ -21,3 +21,4 @@ class ASE_Config(XmlConfigParser):
 
 	system_encoding = 'utf-8'
 	filename = 'ase_config.xml'
+	source = 'Adobe'
