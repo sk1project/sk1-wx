@@ -15,6 +15,8 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from uc2.uc2const import COLOR_CMYK, COLOR_GRAY, COLOR_LAB, COLOR_RGB
+
 ASEF = 'ASEF'
 ASE_VER = '\x00\x01'
 ASE_GROUP = '\xc0\x01'
@@ -31,6 +33,17 @@ ASE_RGB = 'RGB '
 ASE_CMYK = 'CMYK'
 ASE_LAB = 'LAB '
 ASE_GRAY = 'Gray'
+
+CS_MATCH = {
+ASE_RGB:COLOR_RGB,
+ASE_CMYK:COLOR_CMYK,
+ASE_LAB:COLOR_LAB,
+ASE_GRAY:COLOR_GRAY,
+COLOR_RGB:ASE_RGB,
+COLOR_CMYK:ASE_CMYK,
+COLOR_LAB:ASE_LAB,
+COLOR_GRAY:ASE_GRAY,
+}
 
 ASE_GLOBAL = '\x00\x00'
 ASE_SPOT = '\x00\x01'
