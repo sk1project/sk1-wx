@@ -41,7 +41,9 @@ class ASE_Palette(BinaryModelObject):
 		self.version = self.chunk[5:8]
 		self.nblocs = struct.unpack('>I', self.chunk[8:12])[0]
 		for i in range(self.nblocs):
-			obj = ASE_BLOCK()
+			bid = loader.readbytes(2)
+			loader.fileptr.seek(-2, 1)
+			obj = BID_TO_CLASS[bid]()
 			self.childs.append(obj)
 			obj.parse(loader)
 
@@ -56,7 +58,7 @@ class ASE_Palette(BinaryModelObject):
 		name = 'ASE palette'
 		return (is_leaf, name, info)
 
-class ASE_BLOCK(BinaryModelObject):
+class ASE_Block(BinaryModelObject):
 	"""
 	Represents ASE block object.
 	"""
@@ -82,3 +84,86 @@ class ASE_BLOCK(BinaryModelObject):
 		info = '%d' % (len(self.childs))
 		name = ase_const.ASE_NAMES[self.identifier]
 		return (is_leaf, name, info)
+
+class ASE_Group(ASE_Block):
+	"""
+	Represent ASE Group object.
+	"""
+	identifier = ase_const.ASE_GROUP
+	group_name = ''
+
+	def __init__(self):
+		ASE_Block.__init__(self)
+
+	def parse(self, loader):
+		ASE_Block.parse(self, loader)
+		self.group_name = self.chunk[8:-2].decode('utf_16_be')
+
+	def update_for_sword(self):
+		ASE_Block.update_for_sword(self)
+		self.cache_fields.append((6, 2, 'Group name size'))
+		size = struct.unpack('>H', self.chunk[6:8])[0]
+		self.cache_fields.append((8, size * 2, 'Group name'))
+
+class ASE_Group_End(ASE_Block):
+	"""
+	Represent ASE Group End object.
+	"""
+	identifier = ase_const.ASE_GROUP_END
+
+	def __init__(self):
+		ASE_Block.__init__(self)
+
+class ASE_Color(ASE_Block):
+	"""
+	Represent ASE Color object.
+	"""
+	identifier = ase_const.ASE_COLOR
+	color_name = ''
+	colorspace = ase_const.ASE_RGB
+	color_vals = ()
+	color_marker = ase_const.ASE_PROCESS
+
+	def __init__(self):
+		ASE_Block.__init__(self)
+
+	def parse(self, loader):
+		ASE_Block.parse(self, loader)
+		size = struct.unpack('>H', self.chunk[6:8])[0]
+		pos = 8 + 2 * size
+		self.color_name = self.chunk[8:pos - 2].decode('utf_16_be')
+		self.colorspace = self.chunk[pos:pos + 4]
+		pos += 4
+		if self.colorspace in (ase_const.ASE_RGB, ase_const.ASE_LAB) :
+			self.color_vals = struct.unpack('>3f', self.chunk[pos:pos + 12])
+		elif self.colorspace == ase_const.ASE_CMYK:
+			self.color_vals = struct.unpack('>4f', self.chunk[pos:pos + 16])
+		elif self.colorspace == ase_const.ASE_GRAY:
+			self.color_vals = struct.unpack('>f', self.chunk[pos:pos + 4])
+		self.color_marker = self.chunk[-2:]
+
+	def update_for_sword(self):
+		ASE_Block.update_for_sword(self)
+		self.cache_fields.append((6, 2, 'Color name size'))
+		size = struct.unpack('>H', self.chunk[6:8])[0]
+		self.cache_fields.append((8, size * 2, 'Color name'))
+		pos = 8 + 2 * size
+		self.cache_fields.append((pos, 4, 'Colorspace'))
+		pos += 4
+		if self.colorspace in (ase_const.ASE_RGB, ase_const.ASE_LAB) :
+			self.cache_fields.append((pos, 12, 'Color values'))
+			pos += 12
+		elif self.colorspace == ase_const.ASE_CMYK:
+			self.cache_fields.append((pos, 16, 'Color values'))
+			pos += 16
+		elif self.colorspace == ase_const.ASE_GRAY:
+			self.cache_fields.append((pos, 4, 'Color values'))
+			pos += 4
+		self.cache_fields.append((pos, 2, 'Color marker'))
+
+
+BID_TO_CLASS = {
+ase_const.ASE_GROUP: ASE_Group,
+ase_const.ASE_GROUP_END: ASE_Group_End,
+ase_const.ASE_COLOR: ASE_Color,
+}
