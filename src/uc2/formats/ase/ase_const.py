@@ -27,3 +27,11 @@ ASE_GROUP_END:'ASE Group End',
 ASE_COLOR:'ASE Color',
 }
 
+ASE_RGB = 'RGB '
+ASE_CMYK = 'CMYK'
+ASE_LAB = 'LAB '
+ASE_GRAY = 'Gray'
+
+ASE_GLOBAL = '\x00\x00'
+ASE_SPOT = '\x00\x01'
+ASE_PROCESS = '\x00\x02'
