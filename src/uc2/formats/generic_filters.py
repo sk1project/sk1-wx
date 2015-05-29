@@ -213,6 +213,9 @@ class AbstractSaver(object):
 	def writeln(self, line=''):
 		self.fileptr.write(line + '\n')
 
+	def write(self, data):
+		self.fileptr.write(data)
+
 	def field_to_str(self, val):
 		val_str = val.__str__()
 		if isinstance(val, str):
