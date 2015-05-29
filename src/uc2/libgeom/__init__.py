@@ -123,7 +123,7 @@ def bbox_center(bbox):
 
 def bbox_trafo(bbox0, bbox1):
 	x0_0, y0_0, x1_0, y1_0 = normalize_bbox(bbox0)
-	x0_1, y0_1, x1_1, y1_1 = normalize_bbox(bbox0)
+	x0_1, y0_1, x1_1, y1_1 = normalize_bbox(bbox1)
 	w0 = x1_0 - x0_0
 	h0 = y1_0 - y0_0
 	w1 = x1_1 - x0_1
