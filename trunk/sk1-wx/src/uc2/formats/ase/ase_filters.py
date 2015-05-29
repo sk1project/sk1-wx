@@ -32,4 +32,5 @@ class ASE_Saver(AbstractSaver):
 
 	name = 'ASE_Saver'
 
-	def do_save(self):pass
+	def do_save(self):
+		self.model.save(self)
