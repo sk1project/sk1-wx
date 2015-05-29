@@ -18,7 +18,7 @@
 from uc2.uc2const import COLOR_CMYK, COLOR_GRAY, COLOR_LAB, COLOR_RGB
 
 ASEF = 'ASEF'
-ASE_VER = '\x00\x01'
+ASE_VER = '\x00\x01\x00\x00'
 ASE_GROUP = '\xc0\x01'
 ASE_GROUP_END = '\xc0\x02'
 ASE_COLOR = '\x00\x01'

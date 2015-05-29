@@ -38,7 +38,7 @@ class ASE_Palette(BinaryModelObject):
 	def parse(self, loader):
 		self.chunk = loader.readbytes(12)
 		self.header = self.chunk[0:4]
-		self.version = self.chunk[5:8]
+		self.version = self.chunk[4:8]
 		self.nblocs = struct.unpack('>I', self.chunk[8:12])[0]
 		for i in range(self.nblocs):
 			bid = loader.readbytes(2)
@@ -57,6 +57,16 @@ class ASE_Palette(BinaryModelObject):
 		info = '%d' % (len(self.childs))
 		name = 'ASE palette'
 		return (is_leaf, name, info)
+
+	def update(self):
+		self.nblocs = len(self.childs)
+		self.chunk = self.header + self.version
+		self.chunk += struct.pack('>I', self.nblocs)
+
+	def save(self, saver):
+		saver.write(self.chunk)
+		for child in self.childs:
+			child.save(saver)
 
 class ASE_Block(BinaryModelObject):
 	"""
@@ -85,6 +95,9 @@ class ASE_Block(BinaryModelObject):
 		name = ase_const.ASE_NAMES[self.identifier]
 		return (is_leaf, name, info)
 
+	def save(self, saver):
+		saver.write(self.chunk)
+
 class ASE_Group(ASE_Block):
 	"""
 	Represent ASE Group object.
@@ -92,8 +105,9 @@ class ASE_Group(ASE_Block):
 	identifier = ase_const.ASE_GROUP
 	group_name = ''
 
-	def __init__(self):
+	def __init__(self, name=''):
 		ASE_Block.__init__(self)
+		if name: self.group_name = name
 
 	def parse(self, loader):
 		ASE_Block.parse(self, loader)
@@ -105,6 +119,13 @@ class ASE_Group(ASE_Block):
 		size = struct.unpack('>H', self.chunk[6:8])[0]
 		self.cache_fields.append((8, size * 2, 'Group name'))
 
+	def update(self):
+		name_size = len(self.group_name) + 1
+		self.chunk = struct.pack('>H', name_size)
+		self.chunk += self.group_name.encode('utf_16_be') + '\x00\x00'
+		size = len(self.chunk)
+		self.chunk = self.identifier + struct.pack('>I', size) + self.chunk
+
 class ASE_Group_End(ASE_Block):
 	"""
 	Represent ASE Group End object.
@@ -113,6 +134,9 @@ class ASE_Group_End(ASE_Block):
 
 	def __init__(self):
 		ASE_Block.__init__(self)
+
+	def update(self):
+		self.chunk = self.identifier + struct.pack('>I', 0)
 
 class ASE_Color(ASE_Block):
 	"""
@@ -124,8 +148,14 @@ class ASE_Color(ASE_Block):
 	color_vals = ()
 	color_marker = ase_const.ASE_PROCESS
 
-	def __init__(self):
+	def __init__(self, name='', cs=ase_const.ASE_RGB, vals=(0, 0, 0),
+				marker=ase_const.ASE_PROCESS):
 		ASE_Block.__init__(self)
+		if name:
+			self.color_name = name
+			self.colorspace = cs
+			self.color_vals = vals
+			self.color_marker = marker
 
 	def parse(self, loader):
 		ASE_Block.parse(self, loader)
@@ -160,6 +190,17 @@ class ASE_Color(ASE_Block):
 			self.cache_fields.append((pos, 4, 'Color values'))
 			pos += 4
 		self.cache_fields.append((pos, 2, 'Color marker'))
+
+	def update(self):
+		name_size = len(self.color_name) + 1
+		self.chunk = struct.pack('>H', name_size)
+		self.chunk += self.color_name.encode('utf_16_be') + '\x00\x00'
+		self.chunk += self.colorspace
+		for item in self.color_vals:
+			self.chunk += struct.pack('>f', item)
+		self.chunk += self.color_marker
+		size = len(self.chunk)
+		self.chunk = self.identifier + struct.pack('>I', size) + self.chunk
 
 
 BID_TO_CLASS = {
