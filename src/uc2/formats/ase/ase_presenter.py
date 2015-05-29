@@ -16,11 +16,13 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+from copy import deepcopy
 
-from uc2 import uc2const
+from uc2 import uc2const, cms
 from uc2.formats.generic import BinaryModelPresenter
 from uc2.formats.ase.ase_config import ASE_Config
-from uc2.formats.ase.ase_model import ASE_Palette
+from uc2.formats.ase.ase_model import ASE_Palette, ASE_Group, ASE_Group_End, \
+ASE_Color
 from uc2.formats.ase.ase_filters import ASE_Loader, ASE_Saver
 from uc2.formats.ase import ase_const
 
@@ -57,7 +59,33 @@ class ASE_Presenter(BinaryModelPresenter):
 		return ret
 
 	def convert_from_skp(self, skp_doc):
-		pass
+		skp_model = skp_doc.model
+		self.model.childs.append(ASE_Group('' + skp_model.name))
+		for item in skp_model.colors:
+			if item[0] == uc2const.COLOR_SPOT:
+				marker = ase_const.ASE_SPOT
+				if item[1][0] and item[1][0]:
+					if self.config.prefer_cmyk_for_spot:
+						cs = ase_const.ASE_CMYK
+						vals = tuple(deepcopy(item[1][1]))
+					else:
+						cs = ase_const.ASE_RGB
+						vals = tuple(deepcopy(item[1][0]))
+				elif item[1][0] and not item[1][0]:
+					cs = ase_const.ASE_RGB
+					vals = tuple(deepcopy(item[1][0]))
+				else:
+					cs = ase_const.ASE_CMYK
+					vals = tuple(deepcopy(item[1][1]))
+			else:
+				marker = ase_const.ASE_PROCESS
+				cs = ase_const.CS_MATCH[item[0]]
+				vals = tuple(deepcopy(item[1]))
+			if item[3]: name = '' + item[3]
+			else: name = cms.verbose_color(item)
+			self.model.childs.append(ASE_Color(name, cs, vals, marker))
+		self.model.childs.append(ASE_Group_End())
+		self.model.do_update(self)
 
 	def convert_to_skcolor(self, obj):
 		if obj.color_marker == ase_const.ASE_SPOT:
