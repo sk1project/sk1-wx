@@ -19,13 +19,13 @@ CPL12 = '\xdd\xdc'
 CPL8 = '\xdc\xdc'
 
 CPLdd = '\xcd\xdd'#?
-CPLdc = '\xcd\xdc',#?
-CPLbc = '\xcd\xbc',#?
+CPL10 = '\xcd\xdc'
+CPLbc = '\xcd\xbc'#?
 
 CPL7 = '\xcc\xdc'
 CPL6 = '\xcc\xbc'
 
-CPL_IDs = [CPL12, CPL8, CPL7, CPL6]
+CPL_IDs = [CPL12, CPL10, CPL8, CPL7, CPL6]
 
 
 CDR_COLOR_SPOT = 1

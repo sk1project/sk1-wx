@@ -136,6 +136,128 @@ class CPL8_Color(CPL7_Color):
 	def __init__(self):
 		CPL7_Color.__init__(self)
 
+class CPL10_Palette(BinaryModelObject):
+	"""
+	Represents CPL10 palette object (some palettes from CDR10 version).
+	This is a root DOM instance of CPL10 file format.
+	All palette colors are members of childs list.
+	"""
+
+	version = cpl_const.CPL10
+	nheaders = 0
+	headers = {}
+	name = ''
+	palette_type = 0
+	ncolors = 0
+
+
+	def __init__(self):
+		self.childs = []
+		self.cache_fields = []
+
+	def parse(self, loader):
+		self.nheaders = loader.readdword()
+		chunk_size = 2 + 4
+		chunk_size += self.nheaders * 8
+
+		self.headers = {}
+		for i in range(self.nheaders):
+			hid, offset = loader.read_pair_dword()
+			self.headers[hid] = offset
+
+		#Palette name (header 0)
+		loader.fileptr.seek(self.headers[0], 0)
+		name_size = loader.readbyte()
+		self.name = loader.readbytes(name_size).decode('latin1')
+		chunk_size += 1 + name_size
+
+		#Palette type (header 1)
+		loader.fileptr.seek(self.headers[1], 0)
+		self.palette_type = loader.readword()
+		chunk_size += 2
+
+		#Number of colors (header 2)
+		loader.fileptr.seek(self.headers[2], 0)
+		self.ncolors = loader.readword()
+		chunk_size += 2
+
+		loader.fileptr.seek(0)
+		self.chunk = loader.readbytes(chunk_size)
+
+		if self.palette_type < 38 and not self.palette_type  in (5, 16):
+			color_class = CPL10_SpotColor
+		else:
+			color_class = CPL10_Color
+
+		for i in range(self.ncolors):
+			color = color_class()
+			color.parse(loader)
+			self.childs.append(color)
+
+
+	def update_for_sword(self):
+		self.cache_fields.append((0, 2, 'version'))
+		self.cache_fields.append((2, 4, 'number of headers'))
+		size = self.nheaders * 8
+		self.cache_fields.append((6, size, 'header offsets'))
+		self.cache_fields.append((self.headers[0], 1, 'palette name lenght'))
+		size = len(self.name)
+		self.cache_fields.append((self.headers[0] + 1, size, 'palette name'))
+		self.cache_fields.append((self.headers[1], 2, 'palette type'))
+		self.cache_fields.append((self.headers[2], 2, 'number of colors'))
+
+
+	def resolve(self, name=''):
+		is_leaf = False
+		info = '%d' % (len(self.childs))
+		name = 'CPL10 Palette'
+		return (is_leaf, name, info)
+
+class CPL10_Color(CPL7_Color):
+	"""
+	Represents CPL10 palette color object.
+	Color values stored in valbytes field.
+	"""
+
+	def __init__(self):
+		CPL7_Color.__init__(self)
+
+class CPL10_SpotColor(CPL7_Color):
+	"""
+	Represents CPL10 palette SPOT color object.
+	Color values stored in valbytes and valbytes2 field.
+	"""
+	color_id = 0
+	model2 = 0
+	valbytes2 = ''
+
+	def __init__(self):
+		CPL7_Color.__init__(self)
+
+	def parse(self, loader):
+		self.color_id = loader.readdword()
+		self.model = loader.readword()
+		self.valbytes = loader.readbytes(10)
+		self.model2 = loader.readword()
+		self.valbytes2 = loader.readbytes(10)
+		size = loader.readbyte()
+		self.name = loader.readstr(size)
+		ln = 4 + 2 + 10 + 2 + 10 + 1 + size
+		loader.fileptr.seek(-ln, 1)
+		self.chunk = loader.readbytes(ln)
+
+	def update_for_sword(self):
+		self.cache_fields.append((0, 4, 'color id'))
+		self.cache_fields.append((4, 2, 'color model'))
+		self.cache_fields.append((6, 10, 'color values'))
+		self.cache_fields.append((16, 2, 'color model2'))
+		self.cache_fields.append((18, 10, 'color values2'))
+		self.cache_fields.append((28, 1, 'color name size'))
+		self.cache_fields.append((29, len(self.name), 'color name'))
+
+	def resolve(self, name=''):
+		return (True, 'SPOT color', '')
+
 
 class CPL12_Palette(BinaryModelObject):
 	"""
