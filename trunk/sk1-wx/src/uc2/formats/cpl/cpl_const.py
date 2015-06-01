@@ -15,18 +15,16 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+CPLX4 = '\xcd\xdd'
+CPL12_SPOT = '\xcd\xbc'
 CPL12 = '\xdd\xdc'
-CPL8 = '\xdc\xdc'
-
-CPLdd = '\xcd\xdd'#?
 CPL10 = '\xcd\xdc'
-CPLbc = '\xcd\xbc'#?
-
+CPL8 = '\xdc\xdc'
 CPL7 = '\xcc\xdc'
-CPL6 = '\xcc\xbc'
+CPL7_UTF = '\xcc\xbc'
 
-CPL_IDs = [CPL12, CPL10, CPL8, CPL7, CPL6]
-
+CPL_IDs = [CPLX4, CPL12, CPL12_SPOT, CPL10, CPL8, CPL7, CPL7_UTF]
 
 CDR_COLOR_SPOT = 1
 CDR_COLOR_CMYK = 2
