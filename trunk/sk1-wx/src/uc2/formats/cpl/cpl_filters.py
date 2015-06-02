@@ -20,7 +20,8 @@ import os
 from uc2.formats.generic_filters import AbstractBinaryLoader, AbstractSaver
 from uc2.formats.cpl import cpl_const
 from uc2.formats.cpl.cpl_model import CPL12_Palette, CPL8_Palette, \
-CPL7_Palette, CPL7_PaletteUTF, CPL10_Palette, CPL12_SpotPalette, CPLX4_Palette
+CPL7_Palette, CPL7_PaletteUTF, CPL10_Palette, CPL12_SpotPalette, \
+CPLX4_SpotPalette
 
 
 class CPL_Loader(AbstractBinaryLoader):
@@ -31,8 +32,8 @@ class CPL_Loader(AbstractBinaryLoader):
 		self.model = None
 		ver = self.readbytes(2)
 
-		if ver == cpl_const.CPLX4:
-			self.model = CPLX4_Palette()
+		if ver == cpl_const.CPLX4_SPOT:
+			self.model = CPLX4_SpotPalette()
 		elif ver == cpl_const.CPL12:
 			self.model = CPL12_Palette()
 		elif ver == cpl_const.CPL12_SPOT:
@@ -46,7 +47,6 @@ class CPL_Loader(AbstractBinaryLoader):
 		elif ver == cpl_const.CPL7_UTF:
 			self.model = CPL7_PaletteUTF()
 		if self.model:
-			self.model.version = ver
 			self.model.parse(self)
 			if not self.model.name and self.filepath:
 				name = os.path.basename(self.filepath).replace('.cpl', '')
