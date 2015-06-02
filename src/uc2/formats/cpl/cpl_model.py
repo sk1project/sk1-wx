@@ -396,7 +396,7 @@ class CPL12_SpotPalette(CPL12_Palette):
 	This is a root DOM instance of CPL12 file format.
 	All palette colors are members of childs list.
 	"""
-	resolve_name = 'CPL7 SPOT Palette'
+	resolve_name = 'CPL12 SPOT Palette'
 	version = cpl_const.CPL12_SPOT
 
 	def __init__(self):
