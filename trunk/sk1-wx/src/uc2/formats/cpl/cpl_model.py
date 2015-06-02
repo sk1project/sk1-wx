@@ -32,6 +32,11 @@ class AbstractCPLPalette(BinaryModelObject):
 		info = '%d' % (len(self.childs))
 		return (is_leaf, self.resolve_name, info)
 
+	def save(self, saver):
+		saver.write(self.chunk)
+		for child in self.childs:
+			child.save(saver)
+
 class AbstractCPLColor(BinaryModelObject):
 
 	def __init__(self):
@@ -40,6 +45,9 @@ class AbstractCPLColor(BinaryModelObject):
 	def resolve(self, name=''):
 		name = cpl_const.CDR_COLOR_NAMES[self.model]
 		return (True, '%s color' % name, '')
+
+	def save(self, saver):
+		saver.write(self.chunk)
 
 
 class CPL7_Palette(AbstractCPLPalette):

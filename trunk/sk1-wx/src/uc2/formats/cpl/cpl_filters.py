@@ -57,4 +57,5 @@ class CPL_Saver(AbstractSaver):
 
 	name = 'CPL_Saver'
 
-	def do_save(self):pass
+	def do_save(self):
+		self.model.save(self)
