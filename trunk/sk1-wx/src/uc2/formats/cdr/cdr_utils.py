@@ -137,31 +137,31 @@ def parse_reg_color(data=''):
 	"""
 	return [uc2const.COLOR_SPOT, [[0.0, 0.0, 0.0], [1.0, 1.0, 1.0, 1.0] ], 1.0, 'Registration color']
 
-def parse_cdr_color(color_space, color_bytes):
+def parse_cdr_color(colorspace, color_bytes):
 	"""
 	Parses color type and returns according color value.
 	"""
-	if color_space == CDR_COLOR_CMYK:
+	if colorspace == CDR_COLOR_CMYK:
 		return parse_cmyk(color_bytes)
-	elif color_space in (CDR_COLOR_CMYK255, CDR_COLOR_CMYK2):
+	elif colorspace in (CDR_COLOR_CMYK255, CDR_COLOR_CMYK2):
 		return parse_cmyk255(color_bytes)
-	elif color_space == CDR_COLOR_CMY:
+	elif colorspace == CDR_COLOR_CMY:
 		return parse_cmy(color_bytes[0:3])
-	elif color_space == CDR_COLOR_BGR:
+	elif colorspace == CDR_COLOR_BGR:
 		return parse_bgr(color_bytes[0:3])
-	elif color_space == CDR_COLOR_GRAY:
+	elif colorspace == CDR_COLOR_GRAY:
 		return parse_grayscale(color_bytes[0])
-	elif color_space == CDR_COLOR_LAB:
+	elif colorspace == CDR_COLOR_LAB:
 		return parse_lab(color_bytes[0:3])
-	elif color_space == CDR_COLOR_LAB2:
+	elif colorspace == CDR_COLOR_LAB2:
 		return parse_lab2(color_bytes[0:3])
-	elif color_space == CDR_COLOR_HSB:
+	elif colorspace == CDR_COLOR_HSB:
 		return parse_hsb(color_bytes)
-	elif color_space == CDR_COLOR_HLS:
+	elif colorspace == CDR_COLOR_HLS:
 		return parse_hls(color_bytes)
-	elif color_space == CDR_COLOR_YIQ:
+	elif colorspace == CDR_COLOR_YIQ:
 		return parse_yiq(color_bytes[0:3])
-	elif color_space == CDR_COLOR_REGISTRATION:
+	elif colorspace == CDR_COLOR_REGISTRATION:
 		return parse_reg_color()
 	return []
 
