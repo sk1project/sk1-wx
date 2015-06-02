@@ -18,7 +18,7 @@
 
 from uc2.formats.generic import BinaryModelObject
 from uc2.formats.cpl import cpl_const
-from uc2.formats.cdr import cdr_const
+from uc2.formats.cdr import cdr_const, cdr_utils
 
 class AbstractCPLPalette(BinaryModelObject):
 
@@ -50,6 +50,11 @@ class AbstractCPLColor(BinaryModelObject):
 	def save(self, saver):
 		saver.write(self.chunk)
 
+	def get_color(self):
+		clr = cdr_utils.parse_cdr_color(self.model, self.valbytes[-4:])
+		if clr and not self.model == cdr_const.CDR_COLOR_REGISTRATION:
+			clr[3] += self.name
+		return clr
 
 class CPL7_Palette(AbstractCPLPalette):
 	"""
