@@ -16,7 +16,7 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-CPLX4 = '\xcd\xdd'
+CPLX4_SPOT = '\xcd\xdd'
 CPL12_SPOT = '\xcd\xbc'
 CPL12 = '\xdd\xdc'
 CPL10 = '\xcd\xdc'

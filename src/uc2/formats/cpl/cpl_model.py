@@ -19,21 +19,42 @@
 from uc2.formats.generic import BinaryModelObject
 from uc2.formats.cpl import cpl_const
 
+class AbstractCPLPalette(BinaryModelObject):
 
-class CPL7_Palette(BinaryModelObject):
+	resolve_name = 'CPL Palette'
+
+	def __init__(self):
+		self.childs = []
+		self.cache_fields = []
+
+	def resolve(self, name=''):
+		is_leaf = False
+		info = '%d' % (len(self.childs))
+		return (is_leaf, self.resolve_name, info)
+
+class AbstractCPLColor(BinaryModelObject):
+
+	def __init__(self):
+		self.cache_fields = []
+
+	def resolve(self, name=''):
+		name = cpl_const.CDR_COLOR_NAMES[self.model]
+		return (True, '%s color' % name, '')
+
+
+class CPL7_Palette(AbstractCPLPalette):
 	"""
 	Represents CPL7 palette object (CDR7 version).
 	This is a root DOM instance of CPL7 file format.
 	All palette colors are members of childs list.
 	"""
-
+	resolve_name = 'CPL7 Palette'
 	version = cpl_const.CPL7
 	name = ''
 	ncolors = 0
 
 	def __init__(self):
-		self.childs = []
-		self.cache_fields = []
+		AbstractCPLPalette.__init__(self)
 
 	def parse(self, loader):
 		self.ncolors = loader.readword()
@@ -51,13 +72,7 @@ class CPL7_Palette(BinaryModelObject):
 		self.cache_fields.append((0, 2, 'version'))
 		self.cache_fields.append((2, 2, 'number of palette colors'))
 
-	def resolve(self, name=''):
-		is_leaf = False
-		info = '%d' % (len(self.childs))
-		name = 'CPL7 Palette'
-		return (is_leaf, name, info)
-
-class CPL7_Color(BinaryModelObject):
+class CPL7_Color(AbstractCPLColor):
 	"""
 	Represents CPL7 palette color object.
 	Color values stored in valbytes field.
@@ -68,7 +83,7 @@ class CPL7_Color(BinaryModelObject):
 	valbytes = ''
 
 	def __init__(self):
-		self.cache_fields = []
+		AbstractCPLColor.__init__(self)
 
 	def parse(self, loader):
 		self.model = loader.readword()
@@ -85,16 +100,13 @@ class CPL7_Color(BinaryModelObject):
 		self.cache_fields.append((12, 1, 'color name size'))
 		self.cache_fields.append((13, len(self.name), 'color name'))
 
-	def resolve(self, name=''):
-		name = cpl_const.CDR_COLOR_NAMES[self.model]
-		return (True, '%s color' % name, '')
-
 class CPL7_PaletteUTF(CPL7_Palette):
 	"""
 	Represents CPL7 UTF palette object (found in CDR12 version).
 	This is a root DOM instance of CPL7 file format.
 	All palette colors are members of childs list.
 	"""
+	resolve_name = 'CPL7 UTF Palette'
 	version = cpl_const.CPL7_UTF
 
 	def __init__(self):
@@ -106,13 +118,7 @@ class CPL7_PaletteUTF(CPL7_Palette):
 			color.parse(loader)
 			self.childs.append(color)
 
-	def resolve(self, name=''):
-		is_leaf = False
-		info = '%d' % (len(self.childs))
-		name = 'CPL7 UTF Palette'
-		return (is_leaf, name, info)
-
-class CPL7_ColorUTF(BinaryModelObject):
+class CPL7_ColorUTF(AbstractCPLColor):
 	"""
 	Represents CPL7 UTF palette color object.
 	Color values stored in valbytes field.
@@ -123,7 +129,7 @@ class CPL7_ColorUTF(BinaryModelObject):
 	valbytes = ''
 
 	def __init__(self):
-		self.cache_fields = []
+		AbstractCPLColor.__init__(self)
 
 	def parse(self, loader):
 		self.model = loader.readword()
@@ -140,25 +146,20 @@ class CPL7_ColorUTF(BinaryModelObject):
 		self.cache_fields.append((12, 1, 'color name size'))
 		self.cache_fields.append((13, len(self.name) * 2, 'color name'))
 
-	def resolve(self, name=''):
-		name = cpl_const.CDR_COLOR_NAMES[self.model]
-		return (True, '%s color' % name, '')
 
-
-class CPL8_Palette(BinaryModelObject):
+class CPL8_Palette(AbstractCPLPalette):
 	"""
 	Represents CPL8 palette object (CDR8-11 versions).
 	This is a root DOM instance of CPL8 file format.
 	All palette colors are members of childs list.
 	"""
-
+	resolve_name = 'CPL8 Palette'
 	version = cpl_const.CPL8
 	name = ''
 	ncolors = 0
 
 	def __init__(self):
-		self.childs = []
-		self.cache_fields = []
+		AbstractCPLPalette.__init__(self)
 
 	def parse(self, loader):
 		size = loader.readbyte()
@@ -178,12 +179,6 @@ class CPL8_Palette(BinaryModelObject):
 		self.cache_fields.append((3, size, 'palette name'))
 		self.cache_fields.append((3 + size, 2, 'number of palette colors'))
 
-	def resolve(self, name=''):
-		is_leaf = False
-		info = '%d' % (len(self.childs))
-		name = 'CPL8 Palette'
-		return (is_leaf, name, info)
-
 class CPL8_Color(CPL7_Color):
 	"""
 	Represents CPL8 palette color object.
@@ -192,13 +187,13 @@ class CPL8_Color(CPL7_Color):
 	def __init__(self):
 		CPL7_Color.__init__(self)
 
-class CPL10_Palette(BinaryModelObject):
+class CPL10_Palette(AbstractCPLPalette):
 	"""
 	Represents CPL10 palette object (some palettes from CDR10 version).
 	This is a root DOM instance of CPL10 file format.
 	All palette colors are members of childs list.
 	"""
-
+	resolve_name = 'CPL10 Palette'
 	version = cpl_const.CPL10
 	nheaders = 0
 	headers = {}
@@ -208,8 +203,7 @@ class CPL10_Palette(BinaryModelObject):
 
 
 	def __init__(self):
-		self.childs = []
-		self.cache_fields = []
+		AbstractCPLPalette.__init__(self)
 
 	def parse(self, loader):
 		self.nheaders = loader.readdword()
@@ -250,7 +244,6 @@ class CPL10_Palette(BinaryModelObject):
 			color.parse(loader)
 			self.childs.append(color)
 
-
 	def update_for_sword(self):
 		self.cache_fields.append((0, 2, 'version'))
 		self.cache_fields.append((2, 4, 'number of headers'))
@@ -261,13 +254,6 @@ class CPL10_Palette(BinaryModelObject):
 		self.cache_fields.append((self.headers[0] + 1, size, 'palette name'))
 		self.cache_fields.append((self.headers[1], 2, 'palette type'))
 		self.cache_fields.append((self.headers[2], 2, 'number of colors'))
-
-
-	def resolve(self, name=''):
-		is_leaf = False
-		info = '%d' % (len(self.childs))
-		name = 'CPL10 Palette'
-		return (is_leaf, name, info)
 
 class CPL10_Color(CPL7_Color):
 	"""
@@ -315,13 +301,13 @@ class CPL10_SpotColor(CPL7_Color):
 		return (True, 'SPOT color', '')
 
 
-class CPL12_Palette(BinaryModelObject):
+class CPL12_Palette(AbstractCPLPalette):
 	"""
 	Represents CPL12 palette object (CDR12-X4 versions).
 	This is a root DOM instance of CPL12 file format.
 	All palette colors are members of childs list.
 	"""
-
+	resolve_name = 'CPL12 Palette'
 	version = cpl_const.CPL12
 	nheaders = 0
 	headers = {}
@@ -331,8 +317,7 @@ class CPL12_Palette(BinaryModelObject):
 
 
 	def __init__(self):
-		self.childs = []
-		self.cache_fields = []
+		AbstractCPLPalette.__init__(self)
 
 	def parse(self, loader):
 		self.nheaders = loader.readdword()
@@ -382,13 +367,6 @@ class CPL12_Palette(BinaryModelObject):
 		self.cache_fields.append((self.headers[1], 2, 'palette type'))
 		self.cache_fields.append((self.headers[2], 2, 'number of colors'))
 
-
-	def resolve(self, name=''):
-		is_leaf = False
-		info = '%d' % (len(self.childs))
-		name = 'CPL12 Palette'
-		return (is_leaf, name, info)
-
 class CPL12_Color(CPL7_Color):
 	"""
 	Represents CPL12 palette color object.
@@ -418,7 +396,7 @@ class CPL12_SpotPalette(CPL12_Palette):
 	This is a root DOM instance of CPL12 file format.
 	All palette colors are members of childs list.
 	"""
-
+	resolve_name = 'CPL7 SPOT Palette'
 	version = cpl_const.CPL12_SPOT
 
 	def __init__(self):
@@ -434,12 +412,6 @@ class CPL12_SpotPalette(CPL12_Palette):
 			color = color_class()
 			color.parse(loader)
 			self.childs.append(color)
-
-	def resolve(self, name=''):
-		is_leaf = False
-		info = '%d' % (len(self.childs))
-		name = 'CPL12 SPOT Palette'
-		return (is_leaf, name, info)
 
 class CPL12_SpotColor(CPL7_Color):
 	"""
@@ -477,14 +449,14 @@ class CPL12_SpotColor(CPL7_Color):
 	def resolve(self, name=''):
 		return (True, 'SPOT color', '')
 
-class CPLX4_Palette(BinaryModelObject):
+class CPLX4_SpotPalette(AbstractCPLPalette):
 	"""
 	Represents CPLX4 palette object ( SPOT palette from CDRX4 versions).
 	This is a root DOM instance of CPLX4 file format.
 	All palette colors are members of childs list.
 	"""
-
-	version = cpl_const.CPLX4
+	resolve_name = 'CPLX4 SPOT Palette'
+	version = cpl_const.CPLX4_SPOT
 	nheaders = 0
 	headers = {}
 	name = ''
@@ -496,8 +468,7 @@ class CPLX4_Palette(BinaryModelObject):
 	rows = 0
 
 	def __init__(self):
-		self.childs = []
-		self.cache_fields = []
+		AbstractCPLPalette.__init__(self)
 
 	def parse(self, loader):
 		self.nheaders = loader.readdword()
@@ -558,12 +529,6 @@ class CPLX4_Palette(BinaryModelObject):
 			self.cache_fields.append((self.headers[3], 2, 'number of inks'))
 		if 4 in self.headers:
 			self.cache_fields.append((self.headers[4], 4, 'colorspaces'))
-
-	def resolve(self, name=''):
-		is_leaf = False
-		info = '%d' % (len(self.childs))
-		name = 'CPLX4 SPOT Palette'
-		return (is_leaf, name, info)
 
 class CPLX4_SpotColor(CPL12_SpotColor):
 	"""
