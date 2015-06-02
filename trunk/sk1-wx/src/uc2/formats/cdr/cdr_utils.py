@@ -22,7 +22,7 @@ from uc2.utils import double2py_float, word2py_int, long2py_float
 from uc2.formats.cdr.cdr_const import cdrunit_to_pt, \
 CDR_COLOR_CMYK, CDR_COLOR_BGR, CDR_COLOR_CMY, CDR_COLOR_CMYK255, \
 CDR_COLOR_GRAY, CDR_COLOR_LAB, CDR_COLOR_REGISTRATION, CDR_COLOR_CMYK2, \
-CDR_COLOR_HSB, CDR_COLOR_HLS, CDR_COLOR_YIQ
+CDR_COLOR_HSB, CDR_COLOR_HLS, CDR_COLOR_YIQ, CDR_COLOR_LAB2
 
 def parse_matrix(data):
 	"""
@@ -85,6 +85,15 @@ def parse_lab(data):
 	b = ord(data[2]) / 255.0
 	return [uc2const.COLOR_LAB, [l, a, b], 1.0, '']
 
+def parse_lab2(data):
+	"""
+	Parses Lab color bytes and returns fill style list.
+	"""
+	l = ord(data[0]) / 255.0
+	a = ord(data[1]) / 255.0
+	b = ord(data[2]) / 255.0
+	return [uc2const.COLOR_LAB, [l, a, b], 1.0, '']
+
 def parse_grayscale(data):
 	"""
 	Parses Grayscale color byte and returns fill style list.
@@ -134,7 +143,7 @@ def parse_cdr_color(color_space, color_bytes):
 	"""
 	if color_space == CDR_COLOR_CMYK:
 		return parse_cmyk(color_bytes)
-	elif color_space == CDR_COLOR_CMYK255 or color_space == CDR_COLOR_CMYK2:
+	elif color_space in (CDR_COLOR_CMYK255, CDR_COLOR_CMYK2):
 		return parse_cmyk255(color_bytes)
 	elif color_space == CDR_COLOR_CMY:
 		return parse_cmy(color_bytes[0:3])
@@ -144,6 +153,8 @@ def parse_cdr_color(color_space, color_bytes):
 		return parse_grayscale(color_bytes[0])
 	elif color_space == CDR_COLOR_LAB:
 		return parse_lab(color_bytes[0:3])
+	elif color_space == CDR_COLOR_LAB2:
+		return parse_lab2(color_bytes[0:3])
 	elif color_space == CDR_COLOR_HSB:
 		return parse_hsb(color_bytes)
 	elif color_space == CDR_COLOR_HLS:
