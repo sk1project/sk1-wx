@@ -21,4 +21,6 @@ class CPL_Config(XmlConfigParser):
 
 	system_encoding = 'utf-8'
 	filename = 'cpl_config.xml'
+	default_name = 'CorelDRAW palette'
+	source = 'Corel (http://corel.com/)'
 
