@@ -89,6 +89,7 @@ encoding//src/sword/dialogs/__init__.py=utf-8
 encoding//src/sword/mainwindow.py=utf-8
 encoding//src/sword/models/fieldlist.py=utf-8
 encoding//src/sword/presenter.py=utf-8
+encoding//src/sword/selection.py=utf-8
 encoding//src/sword/tools/objectbrowser/introspector.py=utf-8
 encoding//src/sword/tools/objectbrowser/objectintrospection.py=utf-8
 encoding//src/sword/tools/objectbrowser/objectviewer.py=utf-8
