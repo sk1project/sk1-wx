@@ -44,15 +44,15 @@ class AbstractCPLColor(BinaryModelObject):
 		self.cache_fields = []
 
 	def resolve(self, name=''):
-		name = cdr_const.CDR_COLOR_NAMES[self.model]
+		name = cdr_const.CDR_COLOR_NAMES[self.colorspace]
 		return (True, '%s color' % name, '')
 
 	def save(self, saver):
 		saver.write(self.chunk)
 
 	def get_color(self):
-		clr = cdr_utils.parse_cdr_color(self.model, self.valbytes[-4:])
-		if clr and not self.model == cdr_const.CDR_COLOR_REGISTRATION:
+		clr = cdr_utils.parse_cdr_color(self.colorspace, self.valbytes[-4:])
+		if clr and not self.colorspace == cdr_const.CDR_COLOR_REGISTRATION:
 			clr[3] += self.name
 		return clr
 
@@ -92,7 +92,7 @@ class CPL7_Color(AbstractCPLColor):
 	Color values stored in valbytes field.
 	"""
 
-	model = 0
+	colorspace = 0
 	name = ''
 	valbytes = ''
 
@@ -100,7 +100,7 @@ class CPL7_Color(AbstractCPLColor):
 		AbstractCPLColor.__init__(self)
 
 	def parse(self, loader):
-		self.model = loader.readword()
+		self.colorspace = loader.readword()
 		self.valbytes = loader.readbytes(10)
 		size = loader.readbyte()
 		self.name = loader.readstr(size).decode('latin1')
@@ -109,7 +109,7 @@ class CPL7_Color(AbstractCPLColor):
 		self.chunk = loader.readbytes(ln)
 
 	def update_for_sword(self):
-		self.cache_fields.append((0, 2, 'color model'))
+		self.cache_fields.append((0, 2, 'colorspace'))
 		self.cache_fields.append((2, 10, 'color values'))
 		self.cache_fields.append((12, 1, 'color name size'))
 		self.cache_fields.append((13, len(self.name), 'color name'))
@@ -138,7 +138,7 @@ class CPL7_ColorUTF(AbstractCPLColor):
 	Color values stored in valbytes field.
 	"""
 
-	model = 0
+	colorspace = 0
 	name = ''
 	valbytes = ''
 
@@ -146,7 +146,7 @@ class CPL7_ColorUTF(AbstractCPLColor):
 		AbstractCPLColor.__init__(self)
 
 	def parse(self, loader):
-		self.model = loader.readword()
+		self.colorspace = loader.readword()
 		self.valbytes = loader.readbytes(10)
 		size = loader.readbyte()
 		self.name = loader.readstr(size * 2).decode('utf_16_le')
@@ -155,7 +155,7 @@ class CPL7_ColorUTF(AbstractCPLColor):
 		self.chunk = loader.readbytes(ln)
 
 	def update_for_sword(self):
-		self.cache_fields.append((0, 2, 'color model'))
+		self.cache_fields.append((0, 2, 'colorspace'))
 		self.cache_fields.append((2, 10, 'color values'))
 		self.cache_fields.append((12, 1, 'color name size'))
 		self.cache_fields.append((13, len(self.name) * 2, 'color name'))
@@ -284,7 +284,7 @@ class CPL10_SpotColor(CPL7_Color):
 	Color values stored in valbytes and valbytes2 field.
 	"""
 	color_id = 0
-	model2 = 0
+	colorspace2 = 0
 	valbytes2 = ''
 
 	def __init__(self):
@@ -292,9 +292,9 @@ class CPL10_SpotColor(CPL7_Color):
 
 	def parse(self, loader):
 		self.color_id = loader.readdword()
-		self.model = loader.readword()
+		self.colorspace = loader.readword()
 		self.valbytes = loader.readbytes(10)
-		self.model2 = loader.readword()
+		self.colorspace2 = loader.readword()
 		self.valbytes2 = loader.readbytes(10)
 		size = loader.readbyte()
 		self.name = loader.readstr(size)
@@ -304,15 +304,24 @@ class CPL10_SpotColor(CPL7_Color):
 
 	def update_for_sword(self):
 		self.cache_fields.append((0, 4, 'color id'))
-		self.cache_fields.append((4, 2, 'color model'))
+		self.cache_fields.append((4, 2, 'colorspace'))
 		self.cache_fields.append((6, 10, 'color values'))
-		self.cache_fields.append((16, 2, 'color model2'))
+		self.cache_fields.append((16, 2, 'colorspace2'))
 		self.cache_fields.append((18, 10, 'color values2'))
 		self.cache_fields.append((28, 1, 'color name size'))
 		self.cache_fields.append((29, len(self.name), 'color name'))
 
 	def resolve(self, name=''):
 		return (True, 'SPOT color', '')
+
+	def get_color(self):
+		cs = self.colorspace
+		vals = self.valbytes[-4:]
+		cs2 = self.colorspace2
+		vals2 = self.valbytes2[-4:]
+		clr = cdr_utils.parse_cdr_spot_color(cs, vals, cs2, vals2)
+		if clr: clr[3] += self.name
+		return clr
 
 
 class CPL12_Palette(AbstractCPLPalette):
@@ -390,7 +399,7 @@ class CPL12_Color(CPL7_Color):
 		CPL7_Color.__init__(self)
 
 	def parse(self, loader):
-		self.model = loader.readword()
+		self.colorspace = loader.readword()
 		self.valbytes = loader.readbytes(10)
 		size = loader.readbyte()
 		self.name = loader.readstr(size * 2).decode('utf_16_le')
@@ -399,7 +408,7 @@ class CPL12_Color(CPL7_Color):
 		self.chunk = loader.readbytes(ln)
 
 	def update_for_sword(self):
-		self.cache_fields.append((0, 2, 'color model'))
+		self.cache_fields.append((0, 2, 'colorspace'))
 		self.cache_fields.append((2, 10, 'color values'))
 		self.cache_fields.append((12, 1, 'color name size'))
 		self.cache_fields.append((13, len(self.name) * 2, 'color name'))
@@ -427,23 +436,20 @@ class CPL12_SpotPalette(CPL12_Palette):
 			color.parse(loader)
 			self.childs.append(color)
 
-class CPL12_SpotColor(CPL7_Color):
+class CPL12_SpotColor(CPL10_SpotColor):
 	"""
 	Represents CPL12 palette SPOT color object.
 	Color values stored in valbytes and valbytes2 field.
 	"""
-	color_id = 0
-	model2 = 0
-	valbytes2 = ''
 
 	def __init__(self):
-		CPL7_Color.__init__(self)
+		CPL10_SpotColor.__init__(self)
 
 	def parse(self, loader):
 		self.color_id = loader.readdword()
-		self.model = loader.readword()
+		self.colorspace = loader.readword()
 		self.valbytes = loader.readbytes(10)
-		self.model2 = loader.readword()
+		self.colorspace2 = loader.readword()
 		self.valbytes2 = loader.readbytes(10)
 		size = loader.readbyte()
 		self.name = loader.readstr(size * 2).decode('utf_16_le')
@@ -453,15 +459,12 @@ class CPL12_SpotColor(CPL7_Color):
 
 	def update_for_sword(self):
 		self.cache_fields.append((0, 4, 'color id'))
-		self.cache_fields.append((4, 2, 'color model'))
+		self.cache_fields.append((4, 2, 'colorspace'))
 		self.cache_fields.append((6, 10, 'color values'))
-		self.cache_fields.append((16, 2, 'color model2'))
+		self.cache_fields.append((16, 2, 'colorspace2'))
 		self.cache_fields.append((18, 10, 'color values2'))
 		self.cache_fields.append((28, 1, 'color name size'))
 		self.cache_fields.append((29, len(self.name) * 2, 'color name'))
-
-	def resolve(self, name=''):
-		return (True, 'SPOT color', '')
 
 class CPLX4_SpotPalette(AbstractCPLPalette):
 	"""
