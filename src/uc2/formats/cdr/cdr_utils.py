@@ -165,6 +165,32 @@ def parse_cdr_color(colorspace, color_bytes):
 		return parse_reg_color()
 	return []
 
+def parse_cdr_spot_color(cs, clrbytes, cs2, clrbytes2):
+	spot = uc2const.COLOR_SPOT
+	rgb = uc2const.COLOR_RGB
+	cmyk = uc2const.COLOR_CMYK
+	clr = parse_cdr_color(cs, clrbytes)
+	clr2 = parse_cdr_color(cs2, clrbytes2)
+	if not clr and clr2: return clr2
+	if not clr2: return clr
+	if clr[0] == clr2[0]:
+		if clr[0] == rgb:
+			return [spot, [clr[1], []], 1.0, '']
+		elif clr[0] == cmyk:
+			return [spot, [[], clr[1]], 1.0, '']
+		else:
+			return clr
+	elif clr[0] in (rgb, cmyk) and clr2[0] in (rgb, cmyk):
+		if clr[0] == rgb:
+			return [spot, [clr[1], clr2[1]], 1.0, '']
+		else:
+			return [spot, [clr2[1], clr[1]], 1.0, '']
+	elif clr[0] in (rgb, cmyk):
+		return clr
+	elif clr2[0] in (rgb, cmyk):
+		return clr2
+	else:
+		return clr
 
 def parse_size_value(data):
 	"""
