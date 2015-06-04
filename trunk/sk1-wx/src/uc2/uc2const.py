@@ -98,6 +98,7 @@ SCRIBUS_PAL = 503
 SOC = 504
 COREL_PAL = 505
 ASE = 506
+JCW = 507
 
 ICC = 600
 ICM = 601
@@ -161,8 +162,9 @@ GPL: _("GPL - GIMP palette files"),
 CPL: _("CPL - CorelDRAW palette files (v7-X4)"),
 SCRIBUS_PAL: _("XML - Scribus palette files"),
 SOC: _("SOC - LibreOffice palette files"),
-COREL_PAL: _("XML - CorelDRAW x5-X7 palette files"),
+COREL_PAL: _("XML - CorelDRAW X5-X7 palette files"),
 ASE: _("ASE - Adobe Swatch Exchange files"),
+JCW: _("JCW - Xara color palette files"),
 
 #Color profiles
 ICC: _("ICC - International Color Consortium profiles"),
@@ -229,6 +231,7 @@ SCRIBUS_PAL: "SCRIBUS_PAL",
 SOC: "SOC",
 COREL_PAL: "COREL_PAL",
 ASE: "ASE",
+JCW: "JCW",
 
 ICC: "ICC",
 ICM: "ICM",
@@ -254,7 +257,7 @@ PCX: ('pcx',), GIF: ('gif',), PNG: ('png',), PPM: ('pbm', 'pgm', 'pgm'),
 XBM: ('xbm',), XPM: ('xpm',), JP2: ('jp2', 'jpx', 'jpf'),
 
 SKP: ('skp',), GPL: ('gpl',), CPL: ('cpl',), SCRIBUS_PAL:('xml',), SOC:('soc',),
-COREL_PAL: ('xml',), ASE: ('ase',),
+COREL_PAL: ('xml',), ASE: ('ase',), JCW: ('jcw',),
 
 ICC: ('icc',), ICM: ('icm',),
 
