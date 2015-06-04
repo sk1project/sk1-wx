@@ -20,7 +20,7 @@ import os
 from uc2 import uc2const
 from uc2.formats.generic import BinaryModelPresenter
 from uc2.formats.cpl.cpl_config import CPL_Config
-from uc2.formats.riff import model
+from uc2.formats.cpl.cpl_model import CPL12_Palette, CPL12_Color
 from uc2.formats.cpl.cpl_filters import CPL_Loader, CPL_Saver
 
 class CPL_Presenter(BinaryModelPresenter):
@@ -42,11 +42,15 @@ class CPL_Presenter(BinaryModelPresenter):
 		self.new()
 
 	def new(self):
-		self.model = model.RiffRootList()
-		self.model.childs = []
+		self.model = CPL12_Palette()
 
 	def convert_from_skp(self, skp_doc):
-		pass
+		skp_model = skp_doc.model
+		name = '' + skp_model.name
+		self.model = CPL12_Palette(name)
+		for color in skp_model.colors:
+			self.model.childs.append(CPL12_Color(color))
+		self.model.update_for_save()
 
 	def convert_to_skp(self, skp_doc):
 		skp_model = skp_doc.model
