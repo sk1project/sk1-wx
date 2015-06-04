@@ -15,14 +15,15 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import struct
 from colorsys import yiq_to_rgb, hls_to_rgb, hsv_to_rgb
 
-from uc2 import uc2const
+from uc2 import uc2const, cms
 from uc2.utils import double2py_float, word2py_int, long2py_float
 from uc2.formats.cdr.cdr_const import cdrunit_to_pt, \
 CDR_COLOR_CMYK, CDR_COLOR_BGR, CDR_COLOR_CMY, CDR_COLOR_CMYK255, \
 CDR_COLOR_GRAY, CDR_COLOR_LAB, CDR_COLOR_REGISTRATION, CDR_COLOR_CMYK2, \
-CDR_COLOR_HSB, CDR_COLOR_HLS, CDR_COLOR_YIQ, CDR_COLOR_LAB2
+CDR_COLOR_HSB, CDR_COLOR_HLS, CDR_COLOR_YIQ, CDR_COLOR_LAB2, CDR_CS_MATSH
 
 def parse_matrix(data):
 	"""
@@ -135,7 +136,9 @@ def parse_reg_color(data=''):
 	"""
 	Returns Registration color fill style list.
 	"""
-	return [uc2const.COLOR_SPOT, [[0.0, 0.0, 0.0], [1.0, 1.0, 1.0, 1.0] ], 1.0, 'Registration color']
+	return [uc2const.COLOR_SPOT,
+		[[0.0, 0.0, 0.0], [1.0, 1.0, 1.0, 1.0] ],
+		1.0, 'Registration color']
 
 def parse_cdr_color(colorspace, color_bytes):
 	"""
@@ -197,3 +200,31 @@ def parse_size_value(data):
 	Convert 4-bytes string to value in points.
 	"""
 	return long2py_float(data) * cdrunit_to_pt
+
+def get_cdr_color(color):
+	"""
+	Converts color list to CDR colorspace and color valbytes
+	"""
+	cs = CDR_CS_MATSH[uc2const.COLOR_RGB]
+	valbytes = '\x05\x05\x00\x00\x00\x00'
+	if not color[0] == uc2const.COLOR_SPOT:
+		cs = CDR_CS_MATSH[color[0]]
+		if color[0] == uc2const.COLOR_RGB:
+			r, g, b = cms.val_255(color[1])
+			valbytes += struct.pack('<3B', b, g, r) + '\x00'
+		elif color[0] == uc2const.COLOR_CMYK:
+			valbytes += struct.pack('<4B', *cms.val_100(color[1]))
+		elif color[0] == uc2const.COLOR_GRAY:
+			valbytes += struct.pack('<B', *cms.val_255(color[1]))
+			valbytes += '\xeb\x54\x01'
+		if color[0] == uc2const.COLOR_LAB:
+			valbytes = '\x0d\x00\x00\x00\x00\x00'
+			valbytes += struct.pack('<3B', *cms.val_255(color[1])) + '\xcc'
+	else:
+		if color[1][1]:
+			cs = CDR_CS_MATSH[uc2const.COLOR_CMYK]
+			valbytes += struct.pack('<4B', *cms.val_100(color[1]))
+		else:
+			r, g, b = cms.val_255(color[1][0])
+			valbytes += struct.pack('<3B', b, g, r) + '\x00'
+	return cs, valbytes
