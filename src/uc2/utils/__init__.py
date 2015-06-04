@@ -46,11 +46,23 @@ def byte2py_int(data):
 	"""
 	return struct.unpack('B', data)[0]
 
+def py_int2byte(val):
+	"""
+	Converts Python int value to byte.
+	"""
+	return struct.pack('B', val)
+
 def word2py_int(data):
 	"""
 	Converts word of bytes to Python int value.
 	"""
 	return struct.unpack('<H', data)[0]
+
+def py_int2word(val):
+	"""
+	Converts Python int value to word of bytes.
+	"""
+	return struct.pack('<H', val)
 
 def dword2py_int(data):
 	"""
@@ -58,17 +70,17 @@ def dword2py_int(data):
 	"""
 	return struct.unpack('<I', data)[0]
 
+def py_int2dword(val):
+	"""
+	Converts Python int value to double word of bytes.
+	"""
+	return struct.pack('<I', val)
+
 def pair_dword2py_int(data):
 	"""
 	Converts pair of double words (8 bytes) to pair ofPython int value.
 	"""
 	return struct.unpack('<2L', data)
-
-def py_int2dword(val):
-	"""
-	Converts Python int value to word of bytes.
-	"""
-	return struct.pack('<I', val)
 
 def double2py_float(data):
 	"""
