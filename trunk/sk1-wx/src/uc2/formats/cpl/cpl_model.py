@@ -15,7 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
+from uc2 import utils, cms
 from uc2.formats.generic import BinaryModelObject
 from uc2.formats.cpl import cpl_const
 from uc2.formats.cdr import cdr_const, cdr_utils
@@ -38,6 +38,8 @@ class AbstractCPLPalette(BinaryModelObject):
 		for child in self.childs:
 			child.save(saver)
 
+	def update_for_save(self):pass
+
 class AbstractCPLColor(BinaryModelObject):
 
 	def __init__(self):
@@ -55,6 +57,8 @@ class AbstractCPLColor(BinaryModelObject):
 		if clr and not self.colorspace == cdr_const.CDR_COLOR_REGISTRATION:
 			clr[3] += self.name
 		return clr
+
+	def update_for_save(self):pass
 
 class CPL7_Palette(AbstractCPLPalette):
 	"""
@@ -339,8 +343,9 @@ class CPL12_Palette(AbstractCPLPalette):
 	ncolors = 0
 
 
-	def __init__(self):
+	def __init__(self, name=''):
 		AbstractCPLPalette.__init__(self)
+		if name: self.name = name
 
 	def parse(self, loader):
 		self.nheaders = loader.readdword()
@@ -390,13 +395,34 @@ class CPL12_Palette(AbstractCPLPalette):
 		self.cache_fields.append((self.headers[1], 2, 'palette type'))
 		self.cache_fields.append((self.headers[2], 2, 'number of colors'))
 
+	def update_for_save(self):
+		for child in self.childs:
+			child.update_for_save()
+		self.chunk = ''
+		self.chunk += cpl_const.CPL12
+		self.chunk += cpl_const.CPL12_NHEADERS
+		size = len(self.name) * 2
+		pos = [30, 31 + size, 31 + size + 2]
+		for i in range(3):
+			self.chunk += utils.py_int2dword(i) + utils.py_int2dword(pos[i])
+		self.chunk += utils.py_int2byte(len(self.name))
+		self.chunk += self.name.encode('utf_16_le')
+		self.chunk += cpl_const.CPL12_PALTYPE
+		self.chunk += utils.py_int2word(len(self.childs))
+
+
 class CPL12_Color(CPL7_Color):
 	"""
 	Represents CPL12 palette color object.
 	Color values stored in valbytes field.
 	"""
-	def __init__(self):
+
+	def __init__(self, color=None):
 		CPL7_Color.__init__(self)
+		if color:
+			self.colorspace, self.valbytes = cdr_utils.get_cdr_color(color)
+			if color[3]: self.name = '' + color[3]
+			else: self.name = cms.verbose_color(color)
 
 	def parse(self, loader):
 		self.colorspace = loader.readword()
@@ -412,6 +438,12 @@ class CPL12_Color(CPL7_Color):
 		self.cache_fields.append((2, 10, 'color values'))
 		self.cache_fields.append((12, 1, 'color name size'))
 		self.cache_fields.append((13, len(self.name) * 2, 'color name'))
+
+	def update_for_save(self):
+		self.chunk = utils.py_int2word(self.colorspace)
+		self.chunk += self.valbytes
+		self.chunk += utils.py_int2byte(len(self.name))
+		self.chunk += self.name.encode('utf_16_le')
 
 class CPL12_SpotPalette(CPL12_Palette):
 	"""
