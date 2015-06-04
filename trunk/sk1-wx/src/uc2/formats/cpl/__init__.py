@@ -48,16 +48,16 @@ def cpl_saver(doc, filename=None, fileptr=None, translate=True,
 	if translate:
 		skp_doc = SKP_Presenter(appdata, cnf)
 		skp_doc.translate_from_sk2(doc)
-		gpl_doc = CPL_Presenter(appdata, cnf)
-		gpl_doc.convert_from_skp(skp_doc)
-		gpl_doc.save(filename, fileptr)
-		gpl_doc.close()
+		cpl_doc = CPL_Presenter(appdata, cnf)
+		cpl_doc.convert_from_skp(skp_doc)
+		cpl_doc.save(filename, fileptr)
+		cpl_doc.close()
 		skp_doc.close()
 	elif convert:
-		gpl_doc = CPL_Presenter(appdata, cnf)
-		gpl_doc.convert_from_skp(doc)
-		gpl_doc.save(filename, fileptr)
-		gpl_doc.close()
+		cpl_doc = CPL_Presenter(appdata, cnf)
+		cpl_doc.convert_from_skp(doc)
+		cpl_doc.save(filename, fileptr)
+		cpl_doc.close()
 	else:
 		doc.save(filename, fileptr)
 

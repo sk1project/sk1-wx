@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2012 by Igor E. Novikov
+#	Copyright (C) 2015 by Igor E. Novikov
 #
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
@@ -22,5 +22,5 @@ class CPL_Config(XmlConfigParser):
 	system_encoding = 'utf-8'
 	filename = 'cpl_config.xml'
 	default_name = 'CorelDRAW palette'
-	source = 'Corel (http://corel.com/)'
+	source = 'Corel'
 
