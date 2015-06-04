@@ -21,17 +21,17 @@ EPS, PDF, PSD, CGM, WMF, EMF, XPS, VSD, PLT, HPGL , DXF, DWG, RIFF, XML
 
 from uc2.uc2const import JPG, JP2, TIF, BMP, PCX, GIF, PNG, PPM, XBM, XPM
 
-from uc2.uc2const import SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL, ASE
+from uc2.uc2const import SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL, ASE, JCW
 
 
 SIMPLE_LOADERS = []
 MODEL_LOADERS = [SK2, PDXF, PLT, CDR, CDT] + \
 [PNG, JPG, JP2, TIF, GIF, BMP, PCX, PPM, XBM, XPM]
-PALETTE_LOADERS = [SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL, ASE]
+PALETTE_LOADERS = [SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL, ASE, JCW]
 EXPERIMENTAL_LOADERS = [SK1, WMF, RIFF, CDRZ, XML]
 
 SIMPLE_SAVERS = []
-PALETTE_SAVERS = [SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL, ASE]
+PALETTE_SAVERS = [SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL, ASE, JCW]
 MODEL_SAVERS = [SK2, PNG, PDXF, PLT]
 EXPERIMENTAL_SAVERS = [SK1, RIFF, CDR, XML ]
 
@@ -63,6 +63,7 @@ from uc2.formats.cpl import cpl_loader, cpl_saver, check_cpl
 from uc2.formats.corel_pal import corel_pal_loader, corel_pal_saver, \
 check_corel_pal
 from uc2.formats.ase import ase_loader, ase_saver, check_ase
+from uc2.formats.jcw import jcw_loader, jcw_saver, check_jcw
 from uc2.formats.xml_ import xml_loader, xml_saver, check_xml
 
 
@@ -81,7 +82,7 @@ PNG: png_loader, JPG: im_loader, JP2: im_loader, TIF: im_loader, GIF: im_loader,
 BMP: im_loader, PCX: im_loader, PPM: im_loader, XBM: im_loader, XPM: im_loader,
 
 SKP: skp_loader, GPL:gpl_loader, SCRIBUS_PAL:scribus_pal_loader, SOC:soc_loader,
-CPL: cpl_loader, COREL_PAL: corel_pal_loader, ASE: ase_loader,
+CPL: cpl_loader, COREL_PAL: corel_pal_loader, ASE: ase_loader, JCW:jcw_loader,
 
 XML: xml_loader,
 }
@@ -100,7 +101,7 @@ RIFF: riff_saver,
 PNG: png_saver,
 
 SKP: skp_saver, GPL:gpl_saver, SCRIBUS_PAL:scribus_pal_saver, SOC:soc_saver,
-CPL: cpl_saver, COREL_PAL: corel_pal_saver, ASE: ase_saver,
+CPL: cpl_saver, COREL_PAL: corel_pal_saver, ASE: ase_saver, JCW: jcw_saver,
 
 XML: xml_saver,
 }
@@ -120,7 +121,7 @@ GIF: fallback_check, BMP: fallback_check, PCX: fallback_check,
 PPM: fallback_check, XBM: fallback_check, XPM: fallback_check,
 
 SKP: check_skp, GPL: check_gpl, SCRIBUS_PAL:check_scribus_pal, SOC:check_soc,
-CPL: check_cpl, COREL_PAL: check_corel_pal, ASE: check_ase,
+CPL: check_cpl, COREL_PAL: check_corel_pal, ASE: check_ase, JCW: check_jcw,
 
 XML: check_xml,
 }
