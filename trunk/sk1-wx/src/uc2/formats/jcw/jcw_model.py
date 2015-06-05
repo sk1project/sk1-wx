@@ -15,10 +15,11 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from uc2 import utils
 from uc2.formats.generic import BinaryModelObject
 from uc2.formats.jcw.jcw_const import JCW_ID, JCW_NAMESIZE, JCW_COLOR_NAMES, \
-JCW_VER
-from uc2.formats.jcw.jcw_utils import parse_jcw_color
+JCW_VER, JCW_CMYK
+from uc2.formats.jcw.jcw_utils import parse_jcw_color, get_jcw_color
 
 class JCW_Palette(BinaryModelObject):
 
@@ -30,9 +31,12 @@ class JCW_Palette(BinaryModelObject):
 	colorspace = 0
 	namesize = 21
 
-	def __init__(self):
+	def __init__(self, colorspace=JCW_CMYK, namesize=0):
 		self.childs = []
 		self.cache_fields = []
+		if namesize:
+			self.colorspace = colorspace
+			self.namesize = namesize
 
 	def parse(self, loader):
 		self.palette_id = loader.readbytes(3)
@@ -53,6 +57,14 @@ class JCW_Palette(BinaryModelObject):
 		self.cache_fields.append((4, 2, 'number of colors'))
 		self.cache_fields.append((6, 1, 'palette colorspace'))
 		self.cache_fields.append((7, 1, 'size of color name'))
+
+	def update_for_save(self):
+		for child in self.childs: child.update_for_save()
+		self.chunk = '' + JCW_ID
+		self.chunk += JCW_VER
+		self.chunk += utils.py_int2word(len(self.childs))
+		self.chunk += utils.py_int2byte(self.colorspace)
+		self.chunk += utils.py_int2byte(self.namesize)
 
 	def save(self, saver):
 		saver.write(self.chunk)
@@ -76,6 +88,9 @@ class JCW_Color(BinaryModelObject):
 		self.cache_fields = []
 		self.colorspace = colorspace
 		self.namesize = namesize
+		if color:
+			self.valbytes = get_jcw_color(color)
+			self.name = '' + color[3]
 
 	def parse(self, loader):
 		self.chunk = loader.readbytes(8 + self.namesize)
@@ -85,6 +100,13 @@ class JCW_Color(BinaryModelObject):
 	def update_for_sword(self):
 		self.cache_fields.append((0, 8, 'color vals'))
 		self.cache_fields.append((8, self.namesize, 'color name'))
+
+	def update_for_save(self):
+		self.chunk = ''
+		self.chunk += self.valbytes
+		self.chunk += self.name.encode('iso-8859-1')
+		if len(self.name) < self.namesize:
+			self.chunk += '\x00' * (self.namesize - len(self.name))
 
 	def save(self, saver):
 		saver.write(self.chunk)
