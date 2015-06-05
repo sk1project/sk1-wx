@@ -49,7 +49,7 @@ class CPL_Loader(AbstractBinaryLoader):
 		if self.model:
 			self.model.parse(self)
 			if not self.model.name and self.filepath:
-				name = os.path.basename(self.filepath).replace('.cpl', '')
+				name = os.path.basename(self.filepath).split('.')[0]
 				self.model.name = '%s palette' % name
 
 
