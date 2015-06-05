@@ -145,6 +145,7 @@ encoding//src/uc2/formats/jcw/jcw_const.py=utf-8
 encoding//src/uc2/formats/jcw/jcw_filters.py=utf-8
 encoding//src/uc2/formats/jcw/jcw_model.py=utf-8
 encoding//src/uc2/formats/jcw/jcw_presenter.py=utf-8
+encoding//src/uc2/formats/jcw/jcw_utils.py=utf-8
 encoding//src/uc2/formats/pdxf/__init__.py=utf-8
 encoding//src/uc2/formats/pdxf/model.py=utf-8
 encoding//src/uc2/formats/pdxf/pdxf_cms.py=utf-8

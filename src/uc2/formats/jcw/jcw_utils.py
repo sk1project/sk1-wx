@@ -29,6 +29,12 @@ def val_to_dec(vals):
 		ret.append(item / 10000.0)
 	return ret
 
+def dec_to_val(vals):
+	ret = []
+	for item in vals:
+		ret.append(int(item * 10000))
+	return ret
+
 def parse_cmyk(data):
 	cmyk = val_to_dec(struct.unpack('<4H', data))
 	return [uc2const.COLOR_CMYK, cmyk, 1.0, '']
@@ -50,3 +56,10 @@ def parse_jcw_color(cs, data):
 	elif cs in (JCW_HSV_PANTONE, JCW_HSV, JCW_SPOT_HSV):
 		return parse_hsv(data)
 	else: return []
+
+def get_jcw_color(color):
+	if color[0] == uc2const.COLOR_CMYK:
+		return struct.pack('<4H', *dec_to_val(color[1]))
+	else:
+		return struct.pack('<3H', *dec_to_val(color[1])) + '\x00\x00'
+
