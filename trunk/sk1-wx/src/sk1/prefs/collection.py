@@ -19,8 +19,8 @@ import os
 
 import wal
 
-from uc2.uc2const import FORMAT_EXTENSION
-from uc2.uc2const import SKP, GPL, SCRIBUS_PAL, SOC, COREL_PAL, PNG, ASE
+from uc2.uc2const import FORMAT_EXTENSION, PNG
+from uc2.uc2const import SKP, GPL, SCRIBUS_PAL, SOC, COREL_PAL, ASE, CPL, JCW
 from uc2.formats import get_saver_by_id
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 
@@ -28,7 +28,7 @@ from sk1 import config
 from sk1.resources import icons
 from sk1.dialogs import get_dir_path
 
-saver_ids = [SKP, GPL, SOC, SCRIBUS_PAL, COREL_PAL, ASE]
+saver_ids = [SKP, GPL, SOC, SCRIBUS_PAL, COREL_PAL, ASE, CPL, JCW]
 
 class CollectionButton(wal.ImageButton):
 
