@@ -37,7 +37,8 @@ class SKP_Loader(AbstractLoader):
 				try:
 					code = compile('self.' + self.line, '<string>', 'exec')
 					exec code
-				except:pass
+				except:
+					print 'ERROR LINE: ' + self.line
 				if self.stop_flag: break
 
 	def palette(self):self.stop_flag = False
