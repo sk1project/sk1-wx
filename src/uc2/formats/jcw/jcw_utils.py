@@ -17,7 +17,7 @@
 
 import struct
 from colorsys import hsv_to_rgb
-from uc2 import uc2const
+from uc2 import uc2const, cms
 
 from uc2.formats.jcw.jcw_const import JCW_PMS, JCW_CMYK_PANTONE, \
 JCW_RGB_PANTONE, JCW_HSV_PANTONE, JCW_CMYK, JCW_SPOT_CMYK, JCW_RGB, \
@@ -60,6 +60,9 @@ def parse_jcw_color(cs, data):
 def get_jcw_color(color):
 	if color[0] == uc2const.COLOR_CMYK:
 		return struct.pack('<4H', *dec_to_val(color[1]))
+	if color[0] == uc2const.COLOR_GRAY:
+		vals = cms.gray_to_cmyk(color[1])
+		return struct.pack('<4H', *dec_to_val(vals))
 	else:
 		return struct.pack('<3H', *dec_to_val(color[1])) + '\x00\x00'
 
