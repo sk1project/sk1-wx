@@ -236,8 +236,14 @@ class PaletteManager(wal.HPanel):
 
 		btn_box.pack(wal.VPanel(btn_box), fill=True, expand=True)
 
-		btn_box.pack(CollectionButton(btn_box, self.app, self,
-							self.prefpanel.dlg), fill=True, end_padding=5)
+		btn_box.pack(wal.ImageButton(btn_box, icons.PD_DOWNLOAD48,
+							tooltip=_('Download more palettes'),
+							flat=False,
+							onclick=self.download_more),
+							fill=True, end_padding=5)
+
+#		btn_box.pack(CollectionButton(btn_box, self.app, self,
+#							self.prefpanel.dlg), fill=True, end_padding=5)
 
 		self.update_palette_list()
 
@@ -282,6 +288,9 @@ class PaletteManager(wal.HPanel):
 		palette_name = self.pal_list.get_selected()
 		self.app.palettes.remove_palette(palette_name)
 		self.update_palette_list()
+
+	def download_more(self):
+		self.app.open_url('http://sk1project.org/palettes.php')
 
 	def edit_info(self):
 		palette_name = self.pal_list.get_selected()
