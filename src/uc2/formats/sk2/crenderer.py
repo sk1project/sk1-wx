@@ -129,16 +129,26 @@ class CairoRenderer:
 			ctx.append_path(obj.cache_cpath)
 			ctx.stroke()
 		else:
-			if obj.style[0]:
-				ctx.new_path()
-				self.process_fill(ctx, obj.style)
-				ctx.append_path(obj.cache_cpath)
-				ctx.fill()
-			if obj.style[1]:
-				ctx.new_path()
-				self.process_stroke(ctx, obj.style)
-				ctx.append_path(obj.cache_cpath)
-				ctx.stroke()
+			if obj.style[1] and obj.style[1][7]:
+				self.stroke_obj(ctx, obj)
+				self.fill_obj(ctx, obj)
+			else:
+				self.fill_obj(ctx, obj)
+				self.stroke_obj(ctx, obj)
+
+	def fill_obj(self, ctx, obj):
+		if obj.style[0]:
+			ctx.new_path()
+			self.process_fill(ctx, obj.style)
+			ctx.append_path(obj.cache_cpath)
+			ctx.fill()
+
+	def stroke_obj(self, ctx, obj):
+		if obj.style[1]:
+			ctx.new_path()
+			self.process_stroke(ctx, obj.style)
+			ctx.append_path(obj.cache_cpath)
+			ctx.stroke()
 
 	def process_fill(self, ctx, style):
 		fill = style[0]
