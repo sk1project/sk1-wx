@@ -146,7 +146,7 @@ class CairoRenderer:
 	def stroke_obj(self, ctx, obj):
 		if obj.style[1]:
 			ctx.new_path()
-			self.process_stroke(ctx, obj.style)
+			self.process_stroke(ctx, obj)
 			ctx.append_path(obj.cache_cpath)
 			ctx.stroke()
 
@@ -158,25 +158,26 @@ class CairoRenderer:
 			ctx.set_fill_rule(cairo.FILL_RULE_EVEN_ODD)
 		else:
 			ctx.set_fill_rule(cairo.FILL_RULE_WINDING)
-		try:
-			ctx.set_source_rgba(*self.get_color(color))
-		except:
-			pass
+		ctx.set_source_rgba(*self.get_color(color))
 
-	def process_stroke(self, ctx, style):
-		stroke = style[1]
+	def process_stroke(self, ctx, obj):
+		stroke = obj.style[1]
 		#FIXME: add stroke style
 
-		ctx.set_line_width(stroke[1])
+		#Line width
+		if not stroke[8]:
+			line_width = stroke[1]
+		else:
+			coef = max(obj.trafo[0], obj.trafo[3])
+			line_width = stroke[1] * coef
+		ctx.set_line_width(line_width)
+		#Line color
+		ctx.set_source_rgba(*self.get_color(stroke[2]))
+		#Dashes
+		dash = []
+		for item in stroke[3]:dash.append(item * line_width)
+		ctx.set_dash(dash)
 
-		color = stroke[2]
-
-		try:
-			ctx.set_source_rgba(*self.get_color(color))
-		except:
-			pass
-
-		ctx.set_dash(stroke[3])
 		ctx.set_line_cap(stroke[4])
 		ctx.set_line_join(stroke[5])
 		ctx.set_miter_limit(stroke[6])
