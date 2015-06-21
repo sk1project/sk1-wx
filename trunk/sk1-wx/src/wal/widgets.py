@@ -456,8 +456,12 @@ class IntSpin(FloatSpin):
 
 class Slider(wx.Slider, RangeDataWidget):
 
+	callback = None
+	final_callback = None
+
 	def __init__(self, parent, value=0, range_val=(1, 100),
-				size=(100, -1), vertical=False, onchange=None):
+				size=(100, -1), vertical=False, onchange=None,
+				on_final_change=None):
 		self.range_val = range_val
 		style = 0
 		if vertical:
@@ -468,7 +472,20 @@ class Slider(wx.Slider, RangeDataWidget):
 		wx.Slider.__init__(self, parent, wx.ID_ANY, value, start,
 						end, size=size, style=style)
 		if onchange:
-			self.Bind(wx.EVT_SCROLL, onchange, self)
+			self.callback = onchange
+			self.Bind(wx.EVT_SCROLL, self._onchange, self)
+		if on_final_change:
+			self.final_callback = on_final_change
+			self.Bind(wx.EVT_LEFT_UP, self._on_final_change, self)
+			self.Bind(wx.EVT_RIGHT_UP, self._on_final_change, self)
+
+	def _onchange(self, event):
+		if self.callback: self.callback()
+
+	def _on_final_change(self, event):
+		event.Skip()
+		if self.final_callback: self.final_callback()
+
 
 class Splitter(wx.SplitterWindow, Widget):
 
