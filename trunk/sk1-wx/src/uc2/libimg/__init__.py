@@ -60,8 +60,16 @@ def invert_image(cms, bmpstr):
 
 def convert_image(cms, pixmap, colorspace):
 	image_stream = StringIO()
-	raw_image = Image.open(StringIO(b64decode(pixmap.bitmap)))
-	raw_image.load()
+	if pixmap.colorspace in DUOTONES and not colorspace in DUOTONES:
+		cdata_stream = StringIO()
+		pixmap.cache_cdata.write_to_png(cdata_stream)
+		cdata_stream.seek(0)
+		raw_image = Image.open(cdata_stream)
+		raw_image.load()
+		raw_image = raw_image.convert("RGB")
+	else:
+		raw_image = Image.open(StringIO(b64decode(pixmap.bitmap)))
+		raw_image.load()
 	raw_image = cms.convert_image(raw_image, colorspace)
 	raw_image.save(image_stream, format='TIFF')
 	return b64encode(image_stream.getvalue())
