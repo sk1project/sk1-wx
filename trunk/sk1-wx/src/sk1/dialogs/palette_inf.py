@@ -29,7 +29,6 @@ class PaletteInfoDialog(wal.OkCancelDialog):
 		self.set_minsize(config.palinfo_dlg_minsize)
 
 	def build(self):
-#		self.panel
 		grid = wal.GridPanel(self.panel, rows=4, cols=2, vgap=5, hgap=5)
 		self.panel.pack(grid, expand=True, fill=True, padding_all=5)
 		grid.add_growable_col(1)
