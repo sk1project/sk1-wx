@@ -1107,7 +1107,15 @@ class PresenterAPI(AbstractAPI):
 	def set_rect_corners(self, corners):
 		sel = [] + self.selection.objs
 		obj = sel[0]
-		corners_before = obj.corners
+		self.methods.set_rect_corners(obj, corners)
+		self.eventloop.emit(self.eventloop.DOC_MODIFIED)
+		self.selection.update()
+
+	def set_rect_corners_final(self, corners, corners_before=[]):
+		sel = [] + self.selection.objs
+		obj = sel[0]
+		if not corners_before:
+			corners_before = obj.corners
 		self.methods.set_rect_corners(obj, corners)
 		transaction = [
 			[[self.methods.set_rect_corners, obj, corners_before],

@@ -28,6 +28,7 @@ class RectanglePlugin(CtxPlugin):
 
 	name = 'RectanglePlugin'
 	corners = [0, 0, 0, 0]
+	orig_corners = [0, 0, 0, 0]
 	update_flag = False
 	active_corner = 0
 
@@ -40,7 +41,8 @@ class RectanglePlugin(CtxPlugin):
 		bmp = get_bmp(self, icons.CTX_ROUNDED_RECT, _('Rounded rectangle'))
 		self.add(bmp, 0, LEFT | CENTER, 2)
 
-		self.slider = Slider(self, 0, (0, 100), onchange=self.slider_changes)
+		self.slider = Slider(self, 0, (0, 100), onchange=self.slider_changes,
+							on_final_change=self.slider_final_changes)
 		self.add(self.slider, 0, LEFT | CENTER, 2)
 
 		self.num_spin = FloatSpin(self, 0, (0.0, 100.0), 1.0, 0,
@@ -69,15 +71,19 @@ class RectanglePlugin(CtxPlugin):
 		self.active_corner = self.switch.get_index()
 		self.update_vals()
 
-	def slider_changes(self, *args):
+	def slider_changes(self):
 		if self.update_flag: return
 		self.apply_changes(self.slider.get_value() / 100.0)
+
+	def slider_final_changes(self):
+		if self.update_flag: return
+		self.apply_changes(self.slider.get_value() / 100.0, True)
 
 	def changes(self, *args):
 		if self.update_flag: return
 		self.apply_changes(self.num_spin.get_value() / 100.0)
 
-	def apply_changes(self, val):
+	def apply_changes(self, val, final=False):
 		if self.insp.is_selection():
 			selection = self.app.current_doc.selection
 			if self.insp.is_obj_rect(selection.objs[0]):
@@ -85,7 +91,12 @@ class RectanglePlugin(CtxPlugin):
 					self.corners = [val, val, val, val]
 				else:
 					self.corners[self.active_corner] = val
-				self.app.current_doc.api.set_rect_corners(self.corners)
+				api = self.app.current_doc.api
+				if final:
+					api.set_rect_corners_final(self.corners, self.orig_corners)
+					self.orig_corners = [] + self.corners
+				else:
+					api.set_rect_corners(self.corners)
 
 	def update_vals(self):
 		self.update_flag = True
@@ -102,6 +113,7 @@ class RectanglePlugin(CtxPlugin):
 					self.update_vals()
 				else:
 					self.corners = corners
+					self.orig_corners = [] + corners
 					self.update_flag = True
 					state = (corners[0] == corners[1] == corners[2] == corners[3])
 					self.keep_ratio.set_active(state)
