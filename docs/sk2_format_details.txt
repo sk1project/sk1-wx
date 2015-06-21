@@ -75,6 +75,18 @@ STROKE DEFINITION:
 
 -------------------------------------------------------------------------------
 
+TRAFO DEFINITION
+[xx,yx,xy,yy,x0,y0]
+
+x_new = xx*x + xy*y + x0
+y_new = yx*x + yy*y + y0
+
+reverse transformation:
+x = (y_new - y0 - yy*x_new/xy + yy*x0/xy)/(yx - yy*xx/xy)
+y = (x_new - xx*x - x0)/xy
+
+-------------------------------------------------------------------------------
+
 PATHS DEFINITION:
 [path0, path1, ...]
 
