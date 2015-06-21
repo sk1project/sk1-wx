@@ -19,10 +19,23 @@ import cairo
 
 from uc2 import libimg, libcairo, libgeom
 from uc2.formats.sk2 import sk2_model as model
+from uc2.formats.sk2 import sk2_const
 
 CAIRO_BLACK = [0.0, 0.0, 0.0]
 CAIRO_GRAY = [0.5, 0.5, 0.5]
 CAIRO_WHITE = [1.0, 1.0, 1.0]
+
+CAPS = {
+	sk2_const.CAP_BUTT:cairo.LINE_CAP_BUTT,
+	sk2_const.CAP_ROUND:cairo.LINE_CAP_ROUND,
+	sk2_const.CAP_SQUARE:cairo.LINE_CAP_SQUARE,
+	}
+
+JOINS = {
+	sk2_const.JOIN_BEVEL:cairo.LINE_JOIN_BEVEL,
+	sk2_const.JOIN_MITER:cairo.LINE_JOIN_MITER,
+	sk2_const.JOIN_ROUND:cairo.LINE_JOIN_ROUND,
+	}
 
 class CairoRenderer:
 
@@ -82,7 +95,7 @@ class CairoRenderer:
 		ctx.restore()
 		if container.style[1] and not self.contour_flag:
 			ctx.new_path()
-			self.process_stroke(ctx, container.style)
+			self.process_stroke(ctx, None, container.style)
 			ctx.append_path(container.cache_cpath)
 			ctx.stroke()
 
@@ -125,7 +138,7 @@ class CairoRenderer:
 			return
 		if self.contour_flag:
 			ctx.new_path()
-			self.process_stroke(ctx, self.stroke_style)
+			self.process_stroke(ctx, None, self.stroke_style)
 			ctx.append_path(obj.cache_cpath)
 			ctx.stroke()
 		else:
@@ -139,7 +152,7 @@ class CairoRenderer:
 	def fill_obj(self, ctx, obj):
 		if obj.style[0]:
 			ctx.new_path()
-			self.process_fill(ctx, obj.style)
+			self.process_fill(ctx, obj)
 			ctx.append_path(obj.cache_cpath)
 			ctx.fill()
 
@@ -150,18 +163,33 @@ class CairoRenderer:
 			ctx.append_path(obj.cache_cpath)
 			ctx.stroke()
 
-	def process_fill(self, ctx, style):
-		fill = style[0]
-		color = fill[2]
+	def process_fill(self, ctx, obj):
+		fill = obj.style[0]
 		fill_rule = fill[0]
 		if fill_rule:
 			ctx.set_fill_rule(cairo.FILL_RULE_EVEN_ODD)
 		else:
 			ctx.set_fill_rule(cairo.FILL_RULE_WINDING)
-		ctx.set_source_rgba(*self.get_color(color))
+		if fill[1] == sk2_const.FILL_SOLID:
+			color = fill[2]
+			ctx.set_source_rgba(*self.get_color(color))
+		elif fill[1] == sk2_const.FILL_GRADIENT:
+			gradient = fill[2]
+			points = libgeom.apply_trafo_to_points(gradient[1], obj.trafo)
+			coords = points[0] + points[1]
+			if gradient[0] == sk2_const.GRADIENT_LINEAR:
+				grd = cairo.LinearGradient(*coords)
+			else:
+				x0, y0 = coords[:2]
+				radius = libgeom.distance(*points)
+				grd = cairo.RadialGradient(x0, y0, 0, x0, y0, radius)
+			for stop in gradient[2]:
+				grd.add_color_stop_rgba(stop[0], *self.get_color(stop[1]))
+			ctx.set_source(grd)
 
-	def process_stroke(self, ctx, obj):
-		stroke = obj.style[1]
+	def process_stroke(self, ctx, obj, style=None):
+		if style: stroke = style[1]
+		else: stroke = obj.style[1]
 		#FIXME: add stroke style
 
 		#Line width
@@ -178,6 +206,6 @@ class CairoRenderer:
 		for item in stroke[3]:dash.append(item * line_width)
 		ctx.set_dash(dash)
 
-		ctx.set_line_cap(stroke[4])
-		ctx.set_line_join(stroke[5])
+		ctx.set_line_cap(CAPS[stroke[4]])
+		ctx.set_line_join(JOINS[stroke[5]])
 		ctx.set_miter_limit(stroke[6])
