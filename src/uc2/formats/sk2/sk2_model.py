@@ -193,7 +193,7 @@ class Layer(StructuralObject):
 				self.color = cms.hexcolor_to_rgba(self.config.layer_color)
 		stroke = self.style[1]
 		if stroke:
-			stroke[2] = [uc2const.COLOR_RGB , self.color, 1.0, '']
+			stroke[2] = [uc2const.COLOR_RGB , self.color[:3], self.color[3], '']
 
 class GuideLayer(Layer):
 	"""
