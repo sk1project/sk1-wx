@@ -21,6 +21,12 @@ Spot color can be RGB or CMYK based:
 'palette' - this field is optional and used to identify palette
 -------------------------------------------------------------------------------
 
+GRADIENT DEFINITION:
+[gradient_type,[start_point,end_point],stops]
+stops => [[offset,color],[offset,color], ...]
+
+-------------------------------------------------------------------------------
+
 STYLE DEFINITION:
 
 [fill, stroke, text, image_style]
