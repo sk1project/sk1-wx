@@ -85,6 +85,11 @@ class AppPaletteManager(PaletteManager):
 			config.palette = STD_CMYK_PALETTE
 
 	def add_palette(self, palette):
+		pname = '' + palette.model.name
+		i = 1
+		while palette.model.name in self.palettes.keys():
+			palette.model.name = pname + '(%u)' % i
+			i += 1
 		name = palette.model.name
 		self.palettes[name] = palette
 		pf = generate_id() + "." + uc2const.FORMAT_EXTENSION[uc2const.SKP][0]
