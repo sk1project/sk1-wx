@@ -66,7 +66,12 @@ class ScrolledPalette(wal.ScrolledPanel, wal.Canvas):
 
 
 	def paint(self):
-		if not self.colors:return
+		if not self.colors:
+			self.set_stroke(wal.LIGHT_GRAY)
+			w, h = self.get_size()
+			self.draw_line(0, 0, w, h)
+			self.draw_line(w, 0, 0, h)
+			return
 		if self.mode == NORMAL_MODE:
 			self.normal_mode_paint()
 		elif self.mode == LARGE_MODE:
@@ -219,7 +224,10 @@ class PaletteViewer(wal.VPanel):
 		if palette: self.draw_palette(palette)
 
 	def draw_palette(self, palette=None):
-		if not palette: return
+		if not palette:
+			self.win.colors = []
+			self.win.refresh()
+			return
 		self.palette = palette
 		self.win.colors = palette.model.colors
 		self.win.refresh()
