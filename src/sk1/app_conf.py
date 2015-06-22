@@ -121,6 +121,8 @@ class AppConfig(UCConfig):
 
 	palinfo_dlg_size = (400, 350)
 	palinfo_dlg_minsize = (400, 350)
+	palcol_dlg_size = (600, 350)
+	palcol_dlg_minsize = (600, 350)
 
 	statusbar_fontsize = 0
 	tabs_fontsize = 0
