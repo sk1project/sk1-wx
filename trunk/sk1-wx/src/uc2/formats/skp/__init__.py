@@ -28,7 +28,7 @@ def skp_loader(appdata, filename=None, fileptr=None, translate=True,
 			convert=False, cnf={}, **kw):
 	if kw: cnf.update(kw)
 	doc = SKP_Presenter(appdata, cnf)
-	doc.load(filename)
+	doc.load(filename, fileptr)
 	if translate:
 		sk2_doc = SK2_Presenter(appdata, cnf)
 		doc.translate_to_sk2(sk2_doc)
