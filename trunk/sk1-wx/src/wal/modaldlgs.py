@@ -24,8 +24,10 @@ from widgets import HLine, Button
 
 class SimpleDialog(wx.Dialog):
 
+	_timer = None
+
 	def __init__(self, parent, title, size=(-1, -1), style=VERTICAL,
-				resizable=False):
+				resizable=False, on_load=None):
 		dlg_style = wx.DEFAULT_DIALOG_STYLE
 		if resizable:dlg_style |= wx.RESIZE_BORDER
 
@@ -52,6 +54,10 @@ class SimpleDialog(wx.Dialog):
 		if size == (-1, -1):self.Fit()
 		self.CenterOnParent()
 		self.Bind(wx.EVT_CLOSE, self.on_close, self)
+		if on_load:
+			self._timer = wx.Timer(self)
+			self.Bind(wx.EVT_TIMER, on_load)
+			self._timer.Start(500)
 
 	def build(self):pass
 	def set_dialog_buttons(self):pass
@@ -103,9 +109,10 @@ class OkCancelDialog(SimpleDialog):
 	action_button = None
 
 	def __init__(self, parent, title, size=(-1, -1), style=VERTICAL,
-				resizable=False, action_button=const.BUTTON_OK):
+				resizable=False, action_button=const.BUTTON_OK, on_load=None):
 		self.action_button = action_button
-		SimpleDialog.__init__(self, parent, title, size, style, resizable)
+		SimpleDialog.__init__(self, parent, title, size, style,
+							resizable, on_load)
 
 	def set_dialog_buttons(self):
 		self.box.pack(HLine(self.box), fill=True, padding=5)
