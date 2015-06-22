@@ -16,6 +16,7 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
+from wx import animate
 
 from generic import Widget, DataWidget, RangeDataWidget
 import const
@@ -548,3 +549,12 @@ class ColorButton(wx.ColourPickerCtrl, Widget):
 
 	def set_value(self, color): self.SetColour(wx.Colour(*self.val255(color)))
 	def get_value(self): return self.val255_to_dec(self.GetColour().Get())
+
+class AnimatedGif(animate.GIFAnimationCtrl):
+
+	def __init__(self, parent, filepath):
+		animate.GIFAnimationCtrl.__init__(self, parent, wx.ID_ANY, filepath)
+		self.GetPlayer().UseBackgroundColour(True)
+
+	def stop(self): self.Stop()
+	def play(self): self.Play()
