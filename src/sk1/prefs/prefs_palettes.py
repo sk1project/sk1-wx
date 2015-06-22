@@ -20,7 +20,7 @@ import wal
 from sk1 import _, config
 from sk1.resources import icons
 from sk1.pwidgets import PaletteViewer
-from sk1.dialogs import palette_info_dlg
+from sk1.dialogs import palette_info_dlg, palette_collection_dlg
 
 from generic import PrefPanel
 from collection import CollectionButton
@@ -290,7 +290,10 @@ class PaletteManager(wal.HPanel):
 		self.update_palette_list()
 
 	def download_more(self):
-		self.app.open_url('http://sk1project.org/palettes.php')
+		palette = palette_collection_dlg(self.app, self.prefpanel.dlg)
+		if palette:
+			self.app.palettes.add_palette(palette)
+			self.update_palette_list()
 
 	def edit_info(self):
 		palette_name = self.pal_list.get_selected()
