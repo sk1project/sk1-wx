@@ -20,15 +20,6 @@ from sk1.resources import icons
 
 from generic import PrefPanel
 
-class RulersPrefs(PrefPanel):
-
-	pid = 'Rulers'
-	name = _('Rulers preferences')
-	icon_id = icons.PD_PREFS_RULER
-
-	def __init__(self, app, dlg, fmt_config=None):
-		PrefPanel.__init__(self, app, dlg)
-
 class GridPrefs(PrefPanel):
 
 	pid = 'Grid'

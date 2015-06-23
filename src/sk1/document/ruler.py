@@ -19,7 +19,7 @@ import os, math
 import wx
 import cairo
 
-from uc2 import uc2const
+from uc2 import uc2const, cms
 from uc2.formats.sk2.sk2_const import DOC_ORIGIN_CENTER, DOC_ORIGIN_LL, \
 DOC_ORIGIN_LU, ORIGINS
 
@@ -27,23 +27,26 @@ from wal.const import HORIZONTAL, is_mac, is_msw
 from wal import HPanel
 from wal import copy_surface_to_bitmap
 
-from sk1 import config, modes
+from sk1 import config, modes, events
 from sk1.appconst import RENDERING_DELAY
 from sk1.resources import get_icon, icons
 
 HFONT = {}
 VFONT = {}
-fntdir = os.path.join(config.resource_dir, 'fonts', 'ruler-font')
-for char in '.,-0123456789':
-	if char in '.,': file_name = os.path.join(fntdir, 'hdot.png')
-	else: file_name = os.path.join(fntdir, 'h%s.png' % char)
-	surface = cairo.ImageSurface.create_from_png(file_name)
-	HFONT[char] = (surface.get_width(), surface)
 
-	if char in '.,': file_name = os.path.join(fntdir, 'vdot.png')
-	else: file_name = os.path.join(fntdir, 'v%s.png' % char)
-	surface = cairo.ImageSurface.create_from_png(file_name)
-	VFONT[char] = (surface.get_height(), surface)
+def load_font():
+	fntdir = 'ruler-font%dpx' % config.ruler_font_size
+	fntdir = os.path.join(config.resource_dir, 'fonts', fntdir)
+	for char in '.,-0123456789':
+		if char in '.,': file_name = os.path.join(fntdir, 'hdot.png')
+		else: file_name = os.path.join(fntdir, 'h%s.png' % char)
+		surface = cairo.ImageSurface.create_from_png(file_name)
+		HFONT[char] = (surface.get_width(), surface)
+
+		if char in '.,': file_name = os.path.join(fntdir, 'vdot.png')
+		else: file_name = os.path.join(fntdir, 'v%s.png' % char)
+		surface = cairo.ImageSurface.create_from_png(file_name)
+		VFONT[char] = (surface.get_height(), surface)
 
 BITMAPS = {}
 
@@ -71,7 +74,17 @@ class RulerCorner(HPanel):
 		self.Bind(wx.EVT_PAINT, self._on_paint, self)
 		self.eventloop.connect(self.eventloop.DOC_MODIFIED, self.changes)
 		self.Bind(wx.EVT_LEFT_UP, self.left_click)
+		events.connect(events.CONFIG_MODIFIED, self.check_config)
 		self.changes()
+
+	def check_config(self, attr, value):
+		if attr == 'ruler_size':
+			size = config.ruler_size
+			self.remove_all()
+			self.add((size, size))
+			self.parent.layout()
+		if attr[:6] == 'ruler_':
+			self.refresh()
 
 	def changes(self, *args):
 		if not self.origin == self.presenter.model.doc_origin:
@@ -100,13 +113,18 @@ class RulerCorner(HPanel):
 		except:dc = pdc
 		pdc.BeginDrawing()
 		dc.BeginDrawing()
-		grad_start = wx.Colour(0, 0, 0, 255)
-		grad_end = wx.Colour(0, 0, 0, 0)
+		dc.SetPen(wx.NullPen)
+		dc.SetBrush(wx.Brush(wx.Colour(*cms.val_255(config.ruler_bg))))
+		dc.DrawRectangle(0, 0, w, h)
+		color = cms.val_255(config.ruler_fg)
+		grad_start = wx.Colour(*(color + [255]))
+		grad_end = wx.Colour(*(color + [0]))
 		rect = wx.Rect(0, h - 1, w * 2, 1)
 		dc.GradientFillLinear(rect, grad_start, grad_end, nDirection=wx.WEST)
 		rect = wx.Rect(w - 1, 0, 1, h * 2)
 		dc.GradientFillLinear(rect, grad_start, grad_end, nDirection=wx.NORTH)
-		dc.DrawBitmap(BITMAPS[self.origin], 1, 1, True)
+		shift = (w - 19) / 2 + 1
+		dc.DrawBitmap(BITMAPS[self.origin], shift, shift, True)
 
 class Ruler(HPanel):
 
@@ -130,6 +148,7 @@ class Ruler(HPanel):
 		self.eventloop = presenter.eventloop
 		self.style = style
 		HPanel.__init__(self, parent)
+		if not VFONT: load_font()
 		size = config.ruler_size
 		self.add((size, size))
 		self.default_cursor = self.GetCursor()
@@ -145,10 +164,22 @@ class Ruler(HPanel):
 		self.Bind(wx.EVT_MOTION, self.mouse_move)
 		self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self.capture_lost)
 		self.eventloop.connect(self.eventloop.VIEW_CHANGED, self.repaint)
+		events.connect(events.CONFIG_MODIFIED, self.check_config)
 		if is_mac():
 			self.timer = wx.Timer(self)
 			self.Bind(wx.EVT_TIMER, self._repaint_after)
 			self.timer.Start(50)
+
+	def check_config(self, attr, value):
+		if not attr[:6] == 'ruler_': return
+		if attr == 'ruler_size':
+			size = config.ruler_size
+			self.remove_all()
+			self.add((size, size))
+			self.parent.layout()
+		if attr == 'ruler_font_size':
+			load_font()
+		self.repaint()
 
 	def _repaint_after(self, event):
 		self.repaint()
@@ -297,12 +328,12 @@ class Ruler(HPanel):
 			self.height = h
 		self.ctx = cairo.Context(self.surface)
 		self.ctx.set_matrix(cairo.Matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0))
-		self.ctx.set_source_rgb(*CAIRO_WHITE)
+		self.ctx.set_source_rgb(*config.ruler_bg)
 		self.ctx.paint()
 		self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
 		self.ctx.set_line_width(1.0)
 		self.ctx.set_dash([])
-		self.ctx.set_source_rgba(*CAIRO_BLACK)
+		self.ctx.set_source_rgb(*config.ruler_fg)
 		if self.init_flag:
 			if self.style == HORIZONTAL: self.hrender(w, h)
 			else: self.vrender(w, h)
@@ -323,10 +354,13 @@ class Ruler(HPanel):
 
 		self.ctx.stroke()
 
+		vshift = config.ruler_text_vshift
+		hshift = config.ruler_text_hshift
 		for pos, txt in text_ticks:
 			for character in txt:
 				data = HFONT[character]
-				self.ctx.set_source_surface(data[1], int(pos), 3)
+				position = int(pos) + hshift
+				self.ctx.set_source_surface(data[1], position, vshift)
 				self.ctx.paint()
 				pos += data[0]
 
@@ -345,10 +379,13 @@ class Ruler(HPanel):
 
 		self.ctx.stroke()
 
+		vshift = config.ruler_text_vshift
+		hshift = config.ruler_text_hshift
 		for pos, txt in text_ticks:
 			for character in txt:
 				data = VFONT[character]
-				self.ctx.set_source_surface(data[1], 3, int(pos) - data[0])
+				position = int(pos) - data[0] - hshift
+				self.ctx.set_source_surface(data[1], vshift, position)
 				self.ctx.paint()
 				pos -= data[0]
 
