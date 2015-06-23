@@ -294,6 +294,9 @@ class PaletteManager(wal.HPanel):
 		if palette:
 			self.app.palettes.add_palette(palette)
 			self.update_palette_list()
+			pname = palette.model.name
+			self.pal_list.set_active(self.get_palette_list().index(pname))
+
 
 	def edit_info(self):
 		palette_name = self.pal_list.get_selected()
