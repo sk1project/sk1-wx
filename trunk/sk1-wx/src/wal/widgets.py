@@ -422,7 +422,7 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 		self._set_value(val)
 		self.flag = False
 		if not self.callback is None and not self.value == old_value:
-			self.callback(None)
+			self.callback()
 
 	def GetValue(self):
 		if not self.value == self._calc_entry():
