@@ -345,11 +345,11 @@ class Ruler(HPanel):
 
 		small_ticks, text_ticks = self.get_ticks()
 		for item in small_ticks:
-			self.ctx.move_to(item, h - 5)
+			self.ctx.move_to(item, h - config.ruler_small_tick)
 			self.ctx.line_to(item, h - 1)
 
 		for pos, txt in text_ticks:
-			self.ctx.move_to(pos, h - 10)
+			self.ctx.move_to(pos, h - config.ruler_large_tick)
 			self.ctx.line_to(pos, h - 1)
 
 		self.ctx.stroke()
@@ -370,11 +370,11 @@ class Ruler(HPanel):
 
 		small_ticks, text_ticks = self.get_ticks()
 		for item in small_ticks:
-			self.ctx.move_to(w - 5, item)
+			self.ctx.move_to(w - config.ruler_small_tick, item)
 			self.ctx.line_to(w - 1, item)
 
 		for item, txt in text_ticks:
-			self.ctx.move_to(w - 10, item)
+			self.ctx.move_to(w - config.ruler_large_tick, item)
 			self.ctx.line_to(w - 1, item)
 
 		self.ctx.stroke()
