@@ -370,6 +370,9 @@ class PrimitiveObject(SelectableObject):
 
 	cid = PRIMITIVE_CLASS
 
+	fill_trafo = []
+	stroke_trafo = []
+
 	cache_paths = None
 	cache_cpath = None
 
@@ -400,14 +403,20 @@ class PrimitiveObject(SelectableObject):
 	def apply_trafo(self, trafo):
 		self.cache_cpath = libgeom.apply_trafo(self.cache_cpath, trafo)
 		self.trafo = libgeom.multiply_trafo(self.trafo, trafo)
+		if self.fill_trafo:
+			self.fill_trafo = libgeom.multiply_trafo(self.fill_trafo, trafo)
+		if self.stroke_trafo:
+			self.stroke_trafo = libgeom.multiply_trafo(self.stroke_trafo, trafo)
 		self.update_bbox()
 
 	def get_trafo_snapshot(self):
-		return (self, [] + self.trafo, [] + self.cache_bbox,
+		return (self, [] + self.trafo, [] + self.fill_trafo,
+			 [] + self.stroke_trafo, [] + self.cache_bbox,
 			libgeom.copy_cpath(self.cache_cpath))
 
 	def set_trafo_snapshot(self, snapshot):
-		self.trafo, self.cache_bbox, self.cache_cpath = snapshot[1:]
+		self.trafo, self.fill_trafo, self.stroke_trafo = snapshot[1:4]
+		self.cache_bbox, self.cache_cpath = snapshot[4:]
 
 #---------------Primitives---------------------------
 

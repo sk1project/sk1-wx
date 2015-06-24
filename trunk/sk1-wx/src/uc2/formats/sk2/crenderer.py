@@ -171,11 +171,14 @@ class CairoRenderer:
 		else:
 			ctx.set_fill_rule(cairo.FILL_RULE_WINDING)
 		if fill[1] == sk2_const.FILL_SOLID:
+			if obj.fill_trafo: obj.fill_trafo = []
 			color = fill[2]
 			ctx.set_source_rgba(*self.get_color(color))
 		elif fill[1] == sk2_const.FILL_GRADIENT:
+			if not obj.fill_trafo:
+				obj.fill_trafo = [] + sk2_const.NORMAL_TRAFO
 			gradient = fill[2]
-			points = libgeom.apply_trafo_to_points(gradient[1], obj.trafo)
+			points = gradient[1]
 			coords = points[0] + points[1]
 			if gradient[0] == sk2_const.GRADIENT_LINEAR:
 				grd = cairo.LinearGradient(*coords)
@@ -185,6 +188,9 @@ class CairoRenderer:
 				grd = cairo.RadialGradient(x0, y0, 0, x0, y0, radius)
 			for stop in gradient[2]:
 				grd.add_color_stop_rgba(stop[0], *self.get_color(stop[1]))
+			matrix = cairo.Matrix(*obj.fill_trafo)
+			matrix.invert()
+			grd.set_matrix(matrix)
 			ctx.set_source(grd)
 
 	def process_stroke(self, ctx, obj, style=None):
@@ -195,8 +201,11 @@ class CairoRenderer:
 		#Line width
 		if not stroke[8]:
 			line_width = stroke[1]
+			if obj.stroke_trafo: obj.stroke_trafo = []
 		else:
-			coef = max(obj.trafo[0], obj.trafo[3])
+			if not obj.stroke_trafo:
+				obj.stroke_trafo = [] + sk2_const.NORMAL_TRAFO
+			coef = max(obj.stroke_trafo[0], obj.stroke_trafo[3])
 			line_width = stroke[1] * coef
 		ctx.set_line_width(line_width)
 		#Line color
