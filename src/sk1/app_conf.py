@@ -148,11 +148,6 @@ class AppConfig(UCConfig):
 	mouse_scroll_sensitivity = 3.0
 
 	#============== RULER OPTIONS ================
-	ruler_style = 0
-	ruler_min_tick_step = 3
-	ruler_min_text_step = 50
-	ruler_max_text_step = 100
-
 	ruler_size = 20
 	ruler_font_size = 5
 	ruler_text_vshift = 3
