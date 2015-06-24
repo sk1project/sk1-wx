@@ -21,6 +21,7 @@ import wx, const
 
 from generic import Widget
 from const import FONT_SIZE, DEF_SIZE
+from renderer import copy_surface_to_bitmap
 
 
 class Application(wx.App):
@@ -336,6 +337,9 @@ class Canvas(object):
 	def draw_text(self, text, x, y):
 		self.pdc.DrawText(text, x, y)
 
+	def draw_surface(self, surface, x=0, y=0, use_mask=True):
+		self.pdc.DrawBitmap(copy_surface_to_bitmap(surface), x, y, use_mask)
+
 	#=========GC device
 
 	def set_gc_origin(self, x=0, y=0):
@@ -383,6 +387,9 @@ class Canvas(object):
 
 	def gc_draw_text(self, text, x, y):
 		self.dc.DrawText(text, x, y)
+
+	def gc_draw_surface(self, surface, x=0, y=0, use_mask=True):
+		self.dc.DrawBitmap(copy_surface_to_bitmap(surface), x, y, use_mask)
 
 class SensitiveCanvas(Canvas):
 
