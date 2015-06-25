@@ -78,14 +78,14 @@ class RulersPrefs(PrefPanel):
 		grid.pack(self.ruler_large_tick)
 
 		#Vertical text shift
-		grid.pack(wal.Label(grid, _('Vertical text shift (px):')))
+		grid.pack(wal.Label(grid, _('Text vertical shift (px):')))
 		self.ruler_text_vshift = wal.IntSpin(grid, config.ruler_text_vshift,
 								(0, 30), spin_overlay=config.spin_overlay,
 								onchange=self.update_ruler)
 		grid.pack(self.ruler_text_vshift)
 
 		#Horizontal text shift
-		grid.pack(wal.Label(grid, _('Horizontal text shift (px):')))
+		grid.pack(wal.Label(grid, _('Text horizontal shift (px):')))
 		self.ruler_text_hshift = wal.IntSpin(grid, config.ruler_text_hshift,
 								(0, 30), spin_overlay=config.spin_overlay,
 								onchange=self.update_ruler)
