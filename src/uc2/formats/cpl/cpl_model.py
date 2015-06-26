@@ -360,8 +360,9 @@ class CPL12_Palette(AbstractCPLPalette):
 		#Palette name (header 0)
 		loader.fileptr.seek(self.headers[0], 0)
 		name_size = loader.readbyte()
-		self.name = loader.readbytes(name_size * 2).decode('utf_16_le')
-		chunk_size += 1 + name_size * 2
+		chunk_size += 1
+		self.name = loader.readustr(name_size)
+		chunk_size += name_size * 2
 
 		#Palette type (header 1)
 		loader.fileptr.seek(self.headers[1], 0)
@@ -428,7 +429,7 @@ class CPL12_Color(CPL7_Color):
 		self.colorspace = loader.readword()
 		self.valbytes = loader.readbytes(10)
 		size = loader.readbyte()
-		self.name = loader.readstr(size * 2).decode('utf_16_le')
+		self.name = loader.readustr(size)
 		ln = 2 + 10 + 1 + size * 2
 		loader.fileptr.seek(-ln, 1)
 		self.chunk = loader.readbytes(ln)
@@ -484,7 +485,7 @@ class CPL12_SpotColor(CPL10_SpotColor):
 		self.colorspace2 = loader.readword()
 		self.valbytes2 = loader.readbytes(10)
 		size = loader.readbyte()
-		self.name = loader.readstr(size * 2).decode('utf_16_le')
+		self.name = loader.readustr(size)
 		ln = 4 + 2 + 10 + 2 + 10 + 1 + size * 2
 		loader.fileptr.seek(-ln, 1)
 		self.chunk = loader.readbytes(ln)
@@ -530,7 +531,7 @@ class CPLX4_SpotPalette(AbstractCPLPalette):
 		#Palette name (header 0)
 		loader.fileptr.seek(self.headers[0], 0)
 		name_size = loader.readbyte()
-		self.name = loader.readbytes(name_size * 2).decode('utf_16_le')
+		self.name = loader.readustr(name_size)
 
 		#Palette type (header 1)
 		loader.fileptr.seek(self.headers[1], 0)
