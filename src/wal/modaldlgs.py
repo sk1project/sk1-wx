@@ -25,11 +25,13 @@ from widgets import HLine, Button
 class SimpleDialog(wx.Dialog):
 
 	_timer = None
+	add_line = True
 
 	def __init__(self, parent, title, size=(-1, -1), style=VERTICAL,
-				resizable=False, on_load=None):
+				resizable=False, on_load=None, add_line=True):
 		dlg_style = wx.DEFAULT_DIALOG_STYLE
 		if resizable:dlg_style |= wx.RESIZE_BORDER
+		self.add_line = add_line
 
 		wx.Dialog.__init__(self, parent, -1, title, wx.DefaultPosition,
 						size, style=dlg_style)
@@ -83,11 +85,15 @@ class SimpleDialog(wx.Dialog):
 class CloseDialog(SimpleDialog):
 
 	def __init__(self, parent, title, size=(-1, -1), style=VERTICAL,
-				resizable=True):
-		SimpleDialog.__init__(self, parent, title, size, style, resizable)
+				resizable=True, on_load=None, add_line=True):
+		SimpleDialog.__init__(self, parent, title, size, style, resizable,
+							on_load, add_line)
 
 	def set_dialog_buttons(self):
-		self.box.pack(HLine(self.box), fill=True, padding=5)
+		if self.add_line:
+			self.box.pack(HLine(self.box), fill=True, padding=5)
+		else:
+			self.box.pack((3, 3))
 
 		self.button_box = HPanel(self.box)
 		self.box.pack(self.button_box, fill=True)
@@ -109,13 +115,17 @@ class OkCancelDialog(SimpleDialog):
 	action_button = None
 
 	def __init__(self, parent, title, size=(-1, -1), style=VERTICAL,
-				resizable=False, action_button=const.BUTTON_OK, on_load=None):
+				resizable=False, action_button=const.BUTTON_OK, on_load=None,
+							add_line=True):
 		self.action_button = action_button
 		SimpleDialog.__init__(self, parent, title, size, style,
-							resizable, on_load)
+							resizable, on_load, add_line)
 
 	def set_dialog_buttons(self):
-		self.box.pack(HLine(self.box), fill=True, padding=5)
+		if self.add_line:
+			self.box.pack(HLine(self.box), fill=True, padding=5)
+		else:
+			self.box.pack((3, 3))
 
 		self.button_box = HPanel(self.box)
 		self.box.pack(self.button_box, fill=True)
