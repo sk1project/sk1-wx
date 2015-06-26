@@ -375,6 +375,7 @@ class PrimitiveObject(SelectableObject):
 
 	cache_paths = None
 	cache_cpath = None
+	cache_pattern_img = None
 
 	def get_initial_paths(self): pass
 

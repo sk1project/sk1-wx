@@ -27,6 +27,11 @@ stops => [[offset,color],[offset,color], ...]
 
 -------------------------------------------------------------------------------
 
+PATTERN DEFINITION:
+[pattern_type, pattern]
+
+-------------------------------------------------------------------------------
+
 STYLE DEFINITION:
 
 [fill, stroke, text, image_style]
