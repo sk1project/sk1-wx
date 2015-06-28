@@ -173,12 +173,16 @@ class AbstractAPI:
 		result = []
 		for obj in objs:
 			style = deepcopy(obj.style)
-			result.append([obj, style])
+			fill_trafo = deepcopy(obj.fill_trafo)
+			stroke_trafo = deepcopy(obj.stroke_trafo)
+			result.append([obj, style, fill_trafo, stroke_trafo])
 		return result
 
 	def _set_objs_styles(self, objs_styles):
-		for obj, style in objs_styles:
+		for obj, style, fill_trafo, stroke_trafo in objs_styles:
 			obj.style = style
+			obj.fill_trafo = fill_trafo
+			obj.stroke_trafo = stroke_trafo
 			if obj.cid == model.PIXMAP:
 				obj.cache_cdata = None
 
@@ -205,6 +209,14 @@ class AbstractAPI:
 				else:
 					style[0] = []
 			obj.style = style
+			obj.fill_trafo = []
+
+	def _set_objs_fill_style(self, objs, fill_style):
+		for obj in objs:
+			if not obj.cid == model.PIXMAP:
+				style = deepcopy(obj.style)
+				style[0] = deepcopy(fill_style)
+				obj.style = style
 
 	def _set_paths_and_trafo(self, obj, paths, trafo):
 		obj.paths = paths
@@ -266,7 +278,15 @@ class AbstractAPI:
 					style[1] = new_stroke
 				else:
 					style[1] = []
+					obj.stroke_trafo = []
 			obj.style = style
+
+	def _set_objs_stroke_style(self, objs, stroke_style):
+		for obj in objs:
+			if not obj.cid == model.PIXMAP:
+				style = deepcopy(obj.style)
+				style[1] = deepcopy(stroke_style)
+				obj.style = style
 
 	def _set_parent(self, objs, parent):
 		for obj in objs:
@@ -548,6 +568,23 @@ class PresenterAPI(AbstractAPI):
 			self.add_undo(transaction)
 			self.selection.update()
 
+	def set_fill_style(self, fill_style):
+		if self.selection.objs:
+			sel_before = [] + self.selection.objs
+			objs = [] + self.selection.objs
+			initial_styles = self._get_objs_styles(objs)
+			self._set_objs_fill_style(objs, fill_style)
+			after_styles = self._get_objs_styles(objs)
+			sel_after = [] + self.selection.objs
+			transaction = [
+				[[self._set_objs_styles, initial_styles],
+				[self._set_selection, sel_before]],
+				[[self._set_objs_styles, after_styles],
+				[self._set_selection, sel_after]],
+				False]
+			self.add_undo(transaction)
+			self.selection.update()
+
 	def stroke_selected(self, color):
 		if self.selection.objs:
 			color = deepcopy(color)
@@ -560,6 +597,23 @@ class PresenterAPI(AbstractAPI):
 				[[self._set_objs_styles, initial_styles],
 				[self._set_selection, sel_before]],
 				[[self._stroke_objs, objs, color],
+				[self._set_selection, sel_after]],
+				False]
+			self.add_undo(transaction)
+			self.selection.update()
+
+	def set_stroke_style(self, stroke_style):
+		if self.selection.objs:
+			sel_before = [] + self.selection.objs
+			objs = [] + self.selection.objs
+			initial_styles = self._get_objs_styles(objs)
+			self._set_objs_stroke_style(objs, stroke_style)
+			after_styles = self._get_objs_styles(objs)
+			sel_after = [] + self.selection.objs
+			transaction = [
+				[[self._set_objs_styles, initial_styles],
+				[self._set_selection, sel_before]],
+				[[self._set_objs_styles, after_styles],
 				[self._set_selection, sel_after]],
 				False]
 			self.add_undo(transaction)
