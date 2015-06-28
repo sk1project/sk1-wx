@@ -54,8 +54,8 @@ def create_actions(app):
 (pdids.POLYGON_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [POLYGON_MODE], [], [POLYGON_MODE]),
 (pdids.ZOOM_OUT_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [ZOOM_OUT_MODE], [], [ZOOM_OUT_MODE]),
 
-(pdids.FILL_MODE, proxy.stub, doc_chnls, insp.is_doc),
-(pdids.STROKE_MODE, proxy.stub, doc_chnls, insp.is_doc),
+(pdids.FILL_MODE, proxy.fill_dialog, doc_chnls, insp.is_doc),
+(pdids.STROKE_MODE, proxy.stroke_dialog, doc_chnls, insp.is_doc),
 (pdids.GRADIENT_MODE, proxy.stub, tool_chnls, insp.is_doc),
 
 #------ File menu -------

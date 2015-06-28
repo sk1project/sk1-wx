@@ -38,6 +38,8 @@ class AppProxy:
 				'Sorry, but this feature is not implemented yet!\n' +
 				'Be patient and watch project development of regularly updating the source code!')
 
+	def fill_dialog(self): dialogs.fill_dlg(self.mw, self.app.current_doc)
+	def stroke_dialog(self): dialogs.stroke_dlg(self.mw, self.app.current_doc)
 	def new(self): self.app.new()
 	def open(self): self.app.open()
 	def clear_log(self): self.app.history.clear_history()
