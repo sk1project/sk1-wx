@@ -22,4 +22,4 @@ from unitctrls import ActionImageSwitch
 from mactoolbar import MacTB_ActionButton, MacTB_ActionNestedButtons
 from palette_viewer import PaletteViewer
 from palette import Palette
-
+from togglectrls import ModeToggleButton, HToggleKeeper
