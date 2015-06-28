@@ -19,6 +19,7 @@ import wal
 
 from sk1 import _
 from sk1.resources import icons
+from togglectrls import HToggleKeeper
 
 AUTO_MODE = 0
 NORMAL_MODE = 1
@@ -154,57 +155,6 @@ class ScrolledPalette(wal.ScrolledPanel, wal.Canvas):
 			if txt: self.draw_text(txt, txt_x, txt_y + row * i)
 			i += 1
 
-class ModeToggleButton(wal.ImageToggleButton):
-
-	mode = AUTO_MODE
-	callback = None
-
-	def __init__(self, parent, mode, on_change=None):
-		self.mode = mode
-		self.callback = on_change
-		wal.ImageToggleButton.__init__(self, parent, False, MODE_ICON[mode],
-								tooltip=MODE_NAME[mode], onchange=self.change)
-
-	def change(self):
-		if not self.get_active():
-			if self.parent.mode == self.mode:
-				self.set_active(True)
-		else:
-			if not self.parent.mode == self.mode:
-				if self.callback: self.callback(self.mode)
-
-	def set_mode(self, mode):
-		if not self.mode == mode:
-			if self.get_active():
-				self.set_active(False)
-		else:
-			if not self.get_active():
-				self.set_active(True)
-
-
-class PaletteModeChanger(wal.HPanel):
-
-	buttons = []
-	mode = None
-	callback = None
-
-	def __init__(self, parent, on_change=None):
-		self.buttons = []
-		self.callback = on_change
-		wal.HPanel.__init__(self, parent)
-		for item in PREVIEW_MODES:
-			but = ModeToggleButton(self, item, on_change=self.set_mode)
-			self.pack(but)
-			self.buttons.append(but)
-		self.set_mode(AUTO_MODE)
-
-	def set_mode(self, mode):
-		if self.mode == mode:return
-		self.mode = mode
-		for item in self.buttons:
-			item.set_mode(self.mode)
-		if self.callback: self.callback(self.mode)
-
 
 class PaletteViewer(wal.VPanel):
 
@@ -214,13 +164,15 @@ class PaletteViewer(wal.VPanel):
 		self.app = app
 		wal.VPanel.__init__(self, parent)
 		options = wal.ExpandedPanel(self, _('Palette preview:'))
-		changer = PaletteModeChanger(options, on_change=self.set_mode)
+		changer = HToggleKeeper(options, PREVIEW_MODES, MODE_ICON, MODE_NAME,
+								on_change=self.set_mode)
 		options.pack(changer)
 		self.pack(options, fill=True)
 		border = wal.VPanel(self, border=True)
 		self.pack(border, expand=True, fill=True)
 		self.win = ScrolledPalette(self.app, border)
 		border.pack(self.win, expand=True, fill=True)
+		changer.set_mode(AUTO_MODE)
 		if palette: self.draw_palette(palette)
 
 	def draw_palette(self, palette=None):
