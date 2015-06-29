@@ -15,9 +15,10 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wal
+from basic import HPanel
+from gctrls import ImageToggleButton
 
-class ModeToggleButton(wal.ImageToggleButton):
+class ModeToggleButton(ImageToggleButton):
 
 	keeper = None
 	mode = 0
@@ -27,7 +28,7 @@ class ModeToggleButton(wal.ImageToggleButton):
 		self.keeper = keeper
 		self.mode = mode
 		self.callback = on_change
-		wal.ImageToggleButton.__init__(self, parent, False, icons[mode],
+		ImageToggleButton.__init__(self, parent, False, icons[mode],
 								tooltip=names[mode], onchange=self.change)
 
 	def change(self):
@@ -46,7 +47,7 @@ class ModeToggleButton(wal.ImageToggleButton):
 			if not self.get_active():
 				self.set_active(True)
 
-class HToggleKeeper(wal.HPanel):
+class HToggleKeeper(HPanel):
 
 	mode = 0
 	mode_buts = []
@@ -57,7 +58,7 @@ class HToggleKeeper(wal.HPanel):
 		self.modes = modes
 		self.mode_buts = []
 		self.callback = on_change
-		wal.HPanel.__init__(self, parent)
+		HPanel.__init__(self, parent)
 		for item in self.modes:
 			but = ModeToggleButton(self, self, item, icons, names, self.changed)
 			self.mode_buts.append(but)

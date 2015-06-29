@@ -24,6 +24,7 @@ from treewidgets import TreeElement, TreeWidget
 
 from gctrls import ImageLabel, ImageButton, ImageToggleButton
 from renderer import copy_bitmap_to_surface, copy_surface_to_bitmap
+from togglectrls import HToggleKeeper, ModeToggleButton
 
 from msgdlgs import *
 from modaldlgs import *
