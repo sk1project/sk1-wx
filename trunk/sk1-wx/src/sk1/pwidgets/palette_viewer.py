@@ -19,7 +19,6 @@ import wal
 
 from sk1 import _
 from sk1.resources import icons
-from togglectrls import HToggleKeeper
 
 AUTO_MODE = 0
 NORMAL_MODE = 1
@@ -164,8 +163,8 @@ class PaletteViewer(wal.VPanel):
 		self.app = app
 		wal.VPanel.__init__(self, parent)
 		options = wal.ExpandedPanel(self, _('Palette preview:'))
-		changer = HToggleKeeper(options, PREVIEW_MODES, MODE_ICON, MODE_NAME,
-								on_change=self.set_mode)
+		changer = wal.HToggleKeeper(options, PREVIEW_MODES, MODE_ICON,
+								MODE_NAME, on_change=self.set_mode)
 		options.pack(changer)
 		self.pack(options, fill=True)
 		border = wal.VPanel(self, border=True)

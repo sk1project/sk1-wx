@@ -22,7 +22,6 @@ from uc2 import uc2const
 from uc2.formats.sk2 import sk2_const
 from sk1 import _, config
 from sk1.resources import icons
-from sk1.pwidgets import HToggleKeeper
 
 class FillDialog(wal.OkCancelDialog):
 
@@ -102,15 +101,19 @@ sk2_const.FILL_NONZERO: icons.PD_NONZERO,
 
 class SolidFill(wal.VPanel):
 
+	active_panel = None
+
 	def __init__(self, parent, dlg):
 		self.dlg = dlg
 		wal.VPanel.__init__(self, parent)
 		panel = wal.HPanel(self)
-		self.solid_keeper = HToggleKeeper(panel, SOLID_MODES, SOLID_MODE_ICONS,
+		self.solid_keeper = wal.HToggleKeeper(panel, SOLID_MODES,
+									SOLID_MODE_ICONS,
 									SOLID_MODE_NAMES, self.on_mode_change)
 		panel.pack(self.solid_keeper)
 		panel.pack(wal.HPanel(panel), fill=True, expand=True)
-		self.rule_keeper = HToggleKeeper(panel, RULE_MODES, RULE_MODE_ICONS,
+		self.rule_keeper = wal.HToggleKeeper(panel, RULE_MODES,
+										RULE_MODE_ICONS,
 										RULE_MODE_NAMES)
 		panel.pack(self.rule_keeper)
 		self.pack(panel, fill=True, padding_all=5)
