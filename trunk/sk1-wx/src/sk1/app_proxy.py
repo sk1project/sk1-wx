@@ -16,9 +16,10 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
+from copy import deepcopy
 
 from uc2 import uc2const
-from uc2.formats.sk2 import sk2_model
+from uc2.formats.sk2 import sk2_model, sk2_const
 
 from sk1 import _, dialogs, modes, events
 from sk1.dialogs import yesno_dialog
@@ -38,7 +39,44 @@ class AppProxy:
 				'Sorry, but this feature is not implemented yet!\n' +
 				'Be patient and watch project development of regularly updating the source code!')
 
-	def fill_dialog(self): dialogs.fill_dlg(self.mw, self.app.current_doc)
+	def fill_dialog(self):
+		doc = self.app.current_doc
+		fill_style = None
+		default_style = False
+		if doc.selection.objs:
+			style = self._get_style(doc.selection.objs)
+			if not style is None:
+				fill_style = style[0]
+		if fill_style is None:
+			txt = _('Do you wish to change default fill style for this document?')
+			txt += '\n'
+			txt += _('This style will be applied to newly created objects.')
+			title = self.app.appdata.app_name
+			if dialogs.yesno_dialog(self.mw, title, txt):
+				fill_style = doc.model.styles['Default Style'][0]
+				default_style = True
+			else: return
+		new_fill_style = dialogs.fill_dlg(self.mw, doc, fill_style)
+		if not new_fill_style is None:
+			if default_style:
+				new_style = deepcopy(doc.model.styles['Default Style'])
+				new_style[0] = new_fill_style
+				doc.api.set_default_style(new_style)
+			else:
+				doc.api.set_fill_style(new_fill_style)
+
+	def _get_style(self, objs):
+		ret = None
+		for obj in objs:
+			if obj.cid > sk2_model.PRIMITIVE_CLASS:
+				if not obj.cid == sk2_model.PIXMAP:
+					ret = obj.style
+					break
+			else:
+				ret = self._get_style(obj.childs)
+				if not ret is None: break
+		return ret
+
 	def stroke_dialog(self): dialogs.stroke_dlg(self.mw, self.app.current_doc)
 	def new(self): self.app.new()
 	def open(self): self.app.open()
@@ -274,16 +312,47 @@ class AppProxy:
 	def invert_alpha(self):self.app.current_doc.api.invert_alpha()
 
 	def fill_selected(self, color):
-		if self.app.current_doc is None:
-			#FIXME: here should be default style changing
-			pass
+		doc = self.app.current_doc
+		if not doc.selection.objs:
+			txt = _('Do you wish to change default fill color for this document?')
+			txt += '\n'
+			txt += _('This style will be applied to newly created objects.')
+			title = self.app.appdata.app_name
+			if dialogs.yesno_dialog(self.mw, title, txt):
+				new_style = deepcopy(doc.model.styles['Default Style'])
+				if color:
+					fill_style = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID,
+							deepcopy(color)]
+					new_style[0] = fill_style
+				else:
+					new_style[0] = []
+				doc.api.set_default_style(new_style)
 		else:
-			self.app.current_doc.api.fill_selected(color)
+			doc.api.fill_selected(color)
 
 	def stroke_selected(self, color):
-		if self.app.current_doc is None:
-			#FIXME: here should be default style changing
-			pass
+		doc = self.app.current_doc
+		if not doc.selection.objs:
+			txt = _('Do you wish to change default stroke color for this document?')
+			txt += '\n'
+			txt += _('This style will be applied to newly created objects.')
+			title = self.app.appdata.app_name
+			if dialogs.yesno_dialog(self.mw, title, txt):
+				new_style = deepcopy(doc.model.styles['Default Style'])
+				if color:
+					if new_style[1]:
+						new_style[1][2] = deepcopy(color)
+					else:
+						new_style[1] = [sk2_const.STROKE_MIDDLE,
+									0.1 * uc2const.mm_to_pt,
+									deepcopy(color), [], sk2_const.CAP_BUTT,
+									sk2_const.JOIN_MITER,
+									1.0 / math.sin(45.0 / 2.0),
+									0, 0, []
+									]
+				else:
+					new_style[1] = []
+				doc.api.set_default_style(new_style)
 		else:
 			self.app.current_doc.api.stroke_selected(color)
 
