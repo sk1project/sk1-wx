@@ -38,10 +38,18 @@ class Bitmap(wx.StaticBitmap, Widget):
 class Notebook(wx.Notebook, Widget):
 
 	childs = []
+	callback = None
 
-	def __init__(self, parent):
+	def __init__(self, parent, on_change=None):
 		self.childs = []
 		wx.Notebook.__init__(self, parent, wx.ID_ANY)
+		if on_change:
+			self.callback = on_change
+			self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self._on_change, self)
+
+	def _on_change(self, event):
+		if self.callback:
+			self.callback(self.get_active_index())
 
 	def add_page(self, page, title):
 		self.childs.append(page)
@@ -52,6 +60,18 @@ class Notebook(wx.Notebook, Widget):
 		self.childs.remove(page)
 		self.RemovePage(index)
 
+	def get_active_index(self):
+		return self.GetSelection()
+
+	def get_active_page(self):
+		return self.childs[self.get_active_index()]
+
+	def set_active_index(self, index):
+		self.SetSelection(index)
+
+	def set_active_page(self, page):
+		if page in self.childs:
+			self.SetSelection(self.childs.index(page))
 
 class VLine(wx.StaticLine, Widget):
 	def __init__(self, parent):
