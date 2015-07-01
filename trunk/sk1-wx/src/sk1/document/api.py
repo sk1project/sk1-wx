@@ -169,6 +169,9 @@ class AbstractAPI:
 			new_rect[3] = y0 - y1
 		return new_rect
 
+	def _set_default_style(self, style):
+		self.model.styles['Default Style'] = style
+
 	def _get_objs_styles(self, objs):
 		result = []
 		for obj in objs:
@@ -551,11 +554,30 @@ class PresenterAPI(AbstractAPI):
 #			obj.text = dialogs.text_edit_dialog(self.app.mw, obj.text)
 #			obj.update()
 
+	def set_default_style(self, style):
+		style_before = self.model.styles['Default Style']
+		self._set_default_style(style)
+		transaction = [
+			[[self._set_default_style, style_before]],
+			[[self._set_default_style, style]],
+			False]
+		self.add_undo(transaction)
+
+	def _get_primitive_objs(self, objs, exclude_pixmap=False):
+		ret = []
+		for obj in objs:
+			if obj.cid > model.PRIMITIVE_CLASS:
+				if exclude_pixmap and obj.cid == model.PIXMAP: continue
+				ret.append(obj)
+			else:
+				ret += self._get_primitive_objs(obj.childs, exclude_pixmap)
+		return ret
+
 	def fill_selected(self, color):
 		if self.selection.objs:
 			color = deepcopy(color)
 			sel_before = [] + self.selection.objs
-			objs = [] + self.selection.objs
+			objs = self._get_primitive_objs(self.selection.objs)
 			initial_styles = self._get_objs_styles(objs)
 			self._fill_objs(objs, color)
 			sel_after = [] + self.selection.objs
@@ -571,7 +593,7 @@ class PresenterAPI(AbstractAPI):
 	def set_fill_style(self, fill_style):
 		if self.selection.objs:
 			sel_before = [] + self.selection.objs
-			objs = [] + self.selection.objs
+			objs = self._get_primitive_objs(self.selection.objs, True)
 			initial_styles = self._get_objs_styles(objs)
 			self._set_objs_fill_style(objs, fill_style)
 			after_styles = self._get_objs_styles(objs)
@@ -589,7 +611,7 @@ class PresenterAPI(AbstractAPI):
 		if self.selection.objs:
 			color = deepcopy(color)
 			sel_before = [] + self.selection.objs
-			objs = [] + self.selection.objs
+			objs = self._get_primitive_objs(self.selection.objs)
 			initial_styles = self._get_objs_styles(objs)
 			self._stroke_objs(objs, color)
 			sel_after = [] + self.selection.objs
@@ -605,7 +627,7 @@ class PresenterAPI(AbstractAPI):
 	def set_stroke_style(self, stroke_style):
 		if self.selection.objs:
 			sel_before = [] + self.selection.objs
-			objs = [] + self.selection.objs
+			objs = self._get_primitive_objs(self.selection.objs, True)
 			initial_styles = self._get_objs_styles(objs)
 			self._set_objs_stroke_style(objs, stroke_style)
 			after_styles = self._get_objs_styles(objs)
