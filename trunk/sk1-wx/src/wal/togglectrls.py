@@ -64,6 +64,10 @@ class HToggleKeeper(HPanel):
 			self.mode_buts.append(but)
 			self.pack(but)
 
+	def set_enable(self, val):
+		for item in self.mode_buts:
+			item.set_enable(val)
+
 	def changed(self, mode):
 		self.mode = mode
 		for item in self.mode_buts:
