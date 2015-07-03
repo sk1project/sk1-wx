@@ -340,6 +340,15 @@ class Canvas(object):
 	def draw_surface(self, surface, x=0, y=0, use_mask=True):
 		self.pdc.DrawBitmap(copy_surface_to_bitmap(surface), x, y, use_mask)
 
+	def draw_linear_gradient(self, rect, start_clr, stop_clr):
+		self.pdc.GradientFillLinear(wx.Rect(*rect),
+								wx.Colour(*start_clr),
+								wx.Colour(*stop_clr),
+								nDirection=wx.EAST)
+
+	def draw_bitmap(self, bmp, x=0, y=0, use_mask=True):
+		self.pdc.DrawBitmap(bmp, x, y, use_mask)
+
 	#=========GC device
 
 	def set_gc_origin(self, x=0, y=0):
@@ -390,6 +399,12 @@ class Canvas(object):
 
 	def gc_draw_surface(self, surface, x=0, y=0, use_mask=True):
 		self.dc.DrawBitmap(copy_surface_to_bitmap(surface), x, y, use_mask)
+
+	def gc_draw_linear_gradient(self, rect, start_clr, stop_clr):
+		self.dc.GradientFillLinear(wx.Rect(*rect),
+								wx.Colour(*start_clr),
+								wx.Colour(*stop_clr),
+								nDirection=wx.EAST)
 
 class SensitiveCanvas(Canvas):
 
