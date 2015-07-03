@@ -523,6 +523,11 @@ class ColorManager(object):
 	def get_rgb_color255(self, color):
 		return val_255(self.get_rgb_color(color)[1])
 
+	def get_rgba_color255(self, color):
+		clr = self.get_rgb_color(color)
+		clr[1].append(clr[2])
+		return val_255(clr[1])
+
 	def get_cmyk_color(self, color):
 		"""
 		Convert color into CMYK color.
