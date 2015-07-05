@@ -27,14 +27,16 @@ DETAILS
 If you wish testing sK1 you have two installation ways. 
 First option is a distutils install with commands:
 
-python setup.py build
-python setup.py install
+python setup-sk1.py build
+python setup-sk1.py install
+
+(for UniConvertor use setup-uc2.py)
 
 But this way is not recommended. The most preferred option is a package 
 installation (deb or rpm). You can create package using command:
 
-python setup.py bdist_deb (for Ubuntu|Mint|Debian etc.)
-python setup.py bdist_rpm (for Fedora|OpenSuse|Mageia etc.)
+python setup-sk1.py bdist_deb (for Ubuntu|Mint|Debian etc.)
+python setup-sk1.py bdist_rpm (for Fedora|OpenSuse|Mageia etc.)
 
 By installing the package you have full control over all the installed files 
 and can easily remove them from the system (it's important for application
