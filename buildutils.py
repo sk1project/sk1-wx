@@ -219,7 +219,7 @@ def get_source_structure(path='src'):
 	"""
 	pkgs = []
 	for item in get_packages(path):
-		res = item.replace('\\', '.').replace('/', '.').replace(path + '.', '')
+		res = item.replace('\\', '.').replace('/', '.').replace('src.', '')
 		pkgs.append(res)
 	return pkgs
 
