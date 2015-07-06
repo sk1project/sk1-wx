@@ -1,5 +1,5 @@
-include LICENSE GPLv3.txt README.txt MANIFEST.in_uc2  setup.cfg_uc2
-include buildutils.py native_mods.py
+include LICENSE GPLv3.txt README.txt MANIFEST.in_uc2 setup.cfg_uc2
+include buildutils.py native_mods.py src/script/uniconvertor.tmpl
 
 recursive-include src/uc2/utils/streamfilter *.*
 recursive-include src/uc2/formats/sk1/sk1objs *.*
