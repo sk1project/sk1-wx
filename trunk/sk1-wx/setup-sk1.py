@@ -111,30 +111,14 @@ dirs = buildutils.get_dirs_tree('src/sk1/share')
 share_dirs = []
 for item in dirs: share_dirs.append(os.path.join(item[8:], '*.*'))
 
-dirs = buildutils.get_dirs_tree('src/sword/share')
-share_dirs_sword = []
-for item in dirs: share_dirs_sword.append(os.path.join(item[8:], '*.*'))
+#dirs = buildutils.get_dirs_tree('src/sword/share')
+#share_dirs_sword = []
+#for item in dirs: share_dirs_sword.append(os.path.join(item[8:], '*.*'))
 
 package_data = {
 'sk1': share_dirs,
-'sword': share_dirs_sword,
+#'sword': share_dirs_sword,
 }
-
-#Preparing start script
-fileptr = open('src/script/sk1.tmpl', 'rb')
-fileptr2 = open('src/script/sk1', 'wb')
-while True:
-	line = fileptr.readline()
-	if line == '': break
-	if '$APP_INSTALL_PATH' in line:
-		line = line.replace('$APP_INSTALL_PATH', install_path)
-	fileptr2.write(line)
-fileptr.close()
-fileptr2.close()
-
-#Preparing MANIFEST.in and setup.cfg
-shutil.copy2('MANIFEST.in_sk1', 'MANIFEST.in')
-shutil.copy2('setup.cfg_sk1', 'setup.cfg')
 
 ############################################################
 # Main build procedure
@@ -186,49 +170,36 @@ if len(sys.argv) > 1:
 			print 'sK1 installation is not found!'
 		sys.exit(0)
 
-from distutils.core import setup, Extension
+#Preparing start script
+src_script = 'src/script/sk1.tmpl'
+dst_script = 'src/script/sk1'
+if not os.path.lexists(dst_script):
+	fileptr = open(src_script, 'rb')
+	fileptr2 = open(dst_script, 'wb')
+	while True:
+		line = fileptr.readline()
+		if line == '': break
+		if '$APP_INSTALL_PATH' in line:
+			line = line.replace('$APP_INSTALL_PATH', install_path)
+		fileptr2.write(line)
+	fileptr.close()
+	fileptr2.close()
+
+#Preparing MANIFEST.in and setup.cfg
+shutil.copy2('MANIFEST.in_sk1', 'MANIFEST.in')
+shutil.copy2('setup.cfg_sk1', 'setup.cfg')
 
 ############################################################
 # Native extensions
 ############################################################
+from native_mods import make_modules
 
-filter_src = os.path.join(src_path, 'uc2', 'utils', 'streamfilter')
-files = ['streamfilter.c', 'filterobj.c', 'linefilter.c',
-		'subfilefilter.c', 'base64filter.c', 'nullfilter.c',
-		'stringfilter.c', 'binfile.c', 'hexfilter.c']
-files = buildutils.make_source_list(filter_src, files)
-filter_module = Extension('uc2.utils.streamfilter',
-		define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
-		sources=files)
-modules.append(filter_module)
+modules += make_modules(src_path, include_path)
 
-sk1objs_src = os.path.join(src_path, 'uc2', 'formats', 'sk1', 'sk1objs')
-files = ['_sketchmodule.c', 'skpoint.c', 'skcolor.c', 'sktrafo.c',
-	'skrect.c', 'skfm.c', 'curvefunc.c', 'curveobject.c', 'curvelow.c',
-	'curvemisc.c', 'skaux.c', 'skimage.c', ]
-files = buildutils.make_source_list(sk1objs_src, files)
-sk1objs_module = Extension('uc2.formats.sk1._sk1objs',
-		define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
-		sources=files)
-modules.append(sk1objs_module)
-
-cairo_src = os.path.join(src_path, 'uc2', 'libcairo')
-files = buildutils.make_source_list(cairo_src, ['_libcairo.c', ])
-include_dirs = buildutils.make_source_list(include_path, ['cairo', 'pycairo'])
-cairo_module = Extension('uc2.libcairo._libcairo',
-		define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
-		sources=files, include_dirs=include_dirs,
-		libraries=['cairo'])
-modules.append(cairo_module)
-
-pycms_src = os.path.join(src_path, 'uc2', 'cms')
-files = buildutils.make_source_list(pycms_src, ['_cms2.c', ])
-pycms_module = Extension('uc2.cms._cms',
-		define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
-		sources=files,
-		libraries=['lcms2'],
-		extra_compile_args=["-Wall"])
-modules.append(pycms_module)
+############################################################
+# Setup routine
+############################################################
+from distutils.core import setup
 
 
 setup(name=NAME,
@@ -287,4 +258,4 @@ if DEB_PACKAGE:
 if CLEAR_BUILD: buildutils.clear_build()
 
 for item in ['MANIFEST', 'MANIFEST.in', 'src/script/sk1', 'setup.cfg']:
-	os.remove(item)
+	if os.path.lexists(item): os.remove(item)
