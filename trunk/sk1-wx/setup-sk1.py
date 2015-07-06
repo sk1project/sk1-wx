@@ -133,6 +133,13 @@ while True:
 fileptr.close()
 fileptr2.close()
 
+#Preparing MANIFEST.in
+fileptr = open('MANIFEST.in_sk1', 'rb')
+fileptr2 = open('MANIFEST.in', 'wb')
+fileptr2.write(fileptr.read())
+fileptr.close()
+fileptr2.close()
+
 ############################################################
 # Main build procedure
 ############################################################
@@ -283,5 +290,5 @@ if DEB_PACKAGE:
 
 if CLEAR_BUILD: buildutils.clear_build()
 
-os.system('rm -rf MANIFEST')
-os.system('rm -rf src/script/sk1')
+for item in ['MANIFEST', 'MANIFEST.in', 'src/script/sk1']:
+	os.remove(item)

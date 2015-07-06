@@ -112,7 +112,9 @@ include_path = '/usr/include'
 modules = []
 scripts = ['src/script/uniconvertor', ]
 deb_scripts = []
-data_files = []
+data_files = [
+(install_path, ['GPLv3.txt', 'LICENSE', ]),
+]
 deb_depends = 'liblcms2, python (>=2.4), python (<<3.0), '
 deb_depends += 'python-cairo, python-gtk2, python-reportlab, python-imaging, '
 deb_depends += 'python-wand'
@@ -128,6 +130,13 @@ while True:
 	if '$APP_INSTALL_PATH' in line:
 		line = line.replace('$APP_INSTALL_PATH', install_path)
 	fileptr2.write(line)
+fileptr.close()
+fileptr2.close()
+
+#Preparing MANIFEST.in
+fileptr = open('MANIFEST.in_uc2', 'rb')
+fileptr2 = open('MANIFEST.in', 'wb')
+fileptr2.write(fileptr.read())
 fileptr.close()
 fileptr2.close()
 
@@ -281,5 +290,5 @@ if DEB_PACKAGE:
 
 if CLEAR_BUILD: buildutils.clear_build()
 
-os.system('rm -rf MANIFEST')
-os.system('rm -rf src/script/uniconvertor')
+for item in ['MANIFEST', 'MANIFEST.in', 'src/script/uniconvertor']:
+	if os.path.lexists(item): os.remove(item)
