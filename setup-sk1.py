@@ -33,10 +33,9 @@ Usage:
  Help on available distribution formats: --help-formats
 """
 
-import os, sys
+import os, sys, shutil
 
 import buildutils
-from buildutils import make_source_list, DEB_Builder
 
 ############################################################
 # Flags
@@ -133,12 +132,9 @@ while True:
 fileptr.close()
 fileptr2.close()
 
-#Preparing MANIFEST.in
-fileptr = open('MANIFEST.in_sk1', 'rb')
-fileptr2 = open('MANIFEST.in', 'wb')
-fileptr2.write(fileptr.read())
-fileptr.close()
-fileptr2.close()
+#Preparing MANIFEST.in and setup.cfg
+shutil.copy2('MANIFEST.in_sk1', 'MANIFEST.in')
+shutil.copy2('setup.cfg_sk1', 'setup.cfg')
 
 ############################################################
 # Main build procedure
@@ -193,14 +189,14 @@ if len(sys.argv) > 1:
 from distutils.core import setup, Extension
 
 ############################################################
-# Native extesions
+# Native extensions
 ############################################################
 
 filter_src = os.path.join(src_path, 'uc2', 'utils', 'streamfilter')
 files = ['streamfilter.c', 'filterobj.c', 'linefilter.c',
 		'subfilefilter.c', 'base64filter.c', 'nullfilter.c',
 		'stringfilter.c', 'binfile.c', 'hexfilter.c']
-files = make_source_list(filter_src, files)
+files = buildutils.make_source_list(filter_src, files)
 filter_module = Extension('uc2.utils.streamfilter',
 		define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
 		sources=files)
@@ -210,15 +206,15 @@ sk1objs_src = os.path.join(src_path, 'uc2', 'formats', 'sk1', 'sk1objs')
 files = ['_sketchmodule.c', 'skpoint.c', 'skcolor.c', 'sktrafo.c',
 	'skrect.c', 'skfm.c', 'curvefunc.c', 'curveobject.c', 'curvelow.c',
 	'curvemisc.c', 'skaux.c', 'skimage.c', ]
-files = make_source_list(sk1objs_src, files)
+files = buildutils.make_source_list(sk1objs_src, files)
 sk1objs_module = Extension('uc2.formats.sk1._sk1objs',
 		define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
 		sources=files)
 modules.append(sk1objs_module)
 
 cairo_src = os.path.join(src_path, 'uc2', 'libcairo')
-files = make_source_list(cairo_src, ['_libcairo.c', ])
-include_dirs = make_source_list(include_path, ['cairo', 'pycairo'])
+files = buildutils.make_source_list(cairo_src, ['_libcairo.c', ])
+include_dirs = buildutils.make_source_list(include_path, ['cairo', 'pycairo'])
 cairo_module = Extension('uc2.libcairo._libcairo',
 		define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
 		sources=files, include_dirs=include_dirs,
@@ -226,7 +222,7 @@ cairo_module = Extension('uc2.libcairo._libcairo',
 modules.append(cairo_module)
 
 pycms_src = os.path.join(src_path, 'uc2', 'cms')
-files = make_source_list(pycms_src, ['_cms2.c', ])
+files = buildutils.make_source_list(pycms_src, ['_cms2.c', ])
 pycms_module = Extension('uc2.cms._cms',
 		define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
 		sources=files,
@@ -273,7 +269,7 @@ if UPDATE_MODULES: buildutils.copy_modules(modules)
 # Implementation of bdist_deb command
 ############################################################
 if DEB_PACKAGE:
-	bld = DEB_Builder(name=NAME,
+	bld = buildutils.DEB_Builder(name=NAME,
 					version=VERSION,
 					maintainer='%s <%s>' % (AUTHOR, AUTHOR_EMAIL),
 					depends=deb_depends,
@@ -290,5 +286,5 @@ if DEB_PACKAGE:
 
 if CLEAR_BUILD: buildutils.clear_build()
 
-for item in ['MANIFEST', 'MANIFEST.in', 'src/script/sk1']:
+for item in ['MANIFEST', 'MANIFEST.in', 'src/script/sk1', 'setup.cfg']:
 	os.remove(item)
