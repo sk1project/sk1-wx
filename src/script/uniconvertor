@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+#
+# Wrapper script to start UniConvertor application
+#
+# Copyright (C) 2011-2015 Igor E. Novikov
+#
+# This library is covered by GNU General Public License.
+# For more info see LICENSE file in UniConvertor root directory.
+
+import sys
+
+sys.path.insert(1, '/usr/lib/uniconvertor-2.0')
+
+import uc2
+
+uc2.uc2_run()

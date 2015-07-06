@@ -1,0 +1,8 @@
+include LICENSE libutils.py MANIFEST.in_uc2 GPLv3.txt README.txt
+
+recursive-include src/uc2/utils/streamfilter *.*
+recursive-include src/uc2/formats/sk1/sk1objs *.*
+recursive-include src/uc2/libcairo *.c
+recursive-include src/uc2/libimg *.c
+recursive-include src/uc2/cms *.c
+recursive-include src/uc2/cms *.h

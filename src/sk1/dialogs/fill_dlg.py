@@ -171,7 +171,7 @@ class CMYK_Panel(SolidFillPanel):
 			self.color_sliders.append(ColoredSlider(grid))
 			grid.pack(self.color_sliders[-1])
 			self.color_spins.append(wal.FloatSpin(grid,
-									range_val=(0.0, 100.0), width=4,
+									range_val=(0.0, 100.0), width=5,
 									onchange=self.on_change,
 									onenter=self.on_change))
 			grid.pack(self.color_spins[-1])
@@ -181,7 +181,7 @@ class CMYK_Panel(SolidFillPanel):
 		self.alpha_slider = ColoredAlphaSlider(grid)
 		grid.pack(self.alpha_slider)
 		self.alpha_spin = wal.FloatSpin(grid,
-									range_val=(0.0, 100.0), width=4,
+									range_val=(0.0, 100.0), width=5,
 									onchange=self.on_change,
 									onenter=self.on_change)
 		grid.pack(self.alpha_spin)
