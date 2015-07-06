@@ -173,17 +173,16 @@ if len(sys.argv) > 1:
 #Preparing start script
 src_script = 'src/script/sk1.tmpl'
 dst_script = 'src/script/sk1'
-if not os.path.lexists(dst_script):
-	fileptr = open(src_script, 'rb')
-	fileptr2 = open(dst_script, 'wb')
-	while True:
-		line = fileptr.readline()
-		if line == '': break
-		if '$APP_INSTALL_PATH' in line:
-			line = line.replace('$APP_INSTALL_PATH', install_path)
-		fileptr2.write(line)
-	fileptr.close()
-	fileptr2.close()
+fileptr = open(src_script, 'rb')
+fileptr2 = open(dst_script, 'wb')
+while True:
+	line = fileptr.readline()
+	if line == '': break
+	if '$APP_INSTALL_PATH' in line:
+		line = line.replace('$APP_INSTALL_PATH', install_path)
+	fileptr2.write(line)
+fileptr.close()
+fileptr2.close()
 
 #Preparing MANIFEST.in and setup.cfg
 shutil.copy2('MANIFEST.in_sk1', 'MANIFEST.in')
