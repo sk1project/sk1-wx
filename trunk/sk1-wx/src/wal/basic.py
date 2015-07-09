@@ -408,11 +408,17 @@ class Canvas(object):
 
 class SensitiveCanvas(Canvas):
 
-	def __init__(self):
+	def __init__(self, check_move=False):
 		Canvas.__init__(self)
 		self.Bind(wx.EVT_LEFT_UP, self._mouse_left_up)
+		self.Bind(wx.EVT_LEFT_DOWN, self._mouse_left_down)
 		self.Bind(wx.EVT_MOUSEWHEEL, self._mouse_wheel)
 		self.Bind(wx.EVT_RIGHT_UP, self._mouse_right_up)
+		if check_move:
+			self.Bind(wx.EVT_MOTION, self._mouse_move)
+
+	def _mouse_left_down(self, event):
+		self.mouse_left_down(event.GetPositionTuple())
 
 	def _mouse_left_up(self, event):
 		self.mouse_left_up(event.GetPositionTuple())
@@ -423,9 +429,14 @@ class SensitiveCanvas(Canvas):
 	def _mouse_wheel(self, event):
 		self.mouse_wheel(event.GetWheelRotation())
 
+	def _mouse_move(self, event):
+		self.mouse_move(event.GetPositionTuple())
+
+	def mouse_left_down(self, point):pass
 	def mouse_left_up(self, point):pass
 	def mouse_right_up(self, point):pass
 	def mouse_wheel(self, val):pass
+	def mouse_move(self, val):pass
 
 
 class RoundedPanel(VPanel, Canvas):
