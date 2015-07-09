@@ -43,6 +43,7 @@ class AppProxy:
 		doc = self.app.current_doc
 		fill_style = None
 		default_style = False
+		title = _('Fill')
 		if doc.selection.objs:
 			style = self._get_style(doc.selection.objs)
 			if not style is None:
@@ -55,8 +56,9 @@ class AppProxy:
 			if dialogs.yesno_dialog(self.mw, title, txt):
 				fill_style = doc.model.styles['Default Style'][0]
 				default_style = True
+				title = _('Default document fill')
 			else: return
-		new_fill_style = dialogs.fill_dlg(self.mw, doc, fill_style)
+		new_fill_style = dialogs.fill_dlg(self.mw, doc, fill_style, title)
 		if not new_fill_style is None:
 			if default_style:
 				new_style = deepcopy(doc.model.styles['Default Style'])
