@@ -22,3 +22,5 @@ from unitctrls import ActionImageSwitch
 from mactoolbar import MacTB_ActionButton, MacTB_ActionNestedButtons
 from palette_viewer import PaletteViewer
 from palette import Palette
+from colorctrls import CMYK_Panel, RGB_Panel, Gray_Panel, Empty_Panel
+from colorctrls import SolidFillPanel
