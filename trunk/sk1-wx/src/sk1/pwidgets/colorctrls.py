@@ -18,7 +18,7 @@
 from copy import deepcopy
 import wal
 
-from uc2 import uc2const
+from uc2 import uc2const, cms
 from sk1 import _
 from sk1.resources import icons, get_icon
 
@@ -50,7 +50,75 @@ RGB_PALETTE = [
 [uc2const.COLOR_RGB, [1.0, 0.0, 1.0], 1.0, 'Magenta'],
 [uc2const.COLOR_RGB, [1.0, 1.0, 0.0], 1.0, 'Yellow'], ]
 
+GRAY_PALETTE = [
+[uc2const.COLOR_GRAY, [0.0, ], 1.0, 'Black'],
+[uc2const.COLOR_GRAY, [0.1, ], 1.0, '90% Black'],
+[uc2const.COLOR_GRAY, [0.2, ], 1.0, '80% Black'],
+[uc2const.COLOR_GRAY, [0.3, ], 1.0, '70% Black'],
+[uc2const.COLOR_GRAY, [0.4, ], 1.0, '60% Black'],
+[uc2const.COLOR_GRAY, [0.5, ], 1.0, '50% Black'],
+[uc2const.COLOR_GRAY, [0.6, ], 1.0, '40% Black'],
+[uc2const.COLOR_GRAY, [0.7, ], 1.0, '30% Black'],
+[uc2const.COLOR_GRAY, [0.8, ], 1.0, '20% Black'],
+[uc2const.COLOR_GRAY, [0.9, ], 1.0, '10% Black'],
+[uc2const.COLOR_GRAY, [0.95, ], 1.0, '5% Black'],
+[uc2const.COLOR_GRAY, [1.0, ], 1.0, 'White'],
+]
+
 REG_COLOR = [1.0, 1.0, 1.0, 1.0]
+
+class HexField(wal.Entry):
+
+	color = None
+	callback = None
+	hexcolor = ''
+
+	def __init__(self, parent, onchange=None):
+		wal.Entry.__init__(self, parent, width=8, onchange=self.on_change,
+						onenter=self.on_enter)
+		if onchange: self.callback = onchange
+
+	def set_color(self, color):
+		self.color = color
+		if color[2] == 1.0:
+			self.set_value(cms.rgb_to_hexcolor(color[1]))
+		else:
+			self.set_value(cms.rgba_to_hexcolor(color[1] + [color[2], ]))
+		self.hexcolor = self.get_value()
+
+	def get_color(self):
+		return self.hexcolor
+
+	def _check_input(self):
+		ret = ''
+		val = self.get_value()
+		if val:
+			if val[0] == '#':
+				seq = val[1:].lower()
+			else:
+				seq = val.lower()
+			ret += '#'
+			for item in seq:
+				if item in '0123456789abcdef':
+					ret += item
+		if not ret == val:
+			self.set_value(ret)
+
+	def on_enter(self):
+		val = self.get_value()
+		if len(val) in (4, 7, 9):
+			if len(val) == 4:
+				self.hexcolor = '#' + val[1] * 2 + val[2] * 2 + val[3] * 2
+				self.set_value(self.hexcolor)
+			if self.callback: self.callback()
+
+	def on_change(self):
+		self._check_input()
+		val = self.get_value()
+		if len(val) in (7, 9):
+			self.hexcolor = val
+			if self.callback: self.callback()
+
 
 class SwatchCanvas(wal.SensitiveCanvas):
 
@@ -171,13 +239,19 @@ class AlphaColorSwatch(wal.VPanel, SwatchCanvas):
 
 class PatternSwatch(wal.VPanel, SwatchCanvas):
 
+	callback = None
+
 	def __init__(self, parent, cms, fill, size=(20, 20), border='new',
-				even_odd=True):
+				even_odd=True, onclick=None):
 		self.cms = cms
 		wal.VPanel.__init__(self, parent)
 		SwatchCanvas.__init__(self, border, even_odd)
 		self.pack(size)
 		self.set_swatch_fill(fill)
+		if onclick: self.callback = onclick
+
+	def mouse_left_up(self, point):
+		if self.callback: self.callback()
 
 	def set_swatch_fill(self, fill):
 		if fill:
@@ -205,12 +279,13 @@ class MiniPalette(wal.VPanel):
 
 class ColorReferencePanel(wal.VPanel):
 
-	def __init__(self, parent, cms, fill, new_color):
+	def __init__(self, parent, cms, fill, new_color, on_orig=None):
 		wal.VPanel.__init__(self, parent)
 		grid = wal.GridPanel(self, hgap=5)
 		grid.pack(wal.Label(grid, _('Old fill:')))
 
-		self.before_swatch = PatternSwatch(grid, cms, fill, (70, 30))
+		self.before_swatch = PatternSwatch(grid, cms, fill, (70, 30),
+										onclick=on_orig)
 		grid.pack(self.before_swatch)
 
 		grid.pack(wal.Label(grid, _('New fill:')))
@@ -284,8 +359,8 @@ class ColoredSlider(wal.VPanel, wal.SensitiveCanvas):
 
 class ColoredAlphaSlider(ColoredSlider):
 
-	def __init__(self, parent, onchange=None):
-		ColoredSlider.__init__(self, parent, 20, onchange)
+	def __init__(self, parent, size=20, onchange=None):
+		ColoredSlider.__init__(self, parent, size, onchange)
 
 	def paint(self):
 		w, h = self.get_size()
@@ -346,6 +421,9 @@ class SolidFillPanel(wal.VPanel):
 	def get_color(self):
 		return self.new_color
 
+	def set_orig_fill(self):
+		self.activate(self.cms, self.orig_fill, [])
+
 
 class CMYK_Panel(SolidFillPanel):
 
@@ -384,10 +462,13 @@ class CMYK_Panel(SolidFillPanel):
 
 		self.pack(grid)
 
+		self.pack(wal.HPanel(self), fill=True, expand=True)
+
 		self.pack(wal.HLine(self), fill=True, padding=5)
 
 		bot_panel = wal.HPanel(self)
-		self.refpanel = ColorReferencePanel(bot_panel, self.cms, [], [])
+		self.refpanel = ColorReferencePanel(bot_panel, self.cms, [], [],
+										on_orig=self.set_orig_fill)
 		bot_panel.pack(self.refpanel)
 
 		bot_panel.pack(wal.HPanel(bot_panel), fill=True, expand=True)
@@ -484,10 +565,19 @@ class RGB_Panel(SolidFillPanel):
 
 		self.pack(grid)
 
+		self.pack(wal.HPanel(self), fill=True, expand=True)
+
+		html_panel = wal.HPanel(self)
+		html_panel.pack(wal.Label(html_panel, _('HTML notation:')), padding=5)
+		self.html = HexField(html_panel, onchange=self.on_hex_change)
+		html_panel.pack(self.html)
+		self.pack(html_panel, padding=5)
+
 		self.pack(wal.HLine(self), fill=True, padding=5)
 
 		bot_panel = wal.HPanel(self)
-		self.refpanel = ColorReferencePanel(bot_panel, self.cms, [], [])
+		self.refpanel = ColorReferencePanel(bot_panel, self.cms, [], [],
+										on_orig=self.set_orig_fill)
 		bot_panel.pack(self.refpanel)
 
 		bot_panel.pack(wal.HPanel(bot_panel), fill=True, expand=True)
@@ -497,6 +587,17 @@ class RGB_Panel(SolidFillPanel):
 		bot_panel.pack(minipal, padding_all=5)
 
 		self.pack(bot_panel, fill=True)
+
+	def on_hex_change(self):
+		hexcolor = self.html.get_color()
+		if len(hexcolor) == 7:
+			self.new_color[1] = cms.hexcolor_to_rgb(hexcolor)
+			self.new_color[2] = 1.0
+		elif len(hexcolor) == 9:
+			r, g, b, a = cms.hexcolor_to_rgba(hexcolor)
+			self.new_color[1] = [r, g, b]
+			self.new_color[2] = a
+		self.update()
 
 	def on_slider_change(self):
 		color_vals = []
@@ -541,6 +642,7 @@ class RGB_Panel(SolidFillPanel):
 		self.alpha_slider.set_value(self.new_color[2], start_clr, stop_clr)
 		self.alpha_spin.set_value(self.new_color[2] * 255.0)
 		self.refpanel.update(self.orig_fill, self.new_color)
+		self.html.set_color(self.new_color)
 
 	def activate(self, cms, orig_fill, new_color):
 		if not new_color and orig_fill:
@@ -555,7 +657,84 @@ class RGB_Panel(SolidFillPanel):
 class Gray_Panel(SolidFillPanel):
 
 	def build(self):
-		self.pack(wal.Label(self, self.new_color.__str__()))
+		self.pack(wal.HPanel(self), fill=True, expand=True)
+
+		grid = wal.GridPanel(self, 2, 3, 3, 5)
+
+		grid.pack(wal.Label(grid, 'L:'))
+		self.color_slider = ColoredSlider(grid, size=40,
+									onchange=self.on_slider_change)
+		grid.pack(self.color_slider)
+		self.color_spin = wal.IntSpin(grid,
+								range_val=(0, 255), width=4,
+								onchange=self.on_change,
+								onenter=self.on_change)
+		grid.pack(self.color_spin)
+
+		grid.pack(wal.Label(grid, 'A:'))
+		self.alpha_slider = ColoredAlphaSlider(grid, size=40,
+										onchange=self.on_slider_change)
+		grid.pack(self.alpha_slider)
+		self.alpha_spin = wal.IntSpin(grid,
+									range_val=(0, 255), width=4,
+									onchange=self.on_change,
+									onenter=self.on_change)
+		grid.pack(self.alpha_spin)
+
+		self.pack(grid)
+
+		self.pack(wal.HPanel(self), fill=True, expand=True)
+
+		self.pack(wal.HLine(self), fill=True, padding=5)
+
+		bot_panel = wal.HPanel(self)
+		self.refpanel = ColorReferencePanel(bot_panel, self.cms, [], [],
+										on_orig=self.set_orig_fill)
+		bot_panel.pack(self.refpanel)
+
+		bot_panel.pack(wal.HPanel(bot_panel), fill=True, expand=True)
+
+		minipal = MiniPalette(bot_panel, self.cms, GRAY_PALETTE,
+							self.on_palette_click)
+		bot_panel.pack(minipal, padding_all=5)
+
+		self.pack(bot_panel, fill=True)
+
+	def on_slider_change(self):
+		self.new_color[1] = [self.color_slider.get_value(), ]
+		self.new_color[2] = self.alpha_slider.get_value()
+		self.update()
+
+
+	def on_change(self):
+		self.new_color[1] = [self.color_spin.get_value() / 255.0, ]
+		self.new_color[2] = self.alpha_spin.get_value() / 255.0
+		self.update()
+
+	def on_palette_click(self, color):
+		self.new_color = color
+		self.update()
+
+	def update(self):
+		self.color_spin.set_value(self.new_color[1][0] * 255.0)
+		# L slider
+		start_clr = deepcopy(self.new_color)
+		stop_clr = deepcopy(self.new_color)
+		start_clr[1][0] = 0.0
+		stop_clr[1][0] = 1.0
+		start_clr = self.cms.get_rgb_color255(start_clr)
+		stop_clr = self.cms.get_rgb_color255(stop_clr)
+		self.color_slider.set_value(self.new_color[1][0], start_clr, stop_clr)
+		# Alpha slider
+		start_clr = deepcopy(self.new_color)
+		start_clr[2] = 0.0
+		stop_clr = deepcopy(self.new_color)
+		stop_clr[2] = 1.0
+		start_clr = self.cms.get_rgba_color255(start_clr)
+		stop_clr = self.cms.get_rgba_color255(stop_clr)
+		self.alpha_slider.set_value(self.new_color[2], start_clr, stop_clr)
+		self.alpha_spin.set_value(self.new_color[2] * 255.0)
+		self.refpanel.update(self.orig_fill, self.new_color)
 
 	def activate(self, cms, orig_fill, new_color):
 		if not new_color and orig_fill:
@@ -565,11 +744,16 @@ class Gray_Panel(SolidFillPanel):
 		else:
 			new_color = cms.get_grayscale_color(new_color)
 		SolidFillPanel.activate(self, cms, orig_fill, new_color)
+		self.update()
 
 class Empty_Panel(SolidFillPanel):
 
 	def build(self):
-		self.pack(wal.Label(self, self.new_color.__str__()))
+		self.pack(wal.HPanel(self), fill=True, expand=True)
+		self.pack(ColorSwatch(self, self.cms, [], (250, 150)))
+		txt = _('Empty pattern selected, i.e. object will not be filled.')
+		self.pack(wal.Label(self, txt), padding=10)
+		self.pack(wal.HPanel(self), fill=True, expand=True)
 
 	def activate(self, cms, orig_fill, new_color):
 		new_color = []
