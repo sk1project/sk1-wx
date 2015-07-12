@@ -233,6 +233,8 @@ class Entry(wx.TextCtrl, DataWidget):
 
 	my_changes = False
 	value = ''
+	_callback = None
+	_callback1 = None
 
 	def __init__(self, parent, value='', size=DEF_SIZE, width=0, onchange=None,
 				multiline=False, richtext=False, onenter=None, editable=True):
@@ -242,14 +244,29 @@ class Entry(wx.TextCtrl, DataWidget):
 		if onenter: style |= wx.TE_PROCESS_ENTER
 		size = self._set_width(size, width)
 		wx.TextCtrl.__init__(self, parent, wx.ID_ANY, value, size=size, style=style)
-		if onchange: self.Bind(wx.EVT_TEXT, onchange, self)
-		if onenter: self.Bind(wx.EVT_TEXT_ENTER, onenter, self)
+		if onchange:
+			self._callback = onchange
+			self.Bind(wx.EVT_TEXT, self._on_change, self)
+		if onenter:
+			self._callback1 = onenter
+			self.Bind(wx.EVT_TEXT_ENTER, self._on_enter, self)
 		if not editable:
 			self.value = value
-			self.Bind(wx.EVT_TEXT, self.on_change, self)
-			self.Bind(wx.EVT_TEXT_ENTER, self.on_change, self)
+			self.Bind(wx.EVT_TEXT, self._on_change_noneditable, self)
+			self.Bind(wx.EVT_TEXT_ENTER, self._on_change_noneditable, self)
 
-	def on_change(self, event):
+	def _on_change(self, event):
+		if self.my_changes:
+			self.my_changes = False
+			return
+		if self._callback: self._callback()
+		event.Skip()
+
+	def _on_enter(self, event):
+		event.StopPropagation()
+		if self._callback1: self._callback1()
+
+	def _on_change_noneditable(self, event):
 		if self.my_changes:
 			self.my_changes = False
 			return
@@ -258,6 +275,10 @@ class Entry(wx.TextCtrl, DataWidget):
 
 	def get_value(self):
 		return str(self.GetValue())
+
+	def set_value(self, val):
+		self.my_changes = True
+		self.SetValue(val)
 
 
 class Spin(wx.SpinCtrl, RangeDataWidget):
@@ -375,10 +396,9 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 		self.SetValue(dval * self.step + self.value)
 		event.Skip()
 
-	def _entry_enter(self, event):
+	def _entry_enter(self):
 		if self.flag:return
 		self.SetValue(self._calc_entry())
-		event.Skip()
 		if not self.enter_callback is None: self.enter_callback()
 
 	def _entry_lost_focus(self, event):
@@ -386,7 +406,7 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 		self.SetValue(self._calc_entry())
 		event.Skip()
 
-	def _check_entry(self, event):
+	def _check_entry(self):
 		if self.flag:return
 		txt = self.entry.get_value()
 		res = ''
@@ -399,7 +419,6 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 			self.flag = True
 			self.entry.set_value(res)
 			self.flag = False
-		event.Skip()
 
 	def _calc_entry(self):
 		txt = self.entry.get_value()
