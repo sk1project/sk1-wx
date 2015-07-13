@@ -277,7 +277,7 @@ class MiniPalette(wal.VPanel):
 	def on_click(self, color):
 		if self.callback: self.callback(color)
 
-class ColorReferencePanel(wal.VPanel):
+class FillColorRefPanel(wal.VPanel):
 
 	def __init__(self, parent, cms, fill, new_color, on_orig=None):
 		wal.VPanel.__init__(self, parent)
@@ -467,7 +467,7 @@ class CMYK_Panel(SolidFillPanel):
 		self.pack(wal.HLine(self), fill=True, padding=5)
 
 		bot_panel = wal.HPanel(self)
-		self.refpanel = ColorReferencePanel(bot_panel, self.cms, [], [],
+		self.refpanel = FillColorRefPanel(bot_panel, self.cms, [], [],
 										on_orig=self.set_orig_fill)
 		bot_panel.pack(self.refpanel)
 
@@ -576,7 +576,7 @@ class RGB_Panel(SolidFillPanel):
 		self.pack(wal.HLine(self), fill=True, padding=5)
 
 		bot_panel = wal.HPanel(self)
-		self.refpanel = ColorReferencePanel(bot_panel, self.cms, [], [],
+		self.refpanel = FillColorRefPanel(bot_panel, self.cms, [], [],
 										on_orig=self.set_orig_fill)
 		bot_panel.pack(self.refpanel)
 
@@ -688,7 +688,7 @@ class Gray_Panel(SolidFillPanel):
 		self.pack(wal.HLine(self), fill=True, padding=5)
 
 		bot_panel = wal.HPanel(self)
-		self.refpanel = ColorReferencePanel(bot_panel, self.cms, [], [],
+		self.refpanel = FillColorRefPanel(bot_panel, self.cms, [], [],
 										on_orig=self.set_orig_fill)
 		bot_panel.pack(self.refpanel)
 
