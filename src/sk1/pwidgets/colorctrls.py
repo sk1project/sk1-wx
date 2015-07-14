@@ -393,149 +393,111 @@ class ColoredAlphaSlider(ColoredSlider):
 		pos = int(self.value * 255.0) + 1
 		self.draw_bitmap(self.knob, pos, y + h)
 
-#--- Solid fill panels
 
-class SolidFillPanel(wal.VPanel):
+class CMYK_Mixer(wal.GridPanel):
 
-	orig_fill = None
-	cms = None
-	built = False
-	new_color = None
+	color = None
+	callback = None
 
-	def __init__(self, parent):
-		wal.VPanel.__init__(self, parent)
-
-	def build(self):
-		self.pack(wal.Label(self, self.orig_fill.__str__()))
-
-	def activate(self, cms, orig_fill, new_color):
-		self.orig_fill = orig_fill
-		self.new_color = new_color
-		if self.new_color: self.new_color[3] = ''
+	def __init__(self, parent, cms, color=None, onchange=None):
+		wal.GridPanel.__init__(self, parent, 4, 4, 3, 5)
 		self.cms = cms
-		if not self.built:
-			self.build()
-			self.built = True
-		self.show()
-
-	def get_color(self):
-		return self.new_color
-
-	def set_orig_fill(self):
-		self.activate(self.cms, self.orig_fill, [])
-
-
-class CMYK_Panel(SolidFillPanel):
-
-	color_sliders = []
-	color_spins = []
-
-	def build(self):
+		if color:
+			self.color = color
+		else:
+			self.color = [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, '']
+		if onchange: self.callback = onchange
 
 		self.color_sliders = []
 		self.color_spins = []
-		grid = wal.GridPanel(self, 4, 4, 3, 5)
 
 		labels = ['C:', 'M:', 'Y:', 'K:']
 		for item in labels:
-			grid.pack(wal.Label(grid, item))
-			self.color_sliders.append(ColoredSlider(grid,
+			self.pack(wal.Label(self, item))
+			self.color_sliders.append(ColoredSlider(self,
 										onchange=self.on_slider_change))
-			grid.pack(self.color_sliders[-1])
-			self.color_spins.append(wal.FloatSpin(grid,
+			self.pack(self.color_sliders[-1])
+			self.color_spins.append(wal.FloatSpin(self,
 									range_val=(0.0, 100.0), width=5,
 									onchange=self.on_change,
 									onenter=self.on_change))
-			grid.pack(self.color_spins[-1])
-			grid.pack(wal.Label(grid, '%'))
+			self.pack(self.color_spins[-1])
+			self.pack(wal.Label(self, '%'))
 
-		grid.pack(wal.Label(grid, 'A:'))
-		self.alpha_slider = ColoredAlphaSlider(grid,
+		self.pack(wal.Label(self, 'A:'))
+		self.alpha_slider = ColoredAlphaSlider(self,
 										onchange=self.on_slider_change)
-		grid.pack(self.alpha_slider)
-		self.alpha_spin = wal.FloatSpin(grid,
+		self.pack(self.alpha_slider)
+		self.alpha_spin = wal.FloatSpin(self,
 									range_val=(0.0, 100.0), width=5,
 									onchange=self.on_change,
 									onenter=self.on_change)
-		grid.pack(self.alpha_spin)
-		grid.pack(wal.Label(grid, '%'))
-
-		self.pack(grid)
-
-		self.pack(wal.HPanel(self), fill=True, expand=True)
-
-		self.pack(wal.HLine(self), fill=True, padding=5)
-
-		bot_panel = wal.HPanel(self)
-		self.refpanel = FillColorRefPanel(bot_panel, self.cms, [], [],
-										on_orig=self.set_orig_fill)
-		bot_panel.pack(self.refpanel)
-
-		bot_panel.pack(wal.HPanel(bot_panel), fill=True, expand=True)
-
-		minipal = MiniPalette(bot_panel, self.cms, CMYK_PALETTE,
-							self.on_palette_click)
-		bot_panel.pack(minipal, padding_all=5)
-
-		self.pack(bot_panel, fill=True)
-
-	def on_slider_change(self):
-		color_vals = []
-		for item in self.color_sliders:
-			color_vals.append(item.get_value())
-		self.new_color[1] = color_vals
-		self.new_color[2] = self.alpha_slider.get_value()
-		self.update()
+		self.pack(self.alpha_spin)
+		self.pack(wal.Label(self, '%'))
 
 	def on_change(self):
 		color_vals = []
 		for item in self.color_spins:
 			color_vals.append(item.get_value() / 100.0)
-		self.new_color[1] = color_vals
-		self.new_color[2] = self.alpha_spin.get_value() / 100.0
-		self.update()
+		self.color[1] = color_vals
+		self.color[2] = self.alpha_spin.get_value() / 100.0
+		if self.callback: self.callback()
+		else: self.update()
 
-	def on_palette_click(self, color):
-		self.new_color = color
-		self.update()
+	def on_slider_change(self):
+		color_vals = []
+		for item in self.color_sliders:
+			color_vals.append(item.get_value())
+		self.color[1] = color_vals
+		self.color[2] = self.alpha_slider.get_value()
+		if self.callback: self.callback()
+		else: self.update()
+
+	def get_color(self):
+		return self.color
+
+	def set_color(self, color):
+		if color:
+			self.color = color
+			self.update()
 
 	def update(self):
 		for item in self.color_spins:
 			index = self.color_spins.index(item)
-			item.set_value(self.new_color[1][index] * 100.0)
+			item.set_value(self.color[1][index] * 100.0)
 		for item in self.color_sliders:
 			index = self.color_sliders.index(item)
-			start_clr = deepcopy(self.new_color)
-			stop_clr = deepcopy(self.new_color)
+			start_clr = deepcopy(self.color)
+			stop_clr = deepcopy(self.color)
 			start_clr[1][index] = 0.0
 			stop_clr[1][index] = 1.0
 			start_clr = self.cms.get_rgb_color255(start_clr)
 			stop_clr = self.cms.get_rgb_color255(stop_clr)
-			item.set_value(self.new_color[1][index], start_clr, stop_clr)
+			item.set_value(self.color[1][index], start_clr, stop_clr)
 
-		start_clr = deepcopy(self.new_color)
+		start_clr = deepcopy(self.color)
 		start_clr[2] = 0.0
-		stop_clr = deepcopy(self.new_color)
+		stop_clr = deepcopy(self.color)
 		stop_clr[2] = 1.0
 		start_clr = self.cms.get_rgba_color255(start_clr)
 		stop_clr = self.cms.get_rgba_color255(stop_clr)
-		self.alpha_slider.set_value(self.new_color[2], start_clr, stop_clr)
-		self.alpha_spin.set_value(self.new_color[2] * 100.0)
-		self.refpanel.update(self.orig_fill, self.new_color)
+		self.alpha_slider.set_value(self.color[2], start_clr, stop_clr)
+		self.alpha_spin.set_value(self.color[2] * 100.0)
 
-	def activate(self, cms, orig_fill, new_color):
-		if not new_color and orig_fill:
-			new_color = cms.get_cmyk_color(orig_fill[2])
-		elif not new_color and not orig_fill:
-			new_color = [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, '']
+
+class RGB_Mixer(wal.VPanel):
+
+	color = None
+	callback = None
+
+	def __init__(self, parent, cms, color=None, onchange=None):
+		wal.VPanel.__init__(self, parent)
+		self.cms = cms
+		if color:
+			self.color = color
 		else:
-			new_color = cms.get_cmyk_color(new_color)
-		SolidFillPanel.activate(self, cms, orig_fill, new_color)
-		self.update()
-
-class RGB_Panel(SolidFillPanel):
-
-	def build(self):
+			self.color = [uc2const.COLOR_RGB, [0.0, 0.0, 0.0], 1.0, '']
+		if onchange: self.callback = onchange
 
 		self.color_sliders = []
 		self.color_spins = []
@@ -573,91 +535,82 @@ class RGB_Panel(SolidFillPanel):
 		html_panel.pack(self.html)
 		self.pack(html_panel, padding=5)
 
-		self.pack(wal.HLine(self), fill=True, padding=5)
-
-		bot_panel = wal.HPanel(self)
-		self.refpanel = FillColorRefPanel(bot_panel, self.cms, [], [],
-										on_orig=self.set_orig_fill)
-		bot_panel.pack(self.refpanel)
-
-		bot_panel.pack(wal.HPanel(bot_panel), fill=True, expand=True)
-
-		minipal = MiniPalette(bot_panel, self.cms, RGB_PALETTE,
-							self.on_palette_click)
-		bot_panel.pack(minipal, padding_all=5)
-
-		self.pack(bot_panel, fill=True)
-
 	def on_hex_change(self):
 		hexcolor = self.html.get_color()
 		if len(hexcolor) == 7:
-			self.new_color[1] = cms.hexcolor_to_rgb(hexcolor)
-			self.new_color[2] = 1.0
+			self.color[1] = cms.hexcolor_to_rgb(hexcolor)
+			self.color[2] = 1.0
 		elif len(hexcolor) == 9:
 			r, g, b, a = cms.hexcolor_to_rgba(hexcolor)
-			self.new_color[1] = [r, g, b]
-			self.new_color[2] = a
-		self.update()
+			self.color[1] = [r, g, b]
+			self.color[2] = a
+		if self.callback: self.callback()
+		else: self.update()
 
 	def on_slider_change(self):
 		color_vals = []
 		for item in self.color_sliders:
 			color_vals.append(item.get_value())
-		self.new_color[1] = color_vals
-		self.new_color[2] = self.alpha_slider.get_value()
-		self.update()
+		self.color[1] = color_vals
+		self.color[2] = self.alpha_slider.get_value()
+		if self.callback: self.callback()
+		else: self.update()
 
 	def on_change(self):
 		color_vals = []
 		for item in self.color_spins:
 			color_vals.append(item.get_value() / 255.0)
-		self.new_color[1] = color_vals
-		self.new_color[2] = self.alpha_spin.get_value() / 255.0
-		self.update()
+		self.color[1] = color_vals
+		self.color[2] = self.alpha_spin.get_value() / 255.0
+		if self.callback: self.callback()
+		else: self.update()
 
-	def on_palette_click(self, color):
-		self.new_color = color
-		self.update()
+	def get_color(self):
+		return self.color
+
+	def set_color(self, color):
+		if color:
+			self.color = color
+			self.update()
 
 	def update(self):
 		for item in self.color_spins:
 			index = self.color_spins.index(item)
-			item.set_value(self.new_color[1][index] * 255.0)
+			item.set_value(self.color[1][index] * 255.0)
 		for item in self.color_sliders:
 			index = self.color_sliders.index(item)
-			start_clr = deepcopy(self.new_color)
-			stop_clr = deepcopy(self.new_color)
+			start_clr = deepcopy(self.color)
+			stop_clr = deepcopy(self.color)
 			start_clr[1][index] = 0.0
 			stop_clr[1][index] = 1.0
 			start_clr = self.cms.get_rgb_color255(start_clr)
 			stop_clr = self.cms.get_rgb_color255(stop_clr)
-			item.set_value(self.new_color[1][index], start_clr, stop_clr)
+			item.set_value(self.color[1][index], start_clr, stop_clr)
 
-		start_clr = deepcopy(self.new_color)
+		start_clr = deepcopy(self.color)
 		start_clr[2] = 0.0
-		stop_clr = deepcopy(self.new_color)
+		stop_clr = deepcopy(self.color)
 		stop_clr[2] = 1.0
 		start_clr = self.cms.get_rgba_color255(start_clr)
 		stop_clr = self.cms.get_rgba_color255(stop_clr)
-		self.alpha_slider.set_value(self.new_color[2], start_clr, stop_clr)
-		self.alpha_spin.set_value(self.new_color[2] * 255.0)
-		self.refpanel.update(self.orig_fill, self.new_color)
-		self.html.set_color(self.new_color)
+		self.alpha_slider.set_value(self.color[2], start_clr, stop_clr)
+		self.alpha_spin.set_value(self.color[2] * 255.0)
+		self.html.set_color(self.color)
 
-	def activate(self, cms, orig_fill, new_color):
-		if not new_color and orig_fill:
-			new_color = cms.get_rgb_color(orig_fill[2])
-		elif not new_color and not orig_fill:
-			new_color = [uc2const.COLOR_RGB, [0.0, 0.0, 0.0], 1.0, '']
+
+class Gray_Mixer(wal.VPanel):
+
+	color = None
+	callback = None
+
+	def __init__(self, parent, cms, color=None, onchange=None):
+		wal.VPanel.__init__(self, parent)
+		self.cms = cms
+		if color:
+			self.color = color
 		else:
-			new_color = cms.get_rgb_color(new_color)
-		SolidFillPanel.activate(self, cms, orig_fill, new_color)
-		self.update()
-
-class Gray_Panel(SolidFillPanel):
-
-	def build(self):
-		self.pack(wal.HPanel(self), fill=True, expand=True)
+			self.color = [uc2const.COLOR_GRAY, [0.0, ], 1.0, '']
+		if onchange: self.callback = onchange
 
 		grid = wal.GridPanel(self, 2, 3, 3, 5)
 
@@ -683,78 +636,43 @@ class Gray_Panel(SolidFillPanel):
 
 		self.pack(grid)
 
-		self.pack(wal.HPanel(self), fill=True, expand=True)
-
-		self.pack(wal.HLine(self), fill=True, padding=5)
-
-		bot_panel = wal.HPanel(self)
-		self.refpanel = FillColorRefPanel(bot_panel, self.cms, [], [],
-										on_orig=self.set_orig_fill)
-		bot_panel.pack(self.refpanel)
-
-		bot_panel.pack(wal.HPanel(bot_panel), fill=True, expand=True)
-
-		minipal = MiniPalette(bot_panel, self.cms, GRAY_PALETTE,
-							self.on_palette_click)
-		bot_panel.pack(minipal, padding_all=5)
-
-		self.pack(bot_panel, fill=True)
-
 	def on_slider_change(self):
-		self.new_color[1] = [self.color_slider.get_value(), ]
-		self.new_color[2] = self.alpha_slider.get_value()
-		self.update()
-
+		self.color[1] = [self.color_slider.get_value(), ]
+		self.color[2] = self.alpha_slider.get_value()
+		if self.callback: self.callback()
+		else: self.update()
 
 	def on_change(self):
-		self.new_color[1] = [self.color_spin.get_value() / 255.0, ]
-		self.new_color[2] = self.alpha_spin.get_value() / 255.0
-		self.update()
+		self.color[1] = [self.color_spin.get_value() / 255.0, ]
+		self.color[2] = self.alpha_spin.get_value() / 255.0
+		if self.callback: self.callback()
+		else: self.update()
 
-	def on_palette_click(self, color):
-		self.new_color = color
-		self.update()
+	def get_color(self):
+		return self.color
+
+	def set_color(self, color):
+		if color:
+			self.color = color
+			self.update()
 
 	def update(self):
-		self.color_spin.set_value(self.new_color[1][0] * 255.0)
+		self.color_spin.set_value(self.color[1][0] * 255.0)
 		# L slider
-		start_clr = deepcopy(self.new_color)
-		stop_clr = deepcopy(self.new_color)
+		start_clr = deepcopy(self.color)
+		stop_clr = deepcopy(self.color)
 		start_clr[1][0] = 0.0
 		stop_clr[1][0] = 1.0
 		start_clr = self.cms.get_rgb_color255(start_clr)
 		stop_clr = self.cms.get_rgb_color255(stop_clr)
-		self.color_slider.set_value(self.new_color[1][0], start_clr, stop_clr)
+		self.color_slider.set_value(self.color[1][0], start_clr, stop_clr)
 		# Alpha slider
-		start_clr = deepcopy(self.new_color)
+		start_clr = deepcopy(self.color)
 		start_clr[2] = 0.0
-		stop_clr = deepcopy(self.new_color)
+		stop_clr = deepcopy(self.color)
 		stop_clr[2] = 1.0
 		start_clr = self.cms.get_rgba_color255(start_clr)
 		stop_clr = self.cms.get_rgba_color255(stop_clr)
-		self.alpha_slider.set_value(self.new_color[2], start_clr, stop_clr)
-		self.alpha_spin.set_value(self.new_color[2] * 255.0)
-		self.refpanel.update(self.orig_fill, self.new_color)
+		self.alpha_slider.set_value(self.color[2], start_clr, stop_clr)
+		self.alpha_spin.set_value(self.color[2] * 255.0)
 
-	def activate(self, cms, orig_fill, new_color):
-		if not new_color and orig_fill:
-			new_color = cms.get_grayscale_color(orig_fill[2])
-		elif not new_color and not orig_fill:
-			new_color = [uc2const.COLOR_GRAY, [0.0, ], 1.0, '']
-		else:
-			new_color = cms.get_grayscale_color(new_color)
-		SolidFillPanel.activate(self, cms, orig_fill, new_color)
-		self.update()
-
-class Empty_Panel(SolidFillPanel):
-
-	def build(self):
-		self.pack(wal.HPanel(self), fill=True, expand=True)
-		self.pack(ColorSwatch(self, self.cms, [], (250, 150)))
-		txt = _('Empty pattern selected, i.e. object will not be filled.')
-		self.pack(wal.Label(self, txt), padding=10)
-		self.pack(wal.HPanel(self), fill=True, expand=True)
-
-	def activate(self, cms, orig_fill, new_color):
-		new_color = []
-		SolidFillPanel.activate(self, cms, orig_fill, new_color)

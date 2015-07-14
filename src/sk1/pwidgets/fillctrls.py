@@ -23,8 +23,178 @@ from uc2.formats.sk2 import sk2_const
 from sk1 import _
 from sk1.resources import icons
 
-from colorctrls import CMYK_Panel, RGB_Panel, Gray_Panel, Empty_Panel, \
-SolidFillPanel
+from colorctrls import ColorSwatch, CMYK_Mixer, RGB_Mixer, Gray_Mixer
+from colorctrls import FillColorRefPanel, MiniPalette
+from colorctrls import CMYK_PALETTE, RGB_PALETTE, GRAY_PALETTE
+
+#--- Solid fill panels
+
+class SolidFillPanel(wal.VPanel):
+
+	orig_fill = None
+	cms = None
+	built = False
+	new_color = None
+
+	def __init__(self, parent):
+		wal.VPanel.__init__(self, parent)
+
+	def build(self):
+		self.pack(wal.Label(self, self.orig_fill.__str__()))
+
+	def activate(self, cms, orig_fill, new_color):
+		self.orig_fill = orig_fill
+		self.new_color = new_color
+		if self.new_color: self.new_color[3] = ''
+		self.cms = cms
+		if not self.built:
+			self.build()
+			self.built = True
+		self.show()
+
+	def get_color(self):
+		return self.new_color
+
+	def set_orig_fill(self):
+		self.activate(self.cms, self.orig_fill, [])
+
+
+class CMYK_Panel(SolidFillPanel):
+
+	color_sliders = []
+	color_spins = []
+
+	def build(self):
+
+		self.mixer = CMYK_Mixer(self, self.cms, onchange=self.update)
+		self.pack(self.mixer)
+
+		self.pack(wal.HPanel(self), fill=True, expand=True)
+		self.pack(wal.HLine(self), fill=True, padding=5)
+
+		bot_panel = wal.HPanel(self)
+		self.refpanel = FillColorRefPanel(bot_panel, self.cms, [], [],
+										on_orig=self.set_orig_fill)
+		bot_panel.pack(self.refpanel)
+		bot_panel.pack(wal.HPanel(bot_panel), fill=True, expand=True)
+
+		minipal = MiniPalette(bot_panel, self.cms, CMYK_PALETTE,
+							self.on_palette_click)
+		bot_panel.pack(minipal, padding_all=5)
+
+		self.pack(bot_panel, fill=True)
+
+	def on_palette_click(self, color):
+		self.new_color = color
+		self.update()
+
+	def update(self):
+		self.mixer.set_color(self.new_color)
+		self.refpanel.update(self.orig_fill, self.new_color)
+
+	def activate(self, cms, orig_fill, new_color):
+		if not new_color and orig_fill:
+			new_color = cms.get_cmyk_color(orig_fill[2])
+		elif not new_color and not orig_fill:
+			new_color = [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, '']
+		else:
+			new_color = cms.get_cmyk_color(new_color)
+		SolidFillPanel.activate(self, cms, orig_fill, new_color)
+		self.update()
+
+class RGB_Panel(SolidFillPanel):
+
+	def build(self):
+
+		self.mixer = RGB_Mixer(self, self.cms, onchange=self.update)
+		self.pack(self.mixer)
+
+		self.pack(wal.HLine(self), fill=True, padding=5)
+
+		bot_panel = wal.HPanel(self)
+		self.refpanel = FillColorRefPanel(bot_panel, self.cms, [], [],
+										on_orig=self.set_orig_fill)
+		bot_panel.pack(self.refpanel)
+		bot_panel.pack(wal.HPanel(bot_panel), fill=True, expand=True)
+
+		minipal = MiniPalette(bot_panel, self.cms, RGB_PALETTE,
+							self.on_palette_click)
+		bot_panel.pack(minipal, padding_all=5)
+
+		self.pack(bot_panel, fill=True)
+
+	def on_palette_click(self, color):
+		self.new_color = color
+		self.update()
+
+	def update(self):
+		self.mixer.set_color(self.new_color)
+		self.refpanel.update(self.orig_fill, self.new_color)
+
+	def activate(self, cms, orig_fill, new_color):
+		if not new_color and orig_fill:
+			new_color = cms.get_rgb_color(orig_fill[2])
+		elif not new_color and not orig_fill:
+			new_color = [uc2const.COLOR_RGB, [0.0, 0.0, 0.0], 1.0, '']
+		else:
+			new_color = cms.get_rgb_color(new_color)
+		SolidFillPanel.activate(self, cms, orig_fill, new_color)
+		self.update()
+
+
+class Gray_Panel(SolidFillPanel):
+
+	def build(self):
+		self.pack(wal.HPanel(self), fill=True, expand=True)
+
+		self.mixer = Gray_Mixer(self, self.cms, onchange=self.update)
+		self.pack(self.mixer)
+
+		self.pack(wal.HPanel(self), fill=True, expand=True)
+		self.pack(wal.HLine(self), fill=True, padding=5)
+
+		bot_panel = wal.HPanel(self)
+		self.refpanel = FillColorRefPanel(bot_panel, self.cms, [], [],
+										on_orig=self.set_orig_fill)
+		bot_panel.pack(self.refpanel)
+		bot_panel.pack(wal.HPanel(bot_panel), fill=True, expand=True)
+
+		minipal = MiniPalette(bot_panel, self.cms, GRAY_PALETTE,
+							self.on_palette_click)
+		bot_panel.pack(minipal, padding_all=5)
+
+		self.pack(bot_panel, fill=True)
+
+	def on_palette_click(self, color):
+		self.new_color = color
+		self.update()
+
+	def update(self):
+		self.mixer.set_color(self.new_color)
+		self.refpanel.update(self.orig_fill, self.new_color)
+
+	def activate(self, cms, orig_fill, new_color):
+		if not new_color and orig_fill:
+			new_color = cms.get_grayscale_color(orig_fill[2])
+		elif not new_color and not orig_fill:
+			new_color = [uc2const.COLOR_GRAY, [0.0, ], 1.0, '']
+		else:
+			new_color = cms.get_grayscale_color(new_color)
+		SolidFillPanel.activate(self, cms, orig_fill, new_color)
+		self.update()
+
+class Empty_Panel(SolidFillPanel):
+
+	def build(self):
+		self.pack(wal.HPanel(self), fill=True, expand=True)
+		self.pack(ColorSwatch(self, self.cms, [], (250, 150)))
+		txt = _('Empty pattern selected, i.e. object will not be filled.')
+		self.pack(wal.Label(self, txt), padding=10)
+		self.pack(wal.HPanel(self), fill=True, expand=True)
+
+	def activate(self, cms, orig_fill, new_color):
+		new_color = []
+		SolidFillPanel.activate(self, cms, orig_fill, new_color)
 
 #--- Solid fill stuff
 CMYK_MODE = 0
@@ -81,6 +251,9 @@ RULE_MODE_ICONS = {
 sk2_const.FILL_EVENODD: icons.PD_EVENODD,
 sk2_const.FILL_NONZERO: icons.PD_NONZERO,
 }
+
+
+
 
 class FillTab(wal.VPanel):
 
