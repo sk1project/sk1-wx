@@ -316,7 +316,7 @@ def verbose_color(color):
 	if cs == COLOR_CMYK:
 		c, m, y, k = val_100(val)
 		ret = 'C-%d%% M-%d%% Y-%d%% K-%d%%' % (c, m, y, k)
-		if alpha < 1.0: ret += ' A-%d' % val_100([alpha, ])[0]
+		if alpha < 1.0: ret += ' A-%d%%' % val_100([alpha, ])[0]
 	elif cs == COLOR_RGB:
 		r, g, b = val_255(val)
 		ret = 'R-%d G-%d B-%d' % (r, g, b)

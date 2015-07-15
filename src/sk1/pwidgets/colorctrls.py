@@ -19,6 +19,7 @@ from copy import deepcopy
 import wal
 
 from uc2 import uc2const, cms
+from uc2.formats.sk2 import sk2_const
 from sk1 import _
 from sk1.resources import icons, get_icon
 
@@ -128,6 +129,7 @@ class SwatchCanvas(wal.SensitiveCanvas):
 	border = ''
 	even_odd = False
 	reg_icon = None
+	pattern_size = 10
 
 	def __init__(self, border='', even_odd=False):
 		self.border = border
@@ -151,11 +153,11 @@ class SwatchCanvas(wal.SensitiveCanvas):
 				clr = wal.WHITE
 				if not flag_x: clr = wal.LIGHT_GRAY
 				self.set_fill(clr)
-				self.draw_rect(x1, y1, 10, 10)
+				self.draw_rect(x1, y1, self.pattern_size, self.pattern_size)
 				flag_x = not flag_x
-				x1 += 10
+				x1 += self.pattern_size
 			flag_y = not flag_y
-			y1 += 10
+			y1 += self.pattern_size
 			x1 = 0
 
 	def draw_color(self):
@@ -226,18 +228,22 @@ class AlphaColorSwatch(wal.VPanel, SwatchCanvas):
 	callback = None
 
 	def __init__(self, parent, cms, color, size=(20, 20), border='wes',
-				even_odd=False):
+				even_odd=False, onclick=None):
 		self.color = color
 		self.cms = cms
 		wal.VPanel.__init__(self, parent)
 		SwatchCanvas.__init__(self, border, even_odd)
 		self.pack(size)
+		if onclick: self.callback = onclick
+
+	def mouse_left_up(self, point):
+		if self.callback: self.callback()
 
 	def set_color(self, color):
 		self.color = color
 		self.refresh()
 
-class PatternSwatch(wal.VPanel, SwatchCanvas):
+class FillSwatch(wal.VPanel, SwatchCanvas):
 
 	callback = None
 
@@ -259,6 +265,68 @@ class PatternSwatch(wal.VPanel, SwatchCanvas):
 		else:
 			self.color = []
 		self.refresh()
+
+class SB_StrokeSwatch(AlphaColorSwatch):
+
+	pattern_size = 8
+
+	def __init__(self, parent, app, label, color=[], size=(35, 16),
+				onclick=None):
+		self.app = app
+		self.label = label
+		cms = self.app.default_cms
+		AlphaColorSwatch.__init__(self, parent, cms, color, size,
+								 'news', onclick=onclick)
+
+	def update_from_obj(self, obj):
+		text = _('Stroke:')
+		self.cms = self.app.current_doc.cms
+		if self.app.insp.is_obj_pixmap(obj):
+			self.set_color(obj.style[3][1])
+			text = _('Bg:')
+		else:
+			stroke = obj.style[1]
+			if stroke:
+				point_val = stroke[1]
+				self.set_color(stroke[2])
+				unit = self.app.current_doc.model.doc_units
+				val = str(round(point_val * uc2const.point_dict[unit], 3))
+				text += ' %s ' % val
+				text += uc2const.unit_short_names[unit]
+			else:
+				self.set_color([])
+				text += ' ' + _('None')
+		self.label.set_text(text)
+
+class SB_FillSwatch(FillSwatch):
+
+	pattern_size = 8
+
+	def __init__(self, parent, app, label, fill=[], size=(35, 16),
+				onclick=None):
+		self.app = app
+		self.label = label
+		cms = self.app.default_cms
+		FillSwatch.__init__(self, parent, cms, fill, size,
+						'news', onclick=onclick)
+
+	def update_from_obj(self, obj):
+		text = _('Fill:')
+		self.cms = self.app.current_doc.cms
+		if self.app.insp.is_obj_pixmap(obj):
+			text = _('Fg:')
+			self.set_swatch_fill([sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID,
+								obj.style[3][0]])
+		else:
+			fill = obj.style[0]
+			self.set_swatch_fill(fill)
+			if fill:
+				if fill[1] == sk2_const.FILL_SOLID:
+					text += ' ' + cms.verbose_color(fill[2])
+			else:
+				text += ' ' + _('None')
+
+		self.label.set_text(text)
 
 class MiniPalette(wal.VPanel):
 
@@ -284,7 +352,7 @@ class FillColorRefPanel(wal.VPanel):
 		grid = wal.GridPanel(self, hgap=5)
 		grid.pack(wal.Label(grid, _('Old fill:')))
 
-		self.before_swatch = PatternSwatch(grid, cms, fill, (70, 30),
+		self.before_swatch = FillSwatch(grid, cms, fill, (70, 30),
 										onclick=on_orig)
 		grid.pack(self.before_swatch)
 
