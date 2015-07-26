@@ -85,6 +85,7 @@ class AppPaletteManager(PaletteManager):
 			config.palette = STD_CMYK_PALETTE
 
 	def add_palette(self, palette):
+		palette.model.name = str(palette.model.name)
 		pname = '' + palette.model.name
 		i = 1
 		while palette.model.name in self.palettes.keys():
