@@ -15,10 +15,11 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from copy import deepcopy
 import wal
 
 from sk1 import _
-from sk1.resources import icons
+from sk1.resources import icons, get_icon
 
 AUTO_MODE = 0
 NORMAL_MODE = 1
@@ -41,7 +42,7 @@ LIST_MODE:_('List view'),
 
 PREVIEW_MODES = [AUTO_MODE, NORMAL_MODE, LARGE_MODE, LIST_MODE]
 
-class ScrolledPalette(wal.ScrolledPanel, wal.Canvas):
+class ScrolledPalette(wal.ScrolledPanel, wal.SensitiveCanvas):
 
 	mode = AUTO_MODE
 	width = 10
@@ -51,19 +52,79 @@ class ScrolledPalette(wal.ScrolledPanel, wal.Canvas):
 	cell_in_line = 10
 	colors = None
 	sb_width = 1
+	selected_index = None
+	large_sel = None
+	small_sel = None
+	callback = None
 
-	def __init__(self, app, parent, border=False):
-		self.app = app
+	def __init__(self, parent, cms, border=False, onclick=None):
+		self.cms = cms
 		self.parent = parent
+		self.callback = onclick
 		wal.ScrolledPanel.__init__(self, parent, border)
-		wal.Canvas.__init__(self)
+		wal.SensitiveCanvas.__init__(self, True)
 		sb = wal.ScrollBar(self)
 		self.sb_width = sb.get_size()[0]
 		sb.destroy()
+		self.large_sel = get_icon(icons.PD_LARGE_SEL_PALETTE, size=wal.DEF_SIZE)
+		self.small_sel = get_icon(icons.PD_SMALL_SEL_PALETTE, size=wal.DEF_SIZE)
 		self.width = (self.cell_width - 1) * self.cell_in_line + 3 + self.sb_width
 		self.set_size((self.width, -1))
 		self.set_bg(wal.WHITE)
 
+	def mouse_move(self, point):
+		index = self.get_color_index_in_point(point)
+		if not index is None and self.colors[index][3]:
+			self.set_tooltip('' + self.colors[index][3])
+		else:
+			self.set_tooltip()
+
+	def mouse_left_up(self, point):
+		self.selected_index = self.get_color_index_in_point(point)
+		self.refresh()
+		if self.callback: self.callback()
+
+	def get_color_index_in_point(self, point):
+		if self.mode == NORMAL_MODE:
+			return self.get_color_index_normal(point)
+		elif self.mode == LARGE_MODE:
+			return self.get_color_index_large(point)
+		elif self.mode == LIST_MODE:
+			return self.get_color_index_list(point)
+		else:
+			if len(self.colors) < 15:
+				return self.get_color_index_list(point)
+			elif len(self.colors) < 50:
+				return self.get_color_index_large(point)
+			else:
+				return self.get_color_index_normal(point)
+
+	def get_color_index_normal(self, point):
+		x, y = self.win_to_doc(*point)
+		if x < 2: x = 3
+		if x > 156: x = 155
+		if y < 2 :y = 3
+		index = int(y / 15) * 10 + int(x / 15)
+		if index < len(self.colors):
+			return index
+		return None
+
+	def get_color_index_large(self, point):
+		x, y = self.win_to_doc(*point)
+		if x < 2: x = 3
+		if x > 156: x = 155
+		if y < 2 :y = 3
+		index = int(y / 30) * 5 + int(x / 30)
+		if index < len(self.colors):
+			return index
+		return None
+
+	def get_color_index_list(self, point):
+		x, y = self.win_to_doc(*point)
+		index = int(y / 24)
+		if index < len(self.colors):
+			return index
+		return None
 
 	def paint(self):
 		if not self.colors:
@@ -104,10 +165,8 @@ class ScrolledPalette(wal.ScrolledPanel, wal.Canvas):
 		self.cell_mode_paint()
 
 	def cell_mode_paint(self):
-		cms = self.app.default_cms
-
 		self.height = round(1.0 * len(self.colors) / self.cell_in_line) + 1
-		self.height = self.height * (self.cell_height - 1)
+		self.height = int(self.height * (self.cell_height - 1))
 		self.set_virtual_size((self.width - self.sb_width, self.height))
 		self.set_scroll_rate(self.cell_width - 1, self.cell_height - 1)
 
@@ -115,22 +174,27 @@ class ScrolledPalette(wal.ScrolledPanel, wal.Canvas):
 
 		w = self.cell_width
 		h = self.cell_height
-		y = 1
-		x = 1
+		y = x = 1
+		i = 0
 		for color in self.colors:
 			self.set_stroke(wal.BLACK)
-			self.set_fill(cms.get_display_color255(color))
+			self.set_fill(self.cms.get_display_color255(color))
 			self.draw_rect(x, y, w, h)
+			if i == self.selected_index:
+				bmp = self.small_sel
+				if self.cell_width == 31:
+					bmp = self.large_sel
+				self.draw_bitmap(bmp, x, y)
 			x += w - 1
 			if x > (w - 1) * self.cell_in_line:
 				x = 1
 				y += h - 1
+			i += 1
 
 	def list_mode_paint(self):
 		self.cell_width = 20
 		self.cell_height = 20
 		row = self.cell_height + 4
-		cms = self.app.default_cms
 
 		self.height = len(self.colors) * row
 		self.set_virtual_size((self.width - self.sb_width, self.height))
@@ -147,20 +211,32 @@ class ScrolledPalette(wal.ScrolledPanel, wal.Canvas):
 		self.set_text_color(wal.BLACK)
 
 		for color in self.colors:
+			if i == self.selected_index:
+				self.set_stroke()
+				self.set_fill(wal.UI_COLORS['selected_text_bg'])
+				self.draw_rect(0, row * i, self.width - self.sb_width, h + 4)
 			self.set_stroke(wal.BLACK)
-			self.set_fill(cms.get_display_color255(color))
+			self.set_fill(self.cms.get_display_color255(color))
 			self.draw_rect(5, 2 + row * i, w, h)
 			txt = color[3]
-			if txt: self.draw_text(txt, txt_x, txt_y + row * i)
+			if txt:
+				if i == self.selected_index:
+					self.set_text_color(wal.UI_COLORS['selected_text'])
+				else:
+					self.set_text_color(wal.BLACK)
+				self.draw_text(txt, txt_x, txt_y + row * i)
 			i += 1
 
 
 class PaletteViewer(wal.VPanel):
 
 	palette = None
+	callback = None
+	sel_color = None
 
-	def __init__(self, app, parent, palette=None):
-		self.app = app
+	def __init__(self, parent, cms, palette=None, onclick=None):
+		self.cms = cms
+		self.callback = onclick
 		wal.VPanel.__init__(self, parent)
 		options = wal.ExpandedPanel(self, _('Palette preview:'))
 		changer = wal.HToggleKeeper(options, PREVIEW_MODES, MODE_ICON,
@@ -169,7 +245,7 @@ class PaletteViewer(wal.VPanel):
 		self.pack(options, fill=True)
 		border = wal.VPanel(self, border=True)
 		self.pack(border, expand=True, fill=True)
-		self.win = ScrolledPalette(self.app, border)
+		self.win = ScrolledPalette(border, self.cms, onclick=self.select_color)
 		border.pack(self.win, expand=True, fill=True)
 		changer.set_mode(AUTO_MODE)
 		if palette: self.draw_palette(palette)
@@ -181,10 +257,25 @@ class PaletteViewer(wal.VPanel):
 			return
 		self.palette = palette
 		self.win.colors = palette.model.colors
+		self.win.selected_index = None
 		self.win.refresh()
 
 	def set_mode(self, mode):
 		if not self.palette: return
 		self.win.mode = mode
 		self.win.refresh()
+
+	def get_color(self):
+		return self.sel_color
+
+	def set_active_color(self, index=0):
+		if self.win.colors and index < len(self.win.colors):
+			self.win.selected_index = index
+			self.sel_color = deepcopy(self.win.colors[self.win.selected_index])
+			self.win.refresh()
+
+	def select_color(self):
+		if self.callback and not self.win.selected_index is None:
+			self.sel_color = deepcopy(self.win.colors[self.win.selected_index])
+			self.callback()
 
