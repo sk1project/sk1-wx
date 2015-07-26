@@ -27,7 +27,7 @@ from wal import Label, FloatSpin, const
 from sk1 import _, config, events
 from sk1.resources import icons, get_icon
 
-class UnitLabel(Label):
+class StaticUnitLabel(Label):
 
 	app = None
 	insp = None
@@ -39,6 +39,11 @@ class UnitLabel(Label):
 		if self.insp.is_doc(): self.units = app.current_doc.model.doc_units
 		text = uc2const.unit_short_names[self.units]
 		Label.__init__(self, parent, text)
+
+class UnitLabel(StaticUnitLabel):
+
+	def __init__(self, app, parent):
+		StaticUnitLabel.__init__(self, app, parent)
 		events.connect(events.DOC_CHANGED, self.update)
 		events.connect(events.DOC_MODIFIED, self.update)
 
@@ -57,7 +62,8 @@ class UnitSpin(FloatSpin):
 	point_value = 0.0
 	units = uc2const.UNIT_MM
 
-	def __init__(self, app, parent, val=0.0, onchange=None, onenter=None):
+	def __init__(self, app, parent, val=0.0, step=1.0,
+				 onchange=None, onenter=None):
 		self.app = app
 		self.insp = app.insp
 		self.point_value = val
@@ -65,7 +71,7 @@ class UnitSpin(FloatSpin):
 		if self.insp.is_doc(): self.units = app.current_doc.model.doc_units
 		val = self.point_value * point_dict[self.units]
 		FloatSpin.__init__(self, parent, val, (0.0, 100000.0),
-						step=1.0, width=5,
+						step=step, width=5,
 						onchange=self.update_point_value, onenter=onenter,
 						spin_overlay=config.spin_overlay)
 		events.connect(events.DOC_MODIFIED, self.update_units)
