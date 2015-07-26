@@ -16,10 +16,11 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from actions import AppAction, ActionButton
-from unitctrls import UnitLabel, UnitSpin, AngleSpin, RatioToggle, BitmapToggle
-from unitctrls import ActionImageSwitch
+from unitctrls import StaticUnitLabel, UnitLabel, UnitSpin, AngleSpin
+from unitctrls import RatioToggle, BitmapToggle, ActionImageSwitch
 from mactoolbar import MacTB_ActionButton, MacTB_ActionNestedButtons
 from palette_viewer import PaletteViewer
 from palette import Palette
 from fillctrls import SolidFill, GradientFill, PatternFill
 from colorctrls import SB_StrokeSwatch, SB_FillSwatch
+from strokectrls import DashChoice, CapChoice, JoinChoice
