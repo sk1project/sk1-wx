@@ -72,6 +72,7 @@ encoding//src/sk1/prefs/prefs_ruler.py=utf-8
 encoding//src/sk1/prefs/templates.py=utf-8
 encoding//src/sk1/pwidgets/__init__.py=utf-8
 encoding//src/sk1/pwidgets/actions.py=utf-8
+encoding//src/sk1/pwidgets/colorctrls.py=utf-8
 encoding//src/sk1/pwidgets/fillctrls.py=utf-8
 encoding//src/sk1/pwidgets/mactoolbar.py=utf-8
 encoding//src/sk1/pwidgets/palette.py=utf-8
