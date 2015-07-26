@@ -128,7 +128,8 @@ class PalettesPrefs(PrefPanel):
 
 #		cell_panel.pack(wal.HPanel(cell_panel), expand=True, fill=True)
 
-		self.palviewer = PaletteViewer(self.app, btm_panel, current_palette)
+		self.palviewer = PaletteViewer(btm_panel, self.app.default_cms,
+									current_palette)
 		btm_panel.pack(self.palviewer, fill=True, padding_all=5)
 
 		self.nb.add_page(pal_opt, _('Palette options'))
@@ -212,7 +213,7 @@ class PaletteManager(wal.HPanel):
 		self.pal_list = wal.SimpleList(self, data, on_select=self.change_palette)
 		self.pack(self.pal_list, expand=True, fill=True, padding_all=5)
 
-		self.pal_viewer = PaletteViewer(app, self)
+		self.pal_viewer = PaletteViewer(self, self.app.default_cms)
 		self.pack(self.pal_viewer, fill=True, padding_all=5)
 
 		btn_box = wal.VPanel(self)
