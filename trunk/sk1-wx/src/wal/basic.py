@@ -546,6 +546,10 @@ class ScrolledPanel(wx.ScrolledWindow, Widget):
 		self.Refresh(rect=wx.Rect(x, y, w, h))
 	def set_size(self, size): self.SetSize(size)
 	def prepare_dc(self, dc): self.PrepareDC(dc)
+	def win_to_doc(self, x, y):
+		return tuple(self.CalcUnscrolledPosition(wx.Point(x, y)))
+	def doc_to_win(self, x, y):
+		return  tuple(self.CalcScrolledPosition(wx.Point(x, y)))
 
 
 class Expander(VPanel, Canvas):
