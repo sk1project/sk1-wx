@@ -130,7 +130,7 @@ class PreViewer(wal.VPanel):
 		self.parent = parent
 		self.app = parent.parent.app
 		wal.VPanel.__init__(self, parent)
-		self.viewer = PaletteViewer(self.app, self)
+		self.viewer = PaletteViewer(self, self.app.default_cms)
 		self.pack(self.viewer, expand=True, fill=True)
 
 
