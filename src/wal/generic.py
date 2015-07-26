@@ -60,8 +60,11 @@ class Widget(object):
 		width += 2
 		return (width * FONT_SIZE[0], size[1])
 
-	def set_tooltip(self, tip):
-		self.SetToolTipString(tip)
+	def set_tooltip(self, tip=None):
+		if tip:
+			self.SetToolTipString(tip)
+		else:
+			self.SetToolTip(None)
 
 	def destroy(self):
 		self.Destroy()
