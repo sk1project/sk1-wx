@@ -40,7 +40,7 @@ class Palette(wal.VPanel, wal.SensitiveCanvas):
 		self.on_left_click = on_left_click
 		self.on_right_click = on_right_click
 		wal.VPanel.__init__(self, parent)
-		wal.SensitiveCanvas.__init__(self)
+		wal.SensitiveCanvas.__init__(self, True)
 		self.set_palette_size()
 		events.connect(events.CONFIG_MODIFIED, self.config_update)
 		events.connect(events.CMS_CHANGED, self.palette_refresh)
@@ -165,3 +165,11 @@ class Palette(wal.VPanel, wal.SensitiveCanvas):
 		color = self.get_color(point)
 		if not color is None:
 			if self.on_right_click:self.on_right_click(color)
+
+	def mouse_move(self, point):
+		color = self.get_color(point)
+		if not color is None and color[3]:
+			self.set_tooltip(color[3])
+		else:
+			self.set_tooltip()
+
