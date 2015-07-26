@@ -28,10 +28,12 @@ class FillDialog(wal.OkCancelDialog):
 
 	def __init__(self, parent, title, presenter, fill_style):
 		self.presenter = presenter
+		self.app = presenter.app
 		self.cms = presenter.cms
 		self.orig_fill = fill_style
+		size = config.fill_dlg_size
 		wal.OkCancelDialog.__init__(self, parent, title, style=wal.VERTICAL,
-								size=(450, 370), add_line=False)
+								size=size, add_line=False)
 
 	def build(self):
 		self.nb = wal.Notebook(self, on_change=self.on_change)
@@ -56,5 +58,5 @@ class FillDialog(wal.OkCancelDialog):
 	def get_result(self):
 		return self.nb.get_active_page().get_result()
 
-def fill_dlg(parent, presenter, fill_style, title=_("Fill")):
+def fill_dlg(parent, presenter, fill_style, title=_('Fill')):
 	return FillDialog(parent, title, presenter, fill_style).show()
