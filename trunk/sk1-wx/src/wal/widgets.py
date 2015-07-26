@@ -16,6 +16,7 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
+import wx.combo
 from wx import animate
 
 from generic import Widget, DataWidget, RangeDataWidget
@@ -145,7 +146,7 @@ class Checkbox(wx.CheckBox, DataWidget):
 		style = 0
 		if right:style = wx.ALIGN_RIGHT
 		wx.CheckBox.__init__(self, parent, wx.ID_ANY, text, style=style)
-		if value: self.SetValue(value)
+		if value: self.SetValue(True)
 		if onclick:
 			self.callback = onclick
 			self.Bind(wx.EVT_CHECKBOX, self.on_click, self)
@@ -156,6 +157,19 @@ class Checkbox(wx.CheckBox, DataWidget):
 
 	def on_click(self, event=None):
 		if self.callback:self.callback()
+
+
+class NumCheckbox(Checkbox):
+
+	def set_value(self, val, action=True):
+		boolval = False
+		if val:boolval = True
+		self.SetValue(boolval)
+		if action:self.on_click()
+
+	def get_value(self):
+		if self.GetValue(): return 1
+		return 0
 
 
 class Radiobutton(wx.RadioButton, DataWidget):
@@ -205,6 +219,61 @@ class Combolist(wx.Choice, Widget):
 
 	def get_active(self):
 		return self.get_selection()
+
+class BitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
+
+	def __init__(self, parent, value=0, bitmaps=[]):
+
+		self.bitmaps = bitmaps
+		choices = self._create_items()
+		x, y = self.bitmaps[0].GetSize()
+		x += 4
+		y += 7 + 3
+		wx.combo.OwnerDrawnComboBox.__init__(self, parent, wx.ID_ANY,
+				wx.EmptyString, wx.DefaultPosition,
+				(x, y), choices, wx.CB_READONLY,
+				wx.DefaultValidator)
+		self.set_active(value)
+
+	def OnDrawItem(self, dc, rect, item, flags):
+		if item == wx.NOT_FOUND:return
+		r = wx.Rect(*rect)
+		dc.DrawBitmap(self.bitmaps[item], r.x + 2, r.y + 4, True)
+
+	def OnMeasureItem(self, item):
+		if item == wx.NOT_FOUND:return 1
+		return self.bitmaps[item].GetSize()[1] + 7
+
+	def OnMeasureItemWidth(self, item):
+		if item == wx.NOT_FOUND:return 1
+		return self.bitmaps[item].GetSize()[0] - 4
+
+	def _create_items(self):
+		items = []
+		for item in range(len(self.bitmaps)):
+			items.append(str(item))
+		return items
+
+	def set_bitmaps(self, bitmaps):
+		self.bitmaps = bitmaps
+		self.SetItems(self._create_items())
+
+	def set_items(self, items):
+		self.SetItems(items)
+
+	def set_selection(self, index):
+		if index < self.GetCount(): self.SetSelection(index)
+
+	def get_selection(self):
+		return self.GetSelection()
+
+	def set_active(self, index):
+		self.set_selection(index)
+
+	def get_active(self):
+		return self.get_selection()
+
+
 
 class Combobox(wx.ComboBox, DataWidget):
 
