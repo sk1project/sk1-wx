@@ -75,7 +75,9 @@ class AppConfig(UCConfig):
 		UCConfig.__init__(self)
 
 	def __setattr__(self, attr, value):
-		if attr == 'filename': return
+		if attr in ['filename', 'app']:
+			self.__dict__[attr] = value
+			return
 		if not hasattr(self, attr) or getattr(self, attr) != value:
 			self.__dict__[attr] = value
 			events.emit(events.CONFIG_MODIFIED, attr, value)
@@ -84,7 +86,8 @@ class AppConfig(UCConfig):
 		defaults = AppConfig.__dict__.copy()
 		defaults.update(UCConfig.get_defaults(self))
 		return defaults
-
+	#============== Application pointer ===============
+	app = None
 	#============== GENERIC SECTION ===================
 	os = system.LINUX
 	os_name = system.UBUNTU
@@ -123,6 +126,10 @@ class AppConfig(UCConfig):
 	palinfo_dlg_minsize = (400, 350)
 	palcol_dlg_size = (600, 350)
 	palcol_dlg_minsize = (600, 350)
+
+	fill_dlg_size = (430, 370)
+	stroke_dlg_size = (430, 370)
+	dash_dlg_size = (300, 150)
 
 	statusbar_fontsize = 0
 	tabs_fontsize = 0
