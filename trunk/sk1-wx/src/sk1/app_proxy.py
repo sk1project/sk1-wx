@@ -79,7 +79,34 @@ class AppProxy:
 				if not ret is None: break
 		return ret
 
-	def stroke_dialog(self): dialogs.stroke_dlg(self.mw, self.app.current_doc)
+	def stroke_dialog(self):
+		doc = self.app.current_doc
+		stroke_style = None
+		default_style = False
+		title = _('Stroke')
+		if doc.selection.objs:
+			style = self._get_style(doc.selection.objs)
+			if not style is None:
+				stroke_style = style[1]
+		if stroke_style is None:
+			txt = _('Do you wish to change default stroke style for this document?')
+			txt += '\n'
+			txt += _('This style will be applied to newly created objects.')
+			title = self.app.appdata.app_name
+			if dialogs.yesno_dialog(self.mw, title, txt):
+				stroke_style = doc.model.styles['Default Style'][1]
+				default_style = True
+				title = _('Default document stroke')
+			else: return
+		new_stroke_style = dialogs.stroke_dlg(self.mw, doc, stroke_style, title)
+		if not new_stroke_style is None:
+			if default_style:
+				new_style = deepcopy(doc.model.styles['Default Style'])
+				new_style[1] = new_stroke_style
+				doc.api.set_default_style(new_style)
+			else:
+				doc.api.set_stroke_style(new_stroke_style)
+
 	def new(self): self.app.new()
 	def open(self): self.app.open()
 	def clear_log(self): self.app.history.clear_history()
