@@ -83,6 +83,7 @@ class UCApplication(object):
 	def __init__(self, path=''):
 		self.path = path
 		self.config = UCConfig()
+		self.config.app = self
 		self.appdata = UCData(self)
 		setattr(uc2, "config", self.config)
 		setattr(uc2, "appdata", self.appdata)
