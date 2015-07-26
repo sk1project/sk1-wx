@@ -20,12 +20,14 @@ import wal
 
 from uc2 import uc2const
 from uc2.formats.sk2 import sk2_const
+from uc2.cms import get_registration_black, color_to_spot, rgb_to_hexcolor
 from sk1 import _
 from sk1.resources import icons
 
-from colorctrls import ColorSwatch, CMYK_Mixer, RGB_Mixer, Gray_Mixer
+from colorctrls import PaletteSwatch, CMYK_Mixer, RGB_Mixer, Gray_Mixer, \
+SPOT_Mixer, Palette_Mixer
 from colorctrls import FillColorRefPanel, MiniPalette
-from colorctrls import CMYK_PALETTE, RGB_PALETTE, GRAY_PALETTE
+from colorctrls import CMYK_PALETTE, RGB_PALETTE, GRAY_PALETTE, SPOT_PALETTE
 
 #--- Solid fill panels
 
@@ -36,7 +38,8 @@ class SolidFillPanel(wal.VPanel):
 	built = False
 	new_color = None
 
-	def __init__(self, parent):
+	def __init__(self, parent, app):
+		self.app = app
 		wal.VPanel.__init__(self, parent)
 
 	def build(self):
@@ -45,7 +48,8 @@ class SolidFillPanel(wal.VPanel):
 	def activate(self, cms, orig_fill, new_color):
 		self.orig_fill = orig_fill
 		self.new_color = new_color
-		if self.new_color: self.new_color[3] = ''
+		if self.new_color and not self.new_color[0] == uc2const.COLOR_SPOT:
+			self.new_color[3] = ''
 		self.cms = cms
 		if not self.built:
 			self.build()
@@ -183,18 +187,75 @@ class Gray_Panel(SolidFillPanel):
 		SolidFillPanel.activate(self, cms, orig_fill, new_color)
 		self.update()
 
+class SPOT_Panel(SolidFillPanel):
+
+	def build(self):
+		self.pack(wal.HPanel(self), fill=True, expand=True)
+		self.mixer = SPOT_Mixer(self, self.cms, onchange=self.update)
+		self.pack(self.mixer)
+
+		self.pack(wal.HPanel(self), fill=True, expand=True)
+		self.pack(wal.HLine(self), fill=True, padding=5)
+
+		bot_panel = wal.HPanel(self)
+		self.refpanel = FillColorRefPanel(bot_panel, self.cms, [], [],
+										on_orig=self.set_orig_fill)
+		bot_panel.pack(self.refpanel)
+		bot_panel.pack(wal.HPanel(bot_panel), fill=True, expand=True)
+
+		minipal = MiniPalette(bot_panel, self.cms, SPOT_PALETTE,
+							self.on_palette_click)
+		bot_panel.pack(minipal, padding_all=5)
+
+		self.pack(bot_panel, fill=True)
+
+	def on_palette_click(self, color):
+		self.new_color = color
+		self.update()
+
+	def update(self):
+		self.mixer.set_color(self.new_color)
+		self.refpanel.update(self.orig_fill, self.new_color)
+
+	def activate(self, cms, orig_fill, new_color):
+		if not new_color and orig_fill:
+			new_color = color_to_spot(orig_fill[2])
+		elif not new_color and not orig_fill:
+			new_color = get_registration_black()
+		else:
+			new_color = color_to_spot(new_color)
+		if not new_color[3]:
+			new_color[3] = rgb_to_hexcolor(cms.get_rgb_color(new_color)[1])
+		SolidFillPanel.activate(self, cms, orig_fill, new_color)
+		self.update()
+
 class Empty_Panel(SolidFillPanel):
 
 	def build(self):
 		self.pack(wal.HPanel(self), fill=True, expand=True)
-		self.pack(ColorSwatch(self, self.cms, [], (250, 150)))
-		txt = _('Empty pattern selected, i.e. object will not be filled.')
+		self.pack(PaletteSwatch(self, self.cms, [], (250, 150)))
+		txt = _('Empty pattern selected')
 		self.pack(wal.Label(self, txt), padding=10)
 		self.pack(wal.HPanel(self), fill=True, expand=True)
 
 	def activate(self, cms, orig_fill, new_color):
 		new_color = []
 		SolidFillPanel.activate(self, cms, orig_fill, new_color)
+
+class Palette_Panel(SolidFillPanel):
+
+	def build(self):
+		self.mixer = Palette_Mixer(self, self.app, self.cms,
+								onchange=self.set_color)
+		self.pack(self.mixer, fill=True, expand=True)
+
+	def activate(self, cms, orig_fill, new_color):
+		new_color = get_registration_black()
+		SolidFillPanel.activate(self, cms, orig_fill, new_color)
+		self.mixer.on_change()
+
+	def set_color(self, color):
+		self.new_color = color
 
 #--- Solid fill stuff
 CMYK_MODE = 0
@@ -235,8 +296,8 @@ SOLID_MODE_CLASSES = {
 CMYK_MODE: CMYK_Panel,
 RGB_MODE: RGB_Panel,
 GRAY_MODE: Gray_Panel,
-SPOT_MODE: SolidFillPanel,
-PAL_MODE: SolidFillPanel,
+SPOT_MODE: SPOT_Panel,
+PAL_MODE: Palette_Panel,
 EMPTY_MODE: Empty_Panel,
 }
 
@@ -263,6 +324,7 @@ class FillTab(wal.VPanel):
 
 	def __init__(self, parent, dlg, cms):
 		self.dlg = dlg
+		self.app = dlg.app
 		self.cms = cms
 		wal.VPanel.__init__(self, parent)
 
@@ -284,8 +346,12 @@ class SolidFill(FillTab):
 	active_panel = None
 	panels = {}
 	new_color = None
+	callback = None
+	use_rule = True
 
-	def activate(self, fill_style):
+	def activate(self, fill_style, use_rule=True, onmodechange=None):
+		if onmodechange: self.callback = onmodechange
+		self.use_rule = use_rule
 		FillTab.activate(self, fill_style)
 		if not fill_style:
 			mode = EMPTY_MODE
@@ -307,11 +373,12 @@ class SolidFill(FillTab):
 		self.rule_keeper = wal.HToggleKeeper(panel, RULE_MODES,
 										RULE_MODE_ICONS, RULE_MODE_NAMES)
 		panel.pack(self.rule_keeper)
+		if not self.use_rule: self.rule_keeper.set_visible(False)
 		self.pack(panel, fill=True, padding_all=5)
 		self.pack(wal.HLine(self), fill=True)
 
 		for item in SOLID_MODES:
-			self.panels[item] = SOLID_MODE_CLASSES[item](self)
+			self.panels[item] = SOLID_MODE_CLASSES[item](self, self.app)
 			self.panels[item].hide()
 
 	def on_mode_change(self, mode):
@@ -323,6 +390,7 @@ class SolidFill(FillTab):
 		self.pack(self.active_panel, fill=True, expand=True, padding_all=5)
 		self.active_panel.activate(self.cms, self.orig_fill, self.new_color)
 		self.rule_keeper.set_enable(not mode == EMPTY_MODE)
+		if self.callback: self.callback()
 
 	def get_result(self):
 		clr = self.active_panel.get_color()
