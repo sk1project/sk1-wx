@@ -96,7 +96,7 @@ class XmlConfigParser(object):
 		writer.characters('\n')
 		for key, value in items:
 			if defaults.has_key(key) and defaults[key] == value: continue
-			if key == 'filename': continue
+			if key in ['filename', 'app']: continue
 			writer.characters('\t')
 			writer.startElement('%s' % key, {})
 
