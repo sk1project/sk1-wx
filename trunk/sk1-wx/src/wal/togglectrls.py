@@ -79,3 +79,5 @@ class HToggleKeeper(HPanel):
 		for item in self.mode_buts:
 			item.set_mode(mode)
 
+	def get_mode(self): return self.mode
+
