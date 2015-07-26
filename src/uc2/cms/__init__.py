@@ -20,7 +20,7 @@ import os, copy
 from copy import deepcopy
 
 import libcms
-from uc2 import uc2const
+from uc2 import uc2const, utils
 from uc2.uc2const import COLOR_RGB, COLOR_CMYK, COLOR_LAB, COLOR_GRAY, \
 COLOR_SPOT, COLOR_DISPLAY, COLOR_REG
 
@@ -31,6 +31,18 @@ CS = [COLOR_RGB, COLOR_CMYK, COLOR_LAB, COLOR_GRAY]
 
 def get_registration_black():
 	return [COLOR_SPOT, [[0.0, 0.0, 0.0], [1.0, 1.0, 1.0, 1.0]], 1.0, COLOR_REG]
+
+def color_to_spot(color):
+	if not color: return get_registration_black()
+	if color[0] == COLOR_SPOT: return deepcopy(color)
+	rgb = []
+	cmyk = []
+	name = ''
+	if color[0] == COLOR_RGB: rgb = deepcopy(color[1])
+	elif color[0] == COLOR_CMYK: cmyk = deepcopy(color[1])
+	elif color[0] == COLOR_GRAY: cmyk = gray_to_cmyk(color[1])
+	if color[3]: name += color[3]
+	return [COLOR_SPOT, [rgb, cmyk], color[2], name]
 
 def val_100(vals):
 	ret = []
