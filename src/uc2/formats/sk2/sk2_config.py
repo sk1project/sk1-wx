@@ -56,8 +56,7 @@ class SK2_Config(XmlConfigParser):
 	default_stroke_dash = []
 	default_stroke_cap = sk2_const.CAP_BUTT
 	default_stroke_join = sk2_const.JOIN_MITER
-	default_stroke_miter_angle = 45.0
-	default_stroke_miter_limit = 1 / math.sin(default_stroke_miter_angle / 2.0)
+	default_stroke_miter_limit = 1.0 / math.sin(math.pi / 4.0)
 	default_stroke_behind_flag = 0
 	default_stroke_scalable_flag = 0
 	default_stroke_markers = []
