@@ -72,6 +72,7 @@ class pdApplication(wal.Application, UCApplication):
 		config.plugin_dirs = [plg_dir, custom_plg_dir]
 		sys.path.insert(1, self.appdata.app_config)
 		sys.path.insert(1, os.path.join(self.path, 'share'))
+		config.app = self
 
 		self.history = AppHistoryManager(self)
 
