@@ -38,7 +38,7 @@ def generate_id():
 def generate_guid():
 	import uuid
 	time.sleep(0.001)
-	return uuid.uuid1()
+	return str(uuid.uuid1())
 
 def byte2py_int(data):
 	"""
