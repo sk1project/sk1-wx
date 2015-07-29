@@ -97,9 +97,12 @@ class CMYK_Panel(SolidFillPanel):
 		self.refpanel.update(self.orig_fill, self.new_color)
 
 	def activate(self, cms, orig_fill, new_color):
-		if not new_color and orig_fill:
-			new_color = cms.get_cmyk_color(orig_fill[2])
-		elif not new_color and not orig_fill:
+		fill = None
+		if orig_fill and orig_fill[1] == sk2_const.FILL_SOLID:
+			fill = orig_fill
+		if not new_color and fill:
+			new_color = cms.get_cmyk_color(fill[2])
+		elif not new_color and not fill:
 			new_color = [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, '']
 		else:
 			new_color = cms.get_cmyk_color(new_color)
@@ -136,9 +139,12 @@ class RGB_Panel(SolidFillPanel):
 		self.refpanel.update(self.orig_fill, self.new_color)
 
 	def activate(self, cms, orig_fill, new_color):
-		if not new_color and orig_fill:
-			new_color = cms.get_rgb_color(orig_fill[2])
-		elif not new_color and not orig_fill:
+		fill = None
+		if orig_fill and orig_fill[1] == sk2_const.FILL_SOLID:
+			fill = orig_fill
+		if not new_color and fill:
+			new_color = cms.get_rgb_color(fill[2])
+		elif not new_color and not fill:
 			new_color = [uc2const.COLOR_RGB, [0.0, 0.0, 0.0], 1.0, '']
 		else:
 			new_color = cms.get_rgb_color(new_color)
@@ -178,9 +184,12 @@ class Gray_Panel(SolidFillPanel):
 		self.refpanel.update(self.orig_fill, self.new_color)
 
 	def activate(self, cms, orig_fill, new_color):
-		if not new_color and orig_fill:
-			new_color = cms.get_grayscale_color(orig_fill[2])
-		elif not new_color and not orig_fill:
+		fill = None
+		if orig_fill and orig_fill[1] == sk2_const.FILL_SOLID:
+			fill = orig_fill
+		if not new_color and fill:
+			new_color = cms.get_grayscale_color(fill[2])
+		elif not new_color and not fill:
 			new_color = [uc2const.COLOR_GRAY, [0.0, ], 1.0, '']
 		else:
 			new_color = cms.get_grayscale_color(new_color)
@@ -218,9 +227,12 @@ class SPOT_Panel(SolidFillPanel):
 		self.refpanel.update(self.orig_fill, self.new_color)
 
 	def activate(self, cms, orig_fill, new_color):
-		if not new_color and orig_fill:
-			new_color = color_to_spot(orig_fill[2])
-		elif not new_color and not orig_fill:
+		fill = None
+		if orig_fill and orig_fill[1] == sk2_const.FILL_SOLID:
+			fill = orig_fill
+		if not new_color and fill:
+			new_color = color_to_spot(fill[2])
+		elif not new_color and not fill:
 			new_color = get_registration_black()
 		else:
 			new_color = color_to_spot(new_color)
@@ -358,7 +370,11 @@ class SolidFill(FillTab):
 			self.rule_keeper.set_mode(sk2_const.FILL_EVENODD)
 		else:
 			self.rule_keeper.set_mode(fill_style[0])
-			mode = SOLID_MODE_MAP[fill_style[2][0]]
+			if fill_style[1] in [sk2_const.FILL_GRADIENT,
+								sk2_const.FILL_PATTERN]:
+				mode = CMYK_MODE
+			else:
+				mode = SOLID_MODE_MAP[fill_style[2][0]]
 		self.solid_keeper.set_mode(mode)
 		self.on_mode_change(mode)
 
