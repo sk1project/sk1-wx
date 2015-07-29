@@ -15,6 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import cairo
 from copy import deepcopy
 import wal
 
@@ -155,10 +156,19 @@ class SwatchCanvas(wal.SensitiveCanvas):
 		self.even_odd = even_odd
 		wal.SensitiveCanvas.__init__(self)
 
+	def get_cairo_color(self, color):
+		r, g, b = self.cms.get_display_color(color)
+		return r, g, b, color[2]
+
 	def paint(self):
 		self.draw_background()
 		if not self.color is None:
 			self.draw_color()
+		elif self.fill:
+			if self.fill[1] == sk2_const.FILL_GRADIENT:
+				self.draw_gradient()
+			elif self.fill[1] == sk2_const.FILL_PATTERN:
+				self.draw_pattern()
 		self.draw_border()
 
 	def draw_background(self):
@@ -200,6 +210,25 @@ class SwatchCanvas(wal.SensitiveCanvas):
 			x = (w - 19) / 2
 			y = (h - 19) / 2
 			self.draw_bitmap(self.reg_icon, x, y)
+
+	def draw_gradient(self):
+		w, h = self.get_size()
+		gradient = self.fill[2]
+		surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+		ctx = cairo.Context(surface)
+		if gradient[0] == sk2_const.GRADIENT_LINEAR:
+			grd = cairo.LinearGradient(0.0, h / 2.0, w, h / 2.0)
+		else:
+			grd = cairo.RadialGradient(w / 2.0, h / 2.0, 0,
+									w / 2.0, h / 2.0, w / 2.0)
+		for stop in gradient[2]:
+			grd.add_color_stop_rgba(stop[0], *self.get_cairo_color(stop[1]))
+		ctx.set_source(grd)
+		ctx.rectangle(0, 0, w, h)
+		ctx.fill()
+		self.draw_bitmap(wal.copy_surface_to_bitmap(surface), 0, 0)
+
+	def draw_pattern(self):pass
 
 	def draw_empty_pattern(self):
 		w, h = self.get_size()
@@ -285,12 +314,13 @@ class FillSwatch(wal.VPanel, SwatchCanvas):
 	def set_swatch_fill(self, fill):
 		if not fill:
 			self.color = []
+			self.fill = None
 		elif fill[1] == sk2_const.FILL_SOLID:
 			self.color = fill[2]
-		elif fill[1] == sk2_const.FILL_GRADIENT:
+			self.fill = None
+		elif fill[1] in [sk2_const.FILL_GRADIENT, sk2_const.FILL_PATTERN]:
 			self.color = None
-		elif fill[1] == sk2_const.FILL_PATTERN:
-			self.color = None
+			self.fill = fill
 		tooltip = ''
 		if self.color and self.color[3]:tooltip = self.color[3]
 		self.set_tooltip(tooltip)
