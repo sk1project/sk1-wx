@@ -33,11 +33,11 @@ CMYK_PALETTE = [
 [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 0.7], 1.0, '70% Black'],
 [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 0.5], 1.0, '50% Black'],
 [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 0.2], 1.0, '20% Black'],
-[uc2const.COLOR_CMYK, [0.000000, 0.000000, 0.000000, 0.000000], 1.0, 'White'],
-[uc2const.COLOR_CMYK, [1.0, 0.000000, 0.0, 0.000000], 1.0, 'Cyan'],
-[uc2const.COLOR_CMYK, [0.0, 1.0, 0.000000, 0.000000], 1.0, 'Magenta'],
-[uc2const.COLOR_CMYK, [0.000000, 0.000000, 1.0, 0.000000], 1.0, 'Yellow'],
-[uc2const.COLOR_CMYK, [0.000000, 1.0, 1.0, 0.000000], 1.0, 'Red'],
+[uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 0.0], 1.0, 'White'],
+[uc2const.COLOR_CMYK, [1.0, 0.0, 0.0, 0.0], 1.0, 'Cyan'],
+[uc2const.COLOR_CMYK, [0.0, 1.0, 0.0, 0.0], 1.0, 'Magenta'],
+[uc2const.COLOR_CMYK, [0.0, 0.0, 1.0, 0.0], 1.0, 'Yellow'],
+[uc2const.COLOR_CMYK, [0.0, 1.0, 1.0, 0.0], 1.0, 'Red'],
 [uc2const.COLOR_CMYK, [1.0, 0.0, 1.0, 0.0], 1.0, 'Green'],
 [uc2const.COLOR_CMYK, [1.0, 1.0, 0.0, 0.0], 1.0, 'Blue'], ]
 
@@ -426,6 +426,29 @@ class FillColorRefPanel(wal.VPanel):
 	def update(self, fill, new_color):
 		self.before_swatch.set_swatch_fill(fill)
 		self.after_swatch.set_color(new_color)
+
+class FillFillRefPanel(wal.VPanel):
+
+	def __init__(self, parent, cms, fill, new_fill, on_orig=None):
+		wal.VPanel.__init__(self, parent)
+		grid = wal.GridPanel(self, hgap=5)
+		grid.pack(wal.Label(grid, _('Old fill:')))
+
+		self.before_swatch = FillSwatch(grid, cms, fill, (70, 30),
+										onclick=on_orig)
+		grid.pack(self.before_swatch)
+
+		grid.pack(wal.Label(grid, _('New fill:')))
+
+		self.after_swatch = FillSwatch(grid, cms, new_fill, (70, 30),
+									border='swe')
+		grid.pack(self.after_swatch)
+
+		self.pack(grid, padding_all=2)
+
+	def update(self, fill, new_fill):
+		self.before_swatch.set_swatch_fill(fill)
+		self.after_swatch.set_swatch_fill(new_fill)
 
 
 class ColoredSlider(wal.VPanel, wal.SensitiveCanvas):
