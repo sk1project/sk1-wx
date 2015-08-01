@@ -127,7 +127,7 @@ class AppConfig(UCConfig):
 	palcol_dlg_size = (600, 350)
 	palcol_dlg_minsize = (600, 350)
 
-	fill_dlg_size = (430, 370)
+	fill_dlg_size = (440, 370)
 	stroke_dlg_size = (430, 370)
 	dash_dlg_size = (300, 150)
 
