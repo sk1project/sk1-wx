@@ -414,6 +414,7 @@ class SensitiveCanvas(Canvas):
 		self.Bind(wx.EVT_LEFT_DOWN, self._mouse_left_down)
 		self.Bind(wx.EVT_MOUSEWHEEL, self._mouse_wheel)
 		self.Bind(wx.EVT_RIGHT_UP, self._mouse_right_up)
+		self.Bind(wx.EVT_LEFT_DCLICK, self._mouse_left_dclick)
 		if check_move:
 			self.Bind(wx.EVT_MOTION, self._mouse_move)
 
@@ -432,11 +433,15 @@ class SensitiveCanvas(Canvas):
 	def _mouse_move(self, event):
 		self.mouse_move(event.GetPositionTuple())
 
+	def _mouse_left_dclick(self, event):
+		self.mouse_left_dclick(event.GetPositionTuple())
+
 	def mouse_left_down(self, point):pass
 	def mouse_left_up(self, point):pass
 	def mouse_right_up(self, point):pass
 	def mouse_wheel(self, val):pass
 	def mouse_move(self, val):pass
+	def mouse_left_dclick(self, point):pass
 
 
 class RoundedPanel(VPanel, Canvas):
