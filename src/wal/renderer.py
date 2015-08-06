@@ -34,10 +34,10 @@ def copy_surface_to_bitmap(surface):
 	data = surface.get_data()
 	if cairo_format == cairo.FORMAT_ARGB32:
 		fmt = wx.BitmapBufferFormat_ARGB32
+		bmp = wx.EmptyBitmapRGBA(width, height)
 	else:
 		fmt = wx.BitmapBufferFormat_RGB32
-
-	bmp = wx.EmptyBitmap(width, height, 32)
+		bmp = wx.EmptyBitmap(width, height, 32)
 	bmp.CopyFromBuffer(data, fmt, stride)
 	return bmp
 
