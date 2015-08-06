@@ -68,6 +68,22 @@ def val_100_to_dec(vals):
 		ret.append(item / 100.0)
 	return ret
 
+def mix_vals(val1, val2, coef=0.5):
+	if val1 < val2:
+		return val1 + (val2 - val1) * coef
+	else:
+		return val1 - (val1 - val2) * coef
+
+def mix_lists(vals1, vals2, coef=0.5):
+	if not len(vals1) == len(vals2):return None
+	ret = []
+	index = 0
+	for val1 in vals1:
+		val2 = vals2[index]
+		ret.append(mix_vals(val1, val2, coef))
+		index += 1
+	return ret
+
 def rgb_to_hexcolor(color):
 	"""
 	Converts list of RGB float values to hex color string.
@@ -593,6 +609,15 @@ class ColorManager(object):
 						COLOR_CMYK:self.get_cmyk_color,
 						COLOR_GRAY:self.get_grayscale_color}
 		return METHOD_TO_CS[cs](color)
+
+	def mix_colors(self, color0, color1, coef=.5):
+		supported = [COLOR_RGB, COLOR_CMYK, COLOR_GRAY]
+		if not color0[0] in supported: return None
+		if not color1[0] in supported: return None
+		if not color0[0] == color1[0]: return None
+		clr_vals = mix_lists(color0[1], color1[1], coef)
+		alpha = mix_vals(color0[2], color1[2], coef)
+		return [color0[0], clr_vals, alpha, '']
 
 	def get_display_color(self, color):
 		"""
