@@ -26,8 +26,9 @@ from sk1.resources import icons
 
 from colorctrls import PaletteSwatch, CMYK_Mixer, RGB_Mixer, Gray_Mixer, \
 SPOT_Mixer, Palette_Mixer
-from colorctrls import FillColorRefPanel, MiniPalette
+from colorctrls import FillColorRefPanel, MiniPalette, FillFillRefPanel
 from colorctrls import CMYK_PALETTE, RGB_PALETTE, GRAY_PALETTE, SPOT_PALETTE
+from gradientctrls import GradientEditor, GradientPresets
 
 #--- Solid fill panels
 
@@ -315,16 +316,15 @@ EMPTY_MODE: Empty_Panel,
 
 RULE_MODES = [sk2_const.FILL_EVENODD, sk2_const.FILL_NONZERO]
 
-RULE_MODE_NAMES = {
-sk2_const.FILL_EVENODD: _('Evenodd fill'),
-sk2_const.FILL_NONZERO: _('Nonzero fill'),
-}
-
 RULE_MODE_ICONS = {
 sk2_const.FILL_EVENODD: icons.PD_EVENODD,
 sk2_const.FILL_NONZERO: icons.PD_NONZERO,
 }
 
+RULE_MODE_NAMES = {
+sk2_const.FILL_EVENODD: _('Evenodd fill'),
+sk2_const.FILL_NONZERO: _('Nonzero fill'),
+}
 
 
 
@@ -415,9 +415,139 @@ class SolidFill(FillTab):
 
 #--- Gradient fill stuff
 
+GRADIENT_MODES = [sk2_const.GRADIENT_LINEAR, sk2_const.GRADIENT_RADIAL]
+
+GRADIENT_MODE_ICONS = {
+sk2_const.GRADIENT_LINEAR: icons.PD_LINEAR_GRAD,
+sk2_const.GRADIENT_RADIAL: icons.PD_RADIAL_GRAD,
+}
+
+GRADIENT_MODE_NAMES = {
+sk2_const.GRADIENT_LINEAR: _('Linear gradient'),
+sk2_const.GRADIENT_RADIAL: _('Radial gradient'),
+}
+
+GRADIENT_CLR_MODES = [uc2const.COLOR_CMYK, uc2const.COLOR_RGB, uc2const.COLOR_GRAY]
+
+GRADIENT_CLR_ICONS = {
+uc2const.COLOR_CMYK: icons.PD_CONV_TO_CMYK,
+uc2const.COLOR_RGB: icons.PD_CONV_TO_RGB,
+uc2const.COLOR_GRAY: icons.PD_CONV_TO_GRAY,
+}
+
+GRADIENT_CLR_NAMES = {
+uc2const.COLOR_CMYK: _('CMYK colorspace'),
+uc2const.COLOR_RGB: _('RGB colorspace'),
+uc2const.COLOR_GRAY: _('Grayscale colorspace'),
+}
+
+DEFAULT_STOPS = [
+[0.0, [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, 'Black']],
+[1.0, [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 0.0], 1.0, 'White']]
+]
+
 class GradientFill(FillTab):
 
 	name = _('Gradient Fill')
+	vector = []
+	new_fill = None
+
+	def activate(self, fill_style, new_color=None):
+		FillTab.activate(self, fill_style)
+		mode = sk2_const.GRADIENT_LINEAR
+		rule = sk2_const.FILL_EVENODD
+		self.vector = []
+		stops = deepcopy(DEFAULT_STOPS)
+		if fill_style:
+			rule = fill_style[0]
+			if fill_style[1] == sk2_const.FILL_GRADIENT:
+				mode = fill_style[2][0]
+				self.vector = deepcopy(fill_style[2][1])
+				stops = deepcopy(fill_style[2][2])
+			elif fill_style[1] == sk2_const.FILL_SOLID:
+				if fill_style[2][0] in GRADIENT_CLR_MODES:
+					color0 = deepcopy(fill_style[2])
+					color0[3] = ''
+					if new_color and new_color[0] in GRADIENT_CLR_MODES \
+											and not color0 == new_color:
+						color1 = deepcopy(new_color)
+						if not color0[0] == color1[0]:
+							color1 = self.cms.get_color(color1, color0[0])
+					else:
+						color1 = deepcopy(fill_style[2])
+						color1[2] = 0.0
+					stops = [[0.0, color0], [1.0, color1]]
+		self.new_fill = [rule, sk2_const.FILL_GRADIENT,
+						[mode, self.vector, stops]]
+		self.update()
+
+	def build(self):
+		panel = wal.HPanel(self)
+		self.grad_keeper = wal.HToggleKeeper(panel, GRADIENT_MODES,
+								GRADIENT_MODE_ICONS,
+								GRADIENT_MODE_NAMES, self.on_grad_mode_change)
+		panel.pack(self.grad_keeper)
+		panel.pack(wal.HPanel(panel), fill=True, expand=True)
+
+		self.grad_clrs = wal.HToggleKeeper(panel, GRADIENT_CLR_MODES,
+								GRADIENT_CLR_ICONS,
+								GRADIENT_CLR_NAMES, self.on_clr_mode_change)
+		panel.pack(self.grad_clrs)
+		panel.pack(wal.HPanel(panel), fill=True, expand=True)
+
+		self.rule_keeper = wal.HToggleKeeper(panel, RULE_MODES,
+										RULE_MODE_ICONS, RULE_MODE_NAMES)
+		panel.pack(self.rule_keeper)
+		self.pack(panel, fill=True, padding_all=5)
+		self.pack(wal.HLine(self), fill=True)
+
+		self.grad_editor = GradientEditor(self, self.dlg, self.cms,
+								DEFAULT_STOPS, onchange=self.on_stops_change)
+		self.pack(self.grad_editor, fill=True, expand=True, padding=3)
+		self.pack(wal.HLine(self), fill=True)
+
+		panel = wal.HPanel(self)
+		self.refpanel = FillFillRefPanel(self, self.cms, self.orig_fill,
+									deepcopy(self.orig_fill))
+		panel.pack(self.refpanel)
+		self.presets = GradientPresets(panel)
+		panel.pack(self.presets, fill=True, expand=True)
+		self.pack(panel, fill=True, padding_all=5)
+
+	def on_clr_mode_change(self, mode):
+		conv = self.cms.get_cmyk_color
+		if mode == uc2const.COLOR_RGB:
+			conv = self.cms.get_rgb_color
+		elif mode == uc2const.COLOR_GRAY:
+			conv = self.cms.get_grayscale_color
+		new_stops = []
+		for stop in self.new_fill[2][2]:
+			new_stops.append([stop[0], conv(stop[1])])
+		self.new_fill[2][2] = new_stops
+		self.update()
+
+	def on_grad_mode_change(self, mode):
+		self.new_fill[2][0] = mode
+		self.update()
+
+	def on_stops_change(self):
+		self.new_fill[2][2] = self.grad_editor.get_stops()
+		self.update()
+
+	def get_result(self):
+		stops = self.grad_editor.get_stops()
+		vector = self.vector
+		if not self.grad_editor.use_vector():vector = []
+		grad = [self.grad_keeper.get_mode(), vector, stops]
+		return [self.rule_keeper.mode, sk2_const.FILL_GRADIENT, grad]
+
+	def update(self):
+		self.grad_keeper.set_mode(self.new_fill[2][0])
+		self.grad_clrs.set_mode(self.new_fill[2][2][0][1][0])
+		self.rule_keeper.set_mode(self.new_fill[0])
+		self.grad_editor.set_stops(self.new_fill[2][2])
+		self.refpanel.update(self.orig_fill, self.new_fill)
+
 
 class PatternFill(FillTab):
 
