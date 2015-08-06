@@ -181,6 +181,7 @@ class CairoRenderer:
 			gradient = fill[2]
 			points = gradient[1]
 			if not points:
+				obj.fill_trafo = [] + sk2_const.NORMAL_TRAFO
 				points = libgeom.bbox_middle_points(obj.cache_bbox)
 				if gradient[0] == sk2_const.GRADIENT_LINEAR:
 					points = [points[0], points[2]]
