@@ -133,6 +133,13 @@ PD_JOIN_ROUND = 'join-round'
 PD_LINEAR_GRAD = 'linear-grad'
 PD_RADIAL_GRAD = 'radial-grad'
 
+PD_GOTO_FIRST = 'gtk-goto-first'
+PD_GO_BACK = 'gtk-go-back'
+PD_GO_FORWARD = 'gtk-go-forward'
+PD_GOTO_LAST = 'gtk-goto-last'
+
+PD_ADD = 'gtk-add'
+PD_REMOVE = 'gtk-remove'
 
 #----- MacOS X specific bitmaps
 MAC_TBB_NORMAL = 'tbb-normal'
