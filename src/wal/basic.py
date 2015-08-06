@@ -406,6 +406,9 @@ class Canvas(object):
 								wx.Colour(*stop_clr),
 								nDirection=wx.EAST)
 
+	def gc_draw_bitmap(self, bmp, x=0, y=0, use_mask=True):
+		self.dc.DrawBitmap(bmp, x, y, use_mask)
+
 class SensitiveCanvas(Canvas):
 
 	def __init__(self, check_move=False):
