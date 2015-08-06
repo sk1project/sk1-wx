@@ -130,6 +130,7 @@ class AppConfig(UCConfig):
 	fill_dlg_size = (440, 370)
 	stroke_dlg_size = (430, 370)
 	dash_dlg_size = (300, 150)
+	change_color_dlg_size = (420, 300)
 
 	statusbar_fontsize = 0
 	tabs_fontsize = 0
