@@ -37,11 +37,11 @@ class FillDialog(wal.OkCancelDialog):
 
 	def build(self):
 		self.nb = wal.Notebook(self, on_change=self.on_change)
-		tabs = [SolidFill(self.nb, self, self.cms),
+		self.tabs = [SolidFill(self.nb, self, self.cms),
 				GradientFill(self.nb, self, self.cms),
 				PatternFill(self.nb, self, self.cms)
 				]
-		for item in tabs:
+		for item in self.tabs:
 			self.nb.add_page(item, item.name)
 		self.pack(self.nb, fill=True, expand=True)
 
@@ -53,7 +53,13 @@ class FillDialog(wal.OkCancelDialog):
 			self.nb.set_active_index(2)
 
 	def on_change(self, index):
-		self.nb.get_active_page().activate(self.orig_fill)
+		new_color = None
+		if self.tabs[0].active_panel:
+			new_color = self.tabs[0].active_panel.get_color()
+		if index == 1 and new_color:
+			self.nb.get_active_page().activate(self.orig_fill, new_color)
+		else:
+			self.nb.get_active_page().activate(self.orig_fill)
 
 	def get_result(self):
 		return self.nb.get_active_page().get_result()
