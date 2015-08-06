@@ -20,7 +20,7 @@ from copy import deepcopy
 import wal
 
 from uc2 import uc2const, cms
-from uc2.cms import get_registration_black, verbose_color
+from uc2.cms import get_registration_black, verbose_color, val_255_to_dec
 from uc2.formats.sk2 import sk2_const
 from sk1 import _, config
 from sk1.resources import icons, get_icon
@@ -211,11 +211,30 @@ class SwatchCanvas(wal.SensitiveCanvas):
 			y = (h - 19) / 2
 			self.draw_bitmap(self.reg_icon, x, y)
 
+	def draw_cairo_background(self, ctx):
+		w, h = self.get_size()
+		x1 = y1 = 0
+		flag_y = self.even_odd
+		while y1 < h:
+			flag_x = flag_y
+			while x1 < w:
+				clr = wal.WHITE
+				if not flag_x: clr = wal.LIGHT_GRAY
+				ctx.set_source_rgb(*val_255_to_dec(clr.Get()))
+				ctx.rectangle(x1, y1, self.pattern_size, self.pattern_size)
+				ctx.fill()
+				flag_x = not flag_x
+				x1 += self.pattern_size
+			flag_y = not flag_y
+			y1 += self.pattern_size
+			x1 = 0
+
 	def draw_gradient(self):
 		w, h = self.get_size()
 		gradient = self.fill[2]
-		surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+		surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
 		ctx = cairo.Context(surface)
+		self.draw_cairo_background(ctx)
 		if gradient[0] == sk2_const.GRADIENT_LINEAR:
 			grd = cairo.LinearGradient(0.0, h / 2.0, w, h / 2.0)
 		else:
@@ -226,7 +245,7 @@ class SwatchCanvas(wal.SensitiveCanvas):
 		ctx.set_source(grd)
 		ctx.rectangle(0, 0, w, h)
 		ctx.fill()
-		self.draw_bitmap(wal.copy_surface_to_bitmap(surface), 0, 0)
+		self.gc_draw_bitmap(wal.copy_surface_to_bitmap(surface), 0, 0)
 
 	def draw_pattern(self):pass
 
@@ -405,6 +424,29 @@ class MiniPalette(wal.VPanel):
 	def on_click(self, color):
 		if self.callback: self.callback(color)
 
+class ColorColorRefPanel(wal.VPanel):
+
+	def __init__(self, parent, cms, orig_color, new_color, on_orig=None):
+		wal.VPanel.__init__(self, parent)
+		grid = wal.GridPanel(self, hgap=5)
+		grid.pack(wal.Label(grid, _('Old color:')))
+
+		self.before_swatch = AlphaColorSwatch(grid, cms, orig_color, (70, 30),
+										'new', onclick=on_orig)
+		grid.pack(self.before_swatch)
+
+		grid.pack(wal.Label(grid, _('New color:')))
+
+		self.after_swatch = AlphaColorSwatch(grid, cms, new_color, (70, 30),
+											even_odd=True)
+		grid.pack(self.after_swatch)
+
+		self.pack(grid, padding_all=2)
+
+	def update(self, orig_color, new_color):
+		self.before_swatch.set_color(orig_color)
+		self.after_swatch.set_color(new_color)
+
 class FillColorRefPanel(wal.VPanel):
 
 	def __init__(self, parent, cms, fill, new_color, on_orig=None):
@@ -441,7 +483,7 @@ class FillFillRefPanel(wal.VPanel):
 		grid.pack(wal.Label(grid, _('New fill:')))
 
 		self.after_swatch = FillSwatch(grid, cms, new_fill, (70, 30),
-									border='swe')
+									border='swe', even_odd=False)
 		grid.pack(self.after_swatch)
 
 		self.pack(grid, padding_all=2)
