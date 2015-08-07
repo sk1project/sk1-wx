@@ -18,6 +18,7 @@
 from copy import deepcopy
 import wal
 
+from uc2 import uc2const
 from uc2.formats.sk2 import sk2_const
 
 from sk1 import _
@@ -25,6 +26,108 @@ from sk1.dialogs.colordlg import change_color_dlg
 from sk1.resources import icons, get_icon
 
 from colorctrls import SwatchCanvas, AlphaColorSwatch
+
+CMYK_PALETTE = [
+[[0.0, [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, 'Black']],
+[1.0, [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 0.0, 'Black']]],
+[[0.0, [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, 'Black']],
+[1.0, [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 0.0], 1.0, 'White']]],
+[[0.0, [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 0.0], 0.0, 'White']],
+[1.0, [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 0.0], 1.0, 'White']]],
+]
+
+RGB_PALETTE = [
+[[0.0, [uc2const.COLOR_RGB, [0.0, 0.0, 0.0], 1.0, 'Black']],
+[1.0, [uc2const.COLOR_RGB, [0.0, 0.0, 0.0], 0.0, 'Black']]],
+[[0.0, [uc2const.COLOR_RGB, [0.0, 0.0, 0.0], 1.0, 'Black']],
+[1.0, [uc2const.COLOR_RGB, [1.0, 1.0, 1.0], 1.0, 'White']]],
+[[0.0, [uc2const.COLOR_RGB, [1.0, 1.0, 1.0], 0.0, 'White']],
+[1.0, [uc2const.COLOR_RGB, [1.0, 1.0, 1.0], 1.0, 'White']]],
+]
+
+GRAY_PALETTE = [
+[[0.0, [uc2const.COLOR_GRAY, [0.0, ], 1.0, 'Black']],
+[1.0, [uc2const.COLOR_GRAY, [0.0, ], 0.0, 'Black']]],
+[[0.0, [uc2const.COLOR_GRAY, [0.0, ], 1.0, 'Black']],
+[1.0, [uc2const.COLOR_GRAY, [1.0, ], 1.0, 'White']]],
+[[0.0, [uc2const.COLOR_GRAY, [1.0, ], 0.0, 'White']],
+[1.0, [uc2const.COLOR_GRAY, [1.0, ], 1.0, 'White']]],
+]
+
+PALETTES = {
+uc2const.COLOR_CMYK:CMYK_PALETTE,
+uc2const.COLOR_RGB:RGB_PALETTE,
+uc2const.COLOR_GRAY:GRAY_PALETTE,
+}
+
+DEFAULT_STOPS = [[0.0, [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, 'Black']],
+[1.0, [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 0.0, 'Black']]]
+
+class GradientPaletteSwatch(wal.VPanel, SwatchCanvas):
+
+	callback = None
+
+	def __init__(self, parent, cms, stops, size=(80, 20), onclick=None):
+		self.color = None
+		self.cms = cms
+		wal.VPanel.__init__(self, parent)
+		SwatchCanvas.__init__(self)
+		self.pack(size)
+		if onclick: self.callback = onclick
+		self.set_stops(stops)
+
+	def set_stops(self, stops):
+		self.stops = stops
+		self.fill = [0, sk2_const.FILL_GRADIENT,
+				[sk2_const.GRADIENT_LINEAR, [], self.stops]]
+		self.refresh()
+
+	def mouse_left_up(self, point):
+		if self.callback: self.callback(deepcopy(self.stops))
+
+class GradientMiniPalette(wal.VPanel):
+
+	callback = None
+	cells = []
+
+	def __init__(self, parent, cms, stops=[], onclick=None):
+		wal.VPanel.__init__(self, parent)
+		self.set_bg(wal.BLACK)
+		grid = wal.GridPanel(parent, 2, 3, 1, 1)
+		grid.set_bg(wal.BLACK)
+		self.cells = []
+
+		for item in range(6):
+			self.cells.append(GradientPaletteSwatch(grid, cms,
+							deepcopy(DEFAULT_STOPS), onclick=self.on_click))
+			grid.pack(self.cells[-1])
+		self.pack(grid, padding_all=1)
+		if onclick: self.callback = onclick
+		self.set_stops(stops)
+
+	def set_stops(self, stops=[]):
+		if stops:
+			palette = PALETTES[stops[0][1][0]]
+			for item in palette:
+				self.cells[palette.index(item)].set_stops(item)
+			clr1 = deepcopy(stops[0][1])
+			clr1[2] = 1.0
+			clr1a = deepcopy(stops[0][1])
+			clr1a[2] = 0.0
+			clr2 = deepcopy(stops[-1][1])
+			clr2[2] = 1.0
+			clr2a = deepcopy(stops[-1][1])
+			clr2a[2] = 0.0
+			stops = [
+				[[0.0, clr1], [1.0, clr1a]],
+				[[0.0, clr1], [1.0, clr2]],
+				[[0.0, clr2a], [1.0, clr2]],
+				]
+			for item in stops:
+				self.cells[stops.index(item) + 3].set_stops(item)
+
+	def on_click(self, stops):
+		if self.callback: self.callback(stops)
 
 class StopPanel(wal.LabeledPanel):
 
