@@ -28,7 +28,7 @@ from colorctrls import PaletteSwatch, CMYK_Mixer, RGB_Mixer, Gray_Mixer, \
 SPOT_Mixer, Palette_Mixer
 from colorctrls import FillColorRefPanel, MiniPalette, FillFillRefPanel
 from colorctrls import CMYK_PALETTE, RGB_PALETTE, GRAY_PALETTE, SPOT_PALETTE
-from gradientctrls import GradientEditor, GradientPresets
+from gradientctrls import GradientEditor, GradientPresets, GradientMiniPalette
 
 #--- Solid fill panels
 
@@ -508,11 +508,18 @@ class GradientFill(FillTab):
 
 		panel = wal.HPanel(self)
 		self.refpanel = FillFillRefPanel(self, self.cms, self.orig_fill,
-									deepcopy(self.orig_fill))
+						deepcopy(self.orig_fill), on_orig=self.set_orig_fill)
 		panel.pack(self.refpanel)
-		self.presets = GradientPresets(panel)
-		panel.pack(self.presets, fill=True, expand=True)
+
+		panel.pack(wal.HPanel(panel), fill=True, expand=True)
+
+		self.presets = GradientMiniPalette(panel, self.cms,
+										onclick=self.on_presets_select)
+		panel.pack(self.presets)
 		self.pack(panel, fill=True, padding_all=5)
+
+	def set_orig_fill(self):
+		self.activate(self.orig_fill)
 
 	def on_clr_mode_change(self, mode):
 		conv = self.cms.get_cmyk_color
@@ -534,6 +541,10 @@ class GradientFill(FillTab):
 		self.new_fill[2][2] = self.grad_editor.get_stops()
 		self.update()
 
+	def on_presets_select(self, stops):
+		self.new_fill[2][2] = stops
+		self.update()
+
 	def get_result(self):
 		stops = self.grad_editor.get_stops()
 		vector = self.vector
@@ -547,6 +558,7 @@ class GradientFill(FillTab):
 		self.rule_keeper.set_mode(self.new_fill[0])
 		self.grad_editor.set_stops(self.new_fill[2][2])
 		self.refpanel.update(self.orig_fill, self.new_fill)
+		self.presets.set_stops(self.new_fill[2][2])
 
 
 class PatternFill(FillTab):
