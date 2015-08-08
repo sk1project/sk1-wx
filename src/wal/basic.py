@@ -443,7 +443,7 @@ class SensitiveCanvas(Canvas):
 	def mouse_left_up(self, point):pass
 	def mouse_right_up(self, point):pass
 	def mouse_wheel(self, val):pass
-	def mouse_move(self, val):pass
+	def mouse_move(self, point):pass
 	def mouse_left_dclick(self, point):pass
 
 
