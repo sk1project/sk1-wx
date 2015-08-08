@@ -266,7 +266,6 @@ class StopsEditor(wal.VPanel, wal.SensitiveCanvas):
 			if val > w * stop[0] - 4 and val < w * stop[0] + 4:
 				ret = index
 			index += 1
-		print ret
 		return ret
 
 	def mouse_move(self, point):
