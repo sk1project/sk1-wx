@@ -207,10 +207,14 @@ class StopsEditor(wal.VPanel, wal.SensitiveCanvas):
 	bmp_knob_s = None
 	bmp_stop_s = None
 	callback = None
+	callback2 = None
+	pick_flag = False
 
-	def __init__(self, parent, stops, size=(418, 5), onchange=None):
+	def __init__(self, parent, stops, size=(418, 10), onchange=None,
+				onmove=None):
 		self.stops = stops
 		self.callback = onchange
+		self.callback2 = onmove
 		wal.VPanel.__init__(self, parent)
 		wal.SensitiveCanvas.__init__(self, True)
 		self.pack(size)
@@ -250,6 +254,47 @@ class StopsEditor(wal.VPanel, wal.SensitiveCanvas):
 	def set_selected_stop(self, index):
 		self.selected_stop = index
 		self.refresh()
+
+	def change_selected_stop(self, index):
+		if self.callback:self.callback(index)
+
+	def check_stop_point(self, val):
+		ret = None
+		w = self.get_size()[0] - 12
+		index = 1
+		for stop in self.stops[1:-1]:
+			if val > w * stop[0] - 4 and val < w * stop[0] + 4:
+				ret = index
+			index += 1
+		print ret
+		return ret
+
+	def mouse_move(self, point):
+		if self.pick_flag:
+			if self.callback2:
+				w = self.get_size()[0]
+				pos = point[0] - 9
+				if pos > w - 18:pos = w - 18
+				if pos < 0:pos = 0
+				pos /= (w - 18) * 1.0
+				self.callback2(self.selected_stop, pos)
+
+	def mouse_left_up(self, point):
+		self.pick_flag = False
+
+	def mouse_left_down(self, point):
+		x = point[0]
+		w = self.get_size()[0]
+		if x < 9:
+			self.change_selected_stop(0)
+		elif x > w - 8:
+			self.change_selected_stop(len(self.stops) - 1)
+		else:
+			index = self.check_stop_point(x - 8)
+			if not index is None:
+				self.change_selected_stop(index)
+				self.pick_flag = True
+
 
 class GradientViewer(wal.VPanel, SwatchCanvas):
 
@@ -294,9 +339,11 @@ class GradientEditor(wal.VPanel):
 		self.viewer = GradientViewer(self, self.cms, self.stops,
 									onclick=self.insert_stop)
 		self.pack(self.viewer)
-		self.stop_editor = StopsEditor(self, self.stops)
+		self.stop_editor = StopsEditor(self, self.stops,
+									onchange=self.set_selected_stop,
+									onmove=self.change_stop_position)
 		self.pack(self.stop_editor)
-		self.pack((10, 10))
+		self.pack((5, 5))
 
 		hpanel = wal.HPanel(self)
 		self.stop_panel = StopPanel(hpanel, self.dlg, self.cms, self.stops,
