@@ -22,7 +22,7 @@ import wal
 from uc2 import uc2const, cms
 from uc2.cms import get_registration_black, verbose_color, val_255_to_dec
 from uc2.formats.sk2 import sk2_const
-from sk1 import _, config
+from sk1 import _, config, events
 from sk1.resources import icons, get_icon
 
 from palette_viewer import PaletteViewer
@@ -491,6 +491,19 @@ class FillFillRefPanel(wal.VPanel):
 	def update(self, fill, new_fill):
 		self.before_swatch.set_swatch_fill(fill)
 		self.after_swatch.set_swatch_fill(new_fill)
+
+class StyleMonitor(wal.VPanel):
+
+	def __init__(self, parent, app):
+		self.app = app
+		wal.VPanel.__init__(self, parent)
+		self.pack((25, 25))
+		self.stroke = AlphaColorSwatch(self, app.default_cms, [],
+									border='news')
+		self.stroke.set_position((5, 5))
+		self.fill = FillSwatch(self, app.default_cms, [],
+							border='news')
+		self.fill.set_position((0, 0))
 
 
 class ColoredSlider(wal.VPanel, wal.SensitiveCanvas):
