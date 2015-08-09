@@ -18,6 +18,7 @@
 import wal
 
 from sk1.resources import pdids
+from sk1.pwidgets import StyleMonitor
 
 BUTTONS = (pdids.SELECT_MODE, pdids.SHAPER_MODE, pdids.ZOOM_MODE,
 		pdids.FLEUR_MODE, pdids.LINE_MODE, pdids.CURVE_MODE, pdids.RECT_MODE,
@@ -41,7 +42,8 @@ class AppTools(wal.VPanel):
 				else: but = ActionToolButton(self.panel, action)
 				self.buttons.append(but)
 				self.pack(but, padding=1)
-
+		self.pack((15, 15))
+		self.pack(StyleMonitor(self, self.app))
 
 class ActionTool(wal.ImageToggleButton):
 

@@ -22,5 +22,5 @@ from mactoolbar import MacTB_ActionButton, MacTB_ActionNestedButtons
 from palette_viewer import PaletteViewer
 from palette import Palette
 from fillctrls import SolidFill, GradientFill, PatternFill
-from colorctrls import SB_StrokeSwatch, SB_FillSwatch
+from colorctrls import SB_StrokeSwatch, SB_FillSwatch, StyleMonitor
 from strokectrls import DashChoice, CapChoice, JoinChoice

@@ -24,6 +24,9 @@ class Widget(object):
 	shown = True
 	enabled = True
 
+	def set_position(self, point=(0, 0)):
+		self.SetPosition(point)
+
 	def show(self, update=True):
 		self.Show()
 		self.shown = True
