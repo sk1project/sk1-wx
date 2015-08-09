@@ -505,6 +505,15 @@ class StyleMonitor(wal.VPanel):
 							border='news')
 		self.fill.set_position((0, 0))
 
+	def doc_changed(self, doc):pass
+
+
+	def no_docs(self):
+		self.stroke.set_color([])
+		self.stroke.cms = self.app.default_cms
+		self.fill.set_swatch_fill([])
+		self.fill.cms = self.app.default_cms
+
 
 class ColoredSlider(wal.VPanel, wal.SensitiveCanvas):
 
