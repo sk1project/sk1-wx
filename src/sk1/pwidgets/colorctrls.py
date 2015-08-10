@@ -88,6 +88,7 @@ cms.get_registration_black(),
 REG_COLOR = [1.0, 1.0, 1.0, 1.0]
 REG_SPOT_COLOR = [[0.0, 0.0, 0.0], [1.0, 1.0, 1.0, 1.0]]
 
+
 class HexField(wal.Entry):
 
 	color = None
@@ -274,6 +275,7 @@ class SwatchCanvas(wal.SensitiveCanvas):
 		self.set_fill()
 		self.draw_rect(x0, y0, x1 - x0, y1 - y0)
 
+
 class PaletteSwatch(wal.VPanel, SwatchCanvas):
 
 	callback = None
@@ -290,6 +292,7 @@ class PaletteSwatch(wal.VPanel, SwatchCanvas):
 
 	def mouse_left_up(self, point):
 		if self.callback: self.callback(deepcopy(self.color))
+
 
 class AlphaColorSwatch(wal.VPanel, SwatchCanvas):
 
@@ -313,6 +316,7 @@ class AlphaColorSwatch(wal.VPanel, SwatchCanvas):
 		if self.color and self.color[3]:tooltip = self.color[3]
 		self.set_tooltip(tooltip)
 		self.refresh()
+
 
 class FillSwatch(wal.VPanel, SwatchCanvas):
 
@@ -344,6 +348,7 @@ class FillSwatch(wal.VPanel, SwatchCanvas):
 		if self.color and self.color[3]:tooltip = self.color[3]
 		self.set_tooltip(tooltip)
 		self.refresh()
+
 
 class SB_StrokeSwatch(AlphaColorSwatch):
 
@@ -377,6 +382,7 @@ class SB_StrokeSwatch(AlphaColorSwatch):
 				text += ' ' + _('None')
 		self.label.set_text(text)
 
+
 class SB_FillSwatch(FillSwatch):
 
 	pattern_size = 8
@@ -407,6 +413,7 @@ class SB_FillSwatch(FillSwatch):
 
 		self.label.set_text(text)
 
+
 class MiniPalette(wal.VPanel):
 
 	callback = None
@@ -423,6 +430,7 @@ class MiniPalette(wal.VPanel):
 
 	def on_click(self, color):
 		if self.callback: self.callback(color)
+
 
 class ColorColorRefPanel(wal.VPanel):
 
@@ -446,6 +454,7 @@ class ColorColorRefPanel(wal.VPanel):
 	def update(self, orig_color, new_color):
 		self.before_swatch.set_color(orig_color)
 		self.after_swatch.set_color(new_color)
+
 
 class FillColorRefPanel(wal.VPanel):
 
@@ -492,6 +501,7 @@ class FillFillRefPanel(wal.VPanel):
 		self.before_swatch.set_swatch_fill(fill)
 		self.after_swatch.set_swatch_fill(new_fill)
 
+
 class StyleMonitor(wal.VPanel):
 
 	def __init__(self, parent, app):
@@ -499,20 +509,38 @@ class StyleMonitor(wal.VPanel):
 		wal.VPanel.__init__(self, parent)
 		self.pack((25, 25))
 		self.stroke = AlphaColorSwatch(self, app.default_cms, [],
-									border='news')
+									border='news', onclick=self.stroke_click)
 		self.stroke.set_position((5, 5))
 		self.fill = FillSwatch(self, app.default_cms, [],
-							border='news')
+							border='news', onclick=self.fill_click)
 		self.fill.set_position((0, 0))
+		events.connect(events.DOC_CHANGED, self.doc_changed)
+		events.connect(events.DOC_MODIFIED, self.doc_changed)
+		events.connect(events.NO_DOCS, self.no_docs)
 
-	def doc_changed(self, doc):pass
-
+	def doc_changed(self, doc):
+		cms = doc.cms
+		fill_style = doc.model.styles['Default Style'][0]
+		stroke_style = doc.model.styles['Default Style'][1]
+		self.stroke.cms = cms
+		self.fill.cms = cms
+		self.fill.set_swatch_fill(deepcopy(fill_style))
+		if stroke_style:
+			self.stroke.set_color(deepcopy(stroke_style[2]))
+		else:
+			self.stroke.set_color([])
 
 	def no_docs(self):
-		self.stroke.set_color([])
 		self.stroke.cms = self.app.default_cms
-		self.fill.set_swatch_fill([])
 		self.fill.cms = self.app.default_cms
+		self.stroke.set_color([])
+		self.fill.set_swatch_fill([])
+
+	def fill_click(self):
+		self.app.proxy.fill_dialog(True)
+
+	def stroke_click(self):
+		self.app.proxy.stroke_dialog(True)
 
 
 class ColoredSlider(wal.VPanel, wal.SensitiveCanvas):
@@ -571,6 +599,7 @@ class ColoredSlider(wal.VPanel, wal.SensitiveCanvas):
 	def mouse_left_up(self, val):
 		self.check_flag = False
 		self._set_value(val[0])
+
 
 class ColoredAlphaSlider(ColoredSlider):
 
@@ -891,6 +920,7 @@ class Gray_Mixer(wal.VPanel):
 		self.alpha_slider.set_value(self.color[2], start_clr, stop_clr)
 		self.alpha_spin.set_value(self.color[2] * 255.0)
 
+
 class SPOT_Mixer(wal.VPanel):
 
 	color = None
@@ -985,6 +1015,7 @@ class SPOT_Mixer(wal.VPanel):
 		self.alpha_slider.set_value(self.color[2], start_clr, stop_clr)
 		self.alpha_spin.set_value(self.color[2] * 255.0)
 
+
 class ColorSticker(wal.VPanel):
 
 	def __init__(self, parent, cms, color=None):
@@ -1033,6 +1064,7 @@ class ColorSticker(wal.VPanel):
 			self.line1.set_text(txt1)
 			self.line2.set_text(txt2)
 		self.parent.layout()
+
 
 class Palette_Mixer(wal.HPanel):
 

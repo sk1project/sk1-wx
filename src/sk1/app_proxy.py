@@ -39,15 +39,19 @@ class AppProxy:
 				'Sorry, but this feature is not implemented yet!\n' +
 				'Be patient and watch project development of regularly updating the source code!')
 
-	def fill_dialog(self):
+	def fill_dialog(self, default_style=False):
 		doc = self.app.current_doc
-		fill_style = None
-		default_style = False
-		title = _('Fill')
-		if doc.selection.objs:
-			style = self._get_style(doc.selection.objs)
-			if not style is None:
-				fill_style = style[0]
+		if default_style:
+			fill_style = doc.model.styles['Default Style'][0]
+			default_style = True
+			title = _('Default document fill')
+		else:
+			fill_style = None
+			title = _('Fill')
+			if doc.selection.objs:
+				style = self._get_style(doc.selection.objs)
+				if not style is None:
+					fill_style = style[0]
 		if fill_style is None:
 			txt = _('Do you wish to change default fill style for this document?')
 			txt += '\n'
@@ -79,15 +83,19 @@ class AppProxy:
 				if not ret is None: break
 		return ret
 
-	def stroke_dialog(self):
+	def stroke_dialog(self, default_style=False):
 		doc = self.app.current_doc
-		stroke_style = None
-		default_style = False
-		title = _('Stroke')
-		if doc.selection.objs:
-			style = self._get_style(doc.selection.objs)
-			if not style is None:
-				stroke_style = style[1]
+		if default_style:
+			stroke_style = doc.model.styles['Default Style'][1]
+			default_style = True
+			title = _('Default document stroke')
+		else:
+			stroke_style = None
+			title = _('Stroke')
+			if doc.selection.objs:
+				style = self._get_style(doc.selection.objs)
+				if not style is None:
+					stroke_style = style[1]
 		if stroke_style is None:
 			txt = _('Do you wish to change default stroke style for this document?')
 			txt += '\n'
