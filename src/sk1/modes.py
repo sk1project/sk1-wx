@@ -18,7 +18,7 @@
 import os
 import wx
 
-from wal import const 
+from wal import const
 
 from sk1 import config
 
@@ -56,6 +56,9 @@ RESIZE_MODE13_COPY = 33
 GUIDE_MODE = 34
 VGUIDE_MODE = 35
 HGUIDE_MODE = 36
+GR_SELECT_MODE = 40
+GR_CREATE_MODE = 41
+GR_EDIT_MODE = 42
 WAIT_MODE = 100
 
 MODE_LIST = [SELECT_MODE, SHAPER_MODE, ZOOM_MODE, LINE_MODE,
@@ -97,6 +100,9 @@ def get_cursors():
 			GUIDE_MODE:('cur_vguide', (12, 12)),
 			VGUIDE_MODE:('cur_vguide', (12, 12)),
 			HGUIDE_MODE:('cur_hguide', (12, 12)),
+			GR_SELECT_MODE:('cur_gr_edit', (5, 5)),
+			GR_CREATE_MODE:('cur_create_gr', (6, 6)),
+			GR_EDIT_MODE:('cur_gr_edit', (5, 5)),
 			}
 	keys = cursors.keys()
 	ext = '.png'
