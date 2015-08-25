@@ -73,11 +73,11 @@ class ScrolledPalette(wal.ScrolledPanel, wal.SensitiveCanvas):
 		self.set_bg(wal.WHITE)
 
 	def mouse_move(self, point):
-		index = self.get_color_index_in_point(point)
-		if not index is None and self.colors[index][3]:
-			self.set_tooltip('' + self.colors[index][3])
-		else:
+		if self.colors:
+			index = self.get_color_index_in_point(point)
 			self.set_tooltip()
+			if not index is None and self.colors[index][3]:
+				self.set_tooltip('' + self.colors[index][3])
 
 	def mouse_left_up(self, point):
 		self.selected_index = self.get_color_index_in_point(point)
