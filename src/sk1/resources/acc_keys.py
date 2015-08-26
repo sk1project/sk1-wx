@@ -69,6 +69,8 @@ pdids.ID_TO_CURVES:(wx.ACCEL_CTRL , ord('Q')),
 #----- Text menu
 pdids.ID_EDIT_TEXT:(wx.ACCEL_NORMAL, wx.WXK_F8),
 #----- Tools menu
+pdids.FILL_MODE:(wx.ACCEL_NORMAL, wx.WXK_F11),
+pdids.STROKE_MODE:(wx.ACCEL_NORMAL, wx.WXK_F12),
 pdids.ID_TOOL_PAGES:(wx.ACCEL_SHIFT, wx.WXK_F7),
 pdids.ID_TOOL_LAYERS:(wx.ACCEL_NORMAL, wx.WXK_F7),
 }

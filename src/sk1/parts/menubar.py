@@ -106,7 +106,8 @@ class AppMenuBar(wx.MenuBar):
 		self.entries.append(entry)
 
 		#---Tools menu
-		sub = (pdids.ID_TOOL_PAGES, pdids.ID_TOOL_LAYERS,
+		sub = (pdids.FILL_MODE, pdids.STROKE_MODE, None,
+			pdids.ID_TOOL_PAGES, pdids.ID_TOOL_LAYERS,
 			pdids.ID_TOOL_OBJBROWSER,)
 		entry = (_("T&ools"), sub)
 		self.entries.append(entry)

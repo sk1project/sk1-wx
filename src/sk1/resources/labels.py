@@ -36,6 +36,8 @@ pdids.POLYGON_MODE: (_('Create polygon'),),
 pdids.ZOOM_OUT_MODE: (_('Zoom out mode'),),
 pdids.MOVE_MODE: (_('Move mode'),),
 pdids.COPY_MODE: (_('Copy mode'),),
+pdids.STROKE_MODE: (_('Stroke...'),),
+pdids.FILL_MODE: (_('Fill...'),),
 
 wx.ID_NEW: (_('&New'), _('New document')),
 pdids.ID_NEW_FROM_TEMPLATE: (_('New From Template...'), _('New document from template...')),
