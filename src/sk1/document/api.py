@@ -997,6 +997,8 @@ class PresenterAPI(AbstractAPI):
 				curve = model.Curve(config, parent)
 				curve.paths = [path, ]
 				curve.style = deepcopy(obj.style)
+				if obj.fill_trafo: curve.fill_trafo = [] + obj.fill_trafo
+				if obj.stroke_trafo: curve.stroke_trafo = [] + obj.stroke_trafo
 				objs += [curve, ]
 				parent.childs.insert(index, curve)
 				curve.update()
