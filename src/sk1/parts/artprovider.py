@@ -50,7 +50,11 @@ class AbstractArtProvider(wx.ArtProvider):
 				return wx.Bitmap(path, self.image_type)
 		elif artid in self.iconset:
 			path = os.path.join(self.iconset_path, artid + self.file_ext)
-			if os.path.isfile(path):
+			sized_name = artid + '-' + str(size[0]) + self.file_ext
+			sized_path = os.path.join(self.iconset_path, sized_name)
+			if os.path.isfile(sized_path):
+				return wx.Bitmap(sized_path, self.image_type)
+			elif os.path.isfile(path):
 				return wx.Bitmap(path, self.image_type)
 		else:
 			filename = artid + self.file_ext
