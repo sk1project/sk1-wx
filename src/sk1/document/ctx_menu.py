@@ -22,6 +22,7 @@ from sk1.resources import pdids
 
 EDIT = [wx.ID_UNDO, wx.ID_REDO, None, wx.ID_CUT, wx.ID_COPY, wx.ID_PASTE,
 	wx.ID_DELETE, pdids.ID_DUPLICATE, None, wx.ID_SELECTALL]
+STYLE = [None, pdids.FILL_MODE, pdids.STROKE_MODE]
 DEFAULT = [None, wx.ID_PROPERTIES]
 COMBINE = [None, pdids.ID_COMBINE, pdids.ID_BREAK_APART, ]
 TO_CURVES = [None, pdids.ID_TO_CURVES]
@@ -80,15 +81,15 @@ class ContextMenu(wx.Menu):
 			if len(sel) > 1:
 				ret = COMBINE + GROUP + TO_CURVES
 			elif self.insp.is_obj_rect(sel[0]):
-				ret = self.get_order_entries() + TO_CURVES
+				ret = self.get_order_entries() + STYLE + TO_CURVES
 			elif self.insp.is_obj_circle(sel[0]):
-				ret = self.get_order_entries() + TO_CURVES
+				ret = self.get_order_entries() + STYLE + TO_CURVES
 			elif self.insp.is_obj_polygon(sel[0]):
-				ret = self.get_order_entries() + TO_CURVES
+				ret = self.get_order_entries() + STYLE + TO_CURVES
 			elif self.insp.is_obj_curve(sel[0]):
-				ret = self.get_order_entries() + COMBINE
+				ret = self.get_order_entries() + STYLE + COMBINE
 			elif self.insp.can_be_ungrouped():
-				ret = self.get_order_entries() + GROUP
+				ret = self.get_order_entries() + STYLE + GROUP
 			else:
 				ret = DEFAULT
 		return ret
