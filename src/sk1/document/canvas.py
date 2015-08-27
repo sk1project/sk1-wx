@@ -210,6 +210,8 @@ class AppCanvas(wx.Panel):
 			self.controller.restore()
 			events.emit(events.MODE_CHANGED, self.mode)
 			self.previous_mode = None
+		else:
+			self.set_mode()
 
 	def set_temp_cursor(self, cursor):
 		self.orig_cursor = self.app.cursors[self.mode]
