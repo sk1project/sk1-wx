@@ -71,6 +71,7 @@ def create_actions(app):
 (wx.ID_CLOSE_ALL, proxy.close_all, doc_chnls, insp.is_doc),
 (pdids.ID_IMPORT, proxy.import_file, doc_chnls, insp.is_doc),
 (pdids.ID_EXPORT, proxy.export_as, doc_chnls, insp.is_doc),
+(pdids.ID_VIEW_LOG, proxy.view_log, [HISTORY_CHANGED, ] + doc_chnls, insp.is_file_history),
 (wx.ID_PRINT_SETUP, proxy.stub, doc_chnls, insp.is_doc),
 (wx.ID_PRINT, proxy.stub, doc_chnls, insp.is_doc),
 (wx.ID_EXIT, proxy.exit),
@@ -86,7 +87,8 @@ def create_actions(app):
 (wx.ID_SELECTALL, proxy.select_all, doc_chnls, insp.is_doc),
 (pdids.ID_DESELECT, proxy.deselect, sel_chnls, insp.is_selection),
 (pdids.ID_INV_SELECT, proxy.invert_selection, doc_chnls, insp.is_doc),
-(pdids.ID_VIEW_LOG, proxy.view_log, [HISTORY_CHANGED, ] + doc_chnls, insp.is_file_history),
+(pdids.COPY_FILL, proxy.copy_fill, sel_chnls, insp.is_selection),
+(pdids.COPY_STROKE, proxy.copy_stroke, sel_chnls, insp.is_selection),
 (wx.ID_PROPERTIES, proxy.stub, doc_chnls, insp.is_doc),
 (wx.ID_PREFERENCES, proxy.preferences),
 #------ View menu -------
