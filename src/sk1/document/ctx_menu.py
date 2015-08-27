@@ -91,6 +91,8 @@ class ContextMenu(wx.Menu):
 				ret = self.get_order_entries() + STYLE + COMBINE
 			elif self.insp.can_be_ungrouped():
 				ret = self.get_order_entries() + STYLE + GROUP
+			elif self.insp.is_obj_pixmap(sel[0]):
+				ret = self.get_order_entries()
 			else:
 				ret = DEFAULT
 		return ret
