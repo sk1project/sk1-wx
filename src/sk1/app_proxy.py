@@ -115,6 +115,48 @@ class AppProxy:
 			else:
 				doc.api.set_stroke_style(new_stroke_style)
 
+	def copy_fill(self):
+		doc = self.app.current_doc
+		doc.canvas.set_temp_mode(modes.PICK_MODE, self.select_fill_donor)
+
+	def select_fill_donor(self, objs):
+		if len(objs) == 1 and objs[0].cid > sk2_model.PRIMITIVE_CLASS and not \
+		objs[0].cid == sk2_model.PIXMAP:
+			style = self._get_style(objs)
+			if not style is None:
+				fill_style = deepcopy(style[0])
+				if fill_style and fill_style[1] == sk2_const.FILL_GRADIENT:
+					fill_style[2][1] = []
+				self.app.current_doc.api.set_fill_style(fill_style)
+				return False
+
+		if not len(objs):
+			txt = _("There is no selected object.")
+		else:
+			txt = _("Selected object cannot be source of fill property.")
+		txt += '\n' + _('Do you want to try again?')
+		return yesno_dialog(self.app.mw, self.app.appdata.app_name, txt)
+
+	def copy_stroke(self):
+		doc = self.app.current_doc
+		doc.canvas.set_temp_mode(modes.PICK_MODE, self.select_stroke_donor)
+
+	def select_stroke_donor(self, objs):
+		if len(objs) == 1 and objs[0].cid > sk2_model.PRIMITIVE_CLASS and not \
+		objs[0].cid == sk2_model.PIXMAP:
+			style = self._get_style(objs)
+			if not style is None:
+				stroke_style = deepcopy(style[1])
+				self.app.current_doc.api.set_stroke_style(stroke_style)
+				return False
+
+		if not len(objs):
+			txt = _("There is no selected object.")
+		else:
+			txt = _("Selected object cannot be source of stroke property.")
+		txt += '\n' + _('Do you want to try again?')
+		return yesno_dialog(self.app.mw, self.app.appdata.app_name, txt)
+
 	def new(self): self.app.new()
 	def open(self): self.app.open()
 	def clear_log(self): self.app.history.clear_history()
@@ -318,16 +360,16 @@ class AppProxy:
 		doc = self.app.current_doc
 		doc.canvas.set_temp_mode(modes.PICK_MODE, self.select_container)
 
-	def select_container(self, obj):
+	def select_container(self, objs):
 		selection = self.app.current_doc.selection
-		if len(obj) == 1 and obj[0].cid > sk2_model.PRIMITIVE_CLASS and not \
-		obj[0] in selection.objs:
-			self.app.current_doc.api.pack_container(obj[0])
+		if len(objs) == 1 and objs[0].cid > sk2_model.PRIMITIVE_CLASS and not \
+		objs[0] in selection.objs and not objs[0].cid == sk2_model.PIXMAP:
+			self.app.current_doc.api.pack_container(objs[0])
 			return False
 
-		if not len(obj):
+		if not len(objs):
 			txt = _("There is no selected object.")
-		elif obj[0] in selection.objs:
+		elif objs[0] in selection.objs:
 			txt = _("Object from current selection cannot be container.")
 		else:
 			txt = _("Selected object cannot be container.")
