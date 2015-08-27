@@ -40,6 +40,8 @@ pdids.ID_DUPLICATE:(wx.ACCEL_CTRL, ord('D')),
 wx.ID_SELECTALL:(wx.ACCEL_CTRL, ord('A')),
 pdids.ID_DESELECT:(wx.ACCEL_SHIFT | wx.ACCEL_CTRL, ord('A')),
 #pdids.ID_INV_SELECT:(wx.ACCEL_SHIFT, ord('A')),
+pdids.COPY_FILL:(wx.ACCEL_SHIFT, wx.WXK_F11),
+pdids.COPY_STROKE:(wx.ACCEL_SHIFT, wx.WXK_F12),
 #----- View menu
 pdids.ID_STROKE_VIEW:(wx.ACCEL_SHIFT, wx.WXK_F9),
 wx.ID_ZOOM_IN:(wx.ACCEL_CTRL, ord('=')),

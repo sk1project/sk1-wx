@@ -39,6 +39,9 @@ pdids.COPY_MODE: (_('Copy mode'),),
 pdids.STROKE_MODE: (_('Stroke...'),),
 pdids.FILL_MODE: (_('Fill...'),),
 
+pdids.COPY_FILL: (_('Copy fill from...'),),
+pdids.COPY_STROKE: (_('Copy stroke from...'),),
+
 wx.ID_NEW: (_('&New'), _('New document')),
 pdids.ID_NEW_FROM_TEMPLATE: (_('New From Template...'), _('New document from template...')),
 wx.ID_OPEN: (_('&Open...'), _('Open document')),

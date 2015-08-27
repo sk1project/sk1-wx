@@ -37,6 +37,9 @@ ZOOM_OUT_MODE = wx.NewId()
 MOVE_MODE = wx.NewId()
 COPY_MODE = wx.NewId()
 
+COPY_FILL = wx.NewId()
+COPY_STROKE = wx.NewId()
+
 
 #----- File menu
 ID_NEW_FROM_TEMPLATE = wx.NewId()
