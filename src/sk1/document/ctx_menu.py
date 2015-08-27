@@ -22,7 +22,8 @@ from sk1.resources import pdids
 
 EDIT = [wx.ID_UNDO, wx.ID_REDO, None, wx.ID_CUT, wx.ID_COPY, wx.ID_PASTE,
 	wx.ID_DELETE, pdids.ID_DUPLICATE, None, wx.ID_SELECTALL]
-STYLE = [None, pdids.FILL_MODE, pdids.STROKE_MODE]
+STYLE = [None, pdids.FILL_MODE, pdids.STROKE_MODE, pdids.COPY_FILL,
+		pdids.COPY_STROKE]
 DEFAULT = [None, wx.ID_PROPERTIES]
 COMBINE = [None, pdids.ID_COMBINE, pdids.ID_BREAK_APART, ]
 TO_CURVES = [None, pdids.ID_TO_CURVES]
@@ -79,7 +80,7 @@ class ContextMenu(wx.Menu):
 			doc = self.app.current_doc
 			sel = doc.selection.objs
 			if len(sel) > 1:
-				ret = COMBINE + GROUP + TO_CURVES
+				ret = COMBINE + GROUP + STYLE + TO_CURVES
 			elif self.insp.is_obj_rect(sel[0]):
 				ret = self.get_order_entries() + STYLE + TO_CURVES
 			elif self.insp.is_obj_circle(sel[0]):
