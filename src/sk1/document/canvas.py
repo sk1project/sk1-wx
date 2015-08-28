@@ -173,6 +173,7 @@ class AppCanvas(wx.Panel):
 		modes.RESIZE_MODE: controllers.TransformController(self, self.presenter),
 		modes.GUIDE_MODE: controllers.GuideController(self, self.presenter),
 		modes.WAIT_MODE: controllers.WaitController(self, self.presenter),
+		modes.GR_SELECT_MODE: dummy,
 		}
 		return ctrls
 

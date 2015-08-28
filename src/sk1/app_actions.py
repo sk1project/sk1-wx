@@ -22,7 +22,7 @@ from sk1.pwidgets import AppAction
 
 from sk1.modes import SELECT_MODE, SHAPER_MODE, ZOOM_MODE, FLEUR_MODE, \
 LINE_MODE, CURVE_MODE, RECT_MODE, ELLIPSE_MODE, TEXT_MODE, POLYGON_MODE, \
-ZOOM_OUT_MODE
+ZOOM_OUT_MODE, GR_SELECT_MODE
 from sk1.events import CLIPBOARD, DOC_CHANGED, PAGE_CHANGED, \
 DOC_MODIFIED, DOC_SAVED, NO_DOCS, SELECTION_CHANGED, MODE_CHANGED, \
 HISTORY_CHANGED, SNAP_CHANGED
@@ -53,10 +53,10 @@ def create_actions(app):
 (pdids.TEXT_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [TEXT_MODE], [], [TEXT_MODE]),
 (pdids.POLYGON_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [POLYGON_MODE], [], [POLYGON_MODE]),
 (pdids.ZOOM_OUT_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [ZOOM_OUT_MODE], [], [ZOOM_OUT_MODE]),
+(pdids.GRADIENT_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [GR_SELECT_MODE], [], [GR_SELECT_MODE]),
 
 (pdids.FILL_MODE, proxy.fill_dialog, doc_chnls, insp.is_doc),
 (pdids.STROKE_MODE, proxy.stroke_dialog, doc_chnls, insp.is_doc),
-(pdids.GRADIENT_MODE, proxy.stub, tool_chnls, insp.is_doc),
 
 #------ File menu -------
 (wx.ID_NEW, app.new),
