@@ -38,6 +38,7 @@ class AppAction:
 	active = False
 	is_acc = False
 	acc_entry = None
+	global_accs = []
 
 	def __init__(self, action_id, callback, channels=[],
 				validator=None, checker=None,
@@ -46,7 +47,9 @@ class AppAction:
 		self.action_id = action_id
 		self.is_acc = resources.ACC_KEYS.has_key(action_id)
 		if self.is_acc:
-			self.acc_entry = resources.get_accentry_by_id(self.action_id)
+			self.acc_entry, self.global_accs = resources.get_accentry_by_id(self.action_id)
+		if not self.acc_entry:
+			self.is_acc = False
 		self.is_icon = resources.ART_IDS.has_key(action_id)
 		self.callback = callback
 		self.channels = channels
