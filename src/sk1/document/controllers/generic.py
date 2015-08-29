@@ -65,6 +65,7 @@ class AbstractController:
 	def standby(self):pass
 	def restore(self):pass
 	def do_action(self, event): return True
+	def escape_pressed(self):pass
 	def mouse_double_click(self, event): pass
 	def mouse_right_down(self, event):
 		if event.ControlDown():

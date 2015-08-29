@@ -33,6 +33,10 @@ class Kbd_Processor:
 		raw_code = event.GetRawKeyCode()
 		modifiers = event.GetModifiers()
 
+		if key_code == wx.WXK_ESCAPE and not modifiers:
+			self.canvas.controller.escape_pressed()
+			return
+
 		if key_code == wx.WXK_NUMPAD_DECIMAL and modifiers == wx.ACCEL_SHIFT:
 			self.actions[wx.ID_CUT].do_call()
 			return
