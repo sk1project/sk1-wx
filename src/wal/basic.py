@@ -89,6 +89,16 @@ class MainWindow(wx.Frame):
 
 	def build(self):pass
 
+	def set_global_shortcuts(self, actions):
+		global_entries = []
+		for item in actions.keys():
+			if actions[item].global_accs:
+				for acc in actions[item].global_accs:
+					global_entries.append(acc)
+					self.Bind(wx.EVT_MENU, actions[item].do_call)
+		if global_entries:
+			self.SetAcceleratorTable(wx.AcceleratorTable(global_entries))
+
 	def layout(self): self.Layout()
 	def get_size(self): return self.GetSize()
 	def is_maximized(self): return self.IsMaximized()

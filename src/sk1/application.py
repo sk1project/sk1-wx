@@ -18,7 +18,7 @@
 import os, sys, traceback
 import webbrowser
 
-import wal
+import wal, wx
 
 from uc2 import uc2const, libimg
 from uc2.utils.fs import path_unicode
@@ -89,6 +89,7 @@ class pdApplication(wal.Application, UCApplication):
 		self.clipboard = AppClipboard(self)
 
 		self.mw = AppMainWindow(self)
+		self.mw.set_global_shortcuts(self.actions)
 
 		self.proxy.update()
 		self.insp.update()
