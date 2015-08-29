@@ -25,6 +25,9 @@ class SelectController(AbstractController):
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
 
+	def escape_pressed(self):
+		self.selection.clear()
+
 	def mouse_move(self, event):
 		self.snap = self.presenter.snap
 		if self.draw:
