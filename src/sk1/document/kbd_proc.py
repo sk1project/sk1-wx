@@ -17,28 +17,41 @@
 
 import wx
 
+from sk1.resources import pdids
+
 class Kbd_Processor:
 
 	canvas = None
 
 	def __init__(self, canvas):
 		self.canvas = canvas
+		self.app = canvas.app
+		self.actions = self.app.actions
 
 	def on_key_down(self, event):
 		key_code = event.GetKeyCode()
 		raw_code = event.GetRawKeyCode()
 		modifiers = event.GetModifiers()
+
+		if key_code == wx.WXK_NUMPAD_DECIMAL and modifiers == wx.ACCEL_SHIFT:
+			self.actions[wx.ID_CUT].do_call()
+			return
+
+		if key_code == wx.WXK_NUMPAD0 and modifiers == wx.ACCEL_SHIFT:
+			self.actions[wx.ID_PASTE].do_call()
+			return
+
 		msg = "key:%d,raw:%d,modifers:%d" % \
 		(key_code, raw_code, modifiers)
-		print msg
+#		print msg
 		event.Skip()
 
 	def on_char(self, event):
-		print "OnChar Called"
+#		print "OnChar Called"
 		modifiers = event.GetModifiers()
 		key_code = event.GetUniChar()
 		char = unichr(event.GetUniChar())
 		msg = "key:%d, modifers:%d, char:%s" % \
 		(key_code, modifiers, char)
-		print msg
+#		print msg
 		event.Skip()
