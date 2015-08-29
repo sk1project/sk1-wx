@@ -26,7 +26,8 @@ class AbstractCreator(AbstractController):
 		AbstractController.__init__(self, canvas, presenter)
 
 	def escape_pressed(self):
-		self.canvas.set_mode()
+		if not self.start:
+			self.canvas.set_mode()
 
 	def mouse_down(self, event):
 		AbstractController.mouse_down(self, event)
