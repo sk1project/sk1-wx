@@ -58,6 +58,11 @@ def create_actions(app):
 (pdids.FILL_MODE, proxy.fill_dialog, doc_chnls, insp.is_doc),
 (pdids.STROKE_MODE, proxy.stroke_dialog, doc_chnls, insp.is_doc),
 
+(pdids.MOVE_UP, proxy.move_up, sel_chnls, insp.is_selection),
+(pdids.MOVE_DOWN, proxy.move_down, sel_chnls, insp.is_selection),
+(pdids.MOVE_LEFT, proxy.move_left, sel_chnls, insp.is_selection),
+(pdids.MOVE_RIGHT, proxy.move_right, sel_chnls, insp.is_selection),
+
 #------ File menu -------
 (wx.ID_NEW, app.new),
 (pdids.ID_NEW_FROM_TEMPLATE, app.new_from_template),

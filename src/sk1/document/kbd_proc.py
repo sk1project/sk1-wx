@@ -45,6 +45,22 @@ class Kbd_Processor:
 			self.actions[wx.ID_PASTE].do_call()
 			return
 
+		if key_code in (wx.WXK_UP, wx.WXK_NUMPAD_UP) and not modifiers:
+			self.actions[pdids.MOVE_UP].do_call()
+			return
+
+		if key_code in (wx.WXK_DOWN, wx.WXK_NUMPAD_DOWN) and not modifiers:
+			self.actions[pdids.MOVE_DOWN].do_call()
+			return
+
+		if key_code in (wx.WXK_LEFT, wx.WXK_NUMPAD_LEFT) and not modifiers:
+			self.actions[pdids.MOVE_LEFT].do_call()
+			return
+
+		if key_code in (wx.WXK_RIGHT, wx.WXK_NUMPAD_RIGHT) and not modifiers:
+			self.actions[pdids.MOVE_RIGHT].do_call()
+			return
+
 		msg = "key:%d,raw:%d,modifers:%d" % \
 		(key_code, raw_code, modifiers)
 #		print msg

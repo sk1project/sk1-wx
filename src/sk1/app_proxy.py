@@ -21,7 +21,7 @@ from copy import deepcopy
 from uc2 import uc2const
 from uc2.formats.sk2 import sk2_model, sk2_const
 
-from sk1 import _, dialogs, modes, events
+from sk1 import _, dialogs, modes, events, config
 from sk1.dialogs import yesno_dialog
 from sk1.prefs import get_prefs_dialog
 
@@ -156,6 +156,18 @@ class AppProxy:
 			txt = _("Selected object cannot be source of stroke property.")
 		txt += '\n' + _('Do you want to try again?')
 		return yesno_dialog(self.app.mw, self.app.appdata.app_name, txt)
+
+	def move_up(self):
+		self.app.current_doc.api.move_selected(0.0, config.obj_jump)
+
+	def move_down(self):
+		self.app.current_doc.api.move_selected(0.0, -1.0 * config.obj_jump)
+
+	def move_left(self):
+		self.app.current_doc.api.move_selected(-1.0 * config.obj_jump, 0.0)
+
+	def move_right(self):
+		self.app.current_doc.api.move_selected(config.obj_jump, 0.0)
 
 	def new(self): self.app.new()
 	def open(self): self.app.open()

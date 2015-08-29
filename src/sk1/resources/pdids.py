@@ -40,6 +40,10 @@ COPY_MODE = wx.NewId()
 COPY_FILL = wx.NewId()
 COPY_STROKE = wx.NewId()
 
+MOVE_UP = wx.NewId()
+MOVE_DOWN = wx.NewId()
+MOVE_LEFT = wx.NewId()
+MOVE_RIGHT = wx.NewId()
 
 #----- File menu
 ID_NEW_FROM_TEMPLATE = wx.NewId()
