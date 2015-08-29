@@ -95,7 +95,8 @@ class MainWindow(wx.Frame):
 			if actions[item].global_accs:
 				for acc in actions[item].global_accs:
 					global_entries.append(acc)
-					self.Bind(wx.EVT_MENU, actions[item].do_call)
+					self.Bind(wx.EVT_MENU, actions[item].do_call, self,
+							id=acc.GetCommand())
 		if global_entries:
 			self.SetAcceleratorTable(wx.AcceleratorTable(global_entries))
 

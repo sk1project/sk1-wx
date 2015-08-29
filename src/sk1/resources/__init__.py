@@ -58,7 +58,7 @@ def get_accentry_by_id(action_id):
 			menu_entry = wx.AcceleratorEntry(*(menu_item + (action_id,)))
 		if global_items:
 			for item in global_items:
-				entry = wx.AcceleratorEntry(*(item + (wx.NewId(),)))
+				entry = wx.AcceleratorEntry(*(item + (action_id,)))
 				global_entries.append(entry)
 		return menu_entry, global_entries
 	return None, []
