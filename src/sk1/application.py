@@ -18,7 +18,7 @@
 import os, sys, traceback
 import webbrowser
 
-import wal, wx
+import wal
 
 from uc2 import uc2const, libimg
 from uc2.utils.fs import path_unicode
