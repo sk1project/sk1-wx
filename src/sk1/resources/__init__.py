@@ -45,8 +45,23 @@ def get_acc_by_id(action_id):
 
 def get_accentry_by_id(action_id):
 	if ACC_KEYS.has_key(action_id):
-		return wx.AcceleratorEntry(*(ACC_KEYS[action_id] + (action_id,)))
-	return None
+		items = ACC_KEYS[action_id]
+		if isinstance(items, list):
+			menu_item = items[0]
+			global_items = items[1:]
+		else:
+			menu_item = items
+			global_items = []
+		menu_entry = None
+		global_entries = []
+		if menu_item:
+			menu_entry = wx.AcceleratorEntry(*(menu_item + (action_id,)))
+		if global_items:
+			for item in global_items:
+				entry = wx.AcceleratorEntry(*(item + (wx.NewId(),)))
+				global_entries.append(entry)
+		return menu_entry, global_entries
+	return None, []
 
 def get_icon(icon_id, client=wx.ART_OTHER, size=const.SIZE_16):
 	bmp = wx.ArtProvider.GetBitmap(icon_id, client, size)
