@@ -29,6 +29,10 @@ class FleurController(AbstractController):
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
 
+	def escape_pressed(self):
+		if not self.start:
+			self.canvas.set_mode()
+
 	def mouse_down(self, event):
 		self.move = True
 		self.start = list(event.GetPositionTuple())

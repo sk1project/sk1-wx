@@ -29,6 +29,10 @@ class ZoomController(AbstractController):
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
 
+	def escape_pressed(self):
+		if not self.start:
+			self.canvas.set_mode()
+
 	def mouse_right_down(self, event):
 		self.start = list(event.GetPositionTuple())
 		cursor = self.canvas.app.cursors[modes.ZOOM_OUT_MODE]
