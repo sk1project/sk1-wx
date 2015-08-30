@@ -17,6 +17,7 @@
 
 import wx
 
+from sk1 import modes
 from sk1.resources import pdids
 
 class Kbd_Processor:
@@ -60,6 +61,11 @@ class Kbd_Processor:
 		if key_code in (wx.WXK_RIGHT, wx.WXK_NUMPAD_RIGHT) and not modifiers:
 			self.actions[pdids.MOVE_RIGHT].do_call()
 			return
+
+		if key_code == wx.WXK_F2 and not modifiers:
+			self.canvas.set_mode(modes.ZOOM_MODE)
+			return
+
 
 		msg = "key:%d,raw:%d,modifers:%d" % \
 		(key_code, raw_code, modifiers)
