@@ -53,6 +53,12 @@ class PolyLineCreator(AbstractCreator):
 	def __init__(self, canvas, presenter):
 		AbstractCreator.__init__(self, canvas, presenter)
 
+	def escape_pressed(self):
+		if self.draw:
+			self.mouse_double_click(None)
+		else:
+			self.canvas.set_mode()
+
 	def start_(self):
 		self.snap = self.presenter.snap
 		self.init_flags()
