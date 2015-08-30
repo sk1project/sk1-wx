@@ -92,7 +92,7 @@ class PolyLineCreator(AbstractCreator):
 			self.draw = True
 			self.clear_data()
 		point = list(event.GetPositionTuple())
-		flag, self.point, self.doc_point = self.snap.snap_point(point)
+		self.point, self.doc_point = self.snap.snap_point(point)[1:]
 		self.create = True
 		self.init_timer()
 
@@ -102,7 +102,7 @@ class PolyLineCreator(AbstractCreator):
 			self.ctrl_mask = event.ControlDown()
 			self.alt_mask = event.AltDown()
 			point = list(event.GetPositionTuple())
-			flag, point, doc_point = self.snap.snap_point(point)
+			point, doc_point = self.snap.snap_point(point)[1:]
 			self.add_point(point, doc_point)
 			self.on_timer()
 
@@ -145,7 +145,7 @@ class PolyLineCreator(AbstractCreator):
 		if self.path[0] or self.paths:
 			paths = self.canvas.paths_doc_to_win(self.paths)
 			if self.cursor:
-				flag, cursor, doc_point = self.snap.snap_point(self.cursor)
+				cursor = self.snap.snap_point(self.cursor)[1]
 			else:
 				cursor = []
 			if not self.path[0]: cursor = []
@@ -154,7 +154,7 @@ class PolyLineCreator(AbstractCreator):
 
 	def continuous_draw(self):
 		if self.create and self.cursor:
-			flag, point, doc_point = self.snap.snap_point(self.cursor)
+			point, doc_point = self.snap.snap_point(self.cursor)[1:]
 			self.add_point(point, doc_point)
 			self.repaint_draw()
 		else:
@@ -311,7 +311,7 @@ class PathsCreator(PolyLineCreator):
 			self.draw = True
 			self.clear_data()
 		p = list(event.GetPositionTuple())
-		flag, self.curve_point, self.curve_point_doc = self.snap.snap_point(p)
+		self.curve_point, self.curve_point_doc = self.snap.snap_point(p)[1:]
 		self.control_point2 = []
 		self.control_point2_doc = []
 		self.create = True
@@ -323,13 +323,13 @@ class PathsCreator(PolyLineCreator):
 			self.ctrl_mask = False
 			self.alt_mask = False
 			p = list(event.GetPositionTuple())
-			flag, self.control_point2, self.control_point2_doc = self.snap.snap_point(p)
+			self.control_point2, self.control_point2_doc = self.snap.snap_point(p)[1:]
 			self.ctrl_mask = event.ControlDown()
 			self.alt_mask = event.AltDown()
 			if self.path[0]:
 				if self.alt_mask:
 					p = list(event.GetPositionTuple())
-					flag, self.point, self.point_doc = self.snap.snap_point(p)
+					self.point, self.point_doc = self.snap.snap_point(p)[1:]
 					self.add_point([] + self.point, [] + self.point_doc)
 					self.control_point0 = [] + self.point
 					self.cursor = list(event.GetPositionTuple())
@@ -349,10 +349,10 @@ class PathsCreator(PolyLineCreator):
 					self.control_point0_doc = [] + self.control_point2_doc
 					p = list(event.GetPositionTuple())
 					self.cursor = [] + p
-					flag, self.curve_point, self.curve_point_doc = self.snap.snap_point(p)
+					self.curve_point, self.curve_point_doc = self.snap.snap_point(p)[1:]
 			else:
 				p = list(event.GetPositionTuple())
-				flag, self.point, self.point_doc = self.snap.snap_point(p)
+				self.point, self.point_doc = self.snap.snap_point(p)[1:]
 				self.add_point(self.point, self.point_doc)
 				self.control_point0 = [] + self.point
 				self.control_point0_doc = [] + self.point_doc
@@ -361,7 +361,7 @@ class PathsCreator(PolyLineCreator):
 	def mouse_move(self, event):
 		if self.draw:
 			p = list(event.GetPositionTuple())
-			flag, self.control_point2, self.control_point2_doc = self.snap.snap_point(p)
+			self.control_point2, self.control_point2_doc = self.snap.snap_point(p)[1:]
 			self.cursor = [] + p
 			if not self.create:
 				self.curve_point = [] + self.control_point2
