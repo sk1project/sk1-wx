@@ -66,6 +66,14 @@ class Kbd_Processor:
 			self.canvas.set_mode(modes.ZOOM_MODE)
 			return
 
+		if key_code == wx.WXK_SPACE and not modifiers:
+			if self.canvas.mode == modes.SELECT_MODE:
+				self.canvas.set_mode(modes.SHAPER_MODE)
+				return
+			else:
+				self.canvas.set_mode(modes.SELECT_MODE)
+				return
+
 
 		msg = "key:%d,raw:%d,modifers:%d" % \
 		(key_code, raw_code, modifiers)
