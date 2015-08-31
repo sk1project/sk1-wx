@@ -238,7 +238,9 @@ class CairoRenderer:
 		else:
 			if obj and not obj.stroke_trafo:
 				obj.stroke_trafo = [] + sk2_const.NORMAL_TRAFO
-			coef = max(obj.stroke_trafo[0], obj.stroke_trafo[3])
+			points = [[0.0, 0.0], [1.0, 0.0]]
+			points = libgeom.apply_trafo_to_points(points, obj.stroke_trafo)
+			coef = libgeom.distance(*points)
 			line_width = stroke[1] * coef
 		ctx.set_line_width(line_width)
 		#Line color
