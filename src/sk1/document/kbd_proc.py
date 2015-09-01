@@ -70,7 +70,7 @@ class Kbd_Processor:
 			if self.canvas.mode == modes.SELECT_MODE:
 				self.canvas.set_mode(modes.SHAPER_MODE)
 				return
-			else:
+			elif self.canvas.mode == modes.SHAPER_MODE:
 				self.canvas.set_mode(modes.SELECT_MODE)
 				return
 
