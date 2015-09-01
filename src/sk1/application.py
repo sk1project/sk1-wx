@@ -127,6 +127,7 @@ class pdApplication(wal.Application, UCApplication):
 		self.current_doc = doc
 		self.current_doc.set_title()
 		self.mw.mdi.set_active(doc)
+		self.current_doc.canvas.set_focus()
 		events.emit(events.DOC_CHANGED, doc)
 		events.emit(events.SNAP_CHANGED)
 		events.emit(events.APP_STATUS, _('Document is changed'))

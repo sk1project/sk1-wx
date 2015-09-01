@@ -72,6 +72,9 @@ class Widget(object):
 	def destroy(self):
 		self.Destroy()
 
+	def set_focus(self):
+		self.SetFocus()
+
 
 class DataWidget(Widget):
 

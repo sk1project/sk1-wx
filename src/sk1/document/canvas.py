@@ -128,6 +128,10 @@ class AppCanvas(wx.Panel):
 		for item in items:
 			self.__dict__[item] = None
 
+	def set_focus(self):
+		self.SetFocus()
+
+
 	#----- SCROLLING
 
 	def _set_scrolls(self, hscroll, vscroll):
