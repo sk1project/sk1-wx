@@ -38,8 +38,10 @@ class AppTools(wal.VPanel):
 			if item is None: self.pack(wal.HLine(self.panel), fill=True)
 			else:
 				action = self.app.actions[item]
-				if action.is_toggle(): but = ActionTool(self.panel, action)
-				else: but = ActionToolButton(self.panel, action)
+				if action.is_toggle():
+					but = ActionTool(self.panel, action)
+				else:
+					but = ActionToolButton(self.panel, action)
 				self.buttons.append(but)
 				self.pack(but, padding=1)
 		self.pack((15, 15))
