@@ -23,3 +23,4 @@ from zoom_ctrl import ZoomController
 from creators import EllipseCreator, PolygonCreator, RectangleCreator
 from guide_ctrl import GuideController
 from paint_ctrl import PolyLineCreator, PathsCreator
+from grad_ctrl import GradientChooser, GradientCreator, GradientEditor
