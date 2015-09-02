@@ -184,12 +184,16 @@ class AppCanvas(wx.Panel):
 		modes.RESIZE_MODE: controllers.TransformController(self, self.presenter),
 		modes.GUIDE_MODE: controllers.GuideController(self, self.presenter),
 		modes.WAIT_MODE: controllers.WaitController(self, self.presenter),
-		modes.GR_SELECT_MODE: dummy,
+		modes.GR_SELECT_MODE: controllers.GradientChooser(self, self.presenter),
+		modes.GR_CREATE_MODE: controllers.GradientCreator(self, self.presenter),
+		modes.GR_EDIT_MODE: controllers.GradientEditor(self, self.presenter),
 		}
 		return ctrls
 
 	def set_mode(self, mode=modes.SELECT_MODE):
 		if not mode == self.mode:
+			if not self.previous_mode is None:
+				self.restore_mode()
 			if not self.controller is None:
 				self.controller.stop_()
 			self.mode = mode
