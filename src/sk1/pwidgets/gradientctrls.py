@@ -523,8 +523,3 @@ class GradientEditor(wal.VPanel):
 		self.go_last.set_enable(self.selected_stop < last_indx)
 		self.del_button.set_enable(not self.selected_stop in (0, last_indx))
 
-
-class GradientPresets(wal.VPanel):
-
-	def __init__(self, parent):
-		wal.VPanel.__init__(self, parent, True)

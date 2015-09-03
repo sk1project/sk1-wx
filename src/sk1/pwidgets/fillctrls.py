@@ -28,7 +28,7 @@ from colorctrls import PaletteSwatch, CMYK_Mixer, RGB_Mixer, Gray_Mixer, \
 SPOT_Mixer, Palette_Mixer
 from colorctrls import FillColorRefPanel, MiniPalette, FillFillRefPanel
 from colorctrls import CMYK_PALETTE, RGB_PALETTE, GRAY_PALETTE, SPOT_PALETTE
-from gradientctrls import GradientEditor, GradientPresets, GradientMiniPalette
+from gradientctrls import GradientEditor, GradientMiniPalette
 
 #--- Solid fill panels
 
