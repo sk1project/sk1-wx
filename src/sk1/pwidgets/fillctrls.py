@@ -476,6 +476,7 @@ class GradientFill(FillTab):
 					else:
 						color1 = deepcopy(fill_style[2])
 						color1[2] = 0.0
+						color1[3] = ''
 					stops = [[0.0, color0], [1.0, color1]]
 		self.new_fill = [rule, sk2_const.FILL_GRADIENT,
 						[mode, self.vector, stops]]
