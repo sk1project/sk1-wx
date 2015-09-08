@@ -227,6 +227,30 @@ class PDRenderer(CairoRenderer):
 			path = libcairo.convert_bbox_to_cpath(start + end)
 			self._draw_frame(path)
 
+	def draw_gradient_vector(self, start, end, stops=[]):
+		self.ctx.set_matrix(self.direct_matrix)
+		self.ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
+		self.ctx.set_source_rgba(*config.gradient_vector_bg_color)
+		self.ctx.set_line_width(config.gradient_vector_width)
+		self.ctx.set_dash([])
+		self.ctx.move_to(*start)
+		self.ctx.line_to(*end)
+		self.ctx.stroke()
+		self.ctx.set_source_rgba(*config.gradient_vector_fg_color)
+		self.ctx.set_line_width(config.gradient_vector_width)
+		self.ctx.set_dash(config.gradient_vector_dash)
+		self.ctx.move_to(*start)
+		self.ctx.line_to(*end)
+		self.ctx.stroke()
+		self.draw_curve_point(start, config.gradient_vector_point_size,
+							config.gradient_vector_point_fill,
+							config.gradient_vector_point_stroke,
+							config.gradient_vector_point_stroke_width)
+		self.draw_curve_point(end, config.gradient_vector_point_size,
+							config.gradient_vector_point_fill,
+							config.gradient_vector_point_stroke,
+							config.gradient_vector_point_stroke_width)
+
 	def reflect_snap(self):
 		if self.canvas.show_snapping:
 			snap = self.presenter.snap.active_snap
