@@ -590,6 +590,11 @@ class PresenterAPI(AbstractAPI):
 			self.add_undo(transaction)
 			self.selection.update()
 
+	def set_temp_style(self, obj, style):
+		obj.style = style
+		self.eventloop.emit(self.eventloop.DOC_MODIFIED)
+		self.selection.update()
+
 	def set_fill_style(self, fill_style):
 		if self.selection.objs:
 			sel_before = [] + self.selection.objs
