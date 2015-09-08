@@ -433,6 +433,7 @@ class PDRenderer(CairoRenderer):
 		y = cy - int(size / 2.0)
 		self.ctx.move_to(x, y)
 		self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
+		self.ctx.set_dash([])
 		self.ctx.set_source_rgb(*fill)
 		self.ctx.rectangle(x, y, size, size)
 		self.ctx.fill()
