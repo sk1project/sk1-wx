@@ -76,73 +76,98 @@ class GradientChooser(AbstractController):
 class GradientCreator(AbstractController):
 
 	mode = modes.GR_CREATE_MODE
+	snap = None
 	target = None
 	is_frame = False
 	is_first_point = True
+	orig_style = None
+	new_style = None
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
 
 	def start_(self):
+		self.snap = self.presenter.snap
 		self.target = self.selection.objs[0]
 		self.selection.clear()
+		self.canvas.selection_redraw()
+		self.orig_style = self.target.style
+		self.new_style = deepcopy(self.orig_style)
 
-	def mouse_down(self, event):
-		if not self.start:
-			self.start = list(event.GetPositionTuple())
-		else:
-			self.is_first_point = False
+	def escape_pressed(self):
+		self.presenter.api.set_temp_style(self.target, self.orig_style)
+		self.selection.set([self.target, ])
+		self.canvas.set_mode()
 
-	def mouse_move(self, event):
-		if not self.is_frame:
-			x0, y0, x1, y1 = self.target.cache_bbox
-			p0 = self.canvas.point_doc_to_win([x0, y0])
-			p1 = self.canvas.point_doc_to_win([x1, y1])
-			self.canvas.renderer.cdc_draw_frame(p0, p1)
-			self.is_frame = True
-
-	def mouse_up(self, event):
-		p = list(event.GetPositionTuple())
-		if self.is_first_point and not self.end and not p == self.start:
-			self.end = list(event.GetPositionTuple())
-			self.do_action()
-		elif not self.is_first_point:
-			self.end = list(event.GetPositionTuple())
-			self.do_action()
-			self.is_first_point = True
-
-	def stop_(self):
-		self.start = []
-		self.end = []
-		self.target = None
-		if self.is_frame:
-			self.canvas.renderer.cdc_hide_move_frame()
-			self.is_frame = False
-#		self.selection.set([self.target, ])
-
-	def do_action(self):
-		fill_style = self.target.style[0]
+	def _update_style(self):
+		fill_style = self.new_style[0]
 		mode = sk2_const.GRADIENT_LINEAR
 		rule = sk2_const.FILL_EVENODD
-		p0 = self.canvas.point_win_to_doc(self.start)
-		p1 = self.canvas.point_win_to_doc(self.end)
+		p0 = [] + self.start
+		if self.end:
+			p1 = [] + self.end
+		else:
+			p1 = [] + p0
 		vector = [p0, p1]
 		stops = deepcopy(DEFAULT_STOPS)
 		if fill_style:
 			rule = fill_style[0]
 			if fill_style[1] == sk2_const.FILL_SOLID:
+				rule = fill_style[0]
 				color0 = deepcopy(fill_style[2])
 				color0[3] = ''
 				color1 = deepcopy(color0)
 				color1[2] = 0.0
 				stops = [[0.0, color0], [1.0, color1]]
-		new_fill_style = [rule, sk2_const.FILL_GRADIENT,
-						[mode, vector, stops]]
-		if self.is_frame:
-			self.canvas.renderer.cdc_hide_move_frame()
-			self.is_frame = False
+			elif fill_style[1] == sk2_const.FILL_GRADIENT:
+				rule = fill_style[0]
+				mode = fill_style[2][0]
+				stops = fill_style[2][2]
+		self.new_style[0] = [rule, sk2_const.FILL_GRADIENT,
+							[mode, vector, stops]]
+
+	def mouse_down(self, event):
+		if not self.start:
+			self.start = self.snap.snap_point(list(event.GetPositionTuple()))[2]
+		else:
+			self.is_first_point = False
+
+	def mouse_move(self, event):
+		if self.start:
+			self.end = self.snap.snap_point(list(event.GetPositionTuple()))[2]
+			self._update_style()
+			style = deepcopy(self.new_style)
+			self.presenter.api.set_temp_style(self.target, style)
+
+	def mouse_up(self, event):
+		p = self.snap.snap_point(list(event.GetPositionTuple()))[2]
+		if not p == self.start:
+			self.end = p
+			self.do_action()
+
+	def stop_(self):
+		self.start = []
+		self.end = []
+		self.target = None
+		self.orig_style = None
+		self.new_style = None
+		self.is_first_point = True
+
+	def repaint(self):
+		x0, y0, x1, y1 = self.target.cache_bbox
+		p0 = self.canvas.point_doc_to_win([x0, y0])
+		p1 = self.canvas.point_doc_to_win([x1, y1])
+		self.canvas.renderer.draw_frame(p0, p1)
+		if self.start and self.end:
+			p0 = self.canvas.point_doc_to_win(self.start)
+			p1 = self.canvas.point_doc_to_win(self.end)
+			self.canvas.renderer.draw_gradient_vector(p0, p1)
+
+	def do_action(self):
+		self._update_style()
+		self.target.style = self.orig_style
 		self.selection.set([self.target, ])
-		self.presenter.api.set_fill_style(new_fill_style)
+		self.presenter.api.set_fill_style(deepcopy(self.new_style[0]))
 		self.canvas.restore_mode()
 
 
