@@ -257,7 +257,7 @@ class AppConfig(UCConfig):
 	gradient_vector_bg_color = (1.0, 1.0, 1.0)
 	gradient_vector_width = 1.0
 	gradient_vector_dash = [5, 5]
-	gradient_vector_point_size = 5
+	gradient_vector_point_size = 5.0
 	gradient_vector_point_fill = (1.0, 1.0, 1.0)
 	gradient_vector_point_stroke = (0.0, 0.3, 1.0)
 	gradient_vector_point_stroke_width = 1.0
