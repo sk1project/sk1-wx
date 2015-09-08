@@ -96,7 +96,6 @@ class GradientCreator(AbstractController):
 
 	def escape_pressed(self):
 		self.presenter.api.set_temp_style(self.target, self.orig_style)
-		self.selection.set([self.target, ])
 		self.canvas.set_mode()
 
 	def _update_style(self):
@@ -148,10 +147,12 @@ class GradientCreator(AbstractController):
 	def stop_(self):
 		self.start = []
 		self.end = []
+		obj = self.target
 		self.target = None
 		self.orig_style = None
 		self.new_style = None
 		self.is_first_point = True
+		self.selection.set([obj, ])
 
 	def repaint(self):
 		x0, y0, x1, y1 = self.target.cache_bbox
@@ -177,4 +178,35 @@ class GradientEditor(AbstractController):
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
+
+	def start_(self):
+		self.snap = self.presenter.snap
+		self.target = self.selection.objs[0]
+		self.selection.clear()
+		self.canvas.selection_redraw()
+		self.orig_style = self.target.style
+		self.new_style = deepcopy(self.orig_style)
+
+	def escape_pressed(self):
+		self.presenter.api.set_temp_style(self.target, self.orig_style)
+		self.canvas.set_mode()
+
+	def repaint(self):
+		x0, y0, x1, y1 = self.target.cache_bbox
+		p0 = self.canvas.point_doc_to_win([x0, y0])
+		p1 = self.canvas.point_doc_to_win([x1, y1])
+		self.canvas.renderer.draw_frame(p0, p1)
+		vector = self.new_style[0][2][1]
+		p0 = self.canvas.point_doc_to_win(vector[0])
+		p1 = self.canvas.point_doc_to_win(vector[1])
+		self.canvas.renderer.draw_gradient_vector(p0, p1)
+
+	def stop_(self):
+		self.start = []
+		self.end = []
+		obj = self.target
+		self.target = None
+		self.orig_style = None
+		self.new_style = None
+		self.selection.set([obj, ])
 
