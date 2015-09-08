@@ -251,6 +251,17 @@ class AppConfig(UCConfig):
 	control_line_stroke_width = 0.7
 	control_line_stroke_dash = [5, 5]
 
+	#============== GRADIENT MARK OPTIONS ================
+
+	gradient_vector_fg_color = (1.0, 0.0, 0.0)
+	gradient_vector_bg_color = (1.0, 1.0, 1.0)
+	gradient_vector_width = 1.0
+	gradient_vector_dash = [5, 5]
+	gradient_vector_point_size = 5
+	gradient_vector_point_fill = (1.0, 1.0, 1.0)
+	gradient_vector_point_stroke = (0.0, 0.3, 1.0)
+	gradient_vector_point_stroke_width = 1.0
+
 	#===UNSORTED===
 	default_polygon_num = 5
 
