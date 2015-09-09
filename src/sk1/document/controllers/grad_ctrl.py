@@ -17,7 +17,7 @@
 
 from copy import deepcopy
 
-from uc2 import uc2const
+from uc2 import uc2const, libgeom
 from uc2.formats.sk2 import sk2_model
 from uc2.formats.sk2 import sk2_const
 
@@ -199,6 +199,7 @@ class GradientEditor(AbstractController):
 		p1 = self.canvas.point_doc_to_win([x1, y1])
 		self.canvas.renderer.draw_frame(p0, p1)
 		vector = self.new_style[0][2][1]
+		vector = libgeom.apply_trafo_to_points(vector, self.target.fill_trafo)
 		p0 = self.canvas.point_doc_to_win(vector[0])
 		p1 = self.canvas.point_doc_to_win(vector[1])
 		self.canvas.renderer.draw_gradient_vector(p0, p1)
