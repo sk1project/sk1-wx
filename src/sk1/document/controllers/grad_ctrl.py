@@ -39,7 +39,6 @@ class GradientChooser(AbstractController):
 		AbstractController.__init__(self, canvas, presenter)
 
 	def start_(self):
-		if self.timer.IsRunning(): self.timer.Stop()
 		sel_objs = self.selection.objs
 		if len(sel_objs) == 1 and sel_objs[0].cid > sk2_model.PRIMITIVE_CLASS \
 			and not sel_objs[0].cid == sk2_model.PIXMAP:
@@ -52,10 +51,13 @@ class GradientChooser(AbstractController):
 
 	def restore(self):
 		if not self.timer.IsRunning():
-			self.timer_callback = self.start_
 			self.timer.Start(RENDERING_DELAY)
 
 	def stop_(self):pass
+
+	def on_timer(self):
+		if self.timer.IsRunning(): self.timer.Stop()
+		self.start_()
 
 	def mouse_down(self, event):pass
 
