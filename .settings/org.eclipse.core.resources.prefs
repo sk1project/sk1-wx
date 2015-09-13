@@ -42,6 +42,7 @@ encoding//src/sk1/document/controllers/creators.py=utf-8
 encoding//src/sk1/document/controllers/fleur_ctrl.py=utf-8
 encoding//src/sk1/document/controllers/generic.py=utf-8
 encoding//src/sk1/document/controllers/grad_ctrl.py=utf-8
+encoding//src/sk1/document/controllers/guide_ctrl.py=utf-8
 encoding//src/sk1/document/controllers/paint_ctrl.py=utf-8
 encoding//src/sk1/document/controllers/select_ctrl.py=utf-8
 encoding//src/sk1/document/controllers/trafo_ctrl.py=utf-8
