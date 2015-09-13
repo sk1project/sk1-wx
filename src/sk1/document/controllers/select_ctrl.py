@@ -36,7 +36,7 @@ class SelectController(AbstractController):
 			self.counter += 1
 			if self.counter > 5:
 				self.counter = 0
-				point = list(event.GetPositionTuple())
+				point = event.get_point()
 				dpoint = self.canvas.win_to_doc(point)
 				if self.selection.is_point_over(dpoint):
 					self.canvas.set_temp_mode(modes.MOVE_MODE)
@@ -52,7 +52,7 @@ class SelectController(AbstractController):
 	def do_action(self, event):
 		if self.start and self.end:
 			add_flag = False
-			if event.ShiftDown():
+			if event.is_shift():
 				add_flag = True
 			change_x = abs(self.end[0] - self.start[0])
 			change_y = abs(self.end[1] - self.start[1])
@@ -76,7 +76,7 @@ class PickController(AbstractController):
 	def mouse_down(self, event):pass
 
 	def mouse_up(self, event):
-		self.end = list(event.GetPositionTuple())
+		self.end = event.get_point()
 		self.do_action()
 
 	def mouse_move(self, event):pass
