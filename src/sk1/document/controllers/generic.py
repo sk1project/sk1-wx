@@ -16,7 +16,7 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from sk1 import modes, config
+from sk1 import modes
 from sk1.appconst import RENDERING_DELAY, ZOOM_IN, ZOOM_OUT
 
 class AbstractController:
@@ -68,20 +68,21 @@ class AbstractController:
 	def escape_pressed(self):pass
 	def mouse_double_click(self, event): pass
 	def mouse_right_down(self, event):
-		if event.ControlDown():
+		if event.is_ctrl():
 			self.canvas.capture_mouse()
 			self.canvas.set_temp_mode(modes.TEMP_FLEUR_MODE)
-	def mouse_right_up(self, event): self.canvas.show_context_menu(event)
+	def mouse_right_up(self, event):
+		self.canvas.show_context_menu(event.event)
 	def mouse_middle_down(self, event):
 		self.canvas.capture_mouse()
 		self.canvas.set_temp_mode(modes.TEMP_FLEUR_MODE)
 	def mouse_middle_up(self, event):pass
 	def wheel(self, event):
-		point = list(event.GetPositionTuple())
-		val = event.GetWheelRotation() / config.mouse_scroll_sensitivity
-		if event.ControlDown():
+		point = event.get_point()
+		val = event.get_rotation()
+		if event.is_ctrl():
 			self.canvas.scroll(val, 0)
-		elif event.ShiftDown():
+		elif event.is_shift():
 			if val < 0:
 				self.canvas.zoom_at_point(point, ZOOM_OUT)
 			else:
@@ -100,8 +101,8 @@ class AbstractController:
 		if self.timer.IsRunning(): self.timer.Stop()
 
 		self.draw = True
-		self.start = list(event.GetPositionTuple())
-		self.end = list(event.GetPositionTuple())
+		self.start = event.get_point()
+		self.end = event.get_point()
 		if self.check_snap:
 			self.start, self.start_doc = self.snap.snap_point(self.start)[1:]
 			self.end, self.end_doc = self.snap.snap_point(self.end)[1:]
@@ -129,7 +130,7 @@ class AbstractController:
 		return [x0 - dx, y0 - dy]
 
 	def _calc_points(self, event):
-		self.end = list(event.GetPositionTuple())
+		self.end = event.get_point()
 		if self.check_snap:
 			self.start, self.start_doc = self.snap.snap_point(self.start)[1:]
 			self.end, self.end_doc = self.snap.snap_point(self.end)[1:]
