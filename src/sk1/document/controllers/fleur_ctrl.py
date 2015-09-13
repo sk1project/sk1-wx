@@ -35,7 +35,7 @@ class FleurController(AbstractController):
 
 	def mouse_down(self, event):
 		self.move = True
-		self.start = list(event.GetPositionTuple())
+		self.start = event.get_point()
 		if not self.timer.IsRunning(): self.timer.Start(RENDERING_DELAY)
 
 	def mouse_up(self, event):
@@ -51,9 +51,9 @@ class FleurController(AbstractController):
 		if not self.timer.IsRunning(): self.timer.Start(RENDERING_DELAY)
 		if self.move:
 			if self.start:
-				self.end = list(event.GetPositionTuple())
+				self.end = event.get_point()
 			else:
-				self.start = list(event.GetPositionTuple())
+				self.start = event.get_point()
 
 	def on_timer(self):
 		if self.start and self.end:
