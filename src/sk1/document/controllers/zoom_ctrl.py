@@ -34,7 +34,7 @@ class ZoomController(AbstractController):
 			self.canvas.set_mode()
 
 	def mouse_right_down(self, event):
-		self.start = list(event.GetPositionTuple())
+		self.start = event.get_point()
 		cursor = self.canvas.app.cursors[modes.ZOOM_OUT_MODE]
 		self.canvas.set_temp_cursor(cursor)
 
