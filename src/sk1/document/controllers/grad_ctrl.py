@@ -191,18 +191,22 @@ class GradientEditor(AbstractController):
 		self.new_style = deepcopy(self.orig_style)
 
 	def escape_pressed(self):
-		self.presenter.api.set_temp_style(self.target, self.orig_style)
+#		self.presenter.api.set_temp_style(self.target, self.orig_style)
 		self.canvas.set_mode()
+
+	def _get_vector(self, style):
+		vector = style[0][2][1]
+		vector = libgeom.apply_trafo_to_points(vector, self.target.fill_trafo)
+		p0 = self.canvas.point_doc_to_win(vector[0])
+		p1 = self.canvas.point_doc_to_win(vector[1])
+		return p0, p1
 
 	def repaint(self):
 		x0, y0, x1, y1 = self.target.cache_bbox
 		p0 = self.canvas.point_doc_to_win([x0, y0])
 		p1 = self.canvas.point_doc_to_win([x1, y1])
 		self.canvas.renderer.draw_frame(p0, p1)
-		vector = self.new_style[0][2][1]
-		vector = libgeom.apply_trafo_to_points(vector, self.target.fill_trafo)
-		p0 = self.canvas.point_doc_to_win(vector[0])
-		p1 = self.canvas.point_doc_to_win(vector[1])
+		p0, p1 = self._get_vector(self.new_style)
 		self.canvas.renderer.draw_gradient_vector(p0, p1)
 
 	def stop_(self):
@@ -213,4 +217,22 @@ class GradientEditor(AbstractController):
 		self.orig_style = None
 		self.new_style = None
 		self.selection.set([obj, ])
+
+	def mouse_down(self, event):pass
+	def mouse_move(self, event):pass
+	def mouse_up(self, event):pass
+
+
+class VectorPoint:
+
+	point = []
+	canvas = None
+
+	def __init__(self, canvas, doc_point):
+		self.point = doc_point
+		self.canvas = canvas
+
+	def is_pressed(self, win_point):pass
+
+
 
