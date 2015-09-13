@@ -31,11 +31,11 @@ class GuideController(AbstractController):
 
 	def mouse_down(self, event):
 		self.draw = True
-		self.end = list(event.GetPositionTuple())
+		self.end = event.get_point()
 		self.timer.Start(RENDERING_DELAY)
 
 	def mouse_move(self, event):
-		self.end = list(event.GetPositionTuple())
+		self.end = event.get_point()
 		if not self.draw:
 			if not self.snap.is_over_guide(self.end)[0]:
 				self.canvas.restore_mode()
@@ -44,7 +44,7 @@ class GuideController(AbstractController):
 				self.set_cursor()
 
 	def mouse_up(self, event):
-		self.end = list(event.GetPositionTuple())
+		self.end = event.get_point()
 		self.draw = False
 		if self.mode == modes.HGUIDE_MODE and self.end[1] > 0:
 			p_doc = self.presenter.snap.snap_point(self.end, snap_x=False)[2]
