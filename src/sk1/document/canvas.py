@@ -240,7 +240,7 @@ class AppCanvas(wx.Panel):
 			self.current_cursor = self.orig_cursor
 			self.orig_cursor = None
 
-	def show_context_menu(self, event):
+	def show_context_menu(self):
 		self.ctx_menu.rebuild()
 		self.PopupMenu(self.ctx_menu)
 
@@ -509,16 +509,16 @@ class AppCanvas(wx.Panel):
 	def mouse_left_down(self, event):
 		self.capture_mouse()
 		self.controller.set_cursor()
-		self.controller.mouse_down(event)
+		self.controller.mouse_down(CanvasEvent(event))
 		event.Skip()
 
 	def mouse_left_up(self, event):
-		self.controller.mouse_up(event)
+		self.controller.mouse_up(CanvasEvent(event))
 		self.release_mouse()
 
 	def mouse_left_dclick(self, event):
 		self.controller.set_cursor()
-		self.controller.mouse_double_click(event)
+		self.controller.mouse_double_click(CanvasEvent(event))
 
 	def mouse_move(self, event):
 		x, y = self.win_to_doc_coords(list(event.GetPositionTuple()))
@@ -526,19 +526,19 @@ class AppCanvas(wx.Panel):
 		tr_unit = uc2const.unit_short_names[unit]
 		msg = '  %i x %i' % (x * point_dict[unit], y * point_dict[unit])
 		events.emit(events.MOUSE_STATUS, '%s %s' % (msg, tr_unit))
-		self.controller.mouse_move(event)
+		self.controller.mouse_move(CanvasEvent(event))
 
 	def mouse_right_down(self, event):
-		self.controller.mouse_right_down(event)
+		self.controller.mouse_right_down(CanvasEvent(event))
 
 	def mouse_right_up(self, event):
-		self.controller.mouse_right_up(event)
+		self.controller.mouse_right_up(CanvasEvent(event))
 
 	def mouse_middle_down(self, event):
-		self.controller.mouse_middle_down(event)
+		self.controller.mouse_middle_down(CanvasEvent(event))
 
 	def mouse_middle_up(self, event):
-		self.controller.mouse_middle_up(event)
+		self.controller.mouse_middle_up(CanvasEvent(event))
 
 	def mouse_wheel(self, event):
 		self.controller.wheel(CanvasEvent(event))
