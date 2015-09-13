@@ -42,7 +42,8 @@ class GradientChooser(AbstractController):
 		sel_objs = self.selection.objs
 		if len(sel_objs) == 1 and sel_objs[0].cid > sk2_model.PRIMITIVE_CLASS \
 			and not sel_objs[0].cid == sk2_model.PIXMAP:
-			if sel_objs[0].style[0] and sel_objs[0].style[0][1] == sk2_const.FILL_GRADIENT:
+			if sel_objs[0].style[0] \
+			and sel_objs[0].style[0][1] == sk2_const.FILL_GRADIENT:
 				self.canvas.set_temp_mode(modes.GR_EDIT_MODE)
 			else:
 				self.canvas.set_temp_mode(modes.GR_CREATE_MODE)
@@ -62,7 +63,7 @@ class GradientChooser(AbstractController):
 	def mouse_down(self, event):pass
 
 	def mouse_up(self, event):
-		self.end = list(event.GetPositionTuple())
+		self.end = event.get_point()
 		self.do_action()
 
 	def mouse_move(self, event):pass
@@ -129,19 +130,19 @@ class GradientCreator(AbstractController):
 
 	def mouse_down(self, event):
 		if not self.start:
-			self.start = self.snap.snap_point(list(event.GetPositionTuple()))[2]
+			self.start = self.snap.snap_point(event.get_point())[2]
 		else:
 			self.is_first_point = False
 
 	def mouse_move(self, event):
 		if self.start:
-			self.end = self.snap.snap_point(list(event.GetPositionTuple()))[2]
+			self.end = self.snap.snap_point(event.get_point())[2]
 			self._update_style()
 			style = deepcopy(self.new_style)
 			self.presenter.api.set_temp_style(self.target, style)
 
 	def mouse_up(self, event):
-		p = self.snap.snap_point(list(event.GetPositionTuple()))[2]
+		p = self.snap.snap_point(event.get_point())[2]
 		if not p == self.start:
 			self.end = p
 			self.do_action()
