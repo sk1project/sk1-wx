@@ -40,9 +40,8 @@ class MoveController(AbstractController):
 
 	def mouse_down(self, event):
 		self.snap = self.presenter.snap
-		self.start = list(event.GetPositionTuple())
+		self.start = event.get_point()
 		self.move = True
-
 		dpoint = self.canvas.win_to_doc(self.start)
 		sel = self.selection.pick_at_point(dpoint)
 		if sel and sel[0] not in self.selection.objs:
@@ -50,13 +49,9 @@ class MoveController(AbstractController):
 			self.canvas.renderer.paint_selection()
 			self.canvas.selection_repaint = False
 			self.selection.set(sel)
-
 		self.canvas.selection_repaint = False
 		self.canvas.renderer.cdc_paint_doc()
-
 		self.timer.Start(RENDERING_DELAY)
-
-
 
 	def repaint(self):
 		if self.end:
@@ -73,8 +68,8 @@ class MoveController(AbstractController):
 	def mouse_move(self, event):
 		if self.move:
 			self.moved = True
-			new = list(event.GetPositionTuple())
-			if event.ControlDown():
+			new = event.get_point()
+			if event.is_ctrl():
 				change = [new[0] - self.start[0], new[1] - self.start[1]]
 				if abs(change[0]) > abs(change[1]):
 					new[1] = self.start[1]
@@ -85,7 +80,7 @@ class MoveController(AbstractController):
 			bbox = self.presenter.selection.bbox
 			self.trafo = self._snap(bbox, self.trafo)
 		else:
-			point = list(event.GetPositionTuple())
+			point = event.get_point()
 			dpoint = self.canvas.win_to_doc(point)
 			if self.selection.is_point_over(dpoint):
 				if self.selection.is_point_over_marker(dpoint):
@@ -99,8 +94,8 @@ class MoveController(AbstractController):
 	def mouse_up(self, event):
 		if self.move:
 			self.timer.Stop()
-			new = list(event.GetPositionTuple())
-			if event.ControlDown():
+			new = event.get_point()
+			if event.is_ctrl():
 				change = [new[0] - self.start[0], new[1] - self.start[1]]
 				if abs(change[0]) > abs(change[1]):
 					new[1] = self.start[1]
@@ -114,7 +109,7 @@ class MoveController(AbstractController):
 				bbox = self.presenter.selection.bbox
 				self.trafo = self._snap(bbox, self.trafo)
 				self.api.transform_selected(self.trafo, self.copy)
-			elif event.ShiftDown():
+			elif event.is_shift():
 				self.canvas.select_at_point(self.start, True)
 				if not self.selection.is_point_over(self.start):
 					self.canvas.restore_mode()
@@ -202,7 +197,7 @@ class TransformController(AbstractController):
 
 	def mouse_move(self, event):
 		if not self.move:
-			point = self.canvas.win_to_doc(list(event.GetPositionTuple()))
+			point = self.canvas.win_to_doc(event.get_point())
 			ret = self.selection.is_point_over_marker(point)
 			if not ret:
 				self.canvas.restore_mode()
@@ -211,14 +206,14 @@ class TransformController(AbstractController):
 				self.set_cursor()
 
 		else:
-			self.end = list(event.GetPositionTuple())
+			self.end = event.get_point()
 			self.trafo = self._calc_trafo(event)
 			self.moved = True
 
 
 	def mouse_down(self, event):
 		self.snap = self.presenter.snap
-		self.start = list(event.GetPositionTuple())
+		self.start = event.get_point()
 		self.move = True
 		self.canvas.selection_repaint = False
 		if not self.canvas.resize_marker == 9:
@@ -232,7 +227,7 @@ class TransformController(AbstractController):
 
 	def mouse_up(self, event):
 		self.timer.Stop()
-		self.end = list(event.GetPositionTuple())
+		self.end = event.get_point()
 		self.move = False
 		self.canvas.selection_repaint = True
 		if not self.canvas.resize_marker == 9:
@@ -244,7 +239,7 @@ class TransformController(AbstractController):
 			self.copy = False
 			self.start = []
 			self.end = []
-			point = self.canvas.win_to_doc(list(event.GetPositionTuple()))
+			point = self.canvas.win_to_doc(event.get_point())
 			if not self.selection.is_point_over_marker(point):
 				self.canvas.restore_mode()
 		else:
@@ -291,8 +286,8 @@ class TransformController(AbstractController):
 		self.canvas.set_canvas_cursor(mode)
 
 	def _calc_trafo(self, event):
-		control = event.ControlDown()
-		shift = event.ShiftDown()
+		control = event.is_ctrl()
+		shift = event.is_shift()
 		mark = self.canvas.resize_marker
 		start_point = self.canvas.win_to_doc(self.start)
 		end_point = self.canvas.win_to_doc(self.end)
@@ -937,7 +932,7 @@ class TransformController(AbstractController):
 			dy = end[1] - start[1]
 			x, y = self.offset_start
 			cp = libgeom.bbox_center(self.selection.bbox)
-			f, win_p, doc_p = self.snap.snap_point([cp[0] + x + dx, cp[1] + y + dy], False)
+			doc_p = self.snap.snap_point([cp[0] + x + dx, cp[1] + y + dy], False)[2]
 			self.selection.center_offset = [doc_p[0] - cp[0], doc_p[1] - cp[1]]
 			self.canvas.selection_redraw()
 			#self.canvas.renderer.paint_selection()
