@@ -39,7 +39,7 @@ class AbstractCreator(AbstractController):
 			self.counter += 1
 			if self.counter > 5:
 				self.counter = 0
-				point = list(event.GetPositionTuple())
+				point = event.get_point()
 				dpoint = self.canvas.win_to_doc(point)
 				if self.selection.is_point_over_marker(dpoint):
 					mark = self.selection.is_point_over_marker(dpoint)[0]
@@ -47,9 +47,9 @@ class AbstractCreator(AbstractController):
 					self.canvas.set_temp_mode(modes.RESIZE_MODE)
 
 	def _calc_points(self, event):
-		self.end = list(event.GetPositionTuple())
-		ctrl = event.ControlDown()
-		shift = event.ShiftDown()
+		self.end = event.get_point()
+		ctrl = event.is_ctrl()
+		shift = event.is_shift()
 		if shift and ctrl:
 			if not self.center: self.center = self.start
 			self.end = self._get_proportional(self.center, self.end)
