@@ -134,6 +134,17 @@ def bbox_trafo(bbox0, bbox1):
 	dy = y0_1 - y0_0
 	return [m11, 0.0, 0.0, m22, dx, dy]
 
+def bbox_for_point(point, size):
+	x0 = point[0] - size / 2.0
+	y0 = point[1] - size / 2.0
+	x1 = point[0] + size / 2.0
+	y1 = point[1] + size / 2.0
+	return [x0, y0, x1, y1]
+
+def is_point_in_bbox(point, bbox):
+	return point[0] >= bbox[0] and point[1] >= bbox[1] \
+		and point[0] <= bbox[2] and point[1] <= bbox[3]
+
 
 #------------- Flattering -------------
 
