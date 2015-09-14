@@ -304,6 +304,9 @@ def apply_trafo(cache_cpath, trafo):
 def multiply_trafo(trafo1, trafo2):
 	return libcairo.multiply_trafo(trafo1, trafo2)
 
+def invert_trafo(trafo):
+	return libcairo.invert_trafo(trafo)
+
 def get_flattened_path(obj, trafo, tolerance=0.5):
 	if obj.cache_paths is None:
 		obj.update()
