@@ -21,7 +21,7 @@ from uc2 import uc2const, libgeom
 from uc2.formats.sk2 import sk2_model
 from uc2.formats.sk2 import sk2_const
 
-from sk1 import modes
+from sk1 import modes, config
 from generic import AbstractController, RENDERING_DELAY
 
 GRADIENT_CLR_MODES = [uc2const.COLOR_CMYK, uc2const.COLOR_RGB, uc2const.COLOR_GRAY]
@@ -178,6 +178,8 @@ class GradientCreator(AbstractController):
 class GradientEditor(AbstractController):
 
 	mode = modes.GR_EDIT_MODE
+	moved_point = None
+	vector = []
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -189,38 +191,82 @@ class GradientEditor(AbstractController):
 		self.canvas.selection_redraw()
 		self.orig_style = self.target.style
 		self.new_style = deepcopy(self.orig_style)
+		self.vector = self._get_doc_vector(self.orig_style)
 
 	def escape_pressed(self):
-#		self.presenter.api.set_temp_style(self.target, self.orig_style)
+		if self.moved_point:
+			self.new_style = None
+			self.presenter.api.set_temp_style(self.target, self.orig_style)
+			self.selection.set([self.target, ])
 		self.canvas.set_mode()
 
-	def _get_vector(self, style):
+	def _get_win_vector(self, style):
 		vector = style[0][2][1]
 		vector = libgeom.apply_trafo_to_points(vector, self.target.fill_trafo)
 		p0 = self.canvas.point_doc_to_win(vector[0])
 		p1 = self.canvas.point_doc_to_win(vector[1])
 		return p0, p1
 
+	def _get_doc_vector(self, style):
+		ret = []
+		vector = style[0][2][1]
+		vector = libgeom.apply_trafo_to_points(vector, self.target.fill_trafo)
+		for item in vector:
+			ret.append(VectorPoint(self.canvas, item))
+		return ret
+
+	def _set_target_vector(self, temp=True):
+		itrafo = libgeom.invert_trafo(self.target.fill_trafo)
+		vector = [self.vector[0].point, self.vector[1].point]
+		self.new_style[0][2][1] = libgeom.apply_trafo_to_points(vector, itrafo)
+		if temp:
+			self.presenter.api.set_temp_style(self.target, self.new_style)
+		else:
+			self.presenter.api.set_fill_style(deepcopy(self.new_style[0]))
+
 	def repaint(self):
 		x0, y0, x1, y1 = self.target.cache_bbox
 		p0 = self.canvas.point_doc_to_win([x0, y0])
 		p1 = self.canvas.point_doc_to_win([x1, y1])
 		self.canvas.renderer.draw_frame(p0, p1)
-		p0, p1 = self._get_vector(self.new_style)
+		p0, p1 = self._get_win_vector(self.target.style)
 		self.canvas.renderer.draw_gradient_vector(p0, p1)
 
 	def stop_(self):
-		self.start = []
-		self.end = []
-		obj = self.target
+		if self.target and self.new_style:
+			self.selection.set([self.target, ])
+			self._set_target_vector(False)
 		self.target = None
 		self.orig_style = None
 		self.new_style = None
-		self.selection.set([obj, ])
+		self.moved_point = None
 
-	def mouse_down(self, event):pass
-	def mouse_move(self, event):pass
-	def mouse_up(self, event):pass
+	def mouse_down(self, event):
+		point = event.get_point()
+		if self.vector[0].is_pressed(point):
+			self.moved_point = self.vector[0]
+		elif self.vector[1].is_pressed(point):
+			self.moved_point = self.vector[1]
+
+	def mouse_move(self, event):
+		if self.moved_point:
+			self.moved_point.point = self.snap.snap_point(event.get_point())[2]
+			self._set_target_vector()
+
+	def mouse_up(self, event):
+		point = event.get_point()
+		if self.moved_point:
+			self.moved_point.point = self.snap.snap_point(point)[2]
+			self._set_target_vector()
+			self.moved_point = None
+		else:
+			objs = self.canvas.pick_at_point(point)
+			if objs and objs[0].cid > sk2_model.PRIMITIVE_CLASS \
+			and not objs[0].cid == sk2_model.PIXMAP:
+				self._set_target_vector(False)
+				self.target = None
+				self.selection.set([objs[0], ])
+				self.canvas.restore_mode()
 
 
 class VectorPoint:
@@ -232,7 +278,10 @@ class VectorPoint:
 		self.point = doc_point
 		self.canvas = canvas
 
-	def is_pressed(self, win_point):pass
+	def is_pressed(self, win_point):
+		wpoint = self.canvas.point_doc_to_win(self.point)
+		bbox = libgeom.bbox_for_point(wpoint, config.point_sensitivity_size)
+		return libgeom.is_point_in_bbox(win_point, bbox)
 
 
 
