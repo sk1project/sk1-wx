@@ -177,6 +177,11 @@ def get_matrix_from_trafo(trafo):
 def reverse_matrix(cmatrix):
 	return get_matrix_from_trafo(_get_trafo(cmatrix))
 
+def invert_trafo(trafo):
+	cmatrix = get_matrix_from_trafo(trafo)
+	cmatrix.invert()
+	return get_trafo_from_matrix(cmatrix)
+
 def apply_trafo_to_point(point, trafo):
 	x0, y0 = point
 	m11, m21, m12, m22, dx, dy = trafo
