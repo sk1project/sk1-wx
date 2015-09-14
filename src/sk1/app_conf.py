@@ -219,6 +219,11 @@ class AppConfig(UCConfig):
 	guide_line_dash = [5, 5]
 	guide_line_dragging_color = (0.0, 0.0, 0.0, 0.25)
 
+	#============== POINT DATA =============
+
+	point_size = 5.0
+	point_sensitivity_size = 7.0
+
 	#============== BEZIER CURVE OPTIONS ================
 	curve_autoclose_flag = 0
 
@@ -261,6 +266,7 @@ class AppConfig(UCConfig):
 	gradient_vector_point_fill = (1.0, 1.0, 1.0)
 	gradient_vector_point_stroke = (0.0, 0.3, 1.0)
 	gradient_vector_point_stroke_width = 1.0
+
 
 	#===UNSORTED===
 	default_polygon_num = 5
