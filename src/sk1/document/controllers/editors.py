@@ -66,6 +66,46 @@ class EditorChooser(AbstractController):
 class BezierEditor(AbstractController):
 
 	mode = modes.BEZIER_EDITOR_MODE
+	target = None
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
+
+	def start_(self):
+		self.snap = self.presenter.snap
+		self.target = self.selection.objs[0]
+		self.selection.clear()
+		self.canvas.selection_redraw()
+
+	def stop_(self):
+		self.selection.set([self.target, ])
+		self.target = None
+
+	def escape_pressed(self):
+		self.canvas.set_mode()
+
+	def repaint(self):
+		x0, y0, x1, y1 = self.target.cache_bbox
+		p0 = self.canvas.point_doc_to_win([x0, y0])
+		p1 = self.canvas.point_doc_to_win([x1, y1])
+		self.canvas.renderer.draw_frame(p0, p1)
+
+	def _collect_paths(self):pass
+
+class BerzierNode:
+
+	first = False
+	last = False
+	point = []
+	canvas = None
+
+	def __init__(self, canvas, point, first=False, last=False):
+		self.canvas = canvas
+		self.point = point
+		self.first = first
+		self.last = last
+
+	def is_pressed(self, win_point):
+		wpoint = self.canvas.point_doc_to_win(self.point)
+		bbox = libgeom.bbox_for_point(wpoint, config.point_sensitivity_size)
+		return libgeom.is_point_in_bbox(win_point, bbox)
