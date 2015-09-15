@@ -59,6 +59,7 @@ HGUIDE_MODE = 36
 GR_SELECT_MODE = 40
 GR_CREATE_MODE = 41
 GR_EDIT_MODE = 42
+BEZIER_EDITOR_MODE = 43
 WAIT_MODE = 100
 
 MODE_LIST = [SELECT_MODE, SHAPER_MODE, ZOOM_MODE, LINE_MODE,
@@ -103,6 +104,7 @@ def get_cursors():
 			GR_SELECT_MODE:('cur_gr_edit', (5, 5)),
 			GR_CREATE_MODE:('cur_create_gr', (6, 6)),
 			GR_EDIT_MODE:('cur_gr_edit', (5, 5)),
+			BEZIER_EDITOR_MODE:('cur_edit', (5, 5)),
 			}
 	keys = cursors.keys()
 	ext = '.png'
