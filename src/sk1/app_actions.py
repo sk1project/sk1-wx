@@ -22,7 +22,7 @@ from sk1.pwidgets import AppAction
 
 from sk1.modes import SELECT_MODE, SHAPER_MODE, ZOOM_MODE, FLEUR_MODE, \
 LINE_MODE, CURVE_MODE, RECT_MODE, ELLIPSE_MODE, TEXT_MODE, POLYGON_MODE, \
-ZOOM_OUT_MODE, GR_SELECT_MODE
+ZOOM_OUT_MODE, GR_SELECT_MODE, GR_EDIT_MODE, GR_CREATE_MODE, BEZIER_EDITOR_MODE
 from sk1.events import CLIPBOARD, DOC_CHANGED, PAGE_CHANGED, \
 DOC_MODIFIED, DOC_SAVED, NO_DOCS, SELECTION_CHANGED, MODE_CHANGED, \
 HISTORY_CHANGED, SNAP_CHANGED
@@ -37,13 +37,15 @@ def create_actions(app):
 	sel_chnls = [NO_DOCS, DOC_CHANGED, SELECTION_CHANGED]
 	page_chnls = [NO_DOCS, DOC_CHANGED, DOC_MODIFIED, PAGE_CHANGED]
 	snap_chnls = [NO_DOCS, DOC_CHANGED, SNAP_CHANGED]
+	edit_modes = [SHAPER_MODE, BEZIER_EDITOR_MODE]
+	grad_modes = [GR_SELECT_MODE, GR_EDIT_MODE, GR_CREATE_MODE]
 	insp = app.insp
 	proxy = app.proxy
 	actions = {}
 	entries = [
 #----- Canvas modes -----
 (pdids.SELECT_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [SELECT_MODE], [], [SELECT_MODE]),
-(pdids.SHAPER_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [SHAPER_MODE], [], [SHAPER_MODE]),
+(pdids.SHAPER_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [SHAPER_MODE], [], edit_modes),
 (pdids.ZOOM_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [ZOOM_MODE], [], [ZOOM_MODE]),
 (pdids.FLEUR_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [FLEUR_MODE], [], [FLEUR_MODE]),
 (pdids.LINE_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [LINE_MODE], [], [LINE_MODE]),
@@ -53,7 +55,7 @@ def create_actions(app):
 (pdids.TEXT_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [TEXT_MODE], [], [TEXT_MODE]),
 (pdids.POLYGON_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [POLYGON_MODE], [], [POLYGON_MODE]),
 (pdids.ZOOM_OUT_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [ZOOM_OUT_MODE], [], [ZOOM_OUT_MODE]),
-(pdids.GRADIENT_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [GR_SELECT_MODE], [], [GR_SELECT_MODE]),
+(pdids.GRADIENT_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [GR_SELECT_MODE], [], grad_modes),
 
 (pdids.FILL_MODE, proxy.fill_dialog, doc_chnls, insp.is_doc),
 (pdids.STROKE_MODE, proxy.stroke_dialog, doc_chnls, insp.is_doc),
