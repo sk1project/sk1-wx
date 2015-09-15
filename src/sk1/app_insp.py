@@ -46,9 +46,9 @@ class AppInspector:
 				if not doc.saved: ret = True
 		return ret
 
-	def is_mode(self, mode):
+	def is_mode(self, *args):
 		if self.is_not_doc(): return False
-		if mode == self.app.current_doc.canvas.mode: return True
+		if self.app.current_doc.canvas.mode in args: return True
 		return False
 
 	def is_file_history(self): return self.app.history.is_history()
