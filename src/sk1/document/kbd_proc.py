@@ -20,6 +20,8 @@ import wx
 from sk1 import modes
 from sk1.resources import pdids
 
+EDIT_MODES = [modes.SHAPER_MODE, modes.BEZIER_EDITOR_MODE]
+
 class Kbd_Processor:
 
 	canvas = None
@@ -70,7 +72,7 @@ class Kbd_Processor:
 			if self.canvas.mode == modes.SELECT_MODE:
 				self.canvas.set_mode(modes.SHAPER_MODE)
 				return
-			elif self.canvas.mode == modes.SHAPER_MODE:
+			elif self.canvas.mode in EDIT_MODES:
 				self.canvas.set_mode(modes.SELECT_MODE)
 				return
 
