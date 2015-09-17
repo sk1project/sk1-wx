@@ -17,7 +17,7 @@
 
 
 from sk1 import modes
-from sk1.appconst import RENDERING_DELAY, ZOOM_IN, ZOOM_OUT
+from sk1.appconst import ZOOM_IN, ZOOM_OUT
 
 class AbstractController:
 
@@ -98,7 +98,7 @@ class AbstractController:
 		self.start_doc = []
 		self.end_doc = []
 		self.counter = 0
-		if self.timer.IsRunning(): self.timer.Stop()
+		self.timer.stop()
 
 		self.draw = True
 		self.start = event.get_point()
@@ -108,7 +108,7 @@ class AbstractController:
 			self.end, self.end_doc = self.snap.snap_point(self.end)[1:]
 		self.counter = 0
 		self.canvas.renderer.cdc_paint_doc()
-		self.timer.Start(RENDERING_DELAY)
+		self.timer.start()
 
 	def _get_proportional(self, start, end):
 		x0, y0 = start
