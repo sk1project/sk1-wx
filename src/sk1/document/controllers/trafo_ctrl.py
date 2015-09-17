@@ -20,7 +20,6 @@ import math
 from uc2 import libgeom
 
 from sk1 import modes, config
-from sk1.appconst import RENDERING_DELAY
 
 from generic import AbstractController
 
@@ -51,7 +50,7 @@ class MoveController(AbstractController):
 			self.selection.set(sel)
 		self.canvas.selection_repaint = False
 		self.canvas.renderer.cdc_paint_doc()
-		self.timer.Start(RENDERING_DELAY)
+		self.timer.start()
 
 	def repaint(self):
 		if self.end:
@@ -93,7 +92,7 @@ class MoveController(AbstractController):
 
 	def mouse_up(self, event):
 		if self.move:
-			self.timer.Stop()
+			self.timer.stop()
 			new = event.get_point()
 			if event.is_ctrl():
 				change = [new[0] - self.start[0], new[1] - self.start[1]]
@@ -223,10 +222,10 @@ class TransformController(AbstractController):
 			self.offset_start = [] + self.selection.center_offset
 			self.painter = self._draw_center
 			self.canvas.selection_repaint = True
-		self.timer.Start(RENDERING_DELAY)
+		self.timer.start()
 
 	def mouse_up(self, event):
-		self.timer.Stop()
+		self.timer.stop()
 		self.end = event.get_point()
 		self.move = False
 		self.canvas.selection_repaint = True
