@@ -18,7 +18,6 @@
 from uc2 import uc2const
 
 from sk1 import modes
-from sk1.appconst import RENDERING_DELAY
 from generic import AbstractController
 
 class GuideController(AbstractController):
@@ -32,7 +31,7 @@ class GuideController(AbstractController):
 	def mouse_down(self, event):
 		self.draw = True
 		self.end = event.get_point()
-		self.timer.Start(RENDERING_DELAY)
+		self.timer.start()
 
 	def mouse_move(self, event):
 		self.end = event.get_point()
@@ -69,7 +68,7 @@ class GuideController(AbstractController):
 
 	def stop_(self):
 		self.presenter.snap.active_guide = None
-		self.timer.Stop()
+		self.timer.stop()
 		self.canvas.selection_redraw()
 		self.end = []
 		self.guide = None
