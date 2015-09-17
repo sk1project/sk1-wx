@@ -37,11 +37,14 @@ class CanvasTimer(wx.Timer):
 	def __init__(self, parent):
 		wx.Timer.__init__(self, parent)
 
+	def is_running(self):
+		return self.IsRunning()
+
 	def stop(self):
 		if self.IsRunning(): self.Stop()
 
 	def start(self, interval=RENDERING_DELAY):
-		self.Start(interval)
+		if not self.IsRunning(): self.Start(interval)
 
 WORKSPACE_HEIGHT = 2000 * mm_to_pt
 WORKSPACE_WIDTH = 4000 * mm_to_pt
