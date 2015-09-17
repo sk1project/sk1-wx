@@ -25,13 +25,23 @@ from uc2.formats.sk2.sk2_const import DOC_ORIGIN_LL, DOC_ORIGIN_LU
 from wal import const
 
 from sk1 import events, modes, config
-from sk1.appconst import PAGEFIT, ZOOM_IN, ZOOM_OUT
+from sk1.appconst import PAGEFIT, ZOOM_IN, ZOOM_OUT, RENDERING_DELAY
 from sk1.document.renderer import PDRenderer
 from sk1.document.kbd_proc import Kbd_Processor
 from sk1.document import controllers
 
 from ctx_menu import ContextMenu
 
+class CanvasTimer(wx.Timer):
+
+	def __init__(self, parent):
+		wx.Timer.__init__(self, parent)
+
+	def stop(self):
+		if self.IsRunning(): self.Stop()
+
+	def start(self, interval=RENDERING_DELAY):
+		self.Start(interval)
 
 WORKSPACE_HEIGHT = 2000 * mm_to_pt
 WORKSPACE_WIDTH = 4000 * mm_to_pt
@@ -88,7 +98,7 @@ class AppCanvas(wx.Panel):
 
 		self.ctx_menu = ContextMenu(self.app, self)
 
-		self.timer = wx.Timer(self)
+		self.timer = CanvasTimer(self)
 		self.Bind(wx.EVT_TIMER, self._on_timer)
 
 		self.ctrls = self.init_controllers()
@@ -117,7 +127,7 @@ class AppCanvas(wx.Panel):
 							self.selection_redraw)
 
 	def destroy(self):
-		if self.timer.IsRunning():self.timer.Stop()
+		self.timer.stop()
 		self.ctx_menu.destroy()
 		self.renderer.destroy()
 		items = self.ctrls.keys()
