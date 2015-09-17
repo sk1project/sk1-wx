@@ -18,7 +18,6 @@
 from generic import AbstractController
 
 from sk1 import modes
-from sk1.appconst import RENDERING_DELAY
 
 class FleurController(AbstractController):
 
@@ -36,10 +35,10 @@ class FleurController(AbstractController):
 	def mouse_down(self, event):
 		self.move = True
 		self.start = event.get_point()
-		if not self.timer.IsRunning(): self.timer.Start(RENDERING_DELAY)
+		self.timer.start()
 
 	def mouse_up(self, event):
-		if self.timer.IsRunning(): self.timer.Stop()
+		self.timer.stop()
 		if self.start:
 			self.start = []
 			self.end = []
@@ -48,7 +47,7 @@ class FleurController(AbstractController):
 	def repaint(self, *args):pass
 
 	def mouse_move(self, event):
-		if not self.timer.IsRunning(): self.timer.Start(RENDERING_DELAY)
+		self.timer.start()
 		if self.move:
 			if self.start:
 				self.end = event.get_point()
