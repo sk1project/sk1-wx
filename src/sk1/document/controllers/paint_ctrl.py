@@ -21,7 +21,6 @@ from uc2.formats.sk2 import sk2_const as const
 from uc2.formats.sk2 import sk2_model as model
 
 from sk1 import modes, config
-from sk1.appconst import RENDERING_DELAY
 
 from creators import AbstractCreator
 
@@ -162,21 +161,21 @@ class PolyLineCreator(AbstractCreator):
 		return True
 
 	def init_timer(self):
-		if self.timer.IsRunning(): self.timer.Stop()
+		self.timer.stop()
 		self.timer_callback = self.repaint_draw
 
 	def on_timer(self):
 		self.canvas.selection_redraw()
 
 	def set_repaint_timer(self):
-		if not self.timer.IsRunning():
+		if not self.timer.is_running():
 			self.timer_callback = self.repaint_draw
-			self.timer.Start(RENDERING_DELAY)
+			self.timer.start()
 
 	def set_drawing_timer(self):
-		if not self.timer.IsRunning():
+		if not self.timer.is_running():
 			self.timer_callback = self.continuous_draw
-			self.timer.Start(RENDERING_DELAY)
+			self.timer.start()
 
 	def init_data(self):
 		self.cursor = []
