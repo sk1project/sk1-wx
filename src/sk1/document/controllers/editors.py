@@ -22,7 +22,7 @@ from uc2.formats.sk2 import sk2_model
 from uc2.formats.sk2 import sk2_const
 
 from sk1 import modes, config
-from generic import AbstractController, RENDERING_DELAY
+from generic import AbstractController
 
 class EditorChooser(AbstractController):
 
@@ -39,13 +39,12 @@ class EditorChooser(AbstractController):
 			self.selection.clear()
 
 	def restore(self):
-		if not self.timer.IsRunning():
-			self.timer.Start(RENDERING_DELAY)
+		self.timer.start()
 
 	def stop_(self):pass
 
 	def on_timer(self):
-		if self.timer.IsRunning(): self.timer.Stop()
+		self.timer.stop()
 		self.start_()
 
 	def mouse_down(self, event):pass
