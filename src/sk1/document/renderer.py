@@ -719,7 +719,7 @@ class PDRenderer(CairoRenderer):
 			dc.DrawBitmap(copy_surface_to_bitmap(surface), x - 1, y - 1)
 			self.cdc_reflect_snapping()
 
-	def cdc_draw_frame(self, start, end):
+	def cdc_draw_frame(self, start, end, temp_surfase=False):
 		if start and end:
 			if self.frame:
 				if start == self.frame[0] and end == self.frame[1]:return
@@ -733,7 +733,10 @@ class PDRenderer(CairoRenderer):
 			self.frame = frame
 			surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w + 2, h + 2)
 			ctx = cairo.Context(surface)
-			ctx.set_source_surface(self.surface, -x + 1, -y + 1)
+			if temp_surfase:
+				ctx.set_source_surface(self.temp_surface, -x + 1, -y + 1)
+			else:
+				ctx.set_source_surface(self.surface, -x + 1, -y + 1)
 			ctx.paint()
 			ctx.set_matrix(cairo.Matrix(1.0, 0.0, 0.0, 1.0, -x + 1, -y + 1))
 			self._cdc_draw_cpath(ctx, cpath)
