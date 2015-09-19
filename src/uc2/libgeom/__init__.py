@@ -142,8 +142,10 @@ def bbox_for_point(point, size):
 	return [x0, y0, x1, y1]
 
 def is_point_in_bbox(point, bbox):
+	if not len(point) == 2: point = point[2]
 	return point[0] >= bbox[0] and point[1] >= bbox[1] \
 		and point[0] <= bbox[2] and point[1] <= bbox[3]
+
 
 
 #------------- Flattering -------------
