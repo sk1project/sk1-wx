@@ -251,6 +251,27 @@ class PDRenderer(CairoRenderer):
 							config.gradient_vector_point_stroke,
 							config.gradient_vector_point_stroke_width)
 
+	def set_direct_matrix(self):
+		self.ctx.set_matrix(self.direct_matrix)
+
+	def draw_regular_node(self, point):
+		self.draw_curve_point(point, config.curve_point_size,
+							config.curve_point_fill,
+							config.curve_point_stroke,
+							config.curve_point_stroke_width)
+
+	def draw_start_node(self, point):
+		self.draw_curve_point(point, config.curve_start_point_size,
+							config.curve_start_point_fill,
+							config.curve_start_point_stroke,
+							config.curve_start_point_stroke_width)
+
+	def draw_last_node(self, point):
+		self.draw_curve_point(point, config.curve_last_point_size,
+							config.curve_last_point_fill,
+							config.curve_last_point_stroke,
+							config.curve_last_point_stroke_width)
+
 	def reflect_snap(self):
 		if self.canvas.show_snapping:
 			snap = self.presenter.snap.active_snap
@@ -573,7 +594,7 @@ class PDRenderer(CairoRenderer):
 		x = self.cdc_to_int(x)[0]
 		surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, self.height)
 		ctx = cairo.Context(surface)
-		ctx.set_source_surface(self.surface, -x + 1, 0)
+		ctx.set_source_surface(self.temp_surface, -x + 1, 0)
 		ctx.paint()
 		if not clear:
 			self.cdc_set_ctx(ctx, color, dash)
@@ -588,7 +609,7 @@ class PDRenderer(CairoRenderer):
 		y = self.cdc_to_int(y)[0]
 		surface = cairo.ImageSurface(cairo.FORMAT_RGB24, self.width, 1)
 		ctx = cairo.Context(surface)
-		ctx.set_source_surface(self.surface, 0, -y + 1)
+		ctx.set_source_surface(self.temp_surface, 0, -y + 1)
 		ctx.paint()
 		if not clear:
 			self.cdc_set_ctx(ctx, color, dash)
