@@ -67,13 +67,17 @@ class BezierEditor(AbstractController):
 	mode = modes.BEZIER_EDITOR_MODE
 	target = None
 	paths = []
+	selected_nodes = []
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
 
 	def start_(self):
+		self.start = []
+		self.end = []
 		self.snap = self.presenter.snap
 		self.target = self.selection.objs[0]
+		self.selected_nodes = []
 		self.paths = []
 		for item in self.target.paths:
 			self.paths.append(BezierPath(self.canvas, item, self.target.trafo))
@@ -84,6 +88,8 @@ class BezierEditor(AbstractController):
 		self.selection.set([self.target, ])
 		self.target = None
 		self.paths = []
+		self.start = []
+		self.end = []
 
 	def escape_pressed(self):
 		self.canvas.set_mode()
@@ -114,6 +120,14 @@ class BezierEditor(AbstractController):
 		if self.draw:
 			self.timer.stop()
 			self.draw = False
+			points = self.select_points_by_bbox(self.start + self.end)
+			self.set_selected_nodes(points, event.is_shift())
+			self.start = []
+			self.end = []
+			self.canvas.selection_redraw()
+		else:
+			points = self.select_point_by_click(self.end)
+			self.set_selected_nodes(points, event.is_shift())
 			self.start = []
 			self.end = []
 			self.canvas.selection_redraw()
@@ -122,6 +136,34 @@ class BezierEditor(AbstractController):
 		if self.start:
 			self.end = event.get_point()
 			self.draw = True
+
+	def select_points_by_bbox(self, bbox):
+		ret = []
+		bbox = self.canvas.bbox_win_to_doc(bbox)
+		for item in self.paths:
+			ret += item.select_points_by_bbox(bbox)
+		return ret
+
+	def select_point_by_click(self, win_point):
+		paths = [] + self.paths
+		paths.reverse()
+		for item in paths:
+			point = item.pressed_point(win_point)
+			if point: return [point, ]
+		return []
+
+	def set_selected_nodes(self, points, add_flag=False):
+		if not add_flag:
+			for item in self.selected_nodes:
+				item.selected = False
+			self.selected_nodes = []
+		for item in points:
+			if item.selected and item in self.selected_nodes:
+				item.selected = False
+				self.selected_nodes.remove(item)
+			else:
+				item.selected = True
+				self.selected_nodes.append(item)
 
 class BezierPath:
 
@@ -141,20 +183,43 @@ class BezierPath:
 			self.points.append(BerzierNode(self.canvas, item))
 		self.closed = path[2]
 
-	def is_pressed(self, win_point):pass
+	def pressed_point(self, win_point):
+		points = [] + self.points
+		points.reverse()
+		for item in points:
+			if item.is_pressed(win_point):
+				return item
+		if not self.closed == sk2_const.CURVE_CLOSED:
+			if self.start_point.is_pressed(win_point):
+				return self.start_point
+		return None
 
 	def repaint(self):
 		rend = self.canvas.renderer
 		if not self.closed == sk2_const.CURVE_CLOSED:
-			rend.draw_start_node(self.start_point.get_screen_point())
+			rend.draw_start_node(self.start_point.get_screen_point(),
+								self.start_point.selected)
 		for item in self.points[:-1]:
-			rend.draw_regular_node(item.get_screen_point())
-		rend.draw_last_node(self.points[-1].get_screen_point())
+			rend.draw_regular_node(item.get_screen_point(), item.selected)
+		rend.draw_last_node(self.points[-1].get_screen_point(),
+						self.points[-1].selected)
+
+	def select_points_by_bbox(self, bbox):
+		ret = []
+		if not self.closed == sk2_const.CURVE_CLOSED:
+			if libgeom.is_point_in_bbox(self.start_point.point, bbox):
+				ret.append(self.start_point)
+		for item in self.points:
+			if libgeom.is_point_in_bbox(item.point, bbox):
+				ret.append(item)
+		return ret
+
 
 class BerzierNode:
 
 	point = []
 	canvas = None
+	selected = False
 
 	def __init__(self, canvas, point):
 		self.canvas = canvas
@@ -162,6 +227,7 @@ class BerzierNode:
 
 	def is_pressed(self, win_point):
 		wpoint = self.canvas.point_doc_to_win(self.point)
+		if not len(wpoint) == 2:wpoint = wpoint[2]
 		bbox = libgeom.bbox_for_point(wpoint, config.point_sensitivity_size)
 		return libgeom.is_point_in_bbox(win_point, bbox)
 
