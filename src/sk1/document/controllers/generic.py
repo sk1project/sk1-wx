@@ -137,7 +137,7 @@ class AbstractController:
 
 	def mouse_up(self, event):
 		if self.draw:
-			self.timer.Stop()
+			self.timer.stop()
 			self.draw = False
 			self.counter = 0
 			self._calc_points(event)
