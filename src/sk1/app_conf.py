@@ -256,6 +256,8 @@ class AppConfig(UCConfig):
 	control_line_stroke_width = 0.7
 	control_line_stroke_dash = [5, 5]
 
+	selected_node_fill = (1.0, 0.0, 0.0)
+
 	#============== GRADIENT MARK OPTIONS ================
 
 	gradient_vector_fg_color = (1.0, 0.0, 0.0)
