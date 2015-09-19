@@ -254,21 +254,24 @@ class PDRenderer(CairoRenderer):
 	def set_direct_matrix(self):
 		self.ctx.set_matrix(self.direct_matrix)
 
-	def draw_regular_node(self, point):
-		self.draw_curve_point(point, config.curve_point_size,
-							config.curve_point_fill,
+	def draw_regular_node(self, point, selected=False):
+		fill = config.curve_point_fill
+		if selected: fill = config.selected_node_fill
+		self.draw_curve_point(point, config.curve_point_size, fill,
 							config.curve_point_stroke,
 							config.curve_point_stroke_width)
 
-	def draw_start_node(self, point):
-		self.draw_curve_point(point, config.curve_start_point_size,
-							config.curve_start_point_fill,
+	def draw_start_node(self, point, selected=False):
+		fill = config.curve_start_point_fill
+		if selected: fill = config.selected_node_fill
+		self.draw_curve_point(point, config.curve_start_point_size, fill,
 							config.curve_start_point_stroke,
 							config.curve_start_point_stroke_width)
 
-	def draw_last_node(self, point):
-		self.draw_curve_point(point, config.curve_last_point_size,
-							config.curve_last_point_fill,
+	def draw_last_node(self, point, selected=False):
+		fill = config.curve_last_point_fill
+		if selected: fill = config.selected_node_fill
+		self.draw_curve_point(point, config.curve_last_point_size, fill,
 							config.curve_last_point_stroke,
 							config.curve_last_point_stroke_width)
 
