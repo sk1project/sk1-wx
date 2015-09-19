@@ -66,6 +66,7 @@ class BezierEditor(AbstractController):
 
 	mode = modes.BEZIER_EDITOR_MODE
 	target = None
+	paths = []
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -73,12 +74,16 @@ class BezierEditor(AbstractController):
 	def start_(self):
 		self.snap = self.presenter.snap
 		self.target = self.selection.objs[0]
+		self.paths = []
+		for item in self.target.paths:
+			self.paths.append(BezierPath(self.canvas, item, self.target.trafo))
 		self.selection.clear()
 		self.canvas.selection_redraw()
 
 	def stop_(self):
 		self.selection.set([self.target, ])
 		self.target = None
+		self.paths = []
 
 	def escape_pressed(self):
 		self.canvas.set_mode()
@@ -88,23 +93,81 @@ class BezierEditor(AbstractController):
 		p0 = self.canvas.point_doc_to_win([x0, y0])
 		p1 = self.canvas.point_doc_to_win([x1, y1])
 		self.canvas.renderer.draw_frame(p0, p1)
+		for item in self.paths:
+			item.repaint()
 
-	def _collect_paths(self):pass
+	def repaint_frame(self):
+		self.canvas.renderer.cdc_draw_frame(self.start, self.end, True)
+
+	def on_timer(self):
+		if self.draw:
+			self.repaint_frame()
+
+	def mouse_down(self, event):
+		self.start = []
+		self.end = []
+		self.start = event.get_point()
+		self.timer.start()
+
+	def mouse_up(self, event):
+		self.end = event.get_point()
+		if self.draw:
+			self.timer.stop()
+			self.draw = False
+			self.start = []
+			self.end = []
+			self.canvas.selection_redraw()
+
+	def mouse_move(self, event):
+		if self.start:
+			self.end = event.get_point()
+			self.draw = True
+
+class BezierPath:
+
+	canvas = None
+	start_point = []
+	points = []
+	closed = sk2_const.CURVE_CLOSED
+	trafo = []
+
+	def __init__(self, canvas, path, trafo):
+		self.canvas = canvas
+		path = libgeom.apply_trafo_to_path(path, trafo)
+		self.trafo = trafo
+		self.start_point = BerzierNode(self.canvas, path[0])
+		self.points = []
+		for item in path[1]:
+			self.points.append(BerzierNode(self.canvas, item))
+		self.closed = path[2]
+
+	def is_pressed(self, win_point):pass
+
+	def repaint(self):
+		rend = self.canvas.renderer
+		if not self.closed == sk2_const.CURVE_CLOSED:
+			rend.draw_start_node(self.start_point.get_screen_point())
+		for item in self.points[:-1]:
+			rend.draw_regular_node(item.get_screen_point())
+		rend.draw_last_node(self.points[-1].get_screen_point())
 
 class BerzierNode:
 
-	first = False
-	last = False
 	point = []
 	canvas = None
 
-	def __init__(self, canvas, point, first=False, last=False):
+	def __init__(self, canvas, point):
 		self.canvas = canvas
 		self.point = point
-		self.first = first
-		self.last = last
 
 	def is_pressed(self, win_point):
 		wpoint = self.canvas.point_doc_to_win(self.point)
 		bbox = libgeom.bbox_for_point(wpoint, config.point_sensitivity_size)
 		return libgeom.is_point_in_bbox(win_point, bbox)
+
+	def get_screen_point(self):
+		wpoint = self.canvas.point_doc_to_win(self.point)
+		if len(wpoint) == 2:
+			return wpoint
+		else:
+			return wpoint[2]
