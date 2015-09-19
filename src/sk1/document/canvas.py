@@ -349,6 +349,14 @@ class AppCanvas(wx.Panel):
 			result.append(new_path)
 		return result
 
+	def bbox_win_to_doc(self, bbox):
+		new_bbox = self.win_to_doc(bbox[:2]) + self.win_to_doc(bbox[2:])
+		return normalize_bbox(new_bbox)
+
+	def bbox_doc_to_win(self, bbox):
+		new_bbox = self.doc_to_win(bbox[:2]) + self.doc_to_win(bbox[2:])
+		return normalize_bbox(new_bbox)
+
 	def scroll(self, cdx, cdy):
 		m11, m12, m21, m22, dx, dy = self.trafo
 		dx += cdx
