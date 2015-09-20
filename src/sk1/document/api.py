@@ -961,7 +961,8 @@ class PresenterAPI(AbstractAPI):
 		config = objs[0].config
 		paths = []
 		for obj in objs:
-			paths += libgeom.get_transformed_path(obj)
+			for item in libgeom.get_transformed_path(obj):
+				if item[1]:paths.append(item)
 		result = model.Curve(config, parent)
 		result.paths = paths
 		result.style = style
