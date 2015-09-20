@@ -215,7 +215,6 @@ class BezierPath:
 			rend.draw_last_node(self.start_point.get_screen_point(),
 							self.start_point.selected)
 
-
 	def select_points_by_bbox(self, bbox):
 		ret = []
 		if libgeom.is_point_in_bbox(self.start_point.point, bbox):
@@ -224,6 +223,12 @@ class BezierPath:
 			if libgeom.is_point_in_bbox(item.point, bbox):
 				ret.append(item)
 		return ret
+
+	def apply_trafo_to_point(self, point, trafo):
+		if point in self.points:
+			pass
+		elif point == self.start_point:
+			pass
 
 
 class BerzierNode:
@@ -248,3 +253,18 @@ class BerzierNode:
 			return wpoint
 		else:
 			return wpoint[2]
+
+	def apply_trafo(self, trafo):
+		if len(self.point) == 2:
+			self.point = libgeom.apply_trafo_to_point(self.point, trafo)
+		else:
+			p0, p1, p2, marker = deepcopy(self.point)
+			p1 = libgeom.apply_trafo_to_point(p1, trafo)
+			p2 = libgeom.apply_trafo_to_point(p2, trafo)
+			self.point = [p0, p1, p2, marker]
+
+	def apply_trafo_before(self, trafo):
+		if not len(self.point) == 2:
+			p0, p1, p2, marker = deepcopy(self.point)
+			p0 = libgeom.apply_trafo_to_point(p0, trafo)
+			self.point = [p0, p1, p2, marker]
