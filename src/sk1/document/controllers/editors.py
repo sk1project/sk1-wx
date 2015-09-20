@@ -77,12 +77,17 @@ class BezierEditor(AbstractController):
 		self.end = []
 		self.snap = self.presenter.snap
 		self.target = self.selection.objs[0]
+		self.update_paths()
+		self.selection.clear()
+		self.canvas.selection_redraw()
+
+	def update_paths(self):
 		self.selected_nodes = []
 		self.paths = []
 		for item in self.target.paths:
-			self.paths.append(BezierPath(self.canvas, item, self.target.trafo))
-		self.selection.clear()
-		self.canvas.selection_redraw()
+			if not item[1]:continue
+			pth = BezierPath(self.canvas, item, self.target.trafo)
+			self.paths.append(pth)
 
 	def stop_(self):
 		self.selection.set([self.target, ])
