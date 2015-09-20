@@ -206,14 +206,20 @@ class BezierPath:
 								self.start_point.selected)
 		for item in self.points[:-1]:
 			rend.draw_regular_node(item.get_screen_point(), item.selected)
-		rend.draw_last_node(self.points[-1].get_screen_point(),
-						self.points[-1].selected)
+		if not self.closed == sk2_const.CURVE_CLOSED:
+			rend.draw_last_node(self.points[-1].get_screen_point(),
+							self.points[-1].selected)
+		else:
+			rend.draw_regular_node(self.points[-1].get_screen_point(),
+							self.points[-1].selected)
+			rend.draw_last_node(self.start_point.get_screen_point(),
+							self.start_point.selected)
+
 
 	def select_points_by_bbox(self, bbox):
 		ret = []
-		if not self.closed == sk2_const.CURVE_CLOSED:
-			if libgeom.is_point_in_bbox(self.start_point.point, bbox):
-				ret.append(self.start_point)
+		if libgeom.is_point_in_bbox(self.start_point.point, bbox):
+			ret.append(self.start_point)
 		for item in self.points:
 			if libgeom.is_point_in_bbox(item.point, bbox):
 				ret.append(item)
