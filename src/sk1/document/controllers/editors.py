@@ -92,6 +92,7 @@ class BezierEditor(AbstractController):
 	def stop_(self):
 		self.selection.set([self.target, ])
 		self.target = None
+		for item in self.paths: item.destroy()
 		self.paths = []
 		self.start = []
 		self.end = []
@@ -182,11 +183,18 @@ class BezierPath:
 		self.canvas = canvas
 		path = libgeom.apply_trafo_to_path(path, trafo)
 		self.trafo = trafo
-		self.start_point = BerzierNode(self.canvas, path[0])
+		self.start_point = BerzierNode(self.canvas, self, path[0])
 		self.points = []
 		for item in path[1]:
-			self.points.append(BerzierNode(self.canvas, item))
+			self.points.append(BerzierNode(self.canvas, self, item))
 		self.closed = path[2]
+
+	def destroy(self):
+		for item in [self.start_point, ] + self.points:
+			item.destoy()
+		items = self.__dict__.keys()
+		for item in items:
+			self.__dict__[item] = None
 
 	def pressed_point(self, win_point):
 		points = [] + self.points
@@ -235,11 +243,18 @@ class BerzierNode:
 
 	point = []
 	canvas = None
+	path = None
 	selected = False
 
-	def __init__(self, canvas, point):
+	def __init__(self, canvas, path, point):
 		self.canvas = canvas
 		self.point = point
+		self.path = path
+
+	def destroy(self):
+		items = self.__dict__.keys()
+		for item in items:
+			self.__dict__[item] = None
 
 	def is_pressed(self, win_point):
 		wpoint = self.canvas.point_doc_to_win(self.point)
