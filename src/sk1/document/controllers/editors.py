@@ -191,7 +191,7 @@ class BezierPath:
 
 	def destroy(self):
 		for item in [self.start_point, ] + self.points:
-			item.destoy()
+			item.destroy()
 		items = self.__dict__.keys()
 		for item in items:
 			self.__dict__[item] = None
