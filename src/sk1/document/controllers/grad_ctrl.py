@@ -97,7 +97,7 @@ class GradientCreator(AbstractController):
 		self.new_style = deepcopy(self.orig_style)
 
 	def escape_pressed(self):
-		self.presenter.api.set_temp_style(self.target, self.orig_style)
+		self.api.set_temp_style(self.target, self.orig_style)
 		self.canvas.set_mode()
 
 	def _update_style(self):
@@ -138,7 +138,7 @@ class GradientCreator(AbstractController):
 			self.end = self.snap.snap_point(event.get_point())[2]
 			self._update_style()
 			style = deepcopy(self.new_style)
-			self.presenter.api.set_temp_style(self.target, style)
+			self.api.set_temp_style(self.target, style)
 
 	def mouse_up(self, event):
 		p = self.snap.snap_point(event.get_point())[2]
@@ -170,7 +170,7 @@ class GradientCreator(AbstractController):
 		self._update_style()
 		self.target.style = self.orig_style
 		self.selection.set([self.target, ])
-		self.presenter.api.set_fill_style(deepcopy(self.new_style[0]))
+		self.api.set_fill_style(deepcopy(self.new_style[0]))
 		self.canvas.restore_mode()
 
 
@@ -195,7 +195,7 @@ class GradientEditor(AbstractController):
 	def escape_pressed(self):
 		if self.moved_point:
 			self.new_style = None
-			self.presenter.api.set_temp_style(self.target, self.orig_style)
+			self.api.set_temp_style(self.target, self.orig_style)
 			self.selection.set([self.target, ])
 		self.canvas.set_mode()
 
@@ -219,9 +219,9 @@ class GradientEditor(AbstractController):
 		vector = [self.vector[0].point, self.vector[1].point]
 		self.new_style[0][2][1] = libgeom.apply_trafo_to_points(vector, itrafo)
 		if temp:
-			self.presenter.api.set_temp_style(self.target, self.new_style)
+			self.api.set_temp_style(self.target, self.new_style)
 		else:
-			self.presenter.api.set_fill_style(deepcopy(self.new_style[0]))
+			self.api.set_fill_style(deepcopy(self.new_style[0]))
 
 	def repaint(self):
 		x0, y0, x1, y1 = self.target.cache_bbox
