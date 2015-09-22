@@ -187,8 +187,17 @@ class AppProxy:
 	def open_url(self, url): self.app.open_url(url)
 	def about(self): dialogs.about_dialog(self.app, self.mw)
 
-	def undo(self): self.app.current_doc.api.do_undo()
-	def redo(self): self.app.current_doc.api.do_redo()
+	def undo(self):
+		self.app.current_doc.api.do_undo()
+		canvas = self.app.current_doc.canvas
+		if canvas.mode == modes.BEZIER_EDITOR_MODE:
+			canvas.controller.update_paths()
+	def redo(self):
+		self.app.current_doc.api.do_redo()
+		canvas = self.app.current_doc.canvas
+		if canvas.mode == modes.BEZIER_EDITOR_MODE:
+			canvas.controller.update_paths()
+
 	def clear_history(self): self.app.current_doc.api.clear_history()
 	def cut(self): self.app.current_doc.api.cut_selected()
 	def copy(self): self.app.current_doc.api.copy_selected()
