@@ -67,7 +67,10 @@ class BezierEditor(AbstractController):
 	mode = modes.BEZIER_EDITOR_MODE
 	target = None
 	paths = []
+	orig_paths = []
 	selected_nodes = []
+	move_flag = False
+	moved_node = None
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -78,16 +81,18 @@ class BezierEditor(AbstractController):
 		self.snap = self.presenter.snap
 		self.target = self.selection.objs[0]
 		self.update_paths()
-		self.selection.clear()
-		self.canvas.selection_redraw()
+		self.api.set_mode()
 
 	def update_paths(self):
 		self.selected_nodes = []
+		self.orig_paths = deepcopy(self.target.paths)
+		for item in self.paths: item.destroy()
 		self.paths = []
 		for item in self.target.paths:
 			if not item[1]:continue
 			pth = BezierPath(self.canvas, item, self.target.trafo)
 			self.paths.append(pth)
+		self.selection.clear()
 
 	def stop_(self):
 		self.selection.set([self.target, ])
@@ -116,32 +121,47 @@ class BezierEditor(AbstractController):
 			self.repaint_frame()
 
 	def mouse_down(self, event):
+		self.timer.stop()
 		self.start = []
 		self.end = []
+		self.draw = False
+		self.move_flag = False
 		self.start = event.get_point()
-		self.timer.start()
+		points = self.select_point_by_click(self.start)
+		if points:
+			self.moved_node = points[0]
+			if not self.moved_node in self.selected_nodes:
+				self.set_selected_nodes(points, event.is_shift())
+			self.move_flag = True
+		else:
+			self.timer.start()
 
 	def mouse_up(self, event):
+		self.timer.stop()
 		self.end = event.get_point()
 		if self.draw:
-			self.timer.stop()
 			self.draw = False
 			points = self.select_points_by_bbox(self.start + self.end)
 			self.set_selected_nodes(points, event.is_shift())
 			self.start = []
 			self.end = []
 			self.canvas.selection_redraw()
-		else:
-			points = self.select_point_by_click(self.end)
-			self.set_selected_nodes(points, event.is_shift())
-			self.start = []
-			self.end = []
+		elif self.move_flag:
+			if not self.start == self.end:
+				self.move_selected_points(self.moved_node,
+										event.get_point(), True)
+			self.moved_node = None
 			self.canvas.selection_redraw()
+			self.move_flag = False
 
 	def mouse_move(self, event):
-		if self.start:
+		if self.start and not self.move_flag:
 			self.end = event.get_point()
 			self.draw = True
+		elif self.start and self.move_flag:
+			self.move_selected_points(self.moved_node, event.get_point())
+			self.canvas.selection_redraw()
+			self.move_flag = True
 
 	def select_points_by_bbox(self, bbox):
 		ret = []
@@ -171,6 +191,29 @@ class BezierEditor(AbstractController):
 				item.selected = True
 				self.selected_nodes.append(item)
 
+	def move_selected_points(self, base_point, win_point, undable=False):
+		x1, y1 = self.snap.snap_point(win_point)[2]
+		if len(base_point.point) == 2:
+			x0, y0 = [] + base_point.point
+		else:
+			x0, y0 = [] + base_point.point[2]
+		trafo = [1.0, 0.0, 0.0, 1.0, x1 - x0, y1 - y0]
+		for item in self.selected_nodes:
+			item.path.apply_trafo_to_point(item, trafo)
+		paths = self.get_paths()
+		if undable:
+			self.api.set_new_paths(self.target, paths, self.orig_paths)
+			self.orig_paths = paths
+		else:
+			self.api.set_temp_paths(self.target, paths)
+
+	def get_paths(self):
+		ret = []
+		for item in self.paths:
+			ret.append(item.get_path())
+		return ret
+
+
 class BezierPath:
 
 	canvas = None
@@ -196,15 +239,20 @@ class BezierPath:
 		for item in items:
 			self.__dict__[item] = None
 
+	def get_path(self):
+		ret = [[], [], self.closed]
+		inv_trafo = libgeom.invert_trafo(self.trafo)
+		ret[0] = libgeom.apply_trafo_to_point(self.start_point.point, inv_trafo)
+		for item in self.points:
+			ret[1].append(libgeom.apply_trafo_to_point(item.point, inv_trafo))
+		return ret
+
 	def pressed_point(self, win_point):
-		points = [] + self.points
+		points = [self.start_point, ] + self.points
 		points.reverse()
 		for item in points:
 			if item.is_pressed(win_point):
 				return item
-		if not self.closed == sk2_const.CURVE_CLOSED:
-			if self.start_point.is_pressed(win_point):
-				return self.start_point
 		return None
 
 	def repaint(self):
@@ -233,10 +281,11 @@ class BezierPath:
 		return ret
 
 	def apply_trafo_to_point(self, point, trafo):
-		if point in self.points:
-			pass
-		elif point == self.start_point:
-			pass
+		if point in self.points + [self.start_point, ]:
+			point.apply_trafo(trafo)
+			if not point == self.points[-1] and not point == self.start_point:
+				index = self.points.index(point) + 1
+				self.points[index].apply_trafo_before(trafo)
 
 
 class BerzierNode:
