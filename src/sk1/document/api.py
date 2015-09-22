@@ -22,7 +22,7 @@ from uc2.formats.sk2 import sk2_model as model
 from uc2.formats.sk2 import sk2_const
 from uc2 import libgeom, uc2const, libimg
 
-from sk1 import events, config
+from sk1 import events, config, modes
 
 
 class AbstractAPI:
@@ -100,6 +100,9 @@ class AbstractAPI:
 			self.undo[-1][2] = True
 			self.undo_marked = True
 
+	def _set_mode(self, mode):
+		self.presenter.canvas.set_mode(mode)
+
 	def _set_page_format(self, page, page_format):
 		self.methods.set_page_format(page, page_format)
 
@@ -112,6 +115,9 @@ class AbstractAPI:
 
 	def _set_selection(self, objs):
 		self.selection.objs = [] + objs
+		self.selection.update()
+
+	def _selection_update(self):
 		self.selection.update()
 
 	def _delete_object(self, obj):
@@ -224,6 +230,10 @@ class AbstractAPI:
 	def _set_paths_and_trafo(self, obj, paths, trafo):
 		obj.paths = paths
 		obj.trafo = trafo
+		obj.update()
+
+	def _set_paths(self, obj, paths):
+		obj.paths = paths
 		obj.update()
 
 	def _apply_trafo(self, objs, trafo):
@@ -645,6 +655,31 @@ class PresenterAPI(AbstractAPI):
 				False]
 			self.add_undo(transaction)
 			self.selection.update()
+
+	def set_mode(self, mode=modes.SELECT_MODE):
+		transaction = [
+			[[self._set_mode, mode],
+			[self._selection_update, ]],
+			[[self._set_mode, mode],
+			[self._selection_update, ]],
+			False]
+		self.add_undo(transaction)
+
+	def set_temp_paths(self, obj, paths):
+		self._set_paths(obj, paths)
+		self.eventloop.emit(self.eventloop.DOC_MODIFIED)
+		self.selection.update()
+
+	def set_new_paths(self, obj, new_paths, old_paths):
+		self._set_paths(obj, new_paths)
+		transaction = [
+			[[self._set_paths, obj, old_paths],
+			[self._selection_update, ]],
+			[[self._set_paths, obj, new_paths],
+			[self._selection_update, ]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
 
 	def transform_selected(self, trafo, copy=False):
 		if self.selection.objs:
