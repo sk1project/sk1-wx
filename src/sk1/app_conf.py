@@ -256,7 +256,7 @@ class AppConfig(UCConfig):
 	control_line_stroke_width = 0.7
 	control_line_stroke_dash = [5, 5]
 
-	selected_node_fill = (1.0, 0.0, 0.0)
+	selected_node_fill = (1.0, 0.5, 0.5)
 
 	#============== GRADIENT MARK OPTIONS ================
 
