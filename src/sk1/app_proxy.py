@@ -204,9 +204,19 @@ class AppProxy:
 	def paste(self): self.app.current_doc.api.paste_selected()
 	def delete(self): self.app.current_doc.api.delete_selected()
 	def duplicate(self): self.app.current_doc.api.duplicate_selected()
-	def select_all(self): self.app.current_doc.selection.select_all()
+	def select_all(self):
+		canvas = self.app.current_doc.canvas
+		if canvas.mode == modes.BEZIER_EDITOR_MODE:
+			canvas.controller.select_all_nodes()
+		else:
+			self.app.current_doc.selection.select_all()
 	def deselect(self, *args): self.app.current_doc.selection.clear()
-	def invert_selection(self): self.app.current_doc.selection.invert_selection()
+	def invert_selection(self):
+		canvas = self.app.current_doc.canvas
+		if canvas.mode == modes.BEZIER_EDITOR_MODE:
+			canvas.controller.select_all_nodes(True)
+		else:
+			self.app.current_doc.selection.invert_selection()
 
 	def zoom_in(self): self.app.current_doc.canvas.zoom_in()
 	def zoom_out(self): self.app.current_doc.canvas.zoom_out()

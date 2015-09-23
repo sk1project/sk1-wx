@@ -80,6 +80,7 @@ class BezierEditor(AbstractController):
 		self.end = []
 		self.snap = self.presenter.snap
 		self.target = self.selection.objs[0]
+		self.selection.clear()
 		self.update_paths()
 		self.api.set_mode()
 
@@ -92,7 +93,7 @@ class BezierEditor(AbstractController):
 			if not item[1]:continue
 			pth = BezierPath(self.canvas, item, self.target.trafo)
 			self.paths.append(pth)
-		self.selection.clear()
+		self.canvas.selection_redraw()
 
 	def stop_(self):
 		self.selection.set([self.target, ])
@@ -191,6 +192,13 @@ class BezierEditor(AbstractController):
 				item.selected = True
 				self.selected_nodes.append(item)
 
+	def select_all_nodes(self, invert=False):
+		points = []
+		for item in self.paths:
+			points += item.get_all_points()
+		self.set_selected_nodes(points, invert)
+		self.canvas.selection_redraw()
+
 	def move_selected_points(self, base_point, win_point, undable=False):
 		x1, y1 = self.snap.snap_point(win_point)[2]
 		if len(base_point.point) == 2:
@@ -238,6 +246,9 @@ class BezierPath:
 		items = self.__dict__.keys()
 		for item in items:
 			self.__dict__[item] = None
+
+	def get_all_points(self):
+		return [self.start_point, ] + self.points
 
 	def get_path(self):
 		ret = [[], [], self.closed]
