@@ -71,6 +71,7 @@ class BezierEditor(AbstractController):
 	selected_nodes = []
 	move_flag = False
 	moved_node = None
+	selected_obj = None
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -98,6 +99,7 @@ class BezierEditor(AbstractController):
 	def stop_(self):
 		self.selection.set([self.target, ])
 		self.target = None
+		self.selected_obj = None
 		for item in self.paths: item.destroy()
 		self.paths = []
 		self.start = []
@@ -135,6 +137,11 @@ class BezierEditor(AbstractController):
 				self.set_selected_nodes(points, event.is_shift())
 			self.move_flag = True
 		else:
+			objs = self.canvas.pick_at_point(self.start)
+			if objs and not objs[0] == self.target and \
+			objs[0].cid > sk2_model.PRIMITIVE_CLASS \
+			and not objs[0].cid == sk2_model.PIXMAP:
+				self.selected_obj = objs[0]
 			self.timer.start()
 
 	def mouse_up(self, event):
@@ -154,6 +161,14 @@ class BezierEditor(AbstractController):
 			self.moved_node = None
 			self.canvas.selection_redraw()
 			self.move_flag = False
+		elif self.selected_obj:
+			self.target = self.selected_obj
+			self.canvas.restore_mode()
+		else:
+			if self.start == self.end:
+				self.set_selected_nodes([])
+				self.canvas.selection_redraw()
+		self.selected_obj = None
 
 	def mouse_move(self, event):
 		if self.start and not self.move_flag:
