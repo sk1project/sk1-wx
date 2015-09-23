@@ -199,6 +199,7 @@ class Selection:
 		self.update()
 
 	def set(self, objs):
+		if not objs[0]:objs = []
 		self.center_offset = [0.0, 0.0]
 		self.objs = objs
 		self.update()
