@@ -129,6 +129,7 @@ class BezierEditor(AbstractController):
 		self.end = []
 		self.draw = False
 		self.move_flag = False
+		self.selected_obj = None
 		self.start = event.get_point()
 		points = self.select_point_by_click(self.start)
 		if points:
