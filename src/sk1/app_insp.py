@@ -18,6 +18,8 @@
 from uc2.formats.sk2 import sk2_model as model
 from uc2 import uc2const
 
+from sk1 import modes
+
 class AppInspector:
 
 	def __init__(self, app):
@@ -86,6 +88,14 @@ class AppInspector:
 			return True
 		else:
 			return False
+
+	def can_be_deleted(self, doc=None):
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		if doc.canvas.mode == modes.BEZIER_EDITOR_MODE:
+			return len(doc.canvas.controller.selected_nodes) > 0
+		else:
+			return self.is_selection(doc)
 
 	def is_clipboard(self):
 		if self.app.clipboard.contents:
