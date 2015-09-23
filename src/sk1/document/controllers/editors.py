@@ -250,7 +250,7 @@ class BezierEditor(AbstractController):
 		if not paths:
 			parent = self.target.parent
 			index = parent.childs.index(self.target)
-			self.api.delete_objects([self.target, parent, index ])
+			self.api.delete_objects([[self.target, parent, index ], ])
 			self.target = None
 			self.canvas.restore_mode()
 		else:
