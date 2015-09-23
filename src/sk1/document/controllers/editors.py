@@ -21,7 +21,7 @@ from uc2 import uc2const, libgeom
 from uc2.formats.sk2 import sk2_model
 from uc2.formats.sk2 import sk2_const
 
-from sk1 import modes, config
+from sk1 import modes, config, events
 from generic import AbstractController
 
 class EditorChooser(AbstractController):
@@ -207,6 +207,7 @@ class BezierEditor(AbstractController):
 			else:
 				item.selected = True
 				self.selected_nodes.append(item)
+		events.emit(events.SELECTION_CHANGED, self.presenter)
 
 	def select_all_nodes(self, invert=False):
 		points = []
@@ -236,6 +237,25 @@ class BezierEditor(AbstractController):
 		for item in self.paths:
 			ret.append(item.get_path())
 		return ret
+
+	def delete_selected_nodes(self):
+		if not self.selected_nodes: return
+		for item in self.selected_nodes:
+			item.path.delete_point(item)
+			if not item.path.points:
+				self.paths.remove(item.path)
+			item.destroy()
+		self.selected_nodes = []
+		paths = self.get_paths()
+		if not paths:
+			parent = self.target.parent
+			index = parent.childs.index(self.target)
+			self.api.delete_objects([self.target, parent, index ])
+			self.target = None
+			self.canvas.restore_mode()
+		else:
+			self.api.set_new_paths(self.target, paths, self.orig_paths)
+			self.orig_paths = paths
 
 
 class BezierPath:
@@ -313,6 +333,15 @@ class BezierPath:
 			if not point == self.points[-1] and not point == self.start_point:
 				index = self.points.index(point) + 1
 				self.points[index].apply_trafo_before(trafo)
+
+	def delete_point(self, point):
+		if point in self.points:
+			self.points.remove(point)
+		elif point == self.start_point and self.points:
+			self.start_point = self.points[0]
+			self.points = self.points[1:]
+			if not len(self.start_point.point) == 2:
+				self.start_point.point = self.start_point.point[2]
 
 
 class BerzierNode:
