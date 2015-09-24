@@ -107,3 +107,10 @@ def is_point_in_rect2(point, rect_center, rect_w, rect_h):
 	if abs(x - cx) <= rect_w / 2.0 and abs(y - cy) <= rect_h / 2.0:
 		return True
 	return False
+
+def bbox_size(bbox):
+	x0, y0, x1, y1 = bbox
+	h = abs(x1 - x0)
+	v = (y1 - y0)
+	return h, v
+
