@@ -495,11 +495,21 @@ class AppCanvas(wx.Panel):
 			self.set_mode(modes.SELECT_MODE)
 		self._keep_center()
 		if self.soft_repaint and not self.full_repaint:
-			if self.selection_repaint: self.renderer.paint_selection()
+			if self.selection_repaint:
+				if self.mode in modes.EDIT_MODES and \
+				self.presenter.selection.objs:
+					pass
+				else:
+					self.renderer.paint_selection()
 			self.soft_repaint = False
 		else:
 			self.renderer.paint_document()
-			if self.selection_repaint: self.renderer.paint_selection()
+			if self.selection_repaint:
+				if self.mode in modes.EDIT_MODES and \
+				self.presenter.selection.objs:
+					pass
+				else:
+					self.renderer.paint_selection()
 			self.eventloop.emit(self.eventloop.VIEW_CHANGED)
 			self.full_repaint = False
 			self.soft_repaint = False
