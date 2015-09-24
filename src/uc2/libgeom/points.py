@@ -39,7 +39,6 @@ def midpoint(p0, p1):
 def contra_point(p0, p1):
 	return [2.0 * p1[0] - p0[0], 2.0 * p1[1] - p0[1]]
 
-
 def add_points(p1, p0):
 	return [p1[0] + p0[0], p1[1] + p0[1]]
 
