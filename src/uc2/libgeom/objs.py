@@ -18,7 +18,7 @@
 import math
 
 from uc2 import libcairo
-from uc2.formats.sk2 import sk2_const as const
+from uc2.formats.sk2 import sk2_const
 
 from points import rotate_point
 
@@ -26,7 +26,7 @@ from points import rotate_point
 
 def get_rect_path(start, width, height, corners):
 	mr = min(width, height) / 2.0
-	shift = const.CIRCLE_CTRL_SHIFT
+	shift = sk2_const.CIRCLE_CTRL_SHIFT
 
 	path = []
 	points = []
@@ -40,7 +40,7 @@ def get_rect_path(start, width, height, corners):
 			[start[0] + radius * shift, start[1]],
 			[start[0], start[1] + radius * shift],
 			[start[0], start[1] + radius],
-			const.NODE_SMOOTH
+			sk2_const.NODE_SMOOTH
 			])
 
 	if corners[1] == 0.0:
@@ -52,7 +52,7 @@ def get_rect_path(start, width, height, corners):
 			[start[0], start[1] + height - radius * shift],
 			[start[0] + radius * shift, start[1] + height],
 			[start[0] + radius, start[1] + height],
-			const.NODE_SMOOTH
+			sk2_const.NODE_SMOOTH
 			])
 
 	if corners[2] == 0.0:
@@ -64,7 +64,7 @@ def get_rect_path(start, width, height, corners):
 			[start[0] + width - radius * shift, start[1] + height],
 			[start[0] + width, start[1] + height - radius * shift],
 			[start[0] + width, start[1] + height - radius],
-			const.NODE_SMOOTH
+			sk2_const.NODE_SMOOTH
 			])
 
 	if corners[3] == 0.0:
@@ -76,7 +76,7 @@ def get_rect_path(start, width, height, corners):
 			[start[0] + width, start[1] + radius * shift],
 			[start[0] + width - radius * shift, start[1]],
 			[start[0] + width - radius, start[1]],
-			const.NODE_SMOOTH
+			sk2_const.NODE_SMOOTH
 			])
 
 	if not corners[0]:
@@ -86,17 +86,17 @@ def get_rect_path(start, width, height, corners):
 		points.append([start[0] + radius, start[1]])
 
 	path.append(points)
-	path.append(const.CURVE_CLOSED)
+	path.append(sk2_const.CURVE_CLOSED)
 	return [path, ]
 
 def get_circle_path(angle1, angle2, circle_type):
 	paths = []
 	if angle1 == angle2:
-		paths += const.STUB_CIRCLE
+		paths += sk2_const.STUB_CIRCLE
 		if circle_type:
 			return paths
 		else:
-			paths[0][2] = const.CURVE_OPENED
+			paths[0][2] = sk2_const.CURVE_OPENED
 			return paths
 
 	libcairo.CTX.set_matrix(libcairo.DIRECT_MATRIX)
@@ -106,8 +106,8 @@ def get_circle_path(angle1, angle2, circle_type):
 	paths = libcairo.get_path_from_cpath(cairo_path)
 	if circle_type:
 		start_point = [] + paths[0][0]
-		paths[0][2] = const.CURVE_CLOSED
-		if circle_type == const.ARC_PIE_SLICE:
+		paths[0][2] = sk2_const.CURVE_CLOSED
+		if circle_type == sk2_const.ARC_PIE_SLICE:
 			paths[0][1].append([0.5, 0.5])
 		paths[0][1].append(start_point)
 	return paths
@@ -137,7 +137,7 @@ def get_polygon_path(corners_num, angle1, angle2, coef1, coef2):
 
 	start = points[0]
 	points.append([] + start)
-	path = [start, points, const.CURVE_CLOSED]
+	path = [start, points, sk2_const.CURVE_CLOSED]
 	return [path, ]
 
 def get_text_path(text, width, style, attributes):
