@@ -15,7 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx, cairo
+import wx, cairo, inspect
 
 from uc2 import uc2const
 from uc2.uc2const import mm_to_pt, point_dict
@@ -135,8 +135,8 @@ class AppCanvas(wx.Panel):
 		self.renderer.destroy()
 		items = self.ctrls.keys()
 		for item in items:
-			self.ctrls[item].destroy()
-
+			if not inspect.isclass(self.ctrls[item]):
+				self.ctrls[item].destroy()
 		items = self.__dict__.keys()
 		for item in items:
 			self.__dict__[item] = None
@@ -182,27 +182,33 @@ class AppCanvas(wx.Panel):
 		dummy = controllers.AbstractController(self, self.presenter)
 		ctrls = {
 		modes.SELECT_MODE: controllers.SelectController(self, self.presenter),
-		modes.SHAPER_MODE: controllers.EditorChooser(self, self.presenter),
-		modes.BEZIER_EDITOR_MODE: controllers.BezierEditor(self, self.presenter),
-		modes.ZOOM_MODE: controllers.ZoomController(self, self.presenter),
-		modes.FLEUR_MODE:  controllers.FleurController(self, self.presenter),
-		modes.TEMP_FLEUR_MODE: controllers.TempFleurController(self, self.presenter),
-		modes.PICK_MODE: controllers.PickController(self, self.presenter),
-		modes.LINE_MODE: controllers.PolyLineCreator(self, self.presenter),
-		modes.CURVE_MODE: controllers.PathsCreator(self, self.presenter),
-		modes.RECT_MODE: controllers.RectangleCreator(self, self.presenter),
-		modes.ELLIPSE_MODE: controllers.EllipseCreator(self, self.presenter),
+		modes.SHAPER_MODE: controllers.EditorChooser,
+		modes.BEZIER_EDITOR_MODE: controllers.BezierEditor,
+		modes.ZOOM_MODE: controllers.ZoomController,
+		modes.FLEUR_MODE:  controllers.FleurController,
+		modes.TEMP_FLEUR_MODE: controllers.TempFleurController,
+		modes.PICK_MODE: controllers.PickController,
+		modes.LINE_MODE: controllers.PolyLineCreator,
+		modes.CURVE_MODE: controllers.PathsCreator,
+		modes.RECT_MODE: controllers.RectangleCreator,
+		modes.ELLIPSE_MODE: controllers.EllipseCreator,
 		modes.TEXT_MODE: dummy,
-		modes.POLYGON_MODE: controllers.PolygonCreator(self, self.presenter),
-		modes.MOVE_MODE: controllers.MoveController(self, self.presenter),
-		modes.RESIZE_MODE: controllers.TransformController(self, self.presenter),
-		modes.GUIDE_MODE: controllers.GuideController(self, self.presenter),
-		modes.WAIT_MODE: controllers.WaitController(self, self.presenter),
-		modes.GR_SELECT_MODE: controllers.GradientChooser(self, self.presenter),
-		modes.GR_CREATE_MODE: controllers.GradientCreator(self, self.presenter),
-		modes.GR_EDIT_MODE: controllers.GradientEditor(self, self.presenter),
+		modes.POLYGON_MODE: controllers.PolygonCreator,
+		modes.MOVE_MODE: controllers.MoveController,
+		modes.RESIZE_MODE: controllers.TransformController,
+		modes.GUIDE_MODE: controllers.GuideController,
+		modes.WAIT_MODE: controllers.WaitController,
+		modes.GR_SELECT_MODE: controllers.GradientChooser,
+		modes.GR_CREATE_MODE: controllers.GradientCreator,
+		modes.GR_EDIT_MODE: controllers.GradientEditor,
 		}
 		return ctrls
+
+	def get_controller(self, mode):
+		ctrl = self.ctrls[mode]
+		if inspect.isclass(ctrl):
+			self.ctrls[mode] = ctrl(self, self.presenter)
+		return self.ctrls[mode]
 
 	def set_mode(self, mode=modes.SELECT_MODE):
 		if not mode == self.mode:
@@ -211,7 +217,7 @@ class AppCanvas(wx.Panel):
 			if not self.controller is None:
 				self.controller.stop_()
 			self.mode = mode
-			self.controller = self.ctrls[mode]
+			self.controller = self.get_controller(mode)
 			self.controller.set_cursor()
 			self.controller.start_()
 			events.emit(events.MODE_CHANGED, mode)
@@ -225,7 +231,7 @@ class AppCanvas(wx.Panel):
 			self.previous_mode = self.mode
 			self.ctrls[self.mode].standby()
 			self.mode = mode
-			self.controller = self.ctrls[mode]
+			self.controller = self.get_controller(mode)
 			self.controller.callback = callback
 			self.controller.start_()
 			self.controller.set_cursor()
@@ -235,7 +241,7 @@ class AppCanvas(wx.Panel):
 			if not self.controller is None:
 				self.controller.stop_()
 			self.mode = self.previous_mode
-			self.controller = self.ctrls[self.mode]
+			self.controller = self.get_controller(self.mode)
 			self.controller.set_cursor()
 			self.controller.restore()
 			events.emit(events.MODE_CHANGED, self.mode)
