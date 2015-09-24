@@ -20,20 +20,7 @@
 
 def normalize_bbox(bbox):
 	x0, y0, x1, y1 = bbox
-	new_bbox = [0, 0, 0, 0]
-	if x0 < x1:
-		new_bbox[0] = x0
-		new_bbox[2] = x1
-	else:
-		new_bbox[0] = x1
-		new_bbox[2] = x0
-	if y0 < y1:
-		new_bbox[1] = y0
-		new_bbox[3] = y1
-	else:
-		new_bbox[1] = y1
-		new_bbox[3] = y0
-	return new_bbox
+	return [min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)]
 
 def bbox_points(bbox):
 	x0, y0, x1, y1 = normalize_bbox(bbox)
