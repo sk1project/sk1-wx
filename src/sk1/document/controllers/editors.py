@@ -72,6 +72,7 @@ class BezierEditor(AbstractController):
 	move_flag = False
 	moved_node = None
 	selected_obj = None
+	control_points = []
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -79,6 +80,7 @@ class BezierEditor(AbstractController):
 	def start_(self):
 		self.start = []
 		self.end = []
+		self.control_points = []
 		self.snap = self.presenter.snap
 		self.target = self.selection.objs[0]
 		self.selection.clear()
@@ -207,7 +209,35 @@ class BezierEditor(AbstractController):
 			else:
 				item.selected = True
 				self.selected_nodes.append(item)
+		if len(self.selected_nodes) == 1:
+			self.create_control_points()
+		else:
+			self.clear_control_points()
+		print self.control_points
 		events.emit(events.SELECTION_CHANGED, self.presenter)
+
+	def clear_control_points(self):
+		if self.control_points:
+			for item in self.control_points: item.destroy()
+			self.control_points = []
+
+	def create_control_points(self):
+		self.clear_control_points()
+		cp = self.control_points
+		node = self.selected_nodes[0]
+		if len(node.point) > 2:
+			index = node.path.points.index(node)
+			if not index: before = node.path.start_point
+			else: before = node.path.points[index - 1]
+			if node == node.path.points[-1]:
+				after = node.path.start_point
+			else:
+				after = node.path.points[index + 1]
+			cp.append(ControlNode(self.canvas, node, before))
+			cp.append(ControlNode(self.canvas, node, node))
+			if len(after.point) > 2:
+				cp.append(ControlNode(self.canvas, after, node))
+				cp.append(ControlNode(self.canvas, after, after))
 
 	def select_all_nodes(self, invert=False):
 		points = []
@@ -313,10 +343,10 @@ class BezierPath:
 			rend.draw_last_node(self.points[-1].get_screen_point(),
 							self.points[-1].selected)
 		else:
-			rend.draw_regular_node(self.points[-1].get_screen_point(),
-							self.points[-1].selected)
-			rend.draw_last_node(self.start_point.get_screen_point(),
+			rend.draw_start_node(self.start_point.get_screen_point(),
 							self.start_point.selected)
+			rend.draw_last_node(self.points[-1].get_screen_point(),
+							self.points[-1].selected)
 
 	def select_points_by_bbox(self, bbox):
 		ret = []
@@ -388,3 +418,36 @@ class BerzierNode:
 			p0, p1, p2, marker = deepcopy(self.point)
 			p0 = libgeom.apply_trafo_to_point(p0, trafo)
 			self.point = [p0, p1, p2, marker]
+
+
+class ControlNode:
+
+	def __init__(self, canvas, point, base_point):
+		self.canvas = canvas
+		self.point = point
+		self.base_point = base_point
+
+	def destroy(self):
+		items = self.__dict__.keys()
+		for item in items:
+			self.__dict__[item] = None
+
+	def get_point(self):
+		if self.point == self.base_point:
+			return self.point.point[1]
+		return self.point.point[0]
+
+	def is_pressed(self, win_point):
+		wpoint = self.canvas.point_doc_to_win(self.get_point())
+		bbox = libgeom.bbox_for_point(wpoint, config.point_sensitivity_size)
+		return libgeom.is_point_in_bbox(win_point, bbox)
+
+	def get_screen_points(self):
+		bp = self.base_point.point
+		if len(bp) > 2: bp = bp[2]
+		bp = self.canvas.point_doc_to_win(bp)
+		p = self.canvas.point_doc_to_win(self.get_point())
+		return bp, p
+
+	def apply_trafo(self, trafo):
+		self.point = libgeom.apply_trafo_to_point(self.point, trafo)
