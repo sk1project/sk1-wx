@@ -20,7 +20,7 @@ from uc2.formats.sk2 import sk2_const
 from flattering import flat_path
 from points import distance
 
-def get_path_lenght(path):
+def get_path_length(path):
 	fpath = flat_path(path)
 	points = [fpath[0], ] + fpath[1]
 	if fpath[2] == sk2_const.CURVE_CLOSED:
@@ -34,8 +34,8 @@ def get_path_lenght(path):
 		ret += distance(start, item)
 	return ret
 
-def get_paths_lenght(paths):
+def get_paths_length(paths):
 	ret = 0
 	for item in paths:
-		ret += get_path_lenght(item)
+		ret += get_path_length(item)
 	return ret

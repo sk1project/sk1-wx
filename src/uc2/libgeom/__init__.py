@@ -24,6 +24,7 @@ from cwrap import *
 from flattering import get_flattened_path, flat_paths, flat_path
 from objs import get_circle_path, get_polygon_path, get_rect_path, \
 get_text_path
+from bezier_ops import get_path_lenght, get_paths_lenght
 
 
 """
