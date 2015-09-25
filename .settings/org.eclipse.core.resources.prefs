@@ -224,6 +224,7 @@ encoding//src/uc2/formats/xml_/xml_presenter.py=utf-8
 encoding//src/uc2/libcairo/__init__.py=utf-8
 encoding//src/uc2/libgeom/__init__.py=utf-8
 encoding//src/uc2/libgeom/bbox.py=utf-8
+encoding//src/uc2/libgeom/bezier_ops.py=utf-8
 encoding//src/uc2/libgeom/cwrap.py=utf-8
 encoding//src/uc2/libgeom/flattering.py=utf-8
 encoding//src/uc2/libgeom/objs.py=utf-8
