@@ -32,6 +32,7 @@ def get_path_length(path):
 			start = item
 			continue
 		ret += distance(start, item)
+		start = item
 	return ret
 
 def get_paths_length(paths):
