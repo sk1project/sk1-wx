@@ -457,6 +457,10 @@ class BerzierPoint:
 
 class ControlPoint:
 
+	canvas = None
+	point = None
+	base_point = None
+
 	def __init__(self, canvas, point, base_point):
 		self.canvas = canvas
 		self.point = point
