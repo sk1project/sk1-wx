@@ -73,6 +73,7 @@ class BezierEditor(AbstractController):
 	moved_node = None
 	selected_obj = None
 	control_points = []
+	cpoint = None
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -115,8 +116,8 @@ class BezierEditor(AbstractController):
 		p0 = self.canvas.point_doc_to_win([x0, y0])
 		p1 = self.canvas.point_doc_to_win([x1, y1])
 		self.canvas.renderer.draw_frame(p0, p1)
-		for item in self.paths:
-			item.repaint()
+		for item in self.paths: item.repaint()
+		for item in self.control_points: item.repaint()
 
 	def repaint_frame(self):
 		self.canvas.renderer.cdc_draw_frame(self.start, self.end, True)
@@ -133,19 +134,21 @@ class BezierEditor(AbstractController):
 		self.move_flag = False
 		self.selected_obj = None
 		self.start = event.get_point()
-		points = self.select_point_by_click(self.start)
-		if points:
-			self.moved_node = points[0]
-			if not self.moved_node in self.selected_nodes:
-				self.set_selected_nodes(points, event.is_shift())
-			self.move_flag = True
-		else:
-			objs = self.canvas.pick_at_point(self.start)
-			if objs and not objs[0] == self.target and \
-			objs[0].cid > sk2_model.PRIMITIVE_CLASS \
-			and not objs[0].cid == sk2_model.PIXMAP:
-				self.selected_obj = objs[0]
-			self.timer.start()
+		self.cpoint = self.select_control_points_by_click(self.start)
+		if not self.cpoint:
+			points = self.select_point_by_click(self.start)
+			if points:
+				self.moved_node = points[0]
+				if not self.moved_node in self.selected_nodes:
+					self.set_selected_nodes(points, event.is_shift())
+				self.move_flag = True
+			else:
+				objs = self.canvas.pick_at_point(self.start)
+				if objs and not objs[0] == self.target and \
+				objs[0].cid > sk2_model.PRIMITIVE_CLASS \
+				and not objs[0].cid == sk2_model.PIXMAP:
+					self.selected_obj = objs[0]
+				self.timer.start()
 
 	def mouse_up(self, event):
 		self.timer.stop()
@@ -159,11 +162,14 @@ class BezierEditor(AbstractController):
 			self.canvas.selection_redraw()
 		elif self.move_flag:
 			if not self.start == self.end:
-				self.move_selected_points(self.moved_node,
-										event.get_point(), True)
+				self.move_selected_points(self.moved_node, self.end, True)
 			self.moved_node = None
 			self.canvas.selection_redraw()
 			self.move_flag = False
+		elif self.cpoint:
+			if not self.start == self.end:
+				self.move_control_point(self.end, True)
+				self.cpoint = None
 		elif self.selected_obj:
 			self.target = self.selected_obj
 			self.canvas.restore_mode()
@@ -174,12 +180,14 @@ class BezierEditor(AbstractController):
 		self.selected_obj = None
 
 	def mouse_move(self, event):
-		if self.start and not self.move_flag:
+		if not self.start: return
+		if self.cpoint:
+			self.move_control_point(event.get_point())
+		elif not self.move_flag:
 			self.end = event.get_point()
 			self.draw = True
-		elif self.start and self.move_flag:
+		elif self.move_flag:
 			self.move_selected_points(self.moved_node, event.get_point())
-			self.canvas.selection_redraw()
 			self.move_flag = True
 
 	def select_points_by_bbox(self, bbox):
@@ -197,6 +205,12 @@ class BezierEditor(AbstractController):
 			if point: return [point, ]
 		return []
 
+	def select_control_points_by_click(self, win_point):
+		for item in self.control_points:
+			if item.is_pressed(win_point):
+				return item
+		return None
+
 	def set_selected_nodes(self, points, add_flag=False):
 		if not add_flag:
 			for item in self.selected_nodes:
@@ -213,7 +227,6 @@ class BezierEditor(AbstractController):
 			self.create_control_points()
 		else:
 			self.clear_control_points()
-		print self.control_points
 		events.emit(events.SELECTION_CHANGED, self.presenter)
 
 	def clear_control_points(self):
@@ -226,18 +239,13 @@ class BezierEditor(AbstractController):
 		cp = self.control_points
 		node = self.selected_nodes[0]
 		if len(node.point) > 2:
-			index = node.path.points.index(node)
-			if not index: before = node.path.start_point
-			else: before = node.path.points[index - 1]
-			if node == node.path.points[-1]:
-				after = node.path.start_point
-			else:
-				after = node.path.points[index + 1]
-			cp.append(ControlNode(self.canvas, node, before))
-			cp.append(ControlNode(self.canvas, node, node))
-			if len(after.point) > 2:
-				cp.append(ControlNode(self.canvas, after, node))
-				cp.append(ControlNode(self.canvas, after, after))
+			before = node.get_point_before()
+			after = node.get_point_after()
+			cp.append(ControlPoint(self.canvas, node, before))
+			cp.append(ControlPoint(self.canvas, node, node))
+			if after and len(after.point) > 2:
+				cp.append(ControlPoint(self.canvas, after, node))
+				cp.append(ControlPoint(self.canvas, after, after))
 
 	def select_all_nodes(self, invert=False):
 		points = []
@@ -262,6 +270,19 @@ class BezierEditor(AbstractController):
 		else:
 			self.api.set_temp_paths(self.target, paths)
 
+	def move_control_point(self, win_point, undable=False):
+		if not self.cpoint: return
+		x1, y1 = self.snap.snap_point(win_point)[2]
+		x0, y0 = self.cpoint.get_point()
+		trafo = [1.0, 0.0, 0.0, 1.0, x1 - x0, y1 - y0]
+		self.cpoint.apply_trafo(trafo)
+		paths = self.get_paths()
+		if undable:
+			self.api.set_new_paths(self.target, paths, self.orig_paths)
+			self.orig_paths = paths
+		else:
+			self.api.set_temp_paths(self.target, paths)
+
 	def get_paths(self):
 		ret = []
 		for item in self.paths:
@@ -271,10 +292,12 @@ class BezierEditor(AbstractController):
 	def delete_selected_nodes(self):
 		if not self.selected_nodes: return
 		for item in self.selected_nodes:
-			item.path.delete_point(item)
-			if not item.path.points:
-				self.paths.remove(item.path)
+			path = item.path
+			path.delete_point(item)
 			item.destroy()
+			if not path.points:
+				self.paths.remove(path)
+				break
 		self.selected_nodes = []
 		paths = self.get_paths()
 		if not paths:
@@ -300,10 +323,10 @@ class BezierPath:
 		self.canvas = canvas
 		path = libgeom.apply_trafo_to_path(path, trafo)
 		self.trafo = trafo
-		self.start_point = BerzierNode(self.canvas, self, path[0])
+		self.start_point = BerzierPoint(self.canvas, self, path[0])
 		self.points = []
 		for item in path[1]:
-			self.points.append(BerzierNode(self.canvas, self, item))
+			self.points.append(BerzierPoint(self.canvas, self, item))
 		self.closed = path[2]
 
 	def destroy(self):
@@ -374,7 +397,7 @@ class BezierPath:
 				self.start_point.point = self.start_point.point[2]
 
 
-class BerzierNode:
+class BerzierPoint:
 
 	point = []
 	canvas = None
@@ -419,8 +442,20 @@ class BerzierNode:
 			p0 = libgeom.apply_trafo_to_point(p0, trafo)
 			self.point = [p0, p1, p2, marker]
 
+	def get_point_before(self):
+		if self.path.start_point == self: return None
+		index = self.path.points.index(self)
+		if not index: return self.path.start_point
+		else: return self.path.points[index - 1]
 
-class ControlNode:
+	def get_point_after(self):
+		if self.path.start_point == self: return self.path.points[0]
+		index = self.path.points.index(self) + 1
+		if index == len(self.path.points):return None
+		else: return self.path.points[index]
+
+
+class ControlPoint:
 
 	def __init__(self, canvas, point, base_point):
 		self.canvas = canvas
@@ -450,4 +485,11 @@ class ControlNode:
 		return bp, p
 
 	def apply_trafo(self, trafo):
-		self.point = libgeom.apply_trafo_to_point(self.point, trafo)
+		p = libgeom.apply_trafo_to_point(self.get_point(), trafo)
+		if self.point == self.base_point:
+			self.point.point[1] = p
+		else:
+			self.point.point[0] = p
+
+	def repaint(self):
+		self.canvas.renderer.draw_control_point(*self.get_screen_points())
