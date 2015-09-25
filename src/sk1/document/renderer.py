@@ -275,6 +275,24 @@ class PDRenderer(CairoRenderer):
 							config.curve_last_point_stroke,
 							config.curve_last_point_stroke_width)
 
+	def draw_control_point(self, start, end):
+		self.ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
+		self.ctx.set_line_width(config.control_line_stroke_width)
+		self.ctx.set_dash([])
+		self.ctx.set_source_rgba(*config.control_line_bg_stroke_color)
+		self.ctx.move_to(*start)
+		self.ctx.line_to(*end)
+		self.ctx.stroke()
+		self.ctx.set_source_rgba(*config.control_line_stroke_color)
+		self.ctx.set_dash(config.control_line_stroke_dash)
+		self.ctx.move_to(*start)
+		self.ctx.line_to(*end)
+		self.ctx.stroke()
+		self.draw_curve_point(end, config.control_point_size,
+							config.control_point_fill,
+							config.control_point_stroke,
+							config.control_point_stroke_width)
+
 	def reflect_snap(self):
 		if self.canvas.show_snapping:
 			snap = self.presenter.snap.active_snap
