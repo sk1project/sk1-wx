@@ -51,7 +51,7 @@ def _flat_segment(p0, p1, p2, p3, tlr):
 		else:
 			return [p9, p3]
 
-def flat_path(path, tlr):
+def flat_path(path, tlr=0.5):
 	result = []
 	result.append([] + path[0])
 	start = [] + path[0]
@@ -70,7 +70,7 @@ def flat_path(path, tlr):
 			start = [] + point[2]
 	return [result[0], result[1:], path[2]]
 
-def flat_paths(paths, tlr):
+def flat_paths(paths, tlr=0.5):
 	result = []
 	for path in paths:
 		result.append(flat_path(path, tlr))
