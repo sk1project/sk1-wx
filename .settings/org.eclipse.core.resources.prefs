@@ -13,6 +13,7 @@ encoding//src/sk1/appconst.py=utf-8
 encoding//src/sk1/application.py=utf-8
 encoding//src/sk1/clipboard.py=utf-8
 encoding//src/sk1/context/__init__.py=utf-8
+encoding//src/sk1/context/bezier.py=utf-8
 encoding//src/sk1/context/circle.py=utf-8
 encoding//src/sk1/context/combine.py=utf-8
 encoding//src/sk1/context/generic.py=utf-8
