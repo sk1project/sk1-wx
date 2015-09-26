@@ -15,10 +15,12 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from copy import deepcopy
+
 from uc2.formats.sk2 import sk2_const
 
 from flattering import flat_path
-from points import distance
+from points import distance, mult_point, add_points
 
 def get_path_length(path):
 	fpath = flat_path(path)
@@ -41,29 +43,16 @@ def get_paths_length(paths):
 		ret += get_path_length(item)
 	return ret
 
-#This is called the "knot insertion problem". For Bézier curves, the de Casteljau algorithm will give you
-#the right answer. Here is the simple algorithm for a degree 3 Bézier.
-#
-#Say you want to insert a knot at a fraction t of the parameter space inside the Bézier curve defined
-#by P0, P1, P2, P3. Here's what you do:
-#
-#P0_1 = (1-t)*P0 + t*P1
-#P1_2 = (1-t)*P1 + t*P2
-#P2_3 = (1-t)*P2 + t*P3
-#
-#P01_12 = (1-t)*P0_1 + t*P1_2
-#P12_23 = (1-t)*P1_2 + t*P2_3
-#
-#P0112_1223 = (1-t)*P01_12 + t*P12_23
-#Then your first Bézier will be defined by: P_0, P0_1, P01_12, P0112_1223; your second Bézier is
-#defined by: P0112_1223, P12_23, P2_3, P3.
-#
-#The geometrical interpretation is simple: you split each segment of the Bézier polygon at fraction t,
-#then connect these split points in a new polygon and iterate. When you're left with 1 point, this point
-#lies on the curve and the previous/next split points form the previous/next Bézier polygon. The same
-#algorithm also works for higher degree Bézier curves.
-#
-#Now it can get trickier if you want to insert the control point not at a specific value of t but at a specific
-#location in space. Personally, what I would do here is simply a binary search for a value of t that falls
-#close to the desired split point... But if performance is critical, you can probably find a faster analytic
-#solution.
+def split_bezier_curve(start_point, end_point, t=0.5):
+	p0 = [] + start_point
+	if len(start_point) > 2: p0 = [] + start_point[2]
+	p1, p2, p3, flag = deepcopy(end_point)
+	p0_1 = add_points(mult_point(p0, (1 - t)), mult_point(p1, t))
+	p1_2 = add_points(mult_point(p1, (1 - t)), mult_point(p2, t))
+	p2_3 = add_points(mult_point(p2, (1 - t)), mult_point(p3, t))
+	p01_12 = add_points(mult_point(p0_1, (1 - t)), mult_point(p1_2, t))
+	p12_23 = add_points(mult_point(p1_2, (1 - t)), mult_point(p2_3, t))
+	p0112_1223 = add_points(mult_point(p01_12, (1 - t)), mult_point(p12_23, t))
+	new_point = [p0_1, p01_12, p0112_1223, flag]
+	new_end_point = [p12_23, p2_3, p3, flag]
+	return new_point, new_end_point
