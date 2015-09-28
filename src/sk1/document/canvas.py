@@ -17,7 +17,7 @@
 
 import wx, cairo, inspect
 
-from uc2 import uc2const, libcairo, sk2_cids
+from uc2 import uc2const, libcairo, sk2_cids, libgeom
 from uc2.uc2const import mm_to_pt, point_dict
 from uc2.libcairo import normalize_bbox
 from uc2.formats.sk2.sk2_const import DOC_ORIGIN_LL, DOC_ORIGIN_LU
@@ -631,13 +631,16 @@ class HitSurface:
 		self.ctx.paint()
 		self.ctx.set_source_rgb(0, 0, 0)
 
-	def is_point_into_object(self, win_point, obj):
+	def get_context_trafo(self, win_point):
 		dx, dy = win_point
 		trafo = [] + self.canvas.trafo
 		trafo[4] -= dx
 		trafo[5] -= dy
+		return trafo
+
+	def is_point_into_object(self, win_point, obj):
 		self.clear()
-		self._draw_object(obj, trafo)
+		self._draw_object(obj, self.get_context_trafo(win_point))
 		return not libcairo.check_surface_whiteness(self.surface)
 
 	def _draw_object(self, obj, trafo):
@@ -673,3 +676,32 @@ class HitSurface:
 				self.ctx.set_line_width(width)
 				self.ctx.stroke()
 
+	def is_point_on_path(self, win_point, path):
+		self.clear()
+		trafo = self.get_context_trafo(win_point)
+		self.ctx.set_matrix(libcairo.get_matrix_from_trafo(trafo))
+		stroke_width = config.stroke_sensitive_size
+		stroke_width /= trafo[0]
+		cpath = libgeom.create_cpath([path, ])
+		self.ctx.new_path()
+		self.ctx.append_path(cpath)
+		self.ctx.set_line_width(stroke_width)
+		self.ctx.stroke()
+		return not libcairo.check_surface_whiteness(self.surface)
+
+	def is_point_on_segment(self, win_point, start_point, end_point):
+		self.clear()
+		trafo = self.get_context_trafo(win_point)
+		self.ctx.set_matrix(libcairo.get_matrix_from_trafo(trafo))
+		stroke_width = config.stroke_sensitive_size
+		stroke_width /= trafo[0]
+		if len(start_point) > 2:start_point = start_point[2]
+		self.ctx.move_to(*start_point)
+		if len(end_point) == 2:
+			self.ctx.line_to(*end_point)
+		else:
+			p1, p2, p3 = end_point[:-1]
+			self.ctx.curve_to(*(p1 + p2 + p3))
+		self.ctx.set_line_width(stroke_width)
+		self.ctx.stroke()
+		return not libcairo.check_surface_whiteness(self.surface)
