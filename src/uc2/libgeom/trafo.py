@@ -52,3 +52,7 @@ def apply_trafo_to_paths(paths, trafo):
 	for path in paths:
 		new_paths.append(apply_trafo_to_path(path, trafo))
 	return new_paths
+
+def apply_trafo_to_bbox(bbox, trafo):
+	p0, p1 = apply_trafo_to_points([bbox[:2], bbox[2:]], trafo)
+	return p0 + p1
