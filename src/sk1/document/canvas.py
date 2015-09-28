@@ -17,7 +17,7 @@
 
 import wx, cairo, inspect
 
-from uc2 import uc2const
+from uc2 import uc2const, libcairo, sk2_cids
 from uc2.uc2const import mm_to_pt, point_dict
 from uc2.libcairo import normalize_bbox
 from uc2.formats.sk2.sk2_const import DOC_ORIGIN_LL, DOC_ORIGIN_LU
@@ -59,6 +59,7 @@ class AppCanvas(wx.Panel):
 	vscroll = None
 	timer = None
 	ctx_menu = None
+	hit_surface = None
 
 	mode = None
 	previous_mode = None
@@ -98,6 +99,7 @@ class AppCanvas(wx.Panel):
 		style = wx.FULL_REPAINT_ON_RESIZE | wx.WANTS_CHARS
 		wx.Panel.__init__(self, parent, style=style)
 		self.SetBackgroundColour(wx.Colour(255, 255, 255))
+		self.hit_surface = HitSurface(self)
 
 		self.ctx_menu = ContextMenu(self.app, self)
 
@@ -133,6 +135,7 @@ class AppCanvas(wx.Panel):
 		self.timer.stop()
 		self.ctx_menu.destroy()
 		self.renderer.destroy()
+		self.hit_surface.destroy()
 		items = self.ctrls.keys()
 		for item in items:
 			if not inspect.isclass(self.ctrls[item]):
@@ -605,3 +608,68 @@ class CanvasEvent:
 
 	def is_cmd(self):
 		return self.event.CmdDown()
+
+
+class HitSurface:
+
+	surface = None
+	ctx = None
+	canvas = None
+
+	def __init__(self, canvas):
+		self.canvas = canvas
+		self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
+		self.ctx = cairo.Context(self.surface)
+
+	def destroy(self):
+		items = self.__dict__.keys()
+		for item in items:
+			self.__dict__[item] = None
+
+	def clear(self):
+		self.ctx.set_source_rgb(1, 1, 1)
+		self.ctx.paint()
+		self.ctx.set_source_rgb(0, 0, 0)
+
+	def is_point_into_object(self, win_point, obj):
+		dx, dy = win_point
+		trafo = [] + self.canvas.trafo
+		trafo[4] -= dx
+		trafo[5] -= dy
+		self.clear()
+		self._draw_object(obj, trafo)
+		return not libcairo.check_surface_whiteness(self.surface)
+
+	def _draw_object(self, obj, trafo):
+		if obj.childs:
+			for child in obj.childs:
+				self._draw_object(child, trafo)
+		else:
+			fill_anyway = False
+			path = obj.cache_cpath
+
+			if obj.cid in [sk2_cids.TEXT_BLOCK, sk2_cids.TEXT_COLUMN]:
+				path = libcairo.convert_bbox_to_cpath(obj.cache_bbox)
+				fill_anyway = True
+			if obj.cid == sk2_cids.CURVE and len(obj.paths) > 100:
+				path = libcairo.convert_bbox_to_cpath(obj.cache_bbox)
+				fill_anyway = True
+			if obj.cid == sk2_cids.PIXMAP:
+				fill_anyway = True
+
+			self.ctx.set_matrix(libcairo.get_matrix_from_trafo(trafo))
+			self.ctx.new_path()
+			self.ctx.append_path(path)
+			stroke_width = config.stroke_sensitive_size
+			if not self.canvas.stroke_view and obj.style[0]:
+				self.ctx.fill_preserve()
+			if fill_anyway:
+				self.ctx.fill_preserve()
+			if obj.style[1]:
+				stroke = obj.style[1]
+				width = stroke[1] * trafo[0]
+				stroke_width /= trafo[0]
+				if width < stroke_width: width = stroke_width
+				self.ctx.set_line_width(width)
+				self.ctx.stroke()
+
