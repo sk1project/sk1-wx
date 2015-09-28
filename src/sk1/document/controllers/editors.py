@@ -74,6 +74,7 @@ class BezierEditor(AbstractController):
 	selected_obj = None
 	control_points = []
 	cpoint = None
+	new_node_flag = False
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -132,6 +133,7 @@ class BezierEditor(AbstractController):
 		self.end = []
 		self.draw = False
 		self.move_flag = False
+		self.new_node_flag = False
 		self.selected_obj = None
 		self.start = event.get_point()
 		self.cpoint = self.select_control_points_by_click(self.start)
@@ -143,12 +145,15 @@ class BezierEditor(AbstractController):
 					self.set_selected_nodes(points, event.is_shift())
 				self.move_flag = True
 			else:
-				objs = self.canvas.pick_at_point(self.start)
-				if objs and not objs[0] == self.target and \
-				objs[0].cid > sk2_model.PRIMITIVE_CLASS \
-				and not objs[0].cid == sk2_model.PIXMAP:
-					self.selected_obj = objs[0]
-				self.timer.start()
+				if self.is_path_clicked(self.start):
+					self.new_node_flag = True
+				else:
+					objs = self.canvas.pick_at_point(self.start)
+					if objs and not objs[0] == self.target and \
+					objs[0].cid > sk2_model.PRIMITIVE_CLASS \
+					and not objs[0].cid == sk2_model.PIXMAP:
+						self.selected_obj = objs[0]
+					self.timer.start()
 
 	def mouse_up(self, event):
 		self.timer.stop()
@@ -170,6 +175,9 @@ class BezierEditor(AbstractController):
 			if not self.start == self.end:
 				self.move_control_point(self.end, True)
 				self.cpoint = None
+		elif self.new_node_flag:
+			self.new_node_flag = False
+			self.set_new_node(self.end)
 		elif self.selected_obj:
 			self.target = self.selected_obj
 			self.canvas.restore_mode()
@@ -189,6 +197,25 @@ class BezierEditor(AbstractController):
 		elif self.move_flag:
 			self.move_selected_points(self.moved_node, event.get_point())
 			self.move_flag = True
+
+	def mouse_double_click(self, event):
+		if len(self.selected_nodes) == 1:
+			point = self.selected_nodes[0]
+			if len(point.point) > 2:
+				before = point.get_point_before()
+				if before:
+					start_point = before.point
+					end_point = point.point
+					new_point, new_end_point = libgeom.split_bezier_curve(
+												start_point, end_point, 0.05)
+					path = point.path
+					index = path.get_point_index(point)
+					np = BezierPoint(self.canvas, path, new_point)
+					path.insert_point(np, index)
+					point.point = new_end_point
+					paths = self.get_paths()
+					self.api.set_new_paths(self.target, paths, self.orig_paths)
+					self.orig_paths = paths
 
 	def select_points_by_bbox(self, bbox):
 		ret = []
@@ -210,6 +237,18 @@ class BezierEditor(AbstractController):
 			if item.is_pressed(win_point):
 				return item
 		return None
+
+	def is_path_clicked(self, win_point):
+		hit_surface = self.canvas.hit_surface
+		for path in self.paths:
+			if hit_surface.is_point_on_path(win_point, path.get_path()):
+				return path
+		return None
+
+	def set_new_node(self, win_point):
+		path = self.is_path_clicked(win_point)
+		if not path is None:
+			pass
 
 	def set_selected_nodes(self, points, add_flag=False):
 		if not add_flag:
@@ -323,10 +362,10 @@ class BezierPath:
 		self.canvas = canvas
 		path = libgeom.apply_trafo_to_path(path, trafo)
 		self.trafo = trafo
-		self.start_point = BerzierPoint(self.canvas, self, path[0])
+		self.start_point = BezierPoint(self.canvas, self, path[0])
 		self.points = []
 		for item in path[1]:
-			self.points.append(BerzierPoint(self.canvas, self, item))
+			self.points.append(BezierPoint(self.canvas, self, item))
 		self.closed = path[2]
 
 	def destroy(self):
@@ -396,8 +435,16 @@ class BezierPath:
 			if not len(self.start_point.point) == 2:
 				self.start_point.point = self.start_point.point[2]
 
+	def get_point_index(self, point):
+		if point in self.points:
+			return self.points.index(point)
+		return None
 
-class BerzierPoint:
+	def insert_point(self, point, index):
+		self.points.insert(index, point)
+
+
+class BezierPoint:
 
 	point = []
 	canvas = None
@@ -497,3 +544,21 @@ class ControlPoint:
 
 	def repaint(self):
 		self.canvas.renderer.draw_control_point(*self.get_screen_points())
+
+class NewPoint:
+
+	before = None
+	after = None
+	new_point = []
+	new_end_point = []
+
+	def __init__(self, new_point, new_end_point, before, after):
+		self.before = before
+		self.after = after
+		self.new_point = new_point
+		self.new_end_point = new_end_point
+
+	def get_win_point(self):
+		point = [] + self.new_point
+		if len(self.new_point) > 2: point = [] + self.new_point[2]
+		return self.canvas.doc_to_win(point)
