@@ -15,8 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2.libgeom import sum_bbox, is_bbox_in_rect
-from uc2 import libcairo
+from uc2 import libgeom
 from uc2.formats.sk2 import sk2_model
 
 from sk1 import _, config
@@ -70,7 +69,7 @@ class Selection:
 		if self.objs:
 			self.bbox += self.objs[0].cache_bbox
 			for obj in self.objs:
-				self.bbox = sum_bbox(self.bbox, obj.cache_bbox)
+				self.bbox = libgeom.sum_bbox(self.bbox, obj.cache_bbox)
 		self.update_markers()
 
 	def update_markers(self):
@@ -111,18 +110,28 @@ class Selection:
 		layers = self.presenter.get_editable_layers()
 		for layer in layers:
 			for obj in layer.childs:
-				if is_bbox_in_rect(rect, obj.cache_bbox):
+				if libgeom.is_bbox_in_rect(rect, obj.cache_bbox):
 					result.append(obj)
 		if flag:
 			self.add(result)
 		else:
 			self.set(result)
 
+	def _get_fixed_bbox(self, bbox):
+		bbox = self.presenter.canvas.bbox_doc_to_win(bbox)
+		bbox = libgeom.normalize_bbox(bbox)
+		if not bbox[2] - bbox[0]:
+			bbox[2] += 4
+			bbox[0] -= 4
+		if not bbox[3] - bbox[1]:
+			bbox[3] += 4
+			bbox[1] -= 4
+		return bbox
+
 	def _select_at_point(self, point):
 		result = []
 		layers = self.presenter.get_editable_layers()
 		layers.reverse()
-		rect = point + point
 		win_point = self.presenter.canvas.doc_to_win(point)
 		hit_surface = self.presenter.canvas.hit_surface
 		for layer in layers:
@@ -130,7 +139,8 @@ class Selection:
 			objs = [] + layer.childs
 			objs.reverse()
 			for obj in objs:
-				if is_bbox_in_rect(obj.cache_bbox, rect):
+				bbox = self._get_fixed_bbox(obj.cache_bbox)
+				if libgeom.is_point_in_bbox(win_point, bbox):
 					if hit_surface.is_point_into_object(win_point, obj):
 						result.append(obj)
 						break
@@ -176,7 +186,7 @@ class Selection:
 		rect = point + point
 		i = 0
 		for marker in self.markers:
-			if not i == 4 and is_bbox_in_rect(marker, rect):
+			if not i == 4 and libgeom.is_bbox_in_rect(marker, rect):
 				result.append(i)
 				break
 			i += 1
