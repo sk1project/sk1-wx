@@ -19,9 +19,6 @@ import cairo
 #import pangocairo
 import _libcairo
 
-from uc2 import sk2_cids
-
-
 SURFACE = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
 CTX = cairo.Context(SURFACE)
 DIRECT_MATRIX = cairo.Matrix()
@@ -74,7 +71,7 @@ def create_cpath(paths, cmatrix=None):
 				x, y = point
 				CTX.line_to(x, y)
 			else:
-				p1, p2, p3, m = point
+				p1, p2, p3 = point[:-1]
 				x1, y1 = p1
 				x2, y2 = p2
 				x3, y3 = p3
@@ -207,54 +204,14 @@ def convert_bbox_to_cpath(bbox):
 	CTX.close_path()
 	return CTX.copy_path()
 
-def is_point_in_path(point, trafo, obj, stroke_width=5.0, fill_flag=True):
-	dx, dy = point
-	trafo = [] + trafo
-	trafo[4] -= dx
-	trafo[5] -= dy
-	CTX.set_matrix(DIRECT_MATRIX)
-	CTX.set_tolerance(3.0)
-	CTX.set_source_rgb(1, 1, 1)
-	CTX.paint()
-	_draw_object(obj, trafo, stroke_width, fill_flag)
-	pixel = _libcairo.get_pixel(SURFACE)
-	CTX.set_tolerance(0.1)
-	if pixel[0] == pixel[1] == pixel[2] == 255:
-		return False
-	else:
-		return True
+def get_surface_pixel(surface):
+	pixel = _libcairo.get_pixel(surface)
+	return pixel
 
-def _draw_object(obj, trafo, stroke_width, fill_flag):
-	if obj.childs:
-		for child in obj.childs:
-			_draw_object(child, trafo, stroke_width, fill_flag)
-	else:
-		fill_anyway = False
-		path = obj.cache_cpath
+def check_surface_whiteness(surface):
+	pixel = _libcairo.get_pixel(surface)
+	if pixel[0] == pixel[1] == pixel[2] == 255: return True
+	return False
 
-		if obj.cid in [sk2_cids.TEXT_BLOCK, sk2_cids.TEXT_COLUMN]:
-			path = convert_bbox_to_cpath(obj.cache_bbox)
-			fill_anyway = True
-		if obj.cid == sk2_cids.CURVE and len(obj.paths) > 100:
-			path = convert_bbox_to_cpath(obj.cache_bbox)
-			fill_anyway = True
-		if obj.cid == sk2_cids.PIXMAP:
-			fill_anyway = True
 
-		CTX.set_matrix(get_matrix_from_trafo(trafo))
-		CTX.set_source_rgb(0, 0, 0)
-		CTX.new_path()
-		CTX.append_path(path)
-		if fill_flag and obj.style[0]:
-			CTX.fill_preserve()
-		if fill_anyway:
-			CTX.fill_preserve()
-		if obj.style[1]:
-			stroke = obj.style[1]
-			width = stroke[1] * trafo[0]
-			stroke_width /= trafo[0]
-			if width < stroke_width: width = stroke_width
-			CTX.set_source_rgb(0, 0, 0)
-			CTX.set_line_width(width)
-			CTX.stroke()
 
