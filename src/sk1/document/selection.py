@@ -16,7 +16,7 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from uc2.libgeom import sum_bbox, is_bbox_in_rect
-from uc2 import libcairo, uc2const
+from uc2 import libcairo
 from uc2.formats.sk2 import sk2_model
 
 from sk1 import _, config
@@ -124,16 +124,14 @@ class Selection:
 		layers.reverse()
 		rect = point + point
 		win_point = self.presenter.canvas.doc_to_win(point)
-		trafo = self.presenter.canvas.trafo
+		hit_surface = self.presenter.canvas.hit_surface
 		for layer in layers:
 			if result: break
 			objs = [] + layer.childs
 			objs.reverse()
 			for obj in objs:
 				if is_bbox_in_rect(obj.cache_bbox, rect):
-					ret = libcairo.is_point_in_path(win_point, trafo, obj,
-												 config.stroke_sensitive_size)
-					if ret:
+					if hit_surface.is_point_into_object(win_point, obj):
 						result.append(obj)
 						break
 		return result
