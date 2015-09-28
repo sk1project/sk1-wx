@@ -63,19 +63,14 @@ def create_cpath(paths, cmatrix=None):
 		start_point = path[0]
 		points = path[1]
 		end = path[2]
-		x, y = start_point
-		CTX.move_to(x, y)
+		CTX.move_to(*start_point)
 
 		for point in points:
 			if len(point) == 2:
-				x, y = point
-				CTX.line_to(x, y)
+				CTX.line_to(*point)
 			else:
 				p1, p2, p3 = point[:-1]
-				x1, y1 = p1
-				x2, y2 = p2
-				x3, y3 = p3
-				CTX.curve_to(x1, y1, x2, y2, x3, y3)
+				CTX.curve_to(*(p1 + p2 + p3))
 		if end:
 			CTX.close_path()
 
