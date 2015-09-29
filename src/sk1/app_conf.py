@@ -259,6 +259,11 @@ class AppConfig(UCConfig):
 
 	selected_node_fill = (1.0, 0.5, 0.5)
 
+	curve_new_point_size = 7.0
+	curve_new_point_fill = (0.78, 1.0, 0.78)
+	curve_new_point_stroke = (0.2, 0.59, 0.2)
+	curve_new_point_stroke_width = 1.0
+
 	#============== GRADIENT MARK OPTIONS ================
 
 	gradient_vector_fg_color = (1.0, 0.0, 0.0)
