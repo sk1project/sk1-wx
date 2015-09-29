@@ -293,6 +293,12 @@ class PDRenderer(CairoRenderer):
 							config.control_point_stroke,
 							config.control_point_stroke_width)
 
+	def draw_new_node(self, point):
+		fill = config.curve_new_point_fill
+		self.draw_curve_point(point, config.curve_new_point_size, fill,
+							config.curve_new_point_stroke,
+							config.curve_new_point_stroke_width)
+
 	def reflect_snap(self):
 		if self.canvas.show_snapping:
 			snap = self.presenter.snap.active_snap
