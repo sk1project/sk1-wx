@@ -75,6 +75,7 @@ class BezierEditor(AbstractController):
 	control_points = []
 	cpoint = None
 	new_node_flag = False
+	new_node = None
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -112,6 +113,8 @@ class BezierEditor(AbstractController):
 	def escape_pressed(self):
 		self.canvas.set_mode()
 
+	#----- REPAINT
+
 	def repaint(self):
 		x0, y0, x1, y1 = self.target.cache_bbox
 		p0 = self.canvas.point_doc_to_win([x0, y0])
@@ -119,6 +122,8 @@ class BezierEditor(AbstractController):
 		self.canvas.renderer.draw_frame(p0, p1)
 		for item in self.paths: item.repaint()
 		for item in self.control_points: item.repaint()
+		if self.new_node: self.new_node.repaint()
+
 
 	def repaint_frame(self):
 		self.canvas.renderer.cdc_draw_frame(self.start, self.end, True)
@@ -126,6 +131,8 @@ class BezierEditor(AbstractController):
 	def on_timer(self):
 		if self.draw:
 			self.repaint_frame()
+
+	#----- MOUSE CONTROLLING
 
 	def mouse_down(self, event):
 		self.timer.stop()
@@ -144,10 +151,12 @@ class BezierEditor(AbstractController):
 				if not self.moved_node in self.selected_nodes:
 					self.set_selected_nodes(points, event.is_shift())
 				self.move_flag = True
+				self.new_node = None
 			else:
 				if self.is_path_clicked(self.start):
 					self.new_node_flag = True
 				else:
+					self.new_node = None
 					objs = self.canvas.pick_at_point(self.start)
 					if objs and not objs[0] == self.target and \
 					objs[0].cid > sk2_model.PRIMITIVE_CLASS \
@@ -178,6 +187,7 @@ class BezierEditor(AbstractController):
 		elif self.new_node_flag:
 			self.new_node_flag = False
 			self.set_new_node(self.end)
+			self.canvas.selection_redraw()
 		elif self.selected_obj:
 			self.target = self.selected_obj
 			self.canvas.restore_mode()
@@ -217,6 +227,8 @@ class BezierEditor(AbstractController):
 					self.api.set_new_paths(self.target, paths, self.orig_paths)
 					self.orig_paths = paths
 
+	#----- POINT METHODS
+
 	def select_points_by_bbox(self, bbox):
 		ret = []
 		bbox = self.canvas.bbox_win_to_doc(bbox)
@@ -248,7 +260,22 @@ class BezierEditor(AbstractController):
 	def set_new_node(self, win_point):
 		path = self.is_path_clicked(win_point)
 		if not path is None:
-			pass
+			hit_surface = self.canvas.hit_surface
+			segments = path.get_segments()
+			segment = None
+			for item in segments:
+				start = item[0].point
+				end = item[1].point
+				if hit_surface.is_point_on_segment(win_point, start, end):
+					segment = item
+					break
+			if segment and len(segment[1].point) > 2:
+				new_point, new_end_point = libgeom.split_bezier_curve(start, end)
+				before = segment[0]
+				after = segment[1]
+				self.new_node = NewPoint(self.canvas, new_point, new_end_point,
+										before, after)
+
 
 	def set_selected_nodes(self, points, add_flag=False):
 		if not add_flag:
@@ -384,6 +411,16 @@ class BezierPath:
 		ret[0] = libgeom.apply_trafo_to_point(self.start_point.point, inv_trafo)
 		for item in self.points:
 			ret[1].append(libgeom.apply_trafo_to_point(item.point, inv_trafo))
+		return ret
+
+	def get_segments(self):
+		ret = []
+		start = self.start_point
+		for item in self.points:
+			ret.append((start, item))
+			start = item
+		if self.closed == sk2_const.CURVE_CLOSED:
+			ret.append([start, self.start_point])
 		return ret
 
 	def pressed_point(self, win_point):
@@ -547,18 +584,24 @@ class ControlPoint:
 
 class NewPoint:
 
+	canvas = None
 	before = None
 	after = None
 	new_point = []
 	new_end_point = []
 
-	def __init__(self, new_point, new_end_point, before, after):
+	def __init__(self, canvas, new_point, new_end_point, before, after):
+		self.canvas = canvas
 		self.before = before
 		self.after = after
 		self.new_point = new_point
 		self.new_end_point = new_end_point
 
-	def get_win_point(self):
+	def get_screen_point(self):
 		point = [] + self.new_point
 		if len(self.new_point) > 2: point = [] + self.new_point[2]
 		return self.canvas.doc_to_win(point)
+
+	def repaint(self):
+		self.canvas.renderer.draw_new_node(self.get_screen_point())
+
