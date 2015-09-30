@@ -109,6 +109,7 @@ class BezierEditor(AbstractController):
 		self.paths = []
 		self.start = []
 		self.end = []
+		self.new_node = None
 
 	def escape_pressed(self):
 		self.canvas.set_mode()
@@ -183,7 +184,6 @@ class BezierEditor(AbstractController):
 		elif self.cpoint:
 			if not self.start == self.end:
 				self.move_control_point(self.end, True)
-				self.cpoint = None
 		elif self.new_node_flag:
 			self.new_node_flag = False
 			self.set_new_node(self.end)
@@ -196,6 +196,7 @@ class BezierEditor(AbstractController):
 				self.set_selected_nodes([])
 				self.canvas.selection_redraw()
 		self.selected_obj = None
+		self.cpoint = None
 
 	def mouse_move(self, event):
 		if not self.start: return
@@ -209,23 +210,17 @@ class BezierEditor(AbstractController):
 			self.move_flag = True
 
 	def mouse_double_click(self, event):
-		if len(self.selected_nodes) == 1:
-			point = self.selected_nodes[0]
-			if len(point.point) > 2:
-				before = point.get_point_before()
-				if before:
-					start_point = before.point
-					end_point = point.point
-					new_point, new_end_point = libgeom.split_bezier_curve(
-												start_point, end_point, 0.05)
-					path = point.path
-					index = path.get_point_index(point)
-					np = BezierPoint(self.canvas, path, new_point)
-					path.insert_point(np, index)
-					point.point = new_end_point
-					paths = self.get_paths()
-					self.api.set_new_paths(self.target, paths, self.orig_paths)
-					self.orig_paths = paths
+		if self.new_node:
+			path = self.new_node.before.path
+			np = BezierPoint(self.canvas, path, self.new_node.new_point)
+			index = path.get_point_index(self.new_node.after)
+			path.insert_point(np, index)
+			self.new_node.after.point = self.new_node.new_end_point
+			paths = self.get_paths()
+			self.api.set_new_paths(self.target, paths, self.orig_paths)
+			self.orig_paths = paths
+			self.new_node = None
+			self.new_node_flag = False
 
 	#----- POINT METHODS
 
@@ -270,10 +265,11 @@ class BezierEditor(AbstractController):
 					segment = item
 					break
 			if segment and len(segment[1].point) > 2:
-				new_point, new_end_point = libgeom.split_bezier_curve(start, end)
+				t = hit_surface.get_t_parameter(win_point, start, end)
+				new_p, new_end_p = libgeom.split_bezier_curve(start, end, t)
 				before = segment[0]
 				after = segment[1]
-				self.new_node = NewPoint(self.canvas, new_point, new_end_point,
+				self.new_node = NewPoint(self.canvas, new_p, new_end_p,
 										before, after)
 
 
