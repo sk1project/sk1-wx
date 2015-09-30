@@ -705,3 +705,15 @@ class HitSurface:
 		self.ctx.set_line_width(stroke_width)
 		self.ctx.stroke()
 		return not libcairo.check_surface_whiteness(self.surface)
+
+	def get_t_parameter(self, win_point, start, end, t=0.5, dt=0.5):
+		dt /= 2.0
+		new, new_end = libgeom.split_bezier_curve(start, end, t)
+		ret1 = self.is_point_on_segment(win_point, start, new)
+		ret2 = self.is_point_on_segment(win_point, new, new_end)
+		if ret1 and ret2:
+			return t
+		elif ret1:
+			return self.get_t_parameter(win_point, start, end, t - dt, dt)
+		elif ret2:
+			return self.get_t_parameter(win_point, start, end, t + dt, dt)
