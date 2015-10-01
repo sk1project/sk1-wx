@@ -19,7 +19,7 @@ import wal
 
 from sk1 import events, modes
 from sk1.context import PLUGINS, NO_DOC, DEFAULT, MULTIPLE, GROUP, \
-RECTANGLE, CIRCLE, POLYGON, CURVE, TEXT, PIXMAP
+RECTANGLE, CIRCLE, POLYGON, CURVE, TEXT, PIXMAP, BEZIER
 
 class AppCtxPanel(wal.HPanel):
 
@@ -65,6 +65,8 @@ class AppCtxPanel(wal.HPanel):
 		ret = []
 		if not self.insp.is_doc():
 			return NO_DOC
+		if self.insp.is_mode(modes.BEZIER_EDITOR_MODE):
+			return BEZIER
 		if not self.insp.is_selection():
 			ret = DEFAULT
 		else:
