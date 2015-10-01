@@ -211,16 +211,7 @@ class BezierEditor(AbstractController):
 
 	def mouse_double_click(self, event):
 		if self.new_node:
-			path = self.new_node.before.path
-			np = BezierPoint(self.canvas, path, self.new_node.new_point)
-			index = path.get_point_index(self.new_node.after)
-			path.insert_point(np, index)
-			self.new_node.after.point = self.new_node.new_end_point
-			paths = self.get_paths()
-			self.api.set_new_paths(self.target, paths, self.orig_paths)
-			self.orig_paths = paths
-			self.new_node = None
-			self.new_node_flag = False
+			self.insert_new_node()
 
 	#----- POINT METHODS
 
@@ -371,6 +362,19 @@ class BezierEditor(AbstractController):
 		else:
 			self.api.set_new_paths(self.target, paths, self.orig_paths)
 			self.orig_paths = paths
+
+	def insert_new_node(self):
+		if self.new_node:
+			path = self.new_node.before.path
+			np = BezierPoint(self.canvas, path, self.new_node.new_point)
+			index = path.get_point_index(self.new_node.after)
+			path.insert_point(np, index)
+			self.new_node.after.point = self.new_node.new_end_point
+			paths = self.get_paths()
+			self.api.set_new_paths(self.target, paths, self.orig_paths)
+			self.orig_paths = paths
+			self.new_node = None
+			self.new_node_flag = False
 
 
 class BezierPath:
