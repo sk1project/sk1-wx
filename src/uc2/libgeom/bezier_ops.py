@@ -15,6 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import math
 from copy import deepcopy
 
 from uc2.formats.sk2 import sk2_const
@@ -56,3 +57,13 @@ def split_bezier_curve(start_point, end_point, t=0.5):
 	new_point = [p0_1, p01_12, p0112_1223, flag]
 	new_end_point = [p12_23, p2_3, p3, flag]
 	return new_point, new_end_point
+
+def split_bezier_line(start_point, end_point, point):
+	dist1 = distance(start_point, end_point)
+	dist2 = distance(start_point, point)
+	coef = dist2 / dist1
+	x = coef * (end_point[0] - start_point[0]) + start_point[0]
+	y = coef * (end_point[1] - start_point[1]) + start_point[1]
+	return [x, y]
+
+
