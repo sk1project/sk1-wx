@@ -243,27 +243,6 @@ class BezierEditor(AbstractController):
 				return path
 		return None
 
-	def set_new_node(self, win_point):
-		path = self.is_path_clicked(win_point)
-		if not path is None:
-			hit_surface = self.canvas.hit_surface
-			segments = path.get_segments()
-			segment = None
-			for item in segments:
-				start = item[0].point
-				end = item[1].point
-				if hit_surface.is_point_on_segment(win_point, start, end):
-					segment = item
-					break
-			if segment and len(segment[1].point) > 2:
-				t = hit_surface.get_t_parameter(win_point, start, end)
-				new_p, new_end_p = libgeom.split_bezier_curve(start, end, t)
-				before = segment[0]
-				after = segment[1]
-				self.new_node = NewPoint(self.canvas, new_p, new_end_p,
-										before, after)
-
-
 	def set_selected_nodes(self, points, add_flag=False):
 		if not add_flag:
 			for item in self.selected_nodes:
@@ -362,6 +341,34 @@ class BezierEditor(AbstractController):
 		else:
 			self.api.set_new_paths(self.target, paths, self.orig_paths)
 			self.orig_paths = paths
+
+	def set_new_node(self, win_point):
+		path = self.is_path_clicked(win_point)
+		if not path is None:
+			hit_surface = self.canvas.hit_surface
+			segments = path.get_segments()
+			segment = None
+			for item in segments:
+				start = item[0].point
+				end = item[1].point
+				if hit_surface.is_point_on_segment(win_point, start, end):
+					segment = item
+					break
+			if segment and len(segment[1].point) > 2:
+				before = segment[0]
+				after = segment[1]
+				t = hit_surface.get_t_parameter(win_point, start, end)
+				new_p, new_end_p = libgeom.split_bezier_curve(start, end, t)
+				self.new_node = NewPoint(self.canvas, new_p, new_end_p,
+										before, after)
+			elif segment and len(segment[1].point) == 2:
+				before = segment[0]
+				after = segment[1]
+				point = self.canvas.win_to_doc(win_point)
+				new_p = libgeom.split_bezier_line(start, end, point)
+				new_end_p = [] + after.point
+				self.new_node = NewPoint(self.canvas, new_p, new_end_p,
+										before, after)
 
 	def insert_new_node(self):
 		if self.new_node:
