@@ -17,7 +17,7 @@
 
 from copy import deepcopy
 
-from uc2 import uc2const, libgeom
+from uc2 import libgeom
 from uc2.formats.sk2 import sk2_model
 from uc2.formats.sk2 import sk2_const
 
@@ -331,6 +331,8 @@ class BezierEditor(AbstractController):
 				self.paths.remove(path)
 				break
 		self.selected_nodes = []
+		self.control_points = []
+		self.new_node = None
 		paths = self.get_paths()
 		if not paths:
 			parent = self.target.parent
