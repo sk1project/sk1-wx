@@ -59,6 +59,7 @@ def split_bezier_curve(start_point, end_point, t=0.5):
 	return new_point, new_end_point
 
 def split_bezier_line(start_point, end_point, point):
+	if len(start_point) > 2: start_point = start_point[2]
 	dist1 = distance(start_point, end_point)
 	dist2 = distance(start_point, point)
 	coef = dist2 / dist1
