@@ -489,7 +489,10 @@ class BezierPath:
 		return None
 
 	def insert_point(self, point, index):
-		self.points.insert(index, point)
+		if index is None:
+			self.points.append(point)
+		else:
+			self.points.insert(index, point)
 
 
 class BezierPoint:
