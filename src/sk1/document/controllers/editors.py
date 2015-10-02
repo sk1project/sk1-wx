@@ -363,6 +363,7 @@ class BezierEditor(AbstractController):
 				new_p, new_end_p = libgeom.split_bezier_curve(start, end, t)
 				self.new_node = NewPoint(self.canvas, new_p, new_end_p,
 										before, after)
+				self.set_selected_nodes([])
 			elif segment and len(segment[1].point) == 2:
 				before = segment[0]
 				after = segment[1]
@@ -371,6 +372,7 @@ class BezierEditor(AbstractController):
 				new_end_p = [] + after.point
 				self.new_node = NewPoint(self.canvas, new_p, new_end_p,
 										before, after)
+				self.set_selected_nodes([])
 
 	def insert_new_node(self):
 		if self.new_node:
