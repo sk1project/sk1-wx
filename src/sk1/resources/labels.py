@@ -120,6 +120,9 @@ pdids.ID_TO_CURVES:(_('Con&vert to curves'),),
 pdids.ID_TO_CONTAINER:(_('&Place into container'),),
 pdids.ID_FROM_CONTAINER:(_('&Extract from container'),),
 
+pdids.ID_BEZIER_ADD_NODE:(_('Add node'),),
+pdids.ID_BEZIER_DELETE_NODE:(_('Delete node'),),
+
 pdids.ID_CONV_TO_CMYK:(_('Convert to CMYK'),),
 pdids.ID_CONV_TO_RGB:(_('Convert to RGB'),),
 pdids.ID_CONV_TO_LAB:(_('Convert to LAB'),),

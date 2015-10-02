@@ -123,3 +123,6 @@ ID_APP_FORUM = wx.NewId()
 ID_APP_FBPAGE = wx.NewId()
 
 #----- ACTION BUTTONS -----
+ID_BEZIER_ADD_NODE = wx.NewId()
+ID_BEZIER_DELETE_NODE = wx.NewId()
+

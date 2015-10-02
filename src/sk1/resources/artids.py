@@ -87,6 +87,9 @@ pdids.ID_GROUP:icons.PD_GROUP,
 pdids.ID_UNGROUP:icons.PD_UNGROUP,
 pdids.ID_UNGROUPALL:icons.PD_UNGROUP_ALL,
 pdids.ID_TO_CURVES:icons.PD_TO_CURVES,
+#----- Nodes menu
+pdids.ID_BEZIER_ADD_NODE:icons.PD_BEZIER_ADD_NODE,
+pdids.ID_BEZIER_DELETE_NODE:icons.PD_BEZIER_DELETE_NODE,
 #----- Bitmaps menu
 pdids.ID_CONV_TO_CMYK:icons.PD_CONV_TO_CMYK,
 pdids.ID_CONV_TO_RGB:icons.PD_CONV_TO_RGB,
