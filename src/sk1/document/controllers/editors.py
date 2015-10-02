@@ -471,6 +471,8 @@ class BezierPath:
 			if not point == self.points[-1] and not point == self.start_point:
 				index = self.points.index(point) + 1
 				self.points[index].apply_trafo_before(trafo)
+			elif point == self.start_point:
+				self.points[0].apply_trafo_before(trafo)
 
 	def delete_point(self, point):
 		if point in self.points:
