@@ -143,6 +143,9 @@ def create_actions(app):
 #------ Effects menu -------
 (pdids.ID_TO_CONTAINER, proxy.set_container, sel_chnls, insp.is_selection),
 (pdids.ID_FROM_CONTAINER, proxy.unpack_container, sel_chnls, insp.is_container_selected),
+#------ Nodes menu -------
+(pdids.ID_BEZIER_ADD_NODE, proxy.add_node, sel_chnls, insp.can_be_added_node),
+(pdids.ID_BEZIER_DELETE_NODE, proxy.delete_node, sel_chnls, insp.can_be_deleted_node),
 #------ Bitmaps menu -------
 (pdids.ID_CONV_TO_CMYK, proxy.conv_to_cmyk, sel_chnls, insp.can_be_cmyk),
 (pdids.ID_CONV_TO_RGB, proxy.conv_to_rgb, sel_chnls, insp.can_be_rgb),
