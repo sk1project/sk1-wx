@@ -27,7 +27,7 @@ from polygon import PolygonPlugin, PolygonCfgPlugin
 from order import OrderPlugin
 from circle import CirclePlugin
 from image_plgs import ImageTypePlugin
-from bezier import BezierAddDeletePlugin
+from bezier import BezierAddDeletePlugin, BezierJoinSplitPlugin
 
 PLUGINS = [PagePlugin, UnitsPlugin, JumpPlugin, ResizePlugin, RotatePlugin,
 		 MirrorPlugin, GroupPlugin, CombinePlugin, ToCurvePlugin, PolygonPlugin,
@@ -44,4 +44,4 @@ POLYGON = ['ResizePlugin', 'PolygonPlugin', 'RotatePlugin', 'MirrorPlugin', 'ToC
 CURVE = ['ResizePlugin', 'CombinePlugin', 'RotatePlugin', 'MirrorPlugin', 'OrderPlugin' ]
 TEXT = ['ResizePlugin', 'RotatePlugin', 'MirrorPlugin', 'ToCurvePlugin', 'OrderPlugin' ]
 PIXMAP = ['ResizePlugin', 'ImageTypePlugin', 'RotatePlugin', 'MirrorPlugin', 'OrderPlugin' ]
-BEZIER = ['BezierAddDeletePlugin', ]
+BEZIER = ['BezierAddDeletePlugin', 'BezierJoinSplitPlugin', ]
