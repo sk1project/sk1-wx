@@ -143,6 +143,10 @@ PD_REMOVE = 'gtk-remove'
 
 PD_BEZIER_ADD_NODE = 'bezier-add-node'
 PD_BEZIER_DELETE_NODE = 'bezier-delete-node'
+PD_BEZIER_ADD_SEG = 'bezier-add-seg'
+PD_BEZIER_DELETE_SEG = 'bezier-del-seg'
+PD_BEZIER_JOIN_NODE = 'bezier-join-node'
+PD_BEZIER_SPLIT_NODE = 'bezier-split-node'
 
 #----- MacOS X specific bitmaps
 MAC_TBB_NORMAL = 'tbb-normal'

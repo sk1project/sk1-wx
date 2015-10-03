@@ -100,6 +100,15 @@ ID_TO_CURVES = wx.NewId()
 #----- Effects menu
 ID_TO_CONTAINER = wx.NewId()
 ID_FROM_CONTAINER = wx.NewId()
+
+#----- Nodes menu
+ID_BEZIER_ADD_NODE = wx.NewId()
+ID_BEZIER_DELETE_NODE = wx.NewId()
+ID_BEZIER_ADD_SEG = wx.NewId()
+ID_BEZIER_DELETE_SEG = wx.NewId()
+ID_BEZIER_JOIN_NODE = wx.NewId()
+ID_BEZIER_SPLIT_NODE = wx.NewId()
+
 #----- Bitmaps menu
 ID_CONV_TO_CMYK = wx.NewId()
 ID_CONV_TO_RGB = wx.NewId()
@@ -121,8 +130,3 @@ ID_REPORT_BUG = wx.NewId()
 ID_APP_WEBSITE = wx.NewId()
 ID_APP_FORUM = wx.NewId()
 ID_APP_FBPAGE = wx.NewId()
-
-#----- ACTION BUTTONS -----
-ID_BEZIER_ADD_NODE = wx.NewId()
-ID_BEZIER_DELETE_NODE = wx.NewId()
-
