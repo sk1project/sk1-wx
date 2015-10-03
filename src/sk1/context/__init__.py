@@ -30,9 +30,9 @@ from image_plgs import ImageTypePlugin
 from bezier import BezierAddDeletePlugin, BezierJoinSplitPlugin
 
 PLUGINS = [PagePlugin, UnitsPlugin, JumpPlugin, ResizePlugin, RotatePlugin,
-		 MirrorPlugin, GroupPlugin, CombinePlugin, ToCurvePlugin, PolygonPlugin,
-		 PolygonCfgPlugin, PageBorderPlugin, RectanglePlugin, OrderPlugin,
-		 CirclePlugin, ImageTypePlugin, BezierAddDeletePlugin]
+MirrorPlugin, GroupPlugin, CombinePlugin, ToCurvePlugin, PolygonPlugin,
+PolygonCfgPlugin, PageBorderPlugin, RectanglePlugin, OrderPlugin, CirclePlugin,
+ImageTypePlugin, BezierAddDeletePlugin, BezierJoinSplitPlugin]
 
 NO_DOC = []
 DEFAULT = ['PagePlugin', 'UnitsPlugin', 'JumpPlugin', 'PageBorderPlugin']
@@ -44,4 +44,4 @@ POLYGON = ['ResizePlugin', 'PolygonPlugin', 'RotatePlugin', 'MirrorPlugin', 'ToC
 CURVE = ['ResizePlugin', 'CombinePlugin', 'RotatePlugin', 'MirrorPlugin', 'OrderPlugin' ]
 TEXT = ['ResizePlugin', 'RotatePlugin', 'MirrorPlugin', 'ToCurvePlugin', 'OrderPlugin' ]
 PIXMAP = ['ResizePlugin', 'ImageTypePlugin', 'RotatePlugin', 'MirrorPlugin', 'OrderPlugin' ]
-BEZIER = ['BezierAddDeletePlugin', 'BezierJoinSplitPlugin', ]
+BEZIER = ['BezierAddDeletePlugin', 'BezierJoinSplitPlugin']
