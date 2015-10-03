@@ -125,7 +125,7 @@ pdids.ID_BEZIER_DELETE_NODE:(_('Delete node'),),
 pdids.ID_BEZIER_ADD_SEG:(_('Create segment'),),
 pdids.ID_BEZIER_DELETE_SEG:(_('Delete segment'),),
 pdids.ID_BEZIER_JOIN_NODE:(_('Join nodes'),),
-pdids.ID_BEZIER_SPLIT_NODE:(_('Split at node'),),
+pdids.ID_BEZIER_SPLIT_NODE:(_('Split nodes'),),
 
 pdids.ID_CONV_TO_CMYK:(_('Convert to CMYK'),),
 pdids.ID_CONV_TO_RGB:(_('Convert to RGB'),),
