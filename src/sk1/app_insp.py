@@ -106,6 +106,18 @@ class AppInspector:
 			return not doc.canvas.controller.new_node is None
 		return False
 
+	def can_be_deleted_seg(self, doc=None):
+		return True
+
+	def can_be_added_seg(self, doc=None):
+		return True
+
+	def can_be_joined_nodes(self, doc=None):
+		return True
+
+	def can_be_splited_nodes(self, doc=None):
+		return True
+
 	def is_clipboard(self):
 		if self.app.clipboard.contents:
 			return True

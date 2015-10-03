@@ -429,6 +429,11 @@ class AppProxy:
 		if canvas.mode == modes.BEZIER_EDITOR_MODE:
 			canvas.controller.delete_selected_nodes()
 
+	def delete_seg(self):pass
+	def add_seg(self):pass
+	def join_nodes(self):pass
+	def split_node(self):pass
+
 	def conv_to_cmyk(self):self.app.current_doc.api.convert_bitmap(uc2const.IMAGE_CMYK)
 	def conv_to_rgb(self):self.app.current_doc.api.convert_bitmap(uc2const.IMAGE_RGB)
 	def conv_to_lab(self):self.app.current_doc.api.convert_bitmap(uc2const.IMAGE_LAB)
