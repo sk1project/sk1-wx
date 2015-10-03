@@ -146,6 +146,10 @@ def create_actions(app):
 #------ Nodes menu -------
 (pdids.ID_BEZIER_ADD_NODE, proxy.add_node, sel_chnls, insp.can_be_added_node),
 (pdids.ID_BEZIER_DELETE_NODE, proxy.delete_node, sel_chnls, insp.can_be_deleted_node),
+(pdids.ID_BEZIER_ADD_SEG, proxy.add_seg, sel_chnls, insp.can_be_added_seg),
+(pdids.ID_BEZIER_DELETE_SEG, proxy.delete_seg, sel_chnls, insp.can_be_deleted_seg),
+(pdids.ID_BEZIER_JOIN_NODE, proxy.join_nodes, sel_chnls, insp.can_be_joined_nodes),
+(pdids.ID_BEZIER_SPLIT_NODE, proxy.split_nodes, sel_chnls, insp.can_be_splited_nodes),
 #------ Bitmaps menu -------
 (pdids.ID_CONV_TO_CMYK, proxy.conv_to_cmyk, sel_chnls, insp.can_be_cmyk),
 (pdids.ID_CONV_TO_RGB, proxy.conv_to_rgb, sel_chnls, insp.can_be_rgb),
