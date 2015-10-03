@@ -15,6 +15,8 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from wal import LEFT, CENTER
+
 from sk1.resources import pdids
 from sk1.pwidgets import ActionButton
 from generic import CtxPlugin
@@ -28,7 +30,7 @@ class BezierAddDeletePlugin(CtxPlugin):
 
 	def build(self):
 		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_ADD_NODE])
-		self.pack(btn, padding_all=2)
+		self.add(btn, 0, LEFT | CENTER, 2)
 
 		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_DELETE_NODE])
-		self.pack(btn, padding_all=2)
+		self.add(btn, 0, LEFT | CENTER, 2)
