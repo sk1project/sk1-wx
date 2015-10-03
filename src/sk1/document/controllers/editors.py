@@ -110,6 +110,7 @@ class BezierEditor(AbstractController):
 		self.start = []
 		self.end = []
 		self.new_node = None
+		self.selected_nodes = []
 
 	def escape_pressed(self):
 		self.canvas.set_mode()
