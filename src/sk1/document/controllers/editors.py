@@ -388,6 +388,59 @@ class BezierEditor(AbstractController):
 			self.new_node = None
 			self.new_node_flag = False
 
+	def can_be_line(self):
+		if self.selected_nodes:
+			for item in self.selected_nodes:
+				if item.is_curve():
+					return True
+		elif self.new_node:
+			return self.new_node.after.is_curve()
+		return False
+
+	def can_be_curve(self):
+		if self.selected_nodes:
+			for item in self.selected_nodes:
+				if not item.is_curve():
+					return True
+		elif self.new_node:
+			return not self.new_node.after.is_curve()
+		return False
+
+	def convert_to_line(self):
+		flag = False
+		if self.selected_nodes:
+			for item in self.selected_nodes:
+				if item.is_curve():
+					item.convert_to_line()
+					flag = True
+		elif self.new_node:
+			if self.new_node.after.is_curve():
+				self.new_node.after.convert_to_line()
+				flag = True
+		if flag:
+			paths = self.get_paths()
+			self.api.set_new_paths(self.target, paths, self.orig_paths)
+			self.orig_paths = paths
+			self.new_node = None
+			self.new_node_flag = False
+
+	def convert_to_curve(self):
+		flag = False
+		if self.selected_nodes:
+			for item in self.selected_nodes:
+				if not item.is_curve():
+					item.convert_to_curve()
+					flag = True
+		elif self.new_node:
+			if not self.new_node.after.is_curve():
+				self.new_node.after.convert_to_curve()
+				flag = True
+		if flag:
+			paths = self.get_paths()
+			self.api.set_new_paths(self.target, paths, self.orig_paths)
+			self.orig_paths = paths
+			self.new_node = None
+			self.new_node_flag = False
 
 class BezierPath:
 
@@ -554,6 +607,27 @@ class BezierPoint:
 		index = self.path.points.index(self) + 1
 		if index == len(self.path.points):return None
 		else: return self.path.points[index]
+
+	def is_curve(self):
+		return len(self.point) > 2
+
+	def convert_to_line(self):
+		if self.is_curve():
+			self.point = [] + self.point[2]
+
+	def convert_to_curve(self):
+		before = self.get_point_before()
+		if not before is None and not self.is_curve():
+			if before.is_curve():
+				before_point = [] + before.point[2]
+			else:
+				before_point = [] + before.point
+			point = [] + self.point
+			x0 = 1.0 / 3.0 * (point[0] - before_point[0]) + before_point[0]
+			y0 = 1.0 / 3.0 * (point[1] - before_point[1]) + before_point[1]
+			x1 = 2.0 / 3.0 * (point[0] - before_point[0]) + before_point[0]
+			y1 = 2.0 / 3.0 * (point[1] - before_point[1]) + before_point[1]
+			self.point = [[x0, y0], [x1, y1], point, sk2_const.NODE_CUSP]
 
 
 class ControlPoint:
