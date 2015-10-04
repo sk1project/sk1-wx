@@ -118,6 +118,12 @@ class AppInspector:
 	def can_be_splited_nodes(self, doc=None):
 		return True
 
+	def can_be_seg_line(self, doc=None):
+		return True
+
+	def can_be_seg_curve(self, doc=None):
+		return True
+
 	def is_clipboard(self):
 		if self.app.clipboard.contents:
 			return True
