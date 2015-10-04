@@ -423,6 +423,7 @@ class BezierEditor(AbstractController):
 			self.orig_paths = paths
 			self.new_node = None
 			self.new_node_flag = False
+			events.emit(events.SELECTION_CHANGED, self.presenter)
 
 	def convert_to_curve(self):
 		flag = False
@@ -441,6 +442,7 @@ class BezierEditor(AbstractController):
 			self.orig_paths = paths
 			self.new_node = None
 			self.new_node_flag = False
+			events.emit(events.SELECTION_CHANGED, self.presenter)
 
 class BezierPath:
 
