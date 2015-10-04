@@ -150,6 +150,8 @@ def create_actions(app):
 (pdids.ID_BEZIER_DELETE_SEG, proxy.delete_seg, sel_chnls, insp.can_be_deleted_seg),
 (pdids.ID_BEZIER_JOIN_NODE, proxy.join_nodes, sel_chnls, insp.can_be_joined_nodes),
 (pdids.ID_BEZIER_SPLIT_NODE, proxy.split_nodes, sel_chnls, insp.can_be_splited_nodes),
+(pdids.ID_BEZIER_SEG_TO_LINE, proxy.seg_to_line, sel_chnls, insp.can_be_seg_line),
+(pdids.ID_BEZIER_SEG_TO_CURVE, proxy.seg_to_curve, sel_chnls, insp.can_be_seg_curve),
 #------ Bitmaps menu -------
 (pdids.ID_CONV_TO_CMYK, proxy.conv_to_cmyk, sel_chnls, insp.can_be_cmyk),
 (pdids.ID_CONV_TO_RGB, proxy.conv_to_rgb, sel_chnls, insp.can_be_rgb),
