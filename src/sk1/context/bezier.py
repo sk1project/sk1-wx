@@ -54,3 +54,17 @@ class BezierJoinSplitPlugin(CtxPlugin):
 
 		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_SPLIT_NODE])
 		self.add(btn, 0, LEFT | CENTER, 2)
+
+class BezierLineCurvePlugin(CtxPlugin):
+
+	name = 'BezierLineCurvePlugin'
+
+	def __init__(self, app, parent):
+		CtxPlugin.__init__(self, app, parent)
+
+	def build(self):
+		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_SEG_TO_LINE])
+		self.add(btn, 0, LEFT | CENTER, 2)
+
+		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_SEG_TO_CURVE])
+		self.add(btn, 0, LEFT | CENTER, 2)
