@@ -107,10 +107,14 @@ class AppInspector:
 		return False
 
 	def can_be_added_seg(self, doc=None):
-		return True
+		return self.can_be_joined_nodes(doc)
 
 	def can_be_deleted_seg(self, doc=None):
-		return True
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		if doc.canvas.mode == modes.BEZIER_EDITOR_MODE:
+			return doc.canvas.controller.can_be_deleted_seg()
+		return False
 
 	def can_be_joined_nodes(self, doc=None):
 		if doc is None: doc = self.app.current_doc
