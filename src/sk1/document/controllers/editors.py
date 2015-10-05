@@ -501,7 +501,7 @@ class BezierPath:
 		for item in self.points:
 			ret.append((start, item))
 			start = item
-		if self.closed == sk2_const.CURVE_CLOSED:
+		if self.is_closed():
 			ret.append([start, self.start_point])
 		return ret
 
@@ -515,12 +515,12 @@ class BezierPath:
 
 	def repaint(self):
 		rend = self.canvas.renderer
-		if not self.closed == sk2_const.CURVE_CLOSED:
+		if not self.is_closed():
 			rend.draw_start_node(self.start_point.get_screen_point(),
 								self.start_point.selected)
 		for item in self.points[:-1]:
 			rend.draw_regular_node(item.get_screen_point(), item.selected)
-		if not self.closed == sk2_const.CURVE_CLOSED:
+		if not self.is_closed():
 			rend.draw_last_node(self.points[-1].get_screen_point(),
 							self.points[-1].selected)
 		else:
