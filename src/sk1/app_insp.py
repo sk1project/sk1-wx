@@ -113,10 +113,18 @@ class AppInspector:
 		return True
 
 	def can_be_joined_nodes(self, doc=None):
-		return True
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		if doc.canvas.mode == modes.BEZIER_EDITOR_MODE:
+			return doc.canvas.controller.can_be_joined_nodes()
+		return False
 
 	def can_be_splited_nodes(self, doc=None):
-		return True
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		if doc.canvas.mode == modes.BEZIER_EDITOR_MODE:
+			return doc.canvas.controller.can_be_splited_nodes()
+		return False
 
 	def can_be_seg_line(self, doc=None):
 		if doc is None: doc = self.app.current_doc
