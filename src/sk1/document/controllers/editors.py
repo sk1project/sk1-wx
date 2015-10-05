@@ -456,6 +456,21 @@ class BezierEditor(AbstractController):
 			else:
 				events.emit(events.SELECTION_CHANGED, self.presenter)
 
+	def can_be_splited_nodes(self):
+		if self.selected_nodes:
+			for item in self.selected_nodes:
+				if not item.is_terminal():
+					return True
+		return False
+
+	def can_be_joined_nodes(self):
+		if len(self.selected_nodes) == 2:
+			item0 = self.selected_nodes[0]
+			item1 = self.selected_nodes[1]
+			if item0.is_terminal() and item1.is_terminal():
+				return True
+		return False
+
 class BezierPath:
 
 	canvas = None
@@ -627,6 +642,12 @@ class BezierPoint:
 
 	def is_curve(self):
 		return len(self.point) > 2
+
+	def is_terminal(self):
+		if not self.path.is_closed():
+			if self.path.start_point == self or self.path.points[-1] == self:
+				return True
+		return False
 
 	def convert_to_line(self):
 		if self.is_curve():
