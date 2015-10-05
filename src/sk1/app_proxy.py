@@ -433,8 +433,15 @@ class AppProxy:
 	def delete_seg(self):pass
 	def join_nodes(self):pass
 	def split_nodes(self):pass
-	def seg_to_line(self):pass
-	def seg_to_curve(self):pass
+	def seg_to_line(self):
+		canvas = self.app.current_doc.canvas
+		if canvas.mode == modes.BEZIER_EDITOR_MODE:
+			canvas.controller.convert_to_line()
+
+	def seg_to_curve(self):
+		canvas = self.app.current_doc.canvas
+		if canvas.mode == modes.BEZIER_EDITOR_MODE:
+			canvas.controller.convert_to_curve()
 
 	def conv_to_cmyk(self):self.app.current_doc.api.convert_bitmap(uc2const.IMAGE_CMYK)
 	def conv_to_rgb(self):self.app.current_doc.api.convert_bitmap(uc2const.IMAGE_RGB)
