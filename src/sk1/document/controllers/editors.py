@@ -92,6 +92,8 @@ class BezierEditor(AbstractController):
 
 	def update_paths(self):
 		self.selected_nodes = []
+		self.control_points = []
+		self.new_node = None
 		self.orig_paths = deepcopy(self.target.paths)
 		for item in self.paths: item.destroy()
 		self.paths = []
@@ -423,7 +425,12 @@ class BezierEditor(AbstractController):
 			self.orig_paths = paths
 			self.new_node = None
 			self.new_node_flag = False
-			events.emit(events.SELECTION_CHANGED, self.presenter)
+			if self.selected_nodes:
+				nodes = self.selected_nodes
+				self.set_selected_nodes([])
+				self.set_selected_nodes(nodes)
+			else:
+				events.emit(events.SELECTION_CHANGED, self.presenter)
 
 	def convert_to_curve(self):
 		flag = False
@@ -442,7 +449,12 @@ class BezierEditor(AbstractController):
 			self.orig_paths = paths
 			self.new_node = None
 			self.new_node_flag = False
-			events.emit(events.SELECTION_CHANGED, self.presenter)
+			if self.selected_nodes:
+				nodes = self.selected_nodes
+				self.set_selected_nodes([])
+				self.set_selected_nodes(nodes)
+			else:
+				events.emit(events.SELECTION_CHANGED, self.presenter)
 
 class BezierPath:
 
