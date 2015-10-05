@@ -119,10 +119,18 @@ class AppInspector:
 		return True
 
 	def can_be_seg_line(self, doc=None):
-		return True
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		if doc.canvas.mode == modes.BEZIER_EDITOR_MODE:
+			return doc.canvas.controller.can_be_line()
+		return False
 
 	def can_be_seg_curve(self, doc=None):
-		return True
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		if doc.canvas.mode == modes.BEZIER_EDITOR_MODE:
+			return doc.canvas.controller.can_be_curve()
+		return False
 
 	def is_clipboard(self):
 		if self.app.clipboard.contents:
