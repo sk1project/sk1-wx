@@ -481,6 +481,9 @@ class BezierPath:
 		for item in items:
 			self.__dict__[item] = None
 
+	def is_closed(self):
+		return self.closed == sk2_const.CURVE_CLOSED
+
 	def get_all_points(self):
 		return [self.start_point, ] + self.points
 
