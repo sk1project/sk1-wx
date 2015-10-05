@@ -471,6 +471,11 @@ class BezierEditor(AbstractController):
 				return True
 		return False
 
+	def can_be_deleted_seg(self):
+		if self.selected_nodes or self.new_node:
+			return True
+		return False
+
 class BezierPath:
 
 	canvas = None
