@@ -432,7 +432,11 @@ class AppProxy:
 	def add_seg(self):pass
 	def delete_seg(self):pass
 	def join_nodes(self):pass
-	def split_nodes(self):pass
+	def split_nodes(self):
+		canvas = self.app.current_doc.canvas
+		if canvas.mode == modes.BEZIER_EDITOR_MODE:
+			canvas.controller.split_nodes()
+
 	def seg_to_line(self):
 		canvas = self.app.current_doc.canvas
 		if canvas.mode == modes.BEZIER_EDITOR_MODE:
