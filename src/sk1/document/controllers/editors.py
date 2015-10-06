@@ -21,7 +21,7 @@ from uc2 import libgeom
 from uc2.formats.sk2 import sk2_model
 from uc2.formats.sk2 import sk2_const
 
-from sk1 import modes, config, events
+from sk1 import _, modes, config, events
 from generic import AbstractController
 
 class EditorChooser(AbstractController):
@@ -91,8 +91,7 @@ class BezierEditor(AbstractController):
 		self.api.set_mode()
 
 	def update_paths(self):
-		self.selected_nodes = []
-		self.control_points = []
+		self.set_selected_nodes()
 		self.new_node = None
 		self.orig_paths = deepcopy(self.target.paths)
 		for item in self.paths: item.destroy()
@@ -196,7 +195,7 @@ class BezierEditor(AbstractController):
 			self.canvas.restore_mode()
 		else:
 			if self.start == self.end:
-				self.set_selected_nodes([])
+				self.set_selected_nodes()
 				self.canvas.selection_redraw()
 		self.selected_obj = None
 		self.cpoint = None
@@ -246,7 +245,7 @@ class BezierEditor(AbstractController):
 				return path
 		return None
 
-	def set_selected_nodes(self, points, add_flag=False):
+	def set_selected_nodes(self, points=[], add_flag=False):
 		if not add_flag:
 			for item in self.selected_nodes:
 				item.selected = False
@@ -263,6 +262,10 @@ class BezierEditor(AbstractController):
 		else:
 			self.clear_control_points()
 		events.emit(events.SELECTION_CHANGED, self.presenter)
+		msg = _('No selected nodes')
+		if self.selected_nodes:
+			msg = _('Selected %d node(s)') % len(self.selected_nodes)
+		events.emit(events.APP_STATUS, msg)
 
 	def clear_control_points(self):
 		if self.control_points:
@@ -333,8 +336,7 @@ class BezierEditor(AbstractController):
 			if not path.points:
 				self.paths.remove(path)
 				break
-		self.selected_nodes = []
-		self.control_points = []
+		self.set_selected_nodes()
 		self.new_node = None
 		paths = self.get_paths()
 		if not paths:
@@ -366,7 +368,7 @@ class BezierEditor(AbstractController):
 				new_p, new_end_p = libgeom.split_bezier_curve(start, end, t)
 				self.new_node = NewPoint(self.canvas, new_p, new_end_p,
 										before, after)
-				self.set_selected_nodes([])
+				self.set_selected_nodes()
 			elif segment and len(segment[1].point) == 2:
 				before = segment[0]
 				after = segment[1]
@@ -375,7 +377,7 @@ class BezierEditor(AbstractController):
 				new_end_p = [] + after.point
 				self.new_node = NewPoint(self.canvas, new_p, new_end_p,
 										before, after)
-				self.set_selected_nodes([])
+				self.set_selected_nodes()
 
 	def insert_new_node(self):
 		if self.new_node:
@@ -389,6 +391,8 @@ class BezierEditor(AbstractController):
 			self.orig_paths = paths
 			self.new_node = None
 			self.new_node_flag = False
+			return np
+		return None
 
 	def can_be_line(self):
 		if self.selected_nodes:
@@ -427,7 +431,7 @@ class BezierEditor(AbstractController):
 			self.new_node_flag = False
 			if self.selected_nodes:
 				nodes = self.selected_nodes
-				self.set_selected_nodes([])
+				self.set_selected_nodes()
 				self.set_selected_nodes(nodes)
 			else:
 				events.emit(events.SELECTION_CHANGED, self.presenter)
@@ -451,7 +455,7 @@ class BezierEditor(AbstractController):
 			self.new_node_flag = False
 			if self.selected_nodes:
 				nodes = self.selected_nodes
-				self.set_selected_nodes([])
+				self.set_selected_nodes()
 				self.set_selected_nodes(nodes)
 			else:
 				events.emit(events.SELECTION_CHANGED, self.presenter)
@@ -461,6 +465,8 @@ class BezierEditor(AbstractController):
 			for item in self.selected_nodes:
 				if not item.is_terminal():
 					return True
+		elif self.new_node:
+			return True
 		return False
 
 	def can_be_joined_nodes(self):
@@ -476,6 +482,19 @@ class BezierEditor(AbstractController):
 			return True
 		return False
 
+	def split_nodes(self):
+		if self.selected_nodes:
+			nodes = [] + self.selected_nodes
+			self.set_selected_nodes()
+			for item in nodes:
+				self._split_node(item)
+		elif self.new_node:
+			self._split_node(self.insert_new_node())
+
+	def _split_node(self, node):
+		if not node.is_terminal():
+			pass
+
 class BezierPath:
 
 	canvas = None
@@ -484,15 +503,16 @@ class BezierPath:
 	closed = sk2_const.CURVE_CLOSED
 	trafo = []
 
-	def __init__(self, canvas, path, trafo):
+	def __init__(self, canvas, path=None, trafo=[]):
 		self.canvas = canvas
-		path = libgeom.apply_trafo_to_path(path, trafo)
-		self.trafo = trafo
-		self.start_point = BezierPoint(self.canvas, self, path[0])
-		self.points = []
-		for item in path[1]:
-			self.points.append(BezierPoint(self.canvas, self, item))
-		self.closed = path[2]
+		if path and trafo:
+			path = libgeom.apply_trafo_to_path(path, trafo)
+			self.trafo = trafo
+			self.start_point = BezierPoint(self.canvas, self, path[0])
+			self.points = []
+			for item in path[1]:
+				self.points.append(BezierPoint(self.canvas, self, item))
+			self.closed = path[2]
 
 	def destroy(self):
 		for item in [self.start_point, ] + self.points:
