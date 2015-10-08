@@ -276,12 +276,12 @@ class BezierEditor(AbstractController):
 		self.clear_control_points()
 		cp = self.control_points
 		node = self.selected_nodes[0]
-		if len(node.point) > 2:
+		if node.is_curve():
 			before = node.get_point_before()
 			after = node.get_point_after()
 			cp.append(ControlPoint(self.canvas, node, before))
 			cp.append(ControlPoint(self.canvas, node, node))
-			if after and len(after.point) > 2:
+			if after and after.is_curve():
 				cp.append(ControlPoint(self.canvas, after, node))
 				cp.append(ControlPoint(self.canvas, after, after))
 
@@ -493,14 +493,40 @@ class BezierEditor(AbstractController):
 
 	def _split_node(self, node):
 		if not node.is_terminal():
-			pass
+			path = node.path
+			index = path.get_point_index(node)
+			np = node.get_copy()
+			if np.is_curve(): np.point = np.point[2]
+			if path.is_closed():
+				path.closed = sk2_const.CURVE_OPENED
+				if node.is_end():
+					path.points = [path.start_point, ] + path.points
+					path.start_point = np
+				elif node.is_start(): pass
+				else:
+					new_points = path.points[index + 1:] + [path.start_point, ]
+					new_points += path.points[:index + 1]
+					path.points = new_points
+					path.start_point = np
+			else:
+				new_path = BezierPath(self.canvas)
+				new_path.trafo = [] + path.trafo
+				new_path.closed = sk2_const.CURVE_OPENED
+				new_path.start_point = np
+				new_path.points = path.points[index + 1:]
+				path.points = path.points[:index + 1]
+				path_index = self.paths.index(path)
+				self.paths.insert(path_index + 1, new_path)
+			paths = self.get_paths()
+			self.api.set_new_paths(self.target, paths, self.orig_paths)
+			self.orig_paths = paths
 
 class BezierPath:
 
 	canvas = None
-	start_point = []
+	start_point = None
 	points = []
-	closed = sk2_const.CURVE_CLOSED
+	closed = sk2_const.CURVE_OPENED
 	trafo = []
 
 	def __init__(self, canvas, path=None, trafo=[]):
@@ -607,6 +633,30 @@ class BezierPath:
 		else:
 			self.points.insert(index, point)
 
+	def reverse(self):
+		points = [self.start_point, ] + self.points
+		points.reverse()
+		data = []
+		for index in range(len(points)):
+			if points[index].is_curve() and data:
+				p0 = [] + data[1]
+				p1 = [] + data[0]
+				p2 = [] + points[index].point[2]
+				np = [p0, p1, p2, points[index].point[3]]
+				data = deepcopy(points[index].point)
+				points[index].point = np
+			elif  points[index].is_curve() and not data:
+				data = deepcopy(points[index].point)
+				points[index].point = points[index].point[2]
+			elif not points[index].is_curve() and data:
+				p0 = [] + data[1]
+				p1 = [] + data[0]
+				p2 = [] + points[index].point
+				points[index].point = [p0, p1, p2, data[3]]
+				data = []
+		self.start_point = points[0]
+		self.points = points[1:]
+
 
 class BezierPoint:
 
@@ -624,6 +674,9 @@ class BezierPoint:
 		items = self.__dict__.keys()
 		for item in items:
 			self.__dict__[item] = None
+
+	def get_copy(self):
+		return BezierPoint(self.canvas, self.path, deepcopy(self.point))
 
 	def is_pressed(self, win_point):
 		wpoint = self.canvas.point_doc_to_win(self.point)
@@ -674,6 +727,12 @@ class BezierPoint:
 				return True
 		return False
 
+	def is_start(self):
+		return self.path.start_point == self
+
+	def is_end(self):
+		return self.path.points[-1] == self
+
 	def convert_to_line(self):
 		if self.is_curve():
 			self.point = [] + self.point[2]
@@ -721,7 +780,7 @@ class ControlPoint:
 
 	def get_screen_points(self):
 		bp = self.base_point.point
-		if len(bp) > 2: bp = bp[2]
+		if self.base_point.is_curve(): bp = bp[2]
 		bp = self.canvas.point_doc_to_win(bp)
 		p = self.canvas.point_doc_to_win(self.get_point())
 		return bp, p
