@@ -327,6 +327,13 @@ class BezierEditor(AbstractController):
 			ret.append(item.get_path())
 		return ret
 
+	def apply_changes(self):
+		self.new_node = None
+		self.new_node_flag = False
+		paths = self.get_paths()
+		self.api.set_new_paths(self.target, paths, self.orig_paths)
+		self.orig_paths = paths
+
 	def delete_selected_nodes(self):
 		if not self.selected_nodes: return
 		for item in self.selected_nodes:
@@ -346,8 +353,7 @@ class BezierEditor(AbstractController):
 			self.target = None
 			self.canvas.restore_mode()
 		else:
-			self.api.set_new_paths(self.target, paths, self.orig_paths)
-			self.orig_paths = paths
+			self.apply_changes()
 
 	def set_new_node(self, win_point):
 		path = self.is_path_clicked(win_point)
@@ -386,11 +392,7 @@ class BezierEditor(AbstractController):
 			index = path.get_point_index(self.new_node.after)
 			path.insert_point(np, index)
 			self.new_node.after.point = self.new_node.new_end_point
-			paths = self.get_paths()
-			self.api.set_new_paths(self.target, paths, self.orig_paths)
-			self.orig_paths = paths
-			self.new_node = None
-			self.new_node_flag = False
+			self.apply_changes()
 			return np
 		return None
 
@@ -424,11 +426,7 @@ class BezierEditor(AbstractController):
 				self.new_node.after.convert_to_line()
 				flag = True
 		if flag:
-			paths = self.get_paths()
-			self.api.set_new_paths(self.target, paths, self.orig_paths)
-			self.orig_paths = paths
-			self.new_node = None
-			self.new_node_flag = False
+			self.apply_changes()
 			if self.selected_nodes:
 				nodes = self.selected_nodes
 				self.set_selected_nodes()
@@ -448,11 +446,7 @@ class BezierEditor(AbstractController):
 				self.new_node.after.convert_to_curve()
 				flag = True
 		if flag:
-			paths = self.get_paths()
-			self.api.set_new_paths(self.target, paths, self.orig_paths)
-			self.orig_paths = paths
-			self.new_node = None
-			self.new_node_flag = False
+			self.apply_changes()
 			if self.selected_nodes:
 				nodes = self.selected_nodes
 				self.set_selected_nodes()
@@ -478,7 +472,13 @@ class BezierEditor(AbstractController):
 		return False
 
 	def can_be_deleted_seg(self):
-		if self.selected_nodes or self.new_node:
+		if len(self.selected_nodes) == 2:
+			item0 = self.selected_nodes[0]
+			item1 = self.selected_nodes[1]
+			if item0.get_point_before() == item1 or \
+			item0.get_point_after() == item1:
+				return True
+		elif self.new_node:
 			return True
 		return False
 
@@ -488,8 +488,10 @@ class BezierEditor(AbstractController):
 			self.set_selected_nodes()
 			for item in nodes:
 				self._split_node(item)
+				self.apply_changes()
 		elif self.new_node:
 			self._split_node(self.insert_new_node())
+			self.apply_changes()
 
 	def _split_node(self, node):
 		if not node.is_terminal():
@@ -517,9 +519,6 @@ class BezierEditor(AbstractController):
 				path.points = path.points[:index + 1]
 				path_index = self.paths.index(path)
 				self.paths.insert(path_index + 1, new_path)
-			paths = self.get_paths()
-			self.api.set_new_paths(self.target, paths, self.orig_paths)
-			self.orig_paths = paths
 
 	def join_nodes(self):
 		item0 = self.selected_nodes[0]
@@ -546,9 +545,39 @@ class BezierEditor(AbstractController):
 			path1.points = []
 			self.paths.remove(path1)
 			path1.destroy()
-		paths = self.get_paths()
-		self.api.set_new_paths(self.target, paths, self.orig_paths)
-		self.orig_paths = paths
+		self.apply_changes()
+
+	def delete_seg(self):
+		before = None
+		after = None
+		if self.new_node:
+			before = self.new_node.before
+			after = self.new_node.after
+		elif self.selected_nodes:
+			item0 = self.selected_nodes[0]
+			item1 = self.selected_nodes[1]
+			before = item0
+			after = item1
+			if item0.get_point_before() == item1:
+				before = item1
+				after = item0
+		path = before.path
+		if before.is_start() and after.is_end():
+			self.paths.remove(path)
+			path.destroy()
+		elif before.is_start() and not path.is_closed():
+			path.start_point = path.points[0]
+			path.points = path.points[1:]
+			path.start_point.convert_to_line()
+		elif after.is_end() and not path.is_closed():
+			path.points = path.points[:-1]
+		else:
+			self._split_node(before)
+			path = after.path
+			path.start_point = path.points[0]
+			path.points = path.points[1:]
+			path.start_point.convert_to_line()
+		self.apply_changes()
 
 
 class BezierPath:
