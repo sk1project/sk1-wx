@@ -521,6 +521,36 @@ class BezierEditor(AbstractController):
 			self.api.set_new_paths(self.target, paths, self.orig_paths)
 			self.orig_paths = paths
 
+	def join_nodes(self):
+		item0 = self.selected_nodes[0]
+		item1 = self.selected_nodes[1]
+		self.set_selected_nodes()
+		fn = libgeom.midpoint
+		np = fn(item0.get_base_point(), item1.get_base_point())
+		if item0.path == item1.path:
+			item0.set_base_point([] + np)
+			item1.set_base_point(np)
+			item1.path.closed = sk2_const.CURVE_CLOSED
+		else:
+			if item0.is_start() and item1.is_start():
+				item0.path.reverse()
+			elif item0.is_end() and item1.is_end():
+				item1.path.reverse()
+			elif item0.is_start() and item1.is_end():
+				item1, item0 = item0, item1
+			item0.set_base_point([] + np)
+			path1 = item1.path
+			for item in path1.points:
+				item.path = item0.path
+			item0.path.points += path1.points
+			path1.points = []
+			self.paths.remove(path1)
+			path1.destroy()
+		paths = self.get_paths()
+		self.api.set_new_paths(self.target, paths, self.orig_paths)
+		self.orig_paths = paths
+
+
 class BezierPath:
 
 	canvas = None
@@ -705,6 +735,16 @@ class BezierPoint:
 			p0, p1, p2, marker = deepcopy(self.point)
 			p0 = libgeom.apply_trafo_to_point(p0, trafo)
 			self.point = [p0, p1, p2, marker]
+
+	def get_base_point(self):
+		if self.is_curve(): return [] + self.point[2]
+		return [] + self.point
+
+	def set_base_point(self, point):
+		if self.is_curve():
+			self.point[2] = point
+		else:
+			self.point = point
 
 	def get_point_before(self):
 		if self.path.start_point == self: return None
