@@ -429,7 +429,11 @@ class AppProxy:
 		if canvas.mode == modes.BEZIER_EDITOR_MODE:
 			canvas.controller.delete_selected_nodes()
 
-	def add_seg(self):pass
+	def add_seg(self):
+		canvas = self.app.current_doc.canvas
+		if canvas.mode == modes.BEZIER_EDITOR_MODE:
+			canvas.controller.add_seg()
+
 	def delete_seg(self):
 		canvas = self.app.current_doc.canvas
 		if canvas.mode == modes.BEZIER_EDITOR_MODE:
