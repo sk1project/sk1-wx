@@ -488,7 +488,7 @@ class BezierEditor(AbstractController):
 			self.set_selected_nodes()
 			for item in nodes:
 				self._split_node(item)
-				self.apply_changes()
+			self.apply_changes()
 		elif self.new_node:
 			self._split_node(self.insert_new_node())
 			self.apply_changes()
@@ -510,12 +510,14 @@ class BezierEditor(AbstractController):
 					new_points += path.points[:index + 1]
 					path.points = new_points
 					path.start_point = np
-			else:
+			elif not index is None:
 				new_path = BezierPath(self.canvas)
 				new_path.trafo = [] + path.trafo
 				new_path.closed = sk2_const.CURVE_OPENED
 				new_path.start_point = np
 				new_path.points = path.points[index + 1:]
+				for item in new_path.points: item.path = new_path
+				np.path = new_path
 				path.points = path.points[:index + 1]
 				path_index = self.paths.index(path)
 				self.paths.insert(path_index + 1, new_path)
@@ -792,7 +794,9 @@ class BezierPoint:
 
 	def is_terminal(self):
 		if not self.path.is_closed():
-			if self.path.start_point == self or self.path.points[-1] == self:
+			if self.path.start_point == self:
+				return True
+			elif self.path.points[-1] == self:
 				return True
 		return False
 
