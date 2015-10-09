@@ -338,11 +338,11 @@ class BezierEditor(AbstractController):
 		if not self.selected_nodes: return
 		for item in self.selected_nodes:
 			path = item.path
-			path.delete_point(item)
-			item.destroy()
-			if not path.points:
-				self.paths.remove(path)
-				break
+			if path in self.paths:
+				path.delete_point(item)
+				item.destroy()
+				if not path.points:
+					self.paths.remove(path)
 		self.set_selected_nodes()
 		self.new_node = None
 		paths = self.get_paths()
