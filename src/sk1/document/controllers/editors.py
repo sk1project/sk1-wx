@@ -345,8 +345,7 @@ class BezierEditor(AbstractController):
 					self.paths.remove(path)
 		self.set_selected_nodes()
 		self.new_node = None
-		paths = self.get_paths()
-		if not paths:
+		if not self.get_paths():
 			parent = self.target.parent
 			index = parent.childs.index(self.target)
 			self.api.delete_objects([[self.target, parent, index ], ])
@@ -581,6 +580,30 @@ class BezierEditor(AbstractController):
 			path.start_point.convert_to_line()
 		self.apply_changes()
 
+	def add_seg(self):
+		item0 = self.selected_nodes[0]
+		item1 = self.selected_nodes[1]
+		self.set_selected_nodes()
+		if item0.path == item1.path:
+			item1.path.closed = sk2_const.CURVE_CLOSED
+		else:
+			if item0.is_start() and item1.is_start():
+				item0.path.reverse()
+			elif item0.is_end() and item1.is_end():
+				item1.path.reverse()
+			elif item0.is_start() and item1.is_end():
+				item1, item0 = item0, item1
+			path1 = item1.path
+			item1.path = item0.path
+			for item in path1.points:
+				item.path = item0.path
+			item0.path.points += [item1, ] + path1.points
+			path1.points = []
+			path1.start_point = None
+			self.paths.remove(path1)
+			path1.destroy()
+		self.apply_changes()
+
 
 class BezierPath:
 
@@ -603,7 +626,7 @@ class BezierPath:
 
 	def destroy(self):
 		for item in [self.start_point, ] + self.points:
-			item.destroy()
+			if item: item.destroy()
 		items = self.__dict__.keys()
 		for item in items:
 			self.__dict__[item] = None
