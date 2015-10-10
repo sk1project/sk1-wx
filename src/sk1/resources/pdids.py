@@ -110,6 +110,9 @@ ID_BEZIER_JOIN_NODE = wx.NewId()
 ID_BEZIER_SPLIT_NODE = wx.NewId()
 ID_BEZIER_SEG_TO_LINE = wx.NewId()
 ID_BEZIER_SEG_TO_CURVE = wx.NewId()
+ID_BEZIER_NODE_CUSP = wx.NewId()
+ID_BEZIER_NODE_SMOOTH = wx.NewId()
+ID_BEZIER_NODE_SYMMETRICAL = wx.NewId()
 
 #----- Bitmaps menu
 ID_CONV_TO_CMYK = wx.NewId()
