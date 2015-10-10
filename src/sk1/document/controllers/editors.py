@@ -603,6 +603,27 @@ class BezierEditor(AbstractController):
 			path1.destroy()
 		self.apply_changes()
 
+	def can_be_cusp(self):
+		if self.selected_nodes:
+			for item in self.selected_nodes:
+				if not item.is_cusp():
+					return True
+		return False
+
+	def can_be_smooth(self):
+		if self.selected_nodes:
+			for item in self.selected_nodes:
+				if not item.is_smooth():
+					return True
+		return False
+
+	def can_be_symmetrical(self):
+		if self.selected_nodes:
+			for item in self.selected_nodes:
+				if not item.is_symmetrical():
+					return True
+		return False
+
 
 class BezierPath:
 
@@ -813,6 +834,22 @@ class BezierPoint:
 
 	def is_curve(self):
 		return len(self.point) > 2
+
+	def is_cusp(self):
+		if self.is_curve():
+			return self.point[3] == sk2_const.NODE_CUSP
+		return False
+
+	def is_smooth(self):
+		if self.is_curve():
+			return self.point[3] == sk2_const.NODE_SMOOTH
+		return False
+
+	def is_symmetrical(self):
+		if self.is_curve():
+			return self.point[3] == sk2_const.NODE_SYMMETRICAL
+		return False
+
 
 	def is_terminal(self):
 		if not self.path.is_closed():
