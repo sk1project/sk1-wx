@@ -152,13 +152,25 @@ class AppInspector:
 		return False
 
 	def can_be_node_cusp(self, doc=None):
-		return True
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		if doc.canvas.mode == modes.BEZIER_EDITOR_MODE:
+			return doc.canvas.controller.can_be_cusp()
+		return False
 
 	def can_be_node_smooth(self, doc=None):
-		return True
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		if doc.canvas.mode == modes.BEZIER_EDITOR_MODE:
+			return doc.canvas.controller.can_be_smooth()
+		return False
 
 	def can_be_node_symmetrical(self, doc=None):
-		return True
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		if doc.canvas.mode == modes.BEZIER_EDITOR_MODE:
+			return doc.canvas.controller.can_be_symmetrical()
+		return False
 
 	def is_clipboard(self):
 		if self.app.clipboard.contents:
