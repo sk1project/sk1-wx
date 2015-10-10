@@ -217,7 +217,13 @@ class AppProxy:
 		else:
 			self.app.current_doc.selection.select_all()
 
-	def deselect(self, *args): self.app.current_doc.selection.clear()
+	def deselect(self, *args):
+		canvas = self.app.current_doc.canvas
+		if canvas.mode == modes.BEZIER_EDITOR_MODE:
+			canvas.controller.set_selected_nodes()
+		else:
+			self.app.current_doc.selection.clear()
+
 	def invert_selection(self):
 		canvas = self.app.current_doc.canvas
 		if canvas.mode == modes.BEZIER_EDITOR_MODE:
