@@ -68,3 +68,20 @@ class BezierLineCurvePlugin(CtxPlugin):
 
 		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_SEG_TO_CURVE])
 		self.add(btn, 0, LEFT | CENTER, 2)
+
+class BezierConnectionTypePlugin(CtxPlugin):
+
+	name = 'BezierConnectionTypePlugin'
+
+	def __init__(self, app, parent):
+		CtxPlugin.__init__(self, app, parent)
+
+	def build(self):
+		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_NODE_CUSP])
+		self.add(btn, 0, LEFT | CENTER, 2)
+
+		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_NODE_SMOOTH])
+		self.add(btn, 0, LEFT | CENTER, 2)
+
+		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_NODE_SYMMETRICAL])
+		self.add(btn, 0, LEFT | CENTER, 2)
