@@ -196,7 +196,6 @@ class BezierEditor(AbstractController):
 		else:
 			if self.start == self.end:
 				self.set_selected_nodes()
-				self.canvas.selection_redraw()
 		self.selected_obj = None
 		self.cpoint = None
 
@@ -267,6 +266,7 @@ class BezierEditor(AbstractController):
 		if self.selected_nodes:
 			msg = _('Selected %d node(s)') % len(self.selected_nodes)
 		events.emit(events.APP_STATUS, msg)
+		self.canvas.selection_redraw()
 
 	def clear_control_points(self):
 		if self.control_points:
@@ -291,7 +291,6 @@ class BezierEditor(AbstractController):
 		for item in self.paths:
 			points += item.get_all_points()
 		self.set_selected_nodes(points, invert)
-		self.canvas.selection_redraw()
 
 	def move_selected_points(self, base_point, win_point, undable=False):
 		x1, y1 = self.snap.snap_point(win_point)[2]
