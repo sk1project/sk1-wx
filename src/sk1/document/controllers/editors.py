@@ -624,6 +624,19 @@ class BezierEditor(AbstractController):
 					return True
 		return False
 
+	def set_connection_type(self, conn_type=sk2_const.NODE_CUSP):
+		flag = False
+		if self.selected_nodes:
+			for item in self.selected_nodes:
+				if item.is_curve():
+					if item.get_connection_type() == conn_type:
+						item.set_connection_type(conn_type)
+						flag = True
+		if flag:
+			sp = [] + self.selected_nodes
+			self.set_selected_nodes()
+			self.apply_changes()
+			self.set_selected_nodes(sp)
 
 class BezierPath:
 
@@ -883,6 +896,11 @@ class BezierPoint:
 			y1 = 2.0 / 3.0 * (point[1] - before_point[1]) + before_point[1]
 			self.point = [[x0, y0], [x1, y1], point, sk2_const.NODE_CUSP]
 
+	def get_connection_type(self):
+		if self.is_curve():
+			return self.point[3]
+
+	def set_connection_type(self, conn_type):pass
 
 class ControlPoint:
 
