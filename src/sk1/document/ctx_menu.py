@@ -17,10 +17,11 @@
 
 import wx
 
-from sk1 import config
+from sk1 import config, modes
 from sk1.resources import pdids
 
-EDIT = [wx.ID_UNDO, wx.ID_REDO, None, wx.ID_CUT, wx.ID_COPY, wx.ID_PASTE,
+UNDO = [wx.ID_UNDO, wx.ID_REDO]
+EDIT = [None, wx.ID_CUT, wx.ID_COPY, wx.ID_PASTE,
 	wx.ID_DELETE, pdids.ID_DUPLICATE, None, wx.ID_SELECTALL]
 STYLE = [None, pdids.FILL_MODE, pdids.STROKE_MODE, pdids.COPY_FILL,
 		pdids.COPY_STROKE]
@@ -28,6 +29,11 @@ DEFAULT = [None, wx.ID_PROPERTIES]
 COMBINE = [None, pdids.ID_COMBINE, pdids.ID_BREAK_APART, ]
 TO_CURVES = [None, pdids.ID_TO_CURVES]
 GROUP = [None, pdids.ID_GROUP, pdids.ID_UNGROUP, pdids.ID_UNGROUPALL, ]
+BEZIER_EDIT = [None, wx.ID_SELECTALL, pdids.ID_DESELECT, pdids.ID_INV_SELECT,
+None, pdids.ID_BEZIER_ADD_NODE, pdids.ID_BEZIER_DELETE_NODE,
+None, pdids.ID_BEZIER_ADD_SEG, pdids.ID_BEZIER_DELETE_SEG,
+pdids.ID_BEZIER_JOIN_NODE, pdids.ID_BEZIER_SPLIT_NODE,
+None, pdids.ID_BEZIER_SEG_TO_LINE, pdids.ID_BEZIER_SEG_TO_CURVE]
 
 class ContextMenu(wx.Menu):
 
@@ -45,7 +51,7 @@ class ContextMenu(wx.Menu):
 		self.insp = self.app.insp
 		self.actions = self.app.actions
 		wx.Menu.__init__(self)
-		self.build_menu(EDIT)
+		self.build_menu(UNDO)
 		self.persistent_items = self.items
 		self.items = []
 
@@ -73,29 +79,27 @@ class ContextMenu(wx.Menu):
 				self.items.append(menuitem)
 
 	def get_entries(self):
-		ret = []
 		if not self.insp.is_selection():
-			ret = DEFAULT
+			if self.insp.is_mode(modes.BEZIER_EDITOR_MODE):
+				return BEZIER_EDIT
 		else:
 			doc = self.app.current_doc
 			sel = doc.selection.objs
 			if len(sel) > 1:
-				ret = COMBINE + GROUP + STYLE + TO_CURVES
+				return EDIT + COMBINE + GROUP + STYLE + TO_CURVES
 			elif self.insp.is_obj_rect(sel[0]):
-				ret = self.get_order_entries() + STYLE + TO_CURVES
+				return EDIT + self.get_order_entries() + STYLE + TO_CURVES
 			elif self.insp.is_obj_circle(sel[0]):
-				ret = self.get_order_entries() + STYLE + TO_CURVES
+				return EDIT + self.get_order_entries() + STYLE + TO_CURVES
 			elif self.insp.is_obj_polygon(sel[0]):
-				ret = self.get_order_entries() + STYLE + TO_CURVES
+				return EDIT + self.get_order_entries() + STYLE + TO_CURVES
 			elif self.insp.is_obj_curve(sel[0]):
-				ret = self.get_order_entries() + STYLE + COMBINE
+				return EDIT + self.get_order_entries() + STYLE + COMBINE
 			elif self.insp.can_be_ungrouped():
-				ret = self.get_order_entries() + STYLE + GROUP
+				return EDIT + self.get_order_entries() + STYLE + GROUP
 			elif self.insp.is_obj_pixmap(sel[0]):
-				ret = self.get_order_entries()
-			else:
-				ret = DEFAULT
-		return ret
+				return EDIT + self.get_order_entries()
+		return EDIT + DEFAULT
 
 	def get_order_entries(self):
 		ret = []
