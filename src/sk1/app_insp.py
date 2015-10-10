@@ -151,6 +151,15 @@ class AppInspector:
 			return doc.canvas.controller.can_be_curve()
 		return False
 
+	def can_be_node_cusp(self, doc=None):
+		return True
+
+	def can_be_node_smooth(self, doc=None):
+		return True
+
+	def can_be_node_symmetrical(self, doc=None):
+		return True
+
 	def is_clipboard(self):
 		if self.app.clipboard.contents:
 			return True
