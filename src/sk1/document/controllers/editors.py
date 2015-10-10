@@ -246,6 +246,7 @@ class BezierEditor(AbstractController):
 		return None
 
 	def set_selected_nodes(self, points=[], add_flag=False):
+		self.new_node = None
 		if not add_flag:
 			for item in self.selected_nodes:
 				item.selected = False
@@ -344,7 +345,6 @@ class BezierEditor(AbstractController):
 				if not path.points:
 					self.paths.remove(path)
 		self.set_selected_nodes()
-		self.new_node = None
 		if not self.get_paths():
 			parent = self.target.parent
 			index = parent.childs.index(self.target)
