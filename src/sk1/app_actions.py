@@ -152,6 +152,9 @@ def create_actions(app):
 (pdids.ID_BEZIER_SPLIT_NODE, proxy.split_nodes, sel_chnls, insp.can_be_splited_nodes),
 (pdids.ID_BEZIER_SEG_TO_LINE, proxy.seg_to_line, sel_chnls, insp.can_be_seg_line),
 (pdids.ID_BEZIER_SEG_TO_CURVE, proxy.seg_to_curve, sel_chnls, insp.can_be_seg_curve),
+(pdids.ID_BEZIER_NODE_CUSP, proxy.make_node_cusp, sel_chnls, insp.can_be_node_cusp),
+(pdids.ID_BEZIER_NODE_SMOOTH, proxy.make_node_smooth, sel_chnls, insp.can_be_node_smooth),
+(pdids.ID_BEZIER_NODE_SYMMETRICAL, proxy.make_node_symmetrical, sel_chnls, insp.can_be_node_symmetrical),
 #------ Bitmaps menu -------
 (pdids.ID_CONV_TO_CMYK, proxy.conv_to_cmyk, sel_chnls, insp.can_be_cmyk),
 (pdids.ID_CONV_TO_RGB, proxy.conv_to_rgb, sel_chnls, insp.can_be_rgb),
