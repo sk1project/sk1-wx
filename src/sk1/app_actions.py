@@ -90,7 +90,7 @@ def create_actions(app):
 (wx.ID_DELETE, proxy.delete, sel_chnls, insp.can_be_deleted),
 (pdids.ID_DUPLICATE, proxy.duplicate, sel_chnls, insp.is_selection),
 (wx.ID_SELECTALL, proxy.select_all, doc_chnls, insp.is_doc),
-(pdids.ID_DESELECT, proxy.deselect, sel_chnls, insp.is_selection),
+(pdids.ID_DESELECT, proxy.deselect, sel_chnls, insp.can_be_deleted),
 (pdids.ID_INV_SELECT, proxy.invert_selection, doc_chnls, insp.is_doc),
 (pdids.COPY_FILL, proxy.copy_fill, sel_chnls, insp.is_selection),
 (pdids.COPY_STROKE, proxy.copy_stroke, sel_chnls, insp.is_selection),

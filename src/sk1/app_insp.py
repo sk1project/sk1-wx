@@ -85,18 +85,25 @@ class AppInspector:
 			return True
 		return False
 
-	def can_be_deleted(self, doc=None):
+	def is_selected_node(self, doc=None):
 		if doc is None: doc = self.app.current_doc
 		if doc is None: return False
 		if doc.canvas.mode == modes.BEZIER_EDITOR_MODE:
 			return len(doc.canvas.controller.selected_nodes) > 0
+		return False
+
+	def can_be_deleted(self, doc=None):
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		if doc.canvas.mode == modes.BEZIER_EDITOR_MODE:
+			return self.is_selected_node(doc)
 		return self.is_selection(doc)
 
 	def can_be_deleted_node(self, doc=None):
 		if doc is None: doc = self.app.current_doc
 		if doc is None: return False
 		if doc.canvas.mode == modes.BEZIER_EDITOR_MODE:
-			return len(doc.canvas.controller.selected_nodes) > 0
+			return self.is_selected_node(doc)
 		return False
 
 	def can_be_added_node(self, doc=None):
