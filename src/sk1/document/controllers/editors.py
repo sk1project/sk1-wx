@@ -606,21 +606,21 @@ class BezierEditor(AbstractController):
 	def can_be_cusp(self):
 		if self.selected_nodes:
 			for item in self.selected_nodes:
-				if not item.is_cusp():
+				if item.is_curve() and not item.is_cusp():
 					return True
 		return False
 
 	def can_be_smooth(self):
 		if self.selected_nodes:
 			for item in self.selected_nodes:
-				if not item.is_smooth():
+				if item.is_curve() and not item.is_smooth():
 					return True
 		return False
 
 	def can_be_symmetrical(self):
 		if self.selected_nodes:
 			for item in self.selected_nodes:
-				if not item.is_symmetrical():
+				if item.is_curve() and not item.is_symmetrical():
 					return True
 		return False
 
@@ -900,7 +900,9 @@ class BezierPoint:
 		if self.is_curve():
 			return self.point[3]
 
+	#TODO: needs to be implemented
 	def set_connection_type(self, conn_type):pass
+
 
 class ControlPoint:
 
