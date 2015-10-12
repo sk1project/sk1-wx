@@ -276,15 +276,16 @@ class BezierEditor(AbstractController):
 	def create_control_points(self):
 		self.clear_control_points()
 		cp = self.control_points
-		node = self.selected_nodes[0]
-		if node.is_curve():
-			before = node.get_point_before()
-			after = node.get_point_after()
-			cp.append(ControlPoint(self.canvas, node, before))
-			cp.append(ControlPoint(self.canvas, node, node))
-			if after and after.is_curve():
-				cp.append(ControlPoint(self.canvas, after, node))
-				cp.append(ControlPoint(self.canvas, after, after))
+		for node in self.selected_nodes:
+			if node.is_curve():
+				before = node.get_point_before()
+				after = node.get_point_after()
+				cp.append(ControlPoint(self.canvas, node, before))
+				cp.append(ControlPoint(self.canvas, node, node))
+				if after and not after in self.selected_nodes:
+					if after.is_curve():
+						cp.append(ControlPoint(self.canvas, after, node))
+						cp.append(ControlPoint(self.canvas, after, after))
 
 	def select_all_nodes(self, invert=False):
 		points = []
@@ -606,35 +607,28 @@ class BezierEditor(AbstractController):
 	def can_be_cusp(self):
 		if self.selected_nodes:
 			for item in self.selected_nodes:
-				if item.is_curve() and not item.is_cusp():
+				if item.can_be_cusp():
 					return True
 		return False
 
 	def can_be_smooth(self):
 		if self.selected_nodes:
 			for item in self.selected_nodes:
-				if item.is_curve() and not item.is_smooth():
+				if item.can_be_smooth():
 					return True
 		return False
 
 	def can_be_symmetrical(self):
 		if self.selected_nodes:
 			for item in self.selected_nodes:
-				if item.is_curve() and not item.is_symmetrical():
-					after = item.get_point_after()
-					if after and after.is_curve():
-						return True
+				if item.can_be_symmetrical():
+					return True
 		return False
 
 	def set_connection_type(self, conn_type=sk2_const.NODE_CUSP):
-		flag = False
 		if self.selected_nodes:
 			for item in self.selected_nodes:
-				if item.is_curve():
-					if not item.get_connection_type() == conn_type:
-						item.set_connection_type(conn_type)
-						flag = True
-		if flag:
+				item.set_connection_type(conn_type)
 			sp = [] + self.selected_nodes
 			self.set_selected_nodes()
 			self.apply_changes()
@@ -851,7 +845,6 @@ class BezierPoint:
 		return len(self.point) > 2
 
 	#=========
-	#TODO: should be implemented de novo
 
 	def is_cusp(self):
 		if self.is_curve():
@@ -866,6 +859,10 @@ class BezierPoint:
 		if self.is_curve():
 			return self.point[3] in (sk2_const.NODE_SMOOTH,
 									sk2_const.NODE_SMOOTH_BOTH)
+		else:
+			after = self.get_point_after()
+			if after and after.is_curve() and after.is_opp_smooth():
+				return True
 		return False
 
 	def is_opp_smooth(self):
@@ -881,13 +878,26 @@ class BezierPoint:
 									sk2_const.NODE_SYMM_SMOOTH)
 		return False
 
-	def can_be_smooth(self):pass
 	def can_be_cusp(self):
-		if self.is_curve() and not self.point[3] == sk2_const.NODE_CUSP:
+		if self.is_curve() and not self.is_cusp():
 			return True
+		elif not self.is_curve():
+			after = self.get_point_after()
+			if after and after.is_curve() and after.is_opp_smooth():
+				return True
+		return False
+
+	def can_be_smooth(self):
+		if self.is_curve() and not self.is_smooth():
+			return True
+		elif not self.is_curve():
+			after = self.get_point_after()
+			if after and after.is_curve() and not after.is_opp_smooth():
+				return True
+		return False
 
 	def can_be_symmetrical(self):
-		if self.is_curve() and not self.point[3] & sk2_const.NODE_SYMMETRICAL:
+		if self.is_curve() and not self.is_symmetrical():
 			after = self.get_point_after()
 			if after and after.is_curve():
 				return True
@@ -933,11 +943,61 @@ class BezierPoint:
 			return self.point[3]
 		return None
 
-	#TODO: needs to be implemented
 	def set_connection_type(self, conn_type):
 		if self.is_curve():
-			after = self.get_point_after()
-			if not after: return
+			if conn_type == sk2_const.NODE_CUSP and self.can_be_cusp():
+				if self.is_opp_smooth():
+					self.point[3] = sk2_const.NODE_SMOOTH_OPP
+				else:
+					self.point[3] = sk2_const.NODE_CUSP
+			elif conn_type == sk2_const.NODE_SMOOTH and self.can_be_smooth():
+				if self.point[3] in (sk2_const.NODE_SYMM_SMOOTH,
+									sk2_const.NODE_SMOOTH_OPP):
+					self.point[3] = sk2_const.NODE_SMOOTH_BOTH
+				else:
+					self.point[3] = sk2_const.NODE_SMOOTH
+			elif conn_type == sk2_const.NODE_SYMMETRICAL \
+			and self.can_be_symmetrical():
+				if self.is_opp_smooth():
+					self.point[3] = sk2_const.NODE_SYMM_SMOOTH
+				else:
+					self.point[3] = sk2_const.NODE_SYMMETRICAL
+		else:
+			if conn_type == sk2_const.NODE_CUSP and self.can_be_cusp():
+				after = self.get_point_after()
+				if after and after.is_curve() and after.is_opp_smooth():
+					after.point[3] &= sk2_const.NODE_NOT_SMOOTH_OPP
+			elif conn_type == sk2_const.NODE_SMOOTH and self.can_be_smooth():
+				after = self.get_point_after()
+				if after and after.is_curve() and not after.is_opp_smooth():
+					after.point[3] |= sk2_const.NODE_SMOOTH_OPP
+		self.update_connection()
+
+	#TODO: needs to be implemented
+	def update_connection(self):
+		after = self.get_point_after()
+		before = self.get_point_before()
+		if after and after.is_curve():
+			if self.is_symmetrical():
+				after.point[0] = libgeom.contra_point(self.point[1],
+													self.point[2])
+			if self.is_smooth() and self.is_curve():
+				after.point[0] = libgeom.contra_point(self.point[1],
+												self.point[2], after.point[0])
+		if after and not after.is_curve():
+			if self.is_smooth() and self.is_curve():
+				l = libgeom.distance(self.point[2], after.point)
+				if l:
+					self.point[1] = libgeom.contra_point(after.point,
+												self.point[2], self.point[1])
+		if before and before.is_curve():
+			if before.is_symmetrical():
+				before.point[1] = libgeom.contra_point(self.point[0],
+													before.point[2])
+			if before.is_smooth() and self.is_curve():
+				before.point[1] = libgeom.contra_point(self.point[0],
+											before.point[2], before.point[1])
+
 
 
 class ControlPoint:
@@ -979,6 +1039,7 @@ class ControlPoint:
 			self.point.point[1] = p
 		else:
 			self.point.point[0] = p
+		self.point.update_connection()
 
 	def repaint(self):
 		self.canvas.renderer.draw_control_point(*self.get_screen_points())
