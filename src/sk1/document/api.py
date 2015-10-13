@@ -590,8 +590,8 @@ class PresenterAPI(AbstractAPI):
 			initial_styles = self._get_objs_styles(objs)
 			self._fill_objs(objs, color)
 			transaction = [
-				[[self._set_objs_styles, initial_styles]],
-				[[self._fill_objs, objs, color]],
+				[[self._set_objs_styles, initial_styles], ],
+				[[self._fill_objs, objs, color], ],
 				False]
 			self.add_undo(transaction)
 			self.selection.update()
@@ -616,8 +616,19 @@ class PresenterAPI(AbstractAPI):
 		self.eventloop.emit(self.eventloop.DOC_MODIFIED)
 		self.selection.update()
 
-	def set_fill_style(self, fill_style):
-		if self.selection.objs:
+	def set_fill_style(self, fill_style, objs=[]):
+		if objs:
+			objs = self._get_primitive_objs(objs, True)
+			initial_styles = self._get_objs_styles(objs)
+			self._set_objs_fill_style(objs, fill_style)
+			after_styles = self._get_objs_styles(objs)
+			transaction = [
+				[[self._set_objs_styles, initial_styles], ],
+				[[self._set_objs_styles, after_styles], ],
+				False]
+			self.add_undo(transaction)
+			self.selection.update()
+		elif self.selection.objs:
 			sel_before = [] + self.selection.objs
 			objs = self._get_primitive_objs(self.selection.objs, True)
 			initial_styles = self._get_objs_styles(objs)
@@ -640,8 +651,8 @@ class PresenterAPI(AbstractAPI):
 			initial_styles = self._get_objs_styles(objs)
 			self._stroke_objs(objs, color)
 			transaction = [
-				[[self._set_objs_styles, initial_styles]],
-				[[self._stroke_objs, objs, color]],
+				[[self._set_objs_styles, initial_styles], ],
+				[[self._stroke_objs, objs, color], ],
 				False]
 			self.add_undo(transaction)
 			self.selection.update()
@@ -661,8 +672,19 @@ class PresenterAPI(AbstractAPI):
 			self.add_undo(transaction)
 			self.selection.update()
 
-	def set_stroke_style(self, stroke_style):
-		if self.selection.objs:
+	def set_stroke_style(self, stroke_style, objs=[]):
+		if objs:
+			objs = self._get_primitive_objs(objs, True)
+			initial_styles = self._get_objs_styles(objs)
+			self._set_objs_stroke_style(objs, stroke_style)
+			after_styles = self._get_objs_styles(objs)
+			transaction = [
+				[[self._set_objs_styles, initial_styles], ],
+				[[self._set_objs_styles, after_styles], ],
+				False]
+			self.add_undo(transaction)
+			self.selection.update()
+		elif self.selection.objs:
 			sel_before = [] + self.selection.objs
 			objs = self._get_primitive_objs(self.selection.objs, True)
 			initial_styles = self._get_objs_styles(objs)
