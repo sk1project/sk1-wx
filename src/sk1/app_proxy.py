@@ -41,6 +41,7 @@ class AppProxy:
 
 	def fill_dialog(self, default_style=False):
 		doc = self.app.current_doc
+		objs = []
 		if default_style:
 			fill_style = doc.model.styles['Default Style'][0]
 			default_style = True
@@ -50,6 +51,12 @@ class AppProxy:
 			title = _('Fill')
 			if doc.selection.objs:
 				style = self._get_style(doc.selection.objs)
+				if not style is None:
+					fill_style = style[0]
+			elif doc.canvas.mode == modes.BEZIER_EDITOR_MODE and \
+			doc.canvas.controller.target:
+				objs.append(doc.canvas.controller.target)
+				style = self._get_style(objs)
 				if not style is None:
 					fill_style = style[0]
 		if fill_style is None:
@@ -69,7 +76,7 @@ class AppProxy:
 				new_style[0] = new_fill_style
 				doc.api.set_default_style(new_style)
 			else:
-				doc.api.set_fill_style(new_fill_style)
+				doc.api.set_fill_style(new_fill_style, objs)
 
 	def _get_style(self, objs):
 		ret = None
@@ -85,6 +92,7 @@ class AppProxy:
 
 	def stroke_dialog(self, default_style=False):
 		doc = self.app.current_doc
+		objs = []
 		if default_style:
 			stroke_style = doc.model.styles['Default Style'][1]
 			default_style = True
@@ -94,6 +102,12 @@ class AppProxy:
 			title = _('Stroke')
 			if doc.selection.objs:
 				style = self._get_style(doc.selection.objs)
+				if not style is None:
+					stroke_style = style[1]
+			elif doc.canvas.mode == modes.BEZIER_EDITOR_MODE and \
+			doc.canvas.controller.target:
+				objs.append(doc.canvas.controller.target)
+				style = self._get_style(objs)
 				if not style is None:
 					stroke_style = style[1]
 		if stroke_style is None:
@@ -113,7 +127,7 @@ class AppProxy:
 				new_style[1] = new_stroke_style
 				doc.api.set_default_style(new_style)
 			else:
-				doc.api.set_stroke_style(new_stroke_style)
+				doc.api.set_stroke_style(new_stroke_style, objs)
 
 	def copy_fill(self):
 		doc = self.app.current_doc
