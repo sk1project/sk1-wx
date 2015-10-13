@@ -27,6 +27,7 @@ from generic import AbstractController
 class EditorChooser(AbstractController):
 
 	mode = modes.SHAPER_MODE
+	target = None
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
