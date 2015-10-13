@@ -491,7 +491,10 @@ class AppProxy:
 
 	def fill_selected(self, color):
 		doc = self.app.current_doc
-		if not doc.selection.objs:
+		canvas = doc.canvas
+		if canvas.mode == modes.BEZIER_EDITOR_MODE and canvas.controller.target:
+			doc.api.fill_selected(color, [canvas.controller.target, ])
+		elif not doc.selection.objs:
 			txt = _('Do you wish to change default fill color for this document?')
 			txt += '\n'
 			txt += _('This style will be applied to newly created objects.')
@@ -510,7 +513,10 @@ class AppProxy:
 
 	def stroke_selected(self, color):
 		doc = self.app.current_doc
-		if not doc.selection.objs:
+		canvas = doc.canvas
+		if canvas.mode == modes.BEZIER_EDITOR_MODE and canvas.controller.target:
+			doc.api.stroke_selected(color, [canvas.controller.target, ])
+		elif not doc.selection.objs:
 			txt = _('Do you wish to change default stroke color for this document?')
 			txt += '\n'
 			txt += _('This style will be applied to newly created objects.')
@@ -532,7 +538,7 @@ class AppProxy:
 					new_style[1] = []
 				doc.api.set_default_style(new_style)
 		else:
-			self.app.current_doc.api.stroke_selected(color)
+			doc.api.stroke_selected(color)
 
 	def show_plugin(self, pid=""):
 		self.app.plg_area.show_plugin(pid)
