@@ -277,15 +277,15 @@ class BezierEditor(AbstractController):
 		self.clear_control_points()
 		cp = self.control_points
 		for node in self.selected_nodes:
+			before = node.get_point_before()
+			after = node.get_point_after()
 			if node.is_curve():
-				before = node.get_point_before()
-				after = node.get_point_after()
 				cp.append(ControlPoint(self.canvas, node, before))
 				cp.append(ControlPoint(self.canvas, node, node))
-				if after and not after in self.selected_nodes:
-					if after.is_curve():
-						cp.append(ControlPoint(self.canvas, after, node))
-						cp.append(ControlPoint(self.canvas, after, after))
+			if after and not after in self.selected_nodes:
+				if after.is_curve():
+					cp.append(ControlPoint(self.canvas, after, node))
+					cp.append(ControlPoint(self.canvas, after, after))
 
 	def select_all_nodes(self, invert=False):
 		points = []
