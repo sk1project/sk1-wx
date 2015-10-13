@@ -967,13 +967,14 @@ class BezierPoint:
 				after = self.get_point_after()
 				if after and after.is_curve() and after.is_opp_smooth():
 					after.point[3] &= sk2_const.NODE_NOT_SMOOTH_OPP
+					after.update_connection()
 			elif conn_type == sk2_const.NODE_SMOOTH and self.can_be_smooth():
 				after = self.get_point_after()
 				if after and after.is_curve() and not after.is_opp_smooth():
 					after.point[3] |= sk2_const.NODE_SMOOTH_OPP
+					after.update_connection()
 		self.update_connection()
 
-	#TODO: needs to be implemented
 	def update_connection(self):
 		after = self.get_point_after()
 		before = self.get_point_before()
@@ -984,7 +985,7 @@ class BezierPoint:
 			if self.is_smooth() and self.is_curve():
 				after.point[0] = libgeom.contra_point(self.point[1],
 												self.point[2], after.point[0])
-		if after and not after.is_curve():
+		elif after and not after.is_curve():
 			if self.is_smooth() and self.is_curve():
 				l = libgeom.distance(self.point[2], after.point)
 				if l:
@@ -997,6 +998,15 @@ class BezierPoint:
 			if before.is_smooth() and self.is_curve():
 				before.point[1] = libgeom.contra_point(self.point[0],
 											before.point[2], before.point[1])
+		elif before and not before.is_curve():
+			if self.is_opp_smooth():
+				p = before.get_point_before()
+				if p:
+					p = p.get_base_point()
+					l = libgeom.distance(p, before.point)
+					if l:
+						self.point[0] = libgeom.contra_point(p,
+												before.point, self.point[0])
 
 
 
