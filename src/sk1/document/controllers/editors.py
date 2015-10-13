@@ -888,9 +888,9 @@ class BezierPoint:
 		return False
 
 	def can_be_smooth(self):
-		if self.is_curve() and not self.is_smooth():
+		if self.is_curve() and not self.is_smooth() and not self.is_terminal():
 			return True
-		elif not self.is_curve():
+		elif not self.is_curve() and not self.is_terminal():
 			after = self.get_point_after()
 			if after and after.is_curve() and not after.is_opp_smooth():
 				return True
