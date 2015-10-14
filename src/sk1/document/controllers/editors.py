@@ -294,6 +294,12 @@ class BezierEditor(AbstractController):
 			points += item.get_all_points()
 		self.set_selected_nodes(points, invert)
 
+	def count_all_nodes(self):
+		points = []
+		for item in self.paths:
+			points += item.get_all_points()
+		return len(points)
+
 	def move_selected_points(self, base_point, win_point, undable=False):
 		x1, y1 = self.snap.snap_point(win_point)[2]
 		if len(base_point.point) == 2:
@@ -634,6 +640,12 @@ class BezierEditor(AbstractController):
 			self.set_selected_nodes()
 			self.apply_changes()
 			self.set_selected_nodes(sp)
+
+	def reverse_all_paths(self):
+		for item in self.paths:
+			item.reverse()
+		self.set_selected_nodes()
+		self.apply_changes()
 
 class BezierPath:
 
