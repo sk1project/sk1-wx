@@ -15,50 +15,20 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from wal import LEFT, CENTER
-
 from sk1.resources import pdids
-from sk1.pwidgets import ActionButton
-from generic import CtxPlugin
+from generic import ActionCtxPlugin
 
-class CombinePlugin(CtxPlugin):
+class CombinePlugin(ActionCtxPlugin):
 
 	name = 'CombinePlugin'
+	ids = [pdids.ID_COMBINE, pdids.ID_BREAK_APART]
 
-	def __init__(self, app, parent):
-		CtxPlugin.__init__(self, app, parent)
-
-	def build(self):
-		btn = ActionButton(self, self.actions[pdids.ID_COMBINE])
-		self.add(btn, 0, LEFT | CENTER, 2)
-
-		btn = ActionButton(self, self.actions[pdids.ID_BREAK_APART])
-		self.add(btn, 0, LEFT | CENTER, 2)
-
-class GroupPlugin(CtxPlugin):
+class GroupPlugin(ActionCtxPlugin):
 
 	name = 'GroupPlugin'
+	ids = [pdids.ID_GROUP, pdids.ID_UNGROUP, pdids.ID_UNGROUPALL]
 
-	def __init__(self, app, parent):
-		CtxPlugin.__init__(self, app, parent)
-
-	def build(self):
-		btn = ActionButton(self, self.actions[pdids.ID_GROUP])
-		self.add(btn, 0, LEFT | CENTER, 2)
-
-		btn = ActionButton(self, self.actions[pdids.ID_UNGROUP])
-		self.add(btn, 0, LEFT | CENTER, 2)
-
-		btn = ActionButton(self, self.actions[pdids.ID_UNGROUPALL])
-		self.add(btn, 0, LEFT | CENTER, 2)
-
-class ToCurvePlugin(CtxPlugin):
+class ToCurvePlugin(ActionCtxPlugin):
 
 	name = 'ToCurvePlugin'
-
-	def __init__(self, app, parent):
-		CtxPlugin.__init__(self, app, parent)
-
-	def build(self):
-		btn = ActionButton(self, self.actions[pdids.ID_TO_CURVES])
-		self.add(btn, 0, LEFT | CENTER, 2)
+	ids = [pdids.ID_TO_CURVES, ]

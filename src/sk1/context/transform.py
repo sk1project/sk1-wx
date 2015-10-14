@@ -20,7 +20,7 @@ from wal import LEFT, CENTER
 from sk1 import _
 from sk1.resources import icons, get_bmp, pdids
 from sk1.pwidgets import AngleSpin, ActionButton
-from generic import CtxPlugin
+from generic import CtxPlugin, ActionCtxPlugin
 
 class RotatePlugin(CtxPlugin):
 
@@ -48,20 +48,10 @@ class RotatePlugin(CtxPlugin):
 		val = self.angle_spin.get_angle_value()
 		if val <> 0.0: self.app.current_doc.api.rotate_selected(val)
 
-class MirrorPlugin(CtxPlugin):
+class MirrorPlugin(ActionCtxPlugin):
 
 	name = 'MirrorPlugin'
-
-	def __init__(self, app, parent):
-		CtxPlugin.__init__(self, app, parent)
-
-	def build(self):
-
-		mh = ActionButton(self, self.actions[pdids.ID_MIRROR_H])
-		self.add(mh, 0, LEFT | CENTER)
-
-		mv = ActionButton(self, self.actions[pdids.ID_MIRROR_V])
-		self.add(mv, 0, LEFT | CENTER)
+	ids = [pdids.ID_MIRROR_H, pdids.ID_MIRROR_V]
 
 
 

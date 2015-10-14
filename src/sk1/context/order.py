@@ -15,28 +15,12 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from wal import LEFT, CENTER
-
 from sk1.resources import pdids
-from sk1.pwidgets import ActionButton
-from generic import CtxPlugin
+from generic import ActionCtxPlugin
 
-class OrderPlugin(CtxPlugin):
+class OrderPlugin(ActionCtxPlugin):
 
 	name = 'OrderPlugin'
+	ids = [pdids.ID_LOWER_TO_BOTTOM, pdids.ID_LOWER,
+		pdids.ID_RAISE, pdids.ID_RAISE_TO_TOP]
 
-	def __init__(self, app, parent):
-		CtxPlugin.__init__(self, app, parent)
-
-	def build(self):
-		btn = ActionButton(self, self.actions[pdids.ID_LOWER_TO_BOTTOM])
-		self.add(btn, 0, LEFT | CENTER, 2)
-
-		btn = ActionButton(self, self.actions[pdids.ID_LOWER])
-		self.add(btn, 0, LEFT | CENTER, 2)
-
-		btn = ActionButton(self, self.actions[pdids.ID_RAISE])
-		self.add(btn, 0, LEFT | CENTER, 2)
-
-		btn = ActionButton(self, self.actions[pdids.ID_RAISE_TO_TOP])
-		self.add(btn, 0, LEFT | CENTER, 2)
