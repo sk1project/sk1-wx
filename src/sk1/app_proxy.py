@@ -449,6 +449,11 @@ class AppProxy:
 		if canvas.mode == modes.BEZIER_EDITOR_MODE:
 			canvas.controller.reverse_all_paths()
 
+	def select_subpath_nodes(self):pass
+	def delete_subpaths(self):pass
+	def reverse_subpaths(self):pass
+	def extract_subpaths(self):pass
+
 	def add_node(self):
 		canvas = self.app.current_doc.canvas
 		if canvas.mode == modes.BEZIER_EDITOR_MODE:
