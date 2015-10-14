@@ -15,73 +15,35 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from wal import LEFT, CENTER
+from wal import LEFT, CENTER, VLine, ALL, EXPAND
 
 from sk1.resources import pdids
 from sk1.pwidgets import ActionButton
 from generic import CtxPlugin
 
-class BezierAddDeletePlugin(CtxPlugin):
+BEZIER_ACTIONS = [
+pdids.ID_BEZIER_SEL_ALL_NODES, pdids.ID_BEZIER_REVERSE_ALL_PATHS, None,
+pdids.ID_BEZIER_ADD_NODE, pdids.ID_BEZIER_DELETE_NODE, None,
+pdids.ID_BEZIER_ADD_SEG, pdids.ID_BEZIER_DELETE_SEG,
+pdids.ID_BEZIER_JOIN_NODE, pdids.ID_BEZIER_SPLIT_NODE, None,
+pdids.ID_BEZIER_SEG_TO_LINE, pdids.ID_BEZIER_SEG_TO_CURVE, None,
+pdids.ID_BEZIER_NODE_CUSP, pdids.ID_BEZIER_NODE_SMOOTH,
+pdids.ID_BEZIER_NODE_SYMMETRICAL, ]
 
-	name = 'BezierAddDeletePlugin'
+class BezierPlugin(CtxPlugin):
 
-	def __init__(self, app, parent):
-		CtxPlugin.__init__(self, app, parent)
-
-	def build(self):
-		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_ADD_NODE])
-		self.add(btn, 0, LEFT | CENTER, 2)
-
-		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_DELETE_NODE])
-		self.add(btn, 0, LEFT | CENTER, 2)
-
-class BezierJoinSplitPlugin(CtxPlugin):
-
-	name = 'BezierJoinSplitPlugin'
+	name = 'BezierPlugin'
 
 	def __init__(self, app, parent):
 		CtxPlugin.__init__(self, app, parent)
 
 	def build(self):
-		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_ADD_SEG])
-		self.add(btn, 0, LEFT | CENTER, 2)
+		for item in BEZIER_ACTIONS:
+			if item is None:
+				self.add(VLine(self), 0, ALL | EXPAND, 2)
+			else:
+				btn = ActionButton(self, self.actions[item])
+				self.add(btn, 0, LEFT | CENTER, 2)
 
-		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_DELETE_SEG])
-		self.add(btn, 0, LEFT | CENTER, 2)
 
-		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_JOIN_NODE])
-		self.add(btn, 0, LEFT | CENTER, 2)
 
-		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_SPLIT_NODE])
-		self.add(btn, 0, LEFT | CENTER, 2)
-
-class BezierLineCurvePlugin(CtxPlugin):
-
-	name = 'BezierLineCurvePlugin'
-
-	def __init__(self, app, parent):
-		CtxPlugin.__init__(self, app, parent)
-
-	def build(self):
-		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_SEG_TO_LINE])
-		self.add(btn, 0, LEFT | CENTER, 2)
-
-		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_SEG_TO_CURVE])
-		self.add(btn, 0, LEFT | CENTER, 2)
-
-class BezierConnectionTypePlugin(CtxPlugin):
-
-	name = 'BezierConnectionTypePlugin'
-
-	def __init__(self, app, parent):
-		CtxPlugin.__init__(self, app, parent)
-
-	def build(self):
-		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_NODE_CUSP])
-		self.add(btn, 0, LEFT | CENTER, 2)
-
-		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_NODE_SMOOTH])
-		self.add(btn, 0, LEFT | CENTER, 2)
-
-		btn = ActionButton(self, self.actions[pdids.ID_BEZIER_NODE_SYMMETRICAL])
-		self.add(btn, 0, LEFT | CENTER, 2)
