@@ -15,10 +15,11 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from wal import ALL, EXPAND
-from wal import HPanel, VLine
+import wal
 
-class CtxPlugin(HPanel):
+from sk1.pwidgets import ActionButton
+
+class CtxPlugin(wal.HPanel):
 
 	app = None
 	insp = None
@@ -32,11 +33,25 @@ class CtxPlugin(HPanel):
 		self.parent = parent
 		self.insp = self.app.insp
 		self.actions = self.app.actions
-		HPanel.__init__(self, parent)
+		wal.HPanel.__init__(self, parent)
 		self.build()
-		self.add(VLine(self), 0, ALL | EXPAND, 2)
+		self.add(wal.VLine(self), 0, wal.ALL | wal.EXPAND, 2)
 		self.hide()
 
+class ActionCtxPlugin(CtxPlugin):
+
+	ids = []
+
+	def __init__(self, app, parent):
+		CtxPlugin.__init__(self, app, parent)
+
+	def build(self):
+		for item in self.ids:
+			if item is None:
+				self.add(wal.VLine(self), 0, wal.ALL | wal.EXPAND, 2)
+			else:
+				btn = ActionButton(self, self.actions[item])
+				self.add(btn, 0, wal.LEFT | wal.CENTER, 2)
 
 
 
