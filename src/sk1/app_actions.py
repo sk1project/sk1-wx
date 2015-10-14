@@ -146,6 +146,10 @@ def create_actions(app):
 #------ Paths menu -------
 (pdids.ID_BEZIER_SEL_ALL_NODES, proxy.select_all_nodes, sel_chnls, insp.can_be_selected_all_nodes),
 (pdids.ID_BEZIER_REVERSE_ALL_PATHS, proxy.reverse_all_paths, sel_chnls, insp.can_be_reversed_paths),
+(pdids.ID_BEZIER_SEL_SUBPATH_NODES, proxy.select_subpath_nodes, sel_chnls, insp.is_subpath_selected),
+(pdids.ID_BEZIER_DEL_SUBPATH, proxy.delete_subpaths, sel_chnls, insp.is_subpath_selected),
+(pdids.ID_BEZIER_REVERSE_SUBPATH, proxy.reverse_subpaths, sel_chnls, insp.is_subpath_selected),
+(pdids.ID_BEZIER_EXTRACT_SUBPATH, proxy.extract_subpaths, sel_chnls, insp.is_subpath_selected),
 (pdids.ID_BEZIER_ADD_NODE, proxy.add_node, sel_chnls, insp.can_be_added_node),
 (pdids.ID_BEZIER_DELETE_NODE, proxy.delete_node, sel_chnls, insp.can_be_deleted_node),
 (pdids.ID_BEZIER_ADD_SEG, proxy.add_seg, sel_chnls, insp.can_be_added_seg),
