@@ -439,6 +439,16 @@ class AppProxy:
 
 	def unpack_container(self):self.app.current_doc.api.unpack_container()
 
+	def select_all_nodes(self):
+		canvas = self.app.current_doc.canvas
+		if canvas.mode == modes.BEZIER_EDITOR_MODE:
+			canvas.controller.select_all_nodes()
+
+	def reverse_all_paths(self):
+		canvas = self.app.current_doc.canvas
+		if canvas.mode == modes.BEZIER_EDITOR_MODE:
+			canvas.controller.reverse_all_paths()
+
 	def add_node(self):
 		canvas = self.app.current_doc.canvas
 		if canvas.mode == modes.BEZIER_EDITOR_MODE:
