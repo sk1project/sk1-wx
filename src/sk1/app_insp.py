@@ -99,6 +99,22 @@ class AppInspector:
 			return self.is_selected_node(doc)
 		return self.is_selection(doc)
 
+	def can_be_selected_all_nodes(self, doc=None):
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		if doc.canvas.mode == modes.BEZIER_EDITOR_MODE:
+			sel_num = len(doc.canvas.controller.selected_nodes)
+			all_num = doc.canvas.controller.count_all_nodes()
+			return  sel_num < all_num
+		return False
+
+	def can_be_reversed_paths(self, doc=None):
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		if doc.canvas.mode == modes.BEZIER_EDITOR_MODE:
+			return True
+		return False
+
 	def can_be_deleted_node(self, doc=None):
 		if doc is None: doc = self.app.current_doc
 		if doc is None: return False
