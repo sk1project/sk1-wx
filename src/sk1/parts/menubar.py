@@ -93,6 +93,19 @@ class AppMenuBar(wx.MenuBar):
 		entry = (_("Effe&cts"), sub)
 		self.entries.append(entry)
 
+		#---Paths menu
+		sub = (pdids.ID_BEZIER_SEL_ALL_NODES, pdids.ID_BEZIER_REVERSE_ALL_PATHS,
+			None, pdids.ID_BEZIER_SEL_SUBPATH_NODES, pdids.ID_BEZIER_DEL_SUBPATH,
+			pdids.ID_BEZIER_REVERSE_SUBPATH, pdids.ID_BEZIER_EXTRACT_SUBPATH,
+			None, pdids.ID_BEZIER_ADD_NODE, pdids.ID_BEZIER_DELETE_NODE,
+			None, pdids.ID_BEZIER_ADD_SEG, pdids.ID_BEZIER_DELETE_SEG,
+			pdids.ID_BEZIER_JOIN_NODE, pdids.ID_BEZIER_SPLIT_NODE,
+			None, pdids.ID_BEZIER_SEG_TO_LINE, pdids.ID_BEZIER_SEG_TO_CURVE,
+			None, pdids.ID_BEZIER_NODE_CUSP, pdids.ID_BEZIER_NODE_SMOOTH,
+			pdids.ID_BEZIER_NODE_SYMMETRICAL,)
+		entry = (_("&Paths"), sub)
+		self.entries.append(entry)
+
 		#---Bitmaps menu
 		sub = (pdids.ID_CONV_TO_CMYK, pdids.ID_CONV_TO_RGB,#pdids.ID_CONV_TO_LAB,
 			pdids.ID_CONV_TO_GRAY, pdids.ID_CONV_TO_BW, None,
