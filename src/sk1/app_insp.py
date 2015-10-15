@@ -119,7 +119,7 @@ class AppInspector:
 		if doc is None: doc = self.app.current_doc
 		if doc is None: return False
 		if doc.canvas.mode == modes.BEZIER_EDITOR_MODE:
-			return True
+			return doc.canvas.controller.is_subpath_selected()
 		return False
 
 	def can_be_deleted_node(self, doc=None):
