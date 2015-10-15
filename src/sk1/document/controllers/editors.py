@@ -647,6 +647,57 @@ class BezierEditor(AbstractController):
 		self.set_selected_nodes()
 		self.apply_changes()
 
+	def _get_selected_subpaths(self):
+		ret = []
+		if self.new_node:
+			ret.append(self.new_node.before.path)
+		elif self.selected_nodes:
+			for item in self.selected_nodes:
+				if not item.path in ret:
+					ret.append(item.path)
+		return ret
+
+	def is_subpath_selected(self):
+		if len(self.paths) < 2: return False
+		if self.new_node: return True
+		elif self.selected_nodes:
+			return len(self._get_selected_subpaths()) < len(self.paths)
+		return False
+
+	def select_all_nodes_in_subpaths(self):
+		subpaths = self._get_selected_subpaths()
+		if subpaths:
+			points = []
+			for item in subpaths:
+				points += item.get_all_points()
+			self.set_selected_nodes(points)
+
+	def delete_selected_subpaths(self):
+		subpaths = self._get_selected_subpaths()
+		if subpaths:
+			for item in subpaths:
+				self.paths.remove(item)
+			self.set_selected_nodes()
+			self.apply_changes()
+
+	def reverse_selected_subpaths(self):
+		subpaths = self._get_selected_subpaths()
+		if subpaths:
+			for item in subpaths:
+				item.reverse()
+			self.set_selected_nodes()
+			self.apply_changes()
+
+	def extract_selected_subpaths(self):
+		subpaths = self._get_selected_subpaths()
+		if subpaths:
+			indexes = []
+			for item in subpaths:
+				indexes.append(self.paths.index(item))
+			if indexes:
+				self.target = self.api.extract_subpaths(self.target, indexes)[1]
+				self.canvas.restore_mode()
+
 class BezierPath:
 
 	canvas = None
