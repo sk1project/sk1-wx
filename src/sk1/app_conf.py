@@ -230,7 +230,7 @@ class AppConfig(UCConfig):
 	curve_stroke_color = (0.0, 0.0, 0.0)
 	curve_stroke_width = 0.7
 	curve_trace_color = (1.0, 0.0, 0.0)
-	curve_point_sensitivity_size = 9.0
+	curve_point_sensitivity_size = 12.0
 
 	curve_start_point_size = 5.0
 	curve_start_point_fill = (1.0, 1.0, 1.0)
