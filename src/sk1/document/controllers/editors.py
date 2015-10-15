@@ -35,7 +35,7 @@ class EditorChooser(AbstractController):
 	def start_(self):
 		sel_objs = self.selection.objs
 		if len(sel_objs) == 1 and sel_objs[0].cid == sk2_model.CURVE:
-			self.canvas.set_temp_mode(modes.BEZIER_EDITOR_MODE)
+			self.canvas.set_mode(modes.BEZIER_EDITOR_MODE)
 		else:
 			self.selection.clear()
 
@@ -193,23 +193,29 @@ class BezierEditor(AbstractController):
 			self.canvas.selection_redraw()
 		elif self.selected_obj:
 			self.target = self.selected_obj
-			self.canvas.restore_mode()
+			self.canvas.set_mode(modes.SHAPER_MODE)
 		else:
 			if self.start == self.end:
 				self.set_selected_nodes()
 		self.selected_obj = None
 		self.cpoint = None
+		self.start = []
 
 	def mouse_move(self, event):
-		if not self.start: return
-		if self.cpoint:
-			self.move_control_point(event.get_point())
-		elif not self.move_flag:
-			self.end = event.get_point()
-			self.draw = True
-		elif self.move_flag:
-			self.move_selected_points(self.moved_node, event.get_point())
-			self.move_flag = True
+		if not self.start:
+			if self.snap.is_over_guide(event.get_point())[0]:
+				if not self.select_point_by_click(event.get_point()):
+					self.canvas.set_temp_mode(modes.GUIDE_MODE)
+		else:
+			if self.cpoint:
+				self.move_control_point(event.get_point())
+			elif not self.move_flag:
+				self.end = event.get_point()
+				self.draw = True
+			elif self.move_flag:
+				self.move_selected_points(self.moved_node, event.get_point())
+				self.move_flag = True
+
 
 	def mouse_double_click(self, event):
 		if self.new_node:
@@ -357,7 +363,7 @@ class BezierEditor(AbstractController):
 			index = parent.childs.index(self.target)
 			self.api.delete_objects([[self.target, parent, index ], ])
 			self.target = None
-			self.canvas.restore_mode()
+			self.canvas.set_mode(modes.SHAPER_MODE)
 		else:
 			self.apply_changes()
 
@@ -696,7 +702,7 @@ class BezierEditor(AbstractController):
 				indexes.append(self.paths.index(item))
 			if indexes:
 				self.target = self.api.extract_subpaths(self.target, indexes)[1]
-				self.canvas.restore_mode()
+				self.canvas.set_mode(modes.SHAPER_MODE)
 
 class BezierPath:
 
