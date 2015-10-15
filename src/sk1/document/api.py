@@ -1099,6 +1099,56 @@ class PresenterAPI(AbstractAPI):
 		self.add_undo(transaction)
 		self.selection.update()
 
+	def extract_subpaths(self, target, indexes):
+		before = self._get_layers_snapshot()
+
+		parent = target.parent
+		parent_index = parent.childs.index(target)
+		config = target.config
+
+		paths = libgeom.get_transformed_path(target)
+
+		p0 = []
+		p1 = []
+
+		target.parent.childs.remove(target)
+
+		for index in range(len(paths)):
+			if index in indexes:
+				p1.append(paths[index])
+			else:
+				p0.append(paths[index])
+
+		curve0 = curve1 = None
+
+		if p1:
+			curve1 = model.Curve(config, parent)
+			curve1.paths = p1
+			curve1.style = deepcopy(target.style)
+			if target.fill_trafo: curve1.fill_trafo = [] + target.fill_trafo
+			if target.stroke_trafo: curve1.stroke_trafo = [] + target.stroke_trafo
+			parent.childs.insert(parent_index, curve1)
+			curve1.update()
+		if p0:
+			curve0 = model.Curve(config, parent)
+			curve0.paths = p0
+			curve0.style = deepcopy(target.style)
+			if target.fill_trafo: curve0.fill_trafo = [] + target.fill_trafo
+			if target.stroke_trafo: curve0.stroke_trafo = [] + target.stroke_trafo
+			parent.childs.insert(parent_index, curve0)
+			curve0.update()
+
+		after = self._get_layers_snapshot()
+		transaction = [
+			[[self._set_layers_snapshot, before],
+			[self._set_selection, []]],
+			[[self._set_layers_snapshot, after],
+			[self._set_selection, []]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+		return curve0, curve1
+
 	def set_active_page(self, index):
 		if not self.undo:
 			self.presenter.set_active_page(index)
