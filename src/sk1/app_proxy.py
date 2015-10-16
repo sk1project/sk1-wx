@@ -384,10 +384,11 @@ class AppProxy:
 	def create_guide_border(self):
 		api = self.app.current_doc.api
 		w, h = self.app.current_doc.get_page_size()
-		api.create_guides([[-w / 2.0, uc2const.VERTICAL],
-						[ -h / 2.0, uc2const.HORIZONTAL],
-						[ w / 2.0, uc2const.VERTICAL],
-						[h / 2.0, uc2const.HORIZONTAL]])
+		shift = config.page_border
+		api.create_guides([[shift - w / 2.0, uc2const.VERTICAL],
+						[shift - h / 2.0, uc2const.HORIZONTAL],
+						[w / 2.0 - shift, uc2const.VERTICAL],
+						[h / 2.0 - shift, uc2const.HORIZONTAL]])
 
 	def create_guides_at_center(self):
 		self.app.current_doc.api.create_guides([[0, uc2const.VERTICAL],
