@@ -29,6 +29,7 @@ class MoveController(AbstractController):
 	end = None
 	trafo = []
 	mode = modes.MOVE_MODE
+	old_selection = []
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -44,6 +45,7 @@ class MoveController(AbstractController):
 		dpoint = self.canvas.win_to_doc(self.start)
 		sel = self.selection.pick_at_point(dpoint)
 		if sel and sel[0] not in self.selection.objs:
+			self.old_selection = [] + self.selection.objs
 			self.selection.clear()
 			self.canvas.renderer.paint_selection()
 			self.canvas.selection_repaint = False
@@ -109,8 +111,9 @@ class MoveController(AbstractController):
 				self.trafo = self._snap(bbox, self.trafo)
 				self.api.transform_selected(self.trafo, self.copy)
 			elif event.is_shift():
-				self.canvas.select_at_point(self.start, True)
-				if not self.selection.is_point_over(self.start):
+				self.presenter.selection.set(self.old_selection)
+				self.canvas.select_at_point(event.get_point(), True)
+				if not self.selection.is_point_over(event.get_point()):
 					self.canvas.restore_mode()
 			else:
 				sel = self.presenter.selection.objs
@@ -119,6 +122,7 @@ class MoveController(AbstractController):
 				self.canvas.restore_cursor()
 			self.moved = False
 			self.copy = False
+			self.old_selection = []
 			self.start = []
 			self.end = []
 
