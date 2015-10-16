@@ -179,6 +179,7 @@ class AppConfig(UCConfig):
 	default_unit = uc2const.UNIT_MM
 
 	obj_jump = 1.0 * uc2const.mm_to_pt
+	page_border = 0.0
 
 	sel_frame_visible = 1
 	sel_frame_offset = 10.0
