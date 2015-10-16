@@ -23,7 +23,7 @@ from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2 import uc2const
 from uc2.utils.fs import change_file_extension
 
-from sk1 import _, config, events
+from sk1 import _, events, modes
 from sk1.document.eventloop import EventLoop
 from sk1.document.selection import Selection
 from sk1.document.api import PresenterAPI
@@ -323,3 +323,12 @@ class PD_Presenter:
 			page = self.active_page
 		w, h = page.page_format[1]
 		return w, h
+
+	def get_selected_objs(self):
+		ret = []
+		if self.selection.objs:
+			ret += self.selection.objs
+		elif self.canvas.mode in modes.EDIT_MODES:
+			if self.canvas.controller.target:
+				ret.append(self.canvas.controller.target)
+		return ret
