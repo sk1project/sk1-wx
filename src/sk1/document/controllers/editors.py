@@ -202,11 +202,7 @@ class BezierEditor(AbstractController):
 		self.start = []
 
 	def mouse_move(self, event):
-		if not self.start:
-			if self.snap.is_over_guide(event.get_point())[0]:
-				if not self.select_point_by_click(event.get_point()):
-					self.canvas.set_temp_mode(modes.GUIDE_MODE)
-		else:
+		if self.start:
 			if self.cpoint:
 				self.move_control_point(event.get_point())
 			elif not self.move_flag:
