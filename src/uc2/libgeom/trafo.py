@@ -15,6 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import cwrap
 
 def _apply_trafo_to_point(point, trafo):
 	x0, y0 = point
@@ -56,3 +57,9 @@ def apply_trafo_to_paths(paths, trafo):
 def apply_trafo_to_bbox(bbox, trafo):
 	p0, p1 = apply_trafo_to_points([bbox[:2], bbox[2:]], trafo)
 	return p0 + p1
+
+def get_transformed_path(obj):
+	if obj.is_curve():
+		return apply_trafo_to_paths(obj.paths, obj.trafo)
+	else:
+		return cwrap._get_transformed_path(obj)

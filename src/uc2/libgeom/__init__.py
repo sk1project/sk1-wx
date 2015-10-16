@@ -15,15 +15,12 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from trafo import apply_trafo_to_path, apply_trafo_to_paths, \
-apply_trafo_to_point, apply_trafo_to_points
-
+from trafo import *
 from points import *
 from bbox import *
 from cwrap import *
 from flattering import get_flattened_path, flat_paths, flat_path
-from objs import get_circle_path, get_polygon_path, get_rect_path, \
-get_text_path
+from objs import *
 from bezier_ops import *
 
 
