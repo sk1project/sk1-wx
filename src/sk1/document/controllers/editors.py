@@ -914,7 +914,8 @@ class BezierPoint:
 
 	def is_cusp(self):
 		if self.is_curve():
-			return self.point[3] == sk2_const.NODE_CUSP
+			return self.point[3] in [sk2_const.NODE_CUSP,
+									sk2_const.NODE_SMOOTH_OPP]
 		else:
 			after = self.get_point_after()
 			if after and after.is_curve() and not after.is_opp_smooth():
