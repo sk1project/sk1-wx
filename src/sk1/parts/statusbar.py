@@ -18,7 +18,8 @@
 import wal
 
 from uc2.uc2const import IMAGE_NAMES, IMAGE_CMYK, IMAGE_RGB
-from sk1 import _, config, events
+
+from sk1 import _, config, events, modes
 from sk1.resources import pdids, get_tooltip_text
 from sk1.pwidgets import SB_FillSwatch, SB_StrokeSwatch, ActionImageSwitch
 from sk1.resources import get_bmp, icons
@@ -148,8 +149,8 @@ class ColorMonitor(wal.HPanel):
 		events.connect(events.NO_DOCS, self.update)
 
 	def update(self, *args):
-		if self.app.insp.is_selection():
-			sel = self.app.current_doc.selection.objs
+		sel = self.app.current_doc.get_selected_objs()
+		if sel:
 			if len(sel) == 1 and self.app.insp.is_obj_primitive(sel[0]):
 				self.fill_swatch.update_from_obj(sel[0])
 				self.stroke_swatch.update_from_obj(sel[0])
