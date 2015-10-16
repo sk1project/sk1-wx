@@ -158,6 +158,7 @@ class PolyLineCreator(AbstractCreator):
 			self.repaint_draw()
 		else:
 			self.init_timer()
+			self.timer.start()
 		return True
 
 	def init_timer(self):
