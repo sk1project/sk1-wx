@@ -53,7 +53,7 @@ class AppProxy:
 				style = self._get_style(doc.selection.objs)
 				if not style is None:
 					fill_style = style[0]
-			elif doc.canvas.mode == modes.BEZIER_EDITOR_MODE and \
+			elif doc.canvas.mode in modes.EDIT_MODES and \
 			doc.canvas.controller.target:
 				objs.append(doc.canvas.controller.target)
 				style = self._get_style(objs)
@@ -104,7 +104,7 @@ class AppProxy:
 				style = self._get_style(doc.selection.objs)
 				if not style is None:
 					stroke_style = style[1]
-			elif doc.canvas.mode == modes.BEZIER_EDITOR_MODE and \
+			elif doc.canvas.mode in modes.EDIT_MODES and \
 			doc.canvas.controller.target:
 				objs.append(doc.canvas.controller.target)
 				style = self._get_style(objs)
@@ -537,7 +537,7 @@ class AppProxy:
 	def fill_selected(self, color):
 		doc = self.app.current_doc
 		canvas = doc.canvas
-		if canvas.mode == modes.BEZIER_EDITOR_MODE and canvas.controller.target:
+		if canvas.mode in modes.EDIT_MODES and canvas.controller.target:
 			doc.api.fill_selected(color, [canvas.controller.target, ])
 		elif not doc.selection.objs:
 			txt = _('Do you wish to change default fill color for this document?')
@@ -559,7 +559,7 @@ class AppProxy:
 	def stroke_selected(self, color):
 		doc = self.app.current_doc
 		canvas = doc.canvas
-		if canvas.mode == modes.BEZIER_EDITOR_MODE and canvas.controller.target:
+		if canvas.mode in modes.EDIT_MODES and canvas.controller.target:
 			doc.api.stroke_selected(color, [canvas.controller.target, ])
 		elif not doc.selection.objs:
 			txt = _('Do you wish to change default stroke color for this document?')
