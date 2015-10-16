@@ -230,6 +230,5 @@ class PageBorderPlugin(CtxPlugin):
 
 	def user_changes(self, *args):
 		val = self.page_border.get_point_value()
-		print val
 		if not config.page_border == val:
 			config.page_border = val
