@@ -384,6 +384,8 @@ class PrimitiveObject(SelectableObject):
 			del self.cache_cpath
 		SelectableObject.destroy(self)
 
+	def is_curve(self): return False
+
 	def to_curve(self):
 		curve = Curve(self.config)
 		curve.paths = deepcopy(self.cache_paths)
@@ -537,6 +539,7 @@ class Curve(PrimitiveObject):
 	def get_initial_paths(self):
 		return self.paths
 
+	def is_curve(self): return True
 	def to_curve(self): return self
 
 class Text(PrimitiveObject):
