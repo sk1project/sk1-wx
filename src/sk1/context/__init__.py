@@ -44,4 +44,4 @@ POLYGON = ['ResizePlugin', 'PolygonPlugin', 'RotatePlugin', 'MirrorPlugin', 'ToC
 CURVE = ['ResizePlugin', 'CombinePlugin', 'RotatePlugin', 'MirrorPlugin', 'OrderPlugin' ]
 TEXT = ['ResizePlugin', 'RotatePlugin', 'MirrorPlugin', 'ToCurvePlugin', 'OrderPlugin' ]
 PIXMAP = ['ResizePlugin', 'ImageTypePlugin', 'RotatePlugin', 'MirrorPlugin', 'OrderPlugin' ]
-BEZIER = ['BezierPlugin']
+BEZIER = ['BezierPlugin', 'PageBorderPlugin']
