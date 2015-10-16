@@ -17,10 +17,10 @@
 
 from uc2.uc2const import PAGE_FORMATS, PAGE_FORMAT_NAMES, PORTRAIT, LANDSCAPE
 
-from wal import const
+from wal import VLine, ALL, EXPAND
 from wal import Combolist, LEFT, CENTER, ImageToggleButton
 
-from sk1 import _, events
+from sk1 import _, events, config
 from sk1.resources import icons, get_bmp, pdids
 from sk1.pwidgets import UnitSpin, ActionButton
 from generic import CtxPlugin
@@ -208,11 +208,28 @@ class PageBorderPlugin(CtxPlugin):
 		btn = ActionButton(self, self.actions[pdids.ID_PAGE_FRAME])
 		self.add(btn, 0, LEFT | CENTER, 2)
 
+		#=====
+		self.add(VLine(self), 0, ALL | EXPAND, 2)
+
+		self.page_border = UnitSpin(self.app, self, onchange=self.user_changes,
+								can_be_negative=True)
+		self.page_border.set_point_value(config.page_border)
+		self.add(self.page_border, 0, LEFT | CENTER, 2)
+
 		btn = ActionButton(self, self.actions[pdids.ID_PAGE_GUIDE_FRAME])
 		self.add(btn, 0, LEFT | CENTER, 2)
+
+		self.add(VLine(self), 0, ALL | EXPAND, 2)
+		#=====
 
 		btn = ActionButton(self, self.actions[pdids.ID_GUIDES_AT_CENTER])
 		self.add(btn, 0, LEFT | CENTER, 2)
 
 		btn = ActionButton(self, self.actions[pdids.ID_REMOVE_ALL_GUIDES])
 		self.add(btn, 0, LEFT | CENTER, 2)
+
+	def user_changes(self, *args):
+		val = self.page_border.get_point_value()
+		print val
+		if not config.page_border == val:
+			config.page_border = val
