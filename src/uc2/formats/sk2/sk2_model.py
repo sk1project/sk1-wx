@@ -385,6 +385,7 @@ class PrimitiveObject(SelectableObject):
 		SelectableObject.destroy(self)
 
 	def is_curve(self): return False
+	def is_rect(self): return False
 
 	def to_curve(self):
 		curve = Curve(self.config)
@@ -446,6 +447,8 @@ class Rectangle(PrimitiveObject):
 		self.trafo = trafo
 		self.corners = corners
 		self.style = style
+
+	def is_rect(self): return True
 
 	def get_initial_paths(self):
 		return libgeom.get_rect_path(self.start, self.width,
