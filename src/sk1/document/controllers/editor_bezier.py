@@ -52,6 +52,8 @@ class BezierEditor(AbstractController):
 		self.update_paths()
 		self.api.set_mode()
 		self.selection.clear()
+		msg = _('No selected nodes')
+		events.emit(events.APP_STATUS, msg)
 
 	def update_paths(self):
 		self.set_selected_nodes()
