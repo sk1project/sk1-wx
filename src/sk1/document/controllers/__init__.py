@@ -26,3 +26,4 @@ from paint_ctrl import PolyLineCreator, PathsCreator
 from grad_ctrl import GradientChooser, GradientCreator, GradientEditor
 from editor_chooser import EditorChooser
 from editor_bezier import BezierEditor
+from editor_rect import RectEditor
