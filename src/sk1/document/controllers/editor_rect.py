@@ -29,6 +29,40 @@ class RectEditor(AbstractController):
 
 	mode = modes.BEZIER_EDITOR_MODE
 	target = None
+	points = []
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
+
+	def start_(self):
+		self.points = []
+		self.snap = self.presenter.snap
+		self.target = self.selection.objs[0]
+		self.update_points()
+		self.api.set_mode()
+		self.selection.clear()
+		msg = _('Rectangle in editing')
+		events.emit(events.APP_STATUS, msg)
+
+	def update_points(self):pass
+
+	def stop_(self):
+		self.selection.set([self.target, ])
+		self.target = None
+#		for item in self.points: item.destroy()
+
+	def escape_pressed(self):
+		self.canvas.set_mode()
+
+	#----- REPAINT
+
+	def repaint(self):
+		x0, y0, x1, y1 = self.target.cache_bbox
+		p0 = self.canvas.point_doc_to_win([x0, y0])
+		p1 = self.canvas.point_doc_to_win([x1, y1])
+		self.canvas.renderer.draw_frame(p0, p1)
+
+	#----- MOUSE CONTROLLING
+	def mouse_down(self, event):pass
+	def mouse_up(self, event):pass
+	def mouse_move(self, event):pass
