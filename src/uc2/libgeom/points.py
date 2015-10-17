@@ -33,8 +33,10 @@ def mult_point(p, k):
 def normalize_point(p):
 	return [p[0] / abs_point(p), p[1] / abs_point(p)]
 
-def midpoint(p0, p1):
-	return [(p1[0] + p0[0]) / 2.0, (p1[1] + p0[1]) / 2.0]
+def midpoint(p0, p1, coef=0.5):
+	x = (p1[0] - p0[0]) * coef + p0[0]
+	y = (p1[1] - p0[1]) * coef + p0[1]
+	return [x, y]
 
 def contra_point(p0, p1, p3=None):
 	if not p3:
