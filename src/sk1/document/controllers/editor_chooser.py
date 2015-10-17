@@ -33,6 +33,8 @@ class EditorChooser(AbstractController):
 		sel_objs = self.selection.objs
 		if len(sel_objs) == 1 and sel_objs[0].cid == sk2_model.CURVE:
 			self.canvas.set_mode(modes.BEZIER_EDITOR_MODE)
+		elif len(sel_objs) == 1 and sel_objs[0].cid == sk2_model.RECTANGLE:
+			self.canvas.set_mode(modes.RECT_EDITOR_MODE)
 		else:
 			self.selection.clear()
 
