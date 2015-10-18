@@ -391,6 +391,8 @@ class PrimitiveObject(SelectableObject):
 		curve = Curve(self.config)
 		curve.paths = deepcopy(self.cache_paths)
 		curve.trafo = [] + self.trafo
+		curve.fill_trafo = [] + self.fill_trafo
+		curve.stroke_trafo = []	 + self.stroke_trafo
 		curve.style = deepcopy(self.style)
 		curve.update()
 		return curve
@@ -460,6 +462,8 @@ class Rectangle(PrimitiveObject):
 		c2 = [self.start[0] + self.width, self.start[1] + self.height]
 		c3 = [self.start[0] + self.width, self.start[1]]
 		return [c0, c1, c2, c3]
+
+	def get_stops(self):pass
 
 
 class Circle(PrimitiveObject):
