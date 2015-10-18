@@ -463,7 +463,32 @@ class Rectangle(PrimitiveObject):
 		c3 = [self.start[0] + self.width, self.start[1]]
 		return [c0, c1, c2, c3]
 
-	def get_stops(self):pass
+	def get_stops(self):
+		if self.width == self.height:
+			p0, p1, p2, p3 = self.get_midpoints()
+			return [[p0, ], [p1, ], [p2, ], [p3, ]]
+		elif self.width > self.height:
+			dx = self.width / 2.0 - self.height / 2.0
+			p0, p1, p2, p3 = self.get_midpoints()
+			p10 = [p1[0] - dx, p1[1]]
+			p11 = [p1[0] + dx, p1[1]]
+			p30 = [p3[0] + dx, p3[1]]
+			p31 = [p3[0] - dx, p3[1]]
+			return [[p0, ], [p10, p11], [p2, ], [p30, p31]]
+		else:
+			dy = self.height / 2.0 - self.width / 2.0
+			p0, p1, p2, p3 = self.get_midpoints()
+			p00 = [p0[0], p0[1] - dy]
+			p01 = [p0[0], p0[1] + dy]
+			p20 = [p2[0], p2[1] + dy]
+			p21 = [p2[0], p2[1] - dy]
+			return [[p00, p01 ], [p1, ], [p20, p21], [p3, ]]
+
+	def get_midpoints(self):
+		return[[self.start[0], self.start[1] + self.height / 2.0],
+			[self.start[0] + self.width / 2.0, self.start[1] + self.height],
+			[self.start[0] + self.width, self.start[1] + self.height / 2.0],
+			[self.start[0] + self.width / 2.0, self.start[1]]]
 
 
 class Circle(PrimitiveObject):
