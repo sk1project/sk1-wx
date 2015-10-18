@@ -98,7 +98,6 @@ class DashChoice(wal.BitmapChoice):
 			self.dash_list.append(dash)
 		bitmaps = DASH_BITMAPS + custom_dash
 		self.set_bitmaps(bitmaps)
-		self.set_items(self.dash_list)
 		self.set_active(self.dash_list.index(dash))
 
 CAP_MODES = [sk2_const.CAP_BUTT, sk2_const.CAP_ROUND, sk2_const.CAP_SQUARE]
