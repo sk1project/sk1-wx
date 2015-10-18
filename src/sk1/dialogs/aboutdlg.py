@@ -23,7 +23,7 @@ from sk1.resources import icons, get_bmp
 from sk1.dialogs.aboutdlg_license import LICENSE
 from sk1.dialogs.aboutdlg_credits import CREDITS
 
-class AboutDialog(wal.SimpleDialog):
+class AboutDialog(wal.CloseDialog):
 
 	sizer = None
 	app = None
@@ -31,7 +31,7 @@ class AboutDialog(wal.SimpleDialog):
 	def __init__(self, app, parent, title, size=(500, 350)):
 		self.app = app
 		if wal.is_mac(): size = (550, 400)
-		wal.SimpleDialog.__init__(self, parent, title, size)
+		wal.CloseDialog.__init__(self, parent, title, size)
 
 	def build(self):
 		header = AboutHeader(self.app, self)
