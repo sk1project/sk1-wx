@@ -22,8 +22,8 @@ from uc2 import uc2const
 from uc2 import _, cms
 from uc2 import libgeom
 from uc2.formats.sk2 import sk2_const
-from uc2.sk2_cids import *
 from uc2.formats.generic import TextModelObject
+from sk2_cids import *
 
 GENERIC_FIELDS = ['cid', 'childs', 'parent', 'config']
 
@@ -56,8 +56,13 @@ class DocumentObject(TextModelObject):
 			obj_copy.childs.append(child.copy())
 		return obj_copy
 
+	def is_privitive(self): return False
 	def is_curve(self): return False
 	def is_rect(self): return False
+	def is_pixmap(self): return False
+	def is_circle(self): return False
+	def is_polygon(self): return False
+	def is_text(self): return False
 
 
 class Document(DocumentObject):
@@ -387,6 +392,8 @@ class PrimitiveObject(SelectableObject):
 			del self.cache_cpath
 		SelectableObject.destroy(self)
 
+	def is_privitive(self): return True
+
 	def to_curve(self):
 		curve = Curve(self.config)
 		curve.paths = deepcopy(self.cache_paths)
@@ -516,6 +523,8 @@ class Circle(PrimitiveObject):
 		self.circle_type = circle_type
 		self.style = style
 
+	def is_circle(self): return True
+
 	def get_initial_paths(self):
 		return libgeom.get_circle_path(self.angle1, self.angle2, self.circle_type)
 
@@ -553,6 +562,8 @@ class Polygon(PrimitiveObject):
 		self.trafo = [rect[2], 0.0, 0.0, rect[3], rect[0], rect[1]]
 		self.initial_trafo = [] + self.trafo
 		self.style = style
+
+	def is_polygon(self): return True
 
 	def get_initial_paths(self):
 		return libgeom.get_polygon_path(self.corners_num,
@@ -611,6 +622,9 @@ class Text(PrimitiveObject):
 		self.style = style
 		self.attributes = []
 
+
+	def is_text(self): return True
+
 	def get_initial_paths(self):
 		return libgeom.get_text_path(self.text, self.width, self.style,
 										self.attributes)
@@ -644,6 +658,8 @@ class Pixmap(PrimitiveObject):
 		self.alpha_channel = alpha_channel
 		self.size = size
 		self.trafo = trafo
+
+	def is_pixmap(self): return True
 
 	def get_initial_paths(self):
 		width = float(self.size[0]) * uc2const.px_to_pt
