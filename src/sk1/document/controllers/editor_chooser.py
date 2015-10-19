@@ -15,9 +15,6 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-from uc2.formats.sk2 import sk2_model
-
 from sk1 import modes
 from generic import AbstractController
 
@@ -31,12 +28,16 @@ class EditorChooser(AbstractController):
 
 	def start_(self):
 		sel_objs = self.selection.objs
-		if len(sel_objs) == 1 and sel_objs[0].cid == sk2_model.CURVE:
-			self.canvas.set_mode(modes.BEZIER_EDITOR_MODE)
-		elif len(sel_objs) == 1 and sel_objs[0].cid == sk2_model.RECTANGLE:
-			self.canvas.set_mode(modes.RECT_EDITOR_MODE)
-		else:
+		if not sel_objs:
 			self.selection.clear()
+		else:
+			obj = sel_objs[0]
+			if obj.is_curve():
+				self.canvas.set_mode(modes.BEZIER_EDITOR_MODE)
+			elif obj.is_rect():
+				self.canvas.set_mode(modes.RECT_EDITOR_MODE)
+			else:
+				self.selection.clear()
 
 	def restore(self):
 		self.timer.start()
@@ -57,7 +58,6 @@ class EditorChooser(AbstractController):
 
 	def do_action(self):
 		objs = self.canvas.pick_at_point(self.end)
-		if objs and objs[0].cid > sk2_model.PRIMITIVE_CLASS \
-		and not objs[0].cid == sk2_model.PIXMAP:
+		if objs and objs[0].is_primitive and not objs[0].is_pixmap():
 			self.selection.set([objs[0], ])
 			self.start_()
