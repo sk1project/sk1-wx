@@ -56,6 +56,9 @@ class DocumentObject(TextModelObject):
 			obj_copy.childs.append(child.copy())
 		return obj_copy
 
+	def is_curve(self): return False
+	def is_rect(self): return False
+
 
 class Document(DocumentObject):
 	"""
@@ -383,9 +386,6 @@ class PrimitiveObject(SelectableObject):
 		if not self.cache_cpath is None:
 			del self.cache_cpath
 		SelectableObject.destroy(self)
-
-	def is_curve(self): return False
-	def is_rect(self): return False
 
 	def to_curve(self):
 		curve = Curve(self.config)
