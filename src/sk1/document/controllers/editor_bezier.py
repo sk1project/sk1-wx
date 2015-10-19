@@ -127,8 +127,7 @@ class BezierEditor(AbstractController):
 					self.new_node = None
 					objs = self.canvas.pick_at_point(self.start)
 					if objs and not objs[0] == self.target and \
-					objs[0].cid > sk2_model.PRIMITIVE_CLASS \
-					and not objs[0].cid == sk2_model.PIXMAP:
+					objs[0].is_primitive():
 						self.selected_obj = objs[0]
 					self.timer.start()
 
