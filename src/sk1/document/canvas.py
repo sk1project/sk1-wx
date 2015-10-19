@@ -17,10 +17,11 @@
 
 import wx, cairo, inspect
 
-from uc2 import uc2const, libcairo, sk2_cids, libgeom
+from uc2 import uc2const, libcairo, libgeom
 from uc2.uc2const import mm_to_pt, point_dict
 from uc2.libcairo import normalize_bbox
 from uc2.formats.sk2.sk2_const import DOC_ORIGIN_LL, DOC_ORIGIN_LU
+from uc2.formats.sk2 import sk2_cids
 
 from wal import const
 
