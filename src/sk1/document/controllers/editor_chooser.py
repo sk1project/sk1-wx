@@ -58,6 +58,6 @@ class EditorChooser(AbstractController):
 
 	def do_action(self):
 		objs = self.canvas.pick_at_point(self.end)
-		if objs and objs[0].is_primitive and not objs[0].is_pixmap():
+		if objs and objs[0].is_primitive() and not objs[0].is_pixmap():
 			self.selection.set([objs[0], ])
 			self.start_()
