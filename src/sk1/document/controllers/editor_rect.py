@@ -30,6 +30,7 @@ class RectEditor(AbstractController):
 	mode = modes.BEZIER_EDITOR_MODE
 	target = None
 	points = []
+	midpoints = []
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -45,6 +46,33 @@ class RectEditor(AbstractController):
 
 	def update_points(self):
 		self.points = []
+		self.midpoints = []
+		mps = self.target.get_midpoints()
+		for item in mps:
+			self.midpoints.append(MidPoint(self.canvas, self.target, item))
+		corner_points = self.target.get_corner_points()
+		stops = self.target.get_stops()
+		for index in range(4):
+			if self.target.corners[index]:
+				start = corner_points[index]
+				stop = stops[index - 1]
+				if len(stop) == 2: stop = stop[1]
+				else: stop = stop[0]
+				coef = self.target.corners[index]
+				self.points.append(ControlPoint(self.canvas, self.target,
+											start, stop, coef))
+
+				stop = stops[index][0]
+				self.points.append(ControlPoint(self.canvas, self.target,
+											start, stop, coef))
+			else:
+				start = corner_points[index]
+				stop = stops[index][0]
+				coef = self.target.corners[index]
+				self.points.append(ControlPoint(self.canvas, self.target,
+											start, stop, coef))
+
+
 
 	def stop_(self):
 		self.selection.set([self.target, ])
@@ -61,6 +89,7 @@ class RectEditor(AbstractController):
 		p0 = self.canvas.point_doc_to_win([x0, y0])
 		p1 = self.canvas.point_doc_to_win([x1, y1])
 		self.canvas.renderer.draw_frame(p0, p1)
+		for item in self.midpoints: item.repaint()
 		for item in self.points: item.repaint()
 
 	#----- MOUSE CONTROLLING
@@ -71,20 +100,22 @@ class RectEditor(AbstractController):
 class ControlPoint:
 
 	canvas = None
+	target = None
 	start = []
 	stop = []
+	stop2 = []
 	coef = 0.0
-	index = 0
 
-	def __init__(self, canvas, start, stop, coef, index):
+	def __init__(self, canvas, target, start, stop, coef=0.0):
 		self.canvas = canvas
+		self.target = target
 		self.start = start
 		self.stop = stop
 		self.coef = coef
-		self.index = index
 
 	def get_point(self):
-		return libgeom.midpoint(self.start, self.stop, self.coef)
+		p = libgeom.midpoint(self.start, self.stop, self.coef)
+		return libgeom.apply_trafo_to_point(p, self.target.trafo)
 
 	def get_screen_point(self):
 		return self.canvas.point_doc_to_win(self.get_point())
@@ -95,4 +126,25 @@ class ControlPoint:
 		return libgeom.is_point_in_bbox(win_point, bbox)
 
 	def repaint(self):
-		self.canvas.renderer.draw_control_point(*self.get_screen_points())
+		self.canvas.renderer.draw_rect_point(self.get_screen_point())
+
+class MidPoint:
+
+	canvas = None
+	target = None
+	point = []
+	callback = None
+
+	def __init__(self, canvas, target, point):
+		self.canvas = canvas
+		self.target = target
+		self.point = point
+
+	def get_point(self):
+		return libgeom.apply_trafo_to_point(self.point, self.target.trafo)
+
+	def get_screen_point(self):
+		return self.canvas.point_doc_to_win(self.get_point())
+
+	def repaint(self):
+		self.canvas.renderer.draw_rect_midpoint(self.get_screen_point())
