@@ -265,6 +265,18 @@ class AppConfig(UCConfig):
 	curve_new_point_stroke = (0.2, 0.59, 0.2)
 	curve_new_point_stroke_width = 1.0
 
+	#============== RECT OPTIONS ================
+
+	rect_midpoint_size = 5.0
+	rect_midpoint_fill = (1.0, 0.97, 0.86)
+	rect_midpoint_stroke = (1.0, 0.8, 0.2)
+	rect_midpoint_stroke_width = 1.0
+
+	rect_point_size = 5.0
+	rect_point_fill = (1.0, 1.0, 1.0)
+	rect_point_stroke = (0.0, 0.3, 1.0)
+	rect_point_stroke_width = 1.0
+
 	#============== GRADIENT MARK OPTIONS ================
 
 	gradient_vector_fg_color = (1.0, 0.0, 0.0)
