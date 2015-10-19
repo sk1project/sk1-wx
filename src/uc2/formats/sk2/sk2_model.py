@@ -463,7 +463,7 @@ class Rectangle(PrimitiveObject):
 		return libgeom.get_rect_path(self.start, self.width,
 									self.height, self.corners)
 
-	def get_corners(self):
+	def get_corner_points(self):
 		c0 = [] + self.start
 		c1 = [self.start[0], self.start[1] + self.height]
 		c2 = [self.start[0] + self.width, self.start[1] + self.height]
