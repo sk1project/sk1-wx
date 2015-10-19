@@ -56,7 +56,7 @@ class DocumentObject(TextModelObject):
 			obj_copy.childs.append(child.copy())
 		return obj_copy
 
-	def is_privitive(self): return False
+	def is_primitive(self): return False
 	def is_curve(self): return False
 	def is_rect(self): return False
 	def is_pixmap(self): return False
@@ -392,7 +392,7 @@ class PrimitiveObject(SelectableObject):
 			del self.cache_cpath
 		SelectableObject.destroy(self)
 
-	def is_privitive(self): return True
+	def is_primitive(self): return True
 
 	def to_curve(self):
 		curve = Curve(self.config)
