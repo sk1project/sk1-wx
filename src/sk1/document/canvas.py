@@ -15,15 +15,12 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx, cairo, inspect
+import wx, cairo, inspect, wal
 
 from uc2 import uc2const, libcairo, libgeom
 from uc2.uc2const import mm_to_pt, point_dict
 from uc2.libcairo import normalize_bbox
 from uc2.formats.sk2.sk2_const import DOC_ORIGIN_LL, DOC_ORIGIN_LU
-from uc2.formats.sk2 import sk2_cids
-
-from wal import const
 
 from sk1 import events, modes, config
 from sk1.appconst import PAGEFIT, ZOOM_IN, ZOOM_OUT, RENDERING_DELAY
@@ -527,10 +524,10 @@ class AppCanvas(wx.Panel):
 #==============EVENT CONTROLLING==========================
 
 	def mouse_enter(self, enent):
-		if const.is_msw(): self.SetFocus()
+		if wal.is_msw(): self.SetFocus()
 
 	def capture_mouse(self):
-		if const.is_msw():
+		if wal.is_msw():
 			self.CaptureMouse()
 			self.mouse_captured = True
 
@@ -653,13 +650,13 @@ class HitSurface:
 			fill_anyway = False
 			path = obj.cache_cpath
 
-			if obj.cid in [sk2_cids.TEXT_BLOCK, sk2_cids.TEXT_COLUMN]:
+			if obj.is_text():
 				path = libcairo.convert_bbox_to_cpath(obj.cache_bbox)
 				fill_anyway = True
-			if obj.cid == sk2_cids.CURVE and len(obj.paths) > 100:
+			if obj.is_curve() and len(obj.paths) > 100:
 				path = libcairo.convert_bbox_to_cpath(obj.cache_bbox)
 				fill_anyway = True
-			if obj.cid == sk2_cids.PIXMAP:
+			if obj.is_pixmap():
 				fill_anyway = True
 
 			self.ctx.set_matrix(libcairo.get_matrix_from_trafo(trafo))
