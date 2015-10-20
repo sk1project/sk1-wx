@@ -203,6 +203,10 @@ class SK2_Methods:
 		obj.corners = corners
 		obj.update()
 
+	def set_rect(self, obj, rect):
+		obj.set_rect(rect)
+		obj.update()
+
 	def set_polygon_corners_num(self, obj, num):
 		obj.corners_num = num
 		obj.update()
