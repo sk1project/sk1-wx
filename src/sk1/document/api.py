@@ -1317,12 +1317,12 @@ class PresenterAPI(AbstractAPI):
 				guides.append(child)
 		self.delete_guides(guides)
 
-	def set_rect(self, rect, obj):
+	def set_rect(self, obj, rect):
 		self.methods.set_rect(obj, rect)
 		self.eventloop.emit(self.eventloop.DOC_MODIFIED)
 		self.selection.update()
 
-	def set_rect_final(self, rect, rect_before, obj):
+	def set_rect_final(self, obj, rect, rect_before):
 		if not rect_before:
 			rect_before = obj.get_rect()
 		self.methods.set_rect(obj, rect)
