@@ -24,6 +24,18 @@ from points import rotate_point
 
 #------------- Object specific routines -------------
 
+def normalize_rect(rect):
+	x, y, width, height = rect
+	if width < 0:
+		width = abs(width)
+		x -= width
+	if height < 0:
+		height = abs(height)
+		y -= height
+	if not width: width = .0000000001
+	if not height: height = .0000000001
+	return [x, y, width, height]
+
 def get_rect_path(start, width, height, corners):
 	mr = min(width, height) / 2.0
 	shift = sk2_const.CIRCLE_CTRL_SHIFT
