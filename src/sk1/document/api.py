@@ -1317,25 +1317,51 @@ class PresenterAPI(AbstractAPI):
 				guides.append(child)
 		self.delete_guides(guides)
 
-	def set_rect_corners(self, corners):
-		sel = [] + self.selection.objs
-		obj = sel[0]
+	def set_rect(self, rect, obj):
+		self.methods.set_rect(obj, rect)
+		self.eventloop.emit(self.eventloop.DOC_MODIFIED)
+		self.selection.update()
+
+	def set_rect_final(self, rect, rect_before, obj):
+		if not rect_before:
+			rect_before = obj.get_rect()
+		self.methods.set_rect(obj, rect)
+		transaction = [
+			[[self.methods.set_rect, obj, rect_before], ],
+			[[self.methods.set_rect, obj, rect], ],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def set_rect_corners(self, corners, obj=None):
+		if obj is None:
+			sel = [] + self.selection.objs
+			obj = sel[0]
 		self.methods.set_rect_corners(obj, corners)
 		self.eventloop.emit(self.eventloop.DOC_MODIFIED)
 		self.selection.update()
 
-	def set_rect_corners_final(self, corners, corners_before=[]):
-		sel = [] + self.selection.objs
-		obj = sel[0]
-		if not corners_before:
-			corners_before = obj.corners
-		self.methods.set_rect_corners(obj, corners)
-		transaction = [
-			[[self.methods.set_rect_corners, obj, corners_before],
-			[self._set_selection, sel], ],
-			[[self.methods.set_rect_corners, obj, corners],
-			[self._set_selection, sel]],
-			False]
+	def set_rect_corners_final(self, corners, corners_before=[], obj=None):
+		if obj is None:
+			sel = [] + self.selection.objs
+			obj = sel[0]
+			if not corners_before:
+				corners_before = obj.corners
+			self.methods.set_rect_corners(obj, corners)
+			transaction = [
+				[[self.methods.set_rect_corners, obj, corners_before],
+				[self._set_selection, sel], ],
+				[[self.methods.set_rect_corners, obj, corners],
+				[self._set_selection, sel]],
+				False]
+		else:
+			if not corners_before:
+				corners_before = obj.corners
+			self.methods.set_rect_corners(obj, corners)
+			transaction = [
+				[[self.methods.set_rect_corners, obj, corners_before], ],
+				[[self.methods.set_rect_corners, obj, corners], ],
+				False]
 		self.add_undo(transaction)
 		self.selection.update()
 
