@@ -31,6 +31,9 @@ class RectEditor(AbstractController):
 	target = None
 	points = []
 	midpoints = []
+	resizing = False
+	res_index = 0
+	orig_rect = []
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -72,8 +75,6 @@ class RectEditor(AbstractController):
 				self.points.append(ControlPoint(self.canvas, self.target,
 											start, stop, coef))
 
-
-
 	def stop_(self):
 		self.selection.set([self.target, ])
 		self.target = None
@@ -92,10 +93,51 @@ class RectEditor(AbstractController):
 		for item in self.midpoints: item.repaint()
 		for item in self.points: item.repaint()
 
+	#----- CHANGE APPLY
+	def apply_resizing(self, point, final=False):
+		wpoint = self.canvas.point_win_to_doc(point)
+		invtrafo = libgeom.invert_trafo(self.target.trafo)
+		wpoint = libgeom.apply_trafo_to_point(wpoint, invtrafo)
+		rect = self.target.get_rect()
+		if self.res_index == 0:
+			rect[2] -= wpoint[0] - rect[0]
+			rect[0] = wpoint[0]
+			if rect[2] < 0:self.res_index = 2
+		elif self.res_index == 1:
+			rect[3] = wpoint[1] - rect[1]
+			if rect[3] < 0:self.res_index = 3
+		elif self.res_index == 2:
+			rect[2] = wpoint[0] - rect[0]
+			if rect[2] < 0:self.res_index = 0
+		elif self.res_index == 3:
+			rect[3] -= wpoint[1] - rect[1]
+			rect[1] = wpoint[1]
+			if rect[3] < 0:self.res_index = 1
+		rect = libgeom.normalize_rect(rect)
+		if final:
+			self.api.set_rect_final(self.target, rect, self.orig_rect)
+			self.orig_rect = self.target.get_rect()
+		else:
+			self.api.set_rect(self.target, rect)
+		self.update_points()
+
 	#----- MOUSE CONTROLLING
-	def mouse_down(self, event):pass
-	def mouse_up(self, event):pass
-	def mouse_move(self, event):pass
+	def mouse_down(self, event):
+		self.resizing = False
+		for item in self.midpoints:
+			if item.is_pressed(event.get_point()):
+				self.resizing = True
+				self.res_index = self.midpoints.index(item)
+				self.orig_rect = self.target.get_rect()
+
+	def mouse_up(self, event):
+		if self.resizing:
+			self.resizing = False
+			self.apply_resizing(event.get_point(), True)
+
+	def mouse_move(self, event):
+		if self.resizing:
+			self.apply_resizing(event.get_point())
 
 class ControlPoint:
 
@@ -145,6 +187,11 @@ class MidPoint:
 
 	def get_screen_point(self):
 		return self.canvas.point_doc_to_win(self.get_point())
+
+	def is_pressed(self, win_point):
+		wpoint = self.canvas.point_doc_to_win(self.get_point())
+		bbox = libgeom.bbox_for_point(wpoint, config.point_sensitivity_size)
+		return libgeom.is_point_in_bbox(win_point, bbox)
 
 	def repaint(self):
 		self.canvas.renderer.draw_rect_midpoint(self.get_screen_point())
