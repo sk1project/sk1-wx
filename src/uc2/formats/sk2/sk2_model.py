@@ -450,12 +450,18 @@ class Rectangle(PrimitiveObject):
 		self.cid = RECTANGLE
 		self.parent = parent
 		self.config = config
-		self.start = [rect[0], rect[1]]
-		self.width = rect[2]
-		self.height = rect[3]
+		self.set_rect(rect)
 		self.trafo = trafo
 		self.corners = corners
 		self.style = style
+
+	def get_rect(self):
+		return self.start + [self.width, self.height]
+
+	def set_rect(self, rect):
+		self.start = rect[0:2]
+		self.width = rect[2]
+		self.height = rect[3]
 
 	def is_rect(self): return True
 
