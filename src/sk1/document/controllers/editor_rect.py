@@ -134,26 +134,45 @@ class RectEditor(AbstractController):
 		invtrafo = libgeom.invert_trafo(self.target.trafo)
 		wpoint = libgeom.apply_trafo_to_point(wpoint, invtrafo)
 		rect = self.target.get_rect()
+		corners = [] + self.target.corners
 		if self.res_index == 0:
 			rect[2] -= wpoint[0] - rect[0]
 			rect[0] = wpoint[0]
-			if rect[2] < 0:self.res_index = 2
+			if rect[2] < 0:
+				self.res_index = 2
+				c0, c1, c2, c3 = corners
+				corners = [c3, c2, c1, c0]
 		elif self.res_index == 1:
 			rect[3] = wpoint[1] - rect[1]
-			if rect[3] < 0:self.res_index = 3
+			if rect[3] < 0:
+				self.res_index = 3
+				c0, c1, c2, c3 = corners
+				corners = [c1, c0, c3, c2]
 		elif self.res_index == 2:
 			rect[2] = wpoint[0] - rect[0]
-			if rect[2] < 0:self.res_index = 0
+			if rect[2] < 0:
+				self.res_index = 0
+				c0, c1, c2, c3 = corners
+				corners = [c3, c2, c1, c0]
 		elif self.res_index == 3:
 			rect[3] -= wpoint[1] - rect[1]
 			rect[1] = wpoint[1]
-			if rect[3] < 0:self.res_index = 1
+			if rect[3] < 0:
+				self.res_index = 1
+				c0, c1, c2, c3 = corners
+				corners = [c1, c0, c3, c2]
 		rect = libgeom.normalize_rect(rect)
 		if final:
 			self.api.set_rect_final(self.target, rect, self.orig_rect)
+			if not corners == self.orig_corners:
+				self.api.set_rect_corners_final(corners, self.orig_corners,
+										self.target)
+				self.orig_corners = [] + self.target.corners
 			self.orig_rect = self.target.get_rect()
 		else:
 			self.api.set_rect(self.target, rect)
+			if not corners == self.target.corners:
+				self.api.set_rect_corners(corners, self.target)
 		self.update_points()
 
 	def apply_rounding(self, point, final=False, inplace=False):
