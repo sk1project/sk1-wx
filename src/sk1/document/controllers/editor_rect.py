@@ -15,15 +15,12 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from copy import deepcopy
-
 from uc2 import libgeom
-from uc2.formats.sk2 import sk2_model
-from uc2.formats.sk2 import sk2_const
 
 from sk1 import _, modes, config, events
 from generic import AbstractController
 
+H_ORIENT = ['00', '11', '20', '31']
 
 class RectEditor(AbstractController):
 
@@ -31,9 +28,19 @@ class RectEditor(AbstractController):
 	target = None
 	points = []
 	midpoints = []
+
 	resizing = False
 	res_index = 0
 	orig_rect = []
+
+	rounding = False
+	rnd_index = 0
+	rnd_subindex = 0
+	orig_corners = []
+	start = []
+	stop = []
+	start2 = []
+	stop2 = []
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -56,29 +63,57 @@ class RectEditor(AbstractController):
 		corner_points = self.target.get_corner_points()
 		stops = self.target.get_stops()
 		for index in range(4):
-			if self.target.corners[index]:
+			if not self.target.corners[index]:
+				start = corner_points[index]
+				stop = stops[index][0]
+				stop2 = stops[index - 1]
+				if len(stop2) == 2: stop2 = stop2[1]
+				else: stop2 = stop2[0]
+				coef = self.target.corners[index]
+				self.points.append(ControlPoint(self.canvas, self.target, start,
+											stop, stop2=stop2,
+											coef=coef, index=index))
+			elif self.target.corners[index] == 1.0:
+				start = corner_points[index]
+				stop = stops[index - 1]
+				if len(stop) == 2:
+					stop = stop[1]
+					coef = self.target.corners[index]
+					self.points.append(ControlPoint(self.canvas, self.target,
+										start, stop, coef=coef, index=index))
+				elif not self.target.corners[index - 1] == 1.0:
+					stop = stop[0]
+					coef = self.target.corners[index]
+					self.points.append(ControlPoint(self.canvas, self.target,
+										start, stop, coef=coef, index=index))
+
+				stop = stops[index][0]
+				start2 = []
+				if len(stops[index]) == 1 and \
+					self.target.corners[index - 3] == 1.0:
+						start2 = corner_points[index - 3]
+				coef = self.target.corners[index]
+				self.points.append(ControlPoint(self.canvas, self.target, start,
+									stop, start2=start2,
+									coef=coef, index=index, subindex=1))
+			else:
 				start = corner_points[index]
 				stop = stops[index - 1]
 				if len(stop) == 2: stop = stop[1]
 				else: stop = stop[0]
 				coef = self.target.corners[index]
-				self.points.append(ControlPoint(self.canvas, self.target,
-											start, stop, coef))
+				self.points.append(ControlPoint(self.canvas, self.target, start,
+											stop, coef=coef, index=index))
 
 				stop = stops[index][0]
-				self.points.append(ControlPoint(self.canvas, self.target,
-											start, stop, coef))
-			else:
-				start = corner_points[index]
-				stop = stops[index][0]
-				coef = self.target.corners[index]
-				self.points.append(ControlPoint(self.canvas, self.target,
-											start, stop, coef))
+				self.points.append(ControlPoint(self.canvas, self.target, start,
+									stop, coef=coef, index=index, subindex=1))
+		msg = _('Rectangle in editing')
+		events.emit(events.APP_STATUS, msg)
 
 	def stop_(self):
 		self.selection.set([self.target, ])
 		self.target = None
-#		for item in self.points: item.destroy()
 
 	def escape_pressed(self):
 		self.canvas.set_mode()
@@ -121,23 +156,86 @@ class RectEditor(AbstractController):
 			self.api.set_rect(self.target, rect)
 		self.update_points()
 
+	def apply_rounding(self, point, final=False, inplace=False):
+		wpoint = self.canvas.point_win_to_doc(point)
+		invtrafo = libgeom.invert_trafo(self.target.trafo)
+		wpoint = libgeom.apply_trafo_to_point(wpoint, invtrafo)
+		corners = [] + self.target.corners
+		name = str(self.rnd_index) + str(self.rnd_subindex)
+
+		res = 0.0
+		if self.stop2:
+			val = abs(wpoint[0] - self.start[0])
+			val2 = abs(wpoint[1] - self.start[1])
+			start = self.start
+			if val > val2:
+				if self.rnd_index in (0, 2):
+					stop = self.stop2
+					res = (wpoint[0] - start[0]) / (stop[0] - start[0])
+				else:
+					stop = self.stop
+					res = (wpoint[0] - start[0]) / (stop[0] - start[0])
+			else:
+				if self.rnd_index in (0, 2):
+					stop = self.stop
+					res = (wpoint[1] - start[1]) / (stop[1] - start[1])
+				else:
+					stop = self.stop2
+					res = (wpoint[1] - start[1]) / (stop[1] - start[1])
+		else:
+			start = self.start
+			stop = self.stop
+			if name in H_ORIENT:
+				res = (wpoint[0] - start[0]) / (stop[0] - start[0])
+			else:
+				res = (wpoint[1] - start[1]) / (stop[1] - start[1])
+
+		if res < 0.0: res = 0.0
+		if res > 1.0: res = 1.0
+
+		if inplace: corners[self.rnd_index] = res
+		else: corners = [res, res, res, res]
+		if final:
+			self.api.set_rect_corners_final(corners, self.orig_corners,
+										self.target)
+		else:
+			self.api.set_rect_corners(corners, self.target)
+		self.update_points()
+
 	#----- MOUSE CONTROLLING
 	def mouse_down(self, event):
 		self.resizing = False
+		for item in self.points:
+			if item.is_pressed(event.get_point()):
+				self.rounding = True
+				self.rnd_index = item.index
+				self.rnd_subindex = item.subindex
+				self.orig_corners = [] + self.target.corners
+				self.start = [] + item.start
+				self.start2 = [] + item.start2
+				self.stop = [] + item.stop
+				self.stop2 = [] + item.stop2
+				return
 		for item in self.midpoints:
 			if item.is_pressed(event.get_point()):
 				self.resizing = True
 				self.res_index = self.midpoints.index(item)
 				self.orig_rect = self.target.get_rect()
+				self.orig_corners = [] + self.target.corners
 
 	def mouse_up(self, event):
 		if self.resizing:
 			self.resizing = False
 			self.apply_resizing(event.get_point(), True)
+		elif self.rounding:
+			self.rounding = False
+			self.apply_rounding(event.get_point(), True, event.is_ctrl())
 
 	def mouse_move(self, event):
 		if self.resizing:
 			self.apply_resizing(event.get_point())
+		elif self.rounding:
+			self.apply_rounding(event.get_point(), inplace=event.is_ctrl())
 
 class ControlPoint:
 
@@ -145,15 +243,23 @@ class ControlPoint:
 	target = None
 	start = []
 	stop = []
+	start2 = []
 	stop2 = []
 	coef = 0.0
+	index = 0
+	subindex = 0
 
-	def __init__(self, canvas, target, start, stop, coef=0.0):
+	def __init__(self, canvas, target, start, stop, start2=[], stop2=[],
+				coef=0.0, index=0, subindex=0):
 		self.canvas = canvas
 		self.target = target
 		self.start = start
+		self.start2 = start2
 		self.stop = stop
+		self.stop2 = stop2
 		self.coef = coef
+		self.index = index
+		self.subindex = subindex
 
 	def get_point(self):
 		p = libgeom.midpoint(self.start, self.stop, self.coef)
