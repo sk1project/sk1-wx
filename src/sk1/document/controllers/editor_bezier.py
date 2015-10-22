@@ -273,6 +273,10 @@ class BezierEditor(AbstractController):
 		trafo = [1.0, 0.0, 0.0, 1.0, x1 - x0, y1 - y0]
 		for item in self.selected_nodes:
 			item.path.apply_trafo_to_point(item, trafo)
+			start = item.path.start_point
+			if item.path.is_closed() and item.is_end() \
+			and not start in self.selected_nodes:
+				item.path.apply_trafo_to_point(start, trafo)
 		paths = self.get_paths()
 		if undable:
 			self.api.set_new_paths(self.target, paths, self.orig_paths)
