@@ -561,6 +561,9 @@ class BezierEditor(AbstractController):
 		self.set_selected_nodes()
 		if item0.path == item1.path:
 			item1.path.closed = sk2_const.CURVE_CLOSED
+			if item1.is_start():
+				item1, item0 = item0, item1
+			item1.path.points.append(item0.get_copy())
 		else:
 			if item0.is_start() and item1.is_start():
 				item0.path.reverse()
