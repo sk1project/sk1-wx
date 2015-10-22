@@ -57,7 +57,7 @@ STUB_CIRCLE = [[[1.0, 0.5], [
 			[[1.0, 0.775], [0.775, 1.0], [0.5, 1.0], NODE_SYMMETRICAL],
 			[[0.225, 1.0], [0.0, 0.775], [0.0, 0.5], NODE_SYMMETRICAL],
 			[[0.0, 0.225], [0.225, 0.0], [0.5, 0.0], NODE_SYMMETRICAL],
-			[[0.775, 0.0], [1.0, 0.225], [1.0, 0.5], NODE_CUSP],
+			[[0.775, 0.0], [1.0, 0.225], [1.0, 0.5], NODE_SYMMETRICAL],
 			], CURVE_CLOSED]]
 
 #Fill and stroke constants
