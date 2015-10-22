@@ -18,7 +18,6 @@
 from copy import deepcopy
 
 from uc2 import libgeom
-from uc2.formats.sk2 import sk2_model
 from uc2.formats.sk2 import sk2_const
 
 from sk1 import _, modes, config, events
