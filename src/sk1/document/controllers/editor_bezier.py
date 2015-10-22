@@ -476,13 +476,14 @@ class BezierEditor(AbstractController):
 			if path.is_closed():
 				path.closed = sk2_const.CURVE_OPENED
 				if node.is_end():
-					path.points = [path.start_point, ] + path.points
+					path.start_point.destroy()
 					path.start_point = np
 				elif node.is_start(): pass
 				else:
-					new_points = path.points[index + 1:] + [path.start_point, ]
+					new_points = path.points[index + 1:]
 					new_points += path.points[:index + 1]
 					path.points = new_points
+					path.start_point.destroy()
 					path.start_point = np
 			elif not index is None:
 				new_path = BezierPath(self.canvas)
