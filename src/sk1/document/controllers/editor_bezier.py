@@ -244,6 +244,8 @@ class BezierEditor(AbstractController):
 		for node in self.selected_nodes:
 			before = node.get_point_before()
 			after = node.get_point_after()
+			if not after and node.is_end() and node.path.is_closed():
+				after = node.path.points[0]
 			if node.is_curve():
 				cp.append(ControlPoint(self.canvas, node, before))
 				cp.append(ControlPoint(self.canvas, node, node))
@@ -942,6 +944,8 @@ class BezierPoint:
 	def can_be_symmetrical(self):
 		if self.is_curve() and not self.is_symmetrical():
 			after = self.get_point_after()
+			if not after and self.is_end() and self.path.is_closed():
+				after = self.path.points[0]
 			if after and after.is_curve():
 				return True
 		return False
@@ -1021,6 +1025,11 @@ class BezierPoint:
 	def update_connection(self):
 		after = self.get_point_after()
 		before = self.get_point_before()
+		if self.path.is_closed():
+			if self.path.points[0] == self:
+				before = self.path.points[-1]
+			if not after and self.is_end():
+				after = self.path.points[0]
 		if after and after.is_curve():
 			if self.is_symmetrical():
 				after.point[0] = libgeom.contra_point(self.point[1],
@@ -1050,7 +1059,6 @@ class BezierPoint:
 					if l:
 						self.point[0] = libgeom.contra_point(p,
 												before.point, self.point[0])
-
 
 
 class ControlPoint:
