@@ -684,6 +684,12 @@ class BezierPath:
 			for item in path[1]:
 				self.points.append(BezierPoint(self.canvas, self, item))
 			self.closed = path[2]
+			if self.is_closed():
+				sp = self.start_point.point
+				lp = self.points[-1].point
+				if self.points[-1].is_curve(): lp = lp[2]
+				if not sp == lp:
+					self.points.append(self.start_point.get_copy())
 
 	def destroy(self):
 		for item in [self.start_point, ] + self.points:
