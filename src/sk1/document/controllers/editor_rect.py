@@ -28,6 +28,7 @@ class RectEditor(AbstractController):
 	target = None
 	points = []
 	midpoints = []
+	selected_obj = None
 
 	resizing = False
 	res_index = 0
@@ -48,6 +49,9 @@ class RectEditor(AbstractController):
 	def start_(self):
 		self.snap = self.presenter.snap
 		self.target = self.selection.objs[0]
+		self.resizing = False
+		self.rounding = False
+		self.selected_obj = None
 		self.update_points()
 		self.api.set_mode()
 		self.selection.clear()
@@ -114,6 +118,7 @@ class RectEditor(AbstractController):
 	def stop_(self):
 		self.selection.set([self.target, ])
 		self.target = None
+		self.selected_obj = None
 
 	def escape_pressed(self):
 		self.canvas.set_mode()
@@ -224,6 +229,8 @@ class RectEditor(AbstractController):
 	#----- MOUSE CONTROLLING
 	def mouse_down(self, event):
 		self.resizing = False
+		self.rounding = False
+		self.selected_obj = None
 		for item in self.points:
 			if item.is_pressed(event.get_point()):
 				self.rounding = True
@@ -241,6 +248,10 @@ class RectEditor(AbstractController):
 				self.res_index = self.midpoints.index(item)
 				self.orig_rect = self.target.get_rect()
 				self.orig_corners = [] + self.target.corners
+				return
+		objs = self.canvas.pick_at_point(event.get_point())
+		if objs and not objs[0] == self.target and objs[0].is_primitive():
+			self.selected_obj = objs[0]
 
 	def mouse_up(self, event):
 		if self.resizing:
@@ -249,6 +260,9 @@ class RectEditor(AbstractController):
 		elif self.rounding:
 			self.rounding = False
 			self.apply_rounding(event.get_point(), True, event.is_ctrl())
+		elif self.selected_obj:
+			self.target = self.selected_obj
+			self.canvas.set_mode(modes.SHAPER_MODE)
 
 	def mouse_move(self, event):
 		if self.resizing:
