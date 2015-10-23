@@ -311,6 +311,18 @@ class PDRenderer(CairoRenderer):
 							config.rect_point_stroke,
 							config.rect_point_stroke_width)
 
+	def draw_ellipse_start_point(self, point):
+		fill = config.ellipse_start_point_fill
+		self.draw_curve_point(point, config.ellipse_start_point_size, fill,
+							config.ellipse_start_point_stroke,
+							config.ellipse_start_point_stroke_width)
+
+	def draw_ellipse_end_point(self, point):
+		fill = config.ellipse_end_point_fill
+		self.draw_curve_point(point, config.ellipse_end_point_size, fill,
+							config.ellipse_end_point_stroke,
+							config.ellipse_end_point_stroke_width)
+
 	def reflect_snap(self):
 		if self.canvas.show_snapping:
 			snap = self.presenter.snap.active_snap
