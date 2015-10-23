@@ -289,6 +289,13 @@ class AppConfig(UCConfig):
 	ellipse_end_point_stroke = (0.0, 0.0, 0.0)
 	ellipse_end_point_stroke_width = 2.0
 
+	#============== POLYGON OPTIONS ================
+
+	polygon_point_size = 5.0
+	polygon_point_fill = (1.0, 1.0, 1.0)
+	polygon_point_stroke = (0.0, 0.3, 1.0)
+	polygon_point_stroke_width = 1.0
+
 	#============== GRADIENT MARK OPTIONS ================
 
 	gradient_vector_fg_color = (1.0, 0.0, 0.0)
