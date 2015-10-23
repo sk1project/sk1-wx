@@ -36,6 +36,8 @@ class EditorChooser(AbstractController):
 				self.canvas.set_mode(modes.BEZIER_EDITOR_MODE)
 			elif obj.is_rect():
 				self.canvas.set_mode(modes.RECT_EDITOR_MODE)
+			elif obj.is_circle():
+				self.canvas.set_mode(modes.ELLIPSE_EDITOR_MODE)
 			else:
 				self.selection.clear()
 
