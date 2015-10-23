@@ -277,6 +277,18 @@ class AppConfig(UCConfig):
 	rect_point_stroke = (0.0, 0.3, 1.0)
 	rect_point_stroke_width = 1.0
 
+	#============== ELLIPSE OPTIONS ================
+
+	ellipse_start_point_size = 5.0
+	ellipse_start_point_fill = (1.0, 1.0, 1.0)
+	ellipse_start_point_stroke = (0.0, 0.3, 1.0)
+	ellipse_start_point_stroke_width = 2.0
+
+	ellipse_end_point_size = 5.0
+	ellipse_end_point_fill = (1.0, 1.0, 1.0)
+	ellipse_end_point_stroke = (0.0, 0.0, 0.0)
+	ellipse_end_point_stroke_width = 2.0
+
 	#============== GRADIENT MARK OPTIONS ================
 
 	gradient_vector_fg_color = (1.0, 0.0, 0.0)
