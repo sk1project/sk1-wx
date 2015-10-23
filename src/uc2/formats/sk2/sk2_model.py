@@ -530,6 +530,7 @@ class Circle(PrimitiveObject):
 		self.style = style
 
 	def is_circle(self): return True
+	def get_center(self): return [0.5, 0.5]
 
 	def get_initial_paths(self):
 		return libgeom.get_circle_path(self.angle1, self.angle2, self.circle_type)
