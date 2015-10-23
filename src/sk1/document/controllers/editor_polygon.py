@@ -122,11 +122,13 @@ class CornerPoint:
 	canvas = None
 	target = None
 	point = []
+	index = 0
 
 	def __init__(self, canvas, target, point, index):
 		self.canvas = canvas
 		self.target = target
 		self.point = point
+		self.index = index
 
 	def get_point(self):
 		return libgeom.apply_trafo_to_point(self.point, self.target.trafo)
