@@ -138,7 +138,7 @@ class CirclePlugin(CtxPlugin):
 					not self.start == obj.angle1 or \
 					not self.end == obj.angle2:
 					api = self.app.current_doc.api
-					api.set_circle_properties(self.circle_type,
+					api.set_circle_properties_final(self.circle_type,
 											self.start, self.end)
 
 
