@@ -205,7 +205,8 @@ class BezierEditor(AbstractController):
 	def is_path_clicked(self, win_point):
 		hit_surface = self.canvas.hit_surface
 		for path in self.paths:
-			if hit_surface.is_point_on_path(win_point, path.get_path()):
+			pth = libgeom.apply_trafo_to_path(path.get_path(), self.target.trafo)
+			if hit_surface.is_point_on_path(win_point, pth):
 				return path
 		return None
 
