@@ -38,6 +38,11 @@ class CirclePlugin(CtxPlugin):
 	end = 0
 	toggles = {}
 
+	target = None
+	orig_type = ARC_CHORD
+	orig_start = 0
+	orig_end = 0
+
 	def __init__(self, app, parent):
 		CtxPlugin.__init__(self, app, parent)
 		events.connect(events.DOC_CHANGED, self.update)
@@ -63,7 +68,8 @@ class CirclePlugin(CtxPlugin):
 								tooltip=_('Pie slice'))
 		self.add(self.toggles[ARC_PIE_SLICE], 0, wal.LEFT | wal.CENTER)
 
-		self.slider = wal.Slider(self, 0, (0, 360), onchange=self.slider_changes)
+		self.slider = wal.Slider(self, 0, (0, 360), onchange=self.slider_changes,
+								on_final_change=self.slider_final_changes)
 		self.add(self.slider, 0, wal.LEFT | wal.CENTER, 2)
 
 		self.angle_spin = AngleSpin(self, onchange=self.angle_changes)
@@ -89,6 +95,14 @@ class CirclePlugin(CtxPlugin):
 					self.toggles[item].set_active(item == self.circle_type)
 				self.update_flag = False
 				self.switched()
+				if not obj == self.target:
+					self.target = obj
+					self.store_props()
+
+	def store_props(self):
+		self.orig_type = self.target.circle_type
+		self.orig_start = self.target.angle1
+		self.orig_end = self.target.angle2
 
 	def toggled(self, *args):
 		if self.update_flag: return
@@ -102,7 +116,7 @@ class CirclePlugin(CtxPlugin):
 		if val < 0: self.toggles[self.circle_type].set_active(True)
 		else: self.circle_type = val
 		self.update_flag = False
-		self.apply_changes()
+		self.apply_changes(True)
 
 	def switched(self, *args):
 		self.update_flag = True
@@ -120,7 +134,7 @@ class CirclePlugin(CtxPlugin):
 			self.start = self.angle_spin.get_angle_value()
 		else:
 			self.end = self.angle_spin.get_angle_value()
-		self.apply_changes()
+		self.apply_changes(True)
 
 	def slider_changes(self, *args):
 		if self.update_flag: return
@@ -129,16 +143,27 @@ class CirclePlugin(CtxPlugin):
 		else: self.end = val
 		self.apply_changes()
 
-	def apply_changes(self):
+	def slider_final_changes(self, *args):
+		if self.update_flag: return
+		val = self.slider.get_value() * math.pi / 180.0
+		if self.switch.get_active(): self.start = val
+		else: self.end = val
+		self.apply_changes(True)
+
+	def apply_changes(self, final=False):
 		if self.insp.is_selection():
 			sel = self.app.current_doc.selection
 			if len(sel.objs) == 1 and self.insp.is_obj_circle(sel.objs[0]):
 				obj = sel.objs[0]
-				if not self.circle_type == obj.circle_type or \
-					not self.start == obj.angle1 or \
-					not self.end == obj.angle2:
-					api = self.app.current_doc.api
+				api = self.app.current_doc.api
+				if final:
 					api.set_circle_properties_final(self.circle_type,
+								self.start, self.end, self.orig_type,
+								self.orig_start, self.orig_end)
+					self.store_props()
+				elif not self.start == obj.angle1 or \
+					not self.end == obj.angle2:
+					api.set_circle_properties(self.circle_type,
 											self.start, self.end)
 
 
