@@ -216,6 +216,8 @@ class BezierEditor(AbstractController):
 				item.selected = False
 			self.selected_nodes = []
 		for item in points:
+			if item.is_start() and item.path.is_closed():
+				continue
 			if item.selected and item in self.selected_nodes:
 				item.selected = False
 				self.selected_nodes.remove(item)
