@@ -594,7 +594,7 @@ class Rectangle(PrimitiveObject):
 		return rect
 
 	def get_initial_paths(self):
-		return libgeom.get_rect_path(self.start, self.width,
+		return libgeom.get_rect_paths(self.start, self.width,
 									self.height, self.corners)
 
 
@@ -634,7 +634,7 @@ class Circle(PrimitiveObject):
 		return circle
 
 	def get_initial_paths(self):
-		return libgeom.get_circle_path(self.angle1, self.angle2, self.circle_type)
+		return libgeom.get_circle_paths(self.angle1, self.angle2, self.circle_type)
 
 
 class Polygon(PrimitiveObject):
@@ -684,7 +684,7 @@ class Polygon(PrimitiveObject):
 		return polygon
 
 	def get_initial_paths(self):
-		return libgeom.get_polygon_path(self.corners_num,
+		return libgeom.get_polygon_paths(self.corners_num,
 									self.angle1, self.angle2,
 									self.coef1, self.coef2)
 
