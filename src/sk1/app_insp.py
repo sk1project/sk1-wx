@@ -98,7 +98,7 @@ class AppInspector:
 		if doc.canvas.mode in modes.EDIT_MODES and not \
 			doc.canvas.mode == modes.BEZIER_EDITOR_MODE:
 			return False
-		return True
+		return doc.selection.can_be_any_selected()
 
 	def can_be_deleted(self, doc=None):
 		if doc is None: doc = self.app.current_doc
