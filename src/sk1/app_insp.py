@@ -92,6 +92,14 @@ class AppInspector:
 			return len(doc.canvas.controller.selected_nodes) > 0
 		return False
 
+	def can_be_selected(self, doc=None):
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		if doc.canvas.mode in modes.EDIT_MODES and not \
+			doc.canvas.mode == modes.BEZIER_EDITOR_MODE:
+			return False
+		return True
+
 	def can_be_deleted(self, doc=None):
 		if doc is None: doc = self.app.current_doc
 		if doc is None: return False
