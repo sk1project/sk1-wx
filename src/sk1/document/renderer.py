@@ -323,6 +323,12 @@ class PDRenderer(CairoRenderer):
 							config.ellipse_end_point_stroke,
 							config.ellipse_end_point_stroke_width)
 
+	def draw_polygon_point(self, point):
+		fill = config.polygon_point_fill
+		self.draw_curve_point(point, config.polygon_point_size, fill,
+							config.polygon_point_stroke,
+							config.polygon_point_stroke_width)
+
 	def reflect_snap(self):
 		if self.canvas.show_snapping:
 			snap = self.presenter.snap.active_snap
