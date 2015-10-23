@@ -319,6 +319,10 @@ class BezierEditor(AbstractController):
 		for item in self.selected_nodes:
 			path = item.path
 			if path in self.paths:
+				if item.is_end() and path.is_closed():
+					start = path.start_point
+					path.delete_point(start)
+					start.destroy()
 				path.delete_point(item)
 				item.destroy()
 				if not path.points:
@@ -780,6 +784,8 @@ class BezierPath:
 			self.points = self.points[1:]
 			if not len(self.start_point.point) == 2:
 				self.start_point.point = self.start_point.point[2]
+			if self.is_closed():
+				self.points += [self.start_point.get_copy(), ]
 
 	def get_point_index(self, point):
 		if point in self.points:
