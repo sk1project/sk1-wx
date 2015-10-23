@@ -24,7 +24,7 @@ H_ORIENT = ['00', '11', '20', '31']
 
 class RectEditor(AbstractController):
 
-	mode = modes.BEZIER_EDITOR_MODE
+	mode = modes.RECT_EDITOR_MODE
 	target = None
 	points = []
 	midpoints = []
