@@ -466,7 +466,7 @@ class Rectangle(PrimitiveObject):
 	def is_rect(self): return True
 
 	def get_initial_paths(self):
-		return libgeom.get_rect_path(self.start, self.width,
+		return libgeom.get_rect_paths(self.start, self.width,
 									self.height, self.corners)
 
 	def get_corner_points(self):
@@ -533,7 +533,7 @@ class Circle(PrimitiveObject):
 	def get_center(self): return [0.5, 0.5]
 
 	def get_initial_paths(self):
-		return libgeom.get_circle_path(self.angle1, self.angle2, self.circle_type)
+		return libgeom.get_circle_paths(self.angle1, self.angle2, self.circle_type)
 
 
 class Polygon(PrimitiveObject):
@@ -573,7 +573,7 @@ class Polygon(PrimitiveObject):
 	def is_polygon(self): return True
 
 	def get_initial_paths(self):
-		return libgeom.get_polygon_path(self.corners_num,
+		return libgeom.get_polygon_paths(self.corners_num,
 									self.angle1, self.angle2,
 									self.coef1, self.coef2)
 
@@ -671,7 +671,7 @@ class Pixmap(PrimitiveObject):
 	def get_initial_paths(self):
 		width = float(self.size[0]) * uc2const.px_to_pt
 		height = float(self.size[1]) * uc2const.px_to_pt
-		return libgeom.get_rect_path([0, 0], width, height,
+		return libgeom.get_rect_paths([0, 0], width, height,
 									[] + sk2_const.CORNERS)
 
 	def get_resolution(self):

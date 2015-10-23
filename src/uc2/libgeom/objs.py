@@ -36,7 +36,7 @@ def normalize_rect(rect):
 	if not height: height = .0000000001
 	return [x, y, width, height]
 
-def get_rect_path(start, width, height, corners):
+def get_rect_paths(start, width, height, corners):
 	mr = min(width, height) / 2.0
 	shift = sk2_const.CIRCLE_CTRL_SHIFT
 
@@ -101,7 +101,7 @@ def get_rect_path(start, width, height, corners):
 	path.append(sk2_const.CURVE_CLOSED)
 	return [path, ]
 
-def get_circle_path(angle1, angle2, circle_type):
+def get_circle_paths(angle1, angle2, circle_type):
 	paths = []
 	if angle1 == angle2:
 		paths += sk2_const.STUB_CIRCLE
@@ -125,7 +125,7 @@ def get_circle_path(angle1, angle2, circle_type):
 	return paths
 
 
-def get_polygon_path(corners_num, angle1, angle2, coef1, coef2):
+def get_polygon_paths(corners_num, angle1, angle2, coef1, coef2):
 
 	if corners_num < 3:corners_num = 3
 	points = []
