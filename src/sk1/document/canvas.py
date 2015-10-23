@@ -186,6 +186,7 @@ class AppCanvas(wx.Panel):
 		modes.SHAPER_MODE: controllers.EditorChooser,
 		modes.BEZIER_EDITOR_MODE: controllers.BezierEditor,
 		modes.RECT_EDITOR_MODE: controllers.RectEditor,
+		modes.ELLIPSE_EDITOR_MODE: controllers.EllipseEditor,
 		modes.ZOOM_MODE: controllers.ZoomController,
 		modes.FLEUR_MODE:  controllers.FleurController,
 		modes.TEMP_FLEUR_MODE: controllers.TempFleurController,
