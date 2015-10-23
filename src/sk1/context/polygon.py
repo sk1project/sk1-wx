@@ -71,7 +71,8 @@ class PolygonCfgPlugin(CtxPlugin):
 					_('Number of angles for newly created polygon'))
 		self.add(bmp, 0, LEFT | CENTER, 2)
 
-		self.num_spin = FloatSpin(self, 5, (3.0, 1000.0), 1.0, 0,
+		self.num_spin = FloatSpin(self, config.default_polygon_num,
+							(3.0, 1000.0), 1.0, 0,
 							width=3, onchange=self.changes,
 							spin_overlay=config.spin_overlay)
 		self.add(self.num_spin, 0, LEFT | CENTER, 2)
