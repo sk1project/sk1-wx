@@ -16,6 +16,7 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
+from copy import deepcopy
 
 from uc2 import libcairo
 from uc2.formats.sk2 import sk2_const
@@ -104,7 +105,7 @@ def get_rect_paths(start, width, height, corners):
 def get_circle_paths(angle1, angle2, circle_type):
 	paths = []
 	if angle1 == angle2:
-		paths += sk2_const.STUB_CIRCLE
+		paths = deepcopy(sk2_const.STUB_CIRCLE)
 		if circle_type:
 			return paths
 		else:
