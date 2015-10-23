@@ -156,6 +156,13 @@ class Selection:
 	def pick_at_point(self, point):
 		return self._select_at_point(point)
 
+	def can_be_any_selected(self):
+		layers = self.presenter.get_editable_layers()
+		for layer in layers:
+			if layer.childs:
+				return True
+		return False
+
 	def select_all(self):
 		result = []
 		layers = self.presenter.get_editable_layers()
