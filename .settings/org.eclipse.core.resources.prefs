@@ -47,6 +47,7 @@ encoding//src/sk1/document/controllers/creators.py=utf-8
 encoding//src/sk1/document/controllers/editor_bezier.py=utf-8
 encoding//src/sk1/document/controllers/editor_chooser.py=utf-8
 encoding//src/sk1/document/controllers/editor_ellipse.py=utf-8
+encoding//src/sk1/document/controllers/editor_polygon.py=utf-8
 encoding//src/sk1/document/controllers/editor_rect.py=utf-8
 encoding//src/sk1/document/controllers/fleur_ctrl.py=utf-8
 encoding//src/sk1/document/controllers/generic.py=utf-8
