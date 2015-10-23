@@ -149,7 +149,7 @@ def get_polygon_paths(corners_num, angle1, angle2, coef1, coef2):
 
 	start = points[0]
 	points.append([] + start)
-	path = [start, points, sk2_const.CURVE_CLOSED]
+	path = [start, points[1:], sk2_const.CURVE_CLOSED]
 	return [path, ]
 
 def get_text_path(text, width, style, attributes):
