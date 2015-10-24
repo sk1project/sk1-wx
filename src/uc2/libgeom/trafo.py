@@ -58,8 +58,10 @@ def apply_trafo_to_bbox(bbox, trafo):
 	p0, p1 = apply_trafo_to_points([bbox[:2], bbox[2:]], trafo)
 	return p0 + p1
 
-def get_transformed_path(obj):
+def get_transformed_paths(obj):
 	if obj.is_curve():
 		return apply_trafo_to_paths(obj.paths, obj.trafo)
+	elif obj.cache_paths:
+		return apply_trafo_to_paths(obj.cache_paths, obj.trafo)
 	else:
 		return cwrap._get_transformed_path(obj)
