@@ -45,19 +45,17 @@ ARC_ARC = 0
 ARC_CHORD = 1
 ARC_PIE_SLICE = 2
 
-CIRCLE_CTRL = 0.55
-CIRCLE_CTRL_SHIFT = 0.45
-
-TEXTBLOCK_WIDTH = -1
+CIRCLE_CTRL = 0.5521
+CIRCLE_CTRL_SHIFT = 0.4479
 
 
 STUB_RECT = [0.0, 0.0, 1.0, 1.0]
 STUB_PATHS = [[[0.0, 0.0], [[10.0, 10.0], ], CURVE_OPENED], ]
 STUB_CIRCLE = [[[1.0, 0.5], [
-			[[1.0, 0.775], [0.775, 1.0], [0.5, 1.0], NODE_SYMMETRICAL],
-			[[0.225, 1.0], [0.0, 0.775], [0.0, 0.5], NODE_SYMMETRICAL],
-			[[0.0, 0.225], [0.225, 0.0], [0.5, 0.0], NODE_SYMMETRICAL],
-			[[0.775, 0.0], [1.0, 0.225], [1.0, 0.5], NODE_SYMMETRICAL],
+			[[1.0, 0.77605], [0.77605, 1.0], [0.5, 1.0], NODE_SYMMETRICAL],
+			[[0.22395, 1.0], [0.0, 0.77605], [0.0, 0.5], NODE_SYMMETRICAL],
+			[[0.0, 0.22395], [0.22395, 0.0], [0.5, 0.0], NODE_SYMMETRICAL],
+			[[0.77605, 0.0], [1.0, 0.22395], [1.0, 0.5], NODE_SYMMETRICAL],
 			], CURVE_CLOSED]]
 
 #Fill and stroke constants
@@ -93,3 +91,6 @@ CMYK_BLACK = [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, 'Black']
 CMYK_WHITE = [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 0.0], 1.0, 'White']
 RGB_BLACK = [uc2const.COLOR_RGB, [0.0, 0.0, 0.0], 1.0, 'Black']
 RGB_WHITE = [uc2const.COLOR_RGB, [1.0, 1.0, 1.0], 1.0, 'White']
+
+
+TEXTBLOCK_WIDTH = -1
