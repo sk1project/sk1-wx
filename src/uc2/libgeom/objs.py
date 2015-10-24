@@ -21,7 +21,8 @@ from copy import deepcopy
 from uc2 import libcairo
 from uc2.formats.sk2 import sk2_const
 
-from points import rotate_point
+from points import rotate_point, bezier_base_point
+from bezier_ops import split_bezier_curve
 
 #------------- Object specific routines -------------
 
@@ -36,6 +37,8 @@ def normalize_rect(rect):
 	if not width: width = .0000000001
 	if not height: height = .0000000001
 	return [x, y, width, height]
+
+#------------- RECTANGLE -------------
 
 def get_rect_paths(start, width, height, corners):
 	mr = min(width, height) / 2.0
@@ -102,29 +105,138 @@ def get_rect_paths(start, width, height, corners):
 	path.append(sk2_const.CURVE_CLOSED)
 	return [path, ]
 
+#------------- CIRCLE -------------
+
+EXTREME_ANGLES = (0.0, math.pi / 2.0, math.pi, 1.5 * math.pi, 2.0 * math.pi)
+START_ANGLES = (0.0, 2.0 * math.pi)
+
+def _get_arc_index(angle):
+	ret = 0
+	for index in range(4):
+		if angle > EXTREME_ANGLES[index]:
+			ret = index
+		else:break
+	return ret
+
+def _split_arcs_at_point(angle):
+	segments = deepcopy(sk2_const.STUB_ARCS)
+	index = _get_arc_index(angle)
+	if angle in EXTREME_ANGLES:
+		if angle in START_ANGLES:index = 0
+		points = segments[index:] + segments[:index]
+		start = bezier_base_point(points[-1])
+		return [[start, points, sk2_const.CURVE_CLOSED], ]
+	else:
+		points = segments[index + 1:] + segments[:index]
+		seg_start = bezier_base_point(points[-1])
+		seg_end = segments[index]
+		t = 2.0 * (angle - EXTREME_ANGLES[index]) / math.pi
+		new_point, new_end_point = split_bezier_curve(seg_start, seg_end, t)
+		new_point[3] = sk2_const.NODE_SMOOTH
+		new_end_point[3] = sk2_const.NODE_SMOOTH
+		points[-1][3] = sk2_const.NODE_SMOOTH
+		start = bezier_base_point(new_point)
+		return [[start, [new_end_point, ] + points + [new_point, ],
+				sk2_const.CURVE_CLOSED], ]
+
+def _exclude_segment_from_arcs(angle1, angle2):
+	segments = deepcopy(sk2_const.STUB_ARCS)
+	points = []
+	start_index = 0
+	end_index = 0
+	start_point = None
+
+	if angle1 in EXTREME_ANGLES:
+		start_index = _get_arc_index(angle1)
+		if angle1 in START_ANGLES:start_index = 0
+		start_point = bezier_base_point(segments[start_index - 1])
+		points = segments[start_index:] + segments[:start_index]
+	else:
+		start_index = _get_arc_index(angle1)
+		seg_start = bezier_base_point(segments[start_index - 1])
+		seg_end = segments[start_index]
+		t = 2.0 * (angle1 - EXTREME_ANGLES[start_index]) / math.pi
+		new_point, new_end_point = split_bezier_curve(seg_start, seg_end, t)
+		new_end_point[3] = sk2_const.NODE_SMOOTH
+		points = segments[start_index + 1:] + segments[:start_index]
+		points = [new_end_point, ] + points + [new_point, ]
+		start_point = bezier_base_point(new_point)
+
+	if angle2 in EXTREME_ANGLES and angle1 in EXTREME_ANGLES:
+		end_index = _get_arc_index(angle2)
+		if angle2 in START_ANGLES:end_index = 0
+		index = points.index(segments[end_index])
+		points = points[:index]
+	elif angle2 in EXTREME_ANGLES and not angle1 in EXTREME_ANGLES:
+		end_index = _get_arc_index(angle2)
+		if angle2 in START_ANGLES:end_index = 0
+		if segments[end_index] in points:
+			index = points.index(segments[end_index])
+		else:
+			index = -1
+		points = points[:index]
+	elif not angle2 in EXTREME_ANGLES and angle1 in EXTREME_ANGLES:
+		end_index = _get_arc_index(angle2)
+		seg_start = bezier_base_point(segments[end_index - 1])
+		seg_end = segments[end_index]
+		t = 2.0 * (angle2 - EXTREME_ANGLES[end_index]) / math.pi
+		new_point = split_bezier_curve(seg_start, seg_end, t)[0]
+		index = points.index(segments[end_index])
+		points = points[:index]
+		points += [new_point, ]
+	else:
+		end_index = _get_arc_index(angle2)
+		if not start_index == end_index:
+			seg_start = bezier_base_point(segments[end_index - 1])
+			seg_end = segments[end_index]
+			t = 2.0 * (angle2 - EXTREME_ANGLES[end_index]) / math.pi
+			new_point = split_bezier_curve(seg_start, seg_end, t)[0]
+			if segments[end_index] in points:
+				index = points.index(segments[end_index])
+			else:
+				index = -1
+			points = points[:index]
+			points += [new_point, ]
+		elif angle2 > angle1:
+			da = angle2 - angle1
+			t = da / (math.pi / 2.0 - (angle1 - EXTREME_ANGLES[end_index]))
+			seg_start = start_point
+			seg_end = points[0]
+			new_point = split_bezier_curve(seg_start, seg_end, t)[0]
+			points = [new_point, ]
+		else:
+			da = angle1 - angle2
+			t = 1.0 - da / (angle1 - EXTREME_ANGLES[end_index])
+			seg_start = bezier_base_point(points[-2])
+			seg_end = points[-1]
+			points[-1] = split_bezier_curve(seg_start, seg_end, t)[0]
+	return [[start_point, points, sk2_const.CURVE_CLOSED], ]
+
+
 def get_circle_paths(angle1, angle2, circle_type):
 	paths = []
+	if angle1 in START_ANGLES and angle2 in START_ANGLES:
+		angle1 = angle2 = 0.0
 	if angle1 == angle2:
-		paths = deepcopy(sk2_const.STUB_CIRCLE)
-		if circle_type:
+		paths = _split_arcs_at_point(angle1)
+		if circle_type in (sk2_const.ARC_PIE_SLICE, sk2_const.ARC_CHORD):
 			return paths
 		else:
 			paths[0][2] = sk2_const.CURVE_OPENED
 			return paths
 
-	libcairo.CTX.set_matrix(libcairo.DIRECT_MATRIX)
-	libcairo.CTX.new_path()
-	libcairo.CTX.arc(0.5, 0.5, 0.5, angle1, angle2)
-	cairo_path = libcairo.CTX.copy_path()
-	paths = libcairo.get_path_from_cpath(cairo_path)
-	if circle_type:
-		start_point = [] + paths[0][0]
-		paths[0][2] = sk2_const.CURVE_CLOSED
-		if circle_type == sk2_const.ARC_PIE_SLICE:
-			paths[0][1].append([0.5, 0.5])
+	paths = _exclude_segment_from_arcs(angle1, angle2)
+	start_point = [] + paths[0][0]
+	if circle_type == sk2_const.ARC_PIE_SLICE:
+		paths[0][1].append([0.5, 0.5])
 		paths[0][1].append(start_point)
+	elif circle_type == sk2_const.ARC_CHORD:
+		paths[0][1].append(start_point)
+	else:
+		paths[0][2] = sk2_const.CURVE_OPENED
 	return paths
 
+#------------- POLYGON -------------
 
 def get_polygon_paths(corners_num, angle1, angle2, coef1, coef2):
 
@@ -152,6 +264,8 @@ def get_polygon_paths(corners_num, angle1, angle2, coef1, coef2):
 	points.append([] + start)
 	path = [start, points[1:], sk2_const.CURVE_CLOSED]
 	return [path, ]
+
+#------------- TEXT -------------
 
 def get_text_path(text, width, style, attributes):
 	paths = []
