@@ -73,8 +73,8 @@ def distance(p0, p1):
 	return math.sqrt(math.pow((x1 - x0), 2) + math.pow((y1 - y0), 2))
 
 def bezier_base_point(point):
-	if len(point) == 2: return point
-	return point[2]
+	if len(point) == 2: return [] + point
+	return [] + point[2]
 
 def rotate_point(center, point, angle):
 	m21 = math.sin(angle)
