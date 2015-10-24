@@ -1040,7 +1040,7 @@ class PresenterAPI(AbstractAPI):
 		config = objs[0].config
 		paths = []
 		for obj in objs:
-			for item in libgeom.get_transformed_path(obj):
+			for item in libgeom.get_transformed_paths(obj):
 				if item[1]:paths.append(item)
 		result = model.Curve(config, parent)
 		result.paths = paths
@@ -1072,7 +1072,7 @@ class PresenterAPI(AbstractAPI):
 		index = parent.childs.index(obj)
 		config = obj.config
 
-		paths = libgeom.get_transformed_path(obj)
+		paths = libgeom.get_transformed_paths(obj)
 
 		objs = []
 
@@ -1106,7 +1106,7 @@ class PresenterAPI(AbstractAPI):
 		parent_index = parent.childs.index(target)
 		config = target.config
 
-		paths = libgeom.get_transformed_path(target)
+		paths = libgeom.get_transformed_paths(target)
 
 		p0 = []
 		p1 = []
