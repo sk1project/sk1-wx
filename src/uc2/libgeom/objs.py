@@ -147,7 +147,7 @@ def _exclude_segment_from_arcs(angle1, angle2):
 	start_point = None
 
 	if angle1 in EXTREME_ANGLES:
-		start_index = _get_arc_index(angle1)
+		start_index = _get_arc_index(angle1) + 1
 		if angle1 in START_ANGLES:start_index = 0
 		start_point = bezier_base_point(segments[start_index - 1])
 		points = segments[start_index:] + segments[:start_index]
@@ -163,12 +163,12 @@ def _exclude_segment_from_arcs(angle1, angle2):
 		start_point = bezier_base_point(new_point)
 
 	if angle2 in EXTREME_ANGLES and angle1 in EXTREME_ANGLES:
-		end_index = _get_arc_index(angle2)
+		end_index = _get_arc_index(angle2) + 1
 		if angle2 in START_ANGLES:end_index = 0
 		index = points.index(segments[end_index])
 		points = points[:index]
 	elif angle2 in EXTREME_ANGLES and not angle1 in EXTREME_ANGLES:
-		end_index = _get_arc_index(angle2)
+		end_index = _get_arc_index(angle2) + 1
 		if angle2 in START_ANGLES:end_index = 0
 		if segments[end_index] in points:
 			index = points.index(segments[end_index])
