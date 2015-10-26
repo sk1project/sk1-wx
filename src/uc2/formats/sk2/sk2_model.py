@@ -15,8 +15,8 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import math
 from copy import deepcopy
-
 
 from uc2 import uc2const
 from uc2 import _, cms
@@ -576,6 +576,23 @@ class Polygon(PrimitiveObject):
 		return libgeom.get_polygon_paths(self.corners_num,
 									self.angle1, self.angle2,
 									self.coef1, self.coef2)
+
+	def get_corner_radius(self): return 0.5
+
+	def get_midpoint_radius(self):
+		val = math.pi / float(self.corners_num)
+		return self.get_corner_radius() * math.cos(val)
+
+	def get_corner_angle(self, index):
+		val = 2.0 * math.pi / float(self.corners_num) * float(index) + math.pi / 2.0
+		if val > 2.0 * math.pi: val -= 2.0 * math.pi
+		return val
+
+	def get_midpoint_angle(self, index):
+		val = self.get_corner_angle(index) + math.pi / float(self.corners_num)
+		if val > 2.0 * math.pi: val -= 2.0 * math.pi
+		return val
+
 
 class Curve(PrimitiveObject):
 
