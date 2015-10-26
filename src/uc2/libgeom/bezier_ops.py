@@ -23,6 +23,11 @@ from uc2.formats.sk2 import sk2_const
 from flattering import flat_path
 from points import distance, mult_point, add_points
 
+
+def bezier_base_point(point):
+	if len(point) == 2: return [] + point
+	return [] + point[2]
+
 def get_path_length(path):
 	fpath = flat_path(path)
 	points = [fpath[0], ] + fpath[1]
