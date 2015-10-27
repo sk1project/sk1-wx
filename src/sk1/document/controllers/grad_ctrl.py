@@ -21,7 +21,7 @@ from uc2 import uc2const, libgeom
 from uc2.formats.sk2 import sk2_model
 from uc2.formats.sk2 import sk2_const
 
-from sk1 import modes, config
+from sk1 import _, modes, config, events
 from generic import AbstractController
 
 GRADIENT_CLR_MODES = [uc2const.COLOR_CMYK, uc2const.COLOR_RGB, uc2const.COLOR_GRAY]
@@ -84,6 +84,7 @@ class GradientCreator(AbstractController):
 	is_first_point = True
 	orig_style = None
 	new_style = None
+	msg = _('Gradient creating')
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -95,6 +96,7 @@ class GradientCreator(AbstractController):
 		self.canvas.selection_redraw()
 		self.orig_style = self.target.style
 		self.new_style = deepcopy(self.orig_style)
+		events.emit(events.APP_STATUS, self.msg)
 
 	def escape_pressed(self):
 		self.api.set_temp_style(self.target, self.orig_style)
@@ -139,6 +141,7 @@ class GradientCreator(AbstractController):
 			self._update_style()
 			style = deepcopy(self.new_style)
 			self.api.set_temp_style(self.target, style)
+			events.emit(events.APP_STATUS, self.msg)
 
 	def mouse_up(self, event):
 		p = self.snap.snap_point(event.get_point())[2]
@@ -179,6 +182,7 @@ class GradientEditor(AbstractController):
 	mode = modes.GR_EDIT_MODE
 	moved_point = None
 	vector = []
+	msg = _('Gradient in editing')
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -191,6 +195,7 @@ class GradientEditor(AbstractController):
 		self.orig_style = self.target.style
 		self.new_style = deepcopy(self.orig_style)
 		self.vector = self._get_doc_vector(self.orig_style)
+		events.emit(events.APP_STATUS, self.msg)
 
 	def escape_pressed(self):
 		if self.moved_point:
@@ -222,6 +227,7 @@ class GradientEditor(AbstractController):
 			self.api.set_temp_style(self.target, self.new_style)
 		else:
 			self.api.set_fill_style(deepcopy(self.new_style[0]))
+		events.emit(events.APP_STATUS, self.msg)
 
 	def repaint(self):
 		x0, y0, x1, y1 = self.target.cache_bbox
