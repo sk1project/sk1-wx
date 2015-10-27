@@ -72,10 +72,6 @@ def distance(p0, p1):
 	x1, y1 = p1
 	return math.sqrt(math.pow((x1 - x0), 2) + math.pow((y1 - y0), 2))
 
-def bezier_base_point(point):
-	if len(point) == 2: return [] + point
-	return [] + point[2]
-
 def rotate_point(center, point, angle):
 	m21 = math.sin(angle)
 	m11 = m22 = math.cos(angle)
@@ -84,3 +80,30 @@ def rotate_point(center, point, angle):
 	dy = center[1] - m21 * center[0] - m11 * center[1];
 	trafo = [m11, m21, m12, m22, dx, dy]
 	return apply_trafo_to_point(point, trafo)
+
+def get_point_radius(p, center=[0.5, 0.5]):
+	return distance(p, center)
+
+def get_point_angle(p, center=[0.5, 0.5]):
+	x0, y0 = center
+	x, y = p
+	r = get_point_radius(p, center)
+	if x >= x0 and y == y0:
+		return 0.0
+	elif x < x0 and y == y0:
+		return math.pi
+	elif x == x0 and y > y0:
+		return math.pi / 2.0
+	elif x == x0 and y < y0:
+		return math.pi / 2.0 + math.pi
+	elif x > x0 and y > y0:
+		return math.acos((x - x0) / r)
+	elif x < x0 and y > y0:
+		return math.pi - math.acos((x0 - x) / r)
+	elif x < x0 and y < y0:
+		return math.pi + math.acos((x0 - x) / r)
+	elif x > x0 and y < y0:
+		return 2.0 * math.pi - math.acos((x - x0) / r)
+
+
+
