@@ -216,6 +216,7 @@ class SK2_Methods:
 		obj.angle2 = angle2
 		obj.coef1 = coef1
 		obj.coef2 = coef2
+		obj.update()
 
 	def set_circle_properties(self, obj, circle_type, angle1, angle2):
 		obj.circle_type = circle_type
