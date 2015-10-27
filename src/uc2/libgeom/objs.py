@@ -21,8 +21,8 @@ from copy import deepcopy
 from uc2 import libcairo
 from uc2.formats.sk2 import sk2_const
 
-from points import rotate_point, bezier_base_point
-from bezier_ops import split_bezier_curve
+from points import rotate_point
+from bezier_ops import split_bezier_curve, bezier_base_point
 
 #------------- Object specific routines -------------
 
