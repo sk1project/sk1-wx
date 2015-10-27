@@ -18,7 +18,6 @@
 import math
 from copy import deepcopy
 
-from uc2 import libcairo
 from uc2.formats.sk2 import sk2_const
 
 from points import rotate_point
