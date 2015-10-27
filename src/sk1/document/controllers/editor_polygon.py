@@ -35,6 +35,9 @@ class PolygonEditor(AbstractController):
 	orig_coef1 = 1.0
 	orig_coef2 = 1.0
 
+	midpoint_index = None
+	corner_index = None
+
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
 
@@ -92,7 +95,6 @@ class PolygonEditor(AbstractController):
 		events.emit(events.APP_STATUS, msg)
 
 	#----- REPAINT
-
 	def repaint(self):
 		x0, y0, x1, y1 = self.target.cache_bbox
 		p0 = self.canvas.point_doc_to_win([x0, y0])
@@ -101,20 +103,93 @@ class PolygonEditor(AbstractController):
 		for item in self.corner_points: item.repaint()
 		for item in self.midpoints: item.repaint()
 
+	#----- CHANGE APPLY
+	def apply_corner_change(self, point, index, control=False, final=False):
+		wpoint = self.canvas.point_win_to_doc(point)
+		invtrafo = libgeom.invert_trafo(self.target.trafo)
+		x, y = libgeom.apply_trafo_to_point(wpoint, invtrafo)
+		radius = self.target.get_corner_radius()
+		angle = self.target.get_corner_angle(index)
+		coef1 = libgeom.get_point_radius([x, y]) / radius
+		if control:
+			props = [self.orig_angle1, self.orig_angle2,
+					coef1, self.orig_coef2]
+		else:
+			angle1 = libgeom.get_point_angle([x, y]) - angle
+			props = [angle1, self.orig_angle2,
+					coef1, self.orig_coef2]
+		if final:
+			props_before = [self.orig_angle1, self.orig_angle2,
+					self.orig_coef1, self.orig_coef2]
+			self.api.set_polygon_properties_final(props, props_before,
+												self.target)
+		else:
+			self.api.set_polygon_properties(props, self.target)
+		self.update_points()
+
+	def apply_midpoint_change(self, point, index, control=False, final=False):
+		wpoint = self.canvas.point_win_to_doc(point)
+		invtrafo = libgeom.invert_trafo(self.target.trafo)
+		x, y = libgeom.apply_trafo_to_point(wpoint, invtrafo)
+		radius = self.target.get_midpoint_radius()
+		angle = self.target.get_midpoint_angle(index)
+		coef2 = libgeom.get_point_radius([x, y]) / radius
+		if control:
+			props = [self.orig_angle1, self.orig_angle2,
+					self.orig_coef1, coef2]
+		else:
+			angle2 = libgeom.get_point_angle([x, y]) - angle
+			props = [self.orig_angle1, angle2,
+					self.orig_coef1, coef2]
+		if final:
+			props_before = [self.orig_angle1, self.orig_angle2,
+					self.orig_coef1, self.orig_coef2]
+			self.api.set_polygon_properties_final(props, props_before,
+												self.target)
+		else:
+			self.api.set_polygon_properties(props, self.target)
+		self.update_points()
+
 	#----- MOUSE CONTROLLING
 	def mouse_down(self, event):
 		self.selected_obj = None
-
+		self.corner_index = None
+		self.midpoint_index = None
+		for item in self.corner_points:
+			if item.is_pressed(event.get_point()):
+				self.corner_index = item.index
+				self.store_props()
+				return
+		for item in self.midpoints:
+			if item.is_pressed(event.get_point()):
+				self.midpoint_index = item.index
+				self.store_props()
+				return
 		objs = self.canvas.pick_at_point(event.get_point())
 		if objs and not objs[0] == self.target and objs[0].is_primitive():
 			self.selected_obj = objs[0]
 
 	def mouse_up(self, event):
-		if self.selected_obj:
+		if not self.corner_index is None:
+			self.apply_corner_change(event.get_point(), self.corner_index,
+									event.is_ctrl(), True)
+			self.corner_index = None
+		elif not self.midpoint_index is None:
+			self.apply_midpoint_change(event.get_point(), self.midpoint_index,
+									event.is_ctrl(), True)
+			self.midpoint_index = None
+		elif self.selected_obj:
 			self.target = self.selected_obj
+			self.selected_obj = None
 			self.canvas.set_mode(modes.SHAPER_MODE)
 
-	def mouse_move(self, event):pass
+	def mouse_move(self, event):
+		if not self.corner_index is None:
+			self.apply_corner_change(event.get_point(), self.corner_index,
+									event.is_ctrl())
+		elif not self.midpoint_index is None:
+			self.apply_midpoint_change(event.get_point(), self.midpoint_index,
+									event.is_ctrl())
 
 
 class CornerPoint:
