@@ -1379,6 +1379,40 @@ class PresenterAPI(AbstractAPI):
 		self.add_undo(transaction)
 		self.selection.update()
 
+	def set_polygon_properties(self, props, obj=None):
+		if obj is None:
+			sel = [] + self.selection.objs
+			obj = sel[0]
+		self.methods.set_polygon_properties(obj, *props)
+		self.eventloop.emit(self.eventloop.DOC_MODIFIED)
+		self.selection.update()
+
+	def set_polygon_properties_final(self, props, props_before=[], obj=None):
+		if obj is None:
+			sel = [] + self.selection.objs
+			obj = sel[0]
+			if not props_before:
+				props_before = [obj.angle1, obj.angle2, obj.coef1, obj.coef2]
+			self.methods.set_polygon_properties(obj, *props)
+			transaction = [
+				[[self.methods.set_rect_corners, obj, ] + props_before,
+				[self._set_selection, sel], ],
+				[[self.methods.set_rect_corners, obj, ] + props,
+				[self._set_selection, sel]],
+				False]
+			self.add_undo(transaction)
+			self.selection.update()
+		else:
+			if not props_before:
+				props_before = [obj.angle1, obj.angle2, obj.coef1, obj.coef2]
+			self.methods.set_polygon_properties(obj, *props)
+			transaction = [
+				[[self.methods.set_rect_corners, obj, ] + props_before, ],
+				[[self.methods.set_rect_corners, obj, ] + props, ],
+				False]
+			self.add_undo(transaction)
+			self.selection.update()
+
 	def set_circle_properties(self, circle_type, angle1, angle2, obj=None):
 		if obj is None:
 			sel = [] + self.selection.objs
