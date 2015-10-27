@@ -211,6 +211,12 @@ class SK2_Methods:
 		obj.corners_num = num
 		obj.update()
 
+	def set_polygon_properties(self, obj, angle1, angle2, coef1, coef2):
+		obj.angle1 = angle1
+		obj.angle2 = angle2
+		obj.coef1 = coef1
+		obj.coef2 = coef2
+
 	def set_circle_properties(self, obj, circle_type, angle1, angle2):
 		obj.circle_type = circle_type
 		obj.angle1 = angle1
