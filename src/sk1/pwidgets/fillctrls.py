@@ -550,3 +550,41 @@ class GradientFill(FillTab):
 class PatternFill(FillTab):
 
 	name = _('Pattern Fill')
+
+	def activate(self, fill_style, new_color=None):
+		FillTab.activate(self, fill_style)
+
+	def build(self):
+		panel = wal.HPanel(self)
+		self.pattern_clrs = wal.HToggleKeeper(panel, GRADIENT_CLR_MODES,
+								GRADIENT_CLR_ICONS,
+								GRADIENT_CLR_NAMES, self.on_clr_mode_change)
+		panel.pack(self.pattern_clrs)
+		panel.pack(wal.HPanel(panel), fill=True, expand=True)
+
+		self.rule_keeper = FillRuleKeeper(panel)
+		panel.pack(self.rule_keeper)
+		self.pack(panel, fill=True, padding_all=5)
+		self.pack(wal.HLine(self), fill=True)
+
+
+		self.pack(wal.HPanel(self), fill=True, expand=True)
+
+
+		self.pack(wal.HLine(self), fill=True)
+
+		panel = wal.HPanel(self)
+		self.refpanel = FillFillRefPanel(self, self.cms, self.orig_fill,
+						deepcopy(self.orig_fill), on_orig=self.set_orig_fill)
+		panel.pack(self.refpanel)
+
+		panel.pack(wal.HPanel(panel), fill=True, expand=True)
+
+		self.presets = GradientMiniPalette(panel, self.cms,
+										onclick=self.on_presets_select)
+		panel.pack(self.presets)
+		self.pack(panel, fill=True, padding_all=5)
+
+	def set_orig_fill(self):pass
+	def on_clr_mode_change(self, mode):pass
+	def on_presets_select(self, *args):pass
