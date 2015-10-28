@@ -15,13 +15,13 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import cairo
+import cairo, wal, os
 from copy import deepcopy
-import wal
+from base64 import b64decode
 
-from uc2 import uc2const, cms
+from uc2 import uc2const, cms, libimg
 from uc2.cms import get_registration_black, verbose_color, val_255_to_dec
-from uc2.formats.sk2 import sk2_const
+from uc2.formats.sk2 import sk2_const, sk2_model, sk2_config
 from sk1 import _, config, events
 from sk1.resources import icons, get_icon
 
@@ -298,7 +298,28 @@ class SwatchCanvas(wal.SensitiveCanvas):
 		ctx.fill()
 		self.gc_draw_bitmap(wal.copy_surface_to_bitmap(surface), 0, 0)
 
-	def draw_pattern(self):pass
+	def draw_pattern(self):
+		w, h = self.get_size()
+		pattern = self.fill[2]
+		surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
+		ctx = cairo.Context(surface)
+		self.draw_cairo_background(ctx)
+		if pattern[0] == sk2_const.PATTERN_IMG:
+			bmpstr = b64decode(pattern[1])
+			config = sk2_config.SK2_Config()
+			config_file = os.path.join(self.cms.app.appdata.app_config_dir,
+									'sk2_config.xml')
+			config.load(config_file)
+			image_obj = sk2_model.Pixmap(config)
+			libimg.set_image_data(self.cms, image_obj, bmpstr)
+			libimg.update_image(self.cms, image_obj)
+			sp = cairo.SurfacePattern(image_obj.cache_cdata)
+			sp.set_extend(cairo.EXTEND_REPEAT)
+			ctx.set_source(sp)
+			ctx.rectangle(0, 0, w, h)
+			ctx.fill()
+			image_obj.cache_cdata = None
+		self.gc_draw_bitmap(wal.copy_surface_to_bitmap(surface), 0, 0)
 
 	def draw_empty_pattern(self):
 		w, h = self.get_size()
