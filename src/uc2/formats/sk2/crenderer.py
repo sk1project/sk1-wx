@@ -17,6 +17,7 @@
 
 import cairo
 from base64 import b64decode
+from copy import deepcopy
 
 from uc2 import libimg, libcairo, libgeom
 from uc2.formats.sk2 import sk2_model as model
@@ -208,26 +209,30 @@ class CairoRenderer:
 			if not obj.fill_trafo:
 				obj.fill_trafo = [] + sk2_const.NORMAL_TRAFO
 			pattern_fill = fill[2]
-			if pattern_fill[0] == sk2_const.PATTERN_IMG:
-				if not obj.cache_pattern_img:
-					bmpstr = b64decode(pattern_fill[1])
-					image_obj = model.Pixmap(obj.config)
-					libimg.set_image_data(self.cms, image_obj, bmpstr)
-					libimg.update_image(self.cms, image_obj)
-					obj.cache_pattern_img = image_obj.cache_cdata
-					image_obj.cache_cdata = None
-				sp = cairo.SurfacePattern(obj.cache_pattern_img)
-				sp.set_extend(cairo.EXTEND_REPEAT)
-				matrix = cairo.Matrix(*obj.fill_trafo)
-				matrix.invert()
-				sp.set_matrix(matrix)
-				ctx.set_source(sp)
+			if not obj.cache_pattern_img:
+				bmpstr = b64decode(pattern_fill[1])
+				image_obj = model.Pixmap(obj.config)
+				if pattern_fill[0] == sk2_const.PATTERN_IMG and \
+				 len(pattern_fill) > 2:
+					image_obj.style[3] = deepcopy(pattern_fill[2])
+				libimg.set_image_data(self.cms, image_obj, bmpstr)
+				libimg.update_image(self.cms, image_obj)
+				obj.cache_pattern_img = image_obj.cache_cdata
+				image_obj.cache_cdata = None
+			sp = cairo.SurfacePattern(obj.cache_pattern_img)
+			sp.set_extend(cairo.EXTEND_REPEAT)
+			matrix = cairo.Matrix(*obj.fill_trafo)
+			matrix.invert()
+			if len(pattern_fill) > 3:
+				matrix = cairo.Matrix(*pattern_fill[3]) * matrix
+			sp.set_matrix(matrix)
+			ctx.set_source(sp)
 
-				canvas_matrix = ctx.get_matrix()
-				canvas_trafo = libcairo.get_trafo_from_matrix(canvas_matrix)
-				zoom = canvas_trafo[0]
-				if zoom * abs(obj.fill_trafo[0]) > .98:
-					ctx.get_source().set_filter(cairo.FILTER_NEAREST)
+			canvas_matrix = ctx.get_matrix()
+			canvas_trafo = libcairo.get_trafo_from_matrix(canvas_matrix)
+			zoom = canvas_trafo[0]
+			if zoom * abs(obj.fill_trafo[0]) > .98:
+				ctx.get_source().set_filter(cairo.FILTER_NEAREST)
 
 	def process_stroke(self, ctx, obj, style=None):
 		if style: stroke = style[1]
