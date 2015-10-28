@@ -217,7 +217,7 @@ class CairoRenderer:
 					obj.cache_pattern_img = image_obj.cache_cdata
 					image_obj.cache_cdata = None
 				sp = cairo.SurfacePattern(obj.cache_pattern_img)
-				sp.set_extend(cairo.EXTEND_REPEAT);
+				sp.set_extend(cairo.EXTEND_REPEAT)
 				matrix = cairo.Matrix(*obj.fill_trafo)
 				matrix.invert()
 				sp.set_matrix(matrix)
