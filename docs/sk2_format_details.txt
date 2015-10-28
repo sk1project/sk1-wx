@@ -28,13 +28,7 @@ stops => [[offset,color],[offset,color], ...]
 -------------------------------------------------------------------------------
 
 PATTERN DEFINITION:
-[pattern_type, pattern]
-
--------------------------------------------------------------------------------
-
-STYLE DEFINITION:
-
-[fill, stroke, text, image_style]
+[pattern_type, pattern, image_style, trafo]
 
 -------------------------------------------------------------------------------
 
@@ -77,6 +71,12 @@ STROKE DEFINITION:
  scalable flag,
  markers,
  ]
+
+-------------------------------------------------------------------------------
+
+STYLE DEFINITION:
+
+[fill, stroke, text, image_style]
 
 -------------------------------------------------------------------------------
 
