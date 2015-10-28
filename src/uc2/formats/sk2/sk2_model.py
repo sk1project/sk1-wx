@@ -63,6 +63,7 @@ class DocumentObject(TextModelObject):
 	def is_circle(self): return False
 	def is_polygon(self): return False
 	def is_text(self): return False
+	def is_closed(self): return False
 
 
 class Document(DocumentObject):
@@ -464,6 +465,7 @@ class Rectangle(PrimitiveObject):
 		self.height = rect[3]
 
 	def is_rect(self): return True
+	def is_closed(self): return True
 
 	def get_initial_paths(self):
 		return libgeom.get_rect_paths(self.start, self.width,
@@ -530,6 +532,10 @@ class Circle(PrimitiveObject):
 		self.style = style
 
 	def is_circle(self): return True
+	def is_closed(self):
+		if self.circle_type == sk2_const.ARC_ARC: return False
+		return True
+
 	def get_center(self): return [0.5, 0.5]
 
 	def get_initial_paths(self):
@@ -571,6 +577,7 @@ class Polygon(PrimitiveObject):
 		self.style = style
 
 	def is_polygon(self): return True
+	def is_closed(self): return True
 
 	def get_initial_paths(self):
 		return libgeom.get_polygon_paths(self.corners_num,
@@ -614,6 +621,13 @@ class Curve(PrimitiveObject):
 		return self.paths
 
 	def is_curve(self): return True
+
+	def is_closed(self):
+		for path in self.paths:
+			if path[2] == sk2_const.CURVE_CLOSED:
+				return True
+		return False
+
 	def to_curve(self): return self
 
 class Text(PrimitiveObject):
@@ -648,6 +662,7 @@ class Text(PrimitiveObject):
 
 
 	def is_text(self): return True
+	def is_closed(self): return True
 
 	def get_initial_paths(self):
 		return libgeom.get_text_path(self.text, self.width, self.style,
