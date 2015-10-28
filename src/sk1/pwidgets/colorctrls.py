@@ -27,6 +27,56 @@ from sk1.resources import icons, get_icon
 
 from palette_viewer import PaletteViewer
 
+FILL_MODES = [sk2_const.FILL_ANY, sk2_const.FILL_CLOSED_ONLY]
+RULE_MODES = [sk2_const.FILL_EVENODD, sk2_const.FILL_NONZERO]
+
+FILL_MODE_ICONS = {
+sk2_const.FILL_ANY: icons.PD_FILL_ANY,
+sk2_const.FILL_CLOSED_ONLY: icons.PD_FILL_CLOSED_ONLY,
+}
+RULE_MODE_ICONS = {
+sk2_const.FILL_EVENODD: icons.PD_EVENODD,
+sk2_const.FILL_NONZERO: icons.PD_NONZERO,
+}
+
+FILL_MODE_NAMES = {
+sk2_const.FILL_ANY: _('Fill any contour'),
+sk2_const.FILL_CLOSED_ONLY: _('Fill closed only'),
+}
+RULE_MODE_NAMES = {
+sk2_const.FILL_EVENODD: _('Evenodd fill'),
+sk2_const.FILL_NONZERO: _('Nonzero fill'),
+}
+
+class FillRuleKeeper(wal.HPanel):
+
+	mode = 0
+	fill_keeper = None
+	rule_keeper = None
+
+	def __init__(self, parent, mode=sk2_const.FILL_EVENODD):
+		self.mode = mode
+		wal.HPanel.__init__(self, parent)
+		self.fill_keeper = wal.HToggleKeeper(self, FILL_MODES,
+										FILL_MODE_ICONS, FILL_MODE_NAMES)
+		self.pack(self.fill_keeper)
+		self.rule_keeper = wal.HToggleKeeper(self, RULE_MODES,
+										RULE_MODE_ICONS, RULE_MODE_NAMES)
+		self.pack(self.rule_keeper)
+		self.set_mode(self.mode)
+
+	def set_mode(self, mode):
+		self.fill_keeper.set_mode(mode & sk2_const.FILL_CLOSED_ONLY)
+		self.rule_keeper.set_mode(mode & sk2_const.FILL_EVENODD)
+
+	def get_mode(self):
+		return self.rule_keeper.mode | self.fill_keeper.mode
+
+	def set_enable(self, val):
+		self.fill_keeper.set_enable(val)
+		self.rule_keeper.set_enable(val)
+
+
 CMYK_PALETTE = [
 [uc2const.COLOR_CMYK, [1.0, 1.0, 1.0, 1.0], 1.0, 'CMYK Registration'],
 [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, 'Black'],
