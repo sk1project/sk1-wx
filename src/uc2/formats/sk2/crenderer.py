@@ -167,7 +167,10 @@ class CairoRenderer:
 	def process_fill(self, ctx, obj):
 		fill = obj.style[0]
 		fill_rule = fill[0]
-		if fill_rule:
+		if fill_rule & sk2_const.FILL_CLOSED_ONLY and not obj.is_closed():
+			ctx.set_source_rgba(0.0, 0.0, 0.0, 0.0)
+			return
+		if fill_rule & sk2_const.FILL_EVENODD:
 			ctx.set_fill_rule(cairo.FILL_RULE_EVEN_ODD)
 		else:
 			ctx.set_fill_rule(cairo.FILL_RULE_WINDING)
