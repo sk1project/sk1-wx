@@ -19,7 +19,7 @@ import cairo, wal, os
 from copy import deepcopy
 from base64 import b64decode
 
-from uc2 import uc2const, cms, libimg
+from uc2 import uc2const, cms, libimg, libgeom
 from uc2.cms import get_registration_black, verbose_color, val_255_to_dec
 from uc2.formats.sk2 import sk2_const, sk2_model, sk2_config
 from sk1 import _, config, events
@@ -304,21 +304,24 @@ class SwatchCanvas(wal.SensitiveCanvas):
 		surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
 		ctx = cairo.Context(surface)
 		self.draw_cairo_background(ctx)
-		if pattern[0] == sk2_const.PATTERN_IMG:
-			bmpstr = b64decode(pattern[1])
-			config = sk2_config.SK2_Config()
-			config_file = os.path.join(self.cms.app.appdata.app_config_dir,
-									'sk2_config.xml')
-			config.load(config_file)
-			image_obj = sk2_model.Pixmap(config)
-			libimg.set_image_data(self.cms, image_obj, bmpstr)
-			libimg.update_image(self.cms, image_obj)
-			sp = cairo.SurfacePattern(image_obj.cache_cdata)
-			sp.set_extend(cairo.EXTEND_REPEAT)
-			ctx.set_source(sp)
-			ctx.rectangle(0, 0, w, h)
-			ctx.fill()
-			image_obj.cache_cdata = None
+		bmpstr = b64decode(pattern[1])
+		config = sk2_config.SK2_Config()
+		config_file = os.path.join(self.cms.app.appdata.app_config_dir,
+								'sk2_config.xml')
+		config.load(config_file)
+		image_obj = sk2_model.Pixmap(config)
+		if pattern[0] == sk2_const.PATTERN_IMG and len(pattern) > 2:
+			image_obj.style[3] = deepcopy(pattern[2])
+		libimg.set_image_data(self.cms, image_obj, bmpstr)
+		libimg.update_image(self.cms, image_obj)
+		sp = cairo.SurfacePattern(image_obj.cache_cdata)
+		sp.set_extend(cairo.EXTEND_REPEAT)
+		if pattern[0] == sk2_const.PATTERN_IMG and len(pattern) > 3:
+			sp.set_matrix(cairo.Matrix(*pattern[3]))
+		ctx.set_source(sp)
+		ctx.rectangle(0, 0, w, h)
+		ctx.fill()
+		image_obj.cache_cdata = None
 		self.gc_draw_bitmap(wal.copy_surface_to_bitmap(surface), 0, 0)
 
 	def draw_empty_pattern(self):
