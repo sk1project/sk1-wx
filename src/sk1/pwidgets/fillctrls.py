@@ -26,8 +26,8 @@ from sk1.resources import icons
 
 from colorctrls import PaletteSwatch, CMYK_Mixer, RGB_Mixer, Gray_Mixer, \
 SPOT_Mixer, Palette_Mixer
-from colorctrls import FillColorRefPanel, MiniPalette, FillFillRefPanel
-from colorctrls import CMYK_PALETTE, RGB_PALETTE, GRAY_PALETTE, SPOT_PALETTE
+from colorctrls import FillColorRefPanel, MiniPalette, FillFillRefPanel, \
+FillRuleKeeper, CMYK_PALETTE, RGB_PALETTE, GRAY_PALETTE, SPOT_PALETTE
 from gradientctrls import GradientEditor, GradientMiniPalette
 
 #--- Solid fill panels
@@ -314,19 +314,6 @@ PAL_MODE: Palette_Panel,
 EMPTY_MODE: Empty_Panel,
 }
 
-RULE_MODES = [sk2_const.FILL_EVENODD, sk2_const.FILL_NONZERO]
-
-RULE_MODE_ICONS = {
-sk2_const.FILL_EVENODD: icons.PD_EVENODD,
-sk2_const.FILL_NONZERO: icons.PD_NONZERO,
-}
-
-RULE_MODE_NAMES = {
-sk2_const.FILL_EVENODD: _('Evenodd fill'),
-sk2_const.FILL_NONZERO: _('Nonzero fill'),
-}
-
-
 
 class FillTab(wal.VPanel):
 
@@ -386,8 +373,7 @@ class SolidFill(FillTab):
 									SOLID_MODE_NAMES, self.on_mode_change)
 		panel.pack(self.solid_keeper)
 		panel.pack(wal.HPanel(panel), fill=True, expand=True)
-		self.rule_keeper = wal.HToggleKeeper(panel, RULE_MODES,
-										RULE_MODE_ICONS, RULE_MODE_NAMES)
+		self.rule_keeper = FillRuleKeeper(panel)
 		panel.pack(self.rule_keeper)
 		if not self.use_rule: self.rule_keeper.set_visible(False)
 		self.pack(panel, fill=True, padding_all=5)
@@ -410,7 +396,7 @@ class SolidFill(FillTab):
 
 	def get_result(self):
 		clr = self.active_panel.get_color()
-		if clr: return [self.rule_keeper.mode, sk2_const.FILL_SOLID, clr]
+		if clr: return [self.rule_keeper.get_mode(), sk2_const.FILL_SOLID, clr]
 		else: return []
 
 #--- Gradient fill stuff
@@ -496,8 +482,7 @@ class GradientFill(FillTab):
 		panel.pack(self.grad_clrs)
 		panel.pack(wal.HPanel(panel), fill=True, expand=True)
 
-		self.rule_keeper = wal.HToggleKeeper(panel, RULE_MODES,
-										RULE_MODE_ICONS, RULE_MODE_NAMES)
+		self.rule_keeper = FillRuleKeeper(panel)
 		panel.pack(self.rule_keeper)
 		self.pack(panel, fill=True, padding_all=5)
 		self.pack(wal.HLine(self), fill=True)
@@ -551,7 +536,7 @@ class GradientFill(FillTab):
 		vector = self.vector
 		if not self.grad_editor.use_vector():vector = []
 		grad = [self.grad_keeper.get_mode(), vector, stops]
-		return [self.rule_keeper.mode, sk2_const.FILL_GRADIENT, grad]
+		return [self.rule_keeper.get_mode(), sk2_const.FILL_GRADIENT, grad]
 
 	def update(self):
 		self.grad_keeper.set_mode(self.new_fill[2][0])
