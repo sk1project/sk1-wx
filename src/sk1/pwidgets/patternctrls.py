@@ -60,7 +60,6 @@ class PatternMiniPalette(wal.VPanel):
 		self.cells = []
 
 		for item in range(12):
-			print item
 			self.cells.append(PatternPaletteSwatch(grid, cms,
 							PATTERN_PRESETS[item], onclick=self.on_click))
 			grid.pack(self.cells[-1])
