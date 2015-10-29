@@ -29,6 +29,7 @@ SPOT_Mixer, Palette_Mixer
 from colorctrls import FillColorRefPanel, MiniPalette, FillFillRefPanel, \
 FillRuleKeeper, CMYK_PALETTE, RGB_PALETTE, GRAY_PALETTE, SPOT_PALETTE
 from gradientctrls import GradientEditor, GradientMiniPalette
+from patternctrls import PatternMiniPalette
 
 #--- Solid fill panels
 
@@ -580,7 +581,7 @@ class PatternFill(FillTab):
 
 		panel.pack(wal.HPanel(panel), fill=True, expand=True)
 
-		self.presets = GradientMiniPalette(panel, self.cms,
+		self.presets = PatternMiniPalette(panel, self.cms,
 										onclick=self.on_presets_select)
 		panel.pack(self.presets)
 		self.pack(panel, fill=True, padding_all=5)
