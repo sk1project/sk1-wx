@@ -51,7 +51,7 @@ FILL DEFINITION:
  gradient]
 
 [fill rule,
- FILL_TILED,
+ FILL_PATTERN,
  pattern]
 
 -------------------------------------------------------------------------------
