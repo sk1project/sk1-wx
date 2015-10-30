@@ -52,7 +52,7 @@ class PatternMiniPalette(wal.VPanel):
 	callback = None
 	cells = []
 
-	def __init__(self, parent, cms, stops=[], onclick=None):
+	def __init__(self, parent, cms, onclick=None):
 		wal.VPanel.__init__(self, parent)
 		self.set_bg(wal.BLACK)
 		grid = wal.GridPanel(parent, 2, 6, 1, 1)
@@ -68,3 +68,49 @@ class PatternMiniPalette(wal.VPanel):
 
 	def on_click(self, pattern):
 		if self.callback: self.callback(pattern)
+
+class PatternSwatch(wal.VPanel, SwatchCanvas):
+
+	callback = None
+	pattern = None
+
+	def __init__(self, parent, cms, pattern_def, size=(130, 130)):
+		self.color = None
+		self.cms = cms
+		wal.VPanel.__init__(self, parent)
+		SwatchCanvas.__init__(self, border='news')
+		self.pack(size)
+		self.set_pattern_def(pattern_def)
+
+	def set_pattern_def(self, pattern_def):
+		self.fill = [0, sk2_const.FILL_PATTERN, pattern_def]
+		self.refresh()
+
+class PatternEditor(wal.HPanel):
+
+	pattern_def = []
+	cms = None
+	dlg = None
+
+	def __init__(self, parent, dlg, cms, pattern_def, onchange=None):
+		self.dlg = dlg
+		self.cms = cms
+		self.pattern_def = pattern_def
+		wal.HPanel.__init__(self, parent)
+		left_panel = wal.VPanel(self)
+		self.pattern_swatch = PatternSwatch(left_panel, self.cms, pattern_def)
+		left_panel.pack(self.pattern_swatch)
+		self.pack(left_panel, fill=True)
+
+		right_panel = wal.VPanel(self)
+		self.pack(right_panel, fill=True, expand=True)
+
+	def set_pattern_def(self, pattern_def):
+		self.pattern_def = deepcopy(pattern_def)
+		self.update()
+
+	def get_pattern_def(self):
+		return deepcopy(self.pattern_def)
+
+	def update(self):
+		self.pattern_swatch.set_pattern_def(self.pattern_def)
