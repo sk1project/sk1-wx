@@ -25,6 +25,7 @@ class FillDialog(wal.OkCancelDialog):
 
 	presenter = None
 	orig_fill = []
+	start = True
 
 	def __init__(self, parent, title, presenter, fill_style):
 		self.presenter = presenter
@@ -51,12 +52,13 @@ class FillDialog(wal.OkCancelDialog):
 			self.nb.set_active_index(1)
 		elif self.orig_fill[1] == sk2_const.FILL_PATTERN:
 			self.nb.set_active_index(2)
+		self.start = False
 
 	def on_change(self, index):
 		new_color = None
-		if self.tabs[0].active_panel:
+		if self.tabs[0].active_panel and not self.start:
 			new_color = self.tabs[0].active_panel.get_color()
-		if index == 1 and new_color:
+		if index in (1, 2) and new_color:
 			self.nb.get_active_page().activate(self.orig_fill, new_color)
 		else:
 			self.nb.get_active_page().activate(self.orig_fill)
