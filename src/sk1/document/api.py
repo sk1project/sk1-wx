@@ -192,6 +192,7 @@ class AbstractAPI:
 			obj.style = style
 			obj.fill_trafo = fill_trafo
 			obj.stroke_trafo = stroke_trafo
+			obj.cache_pattern_img = None
 			if obj.cid == model.PIXMAP:
 				obj.cache_cdata = None
 
@@ -226,6 +227,7 @@ class AbstractAPI:
 				style = deepcopy(obj.style)
 				style[0] = deepcopy(fill_style)
 				obj.style = style
+				obj.cache_pattern_img = None
 
 	def _set_paths_and_trafo(self, obj, paths, trafo):
 		obj.paths = paths
