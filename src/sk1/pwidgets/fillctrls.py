@@ -29,7 +29,8 @@ SPOT_Mixer, Palette_Mixer
 from colorctrls import FillColorRefPanel, MiniPalette, FillFillRefPanel, \
 FillRuleKeeper, CMYK_PALETTE, RGB_PALETTE, GRAY_PALETTE, SPOT_PALETTE
 from gradientctrls import GradientEditor, GradientMiniPalette
-from patternctrls import PatternMiniPalette
+from patternctrls import PatternMiniPalette, PatternEditor
+from patterns import DEFAULT_PATTERN
 
 #--- Solid fill panels
 
@@ -554,6 +555,45 @@ class PatternFill(FillTab):
 
 	def activate(self, fill_style, new_color=None):
 		FillTab.activate(self, fill_style)
+		rule = sk2_const.FILL_EVENODD
+		pattern_type = sk2_const.PATTERN_IMG
+		pattern = '' + DEFAULT_PATTERN
+		image_style = deepcopy([sk2_const.CMYK_BLACK, sk2_const.CMYK_WHITE])
+		trafo = [] + sk2_const.NORMAL_TRAFO
+
+		if fill_style:
+			rule = fill_style[0]
+			if fill_style[1] == sk2_const.FILL_PATTERN:
+				pattern_type = fill_style[2][0]
+				pattern = deepcopy(fill_style[2][1])
+				if len(fill_style[2]) > 2:
+					image_style = deepcopy(fill_style[2][2])
+				if len(fill_style[2]) > 3:
+					trafo = [] + fill_style[2][3]
+			elif fill_style[1] == sk2_const.FILL_SOLID:
+				if fill_style[2][0] in GRADIENT_CLR_MODES:
+					color0 = deepcopy(fill_style[2])
+					color0[3] = ''
+					color1 = deepcopy(sk2_const.CMYK_WHITE)
+					if not color0[0] == color1[0]:
+						color1 = self.cms.get_color(color1, color0[0])
+					color1[3] = ''
+					image_style = [color0, color1]
+
+		color0 = image_style[0]
+		if new_color and new_color[0] in GRADIENT_CLR_MODES \
+								and not color0 == new_color:
+			print new_color
+			color1 = deepcopy(new_color)
+			if not color0[0] == color1[0]:
+				color1 = self.cms.get_color(color1, color0[0])
+			color1[3] = ''
+			image_style[1] = color1
+
+		self.new_fill = [rule, sk2_const.FILL_PATTERN,
+						[pattern_type, pattern, image_style, trafo]]
+		self.update()
+
 
 	def build(self):
 		panel = wal.HPanel(self)
@@ -568,8 +608,12 @@ class PatternFill(FillTab):
 		self.pack(panel, fill=True, padding_all=5)
 		self.pack(wal.HLine(self), fill=True)
 
-
-		self.pack(wal.HPanel(self), fill=True, expand=True)
+		default_pattern_def = [sk2_const.PATTERN_IMG, '' + DEFAULT_PATTERN,
+					deepcopy([sk2_const.CMYK_BLACK, sk2_const.CMYK_WHITE]),
+					[] + sk2_const.NORMAL_TRAFO]
+		self.pattern_editor = PatternEditor(self, self.dlg, self.cms,
+						default_pattern_def, onchange=self.on_pattern_change)
+		self.pack(self.pattern_editor, fill=True, expand=True, padding_all=5)
 
 
 		self.pack(wal.HLine(self), fill=True)
@@ -586,6 +630,22 @@ class PatternFill(FillTab):
 		panel.pack(self.presets)
 		self.pack(panel, fill=True, padding_all=5)
 
-	def set_orig_fill(self):pass
+	def set_orig_fill(self):
+		self.activate(self.orig_fill)
+
 	def on_clr_mode_change(self, mode):pass
-	def on_presets_select(self, *args):pass
+
+	def on_presets_select(self, pattern):
+		self.new_fill[2][1] = pattern
+		self.update()
+
+	def on_pattern_change(self):pass
+
+	def get_result(self):
+		return self.new_fill
+
+	def update(self):
+		self.pattern_clrs.set_mode(self.new_fill[2][2][0][0])
+		self.rule_keeper.set_mode(self.new_fill[0])
+		self.pattern_editor.set_pattern_def(self.new_fill[2])
+		self.refpanel.update(self.orig_fill, self.new_fill)
