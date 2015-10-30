@@ -310,9 +310,9 @@ class SwatchCanvas(wal.SensitiveCanvas):
 								'sk2_config.xml')
 		config.load(config_file)
 		image_obj = sk2_model.Pixmap(config)
+		libimg.set_image_data(self.cms, image_obj, bmpstr)
 		if pattern[0] == sk2_const.PATTERN_IMG and len(pattern) > 2:
 			image_obj.style[3] = deepcopy(pattern[2])
-		libimg.set_image_data(self.cms, image_obj, bmpstr)
 		libimg.update_image(self.cms, image_obj)
 		sp = cairo.SurfacePattern(image_obj.cache_cdata)
 		sp.set_extend(cairo.EXTEND_REPEAT)
