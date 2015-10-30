@@ -212,10 +212,10 @@ class CairoRenderer:
 			if not obj.cache_pattern_img:
 				bmpstr = b64decode(pattern_fill[1])
 				image_obj = model.Pixmap(obj.config)
+				libimg.set_image_data(self.cms, image_obj, bmpstr)
 				if pattern_fill[0] == sk2_const.PATTERN_IMG and \
 				 len(pattern_fill) > 2:
 					image_obj.style[3] = deepcopy(pattern_fill[2])
-				libimg.set_image_data(self.cms, image_obj, bmpstr)
 				libimg.update_image(self.cms, image_obj)
 				obj.cache_pattern_img = image_obj.cache_cdata
 				image_obj.cache_cdata = None
