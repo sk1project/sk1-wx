@@ -632,7 +632,12 @@ class PatternFill(FillTab):
 	def set_orig_fill(self):
 		self.activate(self.orig_fill)
 
-	def on_clr_mode_change(self, mode):pass
+	def on_clr_mode_change(self, mode):
+		image_style = deepcopy(self.new_fill[2][2])
+		image_style[0] = self.cms.get_color(image_style[0], mode)
+		image_style[1] = self.cms.get_color(image_style[1], mode)
+		self.new_fill[2][2] = image_style
+		self.update()
 
 	def on_presets_select(self, pattern):
 		self.new_fill[2][1] = pattern
