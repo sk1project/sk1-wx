@@ -583,7 +583,6 @@ class PatternFill(FillTab):
 		color0 = image_style[0]
 		if new_color and new_color[0] in GRADIENT_CLR_MODES \
 								and not color0 == new_color:
-			print new_color
 			color1 = deepcopy(new_color)
 			if not color0[0] == color1[0]:
 				color1 = self.cms.get_color(color1, color0[0])
@@ -639,7 +638,9 @@ class PatternFill(FillTab):
 		self.new_fill[2][1] = pattern
 		self.update()
 
-	def on_pattern_change(self):pass
+	def on_pattern_change(self, pattern_def):
+		self.new_fill[2] = deepcopy(pattern_def)
+		self.update()
 
 	def get_result(self):
 		return self.new_fill
