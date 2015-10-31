@@ -22,10 +22,10 @@ from uc2 import uc2const
 from uc2.formats.sk2 import sk2_const
 
 from sk1 import _
-from sk1.dialogs.colordlg import change_color_dlg
 from sk1.resources import icons, get_icon
 
-from colorctrls import SwatchCanvas, AlphaColorSwatch
+from colorctrls import SwatchCanvas
+from colorbtn import PDColorButton
 
 CMYK_PALETTE = [
 [[0.0, [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, 'Black']],
@@ -151,17 +151,11 @@ class StopPanel(wal.LabeledPanel):
 
 		grid.pack(wal.Label(grid, _('Color value:')))
 
-		spanel = wal.HPanel(grid)
 		clr = self.stops[self.selected_stop][1]
-		self.swatch = AlphaColorSwatch(spanel, self.cms, clr, (40, 20), 'news',
-									onclick=self.edit_color)
-		spanel.pack(self.swatch)
-
 		txt = _('Change stop color')
-		spanel.pack(wal.ImageButton(spanel, icons.PD_EDIT, wal.SIZE_16,
-				tooltip=txt, flat=False, onclick=self.edit_color), padding=5)
-
-		grid.pack(spanel)
+		self.swatch = PDColorButton(grid, self.dlg, self.cms, clr, txt,
+							onchange=self.edit_color)
+		grid.pack(self.swatch)
 		grid.pack((1, 1))
 
 		grid.pack(wal.Label(grid, _('Position:')))
@@ -171,13 +165,10 @@ class StopPanel(wal.LabeledPanel):
 		grid.pack(wal.Label(grid, '%'))
 		self.pack(grid, align_center=False, padding_all=10)
 
-	def edit_color(self):
-		clr = self.stops[self.selected_stop][1]
-		ret = change_color_dlg(self.dlg, self.cms, clr)
-		if ret:
-			self.stops[self.selected_stop][1] = ret
-			self.update()
-			if self.color_callback:self.color_callback()
+	def edit_color(self, color):
+		self.stops[self.selected_stop][1] = color
+		self.update()
+		if self.color_callback:self.color_callback()
 
 	def pos_changed(self):
 		if self.pos_callback:
