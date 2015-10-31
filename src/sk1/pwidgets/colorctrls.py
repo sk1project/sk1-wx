@@ -19,11 +19,13 @@ import cairo, wal, os
 from copy import deepcopy
 from base64 import b64decode
 
-from uc2 import uc2const, cms, libimg, libgeom
+from uc2 import uc2const, cms, libimg
 from uc2.cms import get_registration_black, verbose_color, val_255_to_dec
 from uc2.formats.sk2 import sk2_const, sk2_model, sk2_config
+
 from sk1 import _, config, events
 from sk1.resources import icons, get_icon
+
 
 from palette_viewer import PaletteViewer
 
