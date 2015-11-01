@@ -99,24 +99,15 @@ def update_image(cms, pixmap):
 			raw_image = raw_image.convert(IMAGE_GRAY)
 		fg = pixmap.style[3][0]
 		bg = pixmap.style[3][1]
-
-		if fg and bg:
-			fg = rgb_to_hexcolor(cms.get_display_color(fg))
-			bg = rgb_to_hexcolor(cms.get_display_color(bg))
-			cache_image = Image.new(IMAGE_RGB, pixmap.size, fg)
-			bg_image = Image.new(IMAGE_RGB, pixmap.size, bg)
-			cache_image.paste(bg_image, (0, 0), raw_image)
-		elif fg and not bg:
-			fg = rgb_to_hexcolor(cms.get_display_color(fg))
-			cache_image = Image.new(IMAGE_RGBA, pixmap.size, fg)
-			cache_image.putalpha(ImageOps.invert(raw_image))
-		elif bg and not fg:
-			bg = rgb_to_hexcolor(cms.get_display_color(bg))
-			cache_image = Image.new(IMAGE_RGBA, pixmap.size, bg)
-			cache_image.putalpha(raw_image)
-		else:
-			cache_image = Image.new(IMAGE_RGBA, pixmap.size, '#000000')
-			cache_image.putalpha(Image.new(IMAGE_GRAY, pixmap.size, 0))
+		fg_color = (0, 0, 0, 0)
+		bg_color = (255, 255, 255, 0)
+		if fg:
+			fg_color = tuple(cms.get_display_color255(fg)) + (int(fg[2] * 255.0),)
+		if bg:
+			bg_color = tuple(cms.get_display_color255(bg)) + (int(bg[2] * 255.0),)
+		cache_image = Image.new(IMAGE_RGBA, pixmap.size, fg_color)
+		bg_image = Image.new(IMAGE_RGBA, pixmap.size, bg_color)
+		cache_image.paste(bg_image, (0, 0), raw_image)
 	else:
 		cache_image = cms.get_display_image(raw_image)
 
