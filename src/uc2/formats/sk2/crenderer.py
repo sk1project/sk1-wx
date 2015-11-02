@@ -224,7 +224,9 @@ class CairoRenderer:
 			matrix = cairo.Matrix(*obj.fill_trafo)
 			matrix.invert()
 			if len(pattern_fill) > 3:
-				matrix = cairo.Matrix(*pattern_fill[3]) * matrix
+				pattern_matrix = cairo.Matrix(*pattern_fill[3])
+				pattern_matrix.invert()
+				matrix = matrix * pattern_matrix
 			sp.set_matrix(matrix)
 			ctx.set_source(sp)
 
