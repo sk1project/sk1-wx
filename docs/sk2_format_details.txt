@@ -28,7 +28,7 @@ stops => [[offset,color],[offset,color], ...]
 -------------------------------------------------------------------------------
 
 PATTERN DEFINITION:
-[pattern_type, pattern, image_style, trafo]
+[pattern_type, pattern, image_style, trafo, transforms]
 
 -------------------------------------------------------------------------------
 
