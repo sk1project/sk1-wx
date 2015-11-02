@@ -560,6 +560,7 @@ class PatternFill(FillTab):
 		pattern = '' + DEFAULT_PATTERN
 		image_style = deepcopy([sk2_const.CMYK_BLACK, sk2_const.CMYK_WHITE])
 		trafo = [] + sk2_const.NORMAL_TRAFO
+		transforms = [] + sk2_const.PATTERN_TRANSFORMS
 
 		if fill_style:
 			rule = fill_style[0]
@@ -570,6 +571,10 @@ class PatternFill(FillTab):
 					image_style = deepcopy(fill_style[2][2])
 				if len(fill_style[2]) > 3:
 					trafo = [] + fill_style[2][3]
+				if len(fill_style[2]) > 4:
+					transforms = [] + fill_style[2][4]
+				else:
+					transforms = []
 			elif fill_style[1] == sk2_const.FILL_SOLID:
 				if fill_style[2][0] in GRADIENT_CLR_MODES:
 					color0 = deepcopy(fill_style[2])
@@ -590,7 +595,7 @@ class PatternFill(FillTab):
 			image_style[1] = color1
 
 		self.new_fill = [rule, sk2_const.FILL_PATTERN,
-						[pattern_type, pattern, image_style, trafo]]
+						[pattern_type, pattern, image_style, trafo, transforms]]
 		self.update()
 
 
