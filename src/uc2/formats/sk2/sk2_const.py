@@ -26,6 +26,8 @@ ORIGINS = [DOC_ORIGIN_CENTER, DOC_ORIGIN_LL, DOC_ORIGIN_LU]
 
 #Bezier curve constants
 NORMAL_TRAFO = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+#[scale_x, scale_y, shear_x, shear_y, rotate]
+PATTERN_TRANSFORMS = [1.0, 1.0, 0.0, 0.0, 0.0]
 CORNERS = [0.0, 0.0, 0.0, 0.0]
 EMPTY_STYLE = [[], [], [], []]
 EMPTY_IMAGE_STYLE = [[], []]
