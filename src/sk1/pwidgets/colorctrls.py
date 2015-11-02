@@ -319,7 +319,9 @@ class SwatchCanvas(wal.SensitiveCanvas):
 		sp = cairo.SurfacePattern(image_obj.cache_cdata)
 		sp.set_extend(cairo.EXTEND_REPEAT)
 		if pattern[0] == sk2_const.PATTERN_IMG and len(pattern) > 3:
-			sp.set_matrix(cairo.Matrix(*pattern[3]))
+			pattern_matrix = cairo.Matrix(*pattern[3])
+			pattern_matrix.invert()
+			sp.set_matrix(pattern_matrix)
 		ctx.set_source(sp)
 		ctx.rectangle(0, 0, w, h)
 		ctx.fill()
