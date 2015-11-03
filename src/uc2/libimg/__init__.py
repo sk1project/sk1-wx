@@ -25,10 +25,7 @@ from PIL import Image, ImageOps
 from uc2.cms import rgb_to_hexcolor
 from uc2.libimg.imwand import check_image_file, process_image
 from uc2.uc2const import IMAGE_CMYK, IMAGE_RGB, IMAGE_RGBA, IMAGE_LAB
-from uc2.uc2const import IMAGE_GRAY, IMAGE_MONO
-
-DUOTONES = [IMAGE_GRAY, IMAGE_MONO]
-SUPPORTED_CS = [IMAGE_MONO, IMAGE_GRAY, IMAGE_RGB, IMAGE_CMYK, IMAGE_LAB]
+from uc2.uc2const import IMAGE_GRAY, IMAGE_MONO, DUOTONES, SUPPORTED_CS
 
 def get_version():
 	return Image.VERSION
