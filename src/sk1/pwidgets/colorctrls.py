@@ -19,7 +19,7 @@ import cairo, wal, os
 from copy import deepcopy
 from base64 import b64decode
 
-from uc2 import uc2const, cms, libimg
+from uc2 import uc2const, cms, libimg, libgeom
 from uc2.cms import get_registration_black, verbose_color, val_255_to_dec
 from uc2.formats.sk2 import sk2_const, sk2_model, sk2_config
 
@@ -319,7 +319,9 @@ class SwatchCanvas(wal.SensitiveCanvas):
 		sp = cairo.SurfacePattern(image_obj.cache_cdata)
 		sp.set_extend(cairo.EXTEND_REPEAT)
 		if pattern[0] == sk2_const.PATTERN_IMG and len(pattern) > 3:
-			pattern_matrix = cairo.Matrix(*pattern[3])
+			flip_trafo = [1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
+			trafo = libgeom.multiply_trafo(pattern[3], flip_trafo)
+			pattern_matrix = cairo.Matrix(*trafo)
 			pattern_matrix.invert()
 			sp.set_matrix(pattern_matrix)
 		ctx.set_source(sp)
