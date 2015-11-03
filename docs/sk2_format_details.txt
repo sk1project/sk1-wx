@@ -82,6 +82,7 @@ STYLE DEFINITION:
 
 TRAFO DEFINITION
 [xx,yx,xy,yy,x0,y0]
+[m11,m12,m21,m22,dx,dy]
 
 x_new = xx*x + xy*y + x0
 y_new = yx*x + yy*y + y0
