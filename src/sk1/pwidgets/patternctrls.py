@@ -17,9 +17,10 @@
 
 import math
 from copy import deepcopy
+
 import wal
 
-from uc2 import libgeom
+from uc2 import libgeom, libimg
 from uc2.formats.sk2 import sk2_const
 
 from sk1 import _
@@ -402,6 +403,7 @@ class PatternEditor(wal.HPanel):
 
 	def __init__(self, parent, dlg, cms, pattern_def, onchange=None):
 		self.dlg = dlg
+		self.app = dlg.app
 		self.cms = cms
 		self.pattern_def = deepcopy(pattern_def)
 		self.callback = onchange
@@ -457,5 +459,21 @@ class PatternEditor(wal.HPanel):
 		self.trafo_editor.set_trafo(self.pattern_def[3], self.pattern_def[4])
 		self.pattern_color_editor.set_visible(self.pattern_def[0] == sk2_const.PATTERN_IMG)
 
-	def load_pattern(self):print 'Load'
-	def save_pattern(self):print 'Save'
+	def load_pattern(self):
+		img_file = self.app.import_pattern(self.dlg)
+		if img_file:
+			fobj = open(img_file, 'rb')
+			pattern, flag = libimg.read_pattern(fobj.read())
+			pattern_type = sk2_const.PATTERN_TRUECOLOR
+			if flag:
+				pattern_type = sk2_const.PATTERN_IMG
+				if flag == 'EPS':
+					pattern_type = sk2_const.PATTERN_EPS
+			self.pattern_def[0] = pattern_type
+			self.pattern_def[1] = pattern
+			if self.callback: self.callback(self.get_pattern_def())
+
+	def save_pattern(self):
+		self.app.extract_pattern(self.dlg, self.pattern_def[1],
+								self.pattern_def[0] == sk2_const.PATTERN_EPS)
+
