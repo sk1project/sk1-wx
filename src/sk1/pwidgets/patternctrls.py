@@ -403,12 +403,24 @@ class PatternEditor(wal.HPanel):
 	def __init__(self, parent, dlg, cms, pattern_def, onchange=None):
 		self.dlg = dlg
 		self.cms = cms
-		self.pattern_def = pattern_def
+		self.pattern_def = deepcopy(pattern_def)
 		self.callback = onchange
 		wal.HPanel.__init__(self, parent)
 		left_panel = wal.VPanel(self)
 		self.pattern_swatch = PatternSwatch(left_panel, self.cms, pattern_def)
 		left_panel.pack(self.pattern_swatch)
+
+		button_panel = wal.HPanel(left_panel)
+		txt = _('Load pattern from file')
+		button_panel.pack(wal.ImageButton(self, icons.PD_OPEN, wal.SIZE_16,
+				tooltip=txt, flat=False, onclick=self.load_pattern),
+				padding=1)
+		txt = _('Save pattern into file')
+		button_panel.pack(wal.ImageButton(self, icons.PD_FILE_SAVE, wal.SIZE_16,
+				tooltip=txt, flat=False, onclick=self.save_pattern),
+				padding=1)
+		left_panel.pack(button_panel, padding=2)
+
 		self.pack(left_panel, fill=True)
 
 		right_panel = wal.VPanel(self)
@@ -443,3 +455,7 @@ class PatternEditor(wal.HPanel):
 		self.pattern_swatch.set_pattern_def(self.pattern_def)
 		self.pattern_color_editor.set_image_style(self.pattern_def[2])
 		self.trafo_editor.set_trafo(self.pattern_def[3], self.pattern_def[4])
+		self.pattern_color_editor.set_visible(self.pattern_def[0] == sk2_const.PATTERN_IMG)
+
+	def load_pattern(self):print 'Load'
+	def save_pattern(self):print 'Save'
