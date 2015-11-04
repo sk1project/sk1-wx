@@ -646,6 +646,7 @@ class PatternFill(FillTab):
 
 	def on_presets_select(self, pattern):
 		self.new_fill[2][1] = pattern
+		self.new_fill[2][0] = sk2_const.PATTERN_IMG
 		self.update()
 
 	def on_pattern_change(self, pattern_def):
@@ -660,3 +661,6 @@ class PatternFill(FillTab):
 		self.rule_keeper.set_mode(self.new_fill[0])
 		self.pattern_editor.set_pattern_def(self.new_fill[2])
 		self.refpanel.update(self.orig_fill, self.new_fill)
+		self.pattern_clrs.set_visible(self.new_fill[2][0] == sk2_const.PATTERN_IMG)
+
+
