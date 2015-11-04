@@ -478,6 +478,25 @@ class pdApplication(wal.Application, UCApplication):
 				return
 			config.save_dir = str(os.path.dirname(doc_file))
 
+	def import_pattern(self, parent=None):
+		if not parent: parent = self.mw
+		img_file = dialogs.get_open_file_name(parent, self, config.import_dir,
+				_('Select pattern to load'), file_types=data.PATTERN_FORMATS)
+		if os.path.lexists(img_file) and os.path.isfile(img_file):
+			first = _('Cannot load pattern')
+			msg = ("%s '%s'.") % (first, self.current_doc.doc_name) + '\n'
+			msg += _('The file may be corrupted or not supported format')
+			try:
+				if libimg.check_image(img_file):
+					return img_file
+				else:
+					dialogs.error_dialog(parent, self.appdata.app_name, msg)
+					self.print_stacktrace()
+			except:
+				dialogs.error_dialog(parent, self.appdata.app_name, msg)
+				self.print_stacktrace()
+		return None
+
 	def make_backup(self, doc_file, export=False):
 		if not export and not config.make_backup:return
 		if export and not config.make_export_backup:return
