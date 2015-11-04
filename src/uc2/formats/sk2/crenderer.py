@@ -221,13 +221,15 @@ class CairoRenderer:
 				image_obj.cache_cdata = None
 			sp = cairo.SurfacePattern(obj.cache_pattern_img)
 			sp.set_extend(cairo.EXTEND_REPEAT)
-			matrix = cairo.Matrix(*obj.fill_trafo)
-			matrix.invert()
+			flip_matrix = cairo.Matrix(1.0, 0.0, 0.0, -1.0, 0.0, 0.0)
 			if len(pattern_fill) > 3:
 				pattern_matrix = cairo.Matrix(*pattern_fill[3])
 				pattern_matrix.invert()
-				matrix = matrix * pattern_matrix
-			sp.set_matrix(matrix)
+				flip_matrix = flip_matrix * pattern_matrix
+			trafo_matrix = cairo.Matrix(*obj.fill_trafo)
+			trafo_matrix.invert()
+			flip_matrix = flip_matrix * trafo_matrix
+			sp.set_matrix(flip_matrix)
 			ctx.set_source(sp)
 
 			canvas_matrix = ctx.get_matrix()
