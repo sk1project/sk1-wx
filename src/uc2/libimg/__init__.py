@@ -23,7 +23,7 @@ from cStringIO import StringIO
 from PIL import Image, ImageOps
 
 from uc2.cms import rgb_to_hexcolor
-from uc2.libimg.imwand import check_image_file, process_image
+from uc2.libimg.imwand import check_image_file, process_image, process_pattern
 from uc2.uc2const import IMAGE_CMYK, IMAGE_RGB, IMAGE_RGBA, IMAGE_LAB
 from uc2.uc2const import IMAGE_GRAY, IMAGE_MONO, DUOTONES, SUPPORTED_CS
 
@@ -199,6 +199,11 @@ def set_image_data(cms, pixmap, raw_content):
 	pixmap.alpha_channel = alpha
 	pixmap.style = style
 
+EPS_HEADER = '%!PS-Adobe-3.0 EPSF-3.0'
 
-
+def read_pattern(raw_content):
+	if raw_content[:len(EPS_HEADER)] == EPS_HEADER:
+		return b64encode(raw_content), 'EPS'
+	fobj, flag = process_pattern(raw_content)
+	return b64encode(fobj.getvalue()), flag
 

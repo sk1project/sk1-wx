@@ -48,3 +48,15 @@ def process_image(raw_content):
 	base.seek(0)
 	return base, alpha
 
+def process_pattern(raw_content):
+	img = Image(file=StringIO(raw_content))
+	base_img = img.convert('tiff')
+	flag = False
+	if img.type in ['bilevel', 'grayscale', 'grayscalematte']:
+		flag = True
+	base = StringIO()
+	base_img.save(file=base)
+	base.seek(0)
+	return base, flag
+
+
