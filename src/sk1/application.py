@@ -17,6 +17,7 @@
 
 import os, sys, traceback
 import webbrowser
+from base64 import b64decode, b64encode
 
 import wal
 
@@ -453,6 +454,29 @@ class pdApplication(wal.Application, UCApplication):
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
 				self.print_stacktrace()
 		return None
+
+	def extract_pattern(self, parent, pattern, eps=False):
+		doc_file = 'image.tiff'
+		if eps:doc_file = 'image.eps'
+		doc_file = os.path.join(config.save_dir, doc_file)
+		file_types = [data.TIF]
+		if eps: file_types = [data.EPS]
+		doc_file = dialogs.get_save_file_name(parent, self, doc_file,
+							_('Save pattern as...'),
+							file_types=file_types)[0]
+		if doc_file:
+			try:
+				fobj = open(doc_file, 'wb')
+				fobj.write(b64decode(pattern))
+				fobj.close()
+			except:
+				first = _('Cannot save pattern')
+				msg = ("%s '%s'.") % (first, self.current_doc.doc_name) + '\n'
+				msg += _('Please check file name and write permissions')
+				dialogs.error_dialog(parent, self.appdata.app_name, msg)
+				self.print_stacktrace()
+				return
+			config.save_dir = str(os.path.dirname(doc_file))
 
 	def make_backup(self, doc_file, export=False):
 		if not export and not config.make_backup:return
