@@ -213,6 +213,7 @@ class CairoRenderer:
 				bmpstr = b64decode(pattern_fill[1])
 				image_obj = model.Pixmap(obj.config)
 				libimg.set_image_data(self.cms, image_obj, bmpstr)
+				libimg.flip_top_to_bottom(image_obj)
 				if pattern_fill[0] == sk2_const.PATTERN_IMG and \
 				 len(pattern_fill) > 2:
 					image_obj.style[3] = deepcopy(pattern_fill[2])
@@ -221,7 +222,7 @@ class CairoRenderer:
 				image_obj.cache_cdata = None
 			sp = cairo.SurfacePattern(obj.cache_pattern_img)
 			sp.set_extend(cairo.EXTEND_REPEAT)
-			flip_matrix = cairo.Matrix(1.0, 0.0, 0.0, -1.0, 0.0, 0.0)
+			flip_matrix = cairo.Matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
 			if len(pattern_fill) > 3:
 				pattern_matrix = cairo.Matrix(*pattern_fill[3])
 				pattern_matrix.invert()
