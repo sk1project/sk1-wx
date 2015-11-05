@@ -262,6 +262,8 @@ class AbstractAPI:
 				obj.trafo = [] + obj.initial_trafo
 			else:
 				obj.trafo = [] + normal_trafo
+			obj.fill_trafo = []
+			obj.stroke_trafo = []
 			obj.update()
 			after.append(obj.get_trafo_snapshot())
 		self.selection.update_bbox()
