@@ -456,38 +456,39 @@ class pdApplication(wal.Application, UCApplication):
 		return None
 
 	def extract_pattern(self, parent, pattern, eps=False):
-		doc_file = 'image.tiff'
-		if eps:doc_file = 'image.eps'
-		doc_file = os.path.join(config.save_dir, doc_file)
+		img_file = 'image.tiff'
+		if eps:img_file = 'image.eps'
+		img_file = os.path.join(config.save_dir, img_file)
 		file_types = [data.TIF]
 		if eps: file_types = [data.EPS]
-		doc_file = dialogs.get_save_file_name(parent, self, doc_file,
+		img_file = dialogs.get_save_file_name(parent, self, img_file,
 							_('Save pattern as...'),
 							file_types=file_types)[0]
-		if doc_file:
+		if img_file:
 			try:
-				fobj = open(doc_file, 'wb')
+				fobj = open(img_file, 'wb')
 				fobj.write(b64decode(pattern))
 				fobj.close()
 			except:
-				first = _('Cannot save pattern')
+				first = _('Cannot save pattern from')
 				msg = ("%s '%s'.") % (first, self.current_doc.doc_name) + '\n'
 				msg += _('Please check file name and write permissions')
 				dialogs.error_dialog(parent, self.appdata.app_name, msg)
 				self.print_stacktrace()
 				return
-			config.save_dir = str(os.path.dirname(doc_file))
+			config.save_dir = str(os.path.dirname(img_file))
 
 	def import_pattern(self, parent=None):
 		if not parent: parent = self.mw
 		img_file = dialogs.get_open_file_name(parent, self, config.import_dir,
 				_('Select pattern to load'), file_types=data.PATTERN_FORMATS)
 		if os.path.lexists(img_file) and os.path.isfile(img_file):
-			first = _('Cannot load pattern')
+			first = _('Cannot load pattern for')
 			msg = ("%s '%s'.") % (first, self.current_doc.doc_name) + '\n'
 			msg += _('The file may be corrupted or not supported format')
 			try:
 				if libimg.check_image(img_file):
+					config.import_dir = str(os.path.dirname(img_file))
 					return img_file
 				else:
 					dialogs.error_dialog(parent, self.appdata.app_name, msg)
@@ -495,6 +496,7 @@ class pdApplication(wal.Application, UCApplication):
 			except:
 				dialogs.error_dialog(parent, self.appdata.app_name, msg)
 				self.print_stacktrace()
+
 		return None
 
 	def make_backup(self, doc_file, export=False):
