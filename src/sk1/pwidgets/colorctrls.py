@@ -307,10 +307,13 @@ class SwatchCanvas(wal.SensitiveCanvas):
 		ctx = cairo.Context(surface)
 		self.draw_cairo_background(ctx)
 		bmpstr = b64decode(pattern[1])
-		config = sk2_config.SK2_Config()
-		config_file = os.path.join(self.cms.app.appdata.app_config_dir,
-								'sk2_config.xml')
-		config.load(config_file)
+		if self.cms.app.current_doc:
+			config = self.cms.app.current_doc.model.config
+		else:
+			config = sk2_config.SK2_Config()
+			config_file = os.path.join(self.cms.app.appdata.app_config_dir,
+									'sk2_config.xml')
+			config.load(config_file)
 		image_obj = sk2_model.Pixmap(config)
 		libimg.set_image_data(self.cms, image_obj, bmpstr)
 		if pattern[0] == sk2_const.PATTERN_IMG and len(pattern) > 2:
@@ -318,12 +321,12 @@ class SwatchCanvas(wal.SensitiveCanvas):
 		libimg.update_image(self.cms, image_obj)
 		sp = cairo.SurfacePattern(image_obj.cache_cdata)
 		sp.set_extend(cairo.EXTEND_REPEAT)
-		if pattern[0] == sk2_const.PATTERN_IMG and len(pattern) > 3:
-			flip_trafo = [1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
-			trafo = libgeom.multiply_trafo(pattern[3], flip_trafo)
-			pattern_matrix = cairo.Matrix(*trafo)
-			pattern_matrix.invert()
-			sp.set_matrix(pattern_matrix)
+		trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+		if len(pattern) > 3:
+			trafo = libgeom.multiply_trafo(pattern[3], trafo)
+		pattern_matrix = cairo.Matrix(*trafo)
+		pattern_matrix.invert()
+		sp.set_matrix(pattern_matrix)
 		ctx.set_source(sp)
 		ctx.rectangle(0, 0, w, h)
 		ctx.fill()
