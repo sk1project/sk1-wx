@@ -199,6 +199,31 @@ def set_image_data(cms, pixmap, raw_content):
 	pixmap.alpha_channel = alpha
 	pixmap.style = style
 
+def transpose(image_obj, method=Image.FLIP_TOP_BOTTOM):
+	image = Image.open(StringIO(b64decode(image_obj.bitmap)))
+	image.load()
+
+	image = image.transpose(method)
+	fobj = StringIO()
+	image.save(fobj, format='TIFF')
+	image_obj.bitmap = b64encode(fobj.getvalue())
+	if image_obj.alpha_channel:
+		alpha = Image.open(StringIO(b64decode(image_obj.alpha_channel)))
+		alpha.load()
+
+		alpha = alpha.transpose(method)
+		fobj = StringIO()
+		alpha.save(fobj, format='TIFF')
+		image_obj.alpha_channel = b64encode(fobj.getvalue())
+	image_obj.cache_cdata = None
+
+def flip_top_to_bottom(image_obj):
+	transpose(image_obj)
+
+def flip_left_to_right(image_obj):
+	transpose(image_obj, Image.FLIP_LEFT_RIGHT)
+
+
 EPS_HEADER = '%!PS-Adobe-3.0 EPSF-3.0'
 
 def read_pattern(raw_content):
