@@ -63,7 +63,7 @@ class AbstractController:
 	def start_(self):pass
 	def stop_(self):pass
 	def standby(self):pass
-	def restore(self):pass
+	def restore(self):self.canvas.selection_redraw()
 	def do_action(self, event): return True
 	def escape_pressed(self):pass
 	def mouse_double_click(self, event): pass
