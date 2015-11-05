@@ -208,6 +208,8 @@ class CairoRenderer:
 		elif fill[1] == sk2_const.FILL_PATTERN:
 			if not obj.fill_trafo:
 				obj.fill_trafo = [] + sk2_const.NORMAL_TRAFO
+				obj.fill_trafo = obj.fill_trafo[:4] + \
+					[obj.cache_bbox[0], obj.cache_bbox[3]]
 			pattern_fill = fill[2]
 			if not obj.cache_pattern_img:
 				bmpstr = b64decode(pattern_fill[1])
