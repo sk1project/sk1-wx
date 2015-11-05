@@ -316,12 +316,13 @@ class SwatchCanvas(wal.SensitiveCanvas):
 			config.load(config_file)
 		image_obj = sk2_model.Pixmap(config)
 		libimg.set_image_data(self.cms, image_obj, bmpstr)
+		libimg.flip_left_to_right(image_obj)
 		if pattern[0] == sk2_const.PATTERN_IMG and len(pattern) > 2:
 			image_obj.style[3] = deepcopy(pattern[2])
 		libimg.update_image(self.cms, image_obj)
 		sp = cairo.SurfacePattern(image_obj.cache_cdata)
 		sp.set_extend(cairo.EXTEND_REPEAT)
-		trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+		trafo = [-1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
 		if len(pattern) > 3:
 			trafo = libgeom.multiply_trafo(pattern[3], trafo)
 		pattern_matrix = cairo.Matrix(*trafo)
