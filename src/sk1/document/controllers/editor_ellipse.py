@@ -18,9 +18,11 @@
 import math
 
 from uc2 import libgeom
+from uc2.formats.sk2 import sk2_const
 
 from sk1 import _, modes, config, events
 from generic import AbstractController
+
 
 class EllipseEditor(AbstractController):
 
@@ -72,7 +74,8 @@ class EllipseEditor(AbstractController):
 		self.start_point.repaint()
 
 	#----- CHANGE APPLY
-	def apply_moving(self, point, start=False, final=False):
+	def apply_moving(self, event, start=False, final=False):
+		point = event.get_point()
 		wpoint = self.canvas.point_win_to_doc(point)
 		invtrafo = libgeom.invert_trafo(self.target.trafo)
 		x, y = libgeom.apply_trafo_to_point(wpoint, invtrafo)
@@ -97,7 +100,20 @@ class EllipseEditor(AbstractController):
 			angle = 0.0
 		elif x == 0 and y == 0:
 			return
+		if event.is_ctrl():
+			fixed_angle = math.pi * config.ellipse_fixed_angle / 180.0
+			angle //= fixed_angle
+			angle *= fixed_angle
+		else:
+			contra_point = self.start_point
+			if start:contra_point = self.end_point
+			if contra_point.is_pressed(point):
+				angle = contra_point.get_angle()
 		circle_type = self.orig_type
+		if event.is_alt() and not circle_type == sk2_const.ARC_ARC:
+			circle_type = sk2_const.ARC_CHORD
+			if libgeom.distance([x, y]) < 0.5:
+				circle_type = sk2_const.ARC_PIE_SLICE
 		angle1 = self.orig_angle1
 		angle2 = self.orig_angle2
 		if start: angle1 = angle
@@ -133,7 +149,7 @@ class EllipseEditor(AbstractController):
 
 	def mouse_up(self, event):
 		if self.selected_point:
-			self.apply_moving(event.get_point(), self.selected_point.start, True)
+			self.apply_moving(event, self.selected_point.start, True)
 			self.selected_point = None
 			return
 		if self.selected_obj:
@@ -142,7 +158,7 @@ class EllipseEditor(AbstractController):
 
 	def mouse_move(self, event):
 		if self.selected_point:
-			self.apply_moving(event.get_point(), self.selected_point.start)
+			self.apply_moving(event, self.selected_point.start)
 
 class ControlPoint:
 
@@ -155,9 +171,12 @@ class ControlPoint:
 		self.target = target
 		self.start = start
 
+	def get_angle(self):
+		if not self.start: return self.target.angle2
+		return self.target.angle1
+
 	def get_point(self):
-		angle = self.target.angle1
-		if not self.start:angle = self.target.angle2
+		angle = self.get_angle()
 		x = 0.5 * math.cos(angle) + 0.5
 		y = 0.5 * math.sin(angle) + 0.5
 		return libgeom.apply_trafo_to_point([x, y], self.target.trafo)
