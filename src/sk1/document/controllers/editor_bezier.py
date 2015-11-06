@@ -276,6 +276,9 @@ class BezierEditor(AbstractController):
 		else:
 			x0, y0 = [] + base_point.point[2]
 		trafo = [1.0, 0.0, 0.0, 1.0, x1 - x0, y1 - y0]
+		self.apply_trafo_to_selected_points(trafo, undable)
+
+	def apply_trafo_to_selected_points(self, trafo, undable=False):
 		for item in self.selected_nodes:
 			item.path.apply_trafo_to_point(item, trafo)
 			start = item.path.start_point
