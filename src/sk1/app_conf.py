@@ -289,6 +289,8 @@ class AppConfig(UCConfig):
 	ellipse_end_point_stroke = (0.0, 0.0, 0.0)
 	ellipse_end_point_stroke_width = 2.0
 
+	ellipse_fixed_angle = 15.0
+
 	#============== POLYGON OPTIONS ================
 
 	polygon_point_size = 5.0
