@@ -83,12 +83,11 @@ class MoveController(AbstractController):
 		else:
 			point = event.get_point()
 			dpoint = self.canvas.win_to_doc(point)
-			if self.selection.is_point_over(dpoint):
-				if self.selection.is_point_over_marker(dpoint):
-					mark = self.selection.is_point_over_marker(dpoint)[0]
-					self.canvas.resize_marker = mark
-					self.canvas.restore_mode()
-					self.canvas.set_temp_mode(modes.RESIZE_MODE)
+			if self.selection.is_point_over_marker(dpoint):
+				mark = self.selection.is_point_over_marker(dpoint)[0]
+				self.canvas.resize_marker = mark
+				self.canvas.restore_mode()
+				self.canvas.set_temp_mode(modes.RESIZE_MODE)
 			elif not self.selection.pick_at_point(dpoint):
 				self.canvas.restore_mode()
 
