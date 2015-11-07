@@ -47,6 +47,10 @@ class UnitLabel(StaticUnitLabel):
 		events.connect(events.DOC_CHANGED, self.update)
 		events.connect(events.DOC_MODIFIED, self.update)
 
+	def __del__(self):
+		events.disconnect(events.DOC_MODIFIED, self.update)
+		events.disconnect(events.DOC_CHANGED, self.update)
+
 	def update(self, *args):
 		if not self.insp.is_doc(): return
 		if self.units == self.app.current_doc.model.doc_units: return
@@ -78,6 +82,12 @@ class UnitSpin(FloatSpin):
 						spin_overlay=config.spin_overlay)
 		events.connect(events.DOC_MODIFIED, self.update_units)
 		events.connect(events.DOC_CHANGED, self.update_units)
+		self._set_digits(unit_accuracy[self.units])
+		self.set_value(self.point_value * point_dict[self.units])
+
+	def __del__(self):
+		events.disconnect(events.DOC_MODIFIED, self.update_units)
+		events.disconnect(events.DOC_CHANGED, self.update_units)
 
 	def update_point_value(self, *args):
 		self.point_value = self.get_value() * unit_dict[self.units]
