@@ -36,6 +36,7 @@ pdids.POLYGON_MODE: (_('Create polygon'),),
 pdids.ZOOM_OUT_MODE: (_('Zoom out mode'),),
 pdids.MOVE_MODE: (_('Move mode'),),
 pdids.COPY_MODE: (_('Copy mode'),),
+pdids.GRADIENT_MODE: (_('Edit gradient'),),
 pdids.STROKE_MODE: (_('Stroke...'),),
 pdids.FILL_MODE: (_('Fill...'),),
 
