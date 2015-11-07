@@ -129,7 +129,7 @@ class StrokeStyle(wal.VPanel):
 		p = wal.HPanel(self)
 		p.pack(wal.Label(p, _('Miter limit:')), padding=5)
 		self.miter_limit = wal.FloatSpin(p, self.stroke[6],
-									range_val=(0.0, 1000.0))
+									range_val=(0.0, 1000.0), digits=5)
 		p.pack(self.miter_limit)
 		self.pack(p)
 
