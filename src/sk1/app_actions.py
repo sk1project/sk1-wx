@@ -174,7 +174,7 @@ def create_actions(app):
 #------ Text menu -------
 (pdids.ID_EDIT_TEXT, proxy.stub),
 #------ Tools menu -------
-(pdids.ID_TOOL_PAGES, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TestPlugin',)),
+(pdids.ID_TOOL_PAGES, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TransformPlugin',)),
 (pdids.ID_TOOL_LAYERS, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('AnotherTestPlugin',)),
 (pdids.ID_TOOL_OBJBROWSER, proxy.stub),
 #------ Help menu -------
