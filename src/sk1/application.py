@@ -54,6 +54,7 @@ class pdApplication(wal.Application, UCApplication):
 	insp = None
 	mw = None
 	default_cms = None
+	artprovider = None
 	cursors = None
 	mdiarea = None
 	plg_area = None
@@ -77,7 +78,7 @@ class pdApplication(wal.Application, UCApplication):
 
 		self.history = AppHistoryManager(self)
 
-		create_artprovider()
+		self.artprovider = create_artprovider()
 		self.cursors = modes.get_cursors()
 
 		self.proxy = AppProxy(self)
