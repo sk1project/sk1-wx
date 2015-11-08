@@ -26,7 +26,7 @@ PLG_DIR = __path__[0]
 IMG_DIR = os.path.join(PLG_DIR, 'images')
 
 def make_artid(name):
-	return os.path.join(IMG_DIR, name)
+	return os.path.join(IMG_DIR, name + '.png')
 
 POSITION_MODE = 0
 RESIZE_MODE = 1

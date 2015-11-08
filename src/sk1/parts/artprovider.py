@@ -64,7 +64,7 @@ class AbstractArtProvider(wx.ArtProvider):
 			if os.path.isfile(path):
 				return wx.Bitmap(path, self.image_type)
 		if os.path.isfile(artid):
-			return wx.Bitmap(path, self.image_type)
+			return wx.Bitmap(artid, self.image_type)
 		return wx.NullIcon
 
 
