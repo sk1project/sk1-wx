@@ -63,6 +63,8 @@ class AbstractArtProvider(wx.ArtProvider):
 			path = os.path.join(self.theme_path, size_dir, filename)
 			if os.path.isfile(path):
 				return wx.Bitmap(path, self.image_type)
+		if os.path.isfile(artid):
+			return wx.Bitmap(path, self.image_type)
 		return wx.NullIcon
 
 
@@ -89,3 +91,4 @@ def create_artprovider():
 	else:
 		provider = LinuxArtProvider()
 	wx.ArtProvider_Push(provider)
+	return provider
