@@ -151,7 +151,7 @@ class MDIArea(wal.VPanel):
 		if value:
 			if not self.plg_area.is_shown():
 				self.splitter.split_vertically(self.doc_keeper,
-											self.plg_area, -100)
+											self.plg_area, -240)
 		else:
 			if self.plg_area.is_shown():
 				self.splitter.unsplit()
