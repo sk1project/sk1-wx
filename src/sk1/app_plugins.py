@@ -72,6 +72,11 @@ class RS_Plugin:
 
 	def show(self, *args):
 		self.panel.show()
+		self.show_signal(*args)
 
 	def hide(self):
 		self.panel.hide()
+		self.hide_signal()
+
+	def show_signal(self, *args):pass
+	def hide_signal(self):pass
