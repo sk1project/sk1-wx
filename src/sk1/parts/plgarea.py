@@ -49,9 +49,11 @@ class PlgArea(wal.HPanel):
 		self.plugins.append(item)
 		return item
 
-	def show_plugin(self, pid):
+	def show_plugin(self, pid, *args):
 		if not pid: return
-		if self.active_plg and pid == self.active_plg.pid: return
+		if self.active_plg and pid == self.active_plg.pid:
+			self.active_plg.show_signal(*args)
+			return
 		self.app.mdiarea.show_plugin_area()
 		item = self.check_pid(pid)
 		if self.active_plg:
@@ -63,7 +65,7 @@ class PlgArea(wal.HPanel):
 		else:
 			self.tabs.plg_tabs.set_active(item)
 		self.active_plg = item
-		self.active_plg.show()
+		self.active_plg.show(*args)
 		self.layout()
 		self.container.layout()
 
