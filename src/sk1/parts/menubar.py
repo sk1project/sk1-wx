@@ -77,7 +77,9 @@ class AppMenuBar(wx.MenuBar):
 
 		#---Arrange menu
 		sub = (
-			(_("Trans&form"), (pdids.ID_ROTATE_LEFT, pdids.ID_ROTATE_RIGHT,
+			(_("Trans&form"), (pdids.ID_POSITION_PLGN, pdids.ID_RESIZE_PLGN,
+				pdids.ID_SCALE_PLGN, pdids.ID_ROTATE_PLGN, pdids.ID_SHEAR_PLGN,
+				None, pdids.ID_ROTATE_LEFT, pdids.ID_ROTATE_RIGHT,
 				None, pdids.ID_MIRROR_H, pdids.ID_MIRROR_V)),
 			pdids.ID_CLEAR_TRANSFORM,
 			None, pdids.ID_COMBINE, pdids.ID_BREAK_APART, None,
