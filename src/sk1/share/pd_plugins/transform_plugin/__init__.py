@@ -23,6 +23,9 @@ from sk1.app_plugins import RS_Plugin
 from sk1.resources import get_icon
 
 from indicator import OrientationIndicator
+from transforms import PositionTransform, ResizeTransform, ScaleTransform, \
+RotateTransform, ShearTransform
+
 
 PLG_DIR = __path__[0]
 IMG_DIR = os.path.join(PLG_DIR, 'images')
@@ -57,6 +60,9 @@ SHEAR_MODE:_('Shearing')
 
 PLUGIN_ICON = make_artid('icon')
 
+TRANSFORM_CLASSES = [PositionTransform, ResizeTransform, ScaleTransform,
+					RotateTransform, ShearTransform]
+
 def get_plugin(app):
 	return Transform_Plugin(app)
 
@@ -64,6 +70,8 @@ class Transform_Plugin(RS_Plugin):
 
 	pid = 'TransformPlugin'
 	name = 'Transformations'
+	active_transform = None
+	transforms = {}
 
 	def build_ui(self):
 		self.icon = get_icon(PLUGIN_ICON)
@@ -74,7 +82,18 @@ class Transform_Plugin(RS_Plugin):
 		panel.pack(self.transform_keeper)
 		panel.pack(wal.HLine(panel), fill=True, padding=3)
 
-		panel.pack(OrientationIndicator(panel), padding_all=10)
+		self.transform_panel = wal.VPanel(panel)
+
+		self.transforms = {}
+		for item in TRANSFORM_MODES:
+			transf = TRANSFORM_CLASSES[item](self.transform_panel, self.app)
+			transf.hide()
+			self.transforms[item] = transf
+
+		panel.pack(self.transform_panel)
+
+		self.oi = OrientationIndicator(panel, onchange=self.on_orient_change)
+		panel.pack(self.oi, padding_all=10)
 
 		self.apply_copy_btn = wal.Button(panel, _('Apply to copy'),
 							onclick=self.action_copy)
@@ -91,15 +110,36 @@ class Transform_Plugin(RS_Plugin):
 		events.connect(events.SELECTION_CHANGED, self.update)
 		self.update()
 
-	def on_mode_change(self, mode):pass
+	def on_mode_change(self, mode):
+		if self.active_transform:
+			self.active_transform.hide()
+			self.transform_panel.remove(self.active_transform)
+		self.active_transform = self.transforms[mode]
+		self.transform_panel.pack(self.active_transform)
+		self.active_transform.show()
+		self.active_transform.set_orientation(self.oi.get_value())
+		self.panel.layout()
+		self.update()
+
+	def on_orient_change(self, val):
+		self.active_transform.set_orientation(val)
+
 	def action_copy(self): self.action(True)
-	def action(self, copy=False):pass
+
+	def action(self, copy=False):
+		doc = self.app.current_doc
+		if doc and self.app.insp.is_selection():
+			doc.api.transform_selected(self.active_transform.get_trafo(), copy)
 
 	def update(self, *args):
 		state = False
 		if self.app.insp.is_selection(): state = True
 		self.apply_btn.set_enable(state)
 		self.apply_copy_btn.set_enable(state)
+		self.oi.set_enable(state)
+		if self.active_transform:
+			self.active_transform.set_enable(state)
 
 	def show_signal(self, mode=POSITION_MODE, *args):
 		self.transform_keeper.set_mode(mode)
+		self.on_mode_change(mode)
