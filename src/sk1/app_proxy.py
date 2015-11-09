@@ -585,6 +585,6 @@ class AppProxy:
 		else:
 			doc.api.stroke_selected(color)
 
-	def show_plugin(self, pid=""):
-		self.app.plg_area.show_plugin(pid)
+	def show_plugin(self, *args):
+		self.app.plg_area.show_plugin(*args)
 
