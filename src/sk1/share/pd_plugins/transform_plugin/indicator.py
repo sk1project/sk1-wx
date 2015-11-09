@@ -41,7 +41,7 @@ class OIToggle(BitmapToggle):
 		BitmapToggle.__init__(self, parent, state, icons_dict, onchange)
 
 	def on_change(self, event):
-		if not self.state:
+		if not self.state and self.get_enabled():
 			self.set_active(not self.state)
 			if self.callback: self.callback(self.val)
 
@@ -78,5 +78,10 @@ class OrientationIndicator(wal.GridPanel):
 		if self.callback: self.callback(self.val)
 
 	def get_value(self): return self.val
+
+	def set_enable(self, state):
+		for y in REV_VALS:
+			for x in VALS:
+				self.toggles[x][y].set_enable(state)
 
 
