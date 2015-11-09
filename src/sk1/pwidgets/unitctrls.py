@@ -91,7 +91,7 @@ class UnitSpin(FloatSpin):
 
 	def update_point_value(self, *args):
 		self.point_value = self.get_value() * unit_dict[self.units]
-		if not self.ucallback is None: self.ucallback()
+		if self.ucallback: self.ucallback()
 
 	def get_point_value(self):
 		return self.point_value
@@ -110,13 +110,13 @@ class UnitSpin(FloatSpin):
 
 class BitmapToggle(wal.Bitmap):
 
-	onchange = None
 	state = True
 	icons_dict = {}
+	callback = None
 
 	def __init__(self, parent, state=True, icons_dict={}, onchange=None):
 		self.state = state
-		self.onchange = onchange
+		self.callback = onchange
 		if icons_dict:
 			self.icons_dict = icons_dict
 		else:
@@ -124,12 +124,13 @@ class BitmapToggle(wal.Bitmap):
 					False:[icons.CTX_NO_RATIO, _("Don't keep ratio")]}
 		self.update_icons()
 		wal.Bitmap.__init__(self, parent, self.icons_dict[self.state][0],
-						on_left_click=self.change)
-		self.set_tooltip(self.icons_dict[self.state][1])
+						on_left_click=self.on_change)
+		if self.icons_dict[self.state][1]:
+			self.set_tooltip(self.icons_dict[self.state][1])
 
-	def change(self, event):
+	def on_change(self, event):
 		self.set_active(not self.state)
-		if not self.onchange is None: self.onchange()
+		if self.callback: self.callback()
 
 	def get_active(self):
 		return self.state
@@ -137,7 +138,8 @@ class BitmapToggle(wal.Bitmap):
 	def set_active(self, state):
 		self.state = state
 		self.set_bitmap(self.icons_dict[self.state][0])
-		self.set_tooltip(self.icons_dict[self.state][1])
+		if self.icons_dict[self.state][1]:
+			self.set_tooltip(self.icons_dict[self.state][1])
 
 	def update_icons(self):
 		self.icons_dict[True] = [get_icon(self.icons_dict[True][0],
@@ -186,7 +188,7 @@ class AngleSpin(FloatSpin):
 
 	def update_angle_value(self, *args):
 		self.angle_value = self.get_value() * math.pi / 180.0
-		if not self.ucallback is None: self.ucallback()
+		if self.ucallback: self.ucallback()
 
 	def get_angle_value(self):
 		return self.angle_value
