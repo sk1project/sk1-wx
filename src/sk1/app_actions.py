@@ -126,10 +126,15 @@ def create_actions(app):
 (pdids.ID_REMOVE_ALL_GUIDES, proxy.remove_all_guides, doc_chnls, insp.is_doc),
 #------ Arrange menu -------
 (pdids.ID_CLEAR_TRANSFORM, proxy.clear_trafo, sel_chnls, insp.can_clear_trafo),
-(pdids.ID_ROTATE_LEFT, proxy.rotate_left, sel_chnls, insp.is_selection),
-(pdids.ID_ROTATE_RIGHT, proxy.rotate_right, sel_chnls, insp.is_selection),
-(pdids.ID_MIRROR_H, proxy.mirror_h, sel_chnls, insp.is_selection),
-(pdids.ID_MIRROR_V, proxy.mirror_v, sel_chnls, insp.is_selection),
+	(pdids.ID_POSITION_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TransformPlugin', 0)),
+	(pdids.ID_RESIZE_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TransformPlugin', 1)),
+	(pdids.ID_SCALE_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TransformPlugin', 2)),
+	(pdids.ID_ROTATE_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TransformPlugin', 3)),
+	(pdids.ID_SHEAR_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TransformPlugin', 4)),
+	(pdids.ID_ROTATE_LEFT, proxy.rotate_left, sel_chnls, insp.is_selection),
+	(pdids.ID_ROTATE_RIGHT, proxy.rotate_right, sel_chnls, insp.is_selection),
+	(pdids.ID_MIRROR_H, proxy.mirror_h, sel_chnls, insp.is_selection),
+	(pdids.ID_MIRROR_V, proxy.mirror_v, sel_chnls, insp.is_selection),
 (pdids.ID_COMBINE, proxy.combine_selected, sel_chnls, insp.can_be_combined),
 (pdids.ID_BREAK_APART, proxy.break_apart_selected, sel_chnls, insp.can_be_breaked),
 (pdids.ID_RAISE_TO_TOP, proxy.raise_to_top, sel_chnls, insp.can_be_raised),
@@ -174,7 +179,7 @@ def create_actions(app):
 #------ Text menu -------
 (pdids.ID_EDIT_TEXT, proxy.stub),
 #------ Tools menu -------
-(pdids.ID_TOOL_PAGES, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TransformPlugin',)),
+(pdids.ID_TOOL_PAGES, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TestPlugin',)),
 (pdids.ID_TOOL_LAYERS, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('AnotherTestPlugin',)),
 (pdids.ID_TOOL_OBJBROWSER, proxy.stub),
 #------ Help menu -------
