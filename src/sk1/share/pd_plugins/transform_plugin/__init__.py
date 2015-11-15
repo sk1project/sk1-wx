@@ -90,7 +90,7 @@ class Transform_Plugin(RS_Plugin):
 			transf.hide()
 			self.transforms[item] = transf
 
-		panel.pack(self.transform_panel)
+		panel.pack(self.transform_panel, fill=True)
 
 		self.oi = OrientationIndicator(panel, onchange=self.on_orient_change)
 		panel.pack(self.oi, padding_all=10)
@@ -115,7 +115,7 @@ class Transform_Plugin(RS_Plugin):
 			self.active_transform.hide()
 			self.transform_panel.remove(self.active_transform)
 		self.active_transform = self.transforms[mode]
-		self.transform_panel.pack(self.active_transform)
+		self.transform_panel.pack(self.active_transform, fill=True)
 		self.active_transform.show()
 		self.active_transform.set_orientation(self.oi.get_value())
 		self.panel.layout()
