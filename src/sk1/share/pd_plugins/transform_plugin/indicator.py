@@ -25,19 +25,22 @@ IMG_DIR = os.path.join(PLG_DIR, 'images')
 def make_artid(name):
 	return os.path.join(IMG_DIR, name + '.png')
 
-VALS = [0.0, 0.5, 1.0]
-REV_VALS = [1.0, 0.5, 0.0]
+VALS = [-1.0, 0.0, 1.0]
+REV_VALS = [1.0, 0.0, -1.0]
 
 CELL_SIZE = (15, 15)
 
 class OIToggle(BitmapToggle):
 
-	val = (0.5, 0.5)
+	val = (0.0, 0.0)
 
 	def __init__(self, parent, val, state=False, onchange=None):
 		self.val = val
 		icons_dict = { True:[make_artid('check-yes'), ''],
 					False:[make_artid('check-no'), ''] }
+		if val == (0.0, 0.0):
+			icons_dict = { True:[make_artid('check-yes-center'), ''],
+						False:[make_artid('check-no'), ''] }
 		BitmapToggle.__init__(self, parent, state, icons_dict, onchange)
 
 	def on_change(self, event):
@@ -47,24 +50,24 @@ class OIToggle(BitmapToggle):
 
 class OrientationIndicator(wal.GridPanel):
 
-	val = (0.5, 0.5)
+	val = (0.0, 0.0)
 	callback = None
 	toggles = {}
 
-	def __init__(self, parent, val=(0.5, 0.5), onchange=None):
+	def __init__(self, parent, val=(0.0, 0.0), onchange=None):
 		self.val = val
 		self.callback = onchange
-		self.toggles = {0.0:{}, 0.5:{}, 1.0:{}}
+		self.toggles = {-1.0:{}, 0.0:{}, 1.0:{}}
 		wal.GridPanel.__init__(self, parent, 5, 5, 2, 2)
 		for y in REV_VALS:
 			for x in VALS:
 				state = False
-				if (x, y) == (0.5, 0.5): state = True
+				if (x, y) == (0.0, 0.0): state = True
 				toggle = OIToggle(self, (x, y), state, self.on_change)
 				self.pack(toggle)
 				self.toggles[x][y] = toggle
 				if x < 1.0: self.pack(wal.HLine(self), fill=True)
-			if y > 0.0:
+			if y > -1.0:
 				self.pack(wal.VLine(self), fill=True)
 				self.pack(CELL_SIZE)
 				self.pack(wal.VLine(self), fill=True)
@@ -76,6 +79,9 @@ class OrientationIndicator(wal.GridPanel):
 		self.toggles[x][y].set_active(False)
 		self.val = val
 		if self.callback: self.callback(self.val)
+
+	def reset(self):
+		self.on_change((0.0, 0.0))
 
 	def get_value(self): return self.val
 
