@@ -95,7 +95,7 @@ class ResizeTransform(AbstractTransform):
 		grid.pack(UnitLabel(self.app, grid))
 
 		self.pack(grid, align_center=False, padding=5)
-		self.proportion = wal.Checkbox(self, _('Keep proportion'), True)
+		self.proportion = wal.Checkbox(self, _('Keep ratio'), True)
 		self.pack(self.proportion, align_center=False, padding=5)
 
 class ScaleTransform(AbstractTransform):
@@ -126,7 +126,7 @@ class ScaleTransform(AbstractTransform):
 		grid.pack(self.v_mirror)
 
 		self.pack(grid, align_center=False, padding=5)
-		self.proportion = wal.Checkbox(self, _('Keep proportion'), True)
+		self.proportion = wal.Checkbox(self, _('Keep ratio'), True)
 		self.pack(self.proportion, align_center=False, padding=5)
 
 class RotateTransform(AbstractTransform):
