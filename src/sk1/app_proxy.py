@@ -200,6 +200,7 @@ class AppProxy:
 	def set_mode(self, mode): self.app.current_doc.canvas.set_mode(mode)
 	def open_url(self, url): self.app.open_url(url)
 	def about(self): dialogs.about_dialog(self.app, self.mw)
+	def properties(self): dialogs.docprops_dlg(self.app, self.mw)
 
 	def undo(self):
 		self.app.current_doc.api.do_undo()
