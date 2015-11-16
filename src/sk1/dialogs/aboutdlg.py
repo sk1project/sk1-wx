@@ -18,7 +18,7 @@
 import wal
 from wal import const
 
-from sk1 import _, events
+from sk1 import _, events, config
 from sk1.resources import icons, get_bmp
 from sk1.dialogs.aboutdlg_license import LICENSE
 from sk1.dialogs.aboutdlg_credits import CREDITS
@@ -28,9 +28,8 @@ class AboutDialog(wal.CloseDialog):
 	sizer = None
 	app = None
 
-	def __init__(self, app, parent, title, size=(500, 350)):
+	def __init__(self, app, parent, title, size=config.about_dlg_size):
 		self.app = app
-		if wal.is_mac(): size = (550, 400)
 		wal.CloseDialog.__init__(self, parent, title, size)
 
 	def build(self):
