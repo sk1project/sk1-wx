@@ -94,7 +94,7 @@ def create_actions(app):
 (pdids.ID_INV_SELECT, proxy.invert_selection, sel_chnls, insp.can_be_selected),
 (pdids.COPY_FILL, proxy.copy_fill, sel_chnls, insp.is_selection),
 (pdids.COPY_STROKE, proxy.copy_stroke, sel_chnls, insp.is_selection),
-(wx.ID_PROPERTIES, proxy.stub, doc_chnls, insp.is_doc),
+(wx.ID_PROPERTIES, proxy.properties, doc_chnls, insp.is_doc),
 (wx.ID_PREFERENCES, proxy.preferences),
 #------ View menu -------
 (pdids.ID_STROKE_VIEW, proxy.stroke_view, doc_chnls, insp.is_doc, insp.is_stroke_view),
