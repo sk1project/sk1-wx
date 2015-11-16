@@ -131,6 +131,9 @@ class AppConfig(UCConfig):
 	stroke_dlg_size = (430, 370)
 	dash_dlg_size = (300, 150)
 	change_color_dlg_size = (420, 300)
+	about_dlg_size = (500, 350)
+	docprops_dlg_size = (400, 350)
+
 
 	statusbar_fontsize = 0
 	tabs_fontsize = 0
@@ -345,6 +348,7 @@ class MacosxConfig(AppConfig):
 	os_name = system.get_os_name()
 	toolbar_size = (16, 16)
 	toolbar_icon_size = (16, 16)
+	about_dlg_size = (550, 400)
 	spin_overlay = False
 
 class WinConfig(AppConfig):
