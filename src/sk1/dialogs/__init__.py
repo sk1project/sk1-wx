@@ -25,3 +25,4 @@ from palette_inf import palette_info_dlg
 from palcol_dlg import palette_collection_dlg
 from fill_dlg import fill_dlg
 from stroke_dlg import stroke_dlg
+from docprops import docprops_dlg
