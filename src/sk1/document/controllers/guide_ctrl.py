@@ -49,12 +49,12 @@ class GuideController(AbstractController):
 			p_doc = self.presenter.snap.snap_point(self.end, snap_x=False)[2]
 			pos = p_doc[1]
 			orient = uc2const.HORIZONTAL
-			self.presenter.api.set_guide_propeties(self.guide, pos, orient)
+			self.presenter.api.set_guide_properties(self.guide, pos, orient)
 		elif self.mode == modes.VGUIDE_MODE and self.end[0] > 0:
 			p_doc = self.presenter.snap.snap_point(self.end, snap_y=False)[2]
 			orient = uc2const.VERTICAL
 			pos = p_doc[0]
-			self.presenter.api.set_guide_propeties(self.guide, pos, orient)
+			self.presenter.api.set_guide_properties(self.guide, pos, orient)
 		else:
 			self.presenter.api.delete_guides([self.guide])
 		self.canvas.dragged_guide = ()
