@@ -355,16 +355,16 @@ class PresenterAPI(AbstractAPI):
 		events.emit(events.DOC_MODIFIED, self.presenter)
 		self.presenter.reflect_saving()
 
-	def set_page_format(self, page_format):
-		page = self.presenter.active_page
-		format_before = page.page_format
-		format_after = page_format
-		self._set_page_format(page, format_after)
+	def set_mode(self, mode=modes.SELECT_MODE):
 		transaction = [
-			[[self._set_page_format, page, format_before]],
-			[[self._set_page_format, page, format_after]],
+			[[self._set_mode, mode],
+			[self._selection_update, ]],
+			[[self._set_mode, mode],
+			[self._selection_update, ]],
 			False]
 		self.add_undo(transaction)
+
+	#--- DOCUMENT
 
 	def set_doc_origin(self, origin):
 		cur_origin = self.model.doc_origin
@@ -383,6 +383,209 @@ class PresenterAPI(AbstractAPI):
 			False]
 		self.methods.set_doc_units(units)
 		self.add_undo(transaction)
+
+	#--- PAGES
+
+	def set_active_page(self, index):
+		if not self.undo:
+			self.presenter.set_active_page(index)
+			self.selection.clear()
+		else:
+			pages = self.presenter.get_pages()
+			active_index_before = pages.index(self.presenter.active_page)
+			sel_before = [] + self.selection.objs
+			active_index_after = index
+
+			self.presenter.set_active_page(index)
+			self.selection.clear()
+
+			transaction = [
+				[[self._set_selection, sel_before],
+				[self.presenter.set_active_page, active_index_before]],
+				[[self._set_selection, []],
+				[self.presenter.set_active_page, active_index_after]],
+				False]
+			self.add_undo(transaction)
+			self.selection.update()
+
+	def delete_page(self, index):
+		pages = self.presenter.get_pages()
+		if index == 0 and len(pages) == 1: return
+
+		before = self._get_pages_snapshot()
+		sel_before = [] + self.selection.objs
+		active_index_before = pages.index(self.presenter.active_page)
+
+		self.methods.delete_page(index)
+
+		active_index_after = 0
+
+		if index == active_index_before:
+			if index:
+				active_index_after = index - 1
+		else:
+			pages = self.presenter.get_pages()
+			active_index_after = pages.index(self.presenter.active_page)
+
+		self.selection.clear()
+		self.presenter.set_active_page(active_index_after)
+
+		after = self._get_pages_snapshot()
+
+		transaction = [
+			[[self._set_pages_snapshot, before],
+			[self._set_selection, sel_before],
+			[self.presenter.set_active_page, active_index_before]],
+			[[self._set_pages_snapshot, after],
+			[self._set_selection, []],
+			[self.presenter.set_active_page, active_index_after]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def insert_page(self, number, target, position):
+		pages = self.presenter.get_pages()
+
+		before = self._get_pages_snapshot()
+		sel_before = [] + self.selection.objs
+		active_index_before = pages.index(self.presenter.active_page)
+
+		active_index_after = target
+		if position == uc2const.AFTER: active_index_after += 1
+
+		for item in range(number):
+			page = self.methods.insert_page(active_index_after + item)
+			self.methods.add_layer(page)
+			page.do_update()
+
+		self.selection.clear()
+		self.presenter.set_active_page(active_index_after)
+
+		after = self._get_pages_snapshot()
+
+		transaction = [
+			[[self._set_pages_snapshot, before],
+			[self._set_selection, sel_before],
+			[self.presenter.set_active_page, active_index_before]],
+			[[self._set_pages_snapshot, after],
+			[self._set_selection, []],
+			[self.presenter.set_active_page, active_index_after]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def add_pages(self, new_pages):
+		pages = self.presenter.get_pages()
+		parent = pages[0].parent
+
+		before = self._get_pages_snapshot()
+		sel_before = [] + self.selection.objs
+		active_index_before = pages.index(self.presenter.active_page)
+
+		active_index_after = len(pages)
+
+		pages += new_pages
+		parent.do_update()
+
+		self.selection.clear()
+		self.presenter.set_active_page(active_index_after)
+
+		after = self._get_pages_snapshot()
+
+		transaction = [
+			[[self._set_pages_snapshot, before],
+			[self._set_selection, sel_before],
+			[self.presenter.set_active_page, active_index_before]],
+			[[self._set_pages_snapshot, after],
+			[self._set_selection, []],
+			[self.presenter.set_active_page, active_index_after]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def set_page_format(self, page_format):
+		page = self.presenter.active_page
+		format_before = page.page_format
+		format_after = page_format
+		self._set_page_format(page, format_after)
+		transaction = [
+			[[self._set_page_format, page, format_before]],
+			[[self._set_page_format, page, format_after]],
+			False]
+		self.add_undo(transaction)
+
+	#--- LAYERS
+
+	def set_layer_properties(self, layer, prop):
+		before = layer.properties
+		after = prop
+		sel_before = [] + self.selection.objs
+
+		self.selection.clear()
+		self._set_layer_properties(layer, prop)
+
+		transaction = [
+			[[self._set_layer_properties, layer, before],
+			[self._set_selection, sel_before], ],
+			[[self._set_layer_properties, layer, after],
+			[self._set_selection, []]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	#--- GUIDES
+
+	def create_guides(self, vals=[]):
+		if vals:
+			objs_list = []
+			parent = self.methods.get_guide_layer()
+			for val in vals:
+				pos, orient = val
+				obj = model.Guide(self.sk2_cfg, parent, pos, orient)
+				objs_list.append([obj, parent, -1])
+				obj.update()
+			self._insert_objects(objs_list)
+			transaction = [
+				[[self._delete_objects, objs_list]],
+				[[self._insert_objects, objs_list]],
+				False]
+			self.add_undo(transaction)
+			self.selection.update()
+
+	def set_guide_properties(self, guide, pos, orient):
+		pos_before = guide.position
+		orient_before = guide.orientation
+		self._set_guide_properties(guide, pos, orient)
+		pos_after = pos
+		orient_after = orient
+		transaction = [
+			[[self._set_guide_properties, guide, pos_before, orient_before], ],
+			[[self._set_guide_properties, guide, pos_after, orient_after], ],
+			False]
+		self.add_undo(transaction)
+
+	def delete_guides(self, objs=[]):
+		if objs:
+			objs_list = []
+			parent = self.methods.get_guide_layer()
+			for obj in objs:
+				objs_list.append([obj, parent, -1])
+			self._delete_objects(objs_list)
+			transaction = [
+				[[self._insert_objects, objs_list]],
+				[[self._delete_objects, objs_list]],
+				False]
+			self.add_undo(transaction)
+
+	def delete_all_guides(self):
+		guides = []
+		guide_layer = self.methods.get_guide_layer()
+		for child in guide_layer.childs:
+			if child.cid == model.GUIDE:
+				guides.append(child)
+		self.delete_guides(guides)
+
+	#--- OBJECT
 
 	def insert_object(self, obj, parent, index):
 		sel_before = [] + self.selection.objs
@@ -481,92 +684,216 @@ class PresenterAPI(AbstractAPI):
 		self.selection.set(objs)
 		self.selection.update()
 
-	#---------------- CREATORS -------------------
-	def create_rectangle(self, rect):
-		rect = self._normalize_rect(rect)
-		parent = self.presenter.active_layer
-		obj = model.Rectangle(self.sk2_cfg, parent, rect)
-		obj.style = deepcopy(self.model.styles['Default Style'])
-		obj.update()
-		self.insert_object(obj, parent, len(parent.childs))
-
-	def create_ellipse(self, rect):
-		rect = self._normalize_rect(rect)
-		parent = self.presenter.active_layer
-		obj = model.Circle(self.sk2_cfg, parent, rect)
-		obj.style = deepcopy(self.model.styles['Default Style'])
-		obj.update()
-		self.insert_object(obj, parent, len(parent.childs))
-
-	def create_polygon(self, rect):
-		rect = self._normalize_rect(rect)
-		parent = self.presenter.active_layer
-		obj = model.Polygon(self.sk2_cfg, parent, rect,
-						corners_num=config.default_polygon_num)
-		obj.style = deepcopy(self.model.styles['Default Style'])
-		obj.update()
-		self.insert_object(obj, parent, len(parent.childs))
-
-	def create_text(self, rect, width=0):pass
-#		rect = self._normalize_rect(rect)
-#		parent = self.presenter.active_layer
-#		if width == 0: width = rect[2]
-#		text = dialogs.text_edit_dialog(self.app.mw)
-#		if text:
-#			obj = model.Text(self.sk2_cfg, parent, rect, text, width)
-#			obj.style = deepcopy(self.model.styles['Default Style'])
-#			obj.update()
-#			self.insert_object(obj, parent, len(parent.childs))
-
-	def create_curve(self, paths):
-		parent = self.presenter.active_layer
-		obj = model.Curve(self.sk2_cfg, parent, paths)
-		obj.style = deepcopy(self.model.styles['Default Style'])
-		obj.update()
-		self.insert_object(obj, parent, len(parent.childs))
-
-	def update_curve(self, obj, paths, trafo=[1.0, 0.0, 0.0, 1.0, 0.0, 0.0]):
-		sel_before = [obj, ]
-		sel_after = [obj, ]
-		trafo_before = obj.trafo
-		paths_before = obj.paths
-		trafo_after = trafo
-		paths_after = paths
-		self._set_paths_and_trafo(obj, paths_after, trafo_after)
+	def raise_to_top(self):
+		before = self._get_layers_snapshot()
+		sel_before = [] + self.selection.objs
+		obj = sel_before[0]
+		childs = obj.parent.childs
+		index = childs.index(obj)
+		new_childs = childs[:index] + childs[index + 1:] + [obj, ]
+		obj.parent.childs = new_childs
+		after = self._get_layers_snapshot()
 		transaction = [
-			[[self._set_paths_and_trafo, obj, paths_before, trafo_before],
+			[[self._set_layers_snapshot, before],
 			[self._set_selection, sel_before]],
-			[[self._set_paths_and_trafo, obj, paths_after, trafo_after],
-			[self._set_selection, sel_after]],
+			[[self._set_layers_snapshot, after],
+			[self._set_selection, sel_before]],
 			False]
-		self._set_selection(sel_after)
 		self.add_undo(transaction)
+		self.selection.update()
 
-	def create_guides(self, vals=[]):
-		if vals:
-			objs_list = []
-			parent = self.methods.get_guide_layer()
-			for val in vals:
-				pos, orient = val
-				obj = model.Guide(self.sk2_cfg, parent, pos, orient)
-				objs_list.append([obj, parent, -1])
-				obj.update()
-			self._insert_objects(objs_list)
+	def raise_obj(self):
+		before = self._get_layers_snapshot()
+		sel_before = [] + self.selection.objs
+		obj = sel_before[0]
+		childs = obj.parent.childs
+		index = childs.index(obj)
+
+		new_childs = childs[:index] + [childs[index + 1], obj]
+		new_childs += childs[index + 2:]
+
+		obj.parent.childs = new_childs
+		after = self._get_layers_snapshot()
+		transaction = [
+			[[self._set_layers_snapshot, before],
+			[self._set_selection, sel_before]],
+			[[self._set_layers_snapshot, after],
+			[self._set_selection, sel_before]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def lower_obj(self):
+		before = self._get_layers_snapshot()
+		sel_before = [] + self.selection.objs
+		obj = sel_before[0]
+		childs = obj.parent.childs
+		index = childs.index(obj)
+
+		new_childs = childs[:index - 1] + [obj, childs[index - 1]]
+		new_childs += childs[index + 1:]
+
+		obj.parent.childs = new_childs
+		after = self._get_layers_snapshot()
+		transaction = [
+			[[self._set_layers_snapshot, before],
+			[self._set_selection, sel_before]],
+			[[self._set_layers_snapshot, after],
+			[self._set_selection, sel_before]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def lower_to_bottom(self):
+		before = self._get_layers_snapshot()
+		sel_before = [] + self.selection.objs
+		obj = sel_before[0]
+		childs = obj.parent.childs
+		index = childs.index(obj)
+		new_childs = [obj, ] + childs[:index] + childs[index + 1:]
+		obj.parent.childs = new_childs
+		after = self._get_layers_snapshot()
+		transaction = [
+			[[self._set_layers_snapshot, before],
+			[self._set_selection, sel_before]],
+			[[self._set_layers_snapshot, after],
+			[self._set_selection, sel_before]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def transform_selected(self, trafo, copy=False):
+		if self.selection.objs:
+			sel_before = [] + self.selection.objs
+			objs = [] + self.selection.objs
+			if copy:
+				copied_objs = []
+				for obj in objs:
+					copied_obj = obj.copy()
+					copied_obj.update()
+					copied_objs.append(copied_obj)
+				self._apply_trafo(copied_objs, trafo)
+				before = self._get_layers_snapshot()
+				self.methods.append_objects(copied_objs,
+										self.presenter.active_layer)
+				after = self._get_layers_snapshot()
+				sel_after = [] + copied_objs
+				transaction = [
+					[[self._set_layers_snapshot, before],
+					[self._set_selection, sel_before]],
+					[[self._set_layers_snapshot, after],
+					[self._set_selection, sel_after]],
+					False]
+				self.add_undo(transaction)
+				self.selection.set(copied_objs)
+			else:
+				before, after = self._apply_trafo(objs, trafo)
+				sel_after = [] + objs
+				transaction = [
+					[[self._set_snapshots, before],
+					[self._set_selection, sel_before]],
+					[[self._set_snapshots, after],
+					[self._set_selection, sel_after]],
+					False]
+				self.add_undo(transaction)
+			self.selection.update()
+
+	def move_selected(self, x, y, copy=False):
+		trafo = [1.0, 0.0, 0.0, 1.0, x, y]
+		self.transform_selected(trafo, copy)
+
+	def duplicate_selected(self):
+		trafo = [1.0, 0.0, 0.0, 1.0, config.obj_jump, config.obj_jump]
+		self.transform_selected(trafo, True)
+
+	def clear_trafo(self):
+		normal_trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+		if self.selection.objs:
+			sel_before = [] + self.selection.objs
+			objs = [] + self.selection.objs
+			cleared_objs = []
+			for obj in objs:
+				if obj.cid > model.PRIMITIVE_CLASS:
+					if not obj.trafo == normal_trafo:
+						cleared_objs.append(obj)
+			if cleared_objs:
+				before, after = self._clear_trafo(cleared_objs)
+				transaction = [
+					[[self._set_snapshots, before],
+					[self._set_selection, sel_before]],
+					[[self._set_snapshots, after],
+					[self._set_selection, sel_before]],
+					False]
+				self.add_undo(transaction)
+				self.selection.update()
+
+	def rotate_selected(self, angle=0, copy=False):
+		if self.selection.objs:
+			bbox = self.selection.bbox
+			w = bbox[2] - bbox[0]
+			h = bbox[3] - bbox[1]
+
+			x0, y0 = bbox[:2]
+			shift_x, shift_y = self.selection.center_offset
+			center_x = x0 + w / 2.0 + shift_x
+			center_y = y0 + h / 2.0 + shift_y
+
+			m21 = math.sin(angle)
+			m11 = m22 = math.cos(angle)
+			m12 = -m21
+			dx = center_x - m11 * center_x + m21 * center_y;
+			dy = center_y - m21 * center_x - m11 * center_y;
+
+			trafo = [m11, m21, m12, m22, dx, dy]
+			self.transform_selected(trafo, copy)
+
+	def mirror_selected(self, vertical=True, copy=False):
+		if self.selection.objs:
+			m11 = m22 = 1.0
+			dx = dy = 0.0
+			bbox = self.selection.bbox
+			w = bbox[2] - bbox[0]
+			h = bbox[3] - bbox[1]
+			x0, y0 = bbox[:2]
+			if vertical:
+				m22 = -1
+				dy = 2 * y0 + h
+			else:
+				m11 = -1
+				dx = 2 * x0 + w
+
+			trafo = [m11, 0.0, 0.0, m22, dx, dy]
+			self.transform_selected(trafo, copy)
+
+	def convert_to_curve_selected(self):
+		if self.selection.objs:
+			before = self._get_layers_snapshot()
+			objs = [] + self.selection.objs
+			sel_before = [] + self.selection.objs
+
+			for obj in objs:
+				if obj.cid > model.PRIMITIVE_CLASS and not obj.cid == model.CURVE:
+					curve = obj.to_curve()
+					if curve is not None:
+						parent = obj.parent
+						index = parent.childs.index(obj)
+						curve.parent = parent
+						parent.childs[index] = curve
+						sel_id = self.selection.objs.index(obj)
+						self.selection.objs[sel_id] = curve
+
+			after = self._get_layers_snapshot()
+			sel_after = [] + self.selection.objs
 			transaction = [
-				[[self._delete_objects, objs_list]],
-				[[self._insert_objects, objs_list]],
+				[[self._set_layers_snapshot, before],
+				[self._set_selection, sel_before]],
+				[[self._set_layers_snapshot, after],
+				[self._set_selection, sel_after]],
 				False]
 			self.add_undo(transaction)
 			self.selection.update()
 
-#///////////////////////////////////////////
-
-	#FIXME: Add undo for operation!
-	def edit_text(self):pass
-#		if self.selection.objs:
-#			obj = self.selection.objs[0]
-#			obj.text = dialogs.text_edit_dialog(self.app.mw, obj.text)
-#			obj.update()
+	#--- OBJECT STYLE
 
 	def set_default_style(self, style):
 		style_before = self.model.styles['Default Style']
@@ -704,161 +1031,7 @@ class PresenterAPI(AbstractAPI):
 			self.add_undo(transaction)
 			self.selection.update()
 
-	def set_mode(self, mode=modes.SELECT_MODE):
-		transaction = [
-			[[self._set_mode, mode],
-			[self._selection_update, ]],
-			[[self._set_mode, mode],
-			[self._selection_update, ]],
-			False]
-		self.add_undo(transaction)
-
-	def set_temp_paths(self, obj, paths):
-		self._set_paths(obj, paths)
-		self.eventloop.emit(self.eventloop.DOC_MODIFIED)
-		self.selection.update()
-
-	def set_new_paths(self, obj, new_paths, old_paths):
-		self._set_paths(obj, new_paths)
-		transaction = [
-			[[self._set_paths, obj, old_paths],
-			[self._selection_update, ]],
-			[[self._set_paths, obj, new_paths],
-			[self._selection_update, ]],
-			False]
-		self.add_undo(transaction)
-		self.selection.update()
-
-	def transform_selected(self, trafo, copy=False):
-		if self.selection.objs:
-			sel_before = [] + self.selection.objs
-			objs = [] + self.selection.objs
-			if copy:
-				copied_objs = []
-				for obj in objs:
-					copied_obj = obj.copy()
-					copied_obj.update()
-					copied_objs.append(copied_obj)
-				self._apply_trafo(copied_objs, trafo)
-				before = self._get_layers_snapshot()
-				self.methods.append_objects(copied_objs,
-										self.presenter.active_layer)
-				after = self._get_layers_snapshot()
-				sel_after = [] + copied_objs
-				transaction = [
-					[[self._set_layers_snapshot, before],
-					[self._set_selection, sel_before]],
-					[[self._set_layers_snapshot, after],
-					[self._set_selection, sel_after]],
-					False]
-				self.add_undo(transaction)
-				self.selection.set(copied_objs)
-			else:
-				before, after = self._apply_trafo(objs, trafo)
-				sel_after = [] + objs
-				transaction = [
-					[[self._set_snapshots, before],
-					[self._set_selection, sel_before]],
-					[[self._set_snapshots, after],
-					[self._set_selection, sel_after]],
-					False]
-				self.add_undo(transaction)
-			self.selection.update()
-
-	def move_selected(self, x, y, copy=False):
-		trafo = [1.0, 0.0, 0.0, 1.0, x, y]
-		self.transform_selected(trafo, copy)
-
-	def duplicate_selected(self):
-		trafo = [1.0, 0.0, 0.0, 1.0, config.obj_jump, config.obj_jump]
-		self.transform_selected(trafo, True)
-
-	def clear_trafo(self):
-		normal_trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
-		if self.selection.objs:
-			sel_before = [] + self.selection.objs
-			objs = [] + self.selection.objs
-			cleared_objs = []
-			for obj in objs:
-				if obj.cid > model.PRIMITIVE_CLASS:
-					if not obj.trafo == normal_trafo:
-						cleared_objs.append(obj)
-			if cleared_objs:
-				before, after = self._clear_trafo(cleared_objs)
-				transaction = [
-					[[self._set_snapshots, before],
-					[self._set_selection, sel_before]],
-					[[self._set_snapshots, after],
-					[self._set_selection, sel_before]],
-					False]
-				self.add_undo(transaction)
-				self.selection.update()
-
-	def rotate_selected(self, angle=0, copy=False):
-		if self.selection.objs:
-			bbox = self.selection.bbox
-			w = bbox[2] - bbox[0]
-			h = bbox[3] - bbox[1]
-
-			x0, y0 = bbox[:2]
-			shift_x, shift_y = self.selection.center_offset
-			center_x = x0 + w / 2.0 + shift_x
-			center_y = y0 + h / 2.0 + shift_y
-
-			m21 = math.sin(angle)
-			m11 = m22 = math.cos(angle)
-			m12 = -m21
-			dx = center_x - m11 * center_x + m21 * center_y;
-			dy = center_y - m21 * center_x - m11 * center_y;
-
-			trafo = [m11, m21, m12, m22, dx, dy]
-			self.transform_selected(trafo, copy)
-
-	def mirror_selected(self, vertical=True, copy=False):
-		if self.selection.objs:
-			m11 = m22 = 1.0
-			dx = dy = 0.0
-			bbox = self.selection.bbox
-			w = bbox[2] - bbox[0]
-			h = bbox[3] - bbox[1]
-			x0, y0 = bbox[:2]
-			if vertical:
-				m22 = -1
-				dy = 2 * y0 + h
-			else:
-				m11 = -1
-				dx = 2 * x0 + w
-
-			trafo = [m11, 0.0, 0.0, m22, dx, dy]
-			self.transform_selected(trafo, copy)
-
-	def convert_to_curve_selected(self):
-		if self.selection.objs:
-			before = self._get_layers_snapshot()
-			objs = [] + self.selection.objs
-			sel_before = [] + self.selection.objs
-
-			for obj in objs:
-				if obj.cid > model.PRIMITIVE_CLASS and not obj.cid == model.CURVE:
-					curve = obj.to_curve()
-					if curve is not None:
-						parent = obj.parent
-						index = parent.childs.index(obj)
-						curve.parent = parent
-						parent.childs[index] = curve
-						sel_id = self.selection.objs.index(obj)
-						self.selection.objs[sel_id] = curve
-
-			after = self._get_layers_snapshot()
-			sel_after = [] + self.selection.objs
-			transaction = [
-				[[self._set_layers_snapshot, before],
-				[self._set_selection, sel_before]],
-				[[self._set_layers_snapshot, after],
-				[self._set_selection, sel_after]],
-				False]
-			self.add_undo(transaction)
-			self.selection.update()
+	#--- GROUP
 
 	def group_selected(self):
 		if self.selection.objs:
@@ -970,6 +1143,8 @@ class PresenterAPI(AbstractAPI):
 			self.add_undo(transaction)
 			self.selection.update()
 
+	#--- CONTAINER
+
 	def pack_container(self, container):
 		if self.selection.objs:
 			before = self._get_layers_snapshot()
@@ -1032,73 +1207,45 @@ class PresenterAPI(AbstractAPI):
 		self.add_undo(transaction)
 		self.selection.update()
 
-	def combine_selected(self):
-		before = self._get_layers_snapshot()
-		sel_before = [] + self.selection.objs
-		objs = self.selection.objs
-		parent = objs[0].parent
-		index = parent.childs.index(objs[0])
 
-		style = deepcopy(objs[0].style)
-		parent = objs[0].parent
-		config = objs[0].config
-		paths = []
-		for obj in objs:
-			for item in libgeom.get_transformed_paths(obj):
-				if item[1]:paths.append(item)
-		result = model.Curve(config, parent)
-		result.paths = paths
-		result.style = style
-		result.update()
+	#--- CURVE
 
-		for obj in objs:
-			obj.parent.childs.remove(obj)
+	def create_curve(self, paths):
+		parent = self.presenter.active_layer
+		obj = model.Curve(self.sk2_cfg, parent, paths)
+		obj.style = deepcopy(self.model.styles['Default Style'])
+		obj.update()
+		self.insert_object(obj, parent, len(parent.childs))
 
-		parent.childs.insert(index, result)
-		after = self._get_layers_snapshot()
-		self.selection.set([result, ])
+	def update_curve(self, obj, paths, trafo=[1.0, 0.0, 0.0, 1.0, 0.0, 0.0]):
+		sel_before = [obj, ]
+		sel_after = [obj, ]
+		trafo_before = obj.trafo
+		paths_before = obj.paths
+		trafo_after = trafo
+		paths_after = paths
+		self._set_paths_and_trafo(obj, paths_after, trafo_after)
 		transaction = [
-			[[self._set_layers_snapshot, before],
+			[[self._set_paths_and_trafo, obj, paths_before, trafo_before],
 			[self._set_selection, sel_before]],
-			[[self._set_layers_snapshot, after],
-			[self._set_selection, [result, ]]],
+			[[self._set_paths_and_trafo, obj, paths_after, trafo_after],
+			[self._set_selection, sel_after]],
 			False]
+		self._set_selection(sel_after)
 		self.add_undo(transaction)
+
+	def set_temp_paths(self, obj, paths):
+		self._set_paths(obj, paths)
+		self.eventloop.emit(self.eventloop.DOC_MODIFIED)
 		self.selection.update()
 
-
-	def break_apart_selected(self):
-		before = self._get_layers_snapshot()
-		sel_before = [] + self.selection.objs
-		obj = self.selection.objs[0]
-
-		parent = obj.parent
-		index = parent.childs.index(obj)
-		config = obj.config
-
-		paths = libgeom.get_transformed_paths(obj)
-
-		objs = []
-
-		obj.parent.childs.remove(obj)
-		for path in paths:
-			if path and path[1]:
-				curve = model.Curve(config, parent)
-				curve.paths = [path, ]
-				curve.style = deepcopy(obj.style)
-				if obj.fill_trafo: curve.fill_trafo = [] + obj.fill_trafo
-				if obj.stroke_trafo: curve.stroke_trafo = [] + obj.stroke_trafo
-				objs += [curve, ]
-				parent.childs.insert(index, curve)
-				curve.update()
-
-		after = self._get_layers_snapshot()
-		self.selection.set(objs)
+	def set_new_paths(self, obj, new_paths, old_paths):
+		self._set_paths(obj, new_paths)
 		transaction = [
-			[[self._set_layers_snapshot, before],
-			[self._set_selection, sel_before]],
-			[[self._set_layers_snapshot, after],
-			[self._set_selection, objs]],
+			[[self._set_paths, obj, old_paths],
+			[self._selection_update, ]],
+			[[self._set_paths, obj, new_paths],
+			[self._selection_update, ]],
 			False]
 		self.add_undo(transaction)
 		self.selection.update()
@@ -1153,173 +1300,85 @@ class PresenterAPI(AbstractAPI):
 		self.selection.update()
 		return curve0, curve1
 
-	def set_active_page(self, index):
-		if not self.undo:
-			self.presenter.set_active_page(index)
-			self.selection.clear()
-		else:
-			pages = self.presenter.get_pages()
-			active_index_before = pages.index(self.presenter.active_page)
-			sel_before = [] + self.selection.objs
-			active_index_after = index
-
-			self.presenter.set_active_page(index)
-			self.selection.clear()
-
-			transaction = [
-				[[self._set_selection, sel_before],
-				[self.presenter.set_active_page, active_index_before]],
-				[[self._set_selection, []],
-				[self.presenter.set_active_page, active_index_after]],
-				False]
-			self.add_undo(transaction)
-			self.selection.update()
-
-	def delete_page(self, index):
-		pages = self.presenter.get_pages()
-		if index == 0 and len(pages) == 1: return
-
-		before = self._get_pages_snapshot()
+	def break_apart_selected(self):
+		before = self._get_layers_snapshot()
 		sel_before = [] + self.selection.objs
-		active_index_before = pages.index(self.presenter.active_page)
+		obj = self.selection.objs[0]
 
-		self.methods.delete_page(index)
+		parent = obj.parent
+		index = parent.childs.index(obj)
+		config = obj.config
 
-		active_index_after = 0
+		paths = libgeom.get_transformed_paths(obj)
 
-		if index == active_index_before:
-			if index:
-				active_index_after = index - 1
-		else:
-			pages = self.presenter.get_pages()
-			active_index_after = pages.index(self.presenter.active_page)
+		objs = []
 
-		self.selection.clear()
-		self.presenter.set_active_page(active_index_after)
+		obj.parent.childs.remove(obj)
+		for path in paths:
+			if path and path[1]:
+				curve = model.Curve(config, parent)
+				curve.paths = [path, ]
+				curve.style = deepcopy(obj.style)
+				if obj.fill_trafo: curve.fill_trafo = [] + obj.fill_trafo
+				if obj.stroke_trafo: curve.stroke_trafo = [] + obj.stroke_trafo
+				objs += [curve, ]
+				parent.childs.insert(index, curve)
+				curve.update()
 
-		after = self._get_pages_snapshot()
-
+		after = self._get_layers_snapshot()
+		self.selection.set(objs)
 		transaction = [
-			[[self._set_pages_snapshot, before],
-			[self._set_selection, sel_before],
-			[self.presenter.set_active_page, active_index_before]],
-			[[self._set_pages_snapshot, after],
-			[self._set_selection, []],
-			[self.presenter.set_active_page, active_index_after]],
+			[[self._set_layers_snapshot, before],
+			[self._set_selection, sel_before]],
+			[[self._set_layers_snapshot, after],
+			[self._set_selection, objs]],
 			False]
 		self.add_undo(transaction)
 		self.selection.update()
 
-	def insert_page(self, number, target, position):
-		pages = self.presenter.get_pages()
-
-		before = self._get_pages_snapshot()
+	def combine_selected(self):
+		before = self._get_layers_snapshot()
 		sel_before = [] + self.selection.objs
-		active_index_before = pages.index(self.presenter.active_page)
+		objs = self.selection.objs
+		parent = objs[0].parent
+		index = parent.childs.index(objs[0])
 
-		active_index_after = target
-		if position == uc2const.AFTER: active_index_after += 1
+		style = deepcopy(objs[0].style)
+		parent = objs[0].parent
+		config = objs[0].config
+		paths = []
+		for obj in objs:
+			for item in libgeom.get_transformed_paths(obj):
+				if item[1]:paths.append(item)
+		result = model.Curve(config, parent)
+		result.paths = paths
+		result.style = style
+		result.update()
 
-		for item in range(number):
-			page = self.methods.insert_page(active_index_after + item)
-			self.methods.add_layer(page)
-			page.do_update()
+		for obj in objs:
+			obj.parent.childs.remove(obj)
 
-		self.selection.clear()
-		self.presenter.set_active_page(active_index_after)
-
-		after = self._get_pages_snapshot()
-
+		parent.childs.insert(index, result)
+		after = self._get_layers_snapshot()
+		self.selection.set([result, ])
 		transaction = [
-			[[self._set_pages_snapshot, before],
-			[self._set_selection, sel_before],
-			[self.presenter.set_active_page, active_index_before]],
-			[[self._set_pages_snapshot, after],
-			[self._set_selection, []],
-			[self.presenter.set_active_page, active_index_after]],
+			[[self._set_layers_snapshot, before],
+			[self._set_selection, sel_before]],
+			[[self._set_layers_snapshot, after],
+			[self._set_selection, [result, ]]],
 			False]
 		self.add_undo(transaction)
 		self.selection.update()
 
-	def add_pages(self, new_pages):
-		pages = self.presenter.get_pages()
-		parent = pages[0].parent
+	#--- RECTANGLE
 
-		before = self._get_pages_snapshot()
-		sel_before = [] + self.selection.objs
-		active_index_before = pages.index(self.presenter.active_page)
-
-		active_index_after = len(pages)
-
-		pages += new_pages
-		parent.do_update()
-
-		self.selection.clear()
-		self.presenter.set_active_page(active_index_after)
-
-		after = self._get_pages_snapshot()
-
-		transaction = [
-			[[self._set_pages_snapshot, before],
-			[self._set_selection, sel_before],
-			[self.presenter.set_active_page, active_index_before]],
-			[[self._set_pages_snapshot, after],
-			[self._set_selection, []],
-			[self.presenter.set_active_page, active_index_after]],
-			False]
-		self.add_undo(transaction)
-		self.selection.update()
-
-
-	def set_layer_properties(self, layer, prop):
-		before = layer.properties
-		after = prop
-		sel_before = [] + self.selection.objs
-
-		self.selection.clear()
-		self._set_layer_properties(layer, prop)
-
-		transaction = [
-			[[self._set_layer_properties, layer, before],
-			[self._set_selection, sel_before], ],
-			[[self._set_layer_properties, layer, after],
-			[self._set_selection, []]],
-			False]
-		self.add_undo(transaction)
-		self.selection.update()
-
-	def set_guide_propeties(self, guide, pos, orient):
-		pos_before = guide.position
-		orient_before = guide.orientation
-		self._set_guide_properties(guide, pos, orient)
-		pos_after = pos
-		orient_after = orient
-		transaction = [
-			[[self._set_guide_properties, guide, pos_before, orient_before], ],
-			[[self._set_guide_properties, guide, pos_after, orient_after], ],
-			False]
-		self.add_undo(transaction)
-
-	def delete_guides(self, objs=[]):
-		if objs:
-			objs_list = []
-			parent = self.methods.get_guide_layer()
-			for obj in objs:
-				objs_list.append([obj, parent, -1])
-			self._delete_objects(objs_list)
-			transaction = [
-				[[self._insert_objects, objs_list]],
-				[[self._delete_objects, objs_list]],
-				False]
-			self.add_undo(transaction)
-
-	def delete_all_guides(self):
-		guides = []
-		guide_layer = self.methods.get_guide_layer()
-		for child in guide_layer.childs:
-			if child.cid == model.GUIDE:
-				guides.append(child)
-		self.delete_guides(guides)
+	def create_rectangle(self, rect):
+		rect = self._normalize_rect(rect)
+		parent = self.presenter.active_layer
+		obj = model.Rectangle(self.sk2_cfg, parent, rect)
+		obj.style = deepcopy(self.model.styles['Default Style'])
+		obj.update()
+		self.insert_object(obj, parent, len(parent.childs))
 
 	def set_rect(self, obj, rect):
 		self.methods.set_rect(obj, rect)
@@ -1369,6 +1428,72 @@ class PresenterAPI(AbstractAPI):
 		self.add_undo(transaction)
 		self.selection.update()
 
+	#--- CIRCLE
+
+	def create_ellipse(self, rect):
+		rect = self._normalize_rect(rect)
+		parent = self.presenter.active_layer
+		obj = model.Circle(self.sk2_cfg, parent, rect)
+		obj.style = deepcopy(self.model.styles['Default Style'])
+		obj.update()
+		self.insert_object(obj, parent, len(parent.childs))
+
+	def set_circle_properties(self, circle_type, angle1, angle2, obj=None):
+		if obj is None:
+			sel = [] + self.selection.objs
+			obj = sel[0]
+		mtds = self.methods
+		mtds.set_circle_properties(obj, circle_type, angle1, angle2)
+		self.eventloop.emit(self.eventloop.DOC_MODIFIED)
+		self.selection.update()
+
+	def set_circle_properties_final(self, circle_type, angle1, angle2,
+		type_before=None, angle1_before=None, angle2_before=None, obj=None):
+		if obj is None:
+			sel = [] + self.selection.objs
+			obj = sel[0]
+			if type_before is None:
+				type_before = obj.circle_type
+				angle1_before = obj.angle1
+				angle2_before = obj.angle2
+			mtds = self.methods
+			mtds.set_circle_properties(obj, circle_type, angle1, angle2)
+			transaction = [
+				[[mtds.set_circle_properties, obj, type_before,
+												angle1_before, angle2_before],
+				[self._set_selection, sel], ],
+				[[mtds.set_circle_properties, obj, circle_type, angle1, angle2],
+				[self._set_selection, sel]],
+				False]
+			self.add_undo(transaction)
+			self.selection.update()
+		else:
+			if type_before is None:
+				type_before = obj.circle_type
+				angle1_before = obj.angle1
+				angle2_before = obj.angle2
+			mtds = self.methods
+			mtds.set_circle_properties(obj, circle_type, angle1, angle2)
+			transaction = [
+				[[mtds.set_circle_properties, obj, type_before,
+											angle1_before, angle2_before], ],
+				[[mtds.set_circle_properties, obj, circle_type,
+											angle1, angle2], ],
+				False]
+			self.add_undo(transaction)
+			self.selection.update()
+
+	#--- POLYGON
+
+	def create_polygon(self, rect):
+		rect = self._normalize_rect(rect)
+		parent = self.presenter.active_layer
+		obj = model.Polygon(self.sk2_cfg, parent, rect,
+						corners_num=config.default_polygon_num)
+		obj.style = deepcopy(self.model.styles['Default Style'])
+		obj.update()
+		self.insert_object(obj, parent, len(parent.childs))
+
 	def set_polygon_corners_num(self, num):
 		sel = [] + self.selection.objs
 		obj = sel[0]
@@ -1417,128 +1542,7 @@ class PresenterAPI(AbstractAPI):
 			self.add_undo(transaction)
 			self.selection.update()
 
-	def set_circle_properties(self, circle_type, angle1, angle2, obj=None):
-		if obj is None:
-			sel = [] + self.selection.objs
-			obj = sel[0]
-		mtds = self.methods
-		mtds.set_circle_properties(obj, circle_type, angle1, angle2)
-		self.eventloop.emit(self.eventloop.DOC_MODIFIED)
-		self.selection.update()
-
-	def set_circle_properties_final(self, circle_type, angle1, angle2,
-		type_before=None, angle1_before=None, angle2_before=None, obj=None):
-		if obj is None:
-			sel = [] + self.selection.objs
-			obj = sel[0]
-			if type_before is None:
-				type_before = obj.circle_type
-				angle1_before = obj.angle1
-				angle2_before = obj.angle2
-			mtds = self.methods
-			mtds.set_circle_properties(obj, circle_type, angle1, angle2)
-			transaction = [
-				[[mtds.set_circle_properties, obj, type_before,
-												angle1_before, angle2_before],
-				[self._set_selection, sel], ],
-				[[mtds.set_circle_properties, obj, circle_type, angle1, angle2],
-				[self._set_selection, sel]],
-				False]
-			self.add_undo(transaction)
-			self.selection.update()
-		else:
-			if type_before is None:
-				type_before = obj.circle_type
-				angle1_before = obj.angle1
-				angle2_before = obj.angle2
-			mtds = self.methods
-			mtds.set_circle_properties(obj, circle_type, angle1, angle2)
-			transaction = [
-				[[mtds.set_circle_properties, obj, type_before,
-											angle1_before, angle2_before], ],
-				[[mtds.set_circle_properties, obj, circle_type,
-											angle1, angle2], ],
-				False]
-			self.add_undo(transaction)
-			self.selection.update()
-
-	def raise_to_top(self):
-		before = self._get_layers_snapshot()
-		sel_before = [] + self.selection.objs
-		obj = sel_before[0]
-		childs = obj.parent.childs
-		index = childs.index(obj)
-		new_childs = childs[:index] + childs[index + 1:] + [obj, ]
-		obj.parent.childs = new_childs
-		after = self._get_layers_snapshot()
-		transaction = [
-			[[self._set_layers_snapshot, before],
-			[self._set_selection, sel_before]],
-			[[self._set_layers_snapshot, after],
-			[self._set_selection, sel_before]],
-			False]
-		self.add_undo(transaction)
-		self.selection.update()
-
-	def raise_obj(self):
-		before = self._get_layers_snapshot()
-		sel_before = [] + self.selection.objs
-		obj = sel_before[0]
-		childs = obj.parent.childs
-		index = childs.index(obj)
-
-		new_childs = childs[:index] + [childs[index + 1], obj]
-		new_childs += childs[index + 2:]
-
-		obj.parent.childs = new_childs
-		after = self._get_layers_snapshot()
-		transaction = [
-			[[self._set_layers_snapshot, before],
-			[self._set_selection, sel_before]],
-			[[self._set_layers_snapshot, after],
-			[self._set_selection, sel_before]],
-			False]
-		self.add_undo(transaction)
-		self.selection.update()
-
-	def lower_obj(self):
-		before = self._get_layers_snapshot()
-		sel_before = [] + self.selection.objs
-		obj = sel_before[0]
-		childs = obj.parent.childs
-		index = childs.index(obj)
-
-		new_childs = childs[:index - 1] + [obj, childs[index - 1]]
-		new_childs += childs[index + 1:]
-
-		obj.parent.childs = new_childs
-		after = self._get_layers_snapshot()
-		transaction = [
-			[[self._set_layers_snapshot, before],
-			[self._set_selection, sel_before]],
-			[[self._set_layers_snapshot, after],
-			[self._set_selection, sel_before]],
-			False]
-		self.add_undo(transaction)
-		self.selection.update()
-
-	def lower_to_bottom(self):
-		before = self._get_layers_snapshot()
-		sel_before = [] + self.selection.objs
-		obj = sel_before[0]
-		childs = obj.parent.childs
-		index = childs.index(obj)
-		new_childs = [obj, ] + childs[:index] + childs[index + 1:]
-		obj.parent.childs = new_childs
-		after = self._get_layers_snapshot()
-		transaction = [
-			[[self._set_layers_snapshot, before],
-			[self._set_selection, sel_before]],
-			[[self._set_layers_snapshot, after],
-			[self._set_selection, sel_before]],
-			False]
-		self.add_undo(transaction)
-		self.selection.update()
+	#--- PIXMAP
 
 	def convert_bitmap(self, colorspace):
 		cms = self.presenter.cms
@@ -1609,6 +1613,26 @@ class PresenterAPI(AbstractAPI):
 		obj = sel_before[0]
 		trafo_before = obj.trafo
 		trafo_after = [] + obj.trafo
+
+	#--- TEXT
+
+	def create_text(self, rect, width=0):pass
+#		rect = self._normalize_rect(rect)
+#		parent = self.presenter.active_layer
+#		if width == 0: width = rect[2]
+#		text = dialogs.text_edit_dialog(self.app.mw)
+#		if text:
+#			obj = model.Text(self.sk2_cfg, parent, rect, text, width)
+#			obj.style = deepcopy(self.model.styles['Default Style'])
+#			obj.update()
+#			self.insert_object(obj, parent, len(parent.childs))
+
+	#FIXME: Add undo for operation!
+	def edit_text(self):pass
+#		if self.selection.objs:
+#			obj = self.selection.objs[0]
+#			obj.text = dialogs.text_edit_dialog(self.app.mw, obj.text)
+#			obj.update()
 
 
 
