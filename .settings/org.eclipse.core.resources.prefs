@@ -32,6 +32,7 @@ encoding//src/sk1/dialogs/aboutdlg_credits.py=utf-8
 encoding//src/sk1/dialogs/aboutdlg_license.py=utf-8
 encoding//src/sk1/dialogs/colordlg.py=utf-8
 encoding//src/sk1/dialogs/dashedit_dlg.py=utf-8
+encoding//src/sk1/dialogs/docprops.py=utf-8
 encoding//src/sk1/dialogs/filedlgs.py=utf-8
 encoding//src/sk1/dialogs/fill_dlg.py=utf-8
 encoding//src/sk1/dialogs/log_viewer.py=utf-8
