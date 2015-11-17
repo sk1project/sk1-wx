@@ -143,3 +143,6 @@ class Transform_Plugin(RS_Plugin):
 	def show_signal(self, mode=POSITION_MODE, *args):
 		self.transform_keeper.set_mode(mode)
 		self.on_mode_change(mode)
+
+
+class AxesSign(wal.Bitmap):pass

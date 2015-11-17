@@ -113,7 +113,7 @@ class SnapManager:
 		self._calc_page_grid()
 
 	def _calc_grid(self):
-		grid_layer = self.methods.get_gird_layer()
+		grid_layer = self.methods.get_grid_layer()
 		w, h = self.presenter.get_page_size()
 		x, y, dx, dy = grid_layer.grid
 		origin = self.presenter.model.doc_origin

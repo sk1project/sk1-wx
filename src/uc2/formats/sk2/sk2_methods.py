@@ -175,14 +175,31 @@ class SK2_Methods:
 		if layer.properties[0]: return True
 		return False
 
+	def get_layer_color(self, layer):
+		return deepcopy(layer.style[1][2])
+
+	def get_layer_rgba_color(self, layer):
+		return [] + layer.color
+
+	def set_layer_color(self, layer, color):
+		layer.style[1][2] = deepcopy(color)
+		layer.color = color[1] + [color[2], ]
+
 	def get_desktop_layers(self):
 		return self.model.childs[1].childs
 
 	def get_master_layers(self):
 		return self.model.childs[2].childs
 
-	def get_gird_layer(self):
+	def get_grid_layer(self):
 		return self.model.childs[3]
+
+	def get_grid_color(self):
+		return self.get_layer_color(self.get_gr)
+	def get_grid_rgba_color(self):pass
+	def set_grid_color(self, color):pass
+	def get_grid_values(self):pass
+	def set_grid_values(self, vals):pass
 
 	def get_guide_layer(self):
 		return self.model.childs[4]

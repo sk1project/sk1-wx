@@ -54,7 +54,7 @@ def im_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw
 
 	sk2_doc.methods.set_page_format(page, ['Custom', (w, h), orient])
 	sk2_doc.methods.set_default_page_format(['Custom', (w, h), orient])
-	grid_layer = sk2_doc.methods.get_gird_layer()
+	grid_layer = sk2_doc.methods.get_grid_layer()
 	grid_layer.grid = [0, 0, uc2const.px_to_pt, uc2const.px_to_pt]
 	grid_layer.properties = [1, 0, 0]
 

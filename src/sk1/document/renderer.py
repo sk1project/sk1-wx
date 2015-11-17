@@ -155,7 +155,7 @@ class PDRenderer(CairoRenderer):
 	#------GRID RENDERING
 	def render_grid(self):
 		methods = self.presenter.methods
-		grid_layer = methods.get_gird_layer()
+		grid_layer = methods.get_grid_layer()
 		if not methods.is_layer_visible(grid_layer):return
 
 		self.ctx.set_matrix(self.direct_matrix)

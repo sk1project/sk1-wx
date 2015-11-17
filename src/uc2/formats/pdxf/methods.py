@@ -178,7 +178,7 @@ class PDXF_Methods:
 	def get_master_layers(self):
 		return self.model.childs[2].childs
 
-	def get_gird_layer(self):
+	def get_grid_layer(self):
 		return self.model.childs[3]
 
 	def get_guide_layer(self):

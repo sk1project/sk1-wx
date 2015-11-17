@@ -287,7 +287,7 @@ class AppProxy:
 		if self.insp.is_doc():
 			methods = self.app.current_doc.methods
 			api = self.app.current_doc.api
-			grid_layer = methods.get_gird_layer()
+			grid_layer = methods.get_grid_layer()
 			if grid_layer.properties[0]:
 				prop = [] + grid_layer.properties
 				prop[0] = 0

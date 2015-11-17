@@ -230,7 +230,7 @@ class AppInspector:
 		if doc is None: doc = self.app.current_doc
 		if doc is None: return False
 		methods = self.app.current_doc.methods
-		grid_layer = methods.get_gird_layer()
+		grid_layer = methods.get_grid_layer()
 		if grid_layer.properties[0]: return True
 		return False
 

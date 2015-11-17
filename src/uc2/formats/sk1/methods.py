@@ -100,7 +100,7 @@ class SK1_Methods:
 		if layer.visible: return True
 		return False
 
-	def get_gird_layer(self):
+	def get_grid_layer(self):
 		return self.model.grid
 
 	def get_guide_layer(self):
