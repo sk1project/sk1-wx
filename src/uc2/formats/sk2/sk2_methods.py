@@ -204,11 +204,11 @@ class SK2_Methods:
 		self.set_layer_color(self.get_grid_layer(), color)
 
 	def get_grid_values(self):
-		return [] + self.get_grid_layer().properties
+		return [] + self.get_grid_layer().grid
 
 	def set_grid_values(self, vals):
 		grid = self.get_grid_layer()
-		grid.properties = [] + vals
+		grid.grid = [] + vals
 
 	def get_guide_layer(self):
 		return self.model.childs[4]
