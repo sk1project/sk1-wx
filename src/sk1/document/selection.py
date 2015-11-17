@@ -56,6 +56,9 @@ class Selection:
 			if cid == sk2_model.PIXMAP:
 				h_dpi, v_dpi = self.objs[0].get_resolution()
 				msg += ', %ix%i dpi' % (h_dpi, v_dpi)
+			parent = self.objs[0].parent
+			if parent.is_layer():
+				msg += ' (%s)' % parent.name
 		elif not len(self.objs):
 			msg = _('No selection')
 		else:
