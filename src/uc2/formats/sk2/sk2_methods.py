@@ -195,11 +195,20 @@ class SK2_Methods:
 		return self.model.childs[3]
 
 	def get_grid_color(self):
-		return self.get_layer_color(self.get_gr)
-	def get_grid_rgba_color(self):pass
-	def set_grid_color(self, color):pass
-	def get_grid_values(self):pass
-	def set_grid_values(self, vals):pass
+		return self.get_layer_color(self.get_grid_layer())
+
+	def get_grid_rgba_color(self):
+		return self.get_layer_rgba_color(self.get_grid_layer())
+
+	def set_grid_color(self, color):
+		self.set_layer_color(self.get_grid_layer(), color)
+
+	def get_grid_values(self):
+		return [] + self.get_grid_layer().properties
+
+	def set_grid_values(self, vals):
+		grid = self.get_grid_layer()
+		grid.properties = [] + vals
 
 	def get_guide_layer(self):
 		return self.model.childs[4]
