@@ -56,6 +56,7 @@ class DocumentObject(TextModelObject):
 			obj_copy.childs.append(child.copy())
 		return obj_copy
 
+	def is_layer(self): return False
 	def is_primitive(self): return False
 	def is_curve(self): return False
 	def is_rect(self): return False
@@ -190,6 +191,8 @@ class Layer(StructuralObject):
 		self.style = [[], deepcopy(self.config.default_stroke), [], []]
 		self.properties = [] + self.config.layer_propeties
 		self.childs = []
+
+	def is_layer(self): return True
 
 	def resolve(self):
 		return StructuralObject.resolve(self, '%s' % (self.name))
