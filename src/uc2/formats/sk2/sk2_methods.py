@@ -218,7 +218,7 @@ class SK2_Methods:
 		layers += self.get_desktop_layers() + page.childs
 		layers += self.get_master_layers()
 		if special:
-			layers += [self.get_gird_layer(), self.get_guide_layer()]
+			layers += [self.get_grid_layer(), self.get_guide_layer()]
 		ret = []
 		for item in layers:
 			if self.is_layer_visible(item):
