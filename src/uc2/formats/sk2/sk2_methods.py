@@ -67,6 +67,9 @@ class SK2_Methods:
 	def set_doc_units(self, units):
 		self.presenter.model.doc_units = units
 
+	def set_doc_metainfo(self, metainfo):
+		self.presenter.model.metainfo = metainfo
+
 	def delete_object(self, obj):
 		parent = obj.parent
 		parent.childs.remove(obj)
