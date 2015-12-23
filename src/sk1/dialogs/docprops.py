@@ -15,6 +15,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from copy import deepcopy
+from base64 import b64decode, b64encode
+
 import wal
 
 from sk1 import _, config
@@ -27,6 +30,7 @@ class DP_Panel(wal.VPanel):
 		self.app = app
 		self.dlg = dlg
 		self.doc = app.current_doc
+		self.api = self.doc.api
 		wal.VPanel.__init__(self, parent)
 		self.build()
 
@@ -36,6 +40,43 @@ class DP_Panel(wal.VPanel):
 class GeneralProps(DP_Panel):
 
 	name = _('General')
+	metainfo = []
+
+	def build(self):
+		self.metainfo = deepcopy(self.doc.model.metainfo)
+		if self.metainfo[3]: self.metainfo[3] = b64decode(self.metainfo[3])
+
+		grid = wal.GridPanel(self, 4, 2, 5, 5)
+		grid.add_growable_col(1)
+		grid.add_growable_row(3)
+
+		grid.pack(wal.Label(grid, _('Author:')))
+		self.author_field = wal.Entry(grid, '' + self.metainfo[0])
+		grid.pack(self.author_field, fill=True)
+
+		grid.pack(wal.Label(grid, _('License:')))
+		self.license_field = wal.Entry(grid, '' + self.metainfo[1])
+		grid.pack(self.license_field, fill=True)
+
+		grid.pack(wal.Label(grid, _('Keywords:')))
+		self.keys_field = wal.Entry(grid, '' + self.metainfo[2])
+		grid.pack(self.keys_field, fill=True)
+
+		grid.pack(wal.Label(grid, _('Notes:')))
+		self.notes_field = wal.Entry(grid, '' + self.metainfo[3], multiline=True)
+		grid.pack(self.notes_field, fill=True)
+
+		self.pack(grid, fill=True, expand=True, padding_all=5)
+
+	def save(self):
+		metainfo = [self.author_field.get_value(),
+		self.license_field.get_value(),
+		self.keys_field.get_value(),
+		self.notes_field.get_value()]
+		if not self.metainfo == metainfo:
+			if metainfo[3]: metainfo[3] = b64encode(metainfo[3])
+			self.api.set_doc_metainfo(metainfo)
+
 
 class PageProps(DP_Panel):
 
@@ -76,10 +117,6 @@ class DocPropertiesDialog(wal.OkCancelDialog):
 		return None
 
 
-
 def docprops_dlg(app, parent):
 	title = _('Document properties')
-	dlg = DocPropertiesDialog(app, parent, title)
-	dlg.Centre()
-	dlg.ShowModal()
-	dlg.Destroy()
+	DocPropertiesDialog(app, parent, title).show()
