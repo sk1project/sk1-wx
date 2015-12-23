@@ -384,6 +384,15 @@ class PresenterAPI(AbstractAPI):
 		self.methods.set_doc_units(units)
 		self.add_undo(transaction)
 
+	def set_doc_metainfo(self, metainfo):
+		cur_metainfo = self.model.metainfo
+		transaction = [
+			[[self.methods.set_doc_metainfo, cur_metainfo]],
+			[[self.methods.set_doc_metainfo, metainfo]],
+			False]
+		self.methods.set_doc_metainfo(metainfo)
+		self.add_undo(transaction)
+
 	#--- PAGES
 
 	def set_active_page(self, index):
