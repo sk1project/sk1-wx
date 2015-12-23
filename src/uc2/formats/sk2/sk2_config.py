@@ -28,6 +28,10 @@ class SK2_Config(XmlConfigParser):
 	#============== DOCUMENT SECTION ==================
 	doc_origin = sk2_const.DOC_ORIGIN_LL
 	doc_units = uc2const.UNIT_MM
+	doc_author = ''
+	doc_license = ''
+	doc_keywords = ''
+	doc_notes = ''
 
 	page_format = 'A4'
 	page_orientation = uc2const.PORTRAIT

@@ -94,6 +94,14 @@ class Document(DocumentObject):
 									deepcopy(self.config.default_structural_style)]
 		self.resources = {}
 
+	def update(self):
+		if self.metainfo is None:
+			self.metainfo = deepcopy([self.config.doc_author,
+								self.config.doc_license,
+								self.config.doc_keywords,
+								self.config.doc_notes, ])
+		DocumentObject.update(self)
+
 
 
 class Pages(DocumentObject):
