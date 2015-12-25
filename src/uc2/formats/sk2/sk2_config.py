@@ -44,7 +44,7 @@ class SK2_Config(XmlConfigParser):
 	guide_layer_propeties = [1, 1, 0]
 
 	grid_layer_color = [0.0, 0.0, 1.0, 0.15]
-	grid_layer_geometry = [0, 0, uc2const.mm_to_pt, uc2const.mm_to_pt]
+	grid_layer_geometry = [0.0, 0.0, uc2const.mm_to_pt, uc2const.mm_to_pt]
 	grid_layer_propeties = [0, 0, 0]
 
 	default_polygon_num = 5
