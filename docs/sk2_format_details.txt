@@ -114,3 +114,20 @@ PAGE FORMAT
 -------------------------------------------------------------------------------
 LAYER PROPETIES
 [visible, editable, printable]
+
+-------------------------------------------------------------------------------
+GRID GEOMETRY
+[x,y, dx, dy]
+
+x,y - origin
+dx,dy - grid frequency
+
+-------------------------------------------------------------------------------
+DOCUMENT METAINFO
+[author, license, keywords, notes]
+
+List of strings
+Keywords are comma separated.
+Notes is a base64 encoded multiline string.
+
+-------------------------------------------------------------------------------
