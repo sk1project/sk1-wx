@@ -21,6 +21,7 @@ from base64 import b64decode, b64encode
 import wal
 
 from sk1 import _, config
+from sk1.pwidgets import StaticUnitLabel, UnitSpin
 
 class DP_Panel(wal.VPanel):
 
@@ -85,6 +86,49 @@ class PageProps(DP_Panel):
 class GridProps(DP_Panel):
 
 	name = _('Grid')
+
+	def build(self):
+		hpanel = wal.HPanel(self)
+
+		txt = _('Grid origin')
+		origin_panel = wal.LabeledPanel(hpanel, text=txt)
+		grid = wal.GridPanel(origin_panel, 2, 4, 5, 5)
+
+		grid.pack((10, 1))
+		grid.pack(wal.Label(grid, 'X:'))
+		self.x_val = UnitSpin(self.app, grid)
+		grid.pack(self.x_val)
+		grid.pack(StaticUnitLabel(self.app, grid))
+
+		grid.pack((10, 1))
+		grid.pack(wal.Label(grid, 'Y:'))
+		self.y_val = UnitSpin(self.app, grid)
+		grid.pack(self.y_val)
+		grid.pack(StaticUnitLabel(self.app, grid))
+
+		origin_panel.pack(grid, align_center=False, padding_all=5)
+		hpanel.pack(origin_panel, padding_all=5, fill=True, expand=True)
+
+		txt = _('Grid frequency')
+		freq_panel = wal.LabeledPanel(hpanel, text=txt)
+		grid = wal.GridPanel(origin_panel, 2, 4, 5, 5)
+
+		grid.pack((10, 1))
+		grid.pack(wal.Label(grid, 'ΔX:'))
+		self.dx_val = UnitSpin(self.app, grid)
+		grid.pack(self.dx_val)
+		grid.pack(StaticUnitLabel(self.app, grid))
+
+		grid.pack((10, 1))
+		grid.pack(wal.Label(grid, 'ΔY:'))
+		self.dy_val = UnitSpin(self.app, grid)
+		grid.pack(self.dy_val)
+		grid.pack(StaticUnitLabel(self.app, grid))
+
+		freq_panel.pack(grid, align_center=False, padding_all=5)
+		hpanel.pack(freq_panel, padding_all=5, fill=True, expand=True)
+
+		self.pack(hpanel, fill=True)
 
 class GuidesProps(DP_Panel):
 
