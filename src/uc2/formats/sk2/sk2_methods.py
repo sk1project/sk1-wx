@@ -61,6 +61,8 @@ class SK2_Methods:
 		self.model = self.presenter.model
 		self.config = self.presenter.model.config
 
+	#---DOCUMENT
+
 	def set_doc_origin(self, origin):
 		self.presenter.model.doc_origin = origin
 
@@ -69,6 +71,8 @@ class SK2_Methods:
 
 	def set_doc_metainfo(self, metainfo):
 		self.presenter.model.metainfo = metainfo
+
+	#---OBJECT
 
 	def delete_object(self, obj):
 		parent = obj.parent
@@ -86,6 +90,8 @@ class SK2_Methods:
 		parent.childs += objs
 		for obj in objs:
 			obj.parent = parent
+
+	#---PAGES
 
 	def get_pages_obj(self):
 		return self.model.childs[0]
@@ -150,6 +156,8 @@ class SK2_Methods:
 		if index < len(pages):
 			pages.remove(pages[index])
 
+	#---LAYERS
+
 	def add_layer(self, page, layer_name=''):
 		if not layer_name:
 			layer_name = _('Layer') + ' %i' % (page.layer_counter + 1)
@@ -178,6 +186,18 @@ class SK2_Methods:
 		if layer.properties[0]: return True
 		return False
 
+	def get_visible_layers(self, page, special=False):
+		layers = []
+		layers += self.get_desktop_layers() + page.childs
+		layers += self.get_master_layers()
+		if special:
+			layers += [self.get_grid_layer(), self.get_guide_layer()]
+		ret = []
+		for item in layers:
+			if self.is_layer_visible(item):
+				ret.append(item)
+		return ret
+
 	def get_layer_color(self, layer):
 		return deepcopy(layer.style[1][2])
 
@@ -193,6 +213,8 @@ class SK2_Methods:
 
 	def get_master_layers(self):
 		return self.model.childs[2].childs
+
+	#---GRID
 
 	def get_grid_layer(self):
 		return self.model.childs[3]
@@ -213,20 +235,12 @@ class SK2_Methods:
 		grid = self.get_grid_layer()
 		grid.grid = [] + vals
 
+	#---GUIDE LAYER
+
 	def get_guide_layer(self):
 		return self.model.childs[4]
 
-	def get_visible_layers(self, page, special=False):
-		layers = []
-		layers += self.get_desktop_layers() + page.childs
-		layers += self.get_master_layers()
-		if special:
-			layers += [self.get_grid_layer(), self.get_guide_layer()]
-		ret = []
-		for item in layers:
-			if self.is_layer_visible(item):
-				ret.append(item)
-		return ret
+	#---RECTANGLE
 
 	def set_rect_corners(self, obj, corners):
 		obj.corners = corners
@@ -235,6 +249,8 @@ class SK2_Methods:
 	def set_rect(self, obj, rect):
 		obj.set_rect(rect)
 		obj.update()
+
+	#---POLYGON
 
 	def set_polygon_corners_num(self, obj, num):
 		obj.corners_num = num
@@ -246,6 +262,8 @@ class SK2_Methods:
 		obj.coef1 = coef1
 		obj.coef2 = coef2
 		obj.update()
+
+	#---CIRCLE
 
 	def set_circle_properties(self, obj, circle_type, angle1, angle2):
 		obj.circle_type = circle_type
