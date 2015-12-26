@@ -66,6 +66,9 @@ class SK2_Methods:
 	def set_doc_origin(self, origin):
 		self.presenter.model.doc_origin = origin
 
+	def get_doc_units(self):
+		return self.presenter.model.doc_units
+
 	def set_doc_units(self, units):
 		self.presenter.model.doc_units = units
 
