@@ -86,49 +86,55 @@ class PageProps(DP_Panel):
 class GridProps(DP_Panel):
 
 	name = _('Grid')
+	geom = []
 
 	def build(self):
+
+		self.geom = self.doc.methods.get_grid_values()
+
 		hpanel = wal.HPanel(self)
 
 		txt = _('Grid origin')
 		origin_panel = wal.LabeledPanel(hpanel, text=txt)
-		grid = wal.GridPanel(origin_panel, 2, 4, 5, 5)
+		grid = wal.GridPanel(origin_panel, 2, 3, 5, 5)
 
-		grid.pack((10, 1))
 		grid.pack(wal.Label(grid, 'X:'))
-		self.x_val = UnitSpin(self.app, grid)
+		self.x_val = UnitSpin(self.app, grid, self.geom[0])
 		grid.pack(self.x_val)
 		grid.pack(StaticUnitLabel(self.app, grid))
 
-		grid.pack((10, 1))
 		grid.pack(wal.Label(grid, 'Y:'))
-		self.y_val = UnitSpin(self.app, grid)
+		self.y_val = UnitSpin(self.app, grid, self.geom[1])
 		grid.pack(self.y_val)
 		grid.pack(StaticUnitLabel(self.app, grid))
 
-		origin_panel.pack(grid, align_center=False, padding_all=5)
+		origin_panel.pack(grid, padding_all=5)
 		hpanel.pack(origin_panel, padding_all=5, fill=True, expand=True)
 
 		txt = _('Grid frequency')
 		freq_panel = wal.LabeledPanel(hpanel, text=txt)
-		grid = wal.GridPanel(origin_panel, 2, 4, 5, 5)
+		grid = wal.GridPanel(origin_panel, 2, 3, 5, 5)
 
-		grid.pack((10, 1))
 		grid.pack(wal.Label(grid, 'ΔX:'))
-		self.dx_val = UnitSpin(self.app, grid)
+		self.dx_val = UnitSpin(self.app, grid, self.geom[2])
 		grid.pack(self.dx_val)
 		grid.pack(StaticUnitLabel(self.app, grid))
 
-		grid.pack((10, 1))
 		grid.pack(wal.Label(grid, 'ΔY:'))
-		self.dy_val = UnitSpin(self.app, grid)
+		self.dy_val = UnitSpin(self.app, grid, self.geom[3])
 		grid.pack(self.dy_val)
 		grid.pack(StaticUnitLabel(self.app, grid))
 
-		freq_panel.pack(grid, align_center=False, padding_all=5)
+		freq_panel.pack(grid, padding_all=5)
 		hpanel.pack(freq_panel, padding_all=5, fill=True, expand=True)
 
 		self.pack(hpanel, fill=True)
+
+	def save(self):
+		geom = [self.x_val.get_value(), self.y_val.get_value(),
+			self.dx_val.get_value(), self.dy_val.get_value()]
+		if not self.geom == geom:
+			self.api.set_grid_values(geom)
 
 class GuidesProps(DP_Panel):
 
