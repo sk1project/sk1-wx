@@ -109,6 +109,9 @@ class AbstractAPI:
 	def _set_layer_properties(self, layer, prop):
 		layer.properties = prop
 
+	def _set_grid_values(self, geom):
+		self.methods.set_grid_values(geom)
+
 	def _set_guide_properties(self, guide, pos, orient):
 		guide.position = pos
 		guide.orientation = orient
@@ -538,6 +541,19 @@ class PresenterAPI(AbstractAPI):
 			[self._set_selection, sel_before], ],
 			[[self._set_layer_properties, layer, after],
 			[self._set_selection, []]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	#--- GRID
+
+	def set_grid_values(self, geom):
+		before = self.methods.get_grid_values()
+		after = geom
+		self.methods.set_grid_values(after)
+		transaction = [
+			[[self._set_grid_values, before]],
+			[[self._set_grid_values, after]],
 			False]
 		self.add_undo(transaction)
 		self.selection.update()
