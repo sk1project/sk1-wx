@@ -63,6 +63,9 @@ class SK2_Methods:
 
 	#---DOCUMENT
 
+	def get_doc_origin(self):
+		return self.presenter.model.doc_origin
+
 	def set_doc_origin(self, origin):
 		self.presenter.model.doc_origin = origin
 
