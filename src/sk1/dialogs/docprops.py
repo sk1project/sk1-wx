@@ -20,7 +20,11 @@ from base64 import b64decode, b64encode
 
 import wal
 
+from uc2.uc2const import unit_names, unit_full_names
+from uc2.formats.sk2.sk2_const import ORIGINS
+
 from sk1 import _, config
+from sk1.resources import icons
 from sk1.pwidgets import StaticUnitLabel, UnitSpin
 
 class DP_Panel(wal.VPanel):
@@ -40,7 +44,7 @@ class DP_Panel(wal.VPanel):
 
 class GeneralProps(DP_Panel):
 
-	name = _('General')
+	name = _('Description')
 	metainfo = []
 
 	def build(self):
@@ -83,15 +87,29 @@ class PageProps(DP_Panel):
 
 	name = _('Page')
 
+ORIGIN_ICONS = [icons.L_ORIGIN_CENTER, icons.L_ORIGIN_LL, icons.L_ORIGIN_LU]
+ORIGIN_NAMES = [_('Page center'),
+			_('Left lower page corner'), _('Left upper page corner')]
+
 class GridProps(DP_Panel):
 
-	name = _('Grid')
+	name = _('Units, grid, origin')
+	units = 'mm'
 	geom = []
+	origin = 0
 
 	def build(self):
+		hpanel = wal.HPanel(self)
+		hpanel.pack(wal.Label(hpanel, _('Document units') + ':'))
+		names = []
+		for item in unit_names: names.append(unit_full_names[item])
+		self.units_combo = wal.Combolist(hpanel, items=names)
+		self.units = self.doc.methods.get_doc_units()
+		self.units_combo.set_active(unit_names.index(self.units))
+		hpanel.pack(self.units_combo, padding=5)
+		self.pack(hpanel, padding_all=5)
 
 		self.geom = self.doc.methods.get_grid_values()
-
 		hpanel = wal.HPanel(self)
 
 		txt = _('Grid origin')
@@ -130,11 +148,23 @@ class GridProps(DP_Panel):
 
 		self.pack(hpanel, fill=True)
 
+		self.origin = self.doc.methods.get_doc_origin()
+		self.pack(wal.Label(self, _('Document origin:')), padding_all=5)
+		self.origin_keeper = wal.HToggleKeeper(self, ORIGINS, ORIGIN_ICONS,
+											ORIGIN_NAMES)
+		self.origin_keeper.set_mode(self.origin)
+		self.pack(self.origin_keeper)
+
 	def save(self):
+		units = unit_names[self.units_combo.get_active()]
+		if not self.units == units:
+			self.api.set_doc_units(units)
 		geom = [self.x_val.get_value(), self.y_val.get_value(),
 			self.dx_val.get_value(), self.dy_val.get_value()]
 		if not self.geom == geom:
 			self.api.set_grid_values(geom)
+		if not self.origin == self.origin_keeper.get_mode():
+			self.api.set_doc_origin(self.origin_keeper.get_mode())
 
 class GuidesProps(DP_Panel):
 
