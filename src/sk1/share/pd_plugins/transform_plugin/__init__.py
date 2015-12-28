@@ -22,7 +22,7 @@ from sk1 import _, events
 from sk1.app_plugins import RS_Plugin
 from sk1.resources import get_icon
 
-from indicator import OrientationIndicator
+from indicator import OrientationIndicator, OriginIndicator
 from transforms import PositionTransform, ResizeTransform, ScaleTransform, \
 RotateTransform, ShearTransform
 
@@ -92,8 +92,13 @@ class Transform_Plugin(RS_Plugin):
 
 		panel.pack(self.transform_panel, fill=True)
 
-		self.oi = OrientationIndicator(panel, onchange=self.on_orient_change)
-		panel.pack(self.oi, padding_all=10)
+		hpanel = wal.HPanel(panel)
+		self.oi = OrientationIndicator(hpanel, onchange=self.on_orient_change)
+		hpanel.pack(self.oi)
+		hpanel.pack((10, 10))
+		hpanel.pack(OriginIndicator(hpanel, self.app))
+
+		panel.pack(hpanel, padding_all=10)
 
 		self.apply_copy_btn = wal.Button(panel, _('Apply to copy'),
 							onclick=self.action_copy)
