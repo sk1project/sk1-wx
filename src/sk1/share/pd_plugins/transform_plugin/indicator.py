@@ -17,6 +17,8 @@
 
 import os, wal
 
+from sk1 import events
+from sk1.resources import icons, get_icon
 from sk1.pwidgets import BitmapToggle
 
 PLG_DIR = os.path.dirname(__file__)
@@ -90,4 +92,21 @@ class OrientationIndicator(wal.GridPanel):
 			for x in VALS:
 				self.toggles[x][y].set_enable(state)
 
+ORIGIN_ICONS = [icons.L_ORIGIN_CENTER, icons.L_ORIGIN_LL, icons.L_ORIGIN_LU]
 
+class OriginIndicator(wal.Bitmap):
+
+	app = None
+
+	def __init__(self, parent, app):
+		self.app = app
+		mode = self.app.current_doc.methods.get_doc_origin()
+		wal.Bitmap.__init__(self, parent, get_icon(ORIGIN_ICONS[mode],
+												size=wal.DEF_SIZE))
+		events.connect(events.DOC_CHANGED, self.update)
+		events.connect(events.DOC_MODIFIED, self.update)
+
+	def update(self, *args):
+		if self.app.current_doc:
+			mode = self.app.current_doc.methods.get_doc_origin()
+			self.set_bitmap(get_icon(ORIGIN_ICONS[mode], size=wal.DEF_SIZE))
