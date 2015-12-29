@@ -149,5 +149,3 @@ class Transform_Plugin(RS_Plugin):
 		self.transform_keeper.set_mode(mode)
 		self.on_mode_change(mode)
 
-
-class AxesSign(wal.Bitmap):pass
