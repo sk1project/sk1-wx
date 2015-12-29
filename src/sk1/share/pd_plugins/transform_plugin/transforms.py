@@ -77,6 +77,11 @@ class PositionTransform(AbstractTransform):
 		self.abs_pos = wal.Checkbox(self, _('Absolute position'))
 		self.pack(self.abs_pos, align_center=False, padding=5)
 
+	def set_enable(self, state):
+		self.h_spin.set_enable(state)
+		self.v_spin.set_enable(state)
+		self.abs_pos.set_enable(state)
+
 class ResizeTransform(AbstractTransform):
 
 	name = _('Resizing')
@@ -97,6 +102,11 @@ class ResizeTransform(AbstractTransform):
 		self.pack(grid, align_center=False, padding=5)
 		self.proportion = wal.Checkbox(self, _('Keep ratio'), True)
 		self.pack(self.proportion, align_center=False, padding=5)
+
+	def set_enable(self, state):
+		self.h_spin.set_enable(state)
+		self.v_spin.set_enable(state)
+		self.proportion.set_enable(state)
 
 class ScaleTransform(AbstractTransform):
 
@@ -129,6 +139,13 @@ class ScaleTransform(AbstractTransform):
 		self.proportion = wal.Checkbox(self, _('Keep ratio'), True)
 		self.pack(self.proportion, align_center=False, padding=5)
 
+	def set_enable(self, state):
+		self.h_spin.set_enable(state)
+		self.h_mirror.set_enable(state)
+		self.v_spin.set_enable(state)
+		self.v_mirror.set_enable(state)
+		self.proportion.set_enable(state)
+
 class RotateTransform(AbstractTransform):
 
 	name = _('Rotation')
@@ -160,6 +177,12 @@ class RotateTransform(AbstractTransform):
 		self.center = wal.Checkbox(self, _('Relative center'))
 		self.pack(self.center, align_center=False, padding=5)
 
+	def set_enable(self, state):
+		self.angle.set_enable(state)
+		self.h_spin.set_enable(state)
+		self.v_spin.set_enable(state)
+		self.center.set_enable(state)
+
 
 class ShearTransform(AbstractTransform):
 
@@ -179,3 +202,7 @@ class ShearTransform(AbstractTransform):
 		grid.pack(wal.Label(grid, _('degrees')))
 
 		self.pack(grid, align_center=False, padding=5)
+
+	def set_enable(self, state):
+		self.h_shear.set_enable(state)
+		self.v_shear.set_enable(state)
