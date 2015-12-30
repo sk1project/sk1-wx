@@ -86,14 +86,16 @@ class AppMenuBar(wx.MenuBar):
 			(_("&Order"), (pdids.ID_RAISE_TO_TOP, pdids.ID_RAISE,
 				pdids.ID_LOWER, pdids.ID_LOWER_TO_BOTTOM)),
 			None, pdids.ID_GROUP,
-			pdids.ID_UNGROUP, pdids.ID_UNGROUPALL, None, pdids.ID_TO_CURVES,)
+			pdids.ID_UNGROUP, pdids.ID_UNGROUPALL, None,
+			pdids.ID_TO_CONTAINER, pdids.ID_FROM_CONTAINER, None,
+			pdids.ID_TO_CURVES,)
 		entry = (_("&Arrange"), sub)
 		self.entries.append(entry)
 
 		#---Effects menu
-		sub = (pdids.ID_TO_CONTAINER, pdids.ID_FROM_CONTAINER,)
-		entry = (_("Effe&cts"), sub)
-		self.entries.append(entry)
+#		sub = (pdids.ID_TO_CONTAINER, pdids.ID_FROM_CONTAINER,)
+#		entry = (_("Effe&cts"), sub)
+#		self.entries.append(entry)
 
 		#---Paths menu
 		sub = (pdids.ID_BEZIER_SEL_ALL_NODES, pdids.ID_BEZIER_REVERSE_ALL_PATHS,
