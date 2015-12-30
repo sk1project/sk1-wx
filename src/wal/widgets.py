@@ -391,7 +391,7 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 	line = None
 
 	flag = True
-	right_click_flag = False
+	ctxmenu_flag = False
 	value = 0.0
 	range_val = (0.0, 1.0)
 	step = 0.01
@@ -442,7 +442,7 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 
 		if check_focus:
 			self.entry.Bind(wx.EVT_KILL_FOCUS, self._entry_lost_focus, self.entry)
-			self.entry.Bind(wx.EVT_RIGHT_DOWN, self._right_click, self.entry)
+			self.entry.Bind(wx.EVT_CONTEXT_MENU, self._ctxmenu, self.entry)
 
 		self.set_step(step)
 		self.set_range(range_val)
@@ -475,15 +475,15 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 		self.SetValue(self._calc_entry())
 		if not self.enter_callback is None: self.enter_callback()
 
-	def _right_click(self, event):
-		self.right_click_flag = True
+	def _ctxmenu(self, event):
+		self.ctxmenu_flag = True
 		event.Skip()
 
 	def _entry_lost_focus(self, event):
-		if not self.flag and not self.right_click_flag:
+		if not self.flag and not self.ctxmenu_flag:
 			self.SetValue(self._calc_entry())
-		elif not self.flag and self.right_click_flag:
-			self.right_click_flag = False
+		elif not self.flag and self.ctxmenu_flag:
+			self.ctxmenu_flag = False
 		event.Skip()
 
 	def _check_entry(self):
