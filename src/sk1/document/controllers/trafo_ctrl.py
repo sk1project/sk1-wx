@@ -44,8 +44,8 @@ class MoveController(AbstractController):
 		self.move = True
 		dpoint = self.canvas.win_to_doc(self.start)
 		sel = self.selection.pick_at_point(dpoint)
+		self.old_selection = [] + self.selection.objs
 		if sel and sel[0] not in self.selection.objs:
-			self.old_selection = [] + self.selection.objs
 			self.selection.clear()
 			self.canvas.renderer.paint_selection()
 			self.canvas.selection_repaint = False
