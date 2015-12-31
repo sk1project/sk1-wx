@@ -30,7 +30,7 @@ class AboutDialog(wal.CloseDialog):
 
 	def __init__(self, app, parent, title, size=config.about_dlg_size):
 		self.app = app
-		wal.CloseDialog.__init__(self, parent, title, size)
+		wal.CloseDialog.__init__(self, parent, title, size, resizable=False)
 
 	def build(self):
 		header = AboutHeader(self.app, self)
