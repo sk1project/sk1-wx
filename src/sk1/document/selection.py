@@ -211,7 +211,8 @@ class Selection:
 	def add(self, objs):
 		for obj in objs:
 			if obj in self.objs:
-				self.objs.remove(obj)
+				if len(self.objs) > 1:
+					self.objs.remove(obj)
 			else:
 				self.objs.append(obj)
 		self.update()
