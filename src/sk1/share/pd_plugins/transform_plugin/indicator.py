@@ -83,7 +83,11 @@ class OrientationIndicator(wal.GridPanel):
 		if self.callback: self.callback(self.val)
 
 	def reset(self):
-		self.on_change((0.0, 0.0))
+		x, y = self.val
+		self.toggles[x][y].set_active(False)
+		self.val = (0.0, 0.0)
+		x, y = self.val
+		self.toggles[x][y].set_active(True)
 
 	def get_value(self): return self.val
 

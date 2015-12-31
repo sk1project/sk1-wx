@@ -86,7 +86,8 @@ class Transform_Plugin(RS_Plugin):
 
 		self.transforms = {}
 		for item in TRANSFORM_MODES:
-			transf = TRANSFORM_CLASSES[item](self.transform_panel, self.app)
+			transf = TRANSFORM_CLASSES[item](self.transform_panel, self.app,
+											self.on_reset)
 			transf.hide()
 			self.transforms[item] = transf
 
@@ -113,6 +114,7 @@ class Transform_Plugin(RS_Plugin):
 
 		events.connect(events.DOC_CHANGED, self.update)
 		events.connect(events.SELECTION_CHANGED, self.update)
+		events.connect(events.DOC_MODIFIED, self.update)
 		self.update()
 
 	def on_mode_change(self, mode):
@@ -128,6 +130,9 @@ class Transform_Plugin(RS_Plugin):
 
 	def on_orient_change(self, val):
 		self.active_transform.set_orientation(val)
+
+	def on_reset(self):
+		self.oi.reset()
 
 	def action_copy(self): self.action(True)
 
