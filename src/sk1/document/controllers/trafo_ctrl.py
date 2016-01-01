@@ -916,8 +916,8 @@ class TransformController(AbstractController):
 			dx = center_x - m11 * center_x + m21 * center_y;
 			dy = center_y - m21 * center_x - m11 * center_y;
 
-		if not m11: m11 = .0000000001
-		if not m22: m22 = .0000000001
+		if not m11: m11 = .000001
+		if not m22: m22 = .000001
 		return [m11, m21, m12, m22, dx, dy]
 
 	def _draw_frame(self, *args):
