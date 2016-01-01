@@ -79,13 +79,6 @@ class AbstractTransform(wal.VPanel):
 		doc = self.app.current_doc
 		return doc.methods.get_doc_origin() == sk2_const.DOC_ORIGIN_CENTER
 
-	def get_page_size(self):
-		page_format = self.app.current_doc.active_page.page_format
-		w, h = page_format[1]
-		if page_format[2] == uc2const.LANDSCAPE:
-			return (max(w, h), min(w, h))
-		else:
-			return (min(w, h), max(w, h))
 
 class PositionTransform(AbstractTransform):
 
@@ -129,18 +122,42 @@ class PositionTransform(AbstractTransform):
 		dy = self.orientation[1] * h
 		if self.is_lu_coords() and dy: dy *= -1.0
 		if self.abs_pos.get_value():
-			pw, ph = self.get_page_size()
-#			self.h_spin.set_point_value(dx)
-#			self.v_spin.set_point_value(dy)
+			pw, ph = self.app.current_doc.get_page_size()
+			new_x = bbox[0] + dx
+			new_y = bbox[1] + dy
+			if self.is_ll_coords():
+				new_x += pw / 2.0
+				new_y += ph / 2.0
+			elif self.is_lu_coords():
+				new_x += pw / 2.0
+				new_y -= ph / 2.0
+				if new_y: new_y *= -1.0
+			self.h_spin.set_point_value(new_x)
+			self.v_spin.set_point_value(new_y)
 		else:
 			self.h_spin.set_point_value(dx)
 			self.v_spin.set_point_value(dy)
 
 	def get_trafo(self):
 		trafo = [] + sk2_const.NORMAL_TRAFO
-		trafo[4] = self.h_spin.get_point_value()
-		trafo[5] = self.v_spin.get_point_value()
-		if self.is_lu_coords() and trafo[5]: trafo[5] *= -1.0
+		if self.abs_pos.get_value():
+			bbox = self.get_selection_bbox()
+			pw, ph = self.app.current_doc.get_page_size()
+			new_x = self.h_spin.get_point_value()
+			new_y = self.v_spin.get_point_value()
+			if self.is_ll_coords():
+				trafo[4] = new_x - pw / 2.0 - bbox[0]
+				trafo[5] = new_y - ph / 2.0 - bbox[1]
+			elif self.is_lu_coords():
+				trafo[4] = new_x - pw / 2.0 - bbox[0]
+				trafo[5] = -1.0 * new_y + ph / 2.0 - bbox[1]
+			else:
+				trafo[4] = new_x - bbox[0]
+				trafo[5] = new_y - bbox[1]
+		else:
+			trafo[4] = self.h_spin.get_point_value()
+			trafo[5] = self.v_spin.get_point_value()
+			if self.is_lu_coords() and trafo[5]: trafo[5] *= -1.0
 		return trafo
 
 class ResizeTransform(AbstractTransform):
