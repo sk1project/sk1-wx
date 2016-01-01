@@ -17,7 +17,6 @@
 
 import os, wal
 
-from uc2 import uc2const
 from uc2.formats.sk2 import sk2_const
 from sk1 import _
 from sk1.resources import get_bmp
@@ -36,6 +35,7 @@ class AbstractTransform(wal.VPanel):
 	orientation = (0.0, 0.0)
 	callback = None
 	user_changes = False
+	active_widgets = []
 
 	def __init__(self, parent, app, onreset=None):
 		self.app = app
@@ -53,7 +53,10 @@ class AbstractTransform(wal.VPanel):
 
 	def update(self):pass
 
-	def set_enable(self, state):pass
+	def set_enable(self, state):
+		for widget in self.active_widgets:
+			widget.set_enable(state)
+		if state: self.update()
 
 	def set_orientation(self, orientation=(0.0, 0.0)):
 		self.orientation = orientation
@@ -66,6 +69,10 @@ class AbstractTransform(wal.VPanel):
 	def get_selection_bbox(self):
 		doc = self.app.current_doc
 		return [] + doc.selection.bbox
+
+	def get_selection_size(self):
+		bbox = self.get_selection_bbox()
+		return (bbox[2] - bbox[0], bbox[3] - bbox[1])
 
 	def is_ll_coords(self):
 		doc = self.app.current_doc
@@ -106,11 +113,7 @@ class PositionTransform(AbstractTransform):
 								onclick=self.update)
 		self.pack(self.abs_pos, align_center=False, padding=5)
 
-	def set_enable(self, state):
-		self.h_spin.set_enable(state)
-		self.v_spin.set_enable(state)
-		self.abs_pos.set_enable(state)
-		if state: self.update()
+		self.active_widgets = [self.h_spin, self.v_spin, self.abs_pos]
 
 	def update(self):
 		if not self.app.insp.is_selection():return
@@ -168,12 +171,12 @@ class ResizeTransform(AbstractTransform):
 		grid = wal.GridPanel(self, 2, 3, 2, 2)
 
 		grid.pack(get_bmp(grid, make_artid('h-sign')))
-		self.h_spin = UnitSpin(self.app, grid)
+		self.h_spin = UnitSpin(self.app, grid, onchange=self.on_reset)
 		grid.pack(self.h_spin)
 		grid.pack(UnitLabel(self.app, grid))
 
 		grid.pack(get_bmp(grid, make_artid('v-sign')))
-		self.v_spin = UnitSpin(self.app, grid)
+		self.v_spin = UnitSpin(self.app, grid, onchange=self.height_changed)
 		grid.pack(self.v_spin)
 		grid.pack(UnitLabel(self.app, grid))
 
@@ -181,10 +184,44 @@ class ResizeTransform(AbstractTransform):
 		self.proportion = wal.Checkbox(self, _('Keep ratio'), True)
 		self.pack(self.proportion, align_center=False, padding=5)
 
+		self.active_widgets = [self.h_spin, self.v_spin, self.proportion]
+
+	def height_changed(self): self.on_reset(True)
+
+	def on_reset(self, height_changed=False):
+		self.user_changes = True
+		if not self.h_spin.get_point_value():
+			self.h_spin.set_point_value(0.000001)
+		if not self.v_spin.get_point_value():
+			self.v_spin.set_point_value(0.000001)
+		if self.proportion.get_value():
+			w, h = self.get_selection_size()
+			if height_changed:
+				new_h = self.v_spin.get_point_value()
+				self.h_spin.set_point_value(w * new_h / h)
+			else:
+				new_w = self.h_spin.get_point_value()
+				self.v_spin.set_point_value(h * new_w / w)
+
 	def set_enable(self, state):
-		self.h_spin.set_enable(state)
-		self.v_spin.set_enable(state)
-		self.proportion.set_enable(state)
+		self.user_changes = False
+		AbstractTransform.set_enable(self, state)
+
+	def update(self):
+		if not self.app.insp.is_selection():return
+		if self.user_changes: return
+		w, h = self.get_selection_size()
+		self.h_spin.set_point_value(w)
+		self.v_spin.set_point_value(h)
+
+	def get_trafo(self):
+		trafo = [] + sk2_const.NORMAL_TRAFO
+		w, h = self.get_selection_size()
+		new_w = self.h_spin.get_point_value()
+		new_h = self.v_spin.get_point_value()
+		trafo[0] = new_w / w
+		trafo[3] = new_h / h
+		return trafo
 
 class ScaleTransform(AbstractTransform):
 
@@ -217,12 +254,8 @@ class ScaleTransform(AbstractTransform):
 		self.proportion = wal.Checkbox(self, _('Keep ratio'), True)
 		self.pack(self.proportion, align_center=False, padding=5)
 
-	def set_enable(self, state):
-		self.h_spin.set_enable(state)
-		self.h_mirror.set_enable(state)
-		self.v_spin.set_enable(state)
-		self.v_mirror.set_enable(state)
-		self.proportion.set_enable(state)
+		self.active_widgets = [self.h_spin, self.h_mirror, self.v_spin,
+							self.v_mirror, self.proportion]
 
 class RotateTransform(AbstractTransform):
 
@@ -255,11 +288,8 @@ class RotateTransform(AbstractTransform):
 		self.center = wal.Checkbox(self, _('Relative center'))
 		self.pack(self.center, align_center=False, padding=5)
 
-	def set_enable(self, state):
-		self.angle.set_enable(state)
-		self.h_spin.set_enable(state)
-		self.v_spin.set_enable(state)
-		self.center.set_enable(state)
+		self.active_widgets = [self.angle, self.h_spin, self.v_spin,
+							self.center]
 
 
 class ShearTransform(AbstractTransform):
@@ -281,6 +311,4 @@ class ShearTransform(AbstractTransform):
 
 		self.pack(grid, align_center=False, padding=5)
 
-	def set_enable(self, state):
-		self.h_shear.set_enable(state)
-		self.v_shear.set_enable(state)
+		self.active_widgets = [self.h_shear, self.v_shear]
