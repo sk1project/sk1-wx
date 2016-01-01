@@ -111,6 +111,8 @@ marker - NODE_CUSP = 0; NODE_SMOOTH = 1; NODE_SYMMETRICAL = 2
 PAGE FORMAT
 [format name,(width, height),orientation]
 
+width, height - real page sizes 
+orientation - just indicates page orientation
 -------------------------------------------------------------------------------
 LAYER PROPETIES
 [visible, editable, printable]
