@@ -207,6 +207,10 @@ class ResizeTransform(AbstractTransform):
 		self.user_changes = False
 		AbstractTransform.set_enable(self, state)
 
+	def set_orientation(self, orientation=(0.0, 0.0)):
+		self.orientation = orientation
+		self.update()
+
 	def update(self):
 		if not self.app.insp.is_selection():return
 		if self.user_changes: return
