@@ -164,6 +164,7 @@ class PositionTransform(AbstractTransform):
 			if self.is_lu_coords() and trafo[5]: trafo[5] *= -1.0
 		return trafo
 
+
 class ResizeTransform(AbstractTransform):
 
 	name = _('Resizing')
@@ -236,15 +237,19 @@ class ResizeTransform(AbstractTransform):
 		trafo[5] = bp[1] - new_bp[1]
 		return trafo
 
+
 class ScaleTransform(AbstractTransform):
 
 	name = _('Scale and mirror')
+	v_scale = 100.0
+	h_scale = 100.0
 
 	def build(self):
 		grid = wal.GridPanel(self, 2, 5, 2, 2)
 
 		grid.pack(get_bmp(grid, make_artid('h-sign')))
-		self.h_spin = wal.FloatSpin(grid, 100.0, (0.0, 10000.0), 1.0)
+		self.h_spin = wal.FloatSpin(grid, 100.0, (0.01, 10000.0), 1.0,
+								 onchange=self.on_reset)
 		grid.pack(self.h_spin)
 		grid.pack(wal.Label(grid, '%'))
 		grid.pack((5, 5))
@@ -254,7 +259,8 @@ class ScaleTransform(AbstractTransform):
 		grid.pack(self.h_mirror)
 
 		grid.pack(get_bmp(grid, make_artid('v-sign')))
-		self.v_spin = wal.FloatSpin(grid, 100.0, (0.0, 10000.0), 1.0)
+		self.v_spin = wal.FloatSpin(grid, 100.0, (0.01, 10000.0), 1.0,
+								 onchange=self.height_changed)
 		grid.pack(self.v_spin)
 		grid.pack(wal.Label(grid, '%'))
 		grid.pack((5, 5))
@@ -269,6 +275,54 @@ class ScaleTransform(AbstractTransform):
 
 		self.active_widgets = [self.h_spin, self.h_mirror, self.v_spin,
 							self.v_mirror, self.proportion]
+
+	def height_changed(self): self.on_reset(True)
+
+	def on_reset(self, height_changed=False):
+		self.user_changes = True
+		if self.proportion.get_value():
+			h = self.h_spin.get_value()
+			v = self.v_spin.get_value()
+			if height_changed:
+				self.h_spin.set_value(v * h / self.v_scale)
+			else:
+				self.v_spin.set_value(v * h / self.h_scale)
+		self.v_scale = self.v_spin.get_value()
+		self.h_scale = self.h_spin.get_value()
+
+	def set_enable(self, state):
+		self.user_changes = False
+		AbstractTransform.set_enable(self, state)
+
+	def set_orientation(self, orientation=(0.0, 0.0)):
+		self.orientation = orientation
+		self.update()
+
+	def update(self):
+		if not self.app.insp.is_selection():return
+		if self.user_changes: return
+		self.h_spin.set_value(100.0)
+		self.v_spin.set_value(100.0)
+		self.v_scale = self.h_scale = 100.0
+
+	def get_trafo(self):
+		trafo = [] + sk2_const.NORMAL_TRAFO
+		bbox = self.get_selection_bbox()
+		w, h = self.get_selection_size()
+		trafo[0] = self.h_spin.get_value() / 100.0
+		trafo[3] = self.v_spin.get_value() / 100.0
+
+		if self.h_mirror.get_value(): trafo[0] *= -1.0
+		if self.v_mirror.get_value(): trafo[3] *= -1.0
+
+		bp = [bbox[0] + w * (1.0 + self.orientation[0]) / 2.0,
+			bbox[1] + h * (1.0 + self.orientation[1]) / 2.0]
+
+		new_bp = libgeom.apply_trafo_to_point(bp, trafo)
+		trafo[4] = bp[0] - new_bp[0]
+		trafo[5] = bp[1] - new_bp[1]
+		return trafo
+
 
 class RotateTransform(AbstractTransform):
 
