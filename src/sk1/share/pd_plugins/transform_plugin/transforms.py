@@ -192,9 +192,9 @@ class ResizeTransform(AbstractTransform):
 	def on_reset(self, height_changed=False):
 		self.user_changes = True
 		if not self.h_spin.get_point_value():
-			self.h_spin.set_point_value(0.000001)
+			self.h_spin.set_point_value(1.0)
 		if not self.v_spin.get_point_value():
-			self.v_spin.set_point_value(0.000001)
+			self.v_spin.set_point_value(1.0)
 		if self.proportion.get_value():
 			w, h = self.get_selection_size()
 			if height_changed:
@@ -228,16 +228,8 @@ class ResizeTransform(AbstractTransform):
 		trafo[0] = new_w / w
 		trafo[3] = new_h / h
 
-		ort = self.orientation
-		if ort == (-1.0, 1.0): bp = [bbox[0], bbox[3]]
-		elif ort == (0.0, 1.0): bp = [bbox[0] + w / 2.0, bbox[3]]
-		elif ort == (1.0, 1.0): bp = [bbox[2], bbox[3]]
-		elif ort == (-1.0, 0.0): bp = [bbox[0], bbox[1] + h / 2.0]
-		elif ort == (0.0, 0.0): bp = [bbox[0] + w / 2.0, bbox[1] + h / 2.0]
-		elif ort == (1.0, 0.0): bp = [bbox[2], bbox[1] + h / 2.0]
-		if ort == (-1.0, -1.0): bp = [bbox[0], bbox[1]]
-		elif ort == (0.0, -1.0): bp = [bbox[0] + w / 2.0, bbox[1]]
-		elif ort == (1.0, -1.0): bp = [bbox[2], bbox[1]]
+		bp = [bbox[0] + w * (1.0 + self.orientation[0]) / 2.0,
+			bbox[1] + h * (1.0 + self.orientation[1]) / 2.0]
 
 		new_bp = libgeom.apply_trafo_to_point(bp, trafo)
 		trafo[4] = bp[0] - new_bp[0]
