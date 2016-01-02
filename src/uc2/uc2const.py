@@ -321,10 +321,10 @@ point_dict = {UNIT_PT: 1.0,
 			UNIT_CM: pt_to_cm,
 			UNIT_MM: pt_to_mm}
 
-unit_accuracy = {UNIT_PT: 1,
+unit_accuracy = {UNIT_PT: 2,
 			UNIT_IN: 3,
 			UNIT_FT: 4,
-			UNIT_PX: 1,
+			UNIT_PX: 2,
 			UNIT_M: 4,
 			UNIT_CM: 3,
 			UNIT_MM: 2}
