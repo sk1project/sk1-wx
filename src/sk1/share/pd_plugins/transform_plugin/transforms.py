@@ -17,6 +17,7 @@
 
 import os, wal
 
+from uc2 import libgeom
 from uc2.formats.sk2 import sk2_const
 from sk1 import _
 from sk1.resources import get_bmp
@@ -220,11 +221,27 @@ class ResizeTransform(AbstractTransform):
 
 	def get_trafo(self):
 		trafo = [] + sk2_const.NORMAL_TRAFO
+		bbox = self.get_selection_bbox()
 		w, h = self.get_selection_size()
 		new_w = self.h_spin.get_point_value()
 		new_h = self.v_spin.get_point_value()
 		trafo[0] = new_w / w
 		trafo[3] = new_h / h
+
+		ort = self.orientation
+		if ort == (-1.0, 1.0): bp = [bbox[0], bbox[3]]
+		elif ort == (0.0, 1.0): bp = [bbox[0] + w / 2.0, bbox[3]]
+		elif ort == (1.0, 1.0): bp = [bbox[2], bbox[3]]
+		elif ort == (-1.0, 0.0): bp = [bbox[0], bbox[1] + h / 2.0]
+		elif ort == (0.0, 0.0): bp = [bbox[0] + w / 2.0, bbox[1] + h / 2.0]
+		elif ort == (1.0, 0.0): bp = [bbox[2], bbox[1] + h / 2.0]
+		if ort == (-1.0, -1.0): bp = [bbox[0], bbox[1]]
+		elif ort == (0.0, -1.0): bp = [bbox[0] + w / 2.0, bbox[1]]
+		elif ort == (1.0, -1.0): bp = [bbox[2], bbox[1]]
+
+		new_bp = libgeom.apply_trafo_to_point(bp, trafo)
+		trafo[4] = bp[0] - new_bp[0]
+		trafo[5] = bp[1] - new_bp[1]
 		return trafo
 
 class ScaleTransform(AbstractTransform):
