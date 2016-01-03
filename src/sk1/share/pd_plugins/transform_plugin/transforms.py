@@ -15,7 +15,7 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, wal
+import os, wal, math
 
 from uc2 import libgeom
 from uc2.formats.sk2 import sk2_const
@@ -87,6 +87,30 @@ class AbstractTransform(wal.VPanel):
 		doc = self.app.current_doc
 		return doc.methods.get_doc_origin() == sk2_const.DOC_ORIGIN_CENTER
 
+	def doc_to_coords(self, point):
+		x, y = point
+		pw, ph = self.app.current_doc.get_page_size()
+		if self.is_ll_coords():
+			x += pw / 2.0
+			y += ph / 2.0
+		elif self.is_lu_coords():
+			x += pw / 2.0
+			y -= ph / 2.0
+			if y: y *= -1.0
+		return [x, y]
+
+	def coords_to_doc(self, point):
+		x, y = point
+		pw, ph = self.app.current_doc.get_page_size()
+		if self.is_ll_coords():
+			x -= pw / 2.0
+			y -= ph / 2.0
+		elif self.is_lu_coords():
+			x -= pw / 2.0
+			y += ph / 2.0
+			if y: y *= -1.0
+		return [x, y]
+
 
 class PositionTransform(AbstractTransform):
 
@@ -126,16 +150,9 @@ class PositionTransform(AbstractTransform):
 		dy = self.orientation[1] * h
 		if self.is_lu_coords() and dy: dy *= -1.0
 		if self.abs_pos.get_value():
-			pw, ph = self.app.current_doc.get_page_size()
 			new_x = bbox[0] + dx
 			new_y = bbox[1] + dy
-			if self.is_ll_coords():
-				new_x += pw / 2.0
-				new_y += ph / 2.0
-			elif self.is_lu_coords():
-				new_x += pw / 2.0
-				new_y -= ph / 2.0
-				if new_y: new_y *= -1.0
+			new_x, new_y = self.doc_to_coords([new_x, new_y])
 			self.h_spin.set_point_value(new_x)
 			self.v_spin.set_point_value(new_y)
 		else:
@@ -146,18 +163,11 @@ class PositionTransform(AbstractTransform):
 		trafo = [] + sk2_const.NORMAL_TRAFO
 		if self.abs_pos.get_value():
 			bbox = self.get_selection_bbox()
-			pw, ph = self.app.current_doc.get_page_size()
 			new_x = self.h_spin.get_point_value()
 			new_y = self.v_spin.get_point_value()
-			if self.is_ll_coords():
-				trafo[4] = new_x - pw / 2.0 - bbox[0]
-				trafo[5] = new_y - ph / 2.0 - bbox[1]
-			elif self.is_lu_coords():
-				trafo[4] = new_x - pw / 2.0 - bbox[0]
-				trafo[5] = -1.0 * new_y + ph / 2.0 - bbox[1]
-			else:
-				trafo[4] = new_x - bbox[0]
-				trafo[5] = new_y - bbox[1]
+			new_x, new_y = self.coords_to_doc([new_x, new_y])
+			trafo[4] = new_x - bbox[0]
+			trafo[5] = new_y - bbox[1]
 		else:
 			trafo[4] = self.h_spin.get_point_value()
 			trafo[5] = self.v_spin.get_point_value()
@@ -332,7 +342,8 @@ class RotateTransform(AbstractTransform):
 		grid = wal.GridPanel(self, 1, 3, 2, 2)
 
 		grid.pack(wal.Label(grid, _('Angle:')))
-		self.angle = AngleSpin(grid, val_range=(-89.0, 89.0))
+		self.angle = AngleSpin(grid, val_range=(-360.0, 360.0),
+							check_focus=True)
 		grid.pack(self.angle)
 		grid.pack(wal.Label(grid, _('degrees')))
 
@@ -342,21 +353,61 @@ class RotateTransform(AbstractTransform):
 		grid = wal.GridPanel(self, 2, 3, 2, 2)
 
 		grid.pack(get_bmp(grid, make_artid('h-sign')))
-		self.h_spin = UnitSpin(self.app, grid)
+		self.h_spin = UnitSpin(self.app, grid, can_be_negative=True)
 		grid.pack(self.h_spin)
 		grid.pack(UnitLabel(self.app, grid))
 
 		grid.pack(get_bmp(grid, make_artid('v-sign')))
-		self.v_spin = UnitSpin(self.app, grid)
+		self.v_spin = UnitSpin(self.app, grid, can_be_negative=True)
 		grid.pack(self.v_spin)
 		grid.pack(UnitLabel(self.app, grid))
 
 		self.pack(grid, align_center=False, padding_all=5)
-		self.center = wal.Checkbox(self, _('Relative center'))
+		self.center = wal.Checkbox(self, _('Relative center'),
+								onclick=self.on_click)
 		self.pack(self.center, align_center=False, padding=5)
 
-		self.active_widgets = [self.angle, self.h_spin, self.v_spin,
-							self.center]
+		self.active_widgets = [self.angle, self.center]
+		self.on_click()
+
+	def on_click(self):
+		state = False
+		if self.center.get_value():
+			state = True
+			self.user_changes = True
+			if self.callback: self.callback()
+		self.v_spin.set_enable(state)
+		self.h_spin.set_enable(state)
+
+	def set_enable(self, state):
+		if self.center.get_value():
+			self.v_spin.set_enable(state)
+			self.h_spin.set_enable(state)
+		else:
+			self.user_changes = False
+		AbstractTransform.set_enable(self, state)
+
+	def update(self):
+		if not self.app.insp.is_selection():return
+		if self.user_changes: return
+		bbox = self.get_selection_bbox()
+		w, h = self.get_selection_size()
+		bp = self.doc_to_coords([bbox[0] + w * (1.0 + self.orientation[0]) / 2.0,
+			bbox[1] + h * (1.0 + self.orientation[1]) / 2.0])
+		self.h_spin.set_point_value(bp[0])
+		self.v_spin.set_point_value(bp[1])
+
+	def get_trafo(self):
+		angle = self.angle.get_angle_value()
+		center_x = self.h_spin.get_point_value()
+		center_y = self.v_spin.get_point_value()
+		center_x, center_y = self.coords_to_doc([center_x, center_y])
+		m21 = math.sin(angle)
+		m11 = m22 = math.cos(angle)
+		m12 = -m21
+		dx = center_x - m11 * center_x + m21 * center_y;
+		dy = center_y - m21 * center_x - m11 * center_y;
+		return [m11, m21, m12, m22, dx, dy]
 
 
 class ShearTransform(AbstractTransform):
