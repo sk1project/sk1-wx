@@ -179,12 +179,12 @@ class AngleSpin(FloatSpin):
 	angle_value = 0.0
 
 	def __init__(self, parent, val=0.0, val_range=(-360.0, 360.0),
-				 onchange=None, onenter=None):
+				 onchange=None, onenter=None, check_focus=False):
 		self.angle_value = val
 		self.ucallback = onchange
 		FloatSpin.__init__(self, parent, val, val_range, step=1.0, width=5,
 						onchange=self.update_angle_value, onenter=onenter,
-						check_focus=False, spin_overlay=config.spin_overlay)
+						check_focus=check_focus, spin_overlay=config.spin_overlay)
 
 	def update_angle_value(self, *args):
 		self.angle_value = self.get_value() * math.pi / 180.0
