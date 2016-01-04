@@ -112,6 +112,7 @@ encoding//src/sk1/resources/icons.py=utf-8
 encoding//src/sk1/resources/labels.py=utf-8
 encoding//src/sk1/resources/pdids.py=utf-8
 encoding//src/sk1/resources/rgb_palette.py=utf-8
+encoding//src/sk1/share/pd_plugins/align_plugin/__init__.py=utf-8
 encoding//src/sk1/share/pd_plugins/transform_plugin/__init__.py=utf-8
 encoding//src/sk1/share/pd_plugins/transform_plugin/indicator.py=utf-8
 encoding//src/sk1/share/pd_plugins/transform_plugin/transforms.py=utf-8
