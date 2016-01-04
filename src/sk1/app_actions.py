@@ -135,6 +135,7 @@ def create_actions(app):
 	(pdids.ID_ROTATE_RIGHT, proxy.rotate_right, sel_chnls, insp.is_selection),
 	(pdids.ID_MIRROR_H, proxy.mirror_h, sel_chnls, insp.is_selection),
 	(pdids.ID_MIRROR_V, proxy.mirror_v, sel_chnls, insp.is_selection),
+(pdids.ID_ALIGN_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('AlignPlugin',)),
 (pdids.ID_COMBINE, proxy.combine_selected, sel_chnls, insp.can_be_combined),
 (pdids.ID_BREAK_APART, proxy.break_apart_selected, sel_chnls, insp.can_be_breaked),
 (pdids.ID_RAISE_TO_TOP, proxy.raise_to_top, sel_chnls, insp.can_be_raised),
