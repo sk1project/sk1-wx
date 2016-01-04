@@ -418,15 +418,37 @@ class ShearTransform(AbstractTransform):
 		grid = wal.GridPanel(self, 3, 3, 2, 2)
 
 		grid.pack(get_bmp(grid, make_artid('h-sign')))
-		self.h_shear = AngleSpin(grid, val_range=(-89.0, 89.0))
+		self.h_shear = AngleSpin(grid, val_range=(-89.0, 89.0),
+							check_focus=True)
 		grid.pack(self.h_shear)
 		grid.pack(wal.Label(grid, _('degrees')))
 
 		grid.pack(get_bmp(grid, make_artid('v-sign')))
-		self.v_shear = AngleSpin(grid, val_range=(-89.0, 89.0))
+		self.v_shear = AngleSpin(grid, val_range=(-89.0, 89.0),
+							check_focus=True)
 		grid.pack(self.v_shear)
 		grid.pack(wal.Label(grid, _('degrees')))
 
 		self.pack(grid, align_center=False, padding=5)
 
 		self.active_widgets = [self.h_shear, self.v_shear]
+
+	def get_trafo(self):
+		angle1 = self.h_shear.get_angle_value()
+		angle2 = self.v_shear.get_angle_value()
+
+		m12 = math.tan(angle1)
+		m21 = math.tan(angle2)
+		m11 = 1.0
+		m22 = 1.0 - (m12 * m21)
+		trafo = [m11, m21, -m12, m22, 0, 0]
+
+		bbox = self.get_selection_bbox()
+		w, h = self.get_selection_size()
+		bp = [bbox[0] + w * (1.0 + self.orientation[0]) / 2.0,
+			bbox[1] + h * (1.0 + self.orientation[1]) / 2.0]
+
+		new_bp = libgeom.apply_trafo_to_point(bp, trafo)
+		trafo[4] = bp[0] - new_bp[0]
+		trafo[5] = bp[1] - new_bp[1]
+		return trafo
