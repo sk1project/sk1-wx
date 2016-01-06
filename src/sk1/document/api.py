@@ -251,6 +251,16 @@ class AbstractAPI:
 		self.selection.update_bbox()
 		return (before, after)
 
+	def _apply_trafos(self, obj_trafo_list):
+		before = []
+		after = []
+		for obj, trafo in obj_trafo_list:
+			before.append(obj.get_trafo_snapshot())
+			obj.apply_trafo(trafo)
+			after.append(obj.get_trafo_snapshot())
+		self.selection.update_bbox()
+		return (before, after)
+
 	def _set_bitmap_trafo(self, obj, trafo):
 		obj.trafo = trafo
 		obj.update()
@@ -821,6 +831,19 @@ class PresenterAPI(AbstractAPI):
 					[self._set_selection, sel_after]],
 					False]
 				self.add_undo(transaction)
+			self.selection.update()
+
+	def trasform_objs(self, obj_trafo_list):
+			before, after = self._apply_trafos(obj_trafo_list)
+			sel_before = [] + self.selection.objs
+			sel_after = [] + sel_before
+			transaction = [
+				[[self._set_snapshots, before],
+				[self._set_selection, sel_before]],
+				[[self._set_snapshots, after],
+				[self._set_selection, sel_after]],
+				False]
+			self.add_undo(transaction)
 			self.selection.update()
 
 	def move_selected(self, x, y, copy=False):
