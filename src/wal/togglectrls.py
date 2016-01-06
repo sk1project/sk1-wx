@@ -23,18 +23,23 @@ class ModeToggleButton(ImageToggleButton):
 	keeper = None
 	mode = 0
 	callback = None
+	allow_off = False
 
-	def __init__(self, parent, keeper, mode, icons, names, on_change=None):
+	def __init__(self, parent, keeper, mode, icons, names, on_change=None,
+								allow_off=False):
 		self.keeper = keeper
 		self.mode = mode
 		self.callback = on_change
+		self.allow_off = allow_off
 		ImageToggleButton.__init__(self, parent, False, icons[mode],
 								tooltip=names[mode], onchange=self.change)
 
 	def change(self):
 		if not self.get_active():
-			if self.keeper.mode == self.mode:
+			if self.keeper.mode == self.mode and not self.allow_off:
 				self.set_active(True)
+			elif self.allow_off:
+				if self.callback: self.callback(None)
 		else:
 			if not self.keeper.mode == self.mode:
 				if self.callback: self.callback(self.mode)
@@ -53,14 +58,18 @@ class HToggleKeeper(HPanel):
 	mode_buts = []
 	modes = []
 	callback = None
+	allow_none = False
 
-	def __init__(self, parent, modes, icons, names, on_change=None):
+	def __init__(self, parent, modes, icons, names, on_change=None,
+				 allow_none=False):
 		self.modes = modes
 		self.mode_buts = []
 		self.callback = on_change
+		self.allow_none = allow_none
 		HPanel.__init__(self, parent)
 		for item in self.modes:
-			but = ModeToggleButton(self, self, item, icons, names, self.changed)
+			but = ModeToggleButton(self, self, item, icons, names,
+								self.changed, self.allow_none)
 			self.mode_buts.append(but)
 			self.pack(but)
 
