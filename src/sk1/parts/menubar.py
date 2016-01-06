@@ -69,8 +69,8 @@ class AppMenuBar(wx.MenuBar):
 
 		#---Layout menu
 		sub = (pdids.ID_INSERT_PAGE, pdids.ID_DELETE_PAGE, pdids.ID_GOTO_PAGE,
-			None, pdids.ID_NEXT_PAGE, pdids.ID_PREV_PAGE, None,
-			pdids.ID_PAGE_FRAME, pdids.ID_PAGE_GUIDE_FRAME,
+			None, pdids.ID_NEXT_PAGE, pdids.ID_PREV_PAGE,
+			None, pdids.ID_PAGE_FRAME, pdids.ID_PAGE_GUIDE_FRAME,
 			pdids.ID_GUIDES_AT_CENTER, pdids.ID_REMOVE_ALL_GUIDES,)
 		entry = (_("&Layout"), sub)
 		self.entries.append(entry)
@@ -81,14 +81,14 @@ class AppMenuBar(wx.MenuBar):
 				pdids.ID_SCALE_PLGN, pdids.ID_ROTATE_PLGN, pdids.ID_SHEAR_PLGN,
 				None, pdids.ID_ROTATE_LEFT, pdids.ID_ROTATE_RIGHT,
 				None, pdids.ID_MIRROR_H, pdids.ID_MIRROR_V)),
-			pdids.ID_CLEAR_TRANSFORM, pdids.ID_ALIGN_PLGN,
-			None, pdids.ID_COMBINE, pdids.ID_BREAK_APART, None,
+			pdids.ID_CLEAR_TRANSFORM,
+			None, pdids.ID_ALIGN_PLGN,
 			(_("&Order"), (pdids.ID_RAISE_TO_TOP, pdids.ID_RAISE,
 				pdids.ID_LOWER, pdids.ID_LOWER_TO_BOTTOM)),
-			None, pdids.ID_GROUP,
-			pdids.ID_UNGROUP, pdids.ID_UNGROUPALL, None,
-			pdids.ID_TO_CONTAINER, pdids.ID_FROM_CONTAINER, None,
-			pdids.ID_TO_CURVES,)
+			None, pdids.ID_COMBINE, pdids.ID_BREAK_APART,
+			None, pdids.ID_GROUP, pdids.ID_UNGROUP, pdids.ID_UNGROUPALL,
+			None, pdids.ID_TO_CONTAINER, pdids.ID_FROM_CONTAINER,
+			None, pdids.ID_TO_CURVES,)
 		entry = (_("&Arrange"), sub)
 		self.entries.append(entry)
 
