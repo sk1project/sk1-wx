@@ -18,6 +18,8 @@
 
 import os, wal
 
+from uc2.formats.sk2 import sk2_const
+
 from sk1 import _, events
 from sk1.app_plugins import RS_Plugin
 from sk1.resources import get_icon
@@ -33,6 +35,60 @@ def get_plugin(app):
 
 PLUGIN_ICON = make_artid('icon')
 
+#--- Source object constants
+
+SOURCE_PAGE = 0
+SOURCE_SEL = 1
+SOURCE_FIRST = 2
+SOURCE_LAST = 3
+SOURCE_LAGEST = 4
+SOURCE_SMALLEST = 5
+
+SOURCE_NAMES = [
+_('Page'),
+_('Selection'),
+_('First selected'),
+_('Last selected'),
+_('Largest object'),
+_('Smallest object'),
+]
+
+#--- Align constants
+
+ALIGN_BOTTOM = -1.0
+ALIGN_LEFT = -1.0
+ALIGN_CENTER = 0.0
+ALIGN_RIGHT = 1.0
+ALIGN_TOP = 1.0
+
+H_ALIGN_MODES = [ALIGN_LEFT, ALIGN_CENTER, ALIGN_RIGHT]
+
+H_ALIGN_MODE_ICONS = {
+ALIGN_LEFT:make_artid('align-left'),
+ALIGN_CENTER:make_artid('align-center-h'),
+ALIGN_RIGHT:make_artid('align-right')
+}
+
+H_ALIGN_MODE_NAMES = {
+ALIGN_LEFT:_('Align to left side'),
+ALIGN_CENTER:_('Align to center horizontally'),
+ALIGN_RIGHT:_('Align to right side')
+}
+
+V_ALIGN_MODES = [ALIGN_BOTTOM, ALIGN_CENTER, ALIGN_TOP]
+
+V_ALIGN_MODE_ICONS = {
+ALIGN_BOTTOM:make_artid('align-bottom'),
+ALIGN_CENTER:make_artid('align-center-v'),
+ALIGN_TOP:make_artid('align-top')
+}
+
+V_ALIGN_MODE_NAMES = {
+ALIGN_BOTTOM:_('Align to bottom'),
+ALIGN_CENTER:_('Align to center vertically'),
+ALIGN_TOP:_('Align to top')
+}
+
 class Align_Plugin(RS_Plugin):
 
 	pid = 'AlignPlugin'
@@ -42,3 +98,129 @@ class Align_Plugin(RS_Plugin):
 
 	def build_ui(self):
 		self.icon = get_icon(PLUGIN_ICON)
+
+		self.apanel = AlignPanel(self.panel, self.app)
+		self.panel.pack(self.apanel, fill=True, padding_all=5)
+
+		events.connect(events.DOC_CHANGED, self.update)
+		events.connect(events.SELECTION_CHANGED, self.update)
+		events.connect(events.DOC_MODIFIED, self.update)
+		self.update()
+
+	def update(self, *args):
+		self.apanel.update()
+
+
+class AlignPanel(wal.LabeledPanel):
+
+	app = None
+
+	def __init__(self, parent, app):
+		self.app = app
+		wal.LabeledPanel.__init__(self, parent, _('Align'))
+
+		self.pack((5, 5))
+		self.pack(wal.Label(self, _('Relative to:')))
+		self.source = wal.Combolist(self, items=SOURCE_NAMES,
+								onchange=self.update)
+		self.pack(self.source, padding_all=5, fill=True)
+		self.pack((5, 5))
+
+		self.halign = wal.HToggleKeeper(self, H_ALIGN_MODES,
+								H_ALIGN_MODE_ICONS, H_ALIGN_MODE_NAMES,
+								on_change=self.update, allow_none=True)
+		self.pack(self.halign)
+		self.halign.set_mode(ALIGN_CENTER)
+
+		self.valign = wal.HToggleKeeper(self, V_ALIGN_MODES,
+								V_ALIGN_MODE_ICONS, V_ALIGN_MODE_NAMES,
+								on_change=self.update, allow_none=True)
+		self.pack(self.valign, padding_all=5)
+		self.valign.set_mode(ALIGN_CENTER)
+
+		self.group = wal.Checkbox(self, _('Selection as group'), True,
+								onclick=self.update)
+		self.pack(self.group, padding_all=5)
+
+		self.apply_btn = wal.Button(self, _('Apply'), onclick=self.action)
+		self.pack(self.apply_btn, padding_all=5, fill=True)
+
+	def get_sel_count(self):
+		doc = self.app.current_doc
+		return len(doc.selection.objs)
+
+	def get_selection_bbox(self):
+		doc = self.app.current_doc
+		return [] + doc.selection.bbox
+
+	def get_selection_size(self):
+		bbox = self.get_selection_bbox()
+		return (bbox[2] - bbox[0], bbox[3] - bbox[1])
+
+	def update(self, *args):
+		self.source.set_enable(False)
+		self.halign.set_enable(False)
+		self.valign.set_enable(False)
+		self.group.set_enable(False)
+		self.apply_btn.set_enable(False)
+		if not self.app.insp.is_selection(): return
+
+		self.source.set_enable(True)
+		if self.source.get_active():
+			self.group.set_value(False, False)
+			if self.get_sel_count() < 2: return
+			if self.get_sel_count() == 2 and self.group.get_value():return
+		self.halign.set_enable(True)
+		self.valign.set_enable(True)
+		if self.get_sel_count() > 1 and not self.source.get_active():
+			self.group.set_enable(True)
+		self.apply_btn.set_enable(True)
+		if self.valign.get_mode() is None and self.halign.get_mode() is None:
+			self.apply_btn.set_enable(False)
+
+	def get_trafo(self, source_bbox, target_bbox):
+		sw = source_bbox[2] - source_bbox[0]
+		sh = source_bbox[3] - source_bbox[1]
+		tw = target_bbox[2] - target_bbox[0]
+		th = target_bbox[3] - target_bbox[1]
+		trafo = [] + sk2_const.NORMAL_TRAFO
+		cs = source_bbox[:2]
+		cs[0] += sw / 2.0
+		cs[1] += sh / 2.0
+		ct = target_bbox[:2]
+		ct[0] += tw / 2.0
+		ct[1] += th / 2.0
+		if not self.halign.get_mode() is None:
+			trafo[4] += cs[0] + self.halign.get_mode() * sw / 2.0
+			trafo[4] -= ct[0] + self.halign.get_mode() * tw / 2.0
+		if not self.valign.get_mode() is None:
+			trafo[5] += cs[1] + self.valign.get_mode() * sh / 2.0
+			trafo[5] -= ct[1] + self.valign.get_mode() * th / 2.0
+		return trafo
+
+	def action(self):
+		if not self.source.get_active():
+			pw, ph = self.app.current_doc.get_page_size()
+			source_bbox = [-pw / 2.0, -ph / 2.0, pw / 2.0, ph / 2.0]
+			if self.group.get_value():
+				trafo = self.get_trafo(source_bbox, self.get_selection_bbox())
+				self.app.current_doc.api.transform_selected(trafo)
+				return
+			else:
+				sel_objs = [] + self.app.current_doc.selection.objs
+		elif self.source.get_active() == SOURCE_SEL:
+			source_bbox = self.get_selection_bbox()
+			sel_objs = [] + self.app.current_doc.selection.objs
+		elif self.source.get_active() == SOURCE_FIRST:
+			source_bbox = [] + self.app.current_doc.selection.objs[0].cache_bbox
+			sel_objs = self.app.current_doc.selection.objs[1:]
+		elif self.source.get_active() == SOURCE_LAST:
+			source_bbox = [] + self.app.current_doc.selection.objs[-1].cache_bbox
+			sel_objs = self.app.current_doc.selection.objs[:-1]
+
+
+		obj_trafo_list = []
+		for item in sel_objs:
+			trafo = self.get_trafo(source_bbox, item.cache_bbox)
+			obj_trafo_list.append((item, trafo))
+		self.app.current_doc.api.trasform_objs(obj_trafo_list)
