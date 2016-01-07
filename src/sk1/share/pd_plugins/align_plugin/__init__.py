@@ -102,6 +102,9 @@ class Align_Plugin(RS_Plugin):
 		self.apanel = AlignPanel(self.panel, self.app)
 		self.panel.pack(self.apanel, fill=True, padding_all=5)
 
+		self.dpanel = DistributePanel(self.panel, self.app)
+		self.panel.pack(self.dpanel, fill=True, padding_all=5)
+
 		events.connect(events.DOC_CHANGED, self.update)
 		events.connect(events.SELECTION_CHANGED, self.update)
 		events.connect(events.DOC_MODIFIED, self.update)
@@ -109,6 +112,7 @@ class Align_Plugin(RS_Plugin):
 
 	def update(self, *args):
 		self.apanel.update()
+		self.dpanel.update()
 
 
 class AlignPanel(wal.LabeledPanel):
@@ -248,3 +252,86 @@ class AlignPanel(wal.LabeledPanel):
 			trafo = self.get_trafo(source_bbox, item.cache_bbox)
 			obj_trafo_list.append((item, trafo))
 		doc.api.trasform_objs(obj_trafo_list)
+
+
+#--- Distribute constants
+
+DISTRIBUTE_BOTTOM = -1.0
+DISTRIBUTE_LEFT = -1.0
+DISTRIBUTE_CENTER = 0.0
+DISTRIBUTE_RIGHT = 1.0
+DISTRIBUTE_TOP = 1.0
+DISTRIBUTE_HGAP = 2.0
+DISTRIBUTE_VGAP = 2.0
+
+H_DISTRIBUTE_MODES = [DISTRIBUTE_LEFT, DISTRIBUTE_CENTER,
+					DISTRIBUTE_RIGHT, DISTRIBUTE_HGAP]
+
+H_DISTRIBUTE_MODE_ICONS = {
+DISTRIBUTE_LEFT:make_artid('distribute-h-le'),
+DISTRIBUTE_CENTER:make_artid('distribute-h-c'),
+DISTRIBUTE_RIGHT:make_artid('distribute-h-re'),
+DISTRIBUTE_HGAP:make_artid('distribute-h-gap')
+}
+
+H_DISTRIBUTE_MODE_NAMES = {
+DISTRIBUTE_LEFT:_('Distribute by left side horizontally'),
+DISTRIBUTE_CENTER:_('Distribute by center horizontally'),
+DISTRIBUTE_RIGHT:_('Distribute by right side horizontally'),
+DISTRIBUTE_HGAP:_('Equal gap horizontally')
+}
+
+V_DISTRIBUTE_MODES = [DISTRIBUTE_BOTTOM, DISTRIBUTE_CENTER,
+					DISTRIBUTE_TOP, DISTRIBUTE_VGAP]
+
+V_DISTRIBUTE_MODE_ICONS = {
+DISTRIBUTE_BOTTOM:make_artid('distribute-v-be'),
+DISTRIBUTE_CENTER:make_artid('distribute-v-c'),
+DISTRIBUTE_TOP:make_artid('distribute-v-te'),
+DISTRIBUTE_VGAP:make_artid('distribute-v-gap')
+}
+
+V_DISTRIBUTE_MODE_NAMES = {
+DISTRIBUTE_BOTTOM:_('Distribute by bottom side vertically'),
+DISTRIBUTE_CENTER:_('Distribute by center vertically'),
+DISTRIBUTE_TOP:_('Distribute by top side vertically'),
+DISTRIBUTE_VGAP:_('Equal gap vertically')
+}
+
+class DistributePanel(wal.LabeledPanel):
+
+	app = None
+
+	def __init__(self, parent, app):
+		self.app = app
+		wal.LabeledPanel.__init__(self, parent, _('Distribute'))
+
+		self.pack((5, 5))
+
+		self.hdistrib = wal.HToggleKeeper(self, H_DISTRIBUTE_MODES,
+							H_DISTRIBUTE_MODE_ICONS, H_DISTRIBUTE_MODE_NAMES,
+							on_change=self.update, allow_none=True)
+		self.pack(self.hdistrib)
+		self.hdistrib.set_mode(DISTRIBUTE_CENTER)
+
+		self.vdistrib = wal.HToggleKeeper(self, V_DISTRIBUTE_MODES,
+							V_DISTRIBUTE_MODE_ICONS, V_DISTRIBUTE_MODE_NAMES,
+							on_change=self.update, allow_none=True)
+		self.pack(self.vdistrib, padding_all=5)
+		self.vdistrib.set_mode(DISTRIBUTE_CENTER)
+
+		self.apply_btn = wal.Button(self, _('Apply'), onclick=self.action)
+		self.pack(self.apply_btn, padding_all=5, fill=True)
+
+	def update(self, *args):
+		self.hdistrib.set_enable(False)
+		self.vdistrib.set_enable(False)
+		self.apply_btn.set_enable(False)
+		if not self.app.insp.is_selection(): return
+		if len(self.app.current_doc.selection.objs) < 3: return
+		self.hdistrib.set_enable(True)
+		self.vdistrib.set_enable(True)
+		if not self.hdistrib.get_mode() is None or not self.vdistrib.get_mode() is None:
+			self.apply_btn.set_enable(True)
+
+	def action(self):pass
