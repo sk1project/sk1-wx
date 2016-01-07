@@ -41,7 +41,7 @@ SOURCE_PAGE = 0
 SOURCE_SEL = 1
 SOURCE_FIRST = 2
 SOURCE_LAST = 3
-SOURCE_LAGEST = 4
+SOURCE_BIGGEST = 4
 SOURCE_SMALLEST = 5
 
 SOURCE_NAMES = [
@@ -49,7 +49,7 @@ _('Page'),
 _('Selection'),
 _('First selected'),
 _('Last selected'),
-_('Largest object'),
+_('Biggest object'),
 _('Smallest object'),
 ]
 
@@ -178,6 +178,21 @@ class AlignPanel(wal.LabeledPanel):
 		if self.valign.get_mode() is None and self.halign.get_mode() is None:
 			self.apply_btn.set_enable(False)
 
+	def get_obj_areas(self, objs):
+		areas = []
+		for obj in objs:
+			bbox = obj.cache_bbox
+			areas.append((bbox[2] - bbox[0]) * (bbox[3] - bbox[1]))
+		return areas
+
+	def get_smallest_obj(self, objs):
+		areas = self.get_obj_areas(objs)
+		return objs[areas.index(min(areas))]
+
+	def get_biggest_obj(self, objs):
+		areas = self.get_obj_areas(objs)
+		return objs[areas.index(max(areas))]
+
 	def get_trafo(self, source_bbox, target_bbox):
 		sw = source_bbox[2] - source_bbox[0]
 		sh = source_bbox[3] - source_bbox[1]
@@ -199,28 +214,38 @@ class AlignPanel(wal.LabeledPanel):
 		return trafo
 
 	def action(self):
+		doc = self.app.current_doc
 		if not self.source.get_active():
-			pw, ph = self.app.current_doc.get_page_size()
+			pw, ph = doc.get_page_size()
 			source_bbox = [-pw / 2.0, -ph / 2.0, pw / 2.0, ph / 2.0]
 			if self.group.get_value():
 				trafo = self.get_trafo(source_bbox, self.get_selection_bbox())
-				self.app.current_doc.api.transform_selected(trafo)
+				doc.api.transform_selected(trafo)
 				return
 			else:
-				sel_objs = [] + self.app.current_doc.selection.objs
+				sel_objs = [] + doc.selection.objs
 		elif self.source.get_active() == SOURCE_SEL:
 			source_bbox = self.get_selection_bbox()
-			sel_objs = [] + self.app.current_doc.selection.objs
+			sel_objs = [] + doc.selection.objs
 		elif self.source.get_active() == SOURCE_FIRST:
-			source_bbox = [] + self.app.current_doc.selection.objs[0].cache_bbox
+			source_bbox = [] + doc.selection.objs[0].cache_bbox
 			sel_objs = self.app.current_doc.selection.objs[1:]
 		elif self.source.get_active() == SOURCE_LAST:
-			source_bbox = [] + self.app.current_doc.selection.objs[-1].cache_bbox
+			source_bbox = [] + doc.selection.objs[-1].cache_bbox
 			sel_objs = self.app.current_doc.selection.objs[:-1]
-
+		elif self.source.get_active() == SOURCE_SMALLEST:
+			sel_objs = [] + doc.selection.objs
+			smallest = self.get_smallest_obj(sel_objs)
+			source_bbox = [] + smallest.cache_bbox
+			sel_objs.remove(smallest)
+		elif self.source.get_active() == SOURCE_BIGGEST:
+			sel_objs = [] + doc.selection.objs
+			biggest = self.get_biggest_obj(sel_objs)
+			source_bbox = [] + biggest.cache_bbox
+			sel_objs.remove(biggest)
 
 		obj_trafo_list = []
 		for item in sel_objs:
 			trafo = self.get_trafo(source_bbox, item.cache_bbox)
 			obj_trafo_list.append((item, trafo))
-		self.app.current_doc.api.trasform_objs(obj_trafo_list)
+		doc.api.trasform_objs(obj_trafo_list)
