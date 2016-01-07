@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2016 by Igor E. Novikov
 #
 # 	This program is free software: you can redistribute it and/or modify
 # 	it under the terms of the GNU General Public License as published by
@@ -164,7 +164,6 @@ class AlignPanel(wal.LabeledPanel):
 		self.group.set_enable(False)
 		self.apply_btn.set_enable(False)
 		if not self.app.insp.is_selection(): return
-
 		self.source.set_enable(True)
 		if self.source.get_active():
 			self.group.set_value(False, False)
@@ -215,7 +214,7 @@ class AlignPanel(wal.LabeledPanel):
 
 	def action(self):
 		doc = self.app.current_doc
-		if not self.source.get_active():
+		if self.source.get_active() == SOURCE_PAGE:
 			pw, ph = doc.get_page_size()
 			source_bbox = [-pw / 2.0, -ph / 2.0, pw / 2.0, ph / 2.0]
 			if self.group.get_value():
