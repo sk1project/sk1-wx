@@ -256,44 +256,45 @@ class AlignPanel(wal.LabeledPanel):
 
 #--- Distribute constants
 
-DISTRIBUTE_BOTTOM = -1.0
-DISTRIBUTE_LEFT = -1.0
-DISTRIBUTE_CENTER = 0.0
-DISTRIBUTE_RIGHT = 1.0
-DISTRIBUTE_TOP = 1.0
-DISTRIBUTE_HGAP = 2.0
-DISTRIBUTE_VGAP = 2.0
+DISTRIBUTE_LEFT = 0
+DISTRIBUTE_BOTTOM = 1
+DISTRIBUTE_HCENTER = 4
+DISTRIBUTE_VCENTER = 5
+DISTRIBUTE_RIGHT = 2
+DISTRIBUTE_TOP = 3
+DISTRIBUTE_HGAP = 6
+DISTRIBUTE_VGAP = 7
 
-H_DISTRIBUTE_MODES = [DISTRIBUTE_LEFT, DISTRIBUTE_CENTER,
+H_DISTRIBUTE_MODES = [DISTRIBUTE_LEFT, DISTRIBUTE_HCENTER,
 					DISTRIBUTE_RIGHT, DISTRIBUTE_HGAP]
 
 H_DISTRIBUTE_MODE_ICONS = {
 DISTRIBUTE_LEFT:make_artid('distribute-h-le'),
-DISTRIBUTE_CENTER:make_artid('distribute-h-c'),
+DISTRIBUTE_HCENTER:make_artid('distribute-h-c'),
 DISTRIBUTE_RIGHT:make_artid('distribute-h-re'),
 DISTRIBUTE_HGAP:make_artid('distribute-h-gap')
 }
 
 H_DISTRIBUTE_MODE_NAMES = {
 DISTRIBUTE_LEFT:_('Distribute by left side horizontally'),
-DISTRIBUTE_CENTER:_('Distribute by center horizontally'),
+DISTRIBUTE_HCENTER:_('Distribute by center horizontally'),
 DISTRIBUTE_RIGHT:_('Distribute by right side horizontally'),
 DISTRIBUTE_HGAP:_('Equal gap horizontally')
 }
 
-V_DISTRIBUTE_MODES = [DISTRIBUTE_BOTTOM, DISTRIBUTE_CENTER,
+V_DISTRIBUTE_MODES = [DISTRIBUTE_BOTTOM, DISTRIBUTE_VCENTER,
 					DISTRIBUTE_TOP, DISTRIBUTE_VGAP]
 
 V_DISTRIBUTE_MODE_ICONS = {
 DISTRIBUTE_BOTTOM:make_artid('distribute-v-be'),
-DISTRIBUTE_CENTER:make_artid('distribute-v-c'),
+DISTRIBUTE_VCENTER:make_artid('distribute-v-c'),
 DISTRIBUTE_TOP:make_artid('distribute-v-te'),
 DISTRIBUTE_VGAP:make_artid('distribute-v-gap')
 }
 
 V_DISTRIBUTE_MODE_NAMES = {
 DISTRIBUTE_BOTTOM:_('Distribute by bottom side vertically'),
-DISTRIBUTE_CENTER:_('Distribute by center vertically'),
+DISTRIBUTE_VCENTER:_('Distribute by center vertically'),
 DISTRIBUTE_TOP:_('Distribute by top side vertically'),
 DISTRIBUTE_VGAP:_('Equal gap vertically')
 }
@@ -312,13 +313,13 @@ class DistributePanel(wal.LabeledPanel):
 							H_DISTRIBUTE_MODE_ICONS, H_DISTRIBUTE_MODE_NAMES,
 							on_change=self.update, allow_none=True)
 		self.pack(self.hdistrib)
-		self.hdistrib.set_mode(DISTRIBUTE_CENTER)
+		self.hdistrib.set_mode(DISTRIBUTE_HCENTER)
 
 		self.vdistrib = wal.HToggleKeeper(self, V_DISTRIBUTE_MODES,
 							V_DISTRIBUTE_MODE_ICONS, V_DISTRIBUTE_MODE_NAMES,
 							on_change=self.update, allow_none=True)
 		self.pack(self.vdistrib, padding_all=5)
-		self.vdistrib.set_mode(DISTRIBUTE_CENTER)
+		self.vdistrib.set_mode(DISTRIBUTE_VCENTER)
 
 		self.apply_btn = wal.Button(self, _('Apply'), onclick=self.action)
 		self.pack(self.apply_btn, padding_all=5, fill=True)
@@ -334,4 +335,69 @@ class DistributePanel(wal.LabeledPanel):
 		if not self.hdistrib.get_mode() is None or not self.vdistrib.get_mode() is None:
 			self.apply_btn.set_enable(True)
 
-	def action(self):pass
+	def get_coord(self, obj, index):
+		bbox = obj.cache_bbox
+		if index < 4:
+			return bbox[index]
+		elif index == 4:
+			return bbox[0] + (bbox[2] - bbox[0]) / 2.0
+		else:
+			return bbox[1] + (bbox[3] - bbox[1]) / 2.0
+
+	def get_coord_list(self, objs, index=0):
+		ret = []
+		for obj in objs:
+			ret.append(self.get_coord(obj, index))
+		return ret
+
+	def sort_objs(self, objs, index=0):
+		objs = [] + objs
+		coords = self.get_coord_list(objs, index)
+		new_coords = [] + coords
+		new_coords.sort()
+		new_objs = []
+		for item in new_coords:
+			index = coords.index(item)
+			obj = objs[index]
+			coords.remove(item)
+			objs.remove(obj)
+			new_objs.append(obj)
+		return new_objs, new_coords
+
+	def action(self):
+		doc = self.app.current_doc
+		objs = [] + doc.selection.objs
+		trafo_dict = {}
+		for obj in objs:
+			trafo_dict[obj] = [] + sk2_const.NORMAL_TRAFO
+
+		if not self.hdistrib.get_mode() is None:
+			mode = self.hdistrib.get_mode()
+			if mode < DISTRIBUTE_HGAP:
+				new_objs, coords = self.sort_objs(objs, mode)
+				shift = coords[-1] - coords[0] / float(len(objs) - 1)
+				i = 0.0
+				start = self.get_coord(new_objs[0], mode)
+				for obj in new_objs:
+					coord = self.get_coord(obj, mode)
+					trafo_dict[obj][4] += start + i * shift - coord
+					i += 1.0
+
+		if not self.vdistrib.get_mode() is None:
+			mode = self.vdistrib.get_mode()
+			if mode < DISTRIBUTE_HGAP:
+				new_objs, coords = self.sort_objs(objs, mode)
+				shift = coords[-1] - coords[0] / float(len(objs) - 1)
+				i = 0.0
+				start = self.get_coord(new_objs[0], mode)
+				for obj in new_objs:
+					coord = self.get_coord(obj, mode)
+					trafo_dict[obj][5] += start + i * shift - coord
+					i += 1.0
+
+		obj_trafo_list = []
+		for item in objs:
+			obj_trafo_list.append((item, trafo_dict[item]))
+		doc.api.trasform_objs(obj_trafo_list)
+
+
