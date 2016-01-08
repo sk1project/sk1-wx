@@ -103,9 +103,9 @@ data_files = [
 ('/usr/share/applications', ['src/sk1.desktop', ]),
 ('/usr/share/pixmaps', ['src/sk1.png', 'src/sk1.xpm', ]),
 ]
-deb_depends = 'liblcms (>=2.0), python (>=2.4), python (<<3.0), python-wxgtk2.8, '
-deb_depends += 'python-cairo, python-gtk2, python-reportlab, python-imaging, '
-deb_depends += 'python-wand'
+deb_depends = 'liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), '
+deb_depends += 'python-wxgtk2.8, python-cairo, python-gtk2, python-reportlab, '
+deb_depends += 'python-imaging, python-wand'
 
 dirs = buildutils.get_dirs_tree('src/sk1/share')
 share_dirs = []
