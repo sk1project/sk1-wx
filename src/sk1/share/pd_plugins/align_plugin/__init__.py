@@ -332,7 +332,8 @@ class DistributePanel(wal.LabeledPanel):
 		if len(self.app.current_doc.selection.objs) < 3: return
 		self.hdistrib.set_enable(True)
 		self.vdistrib.set_enable(True)
-		if not self.hdistrib.get_mode() is None or not self.vdistrib.get_mode() is None:
+		if not self.hdistrib.get_mode() is None or \
+		not self.vdistrib.get_mode() is None:
 			self.apply_btn.set_enable(True)
 
 	def get_coord(self, obj, index):
@@ -343,6 +344,14 @@ class DistributePanel(wal.LabeledPanel):
 			return bbox[0] + (bbox[2] - bbox[0]) / 2.0
 		else:
 			return bbox[1] + (bbox[3] - bbox[1]) / 2.0
+
+	def get_obj_width(self, obj):
+		bbox = obj.cache_bbox
+		return bbox[2] - bbox[0]
+
+	def get_obj_height(self, obj):
+		bbox = obj.cache_bbox
+		return bbox[3] - bbox[1]
 
 	def get_coord_list(self, objs, index=0):
 		ret = []
@@ -375,25 +384,54 @@ class DistributePanel(wal.LabeledPanel):
 			mode = self.hdistrib.get_mode()
 			if mode < DISTRIBUTE_HGAP:
 				new_objs, coords = self.sort_objs(objs, mode)
-				shift = coords[-1] - coords[0] / float(len(objs) - 1)
+				shift = (coords[-1] - coords[0]) / float(len(objs) - 1)
 				i = 0.0
 				start = self.get_coord(new_objs[0], mode)
 				for obj in new_objs:
 					coord = self.get_coord(obj, mode)
 					trafo_dict[obj][4] += start + i * shift - coord
 					i += 1.0
+			else:
+				new_objs, coords = self.sort_objs(objs, DISTRIBUTE_LEFT)
+				total_w = 0
+				for obj in new_objs:
+					total_w += self.get_obj_width(obj)
+				available_w = self.get_coord(new_objs[-1], DISTRIBUTE_RIGHT)
+				available_w -= self.get_coord(new_objs[0], DISTRIBUTE_LEFT)
+				shift = (available_w - total_w) / float(len(objs) - 1)
+				pos = self.get_coord(new_objs[0], DISTRIBUTE_RIGHT)
+				for obj in new_objs[1:-1]:
+					pos += shift
+					coord = self.get_coord(obj, DISTRIBUTE_LEFT)
+					trafo_dict[obj][4] += pos - coord
+					pos += self.get_obj_width(obj)
 
 		if not self.vdistrib.get_mode() is None:
 			mode = self.vdistrib.get_mode()
-			if mode < DISTRIBUTE_HGAP:
+			if mode < DISTRIBUTE_VGAP:
 				new_objs, coords = self.sort_objs(objs, mode)
-				shift = coords[-1] - coords[0] / float(len(objs) - 1)
+				shift = (coords[-1] - coords[0]) / float(len(objs) - 1)
 				i = 0.0
 				start = self.get_coord(new_objs[0], mode)
 				for obj in new_objs:
 					coord = self.get_coord(obj, mode)
 					trafo_dict[obj][5] += start + i * shift - coord
 					i += 1.0
+			else:
+				new_objs, coords = self.sort_objs(objs, DISTRIBUTE_BOTTOM)
+				total_h = 0
+				for obj in new_objs:
+					total_h += self.get_obj_height(obj)
+				available_h = self.get_coord(new_objs[-1], DISTRIBUTE_TOP)
+				available_h -= self.get_coord(new_objs[0], DISTRIBUTE_BOTTOM)
+				shift = (available_h - total_h) / float(len(objs) - 1)
+				pos = self.get_coord(new_objs[0], DISTRIBUTE_TOP)
+				for obj in new_objs[1:-1]:
+					pos += shift
+					coord = self.get_coord(obj, DISTRIBUTE_BOTTOM)
+					trafo_dict[obj][5] += pos - coord
+					pos += self.get_obj_height(obj)
+
 
 		obj_trafo_list = []
 		for item in objs:
