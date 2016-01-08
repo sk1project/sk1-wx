@@ -85,7 +85,7 @@ LONG_DEB_DESCRIPTION = ''' .
  and postscript output.
  . 
  sK1 Project (http://sk1project.org),
- Copyright (C) 2007-2015 by Igor E. Novikov 
+ Copyright (C) 2007-2016 by Igor E. Novikov 
  .
 '''
 
