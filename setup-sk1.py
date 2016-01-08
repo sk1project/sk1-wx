@@ -2,7 +2,7 @@
 #
 #   Setup script for sK1 2.x
 #
-# 	Copyright (C) 2013-2015 by Igor E. Novikov
+# 	Copyright (C) 2013-2016 by Igor E. Novikov
 #
 # 	This program is free software: you can redistribute it and/or modify
 # 	it under the terms of the GNU General Public License as published by
@@ -76,7 +76,7 @@ Adobe Illustrator, or Freehand. First of all sK1 is oriented for prepress
 industry, therefore works with CMYK colorspace and produces CMYK-based PDF 
 and postscript output.
 sK1 Project (http://sk1project.org),
-Copyright (C) 2007-2015 by Igor E. Novikov 
+Copyright (C) 2007-2016 by Igor E. Novikov 
 '''
 LONG_DEB_DESCRIPTION = ''' .
  sK1 is an open source vector graphics editor similar to CorelDRAW, 

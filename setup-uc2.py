@@ -2,7 +2,7 @@
 #
 #   Setup script for UniConvertor 2.x
 #
-# 	Copyright (C) 2013-2015 by Igor E. Novikov
+# 	Copyright (C) 2013-2016 by Igor E. Novikov
 #
 # 	This program is free software: you can redistribute it and/or modify
 # 	it under the terms of the GNU General Public License as published by
@@ -90,7 +90,7 @@ LONG_DEB_DESCRIPTION = ''' .
  Uses PDXF model to convert one format to another. 
  . 
  sK1 Project (http://sk1project.org),
- Copyright (C) 2007-2015 by Igor E. Novikov 
+ Copyright (C) 2007-2016 by Igor E. Novikov 
  .
  Supported input formats:  
  PDXF, CDR, CDT, CCX, CDRX, CMX, AI, PS, EPS, CGM, WMF, XFIG, SVG, SK, SK1, 
