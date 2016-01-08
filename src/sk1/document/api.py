@@ -418,8 +418,9 @@ class PresenterAPI(AbstractAPI):
 			sel_before = [] + self.selection.objs
 			active_index_after = index
 
-			self.presenter.set_active_page(index)
+			self.presenter.canvas.set_mode()
 			self.selection.clear()
+			self.presenter.set_active_page(index)
 
 			transaction = [
 				[[self._set_selection, sel_before],
@@ -438,6 +439,7 @@ class PresenterAPI(AbstractAPI):
 		sel_before = [] + self.selection.objs
 		active_index_before = pages.index(self.presenter.active_page)
 
+		self.presenter.canvas.set_mode()
 		self.methods.delete_page(index)
 
 		active_index_after = 0
@@ -480,6 +482,7 @@ class PresenterAPI(AbstractAPI):
 			self.methods.add_layer(page)
 			page.do_update()
 
+		self.presenter.canvas.set_mode()
 		self.selection.clear()
 		self.presenter.set_active_page(active_index_after)
 
@@ -509,6 +512,7 @@ class PresenterAPI(AbstractAPI):
 		pages += new_pages
 		parent.do_update()
 
+		self.presenter.canvas.set_mode()
 		self.selection.clear()
 		self.presenter.set_active_page(active_index_after)
 
