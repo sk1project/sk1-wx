@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 #	Copyright (C) 2016 by Igor E. Novikov
+#	Copyright (C) 2002 by Tamito KAJIYAMA
 #
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
