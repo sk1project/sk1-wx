@@ -22,6 +22,7 @@ from uc2.formats.sk2 import sk2_const
 
 from flattering import flat_path
 from points import distance, mult_point, add_points
+from cwrap import get_cpath_bbox, create_cpath
 
 
 def bezier_base_point(point):
@@ -48,6 +49,9 @@ def get_paths_length(paths):
 	for item in paths:
 		ret += get_path_length(item)
 	return ret
+
+def get_paths_bbox(paths):
+	return get_cpath_bbox(create_cpath(paths))
 
 def split_bezier_curve(start_point, end_point, t=0.5):
 	p0 = [] + start_point
