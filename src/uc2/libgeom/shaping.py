@@ -43,7 +43,7 @@ def pack_seg(seg_type, ctrls, node, cont):
 
 
 
-#--- Hashable containers
+#--- HASHABLE CONTAINERS
 
 class CurveObject:
 
@@ -359,7 +359,7 @@ def intersect_objects(curve_objs):
 	return new_paths, untouched_paths
 
 
-#---   PATH CONCATENATION
+#--- PATH CONCATENATION
 
 def on_line(p, a, b):
 	if not in_range(p, a, b):
@@ -460,4 +460,4 @@ def join(paths):
 		paths = filter(lambda x: x is not None, paths)
 	return buff
 
-#--- Module interface
+#--- MODULE INTERFACE
