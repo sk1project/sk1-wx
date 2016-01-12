@@ -26,7 +26,7 @@ from copy import deepcopy
 
 from bbox import is_bbox_overlap
 from points import mult_point, add_points
-from bezier_ops import bezier_base_point
+from bezier_ops import bezier_base_point, get_paths_bbox
 
 PRECISION = 8
 
@@ -460,4 +460,22 @@ def join(paths):
 		paths = filter(lambda x: x is not None, paths)
 	return buff
 
+
 #--- MODULE INTERFACE
+
+def intersect_paths(paths1, paths2):
+	buff = []
+	objs = [CurveObject(paths1), CurveObject(paths2)]
+	new_paths = intersect_objects(objs)[0]
+	if not new_paths: return None
+	for i, paths in new_paths:
+		if i == 0:
+			container = objs[1]
+			bbox = get_paths_bbox(paths2)
+		else:
+			container = objs[0]
+			bbox = get_paths_bbox(paths1)
+		for cp1, path, cp2 in paths:
+			if contained(path, container, bbox):
+				buff.append((cp1, path, cp2))
+	return join(buff)
