@@ -152,7 +152,7 @@ class PathObject:
 	def get_seg(self, index):
 		return [] + self.path[1][index]
 
-#--- CURVE APPROXIMATION
+#--- PATH APPROXIMATION
 
 def subdivide(m, n, t=0.5):
 	return m + t * (n - m)
@@ -193,7 +193,7 @@ def approximate_path(path_obj):
 		last = point
 	return ret
 
-#--- CURVE INTERSECTION
+#--- PATH INTERSECTION
 
 class IntersectionIndex(UserDict.UserDict):
 
