@@ -101,3 +101,10 @@ def bbox_size(bbox):
 	v = (y1 - y0)
 	return h, v
 
+def is_bbox_overlap(bbox1, bbox2):
+	new_bbox = [min(bbox1[0], bbox2[0]), min(bbox1[1], bbox2[1]),
+			max(bbox1[2], bbox2[2]), max(bbox1[3], bbox2[3])]
+	w1, h1 = bbox_size(bbox1)
+	w2, h2 = bbox_size(bbox2)
+	w, h = bbox_size(new_bbox)
+	return w <= w1 + w2 and h <= h1 + h2
