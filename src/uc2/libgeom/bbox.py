@@ -102,9 +102,17 @@ def bbox_size(bbox):
 	return h, v
 
 def is_bbox_overlap(bbox1, bbox2):
-	new_bbox = [min(bbox1[0], bbox2[0]), min(bbox1[1], bbox2[1]),
-			max(bbox1[2], bbox2[2]), max(bbox1[3], bbox2[3])]
+	new_bbox = sum_bbox(bbox1, bbox2)
 	w1, h1 = bbox_size(bbox1)
 	w2, h2 = bbox_size(bbox2)
 	w, h = bbox_size(new_bbox)
 	return w <= w1 + w2 and h <= h1 + h2
+
+def is_bbox_in_bbox(bbox1, bbox2):
+	new_bbox = sum_bbox(bbox1, bbox2)
+	w1, h1 = bbox_size(bbox1)
+	w2, h2 = bbox_size(bbox2)
+	w, h = bbox_size(new_bbox)
+	if w == w2 and h == h2: return True
+	if w == w1 and h == h1: return True
+	return False
