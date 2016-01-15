@@ -1268,6 +1268,7 @@ class PresenterAPI(AbstractAPI):
 		obj.style = deepcopy(self.model.styles['Default Style'])
 		obj.update()
 		self.insert_object(obj, parent, len(parent.childs))
+		return obj
 
 	def update_curve(self, obj, paths, trafo=[1.0, 0.0, 0.0, 1.0, 0.0, 0.0]):
 		sel_before = [obj, ]
