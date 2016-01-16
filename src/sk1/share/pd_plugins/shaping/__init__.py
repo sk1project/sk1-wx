@@ -19,7 +19,7 @@
 import os, wal
 
 from uc2.formats.sk2 import sk2_const
-from uc2.libgeom import intersect_paths, apply_trafo_to_paths
+from uc2.libgeom import intersect_paths, fusion_paths, apply_trafo_to_paths
 
 from sk1 import _, events
 from sk1.app_plugins import RS_Plugin
@@ -68,6 +68,6 @@ class Shaping_Plugin(RS_Plugin):
 		objs = sel_objs[:2]
 		paths1 = apply_trafo_to_paths(objs[0].paths, objs[0].trafo)
 		paths2 = apply_trafo_to_paths(objs[1].paths, objs[1].trafo)
-		new_paths = intersect_paths(paths1, paths2)
+		new_paths = fusion_paths(paths1, paths2)
 		if new_paths:
 			doc.api.create_curve(new_paths)
