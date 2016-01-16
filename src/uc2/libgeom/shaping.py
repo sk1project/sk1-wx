@@ -472,22 +472,31 @@ def contained(curve_obj, path_obj):
 				return False
 	return True
 
+INTERSECT_RULE = 0
+FUSION_RULE = 1
+CUTTING_RULE = 3
 
-#--- MODULE INTERFACE
-
-def intersect_paths(paths1, paths2):
+def intersect_and_join(paths1, paths2, rule=INTERSECT_RULE):
 	objs = [CurveObject(paths1, 0), CurveObject(paths2, 1)]
+	if not is_bbox_overlap(objs[0].get_bbox(), objs[1].get_bbox()): return None
 	new_paths = intersect_objects(objs)
 	if not new_paths: return None
 
 	buff = []
 	closed_paths = []
 	for item in new_paths:
-		if contained(objs[abs(item.obj_id - 1)], item):
-			if item.is_closed():
-				closed_paths.append(item)
-			else:
-				buff.append(item)
+		if rule == INTERSECT_RULE and \
+			not contained(objs[abs(item.obj_id - 1)], item): continue
+		if rule == FUSION_RULE and \
+			contained(objs[abs(item.obj_id - 1)], item): continue
+		if rule == CUTTING_RULE:
+			if not item.obj_id and not contained(objs[1], item): pass
+			elif item.obj_id and contained(objs[0], item): pass
+			else: continue
+		if item.is_closed():
+			closed_paths.append(item)
+		else:
+			buff.append(item)
 
 	while len(buff):
 		start = buff[0]
@@ -512,3 +521,15 @@ def intersect_paths(paths1, paths2):
 
 	for obj in objs: obj.destroy()
 	return result
+
+
+#--- MODULE INTERFACE
+
+def intersect_paths(paths1, paths2):
+	return intersect_and_join(paths1, paths2)
+
+def fusion_paths(paths1, paths2):
+	return intersect_and_join(paths1, paths2, FUSION_RULE)
+
+def trim_paths(target_paths, source_paths):
+	return intersect_and_join(target_paths, source_paths, CUTTING_RULE)
