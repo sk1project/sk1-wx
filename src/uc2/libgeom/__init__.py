@@ -22,6 +22,7 @@ from cwrap import *
 from flattering import get_flattened_path, flat_paths, flat_path
 from objs import *
 from bezier_ops import *
+from shaping import intersect_paths
 
 
 """
