@@ -427,7 +427,8 @@ def intersect_objects(curve_objs):
 		for j in range(i + 1, len(approx_paths)):
 			for path1, approx_path1, rect1 in approx_paths[i]:
 				for path2, approx_path2, rect2 in approx_paths[j]:
-					if is_bbox_overlap(rect1, rect2) and not path1.obj_id == path2.obj_id:
+					if not path1.obj_id == path2.obj_id and \
+								is_bbox_overlap(rect1, rect2):
 						for p in range(1, len(approx_path1)):
 							(p0, t0), (p1, t1) = approx_path1[p - 1:p + 1]
 							for q in range(1, len(approx_path2)):
