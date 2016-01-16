@@ -38,6 +38,10 @@ def bbox_center(bbox):
 	my = (y1 - y0) / 2.0 + y0
 	return [mx, my]
 
+def enlarge_bbox(bbox, dx=0.0, dy=0.0):
+	x0, y0, x1, y1 = bbox
+	return [x0 - dx / 2.0, y0 - dy / 2.0, x1 + dx / 2.0, y1 + dy / 2.0]
+
 def bbox_trafo(bbox0, bbox1):
 	x0_0, y0_0, x1_0, y1_0 = normalize_bbox(bbox0)
 	x0_1, y0_1, x1_1, y1_1 = normalize_bbox(bbox1)
