@@ -16,17 +16,16 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#base.intersect_objects([object1, object2])
-#base.contained(path, container)
-#base.join(parts1)
 
-import math
-import UserDict
+import math, cairo
 from copy import deepcopy
 
-from bbox import is_bbox_overlap
+from uc2 import libcairo
+
+from bbox import is_bbox_overlap, is_bbox_in_bbox, sum_bbox, enlarge_bbox
 from points import mult_point, add_points
 from bezier_ops import bezier_base_point, get_paths_bbox
+from cwrap import create_cpath
 
 PRECISION = 8
 
@@ -42,34 +41,123 @@ def pack_seg(seg_type, ctrls, node, cont):
 	return [ctrls[0], ctrls[1], node, cont]
 
 
+class ObjHitSurface:
+
+	surface = None
+	ctx = None
+	canvas = None
+	cpaths = None
+
+	def __init__(self, obj):
+		self.obj = obj
+		self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
+		self.ctx = cairo.Context(self.surface)
+
+	def destroy(self):
+		for item in self.__dict__.keys():
+			self.__dict__[item] = None
+
+	def clear(self):
+		self.ctx.set_source_rgb(1, 1, 1)
+		self.ctx.paint()
+		self.ctx.set_source_rgb(0, 0, 0)
+
+	def set_trafo(self, point):
+		trafo = [1.0, 0.0, 0.0, 1.0, -point[0], -point[1]]
+		self.ctx.set_matrix(libcairo.get_matrix_from_trafo(trafo))
+
+	def check_point(self, point):
+		self.clear()
+		self.set_trafo(point)
+		if self.cpaths is None: self.cpaths = self.obj.get_cpaths()
+		self.ctx.set_fill_rule(cairo.FILL_RULE_EVEN_ODD)
+		self.ctx.new_path()
+		self.ctx.append_path(self.cpaths)
+		self.ctx.fill()
+		self.ctx.set_line_width(2.0)
+		self.ctx.new_path()
+		self.ctx.append_path(self.cpaths)
+		self.ctx.stroke()
+		return not libcairo.check_surface_whiteness(self.surface)
+
 
 #--- HASHABLE CONTAINERS
 
 class CurveObject:
 
+	obj_id = None
 	path_objs = None
+	hit_test = None
 
-	def __init__(self, paths):
+	def __init__(self, paths, obj_id=0):
 		self.path_objs = []
+		self.obj_id = obj_id
 		for path in paths:
-			self.path_objs.append(PathObject(path))
+			self.path_objs.append(PathObject(path, obj_id))
+
+	def destroy(self):
+		if self.hit_test: self.hit_test.destroy()
+		for item in self.__dict__.keys():
+			self.__dict__[item] = None
+
+	def get_bbox(self):
+		self.path_objs[0].update_bbox()
+		bbox = [] + self.path_objs[0].bbox
+		for i in range(1, len(self.path_objs)):
+			self.path_objs[i].update_bbox()
+			bbox = sum_bbox(bbox, self.path_objs[i].bbox)
+		return bbox
+
+	def update_bbox(self):
+		self.bbox = self.get_bbox()
 
 	def paths(self):
 		return self.path_objs
 
+	def get_cpaths(self):
+		paths = []
+		for item in self.path_objs:
+			paths.append(item.get_path())
+		return create_cpath(paths)
+
+	def is_point_inside(self, point):
+		if self.hit_test is None:
+			self.hit_test = ObjHitSurface(self)
+		return self.hit_test.check_point(point)
+
 class PathObject:
 
+	bbox = []
 	path = []
+	cp_indexes = []
+	obj_id = 0
+	cp_dict = {}
+	start_id = None
+	end_id = None
 
-	def __init__(self, path):
+	def __init__(self, path, obj_id=0):
 		self.path = path
+		self.cp_indexes = []
+		self.cp_dict = {}
+		self.obj_id = obj_id
+
+	def update_bbox(self):
+		self.bbox = get_paths_bbox([self.path, ])
+
+	def get_path(self):
+		return deepcopy(self.path)
 
 	def get_segments(self):
 		return deepcopy(self.path[1])
 
+	def get_points(self):
+		result = [self.get_start_point(), ]
+		for item in self.get_segments():
+			result.append(bezier_base_point(item))
+		return result
+
 	def get_len(self):
-		if self.is_closed(): return len(self.path[1])
-		return len(self.path[1]) + 1
+		return len(self.path[1])
 
 	def get_start_point(self):
 		return [] + self.path[0]
@@ -84,6 +172,34 @@ class PathObject:
 		self.path[-1] = 1
 		if not self.path[0] == bezier_base_point(self.path[1][-1]):
 			self.path[1].append(self.get_start_point())
+
+	def unclose_path(self):
+		self.path[-1] = 0
+
+	def append_seg(self, seg):
+		self.path[1].append(seg)
+		self.path[-1] = 0
+
+	def append_segs(self, segs):
+		self.path[1] += segs
+
+	def get_seg(self, index):
+		return [] + self.path[1][index]
+
+	def get_node(self, index):
+		index -= 1
+		if index < 0: return self.get_start_point()
+		return deepcopy(self.path[1][index])
+
+	def get_test_point(self, index=0):
+		if index >= len(self.path[1]):
+			index = len(self.path[1]) - 1
+		if not index:
+			base_point = self.get_start_point()
+		else:
+			base_point = bezier_base_point(self.get_seg(index - 1))
+		point = self.get_seg(index)
+		return self.split_seg(base_point, point)[1]
 
 	def split_seg(self, base_point, point, t=0.5):
 		if is_bezier(point):
@@ -102,55 +218,101 @@ class PathObject:
 						mult_point(point, t))
 			return [new_point, [] + new_point, None]
 
-	def split_path_at(self, at):
+	def split_path_at(self, at, cross_id=0):
 		index = int(at)
 		t = at - index
-		if self.is_closed():
-			if not at or at == float(self.get_len()):
-				new_path = deepcopy(self.path)
-				new_path[-1] = 0
-				return[PathObject(new_path), ]
-			elif not t:
-				segs = self.get_segments()
-				new_segs = segs[index:] + segs[:index]
-				start = bezier_base_point(segs[index - 1])
-				return[PathObject([start, new_segs, 0]), ]
-			else:
-				segs = self.get_segments()
-				base_point = bezier_base_point(segs[index - 1])
-				end, start, seg0 = self.split_seg(base_point, segs[index], t)
-				new_segs = segs[index:] + segs[:index] + [end, ]
-				if not seg0 is None: new_segs[0] = seg0
-				return[PathObject([start, new_segs, 0]), ]
+		if not at or at == float(self.get_len() - 1):
+			new_path = deepcopy(self.path)
+			new_path[-1] = 0
+			path_obj = PathObject(new_path)
+			path_obj.start_id = path_obj.end_id = cross_id
+			path_obj.obj_id = self.obj_id
+			return[path_obj, ]
+		elif not t:
+			segs = self.get_segments()
+			new_segs1 = segs[:index]
+			start1 = self.get_start_point()
+			new_segs2 = segs[index:]
+			start2 = bezier_base_point(self.get_node(index))
 		else:
-			if not at or at == float(self.get_len() - 1):
-				new_path = deepcopy(self.path)
-				new_path[-1] = 0
-				return[PathObject(new_path), ]
-			elif not t:
-				segs = self.get_segments()
-				new_segs1 = segs[:index]
-				start1 = self.get_start_point()
-				new_segs2 = segs[index:]
-				start2 = bezier_base_point(segs[index - 1])
-				return[PathObject([start1, new_segs1, 0]),
-					PathObject([start2, new_segs2, 0])]
-			else:
-				segs = self.get_segments()
-				base_point = bezier_base_point(segs[index - 1])
-				end, start2, seg0 = self.split_seg(base_point, segs[index], t)
-				new_segs1 = segs[:index] + [end, ]
-				start1 = self.get_start_point()
-				new_segs2 = segs[index:]
-				if not seg0 is None: new_segs2[0] = seg0
-				return[PathObject([start1, new_segs1, 0]),
-					PathObject([start2, new_segs2, 0])]
+			segs = self.get_segments()
+			base_point = bezier_base_point(self.get_node(index))
+			end, start2, seg0 = self.split_seg(base_point, segs[index], t)
+			new_segs1 = segs[:index] + [end, ]
+			start1 = self.get_start_point()
+			new_segs2 = segs[index:]
+			if not seg0 is None: new_segs2[0] = seg0
+		path_obj1 = PathObject([start1, new_segs1, 0])
+		path_obj1.start_id = self.start_id
+		path_obj1.end_id = cross_id
+		path_obj1.obj_id = self.obj_id
+		path_obj2 = PathObject([start2, new_segs2, 0])
+		path_obj2.start_id = cross_id
+		path_obj2.obj_id = self.obj_id
+		path_obj2.end_id = self.end_id
+		return[path_obj1, path_obj2]
 
-	def append_seg(self, seg):
-		self.path[1].append(seg)
+	def split(self):
+		if self.cp_indexes:
+			self.cp_indexes.sort()
+			self.cp_indexes.reverse()
+			target = self
+			result = []
+			previous_at = None
+			self.unclose_path()
+			for at in self.cp_indexes:
+				real_at = at
+				if not previous_at is None and int(previous_at) == int(at):
+					real_at = (at - int(at)) / (previous_at - int(previous_at))
+					real_at += int(at)
+				pths = target.split_path_at(real_at, self.cp_dict[at])
+				previous_at = at
+				target = pths[0]
+				result = pths[1:] + result
+			result[-1].append_segs(target.get_segments())
+			result[-1].end_id = target.end_id
+			return result
+		else:
+			return [self, ]
 
-	def get_seg(self, index):
-		return [] + self.path[1][index]
+	def reverse_path(self):
+		start_point = self.get_start_point()
+		points = [start_point, ] + self.get_segments()
+		points.reverse()
+		data = []
+		for index in range(len(points)):
+			if is_bezier(points[index]) and data:
+				p0 = [] + data[1]
+				p1 = [] + data[0]
+				p2 = [] + points[index][2]
+				np = [p0, p1, p2, points[index][3]]
+				data = deepcopy(points[index])
+				points[index] = np
+			elif is_bezier(points[index]) and not data:
+				data = deepcopy(points[index])
+				points[index] = points[index][2]
+			elif not is_bezier(points[index]) and data:
+				p0 = [] + data[1]
+				p1 = [] + data[0]
+				p2 = [] + points[index]
+				points[index] = [p0, p1, p2, data[3]]
+				data = []
+		start = points[0]
+		segs = points[1:]
+		new_path_obj = PathObject([start, segs, 0])
+		new_path_obj.start_id = self.end_id
+		new_path_obj.end_id = self.start_id
+		return new_path_obj
+
+	def join_path(self, path_obj):
+		if self.end_id == path_obj.end_id:
+			path_obj = path_obj.reverse_path()
+		start = self.get_start_point()
+		segs = self.get_segments() + path_obj.get_segments()
+		new_path_obj = PathObject([start, segs, 0])
+		new_path_obj.start_id = self.start_id
+		new_path_obj.end_id = path_obj.end_id
+		return new_path_obj
 
 #--- PATH APPROXIMATION
 
@@ -178,41 +340,22 @@ def subdivide_curve(p0, p1, p2, p3, threshold=1.0, r=(0.0, 1.0)):
 	return ret
 
 def approximate_path(path_obj):
-	points = path_obj.get_segments()
-	ret = []
+	buff = []
 	last = path_obj.get_start_point()
-	for i in range(len(points)):
-		if is_bezier(points[i]):
-			control0, control1, point = points[i]
-			for p, t in subdivide_curve(last, control0, control1, point):
-				ret.append((p, i - 1.0 + t))
-			ret.append((point, float(i)))
+	buff.append((last, 0.0))
+	for i in range(path_obj.get_len()):
+		stype, control, point = unpack_seg(path_obj.get_seg(i))[:-1]
+		if stype:
+			for p, t in subdivide_curve(last, control[0], control[1], point):
+				buff.append((p, i + t))
+			buff.append((point, float(i + 1)))
 		else:
-			point = points[i]
-			ret.append((point, float(i)))
+			buff.append((point, float(i + 1)))
 		last = point
-	return ret
+	return buff
+
 
 #--- PATH INTERSECTION
-
-class IntersectionIndex(UserDict.UserDict):
-
-	def add(self, curve_obj, path_obj, index, cp):
-		index_table = self[curve_obj] = self.get(curve_obj, {})
-		segment_table = index_table[path_obj] = index_table.get(path_obj, {})
-		segment = int(index)
-		indexes = segment_table[segment] = segment_table.get(segment, [])
-		indexes.append([index - segment, cp])
-
-	def adjust(self):
-		for index_table in self.values():
-			for segment_table in index_table.values():
-				for indexes in segment_table.values():
-					indexes.sort()
-					for i in range(len(indexes)):
-						r = 1.0 - indexes[i][0]
-						for j in range(i + 1, len(indexes)):
-							indexes[j][0] = (indexes[j][0] - indexes[i][0]) / r
 
 def coord_rect(points):
 	p = points[0][0]
@@ -259,47 +402,6 @@ def index(cp, p0, t0, p1, t1):
 	else:
 		return subdivide(t0, t1, (cp[0] - p0[0]) / (p1[0] - p0[0]))
 
-def tidy(path):
-	# remove redundant node at the end of the path
-	if path.get_len() > 1:
-		segs = path.get_segments()
-		if not is_bezier(segs[-1]) and segs[-1] == bezier_base_point(segs[-2]):
-			start_point = path.get_start_point()
-			marker = 0
-			if path.is_closed(): marker = 1
-			return PathObject([start_point, segs[:-1], marker])
-	return path
-
-def split_paths(curve_obj, index_table):
-	buff = []
-	paths = curve_obj.paths()
-	for i in index_table.keys():
-		segments = index_table[i].keys()
-		segments.sort()
-		first = last = None
-		for j in range(len(segments)):
-			segment = segments[j]
-			for index, cp in index_table[i][segment]:
-				index = index + segment
-				if j > 0 and segment > 0:
-					index = index - segments[j - 1]
-				result = paths[i].split_path_at(index)
-				if paths[i].is_closed():
-					paths[i] = result[0]
-					first = cp
-				else:
-					paths[i] = result[1]
-					path = tidy(result[0])
-					if path.len > 1:
-						buff.append((last, path, cp))
-				segment = 0
-				last = cp
-		assert first is not None
-		path = tidy(paths[i])
-		if path.get_len() > 1:
-			buff.append((last, path, first))
-	return buff
-
 def intersect_objects(curve_objs):
 	# approximate paths of each object
 	approx_paths = []
@@ -313,19 +415,19 @@ def intersect_objects(curve_objs):
 			partials = []
 			for k in range(0, len(approx_path), 10):
 				partial = approx_path[k:k + 11]
-				partials.append((i, j, partial, coord_rect(partial)))
+				partials.append((paths[j], partial, coord_rect(partial)))
 			if len(partials[-1]) == 1:
 				partial = partials.pop()
 				partials[-1].extend(partial)
 			assert 1 not in map(len, partials)
 			approx_paths.append(partials)
 	# find intersections for each pair of approximated paths
-	table = IntersectionIndex()
+	cross_point_id = 0
 	for i in range(len(approx_paths)):
 		for j in range(i + 1, len(approx_paths)):
-			for object1, path1, approx_path1, rect1 in approx_paths[i]:
-				for object2, path2, approx_path2, rect2 in approx_paths[j]:
-					if is_bbox_overlap(rect1, rect2):
+			for path1, approx_path1, rect1 in approx_paths[i]:
+				for path2, approx_path2, rect2 in approx_paths[j]:
+					if is_bbox_overlap(rect1, rect2) and not path1.obj_id == path2.obj_id:
 						for p in range(1, len(approx_path1)):
 							(p0, t0), (p1, t1) = approx_path1[p - 1:p + 1]
 							for q in range(1, len(approx_path2)):
@@ -339,143 +441,73 @@ def intersect_objects(curve_objs):
 								else:
 									cp = intersect_lines(p0, p1, p2, p3)
 								if cp is not None:
-									##print "crossed at", cp
 									index1 = index(cp, p0, t0, p1, t1)
 									index2 = index(cp, p2, t2, p3, t3)
-									table.add(object1, path1, index1, cp)
-									table.add(object2, path2, index2, cp)
-	table.adjust()
-	# split paths at each intersection
-	new_paths = []
-	for i in table.keys():
-		new_paths.append((i, split_paths(curve_objs[i], table[i])))
-	# collect untouched paths
-	untouched_paths = []
-	for i in range(len(curve_objs)):
-		paths = curve_objs[i].paths()
-		for j in range(len(paths)):
-			if not table.has_key(i) or not table[i].has_key(j):
-				untouched_paths.append((i, paths[j].copy()))
-	return new_paths, untouched_paths
+									path1.cp_indexes.append(index1)
+									path1.cp_dict[index1] = cross_point_id
+									path2.cp_indexes.append(index2)
+									path2.cp_dict[index2] = cross_point_id
+									cross_point_id += 1
+	result = []
+	for obj in curve_objs:
+		for path in obj.paths():
+			result += path.split()
+	return result
 
 
-#--- PATH CONCATENATION
+def find_cross_id(path_objs, cross_id, obj_id):
+	for item in path_objs:
+		if item.end_id == cross_id or item.start_id == cross_id:
+			return item
+	return None
 
-def on_line(p, a, b):
-	if not in_range(p, a, b):
-		return 0
-	x1 = round(b[0] - a[0], PRECISION)
-	x2 = round(p[0] - a[0], PRECISION)
-	y1 = round(b[1] - a[1], PRECISION)
-	y2 = round(p[1] - a[1], PRECISION)
-	if x1 == 0:
-		return x2 == 0
-	if y1 == 0:
-		return y2 == 0
-	return round(x2 / x1, PRECISION) == round(y2 / y1, PRECISION)
-
-def on_outline(p0, p1, object_paths):
-	for approx_path in object_paths:
-		for i in range(1, len(approx_path)):
-			(p2, t), (p3, t) = approx_path[i - 1:i + 1]
-			if on_line(p0, p2, p3) and on_line(p1, p2, p3):
-				return 1
-	return 0
-
-def contained(path_obj, curve_obj, obj_bbox):
-	approx_path = approximate_path(path_obj)
-	object_paths = map(approximate_path, curve_obj.paths())
-	for i in range(1, len(approx_path)):
-		(p0, t), (p1, t) = approx_path[i - 1:i + 1]
-		if not on_outline(p0, p1, object_paths):
-			break
-	else:
-		return 1
-	p0 = [subdivide(p0[0], p1[0]), subdivide(p0[1], p1[1])]
-	p1 = [obj_bbox[0] - 1.0, obj_bbox[1] - 1.0]
-	count = 0
-	for approx_path in object_paths:
-		for i in range(1, len(approx_path)):
-			(p2, t), (p3, t) = approx_path[i - 1:i + 1]
-			cp = intersect_lines(p0, p1, p2, p3)
-			if cp is not None and (i == 1 or not equal(cp, p2)):
-				count = count + 1
-	return count % 2 == 1
-
-def find_circuit(path_objs, start, end, rest, circuit):
-	candidates = []
-	for i in rest:
-		cp1, path, cp2 = path_objs[i]
-		if equal(cp1, start):
-			candidates.append((i, cp2))
-		elif equal(cp2, start):
-			candidates.append((i, cp1))
-	if not candidates:
-		if equal(start, end):
-			return circuit
-		return None
-	longest_circuit = []
-	for i, next in candidates:
-		rest.remove(i)
-		new_circuit = find_circuit(path_objs, next, end, rest, circuit + [i])
-		if new_circuit is not None and len(longest_circuit) < len(new_circuit):
-			longest_circuit = new_circuit
-		rest.append(i)
-	return longest_circuit
-
-def join(paths):
-#	print "join()"
-#	for cp1, path, cp2 in paths:
-#		print cp1, "--", path.len, "--", cp2
-	buff = []
-	while paths:
-		end, path, start = paths.pop()
-		circuit = find_circuit(paths, start, end, range(len(paths)), [])
-		assert circuit is not None
-		new_path = path.copy()
-		for i in circuit:
-			cp1, path, cp2 = paths[i]
-			path_len = path.get_len()
-			if equal(cp1, start):
-				for j in range(1, path_len):
-					new_path.append_seg(path.get_seg(j))
-				start = cp2
-			elif equal(cp2, start):
-				seg = path.get_seg(path_len - 1)
-				last_type, last_control, node, cont = unpack_seg(seg)
-				for j in range(path_len - 2, -1, -1):
-					stype, control, node, cont = unpack_seg(path.get_seg(j))
-					if last_type:
-						last_control = (last_control[1], last_control[0])
-					new_seg = pack_seg(last_type, last_control, node, cont)
-					new_path.append_seg(new_seg)
-					last_type = stype
-					last_control = control
-				start = cp1
-			else:
-				raise RuntimeError, "should not reach here"
-			paths[i] = None
-		new_path.close_path()
-		buff.append(new_path)
-		paths = filter(lambda x: x is not None, paths)
-	return buff
+def contained(curve_obj, path_obj):
+	for item in path_obj.get_points():
+		if not curve_obj.is_point_inside(item):
+			return False
+	if path_obj.get_len() < 10:
+		for i in range(path_obj.get_len()):
+			if not curve_obj.is_point_inside(path_obj.get_test_point(i)):
+				return False
+	return True
 
 
 #--- MODULE INTERFACE
 
 def intersect_paths(paths1, paths2):
-	buff = []
-	objs = [CurveObject(paths1), CurveObject(paths2)]
-	new_paths = intersect_objects(objs)[0]
+	objs = [CurveObject(paths1, 0), CurveObject(paths2, 1)]
+	new_paths = intersect_objects(objs)
 	if not new_paths: return None
-	for i, paths in new_paths:
-		if i == 0:
-			container = objs[1]
-			bbox = get_paths_bbox(paths2)
+
+	buff = []
+	closed_paths = []
+	for item in new_paths:
+		if contained(objs[abs(item.obj_id - 1)], item):
+			if item.is_closed():
+				closed_paths.append(item)
+			else:
+				buff.append(item)
+
+	while len(buff):
+		start = buff[0]
+
+		if start.start_id == start.end_id:
+			start.close_path()
+			closed_paths.append(start)
+			buff.remove(start)
+			continue
+		cont = find_cross_id(buff[1:], start.end_id, start.obj_id)
+		if cont:
+			start = start.join_path(cont)
+			buff.remove(cont)
+			buff = [start, ] + buff[1:]
 		else:
-			container = objs[0]
-			bbox = get_paths_bbox(paths1)
-		for cp1, path, cp2 in paths:
-			if contained(path, container, bbox):
-				buff.append((cp1, path, cp2))
-	return join(buff)
+			closed_paths.append(start)
+			buff = buff[1:]
+
+	result = []
+	for item in closed_paths:
+		result.append(item.get_path())
+
+	for obj in objs: obj.destroy()
+	return result
