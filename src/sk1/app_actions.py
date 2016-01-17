@@ -145,6 +145,10 @@ def create_actions(app):
 (pdids.ID_GROUP, proxy.group, sel_chnls, insp.can_be_grouped),
 (pdids.ID_UNGROUP, proxy.ungroup, sel_chnls, insp.can_be_ungrouped),
 (pdids.ID_UNGROUPALL, proxy.ungroup_all, sel_chnls, insp.can_be_ungrouped_all),
+	(pdids.ID_PATHS_TRIM, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('ShapingPlugin', 0)),
+	(pdids.ID_PATHS_INTERSECTION, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('ShapingPlugin', 1)),
+	(pdids.ID_PATHS_EXCLUSION, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('ShapingPlugin', 2)),
+	(pdids.ID_PATHS_FUSION, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('ShapingPlugin', 3)),
 (pdids.ID_TO_CURVES, proxy.convert_to_curve, sel_chnls, insp.can_be_curve),
 #------ Effects menu -------
 (pdids.ID_TO_CONTAINER, proxy.set_container, sel_chnls, insp.is_selection),
