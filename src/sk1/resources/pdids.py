@@ -102,10 +102,13 @@ ID_LOWER_TO_BOTTOM = wx.NewId()
 ID_GROUP = wx.NewId()
 ID_UNGROUP = wx.NewId()
 ID_UNGROUPALL = wx.NewId()
-ID_TO_CURVES = wx.NewId()
-#----- Effects menu
+ID_PATHS_EXCLUSION = wx.NewId()
+ID_PATHS_FUSION = wx.NewId()
+ID_PATHS_INTERSECTION = wx.NewId()
+ID_PATHS_TRIM = wx.NewId()
 ID_TO_CONTAINER = wx.NewId()
 ID_FROM_CONTAINER = wx.NewId()
+ID_TO_CURVES = wx.NewId()
 
 #----- Paths menu
 ID_BEZIER_SEL_ALL_NODES = wx.NewId()

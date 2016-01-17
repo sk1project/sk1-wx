@@ -122,10 +122,14 @@ pdids.ID_LOWER_TO_BOTTOM:(_('Lower to &Bottom'),),
 pdids.ID_GROUP:(_('&Group'),),
 pdids.ID_UNGROUP:(_('&Ungroup'),),
 pdids.ID_UNGROUPALL:(_('U&ngroup All'),),
-pdids.ID_TO_CURVES:(_('Con&vert to curves'),),
-
+pdids.ID_PATHS_TRIM:(_('Trim...'),),
+pdids.ID_PATHS_INTERSECTION:(_('Intersection...'),),
+pdids.ID_PATHS_EXCLUSION:(_('Exclusion...'),),
+pdids.ID_PATHS_FUSION:(_('Fusion...'),),
 pdids.ID_TO_CONTAINER:(_('&Place into container'),),
 pdids.ID_FROM_CONTAINER:(_('&Extract from container'),),
+pdids.ID_TO_CURVES:(_('Con&vert to curves'),),
+
 
 pdids.ID_BEZIER_SEL_ALL_NODES:(_('Select all nodes'),),
 pdids.ID_BEZIER_REVERSE_ALL_PATHS:(_('Reverse all paths'),),
