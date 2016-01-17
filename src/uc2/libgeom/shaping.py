@@ -22,7 +22,7 @@ from copy import deepcopy
 
 from uc2 import libcairo
 
-from bbox import is_bbox_overlap, is_bbox_in_bbox, sum_bbox, enlarge_bbox
+from bbox import is_bbox_overlap, sum_bbox
 from points import mult_point, add_points
 from bezier_ops import bezier_base_point, get_paths_bbox
 from cwrap import create_cpath
@@ -320,10 +320,6 @@ def subdivide(m, n, t=0.5):
 	return m + t * (n - m)
 
 def subdivide_curve(p0, p1, p2, p3, threshold=1.0, r=(0.0, 1.0)):
-	"""
-	Subdivide curve recursively so that all line segments get shorter
-	than the specified threshold.
-	"""
 	ret = []
 	p10 = [subdivide(p0[0], p1[0]), subdivide(p0[1], p1[1])]
 	p11 = [subdivide(p1[0], p2[0]), subdivide(p1[1], p2[1])]
@@ -403,7 +399,6 @@ def index(cp, p0, t0, p1, t1):
 		return subdivide(t0, t1, (cp[0] - p0[0]) / (p1[0] - p0[0]))
 
 def intersect_objects(curve_objs):
-	# approximate paths of each object
 	approx_paths = []
 	for i in range(len(curve_objs)):
 		paths = curve_objs[i].paths()
@@ -411,7 +406,7 @@ def intersect_objects(curve_objs):
 			approx_path = approximate_path(paths[j])
 			if len(approx_path) < 2:
 				continue
-			# for better performance, group every 10 line segments
+
 			partials = []
 			for k in range(0, len(approx_path), 10):
 				partial = approx_path[k:k + 11]
@@ -421,7 +416,7 @@ def intersect_objects(curve_objs):
 				partials[-1].extend(partial)
 			assert 1 not in map(len, partials)
 			approx_paths.append(partials)
-	# find intersections for each pair of approximated paths
+
 	cross_point_id = 0
 	for i in range(len(approx_paths)):
 		for j in range(i + 1, len(approx_paths)):
@@ -471,6 +466,9 @@ def contained(curve_obj, path_obj):
 			if not curve_obj.is_point_inside(path_obj.get_test_point(i)):
 				return False
 	return True
+
+
+#--- UNIVERSAL INTERSECTION ROUTINE
 
 INTERSECT_RULE = 0
 FUSION_RULE = 1
@@ -528,8 +526,12 @@ def intersect_and_join(paths1, paths2, rule=INTERSECT_RULE):
 def intersect_paths(paths1, paths2):
 	return intersect_and_join(paths1, paths2)
 
-def fusion_paths(paths1, paths2):
+def fuse_paths(paths1, paths2):
 	return intersect_and_join(paths1, paths2, FUSION_RULE)
 
 def trim_paths(target_paths, source_paths):
 	return intersect_and_join(target_paths, source_paths, CUTTING_RULE)
+
+def excluse_paths(paths1, paths2):
+	return intersect_and_join(paths1, paths2, FUSION_RULE) + \
+		intersect_and_join(paths1, paths2)
