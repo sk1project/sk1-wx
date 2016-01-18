@@ -162,6 +162,7 @@ class PDRenderer(CairoRenderer):
 		self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
 		self.ctx.set_source_rgba(*grid_layer.color)
 		self.ctx.set_line_width(1.0)
+		self.ctx.set_dash()
 
 		w, h = self.presenter.get_page_size()
 		x, y, dx, dy = grid_layer.grid
