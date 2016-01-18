@@ -20,7 +20,7 @@ import os, wal
 
 from sk1 import _, events
 from sk1.app_plugins import RS_Plugin
-from sk1.resources import get_icon
+from sk1.resources import get_icon, icons
 
 from indicator import OrientationIndicator, OriginIndicator
 from transforms import PositionTransform, ResizeTransform, ScaleTransform, \
@@ -43,11 +43,11 @@ TRANSFORM_MODES = [POSITION_MODE, RESIZE_MODE, SCALE_MODE,
 				ROTATE_MODE, SHEAR_MODE]
 
 TRANSFORM_MODE_ICONS = {
-POSITION_MODE:make_artid('tab-position'),
-RESIZE_MODE:make_artid('tab-resize'),
-SCALE_MODE:make_artid('tab-scale'),
-ROTATE_MODE:make_artid('tab-rotate'),
-SHEAR_MODE:make_artid('tab-shear')
+POSITION_MODE:icons.PD_POSITION_PLGN,
+RESIZE_MODE:icons.PD_RESIZE_PLGN,
+SCALE_MODE:icons.PD_SCALE_PLGN,
+ROTATE_MODE:icons.PD_ROTATE_PLGN,
+SHEAR_MODE:icons.PD_SHEAR_PLGN
 }
 
 TRANSFORM_MODE_NAMES = {
