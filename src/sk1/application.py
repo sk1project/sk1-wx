@@ -17,7 +17,7 @@
 
 import os, sys, traceback
 import webbrowser
-from base64 import b64decode, b64encode
+from base64 import b64decode
 
 import wal
 
