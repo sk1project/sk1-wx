@@ -93,7 +93,10 @@ class CurveObject:
 		self.path_objs = []
 		self.obj_id = obj_id
 		for path in paths:
-			self.path_objs.append(PathObject(path, obj_id))
+			path_obj = PathObject(path, obj_id)
+			if not path_obj.is_closed():
+				path_obj.close_path()
+			self.path_objs.append(path_obj)
 
 	def destroy(self):
 		if self.hit_test: self.hit_test.destroy()
