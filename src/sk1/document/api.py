@@ -1262,10 +1262,13 @@ class PresenterAPI(AbstractAPI):
 
 	#--- CURVE
 
-	def create_curve(self, paths):
+	def create_curve(self, paths, style=None):
 		parent = self.presenter.active_layer
 		obj = model.Curve(self.sk2_cfg, parent, paths)
-		obj.style = deepcopy(self.model.styles['Default Style'])
+		if style is None:
+			obj.style = deepcopy(self.model.styles['Default Style'])
+		else:
+			obj.style = style
 		obj.update()
 		self.insert_object(obj, parent, len(parent.childs))
 		return obj
