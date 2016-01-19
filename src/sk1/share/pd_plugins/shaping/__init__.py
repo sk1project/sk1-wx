@@ -17,13 +17,14 @@
 
 
 import os, wal
+from copy import deepcopy
 
 from uc2.formats.sk2 import sk2_const
 from uc2.libgeom import apply_trafo_to_paths
 from uc2.libgeom import intersect_paths, fuse_paths, trim_paths, excluse_paths
 
-from sk1 import _, events
-from sk1.dialogs import msg_dialog
+from sk1 import _, events, modes
+from sk1.dialogs import msg_dialog, yesno_dialog, error_dialog
 from sk1.resources import icons, get_icon, get_bmp
 from sk1.app_plugins import RS_Plugin
 
@@ -32,9 +33,6 @@ IMG_DIR = os.path.join(PLG_DIR, 'images')
 
 def make_artid(name):
 	return os.path.join(IMG_DIR, name + '.png')
-
-def get_plugin(app):
-	return Shaping_Plugin(app)
 
 PLUGIN_ICON = make_artid('icon')
 
@@ -103,21 +101,22 @@ class AbstractShapingPanel(wal.VPanel):
 		doc = self.app.current_doc
 		return len(doc.selection.objs)
 
-	def get_selection(self):
-		doc = self.app.current_doc
-		objs = [] + doc.selection.objs
-		if not self.check_selection(objs):
-			msg = _('Selection contains objects, that cannot used for this operation')
-			msg_dialog(self.app.mw, self.app.appdata.app_name, msg)
-			objs = []
-		return objs
-
 	def check_selection(self, sel):
 		ret = True
 		for obj in sel:
 			if not obj.is_primitive():
 				ret = False
 		return ret
+
+	def get_selection(self):
+		doc = self.app.current_doc
+		objs = [] + doc.selection.objs
+		if not self.check_selection(objs):
+			msg = _('Selected objects cannot be used for this operation.')
+			msg += '\n' + _('Try ungroup selection.')
+			msg_dialog(self.app.mw, self.app.appdata.app_name, msg)
+			objs = []
+		return objs
 
 	def get_paths_list(self, objs):
 		paths_list = []
@@ -132,7 +131,66 @@ class AbstractShapingPanel(wal.VPanel):
 		else:
 			self.set_enable(False)
 
-	def action(self):pass
+	def action(self):
+		doc = self.app.current_doc
+		objs = self.get_selection()
+		if not objs: return
+		if self.pid == TRIM_MODE:
+			doc.canvas.set_temp_mode(modes.PICK_MODE, self.select_trim_target)
+		else:
+			self._action(objs)
+
+	def select_trim_target(self, selected):
+		if len(selected) == 1 and selected[0].is_primitive():
+			sel_obj = selected[0]
+			objs = self.get_selection()
+			if sel_obj in objs: objs.remove(sel_obj)
+			if objs:
+				objs = [sel_obj, ] + objs
+				self._action(objs)
+				return False
+			else:
+				selected = []
+
+		if not len(selected):
+			txt = _("There is no selected object.")
+		else:
+			txt = _("Selected object cannot be target for trim operation.")
+		txt += '\n' + _('Do you want to try again?')
+		return yesno_dialog(self.app.mw, self.app.appdata.app_name, txt)
+
+	def _action(self, objs):
+		doc = self.app.current_doc
+		paths = self.get_paths_list(objs)
+		doc.canvas.set_temp_mode(modes.WAIT_MODE)
+		try:
+			result = self.do_action(paths)
+		except:
+			doc.canvas.restore_mode()
+			result = []
+			msg = _('Error occurred during this operation.')
+			msg += '\n' + _('Perhaps this was due to the imperfection of the algorithm.')
+			error_dialog(self.app.mw, self.app.appdata.app_name, msg)
+			return
+
+		doc.canvas.restore_mode()
+		if result:
+			style = deepcopy(objs[0].style)
+			doc.api.create_curve(result, style)
+		elif not result and self.pid == INTERSECTION_MODE:
+			msg = _('Selected objects cannot be intersected.')
+			msg_dialog(self.app.mw, self.app.appdata.app_name, msg)
+			return
+
+		if self.del_check.get_value():
+			objs_list = []
+			for obj in objs:
+				index = obj.parent.childs.index(obj)
+				objs_list.append([obj, obj.parent, index])
+			doc.api.delete_objects(objs_list)
+
+	def do_action(self):
+		return []
 
 
 class TrimPanel(AbstractShapingPanel):
@@ -140,25 +198,41 @@ class TrimPanel(AbstractShapingPanel):
 	pid = TRIM_MODE
 	obj_num = 1
 
-	def action(self):pass
+	def do_action(self, paths):
+		target = paths[0]
+		for item in paths[1:]:
+			target = trim_paths(target, item)
+		return target
 
 class IntersectionPanel(AbstractShapingPanel):
 
 	pid = INTERSECTION_MODE
 
-	def action(self):pass
+	def do_action(self, paths):
+		result = paths[0]
+		for item in paths[1:]:
+			if result: result = intersect_paths(result, item)
+		return result
 
 class ExclusionPanel(AbstractShapingPanel):
 
 	pid = EXCLUSION_MODE
 
-	def action(self):pass
+	def do_action(self, paths):
+		result = paths[0]
+		for item in paths[1:]:
+			result = excluse_paths(result, item)
+		return result
 
 class FusionPanel(AbstractShapingPanel):
 
 	pid = FUSION_MODE
 
-	def action(self):pass
+	def do_action(self, paths):
+		result = paths[0]
+		for item in paths[1:]:
+			result = fuse_paths(result, item)
+		return result
 
 
 SHAPING_CLASSES = {
@@ -217,3 +291,7 @@ class Shaping_Plugin(RS_Plugin):
 	def show_signal(self, mode=TRIM_MODE, *args):
 		self.shaping_keeper.set_mode(mode)
 		self.on_mode_change(mode)
+
+
+def get_plugin(app):
+	return Shaping_Plugin(app)
