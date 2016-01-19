@@ -527,11 +527,19 @@ def intersect_paths(paths1, paths2):
 	return intersect_and_join(paths1, paths2)
 
 def fuse_paths(paths1, paths2):
-	return intersect_and_join(paths1, paths2, FUSION_RULE)
+	ret = intersect_and_join(paths1, paths2, FUSION_RULE)
+	if not ret: ret = paths1 + paths2
+	return ret
 
 def trim_paths(target_paths, source_paths):
-	return intersect_and_join(target_paths, source_paths, CUTTING_RULE)
+	ret = intersect_and_join(target_paths, source_paths, CUTTING_RULE)
+	if not ret: ret = target_paths
+	return ret
 
 def excluse_paths(paths1, paths2):
-	return intersect_and_join(paths1, paths2, FUSION_RULE) + \
-		intersect_and_join(paths1, paths2)
+	fuse = intersect_and_join(paths1, paths2, FUSION_RULE)
+	if not fuse: fuse = paths1 + paths2
+	intersect = intersect_and_join(paths1, paths2)
+	if not intersect:intersect = []
+	return fuse + intersect
+
