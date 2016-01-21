@@ -225,6 +225,8 @@ class AppCanvas(wx.Panel):
 			self.controller.set_cursor()
 			self.controller.start_()
 			events.emit(events.MODE_CHANGED, mode)
+			if self.presenter.selection and self.presenter.selection.objs:
+				self.presenter.selection.update()
 
 	def set_canvas_cursor(self, mode):
 		self.current_cursor = self.app.cursors[mode]
