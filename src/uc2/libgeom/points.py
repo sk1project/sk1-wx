@@ -105,5 +105,10 @@ def get_point_angle(p, center=[0.5, 0.5]):
 	elif x > x0 and y < y0:
 		return 2.0 * math.pi - math.acos((x - x0) / r)
 
+def to_polar(point):
+	r = distance(point)
+	angle = 0.0
+	if r: angle = get_point_angle(point, [0.0, 0.0])
+	return (r, angle)
 
 
