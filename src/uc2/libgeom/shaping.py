@@ -21,13 +21,27 @@ import math, cairo
 from copy import deepcopy
 
 from uc2 import libcairo
+from uc2.formats.sk2 import sk2_const
 
 from bbox import is_bbox_overlap, sum_bbox
 from points import mult_point, add_points
 from bezier_ops import bezier_base_point, get_paths_bbox
 from cwrap import create_cpath
 
+CAPS = {
+	sk2_const.CAP_BUTT:cairo.LINE_CAP_BUTT,
+	sk2_const.CAP_ROUND:cairo.LINE_CAP_ROUND,
+	sk2_const.CAP_SQUARE:cairo.LINE_CAP_SQUARE,
+	}
+
+JOINS = {
+	sk2_const.JOIN_BEVEL:cairo.LINE_JOIN_BEVEL,
+	sk2_const.JOIN_MITER:cairo.LINE_JOIN_MITER,
+	sk2_const.JOIN_ROUND:cairo.LINE_JOIN_ROUND,
+	}
+
 PRECISION = 8
+ZOOM = 100.0
 
 def is_bezier(point):
 	return len(point) > 2
@@ -47,6 +61,7 @@ class ObjHitSurface:
 	ctx = None
 	canvas = None
 	cpaths = None
+	fill_rule = cairo.FILL_RULE_EVEN_ODD
 
 	def __init__(self, obj):
 		self.obj = obj
@@ -62,19 +77,66 @@ class ObjHitSurface:
 		self.ctx.paint()
 		self.ctx.set_source_rgb(0, 0, 0)
 
+	def set_fill_rule(self, rule=cairo.FILL_RULE_WINDING):
+		self.fill_rule = rule
+
 	def set_trafo(self, point):
-		trafo = [1.0, 0.0, 0.0, 1.0, -point[0], -point[1]]
+		trafo = [ZOOM, 0.0, 0.0, ZOOM, -point[0] * ZOOM, -point[1] * ZOOM]
 		self.ctx.set_matrix(libcairo.get_matrix_from_trafo(trafo))
 
 	def check_point(self, point):
 		self.clear()
 		self.set_trafo(point)
 		if self.cpaths is None: self.cpaths = self.obj.get_cpaths()
-		self.ctx.set_fill_rule(cairo.FILL_RULE_EVEN_ODD)
+		self.ctx.set_fill_rule(self.fill_rule)
 		self.ctx.new_path()
 		self.ctx.append_path(self.cpaths)
 		self.ctx.fill()
 		self.ctx.set_line_width(2.0)
+		self.ctx.new_path()
+		self.ctx.append_path(self.cpaths)
+		self.ctx.stroke()
+		return not libcairo.check_surface_whiteness(self.surface)
+
+class StrokeHitSurface:
+
+	surface = None
+	ctx = None
+	canvas = None
+	cpaths = None
+
+	def __init__(self, obj, stroke_style):
+		self.obj = obj
+		self.stroke_style = stroke_style
+		self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
+		self.ctx = cairo.Context(self.surface)
+
+	def destroy(self):
+		for item in self.__dict__.keys():
+			self.__dict__[item] = None
+
+	def clear(self):
+		self.ctx.set_source_rgb(1, 1, 1)
+		self.ctx.paint()
+		self.ctx.set_source_rgb(0, 0, 0)
+
+	def set_trafo(self, point):
+		trafo = [ZOOM, 0.0, 0.0, ZOOM, -point[0] * ZOOM, -point[1] * ZOOM]
+		self.ctx.set_matrix(libcairo.get_matrix_from_trafo(trafo))
+
+	def check_point(self, point):
+		self.clear()
+		self.set_trafo(point)
+		if self.cpaths is None: self.cpaths = self.obj.get_cpaths()
+		line_width = self.stroke_style[1]
+		self.ctx.set_line_width(line_width - .04)
+		dash = []
+		for item in self.stroke_style[3]:
+			dash.append(item * line_width)
+		self.ctx.set_dash(dash)
+		self.ctx.set_line_cap(CAPS[self.stroke_style[4]])
+		self.ctx.set_line_join(JOINS[self.stroke_style[5]])
+		self.ctx.set_miter_limit(self.stroke_style[6])
 		self.ctx.new_path()
 		self.ctx.append_path(self.cpaths)
 		self.ctx.stroke()
@@ -88,10 +150,13 @@ class CurveObject:
 	obj_id = None
 	path_objs = None
 	hit_test = None
+	stroke_test = None
+	stroke_style = None
 
-	def __init__(self, paths, obj_id=0):
+	def __init__(self, paths, obj_id=0, stroke_style=None):
 		self.path_objs = []
 		self.obj_id = obj_id
+		self.stroke_style = stroke_style
 		for path in paths:
 			path_obj = PathObject(path, obj_id)
 			if not path_obj.is_closed():
@@ -100,6 +165,7 @@ class CurveObject:
 
 	def destroy(self):
 		if self.hit_test: self.hit_test.destroy()
+		if self.stroke_test: self.stroke_test.destroy()
 		for item in self.__dict__.keys():
 			self.__dict__[item] = None
 
@@ -127,6 +193,11 @@ class CurveObject:
 		if self.hit_test is None:
 			self.hit_test = ObjHitSurface(self)
 		return self.hit_test.check_point(point)
+
+	def is_point_on_stroke(self, point):
+		if self.stroke_test is None:
+			self.stroke_test = StrokeHitSurface(self, self.stroke_style)
+		return self.stroke_test.check_point(point)
 
 class PathObject:
 
@@ -453,6 +524,58 @@ def intersect_objects(curve_objs):
 			result += path.split()
 	return result
 
+def self_intersect(curve_obj):
+	approx_paths = []
+	paths = curve_obj.paths()
+	for j in range(len(paths)):
+		approx_path = approximate_path(paths[j])
+		if len(approx_path) < 2:
+			continue
+
+		partials = []
+		for k in range(0, len(approx_path), 10):
+			partial = approx_path[k:k + 11]
+			partials.append((paths[j], partial, coord_rect(partial)))
+		if len(partials[-1]) == 1:
+			partial = partials.pop()
+			partials[-1].extend(partial)
+		assert 1 not in map(len, partials)
+		approx_paths.append(partials)
+
+	cross_point_id = 0
+	approx_paths = approx_paths[0]
+
+	for i in range(-1, len(approx_paths) - 1):
+		path1, approx_path1, rect1 = approx_paths[i]
+		for j in range(-1, len(approx_paths) - 1):
+			if i == j:continue
+			path2, approx_path2, rect2 = approx_paths[j]
+			if is_bbox_overlap(rect1, rect2):
+				for p in range(1, len(approx_path1)):
+					(p0, t0), (p1, t1) = approx_path1[p - 1:p + 1]
+					for q in range(1, len(approx_path2)):
+						(p2, t2), (p3, t3) = approx_path2[q - 1:q + 1]
+						if equal(p0, p2):
+							cp = p0
+						elif equal(p0, p3) or \
+								equal(p1, p2) or \
+								equal(p1, p3):
+							cp = None
+						else:
+							cp = intersect_lines(p0, p1, p2, p3)
+						if cp is not None:
+							index1 = index(cp, p0, t0, p1, t1)
+							index2 = index(cp, p2, t2, p3, t3)
+							if not index1 in path1.cp_indexes:
+								path1.cp_indexes.append(index1)
+								path1.cp_dict[index1] = cross_point_id
+							if not index2 in path2.cp_indexes:
+								path2.cp_indexes.append(index2)
+								path2.cp_dict[index2] = cross_point_id
+							cross_point_id += 1
+
+	return paths[0].split()
+
 
 def find_cross_id(path_objs, cross_id, obj_id):
 	for item in path_objs:
@@ -469,6 +592,16 @@ def contained(curve_obj, path_obj):
 			if not curve_obj.is_point_inside(path_obj.get_test_point(i)):
 				return False
 	return True
+
+def on_stroke(curve_obj, path_obj):
+	for item in path_obj.get_points():
+		if curve_obj.is_point_on_stroke(item):
+			return True
+	if path_obj.get_len() < 10:
+		for i in range(path_obj.get_len()):
+			if curve_obj.is_point_on_stroke(path_obj.get_test_point(i)):
+				return True
+	return False
 
 
 #--- UNIVERSAL INTERSECTION ROUTINE
