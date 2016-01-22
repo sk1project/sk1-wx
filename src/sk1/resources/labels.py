@@ -129,6 +129,7 @@ pdids.ID_PATHS_FUSION:(_('Fusion...'),),
 pdids.ID_TO_CONTAINER:(_('&Place into container'),),
 pdids.ID_FROM_CONTAINER:(_('&Extract from container'),),
 pdids.ID_TO_CURVES:(_('Con&vert to curves'),),
+pdids.ID_STROKE_TO_CURVES:(_('Convert stroke to curves'),),
 
 
 pdids.ID_BEZIER_SEL_ALL_NODES:(_('Select all nodes'),),

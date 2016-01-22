@@ -77,6 +77,7 @@ pdids.ID_GROUP:(wx.ACCEL_CTRL, ord('G')),
 pdids.ID_UNGROUP:(wx.ACCEL_CTRL, ord('U')),
 pdids.ID_UNGROUPALL:(wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord('U')),
 pdids.ID_TO_CURVES:(wx.ACCEL_CTRL , ord('Q')),
+pdids.ID_STROKE_TO_CURVES:(wx.ACCEL_CTRL | wx.ACCEL_SHIFT , ord('Q')),
 #----- Text menu
 pdids.ID_EDIT_TEXT:(wx.ACCEL_NORMAL, wx.WXK_F8),
 #----- Tools menu

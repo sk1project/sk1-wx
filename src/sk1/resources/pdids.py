@@ -109,6 +109,7 @@ ID_PATHS_TRIM = wx.NewId()
 ID_TO_CONTAINER = wx.NewId()
 ID_FROM_CONTAINER = wx.NewId()
 ID_TO_CURVES = wx.NewId()
+ID_STROKE_TO_CURVES = wx.NewId()
 
 #----- Paths menu
 ID_BEZIER_SEL_ALL_NODES = wx.NewId()
