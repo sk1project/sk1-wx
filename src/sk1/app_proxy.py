@@ -20,6 +20,7 @@ from copy import deepcopy
 
 from uc2 import uc2const
 from uc2.formats.sk2 import sk2_model, sk2_const
+from uc2.libgeom import stroke_to_curve, apply_trafo_to_paths
 
 from sk1 import _, dialogs, modes, events, config
 from sk1.dialogs import yesno_dialog
@@ -405,6 +406,16 @@ class AppProxy:
 	def mirror_v(self):self.app.current_doc.api.mirror_selected()
 
 	def convert_to_curve(self):self.app.current_doc.api.convert_to_curve_selected()
+
+	def convert_stroke_to_curve(self):
+		doc = self.app.current_doc
+		selection = self.app.current_doc.selection
+		for obj in selection.objs:
+			if obj.is_primitive() and not obj.is_pixmap() and obj.style[1] \
+			and obj.style[1][1]:
+				pths = apply_trafo_to_paths(obj.get_initial_paths(), obj.trafo)
+				doc.api.create_curve(stroke_to_curve(pths, obj.style[1]))
+
 	def group(self):self.app.current_doc.api.group_selected()
 	def ungroup(self):self.app.current_doc.api.ungroup_selected()
 	def ungroup_all(self):self.app.current_doc.api.ungroup_all()
