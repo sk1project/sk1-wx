@@ -150,6 +150,7 @@ def create_actions(app):
 	(pdids.ID_PATHS_EXCLUSION, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('ShapingPlugin', 2)),
 	(pdids.ID_PATHS_FUSION, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('ShapingPlugin', 3)),
 (pdids.ID_TO_CURVES, proxy.convert_to_curve, sel_chnls, insp.can_be_curve),
+(pdids.ID_STROKE_TO_CURVES, proxy.convert_stroke_to_curve, sel_chnls, insp.is_stroke),
 #------ Effects menu -------
 (pdids.ID_TO_CONTAINER, proxy.set_container, sel_chnls, insp.is_selection),
 (pdids.ID_FROM_CONTAINER, proxy.unpack_container, sel_chnls, insp.is_container_selected),
