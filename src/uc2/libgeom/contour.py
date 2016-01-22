@@ -22,7 +22,7 @@ from copy import deepcopy
 from uc2.formats.sk2 import sk2_const
 from points import distance, mult_point, add_points, sub_points
 from bezier_ops import bezier_base_point
-from shaping import clear_self_intersection, fuse_paths
+from shaping import fuse_paths
 
 
 # This constant is used to calculate the length of the bezier
