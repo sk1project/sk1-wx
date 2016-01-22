@@ -436,6 +436,20 @@ class AppInspector:
 		else:
 			return False
 
+	def is_stroke(self, doc=None):
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		elif self.is_selection(doc):
+			result = False
+			for obj in doc.selection.objs:
+				if obj.is_primitive() and not obj.is_pixmap():
+					if obj.style[1] and obj.style[1][1]:
+						result = True
+						break
+			return result
+		else:
+			return False
+
 	def can_be_grouped(self, doc=None):
 		if doc is None: doc = self.app.current_doc
 		if doc is None: return False
