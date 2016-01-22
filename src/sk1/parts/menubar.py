@@ -90,7 +90,7 @@ class AppMenuBar(wx.MenuBar):
 			(_("&Shaping"), (pdids.ID_PATHS_TRIM, pdids.ID_PATHS_INTERSECTION,
 				pdids.ID_PATHS_EXCLUSION, pdids.ID_PATHS_FUSION)),
 			None, pdids.ID_TO_CONTAINER, pdids.ID_FROM_CONTAINER,
-			None, pdids.ID_TO_CURVES,)
+			None, pdids.ID_TO_CURVES, pdids.ID_STROKE_TO_CURVES)
 		entry = (_("&Arrange"), sub)
 		self.entries.append(entry)
 
