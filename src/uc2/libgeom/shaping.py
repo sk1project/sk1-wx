@@ -54,6 +54,10 @@ def pack_seg(seg_type, ctrls, node, cont):
 	if not seg_type: return node
 	return [ctrls[0], ctrls[1], node, cont]
 
+def equal_points(p0, p1):
+	return round(p0[0], PRECISION) == round(p1[0], PRECISION) and \
+			round(p0[1], PRECISION) == round(p1[1], PRECISION)
+
 
 class ObjHitSurface:
 
@@ -245,7 +249,13 @@ class PathObject:
 	def close_path(self):
 		self.path[-1] = 1
 		if not self.path[0] == bezier_base_point(self.path[1][-1]):
-			self.path[1].append(self.get_start_point())
+			if equal(self.path[0], bezier_base_point(self.path[1][-1])):
+				if is_bezier(self.path[1][-1]):
+					self.path[1][-1][3] = self.get_start_point()
+				else:
+					self.path[1][-1] = self.get_start_point()
+			else:
+				self.path[1].append(self.get_start_point())
 
 	def unclose_path(self):
 		self.path[-1] = 0
@@ -522,6 +532,65 @@ def intersect_objects(curve_objs):
 	for obj in curve_objs:
 		for path in obj.paths():
 			result += path.split()
+	return result
+
+def intersect_segments(path1, path2):
+	approx_paths = []
+	paths = [PathObject(path1, 0), PathObject(path2, 1)]
+	for j in range(len(paths)):
+		approx_path = approximate_path(paths[j])
+		if len(approx_path) < 2:
+			continue
+
+		partials = []
+		for k in range(0, len(approx_path), 10):
+			partial = approx_path[k:k + 11]
+			partials.append((paths[j], partial, coord_rect(partial)))
+		if len(partials[-1]) == 1:
+			partial = partials.pop()
+			partials[-1].extend(partial)
+		assert 1 not in map(len, partials)
+		approx_paths.append(partials)
+
+	cross_point_id = 0
+	for i in range(len(approx_paths)):
+		for j in range(i + 1, len(approx_paths)):
+			for path1, approx_path1, rect1 in approx_paths[i]:
+				for path2, approx_path2, rect2 in approx_paths[j]:
+					if not path1.obj_id == path2.obj_id and \
+								is_bbox_overlap(rect1, rect2):
+						for p in range(1, len(approx_path1)):
+							(p0, t0), (p1, t1) = approx_path1[p - 1:p + 1]
+							for q in range(1, len(approx_path2)):
+								(p2, t2), (p3, t3) = approx_path2[q - 1:q + 1]
+								if equal(p0, p2):
+									cp = p0
+								elif equal(p0, p3) or \
+										equal(p1, p2) or \
+										equal(p1, p3):
+									cp = None
+								else:
+									cp = intersect_lines(p0, p1, p2, p3)
+								if cp is not None:
+									index1 = index(cp, p0, t0, p1, t1)
+									index2 = index(cp, p2, t2, p3, t3)
+									path1.cp_indexes.append(index1)
+									path1.cp_dict[index1] = cross_point_id
+									path2.cp_indexes.append(index2)
+									path2.cp_dict[index2] = cross_point_id
+									cross_point_id += 1
+	result = [[], []]
+	if not paths[0].cp_indexes: return None
+	indx = paths[0].cp_indexes[0]
+	sp = paths[0].split_path_at(indx, paths[0].cp_dict[indx])
+	result[0] = deepcopy(sp[0].path[1][-1])
+	start = [] + result[0]
+	if len(result[0]) == 4: start = [] + result[0][2]
+
+	if not paths[1].cp_indexes: return None
+	indx = paths[1].cp_indexes[0]
+	sp = paths[1].split_path_at(indx, paths[1].cp_dict[indx])
+	result[1] = [start, deepcopy(sp[1].path[1][0])]
 	return result
 
 def self_intersect(curve_obj):
