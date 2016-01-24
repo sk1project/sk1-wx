@@ -133,16 +133,20 @@ class Selection:
 
 	def _select_at_point(self, point):
 		result = []
-		layers = self.presenter.get_editable_layers()
+		doc = self.presenter
+		layers = doc.get_editable_layers()
 		layers.reverse()
-		win_point = self.presenter.canvas.doc_to_win(point)
-		hit_surface = self.presenter.canvas.hit_surface
+		win_point = doc.canvas.doc_to_win(point)
+		hit_surface = doc.canvas.hit_surface
 		for layer in layers:
 			if result: break
 			objs = [] + layer.childs
 			objs.reverse()
 			for obj in objs:
 				bbox = self._get_fixed_bbox(obj.cache_bbox)
+				d = 0.0
+				if obj.style[1]: d = doc.canvas.zoom * obj.style[1][1]
+				bbox = libgeom.enlarge_bbox(bbox, d, d)
 				if libgeom.is_point_in_bbox(win_point, bbox):
 					if hit_surface.is_point_into_object(win_point, obj):
 						result.append(obj)
