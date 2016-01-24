@@ -410,11 +410,13 @@ class AppProxy:
 	def convert_stroke_to_curve(self):
 		doc = self.app.current_doc
 		selection = self.app.current_doc.selection
+		self.app.current_doc.canvas.set_mode(modes.WAIT_MODE)
 		for obj in selection.objs:
 			if obj.is_primitive() and not obj.is_pixmap() and obj.style[1] \
 			and obj.style[1][1]:
 				pths = apply_trafo_to_paths(obj.get_initial_paths(), obj.trafo)
 				doc.api.create_curve(stroke_to_curve(pths, obj.style[1]))
+		self.app.current_doc.canvas.set_mode()
 
 	def group(self):self.app.current_doc.api.group_selected()
 	def ungroup(self):self.app.current_doc.api.ungroup_selected()
