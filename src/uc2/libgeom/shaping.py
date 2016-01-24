@@ -25,7 +25,7 @@ from uc2.formats.sk2 import sk2_const
 
 from bbox import is_bbox_overlap, sum_bbox
 from points import mult_point, add_points
-from bezier_ops import bezier_base_point, get_paths_bbox
+from bezier_ops import bezier_base_point, get_paths_bbox, get_path_length
 from cwrap import create_cpath
 
 CAPS = {
@@ -268,7 +268,14 @@ class PathObject:
 		self.path[1] += segs
 
 	def get_seg(self, index):
-		return [] + self.path[1][index]
+		return deepcopy(self.path[1][index])
+
+	def get_seg_as_path(self, index):
+		if not index:
+			start = self.get_start_point()
+		else:
+			start = bezier_base_point(self.get_seg(index - 1))
+		return [start, [self.get_seg(index), ], sk2_const.CURVE_OPENED]
 
 	def get_node(self, index):
 		index -= 1
@@ -336,7 +343,7 @@ class PathObject:
 		path_obj2.end_id = self.end_id
 		return[path_obj1, path_obj2]
 
-	def split(self):
+	def split(self, concatenate=True):
 		if self.cp_indexes:
 			self.cp_indexes.sort()
 			self.cp_indexes.reverse()
@@ -353,8 +360,11 @@ class PathObject:
 				previous_at = at
 				target = pths[0]
 				result = pths[1:] + result
-			result[-1].append_segs(target.get_segments())
-			result[-1].end_id = target.end_id
+			if concatenate:
+				result[-1].append_segs(target.get_segments())
+				result[-1].end_id = target.end_id
+			else:
+				result = [target, ] + result
 			return result
 		else:
 			return [self, ]
@@ -397,6 +407,34 @@ class PathObject:
 		new_path_obj.start_id = self.start_id
 		new_path_obj.end_id = path_obj.end_id
 		return new_path_obj
+
+	def convert_to_dashes(self, dash_size, dash_list):
+		size_dict = {}
+		seg_nums = self.get_len()
+		for i in range(seg_nums):
+			size_dict[i] = get_path_length(self.get_seg_as_path(i))
+
+		self.cp_indexes = []
+		self.cp_dict = {}
+		cross_point_id = 0
+		local_length = 0.0
+		index = 0
+		break_flag = True
+		while break_flag:
+			for item in dash_list:
+				local_length += float(item) * dash_size
+				if local_length > size_dict[index]:
+					local_length -= size_dict[index]
+					index += 1
+					if not index < seg_nums:
+						break_flag = False
+						break
+				at = float(index) + local_length / size_dict[index]
+				self.cp_indexes.append(at)
+				self.cp_dict[at] = cross_point_id
+				cross_point_id += 1
+		return self.split(False)
+
 
 #--- PATH APPROXIMATION
 
@@ -579,17 +617,22 @@ def intersect_segments(path1, path2):
 									path2.cp_indexes.append(index2)
 									path2.cp_dict[index2] = cross_point_id
 									cross_point_id += 1
+
 	result = [[], []]
 	if not paths[0].cp_indexes: return None
 	indx = paths[0].cp_indexes[0]
+	if indx < 0: return None
 	sp = paths[0].split_path_at(indx, paths[0].cp_dict[indx])
+	if len(sp) == 1:return None
 	result[0] = deepcopy(sp[0].path[1][-1])
 	start = [] + result[0]
 	if len(result[0]) == 4: start = [] + result[0][2]
 
 	if not paths[1].cp_indexes: return None
 	indx = paths[1].cp_indexes[0]
+	if indx < 0: return None
 	sp = paths[1].split_path_at(indx, paths[1].cp_dict[indx])
+	if len(sp) == 1:return None
 	result[1] = [start, deepcopy(sp[1].path[1][0])]
 	return result
 
@@ -748,3 +791,18 @@ def excluse_paths(paths1, paths2):
 	if not intersect:intersect = []
 	return fuse + intersect
 
+def dash_path(path, dash_size, dash_list):
+	path_obj = PathObject(path)
+	dashes = path_obj.convert_to_dashes(dash_size, dash_list)
+	result = []
+	for i in range(len(dashes)):
+		if not i % 2: result.append(dashes[i])
+
+	for i in range(len(result)):
+		result[i] = result[i].get_path()
+
+	if path[2] == sk2_const.CURVE_CLOSED and not len(dashes) % 2:
+		result[0][0] = result[-1][0]
+		result[0][1] = result[-1][1] + result[0][1]
+		result = result[:-1]
+	return result
