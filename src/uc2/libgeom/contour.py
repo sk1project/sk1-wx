@@ -20,9 +20,9 @@ import math
 from copy import deepcopy
 
 from uc2.formats.sk2 import sk2_const
-from points import distance, mult_point, add_points, sub_points
+from points import distance, mult_point, add_points, sub_points, midpoint
 from bezier_ops import bezier_base_point
-from shaping import fuse_paths
+from shaping import fuse_paths, intersect_lines, intersect_segments, dash_path
 
 
 # This constant is used to calculate the length of the bezier
@@ -89,6 +89,7 @@ def normalize(point):
 	Returns a unit vector pointing in the same direction.
 	"""
 	k = distance(point)
+	if not k: return [0.0, 0.0]
 	return [point[0] / k, point[1] / k]
 
 
@@ -172,6 +173,16 @@ def build_parallel(p, radius, recursionlimit=6):
 		return (build_parallel (sd[:4], radius, recursionlimit - 1) +
 				  build_parallel (sd[3:], radius, recursionlimit - 1)[1:])
 
+def line_to_curve(p0, p1):
+	"""
+	Converts line segment to bezier segment suitable for manual editing.
+	"""
+	x0 = 1.0 / 3.0 * (p1[0] - p0[0]) + p0[0]
+	y0 = 1.0 / 3.0 * (p1[1] - p0[1]) + p0[1]
+	x1 = 2.0 / 3.0 * (p1[0] - p0[0]) + p0[0]
+	y1 = 2.0 / 3.0 * (p1[1] - p0[1]) + p0[1]
+	return [[x0, y0], [x1, y1], [] + p1]
+
 
 def get_join_segment(startpoint, endpoint, radius, jointype,
 					miter_limit=MITER_LIMIT):
@@ -192,14 +203,14 @@ def get_join_segment(startpoint, endpoint, radius, jointype,
 
 		h2 = length(d) ** 2 / h
 
-		# Hmm - Postscript defines 10 as miter limit...
 		if h2 + h > miter_limit * radius:
 			# Hit miter limit
 			return [startpoint, endpoint]
 
 		edge = add_points(add_points(startpoint, d), mult_point(o, h2))
-
-		return [startpoint, startpoint, edge, edge, edge, endpoint, endpoint]
+		new_seg1 = line_to_curve(startpoint, edge)
+		new_seg2 = line_to_curve(edge, endpoint)
+		return [startpoint, ] + new_seg1 + new_seg2
 
 	elif jointype == sk2_const.JOIN_ROUND:
 		f = CIRCLE_CONSTANT
@@ -225,7 +236,7 @@ def get_join_segment(startpoint, endpoint, radius, jointype,
 					add_points(add_points(center, o), mult_point(d, f)),
 					add_points(add_points(center, d), mult_point(o, f)),
 					add_points(center, d)]
-		ret = ret + list (subdivide(quadseg, 1 - t0)[1:3]) + [endpoint]
+		ret = ret + list (subdivide_seg(quadseg, 1 - t0)[1:3]) + [endpoint]
 
 		return ret
 
@@ -277,9 +288,89 @@ def get_cap_segment (startpoint, endpoint, captype):
 	else:
 		raise "Unknown captype %d" % captype
 
-def unpack_seg(seg):
-	if len(seg) > 2: return [True, [seg[0], seg[1]] , seg[2], seg[3]]
+def unpack_seg(seg, startpoint=None):
+	"""
+	Converts path pont into expected sequence.
+	Also fixes null size control points.
+	"""
+	if len(seg) > 2:
+		ctrl0 = seg[0]
+		ctrl1 = seg[1]
+		if startpoint:
+			if not distance(startpoint, ctrl0):
+				ctrl0 = midpoint(startpoint, seg[2], 0.0001)
+			if not distance(seg[2], ctrl1):
+				ctrl1 = midpoint(startpoint, seg[2], 0.9999)
+		return [True, [ctrl0, ctrl1] , seg[2], seg[3]]
 	return [False, None, seg, None]
+
+def intersect_segs(seg1, seg2):
+	"""
+	Tries intersecting coherent segments.
+	If there is not intersection, returns None. 
+	"""
+	if len(seg1) == 2 and len(seg2) == 2:
+		return intersect_lines(seg1[0], seg1[-1], seg2[0], seg2[-1])
+	else:
+		if len(seg1) == 2:
+			path1 = [seg1[0], [seg1[-1], ], sk2_const.CURVE_OPENED]
+		else:
+			path1 = [seg1[-4],
+					[[seg1[-3], seg1[-2], seg1[-1], sk2_const.NODE_CUSP], ],
+					sk2_const.CURVE_OPENED]
+
+		if len(seg2) == 2:
+			path2 = [seg2[0], [seg2[-1], ], sk2_const.CURVE_OPENED]
+		else:
+			path2 = [seg2[0],
+					[[seg2[1], seg2[2], seg2[3], sk2_const.NODE_CUSP], ],
+					sk2_const.CURVE_OPENED]
+		return intersect_segments(path1, path2)
+	return None
+
+
+def join_segs(segs, radius, linejoin, miter_limit, close=False):
+	"""
+	Smartly joins segments extending or intersecting them.
+	Segment structure:
+	curves - [startpoint, ctrl1, ctrl2, point, ... , ctrl1, ctrl2, endpoint]
+	line - [startpoint, endpoint]
+	"""
+	i = 0
+	if close: i = -1
+	props = (radius, linejoin, miter_limit)
+	while i < len(segs) - 1:
+		if segs[i][-1] != segs[i + 1][0]:
+			seg1 = segs[i]
+			seg2 = segs[i + 1]
+			joint = get_join_segment(seg1[-1], seg2[0], *props)
+			cp = intersect_segs(seg1, seg2)
+			if cp:
+				if len(seg1) == 2 and len(seg2) == 2:
+					seg1[-1] = seg2[0] = cp
+					i += 1
+					continue
+				if len(cp[0]) == 2:
+					seg1[-1] = cp[0]
+				elif len(cp[0]) == 4:
+					seg1[-3] = cp[0][0]
+					seg1[-2] = cp[0][1]
+					seg1[-1] = cp[0][2]
+				if len(cp[1][1]) == 2:
+					seg2[0] = cp[1][0]
+				elif len(cp[1][1]) == 4:
+					seg2[0] = cp[1][0]
+					seg2[1] = cp[1][1][0]
+					seg2[2] = cp[1][1][1]
+					seg2[3] = cp[1][1][2]
+			else:
+				if linejoin == sk2_const.JOIN_MITER and len(joint) == 7 and \
+				len(seg1) == 2 and len(seg2) == 2:
+					seg1[-1] = seg2[0] = joint[3]
+				else:
+					segs.insert(i + 1, joint)
+					i += 1
+		i += 1
 
 def create_stroke_outline (path, radius, linejoin=sk2_const.JOIN_MITER,
 						captype=sk2_const.CAP_BUTT, miter_limit=MITER_LIMIT):
@@ -293,65 +384,43 @@ def create_stroke_outline (path, radius, linejoin=sk2_const.JOIN_MITER,
 	last_point = None
 
 	segs = [path[0], ] + path[1]
-
+	startpoint = [] + path[0]
 	for i in range (len(segs)):
-		segment = unpack_seg(segs[i])
+		segment = unpack_seg(segs[i], startpoint)
+		startpoint = bezier_base_point(segs[i])
 		if not segment[0]:
 			if last_point:
 				c1 = sub_points(segment[2], last_point)
 				if not c1 == [0.0]:
 					t1 = mult_point(normalize(c1), radius)
-					fw_segments.append (
+					fw_segments.append(
 								[add_points(last_point, [t1[1], -t1[0]]),
 								 add_points(segment[2], [t1[1], -t1[0]])])
-					bw_segments.insert (0,
+					bw_segments.insert(0,
 								[sub_points(segment[2], [t1[1], -t1[0]]),
 								 sub_points(last_point, [t1[1], -t1[0]])])
 			last_point = segment[2]
 
 		else:
-			segments = build_parallel ([last_point, segment[1][0],
+			segments = build_parallel([last_point, segment[1][0],
 										segment[1][1], segment[2]], radius)
-			fw_segments.append (segments)
+			fw_segments.append(segments)
 
-			segments = build_parallel ([segment[2], segment[1][1],
+			segments = build_parallel([segment[2], segment[1][1],
 										segment[1][0], last_point], radius)
-			bw_segments.insert (0, segments)
+			bw_segments.insert(0, segments)
 			last_point = segment[2]
 
-	# fix the connections between the parallels if necessary
-	i = 0
-	while i < len (fw_segments) - 1:
-		if fw_segments[i][-1] != fw_segments[i + 1][0]:
-			fw_segments.insert (i + 1, get_join_segment (fw_segments[i][-1],
-						fw_segments[i + 1][0], radius, linejoin, miter_limit))
-			i += 1
-		i += 1
+	# Connect segments if necessary
+	for item in [fw_segments, bw_segments]:
+		join_segs(item, radius, linejoin, miter_limit,
+				path[2] == sk2_const.CURVE_CLOSED)
 
-
-	i = 0
-	while i < len (bw_segments) - 1:
-		if bw_segments[i][-1] != bw_segments[i + 1][0]:
-			bw_segments.insert (i + 1, get_join_segment (bw_segments[i][-1],
-						bw_segments[i + 1][0], radius, linejoin, miter_limit))
-			i += 1
-		i += 1
-
-
-	# fix the connection between both sides of a stroke.
-	# depends on the state of the path.
-
-	if path[2]:
-		if fw_segments[0][0] != fw_segments[-1][-1]:
-			fw_segments.append (get_join_segment (fw_segments[-1][-1],
-						fw_segments[0][0], radius, linejoin, miter_limit))
-		if bw_segments[0][0] != bw_segments[-1][-1]:
-			bw_segments.append (get_join_segment (bw_segments[-1][-1],
-						bw_segments[0][0], radius, linejoin, miter_limit))
-	else:
-		fw_segments.insert (0, get_cap_segment (bw_segments[-1][-1],
+	# Set caps for unclosed paths
+	if not path[2] == sk2_const.CURVE_CLOSED:
+		fw_segments.insert(0, get_cap_segment (bw_segments[-1][-1],
 									fw_segments[0][0], captype))
-		bw_segments.insert (0, get_cap_segment (fw_segments[-1][-1],
+		bw_segments.insert(0, get_cap_segment (fw_segments[-1][-1],
 									bw_segments[0][0], captype))
 
 	return fw_segments, bw_segments
@@ -393,19 +462,26 @@ def make_path(segments, close=1):
 #--- MODULE INTERFACE
 
 def stroke_to_curve(paths, stroke_style):
+#	print paths
 	if not stroke_style: return []
 	width = stroke_style[1]
-	#TODO: dash processing needs to be implemented
-	dash = stroke_style[3]
+	dash_list = stroke_style[3]
 	caps = stroke_style[4]
 	joint = stroke_style[5]
 	miter_limit = stroke_style[6]
+
+	if dash_list:
+		dashes = []
+		for path in paths:
+			dashes += dash_path(path, width, dash_list)
+		paths = dashes
 
 	new_paths = []
 	for path in paths:
 		outlines = []
 		fw, bw = create_stroke_outline(path, width / 2.0,
 									joint, caps, miter_limit)
+
 		if path[-1] == sk2_const.CURVE_CLOSED:
 			outlines.append(make_path(fw))
 			outlines.append(make_path(bw))
