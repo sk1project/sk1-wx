@@ -24,7 +24,7 @@ from uc2 import libcairo
 from uc2.formats.sk2 import sk2_const
 
 from bbox import is_bbox_overlap, sum_bbox
-from points import mult_point, add_points
+from points import mult_point, add_points, distance, midpoint
 from bezier_ops import bezier_base_point, get_paths_bbox, get_path_length
 from cwrap import create_cpath
 
@@ -409,30 +409,43 @@ class PathObject:
 		return new_path_obj
 
 	def convert_to_dashes(self, dash_size, dash_list):
-		size_dict = {}
-		seg_nums = self.get_len()
-		for i in range(seg_nums):
-			size_dict[i] = get_path_length(self.get_seg_as_path(i), 0.1)
-
 		self.cp_indexes = []
 		self.cp_dict = {}
+		approximations = get_approx_paths([self, ])[0]
 		cross_point_id = 0
 		local_length = 0.0
-		index = 0
-		break_flag = True
-		while break_flag:
-			for item in dash_list:
-				local_length += float(item) * dash_size
-				if local_length > size_dict[index]:
-					local_length -= size_dict[index]
-					index += 1
-					if not index < seg_nums:
-						break_flag = False
-						break
-				at = float(index) + local_length / size_dict[index]
-				self.cp_indexes.append(at)
-				self.cp_dict[at] = cross_point_id
-				cross_point_id += 1
+		dash_index = 0
+		local_length += float(dash_list[dash_index]) * dash_size
+		for approximation in approximations:
+			approx_path = approximation[1]
+			p = 1
+			break_flag = False
+			while not break_flag:
+				(p0, t0), (p1, t1) = approx_path[p - 1:p + 1]
+				size = distance(p0, p1)
+				if local_length > size:
+					local_length -= size
+					p += 1
+					if p >= len(approx_path): break_flag = True
+				elif local_length == size:
+					at = t1
+					self.cp_indexes.append(at)
+					self.cp_dict[at] = cross_point_id
+					cross_point_id += 1
+					dash_index += 1
+					if dash_index >= len(dash_list):dash_index = 0
+					local_length = float(dash_list[dash_index]) * dash_size
+					p += 1
+					if p >= len(approx_path): break_flag = True
+				else:
+					cp = midpoint(p0, p1, local_length / size)
+					at = index(cp, p0, t0, p1, t1)
+					self.cp_indexes.append(at)
+					self.cp_dict[at] = cross_point_id
+					cross_point_id += 1
+					dash_index += 1
+					if dash_index >= len(dash_list):dash_index = 0
+					local_length += float(dash_list[dash_index]) * dash_size
 		return self.split(False)
 
 
