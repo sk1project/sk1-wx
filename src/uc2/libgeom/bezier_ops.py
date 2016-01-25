@@ -29,8 +29,8 @@ def bezier_base_point(point):
 	if len(point) == 2: return [] + point
 	return [] + point[2]
 
-def get_path_length(path):
-	fpath = flat_path(path)
+def get_path_length(path, tolerance=0.5):
+	fpath = flat_path(path, tolerance)
 	points = [fpath[0], ] + fpath[1]
 	if fpath[2] == sk2_const.CURVE_CLOSED:
 		points += [fpath[0], ]
