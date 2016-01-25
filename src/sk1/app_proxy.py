@@ -23,7 +23,7 @@ from uc2.formats.sk2 import sk2_model, sk2_const
 from uc2.libgeom import stroke_to_curve, apply_trafo_to_paths
 
 from sk1 import _, dialogs, modes, events, config
-from sk1.dialogs import yesno_dialog
+from sk1.dialogs import yesno_dialog, error_dialog
 from sk1.prefs import get_prefs_dialog
 
 class AppProxy:
@@ -410,13 +410,25 @@ class AppProxy:
 	def convert_stroke_to_curve(self):
 		doc = self.app.current_doc
 		selection = self.app.current_doc.selection
-		self.app.current_doc.canvas.set_mode(modes.WAIT_MODE)
-		for obj in selection.objs:
-			if obj.is_primitive() and not obj.is_pixmap() and obj.style[1] \
-			and obj.style[1][1]:
-				pths = apply_trafo_to_paths(obj.get_initial_paths(), obj.trafo)
-				doc.api.create_curve(stroke_to_curve(pths, obj.style[1]))
-		self.app.current_doc.canvas.set_mode()
+		doc.canvas.set_mode(modes.WAIT_MODE)
+		try:
+			objs = []
+			for obj in selection.objs:
+				if obj.is_primitive() and not obj.is_pixmap() and obj.style[1] \
+				and obj.style[1][1]:
+					pths = apply_trafo_to_paths(obj.get_initial_paths(), obj.trafo)
+					style = deepcopy(doc.model.styles['Default Style'])
+					style[0][1] = sk2_const.FILL_SOLID
+					style[0][2] = deepcopy(obj.style[1][2])
+					pths = stroke_to_curve(pths, obj.style[1])
+					objs.append(doc.api.create_curve(pths, style))
+			selection.set(objs)
+		except:
+			doc.canvas.set_mode()
+			msg = _('Error occurred during this operation.')
+			msg += '\n' + _('Perhaps this was due to the imperfection of the algorithm.')
+			error_dialog(self.app.mw, self.app.appdata.app_name, msg)
+		doc.canvas.set_mode()
 
 	def group(self):self.app.current_doc.api.group_selected()
 	def ungroup(self):self.app.current_doc.api.ungroup_selected()
