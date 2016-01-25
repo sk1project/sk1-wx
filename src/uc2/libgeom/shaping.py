@@ -412,7 +412,7 @@ class PathObject:
 		size_dict = {}
 		seg_nums = self.get_len()
 		for i in range(seg_nums):
-			size_dict[i] = get_path_length(self.get_seg_as_path(i))
+			size_dict[i] = get_path_length(self.get_seg_as_path(i), 0.1)
 
 		self.cp_indexes = []
 		self.cp_dict = {}
@@ -520,24 +520,29 @@ def index(cp, p0, t0, p1, t1):
 	else:
 		return subdivide(t0, t1, (cp[0] - p0[0]) / (p1[0] - p0[0]))
 
-def intersect_objects(curve_objs):
+def get_approx_paths(paths):
 	approx_paths = []
-	for i in range(len(curve_objs)):
-		paths = curve_objs[i].paths()
-		for j in range(len(paths)):
-			approx_path = approximate_path(paths[j])
-			if len(approx_path) < 2:
-				continue
+	for j in range(len(paths)):
+		approx_path = approximate_path(paths[j])
+		if len(approx_path) < 2:
+			continue
 
-			partials = []
-			for k in range(0, len(approx_path), 10):
-				partial = approx_path[k:k + 11]
-				partials.append((paths[j], partial, coord_rect(partial)))
-			if len(partials[-1]) == 1:
-				partial = partials.pop()
-				partials[-1].extend(partial)
-			assert 1 not in map(len, partials)
-			approx_paths.append(partials)
+		partials = []
+		for k in range(0, len(approx_path), 10):
+			partial = approx_path[k:k + 11]
+			partials.append((paths[j], partial, coord_rect(partial)))
+		if len(partials[-1]) == 1:
+			partial = partials.pop()
+			partials[-1].extend(partial)
+		assert 1 not in map(len, partials)
+		approx_paths.append(partials)
+	return approx_paths
+
+def intersect_objects(curve_objs):
+	paths = []
+	for i in range(len(curve_objs)):
+		paths += curve_objs[i].paths()
+	approx_paths = get_approx_paths(paths)
 
 	cross_point_id = 0
 	for i in range(len(approx_paths)):
@@ -573,22 +578,8 @@ def intersect_objects(curve_objs):
 	return result
 
 def intersect_segments(path1, path2):
-	approx_paths = []
 	paths = [PathObject(path1, 0), PathObject(path2, 1)]
-	for j in range(len(paths)):
-		approx_path = approximate_path(paths[j])
-		if len(approx_path) < 2:
-			continue
-
-		partials = []
-		for k in range(0, len(approx_path), 10):
-			partial = approx_path[k:k + 11]
-			partials.append((paths[j], partial, coord_rect(partial)))
-		if len(partials[-1]) == 1:
-			partial = partials.pop()
-			partials[-1].extend(partial)
-		assert 1 not in map(len, partials)
-		approx_paths.append(partials)
+	approx_paths = get_approx_paths(paths)
 
 	cross_point_id = 0
 	for i in range(len(approx_paths)):
@@ -637,22 +628,8 @@ def intersect_segments(path1, path2):
 	return result
 
 def self_intersect(curve_obj):
-	approx_paths = []
 	paths = curve_obj.paths()
-	for j in range(len(paths)):
-		approx_path = approximate_path(paths[j])
-		if len(approx_path) < 2:
-			continue
-
-		partials = []
-		for k in range(0, len(approx_path), 10):
-			partial = approx_path[k:k + 11]
-			partials.append((paths[j], partial, coord_rect(partial)))
-		if len(partials[-1]) == 1:
-			partial = partials.pop()
-			partials[-1].extend(partial)
-		assert 1 not in map(len, partials)
-		approx_paths.append(partials)
+	approx_paths = get_approx_paths(paths)
 
 	cross_point_id = 0
 	approx_paths = approx_paths[0]
