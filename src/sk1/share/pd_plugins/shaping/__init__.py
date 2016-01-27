@@ -245,7 +245,7 @@ FUSION_MODE:FusionPanel,
 class Shaping_Plugin(RS_Plugin):
 
 	pid = 'ShapingPlugin'
-	name = 'Shaping'
+	name = _('Shaping')
 	active_panel = None
 	panels = {}
 
