@@ -69,7 +69,7 @@ def get_plugin(app):
 class Transform_Plugin(RS_Plugin):
 
 	pid = 'TransformPlugin'
-	name = 'Transformations'
+	name = _('Transformations')
 	active_transform = None
 	transforms = {}
 
