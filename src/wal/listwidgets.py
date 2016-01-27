@@ -29,7 +29,7 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, Widget):
 	alt_color = False
 
 	def __init__(self, parent, data=[], border=True, header=False,
-				single_sel=True, alt_color=False,
+				single_sel=True, virtual=False, alt_color=False,
 				even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
 				on_select=None, on_activate=None):
 		self.data = data
@@ -40,6 +40,7 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, Widget):
 		if border: style |= wx.BORDER_MASK
 		if not header: style |= wx.LC_NO_HEADER
 		if single_sel: style |= wx.LC_SINGLE_SEL
+		if virtual: style |= wx.LC_VIRTUAL
 		wx.ListCtrl.__init__(self, parent, wx.ID_ANY, style=style)
 		listmix.ListCtrlAutoWidthMixin.__init__(self)
 		if self.data: self.update(self.data)
@@ -107,12 +108,12 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, Widget):
 class ReportList(SimpleList):
 
 	def __init__(self, parent, data=[], border=True, header=True,
-				single_sel=True, alt_color=True,
+				single_sel=True, virtual=False, alt_color=True,
 				even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
 				on_select=None, on_activate=None):
 
 		SimpleList.__init__(self, parent, data, border, header,
-						single_sel, alt_color, even_color, odd_color,
+						single_sel, virtual, alt_color, even_color, odd_color,
 						on_select, on_activate)
 
 	def set_columns(self):
@@ -150,3 +151,32 @@ class ReportList(SimpleList):
 		if not index < 0:
 			return self.data[index + 1]
 		return None
+
+def VirtualList(SimpleList):
+
+	def __init__(self, parent, data=[], border=True, header=True,
+				single_sel=True, virtual=True, alt_color=True,
+				even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
+				on_select=None, on_activate=None):
+
+		SimpleList.__init__(self, parent, data, border, header,
+						single_sel, virtual, alt_color, even_color, odd_color,
+						on_select, on_activate)
+
+	def OnGetItemText(self, item, col):
+		return self.get_item_text(item, col)
+
+	def get_item_text(self, item, col):
+		"""
+		Callback method. Should return item text for specified column. 
+		"""
+		return ''
+
+	def OnGetItemImage(self, item):
+		return self.get_item_image(item)
+
+	def get_item_image(self, item):
+		"""
+		Callback method. Should return item icon index or -1.
+		"""
+		return -1
