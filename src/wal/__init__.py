@@ -20,6 +20,7 @@ from basic import *
 from widgets import *
 
 from listwidgets import SimpleList, ReportList
+from layerlist import LayerList
 from treewidgets import TreeElement, TreeWidget
 
 from gctrls import ImageLabel, ImageButton, ImageToggleButton
