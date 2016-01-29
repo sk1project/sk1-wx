@@ -35,6 +35,13 @@ def make_artid(name):
 
 PLUGIN_ICON = make_artid('icon')
 
+BITMAPS = [
+		'check-no', 'check-yes',
+		'visible-no', 'visible-yes',
+		'editable-no', 'editable-yes',
+		'printable-no', 'printable-yes',
+]
+
 
 class Layers_Plugin(RS_Plugin):
 
@@ -45,6 +52,30 @@ class Layers_Plugin(RS_Plugin):
 
 	def build_ui(self):
 		self.icon = get_icon(PLUGIN_ICON)
+		bmp = []
+		for item in BITMAPS: bmp.append(make_artid(item))
+		pnl = wal.VPanel(self.panel, border=True)
+		self.viewer = wal.LayerList(pnl, self.get_data(), bmp)
+		pnl.pack(self.viewer, fill=True, expand=True)
+		self.panel.pack(pnl, padding_all=5, fill=True, expand=True)
+
+	def get_data(self):
+		doc = self.app.current_doc
+		if not doc: return []
+		result = []
+		for layer in doc.get_layers():
+			props = []
+			if doc.active_layer == layer:
+				props.append(1)
+			else:
+				props.append(0)
+			for item in layer.properties:
+				props.append(item)
+			props.append('' + layer.name)
+			result.append(props)
+		result.reverse()
+		return result
+
 
 
 def get_plugin(app):
