@@ -17,7 +17,7 @@
 
 import wx
 from wx.lib.agw.ultimatelistctrl import UltimateListCtrl, UltimateListItemAttr, \
-ULC_SHOW_TOOLTIPS
+ULC_VRULES, ULC_HRULES
 
 import const
 
@@ -25,50 +25,64 @@ import const
 class LayerList(UltimateListCtrl):
 
 	pos_x = None
+	sel_callback = None
+	change_callback = None
 
-	def __init__(self, parent, data=[], images=[], tooltips=[], alt_color=True,
-				even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR):
-		self.data = data
-		self.tooltips = tooltips
+	def __init__(self, parent, data=[], images=[], alt_color=True,
+				even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
+				on_select=None, on_change=None):
 		self.alt_color = alt_color
 		self.attr1 = UltimateListItemAttr()
 		self.attr1.SetBackgroundColour(odd_color)
 		self.attr2 = UltimateListItemAttr()
 		self.attr2.SetBackgroundColour(even_color)
-		self.indexes = []
+
+		self.sel_callback = on_select
+		self.change_callback = on_change
 
 		self.il = wx.ImageList(16, 16)
 		for icon_id in images:
 			bmp = wx.ArtProvider.GetBitmap(icon_id, wx.ART_OTHER, const.SIZE_16)
-			self.indexes.append(self.il.Add(bmp))
-
+			self.il.Add(bmp)
 
 		style = wx.LC_REPORT | wx.LC_VRULES | wx.LC_NO_HEADER
 		style |= wx.LC_SINGLE_SEL
 		style |= wx.LC_VIRTUAL
-		style |= wx.LC_HRULES
-		if self.tooltips: style |= ULC_SHOW_TOOLTIPS
+		style |= ULC_VRULES | ULC_HRULES
 		UltimateListCtrl.__init__(self, parent, agwStyle=style)
 		self.SetImageList(self.il, wx.IMAGE_LIST_SMALL)
 
 		for i in range(4):
 			self.InsertColumn(i, '')
 			self.SetColumnWidth(i, 25)
-
 		self.InsertColumn(4, '')
-		self.SetItemCount(len(self.data))
 		self.SetColumnWidth(4, -1)
+
 		self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelected)
 		self.Bind(wx.EVT_LEFT_DOWN, self.on_mouse_down)
+		selected = None
+		if data:selected = 0
+		self.update(data, selected)
+
+	def update(self, data=[], selected=None):
+		self.data = data
+		self.SetItemCount(len(self.data))
+		if not selected is None:
+			self.Select(selected, True)
 
 	def on_mouse_down(self, event):
 		self.pos_x = event.GetX()
 		event.Skip()
 
 	def OnItemSelected(self, event):
-		self.currentItem = event.m_itemIndex
-		if not self.pos_x is None:
-			print 'column', self.pos_x / 25
+		self.current_item = event.m_itemIndex
+		if self.sel_callback:
+			self.sel_callback(self.current_item)
+		if not self.pos_x is None and self.change_callback:
+			column = self.pos_x / 25
+			if column > 4: column = 4
+			self.change_callback(self.current_item, column)
+			self.pos_x = None
 
 	def OnGetItemToolTip(self, item, col):
 		if col == 4: return self.data[item][4]
