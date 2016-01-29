@@ -19,9 +19,19 @@ class WidgetPanel(wal.HPanel):
 	def __init__(self, parent):
 		wal.HPanel.__init__(self, parent)
 		pnl = wal.VPanel(self, border=True)
-		lst = wal.LayerList(pnl, TEST_LIST, BITMAPS)
-		pnl.pack(lst, fill=True, expand=True)
+		self.lst = wal.LayerList(pnl, TEST_LIST, BITMAPS, on_change=self.changes)
+		pnl.pack(self.lst, fill=True, expand=True)
 		self.pack(pnl, padding_all=10, fill=True, expand=True)
+
+	def changes(self, item, column):
+		if column < 4:
+			if not column:
+				for line in TEST_LIST: line[0] = 0
+				TEST_LIST[item][0] = 1
+			else:
+				TEST_LIST[item][column] = abs(TEST_LIST[item][column] - 1)
+			self.lst.update(TEST_LIST, item)
+
 
 
 app = wal.Application('wxWidgets')
