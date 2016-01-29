@@ -296,6 +296,10 @@ class PD_Presenter:
 	def set_active_layer(self, page, layer_num=-1):
 		self.active_layer = self.doc_presenter.methods.get_layer(page, layer_num)
 
+	def get_layers(self, page=None):
+		if page is None: page = self.active_page
+		return self.methods.get_layers(page)
+
 	def get_editable_layers(self, page=None):
 		if page is None: page = self.active_page
 		layers = []
