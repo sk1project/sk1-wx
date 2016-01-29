@@ -188,6 +188,9 @@ class SK2_Methods:
 	def get_layer(self, page, layer_num=0):
 		return page.childs[layer_num]
 
+	def get_layers(self, page):
+		return [] + page.childs
+
 	def is_layer_visible(self, layer):
 		if layer.properties[0]: return True
 		return False
