@@ -157,8 +157,13 @@ class Page(StructuralObject):
 		self.layer_counter = 0
 		self.parent = parent
 		self.config = config
+
+		index = 1
+		if parent:
+			parent.page_counter += 1
+			index = parent.page_counter
 		if not name:
-			self.name = _('Page') + ' 1'
+			self.name = _('Page') + ' ' + str(index)
 		else:
 			self.name = name
 		if parent is None:
@@ -189,8 +194,12 @@ class Layer(StructuralObject):
 		self.childs = []
 		self.config = config
 
+		index = 1
+		if parent:
+			parent.layer_counter += 1
+			index = parent.layer_counter
 		if not name:
-			self.name = _('Layer') + ' 1'
+			self.name = _('Layer') + ' ' + str(index)
 		else:
 			self.name = name
 
