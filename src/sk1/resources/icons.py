@@ -173,16 +173,20 @@ PD_PATTERN_SCALE_Y = 'pattern-scale-y'
 PD_PATTERN_SHEAR_X = 'pattern-shear-x'
 PD_PATTERN_SHEAR_Y = 'pattern-shear-y'
 
-PD_POSITION_PLGN = "transform-position"
-PD_RESIZE_PLGN = "transform-resize"
-PD_SCALE_PLGN = "transform-scale"
-PD_ROTATE_PLGN = "transform-rotate"
-PD_SHEAR_PLGN = "transform-shear"
+PD_POSITION_PLGN = 'transform-position'
+PD_RESIZE_PLGN = 'transform-resize'
+PD_SCALE_PLGN = 'transform-scale'
+PD_ROTATE_PLGN = 'transform-rotate'
+PD_SHEAR_PLGN = 'transform-shear'
 
-PD_PATHS_EXCLUSION = "paths-exclusion"
-PD_PATHS_FUSION = "paths-fusion"
-PD_PATHS_INTERSECTION = "paths-intersection"
-PD_PATHS_TRIM = "paths-trim"
+PD_PATHS_EXCLUSION = 'paths-exclusion'
+PD_PATHS_FUSION = 'paths-fusion'
+PD_PATHS_INTERSECTION = 'paths-intersection'
+PD_PATHS_TRIM = 'paths-trim'
+
+PD_LAYER_NEW = 'action-layer-new'
+PD_LAYER_DELETE = 'action-layer-delete'
+
 
 #----- MacOS X specific bitmaps
 MAC_TBB_NORMAL = 'tbb-normal'
@@ -267,6 +271,7 @@ GENERICS = [SK1_ICON16, SK1_ICON22, SK1_ICON32, SK1_ICON48, SK1_ICON64, SK1_ICON
 		PD_BEZIER_NODE_SMOOTH, PD_BEZIER_NODE_SYMMETRICAL, PD_BEZIER_SEL_ALL_NODES,
 		PD_BEZIER_REVERSE_ALL_PATHS, PD_BEZIER_SEL_SUBPATH_NODES,
 		PD_BEZIER_DEL_SUBPATH, PD_BEZIER_REVERSE_SUBPATH, PD_BEZIER_EXTRACT_SUBPATH,
+		PD_LAYER_NEW, PD_LAYER_DELETE,
 
 		PD_PREFS_CMS, PD_PREFS_PALETTE, PD_PREFS_RULER, PD_PREFS_GRID,
 		PD_PREFS_CMS_BANNER,
