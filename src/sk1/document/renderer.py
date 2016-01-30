@@ -119,11 +119,12 @@ class PDRenderer(CairoRenderer):
 
 		page = self.presenter.active_page
 		for layer in page.childs:
-			if self.canvas.stroke_view:
-				self.stroke_style = deepcopy(layer.style)
-				stroke = self.stroke_style[1]
-				stroke[1] = 1.0 / self.canvas.zoom
-			self.render(self.ctx, layer.childs)
+			if layer.properties[0]:
+				if self.canvas.stroke_view:
+					self.stroke_style = deepcopy(layer.style)
+					stroke = self.stroke_style[1]
+					stroke[1] = 1.0 / self.canvas.zoom
+				self.render(self.ctx, layer.childs)
 
 	#------GUIDES RENDERING
 	def render_guides(self):
