@@ -22,7 +22,7 @@ from uc2.formats.sk2 import sk2_model as model
 from uc2.formats.sk2 import sk2_const
 from uc2 import libgeom, uc2const, libimg
 
-from sk1 import events, config, modes
+from sk1 import _, events, config, modes
 
 
 class AbstractAPI:
@@ -149,6 +149,9 @@ class AbstractAPI:
 	def _set_layers_snapshot(self, layers_snapshot):
 		for layer, childs in layers_snapshot:
 			layer.childs = childs
+
+	def _set_active_layer(self, layer):
+		self.presenter.active_layer = layer
 
 	def _delete_objects(self, objs_list):
 		for item in objs_list:
@@ -541,6 +544,62 @@ class PresenterAPI(AbstractAPI):
 		self.add_undo(transaction)
 
 	#--- LAYERS
+
+	def create_layer(self, name=''):
+		page = self.presenter.active_page
+		new_layer = model.Layer(self.sk2_cfg, page, name)
+		page.childs += [new_layer, ]
+		objs_list = [[new_layer, page, page.childs.index(new_layer)], ]
+		active_layer_before = self.presenter.active_layer
+		self.presenter.active_layer = new_layer
+		sel = [] + self.selection.objs
+		transaction = [
+			[[self._delete_objects, objs_list],
+			[self._set_selection, sel],
+			[self._set_active_layer, active_layer_before]],
+			[[self._insert_objects, objs_list],
+			[self._set_selection, sel],
+			[self._set_active_layer, new_layer]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def delete_layer(self, layer):
+		page = layer.parent
+		indx = page.childs.index(layer)
+		objs_list = [[layer, page, indx], ]
+		page.childs.remove(layer)
+		active_layer_before = self.presenter.active_layer
+		active_layer_after = self.presenter.active_layer
+		if self.presenter.active_layer == layer:
+			self.presenter.active_layer = page.childs[-1]
+			active_layer_after = self.presenter.active_layer
+		sel = [] + self.selection.objs
+		transaction = [
+			[[self._insert_objects, objs_list],
+			[self._set_selection, sel],
+			[self._set_active_layer, active_layer_before]],
+			[[self._delete_objects, objs_list],
+			[self._set_selection, []],
+			[self._set_active_layer, active_layer_after]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def set_active_layer(self, layer):
+		if not layer == self.presenter.active_layer:
+			active_layer_before = self.presenter.active_layer
+			active_layer_after = layer
+			self.presenter.active_layer = layer
+			sel = [] + self.selection.objs
+			transaction = [
+				[[self._set_selection, sel],
+				[self._set_active_layer, active_layer_before]],
+				[[self._set_selection, sel],
+				[self._set_active_layer, active_layer_after]],
+				False]
+			self.add_undo(transaction)
+			self.selection.update()
 
 	def set_layer_properties(self, layer, prop):
 		before = layer.properties
