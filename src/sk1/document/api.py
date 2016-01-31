@@ -139,6 +139,10 @@ class AbstractAPI:
 		parent = model.childs[0]
 		parent.childs = snapshot
 
+	def _set_page_snapshot(self, layers):
+		page = self.presenter.active_page
+		page.childs = layers
+
 	def _get_layers_snapshot(self):
 		layers_snapshot = []
 		layers = self.presenter.get_editable_layers()
@@ -575,6 +579,7 @@ class PresenterAPI(AbstractAPI):
 			self.presenter.active_layer = page.childs[-1]
 			active_layer_after = self.presenter.active_layer
 		sel = [] + self.selection.objs
+		self.selection.clear()
 		transaction = [
 			[[self._insert_objects, objs_list],
 			[self._set_selection, sel],
@@ -606,10 +611,8 @@ class PresenterAPI(AbstractAPI):
 		before = layer.properties
 		after = prop
 		sel_before = [] + self.selection.objs
-
 		self.selection.clear()
 		self._set_layer_properties(layer, prop)
-
 		transaction = [
 			[[self._set_layer_properties, layer, before],
 			[self._set_selection, sel_before], ],
@@ -618,6 +621,65 @@ class PresenterAPI(AbstractAPI):
 			False]
 		self.add_undo(transaction)
 		self.selection.update()
+
+	def layer_raise(self, layer):
+		page = self.presenter.active_page
+		layers_before = self.presenter.get_layers()
+		index = layers_before.index(layer)
+		layers_after = [] + layers_before
+		layers_after.remove(layer)
+		layers_after.insert(index + 1, layer)
+		page.childs = layers_after
+		transaction = [
+			[[self._set_page_snapshot, layers_before]],
+			[[self._set_page_snapshot, layers_after]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def layer_to_top(self, layer):
+		page = self.presenter.active_page
+		layers_before = self.presenter.get_layers()
+		layers_after = [] + layers_before
+		layers_after.remove(layer)
+		layers_after.append(layer)
+		page.childs = layers_after
+		transaction = [
+			[[self._set_page_snapshot, layers_before]],
+			[[self._set_page_snapshot, layers_after]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def layer_lower(self, layer):
+		page = self.presenter.active_page
+		layers_before = self.presenter.get_layers()
+		index = layers_before.index(layer)
+		layers_after = [] + layers_before
+		layers_after.remove(layer)
+		layers_after.insert(index - 1, layer)
+		page.childs = layers_after
+		transaction = [
+			[[self._set_page_snapshot, layers_before]],
+			[[self._set_page_snapshot, layers_after]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def layer_to_bottom(self, layer):
+		page = self.presenter.active_page
+		layers_before = self.presenter.get_layers()
+		layers_after = [] + layers_before
+		layers_after.remove(layer)
+		layers_after = [layer, ] + layers_after
+		page.childs = layers_after
+		transaction = [
+			[[self._set_page_snapshot, layers_before]],
+			[[self._set_page_snapshot, layers_after]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
 
 	#--- GRID
 
