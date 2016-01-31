@@ -587,7 +587,8 @@ class PresenterAPI(AbstractAPI):
 		self.selection.update()
 
 	def set_active_layer(self, layer):
-		if not layer == self.presenter.active_layer:
+		if not layer == self.presenter.active_layer and \
+		layer.properties[0] and layer.properties[1]:
 			active_layer_before = self.presenter.active_layer
 			active_layer_after = layer
 			self.presenter.active_layer = layer
