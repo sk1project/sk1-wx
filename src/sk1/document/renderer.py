@@ -124,7 +124,12 @@ class PDRenderer(CairoRenderer):
 					self.stroke_style = deepcopy(layer.style)
 					stroke = self.stroke_style[1]
 					stroke[1] = 1.0 / self.canvas.zoom
+				if not layer.properties[3] and not self.canvas.draft_view:
+					self.antialias_flag = False
 				self.render(self.ctx, layer.childs)
+				if not layer.properties[3] and not self.canvas.draft_view:
+					self.antialias_flag = True
+
 
 	#------GUIDES RENDERING
 	def render_guides(self):
