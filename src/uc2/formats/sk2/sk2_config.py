@@ -37,15 +37,15 @@ class SK2_Config(XmlConfigParser):
 	page_orientation = uc2const.PORTRAIT
 
 	layer_color = '#3252A2'
-	layer_propeties = [1, 1, 1]
+	layer_propeties = [1, 1, 1, 1]
 	master_layer_color = '#000000'
 
 	guide_layer_color = '#0051FF'
-	guide_layer_propeties = [1, 1, 0]
+	guide_layer_propeties = [1, 1, 0, 0]
 
 	grid_layer_color = [0.0, 0.0, 1.0, 0.15]
 	grid_layer_geometry = [0.0, 0.0, uc2const.mm_to_pt, uc2const.mm_to_pt]
-	grid_layer_propeties = [0, 0, 0]
+	grid_layer_propeties = [0, 0, 0, 1]
 
 	default_polygon_num = 5
 	default_text = "TEXT text"
