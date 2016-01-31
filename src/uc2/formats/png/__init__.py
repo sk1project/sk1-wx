@@ -43,7 +43,8 @@ def png_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf={}, **kw
 	rend = CairoRenderer(sk2_doc.cms)
 	antialias_flag = True
 	if 'antialiasing' in kw.keys():
-		antialias_flag = kw['antialiasing'] == 'True' or kw['antialiasing'] == '1'
+		if not kw['antialiasing'] in ('True', '1'):
+			antialias_flag = False
 	rend.antialias_flag = antialias_flag
 	layers = sk2_doc.methods.get_visible_layers(page)
 
