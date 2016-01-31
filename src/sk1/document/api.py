@@ -109,6 +109,9 @@ class AbstractAPI:
 	def _set_layer_properties(self, layer, prop):
 		layer.properties = prop
 
+	def _set_layer_name(self, layer, name):
+		layer.name = name
+
 	def _set_grid_values(self, geom):
 		self.methods.set_grid_values(geom)
 
@@ -618,6 +621,17 @@ class PresenterAPI(AbstractAPI):
 			[self._set_selection, sel_before], ],
 			[[self._set_layer_properties, layer, after],
 			[self._set_selection, []]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def set_layer_name(self, layer, name):
+		before = layer.name
+		after = name
+		self._set_layer_name(layer, name)
+		transaction = [
+			[[self._set_layer_name, layer, before], ],
+			[[self._set_layer_name, layer, after], ],
 			False]
 		self.add_undo(transaction)
 		self.selection.update()
