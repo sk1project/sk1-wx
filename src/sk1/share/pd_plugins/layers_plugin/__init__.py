@@ -23,7 +23,7 @@ from uc2.libgeom import apply_trafo_to_paths
 from uc2.libgeom import intersect_paths, fuse_paths, trim_paths, excluse_paths
 
 from sk1 import _, events, modes
-from sk1.dialogs import msg_dialog, yesno_dialog, error_dialog
+from sk1.dialogs import edit_dlg
 from sk1.resources import icons, get_icon, get_bmp
 from sk1.app_plugins import RS_Plugin
 
@@ -75,12 +75,15 @@ class Layers_Plugin(RS_Plugin):
 			tooltip=_('Layer to top'), onclick=self.raise_layer_to_top)
 		self.layer_delete = wal.ImageButton(pnl, icons.PD_LAYER_DELETE,
 			tooltip=_('Delete layer'), onclick=self.delete_layer)
+		self.layer_edit = wal.ImageButton(pnl, icons.PD_EDIT,
+			tooltip=_('Rename layer'), onclick=self.rename_layer)
 		pnl.pack(self.layer_new)
 		pnl.pack(self.layer_to_bottom)
 		pnl.pack(self.layer_lower)
 		pnl.pack(self.layer_raise)
 		pnl.pack(self.layer_to_top)
 		pnl.pack(self.layer_delete)
+		pnl.pack(self.layer_edit)
 		self.panel.pack(pnl)
 
 		bmp = []
@@ -185,6 +188,12 @@ class Layers_Plugin(RS_Plugin):
 		self.app.current_doc.api.layer_to_bottom(layer)
 		self.viewer.set_selected(self.get_layer_index(layer))
 		self.update()
+
+	def rename_layer(self):
+		layer = self.get_selected_layer()
+		txt = edit_dlg(self.app.mw, _('Rename layer'), '' + layer.name)
+		if not txt is None and not layer.name == txt:
+			self.app.current_doc.api.set_layer_name(layer, txt)
 
 	def update(self, *args):
 		doc = self.app.current_doc
