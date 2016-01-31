@@ -21,12 +21,15 @@ ULC_VRULES, ULC_HRULES
 
 import const
 
+WIDTH = 22
 
 class LayerList(UltimateListCtrl):
 
+	current_item = None
 	pos_x = None
 	sel_callback = None
 	change_callback = None
+	selection_flag = True
 
 	def __init__(self, parent, data=[], images=[], alt_color=True,
 				even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
@@ -54,32 +57,41 @@ class LayerList(UltimateListCtrl):
 
 		for i in range(4):
 			self.InsertColumn(i, '')
-			self.SetColumnWidth(i, 25)
+			self.SetColumnWidth(i, WIDTH)
 		self.InsertColumn(4, '')
 		self.SetColumnWidth(4, -1)
 
 		self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelected)
 		self.Bind(wx.EVT_LEFT_DOWN, self.on_mouse_down)
-		selected = None
-		if data:selected = 0
-		self.update(data, selected)
+		self.update(data)
+		if data:self.set_selected(0)
 
-	def update(self, data=[], selected=None):
+	def get_selected(self):
+		return self.current_item
+
+	def update(self, data=[]):
+		self.selection_flag = False
 		self.data = data
 		self.SetItemCount(len(self.data))
-		if not selected is None:
-			self.Select(selected, True)
+		self.selection_flag = True
+
+	def set_selected(self, index):
+		self.selection_flag = False
+		self.Select(index, True)
+		self.current_item = index
+		self.selection_flag = True
 
 	def on_mouse_down(self, event):
 		self.pos_x = event.GetX()
 		event.Skip()
 
 	def OnItemSelected(self, event):
+		if not self.selection_flag: return
 		self.current_item = event.m_itemIndex
 		if self.sel_callback:
 			self.sel_callback(self.current_item)
 		if not self.pos_x is None and self.change_callback:
-			column = self.pos_x / 25
+			column = self.pos_x / WIDTH
 			if column > 4: column = 4
 			self.change_callback(self.current_item, column)
 			self.pos_x = None
