@@ -1,11 +1,11 @@
 import wal
 
 TEST_LIST = [
-		[0, 1, 1, 1, 'Layer3a'],
-		[0, 1, 1, 1, 'Layer3b'],
-		[1, 1, 0, 1, 'Layer3c'],
-		[0, 1, 1, 0, 'Layer3d'],
-		[0, 1, 1, 1, 'Layer3f'],
+		[0, 1, 1, 1, 1, 'Layer3a'],
+		[0, 1, 1, 1, 1, 'Layer3b'],
+		[1, 1, 0, 1, 1, 'Layer3c'],
+		[0, 1, 1, 0, 1, 'Layer3d'],
+		[0, 1, 1, 1, 1, 'Layer3f'],
 ]
 
 BITMAPS = [
@@ -13,6 +13,7 @@ BITMAPS = [
 		'gtk-stop', 'gtk-index',
 		'gtk-stop', 'gtk-edit',
 		'gtk-print-error', 'gtk-print',
+		'gtk-stop', 'gtk-edit',
 ]
 
 class WidgetPanel(wal.HPanel):
@@ -30,7 +31,7 @@ class WidgetPanel(wal.HPanel):
 				TEST_LIST[item][0] = 1
 			else:
 				TEST_LIST[item][column] = abs(TEST_LIST[item][column] - 1)
-			self.lst.update(TEST_LIST, item)
+			self.lst.update(TEST_LIST)
 
 
 
