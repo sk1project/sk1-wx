@@ -223,6 +223,7 @@ class Layer(StructuralObject):
 		stroke = self.style[1]
 		if stroke:
 			stroke[2] = [uc2const.COLOR_RGB , self.color[:3], self.color[3], '']
+		if len(self.properties) == 3: self.properties += [1, ]
 
 class GuideLayer(Layer):
 	"""
@@ -239,6 +240,10 @@ class GuideLayer(Layer):
 		self.childs = []
 		self.color = '' + self.config.guide_layer_color
 		self.properties = [] + self.config.guide_layer_propeties
+
+	def update(self):
+		Layer.update(self)
+		if self.properties[3]:self.properties[3] = 0
 
 class GridLayer(Layer):
 	"""
@@ -257,6 +262,10 @@ class GridLayer(Layer):
 		self.color = [] + self.config.grid_layer_color
 		self.grid = [] + self.config.grid_layer_geometry
 		self.properties = [] + self.config.grid_layer_propeties
+
+	def update(self):
+		Layer.update(self)
+		if not self.properties[3]:self.properties[3] = 1
 
 class LayerGroup(StructuralObject):
 	"""
