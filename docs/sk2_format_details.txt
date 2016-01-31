@@ -115,7 +115,7 @@ width, height - real page sizes
 orientation - just indicates page orientation
 -------------------------------------------------------------------------------
 LAYER PROPETIES
-[visible, editable, printable]
+[visible, editable, printable, antialiasing]
 
 -------------------------------------------------------------------------------
 GRID GEOMETRY
