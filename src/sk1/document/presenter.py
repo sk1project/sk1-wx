@@ -304,11 +304,14 @@ class PD_Presenter:
 		if page is None: page = self.active_page
 		layers = []
 		for layer in self.methods.get_desktop_layers():
-			if layer.properties[1]:layers.append(layer)
+			if layer.properties[0] and layer.properties[1]:
+				layers.append(layer)
 		for layer in page.childs:
-			if layer.properties[1]:layers.append(layer)
+			if layer.properties[0] and layer.properties[1]:
+				layers.append(layer)
 		for layer in self.methods.get_master_layers():
-			if layer.properties[1]:layers.append(layer)
+			if layer.properties[0] and layer.properties[1]:
+				layers.append(layer)
 		return layers
 
 	def get_visible_layers(self, page=None):
