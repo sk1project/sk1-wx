@@ -55,11 +55,11 @@ class LayerList(UltimateListCtrl):
 		UltimateListCtrl.__init__(self, parent, agwStyle=style)
 		self.SetImageList(self.il, wx.IMAGE_LIST_SMALL)
 
-		for i in range(4):
+		for i in range(5):
 			self.InsertColumn(i, '')
 			self.SetColumnWidth(i, WIDTH)
-		self.InsertColumn(4, '')
-		self.SetColumnWidth(4, -1)
+		self.InsertColumn(5, '')
+		self.SetColumnWidth(5, -1)
 
 		self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelected)
 		self.Bind(wx.EVT_LEFT_DOWN, self.on_mouse_down)
@@ -92,18 +92,18 @@ class LayerList(UltimateListCtrl):
 			self.sel_callback(self.current_item)
 		if not self.pos_x is None and self.change_callback:
 			column = self.pos_x / WIDTH
-			if column > 4: column = 4
+			if column > 5: column = 5
 			self.change_callback(self.current_item, column)
 			self.pos_x = None
 
 	def OnGetItemToolTip(self, item, col):
-		if col == 4: return self.data[item][4]
+		if col == 5: return self.data[item][5]
 		return None
 
 	def OnGetItemTextColour(self, item, col): return const.BLACK
 
 	def OnGetItemText(self, item, col):
-		if col == 4: return self.data[item][4]
+		if col == 5: return self.data[item][5]
 		return ''
 
 	def OnGetItemImage(self, item):
@@ -116,7 +116,7 @@ class LayerList(UltimateListCtrl):
 		return None
 
 	def OnGetItemColumnImage(self, item, column=0):
-		if column == 4:return []
+		if column == 5:return []
 		else: return [column * 2 + self.data[item][column]]
 
 	def OnGetItemColumnCheck(self, item, column=0): return []
