@@ -40,6 +40,7 @@ BITMAPS = [
 		'visible-no', 'visible-yes',
 		'editable-no', 'editable-yes',
 		'printable-no', 'printable-yes',
+		'aa-no', 'aa-yes',
 ]
 
 ACTIONS = [
@@ -57,7 +58,9 @@ class Layers_Plugin(RS_Plugin):
 
 	def build_ui(self):
 		self.icon = get_icon(PLUGIN_ICON)
-		self.panel.pack((3, 3))
+		self.panel.pack(wal.Label(self.panel, _('Layers'), fontbold=True),
+					padding=3)
+		self.panel.pack(wal.HLine(self.panel), fill=True)
 
 		pnl = wal.HPanel(self.panel)
 		self.layer_new = wal.ImageButton(pnl, icons.PD_LAYER_NEW,
@@ -86,7 +89,7 @@ class Layers_Plugin(RS_Plugin):
 		self.viewer = wal.LayerList(pnl, self.get_data(), bmp,
 								on_select=self.update, on_change=self.changed)
 		pnl.pack(self.viewer, fill=True, expand=True)
-		self.panel.pack(pnl, padding_all=5, fill=True, expand=True)
+		self.panel.pack(pnl, padding_all=3, fill=True, expand=True)
 
 		events.connect(events.DOC_CHANGED, self.update)
 		events.connect(events.DOC_MODIFIED, self.update)
@@ -135,7 +138,7 @@ class Layers_Plugin(RS_Plugin):
 		if not col:
 			if not layers[index] == doc.active_layer:
 				doc.api.set_active_layer(layers[index])
-		elif col < 4:
+		elif col < 5:
 			layer = layers[index]
 			if col < 3 and layer == doc.active_layer:
 				flag = False
