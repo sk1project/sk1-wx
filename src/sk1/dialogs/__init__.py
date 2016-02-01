@@ -23,7 +23,7 @@ from page_dlg import goto_page_dlg, delete_page_dlg, insert_page_dlg
 from log_viewer import log_viewer_dlg
 from palette_inf import palette_info_dlg
 from palcol_dlg import palette_collection_dlg
-from fill_dlg import fill_dlg
+from filldlg import fill_dlg
 from stroke_dlg import stroke_dlg
 from docprops import docprops_dlg
 from editdlg import edit_dlg
