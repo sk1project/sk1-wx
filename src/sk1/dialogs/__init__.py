@@ -19,10 +19,10 @@ from wal import msg_dialog, error_dialog, stop_dialog, ync_dialog, yesno_dialog
 from filedlgs import get_open_file_name, get_save_file_name, get_dir_path
 from progressdlg import ProgressDialog
 from aboutdlg import about_dialog
-from page_dlg import goto_page_dlg, delete_page_dlg, insert_page_dlg
-from log_viewer import log_viewer_dlg
-from palette_inf import palette_info_dlg
-from palcol_dlg import palette_collection_dlg
+from pagedlg import goto_page_dlg, delete_page_dlg, insert_page_dlg
+from logviewer import log_viewer_dlg
+from paletteinfo import palette_info_dlg
+from palcoldlg import palette_collection_dlg
 from filldlg import fill_dlg
 from strokedlg import stroke_dlg
 from docprops import docprops_dlg
