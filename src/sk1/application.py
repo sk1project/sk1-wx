@@ -332,8 +332,7 @@ class pdApplication(wal.Application, UCApplication):
 					uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
 			doc_file = os.path.splitext(doc_file)[0] + "." + \
 					uc2const.FORMAT_EXTENSION[uc2const.PNG][0]
-		if not os.path.lexists(os.path.dirname(doc_file)):
-			doc_file = os.path.join(config.export_dir,
+		doc_file = os.path.join(config.export_dir,
 								os.path.basename(doc_file))
 		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
 							_('Export document As...'),
@@ -350,7 +349,6 @@ class pdApplication(wal.Application, UCApplication):
 				self.print_stacktrace()
 				return
 			config.export_dir = str(os.path.dirname(doc_file))
-			self.history.add_entry(doc_file, appconst.SAVED)
 			events.emit(events.APP_STATUS, _('Document is successfully exported'))
 
 	def extract_bitmap(self):
@@ -371,7 +369,6 @@ class pdApplication(wal.Application, UCApplication):
 				self.print_stacktrace()
 				return
 			config.save_dir = str(os.path.dirname(doc_file))
-			self.history.add_entry(doc_file, appconst.SAVED)
 			events.emit(events.APP_STATUS, _('Bitmap is successfully extracted'))
 
 	def export_palette(self, palette, parent=None):
