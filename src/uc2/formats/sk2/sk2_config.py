@@ -78,7 +78,14 @@ class SK2_Config(XmlConfigParser):
 					default_stroke_markers,
 					]
 
-	default_text_style = []
+	default_font_family = 'Sans'
+	default_font_face = 'Regular'
+	default_font_size = 12.0
+	default_text_alignment = sk2_const.TEXT_ALIGN_LEFT
+	default_text_spacing = []
+	default_text_style = [default_font_family, default_font_face,
+			default_font_size, default_text_alignment, default_text_spacing]
+
 	default_structural_style = []
 	default_cmyk_image_style = [sk2_const.CMYK_BLACK, sk2_const.CMYK_WHITE]
 	default_rgb_image_style = [sk2_const.RGB_BLACK, sk2_const.RGB_WHITE]
