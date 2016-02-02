@@ -122,7 +122,6 @@ class TextCreator(AbstractCreator):
 		if self.start and self.end:
 			if abs(self.end[0] - self.start[0]) > 2 and \
 			abs(self.end[1] - self.start[1]) > 2:
-				print self.start_doc, self.end_doc
 				rect = self.start_doc + self.end_doc
 				self.api.create_text(rect)
 		return True
