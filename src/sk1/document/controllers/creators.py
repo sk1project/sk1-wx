@@ -110,3 +110,21 @@ class PolygonCreator(AbstractCreator):
 				rect = self.start_doc + self.end_doc
 				self.api.create_polygon(rect)
 		return True
+
+class TextCreator(AbstractCreator):
+
+	mode = modes.TEXT_MODE
+
+	def __init__(self, canvas, presenter):
+		AbstractCreator.__init__(self, canvas, presenter)
+
+	def do_action(self, event):
+		if self.start and self.end:
+			if abs(self.end[0] - self.start[0]) > 2 and \
+			abs(self.end[1] - self.start[1]) > 2:
+				print self.start_doc, self.end_doc
+				rect = self.start_doc + self.end_doc
+				self.api.create_text(rect)
+		return True
+
+	def repaint(self):pass

@@ -20,7 +20,7 @@ from select_ctrl import SelectController, PickController
 from trafo_ctrl import MoveController, TransformController
 from fleur_ctrl import FleurController, TempFleurController
 from zoom_ctrl import ZoomController
-from creators import EllipseCreator, PolygonCreator, RectangleCreator
+from creators import EllipseCreator, PolygonCreator, RectangleCreator, TextCreator
 from guide_ctrl import GuideController
 from paint_ctrl import PolyLineCreator, PathsCreator
 from grad_ctrl import GradientChooser, GradientCreator, GradientEditor
