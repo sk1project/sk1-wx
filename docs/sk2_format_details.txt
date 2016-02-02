@@ -74,6 +74,12 @@ STROKE DEFINITION:
 
 -------------------------------------------------------------------------------
 
+TEXT STYLE DEFINITION
+
+[font-family, font-face, size, alignment, spacing]
+
+-------------------------------------------------------------------------------
+
 STYLE DEFINITION:
 
 [fill, stroke, text, image_style]
