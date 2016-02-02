@@ -22,7 +22,7 @@ from uc2.formats.sk2 import sk2_model as model
 from uc2.formats.sk2 import sk2_const
 from uc2 import libgeom, uc2const, libimg
 
-from sk1 import _, events, config, modes
+from sk1 import _, events, config, modes, dialogs
 
 
 class AbstractAPI:
@@ -1808,16 +1808,17 @@ class PresenterAPI(AbstractAPI):
 
 	#--- TEXT
 
-	def create_text(self, rect, width=0):pass
-#		rect = self._normalize_rect(rect)
-#		parent = self.presenter.active_layer
+	def create_text(self, rect, width=0):
+		rect = self._normalize_rect(rect)
+		parent = self.presenter.active_layer
 #		if width == 0: width = rect[2]
-#		text = dialogs.text_edit_dialog(self.app.mw)
-#		if text:
-#			obj = model.Text(self.sk2_cfg, parent, rect, text, width)
-#			obj.style = deepcopy(self.model.styles['Default Style'])
-#			obj.update()
-#			self.insert_object(obj, parent, len(parent.childs))
+		text = dialogs.edit_dlg(self.app.mw, 'Entry text',
+							self.sk2_cfg.default_text)
+		if text:
+			obj = model.Text(self.sk2_cfg, parent, rect, text)
+			obj.style = deepcopy(self.model.styles['Default Style'])
+			obj.update()
+			self.insert_object(obj, parent, len(parent.childs))
 
 	#FIXME: Add undo for operation!
 	def edit_text(self):pass
