@@ -694,7 +694,7 @@ class Text(PrimitiveObject):
 	def is_closed(self): return True
 
 	def get_initial_paths(self):
-		return libgeom.get_text_path(self.text, self.width, self.style,
+		return libgeom.get_text_paths(self.text, self.width, self.style[2],
 										self.attributes)
 
 #---------------Bitmap objects-----------------------
