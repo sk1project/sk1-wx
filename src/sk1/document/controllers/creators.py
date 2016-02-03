@@ -119,11 +119,7 @@ class TextCreator(AbstractCreator):
 		AbstractCreator.__init__(self, canvas, presenter)
 
 	def do_action(self, event):
-		if self.start and self.end:
-			if abs(self.end[0] - self.start[0]) > 2 and \
-			abs(self.end[1] - self.start[1]) > 2:
-				rect = self.start_doc + self.end_doc
-				self.api.create_text(rect)
+		if self.end_doc: self.api.create_text(self.end_doc)
 		return True
 
 	def repaint(self):pass
