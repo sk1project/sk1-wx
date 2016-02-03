@@ -1810,7 +1810,7 @@ class PresenterAPI(AbstractAPI):
 
 	def create_text(self, doc_point):
 		parent = self.presenter.active_layer
-		text = dialogs.edit_dlg(self.app.mw, 'Entry text',
+		text = dialogs.multiline_edit_dlg(self.app.mw, 'Entry text',
 							self.sk2_cfg.default_text)
 		if text:
 			obj = model.Text(self.sk2_cfg, parent, doc_point, text)
