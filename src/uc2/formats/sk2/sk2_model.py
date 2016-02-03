@@ -689,7 +689,7 @@ class Text(PrimitiveObject):
 	attributes = []
 
 	def __init__(self, config, parent=None,
-				rect=[] + sk2_const.STUB_RECT,
+				point=[0.0, 0.0],
 				text="",
 				width=sk2_const.TEXTBLOCK_WIDTH,
 				trafo=[] + sk2_const.NORMAL_TRAFO,
@@ -706,8 +706,8 @@ class Text(PrimitiveObject):
 			self.text = config.default_text
 		self.trafo = trafo
 		self.width = width
-		self.trafo[4] = rect[0]
-		self.trafo[5] = rect[1] + rect[3]
+		self.trafo[4] = point[0]
+		self.trafo[5] = point[1]
 		self.style = style
 		self.attributes = []
 
