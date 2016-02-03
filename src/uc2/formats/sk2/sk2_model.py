@@ -88,8 +88,8 @@ class Document(DocumentObject):
 		self.doc_origin = self.config.doc_origin
 		self.doc_units = self.config.doc_units
 		self.styles = {}
-		self.styles['Default Style'] = [deepcopy(self.config.default_fill),
-									deepcopy(self.config.default_stroke), [], []]
+		self.styles['Default Style'] = deepcopy([self.config.default_fill,
+								self.config.default_stroke, [], []])
 		self.resources = {}
 
 	def update(self):
@@ -98,13 +98,31 @@ class Document(DocumentObject):
 								self.config.doc_license,
 								self.config.doc_keywords,
 								self.config.doc_notes, ])
+		if not 'Default Text Style' in self.styles:
+			self.styles['Default Text Style'] = deepcopy([
+				self.config.default_text_fill, [],
+				self.config.default_text_style])
 		DocumentObject.update(self)
 
 	def get_def_style(self):
 		return deepcopy(self.styles['Default Style'])
 
 	def set_def_style(self, style):
-		self.styles['Default Style'] = style
+		self.styles['Default Style'] = deepcopy(style)
+
+	def get_text_style(self):
+		return deepcopy(self.styles['Default Text Style'])
+
+	def set_text_style(self, style):
+		self.styles['Default Text Style'] = deepcopy(style)
+
+	def get_style(self, name):
+		if name in self.styles:
+			return deepcopy(self.styles[name])
+		return None
+
+	def set_style(self, style, name):
+		self.styles[name] = deepcopy(style)
 
 
 
@@ -722,7 +740,7 @@ class Pixmap(PrimitiveObject):
 				alpha_channel='',
 				size=(100, 100),
 				trafo=[] + sk2_const.NORMAL_TRAFO,
-				image_style=[] + sk2_const.EMPTY_IMAGE_STYLE):
+				style=[]):
 		self.cid = PIXMAP
 		self.config = config
 		self.parent = parent
