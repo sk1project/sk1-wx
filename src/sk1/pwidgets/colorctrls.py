@@ -604,13 +604,13 @@ class StyleMonitor(wal.VPanel):
 
 	def doc_changed(self, doc):
 		cms = doc.cms
-		fill_style = doc.model.styles['Default Style'][0]
-		stroke_style = doc.model.styles['Default Style'][1]
+		fill_style = doc.model.get_def_style()[0]
+		stroke_style = doc.model.get_def_style()[1]
 		self.stroke.cms = cms
 		self.fill.cms = cms
-		self.fill.set_swatch_fill(deepcopy(fill_style))
+		self.fill.set_swatch_fill(fill_style)
 		if stroke_style:
-			self.stroke.set_color(deepcopy(stroke_style[2]))
+			self.stroke.set_color(stroke_style[2])
 		else:
 			self.stroke.set_color([])
 

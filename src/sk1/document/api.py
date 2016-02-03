@@ -1402,7 +1402,7 @@ class PresenterAPI(AbstractAPI):
 		parent = self.presenter.active_layer
 		obj = model.Curve(self.sk2_cfg, parent, paths)
 		if style is None:
-			obj.style = deepcopy(self.model.styles['Default Style'])
+			obj.style = self.model.get_def_style()
 		else:
 			obj.style = style
 		obj.update()
@@ -1568,7 +1568,7 @@ class PresenterAPI(AbstractAPI):
 		rect = self._normalize_rect(rect)
 		parent = self.presenter.active_layer
 		obj = model.Rectangle(self.sk2_cfg, parent, rect)
-		obj.style = deepcopy(self.model.styles['Default Style'])
+		obj.style = self.model.get_def_style()
 		obj.update()
 		self.insert_object(obj, parent, len(parent.childs))
 
@@ -1626,7 +1626,7 @@ class PresenterAPI(AbstractAPI):
 		rect = self._normalize_rect(rect)
 		parent = self.presenter.active_layer
 		obj = model.Circle(self.sk2_cfg, parent, rect)
-		obj.style = deepcopy(self.model.styles['Default Style'])
+		obj.style = self.model.get_def_style()
 		obj.update()
 		self.insert_object(obj, parent, len(parent.childs))
 
@@ -1682,7 +1682,7 @@ class PresenterAPI(AbstractAPI):
 		parent = self.presenter.active_layer
 		obj = model.Polygon(self.sk2_cfg, parent, rect,
 						corners_num=config.default_polygon_num)
-		obj.style = deepcopy(self.model.styles['Default Style'])
+		obj.style = self.model.get_def_style()
 		obj.update()
 		self.insert_object(obj, parent, len(parent.childs))
 
@@ -1816,7 +1816,7 @@ class PresenterAPI(AbstractAPI):
 							self.sk2_cfg.default_text)
 		if text:
 			obj = model.Text(self.sk2_cfg, parent, rect, text)
-			obj.style = deepcopy(self.model.styles['Default Style'])
+			obj.style = self.model.get_def_style()
 			obj.update()
 			self.insert_object(obj, parent, len(parent.childs))
 

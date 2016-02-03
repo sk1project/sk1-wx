@@ -73,7 +73,7 @@ class AppProxy:
 		new_fill_style = dialogs.fill_dlg(self.mw, doc, fill_style, title)
 		if not new_fill_style is None:
 			if default_style:
-				new_style = deepcopy(doc.model.styles['Default Style'])
+				new_style = doc.model.get_def_style()
 				new_style[0] = new_fill_style
 				doc.api.set_default_style(new_style)
 			else:
@@ -124,7 +124,7 @@ class AppProxy:
 		new_stroke_style = dialogs.stroke_dlg(self.mw, doc, stroke_style, title)
 		if not new_stroke_style is None:
 			if default_style:
-				new_style = deepcopy(doc.model.styles['Default Style'])
+				new_style = doc.model.get_def_style()
 				new_style[1] = new_stroke_style
 				doc.api.set_default_style(new_style)
 			else:
@@ -409,7 +409,7 @@ class AppProxy:
 				if obj.is_primitive() and not obj.is_pixmap() and obj.style[1] \
 				and obj.style[1][1]:
 					pths = apply_trafo_to_paths(obj.get_initial_paths(), obj.trafo)
-					style = deepcopy(doc.model.styles['Default Style'])
+					style = doc.model.get_def_style()
 					style[0][1] = sk2_const.FILL_SOLID
 					style[0][2] = deepcopy(obj.style[1][2])
 					pths = stroke_to_curve(pths, obj.style[1])
@@ -563,7 +563,7 @@ class AppProxy:
 			txt += _('This style will be applied to newly created objects.')
 			title = self.app.appdata.app_name
 			if dialogs.yesno_dialog(self.mw, title, txt):
-				new_style = deepcopy(doc.model.styles['Default Style'])
+				new_style = doc.model.get_def_style()
 				if color:
 					fill_style = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID,
 							deepcopy(color)]
@@ -585,7 +585,7 @@ class AppProxy:
 			txt += _('This style will be applied to newly created objects.')
 			title = self.app.appdata.app_name
 			if dialogs.yesno_dialog(self.mw, title, txt):
-				new_style = deepcopy(doc.model.styles['Default Style'])
+				new_style = doc.model.get_def_style()
 				if color:
 					if new_style[1]:
 						new_style[1][2] = deepcopy(color)
