@@ -79,6 +79,7 @@ def get_text_paths(text, width, text_style, attributes):
 		PANGO_LAYOUT.set_justify(True)
 		PANGO_LAYOUT.set_alignment(pango.ALIGN_LEFT)
 	else:
+		PANGO_LAYOUT.set_justify(False)
 		PANGO_LAYOUT.set_alignment(ALIGN_MAP[text_style[3]])
 
 	PANGO_LAYOUT.set_markup(cgi.escape(text))
@@ -100,6 +101,7 @@ def get_text_paths(text, width, text_style, attributes):
 		layout.set_justify(True)
 		layout.set_alignment(pango.ALIGN_LEFT)
 	else:
+		layout.set_justify(False)
 		layout.set_alignment(ALIGN_MAP[text_style[3]])
 	layout.set_markup(cgi.escape(text))
 	#---
