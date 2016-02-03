@@ -1808,14 +1808,12 @@ class PresenterAPI(AbstractAPI):
 
 	#--- TEXT
 
-	def create_text(self, rect, width=0):
-		rect = self._normalize_rect(rect)
+	def create_text(self, doc_point):
 		parent = self.presenter.active_layer
-#		if width == 0: width = rect[2]
 		text = dialogs.edit_dlg(self.app.mw, 'Entry text',
 							self.sk2_cfg.default_text)
 		if text:
-			obj = model.Text(self.sk2_cfg, parent, rect, text)
+			obj = model.Text(self.sk2_cfg, parent, doc_point, text)
 			obj.style = self.model.get_text_style()
 			obj.update()
 			self.insert_object(obj, parent, len(parent.childs))
