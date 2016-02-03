@@ -67,15 +67,7 @@ def get_fonts():
 
 def get_text_paths(text, width, text_style, attributes):
 
-	#Setting cairo context
-	CTX.set_matrix(libcairo.DIRECT_MATRIX)
-	CTX.new_path()
-	CTX.move_to(0, 0)
-
-	PCCTX.update_layout(PANGO_LAYOUT)
-
 	#Processing text properties
-
 	if not width == sk2_const.TEXTBLOCK_WIDTH:
 		width = int(width * PANGO_UNITS)
 	PANGO_LAYOUT.set_width(width)
@@ -91,10 +83,29 @@ def get_text_paths(text, width, text_style, attributes):
 
 	PANGO_LAYOUT.set_markup(cgi.escape(text))
 
+	#Context update
+	size = PANGO_LAYOUT.get_pixel_size()
+	surf = cairo.ImageSurface(cairo.FORMAT_RGB24, size[0], size[1])
+	ctx = cairo.Context(surf)
+	ctx.set_matrix(libcairo.DIRECT_MATRIX)
+	ctx.new_path()
+	ctx.move_to(0, 0)
+	pcctx = pangocairo.CairoContext(ctx)
+	layout = pcctx.create_layout()
+	pcctx.update_layout(layout)
+
+	layout.set_width(width)
+	layout.set_font_description(pango.FontDescription(fnt_descr))
+	if text_style[3] == sk2_const.TEXT_ALIGN_JUSTIFY:
+		layout.set_justify(True)
+		layout.set_alignment(pango.ALIGN_LEFT)
+	else:
+		layout.set_alignment(ALIGN_MAP[text_style[3]])
+	layout.set_markup(cgi.escape(text))
 	#---
 
-	PCCTX.layout_path(PANGO_LAYOUT)
-	cairo_path = CTX.copy_path()
+	pcctx.layout_path(layout)
+	cairo_path = ctx.copy_path()
 	libcairo.apply_cmatrix(cairo_path, PANGO_MATRIX)
 
 	return libcairo.get_path_from_cpath(cairo_path)
