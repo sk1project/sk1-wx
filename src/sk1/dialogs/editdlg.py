@@ -39,3 +39,26 @@ class EditDialog(wal.OkCancelDialog):
 def edit_dlg(parent, dlg_name, text, width=25):
 	dlg = EditDialog(parent, dlg_name, text, width)
 	return dlg.show()
+
+
+class MultilineEditDialog(wal.OkCancelDialog):
+
+	presenter = None
+
+	def __init__(self, parent, title, text):
+		self.text = text
+		wal.OkCancelDialog.__init__(self, parent, title, (400, 250),
+								style=wal.VERTICAL, resizable=True)
+
+	def build(self):
+		self.entry = wal.Entry(self, self.text, multiline=True)
+		self.pack(self.entry, padding_all=5, fill=True, expand=True)
+
+	def get_result(self):
+		txt = self.entry.get_value()
+		if not txt: txt = self.text
+		return txt
+
+def multiline_edit_dlg(parent, dlg_name, text):
+	dlg = MultilineEditDialog(parent, dlg_name, text)
+	return dlg.show()

@@ -26,4 +26,4 @@ from palcoldlg import palette_collection_dlg
 from filldlg import fill_dlg
 from strokedlg import stroke_dlg
 from docprops import docprops_dlg
-from editdlg import edit_dlg
+from editdlg import edit_dlg, multiline_edit_dlg
