@@ -1816,7 +1816,7 @@ class PresenterAPI(AbstractAPI):
 							self.sk2_cfg.default_text)
 		if text:
 			obj = model.Text(self.sk2_cfg, parent, rect, text)
-			obj.style = self.model.get_def_style()
+			obj.style = self.model.get_text_style()
 			obj.update()
 			self.insert_object(obj, parent, len(parent.childs))
 
