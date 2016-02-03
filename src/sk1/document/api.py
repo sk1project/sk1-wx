@@ -189,7 +189,7 @@ class AbstractAPI:
 		return new_rect
 
 	def _set_default_style(self, style):
-		self.model.styles['Default Style'] = style
+		self.model.set_def_style(style)
 
 	def _get_objs_styles(self, objs):
 		result = []
@@ -1084,7 +1084,7 @@ class PresenterAPI(AbstractAPI):
 	#--- OBJECT STYLE
 
 	def set_default_style(self, style):
-		style_before = self.model.styles['Default Style']
+		style_before = self.model.get_def_style()
 		self._set_default_style(style)
 		transaction = [
 			[[self._set_default_style, style_before]],

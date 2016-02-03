@@ -89,9 +89,7 @@ class Document(DocumentObject):
 		self.doc_units = self.config.doc_units
 		self.styles = {}
 		self.styles['Default Style'] = [deepcopy(self.config.default_fill),
-									deepcopy(self.config.default_stroke),
-									deepcopy(self.config.default_text_style),
-									deepcopy(self.config.default_structural_style)]
+									deepcopy(self.config.default_stroke), [], []]
 		self.resources = {}
 
 	def update(self):
@@ -104,6 +102,9 @@ class Document(DocumentObject):
 
 	def get_def_style(self):
 		return deepcopy(self.styles['Default Style'])
+
+	def set_def_style(self, style):
+		self.styles['Default Style'] = style
 
 
 
