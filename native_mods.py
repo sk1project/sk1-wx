@@ -66,4 +66,15 @@ def make_modules(src_path, include_path):
 			extra_compile_args=["-Wall"])
 	modules.append(pycms_module)
 
+	pango_src = os.path.join(src_path, 'uc2', 'libpango')
+	files = buildutils.make_source_list(pango_src, ['_libpango.c', ])
+	include_dirs = buildutils.make_source_list(include_path, ['cairo', 'pango-1.0', 'glib-2.0'])
+	include_dirs += ['/usr/lib/x86_64-linux-gnu/glib-2.0/include/', ]
+	pango_module = Extension('uc2.libpango._libpango',
+			define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
+			sources=files, include_dirs=include_dirs,
+			library_dirs=['/usr/lib/x86_64-linux-gnu/'],
+			libraries=['pango-1.0', 'pangocairo-1.0'])
+	modules.append(pango_module)
+
 	return modules
