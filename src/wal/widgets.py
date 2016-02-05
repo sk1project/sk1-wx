@@ -274,11 +274,11 @@ class BitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 		return self.get_selection()
 
 
-
 class Combobox(wx.ComboBox, DataWidget):
 
 	items = []
 	callback = None
+	flag = False
 
 	def __init__(self, parent, value='', pos=(-1, 1), size=DEF_SIZE, width=0,
 				items=[], onchange=None):
@@ -291,12 +291,55 @@ class Combobox(wx.ComboBox, DataWidget):
 			self.callback = onchange
 			self.Bind(wx.EVT_COMBOBOX, self.on_change, self)
 			self.Bind(wx.EVT_TEXT_ENTER, self.on_change, self)
+		self.Bind(wx.EVT_TEXT, self.on_typing, self)
+
+	def on_typing(self, event): pass
 
 	def on_change(self, event):
+		if self.flag:return
 		if self.callback: self.callback()
 
 	def set_items(self, items):
 		self.SetItems(items)
+
+
+class FloatCombobox(Combobox):
+
+	digits = 0
+
+	def __init__(self, parent, value='', width=0, digits=1, items=[], onchange=None):
+		vals = []
+		for item in items: vals.append(str(item))
+		Combobox.__init__(self, parent, str(value), width=width,
+						 items=vals, onchange=onchange)
+		self.digits = digits
+
+	def on_typing(self, event):
+		if self.flag:return
+		txt = Combobox.get_value(self)
+		res = ''
+		for item in txt:
+			chars = '.0123456789'
+			if not self.digits: chars = '0123456789'
+			if item in chars: res += item
+		if not txt == res:
+			self.flag = True
+			Combobox.set_value(self, res)
+			self.flag = False
+
+	def get_value(self):
+		if self.digits:
+			return float(Combobox.get_value(self))
+		else:
+			return int(Combobox.get_value(self))
+
+	def set_value(self, val):
+		Combobox.set_value(self, str(val))
+
+	def set_items(self, items):
+		sizes = []
+		for item in items: sizes.append(str(item))
+		self.SetItems(sizes)
 
 class Entry(wx.TextCtrl, DataWidget):
 
