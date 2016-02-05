@@ -24,6 +24,7 @@ encoding//src/sk1/context/page_format.py=utf-8
 encoding//src/sk1/context/polygon.py=utf-8
 encoding//src/sk1/context/rect.py=utf-8
 encoding//src/sk1/context/resize.py=utf-8
+encoding//src/sk1/context/text.py=utf-8
 encoding//src/sk1/context/transform.py=utf-8
 encoding//src/sk1/context/units.py=utf-8
 encoding//src/sk1/dialogs/__init__.py=utf-8
