@@ -20,9 +20,10 @@ import cairo
 import cgi
 
 from uc2 import libcairo
+
 import _libpango
 
-PANGO_UNITS = 1024.0
+PANGO_UNITS = 1024
 
 SURFACE = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
 CTX = cairo.Context(SURFACE)
@@ -33,6 +34,12 @@ PANGO_LAYOUT = _libpango.create_layout(CTX)
 
 FAMILIES_LIST = []
 FAMILIES_DICT = {}
+
+def bbox_size(bbox):
+	x0, y0, x1, y1 = bbox
+	w = abs(x1 - x0)
+	h = abs(y1 - y0)
+	return w, h
 
 def update_fonts():
 	FAMILIES_LIST[:] = []
@@ -55,7 +62,7 @@ def _get_font_description(text_style):
 	return _libpango.create_font_description(fnt_descr)
 
 def _set_layout(layout, text, width, text_style, attributes):
-	_libpango.set_layout_width(layout, -1)
+	_libpango.set_layout_width(layout, width)
 	fnt_descr = _get_font_description(text_style)
 	_libpango.set_layout_font_description(layout, fnt_descr)
 	_libpango.set_layout_alignment(layout, text_style[3])
@@ -63,9 +70,9 @@ def _set_layout(layout, text, width, text_style, attributes):
 
 def get_text_paths(text, width, text_style, attributes):
 	_set_layout(PANGO_LAYOUT, text, width, text_style, attributes)
-	size = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
+	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
 
-	surf = cairo.ImageSurface(cairo.FORMAT_RGB24, size[0], size[1])
+	surf = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
 	ctx = cairo.Context(surf)
 	ctx.set_matrix(libcairo.DIRECT_MATRIX)
 	ctx.new_path()
@@ -74,6 +81,13 @@ def get_text_paths(text, width, text_style, attributes):
 	_set_layout(layout, text, width, text_style, attributes)
 	_libpango.layout_path(ctx, layout)
 
-	cairo_path = ctx.copy_path()
-	libcairo.apply_cmatrix(cairo_path, PANGO_MATRIX)
-	return libcairo.get_path_from_cpath(cairo_path)
+	cpath = ctx.copy_path()
+
+	width = bbox_size(libcairo.get_cpath_bbox(cpath))[0]
+	dx = 0.0
+	if text_style[3] == 1: dx = -width / 2.0
+	elif text_style[3] == 2: dx = -width
+	matrix = cairo.Matrix(1.0, 0.0, 0.0, -1.0, dx, 0.0)
+
+	libcairo.apply_cmatrix(cpath, matrix)
+	return libcairo.get_path_from_cpath(cpath)
