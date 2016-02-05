@@ -28,11 +28,12 @@ from order import OrderPlugin
 from circle import CirclePlugin
 from image_plgs import ImageTypePlugin
 from bezier import BezierPlugin
+from text import TextStylePlugin
 
 PLUGINS = [PagePlugin, UnitsPlugin, JumpPlugin, ResizePlugin, RotatePlugin,
 MirrorPlugin, GroupPlugin, CombinePlugin, ToCurvePlugin, PolygonPlugin,
 PolygonCfgPlugin, PageBorderPlugin, RectanglePlugin, OrderPlugin, CirclePlugin,
-ImageTypePlugin, BezierPlugin]
+ImageTypePlugin, BezierPlugin, TextStylePlugin]
 
 NO_DOC = []
 DEFAULT = ['PagePlugin', 'UnitsPlugin', 'JumpPlugin', 'PageBorderPlugin']
@@ -42,6 +43,6 @@ RECTANGLE = ['ResizePlugin', 'RectanglePlugin', 'RotatePlugin', 'MirrorPlugin', 
 CIRCLE = ['ResizePlugin', 'CirclePlugin', 'RotatePlugin', 'MirrorPlugin', 'ToCurvePlugin', 'OrderPlugin' ]
 POLYGON = ['ResizePlugin', 'PolygonPlugin', 'RotatePlugin', 'MirrorPlugin', 'ToCurvePlugin' , 'OrderPlugin']
 CURVE = ['ResizePlugin', 'CombinePlugin', 'RotatePlugin', 'MirrorPlugin', 'OrderPlugin' ]
-TEXT = ['ResizePlugin', 'RotatePlugin', 'MirrorPlugin', 'ToCurvePlugin', 'OrderPlugin' ]
+TEXT = ['ResizePlugin', 'TextStylePlugin', ]
 PIXMAP = ['ResizePlugin', 'ImageTypePlugin', 'RotatePlugin', 'MirrorPlugin', 'OrderPlugin' ]
 BEZIER = ['BezierPlugin', 'PageBorderPlugin']
