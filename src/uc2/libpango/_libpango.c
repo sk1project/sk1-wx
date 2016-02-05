@@ -23,7 +23,7 @@
 #include <pycairo.h>
 
 
-extern Pycairo_CAPI_t *Pycairo_CAPI;
+static Pycairo_CAPI_t *Pycairo_CAPI;
 
 
 static PyObject *
@@ -86,7 +86,7 @@ pango_CreateContext(PyObject *self, PyObject *args) {
 	cairo_t *ctx;
 	PangoContext *pcctx;
 
-	if (!PyArg_ParseTuple(args, "O", &ctx)) {
+	if (!PyArg_ParseTuple(args, "O", &context)) {
 		return NULL;
 	}
 	ctx = context -> ctx;
@@ -263,6 +263,27 @@ pango_GetLayoutPixelSize(PyObject *self, PyObject *args) {
 	return pixel_size;
 }
 
+static PyObject *
+pango_LayoutPath(PyObject *self, PyObject *args) {
+
+    PycairoContext *context;
+	cairo_t *ctx;
+	void *LayoutObj;
+	PangoLayout *layout;
+
+	if (!PyArg_ParseTuple(args, "OO", &context, &LayoutObj)) {
+		return NULL;
+	}
+
+	ctx = context -> ctx;
+	layout = PyCObject_AsVoidPtr(LayoutObj);
+
+	pango_cairo_layout_path(ctx, layout);
+
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
 static
 PyMethodDef pango_methods[] = {
 		{"get_fontmap", pango_GetFontMap, METH_VARARGS},
@@ -275,6 +296,7 @@ PyMethodDef pango_methods[] = {
 		{"set_layout_alignment", pango_SetLayoutAlignment, METH_VARARGS},
 		{"set_layout_markup", pango_SetLayoutMarkup, METH_VARARGS},
 		{"get_layout_pixel_size", pango_GetLayoutPixelSize, METH_VARARGS},
+		{"layout_path", pango_LayoutPath, METH_VARARGS},
 		{NULL, NULL}
 };
 
