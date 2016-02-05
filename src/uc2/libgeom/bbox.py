@@ -101,9 +101,9 @@ def is_point_in_rect2(point, rect_center, rect_w, rect_h):
 
 def bbox_size(bbox):
 	x0, y0, x1, y1 = bbox
-	h = abs(x1 - x0)
-	v = (y1 - y0)
-	return h, v
+	w = abs(x1 - x0)
+	h = abs(y1 - y0)
+	return w, h
 
 def is_bbox_overlap(bbox1, bbox2):
 	new_bbox = sum_bbox(bbox1, bbox2)
