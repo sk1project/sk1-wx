@@ -86,6 +86,8 @@ class AppCtxPanel(wal.HPanel):
 				ret = GROUP
 			elif self.insp.is_obj_pixmap(sel[0]):
 				ret = PIXMAP
+			elif self.insp.is_obj_text(sel[0]):
+				ret = TEXT
 			else:
 				ret = DEFAULT
 		if self.insp.is_mode(modes.POLYGON_MODE):
