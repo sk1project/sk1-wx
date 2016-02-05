@@ -17,27 +17,19 @@
 
 
 import cairo
-import pango, pangocairo
 import cgi
 
 from uc2 import libcairo
-from uc2.formats.sk2 import sk2_const
+import _libpango
 
 PANGO_UNITS = 1024.0
-
-ALIGN_MAP = {
-sk2_const.TEXT_ALIGN_LEFT:pango.ALIGN_LEFT,
-sk2_const.TEXT_ALIGN_CENTER:pango.ALIGN_CENTER,
-sk2_const.TEXT_ALIGN_RIGHT:pango.ALIGN_RIGHT,
-}
 
 SURFACE = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
 CTX = cairo.Context(SURFACE)
 DIRECT_MATRIX = cairo.Matrix()
 
 PANGO_MATRIX = cairo.Matrix(1.0, 0.0, 0.0, -1.0, 0.0, 0.0)
-PCCTX = pangocairo.CairoContext(CTX)
-PANGO_LAYOUT = PCCTX.create_layout()
+PANGO_LAYOUT = _libpango.create_layout(CTX)
 
 FAMILIES_LIST = []
 FAMILIES_DICT = {}
@@ -45,69 +37,43 @@ FAMILIES_DICT = {}
 def update_fonts():
 	FAMILIES_LIST[:] = []
 	FAMILIES_DICT.clear()
-	fm = pangocairo.cairo_font_map_get_default()
-	context = fm.create_context()
-	families = context.list_families()
-	for item in families:
-		fcs = []
-		scalable = True
-		for face in item.list_faces():
-			if not face.list_sizes() is None:
-				scalable = False
-			fcs.append(face.get_face_name())
-		if scalable:
-			fcs.sort()
-			FAMILIES_DICT[item.get_name()] = fcs
-			FAMILIES_LIST.append(item.get_name())
+	font_map = _libpango.get_fontmap()
+	for item in font_map:
+		font_name = item[0]
+		font_faces = item[1]
+		if font_faces:
+			FAMILIES_LIST.append(font_name)
+			FAMILIES_DICT[font_name] = list(font_faces)
 	FAMILIES_LIST.sort()
 
 def get_fonts():
 	if not FAMILIES_LIST: update_fonts()
 	return FAMILIES_LIST, FAMILIES_DICT
 
-def get_text_paths(text, width, text_style, attributes):
-
-	#Processing text properties
-	if not width == sk2_const.TEXTBLOCK_WIDTH:
-		width = int(width * PANGO_UNITS)
-	PANGO_LAYOUT.set_width(width)
-
+def _get_font_description(text_style):
 	fnt_descr = text_style[0] + ', ' + text_style[1] + ' ' + str(text_style[2])
-	PANGO_LAYOUT.set_font_description(pango.FontDescription(fnt_descr))
+	return _libpango.create_font_description(fnt_descr)
 
-	if text_style[3] == sk2_const.TEXT_ALIGN_JUSTIFY:
-		PANGO_LAYOUT.set_justify(True)
-		PANGO_LAYOUT.set_alignment(pango.ALIGN_LEFT)
-	else:
-		PANGO_LAYOUT.set_justify(False)
-		PANGO_LAYOUT.set_alignment(ALIGN_MAP[text_style[3]])
+def _set_layout(layout, text, width, text_style, attributes):
+	_libpango.set_layout_width(layout, -1)
+	fnt_descr = _get_font_description(text_style)
+	_libpango.set_layout_font_description(layout, fnt_descr)
+	_libpango.set_layout_alignment(layout, text_style[3])
+	_libpango.set_layout_markup(layout, cgi.escape(text))
 
-	PANGO_LAYOUT.set_markup(cgi.escape(text))
+def get_text_paths(text, width, text_style, attributes):
+	_set_layout(PANGO_LAYOUT, text, width, text_style, attributes)
+	size = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
 
-	#Context update
-	size = PANGO_LAYOUT.get_pixel_size()
 	surf = cairo.ImageSurface(cairo.FORMAT_RGB24, size[0], size[1])
 	ctx = cairo.Context(surf)
 	ctx.set_matrix(libcairo.DIRECT_MATRIX)
 	ctx.new_path()
 	ctx.move_to(0, 0)
-	pcctx = pangocairo.CairoContext(ctx)
-	layout = pcctx.create_layout()
-	pcctx.update_layout(layout)
+	layout = _libpango.create_layout(ctx)
+	_set_layout(layout, text, width, text_style, attributes)
+	_libpango.layout_path(ctx, layout)
 
-	layout.set_width(width)
-	layout.set_font_description(pango.FontDescription(fnt_descr))
-	if text_style[3] == sk2_const.TEXT_ALIGN_JUSTIFY:
-		layout.set_justify(True)
-		layout.set_alignment(pango.ALIGN_LEFT)
-	else:
-		layout.set_justify(False)
-		layout.set_alignment(ALIGN_MAP[text_style[3]])
-	layout.set_markup(cgi.escape(text))
-	#---
-
-	pcctx.layout_path(layout)
 	cairo_path = ctx.copy_path()
 	libcairo.apply_cmatrix(cairo_path, PANGO_MATRIX)
-
 	return libcairo.get_path_from_cpath(cairo_path)
