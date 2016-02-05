@@ -17,6 +17,7 @@
 
 import math
 from copy import deepcopy
+from base64 import b64decode, b64encode
 
 from uc2 import uc2const
 from uc2 import _, cms
@@ -701,7 +702,7 @@ class Text(PrimitiveObject):
 			self.cid = TEXT_COLUMN
 		self.config = config
 		self.parent = parent
-		self.text = text
+		self.text = b64encode(text)
 		if not text:
 			self.text = config.default_text
 		self.trafo = trafo
@@ -711,15 +712,19 @@ class Text(PrimitiveObject):
 		self.style = style
 		self.attributes = []
 
+	def get_text(self):
+		return b64decode(self.text)
+
+	def set_text(self, text):
+		self.text = b64encode(text)
 
 	def is_text(self): return True
 	def is_closed(self): return True
 
 	def get_initial_paths(self):
-		return libgeom.get_text_paths(self.text, self.width, self.style[2],
-										self.attributes)
+		return libgeom.get_text_paths(self.get_text(), self.width,
+									self.style[2], self.attributes)
 
-#---------------Bitmap objects-----------------------
 
 class Pixmap(PrimitiveObject):
 
