@@ -25,7 +25,7 @@ class SK2_Config(XmlConfigParser):
 
 	system_encoding = 'utf-8'
 
-	#============== DOCUMENT SECTION ==================
+	#--- DOCUMENT PROPERTIES
 	doc_origin = sk2_const.DOC_ORIGIN_LL
 	doc_units = uc2const.UNIT_MM
 	doc_author = ''
@@ -33,9 +33,11 @@ class SK2_Config(XmlConfigParser):
 	doc_keywords = ''
 	doc_notes = ''
 
+	#--- PAGE PROPERTIES
 	page_format = 'A4'
 	page_orientation = uc2const.PORTRAIT
 
+	#--- LAYER PROPERTIES
 	layer_color = '#3252A2'
 	layer_propeties = [1, 1, 1, 1]
 	master_layer_color = '#000000'
@@ -47,13 +49,11 @@ class SK2_Config(XmlConfigParser):
 	grid_layer_geometry = [0.0, 0.0, uc2const.mm_to_pt, uc2const.mm_to_pt]
 	grid_layer_propeties = [0, 0, 0, 1]
 
-	default_polygon_num = 5
-	default_text = "TEXT text"
-
+	#--- FILL STYLE
 	default_fill = []
 	default_fill_rule = sk2_const.FILL_EVENODD
 
-
+	#--- STROKE STYLE
 	default_stroke_rule = sk2_const.STROKE_MIDDLE
 	default_stroke_width = 0.1 * uc2const.mm_to_pt
 	default_stroke_color = sk2_const.CMYK_BLACK
@@ -78,6 +78,8 @@ class SK2_Config(XmlConfigParser):
 					default_stroke_markers,
 					]
 
+	#--- TEXT STYLE
+	default_text = "TEXT text"
 	default_font_family = 'Sans'
 	default_font_face = 'Regular'
 	default_font_size = 12.0
@@ -89,10 +91,13 @@ class SK2_Config(XmlConfigParser):
 	default_text_fill = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID,
 					sk2_const.CMYK_BLACK]
 
-	default_structural_style = []
+	#--- PIXMAP STYLE
 	default_cmyk_image_style = [sk2_const.CMYK_BLACK, sk2_const.CMYK_WHITE]
 	default_rgb_image_style = [sk2_const.RGB_BLACK, sk2_const.RGB_WHITE]
 	default_image_style = [[], [], [], default_cmyk_image_style]
+
+	#--- POLYGON
+	default_polygon_num = 5
 
 	#============== COLOR MANAGEMENT SECTION ===================
 	default_rgb_profile = ''

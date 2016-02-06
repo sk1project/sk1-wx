@@ -41,8 +41,7 @@ class CDR_to_SK2_Translator:
 
 		self.default_style = [deepcopy(sk2_doc.config.default_fill),
 				deepcopy(sk2_doc.config.default_stroke),
-				deepcopy(sk2_doc.config.default_text_style),
-				deepcopy(sk2_doc.config.default_structural_style)]
+				deepcopy(sk2_doc.config.default_text_style), []]
 
 		cdr_doc.model.translate(self)
 

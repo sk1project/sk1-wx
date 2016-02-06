@@ -33,8 +33,7 @@ class PLT_to_SK2_Translator(object):
 
 		style = [deepcopy(sk2_doc.config.default_fill),
 				deepcopy(sk2_doc.config.default_stroke),
-				deepcopy(sk2_doc.config.default_text_style),
-				deepcopy(sk2_doc.config.default_structural_style)]
+				deepcopy(sk2_doc.config.default_text_style), []]
 
 		for job in jobs:
 			if job.cid == plt_model.JOB:
