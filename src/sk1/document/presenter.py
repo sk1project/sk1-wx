@@ -53,6 +53,7 @@ class PD_Presenter:
 	selection = None
 	traced_objects = None
 	snap = None
+	text_obj_style = None
 
 	def __init__(self, app, doc_file='', silent=False, template=False):
 		self.app = app
