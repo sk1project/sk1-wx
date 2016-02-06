@@ -191,6 +191,9 @@ class AbstractAPI:
 	def _set_default_style(self, style):
 		self.model.set_def_style(style)
 
+	def _set_obj_style(self, obj, style):
+		obj.style = style
+
 	def _get_objs_styles(self, objs):
 		result = []
 		for obj in objs:
@@ -1092,6 +1095,20 @@ class PresenterAPI(AbstractAPI):
 			False]
 		self.add_undo(transaction)
 
+	def set_obj_style(self, obj, style):
+		style_before = obj.style
+		sel_before = sel_after = [] + self.selection.objs
+		self._set_obj_style(obj, style)
+		obj.update()
+		transaction = [
+			[[self._set_obj_style, obj, style_before],
+			[self._set_selection, sel_before]],
+			[[self._set_obj_style, obj, style],
+			[self._set_selection, sel_after]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
 	def _get_primitive_objs(self, objs, exclude_pixmap=False):
 		ret = []
 		for obj in objs:
@@ -1814,7 +1831,11 @@ class PresenterAPI(AbstractAPI):
 							self.sk2_cfg.default_text)
 		if text:
 			obj = model.Text(self.sk2_cfg, parent, doc_point, text)
-			obj.style = self.model.get_text_style()
+			if self.presenter.text_obj_style:
+				obj.style = self.presenter.text_obj_style
+				self.presenter.text_obj_style = None
+			else:
+				obj.style = self.model.get_text_style()
 			obj.update()
 			self.insert_object(obj, parent, len(parent.childs))
 
