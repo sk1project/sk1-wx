@@ -19,7 +19,7 @@ import wal
 
 from sk1 import events, modes
 from sk1.context import PLUGINS, NO_DOC, DEFAULT, MULTIPLE, GROUP, \
-RECTANGLE, CIRCLE, POLYGON, CURVE, TEXT, PIXMAP, BEZIER
+RECTANGLE, CIRCLE, POLYGON, CURVE, TEXT, PIXMAP, BEZIER, TEXT_CREATING
 
 class AppCtxPanel(wal.HPanel):
 
@@ -65,13 +65,19 @@ class AppCtxPanel(wal.HPanel):
 		ret = []
 		if not self.insp.is_doc():
 			return NO_DOC
+
+		doc = self.app.current_doc
+		sel = doc.selection.objs
 		if self.insp.is_mode(modes.BEZIER_EDITOR_MODE):
 			return BEZIER
+		if self.insp.is_mode(modes.TEXT_MODE):
+			if len(sel) == 1 and self.insp.is_obj_text(sel[0]):
+				return TEXT
+			else:
+				return TEXT_CREATING
 		if not self.insp.is_selection():
 			ret = DEFAULT
 		else:
-			doc = self.app.current_doc
-			sel = doc.selection.objs
 			if len(sel) > 1:
 				ret = MULTIPLE
 			elif self.insp.is_obj_rect(sel[0]):
