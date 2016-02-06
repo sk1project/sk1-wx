@@ -146,6 +146,7 @@ class TextStylePlugin(CtxPlugin):
 		doc = self.app.current_doc
 		doc.text_obj_style = doc.model.get_style(style_name)
 		self.update_from_style(doc.text_obj_style[2])
+		self.apply_changes()
 
 	def on_font_change(self):
 		family = self.families[self.families_combo.get_active()]
@@ -155,13 +156,13 @@ class TextStylePlugin(CtxPlugin):
 		self.faces = faces
 		self.faces_combo.set_items(self.faces)
 		self.faces_combo.set_active(self.faces.index(face))
+		self.apply_changes()
 
-	def apply_changes(self):
+	def apply_changes(self, *args):
 		doc = self.app.current_doc
 		family = self.families[self.families_combo.get_active()]
 		face = self.faces[self.faces_combo.get_active()]
 		size = self.size_combo.get_value()
-		print size
 		align = self.align.get_mode()
 		if self.target:
 			spacing = [] + self.target.style[2][4]
