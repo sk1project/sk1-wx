@@ -688,6 +688,7 @@ class Text(PrimitiveObject):
 	text = ""
 	width = -1
 	attributes = []
+	initial_trafo = sk2_const.NORMAL_TRAFO
 
 	def __init__(self, config, parent=None,
 				point=[0.0, 0.0],
@@ -702,13 +703,11 @@ class Text(PrimitiveObject):
 			self.cid = TEXT_COLUMN
 		self.config = config
 		self.parent = parent
+		if not text: text = "" + config.default_text
 		self.text = b64encode(text)
-		if not text:
-			self.text = config.default_text
-		self.trafo = trafo
 		self.width = width
-		self.trafo[4] = point[0]
-		self.trafo[5] = point[1]
+		self.trafo = trafo[:4] + [trafo[4] + point[0], trafo[5] + point[1]]
+		self.initial_trafo = [] + self.trafo
 		self.style = style
 		self.attributes = []
 
