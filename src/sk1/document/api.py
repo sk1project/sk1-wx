@@ -284,7 +284,7 @@ class AbstractAPI:
 		after = []
 		for obj in objs:
 			before.append(obj.get_trafo_snapshot())
-			if obj.cid in (model.CIRCLE, model.POLYGON):
+			if obj.cid in (model.CIRCLE, model.POLYGON, model.TEXT_BLOCK):
 				obj.trafo = [] + obj.initial_trafo
 			else:
 				obj.trafo = [] + normal_trafo
@@ -1830,12 +1830,12 @@ class PresenterAPI(AbstractAPI):
 		text = dialogs.multiline_edit_dlg(self.app.mw, 'Entry text',
 							self.sk2_cfg.default_text)
 		if text:
-			obj = model.Text(self.sk2_cfg, parent, doc_point, text)
 			if self.presenter.text_obj_style:
-				obj.style = self.presenter.text_obj_style
+				style = self.presenter.text_obj_style
 				self.presenter.text_obj_style = None
 			else:
-				obj.style = self.model.get_text_style()
+				style = self.model.get_text_style()
+			obj = model.Text(self.sk2_cfg, parent, doc_point, text, style=style)
 			obj.update()
 			self.insert_object(obj, parent, len(parent.childs))
 
