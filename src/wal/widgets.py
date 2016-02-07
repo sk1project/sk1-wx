@@ -389,7 +389,7 @@ class Entry(wx.TextCtrl, DataWidget):
 		self.SetValue(self.value)
 
 	def get_value(self):
-		return str(self.GetValue())
+		return self.GetValue().decode('utf-8')
 
 	def set_value(self, val):
 		self.my_changes = True
