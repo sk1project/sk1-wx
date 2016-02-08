@@ -91,3 +91,6 @@ def get_text_paths(text, width, text_style, attributes):
 
 	libcairo.apply_cmatrix(cpath, matrix)
 	return libcairo.get_path_from_cpath(cpath)
+
+def get_line_positions():
+	return _libpango.get_layout_line_positions(PANGO_LAYOUT)
