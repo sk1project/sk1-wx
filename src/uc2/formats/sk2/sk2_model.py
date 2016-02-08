@@ -689,6 +689,7 @@ class Text(PrimitiveObject):
 	width = -1
 	attributes = []
 	initial_trafo = sk2_const.NORMAL_TRAFO
+	cache_line_points = []
 
 	def __init__(self, config, parent=None,
 				point=[0.0, 0.0],
@@ -721,8 +722,13 @@ class Text(PrimitiveObject):
 	def is_closed(self): return True
 
 	def get_initial_paths(self):
-		return libgeom.get_text_paths(self.get_text(), self.width,
+		paths, points = libgeom.get_text_paths(self.get_text(), self.width,
 									self.style[2], self.attributes)
+		self.cache_line_points = points
+		return paths
+
+	def get_line_points(self):
+		return libgeom.apply_trafo_to_points(self.cache_line_points, self.trafo)
 
 
 class Pixmap(PrimitiveObject):
