@@ -161,7 +161,11 @@ class MoveController(AbstractController):
 
 		shift_y = []
 		snap_y = []
-		for point in [tr_points[1], tr_points[3], tr_points[2]]:
+		pnts = [tr_points[1], tr_points[3], tr_points[2]]
+		if len(self.selection.objs) == 1 and self.selection.objs[0].is_text():
+			line_points = self.selection.objs[0].get_line_points()
+			pnts += libgeom.apply_trafo_to_points(line_points, trafo)
+		for point in pnts:
 			flag, wp, dp = self.snap.snap_point(point, False, snap_x=False)
 			if flag:
 				shift_y.append(dp[1] - point[1])
