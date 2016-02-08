@@ -284,6 +284,37 @@ pango_LayoutPath(PyObject *self, PyObject *args) {
 	return Py_None;
 }
 
+static PyObject *
+pango_GetLayoutLinePos(PyObject *self, PyObject *args) {
+
+	int i, len;
+	double baseline;
+	void *LayoutObj;
+	PangoLayout *layout;
+	PangoLayoutIter *iter;
+	PyObject *ret;
+
+	if (!PyArg_ParseTuple(args, "O", &LayoutObj)) {
+		return NULL;
+	}
+
+	layout = PyCObject_AsVoidPtr(LayoutObj);
+
+	len = pango_layout_get_line_count(layout);
+	ret = PyTuple_New(len);
+	iter = pango_layout_get_iter(layout);
+
+	for (i = 0; i < len; i++) {
+		baseline=((double) pango_layout_iter_get_baseline(iter)) / PANGO_SCALE;
+		PyTuple_SetItem(ret, i, PyFloat_FromDouble(baseline));
+		pango_layout_iter_next_line(iter);
+	}
+
+	pango_layout_iter_free(iter);
+
+	return ret;
+}
+
 static
 PyMethodDef pango_methods[] = {
 		{"get_fontmap", pango_GetFontMap, METH_VARARGS},
@@ -297,6 +328,7 @@ PyMethodDef pango_methods[] = {
 		{"set_layout_markup", pango_SetLayoutMarkup, METH_VARARGS},
 		{"get_layout_pixel_size", pango_GetLayoutPixelSize, METH_VARARGS},
 		{"layout_path", pango_LayoutPath, METH_VARARGS},
+		{"get_layout_line_positions", pango_GetLayoutLinePos, METH_VARARGS},
 		{NULL, NULL}
 };
 
