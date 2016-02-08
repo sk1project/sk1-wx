@@ -268,4 +268,8 @@ def get_polygon_paths(corners_num, angle1, angle2, coef1, coef2):
 #------------- TEXT -------------
 
 def get_text_paths(text, width, text_style, attributes):
-	return libpango.get_text_paths(text, width, text_style, attributes)
+	paths = libpango.get_text_paths(text, width, text_style, attributes)
+	points = []
+	for item in libpango.get_line_positions():
+		points.append([0.0, -item])
+	return paths, points
