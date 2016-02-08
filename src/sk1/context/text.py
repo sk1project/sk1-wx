@@ -113,8 +113,11 @@ class TextStylePlugin(CtxPlugin):
 		if len(sel) == 1 and sel[0].is_text():
 			self.styles_combo.hide(True)
 			self.target = sel[0]
+			doc = self.app.current_doc
+			doc.text_obj_style = deepcopy(self.target.style)
 			self.update_from_style(self.target.style[2])
 		else:
+			self.target = None
 			self.update_styles()
 			self.styles_combo.show(True)
 
