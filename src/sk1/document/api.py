@@ -1831,8 +1831,7 @@ class PresenterAPI(AbstractAPI):
 							self.sk2_cfg.default_text)
 		if text:
 			if self.presenter.text_obj_style:
-				style = self.presenter.text_obj_style
-				self.presenter.text_obj_style = None
+				style = deepcopy(self.presenter.text_obj_style)
 			else:
 				style = self.model.get_text_style()
 			obj = model.Text(self.sk2_cfg, parent, doc_point, text, style=style)
