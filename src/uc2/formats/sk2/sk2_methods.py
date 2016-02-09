@@ -217,6 +217,12 @@ class SK2_Methods:
 		layer.style[1][2] = deepcopy(color)
 		layer.color = color[1] + [color[2], ]
 
+	def get_layer_properties(self, layer):
+		return [] + layer.properties
+
+	def set_layer_properties(self, layer, props):
+		layer.properties = [] + props
+
 	def get_desktop_layers(self):
 		return self.model.childs[1].childs
 
@@ -243,6 +249,12 @@ class SK2_Methods:
 	def set_grid_values(self, vals):
 		grid = self.get_grid_layer()
 		grid.grid = [] + vals
+
+	def get_grid_properties(self):
+		return self.get_layer_properties(self.get_grid_layer())
+
+	def set_grid_properties(self, props):
+		self.set_layer_properties(self.get_grid_layer(), props)
 
 	#---GUIDE LAYER
 
