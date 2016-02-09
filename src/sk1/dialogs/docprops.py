@@ -91,14 +91,16 @@ ORIGIN_ICONS = [icons.L_ORIGIN_CENTER, icons.L_ORIGIN_LL, icons.L_ORIGIN_LU]
 ORIGIN_NAMES = [_('Page center'),
 			_('Left lower page corner'), _('Left upper page corner')]
 
-class GridProps(DP_Panel):
+class UnitsProps(DP_Panel):
 
-	name = _('Units, grid, origin')
+	name = _('Units')
 	units = 'mm'
-	geom = []
 	origin = 0
 
 	def build(self):
+
+		self.pack((5, 5))
+
 		hpanel = wal.HPanel(self)
 		hpanel.pack(wal.Label(hpanel, _('Document units') + ':'))
 		names = []
@@ -109,7 +111,32 @@ class GridProps(DP_Panel):
 		hpanel.pack(self.units_combo, padding=5)
 		self.pack(hpanel, padding_all=5)
 
+		self.pack((5, 5))
+
+		self.origin = self.doc.methods.get_doc_origin()
+		self.pack(wal.Label(self, _('Document origin:')), padding_all=5)
+		self.origin_keeper = wal.HToggleKeeper(self, ORIGINS, ORIGIN_ICONS,
+											ORIGIN_NAMES)
+		self.origin_keeper.set_mode(self.origin)
+		self.pack(self.origin_keeper)
+
+	def save(self):
+		units = unit_names[self.units_combo.get_active()]
+		if not self.units == units:
+			self.api.set_doc_units(units)
+		if not self.origin == self.origin_keeper.get_mode():
+			self.api.set_doc_origin(self.origin_keeper.get_mode())
+
+class GridProps(DP_Panel):
+
+	name = _('Grid')
+	geom = []
+
+	def build(self):
+		self.pack((5, 5))
+
 		self.geom = self.doc.methods.get_grid_values()
+		print self.geom
 		hpanel = wal.HPanel(self)
 
 		txt = _('Grid origin')
@@ -148,29 +175,17 @@ class GridProps(DP_Panel):
 
 		self.pack(hpanel, fill=True)
 
-		self.origin = self.doc.methods.get_doc_origin()
-		self.pack(wal.Label(self, _('Document origin:')), padding_all=5)
-		self.origin_keeper = wal.HToggleKeeper(self, ORIGINS, ORIGIN_ICONS,
-											ORIGIN_NAMES)
-		self.origin_keeper.set_mode(self.origin)
-		self.pack(self.origin_keeper)
-
 	def save(self):
-		units = unit_names[self.units_combo.get_active()]
-		if not self.units == units:
-			self.api.set_doc_units(units)
-		geom = [self.x_val.get_value(), self.y_val.get_value(),
-			self.dx_val.get_value(), self.dy_val.get_value()]
+		geom = [self.x_val.get_point_value(), self.y_val.get_point_value(),
+			self.dx_val.get_point_value(), self.dy_val.get_point_value()]
 		if not self.geom == geom:
 			self.api.set_grid_values(geom)
-		if not self.origin == self.origin_keeper.get_mode():
-			self.api.set_doc_origin(self.origin_keeper.get_mode())
 
 class GuidesProps(DP_Panel):
 
 	name = _('Guides')
 
-PANELS = [GeneralProps, PageProps, GridProps, GuidesProps]
+PANELS = [GeneralProps, PageProps, UnitsProps, GridProps, GuidesProps]
 
 class DocPropertiesDialog(wal.OkCancelDialog):
 
