@@ -158,7 +158,6 @@ class GridProps(DP_Panel):
 	name = _('Grid')
 	geom = []
 	color = []
-	props = []
 
 	def build(self):
 		self.pack((5, 5))
@@ -235,9 +234,9 @@ class GridProps(DP_Panel):
 							range_val=(0, 100), onchange=self.on_slider_change)
 		vpanel.pack(self.alpha_slider, fill=True, padding=5)
 
-		self.props = self.doc.methods.get_grid_properties()
-		val = self.props[0] > 0
-		self.show_grid_check = wal.Checkbox(vpanel, _('Show grid'), val)
+		val = self.doc.methods.is_grid_visible()
+		self.show_grid_check = wal.Checkbox(vpanel,
+										_('Show grid on canvas'), val)
 		vpanel.pack(self.show_grid_check, fill=True, padding=5)
 
 		color_panel.pack(vpanel)
@@ -277,6 +276,14 @@ class GridProps(DP_Panel):
 		color.append(self.alpha_spin.get_value() / 100.0)
 		if not self.color == color:
 			self.api.set_grid_color(color)
+		visibility = self.doc.methods.is_grid_visible()
+		if not visibility == self.show_grid_check.get_value():
+			grid = self.doc.methods.get_grid_layer()
+			props = self.doc.methods.get_grid_properties()
+			props[0] = 0
+			if self.show_grid_check.get_value():props[0] = 1
+			self.api.set_layer_properties(grid, props)
+
 
 
 class GuidesProps(DP_Panel):
