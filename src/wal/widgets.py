@@ -694,7 +694,7 @@ class ColorButton(wx.ColourPickerCtrl, Widget):
 		wx.ColourPickerCtrl.__init__(self, parent, wx.ID_ANY, color)
 		if onchange:
 			self.callback = onchange
-			self.Bind(wx.EVT_SCROLL, self.on_change, self)
+			self.Bind(wx.EVT_COLOURPICKER_CHANGED, self.on_change, self)
 
 	def on_change(self, event):
 		if self.callback:self.callback()
