@@ -22,6 +22,7 @@ import wal
 
 from uc2.uc2const import unit_names, unit_full_names
 from uc2.formats.sk2.sk2_const import ORIGINS
+from uc2 import cms
 
 from sk1 import _, config
 from sk1.resources import icons
@@ -127,16 +128,42 @@ class UnitsProps(DP_Panel):
 		if not self.origin == self.origin_keeper.get_mode():
 			self.api.set_doc_origin(self.origin_keeper.get_mode())
 
+class GridPreview(wal.VPanel, wal.Canvas):
+
+	color = []
+	vgrid = range(0, 200, 20)
+	hgrid = range(0, 200, 20)
+
+	def __init__(self, parent, color):
+		self.color = color
+		wal.VPanel.__init__(self, parent, True)
+		wal.Canvas.__init__(self)
+		self.set_bg(wal.WHITE)
+
+	def set_color(self, color):
+		self.color = color
+		self.refresh()
+
+	def paint(self):
+		self.set_gc_stroke(cms.val_255(self.color), 1.0)
+		for item in self.vgrid:
+			self.gc_draw_line(item, 0, item, 200)
+		self.gc_draw_line(self.vgrid[2], 0, self.vgrid[2], 200)
+		for item in self.hgrid:
+			self.gc_draw_line(0, item, 200, item)
+		self.gc_draw_line(0, self.hgrid[3], 200, self.hgrid[3])
+
 class GridProps(DP_Panel):
 
 	name = _('Grid')
 	geom = []
+	color = []
+	props = []
 
 	def build(self):
 		self.pack((5, 5))
 
 		self.geom = self.doc.methods.get_grid_values()
-		print self.geom
 		hpanel = wal.HPanel(self)
 
 		txt = _('Grid origin')
@@ -175,11 +202,82 @@ class GridProps(DP_Panel):
 
 		self.pack(hpanel, fill=True)
 
+		self.pack((5, 5))
+
+		color_panel = wal.HPanel(self)
+
+		color_panel.pack((10, 10))
+
+		vpanel = wal.VPanel(color_panel)
+
+		hpanel = wal.HPanel(vpanel)
+		hpanel.pack(wal.Label(hpanel, _('Grid color:')))
+		hpanel.pack((10, 5))
+		self.color = self.doc.methods.get_grid_rgba_color()
+		self.grid_color_btn = wal.ColorButton(hpanel, self.color[:3],
+										onchange=self.on_change)
+		hpanel.pack(self.grid_color_btn)
+		vpanel.pack(hpanel, fill=True)
+
+		hpanel = wal.HPanel(vpanel)
+		hpanel.pack(wal.Label(hpanel, _('Grid opacity:')))
+		hpanel.pack((10, 5))
+		self.alpha_spin = wal.FloatSpin(hpanel, self.color[3] * 100.0,
+								range_val=(0.0, 100.0), width=5,
+								onchange=self.on_spin_change,
+								onenter=self.on_spin_change)
+		hpanel.pack(self.alpha_spin)
+		hpanel.pack(wal.Label(hpanel, '%'), padding=3)
+
+		vpanel.pack(hpanel, fill=True, padding=5)
+
+		self.alpha_slider = wal.Slider(vpanel, int(self.color[3] * 100.0),
+							range_val=(0, 100), onchange=self.on_slider_change)
+		vpanel.pack(self.alpha_slider, fill=True, padding=5)
+
+		self.props = self.doc.methods.get_grid_properties()
+		val = self.props[0] > 0
+		self.show_grid_check = wal.Checkbox(vpanel, _('Show grid'), val)
+		vpanel.pack(self.show_grid_check, fill=True, padding=5)
+
+		color_panel.pack(vpanel)
+
+		color_panel.pack((10, 10))
+
+		preview_panel = wal.VPanel(color_panel)
+		preview_panel.pack(wal.Label(hpanel, _('Grid preview:')))
+		preview_panel.pack((5, 5))
+		self.grid_preview = GridPreview(preview_panel, self.color)
+		preview_panel.pack(self.grid_preview, fill=True, expand=True)
+		color_panel.pack(preview_panel, fill=True, expand=True)
+
+		color_panel.pack((10, 10))
+
+		self.pack(color_panel, fill=True)
+
+	def on_slider_change(self):
+		self.alpha_spin.set_value(float(self.alpha_slider.get_value()))
+		self.on_change()
+
+	def on_spin_change(self):
+		self.alpha_slider.set_value(int(self.alpha_spin.get_value()))
+		self.on_change()
+
+	def on_change(self):
+		color = list(self.grid_color_btn.get_value())
+		color.append(self.alpha_spin.get_value() / 100.0)
+		self.grid_preview.set_color(color)
+
 	def save(self):
 		geom = [self.x_val.get_point_value(), self.y_val.get_point_value(),
 			self.dx_val.get_point_value(), self.dy_val.get_point_value()]
 		if not self.geom == geom:
 			self.api.set_grid_values(geom)
+		color = list(self.grid_color_btn.get_value())
+		color.append(self.alpha_spin.get_value() / 100.0)
+		if not self.color == color:
+			self.api.set_grid_color(color)
+
 
 class GuidesProps(DP_Panel):
 
