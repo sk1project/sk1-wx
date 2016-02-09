@@ -253,6 +253,11 @@ class SK2_Methods:
 	def get_grid_properties(self):
 		return self.get_layer_properties(self.get_grid_layer())
 
+	def is_grid_visible(self):
+		grid = self.get_grid_layer()
+		if grid.properties[0]: return True
+		return False
+
 	def set_grid_properties(self, props):
 		self.set_layer_properties(self.get_grid_layer(), props)
 
