@@ -115,6 +115,9 @@ class AbstractAPI:
 	def _set_grid_values(self, geom):
 		self.methods.set_grid_values(geom)
 
+	def _set_grid_color(self, color):
+		self.methods.set_grid_color(color)
+
 	def _set_guide_properties(self, guide, pos, orient):
 		guide.position = pos
 		guide.orientation = orient
@@ -707,6 +710,17 @@ class PresenterAPI(AbstractAPI):
 		transaction = [
 			[[self._set_grid_values, before]],
 			[[self._set_grid_values, after]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def set_grid_color(self, color):
+		before = self.methods.get_grid_rgba_color()
+		after = color
+		self.methods.set_grid_color(after)
+		transaction = [
+			[[self._set_grid_color, before]],
+			[[self._set_grid_color, after]],
 			False]
 		self.add_undo(transaction)
 		self.selection.update()
