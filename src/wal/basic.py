@@ -59,11 +59,11 @@ class Application(wx.App):
 	def run(self):
 		if self.mw:
 			self.SetTopWindow(self.mw)
-			self.mw.build()
 			if self.mw.maximized: self.mw.Maximize()
+			self.mw.build()
+			if self.actions:self.update_actions()
 			self.mw.Show(True)
 			self.mdi = self.mw.mdi
-			if self.actions:self.update_actions()
 			wx.CallAfter(self.call_after)
 			self.MainLoop()
 		else:
