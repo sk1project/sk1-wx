@@ -188,7 +188,7 @@ class PDRenderer(CairoRenderer):
 			i = i + 0.5
 			dx = dx * 10.0 * i
 		if dx / 2.0 > sdist + 3 and \
-		dx / 2.0 > gdx * self.canvas.zoom / 2.0:
+		dx / 2.0 > gdx * self.canvas.zoom:
 			dx = dx / 2.0
 
 		i = 0.0
@@ -196,26 +196,39 @@ class PDRenderer(CairoRenderer):
 			i = i + 0.5
 			dy = dy * 10.0 * i
 		if dy / 2.0 > sdist + 3 and \
-		dy / 2.0 > gdy * self.canvas.zoom / 2.0:
+		dy / 2.0 > gdy * self.canvas.zoom:
 			dy = dy / 2.0
 
 		sx = (x0 / dx - math.floor(x0 / dx)) * dx
 		sy = (y0 / dy - math.floor(y0 / dy)) * dy
 
+
 		i = pos = 0
+		nul_i = round((x0 - sx) / dx)
 		while pos < self.width:
 			pos = sx + i * dx
 			i += 1
 			self.ctx.move_to(pos, 0)
 			self.ctx.line_to(pos, self.height)
 			self.ctx.stroke()
+			if dx == gdx * self.canvas.zoom and not (i - nul_i - 1) % 5:
+				self.ctx.move_to(pos, 0)
+				self.ctx.line_to(pos, self.height)
+				self.ctx.stroke()
+
 		i = pos = 0
+		nul_i = round((y0 - sy) / dy)
 		while pos < self.height:
 			pos = sy + i * dy
 			i += 1
 			self.ctx.move_to(0, pos)
 			self.ctx.line_to(self.width, pos)
 			self.ctx.stroke()
+			if dy == gdy * self.canvas.zoom and not (i - nul_i - 1) % 5:
+				self.ctx.move_to(0, pos)
+				self.ctx.line_to(self.width, pos)
+				self.ctx.stroke()
+
 		self.ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
 
 	#------MARKER RENDERING
