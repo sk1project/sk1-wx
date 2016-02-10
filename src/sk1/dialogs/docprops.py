@@ -144,14 +144,28 @@ class GridPreview(wal.VPanel, wal.Canvas):
 		self.color = color
 		self.refresh()
 
+	def _composite_color(self, color1, color2=[1.0, 1.0, 1.0]):
+		r0, g0, b0, a0 = color1
+		r1, g1, b1 = color2
+		a1 = 1.0 - a0
+		r = r0 * a0 + r1 * a1
+		g = g0 * a0 + g1 * a1
+		b = b0 * a0 + b1 * a1
+		return [r, g, b]
+
 	def paint(self):
-		self.set_gc_stroke(cms.val_255(self.color), 1.0)
+		color1 = self._composite_color(self.color)
+		color2 = self._composite_color(self.color, color1)
+
+		self.set_stroke(cms.val_255(color1), 1.0)
 		for item in self.vgrid:
-			self.gc_draw_line(item, 0, item, 200)
-		self.gc_draw_line(self.vgrid[2], 0, self.vgrid[2], 200)
+			self.draw_line(item, 0, item, 200)
 		for item in self.hgrid:
-			self.gc_draw_line(0, item, 200, item)
-		self.gc_draw_line(0, self.hgrid[3], 200, self.hgrid[3])
+			self.draw_line(0, item, 200, item)
+
+		self.set_stroke(cms.val_255(color2), 1.0)
+		self.draw_line(self.vgrid[2], 0, self.vgrid[2], 200)
+		self.draw_line(0, self.hgrid[3], 200, self.hgrid[3])
 
 class GridProps(DP_Panel):
 
