@@ -171,7 +171,7 @@ class PDRenderer(CairoRenderer):
 		self.ctx.set_dash(())
 
 		w, h = self.presenter.get_page_size()
-		x, y, dx, dy = grid_layer.grid
+		x, y, gdx, gdy = grid_layer.grid
 		origin = self.presenter.model.doc_origin
 		if origin == sk2_const.DOC_ORIGIN_LL:
 			x0, y0 = self.canvas.point_doc_to_win([-w / 2.0 + x, -h / 2.0 + y])
@@ -179,23 +179,25 @@ class PDRenderer(CairoRenderer):
 			x0, y0 = self.canvas.point_doc_to_win([-w / 2.0 + x, h / 2.0 + y])
 		else:
 			x0, y0 = self.canvas.point_doc_to_win([x, y])
-		dx = dx * self.canvas.zoom
-		dy = dy * self.canvas.zoom
+		dx = gdx * self.canvas.zoom
+		dy = gdy * self.canvas.zoom
 		sdist = config.snap_distance
 
 		i = 0.0
 		while dx < sdist + 3:
 			i = i + 0.5
 			dx = dx * 10.0 * i
-#		if dx / 2.0 > sdist + 3:
-#			dx = dx / 2.0
+		if dx / 2.0 > sdist + 3 and \
+		dx / 2.0 > gdx * self.canvas.zoom / 2.0:
+			dx = dx / 2.0
 
 		i = 0.0
 		while dy < sdist + 3:
 			i = i + 0.5
 			dy = dy * 10.0 * i
-#		if dy / 2.0 > sdist + 3:
-#			dy = dy / 2.0
+		if dy / 2.0 > sdist + 3 and \
+		dy / 2.0 > gdy * self.canvas.zoom / 2.0:
+			dy = dy / 2.0
 
 		sx = (x0 / dx - math.floor(x0 / dx)) * dx
 		sy = (y0 / dy - math.floor(y0 / dy)) * dy
