@@ -194,7 +194,7 @@ class Ruler(HPanel):
 		canvas = self.presenter.canvas
 		w, h = self.presenter.get_page_size()
 		x = y = 0
-		dx = dy = uc2const.unit_dict[self.presenter.model.doc_units]
+		udx = udy = uc2const.unit_dict[self.presenter.model.doc_units]
 		origin = self.presenter.model.doc_origin
 		if origin == DOC_ORIGIN_LL:
 			x0, y0 = canvas.point_doc_to_win([-w / 2.0 + x, -h / 2.0 + y])
@@ -202,22 +202,24 @@ class Ruler(HPanel):
 			x0, y0 = canvas.point_doc_to_win([-w / 2.0 + x, h / 2.0 + y])
 		else:
 			x0, y0 = canvas.point_doc_to_win([x, y])
-		dx = dx * canvas.zoom
-		dy = dy * canvas.zoom
+		dx = udx * canvas.zoom
+		dy = udy * canvas.zoom
 		sdist = config.snap_distance
 
 		i = 0.0
 		while dx < sdist + 3:
 			i = i + 0.5
 			dx = dx * 10.0 * i
-		if dx / 2.0 > sdist + 3:
+		if dx / 2.0 > sdist + 3 and \
+		dx / 2.0 > udx * canvas.zoom:
 			dx = dx / 2.0
 
 		i = 0.0
 		while dy < sdist + 3:
 			i = i + 0.5
 			dy = dy * 10.0 * i
-		if dy / 2.0 > sdist + 3:
+		if dy / 2.0 > sdist + 3 and \
+		dy / 2.0 > udy * canvas.zoom:
 			dy = dy / 2.0
 
 		sx = (x0 / dx - math.floor(x0 / dx)) * dx
