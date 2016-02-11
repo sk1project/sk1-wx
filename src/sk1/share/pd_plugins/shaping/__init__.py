@@ -99,6 +99,7 @@ class AbstractShapingPanel(wal.VPanel):
 
 	def get_sel_count(self):
 		doc = self.app.current_doc
+		if not doc: return 0
 		return len(doc.selection.objs)
 
 	def check_selection(self, sel):
