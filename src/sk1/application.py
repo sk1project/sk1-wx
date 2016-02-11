@@ -15,7 +15,7 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, sys, traceback
+import os, sys, traceback, time
 import webbrowser
 from base64 import b64decode
 
@@ -95,13 +95,21 @@ class pdApplication(wal.Application, UCApplication):
 
 		self.proxy.update()
 		self.insp.update()
+		events.emit(events.NO_DOCS)
 
 	def call_after(self, *args):
 		if self.docs: return
-		if config.new_doc_on_start: self.new();return
-		events.emit(events.NO_DOCS)
+		if config.new_doc_on_start:
+			if config.active_plugins:
+				for item in config.active_plugins:
+					self.mw.mdi.plg_area.show_plugin(item)
+			self.new()
+			return
 		txt = _('To start, create new document or open existing')
 		events.emit(events.APP_STATUS, txt)
+		if config.active_plugins:
+			for item in config.active_plugins:
+				self.mw.mdi.plg_area.show_plugin(item)
 
 	def stub(self, *args):pass
 
@@ -110,6 +118,10 @@ class pdApplication(wal.Application, UCApplication):
 		config.mw_size = self.mw.get_size()
 		config.mw_maximized = self.mw.is_maximized()
 		if self.mw.is_maximized(): config.mw_size = config.mw_min_size
+		plugins = []
+		for item in self.mw.mdi.plg_area.plugins:
+			plugins.append(item.pid)
+		config.active_plugins = plugins
 		config.save(self.appdata.app_config)
 
 	def exit(self, *args):

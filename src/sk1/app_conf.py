@@ -102,6 +102,7 @@ class AppConfig(UCConfig):
 	spin_overlay = True
 	make_backup = True
 	make_export_backup = False
+	active_plugins = None
 
 	#===Ubuntu features
 	ubuntu_global_menu = False
