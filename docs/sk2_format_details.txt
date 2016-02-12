@@ -131,6 +131,12 @@ x,y - origin
 dx,dy - grid frequency
 
 -------------------------------------------------------------------------------
+PAGE_FILL
+[fill_type, fill]
+[FILL_SOLID, color]
+[FILL_PATTERN, [color_odd, color_even]]
+
+-------------------------------------------------------------------------------
 DOCUMENT METAINFO
 [author, license, keywords, notes]
 
