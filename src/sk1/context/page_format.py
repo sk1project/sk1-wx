@@ -38,7 +38,7 @@ class PagePlugin(CtxPlugin):
 		events.connect(events.DOC_MODIFIED, self.update)
 
 	def build(self):
-		self.formats = PAGE_FORMAT_NAMES + [_('Custom'), ]
+		self.formats = [_('Custom'), ] + PAGE_FORMAT_NAMES
 		self.combo = Combolist(self, items=self.formats,
 							onchange=self.combo_changed)
 		self.add(self.combo, 0, LEFT | CENTER, 2)
@@ -105,7 +105,7 @@ class PagePlugin(CtxPlugin):
 		if self.update_flag: return
 		if not self.format[0] == self.formats[self.combo.get_active()]:
 			self.update_flag = True
-			if not self.formats[self.combo.get_active()] == self.formats[-1]:
+			if self.formats[self.combo.get_active()] in PAGE_FORMAT_NAMES:
 				w, h = PAGE_FORMATS[self.formats[self.combo.get_active()]]
 				if self.portrait.get_active() and w > h:
 					self.width_spin.set_point_value(w)
