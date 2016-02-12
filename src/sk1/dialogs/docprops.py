@@ -22,10 +22,10 @@ import wal
 
 from uc2.uc2const import unit_names, unit_full_names
 from uc2.formats.sk2.sk2_const import ORIGINS
-from uc2 import cms
+from uc2 import cms, uc2const
 
 from sk1 import _, config
-from sk1.resources import icons
+from sk1.resources import icons, get_bmp
 from sk1.pwidgets import StaticUnitLabel, UnitSpin
 
 class DP_Panel(wal.VPanel):
@@ -83,14 +83,108 @@ class GeneralProps(DP_Panel):
 			if metainfo[3]: metainfo[3] = b64encode(metainfo[3])
 			self.api.set_doc_metainfo(metainfo)
 
+ORIENTS = [uc2const.PORTRAIT, uc2const.LANDSCAPE]
+ORIENTS_ICONS = [icons.CTX_PAGE_PORTRAIT, icons.CTX_PAGE_LANDSCAPE]
+ORIENTS_NAMES = [_('Portrait'), _('Landscape')]
 
 class PageProps(DP_Panel):
 
 	name = _('Page')
+	page_format = None
+
+	def build(self):
+		self.page_format = self.doc.methods.get_default_page_format()
+		self.formats = [_('Custom'), ] + uc2const.PAGE_FORMAT_NAMES
+		self.pack((5, 10))
+
+		#---
+		hpanel = wal.HPanel(self)
+		hpanel.pack((5, 5))
+		label = wal.Label(hpanel, _('Default page:'))
+		hpanel.pack(label)
+		hpanel.pack((5, 5))
+		self.page_combo = wal.Combolist(self, items=self.formats,
+							onchange=self.page_combo_changed)
+		index = 0
+		state = True
+		if self.page_format[0] in uc2const.PAGE_FORMAT_NAMES:
+			index = self.formats.index(self.page_format[0])
+			state = False
+		self.page_combo.set_active(index)
+
+		hpanel.pack(self.page_combo)
+
+		hpanel.pack((15, 5))
+
+		self.orient_keeper = wal.HToggleKeeper(self, ORIENTS, ORIENTS_ICONS,
+								ORIENTS_NAMES, on_change=self.orient_changed)
+		self.orient_keeper.set_mode(self.page_format[2])
+		hpanel.pack(self.orient_keeper)
+
+		self.pack(hpanel, fill=True)
+
+		self.pack((5, 5))
+
+		#---
+		w, h = self.page_format[1]
+		hpanel = wal.HPanel(self)
+		dx = label.get_size()[0] + 10
+		hpanel.pack((dx, 5))
+
+		self.page_width = UnitSpin(self.app, hpanel, w,
+								onchange=self.page_spin_changed)
+		hpanel.pack(self.page_width)
+		hpanel.pack(get_bmp(self, icons.CTX_W_ON_H), padding=5)
+		self.page_height = UnitSpin(self.app, hpanel, h,
+								onchange=self.page_spin_changed)
+		hpanel.pack(self.page_height)
+		hpanel.pack(StaticUnitLabel(self.app, hpanel), padding=5)
+		self.page_width.set_enable(state)
+		self.page_height.set_enable(state)
+
+		self.pack(hpanel, fill=True)
+		self.pack(wal.HLine(self), padding_all=5, fill=True)
+
+	def page_combo_changed(self):
+		state = False
+		if not self.page_combo.get_active():
+			state = True
+		else:
+			w, h = uc2const.PAGE_FORMATS[self.page_combo.get_active_value()]
+			self.page_width.set_point_value(w)
+			self.page_height.set_point_value(h)
+			self.orient_keeper.set_mode(uc2const.PORTRAIT)
+		self.page_width.set_enable(state)
+		self.page_height.set_enable(state)
+
+	def page_spin_changed(self):
+		w = self.page_width.get_point_value()
+		h = self.page_height.get_point_value()
+		if w < h: mode = uc2const.PORTRAIT
+		else: mode = uc2const.LANDSCAPE
+		self.orient_keeper.set_mode(mode)
+
+	def orient_changed(self, mode):
+		w = self.page_width.get_point_value()
+		h = self.page_height.get_point_value()
+		w, h = h, w
+		self.page_width.set_point_value(w)
+		self.page_height.set_point_value(h)
+
+	def save(self):
+		page_format = [self.page_combo.get_active_value(),
+				[self.page_width.get_point_value(),
+				self.page_height.get_point_value(), ],
+				self.orient_keeper.get_mode()]
+		if not self.page_format == page_format:
+			self.api.set_default_page_format(page_format)
+
+
 
 ORIGIN_ICONS = [icons.L_ORIGIN_CENTER, icons.L_ORIGIN_LL, icons.L_ORIGIN_LU]
 ORIGIN_NAMES = [_('Page center'),
 			_('Left lower page corner'), _('Left upper page corner')]
+
 
 class UnitsProps(DP_Panel):
 
