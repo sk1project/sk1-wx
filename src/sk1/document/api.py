@@ -106,6 +106,9 @@ class AbstractAPI:
 	def _set_page_format(self, page, page_format):
 		self.methods.set_page_format(page, page_format)
 
+	def _set_default_page_format(self, page_format):
+		self.methods.set_default_page_format(page_format)
+
 	def _set_layer_properties(self, layer, prop):
 		layer.properties = prop
 
@@ -544,6 +547,16 @@ class PresenterAPI(AbstractAPI):
 			False]
 		self.add_undo(transaction)
 		self.selection.update()
+
+	def set_default_page_format(self, page_format):
+		format_before = self.methods.get_default_page_format()
+		format_after = page_format
+		self._set_default_page_format(format_after)
+		transaction = [
+			[[self._set_default_page_format, format_before]],
+			[[self._set_default_page_format, format_after]],
+			False]
+		self.add_undo(transaction)
 
 	def set_page_format(self, page_format):
 		page = self.presenter.active_page
