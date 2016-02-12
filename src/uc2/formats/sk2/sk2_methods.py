@@ -103,17 +103,22 @@ class SK2_Methods:
 		return self.model.childs[0]
 
 	def get_pages(self):
-		return self.model.childs[0].childs
+		return self.get_pages_obj().childs
 
 	def get_page(self, page_num=0):
-		return self.presenter.model.childs[0].childs[page_num]
+		return self.get_pages_obj().childs[page_num]
 
 	def delete_pages(self):
-		self.model.childs[0].childs = []
-		self.model.childs[0].page_counter = 0
+		pages = self.get_pages_obj()
+		pages.childs = []
+		pages.page_counter = 0
+
+	def get_default_page_format(self):
+		pages = self.get_pages_obj()
+		return deepcopy(pages.page_format)
 
 	def set_default_page_size(self, width, height):
-		parent = self.model.childs[0]
+		parent = self.get_pages_obj()
 		fmt = _('Custom size')
 		size = (width, height)
 		orient = uc2const.PORTRAIT
@@ -121,14 +126,14 @@ class SK2_Methods:
 		parent.page_format = [fmt, size, orient]
 
 	def set_default_page_format(self, page_format):
-		parent = self.model.childs[0]
+		parent = self.get_pages_obj()
 		parent.page_format = page_format
 
 	def set_page_format(self, page, page_format):
 		page.page_format = page_format
 
 	def add_page(self, page_format=[]):
-		parent = self.model.childs[0]
+		parent = self.get_pages_obj()
 		if page_format:
 			page = sk2_model.Page(self.config)
 			page.page_format = deepcopy(page_format)
@@ -140,7 +145,7 @@ class SK2_Methods:
 		return page
 
 	def insert_page(self, index=0, page_format=[]):
-		parent = self.model.childs[0]
+		parent = self.get_pages_obj()
 		if page_format:
 			page = sk2_model.Page(self.config)
 			page.page_format = deepcopy(page_format)
@@ -157,7 +162,7 @@ class SK2_Methods:
 		return page
 
 	def delete_page(self, index=0):
-		parent = self.model.childs[0]
+		parent = self.get_pages_obj()
 		pages = parent.childs
 		if index < len(pages):
 			pages.remove(pages[index])
