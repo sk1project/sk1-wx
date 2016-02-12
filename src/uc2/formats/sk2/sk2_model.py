@@ -137,6 +137,9 @@ class Pages(DocumentObject):
 	cid = PAGES
 	page_format = []
 	page_counter = 0
+	desktop_bg = [1.0, 1.0, 1.0]
+	page_fill = [sk2_const.FILL_SOLID, [1.0, 1.0, 1.0]]
+	page_border = True
 
 	def __init__(self, config, parent=None):
 		self.cid = PAGES
