@@ -42,7 +42,7 @@ class Widget(object):
 			parent.Layout()
 
 	def get_size(self):
-		return self.GetSize()
+		return self.GetSizeTuple()
 
 	def is_shown(self):
 		return self.IsShown()
