@@ -220,6 +220,15 @@ class Combolist(wx.Choice, Widget):
 	def get_active(self):
 		return self.get_selection()
 
+	def get_active_value(self):
+		return self.items[self.get_selection()]
+
+	def set_active_value(self, val):
+		if not val in self.items:
+			self.items.append(val)
+			self.SetItems(self.items)
+		self.set_active(self.items.index[val])
+
 class BitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 
 	def __init__(self, parent, value=0, bitmaps=[]):
