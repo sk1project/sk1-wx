@@ -64,6 +64,7 @@ class PDRenderer(CairoRenderer):
 
 	def paint_document(self):
 		self.presenter = self.canvas.presenter
+		self.doc_methods = self.presenter.methods
 		self.cms = self.presenter.cms
 		self.start()
 		if self.canvas.draw_page_border:
@@ -83,7 +84,7 @@ class PDRenderer(CairoRenderer):
 			self.width = width
 			self.height = height
 		self.ctx = cairo.Context(self.surface)
-		self.ctx.set_source_rgb(*CAIRO_WHITE)
+		self.ctx.set_source_rgb(*self.doc_methods.get_desktop_bg())
 		self.ctx.paint()
 		self.ctx.set_matrix(self.canvas.matrix)
 
