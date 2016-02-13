@@ -127,7 +127,7 @@ class SK2_Methods:
 
 	def set_page_fill(self, page_fill):
 		pages = self.get_pages_obj()
-		pages.page_fill = page_fill
+		pages.page_fill = deepcopy(page_fill)
 
 	def get_page_border(self):
 		return self.get_pages_obj().page_border
