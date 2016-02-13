@@ -115,6 +115,9 @@ class AbstractAPI:
 	def _set_page_border(self, border):
 		self.methods.set_page_border(border)
 
+	def _set_page_fill(self, page_fill):
+		self.methods.set_page_fill(page_fill)
+
 	def _set_layer_properties(self, layer, prop):
 		layer.properties = prop
 
@@ -567,10 +570,20 @@ class PresenterAPI(AbstractAPI):
 	def set_page_border(self, border):
 		border_before = self.methods.get_page_border()
 		border_after = border
-		self._set_desktop_bg(border_after)
+		self._set_page_border(border_after)
 		transaction = [
 			[[self._set_page_border, border_before]],
 			[[self._set_page_border, border_after]],
+			False]
+		self.add_undo(transaction)
+
+	def set_page_fill(self, page_fill):
+		page_fill_before = self.methods.get_page_fill()
+		page_fill_after = page_fill
+		self._set_page_fill(page_fill)
+		transaction = [
+			[[self._set_page_fill, page_fill_before]],
+			[[self._set_page_fill, page_fill_after]],
 			False]
 		self.add_undo(transaction)
 
