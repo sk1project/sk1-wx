@@ -29,7 +29,7 @@ from wal import copy_surface_to_bitmap
 from sk1 import config
 
 CAIRO_BLACK = [0.0, 0.0, 0.0]
-CAIRO_GRAY = [0.5, 0.5, 0.5]
+CAIRO_GRAY = [0.0, 0.0, 0.0, 0.5]
 CAIRO_WHITE = [1.0, 1.0, 1.0]
 
 class PDRenderer(CairoRenderer):
@@ -67,8 +67,7 @@ class PDRenderer(CairoRenderer):
 		self.doc_methods = self.presenter.methods
 		self.cms = self.presenter.cms
 		self.start()
-		if self.canvas.draw_page_border:
-			self.paint_page_border()
+		self.paint_page()
 		self.render_doc()
 		self.render_grid()
 		self.render_guides()
@@ -92,20 +91,25 @@ class PDRenderer(CairoRenderer):
 		dc = wx.PaintDC(self.canvas)
 		dc.DrawBitmap(copy_surface_to_bitmap(self.temp_surface), 0, 0, False)
 
-	def paint_page_border(self):
+	def paint_page(self):
 		self.ctx.set_line_width(1.0 / self.canvas.zoom)
 		offset = 5.0 / self.canvas.zoom
 		w, h = self.presenter.get_page_size()
-		self.ctx.rectangle(-w / 2.0 + offset, -h / 2.0 - offset, w, h)
-		self.ctx.set_source_rgb(*CAIRO_GRAY)
-		self.ctx.fill()
+		border = self.doc_methods.get_page_border()
+		if border:
+			self.ctx.rectangle(-w / 2.0 + offset, -h / 2.0 - offset, w, h)
+			self.ctx.set_source_rgba(*CAIRO_GRAY)
+			self.ctx.fill()
+
 		self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
 		self.ctx.rectangle(-w / 2.0, -h / 2.0, w, h)
 		self.ctx.set_source_rgb(*CAIRO_WHITE)
 		self.ctx.fill()
-		self.ctx.rectangle(-w / 2.0, -h / 2.0, w, h)
-		self.ctx.set_source_rgb(*CAIRO_BLACK)
-		self.ctx.stroke()
+
+		if border:
+			self.ctx.rectangle(-w / 2.0, -h / 2.0, w, h)
+			self.ctx.set_source_rgb(*CAIRO_BLACK)
+			self.ctx.stroke()
 
 	def render_doc(self):
 		if self.canvas.draft_view:
