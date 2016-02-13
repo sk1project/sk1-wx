@@ -81,7 +81,6 @@ class AppCanvas(wx.Panel):
 	soft_repaint = False
 	full_repaint = False
 	selection_repaint = True
-	draw_page_border = True
 	mouse_captured = False
 	show_snapping = config.show_snap
 	dragged_guide = ()
