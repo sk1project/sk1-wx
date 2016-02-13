@@ -113,6 +113,25 @@ class SK2_Methods:
 		pages.childs = []
 		pages.page_counter = 0
 
+	def get_desktop_bg(self):
+		pages = self.get_pages_obj()
+		return deepcopy(pages.desktop_bg)
+
+	def set_desktop_bg(self, color):
+		pages = self.get_pages_obj()
+		pages.desktop_bg = color
+
+	def get_page_fill(self):
+		pages = self.get_pages_obj()
+		return deepcopy(pages.page_fill)
+
+	def set_page_fill(self, page_fill):
+		pages = self.get_pages_obj()
+		pages.page_fill = page_fill
+
+	def get_page_border(self):
+		return self.get_pages_obj().page_border
+
 	def get_default_page_format(self):
 		pages = self.get_pages_obj()
 		return deepcopy(pages.page_format)
@@ -215,12 +234,16 @@ class SK2_Methods:
 	def get_layer_color(self, layer):
 		return deepcopy(layer.style[1][2])
 
-	def get_layer_rgba_color(self, layer):
-		return [] + layer.color
-
 	def set_layer_color(self, layer, color):
 		layer.style[1][2] = deepcopy(color)
 		layer.color = color[1] + [color[2], ]
+
+	def get_layer_rgba_color(self, layer):
+		return [] + layer.color
+
+	def set_layer_rgba_color(self, layer, color):
+		layer.color = deepcopy(color)
+		layer.style[1][2] = [uc2const.COLOR_RGB, color[:-1], color[-1], '', '']
 
 	def get_layer_properties(self, layer):
 		return [] + layer.properties
@@ -244,6 +267,9 @@ class SK2_Methods:
 
 	def get_grid_rgba_color(self):
 		return self.get_layer_rgba_color(self.get_grid_layer())
+
+	def set_grid_rgba_color(self, color):
+		self.set_layer_rgba_color(self.get_grid_layer(), color)
 
 	def set_grid_color(self, color):
 		self.set_layer_color(self.get_grid_layer(), color)
