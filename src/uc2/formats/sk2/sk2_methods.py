@@ -132,6 +132,9 @@ class SK2_Methods:
 	def get_page_border(self):
 		return self.get_pages_obj().page_border
 
+	def set_page_border(self, border=True):
+		self.get_pages_obj().page_border = border
+
 	def get_default_page_format(self):
 		pages = self.get_pages_obj()
 		return deepcopy(pages.page_format)
