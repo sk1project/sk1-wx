@@ -112,6 +112,9 @@ class AbstractAPI:
 	def _set_desktop_bg(self, color):
 		self.methods.set_desktop_bg(color)
 
+	def _set_page_border(self, border):
+		self.methods.set_page_border(border)
+
 	def _set_layer_properties(self, layer, prop):
 		layer.properties = prop
 
@@ -558,6 +561,16 @@ class PresenterAPI(AbstractAPI):
 		transaction = [
 			[[self._set_desktop_bg, color_before]],
 			[[self._set_desktop_bg, color_after]],
+			False]
+		self.add_undo(transaction)
+
+	def set_page_border(self, border):
+		border_before = self.methods.get_page_border()
+		border_after = border
+		self._set_desktop_bg(border_after)
+		transaction = [
+			[[self._set_page_border, border_before]],
+			[[self._set_page_border, border_after]],
 			False]
 		self.add_undo(transaction)
 
