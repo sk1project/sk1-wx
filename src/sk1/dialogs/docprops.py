@@ -21,7 +21,7 @@ from base64 import b64decode, b64encode
 import wal
 
 from uc2.uc2const import unit_names, unit_full_names
-from uc2.formats.sk2.sk2_const import ORIGINS
+from uc2.formats.sk2.sk2_const import ORIGINS, FILL_SOLID, FILL_PATTERN
 from uc2 import cms, uc2const
 
 from sk1 import _, config
@@ -87,10 +87,66 @@ ORIENTS = [uc2const.PORTRAIT, uc2const.LANDSCAPE]
 ORIENTS_ICONS = [icons.CTX_PAGE_PORTRAIT, icons.CTX_PAGE_LANDSCAPE]
 ORIENTS_NAMES = [_('Portrait'), _('Landscape')]
 
+COLORS = ['#282828', '#424242', '#666666', '#989898', '#D5D5D5', '#FFFFFF']
+
+class ColorCell(wal.VPanel, wal.SensitiveCanvas):
+
+	color = None
+	callback = None
+	state = True
+
+	def __init__(self, parent, color=(), size=(30, 30), onclick=None):
+		self.color = color
+		self.callback = onclick
+		wal.VPanel.__init__(self, parent)
+		wal.SensitiveCanvas.__init__(self)
+		self.pack(size)
+
+	def set_color(self, color):
+		self.color = color
+		self.set_bg(color)
+
+	def mouse_left_up(self, point):
+		if self.state and self.color and self.callback:
+			self.callback(cms.val_255_to_dec(self.color))
+
+	def set_enable(self, state):
+		self.state = state
+		if state: color = self.color
+		else: color = wal.UI_COLORS['bg']
+		self.set_bg(color)
+
+
+class CBMiniPalette(wal.VPanel):
+
+	cells = []
+
+	def __init__(self, parent, colors=COLORS, size=(25, 25), onclick=None):
+		wal.VPanel.__init__(self, parent)
+		self.grid = wal.GridPanel(self, 1 , len(colors), 1 , 1)
+		self.cells = []
+		for item in colors:
+			color = cms.val_255(cms.hexcolor_to_rgb(item))
+			cell = ColorCell(self, color, size, onclick)
+			self.grid.pack(cell)
+			self.cells.append(cell)
+		self.pack(self.grid, padding_all=1)
+		self.set_enable(True)
+
+	def set_enable(self, state):
+		if state: color = wal.BLACK
+		else: color = wal.UI_COLORS['disabled_text']
+		self.set_bg(color)
+		self.grid.set_bg(color)
+		for item in self.cells: item.set_enable(state)
+
 class PageProps(DP_Panel):
 
 	name = _('Page')
 	page_format = None
+	desktop_bg = None
+	page_fill = None
+	border_flag = False
 
 	def build(self):
 		self.page_format = self.doc.methods.get_default_page_format()
@@ -145,6 +201,58 @@ class PageProps(DP_Panel):
 		self.pack(hpanel, fill=True)
 		self.pack(wal.HLine(self), padding_all=5, fill=True)
 
+		#---
+		hpanel = wal.HPanel(self)
+		hpanel.pack((5, 5))
+		self.desktop_bg = self.doc.methods.get_desktop_bg()
+
+		grid = wal.GridPanel(hpanel, 3, 3, 5, 5)
+		grid.add_growable_col(2)
+
+		grid.pack(wal.Label(hpanel, _('Desktop:')))
+		self.desktop_color_btn = wal.ColorButton(hpanel, self.desktop_bg)
+		grid.pack(self.desktop_color_btn)
+		grid.pack(CBMiniPalette(grid, onclick=self.desktop_color_btn.set_value))
+
+		self.page_fill = self.doc.methods.get_page_fill()
+		if self.page_fill[0] == FILL_SOLID:
+			color1 = self.page_fill[1]
+			color2 = ()
+		else:
+			color1 = self.page_fill[1][0]
+			color2 = self.page_fill[1][1]
+
+		grid.pack(wal.Label(hpanel, _('Page:')))
+		self.page_color1_btn = wal.ColorButton(hpanel, color1)
+		grid.pack(self.page_color1_btn)
+		grid.pack(CBMiniPalette(grid, onclick=self.page_color1_btn.set_value))
+
+		grid.pack((5, 5))
+		self.page_color2_btn = wal.ColorButton(hpanel, color1)
+		grid.pack(self.page_color2_btn)
+		self.colors2 = CBMiniPalette(grid, onclick=self.page_color2_btn.set_value)
+		grid.pack(self.colors2)
+		if not color2:
+			self.page_color2_btn.set_enable(False)
+			self.colors2.set_enable(False)
+
+		hpanel.pack(grid, fill=True)
+		hpanel.pack((5, 5))
+		self.pack(hpanel, fill=True)
+
+		#---
+		vpanel = wal.VPanel(self)
+		self.pattern_check = wal.Checkbox(vpanel,
+							_('Use pattern for page fill'), not color2 == (),
+							onclick=self.pattern_check_changed)
+		vpanel.pack(self.pattern_check, align_center=False)
+
+		self.border_flag = self.doc.methods.get_page_border()
+		self.border_check = wal.Checkbox(vpanel,
+							_('Show page border'), self.border_flag)
+		vpanel.pack(self.border_check, align_center=False)
+		self.pack(vpanel, fill=True, padding_all=5)
+
 	def page_combo_changed(self):
 		state = False
 		if not self.page_combo.get_active():
@@ -171,6 +279,11 @@ class PageProps(DP_Panel):
 		self.page_width.set_point_value(w)
 		self.page_height.set_point_value(h)
 
+	def pattern_check_changed(self):
+		state = self.pattern_check.get_value()
+		self.page_color2_btn.set_enable(state)
+		self.colors2.set_enable(state)
+
 	def save(self):
 		page_format = [self.page_combo.get_active_value(),
 				[self.page_width.get_point_value(),
@@ -178,7 +291,13 @@ class PageProps(DP_Panel):
 				self.orient_keeper.get_mode()]
 		if not self.page_format == page_format:
 			self.api.set_default_page_format(page_format)
+		desktop_bg = self.desktop_color_btn.get_value()
+		if not self.desktop_bg == desktop_bg:
+			self.api.set_desktop_bg(desktop_bg)
 
+		border_flag = self.border_check.get_value()
+		if not self.border_flag == border_flag:
+			self.api.set_page_border(border_flag)
 
 
 ORIGIN_ICONS = [icons.L_ORIGIN_CENTER, icons.L_ORIGIN_LL, icons.L_ORIGIN_LU]
