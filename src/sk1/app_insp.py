@@ -237,7 +237,7 @@ class AppInspector:
 	def is_draw_page_border(self, doc=None):
 		if doc is None: doc = self.app.current_doc
 		if doc is None: return False
-		return self.app.current_doc.canvas.draw_page_border
+		return self.app.current_doc.methods.get_page_border()
 
 	def is_show_snapping(self, doc=None):
 		if doc is None: doc = self.app.current_doc

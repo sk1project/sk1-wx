@@ -333,12 +333,10 @@ class AppProxy:
 
 	def draw_page_border(self):
 		if self.insp.is_doc():
-			canvas = self.app.current_doc.canvas
-			if canvas.draw_page_border:
-				canvas.draw_page_border = False
-			else:
-				canvas.draw_page_border = True
-			canvas.force_redraw()
+			methods = self.app.current_doc.methods
+			api = self.app.current_doc.api
+			border = methods.get_page_border()
+			api.set_page_border(not border)
 
 	#---Page management
 	def next_page(self):
