@@ -101,12 +101,14 @@ class PDRenderer(CairoRenderer):
 			self.ctx.set_source_rgba(*CAIRO_GRAY)
 			self.ctx.fill()
 
-		self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
-		self.ctx.rectangle(-w / 2.0, -h / 2.0, w, h)
-		self.ctx.set_source_rgb(*CAIRO_WHITE)
-		self.ctx.fill()
+		page_fill = self.doc_methods.get_page_fill()
+		if page_fill[0] == sk2_const.FILL_SOLID:
+			self.ctx.rectangle(-w / 2.0, -h / 2.0, w, h)
+			self.ctx.set_source_rgb(*page_fill[1])
+			self.ctx.fill()
 
 		if border:
+			self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
 			self.ctx.rectangle(-w / 2.0, -h / 2.0, w, h)
 			self.ctx.set_source_rgb(*CAIRO_BLACK)
 			self.ctx.stroke()
