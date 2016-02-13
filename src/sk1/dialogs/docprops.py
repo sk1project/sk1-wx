@@ -217,7 +217,7 @@ class PageProps(DP_Panel):
 		self.page_fill = self.doc.methods.get_page_fill()
 		if self.page_fill[0] == FILL_SOLID:
 			color1 = self.page_fill[1]
-			color2 = ()
+			color2 = [1.0, 1.0, 1.0]
 		else:
 			color1 = self.page_fill[1][0]
 			color2 = self.page_fill[1][1]
@@ -232,7 +232,7 @@ class PageProps(DP_Panel):
 		grid.pack(self.page_color2_btn)
 		self.colors2 = CBMiniPalette(grid, onclick=self.page_color2_btn.set_value)
 		grid.pack(self.colors2)
-		if not color2:
+		if not self.page_fill[0] == FILL_PATTERN:
 			self.page_color2_btn.set_enable(False)
 			self.colors2.set_enable(False)
 
@@ -243,7 +243,8 @@ class PageProps(DP_Panel):
 		#---
 		vpanel = wal.VPanel(self)
 		self.pattern_check = wal.Checkbox(vpanel,
-							_('Use pattern for page fill'), not color2 == (),
+							_('Use pattern for page fill'),
+							self.page_fill[0] == FILL_PATTERN,
 							onclick=self.pattern_check_changed)
 		vpanel.pack(self.pattern_check, align_center=False)
 
@@ -294,6 +295,15 @@ class PageProps(DP_Panel):
 		desktop_bg = self.desktop_color_btn.get_value()
 		if not self.desktop_bg == desktop_bg:
 			self.api.set_desktop_bg(desktop_bg)
+
+		color1 = self.page_color1_btn.get_value()
+		if self.pattern_check.get_value():
+			color2 = self.page_color2_btn.get_value()
+			page_fill = [FILL_PATTERN, [color1, color2]]
+		else:
+			page_fill = [FILL_SOLID, color1]
+		if not self.page_fill == page_fill:
+			self.api.set_page_fill(page_fill)
 
 		border_flag = self.border_check.get_value()
 		if not self.border_flag == border_flag:
