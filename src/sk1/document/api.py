@@ -109,6 +109,9 @@ class AbstractAPI:
 	def _set_default_page_format(self, page_format):
 		self.methods.set_default_page_format(page_format)
 
+	def _set_desktop_bg(self, color):
+		self.methods.set_desktop_bg(color)
+
 	def _set_layer_properties(self, layer, prop):
 		layer.properties = prop
 
@@ -119,7 +122,7 @@ class AbstractAPI:
 		self.methods.set_grid_values(geom)
 
 	def _set_grid_color(self, color):
-		self.methods.set_grid_color(color)
+		self.methods.set_grid_rgba_color(color)
 
 	def _set_guide_properties(self, guide, pos, orient):
 		guide.position = pos
@@ -548,6 +551,16 @@ class PresenterAPI(AbstractAPI):
 		self.add_undo(transaction)
 		self.selection.update()
 
+	def set_desktop_bg(self, color):
+		color_before = self.methods.get_desktop_bg()
+		color_after = color
+		self._set_desktop_bg(color_after)
+		transaction = [
+			[[self._set_desktop_bg, color_before]],
+			[[self._set_desktop_bg, color_after]],
+			False]
+		self.add_undo(transaction)
+
 	def set_default_page_format(self, page_format):
 		format_before = self.methods.get_default_page_format()
 		format_after = page_format
@@ -730,7 +743,7 @@ class PresenterAPI(AbstractAPI):
 	def set_grid_color(self, color):
 		before = self.methods.get_grid_rgba_color()
 		after = color
-		self.methods.set_grid_color(after)
+		self.methods.set_grid_rgba_color(after)
 		transaction = [
 			[[self._set_grid_color, before]],
 			[[self._set_grid_color, after]],
