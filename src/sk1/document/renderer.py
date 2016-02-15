@@ -101,17 +101,54 @@ class PDRenderer(CairoRenderer):
 			self.ctx.set_source_rgba(*CAIRO_GRAY)
 			self.ctx.fill()
 
+		self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
 		page_fill = self.doc_methods.get_page_fill()
 		if page_fill[0] == sk2_const.FILL_SOLID:
 			self.ctx.rectangle(-w / 2.0, -h / 2.0, w, h)
 			self.ctx.set_source_rgb(*page_fill[1])
 			self.ctx.fill()
+		else:
+			units = self.doc_methods.get_doc_units()
+			gdx = uc2const.unit_dict[units]
+			dx = self.calc_grid(0.0, 0.0, gdx, gdx)[2] / self.canvas.zoom
+			origin = self.doc_methods.get_doc_origin()
+			sx = sy = 0.0
+			if origin == sk2_const.DOC_ORIGIN_LU:
+				sy = dx - (h - float(int(h / dx)) * dx)
+			elif origin == sk2_const.DOC_ORIGIN_CENTER:
+				sy = dx - (h / 2.0 - float(int(h / (2.0 * dx))) * dx)
+				sx = dx - (w / 2.0 - float(int(w / (2.0 * dx))) * dx)
+
+			self.ctx.save()
+			self.ctx.rectangle(-w / 2.0, -h / 2.0, w, h)
+			self.ctx.clip()
+
+			self.ctx.rectangle(-w / 2.0, -h / 2.0, w, h)
+			self.ctx.set_source_rgb(*page_fill[1][1])
+			self.ctx.fill()
+
+			self.ctx.set_source_rgb(*page_fill[1][0])
+
+			ypos = ystart = -h / 2.0 - sy
+			j = 0
+			while ypos < h / 2.0:
+				ypos = ystart + j * dx
+				xpos = xstart = -w / 2.0 - sx
+				i = 0
+				if j % 2:xpos = xstart = -w / 2.0 + dx - sx
+				while xpos < w / 2.0:
+					xpos = xstart + i * dx * 2.0
+					self.ctx.rectangle(xpos, ypos, dx, dx)
+					self.ctx.fill()
+					i += 1
+				j += 1
+			self.ctx.restore()
 
 		if border:
-			self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
 			self.ctx.rectangle(-w / 2.0, -h / 2.0, w, h)
 			self.ctx.set_source_rgb(*CAIRO_BLACK)
 			self.ctx.stroke()
+		self.ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
 
 	def render_doc(self):
 		if self.canvas.draft_view:
@@ -166,19 +203,8 @@ class PDRenderer(CairoRenderer):
 					self.ctx.stroke()
 
 	#------GRID RENDERING
-	def render_grid(self):
-		methods = self.presenter.methods
-		grid_layer = methods.get_grid_layer()
-		if not methods.is_layer_visible(grid_layer):return
-
-		self.ctx.set_matrix(self.direct_matrix)
-		self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
-		self.ctx.set_source_rgba(*grid_layer.color)
-		self.ctx.set_line_width(1.0)
-		self.ctx.set_dash(())
-
+	def calc_grid(self, x, y, gdx, gdy):
 		w, h = self.presenter.get_page_size()
-		x, y, gdx, gdy = grid_layer.grid
 		origin = self.presenter.model.doc_origin
 		if origin == sk2_const.DOC_ORIGIN_LL:
 			x0, y0 = self.canvas.point_doc_to_win([-w / 2.0 + x, -h / 2.0 + y])
@@ -209,6 +235,22 @@ class PDRenderer(CairoRenderer):
 		sx = (x0 / dx - math.floor(x0 / dx)) * dx
 		sy = (y0 / dy - math.floor(y0 / dy)) * dy
 
+		return x0, y0, dx, dy, sx, sy
+
+
+	def render_grid(self):
+		methods = self.presenter.methods
+		grid_layer = methods.get_grid_layer()
+		if not methods.is_layer_visible(grid_layer):return
+
+		self.ctx.set_matrix(self.direct_matrix)
+		self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
+		self.ctx.set_source_rgba(*grid_layer.color)
+		self.ctx.set_line_width(1.0)
+		self.ctx.set_dash(())
+
+		x, y, gdx, gdy = grid_layer.grid
+		x0, y0, dx, dy, sx, sy = self.calc_grid(x, y, gdx, gdy)
 
 		i = pos = 0
 		nul_i = round((x0 - sx) / dx)
