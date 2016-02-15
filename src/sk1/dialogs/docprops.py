@@ -228,7 +228,7 @@ class PageProps(DP_Panel):
 		grid.pack(CBMiniPalette(grid, onclick=self.page_color1_btn.set_value))
 
 		grid.pack((5, 5))
-		self.page_color2_btn = wal.ColorButton(hpanel, color1)
+		self.page_color2_btn = wal.ColorButton(hpanel, color2)
 		grid.pack(self.page_color2_btn)
 		self.colors2 = CBMiniPalette(grid, onclick=self.page_color2_btn.set_value)
 		grid.pack(self.colors2)
