@@ -29,11 +29,12 @@ class LayerList(UltimateListCtrl):
 	pos_x = None
 	sel_callback = None
 	change_callback = None
+	double_click_callback = None
 	selection_flag = True
 
 	def __init__(self, parent, data=[], images=[], alt_color=True,
 				even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
-				on_select=None, on_change=None):
+				on_select=None, on_change=None, on_double_click=None):
 		self.alt_color = alt_color
 		self.attr1 = UltimateListItemAttr()
 		self.attr1.SetBackgroundColour(odd_color)
@@ -42,6 +43,7 @@ class LayerList(UltimateListCtrl):
 
 		self.sel_callback = on_select
 		self.change_callback = on_change
+		self.double_click_callback = on_double_click
 
 		self.il = wx.ImageList(16, 16)
 		for icon_id in images:
@@ -63,6 +65,7 @@ class LayerList(UltimateListCtrl):
 
 		self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelected)
 		self.Bind(wx.EVT_LEFT_DOWN, self.on_mouse_down)
+		self.Bind(wx.EVT_LEFT_DCLICK, self.on_double_click)
 		self.update(data)
 		if data:self.set_selected(0)
 
@@ -84,6 +87,10 @@ class LayerList(UltimateListCtrl):
 	def on_mouse_down(self, event):
 		self.pos_x = event.GetX()
 		event.Skip()
+
+	def on_double_click(self, event):
+		if self.double_click_callback:
+			self.double_click_callback()
 
 	def OnItemSelected(self, event):
 		if not self.selection_flag: return
