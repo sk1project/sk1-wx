@@ -535,9 +535,11 @@ class DocPropertiesDialog(wal.OkCancelDialog):
 	app = None
 	panels = []
 
-	def __init__(self, app, parent, title, size=config.docprops_dlg_size):
+	def __init__(self, app, parent, title):
 		self.app = app
-		wal.OkCancelDialog.__init__(self, parent, title, size)
+		size = config.docprops_dlg_size
+		wal.OkCancelDialog.__init__(self, parent, title, size, resizable=True)
+		self.set_minsize(config.docprops_dlg_minsize)
 
 	def build(self):
 		self.panels = []
@@ -551,7 +553,12 @@ class DocPropertiesDialog(wal.OkCancelDialog):
 	def get_result(self):
 		for item in self.panels:
 			item.save()
-		return None
+
+	def show(self):
+		if self.show_modal() == wal.BUTTON_OK:
+			self.get_result()
+		config.docprops_dlg_size = self.get_size()
+		self.destroy()
 
 
 def docprops_dlg(app, parent):
