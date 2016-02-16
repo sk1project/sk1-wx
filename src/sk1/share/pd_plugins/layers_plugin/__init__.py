@@ -90,7 +90,8 @@ class Layers_Plugin(RS_Plugin):
 		for item in BITMAPS: bmp.append(make_artid(item))
 		pnl = wal.VPanel(self.panel, border=True)
 		self.viewer = wal.LayerList(pnl, self.get_data(), bmp,
-								on_select=self.update, on_change=self.changed)
+								on_select=self.update, on_change=self.changed,
+								on_double_click=self.rename_layer)
 		pnl.pack(self.viewer, fill=True, expand=True)
 		self.panel.pack(pnl, padding_all=3, fill=True, expand=True)
 
