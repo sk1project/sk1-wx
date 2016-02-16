@@ -117,23 +117,24 @@ class AppConfig(UCConfig):
 	mw_min_width = 1000
 	mw_min_height = 700
 
-	history_dlg_minsize = (500, 350)
 	history_dlg_size = (500, 350)
+	history_dlg_minsize = (500, 350)
 
-	prefs_dlg_minsize = (700, 430)
 	prefs_dlg_size = (700, 430)
+	prefs_dlg_minsize = (700, 430)
 
 	palinfo_dlg_size = (400, 350)
 	palinfo_dlg_minsize = (400, 350)
 	palcol_dlg_size = (600, 350)
 	palcol_dlg_minsize = (600, 350)
+	docprops_dlg_size = (420, 350)
+	docprops_dlg_minsize = (420, 350)
 
 	fill_dlg_size = (440, 370)
 	stroke_dlg_size = (430, 370)
 	dash_dlg_size = (300, 150)
 	change_color_dlg_size = (420, 300)
 	about_dlg_size = (500, 350)
-	docprops_dlg_size = (400, 350)
 
 
 	statusbar_fontsize = 0
