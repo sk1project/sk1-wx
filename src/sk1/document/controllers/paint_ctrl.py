@@ -15,7 +15,7 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2.libgeom import contra_point, bezier_base_point
+from uc2.libgeom import contra_point, bezier_base_point, midpoint
 from uc2.libgeom import apply_trafo_to_paths, is_point_in_rect2
 from uc2.formats.sk2 import sk2_const as const
 from uc2.formats.sk2 import sk2_model as model
@@ -341,10 +341,24 @@ class PathsCreator(PolyLineCreator):
 															 self.curve_point)
 					self.control_point1_doc = contra_point(self.control_point2_doc,
 															 self.curve_point_doc)
+
+					node_type = const.NODE_SYMMETRICAL
+					if len(self.points):
+						bp_doc = bezier_base_point(self.points[-1])
+					else:
+						bp_doc = self.path[0]
+					if self.control_point0_doc == bp_doc and \
+					self.control_point1_doc == self.curve_point_doc:
+						node_type = const.NODE_CUSP
+						self.control_point0_doc = midpoint(bp_doc, self.curve_point_doc, 1.0 / 3.0)
+						self.control_point1_doc = midpoint(bp_doc, self.curve_point_doc, 2.0 / 3.0)
+						self.control_point0 = self.canvas.doc_to_win(self.control_point0_doc)
+						self.control_point1 = self.canvas.doc_to_win(self.control_point1_doc)
 					self.add_point([self.control_point0, self.control_point1,
-								self.curve_point, const.NODE_SYMMETRICAL],
+								self.curve_point, node_type],
 								[self.control_point0_doc, self.control_point1_doc,
-								self.curve_point_doc, const.NODE_SYMMETRICAL])
+								self.curve_point_doc, node_type])
+
 					self.control_point0 = [] + self.control_point2
 					self.control_point0_doc = [] + self.control_point2_doc
 					p = event.get_point()
