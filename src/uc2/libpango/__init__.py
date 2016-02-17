@@ -66,7 +66,8 @@ def _set_layout(layout, text, width, text_style, attributes):
 	fnt_descr = _get_font_description(text_style)
 	_libpango.set_layout_font_description(layout, fnt_descr)
 	_libpango.set_layout_alignment(layout, text_style[3])
-	_libpango.set_layout_markup(layout, cgi.escape(text))
+	markup = cgi.escape(text)
+	_libpango.set_layout_markup(layout, markup)
 
 def get_text_paths(text, width, text_style, attributes):
 	_set_layout(PANGO_LAYOUT, text, width, text_style, attributes)
