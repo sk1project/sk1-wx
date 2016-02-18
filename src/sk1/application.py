@@ -97,19 +97,22 @@ class pdApplication(wal.Application, UCApplication):
 		self.insp.update()
 		events.emit(events.NO_DOCS)
 
+	def load_plugins(self):
+		if config.active_plugins:
+			for item in config.active_plugins:
+					try:
+						self.mw.mdi.plg_area.show_plugin(item)
+					except: pass
+
 	def call_after(self, *args):
 		if self.docs: return
 		if config.new_doc_on_start:
-			if config.active_plugins:
-				for item in config.active_plugins:
-					self.mw.mdi.plg_area.show_plugin(item)
+			self.load_plugins()
 			self.new()
-			return
-		txt = _('To start, create new document or open existing')
-		events.emit(events.APP_STATUS, txt)
-		if config.active_plugins:
-			for item in config.active_plugins:
-				self.mw.mdi.plg_area.show_plugin(item)
+		else:
+			txt = _('To start, create new document or open existing')
+			events.emit(events.APP_STATUS, txt)
+			self.load_plugins()
 
 	def stub(self, *args):pass
 
