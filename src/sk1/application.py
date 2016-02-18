@@ -100,9 +100,9 @@ class pdApplication(wal.Application, UCApplication):
 	def load_plugins(self):
 		if config.active_plugins:
 			for item in config.active_plugins:
-					try:
-						self.mw.mdi.plg_area.show_plugin(item)
-					except: pass
+				try:
+					self.mw.mdi.plg_area.show_plugin(item)
+				except: pass
 
 	def call_after(self, *args):
 		if self.docs: return
