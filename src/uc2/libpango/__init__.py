@@ -31,6 +31,7 @@ DIRECT_MATRIX = cairo.Matrix()
 
 PANGO_MATRIX = cairo.Matrix(1.0, 0.0, 0.0, -1.0, 0.0, 0.0)
 PANGO_LAYOUT = _libpango.create_layout(CTX)
+NONPRINTING_CHARS = ' \n\t'.decode('utf-8')
 
 FAMILIES_LIST = []
 FAMILIES_DICT = {}
@@ -76,22 +77,39 @@ def get_text_paths(text, width, text_style, attributes):
 	surf = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
 	ctx = cairo.Context(surf)
 	ctx.set_matrix(libcairo.DIRECT_MATRIX)
+
 	ctx.new_path()
 	ctx.move_to(0, 0)
 	layout = _libpango.create_layout(ctx)
 	_set_layout(layout, text, width, text_style, attributes)
 	_libpango.layout_path(ctx, layout)
-
 	cpath = ctx.copy_path()
 
-	width = bbox_size(libcairo.get_cpath_bbox(cpath))[0]
+	w = bbox_size(libcairo.get_cpath_bbox(cpath))[0]
 	dx = 0.0
-	if text_style[3] == 1: dx = -width / 2.0
-	elif text_style[3] == 2: dx = -width
-	matrix = cairo.Matrix(1.0, 0.0, 0.0, -1.0, dx, 0.0)
+	if text_style[3] == 1: dx = -w / 2.0
+	elif text_style[3] == 2: dx = -w
 
-	libcairo.apply_cmatrix(cpath, matrix)
-	return libcairo.get_path_from_cpath(cpath)
+	glyphs = []
+
+	for item in text.decode('utf-8'):
+		if item in NONPRINTING_CHARS:
+			glyphs.append(None)
+			continue
+		ctx.new_path()
+		ctx.move_to(0, 0)
+		layout = _libpango.create_layout(ctx)
+		_set_layout(layout, item.encode('utf-8'), width, text_style, attributes)
+		_libpango.layout_path(ctx, layout)
+		cpath = ctx.copy_path()
+		matrix = cairo.Matrix(1.0, 0.0, 0.0, -1.0, dx, 0.0)
+		libcairo.apply_cmatrix(cpath, matrix)
+		glyphs.append(libcairo.get_path_from_cpath(cpath))
+
+	return glyphs
 
 def get_line_positions():
 	return _libpango.get_layout_line_positions(PANGO_LAYOUT)
+
+def get_glyph_positions():
+	return _libpango.get_layout_glyph_positions(PANGO_LAYOUT)
