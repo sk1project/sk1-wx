@@ -138,6 +138,22 @@ class CairoRenderer:
 		if obj.cid == model.PIXMAP:
 			self.render_image(ctx, obj)
 			return
+		if obj.cid == model.TEXT_BLOCK:
+			if self.contour_flag:
+				self.process_stroke(ctx, None, self.stroke_style)
+				for item in obj.cache_cpath:
+					ctx.new_path()
+					ctx.append_path(item)
+					ctx.stroke()
+			else:
+				if obj.style[1] and obj.style[1][7]:
+					self.stroke_text_obj(ctx, obj)
+					self.fill_text_obj(ctx, obj)
+				else:
+					self.fill_text_obj(ctx, obj)
+					self.stroke_text_obj(ctx, obj)
+			return
+
 		if self.contour_flag:
 			ctx.new_path()
 			self.process_stroke(ctx, None, self.stroke_style)
@@ -158,12 +174,28 @@ class CairoRenderer:
 			ctx.append_path(obj.cache_cpath)
 			ctx.fill()
 
+	def fill_text_obj(self, ctx, obj):
+		if obj.style[0]:
+			self.process_fill(ctx, obj)
+			for item in obj.cache_cpath:
+				ctx.new_path()
+				ctx.append_path(item)
+				ctx.fill()
+
 	def stroke_obj(self, ctx, obj):
 		if obj.style[1]:
 			ctx.new_path()
 			self.process_stroke(ctx, obj)
 			ctx.append_path(obj.cache_cpath)
 			ctx.stroke()
+
+	def stroke_text_obj(self, ctx, obj):
+		if obj.style[1]:
+			self.process_stroke(ctx, obj)
+			for item in obj.cache_cpath:
+				ctx.new_path()
+				ctx.append_path(item)
+				ctx.stroke()
 
 	def process_fill(self, ctx, obj):
 		fill = obj.style[0]
