@@ -305,9 +305,60 @@ pango_GetLayoutLinePos(PyObject *self, PyObject *args) {
 	iter = pango_layout_get_iter(layout);
 
 	for (i = 0; i < len; i++) {
-		baseline=((double) pango_layout_iter_get_baseline(iter)) / PANGO_SCALE;
+		baseline=-1.0*((double) pango_layout_iter_get_baseline(iter)) / PANGO_SCALE;
 		PyTuple_SetItem(ret, i, PyFloat_FromDouble(baseline));
 		pango_layout_iter_next_line(iter);
+	}
+
+	pango_layout_iter_free(iter);
+
+	return ret;
+}
+
+static PyObject *
+pango_GetLayoutGlyphPos(PyObject *self, PyObject *args) {
+
+	int i, len;
+	double baseline, x, y, width, height;
+	void *LayoutObj;
+	PangoLayout *layout;
+	PangoLayoutIter *iter;
+	PangoRectangle rect;
+	PyObject *ret;
+	PyObject *glyph_data;
+
+	if (!PyArg_ParseTuple(args, "O", &LayoutObj)) {
+		return NULL;
+	}
+
+	layout = PyCObject_AsVoidPtr(LayoutObj);
+
+	len = pango_layout_get_character_count(layout);
+	ret = PyTuple_New(len);
+	iter = pango_layout_get_iter(layout);
+
+	for (i = 0; i < len; i++) {
+		glyph_data=PyTuple_New(5);
+		pango_layout_iter_get_char_extents(iter, &rect);
+
+		x=((double) rect.x) / PANGO_SCALE;
+		PyTuple_SetItem(glyph_data, 0, PyFloat_FromDouble(x));
+
+		y=-1.0*((double) rect.y) / PANGO_SCALE;
+		PyTuple_SetItem(glyph_data, 1, PyFloat_FromDouble(y));
+
+		width=((double) rect.width) / PANGO_SCALE;
+		PyTuple_SetItem(glyph_data, 2, PyFloat_FromDouble(width));
+
+		height=((double) rect.height) / PANGO_SCALE;
+		PyTuple_SetItem(glyph_data, 3, PyFloat_FromDouble(height));
+
+		baseline=-1.0*((double) pango_layout_iter_get_baseline(iter)) / PANGO_SCALE;
+		PyTuple_SetItem(glyph_data, 4, PyFloat_FromDouble(baseline));
+
+		pango_layout_iter_next_char(iter);
+
+		PyTuple_SetItem(ret, i, glyph_data);
 	}
 
 	pango_layout_iter_free(iter);
@@ -329,6 +380,7 @@ PyMethodDef pango_methods[] = {
 		{"get_layout_pixel_size", pango_GetLayoutPixelSize, METH_VARARGS},
 		{"layout_path", pango_LayoutPath, METH_VARARGS},
 		{"get_layout_line_positions", pango_GetLayoutLinePos, METH_VARARGS},
+		{"get_layout_glyph_positions", pango_GetLayoutGlyphPos, METH_VARARGS},
 		{NULL, NULL}
 };
 
