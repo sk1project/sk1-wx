@@ -692,7 +692,10 @@ class Text(PrimitiveObject):
 	width = -1
 	attributes = []
 	initial_trafo = sk2_const.NORMAL_TRAFO
+
+	cache_glyphs = []
 	cache_line_points = []
+	cache_layout_data = ()
 
 	def __init__(self, config, parent=None,
 				point=[0.0, 0.0],
@@ -724,14 +727,66 @@ class Text(PrimitiveObject):
 	def is_text(self): return True
 	def is_closed(self): return True
 
-	def get_initial_paths(self):
-		paths, points = libgeom.get_text_paths(self.get_text(), self.width,
-									self.style[2], self.attributes)
-		self.cache_line_points = points
-		return paths
+	def get_glyphs(self):
+		glyphs, line_points, layout_data = libgeom.get_text_glyphs(self.get_text(),
+									self.width, self.style[2], self.attributes)
+		self.cache_line_points = line_points
+		self.cache_layout_data = layout_data
+		return glyphs
 
 	def get_line_points(self):
 		return libgeom.apply_trafo_to_points(self.cache_line_points, self.trafo)
+
+	def to_curve(self):
+		group = Group(self.config)
+		for item in self.cache_glyphs:
+			if not item is None:
+				curve = Curve(self.config, group)
+				curve.paths = deepcopy(item)
+				curve.trafo = [] + self.trafo
+				curve.fill_trafo = [] + self.fill_trafo
+				curve.stroke_trafo = []	 + self.stroke_trafo
+				curve.style = deepcopy(self.style)
+				curve.update()
+				group.childs.append(curve)
+		return group
+
+	def update(self):
+		self.cache_glyphs = self.get_glyphs()
+		self.cache_cpath = []
+		for item in self.cache_glyphs:
+			if item is None: continue
+			cpath = libgeom.create_cpath(item)
+			libgeom.apply_trafo(cpath, self.trafo)
+			self.cache_cpath.append(cpath)
+		self.update_bbox()
+
+	def update_bbox(self):
+		self.cache_bbox = libgeom.get_cpath_bbox(self.cache_cpath[0])
+		for item in self.cache_cpath[1:]:
+			bbox = libgeom.get_cpath_bbox(item)
+			self.cache_bbox = libgeom.sum_bbox(self.cache_bbox, bbox)
+
+	def apply_trafo(self, trafo):
+		for i in range(len(self.cache_cpath)):
+			self.cache_cpath[i] = libgeom.apply_trafo(self.cache_cpath[i], trafo)
+		self.trafo = libgeom.multiply_trafo(self.trafo, trafo)
+		if self.fill_trafo:
+			self.fill_trafo = libgeom.multiply_trafo(self.fill_trafo, trafo)
+		if self.stroke_trafo:
+			self.stroke_trafo = libgeom.multiply_trafo(self.stroke_trafo, trafo)
+		self.update_bbox()
+
+	def get_trafo_snapshot(self):
+		cpaths = []
+		for i in range(len(self.cache_cpath)):
+			cpaths.append(libgeom.copy_cpath(self.cache_cpath[i]))
+		return (self, [] + self.trafo, [] + self.fill_trafo,
+			 [] + self.stroke_trafo, [] + self.cache_bbox, cpaths)
+
+	def set_trafo_snapshot(self, snapshot):
+		self.trafo, self.fill_trafo, self.stroke_trafo = snapshot[1:4]
+		self.cache_bbox, self.cache_cpath = snapshot[4:]
 
 
 class Pixmap(PrimitiveObject):
