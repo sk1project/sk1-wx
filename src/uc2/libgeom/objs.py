@@ -22,6 +22,7 @@ from uc2.formats.sk2 import sk2_const
 from uc2 import libpango
 
 from points import rotate_point
+from trafo import apply_trafo_to_paths
 from bezier_ops import split_bezier_curve, bezier_base_point
 
 #------------- Object specific routines -------------
@@ -267,9 +268,18 @@ def get_polygon_paths(corners_num, angle1, angle2, coef1, coef2):
 
 #------------- TEXT -------------
 
-def get_text_paths(text, width, text_style, attributes):
-	paths = libpango.get_text_paths(text, width, text_style, attributes)
-	points = []
+def get_text_glyphs(text, width, text_style, attributes):
+	glyphs = libpango.get_text_paths(text, width, text_style, attributes)
+
+	line_points = []
 	for item in libpango.get_line_positions():
-		points.append([0.0, -item])
-	return paths, points
+		line_points.append([0.0, item])
+	layout_data = libpango.get_glyph_positions()
+
+	dy = line_points[0][1]
+	for i in range(len(glyphs)):
+		trafo = [1.0, 0.0, 0.0, 1.0, layout_data[i][0], layout_data[i][4] - dy]
+		if glyphs[i]:
+			glyphs[i] = apply_trafo_to_paths(glyphs[i], trafo)
+
+	return glyphs, line_points, layout_data
