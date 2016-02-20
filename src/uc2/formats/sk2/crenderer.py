@@ -178,9 +178,10 @@ class CairoRenderer:
 		if obj.style[0]:
 			self.process_fill(ctx, obj)
 			for item in obj.cache_cpath:
-				ctx.new_path()
-				ctx.append_path(item)
-				ctx.fill()
+				if not item is None:
+					ctx.new_path()
+					ctx.append_path(item)
+					ctx.fill()
 
 	def stroke_obj(self, ctx, obj):
 		if obj.style[1]:
@@ -193,9 +194,10 @@ class CairoRenderer:
 		if obj.style[1]:
 			self.process_stroke(ctx, obj)
 			for item in obj.cache_cpath:
-				ctx.new_path()
-				ctx.append_path(item)
-				ctx.stroke()
+				if not item is None:
+					ctx.new_path()
+					ctx.append_path(item)
+					ctx.stroke()
 
 	def process_fill(self, ctx, obj):
 		fill = obj.style[0]
