@@ -71,6 +71,7 @@ def _set_layout(layout, text, width, text_style, attributes):
 	_libpango.set_layout_markup(layout, markup)
 
 def get_text_paths(text, width, text_style, attributes):
+	if not text: text = ' '
 	_set_layout(PANGO_LAYOUT, text, width, text_style, attributes)
 	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
 
