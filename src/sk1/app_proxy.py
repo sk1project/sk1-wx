@@ -408,8 +408,7 @@ class AppProxy:
 				and obj.style[1][1]:
 					pths = apply_trafo_to_paths(obj.get_initial_paths(), obj.trafo)
 					style = doc.model.get_def_style()
-					style[0][1] = sk2_const.FILL_SOLID
-					style[0][2] = deepcopy(obj.style[1][2])
+					style[0] = [sk2_const.FILL_SOLID, deepcopy(obj.style[1][2])]
 					pths = stroke_to_curve(pths, obj.style[1])
 					objs.append(doc.api.create_curve(pths, style))
 			selection.set(objs)
