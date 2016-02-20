@@ -22,9 +22,7 @@
 #include <cairo.h>
 #include <pycairo.h>
 
-
 static Pycairo_CAPI_t *Pycairo_CAPI;
-
 
 static PyObject *
 pango_GetFontMap(PyObject *self, PyObject *args) {
@@ -32,48 +30,49 @@ pango_GetFontMap(PyObject *self, PyObject *args) {
 	PangoFontMap *fm;
 	PangoContext *ctx;
 
-    PangoFontFamily **families;
-    int n_families, n_faces, i, j;
-    PyObject *ret;
+	PangoFontFamily **families;
+	int n_families, n_faces, i, j;
+	PyObject *ret;
 
 	fm = pango_cairo_font_map_get_default();
 	ctx = pango_font_map_create_context(fm);
-    pango_context_list_families(ctx, &families, &n_families);
+	pango_context_list_families(ctx, &families, &n_families);
 
-    ret = PyTuple_New(n_families);
+	ret = PyTuple_New(n_families);
 
-    for (i = 0; i < n_families; i++) {
+	for (i = 0; i < n_families; i++) {
 
-    	PyObject *family;
-    	family = PyTuple_New(2);
+		PyObject *family;
+		family = PyTuple_New(2);
 
-    	PyTuple_SetItem(family, 0,
-    			Py_BuildValue("s", pango_font_family_get_name(families[i])));
+		PyTuple_SetItem(family, 0,
+				Py_BuildValue("s", pango_font_family_get_name(families[i])));
 
-        PangoFontFace **faces;
-        pango_font_family_list_faces(families[i], &faces, &n_faces);
+		PangoFontFace **faces;
+		pango_font_family_list_faces(families[i], &faces, &n_faces);
 
-        int *sizes, n_sizes;
+		int *sizes, n_sizes;
 
-        pango_font_face_list_sizes(faces[0], &sizes, &n_sizes);
-        if(!sizes) {
-        	PyObject *faces_tuple;
-        	faces_tuple = PyTuple_New(n_faces);
+		pango_font_face_list_sizes(faces[0], &sizes, &n_sizes);
+		if (!sizes) {
+			PyObject *faces_tuple;
+			faces_tuple = PyTuple_New(n_faces);
 			for (j = 0; j < n_faces; j++) {
 				PyTuple_SetItem(faces_tuple, j,
-				Py_BuildValue("s", pango_font_face_get_face_name(faces[j])));
+						Py_BuildValue("s",
+								pango_font_face_get_face_name(faces[j])));
 			}
 			PyTuple_SetItem(family, 1, faces_tuple);
-        }else{
-        	Py_INCREF(Py_None);
-        	PyTuple_SetItem(family, 1, Py_None);
-        }
-        PyTuple_SetItem(ret, i, family);
-        g_free(sizes);
-        g_free(faces);
-    }
+		} else {
+			Py_INCREF(Py_None);
+			PyTuple_SetItem(family, 1, Py_None);
+		}
+		PyTuple_SetItem(ret, i, family);
+		g_free(sizes);
+		g_free(faces);
+	}
 
-    g_free(families);
+	g_free(families);
 	g_object_unref(ctx);
 
 	return ret;
@@ -82,25 +81,25 @@ pango_GetFontMap(PyObject *self, PyObject *args) {
 static PyObject *
 pango_CreateContext(PyObject *self, PyObject *args) {
 
-    PycairoContext *context;
+	PycairoContext *context;
 	cairo_t *ctx;
 	PangoContext *pcctx;
 
 	if (!PyArg_ParseTuple(args, "O", &context)) {
 		return NULL;
 	}
-	ctx = context -> ctx;
+	ctx = context->ctx;
 
 	pcctx = pango_cairo_create_context(ctx);
 
-	return Py_BuildValue("O", PyCObject_FromVoidPtr((void *)pcctx,
-			(void *)g_object_unref));
+	return Py_BuildValue("O",
+			PyCObject_FromVoidPtr((void *) pcctx, (void *) g_object_unref));
 }
 
 static PyObject *
 pango_CreateLayout(PyObject *self, PyObject *args) {
 
-    PycairoContext *context;
+	PycairoContext *context;
 	cairo_t *ctx;
 	PangoLayout *layout;
 
@@ -108,11 +107,11 @@ pango_CreateLayout(PyObject *self, PyObject *args) {
 		return NULL;
 	}
 
-	ctx = context -> ctx;
+	ctx = context->ctx;
 	layout = pango_cairo_create_layout(ctx);
 
-	return Py_BuildValue("O", PyCObject_FromVoidPtr((void *)layout,
-			(void *)g_object_unref));
+	return Py_BuildValue("O",
+			PyCObject_FromVoidPtr((void *) layout, (void *) g_object_unref));
 }
 
 static PyObject *
@@ -127,8 +126,9 @@ pango_CreateFontDescription(PyObject *self, PyObject *args) {
 
 	fd = pango_font_description_from_string(description);
 
-	return Py_BuildValue("O", PyCObject_FromVoidPtr((void *)fd,
-			(void *)pango_font_description_free));
+	return Py_BuildValue("O",
+			PyCObject_FromVoidPtr((void *) fd,
+					(void *) pango_font_description_free));
 }
 
 static PyObject *
@@ -203,16 +203,13 @@ pango_SetLayoutAlignment(PyObject *self, PyObject *args) {
 	if (alignment == 0) {
 		pango_layout_set_justify(layout, 0);
 		pango_layout_set_alignment(layout, PANGO_ALIGN_LEFT);
-	}
-	else if (alignment == 1) {
+	} else if (alignment == 1) {
 		pango_layout_set_justify(layout, 0);
 		pango_layout_set_alignment(layout, PANGO_ALIGN_CENTER);
-	}
-	else if (alignment == 2) {
+	} else if (alignment == 2) {
 		pango_layout_set_justify(layout, 0);
 		pango_layout_set_alignment(layout, PANGO_ALIGN_RIGHT);
-	}
-	else if (alignment == 3) {
+	} else if (alignment == 3) {
 		pango_layout_set_justify(layout, 1);
 		pango_layout_set_alignment(layout, PANGO_ALIGN_LEFT);
 	}
@@ -266,7 +263,7 @@ pango_GetLayoutPixelSize(PyObject *self, PyObject *args) {
 static PyObject *
 pango_LayoutPath(PyObject *self, PyObject *args) {
 
-    PycairoContext *context;
+	PycairoContext *context;
 	cairo_t *ctx;
 	void *LayoutObj;
 	PangoLayout *layout;
@@ -275,7 +272,7 @@ pango_LayoutPath(PyObject *self, PyObject *args) {
 		return NULL;
 	}
 
-	ctx = context -> ctx;
+	ctx = context->ctx;
 	layout = PyCObject_AsVoidPtr(LayoutObj);
 
 	pango_cairo_layout_path(ctx, layout);
@@ -305,7 +302,8 @@ pango_GetLayoutLinePos(PyObject *self, PyObject *args) {
 	iter = pango_layout_get_iter(layout);
 
 	for (i = 0; i < len; i++) {
-		baseline=-1.0*((double) pango_layout_iter_get_baseline(iter)) / PANGO_SCALE;
+		baseline = -1.0 * ((double) pango_layout_iter_get_baseline(iter))
+				/ PANGO_SCALE;
 		PyTuple_SetItem(ret, i, PyFloat_FromDouble(baseline));
 		pango_layout_iter_next_line(iter);
 	}
@@ -318,8 +316,8 @@ pango_GetLayoutLinePos(PyObject *self, PyObject *args) {
 static PyObject *
 pango_GetLayoutGlyphPos(PyObject *self, PyObject *args) {
 
-	int i, len;
-	double baseline, x, y, width, height;
+	int i, len, w, h;
+	double baseline, x, y, width, height, dx;
 	void *LayoutObj;
 	PangoLayout *layout;
 	PangoLayoutIter *iter;
@@ -333,27 +331,36 @@ pango_GetLayoutGlyphPos(PyObject *self, PyObject *args) {
 
 	layout = PyCObject_AsVoidPtr(LayoutObj);
 
+	pango_layout_get_size(layout, &w, &h);
+	dx = 0.0;
+	if (pango_layout_get_alignment(layout) == PANGO_ALIGN_CENTER) {
+		dx = -0.5 * ((double) w) / PANGO_SCALE;
+	} else if (pango_layout_get_alignment(layout) == PANGO_ALIGN_RIGHT) {
+		dx = -1.0 * ((double) w) / PANGO_SCALE;
+	}
+
 	len = pango_layout_get_character_count(layout);
 	ret = PyTuple_New(len);
 	iter = pango_layout_get_iter(layout);
 
 	for (i = 0; i < len; i++) {
-		glyph_data=PyTuple_New(5);
+		glyph_data = PyTuple_New(5);
 		pango_layout_iter_get_char_extents(iter, &rect);
 
-		x=((double) rect.x) / PANGO_SCALE;
+		x = ((double) rect.x) / PANGO_SCALE + dx;
 		PyTuple_SetItem(glyph_data, 0, PyFloat_FromDouble(x));
 
-		y=-1.0*((double) rect.y) / PANGO_SCALE;
+		y = -1.0 * ((double) rect.y) / PANGO_SCALE;
 		PyTuple_SetItem(glyph_data, 1, PyFloat_FromDouble(y));
 
-		width=((double) rect.width) / PANGO_SCALE;
+		width = ((double) rect.width) / PANGO_SCALE;
 		PyTuple_SetItem(glyph_data, 2, PyFloat_FromDouble(width));
 
-		height=((double) rect.height) / PANGO_SCALE;
+		height = ((double) rect.height) / PANGO_SCALE;
 		PyTuple_SetItem(glyph_data, 3, PyFloat_FromDouble(height));
 
-		baseline=-1.0*((double) pango_layout_iter_get_baseline(iter)) / PANGO_SCALE;
+		baseline = -1.0 * ((double) pango_layout_iter_get_baseline(iter))
+				/ PANGO_SCALE;
 		PyTuple_SetItem(glyph_data, 4, PyFloat_FromDouble(baseline));
 
 		pango_layout_iter_next_char(iter);
@@ -368,20 +375,20 @@ pango_GetLayoutGlyphPos(PyObject *self, PyObject *args) {
 
 static
 PyMethodDef pango_methods[] = {
-		{"get_fontmap", pango_GetFontMap, METH_VARARGS},
-		{"create_pcctx", pango_CreateContext, METH_VARARGS},
-		{"create_layout", pango_CreateLayout, METH_VARARGS},
-		{"create_font_description", pango_CreateFontDescription, METH_VARARGS},
-		{"set_layout_width", pango_SetLayoutWidth, METH_VARARGS},
-		{"set_layout_font_description", pango_SetLayoutFontDescription, METH_VARARGS},
-		{"set_layout_justify", pango_SetLayoutJustify, METH_VARARGS},
-		{"set_layout_alignment", pango_SetLayoutAlignment, METH_VARARGS},
-		{"set_layout_markup", pango_SetLayoutMarkup, METH_VARARGS},
-		{"get_layout_pixel_size", pango_GetLayoutPixelSize, METH_VARARGS},
-		{"layout_path", pango_LayoutPath, METH_VARARGS},
-		{"get_layout_line_positions", pango_GetLayoutLinePos, METH_VARARGS},
-		{"get_layout_glyph_positions", pango_GetLayoutGlyphPos, METH_VARARGS},
-		{NULL, NULL}
+	{"get_fontmap", pango_GetFontMap, METH_VARARGS},
+	{"create_pcctx", pango_CreateContext, METH_VARARGS},
+	{"create_layout", pango_CreateLayout, METH_VARARGS},
+	{"create_font_description", pango_CreateFontDescription, METH_VARARGS},
+	{"set_layout_width", pango_SetLayoutWidth, METH_VARARGS},
+	{"set_layout_font_description", pango_SetLayoutFontDescription, METH_VARARGS},
+	{"set_layout_justify", pango_SetLayoutJustify, METH_VARARGS},
+	{"set_layout_alignment", pango_SetLayoutAlignment, METH_VARARGS},
+	{"set_layout_markup", pango_SetLayoutMarkup, METH_VARARGS},
+	{"get_layout_pixel_size", pango_GetLayoutPixelSize, METH_VARARGS},
+	{"layout_path", pango_LayoutPath, METH_VARARGS},
+	{"get_layout_line_positions", pango_GetLayoutLinePos, METH_VARARGS},
+	{"get_layout_glyph_positions", pango_GetLayoutGlyphPos, METH_VARARGS},
+	{NULL, NULL}
 };
 
 void
