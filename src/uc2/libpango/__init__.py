@@ -85,11 +85,6 @@ def get_text_paths(text, width, text_style, attributes):
 	_libpango.layout_path(ctx, layout)
 	cpath = ctx.copy_path()
 
-	w = bbox_size(libcairo.get_cpath_bbox(cpath))[0]
-	dx = 0.0
-	if text_style[3] == 1: dx = -w / 2.0
-	elif text_style[3] == 2: dx = -w
-
 	glyphs = []
 
 	for item in text.decode('utf-8'):
@@ -102,7 +97,7 @@ def get_text_paths(text, width, text_style, attributes):
 		_set_layout(layout, item.encode('utf-8'), width, text_style, attributes)
 		_libpango.layout_path(ctx, layout)
 		cpath = ctx.copy_path()
-		matrix = cairo.Matrix(1.0, 0.0, 0.0, -1.0, dx, 0.0)
+		matrix = cairo.Matrix(1.0, 0.0, 0.0, -1.0, 0.0, 0.0)
 		libcairo.apply_cmatrix(cpath, matrix)
 		glyphs.append(libcairo.get_path_from_cpath(cpath))
 
