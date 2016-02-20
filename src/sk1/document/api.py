@@ -208,6 +208,7 @@ class AbstractAPI:
 
 	def _set_obj_style(self, obj, style):
 		obj.style = style
+		obj.update()
 
 	def _get_objs_styles(self, objs):
 		result = []
@@ -1165,7 +1166,6 @@ class PresenterAPI(AbstractAPI):
 		style_before = obj.style
 		sel_before = sel_after = [] + self.selection.objs
 		self._set_obj_style(obj, style)
-		obj.update()
 		transaction = [
 			[[self._set_obj_style, obj, style_before],
 			[self._set_selection, sel_before]],
