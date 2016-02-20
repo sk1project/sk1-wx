@@ -749,26 +749,40 @@ class Text(PrimitiveObject):
 				curve.style = deepcopy(self.style)
 				curve.update()
 				group.childs.append(curve)
+		group.update()
 		return group
 
 	def update(self):
 		self.cache_glyphs = self.get_glyphs()
 		self.cache_cpath = []
 		for item in self.cache_glyphs:
-			if item is None: continue
+			if item is None:
+				self.cache_cpath.append(None)
+				continue
 			cpath = libgeom.create_cpath(item)
 			libgeom.apply_trafo(cpath, self.trafo)
 			self.cache_cpath.append(cpath)
 		self.update_bbox()
 
 	def update_bbox(self):
-		self.cache_bbox = libgeom.get_cpath_bbox(self.cache_cpath[0])
-		for item in self.cache_cpath[1:]:
-			bbox = libgeom.get_cpath_bbox(item)
-			self.cache_bbox = libgeom.sum_bbox(self.cache_bbox, bbox)
+		self.cache_bbox = []
+		index = 0
+		for item in self.cache_cpath:
+			if item is None:
+				data = self.cache_layout_data[index]
+				bp = [data[0], data[4]]
+				bbox = 2 * libgeom.apply_trafo_to_point(bp, self.trafo)
+			else:
+				bbox = libgeom.get_cpath_bbox(item)
+			if not self.cache_bbox:
+				self.cache_bbox = bbox
+			else:
+				self.cache_bbox = libgeom.sum_bbox(self.cache_bbox, bbox)
+			index += 1
 
 	def apply_trafo(self, trafo):
 		for i in range(len(self.cache_cpath)):
+			if self.cache_cpath[i] is None: continue
 			self.cache_cpath[i] = libgeom.apply_trafo(self.cache_cpath[i], trafo)
 		self.trafo = libgeom.multiply_trafo(self.trafo, trafo)
 		if self.fill_trafo:
@@ -780,7 +794,10 @@ class Text(PrimitiveObject):
 	def get_trafo_snapshot(self):
 		cpaths = []
 		for i in range(len(self.cache_cpath)):
-			cpaths.append(libgeom.copy_cpath(self.cache_cpath[i]))
+			if self.cache_cpath[i] is None:
+				cpaths.append(None)
+			else:
+				cpaths.append(libgeom.copy_cpath(self.cache_cpath[i]))
 		return (self, [] + self.trafo, [] + self.fill_trafo,
 			 [] + self.stroke_trafo, [] + self.cache_bbox, cpaths)
 
