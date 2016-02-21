@@ -63,6 +63,8 @@ BEZIER_EDITOR_MODE = 43
 RECT_EDITOR_MODE = 44
 ELLIPSE_EDITOR_MODE = 45
 POLYGON_EDITOR_MODE = 46
+TEXT_EDITOR_MODE = 47
+TEXT_EDIT_MODE = 60
 WAIT_MODE = 100
 
 MODE_LIST = [SELECT_MODE, SHAPER_MODE, ZOOM_MODE, LINE_MODE,
@@ -70,8 +72,9 @@ MODE_LIST = [SELECT_MODE, SHAPER_MODE, ZOOM_MODE, LINE_MODE,
 			POLYGON_MODE, ZOOM_OUT_MODE, MOVE_MODE, RESIZE_MODE, ]
 
 EDIT_MODES = [SHAPER_MODE, BEZIER_EDITOR_MODE, RECT_EDITOR_MODE,
-			ELLIPSE_EDITOR_MODE, POLYGON_EDITOR_MODE]
+			ELLIPSE_EDITOR_MODE, POLYGON_EDITOR_MODE, TEXT_EDITOR_MODE]
 GRAD_MODES = [GR_SELECT_MODE, GR_EDIT_MODE, GR_CREATE_MODE]
+TEXT_MODES = [TEXT_MODE, TEXT_EDIT_MODE]
 
 def get_cursors():
 	cursors = {
@@ -87,6 +90,7 @@ def get_cursors():
 			POLYGON_MODE:('cur_create_polygon', (6, 6)),
 			ELLIPSE_MODE:('cur_create_ellipse', (6, 6)),
 			TEXT_MODE:('cur_text', (4, 8)),
+			TEXT_EDIT_MODE:('cur_text', (4, 8)),
 			ZOOM_OUT_MODE:('cur_zoom_out', (6, 6)),
 			MOVE_MODE:('cur_move', (5, 5)),
 			COPY_MODE:('cur_copy', (5, 5)),
@@ -115,6 +119,7 @@ def get_cursors():
 			RECT_EDITOR_MODE:('cur_edit', (5, 5)),
 			ELLIPSE_EDITOR_MODE:('cur_edit', (5, 5)),
 			POLYGON_EDITOR_MODE:('cur_edit', (5, 5)),
+			TEXT_EDITOR_MODE:('cur_edit', (5, 5)),
 			}
 	keys = cursors.keys()
 	ext = '.png'
