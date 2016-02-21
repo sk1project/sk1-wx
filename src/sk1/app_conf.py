@@ -314,6 +314,10 @@ class AppConfig(UCConfig):
 	gradient_vector_point_stroke = (0.0, 0.3, 1.0)
 	gradient_vector_point_stroke_width = 1.0
 
+	#============== TEXT MARK OPTIONS ================
+	text_cursor_width = 1.2
+	text_cursor_color = (1.0, 0.0, 0.0)
+
 
 	#===UNSORTED===
 	default_polygon_num = 5
