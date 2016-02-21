@@ -679,6 +679,16 @@ class PDRenderer(CairoRenderer):
 
 		self.end_soft_repaint()
 
+	def draw_text_cursor(self, start, end):
+		self.set_direct_matrix()
+		self.ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
+		self.ctx.set_dash([])
+		self.ctx.set_source_rgb(*config.text_cursor_color)
+		self.ctx.set_line_width(config.text_cursor_width)
+		self.ctx.move_to(*start)
+		self.ctx.line_to(*end)
+		self.ctx.stroke()
+
 	#------DIRECT DRAWING
 
 	def cdc_paint_doc(self):
