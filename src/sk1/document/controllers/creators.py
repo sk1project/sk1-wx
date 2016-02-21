@@ -118,8 +118,26 @@ class TextCreator(AbstractCreator):
 	def __init__(self, canvas, presenter):
 		AbstractCreator.__init__(self, canvas, presenter)
 
+	def start_(self):
+		sel_objs = self.selection.objs
+		if not sel_objs:
+			self.selection.clear()
+		else:
+			obj = sel_objs[0]
+			if obj.is_text():
+				self.canvas.set_mode(modes.TEXT_EDIT_MODE)
+			else:
+				self.selection.clear()
+
+	def escape_pressed(self):
+		self.canvas.set_mode()
+
 	def do_action(self, event):
-		if self.end_doc: self.api.create_text(self.end_doc)
-		return True
+		if self.end_doc:
+			self.api.create_text(self.end_doc)
+			self.start = []
+			self.center = []
+			self.end = []
+			self.canvas.set_mode(modes.TEXT_EDIT_MODE)
 
 	def repaint(self):pass
