@@ -692,6 +692,7 @@ class Text(PrimitiveObject):
 	width = -1
 	attributes = []
 	initial_trafo = sk2_const.NORMAL_TRAFO
+	trafos = None
 
 	cache_glyphs = []
 	cache_line_points = []
@@ -717,6 +718,7 @@ class Text(PrimitiveObject):
 		self.initial_trafo = [] + self.trafo
 		self.style = style
 		self.attributes = []
+		self.trafos = {}
 
 	def get_text(self):
 		return b64decode(self.text)
@@ -755,13 +757,18 @@ class Text(PrimitiveObject):
 	def update(self):
 		self.cache_glyphs = self.get_glyphs()
 		self.cache_cpath = []
+		index = 0
 		for item in self.cache_glyphs:
 			if item is None:
 				self.cache_cpath.append(None)
-				continue
-			cpath = libgeom.create_cpath(item)
-			libgeom.apply_trafo(cpath, self.trafo)
-			self.cache_cpath.append(cpath)
+			else:
+				cpath = libgeom.create_cpath(item)
+				if not index in self.trafos:
+					libgeom.apply_trafo(cpath, self.trafo)
+				else:
+					libgeom.apply_trafo(cpath, self.trafos[index])
+				self.cache_cpath.append(cpath)
+			index += 1
 		self.update_bbox()
 
 	def update_bbox(self):
@@ -784,6 +791,8 @@ class Text(PrimitiveObject):
 		for i in range(len(self.cache_cpath)):
 			if self.cache_cpath[i] is None: continue
 			self.cache_cpath[i] = libgeom.apply_trafo(self.cache_cpath[i], trafo)
+		for i in self.trafos.keys():
+			self.trafos[i] = libgeom.multiply_trafo(self.trafos[i], trafo)
 		self.trafo = libgeom.multiply_trafo(self.trafo, trafo)
 		if self.fill_trafo:
 			self.fill_trafo = libgeom.multiply_trafo(self.fill_trafo, trafo)
@@ -798,12 +807,13 @@ class Text(PrimitiveObject):
 				cpaths.append(None)
 			else:
 				cpaths.append(libgeom.copy_cpath(self.cache_cpath[i]))
+		trafos = deepcopy(self.trafos)
 		return (self, [] + self.trafo, [] + self.fill_trafo,
-			 [] + self.stroke_trafo, [] + self.cache_bbox, cpaths)
+			 [] + self.stroke_trafo, [] + self.cache_bbox, cpaths, trafos)
 
 	def set_trafo_snapshot(self, snapshot):
 		self.trafo, self.fill_trafo, self.stroke_trafo = snapshot[1:4]
-		self.cache_bbox, self.cache_cpath = snapshot[4:]
+		self.cache_bbox, self.cache_cpath, self.trafos = snapshot[4:]
 
 
 class Pixmap(PrimitiveObject):
