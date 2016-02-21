@@ -1893,23 +1893,15 @@ class PresenterAPI(AbstractAPI):
 
 	def create_text(self, doc_point):
 		parent = self.presenter.active_layer
-		text = dialogs.multiline_edit_dlg(self.app.mw, 'Entry text',
-							self.sk2_cfg.default_text)
-		if text:
-			if self.presenter.text_obj_style:
-				style = deepcopy(self.presenter.text_obj_style)
-			else:
-				style = self.model.get_text_style()
-			obj = model.Text(self.sk2_cfg, parent, doc_point, text, style=style)
-			obj.update()
-			self.insert_object(obj, parent, len(parent.childs))
+		if self.presenter.text_obj_style:
+			style = deepcopy(self.presenter.text_obj_style)
+		else:
+			style = self.model.get_text_style()
+		obj = model.Text(self.sk2_cfg, parent, doc_point, style=style)
+		obj.update()
+		self.insert_object(obj, parent, len(parent.childs))
 
-	#FIXME: Add undo for operation!
-	def edit_text(self):pass
-#		if self.selection.objs:
-#			obj = self.selection.objs[0]
-#			obj.text = dialogs.text_edit_dialog(self.app.mw, obj.text)
-#			obj.update()
+
 
 
 
