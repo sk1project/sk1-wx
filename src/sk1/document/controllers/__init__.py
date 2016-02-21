@@ -29,3 +29,4 @@ from editor_bezier import BezierEditor
 from editor_rect import RectEditor
 from editor_ellipse import EllipseEditor
 from editor_polygon import PolygonEditor
+from text_ctrl import TextEditController
