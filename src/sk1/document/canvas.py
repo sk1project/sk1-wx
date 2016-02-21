@@ -196,6 +196,7 @@ class AppCanvas(wx.Panel):
 		modes.RECT_MODE: controllers.RectangleCreator,
 		modes.ELLIPSE_MODE: controllers.EllipseCreator,
 		modes.TEXT_MODE: controllers.TextCreator,
+		modes.TEXT_EDIT_MODE: controllers.TextEditController,
 		modes.POLYGON_MODE: controllers.PolygonCreator,
 		modes.MOVE_MODE: controllers.MoveController,
 		modes.RESIZE_MODE: controllers.TransformController,
