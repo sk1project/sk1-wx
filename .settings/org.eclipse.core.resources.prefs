@@ -58,6 +58,7 @@ encoding//src/sk1/document/controllers/grad_ctrl.py=utf-8
 encoding//src/sk1/document/controllers/guide_ctrl.py=utf-8
 encoding//src/sk1/document/controllers/paint_ctrl.py=utf-8
 encoding//src/sk1/document/controllers/select_ctrl.py=utf-8
+encoding//src/sk1/document/controllers/text_ctrl.py=utf-8
 encoding//src/sk1/document/controllers/trafo_ctrl.py=utf-8
 encoding//src/sk1/document/controllers/zoom_ctrl.py=utf-8
 encoding//src/sk1/document/ctx_menu.py=utf-8
