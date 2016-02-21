@@ -25,12 +25,13 @@ class TextEditController(AbstractController):
 
 	mode = modes.TEXT_EDIT_MODE
 	target = None
+	cursor = 0
 
 	def start_(self):
 		self.snap = self.presenter.snap
 		self.target = self.selection.objs[0]
 		self.selection.clear()
-
+		self.cursor = 0
 		msg = _('Text in editing')
 		events.emit(events.APP_STATUS, msg)
 
@@ -41,7 +42,7 @@ class TextEditController(AbstractController):
 	def escape_pressed(self):
 		self.canvas.set_mode()
 
-	#----- REPAINT
+	#----- REPAINT self.canvas.selection_redraw()
 
 	def repaint(self):
 		x0, y0, x1, y1 = self.target.cache_bbox
@@ -50,3 +51,21 @@ class TextEditController(AbstractController):
 		bbox = libgeom.normalize_bbox(p0 + p1)
 		bbox = libgeom.enlarge_bbox(bbox, 10, 10)
 		self.canvas.renderer.draw_frame(bbox[:2], bbox[2:])
+		self.paint_cursor()
+
+	def paint_cursor(self):
+		if self.cursor < len(self.target.cache_layout_data):
+			data = self.target.cache_layout_data[self.cursor]
+			p0 = [data[0], data[1]]
+			p1 = [data[0], data[1] - data[3]]
+		else:
+			data = self.target.cache_layout_data[-1]
+			p0 = [data[0] + data[2], data[1]]
+			p1 = [data[0] + data[2], data[1] - data[3]]
+		trafo = self.target.trafo
+		if self.cursor in self.target.trafos:
+			trafo = self.target.trafos[self.cursor]
+		p0, p1 = libgeom.apply_trafo_to_points([p0, p1], trafo)
+		p0 = self.canvas.point_doc_to_win(p0)
+		p1 = self.canvas.point_doc_to_win(p1)
+		self.canvas.renderer.draw_text_cursor(p0, p1)
