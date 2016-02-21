@@ -50,7 +50,7 @@ def create_actions(app):
 (pdids.CURVE_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [CURVE_MODE], [], [CURVE_MODE]),
 (pdids.RECT_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [RECT_MODE], [], [RECT_MODE]),
 (pdids.ELLIPSE_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [ELLIPSE_MODE], [], [ELLIPSE_MODE]),
-(pdids.TEXT_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [TEXT_MODE], [], [TEXT_MODES]),
+(pdids.TEXT_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [TEXT_MODE], [], TEXT_MODES),
 (pdids.POLYGON_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [POLYGON_MODE], [], [POLYGON_MODE]),
 (pdids.ZOOM_OUT_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [ZOOM_OUT_MODE], [], [ZOOM_OUT_MODE]),
 (pdids.GRADIENT_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [GR_SELECT_MODE], [], GRAD_MODES),
