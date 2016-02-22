@@ -47,6 +47,10 @@ class Kbd_Processor:
 			self.actions[wx.ID_PASTE].do_call()
 			return
 
+		if self.canvas.mode == modes.TEXT_EDIT_MODE:
+			self.text_edit_mode(event, key_code, raw_code, modifiers)
+			return
+
 		if key_code in (wx.WXK_UP, wx.WXK_NUMPAD_UP) and not modifiers:
 			self.actions[pdids.MOVE_UP].do_call()
 			return
@@ -75,18 +79,27 @@ class Kbd_Processor:
 				self.canvas.set_mode(modes.SELECT_MODE)
 				return
 
+		event.Skip()
 
-		msg = "key:%d,raw:%d,modifers:%d" % \
-		(key_code, raw_code, modifiers)
-#		print msg
+	def text_edit_mode(self, event, key_code, raw_code, modifiers):
+		if not modifiers:
+			if key_code in (wx.WXK_UP, wx.WXK_NUMPAD_UP):
+				self.canvas.controller.key_up();return
+			if key_code in (wx.WXK_DOWN, wx.WXK_NUMPAD_DOWN):
+				self.canvas.controller.key_down();return
+			if key_code in (wx.WXK_LEFT, wx.WXK_NUMPAD_LEFT):
+				self.canvas.controller.key_left();return
+			if key_code in (wx.WXK_RIGHT, wx.WXK_NUMPAD_RIGHT):
+				self.canvas.controller.key_right();return
+			if key_code == wx.WXK_BACK:
+				self.canvas.controller.key_backspace();return
+			if key_code == wx.WXK_NUMPAD_ENTER:
+				self.canvas.controller.insert_char(u'\n');return
+
 		event.Skip()
 
 	def on_char(self, event):
-#		print "OnChar Called"
-		modifiers = event.GetModifiers()
-		key_code = event.GetUniChar()
-		char = unichr(event.GetUniChar())
-		msg = "key:%d, modifers:%d, char:%s" % \
-		(key_code, modifiers, char)
-#		print msg
+		if self.canvas.mode == modes.TEXT_EDIT_MODE:
+			self.canvas.controller.insert_char(unichr(event.GetUniChar()))
+			return
 		event.Skip()
