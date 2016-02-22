@@ -367,6 +367,19 @@ class AbstractAPI:
 		obj.cache_cdata = None
 		obj.cache_gray_cdata = None
 
+	def _get_text_data(self, text_obj):
+		text = text_obj.get_text()
+		trafos = deepcopy(text_obj.trafos)
+		markup = deepcopy(text_obj.markup)
+		return text, trafos, markup
+
+	def _set_text_data(self, text_obj, text, trafos, markup):
+		text_obj.set_text(text)
+		text_obj.trafos = trafos
+		text_obj.markup = markup
+		text_obj.update()
+
+
 
 class PresenterAPI(AbstractAPI):
 
@@ -1900,6 +1913,20 @@ class PresenterAPI(AbstractAPI):
 		obj = model.Text(self.sk2_cfg, parent, doc_point, style=style)
 		obj.update()
 		self.insert_object(obj, parent, len(parent.childs))
+
+	def change_text(self, obj, text_after, trafos_after, markup_after):
+		sel_before = [] + self.selection.objs
+		text_before, trafos_before, markup_before = self._get_text_data(obj)
+		self._set_text_data(obj, text_after, trafos_after, markup_after)
+		obj.update()
+		transaction = [
+			[[self._set_text_data, obj, text_before, trafos_before, markup_before],
+			[self._set_selection, sel_before]],
+			[[self._set_text_data, obj, text_after, trafos_after, markup_after],
+			[self._set_selection, sel_before]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
 
 
 
