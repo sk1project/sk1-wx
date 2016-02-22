@@ -282,4 +282,6 @@ def get_text_glyphs(text, width, text_style, attributes):
 		if glyphs[i]:
 			glyphs[i] = apply_trafo_to_paths(glyphs[i], trafo)
 
-	return glyphs, line_points, layout_data
+	layout_bbox = libpango.get_layout_bbox()
+
+	return glyphs, line_points, layout_data, layout_bbox
