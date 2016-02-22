@@ -315,7 +315,7 @@ class AppConfig(UCConfig):
 	gradient_vector_point_stroke_width = 1.0
 
 	#============== TEXT MARK OPTIONS ================
-	text_cursor_width = 1.2
+	text_cursor_width = 1.0
 	text_cursor_color = (1.0, 0.0, 0.0)
 
 
