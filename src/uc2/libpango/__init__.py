@@ -33,6 +33,8 @@ PANGO_MATRIX = cairo.Matrix(1.0, 0.0, 0.0, -1.0, 0.0, 0.0)
 PANGO_LAYOUT = _libpango.create_layout(CTX)
 NONPRINTING_CHARS = ' \n\t'.decode('utf-8')
 
+EMPTY_PATH = [[0.0, 0.0], [], 0]
+
 FAMILIES_LIST = []
 FAMILIES_DICT = {}
 
@@ -63,6 +65,7 @@ def _get_font_description(text_style):
 	return _libpango.create_font_description(fnt_descr)
 
 def _set_layout(layout, text, width, text_style, attributes):
+	text = text.encode('utf-8')
 	_libpango.set_layout_width(layout, width)
 	fnt_descr = _get_font_description(text_style)
 	_libpango.set_layout_font_description(layout, fnt_descr)
@@ -71,7 +74,7 @@ def _set_layout(layout, text, width, text_style, attributes):
 	_libpango.set_layout_markup(layout, markup)
 
 def get_text_paths(text, width, text_style, attributes):
-	if not text: text = ' '
+	if not text: text = NONPRINTING_CHARS[0]
 	_set_layout(PANGO_LAYOUT, text, width, text_style, attributes)
 	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
 
@@ -87,21 +90,24 @@ def get_text_paths(text, width, text_style, attributes):
 	cpath = ctx.copy_path()
 
 	glyphs = []
-
-	for item in text.decode('utf-8'):
+	for item in text:
 		if item in NONPRINTING_CHARS:
 			glyphs.append(None)
 			continue
 		ctx.new_path()
 		ctx.move_to(0, 0)
 		layout = _libpango.create_layout(ctx)
-		_set_layout(layout, item.encode('utf-8'), width, text_style, attributes)
+		_set_layout(layout, item, width, text_style, attributes)
 		_libpango.layout_path(ctx, layout)
 		cpath = ctx.copy_path()
 		matrix = cairo.Matrix(1.0, 0.0, 0.0, -1.0, 0.0, 0.0)
 		libcairo.apply_cmatrix(cpath, matrix)
-		glyphs.append(libcairo.get_path_from_cpath(cpath))
-
+		glyph = libcairo.get_path_from_cpath(cpath)
+		ret = []
+		for item in glyph:
+			if item and not item == EMPTY_PATH:
+				ret.append(item)
+		glyphs.append(ret)
 	return glyphs
 
 def get_line_positions():
@@ -109,3 +115,7 @@ def get_line_positions():
 
 def get_glyph_positions():
 	return _libpango.get_layout_glyph_positions(PANGO_LAYOUT)
+
+def get_layout_bbox():
+	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
+	return [0.0, 0.0, float(w), float(-h)]
