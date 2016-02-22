@@ -690,13 +690,14 @@ class Text(PrimitiveObject):
 	cid = TEXT_BLOCK
 	text = ""
 	width = -1
-	attributes = []
+	markup = []
 	initial_trafo = sk2_const.NORMAL_TRAFO
 	trafos = None
 
 	cache_glyphs = []
 	cache_line_points = []
 	cache_layout_data = ()
+	cache_layout_bbox = []
 
 	def __init__(self, config, parent=None,
 				point=[0.0, 0.0],
@@ -711,29 +712,34 @@ class Text(PrimitiveObject):
 			self.cid = TEXT_COLUMN
 		self.config = config
 		self.parent = parent
-		if not text: text = "" + config.default_text
 		self.text = b64encode(text)
 		self.width = width
 		self.trafo = trafo[:4] + [trafo[4] + point[0], trafo[5] + point[1]]
 		self.initial_trafo = [] + self.trafo
 		self.style = style
-		self.attributes = []
+		self.markup = []
 		self.trafos = {}
 
 	def get_text(self):
-		return b64decode(self.text)
+		return b64decode(self.text).decode('utf-8')
 
 	def set_text(self, text):
-		self.text = b64encode(text)
+		self.text = b64encode(text.encode('utf-8'))
 
 	def is_text(self): return True
 	def is_closed(self): return True
 
 	def get_glyphs(self):
-		glyphs, line_points, layout_data = libgeom.get_text_glyphs(self.get_text(),
-									self.width, self.style[2], self.attributes)
-		self.cache_line_points = line_points
-		self.cache_layout_data = layout_data
+		glyphs, points, data, bbox = libgeom.get_text_glyphs(self.get_text(),
+									self.width, self.style[2], self.markup)
+		self.cache_line_points = points
+		self.cache_layout_data = data
+		dx = 0.0
+		if self.style[2][3] == sk2_const.TEXT_ALIGN_CENTER: dx = -bbox[2] / 2.0
+		if self.style[2][3] == sk2_const.TEXT_ALIGN_RIGHT: dx = -bbox[2]
+		bbox[0] += dx
+		bbox[2] += dx
+		self.cache_layout_bbox = bbox
 		return glyphs
 
 	def get_line_points(self):
@@ -742,7 +748,7 @@ class Text(PrimitiveObject):
 	def to_curve(self):
 		group = Group(self.config)
 		for item in self.cache_glyphs:
-			if not item is None:
+			if item:
 				curve = Curve(self.config, group)
 				curve.paths = deepcopy(item)
 				curve.trafo = [] + self.trafo
@@ -759,7 +765,7 @@ class Text(PrimitiveObject):
 		self.cache_cpath = []
 		index = 0
 		for item in self.cache_glyphs:
-			if item is None:
+			if not item:
 				self.cache_cpath.append(None)
 			else:
 				cpath = libgeom.create_cpath(item)
