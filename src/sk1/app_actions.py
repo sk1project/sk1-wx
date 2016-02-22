@@ -184,7 +184,7 @@ def create_actions(app):
 (pdids.ID_INVERT_ALPHA, proxy.invert_alpha, sel_chnls, insp.is_pixmap_alpha),
 (pdids.ID_EXTRACT_BITMAP, app.extract_bitmap, sel_chnls, insp.is_pixmap_selected),
 #------ Text menu -------
-(pdids.ID_EDIT_TEXT, proxy.stub),
+(pdids.ID_EDIT_TEXT, proxy.set_text_mode, tool_chnls, insp.is_doc),
 #------ Tools menu -------
 (pdids.ID_TOOL_PAGES, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('ShapingPlugin',)),
 (pdids.ID_TOOL_OBJBROWSER, proxy.stub),
