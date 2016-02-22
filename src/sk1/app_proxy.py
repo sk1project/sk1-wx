@@ -203,6 +203,10 @@ class AppProxy:
 	def about(self): dialogs.about_dialog(self.app, self.mw)
 	def properties(self): dialogs.docprops_dlg(self.app, self.mw)
 
+	def set_text_mode(self):
+		if not self.app.current_doc.canvas.mode in modes.TEXT_MODES:
+			self.app.current_doc.canvas.set_mode(modes.TEXT_MODE)
+
 	def undo(self):
 		self.app.current_doc.api.do_undo()
 		canvas = self.app.current_doc.canvas
