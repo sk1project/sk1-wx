@@ -679,6 +679,14 @@ class PDRenderer(CairoRenderer):
 
 		self.end_soft_repaint()
 
+	def draw_text_frame(self, bbox, trafo):
+		libgeom.normalize_bbox(bbox)
+		cpath = libcairo.convert_bbox_to_cpath(bbox)
+		libcairo.apply_trafo(cpath, trafo)
+		libcairo.apply_trafo(cpath, self.canvas.trafo)
+		self._draw_frame(cpath)
+
+
 	def draw_text_cursor(self, start, end):
 		self.set_direct_matrix()
 		self.ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
