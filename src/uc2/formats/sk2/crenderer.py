@@ -142,9 +142,10 @@ class CairoRenderer:
 			if self.contour_flag:
 				self.process_stroke(ctx, None, self.stroke_style)
 				for item in obj.cache_cpath:
-					ctx.new_path()
-					ctx.append_path(item)
-					ctx.stroke()
+					if item:
+						ctx.new_path()
+						ctx.append_path(item)
+						ctx.stroke()
 			else:
 				if obj.style[1] and obj.style[1][7]:
 					self.stroke_text_obj(ctx, obj)
