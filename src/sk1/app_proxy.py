@@ -18,6 +18,8 @@
 import math
 from copy import deepcopy
 
+import wal
+
 from uc2 import uc2const
 from uc2.formats.sk2 import sk2_model, sk2_const
 from uc2.libgeom import stroke_to_curve, apply_trafo_to_paths
@@ -221,7 +223,13 @@ class AppProxy:
 	def clear_history(self): self.app.current_doc.api.clear_history()
 	def cut(self): self.app.current_doc.api.cut_selected()
 	def copy(self): self.app.current_doc.api.copy_selected()
-	def paste(self): self.app.current_doc.api.paste_selected()
+	def paste(self):
+		doc = self.app.current_doc
+		if doc.canvas.mode == modes.TEXT_EDIT_MODE:
+			doc.canvas.controller.insert_text(wal.get_text_from_clipboar())
+		else:
+			doc.api.paste_selected()
+
 	def delete(self):
 		canvas = self.app.current_doc.canvas
 		if canvas.mode == modes.BEZIER_EDITOR_MODE:
