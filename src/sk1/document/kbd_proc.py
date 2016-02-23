@@ -95,6 +95,8 @@ class Kbd_Processor:
 				self.canvas.controller.key_backspace();return
 			if key_code == wx.WXK_NUMPAD_ENTER:
 				self.canvas.controller.insert_char(u'\n');return
+			if key_code in (wx.WXK_DELETE, wx.WXK_NUMPAD_DELETE):
+				self.canvas.controller.key_del();return
 
 		event.Skip()
 
