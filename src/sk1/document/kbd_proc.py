@@ -94,7 +94,7 @@ class Kbd_Processor:
 			if key_code == wx.WXK_BACK:
 				self.canvas.controller.key_backspace();return
 			if key_code == wx.WXK_NUMPAD_ENTER:
-				self.canvas.controller.insert_char(u'\n');return
+				self.canvas.controller.insert_text(u'\n');return
 			if key_code in (wx.WXK_DELETE, wx.WXK_NUMPAD_DELETE):
 				self.canvas.controller.key_del();return
 		elif modifiers == wx.ACCEL_CTRL:
@@ -107,6 +107,6 @@ class Kbd_Processor:
 
 	def on_char(self, event):
 		if self.canvas.mode == modes.TEXT_EDIT_MODE:
-			self.canvas.controller.insert_char(unichr(event.GetUniChar()))
+			self.canvas.controller.insert_text(unichr(event.GetUniChar()))
 			return
 		event.Skip()
