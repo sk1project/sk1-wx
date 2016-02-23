@@ -88,6 +88,12 @@ class TextEditController(AbstractController):
 		if self.text_cursor < len(self.text):
 			self.delete_char()
 
+	def key_ctrl_home(self):
+		self.set_text_cursor(0)
+
+	def key_ctrl_end(self):
+		self.set_text_cursor(len(self.text))
+
 	#--- Text modifiers
 	def _delete_char(self, index):
 		if index == len(self.text) - 1:
