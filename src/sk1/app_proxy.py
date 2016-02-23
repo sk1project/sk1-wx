@@ -226,6 +226,8 @@ class AppProxy:
 		canvas = self.app.current_doc.canvas
 		if canvas.mode == modes.BEZIER_EDITOR_MODE:
 			canvas.controller.delete_selected_nodes()
+		elif canvas.mode == modes.TEXT_EDIT_MODE:
+			canvas.controller.key_del()
 		else:
 			self.app.current_doc.api.delete_selected()
 

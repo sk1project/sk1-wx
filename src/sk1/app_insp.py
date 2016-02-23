@@ -105,6 +105,8 @@ class AppInspector:
 		if doc is None: return False
 		if doc.canvas.mode == modes.BEZIER_EDITOR_MODE:
 			return self.is_selected_node(doc)
+		elif doc.canvas.mode == modes.TEXT_EDIT_MODE:
+			return True
 		return self.is_selection(doc)
 
 	def can_be_selected_all_nodes(self, doc=None):
