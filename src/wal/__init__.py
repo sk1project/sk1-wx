@@ -30,4 +30,6 @@ from togglectrls import HToggleKeeper, ModeToggleButton
 from msgdlgs import *
 from modaldlgs import *
 
+from clipboard import *
+
 
