@@ -23,6 +23,7 @@ from sk1 import _, modes, events
 
 from generic import AbstractController
 
+
 class TextEditController(AbstractController):
 
 	mode = modes.TEXT_EDIT_MODE
@@ -129,8 +130,12 @@ class TextEditController(AbstractController):
 			p1 = [data[0], data[1] - data[3]]
 		else:
 			data = self.target.cache_layout_data[-1]
-			p0 = [data[0] + data[2], data[1]]
-			p1 = [data[0] + data[2], data[1] - data[3]]
+			if ord(self.text[-1]) == 13:
+				p0 = [0.0, data[1] - data[3]]
+				p1 = [0.0, data[1] - 2.0 * data[3]]
+			else:
+				p0 = [data[0] + data[2], data[1]]
+				p1 = [data[0] + data[2], data[1] - data[3]]
 		trafo = self.target.trafo
 		if self.text_cursor in self.trafos:
 			trafo = self.trafos[self.text_cursor]
