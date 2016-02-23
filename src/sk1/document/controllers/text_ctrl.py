@@ -103,17 +103,17 @@ class TextEditController(AbstractController):
 		if index in self.trafos:
 			self.trafos.pop(index, None)
 
-	def _insert_char(self, char, index):
+	def _insert_text(self, text, index):
 		if index == len(self.text) - 1:
-			self.text += char
+			self.text += text
 		else:
-			self.text = self.text[:index] + char + self.text[index:]
+			self.text = self.text[:index] + text + self.text[index:]
 		trafos = {}
 		for item in self.trafos.keys():
 			if item < index:
 				trafos[item] = self.trafos[item]
 			else:
-				trafos[item + 1] = self.trafos[item]
+				trafos[item + len(text)] = self.trafos[item]
 		self.trafos = trafos
 
 	def delete_char(self):
@@ -121,9 +121,9 @@ class TextEditController(AbstractController):
 			self._delete_char(self.text_cursor)
 			self.update_target()
 
-	def insert_char(self, char):
-		self._insert_char(char, self.text_cursor)
-		self.text_cursor += 1
+	def insert_text(self, text):
+		self._insert_text(text, self.text_cursor)
+		self.text_cursor += len(text)
 		self.update_target()
 
 	#--- REPAINT
