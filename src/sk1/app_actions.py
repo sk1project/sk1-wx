@@ -86,7 +86,7 @@ def create_actions(app):
 (pdids.ID_CLEAR_UNDO, proxy.clear_history, doc_chnls, insp.is_history),
 (wx.ID_CUT, proxy.cut, sel_chnls, insp.is_selection),
 (wx.ID_COPY, proxy.copy, sel_chnls, insp.is_selection),
-(wx.ID_PASTE, proxy.paste, [NO_DOCS, DOC_CHANGED, CLIPBOARD], insp.is_clipboard),
+(wx.ID_PASTE, proxy.paste, tool_chnls + [CLIPBOARD, ], insp.is_clipboard),
 (wx.ID_DELETE, proxy.delete, sel_chnls, insp.can_be_deleted),
 (pdids.ID_DUPLICATE, proxy.duplicate, sel_chnls, insp.is_selection),
 (wx.ID_SELECTALL, proxy.select_all, sel_chnls, insp.can_be_selected),
