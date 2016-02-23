@@ -266,6 +266,7 @@ encoding//src/uc2/utils/fs.py=utf-8
 encoding//src/uc2/utils/system.py=utf-8
 encoding//src/wal/__init__.py=utf-8
 encoding//src/wal/basic.py=utf-8
+encoding//src/wal/clipboard.py=utf-8
 encoding//src/wal/const.py=utf-8
 encoding//src/wal/gctrls.py=utf-8
 encoding//src/wal/generic.py=utf-8
