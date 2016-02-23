@@ -205,8 +205,12 @@ class AppInspector:
 			return doc.canvas.controller.can_be_symmetrical()
 		return False
 
-	def is_clipboard(self):
-		if self.app.clipboard.contents:
+	def is_clipboard(self, doc=None):
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		if doc.canvas.mode == modes.TEXT_EDIT_MODE:
+			return True
+		elif self.app.clipboard.contents:
 			return True
 		return False
 
