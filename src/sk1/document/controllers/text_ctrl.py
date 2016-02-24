@@ -122,7 +122,7 @@ class TextEditController(AbstractController):
 
 	def key_backspace(self):
 		if self.text_cursor > 0:
-			self.text_cursor -= 1
+			self.set_text_cursor(self.text_cursor - 1)
 			self.delete_char()
 
 	def key_del(self):
@@ -164,8 +164,8 @@ class TextEditController(AbstractController):
 
 	def insert_text(self, text):
 		self._insert_text(text, self.text_cursor)
-		self.text_cursor += len(text)
 		self.update_target()
+		self.set_text_cursor(self.text_cursor + len(text))
 
 	#--- REPAINT
 
