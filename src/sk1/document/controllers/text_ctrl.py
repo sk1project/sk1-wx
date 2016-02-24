@@ -29,6 +29,9 @@ class TextEditController(AbstractController):
 	mode = modes.TEXT_EDIT_MODE
 	target = None
 	text_cursor = 0
+	line_num = 0
+	line_pos = 0
+	lines = []
 	text = ''
 	trafos = {}
 	markup = []
@@ -57,16 +60,35 @@ class TextEditController(AbstractController):
 		self.text = self.target.get_text()
 		self.trafos = deepcopy(self.target.trafos)
 		self.markup = deepcopy(self.target.markup)
-		self.text_cursor = len(self.text)
+		self.update_lines()
+		self.set_text_cursor(len(self.text))
 
 	def update_target(self):
 		self.presenter.api.change_text(self.target, '' + self.text,
 								deepcopy(self.trafos), deepcopy(self.markup))
+		self.update_lines()
+
+	def update_lines(self):
+		self.lines = []
+		index = 0
+		for item in self.text.split('\n'):
+			self.lines.append((index, index + len(item)))
+			index += len(item) + 1
+
+	def set_line_pos(self):
+		index = 0
+		for line in self.lines:
+			if not self.text_cursor > line[1]:
+				self.line_num = index
+				break
+			index += 1
+		self.line_pos = self.text_cursor - line[0]
 
 	def set_text_cursor(self, val):
 		if val < 0: val = 0
 		if val > len(self.text):val = len(self.text)
 		self.text_cursor = val
+		self.set_line_pos()
 		self.canvas.selection_redraw()
 
 	#--- Keyboard calls
@@ -76,8 +98,25 @@ class TextEditController(AbstractController):
 	def key_right(self):
 		self.set_text_cursor(self.text_cursor + 1)
 
-	def key_up(self):pass
-	def key_down(self):pass
+	def key_up(self):
+		if not self.line_num: return
+		self.line_num -= 1
+		line = self.lines[self.line_num]
+		pos = self.line_pos + line[0]
+		if not pos < line[1]: pos = line[1]
+		self.set_text_cursor(pos)
+
+	def key_down(self):
+		if not self.line_num < len(self.lines) - 1: return
+		self.line_num += 1
+		line = self.lines[self.line_num]
+		pos = self.line_pos + line[0]
+		if not pos < line[1]: pos = line[1]
+		self.set_text_cursor(pos)
+
+	def key_home(self):pass
+
+	def key_end(self):pass
 
 	def key_backspace(self):
 		if self.text_cursor > 0:
