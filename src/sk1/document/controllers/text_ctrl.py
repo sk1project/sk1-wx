@@ -114,9 +114,11 @@ class TextEditController(AbstractController):
 		if not pos < line[1]: pos = line[1]
 		self.set_text_cursor(pos)
 
-	def key_home(self):pass
+	def key_home(self):
+		self.set_text_cursor(self.lines[self.line_num][0])
 
-	def key_end(self):pass
+	def key_end(self):
+		self.set_text_cursor(self.lines[self.line_num][1])
 
 	def key_backspace(self):
 		if self.text_cursor > 0:
