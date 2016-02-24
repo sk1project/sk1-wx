@@ -18,6 +18,7 @@
 
 import cairo
 import cgi
+from copy import deepcopy
 
 from uc2 import libcairo
 
@@ -31,12 +32,14 @@ DIRECT_MATRIX = cairo.Matrix()
 
 PANGO_MATRIX = cairo.Matrix(1.0, 0.0, 0.0, -1.0, 0.0, 0.0)
 PANGO_LAYOUT = _libpango.create_layout(CTX)
-NONPRINTING_CHARS = ' \n\t'.decode('utf-8')
+NONPRINTING_CHARS = ' \n\t'
 
 EMPTY_PATH = [[0.0, 0.0], [], 0]
 
 FAMILIES_LIST = []
 FAMILIES_DICT = {}
+
+GLYPH_CACHE = {}
 
 def bbox_size(bbox):
 	x0, y0, x1, y1 = bbox
@@ -59,6 +62,20 @@ def update_fonts():
 def get_fonts():
 	if not FAMILIES_LIST: update_fonts()
 	return FAMILIES_LIST, FAMILIES_DICT
+
+def get_glyph_cache(font_name, char):
+	ret = None
+	char = str(char)
+	if font_name in GLYPH_CACHE:
+		if char in GLYPH_CACHE[font_name]:
+			ret = deepcopy(GLYPH_CACHE[font_name][char])
+	return ret
+
+def set_glyph_cache(font_name, char, glyph):
+	char = str(char)
+	if not font_name in GLYPH_CACHE:
+		GLYPH_CACHE[font_name] = {}
+	GLYPH_CACHE[font_name][char] = deepcopy(glyph)
 
 def _get_font_description(text_style):
 	fnt_descr = text_style[0] + ', ' + text_style[1] + ' ' + str(text_style[2])
