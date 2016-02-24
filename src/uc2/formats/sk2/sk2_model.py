@@ -781,7 +781,7 @@ class Text(PrimitiveObject):
 		self.cache_bbox = []
 		index = 0
 		for item in self.cache_cpath:
-			if item is None:
+			if not item:
 				data = self.cache_layout_data[index]
 				bp = [data[0], data[4]]
 				bbox = 2 * libgeom.apply_trafo_to_point(bp, self.trafo)
