@@ -90,6 +90,16 @@ def _set_layout(layout, text, width, text_style, attributes):
 	markup = cgi.escape(text)
 	_libpango.set_layout_markup(layout, markup)
 
+def get_line_positions():
+	return _libpango.get_layout_line_positions(PANGO_LAYOUT)
+
+def get_glyph_positions():
+	return _libpango.get_layout_glyph_positions(PANGO_LAYOUT)
+
+def get_layout_bbox():
+	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
+	return [0.0, 0.0, float(w), float(-h)]
+
 def get_text_paths(text, width, text_style, attributes):
 	if not text: text = NONPRINTING_CHARS[0]
 	_set_layout(PANGO_LAYOUT, text, width, text_style, attributes)
@@ -106,8 +116,17 @@ def get_text_paths(text, width, text_style, attributes):
 	_libpango.layout_path(ctx, layout)
 	cpath = ctx.copy_path()
 
+	line_points = []
+	for item in get_line_positions():
+		line_points.append([0.0, item])
+	layout_data = get_glyph_positions()
+	dy = line_points[0][1]
+	layout_bbox = get_layout_bbox()
+
 	glyphs = []
+	i = -1
 	for item in text:
+		i += 1
 		if item in NONPRINTING_CHARS:
 			glyphs.append(None)
 			continue
@@ -117,7 +136,8 @@ def get_text_paths(text, width, text_style, attributes):
 		_set_layout(layout, item, width, text_style, attributes)
 		_libpango.layout_path(ctx, layout)
 		cpath = ctx.copy_path()
-		matrix = cairo.Matrix(1.0, 0.0, 0.0, -1.0, 0.0, 0.0)
+		matrix = cairo.Matrix(1.0, 0.0, 0.0, -1.0,
+							layout_data[i][0], layout_data[i][4] - dy)
 		libcairo.apply_cmatrix(cpath, matrix)
 		glyph = libcairo.get_path_from_cpath(cpath)
 		ret = []
@@ -125,14 +145,4 @@ def get_text_paths(text, width, text_style, attributes):
 			if item and not item == EMPTY_PATH:
 				ret.append(item)
 		glyphs.append(ret)
-	return glyphs
-
-def get_line_positions():
-	return _libpango.get_layout_line_positions(PANGO_LAYOUT)
-
-def get_glyph_positions():
-	return _libpango.get_layout_glyph_positions(PANGO_LAYOUT)
-
-def get_layout_bbox():
-	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
-	return [0.0, 0.0, float(w), float(-h)]
+	return glyphs, line_points, layout_data, layout_bbox

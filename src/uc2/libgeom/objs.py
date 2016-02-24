@@ -269,19 +269,4 @@ def get_polygon_paths(corners_num, angle1, angle2, coef1, coef2):
 #------------- TEXT -------------
 
 def get_text_glyphs(text, width, text_style, attributes):
-	glyphs = libpango.get_text_paths(text, width, text_style, attributes)
-
-	line_points = []
-	for item in libpango.get_line_positions():
-		line_points.append([0.0, item])
-	layout_data = libpango.get_glyph_positions()
-
-	dy = line_points[0][1]
-	for i in range(len(glyphs)):
-		trafo = [1.0, 0.0, 0.0, 1.0, layout_data[i][0], layout_data[i][4] - dy]
-		if glyphs[i]:
-			glyphs[i] = apply_trafo_to_paths(glyphs[i], trafo)
-
-	layout_bbox = libpango.get_layout_bbox()
-
-	return glyphs, line_points, layout_data, layout_bbox
+	return libpango.get_text_paths(text, width, text_style, attributes)
