@@ -1918,7 +1918,6 @@ class PresenterAPI(AbstractAPI):
 		sel_before = [] + self.selection.objs
 		text_before, trafos_before, markup_before = self._get_text_data(obj)
 		self._set_text_data(obj, text_after, trafos_after, markup_after)
-		obj.update()
 		transaction = [
 			[[self._set_text_data, obj, text_before, trafos_before, markup_before],
 			[self._set_selection, sel_before]],
