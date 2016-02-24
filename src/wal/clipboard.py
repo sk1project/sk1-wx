@@ -15,9 +15,9 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx
+import wx, os
 
-def get_text_from_clipboar():
+def get_text_from_clipboar(unix_text=True):
 	ret = ''
 	if not wx.TheClipboard.IsOpened():# may crash, otherwise
 		do = wx.TextDataObject()
@@ -26,9 +26,13 @@ def get_text_from_clipboar():
 		wx.TheClipboard.Close()
 		if success:
 			ret = do.GetText()
+	if ret and unix_text and not os.linesep == '\n':
+		ret = ret.replace(os.linesep, '\n')
 	return ret
 
-def set_text_to_clipboard(text):
+def set_text_to_clipboard(text, system_text=True):
+	if text and system_text and not os.linesep == '\n':
+		text = text.replace('\n', os.linesep)
 	clipdata = wx.TextDataObject()
 	clipdata.SetText(text)
 	wx.TheClipboard.Open()
