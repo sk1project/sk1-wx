@@ -34,7 +34,6 @@ PANGO_MATRIX = cairo.Matrix(1.0, 0.0, 0.0, -1.0, 0.0, 0.0)
 PANGO_LAYOUT = _libpango.create_layout(CTX)
 NONPRINTING_CHARS = ' \n\t'
 
-EMPTY_PATH = [[0.0, 0.0], [], 0]
 
 FAMILIES_LIST = []
 FAMILIES_DICT = {}
@@ -142,7 +141,8 @@ def get_text_paths(text, width, text_style, attributes):
 		glyph = libcairo.get_path_from_cpath(cpath)
 		ret = []
 		for item in glyph:
-			if item and not item == EMPTY_PATH:
+			if item and item[1]:
 				ret.append(item)
+		if not ret:ret = None
 		glyphs.append(ret)
 	return glyphs, line_points, layout_data, layout_bbox
