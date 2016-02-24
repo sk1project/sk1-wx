@@ -91,6 +91,10 @@ class Kbd_Processor:
 				self.canvas.controller.key_left();return
 			if key_code in (wx.WXK_RIGHT, wx.WXK_NUMPAD_RIGHT):
 				self.canvas.controller.key_right();return
+			if key_code in (wx.WXK_HOME, wx.WXK_NUMPAD_HOME):
+				self.canvas.controller.key_home();return
+			if key_code in (wx.WXK_END, wx.WXK_NUMPAD_END):
+				self.canvas.controller.key_end();return
 			if key_code == wx.WXK_BACK:
 				self.canvas.controller.key_backspace();return
 			if key_code == wx.WXK_NUMPAD_ENTER:
