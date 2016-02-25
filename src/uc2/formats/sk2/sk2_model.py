@@ -747,33 +747,49 @@ class Text(PrimitiveObject):
 
 	def to_curve(self):
 		group = Group(self.config)
-		for item in self.cache_glyphs:
-			if item:
+		subgroup = Group(self.config, group)
+		for item in self.cache_cpath:
+			paths = None
+			if item: paths = libgeom.get_paths_from_glyph(item)
+			if not paths:
+				if len(subgroup.childs) == 1:
+					subgroup.childs[0].parent = group
+					group.childs.append(subgroup.childs[0])
+					subgroup.childs = []
+				elif len(subgroup.childs) > 1:
+					subgroup.update()
+					group.childs.append(subgroup)
+					subgroup = Group(self.config, group)
+			else:
 				curve = Curve(self.config, group)
-				curve.paths = deepcopy(item)
-				curve.trafo = [] + self.trafo
+				curve.paths = paths
 				curve.fill_trafo = [] + self.fill_trafo
 				curve.stroke_trafo = []	 + self.stroke_trafo
 				curve.style = deepcopy(self.style)
 				curve.update()
-				group.childs.append(curve)
+				subgroup.childs.append(curve)
+
+		if not subgroup in group.childs:
+			if len(subgroup.childs) == 1:
+				subgroup.childs[0].parent = group
+				group.childs.append(subgroup.childs[0])
+				subgroup.childs = []
+			elif len(subgroup.childs) > 1:
+				subgroup.update()
+				group.childs.append(subgroup)
+
 		group.update()
 		return group
 
 	def update(self):
-		self.cache_glyphs = self.get_glyphs()
-		self.cache_cpath = []
+		self.cache_cpath = self.get_glyphs()
 		index = 0
-		for item in self.cache_glyphs:
-			if not item:
-				self.cache_cpath.append(None)
-			else:
-				cpath = libgeom.create_cpath(item)
+		for item in self.cache_cpath:
+			if item:
 				if not index in self.trafos:
-					libgeom.apply_trafo(cpath, self.trafo)
+					libgeom.apply_trafo(item, self.trafo)
 				else:
-					libgeom.apply_trafo(cpath, self.trafos[index])
-				self.cache_cpath.append(cpath)
+					libgeom.apply_trafo(item, self.trafos[index])
 			index += 1
 		self.update_bbox()
 
