@@ -160,8 +160,12 @@ class TextEditController(AbstractController):
 					parent = self.target.parent
 					index = parent.childs.index(self.target)
 					self.api.delete_object(self.target, parent, index)
-				doc_point = self.canvas.win_to_doc(self.end)
-				self.target = self.api.create_text(doc_point)
+				objs = self.canvas.pick_at_point(self.end)
+				if objs and objs[0].is_text():
+					self.target = objs[0]
+				else:
+					doc_point = self.canvas.win_to_doc(self.end)
+					self.target = self.api.create_text(doc_point)
 				self.update_from_target()
 				self.canvas.selection_redraw()
 		#---
