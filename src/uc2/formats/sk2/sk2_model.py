@@ -739,7 +739,7 @@ class Text(PrimitiveObject):
 		if self.style[2][3] == sk2_const.TEXT_ALIGN_RIGHT: dx = -bbox[2]
 		bbox[0] += dx
 		bbox[2] += dx
-		self.cache_layout_bbox = bbox
+		self.cache_layout_bbox = libgeom.normalize_bbox(bbox)
 		return glyphs
 
 	def get_line_points(self):
