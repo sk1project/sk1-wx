@@ -39,7 +39,6 @@ class TextEditController(AbstractController):
 	def start_(self):
 		self.snap = self.presenter.snap
 		self.target = self.selection.objs[0]
-		self.selection.clear()
 		self.update_from_target()
 		msg = _('Text in editing')
 		events.emit(events.APP_STATUS, msg)
@@ -57,6 +56,9 @@ class TextEditController(AbstractController):
 		self.canvas.set_mode()
 
 	def update_from_target(self):
+		self.start = []
+		self.end = []
+		self.selection.clear()
 		self.text = self.target.get_text()
 		self.trafos = deepcopy(self.target.trafos)
 		self.markup = deepcopy(self.target.markup)
@@ -134,6 +136,37 @@ class TextEditController(AbstractController):
 
 	def key_ctrl_end(self):
 		self.set_text_cursor(len(self.text))
+
+	#--- Mouse calls
+	def is_point_in_layout_bbox(self, point):
+		bbox = self.target.cache_layout_bbox
+		doc_point = self.canvas.win_to_doc(point)
+		inv_trafo = libgeom.invert_trafo(self.target.trafo)
+		doc_point = libgeom.apply_trafo_to_point(doc_point, inv_trafo)
+		return libgeom.is_point_in_bbox(doc_point, bbox)
+
+	def mouse_down(self, event):
+		self.start = event.get_point()
+
+	def mouse_move(self, event):pass
+
+	def mouse_up(self, event):
+		self.end = event.get_point()
+		if self.end == self.start:
+			if self.is_point_in_layout_bbox(self.end):
+				pass
+			else:
+				if not self.text:
+					parent = self.target.parent
+					index = parent.childs.index(self.target)
+					self.api.delete_object(self.target, parent, index)
+				doc_point = self.canvas.win_to_doc(self.end)
+				self.target = self.api.create_text(doc_point)
+				self.update_from_target()
+				self.canvas.selection_redraw()
+		#---
+		self.start = []
+		self.end = []
 
 	#--- Text modifiers
 	def _delete_char(self, index):
