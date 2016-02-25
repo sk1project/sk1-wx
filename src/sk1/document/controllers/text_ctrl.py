@@ -181,7 +181,7 @@ class TextEditController(AbstractController):
 			p1 = [data[0], data[1] - data[3]]
 		else:
 			data = self.target.cache_layout_data[-1]
-			if ord(self.text[-1]) == 13:
+			if self.text[-1] == '\n':
 				p0 = [0.0, data[1] - data[3]]
 				p1 = [0.0, data[1] - 2.0 * data[3]]
 			else:
