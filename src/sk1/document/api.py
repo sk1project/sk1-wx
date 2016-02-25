@@ -1913,6 +1913,7 @@ class PresenterAPI(AbstractAPI):
 		obj = model.Text(self.sk2_cfg, parent, doc_point, style=style)
 		obj.update()
 		self.insert_object(obj, parent, len(parent.childs))
+		return obj
 
 	def change_text(self, obj, text_after, trafos_after, markup_after):
 		sel_before = [] + self.selection.objs
