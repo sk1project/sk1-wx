@@ -138,11 +138,5 @@ def get_text_paths(text, width, text_style, attributes):
 		matrix = cairo.Matrix(1.0, 0.0, 0.0, -1.0,
 							layout_data[i][0], layout_data[i][4] - dy)
 		libcairo.apply_cmatrix(cpath, matrix)
-		glyph = libcairo.get_path_from_cpath(cpath)
-		ret = []
-		for item in glyph:
-			if item and item[1]:
-				ret.append(item)
-		if not ret:ret = None
-		glyphs.append(ret)
+		glyphs.append(cpath)
 	return glyphs, line_points, layout_data, layout_bbox
