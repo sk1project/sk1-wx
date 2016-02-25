@@ -19,7 +19,7 @@ import math
 from copy import deepcopy
 
 from uc2.formats.sk2 import sk2_const
-from uc2 import libpango
+from uc2 import libpango, libcairo
 
 from points import rotate_point
 from trafo import apply_trafo_to_paths
@@ -270,3 +270,12 @@ def get_polygon_paths(corners_num, angle1, angle2, coef1, coef2):
 
 def get_text_glyphs(text, width, text_style, attributes):
 	return libpango.get_text_paths(text, width, text_style, attributes)
+
+def get_paths_from_glyph(glyph):
+	glyph = libcairo.get_path_from_cpath(glyph)
+	ret = []
+	for item in glyph:
+		if item and item[1]:
+			ret.append(item)
+	if not ret:return None
+	return ret
