@@ -106,6 +106,24 @@ class Kbd_Processor:
 				self.canvas.controller.key_ctrl_home();return
 			if key_code in (wx.WXK_END, wx.WXK_NUMPAD_END):
 				self.canvas.controller.key_ctrl_end();return
+		elif modifiers == wx.ACCEL_CTRL | wx.ACCEL_SHIFT:
+			if key_code in (wx.WXK_HOME, wx.WXK_NUMPAD_HOME):
+				self.canvas.controller.key_ctrl_home(True);return
+			if key_code in (wx.WXK_END, wx.WXK_NUMPAD_END):
+				self.canvas.controller.key_ctrl_end(True);return
+		elif modifiers == wx.ACCEL_SHIFT:
+			if key_code in (wx.WXK_LEFT, wx.WXK_NUMPAD_LEFT):
+				self.canvas.controller.key_left(True);return
+			if key_code in (wx.WXK_RIGHT, wx.WXK_NUMPAD_RIGHT):
+				self.canvas.controller.key_right(True);return
+			if key_code in (wx.WXK_HOME, wx.WXK_NUMPAD_HOME):
+				self.canvas.controller.key_home(True);return
+			if key_code in (wx.WXK_END, wx.WXK_NUMPAD_END):
+				self.canvas.controller.key_end(True);return
+			if key_code in (wx.WXK_UP, wx.WXK_NUMPAD_UP):
+				self.canvas.controller.key_up(True);return
+			if key_code in (wx.WXK_DOWN, wx.WXK_NUMPAD_DOWN):
+				self.canvas.controller.key_down(True);return
 
 		event.Skip()
 
