@@ -458,7 +458,6 @@ class PDRenderer(CairoRenderer):
 		self.ctx.new_path()
 		self.ctx.append_path(path)
 		self.ctx.stroke()
-
 		self.end_soft_repaint()
 
 	def _paint_selection(self):
@@ -685,6 +684,17 @@ class PDRenderer(CairoRenderer):
 		libcairo.apply_trafo(cpath, self.canvas.trafo)
 		self._draw_frame(cpath)
 
+	def draw_text_selection(self, bboxs, trafo):
+		self.set_direct_matrix()
+		self.ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
+		self.ctx.set_source_rgba(*config.text_selection_color)
+		for item in bboxs:
+			cpath = libcairo.convert_bbox_to_cpath(item)
+			libcairo.apply_trafo(cpath, trafo)
+			libcairo.apply_trafo(cpath, self.canvas.trafo)
+			self.ctx.new_path()
+			self.ctx.append_path(cpath)
+			self.ctx.fill()
 
 	def draw_text_cursor(self, start, end):
 		self.set_direct_matrix()
