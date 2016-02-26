@@ -28,13 +28,16 @@ class TextEditController(AbstractController):
 
 	mode = modes.TEXT_EDIT_MODE
 	target = None
+	text = ''
+	trafos = {}
+	markup = []
+
 	text_cursor = 0
 	line_num = 0
 	line_pos = 0
 	lines = []
-	text = ''
-	trafos = {}
-	markup = []
+
+	selected = []
 
 	def start_(self):
 		self.snap = self.presenter.snap
@@ -86,41 +89,68 @@ class TextEditController(AbstractController):
 			index += 1
 		self.line_pos = self.text_cursor - line[0]
 
-	def set_text_cursor(self, val):
-		if val < 0: val = 0
-		if val > len(self.text):val = len(self.text)
-		self.text_cursor = val
+	def set_text_cursor(self, pos, selection=False):
+		if pos < 0: pos = 0
+		if pos > len(self.text):pos = len(self.text)
+		if not selection:self.selected = []
+		self.text_cursor = pos
 		self.set_line_pos()
 		self.canvas.selection_redraw()
 
+	def set_selected(self, pos):
+		if pos < 0: pos = 0
+		if pos > len(self.text):pos = len(self.text)
+		dx = pos - self.text_cursor
+		if not self.selected:
+			self.selected = [self.text_cursor, self.text_cursor]
+
+		if self.selected[0] > pos:
+			self.selected = [pos, self.selected[1]]
+		elif self.selected[1] > pos and dx > 0:
+			self.selected = [pos, self.selected[1]]
+		elif self.selected[1] > pos and dx < 0:
+			self.selected = [self.selected[0], pos]
+		elif self.selected[1] == pos:
+			self.selected = []
+		elif self.selected[1] < pos:
+			self.selected = [self.selected[0], pos]
+#		print self.selected
+
+
 	#--- Keyboard calls
-	def key_left(self):
-		self.set_text_cursor(self.text_cursor - 1)
+	def key_left(self, shift=False):
+		if shift: self.set_selected(self.text_cursor - 1)
+		self.set_text_cursor(self.text_cursor - 1, shift)
 
-	def key_right(self):
-		self.set_text_cursor(self.text_cursor + 1)
+	def key_right(self, shift=False):
+		if shift: self.set_selected(self.text_cursor + 1)
+		self.set_text_cursor(self.text_cursor + 1, shift)
 
-	def key_up(self):
+	def key_up(self, shift=False):
 		if not self.line_num: return
 		self.line_num -= 1
 		line = self.lines[self.line_num]
 		pos = self.line_pos + line[0]
 		if not pos < line[1]: pos = line[1]
-		self.set_text_cursor(pos)
+		if shift: self.set_selected(pos)
+		self.set_text_cursor(pos, shift)
 
-	def key_down(self):
+	def key_down(self, shift=False):
 		if not self.line_num < len(self.lines) - 1: return
 		self.line_num += 1
 		line = self.lines[self.line_num]
 		pos = self.line_pos + line[0]
 		if not pos < line[1]: pos = line[1]
-		self.set_text_cursor(pos)
+		if shift: self.set_selected(pos)
+		self.set_text_cursor(pos, shift)
 
-	def key_home(self):
-		self.set_text_cursor(self.lines[self.line_num][0])
+	def key_home(self, shift=False):
+		if shift: self.set_selected(self.lines[self.line_num][0])
+		self.set_text_cursor(self.lines[self.line_num][0], shift)
 
-	def key_end(self):
-		self.set_text_cursor(self.lines[self.line_num][1])
+	def key_end(self, shift=False):
+		if shift: self.set_selected(self.lines[self.line_num][1])
+		self.set_text_cursor(self.lines[self.line_num][1], shift)
 
 	def key_backspace(self):
 		if self.text_cursor > 0:
@@ -131,11 +161,13 @@ class TextEditController(AbstractController):
 		if self.text_cursor < len(self.text):
 			self.delete_char()
 
-	def key_ctrl_home(self):
-		self.set_text_cursor(0)
+	def key_ctrl_home(self, shift=False):
+		if shift: self.set_selected(0)
+		self.set_text_cursor(0, shift)
 
-	def key_ctrl_end(self):
-		self.set_text_cursor(len(self.text))
+	def key_ctrl_end(self, shift=False):
+		if shift: self.set_selected(len(self.text))
+		self.set_text_cursor(len(self.text), shift)
 
 	#--- Mouse calls
 	def is_point_in_layout_bbox(self, point):
@@ -227,7 +259,44 @@ class TextEditController(AbstractController):
 	def repaint(self):
 		bbox = self.target.cache_layout_bbox
 		self.canvas.renderer.draw_text_frame(bbox, self.target.trafo)
+		self.paint_selection()
 		self.paint_cursor()
+
+	def paint_selection(self):
+		if not self.selected or self.selected[0] == self.selected[1]: return
+		sel_blocks = []
+		for line in self.lines:
+			block = []
+			indexes = range(*line)
+			if not indexes: continue
+
+			if self.selected[0] in indexes:
+				block.append(self.selected[0])
+			elif self.selected[0] < indexes[0]:
+				block.append(indexes[0])
+			else:
+				continue
+
+			if self.selected[1] in indexes:
+				block.append(self.selected[1])
+				sel_blocks.append(block)
+				break
+			elif self.selected[1] > indexes[-1]:
+				block.append(indexes[-1] + 1)
+				sel_blocks.append(block)
+
+		bboxs = []
+		layout = self.target.cache_layout_data
+		for item in sel_blocks:
+			x0, y0 = layout[item[0]][:2]
+			y1 = y0 - layout[item[0]][3]
+			x1 = x0
+			for i in range(*item):
+				x1 += layout[i][2]
+			bbox = libgeom.normalize_bbox([x0, y0, x1, y1])
+			bboxs.append(bbox)
+		if bboxs:
+			self.canvas.renderer.draw_text_selection(bboxs, self.target.trafo)
 
 	def paint_cursor(self):
 		if self.text_cursor < len(self.target.cache_layout_data):
