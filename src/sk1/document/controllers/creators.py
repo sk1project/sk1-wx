@@ -134,7 +134,11 @@ class TextCreator(AbstractCreator):
 
 	def do_action(self, event):
 		if self.end_doc:
-			self.api.create_text(self.end_doc)
+			objs = self.canvas.pick_at_point(self.end)
+			if objs and objs[0].is_text():
+				self.selection.set([objs[0], ])
+			else:
+				self.api.create_text(self.end_doc)
 			self.start = []
 			self.center = []
 			self.end = []
