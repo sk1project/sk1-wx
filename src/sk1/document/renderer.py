@@ -689,6 +689,8 @@ class PDRenderer(CairoRenderer):
 	def draw_text_cursor(self, start, end):
 		self.set_direct_matrix()
 		self.ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
+		if start[0] == end[0] or start[1] == end[1]:
+			self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
 		self.ctx.set_dash([])
 		self.ctx.set_source_rgb(*config.text_cursor_color)
 		self.ctx.set_line_width(config.text_cursor_width)
