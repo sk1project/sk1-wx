@@ -78,15 +78,14 @@ class LogViewerDialog(wal.OkCancelDialog):
 		self.app.history.clear_history()
 		self.lc.clear_all()
 
-	def on_ok(self, value):
-		if value:
-			path = self.lc.get_selected()[2]
-			if os.path.isfile(path):
-				self.ret = path
-				self.end_modal(wal.BUTTON_OK)
-			else:
-				txt = "%s '%s' %s" % (_('File'), path, _('is not found.'))
-				wal.error_dialog(self, _('File not found'), txt)
+	def on_ok(self, *args):
+		path = self.lc.get_selected()[2]
+		if os.path.isfile(path):
+			self.ret = path
+			self.end_modal(wal.BUTTON_OK)
+		else:
+			txt = "%s '%s' %s" % (_('File'), path, _('is not found.'))
+			wal.error_dialog(self, _('File not found'), txt)
 
 	def get_result(self): return self.ret
 
