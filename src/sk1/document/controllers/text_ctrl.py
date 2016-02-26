@@ -111,7 +111,7 @@ class TextEditController(AbstractController):
 		elif self.selected[1] > pos and dx < 0:
 			self.selected = [self.selected[0], pos]
 		elif self.selected[1] == pos:
-			self.selected = []
+			self.selected = [pos, pos]
 		elif self.selected[1] < pos:
 			self.selected = [self.selected[0], pos]
 #		print self.selected
@@ -197,8 +197,16 @@ class TextEditController(AbstractController):
 
 	def mouse_down(self, event):
 		self.start = event.get_point()
+		pos = self.get_index_by_point(self.start)
+		self.set_text_cursor(pos)
+		self.set_selected(pos)
 
-	def mouse_move(self, event):pass
+	def mouse_move(self, event):
+		if self.start:
+			pos = self.get_index_by_point(event.get_point())
+			if not pos == self.text_cursor:
+				self.set_selected(pos)
+				self.set_text_cursor(pos, True)
 
 	def mouse_up(self, event):
 		self.end = event.get_point()
