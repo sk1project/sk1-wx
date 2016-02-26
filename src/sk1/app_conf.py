@@ -317,6 +317,7 @@ class AppConfig(UCConfig):
 	#============== TEXT MARK OPTIONS ================
 	text_cursor_width = 1.0
 	text_cursor_color = (1.0, 0.0, 0.0)
+	text_selection_color = (.098, .6824, 1.0, .2392)
 
 
 	#===UNSORTED===
