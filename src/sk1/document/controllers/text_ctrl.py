@@ -145,6 +145,24 @@ class TextEditController(AbstractController):
 		doc_point = libgeom.apply_trafo_to_point(doc_point, inv_trafo)
 		return libgeom.is_point_in_bbox(doc_point, bbox)
 
+	def get_index_by_point(self, point):
+		doc_point = self.canvas.win_to_doc(point)
+		inv_trafo = libgeom.invert_trafo(self.target.trafo)
+		doc_point = libgeom.apply_trafo_to_point(doc_point, inv_trafo)
+
+		line = -1
+		for item in self.target.cache_line_points:
+			line += 1
+			if doc_point[1] >= item[1]: break
+
+		index = self.lines[line][0]
+		for item in range(*self.lines[line]):
+			layout = self.target.cache_layout_data
+			pos = layout[index][0] + layout[index][2] / 2.0
+			if doc_point[0] <= pos: break
+			index += 1
+		return index
+
 	def mouse_down(self, event):
 		self.start = event.get_point()
 
@@ -154,7 +172,7 @@ class TextEditController(AbstractController):
 		self.end = event.get_point()
 		if self.end == self.start:
 			if self.is_point_in_layout_bbox(self.end):
-				pass
+				self.set_text_cursor(self.get_index_by_point(self.end))
 			else:
 				if not self.text:
 					parent = self.target.parent
