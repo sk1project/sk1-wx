@@ -57,7 +57,7 @@ class ActionTool(wal.ImageToggleButton):
 		text = ''
 		tooltip = action.get_tooltip_text()
 		padding = 0
-		decoration_padding = 4
+		decoration_padding = 3
 
 		if wal.is_msw():
 			decoration_padding = 2
@@ -89,7 +89,7 @@ class ActionToolButton(wal.ImageButton):
 		text = ''
 		tooltip = action.get_tooltip_text()
 		padding = 0
-		decoration_padding = 4
+		decoration_padding = 3
 		native = True
 
 		if wal.is_msw():
