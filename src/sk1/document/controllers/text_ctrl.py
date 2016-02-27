@@ -111,11 +111,31 @@ class TextEditController(AbstractController):
 		elif self.selected[1] > pos and dx < 0:
 			self.selected = [self.selected[0], pos]
 		elif self.selected[1] == pos:
-			self.selected = [pos, pos]
+			self.selected = []
 		elif self.selected[1] < pos:
 			self.selected = [self.selected[0], pos]
+
+		events.emit(events.SELECTION_CHANGED)
 #		print self.selected
 
+	def is_selected(self):
+		return not self.selected == []
+
+	def get_selected(self):
+		if not self.selected: return ''
+		return self.text[self.selected[0]:self.selected[1]]
+
+	def delete_selected(self):
+		if self.selected:
+			self._delete_text_range(self.selected)
+			self.set_text_cursor(self.selected[0])
+			self.update_target()
+
+	def replace_selected(self, text):
+		if self.selected:
+			self._delete_text_range(self.selected)
+			self.set_text_cursor(self.selected[0])
+		self.insert_text(text)
 
 	#--- Keyboard calls
 	def key_left(self, shift=False):
@@ -153,12 +173,16 @@ class TextEditController(AbstractController):
 		self.set_text_cursor(self.lines[self.line_num][1], shift)
 
 	def key_backspace(self):
-		if self.text_cursor > 0:
+		if self.selected:
+			self.delete_selected()
+		elif self.text_cursor > 0:
 			self.set_text_cursor(self.text_cursor - 1)
 			self.delete_char()
 
 	def key_del(self):
-		if self.text_cursor < len(self.text):
+		if self.selected:
+			self.delete_selected()
+		elif self.text_cursor < len(self.text):
 			self.delete_char()
 
 	def key_ctrl_home(self, shift=False):
@@ -238,6 +262,18 @@ class TextEditController(AbstractController):
 			self.text = self.text[:index] + self.text[index + 1:]
 		if index in self.trafos:
 			self.trafos.pop(index, None)
+
+	def _delete_text_range(self, text_range):
+		if text_range[1] == len(self.text):
+			self.text = self.text[:text_range[0]]
+		elif not text_range[0]:
+			self.text = self.text[text_range[1]:]
+		else:
+			self.text = self.text[:text_range[0]] + self.text[text_range[1]:]
+		deleted = range(*text_range)
+		for item in self.trafos:
+			if item in deleted:
+				self.trafos.pop(item, None)
 
 	def _insert_text(self, text, index):
 		if index == len(self.text) - 1:
