@@ -220,13 +220,30 @@ class AppProxy:
 		if canvas.mode == modes.BEZIER_EDITOR_MODE:
 			canvas.controller.update_paths()
 
-	def clear_history(self): self.app.current_doc.api.clear_history()
-	def cut(self): self.app.current_doc.api.cut_selected()
-	def copy(self): self.app.current_doc.api.copy_selected()
+	def clear_history(self):
+		self.app.current_doc.api.clear_history()
+
+	def cut(self):
+		doc = self.app.current_doc
+		if doc.canvas.mode == modes.TEXT_EDIT_MODE:
+			text = doc.canvas.controller.get_selected()
+			wal.set_text_to_clipboard(text)
+			doc.canvas.controller.delete_selected()
+		else:
+			self.app.current_doc.api.cut_selected()
+
+	def copy(self):
+		doc = self.app.current_doc
+		if doc.canvas.mode == modes.TEXT_EDIT_MODE:
+			text = doc.canvas.controller.get_selected()
+			wal.set_text_to_clipboard(text)
+		else:
+			self.app.current_doc.api.copy_selected()
+
 	def paste(self):
 		doc = self.app.current_doc
 		if doc.canvas.mode == modes.TEXT_EDIT_MODE:
-			doc.canvas.controller.insert_text(wal.get_text_from_clipboar())
+			doc.canvas.controller.replace_selected(wal.get_text_from_clipboar())
 		else:
 			doc.api.paste_selected()
 
