@@ -247,15 +247,16 @@ class TextEditController(AbstractController):
 			if self.is_point_in_layout_bbox(self.end):
 				self.set_text_cursor(self.get_index_by_point(self.end))
 			else:
+				point = self.end
 				if not self.text:
 					parent = self.target.parent
 					index = parent.childs.index(self.target)
 					self.api.delete_object(self.target, parent, index)
-				objs = self.canvas.pick_at_point(self.end)
+				objs = self.canvas.pick_at_point(point)
 				if objs and objs[0].is_text():
 					self.target = objs[0]
 				else:
-					doc_point = self.canvas.win_to_doc(self.end)
+					doc_point = self.canvas.win_to_doc(point)
 					self.target = self.api.create_text(doc_point)
 				self.update_from_target()
 				self.canvas.selection_redraw()
