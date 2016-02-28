@@ -146,6 +146,15 @@ class TextEditController(AbstractController):
 			self.set_text_cursor(self.selected[0])
 		self.insert_text(text)
 
+	def select_all(self):
+		self.set_text_cursor(0)
+		self.set_selected(len(self.text))
+		self.set_text_cursor(len(self.text), True)
+
+	def deselect(self):
+		self.selected = []
+		self.canvas.selection_redraw()
+
 	#--- Keyboard calls
 	def key_left(self, shift=False):
 		if shift: self.set_selected(self.text_cursor - 1)
