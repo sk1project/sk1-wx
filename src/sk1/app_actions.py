@@ -185,9 +185,9 @@ def create_actions(app):
 (pdids.ID_EXTRACT_BITMAP, app.extract_bitmap, sel_chnls, insp.is_pixmap_selected),
 #------ Text menu -------
 (pdids.ID_EDIT_TEXT, proxy.set_text_mode, tool_chnls, insp.is_doc),
-(pdids.ID_UPPER_TEXT, proxy.stub, sel_chnls, insp.is_text_selection),
-(pdids.ID_LOWER_TEXT, proxy.stub, sel_chnls, insp.is_text_selection),
-(pdids.ID_CAPITALIZE_TEXT, proxy.stub, sel_chnls, insp.is_text_selection),
+(pdids.ID_UPPER_TEXT, proxy.upper_text, sel_chnls, insp.is_text_selection),
+(pdids.ID_LOWER_TEXT, proxy.lower_text, sel_chnls, insp.is_text_selection),
+(pdids.ID_CAPITALIZE_TEXT, proxy.capitalize_text, sel_chnls, insp.is_text_selection),
 #------ Tools menu -------
 (pdids.ID_TOOL_PAGES, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('ShapingPlugin',)),
 (pdids.ID_TOOL_OBJBROWSER, proxy.stub),
