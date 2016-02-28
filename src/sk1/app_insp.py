@@ -96,6 +96,15 @@ class AppInspector:
 			return True
 		return False
 
+	def is_text_selection(self, doc=None):
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		elif doc.selection is None:
+			return False
+		elif doc.canvas.mode == modes.TEXT_EDIT_MODE:
+			return doc.canvas.controller.is_selected()
+		return False
+
 	def is_selected_node(self, doc=None):
 		if doc is None: doc = self.app.current_doc
 		if doc is None: return False
