@@ -38,6 +38,10 @@ class TextEditController(AbstractController):
 	lines = []
 
 	selected = []
+	def __init__(self, canvas, presenter):
+		AbstractController.__init__(self, canvas, presenter)
+		self.canvas.eventloop.connect(self.eventloop.DOC_MODIFIED,
+									self.doc_modified)
 
 	def start_(self):
 		self.snap = self.presenter.snap
@@ -54,6 +58,12 @@ class TextEditController(AbstractController):
 		else:
 			self.selection.set([self.target, ])
 		self.target = None
+
+	def doc_modified(self, *args):
+		if self.canvas.mode == modes.TEXT_EDIT_MODE:
+			pos = self.text_cursor
+			self.update_from_target()
+			self.set_text_cursor(pos)
 
 	def escape_pressed(self):
 		self.canvas.set_mode()
@@ -116,7 +126,6 @@ class TextEditController(AbstractController):
 			self.selected = [self.selected[0], pos]
 
 		events.emit(events.SELECTION_CHANGED)
-#		print self.selected
 
 	def is_selected(self):
 		return not self.selected == []
@@ -276,7 +285,7 @@ class TextEditController(AbstractController):
 				self.trafos.pop(item, None)
 
 	def _insert_text(self, text, index):
-		if index == len(self.text) - 1:
+		if index == len(self.text):
 			self.text += text
 		else:
 			self.text = self.text[:index] + text + self.text[index:]
