@@ -638,3 +638,11 @@ class AppProxy:
 	def show_plugin(self, *args):
 		self.app.plg_area.show_plugin(*args)
 
+	def upper_text(self):
+		self.app.current_doc.canvas.controller.upper_selected()
+
+	def lower_text(self):
+		self.app.current_doc.canvas.controller.lower_selected()
+
+	def capitalize_text(self):
+		self.app.current_doc.canvas.controller.capitalize_selected()
