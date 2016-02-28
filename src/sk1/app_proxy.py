@@ -261,6 +261,8 @@ class AppProxy:
 		canvas = self.app.current_doc.canvas
 		if canvas.mode == modes.BEZIER_EDITOR_MODE:
 			canvas.controller.select_all_nodes()
+		elif canvas.mode == modes.TEXT_EDIT_MODE:
+			canvas.controller.select_all()
 		else:
 			self.app.current_doc.selection.select_all()
 
@@ -268,6 +270,8 @@ class AppProxy:
 		canvas = self.app.current_doc.canvas
 		if canvas.mode == modes.BEZIER_EDITOR_MODE:
 			canvas.controller.set_selected_nodes()
+		elif canvas.mode == modes.TEXT_EDIT_MODE:
+			canvas.controller.deselect()
 		else:
 			self.app.current_doc.selection.clear()
 
