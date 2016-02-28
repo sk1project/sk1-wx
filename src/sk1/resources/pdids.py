@@ -142,6 +142,9 @@ ID_INVERT_ALPHA = wx.NewId()
 ID_EXTRACT_BITMAP = wx.NewId()
 #----- Text menu
 ID_EDIT_TEXT = wx.NewId()
+ID_UPPER_TEXT = wx.NewId()
+ID_LOWER_TEXT = wx.NewId()
+ID_CAPITALIZE_TEXT = wx.NewId()
 #----- Tools menu
 ID_TOOL_PAGES = wx.NewId()
 ID_TOOL_LAYERS = wx.NewId()

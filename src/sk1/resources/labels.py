@@ -161,6 +161,9 @@ pdids.ID_INVERT_ALPHA:(_('Invert alpha-channel'),),
 pdids.ID_EXTRACT_BITMAP:(_('Extract embedded bitmap'),),
 
 pdids.ID_EDIT_TEXT:(_('&Edit text'),),
+pdids.ID_UPPER_TEXT:(_('Uppercase'),),
+pdids.ID_LOWER_TEXT:(_('Lowercase'),),
+pdids.ID_CAPITALIZE_TEXT:(_('Capitalize'),),
 
 pdids.ID_TOOL_PAGES:(_('Pages'),),
 pdids.ID_TOOL_LAYERS:(_('Layers'),),
