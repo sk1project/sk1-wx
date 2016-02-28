@@ -155,6 +155,18 @@ class TextEditController(AbstractController):
 		self.selected = []
 		self.canvas.selection_redraw()
 
+	def upper_selected(self):
+		text = self.get_selected()
+		if text: self.replace_selected(text.upper())
+
+	def lower_selected(self):
+		text = self.get_selected()
+		if text: self.replace_selected(text.lower())
+
+	def capitalize_selected(self):
+		text = self.get_selected()
+		if text: self.replace_selected(text.capitalize())
+
 	#--- Keyboard calls
 	def key_left(self, shift=False):
 		if shift: self.set_selected(self.text_cursor - 1)
