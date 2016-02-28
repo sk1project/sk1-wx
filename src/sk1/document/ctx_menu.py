@@ -36,6 +36,7 @@ pdids.ID_BEZIER_JOIN_NODE, pdids.ID_BEZIER_SPLIT_NODE,
 None, pdids.ID_BEZIER_SEG_TO_LINE, pdids.ID_BEZIER_SEG_TO_CURVE,
 None, pdids.ID_BEZIER_NODE_CUSP, pdids.ID_BEZIER_NODE_SMOOTH,
 pdids.ID_BEZIER_NODE_SYMMETRICAL]
+TEXT = [None, pdids.ID_UPPER_TEXT, pdids.ID_LOWER_TEXT, pdids.ID_CAPITALIZE_TEXT]
 
 class ContextMenu(wx.Menu):
 
@@ -84,6 +85,8 @@ class ContextMenu(wx.Menu):
 		if not self.insp.is_selection():
 			if self.insp.is_mode(modes.BEZIER_EDITOR_MODE):
 				return BEZIER_EDIT
+			elif self.app.current_doc.canvas.mode == modes.TEXT_EDIT_MODE:
+				return EDIT + TEXT + DEFAULT
 		else:
 			doc = self.app.current_doc
 			sel = doc.selection.objs
