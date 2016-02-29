@@ -42,6 +42,8 @@ class TextEditController(AbstractController):
 
 	selected = []
 	drag = False
+	prev_pos = 0
+	prev_sel = []
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -261,6 +263,8 @@ class TextEditController(AbstractController):
 
 	def mouse_down(self, event):
 		self.start = event.get_point()
+		self.prev_pos = self.text_cursor
+		self.prev_sel = [] + self.selected
 		pos = self.get_index_by_point(self.start)
 		if self.selected and self.is_pos_in_selected(pos):
 			self.drag = True
@@ -284,7 +288,20 @@ class TextEditController(AbstractController):
 				self.drag = False
 				self.set_text_cursor(self.get_index_by_point(self.end))
 			elif self.is_point_in_layout_bbox(self.end):
-				self.set_text_cursor(self.get_index_by_point(self.end))
+				pos = self.get_index_by_point(self.end)
+				if event.is_shift():
+					if self.prev_sel and self.prev_pos == self.prev_sel[0]:
+						start = self.prev_sel[1]
+					elif self.prev_sel and self.prev_pos == self.prev_sel[1]:
+						start = self.prev_sel[0]
+					else:
+						start = self.prev_pos
+					print start, self.prev_pos, self.selected
+					self.set_text_cursor(start)
+					self.set_selected(pos)
+					self.set_text_cursor(pos, True)
+				else:
+					self.set_text_cursor(pos)
 			else:
 				point = self.end
 				if not self.text:
