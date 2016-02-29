@@ -41,6 +41,8 @@ class TextEditController(AbstractController):
 	lines = []
 
 	selected = []
+	drag = False
+
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
 		self.canvas.eventloop.connect(self.eventloop.DOC_MODIFIED,
@@ -132,6 +134,9 @@ class TextEditController(AbstractController):
 
 	def is_selected(self):
 		return not self.selected == []
+
+	def is_pos_in_selected(self, pos):
+		return not pos < self.selected[0] and not pos > self.selected[1]
 
 	def get_selected(self):
 		if not self.selected: return ''
@@ -257,20 +262,28 @@ class TextEditController(AbstractController):
 	def mouse_down(self, event):
 		self.start = event.get_point()
 		pos = self.get_index_by_point(self.start)
-		self.set_text_cursor(pos)
-		self.set_selected(pos)
+		if self.selected and self.is_pos_in_selected(pos):
+			self.drag = True
+			self.set_text_cursor(pos, True)
+		else:
+			self.set_text_cursor(pos)
+			self.set_selected(pos)
 
 	def mouse_move(self, event):
 		if self.start:
 			pos = self.get_index_by_point(event.get_point())
 			if not pos == self.text_cursor:
-				self.set_selected(pos)
+				if not self.drag:
+					self.set_selected(pos)
 				self.set_text_cursor(pos, True)
 
 	def mouse_up(self, event):
 		self.end = event.get_point()
 		if self.end == self.start:
-			if self.is_point_in_layout_bbox(self.end):
+			if self.drag:
+				self.drag = False
+				self.set_text_cursor(self.get_index_by_point(self.end))
+			elif self.is_point_in_layout_bbox(self.end):
 				self.set_text_cursor(self.get_index_by_point(self.end))
 			else:
 				point = self.end
@@ -286,6 +299,19 @@ class TextEditController(AbstractController):
 					self.target = self.api.create_text(doc_point)
 				self.update_from_target()
 				self.canvas.selection_redraw()
+		else:
+			if self.drag:
+				self.drag = False
+				pos = self.get_index_by_point(self.end)
+				if self.is_pos_in_selected(pos):
+					self.set_text_cursor(pos)
+				else:
+					sel = self.get_selected()
+					if pos > self.selected[1]: pos -= len(sel)
+					self._delete_text_range(self.selected)
+					self.set_text_cursor(pos)
+					self.insert_text(sel)
+
 		#---
 		self.start = []
 		self.end = []
