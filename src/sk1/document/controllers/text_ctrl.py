@@ -23,6 +23,9 @@ from sk1 import _, modes, events
 
 from generic import AbstractController
 
+NON_WORD_CHARS = ' \n\t!"#$%&\'()*+,-./:;<=>?@[\]^_`{|}~'
+NON_WORD_CHARS += '¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿÷'
+
 
 class TextEditController(AbstractController):
 
@@ -167,6 +170,8 @@ class TextEditController(AbstractController):
 		text = self.get_selected()
 		if text: self.replace_selected(text.capitalize())
 
+
+
 	#--- Keyboard calls
 	def key_left(self, shift=False):
 		if shift: self.set_selected(self.text_cursor - 1)
@@ -284,6 +289,27 @@ class TextEditController(AbstractController):
 		#---
 		self.start = []
 		self.end = []
+
+	def mouse_double_click(self, event):
+		self.end = event.get_point()
+		if self.text:
+			if self.is_point_in_layout_bbox(self.end):
+				start = self.text_cursor
+				while True:
+					if not start: break
+					if not self.text[start - 1] in NON_WORD_CHARS:
+						start -= 1
+					else: break
+				end = self.text_cursor
+				while True:
+					if end == len(self.text): break
+					if not self.text[end] in NON_WORD_CHARS:
+						end += 1
+					else: break
+				if not start == end:
+					self.selected = [start, end]
+					self.set_text_cursor(end, True)
+					events.emit(events.SELECTION_CHANGED)
 
 	#--- Text modifiers
 	def _delete_char(self, index):
