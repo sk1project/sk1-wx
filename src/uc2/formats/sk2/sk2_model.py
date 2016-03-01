@@ -103,6 +103,8 @@ class Document(DocumentObject):
 			self.styles['Default Text Style'] = deepcopy([
 				self.config.default_text_fill, [],
 				self.config.default_text_style])
+		elif len(self.styles['Default Text Style']) == 5:
+			self.styles['Default Text Style'] += [True, ]
 		DocumentObject.update(self)
 
 	def get_def_style(self):
