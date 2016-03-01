@@ -85,8 +85,10 @@ class SK2_Config(XmlConfigParser):
 	default_font_size = 12.0
 	default_text_alignment = sk2_const.TEXT_ALIGN_LEFT
 	default_text_spacing = []
+	default_cluster_flag = True
 	default_text_style = [default_font_family, default_font_face,
-			default_font_size, default_text_alignment, default_text_spacing]
+			default_font_size, default_text_alignment, default_text_spacing,
+			default_cluster_flag]
 
 	default_text_fill = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID,
 					sk2_const.CMYK_BLACK]
