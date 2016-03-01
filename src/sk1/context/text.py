@@ -21,7 +21,7 @@ from copy import deepcopy
 from uc2 import libpango
 from uc2.formats.sk2 import sk2_const
 
-from sk1 import _, events, config
+from sk1 import _, events
 from sk1.resources import icons
 
 from generic import CtxPlugin
@@ -93,6 +93,12 @@ class TextStylePlugin(CtxPlugin):
 		self.align.set_mode(sk2_const.TEXT_ALIGN_LEFT)
 		self.add(self.align, 0, wal.LEFT | wal.CENTER, 2)
 
+		self.pack(wal.VLine(self), fill=True, padding_all=3)
+
+		self.ligature = wal.ImageToggleButton(self, False, icons.PD_LIGATURE,
+						tooltip=_('Use ligatures'), onchange=self.apply_changes)
+		self.add(self.ligature, 0, wal.LEFT | wal.CENTER, 2)
+
 	def _get_styles(self):
 		ret = []
 		if self.app.current_doc:
@@ -143,6 +149,7 @@ class TextStylePlugin(CtxPlugin):
 
 		self.size_combo.set_value(text_style[2])
 		self.align.set_mode(text_style[3])
+		self.ligature.set_active(text_style[5])
 
 	def on_style_change(self):
 		style_name = self.styles[self.styles_combo.get_active()]
@@ -167,13 +174,14 @@ class TextStylePlugin(CtxPlugin):
 		face = self.faces[self.faces_combo.get_active()]
 		size = self.size_combo.get_value()
 		align = self.align.get_mode()
+		cluster_flag = self.ligature.get_value()
 		if self.target:
 			spacing = [] + self.target.style[2][4]
 			new_style = deepcopy(self.target.style)
-			new_style[2] = [family, face, size, align, spacing]
+			new_style[2] = [family, face, size, align, spacing, cluster_flag]
 			doc.api.set_obj_style(self.target, new_style)
 		else:
 			spacing = [] + doc.text_obj_style[2][4]
 			new_style = deepcopy(doc.text_obj_style)
-			new_style[2] = [family, face, size, align, spacing]
+			new_style[2] = [family, face, size, align, spacing, cluster_flag]
 			doc.text_obj_style = new_style
