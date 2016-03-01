@@ -35,7 +35,7 @@ class AppData(UCData):
 	app_icon = None
 	doc_icon = None
 	version = "2.0"
-	revision = 'rev.2200'
+	revision = ''
 	app_config_dir = os.path.expanduser(os.path.join('~', '.config', 'sk1-wx'))
 	plugin_dir = os.path.expanduser(os.path.join('~', '.config', 'sk1-wx', \
 												'sk1_custom_plugins'))
