@@ -378,6 +378,99 @@ pango_GetLayoutCharPos(PyObject *self, PyObject *args) {
 	return ret;
 }
 
+static PyObject *
+pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
+
+	int i, len, w, h;
+	double baseline, x, y, width, height, char_width, dx;
+	void *LayoutObj;
+	PangoLayout *layout;
+	PangoLayoutIter *iter;
+	PangoLayoutIter *cluster_iter;
+	PangoRectangle rect, cluster_rect;
+	PyObject *ret;
+	PyObject *layout_data;
+	PyObject *cluster_data;
+	PyObject *cluster_range;
+	PyObject *glyph_data;
+
+	if (!PyArg_ParseTuple(args, "O", &LayoutObj)) {
+		return NULL;
+	}
+
+	layout = PyCObject_AsVoidPtr(LayoutObj);
+
+	pango_layout_get_size(layout, &w, &h);
+	dx = 0.0;
+	if (pango_layout_get_alignment(layout) == PANGO_ALIGN_CENTER) {
+		dx = -0.5 * ((double) w) / PANGO_SCALE;
+	} else if (pango_layout_get_alignment(layout) == PANGO_ALIGN_RIGHT) {
+		dx = -1.0 * ((double) w) / PANGO_SCALE;
+	}
+
+	len = pango_layout_get_character_count(layout);
+
+	ret = PyTuple_New(2);
+	layout_data = PyList_New(0);
+	cluster_data = PyList_New(0);
+
+	PyTuple_SetItem(ret, 0, layout_data);
+	PyTuple_SetItem(ret, 1, cluster_data);
+
+	iter = pango_layout_get_iter(layout);
+	cluster_iter = pango_layout_get_iter(layout);
+
+	for (i = 0; i < len; i++) {
+		glyph_data = PyTuple_New(5);
+		pango_layout_iter_get_char_extents(iter, &rect);
+		pango_layout_iter_get_cluster_extents(cluster_iter, NULL, &cluster_rect);
+
+		//Processing cluster data
+
+		x = ((double) cluster_rect.x) / PANGO_SCALE + dx;
+		PyTuple_SetItem(glyph_data, 0, PyFloat_FromDouble(x));
+
+		y = -1.0 * ((double) cluster_rect.y) / PANGO_SCALE;
+		PyTuple_SetItem(glyph_data, 1, PyFloat_FromDouble(y));
+
+		width = ((double) cluster_rect.width) / PANGO_SCALE;
+		PyTuple_SetItem(glyph_data, 2, PyFloat_FromDouble(width));
+
+		height = ((double) cluster_rect.height) / PANGO_SCALE;
+		PyTuple_SetItem(glyph_data, 3, PyFloat_FromDouble(height));
+
+		baseline = -1.0 * ((double) pango_layout_iter_get_baseline(iter))
+				/ PANGO_SCALE;
+		PyTuple_SetItem(glyph_data, 4, PyFloat_FromDouble(baseline));
+
+		PyList_Append(layout_data, glyph_data);
+
+		//Iterating over chars to next cluster
+
+		if(cluster_rect.width > rect.width){
+			char_width = rect.width;
+			cluster_range = PyTuple_New(2);
+			PyTuple_SetItem(cluster_range, 0, PyInt_FromLong(i));
+			while(cluster_rect.width > char_width){
+				pango_layout_iter_next_char(iter);
+				pango_layout_iter_get_char_extents(iter, &rect);
+				char_width = char_width + rect.width;
+				i++;
+			}
+			PyTuple_SetItem(cluster_range, 1, PyInt_FromLong(i + 1));
+			PyList_Append(cluster_data, cluster_range);
+		}
+
+		pango_layout_iter_next_char(iter);
+		pango_layout_iter_next_cluster(cluster_iter);
+	}
+
+	pango_layout_iter_free(iter);
+	pango_layout_iter_free(cluster_iter);
+
+	return ret;
+}
+
 static
 PyMethodDef pango_methods[] = {
 	{"get_version", pango_GetVersion, METH_VARARGS},
@@ -394,6 +487,7 @@ PyMethodDef pango_methods[] = {
 	{"layout_path", pango_LayoutPath, METH_VARARGS},
 	{"get_layout_line_positions", pango_GetLayoutLinePos, METH_VARARGS},
 	{"get_layout_char_positions", pango_GetLayoutCharPos, METH_VARARGS},
+	{"get_layout_cluster_positions", pango_GetLayoutClusterPos, METH_VARARGS},
 	{NULL, NULL}
 };
 
