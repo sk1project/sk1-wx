@@ -136,7 +136,7 @@ def get_text_paths(text, width, text_style, attributes):
 				text_seq += (text[item[0]:item[1]],)
 				index = item[1]
 			if text[index:]:
-				text_seq += tuple(text[index:item[0]])
+				text_seq += tuple(text[index:])
 			text = text_seq
 	else:
 		layout_data = get_char_positions()
