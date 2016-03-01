@@ -98,6 +98,9 @@ def get_line_positions():
 def get_char_positions():
 	return _libpango.get_layout_char_positions(PANGO_LAYOUT)
 
+def get_cluster_positions():
+	return _libpango.get_layout_cluster_positions(PANGO_LAYOUT)
+
 def get_layout_bbox():
 	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
 	return [0.0, 0.0, float(w), float(-h)]
@@ -121,7 +124,24 @@ def get_text_paths(text, width, text_style, attributes):
 	line_points = []
 	for item in get_line_positions():
 		line_points.append([0.0, item])
-	layout_data = get_char_positions()
+
+	if text_style[5]:
+		layout_data, clusters = get_cluster_positions()
+		if clusters:
+			index = 0
+			text_seq = ()
+			for item in clusters:
+				if text[index:item[0]]:
+					text_seq += tuple(text[index:item[0]])
+				text_seq += (text[item[0]:item[1]],)
+				index = item[1]
+			if text[index:]:
+				text_seq += tuple(text[index:item[0]])
+			text = text_seq
+	else:
+		layout_data = get_char_positions()
+		clusters = []
+
 	dy = line_points[0][1]
 	layout_bbox = get_layout_bbox()
 
@@ -142,4 +162,4 @@ def get_text_paths(text, width, text_style, attributes):
 							layout_data[i][0], layout_data[i][4] - dy)
 		libcairo.apply_cmatrix(cpath, matrix)
 		glyphs.append(cpath)
-	return glyphs, line_points, layout_data, layout_bbox
+	return glyphs, line_points, layout_data, layout_bbox, clusters
