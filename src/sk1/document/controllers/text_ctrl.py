@@ -32,7 +32,7 @@ class TextEditController(AbstractController):
 
 	mode = modes.TEXT_EDIT_MODE
 	target = None
-	text = ''
+	text = ()
 	trafos = {}
 	markup = []
 
@@ -80,23 +80,49 @@ class TextEditController(AbstractController):
 		self.start = []
 		self.end = []
 		self.selection.clear()
-		self.text = self.target.get_text()
+		self.text = self.text_to_seq(self.target.get_text(),
+									self.target.cache_clusters)
 		self.trafos = deepcopy(self.target.trafos)
 		self.markup = deepcopy(self.target.markup)
 		self.update_lines()
 		self.set_text_cursor(len(self.text))
 
+	def text_to_seq(self, text, clusters):
+		if clusters:
+			index = 0
+			text_seq = ()
+			for item in clusters:
+				if text[index:item[0]]:
+					text_seq += tuple(text[index:item[0]])
+				text_seq += (text[item[0]:item[1]],)
+				index = item[1]
+			if text[index:]:
+				text_seq += tuple(text[index:])
+			return text_seq
+		else:
+			return tuple(text)
+
+	def seq_to_text(self, seq):
+		return ''.join(seq)
+
 	def update_target(self):
-		self.presenter.api.change_text(self.target, '' + self.text,
+		self.presenter.api.change_text(self.target, self.seq_to_text(self.text),
 								deepcopy(self.trafos), deepcopy(self.markup))
+		self.text = self.text_to_seq(self.target.get_text(),
+									self.target.cache_clusters)
 		self.update_lines()
 
 	def update_lines(self):
 		self.lines = []
 		index = 0
-		for item in self.text.split('\n'):
-			self.lines.append((index, index + len(item)))
-			index += len(item) + 1
+		i = 0
+		for item in self.text:
+			if item == '\n':
+				self.lines.append((index, i))
+				index = i
+			i += 1
+		if not self.lines:
+			self.lines.append((index, i))
 
 	def set_line_pos(self):
 		index = 0
@@ -143,7 +169,7 @@ class TextEditController(AbstractController):
 
 	def get_selected(self):
 		if not self.selected: return ''
-		return self.text[self.selected[0]:self.selected[1]]
+		return ''.join(self.text[self.selected[0]:self.selected[1]])
 
 	def delete_selected(self):
 		if self.selected:
@@ -177,8 +203,6 @@ class TextEditController(AbstractController):
 	def capitalize_selected(self):
 		text = self.get_selected()
 		if text: self.replace_selected(text.capitalize())
-
-
 
 	#--- Keyboard calls
 	def key_left(self, shift=False):
@@ -378,9 +402,9 @@ class TextEditController(AbstractController):
 
 	def _insert_text(self, text, index):
 		if index == len(self.text):
-			self.text += text
+			self.text += tuple(text)
 		else:
-			self.text = self.text[:index] + text + self.text[index:]
+			self.text = self.text[:index] + tuple(text) + self.text[index:]
 		trafos = {}
 		for item in self.trafos.keys():
 			if item < index:
