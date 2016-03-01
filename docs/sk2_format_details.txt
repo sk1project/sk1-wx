@@ -76,7 +76,7 @@ STROKE DEFINITION:
 
 TEXT STYLE DEFINITION
 
-[font-family, font-face, size, alignment, spacing]
+[font-family, font-face, size, alignment, spacing, cluster_flag]
 
 -------------------------------------------------------------------------------
 
