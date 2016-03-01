@@ -319,7 +319,7 @@ pango_GetLayoutLinePos(PyObject *self, PyObject *args) {
 }
 
 static PyObject *
-pango_GetLayoutGlyphPos(PyObject *self, PyObject *args) {
+pango_GetLayoutCharPos(PyObject *self, PyObject *args) {
 
 	int i, len, w, h;
 	double baseline, x, y, width, height, dx;
@@ -393,7 +393,7 @@ PyMethodDef pango_methods[] = {
 	{"get_layout_pixel_size", pango_GetLayoutPixelSize, METH_VARARGS},
 	{"layout_path", pango_LayoutPath, METH_VARARGS},
 	{"get_layout_line_positions", pango_GetLayoutLinePos, METH_VARARGS},
-	{"get_layout_glyph_positions", pango_GetLayoutGlyphPos, METH_VARARGS},
+	{"get_layout_char_positions", pango_GetLayoutCharPos, METH_VARARGS},
 	{NULL, NULL}
 };
 

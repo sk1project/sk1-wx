@@ -95,8 +95,8 @@ def _set_layout(layout, text, width, text_style, attributes):
 def get_line_positions():
 	return _libpango.get_layout_line_positions(PANGO_LAYOUT)
 
-def get_glyph_positions():
-	return _libpango.get_layout_glyph_positions(PANGO_LAYOUT)
+def get_char_positions():
+	return _libpango.get_layout_char_positions(PANGO_LAYOUT)
 
 def get_layout_bbox():
 	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
@@ -121,7 +121,7 @@ def get_text_paths(text, width, text_style, attributes):
 	line_points = []
 	for item in get_line_positions():
 		line_points.append([0.0, item])
-	layout_data = get_glyph_positions()
+	layout_data = get_char_positions()
 	dy = line_points[0][1]
 	layout_bbox = get_layout_bbox()
 
