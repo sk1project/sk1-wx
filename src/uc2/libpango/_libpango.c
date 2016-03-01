@@ -25,6 +25,11 @@
 static Pycairo_CAPI_t *Pycairo_CAPI;
 
 static PyObject *
+pango_GetVersion(PyObject *self, PyObject *args) {
+	return PyString_FromString(pango_version_string());
+}
+
+static PyObject *
 pango_GetFontMap(PyObject *self, PyObject *args) {
 
 	PangoFontMap *fm;
@@ -375,6 +380,7 @@ pango_GetLayoutGlyphPos(PyObject *self, PyObject *args) {
 
 static
 PyMethodDef pango_methods[] = {
+	{"get_version", pango_GetVersion, METH_VARARGS},
 	{"get_fontmap", pango_GetFontMap, METH_VARARGS},
 	{"create_pcctx", pango_CreateContext, METH_VARARGS},
 	{"create_layout", pango_CreateLayout, METH_VARARGS},

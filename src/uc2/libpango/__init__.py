@@ -40,6 +40,9 @@ FAMILIES_DICT = {}
 
 GLYPH_CACHE = {}
 
+def get_version():
+	return _libpango.get_version()
+
 def bbox_size(bbox):
 	x0, y0, x1, y1 = bbox
 	w = abs(x1 - x0)
