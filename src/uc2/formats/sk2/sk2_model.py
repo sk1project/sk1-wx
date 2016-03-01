@@ -700,6 +700,7 @@ class Text(PrimitiveObject):
 	cache_line_points = []
 	cache_layout_data = ()
 	cache_layout_bbox = []
+	cache_clusters = []
 
 	def __init__(self, config, parent=None,
 				point=[0.0, 0.0],
@@ -732,10 +733,11 @@ class Text(PrimitiveObject):
 	def is_closed(self): return True
 
 	def get_glyphs(self):
-		glyphs, points, data, bbox = libgeom.get_text_glyphs(self.get_text(),
+		glyphs, points, data, bbox, cl = libgeom.get_text_glyphs(self.get_text(),
 									self.width, self.style[2], self.markup)
 		self.cache_line_points = points
 		self.cache_layout_data = data
+		self.cache_clusters = cl
 		dx = 0.0
 		if self.style[2][3] == sk2_const.TEXT_ALIGN_CENTER: dx = -bbox[2] / 2.0
 		if self.style[2][3] == sk2_const.TEXT_ALIGN_RIGHT: dx = -bbox[2]
