@@ -114,15 +114,18 @@ class TextEditController(AbstractController):
 
 	def update_lines(self):
 		self.lines = []
-		index = 0
 		i = 0
+		indexes = [0, ]
 		for item in self.text:
-			if item == '\n':
-				self.lines.append((index, i))
-				index = i
 			i += 1
-		if not self.lines:
-			self.lines.append((index, i))
+			if item == '\n':
+				indexes.append(i)
+				indexes.append(i)
+		indexes.append(len(self.text))
+		i = 0
+		while i < len(indexes):
+			self.lines.append((indexes[i], indexes[i + 1]))
+			i += 2
 
 	def set_line_pos(self):
 		index = 0
@@ -349,7 +352,8 @@ class TextEditController(AbstractController):
 					self.set_text_cursor(pos)
 				else:
 					sel = self.get_selected()
-					if pos > self.selected[1]: pos -= len(sel)
+					if pos > self.selected[1]:
+						pos -= self.selected[1] - self.selected[0]
 					self._delete_text_range(self.selected)
 					self.set_text_cursor(pos)
 					self.insert_text(sel)
