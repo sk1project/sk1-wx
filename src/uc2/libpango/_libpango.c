@@ -422,6 +422,35 @@ pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 
 	for (i = 0; i < len; i++) {
 		glyph_data = PyTuple_New(5);
+
+		if(pango_layout_iter_get_baseline(cluster_iter) !=
+				pango_layout_iter_get_baseline(iter)) {
+
+			pango_layout_iter_get_char_extents(iter, &rect);
+
+			x = ((double) rect.x) / PANGO_SCALE + dx;
+			PyTuple_SetItem(glyph_data, 0, PyFloat_FromDouble(x));
+
+			y = -1.0 * ((double) rect.y) / PANGO_SCALE;
+			PyTuple_SetItem(glyph_data, 1, PyFloat_FromDouble(y));
+
+			width = ((double) rect.width) / PANGO_SCALE;
+			PyTuple_SetItem(glyph_data, 2, PyFloat_FromDouble(width));
+
+			height = ((double) rect.height) / PANGO_SCALE;
+			PyTuple_SetItem(glyph_data, 3, PyFloat_FromDouble(height));
+
+			baseline = -1.0 * ((double) pango_layout_iter_get_baseline(iter))
+					/ PANGO_SCALE;
+			PyTuple_SetItem(glyph_data, 4, PyFloat_FromDouble(baseline));
+
+			PyList_Append(layout_data, glyph_data);
+
+			pango_layout_iter_next_char(iter);
+			i++;
+			glyph_data = PyTuple_New(5);
+		}
+
 		pango_layout_iter_get_char_extents(iter, &rect);
 		pango_layout_iter_get_cluster_extents(cluster_iter, NULL, &cluster_rect);
 
@@ -439,7 +468,7 @@ pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 		height = ((double) cluster_rect.height) / PANGO_SCALE;
 		PyTuple_SetItem(glyph_data, 3, PyFloat_FromDouble(height));
 
-		baseline = -1.0 * ((double) pango_layout_iter_get_baseline(iter))
+		baseline = -1.0 * ((double) pango_layout_iter_get_baseline(cluster_iter))
 				/ PANGO_SCALE;
 		PyTuple_SetItem(glyph_data, 4, PyFloat_FromDouble(baseline));
 
