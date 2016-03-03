@@ -785,6 +785,14 @@ class Text(PrimitiveObject):
 		group.update()
 		return group
 
+	def get_transformed_paths(self):
+		ret = []
+		for item in self.cache_cpath:
+			if item:
+				paths = libgeom.get_paths_from_glyph(item)
+				if paths: ret += paths
+		return ret
+
 	def update(self):
 		self.cache_cpath = self.get_glyphs()
 		index = 0
