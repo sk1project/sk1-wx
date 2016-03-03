@@ -290,7 +290,7 @@ static PyObject *
 pango_GetLayoutLinePos(PyObject *self, PyObject *args) {
 
 	int i, len;
-	double baseline;
+	double baseline, dy;
 	void *LayoutObj;
 	PangoLayout *layout;
 	PangoLayoutIter *iter;
@@ -305,10 +305,11 @@ pango_GetLayoutLinePos(PyObject *self, PyObject *args) {
 	len = pango_layout_get_line_count(layout);
 	ret = PyTuple_New(len);
 	iter = pango_layout_get_iter(layout);
+	dy = ((double) pango_layout_iter_get_baseline(iter)) / PANGO_SCALE;
 
 	for (i = 0; i < len; i++) {
 		baseline = -1.0 * ((double) pango_layout_iter_get_baseline(iter))
-				/ PANGO_SCALE;
+				/ PANGO_SCALE + dy;
 		PyTuple_SetItem(ret, i, PyFloat_FromDouble(baseline));
 		pango_layout_iter_next_line(iter);
 	}
@@ -322,7 +323,7 @@ static PyObject *
 pango_GetLayoutCharPos(PyObject *self, PyObject *args) {
 
 	int i, len, w, h;
-	double baseline, x, y, width, height, dx;
+	double baseline, x, y, width, height, dx, dy;
 	void *LayoutObj;
 	PangoLayout *layout;
 	PangoLayoutIter *iter;
@@ -348,6 +349,8 @@ pango_GetLayoutCharPos(PyObject *self, PyObject *args) {
 	ret = PyTuple_New(len);
 	iter = pango_layout_get_iter(layout);
 
+	dy = ((double) pango_layout_iter_get_baseline(iter)) / PANGO_SCALE;
+
 	for (i = 0; i < len; i++) {
 		glyph_data = PyTuple_New(5);
 		pango_layout_iter_get_char_extents(iter, &rect);
@@ -355,7 +358,7 @@ pango_GetLayoutCharPos(PyObject *self, PyObject *args) {
 		x = ((double) rect.x) / PANGO_SCALE + dx;
 		PyTuple_SetItem(glyph_data, 0, PyFloat_FromDouble(x));
 
-		y = -1.0 * ((double) rect.y) / PANGO_SCALE;
+		y = -1.0 * ((double) rect.y) / PANGO_SCALE + dy;
 		PyTuple_SetItem(glyph_data, 1, PyFloat_FromDouble(y));
 
 		width = ((double) rect.width) / PANGO_SCALE;
@@ -365,7 +368,7 @@ pango_GetLayoutCharPos(PyObject *self, PyObject *args) {
 		PyTuple_SetItem(glyph_data, 3, PyFloat_FromDouble(height));
 
 		baseline = -1.0 * ((double) pango_layout_iter_get_baseline(iter))
-				/ PANGO_SCALE;
+				/ PANGO_SCALE + dy;
 		PyTuple_SetItem(glyph_data, 4, PyFloat_FromDouble(baseline));
 
 		pango_layout_iter_next_char(iter);
@@ -382,7 +385,7 @@ static PyObject *
 pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 
 	int i, len, w, h;
-	double baseline, x, y, width, height, char_width, dx;
+	double baseline, x, y, width, height, char_width, dx, dy;
 	void *LayoutObj;
 	PangoLayout *layout;
 	PangoLayoutIter *iter;
@@ -420,6 +423,8 @@ pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 	iter = pango_layout_get_iter(layout);
 	cluster_iter = pango_layout_get_iter(layout);
 
+	dy = ((double) pango_layout_iter_get_baseline(iter)) / PANGO_SCALE;
+
 	for (i = 0; i < len; i++) {
 		glyph_data = PyTuple_New(5);
 
@@ -431,7 +436,7 @@ pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 			x = ((double) rect.x) / PANGO_SCALE + dx;
 			PyTuple_SetItem(glyph_data, 0, PyFloat_FromDouble(x));
 
-			y = -1.0 * ((double) rect.y) / PANGO_SCALE;
+			y = -1.0 * ((double) rect.y) / PANGO_SCALE + dy;
 			PyTuple_SetItem(glyph_data, 1, PyFloat_FromDouble(y));
 
 			width = ((double) rect.width) / PANGO_SCALE;
@@ -441,7 +446,7 @@ pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 			PyTuple_SetItem(glyph_data, 3, PyFloat_FromDouble(height));
 
 			baseline = -1.0 * ((double) pango_layout_iter_get_baseline(iter))
-					/ PANGO_SCALE;
+					/ PANGO_SCALE + dy;
 			PyTuple_SetItem(glyph_data, 4, PyFloat_FromDouble(baseline));
 
 			PyList_Append(layout_data, glyph_data);
@@ -459,7 +464,7 @@ pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 		x = ((double) cluster_rect.x) / PANGO_SCALE + dx;
 		PyTuple_SetItem(glyph_data, 0, PyFloat_FromDouble(x));
 
-		y = -1.0 * ((double) cluster_rect.y) / PANGO_SCALE;
+		y = -1.0 * ((double) cluster_rect.y) / PANGO_SCALE + dy;
 		PyTuple_SetItem(glyph_data, 1, PyFloat_FromDouble(y));
 
 		width = ((double) cluster_rect.width) / PANGO_SCALE;
@@ -469,7 +474,7 @@ pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 		PyTuple_SetItem(glyph_data, 3, PyFloat_FromDouble(height));
 
 		baseline = -1.0 * ((double) pango_layout_iter_get_baseline(cluster_iter))
-				/ PANGO_SCALE;
+				/ PANGO_SCALE + dy;
 		PyTuple_SetItem(glyph_data, 4, PyFloat_FromDouble(baseline));
 
 		PyList_Append(layout_data, glyph_data);
