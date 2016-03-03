@@ -110,7 +110,7 @@ def get_text_paths(text, width, text_style, attributes):
 	_set_layout(PANGO_LAYOUT, text, width, text_style, attributes)
 	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
 
-	surf = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
+	surf = cairo.ImageSurface(cairo.FORMAT_RGB24, 100, 100)
 	ctx = cairo.Context(surf)
 	ctx.set_matrix(libcairo.DIRECT_MATRIX)
 
@@ -142,8 +142,8 @@ def get_text_paths(text, width, text_style, attributes):
 		layout_data = get_char_positions()
 		clusters = []
 
-	dy = line_points[0][1]
-	layout_bbox = get_layout_bbox()
+	layout_bbox = [layout_data[0][0], layout_data[0][1],
+					float(w), layout_data[0][1] - float(h)]
 
 	glyphs = []
 	i = -1
@@ -159,7 +159,7 @@ def get_text_paths(text, width, text_style, attributes):
 		_libpango.layout_path(ctx, layout)
 		cpath = ctx.copy_path()
 		matrix = cairo.Matrix(1.0, 0.0, 0.0, -1.0,
-							layout_data[i][0], layout_data[i][4] - dy)
+							layout_data[i][0], layout_data[i][1])
 		libcairo.apply_cmatrix(cpath, matrix)
 		glyphs.append(cpath)
 	return glyphs, line_points, layout_data, layout_bbox, clusters
