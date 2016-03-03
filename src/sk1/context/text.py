@@ -58,6 +58,7 @@ class TextStylePlugin(CtxPlugin):
 		CtxPlugin.__init__(self, app, parent)
 		events.connect(events.DOC_CHANGED, self.update)
 		events.connect(events.DOC_MODIFIED, self.update)
+		events.connect(events.SELECTION_CHANGED, self.update)
 
 	def build(self):
 		self.styles = self._get_styles()
@@ -113,6 +114,7 @@ class TextStylePlugin(CtxPlugin):
 		self.update()
 
 	def update(self, *args):
+		if not self.is_shown(): return
 		if not self.app.current_doc: return
 		doc = self.app.current_doc
 		sel = doc.selection.objs
