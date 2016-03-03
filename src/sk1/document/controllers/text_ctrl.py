@@ -247,7 +247,7 @@ class TextEditController(AbstractController):
 			self.delete_selected()
 		elif self.text_cursor > 0:
 			self.set_text_cursor(self.text_cursor - 1)
-			self.delete_char()
+			self.delete_char(False)
 
 	def key_del(self):
 		if self.selected:
@@ -384,13 +384,20 @@ class TextEditController(AbstractController):
 					events.emit(events.SELECTION_CHANGED)
 
 	#--- Text modifiers
-	def _delete_char(self, index):
-		if index == len(self.text) - 1:
-			self.text = self.text[:-1]
+	def _delete_char(self, index, forward=True):
+		if len(self.text[index]) > 1 and not self.selected:
+			chars = self.text[index]
+			if forward: chars = chars[1:]
+			else: chars = chars[:-1]
+			self.text = self.text[:index] + tuple(chars) + self.text[index + 1:]
+			#TODO: process trafo
 		else:
-			self.text = self.text[:index] + self.text[index + 1:]
-		if index in self.trafos:
-			self.trafos.pop(index, None)
+			if index == len(self.text) - 1:
+				self.text = self.text[:-1]
+			else:
+				self.text = self.text[:index] + self.text[index + 1:]
+			if index in self.trafos:
+				self.trafos.pop(index, None)
 
 	def _delete_text_range(self, text_range):
 		if text_range[1] == len(self.text):
@@ -421,9 +428,9 @@ class TextEditController(AbstractController):
 				trafos[item + len(text)] = self.trafos[item]
 		self.trafos = trafos
 
-	def delete_char(self):
+	def delete_char(self, forward=True):
 		if self.text_cursor < len(self.text):
-			self._delete_char(self.text_cursor)
+			self._delete_char(self.text_cursor, forward)
 			self.update_target()
 
 	def insert_text(self, text):
