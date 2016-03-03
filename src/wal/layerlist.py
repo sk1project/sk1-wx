@@ -77,6 +77,7 @@ class LayerList(UltimateListCtrl):
 		self.data = data
 		self.SetItemCount(len(self.data))
 		self.selection_flag = True
+		if data:self.set_selected(0)
 
 	def set_selected(self, index):
 		self.selection_flag = False
