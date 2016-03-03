@@ -61,6 +61,8 @@ def apply_trafo_to_bbox(bbox, trafo):
 def get_transformed_paths(obj):
 	if obj.is_curve():
 		return apply_trafo_to_paths(obj.paths, obj.trafo)
+	elif obj.is_text():
+		return obj.get_transformed_paths()
 	elif obj.cache_paths:
 		return apply_trafo_to_paths(obj.cache_paths, obj.trafo)
 	else:
