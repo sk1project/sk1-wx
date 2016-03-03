@@ -405,6 +405,10 @@ class TextEditController(AbstractController):
 				self.trafos.pop(item, None)
 
 	def _insert_text(self, text, index):
+		if self.selected:
+			index = self.selected[0]
+			self._delete_text_range(self.selected)
+			self.set_text_cursor(self.selected[0])
 		if index == len(self.text):
 			self.text += tuple(text)
 		else:
