@@ -806,7 +806,8 @@ class Text(PrimitiveObject):
 		self.update_bbox()
 
 	def update_bbox(self):
-		self.cache_bbox = []
+		bp = libgeom.apply_trafo_to_point([0.0, 0.0], self.trafo)
+		self.cache_bbox = 2 * bp
 		index = 0
 		for item in self.cache_cpath:
 			if not item:
