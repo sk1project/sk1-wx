@@ -18,6 +18,7 @@
 
 import cairo
 import cgi
+import unicodedata
 from copy import deepcopy
 
 from uc2 import libcairo
@@ -126,7 +127,7 @@ def get_text_paths(text, width, text_style, attributes):
 		line_points.append([0.0, item])
 
 	if text_style[5]:
-		layout_data, clusters = get_cluster_positions()
+		layout_data, clusters, rtl_flag = get_cluster_positions()
 		if clusters:
 			index = 0
 			text_seq = ()
@@ -141,17 +142,49 @@ def get_text_paths(text, width, text_style, attributes):
 	else:
 		layout_data = get_char_positions()
 		clusters = []
+		rtl_flag = False
 
-	layout_bbox = [layout_data[0][0], layout_data[0][1],
+	layout_bbox = [0.0, layout_data[0][1],
 					float(w), layout_data[0][1] - float(h)]
+
+	if rtl_flag:
+		rtl_regs = []
+		reg = []
+		i = 0
+		while i < len(layout_data) - 1:
+			if not reg and layout_data[i][5] > layout_data[i + 1][5]:
+				reg.append(i)
+			elif reg and layout_data[i][5] < layout_data[i + 1][5]:
+				reg.append(i + 1)
+				rtl_regs.append(reg)
+				reg = []
+			i += 1
+		if reg:
+			reg.append(i + 1)
+			rtl_regs.append(reg)
+
+		if rtl_regs:
+			index = 0
+			text_seq = ()
+			for item in rtl_regs:
+				if text[index:item[0]]:
+					text_seq += tuple(text[index:item[0]])
+				text_seq += (''.join(text[item[0]:item[1]]),)
+				text_seq += (len(text[item[0]:item[1]]) - 1) * (' ',)
+				index = item[1]
+			if text[index:]:
+				text_seq += tuple(text[index:])
+			text = text_seq
 
 	glyphs = []
 	i = -1
 	for item in text:
 		i += 1
+
 		if item in NONPRINTING_CHARS:
 			glyphs.append(None)
 			continue
+
 		ctx.new_path()
 		ctx.move_to(0, 0)
 		layout = _libpango.create_layout(ctx)
@@ -162,4 +195,5 @@ def get_text_paths(text, width, text_style, attributes):
 							layout_data[i][0], layout_data[i][1])
 		libcairo.apply_cmatrix(cpath, matrix)
 		glyphs.append(cpath)
+
 	return glyphs, line_points, layout_data, layout_bbox, clusters
