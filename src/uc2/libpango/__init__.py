@@ -147,6 +147,7 @@ def get_text_paths(text, width, text_style, attributes):
 	layout_bbox = [0.0, layout_data[0][1],
 					float(w), layout_data[0][1] - float(h)]
 
+	rtl_regs = []
 	if rtl_flag:
 		rtl_regs = []
 		reg = []
@@ -195,5 +196,24 @@ def get_text_paths(text, width, text_style, attributes):
 							layout_data[i][0], layout_data[i][1])
 		libcairo.apply_cmatrix(cpath, matrix)
 		glyphs.append(cpath)
+
+	if rtl_regs:
+		index = 0
+		data = []
+		for item in rtl_regs:
+			if layout_data[index:item[0]]:
+				data += layout_data[index:item[0]]
+			rtl = layout_data[item[0]:item[1]]
+			rtl.reverse()
+			i = 0
+			while i < len(rtl):
+				x, y, w, h, bl, j = rtl[i]
+				rtl[i] = (x + w, y, -w, h, bl, j)
+				i += 1
+			data += rtl
+			index = item[1]
+		if layout_data[index:]:
+			data += layout_data[index:]
+		layout_data = data
 
 	return glyphs, line_points, layout_data, layout_bbox, clusters
