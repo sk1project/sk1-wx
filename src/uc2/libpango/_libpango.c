@@ -431,7 +431,7 @@ pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 	for (i = 0; i < len; i++) {
 		glyph_data = PyTuple_New(6);
 
-		if(pango_layout_iter_get_baseline(cluster_iter) !=
+		while (pango_layout_iter_get_baseline(cluster_iter) !=
 				pango_layout_iter_get_baseline(iter)) {
 
 			pango_layout_iter_get_char_extents(iter, &rect);
