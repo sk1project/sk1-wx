@@ -129,12 +129,19 @@ class TextEditController(AbstractController):
 
 	def set_line_pos(self):
 		index = 0
-		for line in self.lines:
-			if not self.text_cursor > line[1]:
-				self.line_num = index
-				break
-			index += 1
-		self.line_pos = self.text_cursor - line[0]
+		if self.text_cursor == len(self.text):
+			self.line_num = len(self.lines) - 1
+			self.line_pos = self.text_cursor - self.lines[-1][0]
+		else:
+			for line in self.lines:
+				if not self.text_cursor >= line[1]:
+					self.line_num = index
+					break
+				index += 1
+			self.line_pos = self.text_cursor - line[0]
+
+	def get_line_width(self, num):
+		return self.lines[num][1] - self.lines[num][0]
 
 	def set_text_cursor(self, pos, selection=False):
 		if pos < 0: pos = 0
@@ -218,19 +225,24 @@ class TextEditController(AbstractController):
 
 	def key_up(self, shift=False):
 		if not self.line_num: return
-		self.line_num -= 1
-		line = self.lines[self.line_num]
-		pos = self.line_pos + line[0]
-		if not pos < line[1]: pos = line[1]
+		pos = self.lines[self.line_num - 1][0]
+		if self.line_pos < self.get_line_width(self.line_num - 1) - 1:
+			pos += self.line_pos
+		else:
+			pos += self.get_line_width(self.line_num - 1) - 1
 		if shift: self.set_selected(pos)
 		self.set_text_cursor(pos, shift)
 
 	def key_down(self, shift=False):
 		if not self.line_num < len(self.lines) - 1: return
-		self.line_num += 1
-		line = self.lines[self.line_num]
-		pos = self.line_pos + line[0]
-		if not pos < line[1]: pos = line[1]
+		pos = self.lines[self.line_num + 1][0]
+		if self.line_num + 1 == len(self.lines) - 1 and \
+		not self.get_line_width(self.line_num + 1):
+			pos += 1
+		if self.line_pos < self.get_line_width(self.line_num + 1) - 1:
+			pos += self.line_pos
+		else:
+			pos += self.get_line_width(self.line_num + 1) - 1
 		if shift: self.set_selected(pos)
 		self.set_text_cursor(pos, shift)
 
@@ -239,8 +251,11 @@ class TextEditController(AbstractController):
 		self.set_text_cursor(self.lines[self.line_num][0], shift)
 
 	def key_end(self, shift=False):
-		if shift: self.set_selected(self.lines[self.line_num][1])
-		self.set_text_cursor(self.lines[self.line_num][1], shift)
+		pos = self.lines[self.line_num][1] - 1
+		if self.line_num == len(self.lines) - 1:
+			pos = self.lines[-1][1]
+		if shift: self.set_selected(pos)
+		self.set_text_cursor(pos, shift)
 
 	def key_backspace(self):
 		if self.selected:
