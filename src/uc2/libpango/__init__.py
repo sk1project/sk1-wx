@@ -203,7 +203,6 @@ def get_text_paths(orig_text, width, text_style, attributes):
 	rtl_flag = False
 	if text_style[5]:
 		layout_data, clusters, bidi_flag, rtl_flag = get_cluster_positions()
-		print bidi_flag, rtl_flag
 		if clusters and not rtl_flag:
 			text = cluster_text(text, clusters)
 			if check_manyamar(orig_text):
