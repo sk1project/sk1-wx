@@ -35,6 +35,61 @@ PANGO_MATRIX = cairo.Matrix(1.0, 0.0, 0.0, -1.0, 0.0, 0.0)
 PANGO_LAYOUT = _libpango.create_layout(CTX)
 NONPRINTING_CHARS = ' \n\t'
 
+MYANMAR = (u'\u1000', u'\u109f')
+MYANMAR_EXT = (u'\uaa60', u'\uaa7f')
+ARABIC = (u'\u0600', u'\u06ff')
+ARABIC_SUPPLEMENT = (u'\u0750', u'\u077f')
+ARABIC_FORMS_A = (u'\ufb50', u'\ufdff')
+ARABIC_FORMS_B = (u'\ufe70', u'\ufeff')
+
+
+def check_unicode_range(rng, symbol):
+	return rng[0] <= symbol and rng[1] >= symbol
+
+def check_lang(text, ranges):
+	test = text
+	if len(test) > 20: test = test[:20]
+	ret = False
+	for item in test:
+		for reg in ranges:
+			if check_unicode_range(reg, item): ret = True
+		if ret: break
+	return ret
+
+def check_manyamar(text):
+	return check_lang(text, (MYANMAR, MYANMAR_EXT))
+
+def check_arabic(text):
+	return check_lang(text, (ARABIC, ARABIC_SUPPLEMENT,
+							ARABIC_FORMS_A, ARABIC_FORMS_B))
+
+def cluster_text(text, clusters):
+	index = 0
+	text_seq = []
+	for item in clusters:
+		if text[index:item[0]]:
+			text_seq += list(text[index:item[0]])
+		text_seq += [text[item[0]:item[1]], ]
+		index = item[1]
+	if text[index:]:
+		text_seq += list(text[index:])
+	return text_seq
+
+def word_group(text_seq):
+	i = 0
+	index = None
+	while i < len(text_seq):
+		if not index is None:
+			if not text_seq[i] in NONPRINTING_CHARS:
+				text_seq[index] += text_seq[i]
+				text_seq[i] = ' '
+			else:
+				index = None
+		else:
+			if not text_seq[i] in NONPRINTING_CHARS:
+				index = i
+		i += 1
+
 
 FAMILIES_LIST = []
 FAMILIES_DICT = {}
@@ -106,9 +161,26 @@ def get_layout_bbox():
 	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
 	return [0.0, 0.0, float(w), float(-h)]
 
-def get_text_paths(text, width, text_style, attributes):
-	if not text: text = NONPRINTING_CHARS[0]
-	_set_layout(PANGO_LAYOUT, text, width, text_style, attributes)
+def find_rtl_regs(layout_data):
+	rtl_regs = []
+	reg = []
+	i = 0
+	while i < len(layout_data) - 1:
+		if not reg and layout_data[i][5] > layout_data[i + 1][5]:
+			reg.append(i)
+		elif reg and layout_data[i][5] < layout_data[i + 1][5]:
+			reg.append(i + 1)
+			rtl_regs.append(reg)
+			reg = []
+		i += 1
+	if reg:
+		reg.append(i + 1)
+		rtl_regs.append(reg)
+	return rtl_regs
+
+def get_text_paths(orig_text, width, text_style, attributes):
+	if not orig_text: orig_text = NONPRINTING_CHARS[0]
+	_set_layout(PANGO_LAYOUT, orig_text, width, text_style, attributes)
 	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
 
 	surf = cairo.ImageSurface(cairo.FORMAT_RGB24, 100, 100)
@@ -118,7 +190,7 @@ def get_text_paths(text, width, text_style, attributes):
 	ctx.new_path()
 	ctx.move_to(0, 0)
 	layout = _libpango.create_layout(ctx)
-	_set_layout(layout, text, width, text_style, attributes)
+	_set_layout(layout, orig_text, width, text_style, attributes)
 	_libpango.layout_path(ctx, layout)
 	cpath = ctx.copy_path()
 
@@ -126,43 +198,27 @@ def get_text_paths(text, width, text_style, attributes):
 	for item in get_line_positions():
 		line_points.append([0.0, item])
 
+	text = '' + orig_text
+	clusters = []
+	rtl_flag = False
 	if text_style[5]:
-		layout_data, clusters, rtl_flag = get_cluster_positions()
-		if clusters:
-			index = 0
-			text_seq = ()
-			for item in clusters:
-				if text[index:item[0]]:
-					text_seq += tuple(text[index:item[0]])
-				text_seq += (text[item[0]:item[1]],)
-				index = item[1]
-			if text[index:]:
-				text_seq += tuple(text[index:])
-			text = text_seq
+		layout_data, clusters, bidi_flag, rtl_flag = get_cluster_positions()
+		print bidi_flag, rtl_flag
+		if clusters and not rtl_flag:
+			text = cluster_text(text, clusters)
+			if check_manyamar(orig_text):
+				word_group(text)
 	else:
 		layout_data = get_char_positions()
-		clusters = []
-		rtl_flag = False
 
 	layout_bbox = [0.0, layout_data[0][1],
 					float(w), layout_data[0][1] - float(h)]
 
+
 	rtl_regs = []
 	if rtl_flag:
-		rtl_regs = []
-		reg = []
-		i = 0
-		while i < len(layout_data) - 1:
-			if not reg and layout_data[i][5] > layout_data[i + 1][5]:
-				reg.append(i)
-			elif reg and layout_data[i][5] < layout_data[i + 1][5]:
-				reg.append(i + 1)
-				rtl_regs.append(reg)
-				reg = []
-			i += 1
-		if reg:
-			reg.append(i + 1)
-			rtl_regs.append(reg)
+		rtl_regs = find_rtl_regs(layout_data)
+		text = cluster_text(text, clusters)
 
 		if rtl_regs:
 			index = 0
