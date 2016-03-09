@@ -384,13 +384,15 @@ pango_GetLayoutCharPos(PyObject *self, PyObject *args) {
 static PyObject *
 pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 
-	int i, len, w, h, index, prev_index, rtl_flag;
+	int i, len, w, h, index, prev_index;
+	int ltr_flag, rtl_flag;
 	double baseline, x, y, width, height, char_width, dx, dy;
 	void *LayoutObj;
 	PangoLayout *layout;
 	PangoLayoutIter *iter;
 	PangoLayoutIter *cluster_iter;
 	PangoRectangle rect, cluster_rect;
+	PangoDirection dir;
 	PyObject *ret;
 	PyObject *layout_data;
 	PyObject *cluster_data;
@@ -413,7 +415,7 @@ pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 
 	len = pango_layout_get_character_count(layout);
 
-	ret = PyTuple_New(3);
+	ret = PyTuple_New(4);
 	layout_data = PyList_New(0);
 	cluster_data = PyList_New(0);
 
@@ -425,11 +427,14 @@ pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 
 	prev_index = -1;
 	rtl_flag = 0;
+	ltr_flag = 0;
 
 	dy = ((double) pango_layout_iter_get_baseline(iter)) / PANGO_SCALE;
 
 	for (i = 0; i < len; i++) {
 		glyph_data = PyTuple_New(6);
+
+		//Processing EOL
 
 		while (pango_layout_iter_get_baseline(cluster_iter) !=
 				pango_layout_iter_get_baseline(iter)) {
@@ -454,9 +459,6 @@ pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 
 			//index processing
 			index=pango_layout_iter_get_index(cluster_iter);
-			if(index < prev_index){
-				rtl_flag=1;
-			}
 			prev_index = index;
 			PyTuple_SetItem(glyph_data, 5, PyInt_FromLong(index));
 
@@ -490,8 +492,12 @@ pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 
 		//index processing
 		index=pango_layout_iter_get_index(cluster_iter);
-		if(index < prev_index){
-			rtl_flag=1;
+		if (prev_index != -1){
+			if(index < prev_index){
+				rtl_flag=1;
+			}else if(index > prev_index){
+				ltr_flag=1;
+			}
 		}
 		prev_index = index;
 		PyTuple_SetItem(glyph_data, 5, PyInt_FromLong(index));
@@ -521,7 +527,18 @@ pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 	pango_layout_iter_free(iter);
 	pango_layout_iter_free(cluster_iter);
 
-	PyTuple_SetItem(ret, 2, PyBool_FromLong(rtl_flag));
+	if(rtl_flag + ltr_flag == 2){
+		PyTuple_SetItem(ret, 2, PyBool_FromLong(1));
+	}else{
+		PyTuple_SetItem(ret, 2, PyBool_FromLong(0));
+	}
+
+	dir = pango_find_base_dir(pango_layout_get_text(layout),-1);
+	if(dir == PANGO_DIRECTION_RTL) {
+		PyTuple_SetItem(ret, 3, PyBool_FromLong(1));
+	} else {
+		PyTuple_SetItem(ret, 3, PyBool_FromLong(0));
+	}
 
 	return ret;
 }
