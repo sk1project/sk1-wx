@@ -178,6 +178,24 @@ def find_rtl_regs(layout_data):
 		rtl_regs.append(reg)
 	return rtl_regs
 
+def fix_embedded_rlt_clusters(clusters, rtl_regs):
+	pass
+
+def assemble_to_lines(text, rtl_regs):
+	if rtl_regs:
+		index = 0
+		text_seq = ()
+		for item in rtl_regs:
+			if text[index:item[0]]:
+				text_seq += tuple(text[index:item[0]])
+			text_seq += (''.join(text[item[0]:item[1]]),)
+			text_seq += (len(text[item[0]:item[1]]) - 1) * (' ',)
+			index = item[1]
+		if text[index:]:
+			text_seq += tuple(text[index:])
+		text = text_seq
+	return text
+
 def get_text_paths(orig_text, width, text_style, attributes):
 	if not orig_text: orig_text = NONPRINTING_CHARS[0]
 	_set_layout(PANGO_LAYOUT, orig_text, width, text_style, attributes)
@@ -200,37 +218,40 @@ def get_text_paths(orig_text, width, text_style, attributes):
 
 	text = '' + orig_text
 	clusters = []
+	rtl_regs = []
 	rtl_flag = False
+
+	#Ligature support
 	if text_style[5]:
 		layout_data, clusters, bidi_flag, rtl_flag = get_cluster_positions()
-		if clusters and not rtl_flag:
+		if not rtl_flag and not bidi_flag:
+			if clusters:
+				text = cluster_text(text, clusters)
+				if check_manyamar(orig_text):
+					word_group(text)
+
+		elif not rtl_flag and bidi_flag:
+			rtl_regs = find_rtl_regs(layout_data)
 			text = cluster_text(text, clusters)
-			if check_manyamar(orig_text):
-				word_group(text)
+			text = assemble_to_lines(text, rtl_regs)
+
+		elif rtl_flag and not bidi_flag:
+			rtl_regs = find_rtl_regs(layout_data)
+			text = cluster_text(text, clusters)
+			text = assemble_to_lines(text, rtl_regs)
+
+		elif rtl_flag and bidi_flag:
+			rtl_regs = find_rtl_regs(layout_data)
+			text = cluster_text(text, clusters)
+			text = assemble_to_lines(text, rtl_regs)
+
+	#Simple char-by-char rendering
 	else:
 		layout_data = get_char_positions()
 
 	layout_bbox = [0.0, layout_data[0][1],
 					float(w), layout_data[0][1] - float(h)]
 
-
-	rtl_regs = []
-	if rtl_flag:
-		rtl_regs = find_rtl_regs(layout_data)
-		text = cluster_text(text, clusters)
-
-		if rtl_regs:
-			index = 0
-			text_seq = ()
-			for item in rtl_regs:
-				if text[index:item[0]]:
-					text_seq += tuple(text[index:item[0]])
-				text_seq += (''.join(text[item[0]:item[1]]),)
-				text_seq += (len(text[item[0]:item[1]]) - 1) * (' ',)
-				index = item[1]
-			if text[index:]:
-				text_seq += tuple(text[index:])
-			text = text_seq
 
 	glyphs = []
 	i = -1
