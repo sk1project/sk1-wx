@@ -196,6 +196,16 @@ def assemble_to_lines(text, rtl_regs):
 		text = text_seq
 	return text
 
+def utf8_to_ucs4_dict(text):
+	text_dict = {}
+	index = 0
+	ucs4_index = 0
+	for item in text:
+		text_dict[index] = ucs4_index
+		index += len(item.encode('utf-8'))
+		ucs4_index += 1
+	return text_dict
+
 def get_text_paths(orig_text, width, text_style, attributes):
 	if not orig_text: orig_text = NONPRINTING_CHARS[0]
 	_set_layout(PANGO_LAYOUT, orig_text, width, text_style, attributes)
@@ -223,7 +233,13 @@ def get_text_paths(orig_text, width, text_style, attributes):
 
 	#Ligature support
 	if text_style[5]:
-		layout_data, clusters, bidi_flag, rtl_flag = get_cluster_positions()
+		layout_data, clusters, clusters_index, bidi_flag, rtl_flag = get_cluster_positions()
+
+		print layout_data
+		print clusters
+		print clusters_index
+		print len(text), len(text.encode('utf-8'))
+
 		if not rtl_flag and not bidi_flag:
 			if clusters:
 				text = cluster_text(text, clusters)
