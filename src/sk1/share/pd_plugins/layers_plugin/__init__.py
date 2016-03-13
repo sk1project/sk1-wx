@@ -203,6 +203,9 @@ class Layers_Plugin(RS_Plugin):
 		lnums = len(layers)
 		self.viewer.update(self.get_data())
 		sel_idx = self.viewer.get_selected()
+		if sel_idx is None:
+			self.viewer.set_selected(0)
+			sel_idx = 0
 		sel_layer = self.get_selected_layer()
 		self.layer_to_bottom.set_enable(sel_idx < lnums - 1)
 		self.layer_lower.set_enable(sel_idx < lnums - 1)
