@@ -90,6 +90,36 @@ def word_group(text_seq):
 				index = i
 		i += 1
 
+def rtl_word_group(text_seq):
+	i = 0
+	buff = ''
+	while i < len(text_seq):
+		if not text_seq[i] in NONPRINTING_CHARS:
+			buff += text_seq[i]
+			text_seq[i] = ' '
+		else:
+			if buff:
+				text_seq[i - 1] = buff
+				buff = ''
+		i += 1
+	if buff:
+		text_seq[i - 1] = buff
+
+def rtl_word_group_in_reg(text_seq, reg):
+	i = reg[0]
+	buff = ''
+	while i < reg[1]:
+		if not text_seq[i] in NONPRINTING_CHARS:
+			buff += text_seq[i]
+			text_seq[i] = ' '
+		else:
+			if buff:
+				text_seq[i - 1] = buff
+				buff = ''
+		i += 1
+	if buff:
+		text_seq[i - 1] = buff
+
 
 FAMILIES_LIST = []
 FAMILIES_DICT = {}
@@ -178,8 +208,36 @@ def find_rtl_regs(layout_data):
 		rtl_regs.append(reg)
 	return rtl_regs
 
-def fix_embedded_rlt_clusters(clusters, rtl_regs):
-	pass
+def utf8_to_ucs4_dict(text):
+	text_dict = {}
+	index = 0
+	ucs4_index = 0
+	for item in text:
+		for char in item:
+			text_dict[index] = ucs4_index
+			index += len(char.encode('utf-8'))
+		ucs4_index += 1
+	text_dict[index] = -1
+	return text_dict
+
+def fix_rlt_clusters(clusters_index, byte_dict):
+	clusters = []
+	for item in clusters_index:
+		start, end = item
+		start, end = byte_dict[start], byte_dict[end]
+		cluster = (min(start, end), max(start, end) + 1)
+		clusters.append(cluster)
+	return clusters
+
+def fix_rlt_regs(rtl_regs, layout_data, byte_dict):
+	regs = []
+	for item in rtl_regs:
+		start, end = item
+		start, end = layout_data[start][5], layout_data[end - 1][5]
+		start, end = byte_dict[start], byte_dict[end]
+		reg = (min(start, end), max(start, end) + 1)
+		regs.append(reg)
+	return regs
 
 def assemble_to_lines(text, rtl_regs):
 	if rtl_regs:
@@ -196,79 +254,26 @@ def assemble_to_lines(text, rtl_regs):
 		text = text_seq
 	return text
 
-def utf8_to_ucs4_dict(text):
-	text_dict = {}
+def get_rtl_layout_data(layout_data, rtl_regs):
 	index = 0
-	ucs4_index = 0
-	for item in text:
-		text_dict[index] = ucs4_index
-		index += len(item.encode('utf-8'))
-		ucs4_index += 1
-	return text_dict
+	data = []
+	for item in rtl_regs:
+		if layout_data[index:item[0]]:
+			data += layout_data[index:item[0]]
+		rtl = layout_data[item[0]:item[1]]
+		rtl.reverse()
+		i = 0
+		while i < len(rtl):
+			x, y, w, h, bl, j = rtl[i]
+			rtl[i] = (x + w, y, -w, h, bl, j)
+			i += 1
+		data += rtl
+		index = item[1]
+	if layout_data[index:]:
+		data += layout_data[index:]
+	return data
 
-def get_text_paths(orig_text, width, text_style, attributes):
-	if not orig_text: orig_text = NONPRINTING_CHARS[0]
-	_set_layout(PANGO_LAYOUT, orig_text, width, text_style, attributes)
-	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
-
-	surf = cairo.ImageSurface(cairo.FORMAT_RGB24, 100, 100)
-	ctx = cairo.Context(surf)
-	ctx.set_matrix(libcairo.DIRECT_MATRIX)
-
-	ctx.new_path()
-	ctx.move_to(0, 0)
-	layout = _libpango.create_layout(ctx)
-	_set_layout(layout, orig_text, width, text_style, attributes)
-	_libpango.layout_path(ctx, layout)
-	cpath = ctx.copy_path()
-
-	line_points = []
-	for item in get_line_positions():
-		line_points.append([0.0, item])
-
-	text = '' + orig_text
-	clusters = []
-	rtl_regs = []
-	rtl_flag = False
-
-	#Ligature support
-	if text_style[5]:
-		layout_data, clusters, clusters_index, bidi_flag, rtl_flag = get_cluster_positions()
-
-		print layout_data
-		print clusters
-		print clusters_index
-		print len(text), len(text.encode('utf-8'))
-
-		if not rtl_flag and not bidi_flag:
-			if clusters:
-				text = cluster_text(text, clusters)
-				if check_manyamar(orig_text):
-					word_group(text)
-
-		elif not rtl_flag and bidi_flag:
-			rtl_regs = find_rtl_regs(layout_data)
-			text = cluster_text(text, clusters)
-			text = assemble_to_lines(text, rtl_regs)
-
-		elif rtl_flag and not bidi_flag:
-			rtl_regs = find_rtl_regs(layout_data)
-			text = cluster_text(text, clusters)
-			text = assemble_to_lines(text, rtl_regs)
-
-		elif rtl_flag and bidi_flag:
-			rtl_regs = find_rtl_regs(layout_data)
-			text = cluster_text(text, clusters)
-			text = assemble_to_lines(text, rtl_regs)
-
-	#Simple char-by-char rendering
-	else:
-		layout_data = get_char_positions()
-
-	layout_bbox = [0.0, layout_data[0][1],
-					float(w), layout_data[0][1] - float(h)]
-
-
+def get_glyphs(ctx, layout_data, text, width, text_style, attributes):
 	glyphs = []
 	i = -1
 	for item in text:
@@ -288,24 +293,106 @@ def get_text_paths(orig_text, width, text_style, attributes):
 							layout_data[i][0], layout_data[i][1])
 		libcairo.apply_cmatrix(cpath, matrix)
 		glyphs.append(cpath)
+	return glyphs
 
-	if rtl_regs:
-		index = 0
-		data = []
-		for item in rtl_regs:
-			if layout_data[index:item[0]]:
-				data += layout_data[index:item[0]]
-			rtl = layout_data[item[0]:item[1]]
-			rtl.reverse()
-			i = 0
-			while i < len(rtl):
-				x, y, w, h, bl, j = rtl[i]
-				rtl[i] = (x + w, y, -w, h, bl, j)
-				i += 1
-			data += rtl
-			index = item[1]
-		if layout_data[index:]:
-			data += layout_data[index:]
-		layout_data = data
+def get_rtl_glyphs(ctx, layout_data, byte_dict, text, width, text_style, attributes):
+	glyphs = []
+	for item in layout_data:
+		try:
+			txt = text[byte_dict[item[5]]]
+		except:continue
 
-	return glyphs, line_points, layout_data, layout_bbox, clusters
+		if txt in NONPRINTING_CHARS:
+			glyphs.append(None)
+			continue
+
+		ctx.new_path()
+		ctx.move_to(0, 0)
+		layout = _libpango.create_layout(ctx)
+		_set_layout(layout, txt, width, text_style, attributes)
+		_libpango.layout_path(ctx, layout)
+		cpath = ctx.copy_path()
+		matrix = cairo.Matrix(1.0, 0.0, 0.0, -1.0, item[0], item[1])
+		libcairo.apply_cmatrix(cpath, matrix)
+		glyphs.append(cpath)
+	return glyphs
+
+def is_item_in_rtl(index, rtl_regs):
+	for item in rtl_regs:
+		if index < item[0]:
+			return False
+		if index >= item[1]:
+			continue
+		elif index >= item[0] and index < item[1]:
+			return True
+	return False
+
+def get_log_layout_data(layout_data, byte_dict, rtl_regs):
+	log_layout_data = len(layout_data) * ['', ]
+	index = 0
+	for item in layout_data:
+		if is_item_in_rtl(index, rtl_regs):
+			x, y, w, h, bl, j = item
+			data = (x + w, y, -w, h, bl, j)
+		else:
+			data = deepcopy(item)
+		log_layout_data[byte_dict[item[5]]] = data
+		index += 1
+	return log_layout_data
+
+def get_text_paths(orig_text, width, text_style, attributes):
+	if not orig_text: orig_text = NONPRINTING_CHARS[0]
+	_set_layout(PANGO_LAYOUT, orig_text, width, text_style, attributes)
+	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
+
+	surf = cairo.ImageSurface(cairo.FORMAT_RGB24, 100, 100)
+	ctx = cairo.Context(surf)
+	ctx.set_matrix(libcairo.DIRECT_MATRIX)
+
+	line_points = []
+	for item in get_line_positions():
+		line_points.append([0.0, item])
+
+	text = '' + orig_text
+	clusters = []
+	rtl_regs = []
+	rtl_flag = False
+
+	#Ligature support
+	if text_style[5]:
+		data = get_cluster_positions()
+		layout_data, clusters, clusters_index, bidi_flag, rtl_flag = data
+
+		if not rtl_flag and not bidi_flag:
+			if clusters:
+				text = cluster_text(text, clusters)
+				if check_manyamar(orig_text):
+					word_group(text)
+			log_layout_data = layout_data
+			glyphs = get_glyphs(ctx, layout_data, text,
+							width, text_style, attributes)
+		else:
+			byte_dict = utf8_to_ucs4_dict(text)
+			clusters = fix_rlt_clusters(clusters_index, byte_dict)
+			text = cluster_text(text, clusters)
+			byte_dict = utf8_to_ucs4_dict(text)
+			rtl_regs = find_rtl_regs(layout_data)
+			log_rtl_regs = fix_rlt_regs(rtl_regs, layout_data, byte_dict)
+			for item in log_rtl_regs:
+				if check_arabic(text[item[0]:item[1]]):
+					rtl_word_group_in_reg(text, item)
+			glyphs = get_rtl_glyphs(ctx, layout_data, byte_dict, text,
+						width, text_style, attributes)
+			log_layout_data = get_log_layout_data(layout_data, byte_dict, rtl_regs)
+
+	#Simple char-by-char rendering
+	else:
+		layout_data = get_char_positions()
+		log_layout_data = layout_data
+		glyphs = get_glyphs(ctx, layout_data, text,
+						width, text_style, attributes)
+
+	layout_bbox = [0.0, layout_data[0][1],
+					float(w), layout_data[0][1] - float(h)]
+
+	return glyphs, line_points, log_layout_data, layout_bbox, clusters
