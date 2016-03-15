@@ -477,6 +477,7 @@ pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 		pango_layout_iter_get_cluster_extents(cluster_iter, NULL, &cluster_rect);
 
 		//Processing cluster data
+		//Layout_data: (x,y,width,height,base_line,byte_index)
 
 		x = ((double) cluster_rect.x) / PANGO_SCALE + dx;
 		PyTuple_SetItem(glyph_data, 0, PyFloat_FromDouble(x));
