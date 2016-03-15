@@ -462,7 +462,7 @@ pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 			PyTuple_SetItem(glyph_data, 4, PyFloat_FromDouble(baseline));
 
 			//index processing
-			index=pango_layout_iter_get_index(cluster_iter);
+			index=pango_layout_iter_get_index(iter);
 			prev_index = index;
 			PyTuple_SetItem(glyph_data, 5, PyInt_FromLong(index));
 
@@ -496,7 +496,7 @@ pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 		PyTuple_SetItem(glyph_data, 4, PyFloat_FromDouble(baseline));
 
 		//index processing
-		index=pango_layout_iter_get_index(cluster_iter);
+		index=pango_layout_iter_get_index(iter);
 		if (prev_index != -1){
 			if(index < prev_index){
 				rtl_flag=1;
