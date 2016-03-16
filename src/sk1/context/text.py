@@ -146,8 +146,9 @@ class TextStylePlugin(CtxPlugin):
 		face = text_style[1]
 		faces = self.faces_dict[family]
 		if not face in faces: face = faces[0]
-		self.faces_combo.set_items(faces)
-		self.faces_combo.set_active(faces.index(face))
+		self.faces = faces
+		self.faces_combo.set_items(self.faces)
+		self.faces_combo.set_active(self.faces.index(face))
 
 		self.size_combo.set_value(text_style[2])
 		self.align.set_mode(text_style[3])
