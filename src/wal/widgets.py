@@ -194,8 +194,7 @@ class Combolist(wx.Choice, Widget):
 	callback = None
 
 	def __init__(self, parent, size=DEF_SIZE, width=0, items=[], onchange=None):
-		self.items = []
-		if items: self.items = items
+		self.items = items
 		size = self._set_width(size, width)
 		wx.Choice.__init__(self, parent, wx.ID_ANY, size, choices=self.items)
 		if onchange:
@@ -206,6 +205,7 @@ class Combolist(wx.Choice, Widget):
 		if self.callback: self.callback()
 
 	def set_items(self, items):
+		self.items = items
 		self.SetItems(items)
 
 	def set_selection(self, index):
