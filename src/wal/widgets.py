@@ -247,7 +247,16 @@ class BitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 	def OnDrawItem(self, dc, rect, item, flags):
 		if item == wx.NOT_FOUND:return
 		r = wx.Rect(*rect)
-		dc.DrawBitmap(self.bitmaps[item], r.x + 2, r.y + 4, True)
+		if flags & wx.combo.ODCB_PAINTING_SELECTED:
+			image = self.bitmaps[item].ConvertToImage()
+			alpha = image.GetAlphaData()
+			w, h = self.bitmaps[item].GetSize()
+			image.SetRGBRect(wx.Rect(0, 0, w, h), 255, 255, 255)
+			image.SetAlphaData(alpha)
+			bmp = image.ConvertToBitmap()
+			dc.DrawBitmap(bmp, r.x + 2, r.y + 4, True)
+		else:
+			dc.DrawBitmap(self.bitmaps[item], r.x + 2, r.y + 4, True)
 
 	def OnMeasureItem(self, item):
 		if item == wx.NOT_FOUND:return 1
