@@ -33,7 +33,7 @@ DIRECT_MATRIX = cairo.Matrix()
 
 PANGO_MATRIX = cairo.Matrix(1.0, 0.0, 0.0, -1.0, 0.0, 0.0)
 PANGO_LAYOUT = _libpango.create_layout(CTX)
-NONPRINTING_CHARS = ' \n\t'
+NONPRINTING_CHARS = ' \n\t '
 
 MYANMAR = (u'\u1000', u'\u109f')
 MYANMAR_EXT = (u'\uaa60', u'\uaa7f')
