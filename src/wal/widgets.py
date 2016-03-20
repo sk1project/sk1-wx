@@ -23,6 +23,7 @@ from generic import Widget, DataWidget, RangeDataWidget
 import const
 from const import DEF_SIZE
 from basic import HPanel
+from renderer import bmp_to_white
 
 class Bitmap(wx.StaticBitmap, Widget):
 
@@ -248,13 +249,7 @@ class BitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 		if item == wx.NOT_FOUND:return
 		r = wx.Rect(*rect)
 		if flags & wx.combo.ODCB_PAINTING_SELECTED:
-			image = self.bitmaps[item].ConvertToImage()
-			alpha = image.GetAlphaData()
-			w, h = self.bitmaps[item].GetSize()
-			image.SetRGBRect(wx.Rect(0, 0, w, h), 255, 255, 255)
-			image.SetAlphaData(alpha)
-			bmp = image.ConvertToBitmap()
-			dc.DrawBitmap(bmp, r.x + 2, r.y + 4, True)
+			dc.DrawBitmap(bmp_to_white(self.bitmaps[item]), r.x + 2, r.y + 4, True)
 		else:
 			dc.DrawBitmap(self.bitmaps[item], r.x + 2, r.y + 4, True)
 
