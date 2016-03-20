@@ -74,6 +74,13 @@ def _get_text_size(text, bold=False):
 		result = (width, height)
 	return result
 
+def invert_text_bitmap(bmp, color=(0, 0, 0)):
+	w, h = bmp.GetSize()
+	img = bmp.ConvertToImage()
+	img.ConvertColourToAlpha(0, 0, 0)
+	img.SetRGBRect(wx.Rect(0, 0, w, h), *color)
+	return img.ConvertToBitmap()
+
 def text_to_bitmap(text, bold=False):
 	w, h = _get_text_size(text, bold)
 	dc = wx.MemoryDC()
@@ -84,16 +91,11 @@ def text_to_bitmap(text, bold=False):
 	font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
 	if bold: font.SetWeight(wx.FONTWEIGHT_BOLD)
 	dc.SetFont(font)
-	color = UI_COLORS['text']
 	dc.SetTextForeground(wx.Colour(255, 255, 255))
 	dc.DrawText(text, 0, 0)
 	dc.EndDrawing()
 	dc.SelectObject(wx.NullBitmap)
-	img = bmp.ConvertToImage()
-	img.ConvertColourToAlpha(0, 0, 0)
-	img.SetRGBRect(wx.Rect(0, 0, w, h), *color)
-	bmp = img.ConvertToBitmap()
-	return bmp, (w, h)
+	return invert_text_bitmap(bmp, UI_COLORS['text']), (w, h)
 
 def bmp_to_white(bmp):
 	image = bmp.ConvertToImage()
