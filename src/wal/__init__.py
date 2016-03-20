@@ -15,17 +15,19 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from const import *
-from basic import *
-from widgets import *
-
 from listwidgets import SimpleList, ReportList
 from layerlist import LayerList
+from fontchoice import FontBitmapChoice
 from treewidgets import TreeElement, TreeWidget
 
 from gctrls import ImageLabel, ImageButton, ImageToggleButton
-from renderer import copy_bitmap_to_surface, copy_surface_to_bitmap
+from renderer import copy_bitmap_to_surface, copy_surface_to_bitmap, \
+text_to_bitmap, invert_text_bitmap
 from togglectrls import HToggleKeeper, ModeToggleButton
+
+from const import *
+from basic import *
+from widgets import *
 
 from msgdlgs import *
 from modaldlgs import *
