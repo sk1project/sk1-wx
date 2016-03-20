@@ -321,6 +321,12 @@ class AppConfig(UCConfig):
 	text_selection_color = (.098, .6824, 1.0, .2392)
 
 
+	#============== FONT OPTIONS ================
+	font_preview_text = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+	font_preview_width = 400
+	font_preview_size = 14
+	font_preview_color = (0.7, 0.7, 0.7)
+
 	#===UNSORTED===
 	default_polygon_num = 5
 
