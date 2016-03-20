@@ -23,6 +23,7 @@ from uc2.formats.sk2 import sk2_const
 
 from sk1 import _, events
 from sk1.resources import icons
+from sk1.pwidgets import FontChoice
 
 from generic import CtxPlugin
 
@@ -65,12 +66,11 @@ class TextStylePlugin(CtxPlugin):
 		self.styles_combo = wal.Combolist(self, items=self.styles,
 										onchange=self.on_style_change)
 		self.add(self.styles_combo, 0, wal.LEFT | wal.CENTER, 2)
+		self.add((3, 3))
 
 		self.families, self.faces_dict = libpango.get_fonts()
 
-		self.families_combo = wal.Combolist(self, items=self.families,
-										onchange=self.on_font_change)
-		self.families_combo.set_active(self.families.index('Sans'))
+		self.families_combo = FontChoice(self, onchange=self.on_font_change)
 		self.add(self.families_combo, 0, wal.LEFT | wal.CENTER, 2)
 		self.add((3, 3))
 
@@ -140,8 +140,7 @@ class TextStylePlugin(CtxPlugin):
 
 	def update_from_style(self, text_style):
 		family = text_style[0]
-		if not family in self.families: family = 'Sans'
-		self.families_combo.set_active(self.families.index(family))
+		self.families_combo.set_font_family(family)
 
 		face = text_style[1]
 		faces = self.faces_dict[family]
@@ -162,7 +161,7 @@ class TextStylePlugin(CtxPlugin):
 		self.apply_changes()
 
 	def on_font_change(self):
-		family = self.families[self.families_combo.get_active()]
+		family = self.families_combo.get_font_family()
 		faces = self.faces_dict[family]
 		face = self.faces[self.faces_combo.get_active()]
 		if not face in faces:face = faces[0]
@@ -173,7 +172,7 @@ class TextStylePlugin(CtxPlugin):
 
 	def apply_changes(self, *args):
 		doc = self.app.current_doc
-		family = self.families[self.families_combo.get_active()]
+		family = self.families_combo.get_font_family()
 		face = self.faces[self.faces_combo.get_active()]
 		size = self.size_combo.get_value()
 		align = self.align.get_mode()
