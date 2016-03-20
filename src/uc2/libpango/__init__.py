@@ -165,6 +165,30 @@ def set_glyph_cache(font_name, char, glyph):
 		GLYPH_CACHE[font_name] = {}
 	GLYPH_CACHE[font_name][char] = deepcopy(glyph)
 
+#---Font sampling
+
+def _set_sample_layout(layout, text, family, fontsize):
+	text = text.encode('utf-8')
+	_libpango.set_layout_width(layout, -1)
+	fnt_descr = family + ', ' + str(fontsize)
+	fnt_descr = _libpango.create_font_description(fnt_descr)
+	_libpango.set_layout_font_description(layout, fnt_descr)
+	markup = cgi.escape(text)
+	_libpango.set_layout_markup(layout, markup)
+
+def get_sample_size(text, family, fontsize):
+	_set_sample_layout(PANGO_LAYOUT, text, family, fontsize)
+	return _libpango.get_layout_pixel_size(PANGO_LAYOUT)
+
+def render_sample(ctx, text, family, fontsize):
+	ctx.new_path()
+	ctx.move_to(0, 0)
+	layout = _libpango.create_layout(ctx)
+	_set_sample_layout(layout, text, family, fontsize)
+	_libpango.layout_path(ctx, layout)
+
+#---Font sampling end
+
 def _get_font_description(text_style):
 	fnt_descr = text_style[0] + ', ' + text_style[1] + ' ' + str(text_style[2])
 	return _libpango.create_font_description(fnt_descr)
