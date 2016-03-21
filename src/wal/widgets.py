@@ -364,6 +364,7 @@ class Entry(wx.TextCtrl, DataWidget):
 	def __init__(self, parent, value='', size=DEF_SIZE, width=0, onchange=None,
 				multiline=False, richtext=False, onenter=None, editable=True):
 		style = 0
+		value = value.decode('utf-8')
 		if multiline: style |= wx.TE_MULTILINE
 		if richtext: style |= wx.TE_RICH2
 		if onenter: style |= wx.TE_PROCESS_ENTER
@@ -387,11 +388,13 @@ class Entry(wx.TextCtrl, DataWidget):
 		if self.my_changes:
 			self.my_changes = False
 			return
+		self.value = self.GetValue()
 		if self._callback: self._callback()
 		event.Skip()
 
 	def _on_enter(self, event):
 		event.StopPropagation()
+		self.value = self.GetValue()
 		if self._callback1: self._callback1()
 
 	def _on_change_noneditable(self, event):
@@ -406,7 +409,8 @@ class Entry(wx.TextCtrl, DataWidget):
 
 	def set_value(self, val):
 		self.my_changes = True
-		self.SetValue(val)
+		self.value = val.decode('utf-8')
+		self.SetValue(self.value)
 
 
 class Spin(wx.SpinCtrl, RangeDataWidget):
