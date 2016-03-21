@@ -56,7 +56,7 @@ def check_lang(text, ranges):
 		if ret: break
 	return ret
 
-def check_manyamar(text):
+def check_maynmar(text):
 	return check_lang(text, (MYANMAR, MYANMAR_EXT))
 
 def check_arabic(text):
@@ -390,7 +390,7 @@ def get_text_paths(orig_text, width, text_style, attributes):
 		if not rtl_flag and not bidi_flag:
 			if clusters:
 				text = cluster_text(text, clusters)
-				if check_manyamar(orig_text):
+				if check_maynmar(orig_text):
 					word_group(text)
 			log_layout_data = layout_data
 			glyphs = get_glyphs(ctx, layout_data, text,
