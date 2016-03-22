@@ -33,4 +33,38 @@ class FontPrefs(PrefPanel):
 		PrefPanel.__init__(self, app, dlg)
 
 	def build(self):
-		pass
+		grid = wal.GridPanel(self, rows=4, cols=2, hgap=5, vgap=5)
+		grid.add_growable_col(1)
+
+		grid.pack(wal.Label(grid, _('Text filler:')))
+		self.filler = wal.Entry(grid, config.font_preview_text)
+		grid.pack(self.filler, fill=True)
+
+		grid.pack(wal.Label(grid, _('Font size:')))
+		self.fontsize = wal.IntSpin(grid, config.font_preview_size, (5, 50))
+		grid.pack(self.fontsize)
+
+		grid.pack(wal.Label(grid, _('Font color:')))
+		self.fontcolor = wal.ColorButton(grid, config.font_preview_color)
+		grid.pack(self.fontcolor)
+
+		grid.pack(wal.Label(grid, _('Preview width:')))
+		self.pwidth = wal.IntSpin(grid, config.font_preview_width, (100, 1000))
+		grid.pack(self.pwidth)
+
+		self.pack(grid, align_center=False, fill=True, padding=5)
+		self.built = True
+
+	def apply_changes(self):
+		config.font_preview_text = self.filler.get_value()
+		config.font_preview_size = self.fontsize.get_value()
+		config.font_preview_color = self.fontcolor.get_value()
+		config.font_preview_width = self.pwidth.get_value()
+
+	def restore_defaults(self):
+		defaults = config.get_defaults()
+		self.filler.set_value(defaults['font_preview_text'])
+		self.fontsize.set_value(defaults['font_preview_size'])
+		self.fontcolor.set_value(defaults['font_preview_color'])
+		self.pwidth.set_value(defaults['font_preview_width'])
+
