@@ -15,7 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
+import os, sys
 
 import wal
 
@@ -79,7 +79,7 @@ class LogViewerDialog(wal.OkCancelDialog):
 		self.lc.clear_all()
 
 	def on_ok(self, *args):
-		path = self.lc.get_selected()[2]
+		path = self.lc.get_selected()[2].encode(sys.getfilesystemencoding())
 		if os.path.isfile(path):
 			self.ret = path
 			self.end_modal(wal.BUTTON_OK)
