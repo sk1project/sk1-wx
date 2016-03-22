@@ -16,7 +16,7 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from copy import deepcopy
-import Image
+from PIL import Image
 
 from uc2 import _, uc2const
 from uc2.formats.pdxf import const
