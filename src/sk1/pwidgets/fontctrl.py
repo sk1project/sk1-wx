@@ -20,7 +20,7 @@ import cairo
 
 from uc2 import libpango, cms
 
-from sk1 import config
+from sk1 import config, events
 from sk1.resources import icons, get_icon
 
 def generate_fontnames(fonts):
@@ -71,6 +71,14 @@ class FontChoice(wal.FontBitmapChoice):
 		icon = get_icon(icons.PD_FONT, size=wal.DEF_SIZE)
 		wal.FontBitmapChoice.__init__(self, parent, value, maxsize,
 							bitmaps, samples, icon, onchange)
+		events.connect(events.CONFIG_MODIFIED, self.check_config)
+
+	def check_config(self, attr, value):
+		if len(attr) > 12 and attr[:12] == 'font_preview':
+			sample_bitmaps = generate_fontsamples(self.fonts)
+			index = self._get_active()
+			self._set_bitmaps(self.bitmaps, sample_bitmaps)
+			self._set_active(index)
 
 	def get_font_family(self):
 		index = self._get_active()
