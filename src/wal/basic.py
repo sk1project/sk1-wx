@@ -41,9 +41,12 @@ class Application(wx.App):
 
 	def _set_font_size(self):
 		dc = wx.MemoryDC()
+		bmp = wx.EmptyBitmap(1, 1)
+		dc.SelectObject(bmp)
 		dc.SetFont(wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT))
 		FONT_SIZE[0] = dc.GetTextExtent('D')[0]
 		FONT_SIZE[1] = dc.GetCharHeight()
+		dc.SelectObject(wx.NullBitmap)
 
 	def set_app_name(self, name):
 		self.app_name = name
