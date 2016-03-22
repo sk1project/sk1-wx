@@ -42,12 +42,16 @@ By installing the package you have full control over all the installed files
 and can easily remove them from the system (it's important for application
 preview).
 
+Please note that application uses Python 2.x branch. So Python interpreter
+and python based dependencies should be from 2.x branch, but not 3.x
+
 For successful build either distutils or deb|rpm package you need installing
 some development packages. We describe dev-packages for Ubuntu|Debian, but for
 other distros they have similar names. So, you need:
 
 libcairo2-dev
 liblcms2-dev
+libpango1.0-dev
 python-dev
 python-cairo-dev
 
