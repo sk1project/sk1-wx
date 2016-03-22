@@ -89,6 +89,7 @@ encoding//src/sk1/prefs/__init__.py=utf-8
 encoding//src/sk1/prefs/collection.py=utf-8
 encoding//src/sk1/prefs/generic.py=utf-8
 encoding//src/sk1/prefs/prefs_cms.py=utf-8
+encoding//src/sk1/prefs/prefs_fonts.py=utf-8
 encoding//src/sk1/prefs/prefs_general.py=utf-8
 encoding//src/sk1/prefs/prefs_palettes.py=utf-8
 encoding//src/sk1/prefs/prefs_ruler.py=utf-8
