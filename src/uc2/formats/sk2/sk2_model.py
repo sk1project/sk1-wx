@@ -823,11 +823,11 @@ class Text(PrimitiveObject):
 			index += 1
 
 	def apply_trafo(self, trafo):
+		for i in self.trafos.keys():
+			self.trafos[i] = libgeom.multiply_trafo(self.trafos[i], trafo)
 		for i in range(len(self.cache_cpath)):
 			if self.cache_cpath[i] is None: continue
 			self.cache_cpath[i] = libgeom.apply_trafo(self.cache_cpath[i], trafo)
-		for i in self.trafos.keys():
-			self.trafos[i] = libgeom.multiply_trafo(self.trafos[i], trafo)
 		self.trafo = libgeom.multiply_trafo(self.trafo, trafo)
 		if self.fill_trafo:
 			self.fill_trafo = libgeom.multiply_trafo(self.fill_trafo, trafo)
