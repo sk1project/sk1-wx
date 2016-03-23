@@ -88,6 +88,9 @@ class MoveController(AbstractController):
 				self.canvas.resize_marker = mark
 				self.canvas.restore_mode()
 				self.canvas.set_temp_mode(modes.RESIZE_MODE)
+			elif self.presenter.snap.is_over_guide(point)[0]:
+				self.canvas.restore_mode()
+				self.canvas.set_temp_mode(modes.GUIDE_MODE)
 			elif not self.selection.pick_at_point(dpoint):
 				self.canvas.restore_mode()
 
