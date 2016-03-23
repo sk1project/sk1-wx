@@ -37,6 +37,7 @@ class TextEditor(AbstractController):
 		self.target = self.selection.objs[0]
 		self.selected_obj = None
 		self.api.set_mode()
+		self.update_points()
 		self.selection.clear()
 		msg = _('Text in shaping')
 		events.emit(events.APP_STATUS, msg)
@@ -50,12 +51,50 @@ class TextEditor(AbstractController):
 	def escape_pressed(self):
 		self.canvas.set_mode()
 
+	def update_points(self):
+		cv = self.canvas
+		self.points = []
+		index = 0
+		for item in self.target.cache_layout_data:
+			if index < len(self.target.cache_cpath) and \
+			self.target.cache_cpath[index]:
+				x = item[0]
+				y = item[4]
+				trafo = self.target.trafo
+				flag = False
+				if index in self.target.trafos.keys():
+					trafo = self.target.trafos[index]
+					flag = True
+				self.points.append(ControlPoint(cv, index, [x, y], trafo, flag))
+			index += 1
+
 	#----- REPAINT
 	def repaint(self):
 		bbox = self.target.cache_layout_bbox
 		self.canvas.renderer.draw_text_frame(bbox, self.target.trafo)
+		for item in self.points:
+			item.repaint()
 
 class ControlPoint:
 
-	def __init__(self, point, trafo):
-		pass
+	canvas = None
+	index = 0
+	point = []
+	trafo = []
+	modified = False
+
+	def __init__(self, canvas, index, point, trafo, modified=False):
+		self.canvas = canvas
+		self.index = index
+		self.point = point
+		self.trafo = trafo
+		self.modified = modified
+
+	def get_point(self):
+		return libgeom.apply_trafo_to_point(self.point, self.trafo)
+
+	def get_screen_point(self):
+		return self.canvas.point_doc_to_win(self.get_point())
+
+	def repaint(self):
+		self.canvas.renderer.draw_polygon_point(self.get_screen_point())
