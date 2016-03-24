@@ -304,6 +304,15 @@ class AppConfig(UCConfig):
 	polygon_point_stroke = (0.0, 0.3, 1.0)
 	polygon_point_stroke_width = 1.0
 
+	#============== TEXT OPTIONS ================
+
+	text_point_size = 5.0
+	text_point_fill = (1.0, 1.0, 1.0)
+	text_point_stroke = (0.0, 0.3, 1.0)
+	text_point_stroke_width = 1.0
+
+	text_selected_point_fill = (1.0, 0.5, 0.5)
+
 	#============== GRADIENT MARK OPTIONS ================
 
 	gradient_vector_fg_color = (1.0, 0.0, 0.0)
