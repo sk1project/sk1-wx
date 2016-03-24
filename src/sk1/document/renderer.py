@@ -400,6 +400,13 @@ class PDRenderer(CairoRenderer):
 							config.polygon_point_stroke,
 							config.polygon_point_stroke_width)
 
+	def draw_text_point(self, point, selected=False):
+		fill = config.text_point_fill
+		if selected: fill = config.text_selected_point_fill
+		self.draw_curve_point(point, config.text_point_size, fill,
+							config.text_point_stroke,
+							config.text_point_stroke_width)
+
 	def reflect_snap(self):
 		if self.canvas.show_snapping:
 			snap = self.presenter.snap.active_snap
