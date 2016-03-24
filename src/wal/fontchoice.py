@@ -79,7 +79,7 @@ class FontBitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 				pdc.SetPen(wx.TRANSPARENT_PEN)
 				pdc.SetBrush(wx.Brush(wx.Colour(*self.GetBackgroundColour())))
 				h = self.get_size()[1]
-				w = r.width + 2
+				w = r.width + 3
 				pdc.DrawRectangle(0, 0, w, h)
 				nr = wx.RendererNative.Get()
 				nr.DrawTextCtrl(self, dc, (0, 0, w, h), wx.CONTROL_DIRTY)
