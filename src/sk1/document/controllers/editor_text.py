@@ -26,8 +26,10 @@ class TextEditor(AbstractController):
 
 	mode = modes.TEXT_EDITOR_MODE
 	target = None
+	selected_obj = None
 
 	points = []
+	selected_points = []
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -43,7 +45,10 @@ class TextEditor(AbstractController):
 		events.emit(events.APP_STATUS, msg)
 
 	def stop_(self):
-		self.selection.set([self.target, ])
+		if not self.selected_obj:
+			self.selection.set([self.target, ])
+		else:
+			self.selection.set([self.selected_obj, ])
 		self.target = None
 		self.selected_obj = None
 		self.points = []
@@ -73,7 +78,75 @@ class TextEditor(AbstractController):
 		bbox = self.target.cache_layout_bbox
 		self.canvas.renderer.draw_text_frame(bbox, self.target.trafo)
 		for item in self.points:
-			item.repaint()
+			selected = False
+			if item in self.selected_points: selected = True
+			item.repaint(selected)
+
+	def repaint_frame(self):
+		self.canvas.renderer.cdc_draw_frame(self.start, self.end, True)
+
+	def on_timer(self):
+		if self.draw:
+			self.repaint_frame()
+
+	#----- MOUSE CONTROLLING
+
+	def mouse_down(self, event):
+		self.timer.stop()
+		self.start = []
+		self.end = []
+		self.draw = False
+		self.move_flag = False
+		self.start = event.get_point()
+		self.timer.start()
+
+	def mouse_move(self, event):
+		if self.start:
+			if not self.move_flag:
+				self.end = event.get_point()
+				self.draw = True
+			elif self.move_flag:
+				self.move_flag = True
+
+	def mouse_up(self, event):
+		self.timer.stop()
+		self.end = event.get_point()
+		if self.draw:
+			self.draw = False
+			points = self.select_points_by_bbox(self.start + self.end)
+			self.set_selected_points(points, event.is_shift())
+			self.canvas.selection_redraw()
+		else:
+			objs = self.canvas.pick_at_point(self.end)
+			if objs and objs[0].is_primitive() and not objs[0].is_pixmap():
+				self.selected_obj = objs[0]
+				self.start = []
+				self.canvas.set_mode(modes.SHAPER_MODE)
+				return
+			else:
+				self.set_selected_points([])
+				self.canvas.selection_redraw()
+		self.start = []
+
+	#----- POINT PROCESSING
+
+	def set_selected_points(self, points, add=False):
+		if add:
+			for item in points:
+				if not item in self.selected_points:
+					self.selected_points.append(item)
+				else:
+					self.selected_points.remove(item)
+		else:
+			self.selected_points = points
+
+	def select_points_by_bbox(self, bbox):
+		ret = []
+		bbox = libgeom.normalize_bbox(bbox)
+		for item in self.points:
+			if libgeom.is_point_in_bbox(item.get_screen_point(), bbox):
+				ret.append(item)
+		return ret
 
 class ControlPoint:
 
@@ -96,5 +169,5 @@ class ControlPoint:
 	def get_screen_point(self):
 		return self.canvas.point_doc_to_win(self.get_point())
 
-	def repaint(self):
-		self.canvas.renderer.draw_polygon_point(self.get_screen_point())
+	def repaint(self, selected=False):
+		self.canvas.renderer.draw_text_point(self.get_screen_point(), selected)
