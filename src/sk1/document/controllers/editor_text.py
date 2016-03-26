@@ -30,6 +30,7 @@ class TextEditor(AbstractController):
 
 	points = []
 	selected_points = []
+	spoint = None
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -98,15 +99,27 @@ class TextEditor(AbstractController):
 		self.draw = False
 		self.move_flag = False
 		self.start = event.get_point()
-		self.timer.start()
+		self.spoint = self.select_point_by_click(self.start)
+		if not self.spoint:
+			self.timer.start()
+#		else:
+#			if not self.spoint in self.selected_points:
+#				self.set_selected_points([self.spoint, ], event.is_shift())
+#			self.canvas.selection_redraw()
 
 	def mouse_move(self, event):
 		if self.start:
-			if not self.move_flag:
+			if not self.move_flag and not self.spoint:
 				self.end = event.get_point()
 				self.draw = True
 			elif self.move_flag:
+				self.canvas.selection_redraw()
 				self.move_flag = True
+			elif self.spoint:
+				if not self.spoint in self.selected_points:
+					self.set_selected_points([self.spoint, ])
+				self.move_flag = True
+				self.canvas.selection_redraw()
 
 	def mouse_up(self, event):
 		self.timer.stop()
@@ -115,6 +128,12 @@ class TextEditor(AbstractController):
 			self.draw = False
 			points = self.select_points_by_bbox(self.start + self.end)
 			self.set_selected_points(points, event.is_shift())
+			self.canvas.selection_redraw()
+		elif self.move_flag:
+			self.move_flag = False
+			self.canvas.selection_redraw()
+		elif self.spoint:
+			self.set_selected_points([self.spoint, ], event.is_shift())
 			self.canvas.selection_redraw()
 		else:
 			objs = self.canvas.pick_at_point(self.end)
@@ -147,6 +166,15 @@ class TextEditor(AbstractController):
 			if libgeom.is_point_in_bbox(item.get_screen_point(), bbox):
 				ret.append(item)
 		return ret
+
+	def select_point_by_click(self, point):
+		for item in self.points:
+			ipoint = item.get_screen_point()
+			bbox = libgeom.bbox_for_point(ipoint, config.point_sensitivity_size)
+			if libgeom.is_point_in_bbox(point, bbox):
+				return item
+		return None
+
 
 class ControlPoint:
 
