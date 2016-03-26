@@ -16,6 +16,7 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
+from copy import deepcopy
 
 from uc2 import libgeom
 
@@ -31,6 +32,7 @@ class TextEditor(AbstractController):
 	points = []
 	selected_points = []
 	spoint = None
+	trafos = {}
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -102,24 +104,24 @@ class TextEditor(AbstractController):
 		self.spoint = self.select_point_by_click(self.start)
 		if not self.spoint:
 			self.timer.start()
-#		else:
-#			if not self.spoint in self.selected_points:
-#				self.set_selected_points([self.spoint, ], event.is_shift())
-#			self.canvas.selection_redraw()
 
 	def mouse_move(self, event):
-		if self.start:
-			if not self.move_flag and not self.spoint:
-				self.end = event.get_point()
-				self.draw = True
-			elif self.move_flag:
-				self.canvas.selection_redraw()
-				self.move_flag = True
-			elif self.spoint:
-				if not self.spoint in self.selected_points:
-					self.set_selected_points([self.spoint, ])
-				self.move_flag = True
-				self.canvas.selection_redraw()
+		if not self.start: return
+		if not self.move_flag and not self.spoint:
+			self.end = event.get_point()
+			self.draw = True
+		elif self.move_flag:
+			self.end = event.get_point()
+			trafo = self.get_trafo(self.start, self.end)
+			self.apply_trafo_to_selected(trafo)
+			self.start = self.end
+			self.canvas.selection_redraw()
+		elif self.spoint:
+			if not self.spoint in self.selected_points:
+				self.set_selected_points([self.spoint, ])
+			self.move_flag = True
+			self.trafos = deepcopy(self.target.trafos)
+			self.canvas.selection_redraw()
 
 	def mouse_up(self, event):
 		self.timer.stop()
@@ -131,6 +133,8 @@ class TextEditor(AbstractController):
 			self.canvas.selection_redraw()
 		elif self.move_flag:
 			self.move_flag = False
+			trafo = self.get_trafo(self.start, self.end)
+			self.apply_trafo_to_selected(trafo, True)
 			self.canvas.selection_redraw()
 		elif self.spoint:
 			self.set_selected_points([self.spoint, ], event.is_shift())
@@ -175,6 +179,26 @@ class TextEditor(AbstractController):
 				return item
 		return None
 
+	def get_trafo(self, start, end):
+		dstart = self.canvas.win_to_doc(start)
+		dend = self.canvas.win_to_doc(end)
+		return [1.0, 0.0, 0.0, 1.0] + libgeom.sub_points(dend, dstart)
+
+	def apply_trafo_to_selected(self, trafo, final=False):
+		trafos = deepcopy(self.target.trafos)
+		for item in self.selected_points:
+			index = item.index
+			if index in trafos.keys():
+				trafos[index] = libgeom.multiply_trafo(trafos[index], trafo)
+			else:
+				trafos[index] = libgeom.multiply_trafo(self.target.trafo, trafo)
+			item.apply_trafo(trafo)
+		if not final:
+			self.api.set_temp_text_trafos(self.target, trafos)
+		else:
+			self.api.set_text_trafos(self.target, trafos, self.trafos)
+			self.trafos = {}
+
 
 class ControlPoint:
 
@@ -190,6 +214,9 @@ class ControlPoint:
 		self.point = point
 		self.trafo = trafo
 		self.modified = modified
+
+	def apply_trafo(self, trafo):
+		self.trafo = libgeom.multiply_trafo(self.trafo, trafo)
 
 	def get_point(self):
 		return libgeom.apply_trafo_to_point(self.point, self.trafo)
