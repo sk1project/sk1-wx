@@ -270,6 +270,10 @@ class AbstractAPI:
 		obj.paths = paths
 		obj.update()
 
+	def _set_text_trafos(self, obj, trafos):
+		obj.trafos = trafos
+		obj.update()
+
 	def _apply_trafo(self, objs, trafo):
 		before = []
 		after = []
@@ -1923,6 +1927,23 @@ class PresenterAPI(AbstractAPI):
 			[[self._set_text_data, obj, text_before, trafos_before, markup_before],
 			[self._set_selection, sel_before]],
 			[[self._set_text_data, obj, text_after, trafos_after, markup_after],
+			[self._set_selection, sel_before]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def set_temp_text_trafos(self, obj, trafos):
+		self._set_text_trafos(obj, trafos)
+		self.eventloop.emit(self.eventloop.DOC_MODIFIED)
+		self.selection.update()
+
+	def set_text_trafos(self, obj, trafos, trafos_before):
+		sel_before = [] + self.selection.objs
+		self._set_text_trafos(obj, trafos)
+		transaction = [
+			[[self._set_text_trafos, obj, trafos_before],
+			[self._set_selection, sel_before]],
+			[[self._set_text_trafos, obj, trafos],
 			[self._set_selection, sel_before]],
 			False]
 		self.add_undo(transaction)
