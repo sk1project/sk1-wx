@@ -229,7 +229,7 @@ class AppConfig(UCConfig):
 	#============== POINT DATA =============
 
 	point_size = 5.0
-	point_sensitivity_size = 7.0
+	point_sensitivity_size = 9.0
 
 	#============== BEZIER CURVE OPTIONS ================
 	curve_autoclose_flag = 0
