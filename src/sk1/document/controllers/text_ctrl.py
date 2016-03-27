@@ -434,6 +434,16 @@ class TextEditController(AbstractController):
 			self.text = self.text[:text_range[0]] + self.text[text_range[1]:]
 		self._delete_trafos_range(text_range)
 
+	def _insert_trafos_range(self, index, size):
+		if not self.trafos: return
+		trafos = {}
+		for item in self.trafos.keys():
+			if item < index:
+				trafos[item] = self.trafos[item]
+			else:
+				trafos[item + size] = self.trafos[item]
+		self.trafos = trafos
+
 	def _insert_text(self, text, index):
 		if self.selected:
 			index = self.selected[0]
@@ -443,13 +453,7 @@ class TextEditController(AbstractController):
 			self.text += tuple(text)
 		else:
 			self.text = self.text[:index] + tuple(text) + self.text[index:]
-		trafos = {}
-		for item in self.trafos.keys():
-			if item < index:
-				trafos[item] = self.trafos[item]
-			else:
-				trafos[item + len(text)] = self.trafos[item]
-		self.trafos = trafos
+		self._insert_trafos_range(index, len(text))
 
 	def delete_char(self, forward=True):
 		if self.text_cursor < len(self.text):
