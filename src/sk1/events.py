@@ -34,7 +34,8 @@ MODE_CHANGED	  mode - canvas MODE value
 SELECTION_CHANGED doc - presenter instance
 CLIPBOARD		  no args 
 PAGE_CHANGED      doc - presenter instance
-SNAP_CHANGED	  no args 
+SNAP_CHANGED	  no args
+UPDATE_CHANNEL    id - recipient id 
 """
 
 #Signal channels
@@ -57,6 +58,7 @@ SELECTION_CHANGED = ['SELECTION_CHANGED']
 CLIPBOARD = ['CLIPBOARD']
 PAGE_CHANGED = ['PAGE_CHANGED']
 SNAP_CHANGED = ['SNAP_CHANGED']
+UPDATE_CHANNEL = ['UPDATE_CHANNEL']
 
 ALL_CHANNELS = [CONFIG_MODIFIED, APP_STATUS, MOUSE_STATUS, CMS_CHANGED,
 			HISTORY_CHANGED, NO_DOCS, DOC_MODIFIED, DOC_CHANGED, DOC_SAVED,
@@ -92,7 +94,6 @@ def emit(channel, *args):
 	"""
 	Sends signal to all receivers in channel.
 	"""
-#	print 'signal', channel[0]
 	try:
 		for receiver in channel[1:]:
 			try:
