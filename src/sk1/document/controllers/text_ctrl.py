@@ -399,20 +399,31 @@ class TextEditController(AbstractController):
 					events.emit(events.SELECTION_CHANGED)
 
 	#--- Text modifiers
+	def _delete_trafos_range(self, text_range):
+		if not self.trafos: return
+		trafos = {}
+		shift = text_range[1] - text_range[0]
+		for item in self.trafos.keys():
+			if item < text_range[0]:
+				trafos[item] = self.trafos[item]
+			elif item >= text_range[1]:
+				trafos[item - shift] = self.trafos[item]
+		self.trafos = trafos
+
 	def _delete_char(self, index, forward=True):
 		if len(self.text[index]) > 1 and not self.selected:
 			chars = self.text[index]
-			if forward: chars = chars[1:]
+			if forward: chars = []
 			else: chars = chars[:-1]
 			self.text = self.text[:index] + tuple(chars) + self.text[index + 1:]
-			#TODO: process trafo
+			if not chars:
+				self._delete_trafos_range((index, index + 1))
 		else:
 			if index == len(self.text) - 1:
 				self.text = self.text[:-1]
 			else:
 				self.text = self.text[:index] + self.text[index + 1:]
-			if index in self.trafos:
-				self.trafos.pop(index, None)
+			self._delete_trafos_range((index, index + 1))
 
 	def _delete_text_range(self, text_range):
 		if text_range[1] == len(self.text):
@@ -421,10 +432,7 @@ class TextEditController(AbstractController):
 			self.text = self.text[text_range[1]:]
 		else:
 			self.text = self.text[:text_range[0]] + self.text[text_range[1]:]
-		deleted = range(*text_range)
-		for item in self.trafos:
-			if item in deleted:
-				self.trafos.pop(item, None)
+		self._delete_trafos_range(text_range)
 
 	def _insert_text(self, text, index):
 		if self.selected:
