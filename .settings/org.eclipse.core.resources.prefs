@@ -64,6 +64,7 @@ encoding//src/sk1/document/controllers/trafo_ctrl.py=utf-8
 encoding//src/sk1/document/controllers/zoom_ctrl.py=utf-8
 encoding//src/sk1/document/ctx_menu.py=utf-8
 encoding//src/sk1/document/docarea.py=utf-8
+encoding//src/sk1/document/eventloop.py=utf-8
 encoding//src/sk1/document/kbd_proc.py=utf-8
 encoding//src/sk1/document/presenter.py=utf-8
 encoding//src/sk1/document/renderer.py=utf-8
