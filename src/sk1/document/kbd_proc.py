@@ -131,4 +131,9 @@ class Kbd_Processor:
 		if self.canvas.mode == modes.TEXT_EDIT_MODE:
 			self.canvas.controller.insert_text(unichr(event.GetUniChar()))
 			return
+		elif self.canvas.mode == modes.TEXT_EDITOR_MODE:
+			char = int(unichr(event.GetUniChar()))
+			if char in modes.ET_MODES:
+				self.canvas.controller.set_mode(char)
+				return
 		event.Skip()
