@@ -532,3 +532,14 @@ class AppInspector:
 				if parent.childs.index(obj) < len(parent.childs) - 1:
 					return True
 		return False
+
+	def can_be_straighten_text(self, doc=None):
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		elif self.is_selection(doc):
+			objs = doc.selection.objs
+			if len(objs) == 1:
+				obj = objs[0]
+				if obj.is_text() and obj.trafos:
+					return True
+		return False

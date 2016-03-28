@@ -651,3 +651,12 @@ class AppProxy:
 
 	def capitalize_text(self):
 		self.app.current_doc.canvas.controller.capitalize_selected()
+
+	def straighten_text(self):
+		doc = self.app.current_doc
+		canvas = doc.canvas
+		obj = None
+		if canvas.mode in (modes.TEXT_EDITOR_MODE, modes.TEXT_EDIT_MODE):
+			obj = canvas.controller.target
+		doc.api.straighten_text(obj)
+
