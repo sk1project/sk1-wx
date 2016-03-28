@@ -81,10 +81,10 @@ class TextEditor(AbstractController):
 			index += 1
 
 	def set_mode(self, mode):
-		if mode in modes.ET_MODES:
-			self.trafo_mode = mode
-			events.emit(events.UPDATE_CHANNEL, events.ET_ID)
-			print mode
+		if mode in modes.ET_MODES and not mode == self.trafo_mode:
+			pass
+#			self.trafo_mode = mode
+#			events.emit(events.UPDATE_CHANNEL, events.ET_ID)
 
 	#----- REPAINT
 	def repaint(self):
@@ -106,11 +106,13 @@ class TextEditor(AbstractController):
 
 	def mouse_down(self, event):
 		self.timer.stop()
+		self.initial_start = []
 		self.start = []
 		self.end = []
 		self.draw = False
 		self.move_flag = False
 		self.start = event.get_point()
+		self.initial_start = event.get_point()
 		self.spoint = self.select_point_by_click(self.start)
 		if not self.spoint:
 			self.timer.start()
@@ -122,7 +124,8 @@ class TextEditor(AbstractController):
 			self.draw = True
 		elif self.move_flag:
 			self.end = event.get_point()
-			trafo = self.get_trafo(self.start, self.end)
+			trafo = self.get_trafo(self.start, self.end,
+								event.is_ctrl(), event.is_shift())
 			self.apply_trafo_to_selected(trafo)
 			self.start = self.end
 			self.canvas.selection_redraw()
@@ -143,7 +146,8 @@ class TextEditor(AbstractController):
 			self.canvas.selection_redraw()
 		elif self.move_flag:
 			self.move_flag = False
-			trafo = self.get_trafo(self.start, self.end)
+			trafo = self.get_trafo(self.start, self.end,
+								event.is_ctrl(), event.is_shift())
 			self.apply_trafo_to_selected(trafo, True)
 			self.canvas.selection_redraw()
 		elif self.spoint:
@@ -189,10 +193,20 @@ class TextEditor(AbstractController):
 				return item
 		return None
 
-	def get_trafo(self, start, end):
+	def get_trafo(self, start, end, ctrl=False, shift=False):
+		trafo = [1.0, 0.0, 0.0, 1.0]
+		dchange = [0.0, 0.0]
 		dstart = self.canvas.win_to_doc(start)
 		dend = self.canvas.win_to_doc(end)
-		return [1.0, 0.0, 0.0, 1.0] + libgeom.sub_points(dend, dstart)
+		if self.trafo_mode == modes.ET_MOVING_MODE:
+			dchange = libgeom.sub_points(dend, dstart)
+			if ctrl:
+				change = libgeom.sub_points(end, self.initial_start)
+				if abs(change[0]) > abs(change[1]):
+					dchange = [dchange[0], 0.0]
+				else:
+					dchange = [0.0, dchange[1]]
+		return trafo + dchange
 
 	def apply_trafo_to_selected(self, trafo, final=False):
 		trafos = deepcopy(self.target.trafos)
