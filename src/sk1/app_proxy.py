@@ -214,11 +214,16 @@ class AppProxy:
 		canvas = self.app.current_doc.canvas
 		if canvas.mode == modes.BEZIER_EDITOR_MODE:
 			canvas.controller.update_paths()
+		elif canvas.mode == modes.TEXT_EDITOR_MODE:
+			canvas.controller.update_points()
+
 	def redo(self):
 		self.app.current_doc.api.do_redo()
 		canvas = self.app.current_doc.canvas
 		if canvas.mode == modes.BEZIER_EDITOR_MODE:
 			canvas.controller.update_paths()
+		elif canvas.mode == modes.TEXT_EDITOR_MODE:
+			canvas.controller.update_points()
 
 	def clear_history(self):
 		self.app.current_doc.api.clear_history()
