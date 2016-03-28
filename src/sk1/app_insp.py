@@ -542,4 +542,7 @@ class AppInspector:
 				obj = objs[0]
 				if obj.is_text() and obj.trafos:
 					return True
+		elif doc.canvas.mode in (modes.TEXT_EDIT_MODE, modes.TEXT_EDITOR_MODE):
+			if doc.canvas.controller.target.trafos:
+				return True
 		return False
