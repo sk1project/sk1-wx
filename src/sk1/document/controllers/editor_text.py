@@ -23,13 +23,7 @@ from uc2 import libgeom
 from sk1 import _, modes, config, events
 from generic import AbstractController
 
-MOVING_MODE = 1
-X_RESIZE_MODE = 2
-Y_RESIZE_MODE = 3
-XY_RESIZE_MODE = 4
-ROTATE_MODE = 5
-X_SKEW_MODE = 6
-Y_SKEW_MODE = 7
+
 
 class TextEditor(AbstractController):
 
@@ -41,7 +35,7 @@ class TextEditor(AbstractController):
 	selected_points = []
 	spoint = None
 	trafos = {}
-	trafo_mode = MOVING_MODE
+	trafo_mode = modes.ET_MOVING_MODE
 
 	def __init__(self, canvas, presenter):
 		AbstractController.__init__(self, canvas, presenter)
@@ -53,7 +47,7 @@ class TextEditor(AbstractController):
 		self.api.set_mode()
 		self.update_points()
 		self.selection.clear()
-		self.trafo_mode = MOVING_MODE
+		self.trafo_mode = modes.ET_MOVING_MODE
 		msg = _('Text in shaping')
 		events.emit(events.APP_STATUS, msg)
 
@@ -85,6 +79,12 @@ class TextEditor(AbstractController):
 					flag = True
 				self.points.append(ControlPoint(cv, index, [x, y], trafo, flag))
 			index += 1
+
+	def set_mode(self, mode):
+		if mode in modes.ET_MODES:
+			self.trafo_mode = mode
+			events.emit(events.UPDATE_CHANNEL, events.ET_ID)
+			print mode
 
 	#----- REPAINT
 	def repaint(self):
