@@ -659,4 +659,6 @@ class AppProxy:
 		if canvas.mode in (modes.TEXT_EDITOR_MODE, modes.TEXT_EDIT_MODE):
 			obj = canvas.controller.target
 		doc.api.straighten_text(obj)
+		if canvas.mode == modes.TEXT_EDITOR_MODE:
+			canvas.controller.update_points()
 
