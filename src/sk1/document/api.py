@@ -1949,7 +1949,11 @@ class PresenterAPI(AbstractAPI):
 		self.add_undo(transaction)
 		self.selection.update()
 
-
+	def straighten_text(self, obj=None):
+		if not obj:
+			sel_before = [] + self.selection.objs
+			obj = sel_before[0]
+		self.set_text_trafos(obj, {}, obj.trafos)
 
 
 
