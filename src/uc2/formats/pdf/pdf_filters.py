@@ -17,15 +17,37 @@
 
 import sys
 
-from uc2.formats.generic_filters import AbstractSaver
+from reportlab.pdfgen.canvas import Canvas
+from reportlab.lib.utils import ImageReader
 
+from uc2.formats.generic_filters import AbstractSaver
+from pdfconst import PDF_VERSION_DEFAULT
 
 class PDF_Saver(AbstractSaver):
 
 	name = 'PDF_Saver'
+	canvas = None
+	methods = None
+	desktop_layers = None
+	master_layers = None
+	page_trafo = None
 
-	def __init__(self):
-		pass
 
 	def do_save(self):
-		pass
+		self.canvas = Canvas(self.fileptr, pdfVersion=PDF_VERSION_DEFAULT)
+		self.presenter.update()
+		self.methods = self.presenter.methods
+		self.desktop_layers = self.methods.get_desktop_layers()
+		self.master_layers = self.methods.get_master_layers()
+		pages = self.methods.get_pages()
+		for page in pages:
+			self.canvas.setPageSize(self.methods.get_page_size(page))
+			layers = self.desktop_layers + self.methods.get_layers(page)
+			layers += self.master_layers
+			for layer in layers:
+				if self.methods.is_layer_visible(layer) and \
+				self.methods.is_layer_printable(layer):
+					for obj in layer.childs:
+						pass
+			self.canvas.showPage()
+		self.canvas.save()
