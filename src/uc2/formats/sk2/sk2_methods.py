@@ -154,6 +154,9 @@ class SK2_Methods:
 	def set_page_format(self, page, page_format):
 		page.page_format = page_format
 
+	def get_page_size(self, page):
+		return deepcopy(page.page_format[1])
+
 	def add_page(self, page_format=[]):
 		parent = self.get_pages_obj()
 		if page_format:
@@ -219,8 +222,13 @@ class SK2_Methods:
 		return [] + page.childs
 
 	def is_layer_visible(self, layer):
-		if layer.properties[0]: return True
-		return False
+		return layer.properties[0] == 1
+
+	def is_layer_editable(self, layer):
+		return layer.properties[1] == 1
+
+	def is_layer_printable(self, layer):
+		return layer.properties[2] == 1
 
 	def get_visible_layers(self, page, special=False):
 		layers = []
