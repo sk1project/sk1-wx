@@ -25,14 +25,14 @@ from uc2.uc2const import SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL, ASE, JCW
 
 
 SIMPLE_LOADERS = []
-MODEL_LOADERS = [SK2, PDXF, PLT, CDR, CDT] + \
+MODEL_LOADERS = [SK2, PLT, CDR, CDT] + \
 [PNG, JPG, JP2, TIF, GIF, BMP, PCX, PPM, XBM, XPM]
 PALETTE_LOADERS = [SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL, ASE, JCW]
 EXPERIMENTAL_LOADERS = [SK1, WMF, RIFF, CDRZ, XML]
 
 SIMPLE_SAVERS = []
 PALETTE_SAVERS = [SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL, ASE, JCW]
-MODEL_SAVERS = [SK2, PNG, PDXF, PLT]
+MODEL_SAVERS = [SK2, PNG, PDF, PLT]
 EXPERIMENTAL_SAVERS = [SK1, RIFF, CDR, XML ]
 
 PATTERN_FORMATS = [EPS, PNG, JPG, JP2, TIF, GIF, BMP, PCX, PPM, XBM, XPM]
@@ -43,6 +43,7 @@ SAVER_FORMATS = SIMPLE_SAVERS + MODEL_SAVERS + PALETTE_SAVERS
 
 from uc2.formats.sk2 import sk2_loader, sk2_saver, check_sk2
 from uc2.formats.pdxf import pdxf_loader, pdxf_saver, check_pdxf
+from uc2.formats.pdf import check_pdf, pdf_saver
 from uc2.formats.plt import plt_loader, plt_saver, check_plt
 from uc2.formats.sk1 import sk1_loader, sk1_saver, check_sk1
 from uc2.formats.sk import SK_Loader, SK_Saver
@@ -94,7 +95,7 @@ SVG : None, SVGZ : None, ORA : None, XCF : None, SLA : None, FIG : None,
 CDR : cdr_saver, CDT : None, CDRZ : None, CDTZ : None, CMX : None, CCX : None,
 CDRX : None,
 XAR : None,
-AI_PS : None, AI_PDF : None, PS : None, EPS : None, PDF : None, PSD : None,
+AI_PS : None, AI_PDF : None, PS : None, EPS : None, PDF : pdf_saver, PSD : None,
 CGM : None, WMF : wmf_saver, EMF : None, XPS : None, VSD : None,
 PLT : plt_saver, HPGL : None, DXF : None, DWG : None,
 RIFF: riff_saver,
