@@ -66,6 +66,7 @@ class DocumentObject(TextModelObject):
 	def is_polygon(self): return False
 	def is_text(self): return False
 	def is_closed(self): return False
+	def is_container(self): return False
 
 
 class Document(DocumentObject):
@@ -430,6 +431,8 @@ class Container(Group):
 	def update_bbox(self):
 		self.cache_container = self.childs[0]
 		self.cache_bbox = deepcopy(self.cache_container.cache_bbox)
+
+	def is_container(self): return True
 
 
 class PrimitiveObject(SelectableObject):
