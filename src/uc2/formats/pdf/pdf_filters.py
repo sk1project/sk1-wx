@@ -136,13 +136,14 @@ class PDF_Saver(AbstractSaver):
 		self.canvas.setLineWidth(width)
 		self.canvas.setLineCap(caps - 1)
 		self.canvas.setLineJoin(joint)
+		dashes = []
 		if dash:
 			dashes = list(dash)
 			w = width
 			if w < 1.0: w = 1.0
 			for i in range(len(dashes)):
 				dashes[i] = w * dashes[i]
-			self.canvas.setDash(dashes)
+		self.canvas.setDash(dashes)
 		self.canvas.setMiterLimit(miter)
 		#TODO:process scalable flag
 
