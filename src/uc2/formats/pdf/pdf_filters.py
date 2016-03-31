@@ -119,6 +119,7 @@ class PDF_Saver(AbstractSaver):
 		elif color[0] == uc2const.COLOR_SPOT:
 			c, m, y, k = cms.val_100(self.cms.get_cmyk_color(color)[1])
 			spotname = color[3]
+			if spotname == uc2const.COLOR_REG: spotname = 'All'
 			color = PCMYKColor(c, m, y, k, spotName=spotname)
 			self.canvas.setStrokeColor(color, alpha)
 		else:
@@ -157,6 +158,7 @@ class PDF_Saver(AbstractSaver):
 		elif color[0] == uc2const.COLOR_SPOT:
 			c, m, y, k = cms.val_100(self.cms.get_cmyk_color(color)[1])
 			spotname = color[3]
+			if spotname == uc2const.COLOR_REG: spotname = 'All'
 			color = PCMYKColor(c, m, y, k, spotName=spotname)
 			self.canvas.setFillColor(color, alpha)
 		else:
