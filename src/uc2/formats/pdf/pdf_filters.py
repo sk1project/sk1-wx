@@ -18,10 +18,11 @@
 
 from reportlab.pdfgen.canvas import Canvas, FILL_EVEN_ODD, FILL_NON_ZERO
 from reportlab.lib.utils import ImageReader
+from reportlab.lib.colors import PCMYKColor
 
 from uc2 import libgeom
 from uc2.formats.generic_filters import AbstractSaver
-from uc2 import uc2const
+from uc2 import uc2const, cms
 from pdfconst import PDF_VERSION_DEFAULT
 from uc2.formats.sk2 import sk2_const
 
@@ -38,6 +39,7 @@ class PDF_Saver(AbstractSaver):
 	def do_save(self):
 		self.canvas = Canvas(self.fileptr, pdfVersion=PDF_VERSION_DEFAULT)
 		self.presenter.update()
+		self.cms = self.presenter.cms
 		self.methods = self.presenter.methods
 		self.desktop_layers = self.methods.get_desktop_layers()
 		self.master_layers = self.methods.get_master_layers()
@@ -106,17 +108,21 @@ class PDF_Saver(AbstractSaver):
 		return pdfpath, closed
 
 	def set_stroke_color(self, color):
-		cms = self.presenter.cms
+		alpha = color[2]
+		if alpha == 1.0: alpha = None
 		if color[0] == uc2const.COLOR_RGB:
 			r, g, b = color[1]
-			alpha = color[2]
-			if alpha == 1.0: alpha = None
 			self.canvas.setStrokeColorRGB(r, g, b, alpha)
-		#TODO: implement SpotColors support
+		elif color[0] == uc2const.COLOR_GRAY:
+			gray = color[1][0]
+			self.canvas.setStrokeGray(gray, alpha)
+		elif color[0] == uc2const.COLOR_SPOT:
+			c, m, y, k = cms.val_100(self.cms.get_cmyk_color(color)[1])
+			spotname = color[3]
+			color = PCMYKColor(c, m, y, k, spotName=spotname)
+			self.canvas.setStrokeColor(color, alpha)
 		else:
-			c, m, y, k = cms.get_cmyk_color(color)[1]
-			alpha = color[2]
-			if alpha == 1: alpha = None
+			c, m, y, k = self.cms.get_cmyk_color(color)[1]
 			self.canvas.setStrokeColorCMYK(c, m, y, k, alpha)
 
 	def set_stroke(self, stroke_style):
@@ -140,17 +146,21 @@ class PDF_Saver(AbstractSaver):
 		#TODO:process scalable flag
 
 	def set_fill_color(self, color):
-		cms = self.presenter.cms
+		alpha = color[2]
+		if alpha == 1.0: alpha = None
 		if color[0] == uc2const.COLOR_RGB:
 			r, g, b = color[1]
-			alpha = color[2]
-			if alpha == 1.0: alpha = None
 			self.canvas.setFillColorRGB(r, g, b, alpha)
-		#TODO: implement SpotColors support
+		elif color[0] == uc2const.COLOR_GRAY:
+			gray = color[1][0]
+			self.canvas.setFillGray(gray, alpha)
+		elif color[0] == uc2const.COLOR_SPOT:
+			c, m, y, k = cms.val_100(self.cms.get_cmyk_color(color)[1])
+			spotname = color[3]
+			color = PCMYKColor(c, m, y, k, spotName=spotname)
+			self.canvas.setFillColor(color, alpha)
 		else:
-			c, m, y, k = cms.get_cmyk_color(color)[1]
-			alpha = color[2]
-			if alpha == 1: alpha = None
+			c, m, y, k = self.cms.get_cmyk_color(color)[1]
 			self.canvas.setFillColorCMYK(c, m, y, k, alpha)
 
 	def set_fill(self, fill_style):
