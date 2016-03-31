@@ -114,8 +114,9 @@ class PDF_Saver(AbstractSaver):
 			r, g, b = color[1]
 			self.canvas.setStrokeColorRGB(r, g, b, alpha)
 		elif color[0] == uc2const.COLOR_GRAY:
-			gray = color[1][0]
-			self.canvas.setStrokeGray(gray, alpha)
+			k = 1.0 - color[1][0]
+			c = m = y = 0.0
+			self.canvas.setStrokeColorCMYK(c, m, y, k, alpha)
 		elif color[0] == uc2const.COLOR_SPOT:
 			c, m, y, k = cms.val_100(self.cms.get_cmyk_color(color)[1])
 			spotname = color[3]
@@ -154,8 +155,9 @@ class PDF_Saver(AbstractSaver):
 			r, g, b = color[1]
 			self.canvas.setFillColorRGB(r, g, b, alpha)
 		elif color[0] == uc2const.COLOR_GRAY:
-			gray = color[1][0]
-			self.canvas.setFillGray(gray, alpha)
+			k = 1.0 - color[1][0]
+			c = m = y = 0.0
+			self.canvas.setFillColorCMYK(c, m, y, k, alpha)
 		elif color[0] == uc2const.COLOR_SPOT:
 			c, m, y, k = cms.val_100(self.cms.get_cmyk_color(color)[1])
 			spotname = color[3]
