@@ -89,15 +89,36 @@ class CairoRenderer:
 	def render_container(self, ctx, obj):
 		ctx.save()
 		container = obj.cache_container
+
+		if container.style[1] and not self.contour_flag \
+		and container.style[1][7]:
+			ctx.new_path()
+			self.process_stroke(ctx, None, container.style)
+			ctx.append_path(container.cache_cpath)
+			ctx.stroke()
+
+		if container.style[0] and not self.contour_flag:
+			ctx.new_path()
+			self.process_fill(ctx, container)
+			ctx.append_path(container.cache_cpath)
+			ctx.fill()
+
 		ctx.new_path()
 		ctx.append_path(container.cache_cpath)
 		ctx.clip()
-		for obj in obj.childs:
+		for obj in obj.childs[1:]:
 			self.render_object(ctx, obj)
 		ctx.restore()
-		if container.style[1] and not self.contour_flag:
+
+		if container.style[1] and not self.contour_flag and \
+		not container.style[1][7]:
 			ctx.new_path()
 			self.process_stroke(ctx, None, container.style)
+			ctx.append_path(container.cache_cpath)
+			ctx.stroke()
+		elif self.contour_flag:
+			ctx.new_path()
+			self.process_stroke(ctx, None, self.stroke_style)
 			ctx.append_path(container.cache_cpath)
 			ctx.stroke()
 
