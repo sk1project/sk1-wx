@@ -128,6 +128,15 @@ class PDF_Saver(AbstractSaver):
 				closed = True
 		return pdfpath, closed
 
+	def set_rgb_values(self, color, pdfcolor):
+		r, g, b = self.cms.get_rgb_color(color)[1]
+		density = pdfcolor.density
+		if density < 1:
+			r = density * (r - 1) + 1
+			g = density * (g - 1) + 1
+			b = density * (b - 1) + 1
+		pdfcolor.red, pdfcolor.green, pdfcolor.blue = (r, g, b)
+
 	def get_pdfcolor(self, color):
 		pdfcolor = None
 		alpha = color[2]
@@ -146,6 +155,8 @@ class PDF_Saver(AbstractSaver):
 		else:
 			c, m, y, k = self.cms.get_cmyk_color(color)[1]
 			pdfcolor = CMYKColor(c, m, y, k, alpha=alpha)
+		if not color[0] == uc2const.COLOR_RGB:
+			self.set_rgb_values(color, pdfcolor)
 		return pdfcolor
 
 	def stroke_pdfpath(self, pdfpath, stroke_style):
