@@ -18,7 +18,7 @@
 
 from reportlab.pdfgen.canvas import Canvas, FILL_EVEN_ODD, FILL_NON_ZERO
 from reportlab.lib.utils import ImageReader
-from reportlab.lib.colors import PCMYKColor
+from reportlab.lib.colors import CMYKColorSep, Color, CMYKColor
 
 from uc2 import libgeom
 from uc2.formats.generic_filters import AbstractSaver
@@ -67,7 +67,7 @@ class PDF_Saver(AbstractSaver):
 				else:
 					self.process_childs(curve_obj.childs)
 			elif obj.is_container():
-				pass
+				self.draw_container(obj)
 			else:
 				self.process_childs(obj.childs)
 
@@ -78,17 +78,38 @@ class PDF_Saver(AbstractSaver):
 		fill_style = curve_obj.style[0]
 		stroke_style = curve_obj.style[1]
 		if stroke_style and stroke_style[7]:
-			self.set_stroke(stroke_style)
-			self.canvas.drawPath(pdfpath, 1, 0)
+			self.stroke_pdfpath(pdfpath, stroke_style)
 		if fill_style and fill_style[0] & sk2_const.FILL_CLOSED_ONLY and closed:
-			self.set_fill(fill_style)
-			self.canvas.drawPath(pdfpath, 0, 1)
+			self.fill_pdfpath(pdfpath, fill_style, curve_obj.fill_trafo)
 		elif fill_style and not fill_style[0] & sk2_const.FILL_CLOSED_ONLY:
-			self.set_fill(fill_style)
-			self.canvas.drawPath(pdfpath, 0, 1)
+			self.fill_pdfpath(pdfpath, fill_style, curve_obj.fill_trafo)
 		if stroke_style and not stroke_style[7]:
-			self.set_stroke(stroke_style)
-			self.canvas.drawPath(pdfpath, 1, 0)
+			self.stroke_pdfpath(pdfpath, stroke_style)
+
+	def draw_container(self, obj):
+		container = obj.childs[0].to_curve()
+		paths = libgeom.apply_trafo_to_paths(container.paths, container.trafo)
+		paths = libgeom.apply_trafo_to_paths(paths, self.page_trafo)
+		pdfpath, closed = self.make_pdfpath(paths)
+		fill_style = container.style[0]
+		stroke_style = container.style[1]
+		if stroke_style and stroke_style[7]:
+			self.stroke_pdfpath(pdfpath, stroke_style)
+
+		self.canvas.saveState()
+		self.canvas.clipPath(pdfpath, 0, 0)
+
+		if fill_style and fill_style[0] & sk2_const.FILL_CLOSED_ONLY and closed:
+			self.fill_pdfpath(pdfpath, fill_style, container.fill_trafo)
+		elif fill_style and not fill_style[0] & sk2_const.FILL_CLOSED_ONLY:
+			self.fill_pdfpath(pdfpath, fill_style, container.fill_trafo)
+
+		self.process_childs(obj.childs[1:])
+
+		self.canvas.restoreState()
+
+		if stroke_style and not stroke_style[7]:
+			self.stroke_pdfpath(pdfpath, stroke_style)
 
 	def make_pdfpath(self, paths):
 		closed = False
@@ -107,29 +128,29 @@ class PDF_Saver(AbstractSaver):
 				closed = True
 		return pdfpath, closed
 
-	def set_stroke_color(self, color):
+	def get_pdfcolor(self, color):
+		pdfcolor = None
 		alpha = color[2]
-		if alpha == 1.0: alpha = None
 		if color[0] == uc2const.COLOR_RGB:
 			r, g, b = color[1]
-			self.canvas.setStrokeColorRGB(r, g, b, alpha)
+			pdfcolor = Color(r, g, b, alpha)
 		elif color[0] == uc2const.COLOR_GRAY:
 			k = 1.0 - color[1][0]
 			c = m = y = 0.0
-			self.canvas.setStrokeColorCMYK(c, m, y, k, alpha)
+			pdfcolor = CMYKColor(c, m, y, k, alpha=alpha)
 		elif color[0] == uc2const.COLOR_SPOT:
-			c, m, y, k = cms.val_100(self.cms.get_cmyk_color(color)[1])
+			c, m, y, k = self.cms.get_cmyk_color(color)[1]
 			spotname = color[3]
 			if spotname == uc2const.COLOR_REG: spotname = 'All'
-			color = PCMYKColor(c, m, y, k, spotName=spotname)
-			self.canvas.setStrokeColor(color, alpha)
+			pdfcolor = CMYKColorSep(c, m, y, k, spotName=spotname, alpha=alpha)
 		else:
 			c, m, y, k = self.cms.get_cmyk_color(color)[1]
-			self.canvas.setStrokeColorCMYK(c, m, y, k, alpha)
+			pdfcolor = CMYKColor(c, m, y, k, alpha=alpha)
+		return pdfcolor
 
-	def set_stroke(self, stroke_style):
+	def stroke_pdfpath(self, pdfpath, stroke_style):
 		width = stroke_style[1]
-		self.set_stroke_color(stroke_style[2])
+		self.canvas.setStrokeColor(self.get_pdfcolor(stroke_style[2]))
 		dash = stroke_style[3]
 		caps = stroke_style[4]
 		joint = stroke_style[5]
@@ -146,29 +167,10 @@ class PDF_Saver(AbstractSaver):
 				dashes[i] = w * dashes[i]
 		self.canvas.setDash(dashes)
 		self.canvas.setMiterLimit(miter)
+		self.canvas.drawPath(pdfpath, 1, 0)
 		#TODO:process scalable flag
 
-	def set_fill_color(self, color):
-		alpha = color[2]
-		if alpha == 1.0: alpha = None
-		if color[0] == uc2const.COLOR_RGB:
-			r, g, b = color[1]
-			self.canvas.setFillColorRGB(r, g, b, alpha)
-		elif color[0] == uc2const.COLOR_GRAY:
-			k = 1.0 - color[1][0]
-			c = m = y = 0.0
-			self.canvas.setFillColorCMYK(c, m, y, k, alpha)
-		elif color[0] == uc2const.COLOR_SPOT:
-			c, m, y, k = cms.val_100(self.cms.get_cmyk_color(color)[1])
-			spotname = color[3]
-			if spotname == uc2const.COLOR_REG: spotname = 'All'
-			color = PCMYKColor(c, m, y, k, spotName=spotname)
-			self.canvas.setFillColor(color, alpha)
-		else:
-			c, m, y, k = self.cms.get_cmyk_color(color)[1]
-			self.canvas.setFillColorCMYK(c, m, y, k, alpha)
-
-	def set_fill(self, fill_style):
+	def fill_pdfpath(self, pdfpath, fill_style, fill_trafo=None):
 		fillrule = fill_style[0]
 		if fillrule in (sk2_const.FILL_EVENODD,
 					sk2_const.FILL_EVENODD_CLOSED_ONLY):
@@ -177,10 +179,36 @@ class PDF_Saver(AbstractSaver):
 		self.canvas._fillMode = fillrule
 
 		if fill_style[1] == sk2_const.FILL_SOLID:
-			self.set_fill_color(fill_style[2])
+			self.canvas.setFillColor(self.get_pdfcolor(fill_style[2]))
+			self.canvas.drawPath(pdfpath, 0, 1)
 		elif fill_style[1] == sk2_const.FILL_GRADIENT:
-			pass
-			#TODO: implement FILL_GRADIENT support
+			self.canvas.saveState()
+			self.canvas.clipPath(pdfpath, 0, 0)
+			if fill_trafo:
+#				trafo = libgeom.invert_trafo(fill_trafo)
+#				self.canvas.transform(*trafo)
+				self.canvas.transform(*fill_trafo)
+			self.canvas.transform(*self.page_trafo)
+			gradient = fill_style[2]
+			grad_type = gradient[0]
+#			sp, ep = libgeom.apply_trafo_to_points(gradient[1], self.page_trafo)
+			sp, ep = gradient[1]
+			stops = gradient[2]
+			colors = []
+			positions = []
+			for offset, color in stops:
+				positions.append(offset)
+				colors.append(self.get_pdfcolor(color))
+			if grad_type == sk2_const.GRADIENT_RADIAL:
+				radius = libgeom.distance(sp, ep)
+				self.canvas.radialGradient(sp[0], sp[1], radius, colors,
+										positions, True)
+			else:
+				x0, y0 = sp
+				x1, y1 = ep
+				self.canvas.linearGradient(x0, y0, x1, y1, colors,
+										positions, True)
+			self.canvas.restoreState()
 		elif fill_style[1] == sk2_const.FILL_PATTERN:
 			pass
 			#TODO: implement FILL_PATTERN support
