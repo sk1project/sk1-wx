@@ -46,8 +46,8 @@ class PDF_Saver(AbstractSaver):
 		pages = self.methods.get_pages()
 		for page in pages:
 			w, h = self.methods.get_page_size(page)
+			self.canvas.translate(w / 2.0, h / 2.0)
 			self.canvas.setPageSize((w, h))
-			self.page_trafo = [1.0, 0.0, 0.0, 1.0, w / 2.0, h / 2.0]
 			layers = self.desktop_layers + self.methods.get_layers(page)
 			layers += self.master_layers
 			for layer in layers:
@@ -73,7 +73,6 @@ class PDF_Saver(AbstractSaver):
 
 	def draw_curve(self, curve_obj):
 		paths = libgeom.apply_trafo_to_paths(curve_obj.paths, curve_obj.trafo)
-		paths = libgeom.apply_trafo_to_paths(paths, self.page_trafo)
 		pdfpath, closed = self.make_pdfpath(paths)
 		fill_style = curve_obj.style[0]
 		stroke_style = curve_obj.style[1]
@@ -89,7 +88,6 @@ class PDF_Saver(AbstractSaver):
 	def draw_container(self, obj):
 		container = obj.childs[0].to_curve()
 		paths = libgeom.apply_trafo_to_paths(container.paths, container.trafo)
-		paths = libgeom.apply_trafo_to_paths(paths, self.page_trafo)
 		pdfpath, closed = self.make_pdfpath(paths)
 		fill_style = container.style[0]
 		stroke_style = container.style[1]
@@ -179,6 +177,7 @@ class PDF_Saver(AbstractSaver):
 		self.canvas.setDash(dashes)
 		self.canvas.setMiterLimit(miter)
 		self.canvas.drawPath(pdfpath, 1, 0)
+		self.canvas.setStrokeAlpha(1.0)
 		#TODO:process scalable flag
 
 	def fill_pdfpath(self, pdfpath, fill_style, fill_trafo=None):
@@ -192,17 +191,15 @@ class PDF_Saver(AbstractSaver):
 		if fill_style[1] == sk2_const.FILL_SOLID:
 			self.canvas.setFillColor(self.get_pdfcolor(fill_style[2]))
 			self.canvas.drawPath(pdfpath, 0, 1)
+			self.canvas.setFillAlpha(1.0)
 		elif fill_style[1] == sk2_const.FILL_GRADIENT:
+			#TODO: transparency in gradient colors
 			self.canvas.saveState()
 			self.canvas.clipPath(pdfpath, 0, 0)
 			if fill_trafo:
-#				trafo = libgeom.invert_trafo(fill_trafo)
-#				self.canvas.transform(*trafo)
 				self.canvas.transform(*fill_trafo)
-			self.canvas.transform(*self.page_trafo)
 			gradient = fill_style[2]
 			grad_type = gradient[0]
-#			sp, ep = libgeom.apply_trafo_to_points(gradient[1], self.page_trafo)
 			sp, ep = gradient[1]
 			stops = gradient[2]
 			colors = []
@@ -220,6 +217,7 @@ class PDF_Saver(AbstractSaver):
 				self.canvas.linearGradient(x0, y0, x1, y1, colors,
 										positions, True)
 			self.canvas.restoreState()
+
 		elif fill_style[1] == sk2_const.FILL_PATTERN:
 			pass
 			#TODO: implement FILL_PATTERN support
