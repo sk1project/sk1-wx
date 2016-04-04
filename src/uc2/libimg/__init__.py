@@ -26,6 +26,7 @@ from uc2.cms import rgb_to_hexcolor
 from uc2.libimg.imwand import check_image_file, process_image, process_pattern
 from uc2.uc2const import IMAGE_CMYK, IMAGE_RGB, IMAGE_RGBA, IMAGE_LAB
 from uc2.uc2const import IMAGE_GRAY, IMAGE_MONO, DUOTONES, SUPPORTED_CS
+from uc2 import uc2const
 
 def get_version():
 	return Image.VERSION
@@ -55,7 +56,7 @@ def invert_image(cms, bmpstr):
 	raw_image.save(image_stream, format='TIFF')
 	return b64encode(image_stream.getvalue())
 
-def convert_image(cms, pixmap, colorspace):
+def convert_image(cms, pixmap, colorspace, raw=False):
 	image_stream = StringIO()
 	if pixmap.colorspace in DUOTONES and not colorspace in DUOTONES:
 		cdata_stream = StringIO()
@@ -68,8 +69,17 @@ def convert_image(cms, pixmap, colorspace):
 		raw_image = Image.open(StringIO(b64decode(pixmap.bitmap)))
 		raw_image.load()
 	raw_image = cms.convert_image(raw_image, colorspace)
+	if raw: return raw_image
 	raw_image.save(image_stream, format='TIFF')
 	return b64encode(image_stream.getvalue())
+
+def convert_duotone_to_image(cms, pixmap):
+	update_image(cms, pixmap)
+	fg = pixmap.style[3][0]
+	bg = pixmap.style[3][1]
+	cs = uc2const.COLOR_RGB
+	if uc2const.COLOR_CMYK in (fg[0], bg[0]):cs = uc2const.COLOR_CMYK
+	return convert_image(cms, pixmap, cs, True)
 
 def extract_bitmap(pixmap, filepath):
 	if not os.path.splitext(filepath)[1] == '.tiff':
