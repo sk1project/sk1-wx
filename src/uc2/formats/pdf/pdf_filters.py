@@ -15,12 +15,15 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from base64 import b64decode, b64encode
+from cStringIO import StringIO
+from PIL import Image
 
 from reportlab.pdfgen.canvas import Canvas, FILL_EVEN_ODD, FILL_NON_ZERO
 from reportlab.lib.utils import ImageReader
 from reportlab.lib.colors import CMYKColorSep, Color, CMYKColor
 
-from uc2 import libgeom
+from uc2 import libgeom, libimg
 from uc2.formats.generic_filters import AbstractSaver
 from uc2 import uc2const, cms
 from pdfconst import PDF_VERSION_DEFAULT
@@ -38,6 +41,16 @@ class PDF_Saver(AbstractSaver):
 
 	def do_save(self):
 		self.canvas = Canvas(self.fileptr, pdfVersion=PDF_VERSION_DEFAULT)
+		#---Generic data
+		appdata = self.presenter.appdata
+		creator = '%s %s' % (appdata.app_name, appdata.version)
+		self.canvas.setCreator(creator)
+#		self.canvas.setAuthor(author)
+#		self.canvas.setKeywords(keywords)
+#		self.canvas.setTitle(title)
+#		self.canvas.setSubject(subject)
+		self.canvas.setPageCompression(0)
+		#---Generic data end
 		self.presenter.update()
 		self.cms = self.presenter.cms
 		self.methods = self.presenter.methods
@@ -59,7 +72,7 @@ class PDF_Saver(AbstractSaver):
 	def process_childs(self, childs):
 		for obj in childs:
 			if obj.is_pixmap():
-				pass
+				self.draw_image(obj)
 			elif obj.is_primitive():
 				curve_obj = obj.to_curve()
 				if curve_obj.is_primitive():
@@ -164,6 +177,7 @@ class PDF_Saver(AbstractSaver):
 		caps = stroke_style[4]
 		joint = stroke_style[5]
 		miter = stroke_style[6]
+		#TODO:process scalable flag
 		self.canvas.setLineWidth(width)
 		self.canvas.setLineCap(caps - 1)
 		self.canvas.setLineJoin(joint)
@@ -178,7 +192,6 @@ class PDF_Saver(AbstractSaver):
 		self.canvas.setMiterLimit(miter)
 		self.canvas.drawPath(pdfpath, 1, 0)
 		self.canvas.setStrokeAlpha(1.0)
-		#TODO:process scalable flag
 
 	def fill_pdfpath(self, pdfpath, fill_style, fill_trafo=None):
 		fillrule = fill_style[0]
@@ -191,8 +204,8 @@ class PDF_Saver(AbstractSaver):
 		if fill_style[1] == sk2_const.FILL_SOLID:
 			self.canvas.setFillColor(self.get_pdfcolor(fill_style[2]))
 			self.canvas.drawPath(pdfpath, 0, 1)
-			self.canvas.setFillAlpha(1.0)
 		elif fill_style[1] == sk2_const.FILL_GRADIENT:
+			self.canvas.setFillAlpha(1.0)
 			#TODO: transparency in gradient colors
 			self.canvas.saveState()
 			self.canvas.clipPath(pdfpath, 0, 0)
@@ -222,4 +235,21 @@ class PDF_Saver(AbstractSaver):
 			pass
 			#TODO: implement FILL_PATTERN support
 
+	def draw_image(self, obj):
+		self.canvas.saveState()
+		self.canvas.transform(*obj.trafo)
 
+		if obj.colorspace in uc2const.DUOTONES:
+			raw_image = libimg.convert_duotone_to_image(self.cms, obj)
+		else:
+			raw_image = Image.open(StringIO(b64decode(obj.bitmap)))
+			raw_image.load()
+		img = ImageReader(raw_image)
+		img.getRGBData()
+		if obj.alpha_channel:
+			alpha_channel = Image.open(StringIO(b64decode(obj.alpha_channel)))
+			alpha_channel.load()
+			img._dataA = ImageReader(alpha_channel)
+
+		self.canvas.drawImage(img, 0, 0, mask='auto')
+		self.canvas.restoreState()
