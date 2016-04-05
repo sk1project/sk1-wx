@@ -15,7 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from base64 import b64decode, b64encode
+from base64 import b64decode
 from cStringIO import StringIO
 from PIL import Image
 
@@ -25,7 +25,7 @@ from reportlab.lib.colors import CMYKColorSep, Color, CMYKColor
 
 from uc2 import libgeom, libimg
 from uc2.formats.generic_filters import AbstractSaver
-from uc2 import uc2const, cms
+from uc2 import uc2const
 from pdfconst import PDF_VERSION_DEFAULT
 from uc2.formats.sk2 import sk2_const
 
@@ -49,7 +49,7 @@ class PDF_Saver(AbstractSaver):
 #		self.canvas.setKeywords(keywords)
 #		self.canvas.setTitle(title)
 #		self.canvas.setSubject(subject)
-		self.canvas.setPageCompression(0)
+#		self.canvas.setPageCompression(0)
 		#---Generic data end
 		self.presenter.update()
 		self.cms = self.presenter.cms
