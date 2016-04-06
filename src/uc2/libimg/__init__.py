@@ -22,7 +22,7 @@ from base64 import b64decode, b64encode
 from cStringIO import StringIO
 from PIL import Image, ImageOps
 
-from uc2.cms import rgb_to_hexcolor
+from uc2.cms import rgb_to_hexcolor, val_255
 from uc2.libimg.imwand import check_image_file, process_image, process_pattern
 from uc2.uc2const import IMAGE_CMYK, IMAGE_RGB, IMAGE_RGBA, IMAGE_LAB
 from uc2.uc2const import IMAGE_GRAY, IMAGE_MONO, DUOTONES, SUPPORTED_CS
@@ -73,13 +73,45 @@ def convert_image(cms, pixmap, colorspace, raw=False):
 	raw_image.save(image_stream, format='TIFF')
 	return b64encode(image_stream.getvalue())
 
-def convert_duotone_to_image(cms, pixmap):
+def convert_duotone_to_image(cms, pixmap, cs=None):
 	update_image(cms, pixmap)
 	fg = pixmap.style[3][0]
 	bg = pixmap.style[3][1]
-	cs = uc2const.COLOR_RGB
-	if uc2const.COLOR_CMYK in (fg[0], bg[0]):cs = uc2const.COLOR_CMYK
-	return convert_image(cms, pixmap, cs, True)
+	raw_image = Image.open(StringIO(b64decode(pixmap.bitmap)))
+	raw_image.load()
+	fg_img = None
+	bg_img = None
+	if pixmap.colorspace == uc2const.IMAGE_MONO:
+		raw_image = raw_image.convert(IMAGE_GRAY)
+	size = raw_image.size
+	if cs == uc2const.IMAGE_CMYK:
+		if fg:fg = tuple(cms.get_cmyk_color255(fg))
+		if bg:bg = tuple(cms.get_cmyk_color255(bg))
+		fg_cs = bg_cs = cs
+	elif cs == uc2const.IMAGE_RGB:
+		if fg:fg = tuple(cms.get_rgb_color255(fg))
+		if bg:bg = tuple(cms.get_rgb_color255(bg))
+		fg_cs = bg_cs = cs
+	else:
+		if fg:
+			fg_cs = fg[0]
+			fg = tuple(val_255(cms.get_color(fg, fg_cs)[1]))
+		if bg:
+			bg_cs = bg[0]
+			bg = tuple(val_255(cms.get_color(bg, bg_cs)[1]))
+	if fg:fg_img = Image.new(fg_cs, size, fg)
+	if bg:bg_img = Image.new(bg_cs, size, bg)
+
+	fg_alpha = ImageOps.invert(raw_image)
+	bg_alpha = raw_image
+	if pixmap.alpha_channel:
+		alpha_chnl = Image.open(StringIO(b64decode(pixmap.alpha_channel)))
+		alpha_chnl.load()
+		alpha_chnl = ImageOps.invert(alpha_chnl)
+		comp_img = Image.new('L', size, 0)
+		fg_alpha.paste(comp_img, (0, 0), alpha_chnl)
+		bg_alpha.paste(comp_img, (0, 0), alpha_chnl)
+	return ((fg_img, fg_alpha), (bg_img, bg_alpha))
 
 def extract_bitmap(pixmap, filepath):
 	if not os.path.splitext(filepath)[1] == '.tiff':
