@@ -571,6 +571,9 @@ class ColorManager(object):
 		res = self.do_transform(color, color[0], COLOR_CMYK)
 		return [COLOR_CMYK, res, color[2], '' + color[3]]
 
+	def get_cmyk_color255(self, color):
+		return val_255(self.get_cmyk_color(color)[1])
+
 	def get_lab_color(self, color):
 		"""
 		Convert color into L*a*b* color.
