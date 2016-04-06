@@ -72,7 +72,7 @@ class PDF_Saver(AbstractSaver):
 	def process_childs(self, childs):
 		for obj in childs:
 			if obj.is_pixmap():
-				self.draw_image(obj)
+				self.draw_pixmap(obj)
 			elif obj.is_primitive():
 				curve_obj = obj.to_curve()
 				if curve_obj.is_primitive():
@@ -235,21 +235,28 @@ class PDF_Saver(AbstractSaver):
 			pass
 			#TODO: implement FILL_PATTERN support
 
-	def draw_image(self, obj):
+	def draw_pixmap(self, obj):
 		self.canvas.saveState()
 		self.canvas.transform(*obj.trafo)
 
 		if obj.colorspace in uc2const.DUOTONES:
-			raw_image = libimg.convert_duotone_to_image(self.cms, obj)
+			fg, bg = libimg.convert_duotone_to_image(self.cms, obj)
+			self.draw_image(*bg)
+			self.draw_image(*fg)
 		else:
 			raw_image = Image.open(StringIO(b64decode(obj.bitmap)))
 			raw_image.load()
-		img = ImageReader(raw_image)
-		img.getRGBData()
-		if obj.alpha_channel:
-			alpha_channel = Image.open(StringIO(b64decode(obj.alpha_channel)))
-			alpha_channel.load()
-			img._dataA = ImageReader(alpha_channel)
+			alpha_chnl = None
+			if obj.alpha_channel:
+				alpha_chnl = Image.open(StringIO(b64decode(obj.alpha_channel)))
+				alpha_chnl.load()
+			self.draw_image(raw_image, alpha_chnl)
 
-		self.canvas.drawImage(img, 0, 0, mask='auto')
 		self.canvas.restoreState()
+
+	def draw_image(self, image, alpha_channel=None):
+		if not image: return
+		img = ImageReader(image)
+		img.getRGBData()
+		if alpha_channel: img._dataA = ImageReader(alpha_channel)
+		self.canvas.drawImage(img, 0, 0, mask='auto')
