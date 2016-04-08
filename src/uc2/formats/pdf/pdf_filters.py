@@ -45,6 +45,8 @@ class PDF_Saver(AbstractSaver):
 		appdata = self.presenter.appdata
 		creator = '%s %s' % (appdata.app_name, appdata.version)
 		self.canvas.setCreator(creator)
+		producer = '%s %s' % ('UniConvertor', appdata.version)
+		self.canvas._doc.info.producer = producer
 #		self.canvas.setAuthor(author)
 #		self.canvas.setKeywords(keywords)
 #		self.canvas.setTitle(title)
