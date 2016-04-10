@@ -16,6 +16,7 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
+from copy import deepcopy
 from base64 import b64decode
 from cStringIO import StringIO
 from PIL import Image
@@ -28,7 +29,7 @@ from uc2 import libgeom, libimg
 from uc2.formats.generic_filters import AbstractSaver
 from uc2 import uc2const
 from pdfconst import PDF_VERSION_DEFAULT
-from uc2.formats.sk2 import sk2_const
+from uc2.formats.sk2 import sk2_const, sk2_model
 
 class PDF_Saver(AbstractSaver):
 
@@ -55,10 +56,10 @@ class PDF_Saver(AbstractSaver):
 			self.canvas.setKeywords(metainfo[2])
 #		self.canvas.setTitle(title)
 #		self.canvas.setSubject(subject)
-#		self.canvas.setPageCompression(0)
 		#---Generic data end
 
 		self.presenter.update()
+		self.canvas.setPageCompression(1)
 		self.cms = self.presenter.cms
 		self.methods = self.presenter.methods
 		self.desktop_layers = self.methods.get_desktop_layers()
@@ -238,8 +239,8 @@ class PDF_Saver(AbstractSaver):
 				self.fill_gradient(pdfpath, fill_trafo, gradient)
 
 		elif fill_style[1] == sk2_const.FILL_PATTERN:
-			pass
-			#TODO: implement FILL_PATTERN support
+			pattern = fill_style[2]
+			self.fill_pattern(obj, pdfpath, fill_trafo, pattern)
 
 	def fill_gradient(self, pdfpath, fill_trafo, gradient):
 		self.canvas.saveState()
@@ -390,7 +391,10 @@ class PDF_Saver(AbstractSaver):
 	def draw_pixmap(self, obj):
 		self.canvas.saveState()
 		self.canvas.transform(*obj.trafo)
+		self.draw_pixmap_obj(obj)
+		self.canvas.restoreState()
 
+	def draw_pixmap_obj(self, obj):
 		if obj.colorspace in uc2const.DUOTONES:
 			fg, bg = libimg.convert_duotone_to_image(self.cms, obj)
 			self.draw_image(*bg)
@@ -404,11 +408,47 @@ class PDF_Saver(AbstractSaver):
 				alpha_chnl.load()
 			self.draw_image(raw_image, alpha_chnl)
 
-		self.canvas.restoreState()
-
 	def draw_image(self, image, alpha_channel=None):
 		if not image: return
 		img = ImageReader(image)
 		img.getRGBData()
 		if alpha_channel: img._dataA = ImageReader(alpha_channel)
 		self.canvas.drawImage(img, 0, 0, mask='auto')
+
+	def fill_pattern(self, obj, pdfpath, fill_trafo, pattern):
+		#TODO: fix pattern and obj trafo!
+		if not fill_trafo:
+			fill_trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+		inv_ptrn_trafo = libgeom.invert_trafo(pattern[3])
+		inv_trafo = libgeom.multiply_trafo(libgeom.invert_trafo(fill_trafo),
+										libgeom.invert_trafo(inv_ptrn_trafo))
+		paths = libgeom.apply_trafo_to_paths(obj.paths, obj.trafo)
+		paths = libgeom.apply_trafo_to_paths(paths, inv_trafo)
+		bbox = libgeom.get_paths_bbox(paths)
+		cv_trafo = libgeom.multiply_trafo(pattern[3], fill_trafo)
+
+		bmpstr = b64decode(pattern[1])
+		image_obj = sk2_model.Pixmap(obj.config)
+		libimg.set_image_data(self.cms, image_obj, bmpstr)
+		if pattern[0] == sk2_const.PATTERN_IMG and \
+		 len(pattern) > 2:
+			image_obj.style[3] = deepcopy(pattern[2])
+		libimg.update_image(self.cms, image_obj)
+
+		self.canvas.saveState()
+		self.canvas.clipPath(pdfpath, 0, 0)
+
+		w, h = image_obj.get_size()
+		x = bbox[0]
+		y = bbox[3]
+		while y > bbox[1] - h:
+			while x < bbox[2]:
+				self.canvas.saveState()
+				self.canvas.transform(1.0, 0.0, 0.0, 1.0, x, y)
+				self.canvas.transform(*cv_trafo)
+				self.draw_pixmap_obj(image_obj)
+				self.canvas.restoreState()
+				x += w
+			y -= h
+			x = bbox[0]
+		self.canvas.restoreState()
