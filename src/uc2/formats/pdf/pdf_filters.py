@@ -42,18 +42,22 @@ class PDF_Saver(AbstractSaver):
 
 	def do_save(self):
 		self.canvas = Canvas(self.fileptr, pdfVersion=PDF_VERSION_DEFAULT)
+
 		#---Generic data
 		appdata = self.presenter.appdata
 		creator = '%s %s' % (appdata.app_name, appdata.version)
 		self.canvas.setCreator(creator)
 		producer = '%s %s' % ('UniConvertor', appdata.version)
 		self.canvas._doc.info.producer = producer
-#		self.canvas.setAuthor(author)
-#		self.canvas.setKeywords(keywords)
+		metainfo = self.presenter.model.metainfo
+		if metainfo:
+			self.canvas.setAuthor(metainfo[0])
+			self.canvas.setKeywords(metainfo[2])
 #		self.canvas.setTitle(title)
 #		self.canvas.setSubject(subject)
 #		self.canvas.setPageCompression(0)
 		#---Generic data end
+
 		self.presenter.update()
 		self.cms = self.presenter.cms
 		self.methods = self.presenter.methods
