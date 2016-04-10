@@ -884,9 +884,13 @@ class Pixmap(PrimitiveObject):
 
 	def is_pixmap(self): return True
 
-	def get_initial_paths(self):
+	def get_size(self):
 		width = float(self.size[0]) * uc2const.px_to_pt
 		height = float(self.size[1]) * uc2const.px_to_pt
+		return width, height
+
+	def get_initial_paths(self):
+		width, height = self.get_size()
 		return libgeom.get_rect_paths([0, 0], width, height,
 									[] + sk2_const.CORNERS)
 
