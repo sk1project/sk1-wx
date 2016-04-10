@@ -15,6 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import math
 from base64 import b64decode
 from cStringIO import StringIO
 from PIL import Image
@@ -94,9 +95,9 @@ class PDF_Saver(AbstractSaver):
 		if stroke_style and stroke_style[7]:
 			self.stroke_pdfpath(pdfpath, stroke_style)
 		if fill_style and fill_style[0] & sk2_const.FILL_CLOSED_ONLY and closed:
-			self.fill_pdfpath(pdfpath, fill_style, curve_obj.fill_trafo)
+			self.fill_pdfpath(curve_obj, pdfpath, fill_style, curve_obj.fill_trafo)
 		elif fill_style and not fill_style[0] & sk2_const.FILL_CLOSED_ONLY:
-			self.fill_pdfpath(pdfpath, fill_style, curve_obj.fill_trafo)
+			self.fill_pdfpath(curve_obj, pdfpath, fill_style, curve_obj.fill_trafo)
 		if stroke_style and not stroke_style[7]:
 			self.stroke_pdfpath(pdfpath, stroke_style)
 
@@ -113,9 +114,9 @@ class PDF_Saver(AbstractSaver):
 		self.canvas.clipPath(pdfpath, 0, 0)
 
 		if fill_style and fill_style[0] & sk2_const.FILL_CLOSED_ONLY and closed:
-			self.fill_pdfpath(pdfpath, fill_style, container.fill_trafo)
+			self.fill_pdfpath(container, pdfpath, fill_style, container.fill_trafo)
 		elif fill_style and not fill_style[0] & sk2_const.FILL_CLOSED_ONLY:
-			self.fill_pdfpath(pdfpath, fill_style, container.fill_trafo)
+			self.fill_pdfpath(container, pdfpath, fill_style, container.fill_trafo)
 
 		self.process_childs(obj.childs[1:])
 
@@ -140,6 +141,13 @@ class PDF_Saver(AbstractSaver):
 				pdfpath.close()
 				closed = True
 		return pdfpath, closed
+
+	def set_fill_rule(self, fillrule):
+		if fillrule in (sk2_const.FILL_EVENODD,
+					sk2_const.FILL_EVENODD_CLOSED_ONLY):
+			fillrule = FILL_EVEN_ODD
+		else:fillrule = FILL_NON_ZERO
+		self.canvas._fillMode = fillrule
 
 	def set_rgb_values(self, color, pdfcolor):
 		r, g, b = self.cms.get_rgb_color(color)[1]
@@ -195,47 +203,174 @@ class PDF_Saver(AbstractSaver):
 		self.canvas.drawPath(pdfpath, 1, 0)
 		self.canvas.setStrokeAlpha(1.0)
 
-	def fill_pdfpath(self, pdfpath, fill_style, fill_trafo=None):
-		fillrule = fill_style[0]
-		if fillrule in (sk2_const.FILL_EVENODD,
-					sk2_const.FILL_EVENODD_CLOSED_ONLY):
-			fillrule = FILL_EVEN_ODD
-		else:fillrule = FILL_NON_ZERO
-		self.canvas._fillMode = fillrule
+	def fill_pdfpath(self, obj, pdfpath, fill_style, fill_trafo=None):
+		self.set_fill_rule(fill_style[0])
 
 		if fill_style[1] == sk2_const.FILL_SOLID:
 			self.canvas.setFillColor(self.get_pdfcolor(fill_style[2]))
 			self.canvas.drawPath(pdfpath, 0, 1)
 		elif fill_style[1] == sk2_const.FILL_GRADIENT:
-			self.canvas.setFillAlpha(1.0)
-			#TODO: transparency in gradient colors
-			self.canvas.saveState()
-			self.canvas.clipPath(pdfpath, 0, 0)
-			if fill_trafo:
-				self.canvas.transform(*fill_trafo)
 			gradient = fill_style[2]
-			grad_type = gradient[0]
-			sp, ep = gradient[1]
 			stops = gradient[2]
-			colors = []
-			positions = []
+			transparency = False
 			for offset, color in stops:
-				positions.append(offset)
-				colors.append(self.get_pdfcolor(color))
-			if grad_type == sk2_const.GRADIENT_RADIAL:
-				radius = libgeom.distance(sp, ep)
-				self.canvas.radialGradient(sp[0], sp[1], radius, colors,
-										positions, True)
+				if color[2] < 1.0:
+					transparency = True
+					break
+			if transparency:
+				self.fill_tr_gradient(obj, pdfpath, fill_trafo, gradient)
 			else:
-				x0, y0 = sp
-				x1, y1 = ep
-				self.canvas.linearGradient(x0, y0, x1, y1, colors,
-										positions, True)
-			self.canvas.restoreState()
+				self.fill_gradient(pdfpath, fill_trafo, gradient)
 
 		elif fill_style[1] == sk2_const.FILL_PATTERN:
 			pass
 			#TODO: implement FILL_PATTERN support
+
+	def fill_gradient(self, pdfpath, fill_trafo, gradient):
+		self.canvas.saveState()
+		self.canvas.clipPath(pdfpath, 0, 0)
+		if fill_trafo:
+			self.canvas.transform(*fill_trafo)
+		grad_type = gradient[0]
+		sp, ep = gradient[1]
+		stops = gradient[2]
+		colors = []
+		positions = []
+		for offset, color in stops:
+			positions.append(offset)
+			colors.append(self.get_pdfcolor(color))
+		if grad_type == sk2_const.GRADIENT_RADIAL:
+			radius = libgeom.distance(sp, ep)
+			self.canvas.radialGradient(sp[0], sp[1], radius, colors,
+									positions, True)
+		else:
+			x0, y0 = sp
+			x1, y1 = ep
+			self.canvas.linearGradient(x0, y0, x1, y1, colors,
+									positions, True)
+		self.canvas.restoreState()
+
+	def fill_tr_gradient(self, obj, pdfpath, fill_trafo, gradient):
+		grad_type = gradient[0]
+		if grad_type == sk2_const.GRADIENT_RADIAL:
+			self.fill_radial_tr_gradient(obj, pdfpath, fill_trafo, gradient)
+		else:
+			self.fill_linear_tr_gradient(obj, pdfpath, fill_trafo, gradient)
+
+	def get_grcolor_at_point(self, stops, point=0.0):
+		if not point:return self.get_pdfcolor(stops[0][1])
+		if point == 1.0:return self.get_pdfcolor(stops[-1][1])
+		stop0 = stops[0]
+		stop1 = None
+		for item in stops:
+			if item[0] < point:stop0 = item
+			if item[0] >= point:
+				stop1 = item
+				break
+		size = stop1[0] - stop0[0]
+		if not size:
+			color = stop1[1]
+		else:
+			coef = (point - stop0[0]) / size
+			color = self.cms.mix_colors(stop0[1], stop1[1], coef)
+		return self.get_pdfcolor(color)
+
+	def fill_linear_tr_gradient(self, obj, pdfpath, fill_trafo, gradient):
+		if not fill_trafo:
+			fill_trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+		stops = gradient[2]
+		sp, ep = gradient[1]
+		dx, dy = sp
+		l = libgeom.distance(sp, ep)
+		angle = libgeom.get_point_angle(ep, sp)
+		m21 = math.sin(angle)
+		m11 = m22 = math.cos(angle)
+		m12 = -m21
+		trafo = [m11, m21, m12, m22, dx, dy]
+		inv_trafo = libgeom.multiply_trafo(libgeom.invert_trafo(fill_trafo),
+										libgeom.invert_trafo(trafo))
+		cv_trafo = libgeom.multiply_trafo(trafo, fill_trafo)
+		paths = libgeom.apply_trafo_to_paths(obj.paths, obj.trafo)
+		paths = libgeom.apply_trafo_to_paths(paths, inv_trafo)
+		bbox = libgeom.sum_bbox(libgeom.get_paths_bbox(paths),
+							[0.0, 0.0, l, 0.0])
+		bbox = libgeom.normalize_bbox(bbox)
+
+		y = bbox[1]
+		d = libgeom.distance(*libgeom.apply_trafo_to_points([[0.0, 0.0],
+													[0.0, 1.0]], inv_trafo))
+		height = bbox[3] - bbox[1]
+
+		self.canvas.saveState()
+		self.canvas.clipPath(pdfpath, 0, 0)
+		self.canvas.transform(*cv_trafo)
+
+		self.canvas.setFillColor(self.get_grcolor_at_point(stops, 0.0))
+		self.canvas.rect(bbox[0], y, 0.0 - bbox[0], height, stroke=0, fill=1)
+
+		x = 0.0
+		while x < l:
+			point = x / l
+			self.canvas.setFillColor(self.get_grcolor_at_point(stops, point))
+			if x + d < l: width = d
+			else: width = l - x
+			self.canvas.rect(x, y, width, height, stroke=0, fill=1)
+			x += d
+
+		self.canvas.setFillColor(self.get_grcolor_at_point(stops, 1.0))
+		self.canvas.rect(l, y, bbox[2] - l, height, stroke=0, fill=1)
+
+		self.canvas.restoreState()
+
+
+	def fill_radial_tr_gradient(self, obj, pdfpath, fill_trafo, gradient):
+		if not fill_trafo:
+			fill_trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+		stops = gradient[2]
+		sp, ep = gradient[1]
+		dx, dy = sp
+		l = libgeom.distance(sp, ep)
+		trafo = [1.0, 0.0, 0.0, 1.0, dx, dy]
+		inv_trafo = libgeom.multiply_trafo(libgeom.invert_trafo(fill_trafo),
+										libgeom.invert_trafo(trafo))
+		cv_trafo = libgeom.multiply_trafo(trafo, fill_trafo)
+		paths = libgeom.apply_trafo_to_paths(obj.paths, obj.trafo)
+		paths = libgeom.apply_trafo_to_paths(paths, inv_trafo)
+		bbox = libgeom.sum_bbox(libgeom.get_paths_bbox(paths),
+							[0.0, 0.0, l, 0.0])
+		bbox = libgeom.normalize_bbox(bbox)
+		d = libgeom.distance(*libgeom.apply_trafo_to_points([[0.0, 0.0],
+													[0.0, 1.0]], inv_trafo))
+
+		circle_paths = libgeom.get_circle_paths(0.0, 0.0, sk2_const.ARC_CHORD)
+		trafo = [2.0, 0.0, 0.0, 2.0, -1.0, -1.0]
+		circle_paths = libgeom.apply_trafo_to_paths(circle_paths, trafo)
+
+		inner_paths = []
+		r = 0.0
+		self.canvas.saveState()
+		self.canvas.clipPath(pdfpath, 0, 0)
+		self.canvas.transform(*cv_trafo)
+		while r < l:
+			point = r / l
+			self.canvas.setFillColor(self.get_grcolor_at_point(stops, point))
+			if r + d < l: coef = (r + d)
+			else: coef = l
+			trafo = [coef, 0.0, 0.0, coef, 0.0, 0.0]
+			paths = libgeom.apply_trafo_to_paths(circle_paths, trafo)
+			ring = self.make_pdfpath(inner_paths + paths)[0]
+			inner_paths = paths
+			self.canvas.drawPath(ring, stroke=0, fill=1)
+			r += d
+
+		self.canvas.setFillColor(self.get_grcolor_at_point(stops, 1.0))
+		r = max(bbox[2] - bbox[0], bbox[3] - bbox[1])
+		trafo = [2.0 * r, 0.0, 0.0, 2.0 * r, 0.0, 0.0]
+		paths = libgeom.apply_trafo_to_paths(circle_paths, trafo)
+		ring = self.make_pdfpath(inner_paths + paths)[0]
+		self.canvas.drawPath(ring, stroke=0, fill=1)
+
+		self.canvas.restoreState()
 
 	def draw_pixmap(self, obj):
 		self.canvas.saveState()
