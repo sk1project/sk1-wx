@@ -93,13 +93,13 @@ class PDF_Saver(AbstractSaver):
 		fill_style = curve_obj.style[0]
 		stroke_style = curve_obj.style[1]
 		if stroke_style and stroke_style[7]:
-			self.stroke_pdfpath(pdfpath, stroke_style)
+			self.stroke_pdfpath(pdfpath, stroke_style, curve_obj.stroke_trafo)
 		if fill_style and fill_style[0] & sk2_const.FILL_CLOSED_ONLY and closed:
 			self.fill_pdfpath(curve_obj, pdfpath, fill_style, curve_obj.fill_trafo)
 		elif fill_style and not fill_style[0] & sk2_const.FILL_CLOSED_ONLY:
 			self.fill_pdfpath(curve_obj, pdfpath, fill_style, curve_obj.fill_trafo)
 		if stroke_style and not stroke_style[7]:
-			self.stroke_pdfpath(pdfpath, stroke_style)
+			self.stroke_pdfpath(pdfpath, stroke_style, curve_obj.stroke_trafo)
 
 	def draw_container(self, obj):
 		container = obj.childs[0].to_curve()
@@ -108,7 +108,7 @@ class PDF_Saver(AbstractSaver):
 		fill_style = container.style[0]
 		stroke_style = container.style[1]
 		if stroke_style and stroke_style[7]:
-			self.stroke_pdfpath(pdfpath, stroke_style)
+			self.stroke_pdfpath(pdfpath, stroke_style, container.stroke_trafo)
 
 		self.canvas.saveState()
 		self.canvas.clipPath(pdfpath, 0, 0)
@@ -123,7 +123,7 @@ class PDF_Saver(AbstractSaver):
 		self.canvas.restoreState()
 
 		if stroke_style and not stroke_style[7]:
-			self.stroke_pdfpath(pdfpath, stroke_style)
+			self.stroke_pdfpath(pdfpath, stroke_style, container.stroke_trafo)
 
 	def make_pdfpath(self, paths):
 		closed = False
@@ -180,14 +180,25 @@ class PDF_Saver(AbstractSaver):
 			self.set_rgb_values(color, pdfcolor)
 		return pdfcolor
 
-	def stroke_pdfpath(self, pdfpath, stroke_style):
+	def stroke_pdfpath(self, pdfpath, stroke_style, stroke_trafo=[]):
 		width = stroke_style[1]
+
+		if not stroke_style[8]:
+			width = stroke_style[1]
+		else:
+			if not stroke_trafo:
+				stroke_trafo = [] + sk2_const.NORMAL_TRAFO
+			points = [[0.0, 0.0], [1.0, 0.0]]
+			points = libgeom.apply_trafo_to_points(points, stroke_trafo)
+			coef = libgeom.distance(*points)
+			width = stroke_style[1] * coef
+
 		self.canvas.setStrokeColor(self.get_pdfcolor(stroke_style[2]))
 		dash = stroke_style[3]
 		caps = stroke_style[4]
 		joint = stroke_style[5]
 		miter = stroke_style[6]
-		#TODO:process scalable flag
+
 		self.canvas.setLineWidth(width)
 		self.canvas.setLineCap(caps - 1)
 		self.canvas.setLineJoin(joint)
@@ -213,8 +224,8 @@ class PDF_Saver(AbstractSaver):
 			gradient = fill_style[2]
 			stops = gradient[2]
 			transparency = False
-			for offset, color in stops:
-				if color[2] < 1.0:
+			for stop in stops:
+				if stop[1][2] < 1.0:
 					transparency = True
 					break
 			if transparency:
