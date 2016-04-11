@@ -416,7 +416,6 @@ class PDF_Saver(AbstractSaver):
 		self.canvas.drawImage(img, 0, 0, mask='auto')
 
 	def fill_pattern(self, obj, pdfpath, fill_trafo, pattern):
-		#TODO: fix pattern and obj trafo!
 		if not fill_trafo:
 			fill_trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
 		inv_ptrn_trafo = libgeom.invert_trafo(pattern[3])
@@ -437,6 +436,7 @@ class PDF_Saver(AbstractSaver):
 
 		self.canvas.saveState()
 		self.canvas.clipPath(pdfpath, 0, 0)
+		self.canvas.transform(*cv_trafo)
 
 		w, h = image_obj.get_size()
 		x = bbox[0]
@@ -445,7 +445,6 @@ class PDF_Saver(AbstractSaver):
 			while x < bbox[2]:
 				self.canvas.saveState()
 				self.canvas.transform(1.0, 0.0, 0.0, 1.0, x, y)
-				self.canvas.transform(*cv_trafo)
 				self.draw_pixmap_obj(image_obj)
 				self.canvas.restoreState()
 				x += w
