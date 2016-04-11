@@ -230,7 +230,8 @@ class pdApplication(wal.Application, UCApplication):
 		if not os.path.lexists(os.path.dirname(doc_file)):
 			doc_file = os.path.join(config.save_dir,
 								os.path.basename(doc_file))
-		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file)[0]
+		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
+											path_only=True)
 		if doc_file:
 			old_file = self.current_doc.doc_file
 			old_name = self.current_doc.doc_name
@@ -266,7 +267,8 @@ class pdApplication(wal.Application, UCApplication):
 			doc_file = os.path.join(config.save_dir,
 								os.path.basename(doc_file))
 		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
-							_('Save selected objects only as...'))[0]
+							_('Save selected objects only as...'),
+							path_only=True)
 		if doc_file:
 			try:
 				self.make_backup(doc_file)
@@ -345,13 +347,13 @@ class pdApplication(wal.Application, UCApplication):
 			doc_file = '' + self.current_doc.doc_name
 		if os.path.splitext(doc_file)[1] == "." + \
 					uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
-			doc_file = os.path.splitext(doc_file)[0] + "." + \
-					uc2const.FORMAT_EXTENSION[uc2const.PNG][0]
+			doc_file = os.path.splitext(doc_file)[0]#+ "." + \
+					#uc2const.FORMAT_EXTENSION[uc2const.PNG][0]
 		doc_file = os.path.join(config.export_dir,
 								os.path.basename(doc_file))
 		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
 							_('Export document As...'),
-							file_types=data.SAVER_FORMATS[1:])[0]
+							file_types=data.SAVER_FORMATS[1:], path_only=True)
 		if doc_file:
 			try:
 				self.make_backup(doc_file, True)
@@ -367,11 +369,11 @@ class pdApplication(wal.Application, UCApplication):
 			events.emit(events.APP_STATUS, _('Document is successfully exported'))
 
 	def extract_bitmap(self):
-		doc_file = 'image.tiff'
+		doc_file = 'image'
 		doc_file = os.path.join(config.save_dir, doc_file)
 		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
 							_('Extract selected bitmap as...'),
-							file_types=[data.TIF])[0]
+							file_types=[data.TIF], path_only=True)
 		if doc_file:
 			try:
 				pixmap = self.current_doc.selection.objs[0]
@@ -393,9 +395,11 @@ class pdApplication(wal.Application, UCApplication):
 					uc2const.FORMAT_EXTENSION[uc2const.SKP][0]
 		doc_file = os.path.join(config.export_dir,
 								os.path.basename(doc_file))
-		doc_file, index = dialogs.get_save_file_name(parent, self, doc_file,
+		ret = dialogs.get_save_file_name(parent, self, doc_file,
 							_('Export palette as...'),
 							file_types=data.PALETTE_SAVERS)
+		if not ret: return
+		doc_file, index = ret
 		saver_id = data.PALETTE_SAVERS[index]
 
 		if doc_file:
@@ -476,7 +480,7 @@ class pdApplication(wal.Application, UCApplication):
 		if eps: file_types = [data.EPS]
 		img_file = dialogs.get_save_file_name(parent, self, img_file,
 							_('Save pattern as...'),
-							file_types=file_types)[0]
+							file_types=file_types, path_only=True)
 		if img_file:
 			try:
 				fobj = open(img_file, 'wb')
