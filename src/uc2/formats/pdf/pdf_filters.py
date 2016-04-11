@@ -15,13 +15,14 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import math
+import math, os
 from copy import deepcopy
 from base64 import b64decode
 from cStringIO import StringIO
 from PIL import Image
 
 from reportlab.pdfgen.canvas import Canvas, FILL_EVEN_ODD, FILL_NON_ZERO
+from reportlab.pdfbase.pdfdoc import PDFInfo, PDFString, PDFDate, PDFDictionary
 from reportlab.lib.utils import ImageReader
 from reportlab.lib.colors import CMYKColorSep, Color, CMYKColor
 
@@ -30,6 +31,31 @@ from uc2.formats.generic_filters import AbstractSaver
 from uc2 import uc2const
 from pdfconst import PDF_VERSION_DEFAULT
 from uc2.formats.sk2 import sk2_const, sk2_model
+
+class UC_PDFInfo(PDFInfo):
+
+	pdfxversion = 'PDF/X-4'
+
+	def __init__(self, pdfdoc):
+		PDFInfo.__init__(self)
+		pdfdoc.info = self
+		self.invariant = pdfdoc.invariant
+
+	def format(self, document):
+		D = {}
+		D["Title"] = PDFString(self.title)
+		D["Author"] = PDFString(self.author)
+		D["CreationDate"] = PDFDate(invariant=self.invariant,
+								dateFormatter=self._dateFormatter)
+		D["Producer"] = PDFString(self.producer)
+		D["GTS_PDFXVersion"] = PDFString(self.pdfxversion)
+		D["Creator"] = PDFString(self.creator)
+		D["Subject"] = PDFString(self.subject)
+		D["Keywords"] = PDFString(self.keywords)
+
+		PD = PDFDictionary(D)
+		return PD.format(document)
+
 
 class PDF_Saver(AbstractSaver):
 
@@ -43,20 +69,24 @@ class PDF_Saver(AbstractSaver):
 
 	def do_save(self):
 		self.canvas = Canvas(self.fileptr, pdfVersion=PDF_VERSION_DEFAULT)
+		self.info = UC_PDFInfo(self.canvas._doc)
 
-		#---Generic data
+		#---PDF doc data
 		appdata = self.presenter.appdata
 		creator = '%s %s' % (appdata.app_name, appdata.version)
-		self.canvas.setCreator(creator)
+		self.info.creator = creator
 		producer = '%s %s' % ('UniConvertor', appdata.version)
-		self.canvas._doc.info.producer = producer
+		self.info.producer = producer
 		metainfo = self.presenter.model.metainfo
 		if metainfo:
-			self.canvas.setAuthor(metainfo[0])
-			self.canvas.setKeywords(metainfo[2])
-#		self.canvas.setTitle(title)
-#		self.canvas.setSubject(subject)
-		#---Generic data end
+			self.info.author = metainfo[0]
+			self.info.keywords = metainfo[2]
+		if self.filepath:
+			title = os.path.basename(self.filepath)
+			title = os.path.splitext(title)[0]
+			self.info.title = title
+		self.info.subject = '---'
+		#---PDF doc data end
 
 		self.presenter.update()
 		self.canvas.setPageCompression(1)
