@@ -345,10 +345,7 @@ class pdApplication(wal.Application, UCApplication):
 		doc_file = '' + self.current_doc.doc_file
 		if not doc_file:
 			doc_file = '' + self.current_doc.doc_name
-		if os.path.splitext(doc_file)[1] == "." + \
-					uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
-			doc_file = os.path.splitext(doc_file)[0]#+ "." + \
-					#uc2const.FORMAT_EXTENSION[uc2const.PNG][0]
+		doc_file = os.path.splitext(doc_file)[0]
 		doc_file = os.path.join(config.export_dir,
 								os.path.basename(doc_file))
 		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
@@ -391,10 +388,8 @@ class pdApplication(wal.Application, UCApplication):
 	def export_palette(self, palette, parent=None):
 		if not parent: parent = self.mw
 		doc_file = '' + palette.model.name
-		doc_file = os.path.splitext(doc_file)[0] + "." + \
-					uc2const.FORMAT_EXTENSION[uc2const.SKP][0]
-		doc_file = os.path.join(config.export_dir,
-								os.path.basename(doc_file))
+		doc_file = os.path.splitext(doc_file)[0]
+		doc_file = os.path.join(config.export_dir, os.path.basename(doc_file))
 		ret = dialogs.get_save_file_name(parent, self, doc_file,
 							_('Export palette as...'),
 							file_types=data.PALETTE_SAVERS)
@@ -473,8 +468,7 @@ class pdApplication(wal.Application, UCApplication):
 		return None
 
 	def extract_pattern(self, parent, pattern, eps=False):
-		img_file = 'image.tiff'
-		if eps:img_file = 'image.eps'
+		img_file = 'image'
 		img_file = os.path.join(config.save_dir, img_file)
 		file_types = [data.TIF]
 		if eps: file_types = [data.EPS]
