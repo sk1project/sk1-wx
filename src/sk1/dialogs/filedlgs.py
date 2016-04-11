@@ -89,8 +89,9 @@ def _get_save_fiters(items=[]):
 			wildcard += '|'
 	return wildcard
 
-def get_save_file_name(parent, app, path, msg='', file_types=[]):
-	ret = ('', 0)
+def get_save_file_name(parent, app, path, msg='',
+					file_types=[], path_only=False):
+	ret = None
 	if not msg: msg = _('Save document As...')
 	if is_mac(): msg = ''
 
@@ -108,7 +109,16 @@ def get_save_file_name(parent, app, path, msg='', file_types=[]):
 	)
 	dlg.CenterOnParent()
 	if dlg.ShowModal() == wx.ID_OK:
-		ret = (path_system(dlg.GetPath()), dlg.GetFilterIndex())
+		if path_only:
+			ret = path_system(dlg.GetPath())
+			if not file_types:
+				ext = uc2const.FORMAT_EXTENSION[data.SK2][0]
+			else:
+				index = dlg.GetFilterIndex()
+				ext = uc2const.FORMAT_EXTENSION[file_types[index]][0]
+			ret = os.path.splitext(ret)[0] + '.' + ext
+		else:
+			ret = (path_system(dlg.GetPath()), dlg.GetFilterIndex())
 	dlg.Destroy()
 	return ret
 
