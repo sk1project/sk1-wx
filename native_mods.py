@@ -19,7 +19,7 @@
 
 import os
 
-import buildutils
+import buildutils, commands
 
 from distutils.core import Extension
 
@@ -70,12 +70,12 @@ def make_modules(src_path, include_path):
 	files = buildutils.make_source_list(pango_src, ['_libpango.c', ])
 	include_dirs = buildutils.make_source_list(include_path, ['cairo',
 										'pycairo', 'pango-1.0', 'glib-2.0'])
-	include_dirs += ['/usr/lib/x86_64-linux-gnu/glib-2.0/include/', ]
+	output = commands.getoutput("pkg-config --cflags glib-2.0")
+	include_dirs += output.replace('-I', '').strip().split(' ')
 	pango_module = Extension('uc2.libpango._libpango',
 			define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
 			sources=files, include_dirs=include_dirs,
-			library_dirs=['/usr/lib/x86_64-linux-gnu/'],
-			libraries=['pango-1.0', 'pangocairo-1.0', 'cairo'])
+			libraries=['pango-1.0', 'pangocairo-1.0', 'cairo', 'glib-2.0'])
 	modules.append(pango_module)
 
 	return modules
