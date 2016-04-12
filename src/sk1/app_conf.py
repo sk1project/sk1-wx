@@ -34,8 +34,8 @@ class AppData(UCData):
 	app_domain = 'sk1project.org'
 	app_icon = None
 	doc_icon = None
-	version = "2.0"
-	revision = ''
+	version = '2.0'
+	revision = 'alpha1'
 	app_config_dir = os.path.expanduser(os.path.join('~', '.config', 'sk1-wx'))
 	plugin_dir = os.path.expanduser(os.path.join('~', '.config', 'sk1-wx', \
 												'sk1_custom_plugins'))
