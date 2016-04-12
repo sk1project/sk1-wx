@@ -20,15 +20,15 @@
 """
 Usage: 
 --------------------------------------------------------------------------
- to build package:       python setup.py build
- to install package:     python setup.py install
- to remove installation: python setup.py uninstall
+ to build package:       python setup-uc2.py build
+ to install package:     python setup-uc2.py install
+ to remove installation: python setup-uc2.py uninstall
 --------------------------------------------------------------------------
- to create source distribution:   python setup.py sdist
+ to create source distribution:   python setup-uc2.py sdist
 --------------------------------------------------------------------------
- to create binary RPM distribution:  python setup.py bdist_rpm
+ to create binary RPM distribution:  python setup-uc2.py bdist_rpm
 --------------------------------------------------------------------------
- to create binary DEB distribution:  python setup.py bdist_deb
+ to create binary DEB distribution:  python setup-uc2.py bdist_deb
 --------------------------------------------------------------------------.
  Help on available distribution formats: --help-formats
 """
