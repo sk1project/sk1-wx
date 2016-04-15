@@ -1,4 +1,5 @@
-#
+# -*- coding: utf-8 -*-
+
 #   Setup script for sK1 2.x on MS Windows
 #
 #     Copyright (C) 2016 by Igor E. Novikov
@@ -19,9 +20,9 @@
 """
 Usage: 
 --------------------------------------------------------------------------
- to build package:       python setup-sk1.py build
+ to build package:       python setup-sk1-msw.py build
 --------------------------------------------------------------------------
- to create portable distribution:   python setup-sk1.py bdist_portable
+ to create portable distribution:   python setup-sk1-msw.py bdist_portable
 --------------------------------------------------------------------------
  Help on available distribution formats: --help-formats
 """
@@ -34,6 +35,11 @@ def get_res_path():
     if platform.architecture()[0]=='32bit':
         return 'win32-devres'
     return 'win64-devres'
+
+def get_build_suffix():
+    if platform.architecture()[0]=='32bit':
+        return '.win32-2.7'
+    return '.win64-2.7'
 
 
 ############################################################
@@ -84,6 +90,8 @@ Copyright (C) 2007-2016 by Igor E. Novikov
 src_path = 'src'
 res_path=get_res_path()
 include_path = os.path.join(res_path, 'include')
+lib_path = [os.path.join(res_path, 'libs'),]
+modules = []
 
 dirs = buildutils.get_dirs_tree('src/sk1/share')
 share_dirs = []
@@ -120,7 +128,7 @@ data_files=scripts=[]
 ############################################################
 from native_mods import make_modules
 
-modules += make_modules(src_path, include_path)
+modules += make_modules(src_path, include_path, lib_path)
         
 ############################################################
 # Setup routine
@@ -146,3 +154,25 @@ setup(name=NAME,
     data_files=data_files,
     scripts=scripts,
     ext_modules=modules)
+
+############################################################
+# .py source compiling
+############################################################
+if not UPDATE_MODULES: 
+    buildutils.compile_sources()
+
+############################################################
+# This section for developing purpose only
+# Command 'python setup.py build_update' allows
+# automating build and native extension copying
+# into package directory
+############################################################
+if UPDATE_MODULES: buildutils.copy_modules(modules)
+
+############################################################
+# Implementation of bdist_portable command
+############################################################
+if PORTABLE_PACKAGE:
+    pass
+
+if CLEAR_BUILD: buildutils.clear_msw_build()
