@@ -24,7 +24,7 @@ import buildutils, commands
 from distutils.core import Extension
 
 
-def make_modules(src_path, include_path):
+def make_modules(src_path, include_path, lib_path=[]):
 
 	modules = []
 
@@ -54,14 +54,17 @@ def make_modules(src_path, include_path):
 	cairo_module = Extension('uc2.libcairo._libcairo',
 			define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
 			sources=files, include_dirs=include_dirs,
+			library_dirs=lib_path,
 			libraries=['cairo'])
 	modules.append(cairo_module)
 
 	pycms_src = os.path.join(src_path, 'uc2', 'cms')
 	files = buildutils.make_source_list(pycms_src, ['_cms2.c', ])
+	include_dirs = [include_path,]
 	pycms_module = Extension('uc2.cms._cms',
 			define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
-			sources=files,
+			sources=files, include_dirs=include_dirs,
+			library_dirs=lib_path,
 			libraries=['lcms2'],
 			extra_compile_args=["-Wall"])
 	modules.append(pycms_module)
@@ -76,7 +79,8 @@ def make_modules(src_path, include_path):
 	pango_module = Extension('uc2.libpango._libpango',
 			define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
 			sources=files, include_dirs=include_dirs,
-			libraries=['pango-1.0', 'pangocairo-1.0', 'cairo', 'glib-2.0'])
+			library_dirs=lib_path,
+			libraries=['pango-1.0', 'pangocairo-1.0', 'cairo', 'glib-2.0', 'gobject-2.0'])
 	modules.append(pango_module)
 
 	return modules
