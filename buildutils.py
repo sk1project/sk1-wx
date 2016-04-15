@@ -17,7 +17,7 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, sys
+import os, sys, shutil
 
 ############################################################
 #
@@ -155,6 +155,12 @@ def clear_build():
 	"""
 	os.system('rm -f MANIFEST')
 	os.system('rm -rf build')
+	
+def clear_msw_build():
+	"""
+	Clears build result on MS Windows.
+	"""
+	shutil.rmtree('build', True)
 
 def make_source_list(path, file_list=[]):
 	"""
@@ -236,20 +242,24 @@ def copy_modules(modules):
 	Copies native modules into src/
 	The routine implements build_update command
 	functionality and executed after "setup.py build" command.
-	Works on Linux only.
 	"""
 	import string, platform, shutil
 
 	version = (string.split(sys.version)[0])[0:3]
 	machine = platform.machine()
-	prefix = 'build/lib.linux-' + machine + '-' + version
+	if os.name=='posix':
+		prefix = 'build/lib.linux-' + machine + '-' + version
+		ext='.so'
+	elif os.name=='nt' and platform.architecture()[0]=='32bit':
+		prefix='build/lib.win32-'+ version
+		ext='.pyd'
+	
 	for item in modules:
-		path = os.path.join(*item.name.split('.')) + '.so'
+		path = os.path.join(*item.name.split('.')) + ext
 		src = os.path.join(prefix, path)
 		dst = os.path.join('src', path)
 		shutil.copy(src, dst)
 		print '>>>Module %s has been copied to src/ directory' % path
-	clear_build()
 
 
 ############################################################
