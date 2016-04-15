@@ -2,7 +2,7 @@
 #
 #   Native modules build
 #
-# 	Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2015-2016 by Igor E. Novikov
 #
 # 	This program is free software: you can redistribute it and/or modify
 # 	it under the terms of the GNU General Public License as published by
@@ -70,8 +70,9 @@ def make_modules(src_path, include_path):
 	files = buildutils.make_source_list(pango_src, ['_libpango.c', ])
 	include_dirs = buildutils.make_source_list(include_path, ['cairo',
 										'pycairo', 'pango-1.0', 'glib-2.0'])
-	output = commands.getoutput("pkg-config --cflags glib-2.0")
-	include_dirs += output.replace('-I', '').strip().split(' ')
+	if os.name=='posix':
+		output = commands.getoutput("pkg-config --cflags glib-2.0")
+		include_dirs += output.replace('-I', '').strip().split(' ')
 	pango_module = Extension('uc2.libpango._libpango',
 			define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
 			sources=files, include_dirs=include_dirs,
