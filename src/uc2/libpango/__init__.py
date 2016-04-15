@@ -205,11 +205,11 @@ def _set_layout(layout, text, width, text_style, attributes):
 def get_line_positions():
 	return _libpango.get_layout_line_positions(PANGO_LAYOUT)
 
-def get_char_positions():
-	return _libpango.get_layout_char_positions(PANGO_LAYOUT)
+def get_char_positions(size):
+	return _libpango.get_layout_char_positions(PANGO_LAYOUT, size)
 
-def get_cluster_positions():
-	return _libpango.get_layout_cluster_positions(PANGO_LAYOUT)
+def get_cluster_positions(size):
+	return _libpango.get_layout_cluster_positions(PANGO_LAYOUT, size)
 
 def get_layout_bbox():
 	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
@@ -384,7 +384,7 @@ def get_text_paths(orig_text, width, text_style, attributes):
 
 	#Ligature support
 	if text_style[5]:
-		data = get_cluster_positions()
+		data = get_cluster_positions(len(orig_text))
 		layout_data, clusters, clusters_index, bidi_flag, rtl_flag = data
 
 		if not rtl_flag and not bidi_flag:
@@ -411,7 +411,7 @@ def get_text_paths(orig_text, width, text_style, attributes):
 
 	#Simple char-by-char rendering
 	else:
-		layout_data = get_char_positions()
+		layout_data = get_char_positions(len(orig_text))
 		log_layout_data = layout_data
 		glyphs = get_glyphs(ctx, layout_data, text,
 						width, text_style, attributes)

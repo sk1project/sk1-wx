@@ -331,7 +331,7 @@ pango_GetLayoutCharPos(PyObject *self, PyObject *args) {
 	PyObject *ret;
 	PyObject *glyph_data;
 
-	if (!PyArg_ParseTuple(args, "O", &LayoutObj)) {
+	if (!PyArg_ParseTuple(args, "Oi", &LayoutObj, &len)) {
 		return NULL;
 	}
 
@@ -345,7 +345,7 @@ pango_GetLayoutCharPos(PyObject *self, PyObject *args) {
 		dx = -1.0 * ((double) w) / PANGO_SCALE;
 	}
 
-	len = pango_layout_get_character_count(layout);
+
 	ret = PyTuple_New(len);
 	iter = pango_layout_get_iter(layout);
 
@@ -401,7 +401,7 @@ pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 	PyObject *cluster_index_range;
 	PyObject *glyph_data;
 
-	if (!PyArg_ParseTuple(args, "O", &LayoutObj)) {
+	if (!PyArg_ParseTuple(args, "Oi", &LayoutObj, &len)) {
 		return NULL;
 	}
 
@@ -415,7 +415,6 @@ pango_GetLayoutClusterPos(PyObject *self, PyObject *args) {
 		dx = -1.0 * ((double) w) / PANGO_SCALE;
 	}
 
-	len = pango_layout_get_character_count(layout);
 
 	ret = PyTuple_New(5);
 	layout_data = PyList_New(0);
