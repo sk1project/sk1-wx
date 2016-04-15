@@ -36,7 +36,11 @@ pango_GetFontMap(PyObject *self, PyObject *args) {
 	PangoContext *ctx;
 
 	PangoFontFamily **families;
+	PangoFontFace **faces;
+	PyObject *family;
 	int n_families, n_faces, i, j;
+	int *sizes, n_sizes;
+	PyObject *faces_tuple;
 	PyObject *ret;
 
 	fm = pango_cairo_font_map_get_default();
@@ -47,20 +51,16 @@ pango_GetFontMap(PyObject *self, PyObject *args) {
 
 	for (i = 0; i < n_families; i++) {
 
-		PyObject *family;
 		family = PyTuple_New(2);
 
 		PyTuple_SetItem(family, 0,
 				Py_BuildValue("s", pango_font_family_get_name(families[i])));
 
-		PangoFontFace **faces;
 		pango_font_family_list_faces(families[i], &faces, &n_faces);
 
-		int *sizes, n_sizes;
 
 		pango_font_face_list_sizes(faces[0], &sizes, &n_sizes);
 		if (!sizes) {
-			PyObject *faces_tuple;
 			faces_tuple = PyTuple_New(n_faces);
 			for (j = 0; j < n_faces; j++) {
 				PyTuple_SetItem(faces_tuple, j,
