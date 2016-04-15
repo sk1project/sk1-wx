@@ -30,7 +30,9 @@ class WidgetPanel(wal.VPanel):
 
 app = wal.Application('wxWidgets')
 mw = wal.MainWindow('Tree widget', (350, 550))
-panel = WidgetPanel(mw)
-mw.pack(panel, expand=True, fill=True, padding=10)
+top_panel=wal.VPanel(mw)
+mw.pack(top_panel, expand=True, fill=True)
+panel = WidgetPanel(top_panel)
+top_panel.pack(panel, expand=True, fill=True, padding_all=5)
 app.mw = mw
 app.run()

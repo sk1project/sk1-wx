@@ -31,7 +31,9 @@ class WidgetPanel(wal.HPanel):
 
 app = wal.Application('wxWidgets')
 mw = wal.MainWindow('List widget', (750, 550))
-panel = WidgetPanel(mw)
-mw.pack(panel, expand=True, fill=True, padding=10)
+top_panel=wal.VPanel(mw)
+mw.pack(top_panel, expand=True, fill=True)
+panel = WidgetPanel(top_panel)
+top_panel.pack(panel, expand=True, fill=True, padding=10)
 app.mw = mw
 app.run()
