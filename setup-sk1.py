@@ -223,7 +223,8 @@ setup(name=NAME,
 ############################################################
 # .py source compiling
 ############################################################
-buildutils.compile_sources()
+if not UPDATE_MODULES: 
+    buildutils.compile_sources()
 
 
 ############################################################
