@@ -60,7 +60,7 @@ def make_modules(src_path, include_path, lib_path=[]):
 
 	pycms_src = os.path.join(src_path, 'uc2', 'cms')
 	files = buildutils.make_source_list(pycms_src, ['_cms2.c', ])
-	include_dirs = [include_path,]
+	include_dirs = [include_path, ]
 	pycms_module = Extension('uc2.cms._cms',
 			define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
 			sources=files, include_dirs=include_dirs,
@@ -73,7 +73,7 @@ def make_modules(src_path, include_path, lib_path=[]):
 	files = buildutils.make_source_list(pango_src, ['_libpango.c', ])
 	include_dirs = buildutils.make_source_list(include_path, ['cairo',
 										'pycairo', 'pango-1.0', 'glib-2.0'])
-	if os.name=='posix':
+	if os.name == 'posix':
 		output = commands.getoutput("pkg-config --cflags glib-2.0")
 		include_dirs += output.replace('-I', '').strip().split(' ')
 	pango_module = Extension('uc2.libpango._libpango',
@@ -82,5 +82,15 @@ def make_modules(src_path, include_path, lib_path=[]):
 			library_dirs=lib_path,
 			libraries=['pango-1.0', 'pangocairo-1.0', 'cairo', 'glib-2.0', 'gobject-2.0'])
 	modules.append(pango_module)
+
+	libimg_src = os.path.join(src_path, 'uc2', 'libimg')
+	files = buildutils.make_source_list(libimg_src, ['_libimg.c', ])
+	include_dirs = [include_path, include_path + '/ImageMagick']
+	libimg_module = Extension('uc2.libimg._libimg',
+			define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
+			sources=files, include_dirs=include_dirs,
+			library_dirs=lib_path,
+			libraries=['MagickWand'])
+	modules.append(libimg_module)
 
 	return modules
