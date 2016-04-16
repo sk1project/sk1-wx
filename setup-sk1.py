@@ -48,7 +48,7 @@ CLEAR_BUILD = False
 # Package description
 ############################################################
 NAME = 'sk1'
-VERSION = '2.0_alpha1'
+VERSION = '2.0rc1'
 DESCRIPTION = 'Vector graphics editor for prepress'
 AUTHOR = 'Igor E. Novikov'
 AUTHOR_EMAIL = 'igor.e.novikov@gmail.com'
@@ -223,7 +223,7 @@ setup(name=NAME,
 ############################################################
 # .py source compiling
 ############################################################
-if not UPDATE_MODULES: 
+if not UPDATE_MODULES:
     buildutils.compile_sources()
 
 

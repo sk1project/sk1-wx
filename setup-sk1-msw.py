@@ -32,12 +32,12 @@ import os, sys, shutil, platform
 import buildutils
 
 def get_res_path():
-    if platform.architecture()[0]=='32bit':
+    if platform.architecture()[0] == '32bit':
         return 'win32-devres'
     return 'win64-devres'
 
 def get_build_suffix():
-    if platform.architecture()[0]=='32bit':
+    if platform.architecture()[0] == '32bit':
         return '.win32-2.7'
     return '.win64-2.7'
 
@@ -53,7 +53,7 @@ CLEAR_BUILD = False
 # Package description
 ############################################################
 NAME = 'sk1'
-VERSION = '2.0_alpha1'
+VERSION = '2.0rc1'
 DESCRIPTION = 'Vector graphics editor for prepress'
 AUTHOR = 'Igor E. Novikov'
 AUTHOR_EMAIL = 'igor.e.novikov@gmail.com'
@@ -88,9 +88,9 @@ Copyright (C) 2007-2016 by Igor E. Novikov
 # Build data
 ############################################################
 src_path = 'src'
-res_path=get_res_path()
+res_path = get_res_path()
 include_path = os.path.join(res_path, 'include')
-lib_path = [os.path.join(res_path, 'libs'),]
+lib_path = [os.path.join(res_path, 'libs'), ]
 modules = []
 
 dirs = buildutils.get_dirs_tree('src/sk1/share')
@@ -120,8 +120,8 @@ if len(sys.argv) > 1:
         UPDATE_MODULES = True
         CLEAR_BUILD = True
         sys.argv[1] = 'build'
-        
-data_files=scripts=[]
+
+data_files = scripts = []
 
 ############################################################
 # Native extensions
@@ -129,7 +129,7 @@ data_files=scripts=[]
 from native_mods import make_modules
 
 modules += make_modules(src_path, include_path, lib_path)
-        
+
 ############################################################
 # Setup routine
 ############################################################
@@ -158,7 +158,7 @@ setup(name=NAME,
 ############################################################
 # .py source compiling
 ############################################################
-if not UPDATE_MODULES: 
+if not UPDATE_MODULES:
     buildutils.compile_sources()
 
 ############################################################
