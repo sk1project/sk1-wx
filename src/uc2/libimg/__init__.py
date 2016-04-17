@@ -23,7 +23,8 @@ from cStringIO import StringIO
 from PIL import Image, ImageOps
 
 from uc2.cms import rgb_to_hexcolor, val_255
-from uc2.libimg.imwand import check_image_file, process_image, process_pattern
+from uc2.libimg.magickwand import process_pattern
+from uc2.libimg.magickwand import check_image_file, process_image
 from uc2.uc2const import IMAGE_CMYK, IMAGE_RGB, IMAGE_RGBA, IMAGE_LAB
 from uc2.uc2const import IMAGE_GRAY, IMAGE_MONO, DUOTONES, SUPPORTED_CS
 from uc2 import uc2const
