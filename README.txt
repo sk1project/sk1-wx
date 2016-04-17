@@ -12,6 +12,7 @@ How to install:
 --------------------------------------------------------------------------
  to build package:   python setup.py build
  to install package:   python setup.py install
+ to remove installation: python setup-sk1.py uninstall
 --------------------------------------------------------------------------
  to create source distribution:   python setup.py sdist
 --------------------------------------------------------------------------
