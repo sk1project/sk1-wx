@@ -17,6 +17,7 @@
 
 import unittest, os
 from uc2.libimg import _libimg
+from cStringIO import StringIO
 
 _pkgdir = __path__[0]
 
@@ -100,3 +101,10 @@ class TestCoreLibImgFunctions(unittest.TestCase):
 			_libimg.reset_iterator(wand)
 			_libimg.next_image(wand)
 			self.assertEqual(name[1], _libimg.get_image_type(wand))
+
+	def test08_blob_reading(self):
+		path = os.path.join(_pkgdir, 'img_data', 'type_palettematte.png')
+		blob = open(path, 'rb').read()
+		wand = _libimg.new_image()
+		result = _libimg.load_image_blob(wand, blob)
+		self.assertEqual(1, result)
