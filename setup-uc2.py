@@ -114,9 +114,9 @@ deb_scripts = []
 data_files = [
 (install_path, ['GPLv3.txt', 'LICENSE', ]),
 ]
-deb_depends = 'liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), '
-deb_depends += 'python-cairo, python-gtk2, python-reportlab, python-imaging, '
-deb_depends += 'python-wand'
+deb_depends = 'liblcms2-2 (>=2.0), libmagickwand5, '
+deb_depends += 'python (>=2.4), python (<<3.0), '
+deb_depends += 'python-cairo, python-reportlab, python-pil'
 
 package_data = {}
 

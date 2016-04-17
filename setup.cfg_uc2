@@ -12,16 +12,15 @@ release = 1
 packager = Igor Novikov <igor.e.novikov@gmail.com>
 provides = uniconvertor
 
-#TODO: add python-wand
 
 #Fedora dependencies
-#requires = lcms2 pycairo pygtk2 python-pillow python-reportlab
+#requires = lcms2 pycairo python-pillow python-reportlab
 
 #OpenSUSE dependencies
-#requires = liblcms2-2 python-cairo python-gtk python-Pillow python-reportlab
+#requires = liblcms2-2 python-cairo python-Pillow python-reportlab
 
 #Mageia 64bit dependencies
-#requires = lib64lcms2_2 python-cairo pygtk2.0 python-pillow python-reportlab 
+#requires = lib64lcms2_2 python-cairo python-pillow python-reportlab 
 
 #Mageia 32bit dependencies
-#requires = liblcms2_2 python-cairo pygtk2.0 python-pillow python-reportlab 
+#requires = liblcms2_2 python-cairo python-pillow python-reportlab 
