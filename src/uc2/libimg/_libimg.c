@@ -44,7 +44,8 @@ im_NewImage(PyObject *self, PyObject *args) {
 
 	magick_wand = NewMagickWand();
 
-	return Py_BuildValue("O", PyCObject_FromVoidPtr((void *)magick_wand, (void *)DestroyMagickWand));
+	return Py_BuildValue("O", PyCObject_FromVoidPtr((void *)magick_wand,
+			(void *)DestroyMagickWand));
 }
 
 static PyObject *
@@ -61,6 +62,30 @@ im_LoadImage(PyObject *self, PyObject *args) {
 
 	magick_wand = (MagickWand *) PyCObject_AsVoidPtr(magick_pointer);
 	status = MagickReadImage(magick_wand, filepath);
+
+	if (status == MagickFalse){
+		return Py_BuildValue("i", 0);
+	}
+
+	return Py_BuildValue("i", 1);
+}
+
+static PyObject *
+im_LoadImageBlob(PyObject *self, PyObject *args) {
+
+	void *magick_pointer;
+	MagickWand *magick_wand;
+	Py_ssize_t size;
+	char *blob;
+	MagickBooleanType status;
+
+	if (!PyArg_ParseTuple(args, "Os#", &magick_pointer, &blob, &size)){
+		return Py_BuildValue("i", 0);
+	}
+
+	magick_wand = (MagickWand *) PyCObject_AsVoidPtr(magick_pointer);
+
+	status = MagickReadImageBlob(magick_wand, blob, (size_t)size);
 
 	if (status == MagickFalse){
 		return Py_BuildValue("i", 0);
@@ -89,6 +114,27 @@ im_WriteImage(PyObject *self, PyObject *args) {
 	}
 
 	return Py_BuildValue("i", 1);
+}
+
+static PyObject *
+im_GetImageBlob(PyObject *self, PyObject *args) {
+
+	void *magick_pointer;
+	MagickWand *magick_wand;
+	unsigned char *blob;
+	size_t length;
+	PyObject *ret;
+
+	if (!PyArg_ParseTuple(args, "O", &magick_pointer)){
+		return Py_BuildValue("i", 0);
+	}
+
+	magick_wand = (MagickWand *) PyCObject_AsVoidPtr(magick_pointer);
+	blob = MagickGetImagesBlob(magick_wand, &length);
+	ret = Py_BuildValue("s#", blob, length);
+	free(blob);
+
+	return ret;
 }
 
 static PyObject *
@@ -328,18 +374,139 @@ im_GetColorspace(PyObject *self, PyObject *args) {
 	}
 }
 
+static PyObject *
+im_CloneImage(PyObject *self, PyObject *args) {
+
+	void *magick_pointer;
+	MagickWand *magick_wand;
+	MagickWand *wand_clone;
+
+	if (!PyArg_ParseTuple(args, "O", &magick_pointer)){
+		Py_INCREF(Py_None);
+		return Py_None;
+	}
+
+	magick_wand = (MagickWand *) PyCObject_AsVoidPtr(magick_pointer);
+	wand_clone = CloneMagickWand(magick_wand);
+
+	return Py_BuildValue("O", PyCObject_FromVoidPtr((void *)wand_clone,
+			(void *)DestroyMagickWand));
+}
+
+static PyObject *
+im_SetImageFormat(PyObject *self, PyObject *args) {
+
+	void *magick_pointer;
+	MagickWand *magick_wand;
+	char *format = NULL;
+	MagickBooleanType status;
+
+	if (!PyArg_ParseTuple(args, "Os", &magick_pointer, &format)){
+		return Py_BuildValue("i", 0);
+	}
+
+	magick_wand = (MagickWand *) PyCObject_AsVoidPtr(magick_pointer);
+	status = MagickSetImageFormat(magick_wand, format);
+
+	if (status == MagickFalse){
+		return Py_BuildValue("i", 0);
+	}
+
+	return Py_BuildValue("i", 1);
+}
+
+
+ImageType
+get_image_type(char* mode) {
+
+  if (strcmp(mode, "BilevelType") == 0) {
+    return BilevelType;
+  }
+  else if (strcmp(mode, "GrayscaleType") == 0) {
+    return GrayscaleType;
+  }
+  else if (strcmp(mode, "GrayscaleMatteType") == 0) {
+    return GrayscaleMatteType;
+  }
+  else if (strcmp(mode, "PaletteType") == 0) {
+    return PaletteType;
+  }
+  else if (strcmp(mode, "PaletteMatteType") == 0) {
+    return PaletteMatteType;
+  }
+  else if (strcmp(mode, "TrueColorType") == 0) {
+    return TrueColorType;
+  }
+  else if (strcmp(mode, "TrueColorMatteType") == 0) {
+    return TrueColorMatteType;
+  }
+  else if (strcmp(mode, "ColorSeparationType") == 0) {
+    return ColorSeparationType;
+  }
+  else if (strcmp(mode, "ColorSeparationMatteType") == 0) {
+    return ColorSeparationMatteType;
+  }
+  else {
+    return TrueColorType;
+  }
+}
+
+static PyObject *
+im_SetImageType(PyObject *self, PyObject *args) {
+
+	void *magick_pointer;
+	MagickWand *magick_wand;
+	char *img_type = NULL;
+
+	if (!PyArg_ParseTuple(args, "Os", &magick_pointer, &img_type)){
+		Py_INCREF(Py_None);
+		return Py_None;
+	}
+
+	magick_wand = (MagickWand *) PyCObject_AsVoidPtr(magick_pointer);
+	MagickSetImageType(magick_wand, get_image_type(img_type));
+
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+static PyObject *
+im_RemoveAlpaChannel(PyObject *self, PyObject *args) {
+
+	void *magick_pointer;
+	MagickWand *magick_wand;
+
+	if (!PyArg_ParseTuple(args, "O", &magick_pointer)){
+		Py_INCREF(Py_None);
+		return Py_None;
+	}
+
+	magick_wand = (MagickWand *) PyCObject_AsVoidPtr(magick_pointer);
+	MagickSetImageAlphaChannel(magick_wand, DeactivateAlphaChannel);
+
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
 static
 PyMethodDef im_methods[] = {
 		{"init_magick", im_InitMagick, METH_VARARGS},
 		{"terminate_magick", im_TerminateMagick, METH_VARARGS},
 		{"new_image", im_NewImage, METH_VARARGS},
 		{"load_image", im_LoadImage, METH_VARARGS},
+		{"load_image_blob", im_LoadImageBlob, METH_VARARGS},
 		{"write_image", im_WriteImage, METH_VARARGS},
+		{"get_image_blob", im_GetImageBlob, METH_VARARGS},
 		{"get_number_images", im_GetNumberImages, METH_VARARGS},
 		{"reset_iterator", im_ResetIterator, METH_VARARGS},
 		{"next_image", im_NextImage, METH_VARARGS},
 		{"get_image_type", im_GetImageType, METH_VARARGS},
 		{"get_colorspace", im_GetColorspace, METH_VARARGS},
+		{"clone_image", im_CloneImage, METH_VARARGS},
+		{"set_image_format", im_SetImageFormat, METH_VARARGS},
+		{"set_image_type", im_SetImageType, METH_VARARGS},
+		{"remove_alpha_channel", im_RemoveAlpaChannel, METH_VARARGS},
+
 	{NULL, NULL}
 };
 
