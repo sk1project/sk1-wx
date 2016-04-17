@@ -51,6 +51,7 @@ other distros they have similar names. So, you need:
 
 libcairo2-dev
 liblcms2-dev
+libmagickwand-dev
 libpango1.0-dev
 python-dev
 python-cairo-dev
@@ -58,8 +59,7 @@ python-cairo-dev
 
 To run application you need installing also:
 
-python-wxgtk2.8 (for sK1 on Linux only)
+python-wxgtk2.8 (for sK1 only)
 python-imaging 
 python-reportlab
 python-cairo
-python-wand
