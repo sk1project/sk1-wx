@@ -93,6 +93,28 @@ pycms_OpenProfile(PyObject *self, PyObject *args) {
 }
 
 static PyObject *
+pycms_OpenProfileFromString(PyObject *self, PyObject *args) {
+
+	long size;
+	char *profile;
+	cmsHPROFILE hProfile;
+
+	if (!PyArg_ParseTuple(args, "s#", &profile, &size)){
+		Py_INCREF(Py_None);
+		return Py_None;
+	}
+
+	hProfile = 	cmsOpenProfileFromMem(profile, size);
+
+	if(hProfile==NULL) {
+		Py_INCREF(Py_None);
+		return Py_None;
+	}
+
+	return Py_BuildValue("O", PyCObject_FromVoidPtr((void *)hProfile, (void *)cmsCloseProfile));
+}
+
+static PyObject *
 pycms_CreateRGBProfile(PyObject *self, PyObject *args) {
 
 	cmsHPROFILE hProfile;
@@ -332,6 +354,8 @@ pycms_TransformBitmap (PyObject *self, PyObject *args) {
 	return Py_None;
 }
 
+#define BUFFER_SIZE 1000
+
 static PyObject *
 pycms_GetProfileName (PyObject *self, PyObject *args) {
 
@@ -366,6 +390,23 @@ pycms_GetProfileInfo (PyObject *self, PyObject *args) {
 	hProfile = (cmsHPROFILE) PyCObject_AsVoidPtr(profile);
 
 	return Py_BuildValue("s", cmsTakeProductName(hProfile));
+}
+
+static PyObject *
+pycms_GetProfileInfoCopyright (PyObject *self, PyObject *args) {
+
+	void *profile;
+	cmsHPROFILE hProfile;
+	char *buffer;
+	PyObject *ret;
+
+	if (!PyArg_ParseTuple(args, "O", &profile)) {
+		Py_INCREF(Py_None);
+		return Py_None;
+	}
+
+	ret=Py_BuildValue("s", "");
+	return ret;
 }
 
 static PyObject *
@@ -451,6 +492,7 @@ static
 PyMethodDef pycms_methods[] = {
 	{"getVersion", pycms_GetVersion, METH_VARARGS},
 	{"openProfile", pycms_OpenProfile, METH_VARARGS},
+	{"openProfileFromString", pycms_OpenProfileFromString, METH_VARARGS},
 	{"createRGBProfile", pycms_CreateRGBProfile, METH_VARARGS},
 	{"createLabProfile", pycms_CreateLabProfile, METH_VARARGS},
 	{"createGrayProfile", pycms_CreateGrayProfile, METH_VARARGS},
@@ -462,6 +504,7 @@ PyMethodDef pycms_methods[] = {
 	{"transformBitmap", pycms_TransformBitmap, METH_VARARGS},
 	{"getProfileName", pycms_GetProfileName, METH_VARARGS},
 	{"getProfileInfo", pycms_GetProfileInfo, METH_VARARGS},
+	{"getProfileInfoCopyright", pycms_GetProfileInfoCopyright, METH_VARARGS},
 	{"getPixelsFromImage", pycms_GetPixelsFromImage, METH_VARARGS},
 	{"setImagePixels", pycms_SetImagePixels, METH_VARARGS},
 	{"transformPixels", pycms_TransformPixels, METH_VARARGS},
