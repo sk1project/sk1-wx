@@ -58,14 +58,21 @@ def make_modules(src_path, include_path, lib_path=[]):
 			libraries=['cairo'])
 	modules.append(cairo_module)
 
+	if os.name == 'nt':
+		pycms_files = ['_cms.c', ]
+		pycms_libraries = ['lcms']
+	else:
+		pycms_files = ['_cms2.c', ]
+		pycms_libraries = ['lcms2']
+
 	pycms_src = os.path.join(src_path, 'uc2', 'cms')
-	files = buildutils.make_source_list(pycms_src, ['_cms2.c', ])
+	files = buildutils.make_source_list(pycms_src, pycms_files)
 	include_dirs = [include_path, ]
 	pycms_module = Extension('uc2.cms._cms',
 			define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
 			sources=files, include_dirs=include_dirs,
 			library_dirs=lib_path,
-			libraries=['lcms2'],
+			libraries=pycms_libraries,
 			extra_compile_args=["-Wall"])
 	modules.append(pycms_module)
 
