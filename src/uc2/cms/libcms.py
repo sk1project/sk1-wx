@@ -88,10 +88,10 @@ def cms_open_profile_from_string(profilestr):
 
 	profilestr - ICC profile in python string
 	"""
-	ln = len(profilestr)
+
 	if not ln: raise CmsError, "Empty profile string provided"
 
-	result = _cms.openProfileFromString(profilestr, ln)
+	result = _cms.openProfileFromString(profilestr)
 
 	if result is None:
 		raise CmsError, 'It seems provided profile string is invalid!'
