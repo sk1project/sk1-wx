@@ -97,7 +97,7 @@ pycms_OpenProfileFromString(PyObject *self, PyObject *args) {
 	char *profile;
 	cmsHPROFILE hProfile;
 
-	if (!PyArg_ParseTuple(args, "s#l", &profile, &size)){
+	if (!PyArg_ParseTuple(args, "s#", &profile, &size)){
 		Py_INCREF(Py_None);
 		return Py_None;
 	}
