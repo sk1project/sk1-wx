@@ -60,7 +60,7 @@ def make_modules(src_path, include_path, lib_path=[]):
 
 	if os.name == 'nt':
 		pycms_files = ['_cms.c', ]
-		pycms_libraries = ['lcms']
+		pycms_libraries = ['lcms', 'user32']
 	else:
 		pycms_files = ['_cms2.c', ]
 		pycms_libraries = ['lcms2']
