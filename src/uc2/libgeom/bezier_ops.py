@@ -15,7 +15,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import math
 from copy import deepcopy
 
 from uc2.formats.sk2 import sk2_const
