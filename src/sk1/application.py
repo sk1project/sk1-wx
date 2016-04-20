@@ -15,7 +15,7 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, sys, traceback, time
+import os, sys, traceback
 import webbrowser
 from base64 import b64decode
 
