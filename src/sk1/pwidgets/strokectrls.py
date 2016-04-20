@@ -19,7 +19,6 @@ from copy import deepcopy
 import cairo
 import wal
 
-from uc2 import uc2const
 from uc2.formats.sk2 import sk2_const
 
 from sk1 import _
