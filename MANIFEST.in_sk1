@@ -1,4 +1,4 @@
-include LICENSE GPLv3.txt README.txt MANIFEST.in_uc2 setup.cfg_sk1
+include LICENSE GPLv3.txt README.txt MANIFEST.in_sk1 setup.cfg_sk1
 include buildutils.py native_mods.py src/script/sk1.tmpl
 
 recursive-include src/uc2/utils/streamfilter *.*
