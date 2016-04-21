@@ -61,6 +61,6 @@ python-cairo-dev
 To run application you need installing also:
 
 python-wxgtk2.8 (for sK1 only)
-python-imaging 
+python-pil 
 python-reportlab
 python-cairo
