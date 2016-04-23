@@ -40,7 +40,8 @@ class Palette(wal.VPanel, wal.SensitiveCanvas):
 		self.on_left_click = on_left_click
 		self.on_right_click = on_right_click
 		wal.VPanel.__init__(self, parent)
-		wal.SensitiveCanvas.__init__(self, True)
+		wal.SensitiveCanvas.__init__(self, True)		
+		if wal.is_msw(): self.SetDoubleBuffered(True)
 		self.set_palette_size()
 		events.connect(events.CONFIG_MODIFIED, self.config_update)
 		events.connect(events.CMS_CHANGED, self.palette_refresh)
