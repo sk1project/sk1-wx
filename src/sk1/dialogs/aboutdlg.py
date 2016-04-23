@@ -140,6 +140,4 @@ class EvetLoopMonitor(wal.VPanel):
 def about_dialog(app, parent):
 	title = _('About') + ' ' + app.appdata.app_name
 	dlg = AboutDialog(app, parent, title)
-	dlg.Centre()
-	dlg.ShowModal()
-	dlg.Destroy()
+	dlg.show()
