@@ -132,7 +132,7 @@ im_GetImageBlob(PyObject *self, PyObject *args) {
 	magick_wand = (MagickWand *) PyCObject_AsVoidPtr(magick_pointer);
 	blob = MagickGetImagesBlob(magick_wand, &length);
 	ret = Py_BuildValue("s#", blob, length);
-	free(blob);
+	MagickRelinquishMemory(blob);
 
 	return ret;
 }
