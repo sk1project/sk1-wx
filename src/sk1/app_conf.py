@@ -378,8 +378,9 @@ class WinConfig(AppConfig):
 	os = system.WINDOWS
 	os_name = system.get_os_name()
 	toolbar_size = (24, 24)
-	toolbar_icon_size = (16, 16)
-	statusbar_fontsize = 10
+	toolbar_icon_size = (22, 22)
+	statusbar_fontsize = 12
+	tabs_use_bold = False
 
 
 
