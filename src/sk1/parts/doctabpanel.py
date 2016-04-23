@@ -372,13 +372,14 @@ class DocTab(HPanel):
 
 	def _on_move(self, event):
 		mouse_pos = event.GetPosition()
-		if self.but_rect.Inside(mouse_pos) and not self.but_active:
-			self.but_active = True
-			self.refresh()
-		if not self.but_rect.Inside(mouse_pos) and self.but_active:
-			self.but_active = False
-			self.but_pressed = False
-			self.refresh()
+		if self.but_rect:
+			if self.but_rect.Inside(mouse_pos) and not self.but_active:
+				self.but_active = True
+				self.refresh()
+			if not self.but_rect.Inside(mouse_pos) and self.but_active:
+				self.but_active = False
+				self.but_pressed = False
+				self.refresh()
 
 	def _on_win_leave(self, event):
 		if self.but_active:
