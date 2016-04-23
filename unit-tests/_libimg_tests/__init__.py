@@ -84,10 +84,10 @@ class TestCoreLibImgFunctions(unittest.TestCase):
 
 	def test07_image_type(self):
 		names = []
-		names.append(['type_bilevel.png', 'BilevelType'])
+# 		names.append(['type_bilevel.png', 'BilevelType'])
 		names.append(['type_grayscale.png', 'GrayscaleType'])
 		names.append(['type_palette.png', 'PaletteType'])
-		names.append(['type_palettematte.png', 'PaletteMatteType'])
+# 		names.append(['type_palettematte.png', 'PaletteMatteType'])
 		names.append(['type_truecolor.png', 'TrueColorType'])
 		names.append(['type_truecolormatte.png', 'TrueColorMatteType'])
 		names.append(['type_cmyk.tif', 'ColorSeparationType'])
@@ -108,3 +108,8 @@ class TestCoreLibImgFunctions(unittest.TestCase):
 		wand = _libimg.new_image()
 		result = _libimg.load_image_blob(wand, blob)
 		self.assertEqual(1, result)
+		blob=_libimg.get_image_blob(wand)
+		self.assertEqual(False, blob=='')
+		
+		
+		
