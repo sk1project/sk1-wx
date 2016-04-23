@@ -486,9 +486,9 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 				width += 2
 				self.entry = Entry(self, '', size=size, width=width,
 						onchange=self._check_entry, onenter=self._entry_enter)
-				size = (-1, self.entry.GetSize()[1] - 4)
+				size = (-1, self.entry.GetSize()[1] - 3)
 				self.sb = SpinButton(self.entry, size=size, onchange=self._check_spin)
-				w_pos = self.entry.GetSize()[0] - self.sb.GetSize()[0] - 3
+				w_pos = self.entry.GetSize()[0] - self.sb.GetSize()[0] - 4
 				self.sb.SetPosition((w_pos, -1))
 		else:
 			self.box = wx.BoxSizer(const.HORIZONTAL)
