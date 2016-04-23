@@ -19,7 +19,7 @@ import wal
 
 from uc2.uc2const import IMAGE_NAMES, IMAGE_CMYK, IMAGE_RGB
 
-from sk1 import _, config, events, modes
+from sk1 import _, config, events
 from sk1.resources import pdids, get_tooltip_text
 from sk1.pwidgets import SB_FillSwatch, SB_StrokeSwatch, ActionImageSwitch
 from sk1.resources import get_bmp, icons
@@ -39,7 +39,7 @@ class AppStatusbar(wal.HPanel):
 	def __init__(self, mw):
 
 		if not config.statusbar_fontsize:
-			FONTSIZE[0] = wal.get_system_fontsize()
+			FONTSIZE[0] = str(wal.get_system_fontsize()[1])
 
 		self.mw = mw
 		wal.HPanel.__init__(self, mw)
