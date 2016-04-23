@@ -90,6 +90,11 @@ def make_modules(src_path, include_path, lib_path=[]):
 			libraries=['pango-1.0', 'pangocairo-1.0', 'cairo',
 					'glib-2.0', 'gobject-2.0'])
 	modules.append(pango_module)
+	
+	if os.name == 'nt':
+		libimg_libraries = ['CORE_RL_wand_','CORE_RL_magick_']
+	else:
+		libimg_libraries = ['MagickWand']
 
 	libimg_src = os.path.join(src_path, 'uc2', 'libimg')
 	files = buildutils.make_source_list(libimg_src, ['_libimg.c', ])
@@ -98,7 +103,7 @@ def make_modules(src_path, include_path, lib_path=[]):
 			define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
 			sources=files, include_dirs=include_dirs,
 			library_dirs=lib_path,
-			libraries=['MagickWand'])
+			libraries=libimg_libraries)
 	modules.append(libimg_module)
 
 	return modules
