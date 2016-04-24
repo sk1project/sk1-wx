@@ -629,6 +629,7 @@ class IntSpin(FloatSpin):
 				onchange=None, onenter=None, check_focus=True):
 		step = 1
 		digits = 0
+		if not width and const.is_msw(): width=5
 		FloatSpin.__init__(self, parent, value, range_val,
 						step, digits, size, width, spin_overlay,
 						onchange, onenter, check_focus)
