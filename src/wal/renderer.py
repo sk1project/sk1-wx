@@ -105,7 +105,8 @@ def bmp_to_white(bmp):
 
 def disabled_bmp(bmp):
 	image = bmp.ConvertToImage()
-	image=image.ConvertToGreyscale(lr=0.15)#, lg=0.3, lb=0.06)
+	image=image.ConvertToGreyscale()
+	image=image.AdjustChannels(1.0, 1.0, 1.0, 0.5)
 	return image.ConvertToBitmap()
 
 class LabelRenderer:
