@@ -38,7 +38,8 @@ def decode_quotes(line):
 	return result
 
 def escape_quote(line):
-	return line.replace("'", "\\'")
+	ret=line.replace("\\", "\\\\")
+	return ret.replace("'", "\\'")
 
 
 
