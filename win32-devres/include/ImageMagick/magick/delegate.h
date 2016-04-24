@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -22,6 +22,9 @@
 extern "C" {
 #endif
 
+#include <stdarg.h>
+#include "magick/semaphore.h"
+
 typedef struct _DelegateInfo
 {
   char
@@ -29,36 +32,43 @@ typedef struct _DelegateInfo
     *decode,
     *encode,
     *commands;
-                                                                                
-  long
+
+  ssize_t
     mode;
-                                                                                
+
   MagickBooleanType
     thread_support,
     spawn,
     stealth;
-                                                                                
+
   struct _DelegateInfo
     *previous,
     *next;  /* deprecated, use GetDelegateInfoList() */
 
-  unsigned long
+  size_t
     signature;
+
+  SemaphoreInfo
+    *semaphore;
 } DelegateInfo;
 
 extern MagickExport char
   *GetDelegateCommand(const ImageInfo *,Image *,const char *,const char *,
     ExceptionInfo *),
-  **GetDelegateList(const char *,unsigned long *,ExceptionInfo *);
+  **GetDelegateList(const char *,size_t *,ExceptionInfo *);
 
 extern MagickExport const char
   *GetDelegateCommands(const DelegateInfo *);
 
 extern MagickExport const DelegateInfo
   *GetDelegateInfo(const char *,const char *,ExceptionInfo *exception),
-  **GetDelegateInfoList(const char *,unsigned long *,ExceptionInfo *);
+  **GetDelegateInfoList(const char *,size_t *,ExceptionInfo *);
 
-extern MagickExport long
+extern MagickExport int
+  ExternalDelegateCommand(const MagickBooleanType,const MagickBooleanType,
+    const char *,char *,ExceptionInfo *);
+
+extern MagickExport ssize_t
   GetDelegateMode(const DelegateInfo *);
 
 extern MagickExport MagickBooleanType

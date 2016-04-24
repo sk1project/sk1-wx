@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ typedef struct _MimeInfo
   MimeInfo;
 
 extern MagickExport char
-  **GetMimeList(const char *,unsigned long *,ExceptionInfo *),
+  **GetMimeList(const char *,size_t *,ExceptionInfo *),
   *MagickToMime(const char *);
 
 extern MagickExport const char
@@ -35,12 +35,11 @@ extern MagickExport const char
 
 extern MagickExport MagickBooleanType
   ListMimeInfo(FILE *,ExceptionInfo *),
-  LoadMimeLists(const char *,ExceptionInfo *),
   MimeComponentGenesis(void);
 
 extern MagickExport const MimeInfo
   *GetMimeInfo(const char *,const unsigned char *,const size_t,ExceptionInfo *),
-  **GetMimeInfoList(const char *,unsigned long *,ExceptionInfo *);
+  **GetMimeInfoList(const char *,size_t *,ExceptionInfo *);
 
 extern MagickExport void
   MimeComponentTerminus(void);

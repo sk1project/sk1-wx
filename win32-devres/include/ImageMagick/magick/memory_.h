@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -22,26 +22,38 @@
 extern "C" {
 #endif
 
+typedef struct _MemoryInfo
+  MemoryInfo;
+
 typedef void
-  *(*AcquireMemoryHandler)(size_t),
+  *(*AcquireMemoryHandler)(size_t) magick_alloc_size(1),
   (*DestroyMemoryHandler)(void *),
-  *(*ResizeMemoryHandler)(void *,size_t);
+  *(*ResizeMemoryHandler)(void *,size_t) magick_alloc_size(2);
+
+extern MagickExport MemoryInfo
+  *AcquireVirtualMemory(const size_t,const size_t) magick_alloc_sizes(1,2),
+  *RelinquishVirtualMemory(MemoryInfo *);
 
 extern MagickExport void
-  *AcquireAlignedMemory(const size_t,const size_t) magick_attribute((malloc)),
-  *AcquireMagickMemory(const size_t) magick_attribute((malloc)),
-  *AcquireQuantumMemory(const size_t,const size_t) magick_attribute((malloc)),
+  *AcquireAlignedMemory(const size_t,const size_t)
+    magick_attribute((__malloc__)) magick_alloc_sizes(1,2),
+  *AcquireMagickMemory(const size_t) magick_attribute((__malloc__))
+    magick_alloc_size(1),
+  *AcquireQuantumMemory(const size_t,const size_t)
+    magick_attribute((__malloc__)) magick_alloc_sizes(1,2),
   *CopyMagickMemory(void *,const void *,const size_t)
-    magick_attribute((nonnull)),
+    magick_attribute((__nonnull__)),
   DestroyMagickMemory(void),
   GetMagickMemoryMethods(AcquireMemoryHandler *,ResizeMemoryHandler *,
     DestroyMemoryHandler *),
+  *GetVirtualMemoryBlob(const MemoryInfo *),
   *RelinquishAlignedMemory(void *),
   *RelinquishMagickMemory(void *),
   *ResetMagickMemory(void *,int,const size_t),
-  *ResizeMagickMemory(void *,const size_t) magick_attribute((malloc)),
+  *ResizeMagickMemory(void *,const size_t)
+    magick_attribute((__malloc__)) magick_alloc_size(2),
   *ResizeQuantumMemory(void *,const size_t,const size_t)
-    magick_attribute((malloc)),
+    magick_attribute((__malloc__)) magick_alloc_sizes(2,3),
   SetMagickMemoryMethods(AcquireMemoryHandler,ResizeMemoryHandler,
     DestroyMemoryHandler);
 

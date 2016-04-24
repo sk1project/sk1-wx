@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -37,18 +37,8 @@ typedef enum
 
 extern MagickExport char
   *Base64Encode(const unsigned char *,const size_t,size_t *),
-  **GetPathComponents(const char *,unsigned long *),
-  **ListFiles(const char *,const char *,unsigned long *);
-
-extern MagickExport FILE
-  *OpenMagickStream(const char *,const char *);
-
-extern MagickExport int
-  SystemCommand(const MagickBooleanType,const MagickBooleanType,const char *,
-    ExceptionInfo *);
-
-extern MagickExport long
-  GetMagickPageSize(void);
+  **GetPathComponents(const char *,size_t *),
+  **ListFiles(const char *,const char *,size_t *);
 
 extern MagickExport MagickBooleanType
   AcquireUniqueFilename(char *),
@@ -56,20 +46,23 @@ extern MagickExport MagickBooleanType
   ExpandFilenames(int *,char ***),
   GetPathAttributes(const char *,void *),
   GetExecutionPath(char *,const size_t),
-  IsMagickTrue(const char *),
   IsPathAccessible(const char *);
+
+extern MagickExport size_t
+  MultilineCensus(const char *);
+
+extern MagickExport ssize_t
+  GetMagickPageSize(void);
 
 extern MagickExport unsigned char
   *Base64Decode(const char *, size_t *);
 
-extern MagickExport unsigned long
-  MultilineCensus(const char *);
-
 extern MagickExport void
   AppendImageFormat(const char *,char *),
-  ChopPathComponents(char *,const unsigned long),
+  ChopPathComponents(char *,const size_t),
   ExpandFilename(char *),
-  GetPathComponent(const char *,PathType,char *);
+  GetPathComponent(const char *,PathType,char *),
+  MagickDelay(const MagickSizeType);
 
 #if defined(__cplusplus) || defined(c_plusplus)
 }

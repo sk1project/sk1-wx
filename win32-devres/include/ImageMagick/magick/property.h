@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -36,9 +36,7 @@ extern MagickExport MagickBooleanType
   DefineImageProperty(Image *,const char *),
   DeleteImageProperty(Image *,const char *),
   FormatImageProperty(Image *,const char *,const char *,...)
-    magick_attribute((format (printf,3,4))),
-  FormatImagePropertyList(Image *,const char *,const char *,va_list)
-    magick_attribute((format (printf,3,0))),
+    magick_attribute((__format__ (__printf__,3,4))),
   SetImageProperty(Image *,const char *,const char *);
 
 extern MagickExport void

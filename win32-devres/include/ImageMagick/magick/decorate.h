@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -24,11 +24,11 @@ extern "C" {
 
 typedef struct _FrameInfo
 {
-  unsigned long
+  size_t
     width,
     height;
 
-  long
+  ssize_t
     x,
     y,
     inner_bevel,

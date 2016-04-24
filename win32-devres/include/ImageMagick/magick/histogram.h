@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -35,17 +35,18 @@ typedef struct _ColorPacket
 } ColorPacket;
 
 extern MagickExport ColorPacket
-  *GetImageHistogram(const Image *,unsigned long *,ExceptionInfo *);
+  *GetImageHistogram(const Image *,size_t *,ExceptionInfo *);
 
 extern MagickExport Image
   *UniqueImageColors(const Image *,ExceptionInfo *);
 
 extern MagickExport MagickBooleanType
+  IdentifyPaletteImage(const Image *,ExceptionInfo *),
   IsHistogramImage(const Image *,ExceptionInfo *),
   IsPaletteImage(const Image *,ExceptionInfo *),
   MinMaxStretchImage(Image *,const ChannelType,const double,const double);
 
-extern MagickExport unsigned long
+extern MagickExport size_t
   GetNumberColors(const Image *,FILE *,ExceptionInfo *);
 
 #if defined(__cplusplus) || defined(c_plusplus)

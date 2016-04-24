@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -23,10 +23,10 @@ extern "C" {
 #endif
 
 extern MagickExport Image
-  *AffineTransformImage(const Image *,const AffineMatrix *,ExceptionInfo *),
   *DeskewImage(const Image *,const double,ExceptionInfo *),
-  *RotateImage(const Image *,const double,ExceptionInfo *),
-  *ShearImage(const Image *,const double,const double,ExceptionInfo *);
+  *IntegralRotateImage(const Image *,size_t,ExceptionInfo *),
+  *ShearImage(const Image *,const double,const double,ExceptionInfo *),
+  *ShearRotateImage(const Image *,const double,ExceptionInfo *);
 
 #if defined(__cplusplus) || defined(c_plusplus)
 }

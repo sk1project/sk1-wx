@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ typedef enum
 {
   UndefinedCompositeOp,
   NoCompositeOp,
-  AddCompositeOp,
+  ModulusAddCompositeOp,
   AtopCompositeOp,
   BlendCompositeOp,
   BumpmapCompositeOp,
@@ -60,7 +60,7 @@ typedef enum
   LightenCompositeOp,
   LinearLightCompositeOp,
   LuminizeCompositeOp,
-  MinusCompositeOp,
+  MinusDstCompositeOp,
   ModulateCompositeOp,
   MultiplyCompositeOp,
   OutCompositeOp,
@@ -76,10 +76,14 @@ typedef enum
   SrcInCompositeOp,
   SrcOutCompositeOp,
   SrcOverCompositeOp,
-  SubtractCompositeOp,
+  ModulusSubtractCompositeOp,
   ThresholdCompositeOp,
   XorCompositeOp,
-  DivideCompositeOp,
+  /* These are new operators, added after the above was last sorted.
+   * The list should be re-sorted only when a new library version is
+   * created.
+   */
+  DivideDstCompositeOp,
   DistortCompositeOp,
   BlurCompositeOp,
   PegtopLightCompositeOp,
@@ -87,14 +91,27 @@ typedef enum
   PinLightCompositeOp,
   LinearDodgeCompositeOp,
   LinearBurnCompositeOp,
-  MathematicsCompositeOp
+  MathematicsCompositeOp,
+  DivideSrcCompositeOp,
+  MinusSrcCompositeOp,
+  DarkenIntensityCompositeOp,
+  LightenIntensityCompositeOp,
+  HardMixCompositeOp
 } CompositeOperator;
 
+/* Deprecated (renamed) Method Names for backward compatibility
+ * However the CompositeOp value has not changed, just renamed.
+ */
+#define AddCompositeOp       ModulusAddCompositeOp
+#define SubtractCompositeOp  ModulusSubtractCompositeOp
+#define MinusCompositeOp     MinusDstCompositeOp
+#define DivideCompositeOp    DivideDstCompositeOp
+
 extern MagickExport MagickBooleanType
-  CompositeImage(Image *,const CompositeOperator,const Image *,const long,
-    const long),
+  CompositeImage(Image *,const CompositeOperator,const Image *,const ssize_t,
+    const ssize_t),
   CompositeImageChannel(Image *,const ChannelType,const CompositeOperator,
-    const Image *,const long,const long),
+    const Image *,const ssize_t,const ssize_t),
   TextureImage(Image *,const Image *);
 
 #if defined(__cplusplus) || defined(c_plusplus)

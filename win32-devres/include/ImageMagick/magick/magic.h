@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -46,12 +46,12 @@ typedef struct _MagicInfo
     *previous,
     *next;  /* deprecated, use GetMagicInfoList() */
 
-  unsigned long
+  size_t
     signature;
 } MagicInfo;
 
 extern MagickExport char
-  **GetMagicList(const char *,unsigned long *,ExceptionInfo *);
+  **GetMagicList(const char *,size_t *,ExceptionInfo *);
 
 extern MagickExport const char
   *GetMagicName(const MagicInfo *);
@@ -62,7 +62,7 @@ extern MagickExport MagickBooleanType
 
 extern MagickExport const MagicInfo
   *GetMagicInfo(const unsigned char *,const size_t,ExceptionInfo *),
-  **GetMagicInfoList(const char *,unsigned long *,ExceptionInfo *);
+  **GetMagicInfoList(const char *,size_t *,ExceptionInfo *);
 
 extern MagickExport void
   MagicComponentTerminus(void);

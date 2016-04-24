@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -18,17 +18,17 @@
 #ifndef _MAGICKCORE_MODULE_H
 #define _MAGICKCORE_MODULE_H
 
+#include <time.h>
+#include "magick/version.h"
+
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
 #endif
 
-#include <time.h>
-#include "magick/version.h"
-
-#define MagickImageCoderSignature  ((unsigned long) \
-  (((MagickLibVersion) << 8) | MAGICKCORE_QUANTUM_DEPTH))
-#define MagickImageFilterSignature  ((unsigned long) \
-  (((MagickLibVersion) << 8) | MAGICKCORE_QUANTUM_DEPTH))
+#define MagickImageCoderSignature  ((size_t) \
+  (((MagickLibInterface) << 8) | MAGICKCORE_QUANTUM_DEPTH))
+#define MagickImageFilterSignature  ((size_t) \
+  (((MagickLibInterface) << 8) | MAGICKCORE_QUANTUM_DEPTH))
 
 typedef enum
 {
@@ -46,7 +46,7 @@ typedef struct _ModuleInfo
     *handle,
     (*unregister_module)(void);
 
-  unsigned long
+  size_t
     (*register_module)(void);
 
   time_t
@@ -59,21 +59,20 @@ typedef struct _ModuleInfo
     *previous,
     *next;  /* deprecated, use GetModuleInfoList() */
 
-  unsigned long
+  size_t
     signature;
 } ModuleInfo;
 
-typedef ModuleExport unsigned long
+typedef size_t
   ImageFilterHandler(Image **,const int,const char **,ExceptionInfo *);
 
 extern MagickExport char
-  **GetModuleList(const char *,unsigned long *,ExceptionInfo *);
+  **GetModuleList(const char *,const MagickModuleType,size_t *,ExceptionInfo *);
 
 extern MagickExport const ModuleInfo
-  **GetModuleInfoList(const char *,unsigned long *,ExceptionInfo *);
+  **GetModuleInfoList(const char *,size_t *,ExceptionInfo *);
 
 extern MagickExport MagickBooleanType
-  InitializeModuleList(ExceptionInfo *),
   InvokeDynamicImageFilter(const char *,Image **,const int,const char **,
     ExceptionInfo *),
   ListModuleInfo(FILE *,ExceptionInfo *),

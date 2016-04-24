@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -26,8 +26,9 @@ extern MagickExport Image
   *CloneImageList(const Image *,ExceptionInfo *),
   *CloneImages(const Image *,const char *,ExceptionInfo *),
   *DestroyImageList(Image *),
+  *DuplicateImages(Image *,const size_t,const char *,ExceptionInfo *),
   *GetFirstImageInList(const Image *),
-  *GetImageFromList(const Image *,const long),
+  *GetImageFromList(const Image *,const ssize_t),
   *GetLastImageInList(const Image *),
   *GetNextImageInList(const Image *),
   *GetPreviousImageInList(const Image *),
@@ -36,15 +37,15 @@ extern MagickExport Image
   *RemoveImageFromList(Image **),
   *RemoveLastImageFromList(Image **),
   *RemoveFirstImageFromList(Image **),
-  *SpliceImageIntoList(Image **,const unsigned long,const Image *),
+  *SpliceImageIntoList(Image **,const size_t,const Image *),
   *SplitImageList(Image *),
   *SyncNextImageInList(const Image *);
 
-extern MagickExport long
-  GetImageIndexInList(const Image *);
-
-extern MagickExport unsigned long
+extern MagickExport size_t
   GetImageListLength(const Image *);
+
+extern MagickExport ssize_t
+  GetImageIndexInList(const Image *);
 
 extern MagickExport void
   AppendImageToList(Image **,const Image *),
@@ -53,6 +54,7 @@ extern MagickExport void
   InsertImageInList(Image **,Image *),
   PrependImageToList(Image **,Image *),
   ReplaceImageInList(Image **,Image *),
+  ReplaceImageInListReturnLast(Image **,Image *),
   ReverseImageList(Image **),
   SyncImageList(Image *);
 

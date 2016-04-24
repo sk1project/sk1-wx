@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -26,8 +26,8 @@ typedef struct _ThresholdMap
   ThresholdMap;
 
 extern MagickExport Image
-  *AdaptiveThresholdImage(const Image *,const unsigned long,const unsigned long,
-    const long,ExceptionInfo *);
+  *AdaptiveThresholdImage(const Image *,const size_t,const size_t,const ssize_t,
+    ExceptionInfo *);
 
 extern MagickExport ThresholdMap
   *DestroyThresholdMap(ThresholdMap *),
@@ -47,6 +47,8 @@ extern MagickExport MagickBooleanType
   OrderedPosterizeImage(Image *,const char *,ExceptionInfo *),
   OrderedPosterizeImageChannel(Image *,const ChannelType,const char *,
     ExceptionInfo *),
+  PerceptibleImage(Image *,const double),
+  PerceptibleImageChannel(Image *,const ChannelType,const double),
   RandomThresholdImage(Image *,const char *,ExceptionInfo *),
   RandomThresholdImageChannel(Image *,const ChannelType,const char *,
     ExceptionInfo *),

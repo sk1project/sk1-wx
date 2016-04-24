@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -23,14 +23,16 @@ extern "C" {
 #endif
 
 extern MagickExport Image
+  *AutoOrientImage(const Image *,const OrientationType,ExceptionInfo *),
   *ChopImage(const Image *,const RectangleInfo *,ExceptionInfo *),
   *ConsolidateCMYKImages(const Image *,ExceptionInfo *),
   *CropImage(const Image *,const RectangleInfo *,ExceptionInfo *),
+  *CropImageToTiles(const Image *,const char *, ExceptionInfo *),
   *ExcerptImage(const Image *,const RectangleInfo *,ExceptionInfo *),
   *ExtentImage(const Image *,const RectangleInfo *,ExceptionInfo *),
   *FlipImage(const Image *,ExceptionInfo *),
   *FlopImage(const Image *,ExceptionInfo *),
-  *RollImage(const Image *,const long,const long,ExceptionInfo *),
+  *RollImage(const Image *,const ssize_t,const ssize_t,ExceptionInfo *),
   *ShaveImage(const Image *,const RectangleInfo *,ExceptionInfo *),
   *SpliceImage(const Image *,const RectangleInfo *,ExceptionInfo *),
   *TransposeImage(const Image *,ExceptionInfo *),

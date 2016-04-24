@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -32,10 +32,9 @@ extern MagickExport SemaphoreInfo
   *AllocateSemaphoreInfo(void);
 
 extern MagickExport void
-  AcquireSemaphoreInfo(SemaphoreInfo **),
+  ActivateSemaphoreInfo(SemaphoreInfo **),
   DestroySemaphoreInfo(SemaphoreInfo **),
   LockSemaphoreInfo(SemaphoreInfo *),
-  RelinquishSemaphoreInfo(SemaphoreInfo *),
   SemaphoreComponentTerminus(void),
   UnlockSemaphoreInfo(SemaphoreInfo *);
 

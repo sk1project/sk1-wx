@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -18,12 +18,12 @@
 #ifndef _MAGICKCORE_POLICY_H
 #define _MAGICKCORE_POLICY_H
 
+#include "magick/pixel.h"
+#include "magick/exception.h"
+
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
 #endif
-
-#include <magick/pixel.h>
-#include <magick/exception.h>
 
 typedef enum
 {
@@ -32,7 +32,8 @@ typedef enum
   DelegatePolicyDomain,
   FilterPolicyDomain,
   PathPolicyDomain,
-  ResourcePolicyDomain
+  ResourcePolicyDomain,
+  SystemPolicyDomain
 } PolicyDomain;
 
 typedef enum
@@ -49,10 +50,10 @@ typedef struct _PolicyInfo
 
 extern MagickExport char
   *GetPolicyValue(const char *name),
-  **GetPolicyList(const char *,unsigned long *,ExceptionInfo *);
+  **GetPolicyList(const char *,size_t *,ExceptionInfo *);
 
 extern MagickExport const PolicyInfo
-  **GetPolicyInfoList(const char *,unsigned long *,ExceptionInfo *);
+  **GetPolicyInfoList(const char *,size_t *,ExceptionInfo *);
 
 extern MagickExport MagickBooleanType
   IsRightsAuthorized(const PolicyDomain,const PolicyRights,const char *),

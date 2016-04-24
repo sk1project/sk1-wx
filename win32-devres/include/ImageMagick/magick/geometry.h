@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -46,13 +46,16 @@ typedef enum
 #undef YNegative
   YNegative = 0x0040,
   ChiNegative = 0x0080,
-  PercentValue = 0x1000,
-  AspectValue = 0x2000,
-  LessValue = 0x4000,
-  GreaterValue = 0x8000,
-  MinimumValue = 0x10000,
-  AreaValue = 0x20000,
-  DecimalValue = 0x40000,
+  PercentValue = 0x1000,   /* '%'  percentage of something */
+  AspectValue = 0x2000,    /* '!'  resize no-aspect - special use flag */
+  NormalizeValue = 0x2000, /* '!'  ScaleKernelValue() in morphology.c */
+  LessValue = 0x4000,      /* '<'  resize smaller - special use flag */
+  GreaterValue = 0x8000,   /* '>'  resize larger - spacial use flag */
+  MinimumValue = 0x10000,  /* '^'  special handling needed */
+  CorrelateNormalizeValue = 0x10000, /* '^' see ScaleKernelValue() */
+  AreaValue = 0x20000,     /* '@'  resize to area - special use flag */
+  DecimalValue = 0x40000,  /* '.'  floating point numbers found */
+  SeparatorValue = 0x80000,  /* 'x'  separator found  */
 #undef AllValues
   AllValues = 0x7fffffff
 } GeometryFlags;
@@ -108,13 +111,20 @@ typedef struct _GeometryInfo
     chi;
 } GeometryInfo;
 
+typedef struct _OffsetInfo
+{
+  ssize_t
+    x,
+    y;
+} OffsetInfo;
+
 typedef struct _RectangleInfo
 {
-  unsigned long
+  size_t
     width,
     height;
 
-  long
+  ssize_t
     x,
     y;
 } RectangleInfo;
@@ -127,20 +137,20 @@ extern MagickExport MagickBooleanType
   IsSceneGeometry(const char *,const MagickBooleanType);
 
 extern MagickExport MagickStatusType
-  GetGeometry(const char *,long *,long *,unsigned long *,unsigned long *),
+  GetGeometry(const char *,ssize_t *,ssize_t *,size_t *,size_t *),
   ParseAbsoluteGeometry(const char *,RectangleInfo *),
   ParseAffineGeometry(const char *,AffineMatrix *,ExceptionInfo *),
   ParseGeometry(const char *,GeometryInfo *),
   ParseGravityGeometry(const Image *,const char *,RectangleInfo *,
     ExceptionInfo *),
-  ParseMetaGeometry(const char *,long *,long *,unsigned long *,unsigned long *),
+  ParseMetaGeometry(const char *,ssize_t *,ssize_t *,size_t *,size_t *),
   ParsePageGeometry(const Image *,const char *,RectangleInfo *,ExceptionInfo *),
   ParseRegionGeometry(const Image *,const char *,RectangleInfo *,
     ExceptionInfo *);
 
 extern MagickExport void
-  GravityAdjustGeometry(const unsigned long,const unsigned long,
-    const GravityType,RectangleInfo *),
+  GravityAdjustGeometry(const size_t,const size_t,const GravityType,
+    RectangleInfo *),
   SetGeometry(const Image *,RectangleInfo *),
   SetGeometryInfo(GeometryInfo *);
 

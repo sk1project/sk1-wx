@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -18,59 +18,82 @@
 #ifndef _MAGICKCORE_PIXEL_H
 #define _MAGICKCORE_PIXEL_H
 
+#include "magick/colorspace.h"
+#include "magick/constitute.h"
+
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
 #endif
 
-#include <magick/colorspace.h>
-#include <magick/constitute.h>
+/*
+  Pixel enum declarations.
+*/
+typedef enum
+{
+  UndefinedInterpolatePixel,
+  AverageInterpolatePixel,           /* Average 4 nearest neighbours */
+  BicubicInterpolatePixel,           /* Catmull-Rom interpolation */
+  BilinearInterpolatePixel,          /* Triangular filter interpolation */
+  FilterInterpolatePixel,            /* Use resize filter - (very slow) */
+  IntegerInterpolatePixel,           /* Integer (floor) interpolation */
+  MeshInterpolatePixel,              /* Triangular mesh interpolation */
+  NearestNeighborInterpolatePixel,   /* Nearest neighbour only */
+  SplineInterpolatePixel,            /* Cubic Spline (blurred) interpolation */
+  Average9InterpolatePixel,          /* Average 9 nearest neighbours */
+  Average16InterpolatePixel,         /* Average 16 nearest neighbours */
+  BlendInterpolatePixel,             /* blend of nearest 1, 2 or 4 pixels */
+  BackgroundInterpolatePixel,        /* just return background color */
+  CatromInterpolatePixel             /* Catmull-Rom interpolation */
+} InterpolatePixelMethod;
 
-#define ClampRedPixelComponent(p) ClampToQuantum((p)->red)
-#define ClampGreenPixelComponent(p) ClampToQuantum((p)->green)
-#define ClampBluePixelComponent(p) ClampToQuantum((p)->blue)
-#define ClampOpacityPixelComponent(p) ClampToQuantum((p)->opacity)
-#define ClampIndexPixelComponent(p) ClampToQuantum((p)->index)
+typedef enum
+{
+  PixelRed = 0,
+  PixelCyan = 0,
+  PixelGray = 0,
+  PixelY = 0,
+  PixelGreen = 1,
+  PixelMagenta = 1,
+  PixelCb = 1,
+  PixelBlue = 2,
+  PixelYellow = 2,
+  PixelCr = 2,
+  PixelAlpha = 3,
+  PixelBlack = 4,
+  PixelIndex = 4,
+  MaskPixelComponent = 5
+} PixelComponent;
 
-#define GetRedPixelComponent(p) ((p)->red)
-#define GetGreenPixelComponent(p) ((p)->green)
-#define GetBluePixelComponent(p) ((p)->blue)
-#define GetOpacityPixelComponent(p) ((p)->opacity)
-#define GetAlphaPixelComponent(p) (QuantumRange-(p)->opacity)
-#define GetIndexPixelComponent(p) ((p)->index)
+typedef enum
+{
+  UndefinedPixelIntensityMethod = 0,
+  AveragePixelIntensityMethod,
+  BrightnessPixelIntensityMethod,
+  LightnessPixelIntensityMethod,
+  Rec601LumaPixelIntensityMethod,
+  Rec601LuminancePixelIntensityMethod,
+  Rec709LumaPixelIntensityMethod,
+  Rec709LuminancePixelIntensityMethod,
+  RMSPixelIntensityMethod,
+  MSPixelIntensityMethod
+} PixelIntensityMethod;
 
-#define SetRedPixelComponent(q,component) ((q)->red=(component))
-#define SetGreenPixelComponent(q,component) ((q)->green=(component))
-#define SetBluePixelComponent(q,component) ((q)->blue=(component))
-#define SetOpacityPixelComponent(q,component) ((q)->opacity=(component))
-#define SetAlphaPixelComponent(q,component) \
-  ((q)->opacity=(QuantumRange-(component)))
-#define SetIndexPixelComponent(q,component) ((q)->index=(component))
-
-#define GetGrayPixelComponent(p) ((p)->red)
-#define SetGrayPixelComponent(q,component) \
-  ((q)->red=(q)->green=(q)->blue=(component))
-
-#define GetYPixelComponent(p) ((p)->red)
-#define GetCbPixelComponent(p) ((p)->green)
-#define GetCrPixelComponent(p) ((p)->blue)
-
-#define SetYPixelComponent(q,component) ((q)->red=(component))
-#define SetCbPixelComponent(q,component) ((q)->green=(component))
-#define SetCrPixelComponent(q,component) ((q)->blue=(component))
-
-#define GetCyanPixelComponent(p) ((p)->red)
-#define GetMagentaPixelComponent(p) ((p)->green)
-#define GetYellowPixelComponent(p) ((p)->blue)
-#define GetBlackPixelComponent(p) ((p)->opacity)
-
-#define SetCyanPixelComponent(q,component) ((q)->red=(component))
-#define SetMagentaPixelComponent(q,component) ((q)->green=(component))
-#define SetYellowPixelComponent(q,component) ((q)->blue=(component))
-#define SetBlackPixelComponent(q,component) ((q)->opacity=(component))
+/*
+  Pixel typedef declarations.
+*/
+typedef struct _DoublePixelPacket
+{
+  double
+    red,
+    green,
+    blue,
+    opacity,
+    index;
+} DoublePixelPacket;
 
 typedef struct _LongPixelPacket
 {
-  unsigned long
+  unsigned int
     red,
     green,
     blue,
@@ -92,7 +115,7 @@ typedef struct _MagickPixelPacket
   double
     fuzz;
 
-  unsigned long
+  size_t
     depth;
 
   MagickRealType
@@ -124,13 +147,45 @@ typedef struct _PixelPacket
 #endif
 } PixelPacket;
 
+typedef struct _QuantumPixelPacket
+{
+  Quantum
+    red,
+    green,
+    blue,
+    opacity,
+    index;
+} QuantumPixelPacket;
+
+typedef struct _CacheView
+  CacheView_;
+
+/*
+  Pixel method declarations.
+*/
 extern MagickExport MagickBooleanType
-  ExportImagePixels(const Image *,const long,const long,const unsigned long,
-    const unsigned long,const char *,const StorageType,void *,ExceptionInfo *),
-  ImportImagePixels(Image *,const long,const long,const unsigned long,
-    const unsigned long,const char *,const StorageType,const void *);
+  ExportImagePixels(const Image *,const ssize_t,const ssize_t,const size_t,
+    const size_t,const char *,const StorageType,void *,ExceptionInfo *),
+  ImportImagePixels(Image *,const ssize_t,const ssize_t,const size_t,
+    const size_t,const char *,const StorageType,const void *),
+  InterpolateMagickPixelPacket(const Image *,const CacheView_ *,
+    const InterpolatePixelMethod,const double,const double,MagickPixelPacket *,
+    ExceptionInfo *);
+
+extern MagickExport MagickPixelPacket
+  *CloneMagickPixelPacket(const MagickPixelPacket *);
+
+extern MagickExport MagickRealType
+  DecodePixelGamma(const MagickRealType) magick_hot_spot,
+  EncodePixelGamma(const MagickRealType) magick_hot_spot,
+  GetMagickPixelIntensity(const Image *image,
+    const MagickPixelPacket *magick_restrict) magick_hot_spot,
+  GetPixelIntensity(const Image *image,const PixelPacket *magick_restrict)
+    magick_hot_spot;
 
 extern MagickExport void
+  ConformMagickPixelPacket(Image *,const MagickPixelPacket *,
+    MagickPixelPacket *,ExceptionInfo *),
   GetMagickPixelPacket(const Image *,MagickPixelPacket *);
 
 #if defined(__cplusplus) || defined(c_plusplus)

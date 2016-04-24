@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -35,19 +35,18 @@ typedef struct _LinkedListInfo
 
 extern MagickExport HashmapInfo
   *DestroyHashmap(HashmapInfo *),
-  *NewHashmap(const unsigned long,size_t (*)(const void *),
-    MagickBooleanType (*)(const void *,const void *),void *(*)(void *),
-    void *(*)(void *));
+  *NewHashmap(const size_t,size_t (*)(const void *),MagickBooleanType (*)
+    (const void *,const void *),void *(*)(void *),void *(*)(void *));
 
 extern MagickExport LinkedListInfo
   *DestroyLinkedList(LinkedListInfo *,void *(*)(void *)),
-  *NewLinkedList(const unsigned long);
+  *NewLinkedList(const size_t);
 
 extern MagickExport MagickBooleanType
   AppendValueToLinkedList(LinkedListInfo *,const void *),
   CompareHashmapString(const void *,const void *),
   CompareHashmapStringInfo(const void *,const void *),
-  InsertValueInLinkedList(LinkedListInfo *,const unsigned long,const void *),
+  InsertValueInLinkedList(LinkedListInfo *,const size_t,const void *),
   InsertValueInSortedLinkedList(LinkedListInfo *,
     int (*)(const void *,const void *),void **,const void *),
   IsHashmapEmpty(const HashmapInfo *),
@@ -56,13 +55,11 @@ extern MagickExport MagickBooleanType
   PutEntryInHashmap(HashmapInfo *,const void *,const void *);
 
 extern MagickExport size_t
+  GetNumberOfElementsInLinkedList(const LinkedListInfo *),
+  GetNumberOfEntriesInHashmap(const HashmapInfo *),
   HashPointerType(const void *),
   HashStringType(const void *),
   HashStringInfoType(const void *);
-
-extern MagickExport unsigned long
-  GetNumberOfElementsInLinkedList(const LinkedListInfo *),
-  GetNumberOfEntriesInHashmap(const HashmapInfo *);
 
 extern MagickExport void
   ClearLinkedList(LinkedListInfo *,void *(*)(void *)),
@@ -71,9 +68,9 @@ extern MagickExport void
   *GetNextValueInHashmap(HashmapInfo *),
   *GetNextValueInLinkedList(LinkedListInfo *),
   *GetValueFromHashmap(HashmapInfo *,const void *),
-  *GetValueFromLinkedList(LinkedListInfo *,const unsigned long),
+  *GetValueFromLinkedList(LinkedListInfo *,const size_t),
   *RemoveElementByValueFromLinkedList(LinkedListInfo *,const void *),
-  *RemoveElementFromLinkedList(LinkedListInfo *,const unsigned long),
+  *RemoveElementFromLinkedList(LinkedListInfo *,const size_t),
   *RemoveEntryFromHashmap(HashmapInfo *,const void *),
   *RemoveLastElementFromLinkedList(LinkedListInfo *),
   ResetHashmapIterator(HashmapInfo *),

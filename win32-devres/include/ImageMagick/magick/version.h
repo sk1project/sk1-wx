@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2015 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -22,68 +22,53 @@
 extern "C" {
 #endif
 
+#define MagickStringify(macro_or_string)  MagickStringifyArg(macro_or_string)
+#define MagickStringifyArg(contents)  #contents
+
 /*
   Define declarations.
 */
 #define MagickPackageName "ImageMagick"
-#define MagickCopyright  "Copyright (C) 1999-2010 ImageMagick Studio LLC"
-#define MagickLibVersion  0x659
-#define MagickLibVersionText  "6.5.9"
-#define MagickLibVersionNumber  3,0,0
-#define MagickLibSubversion  "-0"
-#define MagickLibInterface  3
-#define MagickReleaseDate  "2010-02-01"
-#define MagickChangeDate   "20100101"
+#define MagickCopyright  "Copyright (C) 1999-2015 ImageMagick Studio LLC"
+#define MagickLibVersion  0x693
+#define MagickLibVersionText  "6.9.3"
+#define MagickLibVersionNumber  6,9,3,8
+#define MagickLibAddendum  "-8"
+#define MagickLibInterface  6
+#define MagickLibMinInterface  6
+#if defined(_WIN64)
+#  define MagickPlatform "x64"
+#else
+#  define MagickPlatform "x86"
+#endif
+#define MagickReleaseDate  "2016-04-10"
+#define MagickAuthoritativeLicense  \
+  "http://www.imagemagick.org/script/license.php"
 #define MagickAuthoritativeURL  "http://www.imagemagick.org"
-#define MagickHomeURL  "file:///c/devlibs-update/share/doc/ImageMagick-6.5.9/index.html"
-#if (MAGICKCORE_QUANTUM_DEPTH == 8)
-#define MagickQuantumDepth  "Q8"
-#define MagickQuantumRange  "255"
-#elif (MAGICKCORE_QUANTUM_DEPTH == 16)
-#define MagickQuantumDepth  "Q16"
-#define MagickQuantumRange  "65535"
-#elif (MAGICKCORE_QUANTUM_DEPTH == 32)
-#define MagickQuantumDepth  "Q32"
-#define MagickQuantumRange  "4294967295"
-#elif (MAGICKCORE_QUANTUM_DEPTH == 64)
-#define MagickQuantumDepth  "Q64"
-#define MagickQuantumRange  "18446744073709551615"
-#else
-#define MagickQuantumDepth  "Q?"
-#define MagickQuantumRange  "?"
-#endif
-#if !defined(MAGICKCORE_HDRI_SUPPORT)
-#define MagickHDRIFeature ""
-#else
-#define MagickHDRIFeature "HDRI "
-#endif
-#if !defined(MAGICKCORE_OPENMP_SUPPORT)
-#define MagickOPENMPFeature ""
-#else
-#define MagickOPENMPFeature "OpenMP "
-#endif
-#if !defined(MAGICKCORE_OPENCL_SUPPORT)
-#define MagickOPENCLFeature ""
-#else
-#define MagickOPENCLFeature "OpenCL "
-#endif
-#define MagickFeatures \
-  MagickHDRIFeature MagickOPENMPFeature MagickOPENCLFeature
+#define MagickHomeURL  ""
+#define MagickQuantumDepth "Q" MagickStringify(MAGICKCORE_QUANTUM_DEPTH)
+#define MagickQuantumRange MagickStringify(QuantumRange)
 #define MagickVersion  \
-  MagickPackageName " " MagickLibVersionText MagickLibSubversion " " \
-  MagickReleaseDate " " MagickQuantumDepth " " MagickAuthoritativeURL
+  MagickPackageName " " MagickLibVersionText MagickLibAddendum " " \
+  MagickQuantumDepth " " MagickPlatform " " MagickReleaseDate " " \
+  MagickAuthoritativeURL
 
 extern MagickExport char
   *GetMagickHomeURL(void);
 
 extern MagickExport const char
   *GetMagickCopyright(void),
+  *GetMagickDelegates(void),
   *GetMagickFeatures(void),
+  *GetMagickLicense(void),
   *GetMagickPackageName(void),
-  *GetMagickQuantumDepth(unsigned long *),
-  *GetMagickQuantumRange(unsigned long *),
+  *GetMagickQuantumDepth(size_t *),
+  *GetMagickQuantumRange(size_t *),
   *GetMagickReleaseDate(void),
-  *GetMagickVersion(unsigned long *);
+  *GetMagickVersion(size_t *);
+
+extern MagickExport void
+  ListMagickVersion(FILE *);
 
 #if defined(__cplusplus) || defined(c_plusplus)
 }

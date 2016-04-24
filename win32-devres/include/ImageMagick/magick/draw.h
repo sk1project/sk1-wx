@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -18,14 +18,14 @@
 #ifndef _MAGICKCORE_DRAW_H
 #define _MAGICKCORE_DRAW_H
 
-#if defined(__cplusplus) || defined(c_plusplus)
-extern "C" {
-#endif
-
 #include "magick/geometry.h"
 #include "magick/image.h"
 #include "magick/pixel.h"
 #include "magick/type.h"
+
+#if defined(__cplusplus) || defined(c_plusplus)
+extern "C" {
+#endif
 
 typedef enum
 {
@@ -51,6 +51,13 @@ typedef enum
   OverlineDecoration,
   LineThroughDecoration
 } DecorationType;
+
+typedef enum
+{
+  UndefinedDirection,
+  RightToLeftDirection,
+  LeftToRightDirection
+} DirectionType;
 
 typedef enum
 {
@@ -157,7 +164,7 @@ typedef struct _GradientInfo
   StopInfo
     *stops;
 
-  unsigned long
+  size_t
     number_stops;
 
   SpreadMethod
@@ -166,14 +173,18 @@ typedef struct _GradientInfo
   MagickBooleanType
     debug;
 
-  unsigned long
+  size_t
     signature;
 
   PointInfo
     center;
 
   MagickRealType
-    radius;
+    radius,
+    angle;
+
+  PointInfo
+    radii;
 } GradientInfo;
 
 typedef struct _ElementReference
@@ -187,7 +198,7 @@ typedef struct _ElementReference
   GradientInfo
     gradient;
 
-  unsigned long
+  size_t
     signature;
 
   struct _ElementReference
@@ -238,7 +249,7 @@ typedef struct _DrawInfo
   LineJoin
     linejoin;
 
-  unsigned long
+  size_t
     miterlimit;
 
   double
@@ -253,7 +264,7 @@ typedef struct _DrawInfo
   char
     *text;
 
-  unsigned long
+  size_t
     face;
 
   char
@@ -267,7 +278,7 @@ typedef struct _DrawInfo
   StretchType
     stretch;
 
-  unsigned long
+  size_t
     weight;
 
   char
@@ -313,13 +324,16 @@ typedef struct _DrawInfo
   MagickBooleanType
     debug;
 
-  unsigned long
+  size_t
     signature;
 
   double
     kerning,
     interword_spacing,
     interline_spacing;
+
+  DirectionType
+    direction;
 } DrawInfo;
 
 typedef struct _PrimitiveInfo
@@ -327,7 +341,7 @@ typedef struct _PrimitiveInfo
   PointInfo
     point;
 
-  unsigned long
+  size_t
     coordinates;
 
   PrimitiveType

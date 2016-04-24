@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -46,9 +46,12 @@ typedef enum
   ArcDistortion,
   PolarDistortion,
   DePolarDistortion,
+  Cylinder2PlaneDistortion,
+  Plane2CylinderDistortion,
   BarrelDistortion,
   BarrelInverseDistortion,
   ShepardsDistortion,
+  ResizeDistortion,
   SentinelDistortion
 } DistortImageMethod;
 
@@ -62,14 +65,19 @@ typedef enum
   /*
     Methods unique to SparseColor().
   */
-  VoronoiColorInterpolate = SentinelDistortion
+  VoronoiColorInterpolate = SentinelDistortion,
+  InverseColorInterpolate,
+  ManhattanColorInterpolate
 } SparseColorMethod;
 
 extern MagickExport Image
-  *DistortImage(const Image *,const DistortImageMethod,const unsigned long,
+  *AffineTransformImage(const Image *,const AffineMatrix *,ExceptionInfo *),
+  *DistortImage(const Image *,const DistortImageMethod,const size_t,
     const double *,MagickBooleanType,ExceptionInfo *exception),
+  *DistortResizeImage(const Image *,const size_t,const size_t,ExceptionInfo *),
+  *RotateImage(const Image *,const double,ExceptionInfo *),
   *SparseColorImage(const Image *,const ChannelType,const SparseColorMethod,
-    const unsigned long,const double *,ExceptionInfo *);
+    const size_t,const double *,ExceptionInfo *);
 
 #if defined(__cplusplus) || defined(c_plusplus)
 }

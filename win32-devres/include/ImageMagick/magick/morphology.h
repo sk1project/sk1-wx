@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -18,86 +18,132 @@
 #ifndef _MAGICKCORE_MORPHOLOGY_H
 #define _MAGICKCORE_MORPHOLOGY_H
 
+#include "magick/geometry.h"
+
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
 #endif
 
-#include <magick/geometry.h>
-
 typedef enum
 {
-  UndefinedKernel,    /* also the 'no-op' kernel */
-  GaussianKernel,     /* Convolution Kernels */
+  UndefinedKernel,    /* equivalent to UnityKernel */
+  UnityKernel,        /* The no-op or 'original image' kernel */
+  GaussianKernel,     /* Convolution Kernels, Gaussian Based */
+  DoGKernel,
+  LoGKernel,
   BlurKernel,
   CometKernel,
-  LaplacianKernel,
-  LOGKernel,
-  DOGKernel,
-  RectangleKernel,    /* Boolean Kernels */
+  LaplacianKernel,    /* Convolution Kernels, by Name */
+  SobelKernel,
+  FreiChenKernel,
+  RobertsKernel,
+  PrewittKernel,
+  CompassKernel,
+  KirschKernel,
+  DiamondKernel,      /* Shape Kernels */
   SquareKernel,
-  DiamondKernel,
+  RectangleKernel,
+  OctagonKernel,
   DiskKernel,
   PlusKernel,
+  CrossKernel,
+  RingKernel,
+  PeaksKernel,         /* Hit And Miss Kernels */
+  EdgesKernel,
+  CornersKernel,
+  DiagonalsKernel,
+  LineEndsKernel,
+  LineJunctionsKernel,
+  RidgesKernel,
+  ConvexHullKernel,
+  ThinSEKernel,
+  SkeletonKernel,
   ChebyshevKernel,    /* Distance Measuring Kernels */
-  ManhattenKernel,
+  ManhattanKernel,
+  OctagonalKernel,
   EuclideanKernel,
-  UserDefinedKernel   /* user specified kernel values */
-} MagickKernelType;
+  UserDefinedKernel,   /* User Specified Kernel Array */
+  BinomialKernel
+} KernelInfoType;
 
 typedef enum
 {
   UndefinedMorphology,
-  ConvolveMorphology,          /* Weighted Sum of pixels - Convolve */
-  DialateMorphology,           /* Weighted Value Maximum */
-  ErodeMorphology,             /* Weighted Value Minimum */
-  CloseMorphology,             /* Erode then Dialate */
-  OpenMorphology,              /* Dialate then Erode */
-  DialateIntensityMorphology,  /* Pixel Pick using GreyScale Dialate */
-  ErodeIntensityMorphology,    /* Pixel Pick using GreyScale Erode */
-  CloseIntensityMorphology,    /* Pixel Pick using GreyScale Close */
-  OpenIntensityMorphology,     /* Pixel Pick using GreyScale Open */
-  DistanceMorphology           /* Add to Value, take Minimum */
+/* Convolve / Correlate weighted sums */
+  ConvolveMorphology,           /* Weighted Sum with reflected kernel */
+  CorrelateMorphology,          /* Weighted Sum using a sliding window */
+/* Low-level Morphology methods */
+  ErodeMorphology,              /* Minimum Value in Neighbourhood */
+  DilateMorphology,             /* Maximum Value in Neighbourhood */
+  ErodeIntensityMorphology,     /* Pixel Pick using GreyScale Erode */
+  DilateIntensityMorphology,    /* Pixel Pick using GreyScale Dialate */
+  DistanceMorphology,           /* Add Kernel Value, take Minimum */
+/* Second-level Morphology methods */
+  OpenMorphology,               /* Dilate then Erode */
+  CloseMorphology,              /* Erode then Dilate */
+  OpenIntensityMorphology,      /* Pixel Pick using GreyScale Open */
+  CloseIntensityMorphology,     /* Pixel Pick using GreyScale Close */
+  SmoothMorphology,             /* Open then Close */
+/* Difference Morphology methods */
+  EdgeInMorphology,             /* Dilate difference from Original */
+  EdgeOutMorphology,            /* Erode difference from Original */
+  EdgeMorphology,               /* Dilate difference with Erode */
+  TopHatMorphology,             /* Close difference from Original */
+  BottomHatMorphology,          /* Open difference from Original */
+/* Recursive Morphology methods */
+  HitAndMissMorphology,         /* Foreground/Background pattern matching */
+  ThinningMorphology,           /* Remove matching pixels from image */
+  ThickenMorphology,            /* Add matching pixels from image */
+/* Experimental Morphology methods */
+  VoronoiMorphology,            /* distance matte channel copy nearest color */
+  IterativeDistanceMorphology   /* Add Kernel Value, take Minimum */
 } MorphologyMethod;
 
-typedef struct
+typedef struct KernelInfo
 {
-  MagickKernelType
+  KernelInfoType
     type;
 
-  unsigned long
+  size_t
     width,
-    height,
-    offset_x,
-    offset_y;
+    height;
 
-  double *
-    values;
+  ssize_t
+    x,
+    y;
 
   double
-    value_min,
-    value_max,
-    range_neg,
-    range_pos;
+    *values,
+    minimum,
+    maximum,
+    negative_range,
+    positive_range,
+    angle;
 
-  MagickBooleanType
-    normalized;
+  struct KernelInfo
+    *next;
 
-} MagickKernel;
+  size_t
+    signature;
+} KernelInfo;
 
-extern MagickExport MagickKernel
-  *AcquireKernelFromString(const char *),
-  *AcquireKernelBuiltIn(const MagickKernelType, const GeometryInfo *),
-  *DestroyKernel(MagickKernel *);
-
-extern MagickExport void
-  KernelNormalize(MagickKernel *),
-  KernelPrint(MagickKernel *),
-  KernelRotate(MagickKernel *, double);
+extern MagickExport KernelInfo
+  *AcquireKernelInfo(const char *),
+  *AcquireKernelBuiltIn(const KernelInfoType,const GeometryInfo *),
+  *CloneKernelInfo(const KernelInfo *),
+  *DestroyKernelInfo(KernelInfo *);
 
 extern MagickExport Image
-  *MorphologyImage(const Image *, const ChannelType, MorphologyMethod,
-      const long, MagickKernel *, ExceptionInfo *);
+  *MorphologyImage(const Image *,const MorphologyMethod,const ssize_t,
+    const KernelInfo *,ExceptionInfo *),
+  *MorphologyImageChannel(const Image *,const ChannelType,
+    const MorphologyMethod,const ssize_t,const KernelInfo *,ExceptionInfo *);
 
+extern MagickExport void
+  ScaleGeometryKernelInfo(KernelInfo *,const char *),
+  ScaleKernelInfo(KernelInfo *,const double,const GeometryFlags),
+  ShowKernelInfo(const KernelInfo *),
+  UnityAddKernelInfo(KernelInfo *,const double);
 
 #if defined(__cplusplus) || defined(c_plusplus)
 }

@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 */
 #ifndef _MAGICKCORE_ENHANCE_H
 #define _MAGICKCORE_ENHANCE_H
+
+#include "magick/pixel.h"
 
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
@@ -41,6 +43,7 @@ extern MagickExport MagickBooleanType
   EqualizeImageChannel(Image *image,const ChannelType),
   GammaImage(Image *,const char *),
   GammaImageChannel(Image *,const ChannelType,const double),
+  GrayscaleImage(Image *,const PixelIntensityMethod),
   HaldClutImage(Image *,const Image *),
   HaldClutImageChannel(Image *,const ChannelType,const Image *),
   LevelImage(Image *,const char *),

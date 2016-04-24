@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@
 #ifndef _MAGICKWAND_DRAWING_WAND_H
 #define _MAGICKWAND_DRAWING_WAND_H
 
+#include "wand/pixel-wand.h"
+
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
 #endif
-
-#include "wand/pixel-wand.h"
 
 typedef struct _DrawingWand
   DrawingWand;
@@ -32,6 +32,7 @@ extern WandExport AlignType
 
 extern WandExport char
   *DrawGetClipPath(const DrawingWand *),
+  *DrawGetDensity(const DrawingWand *),
   *DrawGetException(const DrawingWand *,ExceptionType *),
   *DrawGetFont(const DrawingWand *),
   *DrawGetFontFamily(const DrawingWand *),
@@ -44,11 +45,14 @@ extern WandExport ClipPathUnits
 extern WandExport DecorationType
   DrawGetTextDecoration(const DrawingWand *);
 
+extern WandExport DirectionType
+  DrawGetTextDirection(const DrawingWand *);
+
 extern WandExport double
   DrawGetFillOpacity(const DrawingWand *),
   DrawGetFontSize(const DrawingWand *),
   DrawGetOpacity(const DrawingWand *),
-  *DrawGetStrokeDashArray(const DrawingWand *,unsigned long *),
+  *DrawGetStrokeDashArray(const DrawingWand *,size_t *),
   DrawGetStrokeDashOffset(const DrawingWand *),
   DrawGetStrokeOpacity(const DrawingWand *),
   DrawGetStrokeWidth(const DrawingWand *),
@@ -60,9 +64,9 @@ extern WandExport DrawInfo
   *PeekDrawingWand(const DrawingWand *);
 
 extern WandExport DrawingWand
+  *AcquireDrawingWand(const DrawInfo *,Image *),
   *CloneDrawingWand(const DrawingWand *),
   *DestroyDrawingWand(DrawingWand *),
-  *DrawAllocateWand(const DrawInfo *,Image *),
   *NewDrawingWand(void);
 
 extern WandExport ExceptionType
@@ -85,6 +89,7 @@ extern WandExport MagickBooleanType
   DrawClearException(DrawingWand *),
   DrawComposite(DrawingWand *,const CompositeOperator,const double,const double,
     const double,const double,MagickWand *),
+  DrawGetFontResolution(const DrawingWand *,double *,double *),
   DrawGetStrokeAntialias(const DrawingWand *),
   DrawGetTextAntialias(const DrawingWand *),
   DrawPopPattern(DrawingWand *),
@@ -92,10 +97,12 @@ extern WandExport MagickBooleanType
     const double,const double),
   DrawRender(DrawingWand *),
   DrawSetClipPath(DrawingWand *,const char *),
+  DrawSetDensity(DrawingWand *,const char *),
   DrawSetFillPatternURL(DrawingWand *,const char *),
   DrawSetFont(DrawingWand *,const char *),
   DrawSetFontFamily(DrawingWand *,const char *),
-  DrawSetStrokeDashArray(DrawingWand *,const unsigned long,const double *),
+  DrawSetFontResolution(DrawingWand *,const double,const double),
+  DrawSetStrokeDashArray(DrawingWand *,const size_t,const double *),
   DrawSetStrokePatternURL(DrawingWand *,const char *),
   DrawSetVectorGraphics(DrawingWand *,const char *),
   IsDrawingWand(const DrawingWand *),
@@ -108,7 +115,7 @@ extern WandExport StretchType
 extern WandExport StyleType
   DrawGetFontStyle(const DrawingWand *);
 
-extern WandExport unsigned long
+extern WandExport size_t
   DrawGetFontWeight(const DrawingWand *),
   DrawGetStrokeMiterLimit(const DrawingWand *);
 
@@ -118,7 +125,7 @@ extern WandExport void
   DrawAnnotation(DrawingWand *,const double,const double,const unsigned char *),
   DrawArc(DrawingWand *,const double,const double,const double,const double,
     const double,const double),
-  DrawBezier(DrawingWand *,const unsigned long,const PointInfo *),
+  DrawBezier(DrawingWand *,const size_t,const PointInfo *),
   DrawGetBorderColor(const DrawingWand *,PixelWand *),
   DrawCircle(DrawingWand *,const double,const double,const double,const double),
   DrawColor(DrawingWand *,const double,const double,const PaintMethod),
@@ -167,8 +174,8 @@ extern WandExport void
   DrawPathMoveToRelative(DrawingWand *,const double,const double),
   DrawPathStart(DrawingWand *),
   DrawPoint(DrawingWand *,const double,const double),
-  DrawPolygon(DrawingWand *,const unsigned long,const PointInfo *),
-  DrawPolyline(DrawingWand *,const unsigned long,const PointInfo *),
+  DrawPolygon(DrawingWand *,const size_t,const PointInfo *),
+  DrawPolyline(DrawingWand *,const size_t,const PointInfo *),
   DrawPopClipPath(DrawingWand *),
   DrawPopDefs(DrawingWand *),
   DrawPushClipPath(DrawingWand *,const char *),
@@ -188,7 +195,7 @@ extern WandExport void
   DrawSetFontSize(DrawingWand *,const double),
   DrawSetFontStretch(DrawingWand *,const StretchType),
   DrawSetFontStyle(DrawingWand *,const StyleType),
-  DrawSetFontWeight(DrawingWand *,const unsigned long),
+  DrawSetFontWeight(DrawingWand *,const size_t),
   DrawSetGravity(DrawingWand *,const GravityType),
   DrawSetOpacity(DrawingWand *,const double),
   DrawSetStrokeAntialias(DrawingWand *,const MagickBooleanType),
@@ -196,16 +203,16 @@ extern WandExport void
   DrawSetStrokeDashOffset(DrawingWand *,const double dashoffset),
   DrawSetStrokeLineCap(DrawingWand *,const LineCap),
   DrawSetStrokeLineJoin(DrawingWand *,const LineJoin),
-  DrawSetStrokeMiterLimit(DrawingWand *,const unsigned long),
+  DrawSetStrokeMiterLimit(DrawingWand *,const size_t),
   DrawSetStrokeOpacity(DrawingWand *, const double),
   DrawSetStrokeWidth(DrawingWand *,const double),
   DrawSetTextAlignment(DrawingWand *,const AlignType),
   DrawSetTextAntialias(DrawingWand *,const MagickBooleanType),
   DrawSetTextDecoration(DrawingWand *,const DecorationType),
+  DrawSetTextDirection(DrawingWand *,const DirectionType),
   DrawSetTextEncoding(DrawingWand *,const char *),
   DrawSetTextUnderColor(DrawingWand *,const PixelWand *),
-  DrawSetViewbox(DrawingWand *,unsigned long,unsigned long,unsigned long,
-    unsigned long),
+  DrawSetViewbox(DrawingWand *,ssize_t,ssize_t,ssize_t,ssize_t),
   DrawSkewX(DrawingWand *,const double),
   DrawSkewY(DrawingWand *,const double),
   DrawTranslate(DrawingWand *,const double,const double);

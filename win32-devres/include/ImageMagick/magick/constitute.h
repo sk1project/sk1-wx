@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -35,8 +35,8 @@ typedef enum
 } StorageType;
 
 extern MagickExport Image
-  *ConstituteImage(const unsigned long,const unsigned long,const char *,
-    const StorageType,const void *,ExceptionInfo *),
+  *ConstituteImage(const size_t,const size_t,const char *,const StorageType,
+    const void *,ExceptionInfo *),
   *PingImage(const ImageInfo *,ExceptionInfo *),
   *PingImages(const ImageInfo *,ExceptionInfo *),
   *ReadImage(const ImageInfo *,ExceptionInfo *),
@@ -44,12 +44,8 @@ extern MagickExport Image
   *ReadInlineImage(const ImageInfo *,const char *,ExceptionInfo *);
 
 extern MagickExport MagickBooleanType
-  ConstituteComponentGenesis(void),
   WriteImage(const ImageInfo *,Image *),
   WriteImages(const ImageInfo *,Image *,const char *,ExceptionInfo *);
-
-extern MagickExport void
-  ConstituteComponentTerminus(void);
 
 #if defined(__cplusplus) || defined(c_plusplus)
 }

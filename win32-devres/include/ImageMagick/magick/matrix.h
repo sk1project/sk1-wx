@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 
-  MagickCore graphic resample methods.
+  MagickCore matrix methods.
 */
 #ifndef _MAGICKCORE_MATRIX_H
 #define _MAGICKCORE_MATRIX_H
@@ -22,17 +22,33 @@
 extern "C" {
 #endif
 
+typedef struct _MatrixInfo
+  MatrixInfo;
+
 extern MagickExport double
-  **AcquireMagickMatrix(const unsigned long,const unsigned long),
-  **RelinquishMagickMatrix(double **,const unsigned long);
+  **AcquireMagickMatrix(const size_t,const size_t),
+  **RelinquishMagickMatrix(double **,const size_t);
+
+extern MagickExport Image
+  *MatrixToImage(const MatrixInfo *,ExceptionInfo *);
 
 extern MagickExport MagickBooleanType
-  GaussJordanElimination(double **,double **,const unsigned long,
-       const unsigned long);
+  GaussJordanElimination(double **,double **,const size_t,const size_t),
+  GetMatrixElement(const MatrixInfo *,const ssize_t,const ssize_t,void *),
+  NullMatrix(MatrixInfo *),
+  SetMatrixElement(const MatrixInfo *,const ssize_t,const ssize_t,const void *);
+
+MagickExport MatrixInfo
+  *AcquireMatrixInfo(const size_t,const size_t,const size_t,ExceptionInfo *),
+  *DestroyMatrixInfo(MatrixInfo *);
+
+MagickExport size_t
+  GetMatrixColumns(const MatrixInfo *),
+  GetMatrixRows(const MatrixInfo *);
 
 extern MagickExport void
   LeastSquaresAddTerms(double **,double **,const double *,const double *,
-       const unsigned long, const unsigned long);
+    const size_t,const size_t);
 
 #if defined(__cplusplus) || defined(c_plusplus)
 }

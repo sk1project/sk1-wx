@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@
 #ifndef _MAGICKCORE_EFFECT_H
 #define _MAGICKCORE_EFFECT_H
 
+#include "magick/morphology.h"
+
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
 #endif
-
-#include <magick/morphology.h>
 
 typedef enum
 {
@@ -69,29 +69,30 @@ extern MagickExport Image
   *BlurImage(const Image *,const double,const double,ExceptionInfo *),
   *BlurImageChannel(const Image *,const ChannelType,const double,const double,
     ExceptionInfo *),
-  *ConvolveImage(const Image *,const unsigned long,const double *,
-    ExceptionInfo *),
-  *ConvolveImageChannel(const Image *,const ChannelType,const unsigned long,
+  *ConvolveImage(const Image *,const size_t,const double *,ExceptionInfo *),
+  *ConvolveImageChannel(const Image *,const ChannelType,const size_t,
     const double *,ExceptionInfo *),
   *DespeckleImage(const Image *,ExceptionInfo *),
   *EdgeImage(const Image *,const double,ExceptionInfo *),
   *EmbossImage(const Image *,const double,const double,ExceptionInfo *),
-  *FilterImage(const Image *,const MagickKernel *,ExceptionInfo *),
-  *FilterImageChannel(const Image *,const ChannelType,const MagickKernel *,
+  *FilterImage(const Image *,const KernelInfo *,ExceptionInfo *),
+  *FilterImageChannel(const Image *,const ChannelType,const KernelInfo *,
      ExceptionInfo *),
   *GaussianBlurImage(const Image *,const double,const double,ExceptionInfo *),
   *GaussianBlurImageChannel(const Image *,const ChannelType,const double,
     const double,ExceptionInfo *),
-  *MedianFilterImage(const Image *,const double,ExceptionInfo *),
+  *KuwaharaImage(const Image *,const double,const double,ExceptionInfo *),
+  *KuwaharaImageChannel(const Image *,const ChannelType,const double,
+    const double,ExceptionInfo *),
+  *LocalContrastImage(const Image *,const double,const double,ExceptionInfo *),
   *MotionBlurImage(const Image *,const double,const double,const double,
     ExceptionInfo *),
   *MotionBlurImageChannel(const Image *,const ChannelType,const double,
     const double,const double,ExceptionInfo *),
   *PreviewImage(const Image *,const PreviewType,ExceptionInfo *),
-  *RadialBlurImage(const Image *,const double,ExceptionInfo *),
-  *RadialBlurImageChannel(const Image *,const ChannelType,const double,
+  *RotationalBlurImage(const Image *,const double,ExceptionInfo *),
+  *RotationalBlurImageChannel(const Image *,const ChannelType,const double,
     ExceptionInfo *),
-  *ReduceNoiseImage(const Image *,const double,ExceptionInfo *),
   *SelectiveBlurImage(const Image *,const double,const double,const double,
     ExceptionInfo *),
   *SelectiveBlurImageChannel(const Image *,const ChannelType,const double,

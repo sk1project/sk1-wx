@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -18,14 +18,14 @@
 #ifndef _MAGICKCORE_BLOB_H
 #define _MAGICKCORE_BLOB_H
 
+#include "magick/image.h"
+#include "magick/stream.h"
+
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
 #endif
 
-#include "magick/image.h"
-#include "magick/stream.h"
-
-#define MagickMaxBufferExtent  0x3c005L
+#define MagickMaxBufferExtent  81920
 
 typedef enum
 {

@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -18,19 +18,20 @@
 #ifndef _MAGICKCORE_PAINT_H
 #define _MAGICKCORE_PAINT_H
 
+#include "magick/color.h"
+#include "magick/draw.h"
+
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
 #endif
-
-#include "magick/color.h"
-#include "magick/draw.h"
 
 extern MagickExport Image
   *OilPaintImage(const Image *,const double,ExceptionInfo *);
 
 extern MagickExport MagickBooleanType
   FloodfillPaintImage(Image *,const ChannelType,const DrawInfo *,
-    const MagickPixelPacket *,const long,const long,const MagickBooleanType),
+    const MagickPixelPacket *,const ssize_t,const ssize_t,
+    const MagickBooleanType),
   GradientImage(Image *,const GradientType,const SpreadMethod,
     const PixelPacket *,const PixelPacket *),
   OpaquePaintImage(Image *,const MagickPixelPacket *,const MagickPixelPacket *,

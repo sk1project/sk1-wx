@@ -1,5 +1,5 @@
 /*
-  Copyright 1999-2010 ImageMagick Studio LLC, a non-profit organization
+  Copyright 1999-2016 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
   You may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ MagickExport MagickProgressMonitor
   SetImageProgressMonitor(Image *,const MagickProgressMonitor,void *),
   SetImageInfoProgressMonitor(ImageInfo *,const MagickProgressMonitor,void *);
 
-static __inline MagickBooleanType QuantumTick(const MagickOffsetType offset,
+static inline MagickBooleanType QuantumTick(const MagickOffsetType offset,
   const MagickSizeType span)
 {
   if (span <= 100)
