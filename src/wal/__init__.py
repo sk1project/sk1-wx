@@ -22,7 +22,7 @@ from treewidgets import TreeElement, TreeWidget
 
 from gctrls import ImageLabel, ImageButton, ImageToggleButton
 from renderer import copy_bitmap_to_surface, copy_surface_to_bitmap, \
-text_to_bitmap, invert_text_bitmap
+text_to_bitmap, invert_text_bitmap, disabled_bmp
 from togglectrls import HToggleKeeper, ModeToggleButton
 
 from const import *
