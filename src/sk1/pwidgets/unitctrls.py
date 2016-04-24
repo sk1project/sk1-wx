@@ -134,12 +134,20 @@ class BitmapToggle(wal.Bitmap):
 
 	def get_active(self):
 		return self.state
+	
+	def _get_bitmap(self):
+		if not self.enabled and wal.is_msw():
+			return wal.disabled_bmp(self.icons_dict[self.state][0])
+		return self.icons_dict[self.state][0]
+	
+	def _get_tooltip(self):
+		return self.icons_dict[self.state][1]
 
 	def set_active(self, state):
 		self.state = state
-		self.set_bitmap(self.icons_dict[self.state][0])
-		if self.icons_dict[self.state][1]:
-			self.set_tooltip(self.icons_dict[self.state][1])
+		self.set_bitmap(self._get_bitmap())
+		tooltip=self._get_tooltip()
+		if tooltip: self.set_tooltip(tooltip)
 
 	def update_icons(self):
 		self.icons_dict[True] = [get_icon(self.icons_dict[True][0],
@@ -153,6 +161,11 @@ class BitmapToggle(wal.Bitmap):
 		self.icons_dict = icons_dict
 		self.update_icons()
 		self.set_active(self.state)
+		
+	def set_enable(self, value):
+		wal.Bitmap.set_enable(self, value)
+		self.set_bitmap(self._get_bitmap())
+		
 
 
 class RatioToggle(BitmapToggle):
