@@ -1,0 +1,21 @@
+Generating lib-file in Visual Studio Command Prompt
+
+1.Create def-file
+
+	dumpbin /exports C:\path\to\lib_name.dll >lib_name.def
+
+Edit fil and leave only function names. Add EXPORTS as a first line. Should be like:
+
+EXPORTS
+sqlite3_aggregate_context
+sqlite3_aggregate_count
+sqlite3_auto_extension
+sqlite3_bind_blob
+...
+
+2.Generate lib-file:
+
+	lib /def:C:\path\to\lib_name.def /out:C:\path\to\lib_name.lib /machine:x86
+
+
+
