@@ -1,5 +1,6 @@
+----------------------------------------------------
 Generating lib-file in Visual Studio Command Prompt
-
+----------------------------------------------------
 1.Create def-file
 
 	dumpbin /exports C:\path\to\lib_name.dll >lib_name.def
@@ -17,5 +18,10 @@ sqlite3_bind_blob
 
 	lib /def:C:\path\to\lib_name.def /out:C:\path\to\lib_name.lib /machine:x86
 
+----------------------------------------------------
+ImageMagick enviroment variables
+----------------------------------------------------
+These variables should point to IM coders location
 
-
+MAGICK_HOME
+MAGICK_CODER_MODULE_PATH
