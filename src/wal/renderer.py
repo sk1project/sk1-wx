@@ -103,6 +103,11 @@ def bmp_to_white(bmp):
 	image.SetRGBRect(wx.Rect(0, 0, w, h), 255, 255, 255)
 	return image.ConvertToBitmap()
 
+def disabled_bmp(bmp):
+	image = bmp.ConvertToImage()
+	image=image.ConvertToGreyscale(lr=0.15)#, lg=0.3, lb=0.06)
+	return image.ConvertToBitmap()
+
 class LabelRenderer:
 
 	art_id = None
