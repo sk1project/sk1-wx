@@ -63,8 +63,13 @@ class ToolbarCreator:
 						hlp_txt = action.get_descr_text()
 						bmp = action.get_icon(icon_size, wal.ART_TOOLBAR)
 						if not bmp: continue
-						self.tb.AddLabelTool(aid, label_txt, bmp,
-											shortHelp=hlp_txt)
+						if wal.is_msw():
+							self.tb.AddLabelTool(aid, label_txt, bmp,
+												bmpDisabled=wal.disabled_bmp(bmp),
+												shortHelp=hlp_txt)
+						else:
+							self.tb.AddLabelTool(aid, label_txt, bmp,
+												shortHelp=hlp_txt)							
 						action.register_as_tool(self.tb)
 		self.tb.Realize()
 
