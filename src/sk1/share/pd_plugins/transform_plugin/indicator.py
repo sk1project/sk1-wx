@@ -70,13 +70,16 @@ class OrientationIndicator(wal.GridPanel):
 				toggle = OIToggle(self, (x, y), state, self.on_change)
 				self.pack(toggle)
 				self.toggles[x][y] = toggle
-				if x < 1.0: self.pack(wal.HLine(self), fill=True)
+				if x < 1.0: 
+					panel=wal.HPanel(self)
+					panel.pack(wal.HLine(self), expand=True)
+					self.pack(panel, fill=True)
 			if y > -1.0:
-				self.pack(wal.VLine(self), fill=True)
-				self.pack(CELL_SIZE)
-				self.pack(wal.VLine(self), fill=True)
-				self.pack(CELL_SIZE)
-				self.pack(wal.VLine(self), fill=True)
+				for i in range(3):
+					panel=wal.VPanel(self)
+					panel.pack(wal.VLine(panel), expand=True)
+					self.pack(panel, fill=True)
+					if i<2: self.pack(CELL_SIZE)
 
 	def on_change(self, val):
 		x, y = self.val
