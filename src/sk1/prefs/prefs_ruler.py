@@ -35,7 +35,7 @@ class RulersPrefs(PrefPanel):
 
 	def build(self):
 
-		grid = wal.GridPanel(self, hgap=15, vgap=5)
+		grid = wal.GridPanel(self, rows=8, hgap=15, vgap=5)
 
 		#Ruler size
 		grid.pack(wal.Label(grid, _('Ruler size (px):')))
@@ -179,10 +179,8 @@ class RulerTest(wal.HPanel, wal.Canvas):
 
 	def paint(self):
 		w, h = self.get_size()
-		shift = 0
-		if wal.is_msw():shift = 1
 		fmt = cairo.FORMAT_RGB24
-		self.surface = cairo.ImageSurface(fmt, w - shift, h - shift)
+		self.surface = cairo.ImageSurface(fmt, w, h)
 		self.ctx = cairo.Context(self.surface)
 		self.ctx.set_matrix(cairo.Matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0))
 		self.ctx.set_source_rgb(*self.prefs.bg_btn.get_value())
@@ -194,6 +192,7 @@ class RulerTest(wal.HPanel, wal.Canvas):
 
 		self.ctx.move_to(0, h)
 		self.ctx.line_to(w, h)
+		self.ctx.stroke()
 
 		small_l = self.prefs.ruler_small_tick.get_value()
 		for item in SMALL_TICKS:
