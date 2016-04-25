@@ -133,7 +133,7 @@ class CMS_Profiles(CMS_Tab):
 		self.pack(wal.Label(self, txt, fontbold=True), padding=2)
 		self.pack(wal.HLine(self), fill=True, padding_all=2)
 
-		grid = wal.GridPanel(self, cols=3, hgap=5, vgap=5)
+		grid = wal.GridPanel(self, rows=10, cols=3, hgap=5, vgap=5)
 		grid.add_growable_col(1)
 
 		self.cs_widgets = {}
