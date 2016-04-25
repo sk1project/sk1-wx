@@ -59,11 +59,13 @@ def make_modules(src_path, include_path, lib_path=[]):
 	modules.append(cairo_module)
 
 	if os.name == 'nt':
-		pycms_files = ['_cms.c', ]
-		pycms_libraries = ['lcms', 'user32']
+		pycms_files = ['_cms2.c', ]
+		pycms_libraries = ['lcms2_static']
+		extra_compile_args=[]
 	else:
 		pycms_files = ['_cms2.c', ]
 		pycms_libraries = ['lcms2']
+		extra_compile_args=["-Wall"]
 
 	pycms_src = os.path.join(src_path, 'uc2', 'cms')
 	files = buildutils.make_source_list(pycms_src, pycms_files)
@@ -73,7 +75,7 @@ def make_modules(src_path, include_path, lib_path=[]):
 			sources=files, include_dirs=include_dirs,
 			library_dirs=lib_path,
 			libraries=pycms_libraries,
-			extra_compile_args=["-Wall"])
+			extra_compile_args=extra_compile_args)
 	modules.append(pycms_module)
 
 	pango_src = os.path.join(src_path, 'uc2', 'libpango')
