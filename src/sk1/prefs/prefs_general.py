@@ -36,14 +36,20 @@ class GeneralPrefs(PrefPanel):
 		txt = _('Create new document on start')
 		self.newdoc = wal.Checkbox(self, txt, config.new_doc_on_start)
 		self.pack(self.newdoc, align_center=False, start_padding=5)
-
+		
+		if wal.is_msw():self.pack((5,5))
+		
 		txt = _('Make backup on document save')
 		self.backup = wal.Checkbox(self, txt, config.make_backup)
 		self.pack(self.backup, align_center=False)
+		
+		if wal.is_msw():self.pack((5,5))
 
 		txt = _('Make backup on export')
 		self.expbackup = wal.Checkbox(self, txt, config.make_export_backup)
 		self.pack(self.expbackup, align_center=False)
+		
+		if wal.is_msw():self.pack((5,5))
 
 		grid = wal.GridPanel(self, rows=2, cols=3, hgap=5, vgap=3)
 		grid.pack(wal.Label(grid, _('History log size:')))
@@ -57,10 +63,14 @@ class GeneralPrefs(PrefPanel):
 		grid.pack(self.hist_menu_size)
 		grid.pack(wal.Label(grid, _('records')))
 		self.pack(grid, align_center=False, padding=5)
+		
+		if wal.is_msw():self.pack((5,5))
 
 		txt = _('Show quick access buttons')
 		self.stub_buttons = wal.Checkbox(self, txt, config.show_stub_buttons)
 		self.pack(self.stub_buttons, align_center=False)
+		
+		if wal.is_msw():self.pack((5,5))
 
 		if not config.is_mac():
 			txt = _('Use overlay for spinbox widgets (*)')
