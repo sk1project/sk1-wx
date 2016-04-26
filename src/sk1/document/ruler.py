@@ -157,7 +157,7 @@ class Ruler(HPanel):
 		else:
 			self.guide_cursor = self.presenter.app.cursors[modes.VGUIDE_MODE]
 		self.SetBackgroundColour(wx.WHITE)
-		self.SetDoubleBuffered(True)
+		self.set_double_buffered()
 		self.Bind(wx.EVT_PAINT, self._on_paint, self)
 		self.Bind(wx.EVT_LEFT_DOWN, self.mouse_down)
 		self.Bind(wx.EVT_LEFT_UP, self.mouse_up)
