@@ -74,6 +74,9 @@ class Widget(object):
 
 	def set_focus(self):
 		self.SetFocus()
+		
+	def set_double_buffered(self):					
+		if is_msw(): self.SetDoubleBuffered(True)
 
 
 class DataWidget(Widget):
