@@ -238,6 +238,7 @@ class PaletteViewer(wal.VPanel):
 		self.cms = cms
 		self.callback = onclick
 		wal.VPanel.__init__(self, parent)
+		if wal.is_msw(): self.pack((170, 1))
 		options = wal.ExpandedPanel(self, _('Palette preview:'))
 		changer = wal.HToggleKeeper(options, PREVIEW_MODES, MODE_ICON,
 								MODE_NAME, on_change=self.set_mode)
