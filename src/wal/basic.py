@@ -559,7 +559,7 @@ class ScrolledPanel(wx.ScrolledWindow, Widget):
 		if border and not const.is_msw():style = wx.BORDER_MASK
 		wx.ScrolledWindow.__init__(self, parent, wx.ID_ANY, style=style)
 		self.set_scroll_rate()
-		self.SetDoubleBuffered(True)
+		self.set_double_buffered()
 
 	def set_virtual_size(self, size): self.SetVirtualSize(size)
 	def set_scroll_rate(self, h=20, v=20): self.SetScrollRate(h, v)
