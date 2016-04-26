@@ -54,6 +54,7 @@ class Notebook(wx.Notebook, Widget):
 			self.callback(self.get_active_index())
 
 	def add_page(self, page, title):
+		if not self.childs: page.set_double_buffered()
 		self.childs.append(page)
 		self.AddPage(page, title)
 
@@ -488,8 +489,11 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 						onchange=self._check_entry, onenter=self._entry_enter)
 				size = (-1, self.entry.GetSize()[1] - 3)
 				self.sb = SpinButton(self.entry, size=size, onchange=self._check_spin)
-				w_pos = self.entry.GetSize()[0] - self.sb.GetSize()[0] - 4
-				self.sb.SetPosition((w_pos, -1))
+				w_pos = self.entry.GetSize()[0] - self.sb.GetSize()[0] - 3
+				self.sb.SetPosition((w_pos, 0))
+				w,h=self.entry.GetSize()
+				self.entry.SetSize((w,h+1))
+				
 		else:
 			self.box = wx.BoxSizer(const.HORIZONTAL)
 			self.SetSizer(self.box)
