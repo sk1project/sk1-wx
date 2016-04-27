@@ -45,7 +45,6 @@ class AboutDialog(wal.CloseDialog):
 
 # 		nb.add_page(EvetLoopMonitor(nb), 'Event loops')
 		self.pack(nb, expand=True, fill=True, padding=5)
-		nb.set_double_buffered()
 
 
 class AboutHeader(wal.VPanel):
@@ -68,7 +67,7 @@ class AboutHeader(wal.VPanel):
 		p.pack(wal.Label(p, txt), fill=True)
 		panel.pack(p)
 
-		self.pack(panel, expand=True, fill=True, padding_all=3)
+		self.pack(panel, expand=True, fill=True, padding_all=3)		
 
 class AboutPage(wal.HPanel):
 
@@ -87,6 +86,7 @@ class AboutPage(wal.HPanel):
 		p = wal.HPanel(box)
 		p.pack(wal.HtmlLabel(p, 'http://sk1project.org'))
 		box.pack(p, fill=True)
+		self.set_double_buffered()
 
 class ComponentsPage(wal.VPanel):
 
@@ -141,4 +141,5 @@ class EvetLoopMonitor(wal.VPanel):
 def about_dialog(app, parent):
 	title = _('About') + ' ' + app.appdata.app_name
 	dlg = AboutDialog(app, parent, title)
+	dlg.Refresh()
 	dlg.show()
