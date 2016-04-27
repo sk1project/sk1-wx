@@ -425,12 +425,12 @@ class GridProps(DP_Panel):
 		freq_panel = wal.LabeledPanel(hpanel, text=txt)
 		grid = wal.GridPanel(origin_panel, 2, 3, 5, 5)
 
-		grid.pack(wal.Label(grid, 'ΔX:'))
+		grid.pack(wal.Label(grid, 'dX:'))
 		self.dx_val = UnitSpin(self.app, grid, self.geom[2])
 		grid.pack(self.dx_val)
 		grid.pack(StaticUnitLabel(self.app, grid))
 
-		grid.pack(wal.Label(grid, 'ΔY:'))
+		grid.pack(wal.Label(grid, 'dY:'))
 		self.dy_val = UnitSpin(self.app, grid, self.geom[3])
 		grid.pack(self.dy_val)
 		grid.pack(StaticUnitLabel(self.app, grid))
