@@ -77,6 +77,9 @@ class Widget(object):
 		
 	def set_double_buffered(self):					
 		if is_msw(): self.SetDoubleBuffered(True)
+		
+	def refresh(self):
+		self.Refresh()
 
 
 class DataWidget(Widget):
