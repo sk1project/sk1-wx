@@ -17,7 +17,7 @@
 
 import wx
 
-from wal import const, ALL, EXPAND, VPanel
+from wal import const, ALL, EXPAND, VPanel, is_msw
 
 from sk1 import config
 from sk1.resources import icons
@@ -286,6 +286,7 @@ class PlgTab(VPanel):
 			y += 3 + self.icon.GetSize()[0]
 			txt_h = self._get_text_size(self.text, self.active)[1]
 			x = (TAB_WIDTH - txt_h) / 2 + txt_h - 2
+			if is_msw(): x += 3
 			font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
 			if config.tabs_use_bold:
 				font.SetWeight(wx.FONTWEIGHT_BOLD)
@@ -321,6 +322,7 @@ class PlgTab(VPanel):
 			y += 3 + self.icon.GetSize()[0]
 			txt_h = self._get_text_size(self.text, self.active)[1]
 			x = (TAB_WIDTH - txt_h) / 2 + txt_h - 3
+			if is_msw(): x += 3
 			font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
 			if config.tabs_fontsize:
 				if font.IsUsingSizeInPixels():
