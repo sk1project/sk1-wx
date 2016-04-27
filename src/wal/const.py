@@ -1,25 +1,25 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2013 by Igor E. Novikov
+# 	Copyright (C) 2013 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import platform
 import wx
 
-#Editable preference list
-#[OVERLAY,]
+# Editable preference list
+# [OVERLAY,]
 CFG = [True, ]
 
 MSW = '__WXMSW__'
@@ -142,7 +142,7 @@ def _init_gtk_colors(kw):
 	kw['dark_shadow'] = mix_colors(border, bg, 200)
 	kw['dark_face'] = border + (40,)
 	kw['light_face'] = (255, 255, 255, 60)
-#	kw['workspace'] = () + ws
+# 	kw['workspace'] = () + ws
 	kw['workspace'] = (89, 89, 89)
 	kw['tooltip_bg'] = () + infobk
 
@@ -211,5 +211,6 @@ YELLOW_ODD_COLOR = wx.Colour(255, 255, 222)
 WHITE = wx.Colour(255, 255, 255)
 BLACK = wx.Colour(0, 0, 0)
 DARK_GRAY = wx.Colour(89, 89, 89)
+GRAY = wx.Colour(129, 134, 134)
 LIGHT_GRAY = wx.Colour(240, 240, 240)
 RED = wx.Colour(255, 0, 0)
