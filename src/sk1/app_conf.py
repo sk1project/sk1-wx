@@ -380,7 +380,10 @@ class WinConfig(AppConfig):
 	toolbar_size = (24, 24)
 	toolbar_icon_size = (22, 22)
 	statusbar_fontsize = 12
-	tabs_use_bold = False
+	tabs_use_bold = False	
+
+	prefs_dlg_size = (700, 450)
+	prefs_dlg_minsize = (700, 450)
 
 
 
