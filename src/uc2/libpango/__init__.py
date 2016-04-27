@@ -15,7 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
+import os
 import cairo
 import cgi
 import unicodedata
@@ -189,14 +189,16 @@ def render_sample(ctx, text, family, fontsize):
 
 #---Font sampling end
 
-def _get_font_description(text_style):
-	fnt_descr = text_style[0] + ', ' + text_style[1] + ' ' + str(text_style[2])
+def _get_font_description(text_style, check_nt=False):
+	font_size=text_style[2]
+	if check_nt and os.name == 'nt': font_size *=10
+	fnt_descr = text_style[0] + ', ' + text_style[1] + ' ' + str(font_size)
 	return _libpango.create_font_description(fnt_descr)
 
-def _set_layout(layout, text, width, text_style, attributes):
+def _set_layout(layout, text, width, text_style, attributes, check_nt=False):
 	text = text.encode('utf-8')
 	_libpango.set_layout_width(layout, width)
-	fnt_descr = _get_font_description(text_style)
+	fnt_descr = _get_font_description(text_style, check_nt)
 	_libpango.set_layout_font_description(layout, fnt_descr)
 	_libpango.set_layout_alignment(layout, text_style[3])
 	markup = cgi.escape(text)
@@ -310,10 +312,15 @@ def get_glyphs(ctx, layout_data, text, width, text_style, attributes):
 		ctx.new_path()
 		ctx.move_to(0, 0)
 		layout = _libpango.create_layout(ctx)
-		_set_layout(layout, item, width, text_style, attributes)
+		_set_layout(layout, item, width, text_style, attributes, check_nt=True)
 		_libpango.layout_path(ctx, layout)
 		cpath = ctx.copy_path()
-		matrix = cairo.Matrix(1.0, 0.0, 0.0, -1.0,
+		m00 = 1.0
+		m11 = -1.0
+		if os.name == 'nt':
+			m00 *= 0.1
+			m11 *= 0.1			
+		matrix = cairo.Matrix(m00, 0.0, 0.0, m11,
 							layout_data[i][0], layout_data[i][1])
 		libcairo.apply_cmatrix(cpath, matrix)
 		glyphs.append(cpath)
@@ -333,10 +340,15 @@ def get_rtl_glyphs(ctx, layout_data, byte_dict, text, width, text_style, attribu
 		ctx.new_path()
 		ctx.move_to(0, 0)
 		layout = _libpango.create_layout(ctx)
-		_set_layout(layout, txt, width, text_style, attributes)
+		_set_layout(layout, txt, width, text_style, attributes, check_nt=True)
 		_libpango.layout_path(ctx, layout)
 		cpath = ctx.copy_path()
-		matrix = cairo.Matrix(1.0, 0.0, 0.0, -1.0, item[0], item[1])
+		m00 = 1.0
+		m11 = -1.0
+		if os.name == 'nt':
+			m00 *= 0.1
+			m11 *= 0.1
+		matrix = cairo.Matrix(m00, 0.0, 0.0, m11, item[0], item[1])
 		libcairo.apply_cmatrix(cpath, matrix)
 		glyphs.append(cpath)
 	return glyphs
