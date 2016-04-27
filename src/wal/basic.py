@@ -477,7 +477,9 @@ class RoundedPanel(VPanel, Canvas):
 		self.set_stroke(color)
 		self.draw_rounded_rect(0, 0, w - 1, h - 1, 7.0)
 		self.layout()
-
+		if self.parent.widget:
+			self.parent.widget.Refresh()
+		
 
 class LabeledPanel(VPanel):
 
