@@ -127,6 +127,7 @@ class AlignPanel(wal.LabeledPanel):
 		self.pack(wal.Label(self, _('Relative to:')))
 		self.source = wal.Combolist(self, items=SOURCE_NAMES,
 								onchange=self.update)
+		self.source.set_active(0)
 		self.pack(self.source, padding_all=5, fill=True)
 		self.pack((5, 5))
 
