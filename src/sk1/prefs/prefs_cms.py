@@ -28,6 +28,7 @@ from sk1 import _, config, dialogs
 from sk1.resources import icons, get_bmp
 
 from generic import PrefPanel
+from sk1.resources.icons import PD_OPEN
 
 #COLORSPACES = [COLOR_RGB, COLOR_CMYK, COLOR_LAB, COLOR_GRAY, COLOR_DISPLAY]
 
@@ -87,22 +88,32 @@ class CMS_Options(CMS_Tab):
 	def __init__(self, parent, prefpanel):
 		CMS_Tab.__init__(self, parent, prefpanel)
 		txt = _('Activate Color Management')
-		self.cms_check = wal.Checkbox(self, txt, config.cms_use,
-									onclick=self.activate_cms)
+		panel = wal.VPanel(self)
+		hp=wal.HPanel(panel)
+		self.cms_check = wal.Checkbox(hp, txt, config.cms_use,
+									onclick=self.activate_cms)		
+		
+		
+		hp.pack(self.cms_check)
+		panel.pack(hp, fill=True, padding_all=3)
+		
+		
 
-		self.pack(self.cms_check, align_center=False, padding_all=3)
-
-		self.banner = wal.VPanel(self)
+		self.banner = wal.VPanel(panel)
 		self.banner.set_bg(wal.DARK_GRAY)
 		bmp = get_bmp(self.banner, icons.PD_PREFS_CMS_BANNER)
 		self.banner.pack(bmp, padding=2)
-		self.pack(self.banner, expand=True, fill=True)
+		panel.pack(self.banner, expand=True, fill=True)
 		txt = _('Note: If Color Management is not activated all colors '
 			'will be processed using simple calculation procedures. Therefore '
 			'resulted color values will be not accurate.')
-		label = wal.Label(self, txt, fontsize=-3)
+		fontsize=-3
+		if wal.is_msw(): fontsize=-1
+		label = wal.Label(self, txt, fontsize=fontsize)
 		label.set_enable(False)
-		self.pack(label, fill=True, padding_all=5)
+		if wal.is_msw():label.wrap(430)
+		panel.pack(label, fill=True, padding_all=5)
+		self.pack(panel, fill=True, expand=True)
 
 	def activate_cms(self):
 		self.banner.set_visible(self.cms_check.get_value())
@@ -185,8 +196,11 @@ class CMS_Profiles(CMS_Tab):
 				'hardware you can get either from monitor manufacture or '
 				'calibrating monitor (preferred option) or download '
 				'from ICC Profile Taxi service: ')
-		label = wal.Label(self, txt, fontsize=-3)
+		fontsize=-3
+		if wal.is_msw(): fontsize=-1
+		label = wal.Label(self, txt, fontsize=fontsize)
 		label.set_enable(False)
+		if wal.is_msw(): label.wrap(430)
 		self.pack(label, fill=True, padding_all=5)
 		self.pack(wal.HtmlLabel(self, 'http://icc.opensuse.org/'))
 		self.activate_display()
@@ -276,7 +290,12 @@ class ManageButton(wal.ImageButton):
 		self.owner = owner
 		self.colorspace = colorspace
 		txt = _('Add/remove %s profiles') % (colorspace)
-		wal.ImageButton.__init__(self, parent, icons.PD_EDIT, tooltip=txt,
+		icon=icons.PD_EDIT
+		art_size=wal.DEF_SIZE
+		if wal.is_msw(): 
+			icon=icons.PD_OPEN
+			art_size=(16,16)
+		wal.ImageButton.__init__(self, parent, icon, art_size=art_size, tooltip=txt,
 							flat=False, onclick=self.action)
 
 	def action(self):
@@ -524,6 +543,8 @@ class CMS_Settings(CMS_Tab):
 		self.bpc_check = wal.Checkbox(panel, txt,
 									config.cms_bpc_flag)
 		panel.pack(self.bpc_check, align_center=False)
+		
+		if wal.is_msw(): panel.pack((5,5))
 
 		txt = _('Use Black preserving transforms')
 		self.bpt_check = wal.Checkbox(panel, txt,
