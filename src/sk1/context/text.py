@@ -54,6 +54,7 @@ class TextStylePlugin(CtxPlugin):
 	faces = []
 	styles = []
 	target = None
+	changes_flag=False
 
 	def __init__(self, app, parent):
 		CtxPlugin.__init__(self, app, parent)
@@ -62,6 +63,7 @@ class TextStylePlugin(CtxPlugin):
 		events.connect(events.SELECTION_CHANGED, self.update)
 
 	def build(self):
+		self.changes_flag=False
 		self.styles = self._get_styles()
 		self.styles_combo = wal.Combolist(self, items=self.styles,
 										onchange=self.on_style_change)
@@ -148,8 +150,8 @@ class TextStylePlugin(CtxPlugin):
 		self.faces = faces
 		self.faces_combo.set_items(self.faces)
 		self.faces_combo.set_active(self.faces.index(face))
-
-		self.size_combo.set_value(text_style[2])
+		if not self.changes_flag:
+			self.size_combo.set_value(text_style[2])
 		self.align.set_mode(text_style[3])
 		self.ligature.set_active(text_style[5])
 
@@ -178,12 +180,18 @@ class TextStylePlugin(CtxPlugin):
 		align = self.align.get_mode()
 		cluster_flag = self.ligature.get_value()
 		if self.target:
+			self.changes_flag=True
 			spacing = [] + self.target.style[2][4]
 			new_style = deepcopy(self.target.style)
 			new_style[2] = [family, face, size, align, spacing, cluster_flag]
 			doc.api.set_obj_style(self.target, new_style)
+			target=self.target
+			self.target=None
+			doc.selection.set([target,])
+			self.changes_flag=False
 		else:
 			spacing = [] + doc.text_obj_style[2][4]
 			new_style = deepcopy(doc.text_obj_style)
 			new_style[2] = [family, face, size, align, spacing, cluster_flag]
 			doc.text_obj_style = new_style
+			
