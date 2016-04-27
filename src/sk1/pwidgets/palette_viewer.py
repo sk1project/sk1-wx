@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2015 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from copy import deepcopy
 import wal
@@ -238,16 +238,20 @@ class PaletteViewer(wal.VPanel):
 		self.cms = cms
 		self.callback = onclick
 		wal.VPanel.__init__(self, parent)
-		if wal.is_msw(): self.pack((170, 1))
+		if wal.is_msw(): self.pack((172, 1))
 		options = wal.ExpandedPanel(self, _('Palette preview:'))
 		changer = wal.HToggleKeeper(options, PREVIEW_MODES, MODE_ICON,
 								MODE_NAME, on_change=self.set_mode)
 		options.pack(changer)
 		self.pack(options, fill=True)
 		border = wal.VPanel(self, border=True)
+		if wal.is_msw(): border.set_bg(wal.GRAY) 
 		self.pack(border, expand=True, fill=True)
-		self.win = ScrolledPalette(border, self.cms, onclick=self.select_color)
-		border.pack(self.win, expand=True, fill=True)
+		self.win = ScrolledPalette(border, self.cms, onclick=self.select_color)		
+		if wal.is_msw(): 
+			border.pack(self.win, expand=True, fill=True, padding_all=1)
+		else:
+			border.pack(self.win, expand=True, fill=True)
 		changer.set_mode(AUTO_MODE)
 		if palette: self.draw_palette(palette)
 
