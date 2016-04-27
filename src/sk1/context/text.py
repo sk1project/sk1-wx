@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2016 by Igor E. Novikov
+# 	Copyright (C) 2016 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wal
 from copy import deepcopy
@@ -54,7 +54,7 @@ class TextStylePlugin(CtxPlugin):
 	faces = []
 	styles = []
 	target = None
-	changes_flag=False
+	changes_flag = False
 
 	def __init__(self, app, parent):
 		CtxPlugin.__init__(self, app, parent)
@@ -63,7 +63,7 @@ class TextStylePlugin(CtxPlugin):
 		events.connect(events.SELECTION_CHANGED, self.update)
 
 	def build(self):
-		self.changes_flag=False
+		self.changes_flag = False
 		self.styles = self._get_styles()
 		self.styles_combo = wal.Combolist(self, items=self.styles,
 										onchange=self.on_style_change)
@@ -112,7 +112,7 @@ class TextStylePlugin(CtxPlugin):
 		return ret
 
 	def show(self, update):
-		CtxPlugin.show(self, update)
+		CtxPlugin.show(self, update=True)
 		self.update()
 
 	def update(self, *args):
@@ -142,6 +142,7 @@ class TextStylePlugin(CtxPlugin):
 
 	def update_from_style(self, text_style):
 		family = text_style[0]
+		if not family in self.families: family = 'Sans'
 		self.families_combo.set_font_family(family)
 
 		face = text_style[1]
@@ -180,15 +181,15 @@ class TextStylePlugin(CtxPlugin):
 		align = self.align.get_mode()
 		cluster_flag = self.ligature.get_value()
 		if self.target:
-			self.changes_flag=True
+			self.changes_flag = True
 			spacing = [] + self.target.style[2][4]
 			new_style = deepcopy(self.target.style)
 			new_style[2] = [family, face, size, align, spacing, cluster_flag]
 			doc.api.set_obj_style(self.target, new_style)
-			target=self.target
-			self.target=None
-			doc.selection.set([target,])
-			self.changes_flag=False
+			target = self.target
+			self.target = None
+			doc.selection.set([target, ])
+			self.changes_flag = False
 		else:
 			spacing = [] + doc.text_obj_style[2][4]
 			new_style = deepcopy(doc.text_obj_style)
