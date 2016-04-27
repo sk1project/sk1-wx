@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2015 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, shutil
 
@@ -30,7 +30,7 @@ from sk1.resources import icons, get_bmp
 from generic import PrefPanel
 from sk1.resources.icons import PD_OPEN
 
-#COLORSPACES = [COLOR_RGB, COLOR_CMYK, COLOR_LAB, COLOR_GRAY, COLOR_DISPLAY]
+# COLORSPACES = [COLOR_RGB, COLOR_CMYK, COLOR_LAB, COLOR_GRAY, COLOR_DISPLAY]
 
 COLORSPACES = [COLOR_RGB, COLOR_CMYK, COLOR_GRAY, COLOR_DISPLAY]
 
@@ -89,7 +89,7 @@ class CMS_Options(CMS_Tab):
 		CMS_Tab.__init__(self, parent, prefpanel)
 		txt = _('Activate Color Management')
 		panel = wal.VPanel(self)
-		hp=wal.HPanel(panel)
+		hp = wal.HPanel(panel)
 		self.cms_check = wal.Checkbox(hp, txt, config.cms_use,
 									onclick=self.activate_cms)		
 		
@@ -107,8 +107,8 @@ class CMS_Options(CMS_Tab):
 		txt = _('Note: If Color Management is not activated all colors '
 			'will be processed using simple calculation procedures. Therefore '
 			'resulted color values will be not accurate.')
-		fontsize=-3
-		if wal.is_msw(): fontsize=-1
+		fontsize = -3
+		if wal.is_msw(): fontsize = -1
 		label = wal.Label(self, txt, fontsize=fontsize)
 		label.set_enable(False)
 		if wal.is_msw():label.wrap(430)
@@ -196,8 +196,8 @@ class CMS_Profiles(CMS_Tab):
 				'hardware you can get either from monitor manufacture or '
 				'calibrating monitor (preferred option) or download '
 				'from ICC Profile Taxi service: ')
-		fontsize=-3
-		if wal.is_msw(): fontsize=-1
+		fontsize = -3
+		if wal.is_msw(): fontsize = -1
 		label = wal.Label(self, txt, fontsize=fontsize)
 		label.set_enable(False)
 		if wal.is_msw(): label.wrap(430)
@@ -290,13 +290,14 @@ class ManageButton(wal.ImageButton):
 		self.owner = owner
 		self.colorspace = colorspace
 		txt = _('Add/remove %s profiles') % (colorspace)
-		icon=icons.PD_EDIT
-		art_size=wal.DEF_SIZE
+		art_size = wal.DEF_SIZE
+		decoration_padding = 6
 		if wal.is_msw(): 
-			icon=icons.PD_OPEN
-			art_size=(16,16)
-		wal.ImageButton.__init__(self, parent, icon, art_size=art_size, tooltip=txt,
-							flat=False, onclick=self.action)
+			art_size = (16, 16)
+			decoration_padding = 4
+		wal.ImageButton.__init__(self, parent, icons.PD_EDIT, art_size=art_size,
+							decoration_padding=decoration_padding,
+							tooltip=txt, flat=False, onclick=self.action)
 
 	def action(self):
 		app = self.owner.prefpanel.app
@@ -491,7 +492,7 @@ class CMS_Settings(CMS_Tab):
 
 		panel = wal.VPanel(self.panel)
 
-		#Intents panel
+		# Intents panel
 		int_panel = wal.LabeledPanel(panel, _('Rendering intents'))
 		grid = wal.GridPanel(int_panel, vgap=5, hgap=5)
 
@@ -508,7 +509,7 @@ class CMS_Settings(CMS_Tab):
 		int_panel.pack(grid, align_center=False, padding_all=10)
 		panel.pack(int_panel, fill=True)
 
-		#Simulate printer panel
+		# Simulate printer panel
 		txt = _('Simulate printer on the screen')
 		self.simulate_check = wal.Checkbox(panel, txt,
 									config.cms_proofing,
@@ -538,13 +539,13 @@ class CMS_Settings(CMS_Tab):
 
 		panel.pack(sm_panel, fill=True, padding=5)
 
-		#Bottom checks
+		# Bottom checks
 		txt = _('Use Blackpoint Compensation')
 		self.bpc_check = wal.Checkbox(panel, txt,
 									config.cms_bpc_flag)
 		panel.pack(self.bpc_check, align_center=False)
 		
-		if wal.is_msw(): panel.pack((5,5))
+		if wal.is_msw(): panel.pack((5, 5))
 
 		txt = _('Use Black preserving transforms')
 		self.bpt_check = wal.Checkbox(panel, txt,
