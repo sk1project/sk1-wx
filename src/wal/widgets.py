@@ -304,14 +304,21 @@ class Combobox(wx.ComboBox, DataWidget):
 		if onchange:
 			self.callback = onchange
 			self.Bind(wx.EVT_COMBOBOX, self.on_change, self)
-			self.Bind(wx.EVT_TEXT_ENTER, self.on_change, self)
+			self.Bind(wx.EVT_TEXT_ENTER, self.on_enter, self)
 		self.Bind(wx.EVT_TEXT, self.on_typing, self)
 
-	def on_typing(self, event): pass
+	def on_typing(self, event):
+		event.Skip()
 
 	def on_change(self, event):
-		if self.flag:return
+		if self.flag: return
 		if self.callback: self.callback()
+		event.Skip()
+
+	def on_enter(self, event):
+		if self.flag: return
+		if self.callback: self.callback()
+		event.Skip()
 
 	def set_items(self, items):
 		self.SetItems(items)
@@ -340,15 +347,20 @@ class FloatCombobox(Combobox):
 			self.flag = True
 			Combobox.set_value(self, res)
 			self.flag = False
+		event.Skip()
 
 	def get_value(self):
+		if not Combobox.get_value(self): return 1
 		if self.digits:
-			return float(Combobox.get_value(self))
+			val = float(Combobox.get_value(self))
 		else:
-			return int(Combobox.get_value(self))
+			val = int(Combobox.get_value(self))
+		return val
 
 	def set_value(self, val):
-		Combobox.set_value(self, str(val))
+		val=str(val)
+		if not val==Combobox.get_value(self):
+			Combobox.set_value(self, val)
 
 	def set_items(self, items):
 		sizes = []
