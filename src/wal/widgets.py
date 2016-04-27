@@ -54,9 +54,9 @@ class Notebook(wx.Notebook, Widget):
 			self.callback(self.get_active_index())
 
 	def add_page(self, page, title):
-		if not self.childs: page.set_double_buffered()
 		self.childs.append(page)
 		self.AddPage(page, title)
+		page.Refresh()
 
 	def remove_page(self, page):
 		index = self.childs.index(page)
@@ -113,6 +113,9 @@ class Label(wx.StaticText, Widget):
 
 	def set_text(self, text):
 		self.SetLabel(text)
+		
+	def wrap(self, width):
+		self.Wrap(width)
 
 
 class HtmlLabel(wx.HyperlinkCtrl, Widget):
