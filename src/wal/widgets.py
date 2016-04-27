@@ -50,13 +50,13 @@ class Notebook(wx.Notebook, Widget):
 			self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self._on_change, self)
 
 	def _on_change(self, event):
+		self.refresh()
 		if self.callback:
 			self.callback(self.get_active_index())
 
 	def add_page(self, page, title):
 		self.childs.append(page)
 		self.AddPage(page, title)
-		page.Refresh()
 
 	def remove_page(self, page):
 		index = self.childs.index(page)
@@ -361,8 +361,8 @@ class FloatCombobox(Combobox):
 		return val
 
 	def set_value(self, val):
-		val=str(val)
-		if not val==Combobox.get_value(self):
+		val = str(val)
+		if not val == Combobox.get_value(self):
 			Combobox.set_value(self, val)
 
 	def set_items(self, items):
@@ -506,8 +506,8 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 				self.sb = SpinButton(self.entry, size=size, onchange=self._check_spin)
 				w_pos = self.entry.GetSize()[0] - self.sb.GetSize()[0] - 3
 				self.sb.SetPosition((w_pos, 0))
-				w,h=self.entry.GetSize()
-				self.entry.SetSize((w,h+1))
+				w, h = self.entry.GetSize()
+				self.entry.SetSize((w, h + 1))
 				
 		else:
 			self.box = wx.BoxSizer(const.HORIZONTAL)
@@ -648,7 +648,7 @@ class IntSpin(FloatSpin):
 				onchange=None, onenter=None, check_focus=True):
 		step = 1
 		digits = 0
-		if not width and const.is_msw(): width=5
+		if not width and const.is_msw(): width = 5
 		FloatSpin.__init__(self, parent, value, range_val,
 						step, digits, size, width, spin_overlay,
 						onchange, onenter, check_focus)
