@@ -95,10 +95,9 @@ class PrefsDialog(wal.OkCancelDialog):
 			self.current_plugin = plugin
 			if not self.current_plugin.built:
 				self.current_plugin.build()
+				self.current_plugin.layout()
 			self.current_plugin.show()
 			self.container.layout()
-			if wal.is_msw(): 
-				self.current_plugin.refresh()
 
 	def get_plugin_by_pid(self, pid):
 		ret = None
