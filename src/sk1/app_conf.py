@@ -388,6 +388,9 @@ class WinConfig(AppConfig):
 	history_dlg_size = (630, 350)
 	history_dlg_minsize = (630, 350)
 
+	fill_dlg_size = (440, 395)
+	stroke_dlg_size = (430, 395)
+
 
 
 def get_app_config():
