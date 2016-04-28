@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2013 by Igor E. Novikov
+# 	Copyright (C) 2013 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wal
 
@@ -62,12 +62,14 @@ class PlgArea(wal.HPanel):
 			item = self.load_plugin(pid)
 			self.container.pack(item.panel, expand=True, fill=True)
 			self.tabs.plg_tabs.add_new_tab(item)
+			item.panel.layout()
 		else:
 			self.tabs.plg_tabs.set_active(item)
 		self.active_plg = item
 		self.active_plg.show(*args)
 		self.layout()
 		self.container.layout()
+		self.active_plg.panel.refresh()
 
 	def close_plugin(self, pid):
 		item = self.check_pid(pid)
