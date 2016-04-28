@@ -30,7 +30,8 @@ class AboutDialog(wal.CloseDialog):
 
 	def __init__(self, app, parent, title, size=config.about_dlg_size):
 		self.app = app
-		wal.CloseDialog.__init__(self, parent, title, size, resizable=False)
+		wal.CloseDialog.__init__(self, parent, title, size,
+								resizable=False, add_line=False)
 
 	def build(self):
 		header = AboutHeader(self.app, self)
@@ -67,7 +68,7 @@ class AboutHeader(wal.VPanel):
 		p.pack(wal.Label(p, txt), fill=True)
 		panel.pack(p)
 
-		self.pack(panel, expand=True, fill=True, padding_all=3)		
+		self.pack(panel, expand=True, fill=True, padding_all=3)
 
 class AboutPage(wal.HPanel):
 
@@ -86,7 +87,6 @@ class AboutPage(wal.HPanel):
 		p = wal.HPanel(box)
 		p.pack(wal.HtmlLabel(p, 'http://sk1project.org'))
 		box.pack(p, fill=True)
-		self.set_double_buffered()
 
 class ComponentsPage(wal.VPanel):
 
