@@ -55,6 +55,7 @@ class Notebook(wx.Notebook, Widget):
 			self.callback(self.get_active_index())
 
 	def add_page(self, page, title):
+		page.layout()
 		self.childs.append(page)
 		self.AddPage(page, title)
 
@@ -113,7 +114,7 @@ class Label(wx.StaticText, Widget):
 
 	def set_text(self, text):
 		self.SetLabel(text)
-		
+
 	def wrap(self, width):
 		self.Wrap(width)
 
@@ -252,10 +253,17 @@ class BitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 	def OnDrawItem(self, dc, rect, item, flags):
 		if item == wx.NOT_FOUND:return
 		r = wx.Rect(*rect)
-		if flags & wx.combo.ODCB_PAINTING_SELECTED:
-			dc.DrawBitmap(bmp_to_white(self.bitmaps[item]), r.x + 2, r.y + 4, True)
+		if flags & wx.combo.ODCB_PAINTING_SELECTED and \
+			flags & wx.combo.ODCB_PAINTING_CONTROL:
+			if const.is_msw():
+				bitmap = self.bitmaps[item]
+			else:
+				bitmap = bmp_to_white(self.bitmaps[item])
+		elif flags & wx.combo.ODCB_PAINTING_SELECTED:
+			bitmap = bmp_to_white(self.bitmaps[item])
 		else:
-			dc.DrawBitmap(self.bitmaps[item], r.x + 2, r.y + 4, True)
+			bitmap = self.bitmaps[item]
+		dc.DrawBitmap(bitmap, r.x + 2, r.y + 4, True)
 
 	def OnMeasureItem(self, item):
 		if item == wx.NOT_FOUND:return 1
@@ -482,6 +490,7 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 		self.callback = onchange
 		self.enter_callback = onenter
 		if const.is_mac(): spin_overlay = False
+		if not width and const.is_msw(): width = 5
 
 		wx.Panel.__init__(self, parent)
 		if spin_overlay:
@@ -508,7 +517,7 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 				self.sb.SetPosition((w_pos, 0))
 				w, h = self.entry.GetSize()
 				self.entry.SetSize((w, h + 1))
-				
+
 		else:
 			self.box = wx.BoxSizer(const.HORIZONTAL)
 			self.SetSizer(self.box)
