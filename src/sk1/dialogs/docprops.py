@@ -73,7 +73,6 @@ class GeneralProps(DP_Panel):
 		grid.pack(self.notes_field, fill=True)
 
 		self.pack(grid, fill=True, expand=True, padding_all=5)
-		self.set_double_buffered()
 
 	def save(self):
 		metainfo = [self.author_field.get_value(),
@@ -243,11 +242,15 @@ class PageProps(DP_Panel):
 
 		#---
 		vpanel = wal.VPanel(self)
+		if wal.is_msw(): vpanel.pack((5, 5))
+
 		self.pattern_check = wal.Checkbox(vpanel,
 							_('Use pattern for page fill'),
 							self.page_fill[0] == FILL_PATTERN,
 							onclick=self.pattern_check_changed)
 		vpanel.pack(self.pattern_check, align_center=False)
+
+		if wal.is_msw(): vpanel.pack((5, 5))
 
 		self.border_flag = self.doc.methods.get_page_border()
 		self.border_check = wal.Checkbox(vpanel,
@@ -540,7 +543,8 @@ class DocPropertiesDialog(wal.OkCancelDialog):
 	def __init__(self, app, parent, title):
 		self.app = app
 		size = config.docprops_dlg_size
-		wal.OkCancelDialog.__init__(self, parent, title, size, resizable=True)
+		wal.OkCancelDialog.__init__(self, parent, title, size,
+								resizable=True, add_line=False)
 		self.set_minsize(config.docprops_dlg_minsize)
 
 	def build(self):
