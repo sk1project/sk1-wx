@@ -300,7 +300,7 @@ class Canvas(object):
 			self.dc.EndDrawing()
 		self.pdc = self.dc = None
 
-	#Paint method for inherited class
+	# Paint method for inherited class
 	def paint(self):pass
 
 	#========PaintDC
@@ -477,8 +477,8 @@ class RoundedPanel(VPanel, Canvas):
 		self.set_stroke(color)
 		self.draw_rounded_rect(0, 0, w - 1, h - 1, 7.0)
 		self.layout()
-		if self.parent.widget:
-			self.parent.widget.Refresh()
+		if self.parent.widget_panel:
+			self.parent.widget_panel.refresh()
 		
 
 class LabeledPanel(VPanel):
@@ -500,11 +500,14 @@ class LabeledPanel(VPanel):
 			self.widget_panel.pack(self.widget, padding=5)
 			self.widget_panel.SetPosition((7, 0))
 			self.widget_panel.Fit()
+			if const.is_msw(): self.widget_panel.Raise()
 
 		padding = 0
 		if self.widget_panel:
 			padding = round(self.widget_panel.get_size()[1] / 2.0)
 			self.inner_panel.pack((1, padding))
+		self.refresh()
+		
 		VPanel.pack(self, self.inner_panel, expand=True, fill=True,
 				start_padding=padding)
 
