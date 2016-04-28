@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2015 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from copy import deepcopy
 import wal
@@ -64,7 +64,9 @@ class StrokeDialog(wal.OkCancelDialog):
 		if self.new_color:
 			self.nb.add_page(self.stroke_tab, _('Stroke Style'))
 			self.nb.set_active_index(1)
+		self.nb.Layout()
 		self.pack(self.nb, fill=True, expand=True)
+
 
 	def set_color(self, color):
 		if not self.new_color and color:
@@ -108,7 +110,8 @@ class StrokeStyle(wal.VPanel):
 		self.dashes = DashChoice(p, self.stroke[3])
 		p.pack(self.dashes)
 		txt = _('Edit dash pattern')
-		p.pack(wal.ImageButton(p, icons.PD_EDIT, tooltip=txt, flat=False,
+		p.pack(wal.ImageButton(p, icons.PD_EDIT, art_size=wal.SIZE_16,
+							tooltip=txt, flat=False,
 							onclick=self.edit_dash), padding=5)
 		self.pack(p)
 
@@ -140,6 +143,7 @@ class StrokeStyle(wal.VPanel):
 		self.scalable = wal.NumCheckbox(p, _('Scalable stroke'), self.stroke[8])
 		p.pack(self.scalable)
 		self.pack(p, padding=10)
+		self.layout()
 
 	def edit_dash(self):
 		ret = dash_editor_dlg(self.dlg, self.dashes.get_dash())
@@ -169,6 +173,7 @@ class StrokeColor(wal.VPanel):
 		if orig_color:fill = [0, 0, orig_color]
 		self.color_panel.activate(fill, use_rule=False,
 								onmodechange=self.on_mode_change)
+		self.layout()
 
 	def on_mode_change(self):
 		self.dlg.set_color(self.get_color())
