@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2015 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from copy import deepcopy
 import wal
@@ -383,15 +383,22 @@ class SolidFill(FillTab):
 
 		for item in SOLID_MODES:
 			self.panels[item] = SOLID_MODE_CLASSES[item](self, self.app)
-			self.panels[item].hide()
+			if wal.is_msw():
+				self.pack(self.panels[item], fill=True,
+						expand=True, padding_all=5)
+				self.panels[item].hide()
+				self.remove(self.panels[item])
+			else:
+				self.panels[item].hide()
 
 	def on_mode_change(self, mode):
 		if self.active_panel:
 			self.new_color = self.active_panel.get_color()
-			self.remove(self.active_panel)
 			self.active_panel.hide()
+			self.remove(self.active_panel)
 		self.active_panel = self.panels[mode]
 		self.pack(self.active_panel, fill=True, expand=True, padding_all=5)
+		self.active_panel.show()
 		self.active_panel.activate(self.cms, self.orig_fill, self.new_color)
 		self.rule_keeper.set_enable(not mode == EMPTY_MODE)
 		if self.callback: self.callback()
