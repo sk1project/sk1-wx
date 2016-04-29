@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2015-2016 by Igor E. Novikov
 #
 # 	This program is free software: you can redistribute it and/or modify
 # 	it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ from sk1.resources import icons
 from sk1.pwidgets import SolidFill, StaticUnitLabel, UnitSpin, DashChoice, \
 CapChoice, JoinChoice
 from dashedit_dlg import dash_editor_dlg
-from string import digits
+
 
 FALLBACK_STROKE = [0, 0.28346456692913385,
 [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, ''],
@@ -54,19 +54,19 @@ class StrokeDialog(wal.OkCancelDialog):
 			self.new_color = []
 		size = config.stroke_dlg_size
 		wal.OkCancelDialog.__init__(self, parent, title, style=wal.VERTICAL,
-								size=size, add_line=False)
+							size=size, add_line=False)
 
 	def build(self):
 		self.nb = wal.Notebook(self)
 		self.color_tab = StrokeColor(self.nb, self, self.orig_color)
 		self.stroke_tab = StrokeStyle(self.nb, self, self.new_stroke)
 		self.nb.add_page(self.color_tab, _('Stroke Color'))
+		self.nb.add_page(self.stroke_tab, _('Stroke Style'))
 		if self.new_color:
-			self.nb.add_page(self.stroke_tab, _('Stroke Style'))
 			self.nb.set_active_index(1)
-		self.nb.Layout()
+		else:
+			self.nb.remove_page_by_index(1)
 		self.pack(self.nb, fill=True, expand=True)
-
 
 	def set_color(self, color):
 		if not self.new_color and color:
@@ -173,7 +173,6 @@ class StrokeColor(wal.VPanel):
 		if orig_color:fill = [0, 0, orig_color]
 		self.color_panel.activate(fill, use_rule=False,
 								onmodechange=self.on_mode_change)
-		self.layout()
 
 	def on_mode_change(self):
 		self.dlg.set_color(self.get_color())
