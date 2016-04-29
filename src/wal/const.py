@@ -31,7 +31,13 @@ def get_version(): return wx.version()
 
 def is_mac(): return PLATFORM == MAC
 def is_msw(): return PLATFORM == MSW
-def is_winxp(): return platform.release() == 'XP'
+def is_winxp():
+	if is_msw(): return platform.release() == 'XP'
+	return False
+def is_win7():
+	if is_msw(): return platform.release() == '7'
+	return False
+
 def is_gtk(): return PLATFORM == GTK
 
 TOP = wx.TOP
