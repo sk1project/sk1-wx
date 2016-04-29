@@ -77,11 +77,14 @@ class AbstractShapingPanel(wal.VPanel):
 
 		self.pack(wal.Label(self, SHAPING_MODE_NAMES[self.pid], fontbold=True))
 
-		self.pic_panel = wal.VPanel(self, border=True)
+		border = wal.VPanel(self)
+		border.set_bg(wal.GRAY)
+		self.pic_panel = wal.VPanel(border)
 		self.pic_panel.set_bg(wal.WHITE)
 		self.bmp = get_bmp(self.pic_panel, SHAPING_MODE_PICS[self.pid])
 		self.pic_panel.pack(self.bmp, padding_all=5)
-		self.pack(self.pic_panel, padding=10)
+		border.pack(self.pic_panel, padding_all=1)
+		self.pack(border, padding=10)
 
 		self.del_check = wal.Checkbox(self, _('Delete originals'))
 		self.pack(self.del_check)
