@@ -91,13 +91,13 @@ class CMS_Options(CMS_Tab):
 		panel = wal.VPanel(self)
 		hp = wal.HPanel(panel)
 		self.cms_check = wal.Checkbox(hp, txt, config.cms_use,
-									onclick=self.activate_cms)		
-		
-		
+									onclick=self.activate_cms)
+
+
 		hp.pack(self.cms_check)
 		panel.pack(hp, fill=True, padding_all=3)
-		
-		
+
+
 
 		self.banner = wal.VPanel(panel)
 		self.banner.set_bg(wal.DARK_GRAY)
@@ -290,11 +290,9 @@ class ManageButton(wal.ImageButton):
 		self.owner = owner
 		self.colorspace = colorspace
 		txt = _('Add/remove %s profiles') % (colorspace)
-		art_size = wal.DEF_SIZE
+		art_size = wal.SIZE_16
 		decoration_padding = 6
-		if wal.is_msw(): 
-			art_size = (16, 16)
-			decoration_padding = 4
+		if wal.is_msw(): decoration_padding = 4
 		wal.ImageButton.__init__(self, parent, icons.PD_EDIT, art_size=art_size,
 							decoration_padding=decoration_padding,
 							tooltip=txt, flat=False, onclick=self.action)
@@ -544,7 +542,7 @@ class CMS_Settings(CMS_Tab):
 		self.bpc_check = wal.Checkbox(panel, txt,
 									config.cms_bpc_flag)
 		panel.pack(self.bpc_check, align_center=False)
-		
+
 		if wal.is_msw(): panel.pack((5, 5))
 
 		txt = _('Use Black preserving transforms')
