@@ -479,7 +479,7 @@ class RoundedPanel(VPanel, Canvas):
 		self.layout()
 		if self.parent.widget_panel:
 			self.parent.widget_panel.refresh()
-		
+
 
 class LabeledPanel(VPanel):
 
@@ -507,7 +507,7 @@ class LabeledPanel(VPanel):
 			padding = round(self.widget_panel.get_size()[1] / 2.0)
 			self.inner_panel.pack((1, padding))
 		self.refresh()
-		
+
 		VPanel.pack(self, self.inner_panel, expand=True, fill=True,
 				start_padding=padding)
 
