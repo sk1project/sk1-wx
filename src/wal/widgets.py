@@ -64,6 +64,10 @@ class Notebook(wx.Notebook, Widget):
 		self.childs.remove(page)
 		self.RemovePage(index)
 
+	def remove_page_by_index(self, index):
+		self.childs.remove(self.childs[index])
+		self.RemovePage(index)
+
 	def get_active_index(self):
 		return self.GetSelection()
 
