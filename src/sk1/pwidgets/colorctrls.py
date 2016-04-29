@@ -208,6 +208,7 @@ class SwatchCanvas(wal.SensitiveCanvas):
 		self.border = border
 		self.even_odd = even_odd
 		wal.SensitiveCanvas.__init__(self)
+		self.set_double_buffered()
 
 	def get_cairo_color(self, color):
 		r, g, b = self.cms.get_display_color(color)
@@ -639,6 +640,7 @@ class ColoredSlider(wal.VPanel, wal.SensitiveCanvas):
 	def __init__(self, parent, size=20, onchange=None):
 		wal.VPanel.__init__(self, parent)
 		wal.SensitiveCanvas.__init__(self, check_move=True)
+		self.set_double_buffered()
 		self.pack((256 + 8, size + 10))
 		self.knob = get_icon(icons.SLIDER_KNOB, size=wal.DEF_SIZE)
 		if onchange:
