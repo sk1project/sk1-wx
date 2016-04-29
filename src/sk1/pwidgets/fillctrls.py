@@ -336,6 +336,7 @@ class FillTab(wal.VPanel):
 		if not self.built:
 			self.build()
 			self.built = True
+			self.layout()
 
 	def get_result(self):
 		return deepcopy(self.orig_fill)
@@ -386,6 +387,7 @@ class SolidFill(FillTab):
 			if wal.is_msw():
 				self.pack(self.panels[item], fill=True,
 						expand=True, padding_all=5)
+				self.layout()
 				self.panels[item].hide()
 				self.remove(self.panels[item])
 			else:
