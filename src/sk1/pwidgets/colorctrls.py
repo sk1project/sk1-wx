@@ -373,7 +373,6 @@ class PaletteSwatch(wal.VPanel, SwatchCanvas):
 		if self.color and self.color[3]:
 			self.set_tooltip(self.color[3])
 		if onclick: self.callback = onclick
-		self.set_double_buffered()
 
 	def mouse_left_up(self, point):
 		if self.callback: self.callback(deepcopy(self.color))
@@ -391,7 +390,6 @@ class AlphaColorSwatch(wal.VPanel, SwatchCanvas):
 		SwatchCanvas.__init__(self, border, even_odd)
 		self.pack(size)
 		if onclick: self.callback = onclick
-		self.set_double_buffered()
 
 	def mouse_left_up(self, point):
 		if self.callback: self.callback()
@@ -416,7 +414,6 @@ class FillSwatch(wal.VPanel, SwatchCanvas):
 		self.pack(size)
 		self.set_swatch_fill(fill)
 		if onclick: self.callback = onclick
-		self.set_double_buffered()
 
 	def mouse_left_up(self, point):
 		if self.callback: self.callback()
