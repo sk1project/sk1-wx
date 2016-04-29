@@ -1107,13 +1107,16 @@ class ColorSticker(wal.VPanel):
 		if not color:
 			color = get_registration_black()
 		wal.VPanel.__init__(self, parent, True)
+		if wal.is_msw(): self.set_bg(wal.GRAY)
+		inner_panel = wal.VPanel(self)
+		inner_panel.set_bg(wal.WHITE)
 
-		nf = wal.VPanel(self)
+		nf = wal.VPanel(inner_panel)
 		nf.set_bg(wal.BLACK)
 		self.name_field = wal.Label(nf, '???', fontbold=True, fg=wal.WHITE)
 		nf.pack(self.name_field, padding_all=3)
 
-		vf = wal.VPanel(self)
+		vf = wal.VPanel(inner_panel)
 		vf.set_bg(wal.WHITE)
 		self.color_type = wal.Label(vf, '???', fontbold=True, fontsize=-1)
 		self.line1 = wal.Label(vf, '???', fontsize=-1)
@@ -1122,11 +1125,16 @@ class ColorSticker(wal.VPanel):
 		vf.pack(self.line1, padding_all=1)
 		vf.pack(self.line2, padding_all=1)
 
-		self.color_swatch = AlphaColorSwatch(self, self.cms, color, (180, 100),
-											border='')
-		self.pack(nf, fill=True)
-		self.pack(vf, fill=True)
-		self.pack(self.color_swatch, fill=True, expand=True)
+		self.color_swatch = AlphaColorSwatch(inner_panel, self.cms,
+											color, (180, 100), border='')
+
+		inner_panel.pack(nf, fill=True)
+		inner_panel.pack(vf, fill=True)
+		inner_panel.pack(self.color_swatch, fill=True, expand=True)
+		padding = 0
+		if wal.is_msw(): padding = 1
+		self.pack(inner_panel, fill=True, expand=True, padding_all=padding)
+		self.layout()
 
 	def set_color(self, color):
 		if not color: return
