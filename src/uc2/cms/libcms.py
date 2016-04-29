@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 #
-#	cms - module which provides binding to LittleCMS2 library.
+# 	cms - module which provides binding to LittleCMS2 library.
 #
-#	Copyright (C) 2012-2015 by Igor E. Novikov
+# 	Copyright (C) 2012-2015 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import types
@@ -35,6 +35,7 @@ def get_version():
 	Returns LCMS version.
 	"""
 	ver = str(_cms.getVersion())
+	if ver[0] == '2': return ver[0] + '.' + ver[2:]
 	return ver[0] + '.' + ver[1:]
 
 
@@ -89,7 +90,7 @@ def cms_open_profile_from_string(profilestr):
 	profilestr - ICC profile in python string
 	"""
 
-	if not len(profilestr): 
+	if not len(profilestr):
 		raise CmsError, "Empty profile string provided"
 
 	result = _cms.openProfileFromString(profilestr)
