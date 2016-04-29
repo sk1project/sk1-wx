@@ -5,7 +5,8 @@ Generating lib-file in Visual Studio Command Prompt
 
 	dumpbin /exports C:\path\to\lib_name.dll >lib_name.def
 
-Edit fil and leave only function names. Add EXPORTS as a first line. Should be like:
+Edit fil and leave only function names. Add EXPORTS as a first line. 
+Should be like:
 
 EXPORTS
 sqlite3_aggregate_context
