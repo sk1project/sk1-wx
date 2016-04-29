@@ -35,7 +35,7 @@ def get_version():
 	Returns LCMS version.
 	"""
 	ver = str(_cms.getVersion())
-	if ver[0] == '2': return ver[0] + '.' + ver[2:]
+	if ver[0] == '2': return ver[0] + '.' + ver[2]
 	return ver[0] + '.' + ver[1:]
 
 
