@@ -1,24 +1,66 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2013 by Igor E. Novikov
+# 	Copyright (C) 2013-2016 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import cairo
 import wx
 from const import UI_COLORS, DEF_SIZE, TOP, BOTTOM, LEFT, RIGHT
 from const import is_msw
+
+from PIL import Image, ImageOps
+
+#----- PIL interfaces
+
+def image_to_pil_image(image):
+	"""
+	Converts wx.Image to PIL Image object.
+	"""
+	pil_image = Image.new('RGB', (image.GetWidth(), image.GetHeight()))
+	pil_image.frombytes(image.GetData())
+	if image.HasAlpha():
+		alpha = Image.new('L', (image.GetWidth(), image.GetHeight()))
+		alpha.frombytes(image.GetAlphaData())
+		pil_image.putalpha(alpha)
+	return pil_image
+
+def pil_image_to_image(pil_image):
+	"""
+	Converts PIL Image object to wx.Image.
+	"""
+	image = wx.EmptyImage(*pil_image.size)
+	if pil_image.mode[-1] == 'A':
+		image.SetData(pil_image.convert('RGB').tobytes())
+		image.SetAlphaData(pil_image.tobytes()[3::4])
+	else:
+		image.SetData(pil_image.tobytes())
+	return image
+
+def bitmap_to_pil_image(bitmap) :
+	"""
+	Converts wx.Bitmap to PIL Image object.
+	"""
+	return image_to_pil_image(bitmap.ConvertToImage())
+
+def pil_image_to_bitmap(pil_image) :
+	"""
+	Converts PIL Image object to wx.Bitmap.
+	"""
+	return pil_image_to_image(pil_image).ConvertToBitmap()
+
+#----- Cairo interfaces
 
 def copy_surface_to_bitmap(surface):
 	"""
@@ -62,6 +104,8 @@ def copy_bitmap_to_surface(bitmap):
 	bitmap.CopyToBuffer(surface.get_data(), fmt, stride)
 	return surface
 
+#----- Text routines
+
 def _get_text_size(text, bold=False):
 	font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
 	if bold: font.SetWeight(wx.FONTWEIGHT_BOLD)
@@ -86,16 +130,19 @@ def text_to_bitmap(text, bold=False):
 	dc = wx.MemoryDC()
 	bmp = wx.EmptyBitmap(w, h)
 	dc.SelectObject(bmp)
-	dc.SetBackground(wx.Brush("black"))
+	dc.SetBackground(wx.Brush("white"))
 	dc.Clear()
 	font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
 	if bold: font.SetWeight(wx.FONTWEIGHT_BOLD)
 	dc.SetFont(font)
-	dc.SetTextForeground(wx.Colour(255, 255, 255))
+	dc.SetTextForeground(wx.Colour(*UI_COLORS['text']))
 	dc.DrawText(text, 0, 0)
+	image = bitmap_to_pil_image(bmp)
+	image.putalpha(ImageOps.invert(image).convert('L'))
+	ret = pil_image_to_bitmap(image)
 	dc.EndDrawing()
 	dc.SelectObject(wx.NullBitmap)
-	return invert_text_bitmap(bmp, UI_COLORS['text']), (w, h)
+	return ret, (w, h)
 
 def bmp_to_white(bmp):
 	image = bmp.ConvertToImage()
@@ -105,8 +152,8 @@ def bmp_to_white(bmp):
 
 def disabled_bmp(bmp):
 	image = bmp.ConvertToImage()
-	image=image.ConvertToGreyscale()
-	image=image.AdjustChannels(1.0, 1.0, 1.0, 0.5)
+	image = image.ConvertToGreyscale()
+	image = image.AdjustChannels(1.0, 1.0, 1.0, 0.5)
 	return image.ConvertToBitmap()
 
 class LabelRenderer:
@@ -468,5 +515,3 @@ class NativeButtonRenderer(ButtonRenderer):
 		w, h = self.size
 		self.nr.DrawPushButton(self.widget, self.dc, (0, 0, w, h),
 				wx.CONTROL_PRESSED | wx.CONTROL_DISABLED | wx.CONTROL_SELECTED)
-
-
