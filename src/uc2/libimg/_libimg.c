@@ -488,6 +488,18 @@ im_RemoveAlpaChannel(PyObject *self, PyObject *args) {
 	return Py_None;
 }
 
+static PyObject *
+im_GetVersion(PyObject *self, PyObject *args) {
+
+	size_t ver;
+	PyObject *version_tuple;
+
+	version_tuple = PyTuple_New(2);
+	PyTuple_SetItem(version_tuple, 0, Py_BuildValue("s", GetMagickVersion(&ver)));
+	PyTuple_SetItem(version_tuple, 1, Py_BuildValue("i", ver));
+	return version_tuple;
+}
+
 static
 PyMethodDef im_methods[] = {
 		{"init_magick", im_InitMagick, METH_VARARGS},
@@ -506,6 +518,7 @@ PyMethodDef im_methods[] = {
 		{"set_image_format", im_SetImageFormat, METH_VARARGS},
 		{"set_image_type", im_SetImageType, METH_VARARGS},
 		{"remove_alpha_channel", im_RemoveAlpaChannel, METH_VARARGS},
+		{"get_version", im_GetVersion, METH_VARARGS},
 
 	{NULL, NULL}
 };
