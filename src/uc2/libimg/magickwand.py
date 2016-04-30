@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2016 by Igor E. Novikov
+# 	Copyright (C) 2016 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from cStringIO import StringIO
 import _libimg
@@ -33,6 +33,10 @@ WAND_TYPES = [BILEVEL_TYPE, L_TYPE, LA_TYPE, P_TYPE, PA_TYPE,
 ALPHA_TYPES = [LA_TYPE, PA_TYPE, RGBA_TYPE, CMYKA_TYPE]
 CMYK_TYPES = [CMYK_TYPE, CMYKA_TYPE]
 DUOTONES = [BILEVEL_TYPE, L_TYPE, LA_TYPE]
+
+def get_magickwand_version():
+	ver = _libimg.get_version()
+	return ' '.join(ver[0].split(' ')[1:-1]), ver[1]
 
 def check_image_file(filepath):
 	_libimg.init_magick()
