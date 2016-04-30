@@ -70,7 +70,7 @@ class FontChoice(wal.FontBitmapChoice):
 		value = self.fonts.index(selected_font)
 		icon = get_icon(icons.PD_FONT, size=wal.DEF_SIZE)
 		wal.FontBitmapChoice.__init__(self, parent, value, maxsize,
-							bitmaps, samples, icon, onchange)
+							self.fonts, bitmaps, samples, icon, onchange)
 		events.connect(events.CONFIG_MODIFIED, self.check_config)
 
 	def check_config(self, attr, value):
