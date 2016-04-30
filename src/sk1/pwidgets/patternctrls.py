@@ -194,7 +194,7 @@ class TransformEditor(wal.VPanel):
 						step=1.0, width=5,
 						onchange=self.changes, onenter=self.changes)
 		grid.pack(self.shear_x)
-		grid.pack(wal.Label(grid, _('deg')))
+		grid.pack(wal.Label(grid, u'°'))
 
 		grid.pack((10, 5))
 
@@ -205,7 +205,7 @@ class TransformEditor(wal.VPanel):
 						step=1.0, width=5,
 						onchange=self.changes, onenter=self.changes)
 		grid.pack(self.shear_y)
-		grid.pack(wal.Label(grid, _('deg')))
+		grid.pack(wal.Label(grid, u'°'))
 
 		self.pack(grid)
 
@@ -217,7 +217,7 @@ class TransformEditor(wal.VPanel):
 						step=1.0, width=5,
 						onchange=self.changes, onenter=self.changes)
 		rot_panel.pack(self.rotate, padding=3)
-		rot_panel.pack(wal.Label(rot_panel, '°'))
+		rot_panel.pack(wal.Label(rot_panel, u'°'))
 
 		self.pack(rot_panel, padding=5)
 
