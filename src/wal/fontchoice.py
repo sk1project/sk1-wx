@@ -15,7 +15,6 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx
 import wx.combo
 
 import const
@@ -24,17 +23,24 @@ from renderer import bmp_to_white
 
 class FontBitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 
+	fontnames = []
 	bitmaps = []
 	sample_bitmaps = []
 	font_icon = None
 	control_height = 0
 
-	def __init__(self, parent, value=0, size=(10, 30), fontname_bitmaps=[],
+	def __init__(self, parent, value=0, size=(10, 30),
+				fontnames=[], fontname_bitmaps=[],
 				fontsample_bitmaps=[], font_icon=None, onchange=None):
 
+		self.fontnames = fontnames
 		self.bitmaps = fontname_bitmaps
 		self.sample_bitmaps = fontsample_bitmaps
 		self.font_icon = font_icon
+
+		self.font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+		self.fontcolor = wx.Colour(*const.UI_COLORS['text'])
+
 		choices = self._create_items()
 		x, y = size
 		self.control_height = y
@@ -67,8 +73,8 @@ class FontBitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 			if self.font_icon:
 				icon = bmp_to_white(self.font_icon)
 				dc.DrawBitmap(icon, icon_x, icon_y, True)
-			bmp = bmp_to_white(self.bitmaps[item])
-			dc.DrawBitmap(bmp, label_x, label_y, True)
+			dc.SetTextForeground(wx.WHITE)
+			dc.DrawText(self.fontnames[item], label_x, label_y)
 			bmp = bmp_to_white(self.sample_bitmaps[item])
 			dc.DrawBitmap(bmp, label_x, sample_y, True)
 		elif flags & wx.combo.ODCB_PAINTING_CONTROL:
@@ -85,11 +91,13 @@ class FontBitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 				nr.DrawTextCtrl(self, dc, (0, 0, w, h), wx.CONTROL_DIRTY)
 			if self.font_icon:
 				dc.DrawBitmap(self.font_icon, icon_x, icon_y, True)
-			dc.DrawBitmap(self.bitmaps[item], label_x, label_y, True)
+			dc.SetTextForeground(self.fontcolor)
+			dc.DrawText(self.fontnames[item], label_x, label_y)
 		else:
 			if self.font_icon:
 				dc.DrawBitmap(self.font_icon, icon_x, icon_y, True)
-			dc.DrawBitmap(self.bitmaps[item], label_x, label_y, True)
+			dc.SetTextForeground(self.fontcolor)
+			dc.DrawText(self.fontnames[item], label_x, label_y)
 			dc.DrawBitmap(self.sample_bitmaps[item], label_x, sample_y, True)
 			dc.SetPen(wx.Pen(wx.Colour(240, 240, 240), 1))
 			val = sample_y + self.sample_bitmaps[item].GetSize()[1]
