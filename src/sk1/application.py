@@ -95,7 +95,7 @@ class pdApplication(wal.Application, UCApplication):
 
 		self.proxy.update()
 		self.insp.update()
-		events.emit(events.NO_DOCS)
+		if not wal.is_msw(): events.emit(events.NO_DOCS)
 
 	def load_plugins(self):
 		if config.active_plugins:
@@ -113,6 +113,8 @@ class pdApplication(wal.Application, UCApplication):
 			txt = _('To start, create new document or open existing')
 			events.emit(events.APP_STATUS, txt)
 			self.load_plugins()
+			if wal.is_msw(): events.emit(events.NO_DOCS)
+		self.update_actions()
 
 	def stub(self, *args):pass
 
