@@ -17,7 +17,7 @@
 
 import wx
 
-from wal import const, ImageButton
+from wal import const, ImageButton, is_msw
 
 from sk1 import events, resources
 
@@ -69,7 +69,10 @@ class AppAction:
 
 	def update(self):
 		for widget in self.widgets:
-			if not widget in self.menuitem:
+			if is_msw():
+				if not widget in self.menuitem:
+					widget.update()
+			else:
 				widget.update()
 		if not self.toolbar is None and not const.is_mac():
 			self.toolbar.EnableTool(self.action_id, self.enabled)
@@ -85,6 +88,7 @@ class AppAction:
 	def register_as_menuitem(self, item):
 		self.menuitem.append(item)
 		self.widgets.append(item)
+		if not is_msw(): self.update()
 
 	def unregister(self, widget):
 		if widget in self.widgets:
