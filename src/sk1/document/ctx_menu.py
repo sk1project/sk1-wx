@@ -100,6 +100,8 @@ class ContextMenu(wx.Menu):
 				return EDIT + self.get_order_entries() + STYLE + GROUP
 			elif self.insp.is_obj_pixmap(sel[0]):
 				return EDIT + self.get_order_entries()
+			elif self.insp.is_obj_text(sel[0]):
+				return EDIT + self.get_order_entries() + STYLE + TO_CURVES
 		return EDIT + DEFAULT
 
 	def get_order_entries(self):
