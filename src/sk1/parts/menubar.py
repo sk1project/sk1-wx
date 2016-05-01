@@ -96,9 +96,9 @@ class AppMenuBar(wx.MenuBar):
 		self.entries.append(entry)
 
 		#---Effects menu
-#		sub = (pdids.ID_TO_CONTAINER, pdids.ID_FROM_CONTAINER,)
-#		entry = (_("Effe&cts"), sub)
-#		self.entries.append(entry)
+# 		sub = (pdids.ID_TO_CONTAINER, pdids.ID_FROM_CONTAINER,)
+# 		entry = (_("Effe&cts"), sub)
+# 		self.entries.append(entry)
 
 		#---Paths menu
 		sub = (pdids.ID_BEZIER_SEL_ALL_NODES, pdids.ID_BEZIER_REVERSE_ALL_PATHS,
@@ -114,7 +114,7 @@ class AppMenuBar(wx.MenuBar):
 		self.entries.append(entry)
 
 		#---Bitmaps menu
-		sub = (pdids.ID_CONV_TO_CMYK, pdids.ID_CONV_TO_RGB,#pdids.ID_CONV_TO_LAB,
+		sub = (pdids.ID_CONV_TO_CMYK, pdids.ID_CONV_TO_RGB,  # pdids.ID_CONV_TO_LAB,
 			pdids.ID_CONV_TO_GRAY, pdids.ID_CONV_TO_BW, None,
 			pdids.ID_INVERT_BITMAP, None, pdids.ID_REMOVE_ALPHA,
 			pdids.ID_INVERT_ALPHA, None, pdids.ID_EXTRACT_BITMAP)
@@ -128,11 +128,11 @@ class AppMenuBar(wx.MenuBar):
 		self.entries.append(entry)
 
 		#---Tools menu
-#		sub = (
-#			pdids.ID_TOOL_PAGES,
-#			pdids.ID_TOOL_OBJBROWSER,)
-#		entry = (_("T&ools"), sub)
-#		self.entries.append(entry)
+# 		sub = (
+# 			pdids.ID_TOOL_PAGES,
+# 			pdids.ID_TOOL_OBJBROWSER,)
+# 		entry = (_("T&ools"), sub)
+# 		self.entries.append(entry)
 
 		#---Help menu
 		sub = (pdids.ID_REPORT_BUG, None, pdids.ID_APP_WEBSITE,
@@ -238,7 +238,7 @@ class ActionMenuItem(wx.MenuItem):
 		if not config.is_mac() and self.action.is_icon:
 			bmp = self.action.get_icon(config.menu_size, wx.ART_MENU)
 			if bmp: self.SetBitmap(bmp)
-		self.action.register(self)
+		self.action.register_as_menuitem(self)
 		self.mw.Bind(wx.EVT_MENU, self.action.do_call, id=action_id)
 		if self.action.is_toggle():
 			self.SetCheckable(True)
@@ -249,8 +249,12 @@ class ActionMenuItem(wx.MenuItem):
 			self.set_active(self.action.active)
 
 	def set_enable(self, enabled):
-		self.Enable(enabled)
+		if not enabled == self.get_enable():
+			self.Enable(enabled)
 
 	def set_active(self, val):
 		if not self.IsChecked() == val and self.IsCheckable():
 			self.Toggle()
+
+	def get_enable(self):
+		return self.IsEnabled()
