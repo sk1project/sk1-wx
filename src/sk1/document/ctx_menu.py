@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2013 by Igor E. Novikov
+# 	Copyright (C) 2013 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 
@@ -45,7 +45,6 @@ class ContextMenu(wx.Menu):
 	insp = None
 	actions = None
 	items = []
-	persistent_items = []
 
 	def __init__(self, app, parent):
 		self.app = app
@@ -55,7 +54,6 @@ class ContextMenu(wx.Menu):
 		self.actions = self.app.actions
 		wx.Menu.__init__(self)
 		self.build_menu(UNDO)
-		self.persistent_items = self.items
 		self.items = []
 
 	def destroy(self):
@@ -64,8 +62,6 @@ class ContextMenu(wx.Menu):
 			self.__dict__[item] = None
 
 	def rebuild(self):
-		for item in self.persistent_items:
-			if not item.IsSeparator(): item.update()
 		self.build_menu(self.get_entries())
 
 	def build_menu(self, entries):
@@ -130,7 +126,7 @@ class CtxActionMenuItem(wx.MenuItem):
 		if not config.is_mac() and self.action.is_icon:
 			bmp = self.action.get_icon(config.menu_size, wx.ART_MENU)
 			if bmp: self.SetBitmap(bmp)
-		self.action.register(self)
+		self.action.register_as_menuitem(self)
 		self.mw.Bind(wx.EVT_MENU, self.action.do_call, id=action_id)
 		if self.action.is_toggle():
 			self.SetCheckable(True)
