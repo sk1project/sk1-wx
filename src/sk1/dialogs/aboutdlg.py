@@ -34,8 +34,15 @@ class AboutDialog(wal.CloseDialog):
 								resizable=False, add_line=False)
 
 	def build(self):
-		header = AboutHeader(self.app, self)
-		self.pack(header, fill=True, padding=5)
+		if wal.is_msw():
+			header_panel = wal.VPanel(self)
+			header_panel.set_bg(wal.GRAY)
+			header = AboutHeader(self.app, header_panel)
+			header_panel.pack(header, fill=True, padding_all=1)
+			self.pack(header_panel, fill=True, padding=5)
+		else:
+			header = AboutHeader(self.app, self)
+			self.pack(header, fill=True, padding=5)
 
 		nb = wal.Notebook(self)
 		nb.add_page(AboutPage(self.app, nb), _('About'))
@@ -52,7 +59,9 @@ class AboutHeader(wal.VPanel):
 
 	def __init__(self, app, parent):
 		wal.VPanel.__init__(self, parent, border=True)
-		color = const.lighter_color(const.UI_COLORS['bg'], 0.9)
+		coef = 0.9
+		if wal.is_msw(): coef = 0.2
+		color = const.lighter_color(const.UI_COLORS['bg'], coef)
 		self.set_bg(color)
 
 		panel = wal.HPanel(self)
