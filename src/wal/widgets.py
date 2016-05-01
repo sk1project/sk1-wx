@@ -23,19 +23,33 @@ from generic import Widget, DataWidget, RangeDataWidget
 import const
 from const import DEF_SIZE
 from basic import HPanel
-from renderer import bmp_to_white
+from renderer import bmp_to_white, disabled_bmp
 
 class Bitmap(wx.StaticBitmap, Widget):
 
+	bmp = None
+
 	def __init__(self, parent, bitmap, on_left_click=None, on_right_click=None):
+		self.bmp = bitmap
 		wx.StaticBitmap.__init__(self, parent, wx.ID_ANY, bitmap)
 		if on_left_click:
 			self.Bind(wx.EVT_LEFT_UP, on_left_click, self)
 		if on_right_click:
 			self.Bind(wx.EVT_RIGHT_UP, on_right_click, self)
 
+	def _get_bitmap(self):
+		if const.is_msw() and not self.get_enabled():
+			return disabled_bmp(self.bmp)
+		return self.bmp
+
 	def set_bitmap(self, bmp):
-		self.SetBitmap(bmp)
+		self.bmp = bmp
+		self.SetBitmap(self._get_bitmap())
+
+	def set_enable(self, value):
+		Widget.set_enable(self, value)
+		if const.is_msw():
+			self.set_bitmap(self.bmp)
 
 class Notebook(wx.Notebook, Widget):
 
