@@ -409,7 +409,7 @@ class Entry(wx.TextCtrl, DataWidget):
 			self.Bind(wx.EVT_TEXT, self._on_change_noneditable, self)
 			self.Bind(wx.EVT_TEXT_ENTER, self._on_change_noneditable, self)
 		if multiline:
-			self.ScrollPages(1)
+			self.ScrollPages(0)
 
 
 	def _on_change(self, event):
