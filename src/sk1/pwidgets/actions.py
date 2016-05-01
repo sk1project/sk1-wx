@@ -34,6 +34,7 @@ class AppAction:
 
 	widgets = []
 	toolbar = None
+	menuitem = []
 	enabled = True
 	active = False
 	is_acc = False
@@ -60,6 +61,7 @@ class AppAction:
 		self.checker_args = checker_args
 
 		self.widgets = []
+		self.menuitem = []
 
 		if channels:
 			for channel in channels:
@@ -67,7 +69,8 @@ class AppAction:
 
 	def update(self):
 		for widget in self.widgets:
-			widget.update()
+			if not widget in self.menuitem:
+				widget.update()
 		if not self.toolbar is None and not const.is_mac():
 			self.toolbar.EnableTool(self.action_id, self.enabled)
 			self.toolbar.SetToolShortHelp(self.action_id, self.get_descr_text())
@@ -79,9 +82,15 @@ class AppAction:
 	def register_as_tool(self, toolbar):
 		self.toolbar = toolbar
 
+	def register_as_menuitem(self, item):
+		self.menuitem.append(item)
+		self.widgets.append(item)
+
 	def unregister(self, widget):
 		if widget in self.widgets:
 			self.widgets.remove(widget)
+		if widget in self.menuitem:
+			self.menuitem.remove(widget)
 		self.update()
 
 	def receiver(self, *args):
