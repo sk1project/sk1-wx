@@ -19,11 +19,11 @@
 import os, sys
 
 cur_path = os.getcwd()
-_bindir = os.path.join(cur_path, 'dlls')
-_magickdir = os.path.join(cur_path, 'dlls', 'modules')
+_bindir = os.path.join(cur_path, 'dlls') + os.pathsep
+_magickdir = os.path.join(cur_path, 'dlls', 'modules') + os.pathsep
 
-os.environ["PATH"] = _magickdir + os.pathsep + os.environ["PATH"]
-os.environ["PATH"] = _bindir + os.pathsep + os.environ["PATH"]
+os.environ["PATH"] = _magickdir + os.environ["PATH"]
+os.environ["PATH"] = _bindir + os.environ["PATH"]
 os.environ["MAGICK_CODER_MODULE_PATH"] = _magickdir
 os.environ["MAGICK_HOME"] = _magickdir
 
