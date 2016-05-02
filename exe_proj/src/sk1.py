@@ -20,10 +20,14 @@ import os, sys
 
 cur_path = os.getcwd()
 _bindir = os.path.join(cur_path, 'dlls')
+_magickdir = os.path.join(cur_path, 'dlls', 'modules')
 os.environ["PATH"] = _bindir + os.pathsep + os.environ["PATH"]
 
+os.environ["MAGICK_CODER_MODULE_PATH"] = _magickdir
+os.environ["MAGICK_HOME"] = _magickdir
+
 libs_path = os.path.join(cur_path, 'libs')
-sys.path.insert(1, libs_path)
+sys.path.insert(0, libs_path)
 
 import sk1
 

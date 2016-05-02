@@ -6,6 +6,8 @@ datetime
 errno
 inspect
 math
+new
+numbers
 os
 platform
 shutil

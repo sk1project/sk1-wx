@@ -9,12 +9,11 @@ import py2exe
 
 setup(
 	options={'py2exe': {'bundle_files': 2,
-	'compressed': True,
-	'includes':['cairo', 'PIL', 'reportlab',
-	'base64', 'cgi', 'colorsys', 'copy', 'datetime', 'errno', 'inspect',
-	'math', 'os', 'platform', 'shutil', 'StringIO', 'cStringIO',
-	'struct', 'sys', 'system', 'tempfile', 'time', 'traceback', 'types',
-	'unicodedata', 'urllib2', 'webbrowser', 'xml.sax', 'zipfile', 'zlib', ],
+						'compressed': True,
+'includes':['base64', 'cgi', 'colorsys', 'copy', 'datetime', 'errno', 'inspect',
+'math', 'new', 'numbers', 'os', 'platform', 'shutil', 'StringIO', 'cStringIO',
+'struct', 'sys', 'tempfile', 'time', 'traceback', 'types',
+'unicodedata', 'urllib2', 'webbrowser', 'xml.sax', 'zipfile', 'zlib', ],
 						}},
 	windows=[{'script': "src\\sk1.py",
 			"icon_resources": [(1, "src\\sk1.ico")]
