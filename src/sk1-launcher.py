@@ -21,15 +21,18 @@ import os, platform
 
 if os.name == 'nt':
     cur_path = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
-    if platform.architecture()[0] == '32bit':
-        devres = os.path.join(cur_path, 'win32-devres')
-        bindir = os.path.join(devres, 'dlls') + os.pathsep
-        magickdir = os.path.join(devres, 'dlls', 'modules') + os.pathsep
 
-        os.environ["PATH"] = magickdir + os.environ["PATH"]
-        os.environ["PATH"] = bindir + os.environ["PATH"]
-        os.environ["MAGICK_CODER_MODULE_PATH"] = magickdir
-        os.environ["MAGICK_HOME"] = magickdir
+    devresdir = 'win32-devres'
+    if platform.architecture()[0] == '64bit': devresdir = 'win64-devres'
+
+    devres = os.path.join(cur_path, devresdir)
+    bindir = os.path.join(devres, 'dlls') + os.pathsep
+    magickdir = os.path.join(devres, 'dlls', 'modules') + os.pathsep
+
+    os.environ["PATH"] = magickdir + os.environ["PATH"]
+    os.environ["PATH"] = bindir + os.environ["PATH"]
+    os.environ["MAGICK_CODER_MODULE_PATH"] = magickdir
+    os.environ["MAGICK_HOME"] = magickdir
 
 import sk1
 
