@@ -167,7 +167,7 @@ class ActionButton(ImageButton):
 		text = ''
 		if artid is None: text = tooltip
 		native = True
-		if not const.is_gtk(): native = False
+		if const.is_winxp(): native = False
 		ImageButton.__init__(self, parent, artid, const.DEF_SIZE, text, tooltip,
 							native=native, onclick=action.do_call)
 		action.register(self)
