@@ -31,10 +31,13 @@ import os, sys, shutil, platform
 
 import buildutils
 
-def get_res_path():
+def get_os_prefix():
     if platform.architecture()[0] == '32bit':
-        return 'win32-devres'
-    return 'win64-devres'
+        return 'win32'
+    return 'win64'
+
+def get_res_path():
+    return get_os_prefix() + '-devres'
 
 def get_build_suffix():
     if platform.architecture()[0] == '32bit':
@@ -173,6 +176,18 @@ if UPDATE_MODULES: buildutils.copy_modules(modules)
 # Implementation of bdist_portable command
 ############################################################
 if PORTABLE_PACKAGE:
-    pass
+    print 40 * '#'
+    print 'PORTABLE_PACKAGE'
+    print 40 * '#'
+    libdir = os.path.join('build', 'lib' + get_build_suffix())
+    tempdir = os.path.join('build', 'temp' + get_build_suffix())
+    # Clear source code
+    sources = buildutils.get_files_tree(libdir, 'py')
+    print 'Deleting %d source file(s)' % len(sources)
+#     for item in sources:
+#         os.remove(item)
+
+    sys.exit()
+
 
 if CLEAR_BUILD: buildutils.clear_msw_build()
