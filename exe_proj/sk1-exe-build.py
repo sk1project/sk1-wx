@@ -8,7 +8,7 @@ import py2exe
 
 
 setup(
-	options={'py2exe': {'bundle_files': 2,
+	options={'py2exe': {'bundle_files': 3,
 						'compressed': True,
 'includes':['base64', 'cgi', 'colorsys', 'copy', 'datetime', 'errno', 'inspect',
 'math', 'new', 'numbers', 'os', 'platform', 'shutil', 'StringIO', 'cStringIO',
@@ -18,5 +18,4 @@ setup(
 	windows=[{'script': "src\\sk1.py",
 			"icon_resources": [(1, "src\\sk1.ico")]
 			}],
-	zipfile=None,
 	)
