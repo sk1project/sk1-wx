@@ -66,7 +66,7 @@ class AppData(UCData):
 		comp.append(['Pango', libpango.get_version()])
 		comp.append(['pycairo', libcairo.get_version()[1]])
 		comp.append(['ImageMagick', libimg.get_magickwand_version()[0]])
-		comp.append(['PIL', libimg.get_version()])
+		comp.append(['Pillow', libimg.get_version()])
 		comp.append(['LittleCMS', libcms.get_version()])
 
 
