@@ -101,7 +101,10 @@ class ComponentsPage(wal.VPanel):
 
 	def __init__(self, app, parent):
 		wal.VPanel.__init__(self, parent)
+		from uc2 import libimg, libpango
 		data = [[_('Component'), _('Version')]] + app.appdata.components
+		data.append(['ImageMagick', libimg.get_magickwand_version()[0]])
+		data.append(['Pango', libpango.get_version()])
 		slist = wal.ReportList(self, data, border=False,
 							odd_color=wal.YELLOW_ODD_COLOR)
 		self.pack(slist, expand=True, fill=True, padding=5)

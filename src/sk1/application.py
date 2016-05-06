@@ -66,6 +66,11 @@ class pdApplication(wal.Application, UCApplication):
 		wal.Application.__init__(self)
 		UCApplication.__init__(self, path)
 
+		if wal.is_winxp():
+			msg = _('WindowsXP platform is obsolete and not supported!')
+			dialogs.error_dialog(self.mw, 'sK1', msg)
+			sys.exit()
+
 		self.appdata = AppData(self)
 		config.load(self.appdata.app_config)
 		config.resource_dir = os.path.join(path_unicode(self.path), 'share')

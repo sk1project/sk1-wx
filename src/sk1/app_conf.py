@@ -21,7 +21,7 @@ import wal
 
 from uc2.cms import libcms
 from uc2.uc_conf import UCConfig, UCData
-from uc2 import uc2const, libimg, libcairo, libpango
+from uc2 import uc2const, libimg, libcairo
 from uc2.utils import system
 
 from sk1 import events, appconst
@@ -63,9 +63,7 @@ class AppData(UCData):
 		comp.append(['wxWidgets', wal.get_version()])
 		comp.append(['UniConvertor', UCData.version])
 		comp.append(['Cairo', libcairo.get_version()[0]])
-		comp.append(['Pango', libpango.get_version()])
 		comp.append(['pycairo', libcairo.get_version()[1]])
-		comp.append(['ImageMagick', libimg.get_magickwand_version()[0]])
 		comp.append(['Pillow', libimg.get_version()])
 		comp.append(['LittleCMS', libcms.get_version()])
 
