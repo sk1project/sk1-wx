@@ -30,7 +30,7 @@ from uc2.uc2const import IMAGE_GRAY, IMAGE_MONO, DUOTONES, SUPPORTED_CS
 from uc2 import uc2const
 
 def get_version():
-	return Image.VERSION
+	return Image.PILLOW_VERSION
 
 def check_image(path):
 	return check_image_file
