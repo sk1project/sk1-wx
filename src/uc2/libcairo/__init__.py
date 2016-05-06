@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2011 by Igor E. Novikov
+# 	Copyright (C) 2011 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import cairo
 import _libcairo
@@ -25,10 +25,8 @@ DIRECT_MATRIX = cairo.Matrix()
 
 
 def get_version():
-	cairo_ver = cairo.cairo_version_string()
-	pycairo_ver = ''
-	for item in cairo.version_info: pycairo_ver += str(item) + '.'
-	return (cairo_ver, pycairo_ver[:-1])
+	v0, v2, v1 = cairo.version_info
+	return (cairo.cairo_version_string(), '%d.%d.%d' % (v0, v1, v2))
 
 def create_cpath(paths, cmatrix=None):
 	CTX.set_matrix(DIRECT_MATRIX)
