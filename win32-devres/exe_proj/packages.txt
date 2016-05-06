@@ -4,6 +4,7 @@ colorsys
 copy
 datetime
 errno
+fractions
 inspect
 math
 new
