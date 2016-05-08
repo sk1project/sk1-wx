@@ -13,10 +13,13 @@ glob(r'C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90
 setup(
 	options={'py2exe': {'bundle_files': 2,
 						'compressed': True,
-'includes':['base64', 'cgi', 'colorsys', 'copy', 'datetime', 'errno', 'inspect',
-'math', 'new', 'numbers', 'os', 'platform', 'shutil', 'StringIO', 'cStringIO',
-'struct', 'sys', 'tempfile', 'time', 'traceback', 'types', 'fractions',
-'unicodedata', 'urllib2', 'webbrowser', 'xml.sax', 'zipfile', 'zlib', ],
+'includes':['array', 'base64', 'builtins', 'cgi', 'collections', 'colorsys',
+'copy', 'datetime', 'errno', 'inspect', 'itertools', 'io', 'fractions',
+'functools' 'logging', 'locale', 'math', 'mmap', 'new', 'numbers', 'operator',
+'os', 'platform', 'pathlib', 'pipes', 'random', 're', 'reportlab', 'shutil',
+'StringIO', 'cStringIO', 'shlex', 'string', 'struct', 'subprocess', 'sys', 'tempfile',
+'time', 'traceback', 'types', 'unicodedata', 'urllib2', 'warnings', 'webbrowser',
+'xml.sax', 'zipfile', 'zlib', ],
 						}},
 	windows=[{'script': "src\\sk1.py",
 			"icon_resources": [(1, "src\\sk1.ico")]
