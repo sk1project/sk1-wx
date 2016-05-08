@@ -25,7 +25,7 @@ DIRECT_MATRIX = cairo.Matrix()
 
 
 def get_version():
-	v0, v2, v1 = cairo.version_info
+	v0, v1, v2 = cairo.version_info
 	return (cairo.cairo_version_string(), '%d.%d.%d' % (v0, v1, v2))
 
 def create_cpath(paths, cmatrix=None):
