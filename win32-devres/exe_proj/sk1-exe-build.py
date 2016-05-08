@@ -17,9 +17,9 @@ setup(
 'copy', 'datetime', 'errno', 'inspect', 'itertools', 'io', 'fractions',
 'functools' 'logging', 'locale', 'math', 'mmap', 'new', 'numbers', 'operator',
 'os', 'platform', 'pathlib', 'pipes', 'random', 're', 'reportlab', 'shutil',
-'StringIO', 'cStringIO', 'shlex', 'string', 'struct', 'subprocess', 'sys', 'tempfile',
-'time', 'traceback', 'types', 'unicodedata', 'urllib2', 'warnings', 'webbrowser',
-'xml.sax', 'zipfile', 'zlib', ],
+'StringIO', 'cStringIO', 'shlex', 'string', 'struct', 'subprocess', 'sys',
+'tempfile', 'time', 'traceback', 'types', 'unicodedata', 'urllib2', 'warnings',
+'webbrowser', 'xml.sax', 'zipfile', 'zlib', ],
 						}},
 	windows=[{'script': "src\\sk1.py",
 			"icon_resources": [(1, "src\\sk1.ico")]
