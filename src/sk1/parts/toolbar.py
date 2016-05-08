@@ -39,8 +39,8 @@ class ToolbarCreator:
 		self.tb = self.mw.CreateToolBar(wal.TBFLAGS)
 		icon_size = config.toolbar_icon_size
 		self.tb.SetToolBitmapSize(config.toolbar_size)
-		if wal.is_win7():
-			self.tb.SetBackgroundColour('#D3DAED')
+# 		if wal.is_win7():
+# 			self.tb.SetBackgroundColour('#D3DAED')
 
 		if wal.is_mac():
 			for items in BUTTONS:
