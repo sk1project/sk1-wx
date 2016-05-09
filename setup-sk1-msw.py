@@ -56,7 +56,7 @@ CLEAR_BUILD = False
 # Package description
 ############################################################
 NAME = 'sk1'
-VERSION = '2.0rc1'
+VERSION = '2.0RC1'
 DESCRIPTION = 'Vector graphics editor for prepress'
 AUTHOR = 'Igor E. Novikov'
 AUTHOR_EMAIL = 'igor.e.novikov@gmail.com'
@@ -179,15 +179,32 @@ if PORTABLE_PACKAGE:
     print 40 * '#'
     print 'PORTABLE_PACKAGE'
     print 40 * '#'
+    PKGS = ['sk1', 'uc2', 'wal']
+    portable_name = '%s-%s-%s-portable' % (NAME, VERSION, get_os_prefix())
     libdir = os.path.join('build', 'lib' + get_build_suffix())
     tempdir = os.path.join('build', 'temp' + get_build_suffix())
-    # Clear source code
-    sources = buildutils.get_files_tree(libdir, 'py')
-    print 'Deleting %d source file(s)' % len(sources)
-#     for item in sources:
-#         os.remove(item)
+    os.mkdir(portable_name)
 
-    sys.exit()
+    from zipfile import ZipFile
+    portable = os.path.join(get_res_path(), 'portable.zip')
+    print 'Extracting', portable
+    ZipFile(portable, 'r').extractall(portable_name)
+    portable_libs = os.path.join(portable_name, 'libs')
+    for item in PKGS:
+        src = os.path.join(libdir, item)
+        print 'Copying tree', src
+        shutil.copytree(src, os.path.join(portable_libs, item))
 
+    if not os.path.isdir('dist'): os.mkdir('dist')
+    portable = os.path.join('dist', portable_name + '.zip')
+    ziph = ZipFile(portable, 'w')
+
+    for root, dirs, files in os.walk(portable_name):
+        for item in files:
+            path = os.path.join(root, item)
+            print 'Compressing', path
+            ziph.write(path)
+    ziph.close()
+    shutil.rmtree(portable_name, True)
 
 if CLEAR_BUILD: buildutils.clear_msw_build()
