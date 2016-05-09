@@ -182,7 +182,7 @@ if PORTABLE_PACKAGE:
     PKGS = ['sk1', 'uc2', 'wal']
     portable_name = '%s-%s-%s-portable' % (NAME, VERSION, get_os_prefix())
     libdir = os.path.join('build', 'lib' + get_build_suffix())
-    tempdir = os.path.join('build', 'temp' + get_build_suffix())
+
     os.mkdir(portable_name)
 
     from zipfile import ZipFile
