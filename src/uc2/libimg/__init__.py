@@ -211,7 +211,9 @@ def set_image_data(cms, pixmap, raw_content):
 		profile = mode = None
 
 	if profile and base_image.mode == mode:
-		base_image = cms.adjust_image(base_image, profile)
+		try:
+			base_image = cms.adjust_image(base_image, profile)
+		except:pass
 
 	pixmap.colorspace = '' + base_image.mode
 
