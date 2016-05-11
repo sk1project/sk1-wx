@@ -1,0 +1,465 @@
+Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\libgobject-2.0-0.dll
+
+File Type: DLL
+
+  Section contains the following exports for libgobject-2.0-0.dll
+
+    00000000 characteristics
+    536D2ED2 time date stamp Fri May 09 22:38:58 2014
+        0.00 version
+           1 ordinal base
+         426 number of functions
+         426 number of names
+
+    ordinal hint RVA      name
+
+          1    0 000037B0 g_array_get_type
+          2    1 000021F0 g_binding_flags_get_type
+          3    2 000027C0 g_binding_get_flags
+          4    3 00002820 g_binding_get_source = g_ptr_array_get_type
+          5    4 000028E0 g_binding_get_source_property
+          6    5 00002880 g_binding_get_target
+          7    6 00002940 g_binding_get_target_property
+          8    7 00002450 g_binding_get_type
+          9    8 000029A0 g_binding_unbind
+         10    9 00004150 g_boxed_copy
+         11    A 000042F0 g_boxed_free
+         12    B 000033B0 g_boxed_type_register_static
+         13    C 00003890 g_byte_array_get_type
+         14    D 00003900 g_bytes_get_type
+         15    E 00009000 g_cclosure_marshal_BOOLEAN__BOXED_BOXED
+         16    F 000090C0 g_cclosure_marshal_BOOLEAN__BOXED_BOXEDv
+         17   10 00008D40 g_cclosure_marshal_BOOLEAN__FLAGS = g_weak_ref_set.constprop.11
+         18   11 00008E00 g_cclosure_marshal_BOOLEAN__FLAGSv
+         19   12 00008E70 g_cclosure_marshal_STRING__OBJECT_POINTER
+         20   13 00008F30 g_cclosure_marshal_STRING__OBJECT_POINTERv
+         21   14 00007C70 g_cclosure_marshal_VOID__BOOLEAN
+         22   15 00007D00 g_cclosure_marshal_VOID__BOOLEANv
+         23   16 000087F0 g_cclosure_marshal_VOID__BOXED
+         24   17 00008880 g_cclosure_marshal_VOID__BOXEDv
+         25   18 00007D40 g_cclosure_marshal_VOID__CHAR = g_cclosure_marshal_BOOLEAN__FLAGS
+         26   19 00007DD0 g_cclosure_marshal_VOID__CHARv
+         27   1A 000084B0 g_cclosure_marshal_VOID__DOUBLE
+         28   1B 00008550 g_cclosure_marshal_VOID__DOUBLEv = g_object_do_class_init
+         29   1C 00008220 g_cclosure_marshal_VOID__ENUM = g_object_do_get_property
+         30   1D 000082B0 g_cclosure_marshal_VOID__ENUMv
+         31   1E 000082F0 g_cclosure_marshal_VOID__FLAGS
+         32   1F 00008380 g_cclosure_marshal_VOID__FLAGSv
+         33   20 000083C0 g_cclosure_marshal_VOID__FLOAT
+         34   21 00008460 g_cclosure_marshal_VOID__FLOATv
+         35   22 00007EE0 g_cclosure_marshal_VOID__INT
+         36   23 00007F70 g_cclosure_marshal_VOID__INTv
+         37   24 00008080 g_cclosure_marshal_VOID__LONG
+         38   25 00008110 g_cclosure_marshal_VOID__LONGv
+         39   26 00008A00 g_cclosure_marshal_VOID__OBJECT
+         40   27 00008A90 g_cclosure_marshal_VOID__OBJECTv
+         41   28 000086C0 g_cclosure_marshal_VOID__PARAM
+         42   29 00008750 g_cclosure_marshal_VOID__PARAMv
+         43   2A 00008930 g_cclosure_marshal_VOID__POINTER
+         44   2B 000089C0 g_cclosure_marshal_VOID__POINTERv
+         45   2C 00008590 g_cclosure_marshal_VOID__STRING
+         46   2D 00008620 g_cclosure_marshal_VOID__STRINGv
+         47   2E 00007E10 g_cclosure_marshal_VOID__UCHAR
+         48   2F 00007EA0 g_cclosure_marshal_VOID__UCHARv
+         49   30 00007FB0 g_cclosure_marshal_VOID__UINT
+         50   31 00008C50 g_cclosure_marshal_VOID__UINT_POINTER
+         51   32 00008CF0 g_cclosure_marshal_VOID__UINT_POINTERv
+         52   33 00008040 g_cclosure_marshal_VOID__UINTv
+         53   34 00008150 g_cclosure_marshal_VOID__ULONG
+         54   35 000081E0 g_cclosure_marshal_VOID__ULONGv
+         55   36 00008B20 g_cclosure_marshal_VOID__VARIANT
+         56   37 00008BB0 g_cclosure_marshal_VOID__VARIANTv
+         57   38 00007B90 g_cclosure_marshal_VOID__VOID
+         58   39 00007C30 g_cclosure_marshal_VOID__VOIDv
+         59   3A 00006630 g_cclosure_marshal_generic
+         60   3B 00006A40 g_cclosure_marshal_generic_va
+         61   3C 00006290 g_cclosure_new
+         62   3D 0000FE10 g_cclosure_new_object
+         63   3E 0000FEF0 g_cclosure_new_object_swap
+         64   3F 00006310 g_cclosure_new_swap
+         65   40 00004070 g_checksum_get_type
+         66   41 0000EC80 g_clear_object
+         67   42 000052E0 g_closure_add_finalize_notifier
+         68   43 00005460 g_closure_add_invalidate_notifier
+         69   44 00004FC0 g_closure_add_marshal_guards = _g_closure_invoke_va
+         70   45 00003510 g_closure_get_type
+         71   46 00005830 g_closure_invalidate
+         72   47 00005DC0 g_closure_invoke
+         73   48 0000FFD0 g_closure_new_object
+         74   49 00004E30 g_closure_new_simple
+         75   4A 000055B0 g_closure_ref
+         76   4B 00005BD0 g_closure_remove_finalize_notifier
+         77   4C 00005A60 g_closure_remove_invalidate_notifier
+         78   4D 00006190 g_closure_set_marshal
+         79   4E 00004EE0 g_closure_set_meta_marshal
+         80   4F 000059D0 g_closure_sink
+         81   50 000056C0 g_closure_unref
+         82   51 00003660 g_date_get_type
+         83   52 00003C10 g_date_time_get_type
+         84   53 000074C0 g_enum_complete_type_info
+         85   54 00007910 g_enum_get_value
+         86   55 00007600 g_enum_get_value_by_name
+         87   56 00007780 g_enum_get_value_by_nick
+         88   57 00007300 g_enum_register_static
+         89   58 00003BA0 g_error_get_type
+         90   59 00007560 g_flags_complete_type_info
+         91   5A 00007990 g_flags_get_first_value
+         92   5B 000076C0 g_flags_get_value_by_name = g_cclosure_marshal_VOID__PARAM
+         93   5C 00007850 g_flags_get_value_by_nick
+         94   5D 000073E0 g_flags_register_static
+         95   5E 000036D0 g_gstring_get_type = g_value_take_boxed
+         96   5F 0002FFB0 g_gtype_get_type
+         97   60 00003740 g_hash_table_get_type
+         98   61 00010080 g_initially_unowned_get_type = g_param_spec_get_redirect_target
+         99   62 0001F9B0 g_io_channel_get_type
+        100   63 0001FA20 g_io_condition_get_type
+        101   64 00003CF0 g_key_file_get_type
+        102   65 00003E40 g_main_context_get_type
+        103   66 00003DD0 g_main_loop_get_type
+        104   67 00003D60 g_mapped_file_get_type
+        105   68 00003F90 g_markup_parse_context_get_type
+        106   69 000039E0 g_match_info_get_type
+        107   6A 0000E9B0 g_object_add_toggle_ref
+        108   6B 0000E700 g_object_add_weak_pointer = g_value_set_object_take_ownership
+        109   6C 00002F90 g_object_bind_property = g_markup_parse_context_get_type
+        110   6D 00002AD0 g_object_bind_property_full
+        111   6E 00002FD0 g_object_bind_property_with_closures
+        112   6F 0000BCC0 g_object_class_find_property
+        113   70 0000B870 g_object_class_install_properties
+        114   71 0000B5F0 g_object_class_install_property
+        115   72 0000C000 g_object_class_list_properties
+        116   73 0000BE10 g_object_class_override_property
+        117   74 00010110 g_object_compat_control = g_param_spec_get_nick
+        118   75 0000F930 g_object_connect
+        119   76 0000E210 g_object_disconnect
+        120   77 0000F260 g_object_dup_data
+        121   78 0000EE70 g_object_dup_qdata
+        122   79 0000E920 g_object_force_floating
+        123   7A 0000C170 g_object_freeze_notify
+        124   7B 0000D970 g_object_get
+        125   7C 0000F130 g_object_get_data
+        126   7D 0000DF30 g_object_get_property
+        127   7E 0000ECB0 g_object_get_qdata
+        128   7F 0000C7F0 g_object_get_type
+        129   80 0000D5D0 g_object_get_valist
+        130   81 0000BD80 g_object_interface_find_property
+        131   82 0000BB20 g_object_interface_install_property
+        132   83 0000C080 g_object_interface_list_properties
+        133   84 0000E800 g_object_is_floating
+        134   85 0000CED0 g_object_new
+        135   86 0000CA80 g_object_new_valist
+        136   87 0000C800 g_object_newv
+        137   88 0000C290 g_object_notify
+        138   89 0000C4D0 g_object_notify_by_pspec
+        139   8A 0000B1D0 g_object_ref
+        140   8B 0000E870 g_object_ref_sink
+        141   8C 0000EB10 g_object_remove_toggle_ref
+        142   8D 0000E780 g_object_remove_weak_pointer
+        143   8E 0000F320 g_object_replace_data
+        144   8F 0000EF20 g_object_replace_qdata
+        145   90 0000C0F0 g_object_run_dispose
+        146   91 0000D8F0 g_object_set
+        147   92 0000F1D0 g_object_set_data
+        148   93 0000F400 g_object_set_data_full
+        149   94 0000D9F0 g_object_set_property
+        150   95 0000EDE0 g_object_set_qdata
+        151   96 0000F000 g_object_set_qdata_full
+        152   97 0000CF50 g_object_set_valist
+        153   98 0000F4A0 g_object_steal_data = g_param_spec_finalize
+        154   99 0000F090 g_object_steal_qdata
+        155   9A 0000C6C0 g_object_thaw_notify
+        156   9B 00009F40 g_object_unref
+        157   9C 0000FCA0 g_object_watch_closure
+        158   9D 0000E490 g_object_weak_ref
+        159   9E 0000E5C0 g_object_weak_unref
+        160   9F 000142F0 g_param_spec_boolean
+        161   A0 00014B40 g_param_spec_boxed
+        162   A1 000141D0 g_param_spec_char
+        163   A2 00014990 g_param_spec_double
+        164   A3 00014700 g_param_spec_enum
+        165   A4 000147F0 g_param_spec_flags
+        166   A5 000148E0 g_param_spec_float
+        167   A6 00011190 g_param_spec_get_blurb
+        168   A7 000126F0 g_param_spec_get_default_value
+        169   A8 00010B50 g_param_spec_get_name
+        170   A9 00011110 g_param_spec_get_nick
+        171   AA 00010E50 g_param_spec_get_qdata
+        172   AB 00011080 g_param_spec_get_redirect_target
+        173   AC 00014C30 g_param_spec_gtype
+        174   AD 00014360 g_param_spec_int
+        175   AE 000145A0 g_param_spec_int64
+        176   AF 00010BB0 g_param_spec_internal
+        177   B0 00014480 g_param_spec_long
+        178   B1 00014D60 g_param_spec_object
+        179   B2 00014DF0 g_param_spec_override
+        180   B3 00014AB0 g_param_spec_param
+        181   B4 00014C00 g_param_spec_pointer
+        182   B5 000118C0 g_param_spec_pool_insert
+        183   B6 00011F50 g_param_spec_pool_list
+        184   B7 00011EA0 g_param_spec_pool_list_owned = param_object_values_cmp
+        185   B8 00011AA0 g_param_spec_pool_lookup = param_int64_set_default
+        186   B9 00011870 g_param_spec_pool_new = param_int_init
+        187   BA 000119F0 g_param_spec_pool_remove = param_ulong_init
+        188   BB 00010770 g_param_spec_ref
+        189   BC 00010AC0 g_param_spec_ref_sink
+        190   BD 00010EC0 g_param_spec_set_qdata
+        191   BE 00010F50 g_param_spec_set_qdata_full = g_param_spec_pool_list
+        192   BF 00010A40 g_param_spec_sink
+        193   C0 00010FE0 g_param_spec_steal_qdata
+        194   C1 00014A50 g_param_spec_string
+        195   C2 00045230 g_param_spec_types
+        196   C3 00014260 g_param_spec_uchar
+        197   C4 000143F0 g_param_spec_uint
+        198   C5 00014630 g_param_spec_uint64
+        199   C6 00014510 g_param_spec_ulong
+        200   C7 000146C0 g_param_spec_unichar
+        201   C8 000109A0 g_param_spec_unref
+        202   C9 00014C70 g_param_spec_value_array
+        203   CA 00014EE0 g_param_spec_variant
+        204   CB 00012320 g_param_type_register_static
+        205   CC 00011500 g_param_value_convert = g_value_set_param
+        206   CD 000112B0 g_param_value_defaults
+        207   CE 00011200 g_param_value_set_default
+        208   CF 000113E0 g_param_value_validate
+        209   D0 000116E0 g_param_values_cmp
+        210   D1 0002FF10 g_pointer_type_register_static
+        211   D2 00003F20 g_pollfd_get_type
+        212   D3 00003820 g_ptr_array_get_type
+        213   D4 00003970 g_regex_get_type = value_to_ffi_type
+        214   D5 0001F6F0 g_signal_accumulator_first_wins
+        215   D6 0001F6C0 g_signal_accumulator_true_handled
+        216   D7 00017D90 g_signal_add_emission_hook
+        217   D8 0001ABE0 g_signal_chain_from_overridden
+        218   D9 0001B0A0 g_signal_chain_from_overridden_handler
+        219   DA 0001BCF0 g_signal_connect_closure
+        220   DB 0001BA50 g_signal_connect_closure_by_id
+        221   DC 0001C520 g_signal_connect_data
+        222   DD 0000F7C0 g_signal_connect_object
+        223   DE 0001F030 g_signal_emit
+        224   DF 0001F050 g_signal_emit_by_name
+        225   E0 0001E290 g_signal_emit_valist
+        226   E1 0001DFA0 g_signal_emitv
+        227   E2 0001B990 g_signal_get_invocation_hint
+        228   E3 00015240 g_signal_handler_block
+        229   E4 00015950 g_signal_handler_disconnect
+        230   E5 0001D0F0 g_signal_handler_find
+        231   E6 0001CE20 g_signal_handler_is_connected
+        232   E7 00015370 g_signal_handler_unblock
+        233   E8 0001D390 g_signal_handlers_block_matched
+        234   E9 0001CF00 g_signal_handlers_destroy
+        235   EA 0001D9B0 g_signal_handlers_disconnect_matched
+        236   EB 0001D6A0 g_signal_handlers_unblock_matched
+        237   EC 0001DCC0 g_signal_has_handler_pending
+        238   ED 00019200 g_signal_list_ids
+        239   EE 00018F20 g_signal_lookup
+        240   EF 00019430 g_signal_name
+        241   F0 0001A5E0 g_signal_new
+        242   F1 0001A6B0 g_signal_new_class_handler
+        243   F2 0001A4C0 g_signal_new_valist
+        244   F3 00019540 g_signal_newv
+        245   F4 0001A770 g_signal_override_class_closure
+        246   F5 0001AB20 g_signal_override_class_handler
+        247   F6 00018160 g_signal_parse_name
+        248   F7 00019480 g_signal_query
+        249   F8 00018050 g_signal_remove_emission_hook
+        250   F9 0001A400 g_signal_set_va_marshaller
+        251   FA 00017BE0 g_signal_stop_emission
+        252   FB 00018780 g_signal_stop_emission_by_name
+        253   FC 00006430 g_signal_type_cclosure_new
+        254   FD 00003EB0 g_source_get_type
+        255   FE 0001FB40 g_source_set_closure
+        256   FF 0001FC70 g_source_set_dummy_callback
+        257  100 0002FB90 g_strdup_value_contents
+        258  101 000040E0 g_strv_get_type
+        259  102 00004000 g_thread_get_type
+        260  103 00003C80 g_time_zone_get_type
+        261  104 00024400 g_type_add_class_cache_func
+        262  105 0002A7F0 g_type_add_class_private
+        263  106 0002A250 g_type_add_instance_private
+        264  107 000245B0 g_type_add_interface_check
+        265  108 00028CB0 g_type_add_interface_dynamic
+        266  109 00027B30 g_type_add_interface_static
+        267  10A 00029300 g_type_check_class_cast
+        268  10B 00028E90 g_type_check_class_is_a = g_type_name_from_instance
+        269  10C 000295E0 g_type_check_instance
+        270  10D 00028F30 g_type_check_instance_cast
+        271  10E 000288C0 g_type_check_instance_is_a
+        272  10F 000296E0 g_type_check_is_value_type
+        273  110 00029890 g_type_check_value
+        274  111 00029A40 g_type_check_value_holds
+        275  112 00026EC0 g_type_children
+        276  113 0002A050 g_type_class_add_private
+        277  114 0002A3F0 g_type_class_adjust_private_offset
+        278  115 0002A6B0 g_type_class_get_instance_private_offset
+        279  116 0002A980 g_type_class_get_private
+        280  117 00024F30 g_type_class_peek
+        281  118 00024FF0 g_type_class_peek_parent
+        282  119 00024F90 g_type_class_peek_static
+        283  11A 00024870 g_type_class_ref
+        284  11B 00024760 g_type_class_unref
+        285  11C 00024E20 g_type_class_unref_uncached
+        286  11D 000275C0 g_type_create_instance
+        287  11E 000261F0 g_type_default_interface_peek
+        288  11F 00025440 g_type_default_interface_ref
+        289  120 00026240 g_type_default_interface_unref
+        290  121 00026C50 g_type_depth
+        291  122 0002AB80 g_type_ensure = _g_value_c_init
+        292  123 00027870 g_type_free_instance
+        293  124 00026400 g_type_from_name
+        294  125 00027D60 g_type_fundamental
+        295  126 00027D20 g_type_fundamental_next
+        296  127 00027CE0 g_type_get_plugin
+        297  128 000270C0 g_type_get_qdata
+        298  129 000243F0 g_type_get_type_registration_serial
+        299  12A 0002A000 g_type_init
+        300  12B 00029F90 g_type_init_with_debug_flags
+        301  12C 0002A600 g_type_instance_get_private
+        302  12D 00027DA0 g_type_interface_add_prerequisite
+        303  12E 00028700 g_type_interface_get_plugin
+        304  12F 000250E0 g_type_interface_peek
+        305  130 00025280 g_type_interface_peek_parent
+        306  131 000283E0 g_type_interface_prerequisites
+        307  132 00026F80 g_type_interfaces
+        308  133 00026D20 g_type_is_a = g_type_fundamental_next
+        309  134 0002B390 g_type_module_add_interface
+        310  135 0002ADF0 g_type_module_get_type = g_value_fits_pointer
+        311  136 0002B550 g_type_module_register_enum
+        312  137 0002B660 g_type_module_register_flags
+        313  138 0002B110 g_type_module_register_type
+        314  139 0002AF60 g_type_module_set_name
+        315  13A 0002AEB0 g_type_module_unuse
+        316  13B 0002AFD0 g_type_module_use
+        317  13C 00026340 g_type_name
+        318  13D 00029E70 g_type_name_from_class
+        319  13E 00029E90 g_type_name_from_instance
+        320  13F 00026C90 g_type_next_base
+        321  140 00026C10 g_type_parent
+        322  141 0002B970 g_type_plugin_complete_interface_info
+        323  142 0002B8B0 g_type_plugin_complete_type_info
+        324  143 0002B770 g_type_plugin_get_type
+        325  144 0002B840 g_type_plugin_unuse
+        326  145 0002B7D0 g_type_plugin_use
+        327  146 000263C0 g_type_qname
+        328  147 00027370 g_type_query
+        329  148 000289A0 g_type_register_dynamic
+        330  149 00026470 g_type_register_fundamental
+        331  14A 00026810 g_type_register_static
+        332  14B 00026B30 g_type_register_static_simple = g_type_add_interface_static
+        333  14C 000244A0 g_type_remove_class_cache_func
+        334  14D 00024650 g_type_remove_interface_check
+        335  14E 000271A0 g_type_set_qdata
+        336  14F 00027450 g_type_test_flags
+        337  150 00029C40 g_type_value_table_peek
+        338  151 0002C9B0 g_value_array_append
+        339  152 0002C6D0 g_value_array_copy
+        340  153 0002C640 g_value_array_free
+        341  154 0002C560 g_value_array_get_nth
+        342  155 000035F0 g_value_array_get_type
+        343  156 0002C7E0 g_value_array_insert
+        344  157 0002C5D0 g_value_array_new
+        345  158 0002C960 g_value_array_prepend
+        346  159 0002CA00 g_value_array_remove
+        347  15A 0002CAF0 g_value_array_sort
+        348  15B 0002CB60 g_value_array_sort_with_data
+        349  15C 0002C150 g_value_copy = value_transform_ulong_bool
+        350  15D 000044C0 g_value_dup_boxed
+        351  15E 0000F760 g_value_dup_object
+        352  15F 00012690 g_value_dup_param = param_value_array_validate
+        353  160 0002F890 g_value_dup_string
+        354  161 0002FB20 g_value_dup_variant
+        355  162 0002BDF0 g_value_fits_pointer = value_transform_ulong_uint64
+        356  163 0002F140 g_value_get_boolean = g_quark_from_static_string
+        357  164 00004420 g_value_get_boxed
+        358  165 0002EF30 g_value_get_char
+        359  166 0002F660 g_value_get_double
+        360  167 00007AA0 g_value_get_enum
+        361  168 00007B40 g_value_get_flags
+        362  169 0002F5B0 g_value_get_float
+        363  16A 00030070 g_value_get_gtype
+        364  16B 0002F1E0 g_value_get_int = g_bytes_unref
+        365  16C 0002F460 g_value_get_int64 = g_hook_first_valid
+        366  16D 0002F320 g_value_get_long = g_datalist_id_set_data_full
+        367  16E 0000F710 g_value_get_object
+        368  16F 00012640 g_value_get_param = param_object_validate
+        369  170 0002F940 g_value_get_pointer
+        370  171 0002EFE0 g_value_get_schar
+        371  172 0002F840 g_value_get_string
+        372  173 00003580 g_value_get_type
+        373  174 0002F090 g_value_get_uchar
+        374  175 0002F280 g_value_get_uint = g_mapped_file_unref
+        375  176 0002F500 g_value_get_uint64 = g_rec_mutex_lock
+        376  177 0002F3C0 g_value_get_ulong = g_malloc
+        377  178 0002FAD0 g_value_get_variant
+        378  179 0002BBE0 g_value_init
+        379  17A 0002BE40 g_value_peek_pointer = value_transform_int64_u8
+        380  17B 0002BED0 g_value_register_transform_func = value_transform_uint64_u8
+        381  17C 0002BD00 g_value_reset = value_transform_uint_double
+        382  17D 0002F0E0 g_value_set_boolean = g_mutex_unlock
+        383  17E 00004560 g_value_set_boxed
+        384  17F 00004780 g_value_set_boxed_take_ownership
+        385  180 0002EED0 g_value_set_char
+        386  181 0002F600 g_value_set_double
+        387  182 00007A50 g_value_set_enum
+        388  183 00007AF0 g_value_set_flags
+        389  184 0002F550 g_value_set_float = g_string_append_printf
+        390  185 00030010 g_value_set_gtype
+        391  186 0002C220 g_value_set_instance
+        392  187 0002F190 g_value_set_int = g_string_free
+        393  188 0002F410 g_value_set_int64 = g_rw_lock_reader_lock
+        394  189 0002F2D0 g_value_set_long = g_thread_unref
+        395  18A 0000F540 g_value_set_object
+        396  18B 0000F700 g_value_set_object_take_ownership
+        397  18C 00012500 g_value_set_param
+        398  18D 00012630 g_value_set_param_take_ownership = param_override_validate
+        399  18E 0002F8F0 g_value_set_pointer
+        400  18F 0002EF80 g_value_set_schar
+        401  190 00004620 g_value_set_static_boxed
+        402  191 0002F740 g_value_set_static_string
+        403  192 0002F6B0 g_value_set_string
+        404  193 0002F830 g_value_set_string_take_ownership
+        405  194 0002F030 g_value_set_uchar
+        406  195 0002F230 g_value_set_uint = g_variant_dict_unref
+        407  196 0002F4B0 g_value_set_uint64 = g_quark_to_string
+        408  197 0002F370 g_value_set_ulong = g_getenv_utf8
+        409  198 0002F990 g_value_set_variant
+        410  199 000046D0 g_value_take_boxed
+        411  19A 0000F630 g_value_take_object = pool_list
+        412  19B 000125A0 g_value_take_param
+        413  19C 0002F7B0 g_value_take_string
+        414  19D 0002FA30 g_value_take_variant
+        415  19E 0002C470 g_value_transform
+        416  19F 0002C0A0 g_value_type_compatible = value_transform_double_ulong
+        417  1A0 0002C3D0 g_value_type_transformable
+        418  1A1 0002BD80 g_value_unset = value_transform_long_float
+        419  1A2 00003AC0 g_variant_builder_get_type
+        420  1A3 00003B30 g_variant_dict_get_type
+        421  1A4 000033A0 g_variant_get_gtype
+        422  1A5 00003A50 g_variant_type_get_gtype
+        423  1A6 00010150 g_weak_ref_clear
+        424  1A7 00010170 g_weak_ref_get
+        425  1A8 00010330 g_weak_ref_init
+        426  1A9 000101E0 g_weak_ref_set
+
+  Summary
+
+        1000 .CRT
+        2000 .bss
+        1000 .data
+        1000 .debug_abbrev
+        1000 .debug_aranges
+        1000 .debug_frame
+        1000 .debug_info
+        1000 .debug_line
+        4000 .edata
+        3000 .idata
+        3000 .pdata
+        B000 .rdata
+        1000 .reloc
+        1000 .rsrc
+       32000 .text
+        1000 .tls
+        3000 .xdata

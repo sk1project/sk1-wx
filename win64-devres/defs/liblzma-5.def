@@ -1,0 +1,132 @@
+Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\liblzma-5.dll
+
+File Type: DLL
+
+  Section contains the following exports for liblzma-5.dll
+
+    00000000 characteristics
+    536BD691 time date stamp Thu May 08 22:10:09 2014
+        0.00 version
+           1 ordinal base
+          93 number of functions
+          93 number of names
+
+    ordinal hint RVA      name
+
+          1    0 00007670 lzma_alone_decoder
+          2    1 00004770 lzma_alone_encoder
+          3    2 00007AA0 lzma_auto_decoder
+          4    3 00004910 lzma_block_buffer_bound
+          5    4 00007BD0 lzma_block_buffer_decode
+          6    5 00004960 lzma_block_buffer_encode
+          7    6 00001CA0 lzma_block_compressed_size
+          8    7 00008150 lzma_block_decoder
+          9    8 00005210 lzma_block_encoder
+         10    9 00008340 lzma_block_header_decode
+         11    A 00005480 lzma_block_header_encode = lzma_stream_buffer_bound
+         12    B 000053A0 lzma_block_header_size
+         13    C 00001D00 lzma_block_total_size
+         14    D 00001C10 lzma_block_unpadded_size
+         15    E 0000A540 lzma_check_is_supported
+         16    F 0000A560 lzma_check_size
+         17   10 000017E0 lzma_code
+         18   11 0000A640 lzma_crc32
+         19   12 0000A770 lzma_crc64
+         20   13 000055D0 lzma_easy_buffer_encode
+         21   14 00008530 lzma_easy_decoder_memusage
+         22   15 00005670 lzma_easy_encoder
+         23   16 000056C0 lzma_easy_encoder_memusage
+         24   17 00001A40 lzma_end
+         25   18 00008820 lzma_filter_decoder_is_supported
+         26   19 00005920 lzma_filter_encoder_is_supported
+         27   1A 00008AE0 lzma_filter_flags_decode
+         28   1B 00005E90 lzma_filter_flags_encode
+         29   1C 00005E30 lzma_filter_flags_size
+         30   1D 00001D60 lzma_filters_copy
+         31   1E 00005AB0 lzma_filters_update = stream_encoder_update
+         32   1F 00001B00 lzma_get_check
+         33   20 000037A0 lzma_index_append
+         34   21 00003530 lzma_index_block_count
+         35   22 00009130 lzma_index_buffer_decode
+         36   23 00006390 lzma_index_buffer_encode
+         37   24 00003AA0 lzma_index_cat
+         38   25 00003650 lzma_index_checks
+         39   26 00008FE0 lzma_index_decoder
+         40   27 00003C80 lzma_index_dup
+         41   28 00006290 lzma_index_encoder
+         42   29 00003410 lzma_index_end = lzma_stream_flags_compare
+         43   2A 000035C0 lzma_index_file_size
+         44   2B 000093C0 lzma_index_hash_append
+         45   2C 000094C0 lzma_index_hash_decode
+         46   2D 00009380 lzma_index_hash_end
+         47   2E 000092A0 lzma_index_hash_init
+         48   2F 00009390 lzma_index_hash_size = lzma_stream_footer_decode
+         49   30 00003230 lzma_index_init
+         50   31 000040F0 lzma_index_iter_init
+         51   32 00004330 lzma_index_iter_locate
+         52   33 00004100 lzma_index_iter_next
+         53   34 000040C0 lzma_index_iter_rewind
+         54   35 000034B0 lzma_index_memusage
+         55   36 00003520 lzma_index_memused
+         56   37 00003550 lzma_index_size
+         57   38 00003540 lzma_index_stream_count
+         58   39 000036A0 lzma_index_stream_flags
+         59   3A 00003720 lzma_index_stream_padding
+         60   3B 00003590 lzma_index_stream_size
+         61   3C 00003580 lzma_index_total_size
+         62   3D 00003640 lzma_index_uncompressed_size
+         63   3E 000115A0 lzma_lzma_preset
+         64   3F 00001B70 lzma_memlimit_get
+         65   40 00001BC0 lzma_memlimit_set
+         66   41 00001B20 lzma_memusage
+         67   42 0000C2F0 lzma_mf_is_supported
+         68   43 00011590 lzma_mode_is_supported
+         69   44 000023E0 lzma_physmem
+         70   45 000089B0 lzma_properties_decode
+         71   46 00005D10 lzma_properties_encode
+         72   47 00005BF0 lzma_properties_size
+         73   48 00008580 lzma_raw_buffer_decode
+         74   49 00005710 lzma_raw_buffer_encode = stream_encoder_end
+         75   4A 00008920 lzma_raw_decoder
+         76   4B 000089A0 lzma_raw_decoder_memusage
+         77   4C 00005A20 lzma_raw_encoder
+         78   4D 00005AA0 lzma_raw_encoder_memusage
+         79   4E 00006480 lzma_stream_buffer_bound
+         80   4F 000098B0 lzma_stream_buffer_decode
+         81   50 000064C0 lzma_stream_buffer_encode
+         82   51 0000A160 lzma_stream_decoder
+         83   52 00006DF0 lzma_stream_encoder
+         84   53 00004410 lzma_stream_flags_compare
+         85   54 0000A390 lzma_stream_footer_decode
+         86   55 00007120 lzma_stream_footer_encode
+         87   56 0000A310 lzma_stream_header_decode
+         88   57 000070B0 lzma_stream_header_encode
+         89   58 000014D0 lzma_version_number
+         90   59 000014E0 lzma_version_string
+         91   5A 0000A420 lzma_vli_decode
+         92   5B 000071B0 lzma_vli_encode
+         93   5C 000044A0 lzma_vli_size
+
+  Summary
+
+        1000 .CRT
+        1000 .bss
+        1000 .data
+        1000 .debug_abbrev
+        1000 .debug_aranges
+        1000 .debug_frame
+        1000 .debug_info
+        1000 .debug_line
+        1000 .edata
+        1000 .idata
+        1000 .pdata
+        8000 .rdata
+        1000 .reloc
+        1000 .rsrc
+       1C000 .text
+        1000 .tls
+        1000 .xdata

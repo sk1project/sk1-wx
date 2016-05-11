@@ -1,0 +1,242 @@
+Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\libfontconfig-1.dll
+
+File Type: DLL
+
+  Section contains the following exports for libfontconfig-1.dll
+
+    00000000 characteristics
+    536D05B4 time date stamp Fri May 09 19:43:32 2014
+        9.00 version
+           1 ordinal base
+         204 number of functions
+         204 number of names
+
+    ordinal hint RVA      name
+
+          1    0 00001450 FcAtomicCreate
+          2    1 000016EA FcAtomicDeleteNew
+          3    2 00001730 FcAtomicDestroy
+          4    3 000015DA FcAtomicLock
+          5    4 0000167F FcAtomicNewFile
+          6    5 00001691 FcAtomicOrigFile
+          7    6 000016A2 FcAtomicReplaceOrig
+          8    7 0000170D FcAtomicUnlock
+          9    8 000017D8 FcBlanksAdd
+         10    9 00001750 FcBlanksCreate
+         11    A 0000179F FcBlanksDestroy
+         12    B 000018DD FcBlanksIsMember
+         13    C 000036C8 FcCacheCopySet
+         14    D 00004632 FcCacheCreateTagFile
+         15    E 000036AF FcCacheDir
+         16    F 0000382C FcCacheNumFont
+         17   10 0000381B FcCacheNumSubdir
+         18   11 000037D9 FcCacheSubdir
+         19   12 00009E6D FcCharSetAddChar
+         20   13 0000A167 FcCharSetCopy
+         21   14 0000AA79 FcCharSetCount
+         22   15 0000AEBE FcCharSetCoverage
+         23   16 0000978F FcCharSetCreate
+         24   17 00009F05 FcCharSetDelChar
+         25   18 00009804 FcCharSetDestroy
+         26   19 0000A1AB FcCharSetEqual
+         27   1A 0000AE83 FcCharSetFirstPage
+         28   1B 0000A8CD FcCharSetHasChar
+         29   1C 0000A53C FcCharSetIntersect
+         30   1D 0000A95E FcCharSetIntersectCount
+         31   1E 0000AC27 FcCharSetIsSubset
+         32   1F 0000A60D FcCharSetMerge
+         33   20 000097F1 FcCharSetNew
+         34   21 0000ADF7 FcCharSetNextPage
+         35   22 0000A892 FcCharSetSubtract
+         36   23 0000AAFD FcCharSetSubtractCount
+         37   24 0000A5D2 FcCharSetUnion
+         38   25 000092BD FcConfigAppFontAddDir
+         39   26 0000917E FcConfigAppFontAddFile
+         40   27 000093AD FcConfigAppFontClear
+         41   28 000052A8 FcConfigBuildFonts
+         42   29 0000486F FcConfigCreate
+         43   2A 00004E2E FcConfigDestroy
+         44   2B 00008FFE FcConfigEnableHome
+         45   2C 00009024 FcConfigFilename
+         46   2D 000056CC FcConfigGetBlanks
+         47   2E 0000561F FcConfigGetCache
+         48   2F 00005545 FcConfigGetCacheDirs
+         49   30 00005428 FcConfigGetConfigDirs
+         50   31 000055DF FcConfigGetConfigFiles
+         51   32 000053EC FcConfigGetCurrent
+         52   33 000054DB FcConfigGetFontDirs
+         53   34 0000562E FcConfigGetFonts
+         54   35 00005791 FcConfigGetRescanInterval
+         55   36 00005810 FcConfigGetRescanInverval
+         56   37 000095F0 FcConfigGetSysRoot
+         57   38 00008D41 FcConfigHome
+         58   39 0002873D FcConfigParseAndLoad
+         59   3A 00004DE8 FcConfigReference
+         60   3B 00005347 FcConfigSetCurrent
+         61   3C 000057CB FcConfigSetRescanInterval
+         62   3D 0000582B FcConfigSetRescanInverval
+         63   3E 0000962B FcConfigSetSysRoot
+         64   3F 000086DA FcConfigSubstitute
+         65   40 00007C5F FcConfigSubstituteWithPat
+         66   41 00004B80 FcConfigUptoDate
+         67   42 0000DB5C FcDefaultSubstitute
+         68   43 00003381 FcDirCacheClean
+         69   44 00002AA2 FcDirCacheLoad
+         70   45 00002AFA FcDirCacheLoadFile
+         71   46 0000E87C FcDirCacheRead
+         72   47 0000E786 FcDirCacheRescan
+         73   48 00001C50 FcDirCacheUnlink
+         74   49 00002A31 FcDirCacheUnload
+         75   4A 00002C3F FcDirCacheValid
+         76   4B 0000E8DC FcDirSave
+         77   4C 0000E625 FcDirScan
+         78   4D 0000E0B0 FcFileIsDir = interpret_subexpr
+         79   4E 0000E336 FcFileScan
+         80   4F 00015F12 FcFini
+         81   50 00019418 FcFontList
+         82   51 0001B1FB FcFontMatch
+         83   52 0001A4C9 FcFontRenderPrepare
+         84   53 00014D50 FcFontSetAdd
+         85   54 00014C90 FcFontSetCreate
+         86   55 00014CDF FcFontSetDestroy
+         87   56 00019166 FcFontSetList
+         88   57 0001B106 FcFontSetMatch
+         89   58 0000D5AC FcFontSetPrint
+         90   59 0001B595 FcFontSetSort
+         91   5A 0001B579 FcFontSetSortDestroy
+         92   5B 0001BC4F FcFontSort
+         93   5C 00013853 FcFreeTypeCharIndex
+         94   5D 00014454 FcFreeTypeCharSet
+         95   5E 00014346 FcFreeTypeCharSetAndSpacing
+         96   5F 000132C2 FcFreeTypeQuery
+         97   60 00011705 FcFreeTypeQueryFace
+         98   61 0000D6CA FcGetDefaultLangs
+         99   62 00016B73 FcGetLangs
+        100   63 00015C79 FcGetVersion
+        101   64 00015EFF FcInit
+        102   65 00015F61 FcInitBringUptoDate
+        103   66 00015E81 FcInitLoadConfig
+        104   67 00015EE7 FcInitLoadConfigAndFonts
+        105   68 00015F30 FcInitReinitialize
+        106   69 00016AC5 FcLangGetCharSet
+        107   6A 00016561 FcLangNormalize
+        108   6B 00016FAF FcLangSetAdd
+        109   6C 0001729B FcLangSetCompare
+        110   6D 00017A6D FcLangSetContains
+        111   6E 00016C6A FcLangSetCopy
+        112   6F 00016BD4 FcLangSetCreate
+        113   70 0001702D FcLangSetDel
+        114   71 00016C33 FcLangSetDestroy
+        115   72 000177DD FcLangSetEqual
+        116   73 00017D7E FcLangSetGetLangs
+        117   74 0001708C FcLangSetHasLang
+        118   75 00017500 FcLangSetHash
+        119   76 00017F0A FcLangSetSubtract
+        120   77 00017EDD FcLangSetUnion
+        121   78 0001BD70 FcMatrixCopy
+        122   79 0001BDFF FcMatrixEqual
+        123   7A 0001BF23 FcMatrixMultiply
+        124   7B 0001C090 FcMatrixRotate
+        125   7C 0001C0EE FcMatrixScale
+        126   7D 0001C141 FcMatrixShear
+        127   7E 0001C421 FcNameConstant
+        128   7F 0001C3B0 FcNameGetConstant
+        129   80 0001C204 FcNameGetObjectType
+        130   81 0001C7E4 FcNameParse
+        131   82 0001C38C FcNameRegisterConstants
+        132   83 0001C1E0 FcNameRegisterObjectTypes
+        133   84 0001CE32 FcNameUnparse
+        134   85 0001C39E FcNameUnregisterConstants
+        135   86 0001C1F2 FcNameUnregisterObjectTypes
+        136   87 00017F8F FcObjectSetAdd
+        137   88 00018259 FcObjectSetBuild
+        138   89 00017F40 FcObjectSetCreate
+        139   8A 00018158 FcObjectSetDestroy
+        140   8B 000181C9 FcObjectSetVaBuild
+        141   8C 0001EDB1 FcPatternAdd
+        142   8D 0001F2DB FcPatternAddBool
+        143   8E 0001F312 FcPatternAddCharSet
+        144   8F 0001F12B FcPatternAddDouble
+        145   90 0001F368 FcPatternAddFTFace
+        146   91 0001F0A0 FcPatternAddInteger
+        147   92 0001F3BE FcPatternAddLangSet
+        148   93 0001F234 FcPatternAddMatrix
+        149   94 0001F1FC FcPatternAddString
+        150   95 0001EE11 FcPatternAddWeak
+        151   96 0001FCFC FcPatternBuild
+        152   97 0001D5CF FcPatternCreate
+        153   98 0001EF5C FcPatternDel
+        154   99 0001E1EF FcPatternDestroy
+        155   9A 0001F98A FcPatternDuplicate
+        156   9B 0001E629 FcPatternEqual
+        157   9C 0001E8C6 FcPatternEqualSubset
+        158   9D 0001FFE0 FcPatternFilter
+        159   9E 00010C96 FcPatternFormat
+        160   9F 0001F517 FcPatternGet
+        161   A0 0001F7EC FcPatternGetBool
+        162   A1 0001F852 FcPatternGetCharSet
+        163   A2 0001F69B FcPatternGetDouble
+        164   A3 0001F8BA FcPatternGetFTFace
+        165   A4 0001F5D8 FcPatternGetInteger
+        166   A5 0001F922 FcPatternGetLangSet
+        167   A6 0001F784 FcPatternGetMatrix
+        168   A7 0001F742 FcPatternGetString
+        169   A8 0001E7D9 FcPatternHash
+        170   A9 0000C9B6 FcPatternPrint
+        171   AA 0001FB17 FcPatternReference
+        172   AB 0001EF89 FcPatternRemove
+        173   AC 0001FB59 FcPatternVaBuild
+        174   AD 00022A55 FcStrBasename
+        175   AE 00021623 FcStrCmp
+        176   AF 000214DC FcStrCmpIgnoreCase
+        177   B0 0002102B FcStrCopy
+        178   B1 00022888 FcStrCopyFilename
+        179   B2 000229B2 FcStrDirname
+        180   B3 0002142C FcStrDowncase
+        181   B4 000210E6 FcStrFree
+        182   B5 00023395 FcStrListCreate
+        183   B6 00023449 FcStrListDone
+        184   B7 000233E6 FcStrListFirst
+        185   B8 000233FB FcStrListNext
+        186   B9 00021046 FcStrPlus
+        187   BA 00022FBE FcStrSetAdd
+        188   BB 0002301E FcStrSetAddFilename
+        189   BC 00022D40 FcStrSetCreate
+        190   BD 000231DD FcStrSetDel
+        191   BE 000232FE FcStrSetDestroy
+        192   BF 00022F42 FcStrSetEqual
+        193   C0 00022EDF FcStrSetMember
+        194   C1 00021CDC FcStrStr
+        195   C2 00021BAA FcStrStrIgnoreCase
+        196   C3 0002202E FcUcs4ToUtf8
+        197   C4 000222DD FcUtf16Len
+        198   C5 00022192 FcUtf16ToUcs4
+        199   C6 00021F72 FcUtf8Len
+        200   C7 00021DF1 FcUtf8ToUcs4
+        201   C8 0001D650 FcValueDestroy
+        202   C9 0001DC86 FcValueEqual
+        203   CA 0000C5C8 FcValuePrint
+        204   CB 0001D7D6 FcValueSave
+
+  Summary
+
+        1000 .CRT
+        2000 .bss
+        1000 .data
+        1000 .debug_abbrev
+        1000 .debug_aranges
+        1000 .debug_frame
+        1000 .debug_info
+        1000 .debug_line
+        2000 .edata
+        2000 .idata
+        3000 .pdata
+       12000 .rdata
+        1000 .reloc
+       2F000 .text
+        1000 .tls
+        3000 .xdata

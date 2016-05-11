@@ -1,0 +1,68 @@
+Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\libpangowin32-1.0-0.dll
+
+File Type: DLL
+
+  Section contains the following exports for libpangowin32-1.0-0.dll
+
+    00000000 characteristics
+    536D9FAD time date stamp Sat May 10 06:40:29 2014
+        0.00 version
+           1 ordinal base
+          29 number of functions
+          29 number of names
+
+    ordinal hint RVA      name
+
+          1    0 000020C0 _pango_win32_font_get_hfont
+          2    1 00002150 _pango_win32_font_get_type
+          3    2 00007430 _pango_win32_font_map_get_type
+          4    3 000095E0 _pango_win32_fontmap_cache_remove
+          5    4 000091C0 _pango_win32_make_matching_logfontw
+          6    5 00004950 pango_win32_font_cache_free
+          7    6 00004A20 pango_win32_font_cache_load
+          8    7 00005140 pango_win32_font_cache_loadw
+          9    8 000049C0 pango_win32_font_cache_new = logfontw_nosize_hash
+         10    9 000057C0 pango_win32_font_cache_unload
+         11    A 00007600 pango_win32_font_description_from_logfont
+         12    B 00007B20 pango_win32_font_description_from_logfontw
+         13    C 00002C70 pango_win32_font_done_font = pango_win32_get_unknown_glyph
+         14    D 00004350 pango_win32_font_get_glyph_index
+         15    E 00003B80 pango_win32_font_get_metrics_factor
+         16    F 00002850 pango_win32_font_logfont
+         17   10 00002A00 pango_win32_font_logfontw
+         18   11 000074C0 pango_win32_font_map_for_display
+         19   12 00009500 pango_win32_font_map_get_font_cache
+         20   13 00002B80 pango_win32_font_select_font = pango_win32_font_get_metrics_factor
+         21   14 00002130 pango_win32_get_context
+         22   15 000021E0 pango_win32_get_dc
+         23   16 00002280 pango_win32_get_debug_flag
+         24   17 00003C70 pango_win32_get_unknown_glyph
+         25   18 00002290 pango_win32_render
+         26   19 00004230 pango_win32_render_layout
+         27   1A 00003C80 pango_win32_render_layout_line
+         28   1B 00002680 pango_win32_render_transformed
+         29   1C 000075A0 pango_win32_shutdown_display
+
+  Summary
+
+        1000 .CRT
+        1000 .bss
+        1000 .data
+        1000 .debug_abbrev
+        1000 .debug_aranges
+        1000 .debug_frame
+        1000 .debug_info
+        1000 .debug_line
+        1000 .edata
+        3000 .idata
+        1000 .pdata
+        2000 .rdata
+        1000 .reloc
+        1000 .rsrc
+        D000 .text
+        1000 .tls
+        1000 .xdata

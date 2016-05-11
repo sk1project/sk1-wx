@@ -1,0 +1,278 @@
+Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\libpng16-16.dll
+
+File Type: DLL
+
+  Section contains the following exports for libpng16-16.dll
+
+    00000000 characteristics
+    536BD8EF time date stamp Thu May 08 22:20:15 2014
+        0.00 version
+           1 ordinal base
+         240 number of functions
+         240 number of names
+
+    ordinal hint RVA      name
+
+          1    0 00002D80 png_access_version_number
+          2    1 00009AF0 png_benign_error
+          3    2 00018AB0 png_build_grayscale_palette
+          4    3 0000B3B0 png_calloc
+          5    4 00009AD0 png_chunk_benign_error
+          6    5 00009A90 png_chunk_error
+          7    6 00009890 png_chunk_warning
+          8    7 000262D0 png_convert_from_struct_tm
+          9    8 00026300 png_convert_from_time_t
+         10    9 00002C20 png_convert_to_rfc1123
+         11    A 00002A40 png_convert_to_rfc1123_buffer
+         12    B 000022C0 png_create_info_struct
+         13    C 00012280 png_create_read_struct
+         14    D 00012210 png_create_read_struct_2
+         15    E 000263F0 png_create_write_struct
+         16    F 00026330 png_create_write_struct_2
+         17   10 00002360 png_data_freer
+         18   11 00002980 png_destroy_info_struct
+         19   12 00013BD0 png_destroy_read_struct
+         20   13 00026D30 png_destroy_write_struct
+         21   14 000099E0 png_error
+         22   15 0000B4A0 png_free
+         23   16 000023B0 png_free_data
+         24   17 0000B480 png_free_default
+         25   18 0000AAA0 png_get_IHDR
+         26   19 0000AE90 png_get_PLTE
+         27   1A 0000A4B0 png_get_bKGD
+         28   1B 00009FB0 png_get_bit_depth
+         29   1C 0000A4E0 png_get_cHRM
+         30   1D 0000A610 png_get_cHRM_XYZ
+         31   1E 0000A750 png_get_cHRM_XYZ_fixed
+         32   1F 0000A830 png_get_cHRM_fixed = png_push_save_buffer
+         33   20 0000A470 png_get_channels
+         34   21 0000B110 png_get_chunk_cache_max
+         35   22 0000B130 png_get_chunk_malloc_max
+         36   23 00009FD0 png_get_color_type
+         37   24 0000B0A0 png_get_compression_buffer_size
+         38   25 0000A030 png_get_compression_type = png_get_unknown_chunks
+         39   26 00002C70 png_get_copyright
+         40   27 00024DC0 png_get_current_pass_number
+         41   28 00024DA0 png_get_current_row_number
+         42   29 00009D20 png_get_error_ptr
+         43   2A 00009FF0 png_get_filter_type
+         44   2B 0000A930 png_get_gAMA
+         45   2C 0000A900 png_get_gAMA_fixed
+         46   2D 0000AA60 png_get_hIST
+         47   2E 00002C80 png_get_header_ver
+         48   2F 00002CA0 png_get_header_version
+         49   30 0000A9A0 png_get_iCCP
+         50   31 00009F90 png_get_image_height
+         51   32 00009F70 png_get_image_width
+         52   33 0001CFB0 png_get_int_32
+         53   34 0000A010 png_get_interlace_type
+         54   35 0000B160 png_get_io_chunk_type
+         55   36 000029F0 png_get_io_ptr
+         56   37 0000B150 png_get_io_state
+         57   38 00002C90 png_get_libpng_ver
+         58   39 0000B550 png_get_mem_ptr
+         59   3A 0000ABA0 png_get_oFFs
+         60   3B 0000AC00 png_get_pCAL
+         61   3C 0000AE30 png_get_pHYs
+         62   3D 0000A3C0 png_get_pHYs_dpi
+         63   3E 0000B170 png_get_palette_max
+         64   3F 0000A0E0 png_get_pixel_aspect_ratio
+         65   40 0000A120 png_get_pixel_aspect_ratio_fixed
+         66   41 0000A240 png_get_pixels_per_inch = png_realloc_array
+         67   42 0000A0B0 png_get_pixels_per_meter
+         68   43 0000DA30 png_get_progressive_ptr
+         69   44 0000B060 png_get_rgb_to_gray_status
+         70   45 00009F30 png_get_rowbytes
+         71   46 00009F50 png_get_rows
+         72   47 0000AED0 png_get_sBIT
+         73   48 0000AD70 png_get_sCAL
+         74   49 0000ACD0 png_get_sCAL_fixed
+         75   4A 0000ADE0 png_get_sCAL_s
+         76   4B 0000AA30 png_get_sPLT
+         77   4C 0000A970 png_get_sRGB
+         78   4D 0000A490 png_get_signature
+         79   4E 0000AF60 png_get_tIME
+         80   4F 0000AFA0 png_get_tRNS
+         81   50 0000AF00 png_get_text
+         82   51 0001CFE0 png_get_uint_16
+         83   52 0001CF40 png_get_uint_31 = png_handle_iCCP
+         84   53 0001CF80 png_get_uint_32
+         85   54 0000B030 png_get_unknown_chunks
+         86   55 0000B080 png_get_user_chunk_ptr
+         87   56 0000B0F0 png_get_user_height_max
+         88   57 00024D80 png_get_user_transform_ptr
+         89   58 0000B0D0 png_get_user_width_max
+         90   59 00009F10 png_get_valid
+         91   5A 0000A360 png_get_x_offset_inches
+         92   5B 0000A300 png_get_x_offset_inches_fixed
+         93   5C 0000A180 png_get_x_offset_microns
+         94   5D 0000A1E0 png_get_x_offset_pixels
+         95   5E 0000A280 png_get_x_pixels_per_inch
+         96   5F 0000A050 png_get_x_pixels_per_meter
+         97   60 0000A390 png_get_y_offset_inches
+         98   61 0000A330 png_get_y_offset_inches_fixed
+         99   62 0000A1B0 png_get_y_offset_microns
+        100   63 0000A210 png_get_y_offset_pixels
+        101   64 0000A2C0 png_get_y_pixels_per_inch
+        102   65 0000A080 png_get_y_pixels_per_meter = png_get_user_chunk_ptr
+        103   66 00002CB0 png_handle_as_unknown
+        104   67 000141C0 png_image_begin_read_from_file
+        105   68 00014280 png_image_begin_read_from_memory
+        106   69 00014140 png_image_begin_read_from_stdio
+        107   6A 00014330 png_image_finish_read
+        108   6B 00008F50 png_image_free = png_get_rows
+        109   6C 00027EF0 png_image_write_to_file
+        110   6D 00027D70 png_image_write_to_stdio
+        111   6E 00002300 png_info_init_3
+        112   6F 00002A10 png_init_io
+        113   70 000099B0 png_longjmp
+        114   71 0000B350 png_malloc
+        115   72 0000B3E0 png_malloc_default
+        116   73 0000B420 png_malloc_warn
+        117   74 00023850 png_permit_mng_features
+        118   75 0000D320 png_process_data
+        119   76 0000BB20 png_process_data_pause
+        120   77 0000B620 png_process_data_skip
+        121   78 0000D9D0 png_progressive_combine_row
+        122   79 00013730 png_read_end
+        123   7A 00013680 png_read_image
+        124   7B 000122B0 png_read_info
+        125   7C 00013E30 png_read_png
+        126   7D 000131C0 png_read_row = png_image_begin_read_from_file
+        127   7E 000135A0 png_read_rows
+        128   7F 000127F0 png_read_update_info
+        129   80 00002D60 png_reset_zstream
+        130   81 00002A20 png_save_int_32
+        131   82 00029F30 png_save_uint_16
+        132   83 00029F10 png_save_uint_32
+        133   84 00022410 png_set_IHDR
+        134   85 00022B70 png_set_PLTE
+        135   86 00023DE0 png_set_add_alpha = png_default_write_data
+        136   87 00014A90 png_set_alpha_mode
+        137   88 00014890 png_set_alpha_mode_fixed
+        138   89 00021CA0 png_set_bKGD
+        139   8A 000147B0 png_set_background
+        140   8B 000146E0 png_set_background_fixed = png_set_tRNS_to_alpha
+        141   8C 00023C50 png_set_benign_errors
+        142   8D 00023C90 png_set_bgr
+        143   8E 00021E40 png_set_cHRM
+        144   8F 00021FF0 png_set_cHRM_XYZ
+        145   90 00021D90 png_set_cHRM_XYZ_fixed
+        146   91 00021CD0 png_set_cHRM_fixed
+        147   92 00023C80 png_set_check_for_invalid_index
+        148   93 00023C30 png_set_chunk_cache_max
+        149   94 00023C40 png_set_chunk_malloc_max
+        150   95 00023B50 png_set_compression_buffer_size
+        151   96 000275C0 png_set_compression_level
+        152   97 00027A60 png_set_compression_mem_level
+        153   98 00027AF0 png_set_compression_method
+        154   99 00027A70 png_set_compression_strategy
+        155   9A 00027A90 png_set_compression_window_bits
+        156   9B 000145E0 png_set_crc_action
+        157   9C 00009D00 png_set_error_fn
+        158   9D 00015650 png_set_expand
+        159   9E 00015710 png_set_expand_16
+        160   9F 000156B0 png_set_expand_gray_1_2_4_to_8
+        161   A0 00023D50 png_set_filler
+        162   A1 00026EA0 png_set_filter
+        163   A2 00027150 png_set_filter_heuristics
+        164   A3 000273B0 png_set_filter_heuristics_fixed
+        165   A4 00026CC0 png_set_flush
+        166   A5 00022220 png_set_gAMA
+        167   A6 000221E0 png_set_gAMA_fixed
+        168   A7 00015510 png_set_gamma
+        169   A8 00015410 png_set_gamma_fixed
+        170   A9 00015740 png_set_gray_to_rgb
+        171   AA 00022250 png_set_hIST
+        172   AB 00022D70 png_set_iCCP
+        173   AC 00023D20 png_set_interlace_handling
+        174   AD 00023BF0 png_set_invalid
+        175   AE 00023E30 png_set_invert_alpha = png_default_flush
+        176   AF 00023E50 png_set_invert_mono = png_write_data
+        177   B0 00023870 png_set_keep_unknown_chunks
+        178   B1 00009BE0 png_set_longjmp_fn
+        179   B2 0000B530 png_set_mem_fn
+        180   B3 00022540 png_set_oFFs
+        181   B4 00022570 png_set_pCAL
+        182   B5 00022B40 png_set_pHYs
+        183   B6 00023CC0 png_set_packing
+        184   B7 00023CE0 png_set_packswap
+        185   B8 00015680 png_set_palette_to_rgb
+        186   B9 0000D9F0 png_set_progressive_read_fn
+        187   BA 00014B30 png_set_quantize
+        188   BB 00014580 png_set_read_fn
+        189   BC 00013E20 png_set_read_status_fn
+        190   BD 00023AE0 png_set_read_user_chunk_fn
+        191   BE 00015980 png_set_read_user_transform_fn
+        192   BF 00015920 png_set_rgb_to_gray = png_read_transform_info
+        193   C0 00015790 png_set_rgb_to_gray_fixed
+        194   C1 00023B00 png_set_rows
+        195   C2 00022CB0 png_set_sBIT
+        196   C3 000229D0 png_set_sCAL
+        197   C4 00022AA0 png_set_sCAL_fixed
+        198   C5 00022830 png_set_sCAL_s
+        199   C6 00023460 png_set_sPLT
+        200   C7 00022CE0 png_set_sRGB = png_set_packswap
+        201   C8 00022D20 png_set_sRGB_gAMA_and_cHRM = png_set_interlace_handling
+        202   C9 00014800 png_set_scale_16
+        203   CA 00023D00 png_set_shift
+        204   CB 00001ED0 png_set_sig_bytes
+        205   CC 00014830 png_set_strip_16
+        206   CD 00014860 png_set_strip_alpha
+        207   CE 00023CA0 png_set_swap
+        208   CF 00023E10 png_set_swap_alpha
+        209   D0 000232B0 png_set_tIME
+        210   D1 00023320 png_set_tRNS
+        211   D2 000156E0 png_set_tRNS_to_alpha
+        212   D3 00023280 png_set_text
+        213   D4 00027B20 png_set_text_compression_level
+        214   D5 00027B30 png_set_text_compression_mem_level
+        215   D6 00027BB0 png_set_text_compression_method
+        216   D7 00027B40 png_set_text_compression_strategy
+        217   D8 00027B50 png_set_text_compression_window_bits
+        218   D9 000237B0 png_set_unknown_chunk_location
+        219   DA 000235F0 png_set_unknown_chunks
+        220   DB 00023C10 png_set_user_limits
+        221   DC 00024D40 png_set_user_transform_info
+        222   DD 00024EA0 png_set_write_fn
+        223   DE 00027BE0 png_set_write_status_fn
+        224   DF 00027BF0 png_set_write_user_transform_fn
+        225   E0 00001F00 png_sig_cmp
+        226   E1 00013190 png_start_read_image
+        227   E2 00009460 png_warning
+        228   E3 0002A0F0 png_write_chunk
+        229   E4 0002A050 png_write_chunk_data
+        230   E5 0002A0A0 png_write_chunk_end
+        231   E6 00029FB0 png_write_chunk_start
+        232   E7 00026080 png_write_end
+        233   E8 00026CE0 png_write_flush
+        234   E9 00026750 png_write_image
+        235   EA 00025C00 png_write_info
+        236   EB 000259A0 png_write_info_before_PLTE
+        237   EC 00027C10 png_write_png
+        238   ED 00026420 png_write_row
+        239   EE 00026710 png_write_rows
+        240   EF 00029F40 png_write_sig
+
+  Summary
+
+        1000 .CRT
+        2000 .bss
+        1000 .data
+        1000 .debug_abbrev
+        1000 .debug_aranges
+        1000 .debug_frame
+        1000 .debug_info
+        1000 .debug_line
+        2000 .edata
+        1000 .idata
+        2000 .pdata
+        6000 .rdata
+        1000 .reloc
+       36000 .text
+        1000 .tls
+        2000 .xdata

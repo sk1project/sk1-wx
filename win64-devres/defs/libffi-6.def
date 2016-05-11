@@ -1,0 +1,64 @@
+Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\libffi-6.dll
+
+File Type: DLL
+
+  Section contains the following exports for libffi-6.dll
+
+    00000000 characteristics
+    536A41AF time date stamp Wed May 07 17:22:39 2014
+        0.00 version
+           1 ordinal base
+          26 number of functions
+          26 number of names
+
+    ordinal hint RVA      name
+
+          1    0 00004630 ffi_call
+          2    1 000049B0 ffi_call_win64
+          3    2 000019A0 ffi_closure_alloc
+          4    3 00003400 ffi_closure_free
+          5    4 00004930 ffi_closure_win64
+          6    5 000046D0 ffi_closure_win64_inner
+          7    6 00004340 ffi_prep_args
+          8    7 00001690 ffi_prep_cif
+          9    8 00001520 ffi_prep_cif_core
+         10    9 00004530 ffi_prep_cif_machdep
+         11    A 00001800 ffi_prep_cif_var
+         12    B 00001980 ffi_prep_closure
+         13    C 00004830 ffi_prep_closure_loc
+         14    D 00008020 ffi_type_double
+         15    E 00008040 ffi_type_float
+         16    F 00008000 ffi_type_longdouble
+         17   10 00008060 ffi_type_pointer
+         18   11 00008100 ffi_type_sint16
+         19   12 000080C0 ffi_type_sint32
+         20   13 00008080 ffi_type_sint64
+         21   14 00008140 ffi_type_sint8
+         22   15 00008120 ffi_type_uint16
+         23   16 000080E0 ffi_type_uint32
+         24   17 000080A0 ffi_type_uint64
+         25   18 00008160 ffi_type_uint8
+         26   19 00008180 ffi_type_void
+
+  Summary
+
+        1000 .CRT
+        1000 .bss
+        1000 .data
+        1000 .debug_abbrev
+        1000 .debug_aranges
+        1000 .debug_frame
+        1000 .debug_info
+        1000 .debug_line
+        1000 .edata
+        1000 .idata
+        1000 .pdata
+        1000 .rdata
+        1000 .reloc
+        6000 .text
+        1000 .tls
+        1000 .xdata
