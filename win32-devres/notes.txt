@@ -20,7 +20,7 @@ sqlite3_bind_blob
 	lib /def:C:\path\to\lib_name.def /out:C:\path\to\lib_name.lib /machine:x86
 
 ----------------------------------------------------
-ImageMagick enviroment variables
+ImageMagick environment variables
 ----------------------------------------------------
 These variables should point to IM coders location
 
