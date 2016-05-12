@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from zipfile import ZIP_DEFLATED
 
 #   Setup script for sK1 2.x on MS Windows
 #
@@ -197,7 +198,7 @@ if PORTABLE_PACKAGE:
 
     if not os.path.isdir('dist'): os.mkdir('dist')
     portable = os.path.join('dist', portable_name + '.zip')
-    ziph = ZipFile(portable, 'w')
+    ziph = ZipFile(portable, 'w', ZIP_DEFLATED)
 
     for root, dirs, files in os.walk(portable_name):
         for item in files:
