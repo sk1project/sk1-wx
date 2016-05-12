@@ -22,7 +22,7 @@ INCLUDES = ['__future__', 'array', 'base64', 'binascii', 'cgi',
 'xml.dom', 'xml.sax', 'zipimport', 'zipfile', 'zlib', ]
 
 setup(
-	options={'py2exe': {'bundle_files': 2,
+	options={'py2exe': {'bundle_files': 3,
 						'compressed': True,
 						'includes':INCLUDES,
 						}},
