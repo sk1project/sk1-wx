@@ -253,6 +253,9 @@ def copy_modules(modules):
 	elif os.name=='nt' and platform.architecture()[0]=='32bit':
 		prefix='build/lib.win32-'+ version
 		ext='.pyd'
+	elif os.name=='nt' and platform.architecture()[0]=='64bit':
+		prefix='build/lib.win-amd64-'+ version
+		ext='.pyd'
 	
 	for item in modules:
 		path = os.path.join(*item.name.split('.')) + ext
