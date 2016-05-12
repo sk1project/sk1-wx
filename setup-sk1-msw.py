@@ -42,7 +42,7 @@ def get_res_path():
 def get_build_suffix():
     if platform.architecture()[0] == '32bit':
         return '.win32-2.7'
-    return '.win64-2.7'
+    return '.win-amd64-2.7'
 
 
 ############################################################
