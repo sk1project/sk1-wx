@@ -1,123 +1,85 @@
-Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-
-Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\libpangoft2-1.0-0.dll
-
-File Type: DLL
-
-  Section contains the following exports for libpangoft2-1.0-0.dll
-
-    00000000 characteristics
-    536D9F9C time date stamp Sat May 10 06:40:12 2014
-        0.00 version
-           1 ordinal base
-          84 number of functions
-          84 number of names
-
-    ordinal hint RVA      name
-
-          1    0 000070E0 pango_fc_decoder_get_charset
-          2    1 000071D0 pango_fc_decoder_get_glyph
-          3    2 00007050 pango_fc_decoder_get_type
-          4    3 000023A0 pango_fc_font_create_base_metrics_for_context = pango_fc_family_init
-          5    4 00006AD0 pango_fc_font_description_from_pattern
-          6    5 00002A10 pango_fc_font_get_glyph
-          7    6 00003030 pango_fc_font_get_raw_extents
-          8    7 00002310 pango_fc_font_get_type = pango_fc_face_get_face_name
-          9    8 00002A50 pango_fc_font_get_unknown_glyph
-         10    9 000028F0 pango_fc_font_has_char
-         11    A 00002B80 pango_fc_font_kern_glyphs
-         12    B 000060B0 pango_fc_font_key_get_context_key
-         13    C 000060A0 pango_fc_font_key_get_matrix
-         14    D 00006090 pango_fc_font_key_get_pattern
-         15    E 00002730 pango_fc_font_lock_face
-         16    F 00006150 pango_fc_font_map_add_decoder_find_func
-         17   10 00006440 pango_fc_font_map_cache_clear
-         18   11 00006860 pango_fc_font_map_create_context
-         19   12 00006270 pango_fc_font_map_find_decoder
-         20   13 000060C0 pango_fc_font_map_get_type
-         21   14 00006940 pango_fc_font_map_shutdown
-         22   15 00002810 pango_fc_font_unlock_face
-         23   16 00006060 pango_fc_fontset_key_get_absolute_size
-         24   17 00006080 pango_fc_fontset_key_get_context_key
-         25   18 00006040 pango_fc_fontset_key_get_description
-         26   19 00006030 pango_fc_fontset_key_get_language
-         27   1A 00006050 pango_fc_fontset_key_get_matrix = pango_fc_decoder_get_type
-         28   1B 00006070 pango_fc_fontset_key_get_resolution
-         29   1C 00008170 pango_ft2_font_get_coverage
-         30   1D 00007BD0 pango_ft2_font_get_face
-         31   1E 000080F0 pango_ft2_font_get_kerning
-         32   1F 00008060 pango_ft2_font_get_type
-         33   20 00008EB0 pango_ft2_font_map_create_context
-         34   21 000091C0 pango_ft2_font_map_for_display
-         35   22 00008B70 pango_ft2_font_map_get_type
-         36   23 00008C00 pango_ft2_font_map_new
-         37   24 00008CC0 pango_ft2_font_map_set_default_substitute
-         38   25 00008D40 pango_ft2_font_map_set_resolution
-         39   26 00008D20 pango_ft2_font_map_substitute_changed
-         40   27 00008F90 pango_ft2_get_context
-         41   28 00008180 pango_ft2_get_unknown_glyph
-         42   29 0000AE20 pango_ft2_render
-         43   2A 0000AB60 pango_ft2_render_layout
-         44   2B 0000ACA0 pango_ft2_render_layout_line
-         45   2C 0000AC10 pango_ft2_render_layout_line_subpixel
-         46   2D 0000AAB0 pango_ft2_render_layout_subpixel = pango_fc_hb_font_get_glyph_contour_point
-         47   2E 0000AD30 pango_ft2_render_transformed
-         48   2F 0000AA20 pango_ft2_renderer_get_type = pango_ot_tag_from_script
-         49   30 000092C0 pango_ft2_shutdown_display
-         50   31 0000AF90 pango_ot_buffer_add_glyph
-         51   32 0000AF80 pango_ot_buffer_clear
-         52   33 0000AF50 pango_ot_buffer_destroy
-         53   34 0000AFC0 pango_ot_buffer_get_glyphs
-         54   35 0000AF10 pango_ot_buffer_new
-         55   36 0000B000 pango_ot_buffer_output
-         56   37 0000AFA0 pango_ot_buffer_set_rtl
-         57   38 0000AFB0 pango_ot_buffer_set_zero_width_marks
-         58   39 0000B380 pango_ot_info_find_feature
-         59   3A 0000B300 pango_ot_info_find_language
-         60   3B 0000B2D0 pango_ot_info_find_script
-         61   3C 0000B240 pango_ot_info_get
-         62   3D 0000B1B0 pango_ot_info_get_type
-         63   3E 0000B4E0 pango_ot_info_list_features = pango_font_description_hash
-         64   3F 0000B440 pango_ot_info_list_languages = pango_map_get_engine
-         65   40 0000B3C0 pango_ot_info_list_scripts
-         66   41 0000B900 pango_ot_ruleset_add_feature = g_return_if_fail_warning
-         67   42 0000B980 pango_ot_ruleset_description_copy = g_array_free
-         68   43 0000B970 pango_ot_ruleset_description_equal = g_array_append_vals
-         69   44 0000BA10 pango_ot_ruleset_description_free = g_strfreev
-         70   45 0000B960 pango_ot_ruleset_description_hash = g_ptr_array_free
-         71   46 0000B930 pango_ot_ruleset_get_feature_count = g_once_init_leave
-         72   47 0000B680 pango_ot_ruleset_get_for_description = g_param_spec_pointer
-         73   48 0000B5F0 pango_ot_ruleset_get_type = pango_font_description_set_variant
-         74   49 0000B910 pango_ot_ruleset_maybe_add_feature = g_slist_foreach
-         75   4A 0000B920 pango_ot_ruleset_maybe_add_features = g_once_init_enter
-         76   4B 0000B750 pango_ot_ruleset_new = hb_buffer_destroy
-         77   4C 0000B7E0 pango_ot_ruleset_new_for = hb_glib_script_to_script
-         78   4D 0000B870 pango_ot_ruleset_new_from_description = hb_shape
-         79   4E 0000B950 pango_ot_ruleset_position = g_hash_table_lookup
-         80   4F 0000B940 pango_ot_ruleset_substitute = g_free
-         81   50 0000BA70 pango_ot_tag_from_language = g_malloc0_n
-         82   51 0000BA20 pango_ot_tag_from_script = g_queue_pop_tail
-         83   52 0000BA90 pango_ot_tag_to_language = FcFreeTypeCharIndex
-         84   53 0000BA50 pango_ot_tag_to_script = g_hash_table_foreach
-
-  Summary
-
-        1000 .CRT
-        1000 .bss
-        1000 .data
-        1000 .debug_abbrev
-        1000 .debug_aranges
-        1000 .debug_frame
-        1000 .debug_info
-        1000 .debug_line
-        1000 .edata
-        4000 .idata
-        1000 .pdata
-        3000 .rdata
-        1000 .reloc
-        1000 .rsrc
-        E000 .text
-        1000 .tls
-        1000 .xdata
+EXPORTS
+pango_fc_decoder_get_charset
+pango_fc_decoder_get_glyph
+pango_fc_decoder_get_type
+pango_fc_font_create_base_metrics_for_context = pango_fc_family_init
+pango_fc_font_description_from_pattern
+pango_fc_font_get_glyph
+pango_fc_font_get_raw_extents
+pango_fc_font_get_type = pango_fc_face_get_face_name
+pango_fc_font_get_unknown_glyph
+pango_fc_font_has_char
+pango_fc_font_kern_glyphs
+pango_fc_font_key_get_context_key
+pango_fc_font_key_get_matrix
+pango_fc_font_key_get_pattern
+pango_fc_font_lock_face
+pango_fc_font_map_add_decoder_find_func
+pango_fc_font_map_cache_clear
+pango_fc_font_map_create_context
+pango_fc_font_map_find_decoder
+pango_fc_font_map_get_type
+pango_fc_font_map_shutdown
+pango_fc_font_unlock_face
+pango_fc_fontset_key_get_absolute_size
+pango_fc_fontset_key_get_context_key
+pango_fc_fontset_key_get_description
+pango_fc_fontset_key_get_language
+pango_fc_fontset_key_get_matrix = pango_fc_decoder_get_type
+pango_fc_fontset_key_get_resolution
+pango_ft2_font_get_coverage
+pango_ft2_font_get_face
+pango_ft2_font_get_kerning
+pango_ft2_font_get_type
+pango_ft2_font_map_create_context
+pango_ft2_font_map_for_display
+pango_ft2_font_map_get_type
+pango_ft2_font_map_new
+pango_ft2_font_map_set_default_substitute
+pango_ft2_font_map_set_resolution
+pango_ft2_font_map_substitute_changed
+pango_ft2_get_context
+pango_ft2_get_unknown_glyph
+pango_ft2_render
+pango_ft2_render_layout
+pango_ft2_render_layout_line
+pango_ft2_render_layout_line_subpixel
+pango_ft2_render_layout_subpixel = pango_fc_hb_font_get_glyph_contour_point
+pango_ft2_render_transformed
+pango_ft2_renderer_get_type = pango_ot_tag_from_script
+pango_ft2_shutdown_display
+pango_ot_buffer_add_glyph
+pango_ot_buffer_clear
+pango_ot_buffer_destroy
+pango_ot_buffer_get_glyphs
+pango_ot_buffer_new
+pango_ot_buffer_output
+pango_ot_buffer_set_rtl
+pango_ot_buffer_set_zero_width_marks
+pango_ot_info_find_feature
+pango_ot_info_find_language
+pango_ot_info_find_script
+pango_ot_info_get
+pango_ot_info_get_type
+pango_ot_info_list_features = pango_font_description_hash
+pango_ot_info_list_languages = pango_map_get_engine
+pango_ot_info_list_scripts
+pango_ot_ruleset_add_feature = g_return_if_fail_warning
+pango_ot_ruleset_description_copy = g_array_free
+pango_ot_ruleset_description_equal = g_array_append_vals
+pango_ot_ruleset_description_free = g_strfreev
+pango_ot_ruleset_description_hash = g_ptr_array_free
+pango_ot_ruleset_get_feature_count = g_once_init_leave
+pango_ot_ruleset_get_for_description = g_param_spec_pointer
+pango_ot_ruleset_get_type = pango_font_description_set_variant
+pango_ot_ruleset_maybe_add_feature = g_slist_foreach
+pango_ot_ruleset_maybe_add_features = g_once_init_enter
+pango_ot_ruleset_new = hb_buffer_destroy
+pango_ot_ruleset_new_for = hb_glib_script_to_script
+pango_ot_ruleset_new_from_description = hb_shape
+pango_ot_ruleset_position = g_hash_table_lookup
+pango_ot_ruleset_substitute = g_free
+pango_ot_tag_from_language = g_malloc0_n
+pango_ot_tag_from_script = g_queue_pop_tail
+pango_ot_tag_to_language = FcFreeTypeCharIndex
+pango_ot_tag_to_script = g_hash_table_foreach

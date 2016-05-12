@@ -1,417 +1,380 @@
-Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-
-Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\libcairo-2.dll
-
-File Type: DLL
-
-  Section contains the following exports for libcairo-2.dll
-
-    00000000 characteristics
-    54BC26CD time date stamp Sun Jan 18 23:34:05 2015
-        0.00 version
-           1 ordinal base
-         379 number of functions
-         379 number of names
-
-    ordinal hint RVA      name
-
-          1    0 00015A80 cairo_append_path
-          2    1 00014180 cairo_arc
-          3    2 00014230 cairo_arc_negative
-          4    3 00014940 cairo_clip = cairo_get_fill_rule
-          5    4 00014A00 cairo_clip_extents = cairo_get_target
-          6    5 00014980 cairo_clip_preserve = cairo_get_line_cap
-          7    6 000143F0 cairo_close_path
-          8    7 00014AC0 cairo_copy_clip_rectangle_list
-          9    8 00014720 cairo_copy_page
-         10    9 00015A40 cairo_copy_path
-         11    A 00015A60 cairo_copy_path_flat
-         12    B 000136C0 cairo_create
-         13    C 00014120 cairo_curve_to
-         14    D 0001D190 cairo_debug_reset_static_data
-         15    E 00013810 cairo_destroy
-         16    F 0001F110 cairo_device_acquire
-         17   10 0001EFE0 cairo_device_destroy
-         18   11 0001EF70 cairo_device_finish
-         19   12 0001EF20 cairo_device_flush
-         20   13 0001F240 cairo_device_get_reference_count
-         21   14 0001F0F0 cairo_device_get_type
-         22   15 0001F260 cairo_device_get_user_data
-         23   16 00088960 cairo_device_observer_elapsed
-         24   17 00088A70 cairo_device_observer_fill_elapsed
-         25   18 00088B10 cairo_device_observer_glyphs_elapsed
-         26   19 00088A20 cairo_device_observer_mask_elapsed
-         27   1A 000889D0 cairo_device_observer_paint_elapsed
-         28   1B 00088900 cairo_device_observer_print
-         29   1C 00088AC0 cairo_device_observer_stroke_elapsed
-         30   1D 0001EEC0 cairo_device_reference
-         31   1E 0001F170 cairo_device_release
-         32   1F 0001F270 cairo_device_set_user_data
-         33   20 0001EF10 cairo_device_status
-         34   21 00013FE0 cairo_device_to_user
-         35   22 00014000 cairo_device_to_user_distance
-         36   23 000146A0 cairo_fill
-         37   24 000148C0 cairo_fill_extents = cairo_get_current_point
-         38   25 000146E0 cairo_fill_preserve
-         39   26 00014B50 cairo_font_extents = _cairo_cache_init
-         40   27 0001F630 cairo_font_face_destroy
-         41   28 0001F6E0 cairo_font_face_get_reference_count
-         42   29 0001F6C0 cairo_font_face_get_type
-         43   2A 0001F710 cairo_font_face_get_user_data
-         44   2B 0001F600 cairo_font_face_reference
-         45   2C 0001F720 cairo_font_face_set_user_data
-         46   2D 0001F700 cairo_font_face_status
-         47   2E 000222E0 cairo_font_options_copy
-         48   2F 00022280 cairo_font_options_create
-         49   30 00022350 cairo_font_options_destroy
-         50   31 00022410 cairo_font_options_equal
-         51   32 000224D0 cairo_font_options_get_antialias
-         52   33 00022610 cairo_font_options_get_hint_metrics
-         53   34 000225D0 cairo_font_options_get_hint_style
-         54   35 00022510 cairo_font_options_get_subpixel_order
-         55   36 00022480 cairo_font_options_hash
-         56   37 000223A0 cairo_font_options_merge
-         57   38 000224B0 cairo_font_options_set_antialias
-         58   39 000225F0 cairo_font_options_set_hint_metrics
-         59   3A 000225B0 cairo_font_options_set_hint_style
-         60   3B 000224F0 cairo_font_options_set_subpixel_order
-         61   3C 00022380 cairo_font_options_status
-         62   3D 00034E00 cairo_format_stride_for_width
-         63   3E 000CC550 cairo_ft_font_face_create_for_ft_face
-         64   3F 000CC390 cairo_ft_font_face_create_for_pattern
-         65   40 000CC7B0 cairo_ft_font_face_get_synthesize
-         66   41 000CC770 cairo_ft_font_face_set_synthesize
-         67   42 000CC790 cairo_ft_font_face_unset_synthesize
-         68   43 000CC150 cairo_ft_font_options_substitute
-         69   44 000CC7D0 cairo_ft_scaled_font_lock_face
-         70   45 000CC890 cairo_ft_scaled_font_unlock_face
-         71   46 00015880 cairo_get_antialias
-         72   47 000158C0 cairo_get_current_point
-         73   48 00013DC0 cairo_get_dash
-         74   49 00013D90 cairo_get_dash_count
-         75   4A 00015940 cairo_get_fill_rule
-         76   4B 00014BF0 cairo_get_font_face
-         77   4C 00014C90 cairo_get_font_matrix
-         78   4D 00014D00 cairo_get_font_options = _cairo_cache_insert
-         79   4E 00015A20 cairo_get_group_target
-         80   4F 00015980 cairo_get_line_cap
-         81   50 000159A0 cairo_get_line_join
-         82   51 00015960 cairo_get_line_width
-         83   52 000159E0 cairo_get_matrix
-         84   53 000159C0 cairo_get_miter_limit
-         85   54 00015840 cairo_get_operator
-         86   55 000138A0 cairo_get_reference_count
-         87   56 00014DF0 cairo_get_scaled_font
-         88   57 00013BD0 cairo_get_source
-         89   58 00015A00 cairo_get_target
-         90   59 00015860 cairo_get_tolerance
-         91   5A 00013870 cairo_get_user_data
-         92   5B 0003EDB0 cairo_glyph_allocate
-         93   5C 00014FA0 cairo_glyph_extents
-         94   5D 0003EDE0 cairo_glyph_free
-         95   5E 000157F0 cairo_glyph_path
-         96   5F 000158A0 cairo_has_current_point
-         97   60 00013F60 cairo_identity_matrix
-         98   61 00034C40 cairo_image_surface_create
-         99   62 00034EA0 cairo_image_surface_create_for_data
-        100   63 000BEF30 cairo_image_surface_create_from_png
-        101   64 000BEFD0 cairo_image_surface_create_from_png_stream
-        102   65 00034FE0 cairo_image_surface_get_data
-        103   66 00035010 cairo_image_surface_get_format
-        104   67 00035080 cairo_image_surface_get_height
-        105   68 000350B0 cairo_image_surface_get_stride
-        106   69 00035050 cairo_image_surface_get_width
-        107   6A 00014A70 cairo_in_clip
-        108   6B 000147F0 cairo_in_fill = cairo_glyph_path
-        109   6C 000147A0 cairo_in_stroke
-        110   6D 000140E0 cairo_line_to
-        111   6E 00014510 cairo_mask
-        112   6F 00014560 cairo_mask_surface
-        113   70 000367F0 cairo_matrix_init
-        114   71 000367C0 cairo_matrix_init_identity
-        115   72 00036960 cairo_matrix_init_rotate
-        116   73 000368F0 cairo_matrix_init_scale
-        117   74 00036880 cairo_matrix_init_translate
-        118   75 00037390 cairo_matrix_invert
-        119   76 00036AA0 cairo_matrix_multiply
-        120   77 000369D0 cairo_matrix_rotate
-        121   78 00036920 cairo_matrix_scale
-        122   79 00036C80 cairo_matrix_transform_distance
-        123   7A 00036CC0 cairo_matrix_transform_point
-        124   7B 000368B0 cairo_matrix_translate
-        125   7C 00059510 cairo_mesh_pattern_begin_patch
-        126   7D 00059C70 cairo_mesh_pattern_curve_to
-        127   7E 000595F0 cairo_mesh_pattern_end_patch
-        128   7F 0005F840 cairo_mesh_pattern_get_control_point
-        129   80 0005F720 cairo_mesh_pattern_get_corner_color_rgba
-        130   81 0005F450 cairo_mesh_pattern_get_patch_count
-        131   82 0005F4B0 cairo_mesh_pattern_get_path
-        132   83 00059EA0 cairo_mesh_pattern_line_to
-        133   84 0005A140 cairo_mesh_pattern_move_to
-        134   85 0005A1A0 cairo_mesh_pattern_set_control_point
-        135   86 0005A220 cairo_mesh_pattern_set_corner_color_rgb
-        136   87 0005A350 cairo_mesh_pattern_set_corner_color_rgba
-        137   88 000140A0 cairo_move_to
-        138   89 00014020 cairo_new_path = cairo_show_text
-        139   8A 00014060 cairo_new_sub_path
-        140   8B 00014490 cairo_paint
-        141   8C 000144D0 cairo_paint_with_alpha
-        142   8D 00042440 cairo_path_destroy
-        143   8E 00014430 cairo_path_extents
-        144   8F 0005A490 cairo_pattern_add_color_stop_rgb
-        145   90 0005A7D0 cairo_pattern_add_color_stop_rgba
-        146   91 00058B90 cairo_pattern_create_for_surface
-        147   92 00058E30 cairo_pattern_create_linear
-        148   93 00059210 cairo_pattern_create_mesh
-        149   94 00059000 cairo_pattern_create_radial
-        150   95 00069000 cairo_pattern_create_raster_source
-        151   96 000588A0 cairo_pattern_create_rgb
-        152   97 00058A10 cairo_pattern_create_rgba
-        153   98 000593A0 cairo_pattern_destroy
-        154   99 0005F300 cairo_pattern_get_color_stop_count
-        155   9A 0005F1F0 cairo_pattern_get_color_stop_rgba
-        156   9B 0005ACF0 cairo_pattern_get_extend
-        157   9C 0005AC90 cairo_pattern_get_filter
-        158   9D 0005F330 cairo_pattern_get_linear_points
-        159   9E 0005AC10 cairo_pattern_get_matrix
-        160   9F 0005F3A0 cairo_pattern_get_radial_circles
-        161   A0 000594C0 cairo_pattern_get_reference_count
-        162   A1 0005F100 cairo_pattern_get_rgba
-        163   A2 0005F1C0 cairo_pattern_get_surface
-        164   A3 00059380 cairo_pattern_get_type
-        165   A4 000594E0 cairo_pattern_get_user_data
-        166   A5 00059330 cairo_pattern_reference
-        167   A6 0005ACA0 cairo_pattern_set_extend
-        168   A7 0005AC40 cairo_pattern_set_filter
-        169   A8 0005AB20 cairo_pattern_set_matrix
-        170   A9 000594F0 cairo_pattern_set_user_data
-        171   AA 00059390 cairo_pattern_status
-        172   AB 000E2A90 cairo_pdf_get_versions
-        173   AC 000E2980 cairo_pdf_surface_create
-        174   AD 000E2910 cairo_pdf_surface_create_for_stream
-        175   AE 000E29E0 cairo_pdf_surface_restrict_to_version
-        176   AF 000E2AD0 cairo_pdf_surface_set_size
-        177   B0 000E2AB0 cairo_pdf_version_to_string = _cairo_svg_surface_copy_page
-        178   B1 000139A0 cairo_pop_group
-        179   B2 000139F0 cairo_pop_group_to_source
-        180   B3 000D3BC0 cairo_ps_get_levels
-        181   B4 000D3BE0 cairo_ps_level_to_string
-        182   B5 000D3A50 cairo_ps_surface_create
-        183   B6 000D3AB0 cairo_ps_surface_create_for_stream
-        184   B7 000D4020 cairo_ps_surface_dsc_begin_page_setup
-        185   B8 000D3F90 cairo_ps_surface_dsc_begin_setup
-        186   B9 000D3E40 cairo_ps_surface_dsc_comment
-        187   BA 000D3CA0 cairo_ps_surface_get_eps
-        188   BB 000D3B20 cairo_ps_surface_restrict_to_level
-        189   BC 000D3C00 cairo_ps_surface_set_eps
-        190   BD 000D3D00 cairo_ps_surface_set_size
-        191   BE 00013920 cairo_push_group
-        192   BF 00013960 cairo_push_group_with_content
-        193   C0 00069150 cairo_raster_source_pattern_get_acquire
-        194   C1 00069110 cairo_raster_source_pattern_get_callback_data
-        195   C2 000691E0 cairo_raster_source_pattern_get_copy
-        196   C3 00069220 cairo_raster_source_pattern_get_finish
-        197   C4 000691A0 cairo_raster_source_pattern_get_snapshot = bbtree_del
-        198   C5 00069130 cairo_raster_source_pattern_set_acquire
-        199   C6 000690F0 cairo_raster_source_pattern_set_callback_data
-        200   C7 000691C0 cairo_raster_source_pattern_set_copy
-        201   C8 00069200 cairo_raster_source_pattern_set_finish
-        202   C9 00069180 cairo_raster_source_pattern_set_snapshot
-        203   CA 0006CF10 cairo_recording_surface_create
-        204   CB 0006FDA0 cairo_recording_surface_get_extents
-        205   CC 0006EE30 cairo_recording_surface_ink_extents = _cairo_recording_surface_has_only_op_over
-        206   CD 000143B0 cairo_rectangle
-        207   CE 00018950 cairo_rectangle_list_destroy
-        208   CF 000137B0 cairo_reference
-        209   D0 00072A80 cairo_region_contains_point
-        210   D1 00072A10 cairo_region_contains_rectangle
-        211   D2 00072230 cairo_region_copy
-        212   D3 00071DB0 cairo_region_create
-        213   D4 000721D0 cairo_region_create_rectangle
-        214   D5 00071DF0 cairo_region_create_rectangles
-        215   D6 00072370 cairo_region_destroy
-        216   D7 00072AB0 cairo_region_equal
-        217   D8 00072480 cairo_region_get_extents
-        218   D9 00072410 cairo_region_get_rectangle
-        219   DA 000725F0 cairo_region_intersect
-        220   DB 00072680 cairo_region_intersect_rectangle
-        221   DC 000729C0 cairo_region_is_empty
-        222   DD 000723F0 cairo_region_num_rectangles
-        223   DE 00072320 cairo_region_reference
-        224   DF 000724D0 cairo_region_status
-        225   E0 000724E0 cairo_region_subtract
-        226   E1 00072570 cairo_region_subtract_rectangle
-        227   E2 000729F0 cairo_region_translate
-        228   E3 00072700 cairo_region_union
-        229   E4 00072790 cairo_region_union_rectangle
-        230   E5 00072810 cairo_region_xor
-        231   E6 00072900 cairo_region_xor_rectangle
-        232   E7 00014350 cairo_rel_curve_to
-        233   E8 00014310 cairo_rel_line_to
-        234   E9 000142D0 cairo_rel_move_to
-        235   EA 000149C0 cairo_reset_clip = cairo_get_miter_limit
-        236   EB 000138F0 cairo_restore
-        237   EC 00013EA0 cairo_rotate
-        238   ED 000138C0 cairo_save = cairo_fill_extents
-        239   EE 00013E60 cairo_scale
-        240   EF 00075620 cairo_scaled_font_create
-        241   F0 000751C0 cairo_scaled_font_destroy
-        242   F1 00075D70 cairo_scaled_font_extents
-        243   F2 00078C90 cairo_scaled_font_get_ctm
-        244   F3 00078C10 cairo_scaled_font_get_font_face
-        245   F4 00078C40 cairo_scaled_font_get_font_matrix
-        246   F5 00078D40 cairo_scaled_font_get_font_options
-        247   F6 00075D20 cairo_scaled_font_get_reference_count
-        248   F7 00078CE0 cairo_scaled_font_get_scale_matrix
-        249   F8 00074530 cairo_scaled_font_get_type
-        250   F9 00075D40 cairo_scaled_font_get_user_data
-        251   FA 00075DE0 cairo_scaled_font_glyph_extents
-        252   FB 00075170 cairo_scaled_font_reference
-        253   FC 00075D50 cairo_scaled_font_set_user_data
-        254   FD 00074550 cairo_scaled_font_status = _cairo_scaled_font_unregister_placeholder_and_lock_font_map
-        255   FE 00078750 cairo_scaled_font_text_extents
-        256   FF 00077060 cairo_scaled_font_text_to_glyphs
-        257  100 000C6050 cairo_script_create
-        258  101 000C6170 cairo_script_create_for_stream
-        259  102 000C6430 cairo_script_from_recording_surface
-        260  103 000C6310 cairo_script_get_mode
-        261  104 000C6300 cairo_script_set_mode
-        262  105 000C6320 cairo_script_surface_create
-        263  106 000C6390 cairo_script_surface_create_for_target
-        264  107 000C6290 cairo_script_write_comment = _cairo_ft_font_face_create
-        265  108 00014AE0 cairo_select_font_face
-        266  109 00013C30 cairo_set_antialias
-        267  10A 00013D50 cairo_set_dash
-        268  10B 00013C60 cairo_set_fill_rule
-        269  10C 00014BB0 cairo_set_font_face
-        270  10D 00014C50 cairo_set_font_matrix
-        271  10E 00014CB0 cairo_set_font_options
-        272  10F 00014C10 cairo_set_font_size = _cairo_cache_freeze
-        273  110 00013CD0 cairo_set_line_cap
-        274  111 00013D10 cairo_set_line_join
-        275  112 00013C90 cairo_set_line_width = cairo_get_font_matrix
-        276  113 00013F20 cairo_set_matrix
-        277  114 00013DE0 cairo_set_miter_limit
-        278  115 00013A90 cairo_set_operator
-        279  116 00014D60 cairo_set_scaled_font
-        280  117 00013B90 cairo_set_source
-        281  118 00013AD0 cairo_set_source_rgb
-        282  119 00013B10 cairo_set_source_rgba
-        283  11A 00013B50 cairo_set_source_surface = cairo_font_extents
-        284  11B 00013BF0 cairo_set_tolerance = cairo_get_font_face
-        285  11C 00013880 cairo_set_user_data
-        286  11D 000152F0 cairo_show_glyphs
-        287  11E 00014760 cairo_show_page
-        288  11F 00015020 cairo_show_text = _cairo_clip_create
-        289  120 000153D0 cairo_show_text_glyphs
-        290  121 00015AF0 cairo_status
-        291  122 0003EB10 cairo_status_to_string
-        292  123 00014620 cairo_stroke
-        293  124 00014840 cairo_stroke_extents = cairo_get_operator
-        294  125 00014660 cairo_stroke_preserve
-        295  126 00081530 cairo_surface_copy_page
-        296  127 0008A2B0 cairo_surface_create_for_rectangle
-        297  128 000882A0 cairo_surface_create_observer
-        298  129 00081CD0 cairo_surface_create_similar = _cairo_surface_observer_copy_page
-        299  12A 00081BF0 cairo_surface_create_similar_image = _cairo_surface_fallback_fill
-        300  12B 0007ED70 cairo_surface_destroy
-        301  12C 0007F0A0 cairo_surface_finish
-        302  12D 0007F3C0 cairo_surface_flush
-        303  12E 0007E2B0 cairo_surface_get_content
-        304  12F 0007E2D0 cairo_surface_get_device
-        305  130 0007FA80 cairo_surface_get_device_offset
-        306  131 0007F8B0 cairo_surface_get_device_scale
-        307  132 0007FBE0 cairo_surface_get_fallback_resolution
-        308  133 0007E950 cairo_surface_get_font_options
-        309  134 0007E5D0 cairo_surface_get_mime_data
-        310  135 0007E520 cairo_surface_get_reference_count
-        311  136 0007E2A0 cairo_surface_get_type
-        312  137 0007E580 cairo_surface_get_user_data
-        313  138 000816A0 cairo_surface_has_show_text_glyphs = _cairo_surface_clipper_intersect_clip_path_recursive
-        314  139 00081FC0 cairo_surface_map_to_image
-        315  13A 0007F400 cairo_surface_mark_dirty
-        316  13B 0007F5B0 cairo_surface_mark_dirty_rectangle
-        317  13C 00088560 cairo_surface_observer_add_fill_callback
-        318  13D 000887A0 cairo_surface_observer_add_finish_callback
-        319  13E 00088710 cairo_surface_observer_add_flush_callback
-        320  13F 00088680 cairo_surface_observer_add_glyphs_callback
-        321  140 000884D0 cairo_surface_observer_add_mask_callback
-        322  141 00088440 cairo_surface_observer_add_paint_callback
-        323  142 000885F0 cairo_surface_observer_add_stroke_callback
-        324  143 00088890 cairo_surface_observer_elapsed
-        325  144 00088830 cairo_surface_observer_print
-        326  145 0007E4D0 cairo_surface_reference
-        327  146 0007F8E0 cairo_surface_set_device_offset
-        328  147 0007F710 cairo_surface_set_device_scale
-        329  148 0007FAB0 cairo_surface_set_fallback_resolution
-        330  149 0007E660 cairo_surface_set_mime_data
-        331  14A 0007E5A0 cairo_surface_set_user_data
-        332  14B 000815B0 cairo_surface_show_page
-        333  14C 0007E2C0 cairo_surface_status
-        334  14D 0007E790 cairo_surface_supports_mime_type
-        335  14E 00080820 cairo_surface_unmap_image
-        336  14F 000BEE60 cairo_surface_write_to_png
-        337  150 000BEEF0 cairo_surface_write_to_png_stream
-        338  151 000E8580 cairo_svg_get_versions
-        339  152 000E8470 cairo_svg_surface_create
-        340  153 000E8400 cairo_svg_surface_create_for_stream
-        341  154 000E84D0 cairo_svg_surface_restrict_to_version
-        342  155 000E85A0 cairo_svg_version_to_string
-        343  156 0003EDF0 cairo_text_cluster_allocate
-        344  157 0003EE10 cairo_text_cluster_free
-        345  158 00014E10 cairo_text_extents
-        346  159 00015630 cairo_text_path
-        347  15A 00093370 cairo_toy_font_face_create
-        348  15B 00093660 cairo_toy_font_face_get_family
-        349  15C 000936D0 cairo_toy_font_face_get_slant
-        350  15D 00093710 cairo_toy_font_face_get_weight
-        351  15E 00013EE0 cairo_transform
-        352  15F 00013E20 cairo_translate
-        353  160 0009E080 cairo_user_font_face_create
-        354  161 0009E280 cairo_user_font_face_get_init_func
-        355  162 0009E2C0 cairo_user_font_face_get_render_glyph_func
-        356  163 0009E300 cairo_user_font_face_get_text_to_glyphs_func
-        357  164 0009E340 cairo_user_font_face_get_unicode_to_glyph_func
-        358  165 0009E100 cairo_user_font_face_set_init_func
-        359  166 0009E160 cairo_user_font_face_set_render_glyph_func
-        360  167 0009E1C0 cairo_user_font_face_set_text_to_glyphs_func
-        361  168 0009E220 cairo_user_font_face_set_unicode_to_glyph_func
-        362  169 00013FA0 cairo_user_to_device = cairo_glyph_extents
-        363  16A 00013FC0 cairo_user_to_device_distance
-        364  16B 0009E380 cairo_version
-        365  16C 0009E390 cairo_version_string
-        366  16D 000BBA90 cairo_win32_font_face_create_for_hfont
-        367  16E 000BBA80 cairo_win32_font_face_create_for_logfontw
-        368  16F 000BB6A0 cairo_win32_font_face_create_for_logfontw_hfont
-        369  170 000B9DF0 cairo_win32_printing_surface_create
-        370  171 000BDD90 cairo_win32_scaled_font_done_font
-        371  172 000BDE90 cairo_win32_scaled_font_get_device_to_logical
-        372  173 000BDE10 cairo_win32_scaled_font_get_logical_to_device
-        373  174 000BDDC0 cairo_win32_scaled_font_get_metrics_factor
-        374  175 000BBB00 cairo_win32_scaled_font_select_font
-        375  176 000B5F60 cairo_win32_surface_create
-        376  177 000B6340 cairo_win32_surface_create_with_ddb
-        377  178 000B6300 cairo_win32_surface_create_with_dib
-        378  179 000B47F0 cairo_win32_surface_get_dc
-        379  17A 000B4850 cairo_win32_surface_get_image
-
-  Summary
-
-        1000 .CRT
-        2000 .bss
-        1000 .data
-        1000 .debug_abbrev
-        1000 .debug_aranges
-        1000 .debug_frame
-        1000 .debug_info
-        1000 .debug_line
-        4000 .edata
-        3000 .idata
-        7000 .pdata
-       16000 .rdata
-        1000 .reloc
-       EB000 .text
-        1000 .tls
-        8000 .xdata
+EXPORTS
+cairo_append_path
+cairo_arc
+cairo_arc_negative
+cairo_clip = cairo_get_fill_rule
+cairo_clip_extents = cairo_get_target
+cairo_clip_preserve = cairo_get_line_cap
+cairo_close_path
+cairo_copy_clip_rectangle_list
+cairo_copy_page
+cairo_copy_path
+cairo_copy_path_flat
+cairo_create
+cairo_curve_to
+cairo_debug_reset_static_data
+cairo_destroy
+cairo_device_acquire
+cairo_device_destroy
+cairo_device_finish
+cairo_device_flush
+cairo_device_get_reference_count
+cairo_device_get_type
+cairo_device_get_user_data
+cairo_device_observer_elapsed
+cairo_device_observer_fill_elapsed
+cairo_device_observer_glyphs_elapsed
+cairo_device_observer_mask_elapsed
+cairo_device_observer_paint_elapsed
+cairo_device_observer_print
+cairo_device_observer_stroke_elapsed
+cairo_device_reference
+cairo_device_release
+cairo_device_set_user_data
+cairo_device_status
+cairo_device_to_user
+cairo_device_to_user_distance
+cairo_fill
+cairo_fill_extents = cairo_get_current_point
+cairo_fill_preserve
+cairo_font_extents = _cairo_cache_init
+cairo_font_face_destroy
+cairo_font_face_get_reference_count
+cairo_font_face_get_type
+cairo_font_face_get_user_data
+cairo_font_face_reference
+cairo_font_face_set_user_data
+cairo_font_face_status
+cairo_font_options_copy
+cairo_font_options_create
+cairo_font_options_destroy
+cairo_font_options_equal
+cairo_font_options_get_antialias
+cairo_font_options_get_hint_metrics
+cairo_font_options_get_hint_style
+cairo_font_options_get_subpixel_order
+cairo_font_options_hash
+cairo_font_options_merge
+cairo_font_options_set_antialias
+cairo_font_options_set_hint_metrics
+cairo_font_options_set_hint_style
+cairo_font_options_set_subpixel_order
+cairo_font_options_status
+cairo_format_stride_for_width
+cairo_ft_font_face_create_for_ft_face
+cairo_ft_font_face_create_for_pattern
+cairo_ft_font_face_get_synthesize
+cairo_ft_font_face_set_synthesize
+cairo_ft_font_face_unset_synthesize
+cairo_ft_font_options_substitute
+cairo_ft_scaled_font_lock_face
+cairo_ft_scaled_font_unlock_face
+cairo_get_antialias
+cairo_get_current_point
+cairo_get_dash
+cairo_get_dash_count
+cairo_get_fill_rule
+cairo_get_font_face
+cairo_get_font_matrix
+cairo_get_font_options = _cairo_cache_insert
+cairo_get_group_target
+cairo_get_line_cap
+cairo_get_line_join
+cairo_get_line_width
+cairo_get_matrix
+cairo_get_miter_limit
+cairo_get_operator
+cairo_get_reference_count
+cairo_get_scaled_font
+cairo_get_source
+cairo_get_target
+cairo_get_tolerance
+cairo_get_user_data
+cairo_glyph_allocate
+cairo_glyph_extents
+cairo_glyph_free
+cairo_glyph_path
+cairo_has_current_point
+cairo_identity_matrix
+cairo_image_surface_create
+cairo_image_surface_create_for_data
+cairo_image_surface_create_from_png
+cairo_image_surface_create_from_png_stream
+cairo_image_surface_get_data
+cairo_image_surface_get_format
+cairo_image_surface_get_height
+cairo_image_surface_get_stride
+cairo_image_surface_get_width
+cairo_in_clip
+cairo_in_fill = cairo_glyph_path
+cairo_in_stroke
+cairo_line_to
+cairo_mask
+cairo_mask_surface
+cairo_matrix_init
+cairo_matrix_init_identity
+cairo_matrix_init_rotate
+cairo_matrix_init_scale
+cairo_matrix_init_translate
+cairo_matrix_invert
+cairo_matrix_multiply
+cairo_matrix_rotate
+cairo_matrix_scale
+cairo_matrix_transform_distance
+cairo_matrix_transform_point
+cairo_matrix_translate
+cairo_mesh_pattern_begin_patch
+cairo_mesh_pattern_curve_to
+cairo_mesh_pattern_end_patch
+cairo_mesh_pattern_get_control_point
+cairo_mesh_pattern_get_corner_color_rgba
+cairo_mesh_pattern_get_patch_count
+cairo_mesh_pattern_get_path
+cairo_mesh_pattern_line_to
+cairo_mesh_pattern_move_to
+cairo_mesh_pattern_set_control_point
+cairo_mesh_pattern_set_corner_color_rgb
+cairo_mesh_pattern_set_corner_color_rgba
+cairo_move_to
+cairo_new_path = cairo_show_text
+cairo_new_sub_path
+cairo_paint
+cairo_paint_with_alpha
+cairo_path_destroy
+cairo_path_extents
+cairo_pattern_add_color_stop_rgb
+cairo_pattern_add_color_stop_rgba
+cairo_pattern_create_for_surface
+cairo_pattern_create_linear
+cairo_pattern_create_mesh
+cairo_pattern_create_radial
+cairo_pattern_create_raster_source
+cairo_pattern_create_rgb
+cairo_pattern_create_rgba
+cairo_pattern_destroy
+cairo_pattern_get_color_stop_count
+cairo_pattern_get_color_stop_rgba
+cairo_pattern_get_extend
+cairo_pattern_get_filter
+cairo_pattern_get_linear_points
+cairo_pattern_get_matrix
+cairo_pattern_get_radial_circles
+cairo_pattern_get_reference_count
+cairo_pattern_get_rgba
+cairo_pattern_get_surface
+cairo_pattern_get_type
+cairo_pattern_get_user_data
+cairo_pattern_reference
+cairo_pattern_set_extend
+cairo_pattern_set_filter
+cairo_pattern_set_matrix
+cairo_pattern_set_user_data
+cairo_pattern_status
+cairo_pdf_get_versions
+cairo_pdf_surface_create
+cairo_pdf_surface_create_for_stream
+cairo_pdf_surface_restrict_to_version
+cairo_pdf_surface_set_size
+cairo_pdf_version_to_string = _cairo_svg_surface_copy_page
+cairo_pop_group
+cairo_pop_group_to_source
+cairo_ps_get_levels
+cairo_ps_level_to_string
+cairo_ps_surface_create
+cairo_ps_surface_create_for_stream
+cairo_ps_surface_dsc_begin_page_setup
+cairo_ps_surface_dsc_begin_setup
+cairo_ps_surface_dsc_comment
+cairo_ps_surface_get_eps
+cairo_ps_surface_restrict_to_level
+cairo_ps_surface_set_eps
+cairo_ps_surface_set_size
+cairo_push_group
+cairo_push_group_with_content
+cairo_raster_source_pattern_get_acquire
+cairo_raster_source_pattern_get_callback_data
+cairo_raster_source_pattern_get_copy
+cairo_raster_source_pattern_get_finish
+cairo_raster_source_pattern_get_snapshot = bbtree_del
+cairo_raster_source_pattern_set_acquire
+cairo_raster_source_pattern_set_callback_data
+cairo_raster_source_pattern_set_copy
+cairo_raster_source_pattern_set_finish
+cairo_raster_source_pattern_set_snapshot
+cairo_recording_surface_create
+cairo_recording_surface_get_extents
+cairo_recording_surface_ink_extents = _cairo_recording_surface_has_only_op_over
+cairo_rectangle
+cairo_rectangle_list_destroy
+cairo_reference
+cairo_region_contains_point
+cairo_region_contains_rectangle
+cairo_region_copy
+cairo_region_create
+cairo_region_create_rectangle
+cairo_region_create_rectangles
+cairo_region_destroy
+cairo_region_equal
+cairo_region_get_extents
+cairo_region_get_rectangle
+cairo_region_intersect
+cairo_region_intersect_rectangle
+cairo_region_is_empty
+cairo_region_num_rectangles
+cairo_region_reference
+cairo_region_status
+cairo_region_subtract
+cairo_region_subtract_rectangle
+cairo_region_translate
+cairo_region_union
+cairo_region_union_rectangle
+cairo_region_xor
+cairo_region_xor_rectangle
+cairo_rel_curve_to
+cairo_rel_line_to
+cairo_rel_move_to
+cairo_reset_clip = cairo_get_miter_limit
+cairo_restore
+cairo_rotate
+cairo_save = cairo_fill_extents
+cairo_scale
+cairo_scaled_font_create
+cairo_scaled_font_destroy
+cairo_scaled_font_extents
+cairo_scaled_font_get_ctm
+cairo_scaled_font_get_font_face
+cairo_scaled_font_get_font_matrix
+cairo_scaled_font_get_font_options
+cairo_scaled_font_get_reference_count
+cairo_scaled_font_get_scale_matrix
+cairo_scaled_font_get_type
+cairo_scaled_font_get_user_data
+cairo_scaled_font_glyph_extents
+cairo_scaled_font_reference
+cairo_scaled_font_set_user_data
+cairo_scaled_font_status = _cairo_scaled_font_unregister_placeholder_and_lock_font_map
+cairo_scaled_font_text_extents
+cairo_scaled_font_text_to_glyphs
+cairo_script_create
+cairo_script_create_for_stream
+cairo_script_from_recording_surface
+cairo_script_get_mode
+cairo_script_set_mode
+cairo_script_surface_create
+cairo_script_surface_create_for_target
+cairo_script_write_comment = _cairo_ft_font_face_create
+cairo_select_font_face
+cairo_set_antialias
+cairo_set_dash
+cairo_set_fill_rule
+cairo_set_font_face
+cairo_set_font_matrix
+cairo_set_font_options
+cairo_set_font_size = _cairo_cache_freeze
+cairo_set_line_cap
+cairo_set_line_join
+cairo_set_line_width = cairo_get_font_matrix
+cairo_set_matrix
+cairo_set_miter_limit
+cairo_set_operator
+cairo_set_scaled_font
+cairo_set_source
+cairo_set_source_rgb
+cairo_set_source_rgba
+cairo_set_source_surface = cairo_font_extents
+cairo_set_tolerance = cairo_get_font_face
+cairo_set_user_data
+cairo_show_glyphs
+cairo_show_page
+cairo_show_text = _cairo_clip_create
+cairo_show_text_glyphs
+cairo_status
+cairo_status_to_string
+cairo_stroke
+cairo_stroke_extents = cairo_get_operator
+cairo_stroke_preserve
+cairo_surface_copy_page
+cairo_surface_create_for_rectangle
+cairo_surface_create_observer
+cairo_surface_create_similar = _cairo_surface_observer_copy_page
+cairo_surface_create_similar_image = _cairo_surface_fallback_fill
+cairo_surface_destroy
+cairo_surface_finish
+cairo_surface_flush
+cairo_surface_get_content
+cairo_surface_get_device
+cairo_surface_get_device_offset
+cairo_surface_get_device_scale
+cairo_surface_get_fallback_resolution
+cairo_surface_get_font_options
+cairo_surface_get_mime_data
+cairo_surface_get_reference_count
+cairo_surface_get_type
+cairo_surface_get_user_data
+cairo_surface_has_show_text_glyphs = _cairo_surface_clipper_intersect_clip_path_recursive
+cairo_surface_map_to_image
+cairo_surface_mark_dirty
+cairo_surface_mark_dirty_rectangle
+cairo_surface_observer_add_fill_callback
+cairo_surface_observer_add_finish_callback
+cairo_surface_observer_add_flush_callback
+cairo_surface_observer_add_glyphs_callback
+cairo_surface_observer_add_mask_callback
+cairo_surface_observer_add_paint_callback
+cairo_surface_observer_add_stroke_callback
+cairo_surface_observer_elapsed
+cairo_surface_observer_print
+cairo_surface_reference
+cairo_surface_set_device_offset
+cairo_surface_set_device_scale
+cairo_surface_set_fallback_resolution
+cairo_surface_set_mime_data
+cairo_surface_set_user_data
+cairo_surface_show_page
+cairo_surface_status
+cairo_surface_supports_mime_type
+cairo_surface_unmap_image
+cairo_surface_write_to_png
+cairo_surface_write_to_png_stream
+cairo_svg_get_versions
+cairo_svg_surface_create
+cairo_svg_surface_create_for_stream
+cairo_svg_surface_restrict_to_version
+cairo_svg_version_to_string
+cairo_text_cluster_allocate
+cairo_text_cluster_free
+cairo_text_extents
+cairo_text_path
+cairo_toy_font_face_create
+cairo_toy_font_face_get_family
+cairo_toy_font_face_get_slant
+cairo_toy_font_face_get_weight
+cairo_transform
+cairo_translate
+cairo_user_font_face_create
+cairo_user_font_face_get_init_func
+cairo_user_font_face_get_render_glyph_func
+cairo_user_font_face_get_text_to_glyphs_func
+cairo_user_font_face_get_unicode_to_glyph_func
+cairo_user_font_face_set_init_func
+cairo_user_font_face_set_render_glyph_func
+cairo_user_font_face_set_text_to_glyphs_func
+cairo_user_font_face_set_unicode_to_glyph_func
+cairo_user_to_device = cairo_glyph_extents
+cairo_user_to_device_distance
+cairo_version
+cairo_version_string
+cairo_win32_font_face_create_for_hfont
+cairo_win32_font_face_create_for_logfontw
+cairo_win32_font_face_create_for_logfontw_hfont
+cairo_win32_printing_surface_create
+cairo_win32_scaled_font_done_font
+cairo_win32_scaled_font_get_device_to_logical
+cairo_win32_scaled_font_get_logical_to_device
+cairo_win32_scaled_font_get_metrics_factor
+cairo_win32_scaled_font_select_font
+cairo_win32_surface_create
+cairo_win32_surface_create_with_ddb
+cairo_win32_surface_create_with_dib
+cairo_win32_surface_get_dc
+cairo_win32_surface_get_image

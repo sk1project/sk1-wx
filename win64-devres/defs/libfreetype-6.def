@@ -1,468 +1,431 @@
-Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-
-Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\libfreetype-6.dll
-
-File Type: DLL
-
-  Section contains the following exports for libfreetype-6.dll
-
-    00000000 characteristics
-    536CFA7C time date stamp Fri May 09 18:55:40 2014
-        0.00 version
-           1 ordinal base
-         430 number of functions
-         430 number of names
-
-    ordinal hint RVA      name
-
-          1    0 00069320 FTC_CMapCache_Lookup
-          2    1 000691D0 FTC_CMapCache_New
-          3    2 00069730 FTC_ImageCache_Lookup
-          4    3 00069A60 FTC_ImageCache_LookupScaler
-          5    4 000695E0 FTC_ImageCache_New
-          6    5 00068C30 FTC_Manager_Done
-          7    6 00068A00 FTC_Manager_LookupFace
-          8    7 000688F0 FTC_Manager_LookupSize
-          9    8 00068AA0 FTC_Manager_New
-         10    9 00068F00 FTC_Manager_RemoveFaceID
-         11    A 00068DB0 FTC_Manager_Reset
-         12    B 000691B0 FTC_Node_Unref
-         13    C 00069F80 FTC_SBitCache_Lookup
-         14    D 0006A370 FTC_SBitCache_LookupScaler
-         15    E 00069E30 FTC_SBitCache_New
-         16    F 00006770 FT_Activate_Size
-         17   10 00001640 FT_Add_Default_Modules
-         18   11 0000C430 FT_Add_Module
-         19   12 0000C360 FT_Angle_Diff
-         20   13 0000B140 FT_Atan2
-         21   14 000045C0 FT_Attach_File
-         22   15 000046C0 FT_Attach_Stream
-         23   16 00010500 FT_Bitmap_Convert
-         24   17 000103C0 FT_Bitmap_Copy
-         25   18 00011F60 FT_Bitmap_Done
-         26   19 00011320 FT_Bitmap_Embolden = ft_outline_glyph_transform
-         27   1A 00010390 FT_Bitmap_New
-         28   1B 0000CAD0 FT_CMap_Done
-         29   1C 0000CC00 FT_CMap_New
-         30   1D 00002370 FT_CeilFix
-         31   1E 00012BC0 FT_ClassicKern_Free
-         32   1F 00012B40 FT_ClassicKern_Validate
-         33   20 0000AE20 FT_Cos
-         34   21 00002810 FT_DivFix
-         35   22 00004890 FT_Done_Face
-         36   23 00001700 FT_Done_FreeType
-         37   24 000127A0 FT_Done_Glyph
-         38   25 000044A0 FT_Done_GlyphSlot
-         39   26 00006E60 FT_Done_Library
-         40   27 00001600 FT_Done_Memory
-         41   28 00004AC0 FT_Done_Size
-         42   29 00013340 FT_Face_CheckTrueTypePatents
-         43   2A 00005F30 FT_Face_GetCharVariantIndex
-         44   2B 00006010 FT_Face_GetCharVariantIsDefault
-         45   2C 00006280 FT_Face_GetCharsOfVariant
-         46   2D 000060F0 FT_Face_GetVariantSelectors
-         47   2E 000061B0 FT_Face_GetVariantsOfChar
-         48   2F 00013550 FT_Face_SetUnpatentedHinting
-         49   30 00002390 FT_FloorFix
-         50   31 00008AF0 FT_Get_Advance = FT_Raccess_Get_HeaderInfo
-         51   32 000088B0 FT_Get_Advances = FT_Stream_GetChar
-         52   33 00010290 FT_Get_BDF_Charset_ID
-         53   34 00010320 FT_Get_BDF_Property = FT_Bitmap_Embolden
-         54   35 000120E0 FT_Get_CID_From_Glyph_Index
-         55   36 00012070 FT_Get_CID_Is_Internally_CID_Keyed
-         56   37 00011FC0 FT_Get_CID_Registry_Ordering_Supplement = FT_Set_Var_Blend_Coordinates
-         57   38 00006710 FT_Get_CMap_Format
-         58   39 000066B0 FT_Get_CMap_Language_ID
-         59   3A 00005DE0 FT_Get_Char_Index
-         60   3B 00005D80 FT_Get_Charmap_Index
-         61   3C 00012150 FT_Get_FSType_Flags
-         62   3D 00005E10 FT_Get_First_Char
-         63   3E 000121E0 FT_Get_Gasp
-         64   3F 000125A0 FT_Get_Glyph
-         65   40 000063E0 FT_Get_Glyph_Name
-         66   41 00005A40 FT_Get_Kerning
-         67   42 00012CC0 FT_Get_MM_Var
-         68   43 00006B30 FT_Get_Module
-         69   44 00006BA0 FT_Get_Module_Interface
-         70   45 00012C00 FT_Get_Multi_Master
-         71   46 00006350 FT_Get_Name_Index
-         72   47 00005EC0 FT_Get_Next_Char
-         73   48 00013740 FT_Get_PFR_Advance
-         74   49 00013670 FT_Get_PFR_Kerning
-         75   4A 00013560 FT_Get_PFR_Metrics
-         76   4B 00017070 FT_Get_PS_Font_Info
-         77   4C 00017120 FT_Get_PS_Font_Private
-         78   4D 00017180 FT_Get_PS_Font_Value = tt_size_done_bytecode
-         79   4E 000064B0 FT_Get_Postscript_Name
-         80   4F 00006800 FT_Get_Renderer
-         81   50 0000F260 FT_Get_Sfnt_Name
-         82   51 00009340 FT_Get_Sfnt_Name_Count
-         83   52 00006540 FT_Get_Sfnt_Table
-         84   53 00007150 FT_Get_SubGlyph_Info
-         85   54 00005B60 FT_Get_Track_Kerning
-         86   55 00007080 FT_Get_TrueType_Engine_Type
-         87   56 00017200 FT_Get_WinFNT_Header
-         88   57 00017290 FT_Get_X11_Font_Format
-         89   58 00003D00 FT_GlyphLoader_Add
-         90   59 0000C8A0 FT_GlyphLoader_CheckPoints
-         91   5A 00003B50 FT_GlyphLoader_CheckSubGlyphs
-         92   5B 0000F4E0 FT_GlyphLoader_CopyPoints
-         93   5C 00003A50 FT_GlyphLoader_CreateExtra
-         94   5D 00003700 FT_GlyphLoader_Done
-         95   5E 00003200 FT_GlyphLoader_New
-         96   5F 00003C80 FT_GlyphLoader_Prepare
-         97   60 000032B0 FT_GlyphLoader_Reset
-         98   61 00003240 FT_GlyphLoader_Rewind
-         99   62 00016F50 FT_GlyphSlot_Embolden
-        100   63 00016F10 FT_GlyphSlot_Oblique
-        101   64 00011DF0 FT_GlyphSlot_Own_Bitmap
-        102   65 000124C0 FT_Glyph_Copy
-        103   66 00012710 FT_Glyph_Get_CBox
-        104   67 00016C40 FT_Glyph_Stroke = Ins_GC
-        105   68 00016D50 FT_Glyph_StrokeBorder = Ins_MD
-        106   69 000127E0 FT_Glyph_To_Bitmap = ft_stroke_border_export
-        107   6A 000126B0 FT_Glyph_Transform
-        108   6B 0006B0A0 FT_Gzip_Uncompress
-        109   6C 000170D0 FT_Has_PS_Glyph_Names
-        110   6D 00002400 FT_Hypot
-        111   6E 00001680 FT_Init_FreeType
-        112   6F 00012BF0 FT_Library_SetLcdFilter
-        113   70 00012BE0 FT_Library_SetLcdFilterWeights
-        114   71 00006E20 FT_Library_Version = FT_Outline_Render
-        115   72 0000FAF0 FT_List_Add
-        116   73 0000FC10 FT_List_Finalize
-        117   74 0000FAC0 FT_List_Find
-        118   75 0000FB20 FT_List_Insert
-        119   76 0000FBC0 FT_List_Iterate
-        120   77 0000FB50 FT_List_Remove
-        121   78 0000FB80 FT_List_Up
-        122   79 00008AA0 FT_Load_Char
-        123   7A 00008890 FT_Load_Glyph
-        124   7B 000065A0 FT_Load_Sfnt_Table
-        125   7C 000067A0 FT_Lookup_Renderer
-        126   7D 000023B0 FT_MSB
-        127   7E 00004C00 FT_Match_Size
-        128   7F 00002A00 FT_Matrix_Invert
-        129   80 000028C0 FT_Matrix_Multiply
-        130   81 00002D30 FT_Matrix_Multiply_Scaled
-        131   82 00002590 FT_MulDiv
-        132   83 000026D0 FT_MulDiv_No_Round
-        133   84 000027F0 FT_MulFix
-        134   85 0000EB10 FT_New_Face
-        135   86 00004320 FT_New_GlyphSlot
-        136   87 00006D50 FT_New_Library
-        137   88 000015C0 FT_New_Memory
-        138   89 0000EB50 FT_New_Memory_Face = FT_List_Remove
-        139   8A 00004950 FT_New_Size
-        140   8B 00013160 FT_OpenType_Free
-        141   8C 00013080 FT_OpenType_Validate
-        142   8D 0000E170 FT_Open_Face
-        143   8E 000076C0 FT_Outline_Check
-        144   8F 00007730 FT_Outline_Copy
-        145   90 000071C0 FT_Outline_Decompose
-        146   91 00007860 FT_Outline_Done
-        147   92 000077C0 FT_Outline_Done_Internal
-        148   93 0000BF40 FT_Outline_Embolden
-        149   94 0000B750 FT_Outline_EmboldenXY
-        150   95 000149A0 FT_Outline_GetInsideBorder
-        151   96 000149C0 FT_Outline_GetOutsideBorder
-        152   97 000100B0 FT_Outline_Get_BBox
-        153   98 00007F60 FT_Outline_Get_Bitmap
-        154   99 00007910 FT_Outline_Get_CBox
-        155   9A 00008CB0 FT_Outline_Get_Orientation
-        156   9B 0000F3A0 FT_Outline_New
-        157   9C 0000CD70 FT_Outline_New_Internal
-        158   9D 00007E20 FT_Outline_Render
-        159   9E 00007D60 FT_Outline_Reverse
-        160   9F 00008040 FT_Outline_Transform
-        161   A0 00007D20 FT_Outline_Translate
-        162   A1 00006D00 FT_Property_Get
-        163   A2 00006CC0 FT_Property_Set
-        164   A3 0000CEE0 FT_Raccess_Get_DataOffsets
-        165   A4 00009AF0 FT_Raccess_Get_HeaderInfo
-        166   A5 00009220 FT_Raccess_Guess
-        167   A6 00004880 FT_Reference_Face = FT_Set_Char_Size
-        168   A7 00006D40 FT_Reference_Library
-        169   A8 00006C90 FT_Remove_Module
-        170   A9 00006AF0 FT_Render_Glyph
-        171   AA 00006930 FT_Render_Glyph_Internal
-        172   AB 00005190 FT_Request_Metrics
-        173   AC 000057F0 FT_Request_Size
-        174   AD 00002350 FT_RoundFix
-        175   AE 00005BF0 FT_Select_Charmap
-        176   AF 00004DC0 FT_Select_Metrics
-        177   B0 00005780 FT_Select_Size
-        178   B1 00005880 FT_Set_Char_Size
-        179   B2 00005CD0 FT_Set_Charmap
-        180   B3 00007060 FT_Set_Debug_Hook
-        181   B4 00012F00 FT_Set_MM_Blend_Coordinates
-        182   B5 00012D80 FT_Set_MM_Design_Coordinates
-        183   B6 00005960 FT_Set_Pixel_Sizes
-        184   B7 00006840 FT_Set_Renderer
-        185   B8 00004530 FT_Set_Transform
-        186   B9 00012FC0 FT_Set_Var_Blend_Coordinates
-        187   BA 00012E40 FT_Set_Var_Design_Coordinates
-        188   BB 00006630 FT_Sfnt_Table_Info
-        189   BC 0000AEF0 FT_Sin
-        190   BD 00009390 FT_Stream_Close
-        191   BE 00009760 FT_Stream_EnterFrame
-        192   BF 00009870 FT_Stream_ExitFrame
-        193   C0 000095E0 FT_Stream_ExtractFrame
-        194   C1 00004150 FT_Stream_Free
-        195   C2 000098B0 FT_Stream_GetChar
-        196   C3 00009970 FT_Stream_GetULong
-        197   C4 000099B0 FT_Stream_GetULongLE
-        198   C5 00009930 FT_Stream_GetUOffset
-        199   C6 000098D0 FT_Stream_GetUShort
-        200   C7 00009900 FT_Stream_GetUShortLE
-        201   C8 00004050 FT_Stream_New
-        202   C9 00001500 FT_Stream_Open
-        203   CA 0006C960 FT_Stream_OpenBzip2
-        204   CB 0006AB40 FT_Stream_OpenGzip
-        205   CC 0006B400 FT_Stream_OpenLZW
-        206   CD 00009360 FT_Stream_OpenMemory
-        207   CE 00009470 FT_Stream_Pos
-        208   CF 00009480 FT_Stream_Read
-        209   D0 00009500 FT_Stream_ReadAt
-        210   D1 000099F0 FT_Stream_ReadChar
-        211   D2 0000ABB0 FT_Stream_ReadFields
-        212   D3 00009F30 FT_Stream_ReadULong
-        213   D4 0000AB00 FT_Stream_ReadULongLE
-        214   D5 00009E90 FT_Stream_ReadUOffset
-        215   D6 00009A60 FT_Stream_ReadUShort
-        216   D7 00009E00 FT_Stream_ReadUShortLE
-        217   D8 00009720 FT_Stream_ReleaseFrame
-        218   D9 000093B0 FT_Stream_Seek
-        219   DA 00009400 FT_Stream_Skip
-        220   DB 00009580 FT_Stream_TryRead
-        221   DC 00016150 FT_Stroker_BeginSubPath
-        222   DD 00014ED0 FT_Stroker_ConicTo
-        223   DE 000156D0 FT_Stroker_CubicTo
-        224   DF 00014B30 FT_Stroker_Done
-        225   E0 00016190 FT_Stroker_EndSubPath
-        226   E1 00016BD0 FT_Stroker_Export
-        227   E2 00016BA0 FT_Stroker_ExportBorder = Ins_PUSHW
-        228   E3 000169E0 FT_Stroker_GetBorderCounts
-        229   E4 00016A90 FT_Stroker_GetCounts
-        230   E5 00014C10 FT_Stroker_LineTo
-        231   E6 000149E0 FT_Stroker_New
-        232   E7 00016C20 FT_Stroker_ParseOutline
-        233   E8 00014AF0 FT_Stroker_Rewind
-        234   E9 00014A90 FT_Stroker_Set
-        235   EA 0000AFC0 FT_Tan
-        236   EB 00001620 FT_Trace_Get_Count
-        237   EC 00001630 FT_Trace_Get_Name
-        238   ED 00012B20 FT_TrueTypeGX_Free
-        239   EE 00012AA0 FT_TrueTypeGX_Validate
-        240   EF 0000C0D0 FT_Vector_From_Polar
-        241   F0 0000B5B0 FT_Vector_Length
-        242   F1 0000BF50 FT_Vector_Polarize
-        243   F2 0000B300 FT_Vector_Rotate
-        244   F3 00007FB0 FT_Vector_Transform
-        245   F4 00002F80 FT_Vector_Transform_Scaled
-        246   F5 0000B200 FT_Vector_Unit
-        247   F6 00024080 TT_New_Context
-        248   F7 00020F70 TT_RunIns
-        249   F8 0007FDA0 af_autofitter_interface
-        250   F9 00080690 af_beng_dflt_style_class
-        251   FA 00080C80 af_beng_script_class
-        252   FB 00080100 af_beng_uniranges
-        253   FC 00080E40 af_blue_strings
-        254   FD 00080D40 af_blue_stringsets
-        255   FE 0007FE60 af_cjk_writing_system_class
-        256   FF 00080A90 af_cyrl_c2cp_style_class
-        257  100 00080A70 af_cyrl_c2sc_style_class
-        258  101 00080970 af_cyrl_dflt_style_class
-        259  102 00080A50 af_cyrl_ordn_style_class
-        260  103 00080A30 af_cyrl_pcap_style_class
-        261  104 00080D20 af_cyrl_script_class
-        262  105 00080A10 af_cyrl_sinf_style_class
-        263  106 000809F0 af_cyrl_smcp_style_class
-        264  107 000809D0 af_cyrl_subs_style_class
-        265  108 000809B0 af_cyrl_sups_style_class
-        266  109 00080990 af_cyrl_titl_style_class
-        267  10A 00080220 af_cyrl_uniranges
-        268  10B 00080670 af_deva_dflt_style_class
-        269  10C 00080C60 af_deva_script_class
-        270  10D 000800F0 af_deva_uniranges
-        271  10E 0007FEE0 af_dummy_writing_system_class
-        272  10F 0005E750 af_get_char_index
-        273  110 0005E740 af_get_coverage
-        274  111 00080950 af_grek_c2cp_style_class
-        275  112 00080930 af_grek_c2sc_style_class
-        276  113 00080830 af_grek_dflt_style_class
-        277  114 00080910 af_grek_ordn_style_class
-        278  115 000808F0 af_grek_pcap_style_class
-        279  116 00080D00 af_grek_script_class
-        280  117 000808D0 af_grek_sinf_style_class
-        281  118 000808B0 af_grek_smcp_style_class
-        282  119 00080890 af_grek_subs_style_class
-        283  11A 00080870 af_grek_sups_style_class
-        284  11B 00080850 af_grek_titl_style_class
-        285  11C 00080200 af_grek_uniranges
-        286  11D 00080650 af_gujr_dflt_style_class
-        287  11E 00080C40 af_gujr_script_class
-        288  11F 000800E0 af_gujr_uniranges
-        289  120 00080630 af_guru_dflt_style_class
-        290  121 00080C20 af_guru_script_class
-        291  122 000800D0 af_guru_uniranges
-        292  123 000804D0 af_hani_dflt_style_class
-        293  124 00080AC0 af_hani_script_class
-        294  125 0007FF20 af_hani_uniranges
-        295  126 00080810 af_hebr_dflt_style_class
-        296  127 00080CE0 af_hebr_script_class
-        297  128 000801E0 af_hebr_uniranges
-        298  129 0007FE20 af_indic_writing_system_class
-        299  12A 00080610 af_knda_dflt_style_class
-        300  12B 00080C00 af_knda_script_class
-        301  12C 000800C0 af_knda_uniranges
-        302  12D 0007FEA0 af_latin_writing_system_class
-        303  12E 000807F0 af_latn_c2cp_style_class
-        304  12F 000807D0 af_latn_c2sc_style_class
-        305  130 000806D0 af_latn_dflt_style_class
-        306  131 000807B0 af_latn_ordn_style_class
-        307  132 00080790 af_latn_pcap_style_class
-        308  133 00080CC0 af_latn_script_class
-        309  134 00080770 af_latn_sinf_style_class
-        310  135 00080750 af_latn_smcp_style_class
-        311  136 00080730 af_latn_subs_style_class
-        312  137 00080710 af_latn_sups_style_class
-        313  138 000806F0 af_latn_titl_style_class
-        314  139 00080120 af_latn_uniranges
-        315  13A 000805F0 af_limb_dflt_style_class
-        316  13B 00080BE0 af_limb_script_class
-        317  13C 000800B0 af_limb_uniranges
-        318  13D 000805D0 af_mlym_dflt_style_class
-        319  13E 00080BC0 af_mlym_script_class
-        320  13F 000800A0 af_mlym_uniranges
-        321  140 000806B0 af_none_dflt_style_class
-        322  141 00080CA0 af_none_script_class
-        323  142 00080110 af_none_uniranges
-        324  143 000805B0 af_orya_dflt_style_class
-        325  144 00080BA0 af_orya_script_class
-        326  145 00080090 af_orya_uniranges
-        327  146 000803E0 af_script_classes
-        328  147 00080590 af_sinh_dflt_style_class
-        329  148 00080B80 af_sinh_script_class
-        330  149 00080080 af_sinh_uniranges
-        331  14A 00080260 af_style_classes
-        332  14B 00080570 af_sund_dflt_style_class
-        333  14C 00080B60 af_sund_script_class
-        334  14D 00080070 af_sund_uniranges
-        335  14E 00080550 af_sylo_dflt_style_class
-        336  14F 00080B40 af_sylo_script_class
-        337  150 00080060 af_sylo_uniranges
-        338  151 00080530 af_taml_dflt_style_class
-        339  152 00080B20 af_taml_script_class
-        340  153 00080050 af_taml_uniranges
-        341  154 00080510 af_telu_dflt_style_class
-        342  155 00080B00 af_telu_script_class
-        343  156 00080040 af_telu_uniranges
-        344  157 000804F0 af_tibt_dflt_style_class
-        345  158 00080AE0 af_tibt_script_class
-        346  159 00080030 af_tibt_uniranges
-        347  15A 000804A0 af_writing_system_classes
-        348  15B 000823C0 afm_parser_funcs
-        349  15C 0007FD60 autofit_module_class
-        350  15D 0007E320 bdf_cmap_class
-        351  15E 0007E220 bdf_driver_class
-        352  15F 0007B000 cff_cmap_encoding_class_rec
-        353  160 0007AFA0 cff_cmap_unicode_class_rec
-        354  161 0007BF20 cff_driver_class
-        355  162 000794C0 ft_bitmap_glyph_class
-        356  163 00003190 ft_corner_is_flat
-        357  164 00003060 ft_corner_orientation
-        358  165 00001610 ft_debug_init
-        359  166 00004270 ft_glyphslot_alloc_bitmap
-        360  167 000041A0 ft_glyphslot_free_bitmap
-        361  168 00004210 ft_glyphslot_set_bitmap
-        362  169 00081400 ft_grays_raster
-        363  16A 0000FCA0 ft_highpow2
-        364  16B 0006B720 ft_lzwstate_done
-        365  16C 0006B690 ft_lzwstate_init
-        366  16D 0006B7B0 ft_lzwstate_io
-        367  16E 0006B650 ft_lzwstate_reset
-        368  16F 0000C3B0 ft_mem_alloc
-        369  170 0000F930 ft_mem_dup
-        370  171 0000F910 ft_mem_free
-        371  172 0000C740 ft_mem_qalloc
-        372  173 0000F830 ft_mem_qrealloc
-        373  174 0000C780 ft_mem_realloc
-        374  175 0000FA70 ft_mem_strcpyn
-        375  176 0000F9B0 ft_mem_strdup
-        376  177 00006C10 ft_module_get_service
-        377  178 00079480 ft_outline_glyph_class
-        378  179 00079220 ft_raccess_guess_table
-        379  17A 00081180 ft_raster1_renderer_class
-        380  17B 00081100 ft_raster5_renderer_class
-        381  17C 00003FB0 ft_service_list_lookup
-        382  17D 00081300 ft_smooth_lcd_renderer_class
-        383  17E 00081280 ft_smooth_lcdv_renderer_class
-        384  17F 00081380 ft_smooth_renderer_class
-        385  180 00081200 ft_standard_raster
-        386  181 00004D50 ft_synthesize_vertical_metrics
-        387  182 00004030 ft_validator_error
-        388  183 00004000 ft_validator_init
-        389  184 00004020 ft_validator_run = FT_Request_Size.part.8
-        390  185 00081520 ftc_basic_image_cache_class
-        391  186 00081580 ftc_basic_image_family_class
-        392  187 00081480 ftc_basic_sbit_cache_class
-        393  188 000814E0 ftc_basic_sbit_family_class
-        394  189 000815C0 ftc_cmap_cache_class
-        395  18A 00081600 ftc_face_list_class
-        396  18B 00081640 ftc_size_list_class
-        397  18C 0007DE60 pcf_cmap_class
-        398  18D 0007DD40 pcf_driver_class
-        399  18E 0007D0C0 pfr_cmap_class_rec
-        400  18F 0007CF80 pfr_driver_class
-        401  190 0007D090 pfr_metrics_service_rec
-        402  191 00062640 ps_hints_apply
-        403  192 00082440 ps_parser_funcs
-        404  193 000824C0 ps_table_funcs
-        405  194 00082320 psaux_module_class
-        406  195 00081080 pshinter_module_class
-        407  196 00082500 psnames_module_class
-        408  197 0007F5E0 sfnt_module_class
-        409  198 00082400 t1_builder_funcs
-        410  199 000823A0 t1_cmap_classes
-        411  19A 00082180 t1_cmap_custom_class_rec
-        412  19B 000821E0 t1_cmap_expert_class_rec
-        413  19C 00082240 t1_cmap_standard_class_rec
-        414  19D 00082120 t1_cmap_unicode_class_rec
-        415  19E 000823E0 t1_decoder_funcs
-        416  19F 0007A160 t1_driver_class
-        417  1A0 0007C1E0 t1cid_driver_class
-        418  1A1 0007D2A0 t42_driver_class
-        419  1A2 0007FC60 tt_cmap0_class_rec
-        420  1A3 0007F9E0 tt_cmap10_class_rec
-        421  1A4 0007F960 tt_cmap12_class_rec
-        422  1A5 0007F8E0 tt_cmap13_class_rec
-        423  1A6 0007F860 tt_cmap14_class_rec
-        424  1A7 0007FBE0 tt_cmap2_class_rec
-        425  1A8 0007FB60 tt_cmap4_class_rec
-        426  1A9 0007FAE0 tt_cmap6_class_rec
-        427  1AA 0007FA60 tt_cmap8_class_rec
-        428  1AB 00079D80 tt_default_graphics_state
-        429  1AC 00079DE0 tt_driver_class
-        430  1AD 0007D940 winfnt_driver_class
-
-  Summary
-
-        1000 .CRT
-        1000 .bss
-        1000 .data
-        1000 .debug_abbrev
-        1000 .debug_aranges
-        1000 .debug_frame
-        1000 .debug_info
-        1000 .debug_line
-        4000 .edata
-        1000 .idata
-        4000 .pdata
-       1A000 .rdata
-        1000 .reloc
-       77000 .text
-        1000 .tls
-        4000 .xdata
+EXPORTS
+FTC_CMapCache_Lookup
+FTC_CMapCache_New
+FTC_ImageCache_Lookup
+FTC_ImageCache_LookupScaler
+FTC_ImageCache_New
+FTC_Manager_Done
+FTC_Manager_LookupFace
+FTC_Manager_LookupSize
+FTC_Manager_New
+FTC_Manager_RemoveFaceID
+FTC_Manager_Reset
+FTC_Node_Unref
+FTC_SBitCache_Lookup
+FTC_SBitCache_LookupScaler
+FTC_SBitCache_New
+FT_Activate_Size
+FT_Add_Default_Modules
+FT_Add_Module
+FT_Angle_Diff
+FT_Atan2
+FT_Attach_File
+FT_Attach_Stream
+FT_Bitmap_Convert
+FT_Bitmap_Copy
+FT_Bitmap_Done
+FT_Bitmap_Embolden = ft_outline_glyph_transform
+FT_Bitmap_New
+FT_CMap_Done
+FT_CMap_New
+FT_CeilFix
+FT_ClassicKern_Free
+FT_ClassicKern_Validate
+FT_Cos
+FT_DivFix
+FT_Done_Face
+FT_Done_FreeType
+FT_Done_Glyph
+FT_Done_GlyphSlot
+FT_Done_Library
+FT_Done_Memory
+FT_Done_Size
+FT_Face_CheckTrueTypePatents
+FT_Face_GetCharVariantIndex
+FT_Face_GetCharVariantIsDefault
+FT_Face_GetCharsOfVariant
+FT_Face_GetVariantSelectors
+FT_Face_GetVariantsOfChar
+FT_Face_SetUnpatentedHinting
+FT_FloorFix
+FT_Get_Advance = FT_Raccess_Get_HeaderInfo
+FT_Get_Advances = FT_Stream_GetChar
+FT_Get_BDF_Charset_ID
+FT_Get_BDF_Property = FT_Bitmap_Embolden
+FT_Get_CID_From_Glyph_Index
+FT_Get_CID_Is_Internally_CID_Keyed
+FT_Get_CID_Registry_Ordering_Supplement = FT_Set_Var_Blend_Coordinates
+FT_Get_CMap_Format
+FT_Get_CMap_Language_ID
+FT_Get_Char_Index
+FT_Get_Charmap_Index
+FT_Get_FSType_Flags
+FT_Get_First_Char
+FT_Get_Gasp
+FT_Get_Glyph
+FT_Get_Glyph_Name
+FT_Get_Kerning
+FT_Get_MM_Var
+FT_Get_Module
+FT_Get_Module_Interface
+FT_Get_Multi_Master
+FT_Get_Name_Index
+FT_Get_Next_Char
+FT_Get_PFR_Advance
+FT_Get_PFR_Kerning
+FT_Get_PFR_Metrics
+FT_Get_PS_Font_Info
+FT_Get_PS_Font_Private
+FT_Get_PS_Font_Value = tt_size_done_bytecode
+FT_Get_Postscript_Name
+FT_Get_Renderer
+FT_Get_Sfnt_Name
+FT_Get_Sfnt_Name_Count
+FT_Get_Sfnt_Table
+FT_Get_SubGlyph_Info
+FT_Get_Track_Kerning
+FT_Get_TrueType_Engine_Type
+FT_Get_WinFNT_Header
+FT_Get_X11_Font_Format
+FT_GlyphLoader_Add
+FT_GlyphLoader_CheckPoints
+FT_GlyphLoader_CheckSubGlyphs
+FT_GlyphLoader_CopyPoints
+FT_GlyphLoader_CreateExtra
+FT_GlyphLoader_Done
+FT_GlyphLoader_New
+FT_GlyphLoader_Prepare
+FT_GlyphLoader_Reset
+FT_GlyphLoader_Rewind
+FT_GlyphSlot_Embolden
+FT_GlyphSlot_Oblique
+FT_GlyphSlot_Own_Bitmap
+FT_Glyph_Copy
+FT_Glyph_Get_CBox
+FT_Glyph_Stroke = Ins_GC
+FT_Glyph_StrokeBorder = Ins_MD
+FT_Glyph_To_Bitmap = ft_stroke_border_export
+FT_Glyph_Transform
+FT_Gzip_Uncompress
+FT_Has_PS_Glyph_Names
+FT_Hypot
+FT_Init_FreeType
+FT_Library_SetLcdFilter
+FT_Library_SetLcdFilterWeights
+FT_Library_Version = FT_Outline_Render
+FT_List_Add
+FT_List_Finalize
+FT_List_Find
+FT_List_Insert
+FT_List_Iterate
+FT_List_Remove
+FT_List_Up
+FT_Load_Char
+FT_Load_Glyph
+FT_Load_Sfnt_Table
+FT_Lookup_Renderer
+FT_MSB
+FT_Match_Size
+FT_Matrix_Invert
+FT_Matrix_Multiply
+FT_Matrix_Multiply_Scaled
+FT_MulDiv
+FT_MulDiv_No_Round
+FT_MulFix
+FT_New_Face
+FT_New_GlyphSlot
+FT_New_Library
+FT_New_Memory
+FT_New_Memory_Face = FT_List_Remove
+FT_New_Size
+FT_OpenType_Free
+FT_OpenType_Validate
+FT_Open_Face
+FT_Outline_Check
+FT_Outline_Copy
+FT_Outline_Decompose
+FT_Outline_Done
+FT_Outline_Done_Internal
+FT_Outline_Embolden
+FT_Outline_EmboldenXY
+FT_Outline_GetInsideBorder
+FT_Outline_GetOutsideBorder
+FT_Outline_Get_BBox
+FT_Outline_Get_Bitmap
+FT_Outline_Get_CBox
+FT_Outline_Get_Orientation
+FT_Outline_New
+FT_Outline_New_Internal
+FT_Outline_Render
+FT_Outline_Reverse
+FT_Outline_Transform
+FT_Outline_Translate
+FT_Property_Get
+FT_Property_Set
+FT_Raccess_Get_DataOffsets
+FT_Raccess_Get_HeaderInfo
+FT_Raccess_Guess
+FT_Reference_Face = FT_Set_Char_Size
+FT_Reference_Library
+FT_Remove_Module
+FT_Render_Glyph
+FT_Render_Glyph_Internal
+FT_Request_Metrics
+FT_Request_Size
+FT_RoundFix
+FT_Select_Charmap
+FT_Select_Metrics
+FT_Select_Size
+FT_Set_Char_Size
+FT_Set_Charmap
+FT_Set_Debug_Hook
+FT_Set_MM_Blend_Coordinates
+FT_Set_MM_Design_Coordinates
+FT_Set_Pixel_Sizes
+FT_Set_Renderer
+FT_Set_Transform
+FT_Set_Var_Blend_Coordinates
+FT_Set_Var_Design_Coordinates
+FT_Sfnt_Table_Info
+FT_Sin
+FT_Stream_Close
+FT_Stream_EnterFrame
+FT_Stream_ExitFrame
+FT_Stream_ExtractFrame
+FT_Stream_Free
+FT_Stream_GetChar
+FT_Stream_GetULong
+FT_Stream_GetULongLE
+FT_Stream_GetUOffset
+FT_Stream_GetUShort
+FT_Stream_GetUShortLE
+FT_Stream_New
+FT_Stream_Open
+FT_Stream_OpenBzip2
+FT_Stream_OpenGzip
+FT_Stream_OpenLZW
+FT_Stream_OpenMemory
+FT_Stream_Pos
+FT_Stream_Read
+FT_Stream_ReadAt
+FT_Stream_ReadChar
+FT_Stream_ReadFields
+FT_Stream_ReadULong
+FT_Stream_ReadULongLE
+FT_Stream_ReadUOffset
+FT_Stream_ReadUShort
+FT_Stream_ReadUShortLE
+FT_Stream_ReleaseFrame
+FT_Stream_Seek
+FT_Stream_Skip
+FT_Stream_TryRead
+FT_Stroker_BeginSubPath
+FT_Stroker_ConicTo
+FT_Stroker_CubicTo
+FT_Stroker_Done
+FT_Stroker_EndSubPath
+FT_Stroker_Export
+FT_Stroker_ExportBorder = Ins_PUSHW
+FT_Stroker_GetBorderCounts
+FT_Stroker_GetCounts
+FT_Stroker_LineTo
+FT_Stroker_New
+FT_Stroker_ParseOutline
+FT_Stroker_Rewind
+FT_Stroker_Set
+FT_Tan
+FT_Trace_Get_Count
+FT_Trace_Get_Name
+FT_TrueTypeGX_Free
+FT_TrueTypeGX_Validate
+FT_Vector_From_Polar
+FT_Vector_Length
+FT_Vector_Polarize
+FT_Vector_Rotate
+FT_Vector_Transform
+FT_Vector_Transform_Scaled
+FT_Vector_Unit
+TT_New_Context
+TT_RunIns
+af_autofitter_interface
+af_beng_dflt_style_class
+af_beng_script_class
+af_beng_uniranges
+af_blue_strings
+af_blue_stringsets
+af_cjk_writing_system_class
+af_cyrl_c2cp_style_class
+af_cyrl_c2sc_style_class
+af_cyrl_dflt_style_class
+af_cyrl_ordn_style_class
+af_cyrl_pcap_style_class
+af_cyrl_script_class
+af_cyrl_sinf_style_class
+af_cyrl_smcp_style_class
+af_cyrl_subs_style_class
+af_cyrl_sups_style_class
+af_cyrl_titl_style_class
+af_cyrl_uniranges
+af_deva_dflt_style_class
+af_deva_script_class
+af_deva_uniranges
+af_dummy_writing_system_class
+af_get_char_index
+af_get_coverage
+af_grek_c2cp_style_class
+af_grek_c2sc_style_class
+af_grek_dflt_style_class
+af_grek_ordn_style_class
+af_grek_pcap_style_class
+af_grek_script_class
+af_grek_sinf_style_class
+af_grek_smcp_style_class
+af_grek_subs_style_class
+af_grek_sups_style_class
+af_grek_titl_style_class
+af_grek_uniranges
+af_gujr_dflt_style_class
+af_gujr_script_class
+af_gujr_uniranges
+af_guru_dflt_style_class
+af_guru_script_class
+af_guru_uniranges
+af_hani_dflt_style_class
+af_hani_script_class
+af_hani_uniranges
+af_hebr_dflt_style_class
+af_hebr_script_class
+af_hebr_uniranges
+af_indic_writing_system_class
+af_knda_dflt_style_class
+af_knda_script_class
+af_knda_uniranges
+af_latin_writing_system_class
+af_latn_c2cp_style_class
+af_latn_c2sc_style_class
+af_latn_dflt_style_class
+af_latn_ordn_style_class
+af_latn_pcap_style_class
+af_latn_script_class
+af_latn_sinf_style_class
+af_latn_smcp_style_class
+af_latn_subs_style_class
+af_latn_sups_style_class
+af_latn_titl_style_class
+af_latn_uniranges
+af_limb_dflt_style_class
+af_limb_script_class
+af_limb_uniranges
+af_mlym_dflt_style_class
+af_mlym_script_class
+af_mlym_uniranges
+af_none_dflt_style_class
+af_none_script_class
+af_none_uniranges
+af_orya_dflt_style_class
+af_orya_script_class
+af_orya_uniranges
+af_script_classes
+af_sinh_dflt_style_class
+af_sinh_script_class
+af_sinh_uniranges
+af_style_classes
+af_sund_dflt_style_class
+af_sund_script_class
+af_sund_uniranges
+af_sylo_dflt_style_class
+af_sylo_script_class
+af_sylo_uniranges
+af_taml_dflt_style_class
+af_taml_script_class
+af_taml_uniranges
+af_telu_dflt_style_class
+af_telu_script_class
+af_telu_uniranges
+af_tibt_dflt_style_class
+af_tibt_script_class
+af_tibt_uniranges
+af_writing_system_classes
+afm_parser_funcs
+autofit_module_class
+bdf_cmap_class
+bdf_driver_class
+cff_cmap_encoding_class_rec
+cff_cmap_unicode_class_rec
+cff_driver_class
+ft_bitmap_glyph_class
+ft_corner_is_flat
+ft_corner_orientation
+ft_debug_init
+ft_glyphslot_alloc_bitmap
+ft_glyphslot_free_bitmap
+ft_glyphslot_set_bitmap
+ft_grays_raster
+ft_highpow2
+ft_lzwstate_done
+ft_lzwstate_init
+ft_lzwstate_io
+ft_lzwstate_reset
+ft_mem_alloc
+ft_mem_dup
+ft_mem_free
+ft_mem_qalloc
+ft_mem_qrealloc
+ft_mem_realloc
+ft_mem_strcpyn
+ft_mem_strdup
+ft_module_get_service
+ft_outline_glyph_class
+ft_raccess_guess_table
+ft_raster1_renderer_class
+ft_raster5_renderer_class
+ft_service_list_lookup
+ft_smooth_lcd_renderer_class
+ft_smooth_lcdv_renderer_class
+ft_smooth_renderer_class
+ft_standard_raster
+ft_synthesize_vertical_metrics
+ft_validator_error
+ft_validator_init
+ft_validator_run = FT_Request_Size.part.8
+ftc_basic_image_cache_class
+ftc_basic_image_family_class
+ftc_basic_sbit_cache_class
+ftc_basic_sbit_family_class
+ftc_cmap_cache_class
+ftc_face_list_class
+ftc_size_list_class
+pcf_cmap_class
+pcf_driver_class
+pfr_cmap_class_rec
+pfr_driver_class
+pfr_metrics_service_rec
+ps_hints_apply
+ps_parser_funcs
+ps_table_funcs
+psaux_module_class
+pshinter_module_class
+psnames_module_class
+sfnt_module_class
+t1_builder_funcs
+t1_cmap_classes
+t1_cmap_custom_class_rec
+t1_cmap_expert_class_rec
+t1_cmap_standard_class_rec
+t1_cmap_unicode_class_rec
+t1_decoder_funcs
+t1_driver_class
+t1cid_driver_class
+t42_driver_class
+tt_cmap0_class_rec
+tt_cmap10_class_rec
+tt_cmap12_class_rec
+tt_cmap13_class_rec
+tt_cmap14_class_rec
+tt_cmap2_class_rec
+tt_cmap4_class_rec
+tt_cmap6_class_rec
+tt_cmap8_class_rec
+tt_default_graphics_state
+tt_driver_class
+winfnt_driver_class

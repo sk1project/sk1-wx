@@ -1,119 +1,82 @@
-Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-
-Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\libexpat-1.dll
-
-File Type: DLL
-
-  Section contains the following exports for libexpat-1.dll
-
-    00000000 characteristics
-    569B0DB4 time date stamp Sun Jan 17 05:42:44 2016
-        0.00 version
-           1 ordinal base
-          81 number of functions
-          81 number of names
-
-    ordinal hint RVA      name
-
-          1    0 000104F0 XML_DefaultCurrent
-          2    1 00010690 XML_ErrorString
-          3    2 000106C0 XML_ExpatVersion
-          4    3 000106D0 XML_ExpatVersionInfo
-          5    4 0000DD50 XML_ExternalEntityParserCreate
-          6    5 000104B0 XML_FreeContentModel
-          7    6 0000F970 XML_GetBase
-          8    7 0000FD90 XML_GetBuffer
-          9    8 00010390 XML_GetCurrentByteCount
-         10    9 00010370 XML_GetCurrentByteIndex
-         11    A 00010460 XML_GetCurrentColumnNumber
-         12    B 00010400 XML_GetCurrentLineNumber
-         13    C 00010360 XML_GetErrorCode
-         14    D 000106F0 XML_GetFeatureList
-         15    E 0000F990 XML_GetIdAttributeIndex
-         16    F 000103C0 XML_GetInputContext
-         17   10 00010320 XML_GetParsingStatus
-         18   11 0000F980 XML_GetSpecifiedAttributeCount
-         19   12 000104E0 XML_MemFree
-         20   13 000104C0 XML_MemMalloc
-         21   14 000104D0 XML_MemRealloc
-         22   15 0000FF80 XML_Parse
-         23   16 0000FBA0 XML_ParseBuffer
-         24   17 0000EA80 XML_ParserCreate = XML_SetUnparsedEntityDeclHandler
-         25   18 0000F150 XML_ParserCreateNS
-         26   19 0000DD40 XML_ParserCreate_MM
-         27   1A 0000D1C0 XML_ParserFree
-         28   1B 0000C900 XML_ParserReset
-         29   1C 00010230 XML_ResumeParser
-         30   1D 0000FB30 XML_SetAttlistDeclHandler
-         31   1E 0000F8B0 XML_SetBase
-         32   1F 0000FA00 XML_SetCdataSectionHandler
-         33   20 0000F9D0 XML_SetCharacterDataHandler
-         34   21 0000F9F0 XML_SetCommentHandler
-         35   22 0000FA30 XML_SetDefaultHandler
-         36   23 0000FA40 XML_SetDefaultHandlerExpand
-         37   24 0000FA50 XML_SetDoctypeDeclHandler
-         38   25 0000FB20 XML_SetElementDeclHandler
-         39   26 0000F9A0 XML_SetElementHandler
-         40   27 0000D0F0 XML_SetEncoding
-         41   28 0000FA20 XML_SetEndCdataSectionHandler
-         42   29 0000FA70 XML_SetEndDoctypeDeclHandler
-         43   2A 0000F9C0 XML_SetEndElementHandler
-         44   2B 0000FAC0 XML_SetEndNamespaceDeclHandler
-         45   2C 0000FB40 XML_SetEntityDeclHandler
-         46   2D 0000FAE0 XML_SetExternalEntityRefHandler
-         47   2E 0000FAF0 XML_SetExternalEntityRefHandlerArg
-         48   2F 0000FB80 XML_SetHashSalt = normal_scanRef
-         49   30 0000FAA0 XML_SetNamespaceDeclHandler
-         50   31 0000FAD0 XML_SetNotStandaloneHandler
-         51   32 0000FA90 XML_SetNotationDeclHandler
-         52   33 0000FB60 XML_SetParamEntityParsing
-         53   34 0000F9E0 XML_SetProcessingInstructionHandler
-         54   35 0000F870 XML_SetReturnNSTriplet = utf8_isInvalid3
-         55   36 0000FB00 XML_SetSkippedEntityHandler
-         56   37 0000FA10 XML_SetStartCdataSectionHandler
-         57   38 0000FA60 XML_SetStartDoctypeDeclHandler
-         58   39 0000F9B0 XML_SetStartElementHandler
-         59   3A 0000FAB0 XML_SetStartNamespaceDeclHandler
-         60   3B 0000FB10 XML_SetUnknownEncodingHandler
-         61   3C 0000FA80 XML_SetUnparsedEntityDeclHandler
-         62   3D 0000F890 XML_SetUserData
-         63   3E 0000FB50 XML_SetXmlDeclHandler
-         64   3F 000101C0 XML_StopParser
-         65   40 0000F840 XML_UseForeignDTD
-         66   41 0000F830 XML_UseParserAsHandlerArg
-         67   42 0001CBD0 XmlGetUtf16InternalEncoding
-         68   43 0001D240 XmlGetUtf16InternalEncodingNS = declClose
-         69   44 0001CBC0 XmlGetUtf8InternalEncoding
-         70   45 0001D230 XmlGetUtf8InternalEncodingNS = error
-         71   46 0001CBE0 XmlInitEncoding
-         72   47 0001D250 XmlInitEncodingNS
-         73   48 0001C8A0 XmlInitUnknownEncoding = XmlInitUnknownEncodingNS
-         74   49 0001D8A0 XmlInitUnknownEncodingNS
-         75   4A 0001CC90 XmlParseXmlDecl
-         76   4B 0001D300 XmlParseXmlDeclNS
-         77   4C 0001F690 XmlPrologStateInit
-         78   4D 0001F6B0 XmlPrologStateInitExternalEntity
-         79   4E 0001C890 XmlSizeOfUnknownEncoding
-         80   4F 0001C830 XmlUtf16Encode
-         81   50 0001C770 XmlUtf8Encode
-
-  Summary
-
-        1000 .CRT
-        1000 .bss
-        1000 .data
-        1000 .debug_abbrev
-        1000 .debug_aranges
-        1000 .debug_frame
-        1000 .debug_info
-        1000 .debug_line
-        1000 .edata
-        1000 .idata
-        1000 .pdata
-        9000 .rdata
-        1000 .reloc
-       21000 .text
-        1000 .tls
-        1000 .xdata
+EXPORTS
+XML_DefaultCurrent
+XML_ErrorString
+XML_ExpatVersion
+XML_ExpatVersionInfo
+XML_ExternalEntityParserCreate
+XML_FreeContentModel
+XML_GetBase
+XML_GetBuffer
+XML_GetCurrentByteCount
+XML_GetCurrentByteIndex
+XML_GetCurrentColumnNumber
+XML_GetCurrentLineNumber
+XML_GetErrorCode
+XML_GetFeatureList
+XML_GetIdAttributeIndex
+XML_GetInputContext
+XML_GetParsingStatus
+XML_GetSpecifiedAttributeCount
+XML_MemFree
+XML_MemMalloc
+XML_MemRealloc
+XML_Parse
+XML_ParseBuffer
+XML_ParserCreate = XML_SetUnparsedEntityDeclHandler
+XML_ParserCreateNS
+XML_ParserCreate_MM
+XML_ParserFree
+XML_ParserReset
+XML_ResumeParser
+XML_SetAttlistDeclHandler
+XML_SetBase
+XML_SetCdataSectionHandler
+XML_SetCharacterDataHandler
+XML_SetCommentHandler
+XML_SetDefaultHandler
+XML_SetDefaultHandlerExpand
+XML_SetDoctypeDeclHandler
+XML_SetElementDeclHandler
+XML_SetElementHandler
+XML_SetEncoding
+XML_SetEndCdataSectionHandler
+XML_SetEndDoctypeDeclHandler
+XML_SetEndElementHandler
+XML_SetEndNamespaceDeclHandler
+XML_SetEntityDeclHandler
+XML_SetExternalEntityRefHandler
+XML_SetExternalEntityRefHandlerArg
+XML_SetHashSalt = normal_scanRef
+XML_SetNamespaceDeclHandler
+XML_SetNotStandaloneHandler
+XML_SetNotationDeclHandler
+XML_SetParamEntityParsing
+XML_SetProcessingInstructionHandler
+XML_SetReturnNSTriplet = utf8_isInvalid3
+XML_SetSkippedEntityHandler
+XML_SetStartCdataSectionHandler
+XML_SetStartDoctypeDeclHandler
+XML_SetStartElementHandler
+XML_SetStartNamespaceDeclHandler
+XML_SetUnknownEncodingHandler
+XML_SetUnparsedEntityDeclHandler
+XML_SetUserData
+XML_SetXmlDeclHandler
+XML_StopParser
+XML_UseForeignDTD
+XML_UseParserAsHandlerArg
+XmlGetUtf16InternalEncoding
+XmlGetUtf16InternalEncodingNS = declClose
+XmlGetUtf8InternalEncoding
+XmlGetUtf8InternalEncodingNS = error
+XmlInitEncoding
+XmlInitEncodingNS
+XmlInitUnknownEncoding = XmlInitUnknownEncodingNS
+XmlInitUnknownEncodingNS
+XmlParseXmlDecl
+XmlParseXmlDeclNS
+XmlPrologStateInit
+XmlPrologStateInitExternalEntity
+XmlSizeOfUnknownEncoding
+XmlUtf16Encode
+XmlUtf8Encode

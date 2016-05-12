@@ -1,1657 +1,1619 @@
-Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-
-Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\libglib-2.0-0.dll
-
-File Type: DLL
-
-  Section contains the following exports for libglib-2.0-0.dll
-
-    00000000 characteristics
-    536D2DE0 time date stamp Fri May 09 22:34:56 2014
-        0.00 version
-           1 ordinal base
-        1618 number of functions
-        1618 number of names
-
-    ordinal hint RVA      name
-
-          1    0 0013A620 __glib_assert_msg
-          2    1 000250C0 _glib_get_locale_dir
-          3    2 000628B0 g_access = g_ascii_strtod
-          4    3 00001590 g_allocator_free
-          5    4 00001580 g_allocator_new
-          6    5 00003C80 g_array_append_vals
-          7    6 00003BA0 g_array_free
-          8    7 00003B60 g_array_get_element_size
-          9    8 00003F30 g_array_insert_vals
-         10    9 00003A10 g_array_new
-         11    A 00003DD0 g_array_prepend_vals
-         12    B 00003A80 g_array_ref
-         13    C 000040C0 g_array_remove_index
-         14    D 000041B0 g_array_remove_index_fast
-         15    E 000042A0 g_array_remove_range
-         16    F 00003A50 g_array_set_clear_func
-         17   10 00004450 g_array_set_size
-         18   11 00003890 g_array_sized_new
-         19   12 000045B0 g_array_sort = g_async_queue_unref
-         20   13 00004600 g_array_sort_with_data
-         21   14 00003AD0 g_array_unref
-         22   15 00064680 g_ascii_digit_value
-         23   16 00064020 g_ascii_dtostr
-         24   17 00063DB0 g_ascii_formatd
-         25   18 000646E0 g_ascii_strcasecmp
-         26   19 00064540 g_ascii_strdown
-         27   1A 000647E0 g_ascii_strncasecmp
-         28   1B 000638B0 g_ascii_strtod
-         29   1C 00064060 g_ascii_strtoll
-         30   1D 00064030 g_ascii_strtoull
-         31   1E 000645F0 g_ascii_strup
-         32   1F 000D8B00 g_ascii_table
-         33   20 00064520 g_ascii_tolower
-         34   21 000645D0 g_ascii_toupper
-         35   22 000646B0 g_ascii_xdigit_value
-         36   23 00044690 g_assert_warning
-         37   24 0006AFC0 g_assertion_message
-         38   25 0006B6C0 g_assertion_message_cmpnum
-         39   26 0006B830 g_assertion_message_cmpstr
-         40   27 0006B980 g_assertion_message_error
-         41   28 0006B140 g_assertion_message_expr
-         42   29 00005F60 g_async_queue_length = parse_data_free
-         43   2A 00005FC0 g_async_queue_length_unlocked
-         44   2B 00005690 g_async_queue_lock
-         45   2C 00005520 g_async_queue_new
-         46   2D 000054D0 g_async_queue_new_full
-         47   2E 000058B0 g_async_queue_pop
-         48   2F 00005990 g_async_queue_pop_unlocked
-         49   30 00005760 g_async_queue_push
-         50   31 00005840 g_async_queue_push_sorted = g_base64_decode_step
-         51   32 000057C0 g_async_queue_push_sorted_unlocked
-         52   33 000056F0 g_async_queue_push_unlocked
-         53   34 00005530 g_async_queue_ref
-         54   35 00005580 g_async_queue_ref_unlocked
-         55   36 00006080 g_async_queue_sort = is_element_full.isra.1
-         56   37 00006000 g_async_queue_sort_unlocked
-         57   38 00005CE0 g_async_queue_timed_pop
-         58   39 00005E30 g_async_queue_timed_pop_unlocked
-         59   3A 00005B10 g_async_queue_timeout_pop
-         60   3B 00005C10 g_async_queue_timeout_pop_unlocked
-         61   3C 00005A50 g_async_queue_try_pop
-         62   3D 00005AC0 g_async_queue_try_pop_unlocked
-         63   3E 000056C0 g_async_queue_unlock
-         64   3F 000055B0 g_async_queue_unref = g_base64_encode_close
-         65   40 00005650 g_async_queue_unref_and_unlock
-         66   41 0007A270 g_atexit
-         67   42 00006180 g_atomic_int_add
-         68   43 00006190 g_atomic_int_and
-         69   44 00006170 g_atomic_int_compare_and_exchange
-         70   45 00006160 g_atomic_int_dec_and_test
-         71   46 00006290 g_atomic_int_exchange_and_add
-         72   47 00006130 g_atomic_int_get
-         73   48 00006150 g_atomic_int_inc
-         74   49 000061B0 g_atomic_int_or
-         75   4A 00006140 g_atomic_int_set
-         76   4B 000061D0 g_atomic_int_xor
-         77   4C 00006220 g_atomic_pointer_add
-         78   4D 00006230 g_atomic_pointer_and
-         79   4E 00006210 g_atomic_pointer_compare_and_exchange = text_raw_cb
-         80   4F 000061F0 g_atomic_pointer_get
-         81   50 00006250 g_atomic_pointer_or
-         82   51 00006200 g_atomic_pointer_set
-         83   52 00006270 g_atomic_pointer_xor
-         84   53 00006A10 g_base64_decode
-         85   54 00006AD0 g_base64_decode_inplace
-         86   55 00006840 g_base64_decode_step
-         87   56 00006730 g_base64_encode
-         88   57 000065B0 g_base64_encode_close
-         89   58 00006310 g_base64_encode_step
-         90   59 00024B90 g_basename
-         91   5A 00006C90 g_bit_lock
-         92   5B 0007A140 g_bit_nth_lsf
-         93   5C 0007A180 g_bit_nth_msf
-         94   5D 0007A1D0 g_bit_storage
-         95   5E 00006D00 g_bit_trylock
-         96   5F 00006D10 g_bit_unlock
-         97   60 000015E0 g_blow_chunks
-         98   61 0000B790 g_bookmark_file_add_application
-         99   62 0000AC00 g_bookmark_file_add_group
-        100   63 000078D0 g_bookmark_file_error_quark
-        101   64 00007950 g_bookmark_file_free
-        102   65 0000A6A0 g_bookmark_file_get_added
-        103   66 0000BA00 g_bookmark_file_get_app_info
-        104   67 0000BD80 g_bookmark_file_get_applications
-        105   68 0000A020 g_bookmark_file_get_description
-        106   69 0000B0D0 g_bookmark_file_get_groups
-        107   6A 0000C310 g_bookmark_file_get_icon
-        108   6B 0000A490 g_bookmark_file_get_is_private
-        109   6C 0000A240 g_bookmark_file_get_mime_type
-        110   6D 0000A870 g_bookmark_file_get_modified
-        111   6E 0000BF90 g_bookmark_file_get_size
-        112   6F 00009E70 g_bookmark_file_get_title
-        113   70 00009C50 g_bookmark_file_get_uris
-        114   71 0000AA40 g_bookmark_file_get_visited
-        115   72 0000B2A0 g_bookmark_file_has_application
-        116   73 0000AB10 g_bookmark_file_has_group
-        117   74 000089E0 g_bookmark_file_has_item
-        118   75 000079C0 g_bookmark_file_load_from_data
-        119   76 00007CE0 g_bookmark_file_load_from_data_dirs
-        120   77 00007BD0 g_bookmark_file_load_from_file
-        121   78 0000BFE0 g_bookmark_file_move_item
-        122   79 00007900 g_bookmark_file_new
-        123   7A 0000B920 g_bookmark_file_remove_application
-        124   7B 0000AD90 g_bookmark_file_remove_group
-        125   7C 00008870 g_bookmark_file_remove_item
-        126   7D 0000A590 g_bookmark_file_set_added
-        127   7E 0000B3B0 g_bookmark_file_set_app_info
-        128   7F 00009F20 g_bookmark_file_set_description
-        129   80 0000AF00 g_bookmark_file_set_groups
-        130   81 0000C160 g_bookmark_file_set_icon
-        131   82 0000A330 g_bookmark_file_set_is_private
-        132   83 0000A0D0 g_bookmark_file_set_mime_type = g_bookmark_file_get_groups
-        133   84 0000A770 g_bookmark_file_set_modified
-        134   85 00009D70 g_bookmark_file_set_title
-        135   86 0000A940 g_bookmark_file_set_visited
-        136   87 00007F80 g_bookmark_file_to_data
-        137   88 00008770 g_bookmark_file_to_file
-        138   89 00024550 g_build_filename
-        139   8A 00024320 g_build_filenamev
-        140   8B 000240C0 g_build_path = _glib_get_locale_dir
-        141   8C 00023E80 g_build_pathv
-        142   8D 00005360 g_byte_array_append
-        143   8E 000052E0 g_byte_array_free
-        144   8F 000052F0 g_byte_array_free_to_bytes = g_on_error_stack_trace
-        145   90 00005210 g_byte_array_new = g_atomic_pointer_compare_and_exchange
-        146   91 00005230 g_byte_array_new_take = g_atomic_pointer_and
-        147   92 00005380 g_byte_array_prepend
-        148   93 00005340 g_byte_array_ref
-        149   94 000053C0 g_byte_array_remove_index
-        150   95 000053E0 g_byte_array_remove_index_fast
-        151   96 00005400 g_byte_array_remove_range
-        152   97 000053A0 g_byte_array_set_size
-        153   98 000052C0 g_byte_array_sized_new
-        154   99 00005490 g_byte_array_sort
-        155   9A 000054A0 g_byte_array_sort_with_data
-        156   9B 00005350 g_byte_array_unref
-        157   9C 0000C820 g_bytes_compare
-        158   9D 0000C720 g_bytes_equal
-        159   9E 0000C570 g_bytes_get_data
-        160   9F 0000C5C0 g_bytes_get_size
-        161   A0 0000C7B0 g_bytes_hash
-        162   A1 0000C500 g_bytes_new
-        163   A2 0000C650 g_bytes_new_from_bytes
-        164   A3 0000C560 g_bytes_new_static
-        165   A4 0000C4F0 g_bytes_new_take
-        166   A5 0000C470 g_bytes_new_with_free_func
-        167   A6 0000C600 g_bytes_ref
-        168   A7 0000C420 g_bytes_unref
-        169   A8 0000C9A0 g_bytes_unref_to_array
-        170   A9 0000C8C0 g_bytes_unref_to_data
-        171   AA 00001800 g_cache_destroy
-        172   AB 00001850 g_cache_insert
-        173   AC 000019D0 g_cache_key_foreach
-        174   AD 00001650 g_cache_new
-        175   AE 00001910 g_cache_remove
-        176   AF 00001A20 g_cache_value_foreach
-        177   B0 00062C30 g_chdir
-        178   B1 000131F0 g_checksum_copy
-        179   B2 00013260 g_checksum_free
-        180   B3 00013B10 g_checksum_get_digest
-        181   B4 000137F0 g_checksum_get_string
-        182   B5 000131C0 g_checksum_new
-        183   B6 00012FD0 g_checksum_reset
-        184   B7 00012FB0 g_checksum_type_get_length
-        185   B8 000132A0 g_checksum_update
-        186   B9 0003D430 g_child_watch_add
-        187   BA 0003D390 g_child_watch_add_full
-        188   BB 000C7500 g_child_watch_funcs
-        189   BC 0003D340 g_child_watch_source_new
-        190   BD 00062920 g_chmod
-        191   BE 000228E0 g_clear_error
-        192   BF 000425B0 g_clear_pointer
-        193   C0 00063100 g_close
-        194   C1 00001AB0 g_completion_add_items
-        195   C2 00001C00 g_completion_clear_items = g_thread_init_glib
-        196   C3 00001C70 g_completion_complete
-        197   C4 00001F60 g_completion_complete_utf8 = g_static_rec_mutex_trylock
-        198   C5 00001FC0 g_completion_free
-        199   C6 00001A70 g_completion_new
-        200   C7 00001B40 g_completion_remove_items
-        201   C8 00002000 g_completion_set_compare
-        202   C9 00014190 g_compute_checksum_for_bytes = dbcs_mblen
-        203   CA 00014050 g_compute_checksum_for_data
-        204   CB 00014100 g_compute_checksum_for_string
-        205   CC 00027C70 g_compute_hmac_for_data
-        206   CD 00027D00 g_compute_hmac_for_string
-        207   CE 0008D2A0 g_cond_broadcast
-        208   CF 0008D270 g_cond_clear
-        209   D0 00002B60 g_cond_free = g_array_get_element_size
-        210   D1 0008D260 g_cond_init
-        211   D2 00002B30 g_cond_new
-        212   D3 0008D290 g_cond_signal
-        213   D4 00002B80 g_cond_timed_wait
-        214   D5 0008D2B0 g_cond_wait
-        215   D6 0008D2D0 g_cond_wait_until
-        216   D7 00016B20 g_convert
-        217   D8 00016240 g_convert_error_quark
-        218   D9 00016CD0 g_convert_with_fallback
-        219   DA 000167F0 g_convert_with_iconv
-        220   DB 00062A10 g_creat
-        221   DC 000180A0 g_datalist_clear
-        222   DD 00018C00 g_datalist_foreach
-        223   DE 00018B50 g_datalist_get_data
-        224   DF 00019290 g_datalist_get_flags = g_date_set_dmy
-        225   E0 00018740 g_datalist_id_dup_data = g_date_valid
-        226   E1 00018850 g_datalist_id_get_data
-        227   E2 00018610 g_datalist_id_remove_no_notify
-        228   E3 00018910 g_datalist_id_replace_data
-        229   E4 000181F0 g_datalist_id_set_data_full
-        230   E5 00018E20 g_datalist_init
-        231   E6 000191E0 g_datalist_set_flags
-        232   E7 00019230 g_datalist_unset_flags
-        233   E8 00018160 g_dataset_destroy
-        234   E9 00018D50 g_dataset_foreach = g_date_valid_dmy
-        235   EA 00018860 g_dataset_id_get_data
-        236   EB 00018490 g_dataset_id_remove_no_notify
-        237   EC 00018E50 g_dataset_id_set_data_full
-        238   ED 0001A7B0 g_date_add_days
-        239   EE 0001B990 g_date_add_months
-        240   EF 0001BC00 g_date_add_years
-        241   F0 0001D770 g_date_clamp
-        242   F1 00019B60 g_date_clear
-        243   F2 0001C060 g_date_compare
-        244   F3 0001A5B0 g_date_days_between
-        245   F4 00019710 g_date_free
-        246   F5 00019AE0 g_date_get_day
-        247   F6 0001A8A0 g_date_get_day_of_year
-        248   F7 0001BD90 g_date_get_days_in_month
-        249   F8 0001A650 g_date_get_iso8601_week_of_year
-        250   F9 0001A530 g_date_get_julian
-        251   FA 0001A970 g_date_get_monday_week_of_year
-        252   FB 0001BE40 g_date_get_monday_weeks_in_year
-        253   FC 000199E0 g_date_get_month
-        254   FD 0001AA60 g_date_get_sunday_week_of_year
-        255   FE 0001BF50 g_date_get_sunday_weeks_in_year
-        256   FF 0001A490 g_date_get_weekday
-        257  100 00019A60 g_date_get_year = g_date_get_sunday_week_of_year
-        258  101 00019C20 g_date_is_first_of_month
-        259  102 0001B8C0 g_date_is_last_of_month
-        260  103 00019CB0 g_date_is_leap_year
-        261  104 00019700 g_date_new
-        262  105 00019DC0 g_date_new_dmy
-        263  106 000197E0 g_date_new_julian
-        264  107 0001D860 g_date_order
-        265  108 0001A0F0 g_date_set_day
-        266  109 0001A290 g_date_set_dmy
-        267  10A 00019BC0 g_date_set_julian
-        268  10B 0001A020 g_date_set_month
-        269  10C 0001C730 g_date_set_parse
-        270  10D 0001A000 g_date_set_time
-        271  10E 00019E90 g_date_set_time_t
-        272  10F 0001A010 g_date_set_time_val
-        273  110 0001A1C0 g_date_set_year
-        274  111 0001D8D0 g_date_strftime
-        275  112 0001A820 g_date_subtract_days
-        276  113 0001BAA0 g_date_subtract_months
-        277  114 0001BCC0 g_date_subtract_years
-        278  115 0001E970 g_date_time_add
-        279  116 0001EAA0 g_date_time_add_days
-        280  117 0001F670 g_date_time_add_full
-        281  118 0001EC60 g_date_time_add_hours
-        282  119 0001EC80 g_date_time_add_minutes
-        283  11A 0001F340 g_date_time_add_months
-        284  11B 0001EC90 g_date_time_add_seconds
-        285  11C 0001EC10 g_date_time_add_weeks
-        286  11D 0001F090 g_date_time_add_years = g_date_time_get_day_of_year
-        287  11E 0001ED80 g_date_time_compare
-        288  11F 0001ECB0 g_date_time_difference
-        289  120 0001EDF0 g_date_time_equal
-        290  121 00021550 g_date_time_format
-        291  122 0001FAD0 g_date_time_get_day_of_month
-        292  123 0001FFB0 g_date_time_get_day_of_week
-        293  124 00020090 g_date_time_get_day_of_year
-        294  125 000201B0 g_date_time_get_hour
-        295  126 00020300 g_date_time_get_microsecond
-        296  127 00020200 g_date_time_get_minute
-        297  128 0001FA80 g_date_time_get_month
-        298  129 00020280 g_date_time_get_second
-        299  12A 00020360 g_date_time_get_seconds = g_date_time_is_daylight_savings
-        300  12B 00020520 g_date_time_get_timezone_abbreviation
-        301  12C 000204D0 g_date_time_get_utc_offset = g_date_time_to_local
-        302  12D 00020020 g_date_time_get_week_numbering_year
-        303  12E 0001FD50 g_date_time_get_week_of_year
-        304  12F 0001FA30 g_date_time_get_year
-        305  130 0001EE10 g_date_time_get_ymd
-        306  131 0001EDB0 g_date_time_hash
-        307  132 00021360 g_date_time_is_daylight_savings
-        308  133 0001E600 g_date_time_new
-        309  134 0001E420 g_date_time_new_from_timeval_local
-        310  135 0001E510 g_date_time_new_from_timeval_utc
-        311  136 0001E240 g_date_time_new_from_unix_local
-        312  137 0001E330 g_date_time_new_from_unix_utc
-        313  138 0001E890 g_date_time_new_local
-        314  139 0001E0F0 g_date_time_new_now
-        315  13A 0001E1E0 g_date_time_new_now_local
-        316  13B 0001E210 g_date_time_new_now_utc
-        317  13C 0001E900 g_date_time_new_utc
-        318  13D 0001E010 g_date_time_ref
-        319  13E 000214D0 g_date_time_to_local
-        320  13F 00020440 g_date_time_to_timeval
-        321  140 000213B0 g_date_time_to_timezone
-        322  141 000203D0 g_date_time_to_unix
-        323  142 00021510 g_date_time_to_utc
-        324  143 0001E080 g_date_time_unref
-        325  144 0001C520 g_date_to_struct_tm
-        326  145 00019740 g_date_valid
-        327  146 000197B0 g_date_valid_day = g_date_add_days
-        328  147 00019D50 g_date_valid_dmy
-        329  148 000197D0 g_date_valid_julian
-        330  149 00019790 g_date_valid_month
-        331  14A 000197C0 g_date_valid_weekday
-        332  14B 000197A0 g_date_valid_year
-        333  14C 00025570 g_dcgettext
-        334  14D 000251B0 g_dgettext
-        335  14E 00021970 g_dir_close
-        336  14F 00023C70 g_dir_make_tmp
-        337  150 00021790 g_dir_open_utf8 = g_error_matches
-        338  151 00021880 g_dir_read_name_utf8
-        339  152 00021940 g_dir_rewind
-        340  153 00027730 g_direct_equal
-        341  154 00025800 g_direct_hash
-        342  155 00025690 g_dngettext
-        343  156 00027780 g_double_equal
-        344  157 00027790 g_double_hash
-        345  158 00025350 g_dpgettext
-        346  159 000254B0 g_dpgettext2
-        347  15A 000219C0 g_environ_getenv
-        348  15B 00021A80 g_environ_setenv
-        349  15C 00021C30 g_environ_unsetenv
-        350  15D 000226B0 g_error_copy
-        351  15E 00022660 g_error_free
-        352  15F 00022790 g_error_matches
-        353  160 00022540 g_error_new = g_file_set_contents
-        354  161 000225C0 g_error_new_literal
-        355  162 00022490 g_error_new_valist
-        356  163 00023080 g_file_error_from_errno
-        357  164 00023050 g_file_error_quark
-        358  165 000233B0 g_file_get_contents_utf8
-        359  166 00023A30 g_file_open_tmp_utf8
-        360  167 000247C0 g_file_read_link
-        361  168 00023540 g_file_set_contents
-        362  169 00022E90 g_file_test_utf8
-        363  16A 00017F10 g_filename_display_basename
-        364  16B 00017E40 g_filename_display_name
-        365  16C 000177C0 g_filename_from_uri_utf8
-        366  16D 000176A0 g_filename_from_utf8_utf8
-        367  16E 00017AF0 g_filename_to_uri_utf8
-        368  16F 00017550 g_filename_to_utf8_utf8
-        369  170 0007A2B0 g_find_program_in_path
-        370  171 00062F20 g_fopen
-        371  172 0007B3F0 g_format_size
-        372  173 0007B400 g_format_size_for_display
-        373  174 0007AFF0 g_format_size_full
-        374  175 0008C4D0 g_fprintf
-        375  176 00042590 g_free
-        376  177 00062FD0 g_freopen
-        377  178 0007A780 g_get_application_name
-        378  179 0000CDB0 g_get_charset
-        379  17A 0000CEF0 g_get_codeset
-        380  17B 00025020 g_get_current_dir_utf8
-        381  17C 0003AFE0 g_get_current_time
-        382  17D 000223A0 g_get_environ
-        383  17E 00017530 g_get_filename_charsets
-        384  17F 0007A460 g_get_home_dir
-        385  180 0007A600 g_get_host_name
-        386  181 0000CF80 g_get_language_names
-        387  182 0000CF10 g_get_locale_variants
-        388  183 0003B0F0 g_get_monotonic_time
-        389  184 0006C860 g_get_num_processors
-        390  185 0007A680 g_get_prgname
-        391  186 0007A440 g_get_real_name
-        392  187 0003B070 g_get_real_time
-        393  188 0007AF30 g_get_system_config_dirs
-        394  189 0007AEE0 g_get_system_data_dirs
-        395  18A 0007A580 g_get_tmp_dir = g_variant_new_boolean
-        396  18B 0007A980 g_get_user_cache_dir
-        397  18C 0007A8E0 g_get_user_config_dir
-        398  18D 0007A830 g_get_user_data_dir
-        399  18E 0007A420 g_get_user_name
-        400  18F 0007AA20 g_get_user_runtime_dir
-        401  190 0007AAF0 g_get_user_special_dir
-        402  191 00021D30 g_getenv_utf8
-        403  192 000267A0 g_hash_table_add = g_hmac_new
-        404  193 000268C0 g_hash_table_contains
-        405  194 00026EB0 g_hash_table_destroy
-        406  195 00027380 g_hash_table_find
-        407  196 000272C0 g_hash_table_foreach
-        408  197 00026FB0 g_hash_table_foreach_remove
-        409  198 00027150 g_hash_table_foreach_steal
-        410  199 000274C0 g_hash_table_get_keys
-        411  19A 00027540 g_hash_table_get_keys_as_array
-        412  19B 00027660 g_hash_table_get_values = g_hook_list_marshal_check
-        413  19C 00026560 g_hash_table_insert
-        414  19D 00025D80 g_hash_table_iter_get_hash_table
-        415  19E 00025C00 g_hash_table_iter_init
-        416  19F 00025C60 g_hash_table_iter_next
-        417  1A0 00025DC0 g_hash_table_iter_remove
-        418  1A1 00025EA0 g_hash_table_iter_replace
-        419  1A2 00026040 g_hash_table_iter_steal
-        420  1A3 000262D0 g_hash_table_lookup
-        421  1A4 00026400 g_hash_table_lookup_extended
-        422  1A5 00025BF0 g_hash_table_new
-        423  1A6 00025B40 g_hash_table_new_full
-        424  1A7 00026110 g_hash_table_ref
-        425  1A8 000269E0 g_hash_table_remove
-        426  1A9 00026D10 g_hash_table_remove_all
-        427  1AA 00026680 g_hash_table_replace
-        428  1AB 00027480 g_hash_table_size
-        429  1AC 00026B90 g_hash_table_steal
-        430  1AD 00026EF0 g_hash_table_steal_all
-        431  1AE 00026160 g_hash_table_unref
-        432  1AF 000279A0 g_hmac_copy
-        433  1B0 00027B30 g_hmac_get_digest
-        434  1B1 00027BF0 g_hmac_get_string
-        435  1B2 000277A0 g_hmac_new
-        436  1B3 00027A20 g_hmac_ref
-        437  1B4 00027A60 g_hmac_unref
-        438  1B5 00027AD0 g_hmac_update = g_hook_find_func
-        439  1B6 00027E30 g_hook_alloc
-        440  1B7 00028D90 g_hook_compare_ids
-        441  1B8 00028880 g_hook_destroy
-        442  1B9 000280A0 g_hook_destroy_link
-        443  1BA 00028900 g_hook_find
-        444  1BB 00028A40 g_hook_find_data
-        445  1BC 00028AD0 g_hook_find_func
-        446  1BD 00028B80 g_hook_find_func_data
-        447  1BE 00028470 g_hook_first_valid
-        448  1BF 00027EE0 g_hook_free
-        449  1C0 00028800 g_hook_get
-        450  1C1 00028240 g_hook_insert_before
-        451  1C2 00028C40 g_hook_insert_sorted
-        452  1C3 000281B0 g_hook_list_clear
-        453  1C4 00027DB0 g_hook_list_init = nameprep
-        454  1C5 00028510 g_hook_list_invoke
-        455  1C6 000285B0 g_hook_list_invoke_check
-        456  1C7 00028740 g_hook_list_marshal
-        457  1C8 00028660 g_hook_list_marshal_check
-        458  1C9 000283A0 g_hook_next_valid
-        459  1CA 00028370 g_hook_prepend
-        460  1CB 00028110 g_hook_ref
-        461  1CC 00027F90 g_hook_unref
-        462  1CD 00029C20 g_hostname_is_ascii_encoded
-        463  1CE 00029D10 g_hostname_is_ip_address
-        464  1CF 00029760 g_hostname_is_non_ascii
-        465  1D0 00029170 g_hostname_to_ascii
-        466  1D1 00029790 g_hostname_to_unicode
-        467  1D2 00016770 g_iconv
-        468  1D3 000167B0 g_iconv_close
-        469  1D4 00016270 g_iconv_open
-        470  1D5 0003D530 g_idle_add
-        471  1D6 0003D490 g_idle_add_full
-        472  1D7 000C74C0 g_idle_funcs
-        473  1D8 0003D550 g_idle_remove_by_data
-        474  1D9 0003D460 g_idle_source_new
-        475  1DA 00027760 g_int64_equal
-        476  1DB 00027770 g_int64_hash
-        477  1DC 00027740 g_int_equal = g_hook_list_marshal
-        478  1DD 00027750 g_int_hash
-        479  1DE 000528B0 g_intern_static_string
-        480  1DF 00052680 g_intern_string
-        481  1E0 0002A080 g_io_add_watch
-        482  1E1 00029FF0 g_io_add_watch_full
-        483  1E2 0002B2C0 g_io_channel_close
-        484  1E3 0002A110 g_io_channel_error_from_errno
-        485  1E4 0002F040 g_io_channel_error_quark
-        486  1E5 0002A530 g_io_channel_flush = g_io_channel_set_encoding
-        487  1E6 0002A0B0 g_io_channel_get_buffer_condition
-        488  1E7 0002A270 g_io_channel_get_buffer_size
-        489  1E8 0002B4F0 g_io_channel_get_buffered
-        490  1E9 0002A4E0 g_io_channel_get_close_on_unref
-        491  1EA 0002B890 g_io_channel_get_encoding
-        492  1EB 0002A430 g_io_channel_get_flags = g_io_channel_set_buffered
-        493  1EC 0002A360 g_io_channel_get_line_term
-        494  1ED 00029EE0 g_io_channel_init
-        495  1EE 00090F70 g_io_channel_new_file_utf8
-        496  1EF 0002F380 g_io_channel_read
-        497  1F0 0002CF20 g_io_channel_read_chars
-        498  1F1 0002B8D0 g_io_channel_read_line
-        499  1F2 0002BF80 g_io_channel_read_line_string
-        500  1F3 0002C600 g_io_channel_read_to_end
-        501  1F4 0002DAF0 g_io_channel_read_unichar
-        502  1F5 00029F60 g_io_channel_ref
-        503  1F6 0002F070 g_io_channel_seek
-        504  1F7 0002A9A0 g_io_channel_seek_position
-        505  1F8 0002A220 g_io_channel_set_buffer_size
-        506  1F9 0002B430 g_io_channel_set_buffered
-        507  1FA 0002A4A0 g_io_channel_set_close_on_unref
-        508  1FB 0002B530 g_io_channel_set_encoding
-        509  1FC 0002A3B0 g_io_channel_set_flags
-        510  1FD 0002A2B0 g_io_channel_set_line_term
-        511  1FE 0002A680 g_io_channel_shutdown
-        512  1FF 00091700 g_io_channel_unix_get_fd
-        513  200 000914A0 g_io_channel_unix_new
-        514  201 0002A7E0 g_io_channel_unref
-        515  202 00091380 g_io_channel_win32_get_fd
-        516  203 00091760 g_io_channel_win32_make_pollfd
-        517  204 00090D80 g_io_channel_win32_new_fd
-        518  205 00090C40 g_io_channel_win32_new_messages
-        519  206 00091390 g_io_channel_win32_new_socket
-        520  207 00091720 g_io_channel_win32_poll
-        521  208 00091710 g_io_channel_win32_set_debug
-        522  209 0002F210 g_io_channel_write
-        523  20A 0002E460 g_io_channel_write_chars
-        524  20B 0002EEE0 g_io_channel_write_unichar
-        525  20C 00029FA0 g_io_create_watch
-        526  20D 000C7C40 g_io_watch_funcs
-        527  20E 0002FE50 g_key_file_error_quark
-        528  20F 00031520 g_key_file_free
-        529  210 00032D00 g_key_file_get_boolean
-        530  211 00032FB0 g_key_file_get_boolean_list
-        531  212 000346C0 g_key_file_get_comment
-        532  213 00033D40 g_key_file_get_double
-        533  214 00033FE0 g_key_file_get_double_list
-        534  215 00031930 g_key_file_get_groups
-        535  216 000335E0 g_key_file_get_int64
-        536  217 00033330 g_key_file_get_integer
-        537  218 000339C0 g_key_file_get_integer_list
-        538  219 00031750 g_key_file_get_keys
-        539  21A 00032870 g_key_file_get_locale_string
-        540  21B 00032A00 g_key_file_get_locale_string_list
-        541  21C 000318E0 g_key_file_get_start_group
-        542  21D 00031DE0 g_key_file_get_string
-        543  21E 000321D0 g_key_file_get_string_list
-        544  21F 000337D0 g_key_file_get_uint64
-        545  220 00031AB0 g_key_file_get_value
-        546  221 00034CE0 g_key_file_has_group
-        547  222 00034D60 g_key_file_has_key
-        548  223 00030DF0 g_key_file_load_from_data
-        549  224 000312B0 g_key_file_load_from_data_dirs
-        550  225 00030FE0 g_key_file_load_from_dirs
-        551  226 00030CE0 g_key_file_load_from_file
-        552  227 00030C20 g_key_file_new
-        553  228 00031400 g_key_file_ref
-        554  229 00034AA0 g_key_file_remove_comment
-        555  22A 00034E60 g_key_file_remove_group
-        556  22B 00034F60 g_key_file_remove_key
-        557  22C 000350F0 g_key_file_save_to_file
-        558  22D 00032F10 g_key_file_set_boolean
-        559  22E 000331F0 g_key_file_set_boolean_list
-        560  22F 00034300 g_key_file_set_comment
-        561  230 00033F60 g_key_file_set_double = g_key_file_remove_key
-        562  231 000341D0 g_key_file_set_double_list
-        563  232 00033750 g_key_file_set_int64
-        564  233 00033560 g_key_file_set_integer
-        565  234 00033C10 g_key_file_set_integer_list
-        566  235 00030CB0 g_key_file_set_list_separator
-        567  236 000327B0 g_key_file_set_locale_string
-        568  237 00032B80 g_key_file_set_locale_string_list
-        569  238 00032150 g_key_file_set_string
-        570  239 00032680 g_key_file_set_string_list
-        571  23A 00033940 g_key_file_set_uint64
-        572  23B 00031C00 g_key_file_set_value
-        573  23C 000315E0 g_key_file_to_data
-        574  23D 00031450 g_key_file_unref
-        575  23E 00035A50 g_list_alloc
-        576  23F 000361D0 g_list_append
-        577  240 000362B0 g_list_concat
-        578  241 00035EA0 g_list_copy
-        579  242 00035EB0 g_list_copy_deep
-        580  243 00035DE0 g_list_delete_link
-        581  244 00036090 g_list_find
-        582  245 000360C0 g_list_find_custom
-        583  246 000362F0 g_list_first
-        584  247 00036330 g_list_foreach
-        585  248 00035A60 g_list_free
-        586  249 00035A80 g_list_free_1
-        587  24A 00036360 g_list_free_full
-        588  24B 00036170 g_list_index
-        589  24C 00036230 g_list_insert
-        590  24D 00035AE0 g_list_insert_before
-        591  24E 00036380 g_list_insert_sorted
-        592  24F 00036390 g_list_insert_sorted_with_data
-        593  250 000361B0 g_list_last
-        594  251 00036310 g_list_length
-        595  252 00035FF0 g_list_nth
-        596  253 00036050 g_list_nth_data = unblock_source
-        597  254 00036020 g_list_nth_prev
-        598  255 00001600 g_list_pop_allocator
-        599  256 00036130 g_list_position
-        600  257 00035A90 g_list_prepend
-        601  258 000015F0 g_list_push_allocator
-        602  259 00035BE0 g_list_remove = g_source_unref_internal
-        603  25A 00035CC0 g_list_remove_all
-        604  25B 00035D30 g_list_remove_link
-        605  25C 00035FC0 g_list_reverse
-        606  25D 000363A0 g_list_sort
-        607  25E 000363B0 g_list_sort_with_data
-        608  25F 00022270 g_listenv
-        609  260 00017410 g_locale_from_utf8
-        610  261 000172F0 g_locale_to_utf8
-        611  262 00044220 g_log
-        612  263 000437E0 g_log_default_handler
-        613  264 000443D0 g_log_remove_handler
-        614  265 00043C60 g_log_set_always_fatal
-        615  266 00043DD0 g_log_set_default_handler
-        616  267 00043CA0 g_log_set_fatal_mask
-        617  268 00044270 g_log_set_handler
-        618  269 00043E60 g_logv
-        619  26A 00062DB0 g_lstat = g_ascii_formatd
-        620  26B 0003B230 g_main_context_acquire
-        621  26C 0003C940 g_main_context_add_poll
-        622  26D 0003BB00 g_main_context_check
-        623  26E 00039380 g_main_context_default
-        624  26F 0003BE10 g_main_context_dispatch
-        625  270 0003ACE0 g_main_context_find_source_by_funcs_user_data
-        626  271 0003AC00 g_main_context_find_source_by_id
-        627  272 0003ADF0 g_main_context_find_source_by_user_data
-        628  273 0003CDF0 g_main_context_get_poll_func = g_mapped_file_get_contents
-        629  274 000393E0 g_main_context_get_thread_default
-        630  275 0003D6A0 g_main_context_invoke
-        631  276 0003D560 g_main_context_invoke_full = unescape_gstring_inplace
-        632  277 0003CEB0 g_main_context_is_owner
-        633  278 0003C520 g_main_context_iteration
-        634  279 00039160 g_main_context_new
-        635  27A 0003C4D0 g_main_context_pending
-        636  27B 0003B440 g_main_context_pop_thread_default
-        637  27C 0003B6B0 g_main_context_prepare
-        638  27D 0003B2D0 g_main_context_push_thread_default
-        639  27E 0003BA50 g_main_context_query
-        640  27F 00038CE0 g_main_context_ref
-        641  280 00039410 g_main_context_ref_thread_default
-        642  281 0003B370 g_main_context_release
-        643  282 0003CA60 g_main_context_remove_poll
-        644  283 0003CD70 g_main_context_set_poll_func
-        645  284 00038D50 g_main_context_unref
-        646  285 0003B4E0 g_main_context_wait
-        647  286 0003CE60 g_main_context_wakeup
-        648  287 0003B1D0 g_main_current_source
-        649  288 0003B180 g_main_depth
-        650  289 0003C8D0 g_main_loop_get_context
-        651  28A 0003C860 g_main_loop_is_running
-        652  28B 0003C570 g_main_loop_new
-        653  28C 0003C7E0 g_main_loop_quit = g_mapped_file_new
-        654  28D 0003C5C0 g_main_loop_ref
-        655  28E 0003C6A0 g_main_loop_run = g_main_context_invoke
-        656  28F 0003C630 g_main_loop_unref
-        657  290 00042480 g_malloc
-        658  291 000424D0 g_malloc0 = _g_log_fallback_handler
-        659  292 000426E0 g_malloc0_n
-        660  293 00042680 g_malloc_n
-        661  294 0003DE30 g_mapped_file_free
-        662  295 0003DE90 g_mapped_file_get_bytes
-        663  296 0003DDF0 g_mapped_file_get_contents
-        664  297 0003DDB0 g_mapped_file_get_length
-        665  298 0003D7E0 g_mapped_file_new
-        666  299 0003DB80 g_mapped_file_new_from_fd
-        667  29A 0003DE40 g_mapped_file_ref
-        668  29B 0003D770 g_mapped_file_unref
-        669  29C 00041A00 g_markup_collect_attributes
-        670  29D 0003E480 g_markup_error_quark = g_markup_parse_context_get_user_data
-        671  29E 000415E0 g_markup_escape_text = g_try_malloc
-        672  29F 0003F060 g_markup_parse_context_end_parse
-        673  2A0 0003EF20 g_markup_parse_context_free
-        674  2A1 0003F3B0 g_markup_parse_context_get_element
-        675  2A2 0003F400 g_markup_parse_context_get_element_stack
-        676  2A3 0003F440 g_markup_parse_context_get_position
-        677  2A4 0003F480 g_markup_parse_context_get_user_data
-        678  2A5 0003ED70 g_markup_parse_context_new
-        679  2A6 0003F9F0 g_markup_parse_context_parse
-        680  2A7 0003F760 g_markup_parse_context_pop
-        681  2A8 0003F490 g_markup_parse_context_push
-        682  2A9 0003EEB0 g_markup_parse_context_ref
-        683  2AA 0003F010 g_markup_parse_context_unref
-        684  2AB 000419D0 g_markup_printf_escaped
-        685  2AC 00041780 g_markup_vprintf_escaped
-        686  2AD 00055870 g_match_info_expand_references
-        687  2AE 00054AD0 g_match_info_fetch = g_match_info_free
-        688  2AF 00054F90 g_match_info_fetch_all
-        689  2B0 00054B80 g_match_info_fetch_named
-        690  2B1 00054E30 g_match_info_fetch_named_pos
-        691  2B2 00054A30 g_match_info_fetch_pos
-        692  2B3 00055AD0 g_match_info_free
-        693  2B4 00054980 g_match_info_get_match_count
-        694  2B5 00054870 g_match_info_get_regex = g_match_info_expand_references
-        695  2B6 000548B0 g_match_info_get_string
-        696  2B7 000549E0 g_match_info_is_partial_match
-        697  2B8 00054930 g_match_info_matches
-        698  2B9 00055070 g_match_info_next
-        699  2BA 000548F0 g_match_info_ref
-        700  2BB 00055A90 g_match_info_unref
-        701  2BC 000014D0 g_mem_chunk_alloc
-        702  2BD 00001510 g_mem_chunk_alloc0
-        703  2BE 000015A0 g_mem_chunk_clean
-        704  2BF 000014A0 g_mem_chunk_destroy
-        705  2C0 00001550 g_mem_chunk_free
-        706  2C1 000015D0 g_mem_chunk_info
-        707  2C2 00001450 g_mem_chunk_new
-        708  2C3 000015C0 g_mem_chunk_print
-        709  2C4 000015B0 g_mem_chunk_reset
-        710  2C5 0013A2B0 g_mem_gc_friendly
-        711  2C6 00042830 g_mem_is_system_malloc
-        712  2C7 00042910 g_mem_profile
-        713  2C8 00042840 g_mem_set_vtable
-        714  2C9 00063650 g_memdup
-        715  2CA 00062BC0 g_mkdir
-        716  2CB 000249E0 g_mkdir_with_parents
-        717  2CC 00023520 g_mkdtemp
-        718  2CD 00023500 g_mkdtemp_full
-        719  2CE 00023530 g_mkstemp_full
-        720  2CF 00023A20 g_mkstemp_utf8
-        721  2D0 0008CE80 g_mutex_clear
-        722  2D1 00002B10 g_mutex_free
-        723  2D2 0008CE70 g_mutex_init
-        724  2D3 0008CEA0 g_mutex_lock
-        725  2D4 00002AE0 g_mutex_new
-        726  2D5 0008CEB0 g_mutex_trylock
-        727  2D6 0008CED0 g_mutex_unlock
-        728  2D7 0004AC30 g_node_child_index
-        729  2D8 0004AB70 g_node_child_position
-        730  2D9 0004AD50 g_node_children_foreach
-        731  2DA 0004A810 g_node_copy
-        732  2DB 0004A870 g_node_copy_deep
-        733  2DC 0004A350 g_node_depth
-        734  2DD 00049F20 g_node_destroy
-        735  2DE 0004A680 g_node_find
-        736  2DF 0004AA90 g_node_find_child
-        737  2E0 0004ACA0 g_node_first_sibling
-        738  2E1 0004A270 g_node_get_root
-        739  2E2 0004A950 g_node_insert
-        740  2E3 0004A100 g_node_insert_after
-        741  2E4 00049FB0 g_node_insert_before
-        742  2E5 0004A2C0 g_node_is_ancestor
-        743  2E6 0004A7C0 g_node_last_child
-        744  2E7 0004AD00 g_node_last_sibling
-        745  2E8 0004A3C0 g_node_max_height
-        746  2E9 0004AA40 g_node_n_children
-        747  2EA 0004A730 g_node_n_nodes
-        748  2EB 00049E80 g_node_new
-        749  2EC 0004A8F0 g_node_nth_child
-        750  2ED 00001640 g_node_pop_allocator
-        751  2EE 0004A220 g_node_prepend
-        752  2EF 00001630 g_node_push_allocator
-        753  2F0 0004A370 g_node_reverse_children
-        754  2F1 0004A410 g_node_traverse
-        755  2F2 00049EA0 g_node_unlink
-        756  2F3 0007AFC0 g_nullify_pointer
-        757  2F4 000062A0 g_on_error_query
-        758  2F5 000062F0 g_on_error_stack_trace
-        759  2F6 0006C2C0 g_once_impl
-        760  2F7 0006C360 g_once_init_enter
-        761  2F8 00002DC0 g_once_init_enter_impl
-        762  2F9 0006C400 g_once_init_leave
-        763  2FA 00062990 g_open
-        764  2FB 0004C340 g_option_context_add_group
-        765  2FC 0004E1C0 g_option_context_add_main_entries
-        766  2FD 0004C130 g_option_context_free
-        767  2FE 0004E400 g_option_context_get_description
-        768  2FF 0004C500 g_option_context_get_help
-        769  300 0004C270 g_option_context_get_help_enabled
-        770  301 0004C2F0 g_option_context_get_ignore_unknown_options
-        771  302 0004C4C0 g_option_context_get_main_group
-        772  303 0004E370 g_option_context_get_summary
-        773  304 0004C0F0 g_option_context_new
-        774  305 0004D160 g_option_context_parse = g_option_group_set_translation_domain
-        775  306 0004E440 g_option_context_parse_strv
-        776  307 0004E3B0 g_option_context_set_description
-        777  308 0004C240 g_option_context_set_help_enabled
-        778  309 0004C2B0 g_option_context_set_ignore_unknown_options
-        779  30A 0004C450 g_option_context_set_main_group
-        780  30B 0004E320 g_option_context_set_summary
-        781  30C 0004E250 g_option_context_set_translate_func
-        782  30D 0004E2C0 g_option_context_set_translation_domain
-        783  30E 0004B2A0 g_option_error_quark
-        784  30F 0004DE60 g_option_group_add_entries
-        785  310 0004AE40 g_option_group_free
-        786  311 0004DDF0 g_option_group_new
-        787  312 0004E0C0 g_option_group_set_error_hook
-        788  313 0004E090 g_option_group_set_parse_hooks
-        789  314 0004E0F0 g_option_group_set_translate_func
-        790  315 0004E160 g_option_group_set_translation_domain
-        791  316 00035200 g_parse_debug_string
-        792  317 00024C40 g_path_get_basename
-        793  318 00024DD0 g_path_get_dirname
-        794  319 00024800 g_path_is_absolute = g_direct_hash
-        795  31A 00024880 g_path_skip_root
-        796  31B 0004EDD0 g_pattern_match
-        797  31C 000511C0 g_pattern_match_simple
-        798  31D 00051130 g_pattern_match_string
-        799  31E 000510A0 g_pattern_spec_equal
-        800  31F 00051050 g_pattern_spec_free
-        801  320 00050D50 g_pattern_spec_new
-        802  321 00006DA0 g_pointer_bit_lock
-        803  322 00006E50 g_pointer_bit_trylock
-        804  323 00006EA0 g_pointer_bit_unlock
-        805  324 00051610 g_poll
-        806  325 00022910 g_prefix_error
-        807  326 00044AF0 g_print
-        808  327 00044C30 g_printerr
-        809  328 0008C460 g_printf
-        810  329 00044D30 g_printf_string_upper_bound
-        811  32A 0008D340 g_private_get
-        812  32B 00002A50 g_private_new = g_array_set_clear_func
-        813  32C 0008D3A0 g_private_replace
-        814  32D 0008D370 g_private_set
-        815  32E 00022870 g_propagate_error
-        816  32F 00022980 g_propagate_prefixed_error
-        817  330 00004D50 g_ptr_array_add
-        818  331 00005070 g_ptr_array_foreach
-        819  332 00005150 g_ptr_array_free = g_atomic_int_inc
-        820  333 00004E70 g_ptr_array_insert
-        821  334 00004650 g_ptr_array_new = g_async_queue_unref_and_unlock
-        822  335 000047A0 g_ptr_array_new_full
-        823  336 00004770 g_ptr_array_new_with_free_func
-        824  337 000047D0 g_ptr_array_ref
-        825  338 00004C70 g_ptr_array_remove
-        826  339 00004CE0 g_ptr_array_remove_fast = g_async_queue_timed_pop
-        827  33A 00004820 g_ptr_array_remove_index
-        828  33B 00004900 g_ptr_array_remove_index_fast
-        829  33C 000049D0 g_ptr_array_remove_range
-        830  33D 00004740 g_ptr_array_set_free_func
-        831  33E 00004B20 g_ptr_array_set_size
-        832  33F 00004660 g_ptr_array_sized_new
-        833  340 00004FD0 g_ptr_array_sort
-        834  341 00005020 g_ptr_array_sort_with_data
-        835  342 000050E0 g_ptr_array_unref
-        836  343 000521A0 g_qsort_with_data
-        837  344 000524C0 g_quark_from_static_string
-        838  345 00052290 g_quark_from_string
-        839  346 00052650 g_quark_to_string = g_queue_peek_head
-        840  347 00052240 g_quark_try_string
-        841  348 00052B10 g_queue_clear
-        842  349 00052F50 g_queue_copy
-        843  34A 000535A0 g_queue_delete_link = g_random_set_seed
-        844  34B 00052CC0 g_queue_find
-        845  34C 00052D00 g_queue_find_custom
-        846  34D 00052C30 g_queue_foreach
-        847  34E 00052A80 g_queue_free = g_rand_copy
-        848  34F 00052CA0 g_queue_free_full
-        849  350 00052BA0 g_queue_get_length
-        850  351 00053740 g_queue_index
-        851  352 00052AD0 g_queue_init
-        852  353 00053940 g_queue_insert_after
-        853  354 00053870 g_queue_insert_before = g_match_info_get_regex
-        854  355 000539B0 g_queue_insert_sorted
-        855  356 00052B50 g_queue_is_empty
-        856  357 00053490 g_queue_link_index
-        857  358 00052A70 g_queue_new
-        858  359 00053650 g_queue_peek_head
-        859  35A 00053170 g_queue_peek_head_link
-        860  35B 000536F0 g_queue_peek_nth
-        861  35C 000532D0 g_queue_peek_nth_link
-        862  35D 000536A0 g_queue_peek_tail
-        863  35E 000531B0 g_queue_peek_tail_link
-        864  35F 00053080 g_queue_pop_head
-        865  360 00053100 g_queue_pop_head_link
-        866  361 000535F0 g_queue_pop_nth
-        867  362 00053540 g_queue_pop_nth_link
-        868  363 000531F0 g_queue_pop_tail
-        869  364 00053260 g_queue_pop_tail_link
-        870  365 00052DD0 g_queue_push_head
-        871  366 00052E30 g_queue_push_head_link = g_rand_set_seed_array
-        872  367 000538D0 g_queue_push_nth
-        873  368 00053360 g_queue_push_nth_link
-        874  369 00052EF0 g_queue_push_tail
-        875  36A 00052FC0 g_queue_push_tail_link
-        876  36B 00053780 g_queue_remove = string_append.part.0
-        877  36C 000537F0 g_queue_remove_all
-        878  36D 00052BE0 g_queue_reverse
-        879  36E 00052D70 g_queue_sort
-        880  36F 000534D0 g_queue_unlink
-        881  370 00053A80 g_rand_copy
-        882  371 00054110 g_rand_double
-        883  372 00054180 g_rand_double_range
-        884  373 00053A50 g_rand_free
-        885  374 00053FB0 g_rand_int
-        886  375 000541D0 g_rand_int_range
-        887  376 00053DF0 g_rand_new
-        888  377 00053C80 g_rand_new_with_seed
-        889  378 00053F70 g_rand_new_with_seed_array
-        890  379 00053AE0 g_rand_set_seed
-        891  37A 00053E30 g_rand_set_seed_array = g_match_info_fetch_named_pos
-        892  37B 000544C0 g_random_double
-        893  37C 00054520 g_random_double_range
-        894  37D 00054400 g_random_int
-        895  37E 00054460 g_random_int_range
-        896  37F 000545A0 g_random_set_seed
-        897  380 00042530 g_realloc
-        898  381 00042740 g_realloc_n
-        899  382 0008D0F0 g_rec_mutex_clear
-        900  383 0008D0C0 g_rec_mutex_init
-        901  384 0008D120 g_rec_mutex_lock
-        902  385 0008D170 g_rec_mutex_trylock
-        903  386 0008D160 g_rec_mutex_unlock
-        904  387 000578E0 g_regex_check_replacement
-        905  388 00055040 g_regex_error_quark
-        906  389 00057990 g_regex_escape_nul
-        907  38A 00057BD0 g_regex_escape_string
-        908  38B 000565F0 g_regex_get_capture_count
-        909  38C 00056680 g_regex_get_compile_flags
-        910  38D 00056620 g_regex_get_has_cr_or_lf
-        911  38E 000566C0 g_regex_get_match_flags = g_regex_replace
-        912  38F 000565C0 g_regex_get_max_backref
-        913  390 00056650 g_regex_get_max_lookbehind
-        914  391 00056580 g_regex_get_pattern
-        915  392 00056EA0 g_regex_get_string_number = g_scanner_error
-        916  393 00056960 g_regex_match
-        917  394 00056E70 g_regex_match_all
-        918  395 00056B80 g_regex_match_all_full
-        919  396 00056710 g_regex_match_full
-        920  397 000568F0 g_regex_match_simple
-        921  398 00055AF0 g_regex_new
-        922  399 000559D0 g_regex_ref
-        923  39A 000576C0 g_regex_replace
-        924  39B 00057490 g_regex_replace_eval
-        925  39C 00057400 g_regex_replace_literal = g_scanner_scope_add_symbol
-        926  39D 000573D0 g_regex_split
-        927  39E 00056F20 g_regex_split_full
-        928  39F 00057360 g_regex_split_simple
-        929  3A0 00055A10 g_regex_unref
-        930  3A1 00002620 g_relation_count
-        931  3A2 00002540 g_relation_delete
-        932  3A3 00002300 g_relation_destroy
-        933  3A4 000027C0 g_relation_exists
-        934  3A5 000023A0 g_relation_index
-        935  3A6 00002410 g_relation_insert
-        936  3A7 00002290 g_relation_new
-        937  3A8 000028F0 g_relation_print
-        938  3A9 000026A0 g_relation_select
-        939  3AA 0007AA30 g_reload_user_special_dirs_cache
-        940  3AB 00062E30 g_remove
-        941  3AC 00062A80 g_rename
-        942  3AD 00044240 g_return_if_fail_warning
-        943  3AE 00062EB0 g_rmdir
-        944  3AF 0008D1C0 g_rw_lock_clear
-        945  3B0 0008D1B0 g_rw_lock_init
-        946  3B1 0008D220 g_rw_lock_reader_lock
-        947  3B2 0008D230 g_rw_lock_reader_trylock = read_thread
-        948  3B3 0008D250 g_rw_lock_reader_unlock
-        949  3B4 0008D1E0 g_rw_lock_writer_lock
-        950  3B5 0008D1F0 g_rw_lock_writer_trylock
-        951  3B6 0008D210 g_rw_lock_writer_unlock
-        952  3B7 00058BA0 g_scanner_cur_line
-        953  3B8 00058BE0 g_scanner_cur_position
-        954  3B9 00058B20 g_scanner_cur_token
-        955  3BA 00058B60 g_scanner_cur_value
-        956  3BB 00058320 g_scanner_destroy
-        957  3BC 00058C20 g_scanner_eof
-        958  3BD 00057EA0 g_scanner_error
-        959  3BE 0005A4F0 g_scanner_get_next_token
-        960  3BF 0005A5C0 g_scanner_input_file
-        961  3C0 0005A680 g_scanner_input_text
-        962  3C1 00058750 g_scanner_lookup_symbol
-        963  3C2 000580B0 g_scanner_new
-        964  3C3 0005A470 g_scanner_peek_next_token
-        965  3C4 00058400 g_scanner_scope_add_symbol
-        966  3C5 00058AC0 g_scanner_scope_foreach_symbol
-        967  3C6 00058950 g_scanner_scope_lookup_symbol
-        968  3C7 000585F0 g_scanner_scope_remove_symbol
-        969  3C8 00058A70 g_scanner_set_scope
-        970  3C9 00058C70 g_scanner_sync_file_offset
-        971  3CA 0005A740 g_scanner_unexp_token
-        972  3CB 00057F50 g_scanner_warn
-        973  3CC 0005D330 g_sequence_append
-        974  3CD 0005EEF0 g_sequence_foreach
-        975  3CE 0005CDC0 g_sequence_foreach_range
-        976  3CF 0005C8A0 g_sequence_free
-        977  3D0 0005EC90 g_sequence_get
-        978  3D1 0005EE80 g_sequence_get_begin_iter
-        979  3D2 0005EE40 g_sequence_get_end_iter
-        980  3D3 0005F460 g_sequence_get_iter_at_pos
-        981  3D4 0005EE20 g_sequence_get_length
-        982  3D5 0005D930 g_sequence_insert_before
-        983  3D6 0005E030 g_sequence_insert_sorted
-        984  3D7 0005E780 g_sequence_insert_sorted_iter
-        985  3D8 0005D100 g_sequence_iter_compare
-        986  3D9 0005F7B0 g_sequence_iter_get_position
-        987  3DA 0005EC30 g_sequence_iter_get_sequence
-        988  3DB 0005F720 g_sequence_iter_is_begin
-        989  3DC 0005F680 g_sequence_iter_is_end
-        990  3DD 0005F940 g_sequence_iter_move
-        991  3DE 0005F840 g_sequence_iter_next
-        992  3DF 0005F8C0 g_sequence_iter_prev
-        993  3E0 0005E270 g_sequence_lookup
-        994  3E1 0005EB30 g_sequence_lookup_iter
-        995  3E2 0005F500 g_sequence_move
-        996  3E3 0005DBE0 g_sequence_move_range
-        997  3E4 0005C840 g_sequence_new
-        998  3E5 0005D870 g_sequence_prepend
-        999  3E6 0005CEE0 g_sequence_range_get_midpoint
-       1000  3E7 0005DA00 g_sequence_remove
-       1001  3E8 0005DF00 g_sequence_remove_range
-       1002  3E9 0005E1F0 g_sequence_search
-       1003  3EA 0005E9E0 g_sequence_search_iter
-       1004  3EB 0005ED40 g_sequence_set
-       1005  3EC 0005F420 g_sequence_sort
-       1006  3ED 0005E0E0 g_sequence_sort_changed
-       1007  3EE 0005E2F0 g_sequence_sort_changed_iter
-       1008  3EF 0005EF40 g_sequence_sort_iter
-       1009  3F0 0005FA60 g_sequence_swap
-       1010  3F1 0007A7C0 g_set_application_name
-       1011  3F2 000227B0 g_set_error
-       1012  3F3 00022820 g_set_error_literal
-       1013  3F4 0007A740 g_set_prgname
-       1014  3F5 00044AB0 g_set_print_handler
-       1015  3F6 00044BF0 g_set_printerr_handler
-       1016  3F7 00021F60 g_setenv_utf8
-       1017  3F8 0005FB70 g_shell_error_quark
-       1018  3F9 00060010 g_shell_parse_argv
-       1019  3FA 0005FBA0 g_shell_quote
-       1020  3FB 0005FCD0 g_shell_unquote
-       1021  3FC 00061380 g_slice_alloc
-       1022  3FD 00061890 g_slice_alloc0 = g_slist_sort
-       1023  3FE 000618C0 g_slice_copy
-       1024  3FF 00061900 g_slice_free1
-       1025  400 00061B40 g_slice_free_chain_with_offset
-       1026  401 00061210 g_slice_get_config
-       1027  402 00061290 g_slice_get_config_state
-       1028  403 00061180 g_slice_set_config
-       1029  404 00062120 g_slist_alloc
-       1030  405 000626E0 g_slist_append = g_strnfill
-       1031  406 000627C0 g_slist_concat = g_strdup_printf
-       1032  407 00062400 g_slist_copy
-       1033  408 00062410 g_slist_copy_deep
-       1034  409 000623A0 g_slist_delete_link
-       1035  40A 000625A0 g_slist_find
-       1036  40B 000625D0 g_slist_find_custom
-       1037  40C 00062820 g_slist_foreach
-       1038  40D 00062130 g_slist_free
-       1039  40E 00062150 g_slist_free_1
-       1040  40F 00062850 g_slist_free_full
-       1041  410 00062680 g_slist_index
-       1042  411 00062730 g_slist_insert
-       1043  412 00062190 g_slist_insert_before
-       1044  413 00062870 g_slist_insert_sorted
-       1045  414 00062880 g_slist_insert_sorted_with_data
-       1046  415 000626C0 g_slist_last
-       1047  416 00062800 g_slist_length
-       1048  417 00062530 g_slist_nth
-       1049  418 00062560 g_slist_nth_data
-       1050  419 00001620 g_slist_pop_allocator = g_relation_count
-       1051  41A 00062640 g_slist_position
-       1052  41B 00062160 g_slist_prepend
-       1053  41C 00001610 g_slist_push_allocator
-       1054  41D 00062280 g_slist_remove
-       1055  41E 000622E0 g_slist_remove_all
-       1056  41F 00062350 g_slist_remove_link
-       1057  420 00062500 g_slist_reverse
-       1058  421 00062890 g_slist_sort
-       1059  422 000628A0 g_slist_sort_with_data
-       1060  423 0008C610 g_snprintf
-       1061  424 0003A670 g_source_add_child_source
-       1062  425 00039D30 g_source_add_poll
-       1063  426 00039500 g_source_attach
-       1064  427 000399E0 g_source_destroy
-       1065  428 0003A520 g_source_get_can_recurse
-       1066  429 00039CF0 g_source_get_context
-       1067  42A 0003CB60 g_source_get_current_time
-       1068  42B 00039C70 g_source_get_id
-       1069  42C 0003A5C0 g_source_get_name
-       1070  42D 0003A360 g_source_get_priority
-       1071  42E 0003A440 g_source_get_ready_time = g_main_context_pop_thread_default
-       1072  42F 0003CB70 g_source_get_time
-       1073  430 0003B220 g_source_is_destroyed
-       1074  431 00039450 g_source_new
-       1075  432 0003A600 g_source_ref
-       1076  433 0003AED0 g_source_remove
-       1077  434 0003AF80 g_source_remove_by_funcs_user_data
-       1078  435 0003AF50 g_source_remove_by_user_data
-       1079  436 00039FC0 g_source_remove_child_source
-       1080  437 00039E80 g_source_remove_poll
-       1081  438 0003A1A0 g_source_set_callback
-       1082  439 0003A0E0 g_source_set_callback_indirect
-       1083  43A 0003A490 g_source_set_can_recurse
-       1084  43B 0003A220 g_source_set_funcs = g_source_is_destroyed
-       1085  43C 0003A570 g_source_set_name
-       1086  43D 0003AC80 g_source_set_name_by_id
-       1087  43E 0003A2C0 g_source_set_priority
-       1088  43F 0003A3A0 g_source_set_ready_time
-       1089  440 0003A9A0 g_source_unref
-       1090  441 00051840 g_spaced_primes_closest
-       1091  442 00093970 g_spawn_async_utf8
-       1092  443 00093810 g_spawn_async_with_pipes_utf8
-       1093  444 00093B80 g_spawn_check_exit_status
-       1094  445 00093B70 g_spawn_close_pid
-       1095  446 00093AC0 g_spawn_command_line_async_utf8
-       1096  447 00093A00 g_spawn_command_line_sync_utf8
-       1097  448 00091C60 g_spawn_error_quark
-       1098  449 00092FA0 g_spawn_exit_error_quark
-       1099  44A 00092FD0 g_spawn_sync_utf8
-       1100  44B 0008C570 g_sprintf
-       1101  44C 00062CA0 g_stat
-       1102  44D 00002E60 g_static_mutex_free
-       1103  44E 00002E00 g_static_mutex_get_mutex_impl
-       1104  44F 00002DD0 g_static_mutex_init = g_array_prepend_vals
-       1105  450 00003800 g_static_private_free
-       1106  451 00003670 g_static_private_get
-       1107  452 00003660 g_static_private_init = g_ptr_array_sized_new
-       1108  453 000036F0 g_static_private_set
-       1109  454 00003150 g_static_rec_mutex_free
-       1110  455 00002EB0 g_static_rec_mutex_init
-       1111  456 00002EF0 g_static_rec_mutex_lock
-       1112  457 00003040 g_static_rec_mutex_lock_full
-       1113  458 00002F60 g_static_rec_mutex_trylock
-       1114  459 00002FD0 g_static_rec_mutex_unlock
-       1115  45A 000030D0 g_static_rec_mutex_unlock_full
-       1116  45B 000035F0 g_static_rw_lock_free
-       1117  45C 000031B0 g_static_rw_lock_init = g_array_remove_index_fast
-       1118  45D 00003200 g_static_rw_lock_reader_lock
-       1119  45E 000032B0 g_static_rw_lock_reader_trylock
-       1120  45F 00003350 g_static_rw_lock_reader_unlock
-       1121  460 00003400 g_static_rw_lock_writer_lock
-       1122  461 000034C0 g_static_rw_lock_writer_trylock
-       1123  462 00003550 g_static_rw_lock_writer_unlock
-       1124  463 00063710 g_stpcpy
-       1125  464 000276E0 g_str_equal
-       1126  465 00065AB0 g_str_has_prefix
-       1127  466 00065A00 g_str_has_suffix
-       1128  467 00027700 g_str_hash
-       1129  468 00064350 g_str_is_ascii
-       1130  469 00065DC0 g_str_match_string
-       1131  46A 00072210 g_str_to_ascii
-       1132  46B 00065BA0 g_str_tokenize_and_fold
-       1133  46C 00064A00 g_strcanon = g_str_has_suffix
-       1134  46D 000648F0 g_strcasecmp = g_strrstr_len
-       1135  46E 00064F50 g_strchomp
-       1136  46F 00064EC0 g_strchug = g_string_sized_new
-       1137  470 000678D0 g_strcmp0
-       1138  471 00064AC0 g_strcompress
-       1139  472 000637F0 g_strconcat
-       1140  473 00064970 g_strdelimit
-       1141  474 00064380 g_strdown
-       1142  475 00063600 g_strdup
-       1143  476 000637C0 g_strdup_printf
-       1144  477 00063790 g_strdup_vprintf
-       1145  478 00065400 g_strdupv
-       1146  479 000640D0 g_strerror
-       1147  47A 00064CD0 g_strescape
-       1148  47B 000653B0 g_strfreev
-       1149  47C 00066420 g_string_append
-       1150  47D 00066950 g_string_append_c
-       1151  47E 00066540 g_string_append_len
-       1152  47F 00067560 g_string_append_printf = g_test_timer_elapsed
-       1153  480 00066E60 g_string_append_unichar
-       1154  481 000669F0 g_string_append_uri_escaped
-       1155  482 000673F0 g_string_append_vprintf
-       1156  483 000671F0 g_string_ascii_down
-       1157  484 00067260 g_string_ascii_up
-       1158  485 000664A0 g_string_assign
-       1159  486 00067650 g_string_chunk_clear
-       1160  487 000675F0 g_string_chunk_free
-       1161  488 000677D0 g_string_chunk_insert
-       1162  489 00067820 g_string_chunk_insert_const
-       1163  48A 000676D0 g_string_chunk_insert_len
-       1164  48B 00067590 g_string_chunk_new = g_test_timer_last
-       1165  48C 000672D0 g_string_down
-       1166  48D 00066000 g_string_equal
-       1167  48E 000670D0 g_string_erase
-       1168  48F 00065F40 g_string_free
-       1169  490 00065FB0 g_string_free_to_bytes
-       1170  491 00066060 g_string_hash = g_string_overwrite
-       1171  492 00066780 g_string_insert
-       1172  493 00066820 g_string_insert_c = g_string_chunk_insert_const
-       1173  494 00066190 g_string_insert_len
-       1174  495 00066C40 g_string_insert_unichar
-       1175  496 000665D0 g_string_new
-       1176  497 00066630 g_string_new_len
-       1177  498 00067060 g_string_overwrite
-       1178  499 00066F00 g_string_overwrite_len
-       1179  49A 00066680 g_string_prepend
-       1180  49B 000669A0 g_string_prepend_c
-       1181  49C 00066700 g_string_prepend_len
-       1182  49D 00066EB0 g_string_prepend_unichar
-       1183  49E 00067520 g_string_printf = g_test_timer_start
-       1184  49F 000660F0 g_string_set_size
-       1185  4A0 00065EC0 g_string_sized_new
-       1186  4A1 00066090 g_string_truncate
-       1187  4A2 00067360 g_string_up
-       1188  4A3 000674F0 g_string_vprintf = g_test_rand_double
-       1189  4A4 00025160 g_strip_context = g_hash_table_unref
-       1190  4A5 000655E0 g_strjoin
-       1191  4A6 000654A0 g_strjoinv = g_string_assign
-       1192  4A7 00064250 g_strlcat
-       1193  4A8 00064190 g_strlcpy
-       1194  4A9 00064960 g_strncasecmp
-       1195  4AA 00063690 g_strndup
-       1196  4AB 000636E0 g_strnfill = g_ascii_strcasecmp
-       1197  4AC 000644A0 g_strreverse = g_strjoinv
-       1198  4AD 00065810 g_strrstr
-       1199  4AE 000658F0 g_strrstr_len
-       1200  4AF 00064150 g_strsignal
-       1201  4B0 00064FF0 g_strsplit
-       1202  4B1 000651E0 g_strsplit_set
-       1203  4B2 00065720 g_strstr_len
-       1204  4B3 00063CD0 g_strtod = g_strescape
-       1205  4B4 00064410 g_strup
-       1206  4B5 00065B50 g_strv_length
-       1207  4B6 00068C10 g_test_add_data_func
-       1208  4B7 00068C90 g_test_add_data_func_full
-       1209  4B8 00068BA0 g_test_add_func
-       1210  4B9 000689C0 g_test_add_vtable
-       1211  4BA 000447A0 g_test_assert_expected_messages_internal
-       1212  4BB 0006A5C0 g_test_bug
-       1213  4BC 000685A0 g_test_bug_base
-       1214  4BD 0006BC80 g_test_build_filename
-       1215  4BE 000DA030 g_test_config_vars
-       1216  4BF 000685D0 g_test_create_case
-       1217  4C0 00068800 g_test_create_suite
-       1218  4C1 000446F0 g_test_expect_message
-       1219  4C2 00068710 g_test_fail
-       1220  4C3 000687A0 g_test_failed
-       1221  4C4 0006BED0 g_test_get_dir
-       1222  4C5 0006BF60 g_test_get_filename
-       1223  4C6 000688C0 g_test_get_root
-       1224  4C7 00068720 g_test_incomplete
-       1225  4C8 00069930 g_test_init
-       1226  4C9 00069100 g_test_log_buffer_free
-       1227  4CA 00068DE0 g_test_log_buffer_new
-       1228  4CB 00069030 g_test_log_buffer_pop
-       1229  4CC 00068E10 g_test_log_buffer_push
-       1230  4CD 000690B0 g_test_log_msg_free
-       1231  4CE 00043E20 g_test_log_set_fatal_handler
-       1232  4CF 000683D0 g_test_log_type_name
-       1233  4D0 0006A4F0 g_test_maximized_result
-       1234  4D1 0006A560 g_test_message
-       1235  4D2 0006A480 g_test_minimized_result
-       1236  4D3 00068D00 g_test_queue_destroy
-       1237  4D4 00068D60 g_test_queue_free
-       1238  4D5 000684F0 g_test_rand_double
-       1239  4D6 00068500 g_test_rand_double_range
-       1240  4D7 000684C0 g_test_rand_int
-       1241  4D8 000684D0 g_test_rand_int_range
-       1242  4D9 0006AF70 g_test_run
-       1243  4DA 0006ADE0 g_test_run_suite
-       1244  4DB 000687B0 g_test_set_nonfatal_assertions
-       1245  4DC 00068760 g_test_skip
-       1246  4DD 00068DB0 g_test_subprocess
-       1247  4DE 00068920 g_test_suite_add
-       1248  4DF 00068970 g_test_suite_add_suite
-       1249  4E0 00068560 g_test_timer_elapsed
-       1250  4E1 00068590 g_test_timer_last
-       1251  4E2 00068520 g_test_timer_start
-       1252  4E3 0006BA90 g_test_trap_assertions
-       1253  4E4 00068D80 g_test_trap_fork
-       1254  4E5 00068DC0 g_test_trap_has_passed
-       1255  4E6 00068DD0 g_test_trap_reached_timeout
-       1256  4E7 0006B1D0 g_test_trap_subprocess
-       1257  4E8 00002D90 g_thread_create
-       1258  4E9 00002D20 g_thread_create_full
-       1259  4EA 0006C290 g_thread_error_quark
-       1260  4EB 0006C820 g_thread_exit
-       1261  4EC 00002C20 g_thread_foreach
-       1262  4ED 000C7060 g_thread_functions_for_glib_use
-       1263  4EE 00002BF0 g_thread_get_initialized
-       1264  4EF 000C7048 g_thread_gettime
-       1265  4F0 00002C00 g_thread_init_glib
-       1266  4F1 0006C740 g_thread_join
-       1267  4F2 0006C4F0 g_thread_new
-       1268  4F3 0006D380 g_thread_pool_free
-       1269  4F4 0006D780 g_thread_pool_get_max_idle_time
-       1270  4F5 0006D1E0 g_thread_pool_get_max_threads
-       1271  4F6 0006D660 g_thread_pool_get_max_unused_threads
-       1272  4F7 0006D270 g_thread_pool_get_num_threads
-       1273  4F8 0006D670 g_thread_pool_get_num_unused_threads
-       1274  4F9 0006C8C0 g_thread_pool_new
-       1275  4FA 0006CE60 g_thread_pool_push
-       1276  4FB 0006D720 g_thread_pool_set_max_idle_time
-       1277  4FC 0006CFF0 g_thread_pool_set_max_threads
-       1278  4FD 0006D5C0 g_thread_pool_set_max_unused_threads
-       1279  4FE 0006D6A0 g_thread_pool_set_sort_function
-       1280  4FF 0006D680 g_thread_pool_stop_unused_threads
-       1281  500 0006D300 g_thread_pool_unprocessed
-       1282  501 0006C4A0 g_thread_ref
-       1283  502 0006C7D0 g_thread_self
-       1284  503 00002C10 g_thread_set_priority
-       1285  504 0006C5E0 g_thread_try_new
-       1286  505 0006C4B0 g_thread_unref
-       1287  506 0013A010 g_thread_use_default_impl
-       1288  507 0008D550 g_thread_yield
-       1289  508 000C7040 g_threads_got_initialized
-       1290  509 0006D9E0 g_time_val_add
-       1291  50A 0006DAC0 g_time_val_from_iso8601
-       1292  50B 0006E100 g_time_val_to_iso8601
-       1293  50C 00070980 g_time_zone_adjust_time
-       1294  50D 000712A0 g_time_zone_find_interval
-       1295  50E 00071950 g_time_zone_get_abbreviation
-       1296  50F 00071A60 g_time_zone_get_offset
-       1297  510 00071B60 g_time_zone_is_dst
-       1298  511 0006F840 g_time_zone_new
-       1299  512 00070960 g_time_zone_new_local
-       1300  513 00070950 g_time_zone_new_utc = g_time_zone_get_abbreviation
-       1301  514 0006F7F0 g_time_zone_ref
-       1302  515 0006F6D0 g_time_zone_unref
-       1303  516 0003D220 g_timeout_add
-       1304  517 0003D190 g_timeout_add_full
-       1305  518 0003D2E0 g_timeout_add_seconds
-       1306  519 0003D250 g_timeout_add_seconds_full
-       1307  51A 000C7540 g_timeout_funcs
-       1308  51B 0003CF00 g_timeout_source_new
-       1309  51C 0003D040 g_timeout_source_new_seconds
-       1310  51D 0006D8B0 g_timer_continue = init_zone_from_rules.isra.13
-       1311  51E 0006D7C0 g_timer_destroy
-       1312  51F 0006D910 g_timer_elapsed
-       1313  520 0006D790 g_timer_new
-       1314  521 0006D870 g_timer_reset
-       1315  522 0006D7F0 g_timer_start
-       1316  523 0006D830 g_timer_stop
-       1317  524 000724B0 g_trash_stack_height
-       1318  525 000724A0 g_trash_stack_peek = g_tree_unref
-       1319  526 00072480 g_trash_stack_pop
-       1320  527 00072470 g_trash_stack_push
-       1321  528 00073500 g_tree_destroy
-       1322  529 00073780 g_tree_foreach
-       1323  52A 000739D0 g_tree_height
-       1324  52B 00073540 g_tree_insert
-       1325  52C 00073630 g_tree_lookup
-       1326  52D 000736C0 g_tree_lookup_extended
-       1327  52E 000733B0 g_tree_new
-       1328  52F 00073330 g_tree_new_full = g_unichar_isxdigit
-       1329  530 00073400 g_tree_new_with_data
-       1330  531 00073A50 g_tree_nnodes
-       1331  532 00073450 g_tree_ref
-       1332  533 000735A0 g_tree_remove
-       1333  534 00073570 g_tree_replace
-       1334  535 00073950 g_tree_search
-       1335  536 000735E0 g_tree_steal
-       1336  537 00073830 g_tree_traverse
-       1337  538 000734A0 g_tree_unref
-       1338  539 000425E0 g_try_malloc
-       1339  53A 00042600 g_try_malloc0
-       1340  53B 000427D0 g_try_malloc0_n
-       1341  53C 000427A0 g_try_malloc_n
-       1342  53D 00042640 g_try_realloc
-       1343  53E 00042800 g_try_realloc_n
-       1344  53F 00002840 g_tuples_destroy
-       1345  540 00002870 g_tuples_index
-       1346  541 00077730 g_ucs4_to_utf16
-       1347  542 00076BF0 g_ucs4_to_utf8
-       1348  543 00077E00 g_unichar_break_type
-       1349  544 00078450 g_unichar_combining_class
-       1350  545 00079240 g_unichar_compose
-       1351  546 00079120 g_unichar_decompose
-       1352  547 00074E70 g_unichar_digit_value
-       1353  548 00079430 g_unichar_fully_decompose
-       1354  549 00075B80 g_unichar_get_mirror_char
-       1355  54A 00075C00 g_unichar_get_script
-       1356  54B 00073D60 g_unichar_isalnum
-       1357  54C 00073DE0 g_unichar_isalpha
-       1358  54D 00073E60 g_unichar_iscntrl
-       1359  54E 000743E0 g_unichar_isdefined
-       1360  54F 00073EE0 g_unichar_isdigit
-       1361  550 00073F60 g_unichar_isgraph
-       1362  551 00073FE0 g_unichar_islower
-       1363  552 00074200 g_unichar_ismark
-       1364  553 00074060 g_unichar_isprint
-       1365  554 000740E0 g_unichar_ispunct
-       1366  555 00074160 g_unichar_isspace
-       1367  556 00074300 g_unichar_istitle
-       1368  557 00074280 g_unichar_isupper
-       1369  558 00074520 g_unichar_iswide
-       1370  559 00074560 g_unichar_iswide_cjk
-       1371  55A 00074330 g_unichar_isxdigit
-       1372  55B 00074460 g_unichar_iszerowidth
-       1373  55C 00076480 g_unichar_to_utf8
-       1374  55D 000746F0 g_unichar_tolower
-       1375  55E 00074DC0 g_unichar_totitle
-       1376  55F 000745B0 g_unichar_toupper
-       1377  560 00075050 g_unichar_type
-       1378  561 00077970 g_unichar_validate
-       1379  562 00074F40 g_unichar_xdigit_value
-       1380  563 000786B0 g_unicode_canonical_decomposition
-       1381  564 000784C0 g_unicode_canonical_ordering
-       1382  565 00075CD0 g_unicode_script_from_iso15924
-       1383  566 00075CA0 g_unicode_script_to_iso15924
-       1384  567 00062DC0 g_unlink
-       1385  568 00022170 g_unsetenv_utf8
-       1386  569 00079890 g_uri_escape_string
-       1387  56A 00017CB0 g_uri_list_extract_uris
-       1388  56B 00079800 g_uri_parse_scheme
-       1389  56C 00079690 g_uri_unescape_segment
-       1390  56D 000797F0 g_uri_unescape_string
-       1391  56E 0006D9C0 g_usleep
-       1392  56F 00077100 g_utf16_to_ucs4
-       1393  570 00076DE0 g_utf16_to_utf8
-       1394  571 00075A60 g_utf8_casefold
-       1395  572 00077E70 g_utf8_collate
-       1396  573 00078040 g_utf8_collate_key
-       1397  574 000781C0 g_utf8_collate_key_for_filename
-       1398  575 00076040 g_utf8_find_next_char
-       1399  576 00076000 g_utf8_find_prev_char
-       1400  577 000761F0 g_utf8_get_char
-       1401  578 000765E0 g_utf8_get_char_validated
-       1402  579 000790E0 g_utf8_normalize
-       1403  57A 00076350 g_utf8_offset_to_pointer
-       1404  57B 000762F0 g_utf8_pointer_to_offset
-       1405  57C 000760D0 g_utf8_prev_char
-       1406  57D 000F6AE0 g_utf8_skip
-       1407  57E 00076560 g_utf8_strchr
-       1408  57F 00075970 g_utf8_strdown
-       1409  580 000760F0 g_utf8_strlen
-       1410  581 00076420 g_utf8_strncpy
-       1411  582 000765A0 g_utf8_strrchr
-       1412  583 00077990 g_utf8_strreverse
-       1413  584 000750C0 g_utf8_strup
-       1414  585 000763D0 g_utf8_substring
-       1415  586 000768F0 g_utf8_to_ucs4
-       1416  587 00076770 g_utf8_to_ucs4_fast
-       1417  588 00077370 g_utf8_to_utf16
-       1418  589 00077900 g_utf8_validate
-       1419  58A 00063090 g_utime
-       1420  58B 00081D60 g_variant_builder_add
-       1421  58C 000873F0 g_variant_builder_add_parsed
-       1422  58D 0007F0C0 g_variant_builder_add_value
-       1423  58E 0007ED00 g_variant_builder_clear = g_variant_dict_insert_value
-       1424  58F 0007F580 g_variant_builder_close
-       1425  590 0007F310 g_variant_builder_end
-       1426  591 0007EE20 g_variant_builder_init
-       1427  592 0007F070 g_variant_builder_new
-       1428  593 0007F210 g_variant_builder_open
-       1429  594 0007ECB0 g_variant_builder_ref
-       1430  595 0007EDB0 g_variant_builder_unref
-       1431  596 00082450 g_variant_byteswap
-       1432  597 00080E20 g_variant_check_format_string
-       1433  598 0007CE50 g_variant_classify
-       1434  599 0007E690 g_variant_compare
-       1435  59A 0007FE10 g_variant_dict_clear
-       1436  59B 0007FC80 g_variant_dict_contains
-       1437  59C 00081580 g_variant_dict_end
-       1438  59D 000820B0 g_variant_dict_init
-       1439  59E 00081470 g_variant_dict_insert
-       1440  59F 0007FD00 g_variant_dict_insert_value
-       1441  5A0 00081AE0 g_variant_dict_lookup
-       1442  5A1 0007FBD0 g_variant_dict_lookup_value
-       1443  5A2 00082150 g_variant_dict_new
-       1444  5A3 0007FE70 g_variant_dict_ref
-       1445  5A4 0007FD90 g_variant_dict_remove
-       1446  5A5 0007FEB0 g_variant_dict_unref
-       1447  5A6 0007CAB0 g_variant_dup_bytestring
-       1448  5A7 0007CC30 g_variant_dup_bytestring_array
-       1449  5A8 0007D200 g_variant_dup_objv
-       1450  5A9 0007D050 g_variant_dup_string
-       1451  5AA 0007D2F0 g_variant_dup_strv
-       1452  5AB 0007E580 g_variant_equal = g_variant_builder_close
-       1453  5AC 0007FF10 g_variant_format_string_scan
-       1454  5AD 00080F70 g_variant_format_string_scan_type
-       1455  5AE 00081BE0 g_variant_get
-       1456  5AF 0007C120 g_variant_get_boolean
-       1457  5B0 0007C180 g_variant_get_byte
-       1458  5B1 0007CA30 g_variant_get_bytestring
-       1459  5B2 0007CB40 g_variant_get_bytestring_array
-       1460  5B3 00081DA0 g_variant_get_child
-       1461  5B4 00083060 g_variant_get_child_value
-       1462  5B5 00082C60 g_variant_get_data
-       1463  5B6 00082E00 g_variant_get_data_as_bytes
-       1464  5B7 0007C480 g_variant_get_double
-       1465  5B8 0007C8B0 g_variant_get_fixed_array
-       1466  5B9 0007C420 g_variant_get_handle
-       1467  5BA 0007C1E0 g_variant_get_int16 = g_variant_dup_string.constprop.6
-       1468  5BB 0007C2A0 g_variant_get_int32
-       1469  5BC 0007C360 g_variant_get_int64
-       1470  5BD 0007C640 g_variant_get_maybe
-       1471  5BE 000823E0 g_variant_get_normal_form
-       1472  5BF 0007D3E0 g_variant_get_objv
-       1473  5C0 00082BF0 g_variant_get_size
-       1474  5C1 0007CEA0 g_variant_get_string
-       1475  5C2 0007D4D0 g_variant_get_strv
-       1476  5C3 0007BF50 g_variant_get_type
-       1477  5C4 0007C0B0 g_variant_get_type_string
-       1478  5C5 0007C240 g_variant_get_uint16
-       1479  5C6 0007C300 g_variant_get_uint32
-       1480  5C7 0007C3C0 g_variant_get_uint64
-       1481  5C8 00081850 g_variant_get_va
-       1482  5C9 0007C6A0 g_variant_get_variant
-       1483  5CA 0007E470 g_variant_hash
-       1484  5CB 0007CD20 g_variant_is_container
-       1485  5CC 00082BA0 g_variant_is_floating
-       1486  5CD 00083360 g_variant_is_normal_form
-       1487  5CE 0007BB20 g_variant_is_object_path
-       1488  5CF 0007C100 g_variant_is_of_type
-       1489  5D0 0007BBF0 g_variant_is_signature
-       1490  5D1 0007E960 g_variant_iter_copy
-       1491  5D2 0007EA00 g_variant_iter_free
-       1492  5D3 0007E8E0 g_variant_iter_init
-       1493  5D4 00082190 g_variant_iter_loop
-       1494  5D5 0007E9C0 g_variant_iter_n_children
-       1495  5D6 0007E920 g_variant_iter_new
-       1496  5D7 00081F10 g_variant_iter_next
-       1497  5D8 0007EA60 g_variant_iter_next_value
-       1498  5D9 00081A60 g_variant_lookup
-       1499  5DA 0007EAE0 g_variant_lookup_value
-       1500  5DB 00083000 g_variant_n_children
-       1501  5DC 00081650 g_variant_new
-       1502  5DD 0007C700 g_variant_new_array
-       1503  5DE 0007B580 g_variant_new_boolean
-       1504  5DF 0007B5D0 g_variant_new_byte
-       1505  5E0 0007BE20 g_variant_new_bytestring
-       1506  5E1 0007BEA0 g_variant_new_bytestring_array = g_variant_get_string
-       1507  5E2 0007CD40 g_variant_new_dict_entry
-       1508  5E3 0007B850 g_variant_new_double
-       1509  5E4 00082610 g_variant_new_fixed_array
-       1510  5E5 00082780 g_variant_new_from_bytes
-       1511  5E6 00082520 g_variant_new_from_data
-       1512  5E7 0007B800 g_variant_new_handle
-       1513  5E8 0007B620 g_variant_new_int16
-       1514  5E9 0007B6C0 g_variant_new_int32
-       1515  5EA 0007B760 g_variant_new_int64
-       1516  5EB 0007C4F0 g_variant_new_maybe
-       1517  5EC 0007BB70 g_variant_new_object_path
-       1518  5ED 0007BD70 g_variant_new_objv
-       1519  5EE 000873C0 g_variant_new_parsed
-       1520  5EF 00087290 g_variant_new_parsed_va
-       1521  5F0 0007BA80 g_variant_new_printf
-       1522  5F1 0007BC40 g_variant_new_signature
-       1523  5F2 0007B920 g_variant_new_string
-       1524  5F3 0007BCC0 g_variant_new_strv
-       1525  5F4 0007B9D0 g_variant_new_take_string
-       1526  5F5 0007BFA0 g_variant_new_tuple
-       1527  5F6 0007B670 g_variant_new_uint16
-       1528  5F7 0007B710 g_variant_new_uint32
-       1529  5F8 0007B7B0 g_variant_new_uint64
-       1530  5F9 00081730 g_variant_new_va
-       1531  5FA 0007B8A0 g_variant_new_variant
-       1532  5FB 00087100 g_variant_parse
-       1533  5FC 00087430 g_variant_parse_error_print_context
-       1534  5FD 00084200 g_variant_parse_error_quark
-       1535  5FE 000870F0 g_variant_parser_get_error_quark
-       1536  5FF 0007D5C0 g_variant_print
-       1537  600 0007D5E0 g_variant_print_string
-       1538  601 00082A20 g_variant_ref
-       1539  602 00082A90 g_variant_ref_sink
-       1540  603 00088EB0 g_variant_serialised_byteswap
-       1541  604 00087CF0 g_variant_serialised_get_child
-       1542  605 000894C0 g_variant_serialised_is_normal
-       1543  606 00087990 g_variant_serialised_n_children
-       1544  607 000893C0 g_variant_serialiser_is_object_path
-       1545  608 00089450 g_variant_serialiser_is_signature
-       1546  609 00089380 g_variant_serialiser_is_string
-       1547  60A 00088B70 g_variant_serialiser_needed_size
-       1548  60B 000885F0 g_variant_serialiser_serialise
-       1549  60C 00083180 g_variant_store
-       1550  60D 00082B30 g_variant_take_ref
-       1551  60E 0008C2B0 g_variant_type_checked_ = g_cond_wait
-       1552  60F 0008B560 g_variant_type_copy
-       1553  610 0008B610 g_variant_type_dup_string = g_snprintf
-       1554  611 0008BC10 g_variant_type_element
-       1555  612 0008BA10 g_variant_type_equal
-       1556  613 0008BC90 g_variant_type_first
-       1557  614 0008B4D0 g_variant_type_free = g_fprintf
-       1558  615 0008B4E0 g_variant_type_get_string_length
-       1559  616 0008B990 g_variant_type_hash
-       1560  617 0008B2D0 g_variant_type_info_assert_no_infos
-       1561  618 0008A440 g_variant_type_info_element
-       1562  619 0008AB80 g_variant_type_info_get
-       1563  61A 0008A0C0 g_variant_type_info_get_type_string
-       1564  61B 0008A800 g_variant_type_info_member_info
-       1565  61C 0008A6C0 g_variant_type_info_n_members
-       1566  61D 0008A290 g_variant_type_info_query
-       1567  61E 0008A580 g_variant_type_info_query_element
-       1568  61F 0008A950 g_variant_type_info_ref
-       1569  620 0008AFF0 g_variant_type_info_unref
-       1570  621 0008B840 g_variant_type_is_array
-       1571  622 0008B780 g_variant_type_is_basic
-       1572  623 0008B710 g_variant_type_is_container
-       1573  624 0008B670 g_variant_type_is_definite
-       1574  625 0008B8F0 g_variant_type_is_dict_entry
-       1575  626 0008B7F0 g_variant_type_is_maybe
-       1576  627 0008BB00 g_variant_type_is_subtype_of
-       1577  628 0008B890 g_variant_type_is_tuple
-       1578  629 0008B940 g_variant_type_is_variant
-       1579  62A 0008BE00 g_variant_type_key
-       1580  62B 0008BD90 g_variant_type_n_items
-       1581  62C 0008C300 g_variant_type_new
-       1582  62D 0008C0F0 g_variant_type_new_array = g_rec_mutex_clear
-       1583  62E 0008C1D0 g_variant_type_new_dict_entry
-       1584  62F 0008C160 g_variant_type_new_maybe = g_rec_mutex_unlock
-       1585  630 0008BEF0 g_variant_type_new_tuple
-       1586  631 0008BD20 g_variant_type_next
-       1587  632 0008B5D0 g_variant_type_peek_string
-       1588  633 0008B470 g_variant_type_string_is_valid
-       1589  634 0008B320 g_variant_type_string_scan
-       1590  635 0008BE70 g_variant_type_value = g_mutex_init
-       1591  636 000828D0 g_variant_unref
-       1592  637 0008C630 g_vasprintf
-       1593  638 0008C490 g_vfprintf = g_thread_win32_proxy
-       1594  639 0008C420 g_vprintf
-       1595  63A 0008C5A0 g_vsnprintf
-       1596  63B 0008C500 g_vsprintf
-       1597  63C 00044570 g_warn_message
-       1598  63D 00093D30 g_win32_error_message
-       1599  63E 00093BD0 g_win32_ftruncate
-       1600  63F 000941F0 g_win32_get_command_line
-       1601  640 00093E00 g_win32_get_package_installation_directory_of_module
-       1602  641 00093EB0 g_win32_get_package_installation_directory_utf8
-       1603  642 00094080 g_win32_get_package_installation_subdirectory_utf8
-       1604  643 0007ABA0 g_win32_get_system_data_dirs_for_module
-       1605  644 000940C0 g_win32_get_windows_version
-       1606  645 00093BE0 g_win32_getlocale
-       1607  646 00094110 g_win32_locale_filename_from_utf8
-       1608  647 00035730 glib__private__
-       1609  648 001233A0 glib_binary_age
-       1610  649 0008C350 glib_check_version
-       1611  64A 000252C0 glib_gettext
-       1612  64B 001233A4 glib_interface_age
-       1613  64C 001233B0 glib_major_version
-       1614  64D 000C75F0 glib_mem_profiler_table
-       1615  64E 001233A8 glib_micro_version
-       1616  64F 001233AC glib_minor_version
-       1617  650 000C7120 glib_on_error_halt
-       1618  651 00025410 glib_pgettext
-
-  Summary
-
-        1000 .CRT
-        2000 .bss
-        1000 .data
-        1000 .debug_abbrev
-        1000 .debug_aranges
-        1000 .debug_frame
-        1000 .debug_info
-        1000 .debug_line
-        D000 .edata
-        3000 .idata
-        7000 .pdata
-       64000 .rdata
-        1000 .reloc
-        1000 .rsrc
-       C6000 .text
-        1000 .tls
-        7000 .xdata
+EXPORTS
+__glib_assert_msg
+_glib_get_locale_dir
+g_access = g_ascii_strtod
+g_allocator_free
+g_allocator_new
+g_array_append_vals
+g_array_free
+g_array_get_element_size
+g_array_insert_vals
+g_array_new
+g_array_prepend_vals
+g_array_ref
+g_array_remove_index
+g_array_remove_index_fast
+g_array_remove_range
+g_array_set_clear_func
+g_array_set_size
+g_array_sized_new
+g_array_sort = g_async_queue_unref
+g_array_sort_with_data
+g_array_unref
+g_ascii_digit_value
+g_ascii_dtostr
+g_ascii_formatd
+g_ascii_strcasecmp
+g_ascii_strdown
+g_ascii_strncasecmp
+g_ascii_strtod
+g_ascii_strtoll
+g_ascii_strtoull
+g_ascii_strup
+g_ascii_table
+g_ascii_tolower
+g_ascii_toupper
+g_ascii_xdigit_value
+g_assert_warning
+g_assertion_message
+g_assertion_message_cmpnum
+g_assertion_message_cmpstr
+g_assertion_message_error
+g_assertion_message_expr
+g_async_queue_length = parse_data_free
+g_async_queue_length_unlocked
+g_async_queue_lock
+g_async_queue_new
+g_async_queue_new_full
+g_async_queue_pop
+g_async_queue_pop_unlocked
+g_async_queue_push
+g_async_queue_push_sorted = g_base64_decode_step
+g_async_queue_push_sorted_unlocked
+g_async_queue_push_unlocked
+g_async_queue_ref
+g_async_queue_ref_unlocked
+g_async_queue_sort = is_element_full.isra.1
+g_async_queue_sort_unlocked
+g_async_queue_timed_pop
+g_async_queue_timed_pop_unlocked
+g_async_queue_timeout_pop
+g_async_queue_timeout_pop_unlocked
+g_async_queue_try_pop
+g_async_queue_try_pop_unlocked
+g_async_queue_unlock
+g_async_queue_unref = g_base64_encode_close
+g_async_queue_unref_and_unlock
+g_atexit
+g_atomic_int_add
+g_atomic_int_and
+g_atomic_int_compare_and_exchange
+g_atomic_int_dec_and_test
+g_atomic_int_exchange_and_add
+g_atomic_int_get
+g_atomic_int_inc
+g_atomic_int_or
+g_atomic_int_set
+g_atomic_int_xor
+g_atomic_pointer_add
+g_atomic_pointer_and
+g_atomic_pointer_compare_and_exchange = text_raw_cb
+g_atomic_pointer_get
+g_atomic_pointer_or
+g_atomic_pointer_set
+g_atomic_pointer_xor
+g_base64_decode
+g_base64_decode_inplace
+g_base64_decode_step
+g_base64_encode
+g_base64_encode_close
+g_base64_encode_step
+g_basename
+g_bit_lock
+g_bit_nth_lsf
+g_bit_nth_msf
+g_bit_storage
+g_bit_trylock
+g_bit_unlock
+g_blow_chunks
+g_bookmark_file_add_application
+g_bookmark_file_add_group
+g_bookmark_file_error_quark
+g_bookmark_file_free
+g_bookmark_file_get_added
+g_bookmark_file_get_app_info
+g_bookmark_file_get_applications
+g_bookmark_file_get_description
+g_bookmark_file_get_groups
+g_bookmark_file_get_icon
+g_bookmark_file_get_is_private
+g_bookmark_file_get_mime_type
+g_bookmark_file_get_modified
+g_bookmark_file_get_size
+g_bookmark_file_get_title
+g_bookmark_file_get_uris
+g_bookmark_file_get_visited
+g_bookmark_file_has_application
+g_bookmark_file_has_group
+g_bookmark_file_has_item
+g_bookmark_file_load_from_data
+g_bookmark_file_load_from_data_dirs
+g_bookmark_file_load_from_file
+g_bookmark_file_move_item
+g_bookmark_file_new
+g_bookmark_file_remove_application
+g_bookmark_file_remove_group
+g_bookmark_file_remove_item
+g_bookmark_file_set_added
+g_bookmark_file_set_app_info
+g_bookmark_file_set_description
+g_bookmark_file_set_groups
+g_bookmark_file_set_icon
+g_bookmark_file_set_is_private
+g_bookmark_file_set_mime_type = g_bookmark_file_get_groups
+g_bookmark_file_set_modified
+g_bookmark_file_set_title
+g_bookmark_file_set_visited
+g_bookmark_file_to_data
+g_bookmark_file_to_file
+g_build_filename
+g_build_filenamev
+g_build_path = _glib_get_locale_dir
+g_build_pathv
+g_byte_array_append
+g_byte_array_free
+g_byte_array_free_to_bytes = g_on_error_stack_trace
+g_byte_array_new = g_atomic_pointer_compare_and_exchange
+g_byte_array_new_take = g_atomic_pointer_and
+g_byte_array_prepend
+g_byte_array_ref
+g_byte_array_remove_index
+g_byte_array_remove_index_fast
+g_byte_array_remove_range
+g_byte_array_set_size
+g_byte_array_sized_new
+g_byte_array_sort
+g_byte_array_sort_with_data
+g_byte_array_unref
+g_bytes_compare
+g_bytes_equal
+g_bytes_get_data
+g_bytes_get_size
+g_bytes_hash
+g_bytes_new
+g_bytes_new_from_bytes
+g_bytes_new_static
+g_bytes_new_take
+g_bytes_new_with_free_func
+g_bytes_ref
+g_bytes_unref
+g_bytes_unref_to_array
+g_bytes_unref_to_data
+g_cache_destroy
+g_cache_insert
+g_cache_key_foreach
+g_cache_new
+g_cache_remove
+g_cache_value_foreach
+g_chdir
+g_checksum_copy
+g_checksum_free
+g_checksum_get_digest
+g_checksum_get_string
+g_checksum_new
+g_checksum_reset
+g_checksum_type_get_length
+g_checksum_update
+g_child_watch_add
+g_child_watch_add_full
+g_child_watch_funcs
+g_child_watch_source_new
+g_chmod
+g_clear_error
+g_clear_pointer
+g_close
+g_completion_add_items
+g_completion_clear_items = g_thread_init_glib
+g_completion_complete
+g_completion_complete_utf8 = g_static_rec_mutex_trylock
+g_completion_free
+g_completion_new
+g_completion_remove_items
+g_completion_set_compare
+g_compute_checksum_for_bytes = dbcs_mblen
+g_compute_checksum_for_data
+g_compute_checksum_for_string
+g_compute_hmac_for_data
+g_compute_hmac_for_string
+g_cond_broadcast
+g_cond_clear
+g_cond_free = g_array_get_element_size
+g_cond_init
+g_cond_new
+g_cond_signal
+g_cond_timed_wait
+g_cond_wait
+g_cond_wait_until
+g_convert
+g_convert_error_quark
+g_convert_with_fallback
+g_convert_with_iconv
+g_creat
+g_datalist_clear
+g_datalist_foreach
+g_datalist_get_data
+g_datalist_get_flags = g_date_set_dmy
+g_datalist_id_dup_data = g_date_valid
+g_datalist_id_get_data
+g_datalist_id_remove_no_notify
+g_datalist_id_replace_data
+g_datalist_id_set_data_full
+g_datalist_init
+g_datalist_set_flags
+g_datalist_unset_flags
+g_dataset_destroy
+g_dataset_foreach = g_date_valid_dmy
+g_dataset_id_get_data
+g_dataset_id_remove_no_notify
+g_dataset_id_set_data_full
+g_date_add_days
+g_date_add_months
+g_date_add_years
+g_date_clamp
+g_date_clear
+g_date_compare
+g_date_days_between
+g_date_free
+g_date_get_day
+g_date_get_day_of_year
+g_date_get_days_in_month
+g_date_get_iso8601_week_of_year
+g_date_get_julian
+g_date_get_monday_week_of_year
+g_date_get_monday_weeks_in_year
+g_date_get_month
+g_date_get_sunday_week_of_year
+g_date_get_sunday_weeks_in_year
+g_date_get_weekday
+g_date_get_year = g_date_get_sunday_week_of_year
+g_date_is_first_of_month
+g_date_is_last_of_month
+g_date_is_leap_year
+g_date_new
+g_date_new_dmy
+g_date_new_julian
+g_date_order
+g_date_set_day
+g_date_set_dmy
+g_date_set_julian
+g_date_set_month
+g_date_set_parse
+g_date_set_time
+g_date_set_time_t
+g_date_set_time_val
+g_date_set_year
+g_date_strftime
+g_date_subtract_days
+g_date_subtract_months
+g_date_subtract_years
+g_date_time_add
+g_date_time_add_days
+g_date_time_add_full
+g_date_time_add_hours
+g_date_time_add_minutes
+g_date_time_add_months
+g_date_time_add_seconds
+g_date_time_add_weeks
+g_date_time_add_years = g_date_time_get_day_of_year
+g_date_time_compare
+g_date_time_difference
+g_date_time_equal
+g_date_time_format
+g_date_time_get_day_of_month
+g_date_time_get_day_of_week
+g_date_time_get_day_of_year
+g_date_time_get_hour
+g_date_time_get_microsecond
+g_date_time_get_minute
+g_date_time_get_month
+g_date_time_get_second
+g_date_time_get_seconds = g_date_time_is_daylight_savings
+g_date_time_get_timezone_abbreviation
+g_date_time_get_utc_offset = g_date_time_to_local
+g_date_time_get_week_numbering_year
+g_date_time_get_week_of_year
+g_date_time_get_year
+g_date_time_get_ymd
+g_date_time_hash
+g_date_time_is_daylight_savings
+g_date_time_new
+g_date_time_new_from_timeval_local
+g_date_time_new_from_timeval_utc
+g_date_time_new_from_unix_local
+g_date_time_new_from_unix_utc
+g_date_time_new_local
+g_date_time_new_now
+g_date_time_new_now_local
+g_date_time_new_now_utc
+g_date_time_new_utc
+g_date_time_ref
+g_date_time_to_local
+g_date_time_to_timeval
+g_date_time_to_timezone
+g_date_time_to_unix
+g_date_time_to_utc
+g_date_time_unref
+g_date_to_struct_tm
+g_date_valid
+g_date_valid_day = g_date_add_days
+g_date_valid_dmy
+g_date_valid_julian
+g_date_valid_month
+g_date_valid_weekday
+g_date_valid_year
+g_dcgettext
+g_dgettext
+g_dir_close
+g_dir_make_tmp
+g_dir_open_utf8 = g_error_matches
+g_dir_read_name_utf8
+g_dir_rewind
+g_direct_equal
+g_direct_hash
+g_dngettext
+g_double_equal
+g_double_hash
+g_dpgettext
+g_dpgettext2
+g_environ_getenv
+g_environ_setenv
+g_environ_unsetenv
+g_error_copy
+g_error_free
+g_error_matches
+g_error_new = g_file_set_contents
+g_error_new_literal
+g_error_new_valist
+g_file_error_from_errno
+g_file_error_quark
+g_file_get_contents_utf8
+g_file_open_tmp_utf8
+g_file_read_link
+g_file_set_contents
+g_file_test_utf8
+g_filename_display_basename
+g_filename_display_name
+g_filename_from_uri_utf8
+g_filename_from_utf8_utf8
+g_filename_to_uri_utf8
+g_filename_to_utf8_utf8
+g_find_program_in_path
+g_fopen
+g_format_size
+g_format_size_for_display
+g_format_size_full
+g_fprintf
+g_free
+g_freopen
+g_get_application_name
+g_get_charset
+g_get_codeset
+g_get_current_dir_utf8
+g_get_current_time
+g_get_environ
+g_get_filename_charsets
+g_get_home_dir
+g_get_host_name
+g_get_language_names
+g_get_locale_variants
+g_get_monotonic_time
+g_get_num_processors
+g_get_prgname
+g_get_real_name
+g_get_real_time
+g_get_system_config_dirs
+g_get_system_data_dirs
+g_get_tmp_dir = g_variant_new_boolean
+g_get_user_cache_dir
+g_get_user_config_dir
+g_get_user_data_dir
+g_get_user_name
+g_get_user_runtime_dir
+g_get_user_special_dir
+g_getenv_utf8
+g_hash_table_add = g_hmac_new
+g_hash_table_contains
+g_hash_table_destroy
+g_hash_table_find
+g_hash_table_foreach
+g_hash_table_foreach_remove
+g_hash_table_foreach_steal
+g_hash_table_get_keys
+g_hash_table_get_keys_as_array
+g_hash_table_get_values = g_hook_list_marshal_check
+g_hash_table_insert
+g_hash_table_iter_get_hash_table
+g_hash_table_iter_init
+g_hash_table_iter_next
+g_hash_table_iter_remove
+g_hash_table_iter_replace
+g_hash_table_iter_steal
+g_hash_table_lookup
+g_hash_table_lookup_extended
+g_hash_table_new
+g_hash_table_new_full
+g_hash_table_ref
+g_hash_table_remove
+g_hash_table_remove_all
+g_hash_table_replace
+g_hash_table_size
+g_hash_table_steal
+g_hash_table_steal_all
+g_hash_table_unref
+g_hmac_copy
+g_hmac_get_digest
+g_hmac_get_string
+g_hmac_new
+g_hmac_ref
+g_hmac_unref
+g_hmac_update = g_hook_find_func
+g_hook_alloc
+g_hook_compare_ids
+g_hook_destroy
+g_hook_destroy_link
+g_hook_find
+g_hook_find_data
+g_hook_find_func
+g_hook_find_func_data
+g_hook_first_valid
+g_hook_free
+g_hook_get
+g_hook_insert_before
+g_hook_insert_sorted
+g_hook_list_clear
+g_hook_list_init = nameprep
+g_hook_list_invoke
+g_hook_list_invoke_check
+g_hook_list_marshal
+g_hook_list_marshal_check
+g_hook_next_valid
+g_hook_prepend
+g_hook_ref
+g_hook_unref
+g_hostname_is_ascii_encoded
+g_hostname_is_ip_address
+g_hostname_is_non_ascii
+g_hostname_to_ascii
+g_hostname_to_unicode
+g_iconv
+g_iconv_close
+g_iconv_open
+g_idle_add
+g_idle_add_full
+g_idle_funcs
+g_idle_remove_by_data
+g_idle_source_new
+g_int64_equal
+g_int64_hash
+g_int_equal = g_hook_list_marshal
+g_int_hash
+g_intern_static_string
+g_intern_string
+g_io_add_watch
+g_io_add_watch_full
+g_io_channel_close
+g_io_channel_error_from_errno
+g_io_channel_error_quark
+g_io_channel_flush = g_io_channel_set_encoding
+g_io_channel_get_buffer_condition
+g_io_channel_get_buffer_size
+g_io_channel_get_buffered
+g_io_channel_get_close_on_unref
+g_io_channel_get_encoding
+g_io_channel_get_flags = g_io_channel_set_buffered
+g_io_channel_get_line_term
+g_io_channel_init
+g_io_channel_new_file_utf8
+g_io_channel_read
+g_io_channel_read_chars
+g_io_channel_read_line
+g_io_channel_read_line_string
+g_io_channel_read_to_end
+g_io_channel_read_unichar
+g_io_channel_ref
+g_io_channel_seek
+g_io_channel_seek_position
+g_io_channel_set_buffer_size
+g_io_channel_set_buffered
+g_io_channel_set_close_on_unref
+g_io_channel_set_encoding
+g_io_channel_set_flags
+g_io_channel_set_line_term
+g_io_channel_shutdown
+g_io_channel_unix_get_fd
+g_io_channel_unix_new
+g_io_channel_unref
+g_io_channel_win32_get_fd
+g_io_channel_win32_make_pollfd
+g_io_channel_win32_new_fd
+g_io_channel_win32_new_messages
+g_io_channel_win32_new_socket
+g_io_channel_win32_poll
+g_io_channel_win32_set_debug
+g_io_channel_write
+g_io_channel_write_chars
+g_io_channel_write_unichar
+g_io_create_watch
+g_io_watch_funcs
+g_key_file_error_quark
+g_key_file_free
+g_key_file_get_boolean
+g_key_file_get_boolean_list
+g_key_file_get_comment
+g_key_file_get_double
+g_key_file_get_double_list
+g_key_file_get_groups
+g_key_file_get_int64
+g_key_file_get_integer
+g_key_file_get_integer_list
+g_key_file_get_keys
+g_key_file_get_locale_string
+g_key_file_get_locale_string_list
+g_key_file_get_start_group
+g_key_file_get_string
+g_key_file_get_string_list
+g_key_file_get_uint64
+g_key_file_get_value
+g_key_file_has_group
+g_key_file_has_key
+g_key_file_load_from_data
+g_key_file_load_from_data_dirs
+g_key_file_load_from_dirs
+g_key_file_load_from_file
+g_key_file_new
+g_key_file_ref
+g_key_file_remove_comment
+g_key_file_remove_group
+g_key_file_remove_key
+g_key_file_save_to_file
+g_key_file_set_boolean
+g_key_file_set_boolean_list
+g_key_file_set_comment
+g_key_file_set_double = g_key_file_remove_key
+g_key_file_set_double_list
+g_key_file_set_int64
+g_key_file_set_integer
+g_key_file_set_integer_list
+g_key_file_set_list_separator
+g_key_file_set_locale_string
+g_key_file_set_locale_string_list
+g_key_file_set_string
+g_key_file_set_string_list
+g_key_file_set_uint64
+g_key_file_set_value
+g_key_file_to_data
+g_key_file_unref
+g_list_alloc
+g_list_append
+g_list_concat
+g_list_copy
+g_list_copy_deep
+g_list_delete_link
+g_list_find
+g_list_find_custom
+g_list_first
+g_list_foreach
+g_list_free
+g_list_free_1
+g_list_free_full
+g_list_index
+g_list_insert
+g_list_insert_before
+g_list_insert_sorted
+g_list_insert_sorted_with_data
+g_list_last
+g_list_length
+g_list_nth
+g_list_nth_data = unblock_source
+g_list_nth_prev
+g_list_pop_allocator
+g_list_position
+g_list_prepend
+g_list_push_allocator
+g_list_remove = g_source_unref_internal
+g_list_remove_all
+g_list_remove_link
+g_list_reverse
+g_list_sort
+g_list_sort_with_data
+g_listenv
+g_locale_from_utf8
+g_locale_to_utf8
+g_log
+g_log_default_handler
+g_log_remove_handler
+g_log_set_always_fatal
+g_log_set_default_handler
+g_log_set_fatal_mask
+g_log_set_handler
+g_logv
+g_lstat = g_ascii_formatd
+g_main_context_acquire
+g_main_context_add_poll
+g_main_context_check
+g_main_context_default
+g_main_context_dispatch
+g_main_context_find_source_by_funcs_user_data
+g_main_context_find_source_by_id
+g_main_context_find_source_by_user_data
+g_main_context_get_poll_func = g_mapped_file_get_contents
+g_main_context_get_thread_default
+g_main_context_invoke
+g_main_context_invoke_full = unescape_gstring_inplace
+g_main_context_is_owner
+g_main_context_iteration
+g_main_context_new
+g_main_context_pending
+g_main_context_pop_thread_default
+g_main_context_prepare
+g_main_context_push_thread_default
+g_main_context_query
+g_main_context_ref
+g_main_context_ref_thread_default
+g_main_context_release
+g_main_context_remove_poll
+g_main_context_set_poll_func
+g_main_context_unref
+g_main_context_wait
+g_main_context_wakeup
+g_main_current_source
+g_main_depth
+g_main_loop_get_context
+g_main_loop_is_running
+g_main_loop_new
+g_main_loop_quit = g_mapped_file_new
+g_main_loop_ref
+g_main_loop_run = g_main_context_invoke
+g_main_loop_unref
+g_malloc
+g_malloc0 = _g_log_fallback_handler
+g_malloc0_n
+g_malloc_n
+g_mapped_file_free
+g_mapped_file_get_bytes
+g_mapped_file_get_contents
+g_mapped_file_get_length
+g_mapped_file_new
+g_mapped_file_new_from_fd
+g_mapped_file_ref
+g_mapped_file_unref
+g_markup_collect_attributes
+g_markup_error_quark = g_markup_parse_context_get_user_data
+g_markup_escape_text = g_try_malloc
+g_markup_parse_context_end_parse
+g_markup_parse_context_free
+g_markup_parse_context_get_element
+g_markup_parse_context_get_element_stack
+g_markup_parse_context_get_position
+g_markup_parse_context_get_user_data
+g_markup_parse_context_new
+g_markup_parse_context_parse
+g_markup_parse_context_pop
+g_markup_parse_context_push
+g_markup_parse_context_ref
+g_markup_parse_context_unref
+g_markup_printf_escaped
+g_markup_vprintf_escaped
+g_match_info_expand_references
+g_match_info_fetch = g_match_info_free
+g_match_info_fetch_all
+g_match_info_fetch_named
+g_match_info_fetch_named_pos
+g_match_info_fetch_pos
+g_match_info_free
+g_match_info_get_match_count
+g_match_info_get_regex = g_match_info_expand_references
+g_match_info_get_string
+g_match_info_is_partial_match
+g_match_info_matches
+g_match_info_next
+g_match_info_ref
+g_match_info_unref
+g_mem_chunk_alloc
+g_mem_chunk_alloc0
+g_mem_chunk_clean
+g_mem_chunk_destroy
+g_mem_chunk_free
+g_mem_chunk_info
+g_mem_chunk_new
+g_mem_chunk_print
+g_mem_chunk_reset
+g_mem_gc_friendly
+g_mem_is_system_malloc
+g_mem_profile
+g_mem_set_vtable
+g_memdup
+g_mkdir
+g_mkdir_with_parents
+g_mkdtemp
+g_mkdtemp_full
+g_mkstemp_full
+g_mkstemp_utf8
+g_mutex_clear
+g_mutex_free
+g_mutex_init
+g_mutex_lock
+g_mutex_new
+g_mutex_trylock
+g_mutex_unlock
+g_node_child_index
+g_node_child_position
+g_node_children_foreach
+g_node_copy
+g_node_copy_deep
+g_node_depth
+g_node_destroy
+g_node_find
+g_node_find_child
+g_node_first_sibling
+g_node_get_root
+g_node_insert
+g_node_insert_after
+g_node_insert_before
+g_node_is_ancestor
+g_node_last_child
+g_node_last_sibling
+g_node_max_height
+g_node_n_children
+g_node_n_nodes
+g_node_new
+g_node_nth_child
+g_node_pop_allocator
+g_node_prepend
+g_node_push_allocator
+g_node_reverse_children
+g_node_traverse
+g_node_unlink
+g_nullify_pointer
+g_on_error_query
+g_on_error_stack_trace
+g_once_impl
+g_once_init_enter
+g_once_init_enter_impl
+g_once_init_leave
+g_open
+g_option_context_add_group
+g_option_context_add_main_entries
+g_option_context_free
+g_option_context_get_description
+g_option_context_get_help
+g_option_context_get_help_enabled
+g_option_context_get_ignore_unknown_options
+g_option_context_get_main_group
+g_option_context_get_summary
+g_option_context_new
+g_option_context_parse = g_option_group_set_translation_domain
+g_option_context_parse_strv
+g_option_context_set_description
+g_option_context_set_help_enabled
+g_option_context_set_ignore_unknown_options
+g_option_context_set_main_group
+g_option_context_set_summary
+g_option_context_set_translate_func
+g_option_context_set_translation_domain
+g_option_error_quark
+g_option_group_add_entries
+g_option_group_free
+g_option_group_new
+g_option_group_set_error_hook
+g_option_group_set_parse_hooks
+g_option_group_set_translate_func
+g_option_group_set_translation_domain
+g_parse_debug_string
+g_path_get_basename
+g_path_get_dirname
+g_path_is_absolute = g_direct_hash
+g_path_skip_root
+g_pattern_match
+g_pattern_match_simple
+g_pattern_match_string
+g_pattern_spec_equal
+g_pattern_spec_free
+g_pattern_spec_new
+g_pointer_bit_lock
+g_pointer_bit_trylock
+g_pointer_bit_unlock
+g_poll
+g_prefix_error
+g_print
+g_printerr
+g_printf
+g_printf_string_upper_bound
+g_private_get
+g_private_new = g_array_set_clear_func
+g_private_replace
+g_private_set
+g_propagate_error
+g_propagate_prefixed_error
+g_ptr_array_add
+g_ptr_array_foreach
+g_ptr_array_free = g_atomic_int_inc
+g_ptr_array_insert
+g_ptr_array_new = g_async_queue_unref_and_unlock
+g_ptr_array_new_full
+g_ptr_array_new_with_free_func
+g_ptr_array_ref
+g_ptr_array_remove
+g_ptr_array_remove_fast = g_async_queue_timed_pop
+g_ptr_array_remove_index
+g_ptr_array_remove_index_fast
+g_ptr_array_remove_range
+g_ptr_array_set_free_func
+g_ptr_array_set_size
+g_ptr_array_sized_new
+g_ptr_array_sort
+g_ptr_array_sort_with_data
+g_ptr_array_unref
+g_qsort_with_data
+g_quark_from_static_string
+g_quark_from_string
+g_quark_to_string = g_queue_peek_head
+g_quark_try_string
+g_queue_clear
+g_queue_copy
+g_queue_delete_link = g_random_set_seed
+g_queue_find
+g_queue_find_custom
+g_queue_foreach
+g_queue_free = g_rand_copy
+g_queue_free_full
+g_queue_get_length
+g_queue_index
+g_queue_init
+g_queue_insert_after
+g_queue_insert_before = g_match_info_get_regex
+g_queue_insert_sorted
+g_queue_is_empty
+g_queue_link_index
+g_queue_new
+g_queue_peek_head
+g_queue_peek_head_link
+g_queue_peek_nth
+g_queue_peek_nth_link
+g_queue_peek_tail
+g_queue_peek_tail_link
+g_queue_pop_head
+g_queue_pop_head_link
+g_queue_pop_nth
+g_queue_pop_nth_link
+g_queue_pop_tail
+g_queue_pop_tail_link
+g_queue_push_head
+g_queue_push_head_link = g_rand_set_seed_array
+g_queue_push_nth
+g_queue_push_nth_link
+g_queue_push_tail
+g_queue_push_tail_link
+g_queue_remove = string_append.part.0
+g_queue_remove_all
+g_queue_reverse
+g_queue_sort
+g_queue_unlink
+g_rand_copy
+g_rand_double
+g_rand_double_range
+g_rand_free
+g_rand_int
+g_rand_int_range
+g_rand_new
+g_rand_new_with_seed
+g_rand_new_with_seed_array
+g_rand_set_seed
+g_rand_set_seed_array = g_match_info_fetch_named_pos
+g_random_double
+g_random_double_range
+g_random_int
+g_random_int_range
+g_random_set_seed
+g_realloc
+g_realloc_n
+g_rec_mutex_clear
+g_rec_mutex_init
+g_rec_mutex_lock
+g_rec_mutex_trylock
+g_rec_mutex_unlock
+g_regex_check_replacement
+g_regex_error_quark
+g_regex_escape_nul
+g_regex_escape_string
+g_regex_get_capture_count
+g_regex_get_compile_flags
+g_regex_get_has_cr_or_lf
+g_regex_get_match_flags = g_regex_replace
+g_regex_get_max_backref
+g_regex_get_max_lookbehind
+g_regex_get_pattern
+g_regex_get_string_number = g_scanner_error
+g_regex_match
+g_regex_match_all
+g_regex_match_all_full
+g_regex_match_full
+g_regex_match_simple
+g_regex_new
+g_regex_ref
+g_regex_replace
+g_regex_replace_eval
+g_regex_replace_literal = g_scanner_scope_add_symbol
+g_regex_split
+g_regex_split_full
+g_regex_split_simple
+g_regex_unref
+g_relation_count
+g_relation_delete
+g_relation_destroy
+g_relation_exists
+g_relation_index
+g_relation_insert
+g_relation_new
+g_relation_print
+g_relation_select
+g_reload_user_special_dirs_cache
+g_remove
+g_rename
+g_return_if_fail_warning
+g_rmdir
+g_rw_lock_clear
+g_rw_lock_init
+g_rw_lock_reader_lock
+g_rw_lock_reader_trylock = read_thread
+g_rw_lock_reader_unlock
+g_rw_lock_writer_lock
+g_rw_lock_writer_trylock
+g_rw_lock_writer_unlock
+g_scanner_cur_line
+g_scanner_cur_position
+g_scanner_cur_token
+g_scanner_cur_value
+g_scanner_destroy
+g_scanner_eof
+g_scanner_error
+g_scanner_get_next_token
+g_scanner_input_file
+g_scanner_input_text
+g_scanner_lookup_symbol
+g_scanner_new
+g_scanner_peek_next_token
+g_scanner_scope_add_symbol
+g_scanner_scope_foreach_symbol
+g_scanner_scope_lookup_symbol
+g_scanner_scope_remove_symbol
+g_scanner_set_scope
+g_scanner_sync_file_offset
+g_scanner_unexp_token
+g_scanner_warn
+g_sequence_append
+g_sequence_foreach
+g_sequence_foreach_range
+g_sequence_free
+g_sequence_get
+g_sequence_get_begin_iter
+g_sequence_get_end_iter
+g_sequence_get_iter_at_pos
+g_sequence_get_length
+g_sequence_insert_before
+g_sequence_insert_sorted
+g_sequence_insert_sorted_iter
+g_sequence_iter_compare
+g_sequence_iter_get_position
+g_sequence_iter_get_sequence
+g_sequence_iter_is_begin
+g_sequence_iter_is_end
+g_sequence_iter_move
+g_sequence_iter_next
+g_sequence_iter_prev
+g_sequence_lookup
+g_sequence_lookup_iter
+g_sequence_move
+g_sequence_move_range
+g_sequence_new
+g_sequence_prepend
+g_sequence_range_get_midpoint
+g_sequence_remove
+g_sequence_remove_range
+g_sequence_search
+g_sequence_search_iter
+g_sequence_set
+g_sequence_sort
+g_sequence_sort_changed
+g_sequence_sort_changed_iter
+g_sequence_sort_iter
+g_sequence_swap
+g_set_application_name
+g_set_error
+g_set_error_literal
+g_set_prgname
+g_set_print_handler
+g_set_printerr_handler
+g_setenv_utf8
+g_shell_error_quark
+g_shell_parse_argv
+g_shell_quote
+g_shell_unquote
+g_slice_alloc
+g_slice_alloc0 = g_slist_sort
+g_slice_copy
+g_slice_free1
+g_slice_free_chain_with_offset
+g_slice_get_config
+g_slice_get_config_state
+g_slice_set_config
+g_slist_alloc
+g_slist_append = g_strnfill
+g_slist_concat = g_strdup_printf
+g_slist_copy
+g_slist_copy_deep
+g_slist_delete_link
+g_slist_find
+g_slist_find_custom
+g_slist_foreach
+g_slist_free
+g_slist_free_1
+g_slist_free_full
+g_slist_index
+g_slist_insert
+g_slist_insert_before
+g_slist_insert_sorted
+g_slist_insert_sorted_with_data
+g_slist_last
+g_slist_length
+g_slist_nth
+g_slist_nth_data
+g_slist_pop_allocator = g_relation_count
+g_slist_position
+g_slist_prepend
+g_slist_push_allocator
+g_slist_remove
+g_slist_remove_all
+g_slist_remove_link
+g_slist_reverse
+g_slist_sort
+g_slist_sort_with_data
+g_snprintf
+g_source_add_child_source
+g_source_add_poll
+g_source_attach
+g_source_destroy
+g_source_get_can_recurse
+g_source_get_context
+g_source_get_current_time
+g_source_get_id
+g_source_get_name
+g_source_get_priority
+g_source_get_ready_time = g_main_context_pop_thread_default
+g_source_get_time
+g_source_is_destroyed
+g_source_new
+g_source_ref
+g_source_remove
+g_source_remove_by_funcs_user_data
+g_source_remove_by_user_data
+g_source_remove_child_source
+g_source_remove_poll
+g_source_set_callback
+g_source_set_callback_indirect
+g_source_set_can_recurse
+g_source_set_funcs = g_source_is_destroyed
+g_source_set_name
+g_source_set_name_by_id
+g_source_set_priority
+g_source_set_ready_time
+g_source_unref
+g_spaced_primes_closest
+g_spawn_async_utf8
+g_spawn_async_with_pipes_utf8
+g_spawn_check_exit_status
+g_spawn_close_pid
+g_spawn_command_line_async_utf8
+g_spawn_command_line_sync_utf8
+g_spawn_error_quark
+g_spawn_exit_error_quark
+g_spawn_sync_utf8
+g_sprintf
+g_stat
+g_static_mutex_free
+g_static_mutex_get_mutex_impl
+g_static_mutex_init = g_array_prepend_vals
+g_static_private_free
+g_static_private_get
+g_static_private_init = g_ptr_array_sized_new
+g_static_private_set
+g_static_rec_mutex_free
+g_static_rec_mutex_init
+g_static_rec_mutex_lock
+g_static_rec_mutex_lock_full
+g_static_rec_mutex_trylock
+g_static_rec_mutex_unlock
+g_static_rec_mutex_unlock_full
+g_static_rw_lock_free
+g_static_rw_lock_init = g_array_remove_index_fast
+g_static_rw_lock_reader_lock
+g_static_rw_lock_reader_trylock
+g_static_rw_lock_reader_unlock
+g_static_rw_lock_writer_lock
+g_static_rw_lock_writer_trylock
+g_static_rw_lock_writer_unlock
+g_stpcpy
+g_str_equal
+g_str_has_prefix
+g_str_has_suffix
+g_str_hash
+g_str_is_ascii
+g_str_match_string
+g_str_to_ascii
+g_str_tokenize_and_fold
+g_strcanon = g_str_has_suffix
+g_strcasecmp = g_strrstr_len
+g_strchomp
+g_strchug = g_string_sized_new
+g_strcmp0
+g_strcompress
+g_strconcat
+g_strdelimit
+g_strdown
+g_strdup
+g_strdup_printf
+g_strdup_vprintf
+g_strdupv
+g_strerror
+g_strescape
+g_strfreev
+g_string_append
+g_string_append_c
+g_string_append_len
+g_string_append_printf = g_test_timer_elapsed
+g_string_append_unichar
+g_string_append_uri_escaped
+g_string_append_vprintf
+g_string_ascii_down
+g_string_ascii_up
+g_string_assign
+g_string_chunk_clear
+g_string_chunk_free
+g_string_chunk_insert
+g_string_chunk_insert_const
+g_string_chunk_insert_len
+g_string_chunk_new = g_test_timer_last
+g_string_down
+g_string_equal
+g_string_erase
+g_string_free
+g_string_free_to_bytes
+g_string_hash = g_string_overwrite
+g_string_insert
+g_string_insert_c = g_string_chunk_insert_const
+g_string_insert_len
+g_string_insert_unichar
+g_string_new
+g_string_new_len
+g_string_overwrite
+g_string_overwrite_len
+g_string_prepend
+g_string_prepend_c
+g_string_prepend_len
+g_string_prepend_unichar
+g_string_printf = g_test_timer_start
+g_string_set_size
+g_string_sized_new
+g_string_truncate
+g_string_up
+g_string_vprintf = g_test_rand_double
+g_strip_context = g_hash_table_unref
+g_strjoin
+g_strjoinv = g_string_assign
+g_strlcat
+g_strlcpy
+g_strncasecmp
+g_strndup
+g_strnfill = g_ascii_strcasecmp
+g_strreverse = g_strjoinv
+g_strrstr
+g_strrstr_len
+g_strsignal
+g_strsplit
+g_strsplit_set
+g_strstr_len
+g_strtod = g_strescape
+g_strup
+g_strv_length
+g_test_add_data_func
+g_test_add_data_func_full
+g_test_add_func
+g_test_add_vtable
+g_test_assert_expected_messages_internal
+g_test_bug
+g_test_bug_base
+g_test_build_filename
+g_test_config_vars
+g_test_create_case
+g_test_create_suite
+g_test_expect_message
+g_test_fail
+g_test_failed
+g_test_get_dir
+g_test_get_filename
+g_test_get_root
+g_test_incomplete
+g_test_init
+g_test_log_buffer_free
+g_test_log_buffer_new
+g_test_log_buffer_pop
+g_test_log_buffer_push
+g_test_log_msg_free
+g_test_log_set_fatal_handler
+g_test_log_type_name
+g_test_maximized_result
+g_test_message
+g_test_minimized_result
+g_test_queue_destroy
+g_test_queue_free
+g_test_rand_double
+g_test_rand_double_range
+g_test_rand_int
+g_test_rand_int_range
+g_test_run
+g_test_run_suite
+g_test_set_nonfatal_assertions
+g_test_skip
+g_test_subprocess
+g_test_suite_add
+g_test_suite_add_suite
+g_test_timer_elapsed
+g_test_timer_last
+g_test_timer_start
+g_test_trap_assertions
+g_test_trap_fork
+g_test_trap_has_passed
+g_test_trap_reached_timeout
+g_test_trap_subprocess
+g_thread_create
+g_thread_create_full
+g_thread_error_quark
+g_thread_exit
+g_thread_foreach
+g_thread_functions_for_glib_use
+g_thread_get_initialized
+g_thread_gettime
+g_thread_init_glib
+g_thread_join
+g_thread_new
+g_thread_pool_free
+g_thread_pool_get_max_idle_time
+g_thread_pool_get_max_threads
+g_thread_pool_get_max_unused_threads
+g_thread_pool_get_num_threads
+g_thread_pool_get_num_unused_threads
+g_thread_pool_new
+g_thread_pool_push
+g_thread_pool_set_max_idle_time
+g_thread_pool_set_max_threads
+g_thread_pool_set_max_unused_threads
+g_thread_pool_set_sort_function
+g_thread_pool_stop_unused_threads
+g_thread_pool_unprocessed
+g_thread_ref
+g_thread_self
+g_thread_set_priority
+g_thread_try_new
+g_thread_unref
+g_thread_use_default_impl
+g_thread_yield
+g_threads_got_initialized
+g_time_val_add
+g_time_val_from_iso8601
+g_time_val_to_iso8601
+g_time_zone_adjust_time
+g_time_zone_find_interval
+g_time_zone_get_abbreviation
+g_time_zone_get_offset
+g_time_zone_is_dst
+g_time_zone_new
+g_time_zone_new_local
+g_time_zone_new_utc = g_time_zone_get_abbreviation
+g_time_zone_ref
+g_time_zone_unref
+g_timeout_add
+g_timeout_add_full
+g_timeout_add_seconds
+g_timeout_add_seconds_full
+g_timeout_funcs
+g_timeout_source_new
+g_timeout_source_new_seconds
+g_timer_continue = init_zone_from_rules.isra.13
+g_timer_destroy
+g_timer_elapsed
+g_timer_new
+g_timer_reset
+g_timer_start
+g_timer_stop
+g_trash_stack_height
+g_trash_stack_peek = g_tree_unref
+g_trash_stack_pop
+g_trash_stack_push
+g_tree_destroy
+g_tree_foreach
+g_tree_height
+g_tree_insert
+g_tree_lookup
+g_tree_lookup_extended
+g_tree_new
+g_tree_new_full = g_unichar_isxdigit
+g_tree_new_with_data
+g_tree_nnodes
+g_tree_ref
+g_tree_remove
+g_tree_replace
+g_tree_search
+g_tree_steal
+g_tree_traverse
+g_tree_unref
+g_try_malloc
+g_try_malloc0
+g_try_malloc0_n
+g_try_malloc_n
+g_try_realloc
+g_try_realloc_n
+g_tuples_destroy
+g_tuples_index
+g_ucs4_to_utf16
+g_ucs4_to_utf8
+g_unichar_break_type
+g_unichar_combining_class
+g_unichar_compose
+g_unichar_decompose
+g_unichar_digit_value
+g_unichar_fully_decompose
+g_unichar_get_mirror_char
+g_unichar_get_script
+g_unichar_isalnum
+g_unichar_isalpha
+g_unichar_iscntrl
+g_unichar_isdefined
+g_unichar_isdigit
+g_unichar_isgraph
+g_unichar_islower
+g_unichar_ismark
+g_unichar_isprint
+g_unichar_ispunct
+g_unichar_isspace
+g_unichar_istitle
+g_unichar_isupper
+g_unichar_iswide
+g_unichar_iswide_cjk
+g_unichar_isxdigit
+g_unichar_iszerowidth
+g_unichar_to_utf8
+g_unichar_tolower
+g_unichar_totitle
+g_unichar_toupper
+g_unichar_type
+g_unichar_validate
+g_unichar_xdigit_value
+g_unicode_canonical_decomposition
+g_unicode_canonical_ordering
+g_unicode_script_from_iso15924
+g_unicode_script_to_iso15924
+g_unlink
+g_unsetenv_utf8
+g_uri_escape_string
+g_uri_list_extract_uris
+g_uri_parse_scheme
+g_uri_unescape_segment
+g_uri_unescape_string
+g_usleep
+g_utf16_to_ucs4
+g_utf16_to_utf8
+g_utf8_casefold
+g_utf8_collate
+g_utf8_collate_key
+g_utf8_collate_key_for_filename
+g_utf8_find_next_char
+g_utf8_find_prev_char
+g_utf8_get_char
+g_utf8_get_char_validated
+g_utf8_normalize
+g_utf8_offset_to_pointer
+g_utf8_pointer_to_offset
+g_utf8_prev_char
+g_utf8_skip
+g_utf8_strchr
+g_utf8_strdown
+g_utf8_strlen
+g_utf8_strncpy
+g_utf8_strrchr
+g_utf8_strreverse
+g_utf8_strup
+g_utf8_substring
+g_utf8_to_ucs4
+g_utf8_to_ucs4_fast
+g_utf8_to_utf16
+g_utf8_validate
+g_utime
+g_variant_builder_add
+g_variant_builder_add_parsed
+g_variant_builder_add_value
+g_variant_builder_clear = g_variant_dict_insert_value
+g_variant_builder_close
+g_variant_builder_end
+g_variant_builder_init
+g_variant_builder_new
+g_variant_builder_open
+g_variant_builder_ref
+g_variant_builder_unref
+g_variant_byteswap
+g_variant_check_format_string
+g_variant_classify
+g_variant_compare
+g_variant_dict_clear
+g_variant_dict_contains
+g_variant_dict_end
+g_variant_dict_init
+g_variant_dict_insert
+g_variant_dict_insert_value
+g_variant_dict_lookup
+g_variant_dict_lookup_value
+g_variant_dict_new
+g_variant_dict_ref
+g_variant_dict_remove
+g_variant_dict_unref
+g_variant_dup_bytestring
+g_variant_dup_bytestring_array
+g_variant_dup_objv
+g_variant_dup_string
+g_variant_dup_strv
+g_variant_equal = g_variant_builder_close
+g_variant_format_string_scan
+g_variant_format_string_scan_type
+g_variant_get
+g_variant_get_boolean
+g_variant_get_byte
+g_variant_get_bytestring
+g_variant_get_bytestring_array
+g_variant_get_child
+g_variant_get_child_value
+g_variant_get_data
+g_variant_get_data_as_bytes
+g_variant_get_double
+g_variant_get_fixed_array
+g_variant_get_handle
+g_variant_get_int16 = g_variant_dup_string.constprop.6
+g_variant_get_int32
+g_variant_get_int64
+g_variant_get_maybe
+g_variant_get_normal_form
+g_variant_get_objv
+g_variant_get_size
+g_variant_get_string
+g_variant_get_strv
+g_variant_get_type
+g_variant_get_type_string
+g_variant_get_uint16
+g_variant_get_uint32
+g_variant_get_uint64
+g_variant_get_va
+g_variant_get_variant
+g_variant_hash
+g_variant_is_container
+g_variant_is_floating
+g_variant_is_normal_form
+g_variant_is_object_path
+g_variant_is_of_type
+g_variant_is_signature
+g_variant_iter_copy
+g_variant_iter_free
+g_variant_iter_init
+g_variant_iter_loop
+g_variant_iter_n_children
+g_variant_iter_new
+g_variant_iter_next
+g_variant_iter_next_value
+g_variant_lookup
+g_variant_lookup_value
+g_variant_n_children
+g_variant_new
+g_variant_new_array
+g_variant_new_boolean
+g_variant_new_byte
+g_variant_new_bytestring
+g_variant_new_bytestring_array = g_variant_get_string
+g_variant_new_dict_entry
+g_variant_new_double
+g_variant_new_fixed_array
+g_variant_new_from_bytes
+g_variant_new_from_data
+g_variant_new_handle
+g_variant_new_int16
+g_variant_new_int32
+g_variant_new_int64
+g_variant_new_maybe
+g_variant_new_object_path
+g_variant_new_objv
+g_variant_new_parsed
+g_variant_new_parsed_va
+g_variant_new_printf
+g_variant_new_signature
+g_variant_new_string
+g_variant_new_strv
+g_variant_new_take_string
+g_variant_new_tuple
+g_variant_new_uint16
+g_variant_new_uint32
+g_variant_new_uint64
+g_variant_new_va
+g_variant_new_variant
+g_variant_parse
+g_variant_parse_error_print_context
+g_variant_parse_error_quark
+g_variant_parser_get_error_quark
+g_variant_print
+g_variant_print_string
+g_variant_ref
+g_variant_ref_sink
+g_variant_serialised_byteswap
+g_variant_serialised_get_child
+g_variant_serialised_is_normal
+g_variant_serialised_n_children
+g_variant_serialiser_is_object_path
+g_variant_serialiser_is_signature
+g_variant_serialiser_is_string
+g_variant_serialiser_needed_size
+g_variant_serialiser_serialise
+g_variant_store
+g_variant_take_ref
+g_variant_type_checked_ = g_cond_wait
+g_variant_type_copy
+g_variant_type_dup_string = g_snprintf
+g_variant_type_element
+g_variant_type_equal
+g_variant_type_first
+g_variant_type_free = g_fprintf
+g_variant_type_get_string_length
+g_variant_type_hash
+g_variant_type_info_assert_no_infos
+g_variant_type_info_element
+g_variant_type_info_get
+g_variant_type_info_get_type_string
+g_variant_type_info_member_info
+g_variant_type_info_n_members
+g_variant_type_info_query
+g_variant_type_info_query_element
+g_variant_type_info_ref
+g_variant_type_info_unref
+g_variant_type_is_array
+g_variant_type_is_basic
+g_variant_type_is_container
+g_variant_type_is_definite
+g_variant_type_is_dict_entry
+g_variant_type_is_maybe
+g_variant_type_is_subtype_of
+g_variant_type_is_tuple
+g_variant_type_is_variant
+g_variant_type_key
+g_variant_type_n_items
+g_variant_type_new
+g_variant_type_new_array = g_rec_mutex_clear
+g_variant_type_new_dict_entry
+g_variant_type_new_maybe = g_rec_mutex_unlock
+g_variant_type_new_tuple
+g_variant_type_next
+g_variant_type_peek_string
+g_variant_type_string_is_valid
+g_variant_type_string_scan
+g_variant_type_value = g_mutex_init
+g_variant_unref
+g_vasprintf
+g_vfprintf = g_thread_win32_proxy
+g_vprintf
+g_vsnprintf
+g_vsprintf
+g_warn_message
+g_win32_error_message
+g_win32_ftruncate
+g_win32_get_command_line
+g_win32_get_package_installation_directory_of_module
+g_win32_get_package_installation_directory_utf8
+g_win32_get_package_installation_subdirectory_utf8
+g_win32_get_system_data_dirs_for_module
+g_win32_get_windows_version
+g_win32_getlocale
+g_win32_locale_filename_from_utf8
+glib__private__
+glib_binary_age
+glib_check_version
+glib_gettext
+glib_interface_age
+glib_major_version
+glib_mem_profiler_table
+glib_micro_version
+glib_minor_version
+glib_on_error_halt
+glib_pgettext

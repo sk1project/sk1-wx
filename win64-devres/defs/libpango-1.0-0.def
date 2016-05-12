@@ -1,444 +1,406 @@
-Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-
-Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\libpango-1.0-0.dll
-
-File Type: DLL
-
-  Section contains the following exports for libpango-1.0-0.dll
-
-    00000000 characteristics
-    536D9F8D time date stamp Sat May 10 06:39:57 2014
-        0.00 version
-           1 ordinal base
-         405 number of functions
-         405 number of names
-
-    ordinal hint RVA      name
-
-          1    0 00027230 pango_alignment_get_type
-          2    1 0000B1E0 pango_attr_background_new
-          3    2 0000B860 pango_attr_fallback_new
-          4    3 0000B060 pango_attr_family_new
-          5    4 0000B520 pango_attr_font_desc_new
-          6    5 0000B160 pango_attr_foreground_new
-          7    6 0000BBD0 pango_attr_gravity_hint_new
-          8    7 0000BB40 pango_attr_gravity_new
-          9    8 0000C620 pango_attr_iterator_copy
-         10    9 0000C690 pango_attr_iterator_destroy
-         11    A 0000C6E0 pango_attr_iterator_get
-         12    B 0000CB60 pango_attr_iterator_get_attrs
-         13    C 0000C730 pango_attr_iterator_get_font
-         14    D 0000C4E0 pango_attr_iterator_next
-         15    E 0000C480 pango_attr_iterator_range = update_attr_iterator
-         16    F 0000B0F0 pango_attr_language_new
-         17   10 0000B8D0 pango_attr_letter_spacing_new
-         18   11 0000BF30 pango_attr_list_change
-         19   12 0000A8E0 pango_attr_list_copy
-         20   13 0000CA50 pango_attr_list_filter
-         21   14 0000C370 pango_attr_list_get_iterator
-         22   15 0000BC40 pango_attr_list_get_type
-         23   16 0000BCF0 pango_attr_list_insert
-         24   17 0000BE00 pango_attr_list_insert_before = pango_log2vis_get_embedding_levels
-         25   18 0000BCB0 pango_attr_list_new
-         26   19 0000BCE0 pango_attr_list_ref
-         27   1A 0000C210 pango_attr_list_splice
-         28   1B 0000A850 pango_attr_list_unref
-         29   1C 0000B770 pango_attr_rise_new
-         30   1D 0000B7E0 pango_attr_scale_new
-         31   1E 0000BA40 pango_attr_shape_new
-         32   1F 0000B940 pango_attr_shape_new_with_data
-         33   20 0000B260 pango_attr_size_new
-         34   21 0000B2E0 pango_attr_size_new_absolute
-         35   22 0000B4B0 pango_attr_stretch_new
-         36   23 0000B6F0 pango_attr_strikethrough_color_new
-         37   24 0000B680 pango_attr_strikethrough_new
-         38   25 0000B360 pango_attr_style_new
-         39   26 0000AEF0 pango_attr_type_get_name
-         40   27 00026DB0 pango_attr_type_get_type
-         41   28 0000AE70 pango_attr_type_register
-         42   29 0000B600 pango_attr_underline_color_new
-         43   2A 0000B590 pango_attr_underline_new
-         44   2B 0000B440 pango_attr_variant_new
-         45   2C 0000B3D0 pango_attr_weight_new
-         46   2D 0000AF90 pango_attribute_copy
-         47   2E 0000AFC0 pango_attribute_destroy
-         48   2F 0000AFE0 pango_attribute_equal
-         49   30 0000AF40 pango_attribute_init
-         50   31 0000CBF0 pango_bidi_type_for_unichar
-         51   32 00026E70 pango_bidi_type_get_type
-         52   33 00002AD0 pango_break
-         53   34 0000CF90 pango_color_copy
-         54   35 0000CFD0 pango_color_free
-         55   36 0000CFF0 pango_color_get_type
-         56   37 0000D0C0 pango_color_parse
-         57   38 0000D060 pango_color_to_string
-         58   39 00025C00 pango_config_key_get
-         59   3A 00025AD0 pango_config_key_get_system
-         60   3B 0000FE40 pango_context_changed
-         61   3C 0000F450 pango_context_get_base_dir
-         62   3D 0000F500 pango_context_get_base_gravity
-         63   3E 0000F310 pango_context_get_font_description = pango_coverage_max
-         64   3F 0000F060 pango_context_get_font_map
-         65   40 0000F540 pango_context_get_gravity
-         66   41 0000F5C0 pango_context_get_gravity_hint
-         67   42 0000F3D0 pango_context_get_language
-         68   43 0000EE20 pango_context_get_matrix
-         69   44 0000FB10 pango_context_get_metrics
-         70   45 0000FE60 pango_context_get_serial
-         71   46 0000EBB0 pango_context_get_type
-         72   47 0000F140 pango_context_list_families
-         73   48 0000F1B0 pango_context_load_font = pango_coverage_set
-         74   49 0000F220 pango_context_load_fontset
-         75   4A 0000EC40 pango_context_new
-         76   4B 0000F410 pango_context_set_base_dir
-         77   4C 0000F490 pango_context_set_base_gravity
-         78   4D 0000F270 pango_context_set_font_description
-         79   4E 0000EF00 pango_context_set_font_map
-         80   4F 0000F580 pango_context_set_gravity_hint
-         81   50 0000F350 pango_context_set_language
-         82   51 0000ECD0 pango_context_set_matrix
-         83   52 0000FEF0 pango_coverage_copy
-         84   53 00010D70 pango_coverage_from_bytes = pango_font_map_list_families
-         85   54 00010120 pango_coverage_get
-         86   55 00026F30 pango_coverage_level_get_type
-         87   56 00010310 pango_coverage_max
-         88   57 0000FEB0 pango_coverage_new
-         89   58 00010030 pango_coverage_ref
-         90   59 000101B0 pango_coverage_set
-         91   5A 00010BE0 pango_coverage_to_bytes
-         92   5B 00010070 pango_coverage_unref = pango_fallback_engine_class_intern_init
-         93   5C 00001450 pango_default_break
-         94   5D 00026ED0 pango_direction_get_type
-         95   5E 000272F0 pango_ellipsize_mode_get_type
-         96   5F 00011360 pango_engine_get_type
-         97   60 000113F0 pango_engine_lang_get_type
-         98   61 00011500 pango_engine_shape_get_type
-         99   62 00026340 pango_extents_to_pixels
-        100   63 000260F0 pango_find_base_dir
-        101   64 00009E20 pango_find_map
-        102   65 00002BB0 pango_find_paragraph_boundary
-        103   66 000079C0 pango_font_describe
-        104   67 00007A10 pango_font_describe_with_absolute_size
-        105   68 00005C30 pango_font_description_better_match
-        106   69 00004870 pango_font_description_copy
-        107   6A 00005D80 pango_font_description_copy_static
-        108   6B 00005DE0 pango_font_description_equal
-        109   6C 000048E0 pango_font_description_free
-        110   6D 00006030 pango_font_description_from_string
-        111   6E 00005490 pango_font_description_get_family
-        112   6F 00005820 pango_font_description_get_gravity
-        113   70 00005860 pango_font_description_get_set_fields
-        114   71 000056F0 pango_font_description_get_size
-        115   72 00005790 pango_font_description_get_size_is_absolute
-        116   73 00005650 pango_font_description_get_stretch
-        117   74 00005500 pango_font_description_get_style
-        118   75 000052A0 pango_font_description_get_type
-        119   76 00005570 pango_font_description_get_variant
-        120   77 000055E0 pango_font_description_get_weight
-        121   78 00005EB0 pango_font_description_hash
-        122   79 00005980 pango_font_description_merge
-        123   7A 00005AF0 pango_font_description_merge_static
-        124   7B 00005310 pango_font_description_new
-        125   7C 00005730 pango_font_description_set_absolute_size
-        126   7D 00005360 pango_font_description_set_family
-        127   7E 00005410 pango_font_description_set_family_static
-        128   7F 000057E0 pango_font_description_set_gravity
-        129   80 00005690 pango_font_description_set_size
-        130   81 00005620 pango_font_description_set_stretch
-        131   82 000054D0 pango_font_description_set_style
-        132   83 00005540 pango_font_description_set_variant
-        133   84 000055B0 pango_font_description_set_weight
-        134   85 00006E20 pango_font_description_to_filename
-        135   86 00006470 pango_font_description_to_string
-        136   87 000058A0 pango_font_description_unset_fields
-        137   88 00005FB0 pango_font_descriptions_free
-        138   89 000082A0 pango_font_face_describe
-        139   8A 00008470 pango_font_face_get_face_name
-        140   8B 00008210 pango_font_face_get_type
-        141   8C 00008380 pango_font_face_is_synthesized = map_add_engine_list
-        142   8D 00008550 pango_font_face_list_sizes
-        143   8E 00007F40 pango_font_family_get_name = pango_glyph_string_x_to_index
-        144   8F 00007EB0 pango_font_family_get_type
-        145   90 00008120 pango_font_family_is_monospace
-        146   91 00008020 pango_font_family_list_faces
-        147   92 00007AE0 pango_font_find_shaper
-        148   93 00007A90 pango_font_get_coverage
-        149   94 00007BF0 pango_font_get_font_map
-        150   95 00007B30 pango_font_get_glyph_extents
-        151   96 00007B80 pango_font_get_metrics
-        152   97 00007930 pango_font_get_type
-        153   98 00011FD0 pango_font_map_changed
-        154   99 00011CC0 pango_font_map_create_context
-        155   9A 00011ED0 pango_font_map_get_serial
-        156   9B 00011DF0 pango_font_map_get_shape_engine_type
-        157   9C 00011C30 pango_font_map_get_type
-        158   9D 00011D70 pango_font_map_list_families
-        159   9E 00011D20 pango_font_map_load_font
-        160   9F 00011DA0 pango_font_map_load_fontset
-        161   A0 00027110 pango_font_mask_get_type
-        162   A1 00007D30 pango_font_metrics_get_approximate_char_width
-        163   A2 00007D70 pango_font_metrics_get_approximate_digit_width
-        164   A3 00007CB0 pango_font_metrics_get_ascent
-        165   A4 00007CF0 pango_font_metrics_get_descent
-        166   A5 00007E30 pango_font_metrics_get_strikethrough_position
-        167   A6 00007E70 pango_font_metrics_get_strikethrough_thickness
-        168   A7 00007C20 pango_font_metrics_get_type
-        169   A8 00007DB0 pango_font_metrics_get_underline_position
-        170   A9 00007DF0 pango_font_metrics_get_underline_thickness
-        171   AA 00007C90 pango_font_metrics_new
-        172   AB 00004A00 pango_font_metrics_ref
-        173   AC 00004A10 pango_font_metrics_unref
-        174   AD 00012690 pango_fontset_foreach
-        175   AE 000124C0 pango_fontset_get_font
-        176   AF 000125B0 pango_fontset_get_metrics
-        177   B0 00012430 pango_fontset_get_type
-        178   B1 00012C10 pango_fontset_simple_append
-        179   B2 00012B00 pango_fontset_simple_get_type
-        180   B3 000129E0 pango_fontset_simple_new
-        181   B4 00012C40 pango_fontset_simple_size
-        182   B5 00025E50 pango_get_lib_subdirectory
-        183   B6 00002D60 pango_get_log_attrs
-        184   B7 0000CEB0 pango_get_mirror_char
-        185   B8 00025DD0 pango_get_sysconf_subdirectory
-        186   B9 00013A80 pango_glyph_item_apply_attrs
-        187   BA 00012CA0 pango_glyph_item_copy
-        188   BB 00012CF0 pango_glyph_item_free
-        189   BC 000140E0 pango_glyph_item_get_logical_widths
-        190   BD 000131A0 pango_glyph_item_get_type
-        191   BE 00012C50 pango_glyph_item_iter_copy
-        192   BF 00012D40 pango_glyph_item_iter_free
-        193   C0 00013210 pango_glyph_item_iter_get_type
-        194   C1 00013850 pango_glyph_item_iter_init_end
-        195   C2 00013630 pango_glyph_item_iter_init_start
-        196   C3 00013280 pango_glyph_item_iter_next_cluster
-        197   C4 00013450 pango_glyph_item_iter_prev_cluster
-        198   C5 00013DB0 pango_glyph_item_letter_space
-        199   C6 00012D60 pango_glyph_item_split
-        200   C7 00008690 pango_glyph_string_copy
-        201   C8 00008AD0 pango_glyph_string_extents
-        202   C9 00008890 pango_glyph_string_extents_range
-        203   CA 00008710 pango_glyph_string_free
-        204   CB 00008B40 pango_glyph_string_get_logical_widths
-        205   CC 00008820 pango_glyph_string_get_type
-        206   CD 00008B00 pango_glyph_string_get_width
-        207   CE 00008C70 pango_glyph_string_index_to_x
-        208   CF 00008750 pango_glyph_string_new
-        209   D0 00008780 pango_glyph_string_set_size
-        210   D1 00008F40 pango_glyph_string_x_to_index
-        211   D2 00014390 pango_gravity_get_for_matrix
-        212   D3 000143F0 pango_gravity_get_for_script = pango_layout_class_intern_init
-        213   D4 000144E0 pango_gravity_get_for_script_and_width
-        214   D5 00027170 pango_gravity_get_type
-        215   D6 000271D0 pango_gravity_hint_get_type
-        216   D7 00014330 pango_gravity_to_rotation
-        217   D8 000261B0 pango_is_zero_width
-        218   D9 000145A0 pango_item_copy
-        219   DA 00014650 pango_item_free
-        220   DB 000146C0 pango_item_get_type
-        221   DC 000146B0 pango_item_new
-        222   DD 00014730 pango_item_split
-        223   DE 0000FA30 pango_itemize
-        224   DF 0000F600 pango_itemize_with_base_dir
-        225   E0 00014AC0 pango_language_from_string
-        226   E1 00014BE0 pango_language_get_default
-        227   E2 00014D70 pango_language_get_sample_string
-        228   E3 00014E30 pango_language_get_scripts
-        229   E4 00014A50 pango_language_get_type
-        230   E5 00014F50 pango_language_includes_script
-        231   E6 00014CA0 pango_language_matches
-        232   E7 00014C90 pango_language_to_string
-        233   E8 000182D0 pango_layout_context_changed
-        234   E9 000168E0 pango_layout_copy
-        235   EA 00017540 pango_layout_get_alignment
-        236   EB 00017000 pango_layout_get_attributes
-        237   EC 00017410 pango_layout_get_auto_dir
-        238   ED 0001CB60 pango_layout_get_baseline
-        239   EE 00017DF0 pango_layout_get_character_count
-        240   EF 00016B50 pango_layout_get_context
-        241   F0 0001C000 pango_layout_get_cursor_pos
-        242   F1 00017AA0 pango_layout_get_ellipsize
-        243   F2 0001AD00 pango_layout_get_extents
-        244   F3 00017180 pango_layout_get_font_description
-        245   F4 00016C70 pango_layout_get_height
-        246   F5 00016EE0 pango_layout_get_indent
-        247   F6 0001B5E0 pango_layout_get_iter
-        248   F7 000172B0 pango_layout_get_justify
-        249   F8 00019F10 pango_layout_get_line
-        250   F9 00019AF0 pango_layout_get_line_count
-        251   FA 00019DB0 pango_layout_get_line_readonly
-        252   FB 0001A220 pango_layout_get_lines
-        253   FC 00019730 pango_layout_get_lines_readonly
-        254   FD 0001A090 pango_layout_get_log_attrs
-        255   FE 00019C40 pango_layout_get_log_attrs_readonly
-        256   FF 0001AD70 pango_layout_get_pixel_extents
-        257  100 0001AE70 pango_layout_get_pixel_size
-        258  101 000183C0 pango_layout_get_serial
-        259  102 000178B0 pango_layout_get_single_paragraph_mode
-        260  103 0001AD20 pango_layout_get_size
-        261  104 00016F50 pango_layout_get_spacing
-        262  105 000176B0 pango_layout_get_tabs
-        263  106 00017D00 pango_layout_get_text
-        264  107 00016770 pango_layout_get_type
-        265  108 00018F00 pango_layout_get_unknown_glyphs_count
-        266  109 00016BD0 pango_layout_get_width
-        267  10A 00016DD0 pango_layout_get_wrap
-        268  10B 0001A380 pango_layout_index_to_line_x
-        269  10C 0001BBF0 pango_layout_index_to_pos
-        270  10D 00019850 pango_layout_is_ellipsized
-        271  10E 000199A0 pango_layout_is_wrapped
-        272  10F 0001CDC0 pango_layout_iter_at_last_line
-        273  110 000157B0 pango_layout_iter_copy
-        274  111 00015D60 pango_layout_iter_free
-        275  112 0001DCF0 pango_layout_iter_get_baseline = tt_parse_func
-        276  113 0001D6D0 pango_layout_iter_get_char_extents
-        277  114 0001DB50 pango_layout_iter_get_cluster_extents
-        278  115 0001CC50 pango_layout_iter_get_index = pango_layout_iter_get_line_yrange
-        279  116 0001CE10 pango_layout_iter_get_layout
-        280  117 0001DD40 pango_layout_iter_get_layout_extents
-        281  118 0001CD40 pango_layout_iter_get_line = pango_layout_iter_get_layout_extents
-        282  119 0001D840 pango_layout_iter_get_line_extents
-        283  11A 0001CD80 pango_layout_iter_get_line_readonly
-        284  11B 0001DC50 pango_layout_iter_get_line_yrange
-        285  11C 0001CCA0 pango_layout_iter_get_run
-        286  11D 0001DA70 pango_layout_iter_get_run_extents
-        287  11E 0001CCF0 pango_layout_iter_get_run_readonly = pango_layout_iter_get_baseline
-        288  11F 0001B570 pango_layout_iter_get_type
-        289  120 0001D1A0 pango_layout_iter_next_char
-        290  121 0001D510 pango_layout_iter_next_cluster
-        291  122 0001CE60 pango_layout_iter_next_line
-        292  123 0001D050 pango_layout_iter_next_run
-        293  124 00018B50 pango_layout_line_get_extents
-        294  125 0001B510 pango_layout_line_get_pixel_extents
-        295  126 000186C0 pango_layout_line_get_type
-        296  127 0001AF90 pango_layout_line_get_x_ranges
-        297  128 000184C0 pango_layout_line_index_to_x
-        298  129 000157A0 pango_layout_line_ref
-        299  12A 00015A10 pango_layout_line_unref
-        300  12B 00018730 pango_layout_line_x_to_index = pango_layout_get_lines_readonly
-        301  12C 00019060 pango_layout_move_cursor_visually
-        302  12D 00016800 pango_layout_new
-        303  12E 000174F0 pango_layout_set_alignment
-        304  12F 00016F90 pango_layout_set_attributes
-        305  130 000172F0 pango_layout_set_auto_dir
-        306  131 00017990 pango_layout_set_ellipsize
-        307  132 000170E0 pango_layout_set_font_description
-        308  133 00016C10 pango_layout_set_height
-        309  134 00016EB0 pango_layout_set_indent
-        310  135 00017260 pango_layout_set_justify
-        311  136 00017ED0 pango_layout_set_markup
-        312  137 000180D0 pango_layout_set_markup_with_accel
-        313  138 00017790 pango_layout_set_single_paragraph_mode
-        314  139 00016F20 pango_layout_set_spacing
-        315  13A 00017590 pango_layout_set_tabs
-        316  13B 00017B80 pango_layout_set_text
-        317  13C 00016B90 pango_layout_set_width
-        318  13D 00016CB0 pango_layout_set_wrap
-        319  13E 0001C5B0 pango_layout_xy_to_index
-        320  13F 0000CE00 pango_log2vis_get_embedding_levels
-        321  140 000260E0 pango_lookup_aliases
-        322  141 00009730 pango_map_get_engine
-        323  142 000098A0 pango_map_get_engines
-        324  143 00020720 pango_markup_parser_finish
-        325  144 00020640 pango_markup_parser_new
-        326  145 00020C80 pango_matrix_concat
-        327  146 000209D0 pango_matrix_copy
-        328  147 00020A30 pango_matrix_free
-        329  148 00020DC0 pango_matrix_get_font_scale_factor
-        330  149 00020A50 pango_matrix_get_type
-        331  14A 00020B80 pango_matrix_rotate
-        332  14B 00020B20 pango_matrix_scale
-        333  14C 00020E30 pango_matrix_transform_distance
-        334  14D 00021130 pango_matrix_transform_pixel_rectangle
-        335  14E 00020E70 pango_matrix_transform_point
-        336  14F 00020ED0 pango_matrix_transform_rectangle
-        337  150 00020AC0 pango_matrix_translate
-        338  151 00009CB0 pango_module_register
-        339  152 00025F00 pango_parse_enum
-        340  153 00020840 pango_parse_markup
-        341  154 00007600 pango_parse_stretch
-        342  155 00006EE0 pango_parse_style
-        343  156 00007160 pango_parse_variant
-        344  157 00007370 pango_parse_weight
-        345  158 00026230 pango_quantize_line_geometry = pango_alignment_get_type
-        346  159 00025460 pango_read_line
-        347  15A 00027350 pango_render_part_get_type
-        348  15B 00023BA0 pango_renderer_activate
-        349  15C 00023BE0 pango_renderer_deactivate
-        350  15D 00023A50 pango_renderer_draw_error_underline
-        351  15E 00023B30 pango_renderer_draw_glyph = pango_tab_array_get_size
-        352  15F 00022E40 pango_renderer_draw_glyph_item
-        353  160 00022D60 pango_renderer_draw_glyphs
-        354  161 00023770 pango_renderer_draw_layout
-        355  162 00022F40 pango_renderer_draw_layout_line
-        356  163 000239E0 pango_renderer_draw_rectangle
-        357  164 00023AB0 pango_renderer_draw_trapezoid
-        358  165 00024130 pango_renderer_get_color
-        359  166 00024410 pango_renderer_get_layout
-        360  167 00024430 pango_renderer_get_layout_line
-        361  168 00024330 pango_renderer_get_matrix
-        362  169 00022CD0 pango_renderer_get_type
-        363  16A 000241C0 pango_renderer_part_changed
-        364  16B 00023C60 pango_renderer_set_color
-        365  16C 000242F0 pango_renderer_set_matrix
-        366  16D 000266D0 pango_reorder_items
-        367  16E 00025A70 pango_scan_int
-        368  16F 00025880 pango_scan_string
-        369  170 00025790 pango_scan_word
-        370  171 00024440 pango_script_for_unichar
-        371  172 00015070 pango_script_get_sample_language
-        372  173 000273B0 pango_script_get_type
-        373  174 00024460 pango_script_iter_free = pango_read_line
-        374  175 00024470 pango_script_iter_get_range
-        375  176 00024710 pango_script_iter_new
-        376  177 000244A0 pango_script_iter_next
-        377  178 000266F0 pango_shape
-        378  179 00026A30 pango_shape_full
-        379  17A 00025750 pango_skip_space
-        380  17B 00025300 pango_split_file_list
-        381  17C 000270B0 pango_stretch_get_type
-        382  17D 00026F90 pango_style_get_type
-        383  17E 00027410 pango_tab_align_get_type
-        384  17F 000247D0 pango_tab_array_copy
-        385  180 00024780 pango_tab_array_free
-        386  181 00024F20 pango_tab_array_get_positions_in_pixels
-        387  182 00024B30 pango_tab_array_get_size
-        388  183 00024D70 pango_tab_array_get_tab
-        389  184 00024E10 pango_tab_array_get_tabs
-        390  185 00024AC0 pango_tab_array_get_type
-        391  186 000248E0 pango_tab_array_new
-        392  187 00024990 pango_tab_array_new_with_positions
-        393  188 00024B70 pango_tab_array_resize
-        394  189 00024C10 pango_tab_array_set_tab
-        395  18A 00025230 pango_trim_string = pango_quantize_line_geometry
-        396  18B 00026E10 pango_underline_get_type
-        397  18C 0000CE90 pango_unichar_direction
-        398  18D 000262D0 pango_units_from_double
-        399  18E 00026330 pango_units_to_double
-        400  18F 00026FF0 pango_variant_get_type
-        401  190 000251D0 pango_version
-        402  191 000251F0 pango_version_check
-        403  192 000251E0 pango_version_string
-        404  193 00027050 pango_weight_get_type
-        405  194 00027290 pango_wrap_mode_get_type
-
-  Summary
-
-        1000 .CRT
-        1000 .bss
-        1000 .data
-        1000 .debug_abbrev
-        1000 .debug_aranges
-        1000 .debug_frame
-        1000 .debug_info
-        1000 .debug_line
-        4000 .edata
-        3000 .idata
-        2000 .pdata
-       17000 .rdata
-        1000 .reloc
-        1000 .rsrc
-       2C000 .text
-        1000 .tls
-        2000 .xdata
+EXPORTS
+pango_alignment_get_type
+pango_attr_background_new
+pango_attr_fallback_new
+pango_attr_family_new
+pango_attr_font_desc_new
+pango_attr_foreground_new
+pango_attr_gravity_hint_new
+pango_attr_gravity_new
+pango_attr_iterator_copy
+pango_attr_iterator_destroy
+pango_attr_iterator_get
+pango_attr_iterator_get_attrs
+pango_attr_iterator_get_font
+pango_attr_iterator_next
+pango_attr_iterator_range = update_attr_iterator
+pango_attr_language_new
+pango_attr_letter_spacing_new
+pango_attr_list_change
+pango_attr_list_copy
+pango_attr_list_filter
+pango_attr_list_get_iterator
+pango_attr_list_get_type
+pango_attr_list_insert
+pango_attr_list_insert_before = pango_log2vis_get_embedding_levels
+pango_attr_list_new
+pango_attr_list_ref
+pango_attr_list_splice
+pango_attr_list_unref
+pango_attr_rise_new
+pango_attr_scale_new
+pango_attr_shape_new
+pango_attr_shape_new_with_data
+pango_attr_size_new
+pango_attr_size_new_absolute
+pango_attr_stretch_new
+pango_attr_strikethrough_color_new
+pango_attr_strikethrough_new
+pango_attr_style_new
+pango_attr_type_get_name
+pango_attr_type_get_type
+pango_attr_type_register
+pango_attr_underline_color_new
+pango_attr_underline_new
+pango_attr_variant_new
+pango_attr_weight_new
+pango_attribute_copy
+pango_attribute_destroy
+pango_attribute_equal
+pango_attribute_init
+pango_bidi_type_for_unichar
+pango_bidi_type_get_type
+pango_break
+pango_color_copy
+pango_color_free
+pango_color_get_type
+pango_color_parse
+pango_color_to_string
+pango_config_key_get
+pango_config_key_get_system
+pango_context_changed
+pango_context_get_base_dir
+pango_context_get_base_gravity
+pango_context_get_font_description = pango_coverage_max
+pango_context_get_font_map
+pango_context_get_gravity
+pango_context_get_gravity_hint
+pango_context_get_language
+pango_context_get_matrix
+pango_context_get_metrics
+pango_context_get_serial
+pango_context_get_type
+pango_context_list_families
+pango_context_load_font = pango_coverage_set
+pango_context_load_fontset
+pango_context_new
+pango_context_set_base_dir
+pango_context_set_base_gravity
+pango_context_set_font_description
+pango_context_set_font_map
+pango_context_set_gravity_hint
+pango_context_set_language
+pango_context_set_matrix
+pango_coverage_copy
+pango_coverage_from_bytes = pango_font_map_list_families
+pango_coverage_get
+pango_coverage_level_get_type
+pango_coverage_max
+pango_coverage_new
+pango_coverage_ref
+pango_coverage_set
+pango_coverage_to_bytes
+pango_coverage_unref = pango_fallback_engine_class_intern_init
+pango_default_break
+pango_direction_get_type
+pango_ellipsize_mode_get_type
+pango_engine_get_type
+pango_engine_lang_get_type
+pango_engine_shape_get_type
+pango_extents_to_pixels
+pango_find_base_dir
+pango_find_map
+pango_find_paragraph_boundary
+pango_font_describe
+pango_font_describe_with_absolute_size
+pango_font_description_better_match
+pango_font_description_copy
+pango_font_description_copy_static
+pango_font_description_equal
+pango_font_description_free
+pango_font_description_from_string
+pango_font_description_get_family
+pango_font_description_get_gravity
+pango_font_description_get_set_fields
+pango_font_description_get_size
+pango_font_description_get_size_is_absolute
+pango_font_description_get_stretch
+pango_font_description_get_style
+pango_font_description_get_type
+pango_font_description_get_variant
+pango_font_description_get_weight
+pango_font_description_hash
+pango_font_description_merge
+pango_font_description_merge_static
+pango_font_description_new
+pango_font_description_set_absolute_size
+pango_font_description_set_family
+pango_font_description_set_family_static
+pango_font_description_set_gravity
+pango_font_description_set_size
+pango_font_description_set_stretch
+pango_font_description_set_style
+pango_font_description_set_variant
+pango_font_description_set_weight
+pango_font_description_to_filename
+pango_font_description_to_string
+pango_font_description_unset_fields
+pango_font_descriptions_free
+pango_font_face_describe
+pango_font_face_get_face_name
+pango_font_face_get_type
+pango_font_face_is_synthesized = map_add_engine_list
+pango_font_face_list_sizes
+pango_font_family_get_name = pango_glyph_string_x_to_index
+pango_font_family_get_type
+pango_font_family_is_monospace
+pango_font_family_list_faces
+pango_font_find_shaper
+pango_font_get_coverage
+pango_font_get_font_map
+pango_font_get_glyph_extents
+pango_font_get_metrics
+pango_font_get_type
+pango_font_map_changed
+pango_font_map_create_context
+pango_font_map_get_serial
+pango_font_map_get_shape_engine_type
+pango_font_map_get_type
+pango_font_map_list_families
+pango_font_map_load_font
+pango_font_map_load_fontset
+pango_font_mask_get_type
+pango_font_metrics_get_approximate_char_width
+pango_font_metrics_get_approximate_digit_width
+pango_font_metrics_get_ascent
+pango_font_metrics_get_descent
+pango_font_metrics_get_strikethrough_position
+pango_font_metrics_get_strikethrough_thickness
+pango_font_metrics_get_type
+pango_font_metrics_get_underline_position
+pango_font_metrics_get_underline_thickness
+pango_font_metrics_new
+pango_font_metrics_ref
+pango_font_metrics_unref
+pango_fontset_foreach
+pango_fontset_get_font
+pango_fontset_get_metrics
+pango_fontset_get_type
+pango_fontset_simple_append
+pango_fontset_simple_get_type
+pango_fontset_simple_new
+pango_fontset_simple_size
+pango_get_lib_subdirectory
+pango_get_log_attrs
+pango_get_mirror_char
+pango_get_sysconf_subdirectory
+pango_glyph_item_apply_attrs
+pango_glyph_item_copy
+pango_glyph_item_free
+pango_glyph_item_get_logical_widths
+pango_glyph_item_get_type
+pango_glyph_item_iter_copy
+pango_glyph_item_iter_free
+pango_glyph_item_iter_get_type
+pango_glyph_item_iter_init_end
+pango_glyph_item_iter_init_start
+pango_glyph_item_iter_next_cluster
+pango_glyph_item_iter_prev_cluster
+pango_glyph_item_letter_space
+pango_glyph_item_split
+pango_glyph_string_copy
+pango_glyph_string_extents
+pango_glyph_string_extents_range
+pango_glyph_string_free
+pango_glyph_string_get_logical_widths
+pango_glyph_string_get_type
+pango_glyph_string_get_width
+pango_glyph_string_index_to_x
+pango_glyph_string_new
+pango_glyph_string_set_size
+pango_glyph_string_x_to_index
+pango_gravity_get_for_matrix
+pango_gravity_get_for_script = pango_layout_class_intern_init
+pango_gravity_get_for_script_and_width
+pango_gravity_get_type
+pango_gravity_hint_get_type
+pango_gravity_to_rotation
+pango_is_zero_width
+pango_item_copy
+pango_item_free
+pango_item_get_type
+pango_item_new
+pango_item_split
+pango_itemize
+pango_itemize_with_base_dir
+pango_language_from_string
+pango_language_get_default
+pango_language_get_sample_string
+pango_language_get_scripts
+pango_language_get_type
+pango_language_includes_script
+pango_language_matches
+pango_language_to_string
+pango_layout_context_changed
+pango_layout_copy
+pango_layout_get_alignment
+pango_layout_get_attributes
+pango_layout_get_auto_dir
+pango_layout_get_baseline
+pango_layout_get_character_count
+pango_layout_get_context
+pango_layout_get_cursor_pos
+pango_layout_get_ellipsize
+pango_layout_get_extents
+pango_layout_get_font_description
+pango_layout_get_height
+pango_layout_get_indent
+pango_layout_get_iter
+pango_layout_get_justify
+pango_layout_get_line
+pango_layout_get_line_count
+pango_layout_get_line_readonly
+pango_layout_get_lines
+pango_layout_get_lines_readonly
+pango_layout_get_log_attrs
+pango_layout_get_log_attrs_readonly
+pango_layout_get_pixel_extents
+pango_layout_get_pixel_size
+pango_layout_get_serial
+pango_layout_get_single_paragraph_mode
+pango_layout_get_size
+pango_layout_get_spacing
+pango_layout_get_tabs
+pango_layout_get_text
+pango_layout_get_type
+pango_layout_get_unknown_glyphs_count
+pango_layout_get_width
+pango_layout_get_wrap
+pango_layout_index_to_line_x
+pango_layout_index_to_pos
+pango_layout_is_ellipsized
+pango_layout_is_wrapped
+pango_layout_iter_at_last_line
+pango_layout_iter_copy
+pango_layout_iter_free
+pango_layout_iter_get_baseline = tt_parse_func
+pango_layout_iter_get_char_extents
+pango_layout_iter_get_cluster_extents
+pango_layout_iter_get_index = pango_layout_iter_get_line_yrange
+pango_layout_iter_get_layout
+pango_layout_iter_get_layout_extents
+pango_layout_iter_get_line = pango_layout_iter_get_layout_extents
+pango_layout_iter_get_line_extents
+pango_layout_iter_get_line_readonly
+pango_layout_iter_get_line_yrange
+pango_layout_iter_get_run
+pango_layout_iter_get_run_extents
+pango_layout_iter_get_run_readonly = pango_layout_iter_get_baseline
+pango_layout_iter_get_type
+pango_layout_iter_next_char
+pango_layout_iter_next_cluster
+pango_layout_iter_next_line
+pango_layout_iter_next_run
+pango_layout_line_get_extents
+pango_layout_line_get_pixel_extents
+pango_layout_line_get_type
+pango_layout_line_get_x_ranges
+pango_layout_line_index_to_x
+pango_layout_line_ref
+pango_layout_line_unref
+pango_layout_line_x_to_index = pango_layout_get_lines_readonly
+pango_layout_move_cursor_visually
+pango_layout_new
+pango_layout_set_alignment
+pango_layout_set_attributes
+pango_layout_set_auto_dir
+pango_layout_set_ellipsize
+pango_layout_set_font_description
+pango_layout_set_height
+pango_layout_set_indent
+pango_layout_set_justify
+pango_layout_set_markup
+pango_layout_set_markup_with_accel
+pango_layout_set_single_paragraph_mode
+pango_layout_set_spacing
+pango_layout_set_tabs
+pango_layout_set_text
+pango_layout_set_width
+pango_layout_set_wrap
+pango_layout_xy_to_index
+pango_log2vis_get_embedding_levels
+pango_lookup_aliases
+pango_map_get_engine
+pango_map_get_engines
+pango_markup_parser_finish
+pango_markup_parser_new
+pango_matrix_concat
+pango_matrix_copy
+pango_matrix_free
+pango_matrix_get_font_scale_factor
+pango_matrix_get_type
+pango_matrix_rotate
+pango_matrix_scale
+pango_matrix_transform_distance
+pango_matrix_transform_pixel_rectangle
+pango_matrix_transform_point
+pango_matrix_transform_rectangle
+pango_matrix_translate
+pango_module_register
+pango_parse_enum
+pango_parse_markup
+pango_parse_stretch
+pango_parse_style
+pango_parse_variant
+pango_parse_weight
+pango_quantize_line_geometry = pango_alignment_get_type
+pango_read_line
+pango_render_part_get_type
+pango_renderer_activate
+pango_renderer_deactivate
+pango_renderer_draw_error_underline
+pango_renderer_draw_glyph = pango_tab_array_get_size
+pango_renderer_draw_glyph_item
+pango_renderer_draw_glyphs
+pango_renderer_draw_layout
+pango_renderer_draw_layout_line
+pango_renderer_draw_rectangle
+pango_renderer_draw_trapezoid
+pango_renderer_get_color
+pango_renderer_get_layout
+pango_renderer_get_layout_line
+pango_renderer_get_matrix
+pango_renderer_get_type
+pango_renderer_part_changed
+pango_renderer_set_color
+pango_renderer_set_matrix
+pango_reorder_items
+pango_scan_int
+pango_scan_string
+pango_scan_word
+pango_script_for_unichar
+pango_script_get_sample_language
+pango_script_get_type
+pango_script_iter_free = pango_read_line
+pango_script_iter_get_range
+pango_script_iter_new
+pango_script_iter_next
+pango_shape
+pango_shape_full
+pango_skip_space
+pango_split_file_list
+pango_stretch_get_type
+pango_style_get_type
+pango_tab_align_get_type
+pango_tab_array_copy
+pango_tab_array_free
+pango_tab_array_get_positions_in_pixels
+pango_tab_array_get_size
+pango_tab_array_get_tab
+pango_tab_array_get_tabs
+pango_tab_array_get_type
+pango_tab_array_new
+pango_tab_array_new_with_positions
+pango_tab_array_resize
+pango_tab_array_set_tab
+pango_trim_string = pango_quantize_line_geometry
+pango_underline_get_type
+pango_unichar_direction
+pango_units_from_double
+pango_units_to_double
+pango_variant_get_type
+pango_version
+pango_version_check
+pango_version_string
+pango_weight_get_type
+pango_wrap_mode_get_type

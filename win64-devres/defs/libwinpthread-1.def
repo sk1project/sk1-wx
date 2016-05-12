@@ -1,167 +1,134 @@
-Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-
-Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\libwinpthread-1.dll
-
-File Type: DLL
-
-  Section contains the following exports for libwinpthread-1.dll
-
-    00000000 characteristics
-           0 time date stamp Thu Jan 01 02:00:00 1970
-        0.00 version
-           1 ordinal base
-         133 number of functions
-         133 number of names
-
-    ordinal hint RVA      name
-
-          1    0 00004AA0 __pth_gpointer_locked
-          2    1 00001BE0 __pthread_clock_nanosleep
-          3    2 000055F0 _pthread_cleanup_dest
-          4    3 00005D40 _pthread_get_state
-          5    4 00005860 _pthread_invoke_cancel
-          6    5 0000D040 _pthread_key_dest
-          7    6 00002A50 _pthread_rel_time_in_ms
-          8    7 00005D50 _pthread_set_state
-          9    8 000029F0 _pthread_time_in_ms
-         10    9 00002A20 _pthread_time_in_ms_from_timespec
-         11    A 00006360 _pthread_tryjoin
-         12    B 00007200 clock_getres
-         13    C 000072B0 clock_gettime
-         14    D 00007430 clock_nanosleep
-         15    E 000074D0 clock_settime
-         16    F 00007570 nanosleep
-         17   10 00005DA0 pthread_attr_destroy
-         18   11 00005DF0 pthread_attr_getdetachstate
-         19   12 00005E30 pthread_attr_getinheritsched
-         20   13 00006EE0 pthread_attr_getschedparam
-         21   14 00006F30 pthread_attr_getschedpolicy
-         22   15 00005E60 pthread_attr_getscope
-         23   16 00005E70 pthread_attr_getstackaddr
-         24   17 00005E90 pthread_attr_getstacksize
-         25   18 00005D70 pthread_attr_init
-         26   19 00005DD0 pthread_attr_setdetachstate
-         27   1A 00005E00 pthread_attr_setinheritsched
-         28   1B 00006EC0 pthread_attr_setschedparam
-         29   1C 00006F00 pthread_attr_setschedpolicy
-         30   1D 00005E40 pthread_attr_setscope
-         31   1E 00005E80 pthread_attr_setstackaddr
-         32   1F 00005EA0 pthread_attr_setstacksize
-         33   20 000015E0 pthread_barrier_destroy
-         34   21 00001710 pthread_barrier_init
-         35   22 00001820 pthread_barrier_wait
-         36   23 00001930 pthread_barrierattr_destroy
-         37   24 00001990 pthread_barrierattr_getpshared
-         38   25 000018F0 pthread_barrierattr_init
-         39   26 00001960 pthread_barrierattr_setpshared
-         40   27 00005AC0 pthread_cancel
-         41   28 00002460 pthread_cond_broadcast
-         42   29 000021A0 pthread_cond_destroy
-         43   2A 00001CB0 pthread_cond_init
-         44   2B 00002330 pthread_cond_signal
-         45   2C 000029D0 pthread_cond_timedwait
-         46   2D 000029E0 pthread_cond_timedwait_relative_np
-         47   2E 00002580 pthread_cond_wait
-         48   2F 00001B40 pthread_condattr_destroy
-         49   30 00001BA0 pthread_condattr_getclock
-         50   31 00001B80 pthread_condattr_getpshared
-         51   32 00001B60 pthread_condattr_init
-         52   33 00001BC0 pthread_condattr_setclock
-         53   34 00001C80 pthread_condattr_setpshared
-         54   35 00005F90 pthread_create
-         55   36 00004D60 pthread_create_wrapper
-         56   37 000059B0 pthread_delay_np
-         57   38 000064B0 pthread_detach
-         58   39 000055E0 pthread_equal
-         59   3A 000056F0 pthread_exit
-         60   3B 000056D0 pthread_get_concurrency
-         61   3C 000056A0 pthread_getclean
-         62   3D 000065A0 pthread_getconcurrency
-         63   3E 00005640 pthread_getevent
-         64   3F 00005670 pthread_gethandle
-         65   40 00006F50 pthread_getschedparam
-         66   41 00005470 pthread_getspecific
-         67   42 00006250 pthread_join
-         68   43 000051C0 pthread_key_create
-         69   44 00005370 pthread_key_delete
-         70   45 00005CA0 pthread_kill
-         71   46 00003340 pthread_mutex_destroy
-         72   47 00002E40 pthread_mutex_init
-         73   48 00003180 pthread_mutex_lock
-         74   49 00003190 pthread_mutex_timedlock
-         75   4A 00003240 pthread_mutex_trylock
-         76   4B 00002D60 pthread_mutex_unlock
-         77   4C 000033F0 pthread_mutexattr_destroy
-         78   4D 000034D0 pthread_mutexattr_getprioceiling
-         79   4E 000034A0 pthread_mutexattr_getprotocol
-         80   4F 00003440 pthread_mutexattr_getpshared
-         81   50 00003400 pthread_mutexattr_gettype
-         82   51 000033E0 pthread_mutexattr_init
-         83   52 000034E0 pthread_mutexattr_setprioceiling
-         84   53 000034B0 pthread_mutexattr_setprotocol
-         85   54 00003470 pthread_mutexattr_setpshared
-         86   55 00003420 pthread_mutexattr_settype
-         87   56 00004FE0 pthread_num_processors_np
-         88   57 000050C0 pthread_once
-         89   58 00003970 pthread_rwlock_destroy
-         90   59 000037C0 pthread_rwlock_init
-         91   5A 00003A60 pthread_rwlock_rdlock
-         92   5B 00003B00 pthread_rwlock_timedrdlock
-         93   5C 00003EB0 pthread_rwlock_timedwrlock
-         94   5D 00003BB0 pthread_rwlock_tryrdlock
-         95   5E 00003C50 pthread_rwlock_trywrlock
-         96   5F 00003D00 pthread_rwlock_unlock
-         97   60 00003DA0 pthread_rwlock_wrlock
-         98   61 00004020 pthread_rwlockattr_destroy
-         99   62 00004050 pthread_rwlockattr_getpshared
-        100   63 00004030 pthread_rwlockattr_init
-        101   64 00004070 pthread_rwlockattr_setpshared
-        102   65 00005610 pthread_self
-        103   66 000056E0 pthread_set_concurrency
-        104   67 00005040 pthread_set_num_processors_np
-        105   68 00005EB0 pthread_setcancelstate
-        106   69 00005F20 pthread_setcanceltype
-        107   6A 000065B0 pthread_setconcurrency
-        108   6B 00006FE0 pthread_setschedparam
-        109   6C 000054E0 pthread_setspecific
-        110   6D 00004180 pthread_spin_destroy
-        111   6E 000040C0 pthread_spin_init
-        112   6F 00004200 pthread_spin_lock
-        113   70 00004250 pthread_spin_trylock
-        114   71 000042A0 pthread_spin_unlock
-        115   72 00005920 pthread_testcancel
-        116   73 00004FD0 pthread_timechange_handler_np
-        117   74 000044A0 pthread_tls_init
-        118   75 00006E90 sched_get_priority_max
-        119   76 00006E60 sched_get_priority_min
-        120   77 000070C0 sched_getscheduler
-        121   78 00007130 sched_setscheduler
-        122   79 000071E0 sched_yield
-        123   7A 00006D20 sem_close
-        124   7B 000067D0 sem_destroy
-        125   7C 00006D60 sem_getvalue
-        126   7D 000066E0 sem_init
-        127   7E 00006D00 sem_open
-        128   7F 00006B60 sem_post
-        129   80 00006C30 sem_post_multiple
-        130   81 00006A20 sem_timedwait
-        131   82 000068A0 sem_trywait
-        132   83 00006D40 sem_unlink
-        133   84 00006910 sem_wait
-
-  Summary
-
-        1000 .CRT
-        1000 .bss
-        1000 .data
-        2000 .edata
-        1000 .idata
-        1000 .pdata
-        1000 .rdata
-        1000 .reloc
-        1000 .rsrc
-        8000 .text
-        1000 .tls
-        1000 .xdata
+EXPORTS
+__pth_gpointer_locked
+__pthread_clock_nanosleep
+_pthread_cleanup_dest
+_pthread_get_state
+_pthread_invoke_cancel
+_pthread_key_dest
+_pthread_rel_time_in_ms
+_pthread_set_state
+_pthread_time_in_ms
+_pthread_time_in_ms_from_timespec
+_pthread_tryjoin
+clock_getres
+clock_gettime
+clock_nanosleep
+clock_settime
+nanosleep
+pthread_attr_destroy
+pthread_attr_getdetachstate
+pthread_attr_getinheritsched
+pthread_attr_getschedparam
+pthread_attr_getschedpolicy
+pthread_attr_getscope
+pthread_attr_getstackaddr
+pthread_attr_getstacksize
+pthread_attr_init
+pthread_attr_setdetachstate
+pthread_attr_setinheritsched
+pthread_attr_setschedparam
+pthread_attr_setschedpolicy
+pthread_attr_setscope
+pthread_attr_setstackaddr
+pthread_attr_setstacksize
+pthread_barrier_destroy
+pthread_barrier_init
+pthread_barrier_wait
+pthread_barrierattr_destroy
+pthread_barrierattr_getpshared
+pthread_barrierattr_init
+pthread_barrierattr_setpshared
+pthread_cancel
+pthread_cond_broadcast
+pthread_cond_destroy
+pthread_cond_init
+pthread_cond_signal
+pthread_cond_timedwait
+pthread_cond_timedwait_relative_np
+pthread_cond_wait
+pthread_condattr_destroy
+pthread_condattr_getclock
+pthread_condattr_getpshared
+pthread_condattr_init
+pthread_condattr_setclock
+pthread_condattr_setpshared
+pthread_create
+pthread_create_wrapper
+pthread_delay_np
+pthread_detach
+pthread_equal
+pthread_exit
+pthread_get_concurrency
+pthread_getclean
+pthread_getconcurrency
+pthread_getevent
+pthread_gethandle
+pthread_getschedparam
+pthread_getspecific
+pthread_join
+pthread_key_create
+pthread_key_delete
+pthread_kill
+pthread_mutex_destroy
+pthread_mutex_init
+pthread_mutex_lock
+pthread_mutex_timedlock
+pthread_mutex_trylock
+pthread_mutex_unlock
+pthread_mutexattr_destroy
+pthread_mutexattr_getprioceiling
+pthread_mutexattr_getprotocol
+pthread_mutexattr_getpshared
+pthread_mutexattr_gettype
+pthread_mutexattr_init
+pthread_mutexattr_setprioceiling
+pthread_mutexattr_setprotocol
+pthread_mutexattr_setpshared
+pthread_mutexattr_settype
+pthread_num_processors_np
+pthread_once
+pthread_rwlock_destroy
+pthread_rwlock_init
+pthread_rwlock_rdlock
+pthread_rwlock_timedrdlock
+pthread_rwlock_timedwrlock
+pthread_rwlock_tryrdlock
+pthread_rwlock_trywrlock
+pthread_rwlock_unlock
+pthread_rwlock_wrlock
+pthread_rwlockattr_destroy
+pthread_rwlockattr_getpshared
+pthread_rwlockattr_init
+pthread_rwlockattr_setpshared
+pthread_self
+pthread_set_concurrency
+pthread_set_num_processors_np
+pthread_setcancelstate
+pthread_setcanceltype
+pthread_setconcurrency
+pthread_setschedparam
+pthread_setspecific
+pthread_spin_destroy
+pthread_spin_init
+pthread_spin_lock
+pthread_spin_trylock
+pthread_spin_unlock
+pthread_testcancel
+pthread_timechange_handler_np
+pthread_tls_init
+sched_get_priority_max
+sched_get_priority_min
+sched_getscheduler
+sched_setscheduler
+sched_yield
+sem_close
+sem_destroy
+sem_getvalue
+sem_init
+sem_open
+sem_post
+sem_post_multiple
+sem_timedwait
+sem_trywait
+sem_unlink
+sem_wait

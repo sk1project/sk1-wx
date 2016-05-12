@@ -1,286 +1,247 @@
-Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-
-Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\libharfbuzz-0.dll
-
-File Type: DLL
-
-  Section contains the following exports for libharfbuzz-0.dll
-
-    00000000 characteristics
-    536D9E6C time date stamp Sat May 10 06:35:08 2014
-        0.00 version
-           1 ordinal base
-         246 number of functions
-         246 number of names
-
-    ordinal hint RVA      name
-
-          1    0 00001590 hb_blob_create
-          2    1 000016E0 hb_blob_create_sub_blob
-          3    2 00001450 hb_blob_destroy
-          4    3 00001890 hb_blob_get_data
-          5    4 000018B0 hb_blob_get_data_writable
-          6    5 000017D0 hb_blob_get_empty
-          7    6 00001880 hb_blob_get_length
-          8    7 00001840 hb_blob_get_user_data
-          9    8 00001870 hb_blob_is_immutable
-         10    9 00001860 hb_blob_make_immutable
-         11    A 000017E0 hb_blob_reference
-         12    B 00001800 hb_blob_set_user_data
-         13    C 00005C80 hb_buffer_add
-         14    D 00006600 hb_buffer_add_utf16
-         15    E 00006DE0 hb_buffer_add_utf32
-         16    F 00006070 hb_buffer_add_utf8
-         17   10 00005C70 hb_buffer_allocation_successful
-         18   11 00005B40 hb_buffer_clear_contents
-         19   12 00005570 hb_buffer_create
-         20   13 00002230 hb_buffer_deserialize_glyphs
-         21   14 00005720 hb_buffer_destroy
-         22   15 000058D0 hb_buffer_get_content_type
-         23   16 00005940 hb_buffer_get_direction
-         24   17 000056F0 hb_buffer_get_empty
-         25   18 00005A00 hb_buffer_get_flags
-         26   19 00005DF0 hb_buffer_get_glyph_infos
-         27   1A 00005E10 hb_buffer_get_glyph_positions
-         28   1B 00005980 hb_buffer_get_language
-         29   1C 00005DE0 hb_buffer_get_length = hb_buffer_add_utf32
-         30   1D 00005960 hb_buffer_get_script
-         31   1E 000059C0 hb_buffer_get_segment_properties
-         32   1F 00005920 hb_buffer_get_unicode_funcs
-         33   20 000058A0 hb_buffer_get_user_data
-         34   21 00005F70 hb_buffer_guess_segment_properties
-         35   22 00007120 hb_buffer_normalize_glyphs
-         36   23 00005C40 hb_buffer_pre_allocate
-         37   24 00005700 hb_buffer_reference
-         38   25 00005A10 hb_buffer_reset
-         39   26 00005E90 hb_buffer_reverse
-         40   27 00005EB0 hb_buffer_reverse_clusters
-         41   28 00002060 hb_buffer_serialize_format_from_string
-         42   29 00002080 hb_buffer_serialize_format_to_string
-         43   2A 000020B0 hb_buffer_serialize_glyphs
-         44   2B 00002050 hb_buffer_serialize_list_formats
-         45   2C 000058C0 hb_buffer_set_content_type
-         46   2D 00005930 hb_buffer_set_direction
-         47   2E 000059F0 hb_buffer_set_flags
-         48   2F 00005970 hb_buffer_set_language
-         49   30 00005D00 hb_buffer_set_length
-         50   31 00005950 hb_buffer_set_script
-         51   32 00005990 hb_buffer_set_segment_properties
-         52   33 000058E0 hb_buffer_set_unicode_funcs
-         53   34 00005860 hb_buffer_set_user_data
-         54   35 000079A0 hb_direction_from_string
-         55   36 00007A10 hb_direction_to_string
-         56   37 00008610 hb_face_create = _ZL31hb_font_get_glyph_from_name_nilP9hb_font_tPvPKciPjS1_
-         57   38 00008550 hb_face_create_for_tables
-         58   39 00008CF0 hb_face_destroy
-         59   3A 00008CC0 hb_face_get_empty = hb_font_funcs_is_immutable
-         60   3B 00009250 hb_face_get_glyph_count
-         61   3C 00008F80 hb_face_get_index
-         62   3D 000090D0 hb_face_get_upem
-         63   3E 00008EC0 hb_face_get_user_data
-         64   3F 00008EF0 hb_face_is_immutable
-         65   40 00008EE0 hb_face_make_immutable
-         66   41 00008CD0 hb_face_reference = hb_font_funcs_set_glyph_func
-         67   42 00008F30 hb_face_reference_blob
-         68   43 00008F00 hb_face_reference_table
-         69   44 00009100 hb_face_set_glyph_count
-         70   45 00008F70 hb_face_set_index
-         71   46 00008F90 hb_face_set_upem
-         72   47 00008E80 hb_face_set_user_data
-         73   48 0000CBB0 hb_feature_from_string
-         74   49 0000CFD0 hb_feature_to_string
-         75   4A 0000A8A0 hb_font_add_glyph_origin_for_direction
-         76   4B 0000B440 hb_font_create
-         77   4C 0000B4E0 hb_font_create_sub_font
-         78   4D 0000B620 hb_font_destroy
-         79   4E 00009930 hb_font_funcs_create
-         80   4F 00009A50 hb_font_funcs_destroy
-         81   50 00009A20 hb_font_funcs_get_empty
-         82   51 00009C90 hb_font_funcs_get_user_data
-         83   52 00009CC0 hb_font_funcs_is_immutable
-         84   53 00009CB0 hb_font_funcs_make_immutable = hb_font_get_glyph_extents_for_origin
-         85   54 00009A30 hb_font_funcs_reference
-         86   55 0000A1D0 hb_font_funcs_set_glyph_contour_point_func
-         87   56 0000A130 hb_font_funcs_set_glyph_extents_func
-         88   57 0000A310 hb_font_funcs_set_glyph_from_name_func
-         89   58 00009CD0 hb_font_funcs_set_glyph_func
-         90   59 00009D70 hb_font_funcs_set_glyph_h_advance_func
-         91   5A 00009FF0 hb_font_funcs_set_glyph_h_kerning_func
-         92   5B 00009EB0 hb_font_funcs_set_glyph_h_origin_func
-         93   5C 0000A270 hb_font_funcs_set_glyph_name_func
-         94   5D 00009E10 hb_font_funcs_set_glyph_v_advance_func
-         95   5E 0000A090 hb_font_funcs_set_glyph_v_kerning_func
-         96   5F 00009F50 hb_font_funcs_set_glyph_v_origin_func
-         97   60 00009C50 hb_font_funcs_set_user_data
-         98   61 0000B5F0 hb_font_get_empty = hb_set_union
-         99   62 0000B840 hb_font_get_face
-        100   63 0000A3B0 hb_font_get_glyph
-        101   64 0000A690 hb_font_get_glyph_advance_for_direction
-        102   65 0000A590 hb_font_get_glyph_contour_point
-        103   66 0000AEC0 hb_font_get_glyph_contour_point_for_origin
-        104   67 0000A550 hb_font_get_glyph_extents
-        105   68 0000ACB0 hb_font_get_glyph_extents_for_origin
-        106   69 0000A620 hb_font_get_glyph_from_name = hb_font_destroy
-        107   6A 0000A3F0 hb_font_get_glyph_h_advance
-        108   6B 0000A4F0 hb_font_get_glyph_h_kerning
-        109   6C 0000A450 hb_font_get_glyph_h_origin
-        110   6D 0000AC20 hb_font_get_glyph_kerning_for_direction
-        111   6E 0000A5E0 hb_font_get_glyph_name
-        112   6F 0000A710 hb_font_get_glyph_origin_for_direction
-        113   70 0000A420 hb_font_get_glyph_v_advance
-        114   71 0000A520 hb_font_get_glyph_v_kerning
-        115   72 0000A4A0 hb_font_get_glyph_v_origin
-        116   73 0000B830 hb_font_get_parent
-        117   74 0000B9A0 hb_font_get_ppem
-        118   75 0000B960 hb_font_get_scale
-        119   76 0000B7F0 hb_font_get_user_data = hb_set_invert
-        120   77 0000B190 hb_font_glyph_from_string = hb_set_create
-        121   78 0000B0E0 hb_font_glyph_to_string
-        122   79 0000B820 hb_font_is_immutable
-        123   7A 0000B810 hb_font_make_immutable
-        124   7B 0000B600 hb_font_reference
-        125   7C 0000B850 hb_font_set_funcs
-        126   7D 0000B8E0 hb_font_set_funcs_data = hb_set_get_population
-        127   7E 0000B980 hb_font_set_ppem = hb_set_get_max
-        128   7F 0000B940 hb_font_set_scale
-        129   80 0000B7B0 hb_font_set_user_data
-        130   81 0000AA60 hb_font_subtract_glyph_origin_for_direction
-        131   82 00023670 hb_ft_face_create
-        132   83 00023700 hb_ft_face_create_cached
-        133   84 00023760 hb_ft_font_create
-        134   85 00023A20 hb_ft_font_get_face
-        135   86 00023870 hb_ft_font_set_funcs
-        136   87 000231C0 hb_glib_get_unicode_funcs
-        137   88 000231B0 hb_glib_script_from_script
-        138   89 000231A0 hb_glib_script_to_script
-        139   8A 00007A30 hb_language_from_string
-        140   8B 00007BC0 hb_language_get_default
-        141   8C 00007BB0 hb_language_to_string
-        142   8D 00012DE0 hb_ot_layout_collect_lookups
-        143   8E 000127A0 hb_ot_layout_feature_get_lookups
-        144   8F 00010820 hb_ot_layout_get_attach_points
-        145   90 000104F0 hb_ot_layout_get_glyph_class
-        146   91 00010710 hb_ot_layout_get_glyphs_in_class
-        147   92 00010BC0 hb_ot_layout_get_ligature_carets
-        148   93 00013540 hb_ot_layout_get_size_params
-        149   94 00010430 hb_ot_layout_has_glyph_classes
-        150   95 00013220 hb_ot_layout_has_positioning
-        151   96 00012ED0 hb_ot_layout_has_substitution
-        152   97 000124A0 hb_ot_layout_language_find_feature
-        153   98 00011D90 hb_ot_layout_language_get_feature_indexes
-        154   99 000120A0 hb_ot_layout_language_get_feature_tags
-        155   9A 00011C40 hb_ot_layout_language_get_required_feature_index
-        156   9B 000143C0 hb_ot_layout_lookup_collect_glyphs
-        157   9C 00013890 hb_ot_layout_lookup_substitute_closure
-        158   9D 00013C30 hb_ot_layout_lookup_would_substitute
-        159   9E 00011A60 hb_ot_layout_script_find_language
-        160   9F 00011910 hb_ot_layout_script_get_language_tags
-        161   A0 00011670 hb_ot_layout_table_choose_script
-        162   A1 00011530 hb_ot_layout_table_find_script
-        163   A2 00011830 hb_ot_layout_table_get_feature_tags
-        164   A3 00012DB0 hb_ot_layout_table_get_lookup_count
-        165   A4 00011450 hb_ot_layout_table_get_script_tags
-        166   A5 00017C10 hb_ot_shape_glyphs_closure
-        167   A6 00017BD0 hb_ot_shape_plan_collect_lookups
-        168   A7 0000BCF0 hb_ot_tag_from_language
-        169   A8 0000C070 hb_ot_tag_to_language
-        170   A9 0000BBF0 hb_ot_tag_to_script
-        171   AA 0000BA30 hb_ot_tags_from_script
-        172   AB 00007C20 hb_script_from_iso15924_tag
-        173   AC 00007CD0 hb_script_from_string = hb_face_reference
-        174   AD 00007EB0 hb_script_get_horizontal_direction
-        175   AE 00007EA0 hb_script_to_iso15924_tag
-        176   AF 00003A00 hb_segment_properties_equal
-        177   B0 00003A40 hb_segment_properties_hash
-        178   B1 0000C450 hb_set_add
-        179   B2 0000C480 hb_set_add_range
-        180   B3 0000C3C0 hb_set_allocation_successful
-        181   B4 0000C3D0 hb_set_clear
-        182   B5 0000C190 hb_set_create
-        183   B6 0000C4D0 hb_set_del
-        184   B7 0000C500 hb_set_del_range
-        185   B8 0000C240 hb_set_destroy = hb_shape_full
-        186   B9 0000C210 hb_set_get_empty
-        187   BA 0000C980 hb_set_get_max
-        188   BB 0000C920 hb_set_get_min
-        189   BC 0000C8E0 hb_set_get_population
-        190   BD 0000C3A0 hb_set_get_user_data
-        191   BE 0000C420 hb_set_has
-        192   BF 0000C670 hb_set_intersect
-        193   C0 0000C7F0 hb_set_invert
-        194   C1 0000C3F0 hb_set_is_empty
-        195   C2 0000C550 hb_set_is_equal
-        196   C3 0000C9E0 hb_set_next
-        197   C4 0000CA90 hb_set_next_range
-        198   C5 0000C220 hb_set_reference
-        199   C6 0000C580 hb_set_set
-        200   C7 0000C360 hb_set_set_user_data
-        201   C8 0000C6F0 hb_set_subtract
-        202   C9 0000C770 hb_set_symmetric_difference
-        203   CA 0000C5F0 hb_set_union
-        204   CB 0000D2F0 hb_shape
-        205   CC 0000D240 hb_shape_full
-        206   CD 0000D1B0 hb_shape_list_shapers
-        207   CE 0000D390 hb_shape_plan_create
-        208   CF 0000DC80 hb_shape_plan_create_cached
-        209   D0 0000D890 hb_shape_plan_destroy
-        210   D1 0000DA50 hb_shape_plan_execute
-        211   D2 0000D860 hb_shape_plan_get_empty = hb_unicode_funcs_make_immutable
-        212   D3 0000E110 hb_shape_plan_get_shaper
-        213   D4 0000DA30 hb_shape_plan_get_user_data
-        214   D5 0000D870 hb_shape_plan_reference = hb_unicode_funcs_is_immutable
-        215   D6 0000D9F0 hb_shape_plan_set_user_data
-        216   D7 000078A0 hb_tag_from_string
-        217   D8 00007980 hb_tag_to_string
-        218   D9 0000EDA0 hb_unicode_combining_class
-        219   DA 0000EE40 hb_unicode_compose
-        220   DB 0000EE80 hb_unicode_decompose
-        221   DC 0000EEB0 hb_unicode_decompose_compatibility
-        222   DD 0000EDC0 hb_unicode_eastasian_width
-        223   DE 0000E4A0 hb_unicode_funcs_create
-        224   DF 0000E630 hb_unicode_funcs_destroy
-        225   E0 0000E490 hb_unicode_funcs_get_default = _ZNK2OT21hb_sanitize_context_t11check_arrayEPKvjj.constprop.238
-        226   E1 0000E600 hb_unicode_funcs_get_empty
-        227   E2 0000E880 hb_unicode_funcs_get_parent
-        228   E3 0000E840 hb_unicode_funcs_get_user_data
-        229   E4 0000E870 hb_unicode_funcs_is_immutable
-        230   E5 0000E860 hb_unicode_funcs_make_immutable
-        231   E6 0000E610 hb_unicode_funcs_reference
-        232   E7 0000E8A0 hb_unicode_funcs_set_combining_class_func
-        233   E8 0000EBC0 hb_unicode_funcs_set_compose_func
-        234   E9 0000ED00 hb_unicode_funcs_set_decompose_compatibility_func
-        235   EA 0000EC60 hb_unicode_funcs_set_decompose_func
-        236   EB 0000E940 hb_unicode_funcs_set_eastasian_width_func
-        237   EC 0000E9E0 hb_unicode_funcs_set_general_category_func
-        238   ED 0000EA80 hb_unicode_funcs_set_mirroring_func
-        239   EE 0000EB20 hb_unicode_funcs_set_script_func
-        240   EF 0000E800 hb_unicode_funcs_set_user_data
-        241   F0 0000EDE0 hb_unicode_general_category
-        242   F1 0000EE00 hb_unicode_mirroring
-        243   F2 0000EE20 hb_unicode_script
-        244   F3 000082C0 hb_version
-        245   F4 000082F0 hb_version_check
-        246   F5 000082E0 hb_version_string
-
-  Summary
-
-        1000 .CRT
-        1000 .bss
-        1000 .data
-        1000 .debug_abbrev
-        1000 .debug_aranges
-        1000 .debug_frame
-        1000 .debug_info
-        1000 .debug_line
-        1000 .debug_loc
-        1000 .debug_ranges
-        3000 .edata
-        1000 .idata
-        2000 .pdata
-       11000 .rdata
-        1000 .reloc
-       37000 .text
-        1000 .tls
-        2000 .xdata
+EXPORTS
+hb_blob_create
+hb_blob_create_sub_blob
+hb_blob_destroy
+hb_blob_get_data
+hb_blob_get_data_writable
+hb_blob_get_empty
+hb_blob_get_length
+hb_blob_get_user_data
+hb_blob_is_immutable
+hb_blob_make_immutable
+hb_blob_reference
+hb_blob_set_user_data
+hb_buffer_add
+hb_buffer_add_utf16
+hb_buffer_add_utf32
+hb_buffer_add_utf8
+hb_buffer_allocation_successful
+hb_buffer_clear_contents
+hb_buffer_create
+hb_buffer_deserialize_glyphs
+hb_buffer_destroy
+hb_buffer_get_content_type
+hb_buffer_get_direction
+hb_buffer_get_empty
+hb_buffer_get_flags
+hb_buffer_get_glyph_infos
+hb_buffer_get_glyph_positions
+hb_buffer_get_language
+hb_buffer_get_length = hb_buffer_add_utf32
+hb_buffer_get_script
+hb_buffer_get_segment_properties
+hb_buffer_get_unicode_funcs
+hb_buffer_get_user_data
+hb_buffer_guess_segment_properties
+hb_buffer_normalize_glyphs
+hb_buffer_pre_allocate
+hb_buffer_reference
+hb_buffer_reset
+hb_buffer_reverse
+hb_buffer_reverse_clusters
+hb_buffer_serialize_format_from_string
+hb_buffer_serialize_format_to_string
+hb_buffer_serialize_glyphs
+hb_buffer_serialize_list_formats
+hb_buffer_set_content_type
+hb_buffer_set_direction
+hb_buffer_set_flags
+hb_buffer_set_language
+hb_buffer_set_length
+hb_buffer_set_script
+hb_buffer_set_segment_properties
+hb_buffer_set_unicode_funcs
+hb_buffer_set_user_data
+hb_direction_from_string
+hb_direction_to_string
+hb_face_create = _ZL31hb_font_get_glyph_from_name_nilP9hb_font_tPvPKciPjS1_
+hb_face_create_for_tables
+hb_face_destroy
+hb_face_get_empty = hb_font_funcs_is_immutable
+hb_face_get_glyph_count
+hb_face_get_index
+hb_face_get_upem
+hb_face_get_user_data
+hb_face_is_immutable
+hb_face_make_immutable
+hb_face_reference = hb_font_funcs_set_glyph_func
+hb_face_reference_blob
+hb_face_reference_table
+hb_face_set_glyph_count
+hb_face_set_index
+hb_face_set_upem
+hb_face_set_user_data
+hb_feature_from_string
+hb_feature_to_string
+hb_font_add_glyph_origin_for_direction
+hb_font_create
+hb_font_create_sub_font
+hb_font_destroy
+hb_font_funcs_create
+hb_font_funcs_destroy
+hb_font_funcs_get_empty
+hb_font_funcs_get_user_data
+hb_font_funcs_is_immutable
+hb_font_funcs_make_immutable = hb_font_get_glyph_extents_for_origin
+hb_font_funcs_reference
+hb_font_funcs_set_glyph_contour_point_func
+hb_font_funcs_set_glyph_extents_func
+hb_font_funcs_set_glyph_from_name_func
+hb_font_funcs_set_glyph_func
+hb_font_funcs_set_glyph_h_advance_func
+hb_font_funcs_set_glyph_h_kerning_func
+hb_font_funcs_set_glyph_h_origin_func
+hb_font_funcs_set_glyph_name_func
+hb_font_funcs_set_glyph_v_advance_func
+hb_font_funcs_set_glyph_v_kerning_func
+hb_font_funcs_set_glyph_v_origin_func
+hb_font_funcs_set_user_data
+hb_font_get_empty = hb_set_union
+hb_font_get_face
+hb_font_get_glyph
+hb_font_get_glyph_advance_for_direction
+hb_font_get_glyph_contour_point
+hb_font_get_glyph_contour_point_for_origin
+hb_font_get_glyph_extents
+hb_font_get_glyph_extents_for_origin
+hb_font_get_glyph_from_name = hb_font_destroy
+hb_font_get_glyph_h_advance
+hb_font_get_glyph_h_kerning
+hb_font_get_glyph_h_origin
+hb_font_get_glyph_kerning_for_direction
+hb_font_get_glyph_name
+hb_font_get_glyph_origin_for_direction
+hb_font_get_glyph_v_advance
+hb_font_get_glyph_v_kerning
+hb_font_get_glyph_v_origin
+hb_font_get_parent
+hb_font_get_ppem
+hb_font_get_scale
+hb_font_get_user_data = hb_set_invert
+hb_font_glyph_from_string = hb_set_create
+hb_font_glyph_to_string
+hb_font_is_immutable
+hb_font_make_immutable
+hb_font_reference
+hb_font_set_funcs
+hb_font_set_funcs_data = hb_set_get_population
+hb_font_set_ppem = hb_set_get_max
+hb_font_set_scale
+hb_font_set_user_data
+hb_font_subtract_glyph_origin_for_direction
+hb_ft_face_create
+hb_ft_face_create_cached
+hb_ft_font_create
+hb_ft_font_get_face
+hb_ft_font_set_funcs
+hb_glib_get_unicode_funcs
+hb_glib_script_from_script
+hb_glib_script_to_script
+hb_language_from_string
+hb_language_get_default
+hb_language_to_string
+hb_ot_layout_collect_lookups
+hb_ot_layout_feature_get_lookups
+hb_ot_layout_get_attach_points
+hb_ot_layout_get_glyph_class
+hb_ot_layout_get_glyphs_in_class
+hb_ot_layout_get_ligature_carets
+hb_ot_layout_get_size_params
+hb_ot_layout_has_glyph_classes
+hb_ot_layout_has_positioning
+hb_ot_layout_has_substitution
+hb_ot_layout_language_find_feature
+hb_ot_layout_language_get_feature_indexes
+hb_ot_layout_language_get_feature_tags
+hb_ot_layout_language_get_required_feature_index
+hb_ot_layout_lookup_collect_glyphs
+hb_ot_layout_lookup_substitute_closure
+hb_ot_layout_lookup_would_substitute
+hb_ot_layout_script_find_language
+hb_ot_layout_script_get_language_tags
+hb_ot_layout_table_choose_script
+hb_ot_layout_table_find_script
+hb_ot_layout_table_get_feature_tags
+hb_ot_layout_table_get_lookup_count
+hb_ot_layout_table_get_script_tags
+hb_ot_shape_glyphs_closure
+hb_ot_shape_plan_collect_lookups
+hb_ot_tag_from_language
+hb_ot_tag_to_language
+hb_ot_tag_to_script
+hb_ot_tags_from_script
+hb_script_from_iso15924_tag
+hb_script_from_string = hb_face_reference
+hb_script_get_horizontal_direction
+hb_script_to_iso15924_tag
+hb_segment_properties_equal
+hb_segment_properties_hash
+hb_set_add
+hb_set_add_range
+hb_set_allocation_successful
+hb_set_clear
+hb_set_create
+hb_set_del
+hb_set_del_range
+hb_set_destroy = hb_shape_full
+hb_set_get_empty
+hb_set_get_max
+hb_set_get_min
+hb_set_get_population
+hb_set_get_user_data
+hb_set_has
+hb_set_intersect
+hb_set_invert
+hb_set_is_empty
+hb_set_is_equal
+hb_set_next
+hb_set_next_range
+hb_set_reference
+hb_set_set
+hb_set_set_user_data
+hb_set_subtract
+hb_set_symmetric_difference
+hb_set_union
+hb_shape
+hb_shape_full
+hb_shape_list_shapers
+hb_shape_plan_create
+hb_shape_plan_create_cached
+hb_shape_plan_destroy
+hb_shape_plan_execute
+hb_shape_plan_get_empty = hb_unicode_funcs_make_immutable
+hb_shape_plan_get_shaper
+hb_shape_plan_get_user_data
+hb_shape_plan_reference = hb_unicode_funcs_is_immutable
+hb_shape_plan_set_user_data
+hb_tag_from_string
+hb_tag_to_string
+hb_unicode_combining_class
+hb_unicode_compose
+hb_unicode_decompose
+hb_unicode_decompose_compatibility
+hb_unicode_eastasian_width
+hb_unicode_funcs_create
+hb_unicode_funcs_destroy
+hb_unicode_funcs_get_default = _ZNK2OT21hb_sanitize_context_t11check_arrayEPKvjj.constprop.238
+hb_unicode_funcs_get_empty
+hb_unicode_funcs_get_parent
+hb_unicode_funcs_get_user_data
+hb_unicode_funcs_is_immutable
+hb_unicode_funcs_make_immutable
+hb_unicode_funcs_reference
+hb_unicode_funcs_set_combining_class_func
+hb_unicode_funcs_set_compose_func
+hb_unicode_funcs_set_decompose_compatibility_func
+hb_unicode_funcs_set_decompose_func
+hb_unicode_funcs_set_eastasian_width_func
+hb_unicode_funcs_set_general_category_func
+hb_unicode_funcs_set_mirroring_func
+hb_unicode_funcs_set_script_func
+hb_unicode_funcs_set_user_data
+hb_unicode_general_category
+hb_unicode_mirroring
+hb_unicode_script
+hb_version
+hb_version_check
+hb_version_string

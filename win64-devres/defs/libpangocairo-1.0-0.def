@@ -1,71 +1,33 @@
-Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-
-Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\libpangocairo-1.0-0.dll
-
-File Type: DLL
-
-  Section contains the following exports for libpangocairo-1.0-0.dll
-
-    00000000 characteristics
-    536D9FB7 time date stamp Sat May 10 06:40:39 2014
-        0.00 version
-           1 ordinal base
-          32 number of functions
-          32 number of names
-
-    ordinal hint RVA      name
-
-          1    0 00001AA0 pango_cairo_context_get_font_options
-          2    1 000018E0 pango_cairo_context_get_resolution
-          3    2 00001D60 pango_cairo_context_get_shape_renderer
-          4    3 00001930 pango_cairo_context_set_font_options
-          5    4 00001830 pango_cairo_context_set_resolution
-          6    5 00001C20 pango_cairo_context_set_shape_renderer
-          7    6 00001E30 pango_cairo_create_context
-          8    7 00001EE0 pango_cairo_create_layout
-          9    8 00006130 pango_cairo_error_underline_path = pango_cairo_fc_font_map_init
-         10    9 00002140 pango_cairo_font_get_scaled_font
-         11    A 00002070 pango_cairo_font_get_type
-         12    B 00003BE0 pango_cairo_font_map_create_context
-         13    C 00003830 pango_cairo_font_map_get_default
-         14    D 00003CD0 pango_cairo_font_map_get_font_type
-         15    E 00003AD0 pango_cairo_font_map_get_resolution
-         16    F 00003710 pango_cairo_font_map_get_type
-         17   10 000037C0 pango_cairo_font_map_new
-         18   11 000037E0 pango_cairo_font_map_new_for_font_type
-         19   12 00003880 pango_cairo_font_map_set_default
-         20   13 00003980 pango_cairo_font_map_set_resolution
-         21   14 00005CB0 pango_cairo_glyph_string_path
-         22   15 00005E30 pango_cairo_layout_line_path
-         23   16 00005FA0 pango_cairo_layout_path
-         24   17 000054B0 pango_cairo_renderer_get_type
-         25   18 00005C00 pango_cairo_show_error_underline
-         26   19 00005710 pango_cairo_show_glyph_item
-         27   1A 00005540 pango_cairo_show_glyph_string
-         28   1B 00005A70 pango_cairo_show_layout
-         29   1C 00005900 pango_cairo_show_layout_line
-         30   1D 000017B0 pango_cairo_update_context
-         31   1E 00001FA0 pango_cairo_update_layout
-         32   1F 00006990 pango_cairo_win32_font_map_get_type = g_type_register_static_simple
-
-  Summary
-
-        1000 .CRT
-        1000 .bss
-        1000 .data
-        1000 .debug_abbrev
-        1000 .debug_aranges
-        1000 .debug_frame
-        1000 .debug_info
-        1000 .debug_line
-        1000 .edata
-        3000 .idata
-        1000 .pdata
-        1000 .rdata
-        1000 .reloc
-        1000 .rsrc
-        9000 .text
-        1000 .tls
-        1000 .xdata
+EXPORTS
+pango_cairo_context_get_font_options
+pango_cairo_context_get_resolution
+pango_cairo_context_get_shape_renderer
+pango_cairo_context_set_font_options
+pango_cairo_context_set_resolution
+pango_cairo_context_set_shape_renderer
+pango_cairo_create_context
+pango_cairo_create_layout
+pango_cairo_error_underline_path = pango_cairo_fc_font_map_init
+pango_cairo_font_get_scaled_font
+pango_cairo_font_get_type
+pango_cairo_font_map_create_context
+pango_cairo_font_map_get_default
+pango_cairo_font_map_get_font_type
+pango_cairo_font_map_get_resolution
+pango_cairo_font_map_get_type
+pango_cairo_font_map_new
+pango_cairo_font_map_new_for_font_type
+pango_cairo_font_map_set_default
+pango_cairo_font_map_set_resolution
+pango_cairo_glyph_string_path
+pango_cairo_layout_line_path
+pango_cairo_layout_path
+pango_cairo_renderer_get_type
+pango_cairo_show_error_underline
+pango_cairo_show_glyph_item
+pango_cairo_show_glyph_string
+pango_cairo_show_layout
+pango_cairo_show_layout_line
+pango_cairo_update_context
+pango_cairo_update_layout
+pango_cairo_win32_font_map_get_type = g_type_register_static_simple

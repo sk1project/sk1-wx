@@ -1,242 +1,205 @@
-Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-
-Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\libpixman-1-0.dll
-
-File Type: DLL
-
-  Section contains the following exports for libpixman-1-0.dll
-
-    00000000 characteristics
-    536D8762 time date stamp Sat May 10 04:56:50 2014
-        0.00 version
-           1 ordinal base
-         204 number of functions
-         204 number of names
-
-    ordinal hint RVA      name
-
-          1    0 00081490 _pixman_addition_overflows_int
-          2    1 0004C660 _pixman_arm_get_implementations
-          3    2 00019FE0 _pixman_bits_image_dest_iter_init
-          4    3 0001A030 _pixman_bits_image_init
-          5    4 00010AB0 _pixman_bits_image_setup_accessors
-          6    5 00016C70 _pixman_bits_image_setup_accessors_accessors
-          7    6 00019F70 _pixman_bits_image_src_iter_init
-          8    7 0006DEE0 _pixman_choose_implementation
-          9    8 00001D20 _pixman_compute_composite_region32
-         10    9 0004B530 _pixman_conical_gradient_iter_init
-         11    A 0006DE30 _pixman_disabled
-         12    B 0006C190 _pixman_gradient_walker_init
-         13    C 0006C1F0 _pixman_gradient_walker_pixel
-         14    D 0006CA20 _pixman_image_allocate
-         15    E 0006C930 _pixman_image_fini
-         16    F 0006D690 _pixman_image_get_solid
-         17   10 0006C8A0 _pixman_image_init
-         18   11 0006CBF0 _pixman_image_reset_clip_region
-         19   12 0006CC10 _pixman_image_validate
-         20   13 0006DBC0 _pixman_implementation_blt
-         21   14 0006D7F0 _pixman_implementation_create
-         22   15 0006AA30 _pixman_implementation_create_fast_path
-         23   16 0006C150 _pixman_implementation_create_general
-         24   17 0008F030 _pixman_implementation_create_mmx
-         25   18 00073230 _pixman_implementation_create_noop
-         26   19 000B21E0 _pixman_implementation_create_sse2
-         27   1A 000B28E0 _pixman_implementation_create_ssse3
-         28   1B 0006DCB0 _pixman_implementation_fill
-         29   1C 0006DD60 _pixman_implementation_iter_init
-         30   1D 0006DAC0 _pixman_implementation_lookup_combiner
-         31   1E 0006D870 _pixman_implementation_lookup_composite
-         32   1F 0006C810 _pixman_init_gradient
-         33   20 00082120 _pixman_internal_only_get_implementation
-         34   21 00081DA0 _pixman_iter_get_scanline_noop
-         35   22 00081DB0 _pixman_iter_init_bits_stride
-         36   23 0006E4B0 _pixman_linear_gradient_iter_init
-         37   24 00082130 _pixman_log_error
-         38   25 0004C650 _pixman_mips_get_implementations
-         39   26 00081470 _pixman_multiply_overflows_int
-         40   27 00081450 _pixman_multiply_overflows_size
-         41   28 0004C670 _pixman_ppc_get_implementations
-         42   29 00073780 _pixman_radial_gradient_iter_init
-         43   2A 00027FA0 _pixman_setup_combiner_functions_32
-         44   2B 0004AB00 _pixman_setup_combiner_functions_float
-         45   2C 0004C5B0 _pixman_x86_get_implementations
-         46   2D 000CAA40 global_implementation
-         47   2E 000808D0 pixman_add_trapezoids
-         48   2F 00080470 pixman_add_traps = _pixman_multiply_overflows_int
-         49   30 000811A0 pixman_add_triangles
-         50   31 00003940 pixman_blt
-         51   32 0006B740 pixman_composite_glyphs
-         52   33 0006B290 pixman_composite_glyphs_no_mask
-         53   34 00080D00 pixman_composite_trapezoids
-         54   35 000810D0 pixman_composite_triangles
-         55   36 00004FF0 pixman_compute_composite_region
-         56   37 00081810 pixman_contract_from_float
-         57   38 0006CC00 pixman_disable_out_of_bounds_workaround
-         58   39 0007FFA0 pixman_edge_init
-         59   3A 0007FF10 pixman_edge_step
-         60   3B 00081550 pixman_expand_to_float
-         61   3C 00072C90 pixman_f_transform_bounds
-         62   3D 00071390 pixman_f_transform_from_pixman_transform
-         63   3E 00072FB0 pixman_f_transform_init_identity
-         64   3F 00072640 pixman_f_transform_init_rotate
-         65   40 00072380 pixman_f_transform_init_scale = radial_get_scanline_narrow
-         66   41 000729B0 pixman_f_transform_init_translate
-         67   42 00071860 pixman_f_transform_invert
-         68   43 000720F0 pixman_f_transform_multiply
-         69   44 00071FB0 pixman_f_transform_point = pixman_f_transform_init_identity
-         70   45 00072050 pixman_f_transform_point_3d
-         71   46 00072690 pixman_f_transform_rotate
-         72   47 000723C0 pixman_f_transform_scale
-         73   48 000729F0 pixman_f_transform_translate
-         74   49 000039C0 pixman_fill
-         75   4A 0004C2F0 pixman_filter_create_separable_convolution
-         76   4B 000817B0 pixman_float_to_unorm
-         77   4C 00004D40 pixman_format_supported_destination
-         78   4D 00004A80 pixman_format_supported_source
-         79   4E 0006AA60 pixman_glyph_cache_create
-         80   4F 0006AAC0 pixman_glyph_cache_destroy
-         81   50 0006AB60 pixman_glyph_cache_freeze
-         82   51 0006ADC0 pixman_glyph_cache_insert
-         83   52 0006AD40 pixman_glyph_cache_lookup
-         84   53 0006AFD0 pixman_glyph_cache_remove
-         85   54 0006AB70 pixman_glyph_cache_thaw
-         86   55 0006B150 pixman_glyph_get_extents = _pixman_implementation_create_general
-         87   56 0006B200 pixman_glyph_get_mask_format
-         88   57 00003160 pixman_image_composite
-         89   58 000025F0 pixman_image_composite32
-         90   59 0001A190 pixman_image_create_bits
-         91   5A 0001A360 pixman_image_create_bits_no_clear
-         92   5B 0004B550 pixman_image_create_conical_gradient
-         93   5C 0006E610 pixman_image_create_linear_gradient
-         94   5D 000737A0 pixman_image_create_radial_gradient = pixman_rect_alloc
-         95   5E 0007F7B0 pixman_image_create_solid_fill
-         96   5F 00003A10 pixman_image_fill_boxes
-         97   60 00004550 pixman_image_fill_rectangles
-         98   61 0006D570 pixman_image_get_component_alpha
-         99   62 0006D5C0 pixman_image_get_data
-        100   63 0006D630 pixman_image_get_depth
-        101   64 0006CBE0 pixman_image_get_destroy_data
-        102   65 0006D670 pixman_image_get_format
-        103   66 0006D5F0 pixman_image_get_height
-        104   67 0006D610 pixman_image_get_stride = pixman_image_create_linear_gradient
-        105   68 0006D5E0 pixman_image_get_width
-        106   69 0006CAD0 pixman_image_ref
-        107   6A 0006D580 pixman_image_set_accessors
-        108   6B 0006D460 pixman_image_set_alpha_map
-        109   6C 0006D1D0 pixman_image_set_clip_region
-        110   6D 0006D180 pixman_image_set_clip_region32
-        111   6E 0006D550 pixman_image_set_component_alpha
-        112   6F 0006CBD0 pixman_image_set_destroy_function
-        113   70 0006D330 pixman_image_set_filter
-        114   71 0006D220 pixman_image_set_has_client_clip
-        115   72 0006D440 pixman_image_set_indexed
-        116   73 0006D310 pixman_image_set_repeat
-        117   74 0006D420 pixman_image_set_source_clipping
-        118   75 0006D230 pixman_image_set_transform
-        119   76 0006CAE0 pixman_image_unref
-        120   77 000801F0 pixman_line_fixed_edge_init
-        121   78 000814E0 pixman_malloc_ab
-        122   79 000814A0 pixman_malloc_ab_plus_c = mmx_fetch_x8r8g8b8
-        123   7A 00081510 pixman_malloc_abc
-        124   7B 0004C680 pixman_rasterize_edges
-        125   7C 0004FEC0 pixman_rasterize_edges_accessors
-        126   7D 00080B40 pixman_rasterize_trapezoid
-        127   7E 00081DF0 pixman_region16_copy_from_region32
-        128   7F 0007EC00 pixman_region32_clear
-        129   80 0007EC50 pixman_region32_contains_point
-        130   81 0007E920 pixman_region32_contains_rectangle
-        131   82 0007D480 pixman_region32_copy
-        132   83 00081F60 pixman_region32_copy_from_region16
-        133   84 0007D060 pixman_region32_equal
-        134   85 0007EDD0 pixman_region32_extents
-        135   86 0007D410 pixman_region32_fini
-        136   87 0007D2C0 pixman_region32_init
-        137   88 0007F1A0 pixman_region32_init_from_image
-        138   89 0007D2F0 pixman_region32_init_rect
-        139   8A 0007EF70 pixman_region32_init_rects
-        140   8B 0007D380 pixman_region32_init_with_extents
-        141   8C 0007D5C0 pixman_region32_intersect
-        142   8D 0007DC00 pixman_region32_intersect_rect = pixman_region32_clear
-        143   8E 0007E800 pixman_region32_inverse
-        144   8F 0007D430 pixman_region32_n_rects
-        145   90 0007EDB0 pixman_region32_not_empty
-        146   91 0007D170 pixman_region32_print
-        147   92 0007D450 pixman_region32_rectangles
-        148   93 0007EB90 pixman_region32_reset
-        149   94 0007EDE0 pixman_region32_selfcheck
-        150   95 0007E5B0 pixman_region32_subtract
-        151   96 0007EB30 pixman_region32_translate
-        152   97 0007E160 pixman_region32_union
-        153   98 0007E3F0 pixman_region32_union_rect
-        154   99 00078F70 pixman_region_clear
-        155   9A 00078FB0 pixman_region_contains_point
-        156   9B 000789A0 pixman_region_contains_rectangle
-        157   9C 00077370 pixman_region_copy
-        158   9D 00076F90 pixman_region_equal
-        159   9E 00079160 pixman_region_extents
-        160   9F 00077300 pixman_region_fini
-        161   A0 000771D0 pixman_region_init
-        162   A1 00079520 pixman_region_init_from_image
-        163   A2 000771F0 pixman_region_init_rect
-        164   A3 00079330 pixman_region_init_rects
-        165   A4 00077280 pixman_region_init_with_extents
-        166   A5 000774E0 pixman_region_intersect
-        167   A6 00077B90 pixman_region_intersect_rect
-        168   A7 00078890 pixman_region_inverse
-        169   A8 00077320 pixman_region_n_rects
-        170   A9 00079140 pixman_region_not_empty
-        171   AA 000770C0 pixman_region_print
-        172   AB 00077340 pixman_region_rectangles
-        173   AC 00078F10 pixman_region_reset = pixman_rect_alloc.constprop.3
-        174   AD 00079170 pixman_region_selfcheck
-        175   AE 00079B60 pixman_region_set_static_pointers
-        176   AF 00078620 pixman_region_subtract
-        177   B0 00078BF0 pixman_region_translate
-        178   B1 00078150 pixman_region_union
-        179   B2 00078460 pixman_region_union_rect
-        180   B3 0007FB40 pixman_sample_ceil_y = pixman_rasterize_trapezoid
-        181   B4 0007FD10 pixman_sample_floor_y
-        182   B5 00070D70 pixman_transform_bounds
-        183   B6 00071420 pixman_transform_from_pixman_f_transform
-        184   B7 0006F650 pixman_transform_init_identity
-        185   B8 000705F0 pixman_transform_init_rotate
-        186   B9 00070250 pixman_transform_init_scale
-        187   BA 00070A00 pixman_transform_init_translate
-        188   BB 00071A90 pixman_transform_invert
-        189   BC 00070EF0 pixman_transform_is_identity
-        190   BD 00071090 pixman_transform_is_int_translate
-        191   BE 00071160 pixman_transform_is_inverse
-        192   BF 00070FC0 pixman_transform_is_scale
-        193   C0 000700B0 pixman_transform_multiply
-        194   C1 0006F7E0 pixman_transform_point
-        195   C2 0006E680 pixman_transform_point_31_16
-        196   C3 0006F3C0 pixman_transform_point_31_16_3d
-        197   C4 0006F230 pixman_transform_point_31_16_affine
-        198   C5 0006F690 pixman_transform_point_3d
-        199   C6 00070630 pixman_transform_rotate
-        200   C7 00070280 pixman_transform_scale
-        201   C8 00070A40 pixman_transform_translate
-        202   C9 000817E0 pixman_unorm_to_float
-        203   CA 00004A60 pixman_version
-        204   CB 00004A70 pixman_version_string
-
-  Summary
-
-        1000 .CRT
-        1000 .bss
-        1000 .data
-        1000 .debug_abbrev
-        1000 .debug_aranges
-        1000 .debug_frame
-        1000 .debug_info
-        1000 .debug_line
-        2000 .edata
-        1000 .idata
-        4000 .pdata
-        A000 .rdata
-        1000 .reloc
-       B4000 .text
-        1000 .tls
-        6000 .xdata
+EXPORTS
+_pixman_addition_overflows_int
+_pixman_arm_get_implementations
+_pixman_bits_image_dest_iter_init
+_pixman_bits_image_init
+_pixman_bits_image_setup_accessors
+_pixman_bits_image_setup_accessors_accessors
+_pixman_bits_image_src_iter_init
+_pixman_choose_implementation
+_pixman_compute_composite_region32
+_pixman_conical_gradient_iter_init
+_pixman_disabled
+_pixman_gradient_walker_init
+_pixman_gradient_walker_pixel
+_pixman_image_allocate
+_pixman_image_fini
+_pixman_image_get_solid
+_pixman_image_init
+_pixman_image_reset_clip_region
+_pixman_image_validate
+_pixman_implementation_blt
+_pixman_implementation_create
+_pixman_implementation_create_fast_path
+_pixman_implementation_create_general
+_pixman_implementation_create_mmx
+_pixman_implementation_create_noop
+_pixman_implementation_create_sse2
+_pixman_implementation_create_ssse3
+_pixman_implementation_fill
+_pixman_implementation_iter_init
+_pixman_implementation_lookup_combiner
+_pixman_implementation_lookup_composite
+_pixman_init_gradient
+_pixman_internal_only_get_implementation
+_pixman_iter_get_scanline_noop
+_pixman_iter_init_bits_stride
+_pixman_linear_gradient_iter_init
+_pixman_log_error
+_pixman_mips_get_implementations
+_pixman_multiply_overflows_int
+_pixman_multiply_overflows_size
+_pixman_ppc_get_implementations
+_pixman_radial_gradient_iter_init
+_pixman_setup_combiner_functions_32
+_pixman_setup_combiner_functions_float
+_pixman_x86_get_implementations
+global_implementation
+pixman_add_trapezoids
+pixman_add_traps = _pixman_multiply_overflows_int
+pixman_add_triangles
+pixman_blt
+pixman_composite_glyphs
+pixman_composite_glyphs_no_mask
+pixman_composite_trapezoids
+pixman_composite_triangles
+pixman_compute_composite_region
+pixman_contract_from_float
+pixman_disable_out_of_bounds_workaround
+pixman_edge_init
+pixman_edge_step
+pixman_expand_to_float
+pixman_f_transform_bounds
+pixman_f_transform_from_pixman_transform
+pixman_f_transform_init_identity
+pixman_f_transform_init_rotate
+pixman_f_transform_init_scale = radial_get_scanline_narrow
+pixman_f_transform_init_translate
+pixman_f_transform_invert
+pixman_f_transform_multiply
+pixman_f_transform_point = pixman_f_transform_init_identity
+pixman_f_transform_point_3d
+pixman_f_transform_rotate
+pixman_f_transform_scale
+pixman_f_transform_translate
+pixman_fill
+pixman_filter_create_separable_convolution
+pixman_float_to_unorm
+pixman_format_supported_destination
+pixman_format_supported_source
+pixman_glyph_cache_create
+pixman_glyph_cache_destroy
+pixman_glyph_cache_freeze
+pixman_glyph_cache_insert
+pixman_glyph_cache_lookup
+pixman_glyph_cache_remove
+pixman_glyph_cache_thaw
+pixman_glyph_get_extents = _pixman_implementation_create_general
+pixman_glyph_get_mask_format
+pixman_image_composite
+pixman_image_composite32
+pixman_image_create_bits
+pixman_image_create_bits_no_clear
+pixman_image_create_conical_gradient
+pixman_image_create_linear_gradient
+pixman_image_create_radial_gradient = pixman_rect_alloc
+pixman_image_create_solid_fill
+pixman_image_fill_boxes
+pixman_image_fill_rectangles
+pixman_image_get_component_alpha
+pixman_image_get_data
+pixman_image_get_depth
+pixman_image_get_destroy_data
+pixman_image_get_format
+pixman_image_get_height
+pixman_image_get_stride = pixman_image_create_linear_gradient
+pixman_image_get_width
+pixman_image_ref
+pixman_image_set_accessors
+pixman_image_set_alpha_map
+pixman_image_set_clip_region
+pixman_image_set_clip_region32
+pixman_image_set_component_alpha
+pixman_image_set_destroy_function
+pixman_image_set_filter
+pixman_image_set_has_client_clip
+pixman_image_set_indexed
+pixman_image_set_repeat
+pixman_image_set_source_clipping
+pixman_image_set_transform
+pixman_image_unref
+pixman_line_fixed_edge_init
+pixman_malloc_ab
+pixman_malloc_ab_plus_c = mmx_fetch_x8r8g8b8
+pixman_malloc_abc
+pixman_rasterize_edges
+pixman_rasterize_edges_accessors
+pixman_rasterize_trapezoid
+pixman_region16_copy_from_region32
+pixman_region32_clear
+pixman_region32_contains_point
+pixman_region32_contains_rectangle
+pixman_region32_copy
+pixman_region32_copy_from_region16
+pixman_region32_equal
+pixman_region32_extents
+pixman_region32_fini
+pixman_region32_init
+pixman_region32_init_from_image
+pixman_region32_init_rect
+pixman_region32_init_rects
+pixman_region32_init_with_extents
+pixman_region32_intersect
+pixman_region32_intersect_rect = pixman_region32_clear
+pixman_region32_inverse
+pixman_region32_n_rects
+pixman_region32_not_empty
+pixman_region32_print
+pixman_region32_rectangles
+pixman_region32_reset
+pixman_region32_selfcheck
+pixman_region32_subtract
+pixman_region32_translate
+pixman_region32_union
+pixman_region32_union_rect
+pixman_region_clear
+pixman_region_contains_point
+pixman_region_contains_rectangle
+pixman_region_copy
+pixman_region_equal
+pixman_region_extents
+pixman_region_fini
+pixman_region_init
+pixman_region_init_from_image
+pixman_region_init_rect
+pixman_region_init_rects
+pixman_region_init_with_extents
+pixman_region_intersect
+pixman_region_intersect_rect
+pixman_region_inverse
+pixman_region_n_rects
+pixman_region_not_empty
+pixman_region_print
+pixman_region_rectangles
+pixman_region_reset = pixman_rect_alloc.constprop.3
+pixman_region_selfcheck
+pixman_region_set_static_pointers
+pixman_region_subtract
+pixman_region_translate
+pixman_region_union
+pixman_region_union_rect
+pixman_sample_ceil_y = pixman_rasterize_trapezoid
+pixman_sample_floor_y
+pixman_transform_bounds
+pixman_transform_from_pixman_f_transform
+pixman_transform_init_identity
+pixman_transform_init_rotate
+pixman_transform_init_scale
+pixman_transform_init_translate
+pixman_transform_invert
+pixman_transform_is_identity
+pixman_transform_is_int_translate
+pixman_transform_is_inverse
+pixman_transform_is_scale
+pixman_transform_multiply
+pixman_transform_point
+pixman_transform_point_31_16
+pixman_transform_point_31_16_3d
+pixman_transform_point_31_16_affine
+pixman_transform_point_3d
+pixman_transform_rotate
+pixman_transform_scale
+pixman_transform_translate
+pixman_unorm_to_float
+pixman_version
+pixman_version_string

@@ -1,165 +1,133 @@
-Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-
-Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\libgcc_s_sjlj-1.dll
-
-File Type: DLL
-
-  Section contains the following exports for libgcc_s_sjlj-1.dll
-
-    00000000 characteristics
-           0 time date stamp Thu Jan 01 02:00:00 1970
-        0.00 version
-           1 ordinal base
-         132 number of functions
-         132 number of names
-
-    ordinal hint RVA      name
-
-          1    0 0000E7E0 _Unwind_Backtrace
-          2    1 0000E7C0 _Unwind_DeleteException
-          3    2 0000E520 _Unwind_FindEnclosingFunction
-          4    3 0000DFE0 _Unwind_Find_FDE
-          5    4 0000E480 _Unwind_GetCFA
-          6    5 0000E530 _Unwind_GetDataRelBase
-          7    6 0000E470 _Unwind_GetGR
-          8    7 0000E4B0 _Unwind_GetIP
-          9    8 0000E4C0 _Unwind_GetIPInfo
-         10    9 0000E500 _Unwind_GetLanguageSpecificData
-         11    A 0000E510 _Unwind_GetRegionStart
-         12    B 0000E540 _Unwind_GetTextRelBase
-         13    C 0000E4A0 _Unwind_SetGR
-         14    D 0000E4F0 _Unwind_SetIP
-         15    E 0000E630 _Unwind_SjLj_ForcedUnwind
-         16    F 0000E550 _Unwind_SjLj_RaiseException
-         17   10 0000E3C0 _Unwind_SjLj_Register
-         18   11 0000E6D0 _Unwind_SjLj_Resume
-         19   12 0000E740 _Unwind_SjLj_Resume_or_Rethrow
-         20   13 0000E420 _Unwind_SjLj_Unregister
-         21   14 00001880 __absvdi2
-         22   15 000018A0 __absvsi2
-         23   16 000018C0 __absvti2
-         24   17 00005C10 __addtf3
-         25   18 00001900 __addvdi3
-         26   19 00001930 __addvsi3
-         27   1A 00001960 __addvti3
-         28   1B 000015B0 __ashlti3
-         29   1C 00001620 __ashrti3
-         30   1D 00004960 __bswapdi2
-         31   1E 00004950 __bswapsi2
-         32   1F 00001700 __clear_cache
-         33   20 00004970 __clrsbdi2
-         34   21 00004990 __clrsbti2
-         35   22 00001DF0 __clzdi2
-         36   23 00001E00 __clzti2
-         37   24 00001680 __cmpti2
-         38   25 00001E30 __ctzdi2
-         39   26 00001E40 __ctzti2
-         40   27 0000DFB0 __deregister_frame
-         41   28 0000DFA0 __deregister_frame_info
-         42   29 0000DEA0 __deregister_frame_info_bases
-         43   2A 00003930 __divdc3
-         44   2B 00003620 __divsc3
-         45   2C 00003F70 __divtc3
-         46   2D 00006FD0 __divtf3
-         47   2E 00005300 __divti3
-         48   2F 00003C90 __divxc3
-         49   30 0000EAD0 __emutls_get_address
-         50   31 0000ECB0 __emutls_register_common
-         51   32 0000CBE0 __enable_execute_stack
-         52   33 00007B80 __eqtf2
-         53   34 0000B6B0 __extenddftf2
-         54   35 0000B490 __extendsftf2
-         55   36 0000B910 __extendxftf2
-         56   37 00001DA0 __ffsdi2
-         57   38 00001DB0 __ffsti2
-         58   39 00004AF0 __fixdfti
-         59   3A 00004A90 __fixsfti
-         60   3B 0000A430 __fixtfdi
-         61   3C 0000A070 __fixtfsi
-         62   3D 0000A940 __fixtfti
-         63   3E 00004A20 __fixunsdfdi
-         64   3F 00004C70 __fixunsdfti
-         65   40 000049F0 __fixunssfdi
-         66   41 00004BB0 __fixunssfti
-         67   42 0000A5D0 __fixunstfdi
-         68   43 0000A190 __fixunstfsi
-         69   44 0000AB80 __fixunstfti
-         70   45 00004A50 __fixunsxfdi
-         71   46 00004D30 __fixunsxfti
-         72   47 00004B50 __fixxfti
-         73   48 0000A720 __floatditf
-         74   49 0000A2A0 __floatsitf
-         75   4A 00004F80 __floattidf
-         76   4B 00004EA0 __floattisf
-         77   4C 0000AD90 __floattitf
-         78   4D 00005060 __floattixf
-         79   4E 0000A840 __floatunditf
-         80   4F 0000A370 __floatunsitf
-         81   50 000051A0 __floatuntidf
-         82   51 000050A0 __floatuntisf
-         83   52 0000B130 __floatuntitf
-         84   53 000052A0 __floatuntixf
-         85   54 0000E870 __gcc_personality_sj0
-         86   55 00007CD0 __getf2
-         87   56 00007CD0 __gttf2
-         88   57 00007E50 __letf2
-         89   58 00001550 __lshrti3
-         90   59 00007E50 __lttf2
-         91   5A 000054B0 __modti3
-         92   5B 00002550 __muldc3
-         93   5C 000021F0 __mulsc3
-         94   5D 00002D00 __multc3
-         95   5E 00007FD0 __multf3
-         96   5F 000014D0 __multi3
-         97   60 00001A80 __mulvdi3
-         98   61 00001AB0 __mulvsi3
-         99   62 00001AE0 __mulvti3
-        100   63 000028D0 __mulxc3
-        101   64 00008B10 __negtf2
-        102   65 00001510 __negti2
-        103   66 00001CE0 __negvdi2
-        104   67 00001D10 __negvsi2
-        105   68 00001D40 __negvti2
-        106   69 00007B80 __netf2
-        107   6A 00001F70 __paritydi2
-        108   6B 00001FB0 __parityti2
-        109   6C 00001E70 __popcountdi2
-        110   6D 00001ED0 __popcountti2
-        111   6E 00002040 __powidf2
-        112   6F 00001FF0 __powisf2
-        113   70 00002100 __powitf2
-        114   71 000020A0 __powixf2
-        115   72 0000DD80 __register_frame
-        116   73 0000DD00 __register_frame_info
-        117   74 0000DC80 __register_frame_info_bases
-        118   75 0000DE60 __register_frame_info_table
-        119   76 0000DE00 __register_frame_info_table_bases
-        120   77 0000DE70 __register_frame_table
-        121   78 00008BB0 __subtf3
-        122   79 000019C0 __subvdi3
-        123   7A 000019F0 __subvsi3
-        124   7B 00001A20 __subvti3
-        125   7C 0000C030 __trunctfdf2
-        126   7D 0000BB40 __trunctfsf2
-        127   7E 0000C600 __trunctfxf2
-        128   7F 000016C0 __ucmpti2
-        129   80 00005980 __udivmodti4
-        130   81 000056A0 __udivti3
-        131   82 000057F0 __umodti3
-        132   83 00009F80 __unordtf2
-
-  Summary
-
-        1000 .CRT
-        1000 .bss
-        1000 .data
-        1000 .edata
-        1000 .idata
-        1000 .pdata
-        3000 .rdata
-        1000 .reloc
-       10000 .text
-        1000 .tls
-        1000 .xdata
+EXPORTS
+_Unwind_Backtrace
+_Unwind_DeleteException
+_Unwind_FindEnclosingFunction
+_Unwind_Find_FDE
+_Unwind_GetCFA
+_Unwind_GetDataRelBase
+_Unwind_GetGR
+_Unwind_GetIP
+_Unwind_GetIPInfo
+_Unwind_GetLanguageSpecificData
+_Unwind_GetRegionStart
+_Unwind_GetTextRelBase
+_Unwind_SetGR
+_Unwind_SetIP
+_Unwind_SjLj_ForcedUnwind
+_Unwind_SjLj_RaiseException
+_Unwind_SjLj_Register
+_Unwind_SjLj_Resume
+_Unwind_SjLj_Resume_or_Rethrow
+_Unwind_SjLj_Unregister
+__absvdi2
+__absvsi2
+__absvti2
+__addtf3
+__addvdi3
+__addvsi3
+__addvti3
+__ashlti3
+__ashrti3
+__bswapdi2
+__bswapsi2
+__clear_cache
+__clrsbdi2
+__clrsbti2
+__clzdi2
+__clzti2
+__cmpti2
+__ctzdi2
+__ctzti2
+__deregister_frame
+__deregister_frame_info
+__deregister_frame_info_bases
+__divdc3
+__divsc3
+__divtc3
+__divtf3
+__divti3
+__divxc3
+__emutls_get_address
+__emutls_register_common
+__enable_execute_stack
+__eqtf2
+__extenddftf2
+__extendsftf2
+__extendxftf2
+__ffsdi2
+__ffsti2
+__fixdfti
+__fixsfti
+__fixtfdi
+__fixtfsi
+__fixtfti
+__fixunsdfdi
+__fixunsdfti
+__fixunssfdi
+__fixunssfti
+__fixunstfdi
+__fixunstfsi
+__fixunstfti
+__fixunsxfdi
+__fixunsxfti
+__fixxfti
+__floatditf
+__floatsitf
+__floattidf
+__floattisf
+__floattitf
+__floattixf
+__floatunditf
+__floatunsitf
+__floatuntidf
+__floatuntisf
+__floatuntitf
+__floatuntixf
+__gcc_personality_sj0
+__getf2
+__gttf2
+__letf2
+__lshrti3
+__lttf2
+__modti3
+__muldc3
+__mulsc3
+__multc3
+__multf3
+__multi3
+__mulvdi3
+__mulvsi3
+__mulvti3
+__mulxc3
+__negtf2
+__negti2
+__negvdi2
+__negvsi2
+__negvti2
+__netf2
+__paritydi2
+__parityti2
+__popcountdi2
+__popcountti2
+__powidf2
+__powisf2
+__powitf2
+__powixf2
+__register_frame
+__register_frame_info
+__register_frame_info_bases
+__register_frame_info_table
+__register_frame_info_table_bases
+__register_frame_table
+__subtf3
+__subvdi3
+__subvsi3
+__subvti3
+__trunctfdf2
+__trunctfsf2
+__trunctfxf2
+__ucmpti2
+__udivmodti4
+__udivti3
+__umodti3
+__unordtf2

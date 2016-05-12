@@ -1,116 +1,78 @@
-Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-
-Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\libintl-8.dll
-
-File Type: DLL
-
-  Section contains the following exports for libintl-8.dll
-
-    00000000 characteristics
-    536BA832 time date stamp Thu May 08 18:52:18 2014
-        0.00 version
-           1 ordinal base
-          77 number of functions
-          77 number of names
-
-    ordinal hint RVA      name
-
-          1    0 0000E200 __printf__
-          2    1 00003270 _nl_expand_alias
-          3    2 00003BE0 _nl_explode_name
-          4    3 00001860 _nl_find_domain
-          5    4 00004030 _nl_find_msg
-          6    5 00006590 _nl_language_preferences_default
-          7    6 00001B60 _nl_load_domain
-          8    7 0000B090 _nl_locale_name
-          9    8 00006910 _nl_locale_name_canonicalize
-         10    9 00009920 _nl_locale_name_default
-         11    A 000098C0 _nl_locale_name_environ
-         12    B 00006980 _nl_locale_name_from_win32_LANGID
-         13    C 000080E0 _nl_locale_name_from_win32_LCID
-         14    D 00009860 _nl_locale_name_posix
-         15    E 00009850 _nl_locale_name_thread
-         16    F 00009840 _nl_locale_name_thread_unsafe
-         17   10 0000B100 _nl_log_untranslated
-         18   11 000034B0 _nl_make_l10nflist
-         19   12 0001DCC0 _nl_msg_cat_cntr
-         20   13 00003A90 _nl_normalize_codeset
-         21   14 00015038 _nl_state_lock
-         22   15 00012510 bind_textdomain_codeset
-         23   16 00012500 bindtextdomain
-         24   17 000124B0 dcgettext
-         25   18 000124E0 dcngettext
-         26   19 000124A0 dgettext
-         27   1A 000124D0 dngettext
-         28   1B 00012490 gettext
-         29   1C 0000E640 libintl_asprintf
-         30   1D 00001650 libintl_bind_textdomain_codeset
-         31   1E 00001450 libintl_bindtextdomain
-         32   1F 00001810 libintl_dcgettext
-         33   20 00004920 libintl_dcigettext
-         34   21 00005040 libintl_dcngettext
-         35   22 00001840 libintl_dgettext
-         36   23 00005070 libintl_dngettext
-         37   24 0000E080 libintl_fprintf
-         38   25 00011500 libintl_fwprintf = bindtextdomain
-         39   26 00001850 libintl_gettext
-         40   27 00006030 libintl_gettext_extract_plural
-         41   28 000050C0 libintl_gettext_free_exp
-         42   29 00015060 libintl_gettext_germanic_plural
-         43   2A 00005800 libintl_gettextparse
-         44   2B 00001B30 libintl_hash_string
-         45   2C 00005090 libintl_ngettext
-         46   2D 00015040 libintl_nl_current_default_domain
-         47   2E 00016180 libintl_nl_default_default_domain
-         48   2F 00016160 libintl_nl_default_dirname
-         49   30 0001DCC8 libintl_nl_domain_bindings
-         50   31 00006250 libintl_once_singlethreaded
-         51   32 000061C0 libintl_recursive_lock_init_multithreaded
-         52   33 000063E0 libintl_relocate
-         53   34 00006270 libintl_set_relocation_prefix
-         54   35 00011F70 libintl_setlocale
-         55   36 0000E4F0 libintl_snprintf
-         56   37 0000E370 libintl_sprintf
-         57   38 000118C0 libintl_swprintf
-         58   39 000033C0 libintl_textdomain
-         59   3A 0000B730 libintl_vasnprintf
-         60   3B 0000E6C0 libintl_vasnwprintf
-         61   3C 0000E5D0 libintl_vasprintf
-         62   3D 000150E0 libintl_version
-         63   3E 0000DFD0 libintl_vfprintf
-         64   3F 00011420 libintl_vfwprintf
-         65   40 0000E140 libintl_vprintf
-         66   41 0000E420 libintl_vsnprintf
-         67   42 0000E2D0 libintl_vsprintf
-         68   43 000117D0 libintl_vswprintf
-         69   44 000115F0 libintl_vwprintf
-         70   45 000116D0 libintl_wprintf
-         71   46 00006110 locale_charset
-         72   47 000124C0 ngettext = ___w64_mingwthr_remove_key_dtor
-         73   48 000124F0 textdomain
-         74   49 00012480 xmax
-         75   4A 00012430 xsum
-         76   4B 00012440 xsum3 = ___w64_mingwthr_add_key_dtor
-         77   4C 00012460 xsum4
-
-  Summary
-
-        1000 .CRT
-        1000 .bss
-        1000 .data
-        1000 .debug_abbrev
-        1000 .debug_aranges
-        1000 .debug_frame
-        1000 .debug_info
-        1000 .debug_line
-        1000 .edata
-        1000 .idata
-        1000 .pdata
-        5000 .rdata
-        1000 .reloc
-        1000 .rsrc
-       14000 .text
-        1000 .tls
-        1000 .xdata
+EXPORTS
+__printf__
+_nl_expand_alias
+_nl_explode_name
+_nl_find_domain
+_nl_find_msg
+_nl_language_preferences_default
+_nl_load_domain
+_nl_locale_name
+_nl_locale_name_canonicalize
+_nl_locale_name_default
+_nl_locale_name_environ
+_nl_locale_name_from_win32_LANGID
+_nl_locale_name_from_win32_LCID
+_nl_locale_name_posix
+_nl_locale_name_thread
+_nl_locale_name_thread_unsafe
+_nl_log_untranslated
+_nl_make_l10nflist
+_nl_msg_cat_cntr
+_nl_normalize_codeset
+_nl_state_lock
+bind_textdomain_codeset
+bindtextdomain
+dcgettext
+dcngettext
+dgettext
+dngettext
+gettext
+libintl_asprintf
+libintl_bind_textdomain_codeset
+libintl_bindtextdomain
+libintl_dcgettext
+libintl_dcigettext
+libintl_dcngettext
+libintl_dgettext
+libintl_dngettext
+libintl_fprintf
+libintl_fwprintf = bindtextdomain
+libintl_gettext
+libintl_gettext_extract_plural
+libintl_gettext_free_exp
+libintl_gettext_germanic_plural
+libintl_gettextparse
+libintl_hash_string
+libintl_ngettext
+libintl_nl_current_default_domain
+libintl_nl_default_default_domain
+libintl_nl_default_dirname
+libintl_nl_domain_bindings
+libintl_once_singlethreaded
+libintl_recursive_lock_init_multithreaded
+libintl_relocate
+libintl_set_relocation_prefix
+libintl_setlocale
+libintl_snprintf
+libintl_sprintf
+libintl_swprintf
+libintl_textdomain
+libintl_vasnprintf
+libintl_vasnwprintf
+libintl_vasprintf
+libintl_version
+libintl_vfprintf
+libintl_vfwprintf
+libintl_vprintf
+libintl_vsnprintf
+libintl_vsprintf
+libintl_vswprintf
+libintl_vwprintf
+libintl_wprintf
+locale_charset
+ngettext = ___w64_mingwthr_remove_key_dtor
+textdomain
+xmax
+xsum
+xsum3 = ___w64_mingwthr_add_key_dtor
+xsum4

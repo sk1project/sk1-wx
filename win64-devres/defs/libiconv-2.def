@@ -1,53 +1,15 @@
-Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-
-Dump of file c:\Users\igor\workspace\sk1-wx\win64-devres\dlls\libiconv-2.dll
-
-File Type: DLL
-
-  Section contains the following exports for libiconv-2.dll
-
-    00000000 characteristics
-    536A74FC time date stamp Wed May 07 21:01:32 2014
-        0.00 version
-           1 ordinal base
-          14 number of functions
-          14 number of names
-
-    ordinal hint RVA      name
-
-          1    0 0001A010 _imp___libiconv_version
-          2    1 0001A000 _libiconv_version
-          3    2 00016FF0 aliases2_lookup
-          4    3 00016E10 aliases_lookup
-          5    4 00017F20 iconv_canonicalize
-          6    5 00017560 libiconv
-          7    6 00017590 libiconv_close
-          8    7 00017050 libiconv_open
-          9    8 000175A0 libiconv_open_into
-         10    9 00018430 libiconv_relocate
-         11    A 000182C0 libiconv_set_relocation_prefix
-         12    B 00017C10 libiconvctl
-         13    C 00017DA0 libiconvlist
-         14    D 00018210 locale_charset
-
-  Summary
-
-        1000 .CRT
-        1000 .bss
-        1000 .data
-        1000 .debug_abbrev
-        1000 .debug_aranges
-        1000 .debug_frame
-        1000 .debug_info
-        1000 .debug_line
-        1000 .edata
-        1000 .idata
-        1000 .pdata
-       CE000 .rdata
-        1000 .reloc
-        1000 .rsrc
-       19000 .text
-        1000 .tls
-        1000 .xdata
+EXPORTS
+_imp___libiconv_version
+_libiconv_version
+aliases2_lookup
+aliases_lookup
+iconv_canonicalize
+libiconv
+libiconv_close
+libiconv_open
+libiconv_open_into
+libiconv_relocate
+libiconv_set_relocation_prefix
+libiconvctl
+libiconvlist
+locale_charset
