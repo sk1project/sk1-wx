@@ -17,7 +17,7 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
+import os, platform
 
 import buildutils, commands
 
@@ -58,9 +58,12 @@ def make_modules(src_path, include_path, lib_path=[]):
 			libraries=['cairo'])
 	modules.append(cairo_module)
 
-	if os.name == 'nt':
+	if os.name == 'nt':		
 		pycms_files = ['_cms2.c', ]
-		pycms_libraries = ['lcms2_static']
+		if platform.architecture()[0] == '32bit':
+			pycms_libraries = ['lcms2_static']
+		else:
+			pycms_libraries = ['liblcms2-2']
 		extra_compile_args=[]
 	else:
 		pycms_files = ['_cms2.c', ]
