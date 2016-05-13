@@ -12,5 +12,5 @@ abslibpath = os.path.abspath('libs')
 
 for item in names:
     defname = os.path.join(absdefpath, item)
-    libname = os.path.join(abslibpath, item[:-4] + '.lib')
+	libname = os.path.join(abslibpath, item[:-4] + '.lib')
     os.system('LIB /NOLOGO /MACHINE:x86 /def:%s /out:%s' % (defname, libname))

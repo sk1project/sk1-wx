@@ -32,7 +32,7 @@ setup(
 			}],
 	data_files=data_files,
 	zipfile=None,
-    name="sK1",
-    version="2.0RC1",
-    description="Vector graphics editor",
+	name="sK1",
+	version="2.0RC1",
+	description="Vector graphics editor",
 	)
