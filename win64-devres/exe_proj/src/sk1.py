@@ -45,6 +45,8 @@ os.environ["MAGICK_HOME"] = magickdir
 libs_path = os.path.join(cur_path, 'libs')
 sys.path.insert(0, libs_path)
 
+os.chdir(os.path.join(cur_path, 'dlls'))
+
 import sk1
 
 sk1.sk1_run()
