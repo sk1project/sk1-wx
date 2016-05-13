@@ -20,20 +20,22 @@
 import os, platform
 
 if os.name == 'nt':
-    cur_path = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+	cur_path = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
 
-    devresdir = 'win32-devres'
-    if platform.architecture()[0] == '64bit': devresdir = 'win64-devres'
+	devresdir = 'win32-devres'
+	if platform.architecture()[0] == '64bit': devresdir = 'win64-devres'
 
-    devres = os.path.join(cur_path, devresdir)
-    bindir = os.path.join(devres, 'dlls') + os.pathsep
-    magickdir = os.path.join(devres, 'dlls', 'modules') + os.pathsep
+	devres = os.path.join(cur_path, devresdir)
+	bindir = os.path.join(devres, 'dlls') + os.pathsep
+	magickdir = os.path.join(devres, 'dlls', 'modules') + os.pathsep
 
-    os.environ["PATH"] = magickdir + bindir + os.environ["PATH"]
-    os.environ["MAGICK_CODER_MODULE_PATH"] = magickdir
-    os.environ["MAGICK_CODER_FILTER_PATH"] = magickdir
-    os.environ["MAGICK_CONFIGURE_PATH"] = magickdir
-    os.environ["MAGICK_HOME"] = magickdir
+	os.environ["PATH"] = magickdir + bindir + os.environ["PATH"]
+	os.environ["MAGICK_CODER_MODULE_PATH"] = magickdir
+	os.environ["MAGICK_CODER_FILTER_PATH"] = magickdir
+	os.environ["MAGICK_CONFIGURE_PATH"] = magickdir
+	os.environ["MAGICK_HOME"] = magickdir
+
+	os.chdir(os.path.join(devres, 'dlls'))
 
 import sk1
 
