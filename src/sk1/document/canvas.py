@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2013-2015 by Igor E. Novikov
+# 	Copyright (C) 2013-2015 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, cairo, inspect, wal
 
@@ -121,7 +121,7 @@ class AppCanvas(wx.Panel):
 		self.kbproc = Kbd_Processor(self)
 		self.Bind(wx.EVT_KEY_DOWN, self.kbproc.on_key_down)
 		self.Bind(wx.EVT_CHAR, self.kbproc.on_char)
-#		self.Bind(wx.EVT_KEY_UP, self.OnKeyUp)
+# 		self.Bind(wx.EVT_KEY_UP, self.OnKeyUp)
 		#----- Application eventloop bindings
 		self.eventloop.connect(self.eventloop.DOC_MODIFIED, self.doc_modified)
 		self.eventloop.connect(self.eventloop.PAGE_CHANGED, self.doc_modified)
@@ -558,8 +558,8 @@ class AppCanvas(wx.Panel):
 		event.Skip()
 
 	def mouse_left_up(self, event):
-		self.controller.mouse_up(CanvasEvent(event))
 		self.release_mouse()
+		self.controller.mouse_up(CanvasEvent(event))
 
 	def mouse_left_dclick(self, event):
 		self.controller.set_cursor()
