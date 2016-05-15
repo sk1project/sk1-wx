@@ -148,7 +148,7 @@ class AppProxy:
 				return False
 
 		if not len(objs):
-			txt = _("There is no selected object.")
+			txt = _("Source object is not selected to copy fill property.")
 		else:
 			txt = _("Selected object cannot be source of fill property.")
 		txt += '\n' + _('Do you want to try again?')
@@ -168,7 +168,7 @@ class AppProxy:
 				return False
 
 		if not len(objs):
-			txt = _("There is no selected object.")
+			txt = _("Source object is not selected to copy stroke property.")
 		else:
 			txt = _("Selected object cannot be source of stroke property.")
 		txt += '\n' + _('Do you want to try again?')
