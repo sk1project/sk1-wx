@@ -17,7 +17,7 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, sys, shutil
+import os, sys, shutil, commands
 
 ############################################################
 #
@@ -155,7 +155,7 @@ def clear_build():
 	"""
 	os.system('rm -f MANIFEST')
 	os.system('rm -rf build')
-	
+
 def clear_msw_build():
 	"""
 	Clears build result on MS Windows.
@@ -247,16 +247,16 @@ def copy_modules(modules):
 
 	version = (string.split(sys.version)[0])[0:3]
 	machine = platform.machine()
-	if os.name=='posix':
+	if os.name == 'posix':
 		prefix = 'build/lib.linux-' + machine + '-' + version
-		ext='.so'
-	elif os.name=='nt' and platform.architecture()[0]=='32bit':
-		prefix='build/lib.win32-'+ version
-		ext='.pyd'
-	elif os.name=='nt' and platform.architecture()[0]=='64bit':
-		prefix='build/lib.win-amd64-'+ version
-		ext='.pyd'
-	
+		ext = '.so'
+	elif os.name == 'nt' and platform.architecture()[0] == '32bit':
+		prefix = 'build/lib.win32-' + version
+		ext = '.pyd'
+	elif os.name == 'nt' and platform.architecture()[0] == '64bit':
+		prefix = 'build/lib.win-amd64-' + version
+		ext = '.pyd'
+
 	for item in modules:
 		path = os.path.join(*item.name.split('.')) + ext
 		src = os.path.join(prefix, path)
@@ -267,7 +267,40 @@ def copy_modules(modules):
 
 ############################################################
 #
-# DEB package builder
+#--- PKG_CONFIG functions
+#
+############################################################
+
+def get_pkg_includes(pkg_names):
+	includes = []
+	for item in pkg_names:
+		output = commands.getoutput("pkg-config --cflags-only-I %s" % item)
+		names = output.replace('-I', '').strip().split(' ')
+		for name in names:
+			if not name in includes: includes.append(name)
+	return includes
+
+def get_pkg_libs(pkg_names):
+	libs = []
+	for item in pkg_names:
+		output = commands.getoutput("pkg-config --libs-only-l %s" % item)
+		names = output.replace('-l', '').strip().split(' ')
+		for name in names:
+			if not name in libs: libs.append(name)
+	return libs
+
+def get_pkg_cflags(pkg_names):
+	flags = []
+	for item in pkg_names:
+		output = commands.getoutput("pkg-config --cflags-only-other %s" % item)
+		names = output.strip().split(' ')
+		for name in names:
+			if not name in flags: flags.append(name)
+	return flags
+
+############################################################
+#
+#--- DEB package builder
 #
 ############################################################
 
