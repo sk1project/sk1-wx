@@ -15,7 +15,7 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import platform
+import os, platform
 import wx
 
 # Editable preference list
@@ -35,6 +35,14 @@ def is_win7(): return is_msw() and platform.release() == '7'
 def is_gtk(): return wx.Platform == GTK
 def is_wx2(): return wx.VERSION[0] == 2
 def is_wx3(): return wx.VERSION[0] == 3
+
+def is_unity_16_04():
+	if is_gtk():
+		import lsb_release
+		data = lsb_release.get_lsb_information()
+		if data['DESCRIPTION'] == 'Ubuntu 16.04 LTS' and \
+		os.environ['XDG_CURRENT_DESKTOP'] == 'Unity': return True
+	return False
 
 TOP = wx.TOP
 BOTTOM = wx.BOTTOM
