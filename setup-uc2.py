@@ -114,13 +114,22 @@ deb_scripts = []
 data_files = [
 (install_path, ['GPLv3.txt', 'LICENSE', ]),
 ]
-deb_depends = 'liblcms2-2 (>=2.0), libmagickwand5, '
-deb_depends += 'python (>=2.4), python (<<3.0), '
-deb_depends += 'python-cairo, python-reportlab, python-pil'
+
+############################################################
+deb_depends = ['liblcms2-2 (>=2.0)', 'python (>=2.4)', 'python (<<3.0)',
+			'python-cairo', 'python-reportlab', 'python-pil']
+
+#--- Ubuntu <16.04
+deb_depends += ['libmagickwand5', ]
+#--- Ubuntu ==16.04
+# deb_depends += ['libmagickwand-6.q16',]
+
+deb_depends = ', '.join(deb_depends)
+############################################################
 
 package_data = {}
 
-#Preparing start script
+# Preparing start script
 src_script = 'src/script/uniconvertor.tmpl'
 dst_script = 'src/script/uniconvertor'
 fileptr = open(src_script, 'rb')
@@ -134,7 +143,7 @@ while True:
 fileptr.close()
 fileptr2.close()
 
-#Preparing MANIFEST.in and setup.cfg
+# Preparing MANIFEST.in and setup.cfg
 shutil.copy2('MANIFEST.in_uc2', 'MANIFEST.in')
 shutil.copy2('setup.cfg_uc2', 'setup.cfg')
 
@@ -164,15 +173,15 @@ if len(sys.argv) > 1:
 
 	if sys.argv[1] == 'uninstall':
 		if os.path.isdir(install_path):
-			#removing sk1 folder
+			# removing sk1 folder
 			print 'REMOVE: ' + install_path
 			os.system('rm -rf ' + install_path)
-			#removing scripts
+			# removing scripts
 			for item in scripts:
 				filename = os.path.basename(item)
 				print 'REMOVE: /usr/bin/' + filename
 				os.system('rm -rf /usr/bin/' + filename)
-			#removing data files
+			# removing data files
 			for item in data_files:
 				location = item[0]
 				file_list = item[1]
