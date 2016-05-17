@@ -105,6 +105,7 @@ class MainWindow(wx.Frame):
 
 	def layout(self): self.Layout()
 	def get_size(self): return self.GetSize()
+	def set_size(self, size): self.SetSize(wx.Size(*size))
 	def is_maximized(self): return self.IsMaximized()
 	def destroy(self): self.Destroy()
 	def hide(self): self.Hide()
