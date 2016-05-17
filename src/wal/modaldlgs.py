@@ -18,7 +18,7 @@
 import wx
 
 import const
-from const import EXPAND, ALL, VERTICAL, HORIZONTAL
+from const import EXPAND, ALL, VERTICAL, HORIZONTAL, is_gtk
 from basic import HPanel, VPanel
 from widgets import HLine, Button
 
@@ -69,6 +69,7 @@ class SimpleDialog(wx.Dialog):
 	def set_title(self, title): self.SetTitle(title)
 	def set_minsize(self, size): self.SetMinSize(size)
 	def get_size(self):return self.GetSize()
+	def set_size(self, size): self.SetSize(wx.Size(*size))
 	def show_modal(self):return self.ShowModal()
 	def end_modal(self, ret): self.EndModal(ret)
 	def destroy(self): self.Destroy()
