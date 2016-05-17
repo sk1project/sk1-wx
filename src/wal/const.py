@@ -33,6 +33,7 @@ def is_msw(): return wx.Platform == MSW
 def is_winxp(): return is_msw() and platform.release() == 'XP'
 def is_win7(): return is_msw() and platform.release() == '7'
 def is_gtk(): return wx.Platform == GTK
+def is_gtk2(): return is_gtk() and wx.VERSION[0] == 2
 def is_gtk3(): return is_gtk() and wx.VERSION[0] == 3
 
 TOP = wx.TOP
