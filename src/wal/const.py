@@ -25,20 +25,15 @@ CFG = [True, ]
 MSW = '__WXMSW__'
 GTK = '__WXGTK__'
 MAC = '__WXMAC__'
-PLATFORM = wx.Platform
 
 def get_version(): return wx.version()
 
-def is_mac(): return PLATFORM == MAC
-def is_msw(): return PLATFORM == MSW
-def is_winxp():
-	if is_msw(): return platform.release() == 'XP'
-	return False
-def is_win7():
-	if is_msw(): return platform.release() == '7'
-	return False
-
-def is_gtk(): return PLATFORM == GTK
+def is_mac(): return wx.Platform == MAC
+def is_msw(): return wx.Platform == MSW
+def is_winxp(): return is_msw() and platform.release() == 'XP'
+def is_win7(): return is_msw() and platform.release() == '7'
+def is_gtk(): return wx.Platform == GTK
+def is_gtk3(): return is_gtk() and wx.VERSION[0] == 3
 
 TOP = wx.TOP
 BOTTOM = wx.BOTTOM
