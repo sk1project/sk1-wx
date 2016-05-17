@@ -17,7 +17,7 @@
 
 import wx
 
-from wal import const, ImageButton, is_msw
+from wal import const, ImageButton, is_wx2
 
 from sk1 import events, resources
 
@@ -69,7 +69,7 @@ class AppAction:
 
 	def update(self):
 		for widget in self.widgets:
-			if is_msw():
+			if not is_wx2():
 				if not widget in self.menuitem:
 					widget.update()
 			else:
@@ -88,7 +88,7 @@ class AppAction:
 	def register_as_menuitem(self, item):
 		self.menuitem.append(item)
 		self.widgets.append(item)
-		if not is_msw(): self.update()
+		if is_wx2(): self.update()
 
 	def unregister(self, widget):
 		if widget in self.widgets:

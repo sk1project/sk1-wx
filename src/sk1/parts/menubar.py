@@ -177,7 +177,7 @@ class HistoryMenu(wx.Menu):
 		wx.Menu.__init__(self)
 
 		self.empty_item = wx.MenuItem(self, wx.NewId(), _('Empty'))
-		self.empty_item.Enable(False)
+		if not wal.is_wx3(): self.empty_item.Enable(False)
 
 		self.items.append(self.AppendSeparator())
 		action = self.app.actions[pdids.ID_CLEAR_LOG]
