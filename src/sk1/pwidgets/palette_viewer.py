@@ -238,18 +238,26 @@ class PaletteViewer(wal.VPanel):
 		self.cms = cms
 		self.callback = onclick
 		wal.VPanel.__init__(self, parent)
-		if wal.is_msw(): self.pack((172, 1))
+		if wal.is_wx3(): self.pack((172, 1))
 		options = wal.ExpandedPanel(self, _('Palette preview:'))
 		changer = wal.HToggleKeeper(options, PREVIEW_MODES, MODE_ICON,
 								MODE_NAME, on_change=self.set_mode)
 		options.pack(changer)
 		self.pack(options, fill=True)
 		border = wal.VPanel(self, border=True)
-		if wal.is_msw(): border.set_bg(wal.GRAY) 
+		if wal.is_wx3():
+			color = wal.GRAY
+			if wal.is_gtk(): color = wal.UI_COLORS['pressed_border']
+			border.set_bg(color)
 		self.pack(border, expand=True, fill=True)
-		self.win = ScrolledPalette(border, self.cms, onclick=self.select_color)		
-		if wal.is_msw(): 
-			border.pack(self.win, expand=True, fill=True, padding_all=1)
+		self.win = ScrolledPalette(border, self.cms, onclick=self.select_color)
+		if wal.is_wx3():
+			if wal.is_gtk():
+				inner_border = wal.VPanel(self)
+				inner_border.pack(self.win, expand=True, fill=True)
+				border.pack(inner_border, expand=True, fill=True, padding_all=1)
+			else:
+				border.pack(self.win, expand=True, fill=True, padding_all=1)
 		else:
 			border.pack(self.win, expand=True, fill=True)
 		changer.set_mode(AUTO_MODE)
