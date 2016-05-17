@@ -160,7 +160,7 @@ class Panel(wx.Panel, Widget):
 
 	def __init__(self, parent, border=False):
 		style = wx.TAB_TRAVERSAL
-		if border and not const.is_msw():style |= wx.BORDER_MASK
+		if border and not const.is_wx3():style |= wx.BORDER_MASK
 		wx.Panel.__init__(self, parent, wx.ID_ANY, style=style)
 
 	def set_bg(self, color):

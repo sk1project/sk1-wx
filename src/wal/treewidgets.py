@@ -54,7 +54,7 @@ class TreeWidget(wx.TreeCtrl, Widget):
 		if const.is_msw(): highlight_row = False
 		if highlight_row: style |= wx.TR_FULL_ROW_HIGHLIGHT
 		if not highlight_row:alt_color = False
-		if border and not const.is_msw(): style |= wx.BORDER_MASK
+		if border and not const.is_wx3(): style |= wx.BORDER_MASK
 		wx.TreeCtrl.__init__(self, parent, wx.ID_ANY, style=style)
 		self.alt_color = alt_color
 		self.use_icons = use_icons
