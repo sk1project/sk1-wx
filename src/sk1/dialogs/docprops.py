@@ -563,7 +563,14 @@ class DocPropertiesDialog(wal.OkCancelDialog):
 	def show(self):
 		if self.show_modal() == wal.BUTTON_OK:
 			self.get_result()
-		config.docprops_dlg_size = self.get_size()
+		if wal.is_unity_16_04():
+			w, h = self.get_size()
+			h -= 28
+			if h < config.docprops_dlg_minsize[1]:
+				h = config.docprops_dlg_minsize[1]
+			config.docprops_dlg_size = (w, h)
+		else:
+			config.docprops_dlg_size = self.get_size()
 		self.destroy()
 
 

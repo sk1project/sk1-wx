@@ -125,7 +125,14 @@ class PrefsDialog(wal.OkCancelDialog):
 	def show(self):
 		if self.show_modal() == wal.BUTTON_OK:
 			self.apply_changes()
-		config.prefs_dlg_size = self.get_size()
+		if wal.is_unity_16_04():
+			w, h = self.get_size()
+			h -= 28
+			if h < config.prefs_dlg_minsize[1]:
+				h = config.prefs_dlg_minsize[1]
+			config.prefs_dlg_size = (w, h)
+		else:
+			config.prefs_dlg_size = self.get_size()
 		self.destroy()
 
 def get_prefs_dialog(parent, pid=''):
