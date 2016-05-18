@@ -776,6 +776,15 @@ class Curve(PrimitiveObject):
 	def to_curve(self): return self
 
 class Text(PrimitiveObject):
+	"""
+	Represents text object. 
+	Text content is stored in 'text' field as a base64 encoded string
+	to resolve EOL and other special character issues.
+	'trafos' contains glyph specific transformations.
+	'markup' list contains text markup description.
+	'width' field defines text block mode in case of -1.
+	For any other positive values paragraph mode is defined.
+	"""
 
 	cid = TEXT_BLOCK
 	text = ""
