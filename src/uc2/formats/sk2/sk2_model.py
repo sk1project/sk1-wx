@@ -949,6 +949,18 @@ class Text(PrimitiveObject):
 
 
 class Pixmap(PrimitiveObject):
+	"""
+	Represents pixmap object. 
+	Raster graphics is stored as a TIFF bitmaps, because the format is covers
+	all available colorspaces. 'bitmap' field contains raster info, but
+	transparency data is stored as a grayscale image in 'alpha_channel'.
+	'colorspace' describes 'bitmap' type. Possible types are:
+	monochrome, grayscale, RGB and CMYK.
+	For monochrome and grayscale colorspaces is available duotone mode. Duotone
+	colors (foreground and background) are defined in 'style' field.
+	It is assumed that initial lower left corner of pixmap is [0.0,0.0] point 
+	and pixmap size is defined by 72 dpi resolution.
+	"""
 
 	cid = PIXMAP
 
