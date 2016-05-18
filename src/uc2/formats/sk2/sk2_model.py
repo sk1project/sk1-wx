@@ -66,6 +66,8 @@ class DocumentObject(TextModelObject):
 	def is_polygon(self): return False
 	def is_text(self): return False
 	def is_closed(self): return False
+	def is_group(self): return False
+	def is_tpgroup(self): return False
 	def is_container(self): return False
 
 
@@ -372,6 +374,10 @@ class SelectableObject(DocumentObject):
 
 #---------------Compound objects---------------------
 class Group(SelectableObject):
+	"""
+	Represents group object. 
+	All child objects are in childs list.
+	"""
 
 	cid = GROUP
 	childs = []
@@ -382,6 +388,8 @@ class Group(SelectableObject):
 		self.config = config
 		self.parent = parent
 		self.childs += childs
+
+	def is_group(self): return True
 
 	def apply_trafo(self, trafo):
 		for child in self.childs:
@@ -411,7 +419,35 @@ class Group(SelectableObject):
 		for item in childs_snapshots:
 			item[0].set_trafo_snapshot(item)
 
+class TP_Group(Group):
+	"""
+	Represents text-on-path group object. 
+	All child objects are in childs list. First child object is a reference 
+	path and this path is not closed.
+	Other child objects are text objects.
+	Each text object has according record in childs_data dict.	
+	"""
+
+	cid = TP_GROUP
+	childs = []
+	childs_data = {}
+
+	def __init__(self, config, parent=None, childs=[], childs_data={}):
+		Group.__init__(self, config, parent, childs)
+		self.cid = TP_GROUP
+		self.childs_data = {}
+		if childs_data: self.childs_data = childs_data
+
+	def is_tpgroup(self): return True
+
+
 class Container(Group):
+	"""
+	Represents container group object. 
+	All child objects are in childs list. 
+	First child object is a container.
+	Other child objects are container's content.	
+	"""
 
 	cid = CONTAINER
 	cache_container = None
@@ -436,6 +472,10 @@ class Container(Group):
 
 
 class PrimitiveObject(SelectableObject):
+	"""
+	Abstract parent class for graphics primitives. 
+	Provides common primitive object properties.
+	"""
 
 	cid = PRIMITIVE_CLASS
 
@@ -923,11 +963,10 @@ CID_TO_CLASS = {
 	GRID_LAYER: GridLayer, GUIDE_LAYER: GuideLayer,
 	DESKTOP_LAYERS: DesktopLayers, GUIDE: Guide,
 
-	GROUP: Group, CONTAINER: Container,
+	GROUP: Group, TP_GROUP: TP_Group, CONTAINER: Container,
 
 	RECTANGLE: Rectangle, CIRCLE: Circle,
 	POLYGON: Polygon, CURVE: Curve, PIXMAP: Pixmap,
 	TEXT_BLOCK: Text, TEXT_COLUMN: Text,
 	}
 
-CID_TO_PROPNAME = {}
