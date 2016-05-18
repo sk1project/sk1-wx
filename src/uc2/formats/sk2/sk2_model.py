@@ -659,6 +659,15 @@ class Circle(PrimitiveObject):
 
 
 class Polygon(PrimitiveObject):
+	"""
+	Represents polygon object. 
+	It is assumed that initial object is a polygon with 0.5 points radius and
+	center at [0.5,0.5] point. Object is initialized by rect list:
+	[x,y, width, height] where [x,y] is a circle/ellipse object center and
+	width/height are object size. These values are stored as 'initial_trafo'
+	field. Later transformations are collected separately.
+	angle1/angle2 and coef1/coef2 are define dorner and midpoint positions.
+	"""
 
 	cid = POLYGON
 
@@ -718,6 +727,26 @@ class Polygon(PrimitiveObject):
 
 
 class Curve(PrimitiveObject):
+	"""
+	Represents curve object. 
+	
+	It is assumed that curve is a list of paths:
+	curve = [path0, path1, ...]
+	
+	Where path is defined as:
+	[start_point, points, end_marker]
+	start_pont - [x,y]
+	end_marker - is closed CURVE_CLOSED = 1, if not CURVE_OPENED = 0
+	
+	Path points are defined as:
+	[point0, point1,...]
+	line point - [x,y]
+	curve point - [[x1,y1],[x2,y2],[x3,y3], marker]
+	marker - NODE_CUSP = 0; NODE_SMOOTH = 1; NODE_SYMMETRICAL = 2
+	
+	Curve affine transformation is stored and collected separately,
+	i.e. curve points are not modified to avoid accurancy lost.	
+	"""
 
 	cid = CURVE
 	paths = []
