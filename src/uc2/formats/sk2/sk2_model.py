@@ -535,6 +535,13 @@ class PrimitiveObject(SelectableObject):
 #---------------Primitives---------------------------
 
 class Rectangle(PrimitiveObject):
+	"""
+	Represents rectangle object. 
+	The object is defined by start point (lower left corner)
+	and width/height values (unsigned floats).
+	'corners' list describes level of corner rounding (from 0.0 to 1.0).
+	Corner order is clockwise from the lower left corner.
+	"""
 
 	cid = RECTANGLE
 	start = []
