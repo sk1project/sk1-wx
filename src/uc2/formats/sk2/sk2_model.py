@@ -614,6 +614,15 @@ class Rectangle(PrimitiveObject):
 
 
 class Circle(PrimitiveObject):
+	"""
+	Represents circle/ellipse object. 
+	It is assumed that initial object is a circle with 0.5 points radius and
+	center at [0.5,0.5] point. Object is initialized by rect list:
+	[x,y, width, height] where [x,y] is a circle/ellipse object center and
+	width/height are object size. These values are stored as 'initial_trafo'
+	field. Later transformations are collected separately.
+	angle1/angle2 and circle_type are define segment properties.
+	"""
 
 	cid = CIRCLE
 	angle1 = 0.0
