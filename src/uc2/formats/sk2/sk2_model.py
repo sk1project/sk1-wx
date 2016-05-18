@@ -342,8 +342,8 @@ class DesktopLayers(LayerGroup):
 
 class Guide(StructuralObject):
 	"""
-	Represents container for regular layers.
-	The object is not used yet. 
+	Represents guideline object.
+	The object is defined by 'orientation' in 'position' point.
 	All child layers are in childs list.
 	"""
 	cid = GUIDE
