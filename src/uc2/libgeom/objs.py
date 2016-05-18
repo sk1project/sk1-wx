@@ -22,7 +22,6 @@ from uc2.formats.sk2 import sk2_const
 from uc2 import libpango, libcairo
 
 from points import rotate_point
-from trafo import apply_trafo_to_paths
 from bezier_ops import split_bezier_curve, bezier_base_point
 
 #------------- Object specific routines -------------
