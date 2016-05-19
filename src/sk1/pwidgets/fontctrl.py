@@ -20,7 +20,7 @@ import cairo
 
 from uc2 import libpango, cms
 
-from sk1 import config, events
+from sk1 import config, events, warn
 from sk1.resources import icons, get_icon
 
 def generate_fontnames(fonts):
@@ -42,6 +42,9 @@ def generate_fontsamples(fonts):
 	text = config.font_preview_text
 	for item in fonts:
 		h = libpango.get_sample_size(text, item, fontsize)[1]
+		if not h:
+			h = 10
+			warn(_('incorrect font') + ' - %s' % item)
 		surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
 		ctx = cairo.Context(surface)
 		ctx.set_source_rgb(0.0, 0.0, 0.0)
