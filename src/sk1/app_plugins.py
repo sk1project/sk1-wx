@@ -25,9 +25,9 @@ def check_package(path, name):
 	full_path = os.path.join(path, name)
 	if not os.path.isdir(full_path): return False
 	if name[0] == '.': return False
-	init_file = os.path.join(full_path, '__init__.py')
-	if not os.path.lexists(init_file): return False
-	return True
+	py_file = os.path.join(full_path, '__init__.py')
+	pyc_file = os.path.join(full_path, '__init__.pyc')
+	return os.path.lexists(py_file) or os.path.lexists(pyc_file)
 
 def scan_plugins(app):
 	ret = {}
