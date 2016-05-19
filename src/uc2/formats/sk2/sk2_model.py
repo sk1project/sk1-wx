@@ -954,8 +954,9 @@ class Pixmap(PrimitiveObject):
 	Raster graphics is stored as a TIFF bitmaps, because the format covers
 	all available colorspaces. 'bitmap' field contains raster info, but
 	transparency data is stored as a grayscale image in 'alpha_channel'.
-	'colorspace' describes 'bitmap' type. Possible types are:
-	monochrome, grayscale, RGB and CMYK.
+	Images are stored as a base64 encoded string to resolve EOL and other 
+	special character issues. 'colorspace' describes 'bitmap' type. 
+	Possible types are: monochrome, grayscale, RGB and CMYK.
 	For monochrome and grayscale colorspaces is available duotone mode. Duotone
 	colors (foreground and background) are defined in 'style' field.
 	It is assumed that initial lower left corner of pixmap is [0.0,0.0] point 
