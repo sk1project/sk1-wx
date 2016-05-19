@@ -92,7 +92,7 @@ ALIGN_TOP:_('Align to top')
 class Align_Plugin(RS_Plugin):
 
 	pid = 'AlignPlugin'
-	name = 'Align and Distribute'
+	name = _('Align and Distribute')
 	active_transform = None
 	transforms = {}
 
