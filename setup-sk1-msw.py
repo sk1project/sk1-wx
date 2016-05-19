@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from zipfile import ZIP_DEFLATED
 
 #   Setup script for sK1 2.x on MS Windows
 #
@@ -29,6 +28,7 @@ Usage:
 """
 
 import os, sys, shutil, platform
+from zipfile import ZIP_DEFLATED
 
 import buildutils
 
