@@ -55,3 +55,7 @@ def sk1_run():
 
 	app = pdApplication(_pkgdir)
 	app.run()
+
+def warn(msg):
+	if config.print_warnings:
+		print _('WARNING:'), msg
