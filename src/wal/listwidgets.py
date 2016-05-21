@@ -15,6 +15,8 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import types
+
 import wx
 import wx.lib.mixins.listctrl as listmix
 
@@ -75,6 +77,8 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, Widget):
 		even = False
 		i = 0
 		for item in data:
+			if type(item) == types.StringType:
+				item = item.decode('utf8')
 			self.Append([item])
 			if alt_color:
 				list_item = self.GetItem(i)
