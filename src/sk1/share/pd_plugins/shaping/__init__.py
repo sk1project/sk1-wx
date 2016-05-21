@@ -78,7 +78,9 @@ class AbstractShapingPanel(wal.VPanel):
 		self.pack(wal.Label(self, SHAPING_MODE_NAMES[self.pid], fontbold=True))
 
 		border = wal.VPanel(self)
-		border.set_bg(wal.GRAY)
+		color = wal.GRAY
+		if wal.is_gtk():color = wal.UI_COLORS['pressed_border']
+		border.set_bg(color)
 		self.pic_panel = wal.VPanel(border)
 		self.pic_panel.set_bg(wal.WHITE)
 		self.bmp = get_bmp(self.pic_panel, SHAPING_MODE_PICS[self.pid])
