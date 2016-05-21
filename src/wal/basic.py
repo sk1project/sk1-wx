@@ -18,6 +18,7 @@
 #   MacOS X env: export VERSIONER_PYTHON_PREFER_32_BIT=yes
 
 import wx, const
+import  wx.lib.scrolledpanel as scrolled
 
 from generic import Widget
 from const import FONT_SIZE, DEF_SIZE
@@ -558,11 +559,79 @@ class GridPanel(Panel, Widget):
 		if not isinstance(obj, tuple) and not isinstance(obj, int):
 			obj.show()
 
+
+class ScrolledPanel(scrolled.ScrolledPanel, Widget):
+
+	def __init__(self, parent):
+		scrolled.ScrolledPanel.__init__(self, parent, -1)
+		self.box = wx.BoxSizer(wx.VERTICAL)
+		self.SetSizer(self.box)
+		self.SetAutoLayout(1)
+		self.SetupScrolling()
+		self.panel = self
+
+	def set_bg(self, color):
+		self.SetBackgroundColour(wx.Colour(*color))
+	def get_bg(self):
+		return self.GetBackgroundColour().Get()
+
+	def set_size(self, size): self.SetSize(size)
+	def layout(self):self.Layout()
+	def fit(self):self.Fit()
+
+	def pack(self, obj, expand=False, fill=False, align_center=True,
+			padding=0, start_padding=0, end_padding=0, padding_all=0):
+
+		if expand:expand = 1
+		else: expand = 0
+
+		flags = wx.ALIGN_TOP
+		if align_center:
+			flags |= wx.ALIGN_CENTER_HORIZONTAL
+
+		if padding:
+			flags = flags | wx.TOP | wx.BOTTOM
+		elif padding_all:
+			flags = flags | wx.ALL
+			padding = padding_all
+		elif start_padding:
+			flags = flags | wx.TOP
+			padding = start_padding
+		elif end_padding:
+			flags = flags | wx.BOTTOM
+			padding = end_padding
+
+		if fill: flags = flags | wx.EXPAND
+
+		self.add(obj, expand, flags, padding)
+
+	def add(self, *args, **kw):
+		"""Arguments: object, expandable (0 or 1), flag, border"""
+		obj = args[0]
+		if not isinstance(obj, tuple):
+			if not obj.GetParent() == self.panel:
+				obj.Reparent(self.panel)
+		self.box.Add(*args, **kw)
+		if not isinstance(obj, tuple) and not isinstance(obj, int):
+			obj.Show()
+
+	def box_add(self, *args, **kw):
+		"""Arguments: object, expandable (0 or 1), flag, border"""
+		self.box.Add(*args, **kw)
+
+	def remove(self, obj):
+		self.box.Detach(obj)
+		if not isinstance(obj, tuple) and not isinstance(obj, int):
+			obj.Hide()
+
+	def remove_all(self):
+		self.box.Clear()
+
 class ScrolledCanvas(wx.ScrolledWindow, Widget):
 
 	def __init__(self, parent, border=False):
 		style = wx.NO_BORDER
-		if border and not const.is_msw():style = wx.BORDER_MASK
+		if border and not const.is_wx3():style = wx.BORDER_MASK
 		wx.ScrolledWindow.__init__(self, parent, wx.ID_ANY, style=style)
 		self.set_scroll_rate()
 		self.set_double_buffered()
@@ -634,7 +703,6 @@ class ExpandedPanel(VPanel):
 
 	def pack(self, *args, **kw):
 		self.container.pack(*args, **kw)
-
 
 
 
