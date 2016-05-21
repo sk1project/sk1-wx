@@ -558,7 +558,7 @@ class GridPanel(Panel, Widget):
 		if not isinstance(obj, tuple) and not isinstance(obj, int):
 			obj.show()
 
-class ScrolledPanel(wx.ScrolledWindow, Widget):
+class ScrolledCanvas(wx.ScrolledWindow, Widget):
 
 	def __init__(self, parent, border=False):
 		style = wx.NO_BORDER

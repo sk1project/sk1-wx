@@ -42,7 +42,7 @@ LIST_MODE:_('List view'),
 
 PREVIEW_MODES = [AUTO_MODE, NORMAL_MODE, LARGE_MODE, LIST_MODE]
 
-class ScrolledPalette(wal.ScrolledPanel, wal.SensitiveCanvas):
+class ScrolledPalette(wal.ScrolledCanvas, wal.SensitiveCanvas):
 
 	mode = AUTO_MODE
 	width = 10
@@ -61,7 +61,7 @@ class ScrolledPalette(wal.ScrolledPanel, wal.SensitiveCanvas):
 		self.cms = cms
 		self.parent = parent
 		self.callback = onclick
-		wal.ScrolledPanel.__init__(self, parent, border)
+		wal.ScrolledCanvas.__init__(self, parent, border)
 		wal.SensitiveCanvas.__init__(self, True)
 		sb = wal.ScrollBar(self)
 		self.sb_width = sb.get_size()[0]
