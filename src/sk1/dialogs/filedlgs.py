@@ -66,7 +66,7 @@ def get_open_file_name(parent, app, start_dir, msg='', file_types=[]):
 		defaultDir=start_dir,
 		defaultFile="",
 		wildcard=_get_open_filters(file_types),
-		style=wx.OPEN | wx.CHANGE_DIR | wx.FILE_MUST_EXIST
+		style=wx.FD_OPEN | wx.FD_CHANGE_DIR | wx.FD_FILE_MUST_EXIST | wx.FD_PREVIEW
 		)
 	dlg.CenterOnParent()
 	if dlg.ShowModal() == wx.ID_OK:
@@ -105,7 +105,7 @@ def get_save_file_name(parent, app, path, msg='',
 		defaultDir=doc_folder,
 		defaultFile=doc_name,
 		wildcard=_get_save_fiters(file_types),
-		style=wx.SAVE | wx.CHANGE_DIR | wx.FD_OVERWRITE_PROMPT
+		style=wx.FD_SAVE | wx.FD_CHANGE_DIR | wx.FD_OVERWRITE_PROMPT | wx.FD_PREVIEW
 	)
 	dlg.CenterOnParent()
 	if dlg.ShowModal() == wx.ID_OK:
