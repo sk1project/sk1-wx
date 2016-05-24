@@ -17,7 +17,7 @@
 
 from copy import deepcopy
 
-from uc2 import _, uc2const
+from uc2 import _, uc2const, libgeom
 from uc2.formats.sk2 import sk2_model
 
 def create_new_doc(config):
@@ -338,3 +338,14 @@ class SK2_Methods:
 		obj.angle1 = angle1
 		obj.angle2 = angle2
 		obj.update()
+
+	#--- bbox
+
+	def count_bbox(self, objs):
+		bbox = []
+		for obj in objs:
+			if obj.is_selectable():
+				bbox = libgeom.sum_bbox(bbox, obj.cache_bbox)
+			elif obj.childs:
+				bbox = libgeom.sum_bbox(bbox, self.count_bbox(obj.childs))
+		return bbox
