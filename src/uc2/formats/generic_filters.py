@@ -194,6 +194,7 @@ class AbstractSaver(object):
 
 	def save(self, presenter, path=None, fileptr=None):
 		self.presenter = presenter
+		self.config = self.presenter.config
 		self.model = presenter.model
 		if path:
 			self.fileptr = get_fileptr(path, True)
