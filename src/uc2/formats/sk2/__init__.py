@@ -20,7 +20,7 @@ import sys
 
 from uc2 import _, events, msgconst
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
-from uc2.formats.sk2.sk2_const import SK2DOC_ID
+from uc2.formats.sk2.sk2_const import SK2DOC_ID, SK2XML_ID, SK2VER
 from uc2.formats.generic_filters import get_fileptr
 
 def sk2_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
@@ -34,7 +34,14 @@ def sk2_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf={}, **kw
 	sk2_doc.save(filename, fileptr)
 
 def check_sk2(path):
+	ret = False
 	fileptr = get_fileptr(path)
-	string = fileptr.read(len(SK2DOC_ID))
+	ln = fileptr.readline()
+	if ln[:len(SK2DOC_ID)] == SK2DOC_ID and \
+	int(ln[len(SK2DOC_ID):]) <= int(SK2VER): ret = True
+	else:
+		ln2 = fileptr.readline()
+		if ln2[:len(SK2XML_ID)] == SK2XML_ID and \
+		int(ln2[len(SK2XML_ID):]) <= int(SK2VER): ret = True
 	fileptr.close()
-	return string == SK2DOC_ID
+	return ret
