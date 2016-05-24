@@ -16,23 +16,32 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
+import cairo
+from base64 import b64encode
+from cStringIO import StringIO
 
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 from uc2.formats.sk2 import sk2_model, sk2_const
+from uc2.formats.sk2.crenderer import CairoRenderer
 
 class SK2_Loader(AbstractLoader):
 
 	name = 'SK2_Loader'
 	parent_stack = []
+	break_flag = False
 
 	def do_load(self):
 		self.model = None
+		self.break_flag = False
 		self.parent_stack = []
-		self.fileptr.readline()
+		line = self.fileptr.readline()
+		if not line[:len(sk2_const.SK2DOC_ID)] == sk2_const.SK2DOC_ID:
+			while not self.fileptr.readline().rstrip('\n') == \
+			sk2_const.SK2DOC_START: pass
 		while True:
+			if self.break_flag: break
 			self.line = self.fileptr.readline()
-			if not self.line: break
-			self.line = self.line.rstrip('\r\n')
+			self.line = self.line.rstrip('\n')
 
 			self.check_loading()
 
@@ -62,6 +71,7 @@ class SK2_Loader(AbstractLoader):
 
 	def obj_end(self):
 		self.parent_stack = self.parent_stack[:-1]
+		if not self.parent_stack: self.break_flag = True
 
 
 class SK2_Saver(AbstractSaver):
@@ -73,8 +83,24 @@ class SK2_Saver(AbstractSaver):
 
 	def do_save(self):
 		self.presenter.update()
-		self.writeln(sk2_const.SK2DOC_ID)
+		if self.config.preview:
+			preview = self.generate_preview()
+			w, h = self.config.preview_size
+			self.writeln(sk2_const.SK2XML_START)
+			self.writeln(sk2_const.SK2XML_ID + sk2_const.SK2VER)
+			size = '%x' % len(preview)
+			size = '0' * (8 - len(size)) + size
+			self.writeln('%s -->' % size)
+			self.writeln(sk2_const.SK2SVG_START % (w, h))
+			self.writeln(sk2_const.SK2IMG_TAG)
+			self.writeln(preview)
+			self.writeln(sk2_const.SK2IMG_TAG_END % (w, h))
+			self.writeln(sk2_const.SK2DOC_START)
+		else:
+			self.writeln(sk2_const.SK2DOC_ID + sk2_const.SK2VER)
 		self.save_obj(self.model)
+		if self.config.preview:
+			self.writeln('-->\n</svg>')
 
 	def save_obj(self, obj):
 		self.writeln("obj('%s')" % sk2_model.CID_TO_TAGNAME[obj.cid])
@@ -89,4 +115,31 @@ class SK2_Saver(AbstractSaver):
 		for child in obj.childs:
 			self.save_obj(child)
 		self.writeln("obj_end()")
+
+	def generate_preview(self):
+		wp, hp = self.config.preview_size
+		surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(wp), int(hp))
+		ctx = cairo.Context(surface)
+		ctx.set_source_rgb(1.0, 1.0, 1.0)
+		ctx.paint()
+		#---rendering
+		mthds = self.presenter.methods
+		layers = mthds.get_visible_layers(mthds.get_page())
+		x, y, x1, y1 = mthds.count_bbox(layers)
+		w = abs(x1 - x)
+		h = abs(y1 - y)
+		coef = min(wp / w, hp / h) * 0.99
+		trafo = (coef, 0.0, 0.0, -coef,
+			wp / 2.0 - coef * (x + w / 2.0), hp / 2.0 - coef * (y + h / 2.0))
+		ctx.set_matrix(cairo.Matrix(*trafo))
+		rend = CairoRenderer(self.presenter.cms)
+		rend.antialias_flag = True
+		for item in layers:
+			rend.render(ctx, item.childs)
+		#---rendering
+		image_stream = StringIO()
+		surface.write_to_png(image_stream)
+		return b64encode(image_stream.getvalue())
+
+
 
