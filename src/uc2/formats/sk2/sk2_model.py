@@ -69,6 +69,7 @@ class DocumentObject(TextModelObject):
 	def is_group(self): return False
 	def is_tpgroup(self): return False
 	def is_container(self): return False
+	def is_selectable(self): return False
 
 
 class Document(DocumentObject):
@@ -370,6 +371,7 @@ class SelectableObject(DocumentObject):
 	cache_bbox = []
 
 	def to_curve(self): return None
+	def is_selectable(self): return True
 
 
 #---------------Compound objects---------------------
