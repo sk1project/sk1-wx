@@ -17,7 +17,17 @@
 
 from uc2 import uc2const
 
-SK2DOC_ID = '##sK1 2 0'
+SK2DOC_ID = '##sK1 2 '
+SK2XML_ID = '<!-- sK1 2 '
+SK2VER = '0'
+SK2XML_START = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>'
+SK2SVG_START = '<svg xmlns:svg="http://www.w3.org/2000/svg" ' + \
+				'xmlns="http://www.w3.org/2000/svg" ' + \
+				'xmlns:xlink="http://www.w3.org/1999/xlink" ' + \
+				'version="1.0" width="%d" height="%d">'
+SK2IMG_TAG = '<image y="0.0"  x="0.0" xlink:href="data:image/png;base64,'
+SK2IMG_TAG_END = '"  height="%d" width="%d" />'
+SK2DOC_START = '<!-- Encapsulated SK2'
 
 DOC_ORIGIN_CENTER = 0
 DOC_ORIGIN_LL = 1
