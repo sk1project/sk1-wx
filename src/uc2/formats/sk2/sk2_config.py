@@ -15,7 +15,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import math
 
 from uc2.utils.config import XmlConfigParser
 from uc2.formats.sk2 import sk2_const
@@ -24,6 +23,10 @@ from uc2 import uc2const
 class SK2_Config(XmlConfigParser):
 
 	system_encoding = 'utf-8'
+
+	#--- DOCUMENT PREVIEW
+	preview = True
+	preview_size = (300.0, 300.0)
 
 	#--- DOCUMENT PROPERTIES
 	doc_origin = sk2_const.DOC_ORIGIN_LL
