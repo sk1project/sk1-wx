@@ -68,6 +68,8 @@ def is_point_in_bbox(point, bbox):
 		and point[0] <= bbox[2] and point[1] <= bbox[3]
 
 def sum_bbox(bbox1, bbox2):
+	if not bbox1 or not bbox2:
+		return bbox1 + bbox2
 	x0, y0, x1, y1 = bbox1
 	_x0, _y0, _x1, _y1 = bbox2
 	new_x0 = min(x0, _x0, x1, _x1)
