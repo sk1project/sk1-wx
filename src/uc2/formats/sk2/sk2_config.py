@@ -27,6 +27,7 @@ class SK2_Config(XmlConfigParser):
 	#--- DOCUMENT PREVIEW
 	preview = True
 	preview_size = (300.0, 300.0)
+	preview_transparent = False
 
 	#--- DOCUMENT PROPERTIES
 	doc_origin = sk2_const.DOC_ORIGIN_LL
