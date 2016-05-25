@@ -37,11 +37,17 @@ def check_sk2(path):
 	ret = False
 	fileptr = get_fileptr(path)
 	ln = fileptr.readline()
-	if ln[:len(SK2DOC_ID)] == SK2DOC_ID and \
-	int(ln[len(SK2DOC_ID):]) <= int(SK2VER): ret = True
+	if ln[:len(SK2DOC_ID)] == SK2DOC_ID:
+		if int(ln[len(SK2DOC_ID):]) <= int(SK2VER): ret = True
+		else:
+			fileptr.close()
+			raise RuntimeError(_('Newer version of SK2 format is found!'))
 	else:
 		ln2 = fileptr.readline()
-		if ln2[:len(SK2XML_ID)] == SK2XML_ID and \
-		int(ln2[len(SK2XML_ID):]) <= int(SK2VER): ret = True
+		if ln2[:len(SK2XML_ID)] == SK2XML_ID:
+			if int(ln2[len(SK2XML_ID):]) <= int(SK2VER): ret = True
+			else:
+				fileptr.close()
+				raise RuntimeError(_('Newer version of SK2 format is found!'))
 	fileptr.close()
 	return ret

@@ -176,8 +176,8 @@ class pdApplication(wal.Application, UCApplication):
 			try:
 				doc = PD_Presenter(self, doc_file, template=True)
 			except:
-				msg = _('Cannot parse file')
-				msg = "%s '%s'" % (msg, doc_file) + '\n'
+				msg = _('Cannot parse file:')
+				msg = "%s\n'%s'" % (msg, doc_file) + '\n'
 				msg += _('The file may be corrupted or not supported format')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
 				self.print_stacktrace()
@@ -193,9 +193,18 @@ class pdApplication(wal.Application, UCApplication):
 		if os.path.lexists(doc_file) and os.path.isfile(doc_file):
 			try:
 				doc = PD_Presenter(self, doc_file, silent)
+
+			except RuntimeError:
+				msg = _('Cannot open file:')
+				msg = "%s\n'%s'" % (msg, doc_file) + '\n'
+				msg += _('The file contains newer SK2 format.\n')
+				msg += _('Try updating sK1 application from http://sk1project.org')
+				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
+				self.print_stacktrace()
+				return
 			except:
-				msg = _('Cannot open file')
-				msg = "%s '%s'" % (msg, doc_file) + '\n'
+				msg = _('Cannot open file:')
+				msg = "%s\n'%s'" % (msg, doc_file) + '\n'
 				msg += _('The file may be corrupted or not supported format')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
 				self.print_stacktrace()
@@ -223,8 +232,8 @@ class pdApplication(wal.Application, UCApplication):
 			self.history.add_entry(self.current_doc.doc_file, appconst.SAVED)
 			events.emit(events.DOC_SAVED, doc)
 		except:
-			msg = _('Cannot save file')
-			msg = "%s '%s'" % (msg, self.current_doc.doc_file) + '\n'
+			msg = _('Cannot save file:')
+			msg = "%s\n'%s'" % (msg, self.current_doc.doc_file) + '\n'
 			msg += _('Please check file write permissions')
 			dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
 			self.print_stacktrace()
@@ -254,8 +263,8 @@ class pdApplication(wal.Application, UCApplication):
 				self.current_doc.save()
 			except:
 				self.current_doc.set_doc_file(old_file, old_name)
-				first = _('Cannot save document')
-				msg = ("%s '%s'.") % (first, self.current_doc.doc_name) + '\n'
+				first = _('Cannot save document:')
+				msg = ("%s\n'%s'.") % (first, self.current_doc.doc_name) + '\n'
 				msg += _('Please check file name and write permissions')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
 				self.print_stacktrace()
@@ -288,8 +297,8 @@ class pdApplication(wal.Application, UCApplication):
 				self.current_doc.save_selected(doc_file)
 				self.history.add_entry(doc_file, appconst.SAVED)
 			except:
-				first = _('Cannot save document')
-				msg = ("%s '%s'.") % (first, doc_file) + '\n'
+				first = _('Cannot save document:')
+				msg = ("%s\n'%s'.") % (first, doc_file) + '\n'
 				msg += _('Please check requested file format and write permissions')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
 				self.print_stacktrace()
@@ -348,8 +357,8 @@ class pdApplication(wal.Application, UCApplication):
 					dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
 				config.import_dir = str(os.path.dirname(doc_file))
 			except:
-				msg = _('Cannot import file')
-				msg = "%s '%s'" % (msg, doc_file) + '\n'
+				msg = _('Cannot import file:')
+				msg = "%s\n'%s'" % (msg, doc_file) + '\n'
 				msg += _('The file may be corrupted or not supported format')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
 				self.print_stacktrace()
@@ -369,8 +378,8 @@ class pdApplication(wal.Application, UCApplication):
 				self.make_backup(doc_file, True)
 				self.current_doc.export_as(doc_file)
 			except:
-				first = _('Cannot save document')
-				msg = ("%s '%s'.") % (first, self.current_doc.doc_name) + '\n'
+				first = _('Cannot save document:')
+				msg = ("%s\n'%s'.") % (first, self.current_doc.doc_name) + '\n'
 				msg += _('Please check file name and write permissions')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
 				self.print_stacktrace()
@@ -389,8 +398,8 @@ class pdApplication(wal.Application, UCApplication):
 				pixmap = self.current_doc.selection.objs[0]
 				libimg.extract_bitmap(pixmap, doc_file)
 			except:
-				first = _('Cannot save document')
-				msg = ("%s '%s'.") % (first, self.current_doc.doc_name) + '\n'
+				first = _('Cannot save document:')
+				msg = ("%s\n'%s'.") % (first, self.current_doc.doc_name) + '\n'
 				msg += _('Please check file name and write permissions')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
 				self.print_stacktrace()
@@ -473,8 +482,8 @@ class pdApplication(wal.Application, UCApplication):
 					return palette.model.name
 
 			except:
-				msg = _('Cannot import file')
-				msg = "%s '%s'" % (msg, doc_file) + '\n'
+				msg = _('Cannot import file:')
+				msg = "%s\n'%s'" % (msg, doc_file) + '\n'
 				msg += _('The file may be corrupted or not supported format')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
 				self.print_stacktrace()
@@ -494,8 +503,8 @@ class pdApplication(wal.Application, UCApplication):
 				fobj.write(b64decode(pattern))
 				fobj.close()
 			except:
-				first = _('Cannot save pattern from')
-				msg = ("%s '%s'.") % (first, self.current_doc.doc_name) + '\n'
+				first = _('Cannot save pattern from:')
+				msg = ("%s\n'%s'.") % (first, self.current_doc.doc_name) + '\n'
 				msg += _('Please check file name and write permissions')
 				dialogs.error_dialog(parent, self.appdata.app_name, msg)
 				self.print_stacktrace()
@@ -507,8 +516,8 @@ class pdApplication(wal.Application, UCApplication):
 		img_file = dialogs.get_open_file_name(parent, self, config.import_dir,
 				_('Select pattern to load'), file_types=data.PATTERN_FORMATS)
 		if os.path.lexists(img_file) and os.path.isfile(img_file):
-			first = _('Cannot load pattern for')
-			msg = ("%s '%s'.") % (first, self.current_doc.doc_name) + '\n'
+			first = _('Cannot load pattern for:')
+			msg = ("%s\n'%s'.") % (first, self.current_doc.doc_name) + '\n'
 			msg += _('The file may be corrupted or not supported format')
 			try:
 				if libimg.check_image(img_file):
