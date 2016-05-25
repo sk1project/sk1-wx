@@ -383,7 +383,7 @@ class pdApplication(wal.Application, UCApplication):
 		doc_file = os.path.join(config.save_dir, doc_file)
 		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
 							_('Extract selected bitmap as...'),
-							file_types=[data.TIF], path_only=True)
+							file_types=[data.PNG], path_only=True)
 		if doc_file:
 			try:
 				pixmap = self.current_doc.selection.objs[0]
