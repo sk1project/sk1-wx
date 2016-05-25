@@ -35,6 +35,10 @@ def get_version():
 def check_image(path):
 	return check_image_file
 
+def _get_saver_fmt(img):
+	if img.mode == IMAGE_CMYK: return 'TIFF'
+	return 'PNG'
+
 def invert_image(cms, bmpstr):
 	image_stream = StringIO()
 	raw_image = Image.open(StringIO(b64decode(bmpstr)))
@@ -54,7 +58,7 @@ def invert_image(cms, bmpstr):
 	else:
 		raw_image = ImageOps.invert(raw_image)
 
-	raw_image.save(image_stream, format='TIFF')
+	raw_image.save(image_stream, format=_get_saver_fmt(raw_image))
 	return b64encode(image_stream.getvalue())
 
 def convert_image(cms, pixmap, colorspace, raw=False):
@@ -71,7 +75,7 @@ def convert_image(cms, pixmap, colorspace, raw=False):
 		raw_image.load()
 	raw_image = cms.convert_image(raw_image, colorspace)
 	if raw: return raw_image
-	raw_image.save(image_stream, format='TIFF')
+	raw_image.save(image_stream, format=_get_saver_fmt(raw_image))
 	return b64encode(image_stream.getvalue())
 
 def convert_duotone_to_image(cms, pixmap, cs=None):
@@ -115,13 +119,15 @@ def convert_duotone_to_image(cms, pixmap, cs=None):
 	return ((fg_img, fg_alpha), (bg_img, bg_alpha))
 
 def extract_bitmap(pixmap, filepath):
-	if not os.path.splitext(filepath)[1] == '.tiff':
-		filepath = os.path.splitext(filepath)[0] + '.tiff'
+	ext = '.png'
+	if pixmap.colorspace == IMAGE_CMYK: ext = '.tiff'
+	if not os.path.splitext(filepath)[1] == ext:
+		filepath = os.path.splitext(filepath)[0] + ext
 	fileptr = open(filepath, 'wb')
 	fileptr.write(b64decode(pixmap.bitmap))
 	fileptr.close()
 	if pixmap.alpha_channel:
-		filepath = os.path.splitext(filepath)[0] + '_alphachannel.tiff'
+		filepath = os.path.splitext(filepath)[0] + '_alphachannel.png'
 		fileptr = open(filepath, 'wb')
 		fileptr.write(b64decode(pixmap.alpha_channel))
 		fileptr.close()
@@ -219,7 +225,7 @@ def set_image_data(cms, pixmap, raw_content):
 
 	fobj = StringIO()
 	base_image = base_image.copy()
-	base_image.save(fobj, format='TIFF')
+	base_image.save(fobj, format=_get_saver_fmt(base_image))
 	bmp = b64encode(fobj.getvalue())
 
 	style = deepcopy(pixmap.config.default_image_style)
@@ -237,7 +243,7 @@ def set_image_data(cms, pixmap, raw_content):
 			else:
 				band = alpha_image.split()[3]
 			fobj = StringIO()
-			band.save(fobj, format='TIFF')
+			band.save(fobj, format=_get_saver_fmt(band))
 			alpha = b64encode(fobj.getvalue())
 
 	pixmap.bitmap = bmp
@@ -258,7 +264,7 @@ def transpose(image_obj, method=Image.FLIP_TOP_BOTTOM):
 
 		alpha = alpha.transpose(method)
 		fobj = StringIO()
-		alpha.save(fobj, format='TIFF')
+		alpha.save(fobj, format=_get_saver_fmt(alpha))
 		image_obj.alpha_channel = b64encode(fobj.getvalue())
 	image_obj.cache_cdata = None
 
