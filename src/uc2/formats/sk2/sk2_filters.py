@@ -23,6 +23,7 @@ from cStringIO import StringIO
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 from uc2.formats.sk2 import sk2_model, sk2_const
 from uc2.formats.sk2.crenderer import CairoRenderer
+from uc2 import libgeom
 
 class SK2_Loader(AbstractLoader):
 
@@ -120,8 +121,9 @@ class SK2_Saver(AbstractSaver):
 		wp, hp = self.config.preview_size
 		surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(wp), int(hp))
 		ctx = cairo.Context(surface)
-		ctx.set_source_rgb(1.0, 1.0, 1.0)
-		ctx.paint()
+		if not self.config.preview_transparent:
+			ctx.set_source_rgb(1.0, 1.0, 1.0)
+			ctx.paint()
 		#---rendering
 		mthds = self.presenter.methods
 		layers = mthds.get_visible_layers(mthds.get_page())
@@ -129,8 +131,11 @@ class SK2_Saver(AbstractSaver):
 		w = abs(x1 - x)
 		h = abs(y1 - y)
 		coef = min(wp / w, hp / h) * 0.99
-		trafo = (coef, 0.0, 0.0, -coef,
-			wp / 2.0 - coef * (x + w / 2.0), hp / 2.0 - coef * (y + h / 2.0))
+		trafo0 = [1.0, 0.0, 0.0, 1.0, -x - w / 2.0, -y - h / 2.0]
+		trafo1 = [coef, 0.0, 0.0, -coef, 0.0, 0.0]
+		trafo2 = [1.0, 0.0, 0.0, 1.0, wp / 2.0, hp / 2.0]
+		trafo = libgeom.multiply_trafo(trafo0, trafo1)
+		trafo = libgeom.multiply_trafo(trafo, trafo2)
 		ctx.set_matrix(cairo.Matrix(*trafo))
 		rend = CairoRenderer(self.presenter.cms)
 		rend.antialias_flag = True
