@@ -953,8 +953,8 @@ class Text(PrimitiveObject):
 class Pixmap(PrimitiveObject):
 	"""
 	Represents pixmap object. 
-	Raster graphics is stored as a TIFF bitmaps, because the format covers
-	all available colorspaces. 'bitmap' field contains raster info, but
+	Raster graphics is stored as a TIFF bitmaps for CMYK colorspace and as 
+	a PNG bitmap for others. 'bitmap' field contains raster info, but
 	transparency data is stored as a grayscale image in 'alpha_channel'.
 	Images are stored as a base64 encoded string to resolve EOL and other 
 	special character issues. 'colorspace' describes 'bitmap' type. 
