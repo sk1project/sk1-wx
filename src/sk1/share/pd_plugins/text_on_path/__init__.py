@@ -69,11 +69,20 @@ class TP_Plugin(RS_Plugin):
 
 		panel.pack(wal.Label(panel, _('Text position on path')), padding_all=5)
 
+		hp = wal.HPanel(panel)
+		hp.pack(wal.Label(hp, _('Base point:')))
+		self.base_point = wal.FloatSpin(hp, value=50.0, range_val=(0.0, 100.0),
+									step=1.0)
+		hp.pack(self.base_point, padding=5)
+		hp.pack(wal.Label(hp, _('%')))
+
+		panel.pack(hp, padding=5)
+
 		self.align_keeper = wal.HToggleKeeper(panel, TEXT_ALIGNS,
 							TEXT_ALIGN_ICONS,
 							TEXT_ALIGN_TEXTS)
 		panel.pack(self.align_keeper)
-		self.align_keeper.set_mode(sk2_const.TEXT_ALIGN_LEFT)
+		self.align_keeper.set_mode(TEXT_ALIGNS[1])
 
 		border = wal.VPanel(panel)
 		color = wal.GRAY
@@ -96,8 +105,44 @@ class TP_Plugin(RS_Plugin):
 		self.panel.pack(panel, fill=True, padding_all=5)
 		self.panel.pack(wal.HLine(self.panel), fill=True)
 
+		events.connect(events.DOC_CHANGED, self.update)
+		events.connect(events.SELECTION_CHANGED, self.update)
+		events.connect(events.DOC_MODIFIED, self.update)
+
 		self.update()
 
-	def update(self, *args):pass
+	def show_signal(self, *args):self.update()
+
+	def set_state(self, state):
+		self.apply_btn.set_enable(state)
+		self.align_keeper.set_enable(state)
+		self.base_point.set_enable(state)
+		self.bmp.set_enable(state)
+		self.other_side.set_enable(state)
+
+	def is_path(self, obj):
+		return obj.is_primitive() and not obj.is_text() and not obj.is_pixmap()
+
+	def check_selection(self):
+		doc = self.app.current_doc
+		if len(doc.selection.objs) == 1 and doc.selection.objs[0].is_tpgroup():
+			return 1
+		elif len(doc.selection.objs) == 2:
+			obj1 = doc.selection.objs[0]
+			obj2 = doc.selection.objs[1]
+			if self.is_path(obj1) and obj2.is_text(): return 2
+			elif self.is_path(obj2) and obj1.is_text(): return 2
+			elif obj1.is_tpgroup() and obj2.is_text(): return 2
+			elif obj2.is_tpgroup() and obj1.is_text(): return 2
+		return False
+
+	def update(self, *args):
+		if not self.is_shown(): return
+		state = False
+		if self.app.insp.is_selection():
+			ret = self.check_selection()
+			if ret: state = True
+		self.set_state(state)
+
 	def action(self):pass
 
