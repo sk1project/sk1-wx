@@ -80,3 +80,4 @@ class RS_Plugin:
 
 	def show_signal(self, *args):pass
 	def hide_signal(self):pass
+	def is_shown(self): return self.panel.is_shown()
