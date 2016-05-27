@@ -71,10 +71,11 @@ CID_TO_NAME = {
 	DESKTOP_LAYERS: _('Desktop layers'), GUIDE: _('Guide'),
 
 	GROUP: _('Group'), CONTAINER: _('Container'),
-	TEXT_BLOCK: _('Text block'), TEXT_COLUMN: _('Text column'),
+	TP_GROUP: _('Text on Path Group'),
 
 	RECTANGLE: _('Rectangle'), CIRCLE: _('Ellipse'),
 	POLYGON: _('Polygon'), CURVE: _('Curve'),
+	TEXT_BLOCK: _('Text block'), TEXT_COLUMN: _('Text column'),
 	PIXMAP: _('Bitmap'),
 	}
 
@@ -92,10 +93,11 @@ CID_TO_TAGNAME = {
 	DESKTOP_LAYERS: 'DesktopLayers', GUIDE: 'Guide',
 
 	GROUP: 'Group', CONTAINER: 'Container',
-	TEXT_BLOCK: 'TextBlock', TEXT_COLUMN: 'TextColumn',
+	TP_GROUP: 'TP_Group',
 
 	RECTANGLE: 'Rectangle', CIRCLE: 'Ellipse',
 	POLYGON: 'Polygon', CURVE: 'Curve',
+	TEXT_BLOCK: 'TextBlock', TEXT_COLUMN: 'TextColumn',
 	PIXMAP: 'Pixmap',
 	}
 
@@ -112,9 +114,10 @@ TAGNAME_TO_CID = {
 	'DesktopLayers': DESKTOP_LAYERS, 'Guide': GUIDE,
 
 	'Group': GROUP, 'Container': CONTAINER,
-	'TextBlock': TEXT_BLOCK, 'TextColumn': TEXT_COLUMN,
+	'TP_Group': TP_GROUP,
 
 	'Rectangle': RECTANGLE, 'Ellipse': CIRCLE,
 	'Polygon': POLYGON, 'Curve': CURVE,
+	'TextBlock': TEXT_BLOCK, 'TextColumn': TEXT_COLUMN,
 	'Pixmap': PIXMAP,
 	}
