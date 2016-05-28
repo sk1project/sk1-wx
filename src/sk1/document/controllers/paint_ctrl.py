@@ -18,7 +18,6 @@
 from uc2.libgeom import contra_point, bezier_base_point, midpoint
 from uc2.libgeom import apply_trafo_to_paths, is_point_in_rect2
 from uc2.formats.sk2 import sk2_const as const
-from uc2.formats.sk2 import sk2_model as model
 
 from sk1 import modes, config
 
@@ -64,7 +63,7 @@ class PolyLineCreator(AbstractCreator):
 		self.init_data()
 		self.init_timer()
 		sel_objs = self.selection.objs
-		if len(sel_objs) == 1 and sel_objs[0].cid == model.CURVE:
+		if len(sel_objs) == 1 and sel_objs[0].is_curve():
 			if self.obj is None:
 				self.obj = sel_objs[0]
 				self.update_from_obj()
