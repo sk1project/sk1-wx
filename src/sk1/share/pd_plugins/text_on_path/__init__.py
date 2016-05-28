@@ -121,6 +121,7 @@ class TP_Plugin(RS_Plugin):
 		self.other_side.set_enable(state)
 
 	def is_path(self, obj):
+		if obj.is_curve() and not len(obj.paths) == 1: return False
 		return obj.is_primitive() and not obj.is_text() and not obj.is_pixmap()
 
 	def check_selection(self):
@@ -132,9 +133,17 @@ class TP_Plugin(RS_Plugin):
 			obj2 = doc.selection.objs[1]
 			if self.is_path(obj1) and obj2.is_text(): return 2
 			elif self.is_path(obj2) and obj1.is_text(): return 2
-			elif obj1.is_tpgroup() and obj2.is_text(): return 2
-			elif obj2.is_tpgroup() and obj1.is_text(): return 2
 		return False
+
+	def update_from_tpgroup(self):
+		doc = self.app.current_doc
+		if len(doc.selection.objs) == 1 and doc.selection.objs[0].is_tpgroup():
+			tpgroup = doc.selection.objs[0]
+			text_obj = tpgroup.childs[1]
+			data = tpgroup.childs_data[text_obj]
+			self.base_point.set_value(data[0] * 100.0)
+			self.align_keeper.set_mode(data[1])
+			self.other_side.set_value(data[2])
 
 	def update(self, *args):
 		if not self.is_shown(): return
@@ -142,7 +151,25 @@ class TP_Plugin(RS_Plugin):
 		if self.app.insp.is_selection():
 			ret = self.check_selection()
 			if ret: state = True
+			if ret == 1: self.update_from_tpgroup()
 		self.set_state(state)
 
-	def action(self):pass
+	def get_data(self):
+		return (self.base_point.get_value() / 100.0,
+			self.align_keeper.get_mode(), self.other_side.get_value())
+
+	def action(self):
+		doc = self.app.current_doc
+		if self.check_selection() == 2:
+			path = doc.selection.objs[0]
+			text_obj = doc.selection.objs[1]
+			if self.is_path(text_obj) and path.is_text():
+				path, text_obj = text_obj, path
+			doc.api.place_text_on_path(path, text_obj,
+									{text_obj:self.get_data()})
+		if self.check_selection() == 1:
+			tpgroup = doc.selection.objs[0]
+			text_obj = tpgroup.childs[1]
+			doc.api.change_tpgroup(tpgroup, text_obj, self.get_data())
+
 
