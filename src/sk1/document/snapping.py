@@ -18,7 +18,7 @@
 import math
 
 from uc2 import libgeom, uc2const
-from uc2.formats.sk2 import sk2_const, sk2_model
+from uc2.formats.sk2 import sk2_const
 
 from sk1 import config
 from sk1.appconst import SNAP_TO_GRID, SNAP_TO_GUIDES, SNAP_TO_OBJECTS, SNAP_TO_PAGE
@@ -93,7 +93,7 @@ class SnapManager:
 		guide_layer = self.methods.get_guide_layer()
 		if not self.methods.is_layer_visible(guide_layer): return
 		for child in guide_layer.childs:
-			if child.cid == sk2_model.GUIDE:
+			if child.is_guide():
 				if child.orientation == uc2const.HORIZONTAL:
 					self.guides_grid[1].append(child.position)
 				else:
@@ -283,7 +283,7 @@ class SnapManager:
 		guide_layer = self.methods.get_guide_layer()
 		if not self.methods.is_layer_visible(guide_layer): return
 		for child in guide_layer.childs:
-			if child.cid == sk2_model.GUIDE:
+			if child.is_guide():
 				if child.orientation == orient and child.position == pos:
 					return child
 		return None
