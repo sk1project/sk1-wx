@@ -427,7 +427,8 @@ class TP_Group(Group):
 	All child objects are in childs list. First child object is a reference 
 	path and this path is not closed.
 	Other child objects are text objects.
-	Each text object has according record in childs_data dict.
+	Each text object has according record in childs_data list.
+	First item int this lis is None (corresponds path obj)
 	Record is a tuple: (base_point, align, side_flag)
 		base_point - value from 0.0 to 1.0
 		align - text align constant
@@ -438,11 +439,11 @@ class TP_Group(Group):
 	childs = []
 	childs_data = {}
 
-	def __init__(self, config, parent=None, childs=[], childs_data={}):
+	def __init__(self, config, parent=None, childs=[], data=[]):
 		Group.__init__(self, config, parent, childs)
 		self.cid = TP_GROUP
-		self.childs_data = {}
-		if childs_data: self.childs_data = childs_data
+		self.childs_data = [None, ]
+		if data: self.childs_data.append(data)
 
 	def is_tpgroup(self): return True
 
