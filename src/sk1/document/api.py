@@ -384,7 +384,8 @@ class AbstractAPI:
 		text_obj.update()
 
 	def _set_tpgroup_data(self, tpgroup, text_obj, data):
-		tpgroup.childs_data[text_obj] = data
+		index = tpgroup.childs.index(text_obj)
+		tpgroup.childs_data[index] = data
 		path = tpgroup.childs[0]
 		tpgroup.set_text_on_path(path, text_obj, data)
 		tpgroup.update()
@@ -1968,7 +1969,7 @@ class PresenterAPI(AbstractAPI):
 
 		parent = objs[-1].parent
 		group = model.TP_Group(objs[-1].config, parent, objs, childs_data)
-		group.set_text_on_path(path, text_obj, childs_data[text_obj])
+		group.set_text_on_path(path, text_obj, childs_data[1])
 		group.update()
 		for obj in objs:
 			obj.parent.childs.remove(obj)
@@ -1996,9 +1997,9 @@ class PresenterAPI(AbstractAPI):
 		self.selection.update()
 
 	def change_tpgroup(self, tpgroup, text_obj, data):
-		if not text_obj in tpgroup.childs_data.keys(): return
+		if not text_obj in tpgroup.childs: return
 		sel = [] + self.selection.objs
-		data_before = tpgroup.childs_data[text_obj]
+		data_before = tpgroup.childs_data[tpgroup.childs.index(text_obj)]
 		self._set_tpgroup_data(tpgroup, text_obj, data)
 		transaction = [
 			[[self._set_tpgroup_data, tpgroup, text_obj, data_before],
