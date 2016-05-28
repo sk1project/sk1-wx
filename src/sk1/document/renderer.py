@@ -20,7 +20,7 @@ from copy import deepcopy
 import cairo, math, wx
 
 from uc2 import uc2const
-from uc2.formats.sk2 import sk2_model, sk2_const
+from uc2.formats.sk2 import sk2_const
 from uc2.formats.sk2.crenderer import CairoRenderer
 from uc2 import libcairo, libgeom
 
@@ -182,7 +182,7 @@ class PDRenderer(CairoRenderer):
 		guide_layer = methods.get_guide_layer()
 		if not methods.is_layer_visible(guide_layer): return
 		for child in guide_layer.childs:
-			if child.cid == sk2_model.GUIDE:
+			if child.is_guide():
 				guides.append(child)
 		if guides:
 			self.ctx.set_matrix(self.direct_matrix)
