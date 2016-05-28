@@ -33,6 +33,8 @@ class DocumentObject(TextModelObject):
 	Abstract parent class for all document 
 	objects. Provides common object properties.
 	"""
+	def get_class_name(self):
+		return CID_TO_NAME[self.cid]
 
 	def resolve(self, name=''):
 		is_leaf = True
@@ -41,7 +43,7 @@ class DocumentObject(TextModelObject):
 			is_leaf = False
 			info = '%d' % (len(self.childs))
 		if self.cid == GUIDE: is_leaf = True
-		if not name: name = CID_TO_NAME[self.cid]
+		if not name: name = self.get_class_name()
 		return (is_leaf, name, info)
 
 	def get_resources(self):
