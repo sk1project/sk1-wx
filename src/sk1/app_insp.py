@@ -15,7 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2.formats.sk2 import sk2_model as model
+
 from uc2 import uc2const
 
 from sk1 import modes
@@ -315,13 +315,13 @@ class AppInspector:
 		if len(pages) - 1: return True
 		return False
 
-	def is_obj_primitive(self, obj):return obj.cid > model.PRIMITIVE_CLASS
-	def is_obj_curve(self, obj):return obj.cid == model.CURVE
-	def is_obj_rect(self, obj):return obj.cid == model.RECTANGLE
-	def is_obj_circle(self, obj):return obj.cid == model.CIRCLE
-	def is_obj_polygon(self, obj):return obj.cid == model.POLYGON
-	def is_obj_text(self, obj):return obj.cid == model.TEXT_BLOCK
-	def is_obj_pixmap(self, obj):return obj.cid == model.PIXMAP
+	def is_obj_primitive(self, obj):return obj.is_primitive()
+	def is_obj_curve(self, obj):return obj.is_curve()
+	def is_obj_rect(self, obj):return obj.is_rect()
+	def is_obj_circle(self, obj):return obj.is_circle()
+	def is_obj_polygon(self, obj):return obj.is_polygon()
+	def is_obj_text(self, obj):return obj.is_text()
+	def is_obj_pixmap(self, obj):return obj.is_pixmap()
 
 	def can_clear_trafo(self, doc=None):
 		if doc is None: doc = self.app.current_doc
@@ -342,8 +342,7 @@ class AppInspector:
 		if doc is None: return False
 		elif self.is_selection(doc):
 			objs = doc.selection.objs
-			cid = objs[0].cid
-			if len(objs) == 1 and cid == model.CONTAINER: return True
+			if len(objs) == 1 and objs[0].is_container(): return True
 		return False
 
 	def is_pixmap_selected(self, doc=None):
@@ -351,8 +350,7 @@ class AppInspector:
 		if doc is None: return False
 		elif self.is_selection(doc):
 			objs = doc.selection.objs
-			cid = objs[0].cid
-			if len(objs) == 1 and cid == model.PIXMAP: return True
+			if len(objs) == 1 and objs[0].is_pixmap(): return True
 		return False
 
 	def is_pixmap_alpha(self, doc=None):
@@ -360,8 +358,7 @@ class AppInspector:
 		if doc is None: return False
 		elif self.is_selection(doc):
 			objs = doc.selection.objs
-			cid = objs[0].cid
-			if len(objs) == 1 and cid == model.PIXMAP:
+			if len(objs) == 1 and objs[0].is_pixmap():
 				if objs[0].alpha_channel:
 					return True
 		return False
@@ -371,9 +368,8 @@ class AppInspector:
 		if doc is None: return False
 		elif self.is_selection(doc):
 			objs = doc.selection.objs
-			obj = objs[0]
-			if len(objs) == 1 and obj.cid == model.PIXMAP:
-				if not obj.colorspace == uc2const.IMAGE_CMYK:
+			if len(objs) == 1 and objs[0].is_pixmap():
+				if not objs[0].colorspace == uc2const.IMAGE_CMYK:
 					return True
 		return False
 
@@ -382,9 +378,8 @@ class AppInspector:
 		if doc is None: return False
 		elif self.is_selection(doc):
 			objs = doc.selection.objs
-			obj = objs[0]
-			if len(objs) == 1 and obj.cid == model.PIXMAP:
-				if not obj.colorspace == uc2const.IMAGE_RGB:
+			if len(objs) == 1 and objs[0].is_pixmap():
+				if not objs[0].colorspace == uc2const.IMAGE_RGB:
 					return True
 		return False
 
@@ -393,9 +388,8 @@ class AppInspector:
 		if doc is None: return False
 		elif self.is_selection(doc):
 			objs = doc.selection.objs
-			obj = objs[0]
-			if len(objs) == 1 and obj.cid == model.PIXMAP:
-				if not obj.colorspace == uc2const.IMAGE_LAB:
+			if len(objs) == 1 and objs[0].is_pixmap():
+				if not objs[0].colorspace == uc2const.IMAGE_LAB:
 					return True
 		return False
 
@@ -404,9 +398,8 @@ class AppInspector:
 		if doc is None: return False
 		elif self.is_selection(doc):
 			objs = doc.selection.objs
-			obj = objs[0]
-			if len(objs) == 1 and obj.cid == model.PIXMAP:
-				if not obj.colorspace == uc2const.IMAGE_GRAY:
+			if len(objs) == 1 and objs[0].is_pixmap():
+				if not objs[0].colorspace == uc2const.IMAGE_GRAY:
 					return True
 		return False
 
@@ -415,9 +408,8 @@ class AppInspector:
 		if doc is None: return False
 		elif self.is_selection(doc):
 			objs = doc.selection.objs
-			obj = objs[0]
-			if len(objs) == 1 and obj.cid == model.PIXMAP:
-				if not obj.colorspace == uc2const.IMAGE_MONO:
+			if len(objs) == 1 and objs[0].is_pixmap():
+				if not objs[0].colorspace == uc2const.IMAGE_MONO:
 					return True
 		return False
 
@@ -429,7 +421,7 @@ class AppInspector:
 			objs = doc.selection.objs
 			if len(objs) < 2: return False
 			for obj in objs:
-				if obj.cid < model.PRIMITIVE_CLASS:
+				if not obj.is_primitive() or obj.is_pixmap():
 					result = False
 					break
 			return result
@@ -442,7 +434,7 @@ class AppInspector:
 		elif self.is_selection(doc):
 			result = False
 			objs = doc.selection.objs
-			if len(objs) == 1 and objs[0].cid == model.CURVE:
+			if len(objs) == 1 and objs[0].is_curve():
 				if len(objs[0].paths) > 1:
 					result = True
 			return result
@@ -455,7 +447,8 @@ class AppInspector:
 		elif self.is_selection(doc):
 			result = False
 			for obj in doc.selection.objs:
-				if self.is_obj_primitive(obj) and not self.is_obj_curve(obj):
+				if obj.is_primitive() and not obj.is_curve() \
+				and not obj.is_pixmap():
 					result = True
 					break
 			return result
@@ -492,7 +485,7 @@ class AppInspector:
 		if doc is None: return False
 		elif self.is_selection(doc)and len(doc.selection.objs) == 1:
 			result = False
-			if doc.selection.objs[0].cid == model.GROUP:
+			if doc.selection.objs[0].is_group():
 				result = True
 			return result
 		else:
@@ -504,7 +497,7 @@ class AppInspector:
 		elif self.is_selection(doc):
 			result = False
 			for obj in doc.selection.objs:
-				if obj.cid == model.GROUP:
+				if obj.is_group():
 					result = True
 					break
 			return result
