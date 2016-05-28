@@ -53,7 +53,7 @@ class Selection:
 		if len(self.objs) == 1:
 			cid = self.objs[0].cid
 			msg = sk2_model.CID_TO_NAME[cid] + _(' object in selection')
-			if cid == sk2_model.PIXMAP:
+			if self.objs[0].is_pixmap():
 				h_dpi, v_dpi = self.objs[0].get_resolution()
 				msg += ', %ix%i dpi' % (h_dpi, v_dpi)
 			parent = self.objs[0].parent
