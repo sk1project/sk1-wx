@@ -21,7 +21,7 @@ from copy import deepcopy
 import wal
 
 from uc2 import uc2const
-from uc2.formats.sk2 import sk2_model, sk2_const
+from uc2.formats.sk2 import sk2_const
 from uc2.libgeom import stroke_to_curve, apply_trafo_to_paths
 
 from sk1 import _, dialogs, modes, events, config
@@ -84,8 +84,8 @@ class AppProxy:
 	def _get_style(self, objs):
 		ret = None
 		for obj in objs:
-			if obj.cid > sk2_model.PRIMITIVE_CLASS:
-				if not obj.cid == sk2_model.PIXMAP:
+			if obj.is_primitive():
+				if not obj.is_pixmap():
 					ret = obj.style
 					break
 			else:
@@ -137,8 +137,7 @@ class AppProxy:
 		doc.canvas.set_temp_mode(modes.PICK_MODE, self.select_fill_donor)
 
 	def select_fill_donor(self, objs):
-		if len(objs) == 1 and objs[0].cid > sk2_model.PRIMITIVE_CLASS and not \
-		objs[0].cid == sk2_model.PIXMAP:
+		if len(objs) == 1 and objs[0].is_primitive() and not objs[0].is_pixmap():
 			style = self._get_style(objs)
 			if not style is None:
 				fill_style = deepcopy(style[0])
@@ -159,8 +158,7 @@ class AppProxy:
 		doc.canvas.set_temp_mode(modes.PICK_MODE, self.select_stroke_donor)
 
 	def select_stroke_donor(self, objs):
-		if len(objs) == 1 and objs[0].cid > sk2_model.PRIMITIVE_CLASS and not \
-		objs[0].cid == sk2_model.PIXMAP:
+		if len(objs) == 1 and objs[0].is_primitive() and not objs[0].is_pixmap():
 			style = self._get_style(objs)
 			if not style is None:
 				stroke_style = deepcopy(style[1])
@@ -476,8 +474,8 @@ class AppProxy:
 
 	def select_container(self, objs):
 		selection = self.app.current_doc.selection
-		if len(objs) == 1 and objs[0].cid > sk2_model.PRIMITIVE_CLASS and not \
-		objs[0] in selection.objs and not objs[0].cid == sk2_model.PIXMAP:
+		if len(objs) == 1 and objs[0].is_primitive() and not \
+		objs[0] in selection.objs and not objs[0].is_pixmap():
 			self.app.current_doc.api.pack_container(objs[0])
 			return False
 
