@@ -20,7 +20,7 @@ from base64 import b64decode
 from copy import deepcopy
 
 from uc2 import libimg, libcairo, libgeom
-from uc2.formats.sk2 import sk2_model as model
+from uc2.formats.sk2 import sk2_model
 from uc2.formats.sk2 import sk2_const
 
 CAIRO_BLACK = [0.0, 0.0, 0.0]
@@ -76,13 +76,13 @@ class CairoRenderer:
 				self.render_object(ctx, obj)
 
 	def render_object(self, ctx, obj):
-		if obj.cid > model.PRIMITIVE_CLASS:
+		if obj.is_primitive():
 			self.render_primitives(ctx, obj)
-		elif obj.cid == model.GROUP:
+		elif obj.is_container():
+				self.render_container(ctx, obj)
+		elif obj.is_group():
 			for obj in obj.childs:
 				self.render_object(ctx, obj)
-		elif obj.cid == model.CONTAINER:
-				self.render_container(ctx, obj)
 		else:
 			pass
 
@@ -156,10 +156,10 @@ class CairoRenderer:
 	def render_primitives(self, ctx, obj):
 		if obj.cache_cpath is None:
 			obj.update()
-		if obj.cid == model.PIXMAP:
+		if obj.is_pixmap():
 			self.render_image(ctx, obj)
 			return
-		if obj.cid == model.TEXT_BLOCK:
+		if obj.is_text():
 			if self.contour_flag:
 				self.process_stroke(ctx, None, self.stroke_style)
 				for item in obj.cache_cpath:
@@ -269,7 +269,7 @@ class CairoRenderer:
 			pattern_fill = fill[2]
 			if not obj.cache_pattern_img:
 				bmpstr = b64decode(pattern_fill[1])
-				image_obj = model.Pixmap(obj.config)
+				image_obj = sk2_model.Pixmap(obj.config)
 				libimg.set_image_data(self.cms, image_obj, bmpstr)
 				libimg.flip_top_to_bottom(image_obj)
 				if pattern_fill[0] == sk2_const.PATTERN_IMG and \
