@@ -58,6 +58,7 @@ class DocumentObject(TextModelObject):
 		return obj_copy
 
 	def is_layer(self): return False
+	def is_guide(self): return False
 	def is_primitive(self): return False
 	def is_curve(self): return False
 	def is_rect(self): return False
@@ -357,6 +358,8 @@ class Guide(StructuralObject):
 		self.position = pos
 		self.orientation = orient
 		self.childs = []
+
+	def is_guide(self): return True
 
 #================Selectable Objects==================
 class SelectableObject(DocumentObject):
