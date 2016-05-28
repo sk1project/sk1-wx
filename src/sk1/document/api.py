@@ -18,7 +18,7 @@
 from copy import deepcopy
 import types, math
 
-from uc2.formats.sk2 import sk2_model as model
+from uc2.formats.sk2 import sk2_model
 from uc2.formats.sk2 import sk2_const
 from uc2 import libgeom, uc2const, libimg
 
@@ -636,7 +636,7 @@ class PresenterAPI(AbstractAPI):
 
 	def create_layer(self, name=''):
 		page = self.presenter.active_page
-		new_layer = model.Layer(self.sk2_cfg, page, name)
+		new_layer = sk2_model.Layer(self.sk2_cfg, page, name)
 		page.childs += [new_layer, ]
 		objs_list = [[new_layer, page, page.childs.index(new_layer)], ]
 		active_layer_before = self.presenter.active_layer
@@ -809,7 +809,7 @@ class PresenterAPI(AbstractAPI):
 			parent = self.methods.get_guide_layer()
 			for val in vals:
 				pos, orient = val
-				obj = model.Guide(self.sk2_cfg, parent, pos, orient)
+				obj = sk2_model.Guide(self.sk2_cfg, parent, pos, orient)
 				objs_list.append([obj, parent, -1])
 				obj.update()
 			self._insert_objects(objs_list)
@@ -1334,7 +1334,7 @@ class PresenterAPI(AbstractAPI):
 			sel_before = [] + self.selection.objs
 
 			parent = objs[-1].parent
-			group = model.Group(objs[-1].config, parent, objs)
+			group = sk2_model.Group(objs[-1].config, parent, objs)
 			group.update()
 			for obj in objs:
 				obj.parent.childs.remove(obj)
@@ -1446,7 +1446,7 @@ class PresenterAPI(AbstractAPI):
 			sel_before = [] + self.selection.objs
 
 			parent = container.parent
-			group = model.Container(container.config, parent, objs)
+			group = sk2_model.Container(container.config, parent, objs)
 			group.update()
 			for obj in objs:
 				obj.parent.childs.remove(obj)
@@ -1506,7 +1506,7 @@ class PresenterAPI(AbstractAPI):
 
 	def create_curve(self, paths, style=None):
 		parent = self.presenter.active_layer
-		obj = model.Curve(self.sk2_cfg, parent, paths)
+		obj = sk2_model.Curve(self.sk2_cfg, parent, paths)
 		if style is None:
 			obj.style = self.model.get_def_style()
 		else:
@@ -1571,7 +1571,7 @@ class PresenterAPI(AbstractAPI):
 		curve0 = curve1 = None
 
 		if p1:
-			curve1 = model.Curve(config, parent)
+			curve1 = sk2_model.Curve(config, parent)
 			curve1.paths = p1
 			curve1.style = deepcopy(target.style)
 			if target.fill_trafo: curve1.fill_trafo = [] + target.fill_trafo
@@ -1579,7 +1579,7 @@ class PresenterAPI(AbstractAPI):
 			parent.childs.insert(parent_index, curve1)
 			curve1.update()
 		if p0:
-			curve0 = model.Curve(config, parent)
+			curve0 = sk2_model.Curve(config, parent)
 			curve0.paths = p0
 			curve0.style = deepcopy(target.style)
 			if target.fill_trafo: curve0.fill_trafo = [] + target.fill_trafo
@@ -1614,7 +1614,7 @@ class PresenterAPI(AbstractAPI):
 		obj.parent.childs.remove(obj)
 		for path in paths:
 			if path and path[1]:
-				curve = model.Curve(config, parent)
+				curve = sk2_model.Curve(config, parent)
 				curve.paths = [path, ]
 				curve.style = deepcopy(obj.style)
 				if obj.fill_trafo: curve.fill_trafo = [] + obj.fill_trafo
@@ -1648,7 +1648,7 @@ class PresenterAPI(AbstractAPI):
 		for obj in objs:
 			for item in libgeom.get_transformed_paths(obj):
 				if item[1]:paths.append(item)
-		result = model.Curve(config, parent)
+		result = sk2_model.Curve(config, parent)
 		result.paths = paths
 		result.style = style
 		result.update()
@@ -1673,7 +1673,7 @@ class PresenterAPI(AbstractAPI):
 	def create_rectangle(self, rect):
 		rect = self._normalize_rect(rect)
 		parent = self.presenter.active_layer
-		obj = model.Rectangle(self.sk2_cfg, parent, rect)
+		obj = sk2_model.Rectangle(self.sk2_cfg, parent, rect)
 		obj.style = self.model.get_def_style()
 		obj.update()
 		self.insert_object(obj, parent, len(parent.childs))
@@ -1731,7 +1731,7 @@ class PresenterAPI(AbstractAPI):
 	def create_ellipse(self, rect):
 		rect = self._normalize_rect(rect)
 		parent = self.presenter.active_layer
-		obj = model.Circle(self.sk2_cfg, parent, rect)
+		obj = sk2_model.Circle(self.sk2_cfg, parent, rect)
 		obj.style = self.model.get_def_style()
 		obj.update()
 		self.insert_object(obj, parent, len(parent.childs))
@@ -1786,7 +1786,7 @@ class PresenterAPI(AbstractAPI):
 	def create_polygon(self, rect):
 		rect = self._normalize_rect(rect)
 		parent = self.presenter.active_layer
-		obj = model.Polygon(self.sk2_cfg, parent, rect,
+		obj = sk2_model.Polygon(self.sk2_cfg, parent, rect,
 						corners_num=config.default_polygon_num)
 		obj.style = self.model.get_def_style()
 		obj.update()
@@ -1920,7 +1920,7 @@ class PresenterAPI(AbstractAPI):
 			style = deepcopy(self.presenter.text_obj_style)
 		else:
 			style = self.model.get_text_style()
-		obj = model.Text(self.sk2_cfg, parent, doc_point, style=style)
+		obj = sk2_model.Text(self.sk2_cfg, parent, doc_point, style=style)
 		obj.update()
 		self.insert_object(obj, parent, len(parent.childs))
 		return obj
@@ -1968,7 +1968,7 @@ class PresenterAPI(AbstractAPI):
 		trafos_before = deepcopy(text_obj.trafos)
 
 		parent = objs[-1].parent
-		group = model.TP_Group(objs[-1].config, parent, objs, childs_data)
+		group = sk2_model.TP_Group(objs[-1].config, parent, objs, childs_data)
 		group.set_text_on_path(path, text_obj, childs_data[1])
 		group.update()
 		for obj in objs:
