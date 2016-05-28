@@ -383,6 +383,11 @@ class AbstractAPI:
 		text_obj.markup = markup
 		text_obj.update()
 
+	def _set_tpgroup_data(self, tpgroup, text_obj, data):
+		tpgroup.childs_data[text_obj] = data
+		path = tpgroup.childs[0]
+		tpgroup.set_text_on_path(path, text_obj, data)
+		tpgroup.update()
 
 
 class PresenterAPI(AbstractAPI):
@@ -1955,7 +1960,54 @@ class PresenterAPI(AbstractAPI):
 			obj = sel_before[0]
 		self.set_text_trafos(obj, {}, obj.trafos)
 
+	def place_text_on_path(self, path, text_obj, childs_data):
+		before = self._get_layers_snapshot()
+		objs = [path, text_obj]
+		sel_before = [path, text_obj]
+		trafos_before = deepcopy(text_obj.trafos)
 
+		parent = objs[-1].parent
+		group = model.TP_Group(objs[-1].config, parent, objs, childs_data)
+		group.set_text_on_path(path, text_obj, childs_data[text_obj])
+		group.update()
+		for obj in objs:
+			obj.parent.childs.remove(obj)
+		parent.childs.append(group)
+		parent_list = []
+		for obj in objs:
+			parent_list.append([obj, obj.parent])
+			obj.parent = group
+
+		after = self._get_layers_snapshot()
+		trafos_after = deepcopy(text_obj.trafos)
+		sel_after = [group]
+		self.selection.set([group])
+		transaction = [
+			[[self._set_layers_snapshot, before],
+			[self._restore_parents, parent_list],
+			[self._set_selection, sel_before],
+			[self._set_text_trafos, text_obj, trafos_before]],
+			[[self._set_layers_snapshot, after],
+			[self._set_parent, sel_after, group],
+			[self._set_selection, sel_after],
+			[self._set_text_trafos, text_obj, trafos_after]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def change_tpgroup(self, tpgroup, text_obj, data):
+		if not text_obj in tpgroup.childs_data.keys(): return
+		sel = [] + self.selection.objs
+		data_before = tpgroup.childs_data[text_obj]
+		self._set_tpgroup_data(tpgroup, text_obj, data)
+		transaction = [
+			[[self._set_tpgroup_data, tpgroup, text_obj, data_before],
+			[self._set_selection, sel]],
+			[[self._set_tpgroup_data, tpgroup, text_obj, data],
+			[self._set_selection, sel]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
 
 
 
