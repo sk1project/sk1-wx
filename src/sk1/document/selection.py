@@ -16,7 +16,6 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from uc2 import libgeom
-from uc2.formats.sk2 import sk2_model
 
 from sk1 import _, config
 from sk1 import events
@@ -51,8 +50,7 @@ class Selection:
 		eventloop = self.presenter.eventloop
 		eventloop.emit(eventloop.SELECTION_CHANGED)
 		if len(self.objs) == 1:
-			cid = self.objs[0].cid
-			msg = sk2_model.CID_TO_NAME[cid] + _(' object in selection')
+			msg = self.objs[0].get_class_name() + _(' object in selection')
 			if self.objs[0].is_pixmap():
 				h_dpi, v_dpi = self.objs[0].get_resolution()
 				msg += ', %ix%i dpi' % (h_dpi, v_dpi)
