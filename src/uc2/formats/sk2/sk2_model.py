@@ -427,7 +427,11 @@ class TP_Group(Group):
 	All child objects are in childs list. First child object is a reference 
 	path and this path is not closed.
 	Other child objects are text objects.
-	Each text object has according record in childs_data dict.	
+	Each text object has according record in childs_data dict.
+	Record is a tuple: (base_point, align, side_flag)
+		base_point - value from 0.0 to 1.0
+		align - text align constant
+		side_flag - if True, place text on other path side
 	"""
 
 	cid = TP_GROUP
@@ -441,6 +445,9 @@ class TP_Group(Group):
 		if childs_data: self.childs_data = childs_data
 
 	def is_tpgroup(self): return True
+
+	def set_text_on_path(self, path, text_obj, data):
+		pass
 
 
 class Container(Group):
