@@ -1968,7 +1968,7 @@ class PresenterAPI(AbstractAPI):
 
 		parent = objs[-1].parent
 		group = sk2_model.TP_Group(objs[-1].config, parent, objs, childs_data)
-		group.set_text_on_path(path, text_obj, childs_data[1])
+		group.set_text_on_path(path, text_obj, childs_data)
 		group.update()
 		for obj in objs:
 			obj.parent.childs.remove(obj)
@@ -1998,7 +1998,8 @@ class PresenterAPI(AbstractAPI):
 	def change_tpgroup(self, tpgroup, text_obj, data):
 		if not text_obj in tpgroup.childs: return
 		sel = [] + self.selection.objs
-		data_before = tpgroup.childs_data[tpgroup.childs.index(text_obj)]
+		index = tpgroup.childs.index(text_obj)
+		data_before = tpgroup.childs_data[index]
 		self._set_tpgroup_data(tpgroup, text_obj, data)
 		transaction = [
 			[[self._set_tpgroup_data, tpgroup, text_obj, data_before],
