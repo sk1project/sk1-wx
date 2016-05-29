@@ -23,6 +23,9 @@ from flattering import flat_path
 from points import distance, mult_point, add_points
 from cwrap import get_cpath_bbox, create_cpath
 
+def is_curve_point(point):
+	if len(point) == 2: return False
+	return True
 
 def bezier_base_point(point):
 	if len(point) == 2: return [] + point
@@ -75,4 +78,37 @@ def split_bezier_line(start_point, end_point, point):
 	y = coef * (end_point[1] - start_point[1]) + start_point[1]
 	return [x, y]
 
+def reverse_path(path):
+	end_marker = path[2]
+	points = [path[0], ] + path[1]
+	points.reverse()
+	data = []
+	new_points = []
+	for index in range(len(points)):
+		if is_curve_point(points[index]) and data:
+			p0 = [] + data[1]
+			p1 = [] + data[0]
+			p2 = [] + points[index][2]
+			new_points.append([p0, p1, p2])
+			data = deepcopy(points[index])
+		elif is_curve_point(points[index]) and not data:
+			new_points.append([] + points[index][2])
+			data = deepcopy(points[index])
+		elif not is_curve_point(points[index]) and data:
+			p0 = [] + data[1]
+			p1 = [] + data[0]
+			p2 = [] + points[index]
+			new_points.append([p0, p1, p2])
+			data = []
+		elif not is_curve_point(points[index]) and not data:
+			new_points.append([] + points[index])
+	start_point = new_points[0]
+	points = new_points[1:]
+	return [start_point, points, end_marker]
+
+def reverse_paths(paths):
+	new_paths = []
+	for path in paths:
+		new_paths.append(reverse_path(path))
+	return new_paths
 
