@@ -165,7 +165,7 @@ class TP_Plugin(RS_Plugin):
 			if self.is_path(text_obj) and path.is_text():
 				path, text_obj = text_obj, path
 			doc.api.place_text_on_path(path, text_obj, [None, self.get_data()])
-		if self.check_selection() == 1:
+		elif self.check_selection() == 1:
 			tpgroup = doc.selection.objs[0]
 			text_obj = tpgroup.childs[1]
 			doc.api.change_tpgroup(tpgroup, text_obj, self.get_data())
