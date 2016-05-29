@@ -19,9 +19,7 @@ import math
 from copy import deepcopy
 from base64 import b64decode, b64encode
 
-from uc2 import uc2const
-from uc2 import _, cms
-from uc2 import libgeom
+from uc2 import _, cms, uc2const, libgeom
 from uc2.formats.sk2 import sk2_const
 from uc2.formats.generic import TextModelObject
 from sk2_cids import *
