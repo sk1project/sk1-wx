@@ -450,8 +450,63 @@ class TP_Group(Group):
 
 	def is_tpgroup(self): return True
 
-	def set_text_on_path(self, path, text_obj, data):
-		pass
+	def _get_point_on_path(self, flat_path, pos):
+		start = flat_path[0]
+		end = flat_path[0]
+		point = None
+		l = 0
+		for item in flat_path[1]:
+			start, end = end, item
+			l += libgeom.distance(start, end)
+			if l >= pos:
+				coef = 1.0 - (l - pos) / libgeom.distance(start, end)
+				point = libgeom.midpoint(start, end, coef)
+				break
+		if not point:
+			last = libgeom.distance(start, end)
+			coef = (pos - l + last) / last
+			point = libgeom.midpoint(start, end, coef)
+		angle = libgeom.get_point_angle(end, start)
+		return point, angle
+
+	def set_text_on_path(self, path_obj, text_obj, data):
+		curve = path_obj.to_curve()
+		path = libgeom.apply_trafo_to_paths(curve.paths, curve.trafo)[0]
+		if data[2]: path = libgeom.reverse_path(path)
+		fpath = libgeom.flat_path(path)
+
+		pos_dict = {}
+		xmin = xmax = 0
+		index = 0
+		for item in text_obj.cache_layout_data:
+			if index < len(text_obj.cache_cpath) and \
+			text_obj.cache_cpath[index]:
+				x = item[0]
+				y = item[4]
+				xmin = min(xmin, x)
+				xmax = max(xmax, x)
+				pos_dict[index] = (x, y)
+			index += 1
+
+		sx = 0 - xmin
+
+		trafos = {}
+		for index in pos_dict.keys():
+			x, y = pos_dict[index]
+			shift = text_obj.cache_layout_data[index][2] / 2.0
+			point, angle = self._get_point_on_path(fpath, x + sx + shift)
+
+			center_x, center_y = x + shift, y
+			m21 = math.sin(angle)
+			m11 = m22 = math.cos(angle)
+			m12 = -m21
+			dx = center_x - m11 * center_x + m21 * center_y;
+			dy = center_y - m21 * center_x - m11 * center_y;
+
+			trafos[index] = [m11, m21, m12, m22,
+							dx + point[0] - x - shift, dy + point[1] - y]
+
+		text_obj.trafos = trafos
 
 
 class Container(Group):
