@@ -24,6 +24,7 @@ from objs import *
 from bezier_ops import *
 from shaping import intersect_paths, fuse_paths, trim_paths, excluse_paths
 from contour import stroke_to_curve
+from text_on_path import set_text_on_path
 
 
 """
