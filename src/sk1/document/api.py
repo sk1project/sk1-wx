@@ -1985,12 +1985,12 @@ class PresenterAPI(AbstractAPI):
 		transaction = [
 			[[self._set_layers_snapshot, before],
 			[self._restore_parents, parent_list],
-			[self._set_selection, sel_before],
-			[self._set_text_trafos, text_obj, trafos_before]],
+			[self._set_text_trafos, text_obj, trafos_before],
+			[self._set_selection, sel_before]],
 			[[self._set_layers_snapshot, after],
 			[self._set_parent, sel_after, group],
-			[self._set_selection, sel_after],
-			[self._set_text_trafos, text_obj, trafos_after]],
+			[self._set_text_trafos, text_obj, trafos_after],
+			[self._set_selection, sel_after]],
 			False]
 		self.add_undo(transaction)
 		self.selection.update()
