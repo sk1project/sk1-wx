@@ -971,20 +971,22 @@ class Text(PrimitiveObject):
 		self.update_bbox()
 
 	def update_bbox(self):
-		bp = libgeom.apply_trafo_to_point([0.0, 0.0], self.trafo)
-		self.cache_bbox = 2 * bp
+		self.cache_bbox = []
 		index = 0
 		for item in self.cache_cpath:
+			bbox = []
 			if not item:
-				data = self.cache_layout_data[index]
-				bp = [data[0], data[4]]
-				bbox = 2 * libgeom.apply_trafo_to_point(bp, self.trafo)
+				if not self.trafos:
+					data = self.cache_layout_data[index]
+					bp = [data[0], data[4]]
+					bbox = 2 * libgeom.apply_trafo_to_point(bp, self.trafo)
 			else:
 				bbox = libgeom.get_cpath_bbox(item)
-			if not self.cache_bbox:
-				self.cache_bbox = bbox
-			else:
-				self.cache_bbox = libgeom.sum_bbox(self.cache_bbox, bbox)
+			if bbox:
+				if not self.cache_bbox:
+					self.cache_bbox = bbox
+				else:
+					self.cache_bbox = libgeom.sum_bbox(self.cache_bbox, bbox)
 			index += 1
 
 	def apply_trafo(self, trafo):
