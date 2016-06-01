@@ -282,6 +282,7 @@ encoding//src/uc2/libgeom/flattering.py=utf-8
 encoding//src/uc2/libgeom/objs.py=utf-8
 encoding//src/uc2/libgeom/points.py=utf-8
 encoding//src/uc2/libgeom/shaping.py=utf-8
+encoding//src/uc2/libgeom/text_on_path.py=utf-8
 encoding//src/uc2/libgeom/trafo.py=utf-8
 encoding//src/uc2/libimg/__init__.py=utf-8
 encoding//src/uc2/libimg/magickwand.py=utf-8
