@@ -20,7 +20,12 @@ import math
 from points import distance, midpoint, get_point_angle
 from trafo import apply_trafo_to_paths
 from flattering import flat_path
-from bezier_ops import reverse_path
+from bezier_ops import reverse_path, get_path_length
+
+TEXT_ALIGN_LEFT = 0
+TEXT_ALIGN_CENTER = 1
+TEXT_ALIGN_RIGHT = 2
+TEXT_ALIGN_JUSTIFY = 3
 
 def _get_point_on_path(flat_path, pos):
 	start = flat_path[0]
@@ -46,6 +51,7 @@ def set_text_on_path(path_obj, text_obj, data):
 	path = apply_trafo_to_paths(curve.paths, curve.trafo)[0]
 	if data[2]: path = reverse_path(path)
 	fpath = flat_path(path)
+	fpath_len = get_path_length(fpath)
 
 	pos_dict = {}
 	xmin = xmax = 0
@@ -56,17 +62,28 @@ def set_text_on_path(path_obj, text_obj, data):
 			x = item[0]
 			y = item[4]
 			xmin = min(xmin, x)
-			xmax = max(xmax, x)
+			xmax = max(xmax, x + item[2])
 			pos_dict[index] = (x, y)
 		index += 1
+	text_len = abs(xmax - xmin)
 
-	sx = 0 - xmin
+	text_shift = fpath_len * data[0]
+	strech = 1.0
+	if data[1] == TEXT_ALIGN_CENTER:
+		text_shift -= text_len / 2.0
+	elif data[1] == TEXT_ALIGN_RIGHT:
+		text_shift -= text_len
+	elif data[1] == TEXT_ALIGN_JUSTIFY:
+		text_shift = 0.0
+		strech = fpath_len / text_len
+
+	sx = 0.0 - xmin + text_shift
 
 	trafos = {}
 	for index in pos_dict.keys():
 		x, y = pos_dict[index]
 		shift = text_obj.cache_layout_data[index][2] / 2.0
-		point, angle = _get_point_on_path(fpath, x + sx + shift)
+		point, angle = _get_point_on_path(fpath, (x + sx + shift) * strech)
 
 		center_x, center_y = x + shift, y
 		m21 = math.sin(angle)
