@@ -162,6 +162,7 @@ pdids.ID_EXTRACT_BITMAP:(_('Extract embedded bitmap'),),
 
 pdids.ID_EDIT_TEXT:(_('&Edit text'),),
 pdids.ID_TEXT_ON_PATH:(_('Text on path...'),),
+pdids.ID_TEXT_ON_CIRCLE:(_('Text on circle...'),),
 pdids.ID_STRAIGHTEN_TEXT:(_('&Straighten text'),),
 pdids.ID_UPPER_TEXT:(_('Uppercase'),),
 pdids.ID_LOWER_TEXT:(_('Lowercase'),),
