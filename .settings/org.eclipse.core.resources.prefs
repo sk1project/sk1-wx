@@ -123,6 +123,7 @@ encoding//src/sk1/resources/rgb_palette.py=utf-8
 encoding//src/sk1/share/pd_plugins/align_plugin/__init__.py=utf-8
 encoding//src/sk1/share/pd_plugins/layers_plugin/__init__.py=utf-8
 encoding//src/sk1/share/pd_plugins/shaping/__init__.py=utf-8
+encoding//src/sk1/share/pd_plugins/text_on_circle/__init__.py=utf-8
 encoding//src/sk1/share/pd_plugins/text_on_path/__init__.py=utf-8
 encoding//src/sk1/share/pd_plugins/transform_plugin/__init__.py=utf-8
 encoding//src/sk1/share/pd_plugins/transform_plugin/indicator.py=utf-8
