@@ -33,6 +33,34 @@ def make_artid(name):
 def get_plugin(app):
 	return TC_Plugin(app)
 
+RIGHT_POS = 2
+TOP_POS = 3
+LEFT_POS = 0
+BOTTOM_POS = 1
+
+POSITIONS = [RIGHT_POS, TOP_POS, LEFT_POS, BOTTOM_POS]
+
+POS_TEXTS = {
+RIGHT_POS:_('Text on right side'),
+TOP_POS:_('Text at top'),
+LEFT_POS:_('Text on left side'),
+BOTTOM_POS:_('Text at bottom'),
+}
+
+POS_PICS = {
+RIGHT_POS:make_artid('pos-00'),
+TOP_POS:make_artid('pos-10'),
+LEFT_POS:make_artid('pos-20'),
+BOTTOM_POS:make_artid('pos-30'),
+}
+
+POS_PICS_OTHERSIDE = {
+RIGHT_POS:make_artid('pos-01'),
+TOP_POS:make_artid('pos-11'),
+LEFT_POS:make_artid('pos-21'),
+BOTTOM_POS:make_artid('pos-31'),
+}
+
 PLUGIN_ICON = make_artid('icon')
 
 class TC_Plugin(RS_Plugin):
@@ -48,7 +76,8 @@ class TC_Plugin(RS_Plugin):
 
 		panel.pack(wal.Label(panel, _('Text position on circle')), padding_all=5)
 
-
+		self.bmp = get_bmp(panel, POS_PICS[TOP_POS])
+		panel.pack(self.bmp, padding_all=5)
 
 		self.other_side = wal.Checkbox(panel, _('Place on other side'),
 									onclick=self.update_bmp)
@@ -66,7 +95,7 @@ class TC_Plugin(RS_Plugin):
 
 		self.update()
 
-
+	def update_bmp(self): pass
 
 	def update(self, *args):pass
 
