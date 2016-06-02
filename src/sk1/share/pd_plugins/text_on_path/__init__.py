@@ -53,7 +53,17 @@ sk2_const.TEXT_ALIGN_JUSTIFY:_('Stretch along path'),
 }
 
 TEXT_ALIGN_PICS = {
-sk2_const.TEXT_ALIGN_LEFT:make_artid('pos-start'),
+sk2_const.TEXT_ALIGN_LEFT:make_artid('pos-00'),
+sk2_const.TEXT_ALIGN_CENTER:make_artid('pos-10'),
+sk2_const.TEXT_ALIGN_RIGHT:make_artid('pos-20'),
+sk2_const.TEXT_ALIGN_JUSTIFY:make_artid('pos-30'),
+}
+
+TEXT_ALIGN_PICS_OTHERSIDE = {
+sk2_const.TEXT_ALIGN_LEFT:make_artid('pos-01'),
+sk2_const.TEXT_ALIGN_CENTER:make_artid('pos-11'),
+sk2_const.TEXT_ALIGN_RIGHT:make_artid('pos-21'),
+sk2_const.TEXT_ALIGN_JUSTIFY:make_artid('pos-31'),
 }
 
 class TP_Plugin(RS_Plugin):
@@ -80,7 +90,7 @@ class TP_Plugin(RS_Plugin):
 
 		self.align_keeper = wal.HToggleKeeper(panel, TEXT_ALIGNS,
 							TEXT_ALIGN_ICONS,
-							TEXT_ALIGN_TEXTS)
+							TEXT_ALIGN_TEXTS, on_change=self.update_bmp)
 		panel.pack(self.align_keeper)
 		self.align_keeper.set_mode(TEXT_ALIGNS[1])
 
@@ -91,12 +101,13 @@ class TP_Plugin(RS_Plugin):
 		self.pic_panel = wal.VPanel(border)
 		self.pic_panel.set_bg(wal.WHITE)
 		self.bmp = get_bmp(self.pic_panel,
-						TEXT_ALIGN_PICS[sk2_const.TEXT_ALIGN_LEFT])
+						TEXT_ALIGN_PICS[TEXT_ALIGNS[1]])
 		self.pic_panel.pack(self.bmp, padding_all=5)
 		border.pack(self.pic_panel, padding_all=1)
 		panel.pack(border, padding=10)
 
-		self.other_side = wal.Checkbox(panel, _('Place on other side'))
+		self.other_side = wal.Checkbox(panel, _('Place on other side'),
+									onclick=self.update_bmp)
 		panel.pack(self.other_side, padding=5)
 
 		self.apply_btn = wal.Button(panel, _('Apply'), onclick=self.action)
@@ -135,6 +146,14 @@ class TP_Plugin(RS_Plugin):
 			elif self.is_path(obj2) and obj1.is_text(): return 2
 		return False
 
+	def update_bmp(self, *args):
+		mode = self.align_keeper.get_mode()
+		if self.other_side.get_value():
+			bmp = get_icon(TEXT_ALIGN_PICS_OTHERSIDE[mode], size=wal.DEF_SIZE)
+		else:
+			bmp = get_icon(TEXT_ALIGN_PICS[mode], size=wal.DEF_SIZE)
+		self.bmp.set_bitmap(bmp)
+
 	def update_from_tpgroup(self):
 		doc = self.app.current_doc
 		if len(doc.selection.objs) == 1 and doc.selection.objs[0].is_tpgroup():
@@ -143,6 +162,7 @@ class TP_Plugin(RS_Plugin):
 			self.base_point.set_value(data[0] * 100.0)
 			self.align_keeper.set_mode(data[1])
 			self.other_side.set_value(data[2])
+			self.update_bmp()
 
 	def update(self, *args):
 		if not self.is_shown(): return
