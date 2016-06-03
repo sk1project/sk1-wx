@@ -219,7 +219,6 @@ def get_circle_paths(angle1, angle2, circle_type):
 	if angle1 in START_ANGLES and angle2 in START_ANGLES:
 		angle1 = angle2 = 0.0
 	if angle1 == angle2:
-		print angle1 * 180.0 / math.pi
 		paths = _split_arcs_at_point(angle1)
 		if circle_type in (sk2_const.ARC_PIE_SLICE, sk2_const.ARC_CHORD):
 			return paths
