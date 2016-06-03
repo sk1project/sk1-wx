@@ -588,31 +588,10 @@ class AppCanvas(wx.Panel):
 	def mouse_wheel(self, event):
 		self.controller.wheel(CanvasEvent(event))
 
-class CanvasEvent:
-
-	event = None
-
-	def __init__(self, event):
-		self.event = event
-
-	def get_point(self):
-		return list(self.event.GetPositionTuple())
+class CanvasEvent(wal.MouseEvent):
 
 	def get_rotation(self):
-		return self.event.GetWheelRotation() / config.mouse_scroll_sensitivity
-
-	def is_ctrl(self):
-		return self.event.ControlDown()
-
-	def is_alt(self):
-		return self.event.AltDown()
-
-	def is_shift(self):
-		return self.event.ShiftDown()
-
-	def is_cmd(self):
-		return self.event.CmdDown()
-
+		return wal.MouseEvent.get_rotation(self) / config.mouse_scroll_sensitivity
 
 class HitSurface:
 
