@@ -63,6 +63,54 @@ BOTTOM_POS:make_artid('pos-31'),
 
 PLUGIN_ICON = make_artid('icon')
 
+class PositionSwitch(wal.Bitmap):
+
+	mode = TOP_POS
+	side_flag = False
+
+	def __init__(self, parent, mode=TOP_POS, side_flag=False):
+		self.mode = mode
+		self.side_flag = side_flag
+		wal.Bitmap.__init__(self, parent, self.load_bmp(),
+						on_left_click=self.on_click)
+
+	def set_side(self, flag):
+		self.side_flag = flag
+		self.update_bmp()
+
+	def set_mode(self, mode):
+		if not mode == self.mode:
+			self.mode = mode
+			self.update_bmp()
+
+	def get_mode(self): return self.mode
+
+	def load_bmp(self):
+		if self.side_flag:
+			return get_icon(POS_PICS_OTHERSIDE[self.mode], size=wal.DEF_SIZE)
+		return get_icon(POS_PICS[self.mode], size=wal.DEF_SIZE)
+
+	def update_bmp(self):
+		self.set_bitmap(self.load_bmp())
+
+	def on_click(self, event):
+		w, h = self.get_size()
+		x, y = event.get_point()
+		if y < h / 2.0 and x < w / 2.0:
+			if y > x: mode = LEFT_POS
+			else: mode = TOP_POS
+		elif y >= h / 2.0 and x >= w / 2.0:
+			if y > x: mode = BOTTOM_POS
+			else: mode = RIGHT_POS
+		elif y < h / 2.0 and x >= w / 2.0:
+			if h - y > x: mode = TOP_POS
+			else: mode = RIGHT_POS
+		elif y >= h / 2.0 and x < w / 2.0:
+			if h - y > x: mode = LEFT_POS
+			else: mode = BOTTOM_POS
+		self.set_mode(mode)
+
+
 class TC_Plugin(RS_Plugin):
 
 	pid = 'TextOnCirclePlugin'
@@ -76,7 +124,7 @@ class TC_Plugin(RS_Plugin):
 
 		panel.pack(wal.Label(panel, _('Text position on circle')), padding_all=5)
 
-		self.bmp = get_bmp(panel, POS_PICS[TOP_POS])
+		self.bmp = PositionSwitch(panel)
 		panel.pack(self.bmp, padding_all=5)
 
 		self.other_side = wal.Checkbox(panel, _('Place on other side'),
@@ -95,7 +143,8 @@ class TC_Plugin(RS_Plugin):
 
 		self.update()
 
-	def update_bmp(self): pass
+	def update_bmp(self):
+		self.bmp.set_side(self.other_side.get_value())
 
 	def update(self, *args):pass
 
