@@ -2010,6 +2010,82 @@ class PresenterAPI(AbstractAPI):
 		self.add_undo(transaction)
 		self.selection.update()
 
+	def place_text_on_circle(self, circle, text_obj, position, side_flag):
+		mtds = self.methods
+		childs_data = [None, [0.5, sk2_const.TEXT_ALIGN_CENTER, side_flag]]
+		before = self._get_layers_snapshot()
+		objs = [circle, text_obj]
+		sel_before = [circle, text_obj]
+		trafos_before = deepcopy(text_obj.trafos)
+		type_before = type_after = circle.circle_type
+		angle1_before = circle.angle1
+		angle2_before = circle.angle2
+
+		angle1_after = angle2_after = position * math.pi / 2.0
+		mtds.set_circle_properties(circle, type_after,
+								angle1_after, angle2_after)
+
+		parent = objs[-1].parent
+		group = sk2_model.TP_Group(objs[-1].config, parent, objs, childs_data)
+		group.set_text_on_path(circle, text_obj, childs_data)
+		group.update()
+		for obj in objs:
+			obj.parent.childs.remove(obj)
+		parent.childs.append(group)
+		parent_list = []
+		for obj in objs:
+			parent_list.append([obj, obj.parent])
+			obj.parent = group
+
+		after = self._get_layers_snapshot()
+		trafos_after = deepcopy(text_obj.trafos)
+		sel_after = [group]
+		self.selection.set([group])
+		transaction = [
+			[[self._set_layers_snapshot, before],
+			[self._restore_parents, parent_list],
+			[mtds.set_circle_properties, circle, type_before,
+			angle1_before, angle2_before],
+			[self._set_text_trafos, text_obj, trafos_before],
+			[self._set_selection, sel_before]],
+			[[self._set_layers_snapshot, after],
+			[self._set_parent, sel_after, group],
+			[mtds.set_circle_properties, circle, type_after,
+			angle1_after, angle2_after],
+			[self._set_text_trafos, text_obj, trafos_after],
+			[self._set_selection, sel_after]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def change_tcgroup(self, tpgroup, text_obj, position, side_flag):
+		if not text_obj in tpgroup.childs: return
+		mtds = self.methods
+		data = [0.5, sk2_const.TEXT_ALIGN_CENTER, side_flag]
+		circle = tpgroup.childs[0]
+		type_before = type_after = circle.circle_type
+		angle1_before = circle.angle1
+		angle2_before = circle.angle2
+		angle1_after = angle2_after = position * math.pi / 2.0
+		mtds.set_circle_properties(circle, type_after,
+								angle1_after, angle2_after)
+		sel = [] + self.selection.objs
+		index = tpgroup.childs.index(text_obj)
+		data_before = tpgroup.childs_data[index]
+		self._set_tpgroup_data(tpgroup, text_obj, data)
+		transaction = [
+			[[self._set_tpgroup_data, tpgroup, text_obj, data_before],
+			[mtds.set_circle_properties, circle, type_before,
+			angle1_before, angle2_before],
+			[self._set_selection, sel]],
+			[[self._set_tpgroup_data, tpgroup, text_obj, data],
+			[mtds.set_circle_properties, circle, type_after,
+			angle1_after, angle2_after],
+			[self._set_selection, sel]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
 
 
 
