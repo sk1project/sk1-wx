@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2013-2015 by Igor E. Novikov
+# 	Copyright (C) 2013-2016 by Igor E. Novikov
 #
 # 	This program is free software: you can redistribute it and/or modify
 # 	it under the terms of the GNU General Public License as published by
@@ -25,17 +25,52 @@ from const import DEF_SIZE
 from basic import HPanel
 from renderer import bmp_to_white, disabled_bmp
 
+class MouseEvent(object):
+
+	event = None
+
+	def __init__(self, event):
+		self.event = event
+
+	def get_point(self):
+		return list(self.event.GetPositionTuple())
+
+	def get_rotation(self):
+		return self.event.GetWheelRotation()
+
+	def is_ctrl(self):
+		return self.event.ControlDown()
+
+	def is_alt(self):
+		return self.event.AltDown()
+
+	def is_shift(self):
+		return self.event.ShiftDown()
+
+	def is_cmd(self):
+		return self.event.CmdDown()
+
 class Bitmap(wx.StaticBitmap, Widget):
 
 	bmp = None
+	rcallback = None
+	lcallback = None
 
 	def __init__(self, parent, bitmap, on_left_click=None, on_right_click=None):
 		self.bmp = bitmap
 		wx.StaticBitmap.__init__(self, parent, wx.ID_ANY, bitmap)
 		if on_left_click:
-			self.Bind(wx.EVT_LEFT_UP, on_left_click, self)
+			self.lcallback = on_left_click
+			self.Bind(wx.EVT_LEFT_UP, self._on_left_click, self)
 		if on_right_click:
-			self.Bind(wx.EVT_RIGHT_UP, on_right_click, self)
+			self.rcallback = on_right_click
+			self.Bind(wx.EVT_RIGHT_UP, self._on_right_click, self)
+
+	def _on_right_click(self, event):
+		if self.rcallback: self.rcallback(MouseEvent(event))
+
+	def _on_left_click(self, event):
+		if self.lcallback: self.lcallback(MouseEvent(event))
 
 	def _get_bitmap(self):
 		if const.is_msw() and not self.get_enabled():
