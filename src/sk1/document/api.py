@@ -2012,7 +2012,7 @@ class PresenterAPI(AbstractAPI):
 
 	def place_text_on_circle(self, circle, text_obj, position, side_flag):
 		mtds = self.methods
-		childs_data = [None, [0.5, sk2_const.TEXT_ALIGN_CENTER, side_flag]]
+		childs_data = [0.5, sk2_const.TEXT_ALIGN_CENTER, side_flag]
 		before = self._get_layers_snapshot()
 		objs = [circle, text_obj]
 		sel_before = [circle, text_obj]
