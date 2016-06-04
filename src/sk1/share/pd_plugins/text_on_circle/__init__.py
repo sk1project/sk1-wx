@@ -16,7 +16,7 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import os, wal
+import os, wal, math
 
 from uc2.formats.sk2 import sk2_const
 
@@ -143,9 +143,69 @@ class TC_Plugin(RS_Plugin):
 
 		self.update()
 
+	def show_signal(self, *args):self.update()
+
+	def set_state(self, state):
+		self.apply_btn.set_enable(state)
+		self.bmp.set_enable(state)
+		self.other_side.set_enable(state)
+
 	def update_bmp(self):
 		self.bmp.set_side(self.other_side.get_value())
 
-	def update(self, *args):pass
+	def update_from_tpgroup(self):
+		doc = self.app.current_doc
+		if len(doc.selection.objs) == 1 and \
+		doc.selection.objs[0].is_tpgroup() and \
+		doc.selection.objs[0].childs[0].is_circle():
+			tpgroup = doc.selection.objs[0]
+			data = tpgroup.childs_data[1]
+			self.other_side.set_value(not data[2])
+			circle = tpgroup.childs[0]
+			if circle.angle1 == 0:
+				mode = LEFT_POS
+			elif circle.angle1 == math.pi / 2.0:
+				mode = BOTTOM_POS
+			elif circle.angle1 == math.pi:
+				mode = RIGHT_POS
+			else:
+				mode = TOP_POS
+			self.bmp.set_mode(mode)
 
-	def action(self):pass
+
+	def check_selection(self):
+		doc = self.app.current_doc
+		if len(doc.selection.objs) == 1 and \
+		doc.selection.objs[0].is_tpgroup() and \
+		doc.selection.objs[0].childs[0].is_circle():
+			return 1
+		elif len(doc.selection.objs) == 2:
+			obj1 = doc.selection.objs[0]
+			obj2 = doc.selection.objs[1]
+			if obj1.is_circle() and obj2.is_text(): return 2
+			elif obj2.is_circle() and obj1.is_text(): return 2
+		return False
+
+	def update(self, *args):
+		if not self.is_shown(): return
+		state = False
+		if self.app.insp.is_selection():
+			ret = self.check_selection()
+			if ret: state = True
+			if ret == 1: self.update_from_tpgroup()
+		self.set_state(state)
+
+	def action(self):
+		doc = self.app.current_doc
+		if self.check_selection() == 2:
+			circle = doc.selection.objs[0]
+			text_obj = doc.selection.objs[1]
+			if text_obj.is_circle() and circle.is_text():
+				circle, text_obj = text_obj, circle
+			doc.api.place_text_on_circle(circle, text_obj, self.bmp.get_mode(),
+										not self.other_side.get_value())
+		elif self.check_selection() == 1:
+			tpgroup = doc.selection.objs[0]
+			text_obj = tpgroup.childs[1]
+			doc.api.change_tcgroup(tpgroup, text_obj, self.bmp.get_mode(),
+										not self.other_side.get_value())
