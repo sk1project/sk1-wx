@@ -190,13 +190,14 @@ def render_sample(ctx, text, family, fontsize):
 #---Font sampling end
 
 def _get_font_description(text_style, check_nt=False):
-	font_size=text_style[2]
-	if check_nt and os.name == 'nt': font_size *=10
+	font_size = text_style[2]
+	if check_nt and os.name == 'nt': font_size *= 10
 	fnt_descr = text_style[0] + ', ' + text_style[1] + ' ' + str(font_size)
 	return _libpango.create_font_description(fnt_descr)
 
 def _set_layout(layout, text, width, text_style, attributes, check_nt=False):
 	text = text.encode('utf-8')
+	if not width == -1: width *= PANGO_UNITS
 	_libpango.set_layout_width(layout, width)
 	fnt_descr = _get_font_description(text_style, check_nt)
 	_libpango.set_layout_font_description(layout, fnt_descr)
@@ -319,7 +320,7 @@ def get_glyphs(ctx, layout_data, text, width, text_style, attributes):
 		m11 = -1.0
 		if os.name == 'nt':
 			m00 *= 0.1
-			m11 *= 0.1			
+			m11 *= 0.1
 		matrix = cairo.Matrix(m00, 0.0, 0.0, m11,
 							layout_data[i][0], layout_data[i][1])
 		libcairo.apply_cmatrix(cpath, matrix)
