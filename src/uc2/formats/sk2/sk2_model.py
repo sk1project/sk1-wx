@@ -819,10 +819,6 @@ class Text(PrimitiveObject):
 				trafo=[] + sk2_const.NORMAL_TRAFO,
 				style=[] + sk2_const.EMPTY_STYLE):
 
-		if width == sk2_const.TEXTBLOCK_WIDTH:
-			self.cid = TEXT_BLOCK
-		else:
-			self.cid = TEXT_COLUMN
 		self.config = config
 		self.parent = parent
 		self.text = b64encode(text)
@@ -841,6 +837,7 @@ class Text(PrimitiveObject):
 
 	def is_text(self): return True
 	def is_closed(self): return True
+	def is_textblock(self): return self.width == sk2_const.TEXTBLOCK_WIDTH
 
 	def get_glyphs(self):
 		glyphs, points, data, bbox, cl = libgeom.get_text_glyphs(self.get_text(),
