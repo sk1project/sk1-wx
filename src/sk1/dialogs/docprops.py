@@ -337,9 +337,15 @@ class UnitsProps(DP_Panel):
 		self.units = self.doc.methods.get_doc_units()
 		self.units_combo.set_active(unit_names.index(self.units))
 		hpanel.pack(self.units_combo, padding=5)
-		self.pack(hpanel, padding_all=5)
+		self.pack(hpanel)
 
-		self.pack((5, 5))
+		data = [[_('Unit'), _('Value in points')]]
+		for item in uc2const.unit_names:
+			name = uc2const.unit_full_names[item]
+			value = _('%s points') % str(uc2const.unit_dict[item])
+			data.append([name, value])
+		slist = wal.ReportList(self, data)
+		self.pack(slist, expand=True, fill=True, padding_all=5)
 
 		self.origin = self.doc.methods.get_doc_origin()
 		self.pack(wal.Label(self, _('Document origin:')), padding_all=5)
@@ -347,6 +353,7 @@ class UnitsProps(DP_Panel):
 											ORIGIN_NAMES)
 		self.origin_keeper.set_mode(self.origin)
 		self.pack(self.origin_keeper)
+		self.pack((5, 5))
 
 	def save(self):
 		units = unit_names[self.units_combo.get_active()]
