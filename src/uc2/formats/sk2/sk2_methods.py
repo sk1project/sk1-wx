@@ -309,8 +309,14 @@ class SK2_Methods:
 	def get_guide_color(self):
 		return self.get_layer_color(self.get_guide_layer())
 
+	def get_guide_rgb_color(self):
+		return self.get_guide_color()[1]
+
 	def set_guide_color(self, color):
 		self.set_layer_color(self.get_guide_layer(), color)
+
+	def set_guide_rgb_color(self, color):
+		self.set_guide_color([uc2const.COLOR_RGB, color, 1.0, '', ''])
 
 	def is_guide_visible(self):
 		return self.get_guide_layer().properties[0] == 1
