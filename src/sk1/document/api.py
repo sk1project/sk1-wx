@@ -129,6 +129,9 @@ class AbstractAPI:
 	def _set_grid_color(self, color):
 		self.methods.set_grid_rgba_color(color)
 
+	def _set_guide_color(self, color):
+		self.methods.set_guide_rgb_color(color)
+
 	def _set_guide_properties(self, guide, pos, orient):
 		guide.position = pos
 		guide.orientation = orient
@@ -801,6 +804,17 @@ class PresenterAPI(AbstractAPI):
 		self.selection.update()
 
 	#--- GUIDES
+
+	def set_guide_color(self, color):
+		before = self.methods.get_guide_rgb_color()
+		after = color
+		self.methods.set_guide_rgb_color(after)
+		transaction = [
+			[[self._set_guide_color, before]],
+			[[self._set_guide_color, after]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
 
 	def create_guides(self, vals=[]):
 		if vals:
