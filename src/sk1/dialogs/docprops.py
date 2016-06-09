@@ -534,10 +534,79 @@ class GridProps(DP_Panel):
 			self.api.set_layer_properties(grid, props)
 
 
+class GuidePreview(wal.VPanel, wal.Canvas):
+
+	color = []
+
+	def __init__(self, parent, color):
+		self.color = color
+		wal.VPanel.__init__(self, parent, True)
+		wal.Canvas.__init__(self)
+		self.set_bg(wal.WHITE)
+
+	def set_color(self, color):
+		self.color = color
+		self.refresh()
+
+	def paint(self):
+		self.set_stroke(cms.val_255(self.color), 1.0, True)
+		w, h = self.get_size()
+
+		for item in (0.4, 0.5, 0.8):
+			self.draw_line(int(item * w), 0, int(item * w), h)
+		for item in (0.3, 0.7):
+			self.draw_line(0, int(item * h), w, int(item * h))
+
 
 class GuidesProps(DP_Panel):
 
 	name = _('Guides')
+	color = []
+
+	def build(self):
+
+		self.pack((5, 5))
+
+		vpanel = wal.VPanel(self)
+
+		hpanel = wal.HPanel(vpanel)
+		hpanel.pack(wal.Label(hpanel, _('Guide color:')))
+		hpanel.pack((10, 5))
+		self.color = self.doc.methods.get_guide_rgb_color()
+		self.guide_color_btn = wal.ColorButton(hpanel, self.color[:3],
+										onchange=self.on_change)
+		hpanel.pack(self.guide_color_btn)
+		vpanel.pack(hpanel, fill=True, align_center=False)
+
+		val = self.doc.methods.is_guide_visible()
+		self.show_guide_check = wal.Checkbox(vpanel,
+										_('Show grid on canvas'), val)
+		vpanel.pack(self.show_guide_check, align_center=False, padding=5)
+
+		self.pack((10, 10))
+
+		self.preview = GuidePreview(vpanel, deepcopy(self.color))
+		vpanel.pack(self.preview, fill=True, expand=True)
+
+		self.pack(vpanel, fill=True, expand=True, padding_all=5)
+
+	def on_change(self):
+		self.preview.set_color(self.guide_color_btn.get_value())
+
+	def save(self):
+		color = list(self.guide_color_btn.get_value())
+		if not self.color == color:
+			self.api.set_guide_color(color)
+		visibility = self.doc.methods.is_guide_visible()
+		if not visibility == self.show_guide_check.get_value():
+			guide = self.doc.methods.get_guide_layer()
+			props = self.doc.methods.get_guide_properties()
+			props[0] = 0
+			if self.show_guide_check.get_value():props[0] = 1
+			self.api.set_layer_properties(guide, props)
+
+
+
 
 PANELS = [GeneralProps, PageProps, UnitsProps, GridProps, GuidesProps]
 
