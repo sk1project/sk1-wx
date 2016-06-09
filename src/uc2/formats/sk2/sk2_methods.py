@@ -296,9 +296,7 @@ class SK2_Methods:
 		return self.get_layer_properties(self.get_grid_layer())
 
 	def is_grid_visible(self):
-		grid = self.get_grid_layer()
-		if grid.properties[0]: return True
-		return False
+		return self.get_grid_layer().properties[0] == 1
 
 	def set_grid_properties(self, props):
 		self.set_layer_properties(self.get_grid_layer(), props)
@@ -307,6 +305,21 @@ class SK2_Methods:
 
 	def get_guide_layer(self):
 		return self.model.childs[4]
+
+	def get_guide_color(self):
+		return self.get_layer_color(self.get_guide_layer())
+
+	def set_guide_color(self, color):
+		self.set_layer_color(self.get_guide_layer(), color)
+
+	def is_guide_visible(self):
+		return self.get_guide_layer().properties[0] == 1
+
+	def get_guide_properties(self):
+		return self.get_layer_properties(self.get_guide_layer())
+
+	def set_guide_properties(self, props):
+		self.set_layer_properties(self.get_guide_layer(), props)
 
 	#---RECTANGLE
 
