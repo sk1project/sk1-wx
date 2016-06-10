@@ -310,12 +310,14 @@ class Canvas(object):
 	def set_origin(self, x=0, y=0):
 		self.pdc.SetDeviceOrigin(x, y)
 
-	def set_stroke(self, color=None, width=1, dashes=False):
+	def set_stroke(self, color=None, width=1, dashes=[]):
 		if color is None:
 			self.pdc.SetPen(wx.TRANSPARENT_PEN)
 		else:
 			pen = wx.Pen(wx.Colour(*color), width)
-			if dashes: pen = wx.Pen(wx.Colour(*color), width, wx.LONG_DASH)
+			if dashes:
+				pen = wx.Pen(wx.Colour(*color), width, wx.USER_DASH)
+				pen.SetDashes(dashes)
 			self.pdc.SetPen(pen)
 
 	def set_fill(self, color=None):
