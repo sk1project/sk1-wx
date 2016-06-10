@@ -549,7 +549,7 @@ class GuidePreview(wal.VPanel, wal.Canvas):
 		self.refresh()
 
 	def paint(self):
-		self.set_stroke(cms.val_255(self.color), 1.0, True)
+		self.set_stroke(cms.val_255(self.color), 1.0, config.guide_line_dash)
 		w, h = self.get_size()
 
 		for item in (0.4, 0.5, 0.8):
@@ -557,6 +557,8 @@ class GuidePreview(wal.VPanel, wal.Canvas):
 		for item in (0.3, 0.7):
 			self.draw_line(0, int(item * h), w, int(item * h))
 
+
+GUIDE_COLORS = ['#0051FF', '#7DF7F6', '#503E8C', '#FF3C0B', '#8282FF', '#BEBEBE']
 
 class GuidesProps(DP_Panel):
 
@@ -576,6 +578,9 @@ class GuidesProps(DP_Panel):
 		self.guide_color_btn = wal.ColorButton(hpanel, self.color[:3],
 										onchange=self.on_change)
 		hpanel.pack(self.guide_color_btn)
+		hpanel.pack((10, 5))
+		hpanel.pack(CBMiniPalette(hpanel, colors=GUIDE_COLORS,
+								onclick=self.change_color))
 		vpanel.pack(hpanel, fill=True, align_center=False)
 
 		val = self.doc.methods.is_guide_visible()
@@ -592,6 +597,10 @@ class GuidesProps(DP_Panel):
 
 	def on_change(self):
 		self.preview.set_color(self.guide_color_btn.get_value())
+
+	def change_color(self, color):
+		self.guide_color_btn.set_value(color)
+		self.on_change()
 
 	def save(self):
 		color = list(self.guide_color_btn.get_value())
