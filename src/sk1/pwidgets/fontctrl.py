@@ -64,8 +64,7 @@ class FontChoice(wal.FontBitmapChoice):
 	fonts = []
 
 	def __init__(self, parent, selected_font='Sans', onchange=None):
-		self.fonts = libpango.FAMILIES_LIST
-		if not self.fonts: libpango.update_fonts()
+		self.fonts = libpango.get_fonts()[0]
 		bitmaps, maxsize = generate_fontnames(self.fonts)
 		samples = generate_fontsamples(self.fonts)
 		if not selected_font in self.fonts:
