@@ -16,6 +16,7 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import cairo
+from copy import deepcopy
 
 import _libpango
 
@@ -31,3 +32,20 @@ NONPRINTING_CHARS = ' \n\t '.decode('utf-8')
 
 def get_version():
 	return _libpango.get_version()
+
+
+GLYPH_CACHE = {}
+
+def get_glyph_cache(font_name, char):
+	ret = None
+	char = str(char)
+	if font_name in GLYPH_CACHE:
+		if char in GLYPH_CACHE[font_name]:
+			ret = deepcopy(GLYPH_CACHE[font_name][char])
+	return ret
+
+def set_glyph_cache(font_name, char, glyph):
+	char = str(char)
+	if not font_name in GLYPH_CACHE:
+		GLYPH_CACHE[font_name] = {}
+	GLYPH_CACHE[font_name][char] = deepcopy(glyph)

@@ -26,34 +26,9 @@ from uc2 import libcairo
 import _libpango
 
 from core import PANGO_UNITS, NONPRINTING_CHARS, PANGO_LAYOUT
-
-MYANMAR = (u'\u1000', u'\u109f')
-MYANMAR_EXT = (u'\uaa60', u'\uaa7f')
-ARABIC = (u'\u0600', u'\u06ff')
-ARABIC_SUPPLEMENT = (u'\u0750', u'\u077f')
-ARABIC_FORMS_A = (u'\ufb50', u'\ufdff')
-ARABIC_FORMS_B = (u'\ufe70', u'\ufeff')
+from langs import check_maynmar, check_arabic
 
 
-def check_unicode_range(rng, symbol):
-	return rng[0] <= symbol and rng[1] >= symbol
-
-def check_lang(text, ranges):
-	test = text
-	if len(test) > 20: test = test[:20]
-	ret = False
-	for item in test:
-		for reg in ranges:
-			if check_unicode_range(reg, item): ret = True
-		if ret: break
-	return ret
-
-def check_maynmar(text):
-	return check_lang(text, (MYANMAR, MYANMAR_EXT))
-
-def check_arabic(text):
-	return check_lang(text, (ARABIC, ARABIC_SUPPLEMENT,
-							ARABIC_FORMS_A, ARABIC_FORMS_B))
 
 def cluster_text(text, clusters):
 	index = 0
@@ -111,27 +86,6 @@ def rtl_word_group_in_reg(text_seq, reg):
 		i += 1
 	if buff:
 		text_seq[i - 1] = buff
-
-
-
-
-GLYPH_CACHE = {}
-
-
-
-def get_glyph_cache(font_name, char):
-	ret = None
-	char = str(char)
-	if font_name in GLYPH_CACHE:
-		if char in GLYPH_CACHE[font_name]:
-			ret = deepcopy(GLYPH_CACHE[font_name][char])
-	return ret
-
-def set_glyph_cache(font_name, char, glyph):
-	char = str(char)
-	if not font_name in GLYPH_CACHE:
-		GLYPH_CACHE[font_name] = {}
-	GLYPH_CACHE[font_name][char] = deepcopy(glyph)
 
 def _get_font_description(text_style, check_nt=False):
 	font_size = text_style[2]
