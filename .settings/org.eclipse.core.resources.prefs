@@ -290,6 +290,7 @@ encoding//src/uc2/libimg/magickwand.py=utf-8
 encoding//src/uc2/libpango/__init__.py=utf-8
 encoding//src/uc2/libpango/core.py=utf-8
 encoding//src/uc2/libpango/fonts.py=utf-8
+encoding//src/uc2/libpango/langs.py=utf-8
 encoding//src/uc2/libpango/paths.py=utf-8
 encoding//src/uc2/msgconst.py=utf-8
 encoding//src/uc2/uc2const.py=utf-8
