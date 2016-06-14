@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2012 by Igor E. Novikov
+#	Copyright (C) 2012-2016 by Igor E. Novikov
 #
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
@@ -29,6 +29,9 @@ from text_on_path import set_text_on_path
 
 """
 Package provides basic routines for Bezier curves.
+
+BBOX DEFINITION:
+[x0,y0,x1,y1]
 
 PATHS DEFINITION:
 [path0, path1, ...]
