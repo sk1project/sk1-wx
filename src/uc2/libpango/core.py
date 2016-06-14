@@ -15,7 +15,19 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import cairo
 
-from core import get_version
-from fonts import get_fonts, get_sample_size, render_sample
-from paths import get_text_paths
+import _libpango
+
+PANGO_UNITS = 1024
+
+SURFACE = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
+CTX = cairo.Context(SURFACE)
+DIRECT_MATRIX = cairo.Matrix()
+
+PANGO_MATRIX = cairo.Matrix(1.0, 0.0, 0.0, -1.0, 0.0, 0.0)
+PANGO_LAYOUT = _libpango.create_layout(CTX)
+NONPRINTING_CHARS = ' \n\t '.decode('utf-8')
+
+def get_version():
+	return _libpango.get_version()
