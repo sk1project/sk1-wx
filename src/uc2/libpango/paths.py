@@ -18,16 +18,15 @@
 
 import os
 import cairo
-import cgi
 from copy import deepcopy
 
 from uc2 import libcairo
 
 import _libpango
 
-from core import PANGO_UNITS, NONPRINTING_CHARS, PANGO_LAYOUT
+import core
+from core import NONPRINTING_CHARS, PANGO_LAYOUT
 from langs import check_maynmar, check_arabic
-
 
 
 def cluster_text(text, clusters):
@@ -86,35 +85,6 @@ def rtl_word_group_in_reg(text_seq, reg):
 		i += 1
 	if buff:
 		text_seq[i - 1] = buff
-
-def _get_font_description(text_style, check_nt=False):
-	font_size = text_style[2]
-	if check_nt and os.name == 'nt': font_size *= 10
-	fnt_descr = text_style[0] + ', ' + text_style[1] + ' ' + str(font_size)
-	return _libpango.create_font_description(fnt_descr)
-
-def _set_layout(layout, text, width, text_style, attributes, check_nt=False):
-	if not width == -1: width *= PANGO_UNITS
-	_libpango.set_layout_width(layout, width)
-	fnt_descr = _get_font_description(text_style, check_nt)
-	_libpango.set_layout_font_description(layout, fnt_descr)
-	_libpango.set_layout_alignment(layout, text_style[3])
-	text = text.encode('utf-8')
-	markup = cgi.escape(text)
-	_libpango.set_layout_markup(layout, markup)
-
-def get_line_positions():
-	return _libpango.get_layout_line_positions(PANGO_LAYOUT)
-
-def get_char_positions(size):
-	return _libpango.get_layout_char_positions(PANGO_LAYOUT, size)
-
-def get_cluster_positions(size):
-	return _libpango.get_layout_cluster_positions(PANGO_LAYOUT, size)
-
-def get_layout_bbox():
-	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
-	return [0.0, 0.0, float(w), float(-h)]
 
 def find_rtl_regs(layout_data):
 	rtl_regs = []
@@ -211,7 +181,7 @@ def get_glyphs(ctx, layout_data, text, width, text_style, attributes):
 		ctx.new_path()
 		ctx.move_to(0, 0)
 		layout = _libpango.create_layout(ctx)
-		_set_layout(layout, item, width, text_style, attributes, check_nt=True)
+		core.set_layout(layout, item, width, text_style, attributes, True)
 		_libpango.layout_path(ctx, layout)
 		cpath = ctx.copy_path()
 		m00 = 1.0
@@ -239,7 +209,7 @@ def get_rtl_glyphs(ctx, layout_data, byte_dict, text, width, text_style, attribu
 		ctx.new_path()
 		ctx.move_to(0, 0)
 		layout = _libpango.create_layout(ctx)
-		_set_layout(layout, txt, width, text_style, attributes, check_nt=True)
+		core.set_layout(layout, txt, width, text_style, attributes, True)
 		_libpango.layout_path(ctx, layout)
 		cpath = ctx.copy_path()
 		m00 = 1.0
@@ -277,7 +247,7 @@ def get_log_layout_data(layout_data, byte_dict, rtl_regs):
 
 def get_text_paths(orig_text, width, text_style, attributes):
 	if not orig_text: orig_text = NONPRINTING_CHARS[0]
-	_set_layout(PANGO_LAYOUT, orig_text, width, text_style, attributes)
+	core.set_layout(PANGO_LAYOUT, orig_text, width, text_style, attributes)
 	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
 
 	surf = cairo.ImageSurface(cairo.FORMAT_RGB24, 100, 100)
@@ -285,7 +255,7 @@ def get_text_paths(orig_text, width, text_style, attributes):
 	ctx.set_matrix(libcairo.DIRECT_MATRIX)
 
 	line_points = []
-	for item in get_line_positions():
+	for item in core.get_line_positions():
 		line_points.append([0.0, item])
 
 	text = '' + orig_text
@@ -295,7 +265,7 @@ def get_text_paths(orig_text, width, text_style, attributes):
 
 	#Ligature support
 	if text_style[5]:
-		data = get_cluster_positions(len(orig_text))
+		data = core.get_cluster_positions(len(orig_text))
 		layout_data, clusters, clusters_index, bidi_flag, rtl_flag = data
 
 		if not rtl_flag and not bidi_flag:
@@ -322,7 +292,7 @@ def get_text_paths(orig_text, width, text_style, attributes):
 
 	#Simple char-by-char rendering
 	else:
-		layout_data = get_char_positions(len(orig_text))
+		layout_data = core.get_char_positions(len(orig_text))
 		log_layout_data = layout_data
 		glyphs = get_glyphs(ctx, layout_data, text,
 						width, text_style, attributes)

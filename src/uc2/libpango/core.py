@@ -15,7 +15,9 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import cairo
+import cgi
 from copy import deepcopy
 
 import _libpango
@@ -49,3 +51,34 @@ def set_glyph_cache(font_name, char, glyph):
 	if not font_name in GLYPH_CACHE:
 		GLYPH_CACHE[font_name] = {}
 	GLYPH_CACHE[font_name][char] = deepcopy(glyph)
+
+#--- Pango context functionality
+
+def get_font_description(text_style, check_nt=False):
+	font_size = text_style[2]
+	if check_nt and os.name == 'nt': font_size *= 10
+	fnt_descr = text_style[0] + ', ' + text_style[1] + ' ' + str(font_size)
+	return _libpango.create_font_description(fnt_descr)
+
+def set_layout(layout, text, width, text_style, attributes, check_nt=False):
+	if not width == -1: width *= PANGO_UNITS
+	_libpango.set_layout_width(layout, width)
+	fnt_descr = get_font_description(text_style, check_nt)
+	_libpango.set_layout_font_description(layout, fnt_descr)
+	_libpango.set_layout_alignment(layout, text_style[3])
+	text = text.encode('utf-8')
+	markup = cgi.escape(text)
+	_libpango.set_layout_markup(layout, markup)
+
+def get_line_positions():
+	return _libpango.get_layout_line_positions(PANGO_LAYOUT)
+
+def get_char_positions(size):
+	return _libpango.get_layout_char_positions(PANGO_LAYOUT, size)
+
+def get_cluster_positions(size):
+	return _libpango.get_layout_cluster_positions(PANGO_LAYOUT, size)
+
+def get_layout_bbox():
+	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
+	return [0.0, 0.0, float(w), float(-h)]
