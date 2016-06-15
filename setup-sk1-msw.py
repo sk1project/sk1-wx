@@ -202,6 +202,7 @@ if PORTABLE_PACKAGE:
 
     for root, dirs, files in os.walk(portable_name):
         for item in files:
+            if item[-3:]=='.py': continue
             path = os.path.join(root, item)
             print 'Compressing', path
             ziph.write(path)
