@@ -15,7 +15,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wal
+import wal, inspect
 
 from sk1 import events, modes
 from sk1.context import PLUGINS, NO_DOC, DEFAULT, MULTIPLE, GROUP, \
@@ -36,8 +36,7 @@ class AppCtxPanel(wal.HPanel):
 		self.add(spacer)
 
 		for item in PLUGINS:
-			plg = item(self.app, self)
-			self.plugins_dict[plg.name] = plg
+			self.plugins_dict[item.name] = item
 
 		events.connect(events.NO_DOCS, self.rebuild)
 		events.connect(events.DOC_CHANGED, self.rebuild)
@@ -54,11 +53,14 @@ class AppCtxPanel(wal.HPanel):
 		self.plugins = []
 		if mode:
 			for item in mode:
+				plg = self.plugins_dict[item]
+				if inspect.isclass(plg):
+					self.plugins_dict[item] = plg(self.app, self)
 				self.pack(self.plugins_dict[item])
 				self.plugins_dict[item].show(update=False)
 				self.plugins.append(self.plugins_dict[item])
-		self.Layout()
-		self.Fit()
+		self.layout()
+		self.fit()
 		self.mode = mode
 
 	def get_mode(self):
