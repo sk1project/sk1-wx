@@ -38,6 +38,8 @@ class CtxPlugin(wal.HPanel):
 		self.add(wal.VLine(self), 0, wal.ALL | wal.EXPAND, 2)
 		self.hide()
 
+	def update(self, *args):pass
+
 class ActionCtxPlugin(CtxPlugin):
 
 	ids = []
@@ -52,7 +54,6 @@ class ActionCtxPlugin(CtxPlugin):
 			else:
 				btn = ActionButton(self, self.actions[item])
 				self.add(btn, 0, wal.LEFT | wal.CENTER, 2)
-
 
 
 
