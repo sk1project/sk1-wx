@@ -22,10 +22,8 @@ from copy import deepcopy
 
 from uc2 import libcairo
 
-import _libpango
-
 import core
-from core import NONPRINTING_CHARS, PANGO_LAYOUT
+from core import NONPRINTING_CHARS
 from langs import check_maynmar, check_arabic
 
 
@@ -180,9 +178,9 @@ def get_glyphs(ctx, layout_data, text, width, text_style, attributes):
 
 		ctx.new_path()
 		ctx.move_to(0, 0)
-		layout = _libpango.create_layout(ctx)
-		core.set_layout(layout, item, width, text_style, attributes, True)
-		_libpango.layout_path(ctx, layout)
+		layout = core.create_layout(ctx)
+		core.set_layout(item, width, text_style, attributes, True, layout)
+		core.layout_path(ctx, layout)
 		cpath = ctx.copy_path()
 		m00 = 1.0
 		m11 = -1.0
@@ -208,9 +206,9 @@ def get_rtl_glyphs(ctx, layout_data, byte_dict, text, width, text_style, attribu
 
 		ctx.new_path()
 		ctx.move_to(0, 0)
-		layout = _libpango.create_layout(ctx)
-		core.set_layout(layout, txt, width, text_style, attributes, True)
-		_libpango.layout_path(ctx, layout)
+		layout = core.create_layout(ctx)
+		core.set_layout(txt, width, text_style, attributes, True, layout)
+		core.layout_path(ctx, layout)
 		cpath = ctx.copy_path()
 		m00 = 1.0
 		m11 = -1.0
@@ -247,8 +245,8 @@ def get_log_layout_data(layout_data, byte_dict, rtl_regs):
 
 def get_text_paths(orig_text, width, text_style, attributes):
 	if not orig_text: orig_text = NONPRINTING_CHARS[0]
-	core.set_layout(PANGO_LAYOUT, orig_text, width, text_style, attributes)
-	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
+	core.set_layout(orig_text, width, text_style, attributes)
+	w, h = core.get_layout_size()
 
 	surf = cairo.ImageSurface(cairo.FORMAT_RGB24, 100, 100)
 	ctx = cairo.Context(surf)

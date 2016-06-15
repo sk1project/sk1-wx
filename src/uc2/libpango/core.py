@@ -54,13 +54,16 @@ def set_glyph_cache(font_name, char, glyph):
 
 #--- Pango context functionality
 
+def create_layout(ctx=CTX):
+	return _libpango.create_layout(ctx)
+
 def get_font_description(text_style, check_nt=False):
 	font_size = text_style[2]
 	if check_nt and os.name == 'nt': font_size *= 10
 	fnt_descr = text_style[0] + ', ' + text_style[1] + ' ' + str(font_size)
 	return _libpango.create_font_description(fnt_descr)
 
-def set_layout(layout, text, width, text_style, attributes, check_nt=False):
+def set_layout(text, width, text_style, attributes, check_nt=False, layout=PANGO_LAYOUT):
 	if not width == -1: width *= PANGO_UNITS
 	_libpango.set_layout_width(layout, width)
 	fnt_descr = get_font_description(text_style, check_nt)
@@ -70,15 +73,21 @@ def set_layout(layout, text, width, text_style, attributes, check_nt=False):
 	markup = cgi.escape(text)
 	_libpango.set_layout_markup(layout, markup)
 
-def get_line_positions():
-	return _libpango.get_layout_line_positions(PANGO_LAYOUT)
+def layout_path(ctx=CTX, layout=PANGO_LAYOUT):
+	_libpango.layout_path(ctx, layout)
 
-def get_char_positions(size):
-	return _libpango.get_layout_char_positions(PANGO_LAYOUT, size)
+def get_line_positions(layout=PANGO_LAYOUT):
+	return _libpango.get_layout_line_positions(layout)
 
-def get_cluster_positions(size):
-	return _libpango.get_layout_cluster_positions(PANGO_LAYOUT, size)
+def get_char_positions(size, layout=PANGO_LAYOUT):
+	return _libpango.get_layout_char_positions(layout, size)
 
-def get_layout_bbox():
-	w, h = _libpango.get_layout_pixel_size(PANGO_LAYOUT)
+def get_cluster_positions(size, layout=PANGO_LAYOUT):
+	return _libpango.get_layout_cluster_positions(layout, size)
+
+def get_layout_size(layout=PANGO_LAYOUT):
+	return _libpango.get_layout_pixel_size(layout)
+
+def get_layout_bbox(layout=PANGO_LAYOUT):
+	w, h = get_layout_size(layout)
 	return [0.0, 0.0, float(w), float(-h)]
