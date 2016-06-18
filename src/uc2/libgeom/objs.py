@@ -268,8 +268,8 @@ def get_polygon_paths(corners_num, angle1, angle2, coef1, coef2):
 
 #------------- TEXT -------------
 
-def get_text_glyphs(text, width, text_style, attributes):
-	return libpango.get_text_paths(text, width, text_style, attributes)
+def get_text_glyphs(text, width, text_style, markup):
+	return libpango.get_text_paths(text, width, text_style, markup)
 
 def get_paths_from_glyph(glyph):
 	glyph = libcairo.get_path_from_cpath(glyph)
