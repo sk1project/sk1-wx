@@ -63,15 +63,15 @@ def get_font_description(text_style, check_nt=False):
 	fnt_descr = text_style[0] + ', ' + text_style[1] + ' ' + str(font_size)
 	return _libpango.create_font_description(fnt_descr)
 
-def set_layout(text, width, text_style, attributes, check_nt=False, layout=PANGO_LAYOUT):
+def set_layout(text, width, text_style, markup, check_nt=False, layout=PANGO_LAYOUT):
 	if not width == -1: width *= PANGO_UNITS
 	_libpango.set_layout_width(layout, width)
 	fnt_descr = get_font_description(text_style, check_nt)
 	_libpango.set_layout_font_description(layout, fnt_descr)
 	_libpango.set_layout_alignment(layout, text_style[3])
 	text = text.encode('utf-8')
-	markup = cgi.escape(text)
-	_libpango.set_layout_markup(layout, markup)
+	text_with_markup = cgi.escape(text)
+	_libpango.set_layout_markup(layout, text_with_markup)
 
 def layout_path(ctx=CTX, layout=PANGO_LAYOUT):
 	_libpango.layout_path(ctx, layout)

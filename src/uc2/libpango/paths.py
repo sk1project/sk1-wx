@@ -166,7 +166,7 @@ def get_rtl_layout_data(layout_data, rtl_regs):
 		data += layout_data[index:]
 	return data
 
-def get_glyphs(ctx, layout_data, text, width, text_style, attributes):
+def get_glyphs(ctx, layout_data, text, width, text_style, markup):
 	glyphs = []
 	i = -1
 	for item in text:
@@ -179,7 +179,7 @@ def get_glyphs(ctx, layout_data, text, width, text_style, attributes):
 		ctx.new_path()
 		ctx.move_to(0, 0)
 		layout = core.create_layout(ctx)
-		core.set_layout(item, width, text_style, attributes, True, layout)
+		core.set_layout(item, width, text_style, markup, True, layout)
 		core.layout_path(ctx, layout)
 		cpath = ctx.copy_path()
 		m00 = 1.0
@@ -193,7 +193,7 @@ def get_glyphs(ctx, layout_data, text, width, text_style, attributes):
 		glyphs.append(cpath)
 	return glyphs
 
-def get_rtl_glyphs(ctx, layout_data, byte_dict, text, width, text_style, attributes):
+def get_rtl_glyphs(ctx, layout_data, byte_dict, text, width, text_style, markup):
 	glyphs = []
 	for item in layout_data:
 		try:
@@ -207,7 +207,7 @@ def get_rtl_glyphs(ctx, layout_data, byte_dict, text, width, text_style, attribu
 		ctx.new_path()
 		ctx.move_to(0, 0)
 		layout = core.create_layout(ctx)
-		core.set_layout(txt, width, text_style, attributes, True, layout)
+		core.set_layout(txt, width, text_style, markup, True, layout)
 		core.layout_path(ctx, layout)
 		cpath = ctx.copy_path()
 		m00 = 1.0
@@ -243,9 +243,9 @@ def get_log_layout_data(layout_data, byte_dict, rtl_regs):
 		index += 1
 	return log_layout_data
 
-def get_text_paths(orig_text, width, text_style, attributes):
+def get_text_paths(orig_text, width, text_style, markup):
 	if not orig_text: orig_text = NONPRINTING_CHARS[0]
-	core.set_layout(orig_text, width, text_style, attributes)
+	core.set_layout(orig_text, width, text_style, markup)
 	w, h = core.get_layout_size()
 
 	surf = cairo.ImageSurface(cairo.FORMAT_RGB24, 100, 100)
@@ -273,7 +273,7 @@ def get_text_paths(orig_text, width, text_style, attributes):
 					word_group(text)
 			log_layout_data = layout_data
 			glyphs = get_glyphs(ctx, layout_data, text,
-							width, text_style, attributes)
+							width, text_style, markup)
 		else:
 			byte_dict = utf8_to_ucs4_dict(text)
 			clusters = fix_rlt_clusters(clusters_index, byte_dict)
@@ -285,7 +285,7 @@ def get_text_paths(orig_text, width, text_style, attributes):
 				if check_arabic(text[item[0]:item[1]]):
 					rtl_word_group_in_reg(text, item)
 			glyphs = get_rtl_glyphs(ctx, layout_data, byte_dict, text,
-						width, text_style, attributes)
+						width, text_style, markup)
 			log_layout_data = get_log_layout_data(layout_data, byte_dict, rtl_regs)
 
 	#Simple char-by-char rendering
@@ -293,7 +293,7 @@ def get_text_paths(orig_text, width, text_style, attributes):
 		layout_data = core.get_char_positions(len(orig_text))
 		log_layout_data = layout_data
 		glyphs = get_glyphs(ctx, layout_data, text,
-						width, text_style, attributes)
+						width, text_style, markup)
 
 	layout_bbox = [0.0, layout_data[0][1],
 					float(w), layout_data[0][1] - float(h)]
