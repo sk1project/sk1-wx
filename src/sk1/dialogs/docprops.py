@@ -557,6 +557,11 @@ class GuidePreview(wal.VPanel, wal.Canvas):
 		for item in (0.3, 0.7):
 			self.draw_line(0, int(item * h), w, int(item * h))
 
+		if wal.is_msw():
+			self.set_stroke(wal.GRAY)
+			self.set_fill()
+			self.draw_rect(0, 0, w, h)
+
 
 GUIDE_COLORS = ['#0051FF', '#7DF7F6', '#503E8C', '#FF3C0B', '#8282FF', '#BEBEBE']
 
