@@ -166,60 +166,6 @@ def get_rtl_layout_data(layout_data, rtl_regs):
 		data += layout_data[index:]
 	return data
 
-def get_glyphs(ctx, layout_data, text, width, text_style, markup):
-	glyphs = []
-	i = -1
-	for item in text:
-		i += 1
-
-		if item in NONPRINTING_CHARS:
-			glyphs.append(None)
-			continue
-
-		ctx.new_path()
-		ctx.move_to(0, 0)
-		layout = core.create_layout(ctx)
-		core.set_layout(item, width, text_style, markup, True, layout)
-		core.layout_path(ctx, layout)
-		cpath = ctx.copy_path()
-		m00 = 1.0
-		m11 = -1.0
-		if os.name == 'nt':
-			m00 *= 0.1
-			m11 *= 0.1
-		matrix = cairo.Matrix(m00, 0.0, 0.0, m11,
-							layout_data[i][0], layout_data[i][1])
-		libcairo.apply_cmatrix(cpath, matrix)
-		glyphs.append(cpath)
-	return glyphs
-
-def get_rtl_glyphs(ctx, layout_data, byte_dict, text, width, text_style, markup):
-	glyphs = []
-	for item in layout_data:
-		try:
-			txt = text[byte_dict[item[5]]]
-		except:continue
-
-		if txt in NONPRINTING_CHARS:
-			glyphs.append(None)
-			continue
-
-		ctx.new_path()
-		ctx.move_to(0, 0)
-		layout = core.create_layout(ctx)
-		core.set_layout(txt, width, text_style, markup, True, layout)
-		core.layout_path(ctx, layout)
-		cpath = ctx.copy_path()
-		m00 = 1.0
-		m11 = -1.0
-		if os.name == 'nt':
-			m00 *= 0.1
-			m11 *= 0.1
-		matrix = cairo.Matrix(m00, 0.0, 0.0, m11, item[0], item[1])
-		libcairo.apply_cmatrix(cpath, matrix)
-		glyphs.append(cpath)
-	return glyphs
-
 def is_item_in_rtl(index, rtl_regs):
 	for item in rtl_regs:
 		if index < item[0]:
@@ -243,9 +189,74 @@ def get_log_layout_data(layout_data, byte_dict, rtl_regs):
 		index += 1
 	return log_layout_data
 
+def get_glyphs(ctx, layout_data, text, width, text_style, markup):
+	glyphs = []
+	i = -1
+	for item in text:
+		i += 1
+
+		if item in NONPRINTING_CHARS:
+			glyphs.append(None)
+			continue
+
+		ctx.new_path()
+		ctx.move_to(0, 0)
+		layout = core.create_layout(ctx)
+		text_range = [i, i + len(item)]
+		core.set_layout(item, width, text_style, markup, text_range,
+					 True, layout)
+		core.layout_path(ctx, layout)
+		cpath = ctx.copy_path()
+		m00 = 1.0
+		m11 = -1.0
+		if os.name == 'nt':
+			m00 *= 0.1
+			m11 *= 0.1
+		matrix = cairo.Matrix(m00, 0.0, 0.0, m11,
+							layout_data[i][0], layout_data[i][1])
+		print layout_data[i][0], layout_data[i][1]
+		libcairo.apply_cmatrix(cpath, matrix)
+		glyphs.append(cpath)
+	return glyphs
+
+def get_rtl_glyphs(ctx, layout_data, byte_dict, rtl_regs,
+				 text, width, text_style, markup):
+	glyphs = []
+	for item in layout_data:
+		try:
+			index = byte_dict[item[5]]
+			txt = text[index]
+			if is_item_in_rtl(index, rtl_regs):
+				text_range = [index + 1, index - len(txt) + 1]
+			else:
+				text_range = [index, index + len(txt)]
+
+		except:continue
+
+		if txt in NONPRINTING_CHARS:
+			glyphs.append(None)
+			continue
+
+		ctx.new_path()
+		ctx.move_to(0, 0)
+		layout = core.create_layout(ctx)
+		core.set_layout(txt, width, text_style, markup, text_range, True, layout)
+		core.layout_path(ctx, layout)
+		cpath = ctx.copy_path()
+		m00 = 1.0
+		m11 = -1.0
+		if os.name == 'nt':
+			m00 *= 0.1
+			m11 *= 0.1
+		matrix = cairo.Matrix(m00, 0.0, 0.0, m11, item[0], item[1])
+		libcairo.apply_cmatrix(cpath, matrix)
+		glyphs.append(cpath)
+	return glyphs
+
 def get_text_paths(orig_text, width, text_style, markup):
 	if not orig_text: orig_text = NONPRINTING_CHARS[0]
-	core.set_layout(orig_text, width, text_style, markup)
+	text_range = [0, len(orig_text)]
+	core.set_layout(orig_text, width, text_style, markup, text_range)
 	w, h = core.get_layout_size()
 
 	surf = cairo.ImageSurface(cairo.FORMAT_RGB24, 100, 100)
@@ -284,8 +295,8 @@ def get_text_paths(orig_text, width, text_style, markup):
 			for item in log_rtl_regs:
 				if check_arabic(text[item[0]:item[1]]):
 					rtl_word_group_in_reg(text, item)
-			glyphs = get_rtl_glyphs(ctx, layout_data, byte_dict, text,
-						width, text_style, markup)
+			glyphs = get_rtl_glyphs(ctx, layout_data, byte_dict, log_rtl_regs,
+								text, width, text_style, markup)
 			log_layout_data = get_log_layout_data(layout_data, byte_dict, rtl_regs)
 
 	#Simple char-by-char rendering
