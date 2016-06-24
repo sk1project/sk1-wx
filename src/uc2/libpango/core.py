@@ -18,7 +18,7 @@
 import os
 import cairo
 from copy import deepcopy
-from markup import apply_markup
+from markup import apply_markup, apply_glyph_markup
 
 import _libpango
 
@@ -64,15 +64,25 @@ def get_font_description(text_style, check_nt=False):
 	fnt_descr = text_style[0] + ', ' + text_style[1] + ' ' + str(font_size)
 	return _libpango.create_font_description(fnt_descr)
 
-def set_layout(text, width, text_style, markup, text_range=[],
+def set_layout(text, width, text_style, markup, layout=PANGO_LAYOUT):
+	if not width == -1: width *= PANGO_UNITS
+	_libpango.set_layout_width(layout, width)
+	fnt_descr = get_font_description(text_style)
+	_libpango.set_layout_font_description(layout, fnt_descr)
+	_libpango.set_layout_alignment(layout, text_style[3])
+	markuped_text = apply_markup(text, markup)
+	_libpango.set_layout_markup(layout, markuped_text)
+
+def set_glyph_layout(text, width, text_style, markup, text_range=[],
 			check_nt=False, layout=PANGO_LAYOUT):
 	if not width == -1: width *= PANGO_UNITS
 	_libpango.set_layout_width(layout, width)
 	fnt_descr = get_font_description(text_style, check_nt)
 	_libpango.set_layout_font_description(layout, fnt_descr)
 	_libpango.set_layout_alignment(layout, text_style[3])
-	markuped_text = apply_markup(text, text_range, markup, check_nt)
+	markuped_text, vpos = apply_glyph_markup(text, text_range, markup, check_nt)
 	_libpango.set_layout_markup(layout, markuped_text)
+	return vpos
 
 def layout_path(ctx=CTX, layout=PANGO_LAYOUT):
 	_libpango.layout_path(ctx, layout)
