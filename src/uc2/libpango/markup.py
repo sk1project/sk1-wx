@@ -36,11 +36,20 @@ def intersect_ranges(text_range, markup):
 	return new_markup
 
 def get_tags_from_descr(tag_descr, check_nt=False):
-	if not isinstance(tag_descr, tuple):
-		if tag_descr in ('sub', 'sup'):
-			return '<span size="xx-small">', '</span>'
-		return '<%s>' % tag_descr, '</%s>' % tag_descr
-	#TODO:implement <span> tag
+	start = ''
+	end = ''
+	if not isinstance(tag_descr, list):
+		tag_descr = [tag_descr, ]
+	for item in tag_descr:
+		if not isinstance(item, tuple):
+			if item in ('sub', 'sup'):
+				start = '<span size="xx-small">' + start
+				end += '</span>'
+			else:
+				start = '<%s>' % item + start
+				end += '</%s>' % item
+			#TODO:implement <span> tag
+	return start, end
 
 def markup_to_tag_dict(markup):
 	tag_dict = {}
@@ -48,12 +57,20 @@ def markup_to_tag_dict(markup):
 		tag_descr = item[0]
 		rng = item[1]
 		tag, tag_end = get_tags_from_descr(tag_descr)
+
 		if rng[0] in tag_dict:
-			tag_dict[rng[0]] = tag + tag_dict[rng[0]]
+			if tag_dict[rng[0]][1] == '/':
+				tag_dict[rng[0]] += tag
+			else:
+				tag_dict[rng[0]] = tag + tag_dict[rng[0]]
 		else:
 			tag_dict[rng[0]] = tag
+
 		if rng[1] in tag_dict:
-			tag_dict[rng[1]] += tag_end
+			if tag_dict[rng[1]][1] == '/':
+				tag_dict[rng[1]] += tag_end
+			else:
+				tag_dict[rng[1]] = tag + tag_dict[rng[1]]
 		else:
 			tag_dict[rng[1]] = tag_end
 	return tag_dict
