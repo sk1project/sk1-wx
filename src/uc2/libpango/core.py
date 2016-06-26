@@ -60,7 +60,7 @@ def create_layout(ctx=CTX):
 
 def get_font_description(text_style, check_nt=False):
 	font_size = text_style[2]
-	if check_nt and os.name == 'nt': font_size *= 10
+	if check_nt and os.name == 'nt': font_size *= 10.0
 	fnt_descr = text_style[0] + ', ' + text_style[1] + ' ' + str(font_size)
 	return _libpango.create_font_description(fnt_descr)
 
