@@ -41,7 +41,14 @@ def get_tags_from_descr(tag_descr, check_nt=False):
 	if not isinstance(tag_descr, list):
 		tag_descr = [tag_descr, ]
 	for item in tag_descr:
-		if not isinstance(item, tuple):
+		if isinstance(item, tuple):
+			if item[0] == 'font':
+				font_size = item[3]
+				if check_nt and os.name == 'nt': font_size *= 10.0
+				start = '<span font="%s, %s %s">' % (item[1],
+								item[2], str(font_size)) + start
+				end += '</span>'
+		else:
 			if item in ('sub', 'sup'):
 				start = '<span size="xx-small">' + start
 				end += '</span>'
