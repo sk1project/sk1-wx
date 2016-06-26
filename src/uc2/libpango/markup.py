@@ -55,7 +55,6 @@ def get_tags_from_descr(tag_descr, check_nt=False):
 			else:
 				start = '<%s>' % item + start
 				end += '</%s>' % item
-			#TODO:implement <span> tag
 	return start, end
 
 def markup_to_tag_dict(markup):
