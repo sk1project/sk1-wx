@@ -267,7 +267,9 @@ def get_rtl_glyphs(ctx, layout_data, log_layout_data, byte_dict, rtl_regs,
 
 def get_text_paths(orig_text, width, text_style, markup):
 # Test markup
-#	markup = [['b', (6, 11)], ['i', (22, 26)], [['b', 'i'], (28, 39)],
+# Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+# tempor incididunt ut labore et dolore magna aliqua.
+#	markup = [[('font', 'Serif', 'Regular', 24), (0, 5)], ['b', (6, 11)], ['i', (22, 26)], [['b', 'i'], (28, 39)],
 #			['sub', (52, 55)], ['sup', (61, 63)], ['s', (73, 79)], ['u', (80, 90)], ]
 
 	if not orig_text:
