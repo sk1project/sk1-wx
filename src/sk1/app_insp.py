@@ -539,3 +539,18 @@ class AppInspector:
 			if doc.canvas.controller.target.trafos:
 				return True
 		return False
+
+	def can_be_markup_cleared(self, doc=None):
+		if doc is None: doc = self.app.current_doc
+		if doc is None: return False
+		elif self.is_selection(doc):
+			objs = doc.selection.objs
+			if len(objs) == 1:
+				obj = objs[0]
+				if obj.is_text() and obj.markup:
+					return True
+		#TODO: fix for edit mode
+#		elif doc.canvas.mode in (modes.TEXT_EDIT_MODE, modes.TEXT_EDITOR_MODE):
+#			if doc.canvas.controller.target.trafos:
+#				return True
+		return False
