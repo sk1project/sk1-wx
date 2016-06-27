@@ -276,6 +276,10 @@ class AbstractAPI:
 		obj.trafos = trafos
 		obj.update()
 
+	def _set_text_markup(self, obj, markup):
+		obj.markup = markup
+		obj.update()
+
 	def _apply_trafo(self, objs, trafo):
 		before = []
 		after = []
@@ -2099,6 +2103,24 @@ class PresenterAPI(AbstractAPI):
 			False]
 		self.add_undo(transaction)
 		self.selection.update()
+
+	def set_text_markup(self, obj, markup, markup_before):
+		sel_before = [] + self.selection.objs
+		self._set_text_markup(obj, markup)
+		transaction = [
+			[[self._set_text_markup, obj, markup_before],
+			[self._set_selection, sel_before]],
+			[[self._set_text_markup, obj, markup],
+			[self._set_selection, sel_before]],
+			False]
+		self.add_undo(transaction)
+		self.selection.update()
+
+	def clear_text_markup(self, obj=None):
+		if not obj:
+			sel_before = [] + self.selection.objs
+			obj = sel_before[0]
+		self.set_text_markup(obj, [], obj.markup)
 
 
 
