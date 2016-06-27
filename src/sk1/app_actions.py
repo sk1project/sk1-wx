@@ -188,6 +188,7 @@ def create_actions(app):
 (pdids.ID_TEXT_ON_PATH, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TextOnPathPlugin',)),
 (pdids.ID_TEXT_ON_CIRCLE, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TextOnCirclePlugin',)),
 (pdids.ID_STRAIGHTEN_TEXT, proxy.straighten_text, sel_chnls, insp.can_be_straighten_text),
+(pdids.ID_CLEAR_MARKUP, proxy.clear_text_markup, sel_chnls, insp.can_be_markup_cleared),
 (pdids.ID_UPPER_TEXT, proxy.upper_text, sel_chnls, insp.is_text_selection),
 (pdids.ID_LOWER_TEXT, proxy.lower_text, sel_chnls, insp.is_text_selection),
 (pdids.ID_CAPITALIZE_TEXT, proxy.capitalize_text, sel_chnls, insp.is_text_selection),
