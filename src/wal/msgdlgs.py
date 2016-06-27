@@ -54,6 +54,6 @@ def ync_dialog(parent, title, text):
 	ret = _dialog(parent, title, text, wx.ICON_WARNING, True, True)
 	if ret == wx.ID_YES: return True
 	if ret == wx.ID_NO: return False
-	else: return None
+	return None
 
 
