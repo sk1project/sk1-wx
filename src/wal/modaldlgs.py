@@ -133,9 +133,9 @@ class OkCancelDialog(SimpleDialog):
 		self.box.pack(self.button_box, fill=True)
 
 		self.ok_btn = Button(self.button_box, '', onclick=self.on_ok,
-							pid=self.action_button)
+							default=True, pid=self.action_button)
 		self.cancel_btn = Button(self.button_box, '', onclick=self.on_cancel,
-							default=True, pid=const.BUTTON_CANCEL)
+								pid=const.BUTTON_CANCEL)
 
 		self.left_button_box = HPanel(self.button_box)
 		self.button_box.pack(self.left_button_box, expand=True, fill=True)
