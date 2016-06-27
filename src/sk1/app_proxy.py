@@ -660,3 +660,13 @@ class AppProxy:
 		if canvas.mode == modes.TEXT_EDITOR_MODE:
 			canvas.controller.update_points()
 
+	def clear_text_markup(self):
+		doc = self.app.current_doc
+		canvas = doc.canvas
+		obj = None
+		if canvas.mode in (modes.TEXT_EDITOR_MODE, modes.TEXT_EDIT_MODE):
+			obj = canvas.controller.target
+		doc.api.clear_text_markup(obj)
+		if canvas.mode == modes.TEXT_EDITOR_MODE:
+			canvas.controller.update_points()
+
