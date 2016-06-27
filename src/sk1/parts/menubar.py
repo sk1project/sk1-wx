@@ -124,7 +124,7 @@ class AppMenuBar(wx.MenuBar):
 		#---Text menu
 		sub = (pdids.ID_EDIT_TEXT, None, pdids.ID_TEXT_ON_PATH,
 			pdids.ID_TEXT_ON_CIRCLE, pdids.ID_STRAIGHTEN_TEXT,
-			None, pdids.ID_UPPER_TEXT,
+			None, pdids.ID_CLEAR_MARKUP, None, pdids.ID_UPPER_TEXT,
 			pdids.ID_LOWER_TEXT, pdids.ID_CAPITALIZE_TEXT)
 		entry = (_("&Text"), sub)
 		self.entries.append(entry)
