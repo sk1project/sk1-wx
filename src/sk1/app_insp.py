@@ -549,8 +549,7 @@ class AppInspector:
 				obj = objs[0]
 				if obj.is_text() and obj.markup:
 					return True
-		#TODO: fix for edit mode
-#		elif doc.canvas.mode in (modes.TEXT_EDIT_MODE, modes.TEXT_EDITOR_MODE):
-#			if doc.canvas.controller.target.trafos:
-#				return True
+		elif doc.canvas.mode in (modes.TEXT_EDIT_MODE, modes.TEXT_EDITOR_MODE):
+			if doc.canvas.controller.target.markup:
+				return True
 		return False
