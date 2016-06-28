@@ -24,6 +24,8 @@ from generic import Widget
 from const import FONT_SIZE, DEF_SIZE
 from renderer import copy_surface_to_bitmap
 
+def new_id():
+	return wx.NewId()
 
 class Application(wx.App):
 
