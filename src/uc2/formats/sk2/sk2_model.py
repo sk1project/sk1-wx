@@ -829,6 +829,13 @@ class Text(PrimitiveObject):
 		self.markup = []
 		self.trafos = {}
 
+		# Test markup
+		# Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+		# tempor incididunt ut labore et dolore magna aliqua.
+#		self.markup = [[('font', 'Serif', 'Regular', 24), (0, 5)], ['b', (6, 11)],
+#						['i', (22, 26)], [['b', 'i'], (28, 39)], ['sub', (52, 55)],
+#						['sup', (61, 63)], ['s', (73, 79)], ['u', (80, 90)], ]
+
 	def get_text(self):
 		return b64decode(self.text).decode('utf-8')
 
