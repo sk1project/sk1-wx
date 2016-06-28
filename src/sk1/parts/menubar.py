@@ -160,7 +160,7 @@ class AppMenuBar(wx.MenuBar):
 					action = self.app.actions[item]
 					menuitem = ActionMenuItem(self.mw, menu, action)
 					menu.AppendItem(menuitem)
-			parent.AppendMenu(wx.NewId(), entry[0], menu)
+			parent.AppendMenu(wal.new_id(), entry[0], menu)
 
 	def AppendMenu(self, menu_id, txt, menu):
 		self.Append(menu, txt)
@@ -178,7 +178,7 @@ class HistoryMenu(wx.Menu):
 		self.mw = mw
 		wx.Menu.__init__(self)
 
-		self.empty_item = wx.MenuItem(self, wx.NewId(), _('Empty'))
+		self.empty_item = wx.MenuItem(self, wal.new_id(), _('Empty'))
 		if not wal.is_wx3(): self.empty_item.Enable(False)
 
 		self.items.append(self.AppendSeparator())
@@ -218,7 +218,7 @@ class HistoryMenuItem(wx.MenuItem):
 	def __init__(self, mw, parent, text, path):
 		self.app = mw.app
 		self.path = path
-		self.id = wx.NewId()
+		self.id = wal.new_id()
 		wx.MenuItem.__init__(self, parent, self.id, text=text)
 		mw.Bind(wx.EVT_MENU, self.action, id=self.id)
 
