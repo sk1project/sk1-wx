@@ -399,7 +399,34 @@ class TextEditController(AbstractController):
 					events.emit(events.SELECTION_CHANGED)
 
 	#--- Text modifiers
+
+	def _delete_markup_range(self, text_range):
+		if not self.markup: return
+		markup = []
+		shift = text_range[1] - text_range[0]
+		for item in self.markup:
+			mkp = deepcopy(item)
+			start = mkp[1][0]
+			end = mkp[1][1]
+			if end <= text_range[0]:
+				markup.append(mkp)
+			elif start >= text_range[1]:
+				mkp[1] = (start - shift, end - shift)
+				markup.append(mkp)
+			else:
+				if start >= text_range[0] and end <= text_range[1]:
+					continue
+				elif start >= text_range[0] and end > text_range[1]:
+					mkp[1] = (text_range[1] - shift, end - shift)
+				elif start < text_range[0] and end <= text_range[1]:
+					mkp[1] = (start, text_range[0])
+				else:
+					mkp[1] = (start, end - shift)
+				markup.append(mkp)
+		self.markup = markup
+
 	def _delete_trafos_range(self, text_range):
+		self._delete_markup_range(text_range)
 		if not self.trafos: return
 		trafos = {}
 		shift = text_range[1] - text_range[0]
@@ -434,7 +461,18 @@ class TextEditController(AbstractController):
 			self.text = self.text[:text_range[0]] + self.text[text_range[1]:]
 		self._delete_trafos_range(text_range)
 
+	def _insert_markup_range(self, index, size):
+		for item in self.markup:
+			start = item[1][0]
+			end = item[1][1]
+			if end < index: continue
+			elif start > index:
+				item[1] = (start + size, end + size)
+			else:
+				item[1] = (start, end + size)
+
 	def _insert_trafos_range(self, index, size):
+		self._insert_markup_range(index, size)
 		if not self.trafos: return
 		trafos = {}
 		for item in self.trafos.keys():
@@ -464,6 +502,8 @@ class TextEditController(AbstractController):
 		self._insert_text(text, self.text_cursor)
 		self.update_target()
 		self.set_text_cursor(self.text_cursor + len(text))
+
+	#--- Markup functionality
 
 	#--- REPAINT
 
