@@ -466,7 +466,7 @@ class TextEditController(AbstractController):
 			start = item[1][0]
 			end = item[1][1]
 			if end < index: continue
-			elif start > index:
+			elif start >= index:
 				item[1] = (start + size, end + size)
 			else:
 				item[1] = (start, end + size)
