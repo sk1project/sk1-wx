@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- sK1 2 0
+0000168c -->
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="300" height="300">
+<image y="0.0"  x="0.0" xlink:href="data:image/png;base64,
+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
+"  height="300" width="300" />
+<!-- Encapsulated SK2
+obj('Document')
+set_field('styles',{'Default Style': [[], [0, 0.28346456692913385, ['CMYK', [0.0, 0.0, 0.0, 1.0], 1.0, 'Black'], [], 1, 0, -2.0526525391269526, 0, 0, []], [], []], 'Default Text Style': [[1, 0, ['CMYK', [0.0, 0.0, 0.0, 1.0], 1.0, 'Black']], [], ['Sans', 'Regular', 12.0, 0, [], True]]})
+set_field('doc_units','px')
+set_field('metainfo',['', '', '', ''])
+set_field('doc_origin',2)
+set_field('resources',{})
+obj('Pages')
+set_field('page_counter',1)
+set_field('page_format',['Custom', (16.0, 16.0), 0])
+obj('Page')
+set_field('name','Page 1')
+set_field('page_format',['Custom', (16.0, 16.0), 0])
+set_field('layer_counter',1)
+obj('Layer')
+set_field('style',[[], [0, 0.28346456692913385, ['RGB', [0.19607843137254902, 0.3215686274509804, 0.6352941176470588], 1.0, ''], [], 1, 0, -2.0526525391269526, 0, 0, []], [], []])
+set_field('name','Layer 1')
+set_field('color',[0.19607843137254902, 0.3215686274509804, 0.6352941176470588, 1.0])
+set_field('properties',[1, 1, 1, 1])
+obj('TextBlock')
+set_field('style',[[1, 0, ['CMYK', [0.0, 0.0, 0.0, 1.0], 1.0, 'Black']], [], ['Serif', 'Bold Italic', 14.0, 0, [], True]])
+set_field('text','SQ==')
+set_field('markup',[])
+set_field('initial_trafo',[1.0, 0.0, 0.0, 1.0, -4.797465489929848, 0.12672550350758088])
+set_field('width',-1)
+set_field('trafos',{})
+set_field('trafo',[1.0, 0.0, 0.0, 1.0, -4.381846324111789, -6.0])
+obj_end()
+obj_end()
+obj_end()
+obj_end()
+obj('DesktopLayers')
+obj_end()
+obj('MasterLayers')
+obj_end()
+obj('GridLayer')
+set_field('style',[[], [0, 0.28346456692913385, ['RGB', [0.0, 0.0, 1.0], 0.15, ''], [], 1, 0, -2.0526525391269526, 0, 0, []], [], []])
+set_field('name','GridLayer')
+set_field('color',[0.0, 0.0, 1.0, 0.15])
+set_field('grid',[0, 0, 1.0, 1.0])
+set_field('properties',[1, 0, 0, 1])
+obj_end()
+obj('GuideLayer')
+set_field('style',[[], [0, 0.28346456692913385, ['RGB', [0.0, 0.3176470588235294, 1.0], 1.0, ''], [], 1, 0, -2.0526525391269526, 0, 0, []], [], []])
+set_field('name','GuideLayer')
+set_field('color',[0.0, 0.3176470588235294, 1.0, 1.0])
+set_field('properties',[1, 1, 0, 0])
+obj_end()
+obj_end()
+-->
+</svg>
