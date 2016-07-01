@@ -29,11 +29,13 @@ from circle import CirclePlugin
 from image_plgs import ImageTypePlugin
 from bezier import BezierPlugin
 from text import TextStylePlugin
+from markup import SimpleMarkupPlugin, ScriptMarkupPlugin
 
 PLUGINS = [PagePlugin, UnitsPlugin, JumpPlugin, ResizePlugin, RotatePlugin,
 MirrorPlugin, GroupPlugin, CombinePlugin, ToCurvePlugin, PolygonPlugin,
 PolygonCfgPlugin, PageBorderPlugin, RectanglePlugin, OrderPlugin, CirclePlugin,
-ImageTypePlugin, BezierPlugin, TextStylePlugin]
+ImageTypePlugin, BezierPlugin, TextStylePlugin, SimpleMarkupPlugin,
+ScriptMarkupPlugin]
 
 NO_DOC = []
 DEFAULT = ['PagePlugin', 'UnitsPlugin', 'JumpPlugin', 'PageBorderPlugin']
@@ -45,5 +47,6 @@ POLYGON = ['ResizePlugin', 'PolygonPlugin', 'RotatePlugin', 'MirrorPlugin', 'ToC
 CURVE = ['ResizePlugin', 'CombinePlugin', 'RotatePlugin', 'MirrorPlugin', 'OrderPlugin' ]
 TEXT_CREATING = ['TextStylePlugin', ]
 TEXT = ['ResizePlugin', 'TextStylePlugin', 'RotatePlugin', 'MirrorPlugin', 'ToCurvePlugin', 'OrderPlugin']
+TEXT_EDIT = ['SimpleMarkupPlugin', 'ScriptMarkupPlugin', ]
 PIXMAP = ['ResizePlugin', 'ImageTypePlugin', 'RotatePlugin', 'MirrorPlugin', 'OrderPlugin' ]
 BEZIER = ['BezierPlugin', 'PageBorderPlugin']
