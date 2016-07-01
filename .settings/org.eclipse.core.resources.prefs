@@ -19,6 +19,7 @@ encoding//src/sk1/context/combine.py=utf-8
 encoding//src/sk1/context/generic.py=utf-8
 encoding//src/sk1/context/image_plgs.py=utf-8
 encoding//src/sk1/context/jump.py=utf-8
+encoding//src/sk1/context/markup.py=utf-8
 encoding//src/sk1/context/order.py=utf-8
 encoding//src/sk1/context/page_format.py=utf-8
 encoding//src/sk1/context/polygon.py=utf-8
