@@ -19,7 +19,8 @@ import wal, inspect
 
 from sk1 import events, modes
 from sk1.context import PLUGINS, NO_DOC, DEFAULT, MULTIPLE, GROUP, \
-RECTANGLE, CIRCLE, POLYGON, CURVE, TEXT, PIXMAP, BEZIER, TEXT_CREATING
+RECTANGLE, CIRCLE, POLYGON, CURVE, TEXT, PIXMAP, BEZIER, TEXT_CREATING, \
+TEXT_EDIT
 
 class AppCtxPanel(wal.HPanel):
 
@@ -78,6 +79,8 @@ class AppCtxPanel(wal.HPanel):
 				return TEXT
 			else:
 				return TEXT_CREATING
+		if self.insp.is_mode(modes.TEXT_EDIT_MODE):
+			return TEXT_EDIT
 		if not self.insp.is_selection():
 			ret = DEFAULT
 		else:
