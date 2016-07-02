@@ -106,9 +106,9 @@ class ImageToggleButton(GenericGWidget):
 		self.renderer = rndr(self, art_id, art_size, text,
 				padding, fontbold, fontsize, textplace)
 
-	def set_value(self, value):
+	def set_value(self, value, silent=False):
 		self.value = value
-		if self.onchange: self.onchange()
+		if self.onchange and not silent: self.onchange()
 		self.refresh()
 
 	def set_active(self, value):
