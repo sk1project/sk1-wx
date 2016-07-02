@@ -26,7 +26,7 @@ from generic import AbstractController
 
 NON_WORD_CHARS = ' \n\t!"#$%&\'()*+,-./:;<=>?@[\]^_`{|}~'
 NON_WORD_CHARS += '¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿÷'
-
+NON_WORD_CHARS = NON_WORD_CHARS.decode('utf-8')
 
 class TextEditController(AbstractController):
 
@@ -150,6 +150,7 @@ class TextEditController(AbstractController):
 		self.text_cursor = pos
 		self.set_line_pos()
 		self.canvas.selection_redraw()
+		events.emit(events.SELECTION_CHANGED)
 
 	def set_selected(self, pos):
 		if pos < 0: pos = 0
@@ -504,6 +505,21 @@ class TextEditController(AbstractController):
 		self.set_text_cursor(self.text_cursor + len(text))
 
 	#--- Markup functionality
+
+	def _get_tag_for_range(self, rng):
+		for item in self.markup:
+			if item[1][0] <= rng[0] and item[1][1] >= rng[1]:
+				if isinstance(item[0], list): return item[0]
+				else: return [item[0], ]
+		return []
+
+	def is_tag(self, tag):
+		rng = self.selected
+		if not rng: rng = (self.text_cursor, self.text_cursor)
+		return tag in self._get_tag_for_range(rng)
+
+	def set_tag(self, tag, action=True):
+		self.update_target()
 
 	#--- REPAINT
 
