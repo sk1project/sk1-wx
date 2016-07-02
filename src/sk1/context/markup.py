@@ -18,7 +18,7 @@
 import wal
 from wal import LEFT, CENTER
 
-from sk1 import _, events
+from sk1 import _, events, modes
 from sk1.resources import icons, get_bmp
 from generic import CtxPlugin
 
@@ -28,12 +28,13 @@ class SimpleMarkupPlugin(CtxPlugin):
 
 	def __init__(self, app, parent):
 		CtxPlugin.__init__(self, app, parent)
-#		events.connect(events.DOC_CHANGED, self.update)
-#		events.connect(events.DOC_MODIFIED, self.update)
+		events.connect(events.DOC_CHANGED, self.update)
+		events.connect(events.DOC_MODIFIED, self.update)
+		events.connect(events.SELECTION_CHANGED, self.update)
 
 	def build(self):
 		self.bold = wal.ImageToggleButton(self, art_id=icons.PD_TEXT_BOLD,
-										tooltip=_('Bold'))
+							tooltip=_('Bold'), onchange=self.bold_changed)
 		self.add(self.bold, 0, LEFT | CENTER, 2)
 
 		self.italic = wal.ImageToggleButton(self, art_id=icons.PD_TEXT_ITALIC,
@@ -49,7 +50,19 @@ class SimpleMarkupPlugin(CtxPlugin):
 		self.add(self.strike, 0, LEFT | CENTER, 2)
 
 	def update(self, *args):
-		pass
+		insp = self.app.insp
+		if not insp.is_mode(modes.TEXT_EDIT_MODE): return
+		val = insp.is_text_selection()
+		for item in (self.bold, self.italic, self.underline, self.strike):
+			item.set_enable(val)
+		ctrl = self.app.current_doc.canvas.controller
+		self.bold.set_value(ctrl.is_tag('b'), True)
+		self.italic.set_value(ctrl.is_tag('i'), True)
+		self.underline.set_value(ctrl.is_tag('u'), True)
+		self.strike.set_value(ctrl.is_tag('s'), True)
+
+	def bold_changed(self):
+		print self.bold.get_value()
 
 	def changed(self, *args):
 		pass
@@ -60,8 +73,9 @@ class ScriptMarkupPlugin(CtxPlugin):
 
 	def __init__(self, app, parent):
 		CtxPlugin.__init__(self, app, parent)
-#		events.connect(events.DOC_CHANGED, self.update)
-#		events.connect(events.DOC_MODIFIED, self.update)
+		events.connect(events.DOC_CHANGED, self.update)
+		events.connect(events.DOC_MODIFIED, self.update)
+		events.connect(events.SELECTION_CHANGED, self.update)
 
 	def build(self):
 		self.sup = wal.ImageToggleButton(self, art_id=icons.PD_TEXT_SUPERSCRIPT,
@@ -73,7 +87,14 @@ class ScriptMarkupPlugin(CtxPlugin):
 		self.add(self.sub, 0, LEFT | CENTER, 2)
 
 	def update(self, *args):
-		pass
+		insp = self.app.insp
+		if not insp.is_mode(modes.TEXT_EDIT_MODE): return
+		val = insp.is_text_selection()
+		for item in (self.sup, self.sub):
+			item.set_enable(val)
+		ctrl = self.app.current_doc.canvas.controller
+		self.sup.set_value(ctrl.is_tag('sup'), True)
+		self.sub.set_value(ctrl.is_tag('sub'), True)
 
 	def changed(self, *args):
 		pass
