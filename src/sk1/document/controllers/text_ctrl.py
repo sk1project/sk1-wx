@@ -513,12 +513,26 @@ class TextEditController(AbstractController):
 				else: return [item[0], ]
 		return []
 
+	def _check_intersect(self, rng):
+		for item in self.markup:
+			if item[1][0] <= rng[0] and item[1][1] > rng[0]:
+				return True
+			if item[1][0] < rng[1] and item[1][1] >= rng[1]:
+				return True
+			if item[1][0] >= rng[0] and item[1][1] <= rng[1]:
+				return True
+		return False
+
 	def is_tag(self, tag):
 		rng = self.selected
 		if not rng: rng = (self.text_cursor, self.text_cursor)
 		return tag in self._get_tag_for_range(rng)
 
-	def set_tag(self, tag, action=True):
+	def set_tag(self, tag, settag=True):
+		if not self.selected: return
+		if settag:
+			if not self.markup or not self._check_intersect(self.selected):
+				self.markup.append([tag, tuple(self.selected)])
 		self.update_target()
 
 	#--- REPAINT
