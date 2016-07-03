@@ -34,19 +34,19 @@ class SimpleMarkupPlugin(CtxPlugin):
 
 	def build(self):
 		self.bold = wal.ImageToggleButton(self, art_id=icons.PD_TEXT_BOLD,
-							tooltip=_('Bold'), onchange=self.bold_changed)
+						tooltip=_('Bold'), onchange=self.bold_changed)
 		self.add(self.bold, 0, LEFT | CENTER, 2)
 
 		self.italic = wal.ImageToggleButton(self, art_id=icons.PD_TEXT_ITALIC,
-										tooltip=_('Italic'))
+						tooltip=_('Italic'), onchange=self.italic_changed)
 		self.add(self.italic, 0, LEFT | CENTER, 2)
 
 		self.underline = wal.ImageToggleButton(self, art_id=icons.PD_TEXT_UNDERLINE,
-										tooltip=_('Underline'))
+						tooltip=_('Underline'), onchange=self.underline_changed)
 		self.add(self.underline, 0, LEFT | CENTER, 2)
 
 		self.strike = wal.ImageToggleButton(self, art_id=icons.PD_TEXT_STRIKETHROUGH,
-										tooltip=_('Strikethrough'))
+						tooltip=_('Strikethrough'), onchange=self.strike_changed)
 		self.add(self.strike, 0, LEFT | CENTER, 2)
 
 	def update(self, *args):
@@ -62,10 +62,21 @@ class SimpleMarkupPlugin(CtxPlugin):
 		self.strike.set_value(ctrl.is_tag('s'), True)
 
 	def bold_changed(self):
-		print self.bold.get_value()
+		ctrl = self.app.current_doc.canvas.controller
+		ctrl.set_tag('b', self.bold.get_value())
 
-	def changed(self, *args):
-		pass
+	def italic_changed(self):
+		ctrl = self.app.current_doc.canvas.controller
+		ctrl.set_tag('i', self.italic.get_value())
+
+	def underline_changed(self):
+		ctrl = self.app.current_doc.canvas.controller
+		ctrl.set_tag('u', self.underline.get_value())
+
+	def strike_changed(self):
+		ctrl = self.app.current_doc.canvas.controller
+		ctrl.set_tag('s', self.strike.get_value())
+
 
 class ScriptMarkupPlugin(CtxPlugin):
 
@@ -79,11 +90,11 @@ class ScriptMarkupPlugin(CtxPlugin):
 
 	def build(self):
 		self.sup = wal.ImageToggleButton(self, art_id=icons.PD_TEXT_SUPERSCRIPT,
-										tooltip=_('Superscript'))
+						tooltip=_('Superscript'), onchange=self.sup_changed)
 		self.add(self.sup, 0, LEFT | CENTER, 2)
 
 		self.sub = wal.ImageToggleButton(self, art_id=icons.PD_TEXT_SUBSCRIPT,
-										tooltip=_('Subscript'))
+						tooltip=_('Subscript'), onchange=self.sub_changed)
 		self.add(self.sub, 0, LEFT | CENTER, 2)
 
 	def update(self, *args):
@@ -96,7 +107,12 @@ class ScriptMarkupPlugin(CtxPlugin):
 		self.sup.set_value(ctrl.is_tag('sup'), True)
 		self.sub.set_value(ctrl.is_tag('sub'), True)
 
-	def changed(self, *args):
-		pass
+	def sup_changed(self):
+		ctrl = self.app.current_doc.canvas.controller
+		ctrl.set_tag('sup', self.sup.get_value())
+
+	def sub_changed(self):
+		ctrl = self.app.current_doc.canvas.controller
+		ctrl.set_tag('sub', self.sub.get_value())
 
 
