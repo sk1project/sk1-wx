@@ -523,6 +523,15 @@ class TextEditController(AbstractController):
 				return True
 		return False
 
+	def _add_and_sort(self, markup, item):
+		index = 0
+		for member in markup:
+			if member[1][0] >= item[1][1]:
+				markup.insert(index, item)
+				break
+		if not item in markup:
+			markup.append(item)
+
 	def is_tag(self, tag):
 		rng = self.selected
 		if not rng: rng = (self.text_cursor, self.text_cursor)
@@ -533,6 +542,23 @@ class TextEditController(AbstractController):
 		if settag:
 			if not self.markup or not self._check_intersect(self.selected):
 				self.markup.append([tag, tuple(self.selected)])
+			else:
+				markup = []
+				intersected = []
+				rng = self.selected
+				for item in self.markup:
+					if item[1][0] <= rng[0] and item[1][1] > rng[0]:
+						self._add_and_sort(intersected, item)
+						continue
+					if item[1][0] < rng[1] and item[1][1] >= rng[1]:
+						self._add_and_sort(intersected, item)
+						continue
+					if item[1][0] >= rng[0] and item[1][1] <= rng[1]:
+						self._add_and_sort(intersected, item)
+						continue
+					markup.append(item)
+
+
 		self.update_target()
 
 	#--- REPAINT
