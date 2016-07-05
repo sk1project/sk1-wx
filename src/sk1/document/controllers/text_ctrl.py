@@ -532,10 +532,67 @@ class TextEditController(AbstractController):
 		if not item in markup:
 			markup.append(item)
 
+	def _intersect_markup(self, markup, rng):
+		untouched = []
+		intersected = []
+		for item in markup:
+			if item[1][0] >= rng[0] and item[1][1] <= rng[1]:
+				self._add_and_sort(intersected, deepcopy(item))
+				continue
+			if item[1][0] <= rng[0] and item[1][1] >= rng[1]:
+				if item[1][0] < rng[0]:
+					untouched.append([deepcopy(item[0]), (item[1][0], rng[0])])
+				if item[1][1] > rng[1]:
+					untouched.append([deepcopy(item[0]), (rng[1], item[1][1])])
+				new_item = [deepcopy(item[0]), (rng[0], rng[1])]
+				self._add_and_sort(intersected, new_item)
+				continue
+			if item[1][0] < rng[0] and item[1][1] <= rng[1]:
+				untouched.append([deepcopy(item[0]), (item[1][0], rng[0])])
+				new_item = [deepcopy(item[0]), (rng[0], item[1][1])]
+				self._add_and_sort(intersected, deepcopy(new_item))
+				continue
+			if item[1][0] >= rng[0] and item[1][1] > rng[1]:
+				untouched.append([deepcopy(item[0]), (rng[1], item[1][1])])
+				new_item = [deepcopy(item[0]), (item[1][0], rng[1])]
+				self._add_and_sort(intersected, deepcopy(new_item))
+				continue
+			untouched.append(deepcopy(item))
+		return untouched, intersected
+
+	def _fix_markup(self, sorted_markup, rng):
+		fixed_markup = []
+		previous = None
+		for item in sorted_markup:
+			if previous and previous[1][1] < item[1][0]:
+				fixed_markup.append([[], (previous[1][1], item[1][0])])
+			fixed_markup.append(deepcopy(item))
+			previous = item
+		if fixed_markup[0][1][0] > rng[0]:
+			fixed_markup.insert(0, [[], (rng[0], fixed_markup[0][1][0])])
+		if fixed_markup[-1][1][1] < rng[1]:
+			fixed_markup += [[[], (fixed_markup[-1][1][1], rng[1])], ]
+		return fixed_markup
+
 	def is_tag(self, tag):
 		rng = self.selected
-		if not rng: rng = (self.text_cursor, self.text_cursor)
-		return tag in self._get_tag_for_range(rng)
+		if not rng:
+			rng = (self.text_cursor, self.text_cursor)
+			return tag in self._get_tag_for_range(rng)
+		else:
+			intersected = self._intersect_markup(self.markup, rng)[1]
+			print intersected
+			intersected = self._fix_markup(intersected, rng)
+			print 'fixed', intersected
+			for item in intersected:
+				print item[0]
+				if isinstance(item[0], list):
+					if not tag in item[0]:
+						return False
+				else:
+					if not tag == item[0]:
+						return False
+			return True
 
 	def set_tag(self, tag, settag=True):
 		if not self.selected: return
