@@ -340,7 +340,6 @@ class TextEditController(AbstractController):
 						start = self.prev_sel[0]
 					else:
 						start = self.prev_pos
-					print start, self.prev_pos, self.selected
 					self.set_text_cursor(start)
 					self.set_selected(pos)
 					self.set_text_cursor(pos, True)
@@ -506,9 +505,9 @@ class TextEditController(AbstractController):
 
 	#--- Markup functionality
 
-	def _get_tag_for_range(self, rng):
+	def _get_tag_for_pos(self, pos):
 		for item in self.markup:
-			if item[1][0] <= rng[0] and item[1][1] >= rng[1]:
+			if item[1][0] <= pos and item[1][1] >= pos:
 				if isinstance(item[0], list): return item[0]
 				else: return [item[0], ]
 		return []
@@ -529,6 +528,7 @@ class TextEditController(AbstractController):
 			if member[1][0] >= item[1][1]:
 				markup.insert(index, item)
 				break
+			index += 1
 		if not item in markup:
 			markup.append(item)
 
@@ -541,23 +541,27 @@ class TextEditController(AbstractController):
 				continue
 			if item[1][0] <= rng[0] and item[1][1] >= rng[1]:
 				if item[1][0] < rng[0]:
-					untouched.append([deepcopy(item[0]), (item[1][0], rng[0])])
+					new_item = [deepcopy(item[0]), (item[1][0], rng[0])]
+					self._add_and_sort(untouched, new_item)
 				if item[1][1] > rng[1]:
-					untouched.append([deepcopy(item[0]), (rng[1], item[1][1])])
+					new_item = [deepcopy(item[0]), (rng[1], item[1][1])]
+					self._add_and_sort(untouched, new_item)
 				new_item = [deepcopy(item[0]), (rng[0], rng[1])]
 				self._add_and_sort(intersected, new_item)
 				continue
-			if item[1][0] < rng[0] and item[1][1] <= rng[1]:
-				untouched.append([deepcopy(item[0]), (item[1][0], rng[0])])
+			if item[1][0] < rng[0] and item[1][1] <= rng[1] and item[1][1] > rng[0]:
+				new_item = [deepcopy(item[0]), (item[1][0], rng[0])]
+				self._add_and_sort(untouched, new_item)
 				new_item = [deepcopy(item[0]), (rng[0], item[1][1])]
-				self._add_and_sort(intersected, deepcopy(new_item))
+				self._add_and_sort(intersected, new_item)
 				continue
-			if item[1][0] >= rng[0] and item[1][1] > rng[1]:
-				untouched.append([deepcopy(item[0]), (rng[1], item[1][1])])
+			if item[1][0] >= rng[0] and item[1][0] < rng[1] and item[1][1] > rng[1]:
+				new_item = [deepcopy(item[0]), (rng[1], item[1][1])]
+				self._add_and_sort(untouched, new_item)
 				new_item = [deepcopy(item[0]), (item[1][0], rng[1])]
-				self._add_and_sort(intersected, deepcopy(new_item))
+				self._add_and_sort(intersected, new_item)
 				continue
-			untouched.append(deepcopy(item))
+			self._add_and_sort(untouched, deepcopy(item))
 		return untouched, intersected
 
 	def _fix_markup(self, sorted_markup, rng):
@@ -577,15 +581,11 @@ class TextEditController(AbstractController):
 	def is_tag(self, tag):
 		rng = self.selected
 		if not rng:
-			rng = (self.text_cursor, self.text_cursor)
-			return tag in self._get_tag_for_range(rng)
+			return tag in self._get_tag_for_pos(self.text_cursor)
 		else:
 			intersected = self._intersect_markup(self.markup, rng)[1]
-			print intersected
 			intersected = self._fix_markup(intersected, rng)
-			print 'fixed', intersected
 			for item in intersected:
-				print item[0]
 				if isinstance(item[0], list):
 					if not tag in item[0]:
 						return False
@@ -596,26 +596,43 @@ class TextEditController(AbstractController):
 
 	def set_tag(self, tag, settag=True):
 		if not self.selected: return
+		rng = self.selected
 		if settag:
-			if not self.markup or not self._check_intersect(self.selected):
-				self.markup.append([tag, tuple(self.selected)])
+			if not self.markup or not self._check_intersect(rng):
+				item = ['' + tag, tuple(self.selected)]
+				self._add_and_sort(self.markup, item)
 			else:
-				markup = []
-				intersected = []
 				rng = self.selected
-				for item in self.markup:
-					if item[1][0] <= rng[0] and item[1][1] > rng[0]:
-						self._add_and_sort(intersected, item)
-						continue
-					if item[1][0] < rng[1] and item[1][1] >= rng[1]:
-						self._add_and_sort(intersected, item)
-						continue
-					if item[1][0] >= rng[0] and item[1][1] <= rng[1]:
-						self._add_and_sort(intersected, item)
-						continue
-					markup.append(item)
-
-
+				untouched, intersected = self._intersect_markup(self.markup, rng)
+				intersected = self._fix_markup(intersected, rng)
+				for item in intersected:
+					if isinstance(item[0], list):
+						if not tag in item[0]:
+							item[0].append('' + tag)
+					else:
+						if not tag == item[0]:
+							item[0] = [item[0], '' + tag]
+				for item in intersected:
+					self._add_and_sort(untouched, item)
+				self.markup = untouched
+		else:
+			if not self.markup or not self._check_intersect(rng):
+				return
+			else:
+				rng = self.selected
+				untouched, intersected = self._intersect_markup(self.markup, rng)
+				intersected = self._fix_markup(intersected, rng)
+				for item in intersected:
+					if isinstance(item[0], list):
+						if tag in item[0]:
+							item[0].remove(tag)
+					else:
+						if tag == item[0]:
+							item[0] = []
+				for item in intersected:
+					if item[0]:
+						self._add_and_sort(untouched, item)
+					self.markup = untouched
 		self.update_target()
 
 	#--- REPAINT
