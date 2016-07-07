@@ -103,8 +103,8 @@ def glyph_markup_to_tag_dict(markup, check_nt=False):
 	for item in markup:
 		tag_descr = item[0]
 		rng = item[1]
-		if tag_descr == 'sub': vpos = -0.3
-		elif tag_descr == 'sup': vpos = 0.8
+		if tag_descr == 'sub' or 'sub' in tag_descr: vpos = -0.3
+		elif tag_descr == 'sup' or 'sup' in tag_descr: vpos = 0.8
 		tag, tag_end = get_tags_from_descr(tag_descr, check_nt)
 		if rng[0] in tag_dict:
 			tag_dict[rng[0]] = tag + tag_dict[rng[0]]
