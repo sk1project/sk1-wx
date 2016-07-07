@@ -23,6 +23,7 @@ from uc2 import libgeom
 from sk1 import _, modes, events
 
 from generic import AbstractController
+from paramiko.common import rng
 
 NON_WORD_CHARS = ' \n\t!"#$%&\'()*+,-./:;<=>?@[\]^_`{|}~'
 NON_WORD_CHARS += '¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿÷'
@@ -634,6 +635,9 @@ class TextEditController(AbstractController):
 						self._add_and_sort(untouched, item)
 					self.markup = untouched
 		self.update_target()
+		self.selected = rng
+		self.canvas.selection_redraw()
+		events.emit(events.SELECTION_CHANGED)
 
 	#--- REPAINT
 
