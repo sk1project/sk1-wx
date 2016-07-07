@@ -23,7 +23,6 @@ from uc2 import libgeom
 from sk1 import _, modes, events
 
 from generic import AbstractController
-from paramiko.common import rng
 
 NON_WORD_CHARS = ' \n\t!"#$%&\'()*+,-./:;<=>?@[\]^_`{|}~'
 NON_WORD_CHARS += '¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿÷'
@@ -595,6 +594,24 @@ class TextEditController(AbstractController):
 						return False
 			return True
 
+	def _set_tag_to_markup(self, fixed_markup, tag):
+		for item in fixed_markup:
+			if isinstance(item[0], list):
+				if not tag in item[0]:
+					item[0].append('' + tag)
+			else:
+				if not tag == item[0]:
+					item[0] = [item[0], '' + tag]
+
+	def _unset_tag_to_markup(self, fixed_markup, tag):
+		for item in fixed_markup:
+			if isinstance(item[0], list):
+				if tag in item[0]:
+					item[0].remove(tag)
+			else:
+				if tag == item[0]:
+					item[0] = []
+
 	def set_tag(self, tag, settag=True):
 		if not self.selected: return
 		rng = self.selected
@@ -606,13 +623,11 @@ class TextEditController(AbstractController):
 				rng = self.selected
 				untouched, intersected = self._intersect_markup(self.markup, rng)
 				intersected = self._fix_markup(intersected, rng)
-				for item in intersected:
-					if isinstance(item[0], list):
-						if not tag in item[0]:
-							item[0].append('' + tag)
-					else:
-						if not tag == item[0]:
-							item[0] = [item[0], '' + tag]
+				if tag == 'sub':
+					self._unset_tag_to_markup(intersected, 'sup')
+				elif tag == 'sup':
+					self._unset_tag_to_markup(intersected, 'sub')
+				self._set_tag_to_markup(intersected, tag)
 				for item in intersected:
 					self._add_and_sort(untouched, item)
 				self.markup = untouched
@@ -623,17 +638,11 @@ class TextEditController(AbstractController):
 				rng = self.selected
 				untouched, intersected = self._intersect_markup(self.markup, rng)
 				intersected = self._fix_markup(intersected, rng)
-				for item in intersected:
-					if isinstance(item[0], list):
-						if tag in item[0]:
-							item[0].remove(tag)
-					else:
-						if tag == item[0]:
-							item[0] = []
+				self._unset_tag_to_markup(intersected, tag)
 				for item in intersected:
 					if item[0]:
 						self._add_and_sort(untouched, item)
-					self.markup = untouched
+				self.markup = untouched
 		self.update_target()
 		self.selected = rng
 		self.canvas.selection_redraw()
