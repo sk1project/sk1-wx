@@ -507,7 +507,7 @@ class TextEditController(AbstractController):
 
 	def _get_tag_for_pos(self, pos):
 		for item in self.markup:
-			if item[1][0] <= pos and item[1][1] >= pos:
+			if item[1][0] <= pos and item[1][1] > pos:
 				if isinstance(item[0], list): return item[0]
 				else: return [item[0], ]
 		return []
@@ -585,6 +585,7 @@ class TextEditController(AbstractController):
 		else:
 			intersected = self._intersect_markup(self.markup, rng)[1]
 			intersected = self._fix_markup(intersected, rng)
+
 			for item in intersected:
 				if isinstance(item[0], list):
 					if not tag in item[0]:
