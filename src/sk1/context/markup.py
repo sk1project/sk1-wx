@@ -18,9 +18,58 @@
 import wal
 from wal import LEFT, CENTER
 
+from uc2 import libpango
+
 from sk1 import _, events, modes
-from sk1.resources import icons, get_bmp
+from sk1.resources import icons
+from sk1.pwidgets import FontChoice
 from generic import CtxPlugin
+
+FONT_SIZES = range(5, 14) + range(14, 30, 2) + [32, 36, 40, 48, 56, 64, 72]
+
+class FontMarkupPlugin(CtxPlugin):
+
+	name = 'FontMarkupPlugin'
+
+	def __init__(self, app, parent):
+		CtxPlugin.__init__(self, app, parent)
+		events.connect(events.DOC_CHANGED, self.update)
+		events.connect(events.DOC_MODIFIED, self.update)
+		events.connect(events.SELECTION_CHANGED, self.update)
+
+	def build(self):
+
+		self.families, self.faces_dict = libpango.get_fonts()
+
+		self.families_combo = FontChoice(self, onchange=self.on_font_change)
+		self.add(self.families_combo, 0, LEFT | CENTER, 2)
+		self.add((3, 3))
+		self.families_combo.set_font_family('Sans')
+
+		self.faces = self.faces_dict['Sans']
+		self.faces_combo = wal.Combolist(self, items=self.faces,
+										onchange=self.apply_changes)
+		self.faces_combo.set_active(0)
+		self.add(self.faces_combo, 0, wal.LEFT | wal.CENTER, 2)
+		self.add((3, 3))
+
+		self.size_combo = wal.FloatCombobox(self, 12, width=5,
+										digits=2, items=FONT_SIZES,
+										onchange=self.apply_changes)
+		self.add(self.size_combo, 0, wal.LEFT | wal.CENTER, 2)
+
+	def update(self, *args):
+		insp = self.app.insp
+		if not insp.is_mode(modes.TEXT_EDIT_MODE): return
+		val = insp.is_text_selection()
+		for item in (self.families_combo, self.faces_combo, self.size_combo):
+			item.set_enable(val)
+		ctrl = self.app.current_doc.canvas.controller
+
+	def on_font_change(self, *args):pass
+
+	def apply_changes(self, *args):pass
+
 
 class SimpleMarkupPlugin(CtxPlugin):
 
