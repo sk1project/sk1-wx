@@ -23,19 +23,23 @@ from uc2 import libpango, cms
 from sk1 import config, events, warn
 from sk1.resources import icons, get_icon
 
-def generate_fontnames(fonts):
-	bitmaps = []
+
+FONTNAME_CACHE = []
+FONTSAMPLE_CACHE = []
+MAXSIZE = []
+
+def generate_fontname_cache(fonts):
 	maxwidth = 0
 	height = 0
 	for item in fonts:
 		bmp, size = wal.text_to_bitmap(item)
-		bitmaps.append(bmp)
+		FONTNAME_CACHE.append(bmp)
 		maxwidth = max(size[0], maxwidth)
 		height = size[1]
-	return bitmaps, (maxwidth, height)
+	MAXSIZE.append(maxwidth)
+	MAXSIZE.append(height)
 
-def generate_fontsamples(fonts):
-	bitmaps = []
+def generate_fontsample_cache(fonts):
 	w = config.font_preview_width
 	fontsize = config.font_preview_size
 	color = cms.val_255(config.font_preview_color)
@@ -56,8 +60,7 @@ def generate_fontsamples(fonts):
 		libpango.render_sample(ctx, text, item, fontsize)
 		ctx.fill()
 		bmp = wal.copy_surface_to_bitmap(surface)
-		bitmaps.append(wal.invert_text_bitmap(bmp, color))
-	return bitmaps
+		FONTSAMPLE_CACHE.append(wal.invert_text_bitmap(bmp, color))
 
 class FontChoice(wal.FontBitmapChoice):
 
@@ -65,21 +68,23 @@ class FontChoice(wal.FontBitmapChoice):
 
 	def __init__(self, parent, selected_font='Sans', onchange=None):
 		self.fonts = libpango.get_fonts()[0]
-		bitmaps, maxsize = generate_fontnames(self.fonts)
-		samples = generate_fontsamples(self.fonts)
+		if not FONTNAME_CACHE:
+			generate_fontname_cache(self.fonts)
+			generate_fontsample_cache(self.fonts)
 		if not selected_font in self.fonts:
 			selected_font = 'Sans'
 		value = self.fonts.index(selected_font)
 		icon = get_icon(icons.PD_FONT, size=wal.DEF_SIZE)
-		wal.FontBitmapChoice.__init__(self, parent, value, maxsize,
-							self.fonts, bitmaps, samples, icon, onchange)
+		wal.FontBitmapChoice.__init__(self, parent, value, MAXSIZE,
+				self.fonts, FONTNAME_CACHE, FONTSAMPLE_CACHE, icon, onchange)
 		events.connect(events.CONFIG_MODIFIED, self.check_config)
 
 	def check_config(self, attr, value):
 		if len(attr) > 12 and attr[:12] == 'font_preview':
-			sample_bitmaps = generate_fontsamples(self.fonts)
+			FONTSAMPLE_CACHE[:] = []
+			generate_fontsample_cache(self.fonts)
 			index = self._get_active()
-			self._set_bitmaps(self.bitmaps, sample_bitmaps)
+			self._set_bitmaps(self.bitmaps, FONTSAMPLE_CACHE)
 			self._set_active(index)
 
 	def get_font_family(self):
