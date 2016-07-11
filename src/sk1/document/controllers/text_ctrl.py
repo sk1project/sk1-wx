@@ -599,10 +599,10 @@ class TextEditController(AbstractController):
 		for item in fixed_markup:
 			if isinstance(item[0], list):
 				if not tag in item[0]:
-					item[0].append('' + tag)
+					item[0].append(deepcopy(tag))
 			else:
 				if not tag == item[0]:
-					item[0] = [item[0], '' + tag]
+					item[0] = [item[0], deepcopy(tag)]
 
 	def _unset_tag_to_markup(self, fixed_markup, tag):
 		for item in fixed_markup:
@@ -613,15 +613,26 @@ class TextEditController(AbstractController):
 				if tag == item[0]:
 					item[0] = []
 
+	def _unset_markup_font(self, fixed_markup):
+		for item in fixed_markup:
+			if isinstance(item[0], list):
+				new_tag_list = []
+				for tag_item in item[0]:
+					if not isinstance(tag_item, tuple):
+						new_tag_list.append(tag_item)
+				item[0] = new_tag_list
+			else:
+				if isinstance(item[0], tuple):
+					item[0] = []
+
 	def set_tag(self, tag, settag=True):
 		if not self.selected: return
 		rng = self.selected
 		if settag:
 			if not self.markup or not self._check_intersect(rng):
-				item = ['' + tag, tuple(self.selected)]
+				item = [deepcopy(tag), tuple(self.selected)]
 				self._add_and_sort(self.markup, item)
 			else:
-				rng = self.selected
 				untouched, intersected = self._intersect_markup(self.markup, rng)
 				intersected = self._fix_markup(intersected, rng)
 				if tag == 'sub':
@@ -636,7 +647,6 @@ class TextEditController(AbstractController):
 			if not self.markup or not self._check_intersect(rng):
 				return
 			else:
-				rng = self.selected
 				untouched, intersected = self._intersect_markup(self.markup, rng)
 				intersected = self._fix_markup(intersected, rng)
 				self._unset_tag_to_markup(intersected, tag)
@@ -657,8 +667,25 @@ class TextEditController(AbstractController):
 				return deepcopy(item)[1:]
 		return deepcopy(self.target.style[2][:3])
 
-	def set_fontdescr(self, family='Sans', face='Regular', size=12):
-		pass
+	def set_fontdescr(self, family='Sans', face='Regular', size=12.0):
+		if not self.selected: return
+		rng = self.selected
+		tag = ('font', family, face, size)
+		if not self.markup or not self._check_intersect(rng):
+			item = [deepcopy(tag), tuple(self.selected)]
+			self._add_and_sort(self.markup, item)
+		else:
+			untouched, intersected = self._intersect_markup(self.markup, rng)
+			intersected = self._fix_markup(intersected, rng)
+			self._unset_markup_font(intersected)
+			self._set_tag_to_markup(intersected, tag)
+			for item in intersected:
+				self._add_and_sort(untouched, item)
+			self.markup = untouched
+		self.update_target()
+		self.selected = rng
+		self.canvas.selection_redraw()
+		events.emit(events.SELECTION_CHANGED)
 
 	#--- REPAINT
 
