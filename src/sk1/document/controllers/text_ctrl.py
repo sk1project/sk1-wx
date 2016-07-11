@@ -649,6 +649,17 @@ class TextEditController(AbstractController):
 		self.canvas.selection_redraw()
 		events.emit(events.SELECTION_CHANGED)
 
+	def get_fontdescr(self):
+		pos = self.text_cursor
+		if self.selected: pos = self.selected[0]
+		for item in self._get_tag_for_pos(pos):
+			if isinstance(item, tuple) and item[0] == 'font':
+				return deepcopy(item)[1:]
+		return deepcopy(self.target.style[2][:3])
+
+	def set_fontdescr(self, family='Sans', face='Regular', size=12):
+		pass
+
 	#--- REPAINT
 
 	def repaint(self):
