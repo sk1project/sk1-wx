@@ -65,10 +65,24 @@ class FontMarkupPlugin(CtxPlugin):
 		for item in (self.families_combo, self.faces_combo, self.size_combo):
 			item.set_enable(val)
 		ctrl = self.app.current_doc.canvas.controller
+		family, face, size = ctrl.get_fontdescr()
+
+		if not family in self.families: family = 'Sans'
+		self.families_combo.set_font_family(family)
+
+		self.faces = self.faces_dict['Sans']
+		self.faces_combo.set_items(self.faces)
+		if face in self.faces:
+			self.faces_combo.set_active(self.faces.index(face))
+		else:
+			self.faces_combo.set_active(0)
+
+		self.size_combo.set_value(size)
 
 	def on_font_change(self, *args):pass
 
-	def apply_changes(self, *args):pass
+	def apply_changes(self, *args):
+		print 'changes'
 
 
 class SimpleMarkupPlugin(CtxPlugin):
