@@ -79,10 +79,21 @@ class FontMarkupPlugin(CtxPlugin):
 
 		self.size_combo.set_value(size)
 
-	def on_font_change(self, *args):pass
+	def on_font_change(self, *args):
+		self.faces = self.faces_dict[self.families_combo.get_font_family()]
+		face = self.faces[self.faces_combo.get_active()]
+		if not face in self.faces:
+			self.faces_combo.set_active(0)
+		self.apply_changes()
 
 	def apply_changes(self, *args):
-		print 'changes'
+		insp = self.app.insp
+		if not insp.is_mode(modes.TEXT_EDIT_MODE): return
+		family = self.families_combo.get_font_family()
+		face = self.faces[self.faces_combo.get_active()]
+		size = self.size_combo.get_value()
+		ctrl = self.app.current_doc.canvas.controller
+		ctrl.set_fontdescr(family, face, size)
 
 
 class SimpleMarkupPlugin(CtxPlugin):
