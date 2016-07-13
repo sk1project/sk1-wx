@@ -21,9 +21,20 @@ from wal import LEFT, CENTER
 from uc2 import libpango
 
 from sk1 import _, events, modes
-from sk1.resources import icons
+from sk1.resources import icons, pdids
 from sk1.pwidgets import FontChoice
 from generic import CtxPlugin
+from generic import ActionCtxPlugin
+
+class TextCasePlugin(ActionCtxPlugin):
+
+	name = 'TextCasePlugin'
+	ids = [pdids.ID_UPPER_TEXT, pdids.ID_LOWER_TEXT, pdids.ID_CAPITALIZE_TEXT, ]
+
+class ClearMarkupPlugin(ActionCtxPlugin):
+
+	name = 'ClearMarkupPlugin'
+	ids = [pdids.ID_CLEAR_MARKUP ]
 
 FONT_SIZES = range(5, 14) + range(14, 30, 2) + [32, 36, 40, 48, 56, 64, 72]
 
