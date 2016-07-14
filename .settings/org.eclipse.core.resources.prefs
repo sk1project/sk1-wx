@@ -122,6 +122,7 @@ encoding//src/sk1/resources/labels.py=utf-8
 encoding//src/sk1/resources/pdids.py=utf-8
 encoding//src/sk1/resources/rgb_palette.py=utf-8
 encoding//src/sk1/share/pd_plugins/align_plugin/__init__.py=utf-8
+encoding//src/sk1/share/pd_plugins/iconizer/__init__.py=utf-8
 encoding//src/sk1/share/pd_plugins/layers_plugin/__init__.py=utf-8
 encoding//src/sk1/share/pd_plugins/shaping/__init__.py=utf-8
 encoding//src/sk1/share/pd_plugins/text_on_circle/__init__.py=utf-8
