@@ -113,6 +113,7 @@ def create_actions(app):
 	(pdids.ID_SNAP_TO_GUIDE, proxy.snap_to_guides, snap_chnls, insp.is_doc, insp.is_snap_to_guides),
 	(pdids.ID_SNAP_TO_OBJ, proxy.snap_to_objects, snap_chnls, insp.is_doc, insp.is_snap_to_objects),
 	(pdids.ID_SNAP_TO_PAGE, proxy.snap_to_page, snap_chnls, insp.is_doc, insp.is_snap_to_page),
+(pdids.ID_ICONIZER, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('IconizerPlugin',)),
 (wx.ID_REFRESH, proxy.force_redraw, doc_chnls, insp.is_doc),
 #------ Layout menu -------
 (pdids.ID_INSERT_PAGE, proxy.insert_page, page_chnls, insp.is_doc),
