@@ -62,7 +62,7 @@ class AppMenuBar(wx.MenuBar):
 				None,
 				(_("S&nap to"), (pdids.ID_SNAP_TO_GRID, pdids.ID_SNAP_TO_GUIDE,
 				pdids.ID_SNAP_TO_OBJ, pdids.ID_SNAP_TO_PAGE)),
-				None,
+				None, pdids.ID_ICONIZER,
 				wal.ID_REFRESH,)
 		entry = (_("&View"), sub)
 		self.entries.append(entry)
