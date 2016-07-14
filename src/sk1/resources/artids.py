@@ -61,6 +61,7 @@ wx.ID_ZOOM_IN:icons.PD_ZOOM_IN,
 wx.ID_ZOOM_OUT:icons.PD_ZOOM_OUT,
 pdids.ID_ZOOM_PAGE:icons.PD_ZOOM_PAGE,
 wx.ID_ZOOM_FIT:icons.PD_ZOOM_FIT,
+pdids.ID_ICONIZER:icons.PD_PLUGIN_ICONIZER,
 wx.ID_REFRESH:icons.PD_REFRESH,
 #----- Layout menu
 pdids.ID_INSERT_PAGE:icons.PD_INSERT_PAGE,

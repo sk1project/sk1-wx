@@ -90,6 +90,7 @@ pdids.ID_SNAP_TO_GRID:(_('Snap to grid'),),
 pdids.ID_SNAP_TO_GUIDE:(_('Snap to guide'),),
 pdids.ID_SNAP_TO_OBJ:(_('Snap to objects'),),
 pdids.ID_SNAP_TO_PAGE:(_('Snap to page'),),
+pdids.ID_ICONIZER:(_('Iconizer...'),),
 wx.ID_REFRESH:(_('Redraw document'),),
 
 pdids.ID_INSERT_PAGE:(_('Insert page...'),),

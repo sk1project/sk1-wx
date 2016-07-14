@@ -71,6 +71,7 @@ ID_SNAP_TO_GRID = new_id()
 ID_SNAP_TO_GUIDE = new_id()
 ID_SNAP_TO_OBJ = new_id()
 ID_SNAP_TO_PAGE = new_id()
+ID_ICONIZER = new_id()
 #----- Layout menu
 ID_INSERT_PAGE = new_id()
 ID_DELETE_PAGE = new_id()
