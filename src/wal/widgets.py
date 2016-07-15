@@ -789,7 +789,10 @@ class ColorButton(wx.ColourPickerCtrl, Widget):
 		if not color:
 			color = const.BLACK
 		else:
-			color = wx.Colour(*self.val255(color))
+			if isinstance(color, tuple):
+				color = wx.Colour(*color)
+			else:
+				color = wx.Colour(*self.val255(color))
 		wx.ColourPickerCtrl.__init__(self, parent, wx.ID_ANY, color)
 		if onchange:
 			self.callback = onchange
