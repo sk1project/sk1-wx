@@ -23,6 +23,7 @@ from uc2.formats.sk2 import sk2_const
 from sk1 import _, events
 from sk1.app_plugins import RS_Plugin
 from sk1.resources import get_icon
+from sk1.pwidgets import CBMiniPalette
 
 PLG_DIR = __path__[0]
 IMG_DIR = os.path.join(PLG_DIR, 'images')
@@ -35,6 +36,19 @@ def get_plugin(app):
 
 PLUGIN_ICON = make_artid('icon')
 
+class ImageViewer(wal.VPanel):
+
+	int_panel = None
+
+	def __init__(self, parent, bg):
+		wal.VPanel.__init__(self, parent)
+		self.set_bg(wal.UI_COLORS['pressed_border'])
+		self.int_panel = wal.VPanel(self)
+		self.int_panel.set_bg(bg)
+		self.int_panel.pack((190, 190))
+		self.pack(self.int_panel, padding_all=1)
+
+
 class Iconizer_Plugin(RS_Plugin):
 
 	pid = 'IconizerPlugin'
@@ -44,6 +58,37 @@ class Iconizer_Plugin(RS_Plugin):
 
 	def build_ui(self):
 		self.icon = get_icon(PLUGIN_ICON)
+
+		self.panel.pack((5, 5))
+		hpanel = wal.HPanel(self.panel)
+		hpanel.pack(wal.Label(hpanel, _('Background:')))
+		color = wal.UI_COLORS['bg']
+		print color
+		self.bg_color_btn = wal.ColorButton(hpanel, color)
+		hpanel.pack((5, 5))
+		hpanel.pack(self.bg_color_btn)
+		self.panel.pack(hpanel, padding=5)
+
+		self.pallete = CBMiniPalette(self.panel)
+		self.panel.pack(self.pallete)
+
+		self.panel.pack((10, 10))
+
+		self.viewer = ImageViewer(self.panel, color)
+		self.panel.pack(self.viewer)
+
+		self.panel.pack((10, 10))
+
+		self.sel_check = wal.Checkbox(self.panel, _('Draw selected only'))
+		self.panel.pack(self.sel_check)
+
+		self.apply_btn = wal.Button(self.panel, _('Save image'))
+		self.panel.pack(self.apply_btn, fill=True, padding_all=5)
+
+		self.panel.pack((5, 5))
+
+		self.panel.pack(wal.HLine(self.panel), fill=True)
+
 		self.update()
 
 	def update(self, *args):pass
