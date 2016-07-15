@@ -168,7 +168,11 @@ class Panel(wx.Panel, Widget):
 		wx.Panel.__init__(self, parent, wx.ID_ANY, style=style)
 
 	def set_bg(self, color):
-		self.SetBackgroundColour(wx.Colour(*color))
+		if isinstance(color, tuple):
+			self.SetBackgroundColour(wx.Colour(*color))
+		else:
+			self.SetBackgroundColour(color)
+
 	def get_bg(self):
 		return self.GetBackgroundColour().Get()
 
