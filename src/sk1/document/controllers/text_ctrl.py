@@ -188,11 +188,16 @@ class TextEditController(AbstractController):
 			self.set_text_cursor(self.selected[0])
 			self.update_target()
 
-	def replace_selected(self, text):
+	def replace_selected(self, text, save_selection=False):
+		rng = self.selected
 		if self.selected:
 			self._delete_text_range(self.selected)
 			self.set_text_cursor(self.selected[0])
 		self.insert_text(text)
+		if rng and save_selection:
+			self.selected = rng
+			self.canvas.selection_redraw()
+			events.emit(events.SELECTION_CHANGED)
 
 	def select_all(self):
 		self.set_text_cursor(0)
@@ -205,15 +210,15 @@ class TextEditController(AbstractController):
 
 	def upper_selected(self):
 		text = self.get_selected()
-		if text: self.replace_selected(text.upper())
+		if text: self.replace_selected(text.upper(), True)
 
 	def lower_selected(self):
 		text = self.get_selected()
-		if text: self.replace_selected(text.lower())
+		if text: self.replace_selected(text.lower(), True)
 
 	def capitalize_selected(self):
 		text = self.get_selected()
-		if text: self.replace_selected(text.capitalize())
+		if text: self.replace_selected(text.capitalize(), True)
 
 	#--- Keyboard calls
 	def key_left(self, shift=False):
