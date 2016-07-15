@@ -25,3 +25,4 @@ from fillctrls import SolidFill, GradientFill, PatternFill
 from colorctrls import SB_StrokeSwatch, SB_FillSwatch, StyleMonitor
 from strokectrls import DashChoice, CapChoice, JoinChoice
 from fontctrl import FontChoice
+from minipalette import CBMiniPalette
