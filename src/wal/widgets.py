@@ -784,8 +784,10 @@ class ScrollBar(wx.ScrollBar, Widget):
 class ColorButton(wx.ColourPickerCtrl, Widget):
 
 	callback = None
+	silent = True
 
-	def __init__(self, parent, color=(), onchange=None):
+	def __init__(self, parent, color=(), onchange=None, silent=True):
+		self.silent = silent
 		if not color:
 			color = const.BLACK
 		else:
@@ -811,7 +813,10 @@ class ColorButton(wx.ColourPickerCtrl, Widget):
 		for item in vals: ret.append(item / 255.0)
 		return tuple(ret)
 
-	def set_value(self, color): self.SetColour(wx.Colour(*self.val255(color)))
+	def set_value(self, color):
+		self.SetColour(wx.Colour(*self.val255(color)))
+		if not self.silent: self.on_change(None)
+
 	def get_value(self): return self.val255_to_dec(self.GetColour().Get())
 
 class AnimatedGif(animate.GIFAnimationCtrl):
