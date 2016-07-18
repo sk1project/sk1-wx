@@ -19,11 +19,14 @@
 import os, wal
 
 from uc2.formats.sk2 import sk2_const
+from uc2 import cms
+from uc2.utils.config import XmlConfigParser
 
 from sk1 import _, events
 from sk1.app_plugins import RS_Plugin
 from sk1.resources import get_icon
 from sk1.pwidgets import CBMiniPalette
+
 
 PLG_DIR = __path__[0]
 IMG_DIR = os.path.join(PLG_DIR, 'images')
@@ -36,17 +39,42 @@ def get_plugin(app):
 
 PLUGIN_ICON = make_artid('icon')
 
-class ImageViewer(wal.VPanel):
+COLORS = [
+('#FFFFFF', 'White'),
+('#D4D0C8', 'Win2k'),
+('#ECE9D8', 'WinXP'),
+('#E0DFE3', 'WinXP Silver'),
+('#F0F0F0', 'Win7'),
+('#F2F1F0', 'Ubuntu'),
+]
 
-	int_panel = None
+
+class Iconizer_Config(XmlConfigParser):
+
+	system_encoding = 'utf-8'
+	bg_color = (1.0, 1.0, 1.0)
+
+class ImageCanvas(wal.ScrolledCanvas):
+
+	def __init__(self, parent, bgcolor=None):
+		wal.ScrolledCanvas.__init__(self, parent)
+		if not bgcolor: bgcolor = wal.WHITE
+		self.set_bg(bgcolor)
+		self.set_size((190, 190))
+
+class ImageViewer(wal.VPanel):
 
 	def __init__(self, parent, bg):
 		wal.VPanel.__init__(self, parent)
 		self.set_bg(wal.UI_COLORS['pressed_border'])
-		self.int_panel = wal.VPanel(self)
-		self.int_panel.set_bg(bg)
-		self.int_panel.pack((190, 190))
-		self.pack(self.int_panel, padding_all=1)
+		print bg
+		self.canvas = ImageCanvas(self, cms.val_255(bg))
+		self.pack(self.canvas, fill=True, expand=True, padding_all=1)
+
+	def set_canvas_bg(self, color):
+		color = cms.val_255(color)
+		self.canvas.set_bg(color)
+		self.canvas.refresh()
 
 
 class Iconizer_Plugin(RS_Plugin):
@@ -59,22 +87,27 @@ class Iconizer_Plugin(RS_Plugin):
 	def build_ui(self):
 		self.icon = get_icon(PLUGIN_ICON)
 
+		self.config = Iconizer_Config()
+		config_dir = self.app.appdata.app_config_dir
+		config_file = os.path.join(config_dir, 'iconizer_config.xml')
+		self.config.load(config_file)
+
 		self.panel.pack((5, 5))
 		hpanel = wal.HPanel(self.panel)
 		hpanel.pack(wal.Label(hpanel, _('Background:')))
-		color = wal.UI_COLORS['bg']
-		print color
-		self.bg_color_btn = wal.ColorButton(hpanel, color)
+		self.bg_color_btn = wal.ColorButton(hpanel, self.config.bg_color,
+										onchange=self.update, silent=False)
 		hpanel.pack((5, 5))
 		hpanel.pack(self.bg_color_btn)
 		self.panel.pack(hpanel, padding=5)
 
-		self.pallete = CBMiniPalette(self.panel)
+		self.pallete = CBMiniPalette(self.panel, COLORS,
+									onclick=self.bg_color_btn.set_value)
 		self.panel.pack(self.pallete)
 
 		self.panel.pack((10, 10))
 
-		self.viewer = ImageViewer(self.panel, color)
+		self.viewer = ImageViewer(self.panel, self.config.bg_color)
 		self.panel.pack(self.viewer)
 
 		self.panel.pack((10, 10))
@@ -91,4 +124,15 @@ class Iconizer_Plugin(RS_Plugin):
 
 		self.update()
 
-	def update(self, *args):pass
+	def save_config(self):
+		config_dir = self.app.appdata.app_config_dir
+		config_file = os.path.join(config_dir, 'iconizer_config.xml')
+		self.config.save(config_file)
+
+
+	def update(self, *args):
+		color = self.bg_color_btn.get_value()
+		if not color == self.config.bg_color:
+			self.config.bg_color = color
+			self.save_config()
+			self.viewer.set_canvas_bg(self.config.bg_color)
