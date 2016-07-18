@@ -67,13 +67,11 @@ class ImageViewer(wal.VPanel):
 	def __init__(self, parent, bg):
 		wal.VPanel.__init__(self, parent)
 		self.set_bg(wal.UI_COLORS['pressed_border'])
-		print bg
 		self.canvas = ImageCanvas(self, cms.val_255(bg))
 		self.pack(self.canvas, fill=True, expand=True, padding_all=1)
 
 	def set_canvas_bg(self, color):
-		color = cms.val_255(color)
-		self.canvas.set_bg(color)
+		self.canvas.set_bg(cms.val_255(color))
 		self.canvas.refresh()
 
 
