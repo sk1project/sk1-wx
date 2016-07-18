@@ -790,11 +790,10 @@ class ColorButton(wx.ColourPickerCtrl, Widget):
 		self.silent = silent
 		if not color:
 			color = const.BLACK
+		elif isinstance(color, str):
+			color = wx.Colour(*self.hex_to_val255(color))
 		else:
-			if isinstance(color, tuple):
-				color = wx.Colour(*color)
-			else:
-				color = wx.Colour(*self.val255(color))
+			color = wx.Colour(*self.val255(color))
 		wx.ColourPickerCtrl.__init__(self, parent, wx.ID_ANY, color)
 		if onchange:
 			self.callback = onchange
@@ -802,6 +801,12 @@ class ColorButton(wx.ColourPickerCtrl, Widget):
 
 	def on_change(self, event):
 		if self.callback:self.callback()
+
+	def hex_to_val255(self, hexcolor):
+		r = int(hexcolor[1:3], 0x10)
+		g = int(hexcolor[3:5], 0x10)
+		b = int(hexcolor[5:], 0x10)
+		return (r, g, b)
 
 	def val255(self, vals):
 		ret = []
