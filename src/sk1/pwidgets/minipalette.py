@@ -27,12 +27,13 @@ class ColorCell(wal.VPanel, wal.SensitiveCanvas):
 	callback = None
 	state = True
 
-	def __init__(self, parent, color=(), size=(30, 30), onclick=None):
+	def __init__(self, parent, color=(), tooltip='', size=(30, 30), onclick=None):
 		self.color = color
 		self.callback = onclick
 		wal.VPanel.__init__(self, parent)
 		wal.SensitiveCanvas.__init__(self)
 		self.pack(size)
+		if tooltip: self.set_tooltip(tooltip)
 
 	def set_color(self, color):
 		self.color = color
@@ -58,8 +59,12 @@ class CBMiniPalette(wal.VPanel):
 		self.grid = wal.GridPanel(self, 1 , len(colors), 1 , 1)
 		self.cells = []
 		for item in colors:
+			tooltip = ''
+			if isinstance(item, tuple):
+				tooltip = item[1]
+				item = item[0]
 			color = cms.val_255(cms.hexcolor_to_rgb(item))
-			cell = ColorCell(self, color, size, onclick)
+			cell = ColorCell(self, color, tooltip, size, onclick)
 			self.grid.pack(cell)
 			self.cells.append(cell)
 		self.pack(self.grid, padding_all=1)
