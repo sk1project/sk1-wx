@@ -16,10 +16,11 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import os, wal
+import os, wal, cairo
+from cStringIO import StringIO
 
-from uc2.formats.sk2 import sk2_const
-from uc2 import cms
+from uc2.formats.sk2 import sk2_const, crenderer
+from uc2 import cms, libgeom
 from uc2.utils.config import XmlConfigParser
 
 from sk1 import _, events
@@ -53,6 +54,7 @@ class Iconizer_Config(XmlConfigParser):
 
 	system_encoding = 'utf-8'
 	bg_color = (1.0, 1.0, 1.0)
+	draw_selected = False
 
 class ImageCanvas(wal.ScrolledCanvas):
 
@@ -81,6 +83,7 @@ class Iconizer_Plugin(RS_Plugin):
 	name = _('Iconizer')
 	active_transform = None
 	transforms = {}
+	picture = None
 
 	def build_ui(self):
 		self.icon = get_icon(PLUGIN_ICON)
@@ -110,7 +113,9 @@ class Iconizer_Plugin(RS_Plugin):
 
 		self.panel.pack((10, 10))
 
-		self.sel_check = wal.Checkbox(self.panel, _('Draw selected only'))
+		self.sel_check = wal.Checkbox(self.panel, _('Draw selected only'),
+									value=self.config.draw_selected,
+									onclick=self.update)
 		self.panel.pack(self.sel_check)
 
 		self.apply_btn = wal.Button(self.panel, _('Save image'))
@@ -120,17 +125,66 @@ class Iconizer_Plugin(RS_Plugin):
 
 		self.panel.pack(wal.HLine(self.panel), fill=True)
 
-		self.update()
+		events.connect(events.DOC_CHANGED, self.update)
+		events.connect(events.SELECTION_CHANGED, self.update)
+		events.connect(events.DOC_MODIFIED, self.update)
+
+
+	def show_signal(self, *args): self.update()
 
 	def save_config(self):
 		config_dir = self.app.appdata.app_config_dir
 		config_file = os.path.join(config_dir, 'iconizer_config.xml')
 		self.config.save(config_file)
 
+	def render(self, sel_flag=False):
+		doc = self.app.current_doc
+		if sel_flag:
+			if not doc.selection.objs: return None
+			w, h = libgeom.bbox_size(doc.selection.bbox)
+			x, y = libgeom.bbox_center(doc.selection.bbox)
+			trafo = (1.0, 0, 0, -1.0, w / 2.0 - x, h / 2.0 + y)
+		else:
+			page = doc.active_page
+			w, h = page.page_format[1]
+			trafo = (1.0, 0, 0, -1.0, w / 2.0, h / 2.0)
+
+		canvas_matrix = cairo.Matrix(*trafo)
+		surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(w), int(h))
+		ctx = cairo.Context(surface)
+		ctx.set_matrix(canvas_matrix)
+
+		rend = crenderer.CairoRenderer(doc.cms)
+
+		if sel_flag:
+			objs = doc.selection.objs
+			for obj in objs:
+				layer = doc.methods.get_parent_layer(obj)
+				rend.antialias_flag = layer.properties[3] == 1
+				rend.render(ctx, [obj, ])
+		else:
+			layers = doc.methods.get_visible_layers(page)
+			for item in layers:
+				rend.antialias_flag = item.properties[3] == 1
+				rend.render(ctx, item.childs)
+
+		image_stream = StringIO()
+		surface.write_to_png(image_stream)
+		return image_stream
 
 	def update(self, *args):
+		if not self.is_shown(): return
 		color = self.bg_color_btn.get_value()
 		if not color == self.config.bg_color:
 			self.config.bg_color = color
 			self.save_config()
 			self.viewer.set_canvas_bg(self.config.bg_color)
+		if not self.sel_check.get_value() == self.config.draw_selected:
+			self.config.draw_selected = not self.config.draw_selected
+			self.save_config()
+		self.picture = self.render(self.config.draw_selected)
+
+#		if not self.picture:return
+#		fileptr = open('/home/igor/test.png', 'w')
+#		fileptr.write(self.picture.getvalue())
+#		fileptr.close()
