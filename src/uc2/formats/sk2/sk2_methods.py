@@ -268,6 +268,12 @@ class SK2_Methods:
 	def get_master_layers(self):
 		return self.model.childs[2].childs
 
+	def get_parent_layer(self, obj):
+		parent = obj.parent
+		while not parent.is_layer():
+			parent = parent.parent
+		return parent
+
 	#---GRID
 
 	def get_grid_layer(self):
