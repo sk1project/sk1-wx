@@ -398,8 +398,8 @@ class pdApplication(wal.Application, UCApplication):
 				pixmap = self.current_doc.selection.objs[0]
 				libimg.extract_bitmap(pixmap, doc_file)
 			except:
-				first = _('Cannot save document:')
-				msg = ("%s\n'%s'.") % (first, self.current_doc.doc_name) + '\n'
+				first = _('Cannot save bitmap:')
+				msg = ("%s\n'%s'.") % (first, doc_file) + '\n'
 				msg += _('Please check file name and write permissions')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
 				self.print_stacktrace()
