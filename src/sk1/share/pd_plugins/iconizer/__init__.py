@@ -19,11 +19,12 @@
 import os, wal, cairo
 from cStringIO import StringIO
 
-from uc2.formats.sk2 import sk2_const, crenderer
 from uc2 import cms, libgeom
+from uc2.formats import data
+from uc2.formats.sk2 import sk2_const, crenderer
 from uc2.utils.config import XmlConfigParser
 
-from sk1 import _, events
+from sk1 import _, events, config, dialogs
 from sk1.app_plugins import RS_Plugin
 from sk1.resources import get_icon
 from sk1.pwidgets import CBMiniPalette
@@ -49,33 +50,93 @@ COLORS = [
 ('#F2F1F0', 'Ubuntu'),
 ]
 
+SIZE = 190
+
 
 class Iconizer_Config(XmlConfigParser):
 
 	system_encoding = 'utf-8'
 	bg_color = (1.0, 1.0, 1.0)
 	draw_selected = False
+	draw_border = False
 
-class ImageCanvas(wal.ScrolledCanvas):
+class ImageCanvas(wal.ScrolledCanvas, wal.Canvas):
+
+	bitmap = None
+	show_border = False
 
 	def __init__(self, parent, bgcolor=None):
 		wal.ScrolledCanvas.__init__(self, parent)
+		wal.Canvas.__init__(self)
 		if not bgcolor: bgcolor = wal.WHITE
 		self.set_bg(bgcolor)
-		self.set_size((190, 190))
+		self.set_size((SIZE, SIZE))
+
+		sb = wal.ScrollBar(self)
+		self.sb_width = sb.get_size()[0]
+		sb.destroy()
+
+	def paint(self):
+		if self.bitmap is None:
+			w = h = 0
+		else:
+			w, h = wal.get_bitmap_size(self.bitmap)
+		self.set_virtual_size((max(SIZE - self.sb_width, w),
+							max(SIZE - self.sb_width, h)))
+		self.prepare_dc(self.pdc)
+		if self.bitmap is None:
+			self.set_gc_stroke(wal.UI_COLORS['pressed_border'][:3])
+			self.gc_draw_line(0, 0, SIZE, SIZE)
+			self.gc_draw_line(SIZE, 0, 0, SIZE)
+		else:
+			x = y = 0
+			if SIZE > w: x = (SIZE - w) / 2
+			if SIZE > h: y = (SIZE - h) / 2
+			self.draw_bitmap(self.bitmap, x, y)
+			if self.show_border:
+				self.set_stroke(wal.UI_COLORS['pressed_border'][:3], 1.0, [1, 1])
+				shift = 10
+				items = [(x - shift, y - 1, x + w + shift, y - 1),
+						(x - shift, y + h + 1, x + w + shift, y + h + 1),
+						(x - 1, y - shift, x - 1, y + h + shift),
+						(x + w + 1, y - shift, x + w + 1, y + h + shift), ]
+				for item in items: self.draw_line(*item)
+
 
 class ImageViewer(wal.VPanel):
 
 	def __init__(self, parent, bg):
 		wal.VPanel.__init__(self, parent)
-		self.set_bg(wal.UI_COLORS['pressed_border'])
-		self.canvas = ImageCanvas(self, cms.val_255(bg))
-		self.pack(self.canvas, fill=True, expand=True, padding_all=1)
+		self.set_bg(wal.UI_COLORS['pressed_border'][:3])
+		panel = wal.VPanel(self)
+		self.canvas = ImageCanvas(panel, cms.val_255(bg))
+		panel.pack(self.canvas)
+		info_panel = wal.VPanel(panel)
+		info_panel.set_bg(wal.WHITE)
+		self.info = wal.Label(info_panel, '---')
+		info_panel.pack(self.info, padding_all=2)
+		panel.pack((1, 1))
+		panel.pack(info_panel, fill=True)
+		self.pack(panel, padding_all=1)
 
 	def set_canvas_bg(self, color):
 		self.canvas.set_bg(cms.val_255(color))
 		self.canvas.refresh()
 
+	def set_picture(self, picture):
+		if not picture is None:
+			picture = wal.stream_to_bitmap(picture)
+			w, h = wal.get_bitmap_size(picture)
+			self.info.set_text(_('Size:') + ' %d х %d px' % (w, h))
+		else:
+			self.info.set_text('---')
+		self.canvas.bitmap = picture
+		self.canvas.refresh()
+		self.layout()
+
+	def set_border(self, val):
+		self.canvas.show_border = val
+		self.canvas.refresh()
 
 class Iconizer_Plugin(RS_Plugin):
 
@@ -113,12 +174,22 @@ class Iconizer_Plugin(RS_Plugin):
 
 		self.panel.pack((10, 10))
 
-		self.sel_check = wal.Checkbox(self.panel, _('Draw selected only'),
+		check_panel = wal.VPanel(self.panel)
+
+		self.border_check = wal.Checkbox(check_panel, _('Draw border'),
+									value=self.config.draw_border,
+									onclick=self.update)
+		check_panel.pack(self.border_check, align_center=False)
+
+		self.sel_check = wal.Checkbox(check_panel, _('Draw selected only'),
 									value=self.config.draw_selected,
 									onclick=self.update)
-		self.panel.pack(self.sel_check)
+		check_panel.pack(self.sel_check, align_center=False)
 
-		self.apply_btn = wal.Button(self.panel, _('Save image'))
+		self.panel.pack(check_panel)
+
+		self.apply_btn = wal.Button(self.panel, _('Save image'),
+								onclick=self.apply_action)
 		self.panel.pack(self.apply_btn, fill=True, padding_all=5)
 
 		self.panel.pack((5, 5))
@@ -182,9 +253,32 @@ class Iconizer_Plugin(RS_Plugin):
 		if not self.sel_check.get_value() == self.config.draw_selected:
 			self.config.draw_selected = not self.config.draw_selected
 			self.save_config()
+		if not self.border_check.get_value() == self.config.draw_border:
+			self.config.draw_border = not self.config.draw_border
+			self.save_config()
+		self.viewer.set_border(self.config.draw_border)
 		self.picture = self.render(self.config.draw_selected)
+		self.viewer.set_picture(self.picture)
+		self.apply_btn.set_enable(not self.picture is None)
 
-#		if not self.picture:return
-#		fileptr = open('/home/igor/test.png', 'w')
-#		fileptr.write(self.picture.getvalue())
-#		fileptr.close()
+	def apply_action(self):
+		if not self.picture:return
+		doc_file = 'image'
+		doc_file = os.path.join(config.save_dir, doc_file)
+		doc_file = dialogs.get_save_file_name(self.app.mw, self.app, doc_file,
+							_('Save image as...'),
+							file_types=[data.PNG], path_only=True)
+		if doc_file:
+			try:
+				fileptr = open(doc_file, 'w')
+				fileptr.write(self.picture.getvalue())
+				fileptr.close()
+			except:
+				first = _('Cannot save image:')
+				msg = ("%s\n'%s'.") % (first, doc_file) + '\n'
+				msg += _('Please check file name and write permissions')
+				dialogs.error_dialog(self.app.mw, self.app.appdata.app_name, msg)
+				return
+			config.save_dir = str(os.path.dirname(doc_file))
+			events.emit(events.APP_STATUS, _('Image is successfully saved'))
+
