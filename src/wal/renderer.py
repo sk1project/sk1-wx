@@ -22,6 +22,16 @@ from const import is_msw
 
 from PIL import Image, ImageOps
 
+def get_bitmap_size(bitmap):
+	return bitmap.GetSize()
+
+def stream_to_image(image_stream):
+	image_stream.seek(0)
+	return wx.ImageFromStream(image_stream)
+
+def stream_to_bitmap(image_stream):
+	return stream_to_image(image_stream).ConvertToBitmap()
+
 #----- PIL interfaces
 
 def image_to_pil_image(image):
