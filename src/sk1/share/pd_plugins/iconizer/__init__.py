@@ -70,7 +70,6 @@ class ImageCanvas(wal.ScrolledCanvas, wal.Canvas):
 		wal.Canvas.__init__(self)
 		if not bgcolor: bgcolor = wal.WHITE
 		self.set_bg(bgcolor)
-		self.set_size((SIZE, SIZE))
 
 		sb = wal.ScrollBar(self)
 		self.sb_width = sb.get_size()[0]
@@ -81,8 +80,8 @@ class ImageCanvas(wal.ScrolledCanvas, wal.Canvas):
 			w = h = 0
 		else:
 			w, h = wal.get_bitmap_size(self.bitmap)
-		self.set_virtual_size((max(SIZE - self.sb_width, w),
-							max(SIZE - self.sb_width, h)))
+		self.set_virtual_size((max(SIZE - self.sb_width - 2, w),
+							max(SIZE - self.sb_width - 2, h)))
 		self.prepare_dc(self.pdc)
 		if self.bitmap is None:
 			self.set_gc_stroke(wal.UI_COLORS['pressed_border'][:3])
@@ -94,7 +93,7 @@ class ImageCanvas(wal.ScrolledCanvas, wal.Canvas):
 			if SIZE > h: y = (SIZE - h) / 2
 			self.draw_bitmap(self.bitmap, x, y)
 			if self.show_border:
-				self.set_stroke(wal.UI_COLORS['pressed_border'][:3], 1.0, [1, 1])
+				self.set_stroke(wal.UI_COLORS['pressed_border'][:3], 1.0, [2, 2])
 				shift = 10
 				items = [(x - shift, y - 1, x + w + shift, y - 1),
 						(x - shift, y + h, x + w + shift, y + h),
@@ -103,21 +102,25 @@ class ImageCanvas(wal.ScrolledCanvas, wal.Canvas):
 				for item in items: self.draw_line(*item)
 
 
-class ImageViewer(wal.VPanel):
+class ImageViewer(wal.HPanel):
 
 	def __init__(self, parent, bg):
-		wal.VPanel.__init__(self, parent)
+		wal.HPanel.__init__(self, parent)
 		self.set_bg(wal.UI_COLORS['pressed_border'][:3])
+		self.pack((1, SIZE))
 		panel = wal.VPanel(self)
+		panel.pack((SIZE, 1))
 		self.canvas = ImageCanvas(panel, cms.val_255(bg))
-		panel.pack(self.canvas)
+		panel.pack(self.canvas, fill=True, expand=True)
 		info_panel = wal.VPanel(panel)
 		info_panel.set_bg(wal.WHITE)
 		self.info = wal.Label(info_panel, '---')
 		info_panel.pack(self.info, padding_all=2)
 		panel.pack((1, 1))
 		panel.pack(info_panel, fill=True)
-		self.pack(panel, padding_all=1)
+		panel.pack((SIZE, 1))
+		self.pack(panel, fill=True)
+		self.pack((1, SIZE + info_panel.get_size()[1] + 3))
 
 	def set_canvas_bg(self, color):
 		self.canvas.set_bg(cms.val_255(color))
@@ -127,7 +130,7 @@ class ImageViewer(wal.VPanel):
 		if not picture is None:
 			picture = wal.stream_to_bitmap(picture)
 			w, h = wal.get_bitmap_size(picture)
-			self.info.set_text(_('Size:') + ' %d х %d px' % (w, h))
+			self.info.set_text(_('Size:') + ' %d x %d px' % (w, h))
 		else:
 			self.info.set_text('---')
 		self.canvas.bitmap = picture
@@ -270,7 +273,7 @@ class Iconizer_Plugin(RS_Plugin):
 							file_types=[data.PNG], path_only=True)
 		if doc_file:
 			try:
-				fileptr = open(doc_file, 'w')
+				fileptr = open(doc_file, 'wb')
 				fileptr.write(self.picture.getvalue())
 				fileptr.close()
 			except:
