@@ -115,6 +115,7 @@ class ImageViewer(wal.HPanel):
 		self.set_bg(wal.UI_COLORS['pressed_border'][:3])
 		self.pack((1, SIZE))
 		panel = wal.VPanel(self)
+		panel.set_bg(wal.UI_COLORS['bg'][:3])
 		panel.pack(Spacer(panel))
 		self.canvas = ImageCanvas(panel, cms.val_255(bg))
 		panel.pack(self.canvas, fill=True, expand=True)
@@ -185,7 +186,7 @@ class Iconizer_Plugin(RS_Plugin):
 
 		check_panel = wal.VPanel(self.panel)
 
-		self.border_check = wal.Checkbox(check_panel, _('Draw border'),
+		self.border_check = wal.Checkbox(check_panel, _('Show image border'),
 									value=self.config.draw_border,
 									onclick=self.update)
 		check_panel.pack(self.border_check, align_center=False)
