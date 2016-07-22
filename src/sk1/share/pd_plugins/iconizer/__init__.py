@@ -101,6 +101,12 @@ class ImageCanvas(wal.ScrolledCanvas, wal.Canvas):
 						(x + w , y - shift, x + w, y + h + shift), ]
 				for item in items: self.draw_line(*item)
 
+class Spacer(wal.VPanel):
+
+	def __init__(self, parent):
+		wal.VPanel.__init__(self, parent)
+		self.pack((SIZE, 1))
+		self.set_bg(wal.UI_COLORS['pressed_border'][:3])
 
 class ImageViewer(wal.HPanel):
 
@@ -109,16 +115,16 @@ class ImageViewer(wal.HPanel):
 		self.set_bg(wal.UI_COLORS['pressed_border'][:3])
 		self.pack((1, SIZE))
 		panel = wal.VPanel(self)
-		panel.pack((SIZE, 1))
+		panel.pack(Spacer(panel))
 		self.canvas = ImageCanvas(panel, cms.val_255(bg))
 		panel.pack(self.canvas, fill=True, expand=True)
 		info_panel = wal.VPanel(panel)
 		info_panel.set_bg(wal.WHITE)
 		self.info = wal.Label(info_panel, '---')
 		info_panel.pack(self.info, padding_all=2)
-		panel.pack((1, 1))
+		panel.pack(Spacer(panel))
 		panel.pack(info_panel, fill=True)
-		panel.pack((SIZE, 1))
+		panel.pack(Spacer(panel))
 		self.pack(panel, fill=True)
 		self.pack((1, SIZE + info_panel.get_size()[1] + 3))
 
