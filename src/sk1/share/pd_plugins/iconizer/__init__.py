@@ -97,9 +97,9 @@ class ImageCanvas(wal.ScrolledCanvas, wal.Canvas):
 				self.set_stroke(wal.UI_COLORS['pressed_border'][:3], 1.0, [1, 1])
 				shift = 10
 				items = [(x - shift, y - 1, x + w + shift, y - 1),
-						(x - shift, y + h + 1, x + w + shift, y + h + 1),
+						(x - shift, y + h, x + w + shift, y + h),
 						(x - 1, y - shift, x - 1, y + h + shift),
-						(x + w + 1, y - shift, x + w + 1, y + h + shift), ]
+						(x + w , y - shift, x + w, y + h + shift), ]
 				for item in items: self.draw_line(*item)
 
 
