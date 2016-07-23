@@ -58,6 +58,7 @@ class pdApplication(wal.Application, UCApplication):
 	cursors = None
 	mdiarea = None
 	plg_area = None
+	print_data = None
 
 	def __init__(self, path):
 
