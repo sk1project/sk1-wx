@@ -68,7 +68,7 @@ class PrefsDialog(wal.OkCancelDialog):
 		self.panel.pack(self.splitter, expand=True, fill=True)
 		if not PREFS_DATA:
 			PREFS_DATA.append(PrefsAppItem(PREFS_APP))
-			PREFS_DATA.append(PrefsDocItem(PREFS_DOC))
+#			PREFS_DATA.append(PrefsDocItem(PREFS_DOC))
 			for item in PREFS_DATA:
 				item.init_prefs(self.app, self)
 		self.tree = wal.TreeWidget(self.splitter, data=PREFS_DATA,
@@ -138,5 +138,5 @@ class PrefsDialog(wal.OkCancelDialog):
 def get_prefs_dialog(parent, pid=''):
 	dlg = PrefsDialog(parent, _("sK1 Preferences"), pid)
 	dlg.show()
-	PREFS_DATA.remove(PREFS_DATA[1])
+#	PREFS_DATA.remove(PREFS_DATA[1])
 	PREFS_DATA.remove(PREFS_DATA[0])
