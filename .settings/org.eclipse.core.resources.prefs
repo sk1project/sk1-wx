@@ -42,6 +42,7 @@ encoding//src/sk1/dialogs/logviewer.py=utf-8
 encoding//src/sk1/dialogs/pagedlg.py=utf-8
 encoding//src/sk1/dialogs/palcoldlg.py=utf-8
 encoding//src/sk1/dialogs/paletteinfo.py=utf-8
+encoding//src/sk1/dialogs/printing.py=utf-8
 encoding//src/sk1/dialogs/progressdlg.py=utf-8
 encoding//src/sk1/dialogs/strokedlg.py=utf-8
 encoding//src/sk1/document/__init__.py=utf-8
