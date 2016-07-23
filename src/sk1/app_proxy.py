@@ -25,7 +25,7 @@ from uc2.formats.sk2 import sk2_const
 from uc2.libgeom import stroke_to_curve, apply_trafo_to_paths
 
 from sk1 import _, dialogs, modes, events, config
-from sk1.dialogs import yesno_dialog, error_dialog
+from sk1.dialogs import yesno_dialog, error_dialog, print_dlg, print_setup_dlg
 from sk1.prefs import get_prefs_dialog
 
 class AppProxy:
@@ -41,6 +41,12 @@ class AppProxy:
 		dialogs.msg_dialog(self.mw, self.app.appdata.app_name,
 				'Sorry, but this feature is not implemented yet!\n' +
 				'Be patient and watch project development of regularly updating the source code!')
+
+	def print_doc(self, *args):
+		print_dlg(self.app.mw, self.app.current_doc)
+
+	def print_setup(self, *args):
+		print_setup_dlg(self.app.mw, self.app)
 
 	def fill_dialog(self, default_style=False):
 		doc = self.app.current_doc
