@@ -77,8 +77,8 @@ def create_actions(app):
 (pdids.ID_IMPORT, proxy.import_file, doc_chnls, insp.is_doc),
 (pdids.ID_EXPORT, proxy.export_as, doc_chnls, insp.is_doc),
 (pdids.ID_VIEW_LOG, proxy.view_log, [HISTORY_CHANGED, ] + doc_chnls, insp.is_file_history),
-(wx.ID_PRINT_SETUP, proxy.stub, doc_chnls, insp.is_doc),
-(wx.ID_PRINT, proxy.stub, doc_chnls, insp.is_doc),
+(wx.ID_PRINT_SETUP, proxy.print_setup),
+(wx.ID_PRINT, proxy.print_doc, doc_chnls, insp.is_doc),
 (wx.ID_EXIT, proxy.exit),
 #------ Edit menu -------
 (wx.ID_UNDO, proxy.undo, doc_save_chnls, insp.is_undo),
