@@ -37,7 +37,7 @@ class AppMenuBar(wx.MenuBar):
 				wal.ID_SAVE, wal.ID_SAVEAS, pdids.ID_SAVE_SEL,
 				pdids.ID_SAVEALL, None, wal.ID_CLOSE, wal.ID_CLOSE_ALL, None,
 				pdids.ID_IMPORT, pdids.ID_EXPORT, None,
-				pdids.ID_VIEW_LOG, None, wal.ID_PRINT_SETUP, wal.ID_PRINT,
+				pdids.ID_VIEW_LOG, None, wal.ID_PRINT,#wal.ID_PRINT_SETUP,
 				None, wal.ID_EXIT,)
 		entry = (_("&File"), sub)
 		self.entries.append(entry)
