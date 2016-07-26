@@ -25,7 +25,8 @@ from uc2.formats.sk2 import sk2_const
 from uc2.libgeom import stroke_to_curve, apply_trafo_to_paths
 
 from sk1 import _, dialogs, modes, events, config
-from sk1.dialogs import yesno_dialog, error_dialog, print_dlg, print_setup_dlg
+from sk1.dialogs import yesno_dialog, error_dialog, print_setup_dlg
+from sk1.printing import print_dlg
 from sk1.prefs import get_prefs_dialog
 
 class AppProxy:
