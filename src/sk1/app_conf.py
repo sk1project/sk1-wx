@@ -131,12 +131,14 @@ class AppConfig(UCConfig):
 	docprops_dlg_size = (420, 350)
 	docprops_dlg_minsize = (420, 350)
 
+	print_dlg_size = (600, 400)
+	print_dlg_minsize = (600, 400)
+
 	fill_dlg_size = (440, 370)
 	stroke_dlg_size = (430, 370)
 	dash_dlg_size = (300, 150)
 	change_color_dlg_size = (420, 300)
 	about_dlg_size = (500, 350)
-
 
 	statusbar_fontsize = 0
 	tabs_fontsize = 0
