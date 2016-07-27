@@ -106,7 +106,20 @@ def emit(channel, *args):
 	except:
 		print "Cannot send signal to channel:", channel
 
+def clean_channel(channel):
+	"""
+	Cleans channel queue.
+	"""
+	name = channel[0]
+	channel[:] = []
+	channel.append(name)
 
+def clean_all_channels():
+	"""
+	Cleans all channels.
+	"""
+	for item in ALL_CHANNELS:
+		clean_channel(item)
 
 
 
