@@ -30,11 +30,12 @@ class GeneralPanel(wal.VPanel):
 
 		ppanel = wal.LabeledPanel(self, _('Printer'))
 
-		grid = wal.GridPanel(ppanel, 4, 3)
+		grid = wal.GridPanel(ppanel, 4, 3, 5, 5)
+		grid.add_growable_col(1)
 
 		grid.pack(wal.Label(grid, _('Name:')))
 		self.prn_list = wal.Combolist(grid)
-		grid.pack(self.prn_list)
+		grid.pack(self.prn_list, fill=True)
 		self.prop_btn = wal.Button(grid, _('Properties...'))
 		grid.pack(self.prop_btn)
 
@@ -52,7 +53,7 @@ class GeneralPanel(wal.VPanel):
 		self.status_label = wal.Label(grid, _(''))
 		grid.pack(self.driver_label)
 		grid.pack((1, 1))
-		ppanel.pack(grid, fill=True, expand=True, padding_all=5)
+		ppanel.pack(grid, fill=True, expand=True, padding_all=10)
 
 		self.pack(ppanel, fill=True, padding_all=5)
 
