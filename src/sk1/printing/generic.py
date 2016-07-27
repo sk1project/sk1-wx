@@ -19,7 +19,12 @@ class AbstractPrinter(object):
 
 	name = 'Abstract Printer'
 
-	def get_name(self):return self.name
+	def get_name(self): return self.name
+	def is_virtual(self): return True
+	def get_connection(self): return '---'
+	def get_driver_name(self): return '---'
+	def get_state(self): return '---'
+	def get_filepath(self): return ''
 
 class AbstractPS(object):
 
