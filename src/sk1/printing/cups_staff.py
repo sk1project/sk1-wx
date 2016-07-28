@@ -28,6 +28,7 @@ class CUPS_PS(AbstractPS):
 
 	def __init__(self):
 		self.connection = cups.Connection()
+		self.printers = []
 		prn_dict = self.connection.getPrinters()
 		for item in prn_dict.keys():
 			prn = CUPS_Printer(self.connection, item, prn_dict[item])
@@ -40,6 +41,19 @@ class CUPS_PS(AbstractPS):
 			if item.cups_name == self.default_printer:
 				return item
 		return self.printers[-1]
+
+	def get_printer_by_name(self, name):
+		for item in self.printers:
+			if item.get_name() == name:
+				return item
+		return None
+
+	def get_printer_names(self):
+		ret = []
+		for item in self.printers:
+			ret.append(item.get_name())
+		return ret
+
 
 class CUPS_Printer(AbstractPrinter):
 
@@ -58,6 +72,11 @@ class CUPS_Printer(AbstractPrinter):
 	def get_driver_name(self): return self.details['printer-make-and-model']
 	def get_connection(self): return self.details['device-uri']
 
-class CUPS_Printout(AbstractPrintout):pass
+class CUPS_Printout(AbstractPrintout):
+
+	presenter = None
+
+	def __init__(self, presenter):
+		self.presenter = presenter
 
 
