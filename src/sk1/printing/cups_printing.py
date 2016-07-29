@@ -19,10 +19,8 @@ import os, sys
 
 import wal
 
-from uc2.formats import data
-
 from sk1 import _, config, appconst, dialogs
-from sk1.resources import icons
+from sk1.resources import get_icon, icons
 
 import prn_events
 from cups_staff import CUPS_PS, CUPS_Printout
@@ -30,18 +28,30 @@ from cups_staff import CUPS_PS, CUPS_Printout
 class RangePanel(wal.LabeledPanel):
 
 	def __init__(self, parent, win, printout):
+		self.win = win
+		self.printout = printout
 		wal.LabeledPanel.__init__(self, parent, _('Print range'))
 
 		vpanel = wal.VPanel(self)
 
 		grid = wal.GridPanel(vpanel, 3, 2, 5, 5)
 		grid.add_growable_col(1)
-		self.all_opt = wal.Radiobutton(grid, _('All'), group=True)
-		self.sel_opt = wal.Radiobutton(grid, _('Selection'))
-		self.cpage_opt = wal.Radiobutton(grid, _('Current page'))
-		self.pages_opt = wal.Radiobutton(grid, _('Pages:'))
+		self.all_opt = wal.Radiobutton(grid, _('All'), group=True,
+									onclick=self.update)
+		self.sel_opt = wal.Radiobutton(grid, _('Selection'),
+									onclick=self.update)
+		self.cpage_opt = wal.Radiobutton(grid, _('Current page'),
+									onclick=self.update)
+		self.pages_opt = wal.Radiobutton(grid, _('Pages:'),
+									onclick=self.update)
 		self.pages_entry = wal.Entry(grid, '1')
+		self.pages_entry.set_enable(False)
 		self.all_opt.set_value(True)
+		if not self.printout.is_selection():
+			self.sel_opt.set_enable(False)
+		if not self.printout.get_num_pages() > 1:
+			self.cpage_opt.set_enable(False)
+			self.pages_opt.set_enable(False)
 		grid.pack(self.all_opt)
 		grid.pack((1, 1))
 		grid.pack(self.sel_opt)
@@ -58,12 +68,67 @@ class RangePanel(wal.LabeledPanel):
 
 		self.pack(vpanel, fill=True, padding_all=10)
 
+	def update(self):
+		self.pages_entry.set_enable(self.pages_opt.get_value())
+
+
+
+
 class CopiesPanel(wal.LabeledPanel):
 
 	def __init__(self, parent, win, printout):
 		wal.LabeledPanel.__init__(self, parent, _('Copies'))
+
+		self.icons = {
+		'00':get_icon(icons.PD_PRINT_COPIES_00, size=wal.DEF_SIZE),
+		'10':get_icon(icons.PD_PRINT_COPIES_10, size=wal.DEF_SIZE),
+		'01':get_icon(icons.PD_PRINT_COPIES_01, size=wal.DEF_SIZE),
+		'11':get_icon(icons.PD_PRINT_COPIES_11, size=wal.DEF_SIZE),
+		}
+
+		self.pack((5, 5))
+
+		hpanel = wal.HPanel(self)
 		title = _('Number of copies:')
-		self.pack(wal.Label(self, title))
+		hpanel.pack(wal.Label(hpanel, title), padding=5)
+		self.num_copies = wal.IntSpin(hpanel, 1, (1, 99999),
+								spin_overlay=config.spin_overlay,
+								onchange=self.copies_changed)
+		hpanel.pack(self.num_copies)
+		self.pack(hpanel, padding=5)
+
+		hpanel = wal.HPanel(self)
+
+		grid = wal.GridPanel(hpanel, 2, 1, 5, 5)
+		self.collate = wal.Checkbox(grid, _('Collate'),
+								onclick=self.flag_changed)
+		grid.pack(self.collate)
+		self.reverse = wal.Checkbox(grid, _('Reverse'),
+								onclick=self.flag_changed)
+		grid.pack(self.reverse)
+
+		hpanel.pack(grid, expand=True)
+
+		self.indicator = wal.Bitmap(hpanel, self.icons['00'])
+		hpanel.pack(self.indicator)
+
+		self.pack(hpanel, fill=True, expand=True, padding_all=10)
+		self.copies_changed()
+
+	def copies_changed(self):
+		state = False
+		if self.num_copies.get_value() > 1: state = True
+		ctrls = [self.collate, self.reverse, self.indicator]
+		for item in ctrls: item.set_enable(state)
+		if not state:
+			self.collate.set_value(False)
+			self.reverse.set_value(False)
+
+	def flag_changed(self):
+		icon_key = str(int(self.collate.get_value()))
+		icon_key += str(int(self.reverse.get_value()))
+		self.indicator.set_bitmap(self.icons[icon_key])
+
 
 class PrinterPanel(wal.LabeledPanel):
 
@@ -204,7 +269,7 @@ class CUPSPrintDialog(wal.OkCancelDialog):
 
 	def set_dialog_buttons(self):
 		wal.OkCancelDialog.set_dialog_buttons(self)
-		self.preview_btn = wal.Button(self.left_button_box, _('Print Prieviw'),
+		self.preview_btn = wal.Button(self.left_button_box, _('Print Preview'),
 								onclick=self.print_preview)
 		self.left_button_box.pack(self.preview_btn)
 
