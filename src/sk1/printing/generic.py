@@ -30,4 +30,7 @@ class AbstractPS(object):
 
 	def get_default_printer(self): return None
 
-class AbstractPrintout(object):pass
+class AbstractPrintout(object):
+
+	def is_selection(self): return False
+	def get_num_pages(self): return 1
