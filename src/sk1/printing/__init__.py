@@ -28,4 +28,3 @@ def print_dlg(parent, presenter):
 		printsys = CUPS_PS()
 	dlg = PrintDialog(parent, printsys, printout)
 	dlg.show()
-	dlg.destroy()
