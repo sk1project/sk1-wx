@@ -25,6 +25,7 @@ class AbstractPrinter(object):
 	def get_driver_name(self): return '---'
 	def get_state(self): return '---'
 	def get_filepath(self): return ''
+	def is_ready(self): return True
 
 class AbstractPS(object):
 
