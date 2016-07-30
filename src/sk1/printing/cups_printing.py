@@ -32,7 +32,9 @@ class RangePanel(wal.LabeledPanel):
 		self.printout = printout
 		wal.LabeledPanel.__init__(self, parent, _('Print range'))
 
-		vpanel = wal.VPanel(self)
+		int_panel = wal.HPanel(self)
+
+		vpanel = wal.VPanel(int_panel)
 
 		grid = wal.GridPanel(vpanel, 3, 2, 5, 5)
 		grid.add_growable_col(1)
@@ -66,7 +68,11 @@ class RangePanel(wal.LabeledPanel):
 		title += '\n' + _('For example: 1,2,5-6')
 		vpanel.pack(wal.Label(self, title, fontsize=-1), align_center=False)
 
-		self.pack(vpanel, fill=True, padding_all=10)
+		int_panel.pack((10, 10))
+		int_panel.pack(vpanel, fill=True, expand=True)
+		int_panel.pack((10, 10))
+
+		self.pack(int_panel, fill=True, expand=True, padding_all=3)
 
 	def update(self):
 		self.pages_entry.set_enable(self.pages_opt.get_value())
@@ -207,6 +213,7 @@ class PrinterPanel(wal.LabeledPanel):
 	def update(self):
 		self.driver_label.set_text(self.printer.get_driver_name())
 		self.conn_label.set_text(self.printer.get_connection())
+
 		self.output_file.set_value(self.printer.get_filepath())
 		file_ctrls = (self.output_label, self.output_file, self.output_choice)
 		state = self.printer.is_virtual()
@@ -220,16 +227,22 @@ class GeneralTab(wal.VPanel):
 	def __init__(self, parent, win, printsys, printout):
 		wal.VPanel.__init__(self, parent)
 
-		self.prn_panel = PrinterPanel(self, win, printsys)
-		self.pack(self.prn_panel, fill=True, padding_all=5)
+		int_panel = wal.VPanel(self)
 
-		hpanel = wal.HPanel(self)
-		self.range_panel = RangePanel(self, win, printout)
+		self.prn_panel = PrinterPanel(int_panel, win, printsys)
+		int_panel.pack(self.prn_panel, fill=True)
+
+		int_panel.pack((5, 5))
+
+		hpanel = wal.HPanel(int_panel)
+		self.range_panel = RangePanel(hpanel, win, printout)
 		hpanel.pack(self.range_panel, fill=True, expand=True)
 		hpanel.pack((5, 5))
-		self.copies_panel = CopiesPanel(self, win, printout)
+		self.copies_panel = CopiesPanel(hpanel, win, printout)
 		hpanel.pack(self.copies_panel, fill=True, expand=True)
-		self.pack(hpanel, fill=True, expand=True, padding_all=5)
+		int_panel.pack(hpanel, fill=True, expand=True)
+
+		self.pack(int_panel, fill=True, expand=True, padding_all=5)
 
 class CUPSPrintDialog(wal.OkCancelDialog):
 
@@ -245,7 +258,7 @@ class CUPSPrintDialog(wal.OkCancelDialog):
 		self.printout = CUPS_Printout(presenter)
 		size = config.print_dlg_size
 		wal.OkCancelDialog.__init__(self, parent, title, size, resizable=True,
-								action_button=wal.BUTTON_PRINT, add_line=False)
+								action_button=wal.BUTTON_PRINT)
 		self.set_minsize(config.print_dlg_minsize)
 
 	def build(self):
