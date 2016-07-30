@@ -35,8 +35,8 @@ class PrintDialog(wal.OkCancelDialog):
 	def __init__(self, parent, printsys, printout):
 		self.app = parent.app
 		self.printsys = printsys
-		self.printer = self.printsys.get_default_printer()
 		self.printout = printout
+		self.printer = self.printsys.get_default_printer()
 		size = config.print_dlg_size
 		wal.OkCancelDialog.__init__(self, parent, _("Print"), size,
 							resizable=True, action_button=wal.BUTTON_PRINT)
