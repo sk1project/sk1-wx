@@ -27,4 +27,6 @@ def print_dlg(parent, presenter):
 		printout = CUPS_Printout(presenter)
 		printsys = CUPS_PS()
 	dlg = PrintDialog(parent, printsys, printout)
-	dlg.show()
+	printer = dlg.show()
+	if printer:
+		printer.printing(printout)
