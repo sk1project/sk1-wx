@@ -27,6 +27,7 @@ class AbstractPrinter(object):
 	def get_filepath(self): return ''
 	def is_ready(self): return True
 	def get_prn_info(self): return (('---', '---'), ('---', '---'))
+	def printing(self, printout): pass
 
 class AbstractPS(object):
 
