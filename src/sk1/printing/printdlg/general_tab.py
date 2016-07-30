@@ -202,7 +202,7 @@ class PrinterPanel(wal.LabeledPanel):
 			self.printer.set_filepath(doc_file)
 			self.output_file.set_value(doc_file)
 			config.print_dir = str(os.path.dirname(doc_file))
-
+			prn_events.emit(prn_events.PRINTER_MODIFIED)
 
 	def on_printer_change(self):
 		if not self.ready_flag: return
