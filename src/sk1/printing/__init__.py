@@ -17,10 +17,15 @@
 
 import wal
 
-from cups_printing import cups_print_dlg
+from printdlg import PrintDialog
 
 def print_dlg(parent, presenter):
 	if wal.is_msw():
-		pass
+		return
 	else:
-		cups_print_dlg(parent, presenter)
+		from cups_staff import CUPS_PS, CUPS_Printout
+		printout = CUPS_Printout(presenter)
+		printsys = CUPS_PS()
+	dlg = PrintDialog(parent, printsys, printout)
+	dlg.show()
+	dlg.destroy()
