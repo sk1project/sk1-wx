@@ -165,13 +165,16 @@ class PrinterPanel(wal.LabeledPanel):
 		hpanel.pack(self.prop_btn)
 		grid.pack(hpanel, fill=True)
 
-		grid.pack(wal.Label(grid, _('Driver:'), fontsize=-1))
-		self.driver_label = wal.Label(grid, _(''), fontsize=-1)
-		grid.pack(self.driver_label)
+		prn_info = self.printer.get_prn_info()
+		self.info_00 = wal.Label(grid, prn_info[0][0], fontsize=-1)
+		grid.pack(self.info_00)
+		self.info_01 = wal.Label(grid, prn_info[0][1], fontsize=-1)
+		grid.pack(self.info_01)
 
-		grid.pack(wal.Label(grid, _('Connection:'), fontsize=-1))
-		self.conn_label = wal.Label(grid, _(''), fontsize=-1)
-		grid.pack(self.conn_label)
+		self.info_10 = wal.Label(grid, prn_info[1][0], fontsize=-1)
+		grid.pack(self.info_10)
+		self.info_11 = wal.Label(grid, prn_info[1][1], fontsize=-1)
+		grid.pack(self.info_11)
 
 		self.output_label = wal.Label(grid, _('Output file:'))
 		grid.pack(self.output_label)
@@ -211,8 +214,12 @@ class PrinterPanel(wal.LabeledPanel):
 		prn_events.emit(prn_events.PRINTER_CHANGED, self.printer)
 
 	def update(self):
-		self.driver_label.set_text(self.printer.get_driver_name())
-		self.conn_label.set_text(self.printer.get_connection())
+		prn_info = self.printer.get_prn_info()
+		self.info_00.set_text(prn_info[0][0])
+		self.info_01.set_text(prn_info[0][1])
+		self.info_10.set_text(prn_info[1][0])
+		self.info_11.set_text(prn_info[1][1])
+		self.layout()
 
 		self.output_file.set_value(self.printer.get_filepath())
 		file_ctrls = (self.output_label, self.output_file, self.output_choice)
@@ -278,17 +285,28 @@ class CUPSPrintDialog(wal.OkCancelDialog):
 		self.nb.add_page(self.preflight_tab, 'Prefligh')
 
 		self.panel.pack(self.nb, expand=True, fill=True)
-		self.general_tab.prn_panel.update()
+
+		self.printer = self.general_tab.prn_panel.printer
+		prn_events.connect(prn_events.PRINTER_CHANGED, self.printer_changed)
+		prn_events.connect(prn_events.PRINTER_MODIFIED, self.printer_modified)
 
 	def set_dialog_buttons(self):
 		wal.OkCancelDialog.set_dialog_buttons(self)
 		self.preview_btn = wal.Button(self.left_button_box, _('Print Preview'),
 								onclick=self.print_preview)
 		self.left_button_box.pack(self.preview_btn)
+		self.ok_btn.set_enable(self.printer.is_ready())
 
 	def end_modal(self, ret):
 		prn_events.clean_all_channels()
 		wal.OkCancelDialog.end_modal(self, ret)
+
+	def printer_changed(self, printer):
+		self.printer = printer
+		self.printer_modified()
+
+	def printer_modified(self):
+		self.ok_btn.set_enable(self.printer.is_ready())
 
 	def print_preview(self):pass
 
