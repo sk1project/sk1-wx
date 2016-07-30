@@ -17,6 +17,7 @@
 
 import cups
 
+from sk1 import _
 from generic import AbstractPrinter, AbstractPrintout, AbstractPS
 from pdf_printer import PDF_Printer
 
@@ -71,6 +72,9 @@ class CUPS_Printer(AbstractPrinter):
 	def get_name(self): return self.details['printer-info']
 	def get_driver_name(self): return self.details['printer-make-and-model']
 	def get_connection(self): return self.details['device-uri']
+	def get_prn_info(self):
+		return ((_('Driver:'), self.get_driver_name()),
+				(_('Connection'), self.get_connection()))
 
 class CUPS_Printout(AbstractPrintout):
 

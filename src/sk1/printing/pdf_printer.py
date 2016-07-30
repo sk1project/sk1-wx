@@ -35,3 +35,7 @@ class PDF_Printer(AbstractPrinter):
 	def set_filepath(self, filepath): self.filepath = filepath
 	def is_ready(self): return bool(self.filepath)
 
+	def get_prn_info(self):
+		return ((_('Driver:'), self.get_driver_name()),
+				(_('Connection'), self.get_connection()))
+
