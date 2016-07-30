@@ -28,8 +28,10 @@ class PDF_Printer(AbstractPrinter):
 	def __init__(self):pass
 
 	def get_driver_name(self): return _('Internal PDF writer')
+	def get_connection(self): return _('Software interface')
 	def get_state(self): return _('Idle')
 	def get_file_type(self): return data.PDF
 	def get_filepath(self): return self.filepath
 	def set_filepath(self, filepath): self.filepath = filepath
+	def is_ready(self): return bool(self.filepath)
 
