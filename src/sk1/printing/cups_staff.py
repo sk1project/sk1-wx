@@ -38,9 +38,10 @@ class CUPS_PS(AbstractPS):
 
 	def get_default_printer(self):
 		for item in self.printers:
-			if item.cups_name == self.default_printer:
-				return item
-		return self.printers[-1]
+			if not item.is_virtual():
+				if item.cups_name == self.default_printer:
+					return item
+		return self.printers[0]
 
 	def get_printer_by_name(self, name):
 		for item in self.printers:
@@ -67,7 +68,6 @@ class CUPS_Printer(AbstractPrinter):
 		self.details = details
 
 	def is_virtual(self): return False
-
 	def get_name(self): return self.details['printer-info']
 	def get_driver_name(self): return self.details['printer-make-and-model']
 	def get_connection(self): return self.details['device-uri']
