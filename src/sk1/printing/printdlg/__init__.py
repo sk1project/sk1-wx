@@ -72,6 +72,8 @@ class PrintDialog(wal.OkCancelDialog):
 		self.left_button_box.pack(self.preview_btn)
 		self.ok_btn.set_enable(self.printer.is_ready())
 
+	def get_result(self): return self.printer
+
 	def end_modal(self, ret):
 		prn_events.clean_all_channels()
 		wal.OkCancelDialog.end_modal(self, ret)
