@@ -62,6 +62,7 @@ class CUPS_Printer(AbstractPrinter):
 	connection = None
 	cups_name = ''
 	details = {}
+	attrs = {}
 
 	def __init__(self, connection, cups_name, details):
 		self.connection = connection
