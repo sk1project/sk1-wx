@@ -105,6 +105,7 @@ encoding//src/sk1/printing/generic.py=utf-8
 encoding//src/sk1/printing/pdf_printer.py=utf-8
 encoding//src/sk1/printing/printdlg/__init__.py=utf-8
 encoding//src/sk1/printing/printdlg/general_tab.py=utf-8
+encoding//src/sk1/printing/printout.py=utf-8
 encoding//src/sk1/printing/prn_events.py=utf-8
 encoding//src/sk1/pwidgets/__init__.py=utf-8
 encoding//src/sk1/pwidgets/actions.py=utf-8
