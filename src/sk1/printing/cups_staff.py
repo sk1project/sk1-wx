@@ -18,7 +18,7 @@
 import cups
 
 from sk1 import _
-from generic import AbstractPrinter, AbstractPrintout, AbstractPS
+from generic import AbstractPrinter, AbstractPS
 from pdf_printer import PDF_Printer
 
 class CUPS_PS(AbstractPS):
@@ -76,11 +76,6 @@ class CUPS_Printer(AbstractPrinter):
 		return ((_('Driver:'), self.get_driver_name()),
 				(_('Connection'), self.get_connection()))
 
-class CUPS_Printout(AbstractPrintout):
 
-	presenter = None
-
-	def __init__(self, presenter):
-		self.presenter = presenter
 
 

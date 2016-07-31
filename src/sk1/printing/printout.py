@@ -15,20 +15,13 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-class AbstractPrinter(object):
 
-	name = 'Abstract Printer'
+class Printout(object):
 
-	def get_name(self): return self.name
-	def is_virtual(self): return True
-	def get_connection(self): return '---'
-	def get_driver_name(self): return '---'
-	def get_state(self): return '---'
-	def get_filepath(self): return ''
-	def is_ready(self): return True
-	def get_prn_info(self): return (('---', '---'), ('---', '---'))
-	def printing(self, printout): pass
+	presenter = None
 
-class AbstractPS(object):
+	def __init__(self, presenter):
+		self.presenter = presenter
 
-	def get_default_printer(self): return None
+	def is_selection(self): return False
+	def get_num_pages(self): return 1
