@@ -61,6 +61,13 @@ class Printout(object):
 	def is_selection(self): return bool(self.selection)
 	def get_num_pages(self): return len(self.pages)
 
+	def get_num_print_pages(self):
+		if self.print_range == PRINT_ALL:
+			return len(self.pages)
+		elif self.print_range in (PRINT_SELECTION, PRINT_CURRENT_PAGE):
+			return 1
+		return len(self.page_range)
+
 	def set_print_range(self, print_range, page_range=[]):
 		self.print_range = print_range
 		self.page_range = page_range
