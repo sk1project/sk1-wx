@@ -126,7 +126,6 @@ class RangePanel(wal.LabeledPanel):
 		elif self.pages_opt.get_value():
 			print_range = printout.PRINT_PAGE_RANGE
 			page_range = self.get_page_range()
-			print page_range
 		self.printout.set_print_range(print_range, page_range)
 
 class CopiesPanel(wal.LabeledPanel):
