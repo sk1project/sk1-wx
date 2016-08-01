@@ -18,6 +18,8 @@
 class AbstractPrinter(object):
 
 	name = 'Abstract Printer'
+	copies = 1
+	collate = False
 
 	def get_name(self): return self.name
 	def is_virtual(self): return True
@@ -28,6 +30,9 @@ class AbstractPrinter(object):
 	def is_ready(self): return True
 	def get_prn_info(self): return (('---', '---'), ('---', '---'))
 	def printing(self, printout): pass
+	def set_copies(self, val): self.copies = val
+	def set_collate(self, val): self.collate = val
+
 
 class AbstractPS(object):
 
