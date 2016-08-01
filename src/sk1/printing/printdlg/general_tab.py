@@ -21,7 +21,7 @@ import wal
 
 from sk1 import _, config, dialogs
 from sk1.resources import get_icon, icons
-from sk1.printing import prn_events
+from sk1.printing import prn_events, printout
 
 class RangePanel(wal.LabeledPanel):
 
@@ -44,7 +44,7 @@ class RangePanel(wal.LabeledPanel):
 									onclick=self.update)
 		self.pages_opt = wal.Radiobutton(grid, _('Pages:'),
 									onclick=self.update)
-		self.pages_entry = wal.Entry(grid, '1')
+		self.pages_entry = wal.Entry(grid, '1', onchange=self.pages_changed)
 		self.pages_entry.set_enable(False)
 		self.all_opt.set_value(True)
 		if not self.printout.is_selection():
@@ -72,11 +72,62 @@ class RangePanel(wal.LabeledPanel):
 
 		self.pack(int_panel, fill=True, expand=True, padding_all=3)
 
+	def pages_changed(self):
+		txt = self.pages_entry.get_value()
+		pos = self.pages_entry.get_cursor_pos()
+		chars = ',0123456789-'
+		res = ''
+		for item in txt:
+			if item in chars:
+				res += item
+		if txt == res:
+			self.pages_entry.set_value(res)
+			self.pages_entry.set_cursor_pos(pos)
+			self.update()
+		else:
+			self.pages_entry.set_value(res)
+
+	def get_page_range(self):
+		txt = self.pages_entry.get_value()
+		vals = txt.split(',')
+		ret = []
+		pages_range = range(self.printout.get_num_pages())
+		for item in vals:
+			if not item:continue
+			if '-' in item:
+				rngs = item.split('-')
+				int_rngs = []
+				for rng in rngs:
+					if rng: int_rngs.append(int(rng) - 1)
+				if len(int_rngs) == 1:
+					if int_rngs[0] in pages_range:
+						ret.append(int_rngs[0])
+				elif len(int_rngs) > 1:
+					pages = range(int_rngs[0], int_rngs[-1] + 1)
+					for page in pages:
+						if page in pages_range:
+							ret.append(page)
+			else:
+				val = int(item) - 1
+				if val in pages_range:
+					ret.append(val)
+		return ret
+
 	def update(self):
 		self.pages_entry.set_enable(self.pages_opt.get_value())
-
-
-
+		print_range = printout.PRINT_ALL
+		page_range = []
+		if self.all_opt.get_value():
+			print_range = printout.PRINT_ALL
+		elif self.sel_opt.get_value():
+			print_range = printout.PRINT_SELECTION
+		elif self.cpage_opt.get_value():
+			print_range = printout.PRINT_CURRENT_PAGE
+		elif self.pages_opt.get_value():
+			print_range = printout.PRINT_PAGE_RANGE
+			page_range = self.get_page_range()
+			print page_range
+		self.printout.set_print_range(print_range, page_range)
 
 class CopiesPanel(wal.LabeledPanel):
 
