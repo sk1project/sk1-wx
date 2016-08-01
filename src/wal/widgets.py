@@ -460,6 +460,13 @@ class Entry(wx.TextCtrl, DataWidget):
 		if multiline:
 			self.ScrollPages(0)
 
+	def get_cursor_pos(self):
+		return self.GetInsertionPoint()
+
+	def set_cursor_pos(self, pos):
+		if pos > len(self.value): pos = len(self.value)
+		if pos < 0:pos = 0
+		self.SetInsertionPoint(pos)
 
 	def _on_change(self, event):
 		if self.my_changes:
