@@ -127,10 +127,15 @@ class RangePanel(wal.LabeledPanel):
 			print_range = printout.PRINT_PAGE_RANGE
 			page_range = self.get_page_range()
 		self.printout.set_print_range(print_range, page_range)
+		prn_events.emit(prn_events.PRINTOUT_MODIFIED)
 
 class CopiesPanel(wal.LabeledPanel):
 
+	printer = None
+	printout = None
+
 	def __init__(self, parent, win, printout):
+		self.printout = printout
 		wal.LabeledPanel.__init__(self, parent, _('Copies'))
 
 		self.icons = {
@@ -168,20 +173,39 @@ class CopiesPanel(wal.LabeledPanel):
 
 		self.pack(hpanel, fill=True, expand=True, padding_all=10)
 		self.copies_changed()
+		prn_events.connect(prn_events.PRINTER_CHANGED, self.on_printer_change)
+		prn_events.connect(prn_events.PRINTOUT_MODIFIED, self.copies_changed)
 
 	def copies_changed(self):
+		copies = self.num_copies.get_value()
+		pages = self.printout.get_num_print_pages()
 		state = False
-		if self.num_copies.get_value() > 1: state = True
+		if pages > 1: state = True
 		ctrls = [self.collate, self.reverse, self.indicator]
 		for item in ctrls: item.set_enable(state)
 		if not state:
 			self.collate.set_value(False)
 			self.reverse.set_value(False)
+		if copies == 1:
+			self.collate.set_value(False)
+			self.collate.set_enable(False)
+		self.update()
 
 	def flag_changed(self):
 		icon_key = str(int(self.collate.get_value()))
 		icon_key += str(int(self.reverse.get_value()))
 		self.indicator.set_bitmap(self.icons[icon_key])
+		self.update()
+
+	def on_printer_change(self, printer):
+		self.printer = printer
+		self.update()
+
+	def update(self):
+		if self.printer:
+			self.printer.set_copies(self.num_copies.get_value())
+			self.printer.set_collate(self.collate.get_value())
+		self.printout.set_reverse(self.reverse.get_value())
 
 
 class PrinterPanel(wal.LabeledPanel):
