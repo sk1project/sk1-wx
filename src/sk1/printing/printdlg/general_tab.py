@@ -25,6 +25,9 @@ from sk1.printing import prn_events, printout
 
 class RangePanel(wal.LabeledPanel):
 
+	win = None
+	printout = None
+
 	def __init__(self, parent, win, printout):
 		self.win = win
 		self.printout = printout
@@ -137,7 +140,8 @@ class CopiesPanel(wal.LabeledPanel):
 	printer = None
 	printout = None
 
-	def __init__(self, parent, win, printout):
+	def __init__(self, parent, printer, printout):
+		self.printer = printer
 		self.printout = printout
 		wal.LabeledPanel.__init__(self, parent, _('Copies'))
 
@@ -320,7 +324,8 @@ class GeneralTab(wal.VPanel):
 		self.range_panel = RangePanel(hpanel, win, printout)
 		hpanel.pack(self.range_panel, fill=True, expand=True)
 		hpanel.pack((5, 5))
-		self.copies_panel = CopiesPanel(hpanel, win, printout)
+		printer = self.prn_panel.printer
+		self.copies_panel = CopiesPanel(hpanel, printer, printout)
 		hpanel.pack(self.copies_panel, fill=True, expand=True)
 		int_panel.pack(hpanel, fill=True, expand=True)
 
