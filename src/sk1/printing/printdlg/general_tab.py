@@ -37,7 +37,7 @@ class RangePanel(wal.LabeledPanel):
 
 		vpanel = wal.VPanel(int_panel)
 
-		grid = wal.GridPanel(vpanel, 3, 2, 5, 5)
+		grid = wal.GridPanel(vpanel, 3, 2, 5, 15)
 		grid.add_growable_col(1)
 		self.all_opt = wal.Radiobutton(grid, _('All'), group=True,
 									onclick=self.update)
