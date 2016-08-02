@@ -48,6 +48,7 @@ class PrintDialog(wal.OkCancelDialog):
 
 		self.general_tab = GeneralTab(self.nb, self,
 									self.printsys, self.printout)
+		self.printer = self.general_tab.prn_panel.printer
 		self.nb.add_page(self.general_tab, self.general_tab.name)
 
 		self.layouts_tab = wal.VPanel(self.nb)
@@ -61,7 +62,6 @@ class PrintDialog(wal.OkCancelDialog):
 
 		self.panel.pack(self.nb, expand=True, fill=True)
 
-		self.printer = self.general_tab.prn_panel.printer
 		prn_events.connect(prn_events.PRINTER_CHANGED, self.printer_changed)
 		prn_events.connect(prn_events.PRINTER_MODIFIED, self.printer_modified)
 
