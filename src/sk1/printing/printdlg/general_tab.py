@@ -77,6 +77,9 @@ class RangePanel(wal.LabeledPanel):
 		pos = self.pages_entry.get_cursor_pos()
 		chars = ',0123456789-'
 		res = ''
+		if not txt or txt == '0':
+			res = '1'
+			txt = ''
 		for item in txt:
 			if item in chars:
 				res += item
