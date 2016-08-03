@@ -157,7 +157,7 @@ class CopiesPanel(wal.LabeledPanel):
 		hpanel = wal.HPanel(self)
 		title = _('Number of copies:')
 		hpanel.pack(wal.Label(hpanel, title), padding=5)
-		self.num_copies = wal.IntSpin(hpanel, 1, (1, 99999),
+		self.num_copies = wal.IntSpin(hpanel, 1, (1, 9999),
 								spin_overlay=config.spin_overlay,
 								onchange=self.copies_changed)
 		hpanel.pack(self.num_copies)
@@ -240,7 +240,8 @@ class PrinterPanel(wal.LabeledPanel):
 		self.prn_list.set_active(plist.index(self.printer.get_name()))
 		hpanel.pack(self.prn_list, fill=True, expand=True)
 		hpanel.pack((5, 5))
-		self.prop_btn = wal.Button(hpanel, _('Properties...'))
+		self.prop_btn = wal.Button(hpanel, _('Properties...'),
+								onclick=self.on_prop_btn_click)
 		hpanel.pack(self.prop_btn)
 		grid.pack(hpanel, fill=True)
 
@@ -272,6 +273,9 @@ class PrinterPanel(wal.LabeledPanel):
 		self.pack(grid, fill=True, expand=True, padding_all=10)
 		self.ready_flag = True
 		self.update()
+
+	def on_prop_btn_click(self):
+		self.printer.run_propsdlg(self.win)
 
 	def on_choice(self):
 		doc_file = 'print'
