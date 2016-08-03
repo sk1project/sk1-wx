@@ -19,6 +19,7 @@ from uc2.formats import data
 from sk1 import _
 
 from generic import AbstractPrinter
+from printdlg import PDF_PrnPropsDialog
 
 class PDF_Printer(AbstractPrinter):
 
@@ -38,4 +39,8 @@ class PDF_Printer(AbstractPrinter):
 	def get_prn_info(self):
 		return ((_('Driver:'), self.get_driver_name()),
 				(_('Connection'), self.get_connection()))
+
+	def run_propsdlg(self, win):
+		dlg = PDF_PrnPropsDialog(win, self)
+		dlg.show()
 
