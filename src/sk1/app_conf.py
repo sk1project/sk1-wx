@@ -134,6 +134,9 @@ class AppConfig(UCConfig):
 	print_dlg_size = (600, 400)
 	print_dlg_minsize = (600, 400)
 
+	prnprops_dlg_size = (400, 500)
+	prnprops_dlg_minsize = (400, 500)
+
 	fill_dlg_size = (440, 370)
 	stroke_dlg_size = (430, 370)
 	dash_dlg_size = (300, 150)
