@@ -32,6 +32,7 @@ class AbstractPrinter(object):
 	def printing(self, printout): pass
 	def set_copies(self, val): self.copies = val
 	def set_collate(self, val): self.collate = val
+	def run_propsdlg(self, win): pass
 
 
 class AbstractPS(object):
