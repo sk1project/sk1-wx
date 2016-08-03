@@ -24,6 +24,7 @@ from sk1.resources import get_icon, icons
 from sk1.printing import prn_events
 
 from general_tab import GeneralTab
+from cupspropsdlg import CUPS_PrnPropsDialog, PDF_PrnPropsDialog
 
 
 class PrintDialog(wal.OkCancelDialog):
