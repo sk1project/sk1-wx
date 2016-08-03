@@ -20,6 +20,7 @@ import cups
 from sk1 import _
 from generic import AbstractPrinter, AbstractPS
 from pdf_printer import PDF_Printer
+from printdlg import CUPS_PrnPropsDialog
 
 class CUPS_PS(AbstractPS):
 
@@ -68,14 +69,31 @@ class CUPS_Printer(AbstractPrinter):
 		self.connection = connection
 		self.cups_name = cups_name
 		self.details = details
+		self.update_attrs()
+
+	def update_attrs(self):
+		self.attrs = self.connection.getPrinterAttributes(self.cups_name)
 
 	def is_virtual(self): return False
 	def get_name(self): return self.details['printer-info']
 	def get_driver_name(self): return self.details['printer-make-and-model']
 	def get_connection(self): return self.details['device-uri']
+
 	def get_prn_info(self):
 		return ((_('Driver:'), self.get_driver_name()),
 				(_('Connection'), self.get_connection()))
+
+	def run_propsdlg(self, win):
+		dlg = CUPS_PrnPropsDialog(win, self)
+		if dlg.show(): self.update_attrs()
+
+	def is_color(self):
+		if 'color-supported' in self.attrs:
+			if self.attrs['color-supported']:
+				return True
+		return False
+
+
 
 
 
