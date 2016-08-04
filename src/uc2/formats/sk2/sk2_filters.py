@@ -127,20 +127,22 @@ class SK2_Saver(AbstractSaver):
 		#---rendering
 		mthds = self.presenter.methods
 		layers = mthds.get_visible_layers(mthds.get_page())
-		x, y, x1, y1 = mthds.count_bbox(layers)
-		w = abs(x1 - x)
-		h = abs(y1 - y)
-		coef = min(wp / w, hp / h) * 0.99
-		trafo0 = [1.0, 0.0, 0.0, 1.0, -x - w / 2.0, -y - h / 2.0]
-		trafo1 = [coef, 0.0, 0.0, -coef, 0.0, 0.0]
-		trafo2 = [1.0, 0.0, 0.0, 1.0, wp / 2.0, hp / 2.0]
-		trafo = libgeom.multiply_trafo(trafo0, trafo1)
-		trafo = libgeom.multiply_trafo(trafo, trafo2)
-		ctx.set_matrix(cairo.Matrix(*trafo))
-		rend = CairoRenderer(self.presenter.cms)
-		rend.antialias_flag = True
-		for item in layers:
-			rend.render(ctx, item.childs)
+		bbox = mthds.count_bbox(layers)
+		if bbox:
+			x, y, x1, y1 = bbox
+			w = abs(x1 - x)
+			h = abs(y1 - y)
+			coef = min(wp / w, hp / h) * 0.99
+			trafo0 = [1.0, 0.0, 0.0, 1.0, -x - w / 2.0, -y - h / 2.0]
+			trafo1 = [coef, 0.0, 0.0, -coef, 0.0, 0.0]
+			trafo2 = [1.0, 0.0, 0.0, 1.0, wp / 2.0, hp / 2.0]
+			trafo = libgeom.multiply_trafo(trafo0, trafo1)
+			trafo = libgeom.multiply_trafo(trafo, trafo2)
+			ctx.set_matrix(cairo.Matrix(*trafo))
+			rend = CairoRenderer(self.presenter.cms)
+			rend.antialias_flag = True
+			for item in layers:
+				rend.render(ctx, item.childs)
 		#---rendering
 		image_stream = StringIO()
 		surface.write_to_png(image_stream)
