@@ -17,6 +17,8 @@
 
 import cups
 
+from uc2 import uc2const
+
 from sk1 import _
 from generic import AbstractPrinter, AbstractPS
 from pdf_printer import PDF_Printer
@@ -57,6 +59,81 @@ class CUPS_PS(AbstractPS):
 			ret.append(item.get_name())
 		return ret
 
+MONOCHROME_MODE = 'monochrome'
+COLOR_MODE = 'color'
+
+UNIT_MM = 'mm'
+UNIT_IN = 'in'
+
+
+def process_media_name(name):
+	try:
+		if '-' in name:name = name.split('-')
+		else:name = [name, ]
+		capname = []
+		for item in name:
+			capname.append(item.capitalize())
+	except:
+		return None
+	return ' '.join(capname)
+
+def process_media_size(size):
+	try:
+		w, h = size.split('x')
+		h, units = h[:-2], h[-2:]
+		w = float(w)
+		h = float(h)
+		if units == UNIT_MM:
+			w = uc2const.mm_to_pt * w
+			h = uc2const.mm_to_pt * h
+		elif units == UNIT_IN:
+			w = uc2const.in_to_pt * w
+			h = uc2const.in_to_pt * h
+		else: return ()
+	except:
+		return ()
+	return (w, h)
+
+def process_media(media_list):
+	customs = []
+	media = []
+	for item in media_list:
+		if item[:6] == 'custom':
+			customs.append(item)
+		else:
+			media.append(item)
+
+	sorted_media = []
+	media_dict = {}
+	for item in media:
+		indx, name, size = item.split('_')
+
+		name = process_media_name(name)
+		if not name: continue
+		if name[0] == 'W' and name[1] in '0123456789': continue
+		if indx == 'na': name = 'US ' + name
+		elif indx == 'jis': name = 'JIS ' + name
+
+		size = process_media_size(size)
+		if not size: continue
+		sorted_media.append(item)
+		media_dict[item] = (name, size)
+
+	custon_ranges = ()
+	if len(customs) == 2:
+		minsize = ()
+		maxsize = ()
+		for item in customs:
+			name, size = item.split('_')[1:]
+			size = process_media_size(size)
+			if not size: continue
+			if name == 'min': minsize = size
+			elif name == 'max': maxsize = size
+		if minsize and maxsize:
+			custon_ranges = (minsize, maxsize)
+
+	return sorted_media, media_dict, custon_ranges
+
 
 class CUPS_Printer(AbstractPrinter):
 
@@ -64,6 +141,16 @@ class CUPS_Printer(AbstractPrinter):
 	cups_name = ''
 	details = {}
 	attrs = {}
+
+	pf_list = []
+	pf_dict = {}
+	customs = ()
+
+	color_mode = MONOCHROME_MODE
+	colorspace = uc2const.COLOR_GRAY
+	page_format = ('A4', uc2const.PAGE_FORMATS['A4'])
+	page_orientation = uc2const.PORTRAIT
+	margins = (10.0, 10.0, 10.0, 10.0)
 
 	def __init__(self, connection, cups_name, details):
 		self.connection = connection
@@ -73,6 +160,17 @@ class CUPS_Printer(AbstractPrinter):
 
 	def update_attrs(self):
 		self.attrs = self.connection.getPrinterAttributes(self.cups_name)
+		self.color_mode = self.attrs['print-color-mode-default']
+		if self.is_color() and self.color_mode == COLOR_MODE:
+			self.colorspace = uc2const.COLOR_CMYK
+
+		medias = self.attrs['media-supported']
+		self.pf_list, self.pf_dict, self.customs = process_media(medias)
+
+		def_media = self.attrs['media-default']
+		if not def_media in self.pf_list and self.pf_list:
+			def_media = self.pf_list[0]
+		self.page_format = self.pf_dict[def_media]
 
 	def is_virtual(self): return False
 	def get_name(self): return self.details['printer-info']
@@ -85,7 +183,7 @@ class CUPS_Printer(AbstractPrinter):
 
 	def run_propsdlg(self, win):
 		dlg = CUPS_PrnPropsDialog(win, self)
-		if dlg.show(): self.update_attrs()
+		dlg.show()
 
 	def is_color(self):
 		if 'color-supported' in self.attrs:
