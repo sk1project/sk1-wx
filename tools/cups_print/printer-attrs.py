@@ -13,6 +13,14 @@ def get_printer_attrs(name):
 	conn = cups.Connection()
 	return conn.getPrinterAttributes(name)
 
+def get_printer_options(name):
+	conn = cups.Connection()
+	dests = conn.getDests()
+	for item in dests.keys():
+		if item[0] == name:
+			return dests[item].options
+	return {}
+
 def attr_to_str(attr):
 	if isinstance(attr, list) or  isinstance(attr, tuple):
 		ret = ''
@@ -115,6 +123,52 @@ class AttrsPanel(wal.VPanel):
 		self.value.set_value(attr_to_str(self.prn_attrs[item]))
 		self.status_label.set_text('%d records' % len(self.prn_attrs))
 
+class OptionPanel(wal.VPanel):
+
+	prn_options = {}
+	options = []
+	options_list = None
+	value = None
+
+	def __init__(self, parent, options):
+		wal.VPanel.__init__(self, parent)
+		hpanel = wal.HPanel(self)
+
+		self.options_list = wal.SimpleList(hpanel, [],
+								on_select=self.options_changed,
+								on_activate=self.options_changed)
+		hpanel.pack(self.options_list, expand=True, fill=True)
+
+		hpanel.pack((10, 10))
+
+		self.value = wal.Entry(hpanel, '', multiline=True, editable=False)
+		hpanel.pack(self.value, expand=True, fill=True)
+
+		self.pack(hpanel, fill=True, expand=True, padding_all=10)
+
+		self.status_label = wal.Label(self, '---')
+		self.pack(self.status_label, fill=True, align_center=False, padding_all=10)
+
+		self.set_prn_options(options)
+
+	def set_prn_options(self, options):
+		cur_val = ''
+		if self.options:
+			cur_val = self.options[self.options_list.get_active()]
+		self.prn_options = options
+		self.options = self.prn_options.keys()
+		self.options.sort()
+		self.options_list.update(self.options)
+		index = 0
+		if cur_val in self.options:
+			index = self.options.index(cur_val)
+		self.options_list.set_active(index)
+
+	def options_changed(self, item):
+		if not self.prn_options or not self.value: return
+		self.value.set_value(attr_to_str(self.prn_options[item]))
+		self.status_label.set_text('%d records' % len(self.prn_options))
+
 class TestPanel(wal.VPanel):
 
 	prn_dict = {}
@@ -154,6 +208,10 @@ class TestPanel(wal.VPanel):
 		self.attrs_panel = AttrsPanel(self.nb, attrs)
 		self.nb.add_page(self.attrs_panel, 'Device attributes')
 
+		options = get_printer_options(default)
+		self.options_panel = OptionPanel(self.nb, options)
+		self.nb.add_page(self.options_panel, 'Device options')
+
 		self.pack(self.nb, fill=True, expand=True, padding_all=10)
 
 	def printer_changed(self, *args):
@@ -163,6 +221,9 @@ class TestPanel(wal.VPanel):
 
 		attrs = get_printer_attrs(self.prn_combo.get_active_value())
 		self.attrs_panel.set_prn_attrs(attrs)
+
+		options = get_printer_options(self.prn_combo.get_active_value())
+		self.options_panel.set_prn_options(options)
 
 
 app = wal.Application('wxWidgets')
