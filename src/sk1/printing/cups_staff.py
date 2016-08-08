@@ -145,6 +145,7 @@ class CUPS_Printer(AbstractPrinter):
 	pf_list = []
 	pf_dict = {}
 	customs = ()
+	def_media = ''
 
 	color_mode = MONOCHROME_MODE
 	colorspace = uc2const.COLOR_GRAY
@@ -167,10 +168,10 @@ class CUPS_Printer(AbstractPrinter):
 		medias = self.attrs['media-supported']
 		self.pf_list, self.pf_dict, self.customs = process_media(medias)
 
-		def_media = self.attrs['media-default']
-		if not def_media in self.pf_list and self.pf_list:
-			def_media = self.pf_list[0]
-		self.page_format = self.pf_dict[def_media]
+		self.def_media = self.attrs['media-default']
+		if not self.def_media in self.pf_list and self.pf_list:
+			self.def_media = self.pf_list[0]
+		self.page_format = self.pf_dict[self.def_media]
 
 	def is_virtual(self): return False
 	def get_name(self): return self.details['printer-info']
