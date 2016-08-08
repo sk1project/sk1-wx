@@ -34,8 +34,6 @@ class PrintModePanel(wal.LabeledPanel):
 		self.printer = printer
 		wal.LabeledPanel.__init__(self, parent, _('Print mode'))
 
-		self.pack((5, 5))
-
 		grid = wal.GridPanel(self, 2, 2, 5, 5)
 
 		self.mono_opt = wal.Radiobutton(grid, _('Monochrome'), group=True,
@@ -64,6 +62,8 @@ class PrintModePanel(wal.LabeledPanel):
 
 		self.pack(hpanel)
 
+		self.pack((5, 5))
+
 		self.set_data()
 
 	def set_data(self):
@@ -84,14 +84,66 @@ class PrintModePanel(wal.LabeledPanel):
 
 	def save(self):pass
 
+class PaperPanel(wal.LabeledPanel):
+
+	app = None
+	printer = None
+	items = []
+
+	def __init__(self, parent, printer, app):
+		self.app = app
+		self.printer = printer
+		wal.LabeledPanel.__init__(self, parent, _('Paper'))
+
+		grid = wal.GridPanel(self, 2, 2, 5, 5)
+		grid.add_growable_col(1)
+
+		grid.pack(wal.Label(grid, _('Page size:')))
+
+		self.size_combo = wal.Combolist(grid, onchange=self.on_change)
+		grid.pack(self.size_combo, fill=True)
+
+		grid.pack(wal.Label(grid, _('Width:')))
+
+		hpanel = wal.HPanel(grid)
+
+		hpanel.pack(wal.Label(grid, _('Height:')), padding=5)
+
+		grid.pack(hpanel)
+
+		self.pack(grid, fill=True, expand=True, padding_all=10)
+
+		self.set_data()
+
+	def set_data(self):
+		self.items = self._get_items()
+		self.size_combo.set_items(self.items)
+		index = self.printer.pf_list.index(self.printer.def_media)
+		self.size_combo.set_active(index)
+
+	def _get_items(self):
+		items = []
+		for item in self.printer.pf_list:
+			items.append(self.printer.pf_dict[item][0])
+		return items
+
+	def on_change(self):
+		pass
+
+	def save(self):pass
+
+
+
 
 class MainTab(wal.VPanel):
 
 	name = _('Main')
+	app = None
 	printer = None
 	panels = []
 
-	def __init__(self, parent, printer):
+	def __init__(self, parent, printer, app):
+		self.app = app
 		self.printer = printer
 		wal.VPanel.__init__(self, parent)
 
@@ -99,15 +151,20 @@ class MainTab(wal.VPanel):
 		icon_name = icons.PD_PRINTER_LASER
 		if self.printer.is_color(): icon_name = icons.PD_PRINTER_INKJET
 		icon = get_icon(icon_name, size=wal.DEF_SIZE)
-		hpanel.pack(wal.Bitmap(hpanel, icon), padding_all=10)
+		hpanel.pack(wal.Bitmap(hpanel, icon), padding=10)
 
 		self.prnmode_panel = PrintModePanel(hpanel, self.printer)
 		hpanel.pack(self.prnmode_panel, fill=True, expand=True)
 
 		self.pack(hpanel, fill=True)
 
+		self.pack((5, 5))
+
+		self.paper_panel = PaperPanel(self, self.printer, self.app)
+		self.pack(self.paper_panel, fill=True)
+
 	def save(self):
-		for item in self.panel: item.save()
+		for item in self.panels: item.save()
 
 
 class CUPS_PrnPropsDialog(PrnProsDialog):
@@ -117,7 +174,7 @@ class CUPS_PrnPropsDialog(PrnProsDialog):
 	def build(self):
 		PrnProsDialog.build(self)
 		self.panel.pack((5, 5))
-		self.main_tab = MainTab(self.panel, self.printer)
+		self.main_tab = MainTab(self.panel, self.printer, self.app)
 		self.panel.pack(self.main_tab, fill=True, expand=True)
 
 	def get_result(self):
