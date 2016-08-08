@@ -22,8 +22,12 @@ from sk1 import _, config
 class PrnProsDialog(wal.OkCancelDialog):
 
 	printer = None
+	win = None
+	app = None
 
 	def __init__(self, win, printer):
+		self.win = win
+		self.app = win.app
 		self.printer = printer
 		size = config.prnprops_dlg_size
 		wal.OkCancelDialog.__init__(self, win, _("Printer properties"),
