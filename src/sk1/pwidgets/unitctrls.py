@@ -58,7 +58,7 @@ class UnitLabel(StaticUnitLabel):
 		text = uc2const.unit_short_names[self.units]
 		self.set_text(text)
 
-class UnitSpin(FloatSpin):
+class StaticUnitSpin(FloatSpin):
 
 	app = None
 	insp = None
@@ -80,14 +80,8 @@ class UnitSpin(FloatSpin):
 						step=step, width=5,
 						onchange=self.update_point_value, onenter=onenter,
 						spin_overlay=config.spin_overlay)
-		events.connect(events.DOC_MODIFIED, self.update_units)
-		events.connect(events.DOC_CHANGED, self.update_units)
 		self._set_digits(unit_accuracy[self.units])
 		self.set_value(self.point_value * point_dict[self.units])
-
-	def __del__(self):
-		events.disconnect(events.DOC_MODIFIED, self.update_units)
-		events.disconnect(events.DOC_CHANGED, self.update_units)
 
 	def update_point_value(self, *args):
 		self.point_value = self.get_value() * unit_dict[self.units]
@@ -101,12 +95,27 @@ class UnitSpin(FloatSpin):
 			self.point_value = val
 			self.set_value(self.point_value * point_dict[self.units])
 
+
+class UnitSpin(StaticUnitSpin):
+
+	def __init__(self, app, parent, val=0.0, step=1.0,
+				 onchange=None, onenter=None, can_be_negative=False):
+		StaticUnitSpin.__init__(self, app, parent, val, step,
+							onchange, onenter, can_be_negative)
+		events.connect(events.DOC_MODIFIED, self.update_units)
+		events.connect(events.DOC_CHANGED, self.update_units)
+
+	def __del__(self):
+		events.disconnect(events.DOC_MODIFIED, self.update_units)
+		events.disconnect(events.DOC_CHANGED, self.update_units)
+
 	def update_units(self, *args):
 		if not self.insp.is_doc(): return
 		if self.units == self.app.current_doc.model.doc_units: return
 		self.units = self.app.current_doc.model.doc_units
 		self._set_digits(unit_accuracy[self.units])
 		self.set_value(self.point_value * point_dict[self.units])
+
 
 class BitmapToggle(wal.Bitmap):
 
@@ -134,19 +143,19 @@ class BitmapToggle(wal.Bitmap):
 
 	def get_active(self):
 		return self.state
-	
+
 	def _get_bitmap(self):
 		if not self.enabled and wal.is_msw():
 			return wal.disabled_bmp(self.icons_dict[self.state][0])
 		return self.icons_dict[self.state][0]
-	
+
 	def _get_tooltip(self):
 		return self.icons_dict[self.state][1]
 
 	def set_active(self, state):
 		self.state = state
 		self.set_bitmap(self._get_bitmap())
-		tooltip=self._get_tooltip()
+		tooltip = self._get_tooltip()
 		if tooltip: self.set_tooltip(tooltip)
 
 	def update_icons(self):
@@ -161,11 +170,11 @@ class BitmapToggle(wal.Bitmap):
 		self.icons_dict = icons_dict
 		self.update_icons()
 		self.set_active(self.state)
-		
+
 	def set_enable(self, value):
 		wal.Bitmap.set_enable(self, value)
 		self.set_bitmap(self._get_bitmap())
-		
+
 
 
 class RatioToggle(BitmapToggle):
