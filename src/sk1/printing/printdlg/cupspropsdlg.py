@@ -21,6 +21,7 @@ from uc2 import uc2const
 
 from sk1 import _
 from sk1.resources import get_icon, icons
+from sk1.pwidgets import StaticUnitLabel, StaticUnitSpin
 
 from generic import PrnProsDialog
 
@@ -107,7 +108,17 @@ class PaperPanel(wal.LabeledPanel):
 
 		hpanel = wal.HPanel(grid)
 
+		self.wspin = StaticUnitSpin(self.app, hpanel)
+		hpanel.pack(self.wspin)
+		hpanel.pack(StaticUnitLabel(self.app, hpanel), padding=5)
+
+		hpanel.pack((5, 5))
+
 		hpanel.pack(wal.Label(grid, _('Height:')), padding=5)
+
+		self.hspin = StaticUnitSpin(self.app, hpanel)
+		hpanel.pack(self.hspin)
+		hpanel.pack(StaticUnitLabel(self.app, hpanel), padding=5)
 
 		grid.pack(hpanel)
 
@@ -116,19 +127,38 @@ class PaperPanel(wal.LabeledPanel):
 		self.set_data()
 
 	def set_data(self):
-		self.items = self._get_items()
+		self.items = self.printer.get_format_items()
 		self.size_combo.set_items(self.items)
-		index = self.printer.pf_list.index(self.printer.def_media)
+		index = 0
+		if not self.printer.def_media[:6] == 'Custom':
+			index = self.printer.pf_list.index(self.printer.def_media)
+		else:
+			index = len(self.items) - 1
 		self.size_combo.set_active(index)
-
-	def _get_items(self):
-		items = []
-		for item in self.printer.pf_list:
-			items.append(self.printer.pf_dict[item][0])
-		return items
+		if self.printer.is_custom_supported():
+			minw, minh = self.printer.customs[0]
+			maxw, maxh = self.printer.customs[1]
+			#TODO: set custom size range
+		self.on_change()
 
 	def on_change(self):
-		pass
+		index = self.size_combo.get_active()
+		status = False
+		if self.printer.is_custom_supported() and index == len(self.items) - 1:
+			if not self.hspin.get_point_value() and \
+			self.printer.def_media[:6] == 'Custom':
+				w, h = self.printer.def_media[:7].split('x')
+				w = float(w)
+				h = float(h)
+				self.wspin.set_point_value(w)
+				self.hspin.set_point_value(h)
+			status = True
+		else:
+			w, h = self.printer.pf_dict[self.printer.pf_list[index]][1]
+			self.wspin.set_point_value(w)
+			self.hspin.set_point_value(h)
+		self.wspin.set_enable(status)
+		self.hspin.set_enable(status)
 
 	def save(self):pass
 
