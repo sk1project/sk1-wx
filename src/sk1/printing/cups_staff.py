@@ -62,6 +62,8 @@ class CUPS_PS(AbstractPS):
 MONOCHROME_MODE = 'monochrome'
 COLOR_MODE = 'color'
 
+CUSTOM_SIZE = _('Custom size')
+
 UNIT_MM = 'mm'
 UNIT_IN = 'in'
 
@@ -191,6 +193,17 @@ class CUPS_Printer(AbstractPrinter):
 			if self.attrs['color-supported']:
 				return True
 		return False
+
+	def is_custom_supported(self):
+		return bool(self.customs)
+
+	def get_format_items(self):
+		items = []
+		for item in self.pf_list:
+			items.append(self.pf_dict[item][0])
+		if self.customs:
+			items.append(CUSTOM_SIZE)
+		return items
 
 
 
