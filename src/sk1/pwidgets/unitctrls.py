@@ -64,6 +64,7 @@ class StaticUnitSpin(FloatSpin):
 	insp = None
 	ucallback = None
 	point_value = 0.0
+	point_range = (0.0, 100000.0)
 	units = uc2const.UNIT_MM
 
 	def __init__(self, app, parent, val=0.0, step=1.0,
@@ -72,11 +73,10 @@ class StaticUnitSpin(FloatSpin):
 		self.insp = app.insp
 		self.point_value = val
 		self.ucallback = onchange
-		val_range = (0.0, 100000.0)
-		if can_be_negative:val_range = (-100000.0, 100000.0)
+		if can_be_negative:self.point_range = (-100000.0, 100000.0)
 		if self.insp.is_doc(): self.units = app.current_doc.model.doc_units
 		val = self.point_value * point_dict[self.units]
-		FloatSpin.__init__(self, parent, val, val_range,
+		FloatSpin.__init__(self, parent, val, self.point_range,
 						step=step, width=5,
 						onchange=self.update_point_value, onenter=onenter,
 						spin_overlay=config.spin_overlay)
@@ -94,6 +94,13 @@ class StaticUnitSpin(FloatSpin):
 		if not self.point_value == val:
 			self.point_value = val
 			self.set_value(self.point_value * point_dict[self.units])
+
+	def set_point_range(self, range_val=()):
+		if range_val: self.point_range = range_val
+		minv, maxv = self.point_range
+		minv *= point_dict[self.units]
+		maxv *= point_dict[self.units]
+		self.set_range((minv, maxv))
 
 
 class UnitSpin(StaticUnitSpin):
@@ -114,6 +121,7 @@ class UnitSpin(StaticUnitSpin):
 		if self.units == self.app.current_doc.model.doc_units: return
 		self.units = self.app.current_doc.model.doc_units
 		self._set_digits(unit_accuracy[self.units])
+		self.set_point_range()
 		self.set_value(self.point_value * point_dict[self.units])
 
 
