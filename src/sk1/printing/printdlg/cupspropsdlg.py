@@ -138,7 +138,8 @@ class PaperPanel(wal.LabeledPanel):
 		if self.printer.is_custom_supported():
 			minw, minh = self.printer.customs[0]
 			maxw, maxh = self.printer.customs[1]
-			#TODO: set custom size range
+			self.wspin.set_point_range((minw, maxw))
+			self.hspin.set_point_range((minh, maxh))
 		self.on_change()
 
 	def on_change(self):
@@ -163,7 +164,75 @@ class PaperPanel(wal.LabeledPanel):
 	def save(self):pass
 
 
+class OrientPanel(wal.LabeledPanel):
 
+	app = None
+	printer = None
+	items = []
+
+	def __init__(self, parent, printer, app):
+		self.app = app
+		self.printer = printer
+		wal.LabeledPanel.__init__(self, parent, _('Orientation'))
+
+		hpanel = wal.HPanel(self)
+
+		vpanel = wal.VPanel(hpanel)
+		self.port_opt = wal.Radiobutton(vpanel, _('Portrait'), group=True,
+									onclick=self.update)
+		vpanel.pack(self.port_opt, align_center=False)
+		vpanel.pack((5, 5))
+		self.land_opt = wal.Radiobutton(vpanel, _('Landscape'),
+									onclick=self.update)
+		vpanel.pack(self.land_opt, align_center=False)
+
+		hpanel.pack(vpanel)
+
+		self.pack(hpanel, fill=True, expand=True, padding_all=10)
+
+	def update(self):pass
+
+	def save(self):pass
+
+class MarginsPanel(wal.LabeledPanel):
+
+	app = None
+	printer = None
+	items = []
+
+	def __init__(self, parent, printer, app):
+		self.app = app
+		self.printer = printer
+		units = app.current_doc.model.doc_units
+		text = uc2const.unit_short_names[units]
+
+		wal.LabeledPanel.__init__(self, parent, _('Margins') + ' (%s)' % text)
+
+		self.pack(wal.VPanel(self), expand=True, padding=2)
+
+		mrgs = self.printer.margins
+		self.top_spin = StaticUnitSpin(self.app, self, mrgs[0])
+		self.pack(self.top_spin)
+
+		self.pack((5, 5))
+
+		hpanel = wal.HPanel(self)
+		self.right_spin = StaticUnitSpin(self.app, self, mrgs[1])
+		hpanel.pack(self.right_spin)
+		hpanel.pack((5, 5))
+		self.bottom_spin = StaticUnitSpin(self.app, self, mrgs[2])
+		hpanel.pack(self.bottom_spin)
+
+		self.pack(hpanel)
+
+		self.pack((5, 5))
+
+		self.left_spin = StaticUnitSpin(self.app, self, mrgs[3])
+		self.pack(self.left_spin)
+
+		self.pack(wal.VPanel(self), expand=True, padding=2)
+
+	def save(self):pass
 
 class MainTab(wal.VPanel):
 
@@ -192,6 +261,29 @@ class MainTab(wal.VPanel):
 
 		self.paper_panel = PaperPanel(self, self.printer, self.app)
 		self.pack(self.paper_panel, fill=True)
+
+		self.pack((5, 5))
+
+		hpanel = wal.HPanel(self)
+		self.orient_panel = OrientPanel(hpanel, self.printer, self.app)
+		hpanel.pack(self.orient_panel, fill=True, expand=True)
+
+		hpanel.pack((5, 5))
+
+		self.margins_panel = MarginsPanel(hpanel, self.printer, self.app)
+		hpanel.pack(self.margins_panel, fill=True, expand=True)
+
+		self.pack(hpanel, fill=True, expand=True)
+
+		text = _("Note: To adjust specific printer options "
+			"you could "
+			"use system configuration tools like 'system-config-printer'")
+
+		label = wal.Label(self, text, fontsize=-2)
+		if wal.is_msw(): label.wrap(380)
+		label.set_enable(False)
+		self.pack(label, fill=True, padding_all=5, align_center=False)
+
 
 	def save(self):
 		for item in self.panels: item.save()
