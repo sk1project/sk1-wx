@@ -188,9 +188,21 @@ class OrientPanel(wal.LabeledPanel):
 
 		hpanel.pack(vpanel)
 
+		icon_name = icons.PD_PRINTORIENT_PORTRAIT
+		if self.printer.page_orientation == uc2const.LANDSCAPE:
+			icon_name = icons.PD_PRINTORIENT_LANDSCAPE
+		icon = get_icon(icon_name, size=wal.DEF_SIZE)
+		self.orient_icon = wal.Bitmap(hpanel, icon)
+		hpanel.pack(self.orient_icon, padding=10)
+
 		self.pack(hpanel, fill=True, expand=True, padding_all=10)
 
-	def update(self):pass
+	def update(self):
+		icon_name = icons.PD_PRINTORIENT_PORTRAIT
+		if self.land_opt.get_value():
+			icon_name = icons.PD_PRINTORIENT_LANDSCAPE
+		icon = get_icon(icon_name, size=wal.DEF_SIZE)
+		self.orient_icon.set_bitmap(icon)
 
 	def save(self):pass
 
