@@ -46,3 +46,7 @@ class PrnProsDialog(wal.OkCancelDialog):
 		self.panel.pack(vpanel, fill=True)
 
 	def get_result(self): return True
+
+	def end_modal(self, ret):
+		config.prnprops_dlg_size = self.get_size()
+		wal.OkCancelDialog.end_modal(self, ret)
