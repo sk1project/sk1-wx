@@ -77,6 +77,7 @@ class PrintDialog(wal.OkCancelDialog):
 
 	def end_modal(self, ret):
 		prn_events.clean_all_channels()
+		config.print_dlg_size = self.get_size()
 		wal.OkCancelDialog.end_modal(self, ret)
 
 	def printer_changed(self, printer):
