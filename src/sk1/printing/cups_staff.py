@@ -20,6 +20,7 @@ import cups
 from uc2 import uc2const
 
 from sk1 import _
+from sk1.printing import prn_events
 from generic import AbstractPrinter, AbstractPS
 from pdf_printer import PDF_Printer
 from printdlg import CUPS_PrnPropsDialog
@@ -186,7 +187,8 @@ class CUPS_Printer(AbstractPrinter):
 
 	def run_propsdlg(self, win):
 		dlg = CUPS_PrnPropsDialog(win, self)
-		dlg.show()
+		if dlg.show():
+			prn_events.emit(prn_events.PRINTER_MODIFIED)
 
 	def is_color(self):
 		if 'color-supported' in self.attrs:
