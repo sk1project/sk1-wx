@@ -27,6 +27,9 @@ from generic import PrnProsDialog
 
 CS = [uc2const.COLOR_GRAY, uc2const.COLOR_CMYK, uc2const.COLOR_RGB]
 
+MONOCHROME_MODE = 'monochrome'
+COLOR_MODE = 'color'
+
 class PrintModePanel(wal.LabeledPanel):
 
 	printer = None
@@ -74,6 +77,13 @@ class PrintModePanel(wal.LabeledPanel):
 			self.color_opt.set_enable(False)
 			self.color_bmp.set_enable(False)
 			self.cs_combo.set_enable(False)
+		else:
+			if self.printer.color_mode == MONOCHROME_MODE:
+				self.mono_opt.set_value(True)
+				self.cs_combo.set_active(0)
+				self.cs_combo.set_enable(False)
+			else:
+				self.color_opt.set_value(True)
 
 	def update(self):
 		if self.mono_opt.get_value():
@@ -83,7 +93,13 @@ class PrintModePanel(wal.LabeledPanel):
 			self.cs_combo.set_enable(True)
 			self.cs_combo.set_active(1)
 
-	def save(self):pass
+	def save(self):
+		self.printer.colorspace = CS[self.cs_combo.get_active()]
+		if self.mono_opt.get_value():
+			self.printer.color_mode = MONOCHROME_MODE
+		else:
+			self.printer.color_mode = COLOR_MODE
+
 
 class PaperPanel(wal.LabeledPanel):
 
@@ -148,7 +164,7 @@ class PaperPanel(wal.LabeledPanel):
 		if self.printer.is_custom_supported() and index == len(self.items) - 1:
 			if not self.hspin.get_point_value() and \
 			self.printer.def_media[:6] == 'Custom':
-				w, h = self.printer.def_media[:7].split('x')
+				w, h = self.printer.def_media[7:].split('x')
 				w = float(w)
 				h = float(h)
 				self.wspin.set_point_value(w)
@@ -161,7 +177,14 @@ class PaperPanel(wal.LabeledPanel):
 		self.wspin.set_enable(status)
 		self.hspin.set_enable(status)
 
-	def save(self):pass
+	def save(self):
+		index = self.size_combo.get_active()
+		if self.printer.is_custom_supported() and index == len(self.items) - 1:
+			w = self.wspin.get_point_value()
+			h = self.hspin.get_point_value()
+			self.printer.def_media = 'Custom.%gx%g' % (w, h)
+		else:
+			self.printer.def_media = self.printer.pf_list[index]
 
 
 class OrientPanel(wal.LabeledPanel):
@@ -191,6 +214,7 @@ class OrientPanel(wal.LabeledPanel):
 		icon_name = icons.PD_PRINTORIENT_PORTRAIT
 		if self.printer.page_orientation == uc2const.LANDSCAPE:
 			icon_name = icons.PD_PRINTORIENT_LANDSCAPE
+			self.land_opt.set_value(True)
 		icon = get_icon(icon_name, size=wal.DEF_SIZE)
 		self.orient_icon = wal.Bitmap(hpanel, icon)
 		hpanel.pack(self.orient_icon, padding=10)
@@ -204,7 +228,12 @@ class OrientPanel(wal.LabeledPanel):
 		icon = get_icon(icon_name, size=wal.DEF_SIZE)
 		self.orient_icon.set_bitmap(icon)
 
-	def save(self):pass
+	def save(self):
+		if self.land_opt.get_value():
+			self.printer.page_orientation = uc2const.LANDSCAPE
+		else:
+			self.printer.page_orientation = uc2const.PORTRAIT
+
 
 class MarginsPanel(wal.LabeledPanel):
 
@@ -244,7 +273,12 @@ class MarginsPanel(wal.LabeledPanel):
 
 		self.pack(wal.VPanel(self), expand=True, padding=2)
 
-	def save(self):pass
+	def save(self):
+		val0 = self.top_spin.get_point_value()
+		val1 = self.right_spin.get_point_value()
+		val2 = self.bottom_spin.get_point_value()
+		val3 = self.left_spin.get_point_value()
+		self.printer.margins = (val0, val1, val2, val3)
 
 class MainTab(wal.VPanel):
 
@@ -295,6 +329,9 @@ class MainTab(wal.VPanel):
 		if wal.is_msw(): label.wrap(380)
 		label.set_enable(False)
 		self.pack(label, fill=True, padding_all=5, align_center=False)
+
+		self.panels = [self.prnmode_panel, self.paper_panel,
+					self.orient_panel, self.margins_panel]
 
 
 	def save(self):
