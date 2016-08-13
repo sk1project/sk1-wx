@@ -179,19 +179,20 @@ class PaperPanel(wal.LabeledPanel):
 
 	def save(self):
 		index = self.size_combo.get_active()
-		if self.printer.is_custom_supported() and index == len(self.items) - 1:
+		prn = self.printer
+		if prn.is_custom_supported() and index == len(self.items) - 1:
 			w = self.wspin.get_point_value()
 			h = self.hspin.get_point_value()
-			self.printer.def_media = 'Custom.%gx%g' % (w, h)
+			prn.def_media = 'Custom.%gx%g' % (w, h)
 		else:
-			self.printer.def_media = self.printer.pf_list[index]
+			prn.def_media = prn.pf_list[index]
+			prn.page_format = prn.pf_dict[prn.def_media]
 
 
 class OrientPanel(wal.LabeledPanel):
 
 	app = None
 	printer = None
-	items = []
 
 	def __init__(self, parent, printer, app):
 		self.app = app
@@ -239,7 +240,6 @@ class MarginsPanel(wal.LabeledPanel):
 
 	app = None
 	printer = None
-	items = []
 
 	def __init__(self, parent, printer, app):
 		self.app = app
