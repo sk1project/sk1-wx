@@ -28,7 +28,7 @@ class SimpleDialog(wx.Dialog):
 	add_line = True
 
 	def __init__(self, parent, title, size=(-1, -1), style=VERTICAL,
-				resizable=False, on_load=None, add_line=True):
+				resizable=False, on_load=None, add_line=True, margin=None):
 		dlg_style = wx.DEFAULT_DIALOG_STYLE
 		if resizable:dlg_style |= wx.RESIZE_BORDER
 		self.add_line = add_line
@@ -39,8 +39,9 @@ class SimpleDialog(wx.Dialog):
 		sizer = wx.BoxSizer(wx.VERTICAL)
 		self.SetSizer(sizer)
 
-		margin = 5
-		if not const.is_gtk(): margin = 10
+		if margin is None:
+			margin = 5
+			if not const.is_gtk(): margin = 10
 
 		self.box = VPanel(self)
 		sizer.Add(self.box, 1, ALL | EXPAND, margin)
