@@ -184,6 +184,7 @@ class PaperPanel(wal.LabeledPanel):
 			w = self.wspin.get_point_value()
 			h = self.hspin.get_point_value()
 			prn.def_media = 'Custom.%gx%g' % (w, h)
+			prn.page_format = ('Custom', (w, h))
 		else:
 			prn.def_media = prn.pf_list[index]
 			prn.page_format = prn.pf_dict[prn.def_media]
