@@ -25,6 +25,7 @@ from sk1.printing import prn_events
 
 from general_tab import GeneralTab
 from cupspropsdlg import CUPS_PrnPropsDialog, PDF_PrnPropsDialog
+from previewdlg import PreviewDialog
 
 
 class PrintDialog(wal.OkCancelDialog):
@@ -87,4 +88,6 @@ class PrintDialog(wal.OkCancelDialog):
 	def printer_modified(self):
 		self.ok_btn.set_enable(self.printer.is_ready())
 
-	def print_preview(self):pass
+	def print_preview(self):
+		dlg = PreviewDialog(self, self.app, self.printer, self.printout)
+		dlg.show()
