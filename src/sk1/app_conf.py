@@ -134,6 +134,9 @@ class AppConfig(UCConfig):
 	print_dlg_size = (600, 400)
 	print_dlg_minsize = (600, 400)
 
+	print_preview_dlg_size = (550, 650)
+	print_preview_dlg_minsize = (550, 650)
+
 	prnprops_dlg_size = (400, 500)
 	prnprops_dlg_minsize = (400, 500)
 
