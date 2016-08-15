@@ -45,28 +45,16 @@ def color_to_spot(color):
 	return [COLOR_SPOT, [rgb, cmyk], color[2], name]
 
 def val_100(vals):
-	ret = []
-	for item in vals:
-		ret.append(int(100 * item))
-	return ret
+	return map(lambda x:int(100 * x), vals)
 
 def val_255(vals):
-	ret = []
-	for item in vals:
-		ret.append(int(255 * item))
-	return ret
+	return map(lambda x:int(255 * x), vals)
 
 def val_255_to_dec(vals):
-	ret = []
-	for item in vals:
-		ret.append(item / 255.0)
-	return ret
+	return map(lambda x:x / 255.0, vals)
 
 def val_100_to_dec(vals):
-	ret = []
-	for item in vals:
-		ret.append(item / 100.0)
-	return ret
+	return map(lambda x:x / 100.0, vals)
 
 def mix_vals(val1, val2, coef=0.5):
 	if val1 < val2:
@@ -89,17 +77,14 @@ def rgb_to_hexcolor(color):
 	Converts list of RGB float values to hex color string.
 	For example: [1.0, 0.0, 1.0] => #ff00ff
 	"""
-	r, g, b = color
-	return '#%02x%02x%02x' % (int(255 * r), int(255 * g), int(255 * b))
+	return '#%02x%02x%02x' % tuple(map(lambda x:int(255 * x), color))
 
 def rgba_to_hexcolor(color):
 	"""
 	Converts list of RGBA float values to hex color string.
 	For example: [1.0, 0.0, 1.0, 1.0] => #ff00ffff
 	"""
-	r, g, b, a = color
-	return '#%02x%02x%02x%02x' % (int(255 * r), int(255 * g),
-								int(255 * b), int(255 * a))
+	return '#%02x%02x%02x%02x' % tuple(map(lambda x:int(255 * x), color))
 
 def cmyk_to_hexcolor(color):
 	return rgba_to_hexcolor(color)
@@ -109,29 +94,21 @@ def hexcolor_to_rgb(hexcolor):
 	Converts hex color string as a list of float values.
 	For example: #ff00ff => [1.0, 0.0, 1.0]
 	"""
-	r = int(hexcolor[1:3], 0x10) / 255.0
-	g = int(hexcolor[3:5], 0x10) / 255.0
-	b = int(hexcolor[5:], 0x10) / 255.0
-	return [r, g, b]
+	vals = (hexcolor[1:3], hexcolor[3:5], hexcolor[5:])
+	return map(lambda x:int(x, 0x10) / 255.0, vals)
 
 def hexcolor_to_rgba(hexcolor):
 	"""
 	Converts hex color string as a list of float values.
 	For example: #ff00ffff => [1.0, 0.0, 1.0, 1.0]
 	"""
+	vals = ('00', '00', '00', 'ff')
 	if len(hexcolor) == 7:
-		r = int(hexcolor[1:3], 0x10) / 255.0
-		g = int(hexcolor[3:5], 0x10) / 255.0
-		b = int(hexcolor[5:], 0x10) / 255.0
-		return [r, g, b, 1.0]
+		vals = (hexcolor[1:3], hexcolor[3:5], hexcolor[5:], 'ff')
 	elif len(hexcolor) == 9:
-		r = int(hexcolor[1:3], 0x10) / 255.0
-		g = int(hexcolor[3:5], 0x10) / 255.0
-		b = int(hexcolor[5:7], 0x10) / 255.0
-		a = int(hexcolor[7:], 0x10) / 255.0
-		return [r, g, b, a]
-	else:
-		return [0.0, 0.0, 0.0, 1.0]
+		vals = (hexcolor[1:3], hexcolor[3:5], hexcolor[5:7], hexcolor[7:])
+	return map(lambda x:int(x, 0x10) / 255.0, vals)
+
 
 def hexcolor_to_cmyk(hexcolor):
 	return hexcolor_to_rgba(hexcolor)
@@ -141,28 +118,22 @@ def gdk_hexcolor_to_rgb(hexcolor):
 	Converts hex color string as a list of float values.
 	For example: #ffff0000ffff => [1.0, 0.0, 1.0]
 	"""
-	r = int(hexcolor[1:5], 0x10) / 65535.0
-	g = int(hexcolor[5:9], 0x10) / 65535.0
-	b = int(hexcolor[9:], 0x10) / 65535.0
-	return [r, g, b]
+	vals = (hexcolor[1:5], hexcolor[5:6], hexcolor[9:])
+	return map(lambda x:int(x, 0x10) / 65535.0, vals)
 
 def rgb_to_gdk_hexcolor(color):
 	"""
 	Converts hex color string as a list of float values.
 	For example: #ffff0000ffff => [1.0, 0.0, 1.0]
 	"""
-	r, g, b = color
-	return '#%04x%04x%04x' % (r * 65535.0, g * 65535.0, b * 65535.0)
+	return '#%04x%04x%04x' % tuple(map(lambda x:x * 65535.0, color))
 
 def cmyk_to_rgb(color):
 	"""
 	Converts list of CMYK values to RGB.
 	"""
 	c, m, y, k = color
-	r = round(1.0 - min(1.0, c + k), 3)
-	g = round(1.0 - min(1.0, m + k), 3)
-	b = round(1.0 - min(1.0, y + k), 3)
-	return [r, g, b]
+	return map(lambda x:round(1.0 - min(1.0, x + k), 3), (c, m, y))
 
 def rgb_to_cmyk(color):
 	"""
