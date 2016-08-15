@@ -24,25 +24,27 @@ class PreviewToolbar(wal.HPanel):
 
 	canvas = None
 
-	def __init__(self, parent, dlg, canvas):
+	def __init__(self, parent, dlg, canvas, printer):
 		self.dlg = dlg
 		self.canvas = canvas
+		self.printer = printer
 		wal.HPanel.__init__(self, parent)
 
 		Btn = wal.ImageButton
 
 		buttons = [
-				(icons.PD_ZOOM_IN, self.stub),
-				(icons.PD_ZOOM_OUT, self.stub),
-				(icons.PD_ZOOM_PAGE, self.stub),
-				(icons.PD_ZOOM_100, self.stub),
-				None,
-				(icons.PD_PROPERTIES, self.stub),
-				]
+		(icons.PD_ZOOM_IN, self.stub, _('Zoom in')),
+		(icons.PD_ZOOM_OUT, self.stub, _('Zoom out')),
+		(icons.PD_ZOOM_PAGE, self.stub, _('Fit to page')),
+		(icons.PD_ZOOM_100, self.stub, _('Zoom 100%')),
+		None,
+		(icons.PD_PROPERTIES, self.on_printer_props, _('Printer properties')),
+		]
 
 		for item in buttons:
 			if item:
-				self.pack(Btn(self, item[0], wal.SIZE_24, onclick=item[1]))
+				self.pack(Btn(self, item[0], wal.SIZE_24,
+							tooltip=item[2], onclick=item[1]))
 			else:
 				self.pack(wal.VLine(self), padding_all=5, fill=True)
 
@@ -51,5 +53,5 @@ class PreviewToolbar(wal.HPanel):
 
 	def stub(self):pass
 
-	def close_dlg(self):
-		self.dlg.on_close()
+	def close_dlg(self): self.dlg.on_close()
+	def on_printer_props(self): self.printer.run_propsdlg(self.dlg)
