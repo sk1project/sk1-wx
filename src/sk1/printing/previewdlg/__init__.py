@@ -40,7 +40,7 @@ class PreviewDialog(wal.SimpleDialog):
 		self.set_minsize(config.print_preview_dlg_minsize)
 
 	def build(self):
-		self.canvas = PreviewCanvas(self)
+		self.canvas = PreviewCanvas(self, self.printer, self.printout)
 		tb = PreviewToolbar(self, self, self.canvas, self.printer)
 
 		self.pack(tb, fill=True)

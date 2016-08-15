@@ -22,7 +22,13 @@ from sk1.resources import icons
 
 class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 
-	def __init__(self, parent):
+	printer = None
+	printout = None
+
+	def __init__(self, parent, printer, printout):
+		self.printer = printer
+		self.printout = printout
 		wal.Panel.__init__(self, parent)
 		wal.SensitiveCanvas.__init__(self, True)
 		self.set_bg(wal.GRAY)
+
