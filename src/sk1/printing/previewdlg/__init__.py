@@ -41,7 +41,7 @@ class PreviewDialog(wal.SimpleDialog):
 
 	def build(self):
 		self.canvas = PreviewCanvas(self)
-		tb = PreviewToolbar(self, self, self.canvas)
+		tb = PreviewToolbar(self, self, self.canvas, self.printer)
 
 		self.pack(tb, fill=True)
 		self.pack(wal.HLine(self), fill=True)
