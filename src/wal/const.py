@@ -225,3 +225,7 @@ DARK_GRAY = wx.Colour(89, 89, 89)
 GRAY = wx.Colour(129, 134, 134)
 LIGHT_GRAY = wx.Colour(240, 240, 240)
 RED = wx.Colour(255, 0, 0)
+
+def wxcolor_to_dec(wxcolor):
+	return tuple(map(lambda x:x / 255.0, wxcolor.Get()[:3]))
+
