@@ -22,10 +22,10 @@ import wal
 from sk1 import _, config, appconst, dialogs
 from sk1.resources import get_icon, icons
 from sk1.printing import prn_events
+from sk1.printing.previewdlg import PreviewDialog
+from sk1.printing.propsdlg import CUPS_PrnPropsDialog, PDF_PrnPropsDialog
 
 from general_tab import GeneralTab
-from cupspropsdlg import CUPS_PrnPropsDialog, PDF_PrnPropsDialog
-from previewdlg import PreviewDialog
 
 
 class PrintDialog(wal.OkCancelDialog):
