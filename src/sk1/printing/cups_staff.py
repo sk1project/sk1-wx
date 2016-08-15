@@ -207,6 +207,11 @@ class CUPS_Printer(AbstractPrinter):
 			items.append(CUSTOM_SIZE)
 		return items
 
+	def get_page_size(self):
+		if self.page_orientation == uc2const.PORTRAIT:
+			return min(*self.page_format[1]), max(*self.page_format[1])
+		return max(*self.page_format[1]), min(*self.page_format[1])
+
 
 
 

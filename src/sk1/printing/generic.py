@@ -33,6 +33,7 @@ class AbstractPrinter(object):
 	def set_copies(self, val): self.copies = val
 	def set_collate(self, val): self.collate = val
 	def run_propsdlg(self, win): pass
+	def get_page_size(self): return 10, 10
 
 
 class AbstractPS(object):
