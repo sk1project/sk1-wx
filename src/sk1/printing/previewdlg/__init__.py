@@ -19,6 +19,9 @@ import wal
 
 from sk1 import _, config
 
+from canvas import PreviewCanvas
+from toolbar import PreviewToolbar
+
 class PreviewDialog(wal.SimpleDialog):
 
 	printer = None
