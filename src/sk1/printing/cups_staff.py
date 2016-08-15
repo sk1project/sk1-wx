@@ -23,7 +23,7 @@ from sk1 import _
 from sk1.printing import prn_events
 from generic import AbstractPrinter, AbstractPS
 from pdf_printer import PDF_Printer
-from printdlg import CUPS_PrnPropsDialog
+from propsdlg import CUPS_PrnPropsDialog
 
 class CUPS_PS(AbstractPS):
 

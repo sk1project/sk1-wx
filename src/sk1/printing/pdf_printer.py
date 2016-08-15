@@ -19,7 +19,7 @@ from uc2.formats import data
 from sk1 import _
 
 from generic import AbstractPrinter
-from printdlg import PDF_PrnPropsDialog
+from propsdlg import PDF_PrnPropsDialog
 
 class PDF_Printer(AbstractPrinter):
 
