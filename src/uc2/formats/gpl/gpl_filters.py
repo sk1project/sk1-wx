@@ -58,12 +58,14 @@ class GPL_Loader(AbstractLoader):
 
 	def add_color(self, line):
 		if line[0] == '#' or not line:return
-		r = int(line[:4])
-		g = int(line[4:8])
-		b = int(line[8:12])
+		parts = line.replace('\t', ' ')
+		parts = parts.replace('  ', ' ').replace('  ', ' ').strip().split(' ')
 		name = ''
-		if len(line) > 11:
-			name = line[12:].strip().decode('utf-8')
+		if len(parts) > 3:
+			name = ' '.join(parts[3:]).decode('utf-8')
+		if len(parts) < 3:return
+		vals = parts[:3]
+		r, g, b = map(lambda x:int(x), vals)
 		if not name and self.config.set_color_name:
 			name = cms.rgb_to_hexcolor(cms.val_255_to_dec((r, g, b)))
 		self.model.colors.append([r, g, b, name])
