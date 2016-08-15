@@ -32,3 +32,7 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 		wal.SensitiveCanvas.__init__(self, True)
 		self.set_bg(wal.GRAY)
 
+	def paint(self):
+		w, h = self.get_size()
+		pw, ph = self.printer.get_page_size()
+
