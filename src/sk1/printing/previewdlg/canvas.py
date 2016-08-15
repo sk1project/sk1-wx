@@ -20,8 +20,9 @@ import wal
 from sk1 import _, config
 from sk1.resources import icons
 
-class PreviewCanvas(wal.Panel):
+class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 
 	def __init__(self, parent):
 		wal.Panel.__init__(self, parent)
+		wal.SensitiveCanvas.__init__(self, True)
 		self.set_bg(wal.GRAY)
