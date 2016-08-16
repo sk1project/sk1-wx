@@ -35,7 +35,7 @@ class PreviewToolbar(wal.HPanel):
 		buttons = [
 		(icons.PD_ZOOM_IN, self.stub, _('Zoom in')),
 		(icons.PD_ZOOM_OUT, self.stub, _('Zoom out')),
-		(icons.PD_ZOOM_PAGE, self.stub, _('Fit to page')),
+		(icons.PD_ZOOM_PAGE, self.canvas.zoom_fit_to_page, _('Fit to page')),
 		(icons.PD_ZOOM_100, self.stub, _('Zoom 100%')),
 		None,
 		(icons.PD_PROPERTIES, self.on_printer_props, _('Printer properties')),
