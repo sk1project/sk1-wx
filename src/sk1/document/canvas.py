@@ -97,6 +97,7 @@ class AppCanvas(wx.Panel):
 		wx.Panel.__init__(self, parent, style=style)
 		self.SetBackgroundColour(wx.Colour(255, 255, 255))
 		self.hit_surface = HitSurface(self)
+		self.zoom_stack = []
 
 		self.ctx_menu = ContextMenu(self.app, self)
 
