@@ -36,7 +36,8 @@ class PreviewDialog(wal.SimpleDialog):
 		self.printout = printout
 		size = config.print_preview_dlg_size
 		wal.SimpleDialog.__init__(self, win, _("Print preview"),
-						size, resizable=True, add_line=False, margin=0)
+						size, resizable=True, add_line=False, margin=0,
+						on_load=self.on_load)
 		self.set_minsize(config.print_preview_dlg_minsize)
 
 	def build(self):
@@ -46,6 +47,10 @@ class PreviewDialog(wal.SimpleDialog):
 		self.pack(tb, fill=True)
 		self.pack(wal.HLine(self), fill=True)
 		self.pack(self.canvas, fill=True, expand=True)
+
+	def on_load(self, *args):
+		self.canvas.zoom_fit_to_page()
+		self._timer.Stop()
 
 	def end_modal(self, ret):
 		config.print_preview_dlg_size = self.get_size()
