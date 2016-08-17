@@ -40,12 +40,24 @@ class PreviewDialog(wal.SimpleDialog):
 		self.set_minsize(config.print_preview_dlg_minsize)
 
 	def build(self):
-		self.canvas = PreviewCanvas(self, self.printer, self.printout)
+		cv_grid = wal.GridPanel(self)
+		self.canvas = PreviewCanvas(cv_grid, self.printer, self.printout)
 		tb = PreviewToolbar(self, self, self.canvas, self.printer)
+		vscroll = wal.ScrollBar(cv_grid, onscroll=self.canvas._scrolling)
+		hscroll = wal.ScrollBar(cv_grid, False, onscroll=self.canvas._scrolling)
+		self.canvas._set_scrolls(hscroll, vscroll)
 
 		self.pack(tb, fill=True)
 		self.pack(wal.HLine(self), fill=True)
-		self.pack(self.canvas, fill=True, expand=True)
+
+		cv_grid.add_growable_col(0)
+		cv_grid.add_growable_row(0)
+		cv_grid.pack(self.canvas, fill=True)
+		cv_grid.pack(vscroll, fill=True)
+		cv_grid.pack(hscroll, fill=True)
+		cv_grid.pack((1, 1))
+
+		self.pack(cv_grid, fill=True, expand=True)
 
 	def end_modal(self, ret):
 		config.print_preview_dlg_size = self.get_size()
