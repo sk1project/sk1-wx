@@ -189,6 +189,8 @@ class CUPS_Printer(AbstractPrinter):
 		dlg = CUPS_PrnPropsDialog(win, self)
 		if dlg.show():
 			prn_events.emit(prn_events.PRINTER_MODIFIED)
+			return True
+		return False
 
 	def is_color(self):
 		if 'color-supported' in self.attrs:
