@@ -67,12 +67,29 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 		self.zoom = zoom
 		self.update_scrolls()
 
+	def _keep_center(self):
+		w, h = self.get_size()
+		w = float(w)
+		h = float(h)
+		if not w == self.width or not h == self.height:
+			_dx = (w - self.width) / 2.0
+			_dy = (h - self.height) / 2.0
+			m11, m12, m21, m22, dx, dy = self.trafo
+			dx += _dx
+			dy += _dy
+			self.trafo = [m11, m12, m21, m22, dx, dy]
+			self.matrix = cairo.Matrix(m11, m12, m21, m22, dx, dy)
+			self.width = w
+			self.height = h
+			self.update_scrolls()
+
 	def zoom_fit_to_page(self):
 		self._fit_to_page()
 		self.refresh()
 
 	def paint(self):
-		if not self.matrix: return
+		if not self.matrix: self._fit_to_page()
+		self._keep_center()
 		w, h = self.get_size()
 		surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
 		self.ctx = cairo.Context(surface)
