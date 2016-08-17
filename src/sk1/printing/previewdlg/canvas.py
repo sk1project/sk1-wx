@@ -41,6 +41,7 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 	def __init__(self, parent, printer, printout):
 		self.printer = printer
 		self.printout = printout
+		self.zoom_stack = []
 		wal.Panel.__init__(self, parent)
 		wal.SensitiveCanvas.__init__(self, True)
 		self.set_bg(wal.GRAY)
@@ -83,9 +84,33 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 			self.height = h
 			self.update_scrolls()
 
+	def _zoom(self, dzoom=1.0):
+		m11, m12, m21, m22, dx, dy = self.trafo
+		_dx = (self.width * dzoom - self.width) / 2.0
+		_dy = (self.height * dzoom - self.height) / 2.0
+		dx = dx * dzoom - _dx
+		dy = dy * dzoom - _dy
+		self.trafo = [m11 * dzoom, m12, m21, m22 * dzoom, dx, dy]
+		self.zoom_stack.append([] + self.trafo)
+		self.matrix = cairo.Matrix(*self.trafo)
+		self.zoom = m11 * dzoom
+		self.update_scrolls()
+		self.refresh()
+
+	def zoom_in(self):
+		self._zoom(ZOOM_IN)
+
+	def zoom_out(self):
+		self._zoom(ZOOM_OUT)
+
+	def zoom_100(self):
+		self._zoom(1.0 / self.zoom)
+
 	def zoom_fit_to_page(self):
 		self._fit_to_page()
 		self.refresh()
+
+	#---PAINTING
 
 	def paint(self):
 		if not self.matrix: self._fit_to_page()
