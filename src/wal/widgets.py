@@ -783,10 +783,27 @@ class Splitter(wx.SplitterWindow, Widget):
 
 class ScrollBar(wx.ScrollBar, Widget):
 
-	def __init__(self, parent, vertical=True):
+	callback = None
+	autohide = False
+
+	def __init__(self, parent, vertical=True, onscroll=None, autohide=False):
 		style = wx.SB_VERTICAL
 		if not vertical: style = wx.SB_HORIZONTAL
 		wx.ScrollBar.__init__(self, parent, wx.ID_ANY, style=style)
+		if onscroll: self.callback = onscroll
+		self.autohide = autohide
+		self.Bind(wx.EVT_SCROLL, self._scrolling, self)
+
+	def set_scrollbar(self, pos, thumbsize, rng, pagesize, refresh=True):
+		self.SetScrollbar(pos, thumbsize, rng, pagesize, refresh)
+
+	def _scrolling(self, *args):
+		if self.callback: self.callback()
+
+	def get_thumb_pos(self):
+		return self.GetThumbPosition()
+
+
 
 class ColorButton(wx.ColourPickerCtrl, Widget):
 
