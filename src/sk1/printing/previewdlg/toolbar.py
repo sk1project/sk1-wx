@@ -39,19 +39,22 @@ class PreviewToolbar(wal.HPanel):
 		(icons.PD_ZOOM_100, self.canvas.zoom_100, _('Zoom 100%')),
 		None,
 		(icons.PD_PROPERTIES, self.on_printer_props, _('Printer properties')),
+		(),
+		(icons.PD_QUIT, self.dlg.on_close, _('Close preview'))
 		]
 
 		for item in buttons:
+
 			if item:
 				self.pack(Btn(self, item[0], wal.SIZE_24,
 							tooltip=item[2], onclick=item[1]))
-			else:
+			elif item is None:
 				self.pack(wal.VLine(self), padding_all=5, fill=True)
-
-		self.pack((5, 5), expand=True)
-		self.pack(wal.Button(self, _('Close'), onclick=self.close_dlg))
+			else:
+				self.pack((5, 5), expand=True)
 
 	def stub(self):pass
 
-	def close_dlg(self): self.dlg.on_close()
-	def on_printer_props(self): self.printer.run_propsdlg(self.dlg)
+	def on_printer_props(self):
+		if self.printer.run_propsdlg(self.dlg):
+			self.canvas.refresh()
