@@ -86,6 +86,8 @@ class AppCanvas(wx.Panel):
 	dragged_guide = ()
 
 	my_changes = False
+	redraw_flag = False
+	request_redraw_flag = False
 
 	def __init__(self, presenter, parent):
 		self.presenter = presenter
@@ -494,8 +496,12 @@ class AppCanvas(wx.Panel):
 		self.force_redraw()
 
 	def force_redraw(self, *args):
-		w, h = self.GetSize()
-		self.Refresh(rect=wx.Rect(0, 0, w, h), eraseBackground=False)
+		if self.redraw_flag:
+			self.request_redraw_flag = True
+		else:
+			w, h = self.GetSize()
+			self.redraw_flag = True
+			self.Refresh(rect=wx.Rect(0, 0, w, h), eraseBackground=False)
 
 	def on_paint(self, event):
 		if self.matrix is None:
@@ -526,6 +532,10 @@ class AppCanvas(wx.Panel):
 			self.renderer.paint_guide_dragging(*self.dragged_guide)
 			if not self.mode == modes.GUIDE_MODE: self.dragged_guide = ()
 		self.renderer.finalize()
+		self.redraw_flag = False
+		if self.request_redraw_flag:
+			self.request_redraw_flag = False
+			self.force_redraw()
 
 #==============EVENT CONTROLLING==========================
 
