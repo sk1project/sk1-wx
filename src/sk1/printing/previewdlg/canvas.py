@@ -31,12 +31,18 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 	printer = None
 	printout = None
 
+	hscroll = None
+	vscroll = None
+
+	workspace = ()
 	matrix = None
 	trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
 	zoom = 1.0
 	zoom_stack = []
 	width = 0
 	height = 0
+
+	my_changes = False
 
 	def __init__(self, parent, printer, printout):
 		self.printer = printer
@@ -48,7 +54,34 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 
 	#----- SCROLLING
 
-	def update_scrolls(self):pass
+	def _set_scrolls(self, hscroll, vscroll):
+		self.hscroll = hscroll
+		self.vscroll = vscroll
+		self.hscroll.set_scrollbar(500, 100, 1100, 100)
+		self.vscroll.set_scrollbar(500, 100, 1100, 100)
+
+	def _scrolling(self, *args):
+		if self.my_changes:return
+		xpos = self.hscroll.get_thumb_pos() / 1000.0
+		ypos = (1000 - self.vscroll.get_thumb_pos()) / 1000.0
+		x = (xpos - 0.5) * self.workspace[0]
+		y = (ypos - 0.5) * self.workspace[1]
+		center = self.doc_to_win((x, y))
+		self._set_center(center)
+		self.refresh()
+
+	def update_scrolls(self):
+		if not self.vscroll: return
+		self.my_changes = True
+		self.set_workspace()
+		center = self._get_center()
+		x = (center[0] + self.workspace[0] / 2.0) / self.workspace[0]
+		y = (center[1] + self.workspace[1] / 2.0) / self.workspace[1]
+		hscroll = int(1000 * x)
+		vscroll = int(1000 - 1000 * y)
+		self.hscroll.set_scrollbar(hscroll, 100, 1100, 100)
+		self.vscroll.set_scrollbar(vscroll, 100, 1100, 100)
+		self.my_changes = False
 
 	#----- ZOOMING
 
@@ -109,6 +142,46 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 	def zoom_fit_to_page(self):
 		self._fit_to_page()
 		self.refresh()
+
+	#---Canvas math
+
+	def _get_center(self):
+		x = self.width / 2.0
+		y = self.height / 2.0
+		return self.win_to_doc((x, y))
+
+	def _set_center(self, center):
+		x, y = center
+		_dx = self.width / 2.0 - x
+		_dy = self.height / 2.0 - y
+		m11, m12, m21, m22, dx, dy = self.trafo
+		dx += _dx
+		dy += _dy
+		self.trafo = [m11, m12, m21, m22, dx, dy]
+		self.matrix = cairo.Matrix(m11, m12, m21, m22, dx, dy)
+		self.update_scrolls()
+
+	def set_workspace(self):
+		size = max(self.printer.get_page_size()) * 1.2
+		self.workspace = (size, size)
+
+	def doc_to_win(self, point=[0.0, 0.0]):
+		x, y = point
+		m11 = self.trafo[0]
+		m22, dx, dy = self.trafo[3:]
+		x_new = m11 * x + dx
+		y_new = m22 * y + dy
+		return [x_new, y_new]
+
+	def win_to_doc(self, point=[0, 0]):
+		x, y = point
+		x = float(x)
+		y = float(y)
+		m11 = self.trafo[0]
+		m22, dx, dy = self.trafo[3:]
+		x_new = (x - dx) / m11
+		y_new = (y - dy) / m22
+		return [x_new, y_new]
 
 	#---PAINTING
 
