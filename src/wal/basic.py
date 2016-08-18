@@ -366,11 +366,13 @@ class Canvas(object):
 	def draw_surface(self, surface, x=0, y=0, use_mask=True):
 		self.pdc.DrawBitmap(copy_surface_to_bitmap(surface), x, y, use_mask)
 
-	def draw_linear_gradient(self, rect, start_clr, stop_clr):
+	def draw_linear_gradient(self, rect, start_clr, stop_clr, ndir=False):
+		if ndir:ndir = wx.SOUTH
+		else:ndir = wx.EAST
 		self.pdc.GradientFillLinear(wx.Rect(*rect),
 								wx.Colour(*start_clr),
 								wx.Colour(*stop_clr),
-								nDirection=wx.EAST)
+								nDirection=ndir)
 
 	def draw_bitmap(self, bmp, x=0, y=0, use_mask=True):
 		self.pdc.DrawBitmap(bmp, x, y, use_mask)
@@ -426,11 +428,13 @@ class Canvas(object):
 	def gc_draw_surface(self, surface, x=0, y=0, use_mask=True):
 		self.dc.DrawBitmap(copy_surface_to_bitmap(surface), x, y, use_mask)
 
-	def gc_draw_linear_gradient(self, rect, start_clr, stop_clr):
+	def gc_draw_linear_gradient(self, rect, start_clr, stop_clr, ndir=False):
+		if ndir:ndir = wx.SOUTH
+		else:ndir = wx.EAST
 		self.dc.GradientFillLinear(wx.Rect(*rect),
 								wx.Colour(*start_clr),
 								wx.Colour(*stop_clr),
-								nDirection=wx.EAST)
+								nDirection=ndir)
 
 	def gc_draw_bitmap(self, bmp, x=0, y=0, use_mask=True):
 		self.dc.DrawBitmap(bmp, x, y, use_mask)
