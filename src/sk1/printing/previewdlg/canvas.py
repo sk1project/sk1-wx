@@ -85,6 +85,8 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 		vscroll = int(1000 - 1000 * y)
 		self.hscroll.set_scrollbar(hscroll, 100, 1100, 100)
 		self.vscroll.set_scrollbar(vscroll, 100, 1100, 100)
+		self.vruler.refresh()
+		self.hruler.refresh()
 		self.my_changes = False
 
 	#----- ZOOMING
@@ -149,6 +151,9 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 
 	#---Canvas math
 
+	def get_page_size(self):
+		return self.printer.get_page_size()
+
 	def _get_center(self):
 		x = self.width / 2.0
 		y = self.height / 2.0
@@ -186,6 +191,24 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 		x_new = (x - dx) / m11
 		y_new = (y - dy) / m22
 		return [x_new, y_new]
+
+	def point_doc_to_win(self, point=[0.0, 0.0]):
+		if not point:return []
+		if len(point) == 2:
+			return self.doc_to_win(point)
+		else:
+			return [self.doc_to_win(point[0]),
+				self.doc_to_win(point[1]),
+				self.doc_to_win(point[2]), point[3]]
+
+	def point_win_to_doc(self, point=[0.0, 0.0]):
+		if not point:return []
+		if len(point) == 2:
+			return self.win_to_doc(point)
+		else:
+			return [self.win_to_doc(point[0]),
+				self.win_to_doc(point[1]),
+				self.win_to_doc(point[2]), point[3]]
 
 	#---PAINTING
 
