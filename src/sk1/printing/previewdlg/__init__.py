@@ -21,7 +21,7 @@ from sk1 import _, config
 
 from canvas import PreviewCanvas
 from toolbar import PreviewToolbar
-from ruler import PreviewCorner
+from ruler import PreviewCorner, PreviewRuler
 
 class PreviewDialog(wal.SimpleDialog):
 
@@ -45,16 +45,17 @@ class PreviewDialog(wal.SimpleDialog):
 		cv_grid = wal.GridPanel(r_grid)
 		self.canvas = PreviewCanvas(cv_grid, self.printer, self.printout)
 
-		self.corner = PreviewCorner(r_grid)
-		self.hruler = wal.VPanel(r_grid)
-		self.hruler.set_bg(wal.WHITE)
-		self.vruler = wal.VPanel(r_grid)
-		self.vruler.set_bg(wal.WHITE)
+		units = self.printout.get_units()
+		corner = PreviewCorner(r_grid)
+		hruler = PreviewRuler(r_grid, self.canvas, units)
+		hruler.set_bg(wal.WHITE)
+		vruler = PreviewRuler(r_grid, self.canvas, units, False)
+		vruler.set_bg(wal.WHITE)
 
 		tb = PreviewToolbar(self, self, self.canvas, self.printer)
 		vscroll = wal.ScrollBar(cv_grid, onscroll=self.canvas._scrolling)
 		hscroll = wal.ScrollBar(cv_grid, False, onscroll=self.canvas._scrolling)
-		self.canvas._set_scrolls(hscroll, vscroll)
+		self.canvas._set_scrolls(hscroll, vscroll, hruler, vruler)
 
 		self.pack(tb, fill=True)
 		self.pack(wal.HLine(self), fill=True)
@@ -68,9 +69,9 @@ class PreviewDialog(wal.SimpleDialog):
 
 		r_grid.add_growable_col(1)
 		r_grid.add_growable_row(1)
-		r_grid.pack(self.corner)
-		r_grid.pack(self.hruler, fill=True)
-		r_grid.pack(self.vruler, fill=True)
+		r_grid.pack(corner)
+		r_grid.pack(hruler, fill=True)
+		r_grid.pack(vruler, fill=True)
 		r_grid.pack(cv_grid, fill=True)
 
 		self.pack(r_grid, fill=True, expand=True)
