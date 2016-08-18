@@ -18,8 +18,6 @@
 import cairo
 import wal
 
-from sk1 import _, config
-from sk1.resources import icons
 from sk1.appconst import PAGEFIT, ZOOM_IN, ZOOM_OUT
 
 CAIRO_BLACK = [0.0, 0.0, 0.0]

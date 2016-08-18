@@ -16,12 +16,12 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
-import wal, wx
+import wal
 import cairo
 
 from uc2 import cms, uc2const
 
-from sk1 import _, config
+from sk1 import config
 from sk1.resources import icons, get_icon
 from sk1.document.ruler import VFONT, HFONT
 
