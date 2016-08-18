@@ -61,6 +61,9 @@ class Printout(object):
 	def is_selection(self): return bool(self.selection)
 	def get_num_pages(self): return len(self.pages)
 
+	def get_units(self):
+		return self.doc.model.doc_units
+
 	def get_num_print_pages(self):
 		if self.print_range == PRINT_ALL:
 			return len(self.pages)
