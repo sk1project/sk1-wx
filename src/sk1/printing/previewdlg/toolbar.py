@@ -38,7 +38,7 @@ class PreviewToolbar(wal.HPanel):
 		(icons.PD_ZOOM_PAGE, self.canvas.zoom_fit_to_page, _('Fit to page')),
 		(icons.PD_ZOOM_100, self.canvas.zoom_100, _('Zoom 100%')),
 		None,
-		(icons.PD_PROPERTIES, self.on_printer_props, _('Printer properties')),
+		(icons.PD_PRINT_PREVIEW, self.on_printer_props, _('Printer properties')),
 		(),
 		(icons.PD_QUIT, self.dlg.on_close, _('Close preview'))
 		]
