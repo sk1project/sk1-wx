@@ -21,6 +21,7 @@ from sk1 import _, config
 
 from canvas import PreviewCanvas
 from toolbar import PreviewToolbar
+from ruler import PreviewCorner
 
 class PreviewDialog(wal.SimpleDialog):
 
@@ -40,8 +41,16 @@ class PreviewDialog(wal.SimpleDialog):
 		self.set_minsize(config.print_preview_dlg_minsize)
 
 	def build(self):
-		cv_grid = wal.GridPanel(self)
+		r_grid = wal.GridPanel(self)
+		cv_grid = wal.GridPanel(r_grid)
 		self.canvas = PreviewCanvas(cv_grid, self.printer, self.printout)
+
+		self.corner = PreviewCorner(r_grid)
+		self.hruler = wal.VPanel(r_grid)
+		self.hruler.set_bg(wal.WHITE)
+		self.vruler = wal.VPanel(r_grid)
+		self.vruler.set_bg(wal.WHITE)
+
 		tb = PreviewToolbar(self, self, self.canvas, self.printer)
 		vscroll = wal.ScrollBar(cv_grid, onscroll=self.canvas._scrolling)
 		hscroll = wal.ScrollBar(cv_grid, False, onscroll=self.canvas._scrolling)
@@ -57,7 +66,14 @@ class PreviewDialog(wal.SimpleDialog):
 		cv_grid.pack(hscroll, fill=True)
 		cv_grid.pack((1, 1))
 
-		self.pack(cv_grid, fill=True, expand=True)
+		r_grid.add_growable_col(1)
+		r_grid.add_growable_row(1)
+		r_grid.pack(self.corner)
+		r_grid.pack(self.hruler, fill=True)
+		r_grid.pack(self.vruler, fill=True)
+		r_grid.pack(cv_grid, fill=True)
+
+		self.pack(r_grid, fill=True, expand=True)
 
 	def end_modal(self, ret):
 		config.print_preview_dlg_size = self.get_size()
