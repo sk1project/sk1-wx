@@ -508,30 +508,35 @@ class AppCanvas(wx.Panel):
 			self.zoom_fit_to_page()
 			self.set_mode(modes.SELECT_MODE)
 		self._keep_center()
-		if self.soft_repaint and not self.full_repaint:
-			if self.selection_repaint:
-				if self.mode in modes.EDIT_MODES and \
-				self.presenter.selection.objs:
-					pass
-				else:
-					self.renderer.paint_selection()
-			self.soft_repaint = False
-		else:
-			self.renderer.paint_document()
-			if self.selection_repaint:
-				if self.mode in modes.EDIT_MODES and \
-				self.presenter.selection.objs:
-					pass
-				else:
-					self.renderer.paint_selection()
-			self.eventloop.emit(self.eventloop.VIEW_CHANGED)
-			self.full_repaint = False
-			self.soft_repaint = False
-		if not self.controller is None: self.controller.repaint()
-		if self.dragged_guide:
-			self.renderer.paint_guide_dragging(*self.dragged_guide)
-			if not self.mode == modes.GUIDE_MODE: self.dragged_guide = ()
-		self.renderer.finalize()
+
+		try:
+			if self.soft_repaint and not self.full_repaint:
+				if self.selection_repaint:
+					if self.mode in modes.EDIT_MODES and \
+					self.presenter.selection.objs:
+						pass
+					else:
+						self.renderer.paint_selection()
+				self.soft_repaint = False
+			else:
+				self.renderer.paint_document()
+				if self.selection_repaint:
+					if self.mode in modes.EDIT_MODES and \
+					self.presenter.selection.objs:
+						pass
+					else:
+						self.renderer.paint_selection()
+				self.eventloop.emit(self.eventloop.VIEW_CHANGED)
+				self.full_repaint = False
+				self.soft_repaint = False
+			if not self.controller is None: self.controller.repaint()
+			if self.dragged_guide:
+				self.renderer.paint_guide_dragging(*self.dragged_guide)
+				if not self.mode == modes.GUIDE_MODE: self.dragged_guide = ()
+			self.renderer.finalize()
+		except:
+			self.app.print_stacktrace()
+
 		self.redraw_flag = False
 		if self.request_redraw_flag:
 			self.request_redraw_flag = False
