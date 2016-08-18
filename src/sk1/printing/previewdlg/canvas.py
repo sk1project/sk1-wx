@@ -33,6 +33,8 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 
 	hscroll = None
 	vscroll = None
+	hruler = None
+	vruler = None
 
 	workspace = ()
 	matrix = None
@@ -54,9 +56,11 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 
 	#----- SCROLLING
 
-	def _set_scrolls(self, hscroll, vscroll):
+	def _set_scrolls(self, hscroll, vscroll, hruler=None, vruler=None):
 		self.hscroll = hscroll
 		self.vscroll = vscroll
+		self.hruler = hruler
+		self.vruler = vruler
 		self.hscroll.set_scrollbar(500, 100, 1100, 100)
 		self.vscroll.set_scrollbar(500, 100, 1100, 100)
 
