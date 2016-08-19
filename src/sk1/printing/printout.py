@@ -15,10 +15,13 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-class PrnGroup(object):
+class PrnPage(object):
 
 	childs = []
 	trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+
+	def __init__(self, childs=[]):
+		self.childs = childs
 
 PRINT_ALL = 0
 PRINT_SELECTION = 1
@@ -64,6 +67,9 @@ class Printout(object):
 	def get_units(self):
 		return self.doc.model.doc_units
 
+	def get_cms(self):
+		return self.doc.cms
+
 	def get_num_print_pages(self):
 		if self.print_range == PRINT_ALL:
 			return len(self.pages)
@@ -76,3 +82,21 @@ class Printout(object):
 		self.page_range = page_range
 
 	def set_reverse(self, val): self.reverse_flag = val
+
+	def get_print_pages(self):
+		ret = []
+		if self.print_range == PRINT_ALL:
+			for item in self.pages:
+				ret.append(PrnPage(item))
+		elif self.print_range == PRINT_SELECTION:
+			ret.append(PrnPage(self.selection))
+		elif self.print_range == PRINT_CURRENT_PAGE:
+			ret.append(PrnPage(self.current_page))
+		elif self.print_range == PRINT_PAGE_RANGE:
+			for index in self.page_range:
+				ret.append(PrnPage(self.pages[index]))
+
+		if self.reverse_flag:
+			ret.reverse()
+
+		return ret
