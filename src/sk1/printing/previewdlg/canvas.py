@@ -254,8 +254,10 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 		self.ctx.rectangle(-w / 2.0, -h / 2.0, w, h)
 		self.ctx.set_source_rgb(*CAIRO_WHITE)
 		self.ctx.fill()
+		self.ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
 
 	def _draw_page_border(self):
+		self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
 		w, h = self.printer.get_page_size()
 		self.ctx.rectangle(-w / 2.0, -h / 2.0, w, h)
 		self.ctx.set_source_rgb(*CAIRO_BLACK)
