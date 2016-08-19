@@ -18,16 +18,27 @@
 import cairo
 import wal
 
+from uc2.formats.sk2.crenderer import CairoRenderer
+
 from sk1.appconst import PAGEFIT, ZOOM_IN, ZOOM_OUT
 
 CAIRO_BLACK = [0.0, 0.0, 0.0]
 CAIRO_GRAY = [0.0, 0.0, 0.0, 0.5]
 CAIRO_WHITE = [1.0, 1.0, 1.0]
+CAIRO_RED = [1.0, 0.0, 0.0]
+
+class PreviewRenderer(CairoRenderer):
+
+	def __init__(self, cms):
+		CairoRenderer.__init__(self, cms)
 
 class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 
 	printer = None
 	printout = None
+	renderer = None
+	pages = []
+	page_index = 0
 
 	hscroll = None
 	vscroll = None
@@ -51,6 +62,8 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 		wal.Panel.__init__(self, parent)
 		wal.SensitiveCanvas.__init__(self, True)
 		self.set_bg(wal.GRAY)
+		self.pages = self.printout.get_print_pages()
+		self.renderer = PreviewRenderer(self.printout.get_cms())
 
 	#----- SCROLLING
 
@@ -221,6 +234,8 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 		self.ctx.set_matrix(self.matrix)
 
 		self._draw_page()
+		self._render_page()
+		self._draw_page_border()
 
 		self.draw_bitmap(wal.copy_surface_to_bitmap(surface))
 
@@ -240,8 +255,35 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 		self.ctx.set_source_rgb(*CAIRO_WHITE)
 		self.ctx.fill()
 
+	def _draw_page_border(self):
+		w, h = self.printer.get_page_size()
 		self.ctx.rectangle(-w / 2.0, -h / 2.0, w, h)
 		self.ctx.set_source_rgb(*CAIRO_BLACK)
 		self.ctx.stroke()
 		self.ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
+
+	def _render_page(self):
+		self.ctx.save()
+		w, h = self.printer.get_page_size()
+		t, r, b, l = self.printer.margins
+		rect = (-w / 2.0 + l, -h / 2.0 + b, w - l - r, h - t - b)
+		self.ctx.rectangle(*rect)
+		self.ctx.clip()
+
+		objs = self.pages[self.page_index].childs
+		self.renderer.render(self.ctx, objs)
+
+		self.ctx.restore()
+		self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
+		self.ctx.set_source_rgb(*CAIRO_RED)
+		self.ctx.set_line_width(1.0 / self.zoom)
+		self.ctx.set_dash([3, 3])
+		self.ctx.rectangle(*rect)
+		self.ctx.stroke()
+		self.ctx.set_dash([])
+		self.ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
+
+
+
+
 
