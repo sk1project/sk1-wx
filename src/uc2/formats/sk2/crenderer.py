@@ -62,6 +62,11 @@ class CairoRenderer:
 			r, g, b = self.cms.get_rgb_color(color)[1]
 		return r, g, b, color[2]
 
+	def get_image(self, pixmap):
+		if not pixmap.cache_cdata:
+			libimg.update_image(self.cms, pixmap)
+		return pixmap.cache_cdata
+
 	#-------DOCUMENT RENDERING
 
 	def render(self, ctx, objs=[]):
@@ -123,8 +128,6 @@ class CairoRenderer:
 			ctx.stroke()
 
 	def render_image(self, ctx, obj):
-		if not obj.cache_cdata: libimg.update_image(self.cms, obj)
-
 		canvas_matrix = ctx.get_matrix()
 		canvas_trafo = libcairo.get_trafo_from_matrix(canvas_matrix)
 		zoom = canvas_trafo[0]
@@ -146,7 +149,7 @@ class CairoRenderer:
 				ctx.get_source().set_filter(cairo.FILTER_NEAREST)
 			ctx.paint_with_alpha(0.3)
 		else:
-			ctx.set_source_surface(obj.cache_cdata)
+			ctx.set_source_surface(self.get_image(obj))
 			if zoom * abs(m11) > .98:
 				ctx.get_source().set_filter(cairo.FILTER_NEAREST)
 			ctx.paint()
