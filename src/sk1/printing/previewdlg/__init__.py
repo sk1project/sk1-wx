@@ -43,7 +43,7 @@ class PreviewDialog(wal.SimpleDialog):
 	def build(self):
 		r_grid = wal.GridPanel(self)
 		cv_grid = wal.GridPanel(r_grid)
-		self.canvas = PreviewCanvas(cv_grid, self.printer, self.printout)
+		self.canvas = PreviewCanvas(cv_grid, self, self.printer, self.printout)
 
 		units = self.printout.get_units()
 		corner = PreviewCorner(r_grid)
@@ -55,7 +55,7 @@ class PreviewDialog(wal.SimpleDialog):
 		tb = PreviewToolbar(self, self, self.canvas, self.printer)
 		vscroll = wal.ScrollBar(cv_grid, onscroll=self.canvas._scrolling)
 		hscroll = wal.ScrollBar(cv_grid, False, onscroll=self.canvas._scrolling)
-		self.canvas._set_scrolls(hscroll, vscroll, hruler, vruler)
+		self.canvas.set_ctrls(hscroll, vscroll, hruler, vruler, tb.pager)
 
 		self.pack(tb, fill=True)
 		self.pack(wal.HLine(self), fill=True)
@@ -75,6 +75,10 @@ class PreviewDialog(wal.SimpleDialog):
 		r_grid.pack(cv_grid, fill=True)
 
 		self.pack(r_grid, fill=True, expand=True)
+
+	def show_modal(self):
+		self.canvas.set_focus()
+		return wal.SimpleDialog.show_modal(self)
 
 	def end_modal(self, ret):
 		config.print_preview_dlg_size = self.get_size()
