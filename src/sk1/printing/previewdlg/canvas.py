@@ -21,6 +21,7 @@ import wal
 from uc2.formats.sk2.crenderer import CairoRenderer
 
 from sk1.appconst import PAGEFIT, ZOOM_IN, ZOOM_OUT
+from kbd_proc import Kbd_Processor
 
 CAIRO_BLACK = [0.0, 0.0, 0.0]
 CAIRO_GRAY = [0.0, 0.0, 0.0, 0.5]
@@ -44,6 +45,7 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 	vscroll = None
 	hruler = None
 	vruler = None
+	pager = None
 
 	workspace = ()
 	matrix = None
@@ -55,23 +57,55 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 
 	my_changes = False
 
-	def __init__(self, parent, printer, printout):
+	def __init__(self, parent, dlg, printer, printout):
+		self.dlg = dlg
 		self.printer = printer
 		self.printout = printout
 		self.zoom_stack = []
-		wal.Panel.__init__(self, parent)
+		wal.Panel.__init__(self, parent, allow_input=True)
+		self.kbdproc = Kbd_Processor(self)
 		wal.SensitiveCanvas.__init__(self, True)
 		self.set_bg(wal.GRAY)
 		self.pages = self.printout.get_print_pages()
 		self.renderer = PreviewRenderer(self.printout.get_cms())
 
+	#----- Paging
+
+	def next_page(self):
+		if not self.page_index >= len(self.pages) - 1:
+			self.page_index += 1
+		self.update_page()
+
+	def previous_page(self):
+		if self.page_index:
+			self.page_index -= 1
+		self.update_page()
+
+	def set_page(self, index):
+		if index >= 0 and index <= len(self.pages) - 1:
+			self.page_index = index
+		self.update_page()
+
+	def update_page(self):
+		self.pager.set_value(self.page_index + 1)
+		self.refresh()
+
+	#----- Mouse control
+
+	def mouse_left_up(self, point):
+		self.set_focus()
+
+	def mouse_right_up(self, point):
+		self.set_focus()
+
 	#----- SCROLLING
 
-	def _set_scrolls(self, hscroll, vscroll, hruler=None, vruler=None):
+	def set_ctrls(self, hscroll, vscroll, hruler, vruler, pager):
 		self.hscroll = hscroll
 		self.vscroll = vscroll
 		self.hruler = hruler
 		self.vruler = vruler
+		self.pager = pager
 		self.hscroll.set_scrollbar(500, 100, 1100, 100)
 		self.vscroll.set_scrollbar(500, 100, 1100, 100)
 
