@@ -30,9 +30,17 @@ class PreviewToolbar(wal.HPanel):
 		self.printer = printer
 		wal.HPanel.__init__(self, parent)
 
+		self.pack(wal.Label(self, _('Page:')), padding=5)
+		rng = (1, len(self.canvas.pages))
+		self.pager = wal.IntSpin(self, 1, rng, onchange=self.on_pager_change,
+								onenter=self.on_pager_change)
+		self.pack(self.pager, padding=5)
+		if len(self.canvas.pages) == 1:self.pager.set_enable(False)
+
 		Btn = wal.ImageButton
 
 		buttons = [
+		None,
 		(icons.PD_ZOOM_IN, self.canvas.zoom_in, _('Zoom in')),
 		(icons.PD_ZOOM_OUT, self.canvas.zoom_out, _('Zoom out')),
 		(icons.PD_ZOOM_PAGE, self.canvas.zoom_fit_to_page, _('Fit to page')),
@@ -58,3 +66,7 @@ class PreviewToolbar(wal.HPanel):
 	def on_printer_props(self):
 		if self.printer.run_propsdlg(self.dlg):
 			self.canvas.refresh()
+
+	def on_pager_change(self):
+		index = self.pager.get_value()
+		self.canvas.set_page(index - 1)
