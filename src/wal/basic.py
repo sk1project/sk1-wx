@@ -162,8 +162,9 @@ class MainWindow(wx.Frame):
 
 class Panel(wx.Panel, Widget):
 
-	def __init__(self, parent, border=False):
+	def __init__(self, parent, border=False, allow_input=False):
 		style = wx.TAB_TRAVERSAL
+		if allow_input: style |= wx.WANTS_CHARS
 		if border and not const.is_wx3():style |= wx.BORDER_MASK
 		wx.Panel.__init__(self, parent, wx.ID_ANY, style=style)
 
