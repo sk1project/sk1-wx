@@ -15,11 +15,14 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from uc2 import uc2const
+
 class AbstractPrinter(object):
 
 	name = 'Abstract Printer'
 	copies = 1
 	collate = False
+	colorspace = uc2const.COLOR_GRAY
 
 	def get_name(self): return self.name
 	def is_virtual(self): return True
