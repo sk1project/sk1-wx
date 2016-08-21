@@ -82,4 +82,5 @@ class PreviewDialog(wal.SimpleDialog):
 
 	def end_modal(self, ret):
 		config.print_preview_dlg_size = self.get_size()
+		self.canvas.destroy()
 		wal.SimpleDialog.end_modal(self, ret)
