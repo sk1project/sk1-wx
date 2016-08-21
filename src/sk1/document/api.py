@@ -229,6 +229,7 @@ class AbstractAPI:
 			obj.cache_pattern_img = None
 			if obj.is_pixmap():
 				obj.cache_cdata = None
+				obj.cache_ps_cdata = None
 
 	def _fill_objs(self, objs, color):
 		for obj in objs:
@@ -239,6 +240,7 @@ class AbstractAPI:
 				else:
 					style[3][0] = []
 				obj.cache_cdata = None
+				obj.cache_ps_cdata = None
 			else:
 				if color:
 					fill = style[0]
@@ -336,6 +338,7 @@ class AbstractAPI:
 				else:
 					style[3][1] = []
 				obj.cache_cdata = None
+				obj.cache_ps_cdata = None
 			else:
 				if color:
 					stroke = style[1]
@@ -368,6 +371,7 @@ class AbstractAPI:
 	def _set_bitmap(self, obj, bmpstr, colorspace=None):
 		obj.bitmap = bmpstr
 		obj.cache_cdata = None
+		obj.cache_ps_cdata = None
 		obj.cache_gray_cdata = None
 		if colorspace:
 			obj.colorspace = colorspace
@@ -375,6 +379,7 @@ class AbstractAPI:
 	def _set_alpha(self, obj, alphastr):
 		obj.alpha_channel = alphastr
 		obj.cache_cdata = None
+		obj.cache_ps_cdata = None
 		obj.cache_gray_cdata = None
 
 	def _get_text_data(self, text_obj):
