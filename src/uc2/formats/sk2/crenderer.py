@@ -63,14 +63,36 @@ class CairoRenderer:
 		return r, g, b, color[2]
 
 	def get_image(self, pixmap):
-		if not pixmap.cache_cdata:
-			libimg.update_image(self.cms, pixmap)
-		return pixmap.cache_cdata
+		if self.cms.proofing:
+			if not pixmap.cache_ps_cdata:
+				libimg.update_image(self.cms, pixmap)
+				pixmap.cache_ps_cdata = pixmap.cache_cdata
+				pixmap.cache_cdata = None
+			return pixmap.cache_ps_cdata
+		else:
+			if not pixmap.cache_cdata:
+				libimg.update_image(self.cms, pixmap)
+			return pixmap.cache_cdata
+
+	def get_pattern_image(self, obj):
+		if not obj.cache_pattern_img:
+			fill = obj.style[0]
+			pattern_fill = fill[2]
+			bmpstr = b64decode(pattern_fill[1])
+			image_obj = sk2_model.Pixmap(obj.config)
+			libimg.set_image_data(self.cms, image_obj, bmpstr)
+			libimg.flip_top_to_bottom(image_obj)
+			if pattern_fill[0] == sk2_const.PATTERN_IMG and \
+			 len(pattern_fill) > 2:
+				image_obj.style[3] = deepcopy(pattern_fill[2])
+			libimg.update_image(self.cms, image_obj)
+			obj.cache_pattern_img = image_obj.cache_cdata
+			image_obj.cache_cdata = None
+		return obj.cache_pattern_img
 
 	#-------DOCUMENT RENDERING
 
 	def render(self, ctx, objs=[]):
-
 		if self.antialias_flag:
 			ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
 		else:
@@ -88,8 +110,7 @@ class CairoRenderer:
 		elif obj.is_group():
 			for obj in obj.childs:
 				self.render_object(ctx, obj)
-		else:
-			pass
+		else: pass
 
 	def render_container(self, ctx, obj):
 		ctx.save()
@@ -270,18 +291,7 @@ class CairoRenderer:
 				obj.fill_trafo = obj.fill_trafo[:4] + \
 					[obj.cache_bbox[0], obj.cache_bbox[3]]
 			pattern_fill = fill[2]
-			if not obj.cache_pattern_img:
-				bmpstr = b64decode(pattern_fill[1])
-				image_obj = sk2_model.Pixmap(obj.config)
-				libimg.set_image_data(self.cms, image_obj, bmpstr)
-				libimg.flip_top_to_bottom(image_obj)
-				if pattern_fill[0] == sk2_const.PATTERN_IMG and \
-				 len(pattern_fill) > 2:
-					image_obj.style[3] = deepcopy(pattern_fill[2])
-				libimg.update_image(self.cms, image_obj)
-				obj.cache_pattern_img = image_obj.cache_cdata
-				image_obj.cache_cdata = None
-			sp = cairo.SurfacePattern(obj.cache_pattern_img)
+			sp = cairo.SurfacePattern(self.get_pattern_image(obj))
 			sp.set_extend(cairo.EXTEND_REPEAT)
 			flip_matrix = cairo.Matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
 			if len(pattern_fill) > 3:
