@@ -18,6 +18,7 @@
 import cairo
 import wal
 
+from uc2 import uc2const, libimg
 from uc2.formats.sk2.crenderer import CairoRenderer
 
 from sk1.appconst import PAGEFIT, ZOOM_IN, ZOOM_OUT
@@ -30,8 +31,45 @@ CAIRO_RED = [1.0, 0.0, 0.0]
 
 class PreviewRenderer(CairoRenderer):
 
+	colorspace = uc2const.COLOR_RGB
+
 	def __init__(self, cms):
 		CairoRenderer.__init__(self, cms)
+
+	def set_colorspace(self, cs=uc2const.COLOR_RGB):
+		if not cs == self.colorspace:
+			self.colorspace = cs
+
+	def get_color(self, color):
+		if self.colorspace == uc2const.COLOR_RGB:
+			r, g, b = self.cms.get_display_color(color)
+		elif self.colorspace == uc2const.COLOR_CMYK:
+			cmyk_color = self.cms.get_cmyk_color(color)
+			r, g, b = self.cms.get_display_color(cmyk_color)
+		else:
+			gc = self.cms.get_grayscale_color(color)
+			r, g, b = self.cms.get_display_color(gc)
+		return r, g, b, color[2]
+
+	def get_image(self, pixmap):
+		if self.colorspace == uc2const.COLOR_RGB:
+			if not pixmap.cache_cdata:
+				libimg.update_image(self.cms, pixmap)
+			return pixmap.cache_cdata
+		elif self.colorspace == uc2const.COLOR_CMYK:
+			if not pixmap.cache_ps_cdata:
+				libimg.update_image(self.cms, pixmap, True)
+				pixmap.cache_ps_cdata = pixmap.cache_cdata
+				pixmap.cache_cdata = None
+			return pixmap.cache_ps_cdata
+		else:
+			if not pixmap.cache_gray_cdata:
+				libimg.update_gray_image(self.cms, pixmap)
+			return pixmap.cache_gray_cdata
+
+	def get_pattern_image(self, obj):
+		return CairoRenderer.get_pattern_image(self, obj)
+
 
 class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 
@@ -68,6 +106,11 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 		self.set_bg(wal.GRAY)
 		self.pages = self.printout.get_print_pages()
 		self.renderer = PreviewRenderer(self.printout.get_cms())
+
+	def destroy(self):
+		items = self.__dict__.keys()
+		for item in items:
+			self.__dict__[item] = None
 
 	#----- Paging
 
@@ -259,6 +302,7 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 
 	def paint(self):
 		if not self.matrix: self._fit_to_page()
+		self.renderer.set_colorspace(self.printer.colorspace)
 		self._keep_center()
 		w, h = self.get_size()
 		surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
