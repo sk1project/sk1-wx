@@ -132,7 +132,7 @@ def extract_bitmap(pixmap, filepath):
 		fileptr.write(b64decode(pixmap.alpha_channel))
 		fileptr.close()
 
-def update_image(cms, pixmap):
+def update_image(cms, pixmap, force_proofing=False):
 	png_stream = StringIO()
 
 	raw_image = Image.open(StringIO(b64decode(pixmap.bitmap)))
@@ -154,7 +154,12 @@ def update_image(cms, pixmap):
 		cache_image = Image.new(IMAGE_RGBA, pixmap.size, fg_color)
 		bg_image = Image.new(IMAGE_RGBA, pixmap.size, bg_color)
 		cache_image.paste(bg_image, (0, 0), raw_image)
+		if force_proofing:
+			cache_image = cms.convert_image(cache_image, IMAGE_CMYK)
+			cache_image = cms.get_display_image(cache_image)
 	else:
+		if force_proofing and not raw_image.mode == IMAGE_CMYK:
+			raw_image = cms.convert_image(raw_image, IMAGE_CMYK)
 		cache_image = cms.get_display_image(raw_image)
 
 	if pixmap.alpha_channel:
