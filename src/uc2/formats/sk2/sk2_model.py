@@ -995,6 +995,7 @@ class Pixmap(PrimitiveObject):
 	cache_paths = None
 	cache_cpath = None
 	cache_cdata = None
+	cache_ps_cdata = None
 	cache_gray_cdata = None
 
 	def __init__(self, config, parent=None,
