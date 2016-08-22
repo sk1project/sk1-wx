@@ -226,21 +226,17 @@ class AbstractAPI:
 			obj.style = style
 			obj.fill_trafo = fill_trafo
 			obj.stroke_trafo = stroke_trafo
-			obj.cache_pattern_img = None
-			if obj.is_pixmap():
-				obj.cache_cdata = None
-				obj.cache_ps_cdata = None
+			obj.clear_color_cache()
 
 	def _fill_objs(self, objs, color):
 		for obj in objs:
 			style = deepcopy(obj.style)
+			obj.clear_color_cache()
 			if obj.is_pixmap():
 				if color:
 					style[3][0] = deepcopy(color)
 				else:
 					style[3][0] = []
-				obj.cache_cdata = None
-				obj.cache_ps_cdata = None
 			else:
 				if color:
 					fill = style[0]
@@ -263,7 +259,7 @@ class AbstractAPI:
 				style = deepcopy(obj.style)
 				style[0] = deepcopy(fill_style)
 				obj.style = style
-				obj.cache_pattern_img = None
+				obj.clear_color_cache()
 
 	def _set_paths_and_trafo(self, obj, paths, trafo):
 		obj.paths = paths
@@ -332,13 +328,12 @@ class AbstractAPI:
 	def _stroke_objs(self, objs, color):
 		for obj in objs:
 			style = deepcopy(obj.style)
+			obj.clear_color_cache()
 			if obj.is_pixmap():
 				if color:
 					style[3][1] = deepcopy(color)
 				else:
 					style[3][1] = []
-				obj.cache_cdata = None
-				obj.cache_ps_cdata = None
 			else:
 				if color:
 					stroke = style[1]
@@ -370,17 +365,13 @@ class AbstractAPI:
 
 	def _set_bitmap(self, obj, bmpstr, colorspace=None):
 		obj.bitmap = bmpstr
-		obj.cache_cdata = None
-		obj.cache_ps_cdata = None
-		obj.cache_gray_cdata = None
+		obj.clear_color_cache()
 		if colorspace:
 			obj.colorspace = colorspace
 
 	def _set_alpha(self, obj, alphastr):
 		obj.alpha_channel = alphastr
-		obj.cache_cdata = None
-		obj.cache_ps_cdata = None
-		obj.cache_gray_cdata = None
+		obj.clear_color_cache()
 
 	def _get_text_data(self, text_obj):
 		text = text_obj.get_text()
