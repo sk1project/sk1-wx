@@ -38,6 +38,8 @@ class AppColorManager(ColorManager):
 			self.update()
 			self.update_mngrs()
 			events.emit(events.CMS_CHANGED)
+			for item in self.app.docs:
+				item.model.clear_color_cache()
 			self.app.current_doc.canvas.force_redraw()
 
 	def update(self):
