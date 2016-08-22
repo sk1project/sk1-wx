@@ -57,6 +57,10 @@ class DocumentObject(TextModelObject):
 			obj_copy.childs.append(child.copy())
 		return obj_copy
 
+	def clear_color_cache(self):
+		for child in self.childs:
+			child.clear_color_cache()
+
 	def is_layer(self): return False
 	def is_guide(self): return False
 	def is_primitive(self): return False
@@ -498,6 +502,8 @@ class PrimitiveObject(SelectableObject):
 	cache_paths = None
 	cache_cpath = None
 	cache_pattern_img = None
+	cache_ps_pattern_img = None
+	cache_gray_pattern_img = None
 
 	def get_initial_paths(self): pass
 
@@ -519,10 +525,17 @@ class PrimitiveObject(SelectableObject):
 		return curve
 
 	def update(self):
+		self.cache_pattern_img = None
+		self.cache_ps_pattern_img = None
+		self.cache_gray_pattern_img = None
 		self.cache_paths = self.get_initial_paths()
 		self.cache_cpath = libgeom.create_cpath(self.cache_paths)
 		libgeom.apply_trafo(self.cache_cpath, self.trafo)
 		self.update_bbox()
+
+	def clear_color_cache(self):
+		self.cache_pattern_img = None
+		self.cache_ps_pattern_img = None
 
 	def update_bbox(self):
 		self.cache_bbox = libgeom.get_cpath_bbox(self.cache_cpath)
@@ -1037,8 +1050,14 @@ class Pixmap(PrimitiveObject):
 
 	def update(self):
 		self.cache_cdata = None
+		self.cache_ps_cdata = None
 		self.cache_gray_cdata = None
 		PrimitiveObject.update(self)
+
+	def clear_color_cache(self):
+		self.cache_cdata = None
+		self.cache_ps_cdata = None
+		self.cache_gray_cdata = None
 
 
 CID_TO_CLASS = {
