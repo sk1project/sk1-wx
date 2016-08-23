@@ -536,6 +536,7 @@ class PrimitiveObject(SelectableObject):
 	def clear_color_cache(self):
 		self.cache_pattern_img = None
 		self.cache_ps_pattern_img = None
+		self.cache_gray_pattern_img = None
 
 	def update_bbox(self):
 		self.cache_bbox = libgeom.get_cpath_bbox(self.cache_cpath)
