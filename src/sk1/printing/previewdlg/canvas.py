@@ -16,6 +16,7 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import cairo
+
 import wal
 
 from uc2 import uc2const, libimg
@@ -68,7 +69,21 @@ class PreviewRenderer(CairoRenderer):
 			return pixmap.cache_gray_cdata
 
 	def get_pattern_image(self, obj):
-		return CairoRenderer.get_pattern_image(self, obj)
+		if self.colorspace == uc2const.COLOR_RGB:
+			if not obj.cache_pattern_img:
+				image_obj = self._create_pattern_image(obj)
+				obj.cache_pattern_img = image_obj.cache_cdata
+			return obj.cache_pattern_img
+		elif self.colorspace == uc2const.COLOR_CMYK:
+			if not obj.cache_ps_pattern_img:
+				image_obj = self._create_pattern_image(obj, force_proofing=True)
+				obj.cache_ps_pattern_img = image_obj.cache_cdata
+			return obj.cache_ps_pattern_img
+		else:
+			if not obj.cache_gray_pattern_img:
+				image_obj = self._create_pattern_image(obj, gray=True)
+				obj.cache_gray_pattern_img = image_obj.cache_gray_cdata
+			return obj.cache_gray_pattern_img
 
 
 class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
