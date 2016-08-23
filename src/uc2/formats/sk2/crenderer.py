@@ -74,21 +74,33 @@ class CairoRenderer:
 				libimg.update_image(self.cms, pixmap)
 			return pixmap.cache_cdata
 
+	def _create_pattern_image(self, obj, force_proofing=False, gray=False):
+		fill = obj.style[0]
+		pattern_fill = fill[2]
+		bmpstr = b64decode(pattern_fill[1])
+		image_obj = sk2_model.Pixmap(obj.config)
+		libimg.set_image_data(self.cms, image_obj, bmpstr)
+		libimg.flip_top_to_bottom(image_obj)
+		if pattern_fill[0] == sk2_const.PATTERN_IMG and \
+		 len(pattern_fill) > 2:
+			image_obj.style[3] = deepcopy(pattern_fill[2])
+		if gray:
+			libimg.update_gray_image(self.cms, image_obj)
+		else:
+			libimg.update_image(self.cms, image_obj, force_proofing)
+		return image_obj
+
 	def get_pattern_image(self, obj):
-		if not obj.cache_pattern_img:
-			fill = obj.style[0]
-			pattern_fill = fill[2]
-			bmpstr = b64decode(pattern_fill[1])
-			image_obj = sk2_model.Pixmap(obj.config)
-			libimg.set_image_data(self.cms, image_obj, bmpstr)
-			libimg.flip_top_to_bottom(image_obj)
-			if pattern_fill[0] == sk2_const.PATTERN_IMG and \
-			 len(pattern_fill) > 2:
-				image_obj.style[3] = deepcopy(pattern_fill[2])
-			libimg.update_image(self.cms, image_obj)
-			obj.cache_pattern_img = image_obj.cache_cdata
-			image_obj.cache_cdata = None
-		return obj.cache_pattern_img
+		if self.cms.proofing:
+			if not obj.cache_ps_pattern_img:
+				image_obj = self._create_pattern_image(obj)
+				obj.cache_ps_pattern_img = image_obj.cache_cdata
+			return obj.cache_ps_pattern_img
+		else:
+			if not obj.cache_pattern_img:
+				image_obj = self._create_pattern_image(obj)
+				obj.cache_pattern_img = image_obj.cache_cdata
+			return obj.cache_pattern_img
 
 	#-------DOCUMENT RENDERING
 
