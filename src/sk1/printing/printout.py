@@ -38,6 +38,7 @@ class Printout(object):
 	reverse_flag = False
 	print_range = PRINT_ALL
 	page_range = []
+	print_pages = []
 
 	def __init__(self, doc):
 		self.app = doc.app
@@ -77,26 +78,32 @@ class Printout(object):
 			return 1
 		return len(self.page_range)
 
+	def _make_print_pages(self):
+		self.print_pages = []
+		if self.print_range == PRINT_ALL:
+			for item in self.pages:
+				self.print_pages.append(PrnPage(item))
+		elif self.print_range == PRINT_SELECTION:
+			self.print_pages.append(PrnPage(self.selection))
+		elif self.print_range == PRINT_CURRENT_PAGE:
+			self.print_pages.append(PrnPage(self.current_page))
+		elif self.print_range == PRINT_PAGE_RANGE:
+			for index in self.page_range:
+				self.print_pages.append(PrnPage(self.pages[index]))
+
+		if self.reverse_flag:
+			self.print_pages.reverse()
+
 	def set_print_range(self, print_range, page_range=[]):
 		self.print_range = print_range
 		self.page_range = page_range
+		self._make_print_pages()
 
-	def set_reverse(self, val): self.reverse_flag = val
+	def set_reverse(self, val):
+		self.reverse_flag = val
+		self._make_print_pages()
 
 	def get_print_pages(self):
-		ret = []
-		if self.print_range == PRINT_ALL:
-			for item in self.pages:
-				ret.append(PrnPage(item))
-		elif self.print_range == PRINT_SELECTION:
-			ret.append(PrnPage(self.selection))
-		elif self.print_range == PRINT_CURRENT_PAGE:
-			ret.append(PrnPage(self.current_page))
-		elif self.print_range == PRINT_PAGE_RANGE:
-			for index in self.page_range:
-				ret.append(PrnPage(self.pages[index]))
-
-		if self.reverse_flag:
-			ret.reverse()
-
-		return ret
+		if not self.print_pages:
+			self._make_print_pages()
+		return self.print_pages
