@@ -55,7 +55,10 @@ class PreviewRenderer(CairoRenderer):
 	def get_image(self, pixmap):
 		if self.colorspace == uc2const.COLOR_RGB:
 			if not pixmap.cache_cdata:
+				proofing = self.cms.proofing
+				self.cms.proofing = False
 				libimg.update_image(self.cms, pixmap)
+				self.cms.proofing = proofing
 			return pixmap.cache_cdata
 		elif self.colorspace == uc2const.COLOR_CMYK:
 			if not pixmap.cache_ps_cdata:
