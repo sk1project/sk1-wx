@@ -259,18 +259,18 @@ class MarginsPanel(wal.LabeledPanel):
 		self.pack((5, 5))
 
 		hpanel = wal.HPanel(self)
+		self.left_spin = StaticUnitSpin(self.app, self, mrgs[3])
+		hpanel.pack(self.left_spin)
+		hpanel.pack((5, 5))
 		self.right_spin = StaticUnitSpin(self.app, self, mrgs[1])
 		hpanel.pack(self.right_spin)
-		hpanel.pack((5, 5))
-		self.bottom_spin = StaticUnitSpin(self.app, self, mrgs[2])
-		hpanel.pack(self.bottom_spin)
 
 		self.pack(hpanel)
 
 		self.pack((5, 5))
 
-		self.left_spin = StaticUnitSpin(self.app, self, mrgs[3])
-		self.pack(self.left_spin)
+		self.bottom_spin = StaticUnitSpin(self.app, self, mrgs[2])
+		self.pack(self.bottom_spin)
 
 		self.pack(wal.VPanel(self), expand=True, padding=2)
 
