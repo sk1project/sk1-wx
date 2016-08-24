@@ -155,8 +155,11 @@ def update_image(cms, pixmap, force_proofing=False):
 		bg_image = Image.new(IMAGE_RGBA, pixmap.size, bg_color)
 		cache_image.paste(bg_image, (0, 0), raw_image)
 		if force_proofing:
-			cache_image = cms.convert_image(cache_image, IMAGE_CMYK)
-			cache_image = cms.get_display_image(cache_image)
+			rgb_image = cache_image.convert(IMAGE_RGB)
+			rgb_image = cms.convert_image(rgb_image, IMAGE_CMYK)
+			rgb_image = cms.get_display_image(rgb_image)
+			rgb_image.putalpha(cache_image.split()[3])
+			cache_image = rgb_image
 	else:
 		if force_proofing and not raw_image.mode == IMAGE_CMYK:
 			raw_image = cms.convert_image(raw_image, IMAGE_CMYK)
@@ -165,7 +168,12 @@ def update_image(cms, pixmap, force_proofing=False):
 	if pixmap.alpha_channel:
 		raw_alpha = b64decode(pixmap.alpha_channel)
 		raw_alpha = Image.open(StringIO(raw_alpha))
-		cache_image = cache_image.convert(IMAGE_RGBA)
+		if cache_image.mode == IMAGE_RGB:
+			cache_image = cache_image.convert(IMAGE_RGBA)
+		elif cache_image.mode == IMAGE_RGBA:
+			cache_alpha = Image.new(IMAGE_GRAY, pixmap.size)
+			mask = ImageOps.invert(cache_image.split()[3])
+			raw_alpha.paste(cache_alpha, (0, 0), mask)
 		cache_image.putalpha(raw_alpha)
 
 	if cache_image:
@@ -174,26 +182,50 @@ def update_image(cms, pixmap, force_proofing=False):
 	png_stream.seek(0)
 	pixmap.cache_cdata = cairo.ImageSurface.create_from_png(png_stream)
 
-def update_gray_image(cms, image_obj):
+def update_gray_image(cms, pixmap):
 	png_stream = StringIO()
 
-	raw_image = Image.open(StringIO(b64decode(image_obj.bitmap)))
+	raw_image = Image.open(StringIO(b64decode(pixmap.bitmap)))
 	raw_image.load()
 
-	raw_image = raw_image.convert(IMAGE_GRAY)
-
-	if image_obj.alpha_channel:
-		raw_alpha = b64decode(image_obj.alpha_channel)
-		raw_alpha = Image.open(StringIO(raw_alpha))
-		rgb_image = raw_image.convert(IMAGE_RGBA)
-		rgb_image.putalpha(raw_alpha)
+	if pixmap.colorspace in DUOTONES:
+		if pixmap.colorspace == IMAGE_MONO:
+			raw_image = raw_image.convert(IMAGE_GRAY)
+		fg = pixmap.style[3][0]
+		bg = pixmap.style[3][1]
+		fg_color = (0, 0, 0, 0)
+		bg_color = (255, 255, 255, 0)
+		if fg:
+			fg_color = tuple(cms.get_display_color255(fg)) + (int(fg[2] * 255.0),)
+		if bg:
+			bg_color = tuple(cms.get_display_color255(bg)) + (int(bg[2] * 255.0),)
+		cache_image = Image.new(IMAGE_RGBA, pixmap.size, fg_color)
+		bg_image = Image.new(IMAGE_RGBA, pixmap.size, bg_color)
+		cache_image.paste(bg_image, (0, 0), raw_image)
+		rgb_image = cache_image.convert(IMAGE_GRAY).convert(IMAGE_RGBA)
+		if pixmap.alpha_channel:
+			raw_alpha = b64decode(pixmap.alpha_channel)
+			raw_alpha = Image.open(StringIO(raw_alpha))
+			cache_alpha = Image.new(IMAGE_GRAY, pixmap.size)
+			mask = ImageOps.invert(cache_image.split()[3])
+			raw_alpha.paste(cache_alpha, (0, 0), mask)
+			rgb_image.putalpha(raw_alpha)
+		else:
+			rgb_image.putalpha(cache_image.split()[3])
 	else:
-		rgb_image = raw_image.convert(IMAGE_RGB)
+		raw_image = raw_image.convert(IMAGE_GRAY)
+		if pixmap.alpha_channel:
+			raw_alpha = b64decode(pixmap.alpha_channel)
+			raw_alpha = Image.open(StringIO(raw_alpha))
+			rgb_image = raw_image.convert(IMAGE_RGBA)
+			rgb_image.putalpha(raw_alpha)
+		else:
+			rgb_image = raw_image.convert(IMAGE_RGB)
 
 	rgb_image.save(png_stream, format='PNG')
 
 	png_stream.seek(0)
-	image_obj.cache_gray_cdata = cairo.ImageSurface.create_from_png(png_stream)
+	pixmap.cache_gray_cdata = cairo.ImageSurface.create_from_png(png_stream)
 
 def extract_profile(raw_content):
 	profile = None
