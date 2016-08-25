@@ -341,7 +341,6 @@ class MainTab(wal.VPanel):
 
 class CUPS_PrnPropsDialog(PrnProsDialog):
 
-	tabs = []
 
 	def build(self):
 		PrnProsDialog.build(self)
@@ -355,4 +354,3 @@ class CUPS_PrnPropsDialog(PrnProsDialog):
 
 
 
-class PDF_PrnPropsDialog(PrnProsDialog):pass
