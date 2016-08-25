@@ -159,7 +159,7 @@ pdids.ID_CONV_TO_BW:(_('Convert to B&&W'),),
 pdids.ID_INVERT_BITMAP:(_('Invert bitmap'),),
 pdids.ID_REMOVE_ALPHA:(_('Remove alpha-channel'),),
 pdids.ID_INVERT_ALPHA:(_('Invert alpha-channel'),),
-pdids.ID_EXTRACT_BITMAP:(_('Extract embedded bitmap'),),
+pdids.ID_EXTRACT_BITMAP:(_('Extract embedded bitmap...'),),
 
 pdids.ID_EDIT_TEXT:(_('&Edit text'),),
 pdids.ID_TEXT_ON_PATH:(_('Text on path...'),),
@@ -171,12 +171,12 @@ pdids.ID_LOWER_TEXT:(_('Lowercase'),),
 pdids.ID_CAPITALIZE_TEXT:(_('Capitalize'),),
 
 pdids.ID_TOOL_PAGES:(_('Pages'),),
-pdids.ID_TOOL_LAYERS:(_('Layers'),),
+pdids.ID_TOOL_LAYERS:(_('Layers...'),),
 pdids.ID_TOOL_OBJBROWSER:(_('Object browser'),),
 
 pdids.ID_REPORT_BUG:(_('&Report bug'),),
 pdids.ID_APP_WEBSITE:(_('Project web site'),),
 pdids.ID_APP_FORUM:(_('Project forum'),),
 pdids.ID_APP_FBPAGE:(_('Project page on Face&book'),),
-wx.ID_ABOUT:(_('&About sK1'),),
+wx.ID_ABOUT:(_('&About sK1...'),),
 }
