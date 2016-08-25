@@ -185,6 +185,7 @@ class CopiesPanel(wal.LabeledPanel):
 
 	def copies_changed(self):
 		copies = self.num_copies.get_value()
+		print copies
 		pages = self.printout.get_num_print_pages()
 		state = False
 		if pages > 1: state = True
@@ -206,10 +207,16 @@ class CopiesPanel(wal.LabeledPanel):
 
 	def on_printer_change(self, printer):
 		self.printer = printer
+		if self.printer and self.printer.is_virtual():
+			self.num_copies.set_enable(False)
+			self.num_copies.set_value(1)
+			self.collate.set_enable(False)
+			self.collate.set_value(False)
 		self.update()
 
 	def update(self):
-		if self.printer:
+		if self.printer and not self.printer.is_virtual():
+			self.num_copies.set_enable(True)
 			self.printer.set_copies(self.num_copies.get_value())
 			self.printer.set_collate(self.collate.get_value())
 		self.printout.set_reverse(self.reverse.get_value())
