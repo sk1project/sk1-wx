@@ -64,3 +64,4 @@ python-wxgtk2.8 (for sK1 only)
 python-pil 
 python-reportlab
 python-cairo
+python-cups
