@@ -15,4 +15,5 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from cupspropsdlg import CUPS_PrnPropsDialog, PDF_PrnPropsDialog
+from cupspropsdlg import CUPS_PrnPropsDialog
+from pdfpropsdlg import PDF_PrnPropsDialog
