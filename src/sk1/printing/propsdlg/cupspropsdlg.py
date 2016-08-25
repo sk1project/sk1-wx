@@ -281,7 +281,7 @@ class MarginsPanel(wal.LabeledPanel):
 		val3 = self.left_spin.get_point_value()
 		self.printer.margins = (val0, val1, val2, val3)
 
-class MainTab(wal.VPanel):
+class MainPanel(wal.VPanel):
 
 	app = None
 	printer = None
@@ -344,11 +344,11 @@ class CUPS_PrnPropsDialog(PrnProsDialog):
 	def build(self):
 		PrnProsDialog.build(self)
 		self.panel.pack((5, 5))
-		self.main_tab = MainTab(self.panel, self.printer, self.app)
-		self.panel.pack(self.main_tab, fill=True, expand=True)
+		self.main_panel = MainPanel(self.panel, self.printer, self.app)
+		self.panel.pack(self.main_panel, fill=True, expand=True)
 
 	def get_result(self):
-		self.main_tab.save()
+		self.main_panel.save()
 		return True
 
 

@@ -17,12 +17,16 @@
 
 import wal
 
+from uc2 import uc2const
+
+from sk1 import _
+from sk1.resources import get_icon, icons
 
 from generic import PrnProsDialog
 
-class MainTab(wal.VPanel):
 
-	name = _('Main')
+class MainPanel(wal.VPanel):
+
 	app = None
 	printer = None
 	panels = []
@@ -40,9 +44,9 @@ class PDF_PrnPropsDialog(PrnProsDialog):
 	def build(self):
 		PrnProsDialog.build(self)
 		self.panel.pack((5, 5))
-		self.main_tab = MainTab(self.panel, self.printer, self.app)
-		self.panel.pack(self.main_tab, fill=True, expand=True)
+		self.main_panel = MainPanel(self.panel, self.printer, self.app)
+		self.panel.pack(self.main_panel, fill=True, expand=True)
 
 	def get_result(self):
-		self.main_tab.save()
+		self.main_panel.save()
 		return True
