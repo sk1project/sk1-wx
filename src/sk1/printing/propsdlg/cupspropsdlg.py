@@ -283,7 +283,6 @@ class MarginsPanel(wal.LabeledPanel):
 
 class MainTab(wal.VPanel):
 
-	name = _('Main')
 	app = None
 	printer = None
 	panels = []
