@@ -106,7 +106,7 @@ data_files = [
 
 ############################################################
 deb_depends = ['liblcms2-2 (>=2.0)', 'python (>=2.4)', 'python (<<3.0)',
-			'python-cairo', 'python-reportlab', 'python-pil']
+			'python-cairo', 'python-reportlab', 'python-pil', 'python-cups']
 
 #--- Ubuntu <16.04
 deb_depends += ['libmagickwand5', 'python-wxgtk2.8']
