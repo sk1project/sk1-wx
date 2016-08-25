@@ -22,7 +22,11 @@ class AbstractPrinter(object):
 	name = 'Abstract Printer'
 	copies = 1
 	collate = False
+
 	colorspace = uc2const.COLOR_GRAY
+	page_format = ('A4', uc2const.PAGE_FORMATS['A4'])
+	page_orientation = uc2const.PORTRAIT
+	margins = (0.0, 0.0, 0.0, 0.0)
 
 	def get_name(self): return self.name
 	def is_virtual(self): return True
@@ -36,7 +40,11 @@ class AbstractPrinter(object):
 	def set_copies(self, val): self.copies = val
 	def set_collate(self, val): self.collate = val
 	def run_propsdlg(self, win): return False
-	def get_page_size(self): return 10, 10
+
+	def get_page_size(self):
+		if self.page_orientation == uc2const.PORTRAIT:
+			return min(*self.page_format[1]), max(*self.page_format[1])
+		return max(*self.page_format[1]), min(*self.page_format[1])
 
 
 class AbstractPS(object):
