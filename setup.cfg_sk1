@@ -12,7 +12,7 @@ release = 1
 packager = Igor Novikov <igor.e.novikov@gmail.com>
 provides = sk1
 
-#TODO: add wxpython
+#TODO: add wxpython, python-cups
 
 #Fedora dependencies
 #requires = lcms2 pycairo python-pillow python-reportlab
