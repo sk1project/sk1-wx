@@ -36,6 +36,17 @@ class MainPanel(wal.VPanel):
 		self.printer = printer
 		wal.VPanel.__init__(self, parent)
 
+		hpanel = wal.HPanel(self)
+		icon = get_icon(icons.PD_PRINTER_PDF, size=wal.DEF_SIZE)
+		hpanel.pack(wal.Bitmap(hpanel, icon), padding=10)
+
+		self.prnmode_panel = wal.VPanel(hpanel)
+		hpanel.pack(self.prnmode_panel, fill=True, expand=True)
+
+		self.pack(hpanel, fill=True)
+
+		self.pack((5, 5))
+
 	def save(self):
 		for item in self.panels: item.save()
 
