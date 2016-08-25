@@ -115,6 +115,7 @@ encoding//src/sk1/printing/prn_events.py=utf-8
 encoding//src/sk1/printing/propsdlg/__init__.py=utf-8
 encoding//src/sk1/printing/propsdlg/cupspropsdlg.py=utf-8
 encoding//src/sk1/printing/propsdlg/generic.py=utf-8
+encoding//src/sk1/printing/propsdlg/pdfpropsdlg.py=utf-8
 encoding//src/sk1/pwidgets/__init__.py=utf-8
 encoding//src/sk1/pwidgets/actions.py=utf-8
 encoding//src/sk1/pwidgets/colorbtn.py=utf-8
