@@ -374,8 +374,9 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 		self.ctx.restore()
 		self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
 		self.ctx.set_source_rgb(*CAIRO_RED)
+		width = 1.0 / self.zoom
 		self.ctx.set_line_width(1.0 / self.zoom)
-		self.ctx.set_dash([3, 3])
+		self.ctx.set_dash([3 * width, 3 * width])
 		self.ctx.rectangle(*rect)
 		self.ctx.stroke()
 		self.ctx.set_dash([])
