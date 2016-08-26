@@ -17,4 +17,14 @@
 
 
 PDF_SIGNATURE = '%PDF-1'
-PDF_VERSION_DEFAULT = (1, 4)
+
+PDF_1_4 = ((1, 4), '')
+PDF_1_5 = ((1, 5), '')
+PDF_1_6 = ((1, 6), '')
+PDF_1_7 = ((1, 7), '')
+PDF_X_4 = ((1, 4), 'PDF/X-4')
+
+PDF_VERSION_DEFAULT = PDF_X_4
+
+PDF_VERSIONS = (PDF_1_4, PDF_1_5, PDF_1_6, PDF_1_7, PDF_X_4)
+PDF_VER_NAMES = ('PDF 1.4', 'PDF 1.5', 'PDF 1.6', 'PDF 1.7', 'PDF/X-4')
