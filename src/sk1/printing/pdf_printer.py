@@ -15,16 +15,25 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from uc2 import uc2const
 from uc2.formats import data
+from uc2.formats.pdf import pdfconst
 from sk1 import _
 
 from generic import AbstractPrinter
 from propsdlg import PDF_PrnPropsDialog
 
+CUSTOM_SIZE = _('Custom size')
+
 class PDF_Printer(AbstractPrinter):
 
 	name = _('Print to file (PDF)')
 	filepath = ''
+
+	colorspace = uc2const.COLOR_CMYK
+	pdf_version = pdfconst.PDF_X_4
+	compressed = True
+	customs = ((10.0, 10.0), (30000.0, 30000.0))
 
 	def __init__(self):pass
 
@@ -43,4 +52,10 @@ class PDF_Printer(AbstractPrinter):
 	def run_propsdlg(self, win):
 		dlg = PDF_PrnPropsDialog(win, self)
 		dlg.show()
+
+	def get_format_items(self):
+		return uc2const.PAGE_FORMAT_NAMES + [CUSTOM_SIZE, ]
+
+	def is_custom_supported(self):
+		return True
 
