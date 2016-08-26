@@ -185,7 +185,6 @@ class CopiesPanel(wal.LabeledPanel):
 
 	def copies_changed(self):
 		copies = self.num_copies.get_value()
-		print copies
 		pages = self.printout.get_num_print_pages()
 		state = False
 		if pages > 1: state = True
