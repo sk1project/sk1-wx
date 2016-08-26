@@ -29,8 +29,9 @@ from reportlab.lib.colors import CMYKColorSep, Color, CMYKColor
 from uc2 import libgeom, libimg
 from uc2.formats.generic_filters import AbstractSaver
 from uc2 import uc2const
-from pdfconst import PDF_VERSION_DEFAULT
 from uc2.formats.sk2 import sk2_const, sk2_model
+
+from pdfconst import PDF_VERSION_DEFAULT
 
 class UC_PDFInfo(PDFInfo):
 
@@ -48,7 +49,8 @@ class UC_PDFInfo(PDFInfo):
 		D["CreationDate"] = PDFDate(invariant=self.invariant,
 								dateFormatter=self._dateFormatter)
 		D["Producer"] = PDFString(self.producer)
-		D["GTS_PDFXVersion"] = PDFString(self.pdfxversion)
+		if self.pdfxversion:
+			D["GTS_PDFXVersion"] = PDFString(self.pdfxversion)
 		D["Creator"] = PDFString(self.creator)
 		D["Subject"] = PDFString(self.subject)
 		D["Keywords"] = PDFString(self.keywords)
@@ -68,7 +70,7 @@ class PDF_Saver(AbstractSaver):
 
 
 	def do_save(self):
-		self.canvas = Canvas(self.fileptr, pdfVersion=PDF_VERSION_DEFAULT)
+		self.canvas = Canvas(self.fileptr, pdfVersion=PDF_VERSION_DEFAULT[0])
 		self.info = UC_PDFInfo(self.canvas._doc)
 
 		#---PDF doc data
@@ -77,6 +79,8 @@ class PDF_Saver(AbstractSaver):
 		self.info.creator = creator
 		producer = '%s %s' % ('UniConvertor', appdata.version)
 		self.info.producer = producer
+		self.info.pdfxversion = PDF_VERSION_DEFAULT[1]
+
 		metainfo = self.presenter.model.metainfo
 		if metainfo:
 			self.info.author = metainfo[0]
