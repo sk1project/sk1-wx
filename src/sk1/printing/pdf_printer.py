@@ -35,6 +35,11 @@ class PDF_Printer(AbstractPrinter):
 	compressed = True
 	customs = ((10.0, 10.0), (30000.0, 30000.0))
 
+	meta_title = ''
+	meta_subject = ''
+	meta_author = ''
+	meta_keywords = ''
+
 	def __init__(self):pass
 
 	def get_driver_name(self): return _('Internal PDF writer')
