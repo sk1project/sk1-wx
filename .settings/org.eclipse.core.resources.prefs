@@ -224,6 +224,7 @@ encoding//src/uc2/formats/jcw/jcw_utils.py=utf-8
 encoding//src/uc2/formats/pdf/__init__.py=utf-8
 encoding//src/uc2/formats/pdf/pdf_filters.py=utf-8
 encoding//src/uc2/formats/pdf/pdfconst.py=utf-8
+encoding//src/uc2/formats/pdf/pdfgen.py=utf-8
 encoding//src/uc2/formats/pdxf/__init__.py=utf-8
 encoding//src/uc2/formats/pdxf/const.py=utf-8
 encoding//src/uc2/formats/pdxf/crenderer.py=utf-8
