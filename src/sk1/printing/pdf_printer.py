@@ -17,8 +17,10 @@
 
 from uc2 import uc2const
 from uc2.formats import data
-from uc2.formats.pdf import pdfconst
+from uc2.formats.pdf import pdfconst, pdfgen
+
 from sk1 import _
+from sk1.printing import prn_events
 
 from generic import AbstractPrinter
 from propsdlg import PDF_PrnPropsDialog
@@ -57,11 +59,44 @@ class PDF_Printer(AbstractPrinter):
 
 	def run_propsdlg(self, win):
 		dlg = PDF_PrnPropsDialog(win, self)
-		dlg.show()
+		if dlg.show():
+			prn_events.emit(prn_events.PRINTER_MODIFIED)
+			return True
+		return False
 
 	def get_format_items(self):
 		return uc2const.PAGE_FORMAT_NAMES + [CUSTOM_SIZE, ]
 
 	def is_custom_supported(self):
 		return True
+
+	def printing(self, printout):
+		pages = printout.get_print_pages()
+		cms = printout.get_cms()
+		renderer = pdfgen.PDFGenerator(self.filepath, cms, self.pdf_version)
+
+		self.set_meta(renderer, printout.app)
+		renderer.set_compression(self.compressed)
+
+		w, h = self.get_page_size()
+		for page in pages:
+			renderer.start_page(w, h)
+			for group in page.childs:
+				renderer.render(group.childs)
+			renderer.end_page()
+		renderer.save()
+
+	def set_meta(self, renderer, app):
+		appdata = app.appdata
+		creator = '%s %s' % (appdata.app_name, appdata.version)
+		producer = '%s %s' % ('UniConvertor', appdata.version)
+
+		renderer.set_creator(creator)
+		renderer.set_producer(producer)
+		renderer.set_title(self.meta_title)
+		renderer.set_author(self.meta_author)
+		renderer.set_subject(self.meta_subject)
+		renderer.set_keywords(self.meta_keywords)
+
+
 
