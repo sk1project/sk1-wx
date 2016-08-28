@@ -31,6 +31,7 @@ from uc2 import libgeom, libimg
 from uc2.formats.sk2 import sk2_const, sk2_model
 
 from pdfconst import PDF_VERSION_DEFAULT
+from numpy.ma.core import compressed
 
 class UC_PDFInfo(PDFInfo):
 
@@ -61,7 +62,8 @@ class UC_PDFInfo(PDFInfo):
 class PDFGenerator(object):
 
 	canvas = None
-
+	colorspace = None
+	use_spot = True
 
 	def __init__(self, fileptr, cms, version=PDF_VERSION_DEFAULT):
 		self.cms = cms
@@ -69,6 +71,7 @@ class PDFGenerator(object):
 		self.info = UC_PDFInfo(self.canvas._doc)
 		self.info.pdfxversion = version[1]
 		self.info.subject = '---'
+		self.canvas.setPageCompression(1)
 
 	#---PDF doc data
 	def set_creator(self, name): self.info.creator = name
@@ -78,6 +81,10 @@ class PDFGenerator(object):
 	def set_subject(self, subj): self.info.subject = subj
 	def set_keywords(self, keywords): self.info.keywords = keywords
 	#---PDF doc data end
+
+	#---Rendering options
+	def set_compression(self, val=True):
+		self.canvas.setPageCompression(int(val))
 
 	def start_page(self, w, h):
 		self.canvas.translate(w / 2.0, h / 2.0)
