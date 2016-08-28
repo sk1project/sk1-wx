@@ -368,8 +368,9 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 		self.ctx.rectangle(*rect)
 		self.ctx.clip()
 
-		objs = self.pages[self.page_index].childs
-		self.renderer.render(self.ctx, objs)
+		groups = self.pages[self.page_index].childs
+		for group in groups:
+			self.renderer.render(self.ctx, group.childs)
 
 		self.ctx.restore()
 		self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
