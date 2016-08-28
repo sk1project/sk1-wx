@@ -18,10 +18,19 @@
 class PrnPage(object):
 
 	childs = []
+
+	def __init__(self, childs=[]):
+		self.childs = []
+		self.childs.append(TrafoGroup(childs))
+
+class TrafoGroup(object):
+
+	childs = []
 	trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
 
 	def __init__(self, childs=[]):
 		self.childs = childs
+
 
 PRINT_ALL = 0
 PRINT_SELECTION = 1
@@ -97,11 +106,11 @@ class Printout(object):
 	def set_print_range(self, print_range, page_range=[]):
 		self.print_range = print_range
 		self.page_range = page_range
-		self._make_print_pages()
+		self.print_pages = []
 
 	def set_reverse(self, val):
 		self.reverse_flag = val
-		self._make_print_pages()
+		self.print_pages = []
 
 	def get_print_pages(self):
 		if not self.print_pages:
