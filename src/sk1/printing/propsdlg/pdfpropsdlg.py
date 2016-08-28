@@ -36,9 +36,9 @@ class GenModePanel(wal.LabeledPanel):
 		self.printer = printer
 		wal.LabeledPanel.__init__(self, parent, _('Generation options'))
 
-		self.pack((1, 1), expand=True)
+		vpanel = wal.VPanel(self)
 
-		grid = wal.GridPanel(self, 2, 2, 5, 5)
+		grid = wal.GridPanel(vpanel, 2, 2, 2, 3)
 		grid.add_growable_col(1)
 
 		grid.pack(wal.Label(grid, _('PDF version:')))
@@ -51,22 +51,26 @@ class GenModePanel(wal.LabeledPanel):
 		self.cs_combo = wal.Combolist(grid, items=CS)
 		grid.pack(self.cs_combo, fill=True)
 
-		self.pack(grid, fill=True, padding_all=8)
+		vpanel.pack(grid, fill=True)
 
-		hp = wal.HPanel(self)
-		self.compressed = wal.Checkbox(hp, _('Use compression'))
-		hp.pack((10, 5))
-		hp.pack(self.compressed)
-		self.pack(hp, padding_all=3, fill=True)
+		vpanel.pack((3, 3))
 
-		self.pack((1, 1), expand=True)
+		self.use_spot = wal.Checkbox(vpanel, _('Use SPOT colors'))
+		vpanel.pack(self.use_spot, align_center=False)
+
+		self.compressed = wal.Checkbox(vpanel, _('Use compression'))
+		vpanel.pack(self.compressed, align_center=False)
+
+		self.pack(vpanel, fill=True, expand=True, padding_all=5)
 
 		index = pdfconst.PDF_VERSIONS.index(self.printer.pdf_version)
 		self.ver_combo.set_active(index)
 		self.cs_combo.set_active(CS.index(self.printer.colorspace))
+		self.use_spot.set_value(self.printer.use_spot)
 		self.compressed.set_value(self.printer.compressed)
 
 	def save(self):
+		self.printer.use_spot = self.use_spot.get_value()
 		self.printer.compressed = self.compressed.get_value()
 		index = self.ver_combo.get_active()
 		self.printer.pdf_version = pdfconst.PDF_VERSIONS[index]
@@ -84,7 +88,7 @@ class PagePanel(wal.LabeledPanel):
 		self.printer = printer
 		wal.LabeledPanel.__init__(self, parent, _('Document page'))
 
-		grid = wal.GridPanel(self, 3, 2, 5, 5)
+		grid = wal.GridPanel(self, 3, 2, 3, 3)
 		grid.add_growable_col(1)
 
 		grid.pack(wal.Label(grid, _('Page size:')))
@@ -122,7 +126,7 @@ class PagePanel(wal.LabeledPanel):
 
 		grid.pack(hpanel)
 
-		self.pack(grid, fill=True, expand=True, padding_all=10)
+		self.pack(grid, fill=True, expand=True, padding_all=7)
 
 		self.set_data()
 
@@ -207,7 +211,7 @@ class DocInfoPanel(wal.LabeledPanel):
 		self.keywords = wal.Entry(grid, self.printer.meta_keywords)
 		grid.pack(self.keywords, fill=True)
 
-		self.pack(grid, fill=True, expand=True, padding_all=10)
+		self.pack(grid, fill=True, expand=True, padding_all=7)
 
 	def is_metadata(self):
 		metainfo = self.app.current_doc.model.metainfo
@@ -241,7 +245,7 @@ class MainPanel(wal.VPanel):
 
 		hpanel = wal.HPanel(self)
 		icon = get_icon(icons.PD_PRINTER_PDF, size=wal.DEF_SIZE)
-		hpanel.pack(wal.Bitmap(hpanel, icon), padding=10)
+		hpanel.pack(wal.Bitmap(hpanel, icon), padding=5)
 
 		self.prnmode_panel = GenModePanel(hpanel, self.printer)
 		hpanel.pack(self.prnmode_panel, fill=True, expand=True)
