@@ -77,6 +77,8 @@ class PDF_Printer(AbstractPrinter):
 
 		self.set_meta(renderer, printout.app)
 		renderer.set_compression(self.compressed)
+		renderer.set_colorspace(self.colorspace)
+		renderer.set_spot_usage(self.use_spot)
 
 		w, h = self.get_page_size()
 		for page in pages:
