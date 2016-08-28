@@ -33,6 +33,7 @@ class PDF_Printer(AbstractPrinter):
 	colorspace = uc2const.COLOR_CMYK
 	pdf_version = pdfconst.PDF_X_4
 	compressed = True
+	use_spot = False
 	customs = ((10.0, 10.0), (30000.0, 30000.0))
 
 	meta_title = ''
