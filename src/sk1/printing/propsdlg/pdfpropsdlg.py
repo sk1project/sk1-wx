@@ -269,8 +269,8 @@ class PDF_PrnPropsDialog(PrnProsDialog):
 
 	def set_dialog_buttons(self):
 		PrnProsDialog.set_dialog_buttons(self)
-		self.import_btn = wal.Button(self.left_button_box, _('Set metadata'),
-							tooltip=_('Set metadata from current document'),
+		self.import_btn = wal.Button(self.left_button_box, _('Set metainfo'),
+							tooltip=_('Set metainfo from current document'),
 							onclick=self.main_panel.doc_info.import_data)
 		self.left_button_box.pack(self.import_btn)
 		self.import_btn.set_enable(self.main_panel.doc_info.is_metadata())
