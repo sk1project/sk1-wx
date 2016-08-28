@@ -31,7 +31,7 @@ from uc2 import libgeom, libimg
 from uc2.formats.sk2 import sk2_const, sk2_model
 
 from pdfconst import PDF_VERSION_DEFAULT
-from numpy.ma.core import compressed
+
 
 class UC_PDFInfo(PDFInfo):
 
@@ -80,11 +80,18 @@ class PDFGenerator(object):
 	def set_author(self, author): self.info.author = author
 	def set_subject(self, subj): self.info.subject = subj
 	def set_keywords(self, keywords): self.info.keywords = keywords
-	#---PDF doc data end
 
 	#---Rendering options
 	def set_compression(self, val=True):
 		self.canvas.setPageCompression(int(val))
+
+	def set_colorspace(self, cs=None):
+		self.colorspace = cs
+
+	def set_spot_usage(self, val=True):
+		self.use_spot = val
+
+	#---Page processing
 
 	def start_page(self, w, h):
 		self.canvas.translate(w / 2.0, h / 2.0)
@@ -186,23 +193,35 @@ class PDFGenerator(object):
 	def get_pdfcolor(self, color):
 		pdfcolor = None
 		alpha = color[2]
-		if color[0] == uc2const.COLOR_RGB:
-			r, g, b = color[1]
-			pdfcolor = Color(r, g, b, alpha)
-		elif color[0] == uc2const.COLOR_GRAY:
-			k = 1.0 - color[1][0]
-			c = m = y = 0.0
-			pdfcolor = CMYKColor(c, m, y, k, alpha=alpha)
-		elif color[0] == uc2const.COLOR_SPOT:
+		if self.use_spot and color[0] == uc2const.COLOR_SPOT:
 			c, m, y, k = self.cms.get_cmyk_color(color)[1]
 			spotname = color[3]
 			if spotname == uc2const.COLOR_REG: spotname = 'All'
 			pdfcolor = CMYKColorSep(c, m, y, k, spotName=spotname, alpha=alpha)
-		else:
+		elif self.colorspace == uc2const.COLOR_CMYK:
 			c, m, y, k = self.cms.get_cmyk_color(color)[1]
 			pdfcolor = CMYKColor(c, m, y, k, alpha=alpha)
-		if not color[0] == uc2const.COLOR_RGB:
-			self.set_rgb_values(color, pdfcolor)
+		elif self.colorspace == uc2const.COLOR_RGB:
+			r, g, b = self.cms.get_rgb_color(color)[1]
+			return Color(r, g, b, alpha)
+		elif self.colorspace == uc2const.COLOR_GRAY:
+			gray = self.cms.get_grayscale_color(color)
+			k = 1.0 - gray[1][0]
+			c = m = y = 0.0
+			pdfcolor = CMYKColor(c, m, y, k, alpha=alpha)
+		else:
+			if color[0] == uc2const.COLOR_RGB:
+				r, g, b = color[1]
+				return Color(r, g, b, alpha)
+			elif color[0] == uc2const.COLOR_GRAY:
+				k = 1.0 - color[1][0]
+				c = m = y = 0.0
+				pdfcolor = CMYKColor(c, m, y, k, alpha=alpha)
+			else:
+				c, m, y, k = self.cms.get_cmyk_color(color)[1]
+				pdfcolor = CMYKColor(c, m, y, k, alpha=alpha)
+
+		self.set_rgb_values(color, pdfcolor)
 		return pdfcolor
 
 	def stroke_pdfpath(self, pdfpath, stroke_style, stroke_trafo=[]):
