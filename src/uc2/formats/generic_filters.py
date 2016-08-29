@@ -76,7 +76,13 @@ class AbstractLoader(object):
 			msg = _('There is no file for reading')
 			raise IOError(errno.ENODATA, msg, '')
 
-		self.init_load()
+		try:
+			self.init_load()
+		except Exception as inst:
+			print type(inst)
+			print inst.args
+			print inst
+			raise IOError(type(inst), str(inst.args) + '\n' + str(inst), '')
 
 		self.fileptr.close()
 		self.position = 0
@@ -205,7 +211,13 @@ class AbstractSaver(object):
 			raise IOError(errno.ENODATA, msg, '')
 
 		self.presenter.update()
-		self.do_save()
+		try:
+			self.do_save()
+		except Exception as inst:
+			print type(inst)
+			print inst.args
+			print inst
+			raise IOError(type(inst), str(inst.args) + '\n' + str(inst), '')
 		self.fileptr.close()
 		self.fileptr = None
 
