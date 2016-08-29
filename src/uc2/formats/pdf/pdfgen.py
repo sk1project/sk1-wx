@@ -427,11 +427,18 @@ class PDFGenerator(object):
 
 		self.canvas.restoreState()
 
-	def draw_pixmap(self, obj):
-		self.canvas.saveState()
-		self.canvas.transform(*obj.trafo)
-		self.draw_pixmap_obj(obj)
-		self.canvas.restoreState()
+	def draw_image(self, image, alpha_channel=None):
+		if not image: return
+		if self.colorspace == uc2const.COLOR_CMYK:
+			image = self.cms.convert_image(image, uc2const.IMAGE_CMYK)
+		elif self.colorspace == uc2const.COLOR_RGB:
+			image = self.cms.convert_image(image, uc2const.IMAGE_RGB)
+		elif self.colorspace == uc2const.COLOR_GRAY:
+			image = self.cms.convert_image(image, uc2const.IMAGE_GRAY)
+		img = ImageReader(image)
+		img.getRGBData()
+		if alpha_channel: img._dataA = ImageReader(alpha_channel)
+		self.canvas.drawImage(img, 0, 0, mask='auto')
 
 	def draw_pixmap_obj(self, obj):
 		if obj.colorspace in uc2const.DUOTONES:
@@ -447,12 +454,11 @@ class PDFGenerator(object):
 				alpha_chnl.load()
 			self.draw_image(raw_image, alpha_chnl)
 
-	def draw_image(self, image, alpha_channel=None):
-		if not image: return
-		img = ImageReader(image)
-		img.getRGBData()
-		if alpha_channel: img._dataA = ImageReader(alpha_channel)
-		self.canvas.drawImage(img, 0, 0, mask='auto')
+	def draw_pixmap(self, obj):
+		self.canvas.saveState()
+		self.canvas.transform(*obj.trafo)
+		self.draw_pixmap_obj(obj)
+		self.canvas.restoreState()
 
 	def fill_pattern(self, obj, pdfpath, fill_trafo, pattern):
 		if not fill_trafo:
