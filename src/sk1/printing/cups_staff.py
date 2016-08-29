@@ -16,8 +16,10 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import cups
+from tempfile import NamedTemporaryFile
 
 from uc2 import uc2const
+from uc2.formats.pdf import pdfconst, pdfgen
 
 from sk1 import _
 from sk1.printing import prn_events
@@ -209,7 +211,38 @@ class CUPS_Printer(AbstractPrinter):
 			items.append(CUSTOM_SIZE)
 		return items
 
+	def printing(self, printout):
+		fileptr = NamedTemporaryFile(delete=False)
+		pages = printout.get_print_pages()
+		cms = printout.get_cms()
+		renderer = pdfgen.PDFGenerator(fileptr, cms,
+									pdfconst.PDF_VERSION_DEFAULT)
 
+		appdata = printout.app.appdata
+		creator = '%s %s' % (appdata.app_name, appdata.version)
+		producer = '%s %s' % ('UniConvertor', appdata.version)
+		renderer.set_creator(creator)
+		renderer.set_producer(producer)
+		title = '%s - [%s]' % (creator, printout.app.current_doc.doc_name)
+
+		renderer.set_compression(True)
+		renderer.set_colorspace(self.colorspace)
+		renderer.set_spot_usage(False)
+
+		renderer.set_progress_message(_('Printing in progress...'))
+		renderer.set_num_pages(len(pages))
+
+		w, h = self.get_page_size()
+		for page in pages:
+			renderer.start_page(w, h)
+			for group in page.childs:
+				renderer.render(group.childs, True)
+			renderer.end_page()
+		renderer.save()
+
+		fileptr.close()
+
+		self.connection.printFile(self.cups_name, fileptr.name, title, {})
 
 
 
