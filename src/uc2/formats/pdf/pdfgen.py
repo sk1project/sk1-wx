@@ -26,7 +26,7 @@ from reportlab.pdfbase.pdfdoc import PDFInfo, PDFString, PDFDate, PDFDictionary
 from reportlab.lib.utils import ImageReader
 from reportlab.lib.colors import CMYKColorSep, Color, CMYKColor
 
-from uc2 import uc2const
+from uc2 import _, uc2const, events
 from uc2 import libgeom, libimg
 from uc2.formats.sk2 import sk2_const, sk2_model
 
@@ -64,6 +64,9 @@ class PDFGenerator(object):
 	canvas = None
 	colorspace = None
 	use_spot = True
+	num_pages = 0
+	page_count = 0
+	prgs_msg = _('Saving in process...')
 
 	def __init__(self, fileptr, cms, version=PDF_VERSION_DEFAULT):
 		self.cms = cms
@@ -93,18 +96,35 @@ class PDFGenerator(object):
 
 	#---Page processing
 
+	def set_num_pages(self, num=1):
+		self.num_pages = num
+
+	def set_progress_message(self, msg):
+		self.prgs_msg = msg
+
 	def start_page(self, w, h):
 		self.canvas.translate(w / 2.0, h / 2.0)
 		self.canvas.setPageSize((w, h))
+		position = 0.0
+		if self.num_pages:
+			position = float(self.page_count) / float(self.num_pages)
+		events.emit(events.FILTER_INFO, self.prgs_msg, position)
 
 	def end_page(self):
 		self.canvas.showPage()
+		self.page_count += 1
+		position = 1.0
+		if self.num_pages:
+			position = float(self.page_count) / float(self.num_pages)
+		events.emit(events.FILTER_INFO, self.prgs_msg, position)
+
 
 	def save(self):
 		self.canvas.save()
 
 	#--- Rendering
-	def render(self, objs):
+	def render(self, objs, toplevel=False):
+		obj_count = 0
 		for obj in objs:
 			if obj.is_pixmap():
 				self.draw_pixmap(obj)
@@ -118,6 +138,16 @@ class PDFGenerator(object):
 				self.draw_container(obj)
 			else:
 				self.render(obj.childs)
+
+			#---Progress
+			obj_count += 1
+			shift = 0.0
+			page_size = 1.0
+			if self.num_pages:
+				shift = float(self.page_count) / float(self.num_pages)
+				page_size = 1.0 / float(self.num_pages)
+			position = shift + obj_count / len(objs) * page_size
+			events.emit(events.FILTER_INFO, self.prgs_msg, position)
 
 	def draw_curve(self, curve_obj):
 		paths = libgeom.apply_trafo_to_paths(curve_obj.paths, curve_obj.trafo)
