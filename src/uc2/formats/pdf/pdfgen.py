@@ -150,7 +150,7 @@ class PDFGenerator(object):
 		elif fill_style and not fill_style[0] & sk2_const.FILL_CLOSED_ONLY:
 			self.fill_pdfpath(container, pdfpath, fill_style, container.fill_trafo)
 
-		self.process_childs(obj.childs[1:])
+		self.render(obj.childs[1:])
 
 		self.canvas.restoreState()
 
