@@ -17,10 +17,14 @@
 
 import wal
 
+from sk1 import _
+from sk1.dialogs import ProgressDialog, error_dialog
+
 from printdlg import PrintDialog
 from printout import Printout
 
 def print_dlg(parent, presenter):
+	app = presenter.app
 	if wal.is_msw():
 		return
 	else:
@@ -32,4 +36,9 @@ def print_dlg(parent, presenter):
 	printer = dlg.show()
 
 	if printer:
-		printer.printing(printout)
+		pd = ProgressDialog(_('Printing...'), parent)
+		ret = pd.run(printer.printing, [printout, ], save_result=False)
+		pd.destroy()
+		if not ret:
+			msg = _('Error while printing!')
+			error_dialog(parent, app.appdata.app_name, msg)
