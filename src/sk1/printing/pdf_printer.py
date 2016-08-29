@@ -80,11 +80,14 @@ class PDF_Printer(AbstractPrinter):
 		renderer.set_colorspace(self.colorspace)
 		renderer.set_spot_usage(self.use_spot)
 
+		renderer.set_progress_message(_('Printing in progress...'))
+		renderer.set_num_pages(len(pages))
+
 		w, h = self.get_page_size()
 		for page in pages:
 			renderer.start_page(w, h)
 			for group in page.childs:
-				renderer.render(group.childs)
+				renderer.render(group.childs, True)
 			renderer.end_page()
 		renderer.save()
 
