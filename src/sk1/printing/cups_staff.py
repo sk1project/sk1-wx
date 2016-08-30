@@ -15,7 +15,7 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import cups
+import os, cups
 from tempfile import NamedTemporaryFile
 
 from uc2 import uc2const
@@ -212,13 +212,14 @@ class CUPS_Printer(AbstractPrinter):
 		return items
 
 	def printing(self, printout):
-		fileptr = NamedTemporaryFile(delete=False)
+		appdata = printout.app.appdata
+		path = os.path.join(appdata.app_temp_dir, 'printout.pdf')
+		fileptr = open(path, 'wb')
 		pages = printout.get_print_pages()
 		cms = printout.get_cms()
 		renderer = pdfgen.PDFGenerator(fileptr, cms,
 									pdfconst.PDF_VERSION_DEFAULT)
 
-		appdata = printout.app.appdata
 		creator = '%s %s' % (appdata.app_name, appdata.version)
 		producer = '%s %s' % ('UniConvertor', appdata.version)
 		renderer.set_creator(creator)
