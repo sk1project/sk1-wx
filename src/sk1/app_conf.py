@@ -36,20 +36,32 @@ class AppData(UCData):
 	doc_icon = None
 	version = '2.0'
 	revision = 'rc1'
-	app_config_dir = os.path.expanduser(os.path.join('~', '.config', 'sk1-wx'))
-	plugin_dir = os.path.expanduser(os.path.join('~', '.config', 'sk1-wx', \
-												'sk1_custom_plugins'))
+	app_config_dir = ''
+	plugin_dir = ''
+	app_palette_dir = ''
+	app_temp_dir = ''
+	plugin_dirs = []
 	components = []
 
 	def __init__(self, app):
+		#--- Init paths
+		cfgdir = '~'
+		path = os.path.expanduser(os.path.join(cfgdir, '.config', 'sk1-wx'))
+		self.app_config_dir = path
+
 		UCData.__init__(self, app)
 
-		#----------------Check config directories
-		self.app_palette_dir = os.path.join(self.app_config_dir, 'palettes')
-		if not os.path.lexists(self.app_palette_dir):
-			os.makedirs(self.app_palette_dir)
-		if not os.path.lexists(self.plugin_dir):
-			os.makedirs(self.plugin_dir)
+		self.app_palette_dir = os.path.join(path, 'palettes')
+		self.plugin_dir = os.path.join(path, 'sk1_custom_plugins')
+		self.app_temp_dir = os.path.join(path, 'temp')
+
+		#--- Check config directories
+		paths = (self.app_palette_dir, self.plugin_dir, self.app_temp_dir)
+
+		for item in paths:
+			if not os.path.lexists(item):
+				os.makedirs(item)
+
 		plugin_dir_init = os.path.join(self.plugin_dir, '__init__.py')
 		if not os.path.lexists(plugin_dir_init):
 			fp = open(plugin_dir_init, 'w')
