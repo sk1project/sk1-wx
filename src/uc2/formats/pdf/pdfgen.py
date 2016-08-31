@@ -102,8 +102,8 @@ class PDFGenerator(object):
 	def set_progress_message(self, msg):
 		self.prgs_msg = msg
 
-	def start_page(self, w, h):
-		self.canvas.translate(w / 2.0, h / 2.0)
+	def start_page(self, w, h, top_margin=0.0, left_margin=0.0):
+		self.canvas.translate(w / 2.0 - left_margin, h / 2.0 - top_margin)
 		self.canvas.setPageSize((w, h))
 		position = 0.0
 		if self.num_pages:
