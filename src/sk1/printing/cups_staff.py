@@ -16,7 +16,6 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, cups
-from tempfile import NamedTemporaryFile
 
 from uc2 import uc2const
 from uc2.formats.pdf import pdfconst, pdfgen
@@ -69,6 +68,11 @@ CUSTOM_SIZE = _('Custom size')
 
 UNIT_MM = 'mm'
 UNIT_IN = 'in'
+
+ORIENTATION_MAP = {
+uc2const.PORTRAIT:'3',
+uc2const.LANDSCAPE:'4',
+}
 
 
 def process_media_name(name):
@@ -156,7 +160,7 @@ class CUPS_Printer(AbstractPrinter):
 	colorspace = uc2const.COLOR_GRAY
 	page_format = ('A4', uc2const.PAGE_FORMATS['A4'])
 	page_orientation = uc2const.PORTRAIT
-	margins = (10.0, 10.0, 10.0, 10.0)
+	margins = (14.2, 14.2, 14.2, 14.2)
 
 	def __init__(self, connection, cups_name, details):
 		self.connection = connection
@@ -211,6 +215,15 @@ class CUPS_Printer(AbstractPrinter):
 			items.append(CUSTOM_SIZE)
 		return items
 
+	def get_printing_options(self):
+		options = {}
+		options['media'] = self.def_media
+		options['copies'] = str(self.copies)
+		options['print-color-mode'] = self.color_mode
+#		options['orientation-requested'] = ORIENTATION_MAP[self.page_orientation]
+		if self.collate: options['collate'] = 'True'
+		return options
+
 	def printing(self, printout):
 		appdata = printout.app.appdata
 		path = os.path.join(appdata.app_temp_dir, 'printout.pdf')
@@ -243,8 +256,8 @@ class CUPS_Printer(AbstractPrinter):
 
 		fileptr.close()
 
-		self.connection.printFile(self.cups_name, fileptr.name, title, {})
-
+		options = self.get_printing_options()
+		self.connection.printFile(self.cups_name, path, title, options)
 
 
 
