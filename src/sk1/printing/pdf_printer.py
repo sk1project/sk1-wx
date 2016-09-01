@@ -72,8 +72,8 @@ class PDF_Printer(AbstractPrinter):
 
 	def printing(self, printout):
 		pages = printout.get_print_pages()
-		cms = printout.get_cms()
-		renderer = pdfgen.PDFGenerator(self.filepath, cms, self.pdf_version)
+		renderer = pdfgen.PDFGenerator(self.filepath, printout.get_cms(),
+									self.pdf_version)
 
 		self.set_meta(renderer, printout.app)
 		renderer.set_compression(self.compressed)
