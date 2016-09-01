@@ -229,8 +229,7 @@ class CUPS_Printer(AbstractPrinter):
 		path = os.path.join(appdata.app_temp_dir, 'printout.pdf')
 		fileptr = open(path, 'wb')
 		pages = printout.get_print_pages()
-		cms = printout.get_cms()
-		renderer = pdfgen.PDFGenerator(fileptr, cms,
+		renderer = pdfgen.PDFGenerator(fileptr, printout.get_cms(),
 									pdfconst.PDF_VERSION_DEFAULT)
 
 		creator = '%s %s' % (appdata.app_name, appdata.version)
