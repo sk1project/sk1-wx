@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2015-2016 by Igor E. Novikov
 #
 # 	This program is free software: you can redistribute it and/or modify
 # 	it under the terms of the GNU General Public License as published by
@@ -28,6 +28,11 @@ from templates import GridPrefs
 from prefs_fonts import FontPrefs
 
 PREFS_APP = [GeneralPrefs, CMSPrefs, RulersPrefs, PalettesPrefs, FontPrefs]
+
+if wal.is_gtk():
+	from prefs_cups import CUPS_Prefs
+	PREFS_APP += [CUPS_Prefs, ]
+
 PREFS_DOC = [GridPrefs, ]
 
 class PrefsAppItem(RootItem):
