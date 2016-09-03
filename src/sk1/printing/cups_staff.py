@@ -20,7 +20,7 @@ import os, cups
 from uc2 import uc2const
 from uc2.formats.pdf import pdfconst, pdfgen
 
-from sk1 import _
+from sk1 import _, config
 from sk1.printing import prn_events
 from generic import AbstractPrinter, AbstractPS
 from pdf_printer import PDF_Printer
@@ -32,14 +32,15 @@ class CUPS_PS(AbstractPS):
 	printers = []
 	default_printer = ''
 
-	def __init__(self):
+	def __init__(self, physial_only=False):
 		self.connection = cups.Connection()
 		self.printers = []
 		prn_dict = self.connection.getPrinters()
 		for item in prn_dict.keys():
 			prn = CUPS_Printer(self.connection, item, prn_dict[item])
 			self.printers.append(prn)
-		self.printers.append(PDF_Printer())
+		if not physial_only:
+			self.printers.append(PDF_Printer())
 		self.default_printer = self.connection.getDefault()
 
 	def get_default_printer(self):
@@ -47,7 +48,10 @@ class CUPS_PS(AbstractPS):
 			if not item.is_virtual():
 				if item.cups_name == self.default_printer:
 					return item
-		return self.printers[0]
+		if self.printers:
+			return self.printers[0]
+		else:
+			return None
 
 	def get_printer_by_name(self, name):
 		for item in self.printers:
@@ -144,6 +148,11 @@ def process_media(media_list):
 	return sorted_media, media_dict, custon_ranges
 
 
+STD_PAGE_FORMAT = ('A4', uc2const.PAGE_FORMATS['A4'])
+STD_MARGINS = (10.0, 10.0, 10.0, 10.0)
+STD_SHIFTS = (0.0, 0.0)
+
+
 class CUPS_Printer(AbstractPrinter):
 
 	connection = None
@@ -158,15 +167,24 @@ class CUPS_Printer(AbstractPrinter):
 
 	color_mode = MONOCHROME_MODE
 	colorspace = uc2const.COLOR_GRAY
-	page_format = ('A4', uc2const.PAGE_FORMATS['A4'])
+	page_format = STD_PAGE_FORMAT
 	page_orientation = uc2const.PORTRAIT
-	margins = (14.2, 14.2, 14.2, 14.2)
+	margins = STD_MARGINS
+	shifts = STD_SHIFTS
 
 	def __init__(self, connection, cups_name, details):
 		self.connection = connection
 		self.cups_name = cups_name
 		self.details = details
 		self.update_attrs()
+		if self.cups_name in config.printer_config:
+			data = config.printer_config[self.cups_name]
+			self.shifts = data[0]
+			self.margins = data[1]
+
+	def save_config(self):
+		val = [() + self.shifts, () + self.margins]
+		config.printer_config[self.cups_name] = val
 
 	def update_attrs(self):
 		self.attrs = self.connection.getPrinterAttributes(self.cups_name)
