@@ -117,6 +117,8 @@ class AppConfig(UCConfig):
 	make_export_backup = False
 	active_plugins = None
 
+	printer_config = {}
+
 	#===Ubuntu features
 	ubuntu_global_menu = False
 	ubuntu_scrollbar_overlay = False
