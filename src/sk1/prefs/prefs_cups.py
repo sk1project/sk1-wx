@@ -53,7 +53,7 @@ class CUPS_Prefs(PrefPanel):
 		else:
 			self.pack((5, 5), expand=True)
 			self.pack(get_bmp(self, icons.PD_NO_PRINTERS), padding=10)
-			self.pack(wal.Label(self, _('Cannot found installed printers')))
+			self.pack(wal.Label(self, _('Cannot found installed printers!')))
 			self.pack((10, 10))
 			self.pack((5, 5), expand=True)
 		self.built = True
