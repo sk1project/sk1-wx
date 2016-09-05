@@ -31,6 +31,9 @@ class SK2_Presenter(TextModelPresenter):
 	doc_file = ''
 	resources = None
 	cms = None
+	app = None
+	active_page = None
+	doc_name = ''
 
 	def __init__(self, appdata, cnf={}, filepath=None):
 		self.config = SK2_Config()
@@ -38,6 +41,7 @@ class SK2_Presenter(TextModelPresenter):
 		self.config.load(config_file)
 		self.config.update(cnf)
 		self.appdata = appdata
+		self.app = self.appdata.app
 		self.cms = self.appdata.app.default_cms
 		self.loader = SK2_Loader()
 		self.saver = SK2_Saver()
