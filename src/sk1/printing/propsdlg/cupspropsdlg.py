@@ -250,7 +250,7 @@ class MarginsPanel(wal.LabeledPanel):
 
 		wal.LabeledPanel.__init__(self, parent, _('Margins') + ' (%s)' % text)
 
-		self.pack(wal.VPanel(self), expand=True, padding=2)
+		self.pack((1, 1), expand=True, padding=2)
 
 		mrgs = self.printer.margins
 		self.top_spin = StaticUnitSpin(self.app, self, mrgs[0])
@@ -272,7 +272,7 @@ class MarginsPanel(wal.LabeledPanel):
 		self.bottom_spin = StaticUnitSpin(self.app, self, mrgs[2])
 		self.pack(self.bottom_spin)
 
-		self.pack(wal.VPanel(self), expand=True, padding=2)
+		self.pack((1, 1), expand=True, padding=2)
 
 	def save(self):
 		val0 = self.top_spin.get_point_value()
