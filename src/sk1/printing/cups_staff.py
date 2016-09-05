@@ -254,7 +254,7 @@ class CUPS_Printer(AbstractPrinter):
 		producer = '%s %s' % ('UniConvertor', appdata.version)
 		renderer.set_creator(creator)
 		renderer.set_producer(producer)
-		title = '%s - [%s]' % (creator, printout.app.current_doc.doc_name)
+		title = '%s - [%s]' % (creator, printout.doc.doc_name)
 
 		renderer.set_compression(True)
 		renderer.set_colorspace(self.colorspace)
@@ -265,7 +265,7 @@ class CUPS_Printer(AbstractPrinter):
 
 		w, h = self.get_page_size()
 		for page in pages:
-			renderer.start_page(w, h)
+			renderer.start_page(w, h, self.shifts[0], self.shifts[1])
 			for group in page.childs:
 				renderer.render(group.childs, True)
 			renderer.end_page()
