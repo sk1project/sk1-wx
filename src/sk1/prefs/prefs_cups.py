@@ -25,7 +25,7 @@ from sk1 import _, config
 from sk1.resources import icons, get_bmp
 from sk1.printing.cups_staff import CUPS_PS, STD_MARGINS, STD_SHIFTS
 from sk1.pwidgets import StaticUnitSpin
-from sk1.dialogs import ProgressDialog
+from sk1.dialogs import ProgressDialog, error_dialog
 from sk1.printing import Printout
 
 from generic import PrefPanel
@@ -203,6 +203,14 @@ class CUPS_Prefs(PrefPanel):
 			doc_presenter = pd.result
 
 		if doc_presenter:
-			self.active_printer.printing(Printout(doc_presenter))
+			try:
+				self.active_printer.printing(Printout(doc_presenter))
+			except:
+				doc_presenter = None
 
 		pd.destroy()
+
+		if not doc_presenter:
+			txt = _('Error while printing calibration page!')
+			txt += '\n' + _('Check your printer status and connection.')
+			error_dialog(self.dlg, self.app.appdata.app_name, txt)
