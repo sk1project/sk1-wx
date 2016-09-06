@@ -136,15 +136,23 @@ class CUPS_Prefs(PrefPanel):
 
 			#---Calibration page
 			text = _("To measure real print area and vertical/horirizontal "
-				"printing shift just print calibration page on the A4 sheet.")
+			"printing shift just print calibration page on the A4/Letter sheet.")
 
 			label = wal.Label(self, text)
 			label.wrap(470)
 			self.pack(label, fill=True, padding_all=5, align_center=False)
 
-			self.calibrate_btn = wal.Button(self, _('Print calibration page'),
-										onclick=self.print_calibration)
-			self.pack(self.calibrate_btn)
+			self.a4_calibrate_btn = wal.Button(self,
+										_('Print A4 calibration page'),
+										onclick=self.print_calibration_a4)
+			self.pack(self.a4_calibrate_btn)
+
+			self.pack((5, 5))
+
+			self.letter_calibrate_btn = wal.Button(self,
+										_('Print Letter calibration page'),
+										onclick=self.print_calibration_letter)
+			self.pack(self.letter_calibrate_btn)
 
 			self.pack((5, 5))
 
@@ -191,10 +199,18 @@ class CUPS_Prefs(PrefPanel):
 		self.active_printer.margins = STD_MARGINS
 		self.set_data()
 
-	def print_calibration(self):
-		doc_presenter = None
+	def print_calibration_a4(self):
 		path = os.path.join(config.resource_dir, 'templates',
-						'print_calibration.sk2')
+						'print_calibration_a4.sk2')
+		self.print_calibration(path, 'A4')
+
+	def print_calibration_letter(self):
+		path = os.path.join(config.resource_dir, 'templates',
+						'print_calibration_letter.sk2')
+		self.print_calibration(path, 'Letter')
+
+	def print_calibration(self, path, media=''):
+		doc_presenter = None
 		loader = get_loader(path)
 
 		pd = ProgressDialog(_('Loading calibration page...'), self.dlg)
@@ -204,13 +220,13 @@ class CUPS_Prefs(PrefPanel):
 
 		if doc_presenter:
 			try:
-				self.active_printer.printing(Printout(doc_presenter))
+				self.active_printer.printing(Printout(doc_presenter), media)
 			except:
 				doc_presenter = None
 
 		pd.destroy()
 
 		if not doc_presenter:
-			txt = _('Error while printing calibration page!')
+			txt = _('Error while printing of calibration page!')
 			txt += '\n' + _('Check your printer status and connection.')
 			error_dialog(self.dlg, self.app.appdata.app_name, txt)
