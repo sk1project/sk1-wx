@@ -242,7 +242,7 @@ class CUPS_Printer(AbstractPrinter):
 		if self.collate: options['collate'] = 'True'
 		return options
 
-	def printing(self, printout):
+	def printing(self, printout, media=''):
 		appdata = printout.app.appdata
 		path = os.path.join(appdata.app_temp_dir, 'printout.pdf')
 		fileptr = open(path, 'wb')
@@ -274,6 +274,8 @@ class CUPS_Printer(AbstractPrinter):
 		fileptr.close()
 
 		options = self.get_printing_options()
+		if media: options['media'] = media
+
 		self.connection.printFile(self.cups_name, path, title, options)
 
 
