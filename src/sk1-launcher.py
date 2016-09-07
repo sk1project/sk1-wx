@@ -33,7 +33,7 @@ def get_path_var():
 	return os.pathsep.join(ret)
 
 if os.name == 'nt':
-	cur_path = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+	cur_path = '../../sk1-wx-msw'
 
 	devresdir = 'win32-devres'
 	if platform.architecture()[0] == '64bit': devresdir = 'win64-devres'
