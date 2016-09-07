@@ -6,7 +6,7 @@ UniConvertor 2.0 is a multiplatform universal vector graphics translator.
 Uses sK1 2.0 model to convert one format to another. 
 
 sK1 Project (http://sk1project.org),
-Copyright (C) 2004-2015 by Igor E. Novikov
+Copyright (C) 2004-2016 by Igor E. Novikov
 
 How to install: 
 --------------------------------------------------------------------------
