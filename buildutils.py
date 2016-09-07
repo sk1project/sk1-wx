@@ -237,7 +237,7 @@ def compile_sources():
 	compileall.compile_dir('build')
 
 
-def copy_modules(modules):
+def copy_modules(modules, src_root='src'):
 	"""
 	Copies native modules into src/
 	The routine implements build_update command
@@ -260,7 +260,7 @@ def copy_modules(modules):
 	for item in modules:
 		path = os.path.join(*item.name.split('.')) + ext
 		src = os.path.join(prefix, path)
-		dst = os.path.join('src', path)
+		dst = os.path.join(src_root, path)
 		shutil.copy(src, dst)
 		print '>>>Module %s has been copied to src/ directory' % path
 
