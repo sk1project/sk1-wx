@@ -22,6 +22,8 @@ import wal
 from sk1 import _, config, appconst, dialogs
 from sk1.resources import get_icon, icons
 from sk1.printing import prn_events
+from sk1.printing.cups_staff import CUPS_PS
+from sk1.printing.printout import Printout
 from sk1.printing.previewdlg import PreviewDialog
 from sk1.printing.propsdlg import CUPS_PrnPropsDialog, PDF_PrnPropsDialog
 
@@ -34,11 +36,11 @@ class PrintDialog(wal.OkCancelDialog):
 	printer = None
 	printout = None
 
-	def __init__(self, mw, printsys, printout):
+	def __init__(self, mw, doc):
 		self.app = mw.app
 		self.mw = mw
-		self.printsys = printsys
-		self.printout = printout
+		self.printsys = CUPS_PS()
+		self.printout = Printout(doc)
 		self.printer = self.printsys.get_default_printer()
 		size = config.print_dlg_size
 		wal.OkCancelDialog.__init__(self, self.mw, _("Print"), size,
@@ -74,7 +76,7 @@ class PrintDialog(wal.OkCancelDialog):
 		self.left_button_box.pack(self.preview_btn)
 		self.ok_btn.set_enable(self.printer.is_ready())
 
-	def get_result(self): return self.printer
+	def get_result(self): return self.printer, self.printout
 
 	def end_modal(self, ret):
 		prn_events.clean_all_channels()
