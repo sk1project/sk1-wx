@@ -36,6 +36,7 @@ class PreviewCorner(wal.HPanel, wal.Canvas):
 		self.pack((size, size))
 		self.set_bg(wal.WHITE)
 		self.icon = get_icon(icons.ORIGIN_LL)
+		self.set_double_buffered()
 
 	def paint(self):
 		w, h = self.get_size()
@@ -73,6 +74,7 @@ class PreviewRuler(wal.HPanel, wal.Canvas):
 		wal.Canvas.__init__(self)
 		self.pack((size, size))
 		self.set_bg(wal.WHITE)
+		self.set_double_buffered()
 
 	def calc_ruler(self):
 		canvas = self.canvas

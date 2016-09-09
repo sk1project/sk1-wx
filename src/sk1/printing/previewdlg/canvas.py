@@ -124,6 +124,7 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 		self.set_bg(wal.GRAY)
 		self.pages = self.printout.get_print_pages()
 		self.renderer = PreviewRenderer(self.printout.get_cms())
+		self.set_double_buffered()
 
 	def destroy(self):
 		items = self.__dict__.keys()
