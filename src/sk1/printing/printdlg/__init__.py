@@ -53,14 +53,14 @@ class PrintDialog(wal.OkCancelDialog):
 		self.printer = self.general_tab.prn_panel.printer
 		self.nb.add_page(self.general_tab, self.general_tab.name)
 
-		self.layouts_tab = wal.VPanel(self.nb)
-		self.nb.add_page(self.layouts_tab, 'Layouts')
-
-		self.prepress_tab = wal.VPanel(self.nb)
-		self.nb.add_page(self.prepress_tab, 'Prepress')
-
-		self.preflight_tab = wal.VPanel(self.nb)
-		self.nb.add_page(self.preflight_tab, 'Prefligh')
+#		self.layouts_tab = wal.VPanel(self.nb)
+#		self.nb.add_page(self.layouts_tab, 'Layouts')
+#
+#		self.prepress_tab = wal.VPanel(self.nb)
+#		self.nb.add_page(self.prepress_tab, 'Prepress')
+#
+#		self.preflight_tab = wal.VPanel(self.nb)
+#		self.nb.add_page(self.preflight_tab, 'Prefligh')
 
 		self.panel.pack(self.nb, expand=True, fill=True)
 
