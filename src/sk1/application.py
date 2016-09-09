@@ -60,19 +60,19 @@ class pdApplication(wal.Application, UCApplication):
 	plg_area = None
 	print_data = None
 
-	def __init__(self, path):
+	def __init__(self, path, cfgdir='~'):
 
 		self.path = path
 
 		wal.Application.__init__(self)
-		UCApplication.__init__(self, path)
+		UCApplication.__init__(self, path, cfgdir)
 
 		if wal.is_winxp():
 			msg = _('WindowsXP platform is obsolete and not supported!')
 			dialogs.error_dialog(self.mw, 'sK1', msg)
 			sys.exit()
 
-		self.appdata = AppData(self)
+		self.appdata = AppData(self, cfgdir)
 		config.load(self.appdata.app_config)
 		config.resource_dir = os.path.join(path_unicode(self.path), 'share')
 		plg_dir = os.path.join(self.path, 'share', 'pd_plugins')
