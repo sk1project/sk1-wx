@@ -80,6 +80,8 @@ class MSWPrintDialog(wal.SimpleDialog):
 
 		self.pack(r_grid, fill=True, expand=True)
 
+	def get_result(self): return None, self.printout
+
 	def show_modal(self):
 		self.canvas.set_focus()
 		return wal.SimpleDialog.show_modal(self)
@@ -88,3 +90,9 @@ class MSWPrintDialog(wal.SimpleDialog):
 		config.print_preview_dlg_size = self.get_size()
 		self.canvas.destroy()
 		wal.SimpleDialog.end_modal(self, ret)
+
+	def show(self):
+		self.show_modal()
+		ret = self.get_result()
+		self.destroy()
+		return ret
