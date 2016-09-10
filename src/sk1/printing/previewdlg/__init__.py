@@ -40,6 +40,7 @@ class PreviewDialog(wal.SimpleDialog):
 		wal.SimpleDialog.__init__(self, win, title, size,
 								resizable=True, add_line=False, margin=0)
 		self.set_minsize(config.print_preview_dlg_minsize)
+		if config.print_preview_dlg_maximized: self.maximize()
 
 	def build(self):
 		r_grid = wal.GridPanel(self)
@@ -82,6 +83,11 @@ class PreviewDialog(wal.SimpleDialog):
 		return wal.SimpleDialog.show_modal(self)
 
 	def end_modal(self, ret):
-		config.print_preview_dlg_size = self.get_size()
+		if self.is_maximized():
+			config.print_preview_dlg_maximized = True
+			config.print_preview_dlg_size = () + config.print_preview_dlg_minsize
+		else:
+			config.print_preview_dlg_maximized = False
+			config.print_preview_dlg_size = self.get_size()
 		self.canvas.destroy()
 		wal.SimpleDialog.end_modal(self, ret)
