@@ -93,6 +93,7 @@ encoding//src/sk1/parts/tools.py=utf-8
 encoding//src/sk1/prefs/__init__.py=utf-8
 encoding//src/sk1/prefs/collection.py=utf-8
 encoding//src/sk1/prefs/generic.py=utf-8
+encoding//src/sk1/prefs/prefs_canvas.py=utf-8
 encoding//src/sk1/prefs/prefs_cms.py=utf-8
 encoding//src/sk1/prefs/prefs_cups.py=utf-8
 encoding//src/sk1/prefs/prefs_fonts.py=utf-8
