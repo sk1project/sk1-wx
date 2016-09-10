@@ -30,7 +30,7 @@ class SimpleDialog(wx.Dialog):
 	def __init__(self, parent, title, size=(-1, -1), style=VERTICAL,
 				resizable=False, on_load=None, add_line=True, margin=None):
 		dlg_style = wx.DEFAULT_DIALOG_STYLE
-		if resizable:dlg_style |= wx.RESIZE_BORDER
+		if resizable:dlg_style |= wx.RESIZE_BORDER | wx.MAXIMIZE_BOX
 		self.add_line = add_line
 
 		wx.Dialog.__init__(self, parent, -1, title, wx.DefaultPosition,
