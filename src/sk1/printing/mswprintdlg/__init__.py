@@ -36,7 +36,7 @@ class MSWPrintDialog(wal.SimpleDialog):
 	def __init__(self, win, app, doc):
 		self.win = win
 		self.app = app
-		self.printer = MSWPrinter()
+		self.printer = MSWPrinter(app)
 		self.printout = MSWPrintout(doc)
 		size = config.print_preview_dlg_size
 		title = _("Print preview") + ' - %s' % self.printer.get_name()

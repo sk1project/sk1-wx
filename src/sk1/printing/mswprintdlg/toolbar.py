@@ -41,14 +41,14 @@ class PreviewToolbar(wal.HPanel):
 
 		buttons = [
 		None,
+		(icons.PD_PRINT, self.on_print, _('Print')),
+		(icons.PD_PRINT_PREVIEW, self.on_printer_props, _('Printer properties')),
+		None,
 		(icons.PD_ZOOM_IN, self.canvas.zoom_in, _('Zoom in')),
 		(icons.PD_ZOOM_OUT, self.canvas.zoom_out, _('Zoom out')),
 		(icons.PD_ZOOM_PAGE, self.canvas.zoom_fit_to_page, _('Fit to page')),
 		(icons.PD_ZOOM_100, self.canvas.zoom_100, _('Zoom 100%')),
 		None,
-		(icons.PD_PRINT_PREVIEW, self.on_printer_props, _('Printer properties')),
-		(),
-		(icons.PD_QUIT, self.dlg.on_close, _('Close preview'))
 		]
 
 		for item in buttons:
@@ -62,6 +62,10 @@ class PreviewToolbar(wal.HPanel):
 				self.pack((5, 5), expand=True)
 
 	def stub(self):pass
+
+	def on_print(self):
+		if self.printer.run_printdlg(self.dlg):
+			self.dlg.on_close()
 
 	def on_printer_props(self):
 		if self.printer.run_propsdlg(self.dlg):

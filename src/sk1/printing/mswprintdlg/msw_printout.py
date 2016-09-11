@@ -24,3 +24,14 @@ class MSWPrintout(Printout, wx.Printout):
 	def __init__(self, doc):
 		Printout.__init__(self, doc)
 		wx.Printout.__init__(self)
+
+	def HasPage(self, page):
+		if page <= self.get_num_print_pages(): return True
+		else: return False
+
+	def GetPageInfo(self):
+		val = self.get_num_print_pages()
+		return (1, val, 1, val)
+
+	def OnPrintPage(self, page):
+		return True

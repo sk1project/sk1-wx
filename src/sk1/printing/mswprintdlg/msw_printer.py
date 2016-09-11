@@ -20,8 +20,34 @@ import wx
 from sk1 import _
 from sk1.printing.generic import AbstractPrinter
 
-class MSWPrinter(AbstractPrinter, wx.Printer):
+class MSWPrinter(AbstractPrinter):
 
-	def __init__(self):
-		wx.Printer.__init__(self)
+	def __init__(self, app):
+		self.app = app
 		self.name = _('Default printer')
+
+	def get_print_data(self):
+		if self.app.print_data is None:
+			self.app.print_data = self.create_print_data()
+		return self.app.print_data
+
+	def create_print_data(self):
+		print_data = wx.PrintData()
+		print_data.SetPaperId(wx.PAPER_A4)
+		print_data.SetPrintMode(wx.PRINT_MODE_PRINTER)
+		return print_data
+
+	def run_propsdlg(self, win):
+		data = wx.PageSetupDialogData(self.get_print_data())
+		data.CalculatePaperSizeFromId()
+		dlg = wx.PageSetupDialog(win, data)
+		if dlg.ShowModal() == wx.OK:
+			data = wx.PrintData(dlg.GetPageSetupData().GetPrintData())
+			self.app.print_data = data
+			dlg.Destroy()
+			return True
+		return False
+
+	def run_printdlg(self, win):
+		printer = wx.Printer(self.app.print_data)
+		return printer.Print(win, win.printout, True)
