@@ -23,11 +23,12 @@ from sk1.dialogs import ProgressDialog, error_dialog
 def print_dlg(parent, presenter):
 	app = presenter.app
 	printer = None
+	ret = None
 
 	if wal.is_msw():
 		from mswprintdlg import MSWPrintDialog
-		dlg = MSWPrintDialog(parent, app, presenter)
-		ret = dlg.show()
+		MSWPrintDialog(parent, app, presenter).show()
+		return
 	else:
 		from printdlg import PrintDialog
 		dlg = PrintDialog(parent, presenter)
