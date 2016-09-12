@@ -45,7 +45,7 @@ class CUPS_Prefs(PrefPanel):
 		PrefPanel.__init__(self, app, dlg)
 
 	def build(self):
-		self.printsys = CUPS_PS(physial_only=True)
+		self.printsys = CUPS_PS(physical_only=True)
 		self.prn_list = self.printsys.get_printer_names()
 		if self.prn_list:
 			self.active_printer = self.printsys.get_default_printer()
