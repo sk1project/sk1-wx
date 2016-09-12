@@ -32,14 +32,14 @@ class CUPS_PS(AbstractPS):
 	printers = []
 	default_printer = ''
 
-	def __init__(self, physial_only=False):
+	def __init__(self, physical_only=False):
 		self.connection = cups.Connection()
 		self.printers = []
 		prn_dict = self.connection.getPrinters()
 		for item in prn_dict.keys():
 			prn = CUPS_Printer(self.connection, item, prn_dict[item])
 			self.printers.append(prn)
-		if not physial_only:
+		if not physical_only:
 			self.printers.append(PDF_Printer())
 		self.default_printer = self.connection.getDefault()
 
@@ -238,7 +238,7 @@ class CUPS_Printer(AbstractPrinter):
 		options['media'] = self.def_media
 		options['copies'] = str(self.copies)
 		options['print-color-mode'] = self.color_mode
-#		options['orientation-requested'] = ORIENTATION_MAP[self.page_orientation]
+# 		options['orientation-requested'] = ORIENTATION_MAP[self.page_orientation]
 		if self.collate: options['collate'] = 'True'
 		return options
 
