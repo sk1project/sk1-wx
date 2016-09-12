@@ -64,7 +64,7 @@ class PreviewToolbar(wal.HPanel):
 	def stub(self):pass
 
 	def on_print(self):
-		if self.printer.run_printdlg(self.dlg):
+		if self.printer.run_printdlg(self.canvas, self.dlg.printout):
 			self.dlg.on_close()
 
 	def on_printer_props(self):
