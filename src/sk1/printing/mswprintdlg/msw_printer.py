@@ -15,16 +15,77 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import wx
 
-from sk1 import _
-from sk1.printing.generic import AbstractPrinter
+from sk1 import _, config
+from sk1.printing.generic import AbstractPrinter, AbstractPS
 
-class MSWPrinter(AbstractPrinter):
+class MSW_PS(AbstractPS):
+
+	printers = []
+	default_printer = ''
 
 	def __init__(self, app):
 		self.app = app
-		self.name = _('Default printer')
+		self.check_printers()
+
+	def readline(self, fileptr):
+		return fileptr.readline().replace('\n', '').replace('\r', '').strip()
+
+	def check_printers(self):
+		script = os.path.join(config.resource_dir, 'templates',
+						'list_printers.vbs')
+		appdata = self.app.appdata
+		stdout = os.path.join(appdata.app_temp_dir, 'stdout.txt')
+		os.system('cscript.exe %s>%s' % (script, stdout))
+		fileptr = open(stdout, 'rb')
+		line = self.readline(fileptr)
+		while not line == '===': line = self.readline(fileptr)
+		self.printers = []
+		line = self.readline(fileptr)
+		while not line == '===':
+			if '::' in line:
+				name, color = line.split('::', 1)
+				printer = MSWPrinter(self.app, name)
+				if color == '2':printer.color_supported = True
+				self.printers.append(printer)
+			line = self.readline(fileptr)
+		line = self.readline(fileptr)
+		while not line == '===':
+			if '::' in line:
+				name, val = line.split('::', 1)
+				if val == 'True':
+					self.default_printer = name
+					break
+
+	def get_printer_by_name(self, name):
+		for item in self.printers:
+			if item.get_name() == name:
+				return item
+		return None
+
+	def get_default_printer(self):
+		for item in self.printers:
+			if not item.is_virtual():
+				if item.name == self.default_printer:
+					return item
+		if self.printers:
+			return self.printers[0]
+		else:
+			return None
+
+
+class MSWPrinter(AbstractPrinter):
+
+	color_supported = False
+
+	def __init__(self, app, name=_('Default printer')):
+		self.app = app
+		self.name = name
+
+	def is_virtual(self): return False
+	def is_color(self): return self.color_supported
 
 	def get_print_data(self):
 		if self.app.print_data is None:
@@ -48,6 +109,7 @@ class MSWPrinter(AbstractPrinter):
 			return True
 		return False
 
-	def run_printdlg(self, win):
-		printer = wx.Printer(self.app.print_data)
-		return printer.Print(win, win.printout, True)
+	def run_printdlg(self, win, printout):
+		data = wx.PrintDialogData(self.get_print_data())
+		printer = wx.Printer(data)
+		return printer.Print(win, printout, True)
