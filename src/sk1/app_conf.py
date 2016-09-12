@@ -413,6 +413,9 @@ class WinConfig(AppConfig):
 	fill_dlg_size = (440, 395)
 	stroke_dlg_size = (430, 395)
 
+	print_preview_dlg_size = (850, 650)
+	print_preview_dlg_minsize = (850, 650)
+
 
 
 def get_app_config():
