@@ -26,14 +26,14 @@ class MSW_PS(AbstractPS):
 	printers = []
 	default_printer = ''
 
-	def __init__(self, app):
+	def __init__(self, app, physical_only=False):
 		self.app = app
-		self.check_printers()
+		self.collect_printers()
 
 	def readline(self, fileptr):
 		return fileptr.readline().replace('\n', '').replace('\r', '').strip()
 
-	def check_printers(self):
+	def collect_printers(self):
 		script = os.path.join(config.resource_dir, 'templates',
 						'list_printers.vbs')
 		appdata = self.app.appdata
@@ -74,6 +74,12 @@ class MSW_PS(AbstractPS):
 			return self.printers[0]
 		else:
 			return None
+
+	def get_printer_names(self):
+		ret = []
+		for item in self.printers:
+			ret.append(item.get_name())
+		return ret
 
 
 class MSWPrinter(AbstractPrinter):
