@@ -22,7 +22,7 @@ from sk1 import _, config
 from sk1.printing.previewdlg.canvas import PreviewCanvas
 from sk1.printing.previewdlg.ruler import PreviewCorner, PreviewRuler
 
-from msw_printer import MSWPrinter
+from msw_printer import MSWPrinter, MSW_PS
 from msw_printout import MSWPrintout
 from toolbar import PreviewToolbar
 
@@ -36,16 +36,25 @@ class MSWPrintDialog(wal.SimpleDialog):
 	def __init__(self, win, app, doc):
 		self.win = win
 		self.app = app
-		self.printer = MSWPrinter(app)
+		self.msw_ps = MSW_PS(app)
+		self.printer = self.msw_ps.get_default_printer()
 		self.printout = MSWPrintout(doc)
 		size = config.print_preview_dlg_size
 		title = _("Print preview") + ' - %s' % self.printer.get_name()
-		wal.SimpleDialog.__init__(self, win, title, size,
+		wal.SimpleDialog.__init__(self, win, title, size, wal.HORIZONTAL,
 								resizable=True, add_line=False, margin=0)
 		self.set_minsize(config.print_preview_dlg_minsize)
 
 	def build(self):
-		r_grid = wal.GridPanel(self)
+		prnpanel = wal.VPanel(self)
+		prnpanel.pack((300, 10))
+		self.pack(prnpanel)
+
+		self.pack(wal.VLine(self), fill=True)
+
+		cont = wal.VPanel(self)
+
+		r_grid = wal.GridPanel(cont)
 		cv_grid = wal.GridPanel(r_grid)
 		self.canvas = PreviewCanvas(cv_grid, self, self.printer, self.printout)
 
@@ -56,13 +65,13 @@ class MSWPrintDialog(wal.SimpleDialog):
 		vruler = PreviewRuler(r_grid, self.canvas, units, False)
 		vruler.set_bg(wal.WHITE)
 
-		tb = PreviewToolbar(self, self, self.canvas, self.printer)
+		tb = PreviewToolbar(cont, self, self.canvas, self.printer)
 		vscroll = wal.ScrollBar(cv_grid, onscroll=self.canvas._scrolling)
 		hscroll = wal.ScrollBar(cv_grid, False, onscroll=self.canvas._scrolling)
 		self.canvas.set_ctrls(hscroll, vscroll, hruler, vruler, tb.pager)
 
-		self.pack(tb, fill=True)
-		self.pack(wal.HLine(self), fill=True)
+		cont.pack(tb, fill=True)
+		cont.pack(wal.HLine(self), fill=True)
 
 		cv_grid.add_growable_col(0)
 		cv_grid.add_growable_row(0)
@@ -78,7 +87,9 @@ class MSWPrintDialog(wal.SimpleDialog):
 		r_grid.pack(vruler, fill=True)
 		r_grid.pack(cv_grid, fill=True)
 
-		self.pack(r_grid, fill=True, expand=True)
+		cont.pack(r_grid, fill=True, expand=True)
+
+		self.pack(cont, fill=True, expand=True)
 
 	def get_result(self): return None, self.printout
 
