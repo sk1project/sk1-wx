@@ -45,16 +45,26 @@ class AbstractPS(object):
 			ret.append(item.get_name())
 		return ret
 
+
+MONOCHROME_MODE = 'monochrome'
+COLOR_MODE = 'color'
+
+STD_PAGE_FORMAT = ('A4', uc2const.PAGE_FORMATS['A4'])
+STD_MARGINS = (10.0, 10.0, 10.0, 10.0)
+STD_SHIFTS = (0.0, 0.0)
+
 class AbstractPrinter(object):
 
 	name = 'Abstract Printer'
 	copies = 1
 	collate = False
 
+	color_mode = MONOCHROME_MODE
 	colorspace = uc2const.COLOR_GRAY
-	page_format = ('A4', uc2const.PAGE_FORMATS['A4'])
+	page_format = STD_PAGE_FORMAT
 	page_orientation = uc2const.PORTRAIT
-	margins = (0.0, 0.0, 0.0, 0.0)
+	margins = STD_MARGINS
+	shifts = STD_SHIFTS
 
 	def get_name(self): return self.name
 	def get_ps_name(self): return self.name

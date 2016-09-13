@@ -23,6 +23,7 @@ from uc2.formats.pdf import pdfconst, pdfgen
 from sk1 import _, config
 from sk1.printing import prn_events
 from generic import AbstractPrinter, AbstractPS
+from generic import MONOCHROME_MODE, COLOR_MODE
 from pdf_printer import PDF_Printer
 from propsdlg import CUPS_PrnPropsDialog
 
@@ -40,10 +41,6 @@ class CUPS_PS(AbstractPS):
 		if not physical_only:
 			self.printers.append(PDF_Printer())
 		self.default_printer = self.connection.getDefault()
-
-
-MONOCHROME_MODE = 'monochrome'
-COLOR_MODE = 'color'
 
 CUSTOM_SIZE = _('Custom size')
 
@@ -125,11 +122,6 @@ def process_media(media_list):
 	return sorted_media, media_dict, custon_ranges
 
 
-STD_PAGE_FORMAT = ('A4', uc2const.PAGE_FORMATS['A4'])
-STD_MARGINS = (10.0, 10.0, 10.0, 10.0)
-STD_SHIFTS = (0.0, 0.0)
-
-
 class CUPS_Printer(AbstractPrinter):
 
 	connection = None
@@ -142,12 +134,6 @@ class CUPS_Printer(AbstractPrinter):
 	customs = ()
 	def_media = ''
 
-	color_mode = MONOCHROME_MODE
-	colorspace = uc2const.COLOR_GRAY
-	page_format = STD_PAGE_FORMAT
-	page_orientation = uc2const.PORTRAIT
-	margins = STD_MARGINS
-	shifts = STD_SHIFTS
 
 	def __init__(self, connection, cups_name, details):
 		self.connection = connection

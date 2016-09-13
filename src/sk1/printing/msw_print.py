@@ -18,6 +18,8 @@
 import os
 import wx
 
+from uc2 import uc2const
+
 from sk1 import _, config
 from generic import AbstractPrinter, AbstractPS
 
@@ -48,7 +50,9 @@ class MSW_PS(AbstractPS):
 			if '::' in line:
 				name, color = line.split('::', 1)
 				printer = MSWPrinter(self.app, name)
-				if color == '2':printer.color_supported = True
+				if color == '2':
+					printer.color_supported = True
+					printer.colorspace = uc2const.COLOR_RGB
 				self.printers.append(printer)
 			line = self.readline(fileptr)
 		line = self.readline(fileptr)

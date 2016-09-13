@@ -22,13 +22,12 @@ from uc2 import uc2const
 from sk1 import _
 from sk1.resources import get_icon, icons
 from sk1.pwidgets import StaticUnitLabel, StaticUnitSpin
+from sk1.printing.generic import MONOCHROME_MODE, COLOR_MODE
 
 from generic import PrnProsDialog
 
 CS = [uc2const.COLOR_GRAY, uc2const.COLOR_CMYK, uc2const.COLOR_RGB]
 
-MONOCHROME_MODE = 'monochrome'
-COLOR_MODE = 'color'
 
 class PrintModePanel(wal.LabeledPanel):
 
