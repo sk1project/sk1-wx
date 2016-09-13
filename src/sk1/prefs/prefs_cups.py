@@ -23,7 +23,7 @@ from uc2.formats import get_loader
 
 from sk1 import _, config
 from sk1.resources import icons, get_bmp
-from sk1.printing.cups_staff import CUPS_PS, STD_MARGINS, STD_SHIFTS
+from sk1.printing.cups_print import CUPS_PS, STD_MARGINS, STD_SHIFTS
 from sk1.pwidgets import StaticUnitSpin
 from sk1.dialogs import ProgressDialog, error_dialog
 from sk1.printing.printout import Printout

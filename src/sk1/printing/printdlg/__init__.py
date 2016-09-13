@@ -22,7 +22,7 @@ import wal
 from sk1 import _, config, appconst, dialogs
 from sk1.resources import get_icon, icons
 from sk1.printing import prn_events
-from sk1.printing.cups_staff import CUPS_PS
+from sk1.printing.cups_print import CUPS_PS
 from sk1.printing.printout import Printout
 from sk1.printing.previewdlg import PreviewDialog
 from sk1.printing.propsdlg import CUPS_PrnPropsDialog, PDF_PrnPropsDialog
