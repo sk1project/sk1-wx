@@ -29,8 +29,6 @@ from propsdlg import CUPS_PrnPropsDialog
 class CUPS_PS(AbstractPS):
 
 	connection = None
-	printers = []
-	default_printer = ''
 
 	def __init__(self, physical_only=False):
 		self.connection = cups.Connection()
@@ -43,27 +41,6 @@ class CUPS_PS(AbstractPS):
 			self.printers.append(PDF_Printer())
 		self.default_printer = self.connection.getDefault()
 
-	def get_default_printer(self):
-		for item in self.printers:
-			if not item.is_virtual():
-				if item.cups_name == self.default_printer:
-					return item
-		if self.printers:
-			return self.printers[0]
-		else:
-			return None
-
-	def get_printer_by_name(self, name):
-		for item in self.printers:
-			if item.get_name() == name:
-				return item
-		return None
-
-	def get_printer_names(self):
-		ret = []
-		for item in self.printers:
-			ret.append(item.get_name())
-		return ret
 
 MONOCHROME_MODE = 'monochrome'
 COLOR_MODE = 'color'
@@ -202,6 +179,7 @@ class CUPS_Printer(AbstractPrinter):
 
 	def is_virtual(self): return False
 	def get_name(self): return self.details['printer-info']
+	def get_ps_name(self): return self.cups_name
 	def get_driver_name(self): return self.details['printer-make-and-model']
 	def get_connection(self): return self.details['device-uri']
 
@@ -238,7 +216,6 @@ class CUPS_Printer(AbstractPrinter):
 		options['media'] = self.def_media
 		options['copies'] = str(self.copies)
 		options['print-color-mode'] = self.color_mode
-# 		options['orientation-requested'] = ORIENTATION_MAP[self.page_orientation]
 		if self.collate: options['collate'] = 'True'
 		return options
 

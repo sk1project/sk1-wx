@@ -59,32 +59,11 @@ class MSW_PS(AbstractPS):
 					self.default_printer = name
 					break
 
-	def get_printer_by_name(self, name):
-		for item in self.printers:
-			if item.get_name() == name:
-				return item
-		return None
-
-	def get_default_printer(self):
-		for item in self.printers:
-			if not item.is_virtual():
-				if item.name == self.default_printer:
-					return item
-		if self.printers:
-			return self.printers[0]
-		else:
-			return None
-
-	def get_printer_names(self):
-		ret = []
-		for item in self.printers:
-			ret.append(item.get_name())
-		return ret
-
 
 class MSWPrinter(AbstractPrinter):
 
 	color_supported = False
+	name = ''
 
 	def __init__(self, app, name=_('Default printer')):
 		self.app = app
