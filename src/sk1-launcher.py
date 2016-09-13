@@ -33,12 +33,14 @@ def get_path_var():
 	return os.pathsep.join(ret)
 
 if os.name == 'nt':
-	cur_path = '../../sk1-wx-msw'
+
+	cur_path = os.path.abspath('..\\..\\sk1-wx-msw')
 
 	devresdir = 'win32-devres'
 	if platform.architecture()[0] == '64bit': devresdir = 'win64-devres'
 
 	devres = os.path.join(cur_path, devresdir)
+	print devres
 	bindir = os.path.join(devres, 'dlls') + os.pathsep
 	magickdir = os.path.join(devres, 'dlls', 'modules') + os.pathsep
 
@@ -51,5 +53,4 @@ if os.name == 'nt':
 	os.chdir(os.path.join(devres, 'dlls'))
 
 import sk1
-
 sk1.sk1_run()
