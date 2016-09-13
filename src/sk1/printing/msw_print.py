@@ -21,7 +21,7 @@ import wx
 from uc2 import uc2const
 
 from sk1 import _, config
-from generic import AbstractPrinter, AbstractPS
+from generic import AbstractPrinter, AbstractPS, COLOR_MODE
 
 class MSW_PS(AbstractPS):
 
@@ -87,18 +87,33 @@ class MSWPrinter(AbstractPrinter):
 		print_data.SetPrintMode(wx.PRINT_MODE_PRINTER)
 		return print_data
 
+	def update_from_psd(self, page_setup_data):
+		print_data = self.app.print_data
+		self.page_orientation = uc2const.PORTRAIT
+		if print_data.GetOrientation() == wx.LANDSCAPE:
+			self.page_orientation = uc2const.LANDSCAPE
+		page_id = page_setup_data.GetPaperId()
+		w, h = page_setup_data.GetPaperSize()
+		w *= uc2const.mm_to_pt
+		h *= uc2const.mm_to_pt
+		self.page_format = (page_id, (w, h))
+
 	def run_propsdlg(self, win):
 		data = wx.PageSetupDialogData(self.get_print_data())
 		data.CalculatePaperSizeFromId()
 		dlg = wx.PageSetupDialog(win, data)
-		if dlg.ShowModal() == wx.OK:
+		if dlg.ShowModal() == wx.ID_OK:
 			data = wx.PrintData(dlg.GetPageSetupData().GetPrintData())
 			self.app.print_data = data
+			self.update_from_psd(dlg.GetPageSetupData())
 			dlg.Destroy()
 			return True
 		return False
 
 	def run_printdlg(self, win, printout):
-		data = wx.PrintDialogData(self.get_print_data())
+		print_data = self.get_print_data()
+		print_data.SetPrinterName(self.name)
+		print_data.SetColour(self.color_mode == COLOR_MODE)
+		data = wx.PrintDialogData(print_data)
 		printer = wx.Printer(data)
 		return printer.Print(win, printout, True)
