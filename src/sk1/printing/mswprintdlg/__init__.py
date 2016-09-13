@@ -22,8 +22,8 @@ from sk1 import _, config
 from sk1.printing.previewdlg.canvas import PreviewCanvas
 from sk1.printing.previewdlg.ruler import PreviewCorner, PreviewRuler
 
-from msw_printer import MSWPrinter, MSW_PS
-from msw_printout import MSWPrintout
+from sk1.printing.msw_printer import MSWPrinter, MSW_PS
+from sk1.printing.msw_printout import MSWPrintout
 from toolbar import PreviewToolbar
 
 class MSWPrintDialog(wal.SimpleDialog):

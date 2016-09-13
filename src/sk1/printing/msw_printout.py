@@ -17,7 +17,7 @@
 
 import wx
 
-from sk1.printing.printout import Printout
+from printout import Printout
 
 class MSWPrintout(Printout, wx.Printout):
 

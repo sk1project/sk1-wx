@@ -19,7 +19,7 @@ import os
 import wx
 
 from sk1 import _, config
-from sk1.printing.generic import AbstractPrinter, AbstractPS
+from generic import AbstractPrinter, AbstractPS
 
 class MSW_PS(AbstractPS):
 
