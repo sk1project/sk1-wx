@@ -40,7 +40,6 @@ if os.name == 'nt':
 	if platform.architecture()[0] == '64bit': devresdir = 'win64-devres'
 
 	devres = os.path.join(cur_path, devresdir)
-	print devres
 	bindir = os.path.join(devres, 'dlls') + os.pathsep
 	magickdir = os.path.join(devres, 'dlls', 'modules') + os.pathsep
 
