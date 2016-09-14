@@ -105,7 +105,6 @@ encoding//src/sk1/printing/__init__.py=utf-8
 encoding//src/sk1/printing/cups_print.py=utf-8
 encoding//src/sk1/printing/generic.py=utf-8
 encoding//src/sk1/printing/msw_print.py=utf-8
-encoding//src/sk1/printing/msw_printout.py=utf-8
 encoding//src/sk1/printing/mswprintdlg/__init__.py=utf-8
 encoding//src/sk1/printing/mswprintdlg/toolbar.py=utf-8
 encoding//src/sk1/printing/pdf_printer.py=utf-8
