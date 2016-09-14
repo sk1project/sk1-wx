@@ -55,14 +55,14 @@ class PrintDialog(wal.OkCancelDialog):
 		self.printer = self.general_tab.prn_panel.printer
 		self.nb.add_page(self.general_tab, self.general_tab.name)
 
-#		self.layouts_tab = wal.VPanel(self.nb)
-#		self.nb.add_page(self.layouts_tab, 'Layouts')
+# 		self.layouts_tab = wal.VPanel(self.nb)
+# 		self.nb.add_page(self.layouts_tab, 'Layouts')
 #
-#		self.prepress_tab = wal.VPanel(self.nb)
-#		self.nb.add_page(self.prepress_tab, 'Prepress')
+# 		self.prepress_tab = wal.VPanel(self.nb)
+# 		self.nb.add_page(self.prepress_tab, 'Prepress')
 #
-#		self.preflight_tab = wal.VPanel(self.nb)
-#		self.nb.add_page(self.preflight_tab, 'Prefligh')
+# 		self.preflight_tab = wal.VPanel(self.nb)
+# 		self.nb.add_page(self.preflight_tab, 'Prefligh')
 
 		self.panel.pack(self.nb, expand=True, fill=True)
 
@@ -82,6 +82,15 @@ class PrintDialog(wal.OkCancelDialog):
 		prn_events.clean_all_channels()
 		config.print_dlg_size = self.get_size()
 		wal.OkCancelDialog.end_modal(self, ret)
+
+	def show(self):
+		if self.show_modal() == wal.const.BUTTON_OK:
+			printer, printout = self.get_result()
+			win = self.mw
+			self.destroy()
+			printer.run_printdlg(win, printout)
+		else:
+			self.destroy()
 
 	def printer_changed(self, printer):
 		self.printer = printer

@@ -17,6 +17,7 @@
 
 from uc2 import uc2const
 
+from sk1.dialogs import ProgressDialog, error_dialog
 
 class AbstractPS(object):
 
@@ -79,9 +80,19 @@ class AbstractPrinter(object):
 	def set_copies(self, val): self.copies = val
 	def set_collate(self, val): self.collate = val
 	def run_propsdlg(self, win): return False
-	def run_printdlg(self, win, printout): return False
 
 	def get_page_size(self):
 		if self.page_orientation == uc2const.PORTRAIT:
 			return min(*self.page_format[1]), max(*self.page_format[1])
 		return max(*self.page_format[1]), min(*self.page_format[1])
+
+	def run_printdlg(self, win, printout):
+		pd = ProgressDialog(_('Printing...'), win)
+		ret = pd.run(self.printing, [printout, ], save_result=False)
+		pd.destroy()
+		if not ret:
+			msg = _('Error while printing!')
+			error_dialog(win, win.app.appdata.app_name, msg)
+			return False
+		return True
+
