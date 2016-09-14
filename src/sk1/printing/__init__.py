@@ -27,4 +27,4 @@ def print_dlg(parent, presenter):
 		return
 	else:
 		from printdlg import PrintDialog
-		PrintDialog(parent, presenter).show()
+		PrintDialog(parent, app, presenter).show()

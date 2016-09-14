@@ -36,8 +36,8 @@ class PrintDialog(wal.OkCancelDialog):
 	printer = None
 	printout = None
 
-	def __init__(self, mw, doc):
-		self.app = mw.app
+	def __init__(self, mw, app, doc):
+		self.app = app
 		self.mw = mw
 		self.printsys = CUPS_PS()
 		self.printout = Printout(doc)
