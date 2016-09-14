@@ -17,6 +17,7 @@
 
 from uc2 import uc2const
 
+from sk1 import _
 from sk1.dialogs import ProgressDialog, error_dialog
 
 class AbstractPS(object):
