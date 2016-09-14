@@ -23,7 +23,7 @@ from sk1.printing.previewdlg.canvas import PreviewCanvas
 from sk1.printing.previewdlg.ruler import PreviewCorner, PreviewRuler
 
 from sk1.printing.msw_print import MSWPrinter, MSW_PS
-from sk1.printing.msw_printout import MSWPrintout
+from sk1.printing.printout import Printout
 from toolbar import PreviewToolbar
 
 class MSWPrintDialog(wal.SimpleDialog):
@@ -38,7 +38,7 @@ class MSWPrintDialog(wal.SimpleDialog):
 		self.app = app
 		self.msw_ps = MSW_PS(app)
 		self.printer = self.msw_ps.get_default_printer()
-		self.printout = MSWPrintout(doc)
+		self.printout = Printout(doc)
 		size = config.print_preview_dlg_size
 		title = _("Print preview") + ' - %s' % self.printer.get_name()
 		wal.SimpleDialog.__init__(self, win, title, size, wal.HORIZONTAL,
