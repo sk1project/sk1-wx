@@ -15,6 +15,8 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import wx
+
 class PrnPage(object):
 
 	childs = []
@@ -37,7 +39,7 @@ PRINT_SELECTION = 1
 PRINT_CURRENT_PAGE = 2
 PRINT_PAGE_RANGE = 4
 
-class Printout(object):
+class Printout(wx.Printout):
 
 	app = None
 	doc = None
@@ -55,6 +57,7 @@ class Printout(object):
 		self.pages, self.current_page = self.collect_pages(doc)
 		if self.app.insp.is_selection():
 			self.selection = self.doc.selection.objs
+		wx.Printout.__init__(self)
 
 	def collect_pages(self, doc):
 		pages = []
@@ -116,3 +119,16 @@ class Printout(object):
 		if not self.print_pages:
 			self._make_print_pages()
 		return self.print_pages
+
+	#--- wx framework related methods
+
+	def HasPage(self, page):
+		if page <= self.get_num_print_pages(): return True
+		else: return False
+
+	def GetPageInfo(self):
+		val = self.get_num_print_pages()
+		return (1, val, 1, val)
+
+	def OnPrintPage(self, page):
+		return True
