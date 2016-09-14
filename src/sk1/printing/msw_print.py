@@ -21,7 +21,20 @@ import wx
 from uc2 import uc2const
 
 from sk1 import _, config
+from sk1.printing import prn_events
 from generic import AbstractPrinter, AbstractPS, COLOR_MODE
+
+def get_print_data(app):
+	if app.print_data is None:
+		app.print_data = create_print_data()
+	return app.print_data
+
+def create_print_data():
+	print_data = wx.PrintData()
+	print_data.SetPaperId(wx.PAPER_A4)
+	print_data.SetPrintMode(wx.PRINT_MODE_PRINTER)
+	return print_data
+
 
 class MSW_PS(AbstractPS):
 
@@ -63,6 +76,10 @@ class MSW_PS(AbstractPS):
 					self.default_printer = name
 					break
 
+	def get_printer_by_name(self, name):
+		if not name: self.get_default_printer()
+		return AbstractPS.get_printer_by_name(self, name)
+
 
 class MSWPrinter(AbstractPrinter):
 
@@ -76,42 +93,45 @@ class MSWPrinter(AbstractPrinter):
 	def is_virtual(self): return False
 	def is_color(self): return self.color_supported
 
-	def get_print_data(self):
-		if self.app.print_data is None:
-			self.app.print_data = self.create_print_data()
-		return self.app.print_data
-
-	def create_print_data(self):
-		print_data = wx.PrintData()
-		print_data.SetPaperId(wx.PAPER_A4)
-		print_data.SetPrintMode(wx.PRINT_MODE_PRINTER)
-		return print_data
-
 	def update_from_psd(self, page_setup_data):
+		#--- Margins
+		x0, y0 = page_setup_data.GetMarginTopLeft()
+		x1, y1 = page_setup_data.GetMarginBottomRight()
+		mrgns = (y0, x1, y1, x0)
+		self.margins = tuple(map(lambda x:uc2const.mm_to_pt * x, mrgns))
+		#--- Page Orientation
 		print_data = self.app.print_data
 		self.page_orientation = uc2const.PORTRAIT
 		if print_data.GetOrientation() == wx.LANDSCAPE:
 			self.page_orientation = uc2const.LANDSCAPE
+		#--- Page format
 		page_id = page_setup_data.GetPaperId()
-		w, h = page_setup_data.GetPaperSize()
-		w *= uc2const.mm_to_pt
-		h *= uc2const.mm_to_pt
-		self.page_format = (page_id, (w, h))
+		page_size = tuple(page_setup_data.GetPaperSize())
+		page_size = tuple(map(lambda x:uc2const.mm_to_pt * x, page_size))
+		self.page_format = (page_id, page_size)
 
 	def run_propsdlg(self, win):
-		data = wx.PageSetupDialogData(self.get_print_data())
+		print_data = get_print_data(self.app)
+		print_data.SetPrinterName(self.name)
+		data = wx.PageSetupDialogData(print_data)
 		data.CalculatePaperSizeFromId()
+		#--- Margins
+		mrgns = map(lambda x:uc2const.pt_to_mm * x, self.margins)
+		data.SetMarginTopLeft(wx.Point(mrgns[-1], mrgns[0]))
+		data.SetMarginBottomRight(wx.Point(mrgns[1], mrgns[2]))
+
 		dlg = wx.PageSetupDialog(win, data)
 		if dlg.ShowModal() == wx.ID_OK:
 			data = wx.PrintData(dlg.GetPageSetupData().GetPrintData())
 			self.app.print_data = data
 			self.update_from_psd(dlg.GetPageSetupData())
 			dlg.Destroy()
+			prn_events.emit(prn_events.PRINTER_MODIFIED)
 			return True
 		return False
 
 	def run_printdlg(self, win, printout):
-		print_data = self.get_print_data()
+		print_data = get_print_data(self.app)
 		print_data.SetPrinterName(self.name)
 		print_data.SetColour(self.color_mode == COLOR_MODE)
 		data = wx.PrintDialogData(print_data)
