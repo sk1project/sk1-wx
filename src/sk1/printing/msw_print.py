@@ -89,6 +89,7 @@ class MSWPrinter(AbstractPrinter):
 	def __init__(self, app, name=_('Default printer')):
 		self.app = app
 		self.name = name
+		AbstractPrinter.__init__(self)
 
 	def is_virtual(self): return False
 	def is_color(self): return self.color_supported

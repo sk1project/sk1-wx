@@ -143,14 +143,7 @@ class CUPS_Printer(AbstractPrinter):
 		self.cups_name = cups_name
 		self.details = details
 		self.update_attrs()
-		if self.cups_name in config.printer_config:
-			data = config.printer_config[self.cups_name]
-			self.shifts = data[0]
-			self.margins = data[1]
-
-	def save_config(self):
-		val = [() + self.shifts, () + self.margins]
-		config.printer_config[self.cups_name] = val
+		AbstractPrinter.__init__(self)
 
 	def update_attrs(self):
 		self.attrs = self.connection.getPrinterAttributes(self.cups_name)

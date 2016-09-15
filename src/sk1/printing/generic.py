@@ -17,7 +17,7 @@
 
 from uc2 import uc2const
 
-from sk1 import _
+from sk1 import _, config
 from sk1.dialogs import ProgressDialog, error_dialog
 
 class AbstractPS(object):
@@ -67,6 +67,16 @@ class AbstractPrinter(object):
 	page_orientation = uc2const.PORTRAIT
 	margins = STD_MARGINS
 	shifts = STD_SHIFTS
+
+	def __init__(self):
+		if self.get_ps_name() in config.printer_config:
+			data = config.printer_config[self.get_ps_name()]
+			self.shifts = data[0]
+			self.margins = data[1]
+
+	def save_config(self):
+		val = [() + self.shifts, () + self.margins]
+		config.printer_config[self.get_ps_name()] = val
 
 	def get_name(self): return self.name
 	def get_ps_name(self): return self.name
