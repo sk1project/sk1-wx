@@ -27,13 +27,10 @@ from prefs_ruler import RulersPrefs
 from templates import GridPrefs
 from prefs_fonts import FontPrefs
 from prefs_canvas import CanvasPrefs
+from prefs_printers import PrinterPrefs
 
 PREFS_APP = [GeneralPrefs, CMSPrefs, RulersPrefs, PalettesPrefs, FontPrefs,
-			CanvasPrefs, ]
-
-if wal.is_gtk():
-	from prefs_cups import CUPS_Prefs
-	PREFS_APP += [CUPS_Prefs, ]
+			CanvasPrefs, PrinterPrefs, ]
 
 PREFS_DOC = [GridPrefs, ]
 

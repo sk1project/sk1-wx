@@ -26,7 +26,7 @@ from sk1.pwidgets import StaticUnitSpin
 
 from generic import PrefPanel
 
-class Printer_Prefs(PrefPanel):
+class PrinterPrefs(PrefPanel):
 
 	pid = 'Printers'
 	name = _('Printers')
