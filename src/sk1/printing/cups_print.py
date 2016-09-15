@@ -19,13 +19,16 @@ import os, cups
 
 from uc2 import uc2const
 from uc2.formats.pdf import pdfconst, pdfgen
+from uc2.formats import get_loader
 
 from sk1 import _, config
 from sk1.printing import prn_events
-from generic import AbstractPrinter, AbstractPS
-from generic import MONOCHROME_MODE, COLOR_MODE
+from sk1.dialogs import ProgressDialog, error_dialog
+
+from generic import AbstractPrinter, AbstractPS, COLOR_MODE
 from pdf_printer import PDF_Printer
 from propsdlg import CUPS_PrnPropsDialog
+from printout import Printout
 
 class CUPS_PS(AbstractPS):
 
@@ -241,5 +244,35 @@ class CUPS_Printer(AbstractPrinter):
 
 		self.connection.printFile(self.cups_name, path, title, options)
 
+	def print_calibration(self, app, win, path, media=''):
+		doc_presenter = None
+		loader = get_loader(path)
 
+		pd = ProgressDialog(_('Loading calibration page...'), win)
+		ret = pd.run(loader, [app.appdata, path])
+		if ret and not pd.result is None:
+			doc_presenter = pd.result
+
+		if doc_presenter:
+			try:
+				self.printing(Printout(doc_presenter), media)
+			except:
+				doc_presenter = None
+
+		pd.destroy()
+
+		if not doc_presenter:
+			txt = _('Error while printing of calibration page!')
+			txt += '\n' + _('Check your printer status and connection.')
+			error_dialog(win, app.appdata.app_name, txt)
+
+	def print_test_page_a4(self, app, win):
+		path = os.path.join(config.resource_dir, 'templates',
+						'print_calibration_a4.sk2')
+		self.print_calibration(app, win, path, 'A4')
+
+	def print_test_page_letter(self, app, win):
+		path = os.path.join(config.resource_dir, 'templates',
+						'print_calibration_letter.sk2')
+		self.print_calibration(app, win, path, 'Letter')
 

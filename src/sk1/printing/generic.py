@@ -81,6 +81,8 @@ class AbstractPrinter(object):
 	def set_copies(self, val): self.copies = val
 	def set_collate(self, val): self.collate = val
 	def run_propsdlg(self, win): return False
+	def print_test_page_a4(self, win): pass
+	def print_test_page_letter(self, win): pass
 
 	def get_page_size(self):
 		if self.page_orientation == uc2const.PORTRAIT:
