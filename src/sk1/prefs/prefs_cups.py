@@ -15,23 +15,18 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import wal
 
 from uc2 import uc2const
-from uc2.formats import get_loader
 
 from sk1 import _, config
 from sk1.resources import icons, get_bmp
 from sk1.printing.generic import STD_MARGINS, STD_SHIFTS
-from sk1.printing.cups_print import CUPS_PS
 from sk1.pwidgets import StaticUnitSpin
-from sk1.dialogs import ProgressDialog, error_dialog
-from sk1.printing.printout import Printout
 
 from generic import PrefPanel
 
-class CUPS_Prefs(PrefPanel):
+class Printer_Prefs(PrefPanel):
 
 	pid = 'Printers'
 	name = _('Printers')
@@ -45,8 +40,16 @@ class CUPS_Prefs(PrefPanel):
 	def __init__(self, app, dlg, fmt_config=None):
 		PrefPanel.__init__(self, app, dlg)
 
+	def get_printsys(self):
+		if wal.is_msw():
+			from sk1.printing.msw_print import MSW_PS
+			return MSW_PS(self.app, physical_only=True)
+		else:
+			from sk1.printing.cups_print import CUPS_PS
+			return CUPS_PS(physical_only=True)
+
 	def build(self):
-		self.printsys = CUPS_PS(physical_only=True)
+		self.printsys = self.get_printsys()
 		self.prn_list = self.printsys.get_printer_names()
 		if self.prn_list:
 			self.active_printer = self.printsys.get_default_printer()
@@ -201,33 +204,7 @@ class CUPS_Prefs(PrefPanel):
 		self.set_data()
 
 	def print_calibration_a4(self):
-		path = os.path.join(config.resource_dir, 'templates',
-						'print_calibration_a4.sk2')
-		self.print_calibration(path, 'A4')
+		self.active_printer.print_test_page_a4(self.app, self.dlg)
 
 	def print_calibration_letter(self):
-		path = os.path.join(config.resource_dir, 'templates',
-						'print_calibration_letter.sk2')
-		self.print_calibration(path, 'Letter')
-
-	def print_calibration(self, path, media=''):
-		doc_presenter = None
-		loader = get_loader(path)
-
-		pd = ProgressDialog(_('Loading calibration page...'), self.dlg)
-		ret = pd.run(loader, [self.app.appdata, path])
-		if ret and not pd.result is None:
-			doc_presenter = pd.result
-
-		if doc_presenter:
-			try:
-				self.active_printer.printing(Printout(doc_presenter), media)
-			except:
-				doc_presenter = None
-
-		pd.destroy()
-
-		if not doc_presenter:
-			txt = _('Error while printing of calibration page!')
-			txt += '\n' + _('Check your printer status and connection.')
-			error_dialog(self.dlg, self.app.appdata.app_name, txt)
+		self.active_printer.print_test_page_letter(self.app, self.dlg)
