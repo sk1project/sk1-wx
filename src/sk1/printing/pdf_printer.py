@@ -110,9 +110,9 @@ class PDF_Printer(AbstractPrinter):
 		if not self.filepath:
 			doc_file = 'print'
 			doc_file = os.path.join(config.print_dir, doc_file)
-			self.filepath = get_save_file_name(self.win, None, doc_file,
+			self.filepath = get_save_file_name(win, None, doc_file,
 								_('Select output file'), path_only=True,
-								file_types=[self.printer.get_file_type(), ])
+								file_types=[self.get_file_type(), ])
 			if not self.filepath: return False
 		return AbstractPrinter.run_printdlg(self, win, printout)
 
