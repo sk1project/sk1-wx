@@ -36,20 +36,20 @@ class GeneralPrefs(PrefPanel):
 		txt = _('Create new document on start')
 		self.newdoc = wal.Checkbox(self, txt, config.new_doc_on_start)
 		self.pack(self.newdoc, align_center=False, start_padding=5)
-		
-		if wal.is_msw():self.pack((5,5))
-		
+
+		if wal.is_msw():self.pack((5, 5))
+
 		txt = _('Make backup on document save')
 		self.backup = wal.Checkbox(self, txt, config.make_backup)
 		self.pack(self.backup, align_center=False)
-		
-		if wal.is_msw():self.pack((5,5))
+
+		if wal.is_msw():self.pack((5, 5))
 
 		txt = _('Make backup on export')
 		self.expbackup = wal.Checkbox(self, txt, config.make_export_backup)
 		self.pack(self.expbackup, align_center=False)
-		
-		if wal.is_msw():self.pack((5,5))
+
+		if wal.is_msw():self.pack((5, 5))
 
 		grid = wal.GridPanel(self, rows=2, cols=3, hgap=5, vgap=3)
 		grid.pack(wal.Label(grid, _('History log size:')))
@@ -63,14 +63,20 @@ class GeneralPrefs(PrefPanel):
 		grid.pack(self.hist_menu_size)
 		grid.pack(wal.Label(grid, _('records')))
 		self.pack(grid, align_center=False, padding=5)
-		
-		if wal.is_msw():self.pack((5,5))
+
+		if wal.is_msw():self.pack((5, 5))
+
+		txt = _('Make font cache on start')
+		self.fcache = wal.Checkbox(self, txt, config.make_font_cache_on_start)
+		self.pack(self.fcache, align_center=False)
+
+		if wal.is_msw():self.pack((5, 5))
 
 		txt = _('Show quick access buttons')
 		self.stub_buttons = wal.Checkbox(self, txt, config.show_stub_buttons)
 		self.pack(self.stub_buttons, align_center=False)
-		
-		if wal.is_msw():self.pack((5,5))
+
+		if wal.is_msw():self.pack((5, 5))
 
 		if not config.is_mac():
 			txt = _('Use overlay for spinbox widgets (*)')
@@ -107,6 +113,7 @@ class GeneralPrefs(PrefPanel):
 		config.history_size = self.hist_size.get_value()
 		config.history_list_size = self.hist_menu_size.get_value()
 		config.show_stub_buttons = self.stub_buttons.get_value()
+		config.make_font_cache_on_start = self.fcache.get_value()
 		if not config.is_mac():
 			config.spin_overlay = self.spin_overlay.get_value()
 		if config.is_ubuntu():
@@ -121,6 +128,7 @@ class GeneralPrefs(PrefPanel):
 		self.hist_size.set_value(defaults['history_size'])
 		self.hist_menu_size.set_value(defaults['history_list_size'])
 		self.stub_buttons.set_value(defaults['show_stub_buttons'])
+		self.fcache.set_value(defaults['make_font_cache_on_start'])
 		if not config.is_mac():
 			self.spin_overlay.set_value(defaults['spin_overlay'])
 		if config.is_ubuntu():
