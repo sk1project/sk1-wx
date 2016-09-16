@@ -15,12 +15,15 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 from uc2 import uc2const
 from uc2.formats import data
 from uc2.formats.pdf import pdfconst, pdfgen
 
-from sk1 import _
+from sk1 import _, config
 from sk1.printing import prn_events
+from sk1.dialogs import get_save_file_name
 
 from generic import AbstractPrinter
 from propsdlg import PDF_PrnPropsDialog
@@ -102,6 +105,16 @@ class PDF_Printer(AbstractPrinter):
 		renderer.set_author(self.meta_author)
 		renderer.set_subject(self.meta_subject)
 		renderer.set_keywords(self.meta_keywords)
+
+	def run_printdlg(self, win, printout):
+		if not self.filepath:
+			doc_file = 'print'
+			doc_file = os.path.join(config.print_dir, doc_file)
+			self.filepath = get_save_file_name(self.win, None, doc_file,
+								_('Select output file'), path_only=True,
+								file_types=[self.printer.get_file_type(), ])
+			if not self.filepath: return False
+		return AbstractPrinter.run_printdlg(self, win, printout)
 
 
 
