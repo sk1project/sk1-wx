@@ -19,6 +19,7 @@ import wal
 
 from sk1 import _
 from sk1.resources import icons
+from sk1.printing import prn_events
 
 class PreviewToolbar(wal.HPanel):
 
@@ -52,7 +53,6 @@ class PreviewToolbar(wal.HPanel):
 		]
 
 		for item in buttons:
-
 			if item:
 				self.pack(Btn(self, item[0], wal.SIZE_22,
 							tooltip=item[2], onclick=item[1]))
@@ -60,6 +60,8 @@ class PreviewToolbar(wal.HPanel):
 				self.pack(wal.VLine(self), padding_all=5, fill=True)
 			else:
 				self.pack((5, 5), expand=True)
+
+		prn_events.connect(prn_events.PRINTER_CHANGED, self.printer_changed)
 
 	def stub(self):pass
 
@@ -74,3 +76,6 @@ class PreviewToolbar(wal.HPanel):
 	def on_pager_change(self):
 		index = self.pager.get_value()
 		self.canvas.set_page(index - 1)
+
+	def printer_changed(self, printer):
+		self.printer = printer
