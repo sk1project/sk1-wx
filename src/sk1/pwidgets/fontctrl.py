@@ -62,6 +62,11 @@ def generate_fontsample_cache(fonts):
 		bmp = wal.copy_surface_to_bitmap(surface)
 		FONTSAMPLE_CACHE.append(wal.invert_text_bitmap(bmp, color))
 
+def generate_fcache():
+	fonts = libpango.get_fonts()[0]
+	generate_fontname_cache(fonts)
+	generate_fontsample_cache(fonts)
+
 class FontChoice(wal.FontBitmapChoice):
 
 	fonts = []
