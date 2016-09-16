@@ -19,6 +19,7 @@ import wal
 
 from sk1 import _, config
 
+from sk1.printing import prn_events
 from sk1.printing.previewdlg.canvas import PreviewCanvas
 from sk1.printing.previewdlg.ruler import PreviewCorner, PreviewRuler
 
@@ -48,7 +49,8 @@ class MSWPrintDialog(wal.SimpleDialog):
 
 	def build(self):
 		prnpanel = wal.VPanel(self)
-		prnpanel.pack(PrinterPanel(prnpanel, self, self.msw_ps), fill=True)
+		prnpanel.pack(PrinterPanel(prnpanel, self, self.msw_ps, self.printout),
+					fill=True)
 		self.pack(prnpanel, fill=True)
 
 		self.pack(wal.VLine(self), fill=True)
@@ -91,6 +93,7 @@ class MSWPrintDialog(wal.SimpleDialog):
 		cont.pack(r_grid, fill=True, expand=True)
 
 		self.pack(cont, fill=True, expand=True)
+		prn_events.connect(prn_events.PRINTER_CHANGED, self.printer_changed)
 
 	def get_result(self): return None, self.printout
 
@@ -99,6 +102,7 @@ class MSWPrintDialog(wal.SimpleDialog):
 		return wal.SimpleDialog.show_modal(self)
 
 	def end_modal(self, ret):
+		prn_events.clean_all_channels()
 		config.print_preview_dlg_size = self.get_size()
 		self.canvas.destroy()
 		wal.SimpleDialog.end_modal(self, ret)
@@ -108,3 +112,10 @@ class MSWPrintDialog(wal.SimpleDialog):
 		ret = self.get_result()
 		self.destroy()
 		return ret
+
+	def printer_changed(self, printer):
+		self.printer = printer
+		self.canvas.printer = printer
+		self.canvas.refresh()
+		title = _("Print preview") + ' - %s' % self.printer.get_name()
+		self.set_title(title)
