@@ -23,6 +23,7 @@ from uc2 import uc2const
 from sk1 import _, config
 from sk1.printing import prn_events
 from generic import AbstractPrinter, AbstractPS, COLOR_MODE
+from pdf_printer import PDF_Printer
 
 def get_print_data(app):
 	if app.print_data is None:
@@ -44,6 +45,8 @@ class MSW_PS(AbstractPS):
 	def __init__(self, app, physical_only=False):
 		self.app = app
 		self.collect_printers()
+		if not physical_only:
+			self.printers.append(PDF_Printer())
 
 	def readline(self, fileptr):
 		return fileptr.readline().replace('\n', '').replace('\r', '').strip()
