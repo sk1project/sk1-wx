@@ -38,6 +38,7 @@ from sk1.app_cms import AppColorManager
 from sk1.app_palettes import AppPaletteManager
 from sk1.document import PD_Presenter
 from sk1.clipboard import AppClipboard
+from sk1.pwidgets import generate_fcache
 
 class pdApplication(wal.Application, UCApplication):
 
@@ -102,6 +103,7 @@ class pdApplication(wal.Application, UCApplication):
 		self.proxy.update()
 		self.insp.update()
 		if wal.is_wx2(): events.emit(events.NO_DOCS)
+		if config.make_font_cache_on_start: generate_fcache()
 
 	def load_plugins(self):
 		if config.active_plugins:
