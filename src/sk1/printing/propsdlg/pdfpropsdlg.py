@@ -192,7 +192,7 @@ class DocInfoPanel(wal.LabeledPanel):
 		self.app = app
 		wal.LabeledPanel.__init__(self, parent, _('Document metainfo'))
 
-		grid = wal.GridPanel(self, 3, 2, 2, 5)
+		grid = wal.GridPanel(self, 4, 2, 2, 5)
 		grid.add_growable_col(1)
 
 		grid.pack(wal.Label(grid, _('Title:')))
