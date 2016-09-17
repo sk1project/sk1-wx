@@ -26,7 +26,7 @@ from sk1.printing.previewdlg.ruler import PreviewCorner, PreviewRuler
 from sk1.printing.msw_print import MSWPrinter, MSW_PS
 from sk1.printing.printout import Printout
 from toolbar import PreviewToolbar
-from panels import PrinterPanel
+from panels import PrinterPanel, PageRangePanel
 
 class MSWPrintDialog(wal.SimpleDialog):
 
@@ -49,10 +49,16 @@ class MSWPrintDialog(wal.SimpleDialog):
 
 	def build(self):
 		prnpanel = wal.VPanel(self)
+		#--- Control panels
+
 		prnpanel.pack(PrinterPanel(prnpanel, self, self.msw_ps, self.printout),
 					fill=True)
-		self.pack(prnpanel, fill=True)
+		prnpanel.pack(PageRangePanel(prnpanel, self.printout), fill=True)
 
+
+		#--- Control panels end
+
+		self.pack(prnpanel, fill=True)
 		self.pack(wal.VLine(self), fill=True)
 
 		cont = wal.VPanel(self)
