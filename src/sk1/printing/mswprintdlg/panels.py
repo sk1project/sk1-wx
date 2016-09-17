@@ -45,6 +45,53 @@ class FLabeledPanel(wal.VPanel):
 
 	def build(self):pass
 
+class PageRangePanel(FLabeledPanel):
+
+	def __init__(self, parent, printout):
+		self.printout = printout
+		FLabeledPanel.__init__(self, parent, _('Page range'))
+
+	def build(self):
+
+		grid = wal.GridPanel(self.cont, 7, 1, 5, 15)
+		grid.add_growable_col(0)
+		self.all_opt = wal.Radiobutton(grid, _('All'), group=True,
+									onclick=self.update)
+		self.sel_opt = wal.Radiobutton(grid, _('Selection'),
+									onclick=self.update)
+		self.cpage_opt = wal.Radiobutton(grid, _('Current page'),
+									onclick=self.update)
+		self.pages_opt = wal.Radiobutton(grid, _('Pages:'),
+									onclick=self.update)
+		self.pages_entry = wal.Entry(grid, '1', onchange=self.pages_changed)
+		self.pages_entry.set_enable(False)
+		self.all_opt.set_value(True)
+		if not self.printout.is_selection():
+			self.sel_opt.set_enable(False)
+		if not self.printout.get_num_pages() > 1:
+			self.cpage_opt.set_enable(False)
+			self.pages_opt.set_enable(False)
+		grid.pack(self.all_opt)
+		grid.pack(self.sel_opt)
+		grid.pack(self.cpage_opt)
+		hpanel = wal.HPanel(grid)
+		hpanel.pack(self.pages_opt)
+		hpanel.pack(self.pages_entry, fill=True, expand=True)
+		grid.pack(hpanel, fill=True)
+
+		title = _('Enter page numbers or page ranges.')
+		title += '\n' + _('For example: 1,2,5-6')
+		grid.pack(wal.Label(self, title, fontsize=-1))
+		grid.pack((5, 5))
+
+		self.reverse = wal.Checkbox(grid, _('Reverse order'))
+		grid.pack(self.reverse)
+
+		self.cont.pack(grid, fill=True, padding_all=5)
+
+	def update(self):pass
+	def pages_changed(self):pass
+
 
 class PrinterPanel(FLabeledPanel):
 
