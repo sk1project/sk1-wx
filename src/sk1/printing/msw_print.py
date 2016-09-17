@@ -139,5 +139,6 @@ class MSWPrinter(AbstractPrinter):
 		print_data.SetPrinterName(self.name)
 		print_data.SetColour(self.color_mode == COLOR_MODE)
 		data = wx.PrintDialogData(print_data)
+		data.EnablePageNumbers(False)
 		printer = wx.Printer(data)
 		return printer.Print(win, printout, True)
