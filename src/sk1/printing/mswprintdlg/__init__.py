@@ -20,11 +20,11 @@ import wal
 from sk1 import _, config
 
 from sk1.printing import prn_events
-from sk1.printing.previewdlg.canvas import PreviewCanvas
-from sk1.printing.previewdlg.ruler import PreviewCorner, PreviewRuler
-
-from sk1.printing.msw_print import MSWPrinter, MSW_PS
+from sk1.printing.msw_print import MSW_PS
 from sk1.printing.printout import Printout
+
+from canvas import PreviewCanvas
+from ruler import PreviewCorner, PreviewRuler
 from toolbar import PreviewToolbar
 from panels import PrinterPanel, PageRangePanel, CopiesPanel, PrintModePanel
 
