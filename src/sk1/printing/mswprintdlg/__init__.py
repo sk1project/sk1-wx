@@ -26,7 +26,7 @@ from sk1.printing.previewdlg.ruler import PreviewCorner, PreviewRuler
 from sk1.printing.msw_print import MSWPrinter, MSW_PS
 from sk1.printing.printout import Printout
 from toolbar import PreviewToolbar
-from panels import PrinterPanel, PageRangePanel, CopiesPanel
+from panels import PrinterPanel, PageRangePanel, CopiesPanel, PrintModePanel
 
 class MSWPrintDialog(wal.SimpleDialog):
 
@@ -53,6 +53,7 @@ class MSWPrintDialog(wal.SimpleDialog):
 
 		prnpanel.pack(PrinterPanel(prnpanel, self, self.msw_ps, self.printout),
 					fill=True)
+		prnpanel.pack(PrintModePanel(prnpanel, self.printer), fill=True)
 		prnpanel.pack(PageRangePanel(prnpanel, self.printout), fill=True)
 		prnpanel.pack(CopiesPanel(prnpanel, self.printer, self.printout),
 					fill=True)
@@ -103,6 +104,7 @@ class MSWPrintDialog(wal.SimpleDialog):
 		self.pack(cont, fill=True, expand=True)
 		prn_events.connect(prn_events.PRINTER_CHANGED, self.printer_changed)
 		prn_events.connect(prn_events.PRINTOUT_MODIFIED, self.printout_modified)
+		prn_events.connect(prn_events.PRINTER_MODIFIED, self.printer_modified)
 
 	def get_result(self): return None, self.printout
 
@@ -131,5 +133,8 @@ class MSWPrintDialog(wal.SimpleDialog):
 
 	def printout_modified(self):
 		self.canvas.update_pages()
+
+	def printer_modified(self):
+		self.canvas.refresh()
 
 
