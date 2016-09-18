@@ -78,6 +78,17 @@ class AbstractPrinter(object):
 		val = [() + self.shifts, () + self.margins]
 		config.printer_config[self.get_ps_name()] = val
 
+	def is_color(self): return False
+
+	def set_color_mode(self, val=True):
+		if self.is_color():
+			if val:
+				self.color_mode = COLOR_MODE
+				self.colorspace = uc2const.COLOR_CMYK
+			else:
+				self.color_mode = MONOCHROME_MODE
+				self.colorspace = uc2const.COLOR_GRAY
+
 	def get_name(self): return self.name
 	def get_ps_name(self): return self.name
 	def is_virtual(self): return True
