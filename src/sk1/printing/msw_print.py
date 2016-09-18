@@ -22,7 +22,7 @@ from uc2 import uc2const
 
 from sk1 import _, config
 from sk1.printing import prn_events
-from generic import AbstractPrinter, AbstractPS, COLOR_MODE
+from generic import AbstractPrinter, AbstractPS, COLOR_MODE, MONOCHROME_MODE
 from pdf_printer import PDF_Printer
 
 def get_print_data(app):
@@ -69,6 +69,7 @@ class MSW_PS(AbstractPS):
 				if color == '2':
 					printer.color_supported = True
 					printer.colorspace = uc2const.COLOR_RGB
+					printer.color_mode = COLOR_MODE
 				self.printers.append(printer)
 			line = self.readline(fileptr)
 		line = self.readline(fileptr)
@@ -96,6 +97,15 @@ class MSWPrinter(AbstractPrinter):
 
 	def is_virtual(self): return False
 	def is_color(self): return self.color_supported
+
+	def set_color_mode(self, val=True):
+		if self.is_color():
+			if val:
+				self.color_mode = COLOR_MODE
+				self.colorspace = uc2const.COLOR_RGB
+			else:
+				self.color_mode = MONOCHROME_MODE
+				self.colorspace = uc2const.COLOR_GRAY
 
 	def update_from_psd(self, page_setup_data):
 		#--- Margins
