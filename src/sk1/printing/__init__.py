@@ -16,15 +16,8 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wal
-
+from printdlg import PrintDialog
 
 def print_dlg(parent, presenter):
 	app = presenter.app
-
-	if wal.is_msw():
-		from mswprintdlg import MSWPrintDialog
-		MSWPrintDialog(parent, app, presenter).show()
-		return
-	else:
-		from printdlg import PrintDialog
-		PrintDialog(parent, app, presenter).show()
+	PrintDialog(parent, app, presenter).show()
