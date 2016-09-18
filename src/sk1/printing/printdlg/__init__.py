@@ -20,7 +20,6 @@ import wal
 from sk1 import _, config
 
 from sk1.printing import prn_events
-from sk1.printing.msw_print import MSW_PS
 from sk1.printing.printout import Printout
 
 from canvas import PreviewCanvas
@@ -28,7 +27,14 @@ from ruler import PreviewCorner, PreviewRuler
 from toolbar import PreviewToolbar
 from panels import PrinterPanel, PageRangePanel, CopiesPanel, PrintModePanel
 
-class MSWPrintDialog(wal.SimpleDialog):
+def get_printsys(app):
+	if wal.is_msw():
+		from sk1.printing.msw_print import MSW_PS
+		return MSW_PS(app)
+	from sk1.printing.cups_print import CUPS_PS
+	return CUPS_PS()
+
+class PrintDialog(wal.SimpleDialog):
 
 	printer = None
 	printout = None
@@ -38,8 +44,8 @@ class MSWPrintDialog(wal.SimpleDialog):
 	def __init__(self, win, app, doc):
 		self.win = win
 		self.app = app
-		self.msw_ps = MSW_PS(app)
-		self.printer = self.msw_ps.get_default_printer()
+		self.printsys = get_printsys(app)
+		self.printer = self.printsys.get_default_printer()
 		self.printout = Printout(doc)
 		size = config.print_preview_dlg_size
 		title = _("Print preview") + ' - %s' % self.printer.get_name()
@@ -51,7 +57,7 @@ class MSWPrintDialog(wal.SimpleDialog):
 		prnpanel = wal.VPanel(self)
 		#--- Control panels
 
-		prnpanel.pack(PrinterPanel(prnpanel, self, self.msw_ps, self.printout),
+		prnpanel.pack(PrinterPanel(prnpanel, self, self.printsys, self.printout),
 					fill=True)
 		prnpanel.pack(PrintModePanel(prnpanel, self.printer), fill=True)
 		prnpanel.pack(PageRangePanel(prnpanel, self.printout), fill=True)
