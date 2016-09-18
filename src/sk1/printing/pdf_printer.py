@@ -25,7 +25,7 @@ from sk1 import _, config
 from sk1.printing import prn_events
 from sk1.dialogs import get_save_file_name
 
-from generic import AbstractPrinter
+from generic import AbstractPrinter, COLOR_MODE
 from propsdlg import PDF_PrnPropsDialog
 
 CUSTOM_SIZE = _('Custom size')
@@ -35,6 +35,7 @@ class PDF_Printer(AbstractPrinter):
 	name = _('Print to file (PDF)')
 	filepath = ''
 
+	color_mode = COLOR_MODE
 	colorspace = uc2const.COLOR_CMYK
 	pdf_version = pdfconst.PDF_X_4
 	compressed = True
@@ -48,6 +49,7 @@ class PDF_Printer(AbstractPrinter):
 
 	def __init__(self):pass
 
+	def is_color(self): return True
 	def get_driver_name(self): return _('Internal PDF writer')
 	def get_connection(self): return _('Software interface')
 	def get_state(self): return _('Idle')
