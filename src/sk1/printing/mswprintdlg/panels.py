@@ -20,6 +20,7 @@ import wal
 from sk1 import _, config
 from sk1.resources import get_icon, icons
 from sk1.printing import prn_events, printout
+from sk1.printing.generic import MONOCHROME_MODE
 
 SPACER = (10, 10)
 
@@ -39,10 +40,9 @@ class FLabeledPanel(wal.VPanel):
 		hpanel.pack(self.cont, fill=True, expand=True)
 		hpanel.pack(SPACER)
 		self.pack(hpanel, fill=True)
-		panel = wal.VPanel(self)
-		panel.set_bg(wal.UI_COLORS['workspace'])
-		panel.pack((1, 1))
-		self.pack(panel, fill=True)
+
+		self.pack(SPACER)
+		self.pack(wal.HLine(self), fill=True)
 
 	def build(self):pass
 
@@ -84,7 +84,6 @@ class CopiesPanel(FLabeledPanel):
 								onclick=self.flag_changed)
 		hpanel.pack(self.reverse)
 		self.cont.pack(hpanel)
-		self.cont.pack(SPACER)
 
 	def copies_changed(self):
 		copies = self.num_copies.get_value()
@@ -221,6 +220,51 @@ class PageRangePanel(FLabeledPanel):
 		prn_events.emit(prn_events.PRINTOUT_MODIFIED)
 
 
+class PrintModePanel(FLabeledPanel):
+
+	def __init__(self, parent, printer):
+		self.printer = printer
+		FLabeledPanel.__init__(self, parent, _('Print mode'))
+		self.on_printer_changed(self.printer)
+		prn_events.connect(prn_events.PRINTER_CHANGED, self.on_printer_changed)
+		prn_events.connect(prn_events.PRINTER_MODIFIED, self.on_printer_modified)
+
+	def build(self):
+
+		grid = wal.GridPanel(self.cont, 2, 3, 5, 5)
+
+		self.mono_opt = wal.Radiobutton(grid, _('Monochrome'), group=True,
+									onclick=self.update)
+		icon = get_icon(icons.PD_PRINTMODE_MONO, size=wal.DEF_SIZE)
+		self.mono_bmp = wal.Bitmap(grid, icon)
+		grid.pack(SPACER)
+		grid.pack(self.mono_bmp)
+		grid.pack(self.mono_opt)
+
+		self.color_opt = wal.Radiobutton(grid, _('Color'), onclick=self.update)
+		icon = get_icon(icons.PD_PRINTMODE_COLOR, size=wal.DEF_SIZE)
+		self.color_bmp = wal.Bitmap(grid, icon)
+		grid.pack(SPACER)
+		grid.pack(self.color_bmp)
+		grid.pack(self.color_opt)
+		self.cont.pack(grid, align_center=False)
+
+	def update(self):
+		self.printer.set_color_mode(self.mono_opt.get_value() == False)
+		prn_events.emit(prn_events.PRINTER_MODIFIED)
+
+	def on_printer_changed(self, printer):
+		self.printer = printer
+		self.color_opt.set_enable(self.printer.is_color())
+		self.on_printer_modified()
+
+	def on_printer_modified(self):
+		if self.printer.color_mode == MONOCHROME_MODE:
+			self.mono_opt.set_value(True)
+		else:
+			self.color_opt.set_value(True)
+
+
 class PrinterPanel(FLabeledPanel):
 
 	ready_flag = False
@@ -239,12 +283,14 @@ class PrinterPanel(FLabeledPanel):
 		self.prn_list.set_active(plist.index(self.printer.get_name()))
 		self.cont.pack(self.prn_list, fill=True, expand=True)
 
+		self.cont.pack(SPACER)
+
 		hpanel = wal.HPanel(self.cont)
 		hpanel.pack((1, 1), fill=True, expand=True)
 		self.print_btn = wal.Button(hpanel, _('Print'), onclick=self.on_print)
 		hpanel.pack(self.print_btn)
 
-		self.cont.pack(hpanel, fill=True, padding=5)
+		self.cont.pack(hpanel, fill=True)
 		self.ready_flag = True
 
 	def on_printer_change(self):
