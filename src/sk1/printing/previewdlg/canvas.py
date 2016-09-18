@@ -133,6 +133,10 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
 
 	#----- Paging
 
+	def update_pages(self):
+		self.pages = self.printout.get_print_pages()
+		self.refresh()
+
 	def next_page(self):
 		if not self.page_index >= len(self.pages) - 1:
 			self.page_index += 1
