@@ -17,6 +17,8 @@
 
 import wx
 
+from sk1.printing import prn_events
+
 class PrnPage(object):
 
 	childs = []
@@ -110,10 +112,13 @@ class Printout(wx.Printout):
 		self.print_range = print_range
 		self.page_range = page_range
 		self.print_pages = []
+		prn_events.emit(prn_events.PRINTOUT_MODIFIED)
 
 	def set_reverse(self, val):
-		self.reverse_flag = val
-		self.print_pages = []
+		if not self.reverse_flag == val:
+			self.reverse_flag = val
+			self.print_pages = []
+			prn_events.emit(prn_events.PRINTOUT_MODIFIED)
 
 	def get_print_pages(self):
 		if not self.print_pages:
