@@ -15,9 +15,12 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import cairo
 import wx
 
+from uc2 import uc2const
 from sk1.printing import prn_events
+from sk1.printing.printrend import PrintRenderer
 
 class PrnPage(object):
 
@@ -60,6 +63,7 @@ class Printout(wx.Printout):
 		if self.app.insp.is_selection():
 			self.selection = self.doc.selection.objs
 		wx.Printout.__init__(self)
+		self.renderer = PrintRenderer(self.get_cms())
 
 	def collect_pages(self, doc):
 		pages = []
@@ -136,4 +140,25 @@ class Printout(wx.Printout):
 		return (1, val, 1, val)
 
 	def OnPrintPage(self, page):
+		page_obj = self.get_print_pages()[page - 1]
+		dc = self.GetDC()
+		w, h = dc.GetSizeTuple()
+		pw, ph = self.GetPageSizeMM()
+		print 'PPI', self.GetPPIPrinter()
+		print 'DC', w, h
+		print 'Page', pw, ph
+		pw *= uc2const.mm_to_pt
+		ph *= uc2const.mm_to_pt
+
+		trafo = (w / pw, 0, 0, -h / ph, w / 2.0, h / 2.0)
+		matrix = cairo.Matrix(*trafo)
+
+		surface = cairo.Win32PrintingSurface(dc.GetHDC())
+		ctx = cairo.Context(surface)
+		ctx.set_matrix(matrix)
+
+		for group in page_obj.childs:
+			self.renderer.render(ctx, group.childs)
+
 		return True
+
