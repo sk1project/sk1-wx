@@ -148,6 +148,8 @@ class MSWPrinter(AbstractPrinter):
 		print_data = get_print_data(self.app)
 		print_data.SetPrinterName(self.name)
 		print_data.SetColour(self.color_mode == COLOR_MODE)
+		print_data.SetCollate(self.collate)
+		print_data.SetNoCopies(self.copies)
 		data = wx.PrintDialogData(print_data)
 		data.EnablePageNumbers(False)
 		printer = wx.Printer(data)
