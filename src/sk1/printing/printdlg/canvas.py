@@ -20,8 +20,8 @@ import cairo
 import wal
 
 from sk1.appconst import PAGEFIT, ZOOM_IN, ZOOM_OUT
+from sk1.printing.printrend import PrintRenderer
 from kbd_proc import Kbd_Processor
-from printrend import PrintRenderer
 
 CAIRO_BLACK = [0.0, 0.0, 0.0]
 CAIRO_GRAY = [0.0, 0.0, 0.0, 0.5]
