@@ -300,4 +300,5 @@ class PrinterPanel(FLabeledPanel):
 		prn_events.emit(prn_events.PRINTER_CHANGED, self.printer)
 
 	def on_print(self):
-		self.printer.run_printdlg(self.win, self.printout)
+		if self.printer.run_printdlg(self.win, self.printout):
+			self.win.on_close()
