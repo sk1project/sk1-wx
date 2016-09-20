@@ -42,7 +42,7 @@ class PreviewToolbar(wal.HPanel):
 
 		buttons = [
 		None,
-		(icons.PD_PRINT, self.on_print, _('Print')),
+		(icons.PD_PRINT, self.dlg.on_print, _('Print')),
 		(icons.PD_PRINT_PREVIEW, self.on_printer_props, _('Printer properties')),
 		None,
 		(icons.PD_ZOOM_IN, self.canvas.zoom_in, _('Zoom in')),
@@ -64,10 +64,6 @@ class PreviewToolbar(wal.HPanel):
 		prn_events.connect(prn_events.PRINTER_CHANGED, self.printer_changed)
 
 	def stub(self):pass
-
-	def on_print(self):
-		if self.printer.run_printdlg(self.canvas, self.dlg.printout):
-			self.dlg.on_close()
 
 	def on_printer_props(self):
 		if self.printer.run_propsdlg(self.dlg):

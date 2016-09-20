@@ -57,8 +57,7 @@ class PrintDialog(wal.SimpleDialog):
 		prnpanel = wal.VPanel(self)
 		#--- Control panels
 
-		prnpanel.pack(PrinterPanel(prnpanel, self, self.printsys, self.printout),
-					fill=True)
+		prnpanel.pack(PrinterPanel(prnpanel, self, self.printsys), fill=True)
 		prnpanel.pack(PrintModePanel(prnpanel, self.printer), fill=True)
 		prnpanel.pack(PageRangePanel(prnpanel, self.printout), fill=True)
 		prnpanel.pack(CopiesPanel(prnpanel, self.printer, self.printout),
@@ -142,5 +141,11 @@ class PrintDialog(wal.SimpleDialog):
 
 	def printer_modified(self):
 		self.canvas.refresh()
+
+	def on_print(self):
+		parent = self
+		if wal.is_msw():parent = self.canvas
+		if self.printer.run_printdlg(parent, self.printout):
+			self.on_close()
 
 

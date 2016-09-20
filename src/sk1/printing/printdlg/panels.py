@@ -269,10 +269,9 @@ class PrinterPanel(FLabeledPanel):
 
 	ready_flag = False
 
-	def __init__(self, parent, win, printsys, printout):
+	def __init__(self, parent, dlg, printsys):
 		self.printsys = printsys
-		self.printout = printout
-		self.win = win
+		self.dlg = dlg
 		self.printer = self.printsys.get_default_printer()
 		FLabeledPanel.__init__(self, parent, _('Printer'))
 
@@ -287,7 +286,8 @@ class PrinterPanel(FLabeledPanel):
 
 		hpanel = wal.HPanel(self.cont)
 		hpanel.pack((1, 1), fill=True, expand=True)
-		self.print_btn = wal.Button(hpanel, _('Print'), onclick=self.on_print)
+		self.print_btn = wal.Button(hpanel, _('Print'),
+								onclick=self.dlg.on_print)
 		hpanel.pack(self.print_btn)
 
 		self.cont.pack(hpanel, fill=True)
@@ -298,7 +298,3 @@ class PrinterPanel(FLabeledPanel):
 		name = self.prn_list.get_active_value()
 		self.printer = self.printsys.get_printer_by_name(name)
 		prn_events.emit(prn_events.PRINTER_CHANGED, self.printer)
-
-	def on_print(self):
-		if self.printer.run_printdlg(self.win, self.printout):
-			self.win.on_close()
