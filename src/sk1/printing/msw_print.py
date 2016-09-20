@@ -19,11 +19,15 @@ import os
 import wx
 
 from uc2 import uc2const
+from uc2.formats import get_loader
 
 from sk1 import _, config
 from sk1.printing import prn_events
+from sk1.dialogs import ProgressDialog, error_dialog
+
 from generic import AbstractPrinter, AbstractPS, COLOR_MODE, MONOCHROME_MODE
 from pdf_printer import PDF_Printer
+from printout import Printout
 
 def get_print_data(app):
 	if app.print_data is None:
@@ -145,6 +149,7 @@ class MSWPrinter(AbstractPrinter):
 		return False
 
 	def run_printdlg(self, win, printout):
+		printout.shifts = () + self.shifts  
 		print_data = get_print_data(self.app)
 		print_data.SetPrinterName(self.name)
 		print_data.SetColour(self.color_mode == COLOR_MODE)
@@ -154,3 +159,35 @@ class MSWPrinter(AbstractPrinter):
 		data.EnablePageNumbers(False)
 		printer = wx.Printer(data)
 		return printer.Print(win, printout, True)
+
+	def print_calibration(self, app, win, path, media=''):
+		doc_presenter = None
+		loader = get_loader(path)
+
+		pd = ProgressDialog(_('Loading calibration page...'), win)
+		ret = pd.run(loader, [app.appdata, path])
+		if ret and not pd.result is None:
+			doc_presenter = pd.result
+
+		pd.destroy()
+
+		if doc_presenter:
+			try:
+				self.run_printdlg(win, Printout(doc_presenter))
+			except:
+				doc_presenter = None
+
+		if not doc_presenter:
+			txt = _('Error while printing of calibration page!')
+			txt += '\n' + _('Check your printer status and connection.')
+			error_dialog(win, app.appdata.app_name, txt)
+
+	def print_test_page_a4(self, app, win):
+		path = os.path.join(config.resource_dir, 'templates',
+						'print_calibration_a4.sk2')
+		self.print_calibration(app, win, path, 'A4')
+
+	def print_test_page_letter(self, app, win):
+		path = os.path.join(config.resource_dir, 'templates',
+						'print_calibration_letter.sk2')
+		self.print_calibration(app, win, path, 'Letter')
