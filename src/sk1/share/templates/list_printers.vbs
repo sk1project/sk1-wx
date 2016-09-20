@@ -13,7 +13,9 @@ Wscript.Echo "==="
 
 Set colInstalledPrinters = objWMIService.ExecQuery ("Select * from Win32_Printer")
 For Each objPrinter in colInstalledPrinters
-    Wscript.Echo objPrinter.Name & "::" & objPrinter.Default
+    val = "False"
+    IF objPrinter.Default THEN val = "True"
+    Wscript.Echo objPrinter.Name & "::" & val
 Next
 
 
