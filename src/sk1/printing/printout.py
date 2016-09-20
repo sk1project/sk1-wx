@@ -21,6 +21,7 @@ import wx
 from uc2 import uc2const
 from sk1.printing import prn_events
 from sk1.printing.printrend import PrintRenderer
+from generic import STD_SHIFTS
 
 class PrnPage(object):
 
@@ -55,6 +56,7 @@ class Printout(wx.Printout):
 	print_range = PRINT_ALL
 	page_range = []
 	print_pages = []
+	shifts = STD_SHIFTS
 
 	def __init__(self, doc):
 		self.app = doc.app
@@ -144,13 +146,12 @@ class Printout(wx.Printout):
 		dc = self.GetDC()
 		w, h = dc.GetSizeTuple()
 		pw, ph = self.GetPageSizeMM()
-		print 'PPI', self.GetPPIPrinter()
-		print 'DC', w, h
-		print 'Page', pw, ph
 		pw *= uc2const.mm_to_pt
 		ph *= uc2const.mm_to_pt
 
-		trafo = (w / pw, 0, 0, -h / ph, w / 2.0, h / 2.0)
+		trafo = (w / pw, 0, 0, -h / ph,
+				w / 2.0 - self.shifts[0], h / 2.0 - self.shifts[1]) 
+		
 		matrix = cairo.Matrix(*trafo)
 
 		surface = cairo.Win32PrintingSurface(dc.GetHDC())
