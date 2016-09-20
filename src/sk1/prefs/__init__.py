@@ -29,8 +29,10 @@ from prefs_fonts import FontPrefs
 from prefs_canvas import CanvasPrefs
 from prefs_printers import PrinterPrefs
 
-PREFS_APP = [GeneralPrefs, CMSPrefs, RulersPrefs, PalettesPrefs, FontPrefs,
-			CanvasPrefs, PrinterPrefs, ]
+PREFS_APP = [GeneralPrefs, CMSPrefs, RulersPrefs,
+			PalettesPrefs, FontPrefs,
+#			CanvasPrefs,
+			PrinterPrefs, ]
 
 PREFS_DOC = [GridPrefs, ]
 
