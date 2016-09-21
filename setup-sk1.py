@@ -104,6 +104,8 @@ data_files = [
 ('/usr/share/pixmaps', ['src/sk1.png', 'src/sk1.xpm', ]),
 ]
 
+EXCLUDES = ['sword', ]
+
 ############################################################
 deb_depends = ['liblcms2-2 (>=2.0)', 'python (>=2.4)', 'python (<<3.0)',
 			'python-cairo', 'python-reportlab', 'python-pil', 'python-cups']
@@ -218,12 +220,13 @@ setup(name=NAME,
 	download_url=DOWNLOAD_URL,
 	long_description=LONG_DESCRIPTION,
 	classifiers=CLASSIFIERS,
-	packages=buildutils.get_source_structure(),
-	package_dir=buildutils.get_package_dirs(),
+	packages=buildutils.get_source_structure(excludes=EXCLUDES),
+	package_dir=buildutils.get_package_dirs(excludes=EXCLUDES),
 	package_data=package_data,
 	data_files=data_files,
 	scripts=scripts,
 	ext_modules=modules)
+
 
 ############################################################
 # .py source compiling
@@ -252,7 +255,7 @@ if DEB_PACKAGE:
 					homepage=URL,
 					description=DESCRIPTION,
 					long_description=LONG_DEB_DESCRIPTION,
-					package_dirs=buildutils.get_package_dirs(),
+					package_dirs=buildutils.get_package_dirs(excludes=EXCLUDES),
 					package_data=package_data,
 					scripts=scripts,
 					data_files=data_files,
