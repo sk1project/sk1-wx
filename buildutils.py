@@ -201,7 +201,7 @@ def get_packages(path):
 	packages.sort()
 	return packages
 
-def get_package_dirs(path='src'):
+def get_package_dirs(path='src', excludes=[]):
 	"""
 	Collects root packages.
 	"""
@@ -212,21 +212,27 @@ def get_package_dirs(path='src'):
 			items = os.listdir(path)
 		except:pass
 		for item in items:
-			if item == '.svn':continue
+			if item in excludes: continue
+			if item == '.svn': continue
 			dir = os.path.join(path, item)
 			if is_package(dir):
 				dirs[item] = dir
 	return dirs
 
 
-def get_source_structure(path='src'):
+def get_source_structure(path='src', excludes=[]):
 	"""
 	Returns recursive list of python packages. 
 	"""
 	pkgs = []
 	for item in get_packages(path):
 		res = item.replace('\\', '.').replace('/', '.').replace('src.', '')
-		pkgs.append(res)
+		check = True
+		for exclude in excludes:
+			if len(res) >= len(exclude) and res[:len(exclude)] == exclude:
+				check = False
+				break
+		if check: pkgs.append(res)
 	return pkgs
 
 def compile_sources():
