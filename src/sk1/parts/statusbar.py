@@ -167,8 +167,8 @@ class ColorMonitor(wal.HPanel):
 					self.image_txt.show()
 				else:
 					self.image_txt.hide()
-				self.hide()
-				self.show()
+				if not self.is_shown(): self.show()
+				self.parent.layout()
 				return
 		self.hide()
 
