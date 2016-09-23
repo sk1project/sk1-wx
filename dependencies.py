@@ -19,7 +19,6 @@
 
 import platform
 
-DEFAULT = 'default'
 MINT = 'LinuxMint'
 UBUNTU = 'Ubuntu'
 UBUNTU14 = 'Ubuntu 14'
@@ -31,12 +30,14 @@ FEDORA22 = 'fedora 22'
 FEDORA23 = 'fedora 23'
 
 UC2_DEB_DEPENDENCIES = {
-DEFAULT:'libmagickwand5, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
+UBUNTU14:'libmagickwand5, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
+UBUNTU15:'libmagickwand5, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
 UBUNTU16:'libmagickwand-6.q16, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
 }
 
 SK1_DEB_DEPENDENCIES = {
-DEFAULT:'python-wxgtk2.8, python-cups',
+UBUNTU14:'python-wxgtk2.8, python-cups',
+UBUNTU15:'python-wxgtk2.8, python-cups',
 UBUNTU16:'python-wxgtk3.0, python-cups',
 }
 
@@ -58,7 +59,6 @@ FEDORA21:'',
 'Mageia 32bit':'',
 }
 
-DEFAULT_DEB = (MINT, UBUNTU14, UBUNTU15)
 
 def get_system_id():
 	ver = platform.dist()[1].split('.')[0]
