@@ -48,7 +48,7 @@ CLEAR_BUILD = False
 # Package description
 ############################################################
 NAME = 'uniconvertor'
-VERSION = '2.0rc1'
+VERSION = '2.0rc2'
 DESCRIPTION = 'Universal vector graphics translator'
 AUTHOR = 'Igor E. Novikov'
 AUTHOR_EMAIL = 'igor.e.novikov@gmail.com'
