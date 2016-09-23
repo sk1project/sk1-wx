@@ -35,7 +35,7 @@ Usage:
 
 import os, sys, shutil
 
-import buildutils
+import buildutils, dependencies
 
 ############################################################
 # Flags
@@ -116,15 +116,8 @@ data_files = [
 ]
 
 ############################################################
-deb_depends = ['liblcms2-2 (>=2.0)', 'python (>=2.4)', 'python (<<3.0)',
-			'python-cairo', 'python-reportlab', 'python-pil']
-
-#--- Ubuntu <16.04
-deb_depends += ['libmagickwand5', ]
-#--- Ubuntu ==16.04
-# deb_depends += ['libmagickwand-6.q16',]
-
-deb_depends = ', '.join(deb_depends)
+deb_depends = ''
+rpm_depends = ''
 ############################################################
 
 package_data = {}
@@ -143,10 +136,6 @@ while True:
 fileptr.close()
 fileptr2.close()
 
-# Preparing MANIFEST.in and setup.cfg
-shutil.copy2('MANIFEST.in_uc2', 'MANIFEST.in')
-shutil.copy2('setup.cfg_uc2', 'setup.cfg')
-
 ############################################################
 # Main build procedure
 ############################################################
@@ -160,6 +149,7 @@ if len(sys.argv) > 1:
 
 	if sys.argv[1] == 'bdist_rpm':
 		CLEAR_BUILD = True
+		rpm_depends = dependencies.get_uc2_rpm_depend()
 
 	if sys.argv[1] == 'build_update':
 		UPDATE_MODULES = True
@@ -170,6 +160,7 @@ if len(sys.argv) > 1:
 		DEB_PACKAGE = True
 		CLEAR_BUILD = True
 		sys.argv[1] = 'build'
+		deb_depends = dependencies.get_uc2_deb_depend()
 
 	if sys.argv[1] == 'uninstall':
 		if os.path.isdir(install_path):
@@ -196,6 +187,19 @@ if len(sys.argv) > 1:
 		else:
 			print 'UniConvertor installation is not found!'
 		sys.exit(0)
+
+# Preparing MANIFEST.in and setup.cfg
+############################################################
+shutil.copy2('MANIFEST.in_uc2', 'MANIFEST.in')
+
+fileptr = open('setup.cfg_uc2', 'rb')
+fileptr2 = open('setup.cfg', 'wb')
+content = fileptr.read()
+if rpm_depends:
+	content += '\nrequires = ' + rpm_depends
+fileptr2.write(content)
+fileptr.close()
+fileptr2.close()
 
 ############################################################
 # Native extensions
