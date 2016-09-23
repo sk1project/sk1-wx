@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2015 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from copy import deepcopy
 import wal
@@ -48,7 +48,9 @@ class ChangeColorDialog(wal.OkCancelDialog):
 		self.new_color = deepcopy(self.orig_color)
 		size = config.change_color_dlg_size
 		wal.OkCancelDialog.__init__(self, parent, title, style=wal.VERTICAL,
-								size=size)
+								resizable=True, size=size,
+								action_button=wal.BUTTON_APPLY)
+		self.set_minsize(config.change_color_dlg_minsize)
 
 	def build(self):
 		self.pack(wal.HPanel(self), fill=True, expand=True)
@@ -78,6 +80,17 @@ class ChangeColorDialog(wal.OkCancelDialog):
 
 	def get_result(self):
 		return self.mixer.get_color()
+
+	def show(self):
+		ret = None
+		if self.show_modal() == wal.BUTTON_APPLY:
+			ret = self.get_result()
+		w, h = self.get_size()
+		if wal.is_unity_16_04():
+			h = max(h - 28, config.change_color_dlg_minsize[1])
+		config.change_color_dlg_size = (w, h)
+		self.destroy()
+		return ret
 
 	def mixer_changed(self):
 		self.new_color = self.mixer.get_color()

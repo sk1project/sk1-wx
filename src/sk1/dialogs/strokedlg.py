@@ -54,7 +54,9 @@ class StrokeDialog(wal.OkCancelDialog):
 			self.new_color = []
 		size = config.stroke_dlg_size
 		wal.OkCancelDialog.__init__(self, parent, title, style=wal.VERTICAL,
-							size=size, add_line=False)
+							resizable=True, size=size, add_line=False,
+							action_button=wal.BUTTON_APPLY)
+		self.set_minsize(config.stroke_dlg_minsize)
 
 	def build(self):
 		self.nb = wal.Notebook(self)
@@ -81,6 +83,17 @@ class StrokeDialog(wal.OkCancelDialog):
 			self.new_stroke[2] = self.color_tab.get_color()
 			return self.new_stroke
 		return []
+
+	def show(self):
+		ret = None
+		if self.show_modal() == wal.BUTTON_APPLY:
+			ret = self.get_result()
+		w, h = self.get_size()
+		if wal.is_unity_16_04():
+			h = max(h - 28, config.stroke_dlg_minsize[1])
+		config.stroke_dlg_size = (w, h)
+		self.destroy()
+		return ret
 
 def stroke_dlg(parent, presenter, stroke_style, title=_('Stroke')):
 	return StrokeDialog(parent, title, presenter, stroke_style).show()

@@ -34,7 +34,9 @@ class FillDialog(wal.OkCancelDialog):
 		self.orig_fill = fill_style
 		size = config.fill_dlg_size
 		wal.OkCancelDialog.__init__(self, parent, title, style=wal.VERTICAL,
-								size=size, add_line=False)
+								resizable=True, size=size, add_line=False,
+								action_button=wal.BUTTON_APPLY)
+		self.set_minsize(config.fill_dlg_minsize)
 
 	def build(self):
 		self.nb = wal.Notebook(self, on_change=self.on_change)
@@ -66,6 +68,17 @@ class FillDialog(wal.OkCancelDialog):
 
 	def get_result(self):
 		return self.nb.get_active_page().get_result()
+
+	def show(self):
+		ret = None
+		if self.show_modal() == wal.BUTTON_APPLY:
+			ret = self.get_result()
+		w, h = self.get_size()
+		if wal.is_unity_16_04():
+			h = max(h - 28, config.fill_dlg_minsize[1])
+		config.fill_dlg_size = (w, h)
+		self.destroy()
+		return ret
 
 def fill_dlg(parent, presenter, fill_style, title=_('Fill')):
 	return FillDialog(parent, title, presenter, fill_style).show()
