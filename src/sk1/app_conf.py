@@ -72,7 +72,7 @@ class AppData(UCData):
 		comp = self.components
 		comp.append(['Python', sys.version])
 		comp.append(['wxWidgets', wal.get_version()])
-		comp.append(['UniConvertor', UCData.version])
+		comp.append(['UniConvertor', '%s %s' % (UCData.version, UCData.revision)])
 		comp.append(['Cairo', libcairo.get_version()[0]])
 		comp.append(['pycairo', libcairo.get_version()[1]])
 		comp.append(['Pillow', libimg.get_version()])
@@ -102,7 +102,7 @@ class AppConfig(UCConfig):
 	#============== GENERIC SECTION ===================
 	os = system.LINUX
 	os_name = system.UBUNTU
-	system_encoding = 'utf-8'  # default encoding (GUI uses utf-8 only)
+	system_encoding = 'utf-8'# default encoding (GUI uses utf-8 only)
 	print_stacktrace = True
 	print_warnings = True
 
@@ -232,11 +232,11 @@ class AppConfig(UCConfig):
 	sel_marker_stroke = (0.0, 0.3, 1.0)
 	sel_object_marker_color = (0.0, 0.0, 0.0)
 
-	rotation_step = 5.0  # in degrees
-	stroke_sensitive_size = 5.0  # in pixels
+	rotation_step = 5.0# in degrees
+	stroke_sensitive_size = 5.0# in pixels
 
 	#============== SNAPPING OPTIONS ================
-	snap_distance = 10.0  # in pixels
+	snap_distance = 10.0# in pixels
 	snap_order = [appconst.SNAP_TO_GUIDES,
 				appconst.SNAP_TO_GRID,
 				appconst.SNAP_TO_OBJECTS,
