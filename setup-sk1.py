@@ -193,7 +193,7 @@ shutil.copy2('MANIFEST.in_sk1', 'MANIFEST.in')
 fileptr = open('setup.cfg_sk1', 'rb')
 fileptr2 = open('setup.cfg', 'wb')
 content = fileptr.read()
-if rpm_depend:
+if rpm_depends:
 	content += '\nrequires = ' + rpm_depend
 fileptr2.write(content)
 fileptr.close()
