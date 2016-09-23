@@ -153,10 +153,16 @@ class AppConfig(UCConfig):
 	prnprops_dlg_minsize = (400, 500)
 
 	fill_dlg_size = (440, 370)
+	fill_dlg_minsize = (440, 370)
+
 	stroke_dlg_size = (430, 370)
-	dash_dlg_size = (300, 150)
+	stroke_dlg_minsize = (430, 370)
+
 	change_color_dlg_size = (420, 300)
+	change_color_dlg_minsize = (420, 300)
+
 	about_dlg_size = (500, 350)
+	dash_dlg_size = (300, 150)
 
 	statusbar_fontsize = 0
 	tabs_fontsize = 0
