@@ -345,4 +345,5 @@ encoding//unit-tests/cms_tests/__init__.py=utf-8
 encoding//unit-tests/cms_testsuite.py=utf-8
 encoding//unit-tests/image_tests/__init__.py=utf-8
 encoding/buildutils.py=utf-8
+encoding/dependencies.py=utf-8
 encoding/native_mods.py=utf-8
