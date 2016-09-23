@@ -128,13 +128,10 @@ class pdApplication(wal.Application, UCApplication):
 
 	def update_config(self):
 		config.resource_dir = ''
+		w, h = self.mw.get_size()
 		if wal.is_unity_16_04():
-			w, h = self.mw.get_size()
-			h -= 28
-			if h < config.mw_min_size[1]:h = config.mw_min_size[1]
-			config.mw_size = (w, h)
-		else:
-			config.mw_size = self.mw.get_size()
+			h = max(h - 28, config.mw_min_size[1])
+		config.mw_size = (w, h)
 		config.mw_maximized = self.mw.is_maximized()
 		if self.mw.is_maximized(): config.mw_size = config.mw_min_size
 		plugins = []
