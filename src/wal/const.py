@@ -40,7 +40,7 @@ def is_unity_16_04():
 	if is_gtk():
 		import lsb_release
 		data = lsb_release.get_lsb_information()
-		if data['DESCRIPTION'] == 'Ubuntu 16.04 LTS' and \
+		if data['DESCRIPTION'][:9] == 'Ubuntu 16' and \
 		os.environ['XDG_CURRENT_DESKTOP'] == 'Unity': return True
 	return False
 
@@ -64,6 +64,7 @@ BUTTON_CLEAR = wx.ID_CLEAR
 BUTTON_SAVE = wx.ID_SAVE
 BUTTON_CLOSE = wx.ID_CLOSE
 BUTTON_PRINT = wx.ID_PRINT
+BUTTON_APPLY = wx.ID_APPLY
 
 DLG_RESIZABLE = wx.RESIZE_BORDER
 
