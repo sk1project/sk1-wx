@@ -38,9 +38,9 @@ def is_wx3(): return wx.VERSION[0] == 3
 
 def is_unity_16_04():
 	if is_gtk():
-		import lsb_release
-		data = lsb_release.get_lsb_information()
-		if data['DESCRIPTION'][:9] == 'Ubuntu 16' and \
+		ver = platform.dist()[1].split('.')[0]
+		dist = platform.dist()[0] + ' ' + ver
+		if dist == 'Ubuntu 16' and \
 		os.environ['XDG_CURRENT_DESKTOP'] == 'Unity': return True
 	return False
 
