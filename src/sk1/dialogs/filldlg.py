@@ -71,7 +71,7 @@ class FillDialog(wal.OkCancelDialog):
 
 	def show(self):
 		ret = None
-		if self.show_modal() == wal.BUTTON_APPLY:
+		if self.show_modal() == wal.BUTTON_OK:
 			ret = self.get_result()
 		w, h = self.get_size()
 		if wal.is_unity_16_04():
