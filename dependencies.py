@@ -30,9 +30,9 @@ UBUNTU14 = 'Ubuntu 14'
 UBUNTU15 = 'Ubuntu 15'
 UBUNTU16 = 'Ubuntu 16'
 
-DEBIAN = ''
-DEBIAN7 = ''
-DEBIAN8 = ''
+DEBIAN = 'debian'
+DEBIAN7 = 'debian 7'
+DEBIAN8 = 'debian 8'
 
 FEDORA = 'fedora'
 FEDORA21 = 'fedora 21'
