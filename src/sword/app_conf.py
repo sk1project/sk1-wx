@@ -28,7 +28,7 @@ class AppData(UCData):
 	app_name = 'SWord'
 	app_proc = 'sword'
 	app_org = 'sK1 Project'
-	app_domain = 'sk1project.org'
+	app_domain = 'sk1project.net'
 	app_icon = None
 	doc_icon = None
 	version = "1.0"

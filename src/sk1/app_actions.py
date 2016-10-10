@@ -197,9 +197,9 @@ def create_actions(app):
 (pdids.ID_TOOL_PAGES, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('ShapingPlugin',)),
 (pdids.ID_TOOL_OBJBROWSER, proxy.stub),
 #------ Help menu -------
-(pdids.ID_REPORT_BUG, proxy.open_url, [], None, None, ('http://sk1project.org/contact.php',)),
-(pdids.ID_APP_WEBSITE, proxy.open_url, [], None, None, ('http://sk1project.org',)),
-(pdids.ID_APP_FORUM, proxy.open_url, [], None, None, ('http://sk1project.org/forum/index.php',)),
+(pdids.ID_REPORT_BUG, proxy.open_url, [], None, None, ('http://www.sk1project.net/contact.php',)),
+(pdids.ID_APP_WEBSITE, proxy.open_url, [], None, None, ('http://www.sk1project.net',)),
+(pdids.ID_APP_FORUM, proxy.open_url, [], None, None, ('http://www.sk1project.net/forum/index.php',)),
 (pdids.ID_APP_FBPAGE, proxy.open_url, [], None, None, ('http://www.facebook.com/pages/sK1-Project/308311182521658',)),
 (wx.ID_ABOUT, proxy.about),
 	]

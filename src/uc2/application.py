@@ -20,7 +20,7 @@
 USAGE: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]
 
 Universal vector graphics format translator.
-sK1 Team (http://sk1project.org), copyright (C) 2007-2013 by Igor E. Novikov
+sK1 Team (http://www.sk1project.net), copyright (C) 2007-2013 by Igor E. Novikov
 
  Allowed input formats:
      AI  - Adobe Illustrator files (postscript based)

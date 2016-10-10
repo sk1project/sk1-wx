@@ -96,7 +96,7 @@ class AboutPage(wal.HPanel):
 		txt = '(C) 2011-' + year + ' sK1 Project team' + '\n'
 		box.pack(wal.Label(box, txt), fill=True)
 		p = wal.HPanel(box)
-		p.pack(wal.HtmlLabel(p, 'http://sk1project.org'))
+		p.pack(wal.HtmlLabel(p, 'http://www.sk1project.net'))
 		box.pack(p, fill=True)
 
 class ComponentsPage(wal.VPanel):
@@ -121,7 +121,7 @@ class AuthorsPage(wal.VPanel):
 		sep = "------------------------------\n"
 		dev = "\nIgor E. Novikov\n"
 		dev += "(sK1 2.0, wxWidgets version; sK1, Tk version)\n"
-		dev += "<igor.e.novikov@gmail.com>\n\n" + sep
+		dev += "<sk1.project.org@gmail.com>\n\n" + sep
 		dev += 'sK1 2.0 is based on sK1 0.9.x and Skencil 0.6.x experience.'
 		dev += '\n' + sep
 		dev += "Bernhard Herzog (Skencil, Tk version)\n"

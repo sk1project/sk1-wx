@@ -58,7 +58,7 @@ class PaletteCollectionDialog(wal.OkCancelDialog):
 		else:
 			msg = _('Cannot connect to server!')
 			msg += '\n' + _('Please check Internet connection')
-			msg += '\n' + _('and access to http://sk1project.org')
+			msg += '\n' + _('and access to http://www.sk1project.net')
 			wal.error_dialog(self, self.app.appdata.app_name, msg)
 			self.on_cancel()
 
@@ -79,7 +79,7 @@ class DataStub(wal.HPanel):
 		self.gif.play()
 
 	def get_palette_list(self):
-		url = 'http://sk1project.org/palettes.php?action=get_list'
+		url = 'http://www.sk1project.net/palettes.php?action=get_list'
 		data = []
 		try:
 			txt = urllib2.urlopen(url).read()
@@ -110,7 +110,7 @@ class DataViewer(wal.HPanel):
 		palette = None
 		index = self.parent.data.index(name) + 1
 		pid = '0' * (4 - len(str(index))) + str(index)
-		url = 'http://sk1project.org/palettes.php?action=get_palette&id=%s' % pid
+		url = 'http://www.sk1project.net/palettes.php?action=get_palette&id=%s' % pid
 		try:
 			pal_url = urllib2.urlopen(url).read()
 			pal_txt = urllib2.urlopen(pal_url).read()

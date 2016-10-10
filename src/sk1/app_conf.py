@@ -31,7 +31,7 @@ class AppData(UCData):
 	app_name = 'sK1'
 	app_proc = 'sk1'
 	app_org = 'sK1 Project'
-	app_domain = 'sk1project.org'
+	app_domain = 'sk1project.net'
 	app_icon = None
 	doc_icon = None
 	version = '2.0'
