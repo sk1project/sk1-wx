@@ -63,8 +63,8 @@ class WidgetPanel(VPanel):
 		#---------HtmlLabels
 		p = HPanel(self)
 
-		p.pack(HtmlLabel(p, 'http://sk1project.org'), padding=5)
-		p.pack(HtmlLabel(p, 'Download site', 'http://sk1project.org'), padding=5)
+		p.pack(HtmlLabel(p, 'http://sk1project.net'), padding=5)
+		p.pack(HtmlLabel(p, 'Download site', 'http://sk1project.net'), padding=5)
 
 		self.pack(p, fill=True)
 		self.pack(HLine(self), fill=True, padding=5)

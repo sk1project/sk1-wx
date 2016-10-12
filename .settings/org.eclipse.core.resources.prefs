@@ -339,6 +339,7 @@ encoding//src/wal/renderer.py=utf-8
 encoding//src/wal/togglectrls.py=utf-8
 encoding//src/wal/treewidgets.py=utf-8
 encoding//src/wal/widgets.py=utf-8
+encoding//tools/rcc2py/rcc2py.py=utf-8
 encoding//unit-tests/_libimg_tests/__init__.py=utf-8
 encoding//unit-tests/_libimg_testsuite.py=utf-8
 encoding//unit-tests/all_tests.py=utf-8

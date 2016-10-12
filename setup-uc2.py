@@ -51,11 +51,11 @@ NAME = 'uniconvertor'
 VERSION = '2.0rc2'
 DESCRIPTION = 'Universal vector graphics translator'
 AUTHOR = 'Igor E. Novikov'
-AUTHOR_EMAIL = 'igor.e.novikov@gmail.com'
+AUTHOR_EMAIL = 'sk1.project.org@gmail.com'
 MAINTAINER = AUTHOR
 MAINTAINER_EMAIL = AUTHOR_EMAIL
 LICENSE = 'GPL v3'
-URL = 'http://sk1project.org'
+URL = 'http://sk1project.net'
 DOWNLOAD_URL = URL
 CLASSIFIERS = [
 'Development Status :: 6 - Mature',
@@ -74,7 +74,7 @@ LONG_DESCRIPTION = '''
 UniConvertor is a multiplatform universal vector graphics translator.
 Uses PDXF model to convert one format to another. 
 
-sK1 Project (http://sk1project.org),
+sK1 Project (http://sk1project.net),
 Copyright (C) 2007-2016 by Igor E. Novikov
 --------------------------------------------------------------------------------
 Supported input formats:  
@@ -89,7 +89,7 @@ LONG_DEB_DESCRIPTION = ''' .
  UniConvertor is a multiplatform universal vector graphics translator.
  Uses PDXF model to convert one format to another. 
  . 
- sK1 Project (http://sk1project.org),
+ sK1 Project (http://sk1project.net),
  Copyright (C) 2007-2016 by Igor E. Novikov 
  .
  Supported input formats:  

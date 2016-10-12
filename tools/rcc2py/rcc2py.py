@@ -27,7 +27,7 @@ Usage: rcc2py input_file output_rc.py
        rcc2py input_file
        
 In last case output file name will be input file name + '_rc.py'
-2011(c) sK1 Project  http://sk1project.org/
+2011(c) sK1 Project  http://sk1project.net/
 """
 
 start = """
