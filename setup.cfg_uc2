@@ -9,5 +9,5 @@ install-headers=$APP_INSTALL_PATH
 
 [bdist_rpm]
 release = 1
-packager = Igor Novikov <igor.e.novikov@gmail.com>
+packager = Igor Novikov <sk1.project.org@gmail.com>
 provides = uniconvertor

@@ -29,7 +29,7 @@ def about_dialog(parent):
 	from license import LICENSE
 	authors = [
 		"\nIgor E. Novikov (SWord, Gtk+ version; CDR Explorer, Tk version)\n\
-		<igor.e.novikov@gmail.com>",
+		<sk1.project.org@gmail.com>",
 		]
 
 	about = gtk.AboutDialog()
