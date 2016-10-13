@@ -96,7 +96,9 @@ def process_media(media_list):
 	sorted_media = []
 	media_dict = {}
 	for item in media:
-		indx, name, size = item.split('_')
+		vals = item.split('_')
+		if not len(vals) == 3: continue 
+		indx, name, size = vals
 
 		name = process_media_name(name)
 		if not name: continue
