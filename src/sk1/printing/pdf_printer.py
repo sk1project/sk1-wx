@@ -41,6 +41,7 @@ class PDF_Printer(AbstractPrinter):
 	compressed = True
 	use_spot = False
 	customs = ((10.0, 10.0), (30000.0, 30000.0))
+	margins = (0.0, 0.0, 0.0, 0.0)
 
 	meta_title = ''
 	meta_subject = ''
