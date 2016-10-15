@@ -62,6 +62,7 @@ UBUNTU15:'python-wxgtk2.8, python-cups',
 UBUNTU16:'python-wxgtk3.0, python-cups',
 
 MINT17:'python-wxgtk2.8, python-cups',
+MINT18:'python-wxgtk3.0, python-cups',
 
 DEBIAN7:'python-wxgtk2.8, python-cups',
 DEBIAN8:'python-wxgtk3.0, python-cups',
