@@ -44,16 +44,18 @@ OPENSUSE = ''
 OPENSUSE13 = ''
 OPENSUSE42 = ''
 
+DEB_GENERIC = 'liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, '
+
 UC2_DEB_DEPENDENCIES = {
-UBUNTU14:'libmagickwand5, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
-UBUNTU15:'libmagickwand5, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
-UBUNTU16:'libmagickwand-6.q16-2, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
+UBUNTU14:DEB_GENERIC + 'libmagickwand5, python-pil',
+UBUNTU15:DEB_GENERIC + 'libmagickwand5, python-pil',
+UBUNTU16:DEB_GENERIC + 'libmagickwand-6.q16-2, python-pil',
 
-MINT17:'libmagickwand5, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
-MINT18:'libmagickwand-6.q16-2, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
+MINT17:DEB_GENERIC + 'libmagickwand5, python-pil',
+MINT18:DEB_GENERIC + 'libmagickwand-6.q16-2, python-pil',
 
-DEBIAN7:'libmagickwand5, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-imaging',
-DEBIAN8:'libmagickwand-6.q16-2, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
+DEBIAN7:DEB_GENERIC + 'libmagickwand5, python-imaging',
+DEBIAN8:DEB_GENERIC + 'libmagickwand-6.q16-2, python-pil',
 }
 
 SK1_DEB_DEPENDENCIES = {
