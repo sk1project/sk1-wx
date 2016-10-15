@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2015-2016 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 
@@ -128,12 +128,14 @@ class Kbd_Processor:
 		event.Skip()
 
 	def on_char(self, event):
-		if self.canvas.mode == modes.TEXT_EDIT_MODE:
-			self.canvas.controller.insert_text(unichr(event.GetUniChar()))
-			return
-		elif self.canvas.mode == modes.TEXT_EDITOR_MODE:
-			char = int(unichr(event.GetUniChar()))
-			if char in modes.ET_MODES:
-				self.canvas.controller.set_mode(char)
+		modifiers = event.GetModifiers()
+		if not modifiers in (wx.ACCEL_CTRL, wx.ACCEL_CTRL | wx.ACCEL_SHIFT):
+			if self.canvas.mode == modes.TEXT_EDIT_MODE:
+				self.canvas.controller.insert_text(unichr(event.GetUniChar()))
 				return
+			elif self.canvas.mode == modes.TEXT_EDITOR_MODE:
+				char = int(unichr(event.GetUniChar()))
+				if char in modes.ET_MODES:
+					self.canvas.controller.set_mode(char)
+					return
 		event.Skip()
