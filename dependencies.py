@@ -50,6 +50,7 @@ UBUNTU15:'libmagickwand5, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), py
 UBUNTU16:'libmagickwand-6.q16-2, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
 
 MINT17:'libmagickwand5, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
+MINT18:'libmagickwand-6.q16-2, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
 }
 
 SK1_DEB_DEPENDENCIES = {
