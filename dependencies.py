@@ -44,7 +44,8 @@ OPENSUSE = ''
 OPENSUSE13 = ''
 OPENSUSE42 = ''
 
-DEB_GENERIC = 'liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, '
+DEB_GENERIC = 'liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), '
+DEB_GENERIC += 'python-cairo, python-reportlab, '
 
 UC2_DEB_DEPENDENCIES = {
 UBUNTU14:DEB_GENERIC + 'libmagickwand5, python-pil',
