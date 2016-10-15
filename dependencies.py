@@ -47,7 +47,7 @@ OPENSUSE42 = ''
 UC2_DEB_DEPENDENCIES = {
 UBUNTU14:'libmagickwand5, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
 UBUNTU15:'libmagickwand5, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
-UBUNTU16:'libmagickwand-6.q16, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
+UBUNTU16:'libmagickwand-6.q16-2, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
 
 MINT17:'libmagickwand5, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
 }
@@ -67,7 +67,7 @@ FEDORA23:'lcms2 pycairo python-pillow python-reportlab',
 FEDORA24:'lcms2 pycairo python-pillow python-reportlab',
 }
 
-#TODO: add wxpython, python-cups
+# TODO: add wxpython, python-cups
 SK1_RPM_DEPENDENCIES = {
 FEDORA21:'',
 FEDORA22:'',
