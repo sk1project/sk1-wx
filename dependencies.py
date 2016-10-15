@@ -53,6 +53,7 @@ MINT17:'libmagickwand5, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), pyth
 MINT18:'libmagickwand-6.q16-2, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
 
 DEBIAN7:'libmagickwand5, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-imaging',
+DEBIAN8:'libmagickwand-6.q16-2, liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), python-cairo, python-reportlab, python-pil',
 }
 
 SK1_DEB_DEPENDENCIES = {
@@ -63,6 +64,7 @@ UBUNTU16:'python-wxgtk3.0, python-cups',
 MINT17:'python-wxgtk2.8, python-cups',
 
 DEBIAN7:'python-wxgtk2.8, python-cups',
+DEBIAN8:'python-wxgtk3.0, python-cups',
 }
 
 UC2_RPM_DEPENDENCIES = {
