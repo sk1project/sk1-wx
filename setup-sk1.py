@@ -194,7 +194,7 @@ fileptr = open('setup.cfg_sk1', 'rb')
 fileptr2 = open('setup.cfg', 'wb')
 content = fileptr.read()
 if rpm_depends:
-	content += '\nrequires = ' + rpm_depend
+	content += '\nrequires = ' + rpm_depends
 fileptr2.write(content)
 fileptr.close()
 fileptr2.close()
