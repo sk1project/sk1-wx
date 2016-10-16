@@ -122,10 +122,13 @@ def _get_text_size(text, bold=False):
 	result = (0, 0)
 	if text:
 		pdc = wx.MemoryDC()
+		bmp = wx.EmptyBitmap(1, 1)
+		pdc.SelectObject(bmp)
 		pdc.SetFont(font)
 		height = pdc.GetCharHeight()
 		width = pdc.GetTextExtent(text)[0]
 		result = (width, height)
+		pdc.SelectObject(wx.NullBitmap)
 	return result
 
 def invert_text_bitmap(bmp, color=(0, 0, 0)):
