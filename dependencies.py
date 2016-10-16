@@ -73,11 +73,13 @@ DEBIAN8:'python-wxgtk3.0, python-cups',
 
 UC2_RPM_DEPENDENCIES = {
 FEDORA23:'lcms2 pango ImageMagick pycairo python-pillow python-reportlab',
+FEDORA24:'lcms2 pango ImageMagick pycairo python-pillow python2-reportlab',
 }
 
 # TODO: add wxpython, python-cups
 SK1_RPM_DEPENDENCIES = {
 FEDORA23:'wxPython python-cups',
+FEDORA24:'wxPython python2-cups',
 }
 
 
