@@ -60,7 +60,7 @@ class MSW_PS(AbstractPS):
 						'list_printers.vbs')
 		appdata = self.app.appdata
 		stdout = os.path.join(appdata.app_temp_dir, 'stdout.txt')
-		os.system('cscript.exe %s>%s' % (script, stdout))
+		os.popen('cscript.exe %s>%s' % (script, stdout))
 		fileptr = open(stdout, 'rb')
 		line = self.readline(fileptr)
 		while not line == '===': line = self.readline(fileptr)
