@@ -40,8 +40,8 @@ FEDORA22 = 'fedora 22'
 FEDORA23 = 'fedora 23'
 FEDORA24 = 'fedora 24'
 
-OPENSUSE = ''
-OPENSUSE13 = ''
+OPENSUSE = 'SuSE'
+OPENSUSE13 = 'SuSE 13'
 OPENSUSE42 = ''
 
 DEB_GENERIC = 'liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), '
@@ -74,12 +74,15 @@ DEBIAN8:'python-wxgtk3.0, python-cups',
 UC2_RPM_DEPENDENCIES = {
 FEDORA23:'lcms2 pango ImageMagick pycairo python-pillow python-reportlab',
 FEDORA24:'lcms2 pango ImageMagick pycairo python-pillow python2-reportlab',
+
+OPENSUSE13:'liblcms2-2 libpango-1_0-0 ImageMagick python-cairo python-Pillow python-reportlab',
 }
 
-# TODO: add wxpython, python-cups
 SK1_RPM_DEPENDENCIES = {
 FEDORA23:'wxPython python-cups',
 FEDORA24:'wxPython python2-cups',
+
+OPENSUSE13:'python-wxWidgets python-cups',
 }
 
 
