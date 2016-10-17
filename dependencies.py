@@ -42,7 +42,7 @@ FEDORA24 = 'fedora 24'
 
 OPENSUSE = 'SuSE'
 OPENSUSE13 = 'SuSE 13'
-OPENSUSE42 = ''
+OPENSUSE42 = 'SuSE 42'
 
 DEB_GENERIC = 'liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), '
 DEB_GENERIC += 'python-cairo, python-reportlab, '
@@ -76,6 +76,7 @@ FEDORA23:'lcms2 pango ImageMagick pycairo python-pillow python-reportlab',
 FEDORA24:'lcms2 pango ImageMagick pycairo python-pillow python2-reportlab',
 
 OPENSUSE13:'liblcms2-2 libpango-1_0-0 ImageMagick python-cairo python-Pillow python-reportlab',
+OPENSUSE42:'liblcms2-2 libpango-1_0-0 ImageMagick python-cairo python-Pillow python-reportlab',
 }
 
 SK1_RPM_DEPENDENCIES = {
@@ -83,6 +84,7 @@ FEDORA23:'wxPython python-cups',
 FEDORA24:'wxPython python2-cups',
 
 OPENSUSE13:'python-wxWidgets python-cups',
+OPENSUSE42:'python-wxWidgets python-cups',
 }
 
 
