@@ -226,7 +226,7 @@ def get_source_structure(path='src', excludes=[]):
 	"""
 	pkgs = []
 	for item in get_packages(path):
-		res = item.replace('\\', '.').replace('/', '.').replace('src.', '')
+		res = item.replace('\\', '.').replace('/', '.').split('src.')[1]
 		check = True
 		for exclude in excludes:
 			if len(res) >= len(exclude) and res[:len(exclude)] == exclude:
