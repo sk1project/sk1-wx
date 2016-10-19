@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2015 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wal
 import urllib2, os
@@ -58,7 +58,7 @@ class PaletteCollectionDialog(wal.OkCancelDialog):
 		else:
 			msg = _('Cannot connect to server!')
 			msg += '\n' + _('Please check Internet connection')
-			msg += '\n' + _('and access to http://www.sk1project.net')
+			msg += '\n' + _('and access to http://sk1project.net')
 			wal.error_dialog(self, self.app.appdata.app_name, msg)
 			self.on_cancel()
 
@@ -79,7 +79,7 @@ class DataStub(wal.HPanel):
 		self.gif.play()
 
 	def get_palette_list(self):
-		url = 'http://www.sk1project.net/palettes.php?action=get_list'
+		url = 'http://104.237.146.215/palettes.php?action=get_list'
 		data = []
 		try:
 			txt = urllib2.urlopen(url).read()
@@ -110,7 +110,7 @@ class DataViewer(wal.HPanel):
 		palette = None
 		index = self.parent.data.index(name) + 1
 		pid = '0' * (4 - len(str(index))) + str(index)
-		url = 'http://www.sk1project.net/palettes.php?action=get_palette&id=%s' % pid
+		url = 'http://104.237.146.215/palettes.php?action=get_palette&id=%s' % pid
 		try:
 			pal_url = urllib2.urlopen(url).read()
 			pal_txt = urllib2.urlopen(pal_url).read()
