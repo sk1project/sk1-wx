@@ -18,8 +18,8 @@
 #	 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import ctypes
-from ctypes.wintypes import BYTE, WORD, DWORD, LPCWSTR, LPSTR, POINTL
-from ctypes import c_long, c_ulong, byref, c_buffer, c_short, c_int, c_char
+from ctypes.wintypes import BYTE, DWORD, LPCWSTR
+from ctypes import c_long, c_ulong, byref, c_short, c_int, c_char
 from ctypes import POINTER, create_unicode_buffer
 
 winspool = ctypes.WinDLL('winspool.drv')
