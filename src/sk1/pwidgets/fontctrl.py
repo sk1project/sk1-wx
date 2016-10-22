@@ -32,7 +32,8 @@ def generate_fontname_cache(fonts):
 	maxwidth = 0
 	height = 0
 	for item in fonts:
-		bmp, size = wal.text_to_bitmap(item)
+		try: bmp, size = wal.text_to_bitmap(item)
+		except: continue
 		FONTNAME_CACHE.append(bmp)
 		maxwidth = max(size[0], maxwidth)
 		height = size[1]
