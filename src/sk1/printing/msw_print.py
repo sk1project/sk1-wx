@@ -29,6 +29,8 @@ from generic import AbstractPrinter, AbstractPS, COLOR_MODE, MONOCHROME_MODE
 from pdf_printer import PDF_Printer
 from printout import Printout
 
+import winspool
+
 def get_print_data(app):
 	if app.print_data is None:
 		app.print_data = create_print_data()
@@ -56,33 +58,14 @@ class MSW_PS(AbstractPS):
 		return fileptr.readline().replace('\n', '').replace('\r', '').strip()
 
 	def collect_printers(self):
-		script = os.path.join(config.resource_dir, 'templates',
-						'list_printers.vbs')
-		appdata = self.app.appdata
-		stdout = os.path.join(appdata.app_temp_dir, 'stdout.txt')
-		os.popen('cscript.exe "%s">"%s"' % (script, stdout))
-		fileptr = open(stdout, 'rb')
-		line = self.readline(fileptr)
-		while not line == '===': line = self.readline(fileptr)
-		self.printers = []
-		line = self.readline(fileptr)
-		while not line == '===':
-			if '::' in line:
-				name, color = line.split('::', 1)
-				printer = MSWPrinter(self.app, name)
-				if color == '2':
-					printer.color_supported = True
-					printer.colorspace = uc2const.COLOR_RGB
-					printer.color_mode = COLOR_MODE
-				self.printers.append(printer)
-			line = self.readline(fileptr)
-		line = self.readline(fileptr)
-		while not line == '===':
-			if '::' in line:
-				name, val = line.split('::', 1)
-				if val == 'True':
-					self.default_printer = name
-					break
+		self.default_printer = winspool.get_default_printer()
+		for ptrname in winspool.get_printer_names():
+			printer = MSWPrinter(self.app, ptrname)
+			if winspool.is_color_printer(ptrname):
+				printer.color_supported = True
+				printer.colorspace = uc2const.COLOR_RGB
+				printer.color_mode = COLOR_MODE
+			self.printers.append(printer)
 
 	def get_printer_by_name(self, name):
 		if not name: self.get_default_printer()
