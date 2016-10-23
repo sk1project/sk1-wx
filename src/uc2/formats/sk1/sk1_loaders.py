@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2013 by Igor E. Novikov
+# 	Copyright (C) 2013 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from uc2.formats.generic_filters import AbstractLoader
 from uc2.formats.sk1 import sk1const
@@ -53,7 +53,7 @@ class GenericLoader(AbstractLoader):
 	def begin_composite(self, composite_class, args=(), kw=None):pass
 	def end_composite(self):pass
 	def end_all(self):pass
-	def check_object(self, object):pass
+	def check_object(self, obj):pass
 
 	def append_object(self, obj):
 		parent = self.parent_stack[-1]
@@ -90,7 +90,7 @@ class GenericLoader(AbstractLoader):
 		obj = Ellipse(trafo, start_angle, end_angle, arc_type, properties)
 		self.append_object(obj)
 
-	def simple_text(self, str, trafo=None, valign=sk1const.ALIGN_BASE,
+	def simple_text(self, txt, trafo=None, valign=sk1const.ALIGN_BASE,
 					halign=sk1const.ALIGN_LEFT):pass
 	def image(self, image, trafo):pass
 
