@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2013 by Igor E. Novikov
+# 	Copyright (C) 2013 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from copy import deepcopy
 from PIL import Image
@@ -24,7 +24,9 @@ from uc2.formats.sk1 import sk1const
 from uc2.utils import Base64Encode, Base64Decode, SubFileDecode
 from uc2.formats.generic import TextModelObject
 
-from _sk1objs import Trafo, CreatePath, Point, Scale, Translation
+from _sk1objs import CreatePath, Point 
+
+# from _sk1objs import Trafo, Scale, Translation
 
 # Document object enumeration
 DOCUMENT = 1
@@ -61,6 +63,21 @@ CID_TO_NAME = {
 	TEXT:_('Text'), BITMAPDATA:_('BitmapData'), IMAGE:_('Image'),
 	}
 
+class Trafo(object):
+
+	def __init__(self, m11, m12, m21, m22, v1, v2):
+		self.m11 = m11
+		self.m12 = m12
+		self.m21 = m21
+		self.m22 = m22
+		self.v1 = v1
+		self.v2 = v2
+ 		
+	def coeff(self):
+		return (self.m11, self.m12, self.m21, self.m22, self.v1, self.v2)
+ 	
+class Scale(object): pass
+class Translation(object): pass
 
 
 class SK1ModelObject(TextModelObject):
@@ -144,8 +161,8 @@ class SK1Layout(SK1ModelObject):
 	size = uc2const.PAGE_FORMATS['A4']
 	orientation = uc2const.PORTRAIT
 
-	def __init__(self, format='', size=(), orientation=uc2const.PORTRAIT):
-		if format: self.format = format
+	def __init__(self, fmt='', size=(), orientation=uc2const.PORTRAIT):
+		if fmt: self.format = fmt
 		if size: self.size = size
 		if orientation: self.orientation = orientation
 		SK1ModelObject.__init__(self)
@@ -216,9 +233,9 @@ class SK1Page(SK1ModelObject):
 	size = uc2const.PAGE_FORMATS['A4']
 	orientation = uc2const.PORTRAIT
 
-	def __init__(self, name='', format='', size=(), orientation=uc2const.PORTRAIT):
+	def __init__(self, name='', fmt='', size=(), orientation=uc2const.PORTRAIT):
 		if name:self.name = name
-		if format:self.format = format
+		if fmt:self.format = fmt
 		if size:self.size = size
 		if orientation:self.orientation = orientation
 		SK1ModelObject.__init__(self)
@@ -518,11 +535,11 @@ class HatchingPattern(Pattern):
 		direction = Point(self.direction.x, self.direction.y)
 		return HatchingPattern(foreground, background, direction, spacing, width)
 
-	def write_content(self, file):
+	def write_content(self, fileptr):
 		color = self.foreground.__str__()
 		background = self.background.__str__()
-		#TODO: check spacing field
-		file.write('phs(%s,%s,%g,%g,%g,%g)\n'
+		# TODO: check spacing field
+		fileptr.write('phs(%s,%s,%g,%g,%g,%g)\n'
 						% (color, background, self.direction.x, self.direction.y,
 						self.distance, self.width))
 
@@ -531,7 +548,7 @@ class ImageTilePattern(Pattern):
 	is_Tiled = 1
 	is_Image = 1
 	data = None
-	id = None
+	bid = None
 
 	def __init__(self, data=None, trafo=None, duplicate=None):
 		if trafo is None: trafo = Trafo(1, 0, 0, -1, 0, 0)
@@ -544,20 +561,20 @@ class ImageTilePattern(Pattern):
 		image = self.image.copy()
 		return ImageTilePattern(image, trafo)
 
-	def write_content(self, file):
-		if self.image and not self.id:
-			self.id = id(self.image)
+	def write_content(self, fileptr):
+		if self.image and not self.bid:
+			self.bid = id(self.image)
 		if self.image:
-			file.write('bm(%d)\n' % (self.id))
-			vfile = Base64Encode(file)
+			fileptr.write('bm(%d)\n' % (self.bid))
+			vfile = Base64Encode(fileptr)
 			if self.raw_image.mode == "CMYK":
 				self.raw_image.save(vfile, 'JPEG', quality=100)
 			else:
 				self.raw_image.save(vfile, 'PNG')
 			vfile.close()
-			file.write('-\n')
-			val = (self.id, self.trafo.coeff()).__str__()
-			file.write('pit' + val + '\n')
+			fileptr.write('-\n')
+			val = (self.bid, self.trafo.coeff()).__str__()
+			fileptr.write('pit' + val + '\n')
 
 class Style:
 	"""
@@ -711,9 +728,9 @@ class SK1MaskGroup(SK1ModelObject):
 	def __init__(self):
 		SK1ModelObject.__init__(self)
 
-#BlendGroup
-#TextOnPath
-#CompoundObject
+# BlendGroup
+# TextOnPath
+# CompoundObject
 
 #--- Primitive objects
 
@@ -941,17 +958,17 @@ class SK1BitmapData(SK1ModelObject):
 	"""
 	Bitmap image data. Object is defined as:
 	
-	bm(ID)	
+	bm(BID)	
 	
 	The bitmap data follows as a base64 encoded JPEG file.
 	"""
 	string = ''
 	cid = BITMAPDATA
 	raw_image = None
-	id = ''
+	bid = ''
 
-	def __init__(self, id=''):
-		if id: self.id = id
+	def __init__(self, bid=''):
+		if bid: self.bid = bid
 		SK1ModelObject.__init__(self)
 
 	def read_data(self, fileobj):
@@ -960,51 +977,51 @@ class SK1BitmapData(SK1ModelObject):
 		self.raw_image.load()
 
 	def update(self):
-		self.string = 'bm(%d)\n' % (self.id)
+		self.string = 'bm(%d)\n' % (self.bid)
 		self.end_string = '-\n'
 
-	def write_content(self, fileobj):
-		fileobj.write(self.string)
-		vfile = Base64Encode(fileobj)
+	def write_content(self, fileptr):
+		fileptr.write(self.string)
+		vfile = Base64Encode(fileptr)
 		if self.raw_image.mode == "CMYK":
 			self.raw_image.save(vfile, 'JPEG', quality=100)
 		else:
 			self.raw_image.save(vfile, 'PNG')
 		vfile.close()
-		fileobj.write(self.end_string)
+		fileptr.write(self.end_string)
 
 
 class SK1Image(SK1ModelObject):
 	"""
-	Image object. ID has to be the id of a previously defined
+	Image object. ID has to be the bid of a previously defined
 	bitmap data object (defined by bm). The object is defined as:
-	im(TRAFO, ID)
+	im(TRAFO, BID)
 	"""
 	string = ''
 	cid = IMAGE
 	trafo = ()
-	id = ''
+	bid = ''
 	image = None
 
-	def __init__(self, trafo=None, id='', image=None):
+	def __init__(self, trafo=None, bid='', image=None):
 		self.trafo = trafo
-		self.id = id
+		self.bid = bid
 		self.image = image
 		SK1ModelObject.__init__(self)
 
 	def update(self):
-		if self.image and not self.id:
-			self.id = id(self.image)
-		self.string = 'im' + (self.trafo.coeff(), self.id).__str__() + '\n'
+		if self.image and not self.bid:
+			self.bid = id(self.image)
+		self.string = 'im' + (self.trafo.coeff(), self.bid).__str__() + '\n'
 
-	def write_content(self, fileobj):
+	def write_content(self, fileptr):
 		if self.image:
-			fileobj.write('bm(%d)\n' % (self.id))
-			vfile = Base64Encode(fileobj)
+			fileptr.write('bm(%d)\n' % (self.bid))
+			vfile = Base64Encode(fileptr)
 			if self.raw_image.mode == "CMYK":
 				self.raw_image.save(vfile, 'JPEG', quality=100)
 			else:
 				self.raw_image.save(vfile, 'PNG')
 			vfile.close()
-			fileobj.write('-\n')
-			fileobj.write(self.string)
+			fileptr.write('-\n')
+			fileptr.write(self.string)
