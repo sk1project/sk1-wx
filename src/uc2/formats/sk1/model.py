@@ -24,8 +24,7 @@ from uc2.formats.sk1 import sk1const
 from uc2.utils import Base64Encode, Base64Decode, SubFileDecode
 from uc2.formats.generic import TextModelObject
 
-from _sk1objs import CreatePath, Point 
-
+# from _sk1objs import CreatePath, Point 
 # from _sk1objs import Trafo, Scale, Translation
 
 # Document object enumeration
@@ -78,6 +77,13 @@ class Trafo(object):
 
 class Scale(object): pass
 class Translation(object): pass
+def CreatePath():return ()
+
+class Point(object):
+	
+	def __init__(self, x, y):
+		self.x = x
+		self.y = y
 
 
 class SK1ModelObject(TextModelObject):
@@ -816,41 +822,41 @@ class PolyBezier(SK1ModelObject):
 	cid = CURVE
 	style = []
 	properties = None
-	paths = ()
+	paths = None
 
 	is_Bezier = 1
 
 	def __init__(self, paths=None, properties=None, duplicate=None, paths_list=[]):
-		if paths:
-			if isinstance(paths, tuple):
-				self.paths = paths
-			elif isinstance(paths, list):
-				self.paths = tuple(paths)
-			else:
-				self.paths = (CreatePath(),)
-		else:
-			self.paths = None
+# 		if paths:
+# 			if isinstance(paths, tuple):
+# 				self.paths = paths
+# 			elif isinstance(paths, list):
+# 				self.paths = tuple(paths)
+# 			else:
+# 				self.paths = (CreatePath(),)
+# 		else:
+# 			self.paths = None
 		self.properties = properties
 		self.paths_list = paths_list
 		SK1ModelObject.__init__(self)
 
-	def set_paths_from_list(self):
-		self.paths = ()
-		for path in self.paths_list:
-			p = CreatePath()
-			p.AppendLine(Point(*path[0]))
-			points = path[1]
-			for point in points:
-				if len(point) == 2:
-					p.AppendLine(Point(*point))
-				else:
-					point0 = Point(*point[0])
-					point1 = Point(*point[1])
-					point2 = Point(*point[2])
-					p.AppendBezier(point0, point1, point2, point[3])
-			if path[2]:
-				p.ClosePath()
-			self.paths = self.paths + (p,)
+# 	def set_paths_from_list(self):
+# 		self.paths = ()
+# 		for path in self.paths_list:
+# 			p = CreatePath()
+# 			p.AppendLine(Point(*path[0]))
+# 			points = path[1]
+# 			for point in points:
+# 				if len(point) == 2:
+# 					p.AppendLine(Point(*point))
+# 				else:
+# 					point0 = Point(*point[0])
+# 					point1 = Point(*point[1])
+# 					point2 = Point(*point[2])
+# 					p.AppendBezier(point0, point1, point2, point[3])
+# 			if path[2]:
+# 				p.ClosePath()
+# 			self.paths = self.paths + (p,)
 
 	def get_line_point(self, x, y, arg):
 		return [x, y]
@@ -858,25 +864,25 @@ class PolyBezier(SK1ModelObject):
 	def get_segment_point(self, x0, y0, x1, y1, x2, y2, cont):
 		return [[x0, y0], [x1, y1], [x2, y2], cont]
 
-	def set_list_from_paths(self):
-		self.paths_list = []
-		for path in self.paths:
-			path_list = [None, [], const.CURVE_OPENED]
-			plist = path.get_save()
-			points = path_list[1]
-			start = True
-			for item in plist:
-				if len(item) == 3:
-					point = self.get_line_point(*item)
-					if start:
-						start = False
-						path_list[0] = point
-					else:
-						points.append(point)
-				elif len(item) == 7:
-					points.append(self.get_segment_point(*item))
-			if path.closed:path_list[2] = const.CURVE_CLOSED
-			self.paths_list.append(path_list)
+# 	def set_list_from_paths(self):
+# 		self.paths_list = []
+# 		for path in self.paths:
+# 			path_list = [None, [], const.CURVE_OPENED]
+# 			plist = path.get_save()
+# 			points = path_list[1]
+# 			start = True
+# 			for item in plist:
+# 				if len(item) == 3:
+# 					point = self.get_line_point(*item)
+# 					if start:
+# 						start = False
+# 						path_list[0] = point
+# 					else:
+# 						points.append(point)
+# 				elif len(item) == 7:
+# 					points.append(self.get_segment_point(*item))
+# 			if path.closed:path_list[2] = const.CURVE_CLOSED
+# 			self.paths_list.append(path_list)
 
 	def add_line(self, point):
 		x, y = point
@@ -905,10 +911,10 @@ class PolyBezier(SK1ModelObject):
 				self.string += 'bC()\n'
 
 	def update(self):
-		if self.paths and not self.paths_list:
-			self.set_list_from_paths()
-		if self.paths_list and not self.paths:
-			self.set_paths_from_list()
+# 		if self.paths and not self.paths_list:
+# 			self.set_list_from_paths()
+# 		if self.paths_list and not self.paths:
+# 			self.set_paths_from_list()
 		self.update_from_list()
 
 
