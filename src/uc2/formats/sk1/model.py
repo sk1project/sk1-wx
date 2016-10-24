@@ -494,7 +494,8 @@ class RadialGradient(GradientPattern):
 
 	def write_content(self, fileobj):
 		self.gradient.write_content(fileobj)
-		fileobj.write('pgr(%g,%g,%g)\n' % (self.center.x, self.center.y, self.border))
+		fileobj.write('pgr(%g,%g,%g)\n' % (self.center.x,
+										self.center.y, self.border))
 
 class ConicalGradient(GradientPattern):
 
@@ -515,8 +516,9 @@ class ConicalGradient(GradientPattern):
 
 	def write_content(self, fileobj):
 		self.gradient.write_content(fileobj)
-		fileobj.write('pgc(%g,%g,%g,%g)\n' % (tuple(self.center) + (round(self.direction.x, 10),
-											round(self.direction.y, 10))))
+		fileobj.write('pgc(%g,%g,%g,%g)\n' % (self.center.x, self.center.y,
+											round(self.direction.x, 10),
+											round(self.direction.y, 10)))
 
 class HatchingPattern(Pattern):
 
@@ -546,7 +548,8 @@ class HatchingPattern(Pattern):
 		background = self.background.__str__()
 		# TODO: check spacing field
 		fileptr.write('phs(%s,%s,%g,%g,%g,%g)\n'
-						% (color, background, self.direction.x, self.direction.y,
+						% (color, background,
+						self.direction.x, self.direction.y,
 						self.distance, self.width))
 
 class ImageTilePattern(Pattern):
