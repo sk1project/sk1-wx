@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2012 by Igor E. Novikov
+# 	Copyright (C) 2012 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from uc2.uc2const import PDXF, SK1, SK2, SK, SVG, SVGZ, ODG, ORA, \
 XCF, SLA, FIG, CDR, CDT, CDRZ, CDTZ, CMX, CCX, CDRX, XAR, AI_PS, AI_PDF, PS, \
@@ -48,14 +48,14 @@ from uc2.formats.plt import plt_loader, plt_saver, check_plt
 from uc2.formats.sk1 import sk1_loader, sk1_saver, check_sk1
 from uc2.formats.sk import SK_Loader, SK_Saver
 from uc2.formats.wmf import wmf_loader, wmf_saver, check_wmf
-
+ 
 from uc2.formats.cdr import cdr_loader, cdr_saver, check_cdr
 from uc2.formats.cdrz import cdrz_loader, check_cdrz
 from uc2.formats.riff import riff_loader, riff_saver, check_riff
-
+ 
 from uc2.formats.png import png_loader, check_png, png_saver
 from uc2.formats.fallback import im_loader, fallback_check
-
+ 
 from uc2.formats.skp import skp_loader, skp_saver, check_skp
 from uc2.formats.gpl import gpl_loader, gpl_saver, check_gpl
 from uc2.formats.scribus_pal import scribus_pal_loader, scribus_pal_saver, \
@@ -79,13 +79,13 @@ AI_PS : None, AI_PDF : None, PS : None, EPS : None, PDF : None, PSD : None,
 CGM : None, WMF : wmf_loader, EMF : None, XPS : None, VSD : None,
 PLT : plt_loader, HPGL : None, DXF : None, DWG : None,
 RIFF: riff_loader,
-
+ 
 PNG: png_loader, JPG: im_loader, JP2: im_loader, TIF: im_loader, GIF: im_loader,
 BMP: im_loader, PCX: im_loader, PPM: im_loader, XBM: im_loader, XPM: im_loader,
-
+ 
 SKP: skp_loader, GPL:gpl_loader, SCRIBUS_PAL:scribus_pal_loader, SOC:soc_loader,
 CPL: cpl_loader, COREL_PAL: corel_pal_loader, ASE: ase_loader, JCW:jcw_loader,
-
+ 
 XML: xml_loader,
 }
 
@@ -99,12 +99,12 @@ AI_PS : None, AI_PDF : None, PS : None, EPS : None, PDF : pdf_saver, PSD : None,
 CGM : None, WMF : wmf_saver, EMF : None, XPS : None, VSD : None,
 PLT : plt_saver, HPGL : None, DXF : None, DWG : None,
 RIFF: riff_saver,
-
+ 
 PNG: png_saver,
-
+ 
 SKP: skp_saver, GPL:gpl_saver, SCRIBUS_PAL:scribus_pal_saver, SOC:soc_saver,
 CPL: cpl_saver, COREL_PAL: corel_pal_saver, ASE: ase_saver, JCW: jcw_saver,
-
+ 
 XML: xml_saver,
 }
 
@@ -121,10 +121,10 @@ RIFF: check_riff,
 PNG: check_png, JPG: fallback_check, JP2: fallback_check, TIF: fallback_check,
 GIF: fallback_check, BMP: fallback_check, PCX: fallback_check,
 PPM: fallback_check, XBM: fallback_check, XPM: fallback_check,
-
+ 
 SKP: check_skp, GPL: check_gpl, SCRIBUS_PAL:check_scribus_pal, SOC:check_soc,
 CPL: check_cpl, COREL_PAL: check_corel_pal, ASE: check_ase, JCW: check_jcw,
-
+ 
 XML: check_xml,
 }
 
