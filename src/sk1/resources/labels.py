@@ -23,15 +23,15 @@ from sk1.resources import pdids
 #----- Text labels format: menu label, long description(optional)
 
 LABELS = {
-pdids.SELECT_MODE: (_('Selection mode'),),
-pdids.SHAPER_MODE: (_('Edit mode'),),
-pdids.ZOOM_MODE: (_('Zoom mode'),),
+pdids.SELECT_MODE: (_('Selection mode (Esc)'),),
+pdids.SHAPER_MODE: (_('Edit mode (Space)'),),
+pdids.ZOOM_MODE: (_('Zoom mode (F2)'),),
 pdids.FLEUR_MODE: (_('Fleur mode'),),
 pdids.LINE_MODE: (_('Create polyline'),),
 pdids.CURVE_MODE: (_('Create curve'),),
 pdids.RECT_MODE: (_('Create rectangle'),),
 pdids.ELLIPSE_MODE: (_('Create ellipse'),),
-pdids.TEXT_MODE: (_('Create text'),),
+pdids.TEXT_MODE: (_('Create text (F8)'),),
 pdids.POLYGON_MODE: (_('Create polygon'),),
 pdids.ZOOM_OUT_MODE: (_('Zoom out mode'),),
 pdids.MOVE_MODE: (_('Move mode'),),

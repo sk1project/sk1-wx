@@ -143,10 +143,18 @@ class AppAction:
 		return resources.get_menu_text(self.action_id)
 
 	def get_tooltip_text(self):
-		return resources.get_tooltip_text(self.action_id)
+		txt = resources.get_tooltip_text(self.action_id)
+		if self.is_acc:
+			shortcut = self.get_shortcut_text()
+			txt = '%s (%s)' % (txt, shortcut)
+		return txt
 
 	def get_descr_text(self):
-		return resources.get_descr_text(self.action_id)
+		txt = resources.get_descr_text(self.action_id)
+		if self.is_acc:
+			shortcut = self.get_shortcut_text()
+			txt = '%s (%s)' % (txt, shortcut)
+		return txt
 
 	def get_shortcut_text(self):
 		if self.is_acc:

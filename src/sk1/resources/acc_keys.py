@@ -18,7 +18,7 @@
 import wx
 from sk1.resources import pdids
 
-GENERIC_KEYS = {
+GENERIC_KEYS = {	
 #----- File menu
 wx.ID_NEW:(wx.ACCEL_CTRL, ord('N')),
 pdids.ID_NEW_FROM_TEMPLATE:(wx.ACCEL_SHIFT | wx.ACCEL_CTRL, ord('N')),
@@ -42,13 +42,11 @@ wx.ID_DELETE:[(wx.ACCEL_NORMAL, wx.WXK_DELETE),
 pdids.ID_DUPLICATE:(wx.ACCEL_CTRL, ord('D')),
 wx.ID_SELECTALL:(wx.ACCEL_CTRL, ord('A')),
 pdids.ID_DESELECT:(wx.ACCEL_SHIFT | wx.ACCEL_CTRL, ord('A')),
-#pdids.ID_INV_SELECT:(wx.ACCEL_SHIFT, ord('A')),
+# pdids.ID_INV_SELECT:(wx.ACCEL_SHIFT, ord('A')),
 pdids.COPY_FILL:(wx.ACCEL_SHIFT, wx.WXK_F11),
 pdids.COPY_STROKE:(wx.ACCEL_SHIFT, wx.WXK_F12),
 #----- View menu
 pdids.ID_STROKE_VIEW:(wx.ACCEL_SHIFT, wx.WXK_F9),
-wx.ID_ZOOM_IN:(wx.ACCEL_CTRL, ord('=')),
-wx.ID_ZOOM_OUT:(wx.ACCEL_CTRL, ord('-')),
 pdids.ID_PREV_ZOOM:(wx.ACCEL_NORMAL, wx.WXK_F3),
 pdids.ID_ZOOM_PAGE:(wx.ACCEL_SHIFT, wx.WXK_F4),
 wx.ID_ZOOM_FIT:(wx.ACCEL_NORMAL, wx.WXK_F4),
