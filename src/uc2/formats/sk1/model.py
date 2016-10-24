@@ -72,10 +72,10 @@ class Trafo(object):
 		self.m22 = m22
 		self.v1 = v1
 		self.v2 = v2
- 		
+	
 	def coeff(self):
 		return (self.m11, self.m12, self.m21, self.m22, self.v1, self.v2)
- 	
+
 class Scale(object): pass
 class Translation(object): pass
 
