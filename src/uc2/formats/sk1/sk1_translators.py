@@ -17,8 +17,10 @@
 
 from copy import deepcopy
 
-from uc2.formats.sk1 import sk1const
 from uc2 import uc2const
+from uc2.formats.sk1 import sk1const
+from uc2.formats.sk2 import sk2_model
+import model
 
 def get_sk2_color(clr):
 	if not clr: return deepcopy(sk1const.fallback_color)
@@ -71,9 +73,105 @@ def get_sk1_color(clr):
 		return result
 	else:
 		return deepcopy(sk1const.fallback_sk1color)
+	
+def sk1_to_sk2_page(fmt, size, ornt):
+	if fmt in uc2const.PAGE_FORMAT_NAMES:
+		return [fmt, () + uc2const.PAGE_FORMATS[fmt], ornt]
+	return ['Custom', () + size, ornt]
+
+def get_sk2_layer_props(sk1_layer):
+	return [sk1_layer.visible, abs(sk1_layer.locked - 1),
+		sk1_layer.printable, 1]
 
 class SK1_to_SK2_Translator:
-	def translate(self, sk1_doc, sk2_doc):pass
 	
+	def translate(self, sk1_doc, sk2_doc):
+		sk1_model = sk1_doc.model
+		sk2_model = sk2_doc.model
+		sk2mtds = sk2_doc.methods
+	
+		for item in sk1_model.childs:
+			if item.cid == model.LAYOUT:
+				pages_obj = sk2mtds.get_pages_obj()
+				fmt = sk1_to_sk2_page(item.format, item.size, item.orientation)
+				pages_obj.page_format = fmt
+			elif item.cid == model.GUIDELAYER:
+				gl = sk2mtds.get_guide_layer()
+				sk2mtds.set_guide_color(get_sk2_color(item.layer_color))
+				props = get_sk2_layer_props(item)
+				if props[3]:props[3] = 0
+				gl.properties = props
+				for chld in item.childs:
+					if chld.cid == model.GUIDE:
+						guide = sk2_model.Guide(gl.config, gl,
+											chld.position, chld.orientation)
+						gl.childs.append(guide)
+			elif item.cid == model.GRID:
+				grid = sk2mtds.get_grid_layer()
+				grid.geometry = list(item.geometry)
+				sk2mtds.set_grid_color(get_sk2_color(item.grid_color))	
+				props = get_sk2_layer_props(item)
+				if props[3]:props[3] = 0
+				grid.properties = props				
+			elif item.cid == model.PAGES:
+				pages_obj = sk2mtds.get_pages_obj()
+				pages_obj.childs = self.translate_objs(pages_obj, item.childs)
+				pages_obj.page_counter = len(pages_obj.childs)
+				
+	def translate_objs(self, dest_parent, source_objs):
+		dest_objs = []
+		if source_objs:
+			for source_obj in source_objs:
+				dest_obj = None
+				if source_obj.cid == model.LAYER:
+					dest_obj = self.translate_layer(dest_parent, source_obj)
+				elif source_obj.cid == model.MASKGROUP:
+					dest_obj = self.translate_mgroup(dest_parent, source_obj)
+				elif source_obj.cid == model.GROUP:
+					dest_obj = self.translate_group(dest_parent, source_obj)
+				elif source_obj.cid == model.RECTANGLE:
+					dest_obj = self.translate_rect(dest_parent, source_obj)
+				elif source_obj.cid == model.ELLIPSE:
+					dest_obj = self.translate_ellipse(dest_parent, source_obj)
+				elif source_obj.cid == model.CURVE:
+					dest_obj = self.translate_curve(dest_parent, source_obj)
+				elif source_obj.cid == model.TEXT:
+					dest_obj = self.translate_text(dest_parent, source_obj)
+				elif source_obj.cid == model.IMAGE:
+					dest_obj = self.translate_image(dest_parent, source_obj)
+				if dest_obj:dest_objs.append(dest_obj)					
+		return dest_objs
+	
+	def translate_page(self, dest_parent, source_page):
+		name = '' + source_page.name
+		fmt = sk1_to_sk2_page(source_page.format, source_page.size,
+						source_page.orientation)
+		dest_page = sk2_model.Page(dest_parent.config, dest_parent, name)
+		dest_page.page_format = fmt
+		dest_page.childs = self.translate_objs(dest_page, source_page.childs)
+		dest_page.layer_counter = len(dest_page.childs)
+		return dest_page
+		
+	def translate_layer(self, dest_parent, source_layer):
+		name = '' + source_layer.name
+		props = get_sk2_layer_props(source_layer)
+		dest_layer = sk2_model.Layer(dest_parent.config, dest_parent, name)
+		dest_layer.color = get_sk2_color(source_layer.layer_color)
+		dest_layer.properties = props
+		dest_layer.childs = self.translate_objs(dest_layer, source_layer.childs)
+		return dest_layer
+	
+	def translate_group(self, dest_parent, source_group):return None
+	def translate_mgroup(self, dest_parent, source_mgroup):return None
+	
+	def translate_rect(self, dest_parent, source_rect):return None
+	def translate_ellipse(self, dest_parent, source_ellipse):return None
+	def translate_curve(self, dest_parent, source_curve):return None
+	def translate_text(self, dest_parent, source_text):return None
+	def translate_image(self, dest_parent, source_image):return None
+				
+				
+						
+			
 class SK2_to_SK1_Translator:
 	def translate(self, sk2_doc, sk1_doc):pass
