@@ -277,6 +277,7 @@ class SK1Layer(SK1ModelObject):
 		self.printable = printable
 		self.locked = locked
 		self.outlined = outlined
+		self.layer_color = outline_color
 		self.is_MasterLayer = is_MasterLayer
 		self.is_Page = is_Page
 		SK1ModelObject.__init__(self)
@@ -313,6 +314,7 @@ class SK1MasterLayer(SK1ModelObject):
 		self.printable = printable
 		self.locked = locked
 		self.outlined = outlined
+		self.layer_color = outline_color
 		self.is_MasterLayer = is_MasterLayer
 		self.is_Page = is_Page
 		SK1ModelObject.__init__(self)
@@ -349,6 +351,7 @@ class SK1GuideLayer(SK1ModelObject):
 		self.printable = printable
 		self.locked = locked
 		self.outlined = outlined
+		self.layer_color = outline_color
 		self.is_MasterLayer = is_MasterLayer
 		self.is_Page = is_Page
 		SK1ModelObject.__init__(self)
