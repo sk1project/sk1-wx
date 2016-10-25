@@ -21,27 +21,28 @@ import sys
 from uc2 import _, events, msgconst, uc2const
 from uc2.formats.sk1 import model
 from uc2.formats.sk1.presenter import SK1_Presenter
+from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2.formats.pdxf.presenter import PDXF_Presenter
 from uc2.formats.generic_filters import get_fileptr
 
 def sk1_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	if kw: cnf.update(kw)
-	doc = SK1_Presenter(appdata, cnf)
-	doc.load(filename)
+	sk1_doc = SK1_Presenter(appdata, cnf)
+	sk1_doc.load(filename)
 	if translate:
-		pdxf_doc = PDXF_Presenter(appdata, cnf)
-		pdxf_doc.doc_file = filename
-		doc.traslate_to_pdxf(pdxf_doc)
-		doc.close()
-		doc = pdxf_doc
-	return doc
+		sk2_doc = SK2_Presenter(appdata, cnf)
+		sk2_doc.doc_file = filename
+		sk1_doc.traslate_to_sk2(sk2_doc)
+		sk1_doc.close()
+		return sk2_doc
+	return sk1_doc
 
 def sk1_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	if kw: cnf.update(kw)
 	if sk2_doc.cid == uc2const.SK1: translate = False
 	if translate:
 		sk1_doc = SK1_Presenter(sk2_doc.appdata, cnf)
-		sk1_doc.traslate_from_pdxf(sk2_doc)
+		sk1_doc.traslate_from_sk2(sk2_doc)
 		sk1_doc.save(filename)
 		sk1_doc.close()
 	else:
