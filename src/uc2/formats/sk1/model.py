@@ -190,6 +190,8 @@ class SK1Grid(SK1ModelObject):
 	cid = GRID
 	geometry = sk1const.default_grid
 	visible = 0
+	printable = 0
+	locked = 0
 	grid_color = sk1const.default_grid_color
 	name = 'Grid'
 	is_GridLayer = 1
@@ -365,31 +367,21 @@ class SK1Guide(SK1ModelObject):
 	"""
 	Represents Guideline object.
 	Guideline values are defined as:
-	(point,orientation)
+	(position,orientation)
 	"""
-	string = "guide((0.0,0.0),0)\n"
+	string = "guide(0.0,0)\n"
 	cid = GUIDE
 	position = 0
 	orientation = uc2const.HORIZONTAL
 	is_GuideLine = 1
 
-	def __init__(self, point=(), orientation=uc2const.HORIZONTAL):
-		if point:
-			if orientation == uc2const.VERTICAL:
-				self.position = point[0]
-			else:
-				self.position = point[1]
-		else:
-			self.position = 0.0
+	def __init__(self, position, orientation=uc2const.HORIZONTAL):
+		self.position = position
 		self.orientation = orientation
 		SK1ModelObject.__init__(self)
 
 	def update(self):
-		if self.orientation == uc2const.VERTICAL:
-			point = (self.position, 0.0)
-		else:
-			point = (0.0, self.position)
-		args = (point, self.orientation)
+		args = (self.position, self.orientation)
 		self.string = 'guide' + args.__str__() + '\n'
 
 #--- PROPERTIES OBJECTS
