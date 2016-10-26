@@ -28,12 +28,15 @@ from uc2.formats.generic_filters import get_fileptr
 def sk1_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	if kw: cnf.update(kw)
 	sk1_doc = SK1_Presenter(appdata, cnf)
-	sk1_doc.load(filename)
+	sk1_doc.load(filename, fileptr)
 	if translate:
-		sk2_doc = SK2_Presenter(appdata, cnf)
-		sk2_doc.doc_file = filename
-		sk1_doc.traslate_to_sk2(sk2_doc)
-		sk1_doc.close()
+		try:
+			sk2_doc = SK2_Presenter(appdata, cnf)
+			if filename: sk2_doc.doc_file = filename
+			sk1_doc.translate_to_sk2(sk2_doc)
+			sk1_doc.close()
+		except:
+			for item in sys.exc_info(): print item
 		return sk2_doc
 	return sk1_doc
 
@@ -42,11 +45,11 @@ def sk1_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf={}, **kw
 	if sk2_doc.cid == uc2const.SK1: translate = False
 	if translate:
 		sk1_doc = SK1_Presenter(sk2_doc.appdata, cnf)
-		sk1_doc.traslate_from_sk2(sk2_doc)
-		sk1_doc.save(filename)
+		sk1_doc.translate_from_sk2(sk2_doc)
+		sk1_doc.save(filename, fileptr)
 		sk1_doc.close()
 	else:
-		sk2_doc.save(filename)
+		sk2_doc.save(filename, fileptr)
 
 def check_sk1(path):
 	fileptr = get_fileptr(path)
