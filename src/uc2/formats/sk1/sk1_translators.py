@@ -20,6 +20,7 @@ from copy import deepcopy
 from uc2 import uc2const
 from uc2.formats.sk1 import sk1const
 from uc2.formats.sk2 import sk2_model
+from uc2 import libgeom
 import model
 
 def get_sk2_color(clr):
@@ -189,9 +190,22 @@ class SK1_to_SK2_Translator:
 		trafo = list(source_rect.trafo.coeff())
 		trafo[4] += self.dx
 		trafo[5] += self.dy
-		print source_rect.radius1, source_rect.radius2
+		corners = [0.0, 0.0, 0.0, 0.0]
+		rect = [0.0, 0.0, 1.0, 1.0]
+		if source_rect.radius1 and source_rect.radius2:
+			radius = min(source_rect.radius1, source_rect.radius2)
+			corners = [radius * 2.0] * 4
+			if source_rect.radius1 > source_rect.radius2:
+				coef = source_rect.radius1 / source_rect.radius2
+				rect = [0.0, 0.0, 1.0, coef]
+				tr = [1.0, 0.0, 0.0, 1.0 / coef, 0.0, 0.0]
+			else:
+				coef = source_rect.radius2 / source_rect.radius1
+				rect = [0.0, 0.0, coef, 1.0]	
+				tr = [1.0 / coef, 0.0, 0.0, 1.0 , 0.0, 0.0]	
+			trafo = libgeom.multiply_trafo(tr, trafo)		
 		dest_rect = sk2_model.Rectangle(dest_parent.config, dest_parent,
-									trafo=trafo)
+									rect, trafo, corners=corners)
 		return dest_rect
 	
 	def translate_ellipse(self, dest_parent, source_ellipse):return None
