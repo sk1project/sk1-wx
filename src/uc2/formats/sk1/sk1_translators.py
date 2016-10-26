@@ -87,14 +87,15 @@ class SK1_to_SK2_Translator:
 	
 	def translate(self, sk1_doc, sk2_doc):
 		sk1_model = sk1_doc.model
-		sk2_model = sk2_doc.model
 		sk2mtds = sk2_doc.methods
-	
+		dx = dy = 0
 		for item in sk1_model.childs:
 			if item.cid == model.LAYOUT:
 				pages_obj = sk2mtds.get_pages_obj()
 				fmt = sk1_to_sk2_page(item.format, item.size, item.orientation)
 				pages_obj.page_format = fmt
+				dx = item.size[0] / 2.0
+				dy = item.size[1] / 2.0
 			elif item.cid == model.GUIDELAYER:
 				gl = sk2mtds.get_guide_layer()
 				sk2mtds.set_guide_color(get_sk2_color(item.layer_color))
@@ -103,8 +104,11 @@ class SK1_to_SK2_Translator:
 				gl.properties = props
 				for chld in item.childs:
 					if chld.cid == model.GUIDE:
+						orientation = abs(chld.orientation - 1)
+						position = chld.position - dy
+						if orientation:position = chld.position - dx							
 						guide = sk2_model.Guide(gl.config, gl,
-											chld.position, chld.orientation)
+											position, orientation)
 						gl.childs.append(guide)
 			elif item.cid == model.GRID:
 				grid = sk2mtds.get_grid_layer()
@@ -118,12 +122,16 @@ class SK1_to_SK2_Translator:
 				pages_obj.childs = self.translate_objs(pages_obj, item.childs)
 				pages_obj.page_counter = len(pages_obj.childs)
 				
+		sk2_doc.model.do_update()
+				
 	def translate_objs(self, dest_parent, source_objs):
 		dest_objs = []
 		if source_objs:
 			for source_obj in source_objs:
 				dest_obj = None
-				if source_obj.cid == model.LAYER:
+				if source_obj.cid == model.PAGE:
+					dest_obj = self.translate_page(dest_parent, source_obj)
+				elif source_obj.cid == model.LAYER:
 					dest_obj = self.translate_layer(dest_parent, source_obj)
 				elif source_obj.cid == model.MASKGROUP:
 					dest_obj = self.translate_mgroup(dest_parent, source_obj)
