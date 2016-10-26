@@ -85,10 +85,12 @@ def get_sk2_layer_props(sk1_layer):
 
 class SK1_to_SK2_Translator:
 	
+	dx = dy = 0.0
+	
 	def translate(self, sk1_doc, sk2_doc):
 		sk1_model = sk1_doc.model
-		sk2mtds = sk2_doc.methods
-		dx = dy = 0
+		self.sk2mtds = sk2mtds = sk2_doc.methods
+		dx = dy = 0.0
 		for item in sk1_model.childs:
 			if item.cid == model.LAYOUT:
 				pages_obj = sk2mtds.get_pages_obj()
@@ -133,10 +135,10 @@ class SK1_to_SK2_Translator:
 					dest_obj = self.translate_page(dest_parent, source_obj)
 				elif source_obj.cid == model.LAYER:
 					dest_obj = self.translate_layer(dest_parent, source_obj)
-				elif source_obj.cid == model.MASKGROUP:
-					dest_obj = self.translate_mgroup(dest_parent, source_obj)
 				elif source_obj.cid == model.GROUP:
 					dest_obj = self.translate_group(dest_parent, source_obj)
+				elif source_obj.cid == model.MASKGROUP:
+					dest_obj = self.translate_mgroup(dest_parent, source_obj)
 				elif source_obj.cid == model.RECTANGLE:
 					dest_obj = self.translate_rect(dest_parent, source_obj)
 				elif source_obj.cid == model.ELLIPSE:
@@ -154,6 +156,8 @@ class SK1_to_SK2_Translator:
 		name = '' + source_page.name
 		fmt = sk1_to_sk2_page(source_page.format, source_page.size,
 						source_page.orientation)
+		self.dx = -source_page.size[0] / 2.0
+		self.dy = -source_page.size[1] / 2.0
 		dest_page = sk2_model.Page(dest_parent.config, dest_parent, name)
 		dest_page.page_format = fmt
 		dest_page.childs = self.translate_objs(dest_page, source_page.childs)
@@ -164,15 +168,32 @@ class SK1_to_SK2_Translator:
 		name = '' + source_layer.name
 		props = get_sk2_layer_props(source_layer)
 		dest_layer = sk2_model.Layer(dest_parent.config, dest_parent, name)
-		dest_layer.color = get_sk2_color(source_layer.layer_color)
+		color = get_sk2_color(source_layer.layer_color)
+		self.sk2mtds.set_layer_color(dest_layer, color)
 		dest_layer.properties = props
 		dest_layer.childs = self.translate_objs(dest_layer, source_layer.childs)
 		return dest_layer
 	
-	def translate_group(self, dest_parent, source_group):return None
-	def translate_mgroup(self, dest_parent, source_mgroup):return None
+	def translate_group(self, dest_parent, source_group):
+		dest_group = sk2_model.Group(dest_parent.config, dest_parent)
+		dest_group.childs = self.translate_objs(dest_group, source_group.childs)
+		return dest_group
 	
-	def translate_rect(self, dest_parent, source_rect):return None
+	def translate_mgroup(self, dest_parent, source_mgroup):
+		dest_mgroup = sk2_model.Container(dest_parent.config, dest_parent)
+		dest_mgroup.childs = self.translate_objs(dest_mgroup,
+												source_mgroup.childs)
+		return dest_mgroup
+	
+	def translate_rect(self, dest_parent, source_rect):
+		trafo = list(source_rect.trafo.coeff())
+		trafo[4] += self.dx
+		trafo[5] += self.dy
+		print source_rect.radius1, source_rect.radius2
+		dest_rect = sk2_model.Rectangle(dest_parent.config, dest_parent,
+									trafo=trafo)
+		return dest_rect
+	
 	def translate_ellipse(self, dest_parent, source_ellipse):return None
 	def translate_curve(self, dest_parent, source_curve):return None
 	def translate_text(self, dest_parent, source_text):return None
