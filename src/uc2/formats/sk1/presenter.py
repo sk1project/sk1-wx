@@ -49,11 +49,11 @@ class SK1_Presenter(TextModelPresenter):
 		self.model = create_new_doc(self.config)
 		self.update()
 
-	def traslate_from_sk2(self, sk2_doc):
+	def translate_from_sk2(self, sk2_doc):
 		translator = SK2_to_SK1_Translator()
 		translator.translate(sk2_doc, self)
 
-	def traslate_to_sk2(self, sk2_doc):
+	def translate_to_sk2(self, sk2_doc):
 		translator = SK1_to_SK2_Translator()
 		translator.translate(self, sk2_doc)
 
