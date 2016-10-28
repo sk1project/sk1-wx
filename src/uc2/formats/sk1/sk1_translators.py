@@ -44,6 +44,12 @@ SK2_LINE_CAP = {
 	sk1const.CapProjecting:sk2_const.CAP_SQUARE, 	
 }
 
+SK2_TEXT_ALIGN = {
+	sk1const.ALIGN_LEFT:sk2_const.TEXT_ALIGN_LEFT,
+	sk1const.ALIGN_RIGHT:sk2_const.TEXT_ALIGN_RIGHT,
+	sk1const.ALIGN_CENTER:sk2_const.TEXT_ALIGN_CENTER,
+}
+
 def get_sk2_color(clr):
 	if not clr: return deepcopy(sk1const.fallback_color)
 	color_spec = clr[0]
@@ -93,6 +99,13 @@ def get_sk2_style(sk1_style):
 			sk2_fill = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID,
 					get_sk2_color(fill_pattern.color)]
 		sk2_style[0] = sk2_fill
+	return sk2_style
+
+def get_sk2_txt_style(source_text):
+	sk1_style = source_text.properties
+	sk2_style = get_sk2_style(sk1_style)
+	sk2_style[2] = ['' + sk1_style.font, '' + sk1_style.font_face,
+		sk1_style.font_size, SK2_TEXT_ALIGN[source_text.horiz_align], [], True]
 	return sk2_style
 
 class SK1_to_SK2_Translator:
@@ -246,7 +259,18 @@ class SK1_to_SK2_Translator:
 		dest_curve.style = get_sk2_style(source_curve.properties)
 		return dest_curve
 	
-	def translate_text(self, dest_parent, source_text):return None
+	def translate_text(self, dest_parent, source_text):	
+		text = '' + source_text.text
+		trafo = list(source_text.trafo)
+		if len(source_text.trafo) == 2:
+			trafo = [1.0, 0.0, 0.0, 1.0] + trafo
+		trafo[4] += self.dx
+		trafo[5] += self.dy
+		size = source_text.properties.font_size * 1.16
+		dest_text = sk2_model.Text(dest_parent.config, dest_parent,
+									[0.0, -size], text, trafo=trafo)
+		dest_text.style = get_sk2_txt_style(source_text)
+		return dest_text
 	
 	def translate_image(self, dest_parent, source_image):
 		trafo = self.get_sk2_trafo(source_image)
@@ -282,6 +306,13 @@ SK1_LINE_CAP = {
 	sk2_const.CAP_BUTT:sk1const.CapButt,
 	sk2_const.CAP_ROUND:sk1const.CapRound,
 	sk2_const.CAP_SQUARE:sk1const.CapProjecting, 	
+}
+
+SK1_TEXT_ALIGN = {
+	sk2_const.TEXT_ALIGN_LEFT:sk1const.ALIGN_LEFT,
+	sk2_const.TEXT_ALIGN_RIGHT:sk1const.ALIGN_RIGHT,
+	sk2_const.TEXT_ALIGN_CENTER:sk1const.ALIGN_CENTER, 	
+	sk2_const.TEXT_ALIGN_JUSTIFY:sk1const.ALIGN_LEFT,
 }
 
 def get_sk1_color(clr):
