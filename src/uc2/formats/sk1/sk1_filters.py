@@ -158,8 +158,9 @@ class SK1_Loader(AbstractLoader):
 	def Fs(self, size):
 		self.style.font_size = size
 
-	def Fn(self, name):
+	def Fn(self, name, face=None):
 		self.style.font = name
+		self.style.font_face = face
 
 	def dstyle(self, name=''):
 		if name:
@@ -337,7 +338,15 @@ class SK1_Loader(AbstractLoader):
 		self.paths[-1][2] = const.CURVE_CLOSED
 
 	def txt(self, text, trafo, horiz_align, vert_align, chargap, wordgap, linegap):
-		if text: text = self._decode_text(text)
+		if not text: return
+		if isinstance(text, int):
+			lines = text
+			text = ''
+			for item in range(lines):
+				text += self.fileptr.readline()
+			text = text[:-1]
+		else:
+			text = self._decode_text(text)
 		obj = SK1Text(text, trafo, horiz_align, vert_align, chargap, wordgap, linegap)
 		self.set_style(obj)
 		self.add_object(obj)
