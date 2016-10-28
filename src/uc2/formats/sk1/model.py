@@ -599,6 +599,7 @@ class Style:
 	line_arrow1 = None
 	line_arrow2 = None
 	font = None
+	font_face = None
 	font_size = 12.0
 
 	def __init__(self, name='', duplicate=None, base_style=False, **kw):
@@ -700,7 +701,10 @@ class Style:
 			else:
 				write('la2()\n')
 		if self.font:
-			write('Fn(\'%s\')\n' % self.font)
+			if self.font_face:
+				write("Fn('%s','%s')\n" % (self.font, self.font_face)) 
+			else:
+				write('Fn(\'%s\')\n' % self.font)
 		if not self.font_size == 12:
 			write('Fs(%g)\n' % self.font_size)
 
@@ -894,16 +898,11 @@ class SK1Text(SK1ModelObject):
 		SK1ModelObject.__init__(self)
 
 	def update(self):
-		text = self._encode_text(self.text)
-		args = (text, self.trafo, self.horiz_align, self.vert_align,
+		lines = self.text.split('\n')
+		args = (len(lines), self.trafo, self.horiz_align, self.vert_align,
 			self.chargap, self.wordgap, self.linegap)
 		self.string = 'txt' + args.__str__() + '\n'
-
-	def _encode_text(self, text):
-		output = ''
-		for char in text:
-			output += '\u0%x' % ord(char)
-		return output
+		self.string += self.text + '\n'
 
 
 class SK1BitmapData(SK1ModelObject):
