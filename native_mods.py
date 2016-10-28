@@ -28,26 +28,6 @@ def make_modules(src_path, include_path, lib_path=[]):
 
 	modules = []
 
-	filter_src = os.path.join(src_path, 'uc2', 'utils', 'streamfilter')
-	files = ['streamfilter.c', 'filterobj.c', 'linefilter.c',
-			'subfilefilter.c', 'base64filter.c', 'nullfilter.c',
-			'stringfilter.c', 'binfile.c', 'hexfilter.c']
-	files = buildutils.make_source_list(filter_src, files)
-	filter_module = Extension('uc2.utils.streamfilter',
-			define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
-			sources=files)
-	modules.append(filter_module)
-
-	sk1objs_src = os.path.join(src_path, 'uc2', 'formats', 'sk1', 'sk1objs')
-	files = ['_sketchmodule.c', 'skpoint.c', 'skcolor.c', 'sktrafo.c',
-		'skrect.c', 'skfm.c', 'curvefunc.c', 'curveobject.c', 'curvelow.c',
-		'curvemisc.c', 'skaux.c', 'skimage.c', ]
-	files = buildutils.make_source_list(sk1objs_src, files)
-	sk1objs_module = Extension('uc2.formats.sk1._sk1objs',
-			define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
-			sources=files)
-	modules.append(sk1objs_module)
-
 	#--- Cairo module
 
 	cairo_src = os.path.join(src_path, 'uc2', 'libcairo')
