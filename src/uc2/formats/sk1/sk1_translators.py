@@ -24,19 +24,21 @@ from uc2.formats.sk2 import sk2_model, sk2_const
 
 import model
 
-SK1_ARC_TYPES = {
+#--- SK1 to SK2 translation 
+
+SK2_ARC_TYPES = {
 	sk1const.ArcArc:sk2_const.ARC_ARC,
 	sk1const.ArcChord:sk2_const.ARC_CHORD,
 	sk1const.ArcPieSlice:sk2_const.ARC_PIE_SLICE, 	
 }
 
-SK1_LINE_JOIN = {
+SK2_LINE_JOIN = {
 	sk1const.JoinMiter:sk2_const.JOIN_MITER,
 	sk1const.JoinRound:sk2_const.JOIN_ROUND,
 	sk1const.JoinBevel:sk2_const.JOIN_BEVEL,
 }
 
-SK1_LINE_CAP = {
+SK2_LINE_CAP = {
 	sk1const.CapButt:sk2_const.CAP_BUTT,
 	sk1const.CapRound:sk2_const.CAP_ROUND,
 	sk1const.CapProjecting:sk2_const.CAP_SQUARE, 	
@@ -80,8 +82,8 @@ def get_sk2_style(sk1_style):
 				sk1_style.line_width,
 				get_sk2_color(line_pattern.color),
 				list(sk1_style.line_dashes),
-				SK1_LINE_CAP[sk1_style.line_cap],
-				SK1_LINE_JOIN[sk1_style.line_join],
+				SK2_LINE_CAP[sk1_style.line_cap],
+				SK2_LINE_JOIN[sk1_style.line_join],
 				10.0, 0, 0, []				
 				]
 		sk2_style[1] = sk2_line
@@ -227,7 +229,7 @@ class SK1_to_SK2_Translator:
 		trafo = self.get_sk2_trafo(source_ellipse)
 		angle1 = source_ellipse.start_angle
 		angle2 = source_ellipse.end_angle
-		arc_type = SK1_ARC_TYPES[source_ellipse.arc_type]
+		arc_type = SK2_ARC_TYPES[source_ellipse.arc_type]
 		rect = [-1.0, -1.0, 2.0, 2.0]		
 		dest_ellipse = sk2_model.Circle(dest_parent.config, dest_parent,
 									rect, angle1, angle2, arc_type)
@@ -262,7 +264,25 @@ class SK1_to_SK2_Translator:
 		dest_image.trafo = trafo
 		return dest_image		
 				
+#--- SK2 to SK1 translation 
 
+SK1_ARC_TYPES = {
+	sk2_const.ARC_ARC:sk1const.ArcArc,
+	sk2_const.ARC_CHORD:sk1const.ArcChord,
+	sk2_const.ARC_PIE_SLICE:sk1const.ArcPieSlice, 	
+}
+
+SK1_LINE_JOIN = {
+	sk2_const.JOIN_MITER:sk1const.JoinMiter,
+	sk2_const.JOIN_ROUND:sk1const.JoinRound,
+	sk2_const.JOIN_BEVEL:sk1const.JoinBevel,
+}
+
+SK1_LINE_CAP = {
+	sk2_const.CAP_BUTT:sk1const.CapButt,
+	sk2_const.CAP_ROUND:sk1const.CapRound,
+	sk2_const.CAP_SQUARE:sk1const.CapProjecting, 	
+}
 
 def get_sk1_color(clr):
 	if not clr: return deepcopy(sk1const.fallback_sk1color)
