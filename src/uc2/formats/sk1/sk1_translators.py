@@ -16,11 +16,12 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from copy import deepcopy
+from cStringIO import StringIO
 
-from uc2 import uc2const
+from uc2 import uc2const, libgeom, libimg
 from uc2.formats.sk1 import sk1const
 from uc2.formats.sk2 import sk2_model, sk2_const
-from uc2 import libgeom
+
 import model
 
 SK1_ARC_TYPES = {
@@ -99,6 +100,7 @@ class SK1_to_SK2_Translator:
 	def translate(self, sk1_doc, sk2_doc):
 		sk1_model = sk1_doc.model
 		self.sk2mtds = sk2mtds = sk2_doc.methods
+		self.sk2_doc = sk2_doc
 		dx = dy = 0.0
 		for item in sk1_model.childs:
 			if item.cid == model.LAYOUT:
@@ -135,7 +137,7 @@ class SK1_to_SK2_Translator:
 				
 		sk2_doc.model.do_update()
 		
-	def get_trafo(self, obj):
+	def get_sk2_trafo(self, obj):
 		trafo = list(obj.trafo.coeff())
 		trafo[4] += self.dx
 		trafo[5] += self.dy
@@ -201,7 +203,7 @@ class SK1_to_SK2_Translator:
 		return dest_mgroup
 	
 	def translate_rect(self, dest_parent, source_rect):
-		trafo = self.get_trafo(source_rect)
+		trafo = self.get_sk2_trafo(source_rect)
 		corners = [0.0, 0.0, 0.0, 0.0]
 		rect = [0.0, 0.0, 1.0, 1.0]
 		if source_rect.radius1 and source_rect.radius2:
@@ -222,7 +224,7 @@ class SK1_to_SK2_Translator:
 		return dest_rect
 	
 	def translate_ellipse(self, dest_parent, source_ellipse):
-		trafo = self.get_trafo(source_ellipse)
+		trafo = self.get_sk2_trafo(source_ellipse)
 		angle1 = source_ellipse.start_angle
 		angle2 = source_ellipse.end_angle
 		arc_type = SK1_ARC_TYPES[source_ellipse.arc_type]
@@ -243,7 +245,22 @@ class SK1_to_SK2_Translator:
 		return dest_curve
 	
 	def translate_text(self, dest_parent, source_text):return None
-	def translate_image(self, dest_parent, source_image):return None		
+	
+	def translate_image(self, dest_parent, source_image):
+		trafo = self.get_sk2_trafo(source_image)
+		dest_image = sk2_model.Pixmap(dest_parent.config)
+		
+		image = source_image.image
+		image_stream = StringIO()
+		if image.mode == "CMYK":
+			image.save(image_stream, 'JPEG', quality=100)
+		else:
+			image.save(image_stream, 'PNG')
+		content = image_stream.getvalue()
+		
+		libimg.set_image_data(self.sk2_doc.cms, dest_image, content)
+		dest_image.trafo = trafo
+		return dest_image		
 				
 
 
