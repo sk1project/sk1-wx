@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2013 by Igor E. Novikov
+# 	Copyright (C) 2013-2016 by Igor E. Novikov
 # 	
 # 	This program is free software: you can redistribute it and/or modify
 # 	it under the terms of the GNU General Public License as published by
@@ -60,40 +60,8 @@ def get_sk2_color(clr):
 		return result
 	else:
 		return deepcopy(sk1const.fallback_color)
-
-def get_sk1_color(clr):
-	if not clr: return deepcopy(sk1const.fallback_sk1color)
-	color_spec = clr[0]
-	val = clr[1]
-	alpha = clr[2]
-	name = clr[3]
-	if color_spec == sk1const.RGB:
-		if clr[2] == 1.0:
-			result = (sk1const.RGB, val[0], val[1], val[2])
-		else:
-			result = (sk1const.RGB, val[0], val[1], val[2], alpha)
-		return result
-	elif color_spec == sk1const.CMYK:
-		if clr[2] == 1.0:
-			result = (sk1const.CMYK, val[0], val[1], val[2], val[3])
-		else:
-			result = (sk1const.CMYK, val[0], val[1], val[2], val[3], alpha)
-		return result
-	elif color_spec == sk1const.SPOT:
-		rgb = val[0]
-		cmyk = val[1]
-		pal = clr[4]
-		if clr[2] == 1.0:
-			result = (sk1const.SPOT, pal, clr[3], rgb[0], rgb[1], rgb[2],
-					cmyk[0], cmyk[1], cmyk[2], cmyk[3])
-		else:
-			result = (sk1const.SPOT, pal, name, rgb[0], rgb[1], rgb[2],
-					cmyk[0], cmyk[1], cmyk[2], cmyk[3], alpha)
-		return result
-	else:
-		return deepcopy(sk1const.fallback_sk1color)
 	
-def sk1_to_sk2_page(fmt, size, ornt):
+def get_sk2_page(fmt, size, ornt):
 	if fmt in uc2const.PAGE_FORMAT_NAMES:
 		return [fmt, () + uc2const.PAGE_FORMATS[fmt], ornt]
 	return ['Custom', () + size, ornt]
@@ -135,7 +103,7 @@ class SK1_to_SK2_Translator:
 		for item in sk1_model.childs:
 			if item.cid == model.LAYOUT:
 				pages_obj = sk2mtds.get_pages_obj()
-				fmt = sk1_to_sk2_page(item.format, item.size, item.orientation)
+				fmt = get_sk2_page(item.format, item.size, item.orientation)
 				pages_obj.page_format = fmt
 				dx = item.size[0] / 2.0
 				dy = item.size[1] / 2.0
@@ -201,7 +169,7 @@ class SK1_to_SK2_Translator:
 	
 	def translate_page(self, dest_parent, source_page):
 		name = '' + source_page.name
-		fmt = sk1_to_sk2_page(source_page.format, source_page.size,
+		fmt = get_sk2_page(source_page.format, source_page.size,
 						source_page.orientation)
 		self.dx = -source_page.size[0] / 2.0
 		self.dy = -source_page.size[1] / 2.0
@@ -275,9 +243,41 @@ class SK1_to_SK2_Translator:
 		return dest_curve
 	
 	def translate_text(self, dest_parent, source_text):return None
-	def translate_image(self, dest_parent, source_image):return None
+	def translate_image(self, dest_parent, source_image):return None		
 				
-				
+
+
+def get_sk1_color(clr):
+	if not clr: return deepcopy(sk1const.fallback_sk1color)
+	color_spec = clr[0]
+	val = clr[1]
+	alpha = clr[2]
+	name = clr[3]
+	if color_spec == sk1const.RGB:
+		if clr[2] == 1.0:
+			result = (sk1const.RGB, val[0], val[1], val[2])
+		else:
+			result = (sk1const.RGB, val[0], val[1], val[2], alpha)
+		return result
+	elif color_spec == sk1const.CMYK:
+		if clr[2] == 1.0:
+			result = (sk1const.CMYK, val[0], val[1], val[2], val[3])
+		else:
+			result = (sk1const.CMYK, val[0], val[1], val[2], val[3], alpha)
+		return result
+	elif color_spec == sk1const.SPOT:
+		rgb = val[0]
+		cmyk = val[1]
+		pal = clr[4]
+		if clr[2] == 1.0:
+			result = (sk1const.SPOT, pal, clr[3], rgb[0], rgb[1], rgb[2],
+					cmyk[0], cmyk[1], cmyk[2], cmyk[3])
+		else:
+			result = (sk1const.SPOT, pal, name, rgb[0], rgb[1], rgb[2],
+					cmyk[0], cmyk[1], cmyk[2], cmyk[3], alpha)
+		return result
+	else:
+		return deepcopy(sk1const.fallback_sk1color)
 						
 			
 class SK2_to_SK1_Translator:
