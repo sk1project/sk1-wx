@@ -290,19 +290,25 @@ def get_sk1_color(clr):
 	val = clr[1]
 	alpha = clr[2]
 	name = clr[3]
-	if color_spec == sk1const.RGB:
+	if color_spec == uc2const.COLOR_RGB:
 		if clr[2] == 1.0:
 			result = (sk1const.RGB, val[0], val[1], val[2])
 		else:
 			result = (sk1const.RGB, val[0], val[1], val[2], alpha)
 		return result
-	elif color_spec == sk1const.CMYK:
+	elif color_spec == uc2const.COLOR_CMYK:
 		if clr[2] == 1.0:
 			result = (sk1const.CMYK, val[0], val[1], val[2], val[3])
 		else:
 			result = (sk1const.CMYK, val[0], val[1], val[2], val[3], alpha)
 		return result
-	elif color_spec == sk1const.SPOT:
+	elif color_spec == uc2const.COLOR_GRAY:
+		if clr[2] == 1.0:
+			result = (sk1const.CMYK, 0.0, 0.0, 0.0, 1.0 - val[0])
+		else:
+			result = (sk1const.CMYK, 0.0, 0.0, 0.0, 1.0 - val[0], alpha)
+		return result		
+	elif color_spec == uc2const.COLOR_SPOT:
 		rgb = val[0]
 		cmyk = val[1]
 		pal = clr[4]
