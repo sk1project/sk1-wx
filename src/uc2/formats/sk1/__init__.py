@@ -30,13 +30,10 @@ def sk1_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **k
 	sk1_doc = SK1_Presenter(appdata, cnf)
 	sk1_doc.load(filename, fileptr)
 	if translate:
-		try:
-			sk2_doc = SK2_Presenter(appdata, cnf)
-			if filename: sk2_doc.doc_file = filename
-			sk1_doc.translate_to_sk2(sk2_doc)
-			sk1_doc.close()
-		except:
-			for item in sys.exc_info(): print item
+		sk2_doc = SK2_Presenter(appdata, cnf)
+		if filename: sk2_doc.doc_file = filename
+		sk1_doc.translate_to_sk2(sk2_doc)
+		sk1_doc.close()
 		return sk2_doc
 	return sk1_doc
 
