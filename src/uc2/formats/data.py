@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2012 by Igor E. Novikov
+# 	Copyright (C) 2012-2016 by Igor E. Novikov
 #
 # 	This program is free software: you can redistribute it and/or modify
 # 	it under the terms of the GNU General Public License as published by
@@ -28,12 +28,12 @@ SIMPLE_LOADERS = []
 MODEL_LOADERS = [SK2, SK1, PLT, CDR, CDT] + \
 [PNG, JPG, JP2, TIF, GIF, BMP, PCX, PPM, XBM, XPM]
 PALETTE_LOADERS = [SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL, ASE, JCW]
-EXPERIMENTAL_LOADERS = [SK1, WMF, RIFF, CDRZ, XML]
+EXPERIMENTAL_LOADERS = [WMF, RIFF, CDRZ, XML]
 
 SIMPLE_SAVERS = []
 PALETTE_SAVERS = [SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL, ASE, JCW]
-MODEL_SAVERS = [SK2, PNG, PDF, PLT]
-EXPERIMENTAL_SAVERS = [SK1, RIFF, CDR, XML ]
+MODEL_SAVERS = [SK2, SK1, PNG, PDF, PLT]
+EXPERIMENTAL_SAVERS = [RIFF, CDR, XML ]
 
 PATTERN_FORMATS = [EPS, PNG, JPG, JP2, TIF, GIF, BMP, PCX, PPM, XBM, XPM]
 
