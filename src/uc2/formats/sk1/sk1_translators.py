@@ -485,6 +485,8 @@ class SK2_to_SK1_Translator:
 		if source_obj.colorspace == uc2const.IMAGE_CMYK:
 			image_stream.write(b64decode(source_obj.bitmap))
 		else:
+			if source_obj.cache_cdata is None:
+				libimg.update_image(self.sk2_doc.cms, source_obj)
 			source_obj.cache_cdata.write_to_png(image_stream)
 		image_stream.seek(0)
 		image = Image.open(image_stream)
