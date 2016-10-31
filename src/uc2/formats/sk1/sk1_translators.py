@@ -110,7 +110,7 @@ def get_sk2_txt_style(source_text):
 		sk1_style.font_size, SK2_TEXT_ALIGN[source_text.horiz_align], [], True]
 	return sk2_style
 
-class SK1_to_SK2_Translator:
+class SK1_to_SK2_Translator(object):
 	
 	dx = dy = 0.0
 	
@@ -369,7 +369,7 @@ def get_sk1_style(source_obj, cms):
 	return sk1_style
 						
 			
-class SK2_to_SK1_Translator:
+class SK2_to_SK1_Translator(object):
 	
 	dx = dy = 0.0
 	
