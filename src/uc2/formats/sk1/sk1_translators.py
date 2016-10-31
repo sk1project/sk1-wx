@@ -17,6 +17,8 @@
 
 from copy import deepcopy
 from cStringIO import StringIO
+from base64 import b64decode
+from PIL import Image
 
 from uc2 import uc2const, libgeom, libimg
 from uc2.formats.sk1 import sk1const
@@ -315,12 +317,11 @@ SK1_TEXT_ALIGN = {
 	sk2_const.TEXT_ALIGN_JUSTIFY:sk1const.ALIGN_LEFT,
 }
 
-def get_sk1_color(clr):
+def get_sk1_color(clr, cms):
 	if not clr: return deepcopy(sk1const.fallback_sk1color)
 	color_spec = clr[0]
 	val = clr[1]
 	alpha = clr[2]
-	name = clr[3]
 	if color_spec == uc2const.COLOR_RGB:
 		if clr[2] == 1.0:
 			result = (sk1const.RGB, val[0], val[1], val[2])
@@ -340,19 +341,158 @@ def get_sk1_color(clr):
 			result = (sk1const.CMYK, 0.0, 0.0, 0.0, 1.0 - val[0], alpha)
 		return result		
 	elif color_spec == uc2const.COLOR_SPOT:
-		rgb = val[0]
-		cmyk = val[1]
-		pal = clr[4]
+		clr = cms.get_rgb_color(clr)
+		val = clr[1]
+		alpha = clr[2]
 		if clr[2] == 1.0:
-			result = (sk1const.SPOT, pal, clr[3], rgb[0], rgb[1], rgb[2],
-					cmyk[0], cmyk[1], cmyk[2], cmyk[3])
+			result = (sk1const.RGB, val[0], val[1], val[2])
 		else:
-			result = (sk1const.SPOT, pal, name, rgb[0], rgb[1], rgb[2],
-					cmyk[0], cmyk[1], cmyk[2], cmyk[3], alpha)
+			result = (sk1const.RGB, val[0], val[1], val[2], alpha)
 		return result
 	else:
 		return deepcopy(sk1const.fallback_sk1color)
+	
+def get_sk1_style(source_obj, cms):
+	sk1_style = model.Style()
+	fill = source_obj.style[0]
+	stroke = source_obj.style[1]
+	if fill and fill[1] == sk2_const.FILL_SOLID:
+		sk1_style.fill_pattern = model.SolidPattern(get_sk1_color(fill[2], cms))
+	if stroke:
+		sk1_style.line_pattern = model.SolidPattern(get_sk1_color(stroke[2], cms))
+		sk1_style.line_width = stroke[1]
+		sk1_style.line_join = SK1_LINE_JOIN[stroke[5]]
+		sk1_style.line_cap = SK1_LINE_CAP[stroke[4]]
+		sk1_style.line_dashes = tuple(stroke[3])
+	else:
+		sk1_style.line_pattern = model.EmptyPattern
+	return sk1_style
 						
 			
 class SK2_to_SK1_Translator:
-	def translate(self, sk2_doc, sk1_doc):pass
+	
+	dx = dy = 0.0
+	
+	def translate(self, sk2_doc, sk1_doc):
+		sk2model = sk2_doc.model
+		self.sk1mtds = sk1mtds = sk1_doc.methods
+		self.sk1_doc = sk1_doc
+		self.sk2_doc = sk2_doc
+		dx = dy = 0.0
+		for item in sk2model.childs:
+			if item.cid == sk2_model.PAGES:
+				layout = sk1mtds.get_layout_obj()
+				fmt, size, ornt = item.page_format
+				layout.format = '' + fmt
+				layout.size = () + size
+				layout.orientation = ornt
+				dx = size[0] / 2.0
+				dy = size[1] / 2.0
+				pages_obj = sk1mtds.get_pages_obj()
+				pages_obj.childs = self.translate_objs(pages_obj, item.childs)
+			elif item.cid == sk2_model.GRID_LAYER:
+				grid = sk1mtds.get_grid_layer()
+				grid.geometry = tuple(item.grid)
+				grid.grid_color = get_sk1_color(item.style[1][2],
+											self.sk2_doc.cms)
+				grid.visible = item.properties[0]
+			elif item.cid == sk2_model.GUIDE_LAYER:
+				gl = sk1mtds.get_guide_layer()
+				gl.layer_color = get_sk1_color(item.style[1][2],
+											self.sk2_doc.cms)
+				gl.visible = item.properties[0]
+				gl.childs = []
+				for chld in item.childs:
+					if chld.cid == sk2_model.GUIDE:
+						position = chld.position + dx
+						orientation = abs(chld.orientation - 1)
+						if orientation:position = chld.position + dy
+						guide = model.SK1Guide(position, orientation)
+						gl.childs.append(guide)
+			
+	def translate_objs(self, dest_parent, source_objs):
+		dest_objs = []
+		if source_objs:
+			for source_obj in source_objs:
+				dest_obj = None
+				if source_obj.cid == sk2_model.PAGE:
+					dest_obj = self.translate_page(dest_parent, source_obj)
+				elif source_obj.cid == sk2_model.LAYER:
+					dest_obj = self.translate_layer(dest_parent, source_obj)
+				elif source_obj.cid == sk2_model.GROUP:
+					dest_obj = self.translate_group(dest_parent, source_obj)
+				elif source_obj.cid == sk2_model.CONTAINER:
+					dest_obj = self.translate_container(dest_parent, source_obj)				
+				elif source_obj.cid == sk2_model.CURVE:
+					dest_obj = self.translate_curve(dest_parent, source_obj)				
+				elif source_obj.cid in (sk2_model.RECTANGLE, sk2_model.CIRCLE,
+									sk2_model.POLYGON):
+					source_obj = source_obj.to_curve()
+					dest_obj = self.translate_curve(dest_parent, source_obj)
+				elif source_obj.is_text():
+					source_obj = source_obj.to_curve()
+					objs = self.translate_objs(dest_parent, [source_obj, ])
+					if objs:
+						for item in objs:
+							dest_objs.append(item)
+					continue
+				elif source_obj.cid == sk2_model.PIXMAP:
+					dest_obj = self.translate_image(dest_parent, source_obj)
+				if dest_obj:dest_objs.append(dest_obj)
+		return dest_objs
+	
+	def translate_page(self, dest_parent, source_obj):
+		name = '' + source_obj.name
+		fmt, size, ornt = deepcopy(source_obj.page_format)
+		self.dx = size[0] / 2.0
+		self.dy = size[1] / 2.0
+		dest_page = model.SK1Page(name, fmt, size, ornt)
+		dest_page.childs = self.translate_objs(dest_page, source_obj.childs)
+		return dest_page
+	
+	def translate_layer(self, dest_parent, source_obj):
+		name = '' + source_obj.name
+		visible, editable, printable = source_obj.properties[:-1]
+		locked = abs(editable - 1)
+		color = get_sk1_color(source_obj.style[1][2], self.sk2_doc.cms)
+		dest_layer = model.SK1Layer(name, visible, printable, locked,
+								outline_color=color)
+		dest_layer.childs = self.translate_objs(dest_layer, source_obj.childs)
+		return dest_layer
+		
+	def translate_group(self, dest_parent, source_obj): 
+		dest_group = model.SK1Group()
+		dest_group.childs = self.translate_objs(dest_group, source_obj.childs)
+		return dest_group
+	
+	def translate_container(self, dest_parent, source_obj):
+		dest_mgroup = model.SK1MaskGroup()
+		dest_mgroup.childs = self.translate_objs(dest_mgroup, source_obj.childs)
+		return dest_mgroup
+	
+	def translate_curve(self, dest_parent, source_obj):
+		paths = source_obj.paths
+		trafo = [] + source_obj.trafo
+		trafo[4] += self.dx
+		trafo[5] += self.dy		
+		paths = libgeom.apply_trafo_to_paths(paths, trafo)
+		style = get_sk1_style(source_obj, self.sk2_doc.cms)
+		dest_curve = model.PolyBezier(properties=style, paths_list=paths)
+		return dest_curve
+	
+	def translate_image(self, dest_parent, source_obj):
+		image_stream = StringIO()
+		if source_obj.colorspace == uc2const.IMAGE_CMYK:
+			image_stream.write(b64decode(source_obj.bitmap))
+		else:
+			source_obj.cache_cdata.write_to_png(image_stream)
+		image_stream.seek(0)
+		image = Image.open(image_stream)
+		image.load()
+		m11, m12, m21, m22, v1, v2 = source_obj.trafo		
+		v1 += self.dx
+		v2 += self.dy
+		trafo = model.Trafo(m11, m12, m21, m22, v1, v2)
+		dest_image = model.SK1Image(trafo, id(image), image)
+		return dest_image
+		
