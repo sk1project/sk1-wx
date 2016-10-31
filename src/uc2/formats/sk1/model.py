@@ -592,7 +592,7 @@ class Style:
 	fill_pattern = EmptyPattern
 	fill_transform = 1
 	line_pattern = SolidPattern(deepcopy(sk1const.black_color))
-	line_width = 0.0
+	line_width = 0.28
 	line_join = sk1const.JoinMiter
 	line_cap = sk1const.CapButt
 	line_dashes = ()
