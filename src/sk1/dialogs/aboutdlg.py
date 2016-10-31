@@ -96,7 +96,7 @@ class AboutPage(wal.HPanel):
 		txt = '(C) 2011-' + year + ' sK1 Project team' + '\n'
 		box.pack(wal.Label(box, txt), fill=True)
 		p = wal.HPanel(box)
-		p.pack(wal.HtmlLabel(p, 'http://www.sk1project.net'))
+		p.pack(wal.HtmlLabel(p, 'http://sk1project.net'))
 		box.pack(p, fill=True)
 
 class ComponentsPage(wal.VPanel):
