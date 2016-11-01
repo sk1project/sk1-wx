@@ -21,7 +21,7 @@ from base64 import b64decode, b64encode
 from cStringIO import StringIO
 
 from uc2 import _, uc2const
-from uc2.formats.pdxf import const
+from uc2.formats.sk2 import sk2_const
 from uc2.formats.sk1 import sk1const
 from uc2.formats.generic import TextModelObject
 
@@ -150,8 +150,7 @@ class SK1Document(SK1ModelObject):
 		self.meta = MetaInfo()
 		SK1ModelObject.__init__(self, config)
 
-class MetaInfo:
-	pass
+class MetaInfo(object): pass
 
 class SK1Layout(SK1ModelObject):
 	"""
@@ -863,7 +862,7 @@ class PolyBezier(SK1ModelObject):
 					self.add_line(point)
 				else:
 					self.add_segment(point)
-			if path[2] == const.CURVE_CLOSED:
+			if path[2] == sk2_const.CURVE_CLOSED:
 				self.string += 'bC()\n'
 
 	def update(self):
