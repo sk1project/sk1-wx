@@ -184,11 +184,11 @@ class SK1_Loader(AbstractLoader):
 			size = args[1]
 			orientation = args[2]
 		else:
-			if isinstance(args[0], str):
+			if not isinstance(args[0], tuple):
 				pformat = args[0]
 				orientation = args[1]
-				if not format in uc2const.PAGE_FORMAT_NAMES: pformat = 'A4'
-				size = uc2const.PAGE_FORMATS[format]
+				if not pformat in uc2const.PAGE_FORMAT_NAMES: pformat = 'A4'
+				size = uc2const.PAGE_FORMATS[pformat]
 			else:
 				pformat = ''
 				size = args[0]
