@@ -165,9 +165,9 @@ class SK1Layout(SK1ModelObject):
 	orientation = uc2const.PORTRAIT
 
 	def __init__(self, fmt='', size=(), orientation=uc2const.PORTRAIT):
-		if fmt: self.format = fmt
-		if size: self.size = size
-		if orientation: self.orientation = orientation
+		self.format = fmt
+		self.size = size
+		self.orientation = orientation
 		SK1ModelObject.__init__(self)
 
 	def update(self):
