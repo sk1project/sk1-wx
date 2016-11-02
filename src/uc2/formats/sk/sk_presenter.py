@@ -27,7 +27,7 @@ from uc2.formats.sk.sk_filters import SK_Loader, SK_Saver
 
 class SK_Presenter(TextModelPresenter):
 
-    cid = uc2const.SK1
+    cid = uc2const.SK
 
     config = None
     doc_file = ''
