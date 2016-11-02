@@ -174,14 +174,14 @@ class SK_Loader(AbstractLoader):
     #---STRUCTURAL ELEMENTS
     def document(self, *args):
         self.add_object(sk_model.SKDocument(self.config))
+        self.model.childs = []
 
     def layout(self, *args):
-
-        if isinstance(args[0], str):
+        if not isinstance(args[0], tuple):
             pformat = args[0]
             orientation = args[1]
-            if not format in uc2const.PAGE_FORMAT_NAMES: pformat = 'A4'
-            size = uc2const.PAGE_FORMATS[format]
+            if not pformat in sk_const.PAGE_FORMATS.keys(): pformat = 'A4'
+            size = sk_const.PAGE_FORMATS[pformat]
         else:
             pformat = ''
             size = args[0]
