@@ -167,7 +167,7 @@ class SKLayout(SKModelObject):
         SKModelObject.__init__(self)
 
     def update(self):
-        if self.format in sk_const.PAGE_FORMATS:
+        if self.format in sk_const.PAGE_FORMATS.keys():
             args = (self.format, self.orientation)
         else:
             args = (self.size, self.orientation)
