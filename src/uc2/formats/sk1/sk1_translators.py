@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 #
 # 	Copyright (C) 2013-2016 by Igor E. Novikov
-# 	
+#
 # 	This program is free software: you can redistribute it and/or modify
 # 	it under the terms of the GNU General Public License as published by
 # 	the Free Software Foundation, either version 3 of the License, or
 # 	(at your option) any later version.
-# 	
+#
 # 	This program is distributed in the hope that it will be useful,
 # 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 # 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # 	GNU General Public License for more details.
-# 	
+#
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -26,12 +26,12 @@ from uc2.formats.sk2 import sk2_model, sk2_const
 
 import model
 
-#--- SK1 to SK2 translation 
+#--- SK1 to SK2 translation
 
 SK2_ARC_TYPES = {
 	sk1const.ArcArc:sk2_const.ARC_ARC,
 	sk1const.ArcChord:sk2_const.ARC_CHORD,
-	sk1const.ArcPieSlice:sk2_const.ARC_PIE_SLICE, 	
+	sk1const.ArcPieSlice:sk2_const.ARC_PIE_SLICE,
 }
 
 SK2_LINE_JOIN = {
@@ -43,7 +43,7 @@ SK2_LINE_JOIN = {
 SK2_LINE_CAP = {
 	sk1const.CapButt:sk2_const.CAP_BUTT,
 	sk1const.CapRound:sk2_const.CAP_ROUND,
-	sk1const.CapProjecting:sk2_const.CAP_SQUARE, 	
+	sk1const.CapProjecting:sk2_const.CAP_SQUARE,
 }
 
 SK2_TEXT_ALIGN = {
@@ -71,7 +71,7 @@ def get_sk2_color(clr):
 		return result
 	else:
 		return deepcopy(sk1const.fallback_color)
-	
+
 def get_sk2_page(fmt, size, ornt):
 	if fmt in uc2const.PAGE_FORMAT_NAMES:
 		return [fmt, () + uc2const.PAGE_FORMATS[fmt], ornt]
@@ -80,7 +80,7 @@ def get_sk2_page(fmt, size, ornt):
 def get_sk2_layer_props(sk1_layer):
 	return [sk1_layer.visible, abs(sk1_layer.locked - 1),
 		sk1_layer.printable, 1]
-	
+
 def get_sk2_style(sk1_style):
 	sk2_style = [[], [], [], []]
 	line_pattern = sk1_style.line_pattern
@@ -92,7 +92,7 @@ def get_sk2_style(sk1_style):
 				list(sk1_style.line_dashes),
 				SK2_LINE_CAP[sk1_style.line_cap],
 				SK2_LINE_JOIN[sk1_style.line_join],
-				10.0, 0, 0, []				
+				10.0, 0, 0, []
 				]
 		sk2_style[1] = sk2_line
 	if not fill_pattern.is_Empty:
@@ -111,9 +111,9 @@ def get_sk2_txt_style(source_text):
 	return sk2_style
 
 class SK1_to_SK2_Translator(object):
-	
+
 	dx = dy = 0.0
-	
+
 	def translate(self, sk1_doc, sk2_doc):
 		sk1_model = sk1_doc.model
 		self.sk2mtds = sk2mtds = sk2_doc.methods
@@ -136,30 +136,30 @@ class SK1_to_SK2_Translator(object):
 					if chld.cid == model.GUIDE:
 						orientation = abs(chld.orientation - 1)
 						position = chld.position - dy
-						if orientation:position = chld.position - dx							
+						if orientation:position = chld.position - dx
 						guide = sk2_model.Guide(gl.config, gl,
 											position, orientation)
 						gl.childs.append(guide)
 			elif item.cid == model.GRID:
 				grid = sk2mtds.get_grid_layer()
 				grid.geometry = list(item.geometry)
-				sk2mtds.set_grid_color(get_sk2_color(item.grid_color))	
+				sk2mtds.set_grid_color(get_sk2_color(item.grid_color))
 				props = get_sk2_layer_props(item)
 				if props[3]:props[3] = 0
-				grid.properties = props				
+				grid.properties = props
 			elif item.cid == model.PAGES:
 				pages_obj = sk2mtds.get_pages_obj()
 				pages_obj.childs = self.translate_objs(pages_obj, item.childs)
 				pages_obj.page_counter = len(pages_obj.childs)
-				
+
 		sk2_doc.model.do_update()
-		
+
 	def get_sk2_trafo(self, obj):
 		trafo = list(obj.trafo.coeff())
 		trafo[4] += self.dx
 		trafo[5] += self.dy
-		return trafo		
-				
+		return trafo
+
 	def translate_objs(self, dest_parent, source_objs):
 		dest_objs = []
 		if source_objs:
@@ -183,9 +183,9 @@ class SK1_to_SK2_Translator(object):
 					dest_obj = self.translate_text(dest_parent, source_obj)
 				elif source_obj.cid == model.IMAGE:
 					dest_obj = self.translate_image(dest_parent, source_obj)
-				if dest_obj:dest_objs.append(dest_obj)					
+				if dest_obj:dest_objs.append(dest_obj)
 		return dest_objs
-	
+
 	def translate_page(self, dest_parent, source_page):
 		name = '' + source_page.name
 		fmt = get_sk2_page(source_page.format, source_page.size,
@@ -197,7 +197,7 @@ class SK1_to_SK2_Translator(object):
 		dest_page.childs = self.translate_objs(dest_page, source_page.childs)
 		dest_page.layer_counter = len(dest_page.childs)
 		return dest_page
-		
+
 	def translate_layer(self, dest_parent, source_layer):
 		name = '' + source_layer.name
 		props = get_sk2_layer_props(source_layer)
@@ -207,18 +207,18 @@ class SK1_to_SK2_Translator(object):
 		dest_layer.properties = props
 		dest_layer.childs = self.translate_objs(dest_layer, source_layer.childs)
 		return dest_layer
-	
+
 	def translate_group(self, dest_parent, source_group):
 		dest_group = sk2_model.Group(dest_parent.config, dest_parent)
 		dest_group.childs = self.translate_objs(dest_group, source_group.childs)
 		return dest_group
-	
+
 	def translate_mgroup(self, dest_parent, source_mgroup):
 		dest_mgroup = sk2_model.Container(dest_parent.config, dest_parent)
 		dest_mgroup.childs = self.translate_objs(dest_mgroup,
 												source_mgroup.childs)
 		return dest_mgroup
-	
+
 	def translate_rect(self, dest_parent, source_rect):
 		trafo = self.get_sk2_trafo(source_rect)
 		corners = [0.0, 0.0, 0.0, 0.0]
@@ -232,36 +232,36 @@ class SK1_to_SK2_Translator(object):
 				tr = [1.0, 0.0, 0.0, 1.0 / coef, 0.0, 0.0]
 			else:
 				coef = source_rect.radius2 / source_rect.radius1
-				rect = [0.0, 0.0, coef, 1.0]	
-				tr = [1.0 / coef, 0.0, 0.0, 1.0 , 0.0, 0.0]	
-			trafo = libgeom.multiply_trafo(tr, trafo)		
+				rect = [0.0, 0.0, coef, 1.0]
+				tr = [1.0 / coef, 0.0, 0.0, 1.0 , 0.0, 0.0]
+			trafo = libgeom.multiply_trafo(tr, trafo)
 		dest_rect = sk2_model.Rectangle(dest_parent.config, dest_parent,
 									rect, trafo, corners=corners)
 		dest_rect.style = get_sk2_style(source_rect.properties)
 		return dest_rect
-	
+
 	def translate_ellipse(self, dest_parent, source_ellipse):
 		trafo = self.get_sk2_trafo(source_ellipse)
 		angle1 = source_ellipse.start_angle
 		angle2 = source_ellipse.end_angle
 		arc_type = SK2_ARC_TYPES[source_ellipse.arc_type]
-		rect = [-1.0, -1.0, 2.0, 2.0]		
+		rect = [-1.0, -1.0, 2.0, 2.0]
 		dest_ellipse = sk2_model.Circle(dest_parent.config, dest_parent,
 									rect, angle1, angle2, arc_type)
 		dest_ellipse.trafo = libgeom.multiply_trafo(dest_ellipse.trafo, trafo)
 		dest_ellipse.initial_trafo = [] + dest_ellipse.trafo
 		dest_ellipse.style = get_sk2_style(source_ellipse.properties)
 		return dest_ellipse
-	
+
 	def translate_curve(self, dest_parent, source_curve):
-		paths = deepcopy(source_curve.paths_list)	
-		trafo = [1.0, 0.0, 0.0, 1.0, self.dx, self.dy]	
+		paths = deepcopy(source_curve.paths_list)
+		trafo = [1.0, 0.0, 0.0, 1.0, self.dx, self.dy]
 		dest_curve = sk2_model.Curve(dest_parent.config, dest_parent,
 									paths, trafo)
 		dest_curve.style = get_sk2_style(source_curve.properties)
 		return dest_curve
-	
-	def translate_text(self, dest_parent, source_text):	
+
+	def translate_text(self, dest_parent, source_text):
 		text = '' + source_text.text
 		trafo = list(source_text.trafo)
 		if len(source_text.trafo) == 2:
@@ -273,11 +273,11 @@ class SK1_to_SK2_Translator(object):
 									[0.0, -size], text, trafo=trafo)
 		dest_text.style = get_sk2_txt_style(source_text)
 		return dest_text
-	
+
 	def translate_image(self, dest_parent, source_image):
 		trafo = self.get_sk2_trafo(source_image)
 		dest_image = sk2_model.Pixmap(dest_parent.config)
-		
+
 		image = source_image.image
 		image_stream = StringIO()
 		if image.mode == "CMYK":
@@ -285,17 +285,17 @@ class SK1_to_SK2_Translator(object):
 		else:
 			image.save(image_stream, 'PNG')
 		content = image_stream.getvalue()
-		
+
 		libimg.set_image_data(self.sk2_doc.cms, dest_image, content)
 		dest_image.trafo = trafo
-		return dest_image		
-				
-#--- SK2 to SK1 translation 
+		return dest_image
+
+#--- SK2 to SK1 translation
 
 SK1_ARC_TYPES = {
 	sk2_const.ARC_ARC:sk1const.ArcArc,
 	sk2_const.ARC_CHORD:sk1const.ArcChord,
-	sk2_const.ARC_PIE_SLICE:sk1const.ArcPieSlice, 	
+	sk2_const.ARC_PIE_SLICE:sk1const.ArcPieSlice,
 }
 
 SK1_LINE_JOIN = {
@@ -307,13 +307,13 @@ SK1_LINE_JOIN = {
 SK1_LINE_CAP = {
 	sk2_const.CAP_BUTT:sk1const.CapButt,
 	sk2_const.CAP_ROUND:sk1const.CapRound,
-	sk2_const.CAP_SQUARE:sk1const.CapProjecting, 	
+	sk2_const.CAP_SQUARE:sk1const.CapProjecting,
 }
 
 SK1_TEXT_ALIGN = {
 	sk2_const.TEXT_ALIGN_LEFT:sk1const.ALIGN_LEFT,
 	sk2_const.TEXT_ALIGN_RIGHT:sk1const.ALIGN_RIGHT,
-	sk2_const.TEXT_ALIGN_CENTER:sk1const.ALIGN_CENTER, 	
+	sk2_const.TEXT_ALIGN_CENTER:sk1const.ALIGN_CENTER,
 	sk2_const.TEXT_ALIGN_JUSTIFY:sk1const.ALIGN_LEFT,
 }
 
@@ -339,7 +339,7 @@ def get_sk1_color(clr, cms):
 			result = (sk1const.CMYK, 0.0, 0.0, 0.0, 1.0 - val[0])
 		else:
 			result = (sk1const.CMYK, 0.0, 0.0, 0.0, 1.0 - val[0], alpha)
-		return result		
+		return result
 	elif color_spec == uc2const.COLOR_SPOT:
 		clr = cms.get_rgb_color(clr)
 		val = clr[1]
@@ -351,7 +351,7 @@ def get_sk1_color(clr, cms):
 		return result
 	else:
 		return deepcopy(sk1const.fallback_sk1color)
-	
+
 def get_sk1_style(source_obj, cms):
 	sk1_style = model.Style()
 	fill = source_obj.style[0]
@@ -367,12 +367,12 @@ def get_sk1_style(source_obj, cms):
 	else:
 		sk1_style.line_pattern = model.EmptyPattern
 	return sk1_style
-						
-			
+
+
 class SK2_to_SK1_Translator(object):
-	
+
 	dx = dy = 0.0
-	
+
 	def translate(self, sk2_doc, sk1_doc):
 		sk2model = sk2_doc.model
 		self.sk1mtds = sk1mtds = sk1_doc.methods
@@ -409,7 +409,7 @@ class SK2_to_SK1_Translator(object):
 						if orientation:position = chld.position + dy
 						guide = model.SK1Guide(position, orientation)
 						gl.childs.append(guide)
-			
+
 	def translate_objs(self, dest_parent, source_objs):
 		dest_objs = []
 		if source_objs:
@@ -422,9 +422,9 @@ class SK2_to_SK1_Translator(object):
 				elif source_obj.cid == sk2_model.GROUP:
 					dest_obj = self.translate_group(dest_parent, source_obj)
 				elif source_obj.cid == sk2_model.CONTAINER:
-					dest_obj = self.translate_container(dest_parent, source_obj)				
+					dest_obj = self.translate_container(dest_parent, source_obj)
 				elif source_obj.cid == sk2_model.CURVE:
-					dest_obj = self.translate_curve(dest_parent, source_obj)				
+					dest_obj = self.translate_curve(dest_parent, source_obj)
 				elif source_obj.cid in (sk2_model.RECTANGLE, sk2_model.CIRCLE,
 									sk2_model.POLYGON):
 					source_obj = source_obj.to_curve()
@@ -440,7 +440,7 @@ class SK2_to_SK1_Translator(object):
 					dest_obj = self.translate_image(dest_parent, source_obj)
 				if dest_obj:dest_objs.append(dest_obj)
 		return dest_objs
-	
+
 	def translate_page(self, dest_parent, source_obj):
 		name = '' + source_obj.name
 		fmt, size, ornt = deepcopy(source_obj.page_format)
@@ -449,7 +449,7 @@ class SK2_to_SK1_Translator(object):
 		dest_page = model.SK1Page(name, fmt, size, ornt)
 		dest_page.childs = self.translate_objs(dest_page, source_obj.childs)
 		return dest_page
-	
+
 	def translate_layer(self, dest_parent, source_obj):
 		name = '' + source_obj.name
 		visible, editable, printable = source_obj.properties[:-1]
@@ -459,27 +459,27 @@ class SK2_to_SK1_Translator(object):
 								outline_color=color)
 		dest_layer.childs = self.translate_objs(dest_layer, source_obj.childs)
 		return dest_layer
-		
-	def translate_group(self, dest_parent, source_obj): 
+
+	def translate_group(self, dest_parent, source_obj):
 		dest_group = model.SK1Group()
 		dest_group.childs = self.translate_objs(dest_group, source_obj.childs)
 		return dest_group
-	
+
 	def translate_container(self, dest_parent, source_obj):
 		dest_mgroup = model.SK1MaskGroup()
 		dest_mgroup.childs = self.translate_objs(dest_mgroup, source_obj.childs)
 		return dest_mgroup
-	
+
 	def translate_curve(self, dest_parent, source_obj):
 		paths = source_obj.paths
 		trafo = [] + source_obj.trafo
 		trafo[4] += self.dx
-		trafo[5] += self.dy		
+		trafo[5] += self.dy
 		paths = libgeom.apply_trafo_to_paths(paths, trafo)
 		style = get_sk1_style(source_obj, self.sk2_doc.cms)
-		dest_curve = model.PolyBezier(properties=style, paths_list=paths)
+		dest_curve = model.PolyBezier(paths_list=paths, properties=style)
 		return dest_curve
-	
+
 	def translate_image(self, dest_parent, source_obj):
 		image_stream = StringIO()
 		if source_obj.colorspace == uc2const.IMAGE_CMYK:
@@ -491,10 +491,10 @@ class SK2_to_SK1_Translator(object):
 		image_stream.seek(0)
 		image = Image.open(image_stream)
 		image.load()
-		m11, m12, m21, m22, v1, v2 = source_obj.trafo		
+		m11, m12, m21, m22, v1, v2 = source_obj.trafo
 		v1 += self.dx
 		v2 += self.dy
 		trafo = model.Trafo(m11, m12, m21, m22, v1, v2)
 		dest_image = model.SK1Image(trafo, id(image), image)
 		return dest_image
-		
+
