@@ -66,3 +66,6 @@ fallback_skcolor = (0.0, 0.0, 0.0)
 
 black_color = (0.0, 0.0, 0.0)
 white_color = (1.0, 1.0, 1.0)
+
+CURVE_CLOSED = 1
+CURVE_OPENED = 0
