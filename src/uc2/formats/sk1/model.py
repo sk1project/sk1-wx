@@ -21,7 +21,6 @@ from base64 import b64decode, b64encode
 from cStringIO import StringIO
 
 from uc2 import _, uc2const
-from uc2.formats.sk2 import sk2_const
 from uc2.formats.sk1 import sk1const
 from uc2.formats.generic import TextModelObject
 
@@ -70,7 +69,7 @@ class Trafo(object):
 		self.m22 = m22
 		self.v1 = v1
 		self.v2 = v2
-	
+
 	def coeff(self):
 		return (self.m11, self.m12, self.m21, self.m22, self.v1, self.v2)
 
@@ -79,7 +78,7 @@ class Translation(object): pass
 def CreatePath():return ()
 
 class Point(object):
-	
+
 	def __init__(self, x, y):
 		self.x = x
 		self.y = y
@@ -568,14 +567,14 @@ class ImageTilePattern(Pattern):
 			self.bid = id(self.image)
 		if self.image:
 			fileptr.write('bm(%d)\n' % (self.bid))
-			
+
 			image_stream = StringIO()
 			if self.raw_image.mode == "CMYK":
 				self.raw_image.save(image_stream, 'JPEG', quality=100)
 			else:
 				self.raw_image.save(image_stream, 'PNG')
 			fileptr.write(b64encode(image_stream.getvalue()))
-			
+
 			fileptr.write('-\n')
 			val = (self.bid, self.trafo.coeff()).__str__()
 			fileptr.write('pit' + val + '\n')
@@ -701,7 +700,7 @@ class Style:
 				write('la2()\n')
 		if self.font:
 			if self.font_face:
-				write("Fn('%s','%s')\n" % (self.font, self.font_face)) 
+				write("Fn('%s','%s')\n" % (self.font, self.font_face))
 			else:
 				write('Fn(\'%s\')\n' % self.font)
 		if not self.font_size == 12:
@@ -828,7 +827,7 @@ class PolyBezier(SK1ModelObject):
 
 	is_Bezier = 1
 
-	def __init__(self, paths=None, properties=None, duplicate=None, paths_list=[]):
+	def __init__(self, paths_list=[], properties=None):
 		self.properties = properties
 		self.paths_list = paths_list
 		SK1ModelObject.__init__(self)
@@ -848,7 +847,7 @@ class PolyBezier(SK1ModelObject):
 		args = (point0[0], point0[1], point1[0], point1[1], point2[0], point2[1], cont)
 		self.string += 'bc' + args.__str__() + '\n'
 
-	def update_from_list(self):
+	def update(self):
 		self.string = 'b()\n'
 		start = True
 		for path in self.paths_list:
@@ -862,11 +861,8 @@ class PolyBezier(SK1ModelObject):
 					self.add_line(point)
 				else:
 					self.add_segment(point)
-			if path[2] == sk2_const.CURVE_CLOSED:
+			if path[2] == sk1const.CURVE_CLOSED:
 				self.string += 'bC()\n'
-
-	def update(self):
-		self.update_from_list()
 
 
 class SK1Text(SK1ModelObject):
@@ -926,7 +922,7 @@ class SK1BitmapData(SK1ModelObject):
 		while True:
 			line = fileobj.readline().strip('\r\n')
 			if line == '-': break
-			raw += line		
+			raw += line
 		self.raw_image = Image.open(StringIO(b64decode(raw)))
 		self.raw_image.load()
 
@@ -963,13 +959,13 @@ class SK1Image(SK1ModelObject):
 	def write_content(self, fileptr):
 		if self.image:
 			fileptr.write('bm(%d)\n' % (self.bid))
-			
+
 			image_stream = StringIO()
 			if self.image.mode == "CMYK":
 				self.image.save(image_stream, 'JPEG', quality=100)
 			else:
 				self.image.save(image_stream, 'PNG')
 			fileptr.write(b64encode(image_stream.getvalue()))
-			
+
 			fileptr.write('-\n')
 			fileptr.write(self.string)
