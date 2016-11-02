@@ -16,7 +16,7 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from copy import deepcopy
-
+from PIL import Image
 from base64 import b64decode, b64encode
 from cStringIO import StringIO
 
@@ -640,3 +640,220 @@ class SKMaskGroup(SKModelObject):
 # TextOnPath
 # CompoundObject
 
+#--- Primitive objects
+
+class SKRectangle(SKModelObject):
+    """
+    Represents Rectangle object.
+    r(TRAFO [, RADIUS1, RADIUS2])
+    """
+    string = ''
+    cid = RECTANGLE
+    style = []
+    properties = None
+    trafo = None
+    radius1 = 0
+    radius2 = 0
+
+    is_Rectangle = 1
+
+    def __init__(self, trafo=None, radius1=0, radius2=0,
+                    properties=None, duplicate=None):
+
+        if trafo is not None and trafo.m11 == trafo.m21 == trafo.m12 == trafo.m22 == 0:
+            trafo = Trafo(1, 0, 0, -1, trafo.v1, trafo.v2)
+        self.trafo = trafo
+        self.radius1 = radius1
+        self.radius2 = radius2
+        self.properties = properties
+        SKModelObject.__init__(self)
+
+    def update(self):
+        if self.radius1 == self.radius2 == 0:
+            args = self.trafo.coeff()
+            self.string = 'r' + args.__str__() + '\n'
+        else:
+            args = self.trafo.coeff() + (self.radius1, self.radius2)
+            self.string = 'r' + args.__str__() + '\n'
+
+class SKEllipse(SKModelObject):
+    """
+    Represents Ellipse object.
+    e(TRAFO, [start_angle, end_angle, arc_type])
+    """
+    string = ''
+    cid = ELLIPSE
+    style = []
+    properties = None
+    trafo = None
+    start_angle = 0.0
+    end_angle = 0.0
+    arc_type = sk_const.ArcPieSlice
+
+    is_Ellipse = 1
+
+    def __init__(self, trafo=None, start_angle=0.0, end_angle=0.0,
+                    arc_type=sk_const.ArcPieSlice, properties=None,
+                    duplicate=None):
+
+        if trafo is not None and trafo.m11 == trafo.m21 == trafo.m12 == trafo.m22 == 0:
+            trafo = Trafo(1, 0, 0, -1, trafo.v1, trafo.v2)
+        self.trafo = trafo
+        self.start_angle = start_angle
+        self.end_angle = end_angle
+        self.arc_type = arc_type
+        self.properties = properties
+        SKModelObject.__init__(self)
+
+    def update(self):
+        if self.start_angle == self.end_angle:
+            args = self.trafo.coeff()
+            self.string = 'e' + args.__str__() + '\n'
+        else:
+            args = self.trafo.coeff() + (self.start_angle, self.end_angle, self.arc_type)
+            self.string = 'e' + args.__str__() + '\n'
+
+class SKPolyBezier(SKModelObject):
+    """
+    Represents Bezier curve object.
+    b()             start a bezier obj
+    bs(X, Y, CONT)  append a line segment
+    bc(X1, Y1, X2, Y2, X3, Y3, CONT)  append a bezier segment
+    bn()            start a new path
+    bC()            close path
+    """
+    string = ''
+    cid = CURVE
+    style = []
+    properties = None
+    paths = None
+
+    is_Bezier = 1
+
+    def __init__(self, paths_list=[], properties=None):
+        self.properties = properties
+        self.paths_list = paths_list
+        SKModelObject.__init__(self)
+
+    def get_line_point(self, x, y, arg):
+        return [x, y]
+
+    def get_segment_point(self, x0, y0, x1, y1, x2, y2, cont):
+        return [[x0, y0], [x1, y1], [x2, y2], cont]
+
+    def add_line(self, point):
+        x, y = point
+        self.string += 'bs' + (x, y, 0).__str__() + '\n'
+
+    def add_segment(self, point):
+        point0, point1, point2, cont = point
+        args = (point0[0], point0[1], point1[0], point1[1], point2[0], point2[1], cont)
+        self.string += 'bc' + args.__str__() + '\n'
+
+    def update(self):
+        self.string = 'b()\n'
+        start = True
+        for path in self.paths_list:
+            if start:
+                start = False
+            else:
+                self.string += 'bn()\n'
+            self.add_line(path[0])
+            for point in path[1]:
+                if len(point) == 2:
+                    self.add_line(point)
+                else:
+                    self.add_segment(point)
+            if path[2] == sk_const.CURVE_CLOSED:
+                self.string += 'bC()\n'
+
+class SKText(SKModelObject):
+    """
+    Represents Text object.
+    txt(TEXT, TRAFO[, HORIZ_ALIGN, VERT_ALIGN])
+    """
+    string = ''
+    cid = TEXT
+    style = []
+    text = ''
+    trafo = ()
+    properties = None
+    horiz_align = sk_const.ALIGN_LEFT
+    vert_align = sk_const.ALIGN_BASE
+
+    def __init__(self, text, trafo, horiz_align, vert_align):
+        self.text = text
+        self.trafo = trafo
+        self.horiz_align = horiz_align
+        self.vert_align = vert_align
+        SKModelObject.__init__(self)
+
+    def update(self):
+        args = (self.text, self.trafo, self.horiz_align, self.vert_align)
+        self.string = 'txt' + args.__str__() + '\n'
+
+class SKBitmapData(SKModelObject):
+    """
+    Bitmap image data. Object is defined as:
+    
+    bm(BID)    
+    
+    The bitmap data follows as a base64 encoded JPEG file.
+    """
+    string = ''
+    cid = BITMAPDATA
+    raw_image = None
+    bid = ''
+
+    def __init__(self, bid=''):
+        if bid: self.bid = bid
+        SKModelObject.__init__(self)
+
+    def read_data(self, fileptr):
+        raw = ''
+        while True:
+            line = fileptr.readline().strip()
+            if line == '-': break
+            raw += line
+        self.raw_image = Image.open(StringIO(b64decode(raw)))
+        self.raw_image.load()
+
+    def update(self):
+        self.string = 'bm(%d)\n' % (self.bid)
+        self.end_string = '-\n'
+
+    def write_content(self, fileptr): return
+
+class SKImage(SKModelObject):
+    """
+    Image object. ID has to be the bid of a previously defined
+    bitmap data object (defined by bm). The object is defined as:
+    im(TRAFO, BID)
+    """
+    string = ''
+    cid = IMAGE
+    trafo = ()
+    bid = ''
+    image = None
+
+    def __init__(self, trafo=None, bid='', image=None):
+        self.trafo = trafo
+        self.bid = bid
+        self.image = image
+        SKModelObject.__init__(self)
+
+    def update(self):
+        if self.image and not self.bid:
+            self.bid = id(self.image)
+        self.string = 'im' + (self.trafo.coeff(), self.bid).__str__() + '\n'
+
+    def write_content(self, fileptr):
+        if self.image:
+            fileptr.write('bm(%d)\n' % (self.bid))
+
+            image_stream = StringIO()
+            self.image.save(image_stream, 'PNG')
+            fileptr.write(b64encode(image_stream.getvalue()))
+
+            fileptr.write('-\n')
+            fileptr.write(self.string)
