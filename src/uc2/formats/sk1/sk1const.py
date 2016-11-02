@@ -18,7 +18,6 @@
 import math
 
 from uc2 import uc2const
-from uc2.formats.pdxf import const
 
 
 DOC_ORIGIN_CENTER = 0
@@ -72,35 +71,5 @@ default_layer_color = (RGB, 0.196, 0.314, 0.635)
 default_guidelayer_properties = [1, 0, 0, 1]
 default_guidelayer_color = (RGB, 0.0, 0.3, 1.0)
 
-
-
-solid_fill = [const.FILL_EVENODD, const.FILL_SOLID, fallback_color]
-
-fill_style = []
-default_stroke_rule = const.STROKE_MIDDLE
-default_stroke_width = 0.0
-default_stroke_color = [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, 'Black']
-default_stroke_dash = []
-default_stroke_cap = const.CAP_BUTT
-default_stroke_join = const.JOIN_MITER
-default_stroke_miter_angle = 45.0
-default_stroke_miter_limit = 1.0 / math.sin(default_stroke_miter_angle / 2.0)
-default_stroke_behind_flag = 0
-default_stroke_scalable_flag = 0
-default_stroke_markers = []
-
-stroke_style = [
-				default_stroke_rule,
-				default_stroke_width,
-				default_stroke_color,
-				default_stroke_dash,
-				default_stroke_cap,
-				default_stroke_join,
-				default_stroke_miter_limit,
-				default_stroke_behind_flag,
-				default_stroke_scalable_flag,
-				default_stroke_markers,
-				]
-text_style = []
-structural_style = []
-default_style = [fill_style, stroke_style, text_style, structural_style]
+CURVE_CLOSED = 1
+CURVE_OPENED = 0
