@@ -148,23 +148,29 @@ class SKLayout(SKModelObject):
     """
     Represents Layout object.
     The object defines default page size as:
-    (format_name,(width,height),orientation)
+        (format_name,orientation)
+    for known page format or:
+        ((width,height),orientation)
+    for user defined page format.
     """
 
-    string = "layout('A4',(595.276,841.89),0)\n"
+    string = "layout('A4',0)\n"
     cid = LAYOUT
     format = 'A4'
-    size = uc2const.PAGE_FORMATS['A4']
+    size = sk_const.PAGE_FORMATS['A4']
     orientation = uc2const.PORTRAIT
 
     def __init__(self, fmt='', size=(), orientation=uc2const.PORTRAIT):
-        if fmt: self.format = fmt
-        if size: self.size = size
-        if orientation: self.orientation = orientation
+        self.format = fmt
+        self.size = size
+        self.orientation = orientation
         SKModelObject.__init__(self)
 
     def update(self):
-        args = (self.format, self.size, self.orientation)
+        if self.format in sk_const.PAGE_FORMATS:
+            args = (self.format, self.orientation)
+        else:
+            args = (self.size, self.orientation)
         self.string = 'layout' + args.__str__() + '\n'
 
 class SKLayer(SKModelObject):
@@ -781,7 +787,8 @@ class SKText(SKModelObject):
     horiz_align = sk_const.ALIGN_LEFT
     vert_align = sk_const.ALIGN_BASE
 
-    def __init__(self, text, trafo, horiz_align, vert_align):
+    def __init__(self, text, trafo, horiz_align=sk_const.ALIGN_LEFT,
+                 vert_align=sk_const.ALIGN_BASE):
         self.text = text
         self.trafo = trafo
         self.horiz_align = horiz_align
