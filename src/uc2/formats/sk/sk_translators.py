@@ -323,15 +323,20 @@ class SK2_to_SK_Translator(object):
         for item in sk2model.childs:
             if item.cid == sk2_model.PAGES:
                 layout = skmtds.get_layout_obj()
-                fmt, size, ornt = item.page_format
+                fmt, size, ornt = item.childs[0].page_format
                 layout.format = '' + fmt
                 layout.size = () + size
                 layout.orientation = ornt
                 self.dx = size[0] / 2.0
                 self.dy = size[1] / 2.0
+                self.page_dx = 0.0
                 childs = []
                 for page in item.childs:
+                    fmt, size, ornt = page.page_format
+                    self.page_size = () + size
                     childs += self.translate_page(self.model, page)
+                    self.dx += self.page_size[0] + 30.0
+                    self.page_dx += self.page_size[0] + 30.0
                 self.model.childs = [self.model.childs[0], ] + childs + self.model.childs[-2:]
             elif item.cid == sk2_model.GRID_LAYER:
                 grid = skmtds.get_grid_layer()
@@ -388,7 +393,14 @@ class SK2_to_SK_Translator(object):
         return dest_objs
 
     def translate_page(self, dest_parent, source_obj):
-        return self.translate_objs(self.model, source_obj.childs)
+        layers = self.translate_objs(self.model, source_obj.childs)
+        if layers:
+            m11, m22 = self.page_size
+            trafo = sk_model.Trafo(m11, 0.0, 0.0, m22, self.page_dx, 0.0)
+            style = sk_model.Style()
+            rect = sk_model.SKRectangle(trafo=trafo, properties=style)
+            layers[0].childs = [rect, ] + layers[0].childs
+        return layers
 
     def translate_layer(self, dest_parent, source_obj):
         name = '' + source_obj.name
