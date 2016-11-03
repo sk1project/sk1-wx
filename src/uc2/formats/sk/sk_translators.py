@@ -316,6 +316,7 @@ class SK2_to_SK_Translator(object):
 
     def translate(self, sk2_doc, sk_doc):
         sk2model = sk2_doc.model
+        self.model = sk_doc.model
         self.skmtds = skmtds = sk_doc.methods
         self.sk_doc = sk_doc
         self.sk2_doc = sk2_doc
@@ -351,6 +352,11 @@ class SK2_to_SK_Translator(object):
                         if orientation:position = chld.position + self.dy
                         guide = sk_model.SKGuide(position, orientation)
                         gl.childs.append(guide)
+
+        self.model = None
+        self.sk2_doc = None
+        self.sk_doc = None
+        self.skmtds = None
 
     def translate_objs(self, dest_parent, source_objs):
         dest_objs = []
