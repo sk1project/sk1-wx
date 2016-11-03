@@ -118,6 +118,7 @@ class SK_to_SK2_Translator(object):
                 props = get_sk2_layer_props(item)
                 if props[3]:props[3] = 0
                 gl.properties = props
+                parse_objs = False
                 for chld in item.childs:
                     if chld.cid == sk_model.GUIDE:
                         orientation = abs(chld.orientation - 1)
@@ -126,6 +127,11 @@ class SK_to_SK2_Translator(object):
                         guide = sk2_model.Guide(gl.config, gl,
                                             position, orientation)
                         gl.childs.append(guide)
+                    else:
+                        parse_objs = True
+                if parse_objs:
+                    layer = self.translate_layer(self.page, item)
+                    self.page.append(layer)
             elif item.cid == sk_model.GRID:
                 grid = sk2mtds.get_grid_layer()
                 grid.geometry = list(item.geometry)
@@ -133,6 +139,9 @@ class SK_to_SK2_Translator(object):
                 props = get_sk2_layer_props(item)
                 if props[3]:props[3] = 0
                 grid.properties = props
+                if item.childs:
+                    layer = self.translate_layer(self.page, item)
+                    self.page.append(layer)
             elif item.cid == sk_model.LAYER:
                 self.page.childs += self.translate_objs(self.page, [item, ])
 
