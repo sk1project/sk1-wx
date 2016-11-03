@@ -107,6 +107,7 @@ class SK_to_SK2_Translator(object):
                 pages_obj.page_format = fmt
                 self.dx = -item.size[0] / 2.0
                 self.dy = -item.size[1] / 2.0
+                pages_obj.childs = []
                 name = 'Page 1'
                 self.page = sk2_model.Page(pages_obj.config, pages_obj, name)
                 self.page.page_format = deepcopy(fmt)
