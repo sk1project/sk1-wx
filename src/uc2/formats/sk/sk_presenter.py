@@ -22,8 +22,8 @@ from uc2.formats.generic import TextModelPresenter
 from uc2.formats.sk.sk_config import SK_Config
 from uc2.formats.sk.sk_methods import create_new_doc, SK_Methods
 from uc2.formats.sk.sk_filters import SK_Loader, SK_Saver
-# from uc2.formats.sk.sk_translators import SK2_to_SK1_Translator
-# from uc2.formats.sk.sk_translators import SK1_to_SK2_Translator
+from uc2.formats.sk.sk_translators import SK2_to_SK_Translator
+from uc2.formats.sk.sk_translators import SK_to_SK2_Translator
 
 class SK_Presenter(TextModelPresenter):
 
@@ -49,13 +49,13 @@ class SK_Presenter(TextModelPresenter):
         self.model = create_new_doc(self.config)
         self.update()
 
-    def translate_from_sk2(self, sk2_doc):pass
-#         translator = SK2_to_SK1_Translator()
-#         translator.translate(sk2_doc, self)
+    def translate_from_sk2(self, sk2_doc):
+        translator = SK2_to_SK_Translator()
+        translator.translate(sk2_doc, self)
 
-    def translate_to_sk2(self, sk2_doc):pass
-#         translator = SK1_to_SK2_Translator()
-#         translator.translate(self, sk2_doc)
+    def translate_to_sk2(self, sk2_doc):
+        translator = SK_to_SK2_Translator()
+        translator.translate(self, sk2_doc)
 
     def update(self, action=False):
         TextModelPresenter.update(self, action)
