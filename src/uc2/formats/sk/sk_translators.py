@@ -243,7 +243,7 @@ class SK_to_SK2_Translator(object):
         return dest_curve
 
     def translate_text(self, dest_parent, source_text):
-        text = '' + source_text.text
+        text = '' + source_text.text.decode('latin1').encode('utf8')
         trafo = list(source_text.trafo)
         if len(source_text.trafo) == 2:
             trafo = [1.0, 0.0, 0.0, 1.0] + trafo
