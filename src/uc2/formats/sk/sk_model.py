@@ -771,6 +771,7 @@ class SKPolyBezier(SKModelObject):
                 else:
                     self.add_segment(point)
             if path[2] == sk_const.CURVE_CLOSED:
+                self.add_line(path[0])
                 self.string += 'bC()\n'
 
 class SKText(SKModelObject):
