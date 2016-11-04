@@ -18,7 +18,6 @@
 import sys
 
 from uc2 import uc2const
-from uc2.formats.pdxf import const
 from uc2.formats.sk1 import sk1const
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 from uc2.formats.sk1.model import SK1Document, SK1Layout, SK1Grid, SK1Pages, \
@@ -49,6 +48,11 @@ class SK1_Loader(AbstractLoader):
 
 	def do_load(self):
 		self.model = None
+		self.paths = []
+		self.options = {}
+		self.parent_stack = []
+		self.obj_style = []
+		self.style_dict = {}
 		self.fileptr.readline()
 		self.style = Style()
 		while True:
@@ -308,7 +312,7 @@ class SK1_Loader(AbstractLoader):
 		self.add_object(obj)
 
 	def b(self):
-		self.paths = [[None, [], const.CURVE_OPENED]]
+		self.paths = [[None, [], sk1const.CURVE_OPENED]]
 		obj = PolyBezier(paths_list=self.paths)
 		self.set_style(obj)
 		self.add_object(obj)
@@ -332,10 +336,10 @@ class SK1_Loader(AbstractLoader):
 			points.append(point)
 
 	def bn(self):
-		self.paths.append([None, [], const.CURVE_OPENED])
+		self.paths.append([None, [], sk1const.CURVE_OPENED])
 
 	def bC(self):
-		self.paths[-1][2] = const.CURVE_CLOSED
+		self.paths[-1][2] = sk1const.CURVE_CLOSED
 
 	def txt(self, text, trafo, horiz_align, vert_align, chargap, wordgap, linegap):
 		if not text: return
