@@ -111,7 +111,7 @@ class Layers_Plugin(RS_Plugin):
 				props.append(0)
 			for item in layer.properties:
 				props.append(item)
-			props.append('' + layer.name)
+			props.append(layer.name.decode('utf8'))
 			result.append(props)
 		result.reverse()
 		return result
@@ -192,7 +192,7 @@ class Layers_Plugin(RS_Plugin):
 
 	def rename_layer(self):
 		layer = self.get_selected_layer()
-		txt = edit_dlg(self.app.mw, _('Rename layer'), '' + layer.name)
+		txt = edit_dlg(self.app.mw, _('Rename layer'), layer.name)
 		if not txt is None and not layer.name == txt:
 			self.app.current_doc.api.set_layer_name(layer, txt)
 
