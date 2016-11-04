@@ -17,7 +17,6 @@
 
 import sys
 
-from uc2 import uc2const
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 from uc2.formats.sk import sk_model, sk_const
 
@@ -42,6 +41,11 @@ class SK_Loader(AbstractLoader):
 
     def do_load(self):
         self.model = None
+        self.paths = []
+        self.options = {}
+        self.parent_stack = []
+        self.obj_style = []
+        self.style_dict = {}
         self.fileptr.readline()
         self.style = sk_model.Style()
         while True:
@@ -56,7 +60,7 @@ class SK_Loader(AbstractLoader):
                     code = compile('self.' + self.line, '<string>', 'exec')
                     exec code
                 except:
-                    print 'error>>', self.line
+                    print 'parsing error>>', self.line
                     errtype, value, traceback = sys.exc_info()
                     print errtype, value, traceback
 
