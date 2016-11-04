@@ -15,6 +15,7 @@
 # 	 You should have received a copy of the GNU General Public License
 # 	 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import math
 from copy import deepcopy
 from cStringIO import StringIO
 from PIL import Image
@@ -67,10 +68,10 @@ def get_sk2_stops(sk_stops):
 	stops = []
 	for item in sk_stops:
 		pos, clr = item
-		stops.append([1.0 - pos, get_sk2_color(clr)])
+		stops = [[1.0 - pos, get_sk2_color(clr)], ] + stops
 	return stops
 
-def get_sk2_style(sk1_style, dest_obj=None):
+def set_sk2_style(sk1_style, dest_obj=None):
 	sk2_style = [[], [], [], []]
 	line_pattern = sk1_style.line_pattern
 	fill_pattern = sk1_style.fill_pattern
@@ -84,19 +85,44 @@ def get_sk2_style(sk1_style, dest_obj=None):
 				10.0, 0, 0, []
 				]
 		sk2_style[1] = sk2_line
+
 	if fill_pattern.is_Solid:
 		sk2_fill = []
 		if fill_pattern.is_Solid:
 			sk2_fill = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID,
 					get_sk2_color(fill_pattern.color)]
 		sk2_style[0] = sk2_fill
-	elif fill_pattern.is_AxialGradient:pass
-# 		stops = get_sk2_stops(fill_pattern.gradient.colors)
-# 		point = [fill_pattern.direction.x, fill_pattern.direction.y]
-# 		angle = libgeom.get_point_angle(point, [0.0, 0.0])
-# 		dest_obj.update()
-# 		bbox = dest_obj.cache_bbox
-# 		center = libgeom.bbox_center(bbox)
+
+	elif fill_pattern.is_AxialGradient:
+		stops = get_sk2_stops(fill_pattern.gradient.colors)
+		point = [fill_pattern.direction.x, fill_pattern.direction.y]
+		angle = libgeom.get_point_angle(point, [0.0, 0.0])
+		points = [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0], [0.0, 1.0]]
+
+		m21 = math.sin(-angle)
+		m11 = m22 = math.cos(-angle)
+		m12 = -m21
+		dx = 0.5 - m11 * 0.5 + m21 * 0.5;
+		dy = 0.5 - m21 * 0.5 - m11 * 0.5;
+		trafo = [m11, m21, m12, m22, dx, dy]
+		points = libgeom.apply_trafo_to_points(points, trafo)
+		bbox = libgeom.bbox_for_points(points)
+		w, h = libgeom.bbox_size(bbox)
+		vector = [[bbox[0], 0.5], [bbox[2], 0.5]]
+		invtrafo = libgeom.invert_trafo(trafo)
+		vector = libgeom.apply_trafo_to_points(vector, invtrafo)
+
+		dest_obj.update()
+		bbox = dest_obj.cache_bbox
+		w, h = libgeom.bbox_size(bbox)
+		trafo = [w, 0.0, 0.0, h, bbox[0], bbox[1]]
+		vector = libgeom.apply_trafo_to_points(vector, trafo)
+
+		sk2_fill = [sk2_const.FILL_EVENODD, sk2_const.FILL_GRADIENT,
+				[sk2_const.GRADIENT_LINEAR, vector, stops]]
+		sk2_style[0] = sk2_fill
+		dest_obj.fill_trafo = [] + sk2_const.NORMAL_TRAFO
+
 	elif fill_pattern.is_RadialGradient or fill_pattern.is_ConicalGradient:
 		stops = get_sk2_stops(fill_pattern.gradient.colors)
 		dest_obj.update()
@@ -114,14 +140,20 @@ def get_sk2_style(sk1_style, dest_obj=None):
 				[sk2_const.GRADIENT_RADIAL, [start_point, end_point], stops]]
 		sk2_style[0] = sk2_fill
 		dest_obj.fill_trafo = [] + sk2_const.NORMAL_TRAFO
-	return sk2_style
 
-def get_sk2_txt_style(source_text):
+	dest_obj.style = sk2_style
+
+def set_sk2_txt_style(source_text, dest_obj):
 	sk1_style = source_text.properties
-	sk2_style = get_sk2_style(sk1_style)
-	sk2_style[2] = ['' + sk1_style.font, 'Regular',
-		sk1_style.font_size, SK2_TEXT_ALIGN[source_text.horiz_align], [], True]
-	return sk2_style
+	font = sk1_style.font.decode('latin1').encode('utf8')
+	sk2_style = [[], [], [], []]
+	text_style = [font, 'Regular', sk1_style.font_size,
+				SK2_TEXT_ALIGN[source_text.horiz_align], [], True]
+	sk2_style[2] = text_style
+	dest_obj.style = sk2_style
+	set_sk2_style(sk1_style, dest_obj)
+	dest_obj.style[2] = text_style
+
 
 class SK_to_SK2_Translator(object):
 
@@ -174,7 +206,7 @@ class SK_to_SK2_Translator(object):
 					layer = self.translate_layer(self.page, item)
 					self.page.append(layer)
 			elif item.cid == sk_model.LAYER:
-				self.page.childs += self.translate_objs(self.page, [item, ])
+				self.page.childs.append(self.translate_layer(self.page, item))
 
 		self.page.layer_counter = len(self.page.childs)
 		self.page = None
@@ -191,9 +223,7 @@ class SK_to_SK2_Translator(object):
 		if source_objs:
 			for source_obj in source_objs:
 				dest_obj = None
-				if source_obj.cid == sk_model.LAYER:
-					dest_obj = self.translate_layer(dest_parent, source_obj)
-				elif source_obj.cid == sk_model.GROUP:
+				if source_obj.cid == sk_model.GROUP:
 					dest_obj = self.translate_group(dest_parent, source_obj)
 				elif source_obj.cid == sk_model.MASKGROUP:
 					dest_obj = self.translate_mgroup(dest_parent, source_obj)
@@ -211,7 +241,7 @@ class SK_to_SK2_Translator(object):
 		return dest_objs
 
 	def translate_layer(self, dest_parent, source_layer):
-		name = '' + source_layer.name
+		name = source_layer.name.decode('latin1').encode('utf8')
 		props = get_sk2_layer_props(source_layer)
 		dest_layer = sk2_model.Layer(dest_parent.config, dest_parent, name)
 		color = get_sk2_color(source_layer.layer_color)
@@ -249,7 +279,7 @@ class SK_to_SK2_Translator(object):
 			trafo = libgeom.multiply_trafo(tr, trafo)
 		dest_rect = sk2_model.Rectangle(dest_parent.config, dest_parent,
 									rect, trafo, corners=corners)
-		dest_rect.style = get_sk2_style(source_rect.properties, dest_rect)
+		set_sk2_style(source_rect.properties, dest_rect)
 		return dest_rect
 
 	def translate_ellipse(self, dest_parent, source_ellipse):
@@ -262,7 +292,7 @@ class SK_to_SK2_Translator(object):
 									rect, angle1, angle2, arc_type)
 		dest_ellipse.trafo = libgeom.multiply_trafo(dest_ellipse.trafo, trafo)
 		dest_ellipse.initial_trafo = [] + dest_ellipse.trafo
-		dest_ellipse.style = get_sk2_style(source_ellipse.properties, dest_ellipse)
+		set_sk2_style(source_ellipse.properties, dest_ellipse)
 		return dest_ellipse
 
 	def translate_curve(self, dest_parent, source_curve):
@@ -270,11 +300,11 @@ class SK_to_SK2_Translator(object):
 		trafo = [1.0, 0.0, 0.0, 1.0, self.dx, self.dy]
 		dest_curve = sk2_model.Curve(dest_parent.config, dest_parent,
 									paths, trafo)
-		dest_curve.style = get_sk2_style(source_curve.properties, dest_curve)
+		set_sk2_style(source_curve.properties, dest_curve)
 		return dest_curve
 
 	def translate_text(self, dest_parent, source_text):
-		text = '' + source_text.text.decode('latin1').encode('utf8')
+		text = source_text.text.decode('latin1').encode('utf8')
 		trafo = list(source_text.trafo)
 		if len(source_text.trafo) == 2:
 			trafo = [1.0, 0.0, 0.0, 1.0] + trafo
@@ -283,7 +313,7 @@ class SK_to_SK2_Translator(object):
 		size = source_text.properties.font_size * 1.16
 		dest_text = sk2_model.Text(dest_parent.config, dest_parent,
 									[0.0, -size], text, trafo=trafo)
-		dest_text.style = get_sk2_txt_style(source_text)
+		set_sk2_txt_style(source_text, dest_text)
 		return dest_text
 
 	def translate_image(self, dest_parent, source_image):
