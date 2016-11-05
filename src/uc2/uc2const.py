@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2012 by Igor E. Novikov
+# 	Copyright (C) 2012 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from uc2 import _
 
 """
 The package provides generic application constants
 """
-#Placement constants
+# Placement constants
 BEFORE = 0
 AFTER = 1
 LOWER = 0
@@ -28,13 +28,13 @@ UPPER = 1
 HORIZONTAL = 0
 VERTICAL = 1
 
-#MODEL TYPES
+# MODEL TYPES
 GENERIC_MODEL = 0
 TAGGED_MODEL = 1
 TEXT_MODEL = 2
 BINARY_MODEL = 3
 
-#Formats enumeration
+# Formats enumeration
 
 ALL_FORMATS = 0
 
@@ -144,7 +144,7 @@ DXF : _("DXF - AutoCAD DXF files"),
 DWG : _("DWG - AutoCAD DWG files"),
 RIFF: _("RIFF files"),
 
-#Bitmap file formats
+# Bitmap file formats
 JPG: _("JPEG - Joint Photographic Experts Group files"),
 JP2: _("JPEG2000 - Joint Photographic Experts Group files"),
 TIF: _("TIFF - Tagged Image File Format files"),
@@ -156,7 +156,7 @@ PPM: _("PPM - Netpbm Color Image format  files"),
 XBM: _("XBM - X bitmap files"),
 XPM: _("XPM - X pixmap files"),
 
-#Palette file formats
+# Palette file formats
 SKP: _("SKP - sK1 palette files"),
 GPL: _("GPL - GIMP palette files"),
 CPL: _("CPL - CorelDRAW palette files (v7-X4)"),
@@ -166,7 +166,7 @@ COREL_PAL: _("XML - CorelDRAW X5-X7 palette files"),
 ASE: _("ASE - Adobe Swatch Exchange files"),
 JCW: _("JCW - Xara color palette files"),
 
-#Color profiles
+# Color profiles
 ICC: _("ICC - International Color Consortium profiles"),
 ICM: _("ICM - Image Color Matching profiles"),
 
@@ -211,7 +211,7 @@ DXF : "DXF",
 DWG : "DWG",
 RIFF: "RIFF",
 
-#Bitmap file formats
+# Bitmap file formats
 JPG: "JPEG",
 JP2: "JP2",
 TIF: "TIFF",
@@ -223,7 +223,7 @@ PPM: "PPM",
 XBM: "XBM",
 XPM: "XPM",
 
-#Palette file formats
+# Palette file formats
 SKP: "SKP",
 GPL: "GPL",
 CPL: "CPL",
@@ -278,7 +278,7 @@ MIMES = {
 	'txt':'text/plain',
 }
 
-#UNITS
+# UNITS
 
 SYSTEM_DPI = 72.0
 
@@ -362,45 +362,61 @@ _('millimeters'): UNIT_MM
 }
 
 PAGE_FORMATS = {
-			'A0': (2383.9370078740158, 3370.3937007874015),
-			'A1': (1683.7795275590549, 2383.9370078740158),
-			'A2': (1190.5511811023621, 1683.7795275590549),
-			'A3': (841.88976377952747, 1190.5511811023621),
-			'A4': (595.27559055118104, 841.88976377952747),
-			'A5': (419.52755905511805, 595.27559055118104),
-			'A6': (297.63779527559052, 419.52755905511805),
-			'B1 (ISO)': (2004.0944881889761, 2834.6456692913384),
-			'B4 (ISO)': (708.66141732283461, 1000.6299212598424),
-			'B5 (ISO)': (498.89763779527556, 708.66141732283461),
-			'C3': (918.42519685039372, 1298.267716535433),
-			'C4': (649.1338582677165, 918.42519685039372),
-			'C5': (459.21259842519686, 649.1338582677165),
-			'C6': (323.14960629921262, 459.21259842519686),
-			'Envelope C4': (649.1338582677165, 918.42519685039372),
-			'Envelope C5': (459.21259842519686, 649.1338582677165),
-			'Envelope C6': (323.14960629921262, 459.21259842519686),
-			'Envelope E65/DL': (311.81102362204723, 623.62204724409446),
-			'Executive': (522.0, 756.0),
-			'Legal': (612.0, 1008.0),
-			'Letter': (612.0, 792.0),
-			'Half Letter': (396.0, 612.0),
-			'Visit card #1': (141.73228346456693, 255.11811023622045),
-			'Visit card #2': (155.90551181102362, 240.94488188976379),
+			'A0': (841.0 * mm_to_pt, 1189.0 * mm_to_pt),
+			'A1': (594.0 * mm_to_pt, 841.0 * mm_to_pt),
+			'A2': (420.0 * mm_to_pt, 594.0 * mm_to_pt),
+			'A3': (297.0 * mm_to_pt, 420.0 * mm_to_pt),
+			'A4': (210.0 * mm_to_pt, 297.0 * mm_to_pt),
+			'A5': (148.0 * mm_to_pt, 210.0 * mm_to_pt),
+			'A6': (105.0 * mm_to_pt, 148.0 * mm_to_pt),
+			'A7': (74.0 * mm_to_pt, 105.0 * mm_to_pt),
+			'B0': (1000.0 * mm_to_pt, 1414.0 * mm_to_pt),
+			'B1': (707.0 * mm_to_pt, 1000.0 * mm_to_pt),
+			'B2': (500.0 * mm_to_pt, 707.0 * mm_to_pt),
+			'B3': (353.0 * mm_to_pt, 500.0 * mm_to_pt),
+			'B4': (250.0 * mm_to_pt, 353.0 * mm_to_pt),
+			'B5': (176.0 * mm_to_pt, 250.0 * mm_to_pt),
+			'B6': (125.0 * mm_to_pt, 176.0 * mm_to_pt),
+			'C0': (917.0 * mm_to_pt, 1297.0 * mm_to_pt),
+			'C1': (648.0 * mm_to_pt, 917.0 * mm_to_pt),
+			'C2': (458.0 * mm_to_pt, 648.0 * mm_to_pt),
+			'C3': (324.0 * mm_to_pt, 458.0 * mm_to_pt),
+			'C4': (229.0 * mm_to_pt, 324.0 * mm_to_pt),
+			'C5': (162.0 * mm_to_pt, 229.0 * mm_to_pt),
+			'C6': (114.0 * mm_to_pt, 162.0 * mm_to_pt),
+			'Letter': (8.5 * in_to_pt, 11.0 * in_to_pt),
+			'Legal': (8.5 * in_to_pt, 14.0 * in_to_pt),
+			'Ledger':(11.0 * in_to_pt, 17.0 * in_to_pt),
+			'Executive': (7.5 * in_to_pt, 10.0 * in_to_pt),
+			'JIS B0': (1030.0 * mm_to_pt, 1456.0 * mm_to_pt),
+			'JIS B1': (728.0 * mm_to_pt, 1030.0 * mm_to_pt),
+			'JIS B2': (515.0 * mm_to_pt, 728.0 * mm_to_pt),
+			'JIS B3': (364.0 * mm_to_pt, 515.0 * mm_to_pt),
+			'JIS B4': (257.0 * mm_to_pt, 364.0 * mm_to_pt),
+			'JIS B5': (182.0 * mm_to_pt, 257.0 * mm_to_pt),
+			'JIS B6': (128.0 * mm_to_pt, 182.0 * mm_to_pt),
+			'Envelope C4': (229.0 * mm_to_pt, 324.0 * mm_to_pt),
+			'Envelope C5': (162.0 * mm_to_pt, 229.0 * mm_to_pt),
+			'Envelope C6': (114.0 * mm_to_pt, 162.0 * mm_to_pt),
+			'Envelope E65/DL': (110.0 * mm_to_pt, 220.0 * mm_to_pt),
+			'Business card #1': (50.0 * mm_to_pt, 90.0 * mm_to_pt),
+			'Business card #2': (55.0 * mm_to_pt, 85.0 * mm_to_pt),
 			}
 
 PAGE_FORMAT_NAMES = [
-'A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6',
-'B1 (ISO)', 'B4 (ISO)', 'B5 (ISO)',
-'C3', 'C4', 'C5', 'C6',
+'A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7',
+'Letter', 'Legal', 'Executive', 'Ledger',
+'B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6',
+'C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6',
+'JIS B0', 'JIS B1', 'JIS B2', 'JIS B3', 'JIS B4', 'JIS B5', 'JIS B6',
 'Envelope C4', 'Envelope C5', 'Envelope C6', 'Envelope E65/DL',
-'Executive', 'Legal', 'Letter', 'Half Letter',
-'Visit card #1', 'Visit card #2',
+'Business card #1', 'Business card #2',
 ]
 
 PORTRAIT = 0
 LANDSCAPE = 1
 
-#Color management constants
+# Color management constants
 
 INTENT_PERCEPTUAL = 0
 INTENT_RELATIVE_COLORIMETRIC = 1
