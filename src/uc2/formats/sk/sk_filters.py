@@ -174,7 +174,7 @@ class SK_Loader(AbstractLoader):
 			stl = self.model.styles[name].copy()
 			if not self.style_obj.fill_pattern.is_Empty:
 				stl.fill_pattern = self.style_obj.fill_pattern
-			if not self.style_obj.line_pattern.is_Empty:
+			if not self.style_obj.line_pattern.color == sk_const.black_color:
 				stl.line_pattern = self.style_obj.line_pattern
 			if not self.style_obj.line_width == 0.28:
 				stl.line_width = self.style_obj.line_width
@@ -212,7 +212,7 @@ class SK_Loader(AbstractLoader):
 		self.add_object(obj, self.model)
 		self.model.layout = obj
 
-	def grid(self, grid, visibility, grid_color, layer_name):
+	def grid(self, grid, visibility, grid_color, layer_name='Grid'):
 		obj = sk_model.SKGrid(grid, visibility, grid_color, layer_name)
 		self.add_object(obj, self.model)
 		self.model.grid = obj
