@@ -17,7 +17,7 @@
 
 from uc2.utils.config import XmlConfigParser
 
-class SVGPalette_Config(XmlConfigParser):
+class SVG_Config(XmlConfigParser):
 
-    system_encoding = 'utf-8'
-    filename = 'svg_config.xml'
+	system_encoding = 'utf-8'
+	filename = 'svg_config.xml'
