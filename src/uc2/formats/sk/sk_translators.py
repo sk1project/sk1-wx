@@ -56,9 +56,16 @@ def get_sk2_color(clr):
 	return result
 
 def get_sk2_page(fmt, size, ornt):
+	fmt = '' + fmt
 	if fmt in uc2const.PAGE_FORMAT_NAMES:
-		return [fmt, () + uc2const.PAGE_FORMATS[fmt], ornt]
-	return ['Custom', () + size, ornt]
+		size = () + uc2const.PAGE_FORMATS[fmt]
+	else:
+		fmt = 'Custom'
+		size = () + size
+	size = (min(*size), max(*size))
+	if ornt == uc2const.LANDSCAPE:
+		size = (max(*size), min(*size))
+	return [fmt, size, ornt]
 
 def get_sk2_layer_props(sk1_layer):
 	return [sk1_layer.visible, abs(sk1_layer.locked - 1),
@@ -168,8 +175,8 @@ class SK_to_SK2_Translator(object):
 				pages_obj = sk2mtds.get_pages_obj()
 				fmt = get_sk2_page(item.format, item.size, item.orientation)
 				pages_obj.page_format = fmt
-				self.dx = -item.size[0] / 2.0
-				self.dy = -item.size[1] / 2.0
+				self.dx = -fmt[1][0] / 2.0
+				self.dy = -fmt[1][1] / 2.0
 				pages_obj.childs = []
 				name = 'Page 1'
 				self.page = sk2_model.Page(pages_obj.config, pages_obj, name)
@@ -198,7 +205,9 @@ class SK_to_SK2_Translator(object):
 			elif item.cid == sk_model.GRID:
 				grid = sk2mtds.get_grid_layer()
 				grid.geometry = list(item.geometry)
-				sk2mtds.set_grid_color(get_sk2_color(item.grid_color))
+				color = get_sk2_color(item.grid_color)
+				color[2] = .15
+				sk2mtds.set_grid_color(color)
 				props = get_sk2_layer_props(item)
 				if props[3]:props[3] = 0
 				grid.properties = props
