@@ -171,7 +171,24 @@ class SK_Loader(AbstractLoader):
 
 	def style(self, name=''):
 		if name and name in self.model.styles:
-			self.style_obj = self.model.styles[name].copy()
+			stl = self.model.styles[name].copy()
+			if not self.style_obj.fill_pattern.is_Empty:
+				stl.fill_pattern = self.style_obj.fill_pattern
+			if not self.style_obj.line_pattern.is_Empty:
+				stl.line_pattern = self.style_obj.line_pattern
+			if not self.style_obj.line_width == 0.28:
+				stl.line_width = self.style_obj.line_width
+			if not self.style_obj.line_join == sk_const.JoinMiter:
+				stl.line_join = self.style_obj.line_join
+			if not self.style_obj.line_cap == sk_const.CapButt:
+				stl.line_cap = self.style_obj.line_cap
+			if self.style_obj.line_dashes:
+				stl.line_dashes = self.style_obj.line_dashes
+			if self.style_obj.font:
+				stl.font = self.style_obj.font
+			if not self.style_obj.font_size == 12.0:
+				stl.font_size = self.style_obj.font_size
+			self.style_obj = stl
 
 	def use_style(self, name=''):
 		self.style(name)
