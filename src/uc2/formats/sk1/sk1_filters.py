@@ -41,7 +41,7 @@ class SK1_Loader(AbstractLoader):
 	parent_stack = []
 	obj_style = []
 
-	style = None
+	style_obj = None
 	style_dict = {}
 	pattern = None
 	gradient = None
@@ -54,7 +54,7 @@ class SK1_Loader(AbstractLoader):
 		self.obj_style = []
 		self.style_dict = {}
 		self.fileptr.readline()
-		self.style = Style()
+		self.style_obj = Style()
 		while True:
 			self.line = self.fileptr.readline()
 			if not self.line: break
@@ -72,8 +72,8 @@ class SK1_Loader(AbstractLoader):
 					print errtype, value, traceback
 
 	def set_style(self, obj):
-		obj.properties = self.style
-		self.style = Style()
+		obj.properties = self.style_obj
+		self.style_obj = Style()
 
 	def add_object(self, obj, parent=''):
 		if self.model is None:
@@ -121,62 +121,63 @@ class SK1_Loader(AbstractLoader):
 
 	def fp(self, color=None):
 		if color is None:
-			self.style.fill_pattern = self.pattern
+			self.style_obj.fill_pattern = self.pattern
 		else:
-			self.style.fill_pattern = SolidPattern(color)
+			self.style_obj.fill_pattern = SolidPattern(color)
 
 	def fe(self):
-		self.style.fill_pattern = EmptyPattern
+		self.style_obj.fill_pattern = EmptyPattern
 
 	def ft(self, val):
-		self.style.fill_transform = val
+		self.style_obj.fill_transform = val
 
 	def lp(self, color=None):
 		if color is None:
-			self.style.line_pattern = self.pattern
+			self.style_obj.line_pattern = self.pattern
 		else:
-			self.style.line_pattern = SolidPattern(color)
+			self.style_obj.line_pattern = SolidPattern(color)
 
 	def le(self):
-		self.style.line_pattern = EmptyPattern
+		self.style_obj.line_pattern = EmptyPattern
 
 	def lw(self, width):
-		self.style.line_width = width
+		self.style_obj.line_width = width
 
 	def lc(self, cap):
 		if not 1 <= cap <= 3: cap = 1
-		self.style.line_cap = cap
+		self.style_obj.line_cap = cap
 
 	def lj(self, join):
-		self.style.line_join = join
+		self.style_obj.line_join = join
 
 	def ld(self, dashes):
-		self.style.line_dashes = dashes
+		self.style_obj.line_dashes = dashes
 
 	def la1(self, args=None):
-		self.style.line_arrow1 = args
+		self.style_obj.line_arrow1 = args
 
 	def la2(self, args=None):
-		self.style.line_arrow2 = args
+		self.style_obj.line_arrow2 = args
 
 	def Fs(self, size):
-		self.style.font_size = size
+		self.style_obj.font_size = size
 
 	def Fn(self, name, face=None):
-		self.style.font = name
-		self.style.font_face = face
+		self.style_obj.font = name
+		self.style_obj.font_face = face
 
 	def dstyle(self, name=''):
 		if name:
-			self.style.name = name
-			self.model.styles[name] = self.style
-			self.style = Style()
+			self.style_obj.name = name
+			self.model.styles[name] = self.style_obj
+			self.style_obj = Style()
 
 	def style(self, name=''):
-		pass
+		if name and name in self.model.styles:
+			self.style_obj = self.model.styles[name].copy()
 
 	def use_style(self, name=''):
-		pass
+		self.style(name)
 
 	#---STRUCTURAL ELEMENTS
 	def document(self, *args):
