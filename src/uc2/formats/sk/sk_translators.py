@@ -201,7 +201,7 @@ class SK_to_SK2_Translator(object):
 						parse_objs = True
 				if parse_objs:
 					layer = self.translate_layer(self.page, item)
-					self.page.append(layer)
+					self.page.childs.append(layer)
 			elif item.cid == sk_model.GRID:
 				grid = sk2mtds.get_grid_layer()
 				grid.geometry = list(item.geometry)
@@ -213,7 +213,7 @@ class SK_to_SK2_Translator(object):
 				grid.properties = props
 				if item.childs:
 					layer = self.translate_layer(self.page, item)
-					self.page.append(layer)
+					self.page.childs.append(layer)
 			elif item.cid == sk_model.LAYER:
 				self.page.childs.append(self.translate_layer(self.page, item))
 
