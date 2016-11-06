@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2011 by Igor E. Novikov
+# 	Copyright (C) 2011 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 
@@ -32,6 +32,7 @@ class AppData(UCData):
 	app_icon = None
 	doc_icon = None
 	version = "1.0"
+	revision = ""
 
 	app_config_dir = expanduser_unicode(os.path.join('~', '.config', 's-word'))
 	app_temp_dir = os.path.join(app_config_dir, 'temp')
@@ -53,7 +54,7 @@ class AppConfig(UCConfig):
 			events.emit(events.CONFIG_MODIFIED, attr, value)
 
 	#============== GENERIC SECTION ===================
-	system_encoding = 'utf-8'# default encoding (GUI uses utf-8 only)
+	system_encoding = 'utf-8'  # default encoding (GUI uses utf-8 only)
 
 	fixed_font = 'Courier 10 Pitch'
 	fixed_font_size = 10
@@ -129,8 +130,8 @@ class AppConfig(UCConfig):
 	sel_marker_fill = (1.0, 1.0, 1.0)
 	sel_marker_stroke = (0.0, 0.3, 1.0)
 
-	rotation_step = 5.0#in graduses
-	stroke_sensitive_size = 5.0#in pixels
+	rotation_step = 5.0  # in graduses
+	stroke_sensitive_size = 5.0  # in pixels
 
 	#============== I/O SECTION ===================
 	open_dir = '~'
@@ -142,7 +143,7 @@ class AppConfig(UCConfig):
 
 	def __init__(self, path):
 		pass
-#		self.resource_dir = os.path.join(path, 'share')
+# 		self.resource_dir = os.path.join(path, 'share')
 
 
 
