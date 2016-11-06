@@ -20,4 +20,6 @@ from uc2.utils.config import XmlConfigParser
 class SVG_Config(XmlConfigParser):
 
 	system_encoding = 'utf-8'
+	encoding = 'utf-8'
+	indent = '\t'
 	filename = 'svg_config.xml'
