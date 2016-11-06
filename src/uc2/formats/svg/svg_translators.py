@@ -35,6 +35,7 @@ svg_const.SVG_FT:uc2const.UNIT_FT,
 class SVG_to_SK2_Translator(object):
 
 	page = None
+	layer = None
 	trafo = []
 	coeff = 1.0
 
@@ -78,6 +79,10 @@ class SVG_to_SK2_Translator(object):
 		self.svg_mtds = svg_doc.methods
 		self.translate_units()
 		self.translate_page()
+		for item in self.svg_mt.childs:
+			self.translate_obj(self.layer, item)
+		if len(self.page.childs) > 1 and not self.layer.childs:
+			self.page.childs.remove(self.layer)
 
 	def translate_units(self):
 		units = SK2_UNITS[self.svg_mtds.doc_units()]
@@ -89,8 +94,11 @@ class SVG_to_SK2_Translator(object):
 		height = self.get_size_pt('297mm')
 		if 'width' in self.svg_mt.attrs:
 			width = self.get_size_pt(self.svg_mt.attrs['width'])
-		if 'height' in self.svg_mt.attrs:
 			height = self.get_size_pt(self.svg_mt.attrs['height'])
+		elif 'viewBox' in self.svg_mt.attrs:
+			vbox = self.get_viewbox(self.svg_mt.attrs['viewBox'])
+			width = vbox[2] - vbox[0]
+			height = vbox[3] - vbox[1]
 		ornt = uc2const.PORTRAIT
 		if width > height: ornt = uc2const.LANDSCAPE
 		page_fmt = ['Custom', (width, height), ornt]
@@ -102,13 +110,30 @@ class SVG_to_SK2_Translator(object):
 		pages_obj.childs = [self.page, ]
 		pages_obj.page_counter = 1
 
-		layer = sk2_model.Layer(self.page.config, self.page)
-		self.page.childs = [layer, ]
+		self.layer = sk2_model.Layer(self.page.config, self.page)
+		self.page.childs = [self.layer, ]
 
 		vbox = self.get_viewbox(self.svg_mt.attrs['viewBox'])
 		dx = -width / 2.0 + vbox[0]
-		dy = -height / 2.0 + vbox[1]
-		self.trafo = [1.0, 0.0, 0.0, -1.0, dx, dy]
+		dy = height / 2.0 + vbox[1]
+		xx = width / (vbox[2] - vbox[0])
+		yy = height / (vbox[3] - vbox[1])
+		self.trafo = [xx, 0.0, 0.0, -yy, dx * xx, dy * yy]
+
+	def translate_obj(self, parent, svg_obj):
+		if svg_obj.tag == 'defs':
+			self.translate_defs(svg_obj)
+		elif svg_obj.tag == 'g':
+			self.translate_g(svg_obj)
+		elif svg_obj.tag == 'rect':
+			self.translate_rect(svg_obj)
+
+
+	def translate_defs(self, svg_obj):pass
+
+	def translate_g(self, parent, svg_obj):pass
+
+	def translate_rect(self, parent, svg_obj):pass
 
 
 class SK2_to_SVG_Translator(object):
