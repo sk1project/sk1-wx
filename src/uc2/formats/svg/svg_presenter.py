@@ -23,6 +23,9 @@ from uc2.formats.svg.svg_config import SVG_Config
 from uc2.formats.xml_.xml_filters import XML_Loader, XML_Saver
 from uc2.formats.svg.svg_methods import SVG_Methods, create_new_svg
 
+from uc2.formats.svg.svg_translators import SK2_to_SVG_Translator
+from uc2.formats.svg.svg_translators import SVG_to_SK2_Translator
+
 
 class SVG_Presenter(TaggedModelPresenter):
 
@@ -56,10 +59,10 @@ class SVG_Presenter(TaggedModelPresenter):
 		TaggedModelPresenter.update(self, action)
 		self.methods.update()
 
-	def translate_from_sk2(self, sk2_doc):pass
-# 		 translator = SK2_to_SK_Translator()
-# 		 translator.translate(sk2_doc, self)
+	def translate_from_sk2(self, sk2_doc):
+		translator = SK2_to_SVG_Translator()
+		translator.translate(sk2_doc, self)
 
-	def translate_to_sk2(self, sk2_doc):pass
-# 		 translator = SK_to_SK2_Translator()
-# 		 translator.translate(self, sk2_doc)
+	def translate_to_sk2(self, sk2_doc):
+		translator = SVG_to_SK2_Translator()
+		translator.translate(self, sk2_doc)
