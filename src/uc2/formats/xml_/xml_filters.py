@@ -57,7 +57,7 @@ class XML_Saver(AbstractSaver):
 		name = "Created with %s" % appdata.app_name
 		ver = "%s%s" % (appdata.version, appdata.revision)
 		link = "(http://%s/)" % appdata.app_domain
-		self.writeln("<!-- %s %s %s) -->" % (name, ver, link))
+		self.writeln("<!-- %s %s %s -->" % (name, ver, link))
 		self.write_obj(self.model)
 
 	def write_obj(self, obj):
