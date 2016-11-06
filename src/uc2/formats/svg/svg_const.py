@@ -28,3 +28,11 @@ SVG_ATTRS = {
 "id":"svg2",
 "version":"1.1",
 }
+
+SVG_DPI = 90.0
+
+in_to_pt = 72.0
+pt_to_in = 1.0 / 72.0
+
+pt_to_svg_px = pt_to_in * SVG_DPI
+svg_px_to_pt = in_to_pt / SVG_DPI
