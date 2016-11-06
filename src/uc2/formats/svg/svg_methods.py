@@ -40,3 +40,12 @@ class SVG_Methods:
 	def update(self):
 		self.model = self.presenter.model
 		self.config = self.presenter.config
+
+	def doc_units(self):
+		for item in self.model.childs:
+			if item.tag == 'sodipodi:namedview':
+				if 'inkscape:document-units' in item.attrs:
+					return item.attrs['inkscape:document-units']
+		width = self.model.attrs['width']
+		if width[-1].isdigit(): return 'px'
+		return width[-2:]
