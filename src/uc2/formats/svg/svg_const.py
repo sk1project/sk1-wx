@@ -36,3 +36,12 @@ pt_to_in = 1.0 / 72.0
 
 pt_to_svg_px = pt_to_in * SVG_DPI
 svg_px_to_pt = in_to_pt / SVG_DPI
+
+SVG_PX = 'px'
+SVG_PC = 'pc'
+SVG_PT = 'pt'
+SVG_MM = 'mm'
+SVG_CM = 'cm'
+SVG_IN = 'in'
+SVG_FT = 'ft'
+SVG_M = 'm'
