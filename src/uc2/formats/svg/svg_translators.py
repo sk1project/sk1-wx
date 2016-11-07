@@ -15,10 +15,11 @@
 # 	 You should have received a copy of the GNU General Public License
 # 	 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import math
 from copy import deepcopy
 
-from uc2 import uc2const
-from uc2.formats.sk2 import sk2_model
+from uc2 import uc2const, libgeom
+from uc2.formats.sk2 import sk2_model, sk2_const
 from uc2.formats.svg import svg_const
 
 SK2_UNITS = {
@@ -38,6 +39,21 @@ class SVG_to_SK2_Translator(object):
 	layer = None
 	trafo = []
 	coeff = 1.0
+
+	def translate(self, svg_doc, sk2_doc):
+		self.svg_mt = svg_doc.model
+		self.sk2_mt = sk2_doc.model
+		self.sk2_mtds = sk2_doc.methods
+		self.svg_mtds = svg_doc.methods
+		self.translate_units()
+		self.translate_page()
+		for item in self.svg_mt.childs:
+			self.translate_obj(self.layer, item, self.trafo)
+		if len(self.page.childs) > 1 and not self.layer.childs:
+			self.page.childs.remove(self.layer)
+		self.sk2_mt.do_update()
+
+	#--- Utility methods
 
 	def _px_to_pt(self, sval):
 		return svg_const.svg_px_to_pt * float(sval)
@@ -72,17 +88,52 @@ class SVG_to_SK2_Translator(object):
 			vbox.append(self.get_size_pt(item))
 		return vbox
 
-	def translate(self, svg_doc, sk2_doc):
-		self.svg_mt = svg_doc.model
-		self.sk2_mt = sk2_doc.model
-		self.sk2_mtds = sk2_doc.methods
-		self.svg_mtds = svg_doc.methods
-		self.translate_units()
-		self.translate_page()
-		for item in self.svg_mt.childs:
-			self.translate_obj(self.layer, item)
-		if len(self.page.childs) > 1 and not self.layer.childs:
-			self.page.childs.remove(self.layer)
+	def trafo_skewX(self,):
+		return [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+
+	def trafo_skewY(self):
+		return [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+
+	def trafo_rotate(self, angle, cx=0.0, cy=0.0):
+		trafo = [math.cos(angle), math.sin(angle),
+			- math.sin(angle), math.cos(angle), 0.0, 0.0]
+		if cx or cy:
+			tr1 = [1.0, 0.0, 0.0, 1.0, -cx, -cy]
+			tr2 = [1.0, 0.0, 0.0, 1.0, cx, cy]
+			trafo = libgeom.multiply_trafo(tr1, trafo)
+			trafo = libgeom.multiply_trafo(trafo, tr2)
+		return trafo
+
+	def trafo_scale(self, m11, m22=None):
+		if m22 is None: m22 = m11
+		return [m11, 0.0, 0.0, m22, 0.0, 0.0]
+
+	def trafo_translate(self, dx, dy=0.0):
+		return [1.0, 0.0, 0.0, 1.0, dx, dy]
+
+	def trafo_matrix(self, m11, m21, m12, m22, dx, dy):
+		return [m11, m21, m12, m22, dx, dy]
+
+	def get_trafo(self, strafo):
+		trafo = [] + sk2_const.NORMAL_TRAFO
+		trs = strafo.split(' ')
+		trs.reverse()
+		for tr in trs:
+			try:
+				code = compile('tr=self.trafo_' + tr, '<string>', 'exec')
+				exec code
+			except: continue
+			trafo = libgeom.multiply_trafo(trafo, tr)
+		return trafo
+
+	def get_level_trafo(self, svg_obj, trafo):
+		tr = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+		if 'transform' in svg_obj.attrs:
+			tr = self.get_trafo(str(svg_obj.attrs['transform']))
+		tr = libgeom.multiply_trafo(tr, trafo)
+		return tr
+
+	#--- Translation metods
 
 	def translate_units(self):
 		units = SK2_UNITS[self.svg_mtds.doc_units()]
@@ -113,27 +164,57 @@ class SVG_to_SK2_Translator(object):
 		self.layer = sk2_model.Layer(self.page.config, self.page)
 		self.page.childs = [self.layer, ]
 
-		vbox = self.get_viewbox(self.svg_mt.attrs['viewBox'])
-		dx = -width / 2.0 + vbox[0]
-		dy = height / 2.0 + vbox[1]
-		xx = width / (vbox[2] - vbox[0])
-		yy = height / (vbox[3] - vbox[1])
+		dx = -width / 2.0
+		dy = height / 2.0
+		xx = yy = 1.0
+		if 'viewBox' in self.svg_mt.attrs:
+			vbox = self.get_viewbox(self.svg_mt.attrs['viewBox'])
+			dx = -width / 2.0 + vbox[0]
+			dy = height / 2.0 + vbox[1]
+			xx = width / (vbox[2] - vbox[0])
+			yy = height / (vbox[3] - vbox[1])
 		self.trafo = [xx, 0.0, 0.0, -yy, dx * xx, dy * yy]
 
-	def translate_obj(self, parent, svg_obj):
+	def translate_obj(self, parent, svg_obj, trafo):
 		if svg_obj.tag == 'defs':
 			self.translate_defs(svg_obj)
 		elif svg_obj.tag == 'g':
-			self.translate_g(svg_obj)
+			self.translate_g(parent, svg_obj, trafo)
 		elif svg_obj.tag == 'rect':
-			self.translate_rect(svg_obj)
+			self.translate_rect(parent, svg_obj, trafo)
 
 
 	def translate_defs(self, svg_obj):pass
 
-	def translate_g(self, parent, svg_obj):pass
+	def translate_g(self, parent, svg_obj, trafo):
+		if 'inkscape:groupmode' in svg_obj.attrs:
+			if svg_obj.attrs['inkscape:groupmode'] == 'layer':
+				name = 'Layer %d' % len(self.page.childs)
+				if 'inkscape:label' in svg_obj.attrs:
+					name = str(svg_obj.attrs['inkscape:label'])
+				layer = sk2_model.Layer(self.page.config, self.page, name)
+				self.page.childs.append(layer)
+				tr = self.get_level_trafo(svg_obj, trafo)
+				for item in svg_obj.childs:
+					self.translate_obj(layer, item, tr)
+		else:
+			group = sk2_model.Group(parent.config, parent)
+			tr = self.get_level_trafo(svg_obj, trafo)
+			for item in svg_obj.childs:
+				self.translate_obj(group, item, tr)
+			if group.childs:
+				parent.childs.append(group)
 
-	def translate_rect(self, parent, svg_obj):pass
+	def translate_rect(self, parent, svg_obj, trafo):
+		x = self.get_size_pt(svg_obj.attrs['x'])
+		y = self.get_size_pt(svg_obj.attrs['y'])
+		w = self.get_size_pt(svg_obj.attrs['width'])
+		h = self.get_size_pt(svg_obj.attrs['height'])
+		cfg = parent.config
+		style = deepcopy([cfg.default_fill, cfg.default_stroke, [], []])
+		tr = self.get_level_trafo(svg_obj, trafo)
+		rect = sk2_model.Rectangle(cfg, parent, [x, y, w, h], tr, style)
+		parent.childs.append(rect)
 
 
 class SK2_to_SVG_Translator(object):
