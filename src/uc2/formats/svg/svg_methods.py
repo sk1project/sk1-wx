@@ -46,8 +46,4 @@ class SVG_Methods:
 			if item.tag == 'sodipodi:namedview':
 				if 'inkscape:document-units' in item.attrs:
 					return item.attrs['inkscape:document-units']
-		if 'width' in self.model.attrs:
-			width = self.model.attrs['width']
-			if width[-1].isdigit(): return 'px'
-			return width[-2:]
 		return 'px'
