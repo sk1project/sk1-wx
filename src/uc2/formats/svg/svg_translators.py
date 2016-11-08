@@ -69,6 +69,8 @@ SK2_LINE_CAP = {
 	'square':sk2_const.CAP_SQUARE,
 }
 
+PATH_STUB = [[], [], 0]
+
 class SVG_to_SK2_Translator(object):
 
 	page = None
@@ -129,6 +131,25 @@ class SVG_to_SK2_Translator(object):
 		for item in svbox.split(' '):
 			vbox.append(self.get_size_pt(item))
 		return vbox
+
+	def parse_points(self, spoints):
+		points = []
+		pairs = spoints.split(' ')
+		for item in pairs:
+			try:
+				pair = item.split(',')
+				if not len(pair) == 2:continue
+				points.append([float(pair[0]), float(pair[1])])
+			except: continue
+		return points
+
+	def parse_path_cmds(self, pathcmds):
+		paths = []
+		path = deepcopy(PATH_STUB)
+		cmds = pathcmds.split(' ')
+		for cmd in cmds:
+			pass
+		return paths
 
 	# TODO: implement skew trafo
 	def trafo_skewX(self, *args):
@@ -311,10 +332,14 @@ class SVG_to_SK2_Translator(object):
 			self.translate_circle(parent, svg_obj, trafo, style)
 		elif svg_obj.tag == 'ellipse':
 			self.translate_ellipse(parent, svg_obj, trafo, style)
-		elif svg_obj.tag == 'path':
-			self.translate_path(parent, svg_obj, trafo, style)
 		elif svg_obj.tag == 'line':
 			self.translate_line(parent, svg_obj, trafo, style)
+		elif svg_obj.tag == 'polyline':
+			self.translate_polyline(parent, svg_obj, trafo, style)
+		elif svg_obj.tag == 'polygon':
+			self.translate_polygon(parent, svg_obj, trafo, style)
+		elif svg_obj.tag == 'path':
+			self.translate_path(parent, svg_obj, trafo, style)
 
 
 	def translate_defs(self, svg_obj):pass
@@ -442,12 +467,41 @@ class SVG_to_SK2_Translator(object):
 
 		paths = [[[x1, y1], [[x2, y2], ], sk2_const.CURVE_OPENED], ]
 
-		path = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
-		path.stroke_trafo = [] + tr
-		parent.childs.append(path)
+		curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
+		curve.stroke_trafo = [] + tr
+		parent.childs.append(curve)
+
+	def translate_polyline(self, parent, svg_obj, trafo, style):
+		cfg = parent.config
+		sk2_style = self.get_sk2_style(svg_obj, style)
+		tr = self.get_level_trafo(svg_obj, trafo)
+
+		if not 'points' in svg_obj.attrs: return
+		points = self.parse_points(svg_obj.attrs['points'])
+		if not points or len(points) < 2: return
+		paths = [[points[0], points[1:], sk2_const.CURVE_OPENED], ]
+
+		curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
+		curve.stroke_trafo = [] + tr
+		parent.childs.append(curve)
+
+	def translate_polygon(self, parent, svg_obj, trafo, style):
+		cfg = parent.config
+		sk2_style = self.get_sk2_style(svg_obj, style)
+		tr = self.get_level_trafo(svg_obj, trafo)
+
+		if not 'points' in svg_obj.attrs: return
+		points = self.parse_points(svg_obj.attrs['points'])
+		if not points or len(points) < 3: return
+		points.append([] + points[0])
+		paths = [[points[0], points[1:], sk2_const.CURVE_CLOSED], ]
+
+		curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
+		curve.stroke_trafo = [] + tr
+		parent.childs.append(curve)
 
 	def translate_path(self, parent, svg_obj, trafo, style):
-		path = None
+		curve = None
 		cfg = parent.config
 		sk2_style = self.get_sk2_style(svg_obj, style)
 		tr = self.get_level_trafo(svg_obj, trafo)
@@ -463,14 +517,18 @@ class SVG_to_SK2_Translator(object):
 			if self.check_attr(svg_obj, 'sodipodi:open', 'true'):
 				circle_type = sk2_const.ARC_ARC
 			rect = [cx - rx, cy - ry, 2.0 * rx, 2.0 * ry]
-			path = sk2_model.Circle(cfg, parent, rect, angle1, angle2,
+			curve = sk2_model.Circle(cfg, parent, rect, angle1, angle2,
 									circle_type, sk2_style)
-			path.trafo = libgeom.multiply_trafo(path.trafo, tr)
-			path.stroke_trafo = [] + tr
+			curve.trafo = libgeom.multiply_trafo(curve.trafo, tr)
+			curve.stroke_trafo = [] + tr
 		elif 'd' in svg_obj.attrs:
-			pass
+			paths = self.parse_path_cmds(svg_obj.attrs['d'])
+			if not paths: return
 
-		if path: parent.childs.append(path)
+			curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
+			curve.stroke_trafo = [] + tr
+
+		if curve: parent.childs.append(curve)
 
 
 
