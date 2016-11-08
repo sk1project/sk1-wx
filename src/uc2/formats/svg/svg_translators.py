@@ -302,6 +302,8 @@ class SVG_to_SK2_Translator(object):
 			self.translate_g(parent, svg_obj, trafo, style)
 		elif svg_obj.tag == 'rect':
 			self.translate_rect(parent, svg_obj, trafo, style)
+		elif svg_obj.tag == 'circle':
+			self.translate_circle(parent, svg_obj, trafo, style)
 		elif svg_obj.tag == 'ellipse':
 			self.translate_ellipse(parent, svg_obj, trafo, style)
 		elif svg_obj.tag == 'path':
@@ -388,6 +390,20 @@ class SVG_to_SK2_Translator(object):
 		ellipse.trafo = libgeom.multiply_trafo(ellipse.trafo, tr)
 		parent.childs.append(ellipse)
 
+	def translate_circle(self, parent, svg_obj, trafo, style):
+		cfg = parent.config
+		sk2_style = self.get_sk2_style(svg_obj, style)
+		tr = self.get_level_trafo(svg_obj, trafo)
+
+		cx = self.get_size_pt(svg_obj.attrs['cx'])
+		cy = self.get_size_pt(svg_obj.attrs['cy'])
+		r = self.get_size_pt(svg_obj.attrs['r'])
+		rect = [cx - r, cy - r, 2.0 * r, 2.0 * r]
+
+		ellipse = sk2_model.Circle(cfg, parent, rect, style=sk2_style)
+		ellipse.trafo = libgeom.multiply_trafo(ellipse.trafo, tr)
+		parent.childs.append(ellipse)
+
 	def translate_path(self, parent, svg_obj, trafo, style):
 		path = None
 		cfg = parent.config
@@ -408,6 +424,8 @@ class SVG_to_SK2_Translator(object):
 			path = sk2_model.Circle(cfg, parent, rect, angle1, angle2,
 									circle_type, sk2_style)
 			path.trafo = libgeom.multiply_trafo(path.trafo, tr)
+		elif 'd' in svg_obj.attrs:
+			pass
 
 		if path: parent.childs.append(path)
 
