@@ -92,6 +92,11 @@ class SVG_to_SK2_Translator(object):
 
 	#--- Utility methods
 
+	def check_attr(self, svg_obj, attr, value):
+		if attr in svg_obj.attrs and  svg_obj.attrs[attr] == value:
+			return True
+		return False
+
 	def _px_to_pt(self, sval):
 		return svg_const.svg_px_to_pt * float(sval)
 
@@ -297,6 +302,10 @@ class SVG_to_SK2_Translator(object):
 			self.translate_g(parent, svg_obj, trafo, style)
 		elif svg_obj.tag == 'rect':
 			self.translate_rect(parent, svg_obj, trafo, style)
+		elif svg_obj.tag == 'ellipse':
+			self.translate_ellipse(parent, svg_obj, trafo, style)
+		elif svg_obj.tag == 'path':
+			self.translate_path(parent, svg_obj, trafo, style)
 
 
 	def translate_defs(self, svg_obj):pass
@@ -309,8 +318,7 @@ class SVG_to_SK2_Translator(object):
 					name = str(svg_obj.attrs['inkscape:label'])
 				layer = sk2_model.Layer(self.page.config, self.page, name)
 				self.page.childs.append(layer)
-				if 'sodipodi:insensitive' in svg_obj.attrs and \
-				svg_obj.attrs['sodipodi:insensitive'] == 'true':
+				if self.check_attr(svg_obj, 'sodipodi:insensitive', 'true'):
 					layer.properties[1] = 0
 				tr = self.get_level_trafo(svg_obj, trafo)
 				stl = self.get_level_style(svg_obj, style)
@@ -328,15 +336,82 @@ class SVG_to_SK2_Translator(object):
 				parent.childs.append(group)
 
 	def translate_rect(self, parent, svg_obj, trafo, style):
+		cfg = parent.config
+		sk2_style = self.get_sk2_style(svg_obj, style)
+		tr = self.get_level_trafo(svg_obj, trafo)
+
 		x = self.get_size_pt(svg_obj.attrs['x'])
 		y = self.get_size_pt(svg_obj.attrs['y'])
 		w = self.get_size_pt(svg_obj.attrs['width'])
 		h = self.get_size_pt(svg_obj.attrs['height'])
+
+		corners = [] + sk2_const.CORNERS
+		rx = ry = None
+		if 'rx' in svg_obj.attrs:
+			rx = self.get_size_pt(svg_obj.attrs['rx'])
+		if 'ry' in svg_obj.attrs:
+			ry = self.get_size_pt(svg_obj.attrs['ry'])
+		if rx is None and not ry is None: rx = ry
+		elif ry is None and not rx is None: ry = rx
+
+		if not rx is None:
+			rx = abs(rx)
+			ry = abs(ry)
+			if rx > w / 2.0: rx = w / 2.0
+			if ry > h / 2.0: ry = h / 2.0
+			coeff = rx / ry
+			w = w / coeff
+			trafo = [1.0, 0.0, 0.0, 1.0, -x, -y]
+			trafo1 = [coeff, 0.0, 0.0, 1.0, 0.0, 0.0]
+			trafo2 = [1.0, 0.0, 0.0, 1.0, x, y]
+			trafo = libgeom.multiply_trafo(trafo, trafo1)
+			trafo = libgeom.multiply_trafo(trafo, trafo2)
+			tr = libgeom.multiply_trafo(trafo, tr)
+			corners = [2.0 * ry / min(w, h), ] * 4
+
+		rect = sk2_model.Rectangle(cfg, parent, [x, y, w, h], tr,
+								sk2_style, corners)
+		parent.childs.append(rect)
+
+	def translate_ellipse(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
 		sk2_style = self.get_sk2_style(svg_obj, style)
 		tr = self.get_level_trafo(svg_obj, trafo)
-		rect = sk2_model.Rectangle(cfg, parent, [x, y, w, h], tr, sk2_style)
-		parent.childs.append(rect)
+
+		cx = self.get_size_pt(svg_obj.attrs['cx'])
+		cy = self.get_size_pt(svg_obj.attrs['cy'])
+		rx = self.get_size_pt(svg_obj.attrs['rx'])
+		ry = self.get_size_pt(svg_obj.attrs['ry'])
+		rect = [cx - rx, cy - ry, 2.0 * rx, 2.0 * ry]
+
+		ellipse = sk2_model.Circle(cfg, parent, rect, style=sk2_style)
+		ellipse.trafo = libgeom.multiply_trafo(ellipse.trafo, tr)
+		parent.childs.append(ellipse)
+
+	def translate_path(self, parent, svg_obj, trafo, style):
+		path = None
+		cfg = parent.config
+		sk2_style = self.get_sk2_style(svg_obj, style)
+		tr = self.get_level_trafo(svg_obj, trafo)
+
+		if self.check_attr(svg_obj, 'sodipodi:type', 'arc'):
+			cx = self.get_size_pt(svg_obj.attrs['sodipodi:cx'])
+			cy = self.get_size_pt(svg_obj.attrs['sodipodi:cy'])
+			rx = self.get_size_pt(svg_obj.attrs['sodipodi:rx'])
+			ry = self.get_size_pt(svg_obj.attrs['sodipodi:ry'])
+			angle1 = float(svg_obj.attrs['sodipodi:start'])
+			angle2 = float(svg_obj.attrs['sodipodi:end'])
+			circle_type = sk2_const.ARC_PIE_SLICE
+			if self.check_attr(svg_obj, 'sodipodi:open', 'true'):
+				circle_type = sk2_const.ARC_ARC
+			rect = [cx - rx, cy - ry, 2.0 * rx, 2.0 * ry]
+			path = sk2_model.Circle(cfg, parent, rect, angle1, angle2,
+									circle_type, sk2_style)
+			path.trafo = libgeom.multiply_trafo(path.trafo, tr)
+
+		if path: parent.childs.append(path)
+
+
 
 
 class SK2_to_SVG_Translator(object):
