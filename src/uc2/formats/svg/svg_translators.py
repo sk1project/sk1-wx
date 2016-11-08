@@ -243,7 +243,7 @@ class SVG_to_SK2_Translator(object):
 				if stroke[0] == '#':
 					vals = cms.hexcolor_to_rgb(stroke)
 					clr = ['RGB', vals, alpha, '']
-				elif fill in svg_colors.SVG_COLORS:
+				elif stroke in svg_colors.SVG_COLORS:
 					clr = deepcopy(svg_colors.SVG_COLORS[stroke])
 					clr[2] = alpha
 				if clr:
@@ -286,14 +286,15 @@ class SVG_to_SK2_Translator(object):
 
 		dx = -width / 2.0
 		dy = height / 2.0
-		xx = yy = 1.0
+		self.trafo = [1.0, 0.0, 0.0, -1.0, dx, dy]
 		if 'viewBox' in self.svg_mt.attrs:
 			vbox = self.get_viewbox(self.svg_mt.attrs['viewBox'])
-			dx = -width / 2.0 + vbox[0]
-			dy = height / 2.0 + vbox[1]
+			dx = vbox[0]
+			dy = vbox[1]
 			xx = width / (vbox[2] - vbox[0])
 			yy = height / (vbox[3] - vbox[1])
-		self.trafo = [xx, 0.0, 0.0, -yy, dx * xx, dy * yy]
+			tr = [xx, 0.0, 0.0, yy, dx, dy]
+			self.trafo = libgeom.multiply_trafo(tr, self.trafo)
 
 	def translate_obj(self, parent, svg_obj, trafo, style):
 		if svg_obj.tag == 'defs':
