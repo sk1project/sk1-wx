@@ -73,6 +73,7 @@ class SVG_to_SK2_Translator(object):
 
 	page = None
 	layer = None
+	defs = None
 	trafo = []
 	coeff = 1.0
 
@@ -124,6 +125,7 @@ class SVG_to_SK2_Translator(object):
 			vbox.append(self.get_size_pt(item))
 		return vbox
 
+	# TODO: implement skew trafo
 	def trafo_skewX(self,):
 		return [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
 
@@ -191,6 +193,7 @@ class SVG_to_SK2_Translator(object):
 			fillrule = SK2_FILL_RULE[style['fill-rule']]
 			fill = style['fill']
 			if len(fill) > 3 and fill[:3] == 'url':
+				# TODO: implement defs parsing
 				pass
 			else:
 				fill = fill.split(' ')[0]
@@ -306,8 +309,13 @@ class SVG_to_SK2_Translator(object):
 					name = str(svg_obj.attrs['inkscape:label'])
 				layer = sk2_model.Layer(self.page.config, self.page, name)
 				self.page.childs.append(layer)
+				if 'sodipodi:insensitive' in svg_obj.attrs and \
+				svg_obj.attrs['sodipodi:insensitive'] == 'true':
+					layer.properties[1] = 0
 				tr = self.get_level_trafo(svg_obj, trafo)
 				stl = self.get_level_style(svg_obj, style)
+				if 'display' in stl and stl['display'] == 'none':
+					layer.properties[0] = 0
 				for item in svg_obj.childs:
 					self.translate_obj(layer, item, tr, stl)
 		else:
