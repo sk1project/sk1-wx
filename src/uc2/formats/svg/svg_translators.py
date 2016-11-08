@@ -18,9 +18,9 @@
 import math
 from copy import deepcopy
 
-from uc2 import uc2const, libgeom
+from uc2 import uc2const, libgeom, cms
 from uc2.formats.sk2 import sk2_model, sk2_const
-from uc2.formats.svg import svg_const
+from uc2.formats.svg import svg_const, svg_colors
 
 SK2_UNITS = {
 svg_const.SVG_PX:uc2const.UNIT_PX,
@@ -31,6 +31,42 @@ svg_const.SVG_CM:uc2const.UNIT_CM,
 svg_const.SVG_M:uc2const.UNIT_M,
 svg_const.SVG_IN:uc2const.UNIT_IN,
 svg_const.SVG_FT:uc2const.UNIT_FT,
+}
+
+SVG_STYLE = {
+	'opacity':'1',
+	'fill':'black',
+	'fill-rule':'nonzero',
+	'fill-opacity':'1',
+	'stroke':'none',
+	'stroke-width':'1',
+	'stroke-linecap':'butt',
+	'stroke-linejoin':'miter',
+	'stroke-miterlimit':'4',
+	'stroke-dasharray':'none',
+	'stroke-dashoffset':'0',
+	'stroke-opacity':'1',
+}
+
+STYLE_ATTRS = ['fill', 'fill-rule', 'fill-opacity', 'stroke', 'stroke-width',
+			'stroke-linecap', 'stroke-linejoin', 'stroke-miterlimit',
+			'stroke-dasharray', 'stroke-dashoffset', 'stroke-opacity', ]
+
+SK2_FILL_RULE = {
+	'nonzero':sk2_const.FILL_NONZERO,
+	'evenodd':sk2_const.FILL_EVENODD,
+}
+
+SK2_LINE_JOIN = {
+	'miter':sk2_const.JOIN_MITER,
+	'round':sk2_const.JOIN_ROUND,
+	'bevel':sk2_const.JOIN_BEVEL,
+}
+
+SK2_LINE_CAP = {
+	'butt':sk2_const.CAP_BUTT,
+	'round':sk2_const.CAP_ROUND,
+	'square':sk2_const.CAP_SQUARE,
 }
 
 class SVG_to_SK2_Translator(object):
@@ -48,7 +84,7 @@ class SVG_to_SK2_Translator(object):
 		self.translate_units()
 		self.translate_page()
 		for item in self.svg_mt.childs:
-			self.translate_obj(self.layer, item, self.trafo)
+			self.translate_obj(self.layer, item, self.trafo, SVG_STYLE)
 		if len(self.page.childs) > 1 and not self.layer.childs:
 			self.page.childs.remove(self.layer)
 		self.sk2_mt.do_update()
@@ -133,6 +169,82 @@ class SVG_to_SK2_Translator(object):
 		tr = libgeom.multiply_trafo(tr, trafo)
 		return tr
 
+	def get_level_style(self, svg_obj, style):
+		style = deepcopy(style)
+		for item in STYLE_ATTRS:
+			if item in svg_obj.attrs:
+				style[item] = '' + str(svg_obj.attrs[item])
+		if 'style' in svg_obj.attrs:
+			stls = str(svg_obj.attrs['style']).split(';')
+			for stl in stls:
+				vals = stl.split(':')
+				if len(vals) == 2:
+					style[vals[0]] = vals[1]
+		return style
+
+	def get_sk2_style(self, svg_obj, style):
+		sk2_style = [[], [], [], []]
+		style = self.get_level_style(svg_obj, style)
+
+		# fill parsing
+		if not style['fill'] == 'none':
+			fillrule = SK2_FILL_RULE[style['fill-rule']]
+			fill = style['fill']
+			if len(fill) > 3 and fill[:3] == 'url':
+				pass
+			else:
+				fill = fill.split(' ')[0]
+				alpha = float(style['fill-opacity']) * float(style['opacity'])
+				if fill[0] == '#':
+					vals = cms.hexcolor_to_rgb(fill)
+					clr = ['RGB', vals, alpha, '']
+					sk2_style[0] = [fillrule, sk2_const.FILL_SOLID, clr]
+				else:
+					if fill in svg_colors.SVG_COLORS:
+						clr = deepcopy(svg_colors.SVG_COLORS[fill])
+						clr[2] = alpha
+						sk2_style[0] = [fillrule, sk2_const.FILL_SOLID, clr]
+
+		# stroke parsing
+		if not style['stroke'] == 'none':
+			stroke = style['stroke']
+			stroke_rule = sk2_const.STROKE_MIDDLE
+			stroke_width = self.get_size_pt(style['stroke-width'])
+			stroke_linecap = SK2_LINE_CAP[style['stroke-linecap']]
+			stroke_linejoin = SK2_LINE_JOIN[style['stroke-linejoin']]
+			stroke_miterlimit = float(style['stroke-miterlimit'])
+
+			dash = []
+			if not style['stroke-dasharray'] == 'none':
+				try:
+					code = compile('dash=[' + style['stroke-dasharray'] + ']',
+								'<string>', 'exec')
+					exec code
+				except: dash = []
+			if dash:
+				sk2_dash = []
+				for item in dash: sk2_dash.append(item / stroke_width)
+				dash = sk2_dash
+
+			if len(stroke) > 3 and stroke[:3] == 'url':
+				pass
+			else:
+				clr = []
+				stroke = stroke.split(' ')[0]
+				alpha = float(style['stroke-opacity']) * float(style['opacity'])
+				if stroke[0] == '#':
+					vals = cms.hexcolor_to_rgb(stroke)
+					clr = ['RGB', vals, alpha, '']
+				elif fill in svg_colors.SVG_COLORS:
+					clr = deepcopy(svg_colors.SVG_COLORS[stroke])
+					clr[2] = alpha
+				if clr:
+					sk2_style[1] = [stroke_rule, stroke_width, clr, dash,
+							stroke_linecap, stroke_linejoin,
+							stroke_miterlimit, 0, 0, []]
+
+		return sk2_style
+
 	#--- Translation metods
 
 	def translate_units(self):
@@ -175,18 +287,18 @@ class SVG_to_SK2_Translator(object):
 			yy = height / (vbox[3] - vbox[1])
 		self.trafo = [xx, 0.0, 0.0, -yy, dx * xx, dy * yy]
 
-	def translate_obj(self, parent, svg_obj, trafo):
+	def translate_obj(self, parent, svg_obj, trafo, style):
 		if svg_obj.tag == 'defs':
 			self.translate_defs(svg_obj)
 		elif svg_obj.tag == 'g':
-			self.translate_g(parent, svg_obj, trafo)
+			self.translate_g(parent, svg_obj, trafo, style)
 		elif svg_obj.tag == 'rect':
-			self.translate_rect(parent, svg_obj, trafo)
+			self.translate_rect(parent, svg_obj, trafo, style)
 
 
 	def translate_defs(self, svg_obj):pass
 
-	def translate_g(self, parent, svg_obj, trafo):
+	def translate_g(self, parent, svg_obj, trafo, style):
 		if 'inkscape:groupmode' in svg_obj.attrs:
 			if svg_obj.attrs['inkscape:groupmode'] == 'layer':
 				name = 'Layer %d' % len(self.page.childs)
@@ -195,25 +307,27 @@ class SVG_to_SK2_Translator(object):
 				layer = sk2_model.Layer(self.page.config, self.page, name)
 				self.page.childs.append(layer)
 				tr = self.get_level_trafo(svg_obj, trafo)
+				stl = self.get_level_style(svg_obj, style)
 				for item in svg_obj.childs:
-					self.translate_obj(layer, item, tr)
+					self.translate_obj(layer, item, tr, stl)
 		else:
 			group = sk2_model.Group(parent.config, parent)
 			tr = self.get_level_trafo(svg_obj, trafo)
+			stl = self.get_level_style(svg_obj, style)
 			for item in svg_obj.childs:
-				self.translate_obj(group, item, tr)
+				self.translate_obj(group, item, tr, stl)
 			if group.childs:
 				parent.childs.append(group)
 
-	def translate_rect(self, parent, svg_obj, trafo):
+	def translate_rect(self, parent, svg_obj, trafo, style):
 		x = self.get_size_pt(svg_obj.attrs['x'])
 		y = self.get_size_pt(svg_obj.attrs['y'])
 		w = self.get_size_pt(svg_obj.attrs['width'])
 		h = self.get_size_pt(svg_obj.attrs['height'])
 		cfg = parent.config
-		style = deepcopy([cfg.default_fill, cfg.default_stroke, [], []])
+		sk2_style = self.get_sk2_style(svg_obj, style)
 		tr = self.get_level_trafo(svg_obj, trafo)
-		rect = sk2_model.Rectangle(cfg, parent, [x, y, w, h], tr, style)
+		rect = sk2_model.Rectangle(cfg, parent, [x, y, w, h], tr, sk2_style)
 		parent.childs.append(rect)
 
 
