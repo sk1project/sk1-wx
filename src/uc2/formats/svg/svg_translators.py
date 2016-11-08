@@ -131,14 +131,14 @@ class SVG_to_SK2_Translator(object):
 		return vbox
 
 	# TODO: implement skew trafo
-	def trafo_skewX(self,):
+	def trafo_skewX(self, *args):
 		return [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
 
-	def trafo_skewY(self):
+	def trafo_skewY(self, *args):
 		return [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
 
 	def trafo_rotate(self, angle, cx=0.0, cy=0.0):
-		angle = angle / 180.0
+		angle = math.pi * angle / 180.0
 		trafo = [math.cos(angle), math.sin(angle),
 			- math.sin(angle), math.cos(angle), 0.0, 0.0]
 		if cx or cy:
@@ -166,7 +166,6 @@ class SVG_to_SK2_Translator(object):
 			tr += ')'
 			tr = tr.replace(', ', ',').replace(' ', ',').replace('))', ')')
 			try:
-				print tr
 				code = compile('tr=self.trafo_' + tr, '<string>', 'exec')
 				exec code
 			except: continue
@@ -297,7 +296,8 @@ class SVG_to_SK2_Translator(object):
 			dy = vbox[1]
 			xx = width / (vbox[2] - vbox[0])
 			yy = height / (vbox[3] - vbox[1])
-			tr = [xx, 0.0, 0.0, yy, dx, dy]
+			tr = [xx, 0.0, 0.0, yy, 0.0, 0.0]
+			tr = libgeom.multiply_trafo(tr, [1.0, 0.0, 0.0, 1.0, dx, dy])
 			self.trafo = libgeom.multiply_trafo(tr, self.trafo)
 
 	def translate_obj(self, parent, svg_obj, trafo, style):
@@ -399,7 +399,6 @@ class SVG_to_SK2_Translator(object):
 			ry = self.get_size_pt(svg_obj.attrs['ry'])
 		if not rx or not ry: return
 		rect = [cx - rx, cy - ry, 2.0 * rx, 2.0 * ry]
-		print rect, tr
 
 		ellipse = sk2_model.Circle(cfg, parent, rect, style=sk2_style)
 		ellipse.trafo = libgeom.multiply_trafo(ellipse.trafo, tr)
@@ -467,7 +466,7 @@ class SVG_to_SK2_Translator(object):
 			path = sk2_model.Circle(cfg, parent, rect, angle1, angle2,
 									circle_type, sk2_style)
 			path.trafo = libgeom.multiply_trafo(path.trafo, tr)
-			path.stroke_trafo = [] + path.trafo
+			path.stroke_trafo = [] + tr
 		elif 'd' in svg_obj.attrs:
 			pass
 
