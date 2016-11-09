@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2011-2015 by Igor E. Novikov
+# 	Copyright (C) 2011-2015 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, copy
 
@@ -94,7 +94,10 @@ def hexcolor_to_rgb(hexcolor):
 	Converts hex color string as a list of float values.
 	For example: #ff00ff => [1.0, 0.0, 1.0]
 	"""
-	vals = (hexcolor[1:3], hexcolor[3:5], hexcolor[5:])
+	if len(hexcolor) == 4:
+		vals = (hexcolor[1] * 2, hexcolor[2] * 2, hexcolor[3] * 2)
+	else:
+		vals = (hexcolor[1:3], hexcolor[3:5], hexcolor[5:])
 	return map(lambda x:int(x, 0x10) / 255.0, vals)
 
 def hexcolor_to_rgba(hexcolor):
@@ -178,9 +181,9 @@ def lab_to_rgb(color):
 	Converts CIE-L*ab value to RGB.
 	"""
 	L, a, b = color
-	#L: 0..100
-	#a:  -128..127
-	#b:  -128..127
+	# L: 0..100
+	# a:  -128..127
+	# b:  -128..127
 	L = L * 100.0
 	a = a * 255.0 - 128.0
 	b = b * 255.0 - 128.0
@@ -219,17 +222,17 @@ def rgb_to_linear(c):
 def rgb_to_lab(color):
 	R, G, B = color
 
-	#RGB -> linear sRGB
+	# RGB -> linear sRGB
 	R = rgb_to_linear(R)
 	G = rgb_to_linear(G)
 	B = rgb_to_linear(B)
 
-	#linear sRGB -> normalized XYZ (X,Y,Z are all in 0...1)
+	# linear sRGB -> normalized XYZ (X,Y,Z are all in 0...1)
 	X = xyz_to_lab(R * (10135552.0 / 23359437.0) + G * (8788810.0 / 23359437.0) + B * (4435075.0 / 23359437.0))
 	Y = xyz_to_lab(R * (871024.0 / 4096299.0) + G * (8788810.0 / 12288897.0) + B * (887015.0 / 12288897.0))
 	Z = xyz_to_lab(R * (158368.0 / 8920923.0) + G * (8788810.0 / 80288307.0) + B * (70074185.0 / 80288307.0))
 
-	#normalized XYZ -> Lab
+	# normalized XYZ -> Lab
 	L = round((Y * 116.0 - 16.0) / 100.0, 3)
 	a = round(((X - Y) * 500.0 + 128.0) / 255.0, 3)
 	b = round(((Y - Z) * 200.0 + 128.0) / 255.0, 3)
@@ -503,7 +506,7 @@ class ColorManager(object):
 		transform = self.get_proof_transform(cs_in)
 		return libcms.cms_do_bitmap_transform(transform, img, img.mode, mode)
 
-	#Color management API
+	# Color management API
 	def get_rgb_color(self, color):
 		"""
 		Convert color into RGB color.
