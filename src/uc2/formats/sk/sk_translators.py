@@ -404,7 +404,7 @@ class SK2_to_SK_Translator(object):
 				layout = skmtds.get_layout_obj()
 				fmt, size, ornt = item.childs[0].page_format
 				layout.format = '' + fmt
-				layout.size = () + size
+				layout.size = () + tuple(size)
 				layout.orientation = ornt
 				self.dx = size[0] / 2.0
 				self.dy = size[1] / 2.0
@@ -412,7 +412,7 @@ class SK2_to_SK_Translator(object):
 				childs = []
 				for page in item.childs:
 					fmt, size, ornt = page.page_format
-					self.page_size = () + size
+					self.page_size = () + tuple(size)
 					childs += self.translate_page(self.model, page)
 					self.dx += self.page_size[0] + 30.0
 					self.page_dx += self.page_size[0] + 30.0
