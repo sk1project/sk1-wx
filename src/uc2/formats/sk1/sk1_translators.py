@@ -384,7 +384,7 @@ class SK2_to_SK1_Translator(object):
 				layout = sk1mtds.get_layout_obj()
 				fmt, size, ornt = item.page_format
 				layout.format = '' + fmt
-				layout.size = () + size
+				layout.size = () + tuple(size)
 				layout.orientation = ornt
 				dx = size[0] / 2.0
 				dy = size[1] / 2.0
