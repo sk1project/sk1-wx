@@ -19,6 +19,7 @@ import math
 from copy import deepcopy
 
 from uc2 import uc2const, libgeom, cms
+from uc2.libgeom import add_points, sub_points
 from uc2.formats.sk2 import sk2_model, sk2_const
 from uc2.formats.svg import svg_const, svg_colors
 
@@ -69,7 +70,7 @@ SK2_LINE_CAP = {
 	'square':sk2_const.CAP_SQUARE,
 }
 
-PATH_STUB = [[], [], 0]
+PATH_STUB = [[], [], sk2_const.CURVE_OPENED]
 
 class SVG_to_SK2_Translator(object):
 
@@ -143,12 +144,114 @@ class SVG_to_SK2_Translator(object):
 			except: continue
 		return points
 
+	def parse_coords(self, scoords):
+		scoords = scoords.strip().replace(',', ' ').replace('-', ' -').strip()
+		scoords = scoords.replace('  ', ' ').replace('  ', ' ')
+		if scoords:
+			return map(lambda x:float(x), scoords.split(' '))
+		return None
+
+	def base_point(self, point):
+		if len(point) == 2: return [] + point
+		return [] + point[-1]
+
 	def parse_path_cmds(self, pathcmds):
+		index = 0
+		last = None
+		last_index = 0
+		cmds = []
+		for item in pathcmds:
+			if item in 'MmZzLlHhVvCcSsQqTtAa':
+				if last:
+					coords = self.parse_coords(pathcmds[last_index + 1:index])
+					cmds.append((last, coords))
+				last = item
+				last_index = index
+			index += 1
+
+		coords = self.parse_coords(pathcmds[last_index + 1:index])
+		cmds.append([last, coords])
+
 		paths = []
-		path = deepcopy(PATH_STUB)
-		cmds = pathcmds.split(' ')
+		path = []
+		cpoint = []
+		rel_flag = False
 		for cmd in cmds:
-			pass
+			if cmd[0] in 'Mm':
+				if path: paths.append(path)
+				path = deepcopy(PATH_STUB)
+				cpoint = []
+				rel_flag = cmd[0] == 'm'
+				points = [cmd[1][i:i + 2] for i in range(0, len(cmd[1]), 2)]
+				for point in points:
+					if cpoint and rel_flag:
+						point = add_points(self.base_point(cpoint), point)
+					if not path[0]: path[0] = point
+					else: path[1].append(point)
+					cpoint = point
+			elif cmd[0] in 'Zz':
+				path[1].append([] + path[0])
+				path[2] = sk2_const.CURVE_CLOSED
+			elif cmd[0] in 'Cc':
+				rel_flag = cmd[0] == 'c'
+				points = [cmd[1][i:i + 2] for i in range(0, len(cmd[1]), 2)]
+				points = [points[i:i + 3] for i in range(0, len(points), 3)]
+				for point in points:
+					if rel_flag:
+						point = [add_points(self.base_point(cpoint), point[0]),
+								add_points(self.base_point(cpoint), point[1]),
+								add_points(self.base_point(cpoint), point[2])]
+					qpoint = [] + point
+					qpoint.append(sk2_const.NODE_CUSP)
+					path[1].append(qpoint)
+					cpoint = point
+			elif cmd[0] in 'Ll':
+				rel_flag = cmd[0] == 'l'
+				points = [cmd[1][i:i + 2] for i in range(0, len(cmd[1]), 2)]
+				for point in points:
+					if rel_flag:
+						point = add_points(self.base_point(cpoint), point)
+					path[1].append(point)
+					cpoint = point
+			elif cmd[0] in 'Hh':
+				rel_flag = cmd[0] == 'h'
+				for x in cmd[1]:
+					dx, y = self.base_point(cpoint)
+					if rel_flag: point = [x + dx, y]
+					else:point = [x, y]
+					path[1].append(point)
+					cpoint = point
+			elif cmd[0] in 'Vv':
+				rel_flag = cmd[0] == 'v'
+				for y in cmd[1]:
+					x, dy = self.base_point(cpoint)
+					if rel_flag: point = [x , y + dy]
+					else:point = [x, y]
+					path[1].append(point)
+					cpoint = point
+			elif cmd[0] in 'Ss':
+				rel_flag = cmd[0] == 's'
+				points = [cmd[1][i:i + 2] for i in range(0, len(cmd[1]), 2)]
+				points = [points[i:i + 2] for i in range(0, len(points), 2)]
+				for point in points:
+					q = cpoint
+					p = cpoint
+					if len(cpoint) > 2:
+						q = cpoint[1]
+						p = cpoint[2]
+					p1 = sub_points(add_points(p, p), q)
+					if rel_flag:
+						p2 = add_points(self.base_point(cpoint), point[0])
+						p3 = add_points(self.base_point(cpoint), point[1])
+					else:
+						p2, p3 = point
+					point = [p1, p2, p3]
+					qpoint = [] + point
+					qpoint.append(sk2_const.NODE_CUSP)
+					path[1].append(qpoint)
+					cpoint = point
+
+		if path:paths.append(path)
 		return paths
 
 	# TODO: implement skew trafo
@@ -511,8 +614,11 @@ class SVG_to_SK2_Translator(object):
 			cy = self.get_size_pt(svg_obj.attrs['sodipodi:cy'])
 			rx = self.get_size_pt(svg_obj.attrs['sodipodi:rx'])
 			ry = self.get_size_pt(svg_obj.attrs['sodipodi:ry'])
-			angle1 = float(svg_obj.attrs['sodipodi:start'])
-			angle2 = float(svg_obj.attrs['sodipodi:end'])
+			angle1 = angle2 = 0
+			if 'sodipodi:start' in svg_obj.attrs:
+				angle1 = float(svg_obj.attrs['sodipodi:start'])
+			if 'sodipodi:end' in svg_obj.attrs:
+				angle2 = float(svg_obj.attrs['sodipodi:end'])
 			circle_type = sk2_const.ARC_PIE_SLICE
 			if self.check_attr(svg_obj, 'sodipodi:open', 'true'):
 				circle_type = sk2_const.ARC_ARC
