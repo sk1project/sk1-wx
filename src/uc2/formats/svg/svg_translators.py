@@ -79,6 +79,8 @@ class SVG_to_SK2_Translator(object):
 	defs = None
 	trafo = []
 	coeff = 1.0
+	user_space = []
+	defs = {}
 
 	def translate(self, svg_doc, sk2_doc):
 		self.svg_mt = svg_doc.model
@@ -150,6 +152,17 @@ class SVG_to_SK2_Translator(object):
 		if scoords:
 			return map(lambda x:float(x), scoords.split(' '))
 		return None
+
+	def parse_svg_color(self, sclr, alpha=1.0):
+		sclr = sclr.split(' ')[0]
+		if sclr[0] == '#':
+			vals = cms.hexcolor_to_rgb(sclr)
+			clr = ['RGB', vals, alpha, '']
+		else:
+			if sclr in svg_colors.SVG_COLORS:
+				clr = deepcopy(svg_colors.SVG_COLORS[sclr])
+				clr[2] = alpha
+		return clr
 
 	def base_point(self, point):
 		if len(point) == 2: return [] + point
@@ -251,8 +264,82 @@ class SVG_to_SK2_Translator(object):
 					path[1].append(qpoint)
 					cpoint = point
 
+			# TODO: TtQqAa command support
+
 		if path:paths.append(path)
 		return paths
+
+	def parse_stops(self, stops):
+		sk2_stops = []
+		for stop in stops:
+			if not stop.tag == 'stop': continue
+			offset = stop.attrs['offset']
+			if offset[-1] == '%':offset = float(offset[:-1]) / 100.0
+			else: offset = float(offset)
+
+			alpha = 1.0
+			sclr = 'black'
+			if 'stop-opacity' in stop.attrs:
+				alpha = float(stop.attrs['stop-opacity'])
+			if 'stop-color' in stop.attrs:
+				sclr = stop.attrs['stop-color']
+
+			if 'style' in stop.attrs:
+				style = {}
+				stls = str(stop.attrs['style']).split(';')
+				for stl in stls:
+					vals = stl.split(':')
+					if len(vals) == 2:
+						style[vals[0]] = vals[1]
+				if 'stop-opacity' in style:
+					alpha = float(style['stop-opacity'])
+				if 'stop-color' in style:
+					sclr = style['stop-color']
+
+			clr = self.parse_svg_color(sclr, alpha)
+			sk2_stops.append([offset, clr])
+		return sk2_stops
+
+	def parse_def(self, svg_obj):
+		if svg_obj.tag == 'linearGradient':
+			if 'xlink:href' in svg_obj.attrs:
+				cid = svg_obj.attrs['xlink:href'][1:]
+				if cid in self.defs:
+					stops = self.parse_def(self.defs[cid])[2][2]
+					if not stops: return []
+			elif svg_obj.childs:
+				stops = self.parse_stops(svg_obj.childs)
+				if not stops: return []
+			else: return []
+
+			x1 = 0.0
+			y1 = 0.0
+			x2 = self.user_space[2]
+			y2 = 0.0
+			if 'x1' in svg_obj.attrs:
+				x1 = self.get_size_pt(svg_obj.attrs['x1'])
+			if 'y1' in svg_obj.attrs:
+				y1 = self.get_size_pt(svg_obj.attrs['y1'])
+			if 'x2' in svg_obj.attrs:
+				x2 = self.get_size_pt(svg_obj.attrs['x2'])
+			if 'y2' in svg_obj.attrs:
+				y2 = self.get_size_pt(svg_obj.attrs['y2'])
+			vector = [[x1, y1], [x2, y2]]
+			return [0, sk2_const.FILL_GRADIENT,
+				 [sk2_const.GRADIENT_LINEAR, vector, stops]]
+
+		elif svg_obj.tag == 'radialGradient':
+			if 'xlink:href' in svg_obj.attrs:
+				cid = svg_obj.attrs['xlink:href'][1:]
+				if cid in self.defs:
+					stops = self.parse_def(self.defs[cid])[2][2]
+					if not stops: return []
+			elif svg_obj.childs:
+				stops = self.parse_stops(svg_obj.childs)
+				if not stops: return []
+			else: return []
+
+		return []
 
 	# TODO: implement skew trafo
 	def trafo_skewX(self, *args):
@@ -320,25 +407,26 @@ class SVG_to_SK2_Translator(object):
 		sk2_style = [[], [], [], []]
 		style = self.get_level_style(svg_obj, style)
 
+		if 'display' in style and style['display'] == 'none':
+			return sk2_style
+		if 'visibility' in style and \
+		style['visibility'] in ('hidden', 'collapse'):
+			return sk2_style
+
 		# fill parsing
 		if not style['fill'] == 'none':
 			fillrule = SK2_FILL_RULE[style['fill-rule']]
 			fill = style['fill']
 			if len(fill) > 3 and fill[:3] == 'url':
-				# TODO: implement defs parsing
-				pass
+				def_id = fill[5:-1]
+				if def_id in self.defs:
+					sk2_style[0] = self.parse_def(self.defs[def_id])
+					if sk2_style[0]: sk2_style[0][0] = fillrule
 			else:
-				fill = fill.split(' ')[0]
 				alpha = float(style['fill-opacity']) * float(style['opacity'])
-				if fill[0] == '#':
-					vals = cms.hexcolor_to_rgb(fill)
-					clr = ['RGB', vals, alpha, '']
+				clr = self.parse_svg_color(fill, alpha)
+				if clr:
 					sk2_style[0] = [fillrule, sk2_const.FILL_SOLID, clr]
-				else:
-					if fill in svg_colors.SVG_COLORS:
-						clr = deepcopy(svg_colors.SVG_COLORS[fill])
-						clr[2] = alpha
-						sk2_style[0] = [fillrule, sk2_const.FILL_SOLID, clr]
 
 		# stroke parsing
 		if not style['stroke'] == 'none':
@@ -364,15 +452,8 @@ class SVG_to_SK2_Translator(object):
 			if len(stroke) > 3 and stroke[:3] == 'url':
 				pass
 			else:
-				clr = []
-				stroke = stroke.split(' ')[0]
 				alpha = float(style['stroke-opacity']) * float(style['opacity'])
-				if stroke[0] == '#':
-					vals = cms.hexcolor_to_rgb(stroke)
-					clr = ['RGB', vals, alpha, '']
-				elif stroke in svg_colors.SVG_COLORS:
-					clr = deepcopy(svg_colors.SVG_COLORS[stroke])
-					clr[2] = alpha
+				clr = self.parse_svg_color(stroke, alpha)
 				if clr:
 					sk2_style[1] = [stroke_rule, stroke_width, clr, dash,
 							stroke_linecap, stroke_linejoin,
@@ -414,6 +495,7 @@ class SVG_to_SK2_Translator(object):
 		dx = -width / 2.0
 		dy = height / 2.0
 		self.trafo = [1.0, 0.0, 0.0, -1.0, dx, dy]
+		self.user_space = [0.0, 0.0, width, height]
 		if 'viewBox' in self.svg_mt.attrs:
 			vbox = self.get_viewbox(self.svg_mt.attrs['viewBox'])
 			dx = vbox[0]
@@ -423,6 +505,7 @@ class SVG_to_SK2_Translator(object):
 			tr = [xx, 0.0, 0.0, yy, 0.0, 0.0]
 			tr = libgeom.multiply_trafo(tr, [1.0, 0.0, 0.0, 1.0, dx, dy])
 			self.trafo = libgeom.multiply_trafo(tr, self.trafo)
+			self.user_space = vbox
 
 	def translate_obj(self, parent, svg_obj, trafo, style):
 		if svg_obj.tag == 'defs':
@@ -444,8 +527,11 @@ class SVG_to_SK2_Translator(object):
 		elif svg_obj.tag == 'path':
 			self.translate_path(parent, svg_obj, trafo, style)
 
-
-	def translate_defs(self, svg_obj):pass
+	def translate_defs(self, svg_obj):
+		self.defs = {}
+		for item in svg_obj.childs:
+			if 'id' in item.attrs:
+				self.defs[str(item.attrs['id'])] = item
 
 	def translate_g(self, parent, svg_obj, trafo, style):
 		if 'inkscape:groupmode' in svg_obj.attrs:
@@ -509,6 +595,8 @@ class SVG_to_SK2_Translator(object):
 		rect = sk2_model.Rectangle(cfg, parent, [x, y, w, h], tr,
 								sk2_style, corners)
 		rect.stroke_trafo = [] + tr
+		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
+			rect.fill_trafo = [] + tr
 		parent.childs.append(rect)
 
 	def translate_ellipse(self, parent, svg_obj, trafo, style):
@@ -531,6 +619,8 @@ class SVG_to_SK2_Translator(object):
 		ellipse = sk2_model.Circle(cfg, parent, rect, style=sk2_style)
 		ellipse.trafo = libgeom.multiply_trafo(ellipse.trafo, tr)
 		ellipse.stroke_trafo = [] + tr
+		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
+			ellipse.fill_trafo = [] + tr
 		parent.childs.append(ellipse)
 
 	def translate_circle(self, parent, svg_obj, trafo, style):
@@ -551,6 +641,8 @@ class SVG_to_SK2_Translator(object):
 		ellipse = sk2_model.Circle(cfg, parent, rect, style=sk2_style)
 		ellipse.trafo = libgeom.multiply_trafo(ellipse.trafo, tr)
 		ellipse.stroke_trafo = [] + tr
+		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
+			ellipse.fill_trafo = [] + tr
 		parent.childs.append(ellipse)
 
 	def translate_line(self, parent, svg_obj, trafo, style):
@@ -572,6 +664,8 @@ class SVG_to_SK2_Translator(object):
 
 		curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
 		curve.stroke_trafo = [] + tr
+		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
+			curve.fill_trafo = [] + tr
 		parent.childs.append(curve)
 
 	def translate_polyline(self, parent, svg_obj, trafo, style):
@@ -586,6 +680,8 @@ class SVG_to_SK2_Translator(object):
 
 		curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
 		curve.stroke_trafo = [] + tr
+		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
+			curve.fill_trafo = [] + tr
 		parent.childs.append(curve)
 
 	def translate_polygon(self, parent, svg_obj, trafo, style):
@@ -601,6 +697,8 @@ class SVG_to_SK2_Translator(object):
 
 		curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
 		curve.stroke_trafo = [] + tr
+		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
+			curve.fill_trafo = [] + tr
 		parent.childs.append(curve)
 
 	def translate_path(self, parent, svg_obj, trafo, style):
@@ -614,7 +712,7 @@ class SVG_to_SK2_Translator(object):
 			cy = self.get_size_pt(svg_obj.attrs['sodipodi:cy'])
 			rx = self.get_size_pt(svg_obj.attrs['sodipodi:rx'])
 			ry = self.get_size_pt(svg_obj.attrs['sodipodi:ry'])
-			angle1 = angle2 = 0
+			angle1 = angle2 = 0.0
 			if 'sodipodi:start' in svg_obj.attrs:
 				angle1 = float(svg_obj.attrs['sodipodi:start'])
 			if 'sodipodi:end' in svg_obj.attrs:
@@ -627,12 +725,16 @@ class SVG_to_SK2_Translator(object):
 									circle_type, sk2_style)
 			curve.trafo = libgeom.multiply_trafo(curve.trafo, tr)
 			curve.stroke_trafo = [] + tr
+			if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
+				curve.fill_trafo = [] + tr
 		elif 'd' in svg_obj.attrs:
 			paths = self.parse_path_cmds(svg_obj.attrs['d'])
 			if not paths: return
 
 			curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
 			curve.stroke_trafo = [] + tr
+			if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
+				curve.fill_trafo = [] + tr
 
 		if curve: parent.childs.append(curve)
 
