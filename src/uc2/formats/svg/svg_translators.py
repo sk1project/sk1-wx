@@ -82,6 +82,7 @@ class SVG_to_SK2_Translator(object):
 	user_space = []
 	defs = {}
 	style_opts = {}
+	id_dict = {}
 
 	def translate(self, svg_doc, sk2_doc):
 		self.svg_mt = svg_doc.model
@@ -541,6 +542,8 @@ class SVG_to_SK2_Translator(object):
 			self.user_space = vbox
 
 	def translate_obj(self, parent, svg_obj, trafo, style):
+		if 'id' in svg_obj.attrs:
+			self.id_dict[svg_obj.attrs['id']] = svg_obj
 		if svg_obj.tag == 'defs':
 			self.translate_defs(svg_obj)
 		elif svg_obj.tag == 'g':
@@ -559,6 +562,8 @@ class SVG_to_SK2_Translator(object):
 			self.translate_polygon(parent, svg_obj, trafo, style)
 		elif svg_obj.tag == 'path':
 			self.translate_path(parent, svg_obj, trafo, style)
+		elif svg_obj.tag == 'use':
+			self.translate_use(parent, svg_obj, trafo, style)
 
 	def translate_defs(self, svg_obj):
 		self.defs = {}
@@ -796,6 +801,13 @@ class SVG_to_SK2_Translator(object):
 
 		if curve: parent.childs.append(curve)
 
+	def translate_use(self, parent, svg_obj, trafo, style):
+		tr = self.get_level_trafo(svg_obj, trafo)
+		stl = self.get_level_style(svg_obj, style)
+		if 'xlink:href' in svg_obj.attrs:
+			obj_id = svg_obj.attrs['xlink:href'][1:]
+			if obj_id in self.id_dict:
+				self.translate_obj(parent, self.id_dict[obj_id], tr, stl)
 
 
 
