@@ -194,7 +194,6 @@ class SVG_to_SK2_Translator(object):
 			if cmd[0] in 'Mm':
 				if path: paths.append(path)
 				path = deepcopy(PATH_STUB)
-				cpoint = []
 				rel_flag = cmd[0] == 'm'
 				points = [cmd[1][i:i + 2] for i in range(0, len(cmd[1]), 2)]
 				for point in points:
@@ -325,6 +324,11 @@ class SVG_to_SK2_Translator(object):
 				x2 = self.get_size_pt(svg_obj.attrs['x2'])
 			if 'y2' in svg_obj.attrs:
 				y2 = self.get_size_pt(svg_obj.attrs['y2'])
+
+			if 'gradientTransform' in svg_obj.attrs:
+				strafo = svg_obj.attrs['gradientTransform']
+				self.style_opts['grad-trafo'] = self.get_trafo(strafo)
+
 			vector = [[x1, y1], [x2, y2]]
 			return [0, sk2_const.FILL_GRADIENT,
 				 [sk2_const.GRADIENT_LINEAR, vector, stops]]
