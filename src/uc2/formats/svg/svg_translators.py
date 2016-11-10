@@ -442,16 +442,21 @@ class SVG_to_SK2_Translator(object):
 		if not style['fill'] == 'none':
 			fillrule = SK2_FILL_RULE[style['fill-rule']]
 			fill = style['fill']
+			alpha = float(style['fill-opacity']) * float(style['opacity'])
 			if len(fill) > 3 and fill[:3] == 'url':
 				def_id = fill[5:-1]
 				if def_id in self.defs:
 					sk2_style[0] = self.parse_def(self.defs[def_id])
-					if sk2_style[0]: sk2_style[0][0] = fillrule
+					if sk2_style[0]:
+						sk2_style[0][0] = fillrule
+						if sk2_style[0][1] == sk2_const.FILL_GRADIENT:
+							for stop in sk2_style[0][2][2]:
+								color = stop[1]
+								color[2] *= alpha
 					if 'grad-trafo' in self.style_opts:
 						tr = [] + self.style_opts['grad-trafo']
 						self.style_opts['fill-grad-trafo'] = tr
 			else:
-				alpha = float(style['fill-opacity']) * float(style['opacity'])
 				clr = self.parse_svg_color(fill, alpha)
 				if clr:
 					sk2_style[0] = [fillrule, sk2_const.FILL_SOLID, clr]
