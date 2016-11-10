@@ -81,6 +81,7 @@ class SVG_to_SK2_Translator(object):
 	coeff = 1.0
 	user_space = []
 	defs = {}
+	style_opts = {}
 
 	def translate(self, svg_doc, sk2_doc):
 		self.svg_mt = svg_doc.model
@@ -339,6 +340,25 @@ class SVG_to_SK2_Translator(object):
 				if not stops: return []
 			else: return []
 
+			cx = self.user_space[2] / 2.0 + self.user_space[0]
+			cy = self.user_space[3] / 2.0 + self.user_space[1]
+			if 'cx' in svg_obj.attrs:
+				cx = self.get_size_pt(svg_obj.attrs['cx'])
+			if 'cy' in svg_obj.attrs:
+				cy = self.get_size_pt(svg_obj.attrs['cy'])
+
+			r = self.user_space[2] / 2.0 + self.user_space[0]
+			if 'r' in svg_obj.attrs:
+				r = self.get_size_pt(svg_obj.attrs['r'])
+
+			if 'gradientTransform' in svg_obj.attrs:
+				strafo = svg_obj.attrs['gradientTransform']
+				self.style_opts['grad-trafo'] = self.get_trafo(strafo)
+
+			vector = [[cx, cy], [cx + r, cy]]
+			return [0, sk2_const.FILL_GRADIENT,
+				 [sk2_const.GRADIENT_RADIAL, vector, stops]]
+
 		return []
 
 	# TODO: implement skew trafo
@@ -406,6 +426,7 @@ class SVG_to_SK2_Translator(object):
 	def get_sk2_style(self, svg_obj, style):
 		sk2_style = [[], [], [], []]
 		style = self.get_level_style(svg_obj, style)
+		self.style_opts = {}
 
 		if 'display' in style and style['display'] == 'none':
 			return sk2_style
@@ -422,6 +443,9 @@ class SVG_to_SK2_Translator(object):
 				if def_id in self.defs:
 					sk2_style[0] = self.parse_def(self.defs[def_id])
 					if sk2_style[0]: sk2_style[0][0] = fillrule
+					if 'grad-trafo' in self.style_opts:
+						tr = [] + self.style_opts['grad-trafo']
+						self.style_opts['fill-grad-trafo'] = tr
 			else:
 				alpha = float(style['fill-opacity']) * float(style['opacity'])
 				clr = self.parse_svg_color(fill, alpha)
@@ -597,6 +621,10 @@ class SVG_to_SK2_Translator(object):
 		rect.stroke_trafo = [] + tr
 		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
 			rect.fill_trafo = [] + tr
+			if 'fill-grad-trafo' in self.style_opts:
+				tr0 = self.style_opts['fill-grad-trafo']
+				rect.fill_trafo = libgeom.multiply_trafo(tr0, tr)
+
 		parent.childs.append(rect)
 
 	def translate_ellipse(self, parent, svg_obj, trafo, style):
@@ -621,6 +649,9 @@ class SVG_to_SK2_Translator(object):
 		ellipse.stroke_trafo = [] + tr
 		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
 			ellipse.fill_trafo = [] + tr
+			if 'fill-grad-trafo' in self.style_opts:
+				tr0 = self.style_opts['fill-grad-trafo']
+				ellipse.fill_trafo = libgeom.multiply_trafo(tr0, tr)
 		parent.childs.append(ellipse)
 
 	def translate_circle(self, parent, svg_obj, trafo, style):
@@ -643,6 +674,9 @@ class SVG_to_SK2_Translator(object):
 		ellipse.stroke_trafo = [] + tr
 		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
 			ellipse.fill_trafo = [] + tr
+			if 'fill-grad-trafo' in self.style_opts:
+				tr0 = self.style_opts['fill-grad-trafo']
+				ellipse.fill_trafo = libgeom.multiply_trafo(tr0, tr)
 		parent.childs.append(ellipse)
 
 	def translate_line(self, parent, svg_obj, trafo, style):
@@ -666,6 +700,9 @@ class SVG_to_SK2_Translator(object):
 		curve.stroke_trafo = [] + tr
 		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
 			curve.fill_trafo = [] + tr
+			if 'fill-grad-trafo' in self.style_opts:
+				tr0 = self.style_opts['fill-grad-trafo']
+				curve.fill_trafo = libgeom.multiply_trafo(tr0, tr)
 		parent.childs.append(curve)
 
 	def translate_polyline(self, parent, svg_obj, trafo, style):
@@ -682,6 +719,9 @@ class SVG_to_SK2_Translator(object):
 		curve.stroke_trafo = [] + tr
 		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
 			curve.fill_trafo = [] + tr
+			if 'fill-grad-trafo' in self.style_opts:
+				tr0 = self.style_opts['fill-grad-trafo']
+				curve.fill_trafo = libgeom.multiply_trafo(tr0, tr)
 		parent.childs.append(curve)
 
 	def translate_polygon(self, parent, svg_obj, trafo, style):
@@ -699,6 +739,9 @@ class SVG_to_SK2_Translator(object):
 		curve.stroke_trafo = [] + tr
 		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
 			curve.fill_trafo = [] + tr
+			if 'fill-grad-trafo' in self.style_opts:
+				tr0 = self.style_opts['fill-grad-trafo']
+				curve.fill_trafo = libgeom.multiply_trafo(tr0, tr)
 		parent.childs.append(curve)
 
 	def translate_path(self, parent, svg_obj, trafo, style):
@@ -727,6 +770,9 @@ class SVG_to_SK2_Translator(object):
 			curve.stroke_trafo = [] + tr
 			if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
 				curve.fill_trafo = [] + tr
+				if 'fill-grad-trafo' in self.style_opts:
+					tr0 = self.style_opts['fill-grad-trafo']
+					curve.fill_trafo = libgeom.multiply_trafo(tr0, tr)
 		elif 'd' in svg_obj.attrs:
 			paths = self.parse_path_cmds(svg_obj.attrs['d'])
 			if not paths: return
@@ -735,6 +781,9 @@ class SVG_to_SK2_Translator(object):
 			curve.stroke_trafo = [] + tr
 			if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
 				curve.fill_trafo = [] + tr
+				if 'fill-grad-trafo' in self.style_opts:
+					tr0 = self.style_opts['fill-grad-trafo']
+					curve.fill_trafo = libgeom.multiply_trafo(tr0, tr)
 
 		if curve: parent.childs.append(curve)
 
