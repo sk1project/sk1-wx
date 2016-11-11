@@ -1,21 +1,35 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2015 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import math
 
 import cwrap
+
+def trafo_rotate(angle, cx=0.0, cy=0.0):
+	m21 = math.sin(angle)
+	m11 = m22 = math.cos(angle)
+	m12 = -m21
+	dx = cx - m11 * cx + m21 * cy;
+	dy = cy - m21 * cx - m11 * cy;
+	return [m11, m21, m12, m22, dx, dy]
+
+def trafo_rotate_grad(grad, cx=0.0, cy=0.0):
+	angle = math.pi * grad / 180.0
+	return trafo_rotate(angle, cx, cy)
 
 def _apply_trafo_to_point(point, trafo):
 	x0, y0 = point
