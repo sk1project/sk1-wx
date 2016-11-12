@@ -271,9 +271,16 @@ class SVG_to_SK2_Translator(object):
 				for arc in arcs:
 					rev_flag = False
 					rx, ry, xrot, large_arc_flag, sweep_flag, x, y = arc
+					rx = abs(rx)
+					ry = abs(ry)
 					if rel_flag:
 						x += cpoint[0]
 						y += cpoint[1]
+
+					if cpoint == [x, y]: continue
+					if not rx or not ry:
+						path[1].append([x, y])
+						continue
 
 					vector = [[] + cpoint, [x, y]]
 					if sweep_flag:
