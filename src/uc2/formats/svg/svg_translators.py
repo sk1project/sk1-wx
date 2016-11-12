@@ -89,6 +89,7 @@ class SVG_to_SK2_Translator(object):
 		self.sk2_mt = sk2_doc.model
 		self.sk2_mtds = sk2_doc.methods
 		self.svg_mtds = svg_doc.methods
+		self.defs = {}
 		self.translate_units()
 		self.translate_page()
 		for item in self.svg_mt.childs:
@@ -686,7 +687,6 @@ class SVG_to_SK2_Translator(object):
 			self.translate_use(parent, svg_obj, trafo, style)
 
 	def translate_defs(self, svg_obj):
-		self.defs = {}
 		for item in svg_obj.childs:
 			if 'id' in item.attrs:
 				self.defs[str(item.attrs['id'])] = item
