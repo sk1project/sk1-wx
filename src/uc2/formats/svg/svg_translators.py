@@ -156,10 +156,32 @@ class SVG_to_SK2_Translator(object):
 		return None
 
 	def parse_svg_color(self, sclr, alpha=1.0):
-		sclr = sclr.split(' ')[0]
+		clr = deepcopy(svg_colors.SVG_COLORS['black'])
+		clr[2] = alpha
 		if sclr[0] == '#':
-			vals = cms.hexcolor_to_rgb(sclr)
-			clr = ['RGB', vals, alpha, '']
+			sclr = sclr.split(' ')[0]
+			try:
+				vals = cms.hexcolor_to_rgb(sclr)
+				clr = ['RGB', vals, alpha, '']
+			except:pass
+		elif sclr[:4] == 'rgb(':
+			vals = sclr[4:].split(')')[0].split(',')
+			if len(vals) == 3:
+				decvals = []
+				for val in vals:
+					val = val.strip()
+					if '%' in val:
+						decval = float(val.replace('%'))
+						if decval > 100.0:decval = 100.0
+						if decval < 0.0:decval = 0.0
+						decval = decval / 100.0
+					else:
+						decval = float(val)
+						if decval > 255.0:decval = 255.0
+						if decval < 0.0:decval = 0.0
+						decval = decval / 255.0
+					decvals.append(decval)
+				clr = [uc2const.COLOR_RGB, decvals, alpha, '']
 		else:
 			if sclr in svg_colors.SVG_COLORS:
 				clr = deepcopy(svg_colors.SVG_COLORS[sclr])
