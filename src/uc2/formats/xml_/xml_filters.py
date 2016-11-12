@@ -33,7 +33,7 @@ class XML_Loader(AbstractXMLLoader):
 		if not self.stack: self.model = obj
 
 		for item in attrs._attrs.keys():
-			obj.attrs[item] = attrs._attrs[item]
+			obj.attrs[item] = attrs._attrs[item].strip()
 
 		if self.stack: self.stack[-1].childs.append(obj)
 		self.stack.append(obj)
