@@ -591,6 +591,7 @@ class SVG_to_SK2_Translator(object):
 			stroke_linecap = SK2_LINE_CAP[style['stroke-linecap']]
 			stroke_linejoin = SK2_LINE_JOIN[style['stroke-linejoin']]
 			stroke_miterlimit = float(style['stroke-miterlimit'])
+			alpha = float(style['stroke-opacity']) * float(style['opacity'])
 
 			dash = []
 			if not style['stroke-dasharray'] == 'none':
@@ -605,9 +606,24 @@ class SVG_to_SK2_Translator(object):
 				dash = sk2_dash
 
 			if len(stroke) > 3 and stroke[:3] == 'url':
-				pass
+				def_id = fill[5:-1]
+				if def_id in self.defs:
+					stroke_fill = self.parse_def(self.defs[def_id])
+					if stroke_fill:
+						stroke_fill[0] = sk2_const.FILL_EVENODD
+						if stroke_fill[1] == sk2_const.FILL_GRADIENT:
+							for stop in stroke_fill[2][2]:
+								color = stop[1]
+								color[2] *= alpha
+						self.style_opts['stroke-fill'] = stroke_fill
+						clr = self.parse_svg_color('black')
+						sk2_style[1] = [stroke_rule, stroke_width, clr, dash,
+							stroke_linecap, stroke_linejoin,
+							stroke_miterlimit, 0, 1, []]
+						if 'grad-trafo' in self.style_opts:
+							tr = [] + self.style_opts['grad-trafo']
+							self.style_opts['stroke-grad-trafo'] = tr
 			else:
-				alpha = float(style['stroke-opacity']) * float(style['opacity'])
 				clr = self.parse_svg_color(stroke, alpha)
 				if clr:
 					sk2_style[1] = [stroke_rule, stroke_width, clr, dash,
