@@ -265,7 +265,106 @@ class SVG_to_SK2_Translator(object):
 					path[1].append(qpoint)
 					cpoint = point
 
-			# TODO: TtQqAa command support
+			elif cmd[0] in 'Aa':
+				rel_flag = cmd[0] == 'a'
+				arcs = [cmd[1][i:i + 7] for i in range(0, len(cmd[1]), 7)]
+				for arc in arcs:
+					rev_flag = False
+					rx, ry, xrot, large_arc_flag, sweep_flag, x, y = arc
+					if rel_flag:
+						x += cpoint[0]
+						y += cpoint[1]
+
+					vector = [[] + cpoint, [x, y]]
+					if sweep_flag:
+						vector = [[x, y], [] + cpoint]
+						rev_flag = True
+					cpoint = [x, y]
+
+					dir_tr = libgeom.trafo_rotate_grad(-xrot)
+
+					if rx > ry:
+						tr = [1.0, 0.0, 0.0, rx / ry, 0.0, 0.0]
+						r = rx
+					else:
+						tr = [ry / rx, 0.0, 0.0, 1.0, 0.0, 0.0]
+						r = ry
+
+					dir_tr = libgeom.multiply_trafo(dir_tr, tr)
+					vector = libgeom.apply_trafo_to_points(vector, dir_tr)
+
+
+					l = libgeom.distance(*vector)
+
+					if l > 2.0 * r:
+						coeff = 2.0 * r / l
+						tr = [coeff, 0.0, 0.0, coeff, 0.0, 0.0]
+						dir_tr = libgeom.multiply_trafo(dir_tr, tr)
+						vector = libgeom.apply_trafo_to_points(vector, tr)
+						r = l / 2.0
+
+					mp = libgeom.midpoint(*vector)
+
+
+					tr0 = libgeom.trafo_rotate(math.pi / 2.0, mp[0], mp[1])
+					pvector = libgeom.apply_trafo_to_points(vector, tr0)
+
+
+
+					k = math.sqrt(r * r - l * l / 4.0)
+					if large_arc_flag:
+						center = libgeom.midpoint(mp,
+												pvector[1], 2.0 * k / l)
+					else:
+						center = libgeom.midpoint(mp,
+												pvector[0], 2.0 * k / l)
+
+
+					angle1 = libgeom.get_point_angle(vector[0], center)
+					angle2 = libgeom.get_point_angle(vector[1], center)
+
+					da = angle2 - angle1
+					start = angle1
+					end = angle2
+					if large_arc_flag:
+						if -math.pi >= da or da <= math.pi:
+							start = angle2
+							end = angle1
+							rev_flag = not rev_flag
+					else:
+						if -math.pi <= da or da >= math.pi:
+							start = angle2
+							end = angle1
+							rev_flag = not rev_flag
+
+					pth = libgeom.get_circle_paths(start, end,
+												sk2_const.ARC_ARC)[0]
+
+					if rev_flag:
+						pth = libgeom.reverse_path(pth)
+
+					points = pth[1]
+					for point in points:
+						if len(point) == 3:
+							point.append(sk2_const.NODE_CUSP)
+
+					tr0 = [1.0, 0.0, 0.0, 1.0, -0.5, -0.5]
+					points = libgeom.apply_trafo_to_points(points, tr0)
+
+					tr1 = [2.0 * r, 0.0, 0.0, 2.0 * r, 0.0, 0.0]
+					points = libgeom.apply_trafo_to_points(points, tr1)
+
+					tr2 = [1.0, 0.0, 0.0, 1.0, center[0], center[1]]
+					points = libgeom.apply_trafo_to_points(points, tr2)
+
+					tr3 = libgeom.invert_trafo(dir_tr)
+					points = libgeom.apply_trafo_to_points(points, tr3)
+
+					for point in points:
+						path[1].append(point)
+
+
+			# TODO: TtQq command support
 
 		if path:paths.append(path)
 		return paths
@@ -373,16 +472,8 @@ class SVG_to_SK2_Translator(object):
 	def trafo_skewY(self, *args):
 		return [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
 
-	def trafo_rotate(self, angle, cx=0.0, cy=0.0):
-		angle = math.pi * angle / 180.0
-		trafo = [math.cos(angle), math.sin(angle),
-			- math.sin(angle), math.cos(angle), 0.0, 0.0]
-		if cx or cy:
-			tr1 = [1.0, 0.0, 0.0, 1.0, -cx, -cy]
-			tr2 = [1.0, 0.0, 0.0, 1.0, cx, cy]
-			trafo = libgeom.multiply_trafo(tr1, trafo)
-			trafo = libgeom.multiply_trafo(trafo, tr2)
-		return trafo
+	def trafo_rotate(self, grad, cx=0.0, cy=0.0):
+		return libgeom.trafo_rotate_grad(grad, cx, cy)
 
 	def trafo_scale(self, m11, m22=None):
 		if m22 is None: m22 = m11
@@ -718,6 +809,13 @@ class SVG_to_SK2_Translator(object):
 				tr0 = self.style_opts['fill-grad-trafo']
 				curve.fill_trafo = libgeom.multiply_trafo(tr0, tr)
 		parent.childs.append(curve)
+
+	def _line(self, point1, point2):
+		paths = [[[] + point1, [[] + point2, ], sk2_const.CURVE_OPENED], ]
+		tr = [] + self.trafo
+		style = [[], self.layer.config.default_stroke, [], []]
+		curve = sk2_model.Curve(self.layer.config, self.layer, paths, tr, style)
+		self.layer.childs.append(curve)
 
 	def translate_polyline(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
