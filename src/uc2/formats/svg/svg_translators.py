@@ -176,7 +176,7 @@ class SVG_to_SK2_Translator(object):
 				for val in vals:
 					val = val.strip()
 					if '%' in val:
-						decval = float(val.replace('%'))
+						decval = float(val.replace('%', ''))
 						if decval > 100.0:decval = 100.0
 						if decval < 0.0:decval = 0.0
 						decval = decval / 100.0
