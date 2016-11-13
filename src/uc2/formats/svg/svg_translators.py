@@ -435,6 +435,9 @@ class SVG_to_SK2_Translator(object):
 		return sk2_stops
 
 	def parse_def(self, svg_obj):
+		if 'color' in svg_obj.attrs:
+			if svg_obj.attrs['color'] == 'inherit':pass
+			else: self.current_color = '' + svg_obj.attrs['color']
 		if svg_obj.tag == 'linearGradient':
 			if 'xlink:href' in svg_obj.attrs:
 				cid = svg_obj.attrs['xlink:href'][1:]
