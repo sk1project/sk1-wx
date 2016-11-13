@@ -15,7 +15,7 @@
 # 	 You should have received a copy of the GNU General Public License
 # 	 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import math
+import math, re
 from copy import deepcopy
 
 from uc2 import uc2const, libgeom, cms
@@ -90,6 +90,7 @@ class SVG_to_SK2_Translator(object):
 		self.sk2_mtds = sk2_doc.methods
 		self.svg_mtds = svg_doc.methods
 		self.defs = {}
+		self.current_color = ''
 		self.translate_units()
 		self.translate_page()
 		for item in self.svg_mt.childs:
@@ -140,18 +141,19 @@ class SVG_to_SK2_Translator(object):
 
 	def parse_points(self, spoints):
 		points = []
-		pairs = spoints.split(' ')
-		for item in pairs:
+		spoints = re.sub('  *', ' ', spoints)
+		spoints = spoints.replace('-', ',-').replace(',,', ',').replace(' ', ',')
+		pairs = spoints.split(',')
+		pairs = [pairs[i:i + 2] for i in range(0, len(pairs), 2)]
+		for pair in pairs:
 			try:
-				pair = item.split(',')
-				if not len(pair) == 2:continue
 				points.append([float(pair[0]), float(pair[1])])
 			except: continue
 		return points
 
 	def parse_coords(self, scoords):
 		scoords = scoords.strip().replace(',', ' ').replace('-', ' -').strip()
-		scoords = scoords.replace('  ', ' ').replace('  ', ' ')
+		scoords = re.sub('  *', ' ', scoords)
 		if scoords:
 			return map(lambda x:float(x), scoords.split(' '))
 		return None
@@ -159,6 +161,8 @@ class SVG_to_SK2_Translator(object):
 	def parse_svg_color(self, sclr, alpha=1.0):
 		clr = deepcopy(svg_colors.SVG_COLORS['black'])
 		clr[2] = alpha
+		if sclr == 'currentColor' and self.current_color:
+			sclr = '' + self.current_color
 		if sclr[0] == '#':
 			sclr = sclr.split(' ')[0]
 			try:
@@ -541,6 +545,9 @@ class SVG_to_SK2_Translator(object):
 		for item in STYLE_ATTRS:
 			if item in svg_obj.attrs:
 				style[item] = '' + str(svg_obj.attrs[item])
+		if 'color' in svg_obj.attrs:
+			if svg_obj.attrs['color'] == 'inherit':pass
+			else: self.current_color = '' + svg_obj.attrs['color']
 		if 'style' in svg_obj.attrs:
 			stls = str(svg_obj.attrs['style']).split(';')
 			for stl in stls:
@@ -645,7 +652,7 @@ class SVG_to_SK2_Translator(object):
 		if 'width' in self.svg_mt.attrs:
 			width = self.get_size_pt(self.svg_mt.attrs['width'])
 			height = self.get_size_pt(self.svg_mt.attrs['height'])
-		elif 'viewBox' in self.svg_mt.attrs:
+		if 'viewBox' in self.svg_mt.attrs:
 			vbox = self.get_viewbox(self.svg_mt.attrs['viewBox'])
 			width = vbox[2] - vbox[0]
 			height = vbox[3] - vbox[1]
@@ -737,10 +744,17 @@ class SVG_to_SK2_Translator(object):
 		sk2_style = self.get_sk2_style(svg_obj, style)
 		tr = self.get_level_trafo(svg_obj, trafo)
 
-		x = self.get_size_pt(svg_obj.attrs['x'])
-		y = self.get_size_pt(svg_obj.attrs['y'])
-		w = self.get_size_pt(svg_obj.attrs['width'])
-		h = self.get_size_pt(svg_obj.attrs['height'])
+		x = y = w = h = 0
+		if 'x' in svg_obj.attrs:
+			x = self.get_size_pt(svg_obj.attrs['x'])
+		if 'y' in svg_obj.attrs:
+			y = self.get_size_pt(svg_obj.attrs['y'])
+		if 'width' in svg_obj.attrs:
+			w = self.get_size_pt(svg_obj.attrs['width'])
+		if 'height' in svg_obj.attrs:
+			h = self.get_size_pt(svg_obj.attrs['height'])
+
+		if not w or not h: return
 
 		corners = [] + sk2_const.CORNERS
 		rx = ry = None
@@ -750,6 +764,7 @@ class SVG_to_SK2_Translator(object):
 			ry = self.get_size_pt(svg_obj.attrs['ry'])
 		if rx is None and not ry is None: rx = ry
 		elif ry is None and not rx is None: ry = rx
+		if not rx or not ry: rx = ry = None
 
 		if not rx is None:
 			rx = abs(rx)
