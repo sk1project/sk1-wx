@@ -15,7 +15,7 @@
 # 	 You should have received a copy of the GNU General Public License
 # 	 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import math, re
+import math, re, sys, os
 from copy import deepcopy
 
 from uc2 import uc2const, libgeom, cms, libpango
@@ -308,7 +308,9 @@ class SVG_to_SK2_Translator(object):
 			elif cmd[0] in 'Aa':
 				rel_flag = cmd[0] == 'a'
 				arcs = [cmd[1][i:i + 7] for i in range(0, len(cmd[1]), 7)]
+
 				for arc in arcs:
+					cpoint = self.base_point(cpoint)
 					rev_flag = False
 					rx, ry, xrot, large_arc_flag, sweep_flag, x, y = arc
 					rx = abs(rx)
@@ -316,7 +318,6 @@ class SVG_to_SK2_Translator(object):
 					if rel_flag:
 						x += cpoint[0]
 						y += cpoint[1]
-
 					if cpoint == [x, y]: continue
 					if not rx or not ry:
 						path[1].append([x, y])
@@ -340,7 +341,6 @@ class SVG_to_SK2_Translator(object):
 					dir_tr = libgeom.multiply_trafo(dir_tr, tr)
 					vector = libgeom.apply_trafo_to_points(vector, dir_tr)
 
-
 					l = libgeom.distance(*vector)
 
 					if l > 2.0 * r:
@@ -352,10 +352,8 @@ class SVG_to_SK2_Translator(object):
 
 					mp = libgeom.midpoint(*vector)
 
-
 					tr0 = libgeom.trafo_rotate(math.pi / 2.0, mp[0], mp[1])
 					pvector = libgeom.apply_trafo_to_points(vector, tr0)
-
 
 
 					k = math.sqrt(r * r - l * l / 4.0)
@@ -365,7 +363,6 @@ class SVG_to_SK2_Translator(object):
 					else:
 						center = libgeom.midpoint(mp,
 												pvector[0], 2.0 * k / l)
-
 
 					angle1 = libgeom.get_point_angle(vector[0], center)
 					angle2 = libgeom.get_point_angle(vector[1], center)
@@ -726,30 +723,36 @@ class SVG_to_SK2_Translator(object):
 			self.user_space = vbox
 
 	def translate_obj(self, parent, svg_obj, trafo, style):
-		if 'id' in svg_obj.attrs:
-			self.id_dict[svg_obj.attrs['id']] = svg_obj
-		if svg_obj.tag == 'defs':
-			self.translate_defs(svg_obj)
-		elif svg_obj.tag == 'g':
-			self.translate_g(parent, svg_obj, trafo, style)
-		elif svg_obj.tag == 'rect':
-			self.translate_rect(parent, svg_obj, trafo, style)
-		elif svg_obj.tag == 'circle':
-			self.translate_circle(parent, svg_obj, trafo, style)
-		elif svg_obj.tag == 'ellipse':
-			self.translate_ellipse(parent, svg_obj, trafo, style)
-		elif svg_obj.tag == 'line':
-			self.translate_line(parent, svg_obj, trafo, style)
-		elif svg_obj.tag == 'polyline':
-			self.translate_polyline(parent, svg_obj, trafo, style)
-		elif svg_obj.tag == 'polygon':
-			self.translate_polygon(parent, svg_obj, trafo, style)
-		elif svg_obj.tag == 'path':
-			self.translate_path(parent, svg_obj, trafo, style)
-		elif svg_obj.tag == 'use':
-			self.translate_use(parent, svg_obj, trafo, style)
-		elif svg_obj.tag == 'text':
-			self.translate_text(parent, svg_obj, trafo, style)
+		try:
+			if 'id' in svg_obj.attrs:
+				self.id_dict[svg_obj.attrs['id']] = svg_obj
+			if svg_obj.tag == 'defs':
+				self.translate_defs(svg_obj)
+			elif svg_obj.tag == 'g':
+				self.translate_g(parent, svg_obj, trafo, style)
+			elif svg_obj.tag == 'rect':
+				self.translate_rect(parent, svg_obj, trafo, style)
+			elif svg_obj.tag == 'circle':
+				self.translate_circle(parent, svg_obj, trafo, style)
+			elif svg_obj.tag == 'ellipse':
+				self.translate_ellipse(parent, svg_obj, trafo, style)
+			elif svg_obj.tag == 'line':
+				self.translate_line(parent, svg_obj, trafo, style)
+			elif svg_obj.tag == 'polyline':
+				self.translate_polyline(parent, svg_obj, trafo, style)
+			elif svg_obj.tag == 'polygon':
+				self.translate_polygon(parent, svg_obj, trafo, style)
+			elif svg_obj.tag == 'path':
+				self.translate_path(parent, svg_obj, trafo, style)
+			elif svg_obj.tag == 'use':
+				self.translate_use(parent, svg_obj, trafo, style)
+			elif svg_obj.tag == 'text':
+				self.translate_text(parent, svg_obj, trafo, style)
+		except:
+			print 'tag', svg_obj.tag
+			if 'id' in svg_obj.attrs: print 'id', svg_obj.attrs['id']
+			for item in sys.exc_info(): print item
+
 
 	def translate_defs(self, svg_obj):
 		for item in svg_obj.childs:
@@ -988,6 +991,7 @@ class SVG_to_SK2_Translator(object):
 					tr0 = self.style_opts['fill-grad-trafo']
 					curve.fill_trafo = libgeom.multiply_trafo(tr0, tr)
 		elif 'd' in svg_obj.attrs:
+
 			paths = self.parse_path_cmds(svg_obj.attrs['d'])
 			if not paths: return
 
