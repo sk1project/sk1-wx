@@ -152,7 +152,8 @@ class SVG_to_SK2_Translator(object):
 	def parse_points(self, spoints):
 		points = []
 		spoints = re.sub('  *', ' ', spoints)
-		spoints = spoints.replace('-', ',-').replace(',,', ',').replace(' ', ',')
+		spoints = spoints.replace('-', ',-').replace('e,-', 'e-')
+		spoints = spoints.replace(',,', ',').replace(' ', ',')
 		pairs = spoints.split(',')
 		pairs = [pairs[i:i + 2] for i in range(0, len(pairs), 2)]
 		for pair in pairs:
@@ -162,7 +163,8 @@ class SVG_to_SK2_Translator(object):
 		return points
 
 	def parse_coords(self, scoords):
-		scoords = scoords.strip().replace(',', ' ').replace('-', ' -').strip()
+		scoords = scoords.strip().replace(',', ' ').replace('-', ' -')
+		scoords = scoords.replace('e -', 'e-').strip()
 		scoords = re.sub('  *', ' ', scoords)
 		if scoords:
 			return map(lambda x:float(x), scoords.split(' '))
@@ -518,8 +520,8 @@ class SVG_to_SK2_Translator(object):
 		for obj in objs:
 			if obj.is_content():
 				ret += obj.text
-			else:
-				ret += self.parse_svg_text(objs)
+			elif obj.childs:
+				ret += self.parse_svg_text(obj.childs)
 		return ret
 
 	# TODO: implement skew trafo
