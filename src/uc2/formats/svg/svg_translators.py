@@ -51,9 +51,7 @@ SVG_STYLE = {
 	'font-size':'12',
 }
 
-STYLE_ATTRS = ['fill', 'fill-rule', 'fill-opacity', 'stroke', 'stroke-width',
-			'stroke-linecap', 'stroke-linejoin', 'stroke-miterlimit',
-			'stroke-dasharray', 'stroke-dashoffset', 'stroke-opacity', ]
+FONT_COEFF = 1.342
 
 SK2_FILL_RULE = {
 	'nonzero':sk2_const.FILL_NONZERO,
@@ -134,6 +132,9 @@ class SVG_to_SK2_Translator(object):
 				return uc2const.in_to_pt * float(sval) * self.coeff
 			else:
 				return self._px_to_pt(sval) * self.coeff
+
+	def get_font_size(self, sval):
+		return self.get_size_pt(sval) / FONT_COEFF
 
 	def get_viewbox(self, svbox):
 		vbox = []
@@ -548,7 +549,7 @@ class SVG_to_SK2_Translator(object):
 
 	def get_level_style(self, svg_obj, style):
 		style = deepcopy(style)
-		for item in STYLE_ATTRS:
+		for item in SVG_STYLE.keys():
 			if item in svg_obj.attrs:
 				style[item] = '' + str(svg_obj.attrs[item])
 		if 'color' in svg_obj.attrs:
@@ -650,10 +651,10 @@ class SVG_to_SK2_Translator(object):
 			font_face = 'Regular'
 			font_size = 12.0
 			try:
-				font_size = float(style['font-size'])
+				font_size = self.get_font_size(style['font-size'])
 			except:pass
 			sk2_style[2] = [font_family, font_face, font_size,
-						sk2_const.TEXT_ALIGN_LEFT, 1.0, True]
+						sk2_const.TEXT_ALIGN_LEFT, [], True]
 
 		return sk2_style
 
@@ -991,7 +992,10 @@ class SVG_to_SK2_Translator(object):
 		cfg = parent.config
 		stl = self.get_level_style(svg_obj, style)
 		sk2_style = self.get_sk2_style(svg_obj, stl, True)
-		tr = self.get_level_trafo(svg_obj, trafo)
+		tr_level = self.get_level_trafo(svg_obj, trafo)
+		inv_tr = libgeom.invert_trafo(self.trafo)
+		tr = libgeom.multiply_trafo(inv_tr, tr_level)
+
 
 		x = y = 0.0
 		if 'x' in svg_obj.attrs:
@@ -1002,7 +1006,7 @@ class SVG_to_SK2_Translator(object):
 		if not svg_obj.content: return
 		txt = '' + str(svg_obj.content)
 
-
+		x, y = libgeom.apply_trafo_to_point([x, y], tr_level)
 		text = sk2_model.Text(cfg, parent, [x, y], txt, -1, tr, sk2_style)
 		text.stroke_trafo = [] + tr
 		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
