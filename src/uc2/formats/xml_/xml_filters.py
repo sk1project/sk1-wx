@@ -39,7 +39,7 @@ class XML_Loader(AbstractXMLLoader):
 		self.stack.append(obj)
 
 	def element_data(self, data):
-		self.stack[-1].content = data
+		self.stack[-1].content += data
 
 	def end_element(self, name):
 		if self.stack and self.stack[-1].tag == name:
