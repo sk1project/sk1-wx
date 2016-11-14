@@ -49,6 +49,7 @@ SVG_STYLE = {
 	'stroke-opacity':'1',
 	'font-family':'Sans',
 	'font-size':'12',
+	'text-align':'start',
 }
 
 FONT_COEFF = 1.342
@@ -68,6 +69,12 @@ SK2_LINE_CAP = {
 	'butt':sk2_const.CAP_BUTT,
 	'round':sk2_const.CAP_ROUND,
 	'square':sk2_const.CAP_SQUARE,
+}
+
+SK2_TEXT_ALIGN = {
+	'start':sk2_const.TEXT_ALIGN_LEFT,
+	'middle':sk2_const.TEXT_ALIGN_CENTER,
+	'end':sk2_const.TEXT_ALIGN_RIGHT,
 }
 
 PATH_STUB = [[], [], sk2_const.CURVE_OPENED]
@@ -506,6 +513,15 @@ class SVG_to_SK2_Translator(object):
 
 		return []
 
+	def parse_svg_text(self, objs):
+		ret = ''
+		for obj in objs:
+			if obj.is_content():
+				ret += obj.text
+			else:
+				ret += self.parse_svg_text(objs)
+		return ret
+
 	# TODO: implement skew trafo
 	def trafo_skewX(self, *args):
 		return [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
@@ -653,8 +669,11 @@ class SVG_to_SK2_Translator(object):
 			try:
 				font_size = self.get_font_size(style['font-size'])
 			except:pass
+			alignment = sk2_const.TEXT_ALIGN_LEFT
+			if style['text-align'] in SK2_TEXT_ALIGN:
+				alignment = SK2_TEXT_ALIGN[style['text-align']]
 			sk2_style[2] = [font_family, font_face, font_size,
-						sk2_const.TEXT_ALIGN_LEFT, [], True]
+						alignment, [], True]
 
 		return sk2_style
 
@@ -1003,8 +1022,8 @@ class SVG_to_SK2_Translator(object):
 		if 'y' in svg_obj.attrs:
 			y = self.parse_coords(svg_obj.attrs['y'])[0]
 
-		if not svg_obj.content: return
-		txt = '' + str(svg_obj.content)
+		if not svg_obj.childs: return
+		txt = self.parse_svg_text(svg_obj.childs).strip()
 
 		x, y = libgeom.apply_trafo_to_point([x, y], tr_level)
 		text = sk2_model.Text(cfg, parent, [x, y], txt, -1, tr, sk2_style)
