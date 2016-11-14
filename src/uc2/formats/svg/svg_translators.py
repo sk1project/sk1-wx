@@ -519,7 +519,7 @@ class SVG_to_SK2_Translator(object):
 		ret = ''
 		for obj in objs:
 			if obj.is_content():
-				ret += obj.text
+				ret += obj.text.lstrip()
 			elif obj.childs:
 				ret += self.parse_svg_text(obj.childs)
 		return ret
@@ -1025,9 +1025,9 @@ class SVG_to_SK2_Translator(object):
 			y = self.parse_coords(svg_obj.attrs['y'])[0]
 
 		if not svg_obj.childs: return
-		txt = self.parse_svg_text(svg_obj.childs).strip()
+		txt = self.parse_svg_text(svg_obj.childs)
 
-		x, y = libgeom.apply_trafo_to_point([x, y], tr_level)
+		x, y = libgeom.apply_trafo_to_point([x, y], self.trafo)
 		text = sk2_model.Text(cfg, parent, [x, y], txt, -1, tr, sk2_style)
 		text.stroke_trafo = [] + tr
 		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
