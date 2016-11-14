@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2015-2016 by Igor E. Novikov
 #
 # 	This program is free software: you can redistribute it and/or modify
 # 	it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from uc2.formats.generic_filters import AbstractXMLLoader, AbstractSaver
-from uc2.formats.xml_.xml_model import XMLObject
+from uc2.formats.xml_.xml_model import XMLObject, XmlContentText
 
 class XML_Loader(AbstractXMLLoader):
 
@@ -39,7 +39,11 @@ class XML_Loader(AbstractXMLLoader):
 		self.stack.append(obj)
 
 	def element_data(self, data):
-		self.stack[-1].content += data
+		if self.stack[-1].childs and self.stack[-1].childs[-1].is_content():
+			self.stack[-1].childs[-1].text += data
+		else:
+			obj = XmlContentText(data)
+			if self.stack: self.stack[-1].childs.append(obj)
 
 	def end_element(self, name):
 		if self.stack and self.stack[-1].tag == name:
@@ -48,7 +52,6 @@ class XML_Loader(AbstractXMLLoader):
 class XML_Saver(AbstractSaver):
 
 	name = 'XML_Saver'
-	indent = 0
 
 	def do_save(self):
 		cfg = self.model.config.encoding
@@ -61,25 +64,22 @@ class XML_Saver(AbstractSaver):
 		self.write_obj(self.model)
 
 	def write_obj(self, obj):
-		ind = self.indent * self.model.config.indent
 		if obj.comments:
 			self.writeln('<!--')
 			self.writeln(obj.comments)
 			self.writeln('-->')
 
+		if obj.tag == 'content_text':
+			self.write(obj.text)
+			return
 		attrs = self.get_obj_attrs(obj)
-		if obj.content or obj.childs:
-			start = ind + '<%s%s>%s' % (obj.tag, attrs, obj.content)
-			if obj.childs:
-				self.writeln(start)
-				self.indent += 1
-				for child in obj.childs: self.write_obj(child)
-				self.indent -= 1
-				self.writeln(ind + '</%s>' % obj.tag)
-			else:
-				self.writeln(start + '</%s>' % obj.tag)
+		if obj.childs:
+			start = '<%s%s>' % (obj.tag, attrs)
+			self.write(start)
+			for child in obj.childs: self.write_obj(child)
+			self.write('</%s>' % obj.tag)
 		else:
-			self.writeln(ind + '<%s%s />' % (obj.tag, attrs))
+			self.write('<%s%s />' % (obj.tag, attrs))
 
 	def get_obj_attrs(self, obj):
 		line = ''
