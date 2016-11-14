@@ -18,7 +18,7 @@
 import math, re
 from copy import deepcopy
 
-from uc2 import uc2const, libgeom, cms
+from uc2 import uc2const, libgeom, cms, libpango
 from uc2.libgeom import add_points, sub_points
 from uc2.formats.sk2 import sk2_model, sk2_const
 from uc2.formats.svg import svg_const, svg_colors
@@ -47,6 +47,8 @@ SVG_STYLE = {
 	'stroke-dasharray':'none',
 	'stroke-dashoffset':'0',
 	'stroke-opacity':'1',
+	'font-family':'Sans',
+	'font-size':'12',
 }
 
 STYLE_ATTRS = ['fill', 'fill-rule', 'fill-opacity', 'stroke', 'stroke-width',
@@ -202,6 +204,7 @@ class SVG_to_SK2_Translator(object):
 		last = None
 		last_index = 0
 		cmds = []
+		pathcmds = re.sub('  *', ' ', pathcmds)
 		for item in pathcmds:
 			if item in 'MmZzLlHhVvCcSsQqTtAa':
 				if last:
@@ -559,7 +562,7 @@ class SVG_to_SK2_Translator(object):
 					style[vals[0]] = vals[1]
 		return style
 
-	def get_sk2_style(self, svg_obj, style):
+	def get_sk2_style(self, svg_obj, style, text_style=False):
 		sk2_style = [[], [], [], []]
 		style = self.get_level_style(svg_obj, style)
 		self.style_opts = {}
@@ -640,6 +643,18 @@ class SVG_to_SK2_Translator(object):
 							stroke_linecap, stroke_linejoin,
 							stroke_miterlimit, 0, 1, []]
 
+		if text_style:
+			font_family = 'Sans'
+			if style['font-family'] in libpango.get_fonts()[0]:
+				font_family = style['font-family']
+			font_face = 'Regular'
+			font_size = 12.0
+			try:
+				font_size = float(style['font-size'])
+			except:pass
+			sk2_style[2] = [font_family, font_face, font_size,
+						sk2_const.TEXT_ALIGN_LEFT, 1.0, True]
+
 		return sk2_style
 
 	#--- Translation metods
@@ -711,6 +726,8 @@ class SVG_to_SK2_Translator(object):
 			self.translate_path(parent, svg_obj, trafo, style)
 		elif svg_obj.tag == 'use':
 			self.translate_use(parent, svg_obj, trafo, style)
+		elif svg_obj.tag == 'text':
+			self.translate_text(parent, svg_obj, trafo, style)
 
 	def translate_defs(self, svg_obj):
 		for item in svg_obj.childs:
@@ -969,6 +986,31 @@ class SVG_to_SK2_Translator(object):
 			obj_id = svg_obj.attrs['xlink:href'][1:]
 			if obj_id in self.id_dict:
 				self.translate_obj(parent, self.id_dict[obj_id], tr, stl)
+
+	def translate_text(self, parent, svg_obj, trafo, style):
+		cfg = parent.config
+		stl = self.get_level_style(svg_obj, style)
+		sk2_style = self.get_sk2_style(svg_obj, stl, True)
+		tr = self.get_level_trafo(svg_obj, trafo)
+
+		x = y = 0.0
+		if 'x' in svg_obj.attrs:
+			x = self.parse_coords(svg_obj.attrs['x'])[0]
+		if 'y' in svg_obj.attrs:
+			y = self.parse_coords(svg_obj.attrs['y'])[0]
+
+		if not svg_obj.content: return
+		txt = '' + str(svg_obj.content)
+
+
+		text = sk2_model.Text(cfg, parent, [x, y], txt, -1, tr, sk2_style)
+		text.stroke_trafo = [] + tr
+		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
+			text.fill_trafo = [] + tr
+			if 'fill-grad-trafo' in self.style_opts:
+				tr0 = self.style_opts['fill-grad-trafo']
+				text.fill_trafo = libgeom.multiply_trafo(tr0, tr)
+		parent.childs.append(text)
 
 
 
