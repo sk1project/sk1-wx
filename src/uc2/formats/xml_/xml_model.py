@@ -27,17 +27,27 @@ class XMLObject(TaggedModelObject):
 	"""
 	comments = ''
 	attrs = {}
-	content = ''
 
 	def __init__(self, tag=''):
 		self.childs = []
 		self.attrs = {}
-		self.content = ''
 		self.comments = ''
 		if tag: self.tag = tag
+
+	def is_content(self): return False
 
 	def resolve(self):
 		is_node = len(self.childs)
 		info = ''
 		if is_node:info = '%d' % (len(self.childs))
 		return (not is_node, self.tag, info)
+
+class XmlContentText(XMLObject):
+
+	text = ''
+
+	def __init__(self, text=''):
+		self.text = text
+		XMLObject.__init__(self, 'content_text')
+
+	def is_content(self): return True
