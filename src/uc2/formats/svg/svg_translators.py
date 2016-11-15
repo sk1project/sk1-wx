@@ -19,7 +19,7 @@ import math, re, sys, os
 from copy import deepcopy
 
 from uc2 import uc2const, libgeom, cms, libpango
-from uc2.libgeom import add_points, sub_points
+from uc2.libgeom import add_points, sub_points, mult_point
 from uc2.formats.sk2 import sk2_model, sk2_const
 from uc2.formats.svg import svg_const, svg_colors
 
@@ -53,6 +53,8 @@ SVG_STYLE = {
 }
 
 FONT_COEFF = 1.342
+F13 = 1.0 / 3.0
+F23 = 2.0 / 3.0
 
 SK2_FILL_RULE = {
 	'nonzero':sk2_const.FILL_NONZERO,
@@ -231,6 +233,9 @@ class SVG_to_SK2_Translator(object):
 		path = []
 		cpoint = []
 		rel_flag = False
+		last_cmd = 'M'
+		last_quad = None
+
 		for cmd in cmds:
 			if cmd[0] in 'Mm':
 				if path: paths.append(path)
@@ -304,6 +309,49 @@ class SVG_to_SK2_Translator(object):
 					qpoint.append(sk2_const.NODE_CUSP)
 					path[1].append(qpoint)
 					cpoint = point
+
+			elif cmd[0] in 'Qq':
+				rel_flag = cmd[0] == 'q'
+				groups = [cmd[1][i:i + 4] for i in range(0, len(cmd[1]), 4)]
+				for vals in groups:
+					p = self.base_point(cpoint)
+					if rel_flag:
+						q = add_points(p, [vals[0], vals[1]])
+						p3 = add_points(p, [vals[2], vals[3]])
+					else:
+						q = [vals[0], vals[1]]
+						p3 = [vals[2], vals[3]]
+					p1 = add_points(mult_point(p, F13), mult_point(q, F23))
+					p2 = add_points(mult_point(p3, F13), mult_point(q, F23))
+
+					point = [p1, p2, p3]
+					qpoint = [] + point
+					qpoint.append(sk2_const.NODE_CUSP)
+					path[1].append(qpoint)
+					cpoint = point
+					last_quad = q
+
+			elif cmd[0] in 'Tt':
+				rel_flag = cmd[0] == 't'
+				groups = [cmd[1][i:i + 2] for i in range(0, len(cmd[1]), 2)]
+				if last_cmd not in 'QqTt' or last_quad is None:
+					last_quad = self.base_point(cpoint)
+				for vals in groups:
+					p = self.base_point(cpoint)
+					q = sub_points(mult_point(p, 2.0), last_quad)
+					if rel_flag:
+						p3 = add_points(p, [vals[0], vals[1]])
+					else:
+						p3 = [vals[0], vals[1]]
+					p1 = add_points(mult_point(p, F13), mult_point(q, F23))
+					p2 = add_points(mult_point(p3, F13), mult_point(q, F23))
+
+					point = [p1, p2, p3]
+					qpoint = [] + point
+					qpoint.append(sk2_const.NODE_CUSP)
+					path[1].append(qpoint)
+					cpoint = point
+					last_quad = q
 
 			elif cmd[0] in 'Aa':
 				rel_flag = cmd[0] == 'a'
@@ -407,8 +455,7 @@ class SVG_to_SK2_Translator(object):
 					for point in points:
 						path[1].append(point)
 
-
-			# TODO: TtQq command support
+			last_cmd = cmd[0]
 
 		if path:paths.append(path)
 		return paths
@@ -1020,7 +1067,6 @@ class SVG_to_SK2_Translator(object):
 		tr_level = self.get_level_trafo(svg_obj, trafo)
 		inv_tr = libgeom.invert_trafo(self.trafo)
 		tr = libgeom.multiply_trafo(inv_tr, tr_level)
-
 
 		x = y = 0.0
 		if 'x' in svg_obj.attrs:
