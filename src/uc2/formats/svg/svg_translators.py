@@ -17,8 +17,11 @@
 
 import math, re, sys, os
 from copy import deepcopy
+from cStringIO import StringIO
+from PIL import Image
+from base64 import b64decode, b64encode
 
-from uc2 import uc2const, libgeom, cms, libpango
+from uc2 import uc2const, libgeom, cms, libpango, libimg
 from uc2.libgeom import add_points, sub_points, mult_point
 from uc2.formats.sk2 import sk2_model, sk2_const
 from uc2.formats.svg import svg_const, svg_colors
@@ -81,6 +84,8 @@ SK2_TEXT_ALIGN = {
 
 PATH_STUB = [[], [], sk2_const.CURVE_OPENED]
 
+IMG_SIGS = ('data:image/jpeg;base64,', 'data:image/png;base64,')
+
 class SVG_to_SK2_Translator(object):
 
 	page = None
@@ -94,6 +99,8 @@ class SVG_to_SK2_Translator(object):
 	id_dict = {}
 
 	def translate(self, svg_doc, sk2_doc):
+		self.svg_doc = svg_doc
+		self.sk2_doc = sk2_doc
 		self.svg_mt = svg_doc.model
 		self.sk2_mt = sk2_doc.model
 		self.sk2_mtds = sk2_doc.methods
@@ -723,6 +730,30 @@ class SVG_to_SK2_Translator(object):
 
 		return sk2_style
 
+	def get_image(self, svg_obj):
+		if not 'xlink:href' in svg_obj.attrs: return None
+		link = svg_obj.attrs['xlink:href']
+		if link[:4] == 'http': pass
+		elif link[:4] == 'data':
+			pos = 0
+			for sig in IMG_SIGS:
+				if link[:len(sig)] == sig: pos = len(sig)
+			if pos:
+				try:
+					raw_image = Image.open(StringIO(b64decode(link[pos:])))
+					raw_image.load()
+					return raw_image
+				except:pass
+		elif self.svg_doc.doc_file:
+			file_dir = os.path.dirname(self.svg_doc.doc)
+			image_path = os.path.join(file_dir, link)
+			image_path = os.path.abspath(image_path)
+			if os.path.lexists(image_path):
+				raw_image = Image.open(image_path)
+				raw_image.load()
+				return raw_image
+		return None
+
 	#--- Translation metods
 
 	def translate_units(self):
@@ -795,6 +826,8 @@ class SVG_to_SK2_Translator(object):
 				self.translate_use(parent, svg_obj, trafo, style)
 			elif svg_obj.tag == 'text':
 				self.translate_text(parent, svg_obj, trafo, style)
+			elif svg_obj.tag == 'image':
+				self.translate_image(parent, svg_obj, trafo, style)
 		except:
 			print 'tag', svg_obj.tag
 			if 'id' in svg_obj.attrs: print 'id', svg_obj.attrs['id']
@@ -1087,6 +1120,43 @@ class SVG_to_SK2_Translator(object):
 				text.fill_trafo = libgeom.multiply_trafo(tr0, tr)
 		parent.childs.append(text)
 
+	def translate_image(self, parent, svg_obj, trafo, style):
+		cfg = parent.config
+		tr_level = self.get_level_trafo(svg_obj, trafo)
+
+		x = y = 0.0
+		if 'x' in svg_obj.attrs:
+			x = self.parse_coords(svg_obj.attrs['x'])[0]
+		if 'y' in svg_obj.attrs:
+			y = self.parse_coords(svg_obj.attrs['y'])[0]
+
+		w = h = 0.0
+		if 'width' in svg_obj.attrs:
+			w = self.parse_coords(svg_obj.attrs['width'])[0]
+		if 'height' in svg_obj.attrs:
+			h = self.parse_coords(svg_obj.attrs['height'])[0]
+
+		if not w or not h: return
+		raw_image = self.get_image(svg_obj)
+		if not raw_image: return
+		img_w, img_h = raw_image.size
+		trafo = [1.0, 0.0, 0.0, 1.0, -img_w / 2.0, -img_h / 2.0]
+		trafo1 = [w / img_w, 0.0, 0.0, h / img_h, 0.0, 0.0]
+		trafo2 = [1.0, 0.0, 0.0, 1.0, w / 2.0, h / 2.0]
+		trafo = libgeom.multiply_trafo(trafo, trafo1)
+		trafo = libgeom.multiply_trafo(trafo, trafo2)
+
+		pixmap = sk2_model.Pixmap(cfg)
+		image_stream = StringIO()
+		if raw_image.mode == "CMYK":
+			raw_image.save(image_stream, 'JPEG', quality=100)
+		else:
+			raw_image.save(image_stream, 'PNG')
+		content = image_stream.getvalue()
+
+		libimg.set_image_data(self.sk2_doc.cms, pixmap, content)
+		pixmap.trafo = trafo  # libgeom.multiply_trafo(trafo, tr_level)
+		parent.childs.append(pixmap)
 
 
 class SK2_to_SVG_Translator(object):
