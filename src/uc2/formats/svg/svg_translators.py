@@ -828,6 +828,12 @@ class SVG_to_SK2_Translator(object):
 				self.translate_text(parent, svg_obj, trafo, style)
 			elif svg_obj.tag == 'image':
 				self.translate_image(parent, svg_obj, trafo, style)
+			elif svg_obj.tag == 'linearGradient':
+				if 'id' in svg_obj.attrs:
+					self.defs[svg_obj.attrs['id']] = svg_obj
+			elif svg_obj.tag == 'radialGradient':
+				if 'id' in svg_obj.attrs:
+					self.defs[svg_obj.attrs['id']] = svg_obj
 		except:
 			print 'tag', svg_obj.tag
 			if 'id' in svg_obj.attrs: print 'id', svg_obj.attrs['id']
