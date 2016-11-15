@@ -689,7 +689,7 @@ class SVG_to_SK2_Translator(object):
 				dash = sk2_dash
 
 			if len(stroke) > 3 and stroke[:3] == 'url':
-				def_id = fill[5:-1]
+				def_id = stroke[5:-1]
 				if def_id in self.defs:
 					stroke_fill = self.parse_def(self.defs[def_id])
 					if stroke_fill:
