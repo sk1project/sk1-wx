@@ -767,7 +767,7 @@ class SVG_to_SK2_Translator(object):
 		if 'width' in self.svg_mt.attrs:
 			width = self.get_size_pt(self.svg_mt.attrs['width'])
 			height = self.get_size_pt(self.svg_mt.attrs['height'])
-		if 'viewBox' in self.svg_mt.attrs:
+		elif 'viewBox' in self.svg_mt.attrs:
 			vbox = self.get_viewbox(self.svg_mt.attrs['viewBox'])
 			width = vbox[2] - vbox[0]
 			height = vbox[3] - vbox[1]
@@ -791,12 +791,9 @@ class SVG_to_SK2_Translator(object):
 		self.user_space = [0.0, 0.0, width, height]
 		if 'viewBox' in self.svg_mt.attrs:
 			vbox = self.get_viewbox(self.svg_mt.attrs['viewBox'])
-			dx = vbox[0]
-			dy = vbox[1]
-			xx = width / (vbox[2] - vbox[0])
-			yy = height / (vbox[3] - vbox[1])
-			tr = [xx, 0.0, 0.0, yy, 0.0, 0.0]
-			tr = libgeom.multiply_trafo(tr, [1.0, 0.0, 0.0, 1.0, dx, dy])
+			dx = -vbox[0]
+			dy = -vbox[1]
+			tr = [1.0, 0.0, 0.0, 1.0, dx, dy]
 			self.trafo = libgeom.multiply_trafo(tr, self.trafo)
 			self.user_space = vbox
 
