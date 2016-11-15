@@ -1123,6 +1123,8 @@ class SVG_to_SK2_Translator(object):
 	def translate_image(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
 		tr_level = self.get_level_trafo(svg_obj, trafo)
+		inv_tr = libgeom.invert_trafo(self.trafo)
+		tr = libgeom.multiply_trafo(inv_tr, tr_level)
 
 		x = y = 0.0
 		if 'x' in svg_obj.attrs:
@@ -1135,8 +1137,8 @@ class SVG_to_SK2_Translator(object):
 			w = self.parse_coords(svg_obj.attrs['width'])[0]
 		if 'height' in svg_obj.attrs:
 			h = self.parse_coords(svg_obj.attrs['height'])[0]
-
 		if not w or not h: return
+
 		raw_image = self.get_image(svg_obj)
 		if not raw_image: return
 		img_w, img_h = raw_image.size
@@ -1145,6 +1147,10 @@ class SVG_to_SK2_Translator(object):
 		trafo2 = [1.0, 0.0, 0.0, 1.0, w / 2.0, h / 2.0]
 		trafo = libgeom.multiply_trafo(trafo, trafo1)
 		trafo = libgeom.multiply_trafo(trafo, trafo2)
+		dx, dy = libgeom.apply_trafo_to_point([x, y], self.trafo)
+		trafo3 = [1.0, 0.0, 0.0, 1.0, dx, dy - h]
+		trafo = libgeom.multiply_trafo(trafo, trafo3)
+		trafo = libgeom.multiply_trafo(trafo, tr)
 
 		pixmap = sk2_model.Pixmap(cfg)
 		image_stream = StringIO()
@@ -1155,7 +1161,7 @@ class SVG_to_SK2_Translator(object):
 		content = image_stream.getvalue()
 
 		libimg.set_image_data(self.sk2_doc.cms, pixmap, content)
-		pixmap.trafo = trafo  # libgeom.multiply_trafo(trafo, tr_level)
+		pixmap.trafo = trafo
 		parent.childs.append(pixmap)
 
 
