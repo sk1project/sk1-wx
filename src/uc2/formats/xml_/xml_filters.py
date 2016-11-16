@@ -39,16 +39,24 @@ class XML_Loader(AbstractXMLLoader):
 		self.stack.append(obj)
 
 	def element_data(self, data):
-		obj = XmlContentText(data)
-		if self.stack: self.stack[-1].childs.append(obj)
+		self.stack[-1].content += data
 
 	def end_element(self, name):
 		if self.stack and self.stack[-1].tag == name:
 			self.stack = self.stack[:-1]
 
+class Advanced_XML_Loader(XML_Loader):
+
+	name = 'Advanced_XML_Loader'
+
+	def element_data(self, data):
+		obj = XmlContentText(data)
+		if self.stack: self.stack[-1].childs.append(obj)
+
 class XML_Saver(AbstractSaver):
 
 	name = 'XML_Saver'
+	indent = 0
 
 	def do_save(self):
 		cfg = self.model.config.encoding
@@ -59,6 +67,38 @@ class XML_Saver(AbstractSaver):
 		link = "(http://%s/)" % appdata.app_domain
 		self.writeln("<!-- %s %s %s -->" % (name, ver, link))
 		self.write_obj(self.model)
+
+	def write_obj(self, obj):
+		ind = self.indent * self.model.config.indent
+		if obj.comments:
+			self.writeln('<!--')
+			self.writeln(obj.comments)
+			self.writeln('-->')
+
+		attrs = self.get_obj_attrs(obj)
+		if obj.content or obj.childs:
+			start = ind + '<%s%s>%s' % (obj.tag, attrs, obj.content)
+			if obj.childs:
+				self.writeln(start)
+				self.indent += 1
+				for child in obj.childs: self.write_obj(child)
+				self.indent -= 1
+				self.writeln(ind + '</%s>' % obj.tag)
+			else:
+				self.writeln(start + '</%s>' % obj.tag)
+		else:
+			self.writeln(ind + '<%s%s />' % (obj.tag, attrs))
+
+	def get_obj_attrs(self, obj):
+		line = ''
+		if not obj.attrs:return line
+		for item in obj.attrs.keys():
+			line += ' %s="%s"' % (item, obj.attrs[item])
+		return line
+
+class Advanced_XML_Saver(XML_Saver):
+
+	name = 'Advanced_XML_Saver'
 
 	def write_obj(self, obj):
 		if obj.comments:
@@ -77,12 +117,5 @@ class XML_Saver(AbstractSaver):
 			self.write('</%s>' % obj.tag)
 		else:
 			self.write('<%s%s />' % (obj.tag, attrs))
-
-	def get_obj_attrs(self, obj):
-		line = ''
-		if not obj.attrs:return line
-		for item in obj.attrs.keys():
-			line += ' %s="%s"' % (item, obj.attrs[item])
-		return line
 
 
