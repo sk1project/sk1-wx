@@ -27,6 +27,7 @@ class XMLObject(TaggedModelObject):
 	"""
 	comments = ''
 	attrs = {}
+	content = ''
 
 	def __init__(self, tag=''):
 		self.childs = []
