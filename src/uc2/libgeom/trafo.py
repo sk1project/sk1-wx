@@ -19,6 +19,8 @@ import math
 
 import cwrap
 
+NORMAL_TRAFO = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+
 def trafo_rotate(angle, cx=0.0, cy=0.0):
 	m21 = math.sin(angle)
 	m11 = m22 = math.cos(angle)
