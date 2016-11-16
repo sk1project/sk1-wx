@@ -15,16 +15,18 @@
 # 	 You should have received a copy of the GNU General Public License
 # 	 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import math, re, sys, os
+import sys, os
 from copy import deepcopy
 from cStringIO import StringIO
 from PIL import Image
-from base64 import b64decode, b64encode
+from base64 import b64decode
 
-from uc2 import uc2const, libgeom, cms, libpango, libimg
-from uc2.libgeom import add_points, sub_points, mult_point
+from uc2 import uc2const, libgeom, libpango, libimg
 from uc2.formats.sk2 import sk2_model, sk2_const
-from uc2.formats.svg import svg_const, svg_colors
+from uc2.formats.svg import svg_const, svglib
+from uc2.formats.svg.svglib import get_svg_trafo, check_svg_attr, \
+parse_svg_points, parse_svg_coords, parse_svg_color, parse_svg_stops, \
+get_svg_level_trafo
 
 SK2_UNITS = {
 svg_const.SVG_PX:uc2const.UNIT_PX,
@@ -56,8 +58,6 @@ SVG_STYLE = {
 }
 
 FONT_COEFF = 1.342
-F13 = 1.0 / 3.0
-F23 = 2.0 / 3.0
 
 SK2_FILL_RULE = {
 	'nonzero':sk2_const.FILL_NONZERO,
@@ -117,11 +117,6 @@ class SVG_to_SK2_Translator(object):
 
 	#--- Utility methods
 
-	def check_attr(self, svg_obj, attr, value):
-		if attr in svg_obj.attrs and  svg_obj.attrs[attr] == value:
-			return True
-		return False
-
 	def _px_to_pt(self, sval):
 		return svg_const.svg_px_to_pt * float(sval)
 
@@ -158,315 +153,6 @@ class SVG_to_SK2_Translator(object):
 			vbox.append(self.get_size_pt(item))
 		return vbox
 
-	def parse_points(self, spoints):
-		points = []
-		spoints = re.sub('  *', ' ', spoints)
-		spoints = spoints.replace('-', ',-').replace('e,-', 'e-')
-		spoints = spoints.replace(',,', ',').replace(' ', ',')
-		pairs = spoints.split(',')
-		pairs = [pairs[i:i + 2] for i in range(0, len(pairs), 2)]
-		for pair in pairs:
-			try:
-				points.append([float(pair[0]), float(pair[1])])
-			except: continue
-		return points
-
-	def parse_coords(self, scoords):
-		scoords = scoords.strip().replace(',', ' ').replace('-', ' -')
-		scoords = scoords.replace('e -', 'e-').strip()
-		scoords = re.sub('  *', ' ', scoords)
-		if scoords:
-			return map(lambda x:float(x), scoords.split(' '))
-		return None
-
-	def parse_svg_color(self, sclr, alpha=1.0):
-		clr = deepcopy(svg_colors.SVG_COLORS['black'])
-		clr[2] = alpha
-		if sclr == 'currentColor' and self.current_color:
-			sclr = '' + self.current_color
-		if sclr[0] == '#':
-			sclr = sclr.split(' ')[0]
-			try:
-				vals = cms.hexcolor_to_rgb(sclr)
-				clr = ['RGB', vals, alpha, '']
-			except:pass
-		elif sclr[:4] == 'rgb(':
-			vals = sclr[4:].split(')')[0].split(',')
-			if len(vals) == 3:
-				decvals = []
-				for val in vals:
-					val = val.strip()
-					if '%' in val:
-						decval = float(val.replace('%', ''))
-						if decval > 100.0:decval = 100.0
-						if decval < 0.0:decval = 0.0
-						decval = decval / 100.0
-					else:
-						decval = float(val)
-						if decval > 255.0:decval = 255.0
-						if decval < 0.0:decval = 0.0
-						decval = decval / 255.0
-					decvals.append(decval)
-				clr = [uc2const.COLOR_RGB, decvals, alpha, '']
-		else:
-			if sclr in svg_colors.SVG_COLORS:
-				clr = deepcopy(svg_colors.SVG_COLORS[sclr])
-				clr[2] = alpha
-		return clr
-
-	def base_point(self, point):
-		if len(point) == 2: return [] + point
-		return [] + point[-1]
-
-	def parse_path_cmds(self, pathcmds):
-		index = 0
-		last = None
-		last_index = 0
-		cmds = []
-		pathcmds = re.sub('  *', ' ', pathcmds)
-		for item in pathcmds:
-			if item in 'MmZzLlHhVvCcSsQqTtAa':
-				if last:
-					coords = self.parse_coords(pathcmds[last_index + 1:index])
-					cmds.append((last, coords))
-				last = item
-				last_index = index
-			index += 1
-
-		coords = self.parse_coords(pathcmds[last_index + 1:index])
-		cmds.append([last, coords])
-
-		paths = []
-		path = []
-		cpoint = []
-		rel_flag = False
-		last_cmd = 'M'
-		last_quad = None
-
-		for cmd in cmds:
-			if cmd[0] in 'Mm':
-				if path: paths.append(path)
-				path = deepcopy(PATH_STUB)
-				rel_flag = cmd[0] == 'm'
-				points = [cmd[1][i:i + 2] for i in range(0, len(cmd[1]), 2)]
-				for point in points:
-					if cpoint and rel_flag:
-						point = add_points(self.base_point(cpoint), point)
-					if not path[0]: path[0] = point
-					else: path[1].append(point)
-					cpoint = point
-			elif cmd[0] in 'Zz':
-				path[1].append([] + path[0])
-				path[2] = sk2_const.CURVE_CLOSED
-			elif cmd[0] in 'Cc':
-				rel_flag = cmd[0] == 'c'
-				points = [cmd[1][i:i + 2] for i in range(0, len(cmd[1]), 2)]
-				points = [points[i:i + 3] for i in range(0, len(points), 3)]
-				for point in points:
-					if rel_flag:
-						point = [add_points(self.base_point(cpoint), point[0]),
-								add_points(self.base_point(cpoint), point[1]),
-								add_points(self.base_point(cpoint), point[2])]
-					qpoint = [] + point
-					qpoint.append(sk2_const.NODE_CUSP)
-					path[1].append(qpoint)
-					cpoint = point
-			elif cmd[0] in 'Ll':
-				rel_flag = cmd[0] == 'l'
-				points = [cmd[1][i:i + 2] for i in range(0, len(cmd[1]), 2)]
-				for point in points:
-					if rel_flag:
-						point = add_points(self.base_point(cpoint), point)
-					path[1].append(point)
-					cpoint = point
-			elif cmd[0] in 'Hh':
-				rel_flag = cmd[0] == 'h'
-				for x in cmd[1]:
-					dx, y = self.base_point(cpoint)
-					if rel_flag: point = [x + dx, y]
-					else:point = [x, y]
-					path[1].append(point)
-					cpoint = point
-			elif cmd[0] in 'Vv':
-				rel_flag = cmd[0] == 'v'
-				for y in cmd[1]:
-					x, dy = self.base_point(cpoint)
-					if rel_flag: point = [x , y + dy]
-					else:point = [x, y]
-					path[1].append(point)
-					cpoint = point
-			elif cmd[0] in 'Ss':
-				rel_flag = cmd[0] == 's'
-				points = [cmd[1][i:i + 2] for i in range(0, len(cmd[1]), 2)]
-				points = [points[i:i + 2] for i in range(0, len(points), 2)]
-				for point in points:
-					q = cpoint
-					p = cpoint
-					if len(cpoint) > 2:
-						q = cpoint[1]
-						p = cpoint[2]
-					p1 = sub_points(add_points(p, p), q)
-					if rel_flag:
-						p2 = add_points(self.base_point(cpoint), point[0])
-						p3 = add_points(self.base_point(cpoint), point[1])
-					else:
-						p2, p3 = point
-					point = [p1, p2, p3]
-					qpoint = [] + point
-					qpoint.append(sk2_const.NODE_CUSP)
-					path[1].append(qpoint)
-					cpoint = point
-
-			elif cmd[0] in 'Qq':
-				rel_flag = cmd[0] == 'q'
-				groups = [cmd[1][i:i + 4] for i in range(0, len(cmd[1]), 4)]
-				for vals in groups:
-					p = self.base_point(cpoint)
-					if rel_flag:
-						q = add_points(p, [vals[0], vals[1]])
-						p3 = add_points(p, [vals[2], vals[3]])
-					else:
-						q = [vals[0], vals[1]]
-						p3 = [vals[2], vals[3]]
-					p1 = add_points(mult_point(p, F13), mult_point(q, F23))
-					p2 = add_points(mult_point(p3, F13), mult_point(q, F23))
-
-					point = [p1, p2, p3]
-					qpoint = [] + point
-					qpoint.append(sk2_const.NODE_CUSP)
-					path[1].append(qpoint)
-					cpoint = point
-					last_quad = q
-
-			elif cmd[0] in 'Tt':
-				rel_flag = cmd[0] == 't'
-				groups = [cmd[1][i:i + 2] for i in range(0, len(cmd[1]), 2)]
-				if last_cmd not in 'QqTt' or last_quad is None:
-					last_quad = self.base_point(cpoint)
-				for vals in groups:
-					p = self.base_point(cpoint)
-					q = sub_points(mult_point(p, 2.0), last_quad)
-					if rel_flag:
-						p3 = add_points(p, [vals[0], vals[1]])
-					else:
-						p3 = [vals[0], vals[1]]
-					p1 = add_points(mult_point(p, F13), mult_point(q, F23))
-					p2 = add_points(mult_point(p3, F13), mult_point(q, F23))
-
-					point = [p1, p2, p3]
-					qpoint = [] + point
-					qpoint.append(sk2_const.NODE_CUSP)
-					path[1].append(qpoint)
-					cpoint = point
-					last_quad = q
-
-			elif cmd[0] in 'Aa':
-				rel_flag = cmd[0] == 'a'
-				arcs = [cmd[1][i:i + 7] for i in range(0, len(cmd[1]), 7)]
-
-				for arc in arcs:
-					cpoint = self.base_point(cpoint)
-					rev_flag = False
-					rx, ry, xrot, large_arc_flag, sweep_flag, x, y = arc
-					rx = abs(rx)
-					ry = abs(ry)
-					if rel_flag:
-						x += cpoint[0]
-						y += cpoint[1]
-					if cpoint == [x, y]: continue
-					if not rx or not ry:
-						path[1].append([x, y])
-						continue
-
-					vector = [[] + cpoint, [x, y]]
-					if sweep_flag:
-						vector = [[x, y], [] + cpoint]
-						rev_flag = True
-					cpoint = [x, y]
-
-					dir_tr = libgeom.trafo_rotate_grad(-xrot)
-
-					if rx > ry:
-						tr = [1.0, 0.0, 0.0, rx / ry, 0.0, 0.0]
-						r = rx
-					else:
-						tr = [ry / rx, 0.0, 0.0, 1.0, 0.0, 0.0]
-						r = ry
-
-					dir_tr = libgeom.multiply_trafo(dir_tr, tr)
-					vector = libgeom.apply_trafo_to_points(vector, dir_tr)
-
-					l = libgeom.distance(*vector)
-
-					if l > 2.0 * r:
-						coeff = 2.0 * r / l
-						tr = [coeff, 0.0, 0.0, coeff, 0.0, 0.0]
-						dir_tr = libgeom.multiply_trafo(dir_tr, tr)
-						vector = libgeom.apply_trafo_to_points(vector, tr)
-						r = l / 2.0
-
-					mp = libgeom.midpoint(*vector)
-
-					tr0 = libgeom.trafo_rotate(math.pi / 2.0, mp[0], mp[1])
-					pvector = libgeom.apply_trafo_to_points(vector, tr0)
-
-
-					k = math.sqrt(r * r - l * l / 4.0)
-					if large_arc_flag:
-						center = libgeom.midpoint(mp,
-												pvector[1], 2.0 * k / l)
-					else:
-						center = libgeom.midpoint(mp,
-												pvector[0], 2.0 * k / l)
-
-					angle1 = libgeom.get_point_angle(vector[0], center)
-					angle2 = libgeom.get_point_angle(vector[1], center)
-
-					da = angle2 - angle1
-					start = angle1
-					end = angle2
-					if large_arc_flag:
-						if -math.pi >= da or da <= math.pi:
-							start = angle2
-							end = angle1
-							rev_flag = not rev_flag
-					else:
-						if -math.pi <= da or da >= math.pi:
-							start = angle2
-							end = angle1
-							rev_flag = not rev_flag
-
-					pth = libgeom.get_circle_paths(start, end,
-												sk2_const.ARC_ARC)[0]
-
-					if rev_flag:
-						pth = libgeom.reverse_path(pth)
-
-					points = pth[1]
-					for point in points:
-						if len(point) == 3:
-							point.append(sk2_const.NODE_CUSP)
-
-					tr0 = [1.0, 0.0, 0.0, 1.0, -0.5, -0.5]
-					points = libgeom.apply_trafo_to_points(points, tr0)
-
-					tr1 = [2.0 * r, 0.0, 0.0, 2.0 * r, 0.0, 0.0]
-					points = libgeom.apply_trafo_to_points(points, tr1)
-
-					tr2 = [1.0, 0.0, 0.0, 1.0, center[0], center[1]]
-					points = libgeom.apply_trafo_to_points(points, tr2)
-
-					tr3 = libgeom.invert_trafo(dir_tr)
-					points = libgeom.apply_trafo_to_points(points, tr3)
-
-					for point in points:
-						path[1].append(point)
-
-			last_cmd = cmd[0]
-
-		if path:paths.append(path)
-		return paths
-
 	def parse_stops(self, stops):
 		sk2_stops = []
 		for stop in stops:
@@ -494,7 +180,7 @@ class SVG_to_SK2_Translator(object):
 				if 'stop-color' in style:
 					sclr = style['stop-color']
 
-			clr = self.parse_svg_color(sclr, alpha)
+			clr = parse_svg_color(sclr, alpha, self.current_color)
 			sk2_stops.append([offset, clr])
 		return sk2_stops
 
@@ -509,7 +195,7 @@ class SVG_to_SK2_Translator(object):
 					stops = self.parse_def(self.defs[cid])[2][2]
 					if not stops: return []
 			elif svg_obj.childs:
-				stops = self.parse_stops(svg_obj.childs)
+				stops = parse_svg_stops(svg_obj.childs, self.current_color)
 				if not stops: return []
 			else: return []
 
@@ -528,7 +214,7 @@ class SVG_to_SK2_Translator(object):
 
 			if 'gradientTransform' in svg_obj.attrs:
 				strafo = svg_obj.attrs['gradientTransform']
-				self.style_opts['grad-trafo'] = self.get_trafo(strafo)
+				self.style_opts['grad-trafo'] = get_svg_trafo(strafo)
 
 			vector = [[x1, y1], [x2, y2]]
 			return [0, sk2_const.FILL_GRADIENT,
@@ -541,7 +227,7 @@ class SVG_to_SK2_Translator(object):
 					stops = self.parse_def(self.defs[cid])[2][2]
 					if not stops: return []
 			elif svg_obj.childs:
-				stops = self.parse_stops(svg_obj.childs)
+				stops = parse_svg_stops(svg_obj.childs, self.current_color)
 				if not stops: return []
 			else: return []
 
@@ -558,63 +244,13 @@ class SVG_to_SK2_Translator(object):
 
 			if 'gradientTransform' in svg_obj.attrs:
 				strafo = svg_obj.attrs['gradientTransform']
-				self.style_opts['grad-trafo'] = self.get_trafo(strafo)
+				self.style_opts['grad-trafo'] = get_svg_trafo(strafo)
 
 			vector = [[cx, cy], [cx + r, cy]]
 			return [0, sk2_const.FILL_GRADIENT,
 				 [sk2_const.GRADIENT_RADIAL, vector, stops]]
 
 		return []
-
-	def parse_svg_text(self, objs):
-		ret = ''
-		for obj in objs:
-			if obj.is_content():
-				ret += obj.text.lstrip()
-			elif obj.childs:
-				ret += self.parse_svg_text(obj.childs)
-		return ret
-
-	# TODO: implement skew trafo
-	def trafo_skewX(self, *args):
-		return [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
-
-	def trafo_skewY(self, *args):
-		return [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
-
-	def trafo_rotate(self, grad, cx=0.0, cy=0.0):
-		return libgeom.trafo_rotate_grad(grad, cx, cy)
-
-	def trafo_scale(self, m11, m22=None):
-		if m22 is None: m22 = m11
-		return [m11, 0.0, 0.0, m22, 0.0, 0.0]
-
-	def trafo_translate(self, dx, dy=0.0):
-		return [1.0, 0.0, 0.0, 1.0, dx, dy]
-
-	def trafo_matrix(self, m11, m21, m12, m22, dx, dy):
-		return [m11, m21, m12, m22, dx, dy]
-
-	def get_trafo(self, strafo):
-		trafo = [] + sk2_const.NORMAL_TRAFO
-		trs = strafo.split(') ')
-		trs.reverse()
-		for tr in trs:
-			tr += ')'
-			tr = tr.replace(', ', ',').replace(' ', ',').replace('))', ')')
-			try:
-				code = compile('tr=self.trafo_' + tr, '<string>', 'exec')
-				exec code
-			except: continue
-			trafo = libgeom.multiply_trafo(trafo, tr)
-		return trafo
-
-	def get_level_trafo(self, svg_obj, trafo):
-		tr = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
-		if 'transform' in svg_obj.attrs:
-			tr = self.get_trafo(str(svg_obj.attrs['transform']))
-		tr = libgeom.multiply_trafo(tr, trafo)
-		return tr
 
 	def get_level_style(self, svg_obj, style):
 		style = deepcopy(style)
@@ -662,7 +298,7 @@ class SVG_to_SK2_Translator(object):
 						tr = [] + self.style_opts['grad-trafo']
 						self.style_opts['fill-grad-trafo'] = tr
 			else:
-				clr = self.parse_svg_color(fill, alpha)
+				clr = parse_svg_color(fill, alpha, self.current_color)
 				if clr:
 					sk2_style[0] = [fillrule, sk2_const.FILL_SOLID, clr]
 
@@ -699,7 +335,7 @@ class SVG_to_SK2_Translator(object):
 								color = stop[1]
 								color[2] *= alpha
 						self.style_opts['stroke-fill'] = stroke_fill
-						clr = self.parse_svg_color('black')
+						clr = parse_svg_color('black')
 						sk2_style[1] = [stroke_rule, stroke_width, clr, dash,
 							stroke_linecap, stroke_linejoin,
 							stroke_miterlimit, 0, 1, []]
@@ -707,7 +343,7 @@ class SVG_to_SK2_Translator(object):
 							tr = [] + self.style_opts['grad-trafo']
 							self.style_opts['stroke-grad-trafo'] = tr
 			else:
-				clr = self.parse_svg_color(stroke, alpha)
+				clr = parse_svg_color(stroke, alpha, self.current_color)
 				if clr:
 					sk2_style[1] = [stroke_rule, stroke_width, clr, dash,
 							stroke_linecap, stroke_linejoin,
@@ -850,9 +486,9 @@ class SVG_to_SK2_Translator(object):
 					name = str(svg_obj.attrs['inkscape:label'])
 				layer = sk2_model.Layer(self.page.config, self.page, name)
 				self.page.childs.append(layer)
-				if self.check_attr(svg_obj, 'sodipodi:insensitive', 'true'):
+				if check_svg_attr(svg_obj, 'sodipodi:insensitive', 'true'):
 					layer.properties[1] = 0
-				tr = self.get_level_trafo(svg_obj, trafo)
+				tr = get_svg_level_trafo(svg_obj, trafo)
 				stl = self.get_level_style(svg_obj, style)
 				if 'display' in stl and stl['display'] == 'none':
 					layer.properties[0] = 0
@@ -860,7 +496,7 @@ class SVG_to_SK2_Translator(object):
 					self.translate_obj(layer, item, tr, stl)
 		else:
 			group = sk2_model.Group(parent.config, parent)
-			tr = self.get_level_trafo(svg_obj, trafo)
+			tr = get_svg_level_trafo(svg_obj, trafo)
 			stl = self.get_level_style(svg_obj, style)
 			for item in svg_obj.childs:
 				self.translate_obj(group, item, tr, stl)
@@ -870,7 +506,7 @@ class SVG_to_SK2_Translator(object):
 	def translate_rect(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
 		sk2_style = self.get_sk2_style(svg_obj, style)
-		tr = self.get_level_trafo(svg_obj, trafo)
+		tr = get_svg_level_trafo(svg_obj, trafo)
 
 		x = y = w = h = 0
 		if 'x' in svg_obj.attrs:
@@ -923,7 +559,7 @@ class SVG_to_SK2_Translator(object):
 	def translate_ellipse(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
 		sk2_style = self.get_sk2_style(svg_obj, style)
-		tr = self.get_level_trafo(svg_obj, trafo)
+		tr = get_svg_level_trafo(svg_obj, trafo)
 
 		cx = cy = 0.0
 		if 'cx' in svg_obj.attrs:
@@ -950,7 +586,7 @@ class SVG_to_SK2_Translator(object):
 	def translate_circle(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
 		sk2_style = self.get_sk2_style(svg_obj, style)
-		tr = self.get_level_trafo(svg_obj, trafo)
+		tr = get_svg_level_trafo(svg_obj, trafo)
 
 		cx = cy = r = 0.0
 		if 'cx' in svg_obj.attrs:
@@ -975,7 +611,7 @@ class SVG_to_SK2_Translator(object):
 	def translate_line(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
 		sk2_style = self.get_sk2_style(svg_obj, style)
-		tr = self.get_level_trafo(svg_obj, trafo)
+		tr = get_svg_level_trafo(svg_obj, trafo)
 
 		x1 = y1 = x2 = y2 = 0.0
 		if 'x1' in svg_obj.attrs:
@@ -1008,10 +644,10 @@ class SVG_to_SK2_Translator(object):
 	def translate_polyline(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
 		sk2_style = self.get_sk2_style(svg_obj, style)
-		tr = self.get_level_trafo(svg_obj, trafo)
+		tr = get_svg_level_trafo(svg_obj, trafo)
 
 		if not 'points' in svg_obj.attrs: return
-		points = self.parse_points(svg_obj.attrs['points'])
+		points = parse_svg_points(svg_obj.attrs['points'])
 		if not points or len(points) < 2: return
 		paths = [[points[0], points[1:], sk2_const.CURVE_OPENED], ]
 
@@ -1027,10 +663,10 @@ class SVG_to_SK2_Translator(object):
 	def translate_polygon(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
 		sk2_style = self.get_sk2_style(svg_obj, style)
-		tr = self.get_level_trafo(svg_obj, trafo)
+		tr = get_svg_level_trafo(svg_obj, trafo)
 
 		if not 'points' in svg_obj.attrs: return
-		points = self.parse_points(svg_obj.attrs['points'])
+		points = parse_svg_points(svg_obj.attrs['points'])
 		if not points or len(points) < 3: return
 		points.append([] + points[0])
 		paths = [[points[0], points[1:], sk2_const.CURVE_CLOSED], ]
@@ -1048,9 +684,9 @@ class SVG_to_SK2_Translator(object):
 		curve = None
 		cfg = parent.config
 		sk2_style = self.get_sk2_style(svg_obj, style)
-		tr = self.get_level_trafo(svg_obj, trafo)
+		tr = get_svg_level_trafo(svg_obj, trafo)
 
-		if self.check_attr(svg_obj, 'sodipodi:type', 'arc'):
+		if check_svg_attr(svg_obj, 'sodipodi:type', 'arc'):
 			cx = self.get_size_pt(svg_obj.attrs['sodipodi:cx'])
 			cy = self.get_size_pt(svg_obj.attrs['sodipodi:cy'])
 			rx = self.get_size_pt(svg_obj.attrs['sodipodi:rx'])
@@ -1061,7 +697,7 @@ class SVG_to_SK2_Translator(object):
 			if 'sodipodi:end' in svg_obj.attrs:
 				angle2 = float(svg_obj.attrs['sodipodi:end'])
 			circle_type = sk2_const.ARC_PIE_SLICE
-			if self.check_attr(svg_obj, 'sodipodi:open', 'true'):
+			if check_svg_attr(svg_obj, 'sodipodi:open', 'true'):
 				circle_type = sk2_const.ARC_ARC
 			rect = [cx - rx, cy - ry, 2.0 * rx, 2.0 * ry]
 			curve = sk2_model.Circle(cfg, parent, rect, angle1, angle2,
@@ -1075,7 +711,7 @@ class SVG_to_SK2_Translator(object):
 					curve.fill_trafo = libgeom.multiply_trafo(tr0, tr)
 		elif 'd' in svg_obj.attrs:
 
-			paths = self.parse_path_cmds(svg_obj.attrs['d'])
+			paths = svglib.parse_svg_path_cmds(svg_obj.attrs['d'])
 			if not paths: return
 
 			curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
@@ -1089,7 +725,7 @@ class SVG_to_SK2_Translator(object):
 		if curve: parent.childs.append(curve)
 
 	def translate_use(self, parent, svg_obj, trafo, style):
-		tr = self.get_level_trafo(svg_obj, trafo)
+		tr = get_svg_level_trafo(svg_obj, trafo)
 		stl = self.get_level_style(svg_obj, style)
 		if 'xlink:href' in svg_obj.attrs:
 			obj_id = svg_obj.attrs['xlink:href'][1:]
@@ -1100,18 +736,18 @@ class SVG_to_SK2_Translator(object):
 		cfg = parent.config
 		stl = self.get_level_style(svg_obj, style)
 		sk2_style = self.get_sk2_style(svg_obj, stl, True)
-		tr_level = self.get_level_trafo(svg_obj, trafo)
+		tr_level = get_svg_level_trafo(svg_obj, trafo)
 		inv_tr = libgeom.invert_trafo(self.trafo)
 		tr = libgeom.multiply_trafo(inv_tr, tr_level)
 
 		x = y = 0.0
 		if 'x' in svg_obj.attrs:
-			x = self.parse_coords(svg_obj.attrs['x'])[0]
+			x = parse_svg_coords(svg_obj.attrs['x'])[0]
 		if 'y' in svg_obj.attrs:
-			y = self.parse_coords(svg_obj.attrs['y'])[0]
+			y = parse_svg_coords(svg_obj.attrs['y'])[0]
 
 		if not svg_obj.childs: return
-		txt = self.parse_svg_text(svg_obj.childs)
+		txt = svglib.parse_svg_text(svg_obj.childs)
 
 		x, y = libgeom.apply_trafo_to_point([x, y], self.trafo)
 		text = sk2_model.Text(cfg, parent, [x, y], txt, -1, tr, sk2_style)
@@ -1125,21 +761,21 @@ class SVG_to_SK2_Translator(object):
 
 	def translate_image(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
-		tr_level = self.get_level_trafo(svg_obj, trafo)
+		tr_level = get_svg_level_trafo(svg_obj, trafo)
 		inv_tr = libgeom.invert_trafo(self.trafo)
 		tr = libgeom.multiply_trafo(inv_tr, tr_level)
 
 		x = y = 0.0
 		if 'x' in svg_obj.attrs:
-			x = self.parse_coords(svg_obj.attrs['x'])[0]
+			x = parse_svg_coords(svg_obj.attrs['x'])[0]
 		if 'y' in svg_obj.attrs:
-			y = self.parse_coords(svg_obj.attrs['y'])[0]
+			y = parse_svg_coords(svg_obj.attrs['y'])[0]
 
 		w = h = 0.0
 		if 'width' in svg_obj.attrs:
-			w = self.parse_coords(svg_obj.attrs['width'])[0]
+			w = parse_svg_coords(svg_obj.attrs['width'])[0]
 		if 'height' in svg_obj.attrs:
-			h = self.parse_coords(svg_obj.attrs['height'])[0]
+			h = parse_svg_coords(svg_obj.attrs['height'])[0]
 		if not w or not h: return
 
 		raw_image = self.get_image(svg_obj)
