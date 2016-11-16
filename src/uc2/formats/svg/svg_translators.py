@@ -629,7 +629,7 @@ class SVG_to_SK2_Translator(object):
 			for stl in stls:
 				vals = stl.split(':')
 				if len(vals) == 2:
-					style[vals[0]] = vals[1]
+					style[vals[0].strip()] = vals[1].strip()
 		return style
 
 	def get_sk2_style(self, svg_obj, style, text_style=False):
