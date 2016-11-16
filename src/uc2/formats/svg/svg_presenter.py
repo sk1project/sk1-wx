@@ -20,7 +20,7 @@ import os
 from uc2 import uc2const
 from uc2.formats.generic import TaggedModelPresenter
 from uc2.formats.svg.svg_config import SVG_Config
-from uc2.formats.xml_.xml_filters import XML_Loader, XML_Saver
+from uc2.formats.xml_.xml_filters import Advanced_XML_Loader, Advanced_XML_Saver
 from uc2.formats.svg.svg_methods import SVG_Methods, create_new_svg
 
 from uc2.formats.svg.svg_translators import SK2_to_SVG_Translator
@@ -43,8 +43,8 @@ class SVG_Presenter(TaggedModelPresenter):
 		self.config.update(cnf)
 		self.appdata = appdata
 		self.cms = self.appdata.app.default_cms
-		self.loader = XML_Loader()
-		self.saver = XML_Saver()
+		self.loader = Advanced_XML_Loader()
+		self.saver = Advanced_XML_Saver()
 		self.methods = SVG_Methods(self)
 		if filepath is None:
 			self.new()
