@@ -439,6 +439,10 @@ class SVG_to_SK2_Translator(object):
 				self.id_dict[svg_obj.attrs['id']] = svg_obj
 			if svg_obj.tag == 'defs':
 				self.translate_defs(svg_obj)
+			elif svg_obj.tag == 'sodipodi:namedview':
+				self.translate_namedview(svg_obj)
+			elif svg_obj.tag == 'sodipodi:guide':
+				self.translate_guide(svg_obj)
 			elif svg_obj.tag == 'g':
 				self.translate_g(parent, svg_obj, trafo, style)
 			elif svg_obj.tag == 'rect':
@@ -477,6 +481,27 @@ class SVG_to_SK2_Translator(object):
 		for item in svg_obj.childs:
 			if 'id' in item.attrs:
 				self.defs[str(item.attrs['id'])] = item
+
+	def translate_namedview(self, svg_obj):
+		for item in svg_obj.childs:
+			self.translate_obj(None, item, None, None)
+
+	def translate_guide(self, svg_obj):
+		position = parse_svg_points(svg_obj.attrs['position'])[0]
+		position = libgeom.apply_trafo_to_point(position, self.trafo)
+		orientation = parse_svg_points(svg_obj.attrs['orientation'])[0]
+		if position and orientation:
+			if not orientation[0] and orientation[1] == 1.0:
+				orientation = uc2const.HORIZONTAL
+				position = -position[1]
+			elif not orientation[1] and orientation[0] == 1.0:
+				orientation = uc2const.VERTICAL
+				position = position[0]
+			else: return
+			guide_layer = self.sk2_mtds.get_guide_layer()
+			guide = sk2_model.Guide(guide_layer.config, guide_layer,
+								position, orientation)
+			guide_layer.childs.append(guide)
 
 	def translate_g(self, parent, svg_obj, trafo, style):
 		if 'inkscape:groupmode' in svg_obj.attrs:
