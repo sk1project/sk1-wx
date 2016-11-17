@@ -80,6 +80,7 @@ def parse_svg_points(spoints):
 	spoints = spoints.replace('-', ',-').replace('e,-', 'e-')
 	spoints = spoints.replace(',,', ',').replace(' ', ',')
 	pairs = spoints.split(',')
+	if not pairs[0]:pairs = pairs[1:]
 	pairs = [pairs[i:i + 2] for i in range(0, len(pairs), 2)]
 	for pair in pairs:
 		try:
