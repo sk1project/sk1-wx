@@ -45,3 +45,23 @@ SVG_CM = 'cm'
 SVG_IN = 'in'
 SVG_FT = 'ft'
 SVG_M = 'm'
+
+SVG_STYLE = {
+	'opacity':'1',
+	'fill':'black',
+	'fill-rule':'nonzero',
+	'fill-opacity':'1',
+	'stroke':'none',
+	'stroke-width':'1',
+	'stroke-linecap':'butt',
+	'stroke-linejoin':'miter',
+	'stroke-miterlimit':'4',
+	'stroke-dasharray':'none',
+	'stroke-dashoffset':'0',
+	'stroke-opacity':'1',
+	'font-family':'Sans',
+	'font-size':'12',
+	'text-align':'start',
+}
+
+IMG_SIGS = ('data:image/jpeg;base64,', 'data:image/png;base64,')
