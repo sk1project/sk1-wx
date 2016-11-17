@@ -756,6 +756,8 @@ class SVG_to_SK2_Translator(object):
 			obj_id = svg_obj.attrs['xlink:href'][1:]
 			if obj_id in self.id_dict:
 				self.translate_obj(parent, self.id_dict[obj_id], tr, stl)
+			elif obj_id in self.defs:
+				self.translate_obj(parent, self.defs[obj_id], tr, stl)
 
 	def translate_text(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
