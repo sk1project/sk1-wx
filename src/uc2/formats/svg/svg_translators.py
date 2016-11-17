@@ -39,23 +39,6 @@ svg_const.SVG_IN:uc2const.UNIT_IN,
 svg_const.SVG_FT:uc2const.UNIT_FT,
 }
 
-SVG_STYLE = {
-	'opacity':'1',
-	'fill':'black',
-	'fill-rule':'nonzero',
-	'fill-opacity':'1',
-	'stroke':'none',
-	'stroke-width':'1',
-	'stroke-linecap':'butt',
-	'stroke-linejoin':'miter',
-	'stroke-miterlimit':'4',
-	'stroke-dasharray':'none',
-	'stroke-dashoffset':'0',
-	'stroke-opacity':'1',
-	'font-family':'Sans',
-	'font-size':'12',
-	'text-align':'start',
-}
 
 FONT_COEFF = 1.342
 
@@ -82,9 +65,7 @@ SK2_TEXT_ALIGN = {
 	'end':sk2_const.TEXT_ALIGN_RIGHT,
 }
 
-PATH_STUB = [[], [], sk2_const.CURVE_OPENED]
 
-IMG_SIGS = ('data:image/jpeg;base64,', 'data:image/png;base64,')
 
 class SVG_to_SK2_Translator(object):
 
@@ -110,7 +91,7 @@ class SVG_to_SK2_Translator(object):
 		self.translate_units()
 		self.translate_page()
 		for item in self.svg_mt.childs:
-			self.translate_obj(self.layer, item, self.trafo, SVG_STYLE)
+			self.translate_obj(self.layer, item, self.trafo, svg_const.SVG_STYLE)
 		if len(self.page.childs) > 1 and not self.layer.childs:
 			self.page.childs.remove(self.layer)
 		self.sk2_mt.do_update()
@@ -254,7 +235,7 @@ class SVG_to_SK2_Translator(object):
 
 	def get_level_style(self, svg_obj, style):
 		style = deepcopy(style)
-		for item in SVG_STYLE.keys():
+		for item in svg_const.SVG_STYLE.keys():
 			if item in svg_obj.attrs:
 				style[item] = '' + str(svg_obj.attrs[item])
 		if 'color' in svg_obj.attrs:
@@ -372,7 +353,7 @@ class SVG_to_SK2_Translator(object):
 		if link[:4] == 'http': pass
 		elif link[:4] == 'data':
 			pos = 0
-			for sig in IMG_SIGS:
+			for sig in svg_const.IMG_SIGS:
 				if link[:len(sig)] == sig: pos = len(sig)
 			if pos:
 				try:
