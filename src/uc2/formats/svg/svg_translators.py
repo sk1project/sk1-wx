@@ -91,7 +91,8 @@ class SVG_to_SK2_Translator(object):
 		self.translate_units()
 		self.translate_page()
 		for item in self.svg_mt.childs:
-			self.translate_obj(self.layer, item, self.trafo, svg_const.SVG_STYLE)
+			style = self.get_level_style(self.svg_mt, svg_const.SVG_STYLE)
+			self.translate_obj(self.layer, item, self.trafo, style)
 		if len(self.page.childs) > 1 and not self.layer.childs:
 			self.page.childs.remove(self.layer)
 		self.sk2_mt.do_update()
