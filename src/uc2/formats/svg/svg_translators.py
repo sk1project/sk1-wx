@@ -379,15 +379,27 @@ class SVG_to_SK2_Translator(object):
 		self.sk2_mt.doc_units = units
 
 	def translate_page(self):
-		width = self.get_size_pt('210mm')
-		height = self.get_size_pt('297mm')
-		if 'width' in self.svg_mt.attrs:
-			width = self.get_size_pt(self.svg_mt.attrs['width'])
-			height = self.get_size_pt(self.svg_mt.attrs['height'])
-		elif 'viewBox' in self.svg_mt.attrs:
+		width = height = 0.0
+		vbox = []
+		if 'viewBox' in self.svg_mt.attrs:
 			vbox = self.get_viewbox(self.svg_mt.attrs['viewBox'])
-			width = vbox[2] - vbox[0]
-			height = vbox[3] - vbox[1]
+
+		if 'width' in self.svg_mt.attrs:
+			if not self.svg_mt.attrs['width'][-1] == '%':
+				width = self.get_size_pt(self.svg_mt.attrs['width'])
+			else:
+				if vbox:width = vbox[2]
+			if not self.svg_mt.attrs['height'][-1] == '%':
+				height = self.get_size_pt(self.svg_mt.attrs['height'])
+			else:
+				if vbox:height = vbox[3]
+		elif vbox:
+			width = vbox[2]
+			height = vbox[3]
+
+		if not width: width = self.get_size_pt('210mm')
+		if not height: height = self.get_size_pt('297mm')
+
 		ornt = uc2const.PORTRAIT
 		if width > height: ornt = uc2const.LANDSCAPE
 		page_fmt = ['Custom', (width, height), ornt]
@@ -406,11 +418,17 @@ class SVG_to_SK2_Translator(object):
 		dy = height / 2.0
 		self.trafo = [1.0, 0.0, 0.0, -1.0, dx, dy]
 		self.user_space = [0.0, 0.0, width, height]
-		if 'viewBox' in self.svg_mt.attrs:
-			vbox = self.get_viewbox(self.svg_mt.attrs['viewBox'])
+
+		if vbox:
 			dx = -vbox[0]
 			dy = -vbox[1]
-			tr = [1.0, 0.0, 0.0, 1.0, dx, dy]
+			xx = width / vbox[2]
+			yy = height / vbox[3]
+			if 'xml:space' in self.svg_mt.attrs and \
+			self.svg_mt.attrs['xml:space'] == 'preserve':
+				xx = yy = min(xx, yy)
+			tr = [xx, 0.0, 0.0, yy, 0.0, 0.0]
+			tr = libgeom.multiply_trafo([1.0, 0.0, 0.0, 1.0, dx, dy], tr)
 			self.trafo = libgeom.multiply_trafo(tr, self.trafo)
 			self.user_space = vbox
 
