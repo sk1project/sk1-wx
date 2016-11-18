@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2015 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from uc2 import uc2const
 
@@ -34,9 +34,9 @@ DOC_ORIGIN_LL = 1
 DOC_ORIGIN_LU = 2
 ORIGINS = [DOC_ORIGIN_CENTER, DOC_ORIGIN_LL, DOC_ORIGIN_LU]
 
-#Bezier curve constants
+# Bezier curve constants
 NORMAL_TRAFO = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
-#[scale_x, scale_y, shear_x, shear_y, rotate]
+# [scale_x, scale_y, shear_x, shear_y, rotate]
 PATTERN_TRANSFORMS = [1.0, 1.0, 0.0, 0.0, 0.0]
 CORNERS = [0.0, 0.0, 0.0, 0.0]
 EMPTY_STYLE = [[], [], [], []]
@@ -45,13 +45,13 @@ EMPTY_IMAGE_STYLE = [[], []]
 CURVE_CLOSED = 1
 CURVE_OPENED = 0
 
-NODE_CUSP = 0#           0000
-NODE_SMOOTH = 1#         0001
-NODE_SMOOTH_OPP = 2#     0010
-NODE_SMOOTH_BOTH = 3#    0011
-NODE_SYMMETRICAL = 4#    0100
-NODE_NOT_SMOOTH_OPP = 5# 0101
-NODE_SYMM_SMOOTH = 6#    0110
+NODE_CUSP = 0  #           0000
+NODE_SMOOTH = 1  #         0001
+NODE_SMOOTH_OPP = 2  #     0010
+NODE_SMOOTH_BOTH = 3  #    0011
+NODE_SYMMETRICAL = 4  #    0100
+NODE_NOT_SMOOTH_OPP = 5  # 0101
+NODE_SYMM_SMOOTH = 6  #    0110
 
 ARC_ARC = 0
 ARC_CHORD = 1
@@ -77,15 +77,15 @@ STUB_ARCS = [
 	[[0.776095653543307, 0.0], [1.0, 0.223904346456693], [1.0, 0.5], NODE_SYMMETRICAL],
 ]
 
-#Fill and stroke constants
+# Fill and stroke constants
 
-FILL_EVENODD = 1#             01
-FILL_NONZERO = 0#             00
-FILL_NONZERO_CLOSED_ONLY = 2# 10
-FILL_EVENODD_CLOSED_ONLY = 3# 11
+FILL_EVENODD = 1  #             01
+FILL_NONZERO = 0  #             00
+FILL_NONZERO_CLOSED_ONLY = 2  # 10
+FILL_EVENODD_CLOSED_ONLY = 3  # 11
 
-FILL_ANY = 0#			  00
-FILL_CLOSED_ONLY = 2#     10
+FILL_ANY = 0  # 			  00
+FILL_CLOSED_ONLY = 2  #     10
 
 FILL_SOLID = 0
 FILL_GRADIENT = 1
@@ -94,6 +94,11 @@ FILL_PATTERN = 2
 GRADIENT_LINEAR = 0
 GRADIENT_RADIAL = 1
 GRADIENT_CONICAL = 2
+
+GRADIENT_EXTEND_NONE = 0
+GRADIENT_EXTEND_PAD = 1
+GRADIENT_EXTEND_REPEAT = 2
+GRADIENT_EXTEND_REFLECT = 2
 
 PATTERN_IMG = 0
 PATTERN_TRUECOLOR = 1
