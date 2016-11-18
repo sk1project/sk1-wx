@@ -22,8 +22,9 @@ Spot color can be RGB or CMYK based:
 -------------------------------------------------------------------------------
 
 GRADIENT DEFINITION:
-[gradient_type,[start_point,end_point],stops]
+[gradient_type,[start_point,end_point],stops, extend]
 stops => [[offset,color],[offset,color], ...]
+extend - optional parameter, default GRADIENT_EXTEND_PAD
 
 -------------------------------------------------------------------------------
 
