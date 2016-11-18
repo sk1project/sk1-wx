@@ -260,11 +260,12 @@ class SVG_to_SK2_Translator(object):
 			if item in svg_obj.attrs:
 				style['' + item] = '' + str(svg_obj.attrs[item])
 		if 'class' in svg_obj.attrs:
-			class_name = str(svg_obj.attrs['class']).strip()
-			if class_name in self.classes:
-				class_ = self.classes[class_name]
-				for item in class_.keys():
-					style['' + item] = '' + class_[item]
+			class_names = str(svg_obj.attrs['class']).strip().split(' ')
+			for class_name in class_names:
+				if class_name in self.classes:
+					class_ = self.classes[class_name]
+					for item in class_.keys():
+						style['' + item] = '' + class_[item]
 		if 'style' in svg_obj.attrs:
 			stls = str(svg_obj.attrs['style']).split(';')
 			for stl in stls:
