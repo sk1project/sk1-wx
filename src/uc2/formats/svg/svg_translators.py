@@ -258,8 +258,13 @@ class SVG_to_SK2_Translator(object):
 		style = deepcopy(style)
 		for item in svg_const.SVG_STYLE.keys():
 			if item in svg_obj.attrs:
-				style[item] = '' + str(svg_obj.attrs[item])
-		# TODO:here should be class parsing
+				style['' + item] = '' + str(svg_obj.attrs[item])
+		if 'class' in svg_obj.attrs:
+			class_name = str(svg_obj.attrs['class']).strip()
+			if class_name in self.classes:
+				class_ = self.classes[class_name]
+				for item in class_.keys():
+					style['' + item] = '' + class_[item]
 		if 'style' in svg_obj.attrs:
 			stls = str(svg_obj.attrs['style']).split(';')
 			for stl in stls:
@@ -543,7 +548,7 @@ class SVG_to_SK2_Translator(object):
 				vals = stl.split(':')
 				if len(vals) == 2:
 					style[vals[0].strip()] = vals[1].strip()
-			self.classes[class_] = style
+			self.classes[class_.strip()] = style
 
 	def translate_g(self, parent, svg_obj, trafo, style):
 		if 'inkscape:groupmode' in svg_obj.attrs:
