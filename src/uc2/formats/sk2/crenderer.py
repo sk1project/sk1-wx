@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2011-2015 by Igor E. Novikov
+# 	Copyright (C) 2011-2015 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import cairo
 from base64 import b64decode
@@ -37,6 +37,13 @@ JOINS = {
 	sk2_const.JOIN_BEVEL:cairo.LINE_JOIN_BEVEL,
 	sk2_const.JOIN_MITER:cairo.LINE_JOIN_MITER,
 	sk2_const.JOIN_ROUND:cairo.LINE_JOIN_ROUND,
+	}
+
+EXTEND = {
+	sk2_const.GRADIENT_EXTEND_NONE:cairo.EXTEND_NONE,
+	sk2_const.GRADIENT_EXTEND_PAD:cairo.EXTEND_PAD,
+	sk2_const.GRADIENT_EXTEND_REPEAT:cairo.EXTEND_REPEAT,
+	sk2_const.GRADIENT_EXTEND_REFLECT:cairo.EXTEND_REFLECT,
 	}
 
 class CairoRenderer:
@@ -295,6 +302,9 @@ class CairoRenderer:
 				grd.add_color_stop_rgba(stop[0], *self.get_color(stop[1]))
 			matrix = cairo.Matrix(*obj.fill_trafo)
 			matrix.invert()
+			extend = cairo.EXTEND_PAD
+			if len(gradient) > 3: extend = EXTEND[gradient[3]]
+			grd.set_extend(extend)
 			grd.set_matrix(matrix)
 			ctx.set_source(grd)
 		elif fill[1] == sk2_const.FILL_PATTERN:
@@ -325,9 +335,9 @@ class CairoRenderer:
 	def process_stroke(self, ctx, obj, style=None):
 		if style: stroke = style[1]
 		else: stroke = obj.style[1]
-		#FIXME: add stroke style
+		# FIXME: add stroke style
 
-		#Line width
+		# Line width
 		if not stroke[8]:
 			line_width = stroke[1]
 			if obj and obj.stroke_trafo: obj.stroke_trafo = []
@@ -339,9 +349,9 @@ class CairoRenderer:
 			coef = libgeom.distance(*points)
 			line_width = stroke[1] * coef
 		ctx.set_line_width(line_width)
-		#Line color
+		# Line color
 		ctx.set_source_rgba(*self.get_color(stroke[2]))
-		#Dashes
+		# Dashes
 		dash = []
 		for item in stroke[3]:dash.append(item * line_width)
 		ctx.set_dash(dash)
