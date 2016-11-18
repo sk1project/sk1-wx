@@ -83,6 +83,7 @@ class SVG_to_SK2_Translator(object):
 	defs = {}
 	style_opts = {}
 	id_dict = {}
+	classes = {}
 
 	def translate(self, svg_doc, sk2_doc):
 		self.svg_doc = svg_doc
@@ -92,6 +93,7 @@ class SVG_to_SK2_Translator(object):
 		self.sk2_mtds = sk2_doc.methods
 		self.svg_mtds = svg_doc.methods
 		self.defs = {}
+		self.classes = {}
 		self.current_color = ''
 		self.translate_units()
 		self.translate_page()
@@ -250,13 +252,14 @@ class SVG_to_SK2_Translator(object):
 		return []
 
 	def get_level_style(self, svg_obj, style):
+		if 'color' in svg_obj.attrs:
+			if svg_obj.attrs['color'] == 'inherit':pass
+			else: self.current_color = '' + svg_obj.attrs['color']
 		style = deepcopy(style)
 		for item in svg_const.SVG_STYLE.keys():
 			if item in svg_obj.attrs:
 				style[item] = '' + str(svg_obj.attrs[item])
-		if 'color' in svg_obj.attrs:
-			if svg_obj.attrs['color'] == 'inherit':pass
-			else: self.current_color = '' + svg_obj.attrs['color']
+		# TODO:here should be class parsing
 		if 'style' in svg_obj.attrs:
 			stls = str(svg_obj.attrs['style']).split(';')
 			for stl in stls:
@@ -494,7 +497,9 @@ class SVG_to_SK2_Translator(object):
 
 	def translate_defs(self, svg_obj):
 		for item in svg_obj.childs:
-			if 'id' in item.attrs:
+			if item.tag == 'style':
+				self.translate_style(item)
+			elif 'id' in item.attrs:
 				self.defs[str(item.attrs['id'])] = item
 
 	def translate_namedview(self, svg_obj):
@@ -517,6 +522,28 @@ class SVG_to_SK2_Translator(object):
 			guide = sk2_model.Guide(guide_layer.config, guide_layer,
 								position, orientation)
 			guide_layer.childs.append(guide)
+
+	def translate_style(self, svg_obj):
+		items = []
+		for item in svg_obj.childs:
+			if item.is_content():
+				val = item.text.strip()
+				if val: items.append(val)
+		if not items:return
+		items = ' '.join(items)
+		if not '.' in items: return
+		items = items.split('.')[1:]
+		for item in items:
+			if not '{' in item: continue
+			class_, stylestr = item.split('{')
+			stylestr = stylestr.replace('}', '')
+			stls = stylestr.split(';')
+			style = {}
+			for stl in stls:
+				vals = stl.split(':')
+				if len(vals) == 2:
+					style[vals[0].strip()] = vals[1].strip()
+			self.classes[class_] = style
 
 	def translate_g(self, parent, svg_obj, trafo, style):
 		if 'inkscape:groupmode' in svg_obj.attrs:
