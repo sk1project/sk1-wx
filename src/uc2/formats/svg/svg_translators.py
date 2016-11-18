@@ -65,6 +65,11 @@ SK2_TEXT_ALIGN = {
 	'end':sk2_const.TEXT_ALIGN_RIGHT,
 }
 
+SK2_GRAD_EXTEND = {
+	'pad':sk2_const.GRADIENT_EXTEND_PAD,
+	'reflect':sk2_const.GRADIENT_EXTEND_REFLECT,
+	'repeat':sk2_const.GRADIENT_EXTEND_REPEAT,
+}
 
 
 class SVG_to_SK2_Translator(object):
@@ -198,9 +203,14 @@ class SVG_to_SK2_Translator(object):
 				strafo = svg_obj.attrs['gradientTransform']
 				self.style_opts['grad-trafo'] = get_svg_trafo(strafo)
 
+			extend = sk2_const.GRADIENT_EXTEND_PAD
+			if 'spreadMethod' in svg_obj.attrs:
+				val = str(svg_obj.attrs['spreadMethod']).strip()
+				if val in SK2_GRAD_EXTEND: extend = SK2_GRAD_EXTEND[val]
+
 			vector = [[x1, y1], [x2, y2]]
 			return [0, sk2_const.FILL_GRADIENT,
-				 [sk2_const.GRADIENT_LINEAR, vector, stops]]
+				 [sk2_const.GRADIENT_LINEAR, vector, stops, extend]]
 
 		elif svg_obj.tag == 'radialGradient':
 			if 'xlink:href' in svg_obj.attrs:
@@ -228,9 +238,14 @@ class SVG_to_SK2_Translator(object):
 				strafo = svg_obj.attrs['gradientTransform']
 				self.style_opts['grad-trafo'] = get_svg_trafo(strafo)
 
+			extend = sk2_const.GRADIENT_EXTEND_PAD
+			if 'spreadMethod' in svg_obj.attrs:
+				val = str(svg_obj.attrs['spreadMethod']).strip()
+				if val in SK2_GRAD_EXTEND: extend = SK2_GRAD_EXTEND[val]
+
 			vector = [[cx, cy], [cx + r, cy]]
 			return [0, sk2_const.FILL_GRADIENT,
-				 [sk2_const.GRADIENT_RADIAL, vector, stops]]
+				 [sk2_const.GRADIENT_RADIAL, vector, stops, extend]]
 
 		return []
 
