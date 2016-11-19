@@ -60,6 +60,8 @@ SVG_STYLE = {
 	'stroke-dashoffset':'0',
 	'stroke-opacity':'1',
 	'font-family':'Sans',
+	'font-style':'normal',
+	'font-weight':'normal',
 	'font-size':'12',
 	'text-align':'start',
 	'text-anchor':'start',
