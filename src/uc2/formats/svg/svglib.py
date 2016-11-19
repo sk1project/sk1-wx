@@ -162,6 +162,7 @@ def parse_svg_path_cmds(pathcmds):
 
 	for cmd in cmds:
 		if cmd[0] in 'Mm':
+			print cpoint
 			if path: paths.append(path)
 			path = deepcopy(PATH_STUB)
 			rel_flag = cmd[0] == 'm'
@@ -175,6 +176,7 @@ def parse_svg_path_cmds(pathcmds):
 		elif cmd[0] in 'Zz':
 			path[1].append([] + path[0])
 			path[2] = sk2_const.CURVE_CLOSED
+			cpoint = [] + path[0]
 		elif cmd[0] in 'Cc':
 			rel_flag = cmd[0] == 'c'
 			points = [cmd[1][i:i + 2] for i in range(0, len(cmd[1]), 2)]
