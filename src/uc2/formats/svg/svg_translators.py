@@ -359,17 +359,43 @@ class SVG_to_SK2_Translator(object):
 							stroke_miterlimit, 0, 1, []]
 
 		if text_style:
+			# font family
 			font_family = 'Sans'
 			if style['font-family'] in libpango.get_fonts()[0]:
 				font_family = style['font-family']
+
+			# font face
 			font_face = 'Regular'
+			faces = libpango.get_fonts()[1][font_family]
+			if not font_face in faces:
+				font_face = '' + faces[0]
+
+			bold = italic = False
+			if style['font-style'] in ('italic', 'oblique'):
+				italic = True
+			if style['font-weight'] in ('bold', 'bolder'):
+				bold = True
+
+			if bold and italic:
+				if 'Bold Italic' in faces: font_face = 'Bold Italic'
+				elif 'Bold Oblique' in faces: font_face = 'Bold Oblique'
+			elif bold and not italic:
+				if 'Bold' in faces: font_face = 'Bold'
+			elif not bold and italic:
+				if 'Italic' in faces: font_face = 'Italic'
+				elif 'Oblique' in faces: font_face = 'Oblique'
+
+			# text size
 			font_size = 12.0
 			try:
 				font_size = self.get_font_size(style['font-size'])
 			except:pass
+
+			# text alignment
 			alignment = sk2_const.TEXT_ALIGN_LEFT
 			if style['text-anchor'] in SK2_TEXT_ALIGN:
 				alignment = SK2_TEXT_ALIGN[style['text-anchor']]
+
 			sk2_style[2] = [font_family, font_face, font_size,
 						alignment, [], True]
 
