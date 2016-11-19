@@ -134,7 +134,10 @@ class SVG_to_SK2_Translator(object):
 				return self._px_to_pt(sval) * self.coeff
 
 	def get_font_size(self, sval):
-		return self.get_size_pt(sval) / FONT_COEFF
+		val = self.get_size_pt(sval)
+		pts = [[0.0, 0.0], [0.0, val]]
+		pts = libgeom.apply_trafo_to_points(pts, self.trafo)
+		return libgeom.distance(*pts)
 
 	def get_viewbox(self, svbox):
 		vbox = []
@@ -824,7 +827,7 @@ class SVG_to_SK2_Translator(object):
 		if not svg_obj.childs: return
 		txt = svglib.parse_svg_text(svg_obj.childs)
 
-		x, y = libgeom.apply_trafo_to_point([x, y], self.trafo)
+		x, y = libgeom.apply_trafo_to_point([x, y], tr_level)
 		text = sk2_model.Text(cfg, parent, [x, y], txt, -1, tr, sk2_style)
 		text.stroke_trafo = [] + tr
 		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
