@@ -134,7 +134,7 @@ class SVG_to_SK2_Translator(object):
 				return self._px_to_pt(sval) * self.coeff
 
 	def get_font_size(self, sval):
-		val = self.get_size_pt(sval)
+		val = self.get_size_pt(sval) / self.coeff
 		pts = [[0.0, 0.0], [0.0, val]]
 		pts = libgeom.apply_trafo_to_points(pts, self.trafo)
 		return libgeom.distance(*pts)
@@ -368,8 +368,8 @@ class SVG_to_SK2_Translator(object):
 				font_size = self.get_font_size(style['font-size'])
 			except:pass
 			alignment = sk2_const.TEXT_ALIGN_LEFT
-			if style['text-align'] in SK2_TEXT_ALIGN:
-				alignment = SK2_TEXT_ALIGN[style['text-align']]
+			if style['text-anchor'] in SK2_TEXT_ALIGN:
+				alignment = SK2_TEXT_ALIGN[style['text-anchor']]
 			sk2_style[2] = [font_family, font_face, font_size,
 						alignment, [], True]
 
@@ -816,7 +816,7 @@ class SVG_to_SK2_Translator(object):
 		sk2_style = self.get_sk2_style(svg_obj, stl, True)
 		tr_level = get_svg_level_trafo(svg_obj, trafo)
 		inv_tr = libgeom.invert_trafo(self.trafo)
-		tr = libgeom.multiply_trafo(inv_tr, tr_level)
+		tr = libgeom.multiply_trafo(tr_level, inv_tr)
 
 		x = y = 0.0
 		if 'x' in svg_obj.attrs:
