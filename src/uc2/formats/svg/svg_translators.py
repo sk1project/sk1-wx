@@ -40,7 +40,7 @@ svg_const.SVG_FT:uc2const.UNIT_FT,
 }
 
 
-FONT_COEFF = 1.342
+FONT_COEFF = 0.938
 
 SK2_FILL_RULE = {
 	'nonzero':sk2_const.FILL_NONZERO,
@@ -717,6 +717,13 @@ class SVG_to_SK2_Translator(object):
 		curve = sk2_model.Curve(self.layer.config, self.layer, paths, tr, style)
 		self.layer.childs.append(curve)
 
+	def _point(self, point, trafo=None):
+		if not trafo: trafo = [] + self.trafo
+		style = [[], self.layer.config.default_stroke, [], []]
+		rect = sk2_model.Rectangle(self.layer.config, self.layer, point + [1.0, 1.0],
+								trafo, style=style)
+		self.layer.childs.append(rect)
+
 	def translate_polyline(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
 		sk2_style = self.get_sk2_style(svg_obj, style)
@@ -815,8 +822,12 @@ class SVG_to_SK2_Translator(object):
 		stl = self.get_level_style(svg_obj, style)
 		sk2_style = self.get_sk2_style(svg_obj, stl, True)
 		tr_level = get_svg_level_trafo(svg_obj, trafo)
+
 		inv_tr = libgeom.invert_trafo(self.trafo)
+		inv_tr[3] *= -1.0
 		tr = libgeom.multiply_trafo(tr_level, inv_tr)
+		tr = libgeom.multiply_trafo([FONT_COEFF, 0.0, 0.0,
+									- FONT_COEFF, 0.0, 0.0], tr)
 
 		x = y = 0.0
 		if 'x' in svg_obj.attrs:
@@ -827,8 +838,11 @@ class SVG_to_SK2_Translator(object):
 		if not svg_obj.childs: return
 		txt = svglib.parse_svg_text(svg_obj.childs)
 
-		x, y = libgeom.apply_trafo_to_point([x, y], tr_level)
-		text = sk2_model.Text(cfg, parent, [x, y], txt, -1, tr, sk2_style)
+		x1, y1 = libgeom.apply_trafo_to_point([x, y], tr_level)
+		x2, y2 = libgeom.apply_trafo_to_point([0.0, 0.0], tr)
+		tr = libgeom.multiply_trafo(tr, [1.0, 0.0, 0.0, 1.0, -x2, -y2])
+
+		text = sk2_model.Text(cfg, parent, [x1, y1], txt, -1, tr, sk2_style)
 		text.stroke_trafo = [] + tr
 		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
 			text.fill_trafo = [] + tr
