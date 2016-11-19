@@ -162,7 +162,6 @@ def parse_svg_path_cmds(pathcmds):
 
 	for cmd in cmds:
 		if cmd[0] in 'Mm':
-			print cpoint
 			if path: paths.append(path)
 			path = deepcopy(PATH_STUB)
 			rel_flag = cmd[0] == 'm'
