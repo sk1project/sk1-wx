@@ -423,4 +423,8 @@ def parse_svg_text(objs):
 			ret += obj.text.lstrip()
 		elif obj.childs:
 			ret += parse_svg_text(obj.childs)
+		if 'sodipodi:role' in obj.attrs and \
+		obj.attrs['sodipodi:role'].strip() == 'line':
+			ret += '\n'
+	if ret[-1] == '\n': ret = ret[:-1]
 	return ret
