@@ -62,6 +62,7 @@ SVG_STYLE = {
 	'font-family':'Sans',
 	'font-size':'12',
 	'text-align':'start',
+	'text-anchor':'start',
 }
 
 IMG_SIGS = ('data:image/jpeg;base64,', 'data:image/png;base64,')
