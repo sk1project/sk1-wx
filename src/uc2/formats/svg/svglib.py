@@ -68,7 +68,7 @@ def get_svg_trafo(strafo):
 	return trafo
 
 def get_svg_level_trafo(svg_obj, trafo):
-	tr = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+	tr = [] + libgeom.NORMAL_TRAFO
 	if 'transform' in svg_obj.attrs:
 		tr = get_svg_trafo(str(svg_obj.attrs['transform']))
 	tr = libgeom.multiply_trafo(tr, trafo)
