@@ -102,10 +102,19 @@ def parse_svg_color(sclr, alpha=1.0, current_color=''):
 	if sclr == 'currentColor' and current_color:
 		sclr = '' + current_color
 	if sclr[0] == '#':
+		if 'icc-color' in sclr:
+			vals = sclr.split('icc-color(')[1].replace(')', '').split(',')
+			if len(vals) == 5:
+				color_vals = []
+				try:
+					color_vals = map(lambda x:float(x), vals[1:])
+				except:pass
+				if color_vals and len(color_vals) == 4:
+					return [uc2const.COLOR_CMYK, color_vals, alpha, '']
 		sclr = sclr.split(' ')[0]
 		try:
 			vals = cms.hexcolor_to_rgb(sclr)
-			clr = ['RGB', vals, alpha, '']
+			clr = [uc2const.COLOR_RGB, vals, alpha, '']
 		except:pass
 	elif sclr[:4] == 'rgb(':
 		vals = sclr[4:].split(')')[0].split(',')
