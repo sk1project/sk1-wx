@@ -145,37 +145,6 @@ class SVG_to_SK2_Translator(object):
 			vbox.append(self.get_size_pt(item))
 		return vbox
 
-	def parse_stops(self, stops):
-		sk2_stops = []
-		for stop in stops:
-			if not stop.tag == 'stop': continue
-			offset = stop.attrs['offset']
-			if offset[-1] == '%':offset = float(offset[:-1]) / 100.0
-			else: offset = float(offset)
-
-			alpha = 1.0
-			sclr = 'black'
-			if 'stop-opacity' in stop.attrs:
-				alpha = float(stop.attrs['stop-opacity'])
-			if 'stop-color' in stop.attrs:
-				sclr = stop.attrs['stop-color']
-
-			if 'style' in stop.attrs:
-				style = {}
-				stls = str(stop.attrs['style']).split(';')
-				for stl in stls:
-					vals = stl.split(':')
-					if len(vals) == 2:
-						style[vals[0]] = vals[1]
-				if 'stop-opacity' in style:
-					alpha = float(style['stop-opacity'])
-				if 'stop-color' in style:
-					sclr = style['stop-color']
-
-			clr = parse_svg_color(sclr, alpha, self.current_color)
-			sk2_stops.append([offset, clr])
-		return sk2_stops
-
 	def parse_def(self, svg_obj):
 		if 'color' in svg_obj.attrs:
 			if svg_obj.attrs['color'] == 'inherit':pass
@@ -295,19 +264,26 @@ class SVG_to_SK2_Translator(object):
 			fillrule = SK2_FILL_RULE[style['fill-rule']]
 			fill = style['fill']
 			alpha = float(style['fill-opacity']) * float(style['opacity'])
+
+			def_id = ''
 			if len(fill) > 3 and fill[:3] == 'url':
-				def_id = fill[5:-1]
-				if def_id in self.defs:
-					sk2_style[0] = self.parse_def(self.defs[def_id])
-					if sk2_style[0]:
-						sk2_style[0][0] = fillrule
-						if sk2_style[0][1] == sk2_const.FILL_GRADIENT:
-							for stop in sk2_style[0][2][2]:
-								color = stop[1]
-								color[2] *= alpha
-					if 'grad-trafo' in self.style_opts:
-						tr = [] + self.style_opts['grad-trafo']
-						self.style_opts['fill-grad-trafo'] = tr
+				val = fill[5:].split(')')[0]
+				if val in self.defs: def_id = val
+			elif fill[0] == '#' and fill[1:] in self.defs:
+				def_id = fill[1:]
+
+			if def_id:
+				print 'fill', def_id
+				sk2_style[0] = self.parse_def(self.defs[def_id])
+				if sk2_style[0]:
+					sk2_style[0][0] = fillrule
+					if sk2_style[0][1] == sk2_const.FILL_GRADIENT:
+						for stop in sk2_style[0][2][2]:
+							color = stop[1]
+							color[2] *= alpha
+				if 'grad-trafo' in self.style_opts:
+					tr = [] + self.style_opts['grad-trafo']
+					self.style_opts['fill-grad-trafo'] = tr
 			else:
 				clr = parse_svg_color(fill, alpha, self.current_color)
 				if clr:
@@ -335,24 +311,30 @@ class SVG_to_SK2_Translator(object):
 				for item in dash: sk2_dash.append(item / stroke_width)
 				dash = sk2_dash
 
+			def_id = ''
 			if len(stroke) > 3 and stroke[:3] == 'url':
-				def_id = stroke[5:-1]
-				if def_id in self.defs:
-					stroke_fill = self.parse_def(self.defs[def_id])
-					if stroke_fill:
-						stroke_fill[0] = sk2_const.FILL_EVENODD
-						if stroke_fill[1] == sk2_const.FILL_GRADIENT:
-							for stop in stroke_fill[2][2]:
-								color = stop[1]
-								color[2] *= alpha
-						self.style_opts['stroke-fill'] = stroke_fill
-						clr = parse_svg_color('black')
-						sk2_style[1] = [stroke_rule, stroke_width, clr, dash,
-							stroke_linecap, stroke_linejoin,
-							stroke_miterlimit, 0, 1, []]
-						if 'grad-trafo' in self.style_opts:
-							tr = [] + self.style_opts['grad-trafo']
-							self.style_opts['stroke-grad-trafo'] = tr
+				val = stroke[5:].split(')')[0]
+				if val in self.defs: def_id = val
+			elif stroke[0] == '#' and stroke[1:] in self.defs:
+				def_id = stroke[1:]
+
+			if def_id:
+				print 'stroke', def_id
+				stroke_fill = self.parse_def(self.defs[def_id])
+				if stroke_fill:
+					stroke_fill[0] = sk2_const.FILL_EVENODD
+					if stroke_fill[1] == sk2_const.FILL_GRADIENT:
+						for stop in stroke_fill[2][2]:
+							color = stop[1]
+							color[2] *= alpha
+					self.style_opts['stroke-fill'] = stroke_fill
+					clr = parse_svg_color('black')
+					sk2_style[1] = [stroke_rule, stroke_width, clr, dash,
+						stroke_linecap, stroke_linejoin,
+						stroke_miterlimit, 0, 1, []]
+					if 'grad-trafo' in self.style_opts:
+						tr = [] + self.style_opts['grad-trafo']
+						self.style_opts['stroke-grad-trafo'] = tr
 			else:
 				clr = parse_svg_color(stroke, alpha, self.current_color)
 				if clr:
