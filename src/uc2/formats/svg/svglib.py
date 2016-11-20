@@ -435,5 +435,5 @@ def parse_svg_text(objs):
 		if 'sodipodi:role' in obj.attrs and \
 		obj.attrs['sodipodi:role'].strip() == 'line':
 			ret += '\n'
-	if ret[-1] == '\n': ret = ret[:-1]
+	if ret and ret[-1] == '\n': ret = ret[:-1]
 	return ret
