@@ -262,7 +262,7 @@ class SVG_to_SK2_Translator(object):
 		# fill parsing
 		if not style['fill'] == 'none':
 			fillrule = SK2_FILL_RULE[style['fill-rule']]
-			fill = style['fill']
+			fill = style['fill'].replace('"', '')
 			alpha = float(style['fill-opacity']) * float(style['opacity'])
 
 			def_id = ''
@@ -290,7 +290,7 @@ class SVG_to_SK2_Translator(object):
 
 		# stroke parsing
 		if not style['stroke'] == 'none':
-			stroke = style['stroke']
+			stroke = style['stroke'].replace('"', '')
 			stroke_rule = sk2_const.STROKE_MIDDLE
 			stroke_width = self.get_size_pt(style['stroke-width'])
 			stroke_linecap = SK2_LINE_CAP[style['stroke-linecap']]
