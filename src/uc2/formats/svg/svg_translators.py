@@ -600,6 +600,15 @@ class SVG_to_SK2_Translator(object):
 		if group.childs:
 			parent.childs.append(group)
 
+	def append_obj(self, parent, obj, trafo , style):
+		obj.stroke_trafo = [] + trafo
+		if style[0] and not style[0][1] == sk2_const.FILL_SOLID:
+			obj.fill_trafo = [] + trafo
+			if 'fill-grad-trafo' in self.style_opts:
+				tr0 = self.style_opts['fill-grad-trafo']
+				obj.fill_trafo = libgeom.multiply_trafo(tr0, trafo)
+		parent.childs.append(obj)
+
 	def translate_rect(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
 		sk2_style = self.get_sk2_style(svg_obj, style)
@@ -644,14 +653,7 @@ class SVG_to_SK2_Translator(object):
 
 		rect = sk2_model.Rectangle(cfg, parent, [x, y, w, h], tr,
 								sk2_style, corners)
-		rect.stroke_trafo = [] + tr
-		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
-			rect.fill_trafo = [] + tr
-			if 'fill-grad-trafo' in self.style_opts:
-				tr0 = self.style_opts['fill-grad-trafo']
-				rect.fill_trafo = libgeom.multiply_trafo(tr0, tr)
-
-		parent.childs.append(rect)
+		self.append_obj(parent, rect, tr, sk2_style)
 
 	def translate_ellipse(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
@@ -672,13 +674,7 @@ class SVG_to_SK2_Translator(object):
 
 		ellipse = sk2_model.Circle(cfg, parent, rect, style=sk2_style)
 		ellipse.trafo = libgeom.multiply_trafo(ellipse.trafo, tr)
-		ellipse.stroke_trafo = [] + tr
-		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
-			ellipse.fill_trafo = [] + tr
-			if 'fill-grad-trafo' in self.style_opts:
-				tr0 = self.style_opts['fill-grad-trafo']
-				ellipse.fill_trafo = libgeom.multiply_trafo(tr0, tr)
-		parent.childs.append(ellipse)
+		self.append_obj(parent, ellipse, tr, sk2_style)
 
 	def translate_circle(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
@@ -697,13 +693,7 @@ class SVG_to_SK2_Translator(object):
 
 		ellipse = sk2_model.Circle(cfg, parent, rect, style=sk2_style)
 		ellipse.trafo = libgeom.multiply_trafo(ellipse.trafo, tr)
-		ellipse.stroke_trafo = [] + tr
-		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
-			ellipse.fill_trafo = [] + tr
-			if 'fill-grad-trafo' in self.style_opts:
-				tr0 = self.style_opts['fill-grad-trafo']
-				ellipse.fill_trafo = libgeom.multiply_trafo(tr0, tr)
-		parent.childs.append(ellipse)
+		self.append_obj(parent, ellipse, tr, sk2_style)
 
 	def translate_line(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
@@ -723,13 +713,7 @@ class SVG_to_SK2_Translator(object):
 		paths = [[[x1, y1], [[x2, y2], ], sk2_const.CURVE_OPENED], ]
 
 		curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
-		curve.stroke_trafo = [] + tr
-		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
-			curve.fill_trafo = [] + tr
-			if 'fill-grad-trafo' in self.style_opts:
-				tr0 = self.style_opts['fill-grad-trafo']
-				curve.fill_trafo = libgeom.multiply_trafo(tr0, tr)
-		parent.childs.append(curve)
+		self.append_obj(parent, curve, tr, sk2_style)
 
 	def _line(self, point1, point2):
 		paths = [[[] + point1, [[] + point2, ], sk2_const.CURVE_OPENED], ]
@@ -756,13 +740,7 @@ class SVG_to_SK2_Translator(object):
 		paths = [[points[0], points[1:], sk2_const.CURVE_OPENED], ]
 
 		curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
-		curve.stroke_trafo = [] + tr
-		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
-			curve.fill_trafo = [] + tr
-			if 'fill-grad-trafo' in self.style_opts:
-				tr0 = self.style_opts['fill-grad-trafo']
-				curve.fill_trafo = libgeom.multiply_trafo(tr0, tr)
-		parent.childs.append(curve)
+		self.append_obj(parent, curve, tr, sk2_style)
 
 	def translate_polygon(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
@@ -776,13 +754,7 @@ class SVG_to_SK2_Translator(object):
 		paths = [[points[0], points[1:], sk2_const.CURVE_CLOSED], ]
 
 		curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
-		curve.stroke_trafo = [] + tr
-		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
-			curve.fill_trafo = [] + tr
-			if 'fill-grad-trafo' in self.style_opts:
-				tr0 = self.style_opts['fill-grad-trafo']
-				curve.fill_trafo = libgeom.multiply_trafo(tr0, tr)
-		parent.childs.append(curve)
+		self.append_obj(parent, curve, tr, sk2_style)
 
 	def translate_path(self, parent, svg_obj, trafo, style):
 		curve = None
@@ -807,26 +779,14 @@ class SVG_to_SK2_Translator(object):
 			curve = sk2_model.Circle(cfg, parent, rect, angle1, angle2,
 									circle_type, sk2_style)
 			curve.trafo = libgeom.multiply_trafo(curve.trafo, tr)
-			curve.stroke_trafo = [] + tr
-			if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
-				curve.fill_trafo = [] + tr
-				if 'fill-grad-trafo' in self.style_opts:
-					tr0 = self.style_opts['fill-grad-trafo']
-					curve.fill_trafo = libgeom.multiply_trafo(tr0, tr)
+			self.append_obj(parent, curve, tr, sk2_style)
 		elif 'd' in svg_obj.attrs:
 
 			paths = svglib.parse_svg_path_cmds(svg_obj.attrs['d'])
 			if not paths: return
 
 			curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
-			curve.stroke_trafo = [] + tr
-			if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
-				curve.fill_trafo = [] + tr
-				if 'fill-grad-trafo' in self.style_opts:
-					tr0 = self.style_opts['fill-grad-trafo']
-					curve.fill_trafo = libgeom.multiply_trafo(tr0, tr)
-
-		if curve: parent.childs.append(curve)
+			self.append_obj(parent, curve, tr, sk2_style)
 
 	def translate_use(self, parent, svg_obj, trafo, style):
 		tr = get_svg_level_trafo(svg_obj, trafo)
@@ -858,19 +818,14 @@ class SVG_to_SK2_Translator(object):
 
 		if not svg_obj.childs: return
 		txt = svglib.parse_svg_text(svg_obj.childs)
+		if not txt: return
 
 		x1, y1 = libgeom.apply_trafo_to_point([x, y], tr_level)
 		x2, y2 = libgeom.apply_trafo_to_point([0.0, 0.0], tr)
 		tr = libgeom.multiply_trafo(tr, [1.0, 0.0, 0.0, 1.0, -x2, -y2])
 
 		text = sk2_model.Text(cfg, parent, [x1, y1], txt, -1, tr, sk2_style)
-		text.stroke_trafo = [] + tr
-		if sk2_style[0] and not sk2_style[0][1] == sk2_const.FILL_SOLID:
-			text.fill_trafo = [] + tr
-			if 'fill-grad-trafo' in self.style_opts:
-				tr0 = self.style_opts['fill-grad-trafo']
-				text.fill_trafo = libgeom.multiply_trafo(tr0, tr)
-		parent.childs.append(text)
+		self.append_obj(parent, text, tr, sk2_style)
 
 	def translate_image(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
