@@ -506,6 +506,8 @@ class SVG_to_SK2_Translator(object):
 			elif svg_obj.tag == 'radialGradient':
 				if 'id' in svg_obj.attrs:
 					self.defs[svg_obj.attrs['id']] = svg_obj
+			elif svg_obj.tag == 'style':
+				self.translate_style(svg_obj)
 		except:
 			print 'tag', svg_obj.tag
 			if 'id' in svg_obj.attrs: print 'id', svg_obj.attrs['id']
