@@ -273,7 +273,6 @@ class SVG_to_SK2_Translator(object):
 				def_id = fill[1:]
 
 			if def_id:
-				print 'fill', def_id
 				sk2_style[0] = self.parse_def(self.defs[def_id])
 				if sk2_style[0]:
 					sk2_style[0][0] = fillrule
@@ -319,7 +318,6 @@ class SVG_to_SK2_Translator(object):
 				def_id = stroke[1:]
 
 			if def_id:
-				print 'stroke', def_id
 				stroke_fill = self.parse_def(self.defs[def_id])
 				if stroke_fill:
 					stroke_fill[0] = sk2_const.FILL_EVENODD
