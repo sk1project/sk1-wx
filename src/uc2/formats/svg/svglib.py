@@ -419,7 +419,7 @@ def parse_svg_stops(stops, current_color):
 			if 'stop-opacity' in style:
 				alpha = float(style['stop-opacity'])
 			if 'stop-color' in style:
-				sclr = style['stop-color']
+				sclr = style['stop-color'].strip()
 
 		clr = parse_svg_color(sclr, alpha, current_color)
 		sk2_stops.append([offset, clr])
