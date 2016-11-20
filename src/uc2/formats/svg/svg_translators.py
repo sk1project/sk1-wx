@@ -261,7 +261,9 @@ class SVG_to_SK2_Translator(object):
 		style = deepcopy(style)
 		for item in svg_const.SVG_STYLE.keys():
 			if item in svg_obj.attrs:
-				style['' + item] = '' + str(svg_obj.attrs[item])
+				val = '' + str(svg_obj.attrs[item])
+				if not val == 'inherit':
+					style['' + item] = val
 		if 'class' in svg_obj.attrs:
 			class_names = str(svg_obj.attrs['class']).strip().split(' ')
 			for class_name in class_names:
@@ -416,7 +418,7 @@ class SVG_to_SK2_Translator(object):
 					return raw_image
 				except:pass
 		elif self.svg_doc.doc_file:
-			file_dir = os.path.dirname(self.svg_doc.doc)
+			file_dir = os.path.dirname(self.svg_doc.doc_file)
 			image_path = os.path.join(file_dir, link)
 			image_path = os.path.abspath(image_path)
 			if os.path.lexists(image_path):
