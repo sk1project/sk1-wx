@@ -508,6 +508,8 @@ class SVG_to_SK2_Translator(object):
 					self.defs[svg_obj.attrs['id']] = svg_obj
 			elif svg_obj.tag == 'style':
 				self.translate_style(svg_obj)
+			elif svg_obj.childs:
+				self.translate_unknown(parent, svg_obj, trafo, style)
 		except:
 			print 'tag', svg_obj.tag
 			if 'id' in svg_obj.attrs: print 'id', svg_obj.attrs['id']
@@ -588,6 +590,15 @@ class SVG_to_SK2_Translator(object):
 				self.translate_obj(group, item, tr, stl)
 			if group.childs:
 				parent.childs.append(group)
+
+	def translate_unknown(self, parent, svg_obj, trafo, style):
+		group = sk2_model.Group(parent.config, parent)
+		tr = get_svg_level_trafo(svg_obj, trafo)
+		stl = self.get_level_style(svg_obj, style)
+		for item in svg_obj.childs:
+			self.translate_obj(group, item, tr, stl)
+		if group.childs:
+			parent.childs.append(group)
 
 	def translate_rect(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
