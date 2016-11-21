@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2015 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
 
@@ -61,11 +61,11 @@ def mult_points(p0, p1):
 def cr_points(p0, p1):
 	return p0[0] * p1[1] - p0[1] * p1[0]
 
-def is_equal_points(p1, p0):
-	ret = False
-	if p1[0] == p0[0] and p1[1] == p0[1]:
-		ret = True
-	return ret
+def is_equal_points(p0, p1, precision=None):
+	if precision is None:
+		return p1[0] == p0[0] and p1[1] == p0[1]
+	return round(p0[0], precision) == round(p1[0], precision) and \
+			round(p0[1], precision) == round(p1[1], precision)
 
 def distance(p0, p1=[0.0, 0.0]):
 	x0, y0 = p0
