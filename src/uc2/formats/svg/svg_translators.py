@@ -600,14 +600,30 @@ class SVG_to_SK2_Translator(object):
 		if group.childs:
 			parent.childs.append(group)
 
-	def append_obj(self, parent, obj, trafo , style):
+	def append_obj(self, parent, obj, trafo, style):
 		obj.stroke_trafo = [] + trafo
-		if style[0] and not style[0][1] == sk2_const.FILL_SOLID:
+		if style[0] and style[0][1] == sk2_const.FILL_GRADIENT:
 			obj.fill_trafo = [] + trafo
 			if 'fill-grad-trafo' in self.style_opts:
 				tr0 = self.style_opts['fill-grad-trafo']
 				obj.fill_trafo = libgeom.multiply_trafo(tr0, trafo)
 		parent.childs.append(obj)
+
+		if style[1] and 'stroke-fill' in self.style_opts:
+			obj.update()
+			stroke_obj = obj.to_curve()
+			pths = libgeom.apply_trafo_to_paths(stroke_obj.get_initial_paths(),
+									stroke_obj.trafo)
+			pths = libgeom.stroke_to_curve(pths, obj.style[1])
+			obj_style = [self.style_opts['stroke-fill'], [], [], []]
+			curve = sk2_model.Curve(parent.config, parent, pths,
+								style=obj_style)
+			obj.style[1] = []
+			curve.fill_trafo = [] + trafo
+			if 'stroke-grad-trafo' in self.style_opts:
+				tr0 = self.style_opts['stroke-grad-trafo']
+				curve.fill_trafo = libgeom.multiply_trafo(tr0, trafo)
+			parent.childs.append(curve)
 
 	def translate_rect(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
