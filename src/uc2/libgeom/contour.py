@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2016 by Igor E. Novikov
-#	Copyright (C) 2003 Simon Budig  <simon@gimp.org>
+# 	Copyright (C) 2016 by Igor E. Novikov
+# 	Copyright (C) 2003 Simon Budig  <simon@gimp.org>
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
 from copy import deepcopy
@@ -438,7 +438,7 @@ def make_path(segments, close=1):
 	points = new_path[1]
 	for seg in segments:
 		if seg[0] != last_point:
-			print "Need to fix up! Should not happen."
+			# print "Need to fix up! Should not happen."
 			points.append(deepcopy(seg[0]))
 
 		if len (seg) == 2:
@@ -462,7 +462,6 @@ def make_path(segments, close=1):
 #--- MODULE INTERFACE
 
 def stroke_to_curve(paths, stroke_style):
-#	print paths
 	if not stroke_style: return []
 	width = stroke_style[1]
 	dash_list = stroke_style[3]
