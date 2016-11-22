@@ -350,7 +350,7 @@ class SVG_to_SK2_Translator(object):
 			if def_id:
 				stroke_fill = self.parse_def(self.defs[def_id])
 				if stroke_fill:
-					stroke_fill[0] = sk2_const.FILL_EVENODD
+					stroke_fill[0] = sk2_const.FILL_NONZERO
 					if stroke_fill[1] == sk2_const.FILL_GRADIENT:
 						for stop in stroke_fill[2][2]:
 							color = stop[1]
