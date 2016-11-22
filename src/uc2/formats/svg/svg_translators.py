@@ -597,6 +597,10 @@ class SVG_to_SK2_Translator(object):
 			self.classes[class_.strip()] = style
 
 	def translate_g(self, parent, svg_obj, trafo, style):
+		tr = get_svg_level_trafo(svg_obj, trafo)
+		stl = self.get_level_style(svg_obj, style)
+		container = None
+
 		if 'inkscape:groupmode' in svg_obj.attrs:
 			if svg_obj.attrs['inkscape:groupmode'] == 'layer':
 				name = 'Layer %d' % len(self.page.childs)
@@ -606,20 +610,30 @@ class SVG_to_SK2_Translator(object):
 				self.page.childs.append(layer)
 				if check_svg_attr(svg_obj, 'sodipodi:insensitive', 'true'):
 					layer.properties[1] = 0
-				tr = get_svg_level_trafo(svg_obj, trafo)
-				stl = self.get_level_style(svg_obj, style)
 				if 'display' in stl and stl['display'] == 'none':
 					layer.properties[0] = 0
 				for item in svg_obj.childs:
 					self.translate_obj(layer, item, tr, stl)
-		else:
-			group = sk2_model.Group(parent.config, parent)
-			tr = get_svg_level_trafo(svg_obj, trafo)
-			stl = self.get_level_style(svg_obj, style)
-			for item in svg_obj.childs:
-				self.translate_obj(group, item, tr, stl)
-			if group.childs:
-				parent.childs.append(group)
+				return
+
+		elif 'clip-path' in svg_obj.attrs:
+			clip_id = svg_obj.attrs['clip-path'][5:-1].strip()
+			if clip_id in self.defs:
+				container = self.parse_clippath(self.defs[clip_id])
+			print container
+			print container.childs
+			if container:
+				for item in svg_obj.childs:
+					self.translate_obj(container, item, tr, stl)
+				if len(container.childs) > 1:
+					parent.childs.append(container)
+					return
+
+		group = sk2_model.Group(parent.config, parent)
+		for item in svg_obj.childs:
+			self.translate_obj(group, item, tr, stl)
+		if group.childs:
+			parent.childs.append(group)
 
 	def translate_unknown(self, parent, svg_obj, trafo, style):
 		group = sk2_model.Group(parent.config, parent)
@@ -630,15 +644,15 @@ class SVG_to_SK2_Translator(object):
 		if group.childs:
 			parent.childs.append(group)
 
-	def append_obj(self, parent, obj, trafo, style):
+	def append_obj(self, parent, svg_obj, obj, trafo, style):
 		obj.stroke_trafo = [] + trafo
 		if style[0] and style[0][1] == sk2_const.FILL_GRADIENT:
 			obj.fill_trafo = [] + trafo
 			if 'fill-grad-trafo' in self.style_opts:
 				tr0 = self.style_opts['fill-grad-trafo']
 				obj.fill_trafo = libgeom.multiply_trafo(tr0, trafo)
-		parent.childs.append(obj)
 
+		curve = None
 		if style[1] and 'stroke-fill' in self.style_opts:
 			obj.update()
 			stroke_obj = obj.to_curve()
@@ -653,7 +667,20 @@ class SVG_to_SK2_Translator(object):
 			if 'stroke-grad-trafo' in self.style_opts:
 				tr0 = self.style_opts['stroke-grad-trafo']
 				curve.fill_trafo = libgeom.multiply_trafo(tr0, trafo)
-			parent.childs.append(curve)
+
+		container = None
+		if 'clip-path' in svg_obj.attrs:
+			clip_id = svg_obj.attrs['clip-path'][5:-1].strip()
+			if clip_id in self.defs:
+				container = self.parse_clippath(self.defs[clip_id])
+
+		if container:
+			container.childs.append(obj)
+			if curve:container.childs.append(curve)
+			parent.childs.append(container)
+		else:
+			parent.childs.append(obj)
+			if curve:parent.childs.append(curve)
 
 	def translate_rect(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
@@ -699,7 +726,7 @@ class SVG_to_SK2_Translator(object):
 
 		rect = sk2_model.Rectangle(cfg, parent, [x, y, w, h], tr,
 								sk2_style, corners)
-		self.append_obj(parent, rect, tr, sk2_style)
+		self.append_obj(parent, svg_obj, rect, tr, sk2_style)
 
 	def translate_ellipse(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
@@ -720,7 +747,7 @@ class SVG_to_SK2_Translator(object):
 
 		ellipse = sk2_model.Circle(cfg, parent, rect, style=sk2_style)
 		ellipse.trafo = libgeom.multiply_trafo(ellipse.trafo, tr)
-		self.append_obj(parent, ellipse, tr, sk2_style)
+		self.append_obj(parent, svg_obj, ellipse, tr, sk2_style)
 
 	def translate_circle(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
@@ -739,7 +766,7 @@ class SVG_to_SK2_Translator(object):
 
 		ellipse = sk2_model.Circle(cfg, parent, rect, style=sk2_style)
 		ellipse.trafo = libgeom.multiply_trafo(ellipse.trafo, tr)
-		self.append_obj(parent, ellipse, tr, sk2_style)
+		self.append_obj(parent, svg_obj, ellipse, tr, sk2_style)
 
 	def translate_line(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
@@ -759,7 +786,7 @@ class SVG_to_SK2_Translator(object):
 		paths = [[[x1, y1], [[x2, y2], ], sk2_const.CURVE_OPENED], ]
 
 		curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
-		self.append_obj(parent, curve, tr, sk2_style)
+		self.append_obj(parent, svg_obj, curve, tr, sk2_style)
 
 	def _line(self, point1, point2):
 		paths = [[[] + point1, [[] + point2, ], sk2_const.CURVE_OPENED], ]
@@ -786,7 +813,7 @@ class SVG_to_SK2_Translator(object):
 		paths = [[points[0], points[1:], sk2_const.CURVE_OPENED], ]
 
 		curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
-		self.append_obj(parent, curve, tr, sk2_style)
+		self.append_obj(parent, svg_obj, curve, tr, sk2_style)
 
 	def translate_polygon(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
@@ -800,7 +827,7 @@ class SVG_to_SK2_Translator(object):
 		paths = [[points[0], points[1:], sk2_const.CURVE_CLOSED], ]
 
 		curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
-		self.append_obj(parent, curve, tr, sk2_style)
+		self.append_obj(parent, svg_obj, curve, tr, sk2_style)
 
 	def translate_path(self, parent, svg_obj, trafo, style):
 		curve = None
@@ -825,14 +852,14 @@ class SVG_to_SK2_Translator(object):
 			curve = sk2_model.Circle(cfg, parent, rect, angle1, angle2,
 									circle_type, sk2_style)
 			curve.trafo = libgeom.multiply_trafo(curve.trafo, tr)
-			self.append_obj(parent, curve, tr, sk2_style)
+			self.append_obj(parent, svg_obj, curve, tr, sk2_style)
 		elif 'd' in svg_obj.attrs:
 
 			paths = svglib.parse_svg_path_cmds(svg_obj.attrs['d'])
 			if not paths: return
 
 			curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
-			self.append_obj(parent, curve, tr, sk2_style)
+			self.append_obj(parent, svg_obj, curve, tr, sk2_style)
 
 	def translate_use(self, parent, svg_obj, trafo, style):
 		tr = get_svg_level_trafo(svg_obj, trafo)
@@ -871,7 +898,7 @@ class SVG_to_SK2_Translator(object):
 		tr = libgeom.multiply_trafo(tr, [1.0, 0.0, 0.0, 1.0, -x2, -y2])
 
 		text = sk2_model.Text(cfg, parent, [x1, y1], txt, -1, tr, sk2_style)
-		self.append_obj(parent, text, tr, sk2_style)
+		self.append_obj(parent, svg_obj, text, tr, sk2_style)
 
 	def translate_image(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
