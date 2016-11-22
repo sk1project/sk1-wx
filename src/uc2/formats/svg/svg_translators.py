@@ -620,8 +620,7 @@ class SVG_to_SK2_Translator(object):
 			clip_id = svg_obj.attrs['clip-path'][5:-1].strip()
 			if clip_id in self.defs:
 				container = self.parse_clippath(self.defs[clip_id])
-			print container
-			print container.childs
+
 			if container:
 				for item in svg_obj.childs:
 					self.translate_obj(container, item, tr, stl)
