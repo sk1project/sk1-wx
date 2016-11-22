@@ -945,7 +945,20 @@ class SVG_to_SK2_Translator(object):
 
 		libimg.set_image_data(self.sk2_doc.cms, pixmap, content)
 		pixmap.trafo = trafo
-		parent.childs.append(pixmap)
+
+		container = None
+		if 'clip-path' in svg_obj.attrs:
+			clip_id = svg_obj.attrs['clip-path'][5:-1].strip()
+			if clip_id in self.defs:
+				container = self.parse_clippath(self.defs[clip_id])
+				if container:
+					container.childs[0].trafo = [] + tr_level
+
+		if container:
+			container.childs.append(pixmap)
+			parent.childs.append(container)
+		else:
+			parent.childs.append(pixmap)
 
 
 class SK2_to_SVG_Translator(object):
