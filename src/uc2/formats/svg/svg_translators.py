@@ -223,6 +223,36 @@ class SVG_to_SK2_Translator(object):
 
 		return []
 
+	def parse_clippath(self, svg_obj):
+		if svg_obj.tag == 'clipPath' and svg_obj.childs:
+			container = sk2_model.Container(self.layer.config)
+			style = self.get_level_style(self.svg_mt, svg_const.SVG_STYLE)
+			for child in svg_obj.childs:
+				self.translate_obj(container, child, self.trafo, style)
+			if not container.childs: return None
+			paths = None
+			if len(container.childs) > 1:
+				curves = []
+				for item in container.childs:
+					item.update()
+					curve = item.to_curve()
+					pths = curve.get_initial_paths()
+					pths = libgeom.apply_trafo_to_paths(pths, curve.trafo)
+					curves.append(pths)
+				paths = curves[0]
+				for item in curves[1:]:
+					paths = libgeom.fuse_paths(paths, item)
+			else:
+				container.childs[0].update()
+				curve = container.childs[0].to_curve()
+				pths = curve.get_initial_paths()
+				paths = libgeom.apply_trafo_to_paths(pths, curve.trafo)
+			if not paths: return None
+			curve = sk2_model.Curve(container.config, container, paths)
+			container.childs = [curve, ]
+			return container
+		return None
+
 	def get_level_style(self, svg_obj, style):
 		if 'color' in svg_obj.attrs:
 			if svg_obj.attrs['color'] == 'inherit':pass
