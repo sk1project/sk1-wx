@@ -901,7 +901,7 @@ class SVG_to_SK2_Translator(object):
 		tr = libgeom.multiply_trafo(tr, [1.0, 0.0, 0.0, 1.0, -x2, -y2])
 
 		text = sk2_model.Text(cfg, parent, [x1, y1], txt, -1, tr, sk2_style)
-		self.append_obj(parent, svg_obj, text, tr, sk2_style)
+		self.append_obj(parent, svg_obj, text, tr_level, sk2_style)
 
 	def translate_image(self, parent, svg_obj, trafo, style):
 		cfg = parent.config
