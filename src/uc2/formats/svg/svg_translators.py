@@ -228,7 +228,8 @@ class SVG_to_SK2_Translator(object):
 			container = sk2_model.Container(self.layer.config)
 			style = self.get_level_style(self.svg_mt, svg_const.SVG_STYLE)
 			for child in svg_obj.childs:
-				self.translate_obj(container, child, self.trafo, style)
+				trafo = [] + libgeom.NORMAL_TRAFO
+				self.translate_obj(container, child, trafo, style)
 			if not container.childs: return None
 			paths = None
 			if len(container.childs) > 1:
@@ -622,6 +623,7 @@ class SVG_to_SK2_Translator(object):
 				container = self.parse_clippath(self.defs[clip_id])
 
 			if container:
+				container.childs[0].trafo = [] + tr
 				for item in svg_obj.childs:
 					self.translate_obj(container, item, tr, stl)
 				if len(container.childs) > 1:
@@ -672,6 +674,8 @@ class SVG_to_SK2_Translator(object):
 			clip_id = svg_obj.attrs['clip-path'][5:-1].strip()
 			if clip_id in self.defs:
 				container = self.parse_clippath(self.defs[clip_id])
+				if container:
+					container.childs[0].trafo = [] + trafo
 
 		if container:
 			container.childs.append(obj)
