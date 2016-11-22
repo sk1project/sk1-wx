@@ -33,12 +33,13 @@ def check_svg_attr(svg_obj, attr, value=None):
 		return True
 	return False
 
-# TODO: implement skew trafo
-def trafo_skewX(*args):
-	return [] + libgeom.NORMAL_TRAFO
+def trafo_skewX(grad=0.0):
+	angle = math.pi * grad / 180.0
+	return [1.0, 0.0, math.tan(angle), 1.0, 0.0, 0.0]
 
-def trafo_skewY(*args):
-	return [] + libgeom.NORMAL_TRAFO
+def trafo_skewY(grad=0.0):
+	angle = math.pi * grad / 180.0
+	return [1.0, math.tan(angle), 0.0, 1.0, 0.0, 0.0]
 
 def trafo_rotate(grad, cx=0.0, cy=0.0):
 	return libgeom.trafo_rotate_grad(grad, cx, cy)
