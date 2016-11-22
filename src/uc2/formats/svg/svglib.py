@@ -182,7 +182,10 @@ def parse_svg_path_cmds(pathcmds):
 				else: path[1].append(point)
 				cpoint = point
 		elif cmd[0] in 'Zz':
-			path[1].append([] + path[0])
+			p0 = [] + base_point(cpoint)
+			p1 = [] + path[0]
+			if not libgeom.is_equal_points(p0, p1, 8):
+				path[1].append([] + path[0])
 			path[2] = sk2_const.CURVE_CLOSED
 			cpoint = [] + path[0]
 		elif cmd[0] in 'Cc':
