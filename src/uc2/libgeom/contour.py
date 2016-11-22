@@ -199,6 +199,10 @@ def get_join_segment(startpoint, endpoint, radius, jointype,
 		if d == [0, 0]: return []
 
 		o = normalize([d[1], -d[0]])
+
+		if radius < length(d):
+			return [startpoint, endpoint]
+
 		h = math.sqrt(radius ** 2 - length(d) ** 2)
 
 		h2 = length(d) ** 2 / h
@@ -219,6 +223,9 @@ def get_join_segment(startpoint, endpoint, radius, jointype,
 		if d == [0, 0]: return []
 
 		o = mult_point(normalize([d[1], -d[0]]), radius)
+
+		if radius < length(d):
+			return [startpoint, endpoint]
 
 		h = math.sqrt(radius ** 2 - length(d) ** 2) / radius
 
