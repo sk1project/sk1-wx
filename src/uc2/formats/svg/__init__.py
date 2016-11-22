@@ -17,7 +17,7 @@
 
 import os
 import sys
-import xml.etree.cElementTree as et
+from xml.etree import cElementTree
 
 from uc2 import _, events, msgconst, uc2const
 from uc2.formats.svg.svg_presenter import SVG_Presenter
@@ -53,9 +53,9 @@ def check_svg(path):
 	tag = None
 	with open(path, "r") as f:
 		try:
-			for event, el in et.iterparse(f, ('start',)):
+			for event, el in cElementTree.iterparse(f, ('start',)):
 				tag = el.tag
 				break
-		except et.ParseError:
+		except cElementTree.ParseError:
 			pass
 	return tag == '{http://www.w3.org/2000/svg}svg'
