@@ -16,17 +16,13 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from copy import deepcopy
-from uc2.formats.xml_.xml_model import XMLObject
 from uc2.formats.svg import svg_const
-
-def create_xmlobj(tag, attrs={}):
-	obj = XMLObject(tag)
-	obj.attrs = attrs
-	return obj
+from uc2.formats.svg.svglib import create_xmlobj, create_nl
 
 def create_new_svg(config):
 	doc = create_xmlobj('svg', deepcopy(svg_const.SVG_ATTRS))
 	defs = create_xmlobj('defs', {'id':'defs1'})
+	doc.childs.append(create_nl())
 	doc.childs.append(defs)
 	return doc
 
