@@ -1096,8 +1096,18 @@ class SK2_to_SVG_Translator(object):
 	def set_stroke(self, svg_style, obj):
 		if not obj.style[1]:return
 		# Stroke width
-		if not obj.style[1][1] == 1.0:
-			svg_style['stroke-width'] = str(obj.style[1][1])
+		if obj.style[1][8]:
+			stroke_trafo = obj.stroke_trafo
+			if not stroke_trafo:
+				stroke_trafo = [] + libgeom.NORMAL_TRAFO
+			points = [[0.0, 0.0], [1.0, 0.0]]
+			points = libgeom.apply_trafo_to_points(points, obj.stroke_trafo)
+			coef = libgeom.distance(*points)
+			line_width = obj.style[1][1] * coef
+			svg_style['stroke-width'] = str(round(line_width, 4))
+		else:
+			if not obj.style[1][1] == 1.0:
+				svg_style['stroke-width'] = str(round(obj.style[1][1], 4))
 		# Stroke color
 		clr = self.sk2_doc.cms.get_rgb_color(obj.style[1][2])
 		svg_style['stroke'] = cms.rgb_to_hexcolor(clr[1])
@@ -1111,7 +1121,7 @@ class SK2_to_SVG_Translator(object):
 		join = '' + SVG_LINE_JOIN[obj.style[1][5]]
 		if not join == 'miter':svg_style['stroke-linejoin'] = join
 		# Miter limit
-		svg_style['stroke-miterlimit'] = str(obj.style[1][5])
+		svg_style['stroke-miterlimit'] = str(round(obj.style[1][5], 4))
 
 	def set_fill(self, svg_style, obj):
 		svg_style['fill'] = 'none'
