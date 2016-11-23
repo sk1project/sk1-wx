@@ -21,7 +21,7 @@ from cStringIO import StringIO
 from PIL import Image
 from base64 import b64decode
 
-from uc2 import uc2const, libgeom, libpango, libimg
+from uc2 import uc2const, libgeom, libpango, libimg, cms
 from uc2.formats.sk2 import sk2_model, sk2_const
 from uc2.formats.svg import svg_const, svglib
 from uc2.formats.svg.svglib import get_svg_trafo, check_svg_attr, \
@@ -963,6 +963,149 @@ class SVG_to_SK2_Translator(object):
 			parent.childs.append(pixmap)
 
 
+SVG_FILL_RULE = {
+	sk2_const.FILL_NONZERO:'nonzero',
+	sk2_const.FILL_EVENODD:'evenodd',
+}
+
+SVG_LINE_JOIN = {
+	sk2_const.JOIN_MITER:'miter',
+	sk2_const.JOIN_ROUND:'round',
+	sk2_const.JOIN_BEVEL:'bevel',
+}
+
+SVG_LINE_CAP = {
+	sk2_const.CAP_BUTT:'butt',
+	sk2_const.CAP_ROUND:'round',
+	sk2_const.CAP_SQUARE:'square',
+}
+
 class SK2_to_SVG_Translator(object):
 
-	def translate(self, sk2_doc, svg_doc):pass
+	dx = dy = page_dx = 0.0
+	ident_level = -1
+
+	def translate(self, sk2_doc, svg_doc):
+		self.svg_doc = svg_doc
+		self.sk2_doc = sk2_doc
+		self.svg_mt = svg_doc.model
+		self.sk2_mt = sk2_doc.model
+		self.sk2_mtds = sk2_doc.methods
+		self.svg_mtds = svg_doc.methods
+		self.trafo = [1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
+		for item in self.sk2_mt.childs:
+			if item.cid == sk2_model.PAGES:
+				w, h = item.childs[0].page_format[1]
+				self.svg_mt.attrs['width'] = str(w)
+				self.svg_mt.attrs['height'] = str(h)
+				self.svg_mt.attrs['viewBox'] = '0 0 %s %s' % (str(w), str(h))
+				self.dx = w / 2.0
+				self.dy = h / 2.0
+				self.trafo[4] = self.dx
+				self.trafo[5] = self.dy
+				self.page_dx = 0.0
+				for page in item.childs:
+					self.translate_page(self.svg_mt, page)
+		self.svg_mt.childs.append(svglib.create_nl())
+		self.svg_doc = None
+		self.sk2_doc = None
+		self.svg_mt = None
+		self.sk2_mt = None
+		self.sk2_mtds = None
+		self.svg_mtds = None
+
+	def add_spacer(self, parent):
+		spacer = '\n' + '\t' * self.ident_level
+		parent.childs.append(svglib.create_spacer(spacer))
+
+	def append_obj(self, parent, obj):
+		self.add_spacer(parent)
+		parent.childs.append(obj)
+
+	def translate_page(self, dest_parent, source_obj):
+		w, h = source_obj.page_format[1]
+		self.trafo[4] = self.dx + self.page_dx
+		if self.page_dx:
+			rect = svglib.create_rect(self.page_dx, self.dy - h / 2.0, w, h)
+			rect.attrs['style'] = 'fill:none;stroke:black;'
+			self.append_obj(self.svg_mt, rect)
+		self.translate_objs(self.svg_mt, source_obj.childs)
+		self.page_dx += w + 30.0
+
+	def translate_objs(self, dest_parent, source_objs):
+		self.ident_level += 1
+		for source_obj in source_objs:
+			if source_obj.is_layer():
+				self.translate_layer(dest_parent, source_obj)
+			elif source_obj.is_group():
+				self.translate_group(dest_parent, source_obj)
+			elif source_obj.is_pixmap():
+				self.translate_pixmap(dest_parent, source_obj)
+			elif source_obj.is_primitive():
+				self.translate_curve(dest_parent, source_obj)
+		self.ident_level -= 1
+
+	def translate_layer(self, dest_parent, source_obj):
+		group = svglib.create_xmlobj('g')
+		if not source_obj.properties[0]:
+			group.attrs['style'] = 'display:none;'
+		self.translate_objs(group, source_obj.childs)
+		self.add_spacer(group)
+		self.append_obj(dest_parent, group)
+
+	def translate_group(self, dest_parent, source_obj):
+		group = svglib.create_xmlobj('g')
+		self.translate_objs(group, source_obj.childs)
+		self.add_spacer(group)
+		self.append_obj(dest_parent, group)
+
+	def translate_curve(self, dest_parent, source_obj):
+		curve = source_obj.to_curve()
+		curve.update()
+		style = self.translate_style(source_obj)
+		trafo = libgeom.multiply_trafo(curve.trafo, self.trafo)
+		paths = libgeom.apply_trafo_to_paths(curve.paths, trafo)
+		pth = svglib.create_xmlobj('path')
+		pth.attrs['style'] = style
+		pth.attrs['d'] = svglib.translate_paths_to_d(paths)
+		self.append_obj(dest_parent, pth)
+
+	def translate_pixmap(self, dest_parent, source_obj):pass
+
+	def translate_style(self, obj):
+		style = {}
+		self.set_fill(style, obj)
+		self.set_stroke(style, obj)
+		return svglib.translate_style_dict(style)
+
+	def set_stroke(self, svg_style, obj):
+		if not obj.style[1]:return
+		# Stroke width
+		if not obj.style[1][1] == 1.0:
+			svg_style['stroke-width'] = str(obj.style[1][1])
+		# Stroke color
+		clr = self.sk2_doc.cms.get_rgb_color(obj.style[1][2])
+		svg_style['stroke'] = cms.rgb_to_hexcolor(clr[1])
+		if clr[2] < 1.0:svg_style['stroke-opacity'] = str(clr[2])
+		# Stroke dash
+
+		# Stroke caps
+		caps = '' + SVG_LINE_CAP[obj.style[1][4]]
+		if not caps == 'butt':svg_style['stroke-linecap'] = caps
+		# Stroke join
+		join = '' + SVG_LINE_JOIN[obj.style[1][5]]
+		if not join == 'miter':svg_style['stroke-linejoin'] = join
+		# Miter limit
+		svg_style['stroke-miterlimit'] = str(obj.style[1][5])
+
+	def set_fill(self, svg_style, obj):
+		svg_style['fill'] = 'none'
+		if not obj.style[0]:return
+		if obj.style[0][1] == sk2_const.FILL_SOLID:
+			if obj.style[0][0] == sk2_const.FILL_EVENODD:
+				svg_style['fill-rule'] = 'evenodd'
+			clr = self.sk2_doc.cms.get_rgb_color(obj.style[0][2])
+			svg_style['fill'] = cms.rgb_to_hexcolor(clr[1])
+			if clr[2] < 1.0:svg_style['fill-opacity'] = str(clr[2])
+		elif obj.style[0][1] == sk2_const.FILL_GRADIENT:
+			pass
