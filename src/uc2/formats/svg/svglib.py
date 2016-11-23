@@ -21,6 +21,7 @@ from copy import deepcopy
 from uc2 import uc2const, libgeom, cms
 from uc2.libgeom import add_points, sub_points, mult_point
 from uc2.formats.sk2 import sk2_const
+from uc2.formats.xml_.xml_model import XMLObject, XmlContentText
 from uc2.formats.svg import svg_colors
 
 PATH_STUB = [[], [], sk2_const.CURVE_OPENED]
@@ -443,3 +444,54 @@ def parse_svg_text(objs):
 	ret = ret.lstrip()
 	if ret and ret[-1] == '\n': ret = ret[:-1]
 	return ret
+
+def create_xmlobj(tag, attrs={}):
+	obj = XMLObject(tag)
+	if attrs: obj.attrs = attrs
+	return obj
+
+def create_nl():
+	return create_spacer()
+
+def create_spacer(txt='\n'):
+	return XmlContentText(txt)
+
+def create_rect(x, y, w, h):
+	attrs = {
+		'x':str(x),
+		'y':str(y),
+		'width':str(w),
+		'height':str(h)
+	}
+	return create_xmlobj('rect', attrs)
+
+def translate_style_dict(style):
+	ret = ''
+	for item in style.keys():
+		ret += '%s:%s;' % (item, style[item])
+	return ret
+
+def point_to_str(point):
+	return ' %s,%s' % (str(point[0]), str(point[1]))
+
+def translate_paths_to_d(paths):
+	ret = ''
+	for path in paths:
+		cmd = 'M'
+		ret += ' M' + point_to_str(path[0])
+		for item in path[1]:
+			if len(item) == 2:
+				if not cmd == 'L':
+					cmd = 'L'
+					ret += ' L'
+				ret += point_to_str(item)
+			else:
+				if not cmd == 'C':
+					cmd = 'C'
+					ret += ' C'
+				ret += point_to_str(item[0])
+				ret += point_to_str(item[1])
+				ret += point_to_str(item[2])
+		if path[2] == sk2_const.CURVE_CLOSED:
+			ret += ' Z'
+	return ret.strip()
