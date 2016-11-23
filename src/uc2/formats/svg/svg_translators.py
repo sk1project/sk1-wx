@@ -1045,7 +1045,19 @@ class SK2_to_SVG_Translator(object):
 			elif source_obj.is_pixmap():
 				self.translate_pixmap(dest_parent, source_obj)
 			elif source_obj.is_primitive():
-				self.translate_curve(dest_parent, source_obj)
+				if source_obj.style[0] and source_obj.style[1] \
+				and source_obj.style[1][7]:
+					stroke_obj = source_obj.copy()
+					stroke_obj.update()
+					stroke_obj.style[0] = []
+					self.translate_curve(dest_parent, stroke_obj)
+
+					fill_obj = source_obj.copy()
+					fill_obj.update()
+					fill_obj.style[1] = []
+					self.translate_curve(dest_parent, fill_obj)
+				else:
+					self.translate_curve(dest_parent, source_obj)
 		self.ident_level -= 1
 
 	def translate_layer(self, dest_parent, source_obj):
