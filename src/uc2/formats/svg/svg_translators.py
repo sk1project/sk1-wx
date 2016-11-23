@@ -636,7 +636,10 @@ class SVG_to_SK2_Translator(object):
 		for item in svg_obj.childs:
 			self.translate_obj(group, item, tr, stl)
 		if group.childs:
-			parent.childs.append(group)
+			if len(group.childs) == 1:
+				parent.childs.append(group.childs[0])
+			else:
+				parent.childs.append(group)
 
 	def translate_unknown(self, parent, svg_obj, trafo, style):
 		group = sk2_model.Group(parent.config, parent)
