@@ -1076,6 +1076,9 @@ class SK2_to_SVG_Translator(object):
 
 	def translate_primitive(self, dest_parent, source_obj):
 		curve = source_obj.to_curve()
+		if curve.is_group():
+			self.translate_group(dest_parent, curve)
+			return
 		curve.update()
 		style = self.translate_style(source_obj)
 		trafo = libgeom.multiply_trafo(curve.trafo, self.trafo)
