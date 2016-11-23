@@ -540,6 +540,7 @@ class SVG_to_SK2_Translator(object):
 			elif svg_obj.tag == 'style':
 				self.translate_style(svg_obj)
 			elif svg_obj.tag == 'pattern': return
+			elif svg_obj.tag == 'clipPath': return
 			elif svg_obj.childs:
 				self.translate_unknown(parent, svg_obj, trafo, style)
 		except:
