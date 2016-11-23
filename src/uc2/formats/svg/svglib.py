@@ -472,7 +472,7 @@ def translate_style_dict(style):
 	return ret
 
 def point_to_str(point):
-	return ' %s,%s' % (str(point[0]), str(point[1]))
+	return ' %s,%s' % (str(round(point[0], 4)), str(round(point[1], 4)))
 
 def translate_paths_to_d(paths):
 	ret = ''
