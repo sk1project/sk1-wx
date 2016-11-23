@@ -1050,14 +1050,14 @@ class SK2_to_SVG_Translator(object):
 					stroke_obj = source_obj.copy()
 					stroke_obj.update()
 					stroke_obj.style[0] = []
-					self.translate_curve(dest_parent, stroke_obj)
+					self.translate_primitive(dest_parent, stroke_obj)
 
 					fill_obj = source_obj.copy()
 					fill_obj.update()
 					fill_obj.style[1] = []
-					self.translate_curve(dest_parent, fill_obj)
+					self.translate_primitive(dest_parent, fill_obj)
 				else:
-					self.translate_curve(dest_parent, source_obj)
+					self.translate_primitive(dest_parent, source_obj)
 		self.ident_level -= 1
 
 	def translate_layer(self, dest_parent, source_obj):
@@ -1074,7 +1074,7 @@ class SK2_to_SVG_Translator(object):
 		self.add_spacer(group)
 		self.append_obj(dest_parent, group)
 
-	def translate_curve(self, dest_parent, source_obj):
+	def translate_primitive(self, dest_parent, source_obj):
 		curve = source_obj.to_curve()
 		curve.update()
 		style = self.translate_style(source_obj)
