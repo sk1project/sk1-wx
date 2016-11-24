@@ -1110,13 +1110,18 @@ class SK2_to_SVG_Translator(object):
 			svg_style['stroke-width'] = str(round(line_width, 4))
 		else:
 			if not obj.style[1][1] == 1.0:
-				svg_style['stroke-width'] = str(round(obj.style[1][1], 4))
+				line_width = obj.style[1][1]
+				svg_style['stroke-width'] = str(round(line_width, 4))
 		# Stroke color
 		clr = self.sk2_doc.cms.get_rgb_color(obj.style[1][2])
 		svg_style['stroke'] = cms.rgb_to_hexcolor(clr[1])
 		if clr[2] < 1.0:svg_style['stroke-opacity'] = str(clr[2])
 		# Stroke dash
-
+		if obj.style[1][3]:
+			vals = []
+			for item in obj.style[1][3]:
+				vals.append(str(round(item * line_width, 4)))
+			svg_style['stroke-dasharray'] = ', '.join(vals)
 		# Stroke caps
 		caps = '' + SVG_LINE_CAP[obj.style[1][4]]
 		if not caps == 'butt':svg_style['stroke-linecap'] = caps
