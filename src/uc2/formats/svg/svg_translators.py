@@ -1051,7 +1051,7 @@ class SK2_to_SVG_Translator(object):
 
 	def translate_page(self, dest_parent, source_obj):
 		w, h = source_obj.page_format[1]
-		self.trafo[4] = self.dx + self.page_dx
+		self.trafo[4] = w / 2.0 + self.page_dx
 		if self.page_dx:
 			rect = svglib.create_rect(self.page_dx, self.dy - h / 2.0, w, h)
 			rect.attrs['style'] = 'fill:none;stroke:black;'
