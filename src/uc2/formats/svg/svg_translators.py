@@ -983,6 +983,12 @@ SVG_LINE_CAP = {
 	sk2_const.CAP_SQUARE:'square',
 }
 
+SVG_GRAD_EXTEND = {
+	sk2_const.GRADIENT_EXTEND_PAD:'pad',
+	sk2_const.GRADIENT_EXTEND_REFLECT:'reflect',
+	sk2_const.GRADIENT_EXTEND_REPEAT:'repeat',
+}
+
 class SK2_to_SVG_Translator(object):
 
 	dx = dy = page_dx = 0.0
@@ -996,6 +1002,10 @@ class SK2_to_SVG_Translator(object):
 		self.sk2_mtds = sk2_doc.methods
 		self.svg_mtds = svg_doc.methods
 		self.trafo = [1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
+		for item in self.svg_mt.childs:
+			if item.tag == 'defs':
+				self.defs = item
+				break
 		for item in self.sk2_mt.childs:
 			if item.cid == sk2_model.PAGES:
 				w, h = item.childs[0].page_format[1]
@@ -1009,7 +1019,9 @@ class SK2_to_SVG_Translator(object):
 				self.page_dx = 0.0
 				for page in item.childs:
 					self.translate_page(self.svg_mt, page)
-		self.svg_mt.childs.append(svglib.create_nl())
+		self.ident_level = 0
+		self.add_spacer(self.defs)
+		self.add_spacer(self.svg_mt)
 		self.svg_doc = None
 		self.sk2_doc = None
 		self.svg_mt = None
@@ -1141,4 +1153,60 @@ class SK2_to_SVG_Translator(object):
 			svg_style['fill'] = cms.rgb_to_hexcolor(clr[1])
 			if clr[2] < 1.0:svg_style['fill-opacity'] = str(clr[2])
 		elif obj.style[0][1] == sk2_const.FILL_GRADIENT:
-			pass
+			if obj.style[0][0] == sk2_const.FILL_EVENODD:
+				svg_style['fill-rule'] = 'evenodd'
+			grad_id = self.translate_gradient(obj.style[0][2], obj)
+			svg_style['fill'] = 'url(#%s)' % grad_id
+
+	def translate_gradient(self, gradient, obj):
+		grad_id = 'grad' + str(len(self.defs.childs) + 1)
+		trafo = libgeom.multiply_trafo(obj.fill_trafo, self.trafo)
+		vector = libgeom.apply_trafo_to_points(gradient[1], trafo)
+		spread = 'pad'
+		if len(gradient) > 3:spread = SVG_GRAD_EXTEND[gradient[3]]
+		attrs = {}
+		attrs['gradientUnits'] = 'userSpaceOnUse'
+		if gradient[0] == sk2_const.GRADIENT_RADIAL:
+			tag = 'radialGradient'
+			attrs['id'] = grad_id
+			attrs['spreadMethod'] = spread
+			cx, cy = gradient[1][0]
+			r = libgeom.distance(*gradient[1])
+			attrs['cx'] = str(cx)
+			attrs['cy'] = str(cy)
+			attrs['r'] = str(r)
+			tr = trafo.__str__()[1:-1]
+			attrs['gradientTransform'] = 'matrix(%s)' % tr
+		else:
+			tag = 'linearGradient'
+			x1, y1 = vector[0]
+			x2, y2 = vector[1]
+			attrs['id'] = grad_id
+			attrs['spreadMethod'] = spread
+			attrs['x1'] = str(x1)
+			attrs['y1'] = str(y1)
+			attrs['x2'] = str(x2)
+			attrs['y2'] = str(y2)
+		grad_obj = svglib.create_xmlobj(tag, attrs)
+		lvl = self.ident_level
+		self.ident_level = 1
+		self.append_obj(self.defs, grad_obj)
+		self.ident_level += 1
+		self.translate_stops(grad_obj, gradient[2])
+		self.ident_level = lvl
+		return grad_id
+
+	def translate_stops(self, parent, stops):
+		for stop in stops:
+			attrs = {}
+			offset, color = stop
+			attrs['offset'] = str(offset)
+			clr = self.sk2_doc.cms.get_rgb_color(color)
+			clr = cms.rgb_to_hexcolor(clr[1])
+			alpha = str(color[2])
+			attrs['style'] = 'stop-color:%s;stop-opacity:%s;' % (clr, alpha)
+			stop_obj = svglib.create_xmlobj('stop', attrs)
+			self.append_obj(parent, stop_obj)
+		self.ident_level -= 1
+		self.add_spacer(parent)
+
