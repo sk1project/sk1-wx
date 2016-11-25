@@ -19,7 +19,7 @@ import sys, os
 from copy import deepcopy
 from cStringIO import StringIO
 from PIL import Image
-from base64 import b64decode
+from base64 import b64decode, b64encode
 
 from uc2 import uc2const, libgeom, libpango, libimg, cms
 from uc2.formats.sk2 import sk2_model, sk2_const
@@ -1153,7 +1153,24 @@ class SK2_to_SVG_Translator(object):
 		pth.attrs['d'] = svglib.translate_paths_to_d(paths)
 		self.append_obj(dest_parent, pth)
 
-	def translate_pixmap(self, dest_parent, source_obj):pass
+	def translate_pixmap(self, dest_parent, source_obj):
+		image_stream = StringIO()
+		if source_obj.cache_cdata is None:
+			libimg.update_image(self.sk2_doc.cms, source_obj)
+		source_obj.cache_cdata.write_to_png(image_stream)
+		content = b64encode(image_stream.getvalue())
+		image = svglib.create_xmlobj('image')
+		w, h = source_obj.get_size()
+		trafo = [1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
+		trafo = libgeom.multiply_trafo(trafo, source_obj.trafo)
+		trafo = libgeom.multiply_trafo(trafo, self.trafo)
+		image.attrs['xlink:href'] = 'data:image/png;base64,' + content
+		image.attrs['transform'] = 'matrix(%s)' % trafo.__str__()[1:-1]
+		image.attrs['x'] = '0'
+		image.attrs['y'] = str(-h)
+		image.attrs['width'] = str(w)
+		image.attrs['height'] = str(h)
+		self.append_obj(dest_parent, image)
 
 	def translate_style(self, obj):
 		style = {}
