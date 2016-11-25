@@ -254,11 +254,11 @@ class SVG_to_SK2_Translator(object):
 			return container
 		return None
 
-	def get_level_style(self, svg_obj, style):
+	def get_level_style(self, svg_obj, style_in):
 		if 'color' in svg_obj.attrs:
 			if svg_obj.attrs['color'] == 'inherit':pass
 			else: self.current_color = '' + svg_obj.attrs['color']
-		style = deepcopy(style)
+		style = deepcopy(style_in)
 		for item in svg_const.SVG_STYLE.keys():
 			if item in svg_obj.attrs:
 				val = '' + svg_obj.attrs[item]
@@ -270,13 +270,23 @@ class SVG_to_SK2_Translator(object):
 				if class_name in self.classes:
 					class_ = self.classes[class_name]
 					for item in class_.keys():
-						style['' + item] = '' + class_[item]
+						if item == 'opacity' and item in style_in:
+							op = float(class_[item]) * float(style_in[item])
+							style['opacity'] = str(op)
+						else:
+							style['' + item] = '' + class_[item]
 		if 'style' in svg_obj.attrs:
 			stls = svg_obj.attrs['style'].split(';')
 			for stl in stls:
 				vals = stl.split(':')
 				if len(vals) == 2:
-					style[vals[0].strip()] = vals[1].strip()
+					key = vals[0].strip()
+					val = vals[1].strip()
+					if key == 'opacity' and key in style_in:
+						op = float(val) * float(style_in[key])
+						style['opacity'] = str(op)
+					else:
+						style[key] = val
 		return style
 
 	def get_sk2_style(self, svg_obj, style, text_style=False):
