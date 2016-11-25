@@ -993,6 +993,7 @@ class SK2_to_SVG_Translator(object):
 
 	dx = dy = page_dx = 0.0
 	ident_level = -1
+	defs_count = 0
 
 	def translate(self, sk2_doc, svg_doc):
 		self.svg_doc = svg_doc
@@ -1001,6 +1002,7 @@ class SK2_to_SVG_Translator(object):
 		self.sk2_mt = sk2_doc.model
 		self.sk2_mtds = sk2_doc.methods
 		self.svg_mtds = svg_doc.methods
+		self.defs_count = 0
 		self.trafo = [1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
 		for item in self.svg_mt.childs:
 			if item.tag == 'defs':
@@ -1159,7 +1161,8 @@ class SK2_to_SVG_Translator(object):
 			svg_style['fill'] = 'url(#%s)' % grad_id
 
 	def translate_gradient(self, gradient, obj):
-		grad_id = 'grad' + str(len(self.defs.childs) + 1)
+		grad_id = 'grad' + str(self.defs_count + 1)
+		self.defs_count += 1
 		trafo = libgeom.multiply_trafo(obj.fill_trafo, self.trafo)
 		vector = libgeom.apply_trafo_to_points(gradient[1], trafo)
 		spread = 'pad'
