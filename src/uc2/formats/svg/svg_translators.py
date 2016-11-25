@@ -1093,10 +1093,51 @@ class SK2_to_SVG_Translator(object):
 		self.append_obj(dest_parent, group)
 
 	def translate_group(self, dest_parent, source_obj):
-		group = svglib.create_xmlobj('g')
-		self.translate_objs(group, source_obj.childs)
-		self.add_spacer(group)
-		self.append_obj(dest_parent, group)
+		if source_obj.is_container():
+			clip = source_obj.childs[0]
+			clip_id = self.make_clippath(clip)
+
+			if clip.style[1] and clip.style[1][7]:
+				stroke_obj = clip.copy()
+				stroke_obj.update()
+				stroke_obj.style[0] = []
+				self.translate_primitive(dest_parent, stroke_obj)
+			if clip.style[0]:
+				fill_obj = clip.copy()
+				fill_obj.update()
+				fill_obj.style[1] = []
+				self.translate_primitive(dest_parent, fill_obj)
+
+			group = svglib.create_xmlobj('g')
+			group.attrs['clip-path'] = 'url(#%s)' % clip_id
+			self.translate_objs(group, source_obj.childs[1:])
+			self.add_spacer(group)
+			self.append_obj(dest_parent, group)
+
+			if clip.style[1] and not clip.style[1][7]:
+				stroke_obj = clip.copy()
+				stroke_obj.update()
+				stroke_obj.style[0] = []
+				self.translate_primitive(dest_parent, stroke_obj)
+		else:
+			group = svglib.create_xmlobj('g')
+			self.translate_objs(group, source_obj.childs)
+			self.add_spacer(group)
+			self.append_obj(dest_parent, group)
+
+	def make_clippath(self, source_obj):
+		clippath = svglib.create_xmlobj('clipPath')
+		clippath.attrs['clipPathUnits'] = 'userSpaceOnUse'
+		clippath.attrs['id'] = 'clipPath' + str(self.defs_count + 1)
+		self.defs_count += 1
+
+		lvl = self.ident_level
+		self.ident_level = 1
+		self.append_obj(self.defs, clippath)
+		self.ident_level += 1
+		self.translate_primitive(clippath, source_obj)
+		self.ident_level = lvl
+		return '' + clippath.attrs['id']
 
 	def translate_primitive(self, dest_parent, source_obj):
 		curve = source_obj.to_curve()
@@ -1153,7 +1194,7 @@ class SK2_to_SVG_Translator(object):
 		join = '' + SVG_LINE_JOIN[obj.style[1][5]]
 		if not join == 'miter':svg_style['stroke-linejoin'] = join
 		# Miter limit
-		svg_style['stroke-miterlimit'] = str(round(obj.style[1][5], 4))
+		svg_style['stroke-miterlimit'] = str(round(obj.style[1][6], 4))
 
 	def set_fill(self, svg_style, obj):
 		svg_style['fill'] = 'none'
