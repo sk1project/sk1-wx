@@ -72,7 +72,7 @@ def get_svg_trafo(strafo):
 def get_svg_level_trafo(svg_obj, trafo):
 	tr = [] + libgeom.NORMAL_TRAFO
 	if 'transform' in svg_obj.attrs:
-		tr = get_svg_trafo(str(svg_obj.attrs['transform']))
+		tr = get_svg_trafo(svg_obj.attrs['transform'])
 	tr = libgeom.multiply_trafo(tr, trafo)
 	return tr
 
@@ -416,7 +416,7 @@ def parse_svg_stops(stops, current_color):
 
 		if 'style' in stop.attrs:
 			style = {}
-			stls = str(stop.attrs['style']).split(';')
+			stls = stop.attrs['style'].split(';')
 			for stl in stls:
 				vals = stl.split(':')
 				if len(vals) == 2:
