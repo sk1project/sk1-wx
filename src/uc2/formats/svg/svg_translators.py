@@ -179,7 +179,7 @@ class SVG_to_SK2_Translator(object):
 
 			extend = sk2_const.GRADIENT_EXTEND_PAD
 			if 'spreadMethod' in svg_obj.attrs:
-				val = str(svg_obj.attrs['spreadMethod']).strip()
+				val = svg_obj.attrs['spreadMethod']
 				if val in SK2_GRAD_EXTEND: extend = SK2_GRAD_EXTEND[val]
 
 			vector = [[x1, y1], [x2, y2]]
@@ -214,7 +214,7 @@ class SVG_to_SK2_Translator(object):
 
 			extend = sk2_const.GRADIENT_EXTEND_PAD
 			if 'spreadMethod' in svg_obj.attrs:
-				val = str(svg_obj.attrs['spreadMethod']).strip()
+				val = svg_obj.attrs['spreadMethod']
 				if val in SK2_GRAD_EXTEND: extend = SK2_GRAD_EXTEND[val]
 
 			vector = [[cx, cy], [cx + r, cy]]
@@ -261,18 +261,18 @@ class SVG_to_SK2_Translator(object):
 		style = deepcopy(style)
 		for item in svg_const.SVG_STYLE.keys():
 			if item in svg_obj.attrs:
-				val = '' + str(svg_obj.attrs[item])
+				val = '' + svg_obj.attrs[item]
 				if not val == 'inherit':
 					style['' + item] = val
 		if 'class' in svg_obj.attrs:
-			class_names = str(svg_obj.attrs['class']).strip().split(' ')
+			class_names = svg_obj.attrs['class'].split(' ')
 			for class_name in class_names:
 				if class_name in self.classes:
 					class_ = self.classes[class_name]
 					for item in class_.keys():
 						style['' + item] = '' + class_[item]
 		if 'style' in svg_obj.attrs:
-			stls = str(svg_obj.attrs['style']).split(';')
+			stls = svg_obj.attrs['style'].split(';')
 			for stl in stls:
 				vals = stl.split(':')
 				if len(vals) == 2:
@@ -554,7 +554,7 @@ class SVG_to_SK2_Translator(object):
 			if item.tag == 'style':
 				self.translate_style(item)
 			elif 'id' in item.attrs:
-				self.defs[str(item.attrs['id'])] = item
+				self.defs[item.attrs['id']] = item
 
 	def translate_namedview(self, svg_obj):
 		for item in svg_obj.childs:
@@ -608,7 +608,7 @@ class SVG_to_SK2_Translator(object):
 			if svg_obj.attrs['inkscape:groupmode'] == 'layer':
 				name = 'Layer %d' % len(self.page.childs)
 				if 'inkscape:label' in svg_obj.attrs:
-					name = str(svg_obj.attrs['inkscape:label'])
+					name = svg_obj.attrs['inkscape:label']
 				layer = sk2_model.Layer(self.page.config, self.page, name)
 				self.page.childs.append(layer)
 				if check_svg_attr(svg_obj, 'sodipodi:insensitive', 'true'):
