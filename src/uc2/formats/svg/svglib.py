@@ -420,7 +420,7 @@ def parse_svg_stops(stops, current_color):
 			for stl in stls:
 				vals = stl.split(':')
 				if len(vals) == 2:
-					style[vals[0]] = vals[1]
+					style[vals[0].strip()] = vals[1].strip()
 			if 'stop-opacity' in style:
 				alpha = float(style['stop-opacity'])
 			if 'stop-color' in style:
