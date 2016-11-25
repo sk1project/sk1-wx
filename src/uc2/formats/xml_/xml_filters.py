@@ -33,7 +33,7 @@ class XML_Loader(AbstractXMLLoader):
 		if not self.stack: self.model = obj
 
 		for item in attrs._attrs.keys():
-			obj.attrs[item] = attrs._attrs[item].strip()
+			obj.attrs[item] = attrs._attrs[item].strip().encode('utf-8')
 
 		if self.stack: self.stack[-1].childs.append(obj)
 		self.stack.append(obj)
@@ -50,7 +50,7 @@ class Advanced_XML_Loader(XML_Loader):
 	name = 'Advanced_XML_Loader'
 
 	def element_data(self, data):
-		obj = XmlContentText(data)
+		obj = XmlContentText(data.encode('utf-8'))
 		if self.stack: self.stack[-1].childs.append(obj)
 
 class XML_Saver(AbstractSaver):
