@@ -113,6 +113,17 @@ def parse_svg_color(sclr, alpha=1.0, current_color=''):
 				except:pass
 				if color_vals and len(color_vals) == 4:
 					return [uc2const.COLOR_CMYK, color_vals, alpha, '']
+		elif 'device-cmyk' in sclr:
+			vals = sclr.split('device-cmyk(')[1].replace(')', '').split(',')
+			if len(vals) in (3, 4):
+				color_vals = []
+				try:
+					color_vals = map(lambda x:float(x), vals[1:])
+				except:pass
+				if color_vals and len(color_vals) in (3, 4):
+					if len(color_vals) == 3: color_vals.append(0.0)
+					return [uc2const.COLOR_CMYK, color_vals, alpha, '']
+
 		sclr = sclr.split(' ')[0]
 		try:
 			vals = cms.hexcolor_to_rgb(sclr)
