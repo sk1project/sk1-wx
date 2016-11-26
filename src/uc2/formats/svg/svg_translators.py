@@ -1032,7 +1032,8 @@ class SK2_to_SVG_Translator(object):
 				for page in item.childs:
 					self.translate_page(self.svg_mt, page)
 		self.ident_level = 0
-		self.add_spacer(self.defs)
+		if self.defs.childs: self.add_spacer(self.defs)
+		else: self.svg_mt.childs.remove(self.defs)
 		self.add_spacer(self.svg_mt)
 		self.svg_doc = None
 		self.sk2_doc = None
