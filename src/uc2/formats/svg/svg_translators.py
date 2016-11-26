@@ -677,19 +677,24 @@ class SVG_to_SK2_Translator(object):
 
 		curve = None
 		if style[1] and 'stroke-fill' in self.style_opts:
-			obj.update()
-			stroke_obj = obj.to_curve()
-			pths = libgeom.apply_trafo_to_paths(stroke_obj.get_initial_paths(),
-									stroke_obj.trafo)
-			pths = libgeom.stroke_to_curve(pths, obj.style[1])
-			obj_style = [self.style_opts['stroke-fill'], [], [], []]
-			curve = sk2_model.Curve(parent.config, parent, pths,
-								style=obj_style)
-			obj.style[1] = []
-			curve.fill_trafo = [] + trafo
-			if 'stroke-grad-trafo' in self.style_opts:
-				tr0 = self.style_opts['stroke-grad-trafo']
-				curve.fill_trafo = libgeom.multiply_trafo(tr0, trafo)
+			try:
+				obj.update()
+				stroke_obj = obj.to_curve()
+				pths = libgeom.apply_trafo_to_paths(stroke_obj.get_initial_paths(),
+										stroke_obj.trafo)
+
+				pths = libgeom.stroke_to_curve(pths, obj.style[1])
+				obj_style = [self.style_opts['stroke-fill'], [], [], []]
+				curve = sk2_model.Curve(parent.config, parent, pths,
+									style=obj_style)
+				obj.style[1] = []
+				curve.fill_trafo = [] + trafo
+				if 'stroke-grad-trafo' in self.style_opts:
+					tr0 = self.style_opts['stroke-grad-trafo']
+					curve.fill_trafo = libgeom.multiply_trafo(tr0, trafo)
+			except:
+				obj.style[1] = []
+
 
 		container = None
 		if 'clip-path' in svg_obj.attrs:
@@ -879,7 +884,6 @@ class SVG_to_SK2_Translator(object):
 			curve.trafo = libgeom.multiply_trafo(curve.trafo, tr)
 			self.append_obj(parent, svg_obj, curve, tr, sk2_style)
 		elif 'd' in svg_obj.attrs:
-
 			paths = svglib.parse_svg_path_cmds(svg_obj.attrs['d'])
 			if not paths: return
 
