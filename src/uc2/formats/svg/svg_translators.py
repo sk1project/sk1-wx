@@ -677,12 +677,11 @@ class SVG_to_SK2_Translator(object):
 
 		curve = None
 		if style[1] and 'stroke-fill' in self.style_opts:
+			obj.update()
+			stroke_obj = obj.to_curve()
+			pths = libgeom.apply_trafo_to_paths(stroke_obj.get_initial_paths(),
+									stroke_obj.trafo)
 			try:
-				obj.update()
-				stroke_obj = obj.to_curve()
-				pths = libgeom.apply_trafo_to_paths(stroke_obj.get_initial_paths(),
-										stroke_obj.trafo)
-
 				pths = libgeom.stroke_to_curve(pths, obj.style[1])
 				obj_style = [self.style_opts['stroke-fill'], [], [], []]
 				curve = sk2_model.Curve(parent.config, parent, pths,
