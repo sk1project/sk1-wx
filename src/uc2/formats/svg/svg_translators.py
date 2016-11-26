@@ -84,6 +84,7 @@ class SVG_to_SK2_Translator(object):
 	style_opts = {}
 	id_dict = {}
 	classes = {}
+	profiles = {}
 
 	def translate(self, svg_doc, sk2_doc):
 		self.svg_doc = svg_doc
@@ -94,6 +95,7 @@ class SVG_to_SK2_Translator(object):
 		self.svg_mtds = svg_doc.methods
 		self.defs = {}
 		self.classes = {}
+		self.profiles = {}
 		self.current_color = ''
 		self.translate_units()
 		self.translate_page()
@@ -563,6 +565,8 @@ class SVG_to_SK2_Translator(object):
 		for item in svg_obj.childs:
 			if item.tag == 'style':
 				self.translate_style(item)
+			elif item.tag == 'color-profile':
+				self.translate_color_profile(item)
 			elif 'id' in item.attrs:
 				self.defs[item.attrs['id']] = item
 
@@ -608,6 +612,9 @@ class SVG_to_SK2_Translator(object):
 				if len(vals) == 2:
 					style[vals[0].strip()] = vals[1].strip()
 			self.classes[class_.strip()] = style
+
+	def translate_color_profile(self, svg_obj):
+		self.profiles[svg_obj.attrs['name']] = svg_obj
 
 	def translate_g(self, parent, svg_obj, trafo, style):
 		tr = get_svg_level_trafo(svg_obj, trafo)
