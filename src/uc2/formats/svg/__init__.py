@@ -56,6 +56,5 @@ def check_svg(path):
 			for event, el in cElementTree.iterparse(f, ('start',)):
 				tag = el.tag
 				break
-		except cElementTree.ParseError:
-			pass
-	return tag == '{http://www.w3.org/2000/svg}svg'
+		except cElementTree.ParseError: pass
+	return tag == '{http://www.w3.org/2000/svg}svg' or tag == 'svg'
