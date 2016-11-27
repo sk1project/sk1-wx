@@ -79,8 +79,11 @@ def get_svg_level_trafo(svg_obj, trafo):
 def parse_svg_points(spoints):
 	points = []
 	spoints = re.sub('  *', ' ', spoints)
-	spoints = spoints.replace('-', ',-').replace('e,-', 'e-')
-	spoints = spoints.replace(',,', ',').replace(' ', ',')
+	spoints = spoints.replace('-', ',-')
+	spoints = spoints.replace('e,-', 'e-')
+	spoints = spoints.replace(', ,', ',')
+	spoints = spoints.replace(' ', ',')
+	spoints = spoints.replace(',,', ',')
 	pairs = spoints.split(',')
 	if not pairs[0]:pairs = pairs[1:]
 	pairs = [pairs[i:i + 2] for i in range(0, len(pairs), 2)]
