@@ -40,9 +40,9 @@ class WMF_Header(BinaryModelObject):
 
 	def update_for_save(self):pass
 
-class WMF_Placeble_Header(WMF_Header):
+class WMF_Placeable_Header(WMF_Header):
 
-	resolve_name = 'WMF_Placeble_Header'
+	resolve_name = 'WMF_Placeable_Header'
 
 class WMF_Record(BinaryModelObject):
 
