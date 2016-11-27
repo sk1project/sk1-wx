@@ -19,7 +19,7 @@ import os
 import sys
 from xml.etree import cElementTree
 
-from uc2 import _, events, msgconst, uc2const
+from uc2 import uc2const
 from uc2.formats.svg.svg_presenter import SVG_Presenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 
@@ -42,10 +42,10 @@ def svg_saver(sk2_doc, filename=None, fileptr=None,
 	if kw: cnf.update(kw)
 	if sk2_doc.cid == uc2const.SVG: translate = False
 	if translate:
-		sk_doc = SVG_Presenter(sk2_doc.appdata, cnf)
-		sk_doc.translate_from_sk2(sk2_doc)
-		sk_doc.save(filename, fileptr)
-		sk_doc.close()
+		svg_doc = SVG_Presenter(sk2_doc.appdata, cnf)
+		svg_doc.translate_from_sk2(sk2_doc)
+		svg_doc.save(filename, fileptr)
+		svg_doc.close()
 	else:
 		sk2_doc.save(filename, fileptr)
 
