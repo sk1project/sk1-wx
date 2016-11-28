@@ -16,8 +16,8 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 WMF_SIGNATURE = '\xd7\xcd\xc6\x9a'
-METAFILETYPES = ('\x00\x01', '\x00\x02')
-METAVERSIONS = ('\x01\x00', '\x03\x00')
+METAFILETYPES = ('\x01\x00', '\x02\x00')
+METAVERSIONS = ('\x00\x01', '\x00\x03')
 META_EOF = '\x03\x00\x00\x00\x00\x00'
 EOF_REC = 0x0000
 
