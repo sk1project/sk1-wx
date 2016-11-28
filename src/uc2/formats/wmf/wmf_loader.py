@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2013 by Igor E. Novikov
-#	Copyright (C) 1999, 2002 by Bernhard Herzog
+# 	Copyright (C) 2013 by Igor E. Novikov
+# 	Copyright (C) 1999, 2002 by Bernhard Herzog
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
-#	
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
-#	
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
+#
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
+#
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys, string
 from struct import unpack, calcsize
@@ -27,9 +27,9 @@ from uc2.formats.sk1.sk1const import ArcArc, ArcPieSlice
 from uc2.formats.sk1.sk1_loaders import GenericLoader
 
 from uc2.formats.wmf.wmfconst import WMF_SIGNATURE, struct_wmf_header, \
-struct_placeable_header, wmf_functions
+struct_placeable_header
 
-
+wmf_functions = {}
 
 def noop(self):
 	pass
@@ -44,8 +44,8 @@ class WMF_Loader(GenericLoader):
 		self.curpoint = Point(0, 0)
 
 	def do_load(self):
-#		self.document()
-#		self.layer(name=_("WMF objects"))
+# 		self.document()
+# 		self.layer(name=_("WMF objects"))
 		self.read_headers()
 		self.interpret()
 		self.end_all()
@@ -82,14 +82,14 @@ class WMF_Loader(GenericLoader):
 		key, handle, left, top, right, bottom, inch, reserved, checksum\
 				 = unpack(struct_placeable_header, placeable)
 		if key != WMF_SIGNATURE:
-#			raise SketchLoadError(_("The file is not a placeable "
-#									"windows metafile"))
+# 			raise SketchLoadError(_("The file is not a placeable "
+# 									"windows metafile"))
 			self._print("The file is not a placeable windows metafile")
 		sum = 0
 		for word in unpack('<10h', placeable[:20]):
 			sum = sum ^ word
 		if sum != checksum:
-			#raise SketchLoadError(_("The file has an incorrect checksum"))
+			# raise SketchLoadError(_("The file has an incorrect checksum"))
 			self._print("The file has an incorrect checksum")
 
 		self.inch = inch
@@ -248,13 +248,13 @@ class WMF_Loader(GenericLoader):
 		if points:
 			path = CreatePath()
 			map(path.AppendLine, points)
-#			self.prop_stack.AddStyle(self.curstyle.copy())
-#			self.prop_stack.SetProperty(fill_pattern=EmptyPattern)
+# 			self.prop_stack.AddStyle(self.curstyle.copy())
+# 			self.prop_stack.SetProperty(fill_pattern=EmptyPattern)
 			self.set_style(self.curstyle.copy())
 			self.style.fill_pattern = EmptyPattern
 			self.bezier((path,))
 
-		#for i in range(len(points)):
+		# for i in range(len(points)):
 		#    self._print('->', points[i])
 
 	def Polygon(self):
@@ -263,14 +263,14 @@ class WMF_Loader(GenericLoader):
 			path = CreatePath()
 			map(path.AppendLine, points)
 			if path.Node(-1) != path.Node(0):
-				#print 'correct polygon'
+				# print 'correct polygon'
 				path.AppendLine(path.Node(0))
 			path.load_close()
-#			self.prop_stack.AddStyle(self.curstyle.copy())
+# 			self.prop_stack.AddStyle(self.curstyle.copy())
 			self.set_style(self.curstyle.copy())
 			self.bezier((path,))
 
-		#for i in range(len(points)):
+		# for i in range(len(points)):
 		#    self._print('->', points[i])
 
 	def PolyPolygon(self):
@@ -289,7 +289,7 @@ class WMF_Loader(GenericLoader):
 				subpath.load_close()
 				path = path + (subpath,)
 		if path:
-#			self.prop_stack.AddStyle(self.curstyle.copy())
+# 			self.prop_stack.AddStyle(self.curstyle.copy())
 			self.set_style(self.curstyle.copy())
 			self.bezier(path)
 
@@ -301,8 +301,8 @@ class WMF_Loader(GenericLoader):
 	def LineTo(self):
 		y, x = self.get_struct('<hh')
 		p = self.trafo(x, y)
-#		self.prop_stack.AddStyle(self.curstyle.copy())
-#		self.prop_stack.SetProperty(fill_pattern=EmptyPattern)
+# 		self.prop_stack.AddStyle(self.curstyle.copy())
+# 		self.prop_stack.SetProperty(fill_pattern=EmptyPattern)
 		self.set_style(self.curstyle.copy())
 		self.style.fill_pattern = EmptyPattern
 		path = CreatePath()
@@ -316,7 +316,7 @@ class WMF_Loader(GenericLoader):
 		bottom, right, top, left = self.get_struct('<hhhh')
 		left, top = self.trafo(left, top)
 		right, bottom = self.trafo(right, bottom)
-#		self.prop_stack.AddStyle(self.curstyle.copy())
+# 		self.prop_stack.AddStyle(self.curstyle.copy())
 		self.set_style(self.curstyle.copy())
 		self.ellipse((right - left) / 2, 0, 0, (bottom - top) / 2,
 						(right + left) / 2, (top + bottom) / 2)
@@ -327,10 +327,10 @@ class WMF_Loader(GenericLoader):
 		right, bottom = self.trafo(right, bottom)
 		xs, ys = self.trafo(xs, ys)
 		xe, ye = self.trafo(xe, ye)
-#		self.prop_stack.AddStyle(self.curstyle.copy())
+# 		self.prop_stack.AddStyle(self.curstyle.copy())
 		self.set_style(self.curstyle.copy())
 		if arc_type == ArcArc:
-#			self.prop_stack.SetProperty(fill_pattern=EmptyPattern)
+# 			self.prop_stack.SetProperty(fill_pattern=EmptyPattern)
 			self.style.fill_pattern = EmptyPattern
 		if left != right and top != bottom:
 			t = Trafo((right - left) / 2, 0, 0, (bottom - top) / 2,
@@ -351,7 +351,7 @@ class WMF_Loader(GenericLoader):
 		bottom, right, top, left = self.get_struct('<hhhh')
 		left, top = self.trafo(left, top)
 		right, bottom = self.trafo(right, bottom)
-#		self.prop_stack.AddStyle(self.curstyle.copy())
+# 		self.prop_stack.AddStyle(self.curstyle.copy())
 		self.set_style(self.curstyle.copy())
 		self.rectangle(right - left, 0, 0, bottom - top, left, top)
 
@@ -361,7 +361,7 @@ class WMF_Loader(GenericLoader):
 		right, bottom = self.trafo(right, bottom)
 		ellw, ellh = self.trafo.DTransform(ellw, ellh)
 		self._print('->', left, top, right, bottom, ellw, ellh)
-#		self.prop_stack.AddStyle(self.curstyle.copy())
+# 		self.prop_stack.AddStyle(self.curstyle.copy())
 		self.set_style(self.curstyle.copy())
 		self.rectangle(right - left, 0, 0, bottom - top, left, top,
 						radius1=abs(ellw / (right - left)),
