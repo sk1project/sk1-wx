@@ -18,7 +18,7 @@
 from struct import calcsize
 
 from uc2.formats.generic_filters import AbstractBinaryLoader, AbstractSaver
-from uc2.formats.wmf.wmfconst import WMF_SIGNATURE, META_EOF, EOF_REC
+from uc2.formats.wmf.wmfconst import WMF_SIGNATURE, EOF_RECORD, META_EOF
 from uc2.formats.wmf.wmfconst import struct_wmf_header, struct_placeable_header
 from uc2.formats.wmf.wmf_model import META_Placeable_Record, \
 META_Header_Record, WMF_Record
@@ -42,7 +42,7 @@ class WMF_Loader(AbstractBinaryLoader):
 			header = self.readbytes(calcsize(struct_wmf_header))
 			self.model = self.parent = META_Header_Record(header)
 		func = -1
-		while not func == EOF_REC:
+		while not func == META_EOF:
 			try:
 				size = self.readdword()
 				func = self.readword()
@@ -50,8 +50,8 @@ class WMF_Loader(AbstractBinaryLoader):
 				chunk = self.readbytes(size * 2)
 				self.parent.childs.append(WMF_Record(chunk))
 			except:
-				func = EOF_REC
-				self.parent.childs.append(WMF_Record('' + META_EOF))
+				func = META_EOF
+				self.parent.childs.append(WMF_Record('' + EOF_RECORD))
 
 class WMF_Saver(AbstractSaver):
 
