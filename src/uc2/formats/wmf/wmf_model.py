@@ -57,8 +57,8 @@ class WMF_Record(BinaryModelObject):
 		self.cache_fields = []
 		self.chunk = chunk
 		self.func = utils.word2py_int(self.chunk[4:6])
-		if self.func in wmfconst.WMF_RECORD_TYPES:
-			self.resolve_name = wmfconst.WMF_RECORD_TYPES[self.func]
+		if self.func in wmfconst.WMF_RECORD_NAMES:
+			self.resolve_name = wmfconst.WMF_RECORD_NAMES[self.func]
 
 	def resolve(self, name=''):
 		is_leaf = True
