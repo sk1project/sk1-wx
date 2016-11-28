@@ -17,7 +17,7 @@
 
 from uc2 import utils, cms
 from uc2.formats.generic import BinaryModelObject
-from uc2.formats.wmf.wmfconst import WMF_RECORD_TYPES
+from uc2.formats.wmf import wmfconst
 
 class  META_Header_Record(BinaryModelObject):
 
@@ -40,20 +40,27 @@ class  META_Header_Record(BinaryModelObject):
 
 	def update_for_save(self):pass
 
+	def update_for_sword(self):
+		self.cache_fields = wmfconst.HEADER_MARKUP
+
 class META_Placeable_Record(META_Header_Record):
 
 	resolve_name = 'META_Placeable_Record'
 
+	def update_for_sword(self):
+		self.cache_fields = wmfconst.PLACEABLE_MARKUP
+
 class WMF_Record(BinaryModelObject):
 
 	resolve_name = 'Unknown record'
+	func = 0
 
 	def __init__(self, chunk):
 		self.cache_fields = []
 		self.chunk = chunk
-		func = utils.word2py_int(self.chunk[4:6])
-		if func in WMF_RECORD_TYPES:
-			self.resolve_name = WMF_RECORD_TYPES[func]
+		self.func = utils.word2py_int(self.chunk[4:6])
+		if self.func in wmfconst.WMF_RECORD_TYPES:
+			self.resolve_name = wmfconst.WMF_RECORD_TYPES[self.func]
 
 	def resolve(self, name=''):
 		is_leaf = True
@@ -64,5 +71,6 @@ class WMF_Record(BinaryModelObject):
 		saver.write(self.chunk)
 
 	def update_for_sword(self):
-		self.cache_fields.append((0, 4, 'chunk size'))
-		self.cache_fields.append((4, 2, 'WMF record type'))
+		self.cache_fields = [] + wmfconst.GENERIC_FIELDS
+		if self.func in wmfconst.RECORD_MARKUPS:
+			self.cache_fields += wmfconst.RECORD_MARKUPS[self.func]
