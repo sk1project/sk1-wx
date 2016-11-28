@@ -133,7 +133,11 @@ HEADER_MARKUP = [(0, 2, 'Type'), (2, 2, 'HeaderSize'), (4, 2, 'Version'),
 (6, 2, 'SizeLow'), (8, 2, 'SizeHigh'), (10, 2, 'NumberOfObjects'),
 (12, 4, 'MaxRecord'), (16, 2, 'NumberOfMembers (0x0000)'), ]
 
-GENERIC_FIELDS = [(0, 4, 'Chunk size'), (4, 2, 'WMF record type')]
+GENERIC_FIELDS = [(0, 4, 'Record size'), (4, 2, 'WMF record type')]
 
 RECORD_MARKUPS = {
+0x0102: [(6, 2, 'BkMode'), ],  # SetBkMode
+0x0104: [(6, 2, 'DrawMode'), ],  # SetROP2
+0x020B: [(6, 2, 'Y'), (8, 2, 'X')],  # SetWindowOrg
+0x020C: [(6, 2, 'Y'), (8, 2, 'X')],  # SetWindowExt
 }
