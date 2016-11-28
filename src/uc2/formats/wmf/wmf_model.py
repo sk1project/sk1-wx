@@ -38,8 +38,6 @@ class  META_Header_Record(BinaryModelObject):
 		for child in self.childs:
 			child.save(saver)
 
-	def update_for_save(self):pass
-
 	def update_for_sword(self):
 		self.cache_fields = wmfconst.HEADER_MARKUP
 
