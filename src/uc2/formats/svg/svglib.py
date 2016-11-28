@@ -341,12 +341,7 @@ def parse_svg_path_cmds(pathcmds):
 
 				l = libgeom.distance(*vector)
 
-				if l > 2.0 * r:
-					coeff = 2.0 * r / l
-					tr = [coeff, 0.0, 0.0, coeff, 0.0, 0.0]
-					dir_tr = libgeom.multiply_trafo(dir_tr, tr)
-					vector = libgeom.apply_trafo_to_points(vector, tr)
-					r = l / 2.0
+				if l > 2.0 * r: r = l / 2.0
 
 				mp = libgeom.midpoint(*vector)
 
