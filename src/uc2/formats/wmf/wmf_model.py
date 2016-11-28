@@ -17,11 +17,11 @@
 
 from uc2 import utils, cms
 from uc2.formats.generic import BinaryModelObject
-from uc2.formats.wmf.wmfconst import wmf_functions
+from uc2.formats.wmf.wmfconst import WMF_RECORD_TYPES
 
-class WMF_Header(BinaryModelObject):
+class  META_Header_Record(BinaryModelObject):
 
-	resolve_name = 'WMF_Header'
+	resolve_name = 'META_Header_Record'
 
 	def __init__(self, chunk=''):
 		if chunk: self.chunk = chunk
@@ -40,24 +40,29 @@ class WMF_Header(BinaryModelObject):
 
 	def update_for_save(self):pass
 
-class WMF_Placeable_Header(WMF_Header):
+class META_Placeable_Record(META_Header_Record):
 
-	resolve_name = 'WMF_Placeable_Header'
+	resolve_name = 'META_Placeable_Record'
 
 class WMF_Record(BinaryModelObject):
 
 	resolve_name = 'Unknown record'
 
 	def __init__(self, chunk):
+		self.cache_fields = []
 		self.chunk = chunk
+		func = utils.word2py_int(self.chunk[4:6])
+		if func in WMF_RECORD_TYPES:
+			self.resolve_name = WMF_RECORD_TYPES[func]
 
 	def resolve(self, name=''):
 		is_leaf = True
-		func = utils.word2py_int(self.chunk[4:6])
-		if func in wmf_functions:
-			self.resolve_name = wmf_functions[func]
 		info = '%d' % (len(self.childs))
 		return (is_leaf, self.resolve_name, info)
 
 	def save(self, saver):
 		saver.write(self.chunk)
+
+	def update_for_sword(self):
+		self.cache_fields.append((0, 4, 'chunk size'))
+		self.cache_fields.append((4, 2, 'WMF record type'))
