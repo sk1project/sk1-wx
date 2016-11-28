@@ -42,7 +42,7 @@ struct_wmf_header = ('<'
 						'I'  # Max. record size
 						'H'  # Num. Parameters
 						)
-
+wmf_functions = {}
 WMF_RECORD_TYPES = {
 0x0000: 'EOF Record',
 0x001E: 'SaveDC',
@@ -125,4 +125,15 @@ WMF_RECORD_TYPES = {
 0x0B41: 'DibStretchBlt',
 0x0d33: 'SetDibToDev',
 0x0F43: 'StretchDIBits',
+}
+
+PLACEABLE_MARKUP = [(0, 4, 'WMF Signature'), (4, 2, 'HWmf handle'),
+(6, 8, 'BoundingBox'), (14, 2, 'Inch'), (16, 4, 'Reserved'), (20, 2, 'Checksum')]
+HEADER_MARKUP = [(0, 2, 'Type'), (2, 2, 'HeaderSize'), (4, 2, 'Version'),
+(6, 2, 'SizeLow'), (8, 2, 'SizeHigh'), (10, 2, 'NumberOfObjects'),
+(12, 4, 'MaxRecord'), (16, 2, 'NumberOfMembers (0x0000)'), ]
+
+GENERIC_FIELDS = [(0, 4, 'Chunk size'), (4, 2, 'WMF record type')]
+
+RECORD_MARKUPS = {
 }
