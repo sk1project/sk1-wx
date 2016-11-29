@@ -207,10 +207,10 @@ GENERIC_FIELDS = [(0, 4, 'Record size'), (4, 2, 'WMF record type')]
 
 RECORD_MARKUPS = {
 # State Record Types
-0x0102: [(6, 2, 'BkMode'), ],  # SetBkMode
-0x0104: [(6, 2, 'DrawMode'), ],  # SetROP2
-0x020B: [(6, 2, 'Y'), (8, 2, 'X')],  # SetWindowOrg
-0x020C: [(6, 2, 'Y'), (8, 2, 'X')],  # SetWindowExt
+META_SETBKMODE: [(6, 2, 'BkMode'), ],
+META_SETROP2: [(6, 2, 'DrawMode'), ],
+META_SETWINDOWORG: [(6, 2, 'Y'), (8, 2, 'X')],
+META_SETWINDOWEXT: [(6, 2, 'Y'), (8, 2, 'X')],
 
 # Drawing Record Types
 }
