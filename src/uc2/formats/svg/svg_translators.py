@@ -369,6 +369,7 @@ class SVG_to_SK2_Translator(object):
 							color = stop[1]
 							color[2] *= alpha
 					self.style_opts['stroke-fill'] = stroke_fill
+					self.style_opts['stroke-fill-color'] = stroke_fill[2][2][0][1]
 					clr = parse_svg_color('black')
 					sk2_style[1] = [stroke_rule, stroke_width, clr, dash,
 						stroke_linecap, stroke_linejoin,
@@ -692,7 +693,10 @@ class SVG_to_SK2_Translator(object):
 					tr0 = self.style_opts['stroke-grad-trafo']
 					curve.fill_trafo = libgeom.multiply_trafo(tr0, trafo)
 			except:
-				obj.style[1] = []
+				if 'stroke-fill-color' in self.style_opts:
+					obj.style[1][2] = self.style_opts['stroke-fill-color']
+				else:
+					obj.style[1] = []
 
 
 		container = None
