@@ -312,6 +312,7 @@ encoding//src/uc2/formats/wmf/wmf_filters.py=utf-8
 encoding//src/uc2/formats/wmf/wmf_loader.py=utf-8
 encoding//src/uc2/formats/wmf/wmf_model.py=utf-8
 encoding//src/uc2/formats/wmf/wmf_presenter.py=utf-8
+encoding//src/uc2/formats/wmf/wmf_translators.py=utf-8
 encoding//src/uc2/formats/wmf/wmfconst.py=utf-8
 encoding//src/uc2/formats/xml_/__init__.py=utf-8
 encoding//src/uc2/formats/xml_/xml_config.py=utf-8
