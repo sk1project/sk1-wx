@@ -28,7 +28,7 @@ class  META_Header_Record(BinaryModelObject):
 		self.childs = []
 		self.cache_fields = []
 
-	def is_placeable(self): return True
+	def is_placeable(self): return False
 
 	def resolve(self, name=''):
 		is_leaf = False
@@ -47,7 +47,7 @@ class META_Placeable_Record(META_Header_Record):
 
 	resolve_name = 'META_Placeable_Record'
 
-	def is_placeable(self): return False
+	def is_placeable(self): return True
 
 	def update_for_sword(self):
 		self.cache_fields = wmfconst.PLACEABLE_MARKUP
