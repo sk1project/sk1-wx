@@ -15,7 +15,7 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2 import utils, cms
+from uc2 import utils
 from uc2.formats.generic import BinaryModelObject
 from uc2.formats.wmf import wmfconst
 
@@ -27,6 +27,8 @@ class  META_Header_Record(BinaryModelObject):
 		if chunk: self.chunk = chunk
 		self.childs = []
 		self.cache_fields = []
+
+	def is_placeable(self): return True
 
 	def resolve(self, name=''):
 		is_leaf = False
@@ -44,6 +46,8 @@ class  META_Header_Record(BinaryModelObject):
 class META_Placeable_Record(META_Header_Record):
 
 	resolve_name = 'META_Placeable_Record'
+
+	def is_placeable(self): return False
 
 	def update_for_sword(self):
 		self.cache_fields = wmfconst.PLACEABLE_MARKUP
