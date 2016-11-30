@@ -20,6 +20,10 @@ METAFILETYPES = ('\x01\x00', '\x02\x00')
 METAVERSIONS = ('\x00\x01', '\x00\x03')
 EOF_RECORD = '\x03\x00\x00\x00\x00\x00'
 
+META_DPI = 1440
+META_W = 11905.51
+META_H = 16837.80
+
 STRUCT_PLACEABLE = ('<'
 '4s'  # Key
 'H'  # handle
