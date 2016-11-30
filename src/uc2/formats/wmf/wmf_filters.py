@@ -19,7 +19,7 @@ from struct import calcsize
 
 from uc2.formats.generic_filters import AbstractBinaryLoader, AbstractSaver
 from uc2.formats.wmf.wmfconst import WMF_SIGNATURE, EOF_RECORD, META_EOF
-from uc2.formats.wmf.wmfconst import struct_wmf_header, struct_placeable_header
+from uc2.formats.wmf.wmfconst import STRUCT_HEADER, STRUCT_PLACEABLE
 from uc2.formats.wmf.wmf_model import META_Placeable_Record, \
 META_Header_Record, WMF_Record
 
@@ -33,13 +33,13 @@ class WMF_Loader(AbstractBinaryLoader):
 		sign = self.readbytes(len(WMF_SIGNATURE))
 		self.fileptr.seek(0)
 		if sign == WMF_SIGNATURE:
-			placeable_header = self.readbytes(calcsize(struct_placeable_header))
-			header = self.readbytes(calcsize(struct_wmf_header))
+			placeable_header = self.readbytes(calcsize(STRUCT_PLACEABLE))
+			header = self.readbytes(calcsize(STRUCT_HEADER))
 			self.model = META_Placeable_Record(placeable_header)
 			self.parent = META_Header_Record(header)
 			self.model.childs.append(self.parent)
 		else:
-			header = self.readbytes(calcsize(struct_wmf_header))
+			header = self.readbytes(calcsize(STRUCT_HEADER))
 			self.model = self.parent = META_Header_Record(header)
 		func = -1
 		while not func == META_EOF:

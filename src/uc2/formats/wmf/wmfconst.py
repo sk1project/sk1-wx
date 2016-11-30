@@ -20,27 +20,27 @@ METAFILETYPES = ('\x01\x00', '\x02\x00')
 METAVERSIONS = ('\x00\x01', '\x00\x03')
 EOF_RECORD = '\x03\x00\x00\x00\x00\x00'
 
-struct_placeable_header = ('<'
-							'4s'  # Key
-							'H'  # handle
-							'h'  # left
-							'h'  # top
-							'h'  # right
-							'h'  # bottom
-							'H'  # Inch
-							'I'  # Reserved
-							'H'  # Checksum
-							)
+STRUCT_PLACEABLE = ('<'
+'4s'  # Key
+'H'  # handle
+'h'  # left
+'h'  # top
+'h'  # right
+'h'  # bottom
+'H'  # Inch
+'I'  # Reserved
+'H'  # Checksum
+)
 
-struct_wmf_header = ('<'
-						'H'  # Type
-						'H'  # header size
-						'H'  # Version
-						'I'  # FileSize
-						'H'  # Num. objects
-						'I'  # Max. record size
-						'H'  # Num. Parameters
-						)
+STRUCT_HEADER = ('<'
+'H'  # Type
+'H'  # header size
+'H'  # Version
+'I'  # FileSize
+'H'  # Num. objects
+'I'  # Max. record size
+'H'  # Num. Parameters
+)
 
 
 META_EOF = 0x0000

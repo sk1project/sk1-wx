@@ -26,8 +26,8 @@ from uc2.formats.sk1.sk1utils import CreateRGBColor, StandardColors
 from uc2.formats.sk1.sk1const import ArcArc, ArcPieSlice
 from uc2.formats.sk1.sk1_loaders import GenericLoader
 
-from uc2.formats.wmf.wmfconst import WMF_SIGNATURE, struct_wmf_header, \
-struct_placeable_header
+from uc2.formats.wmf.wmfconst import WMF_SIGNATURE, STRUCT_HEADER, \
+STRUCT_PLACEABLE
 
 wmf_functions = {}
 
@@ -78,9 +78,9 @@ class WMF_Loader(GenericLoader):
 
 	def read_headers(self):
 		self.file.seek(0)
-		placeable = self.file.read(calcsize(struct_placeable_header))
+		placeable = self.file.read(calcsize(STRUCT_PLACEABLE))
 		key, handle, left, top, right, bottom, inch, reserved, checksum\
-				 = unpack(struct_placeable_header, placeable)
+				 = unpack(STRUCT_PLACEABLE, placeable)
 		if key != WMF_SIGNATURE:
 # 			raise SketchLoadError(_("The file is not a placeable "
 # 									"windows metafile"))
@@ -105,9 +105,9 @@ class WMF_Loader(GenericLoader):
 								0, factor * self.vheight)
 		self.update_trafo()
 
-		header = self.file.read(calcsize(struct_wmf_header))
+		header = self.file.read(calcsize(STRUCT_HEADER))
 		filetype, headersize, version, filesize, numobj, maxrecord, numparams\
-					 = unpack(struct_wmf_header, header)
+					 = unpack(STRUCT_HEADER, header)
 
 		self._print('\nHeader\n------\n')
 		fmt = '% 10s: %s\n'
