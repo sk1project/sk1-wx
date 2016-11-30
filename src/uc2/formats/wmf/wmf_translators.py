@@ -43,13 +43,13 @@ class WMF_to_SK2_Translator(object):
 			sig, handle, left, top, right, bottom, inch, rsvd, checksum\
 				 = unpack(wmfconst.STRUCT_PLACEABLE, self.wmf_mt.chunk)
 
-		val = 0
-		for word in unpack('<10h', self.wmf_mt.chunk[:20]):
-			val = val ^ word
-		if val != checksum:
-			msg = 'Incorrect header checksum'
-			events.emit(events.MESSAGES, msgconst.ERROR, msg)
-			raise IOError(errno.ENODATA, msg, '')
+			val = 0
+			for word in unpack('<10h', self.wmf_mt.chunk[:20]):
+				val = val ^ word
+			if val != checksum:
+				msg = 'Incorrect header checksum'
+				events.emit(events.MESSAGES, msgconst.ERROR, msg)
+				raise IOError(errno.ENODATA, msg, '')
 
 			header = self.wmf_mt.childs[0]
 
