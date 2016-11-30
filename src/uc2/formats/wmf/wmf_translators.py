@@ -17,7 +17,24 @@
 
 class WMF_to_SK2_Translator(object):
 
-	def translate(self, wmf_doc, sk2_doc):pass
+	def translate(self, wmf_doc, sk2_doc):
+		self.wmf_doc = wmf_doc
+		self.sk2_doc = sk2_doc
+		self.wmf_mt = wmf_doc.model
+		self.sk2_mt = sk2_doc.model
+		self.sk2_mtds = sk2_doc.methods
+
+		if self.wmf_mt.is_placeable():
+			self.translate_header(self.wmf_mt.chids[0])
+		else:
+			self.translate_header(self.wmf_mt)
+
+	def translate_header(self, header):
+		for record in header.childs:
+			self.translate_record(record)
+
+	def translate_record(self, record):
+		pass
 
 
 class SK2_to_WMF_Translator(object):
