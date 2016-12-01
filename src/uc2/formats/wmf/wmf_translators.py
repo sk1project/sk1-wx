@@ -228,7 +228,11 @@ class WMF_to_SK2_Translator(object):
 		rect = sk2_model.Rectangle(cfg, self.layer, rect, style=sk2_style)
 		self.layer.childs.append(rect)
 
-	def tr_round_rectangle(self, chunk):pass
+	def tr_round_rectangle(self, chunk):
+		ew, eh, bottom, right, top, left = self.get_data('<hhhhhh', chunk)
+		# TODO: calc rounding
+		left, top = apply_trafo_to_point([left, top], self.trafo)
+		right, bottom = apply_trafo_to_point([right, bottom], self.trafo)
 
 
 class SK2_to_WMF_Translator(object):
