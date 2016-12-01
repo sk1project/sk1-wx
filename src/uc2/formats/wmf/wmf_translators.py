@@ -19,7 +19,7 @@ import errno, sys
 from struct import unpack
 from copy import deepcopy
 
-from uc2 import events, msgconst, uc2const
+from uc2 import events, msgconst, uc2const, libgeom
 from uc2.libgeom import multiply_trafo, apply_trafo_to_point
 from uc2.formats.wmf import wmfconst
 from uc2.formats.sk2 import sk2_model, sk2_const
@@ -94,6 +94,7 @@ class WMF_to_SK2_Translator(object):
 			wmfconst.META_RECTANGLE:self.tr_rectangle,
 			wmfconst.META_ROUNDRECT:self.tr_round_rectangle,
 			wmfconst.META_POLYGON:self.tr_polygon,
+			wmfconst.META_POLYPOLYGON:self.tr_polypolygon,
 			}
 
 		self.translate_header(header)
@@ -244,10 +245,34 @@ class WMF_to_SK2_Translator(object):
 		points = []
 		for i in range(pointnum):
 			x, y = self.get_data('<hh', chunk[2 + i * 4:6 + i * 4])
-			points.append([x, y])
+			points.append([float(x), float(y)])
 		if not points[0] == points[-1]:points.append([] + points[0])
 		if len(points) < 3: return
 		paths = [[points[0], points[1:], sk2_const.CURVE_CLOSED], ]
+		cfg = self.layer.config
+		sk2_style = deepcopy(self.style)
+		tr = [] + self.trafo
+		curve = sk2_model.Curve(cfg, self.layer, paths, tr, sk2_style)
+		self.layer.childs.append(curve)
+
+	def tr_polypolygon(self, chunk):
+		polygonnum = unpack('<H', chunk[:2])[0]
+		pointnums = []
+		pos = 2
+		for i in range(polygonnum):
+			pointnums.append(unpack('<h', chunk[pos:pos + 2])[0])
+			pos += 2
+		paths = []
+		for pointnum in pointnums:
+			points = []
+			for i in range(pointnum):
+				x, y = self.get_data('<hh', chunk[pos:4 + pos])
+				points.append([float(x), float(y)])
+				pos += 4
+			if not points[0] == points[-1]:points.append([] + points[0])
+			paths.append([points[0], points[1:], sk2_const.CURVE_CLOSED])
+		if not paths: return
+
 		cfg = self.layer.config
 		sk2_style = deepcopy(self.style)
 		tr = [] + self.trafo
