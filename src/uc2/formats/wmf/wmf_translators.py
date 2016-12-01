@@ -66,6 +66,12 @@ class WMF_to_SK2_Translator(object):
 						- self.coef * self.vwidth / 2.0,
 						self.coef * self.vheight / 2.0]
 		self.update_trafo()
+
+		self.rec_funcs = {
+			wmfconst.META_SETWINDOWORG:self.tr_set_window_org,
+			wmfconst.META_SETWINDOWORG:self.tr_set_window_ext,
+			}
+
 		self.translate_header(header)
 
 	def update_trafo(self):
@@ -77,6 +83,8 @@ class WMF_to_SK2_Translator(object):
 		self.trafo = multiply_trafo(self.base_trafo, tr)
 
 	def get_size_pt(self, val): return val * self.coef
+	def noop(self, *args):pass
+	def get_data(self, fmt, chunk): return unpack(fmt, chunk)
 
 	def translate_header(self, header):
 		self.sk2_mt.doc_units = uc2const.UNIT_PT
@@ -90,7 +98,6 @@ class WMF_to_SK2_Translator(object):
 		ornt = uc2const.PORTRAIT
 		if width > height: ornt = uc2const.LANDSCAPE
 		page_fmt = ['Custom', (width, height), ornt]
-		print page_fmt
 
 		pages_obj = self.sk2_mtds.get_pages_obj()
 		pages_obj.page_format = page_fmt
@@ -106,7 +113,16 @@ class WMF_to_SK2_Translator(object):
 			self.translate_record(record)
 
 	def translate_record(self, record):
-		pass
+		if record.func in self.rec_funcs:
+			self.rec_funcs[record.func](record.chunk)
+
+	def tr_set_window_org(self, chunk):
+		self.wy, self.wx = self.get_data('<hh', chunk[6:])
+		self.update_trafo()
+
+	def tr_set_window_ext(self, chunk):pass
+		self.wheight, self.wwidth = self.get_data('<hh', chunk[6:])
+		self.update_trafo()
 
 
 class SK2_to_WMF_Translator(object):
