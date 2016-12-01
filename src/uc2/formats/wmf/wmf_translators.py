@@ -22,7 +22,19 @@ from copy import deepcopy
 from uc2 import events, msgconst, uc2const, libgeom
 from uc2.libgeom import multiply_trafo
 from uc2.formats.wmf import wmfconst
-from uc2.formats.sk2 import sk2_model
+from uc2.formats.sk2 import sk2_model, sk2_const
+
+SK2_CAPS = {
+0:sk2_const.CAP_BUTT,
+1:sk2_const.CAP_ROUND,
+2:sk2_const.CAP_SQUARE,
+}
+
+SK2_JOIN = {
+0:sk2_const.JOIN_MITER,
+1:sk2_const.JOIN_ROUND,
+2:sk2_const.JOIN_BEVEL,
+}
 
 class WMF_to_SK2_Translator(object):
 
@@ -38,6 +50,8 @@ class WMF_to_SK2_Translator(object):
 		right = wmfconst.META_W
 		bottom = wmfconst.META_H
 		header = self.wmf_mt
+		self.gdiobjects = []
+		self.style = [[], [], [], []]
 
 		if self.wmf_mt.is_placeable():
 			sig, handle, left, top, right, bottom, inch, rsvd, checksum\
@@ -70,6 +84,10 @@ class WMF_to_SK2_Translator(object):
 		self.rec_funcs = {
 			wmfconst.META_SETWINDOWORG:self.tr_set_window_org,
 			wmfconst.META_SETWINDOWEXT:self.tr_set_window_ext,
+			wmfconst.META_CREATEPENINDIRECT:self.tr_create_pen_in,
+			wmfconst.META_CREATEBRUSHINDIRECT:self.tr_create_brush_in,
+			wmfconst.META_SELECTOBJECT:self.tr_select_object,
+			wmfconst.META_DELETEOBJECT:self.tr_delete_object,
 			}
 
 		self.translate_header(header)
@@ -85,6 +103,16 @@ class WMF_to_SK2_Translator(object):
 	def get_size_pt(self, val): return val * self.coef
 	def noop(self, *args):pass
 	def get_data(self, fmt, chunk): return unpack(fmt, chunk)
+
+	def add_gdiobject(self, obj):
+		if None in self.gdiobjects:
+			idx = self.gdiobjects.index(None)
+			self.gdiobjects[idx] = obj
+		else:
+			self.gdiobjects.append(obj)
+
+	def delete_gdiobject(self, idx):
+		self.gdiobjects[idx] = None
 
 	def translate_header(self, header):
 		self.sk2_mt.doc_units = uc2const.UNIT_PT
@@ -114,15 +142,63 @@ class WMF_to_SK2_Translator(object):
 
 	def translate_record(self, record):
 		if record.func in self.rec_funcs:
-			self.rec_funcs[record.func](record.chunk)
+			self.rec_funcs[record.func](record.chunk[6:])
 
 	def tr_set_window_org(self, chunk):
-		self.wy, self.wx = self.get_data('<hh', chunk[6:])
+		self.wy, self.wx = self.get_data('<hh', chunk)
 		self.update_trafo()
 
 	def tr_set_window_ext(self, chunk):
-		self.wheight, self.wwidth = self.get_data('<hh', chunk[6:])
+		self.wheight, self.wwidth = self.get_data('<hh', chunk)
 		self.update_trafo()
+
+	def tr_select_object(self, chunk):
+		obj = None
+		idx = self.get_data('<h', chunk)[0]
+		if idx < len(self.gdiobjects):
+			obj = self.gdiobjects[idx]
+		if obj and obj[0] == 'stroke':
+			self.style[1] = deepcopy(obj[1])
+		elif obj and obj[0] == 'fill':
+			self.style[0] = deepcopy(obj[0])
+
+	def tr_delete_object(self, chunk):
+		idx = self.get_data('<h', chunk)[0]
+		if idx < len(self.gdiobjects):
+			self.gdiobjects[idx] = None
+
+	def tr_create_pen_in(self, chunk):
+		stroke = []
+		style, widthx, widthy, r, g, b = self.get_data('<hhhBBBx', chunk)
+		style = style & 0x000F
+		if not style == 5:
+			stroke_rule = sk2_const.STROKE_MIDDLE
+			color_vals = [r / 255.0, g / 255.0, b / 255.0]
+			color = [uc2const.COLOR_RGB, color_vals, 1.0, '']
+			stroke_width = abs(widthx * self.trafo[0])
+
+			cap = (style & 0x0F00) >> 8
+			stroke_linecap = sk2_const.CAP_BUTT
+			if cap in SK2_CAPS: stroke_linecap = SK2_CAPS[cap]
+
+			join = (style & 0x00F0) >> 4
+			stroke_linejoin = sk2_const.JOIN_MITER
+			if join in SK2_JOIN: stroke_linejoin = SK2_CAPS[cap]
+			stroke_miterlimit = 9.0
+
+			stroke = [stroke_rule, stroke_width, color, [],
+						stroke_linecap, stroke_linejoin,
+						stroke_miterlimit, 0, 1, []]
+		self.add_gdiobject(('stroke', stroke))
+
+	def tr_create_brush_in(self, chunk):
+		fill = []
+		style, r, g, b, hatch = self.get_data('<hBBBxh', chunk)
+		if not style == 1:
+			color_vals = [r / 255.0, g / 255.0, b / 255.0]
+			color = [uc2const.COLOR_RGB, color_vals, 1.0, '']
+			fill = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID, color]
+		self.add_gdiobject(('fill', fill))
 
 
 class SK2_to_WMF_Translator(object):
