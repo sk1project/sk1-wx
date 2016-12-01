@@ -216,5 +216,11 @@ META_SETROP2: [(6, 2, 'DrawMode'), ],
 META_SETWINDOWORG: [(6, 2, 'Y'), (8, 2, 'X')],
 META_SETWINDOWEXT: [(6, 2, 'Y'), (8, 2, 'X')],
 
-# Drawing Record Types
+# Object Record Types
+META_SELECTOBJECT: [(6, 2, 'Object id'), ],
+META_DELETEOBJECT: [(6, 2, 'Object id'), ],
+
+# Drawing Record Types bottom, right, top, left
+META_ELLIPSE: [(6, 2, 'bottom'), (8, 2, 'right'), (10, 2, 'top'), (12, 2, 'left'), ],
+META_RECTANGLE: [(6, 2, 'bottom'), (8, 2, 'right'), (10, 2, 'top'), (12, 2, 'left'), ],
 }
