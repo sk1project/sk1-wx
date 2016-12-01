@@ -17,7 +17,7 @@
 
 from uc2 import utils
 from uc2.formats.generic import BinaryModelObject
-from uc2.formats.wmf import wmfconst
+from uc2.formats.wmf import wmfconst, wmflib
 
 class  META_Header_Record(BinaryModelObject):
 
@@ -73,6 +73,4 @@ class WMF_Record(BinaryModelObject):
 		saver.write(self.chunk)
 
 	def update_for_sword(self):
-		self.cache_fields = [] + wmfconst.GENERIC_FIELDS
-		if self.func in wmfconst.RECORD_MARKUPS:
-			self.cache_fields += wmfconst.RECORD_MARKUPS[self.func]
+		self.cache_fields = wmflib.get_markup(self)
