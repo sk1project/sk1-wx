@@ -29,5 +29,19 @@ def get_markup(record):
 		pos = last[0] + last[1]
 		lenght = 4 * unpack('<h', record.chunk[last[0]:last[0] + 2])[0]
 		markup.append((pos, lenght, 'aPoints (32-bit points)'))
+	elif record.func == wmfconst.META_POLYPOLYGON:
+		pos = 6
+		markup.append((pos, 2, 'NumberofPolygons'))
+		polygonnum = unpack('<h', record.chunk[pos:pos + 2])[0]
+		pos += 2
+		pointnums = []
+		for i in range(polygonnum):
+			pointnums.append(unpack('<h', record.chunk[pos:pos + 2])[0])
+			markup.append((pos, 2, 'NumberofPoints'))
+			pos += 2
+		for pointnum in pointnums:
+			lenght = 4 * pointnum
+			markup.append((pos, lenght, 'aPoints (32-bit points)'))
+			pos += lenght
 
 	return markup
