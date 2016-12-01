@@ -69,7 +69,7 @@ class WMF_to_SK2_Translator(object):
 
 		self.rec_funcs = {
 			wmfconst.META_SETWINDOWORG:self.tr_set_window_org,
-			wmfconst.META_SETWINDOWORG:self.tr_set_window_ext,
+			wmfconst.META_SETWINDOWEXT:self.tr_set_window_ext,
 			}
 
 		self.translate_header(header)
@@ -120,7 +120,7 @@ class WMF_to_SK2_Translator(object):
 		self.wy, self.wx = self.get_data('<hh', chunk[6:])
 		self.update_trafo()
 
-	def tr_set_window_ext(self, chunk):pass
+	def tr_set_window_ext(self, chunk):
 		self.wheight, self.wwidth = self.get_data('<hh', chunk[6:])
 		self.update_trafo()
 
