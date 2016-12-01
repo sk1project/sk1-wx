@@ -223,7 +223,7 @@ META_DELETEOBJECT: [(6, 2, 'Object id'), ],
 META_CREATEPENINDIRECT:[(6, 2, 'PenStyle'), (8, 4, 'Width'), (12, 4, 'ColorRef'), ],
 META_CREATEBRUSHINDIRECT:[(6, 2, 'BrushStyle'), (8, 4, 'ColorRef'), (12, 2, 'BrushHatch'), ],
 
-# Drawing Record Types bottom, right, top, left
+# Drawing Record Types
 META_ELLIPSE: [(6, 2, 'bottom'), (8, 2, 'right'), (10, 2, 'top'), (12, 2, 'left'), ],
 META_RECTANGLE: [(6, 2, 'bottom'), (8, 2, 'right'), (10, 2, 'top'), (12, 2, 'left'), ],
 META_ROUNDRECT: [(6, 2, 'Height'), (8, 2, 'Width'), (10, 2, 'bottom'), (12, 2, 'right'), (14, 2, 'top'), (16, 2, 'left'), ],
