@@ -19,7 +19,7 @@ import errno, sys
 from struct import unpack
 from copy import deepcopy
 
-from uc2 import events, msgconst, uc2const, libgeom
+from uc2 import events, msgconst, uc2const
 from uc2.libgeom import multiply_trafo, apply_trafo_to_point
 from uc2.formats.wmf import wmfconst
 from uc2.formats.sk2 import sk2_model, sk2_const
@@ -93,18 +93,19 @@ class WMF_to_SK2_Translator(object):
 			wmfconst.META_ELLIPSE:self.tr_ellipse,
 			wmfconst.META_RECTANGLE:self.tr_rectangle,
 			wmfconst.META_ROUNDRECT:self.tr_round_rectangle,
+			wmfconst.META_POLYGON:self.tr_polygon,
 			}
 
 		self.translate_header(header)
 		self.sk2_mt.do_update()
 
 	def update_trafo(self):
-		wt = [1.0, 0.0, 0.0, 1.0, -self.wx, -self.wy]
-		vt = [1.0, 0.0, 0.0, 1.0, self.vx, self.vy]
+		wt = [1.0, 0.0, 0.0, 1.0, -self.wx / 2.0, -self.wy / 2.0]
+		vt = [1.0, 0.0, 0.0, 1.0, self.vx / 2.0, self.vy / 2.0]
 		scale = [float(self.vwidth) / self.wwidth, 0.0, 0.0,
 			float(self.vheight) / self.wheight, 0.0, 0.0]
-		tr = multiply_trafo(vt, multiply_trafo(scale, wt))
-		self.trafo = multiply_trafo(self.base_trafo, tr)
+		tr = multiply_trafo(multiply_trafo(wt, scale), vt)
+		self.trafo = multiply_trafo(tr, self.base_trafo)
 
 	def get_size_pt(self, val): return val * self.coef
 	def noop(self, *args):pass
@@ -144,7 +145,11 @@ class WMF_to_SK2_Translator(object):
 		self.page.childs = [self.layer, ]
 
 		for record in header.childs:
-			self.translate_record(record)
+			try:
+				self.translate_record(record)
+			except:
+				print wmfconst.WMF_RECORD_NAMES[record.func]
+				for item in sys.exc_info(): print item
 
 	def translate_record(self, record):
 		if record.func in self.rec_funcs:
@@ -233,6 +238,22 @@ class WMF_to_SK2_Translator(object):
 		# TODO: calc rounding
 		left, top = apply_trafo_to_point([left, top], self.trafo)
 		right, bottom = apply_trafo_to_point([right, bottom], self.trafo)
+
+	def tr_polygon(self, chunk):
+		pointnum = unpack('<H', chunk[:2])[0]
+		points = []
+		for i in range(pointnum):
+			x, y = self.get_data('<hh', chunk[2 + i * 4:6 + i * 4])
+			points.append([x, y])
+		if not points[0] == points[-1]:points.append([] + points[0])
+		if len(points) < 3: return
+		paths = [[points[0], points[1:], sk2_const.CURVE_CLOSED], ]
+		cfg = self.layer.config
+		sk2_style = deepcopy(self.style)
+		tr = [] + self.trafo
+		curve = sk2_model.Curve(cfg, self.layer, paths, tr, sk2_style)
+		self.layer.childs.append(curve)
+
 
 
 class SK2_to_WMF_Translator(object):
