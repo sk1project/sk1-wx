@@ -20,7 +20,7 @@ from struct import unpack
 from copy import deepcopy
 
 from uc2 import events, msgconst, uc2const, libgeom
-from uc2.libgeom import multiply_trafo
+from uc2.libgeom import multiply_trafo, apply_trafo_to_point
 from uc2.formats.wmf import wmfconst
 from uc2.formats.sk2 import sk2_model, sk2_const
 
@@ -84,13 +84,19 @@ class WMF_to_SK2_Translator(object):
 		self.rec_funcs = {
 			wmfconst.META_SETWINDOWORG:self.tr_set_window_org,
 			wmfconst.META_SETWINDOWEXT:self.tr_set_window_ext,
+
 			wmfconst.META_CREATEPENINDIRECT:self.tr_create_pen_in,
 			wmfconst.META_CREATEBRUSHINDIRECT:self.tr_create_brush_in,
 			wmfconst.META_SELECTOBJECT:self.tr_select_object,
 			wmfconst.META_DELETEOBJECT:self.tr_delete_object,
+
+			wmfconst.META_ELLIPSE:self.tr_ellipse,
+			wmfconst.META_RECTANGLE:self.tr_rectangle,
+			wmfconst.META_ROUNDRECT:self.tr_round_rectangle,
 			}
 
 		self.translate_header(header)
+		self.sk2_mt.do_update()
 
 	def update_trafo(self):
 		wt = [1.0, 0.0, 0.0, 1.0, -self.wx, -self.wy]
@@ -118,8 +124,8 @@ class WMF_to_SK2_Translator(object):
 		self.sk2_mt.doc_units = uc2const.UNIT_PT
 		center = [0.0, 0.0]
 		p = [self.wwidth, self.wheight]
-		x0, y0 = libgeom.apply_trafo_to_point(center, self.trafo)
-		x1, y1 = libgeom.apply_trafo_to_point(p, self.trafo)
+		x0, y0 = apply_trafo_to_point(center, self.trafo)
+		x1, y1 = apply_trafo_to_point(p, self.trafo)
 		width = abs(x1 - x0)
 		height = abs(y1 - y0)
 
@@ -160,7 +166,7 @@ class WMF_to_SK2_Translator(object):
 		if obj and obj[0] == 'stroke':
 			self.style[1] = deepcopy(obj[1])
 		elif obj and obj[0] == 'fill':
-			self.style[0] = deepcopy(obj[0])
+			self.style[0] = deepcopy(obj[1])
 
 	def tr_delete_object(self, chunk):
 		idx = self.get_data('<h', chunk)[0]
@@ -199,6 +205,30 @@ class WMF_to_SK2_Translator(object):
 			color = [uc2const.COLOR_RGB, color_vals, 1.0, '']
 			fill = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID, color]
 		self.add_gdiobject(('fill', fill))
+
+	def tr_ellipse(self, chunk):
+		bottom, right, top, left = self.get_data('<hhhh', chunk)
+		left, top = apply_trafo_to_point([left, top], self.trafo)
+		right, bottom = apply_trafo_to_point([right, bottom], self.trafo)
+
+		cfg = self.layer.config
+		sk2_style = deepcopy(self.style)
+		rect = [left, top, right - left, bottom - top]
+		ellipse = sk2_model.Circle(cfg, self.layer, rect, style=sk2_style)
+		self.layer.childs.append(ellipse)
+
+	def tr_rectangle(self, chunk):
+		bottom, right, top, left = self.get_data('<hhhh', chunk)
+		left, top = apply_trafo_to_point([left, top], self.trafo)
+		right, bottom = apply_trafo_to_point([right, bottom], self.trafo)
+
+		cfg = self.layer.config
+		sk2_style = deepcopy(self.style)
+		rect = [left, top, right - left, bottom - top]
+		rect = sk2_model.Rectangle(cfg, self.layer, rect, style=sk2_style)
+		self.layer.childs.append(rect)
+
+	def tr_round_rectangle(self, chunk):pass
 
 
 class SK2_to_WMF_Translator(object):
