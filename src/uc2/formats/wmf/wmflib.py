@@ -15,11 +15,19 @@
 # 	 You should have received a copy of the GNU General Public License
 # 	 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from struct import unpack
+
 from uc2.formats.wmf import wmfconst
 
 def get_markup(record):
 	markup = [] + wmfconst.GENERIC_FIELDS
 	if record.func in wmfconst.RECORD_MARKUPS:
 		markup += wmfconst.RECORD_MARKUPS[record.func]
+
+	if record.func == wmfconst.META_POLYGON:
+		last = markup[-1]
+		pos = last[0] + last[1]
+		lenght = 4 * unpack('<h', record.chunk[last[0]:last[0] + 2])[0]
+		markup.append((pos, lenght, 'aPoints (32-bit points)'))
 
 	return markup
