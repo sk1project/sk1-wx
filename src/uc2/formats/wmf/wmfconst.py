@@ -219,6 +219,8 @@ META_SETWINDOWEXT: [(6, 2, 'Y'), (8, 2, 'X')],
 # Object Record Types
 META_SELECTOBJECT: [(6, 2, 'Object id'), ],
 META_DELETEOBJECT: [(6, 2, 'Object id'), ],
+META_CREATEPENINDIRECT:[(6, 2, 'PenStyle'), (8, 4, 'Width'), (12, 4, 'ColorRef'), ],
+META_CREATEBRUSHINDIRECT:[(6, 2, 'BrushStyle'), (8, 4, 'ColorRef'), (12, 2, 'BrushHatch'), ],
 
 # Drawing Record Types bottom, right, top, left
 META_ELLIPSE: [(6, 2, 'bottom'), (8, 2, 'right'), (10, 2, 'top'), (12, 2, 'left'), ],
