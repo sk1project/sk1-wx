@@ -236,9 +236,19 @@ class WMF_to_SK2_Translator(object):
 
 	def tr_round_rectangle(self, chunk):
 		eh, ew, bottom, right, top, left = self.get_data('<hhhhhh', chunk)
-		# TODO: calc rounding
+		corners = 4 * [0.0, ]
+		if eh and ew:
+			coef = max(ew / abs(right - left), eh / abs(bottom - top))
+			corners = 4 * [coef, ]
 		left, top = apply_trafo_to_point([left, top], self.trafo)
 		right, bottom = apply_trafo_to_point([right, bottom], self.trafo)
+
+		cfg = self.layer.config
+		sk2_style = deepcopy(self.style)
+		rect = [left, top, right - left, bottom - top]
+		rect = sk2_model.Rectangle(cfg, self.layer, rect,
+								style=sk2_style, corners=corners)
+		self.layer.childs.append(rect)
 
 	def tr_polygon(self, chunk):
 		pointnum = unpack('<H', chunk[:2])[0]
