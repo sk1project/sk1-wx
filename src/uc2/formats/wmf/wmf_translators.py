@@ -95,6 +95,7 @@ class WMF_to_SK2_Translator(object):
 			wmfconst.META_ROUNDRECT:self.tr_round_rectangle,
 			wmfconst.META_POLYGON:self.tr_polygon,
 			wmfconst.META_POLYPOLYGON:self.tr_polypolygon,
+			wmfconst.META_POLYLINE:self.tr_polyline,
 			}
 
 		self.translate_header(header)
@@ -251,7 +252,7 @@ class WMF_to_SK2_Translator(object):
 		self.layer.childs.append(rect)
 
 	def tr_polygon(self, chunk):
-		pointnum = unpack('<H', chunk[:2])[0]
+		pointnum = unpack('<h', chunk[:2])[0]
 		points = []
 		for i in range(pointnum):
 			x, y = self.get_data('<hh', chunk[2 + i * 4:6 + i * 4])
@@ -259,6 +260,7 @@ class WMF_to_SK2_Translator(object):
 		if not points[0] == points[-1]:points.append([] + points[0])
 		if len(points) < 3: return
 		paths = [[points[0], points[1:], sk2_const.CURVE_CLOSED], ]
+
 		cfg = self.layer.config
 		sk2_style = deepcopy(self.style)
 		tr = [] + self.trafo
@@ -289,7 +291,21 @@ class WMF_to_SK2_Translator(object):
 		curve = sk2_model.Curve(cfg, self.layer, paths, tr, sk2_style)
 		self.layer.childs.append(curve)
 
+	def tr_polyline(self, chunk):
+		pointnum = unpack('<h', chunk[:2])[0]
+		points = []
+		for i in range(pointnum):
+			x, y = self.get_data('<hh', chunk[2 + i * 4:6 + i * 4])
+			points.append([float(x), float(y)])
+		if len(points) < 2: return
+		paths = [[points[0], points[1:], sk2_const.CURVE_OPENED], ]
 
+		cfg = self.layer.config
+		sk2_style = deepcopy(self.style)
+		sk2_style[0] = []
+		tr = [] + self.trafo
+		curve = sk2_model.Curve(cfg, self.layer, paths, tr, sk2_style)
+		self.layer.childs.append(curve)
 
 class SK2_to_WMF_Translator(object):
 
