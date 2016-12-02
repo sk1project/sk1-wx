@@ -43,5 +43,12 @@ def get_markup(record):
 			lenght = 4 * pointnum
 			markup.append((pos, lenght, 'aPoints (32-bit points)'))
 			pos += lenght
+	elif record.func == wmfconst.META_POLYLINE:
+		pos = 6
+		markup.append((pos, 2, 'NumberofPoints'))
+		pointnum = unpack('<h', record.chunk[pos:pos + 2])[0]
+		pos += 2
+		lenght = 4 * pointnum
+		markup.append((pos, lenght, 'aPoints (32-bit points)'))
 
 	return markup
