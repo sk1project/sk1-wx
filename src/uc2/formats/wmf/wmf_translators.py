@@ -96,6 +96,9 @@ class WMF_to_SK2_Translator(object):
 			wmfconst.META_POLYGON:self.tr_polygon,
 			wmfconst.META_POLYPOLYGON:self.tr_polypolygon,
 			wmfconst.META_POLYLINE:self.tr_polyline,
+			wmfconst.META_ARC:self.tr_arc,
+			wmfconst.META_CHORD:self.tr_chord,
+			wmfconst.META_PIE:self.tr_pie,
 			}
 
 		self.translate_header(header)
@@ -223,6 +226,38 @@ class WMF_to_SK2_Translator(object):
 		rect = [left, top, right - left, bottom - top]
 		ellipse = sk2_model.Circle(cfg, self.layer, rect, style=sk2_style)
 		self.layer.childs.append(ellipse)
+
+	def tr_arc(self, chunk, arc_type=sk2_const.ARC_ARC):
+		ye, xe, ys, xs, bottom, right, top, left = self.get_data('<hhhhhhhh', chunk)
+		left, top = apply_trafo_to_point([left, top], self.trafo)
+		right, bottom = apply_trafo_to_point([right, bottom], self.trafo)
+		xs, ys = apply_trafo_to_point([xs, ys], self.trafo)
+		xe, ye = apply_trafo_to_point([xe, ye], self.trafo)
+
+		if left != right and top != bottom:
+			t = [(right - left) / 2, 0, 0, (bottom - top) / 2,
+						(right + left) / 2, (top + bottom) / 2]
+			t = libgeom.invert_trafo(t)
+			xs, ys = apply_trafo_to_point([xs, ys], t)
+			xe, ye = apply_trafo_to_point([xe, ye], t)
+			end_angle = libgeom.get_point_angle([xs, ys], [0.0, 0.0])
+			start_angle = libgeom.get_point_angle([xe, ye], [0.0, 0.0])
+		else:
+			start_angle = end_angle = 0.0
+
+		cfg = self.layer.config
+		sk2_style = deepcopy(self.style)
+		if arc_type == sk2_const.ARC_ARC: sk2_style[0] = []
+		rect = [left, top, right - left, bottom - top]
+		ellipse = sk2_model.Circle(cfg, self.layer, rect, start_angle,
+								end_angle, arc_type, sk2_style)
+		self.layer.childs.append(ellipse)
+
+	def tr_chord(self, chunk):
+		self.tr_arc(chunk, sk2_const.ARC_CHORD)
+
+	def tr_pie(self, chunk):
+		self.tr_arc(chunk, sk2_const.ARC_PIE_SLICE)
 
 	def tr_rectangle(self, chunk):
 		bottom, right, top, left = self.get_data('<hhhh', chunk)
