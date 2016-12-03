@@ -91,6 +91,8 @@ class WMF_to_SK2_Translator(object):
 		self.rec_funcs = {
 			wmfconst.META_SETWINDOWORG:self.tr_set_window_org,
 			wmfconst.META_SETWINDOWEXT:self.tr_set_window_ext,
+			wmfconst.META_SAVEDC:self.tr_save_dc,
+			wmfconst.META_RESTOREDC: self.tr_restore_dc,
 
 			wmfconst.META_CREATEPENINDIRECT:self.tr_create_pen_in,
 			wmfconst.META_CREATEBRUSHINDIRECT:self.tr_create_brush_in,
@@ -191,6 +193,14 @@ class WMF_to_SK2_Translator(object):
 	def tr_set_window_ext(self, chunk):
 		self.wheight, self.wwidth = self.get_data('<hh', chunk)
 		self.update_trafo()
+
+	def tr_save_dc(self):
+		self.dcstack.append(deepcopy(self.dc))
+
+	def tr_restore_dc(self):
+		if self.dcstack:
+			self.dc = self.dcstack[-1]
+			self.dcstack = self.dcstack[:-1]
 
 	def tr_select_object(self, chunk):
 		obj = None
