@@ -36,6 +36,12 @@ wmfconst.PS_JOIN_ROUND:sk2_const.JOIN_ROUND,
 wmfconst.PS_JOIN_BEVEL:sk2_const.JOIN_BEVEL,
 }
 
+class DC_Data(object):
+
+	style = [[], [], [], []]
+	curpoint = [0.0, 0.0]
+	trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+
 class WMF_to_SK2_Translator(object):
 
 	def translate(self, wmf_doc, sk2_doc):
@@ -52,8 +58,7 @@ class WMF_to_SK2_Translator(object):
 		header = self.wmf_mt
 		self.gdiobjects = []
 		self.dcstack = []
-		self.style = [[], [], [], []]
-		self.curpoint = [0.0, 0.0]
+		self.dc = DC_Data()
 
 		if self.wmf_mt.is_placeable():
 			sig, handle, left, top, right, bottom, inch, rsvd, checksum\
@@ -121,11 +126,19 @@ class WMF_to_SK2_Translator(object):
 		scale = [float(self.vwidth) / self.wwidth, 0.0, 0.0,
 			float(self.vheight) / self.wheight, 0.0, 0.0]
 		tr = multiply_trafo(multiply_trafo(wt, scale), vt)
-		self.trafo = multiply_trafo(tr, self.base_trafo)
+		self.set_trafo(multiply_trafo(tr, self.base_trafo))
 
 	def get_size_pt(self, val): return val * self.coef
 	def noop(self, *args):pass
 	def get_data(self, fmt, chunk): return unpack(fmt, chunk)
+
+	def get_style(self): return deepcopy(self.dc.style)
+	def set_fill_style(self, fill): self.dc.style[0] = fill
+	def set_stroke_style(self, stroke): self.dc.style[1] = stroke
+	def get_curpoint(self): return [] + self.dc.curpoint
+	def set_curpoint(self, point): self.dc.curpoint = [] + point
+	def get_trafo(self): return [] + self.dc.trafo
+	def set_trafo(self, trafo): self.dc.trafo = [] + trafo
 
 	def add_gdiobject(self, obj):
 		if None in self.gdiobjects:
@@ -141,8 +154,8 @@ class WMF_to_SK2_Translator(object):
 		self.sk2_mt.doc_units = uc2const.UNIT_PT
 		center = [0.0, 0.0]
 		p = [self.wwidth, self.wheight]
-		x0, y0 = apply_trafo_to_point(center, self.trafo)
-		x1, y1 = apply_trafo_to_point(p, self.trafo)
+		x0, y0 = apply_trafo_to_point(center, self.get_trafo())
+		x1, y1 = apply_trafo_to_point(p, self.get_trafo())
 		width = abs(x1 - x0)
 		height = abs(y1 - y0)
 
@@ -184,10 +197,11 @@ class WMF_to_SK2_Translator(object):
 		idx = self.get_data('<h', chunk)[0]
 		if idx < len(self.gdiobjects):
 			obj = self.gdiobjects[idx]
-		if obj and obj[0] == 'stroke':
-			self.style[1] = deepcopy(obj[1])
-		elif obj and obj[0] == 'fill':
-			self.style[0] = deepcopy(obj[1])
+		if obj:
+			if obj[0] == 'stroke':
+				self.set_stroke_style(deepcopy(obj[1]))
+			elif obj[0] == 'fill':
+				self.set_fill_style(deepcopy(obj[1]))
 
 	def tr_delete_object(self, chunk):
 		idx = self.get_data('<h', chunk)[0]
@@ -201,7 +215,7 @@ class WMF_to_SK2_Translator(object):
 			stroke_rule = sk2_const.STROKE_MIDDLE
 			color_vals = [r / 255.0, g / 255.0, b / 255.0]
 			color = [uc2const.COLOR_RGB, color_vals, 1.0, '']
-			stroke_width = abs(width * self.trafo[0])
+			stroke_width = abs(width * self.get_trafo()[0])
 			if stroke_width < 1.0:stroke_width = 1.0
 
 
@@ -241,38 +255,38 @@ class WMF_to_SK2_Translator(object):
 
 	def tr_moveto(self, chunk):
 		y, x = self.get_data('<hh', chunk)
-		self.curpoint = [x, y]
+		self.set_curpoint([x, y])
 
 	def tr_lineto(self, chunk):
 		y, x = self.get_data('<hh', chunk)
 		p = [x, y]
-		paths = [[self.curpoint, [p, ], sk2_const.CURVE_OPENED], ]
-		self.curpoint = [] + p
+		paths = [[self.get_curpoint(), [p, ], sk2_const.CURVE_OPENED], ]
+		self.set_curpoint([] + p)
 
 		cfg = self.layer.config
-		sk2_style = deepcopy(self.style)
+		sk2_style = self.get_style()
 		sk2_style[0] = []
-		tr = [] + self.trafo
-		curve = sk2_model.Curve(cfg, self.layer, paths, tr, sk2_style)
+		curve = sk2_model.Curve(cfg, self.layer, paths,
+							self.get_trafo(), sk2_style)
 		self.layer.childs.append(curve)
 
 	def tr_ellipse(self, chunk):
 		bottom, right, top, left = self.get_data('<hhhh', chunk)
-		left, top = apply_trafo_to_point([left, top], self.trafo)
-		right, bottom = apply_trafo_to_point([right, bottom], self.trafo)
+		left, top = apply_trafo_to_point([left, top], self.get_trafo())
+		right, bottom = apply_trafo_to_point([right, bottom], self.get_trafo())
 
 		cfg = self.layer.config
-		sk2_style = deepcopy(self.style)
+		sk2_style = self.get_style()
 		rect = [left, top, right - left, bottom - top]
 		ellipse = sk2_model.Circle(cfg, self.layer, rect, style=sk2_style)
 		self.layer.childs.append(ellipse)
 
 	def tr_arc(self, chunk, arc_type=sk2_const.ARC_ARC):
 		ye, xe, ys, xs, bottom, right, top, left = self.get_data('<hhhhhhhh', chunk)
-		left, top = apply_trafo_to_point([left, top], self.trafo)
-		right, bottom = apply_trafo_to_point([right, bottom], self.trafo)
-		xs, ys = apply_trafo_to_point([xs, ys], self.trafo)
-		xe, ye = apply_trafo_to_point([xe, ye], self.trafo)
+		left, top = apply_trafo_to_point([left, top], self.get_trafo())
+		right, bottom = apply_trafo_to_point([right, bottom], self.get_trafo())
+		xs, ys = apply_trafo_to_point([xs, ys], self.get_trafo())
+		xe, ye = apply_trafo_to_point([xe, ye], self.get_trafo())
 
 		if left != right and top != bottom:
 			t = [(right - left) / 2, 0, 0, (bottom - top) / 2,
@@ -286,7 +300,7 @@ class WMF_to_SK2_Translator(object):
 			start_angle = end_angle = 0.0
 
 		cfg = self.layer.config
-		sk2_style = deepcopy(self.style)
+		sk2_style = self.get_style()
 		if arc_type == sk2_const.ARC_ARC: sk2_style[0] = []
 		rect = [left, top, right - left, bottom - top]
 		ellipse = sk2_model.Circle(cfg, self.layer, rect, start_angle,
@@ -301,11 +315,11 @@ class WMF_to_SK2_Translator(object):
 
 	def tr_rectangle(self, chunk):
 		bottom, right, top, left = self.get_data('<hhhh', chunk)
-		left, top = apply_trafo_to_point([left, top], self.trafo)
-		right, bottom = apply_trafo_to_point([right, bottom], self.trafo)
+		left, top = apply_trafo_to_point([left, top], self.get_trafo())
+		right, bottom = apply_trafo_to_point([right, bottom], self.get_trafo())
 
 		cfg = self.layer.config
-		sk2_style = deepcopy(self.style)
+		sk2_style = self.get_style()
 		rect = [left, top, right - left, bottom - top]
 		rect = sk2_model.Rectangle(cfg, self.layer, rect, style=sk2_style)
 		self.layer.childs.append(rect)
@@ -316,11 +330,11 @@ class WMF_to_SK2_Translator(object):
 		if eh and ew:
 			coef = max(ew / abs(right - left), eh / abs(bottom - top))
 			corners = 4 * [coef, ]
-		left, top = apply_trafo_to_point([left, top], self.trafo)
-		right, bottom = apply_trafo_to_point([right, bottom], self.trafo)
+		left, top = apply_trafo_to_point([left, top], self.get_trafo())
+		right, bottom = apply_trafo_to_point([right, bottom], self.get_trafo())
 
 		cfg = self.layer.config
-		sk2_style = deepcopy(self.style)
+		sk2_style = self.get_style()
 		rect = [left, top, right - left, bottom - top]
 		rect = sk2_model.Rectangle(cfg, self.layer, rect,
 								style=sk2_style, corners=corners)
@@ -337,9 +351,9 @@ class WMF_to_SK2_Translator(object):
 		paths = [[points[0], points[1:], sk2_const.CURVE_CLOSED], ]
 
 		cfg = self.layer.config
-		sk2_style = deepcopy(self.style)
-		tr = [] + self.trafo
-		curve = sk2_model.Curve(cfg, self.layer, paths, tr, sk2_style)
+		sk2_style = self.get_style()
+		curve = sk2_model.Curve(cfg, self.layer, paths,
+							self.get_trafo(), sk2_style)
 		self.layer.childs.append(curve)
 
 	def tr_polypolygon(self, chunk):
@@ -361,9 +375,9 @@ class WMF_to_SK2_Translator(object):
 		if not paths: return
 
 		cfg = self.layer.config
-		sk2_style = deepcopy(self.style)
-		tr = [] + self.trafo
-		curve = sk2_model.Curve(cfg, self.layer, paths, tr, sk2_style)
+		sk2_style = self.get_style()
+		curve = sk2_model.Curve(cfg, self.layer, paths,
+							self.get_trafo(), sk2_style)
 		self.layer.childs.append(curve)
 
 	def tr_polyline(self, chunk):
@@ -376,10 +390,10 @@ class WMF_to_SK2_Translator(object):
 		paths = [[points[0], points[1:], sk2_const.CURVE_OPENED], ]
 
 		cfg = self.layer.config
-		sk2_style = deepcopy(self.style)
+		sk2_style = self.get_style()
 		sk2_style[0] = []
-		tr = [] + self.trafo
-		curve = sk2_model.Curve(cfg, self.layer, paths, tr, sk2_style)
+		curve = sk2_model.Curve(cfg, self.layer, paths,
+							self.get_trafo(), sk2_style)
 		self.layer.childs.append(curve)
 
 class SK2_to_WMF_Translator(object):
