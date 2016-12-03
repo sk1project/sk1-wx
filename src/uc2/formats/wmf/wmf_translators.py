@@ -201,23 +201,17 @@ class WMF_to_SK2_Translator(object):
 			stroke_linecap = sk2_const.CAP_ROUND
 			cap = style & 0x0F00
 			for item in SK2_CAPS.keys():
-				if cap == item:
-					stroke_linecap = SK2_CAPS[item]
-					break
+				if cap == item: stroke_linecap = SK2_CAPS[item]
 
 			stroke_linejoin = sk2_const.JOIN_MITER
 			join = style & 0xF000
 			for item in SK2_JOIN.keys():
-				if join == item:
-					stroke_linejoin = SK2_JOIN[item]
-					break
+				if join == item: stroke_linejoin = SK2_JOIN[item]
 
 			dashes = []
 			dash = style & 0x000F
 			for item in wmfconst.META_DASHES.keys():
-				if dash == item:
-					dashes = [] + wmfconst.META_DASHES[item]
-					break
+				if dash == item: dashes = [] + wmfconst.META_DASHES[item]
 
 			stroke_miterlimit = 9.0
 
