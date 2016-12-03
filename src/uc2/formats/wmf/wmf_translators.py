@@ -41,6 +41,8 @@ class DC_Data(object):
 	style = [[], [], [], []]
 	curpoint = [0.0, 0.0]
 	trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+	opacity = False
+	bgcolor = [0.0, 0.0, 0.0]
 
 class WMF_to_SK2_Translator(object):
 
@@ -91,6 +93,8 @@ class WMF_to_SK2_Translator(object):
 		self.rec_funcs = {
 			wmfconst.META_SETWINDOWORG:self.tr_set_window_org,
 			wmfconst.META_SETWINDOWEXT:self.tr_set_window_ext,
+			wmfconst.META_SETBKMODE:self.tr_set_bg_mode,
+			wmfconst.META_SETBKCOLOR:self.tr_set_bg_color,
 			wmfconst.META_SAVEDC:self.tr_save_dc,
 			wmfconst.META_RESTOREDC: self.tr_restore_dc,
 
@@ -201,6 +205,14 @@ class WMF_to_SK2_Translator(object):
 		if self.dcstack:
 			self.dc = self.dcstack[-1]
 			self.dcstack = self.dcstack[:-1]
+
+	def tr_set_bg_mode(self, chunk):
+		mode = self.get_data('<h', chunk[:2])[0]
+		self.dc.opacity = mode == wmfconst.OPAQUE
+
+	def tr_set_bg_color(self, chunk):
+		r, g, b = self.get_data('<BBBx', chunk)[0]
+		self.dc.bgcolor = [r / 255.0, g / 255.0, b / 255.0]
 
 	def tr_select_object(self, chunk):
 		obj = None
