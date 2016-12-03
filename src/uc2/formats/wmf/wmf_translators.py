@@ -89,6 +89,13 @@ class WMF_to_SK2_Translator(object):
 
 			wmfconst.META_CREATEPENINDIRECT:self.tr_create_pen_in,
 			wmfconst.META_CREATEBRUSHINDIRECT:self.tr_create_brush_in,
+			#---------
+			wmfconst.META_CREATEFONTINDIRECT:self.tr_create_noop,
+			wmfconst.META_CREATEPALETTE:self.tr_create_noop,
+			wmfconst.META_CREATEPATTERNBRUSH:self.tr_create_noop,
+			wmfconst.META_CREATEREGION:self.tr_create_noop,
+			wmfconst.META_DIBCREATEPATTERNBRUSH:self.tr_create_noop,
+			#---------
 			wmfconst.META_SELECTOBJECT:self.tr_select_object,
 			wmfconst.META_DELETEOBJECT:self.tr_delete_object,
 
@@ -228,6 +235,9 @@ class WMF_to_SK2_Translator(object):
 			color = [uc2const.COLOR_RGB, color_vals, 1.0, '']
 			fill = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID, color]
 		self.add_gdiobject(('fill', fill))
+
+	def tr_create_noop(self, chunk):
+		self.add_gdiobject(('ignore', None))
 
 	def tr_moveto(self, chunk):
 		y, x = self.get_data('<hh', chunk)
