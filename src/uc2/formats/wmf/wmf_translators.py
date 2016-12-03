@@ -25,15 +25,15 @@ from uc2.formats.wmf import wmfconst
 from uc2.formats.sk2 import sk2_model, sk2_const
 
 SK2_CAPS = {
-0:sk2_const.CAP_BUTT,
-1:sk2_const.CAP_ROUND,
-2:sk2_const.CAP_SQUARE,
+wmfconst.PS_ENDCAP_FLAT:sk2_const.CAP_BUTT,
+wmfconst.PS_ENDCAP_ROUND:sk2_const.CAP_ROUND,
+wmfconst.PS_ENDCAP_SQUARE:sk2_const.CAP_SQUARE,
 }
 
 SK2_JOIN = {
-0:sk2_const.JOIN_MITER,
-1:sk2_const.JOIN_ROUND,
-2:sk2_const.JOIN_BEVEL,
+wmfconst.PS_JOIN_MITER:sk2_const.JOIN_MITER,
+wmfconst.PS_JOIN_ROUND:sk2_const.JOIN_ROUND,
+wmfconst.PS_JOIN_BEVEL:sk2_const.JOIN_BEVEL,
 }
 
 class WMF_to_SK2_Translator(object):
@@ -51,7 +51,9 @@ class WMF_to_SK2_Translator(object):
 		bottom = wmfconst.META_H
 		header = self.wmf_mt
 		self.gdiobjects = []
+		self.dcstack = []
 		self.style = [[], [], [], []]
+		self.curpoint = [0.0, 0.0]
 
 		if self.wmf_mt.is_placeable():
 			sig, handle, left, top, right, bottom, inch, rsvd, checksum\
@@ -99,6 +101,8 @@ class WMF_to_SK2_Translator(object):
 			wmfconst.META_ARC:self.tr_arc,
 			wmfconst.META_CHORD:self.tr_chord,
 			wmfconst.META_PIE:self.tr_pie,
+			wmfconst.META_MOVETO:self.tr_moveto,
+			wmfconst.META_LINETO:self.tr_lineto,
 			}
 
 		self.translate_header(header)
@@ -185,24 +189,39 @@ class WMF_to_SK2_Translator(object):
 
 	def tr_create_pen_in(self, chunk):
 		stroke = []
-		style, widthx, widthy, r, g, b = self.get_data('<hhhBBBx', chunk)
-		style = style & 0x000F
-		if not style == 5:
+		style, width, reserved, r, g, b = self.get_data('<hhhBBBx', chunk)
+		if not style & 0x000F == wmfconst.PS_NULL:
 			stroke_rule = sk2_const.STROKE_MIDDLE
 			color_vals = [r / 255.0, g / 255.0, b / 255.0]
 			color = [uc2const.COLOR_RGB, color_vals, 1.0, '']
-			stroke_width = abs(widthx * self.trafo[0])
+			stroke_width = abs(width * self.trafo[0])
+			if stroke_width < 1.0:stroke_width = 1.0
 
-			cap = (style & 0x0F00) >> 8
-			stroke_linecap = sk2_const.CAP_BUTT
-			if cap in SK2_CAPS: stroke_linecap = SK2_CAPS[cap]
 
-			join = (style & 0x00F0) >> 4
+			stroke_linecap = sk2_const.CAP_ROUND
+			cap = style & 0x0F00
+			for item in SK2_CAPS.keys():
+				if cap == item:
+					stroke_linecap = SK2_CAPS[item]
+					break
+
 			stroke_linejoin = sk2_const.JOIN_MITER
-			if join in SK2_JOIN: stroke_linejoin = SK2_CAPS[cap]
+			join = style & 0xF000
+			for item in SK2_JOIN.keys():
+				if join == item:
+					stroke_linejoin = SK2_JOIN[item]
+					break
+
+			dashes = []
+			dash = style & 0x000F
+			for item in wmfconst.META_DASHES.keys():
+				if dash == item:
+					dashes = [] + wmfconst.META_DASHES[item]
+					break
+
 			stroke_miterlimit = 9.0
 
-			stroke = [stroke_rule, stroke_width, color, [],
+			stroke = [stroke_rule, stroke_width, color, dashes,
 						stroke_linecap, stroke_linejoin,
 						stroke_miterlimit, 0, 1, []]
 		self.add_gdiobject(('stroke', stroke))
@@ -215,6 +234,23 @@ class WMF_to_SK2_Translator(object):
 			color = [uc2const.COLOR_RGB, color_vals, 1.0, '']
 			fill = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID, color]
 		self.add_gdiobject(('fill', fill))
+
+	def tr_moveto(self, chunk):
+		y, x = self.get_data('<hh', chunk)
+		self.curpoint = [x, y]
+
+	def tr_lineto(self, chunk):
+		y, x = self.get_data('<hh', chunk)
+		p = [x, y]
+		paths = [[self.curpoint, [p, ], sk2_const.CURVE_OPENED], ]
+		self.curpoint = [] + p
+
+		cfg = self.layer.config
+		sk2_style = deepcopy(self.style)
+		sk2_style[0] = []
+		tr = [] + self.trafo
+		curve = sk2_model.Curve(cfg, self.layer, paths, tr, sk2_style)
+		self.layer.childs.append(curve)
 
 	def tr_ellipse(self, chunk):
 		bottom, right, top, left = self.get_data('<hhhh', chunk)
