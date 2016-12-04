@@ -50,5 +50,37 @@ def get_markup(record):
 		pos += 2
 		lenght = 4 * pointnum
 		markup.append((pos, lenght, 'aPoints (32-bit points)'))
-
+	elif record.func == wmfconst.META_TEXTOUT:
+		pos = 6
+		markup.append((pos, 2, 'StringLength'))
+		lenght = unpack('<h', record.chunk[pos:pos + 2])[0]
+		if lenght % 2:lenght += 1
+		pos += 2
+		markup.append((pos, lenght, 'String'))
+		pos += lenght
+		markup.append((pos, 2, 'YStart'))
+		pos += 2
+		markup.append((pos, 2, 'XStart'))
+	elif record.func == wmfconst.META_EXTTEXTOUT:
+		pos = 6
+		markup.append((pos, 2, 'Y'))
+		pos += 2
+		markup.append((pos, 2, 'X'))
+		pos += 2
+		markup.append((pos, 2, 'StringLength'))
+		lenght = unpack('<h', record.chunk[pos:pos + 2])[0]
+		if lenght % 2:lenght += 1
+		pos += 2
+		markup.append((pos, 2, 'fwOpts'))
+		pos += 2
+		if len(record.chunk) - pos == lenght:
+			markup.append((pos, lenght, 'String'))
+		else:
+			markup.append((pos, 8, 'Rectangle'))
+			pos += 8
+			markup.append((pos, lenght, 'String'))
+			pos += lenght
+			if not len(record.chunk) == pos:
+				lenght = len(record.chunk) - pos
+				markup.append((pos, lenght, 'Dx'))
 	return markup
