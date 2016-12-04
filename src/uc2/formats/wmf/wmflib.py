@@ -83,4 +83,35 @@ def get_markup(record):
 			if not len(record.chunk) == pos:
 				lenght = len(record.chunk) - pos
 				markup.append((pos, lenght, 'Dx'))
+	elif record.func == wmfconst.META_CREATEFONTINDIRECT:
+		pos = 6
+		markup.append((pos, 2, 'Height'))
+		pos += 2
+		markup.append((pos, 2, 'Width'))
+		pos += 2
+		markup.append((pos, 2, 'Escapement'))
+		pos += 2
+		markup.append((pos, 2, 'Orientation'))
+		pos += 2
+		markup.append((pos, 2, 'Weight'))
+		pos += 2
+		markup.append((pos, 1, 'Italic'))
+		pos += 1
+		markup.append((pos, 1, 'Underline'))
+		pos += 1
+		markup.append((pos, 1, 'StrikeOut'))
+		pos += 1
+		markup.append((pos, 1, 'CharSet'))
+		pos += 1
+		markup.append((pos, 1, 'OutPrecision'))
+		pos += 1
+		markup.append((pos, 1, 'ClipPrecision'))
+		pos += 1
+		markup.append((pos, 1, 'Quality'))
+		pos += 1
+		markup.append((pos, 1, 'PitchAndFamily'))
+		pos += 1
+		lenght = len(record.chunk) - pos
+		markup.append((pos, lenght, 'Facename'))
+
 	return markup
