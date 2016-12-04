@@ -129,8 +129,8 @@ class WMF_to_SK2_Translator(object):
 
 			wmfconst.META_TEXTOUT:self.noop,
 			wmfconst.META_EXTTEXTOUT:self.noop,
-			wmfconst.META_SETTEXTCOLOR:self.noop,
-			wmfconst.META_SETTEXTALIGN:self.noop,
+			wmfconst.META_SETTEXTCOLOR:self.tr_set_text_color,
+			wmfconst.META_SETTEXTALIGN:self.tr_set_text_align,
 			wmfconst.META_SETTEXTCHAREXTRA:self.noop,
 			wmfconst.META_SETTEXTJUSTIFICATION:self.noop,
 			}
@@ -223,11 +223,11 @@ class WMF_to_SK2_Translator(object):
 		self.dc.opacity = mode == wmfconst.OPAQUE
 
 	def tr_set_bg_color(self, chunk):
-		r, g, b = self.get_data('<BBBx', chunk)[0]
+		r, g, b = self.get_data('<BBBx', chunk)
 		self.dc.bgcolor = [r / 255.0, g / 255.0, b / 255.0]
 
 	def tr_set_text_color(self, chunk):
-		r, g, b = self.get_data('<BBBx', chunk)[0]
+		r, g, b = self.get_data('<BBBx', chunk)
 		self.dc.text_color = [r / 255.0, g / 255.0, b / 255.0]
 
 	def tr_set_text_align(self, chunk):
