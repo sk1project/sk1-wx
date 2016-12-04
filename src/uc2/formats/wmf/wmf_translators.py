@@ -19,7 +19,7 @@ import errno, sys
 from struct import unpack
 from copy import deepcopy
 
-from uc2 import events, msgconst, uc2const, libgeom
+from uc2 import events, msgconst, uc2const, libgeom, libpango
 from uc2.libgeom import multiply_trafo, apply_trafo_to_point
 from uc2.formats.wmf import wmfconst
 from uc2.formats.sk2 import sk2_model, sk2_const
@@ -48,6 +48,8 @@ class DC_Data(object):
 	text_valign = sk2_const.TEXT_VALIGN_BASELINE
 	text_update_cp = True
 	text_rtl = False
+	# (fontface, size, bold,italic,underline,strikeout,charset)
+	font = ('Sans', 12, False, False, False, False, 'latin-1')
 
 class WMF_to_SK2_Translator(object):
 
@@ -105,8 +107,8 @@ class WMF_to_SK2_Translator(object):
 
 			wmfconst.META_CREATEPENINDIRECT:self.tr_create_pen_in,
 			wmfconst.META_CREATEBRUSHINDIRECT:self.tr_create_brush_in,
+			wmfconst.META_CREATEFONTINDIRECT:self.tr_create_font_in,
 			#---------
-			wmfconst.META_CREATEFONTINDIRECT:self.tr_create_noop,
 			wmfconst.META_CREATEPALETTE:self.tr_create_noop,
 			wmfconst.META_CREATEPATTERNBRUSH:self.tr_create_noop,
 			wmfconst.META_CREATEREGION:self.tr_create_noop,
@@ -149,10 +151,17 @@ class WMF_to_SK2_Translator(object):
 	def get_size_pt(self, val): return val * self.coef
 	def noop(self, *args):pass
 	def get_data(self, fmt, chunk): return unpack(fmt, chunk)
+	def parse_nt_string(self, ntstring):
+		ret = ''
+		for item in ntstring:
+			if item == '\x00': break
+			ret += item
+		return ret
 
 	def get_style(self): return deepcopy(self.dc.style)
 	def set_fill_style(self, fill): self.dc.style[0] = fill
 	def set_stroke_style(self, stroke): self.dc.style[1] = stroke
+	def set_font_style(self, font): self.dc.font = font
 	def get_curpoint(self): return [] + self.dc.curpoint
 	def set_curpoint(self, point): self.dc.curpoint = [] + point
 	def get_trafo(self): return [] + self.dc.trafo
@@ -263,6 +272,8 @@ class WMF_to_SK2_Translator(object):
 				self.set_stroke_style(deepcopy(obj[1]))
 			elif obj[0] == 'fill':
 				self.set_fill_style(deepcopy(obj[1]))
+			elif obj[0] == 'font':
+				self.set_font_style(deepcopy(obj[1]))
 
 	def tr_delete_object(self, chunk):
 		idx = self.get_data('<h', chunk)[0]
@@ -310,6 +321,30 @@ class WMF_to_SK2_Translator(object):
 			color = [uc2const.COLOR_RGB, color_vals, 1.0, '']
 			fill = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID, color]
 		self.add_gdiobject(('fill', fill))
+
+	def tr_create_font_in(self, chunk):
+		h, w, esc, ornt, weight = self.get_data('<hhhhh', chunk[:10])
+		size = round(abs(self.coef * h), 1)
+		if not size: size = 12.0
+		if size < 5.0: size = 5.0
+		fl_b = weight >= 500
+		fl_i, fl_u, fl_s, charset, op, cp, ql, pf = self.get_data('<BBBBBBBB',
+																chunk[10:18])
+		fl_i = fl_i == wmfconst.META_TRUE
+		fl_u = fl_u == wmfconst.META_TRUE
+		fl_s = fl_s == wmfconst.META_TRUE
+
+		if charset in wmfconst.META_CHARSETS:
+			charset = wmfconst.META_CHARSETS[charset]
+		else:
+			charset = wmfconst.META_CHARSETS[wmfconst.ANSI_CHARSET]
+
+		fontface = self.parse_nt_string(chunk[18:]).encode('utf-8')
+		font_family = 'Sans'
+		if fontface in libpango.get_fonts()[0]: font_family = fontface
+
+		font = (font_family, size, fl_b, fl_i, fl_u, fl_s, charset)
+		self.add_gdiobject(('font', font))
 
 	def tr_create_noop(self, chunk):
 		self.add_gdiobject(('ignore', None))
