@@ -43,6 +43,11 @@ class DC_Data(object):
 	trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
 	opacity = False
 	bgcolor = [0.0, 0.0, 0.0]
+	text_color = [0.0, 0.0, 0.0]
+	text_align = sk2_const.TEXT_ALIGN_LEFT
+	text_valign = sk2_const.TEXT_VALIGN_BASELINE
+	text_update_cp = True
+	text_rtl = False
 
 class WMF_to_SK2_Translator(object):
 
@@ -121,6 +126,13 @@ class WMF_to_SK2_Translator(object):
 			wmfconst.META_PIE:self.tr_pie,
 			wmfconst.META_MOVETO:self.tr_moveto,
 			wmfconst.META_LINETO:self.tr_lineto,
+
+			wmfconst.META_TEXTOUT:self.noop,
+			wmfconst.META_EXTTEXTOUT:self.noop,
+			wmfconst.META_SETTEXTCOLOR:self.noop,
+			wmfconst.META_SETTEXTALIGN:self.noop,
+			wmfconst.META_SETTEXTCHAREXTRA:self.noop,
+			wmfconst.META_SETTEXTJUSTIFICATION:self.noop,
 			}
 
 		self.translate_header(header)
@@ -213,6 +225,33 @@ class WMF_to_SK2_Translator(object):
 	def tr_set_bg_color(self, chunk):
 		r, g, b = self.get_data('<BBBx', chunk)[0]
 		self.dc.bgcolor = [r / 255.0, g / 255.0, b / 255.0]
+
+	def tr_set_text_color(self, chunk):
+		r, g, b = self.get_data('<BBBx', chunk)[0]
+		self.dc.text_color = [r / 255.0, g / 255.0, b / 255.0]
+
+	def tr_set_text_align(self, chunk):
+		mode = self.get_data('<h', chunk[:2])[0]
+
+		self.dc.text_update_cp = True
+		if not mode & 0x0001: self.dc.text_update_cp = False
+
+		lower = mode & 0x0007
+		self.dc.text_align = sk2_const.TEXT_ALIGN_LEFT
+		if lower & 0x0006 == wmfconst.TA_CENTER:
+			self.dc.text_align = sk2_const.TEXT_ALIGN_CENTER
+		elif lower & wmfconst.TA_RIGHT:
+			self.dc.text_align = sk2_const.TEXT_ALIGN_RIGHT
+
+		if mode & wmfconst.TA_BASELINE == wmfconst.TA_BASELINE:
+			self.dc.text_valign = sk2_const.TEXT_VALIGN_BASELINE
+		elif mode & wmfconst.TA_BOTTOM:
+			self.dc.text_valign = sk2_const.TEXT_VALIGN_BOTTOM
+		else:
+			self.dc.text_valign = sk2_const.TEXT_VALIGN_TOP
+
+		self.dc.text_rtl = False
+		if mode & wmfconst.TA_RTLREADING:self.dc.text_rtl = True
 
 	def tr_select_object(self, chunk):
 		obj = None
