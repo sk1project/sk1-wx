@@ -49,7 +49,7 @@ class DC_Data(object):
 	text_update_cp = True
 	text_rtl = False
 	# (fontface, size, bold,italic,underline,strikeout,charset)
-	font = ('Sans', 12, False, False, False, False, 'latin-1')
+	font = ('Sans', 12, False, False, False, False, 'cp1252')
 
 class WMF_to_SK2_Translator(object):
 
