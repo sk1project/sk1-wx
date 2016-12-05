@@ -42,7 +42,7 @@ class DC_Data(object):
 	curpoint = [0.0, 0.0]
 	trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
 	opacity = False
-	bgcolor = [0.0, 0.0, 0.0]
+	bgcolor = [1.0, 1.0, 1.0]
 	text_color = [0.0, 0.0, 0.0]
 	text_align = sk2_const.TEXT_ALIGN_LEFT
 	text_valign = sk2_const.TEXT_VALIGN_BASELINE
@@ -130,7 +130,7 @@ class WMF_to_SK2_Translator(object):
 			wmfconst.META_LINETO:self.tr_lineto,
 
 			wmfconst.META_TEXTOUT:self.noop,
-			wmfconst.META_EXTTEXTOUT:self.noop,
+			wmfconst.META_EXTTEXTOUT:self.tr_exttextout,
 			wmfconst.META_SETTEXTCOLOR:self.tr_set_text_color,
 			wmfconst.META_SETTEXTALIGN:self.tr_set_text_align,
 			wmfconst.META_SETTEXTCHAREXTRA:self.noop,
@@ -166,6 +166,27 @@ class WMF_to_SK2_Translator(object):
 	def set_curpoint(self, point): self.dc.curpoint = [] + point
 	def get_trafo(self): return [] + self.dc.trafo
 	def set_trafo(self, trafo): self.dc.trafo = [] + trafo
+	def get_encoding(self): return '' + self.dc.font[-1]
+	def get_text_style(self):
+		sk2_style = [[], [], [], []]
+		clr = [] + self.dc.text_color
+		clr = [uc2const.COLOR_RGB, clr, 1.0, '', '']
+		sk2_style[0] = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID, clr]
+
+		font = deepcopy(self.dc.font)
+		faces = libpango.get_fonts()[1][font[0]]
+		font_face = faces[0]
+		if 'Regular' in faces: font_face = 'Regular'
+		elif 'Normal' in faces: font_face = 'Normal'
+
+		sk2_style[2] = [font[0], font_face, font[1],
+								self.dc.text_align, [], True]
+		tags = []
+		if font[2]:tags.append('b')
+		if font[3]:tags.append('i')
+		if font[4]:tags.append('u')
+		if font[5]:tags.append('s')
+		return sk2_style, tags
 
 	def add_gdiobject(self, obj):
 		if None in self.gdiobjects:
@@ -324,7 +345,7 @@ class WMF_to_SK2_Translator(object):
 
 	def tr_create_font_in(self, chunk):
 		h, w, esc, ornt, weight = self.get_data('<hhhhh', chunk[:10])
-		size = round(abs(self.coef * h), 1)
+		size = round(abs(self.coef * h), 1) * .7
 		if not size: size = 12.0
 		if size < 5.0: size = 5.0
 		fl_b = weight >= 500
@@ -491,6 +512,39 @@ class WMF_to_SK2_Translator(object):
 		curve = sk2_model.Curve(cfg, self.layer, paths,
 							self.get_trafo(), sk2_style)
 		self.layer.childs.append(curve)
+
+	def tr_exttextout(self, chunk):
+		y, x, length, fwopts = self.get_data('<hhhh', chunk[:8])
+		dl = 0
+		if length % 2:
+			length += 1
+			dl += 1
+		p = apply_trafo_to_point([x, y], self.get_trafo())
+
+		encoding = self.get_encoding()
+		pos = 8
+		if not len(chunk) - 8 == length:pos = 16
+		txt = chunk[pos:pos + length - dl].decode(encoding)
+		txt_length = len(txt)
+		txt = txt.encode('utf-8')
+
+		cfg = self.layer.config
+		sk2_style, tags = self.get_text_style()
+		markup = [[tags, (0, txt_length)]]
+		tr = [] + libgeom.NORMAL_TRAFO
+		text = sk2_model.Text(cfg, self.layer, p, txt, -1, tr, sk2_style)
+		text.markup = markup
+		if self.dc.opacity:
+			bg_style = [[], [], [], []]
+			clr = [] + self.dc.bgcolor
+			clr = [uc2const.COLOR_RGB, clr, 1.0, '', '']
+			bg_style[0] = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID, clr]
+			text.update()
+			bbox = [] + text.cache_bbox
+			rect = bbox[:2] + [bbox[2] - bbox[0], bbox[3] - bbox[1]]
+			rect = sk2_model.Rectangle(cfg, self.layer, rect, style=bg_style)
+			self.layer.childs.append(rect)
+		self.layer.childs.append(text)
 
 class SK2_to_WMF_Translator(object):
 
