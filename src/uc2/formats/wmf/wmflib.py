@@ -27,8 +27,8 @@ def get_markup(record):
 	if record.func == wmfconst.META_POLYGON:
 		last = markup[-1]
 		pos = last[0] + last[1]
-		lenght = 4 * unpack('<h', record.chunk[last[0]:last[0] + 2])[0]
-		markup.append((pos, lenght, 'aPoints (32-bit points)'))
+		length = 4 * unpack('<h', record.chunk[last[0]:last[0] + 2])[0]
+		markup.append((pos, length, 'aPoints (32-bit points)'))
 	elif record.func == wmfconst.META_POLYPOLYGON:
 		pos = 6
 		markup.append((pos, 2, 'NumberofPolygons'))
@@ -40,24 +40,24 @@ def get_markup(record):
 			markup.append((pos, 2, 'NumberofPoints'))
 			pos += 2
 		for pointnum in pointnums:
-			lenght = 4 * pointnum
-			markup.append((pos, lenght, 'aPoints (32-bit points)'))
-			pos += lenght
+			length = 4 * pointnum
+			markup.append((pos, length, 'aPoints (32-bit points)'))
+			pos += length
 	elif record.func == wmfconst.META_POLYLINE:
 		pos = 6
 		markup.append((pos, 2, 'NumberofPoints'))
 		pointnum = unpack('<h', record.chunk[pos:pos + 2])[0]
 		pos += 2
-		lenght = 4 * pointnum
-		markup.append((pos, lenght, 'aPoints (32-bit points)'))
+		length = 4 * pointnum
+		markup.append((pos, length, 'aPoints (32-bit points)'))
 	elif record.func == wmfconst.META_TEXTOUT:
 		pos = 6
 		markup.append((pos, 2, 'StringLength'))
-		lenght = unpack('<h', record.chunk[pos:pos + 2])[0]
-		if lenght % 2:lenght += 1
+		length = unpack('<h', record.chunk[pos:pos + 2])[0]
+		if length % 2:length += 1
 		pos += 2
-		markup.append((pos, lenght, 'String'))
-		pos += lenght
+		markup.append((pos, length, 'String'))
+		pos += length
 		markup.append((pos, 2, 'YStart'))
 		pos += 2
 		markup.append((pos, 2, 'XStart'))
@@ -68,21 +68,21 @@ def get_markup(record):
 		markup.append((pos, 2, 'X'))
 		pos += 2
 		markup.append((pos, 2, 'StringLength'))
-		lenght = unpack('<h', record.chunk[pos:pos + 2])[0]
-		if lenght % 2:lenght += 1
+		length = unpack('<h', record.chunk[pos:pos + 2])[0]
+		if length % 2:length += 1
 		pos += 2
 		markup.append((pos, 2, 'fwOpts'))
 		pos += 2
-		if len(record.chunk) - pos == lenght:
-			markup.append((pos, lenght, 'String'))
+		if len(record.chunk) - pos == length:
+			markup.append((pos, length, 'String'))
 		else:
 			markup.append((pos, 8, 'Rectangle'))
 			pos += 8
-			markup.append((pos, lenght, 'String'))
-			pos += lenght
+			markup.append((pos, length, 'String'))
+			pos += length
 			if not len(record.chunk) == pos:
-				lenght = len(record.chunk) - pos
-				markup.append((pos, lenght, 'Dx'))
+				length = len(record.chunk) - pos
+				markup.append((pos, length, 'Dx'))
 	elif record.func == wmfconst.META_CREATEFONTINDIRECT:
 		pos = 6
 		markup.append((pos, 2, 'Height'))
@@ -111,7 +111,7 @@ def get_markup(record):
 		pos += 1
 		markup.append((pos, 1, 'PitchAndFamily'))
 		pos += 1
-		lenght = len(record.chunk) - pos
-		markup.append((pos, lenght, 'Facename'))
+		length = len(record.chunk) - pos
+		markup.append((pos, length, 'Facename'))
 
 	return markup
