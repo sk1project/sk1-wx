@@ -129,7 +129,7 @@ class WMF_to_SK2_Translator(object):
 			wmfconst.META_MOVETO:self.tr_moveto,
 			wmfconst.META_LINETO:self.tr_lineto,
 
-			wmfconst.META_TEXTOUT:self.noop,
+			wmfconst.META_TEXTOUT:self.tr_textout,
 			wmfconst.META_EXTTEXTOUT:self.tr_exttextout,
 			wmfconst.META_SETTEXTCOLOR:self.tr_set_text_color,
 			wmfconst.META_SETTEXTALIGN:self.tr_set_text_align,
@@ -399,7 +399,8 @@ class WMF_to_SK2_Translator(object):
 		self.layer.childs.append(ellipse)
 
 	def tr_arc(self, chunk, arc_type=sk2_const.ARC_ARC):
-		ye, xe, ys, xs, bottom, right, top, left = self.get_data('<hhhhhhhh', chunk)
+		ye, xe, ys, xs, bottom, right, top, left = self.get_data('<hhhhhhhh',
+																chunk)
 		left, top = apply_trafo_to_point([left, top], self.get_trafo())
 		right, bottom = apply_trafo_to_point([right, bottom], self.get_trafo())
 		xs, ys = apply_trafo_to_point([xs, ys], self.get_trafo())
@@ -512,6 +513,34 @@ class WMF_to_SK2_Translator(object):
 		curve = sk2_model.Curve(cfg, self.layer, paths,
 							self.get_trafo(), sk2_style)
 		self.layer.childs.append(curve)
+
+	def tr_textout(self, chunk):
+		length = unpack('<h', chunk[:2])[0]
+
+		encoding = self.get_encoding()
+		txt = chunk[8:8 + length].decode(encoding)
+		txt_length = len(txt)
+		txt = txt.encode('utf-8')
+		y, x, = self.get_data('<hhhh', chunk[8 + length:16 + length])
+		p = apply_trafo_to_point([x, y], self.get_trafo())
+
+		cfg = self.layer.config
+		sk2_style, tags = self.get_text_style()
+		markup = [[tags, (0, txt_length)]]
+		tr = [] + libgeom.NORMAL_TRAFO
+		text = sk2_model.Text(cfg, self.layer, p, txt, -1, tr, sk2_style)
+		text.markup = markup
+		if self.dc.opacity:
+			bg_style = [[], [], [], []]
+			clr = [] + self.dc.bgcolor
+			clr = [uc2const.COLOR_RGB, clr, 1.0, '', '']
+			bg_style[0] = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID, clr]
+			text.update()
+			bbox = [] + text.cache_bbox
+			rect = bbox[:2] + [bbox[2] - bbox[0], bbox[3] - bbox[1]]
+			rect = sk2_model.Rectangle(cfg, self.layer, rect, style=bg_style)
+			self.layer.childs.append(rect)
+		self.layer.childs.append(text)
 
 	def tr_exttextout(self, chunk):
 		y, x, length, fwopts = self.get_data('<hhhh', chunk[:8])
