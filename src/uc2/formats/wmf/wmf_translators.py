@@ -386,7 +386,7 @@ class WMF_to_SK2_Translator(object):
 				offset += colorsnum * 3
 			else:
 				offset += math.pow(2, bitsperpixel) * 3
-
+		print bitsperpixel
 		offset = math.ceil(offset / 4.0) * 4
 
 		pixel_offset = pack('<I', 14 + offset)
@@ -397,7 +397,7 @@ class WMF_to_SK2_Translator(object):
 		ptrn, flag = libimg.read_pattern(imagestr)
 
 		ptrn_type = sk2_const.PATTERN_TRUECOLOR
-		if flag: ptrn_type = sk2_const.PATTERN_IMG
+		if flag or bitsperpixel < 24: ptrn_type = sk2_const.PATTERN_IMG
 		ptrn_style = [deepcopy(sk2_const.RGB_BLACK),
 					deepcopy(sk2_const.RGB_WHITE)]
 		ptrn_trafo = [] + sk2_const.NORMAL_TRAFO
