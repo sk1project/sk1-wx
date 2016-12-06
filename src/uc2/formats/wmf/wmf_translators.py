@@ -16,10 +16,12 @@
 # 	 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import errno, sys
-from struct import unpack
+from struct import unpack, pack
 from copy import deepcopy
+from PIL import Image
+from cStringIO import StringIO
 
-from uc2 import events, msgconst, uc2const, libgeom, libpango
+from uc2 import events, msgconst, uc2const, libgeom, libpango, libimg
 from uc2.libgeom import multiply_trafo, apply_trafo_to_point
 from uc2.formats.wmf import wmfconst
 from uc2.formats.sk2 import sk2_model, sk2_const
@@ -108,11 +110,11 @@ class WMF_to_SK2_Translator(object):
 			wmfconst.META_CREATEPENINDIRECT:self.tr_create_pen_in,
 			wmfconst.META_CREATEBRUSHINDIRECT:self.tr_create_brush_in,
 			wmfconst.META_CREATEFONTINDIRECT:self.tr_create_font_in,
+			wmfconst.META_DIBCREATEPATTERNBRUSH:self.tr_dibcreate_pat_brush,
 			#---------
 			wmfconst.META_CREATEPALETTE:self.tr_create_noop,
 			wmfconst.META_CREATEPATTERNBRUSH:self.tr_create_noop,
 			wmfconst.META_CREATEREGION:self.tr_create_noop,
-			wmfconst.META_DIBCREATEPATTERNBRUSH:self.tr_create_noop,
 			#---------
 			wmfconst.META_SELECTOBJECT:self.tr_select_object,
 			wmfconst.META_DELETEOBJECT:self.tr_delete_object,
@@ -366,6 +368,28 @@ class WMF_to_SK2_Translator(object):
 
 		font = (font_family, size, fl_b, fl_i, fl_u, fl_s, charset)
 		self.add_gdiobject(('font', font))
+
+	def tr_dibcreate_pat_brush(self, chunk):
+		style, colorusage = self.get_data('<hh', chunk[:4])
+		dib = chunk[4:]
+		dib_header_size = self.get_data('<I', dib[:4])[0]
+# 		print self.get_data('<I', dib[32:36])[0]
+		pixel_offset = pack('<I', 14 + 8 + dib_header_size)
+		file_size = pack('<I', 14 + len(dib))
+		imagestr = 'BM' + file_size + '\x00\x00\x00\x00' + pixel_offset + dib
+
+		ptrn, flag = libimg.read_pattern(imagestr)
+
+		ptrn_type = sk2_const.PATTERN_TRUECOLOR
+		if flag: ptrn_type = sk2_const.PATTERN_IMG
+		ptrn_style = [deepcopy(sk2_const.RGB_BLACK),
+					deepcopy(sk2_const.RGB_WHITE)]
+		ptrn_trafo = [] + sk2_const.NORMAL_TRAFO
+		ptrn_transf = [] + sk2_const.PATTERN_TRANSFORMS
+
+		pattern = [ptrn_type, ptrn, ptrn_style, ptrn_trafo, ptrn_transf]
+		fill = [sk2_const.FILL_EVENODD, sk2_const.FILL_PATTERN, pattern]
+		self.add_gdiobject(('fill', fill))
 
 	def tr_create_noop(self, chunk):
 		self.add_gdiobject(('ignore', None))
