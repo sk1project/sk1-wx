@@ -23,7 +23,7 @@ from cStringIO import StringIO
 
 from uc2 import events, msgconst, uc2const, libgeom, libpango, libimg
 from uc2.libgeom import multiply_trafo, apply_trafo_to_point
-from uc2.formats.wmf import wmfconst
+from uc2.formats.wmf import wmfconst, wmf_hatches
 from uc2.formats.sk2 import sk2_model, sk2_const
 
 SK2_CAPS = {
@@ -339,10 +339,23 @@ class WMF_to_SK2_Translator(object):
 	def tr_create_brush_in(self, chunk):
 		fill = []
 		style, r, g, b, hatch = self.get_data('<hBBBxh', chunk)
-		if not style == 1:
-			color_vals = [r / 255.0, g / 255.0, b / 255.0]
-			color = [uc2const.COLOR_RGB, color_vals, 1.0, '']
+		color_vals = [r / 255.0, g / 255.0, b / 255.0]
+		color = [uc2const.COLOR_RGB, color_vals, 1.0, '']
+		if style == wmfconst.BS_SOLID:
 			fill = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID, color]
+		elif style == wmfconst.BS_HATCHED:
+			if not hatch in wmf_hatches.WMF_HATCHES:
+				hatch = wmfconst.HS_HORIZONTAL
+			ptrn = wmf_hatches.WMF_HATCHES[hatch]
+			ptrn_type = sk2_const.PATTERN_IMG
+
+			bgcolor = [uc2const.COLOR_RGB, [] + self.dc.bgcolor, 1.0, '']
+			ptrn_style = [color, bgcolor]
+
+			ptrn_trafo = [] + sk2_const.NORMAL_TRAFO
+			ptrn_transf = [] + sk2_const.PATTERN_TRANSFORMS
+			pattern = [ptrn_type, ptrn, ptrn_style, ptrn_trafo, ptrn_transf]
+			fill = [sk2_const.FILL_EVENODD, sk2_const.FILL_PATTERN, pattern]
 		self.add_gdiobject(('fill', fill))
 
 	def tr_create_font_in(self, chunk):
@@ -386,7 +399,6 @@ class WMF_to_SK2_Translator(object):
 				offset += colorsnum * 3
 			else:
 				offset += math.pow(2, bitsperpixel) * 3
-		print bitsperpixel
 		offset = math.ceil(offset / 4.0) * 4
 
 		pixel_offset = pack('<I', 14 + offset)
@@ -397,7 +409,7 @@ class WMF_to_SK2_Translator(object):
 		ptrn, flag = libimg.read_pattern(imagestr)
 
 		ptrn_type = sk2_const.PATTERN_TRUECOLOR
-		if flag or bitsperpixel < 24: ptrn_type = sk2_const.PATTERN_IMG
+		if flag or bitsperpixel == 1: ptrn_type = sk2_const.PATTERN_IMG
 		ptrn_style = [deepcopy(sk2_const.RGB_BLACK),
 					deepcopy(sk2_const.RGB_WHITE)]
 		ptrn_trafo = [] + sk2_const.NORMAL_TRAFO
