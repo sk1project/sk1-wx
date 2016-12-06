@@ -113,5 +113,13 @@ def get_markup(record):
 		pos += 1
 		length = len(record.chunk) - pos
 		markup.append((pos, length, 'Facename'))
+	elif record.func == wmfconst.META_DIBCREATEPATTERNBRUSH:
+		pos = 6
+		markup.append((pos, 2, 'Style'))
+		pos += 2
+		markup.append((pos, 2, 'ColorUsage'))
+		pos += 2
+		length = len(record.chunk) - pos
+		markup.append((pos, length, 'Variable-bit DIB Object'))
 
 	return markup
