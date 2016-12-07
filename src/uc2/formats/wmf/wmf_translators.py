@@ -386,7 +386,7 @@ class WMF_to_SK2_Translator(object):
 		font_family = 'Sans'
 		if fontface in libpango.get_fonts()[0]: font_family = fontface
 
-		font = (font_family, size, fl_b, fl_i, fl_u, fl_s, charset)
+		font = (font_family, size, fl_b, fl_i, fl_u, fl_s, esc / 10.0, charset)
 		self.add_gdiobject(('font', font))
 
 	def tr_dibcreate_pat_brush(self, chunk):
@@ -620,6 +620,7 @@ class WMF_to_SK2_Translator(object):
 		sk2_style, tags = self.get_text_style()
 		markup = [[tags, (0, txt_length)]]
 		tr = [] + libgeom.NORMAL_TRAFO
+
 		text = sk2_model.Text(cfg, self.layer, p, txt, -1, tr, sk2_style)
 		text.markup = markup
 		if self.dc.opacity:
@@ -631,8 +632,24 @@ class WMF_to_SK2_Translator(object):
 			bbox = [] + text.cache_bbox
 			rect = bbox[:2] + [bbox[2] - bbox[0], bbox[3] - bbox[1]]
 			rect = sk2_model.Rectangle(cfg, self.layer, rect, style=bg_style)
+			rect.trafo = tr
 			self.layer.childs.append(rect)
+		if self.dc.font[-2]:
+			tr = libgeom.trafo_rotate_grad(self.dc.font[-2], p[0], p[1])
+			text.trafo = libgeom.multiply_trafo(text.trafo, tr)
+			if self.dc.opacity:
+				rect.trafo = libgeom.multiply_trafo(rect.trafo, tr)
 		self.layer.childs.append(text)
+
+	def _draw_point(self, point):
+		style = [[], [], [], []]
+		clr = [] + sk2_const.RGB_BLACK
+		clr[1] = [1.0, 0.0, 0.0]
+		style[0] = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID, clr]
+		rect = point + [3.0, 3.0]
+		rect = sk2_model.Rectangle(self.layer.config, self.layer,
+								rect, style=style)
+		self.layer.childs.append(rect)
 
 class SK2_to_WMF_Translator(object):
 
