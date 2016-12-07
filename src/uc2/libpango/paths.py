@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2016 by Igor E. Novikov
+# 	Copyright (C) 2016 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import os
@@ -196,8 +196,16 @@ def get_glyphs(ctx, layout_data, text, width, text_style, markup):
 		i += 1
 
 		if item in NONPRINTING_CHARS:
-			glyphs.append(None)
-			continue
+			res = False
+			if markup and not item == '\n':
+				for mrk in markup:
+					if 'u' in mrk[0] or 's' in mrk[0]:
+						if i >= mrk[1][0] and i < mrk[1][1]:
+							res = True
+							break
+			if not res:
+				glyphs.append(None)
+				continue
 
 		ctx.new_path()
 		ctx.move_to(0, 0)
@@ -285,7 +293,7 @@ def get_text_paths(orig_text, width, text_style, markup):
 	rtl_regs = []
 	rtl_flag = False
 
-	#Ligature support
+	# Ligature support
 	if text_style[5]:
 		data = core.get_cluster_positions(len(orig_text))
 		layout_data, clusters, clusters_index, bidi_flag, rtl_flag = data
@@ -312,7 +320,7 @@ def get_text_paths(orig_text, width, text_style, markup):
 			glyphs = get_rtl_glyphs(ctx, layout_data, log_layout_data,
 					byte_dict, log_rtl_regs, text, width, text_style, markup)
 
-	#Simple char-by-char rendering
+	# Simple char-by-char rendering
 	else:
 		layout_data = core.get_char_positions(len(orig_text))
 		log_layout_data = layout_data
