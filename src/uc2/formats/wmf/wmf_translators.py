@@ -18,8 +18,6 @@
 import errno, sys, math
 from struct import unpack, pack
 from copy import deepcopy
-from PIL import Image
-from cStringIO import StringIO
 
 from uc2 import events, msgconst, uc2const, libgeom, libpango, libimg
 from uc2.libgeom import multiply_trafo, apply_trafo_to_point
@@ -599,6 +597,11 @@ class WMF_to_SK2_Translator(object):
 			rect = bbox[:2] + [bbox[2] - bbox[0], bbox[3] - bbox[1]]
 			rect = sk2_model.Rectangle(cfg, self.layer, rect, style=bg_style)
 			self.layer.childs.append(rect)
+		if self.dc.font[-2]:
+			tr = libgeom.trafo_rotate_grad(self.dc.font[-2], p[0], p[1])
+			text.trafo = libgeom.multiply_trafo(text.trafo, tr)
+			if self.dc.opacity:
+				rect.trafo = libgeom.multiply_trafo(rect.trafo, tr)
 		self.layer.childs.append(text)
 
 	def tr_exttextout(self, chunk):
