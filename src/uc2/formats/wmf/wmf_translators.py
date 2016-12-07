@@ -36,6 +36,11 @@ wmfconst.PS_JOIN_ROUND:sk2_const.JOIN_ROUND,
 wmfconst.PS_JOIN_BEVEL:sk2_const.JOIN_BEVEL,
 }
 
+SK2_FILL_RULE = {
+wmfconst.ALTERNATE:sk2_const.FILL_EVENODD,
+wmfconst.WINDING:sk2_const.FILL_NONZERO,
+}
+
 class DC_Data(object):
 
 	style = [[], [], [], []]
@@ -43,6 +48,7 @@ class DC_Data(object):
 	trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
 	opacity = True
 	bgcolor = [1.0, 1.0, 1.0]
+	fill_rule = sk2_const.FILL_EVENODD
 	text_color = [0.0, 0.0, 0.0]
 	text_align = sk2_const.TEXT_ALIGN_LEFT
 	text_valign = sk2_const.TEXT_VALIGN_BASELINE
@@ -100,6 +106,7 @@ class WMF_to_SK2_Translator(object):
 		self.rec_funcs = {
 			wmfconst.META_SETWINDOWORG:self.tr_set_window_org,
 			wmfconst.META_SETWINDOWEXT:self.tr_set_window_ext,
+			wmfconst.META_SETPOLYFILLMODE:self.tr_set_polyfill_mode,
 			wmfconst.META_SETBKMODE:self.tr_set_bg_mode,
 			wmfconst.META_SETBKCOLOR:self.tr_set_bg_color,
 			wmfconst.META_SAVEDC:self.tr_save_dc,
@@ -160,6 +167,7 @@ class WMF_to_SK2_Translator(object):
 
 	def get_style(self):
 		style = deepcopy(self.dc.style)
+		if style[0]:style[0][0] = self.dc.fill_rule
 		if style[0] and style[0][1] == sk2_const.FILL_PATTERN:
 			alpha = 1.0
 			if not self.dc.opacity: alpha = 0.0
@@ -246,6 +254,11 @@ class WMF_to_SK2_Translator(object):
 	def tr_set_window_ext(self, chunk):
 		self.wheight, self.wwidth = self.get_data('<hh', chunk)
 		self.update_trafo()
+
+	def tr_set_polyfill_mode(self, chunk):
+		mode = self.get_data('<hh', chunk)[0]
+		if mode in SK2_FILL_RULE:
+			self.dc.fill_rule = SK2_FILL_RULE[mode]
 
 	def tr_save_dc(self):
 		self.dcstack.append(deepcopy(self.dc))
