@@ -43,7 +43,7 @@ class DC_Data(object):
 	style = [[], [], [], []]
 	curpoint = [0.0, 0.0]
 	trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
-	opacity = False
+	opacity = True
 	bgcolor = [1.0, 1.0, 1.0]
 	text_color = [0.0, 0.0, 0.0]
 	text_align = sk2_const.TEXT_ALIGN_LEFT
@@ -160,7 +160,14 @@ class WMF_to_SK2_Translator(object):
 			ret += item
 		return ret
 
-	def get_style(self): return deepcopy(self.dc.style)
+	def get_style(self):
+		style = deepcopy(self.dc.style)
+		if style[0] and style[0][1] == sk2_const.FILL_PATTERN:
+			alpha = 1.0
+			if not self.dc.opacity: alpha = 0.0
+			style[0][2][2][1][2] = alpha
+		return style
+
 	def set_fill_style(self, fill): self.dc.style[0] = fill
 	def set_stroke_style(self, stroke): self.dc.style[1] = stroke
 	def set_font_style(self, font): self.dc.font = font
