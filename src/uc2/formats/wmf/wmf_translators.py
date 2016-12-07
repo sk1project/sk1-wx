@@ -48,8 +48,8 @@ class DC_Data(object):
 	text_valign = sk2_const.TEXT_VALIGN_BASELINE
 	text_update_cp = True
 	text_rtl = False
-	# (fontface, size, bold,italic,underline,strikeout,charset)
-	font = ('Sans', 12, False, False, False, False, 'cp1252')
+	# (fontface, size, bold,italic,underline,strikeout, rotate, charset)
+	font = ('Sans', 12, False, False, False, False, 0.0, 'cp1252')
 
 class WMF_to_SK2_Translator(object):
 
