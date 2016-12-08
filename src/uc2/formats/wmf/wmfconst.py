@@ -314,6 +314,8 @@ META_SETBKCOLOR: [(6, 4, 'ColorRef'), ],
 META_SETROP2: [(6, 2, 'DrawMode'), ],
 META_SETWINDOWORG: [(6, 2, 'Y'), (8, 2, 'X')],
 META_SETWINDOWEXT: [(6, 2, 'Y'), (8, 2, 'X')],
+META_SETPOLYFILLMODE: [(6, 2, 'PolyFillMode'), (8, 2, 'Reserved')],
+META_SETMAPMODE: [(6, 2, 'MapMode'), ],
 META_SETTEXTCOLOR: [(6, 4, 'ColorRef'), ],
 META_SETTEXTALIGN: [(6, 2, 'TextAlignmentMode'), ],
 
