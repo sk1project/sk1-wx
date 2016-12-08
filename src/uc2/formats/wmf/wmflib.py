@@ -123,7 +123,7 @@ def get_markup(record):
 		markup.append((pos, length, 'Variable-bit DIB Object'))
 	elif record.func == wmfconst.META_STRETCHDIB:
 		pos = 6
-		markup.append((pos, 2, 'RasterOperation'))
+		markup.append((pos, 4, 'RasterOperation'))
 		pos += 4
 		markup.append((pos, 2, 'ColorUsage'))
 		pos += 2
