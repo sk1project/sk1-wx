@@ -121,5 +121,29 @@ def get_markup(record):
 		pos += 2
 		length = len(record.chunk) - pos
 		markup.append((pos, length, 'Variable-bit DIB Object'))
+	elif record.func == wmfconst.META_STRETCHDIB:
+		pos = 6
+		markup.append((pos, 2, 'RasterOperation'))
+		pos += 4
+		markup.append((pos, 2, 'ColorUsage'))
+		pos += 2
+		markup.append((pos, 2, 'SrcHeight'))
+		pos += 2
+		markup.append((pos, 2, 'SrcWidth'))
+		pos += 2
+		markup.append((pos, 2, 'YSrc'))
+		pos += 2
+		markup.append((pos, 2, 'XSrc'))
+		pos += 2
+		markup.append((pos, 2, 'DestHeight'))
+		pos += 2
+		markup.append((pos, 2, 'DestWidth'))
+		pos += 2
+		markup.append((pos, 2, 'yDst'))
+		pos += 2
+		markup.append((pos, 2, 'xDst'))
+		pos += 2
+		length = len(record.chunk) - pos
+		markup.append((pos, length, 'Variable-bit DIB Object'))
 
 	return markup
