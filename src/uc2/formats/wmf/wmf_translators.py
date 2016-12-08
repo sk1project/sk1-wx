@@ -116,6 +116,7 @@ class WMF_to_SK2_Translator(object):
 			wmfconst.META_CREATEBRUSHINDIRECT:self.tr_create_brush_in,
 			wmfconst.META_CREATEFONTINDIRECT:self.tr_create_font_in,
 			wmfconst.META_DIBCREATEPATTERNBRUSH:self.tr_dibcreate_pat_brush,
+			wmfconst.META_STRETCHDIB:self.tr_stretch_dib,
 			#---------
 			wmfconst.META_CREATEPALETTE:self.tr_create_noop,
 			wmfconst.META_CREATEPATTERNBRUSH:self.tr_create_noop,
@@ -202,6 +203,26 @@ class WMF_to_SK2_Translator(object):
 		if font[4]:tags.append('u')
 		if font[5]:tags.append('s')
 		return sk2_style, tags
+
+	def dib_to_imagestr(self, dib):
+		# Reconstrution of BMP bitmap file header
+		offset = dib_header_size = self.get_data('<I', dib[:4])[0]
+		if dib_header_size == 12:
+			bitsperpixel = self.get_data('<h', dib[10:12])[0]
+			if not bitsperpixel > 8:
+				offset += math.pow(2, bitsperpixel) * 3
+		else:
+			bitsperpixel = self.get_data('<h', dib[14:16])[0]
+			colorsnum = self.get_data('<I', dib[32:36])[0]
+			if bitsperpixel > 8:
+				offset += colorsnum * 3
+			else:
+				offset += math.pow(2, bitsperpixel) * 3
+		offset = math.ceil(offset / 4.0) * 4
+
+		pixel_offset = pack('<I', 14 + offset)
+		file_size = pack('<I', 14 + len(dib))
+		return 'BM' + file_size + '\x00\x00\x00\x00' + pixel_offset + dib
 
 	def add_gdiobject(self, obj):
 		if None in self.gdiobjects:
@@ -401,28 +422,9 @@ class WMF_to_SK2_Translator(object):
 		self.add_gdiobject(('font', font))
 
 	def tr_dibcreate_pat_brush(self, chunk):
-		style, colorusage = self.get_data('<hh', chunk[:4])
-		dib = chunk[4:]
-
-		# Reconstrution of BMP bitmap file header
-		offset = dib_header_size = self.get_data('<I', dib[:4])[0]
-		if dib_header_size == 12:
-			bitsperpixel = self.get_data('<h', dib[10:12])[0]
-			if not bitsperpixel > 8:
-				offset += math.pow(2, bitsperpixel) * 3
-		else:
-			bitsperpixel = self.get_data('<h', dib[14:16])[0]
-			colorsnum = self.get_data('<I', dib[32:36])[0]
-			if bitsperpixel > 8:
-				offset += colorsnum * 3
-			else:
-				offset += math.pow(2, bitsperpixel) * 3
-		offset = math.ceil(offset / 4.0) * 4
-
-		pixel_offset = pack('<I', 14 + offset)
-		file_size = pack('<I', 14 + len(dib))
-		imagestr = 'BM' + file_size + '\x00\x00\x00\x00' + pixel_offset + dib
-		#---------------
+		# style, colorusage = self.get_data('<hh', chunk[:4])
+		imagestr = self.dib_to_imagestr(chunk[4:])
+		bitsperpixel = self.get_data('<h', chunk[18:20])[0]
 
 		ptrn, flag = libimg.read_pattern(imagestr)
 
@@ -666,6 +668,18 @@ class WMF_to_SK2_Translator(object):
 		rect = sk2_model.Rectangle(self.layer.config, self.layer,
 								rect, style=style)
 		self.layer.childs.append(rect)
+
+	def tr_stretch_dib(self, chunk):
+		src_h, src_w, src_y, src_x = self.get_data('<hhhh', chunk[6:14])
+		dst_h, dst_w, dst_y, dst_x = self.get_data('<hhhh', chunk[14:22])
+		imagestr = self.dib_to_imagestr(chunk[22:])
+		p = apply_trafo_to_point([dst_x, dst_y], self.get_trafo())
+
+		pixmap = sk2_model.Pixmap(self.layer.config)
+
+		libimg.set_image_data(self.sk2_doc.cms, pixmap, imagestr)
+		self.layer.childs.append(pixmap)
+
 
 class SK2_to_WMF_Translator(object):
 
