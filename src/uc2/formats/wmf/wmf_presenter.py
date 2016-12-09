@@ -20,10 +20,7 @@ import os
 from uc2 import _, uc2const, events
 from uc2.formats.generic import BinaryModelPresenter
 from uc2.formats.wmf.wmf_config import WMF_Config
-from uc2.formats.wmf.wmf_model import META_Placeable_Record
-from uc2.formats.wmf.wmf_filters import WMF_Loader, WMF_Saver
-from uc2.formats.wmf.wmf_translators import WMF_to_SK2_Translator, \
-SK2_to_WMF_Translator
+from uc2.formats.wmf import wmflib, wmf_model, wmf_filters, wmf_translators
 
 class WMF_Presenter(BinaryModelPresenter):
 
@@ -39,17 +36,20 @@ class WMF_Presenter(BinaryModelPresenter):
 		self.config.load(config_file)
 		self.config.update(cnf)
 		self.appdata = appdata
-		self.loader = WMF_Loader()
-		self.saver = WMF_Saver()
+		self.loader = wmf_filters.WMF_Loader()
+		self.saver = wmf_filters.WMF_Saver()
 		self.new()
 
 	def new(self):
-		self.model = META_Placeable_Record()
+		self.model = wmf_model.META_Placeable_Record()
+		header = wmf_model.META_Header_Record()
+		self.model.childs.append(header)
+		header.childs.append(wmflib.get_eof_rec())
 
 	def translate_from_sk2(self, sk2_doc):
-		translator = SK2_to_WMF_Translator()
+		translator = wmf_translators.SK2_to_WMF_Translator()
 		translator.translate(sk2_doc, self)
 
 	def translate_to_sk2(self, sk2_doc):
-		translator = WMF_to_SK2_Translator()
+		translator = wmf_translators.WMF_to_SK2_Translator()
 		translator.translate(self, sk2_doc)
