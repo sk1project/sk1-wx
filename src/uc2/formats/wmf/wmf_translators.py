@@ -16,7 +16,6 @@
 # 	 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import errno, sys
-from struct import unpack
 from copy import deepcopy
 
 from uc2 import events, msgconst, uc2const, libgeom, libpango, libimg
@@ -78,10 +77,10 @@ class WMF_to_SK2_Translator(object):
 
 		if self.wmf_mt.is_placeable():
 			sig, handle, left, top, right, bottom, inch, rsvd, checksum\
-				 = unpack(wmfconst.STRUCT_PLACEABLE, self.wmf_mt.chunk)
+				 = get_data(wmfconst.STRUCT_PLACEABLE, self.wmf_mt.chunk)
 
 			val = 0
-			for word in unpack('<10h', self.wmf_mt.chunk[:20]):
+			for word in get_data('<10h', self.wmf_mt.chunk[:20]):
 				val = val ^ word
 			if val != checksum:
 				msg = 'Incorrect header checksum'
@@ -505,7 +504,7 @@ class WMF_to_SK2_Translator(object):
 		self.layer.childs.append(rect)
 
 	def tr_polygon(self, chunk):
-		pointnum = unpack('<h', chunk[:2])[0]
+		pointnum = get_data('<h', chunk[:2])[0]
 		points = []
 		for i in range(pointnum):
 			x, y = get_data('<hh', chunk[2 + i * 4:6 + i * 4])
@@ -521,11 +520,11 @@ class WMF_to_SK2_Translator(object):
 		self.layer.childs.append(curve)
 
 	def tr_polypolygon(self, chunk):
-		polygonnum = unpack('<H', chunk[:2])[0]
+		polygonnum = get_data('<H', chunk[:2])[0]
 		pointnums = []
 		pos = 2
 		for i in range(polygonnum):
-			pointnums.append(unpack('<h', chunk[pos:pos + 2])[0])
+			pointnums.append(get_data('<h', chunk[pos:pos + 2])[0])
 			pos += 2
 		paths = []
 		for pointnum in pointnums:
@@ -545,7 +544,7 @@ class WMF_to_SK2_Translator(object):
 		self.layer.childs.append(curve)
 
 	def tr_polyline(self, chunk):
-		pointnum = unpack('<h', chunk[:2])[0]
+		pointnum = get_data('<h', chunk[:2])[0]
 		points = []
 		for i in range(pointnum):
 			x, y = get_data('<hh', chunk[2 + i * 4:6 + i * 4])
@@ -561,7 +560,7 @@ class WMF_to_SK2_Translator(object):
 		self.layer.childs.append(curve)
 
 	def tr_textout(self, chunk):
-		length = unpack('<h', chunk[:2])[0]
+		length = get_data('<h', chunk[:2])[0]
 
 		encoding = self.get_encoding()
 		txt = chunk[8:8 + length].decode(encoding)
