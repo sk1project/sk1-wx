@@ -372,7 +372,9 @@ class WMF_to_SK2_Translator(object):
 		self.add_gdiobject(('fill', fill))
 
 	def tr_create_font_in(self, chunk):
-		h, w, esc, ornt, weight = get_data('<hhhhh', chunk[:10])
+		h = get_data('<h', chunk[:2])[0]
+		esc = get_data('<h', chunk[4:6])[0]
+		weight = get_data('<h', chunk[8:10])[0]
 		size = round(abs(self.coef * h), 1) * .7
 		if not size: size = 12.0
 		if size < 5.0: size = 5.0
