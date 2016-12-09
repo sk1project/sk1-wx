@@ -15,13 +15,14 @@
 # 	 You should have received a copy of the GNU General Public License
 # 	 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import errno, sys, math
-from struct import unpack, pack
+import errno, sys
+from struct import unpack
 from copy import deepcopy
 
 from uc2 import events, msgconst, uc2const, libgeom, libpango, libimg
 from uc2.libgeom import multiply_trafo, apply_trafo_to_point
-from uc2.formats.wmf import wmfconst, wmf_hatches
+from uc2.formats.wmf import wmfconst, wmf_hatches, wmflib
+from uc2.formats.wmf.wmflib import get_data
 from uc2.formats.sk2 import sk2_model, sk2_const
 
 SK2_CAPS = {
@@ -158,13 +159,6 @@ class WMF_to_SK2_Translator(object):
 
 	def get_size_pt(self, val): return val * self.coef
 	def noop(self, *args):pass
-	def get_data(self, fmt, chunk): return unpack(fmt, chunk)
-	def parse_nt_string(self, ntstring):
-		ret = ''
-		for item in ntstring:
-			if item == '\x00': break
-			ret += item
-		return ret
 
 	def get_style(self):
 		style = deepcopy(self.dc.style)
@@ -203,26 +197,6 @@ class WMF_to_SK2_Translator(object):
 		if font[4]:tags.append('u')
 		if font[5]:tags.append('s')
 		return sk2_style, tags
-
-	def dib_to_imagestr(self, dib):
-		# Reconstrution of BMP bitmap file header
-		offset = dib_header_size = self.get_data('<I', dib[:4])[0]
-		if dib_header_size == 12:
-			bitsperpixel = self.get_data('<h', dib[10:12])[0]
-			if not bitsperpixel > 8:
-				offset += math.pow(2, bitsperpixel) * 3
-		else:
-			bitsperpixel = self.get_data('<h', dib[14:16])[0]
-			colorsnum = self.get_data('<I', dib[32:36])[0]
-			if bitsperpixel > 8:
-				offset += colorsnum * 3
-			else:
-				offset += math.pow(2, bitsperpixel) * 3
-		offset = math.ceil(offset / 4.0) * 4
-
-		pixel_offset = pack('<I', 14 + offset)
-		file_size = pack('<I', 14 + len(dib))
-		return 'BM' + file_size + '\x00\x00\x00\x00' + pixel_offset + dib
 
 	def add_gdiobject(self, obj):
 		if None in self.gdiobjects:
@@ -269,15 +243,15 @@ class WMF_to_SK2_Translator(object):
 			self.rec_funcs[record.func](record.chunk[6:])
 
 	def tr_set_window_org(self, chunk):
-		self.wy, self.wx = self.get_data('<hh', chunk)
+		self.wy, self.wx = get_data('<hh', chunk)
 		self.update_trafo()
 
 	def tr_set_window_ext(self, chunk):
-		self.wheight, self.wwidth = self.get_data('<hh', chunk)
+		self.wheight, self.wwidth = get_data('<hh', chunk)
 		self.update_trafo()
 
 	def tr_set_polyfill_mode(self, chunk):
-		mode = self.get_data('<h', chunk[:2])[0]
+		mode = get_data('<h', chunk[:2])[0]
 		if mode in SK2_FILL_RULE:
 			self.dc.fill_rule = SK2_FILL_RULE[mode]
 
@@ -290,19 +264,19 @@ class WMF_to_SK2_Translator(object):
 			self.dcstack = self.dcstack[:-1]
 
 	def tr_set_bg_mode(self, chunk):
-		mode = self.get_data('<h', chunk[:2])[0]
+		mode = get_data('<h', chunk[:2])[0]
 		self.dc.opacity = mode == wmfconst.OPAQUE
 
 	def tr_set_bg_color(self, chunk):
-		r, g, b = self.get_data('<BBBx', chunk)
+		r, g, b = get_data('<BBBx', chunk)
 		self.dc.bgcolor = [r / 255.0, g / 255.0, b / 255.0]
 
 	def tr_set_text_color(self, chunk):
-		r, g, b = self.get_data('<BBBx', chunk)
+		r, g, b = get_data('<BBBx', chunk)
 		self.dc.text_color = [r / 255.0, g / 255.0, b / 255.0]
 
 	def tr_set_text_align(self, chunk):
-		mode = self.get_data('<h', chunk[:2])[0]
+		mode = get_data('<h', chunk[:2])[0]
 
 		self.dc.text_update_cp = True
 		if not mode & 0x0001: self.dc.text_update_cp = False
@@ -326,7 +300,7 @@ class WMF_to_SK2_Translator(object):
 
 	def tr_select_object(self, chunk):
 		obj = None
-		idx = self.get_data('<h', chunk)[0]
+		idx = get_data('<h', chunk)[0]
 		if idx < len(self.gdiobjects):
 			obj = self.gdiobjects[idx]
 		if obj:
@@ -338,13 +312,13 @@ class WMF_to_SK2_Translator(object):
 				self.set_font_style(deepcopy(obj[1]))
 
 	def tr_delete_object(self, chunk):
-		idx = self.get_data('<h', chunk)[0]
+		idx = get_data('<h', chunk)[0]
 		if idx < len(self.gdiobjects):
 			self.gdiobjects[idx] = None
 
 	def tr_create_pen_in(self, chunk):
 		stroke = []
-		style, width, reserved, r, g, b = self.get_data('<hhhBBBx', chunk)
+		style, width, reserved, r, g, b = get_data('<hhhBBBx', chunk)
 		if not style & 0x000F == wmfconst.PS_NULL:
 			stroke_rule = sk2_const.STROKE_MIDDLE
 			color_vals = [r / 255.0, g / 255.0, b / 255.0]
@@ -377,7 +351,7 @@ class WMF_to_SK2_Translator(object):
 
 	def tr_create_brush_in(self, chunk):
 		fill = []
-		style, r, g, b, hatch = self.get_data('<hBBBxh', chunk)
+		style, r, g, b, hatch = get_data('<hBBBxh', chunk)
 		color_vals = [r / 255.0, g / 255.0, b / 255.0]
 		color = [uc2const.COLOR_RGB, color_vals, 1.0, '']
 		if style == wmfconst.BS_SOLID:
@@ -398,12 +372,12 @@ class WMF_to_SK2_Translator(object):
 		self.add_gdiobject(('fill', fill))
 
 	def tr_create_font_in(self, chunk):
-		h, w, esc, ornt, weight = self.get_data('<hhhhh', chunk[:10])
+		h, w, esc, ornt, weight = get_data('<hhhhh', chunk[:10])
 		size = round(abs(self.coef * h), 1) * .7
 		if not size: size = 12.0
 		if size < 5.0: size = 5.0
 		fl_b = weight >= 500
-		fl_i, fl_u, fl_s, charset, op, cp, ql, pf = self.get_data('<BBBBBBBB',
+		fl_i, fl_u, fl_s, charset, op, cp, ql, pf = get_data('<BBBBBBBB',
 																chunk[10:18])
 		fl_i = fl_i == wmfconst.META_TRUE
 		fl_u = fl_u == wmfconst.META_TRUE
@@ -414,7 +388,7 @@ class WMF_to_SK2_Translator(object):
 		else:
 			charset = wmfconst.META_CHARSETS[wmfconst.ANSI_CHARSET]
 
-		fontface = self.parse_nt_string(chunk[18:]).encode('utf-8')
+		fontface = wmflib.parse_nt_string(chunk[18:]).encode('utf-8')
 		font_family = 'Sans'
 		if fontface in libpango.get_fonts()[0]: font_family = fontface
 
@@ -422,9 +396,9 @@ class WMF_to_SK2_Translator(object):
 		self.add_gdiobject(('font', font))
 
 	def tr_dibcreate_pat_brush(self, chunk):
-		# style, colorusage = self.get_data('<hh', chunk[:4])
-		imagestr = self.dib_to_imagestr(chunk[4:])
-		bitsperpixel = self.get_data('<h', chunk[18:20])[0]
+		# style, colorusage = get_data('<hh', chunk[:4])
+		imagestr = wmflib.dib_to_imagestr(chunk[4:])
+		bitsperpixel = get_data('<h', chunk[18:20])[0]
 
 		ptrn, flag = libimg.read_pattern(imagestr)
 
@@ -443,11 +417,11 @@ class WMF_to_SK2_Translator(object):
 		self.add_gdiobject(('ignore', None))
 
 	def tr_moveto(self, chunk):
-		y, x = self.get_data('<hh', chunk)
+		y, x = get_data('<hh', chunk)
 		self.set_curpoint([x, y])
 
 	def tr_lineto(self, chunk):
-		y, x = self.get_data('<hh', chunk)
+		y, x = get_data('<hh', chunk)
 		p = [x, y]
 		paths = [[self.get_curpoint(), [p, ], sk2_const.CURVE_OPENED], ]
 		self.set_curpoint([] + p)
@@ -460,7 +434,7 @@ class WMF_to_SK2_Translator(object):
 		self.layer.childs.append(curve)
 
 	def tr_ellipse(self, chunk):
-		bottom, right, top, left = self.get_data('<hhhh', chunk)
+		bottom, right, top, left = get_data('<hhhh', chunk)
 		left, top = apply_trafo_to_point([left, top], self.get_trafo())
 		right, bottom = apply_trafo_to_point([right, bottom], self.get_trafo())
 
@@ -471,7 +445,7 @@ class WMF_to_SK2_Translator(object):
 		self.layer.childs.append(ellipse)
 
 	def tr_arc(self, chunk, arc_type=sk2_const.ARC_ARC):
-		ye, xe, ys, xs, bottom, right, top, left = self.get_data('<hhhhhhhh',
+		ye, xe, ys, xs, bottom, right, top, left = get_data('<hhhhhhhh',
 																chunk)
 		left, top = apply_trafo_to_point([left, top], self.get_trafo())
 		right, bottom = apply_trafo_to_point([right, bottom], self.get_trafo())
@@ -504,7 +478,7 @@ class WMF_to_SK2_Translator(object):
 		self.tr_arc(chunk, sk2_const.ARC_PIE_SLICE)
 
 	def tr_rectangle(self, chunk):
-		bottom, right, top, left = self.get_data('<hhhh', chunk)
+		bottom, right, top, left = get_data('<hhhh', chunk)
 		left, top = apply_trafo_to_point([left, top], self.get_trafo())
 		right, bottom = apply_trafo_to_point([right, bottom], self.get_trafo())
 
@@ -515,7 +489,7 @@ class WMF_to_SK2_Translator(object):
 		self.layer.childs.append(rect)
 
 	def tr_round_rectangle(self, chunk):
-		eh, ew, bottom, right, top, left = self.get_data('<hhhhhh', chunk)
+		eh, ew, bottom, right, top, left = get_data('<hhhhhh', chunk)
 		corners = 4 * [0.0, ]
 		if eh and ew:
 			coef = max(ew / abs(right - left), eh / abs(bottom - top))
@@ -534,7 +508,7 @@ class WMF_to_SK2_Translator(object):
 		pointnum = unpack('<h', chunk[:2])[0]
 		points = []
 		for i in range(pointnum):
-			x, y = self.get_data('<hh', chunk[2 + i * 4:6 + i * 4])
+			x, y = get_data('<hh', chunk[2 + i * 4:6 + i * 4])
 			points.append([float(x), float(y)])
 		if not points[0] == points[-1]:points.append([] + points[0])
 		if len(points) < 3: return
@@ -557,7 +531,7 @@ class WMF_to_SK2_Translator(object):
 		for pointnum in pointnums:
 			points = []
 			for i in range(pointnum):
-				x, y = self.get_data('<hh', chunk[pos:4 + pos])
+				x, y = get_data('<hh', chunk[pos:4 + pos])
 				points.append([float(x), float(y)])
 				pos += 4
 			if not points[0] == points[-1]:points.append([] + points[0])
@@ -574,7 +548,7 @@ class WMF_to_SK2_Translator(object):
 		pointnum = unpack('<h', chunk[:2])[0]
 		points = []
 		for i in range(pointnum):
-			x, y = self.get_data('<hh', chunk[2 + i * 4:6 + i * 4])
+			x, y = get_data('<hh', chunk[2 + i * 4:6 + i * 4])
 			points.append([float(x), float(y)])
 		if len(points) < 2: return
 		paths = [[points[0], points[1:], sk2_const.CURVE_OPENED], ]
@@ -593,7 +567,7 @@ class WMF_to_SK2_Translator(object):
 		txt = chunk[8:8 + length].decode(encoding)
 		txt_length = len(txt)
 		txt = txt.encode('utf-8')
-		y, x, = self.get_data('<hhhh', chunk[8 + length:16 + length])
+		y, x, = get_data('<hhhh', chunk[8 + length:16 + length])
 		p = apply_trafo_to_point([x, y], self.get_trafo())
 
 		cfg = self.layer.config
@@ -620,7 +594,7 @@ class WMF_to_SK2_Translator(object):
 		self.layer.childs.append(text)
 
 	def tr_exttextout(self, chunk):
-		y, x, length, fwopts = self.get_data('<hhhh', chunk[:8])
+		y, x, length, fwopts = get_data('<hhhh', chunk[:8])
 		dl = 0
 		if length % 2:
 			length += 1
@@ -670,9 +644,9 @@ class WMF_to_SK2_Translator(object):
 		self.layer.childs.append(rect)
 
 	def tr_stretch_dib(self, chunk):
-		src_h, src_w, = self.get_data('<hhhh', chunk[6:10])
-		dst_h, dst_w, dst_y, dst_x = self.get_data('<hhhh', chunk[14:22])
-		imagestr = self.dib_to_imagestr(chunk[22:])
+		src_h, src_w, = get_data('<hhhh', chunk[6:10])
+		dst_h, dst_w, dst_y, dst_x = get_data('<hhhh', chunk[14:22])
+		imagestr = wmflib.dib_to_imagestr(chunk[22:])
 
 		tr = self.get_trafo()
 		p0 = apply_trafo_to_point([dst_x, dst_y], tr)
@@ -690,4 +664,10 @@ class WMF_to_SK2_Translator(object):
 
 class SK2_to_WMF_Translator(object):
 
-	def translate(self, sk2_doc, wmf_doc):pass
+	def translate(self, sk2_doc, wmf_doc):
+		self.wmf_doc = wmf_doc
+		self.sk2_doc = sk2_doc
+		self.wmf_mt = wmf_doc.model
+		self.sk2_mt = sk2_doc.model
+		self.sk2_mtds = sk2_doc.methods
+		self.trafo = [1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
