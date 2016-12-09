@@ -17,7 +17,7 @@
 
 from struct import unpack
 
-from uc2.formats.wmf import wmfconst
+from uc2.formats.wmf import wmfconst, wmf_model
 
 def get_markup(record):
 	markup = [] + wmfconst.GENERIC_FIELDS
@@ -147,3 +147,6 @@ def get_markup(record):
 		markup.append((pos, length, 'Variable-bit DIB Object'))
 
 	return markup
+
+def get_eof_rec():
+	return wmf_model.WMF_Record('' + wmfconst.EOF_RECORD)
