@@ -99,8 +99,8 @@ class WMF_to_SK2_Translator(object):
 		self.wy = self.vy = top
 
 		self.base_trafo = [self.coef, 0, 0, -self.coef,
-						- self.coef * self.vwidth / 2.0,
-						self.coef * self.vheight / 2.0]
+						- self.coef * self.vwidth / 2.0 - self.coef * self.vx,
+						self.coef * self.vheight / 2.0 + self.coef * self.vy]
 		self.update_trafo()
 
 		self.rec_funcs = {
@@ -149,8 +149,8 @@ class WMF_to_SK2_Translator(object):
 		self.sk2_mt.do_update()
 
 	def update_trafo(self):
-		wt = [1.0, 0.0, 0.0, 1.0, -self.wx / 2.0, -self.wy / 2.0]
-		vt = [1.0, 0.0, 0.0, 1.0, self.vx / 2.0, self.vy / 2.0]
+		wt = [1.0, 0.0, 0.0, 1.0, -self.wx, -self.wy]
+		vt = [1.0, 0.0, 0.0, 1.0, self.vx, self.vy]
 		scale = [float(self.vwidth) / self.wwidth, 0.0, 0.0,
 			float(self.vheight) / self.wheight, 0.0, 0.0]
 		tr = multiply_trafo(multiply_trafo(wt, scale), vt)
@@ -277,7 +277,7 @@ class WMF_to_SK2_Translator(object):
 		self.update_trafo()
 
 	def tr_set_polyfill_mode(self, chunk):
-		mode = self.get_data('<hh', chunk)[0]
+		mode = self.get_data('<h', chunk[:2])[0]
 		if mode in SK2_FILL_RULE:
 			self.dc.fill_rule = SK2_FILL_RULE[mode]
 
@@ -673,11 +673,18 @@ class WMF_to_SK2_Translator(object):
 		src_h, src_w, src_y, src_x = self.get_data('<hhhh', chunk[6:14])
 		dst_h, dst_w, dst_y, dst_x = self.get_data('<hhhh', chunk[14:22])
 		imagestr = self.dib_to_imagestr(chunk[22:])
-		p = apply_trafo_to_point([dst_x, dst_y], self.get_trafo())
+
+		tr = self.get_trafo()
+		p0 = apply_trafo_to_point([dst_x, dst_y], tr)
+		p1 = apply_trafo_to_point([dst_w + dst_x, dst_h + dst_y], tr)
+		w = abs(p1[0] - p0[0])
+		h = abs(p1[1] - p0[1])
+		trafo = [w / src_w, 0.0, 0.0, h / src_h, p0[0], p0[1] - h]
 
 		pixmap = sk2_model.Pixmap(self.layer.config)
 
 		libimg.set_image_data(self.sk2_doc.cms, pixmap, imagestr)
+		pixmap.trafo = trafo
 		self.layer.childs.append(pixmap)
 
 
