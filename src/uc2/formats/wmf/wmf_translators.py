@@ -318,7 +318,8 @@ class WMF_to_SK2_Translator(object):
 
 	def tr_create_pen_in(self, chunk):
 		stroke = []
-		style, width, reserved, r, g, b = get_data('<hhhBBBx', chunk)
+		style, width = get_data('<hh', chunk[:4])
+		r, g, b = get_data('<BBBx', chunk[6:])
 		if not style & 0x000F == wmfconst.PS_NULL:
 			stroke_rule = sk2_const.STROKE_MIDDLE
 			color_vals = [r / 255.0, g / 255.0, b / 255.0]
@@ -377,8 +378,7 @@ class WMF_to_SK2_Translator(object):
 		if not size: size = 12.0
 		if size < 5.0: size = 5.0
 		fl_b = weight >= 500
-		fl_i, fl_u, fl_s, charset, op, cp, ql, pf = get_data('<BBBBBBBB',
-																chunk[10:18])
+		fl_i, fl_u, fl_s, charset = get_data('<BBBB', chunk[10:14])
 		fl_i = fl_i == wmfconst.META_TRUE
 		fl_u = fl_u == wmfconst.META_TRUE
 		fl_s = fl_s == wmfconst.META_TRUE
@@ -594,7 +594,7 @@ class WMF_to_SK2_Translator(object):
 		self.layer.childs.append(text)
 
 	def tr_exttextout(self, chunk):
-		y, x, length, fwopts = get_data('<hhhh', chunk[:8])
+		y, x, length = get_data('<hhh', chunk[:6])
 		dl = 0
 		if length % 2:
 			length += 1
