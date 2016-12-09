@@ -20,7 +20,7 @@ import os
 from uc2 import _, uc2const, events
 from uc2.formats.generic import BinaryModelPresenter
 from uc2.formats.wmf.wmf_config import WMF_Config
-from uc2.formats.wmf import wmflib, wmf_model, wmf_filters, wmf_translators
+from uc2.formats.wmf import wmf_model, wmf_filters, wmf_translators
 
 class WMF_Presenter(BinaryModelPresenter):
 
@@ -44,7 +44,7 @@ class WMF_Presenter(BinaryModelPresenter):
 		self.model = wmf_model.META_Placeable_Record()
 		header = wmf_model.META_Header_Record()
 		self.model.childs.append(header)
-		header.childs.append(wmflib.get_eof_rec())
+		header.childs.append(wmf_model.get_eof_rec())
 
 	def translate_from_sk2(self, sk2_doc):
 		translator = wmf_translators.SK2_to_WMF_Translator()

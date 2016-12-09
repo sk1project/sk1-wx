@@ -18,7 +18,7 @@
 import math
 from struct import unpack, pack
 
-from uc2.formats.wmf import wmfconst, wmf_model
+from uc2.formats.wmf import wmfconst
 
 def get_markup(record):
 	markup = [] + wmfconst.GENERIC_FIELDS
@@ -152,7 +152,7 @@ def get_markup(record):
 def get_data(fmt, chunk):
 	return unpack(fmt, chunk)
 
-def dib_to_imagestr(self, dib):
+def dib_to_imagestr(dib):
 	# Reconstrution of BMP bitmap file header
 	offset = dib_header_size = get_data('<I', dib[:4])[0]
 	if dib_header_size == 12:
@@ -179,5 +179,3 @@ def parse_nt_string(ntstring):
 		ret += item
 	return ret
 
-def get_eof_rec():
-	return wmf_model.WMF_Record('' + wmfconst.EOF_RECORD)

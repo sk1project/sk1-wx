@@ -74,3 +74,7 @@ class WMF_Record(BinaryModelObject):
 
 	def update_for_sword(self):
 		self.cache_fields = wmflib.get_markup(self)
+
+
+def get_eof_rec():
+	return WMF_Record('' + wmfconst.EOF_RECORD)

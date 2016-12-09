@@ -644,7 +644,7 @@ class WMF_to_SK2_Translator(object):
 		self.layer.childs.append(rect)
 
 	def tr_stretch_dib(self, chunk):
-		src_h, src_w, = get_data('<hhhh', chunk[6:10])
+		src_h, src_w, = get_data('<hh', chunk[6:10])
 		dst_h, dst_w, dst_y, dst_x = get_data('<hhhh', chunk[14:22])
 		imagestr = wmflib.dib_to_imagestr(chunk[22:])
 
