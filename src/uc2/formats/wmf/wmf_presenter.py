@@ -41,10 +41,7 @@ class WMF_Presenter(BinaryModelPresenter):
 		self.new()
 
 	def new(self):
-		self.model = wmf_model.META_Placeable_Record()
-		header = wmf_model.META_Header_Record()
-		self.model.childs.append(header)
-		header.childs.append(wmf_model.get_eof_rec())
+		self.model = wmf_model.get_empty_wmf()
 
 	def translate_from_sk2(self, sk2_doc):
 		translator = wmf_translators.SK2_to_WMF_Translator()
