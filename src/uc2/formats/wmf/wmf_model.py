@@ -87,10 +87,10 @@ def get_placeble_header(bbox, inch):
 	handle = reserved = 0
 	chunk = pack('<4sHhhhhHI', sig, handle, left, bottom, right, top,
 		inch, reserved)
-	sum = 0
+	val = 0
 	for word in unpack('<10h', chunk):
-		sum = sum ^ word
-	chunk += pack('<H', sum)
+		val = val ^ word
+	chunk += pack('<H', val)
 	return META_Placeable_Record(chunk)
 
 def get_wmf_header(filesize, numobjs, maxrecord):
