@@ -15,6 +15,8 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from struct import pack, unpack
+
 from uc2 import utils
 from uc2.formats.generic import BinaryModelObject
 from uc2.formats.wmf import wmfconst, wmflib
@@ -78,3 +80,33 @@ class WMF_Record(BinaryModelObject):
 
 def get_eof_rec():
 	return WMF_Record('' + wmfconst.EOF_RECORD)
+
+def get_placeble_header(bbox, inch):
+	left, bottom, right, top = bbox
+	sig = wmfconst.WMF_SIGNATURE
+	handle = reserved = 0
+	chunk = pack('<4sHhhhhHI', sig, handle, left, bottom, right, top,
+		inch, reserved)
+	sum = 0
+	for word in unpack('<10h', chunk):
+		sum = sum ^ word
+	chunk += pack('<H', sum)
+	return META_Placeable_Record(chunk)
+
+def get_wmf_header(filesize, numobjs, maxrecord):
+	chunk = pack('<HHHIHIH',
+			wmfconst.DISKMETAFILE,
+			0x0009,
+			wmfconst.METAVERSION300,
+			filesize / 2,
+			numobjs,
+			maxrecord,
+			0x0000)
+	return META_Header_Record(chunk)
+
+def get_empty_wmf():
+	placeable = get_placeble_header((0, 0, 1000, 1000), 1000)
+	header = get_wmf_header(48, 0, 0)
+	placeable.childs.append(header)
+	header.childs.append(get_eof_rec())
+	return placeable
