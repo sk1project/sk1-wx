@@ -700,7 +700,7 @@ class SK2_to_WMF_Translator(object):
 		self.add(wmf_model.get_eof_rec())
 
 		filesize, maxrecord = self.count_record_size()
-		filesize += 18  # + 22
+		filesize += 18
 		numobjs = len(self.wmf_objs)
 		header = wmf_model.get_wmf_header(filesize, numobjs, maxrecord)
 		header.childs = self.wmf_records
