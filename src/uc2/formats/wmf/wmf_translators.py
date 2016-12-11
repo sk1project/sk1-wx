@@ -20,8 +20,8 @@ from copy import deepcopy
 
 from uc2 import events, msgconst, uc2const, libgeom, libpango, libimg
 from uc2.libgeom import multiply_trafo, apply_trafo_to_point
-from uc2.formats.wmf import wmfconst, wmf_hatches, wmflib
-from uc2.formats.wmf.wmflib import get_data
+from uc2.formats.wmf import wmfconst, wmf_hatches, wmflib, wmf_model
+from uc2.formats.wmf.wmflib import get_data, rnd2int, rndpoint
 from uc2.formats.sk2 import sk2_model, sk2_const
 
 SK2_CAPS = {
@@ -663,12 +663,63 @@ class WMF_to_SK2_Translator(object):
 		self.layer.childs.append(pixmap)
 
 
+INCH = 1440
+
 class SK2_to_WMF_Translator(object):
 
 	def translate(self, sk2_doc, wmf_doc):
 		self.wmf_doc = wmf_doc
 		self.sk2_doc = sk2_doc
-		self.wmf_mt = wmf_doc.model
 		self.sk2_mt = sk2_doc.model
 		self.sk2_mtds = sk2_doc.methods
-		self.trafo = [1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
+		self.wmf_records = []
+		self.wmf_objs = []
+
+		page = self.sk2_mtds.get_page()
+		left, bottom, right, top = self.sk2_mtds.count_bbox(page.childs)
+		width = right - left
+		height = top - bottom
+
+		self.inch = INCH
+		x = max(width, height)
+		if x * (INCH / 72.0) > 0xFFFF / 2:
+			self.inch = 0xFFFF / (2 * x)
+		self.scale = coef = self.inch / 72.0
+		self.trafo = [coef, 0, 0, -coef, -coef * left, coef * top]
+		self.bbox = self.point4wmf([left, bottom]) + self.point4wmf([right, top])
+
+		self.add(wmf_model.set_window_org(self.bbox[0], self.bbox[3]))
+		self.add(wmf_model.set_window_ext(self.bbox[2], self.bbox[1]))
+		self.add(wmf_model.set_bkmode(wmfconst.TRANSPARENT))
+		self.add(wmf_model.set_bkcolor([1.0, ] * 3))
+		self.add(wmf_model.set_rop2(wmfconst.R2_COPYPEN))
+		self.add(wmf_model.set_polyfillmode(wmfconst.ALTERNATE))
+
+		self.translate_objs(page.childs)
+
+		self.add(wmf_model.get_eof_rec())
+
+		filesize, maxrecord = self.count_record_size()
+		filesize += 18  # + 22
+		numobjs = len(self.wmf_objs)
+		header = wmf_model.get_wmf_header(filesize, numobjs, maxrecord)
+		header.childs = self.wmf_records
+		placeable = wmf_model.get_placeble_header(self.bbox, self.inch)
+		placeable.childs = [header, ]
+		self.wmf_doc.model = placeable
+
+	def point4wmf(self, point):
+		return rndpoint(apply_trafo_to_point(point, self.trafo))
+
+	def add(self, record):
+		self.wmf_records.append(record)
+
+	def count_record_size(self):
+		total_size = 0
+		maxrecord = 0
+		for item in self.wmf_records:
+			total_size += len(item.chunk)
+			maxrecord = max(maxrecord, len(item.chunk))
+		return total_size, maxrecord
+
+	def translate_objs(self, objs):pass
