@@ -152,6 +152,12 @@ def get_markup(record):
 def get_data(fmt, chunk):
 	return unpack(fmt, chunk)
 
+def rnd2int(val):
+	return int(round(val))
+
+def rndpoint(point):
+	return [rnd2int(point[0]), rnd2int(point[1])]
+
 def dib_to_imagestr(dib):
 	# Reconstrution of BMP bitmap file header
 	offset = dib_header_size = get_data('<I', dib[:4])[0]
