@@ -722,4 +722,31 @@ class SK2_to_WMF_Translator(object):
 			maxrecord = max(maxrecord, len(item.chunk))
 		return total_size, maxrecord
 
-	def translate_objs(self, objs):pass
+	def translate_objs(self, objs):
+		for obj in objs:
+			if obj.is_primitive():
+				self.translate_primitive(obj)
+			elif obj.is_layer():
+				if obj.properties[0]:
+					self.translate_group(obj)
+			elif obj.is_pixmap():
+				self.translate_pixmap(obj)
+			else:
+				self.translate_group(obj)
+
+	def translate_group(self, obj):
+		self.translate_objs(obj.childs)
+
+	def translate_primitive(self, obj):
+		curve = obj.to_curve()
+		if curve.is_group():
+			self.translate_group(curve)
+			return
+		curve.update()
+		self.translate_style(obj)
+		trafo = libgeom.multiply_trafo(curve.trafo, self.trafo)
+		paths = libgeom.apply_trafo_to_paths(curve.paths, trafo)
+
+	def translate_style(self, obj):pass
+
+	def translate_pixmap(self, obj):pass
