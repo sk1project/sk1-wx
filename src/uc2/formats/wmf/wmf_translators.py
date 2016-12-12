@@ -674,6 +674,7 @@ class SK2_to_WMF_Translator(object):
 		self.sk2_mtds = sk2_doc.methods
 		self.wmf_records = []
 		self.wmf_objs = []
+		self.latest_objs = []
 
 		page = self.sk2_mtds.get_page()
 		left, bottom, right, top = self.sk2_mtds.count_bbox(page.childs)
@@ -714,6 +715,18 @@ class SK2_to_WMF_Translator(object):
 	def add(self, record):
 		self.wmf_records.append(record)
 
+	def add_obj(self, obj_record):
+		self.add(obj_record)
+		indx = len(self.wmf_objs)
+		self.wmf_objs.append(obj_record)
+		self.latest_objs.append(indx)
+		self.add(wmf_model.select_obj(indx))
+
+	def delete_obj(self, indx):
+		self.add(wmf_model.delete_obj(indx))
+		if indx in self.latest_objs:
+			self.latest_objs.remove(indx)
+
 	def count_record_size(self):
 		total_size = 0
 		maxrecord = 0
@@ -746,6 +759,9 @@ class SK2_to_WMF_Translator(object):
 		self.translate_style(obj)
 		trafo = libgeom.multiply_trafo(curve.trafo, self.trafo)
 		paths = libgeom.apply_trafo_to_paths(curve.paths, trafo)
+
+		for item in [] + self.latest_objs:
+			self.delete_obj(item)
 
 	def translate_style(self, obj):pass
 
