@@ -135,3 +135,12 @@ def set_rop2(mode):
 def set_polyfillmode(mode):
 	chunk = pack('<LHh', 4, wmfconst.META_SETPOLYFILLMODE, mode)
 	return WMF_Record(chunk)
+
+def select_obj(indx):
+	chunk = pack('<LHH', 4, wmfconst.META_SELECTOBJECT, indx)
+	return WMF_Record(chunk)
+
+def delete_obj(indx):
+	chunk = pack('<LHH', 4, wmfconst.META_DELETEOBJECT, indx)
+	return WMF_Record(chunk)
+
