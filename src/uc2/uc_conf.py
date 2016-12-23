@@ -32,7 +32,7 @@ class UCData:
 	app_icon = None
 	doc_icon = None
 	version = '2.0'
-	revision = 'rc2'
+	revision = 'rc3'
 	app_config_dir = ''
 
 	def __init__(self, app, cfgdir='~'):
@@ -62,7 +62,7 @@ class UCConfig(XmlConfigParser):
 
 	#============== GENERIC SECTION ===================
 	uc_version = '2.0'
-	system_encoding = 'utf-8'# default encoding (GUI uses utf-8 only)
+	system_encoding = 'utf-8'  # default encoding (GUI uses utf-8 only)
 
 
 
