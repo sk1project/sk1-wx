@@ -35,7 +35,7 @@ class AppData(UCData):
 	app_icon = None
 	doc_icon = None
 	version = '2.0'
-	revision = 'rc2'
+	revision = 'rc3'
 	app_config_dir = ''
 	plugin_dir = ''
 	app_palette_dir = ''
