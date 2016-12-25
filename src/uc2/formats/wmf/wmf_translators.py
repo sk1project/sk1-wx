@@ -84,8 +84,9 @@ class WMF_to_SK2_Translator(object):
 				val = val ^ word
 			if val != checksum:
 				msg = 'Incorrect header checksum'
-				events.emit(events.MESSAGES, msgconst.ERROR, msg)
-				raise IOError(errno.ENODATA, msg, '')
+				print msg
+# 				events.emit(events.MESSAGES, msgconst.ERROR, msg)
+# 				raise IOError(errno.ENODATA, msg, '')
 
 			header = self.wmf_mt.childs[0]
 
@@ -234,7 +235,7 @@ class WMF_to_SK2_Translator(object):
 			try:
 				self.translate_record(record)
 			except:
-				print wmfconst.WMF_RECORD_NAMES[record.func]
+				print 'Error -->', wmfconst.WMF_RECORD_NAMES[record.func]
 				for item in sys.exc_info(): print item
 
 	def translate_record(self, record):
