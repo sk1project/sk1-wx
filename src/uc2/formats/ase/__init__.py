@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2015 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from uc2.formats.generic_filters import get_fileptr
 from uc2.formats.ase.ase_const import ASEF
@@ -48,16 +48,16 @@ def ase_saver(doc, filename=None, fileptr=None, translate=True,
 	if translate:
 		skp_doc = SKP_Presenter(appdata, cnf)
 		skp_doc.translate_from_sk2(doc)
-		gpl_doc = ASE_Presenter(appdata, cnf)
-		gpl_doc.convert_from_skp(skp_doc)
-		gpl_doc.save(filename, fileptr)
-		gpl_doc.close()
+		ase_doc = ASE_Presenter(appdata, cnf)
+		ase_doc.convert_from_skp(skp_doc)
+		ase_doc.save(filename, fileptr)
+		ase_doc.close()
 		skp_doc.close()
 	elif convert:
-		gpl_doc = ASE_Presenter(appdata, cnf)
-		gpl_doc.convert_from_skp(doc)
-		gpl_doc.save(filename, fileptr)
-		gpl_doc.close()
+		ase_doc = ASE_Presenter(appdata, cnf)
+		ase_doc.convert_from_skp(doc)
+		ase_doc.save(filename, fileptr)
+		ase_doc.close()
 	else:
 		doc.save(filename, fileptr)
 
