@@ -14,3 +14,22 @@
 #
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+from uc2.formats.generic_filters import AbstractBinaryLoader, AbstractSaver
+
+
+class ACO_Loader(AbstractBinaryLoader):
+
+	name = 'ACO_Loader'
+
+	def do_load(self):
+		self.model.parse(self)
+
+
+class ACO_Saver(AbstractSaver):
+
+	name = 'ACO_Saver'
+
+	def do_save(self):
+		self.model.save(self)
