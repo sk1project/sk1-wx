@@ -25,7 +25,7 @@ from uc2.formats.aco.aco_filters import ACO_Loader, ACO_Saver
 from uc2.formats.aco.aco_model import ACO_Palette
 from uc2.formats.aco import aco_const
 
-class ASE_Presenter(BinaryModelPresenter):
+class ACO_Presenter(BinaryModelPresenter):
 
 	cid = uc2const.ACO
 
