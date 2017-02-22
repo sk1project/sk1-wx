@@ -14,3 +14,40 @@
 #
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import os
+from copy import deepcopy
+
+from uc2 import uc2const, cms
+from uc2.formats.generic import BinaryModelPresenter
+from uc2.formats.aco.aco_config import ACO_Config
+from uc2.formats.aco.aco_filters import ACO_Loader, ACO_Saver
+from uc2.formats.aco.aco_model import ACO_Palette
+from uc2.formats.aco import aco_const
+
+class ASE_Presenter(BinaryModelPresenter):
+
+	cid = uc2const.ACO
+
+	config = None
+	doc_file = ''
+	model = None
+
+	def __init__(self, appdata, cnf={}):
+		self.config = ACO_Config()
+		config_file = os.path.join(appdata.app_config_dir, self.config.filename)
+		self.config.load(config_file)
+		self.config.update(cnf)
+		self.appdata = appdata
+		self.loader = ACO_Loader()
+		self.saver = ACO_Saver()
+		self.new()
+
+	def new(self):
+		self.model = ACO_Palette()
+
+	def convert_from_skp(self, skp_doc):
+		skp_model = skp_doc.model
+
+	def convert_to_skp(self, skp_doc):
+		skp_model = skp_doc.model
