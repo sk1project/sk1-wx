@@ -60,7 +60,11 @@ def aco_chunk2color(chunk):
 	else:
 		return None
 	if len(chunk) > 10:
-		color[3] = chunk[12:-2].decode('utf_16_be')
+		name = chunk[12:-2]
+		if chunk[12:13] < '\x00\x1f':name = name[2:]
+		color[3] = name.decode('utf_16_be').strip()
+	else:
+		color[3] = cms.verbose_color(color)
 	return color
 
 def color2aco_chunk(color, version=ACO1_VER):pass
