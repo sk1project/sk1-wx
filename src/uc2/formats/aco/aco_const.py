@@ -26,3 +26,7 @@ ACO_GRAY = 8
 ACO_WIDE_CMYK = 9
 
 ACO_COLORS = (ACO_RGB, ACO_HSB, ACO_CMYK, ACO_LAB, ACO_GRAY, ACO_WIDE_CMYK)
+
+def aco_chunk2color(chunk):pass
+
+def color2aco_chunk(color, version=ACO1_VER):pass
