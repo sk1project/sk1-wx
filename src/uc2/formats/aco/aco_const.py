@@ -73,31 +73,31 @@ def color2aco_chunk(color, version=ACO1_VER):
 	vals = color[1]
 	if model == uc2const.COLOR_RGB:
 		chunk += struct.pack('>H', ACO_RGB)
-		vals = map(lambda x:int(x * 65535), vals)
+		vals = map(lambda x:int(round(x * 65535)), vals)
 		for item in vals:
 			chunk += struct.pack('>H', item)
 		chunk += '\x00\x00'
 	elif model == uc2const.COLOR_CMYK:
 		chunk += struct.pack('>H', ACO_WIDE_CMYK)
-		vals = map(lambda x:int(x * 10000), vals)
+		vals = map(lambda x:int(round(x * 10000)), vals)
 		for item in vals:
 			chunk += struct.pack('>H', item)
 	elif model == uc2const.COLOR_GRAY:
 		chunk += struct.pack('>H', ACO_GRAY)
-		val = int(vals[0] * 10000)
+		val = int(round(vals[0] * 10000))
 		chunk += struct.pack('>H', val) + 3 * '\x00\x00'
 	elif model == uc2const.COLOR_SPOT:
 		if vals[0]:
 			vals = vals[0]
 			chunk += struct.pack('>H', ACO_RGB)
-			vals = map(lambda x:int(x * 65535), vals)
+			vals = map(lambda x:int(round(x * 65535)), vals)
 			for item in vals:
 				chunk += struct.pack('>H', item)
 			chunk += '\x00\x00'
 		else:
 			vals = vals[1]
 			chunk += struct.pack('>H', ACO_WIDE_CMYK)
-			vals = map(lambda x:int(x * 10000), vals)
+			vals = map(lambda x:int(round(x * 10000)), vals)
 			for item in vals:
 				chunk += struct.pack('>H', item)
 
