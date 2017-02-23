@@ -45,10 +45,10 @@ def color_to_spot(color):
 	return [COLOR_SPOT, [rgb, cmyk], color[2], name]
 
 def val_100(vals):
-	return map(lambda x:int(100 * x), vals)
+	return map(lambda x:int(round(100 * x)), vals)
 
 def val_255(vals):
-	return map(lambda x:int(255 * x), vals)
+	return map(lambda x:int(round(255 * x)), vals)
 
 def val_255_to_dec(vals):
 	return map(lambda x:x / 255.0, vals)
@@ -77,14 +77,14 @@ def rgb_to_hexcolor(color):
 	Converts list of RGB float values to hex color string.
 	For example: [1.0, 0.0, 1.0] => #ff00ff
 	"""
-	return '#%02x%02x%02x' % tuple(map(lambda x:int(255 * x), color))
+	return '#%02x%02x%02x' % tuple(map(lambda x:int(round(255 * x)), color))
 
 def rgba_to_hexcolor(color):
 	"""
 	Converts list of RGBA float values to hex color string.
 	For example: [1.0, 0.0, 1.0, 1.0] => #ff00ffff
 	"""
-	return '#%02x%02x%02x%02x' % tuple(map(lambda x:int(255 * x), color))
+	return '#%02x%02x%02x%02x' % tuple(map(lambda x:int(round(255 * x)), color))
 
 def cmyk_to_hexcolor(color):
 	return rgba_to_hexcolor(color)
