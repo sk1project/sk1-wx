@@ -45,7 +45,10 @@ def wmf_saver(sk2_doc, filename=None, fileptr=None,
 	if sk2_doc.cid == uc2const.WMF: translate = False
 	if translate:
 		wmf_doc = WMF_Presenter(sk2_doc.appdata, cnf)
-		wmf_doc.translate_from_sk2(sk2_doc)
+		try:
+			wmf_doc.translate_from_sk2(sk2_doc)
+		except:
+			for item in sys.exc_info(): print item
 		wmf_doc.save(filename, fileptr)
 		wmf_doc.close()
 	else:

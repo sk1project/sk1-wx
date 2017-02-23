@@ -144,3 +144,8 @@ def delete_obj(indx):
 	chunk = pack('<LHH', 4, wmfconst.META_DELETEOBJECT, indx)
 	return WMF_Record(chunk)
 
+def create_pen_in():
+	chunk = pack('<LHhhhBBBx', 8, wmfconst.META_CREATEPENINDIRECT,
+				5, 0, 0, 0, 0, 0)
+	return WMF_Record(chunk)
+
