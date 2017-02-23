@@ -86,6 +86,9 @@ class ACO1_Header(BinaryModelObject):
 		name = 'ACO1 header'
 		return (is_leaf, name, info)
 
+	def update_for_sword(self):
+		self.cache_fields.append((0, 2, 'ACO version'))
+		self.cache_fields.append((2, 2, 'Number of colors'))
 
 class ACO1_Color(BinaryModelObject):
 	"""
@@ -104,6 +107,10 @@ class ACO1_Color(BinaryModelObject):
 		info = '%d' % (len(self.childs))
 		name = 'ACO1 Color'
 		return (is_leaf, name, info)
+
+	def update_for_sword(self):
+		self.cache_fields.append((0, 2, 'Colorspace'))
+		self.cache_fields.append((2, 8, 'Color values'))
 
 
 class ACO2_Header(ACO1_Header):
@@ -149,6 +156,16 @@ class ACO2_Color(ACO1_Color):
 		info = '%d' % (len(self.childs))
 		name = 'ACO1 Color'
 		return (is_leaf, name, info)
+
+	def update_for_sword(self):
+		self.cache_fields.append((0, 2, 'Colorspace'))
+		self.cache_fields.append((2, 8, 'Color values'))
+		self.cache_fields.append((10, 2, 'Zero field'))
+		self.cache_fields.append((12, 2, 'Name length'))
+		strlen = 2 * struct.unpack('>H', self.chunk[12:14])[0] - 2
+		self.cache_fields.append((14, strlen, 'Color name'))
+		self.cache_fields.append((14 + strlen, 2, 'Zero field'))
+
 
 
 
