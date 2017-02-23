@@ -72,6 +72,10 @@ class ACO_Palette(BinaryModelObject):
 		for item in self.childs:
 			item.set_color_list(colors)
 
+	def save(self, saver):
+		for child in self.childs:
+			child.save(saver)
+
 
 class ACO1_Header(BinaryModelObject):
 	"""
@@ -114,6 +118,16 @@ class ACO1_Header(BinaryModelObject):
 		for color in colors:
 			clr = ACO1_Color()
 			clr.chunk = aco_const.color2aco_chunk(color)
+			self.childs.append(clr)
+
+	def update(self):
+		self.chunk = '' + self.version
+		self.chunk += struct.pack('>H', len(self.childs))
+
+	def save(self, saver):
+		saver.write(self.chunk)
+		for child in self.childs:
+			child.save(saver)
 
 
 class ACO1_Color(BinaryModelObject):
@@ -138,6 +152,8 @@ class ACO1_Color(BinaryModelObject):
 		self.cache_fields.append((0, 2, 'Colorspace'))
 		self.cache_fields.append((2, 8, 'Color values'))
 
+	def save(self, saver):
+		saver.write(self.chunk)
 
 class ACO2_Header(ACO1_Header):
 	"""
@@ -168,6 +184,7 @@ class ACO2_Header(ACO1_Header):
 		for color in colors:
 			clr = ACO2_Color()
 			clr.chunk = aco_const.color2aco_chunk(color, aco_const.ACO2_VER)
+			self.childs.append(clr)
 
 
 class ACO2_Color(ACO1_Color):
