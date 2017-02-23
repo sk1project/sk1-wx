@@ -61,7 +61,7 @@ def aco_saver(doc, filename=None, fileptr=None, translate=True,
 	else:
 		doc.save(filename, fileptr)
 
-def check_ase(path):
+def check_aco(path):
 	fileptr = get_fileptr(path)
 	string = fileptr.read(2)
 	fileptr.close()
