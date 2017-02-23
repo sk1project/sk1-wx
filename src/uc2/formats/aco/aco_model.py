@@ -34,9 +34,12 @@ class ACO_Palette(BinaryModelObject):
 
 	def __init__(self):
 		self.childs = []
+		self.childs.append(ACO1_Header())
+		self.childs.append(ACO2_Header())
 		self.cache_fields = []
 
 	def parse(self, loader):
+		self.childs = []
 		loader.fileptr.seek(0, 2)
 		filesize = loader.fileptr.tell()
 		loader.fileptr.seek(0)
@@ -61,6 +64,13 @@ class ACO_Palette(BinaryModelObject):
 		info = '%d' % (len(self.childs))
 		name = 'ACO palette'
 		return (is_leaf, name, info)
+
+	def get_color_list(self):
+		return self.childs[-1].get_color_list()
+
+	def set_color_list(self, colors):
+		for item in self.childs:
+			item.set_color_list(colors)
 
 
 class ACO1_Header(BinaryModelObject):
@@ -91,6 +101,20 @@ class ACO1_Header(BinaryModelObject):
 	def update_for_sword(self):
 		self.cache_fields.append((0, 2, 'ACO version'))
 		self.cache_fields.append((2, 2, 'Number of colors'))
+
+	def get_color_list(self):
+		colors = []
+		for item in self.childs:
+			color = aco_const.aco_chunk2color(item.chunk)
+			if color:colors.append(color)
+		return colors
+
+	def set_color_list(self, colors):
+		self.childs = []
+		for color in colors:
+			clr = ACO1_Color()
+			clr.chunk = aco_const.color2aco_chunk(color)
+
 
 class ACO1_Color(BinaryModelObject):
 	"""
@@ -138,6 +162,13 @@ class ACO2_Header(ACO1_Header):
 		info = '%d' % (len(self.childs))
 		name = 'ACO2 header'
 		return (is_leaf, name, info)
+
+	def set_color_list(self, colors):
+		self.childs = []
+		for color in colors:
+			clr = ACO2_Color()
+			clr.chunk = aco_const.color2aco_chunk(color, aco_const.ACO2_VER)
+
 
 class ACO2_Color(ACO1_Color):
 	"""
