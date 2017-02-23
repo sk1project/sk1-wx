@@ -36,16 +36,16 @@ class ACO_Palette(BinaryModelObject):
 		self.cache_fields = []
 
 	def parse(self, loader):
-		loader.seek(0, 2)
-		filesize = loader.tell()
-		loader.seek(0)
-		self.version, self.nbcolors = struct.unpack('>2H', loader.read(4))
-		loader.seek(0)
-		if self.version == aco_const.ACO1_VER:
+		loader.fileptr.seek(0, 2)
+		filesize = loader.fileptr.tell()
+		loader.fileptr.seek(0)
+		self.version, self.nbcolors = struct.unpack('>2H', loader.readbytes(4))
+		loader.fileptr.seek(0)
+		if self.version == 1:
 			pal = ACO1_Header()
 			pal.parse(loader)
 			self.childs.append(pal)
-			if loader.tell() < filesize:
+			if loader.fileptr.tell() < filesize:
 				pal = ACO2_Header()
 				pal.parse(loader)
 				self.childs.append(pal)
@@ -53,6 +53,12 @@ class ACO_Palette(BinaryModelObject):
 			pal = ACO2_Header()
 			pal.parse(loader)
 			self.childs.append(pal)
+
+	def resolve(self, name=''):
+		is_leaf = False
+		info = '%d' % (len(self.childs))
+		name = 'ACO palette'
+		return (is_leaf, name, info)
 
 
 class ACO1_Header(BinaryModelObject):
@@ -67,12 +73,18 @@ class ACO1_Header(BinaryModelObject):
 		self.cache_fields = []
 
 	def parse(self, loader):
-		self.chunk = loader.read(4)
-		self.ncolors = struct.unpack('>H', self.chunk[2:])
+		self.chunk = loader.readbytes(4)
+		self.ncolors = struct.unpack('>H', self.chunk[2:])[0]
 		for item in range(self.ncolors):
 			color = ACO1_Color()
 			color.parse(loader)
 			self.childs.append(color)
+
+	def resolve(self, name=''):
+		is_leaf = False
+		info = '%d' % (len(self.childs))
+		name = 'ACO1 header'
+		return (is_leaf, name, info)
 
 
 class ACO1_Color(BinaryModelObject):
@@ -85,7 +97,13 @@ class ACO1_Color(BinaryModelObject):
 		self.cache_fields = []
 
 	def parse(self, loader):
-		self.chunk = loader.read(10)
+		self.chunk = loader.readbytes(10)
+
+	def resolve(self, name=''):
+		is_leaf = True
+		info = '%d' % (len(self.childs))
+		name = 'ACO1 Color'
+		return (is_leaf, name, info)
 
 
 class ACO2_Header(ACO1_Header):
@@ -99,12 +117,18 @@ class ACO2_Header(ACO1_Header):
 		ACO1_Header.__init__(self)
 
 	def parse(self, loader):
-		self.chunk = loader.read(4)
-		self.ncolors = struct.unpack('>H', self.chunk[2:])
+		self.chunk = loader.readbytes(4)
+		self.ncolors = struct.unpack('>H', self.chunk[2:])[0]
 		for item in range(self.ncolors):
 			color = ACO2_Color()
 			color.parse(loader)
 			self.childs.append(color)
+
+	def resolve(self, name=''):
+		is_leaf = False
+		info = '%d' % (len(self.childs))
+		name = 'ACO2 header'
+		return (is_leaf, name, info)
 
 class ACO2_Color(ACO1_Color):
 	"""
@@ -115,10 +139,16 @@ class ACO2_Color(ACO1_Color):
 		ACO1_Color.__init__(self)
 
 	def parse(self, loader):
-		self.chunk = loader.read(10)
-		start = loader.read(4)
-		strlen = struct.unpack('>H', start[2:])
-		self.chunk += start + loader.read(strlen)
+		self.chunk = loader.readbytes(10)
+		start = loader.readbytes(4)
+		strlen = struct.unpack('>L', start)[0]
+		self.chunk += start + loader.readbytes(strlen * 2)
+
+	def resolve(self, name=''):
+		is_leaf = True
+		info = '%d' % (len(self.childs))
+		name = 'ACO1 Color'
+		return (is_leaf, name, info)
 
 
 
