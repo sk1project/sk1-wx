@@ -16,14 +16,12 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from copy import deepcopy
 
-from uc2 import uc2const, cms
+from uc2 import uc2const
 from uc2.formats.generic import BinaryModelPresenter
 from uc2.formats.aco.aco_config import ACO_Config
 from uc2.formats.aco.aco_filters import ACO_Loader, ACO_Saver
 from uc2.formats.aco.aco_model import ACO_Palette
-from uc2.formats.aco import aco_const
 
 class ACO_Presenter(BinaryModelPresenter):
 
