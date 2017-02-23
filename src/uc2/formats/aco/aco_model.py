@@ -25,6 +25,7 @@ class ACO_Palette(BinaryModelObject):
 	"""
 	Represents ACO palette object.
 	This is a root DOM instance of ACO file format.
+	The chunk value is artificial to avoid SWord application error.
 	"""
 
 	chunk = '\x00'
@@ -39,9 +40,10 @@ class ACO_Palette(BinaryModelObject):
 		loader.fileptr.seek(0, 2)
 		filesize = loader.fileptr.tell()
 		loader.fileptr.seek(0)
-		self.version, self.nbcolors = struct.unpack('>2H', loader.readbytes(4))
+		self.version = loader.readbytes(2)
+		self.nbcolors = struct.unpack('>H', loader.readbytes(2))
 		loader.fileptr.seek(0)
-		if self.version == 1:
+		if self.version == aco_const.ACO1_VER:
 			pal = ACO1_Header()
 			pal.parse(loader)
 			self.childs.append(pal)
