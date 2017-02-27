@@ -55,7 +55,6 @@ SAVERS = {}
 CHECKERS = {}
 
 
-sys.path.insert(-1, __path__[0])
 
 def _get_loader(pid):
 	if pid in BITMAP_LOADERS: return im_loader
@@ -63,8 +62,10 @@ def _get_loader(pid):
 	if pid in LOADERS: return LOADERS[pid]
 	loader = None
 	try:
+		sys.path.insert(0, __path__[0])
 		loader_mod = __import__(pid)
 		loader = getattr(loader_mod, pid + '_loader')
+		sys.path = sys.path[1:]
 	except: pass
 	LOADERS[pid] = loader
 	return loader
@@ -74,8 +75,10 @@ def _get_saver(pid):
 	if pid in SAVERS: return SAVERS[pid]
 	saver = None
 	try:
+		sys.path.insert(0, __path__[0])
 		saver_mod = __import__(pid)
 		saver = getattr(saver_mod, pid + '_saver')
+		sys.path = sys.path[1:]
 	except: pass
 	SAVERS[pid] = saver
 	return saver
@@ -86,8 +89,10 @@ def _get_checker(pid):
 	if pid in CHECKERS: return CHECKERS[pid]
 	checker = None
 	try:
+		sys.path.insert(0, __path__[0])
 		checker_mod = __import__(pid)
 		checker = getattr(checker_mod, 'check_' + pid)
+		sys.path = sys.path[1:]
 	except: pass
 	CHECKERS[pid] = checker
 	return checker
