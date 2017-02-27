@@ -22,7 +22,6 @@ from uc2.formats.generic_filters import get_fileptr
 from uc2 import uc2const
 from uc2.formats.wmf.wmfconst import WMF_SIGNATURE, METAFILETYPES, METAVERSIONS
 from uc2.formats.wmf.wmf_presenter import WMF_Presenter
-from uc2.formats.wmf.wmf_loader import WMF_Loader
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 
 
