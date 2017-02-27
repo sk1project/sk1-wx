@@ -39,11 +39,11 @@ BINARY_MODEL = 3
 ALL_FORMATS = 0
 
 PDXF = 1
-SK1 = 2
-SK = 3
-SK2 = 4
+SK1 = 'sk1'
+SK = 'sk'
+SK2 = 'sk2'
 
-SVG = 5
+SVG = 'svg'
 SVGZ = 6
 ODG = 7
 ORA = 8
@@ -51,14 +51,14 @@ XCF = 9
 SLA = 10
 FIG = 11
 
-RIFF = 49
-CDR = 50
-CDT = 51
-CDRZ = 52
-CDTZ = 53
-CMX = 54
+RIFF = 'riff'
+CDR = 'cdr'
+CDT = 'cdr'
+CDRZ = 'cdrz'
+CDTZ = 'cdtz'
+CMX = 'cmx'
 CCX = 55
-CDRX = 56
+CDRX = 'cdrx'
 
 XAR = 66
 
@@ -66,16 +66,16 @@ AI_PS = 70
 AI_PDF = 71
 PS = 72
 EPS = 73
-PDF = 74
+PDF = 'pdf'
 PSD = 75
 
 CGM = 100
-WMF = 101
+WMF = 'wmf'
 EMF = 102
 XPS = 103
 VSD = 104
 
-PLT = 110
+PLT = 'plt'
 HPGL = 111
 DXF = 120
 DWG = 121
@@ -86,25 +86,25 @@ TIF = 305
 BMP = 310
 PCX = 311
 GIF = 312
-PNG = 313
+PNG = 'png'
 PPM = 314
 XBM = 315
 XPM = 316
 
-SKP = 500
-GPL = 501
-CPL = 502
-SCRIBUS_PAL = 503
-SOC = 504
-COREL_PAL = 505
-ASE = 506
-ACO = 507
-JCW = 516
+SKP = 'skp'
+GPL = 'gpl'
+CPL = 'cpl'
+SCRIBUS_PAL = 'scribus_pal'
+SOC = 'soc'
+COREL_PAL = 'corel_pal'
+ASE = 'ase'
+ACO = 'aco'
+JCW = 'jcw'
 
 ICC = 600
 ICM = 601
 
-XML = 700
+XML = 'xml_'
 
 
 FORMAT_DESCRIPTION = {
