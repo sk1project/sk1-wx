@@ -51,9 +51,9 @@ def sk1_run(cfgdir='~'):
 	if not config.ubuntu_scrollbar_overlay:
 		os.environ["LIBOVERLAY_SCROLLBAR"] = "0"
 
-	from sk1.application import pdApplication
+	from sk1.application import SK1Application
 
-	app = pdApplication(_pkgdir, cfgdir)
+	app = SK1Application(_pkgdir, cfgdir)
 	app.run()
 
 def warn(msg):

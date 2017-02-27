@@ -41,7 +41,7 @@ from sk1.document import PD_Presenter
 from sk1.clipboard import AppClipboard
 from sk1.pwidgets import generate_fcache
 
-class pdApplication(wal.Application, UCApplication):
+class SK1Application(wal.Application, UCApplication):
 
 	appdata = None
 	history = None
