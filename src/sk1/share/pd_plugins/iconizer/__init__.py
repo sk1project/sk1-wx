@@ -19,8 +19,7 @@
 import os, wal, cairo
 from cStringIO import StringIO
 
-from uc2 import cms, libgeom
-from uc2.formats import data
+from uc2 import cms, libgeom, uc2const
 from uc2.formats.sk2 import sk2_const, crenderer
 from uc2.utils.config import XmlConfigParser
 
@@ -277,7 +276,7 @@ class Iconizer_Plugin(RS_Plugin):
 		doc_file = os.path.join(config.save_dir, doc_file)
 		doc_file = dialogs.get_save_file_name(self.app.mw, self.app, doc_file,
 							_('Save image as...'),
-							file_types=[data.PNG], path_only=True)
+							file_types=[uc2const.PNG], path_only=True)
 		if doc_file:
 			try:
 				fileptr = open(doc_file, 'wb')
