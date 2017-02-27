@@ -22,8 +22,8 @@ from uc2 import _, events, msgconst, uc2const
 from uc2.formats.sk1 import model
 from uc2.formats.sk1.presenter import SK1_Presenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
-from uc2.formats.pdxf.presenter import PDXF_Presenter
 from uc2.formats.generic_filters import get_fileptr
+
 
 def sk1_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	if kw: cnf.update(kw)
