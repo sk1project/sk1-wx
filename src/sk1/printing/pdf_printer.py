@@ -18,7 +18,6 @@
 import os
 
 from uc2 import uc2const
-from uc2.formats import data
 from uc2.formats.pdf import pdfconst, pdfgen
 
 from sk1 import _, config
@@ -54,7 +53,7 @@ class PDF_Printer(AbstractPrinter):
 	def get_driver_name(self): return _('Internal PDF writer')
 	def get_connection(self): return _('Software interface')
 	def get_state(self): return _('Idle')
-	def get_file_type(self): return data.PDF
+	def get_file_type(self): return uc2const.PDF
 	def get_filepath(self): return self.filepath
 	def set_filepath(self, filepath): self.filepath = filepath
 	def is_ready(self): return bool(self.filepath)
