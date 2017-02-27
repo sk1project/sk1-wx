@@ -24,6 +24,7 @@ from uc2.formats.sk.sk_presenter import SK_Presenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2.formats.generic_filters import get_fileptr
 
+
 def sk_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
 	if kw: cnf.update(kw)
 	sk_doc = SK_Presenter(appdata, cnf)
