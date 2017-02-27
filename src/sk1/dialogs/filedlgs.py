@@ -1,25 +1,25 @@
 # -*- coding: utf-8 -*-
 #
-#	Copyright (C) 2013 by Igor E. Novikov
+# 	Copyright (C) 2013 by Igor E. Novikov
 #
-#	This program is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	(at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import wx
 
 from uc2 import uc2const
-from uc2.formats import data
+from uc2.formats import LOADER_FORMATS
 from uc2.utils.fs import path_system
 
 from wal.const import is_mac
@@ -31,7 +31,7 @@ def _get_open_filters(items=[]):
 	descr = uc2const.FORMAT_DESCRIPTION
 	ext = uc2const.FORMAT_EXTENSION
 	if not items:
-		items = [] + data.LOADER_FORMATS
+		items = [] + LOADER_FORMATS
 	wildcard += _('All supported formats') + '|'
 	for item in items:
 		for extension in ext[item]:
@@ -79,7 +79,7 @@ def _get_save_fiters(items=[]):
 	descr = uc2const.FORMAT_DESCRIPTION
 	ext = uc2const.FORMAT_EXTENSION
 	if not items:
-		items = [data.SK2]#+ data.SAVER_FORMATS
+		items = [uc2const.SK2]
 	for item in items:
 		wildcard += descr[item] + '|'
 		for extension in ext[item]:
@@ -112,7 +112,7 @@ def get_save_file_name(parent, app, path, msg='',
 		if path_only:
 			ret = path_system(dlg.GetPath())
 			if not file_types:
-				ext = uc2const.FORMAT_EXTENSION[data.SK2][0]
+				ext = uc2const.FORMAT_EXTENSION[uc2const.SK2][0]
 			else:
 				index = dlg.GetFilterIndex()
 				ext = uc2const.FORMAT_EXTENSION[file_types[index]][0]
