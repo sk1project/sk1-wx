@@ -24,7 +24,8 @@ import wal
 from uc2 import uc2const, libimg
 from uc2.utils.fs import path_unicode
 from uc2.application import UCApplication
-from uc2.formats import data, get_saver_by_id, get_loader
+from uc2.formats import get_saver_by_id, get_loader, PATTERN_FORMATS, \
+PALETTE_LOADERS, PALETTE_SAVERS, SAVER_FORMATS
 
 from sk1 import _, config, events, modes, dialogs, appconst
 from sk1 import app_plugins, app_actions
@@ -372,7 +373,7 @@ class pdApplication(wal.Application, UCApplication):
 								os.path.basename(doc_file))
 		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
 							_('Export document As...'),
-							file_types=data.SAVER_FORMATS[1:], path_only=True)
+							file_types=SAVER_FORMATS[1:], path_only=True)
 		if doc_file:
 			try:
 				self.make_backup(doc_file, True)
@@ -392,7 +393,7 @@ class pdApplication(wal.Application, UCApplication):
 		doc_file = os.path.join(config.save_dir, doc_file)
 		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
 							_('Extract selected bitmap as...'),
-							file_types=[data.PNG], path_only=True)
+							file_types=[uc2const.PNG], path_only=True)
 		if doc_file:
 			try:
 				pixmap = self.current_doc.selection.objs[0]
@@ -414,10 +415,10 @@ class pdApplication(wal.Application, UCApplication):
 		doc_file = os.path.join(config.export_dir, os.path.basename(doc_file))
 		ret = dialogs.get_save_file_name(parent, self, doc_file,
 							_('Export palette as...'),
-							file_types=data.PALETTE_SAVERS)
+							file_types=PALETTE_SAVERS)
 		if not ret: return
 		doc_file, index = ret
-		saver_id = data.PALETTE_SAVERS[index]
+		saver_id = PALETTE_SAVERS[index]
 
 		if doc_file:
 
@@ -455,7 +456,7 @@ class pdApplication(wal.Application, UCApplication):
 		if not parent: parent = self.mw
 		doc_file = dialogs.get_open_file_name(parent, self, config.import_dir,
 											_('Select palette to import'),
-											file_types=data.PALETTE_LOADERS)
+											file_types=PALETTE_LOADERS)
 		if os.path.lexists(doc_file) and os.path.isfile(doc_file):
 			try:
 				palette = None
@@ -492,8 +493,8 @@ class pdApplication(wal.Application, UCApplication):
 	def extract_pattern(self, parent, pattern, eps=False):
 		img_file = 'image'
 		img_file = os.path.join(config.save_dir, img_file)
-		file_types = [data.TIF]
-		if eps: file_types = [data.EPS]
+		file_types = [uc2const.TIF]
+		if eps: file_types = [uc2const.EPS]
 		img_file = dialogs.get_save_file_name(parent, self, img_file,
 							_('Save pattern as...'),
 							file_types=file_types, path_only=True)
@@ -514,7 +515,7 @@ class pdApplication(wal.Application, UCApplication):
 	def import_pattern(self, parent=None):
 		if not parent: parent = self.mw
 		img_file = dialogs.get_open_file_name(parent, self, config.import_dir,
-				_('Select pattern to load'), file_types=data.PATTERN_FORMATS)
+				_('Select pattern to load'), file_types=PATTERN_FORMATS)
 		if os.path.lexists(img_file) and os.path.isfile(img_file):
 			first = _('Cannot load pattern for:')
 			msg = ("%s\n'%s'.") % (first, self.current_doc.doc_name) + '\n'
