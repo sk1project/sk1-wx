@@ -35,7 +35,7 @@ def make_modules(src_path, include_path, lib_path=[]):
 
 	if os.name == 'nt':
 		include_dirs = buildutils.make_source_list(include_path,
-												['cairo', 'pycairo'])
+					['cairo', 'pycairo'])
 		cairo_libs = ['cairo']
 	elif os.name == 'posix':
 		include_dirs = buildutils.get_pkg_includes(['pycairo', ])
