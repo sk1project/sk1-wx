@@ -20,8 +20,8 @@ import os, time, datetime
 from uc2.utils.fs import path_unicode
 from sk1 import config, appconst, events
 
-class AppHistoryManager:
 
+class AppHistoryManager:
 	app = None
 	history = []
 	history_file = None
@@ -41,7 +41,8 @@ class AppHistoryManager:
 				if line[-1:] == '\n': line = line[:-1]
 				items = line.split('\t')
 				if len(items) == 3:
-					self.history.append([int(items[0]), items[1], int(items[2])])
+					self.history.append(
+						[int(items[0]), items[1], int(items[2])])
 			fp.close()
 
 	def save_history(self):
@@ -61,12 +62,15 @@ class AppHistoryManager:
 		self.history = []
 		self.save_history()
 
-	def is_empty(self): return not self.history
+	def is_empty(self):
+		return not self.history
+
 	def is_history(self):
-		if self.history:return True
+		if self.history: return True
 		return False
 
-	def is_more(self): return len(self.history) > config.history_list_size
+	def is_more(self):
+		return len(self.history) > config.history_list_size
 
 	def get_menu_entries(self):
 		entries = []
@@ -83,7 +87,7 @@ class AppHistoryManager:
 				ret.append([path_unicode(filename + ' [' + path + ']'), path])
 				counter += 1
 			i += 1
-			if i > len(self.history):break
+			if i > len(self.history): break
 		return ret
 
 	def get_history_entries(self):
@@ -97,4 +101,3 @@ class AppHistoryManager:
 			ret.append([item[0], filename, unicode_path, path, timestr])
 		ret.reverse()
 		return ret
-
