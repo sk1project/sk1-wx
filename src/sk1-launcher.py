@@ -21,6 +21,7 @@ import os, platform
 
 RESTRICTED = ('UniConvertor', 'Python', 'ImageMagick')
 
+
 def get_path_var():
 	path = '' + os.environ["PATH"]
 	paths = path.split(os.pathsep)
@@ -31,6 +32,7 @@ def get_path_var():
 			if item in path: allow = False
 		if allow: ret.append(path)
 	return os.pathsep.join(ret)
+
 
 if os.name == 'nt':
 
@@ -52,4 +54,5 @@ if os.name == 'nt':
 	os.chdir(os.path.join(devres, 'dlls'))
 
 import sk1
+
 sk1.sk1_run()
