@@ -31,7 +31,6 @@ class DocArea(VPanel):
 	def __init__(self, presenter, parent):
 		self.presenter = presenter
 		VPanel.__init__(self, parent)
-		self.SetBackgroundColour(wx.Colour(255, 255, 255))
 
 		#----- First row
 		row_hbox = wx.BoxSizer(HORIZONTAL)
