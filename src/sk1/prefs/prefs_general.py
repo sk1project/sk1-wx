@@ -83,7 +83,7 @@ class GeneralPrefs(PrefPanel):
 			self.spin_overlay = wal.Checkbox(self, txt, config.spin_overlay)
 			self.pack(self.spin_overlay, align_center=False)
 
-		if config.is_ubuntu():
+		if wal.is_unity():
 			txt = _('Ubuntu related features')
 			self.pack(wal.Label(grid, txt, fontsize=2, fontbold=True),
 					start_padding=10)
