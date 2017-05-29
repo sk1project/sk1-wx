@@ -104,10 +104,8 @@ class CMS_Options(CMS_Tab):
 		bmp = get_bmp(self.banner, icons.PD_PREFS_CMS_BANNER)
 		self.banner.pack(bmp, padding=2)
 		panel.pack(self.banner, expand=True, fill=True)
-		txt = _('Note: If Color Management is not activated all colors '
-			'will be processed using simple calculation procedures. Therefore '
-			'resulted color values will be not accurate.')
-		fontsize = -3
+		txt = _('Note: If not activated the color values will be not accurate.')
+		fontsize = -1
 		if wal.is_msw(): fontsize = -1
 		label = wal.Label(self, txt, fontsize=fontsize)
 		label.set_enable(False)
@@ -191,16 +189,10 @@ class CMS_Profiles(CMS_Tab):
 									onclick=self.activate_display)
 		self.pack(self.display_check, align_center=False)
 
-		txt = _('Note: Display profile affects on '
-				'document screen representation only. The profile for your '
-				'hardware you can get either from monitor manufacture or '
-				'calibrating monitor (preferred option) or download '
-				'from ICC Profile Taxi service: ')
-		fontsize = -3
-		if wal.is_msw(): fontsize = -1
+		txt = _('Note: Display profile for your hardware you can fetch here: ')
+		fontsize = -1
 		label = wal.Label(self, txt, fontsize=fontsize)
 		label.set_enable(False)
-		if wal.is_msw(): label.wrap(430)
 		self.pack(label, fill=True, padding_all=5)
 		self.pack(wal.HtmlLabel(self, 'http://icc.opensuse.org/'))
 		self.activate_display()
