@@ -116,7 +116,7 @@ class GeneralPrefs(PrefPanel):
 		config.make_font_cache_on_start = self.fcache.get_value()
 		if not config.is_mac():
 			config.spin_overlay = self.spin_overlay.get_value()
-		if config.is_ubuntu():
+		if wal.is_unity():
 			config.ubuntu_global_menu = self.ubuntu_gm.get_value()
 			config.ubuntu_scrollbar_overlay = self.ubuntu_overlay.get_value()
 
