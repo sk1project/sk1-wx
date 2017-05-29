@@ -36,6 +36,9 @@ def is_gtk(): return wx.Platform == GTK
 def is_wx2(): return wx.VERSION[0] == 2
 def is_wx3(): return wx.VERSION[0] == 3
 
+def is_unity():
+	return os.environ['XDG_CURRENT_DESKTOP'] == 'Unity'
+
 def is_unity_16_04():
 	if is_gtk():
 		ver = platform.dist()[1].split('.')[0]
