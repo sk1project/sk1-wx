@@ -25,8 +25,8 @@ from const import DEF_SIZE
 from basic import HPanel
 from renderer import bmp_to_white, disabled_bmp
 
-class MouseEvent(object):
 
+class MouseEvent(object):
 	event = None
 
 	def __init__(self, event):
@@ -50,8 +50,8 @@ class MouseEvent(object):
 	def is_cmd(self):
 		return self.event.CmdDown()
 
-class Bitmap(wx.StaticBitmap, Widget):
 
+class Bitmap(wx.StaticBitmap, Widget):
 	bmp = None
 	rcallback = None
 	lcallback = None
@@ -86,8 +86,8 @@ class Bitmap(wx.StaticBitmap, Widget):
 		if const.is_msw():
 			self.set_bitmap(self.bmp)
 
-class Notebook(wx.Notebook, Widget):
 
+class Notebook(wx.Notebook, Widget):
 	childs = []
 	callback = None
 
@@ -130,6 +130,7 @@ class Notebook(wx.Notebook, Widget):
 		if page in self.childs:
 			self.SetSelection(self.childs.index(page))
 
+
 class VLine(wx.StaticLine, Widget):
 	def __init__(self, parent):
 		wx.StaticLine.__init__(self, parent, style=wx.VERTICAL)
@@ -141,7 +142,6 @@ class HLine(wx.StaticLine, Widget):
 
 
 class Label(wx.StaticText, Widget):
-
 	def __init__(self, parent, text='', fontbold=False, fontsize=0, fg=()):
 		wx.StaticText.__init__(self, parent, wx.ID_ANY, text)
 		font = self.GetFont()
@@ -174,16 +174,15 @@ class Label(wx.StaticText, Widget):
 
 class HtmlLabel(wx.HyperlinkCtrl, Widget):
 	def __init__(self, parent, text, url=''):
-		if not url:url = text
+		if not url: url = text
 		wx.HyperlinkCtrl.__init__(self, parent, wx.ID_ANY, text, url)
 
 
 class Button(wx.Button, Widget):
-
 	callback = None
 
 	def __init__(self, parent, text, size=DEF_SIZE,
-				onclick=None, tooltip='', default=False, pid=wx.ID_ANY):
+			onclick=None, tooltip='', default=False, pid=wx.ID_ANY):
 		wx.Button.__init__(self, parent, pid, text, size=size)
 		if default: self.SetDefault()
 		if onclick:
@@ -191,19 +190,19 @@ class Button(wx.Button, Widget):
 			self.Bind(wx.EVT_BUTTON, self.on_click, self)
 		if tooltip: self.SetToolTipString(tooltip)
 
-	def set_default(self):self.SetDefault()
+	def set_default(self):
+		self.SetDefault()
 
 	def on_click(self, event):
 		if self.callback: self.callback()
 
 
 class Checkbox(wx.CheckBox, DataWidget):
-
 	callback = None
 
 	def __init__(self, parent, text='', value=False, onclick=None, right=False):
 		style = 0
-		if right:style = wx.ALIGN_RIGHT
+		if right: style = wx.ALIGN_RIGHT
 		wx.CheckBox.__init__(self, parent, wx.ID_ANY, text, style=style)
 		if value: self.SetValue(True)
 		if onclick:
@@ -212,19 +211,18 @@ class Checkbox(wx.CheckBox, DataWidget):
 
 	def set_value(self, val, action=True):
 		self.SetValue(val)
-		if action:self.on_click()
+		if action: self.on_click()
 
 	def on_click(self, event=None):
-		if self.callback:self.callback()
+		if self.callback: self.callback()
 
 
 class NumCheckbox(Checkbox):
-
 	def set_value(self, val, action=True):
 		boolval = False
-		if val:boolval = True
+		if val: boolval = True
 		self.SetValue(boolval)
-		if action:self.on_click()
+		if action: self.on_click()
 
 	def get_value(self):
 		if self.GetValue(): return 1
@@ -232,12 +230,11 @@ class NumCheckbox(Checkbox):
 
 
 class Radiobutton(wx.RadioButton, DataWidget):
-
 	callback = None
 
 	def __init__(self, parent, text='', onclick=None, group=False):
 		style = 0
-		if group:style = wx.RB_GROUP
+		if group: style = wx.RB_GROUP
 		wx.RadioButton.__init__(self, parent, wx.ID_ANY, text, style=style)
 		if onclick:
 			self.callback = onclick
@@ -248,7 +245,6 @@ class Radiobutton(wx.RadioButton, DataWidget):
 
 
 class Combolist(wx.Choice, Widget):
-
 	items = []
 	callback = None
 
@@ -288,8 +284,8 @@ class Combolist(wx.Choice, Widget):
 			self.SetItems(self.items)
 		self.set_active(self.items.index[val])
 
-class BitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 
+class BitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 	def __init__(self, parent, value=0, bitmaps=[]):
 
 		self.bitmaps = bitmaps
@@ -298,16 +294,16 @@ class BitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 		x += 4
 		y += 7 + 3
 		wx.combo.OwnerDrawnComboBox.__init__(self, parent, wx.ID_ANY,
-				wx.EmptyString, wx.DefaultPosition,
-				(x, y), choices, wx.CB_READONLY,
-				wx.DefaultValidator)
+			wx.EmptyString, wx.DefaultPosition,
+			(x, y), choices, wx.CB_READONLY,
+			wx.DefaultValidator)
 		self.set_active(value)
 
 	def OnDrawItem(self, dc, rect, item, flags):
-		if item == wx.NOT_FOUND:return
+		if item == wx.NOT_FOUND: return
 		r = wx.Rect(*rect)
 		if flags & wx.combo.ODCB_PAINTING_SELECTED and \
-			flags & wx.combo.ODCB_PAINTING_CONTROL:
+						flags & wx.combo.ODCB_PAINTING_CONTROL:
 			if const.is_msw():
 				bitmap = self.bitmaps[item]
 			else:
@@ -319,11 +315,11 @@ class BitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 		dc.DrawBitmap(bitmap, r.x + 2, r.y + 4, True)
 
 	def OnMeasureItem(self, item):
-		if item == wx.NOT_FOUND:return 1
+		if item == wx.NOT_FOUND: return 1
 		return self.bitmaps[item].GetSize()[1] + 7
 
 	def OnMeasureItemWidth(self, item):
-		if item == wx.NOT_FOUND:return 1
+		if item == wx.NOT_FOUND: return 1
 		return self.bitmaps[item].GetSize()[0] - 4
 
 	def _create_items(self):
@@ -353,18 +349,18 @@ class BitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 
 
 class Combobox(wx.ComboBox, DataWidget):
-
 	items = []
 	callback = None
 	flag = False
 
 	def __init__(self, parent, value='', pos=(-1, 1), size=DEF_SIZE, width=0,
-				items=[], onchange=None):
+			items=[], onchange=None):
 		self.items = []
 		if items: self.items = items
 		flags = wx.CB_DROPDOWN | wx.TE_PROCESS_ENTER
 		size = self._set_width(size, width)
-		wx.ComboBox.__init__(self, parent, wx.ID_ANY, value, pos, size, items, flags)
+		wx.ComboBox.__init__(self, parent, wx.ID_ANY, value, pos, size, items,
+			flags)
 		if onchange:
 			self.callback = onchange
 			self.Bind(wx.EVT_COMBOBOX, self.on_change, self)
@@ -389,18 +385,18 @@ class Combobox(wx.ComboBox, DataWidget):
 
 
 class FloatCombobox(Combobox):
-
 	digits = 0
 
-	def __init__(self, parent, value='', width=0, digits=1, items=[], onchange=None):
+	def __init__(self, parent, value='', width=0, digits=1, items=[],
+			onchange=None):
 		vals = []
 		for item in items: vals.append(str(item))
 		Combobox.__init__(self, parent, str(value), width=width,
-						 items=vals, onchange=onchange)
+			items=vals, onchange=onchange)
 		self.digits = digits
 
 	def on_typing(self, event):
-		if self.flag:return
+		if self.flag: return
 		txt = Combobox.get_value(self)
 		res = ''
 		for item in txt:
@@ -431,22 +427,23 @@ class FloatCombobox(Combobox):
 		for item in items: sizes.append(str(item))
 		self.SetItems(sizes)
 
-class Entry(wx.TextCtrl, DataWidget):
 
+class Entry(wx.TextCtrl, DataWidget):
 	my_changes = False
 	value = ''
 	_callback = None
 	_callback1 = None
 
 	def __init__(self, parent, value='', size=DEF_SIZE, width=0, onchange=None,
-				multiline=False, richtext=False, onenter=None, editable=True):
+			multiline=False, richtext=False, onenter=None, editable=True):
 		style = 0
 		value = value.decode('utf-8')
 		if multiline: style |= wx.TE_MULTILINE
 		if richtext: style |= wx.TE_RICH2
 		if onenter: style |= wx.TE_PROCESS_ENTER
 		size = self._set_width(size, width)
-		wx.TextCtrl.__init__(self, parent, wx.ID_ANY, value, size=size, style=style)
+		wx.TextCtrl.__init__(self, parent, wx.ID_ANY, value, size=size,
+			style=style)
 		if onchange:
 			self._callback = onchange
 			self.Bind(wx.EVT_TEXT, self._on_change, self)
@@ -465,7 +462,7 @@ class Entry(wx.TextCtrl, DataWidget):
 
 	def set_cursor_pos(self, pos):
 		if pos > len(self.value): pos = len(self.value)
-		if pos < 0:pos = 0
+		if pos < 0: pos = 0
 		self.SetInsertionPoint(pos)
 
 	def _on_change(self, event):
@@ -498,11 +495,11 @@ class Entry(wx.TextCtrl, DataWidget):
 
 
 class Spin(wx.SpinCtrl, RangeDataWidget):
-
 	callback = None
 
-	def __init__(self, parent, value=0, range_val=(0, 1), size=DEF_SIZE, width=0,
-				 onchange=None):
+	def __init__(self, parent, value=0, range_val=(0, 1), size=DEF_SIZE,
+			width=0,
+			onchange=None):
 		self.range_val = range_val
 		size = self._set_width(size, width)
 		wx.SpinCtrl.__init__(self, parent, wx.ID_ANY, '', size)
@@ -515,21 +512,21 @@ class Spin(wx.SpinCtrl, RangeDataWidget):
 	def on_change(self, event):
 		if self.callback: self.callback()
 
-class SpinButton(wx.SpinButton, RangeDataWidget):
 
+class SpinButton(wx.SpinButton, RangeDataWidget):
 	def __init__(self, parent, value=0, range_val=(0, 10), size=DEF_SIZE,
-				 onchange=None, vertical=True):
+			onchange=None, vertical=True):
 		self.range_val = range_val
 		style = wx.SL_VERTICAL
-		if not vertical:style = wx.SL_HORIZONTAL
+		if not vertical: style = wx.SL_HORIZONTAL
 		wx.SpinButton.__init__(self, parent, wx.ID_ANY, size=size, style=style)
 		self.SetValue(value)
 		self.SetRange(*range_val)
 		if onchange:
 			self.Bind(wx.EVT_SPIN, onchange, self)
 
-class FloatSpin(wx.Panel, RangeDataWidget):
 
+class FloatSpin(wx.Panel, RangeDataWidget):
 	entry = None
 	sb = None
 	line = None
@@ -544,11 +541,14 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 	enter_callback = None
 
 	def __init__(self, parent, value=0.0, range_val=(0.0, 1.0), step=0.01,
-				digits=2, size=DEF_SIZE, width=0, spin_overlay=True,
-				onchange=None, onenter=None, check_focus=True):
+			digits=2, size=DEF_SIZE, width=0,
+			spin_overlay=True, spin_sep=True,
+			onchange=None, onenter=None, check_focus=True):
 
 		self.callback = onchange
 		self.enter_callback = onenter
+		spin_overlay = const.SPIN['overlay']
+		spin_sep = const.SPIN['sep']
 		if const.is_mac(): spin_overlay = False
 		if not width and const.is_msw(): width = 5
 
@@ -556,23 +556,25 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 		if spin_overlay:
 			if const.is_gtk():
 				self.entry = Entry(self, '', size=size, width=width,
-						onchange=self._check_entry, onenter=self._entry_enter)
+					onchange=self._check_entry, onenter=self._entry_enter)
 				size = (-1, self.entry.GetSize()[1])
 				self.entry.SetPosition((0, 0))
-				self.line = HPanel(self)
 				self.sb = SpinButton(self, size=size, onchange=self._check_spin)
 				w_pos = self.entry.GetSize()[0] - 5
-				self.line.SetSize((1, self.sb.GetSize()[1] - 2))
-				self.line.set_bg(const.UI_COLORS['dark_shadow'])
-				self.line.SetPosition((w_pos - 1, 1))
+				if spin_sep:
+					self.line = HPanel(self)
+					self.line.SetSize((1, self.sb.GetSize()[1] - 2))
+					self.line.set_bg(const.UI_COLORS['dark_shadow'])
+					self.line.SetPosition((w_pos - 1, 1))
 				self.sb.SetPosition((w_pos, 0))
 				self.SetSize((-1, self.entry.GetSize()[1]))
 			elif const.is_msw():
 				width += 2
 				self.entry = Entry(self, '', size=size, width=width,
-						onchange=self._check_entry, onenter=self._entry_enter)
+					onchange=self._check_entry, onenter=self._entry_enter)
 				size = (-1, self.entry.GetSize()[1] - 3)
-				self.sb = SpinButton(self.entry, size=size, onchange=self._check_spin)
+				self.sb = SpinButton(self.entry, size=size,
+					onchange=self._check_spin)
 				w_pos = self.entry.GetSize()[0] - self.sb.GetSize()[0] - 3
 				self.sb.SetPosition((w_pos, 0))
 				w, h = self.entry.GetSize()
@@ -582,14 +584,15 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 			self.box = wx.BoxSizer(const.HORIZONTAL)
 			self.SetSizer(self.box)
 			self.entry = Entry(self, '', size=size, width=width,
-						onchange=self._check_entry, onenter=self._entry_enter)
+				onchange=self._check_entry, onenter=self._entry_enter)
 			self.box.Add(self.entry, 0, wx.ALL)
 			size = (-1, self.entry.GetSize()[1])
 			self.sb = SpinButton(self, size=size, onchange=self._check_spin)
 			self.box.Add(self.sb, 0, wx.ALL)
 
 		if check_focus:
-			self.entry.Bind(wx.EVT_KILL_FOCUS, self._entry_lost_focus, self.entry)
+			self.entry.Bind(wx.EVT_KILL_FOCUS, self._entry_lost_focus,
+				self.entry)
 			self.entry.Bind(wx.EVT_CONTEXT_MENU, self._ctxmenu, self.entry)
 
 		self.set_step(step)
@@ -603,14 +606,16 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 		self.entry.Enable(val)
 		self.sb.Enable(val)
 		if not self.line is None:
-			if val:	self.line.set_bg(const.UI_COLORS['dark_shadow'])
-			else: self.line.set_bg(const.UI_COLORS['light_shadow'])
+			if val:
+				self.line.set_bg(const.UI_COLORS['dark_shadow'])
+			else:
+				self.line.set_bg(const.UI_COLORS['light_shadow'])
 
 	def get_enabled(self):
 		return self.entry.IsEnabled()
 
 	def _check_spin(self, event):
-		if self.flag:return
+		if self.flag: return
 		coef = pow(10, self.digits)
 		dval = float(self.sb.get_value() - int(self.value * coef))
 		if not self.value == self._calc_entry():
@@ -619,7 +624,7 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 		event.Skip()
 
 	def _entry_enter(self):
-		if self.flag:return
+		if self.flag: return
 		self.SetValue(self._calc_entry())
 		if not self.enter_callback is None: self.enter_callback()
 
@@ -635,7 +640,7 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 		event.Skip()
 
 	def _check_entry(self):
-		if self.flag:return
+		if self.flag: return
 		txt = self.entry.get_value()
 		res = ''
 		for item in txt:
@@ -655,13 +660,14 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 			line = 'val=' + txt
 			code = compile(line, '<string>', 'exec')
 			exec code
-		except:return self.value
+		except:
+			return self.value
 		return val
 
 	def _check_in_range(self, val):
 		minval, maxval = self.range_val
-		if val < minval:val = minval
-		if val > maxval:val = maxval
+		if val < minval: val = minval
+		if val > maxval: val = maxval
 		coef = pow(10, self.digits)
 		val = round(val * coef) / coef
 		return val
@@ -682,7 +688,7 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 		self._set_value(val)
 		self.flag = False
 
-	#----- Native API emulation
+	# ----- Native API emulation
 	def SetValue(self, val):
 		self.flag = True
 		old_value = self.value
@@ -701,7 +707,7 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 		self.range_val = (minval, maxval)
 		self.sb.set_range((int(minval * coef), int(maxval * coef)))
 
-	#----- Control API
+	# ----- Control API
 	def set_step(self, step):
 		self.step = step
 
@@ -711,26 +717,24 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 
 
 class IntSpin(FloatSpin):
-
 	def __init__(self, parent, value=0, range_val=(0, 1), size=DEF_SIZE,
-				width=0, spin_overlay=True,
-				onchange=None, onenter=None, check_focus=True):
+			width=0, spin_overlay=True,
+			onchange=None, onenter=None, check_focus=True):
 		step = 1
 		digits = 0
 		if not width and const.is_msw(): width = 5
 		FloatSpin.__init__(self, parent, value, range_val,
-						step, digits, size, width, spin_overlay,
-						onchange, onenter, check_focus)
+			step, digits, size, width, spin_overlay,
+			onchange, onenter, check_focus)
 
 
 class Slider(wx.Slider, RangeDataWidget):
-
 	callback = None
 	final_callback = None
 
 	def __init__(self, parent, value=0, range_val=(1, 100),
-				size=(100, -1), vertical=False, onchange=None,
-				on_final_change=None):
+			size=(100, -1), vertical=False, onchange=None,
+			on_final_change=None):
 		self.range_val = range_val
 		style = 0
 		if vertical:
@@ -739,7 +743,7 @@ class Slider(wx.Slider, RangeDataWidget):
 			style |= wx.SL_HORIZONTAL
 		start, end = range_val
 		wx.Slider.__init__(self, parent, wx.ID_ANY, value, start,
-						end, size=size, style=style)
+			end, size=size, style=style)
 		if onchange:
 			self.callback = onchange
 			self.Bind(wx.EVT_SCROLL, self._onchange, self)
@@ -757,7 +761,6 @@ class Slider(wx.Slider, RangeDataWidget):
 
 
 class Splitter(wx.SplitterWindow, Widget):
-
 	def __init__(self, parent, live_update=True):
 		style = wx.SP_NOBORDER
 		if live_update: style |= wx.SP_LIVE_UPDATE
@@ -781,8 +784,8 @@ class Splitter(wx.SplitterWindow, Widget):
 	def set_sash_position(self, val):
 		self.SetSashPosition(val)
 
-class ScrollBar(wx.ScrollBar, Widget):
 
+class ScrollBar(wx.ScrollBar, Widget):
 	callback = None
 	autohide = False
 
@@ -804,9 +807,7 @@ class ScrollBar(wx.ScrollBar, Widget):
 		return self.GetThumbPosition()
 
 
-
 class ColorButton(wx.ColourPickerCtrl, Widget):
-
 	callback = None
 	silent = True
 
@@ -824,7 +825,7 @@ class ColorButton(wx.ColourPickerCtrl, Widget):
 			self.Bind(wx.EVT_COLOURPICKER_CHANGED, self.on_change, self)
 
 	def on_change(self, event):
-		if self.callback:self.callback()
+		if self.callback: self.callback()
 
 	def hex_to_val255(self, hexcolor):
 		r = int(hexcolor[1:3], 0x10)
@@ -846,13 +847,15 @@ class ColorButton(wx.ColourPickerCtrl, Widget):
 		self.SetColour(wx.Colour(*self.val255(color)))
 		if not self.silent: self.on_change(None)
 
-	def get_value(self): return self.val255_to_dec(self.GetColour().Get())
+	def get_value(self):
+		return self.val255_to_dec(self.GetColour().Get())
+
 
 class AnimatedGif(animate.GIFAnimationCtrl):
-
 	def __init__(self, parent, filepath):
 		animate.GIFAnimationCtrl.__init__(self, parent, wx.ID_ANY, filepath)
 		self.GetPlayer().UseBackgroundColour(True)
 
 	def stop(self): self.Stop()
+
 	def play(self): self.Play()

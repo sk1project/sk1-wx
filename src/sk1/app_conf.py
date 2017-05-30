@@ -112,6 +112,7 @@ class AppConfig(UCConfig):
 	history_size = 100
 	history_list_size = 10
 	spin_overlay = True
+	spin_sep = True
 	make_backup = True
 	make_export_backup = False
 	active_plugins = None

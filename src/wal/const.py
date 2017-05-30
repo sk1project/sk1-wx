@@ -218,6 +218,11 @@ def set_ui_colors(kw):
 
 UI_COLORS = {}
 
+SPIN={
+	'overlay':True,
+	'sep':True,
+}
+
 
 EVEN_COLOR = wx.Colour(240, 240, 240)
 ODD_COLOR = wx.Colour(255, 255, 255)

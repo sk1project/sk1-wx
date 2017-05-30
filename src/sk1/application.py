@@ -25,7 +25,7 @@ from uc2 import uc2const, libimg
 from uc2.utils.fs import path_unicode
 from uc2.application import UCApplication
 from uc2.formats import get_saver_by_id, get_loader, PATTERN_FORMATS, \
-PALETTE_LOADERS, PALETTE_SAVERS, SAVER_FORMATS
+	PALETTE_LOADERS, PALETTE_SAVERS, SAVER_FORMATS
 
 from sk1 import _, config, events, modes, dialogs, appconst
 from sk1 import app_plugins, app_actions
@@ -41,8 +41,8 @@ from sk1.document import PD_Presenter
 from sk1.clipboard import AppClipboard
 from sk1.pwidgets import generate_fcache
 
-class SK1Application(wal.Application, UCApplication):
 
+class SK1Application(wal.Application, UCApplication):
 	appdata = None
 	history = None
 
@@ -77,6 +77,7 @@ class SK1Application(wal.Application, UCApplication):
 		self.appdata = AppData(self, cfgdir)
 		config.load(self.appdata.app_config)
 		config.resource_dir = os.path.join(path_unicode(self.path), 'share')
+		self.update_wal()
 		plg_dir = os.path.join(self.path, 'share', 'pd_plugins')
 		custom_plg_dir = self.appdata.plugin_dir
 		config.plugin_dirs = [plg_dir, custom_plg_dir]
@@ -111,7 +112,8 @@ class SK1Application(wal.Application, UCApplication):
 			for item in config.active_plugins:
 				try:
 					self.mw.mdi.plg_area.show_plugin(item)
-				except: pass
+				except:
+					pass
 
 	def call_after(self, *args):
 		if self.docs: return
@@ -125,7 +127,12 @@ class SK1Application(wal.Application, UCApplication):
 			if not wal.is_wx2(): events.emit(events.NO_DOCS)
 		self.update_actions()
 
-	def stub(self, *args):pass
+	def stub(self, *args):
+		pass
+
+	def update_wal(self):
+		wal.SPIN['overlay'] = config.spin_overlay
+		wal.SPIN['sep'] = config.spin_sep
 
 	def update_config(self):
 		config.resource_dir = ''
@@ -172,7 +179,7 @@ class SK1Application(wal.Application, UCApplication):
 	def new_from_template(self):
 		msg = _('Select Template')
 		doc_file = dialogs.get_open_file_name(self.mw, self,
-								config.template_dir, msg)
+			config.template_dir, msg)
 		if os.path.lexists(doc_file) and os.path.isfile(doc_file):
 			try:
 				doc = PD_Presenter(self, doc_file, template=True)
@@ -190,7 +197,8 @@ class SK1Application(wal.Application, UCApplication):
 
 	def open(self, doc_file='', silent=False):
 		if not doc_file:
-			doc_file = dialogs.get_open_file_name(self.mw, self, config.open_dir)
+			doc_file = dialogs.get_open_file_name(self.mw, self,
+				config.open_dir)
 		if os.path.lexists(doc_file) and os.path.isfile(doc_file):
 			try:
 				doc = PD_Presenter(self, doc_file, silent)
@@ -199,7 +207,8 @@ class SK1Application(wal.Application, UCApplication):
 				msg = _('Cannot open file:')
 				msg = "%s\n'%s'" % (msg, doc_file) + '\n'
 				msg += _('The file contains newer SK2 format.\n')
-				msg += _('Try updating sK1 application from http://www.sk1project.net')
+				msg += _(
+					'Try updating sK1 application from http://www.sk1project.net')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
 				self.print_stacktrace()
 				return
@@ -247,14 +256,14 @@ class SK1Application(wal.Application, UCApplication):
 		if not doc_file:
 			doc_file = '' + self.current_doc.doc_name
 		if not os.path.splitext(doc_file)[1] == "." + \
-					uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
+				uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
 			doc_file = os.path.splitext(doc_file)[0] + "." + \
-					uc2const.FORMAT_EXTENSION[uc2const.SK2][0]
+					   uc2const.FORMAT_EXTENSION[uc2const.SK2][0]
 		if not os.path.lexists(os.path.dirname(doc_file)):
 			doc_file = os.path.join(config.save_dir,
-								os.path.basename(doc_file))
+				os.path.basename(doc_file))
 		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
-											path_only=True)
+			path_only=True)
 		if doc_file:
 			old_file = self.current_doc.doc_file
 			old_name = self.current_doc.doc_name
@@ -283,15 +292,15 @@ class SK1Application(wal.Application, UCApplication):
 		if not doc_file:
 			doc_file = '' + self.current_doc.doc_name
 		if not os.path.splitext(doc_file)[1] == "." + \
-					uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
+				uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
 			doc_file = os.path.splitext(doc_file)[0] + "." + \
-					uc2const.FORMAT_EXTENSION[uc2const.SK2][0]
+					   uc2const.FORMAT_EXTENSION[uc2const.SK2][0]
 		if not os.path.lexists(os.path.dirname(doc_file)):
 			doc_file = os.path.join(config.save_dir,
-								os.path.basename(doc_file))
+				os.path.basename(doc_file))
 		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
-							_('Save selected objects only as...'),
-							path_only=True)
+			_('Save selected objects only as...'),
+			path_only=True)
 		if doc_file:
 			try:
 				self.make_backup(doc_file)
@@ -300,7 +309,8 @@ class SK1Application(wal.Application, UCApplication):
 			except:
 				first = _('Cannot save document:')
 				msg = ("%s\n'%s'.") % (first, doc_file) + '\n'
-				msg += _('Please check requested file format and write permissions')
+				msg += _(
+					'Please check requested file format and write permissions')
 				dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
 				self.print_stacktrace()
 
@@ -347,14 +357,15 @@ class SK1Application(wal.Application, UCApplication):
 
 	def import_file(self):
 		doc_file = dialogs.get_open_file_name(self.mw, self, config.import_dir,
-											_('Select file to import'))
+			_('Select file to import'))
 		if os.path.lexists(doc_file) and os.path.isfile(doc_file):
 			try:
 				ret = self.current_doc.import_file(doc_file)
 				if not ret:
 					msg = _('Cannot import graphics from file:')
 					msg = "%s\n'%s'" % (msg, doc_file) + '\n'
-					msg += _('It seems the document is empty or contains unsupported objects.')
+					msg += _(
+						'It seems the document is empty or contains unsupported objects.')
 					dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
 				config.import_dir = str(os.path.dirname(doc_file))
 			except:
@@ -370,10 +381,10 @@ class SK1Application(wal.Application, UCApplication):
 			doc_file = '' + self.current_doc.doc_name
 		doc_file = os.path.splitext(doc_file)[0]
 		doc_file = os.path.join(config.export_dir,
-								os.path.basename(doc_file))
+			os.path.basename(doc_file))
 		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
-							_('Export document As...'),
-							file_types=SAVER_FORMATS[1:], path_only=True)
+			_('Export document As...'),
+			file_types=SAVER_FORMATS[1:], path_only=True)
 		if doc_file:
 			try:
 				self.make_backup(doc_file, True)
@@ -386,14 +397,15 @@ class SK1Application(wal.Application, UCApplication):
 				self.print_stacktrace()
 				return
 			config.export_dir = str(os.path.dirname(doc_file))
-			events.emit(events.APP_STATUS, _('Document is successfully exported'))
+			events.emit(events.APP_STATUS,
+				_('Document is successfully exported'))
 
 	def extract_bitmap(self):
 		doc_file = 'image'
 		doc_file = os.path.join(config.save_dir, doc_file)
 		doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
-							_('Extract selected bitmap as...'),
-							file_types=[uc2const.PNG], path_only=True)
+			_('Extract selected bitmap as...'),
+			file_types=[uc2const.PNG], path_only=True)
 		if doc_file:
 			try:
 				pixmap = self.current_doc.selection.objs[0]
@@ -406,7 +418,8 @@ class SK1Application(wal.Application, UCApplication):
 				self.print_stacktrace()
 				return
 			config.save_dir = str(os.path.dirname(doc_file))
-			events.emit(events.APP_STATUS, _('Bitmap is successfully extracted'))
+			events.emit(events.APP_STATUS,
+				_('Bitmap is successfully extracted'))
 
 	def export_palette(self, palette, parent=None):
 		if not parent: parent = self.mw
@@ -414,8 +427,8 @@ class SK1Application(wal.Application, UCApplication):
 		doc_file = os.path.splitext(doc_file)[0]
 		doc_file = os.path.join(config.export_dir, os.path.basename(doc_file))
 		ret = dialogs.get_save_file_name(parent, self, doc_file,
-							_('Export palette as...'),
-							file_types=PALETTE_SAVERS)
+			_('Export palette as...'),
+			file_types=PALETTE_SAVERS)
 		if not ret: return
 		doc_file, index = ret
 		saver_id = PALETTE_SAVERS[index]
@@ -423,20 +436,22 @@ class SK1Application(wal.Application, UCApplication):
 		if doc_file:
 
 			if not os.path.splitext(doc_file)[1] == "." + \
-						uc2const.FORMAT_EXTENSION[saver_id][0]:
+					uc2const.FORMAT_EXTENSION[saver_id][0]:
 				doc_file = os.path.splitext(doc_file)[0] + "." + \
-						uc2const.FORMAT_EXTENSION[saver_id][0]
+						   uc2const.FORMAT_EXTENSION[saver_id][0]
 
 			try:
 				saver = get_saver_by_id(saver_id)
 				if saver is None:
-					raise IOError(_('Unknown file format is requested for export!'),
-								 doc_file)
+					raise IOError(
+						_('Unknown file format is requested for export!'),
+						doc_file)
 
 				self.make_backup(doc_file, True)
 
 				pd = dialogs.ProgressDialog(_('Exporting...'), parent)
-				ret = pd.run(saver, [palette, doc_file, None, False, True], False)
+				ret = pd.run(saver, [palette, doc_file, None, False, True],
+					False)
 				if ret:
 					if not pd.error_info is None:
 						pd.destroy()
@@ -450,19 +465,21 @@ class SK1Application(wal.Application, UCApplication):
 				raise IOError(*sys.exc_info())
 
 			config.export_dir = str(os.path.dirname(doc_file))
-			events.emit(events.APP_STATUS, _('Palette is successfully exported'))
+			events.emit(events.APP_STATUS,
+				_('Palette is successfully exported'))
 
 	def import_palette(self, parent=None):
 		if not parent: parent = self.mw
 		doc_file = dialogs.get_open_file_name(parent, self, config.import_dir,
-											_('Select palette to import'),
-											file_types=PALETTE_LOADERS)
+			_('Select palette to import'),
+			file_types=PALETTE_LOADERS)
 		if os.path.lexists(doc_file) and os.path.isfile(doc_file):
 			try:
 				palette = None
 				loader = get_loader(doc_file)
 				pd = dialogs.ProgressDialog(_('Opening file...'), parent)
-				ret = pd.run(loader, [self.appdata, doc_file, None, False, True])
+				ret = pd.run(loader,
+					[self.appdata, doc_file, None, False, True])
 				if ret:
 					if pd.result is None:
 						pd.destroy()
@@ -496,8 +513,8 @@ class SK1Application(wal.Application, UCApplication):
 		file_types = [uc2const.TIF]
 		if eps: file_types = [uc2const.EPS]
 		img_file = dialogs.get_save_file_name(parent, self, img_file,
-							_('Save pattern as...'),
-							file_types=file_types, path_only=True)
+			_('Save pattern as...'),
+			file_types=file_types, path_only=True)
 		if img_file:
 			try:
 				fobj = open(img_file, 'wb')
@@ -515,7 +532,7 @@ class SK1Application(wal.Application, UCApplication):
 	def import_pattern(self, parent=None):
 		if not parent: parent = self.mw
 		img_file = dialogs.get_open_file_name(parent, self, config.import_dir,
-				_('Select pattern to load'), file_types=PATTERN_FORMATS)
+			_('Select pattern to load'), file_types=PATTERN_FORMATS)
 		if os.path.lexists(img_file) and os.path.isfile(img_file):
 			first = _('Cannot load pattern for:')
 			msg = ("%s\n'%s'.") % (first, self.current_doc.doc_name) + '\n'
@@ -534,8 +551,8 @@ class SK1Application(wal.Application, UCApplication):
 		return None
 
 	def make_backup(self, doc_file, export=False):
-		if not export and not config.make_backup:return
-		if export and not config.make_export_backup:return
+		if not export and not config.make_backup: return
+		if export and not config.make_export_backup: return
 		if os.path.lexists(doc_file):
 			if os.path.lexists(doc_file + '~'):
 				os.remove(doc_file + '~')
