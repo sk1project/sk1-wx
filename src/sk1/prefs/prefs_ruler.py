@@ -40,15 +40,13 @@ class RulersPrefs(PrefPanel):
 		#Ruler size
 		grid.pack(wal.Label(grid, _('Ruler size (px):')))
 		self.ruler_size = wal.IntSpin(grid, config.ruler_size,
-								(15, 30), spin_overlay=config.spin_overlay,
-								onchange=self.update_ruler_size)
+                                                            (15, 30), onchange=self.update_ruler_size)
 		grid.pack(self.ruler_size)
 
 		#Ruler font size
 		grid.pack(wal.Label(grid, _('Ruler font size (px):')))
 		self.ruler_font_size = wal.IntSpin(grid, config.ruler_font_size,
-								(5, 8), spin_overlay=config.spin_overlay,
-								onchange=self.update_ruler_font)
+                                                            (5, 8), onchange=self.update_ruler_font)
 		grid.pack(self.ruler_font_size)
 
 		#Ruler bg color
@@ -66,29 +64,25 @@ class RulersPrefs(PrefPanel):
 		#Small tick size
 		grid.pack(wal.Label(grid, _('Small tick size (px):')))
 		self.ruler_small_tick = wal.IntSpin(grid, config.ruler_small_tick,
-								(2, 30), spin_overlay=config.spin_overlay,
-								onchange=self.update_ruler)
+								(2, 30), onchange=self.update_ruler)
 		grid.pack(self.ruler_small_tick)
 
 		#Large tick size
 		grid.pack(wal.Label(grid, _('Large tick size (px):')))
 		self.ruler_large_tick = wal.IntSpin(grid, config.ruler_large_tick,
-								(2, 30), spin_overlay=config.spin_overlay,
-								onchange=self.update_ruler)
+								(2, 30), onchange=self.update_ruler)
 		grid.pack(self.ruler_large_tick)
 
 		#Vertical text shift
 		grid.pack(wal.Label(grid, _('Text vertical shift (px):')))
 		self.ruler_text_vshift = wal.IntSpin(grid, config.ruler_text_vshift,
-								(0, 30), spin_overlay=config.spin_overlay,
-								onchange=self.update_ruler)
+								(0, 30), onchange=self.update_ruler)
 		grid.pack(self.ruler_text_vshift)
 
 		#Horizontal text shift
 		grid.pack(wal.Label(grid, _('Text horizontal shift (px):')))
 		self.ruler_text_hshift = wal.IntSpin(grid, config.ruler_text_hshift,
-								(0, 30), spin_overlay=config.spin_overlay,
-								onchange=self.update_ruler)
+								(0, 30), onchange=self.update_ruler)
 		grid.pack(self.ruler_text_hshift)
 
 		self.pack(grid, padding_all=5)

@@ -45,8 +45,7 @@ class PaletteInfoDialog(wal.OkCancelDialog):
 		grid.pack(wal.Label(grid, _('Columns:')))
 		cols = self.palette.model.columns
 		size = len(self.palette.model.colors)
-		self.cols = wal.IntSpin(grid, value=cols, range_val=(1, size),
-							spin_overlay=config.spin_overlay)
+		self.cols = wal.IntSpin(grid, value=cols, range_val=(1, size))
 		grid.pack(self.cols)
 
 		grid.pack(wal.Label(grid, _('Description:')))

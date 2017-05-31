@@ -67,7 +67,6 @@ class CopiesPanel(FLabeledPanel):
 		title = _('Number of copies:')
 		hpanel.pack(wal.Label(hpanel, title), padding=5)
 		self.num_copies = wal.IntSpin(hpanel, 1, (1, 9999),
-								spin_overlay=config.spin_overlay,
 								onchange=self.copies_changed)
 		hpanel.pack(self.num_copies)
 		self.cont.pack(hpanel)

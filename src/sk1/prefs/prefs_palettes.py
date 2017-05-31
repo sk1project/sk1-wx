@@ -81,16 +81,14 @@ class PalettesPrefs(PrefPanel):
 
 		grid.pack((15, 1))
 		grid.pack(wal.Label(grid, _('Cell width:')))
-		self.vcell_width = wal.IntSpin(grid, config.palette_vcell_width,
-									(10, 20), spin_overlay=config.spin_overlay)
+		self.vcell_width = wal.IntSpin(grid, config.palette_vcell_width, (10, 20))
 		self.vcell_width.set_enable(False)
 		grid.pack(self.vcell_width)
 		grid.pack(wal.Label(grid, _('px')))
 
 		grid.pack((15, 1))
 		grid.pack(wal.Label(grid, _('Cell height:')))
-		self.vcell_height = wal.IntSpin(grid, config.palette_vcell_height,
-									(10, 100), spin_overlay=config.spin_overlay)
+		self.vcell_height = wal.IntSpin(grid, config.palette_vcell_height, (10, 100))
 		grid.pack(self.vcell_height)
 		grid.pack(wal.Label(grid, _('px')))
 
@@ -105,15 +103,13 @@ class PalettesPrefs(PrefPanel):
 
 		grid.pack((15, 1))
 		grid.pack(wal.Label(grid, _('Cell width:')))
-		self.hcell_width = wal.IntSpin(grid, config.palette_hcell_width,
-									(10, 100), spin_overlay=config.spin_overlay)
+		self.hcell_width = wal.IntSpin(grid, config.palette_hcell_width, (10, 100))
 		grid.pack(self.hcell_width)
 		grid.pack(wal.Label(grid, _('px')))
 
 		grid.pack((15, 1))
 		grid.pack(wal.Label(grid, _('Cell height:')))
-		self.hcell_height = wal.IntSpin(grid, config.palette_hcell_height,
-									(10, 20), spin_overlay=config.spin_overlay)
+		self.hcell_height = wal.IntSpin(grid, config.palette_hcell_height, (10, 20))
 		self.hcell_height.set_enable(False)
 		grid.pack(self.hcell_height)
 		grid.pack(wal.Label(grid, _('px')))

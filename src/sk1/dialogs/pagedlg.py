@@ -37,8 +37,7 @@ class GotoPageDialog(wal.OkCancelDialog):
 		page_num = len(pages)
 		current_page = pages.index(self.presenter.active_page) + 1
 
-		self.spin = wal.FloatSpin(self, current_page, (1, page_num), 1, 0,
-								width=5, spin_overlay=config.spin_overlay)
+		self.spin = wal.FloatSpin(self, current_page, (1, page_num), 1, 0, width=5)
 		self.pack(self.spin, padding=5)
 
 	def get_result(self):
@@ -64,8 +63,7 @@ class DeletePageDialog(wal.OkCancelDialog):
 		page_num = len(pages)
 		current_page = pages.index(self.presenter.active_page) + 1
 
-		self.spin = wal.FloatSpin(self, current_page, (1, page_num), 1, 0,
-								width=5, spin_overlay=config.spin_overlay)
+		self.spin = wal.FloatSpin(self, current_page, (1, page_num), 1, 0, width=5)
 		self.pack(self.spin, padding=5)
 
 	def get_result(self):
@@ -96,8 +94,7 @@ class InsertPageDialog(wal.OkCancelDialog):
 		label = wal.Label(panel, _("Insert:"))
 		panel.pack(label, padding=5)
 
-		self.page_num = wal.FloatSpin(panel, 1, (1, 100), 1, 0, width=5,
-							spin_overlay=config.spin_overlay)
+		self.page_num = wal.FloatSpin(panel, 1, (1, 100), 1, 0, width=5)
 		panel.pack(self.page_num, padding=5)
 
 		label = wal.Label(panel, _("page(s)"))
@@ -126,8 +123,7 @@ class InsertPageDialog(wal.OkCancelDialog):
 		page_num = len(pages)
 		current_page = pages.index(self.presenter.active_page) + 1
 
-		self.page_index = wal.FloatSpin(panel, current_page, (1, page_num),
-							1, 0, width=5, spin_overlay=config.spin_overlay)
+		self.page_index = wal.FloatSpin(panel, current_page, (1, page_num), 1, 0, width=5)
 		panel.pack(self.page_index, padding=5)
 
 	def get_result(self):

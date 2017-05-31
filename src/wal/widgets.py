@@ -542,7 +542,6 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 
 	def __init__(self, parent, value=0.0, range_val=(0.0, 1.0), step=0.01,
 			digits=2, size=DEF_SIZE, width=0,
-			spin_overlay=True, spin_sep=True,
 			onchange=None, onenter=None, check_focus=True):
 
 		self.callback = onchange
@@ -718,13 +717,12 @@ class FloatSpin(wx.Panel, RangeDataWidget):
 
 class IntSpin(FloatSpin):
 	def __init__(self, parent, value=0, range_val=(0, 1), size=DEF_SIZE,
-			width=0, spin_overlay=True,
-			onchange=None, onenter=None, check_focus=True):
+			width=0, onchange=None, onenter=None, check_focus=True):
 		step = 1
 		digits = 0
 		if not width and const.is_msw(): width = 5
 		FloatSpin.__init__(self, parent, value, range_val,
-			step, digits, size, width, spin_overlay,
+			step, digits, size, width,
 			onchange, onenter, check_focus)
 
 

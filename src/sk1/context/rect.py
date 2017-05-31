@@ -46,8 +46,7 @@ class RectanglePlugin(CtxPlugin):
 		self.add(self.slider, 0, LEFT | CENTER, 2)
 
 		self.num_spin = FloatSpin(self, 0, (0.0, 100.0), 1.0, 0,
-							width=3, onchange=self.changes,
-							spin_overlay=config.spin_overlay)
+							width=3, onchange=self.changes)
 		self.add(self.num_spin, 0, LEFT | CENTER, 2)
 
 		self.switch = RectAngleSwitch(self, onchange=self.switch_changed)

@@ -78,8 +78,7 @@ class StaticUnitSpin(FloatSpin):
 		val = self.point_value * point_dict[self.units]
 		FloatSpin.__init__(self, parent, val, self.point_range,
 						step=step, width=5,
-						onchange=self.update_point_value, onenter=onenter,
-						spin_overlay=config.spin_overlay)
+						onchange=self.update_point_value, onenter=onenter)
 		self._set_digits(unit_accuracy[self.units])
 		self.set_value(self.point_value * point_dict[self.units])
 
@@ -214,7 +213,7 @@ class AngleSpin(FloatSpin):
 		self.ucallback = onchange
 		FloatSpin.__init__(self, parent, val, val_range, step=1.0, width=5,
 						onchange=self.update_angle_value, onenter=onenter,
-						check_focus=check_focus, spin_overlay=config.spin_overlay)
+						check_focus=check_focus)
 
 	def update_angle_value(self, *args):
 		self.angle_value = self.get_value() * math.pi / 180.0
