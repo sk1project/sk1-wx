@@ -18,17 +18,18 @@
 #   MacOS X env: export VERSIONER_PYTHON_PREFER_32_BIT=yes
 
 import wx, const
-import  wx.lib.scrolledpanel as scrolled
+import wx.lib.scrolledpanel as scrolled
 
-from generic import Widget
+from mixins import WidgetMixin
 from const import FONT_SIZE, DEF_SIZE
 from renderer import copy_surface_to_bitmap
+
 
 def new_id():
 	return wx.NewId()
 
-class Application(wx.App):
 
+class Application(wx.App):
 	app_name = None
 
 	mw = None
@@ -60,14 +61,15 @@ class Application(wx.App):
 		for item in self.actions.keys():
 			self.actions[item].update()
 
-	def call_after(self, *args):pass
+	def call_after(self, *args):
+		pass
 
 	def run(self):
 		if self.mw:
 			self.SetTopWindow(self.mw)
 			if self.mw.maximized: self.mw.Maximize()
 			self.mw.build()
-			if self.actions:self.update_actions()
+			if self.actions: self.update_actions()
 			self.mw.Show(True)
 			self.mdi = self.mw.mdi
 			wx.CallAfter(self.call_after)
@@ -75,17 +77,17 @@ class Application(wx.App):
 		else:
 			raise RuntimeError, 'Main window is not defined!'
 
-class MainWindow(wx.Frame):
 
+class MainWindow(wx.Frame):
 	mdi = None
 	maximized = False
 
 	def __init__(self, title='Frame', size=(100, 100), orientation=wx.VERTICAL,
-				maximized=False, on_close=None):
+			maximized=False, on_close=None):
 		self.maximized = maximized
 
 		wx.Frame.__init__(self, None, wx.ID_ANY, title, pos=DEF_SIZE, size=size,
-						name=title)
+			name=title)
 		self.orientation = orientation
 		self.Centre()
 		self.box = wx.BoxSizer(orientation)
@@ -93,7 +95,8 @@ class MainWindow(wx.Frame):
 		self.set_title(title)
 		if on_close: self.Bind(wx.EVT_CLOSE, on_close, self)
 
-	def build(self):pass
+	def build(self):
+		pass
 
 	def set_global_shortcuts(self, actions):
 		global_entries = []
@@ -102,17 +105,30 @@ class MainWindow(wx.Frame):
 				for acc in actions[item].global_accs:
 					global_entries.append(acc)
 					self.Bind(wx.EVT_KEY_DOWN, actions[item].do_call, self,
-							id=acc.GetCommand())
+						id=acc.GetCommand())
 		if global_entries:
 			self.SetAcceleratorTable(wx.AcceleratorTable(global_entries))
 
-	def layout(self): self.Layout()
-	def get_size(self): return self.GetSize()
-	def set_size(self, size): self.SetSize(wx.Size(*size))
-	def is_maximized(self): return self.IsMaximized()
-	def destroy(self): self.Destroy()
-	def hide(self): self.Hide()
-	def show(self): self.Show()
+	def layout(self):
+		self.Layout()
+
+	def get_size(self):
+		return self.GetSize()
+
+	def set_size(self, size):
+		self.SetSize(wx.Size(*size))
+
+	def is_maximized(self):
+		return self.IsMaximized()
+
+	def destroy(self):
+		self.Destroy()
+
+	def hide(self):
+		self.Hide()
+
+	def show(self):
+		self.Show()
 
 	def add(self, *args, **kw):
 		"""Arguments: object, expandable (0 or 1), flag, border"""
@@ -121,8 +137,10 @@ class MainWindow(wx.Frame):
 	def pack(self, obj, expand=False, fill=False,
 			padding=0, start_padding=0, end_padding=0):
 		if self.orientation == wx.VERTICAL:
-			if expand:expand = 1
-			else: expand = 0
+			if expand:
+				expand = 1
+			else:
+				expand = 0
 			flags = wx.ALIGN_TOP | wx.ALIGN_CENTER_HORIZONTAL
 			if padding:
 				flags = flags | wx.TOP | wx.BOTTOM
@@ -135,8 +153,10 @@ class MainWindow(wx.Frame):
 			if fill: flags = flags | wx.EXPAND
 			self.box.Add(obj, expand, flags, padding)
 		else:
-			if expand:expand = 1
-			else: expand = 0
+			if expand:
+				expand = 1
+			else:
+				expand = 0
 			flags = wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL
 			if padding:
 				flags = flags | wx.LEFT | wx.RIGHT
@@ -160,12 +180,12 @@ class MainWindow(wx.Frame):
 		icons.AddIconFromFile(filepath, wx.BITMAP_TYPE_ANY)
 		self.SetIcons(icons)
 
-class Panel(wx.Panel, Widget):
 
+class Panel(wx.Panel, Widget):
 	def __init__(self, parent, border=False, allow_input=False):
 		style = wx.TAB_TRAVERSAL
 		if allow_input: style |= wx.WANTS_CHARS
-		if border and not const.is_wx3():style |= wx.BORDER_MASK
+		if border and not const.is_wx3(): style |= wx.BORDER_MASK
 		wx.Panel.__init__(self, parent, wx.ID_ANY, style=style)
 
 	def set_bg(self, color):
@@ -177,16 +197,21 @@ class Panel(wx.Panel, Widget):
 	def get_bg(self):
 		return self.GetBackgroundColour().Get()
 
-	def set_size(self, size): self.SetSize(size)
-	def layout(self):self.Layout()
-	def fit(self):self.Fit()
+	def set_size(self, size):
+		self.SetSize(size)
+
+	def layout(self):
+		self.Layout()
+
+	def fit(self):
+		self.Fit()
+
 
 class SizedPanel(Panel):
-
 	panel = None
 
 	def __init__(self, parent, orientation=wx.HORIZONTAL,
-				border=False):
+			border=False):
 		self.parent = parent
 		self.orientation = orientation
 		Panel.__init__(self, parent, border)
@@ -224,8 +249,10 @@ class HPanel(SizedPanel):
 	def pack(self, obj, expand=False, fill=False,
 			padding=0, start_padding=0, end_padding=0, padding_all=0):
 
-		if expand:expand = 1
-		else: expand = 0
+		if expand:
+			expand = 1
+		else:
+			expand = 0
 
 		flags = wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL
 
@@ -245,6 +272,7 @@ class HPanel(SizedPanel):
 
 		self.add(obj, expand, flags, padding)
 
+
 class VPanel(SizedPanel):
 	def __init__(self, parent, border=False):
 		SizedPanel.__init__(self, parent, wx.VERTICAL, border)
@@ -252,8 +280,10 @@ class VPanel(SizedPanel):
 	def pack(self, obj, expand=False, fill=False, align_center=True,
 			padding=0, start_padding=0, end_padding=0, padding_all=0):
 
-		if expand:expand = 1
-		else: expand = 0
+		if expand:
+			expand = 1
+		else:
+			expand = 0
 
 		flags = wx.ALIGN_TOP
 		if align_center:
@@ -275,8 +305,8 @@ class VPanel(SizedPanel):
 
 		self.add(obj, expand, flags, padding)
 
-class Canvas(object):
 
+class Canvas(object):
 	dc = None
 	pdc = None
 
@@ -297,7 +327,8 @@ class Canvas(object):
 		self.pdc = wx.PaintDC(self)
 		try:
 			self.dc = wx.GCDC(self.pdc)
-		except:self.dc = self.pdc
+		except:
+			self.dc = self.pdc
 		self.dc.BeginDrawing()
 
 		self.paint()
@@ -310,9 +341,10 @@ class Canvas(object):
 		self.pdc = self.dc = None
 
 	# Paint method for inherited class
-	def paint(self):pass
+	def paint(self):
+		pass
 
-	#========PaintDC
+	# ========PaintDC
 
 	def set_origin(self, x=0, y=0):
 		self.pdc.SetDeviceOrigin(x, y)
@@ -368,17 +400,19 @@ class Canvas(object):
 		self.pdc.DrawBitmap(copy_surface_to_bitmap(surface), x, y, use_mask)
 
 	def draw_linear_gradient(self, rect, start_clr, stop_clr, ndir=False):
-		if ndir:ndir = wx.SOUTH
-		else:ndir = wx.EAST
+		if ndir:
+			ndir = wx.SOUTH
+		else:
+			ndir = wx.EAST
 		self.pdc.GradientFillLinear(wx.Rect(*rect),
-								wx.Colour(*start_clr),
-								wx.Colour(*stop_clr),
-								nDirection=ndir)
+			wx.Colour(*start_clr),
+			wx.Colour(*stop_clr),
+			nDirection=ndir)
 
 	def draw_bitmap(self, bmp, x=0, y=0, use_mask=True):
 		self.pdc.DrawBitmap(bmp, x, y, use_mask)
 
-	#=========GC device
+	# =========GC device
 
 	def set_gc_origin(self, x=0, y=0):
 		self.dc.SetDeviceOrigin(x, y)
@@ -430,18 +464,20 @@ class Canvas(object):
 		self.dc.DrawBitmap(copy_surface_to_bitmap(surface), x, y, use_mask)
 
 	def gc_draw_linear_gradient(self, rect, start_clr, stop_clr, ndir=False):
-		if ndir:ndir = wx.SOUTH
-		else:ndir = wx.EAST
+		if ndir:
+			ndir = wx.SOUTH
+		else:
+			ndir = wx.EAST
 		self.dc.GradientFillLinear(wx.Rect(*rect),
-								wx.Colour(*start_clr),
-								wx.Colour(*stop_clr),
-								nDirection=ndir)
+			wx.Colour(*start_clr),
+			wx.Colour(*stop_clr),
+			nDirection=ndir)
 
 	def gc_draw_bitmap(self, bmp, x=0, y=0, use_mask=True):
 		self.dc.DrawBitmap(bmp, x, y, use_mask)
 
-class SensitiveCanvas(Canvas):
 
+class SensitiveCanvas(Canvas):
 	def __init__(self, check_move=False):
 		Canvas.__init__(self)
 		self.Bind(wx.EVT_LEFT_UP, self._mouse_left_up)
@@ -470,16 +506,20 @@ class SensitiveCanvas(Canvas):
 	def _mouse_left_dclick(self, event):
 		self.mouse_left_dclick(event.GetPositionTuple())
 
-	def mouse_left_down(self, point):pass
-	def mouse_left_up(self, point):pass
-	def mouse_right_up(self, point):pass
-	def mouse_wheel(self, val):pass
-	def mouse_move(self, point):pass
-	def mouse_left_dclick(self, point):pass
+	def mouse_left_down(self, point): pass
+
+	def mouse_left_up(self, point): pass
+
+	def mouse_right_up(self, point): pass
+
+	def mouse_wheel(self, val): pass
+
+	def mouse_move(self, point): pass
+
+	def mouse_left_dclick(self, point): pass
 
 
 class RoundedPanel(VPanel, Canvas):
-
 	def __init__(self, parent):
 		VPanel.__init__(self, parent)
 		Canvas.__init__(self)
@@ -499,7 +539,6 @@ class RoundedPanel(VPanel, Canvas):
 
 
 class LabeledPanel(VPanel):
-
 	panel = None
 	widget_panel = None
 	widget = None
@@ -526,7 +565,7 @@ class LabeledPanel(VPanel):
 		self.refresh()
 
 		VPanel.pack(self, self.inner_panel, expand=True, fill=True,
-				start_padding=padding)
+			start_padding=padding)
 
 	def pack(self, *args, **kw):
 		obj = args[0]
@@ -535,24 +574,36 @@ class LabeledPanel(VPanel):
 			obj.show()
 
 
-class GridPanel(Panel, Widget):
-
+class GridPanel(Panel, WidgetMixin):
 	def __init__(self, parent, rows=2, cols=2, vgap=0, hgap=0, border=False):
 		Panel.__init__(self, parent, border)
 		self.grid = wx.FlexGridSizer(rows, cols, vgap, hgap)
 		self.SetSizer(self.grid)
 
-	def set_vgap(self, val):self.grid.SetVGap(val)
-	def set_hgap(self, val):self.grid.SetHGap(val)
-	def sel_cols(self, val):self.grid.SetCols(val)
-	def sel_rows(self, val):self.grid.SetRows(val)
-	def add_growable_col(self, index): self.grid.AddGrowableCol(index)
-	def add_growable_row(self, index): self.grid.AddGrowableRow(index)
+	def set_vgap(self, val):
+		self.grid.SetVGap(val)
+
+	def set_hgap(self, val):
+		self.grid.SetHGap(val)
+
+	def sel_cols(self, val):
+		self.grid.SetCols(val)
+
+	def sel_rows(self, val):
+		self.grid.SetRows(val)
+
+	def add_growable_col(self, index):
+		self.grid.AddGrowableCol(index)
+
+	def add_growable_row(self, index):
+		self.grid.AddGrowableRow(index)
 
 	def pack(self, obj, expand=False, fill=False, align_right=False,
 			align_left=True):
-		if expand:expand = 1
-		else: expand = 0
+		if expand:
+			expand = 1
+		else:
+			expand = 0
 		if align_right:
 			flags = wx.ALIGN_RIGHT
 		elif align_left:
@@ -575,8 +626,7 @@ class GridPanel(Panel, Widget):
 			obj.show()
 
 
-class ScrolledPanel(scrolled.ScrolledPanel, Widget):
-
+class ScrolledPanel(scrolled.ScrolledPanel, WidgetMixin):
 	def __init__(self, parent):
 		scrolled.ScrolledPanel.__init__(self, parent, -1)
 		self.box = wx.BoxSizer(wx.VERTICAL)
@@ -587,18 +637,26 @@ class ScrolledPanel(scrolled.ScrolledPanel, Widget):
 
 	def set_bg(self, color):
 		self.SetBackgroundColour(wx.Colour(*color))
+
 	def get_bg(self):
 		return self.GetBackgroundColour().Get()
 
-	def set_size(self, size): self.SetSize(size)
-	def layout(self):self.Layout()
-	def fit(self):self.Fit()
+	def set_size(self, size):
+		self.SetSize(size)
+
+	def layout(self):
+		self.Layout()
+
+	def fit(self):
+		self.Fit()
 
 	def pack(self, obj, expand=False, fill=False, align_center=True,
 			padding=0, start_padding=0, end_padding=0, padding_all=0):
 
-		if expand:expand = 1
-		else: expand = 0
+		if expand:
+			expand = 1
+		else:
+			expand = 0
 
 		flags = wx.ALIGN_TOP
 		if align_center:
@@ -642,31 +700,42 @@ class ScrolledPanel(scrolled.ScrolledPanel, Widget):
 	def remove_all(self):
 		self.box.Clear()
 
-class ScrolledCanvas(wx.ScrolledWindow, Widget):
 
+class ScrolledCanvas(wx.ScrolledWindow, WidgetMixin):
 	def __init__(self, parent, border=False):
 		style = wx.NO_BORDER
-		if border and not const.is_wx3():style = wx.BORDER_MASK
+		if border and not const.is_wx3(): style = wx.BORDER_MASK
 		wx.ScrolledWindow.__init__(self, parent, wx.ID_ANY, style=style)
 		self.set_scroll_rate()
 		self.set_double_buffered()
 
-	def set_virtual_size(self, size): self.SetVirtualSize(size)
-	def set_scroll_rate(self, h=20, v=20): self.SetScrollRate(h, v)
-	def set_bg(self, color): self.SetBackgroundColour(wx.Colour(*color))
+	def set_virtual_size(self, size):
+		self.SetVirtualSize(size)
+
+	def set_scroll_rate(self, h=20, v=20):
+		self.SetScrollRate(h, v)
+
+	def set_bg(self, color):
+		self.SetBackgroundColour(wx.Colour(*color))
+
 	def refresh(self, x=0, y=0, w=0, h=0):
 		if not w: w, h = self.GetVirtualSize()
 		self.Refresh(rect=wx.Rect(x, y, w, h))
-	def set_size(self, size): self.SetSize(size)
-	def prepare_dc(self, dc): self.PrepareDC(dc)
+
+	def set_size(self, size):
+		self.SetSize(size)
+
+	def prepare_dc(self, dc):
+		self.PrepareDC(dc)
+
 	def win_to_doc(self, x, y):
 		return tuple(self.CalcUnscrolledPosition(wx.Point(x, y)))
+
 	def doc_to_win(self, x, y):
-		return  tuple(self.CalcScrolledPosition(wx.Point(x, y)))
+		return tuple(self.CalcScrolledPosition(wx.Point(x, y)))
 
 
 class Expander(VPanel, Canvas):
-
 	state = False
 	callback = None
 
@@ -697,8 +766,8 @@ class Expander(VPanel, Canvas):
 		if not self.state:
 			self.draw_line(half, 5, half, h - 3)
 
-class ExpandedPanel(VPanel):
 
+class ExpandedPanel(VPanel):
 	def __init__(self, parent, txt=''):
 		VPanel.__init__(self, parent)
 		header = HPanel(self)
@@ -718,6 +787,3 @@ class ExpandedPanel(VPanel):
 
 	def pack(self, *args, **kw):
 		self.container.pack(*args, **kw)
-
-
-

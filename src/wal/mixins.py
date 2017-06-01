@@ -19,8 +19,8 @@ import wx
 
 from const import FONT_SIZE, is_msw
 
-class Widget(object):
 
+class WidgetMixin(object):
 	shown = True
 	enabled = True
 
@@ -52,14 +52,16 @@ class Widget(object):
 		self.Enable(value)
 
 	def set_visible(self, value):
-		if value: self.show()
-		else: self.hide()
+		if value:
+			self.show()
+		else:
+			self.hide()
 
 	def get_enabled(self):
 		return self.IsEnabled()
 
 	def _set_width(self, size, width):
-		if not width:return size
+		if not width: return size
 		width += 2
 		return (width * FONT_SIZE[0], size[1])
 
@@ -74,16 +76,15 @@ class Widget(object):
 
 	def set_focus(self):
 		self.SetFocus()
-		
-	def set_double_buffered(self):					
+
+	def set_double_buffered(self):
 		if is_msw(): self.SetDoubleBuffered(True)
-		
+
 	def refresh(self):
 		self.Refresh()
 
 
-class DataWidget(Widget):
-
+class DataWidgetMixin(WidgetMixin):
 	def set_value(self, value):
 		self.SetValue(value)
 
@@ -91,8 +92,7 @@ class DataWidget(Widget):
 		return self.GetValue()
 
 
-class RangeDataWidget(DataWidget):
-
+class RangeDataWidgetMixin(DataWidgetMixin):
 	range_val = ()
 
 	def set_range(self, range_val):
@@ -103,8 +103,7 @@ class RangeDataWidget(DataWidget):
 		return self.range_val
 
 
-class GenericGWidget(wx.Panel, Widget):
-
+class GenericGWidget(wx.Panel, WidgetMixin):
 	decoration_padding = 0
 
 	renderer = None
@@ -135,7 +134,6 @@ class GenericGWidget(wx.Panel, Widget):
 		self.Bind(wx.EVT_TIMER, self._on_timer)
 		self.Bind(wx.EVT_LEAVE_WINDOW, self._on_win_leave, self)
 
-
 	def set_enable(self, value):
 		self.enabled = value
 		self.refresh()
@@ -158,7 +156,8 @@ class GenericGWidget(wx.Panel, Widget):
 		if not w: w, h = self.GetSize()
 		self.Refresh(rect=wx.Rect(x, y, w, h))
 
-	def _on_paint(self, event):pass
+	def _on_paint(self, event):
+		pass
 
 	def _mouse_over(self, event):
 		self.mouse_over = True
@@ -197,4 +196,3 @@ class GenericGWidget(wx.Panel, Widget):
 			self.mouse_over = False
 			self.mouse_pressed = False
 			self.refresh()
-
