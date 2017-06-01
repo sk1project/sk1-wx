@@ -18,12 +18,12 @@
 import wx
 
 import const
-from generic import Widget
+from mixins import WidgetMixin
 
 NO_ICON = -1
 
-class TreeElement(object):
 
+class TreeElement(object):
 	name = ''
 	icon = None
 	childs = []
@@ -33,8 +33,8 @@ class TreeElement(object):
 		self.icon = icon
 		self.childs = []
 
-class TreeWidget(wx.TreeCtrl, Widget):
 
+class TreeWidget(wx.TreeCtrl, WidgetMixin):
 	data = None
 	items = []
 	items_ref = []
@@ -49,11 +49,11 @@ class TreeWidget(wx.TreeCtrl, Widget):
 	select_cmd = None
 
 	def __init__(self, parent, data=[], border=True, alt_color=True,
-				use_icons=True, on_select=None, highlight_row=True):
+			use_icons=True, on_select=None, highlight_row=True):
 		style = wx.TR_DEFAULT_STYLE | wx.TR_HAS_BUTTONS | wx.TR_HIDE_ROOT
 		if const.is_msw(): highlight_row = False
 		if highlight_row: style |= wx.TR_FULL_ROW_HIGHLIGHT
-		if not highlight_row:alt_color = False
+		if not highlight_row: alt_color = False
 		if border and not const.is_wx3(): style |= wx.BORDER_MASK
 		wx.TreeCtrl.__init__(self, parent, wx.ID_ANY, style=style)
 		self.alt_color = alt_color
@@ -124,7 +124,7 @@ class TreeWidget(wx.TreeCtrl, Widget):
 			self.SetFocus()
 
 	def recolor_all_items(self):
-		if not self.alt_color:return
+		if not self.alt_color: return
 		even = False
 		for item in self.items:
 			if even:
@@ -134,7 +134,7 @@ class TreeWidget(wx.TreeCtrl, Widget):
 			even = not even
 
 	def recolor_items(self, *args):
-		if not self.alt_color:return
+		if not self.alt_color: return
 		even = False
 		for item in self.items:
 			if self.IsVisible(item):
@@ -144,7 +144,8 @@ class TreeWidget(wx.TreeCtrl, Widget):
 					self.SetItemBackgroundColour(item, const.EVEN_COLOR)
 				even = not even
 
-	def set_indent(self, val): self.SetIndent(val)
-	def get_indent(self): return self.GetIndent()
+	def set_indent(self, val):
+		self.SetIndent(val)
 
-
+	def get_indent(self):
+		return self.GetIndent()

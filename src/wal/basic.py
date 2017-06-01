@@ -181,7 +181,7 @@ class MainWindow(wx.Frame):
 		self.SetIcons(icons)
 
 
-class Panel(wx.Panel, Widget):
+class Panel(wx.Panel, WidgetMixin):
 	def __init__(self, parent, border=False, allow_input=False):
 		style = wx.TAB_TRAVERSAL
 		if allow_input: style |= wx.WANTS_CHARS

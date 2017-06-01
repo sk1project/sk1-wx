@@ -18,11 +18,11 @@
 import wx.combo
 
 import const
-from generic import Widget
+from mixins import WidgetMixin
 from renderer import bmp_to_white
 
-class FontBitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 
+class FontBitmapChoice(wx.combo.OwnerDrawnComboBox, WidgetMixin):
 	fontnames = []
 	bitmaps = []
 	sample_bitmaps = []
@@ -30,8 +30,8 @@ class FontBitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 	control_height = 0
 
 	def __init__(self, parent, value=0, size=(10, 30),
-				fontnames=[], fontname_bitmaps=[],
-				fontsample_bitmaps=[], font_icon=None, onchange=None):
+			fontnames=[], fontname_bitmaps=[],
+			fontsample_bitmaps=[], font_icon=None, onchange=None):
 
 		self.fontnames = fontnames
 		self.bitmaps = fontname_bitmaps
@@ -48,9 +48,9 @@ class FontBitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 		if self.font_icon: x += self.font_icon.GetSize()[0]
 		y += 7 + 3
 		wx.combo.OwnerDrawnComboBox.__init__(self, parent, wx.ID_ANY,
-				wx.EmptyString, wx.DefaultPosition,
-				(x, y), choices, wx.CB_READONLY,
-				wx.DefaultValidator)
+			wx.EmptyString, wx.DefaultPosition,
+			(x, y), choices, wx.CB_READONLY,
+			wx.DefaultValidator)
 		self._set_active(value)
 		self.callback = onchange
 		self.Bind(wx.EVT_COMBOBOX, self.on_change, self)
@@ -59,7 +59,7 @@ class FontBitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 		if self.callback: self.callback()
 
 	def OnDrawItem(self, dc, rect, item, flags):
-		if item == wx.NOT_FOUND:return
+		if item == wx.NOT_FOUND: return
 		r = wx.Rect(*rect)
 		icon_size = (0, 0)
 		if self.font_icon: icon_size = self.font_icon.GetSize()
@@ -69,7 +69,7 @@ class FontBitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 		icon_y = self.control_height / 2 - icon_size[1] / 2 + label_y
 		sample_y = label_y + self.control_height + 2
 		if flags & wx.combo.ODCB_PAINTING_SELECTED and not \
-		flags & wx.combo.ODCB_PAINTING_CONTROL:
+						flags & wx.combo.ODCB_PAINTING_CONTROL:
 			if self.font_icon:
 				icon = bmp_to_white(self.font_icon)
 				dc.DrawBitmap(icon, icon_x, icon_y, True)
@@ -104,13 +104,13 @@ class FontBitmapChoice(wx.combo.OwnerDrawnComboBox, Widget):
 			dc.DrawLine(0, val, r.width, val)
 
 	def OnMeasureItem(self, item):
-		if item == wx.NOT_FOUND:return 1
+		if item == wx.NOT_FOUND: return 1
 		val = self.bitmaps[item].GetSize()[1]
 		val += self.sample_bitmaps[item].GetSize()[1] + 7
 		return val
 
 	def OnMeasureItemWidth(self, item):
-		if item == wx.NOT_FOUND:return 1
+		if item == wx.NOT_FOUND: return 1
 		val = max(self.bitmaps[item].GetSize()[0],
 			self.sample_bitmaps[item].GetSize()[0])
 		if self.font_icon:

@@ -21,19 +21,19 @@ import wx
 import wx.lib.mixins.listctrl as listmix
 
 import const
-from generic import Widget
+from mixins import WidgetMixin
 
-class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, Widget):
 
+class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, WidgetMixin):
 	data = []
 	select_cmd = None
 	activate_cmd = None
 	alt_color = False
 
 	def __init__(self, parent, data=[], border=True, header=False,
-				single_sel=True, virtual=False, alt_color=False,
-				even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
-				on_select=None, on_activate=None):
+			single_sel=True, virtual=False, alt_color=False,
+			even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
+			on_select=None, on_activate=None):
 		self.data = data
 		self.alt_color = alt_color
 		self.odd_color = odd_color
@@ -82,8 +82,10 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, Widget):
 			self.Append([item])
 			if alt_color:
 				list_item = self.GetItem(i)
-				if even: list_item.SetBackgroundColour(self.even_color)
-				else:list_item.SetBackgroundColour(self.odd_color)
+				if even:
+					list_item.SetBackgroundColour(self.even_color)
+				else:
+					list_item.SetBackgroundColour(self.odd_color)
 				self.SetItem(list_item)
 				even = not even
 				i += 1
@@ -109,16 +111,16 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, Widget):
 	def get_active(self):
 		return self.GetFocusedItem()
 
-class ReportList(SimpleList):
 
+class ReportList(SimpleList):
 	def __init__(self, parent, data=[], border=True, header=True,
-				single_sel=True, virtual=False, alt_color=True,
-				even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
-				on_select=None, on_activate=None):
+			single_sel=True, virtual=False, alt_color=True,
+			even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
+			on_select=None, on_activate=None):
 
 		SimpleList.__init__(self, parent, data, border, header,
-						single_sel, virtual, alt_color, even_color, odd_color,
-						on_select, on_activate)
+			single_sel, virtual, alt_color, even_color, odd_color,
+			on_select, on_activate)
 
 	def set_columns(self):
 		for item in self.data[0]:
@@ -132,8 +134,10 @@ class ReportList(SimpleList):
 			self.Append(item)
 			if alt_color:
 				list_item = self.GetItem(i)
-				if even: list_item.SetBackgroundColour(self.even_color)
-				else:list_item.SetBackgroundColour(self.odd_color)
+				if even:
+					list_item.SetBackgroundColour(self.even_color)
+				else:
+					list_item.SetBackgroundColour(self.odd_color)
 				self.SetItem(list_item)
 				even = not even
 				i += 1
@@ -156,16 +160,15 @@ class ReportList(SimpleList):
 			return self.data[index + 1]
 		return None
 
+
 def VirtualList(SimpleList):
-
 	def __init__(self, parent, data=[], border=True, header=True,
-				single_sel=True, virtual=True, alt_color=True,
-				even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
-				on_select=None, on_activate=None):
-
+			single_sel=True, virtual=True, alt_color=True,
+			even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
+			on_select=None, on_activate=None):
 		SimpleList.__init__(self, parent, data, border, header,
-						single_sel, virtual, alt_color, even_color, odd_color,
-						on_select, on_activate)
+			single_sel, virtual, alt_color, even_color, odd_color,
+			on_select, on_activate)
 
 	def OnGetItemText(self, item, col):
 		return self.get_item_text(item, col)

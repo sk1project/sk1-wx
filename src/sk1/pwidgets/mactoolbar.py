@@ -18,7 +18,7 @@
 import wx
 
 from wal import const, Label
-from wal.generic import Widget
+from wal.mixins import WidgetMixin
 
 from sk1.resources import icons
 
@@ -69,7 +69,7 @@ def composite_bmp(size, bmps):
 	return image.ConvertToBitmap()
 
 
-class MacTB_ActionButton(wx.StaticBitmap, Widget):
+class MacTB_ActionButton(wx.StaticBitmap, WidgetMixin):
 
 	action = None
 	pressed = False
@@ -140,7 +140,7 @@ NB_WIDTH = 26
 NB_HEIGHT = 23
 NB_SPACER = 1
 
-class MacTB_ActionNestedButtons(wx.StaticBitmap, Widget):
+class MacTB_ActionNestedButtons(wx.StaticBitmap, WidgetMixin):
 
 	actions = ()
 	tip = ''

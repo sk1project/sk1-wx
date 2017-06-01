@@ -178,7 +178,7 @@ class HtmlLabel(wx.HyperlinkCtrl, WidgetMixin):
 		wx.HyperlinkCtrl.__init__(self, parent, wx.ID_ANY, text, url)
 
 
-class Button(wx.Button, Widget):
+class Button(wx.Button, WidgetMixin):
 	callback = None
 
 	def __init__(self, parent, text, size=DEF_SIZE,

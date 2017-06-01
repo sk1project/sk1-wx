@@ -19,7 +19,7 @@ import wx
 
 import renderer, const
 from const import DEF_SIZE, RIGHT
-from generic import GenericGWidget
+from mixins import GenericGWidget
 
 
 class ImageLabel(GenericGWidget):
