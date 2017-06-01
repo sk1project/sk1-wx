@@ -24,8 +24,8 @@ from sk1.resources import icons
 
 from generic import PrefPanel
 
-class RulersPrefs(PrefPanel):
 
+class RulersPrefs(PrefPanel):
 	pid = 'Rulers'
 	name = _('Ruler preferences')
 	icon_id = icons.PD_PREFS_RULER
@@ -34,62 +34,74 @@ class RulersPrefs(PrefPanel):
 		PrefPanel.__init__(self, app, dlg)
 
 	def build(self):
+		self.pack(wal.Label(self, _('Size (px):'), fontbold=True))
 
-		grid = wal.GridPanel(self, rows=8, hgap=15, vgap=5)
+		grid = wal.GridPanel(self, rows=3, cols=4, hgap=10, vgap=5)
 
-		#Ruler size
-		grid.pack(wal.Label(grid, _('Ruler size (px):')))
+		# Ruler size
+		grid.pack(wal.Label(grid, _('Ruler:')))
 		self.ruler_size = wal.IntSpin(grid, config.ruler_size,
-                                                            (15, 30), onchange=self.update_ruler_size)
+			(15, 30), width=3, onchange=self.update_ruler_size)
 		grid.pack(self.ruler_size)
 
-		#Ruler font size
-		grid.pack(wal.Label(grid, _('Ruler font size (px):')))
+		# Ruler font size
+		grid.pack(wal.Label(grid, _('Ruler font:')))
 		self.ruler_font_size = wal.IntSpin(grid, config.ruler_font_size,
-                                                            (5, 8), onchange=self.update_ruler_font)
+			(5, 8), width=3, onchange=self.update_ruler_font)
 		grid.pack(self.ruler_font_size)
 
-		#Ruler bg color
-		grid.pack(wal.Label(grid, _('Ruler background color:')))
-		self.bg_btn = wal.ColorButton(grid, config.ruler_bg,
-								onchange=self.update_ruler)
-		grid.pack(self.bg_btn)
-
-		#Ruler fg color
-		grid.pack(wal.Label(grid, _('Ruler mark color:')))
-		self.fg_btn = wal.ColorButton(grid, config.ruler_fg,
-								onchange=self.update_ruler)
-		grid.pack(self.fg_btn)
-
-		#Small tick size
-		grid.pack(wal.Label(grid, _('Small tick size (px):')))
+		# Small tick size
+		grid.pack(wal.Label(grid, _('Small tick:')))
 		self.ruler_small_tick = wal.IntSpin(grid, config.ruler_small_tick,
-								(2, 30), onchange=self.update_ruler)
+			(2, 30), width=3, onchange=self.update_ruler)
 		grid.pack(self.ruler_small_tick)
 
-		#Large tick size
-		grid.pack(wal.Label(grid, _('Large tick size (px):')))
+		# Large tick size
+		grid.pack(wal.Label(grid, _('Large tick:')))
 		self.ruler_large_tick = wal.IntSpin(grid, config.ruler_large_tick,
-								(2, 30), onchange=self.update_ruler)
+			(2, 30), width=3, onchange=self.update_ruler)
 		grid.pack(self.ruler_large_tick)
 
-		#Vertical text shift
-		grid.pack(wal.Label(grid, _('Text vertical shift (px):')))
+		self.pack(grid, padding_all=10)
+
+		self.pack(wal.Label(self, _('Text shift (px):'), fontbold=True))
+
+		grid = wal.GridPanel(self, rows=1, cols=4, hgap=10, vgap=5)
+
+		# Vertical text shift
+		grid.pack(wal.Label(grid, _('Vertical:')))
 		self.ruler_text_vshift = wal.IntSpin(grid, config.ruler_text_vshift,
-								(0, 30), onchange=self.update_ruler)
+			(0, 30), width=3, onchange=self.update_ruler)
 		grid.pack(self.ruler_text_vshift)
 
-		#Horizontal text shift
-		grid.pack(wal.Label(grid, _('Text horizontal shift (px):')))
+		# Horizontal text shift
+		grid.pack(wal.Label(grid, _('Horizontal:')))
 		self.ruler_text_hshift = wal.IntSpin(grid, config.ruler_text_hshift,
-								(0, 30), onchange=self.update_ruler)
+			(0, 30), width=3, onchange=self.update_ruler)
 		grid.pack(self.ruler_text_hshift)
 
-		self.pack(grid, padding_all=5)
+		self.pack(grid, padding_all=10)
 
-		#Testing ruler
+
+		grid = wal.GridPanel(self, hgap=15, vgap=5)
+
+		# Ruler bg color
+		grid.pack(wal.Label(grid, _('Ruler background color:')))
+		self.bg_btn = wal.ColorButton(grid, config.ruler_bg,
+			onchange=self.update_ruler)
+		grid.pack(self.bg_btn)
+
+		# Ruler fg color
+		grid.pack(wal.Label(grid, _('Ruler mark color:')))
+		self.fg_btn = wal.ColorButton(grid, config.ruler_fg,
+			onchange=self.update_ruler)
+		grid.pack(self.fg_btn)
+
+		self.pack(grid, padding_all=15)
+
+		# Testing ruler
 		self.pack(wal.Label(self, _('Testing ruler:'), fontbold=True),
-				padding_all=10)
+			padding_all=10)
 		panel = wal.HPanel(self)
 		panel.add((360, 1))
 		panel.set_bg(wal.UI_COLORS['dark_shadow'])
@@ -134,17 +146,16 @@ class RulersPrefs(PrefPanel):
 		self.update_ruler_font()
 
 
-
 SMALL_TICKS = [15.017, 34.373, 53.729, 73.085, 92.441, 111.797, 131.153,
-150.509, 169.865, 189.221, 208.577, 227.933, 247.289, 266.645, 286.001,
-305.357, 324.714, 344.070, ]
+	150.509, 169.865, 189.221, 208.577, 227.933, 247.289, 266.645, 286.001,
+	305.357, 324.714, 344.070, ]
 
 TEXT_TICKS = [(15.017, '-100'), (53.729, '-75'), (92.441, '-50'),
-(131.153, '-25'), (169.865, '0'), (208.577, '25'),
-(247.289, '50'), (286.001, '75'), (324.714, '100'), ]
+	(131.153, '-25'), (169.865, '0'), (208.577, '25'),
+	(247.289, '50'), (286.001, '75'), (324.714, '100'), ]
+
 
 class RulerTest(wal.HPanel, wal.Canvas):
-
 	font = {}
 	surface = None
 	ctx = None
@@ -166,8 +177,10 @@ class RulerTest(wal.HPanel, wal.Canvas):
 		fntdir = 'ruler-font%dpx' % font_size
 		fntdir = os.path.join(config.resource_dir, 'fonts', fntdir)
 		for char in '.,-0123456789':
-			if char in '.,': file_name = os.path.join(fntdir, 'hdot.png')
-			else: file_name = os.path.join(fntdir, 'h%s.png' % char)
+			if char in '.,':
+				file_name = os.path.join(fntdir, 'hdot.png')
+			else:
+				file_name = os.path.join(fntdir, 'h%s.png' % char)
 			surface = cairo.ImageSurface.create_from_png(file_name)
 			self.font[char] = (surface.get_width(), surface)
 
