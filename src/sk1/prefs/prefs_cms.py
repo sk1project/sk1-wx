@@ -105,11 +105,7 @@ class CMS_Options(CMS_Tab):
 		self.banner.pack(bmp, padding=2)
 		panel.pack(self.banner, expand=True, fill=True)
 		txt = _('Note: If not activated the color values will be not accurate.')
-		fontsize = -1
-		if wal.is_msw(): fontsize = -1
-		label = wal.Label(self, txt, fontsize=fontsize)
-		label.set_enable(False)
-		if wal.is_msw():label.wrap(430)
+		label = wal.Label(self, txt, fontsize=-1)
 		panel.pack(label, fill=True, padding_all=5)
 		self.pack(panel, fill=True, expand=True)
 
@@ -188,11 +184,10 @@ class CMS_Profiles(CMS_Tab):
 									config.cms_use_display_profile,
 									onclick=self.activate_display)
 		self.pack(self.display_check, align_center=False)
+		self.pack(wal.HLine(self), fill=True, padding_all=2)
 
-		txt = _('Note: Display profile for your hardware you can fetch here: ')
-		fontsize = -1
-		label = wal.Label(self, txt, fontsize=fontsize)
-		label.set_enable(False)
+		txt = _('Note: Display profile for your hardware you can fetch here:')
+		label = wal.Label(self, txt, fontsize=-1)
 		self.pack(label, fill=True, padding_all=5)
 		self.pack(wal.HtmlLabel(self, 'http://icc.opensuse.org/'))
 		self.activate_display()
