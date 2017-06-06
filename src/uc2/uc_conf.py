@@ -18,7 +18,7 @@
 import os
 
 from uc2 import uc2const
-from uc2.utils.config import XmlConfigParser
+from uc2.utils.sconfig import SerializedConfig
 from uc2.cms import libcms
 
 
@@ -58,7 +58,7 @@ class UCData:
 			if not os.path.lexists(path):
 				libcms.cms_save_default_profile(path, item)
 
-class UCConfig(XmlConfigParser):
+class UCConfig(SerializedConfig):
 
 	#============== GENERIC SECTION ===================
 	uc_version = '2.0'
