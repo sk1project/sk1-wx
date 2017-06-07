@@ -22,8 +22,8 @@ from sk1.resources import icons
 
 from generic import PrefPanel
 
-class FontPrefs(PrefPanel):
 
+class FontPrefs(PrefPanel):
 	pid = 'Fonts'
 	name = _('Fonts')
 	title = _('Font preview preferences')
@@ -33,7 +33,7 @@ class FontPrefs(PrefPanel):
 		PrefPanel.__init__(self, app, dlg)
 
 	def build(self):
-		grid = wal.GridPanel(self, rows=4, cols=2, hgap=5, vgap=5)
+		grid = wal.GridPanel(self, rows=5, cols=2, hgap=5, vgap=5)
 		grid.add_growable_col(1)
 
 		grid.pack(wal.Label(grid, _('Text filler:')))
@@ -48,6 +48,11 @@ class FontPrefs(PrefPanel):
 		self.fontcolor = wal.ColorButton(grid, config.font_preview_color)
 		grid.pack(self.fontcolor)
 
+		grid.pack(wal.Label(grid, _('Selection color:')))
+		color = self.fontcolor.val255_to_dec(wal.UI_COLORS['selected_text_bg'])
+		self.selcolor = wal.ColorButton(grid, color)
+		grid.pack(self.selcolor)
+
 		grid.pack(wal.Label(grid, _('Preview width:')))
 		self.pwidth = wal.IntSpin(grid, config.font_preview_width, (100, 1000))
 		grid.pack(self.pwidth)
@@ -59,6 +64,10 @@ class FontPrefs(PrefPanel):
 		config.font_preview_text = self.filler.get_value()
 		config.font_preview_size = self.fontsize.get_value()
 		config.font_preview_color = self.fontcolor.get_value()
+		color = self.selcolor.get_value255()
+		config.selected_text_bg = color
+		if not color == wal.UI_COLORS['selected_text_bg']:
+			wal.UI_COLORS['selected_text_bg'] = self.selcolor.get_value255()
 		config.font_preview_width = self.pwidth.get_value()
 
 	def restore_defaults(self):
@@ -66,5 +75,5 @@ class FontPrefs(PrefPanel):
 		self.filler.set_value(defaults['font_preview_text'])
 		self.fontsize.set_value(defaults['font_preview_size'])
 		self.fontcolor.set_value(defaults['font_preview_color'])
+		self.selcolor.set_value255(wal.get_sel_bg())
 		self.pwidth.set_value(defaults['font_preview_width'])
-

@@ -72,7 +72,7 @@ class SimpleDialog(wx.Dialog):
 	def set_minsize(self, size): self.SetMinSize(size)
 	def is_maximized(self): return self.IsMaximized()
 	def maximize(self): self.Maximize()
-	def get_size(self): return self.GetSize()
+	def get_size(self): return self.GetSizeTuple()
 	def set_size(self, size): self.SetSize(wx.Size(*size))
 	def show_modal(self): return self.ShowModal()
 	def end_modal(self, ret): self.EndModal(ret)

@@ -174,6 +174,8 @@ class AppConfig(UCConfig):
 	toolbar_icon_size = (24, 24)
 	show_stub_buttons = True
 
+	selected_text_bg=()
+
 	#============== I/O SECTION ===================
 	open_dir = '~'
 	save_dir = '~'

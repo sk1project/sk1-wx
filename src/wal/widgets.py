@@ -301,18 +301,20 @@ class BitmapChoice(wx.combo.OwnerDrawnComboBox, WidgetMixin):
 
 	def OnDrawItem(self, dc, rect, item, flags):
 		if item == wx.NOT_FOUND: return
-		r = wx.Rect(*rect)
+		x, y, w, h = wx.Rect(*rect)
+		color = wx.Colour(*const.UI_COLORS['selected_text_bg'])
 		if flags & wx.combo.ODCB_PAINTING_SELECTED and \
 						flags & wx.combo.ODCB_PAINTING_CONTROL:
-			if const.is_msw():
-				bitmap = self.bitmaps[item]
-			else:
-				bitmap = bmp_to_white(self.bitmaps[item])
+			dc.SetBrush(wx.Brush(wx.WHITE))
+			dc.DrawRectangle(x - 1, y - 1, w + 2, h + 2)
+			bitmap = self.bitmaps[item]
 		elif flags & wx.combo.ODCB_PAINTING_SELECTED:
+			dc.SetBrush(wx.Brush(color))
+			dc.DrawRectangle(x, y, w, h)
 			bitmap = bmp_to_white(self.bitmaps[item])
 		else:
 			bitmap = self.bitmaps[item]
-		dc.DrawBitmap(bitmap, r.x + 2, r.y + 4, True)
+		dc.DrawBitmap(bitmap, x + 2, y + 4, True)
 
 	def OnMeasureItem(self, item):
 		if item == wx.NOT_FOUND: return 1
@@ -845,8 +847,15 @@ class ColorButton(wx.ColourPickerCtrl, WidgetMixin):
 		self.SetColour(wx.Colour(*self.val255(color)))
 		if not self.silent: self.on_change(None)
 
+	def set_value255(self, color):
+		self.SetColour(wx.Colour(*color))
+		if not self.silent: self.on_change(None)
+
 	def get_value(self):
 		return self.val255_to_dec(self.GetColour().Get())
+
+	def get_value255(self):
+		return self.GetColour().Get()
 
 
 class AnimatedGif(animate.GIFAnimationCtrl):

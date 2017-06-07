@@ -26,26 +26,44 @@ MSW = '__WXMSW__'
 GTK = '__WXGTK__'
 MAC = '__WXMAC__'
 
+
 def get_version(): return wx.version()
 
+
 def is_mac(): return wx.Platform == MAC
+
+
 def is_msw(): return wx.Platform == MSW
+
+
 def is_winxp(): return is_msw() and platform.release() == 'XP'
+
+
 def is_win7(): return is_msw() and platform.release() == '7'
+
+
 def is_gtk(): return wx.Platform == GTK
+
+
 def is_wx2(): return wx.VERSION[0] == 2
+
+
 def is_wx3(): return wx.VERSION[0] == 3
+
 
 def is_unity():
 	return os.environ['XDG_CURRENT_DESKTOP'] == 'Unity'
+
 
 def is_unity_16_04():
 	if is_gtk():
 		ver = platform.dist()[1].split('.')[0]
 		dist = platform.dist()[0] + ' ' + ver
 		if dist == 'Ubuntu 16' and \
-		os.environ['XDG_CURRENT_DESKTOP'] == 'Unity': return True
+						os.environ[
+							'XDG_CURRENT_DESKTOP'] == 'Unity': return True
 	return False
+
 
 TOP = wx.TOP
 BOTTOM = wx.BOTTOM
@@ -73,7 +91,6 @@ DLG_RESIZABLE = wx.RESIZE_BORDER
 
 LIST_AUTOSIZE = wx.LIST_AUTOSIZE
 
-
 ID_NEW = wx.ID_NEW
 ID_OPEN = wx.ID_OPEN
 ID_SAVE = wx.ID_SAVE
@@ -99,7 +116,6 @@ ID_EXIT = wx.ID_EXIT
 ID_SELECTALL = wx.ID_SELECTALL
 ID_ABOUT = wx.ID_ABOUT
 
-
 FONT_SIZE = [1, 1]
 DEF_SIZE = (-1, -1)
 SIZE_16 = (16, 16)
@@ -113,6 +129,7 @@ SIZE_128 = (128, 128)
 TBFLAGS = (wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
 ART_TOOLBAR = wx.ART_TOOLBAR
 
+
 def get_system_fontsize():
 	font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
 	if font.IsUsingSizeInPixels():
@@ -120,6 +137,7 @@ def get_system_fontsize():
 	else:
 		fontsize = font.GetPointSize()
 	return fontsize
+
 
 def mix_colors(fg, bg, alpha):
 	r1, g1, b1 = fg
@@ -131,9 +149,11 @@ def mix_colors(fg, bg, alpha):
 	g = int(g1 * a1 + g2 * a2)
 	return (r, g, b)
 
+
 def lighter_color(color, coef):
 	white = (255, 255, 255)
 	return mix_colors(color, white, coef * 255.0)
+
 
 def _init_gtk_colors(kw):
 	border = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW).Get()
@@ -157,9 +177,10 @@ def _init_gtk_colors(kw):
 	kw['dark_shadow'] = mix_colors(border, bg, 200)
 	kw['dark_face'] = border + (40,)
 	kw['light_face'] = (255, 255, 255, 60)
-# 	kw['workspace'] = () + ws
+	# 	kw['workspace'] = () + ws
 	kw['workspace'] = (89, 89, 89)
 	kw['tooltip_bg'] = () + infobk
+
 
 def _init_mac_colors(kw):
 	border = wx.SystemSettings_GetColour(wx.SYS_COLOUR_APPWORKSPACE).Get()
@@ -186,6 +207,7 @@ def _init_mac_colors(kw):
 	kw['workspace'] = () + ws
 	kw['tooltip_bg'] = () + infobk
 
+
 def _init_msw_colors(kw):
 	border = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW).Get()
 	bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE).Get()
@@ -211,18 +233,26 @@ def _init_msw_colors(kw):
 	kw['workspace'] = () + ws
 	kw['tooltip_bg'] = () + infobk
 
+
+def get_sel_bg():
+	return tuple(wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT).Get())
+
+
 def set_ui_colors(kw):
-	if is_mac(): _init_mac_colors(kw)
-	elif is_msw(): _init_msw_colors(kw)
-	else: _init_gtk_colors(kw)
+	if is_mac():
+		_init_mac_colors(kw)
+	elif is_msw():
+		_init_msw_colors(kw)
+	else:
+		_init_gtk_colors(kw)
+
 
 UI_COLORS = {}
 
-SPIN={
-	'overlay':True,
-	'sep':True,
+SPIN = {
+	'overlay': True,
+	'sep': True,
 }
-
 
 EVEN_COLOR = wx.Colour(240, 240, 240)
 ODD_COLOR = wx.Colour(255, 255, 255)
@@ -235,6 +265,6 @@ GRAY = wx.Colour(129, 134, 134)
 LIGHT_GRAY = wx.Colour(240, 240, 240)
 RED = wx.Colour(255, 0, 0)
 
-def wxcolor_to_dec(wxcolor):
-	return tuple(map(lambda x:x / 255.0, wxcolor.Get()[:3]))
 
+def wxcolor_to_dec(wxcolor):
+	return tuple(map(lambda x: x / 255.0, wxcolor.Get()[:3]))
