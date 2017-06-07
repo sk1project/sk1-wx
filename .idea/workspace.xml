@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="00672540-0deb-461c-8bf4-339ef44f5dd8" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -63,6 +61,7 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -109,7 +108,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -184,24 +182,6 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <method />
     </configuration>
-    <configuration default="false" name="sk1-launcher" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="sk1-wx" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/sk1-launcher.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <method />
-    </configuration>
     <configuration default="false" name="sword-launcher" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -215,6 +195,24 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="sk1-wx" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/sword-launcher.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="sk1-launcher" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="/usr/bin/python2.7" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="sk1-wx" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/sk1-launcher.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -288,8 +286,8 @@
       <item index="0" class="java.lang.String" itemvalue="Python.02-window" />
       <item index="1" class="java.lang.String" itemvalue="Python.06-radiobutton" />
       <item index="2" class="java.lang.String" itemvalue="Python.15-dialog" />
-      <item index="3" class="java.lang.String" itemvalue="Python.sk1-launcher" />
-      <item index="4" class="java.lang.String" itemvalue="Python.sword-launcher" />
+      <item index="3" class="java.lang.String" itemvalue="Python.sword-launcher" />
+      <item index="4" class="java.lang.String" itemvalue="Python.sk1-launcher" />
     </list>
     <recent_temporary>
       <list size="5">
@@ -340,7 +338,14 @@
       <option name="project" value="LOCAL" />
       <updated>1496395941416</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="pycharm proj prefs">
+      <created>1496833980794</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1496833980794</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -378,7 +383,8 @@
     <MESSAGE value="project prefs" />
     <MESSAGE value="mixins refactoring" />
     <MESSAGE value="Eclipse settings removed" />
-    <option name="LAST_COMMIT_MESSAGE" value="Eclipse settings removed" />
+    <MESSAGE value="pycharm proj prefs" />
+    <option name="LAST_COMMIT_MESSAGE" value="pycharm proj prefs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
