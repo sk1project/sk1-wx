@@ -17,24 +17,24 @@
 
 import wx
 
-import const
+import const, mixins
 from const import EXPAND, ALL, VERTICAL, HORIZONTAL, is_gtk
 from basic import HPanel, VPanel
 from widgets import HLine, Button
 
-class SimpleDialog(wx.Dialog):
 
+class SimpleDialog(wx.Dialog, mixins.DialogMixin):
 	_timer = None
 	add_line = True
 
 	def __init__(self, parent, title, size=(-1, -1), style=VERTICAL,
-				resizable=False, on_load=None, add_line=True, margin=None):
+			resizable=False, on_load=None, add_line=True, margin=None):
 		dlg_style = wx.DEFAULT_DIALOG_STYLE
-		if resizable:dlg_style |= wx.RESIZE_BORDER | wx.MAXIMIZE_BOX
+		if resizable: dlg_style |= wx.RESIZE_BORDER | wx.MAXIMIZE_BOX
 		self.add_line = add_line
 
 		wx.Dialog.__init__(self, parent, -1, title, wx.DefaultPosition,
-						size, style=dlg_style)
+			size, style=dlg_style)
 
 		sizer = wx.BoxSizer(wx.VERTICAL)
 		self.SetSizer(sizer)
@@ -54,7 +54,7 @@ class SimpleDialog(wx.Dialog):
 
 		self.build()
 		self.set_dialog_buttons()
-		if size == (-1, -1):self.Fit()
+		if size == (-1, -1): self.Fit()
 		self.CenterOnParent()
 		self.panel.layout()
 		self.Bind(wx.EVT_CLOSE, self.on_close, self)
@@ -63,20 +63,17 @@ class SimpleDialog(wx.Dialog):
 			self.Bind(wx.EVT_TIMER, on_load)
 			self._timer.Start(500)
 
-	def build(self):pass
-	def set_dialog_buttons(self):pass
-	def get_result(self): return None
-	def fit(self): self.Fit()
-	def on_close(self, event=None): self.end_modal(const.BUTTON_CANCEL)
-	def set_title(self, title): self.SetTitle(title)
-	def set_minsize(self, size): self.SetMinSize(size)
-	def is_maximized(self): return self.IsMaximized()
-	def maximize(self): self.Maximize()
-	def get_size(self): return self.GetSizeTuple()
-	def set_size(self, size): self.SetSize(wx.Size(*size))
-	def show_modal(self): return self.ShowModal()
-	def end_modal(self, ret): self.EndModal(ret)
-	def destroy(self): self.Destroy()
+	def build(self):
+		pass
+
+	def set_dialog_buttons(self):
+		pass
+
+	def get_result(self):
+		return None
+
+	def on_close(self, event=None):
+		self.end_modal(const.BUTTON_CANCEL)
 
 	def pack(self, *args, **kw):
 		obj = args[0]
@@ -88,12 +85,12 @@ class SimpleDialog(wx.Dialog):
 		self.show_modal()
 		self.destroy()
 
-class CloseDialog(SimpleDialog):
 
+class CloseDialog(SimpleDialog):
 	def __init__(self, parent, title, size=(-1, -1), style=VERTICAL,
-				resizable=True, on_load=None, add_line=True):
+			resizable=True, on_load=None, add_line=True):
 		SimpleDialog.__init__(self, parent, title, size, style, resizable,
-							on_load, add_line)
+			on_load, add_line)
 
 	def set_dialog_buttons(self):
 		if self.add_line:
@@ -105,14 +102,14 @@ class CloseDialog(SimpleDialog):
 		self.box.pack(self.button_box, fill=True)
 
 		self.close_btn = Button(self.button_box, '', onclick=self.on_close,
-							default=True, pid=const.BUTTON_CLOSE)
+			default=True, pid=const.BUTTON_CLOSE)
 
 		self.left_button_box = HPanel(self.button_box)
 		self.button_box.pack(self.left_button_box, expand=True, fill=True)
 		self.button_box.pack(self.close_btn, padding=5)
 
-class OkCancelDialog(SimpleDialog):
 
+class OkCancelDialog(SimpleDialog):
 	sizer = None
 	box = None
 	button_box = None
@@ -121,11 +118,11 @@ class OkCancelDialog(SimpleDialog):
 	action_button = None
 
 	def __init__(self, parent, title, size=(-1, -1), style=VERTICAL,
-				resizable=False, action_button=const.BUTTON_OK, on_load=None,
-							add_line=True):
+			resizable=False, action_button=const.BUTTON_OK, on_load=None,
+			add_line=True):
 		self.action_button = action_button
 		SimpleDialog.__init__(self, parent, title, size, style,
-							resizable, on_load, add_line)
+			resizable, on_load, add_line)
 
 	def set_dialog_buttons(self):
 		if self.add_line:
@@ -137,9 +134,9 @@ class OkCancelDialog(SimpleDialog):
 		self.box.pack(self.button_box, fill=True)
 
 		self.ok_btn = Button(self.button_box, '', onclick=self.on_ok,
-							default=True, pid=self.action_button)
+			default=True, pid=self.action_button)
 		self.cancel_btn = Button(self.button_box, '', onclick=self.on_cancel,
-								pid=const.BUTTON_CANCEL)
+			pid=const.BUTTON_CANCEL)
 
 		self.left_button_box = HPanel(self.button_box)
 		self.button_box.pack(self.left_button_box, expand=True, fill=True)
