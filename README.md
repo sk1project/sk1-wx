@@ -19,14 +19,21 @@ Copyright (C) 2004-2016 by Igor E. Novikov
 
 
 ## How to install: 
+
 * to build package:   `python setup-sk1.py build`
 * to install package:   `python setup-sk1.py install`
 * to remove installation: `python setup-sk1.py uninstall`
 
+---
+
 * to create source distribution:   `python setup-sk1.py sdist`
+
+---
 
 * to create binary RPM distribution:  `python setup-sk1.py bdist_rpm`
 * to create binary DEB distribution:  `python setup-sk1.py bdist_deb`
+
+---
 
 * help on available distribution formats: `python setup-sk1.py bdist --help-formats`
 
