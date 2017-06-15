@@ -46,6 +46,8 @@ preview).
 Please note that application uses Python 2.x branch. So Python interpreter
 and python based dependencies should be from 2.x branch, but not 3.x
 
+DEPENDENCIES
+
 For successful build either distutils or deb|rpm package you need installing
 some development packages. We describe dev-packages for Ubuntu|Debian, but for
 other distros they have similar names. So, you need:

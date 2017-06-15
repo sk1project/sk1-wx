@@ -10,7 +10,7 @@ sK1 2.0 is an open source vector graphics editor similar to CorelDRAW,
 Adobe Illustrator, or Freehand. sK1 is oriented for prepress industry, 
 so it works with CMYK colorspace and produces CMYK-based PDF and PS output. 
 
-# Uniconvertor 2.0
+# UniConvertor 2.0
 
 <center>
 
@@ -71,8 +71,10 @@ By installing the package you have full control over all the installed files
 and can easily remove them from the system (it's important for application
 preview).
 
-Please note that application uses Python 2.x branch. So Python interpreter
-and python based dependencies should be from 2.x branch, but not 3.x
+### Dependencies
+
+Please note that application uses Python 2.x version. So Python interpreter
+and python based dependencies should be for 2.x, but not 3.x
 
 For successful build either distutils or deb|rpm package you need installing
 some development packages. We describe dev-packages for Ubuntu|Debian, but for
