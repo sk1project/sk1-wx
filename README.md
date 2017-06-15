@@ -1,4 +1,4 @@
-#sK1 2.0
+# sK1 2.0
 
 ![sK1 2.0 under Ubuntu 14.04](./docs/images/sk1_2_0.png "sK1 2.0 under Ubuntu 14.04")
 
@@ -6,7 +6,7 @@ sK1 2.0 is an open source vector graphics editor similar to CorelDRAW,
 Adobe Illustrator, or Freehand. sK1 is oriented for prepress industry, 
 so it works with CMYK colorspace and produces CMYK-based PDF and PS output. 
 
-#Uniconvertor 2.0
+# Uniconvertor 2.0
 
 ![UniConvertor 2.0](./docs/images/uc2_0.png "UniConvertor 2.0")
 
