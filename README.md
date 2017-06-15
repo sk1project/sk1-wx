@@ -1,6 +1,14 @@
+#sK1 2.0
+
+![sK1 2.0 under Ubuntu 14.04](./docs/images/sk1_2_0.png "sK1 2.0 under Ubuntu 14.04")
+
 sK1 2.0 is an open source vector graphics editor similar to CorelDRAW, 
 Adobe Illustrator, or Freehand. sK1 is oriented for prepress industry, 
 so it works with CMYK colorspace and produces CMYK-based PDF and PS output. 
+
+#Uniconvertor 2.0
+
+![UniConvertor 2.0](./docs/images/uc2_0.png "UniConvertor 2.0")
 
 UniConvertor 2.0 is a multiplatform universal vector graphics translator.
 Uses sK1 2.0 model to convert one format to another. 
@@ -11,16 +19,16 @@ Copyright (C) 2004-2016 by Igor E. Novikov
 
 
 ## How to install: 
-* to build package:   `python setup.py build`
-* to install package:   `python setup.py install`
+* to build package:   `python setup-sk1.py build`
+* to install package:   `python setup-sk1.py install`
 * to remove installation: `python setup-sk1.py uninstall`
 
-* to create source distribution:   `python setup.py sdist`
+* to create source distribution:   `python setup-sk1.py sdist`
 
-* to create binary RPM distribution:  `python setup.py bdist_rpm`
-* to create binary DEB distribution:  `python setup.py bdist_deb`
+* to create binary RPM distribution:  `python setup-sk1.py bdist_rpm`
+* to create binary DEB distribution:  `python setup-sk1.py bdist_deb`
 
-* help on available distribution formats: `python setup.py bdist --help-formats`
+* help on available distribution formats: `python setup-sk1.py bdist --help-formats`
 
 ## DETAILS
 
