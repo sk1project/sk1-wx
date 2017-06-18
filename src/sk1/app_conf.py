@@ -126,12 +126,12 @@ class AppConfig(UCConfig):
 
 	#============== UI SECTION ===================
 	mw_maximized = 0
-	mw_size = (1000, 700)
-	mw_min_size = (1000, 700)
+	mw_size = (1000, 650)
+	mw_min_size = (1000, 650)
 	mw_width = 1000
-	mw_height = 700
+	mw_height = 650
 	mw_min_width = 1000
-	mw_min_height = 700
+	mw_min_height = 650
 
 	history_dlg_size = (500, 350)
 	history_dlg_minsize = (500, 350)
