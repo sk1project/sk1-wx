@@ -218,7 +218,7 @@ class AppConfig(UCConfig):
 	page_border = 0.0
 
 	sel_frame_visible = 1
-	sel_frame_offset = 10.0
+	sel_frame_offset = 0.0
 	sel_frame_color = (0.0, 0.0, 0.0)
 	sel_frame_dash = [5, 5]
 
@@ -227,7 +227,7 @@ class AppConfig(UCConfig):
 	sel_bbox_bgcolor = (1.0, 1.0, 1.0)
 	sel_bbox_dash = [5, 5]
 
-	sel_marker_size = 9.0
+	sel_marker_size = 7.0
 	sel_marker_frame_color = (0.62745, 0.62745, 0.64314)
 	sel_marker_frame_bgcolor = (1.0, 1.0, 1.0)
 	sel_marker_frame_dash = [5, 5]
