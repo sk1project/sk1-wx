@@ -33,6 +33,9 @@ Package provides basic routines for Bezier curves.
 BBOX DEFINITION:
 [x0,y0,x1,y1]
 
+RECTANGLE DEFINITION
+[x,y,w,h]
+
 PATHS DEFINITION:
 [path0, path1, ...]
 
