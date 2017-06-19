@@ -15,6 +15,7 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import cwrap
 
 #------------- Bbox operations -------------
 
@@ -101,7 +102,6 @@ def bbox_trafo(bbox0, bbox1):
 	:rtype: list
 	:return: affine transformation matrix
 	"""
-	#TODO: Check algorythm
 	x0_0, y0_0, x1_0, y1_0 = normalize_bbox(bbox0)
 	x0_1, y0_1, x1_1, y1_1 = normalize_bbox(bbox1)
 	w0 = x1_0 - x0_0
@@ -110,9 +110,9 @@ def bbox_trafo(bbox0, bbox1):
 	h1 = y1_1 - y0_1
 	m11 = w1 / w0
 	m22 = h1 / h0
-	dx = x0_1 - x0_0
-	dy = y0_1 - y0_0
-	return [m11, 0.0, 0.0, m22, dx, dy]
+	trafo = cwrap.multiply_trafo([1.0, 0.0, 0.0, 1.0, -x0_0, -y0_0], 
+		[m11, 0.0, 0.0, m22, 0.0, 0.0])
+	return cwrap.multiply_trafo(trafo, [1.0, 0.0, 0.0, 1.0, x0_1, y0_1])
 
 def bbox_for_point(point, size):
 	"""Calcs square bounding box for provided center and bounding box size.
