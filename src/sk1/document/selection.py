@@ -161,8 +161,8 @@ class Selection:
 		else:
 			self.set(result)
 
-	def pick_at_point(self, point):
-		return self._select_at_point(point)
+	def pick_at_point(self, point, check_unfilled=False):
+		return self._select_at_point(point, check_unfilled)
 
 	def can_be_any_selected(self):
 		layers = self.presenter.get_editable_layers()
