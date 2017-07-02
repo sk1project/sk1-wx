@@ -46,7 +46,7 @@ class SelectController(AbstractController):
 					self.canvas.set_temp_mode(modes.GUIDE_MODE)
 				elif self.selection.is_point_over(dpoint):
 					self.canvas.set_temp_mode(modes.MOVE_MODE)
-				elif self.selection.pick_at_point(dpoint):
+				elif self.selection.pick_at_point(dpoint, True):
 					self.canvas.set_temp_mode(modes.MOVE_MODE)
 
 	def do_action(self, event):
