@@ -129,7 +129,7 @@ class Selection:
 			bbox[1] -= 4
 		return bbox
 
-	def _select_at_point(self, point):
+	def _select_at_point(self, point, check_unfilled=False):
 		result = []
 		doc = self.presenter
 		layers = doc.get_editable_layers()
@@ -146,13 +146,16 @@ class Selection:
 				if obj.style[1]: d = doc.canvas.zoom * obj.style[1][1]
 				bbox = libgeom.enlarge_bbox(bbox, d, d)
 				if libgeom.is_point_in_bbox(win_point, bbox):
-					if hit_surface.is_point_into_object(win_point, obj):
+					if hit_surface.is_point_into_object(win_point, obj,
+						check_unfilled):
 						result.append(obj)
 						break
 		return result
 
 	def select_at_point(self, point, add_flag=False):
 		result = self._select_at_point(point)
+		if not result:
+			result = self._select_at_point(point, check_unfilled=True)
 		if add_flag:
 			self.add(result)
 		else:
