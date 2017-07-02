@@ -637,17 +637,16 @@ class HitSurface:
 		trafo[5] -= dy
 		return trafo
 
-	def is_point_into_object(self, win_point, obj):
+	def is_point_into_object(self, win_point, obj, fill_anyway=False):
 		self.clear()
-		self._draw_object(obj, self.get_context_trafo(win_point))
+		self._draw_object(obj, self.get_context_trafo(win_point), fill_anyway)
 		return not libcairo.check_surface_whiteness(self.surface)
 
-	def _draw_object(self, obj, trafo):
+	def _draw_object(self, obj, trafo, fill_anyway=False):
 		if obj.childs:
 			for child in obj.childs:
 				self._draw_object(child, trafo)
 		else:
-			fill_anyway = False
 			path = obj.cache_cpath
 
 			if obj.is_text():
