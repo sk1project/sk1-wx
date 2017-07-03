@@ -33,7 +33,7 @@ class AppCtxPanel(wal.HPanel):
 		self.app = app
 		self.insp = app.insp
 		wal.HPanel.__init__(self, parent)
-		spacer = (5, 30)
+		spacer = (3, 34)
 		self.add(spacer)
 
 		for item in PLUGINS:
