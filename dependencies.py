@@ -29,6 +29,7 @@ UBUNTU12 = 'Ubuntu 12'
 UBUNTU14 = 'Ubuntu 14'
 UBUNTU15 = 'Ubuntu 15'
 UBUNTU16 = 'Ubuntu 16'
+UBUNTU17 = 'Ubuntu 17'
 
 DEBIAN = 'debian'
 DEBIAN7 = 'debian 7'
@@ -51,6 +52,7 @@ UC2_DEB_DEPENDENCIES = {
 UBUNTU14:DEB_GENERIC + 'libmagickwand5, python-pil',
 UBUNTU15:DEB_GENERIC + 'libmagickwand5, python-pil',
 UBUNTU16:DEB_GENERIC + 'libmagickwand-6.q16-2, python-pil',
+UBUNTU17:DEB_GENERIC + 'libmagickwand-6.q16-3, python-pil',
 
 MINT17:DEB_GENERIC + 'libmagickwand5, python-pil',
 MINT18:DEB_GENERIC + 'libmagickwand-6.q16-2, python-pil',
@@ -63,6 +65,7 @@ SK1_DEB_DEPENDENCIES = {
 UBUNTU14:'python-wxgtk2.8, python-cups',
 UBUNTU15:'python-wxgtk2.8, python-cups',
 UBUNTU16:'python-wxgtk3.0, python-cups',
+UBUNTU17:'python-wxgtk3.0, python-cups',
 
 MINT17:'python-wxgtk2.8, python-cups',
 MINT18:'python-wxgtk3.0, python-cups',
