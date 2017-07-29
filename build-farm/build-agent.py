@@ -120,11 +120,11 @@ def get_marker():
     return 'macos'
 
 
-def get_package(path):
+def get_package_name(path):
     files = []
     items = os.listdir(path)
     for item in items:
-        if os.path.isfile(item):
+        if os.path.isfile(os.path.join(path,item)):
             files.append(item)
     if is_deb():    
         if len(files) == 1 and files[0].endswith('.deb'):
@@ -134,6 +134,12 @@ def get_package(path):
             if item.endswith('.rpm') and not item.endswith('src.rpm'):
                 return item
     raise Error('Build failed!')
+
+def command(cmd):
+    os.system(cmd)
+
+def publish_file(path):
+    pass
 
 # ------------ Build script ------------------
 
@@ -151,57 +157,67 @@ BUILD_DIR = os.path.expanduser('~/buildfarm')
 PROJECT_DIR = os.path.join(BUILD_DIR, DATASET['project'])
 PROJECT2_DIR = os.path.join(BUILD_DIR, DATASET['project2'])
 DIST_DIR = os.path.join(PROJECT_DIR, 'dist')
-if is_msw: DIST_DIR = os.path.join(PROJECT2_DIR, 'dist')
+if is_msw(): DIST_DIR = os.path.join(PROJECT2_DIR, 'dist')
 url = DATASET['git_url']
 url2 = DATASET['git_url2']
 script = DATASET['script']
 proj_name = DATASET['project']
 proj2_name = DATASET['project2']
 
-try:
-    if not is_path(BUILD_DIR): os.mkdir(BUILD_DIR)
 
-    if is_linux(): 
-        if not is_path(PROJECT_DIR):
-            os.system('cd %s;git clone %s %s' % (BUILD_DIR, url, proj_name))
-        else:
-            os.system('cd %s;git pull' % PROJECT_DIR)
-        if is_path(DIST_DIR):
-            os.system('rm -rf %s' % DIST_DIR)
+if not is_path(BUILD_DIR): os.mkdir(BUILD_DIR)
 
-        if is_deb():
-            os.system('cd %s;python %s bdist_deb' % (PROJECT_DIR, script))
+if is_linux():
+    package_name2 = '' 
+    if not is_path(PROJECT_DIR):
+        command('cd %s;git clone %s %s' % (BUILD_DIR, url, proj_name))
+    else:
+        command('cd %s;git pull' % PROJECT_DIR)
+    if is_path(DIST_DIR):
+        command('rm -rf %s' % DIST_DIR)
 
-            old_name = get_package(DIST_DIR)
-            prefix, suffix = old_name.split('_')
-            new_name = prefix + get_marker() + suffix
+    if is_deb():
+        command('cd %s;python %s bdist_deb' % (PROJECT_DIR, script))
 
-        elif is_rpm():
-            os.system('cd %s;python %s bdist_rpm' % (PROJECT_DIR, script))
+        old_name = get_package_name(DIST_DIR)
+        prefix, suffix = old_name.split('_')
+        new_name = prefix + get_marker() + suffix
+        if is_ubuntu():
+            ts=''
+            if DATASET['timestamp']: ts = '_' + DATASET['timestamp']
+            if platform.dist()[1] == '14.04':
+                package_name2 = prefix + ts + '_mint_17_' + suffix
+            elif platform.dist()[1] == '16.04':
+                package_name2 = prefix + ts + '_mint_18_' + suffix
 
-            old_name = get_package(DIST_DIR)
-            items=old_name.split('.')
-            new_name = '.'.join(items[:-2] + [get_marker(),] + items[-2:])
+    elif is_rpm():
+        command('cd %s;python %s bdist_rpm' % (PROJECT_DIR, script))
 
-        old_name = os.path.join(DIST_DIR, old_name)
-        package_name = os.path.join(DIST_DIR, new_name)
-        os.system('mv %s %s' % (old_name, package_name))
-            
-    elif is_msw():
-        if not is_path(PROJECT_DIR):
-            os.system('cd %s;git clone %s %s' % (BUILD_DIR, url, proj_name))
-        else:
-            os.system('cd %s;git pull' % PROJECT_DIR)
-        if not is_path(PROJECT2_DIR):
-            os.system('cd %s;git clone %s %s' % (BUILD_DIR, url, proj2_name))
-        else:
-            os.system('cd %s;git pull' % PROJECT2_DIR)
-        if is_path(DIST_DIR):
-            os.system('rm -rf %s' % DIST_DIR)
+        old_name = get_package_name(DIST_DIR)
+        items=old_name.split('.')
+        new_name = '.'.join(items[:-2] + [get_marker(),] + items[-2:])
 
-        os.system('cd %s;python %s bdist_msi' % (PROJECT2_DIR, script))
-        os.system('cd %s;python %s bdist_portable' % (PROJECT2_DIR, script))
-    elif is_macos():
-        pass
-except:
-    sys.exit(1)
+    old_name = os.path.join(DIST_DIR, old_name)
+    package_name = os.path.join(DIST_DIR, new_name)
+    command('cp %s %s' % (old_name, package_name))
+    if package_name2: 
+        package_name2 = os.path.join(DIST_DIR, package_name2)
+        command('cp %s %s' % (old_name, package_name2))
+
+        
+elif is_msw():
+    if not is_path(PROJECT_DIR):
+        command('cd %s;git clone %s %s' % (BUILD_DIR, url, proj_name))
+    else:
+        command('cd %s;git pull' % PROJECT_DIR)
+    if not is_path(PROJECT2_DIR):
+        command('cd %s;git clone %s %s' % (BUILD_DIR, url, proj2_name))
+    else:
+        command('cd %s;git pull' % PROJECT2_DIR)
+    if is_path(DIST_DIR):
+        command('rm -rf %s' % DIST_DIR)
+
+    command('cd %s;python %s bdist_msi' % (PROJECT2_DIR, script))
+    command('cd %s;python %s bdist_portable' % (PROJECT2_DIR, script))
+elif is_macos():
+    pass
