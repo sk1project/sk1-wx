@@ -28,10 +28,13 @@
 #       project2 - additional project name (msw/macos builds)
 #       git_url - main repository URL
 #       git_url2 - additional repository URL (msw/macos builds)
-#       ftp_url - upload url (ftp://username:password@host:port)
+#       ftp_url - upload server url (ftp://host:port)      
+#       ftp_user - upload server user
+#       ftp_pass - ftp user pass
 #       timestamp - optional build marker (like 20170624)
 
 import sys, os, platform
+import ftplib, ntpath
 
 
 class Error(Exception): pass
@@ -42,7 +45,9 @@ DATASET = {
     'project2': 'sk1-wx-msw',
     'git_url': 'https://github.com/sk1project/sk1-wx',
     'git_url2': 'https://github.com/sk1project/sk1-wx-msw',
-    'ftp_url': 'ftp://builder:password@192.168.0.102',
+    'ftp_url': 'ftp://192.168.0.102/home/igor/buildfarm',
+    'ftp_user': 'igor',
+    'ftp_pass': ''
     'timestamp': '',
     'script': 'setup-sk1.py',
 }
@@ -133,13 +138,18 @@ def get_package_name(path):
         for item in files:
             if item.endswith('.rpm') and not item.endswith('src.rpm'):
                 return item
-    raise Error('Build failed!')
+    raise Error('Build failed! There is no build result.')
 
 def command(cmd):
     os.system(cmd)
 
 def publish_file(path):
-    pass
+    session = ftplib.FTP(DATASET['ftp_url'],
+        DATASET['ftp_user'], DATASET['ftp_pass'])
+    fileptr = open(path,'rb')                  
+    session.storbinary('STOR %' % ntpath.basename(path), fileptr)     
+    fileptr.close()                                    
+    session.quit()
 
 # ------------ Build script ------------------
 
@@ -200,9 +210,11 @@ if is_linux():
     old_name = os.path.join(DIST_DIR, old_name)
     package_name = os.path.join(DIST_DIR, new_name)
     command('cp %s %s' % (old_name, package_name))
+    publish_file(package_name)
     if package_name2: 
         package_name2 = os.path.join(DIST_DIR, package_name2)
         command('cp %s %s' % (old_name, package_name2))
+        publish_file(package_name2)
 
         
 elif is_msw():
