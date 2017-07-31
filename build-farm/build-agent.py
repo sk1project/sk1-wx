@@ -121,6 +121,7 @@ def get_marker():
             return marker
         return MARKERS[platform.dist()[0]]
     elif is_msw():
+        # TODO: Should be implemented
         return 'win'
     return 'macos'
 
@@ -218,6 +219,7 @@ if is_linux():
 
         
 elif is_msw():
+    # TODO: Implementation should be finished
     if not is_path(PROJECT_DIR):
         command('cd %s;git clone %s %s' % (BUILD_DIR, url, proj_name))
     else:
