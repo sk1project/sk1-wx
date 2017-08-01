@@ -33,10 +33,10 @@ Usage:
  Help on available distribution formats: --help-formats
 """
 
+from distutils.core import setup
 import os
 import shutil
 import sys
-from distutils.core import setup
 
 import buildutils
 import dependencies
