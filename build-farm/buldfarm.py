@@ -19,9 +19,9 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-OSes =[
-'Ubuntu 14.04 32bit',
-'Ubuntu 14.04 64bit',
-'Ubuntu 16.04 32bit',
-'Ubuntu 16.04 64bit',
+OSes = [
+    'Ubuntu 14.04 32bit',
+    'Ubuntu 14.04 64bit',
+    'Ubuntu 16.04 32bit',
+    'Ubuntu 16.04 64bit',
 ]

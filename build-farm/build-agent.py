@@ -33,11 +33,15 @@
 #       ftp_pass - ftp user pass
 #       timestamp - optional build marker (like 20170624)
 
-import sys, os, platform
-import ftplib, ntpath
+import ftplib
+import ntpath
+import os
+import platform
+import sys
 
 
-class Error(Exception): pass
+class Error(Exception):
+    pass
 
 
 DATASET = {
@@ -108,7 +112,8 @@ def get_marker():
     if is_linux():
         if is_deb():
             ver = platform.dist()[1]
-            if is_debian(): ver = ver.split('.')[0]
+            if is_debian():
+                ver = ver.split('.')[0]
             marker = '_%s_%s_' % (MARKERS[platform.dist()[0]], ver)
             if DATASET['timestamp']:
                 marker = '_%s%s' % (DATASET['timestamp'], marker)
@@ -128,29 +133,34 @@ def get_marker():
 
 def get_package_name(path):
     files = []
-    items = os.listdir(path)
-    for item in items:
-        if os.path.isfile(os.path.join(path,item)):
-            files.append(item)
-    if is_deb():    
+    file_items = os.listdir(path)
+    for file_item in file_items:
+        if os.path.isfile(os.path.join(path, file_item)):
+            files.append(file_item)
+    if is_deb():
         if len(files) == 1 and files[0].endswith('.deb'):
-            return files[0]        
+            return files[0]
     elif is_rpm():
-        for item in files:
-            if item.endswith('.rpm') and not item.endswith('src.rpm'):
-                return item
+        for file_item in files:
+            if file_item.endswith('.rpm') and not file_item.endswith('src.rpm'):
+                return file_item
     raise Error('Build failed! There is no build result.')
+
 
 def command(cmd):
     os.system(cmd)
 
+
 def publish_file(path):
-    session = ftplib.FTP(DATASET['ftp_url'],
-        DATASET['ftp_user'], DATASET['ftp_pass'])
-    fileptr = open(path,'rb')                  
-    session.storbinary('STOR %' % ntpath.basename(path), fileptr)     
-    fileptr.close()                                    
+    session = ftplib.FTP(
+        DATASET['ftp_url'],
+        DATASET['ftp_user'],
+        DATASET['ftp_pass'])
+    fileptr = open(path, 'rb')
+    session.storbinary('STOR %s' % ntpath.basename(path), fileptr)
+    fileptr.close()
     session.quit()
+
 
 # ------------ Build script ------------------
 
@@ -160,26 +170,31 @@ if len(sys.argv) > 1:
     for item in args:
         if '=' in item:
             key, value = item.split('=')[:2]
-            if value[0] in ('"', "'"): value = value[1:]
-            if value[-1] in ('"', "'"): value = value[:-1]
+            if value[0] in ('"', "'"):
+                value = value[1:]
+            if value[-1] in ('"', "'"):
+                value = value[:-1]
             DATASET[key] = value
 
 BUILD_DIR = os.path.expanduser('~/buildfarm')
 PROJECT_DIR = os.path.join(BUILD_DIR, DATASET['project'])
 PROJECT2_DIR = os.path.join(BUILD_DIR, DATASET['project2'])
 DIST_DIR = os.path.join(PROJECT_DIR, 'dist')
-if is_msw(): DIST_DIR = os.path.join(PROJECT2_DIR, 'dist')
+if is_msw():
+    DIST_DIR = os.path.join(PROJECT2_DIR, 'dist')
 url = DATASET['git_url']
 url2 = DATASET['git_url2']
 script = DATASET['script']
 proj_name = DATASET['project']
 proj2_name = DATASET['project2']
 
-
-if not is_path(BUILD_DIR): os.mkdir(BUILD_DIR)
+if not is_path(BUILD_DIR):
+    os.mkdir(BUILD_DIR)
 
 if is_linux():
-    package_name2 = '' 
+    package_name2 = ''
+    old_name = ''
+    new_name = ''
     if not is_path(PROJECT_DIR):
         command('cd %s;git clone %s %s' % (BUILD_DIR, url, proj_name))
     else:
@@ -194,8 +209,10 @@ if is_linux():
         prefix, suffix = old_name.split('_')
         new_name = prefix + get_marker() + suffix
         if is_ubuntu():
-            ts=''
-            if DATASET['timestamp']: ts = '_' + DATASET['timestamp']
+            ts = ''
+            if DATASET['timestamp']:
+                ts = '_' + DATASET['timestamp']
+
             if platform.dist()[1] == '14.04':
                 package_name2 = prefix + ts + '_mint_17_' + suffix
             elif platform.dist()[1] == '16.04':
@@ -205,19 +222,19 @@ if is_linux():
         command('cd %s;python %s bdist_rpm' % (PROJECT_DIR, script))
 
         old_name = get_package_name(DIST_DIR)
-        items=old_name.split('.')
-        new_name = '.'.join(items[:-2] + [get_marker(),] + items[-2:])
+        items = old_name.split('.')
+        new_name = '.'.join(items[:-2] + [get_marker(), ] + items[-2:])
 
     old_name = os.path.join(DIST_DIR, old_name)
     package_name = os.path.join(DIST_DIR, new_name)
     command('cp %s %s' % (old_name, package_name))
     publish_file(package_name)
-    if package_name2: 
+    if package_name2:
         package_name2 = os.path.join(DIST_DIR, package_name2)
         command('cp %s %s' % (old_name, package_name2))
         publish_file(package_name2)
 
-        
+
 elif is_msw():
     # TODO: Implementation should be finished
     if not is_path(PROJECT_DIR):
