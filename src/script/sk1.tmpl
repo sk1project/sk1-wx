@@ -7,14 +7,16 @@
 # This library is covered by GNU General Public License.
 # For more info see LICENSE file in sK1 root directory.
 
-import sys, os
+import os
+import sys
 
 sys.path.insert(1, '$APP_INSTALL_PATH')
 
 try:
-	os.getcwd()
+    os.getcwd()
 except:
-	os.chdir(os.path.expanduser('~'))
+    os.chdir(os.path.expanduser('~'))
 
 from sk1 import sk1_run
+
 sk1_run()
