@@ -255,7 +255,7 @@ if UPDATE_MODULES:
 # Implementation of bdist_deb command
 ############################################################
 if DEB_PACKAGE:
-    bld = buildutils.DEB_Builder(
+    bld = buildutils.DebBuilder(
         name=NAME,
         version=VERSION,
         maintainer='%s <%s>' % (AUTHOR, AUTHOR_EMAIL),

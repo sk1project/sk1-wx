@@ -231,7 +231,7 @@ def extract_profile(raw_content):
 	profile = None
 	mode = None
 	try:
-		img = Image.open(StringIO(raw_content))
+		img = Image
 		if 'icc_profile' in img.info.keys():
 			profile = img.info.get('icc_profile')
 			mode = img.mode

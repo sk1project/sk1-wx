@@ -440,7 +440,7 @@ class TestCmsFunctions(unittest.TestCase):
 
 	#---Embedded profile related tests
 	def test33_get_embedded_profile(self):
-		img = Image.open(get_filepath('CustomRGB.jpg'))
+		img = Image
 		profile = img.info.get('icc_profile')
 		try:
 			custom_profile = libcms.cms_open_profile_from_string(profile)
