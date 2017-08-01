@@ -33,9 +33,14 @@ Usage:
  Help on available distribution formats: --help-formats
 """
 
-import os, sys, shutil
+import os
+import shutil
+import sys
+from distutils.core import setup
 
-import buildutils, dependencies
+import buildutils
+import dependencies
+from native_mods import make_modules
 
 ############################################################
 # Flags
@@ -58,17 +63,17 @@ LICENSE = 'GPL v3'
 URL = 'http://sk1project.net'
 DOWNLOAD_URL = URL
 CLASSIFIERS = [
-'Development Status :: 5 - Stable',
-'Environment :: Desktop',
-'Intended Audience :: End Users/Desktop',
-'License :: OSI Approved :: LGPL v2',
-'License :: OSI Approved :: GPL v3',
-'Operating System :: POSIX',
-'Operating System :: MacOS :: MacOS X',
-'Operating System :: Microsoft :: Windows',
-'Programming Language :: Python',
-'Programming Language :: C',
-"Topic :: Multimedia :: Graphics :: Editors :: Vector-Based",
+    'Development Status :: 5 - Stable',
+    'Environment :: Desktop',
+    'Intended Audience :: End Users/Desktop',
+    'License :: OSI Approved :: LGPL v2',
+    'License :: OSI Approved :: GPL v3',
+    'Operating System :: POSIX',
+    'Operating System :: MacOS :: MacOS X',
+    'Operating System :: Microsoft :: Windows',
+    'Programming Language :: Python',
+    'Programming Language :: C',
+    "Topic :: Multimedia :: Graphics :: Editors :: Vector-Based",
 ]
 LONG_DESCRIPTION = '''
 sK1 is an open source vector graphics editor similar to CorelDRAW, 
@@ -100,8 +105,8 @@ modules = []
 scripts = ['src/script/sk1', ]
 deb_scripts = []
 data_files = [
-('/usr/share/applications', ['src/sk1.desktop', ]),
-('/usr/share/pixmaps', ['src/sk1.png', 'src/sk1.xpm', ]),
+    ('/usr/share/applications', ['src/sk1.desktop', ]),
+    ('/usr/share/pixmaps', ['src/sk1.png', 'src/sk1.xpm', ]),
 ]
 
 EXCLUDES = ['sword', ]
@@ -113,11 +118,11 @@ rpm_depends = ''
 
 dirs = buildutils.get_dirs_tree('src/sk1/share')
 share_dirs = []
-for item in dirs: share_dirs.append(os.path.join(item[8:], '*.*'))
-
+for item in dirs:
+    share_dirs.append(os.path.join(item[8:], '*.*'))
 
 package_data = {
-'sk1': share_dirs,
+    'sk1': share_dirs,
 }
 
 ############################################################
@@ -125,52 +130,52 @@ package_data = {
 ############################################################
 
 if len(sys.argv) == 1:
-	print 'Please specify build options!'
-	print __doc__
-	sys.exit(0)
+    print 'Please specify build options!'
+    print __doc__
+    sys.exit(0)
 
 if len(sys.argv) > 1:
 
-	if sys.argv[1] == 'bdist_rpm':
-		CLEAR_BUILD = True
-		rpm_depends = dependencies.get_sk1_rpm_depend()
+    if sys.argv[1] == 'bdist_rpm':
+        CLEAR_BUILD = True
+        rpm_depends = dependencies.get_sk1_rpm_depend()
 
-	if sys.argv[1] == 'build_update':
-		UPDATE_MODULES = True
-		CLEAR_BUILD = True
-		sys.argv[1] = 'build'
+    if sys.argv[1] == 'build_update':
+        UPDATE_MODULES = True
+        CLEAR_BUILD = True
+        sys.argv[1] = 'build'
 
-	if sys.argv[1] == 'bdist_deb':
-		DEB_PACKAGE = True
-		CLEAR_BUILD = True
-		sys.argv[1] = 'build'
-		deb_depends = dependencies.get_sk1_deb_depend()
+    if sys.argv[1] == 'bdist_deb':
+        DEB_PACKAGE = True
+        CLEAR_BUILD = True
+        sys.argv[1] = 'build'
+        deb_depends = dependencies.get_sk1_deb_depend()
 
-	if sys.argv[1] == 'uninstall':
-		if os.path.isdir(install_path):
-			# removing sk1 folder
-			print 'REMOVE: ' + install_path
-			os.system('rm -rf ' + install_path)
-			# removing scripts
-			for item in scripts:
-				filename = os.path.basename(item)
-				print 'REMOVE: /usr/bin/' + filename
-				os.system('rm -rf /usr/bin/' + filename)
-			# removing data files
-			for item in data_files:
-				location = item[0]
-				file_list = item[1]
-				for file_item in file_list:
-					filename = os.path.basename(file_item)
-					filepath = os.path.join(location, filename)
-					print 'REMOVE: ' + filepath
-					os.system('rm -rf ' + filepath)
-			print 'Desktop database update: ',
-			os.system('update-desktop-database')
-			print 'DONE!'
-		else:
-			print 'sK1 installation is not found!'
-		sys.exit(0)
+    if sys.argv[1] == 'uninstall':
+        if os.path.isdir(install_path):
+            # removing sk1 folder
+            print 'REMOVE: ' + install_path
+            os.system('rm -rf ' + install_path)
+            # removing scripts
+            for item in scripts:
+                filename = os.path.basename(item)
+                print 'REMOVE: /usr/bin/' + filename
+                os.system('rm -rf /usr/bin/' + filename)
+            # removing data files
+            for item in data_files:
+                location = item[0]
+                file_list = item[1]
+                for file_item in file_list:
+                    filename = os.path.basename(file_item)
+                    filepath = os.path.join(location, filename)
+                    print 'REMOVE: ' + filepath
+                    os.system('rm -rf ' + filepath)
+            print 'Desktop database update: ',
+            os.system('update-desktop-database')
+            print 'DONE!'
+        else:
+            print 'sK1 installation is not found!'
+        sys.exit(0)
 
 # Preparing start script
 src_script = 'src/script/sk1.tmpl'
@@ -178,11 +183,12 @@ dst_script = 'src/script/sk1'
 fileptr = open(src_script, 'rb')
 fileptr2 = open(dst_script, 'wb')
 while True:
-	line = fileptr.readline()
-	if line == '': break
-	if '$APP_INSTALL_PATH' in line:
-		line = line.replace('$APP_INSTALL_PATH', install_path)
-	fileptr2.write(line)
+    line = fileptr.readline()
+    if line == '':
+        break
+    if '$APP_INSTALL_PATH' in line:
+        line = line.replace('$APP_INSTALL_PATH', install_path)
+    fileptr2.write(line)
 fileptr.close()
 fileptr2.close()
 
@@ -194,7 +200,7 @@ fileptr = open('setup.cfg_sk1', 'rb')
 fileptr2 = open('setup.cfg', 'wb')
 content = fileptr.read()
 if rpm_depends:
-	content += '\nrequires = ' + rpm_depends
+    content += '\nrequires = ' + rpm_depends
 fileptr2.write(content)
 fileptr.close()
 fileptr2.close()
@@ -202,35 +208,32 @@ fileptr2.close()
 ############################################################
 # Native extensions
 ############################################################
-from native_mods import make_modules
 
 modules += make_modules(src_path, include_path)
 
 ############################################################
 # Setup routine
 ############################################################
-from distutils.core import setup
 
-
-setup(name=NAME,
-	version=VERSION,
-	description=DESCRIPTION,
-	author=AUTHOR,
-	author_email=AUTHOR_EMAIL,
-	maintainer=MAINTAINER,
-	maintainer_email=MAINTAINER_EMAIL,
-	license=LICENSE,
-	url=URL,
-	download_url=DOWNLOAD_URL,
-	long_description=LONG_DESCRIPTION,
-	classifiers=CLASSIFIERS,
-	packages=buildutils.get_source_structure(excludes=EXCLUDES),
-	package_dir=buildutils.get_package_dirs(excludes=EXCLUDES),
-	package_data=package_data,
-	data_files=data_files,
-	scripts=scripts,
-	ext_modules=modules)
-
+setup(
+    name=NAME,
+    version=VERSION,
+    description=DESCRIPTION,
+    author=AUTHOR,
+    author_email=AUTHOR_EMAIL,
+    maintainer=MAINTAINER,
+    maintainer_email=MAINTAINER_EMAIL,
+    license=LICENSE,
+    url=URL,
+    download_url=DOWNLOAD_URL,
+    long_description=LONG_DESCRIPTION,
+    classifiers=CLASSIFIERS,
+    packages=buildutils.get_source_structure(excludes=EXCLUDES),
+    package_dir=buildutils.get_package_dirs(excludes=EXCLUDES),
+    package_data=package_data,
+    data_files=data_files,
+    scripts=scripts,
+    ext_modules=modules)
 
 ############################################################
 # .py source compiling
@@ -238,36 +241,38 @@ setup(name=NAME,
 if not UPDATE_MODULES:
     buildutils.compile_sources()
 
-
 ############################################################
 # This section for developing purpose only
 # Command 'python setup.py build_update' allows
 # automating build and native extension copying
 # into package directory
 ############################################################
-if UPDATE_MODULES: buildutils.copy_modules(modules)
-
+if UPDATE_MODULES:
+    buildutils.copy_modules(modules)
 
 ############################################################
 # Implementation of bdist_deb command
 ############################################################
 if DEB_PACKAGE:
-	bld = buildutils.DEB_Builder(name=NAME,
-					version=VERSION,
-					maintainer='%s <%s>' % (AUTHOR, AUTHOR_EMAIL),
-					depends=deb_depends,
-					homepage=URL,
-					description=DESCRIPTION,
-					long_description=LONG_DEB_DESCRIPTION,
-					package_dirs=buildutils.get_package_dirs(excludes=EXCLUDES),
-					package_data=package_data,
-					scripts=scripts,
-					data_files=data_files,
-					deb_scripts=deb_scripts,
-					dst=install_path)
-	bld.build()
+    bld = buildutils.DEB_Builder(
+        name=NAME,
+        version=VERSION,
+        maintainer='%s <%s>' % (AUTHOR, AUTHOR_EMAIL),
+        depends=deb_depends,
+        homepage=URL,
+        description=DESCRIPTION,
+        long_description=LONG_DEB_DESCRIPTION,
+        package_dirs=buildutils.get_package_dirs(excludes=EXCLUDES),
+        package_data=package_data,
+        scripts=scripts,
+        data_files=data_files,
+        deb_scripts=deb_scripts,
+        dst=install_path)
+    bld.build()
 
-if CLEAR_BUILD: buildutils.clear_build()
+if CLEAR_BUILD:
+    buildutils.clear_build()
 
 for item in ['MANIFEST', 'MANIFEST.in', 'src/script/sk1', 'setup.cfg']:
-	if os.path.lexists(item): os.remove(item)
+    if os.path.lexists(item):
+        os.remove(item)
