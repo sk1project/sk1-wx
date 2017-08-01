@@ -548,6 +548,7 @@ class DebBuilder:
 
         self.package_name = 'python-%s-%s_%s.deb' % (
             self.name, self.version, self.arch)
+        self.build()
 
     def clear_build(self):
         if os.path.lexists(self.build_dir):

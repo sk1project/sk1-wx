@@ -254,7 +254,7 @@ if UPDATE_MODULES:
 # Implementation of bdist_deb command
 ############################################################
 if DEB_PACKAGE:
-    bld = buildutils.DebBuilder(
+    buildutils.DebBuilder(
         name=NAME,
         version=VERSION,
         maintainer='%s <%s>' % (AUTHOR, AUTHOR_EMAIL),
@@ -268,7 +268,6 @@ if DEB_PACKAGE:
         data_files=data_files,
         deb_scripts=deb_scripts,
         dst=install_path)
-    bld.build()
 
 if CLEAR_BUILD:
     buildutils.clear_build()
