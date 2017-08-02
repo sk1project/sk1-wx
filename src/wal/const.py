@@ -15,7 +15,8 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, platform
+import os
+import platform
 import wx
 
 # Editable preference list
@@ -52,17 +53,17 @@ def is_wx3(): return wx.VERSION[0] == 3
 
 
 def is_unity():
-	return os.environ['XDG_CURRENT_DESKTOP'] == 'Unity'
+    return os.environ['XDG_CURRENT_DESKTOP'] == 'Unity'
 
 
 def is_unity_16_04():
-	if is_gtk():
-		ver = platform.dist()[1].split('.')[0]
-		dist = platform.dist()[0] + ' ' + ver
-		if dist == 'Ubuntu 16' and \
-						os.environ[
-							'XDG_CURRENT_DESKTOP'] == 'Unity': return True
-	return False
+    if is_gtk():
+        ver = platform.dist()[1].split('.')[0]
+        dist = platform.dist()[0] + ' ' + ver
+        if dist == 'Ubuntu 16' and \
+                        os.environ[
+                            'XDG_CURRENT_DESKTOP'] == 'Unity': return True
+    return False
 
 
 TOP = wx.TOP
@@ -131,127 +132,127 @@ ART_TOOLBAR = wx.ART_TOOLBAR
 
 
 def get_system_fontsize():
-	font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-	if font.IsUsingSizeInPixels():
-		fontsize = font.GetPixelSize()
-	else:
-		fontsize = font.GetPointSize()
-	return fontsize
+    font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+    if font.IsUsingSizeInPixels():
+        fontsize = font.GetPixelSize()
+    else:
+        fontsize = font.GetPointSize()
+    return fontsize
 
 
 def mix_colors(fg, bg, alpha):
-	r1, g1, b1 = fg
-	r2, g2, b2 = bg
-	a1 = alpha / 255.0
-	a2 = 1.0 - a1
-	r = int(r1 * a1 + r2 * a2)
-	b = int(b1 * a1 + b2 * a2)
-	g = int(g1 * a1 + g2 * a2)
-	return (r, g, b)
+    r1, g1, b1 = fg
+    r2, g2, b2 = bg
+    a1 = alpha / 255.0
+    a2 = 1.0 - a1
+    r = int(r1 * a1 + r2 * a2)
+    b = int(b1 * a1 + b2 * a2)
+    g = int(g1 * a1 + g2 * a2)
+    return (r, g, b)
 
 
 def lighter_color(color, coef):
-	white = (255, 255, 255)
-	return mix_colors(color, white, coef * 255.0)
+    white = (255, 255, 255)
+    return mix_colors(color, white, coef * 255.0)
 
 
 def _init_gtk_colors(kw):
-	border = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW).Get()
-	bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE).Get()
-	fg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNTEXT).Get()
-	ws = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DSHADOW).Get()
-	infobk = wx.SystemSettings_GetColour(wx.SYS_COLOUR_INFOBK).Get()
-	sel_bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT).Get()
-	sel_text = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT).Get()
-	kw['fg'] = () + fg
-	kw['bg'] = () + bg
-	kw['text'] = () + fg
-	kw['selected_text_bg'] = () + sel_bg
-	kw['selected_text'] = () + sel_text
-	kw['disabled_text'] = mix_colors(fg, bg, 125)
-	kw['disabled_text_shadow'] = mix_colors((255, 255, 255), bg, 200)
-	kw['hover_border'] = border + (90,)
-	kw['hover_solid_border'] = mix_colors(border, bg, 200)
-	kw['pressed_border'] = border + (0,)
-	kw['light_shadow'] = mix_colors((255, 255, 255), bg, 40)
-	kw['dark_shadow'] = mix_colors(border, bg, 200)
-	kw['dark_face'] = border + (40,)
-	kw['light_face'] = (255, 255, 255, 60)
-	# 	kw['workspace'] = () + ws
-	kw['workspace'] = (89, 89, 89)
-	kw['tooltip_bg'] = () + infobk
+    border = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW).Get()
+    bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE).Get()
+    fg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNTEXT).Get()
+    ws = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DSHADOW).Get()
+    infobk = wx.SystemSettings_GetColour(wx.SYS_COLOUR_INFOBK).Get()
+    sel_bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT).Get()
+    sel_text = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT).Get()
+    kw['fg'] = () + fg
+    kw['bg'] = () + bg
+    kw['text'] = () + fg
+    kw['selected_text_bg'] = () + sel_bg
+    kw['selected_text'] = () + sel_text
+    kw['disabled_text'] = mix_colors(fg, bg, 125)
+    kw['disabled_text_shadow'] = mix_colors((255, 255, 255), bg, 200)
+    kw['hover_border'] = border + (90,)
+    kw['hover_solid_border'] = mix_colors(border, bg, 200)
+    kw['pressed_border'] = border + (0,)
+    kw['light_shadow'] = mix_colors((255, 255, 255), bg, 40)
+    kw['dark_shadow'] = mix_colors(border, bg, 200)
+    kw['dark_face'] = border + (40,)
+    kw['light_face'] = (255, 255, 255, 60)
+    # 	kw['workspace'] = () + ws
+    kw['workspace'] = (89, 89, 89)
+    kw['tooltip_bg'] = () + infobk
 
 
 def _init_mac_colors(kw):
-	border = wx.SystemSettings_GetColour(wx.SYS_COLOUR_APPWORKSPACE).Get()
-	bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE).Get()
-	fg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNTEXT).Get()
-	ws = wx.SystemSettings_GetColour(wx.SYS_COLOUR_APPWORKSPACE).Get()
-	infobk = wx.SystemSettings_GetColour(wx.SYS_COLOUR_INFOBK).Get()
-	sel_bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT).Get()
-	sel_text = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT).Get()
-	kw['fg'] = () + fg
-	kw['bg'] = () + bg
-	kw['text'] = () + fg
-	kw['selected_text_bg'] = () + sel_bg
-	kw['selected_text'] = () + sel_text
-	kw['disabled_text'] = mix_colors(fg, bg, 125)
-	kw['disabled_text_shadow'] = (255, 255, 255)
-	kw['hover_border'] = border + (90,)
-	kw['hover_solid_border'] = border + ()
-	kw['pressed_border'] = border + ()
-	kw['light_shadow'] = (255, 255, 255, 90)
-	kw['dark_shadow'] = border + (40,)
-	kw['dark_face'] = border + (40,)
-	kw['light_face'] = (255, 255, 255, 60)
-	kw['workspace'] = () + ws
-	kw['tooltip_bg'] = () + infobk
+    border = wx.SystemSettings_GetColour(wx.SYS_COLOUR_APPWORKSPACE).Get()
+    bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE).Get()
+    fg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNTEXT).Get()
+    ws = wx.SystemSettings_GetColour(wx.SYS_COLOUR_APPWORKSPACE).Get()
+    infobk = wx.SystemSettings_GetColour(wx.SYS_COLOUR_INFOBK).Get()
+    sel_bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT).Get()
+    sel_text = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT).Get()
+    kw['fg'] = () + fg
+    kw['bg'] = () + bg
+    kw['text'] = () + fg
+    kw['selected_text_bg'] = () + sel_bg
+    kw['selected_text'] = () + sel_text
+    kw['disabled_text'] = mix_colors(fg, bg, 125)
+    kw['disabled_text_shadow'] = (255, 255, 255)
+    kw['hover_border'] = border + (90,)
+    kw['hover_solid_border'] = border + ()
+    kw['pressed_border'] = border + ()
+    kw['light_shadow'] = (255, 255, 255, 90)
+    kw['dark_shadow'] = border + (40,)
+    kw['dark_face'] = border + (40,)
+    kw['light_face'] = (255, 255, 255, 60)
+    kw['workspace'] = () + ws
+    kw['tooltip_bg'] = () + infobk
 
 
 def _init_msw_colors(kw):
-	border = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW).Get()
-	bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE).Get()
-	fg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNTEXT).Get()
-	ws = wx.SystemSettings_GetColour(wx.SYS_COLOUR_APPWORKSPACE).Get()
-	infobk = wx.SystemSettings_GetColour(wx.SYS_COLOUR_INFOBK).Get()
-	sel_bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT).Get()
-	sel_text = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT).Get()
-	kw['fg'] = () + fg
-	kw['bg'] = () + bg
-	kw['text'] = () + fg
-	kw['selected_text_bg'] = () + sel_bg
-	kw['selected_text'] = () + sel_text
-	kw['disabled_text'] = mix_colors(fg, bg, 125)
-	kw['disabled_text_shadow'] = mix_colors((255, 255, 255), bg, 200)
-	kw['hover_border'] = border + (90,)
-	kw['hover_solid_border'] = mix_colors(border, bg, 200)
-	kw['pressed_border'] = border + (0,)
-	kw['light_shadow'] = (255, 255, 255, 90)
-	kw['dark_shadow'] = border + (40,)
-	kw['dark_face'] = border + (40,)
-	kw['light_face'] = (255, 255, 255, 60)
-	kw['workspace'] = () + ws
-	kw['tooltip_bg'] = () + infobk
+    border = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW).Get()
+    bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE).Get()
+    fg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNTEXT).Get()
+    ws = wx.SystemSettings_GetColour(wx.SYS_COLOUR_APPWORKSPACE).Get()
+    infobk = wx.SystemSettings_GetColour(wx.SYS_COLOUR_INFOBK).Get()
+    sel_bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT).Get()
+    sel_text = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT).Get()
+    kw['fg'] = () + fg
+    kw['bg'] = () + bg
+    kw['text'] = () + fg
+    kw['selected_text_bg'] = () + sel_bg
+    kw['selected_text'] = () + sel_text
+    kw['disabled_text'] = mix_colors(fg, bg, 125)
+    kw['disabled_text_shadow'] = mix_colors((255, 255, 255), bg, 200)
+    kw['hover_border'] = border + (90,)
+    kw['hover_solid_border'] = mix_colors(border, bg, 200)
+    kw['pressed_border'] = border + (0,)
+    kw['light_shadow'] = (255, 255, 255, 90)
+    kw['dark_shadow'] = border + (40,)
+    kw['dark_face'] = border + (40,)
+    kw['light_face'] = (255, 255, 255, 60)
+    kw['workspace'] = () + ws
+    kw['tooltip_bg'] = () + infobk
 
 
 def get_sel_bg():
-	return tuple(wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT).Get())
+    return tuple(wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT).Get())
 
 
 def set_ui_colors(kw):
-	if is_mac():
-		_init_mac_colors(kw)
-	elif is_msw():
-		_init_msw_colors(kw)
-	else:
-		_init_gtk_colors(kw)
+    if is_mac():
+        _init_mac_colors(kw)
+    elif is_msw():
+        _init_msw_colors(kw)
+    else:
+        _init_gtk_colors(kw)
 
 
 UI_COLORS = {}
 
 SPIN = {
-	'overlay': True,
-	'sep': True,
+    'overlay': True,
+    'sep': True,
 }
 
 EVEN_COLOR = wx.Colour(240, 240, 240)
@@ -267,4 +268,4 @@ RED = wx.Colour(255, 0, 0)
 
 
 def wxcolor_to_dec(wxcolor):
-	return tuple(map(lambda x: x / 255.0, wxcolor.Get()[:3]))
+    return tuple(map(lambda x: x / 255.0, wxcolor.Get()[:3]))
