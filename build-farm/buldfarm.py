@@ -19,9 +19,37 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
+DEB = []
+RPM = []
+MSI = []
+
 OSes = [
     'Ubuntu 14.04 32bit',
     'Ubuntu 14.04 64bit',
     'Ubuntu 16.04 32bit',
     'Ubuntu 16.04 64bit',
 ]
+
+VMTYPE = 'gui'  # 'headless'
+
+
+def startvm(vmname):
+    print '===>STARTING "%s"' % vmname
+    os.system('VBoxManage startvm "%s" --type %s' % (vmname, VMTYPE))
+    print '===>"%s" WORKS!' % vmname
+
+
+def suspendvm(vmname):
+    print '===>SUSPENDING "%s"' % vmname
+    os.system('VBoxManage controlvm "%s" savestate' % vmname)
+    print '===>"%s" SUSPENDED!' % vmname
+
+# VBoxManage guestcontrol <UUID> exec --image /bin/sh --username <su username> --password <su password> --wait-exit --wait-stdout --wait-stderr -- "[ -d /<server_folder>/ ] && echo "OK" || echo "Server is not installed""
+def run_agent(vmname):
+    cmd = 'VBoxManage guestcontrol "%s" exec ' % vmname
+    cmd += ' --image /usr/bin/python'
+    cmd += ' --user <su username>'
+    cmd += ' --password <su password>'
+    cmd += ' --wait-exit --wait-stdout --wait-stderr'
