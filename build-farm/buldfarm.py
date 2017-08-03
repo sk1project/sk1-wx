@@ -48,6 +48,7 @@ def suspendvm(vmname):
 
 # VBoxManage guestcontrol <UUID> exec --image /bin/sh --username <su username> --password <su password> --wait-exit --wait-stdout --wait-stderr -- "[ -d /<server_folder>/ ] && echo "OK" || echo "Server is not installed""
 def run_agent(vmname):
+    print '===>STARTING BUILD ON "%s"' % vmname
     cmd = 'VBoxManage guestcontrol "%s" exec ' % vmname
     cmd += ' --image /usr/bin/python'
     cmd += ' --user <su username>'
