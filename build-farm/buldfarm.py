@@ -21,16 +21,33 @@
 
 import os
 
-DEB = []
-RPM = []
-MSI = []
-
-OSes = [
+DEB = [
     'Ubuntu 14.04 32bit',
     'Ubuntu 14.04 64bit',
     'Ubuntu 16.04 32bit',
     'Ubuntu 16.04 64bit',
+    'Ubuntu 17.04 32bit',
+    'Ubuntu 17.04 64bit',
+    'Debian 7.8 32bit',
+    'Debian 7.8 64bit',
+    'Debian 8.6 32bit',
+    'Debian 8.6 64bit',
 ]
+RPM = [
+    'Fedora 23 32bit',
+    'Fedora 23 64bit',
+    'Fedora 24 32bit',
+    'Fedora 24 64bit',
+    'OpenSuse 13.2 32bit',
+    'OpenSuse 13.2 64bit',
+    'OpenSuse 42.1 64bit',
+]
+MSI = [
+    'Win7 32bit',
+    'Win7 64bit',
+]
+
+OSes = DEB + RPM + MSI
 
 VMTYPE = 'gui'  # 'headless'
 

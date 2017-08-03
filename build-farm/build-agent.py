@@ -144,6 +144,9 @@ def get_package_name(path):
         for file_item in files:
             if file_item.endswith('.rpm') and not file_item.endswith('src.rpm'):
                 return file_item
+    elif is_msw():
+        # TODO: Should be implemented
+        pass
     raise Error('Build failed! There is no build result.')
 
 
