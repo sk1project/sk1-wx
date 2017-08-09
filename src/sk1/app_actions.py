@@ -28,19 +28,19 @@ DOC_MODIFIED, DOC_SAVED, NO_DOCS, SELECTION_CHANGED, MODE_CHANGED, \
 HISTORY_CHANGED, SNAP_CHANGED
 
 def create_actions(app):
-	# action_id, callback, channels, validator, checker,
-	# callable_args, validator_args, checker_args
+    # action_id, callback, channels, validator, checker,
+    # callable_args, validator_args, checker_args
 
-	doc_chnls = [NO_DOCS, DOC_CHANGED]
-	tool_chnls = [NO_DOCS, DOC_CHANGED, MODE_CHANGED]
-	doc_save_chnls = [NO_DOCS, DOC_CHANGED, DOC_MODIFIED, DOC_SAVED]
-	sel_chnls = [NO_DOCS, DOC_CHANGED, SELECTION_CHANGED]
-	page_chnls = [NO_DOCS, DOC_CHANGED, DOC_MODIFIED, PAGE_CHANGED]
-	snap_chnls = [NO_DOCS, DOC_CHANGED, SNAP_CHANGED]
-	insp = app.insp
-	proxy = app.proxy
-	actions = {}
-	entries = [
+    doc_chnls = [NO_DOCS, DOC_CHANGED]
+    tool_chnls = [NO_DOCS, DOC_CHANGED, MODE_CHANGED]
+    doc_save_chnls = [NO_DOCS, DOC_CHANGED, DOC_MODIFIED, DOC_SAVED]
+    sel_chnls = [NO_DOCS, DOC_CHANGED, SELECTION_CHANGED]
+    page_chnls = [NO_DOCS, DOC_CHANGED, DOC_MODIFIED, PAGE_CHANGED]
+    snap_chnls = [NO_DOCS, DOC_CHANGED, SNAP_CHANGED]
+    insp = app.insp
+    proxy = app.proxy
+    actions = {}
+    entries = [
 #----- Canvas modes -----
 (pdids.SELECT_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [SELECT_MODE], [], [SELECT_MODE]),
 (pdids.SHAPER_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode, [SHAPER_MODE], [], EDIT_MODES),
@@ -105,14 +105,14 @@ def create_actions(app):
 (pdids.ID_PREV_ZOOM, proxy.previous_zoom, doc_chnls, insp.is_doc),
 (pdids.ID_ZOOM_PAGE, proxy.fit_zoom_to_page, doc_chnls, insp.is_doc),
 (wx.ID_ZOOM_FIT, proxy.zoom_selected, sel_chnls, insp.is_selection),
-	(pdids.ID_SHOW_GRID, proxy.show_grid, doc_chnls, insp.is_doc, insp.is_grid_visible),
-	(pdids.ID_SHOW_GUIDES, proxy.show_guides, doc_chnls, insp.is_doc, insp.is_guides_visible),
-	(pdids.ID_SHOW_SNAP, proxy.show_snapping, doc_chnls, insp.is_doc, insp.is_show_snapping),
-	(pdids.ID_SHOW_PAGE_BORDER, proxy.draw_page_border, doc_chnls, insp.is_doc, insp.is_draw_page_border),
-	(pdids.ID_SNAP_TO_GRID, proxy.snap_to_grid, snap_chnls, insp.is_doc, insp.is_snap_to_grid),
-	(pdids.ID_SNAP_TO_GUIDE, proxy.snap_to_guides, snap_chnls, insp.is_doc, insp.is_snap_to_guides),
-	(pdids.ID_SNAP_TO_OBJ, proxy.snap_to_objects, snap_chnls, insp.is_doc, insp.is_snap_to_objects),
-	(pdids.ID_SNAP_TO_PAGE, proxy.snap_to_page, snap_chnls, insp.is_doc, insp.is_snap_to_page),
+    (pdids.ID_SHOW_GRID, proxy.show_grid, doc_chnls, insp.is_doc, insp.is_grid_visible),
+    (pdids.ID_SHOW_GUIDES, proxy.show_guides, doc_chnls, insp.is_doc, insp.is_guides_visible),
+    (pdids.ID_SHOW_SNAP, proxy.show_snapping, doc_chnls, insp.is_doc, insp.is_show_snapping),
+    (pdids.ID_SHOW_PAGE_BORDER, proxy.draw_page_border, doc_chnls, insp.is_doc, insp.is_draw_page_border),
+    (pdids.ID_SNAP_TO_GRID, proxy.snap_to_grid, snap_chnls, insp.is_doc, insp.is_snap_to_grid),
+    (pdids.ID_SNAP_TO_GUIDE, proxy.snap_to_guides, snap_chnls, insp.is_doc, insp.is_snap_to_guides),
+    (pdids.ID_SNAP_TO_OBJ, proxy.snap_to_objects, snap_chnls, insp.is_doc, insp.is_snap_to_objects),
+    (pdids.ID_SNAP_TO_PAGE, proxy.snap_to_page, snap_chnls, insp.is_doc, insp.is_snap_to_page),
 (pdids.ID_ICONIZER, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('IconizerPlugin',)),
 (wx.ID_REFRESH, proxy.force_redraw, doc_chnls, insp.is_doc),
 #------ Layout menu -------
@@ -128,15 +128,15 @@ def create_actions(app):
 (pdids.ID_REMOVE_ALL_GUIDES, proxy.remove_all_guides, doc_chnls, insp.is_doc),
 #------ Arrange menu -------
 (pdids.ID_CLEAR_TRANSFORM, proxy.clear_trafo, sel_chnls, insp.can_clear_trafo),
-	(pdids.ID_POSITION_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TransformPlugin', 0)),
-	(pdids.ID_RESIZE_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TransformPlugin', 1)),
-	(pdids.ID_SCALE_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TransformPlugin', 2)),
-	(pdids.ID_ROTATE_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TransformPlugin', 3)),
-	(pdids.ID_SHEAR_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TransformPlugin', 4)),
-	(pdids.ID_ROTATE_LEFT, proxy.rotate_left, sel_chnls, insp.is_selection),
-	(pdids.ID_ROTATE_RIGHT, proxy.rotate_right, sel_chnls, insp.is_selection),
-	(pdids.ID_MIRROR_H, proxy.mirror_h, sel_chnls, insp.is_selection),
-	(pdids.ID_MIRROR_V, proxy.mirror_v, sel_chnls, insp.is_selection),
+    (pdids.ID_POSITION_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TransformPlugin', 0)),
+    (pdids.ID_RESIZE_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TransformPlugin', 1)),
+    (pdids.ID_SCALE_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TransformPlugin', 2)),
+    (pdids.ID_ROTATE_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TransformPlugin', 3)),
+    (pdids.ID_SHEAR_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('TransformPlugin', 4)),
+    (pdids.ID_ROTATE_LEFT, proxy.rotate_left, sel_chnls, insp.is_selection),
+    (pdids.ID_ROTATE_RIGHT, proxy.rotate_right, sel_chnls, insp.is_selection),
+    (pdids.ID_MIRROR_H, proxy.mirror_h, sel_chnls, insp.is_selection),
+    (pdids.ID_MIRROR_V, proxy.mirror_v, sel_chnls, insp.is_selection),
 (pdids.ID_ALIGN_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('AlignPlugin',)),
 (pdids.ID_COMBINE, proxy.combine_selected, sel_chnls, insp.can_be_combined),
 (pdids.ID_BREAK_APART, proxy.break_apart_selected, sel_chnls, insp.can_be_breaked),
@@ -147,10 +147,10 @@ def create_actions(app):
 (pdids.ID_GROUP, proxy.group, sel_chnls, insp.can_be_grouped),
 (pdids.ID_UNGROUP, proxy.ungroup, sel_chnls, insp.can_be_ungrouped),
 (pdids.ID_UNGROUPALL, proxy.ungroup_all, sel_chnls, insp.can_be_ungrouped_all),
-	(pdids.ID_PATHS_TRIM, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('ShapingPlugin', 0)),
-	(pdids.ID_PATHS_INTERSECTION, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('ShapingPlugin', 1)),
-	(pdids.ID_PATHS_EXCLUSION, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('ShapingPlugin', 2)),
-	(pdids.ID_PATHS_FUSION, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('ShapingPlugin', 3)),
+    (pdids.ID_PATHS_TRIM, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('ShapingPlugin', 0)),
+    (pdids.ID_PATHS_INTERSECTION, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('ShapingPlugin', 1)),
+    (pdids.ID_PATHS_EXCLUSION, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('ShapingPlugin', 2)),
+    (pdids.ID_PATHS_FUSION, proxy.show_plugin, doc_chnls, insp.is_doc, None, ('ShapingPlugin', 3)),
 (pdids.ID_TO_CURVES, proxy.convert_to_curve, sel_chnls, insp.can_be_curve),
 (pdids.ID_STROKE_TO_CURVES, proxy.convert_stroke_to_curve, sel_chnls, insp.is_stroke),
 #------ Effects menu -------
@@ -202,10 +202,10 @@ def create_actions(app):
 (pdids.ID_APP_FORUM, proxy.open_url, [], None, None, ('http://www.sk1project.net/forum/index.php',)),
 (pdids.ID_APP_FBPAGE, proxy.open_url, [], None, None, ('http://www.facebook.com/pages/sK1-Project/308311182521658',)),
 (wx.ID_ABOUT, proxy.about),
-	]
+]
 # action_id, callback, channels, validator, checker,
 # callable_args, validator_args, checker_args
-	for entry in entries:
-		actions[entry[0]] = AppAction(*entry)
+    for entry in entries:
+        actions[entry[0]] = AppAction(*entry)
 
-	return actions
+    return actions
