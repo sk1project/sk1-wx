@@ -21,164 +21,173 @@ from wal import const, ImageButton, is_wx2
 
 from sk1 import events, resources
 
+
 class AppAction:
+    action_id = None
+    callback = None
+    channels = []
+    validator = None
+    checker = None
+    callable_args = []
+    validator_args = []
+    checker_args = []
 
-	action_id = None
-	callback = None
-	channels = []
-	validator = None
-	checker = None
-	callable_args = []
-	validator_args = []
-	checker_args = []
+    widgets = []
+    toolbar = None
+    menuitem = []
+    enabled = True
+    active = False
+    is_acc = False
+    acc_entry = None
+    global_accs = []
 
-	widgets = []
-	toolbar = None
-	menuitem = []
-	enabled = True
-	active = False
-	is_acc = False
-	acc_entry = None
-	global_accs = []
+    def __init__(self, action_id, callback, channels=[],
+            validator=None, checker=None,
+            callable_args=[], validator_args=[], checker_args=[]):
 
-	def __init__(self, action_id, callback, channels=[],
-				validator=None, checker=None,
-				callable_args=[], validator_args=[], checker_args=[]):
+        self.action_id = action_id
+        self.is_acc = action_id in resources.ACC_KEYS
+        if self.is_acc:
+            self.acc_entry, self.global_accs = resources.get_accentry_by_id(
+                self.action_id)
+        if not self.acc_entry:
+            self.is_acc = False
+        self.is_icon = action_id in resources.ART_IDS
+        self.callback = callback
+        self.channels = channels
+        self.validator = validator
+        self.checker = checker
+        self.callable_args = callable_args
+        self.validator_args = validator_args
+        self.checker_args = checker_args
 
-		self.action_id = action_id
-		self.is_acc = resources.ACC_KEYS.has_key(action_id)
-		if self.is_acc:
-			self.acc_entry, self.global_accs = resources.get_accentry_by_id(self.action_id)
-		if not self.acc_entry:
-			self.is_acc = False
-		self.is_icon = resources.ART_IDS.has_key(action_id)
-		self.callback = callback
-		self.channels = channels
-		self.validator = validator
-		self.checker = checker
-		self.callable_args = callable_args
-		self.validator_args = validator_args
-		self.checker_args = checker_args
+        self.widgets = []
+        self.menuitem = []
 
-		self.widgets = []
-		self.menuitem = []
+        if channels:
+            for channel in channels:
+                events.connect(channel, self.receiver)
 
-		if channels:
-			for channel in channels:
-				events.connect(channel, self.receiver)
+    def update(self):
+        for widget in self.widgets:
+            if not is_wx2():
+                if widget not in self.menuitem:
+                    widget.update()
+            else:
+                widget.update()
+        if self.toolbar is not None and not const.is_mac():
+            self.toolbar.EnableTool(self.action_id, self.enabled)
+            self.toolbar.SetToolShortHelp(self.action_id, self.get_descr_text())
 
-	def update(self):
-		for widget in self.widgets:
-			if not is_wx2():
-				if not widget in self.menuitem:
-					widget.update()
-			else:
-				widget.update()
-		if not self.toolbar is None and not const.is_mac():
-			self.toolbar.EnableTool(self.action_id, self.enabled)
-			self.toolbar.SetToolShortHelp(self.action_id, self.get_descr_text())
+    def register(self, widget):
+        self.widgets.append(widget)
+        self.update()
 
-	def register(self, widget):
-		self.widgets.append(widget)
-		self.update()
+    def register_as_tool(self, toolbar):
+        self.toolbar = toolbar
 
-	def register_as_tool(self, toolbar):
-		self.toolbar = toolbar
+    def register_as_menuitem(self, item):
+        self.menuitem.append(item)
+        self.widgets.append(item)
+        if is_wx2():
+            self.update()
 
-	def register_as_menuitem(self, item):
-		self.menuitem.append(item)
-		self.widgets.append(item)
-		if is_wx2(): self.update()
+    def unregister(self, widget):
+        if widget in self.widgets:
+            self.widgets.remove(widget)
+        if widget in self.menuitem:
+            self.menuitem.remove(widget)
+        self.update()
 
-	def unregister(self, widget):
-		if widget in self.widgets:
-			self.widgets.remove(widget)
-		if widget in self.menuitem:
-			self.menuitem.remove(widget)
-		self.update()
+    def receiver(self, *args):
+        if self.validator_args:
+            self.set_enable(self.validator(*self.validator_args))
+        else:
+            self.set_enable(self.validator())
+        if self.is_toggle() and self.enabled:
+            if self.checker_args:
+                self.set_active(self.checker(*self.checker_args))
+            else:
+                self.set_active(self.checker())
 
-	def receiver(self, *args):
-		if self.validator_args:
-			self.set_enable(self.validator(*self.validator_args))
-		else: self.set_enable(self.validator())
-		if self.is_toggle() and self.enabled:
-			if self.checker_args:
-				self.set_active(self.checker(*self.checker_args))
-			else: self.set_active(self.checker())
+    def set_enable(self, enabled):
+        if not enabled == self.enabled:
+            self.enabled = enabled
+            for widget in self.widgets:
+                widget.set_enable(self.enabled)
+            if self.toolbar is not None and not const.is_mac():
+                self.toolbar.EnableTool(self.action_id, self.enabled)
 
-	def set_enable(self, enabled):
-		if not enabled == self.enabled:
-			self.enabled = enabled
-			for widget in self.widgets:
-				widget.set_enable(self.enabled)
-			if not self.toolbar is None and not const.is_mac():
-				self.toolbar.EnableTool(self.action_id, self.enabled)
+    def set_active(self, active):
+        if not active == self.active:
+            self.active = active
+            for widget in self.widgets:
+                widget.set_active(self.active)
 
-	def set_active(self, active):
-		if not active == self.active:
-			self.active = active
-			for widget in self.widgets:
-				widget.set_active(self.active)
+    def do_call(self, *args):
+        if self.enabled:
+            if self.callable_args:
+                self.callback(*self.callable_args)
+            else:
+                self.callback()
+        if self.is_toggle():
+            if self.checker_args:
+                self.set_active(self.checker(*self.checker_args))
+            else:
+                self.set_active(self.checker())
 
-	def do_call(self, *args):
-		if self.enabled:
-			if self.callable_args: self.callback(*self.callable_args)
-			else: self.callback()
-		if self.is_toggle():
-			if self.checker_args:
-				self.set_active(self.checker(*self.checker_args))
-			else: self.set_active(self.checker())
+    def get_artid(self):
+        if self.is_icon:
+            return resources.get_art_by_id(self.action_id)
+        return None
 
-	def get_artid(self):
-		if self.is_icon:
-			return resources.get_art_by_id(self.action_id)
-		return None
+    def get_icon(self, size=(16, 16), client=wx.ART_OTHER):
+        if self.is_icon:
+            return resources.get_bitmap_by_id(self.action_id, client, size)
+        return None
 
-	def get_icon(self, size=(16, 16), client=wx.ART_OTHER):
-		if self.is_icon:
-			return resources.get_bitmap_by_id(self.action_id, client, size)
-		return None
+    def get_menu_text(self):
+        return resources.get_menu_text(self.action_id)
 
-	def get_menu_text(self):
-		return resources.get_menu_text(self.action_id)
+    def get_tooltip_text(self):
+        txt = resources.get_tooltip_text(self.action_id)
+        if self.is_acc:
+            shortcut = self.get_shortcut_text()
+            txt = '%s (%s)' % (txt, shortcut)
+        return txt
 
-	def get_tooltip_text(self):
-		txt = resources.get_tooltip_text(self.action_id)
-		if self.is_acc:
-			shortcut = self.get_shortcut_text()
-			txt = '%s (%s)' % (txt, shortcut)
-		return txt
+    def get_descr_text(self):
+        txt = resources.get_descr_text(self.action_id)
+        if self.is_acc:
+            shortcut = self.get_shortcut_text()
+            txt = '%s (%s)' % (txt, shortcut)
+        return txt
 
-	def get_descr_text(self):
-		txt = resources.get_descr_text(self.action_id)
-		if self.is_acc:
-			shortcut = self.get_shortcut_text()
-			txt = '%s (%s)' % (txt, shortcut)
-		return txt
+    def get_shortcut_text(self):
+        if self.is_acc:
+            return self.acc_entry.ToString()
+        return ''
 
-	def get_shortcut_text(self):
-		if self.is_acc:
-			return self.acc_entry.ToString()
-		return ''
+    def is_toggle(self):
+        return self.checker is not None
 
-	def is_toggle(self):
-		return not self.checker is None
 
 class ActionButton(ImageButton):
+    action = None
 
-	action = None
+    def __init__(self, parent, action):
+        self.action = action
+        artid = action.get_artid()
+        tooltip = action.get_tooltip_text()
+        text = ''
+        if artid is None:
+            text = tooltip
+        native = True
+        if const.is_winxp():
+            native = False
+        ImageButton.__init__(self, parent, artid, const.DEF_SIZE, text, tooltip,
+            native=native, onclick=action.do_call)
+        action.register(self)
 
-	def __init__(self, parent, action):
-		self.action = action
-		artid = action.get_artid()
-		tooltip = action.get_tooltip_text()
-		text = ''
-		if artid is None: text = tooltip
-		native = True
-		if const.is_winxp(): native = False
-		ImageButton.__init__(self, parent, artid, const.DEF_SIZE, text, tooltip,
-							native=native, onclick=action.do_call)
-		action.register(self)
-
-	def update(self):
-		self.set_enable(self.action.enabled)
+    def update(self):
+        self.set_enable(self.action.enabled)
