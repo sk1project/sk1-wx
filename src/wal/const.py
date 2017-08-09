@@ -52,17 +52,22 @@ def is_wx2(): return wx.VERSION[0] == 2
 def is_wx3(): return wx.VERSION[0] == 3
 
 
+def get_desktop_name():
+    if is_gtk() and 'XDG_CURRENT_DESKTOP' in os.environ:
+        return os.environ['XDG_CURRENT_DESKTOP']
+    return None
+
+
 def is_unity():
-    return os.environ['XDG_CURRENT_DESKTOP'] == 'Unity'
+    return get_desktop_name() == 'Unity'
 
 
 def is_unity_16_04():
     if is_gtk():
         ver = platform.dist()[1].split('.')[0]
         dist = platform.dist()[0] + ' ' + ver
-        if dist == 'Ubuntu 16' and \
-                        os.environ[
-                            'XDG_CURRENT_DESKTOP'] == 'Unity': return True
+        if dist == 'Ubuntu 16' and get_desktop_name() == 'Unity':
+            return True
     return False
 
 
@@ -148,7 +153,7 @@ def mix_colors(fg, bg, alpha):
     r = int(r1 * a1 + r2 * a2)
     b = int(b1 * a1 + b2 * a2)
     g = int(g1 * a1 + g2 * a2)
-    return (r, g, b)
+    return r, g, b
 
 
 def lighter_color(color, coef):
@@ -160,7 +165,6 @@ def _init_gtk_colors(kw):
     border = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW).Get()
     bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE).Get()
     fg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNTEXT).Get()
-    ws = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DSHADOW).Get()
     infobk = wx.SystemSettings_GetColour(wx.SYS_COLOUR_INFOBK).Get()
     sel_bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT).Get()
     sel_text = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT).Get()
