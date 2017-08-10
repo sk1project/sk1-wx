@@ -21,6 +21,24 @@
 
 import os
 
+DATASET = {
+    'mode': 'build',  # sudo - to run as sudo user
+    'project': 'sk1-wx',
+    'project2': 'sk1-wx-msw',
+    'git_url': 'https://github.com/sk1project/sk1-wx',
+    'git_url2': 'https://github.com/sk1project/sk1-wx-msw',
+    'user': 'igor',
+    'user_pass': '',
+    'sudo_user': 'igor',
+    'sudo_pass': '',
+    'root_pass': '',
+    'ftp_url': 'ftp://192.168.0.102/home/igor/buildfarm',
+    'ftp_user': 'igor',
+    'ftp_pass': '',
+    'timestamp': '',
+    'script': 'setup-sk1.py',
+}
+
 DEB = [
     'Ubuntu 14.04 32bit',
     'Ubuntu 14.04 64bit',
@@ -63,11 +81,12 @@ def suspendvm(vmname):
     os.system('VBoxManage controlvm "%s" savestate' % vmname)
     print '===>"%s" SUSPENDED!' % vmname
 
-# VBoxManage guestcontrol <UUID> exec --image /bin/sh --username <su username> --password <su password> --wait-exit --wait-stdout --wait-stderr -- "[ -d /<server_folder>/ ] && echo "OK" || echo "Server is not installed""
+
 def run_agent(vmname):
     print '===>STARTING BUILD ON "%s"' % vmname
-    cmd = 'VBoxManage guestcontrol "%s" exec ' % vmname
-    cmd += ' --image /usr/bin/python'
-    cmd += ' --user <su username>'
-    cmd += ' --password <su password>'
+    cmd = 'VBoxManage --nologo guestcontrol "%s" run' % vmname
+    cmd += ' --exe "/usr/bin/python"'
+    cmd += ' --user "%s"' % DATASET['user']
+    cmd += ' --password "%s"' % DATASET['user_pass']
     cmd += ' --wait-exit --wait-stdout --wait-stderr'
+    cmd += ' -- python/arg0 "~/build-agent.py"'
