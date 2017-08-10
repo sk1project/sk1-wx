@@ -188,12 +188,13 @@ if DATASET['mode'] == 'sudo':
     cmd = 'echo "%s" |sudo -kS python %s' % (DATASET['sudo_pass'], path)
     for item in DATASET.items():
         value = DATASET[item]
+        if not value:
+            continue
         if item == 'mode':
             value = 'build'
         if ' ' in value:
             value = '"%s"' % value
-        if value:
-            cmd += ' %s=%s' % (item, value)
+        cmd += ' %s=%s' % (item, value)
     command(cmd)
     sys.exit()
 
