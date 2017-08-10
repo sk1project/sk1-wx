@@ -45,10 +45,14 @@ class Error(Exception):
 
 
 DATASET = {
+    'mode': 'build',  # sudo - to run as sudo user
     'project': 'sk1-wx',
     'project2': 'sk1-wx-msw',
     'git_url': 'https://github.com/sk1project/sk1-wx',
     'git_url2': 'https://github.com/sk1project/sk1-wx-msw',
+    'sudo_user': 'igor',
+    'sudo_pass': '',
+    'root_pass': '',
     'ftp_url': 'ftp://192.168.0.102/home/igor/buildfarm',
     'ftp_user': 'igor',
     'ftp_pass': '',
@@ -73,8 +77,8 @@ def is_macos():
     return platform.system() == MACOS
 
 
-def is_path(path):
-    return os.path.lexists(path)
+def is_path(pth):
+    return os.path.lexists(pth)
 
 
 MINT = 'LinuxMint'
@@ -131,11 +135,11 @@ def get_marker():
     return 'macos'
 
 
-def get_package_name(path):
+def get_package_name(pth):
     files = []
-    file_items = os.listdir(path)
+    file_items = os.listdir(pth)
     for file_item in file_items:
-        if os.path.isfile(os.path.join(path, file_item)):
+        if os.path.isfile(os.path.join(pth, file_item)):
             files.append(file_item)
     if is_deb():
         if len(files) == 1 and files[0].endswith('.deb'):
@@ -150,17 +154,17 @@ def get_package_name(path):
     raise Error('Build failed! There is no build result.')
 
 
-def command(cmd):
-    os.system(cmd)
+def command(exec_cmd):
+    os.system(exec_cmd)
 
 
-def publish_file(path):
+def publish_file(pth):
     session = ftplib.FTP(
         DATASET['ftp_url'],
         DATASET['ftp_user'],
         DATASET['ftp_pass'])
-    fileptr = open(path, 'rb')
-    session.storbinary('STOR %s' % ntpath.basename(path), fileptr)
+    fileptr = open(pth, 'rb')
+    session.storbinary('STOR %s' % ntpath.basename(pth), fileptr)
     fileptr.close()
     session.quit()
 
@@ -178,6 +182,20 @@ if len(sys.argv) > 1:
             if value[-1] in ('"', "'"):
                 value = value[:-1]
             DATASET[key] = value
+
+if DATASET['mode'] == 'sudo':
+    path = os.path.expanduser('~/build-agent.py')
+    cmd = 'echo "%s" |sudo -kS python %s' % (DATASET['sudo_pass'], path)
+    for item in DATASET.items():
+        value = DATASET[item]
+        if item == 'mode':
+            value = 'build'
+        if ' ' in value:
+            value = '"%s"' % value
+        if value:
+            cmd += ' %s=%s' % (item, value)
+    command(cmd)
+    sys.exit()
 
 BUILD_DIR = os.path.expanduser('~/buildfarm')
 PROJECT_DIR = os.path.join(BUILD_DIR, DATASET['project'])
