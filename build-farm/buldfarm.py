@@ -90,3 +90,15 @@ def run_agent(vmname):
     cmd += ' --password "%s"' % DATASET['user_pass']
     cmd += ' --wait-exit --wait-stdout --wait-stderr'
     cmd += ' -- python/arg0 "~/build-agent.py"'
+    counter = 1
+    for item in DATASET.items():
+        value = DATASET[item]
+        if not value:
+            continue
+        if ' ' in value:
+            value = "'%s'" % value
+        cmd += ' -- python/arg%d "%s=%s"' % (counter, item, value)
+        counter += 1
+
+    os.system(cmd)
+    print '===>BUILD FINISHED ON "%s"' % vmname
