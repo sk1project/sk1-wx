@@ -162,6 +162,7 @@ def command(exec_cmd):
 
 def publish_file(pth):
     if DATASET['mode'] == 'build': return
+    print 'PUBLISHING ===> %s' % ntpath.basename(pth)
     session = ftplib.FTP(
         DATASET['ftp_url'],
         DATASET['ftp_user'],
@@ -230,7 +231,7 @@ if is_linux():
         command('rm -rf %s' % DIST_DIR)
 
     if is_deb():
-        command('cd %s;python %s bdist_deb' % (PROJECT_DIR, script))
+        command('cd %s;python %s bdist_deb 1> /dev/null' % (PROJECT_DIR, script))
 
         old_name = get_package_name(DIST_DIR)
         prefix, suffix = old_name.split('_')
@@ -246,7 +247,7 @@ if is_linux():
                 package_name2 = prefix + ts + '_mint_18_' + suffix
 
     elif is_rpm():
-        command('cd %s;python %s bdist_rpm' % (PROJECT_DIR, script))
+        command('cd %s;python %s bdist_rpm 1> /dev/null' % (PROJECT_DIR, script))
 
         old_name = get_package_name(DIST_DIR)
         items = old_name.split('.')
