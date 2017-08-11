@@ -167,9 +167,9 @@ def publish_file(pth):
         DATASET['ftp_user'],
         DATASET['ftp_pass'])
     session.cwd(DATASET['ftp_path'])
-    fileptr = open(pth, 'rb')
-    session.storbinary('STOR %s' % ntpath.basename(pth), fileptr)
-    fileptr.close()
+    fp = open(pth, 'rb')
+    session.storbinary('STOR %s' % ntpath.basename(pth), fp)
+    fp.close()
     session.quit()
 
 
@@ -189,7 +189,9 @@ if len(sys.argv) > 1:
 
 if DATASET['mode'] == 'test':
     print 'DATASET:'
-    for item in DATASET.keys():
+    items = DATASET.keys()
+    items.sort()
+    for item in items:
         value = DATASET[item]
         if not value:
             continue
@@ -197,7 +199,6 @@ if DATASET['mode'] == 'test':
             value = '"%s"' % value
         print '%s=%s' % (item, value)
     print 'build dir: %s' % os.path.expanduser('~/buildfarm')
-    print 'timestamp: %s' % DATASET['timestamp']
     sys.exit()
 elif DATASET['mode'] == 'release':
     DATASET['timestamp'] = ''
