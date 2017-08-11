@@ -54,10 +54,11 @@ DATASET = {
     'project2': 'sk1-wx-msw',
     'git_url': 'https://github.com/sk1project/sk1-wx',
     'git_url2': 'https://github.com/sk1project/sk1-wx-msw',
-    'ftp_url': 'ftp://192.168.0.102/home/igor/buildfarm',
+    'ftp_url': '192.168.0.102',
+    'ftp_path': '/home/igor/buildfarm',
     'ftp_user': 'igor',
     'ftp_pass': '',
-    'timestamp': '',
+    'timestamp': datetime.datetime.now().strftime("%Y%m%d"),
     'script': 'setup-sk1.py',
 }
 
@@ -165,6 +166,7 @@ def publish_file(pth):
         DATASET['ftp_url'],
         DATASET['ftp_user'],
         DATASET['ftp_pass'])
+    session.cwd(DATASET['ftp_path'])
     fileptr = open(pth, 'rb')
     session.storbinary('STOR %s' % ntpath.basename(pth), fileptr)
     fileptr.close()
@@ -184,8 +186,6 @@ if len(sys.argv) > 1:
             if value[-1] in ('"', "'"):
                 value = value[:-1]
             DATASET[key] = value
-
-DATASET['timestamp'] = datetime.datetime.now().strftime("%Y%m%d")
 
 if DATASET['mode'] == 'test':
     print 'DATASET:'
