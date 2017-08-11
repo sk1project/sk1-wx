@@ -38,6 +38,7 @@ import ntpath
 import os
 import platform
 import sys
+import datetime
 
 
 class Error(Exception):
@@ -45,14 +46,14 @@ class Error(Exception):
 
 
 DATASET = {
-    'mode': 'build',  # sudo - to run as sudo user
+    'mode': 'publish',
+    # release - to prepare release build
+    # build - build package only
+    # test - test mode
     'project': 'sk1-wx',
     'project2': 'sk1-wx-msw',
     'git_url': 'https://github.com/sk1project/sk1-wx',
     'git_url2': 'https://github.com/sk1project/sk1-wx-msw',
-    'sudo_user': 'igor',
-    'sudo_pass': '',
-    'root_pass': '',
     'ftp_url': 'ftp://192.168.0.102/home/igor/buildfarm',
     'ftp_user': 'igor',
     'ftp_pass': '',
@@ -159,6 +160,7 @@ def command(exec_cmd):
 
 
 def publish_file(pth):
+    if DATASET['mode'] == 'build': return
     session = ftplib.FTP(
         DATASET['ftp_url'],
         DATASET['ftp_user'],
@@ -183,20 +185,22 @@ if len(sys.argv) > 1:
                 value = value[:-1]
             DATASET[key] = value
 
-if DATASET['mode'] == 'sudo':
-    path = os.path.expanduser('~/build-agent.py')
-    cmd = 'echo "%s" |sudo -kS python %s' % (DATASET['sudo_pass'], path)
-    for item in DATASET.items():
+DATASET['timestamp'] = datetime.datetime.now().strftime("%Y%m%d")
+
+if DATASET['mode'] == 'test':
+    print 'DATASET:'
+    for item in DATASET.keys():
         value = DATASET[item]
         if not value:
             continue
-        if item == 'mode':
-            value = 'build'
         if ' ' in value:
             value = '"%s"' % value
-        cmd += ' %s=%s' % (item, value)
-    command(cmd)
+        print '%s=%s' % (item, value)
+    print 'build dir: %s' % os.path.expanduser('~/buildfarm')
+    print 'timestamp: %s' % DATASET['timestamp']
     sys.exit()
+elif DATASET['mode'] == 'release':
+    DATASET['timestamp'] = ''
 
 BUILD_DIR = os.path.expanduser('~/buildfarm')
 PROJECT_DIR = os.path.join(BUILD_DIR, DATASET['project'])
