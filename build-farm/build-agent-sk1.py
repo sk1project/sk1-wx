@@ -293,12 +293,16 @@ if is_linux():
 elif is_msw():
     # TODO: Implementation should be finished
     if not is_path(PROJECT_DIR):
+        print 'Cloning project %s' % url
         command('cd %s;git clone %s %s' % (BUILD_DIR, url, proj_name))
     else:
+        print 'Updating projects %s' % url
         command('cd %s;git pull' % PROJECT_DIR)
     if not is_path(PROJECT2_DIR):
+        print 'Cloning project %s' % url2
         command('cd %s;git clone %s %s' % (BUILD_DIR, url, proj2_name))
     else:
+        print 'Updating projects %s' % url2
         command('cd %s;git pull' % PROJECT2_DIR)
     if is_path(DIST_DIR):
         command('rm -rf %s' % DIST_DIR)
