@@ -33,13 +33,13 @@
 #       ftp_pass - ftp user pass
 #       timestamp - optional build marker (like 20170624)
 
+import datetime
 import ftplib
 import ntpath
 import os
 import platform
 import sys
 import time
-import datetime
 
 
 class Error(Exception):
