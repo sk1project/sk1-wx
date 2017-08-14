@@ -38,6 +38,7 @@ import ntpath
 import os
 import platform
 import sys
+import time
 import datetime
 
 
@@ -219,6 +220,26 @@ proj2_name = DATASET['project2']
 if not is_path(BUILD_DIR):
     os.mkdir(BUILD_DIR)
 
+#Check internet connection
+counter = 0
+is_connection = False
+while counter <10
+    try:
+        session = ftplib.FTP(
+            DATASET['ftp_url'],
+            DATASET['ftp_user'],
+            DATASET['ftp_pass'])
+        session.quit()  
+        is_connection = True     
+        break 
+    except:
+        counter +=1
+        time.wait(60)
+if not is_connection:
+    print "There is no LAN connection!"
+    sys.exit(1)
+
+#Package build procedure
 if is_linux():
     package_name2 = ''
     old_name = ''
