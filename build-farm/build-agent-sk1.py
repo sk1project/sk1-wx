@@ -235,7 +235,7 @@ while counter <10
         break 
     except:
         counter +=1
-        print '...%ds' % counter * 60
+        print '...%ds' % counter * 60,
         time.wait(60)
 if not is_connection:
     print " ==> There is no LAN connection!"
