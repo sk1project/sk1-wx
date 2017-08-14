@@ -220,7 +220,8 @@ proj2_name = DATASET['project2']
 if not is_path(BUILD_DIR):
     os.mkdir(BUILD_DIR)
 
-#Check internet connection
+#Check LAN connection
+print 'Checking LAN connection',
 counter = 0
 is_connection = False
 while counter <10
@@ -236,8 +237,9 @@ while counter <10
         counter +=1
         time.wait(60)
 if not is_connection:
-    print "There is no LAN connection!"
+    print " ==> There is no LAN connection!"
     sys.exit(1)
+print ' ==> OK'
 
 #Package build procedure
 if is_linux():
@@ -245,13 +247,16 @@ if is_linux():
     old_name = ''
     new_name = ''
     if not is_path(PROJECT_DIR):
+        print 'Cloning project %s' % url
         command('cd %s;git clone %s %s' % (BUILD_DIR, url, proj_name))
     else:
+        print 'Updating project %s' % url
         command('cd %s;git pull' % PROJECT_DIR)
     if is_path(DIST_DIR):
         command('rm -rf %s' % DIST_DIR)
 
     if is_deb():
+        print "Building DEB package"
         command('cd %s;python %s bdist_deb 1> /dev/null' % (PROJECT_DIR, script))
 
         old_name = get_package_name(DIST_DIR)
@@ -268,6 +273,7 @@ if is_linux():
                 package_name2 = prefix + ts + '_mint_18_' + suffix
 
     elif is_rpm():
+        print "Building RPM package"
         command('cd %s;python %s bdist_rpm 1> /dev/null' % (PROJECT_DIR, script))
 
         old_name = get_package_name(DIST_DIR)
