@@ -49,8 +49,8 @@ class Error(Exception):
 DATASET = {
     'mode': 'publish',
     # release - to prepare release build
-    # build - build package only
-    # test - test mode
+    # build - to build package only
+    # test - to run in test mode
     'project': 'sk1-wx',
     'project2': 'sk1-wx-msw',
     'git_url': 'https://github.com/sk1project/sk1-wx',
@@ -235,6 +235,7 @@ while counter <10
         break 
     except:
         counter +=1
+        print '...%ds' % counter * 60
         time.wait(60)
 if not is_connection:
     print " ==> There is no LAN connection!"
