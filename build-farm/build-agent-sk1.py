@@ -28,7 +28,8 @@
 #       project2 - additional project name (msw/macos builds)
 #       git_url - main repository URL
 #       git_url2 - additional repository URL (msw/macos builds)
-#       ftp_url - upload server url (ftp://host:port)      
+#       ftp_url - upload server url (ftp://host:port) 
+#       ftp_path - path on remote ftp server     
 #       ftp_user - upload server user
 #       ftp_pass - ftp user pass
 #       timestamp - optional build marker (like 20170624)
