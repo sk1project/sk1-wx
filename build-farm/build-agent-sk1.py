@@ -49,6 +49,7 @@ class Error(Exception):
 
 DATASET = {
     'mode': 'publish',
+    # publish - to build and publish build result
     # release - to prepare release build
     # build - to build package only
     # test - to run in test mode
@@ -56,6 +57,11 @@ DATASET = {
     'project2': 'sk1-wx-msw',
     'git_url': 'https://github.com/sk1project/sk1-wx',
     'git_url2': 'https://github.com/sk1project/sk1-wx-msw',
+    'user': 'igor',
+    'user_pass': '',
+    'sudo_user': 'igor',
+    'sudo_pass': '',
+    'root_pass': '',
     'ftp_url': '192.168.0.102',
     'ftp_path': '/home/igor/buildfarm',
     'ftp_user': 'igor',
@@ -221,29 +227,30 @@ proj2_name = DATASET['project2']
 if not is_path(BUILD_DIR):
     os.mkdir(BUILD_DIR)
 
-#Check LAN connection
+# Check LAN connection
 print 'Checking LAN connection',
 counter = 0
 is_connection = False
-while counter <10
+while counter < 10:
     try:
         session = ftplib.FTP(
             DATASET['ftp_url'],
             DATASET['ftp_user'],
             DATASET['ftp_pass'])
-        session.quit()  
-        is_connection = True     
-        break 
+        session.quit()
+        is_connection = True
+        break
     except:
-        counter +=1
-        print '...%ds' % counter * 60,
-        time.wait(60)
+        counter += 1
+        waitfor = counter * 60
+        print '...%ds' % waitfor,
+        time.sleep(60)
 if not is_connection:
     print " ==> There is no LAN connection!"
     sys.exit(1)
 print ' ==> OK'
 
-#Package build procedure
+# Package build procedure
 if is_linux():
     package_name2 = ''
     old_name = ''
@@ -259,7 +266,8 @@ if is_linux():
 
     if is_deb():
         print "Building DEB package"
-        command('cd %s;python %s bdist_deb 1> /dev/null' % (PROJECT_DIR, script))
+        command(
+            'cd %s;python %s bdist_deb 1> /dev/null' % (PROJECT_DIR, script))
 
         old_name = get_package_name(DIST_DIR)
         prefix, suffix = old_name.split('_')
@@ -276,7 +284,8 @@ if is_linux():
 
     elif is_rpm():
         print "Building RPM package"
-        command('cd %s;python %s bdist_rpm 1> /dev/null' % (PROJECT_DIR, script))
+        command(
+            'cd %s;python %s bdist_rpm 1> /dev/null' % (PROJECT_DIR, script))
 
         old_name = get_package_name(DIST_DIR)
         items = old_name.split('.')

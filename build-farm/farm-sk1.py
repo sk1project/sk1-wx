@@ -22,17 +22,22 @@
 import os
 
 DATASET = {
-    'mode': 'build',  # sudo - to run as sudo user
+    'mode': 'build',
+
+    # release - to prepare release build
+    # build - to build package only
+    # test - to run in test mode
     'project': 'sk1-wx',
     'project2': 'sk1-wx-msw',
     'git_url': 'https://github.com/sk1project/sk1-wx',
     'git_url2': 'https://github.com/sk1project/sk1-wx-msw',
     'user': 'igor',
-    'user_pass': '',
+    'user_pass': '123',
     'sudo_user': 'igor',
-    'sudo_pass': '',
-    'root_pass': '',
-    'ftp_url': 'ftp://192.168.0.102/home/igor/buildfarm',
+    'sudo_pass': '123',
+    'root_pass': '123',
+    'ftp_url': '192.168.0.102',
+    'ftp_path': '/home/igor/buildfarm',
     'ftp_user': 'igor',
     'ftp_pass': '',
     'timestamp': '',
@@ -86,12 +91,12 @@ def run_agent(vmname):
     print '===>STARTING BUILD ON "%s"' % vmname
     cmd = 'VBoxManage --nologo guestcontrol "%s" run' % vmname
     cmd += ' --exe "/usr/bin/python"'
-    cmd += ' --user "%s"' % DATASET['user']
+    cmd += ' --username "%s"' % DATASET['user']
     cmd += ' --password "%s"' % DATASET['user_pass']
-    cmd += ' --wait-exit --wait-stdout --wait-stderr'
-    cmd += ' -- python/arg0 "~/build-agent.py"'
+    cmd += ' --wait-stdout --wait-stderr'
+    cmd += ' -- python/arg0 "/home/%s/build-agent-sk1.py"' % DATASET['user']
     counter = 1
-    for item in DATASET.items():
+    for item in DATASET.keys():
         value = DATASET[item]
         if not value:
             continue
@@ -102,3 +107,9 @@ def run_agent(vmname):
 
     os.system(cmd)
     print '===>BUILD FINISHED ON "%s"' % vmname
+
+
+for vmname in ['Ubuntu 14.04 32bit', ]:
+    startvm(vmname)
+    run_agent(vmname)
+    suspendvm(vmname)
