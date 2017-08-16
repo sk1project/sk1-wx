@@ -22,20 +22,18 @@
 import os
 
 DATASET = {
-    'mode': 'build',
-
+    'mode': 'test',
+    # publish - to build and publish build result
     # release - to prepare release build
     # build - to build package only
     # test - to run in test mode
+    'su_mode': 'yes',
     'project': 'sk1-wx',
     'project2': 'sk1-wx-msw',
     'git_url': 'https://github.com/sk1project/sk1-wx',
     'git_url2': 'https://github.com/sk1project/sk1-wx-msw',
     'user': 'igor',
     'user_pass': '123',
-    'sudo_user': 'igor',
-    'sudo_pass': '123',
-    'root_pass': '123',
     'ftp_url': '192.168.0.102',
     'ftp_path': '/home/igor/buildfarm',
     'ftp_user': 'igor',
