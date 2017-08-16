@@ -66,6 +66,7 @@ DATASET = {
     'ftp_path': '/home/igor/buildfarm',
     'ftp_user': 'igor',
     'ftp_pass': '',
+    'timeout': '60',
     'timestamp': datetime.datetime.now().strftime("%Y%m%d"),
     'script': 'setup-sk1.py',
 }
@@ -168,6 +169,72 @@ def command(exec_cmd):
     os.system(exec_cmd)
 
 
+def fetch_cli_args():
+    print 'Processing CLI args...',
+    if len(sys.argv) > 1:
+        args = sys.argv[1:]
+        for item in args:
+            if '=' in item:
+                key, value = item.split('=')[:2]
+                if value[0] in ('"', "'"):
+                    value = value[1:]
+                if value[-1] in ('"', "'"):
+                    value = value[:-1]
+                DATASET[key] = value
+                print '.',
+    print '...OK'
+
+
+def check_mode():
+    print 'Checking mode...',
+    if DATASET['mode'] == 'test':
+        print '\nDATASET:'
+        items = DATASET.keys()
+        items.sort()
+        for item in items:
+            value = DATASET[item]
+            if not value:
+                continue
+            if ' ' in value:
+                value = '"%s"' % value
+            print '%s=%s' % (item, value)
+        print 'build dir: %s' % os.path.expanduser('~/buildfarm')
+        sys.exit()
+    elif DATASET['mode'] == 'release':
+        DATASET['timestamp'] = ''
+    print '...OK'
+
+
+def check_lan_connection():
+    for item in ('ftp_pass', 'ftp_user', 'ftp_url', 'ftp_path'):
+        if not DATASET[item]:
+            print 'There is no %s value!' % item
+            sys.exit(1)
+    print 'Checking LAN connection:'
+    counter = 0
+    is_connection = False
+    timeout = int(DATASET['timeout'])
+    while counter < 10:
+        try:
+            session = ftplib.FTP(
+                DATASET['ftp_url'],
+                DATASET['ftp_user'],
+                DATASET['ftp_pass'])
+            session.quit()
+            is_connection = True
+        except:
+            counter += 1
+            waitfor = counter * timeout
+            print '...%ds' % waitfor
+            time.sleep(timeout)
+        if is_connection:
+            break
+    if not is_connection:
+        print " ==> There is no LAN connection!"
+        sys.exit(1)
+    print '...OK'
+
+
 def publish_file(pth):
     if DATASET['mode'] == 'build': return
     print 'PUBLISHING ===> %s' % ntpath.basename(pth)
@@ -185,32 +252,8 @@ def publish_file(pth):
 # ------------ Build script ------------------
 
 # CLI args processing
-if len(sys.argv) > 1:
-    args = sys.argv[1:]
-    for item in args:
-        if '=' in item:
-            key, value = item.split('=')[:2]
-            if value[0] in ('"', "'"):
-                value = value[1:]
-            if value[-1] in ('"', "'"):
-                value = value[:-1]
-            DATASET[key] = value
-
-if DATASET['mode'] == 'test':
-    print 'DATASET:'
-    items = DATASET.keys()
-    items.sort()
-    for item in items:
-        value = DATASET[item]
-        if not value:
-            continue
-        if ' ' in value:
-            value = '"%s"' % value
-        print '%s=%s' % (item, value)
-    print 'build dir: %s' % os.path.expanduser('~/buildfarm')
-    sys.exit()
-elif DATASET['mode'] == 'release':
-    DATASET['timestamp'] = ''
+fetch_cli_args()
+check_mode()
 
 BUILD_DIR = os.path.expanduser('~/buildfarm')
 PROJECT_DIR = os.path.join(BUILD_DIR, DATASET['project'])
@@ -228,27 +271,7 @@ if not is_path(BUILD_DIR):
     os.mkdir(BUILD_DIR)
 
 # Check LAN connection
-print 'Checking LAN connection',
-counter = 0
-is_connection = False
-while counter < 10:
-    try:
-        session = ftplib.FTP(
-            DATASET['ftp_url'],
-            DATASET['ftp_user'],
-            DATASET['ftp_pass'])
-        session.quit()
-        is_connection = True
-        break
-    except:
-        counter += 1
-        waitfor = counter * 60
-        print '...%ds' % waitfor,
-        time.sleep(60)
-if not is_connection:
-    print " ==> There is no LAN connection!"
-    sys.exit(1)
-print ' ==> OK'
+check_lan_connection()
 
 # Package build procedure
 if is_linux():
