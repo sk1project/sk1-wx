@@ -53,15 +53,13 @@ DATASET = {
     # release - to prepare release build
     # build - to build package only
     # test - to run in test mode
+    'su_mode': 'no',
     'project': 'sk1-wx',
     'project2': 'sk1-wx-msw',
     'git_url': 'https://github.com/sk1project/sk1-wx',
     'git_url2': 'https://github.com/sk1project/sk1-wx-msw',
     'user': 'igor',
-    'user_pass': '',
-    'sudo_user': 'igor',
-    'sudo_pass': '',
-    'root_pass': '',
+    'user_pass': '123',
     'ftp_url': '192.168.0.102',
     'ftp_path': '/home/igor/buildfarm',
     'ftp_user': 'igor',
@@ -186,6 +184,23 @@ def fetch_cli_args():
 
 
 def check_mode():
+    if DATASET['su_mode'] == 'yes' and not is_msw():
+        print 'SUPERUSER MODE'
+        items = DATASET.keys()
+        args = []
+        for item in items:
+            value = DATASET[item]
+            if not value or item == 'su_mode':
+                continue
+            if ' ' in value:
+                value = '"%s"' % value
+            args.append('%s=%s' % (item, value))
+        args = ' '.join(args)
+        name = __file__.split(os.path.sep)[-1]
+        os.system('echo %s | sudo -S python /home/%s/%s %s' % (
+            DATASET['user_pass'], DATASET['user'], name, args))
+        sys.exit()
+
     print 'Checking mode...',
     if DATASET['mode'] == 'test':
         print '\nDATASET:'
