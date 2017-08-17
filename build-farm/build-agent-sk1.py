@@ -64,7 +64,7 @@ DATASET = {
     'ftp_path': '/home/igor/buildfarm',
     'ftp_user': 'igor',
     'ftp_pass': '',
-    'timeout': '60',
+    'timeout': '10',
     'timestamp': datetime.datetime.now().strftime("%Y%m%d"),
     'script': 'setup-sk1.py',
 }
@@ -121,6 +121,14 @@ def is_rpm():
     return platform.dist()[0] in [FEDORA, OPENSUSE]
 
 
+def echo_msg(msg, newline=True, flush=True):
+    if newline:
+        msg += '\n'
+    sys.stdout.write(msg)
+    if flush:
+        sys.stdout.flush()
+
+
 def get_marker():
     if is_linux():
         if is_deb():
@@ -168,7 +176,7 @@ def command(exec_cmd):
 
 
 def fetch_cli_args():
-    print 'Processing CLI args...',
+    echo_msg('Processing CLI args', False)
     if len(sys.argv) > 1:
         args = sys.argv[1:]
         for item in args:
@@ -179,8 +187,8 @@ def fetch_cli_args():
                 if value[-1] in ('"', "'"):
                     value = value[:-1]
                 DATASET[key] = value
-                print '.',
-    print '...OK'
+                echo_msg('.', False)
+    echo_msg('...OK')
 
 
 def check_su_mode():
@@ -188,7 +196,8 @@ def check_su_mode():
         return
     if DATASET['su_mode'] != 'yes':
         return
-    print 'SUPERUSER MODE ON'
+    echo_msg('=====SUPERUSER MODE ON=====')
+    time.sleep(2)
     items = DATASET.keys()
     args = []
     for item in items:
@@ -202,14 +211,14 @@ def check_su_mode():
     name = __file__.split(os.path.sep)[-1]
     os.system('echo %s | sudo -S python /home/%s/%s %s' % (
         DATASET['user_pass'], DATASET['user'], name, args))
-    print 'SUPERUSER MODE OFF'
+    echo_msg('=====SUPERUSER MODE OFF=====')
     sys.exit(0)
 
 
 def check_mode():
-    print 'Checking mode...',
+    echo_msg('Checking mode', False)
     if DATASET['mode'] == 'test':
-        print '\nDATASET:'
+        echo_msg('\nDATASET:')
         items = DATASET.keys()
         items.sort()
         for item in items:
@@ -218,24 +227,29 @@ def check_mode():
                 continue
             if ' ' in value:
                 value = '"%s"' % value
-            print '%s=%s' % (item, value)
-        print 'build dir: %s' % os.path.expanduser('~/buildfarm')
+            echo_msg('%s=%s' % (item, value))
+        echo_msg('build dir: %s' % os.path.expanduser('~/buildfarm'))
         sys.exit()
     elif DATASET['mode'] == 'release':
         DATASET['timestamp'] = ''
-    print '...OK'
+    echo_msg('...OK')
+
+
+def restart_network():
+    if is_ubuntu():
+        os.system('service network-manager restart 1> /dev/null')
 
 
 def check_lan_connection():
     for item in ('ftp_pass', 'ftp_user', 'ftp_url', 'ftp_path'):
         if not DATASET[item]:
-            print 'There is no %s value!' % item
+            echo_msg('There is no %s value!' % item)
             sys.exit(1)
-    print 'Checking LAN connection:'
+    echo_msg('Checking LAN connection', False)
     counter = 0
     is_connection = False
     timeout = int(DATASET['timeout'])
-    while counter < 10:
+    while counter < 5:
         try:
             session = ftplib.FTP(
                 DATASET['ftp_url'],
@@ -244,22 +258,23 @@ def check_lan_connection():
             session.quit()
             is_connection = True
         except:
+            restart_network()
             counter += 1
             waitfor = counter * timeout
-            print '...%ds' % waitfor
+            echo_msg('...%ds' % waitfor, False)
             time.sleep(timeout)
         if is_connection:
             break
     if not is_connection:
-        print " ==> There is no LAN connection!"
+        echo_msg(" ==> There is no LAN connection!")
         sys.exit(1)
-    print '...OK'
+    echo_msg('...OK')
 
 
 def publish_file(pth):
     if DATASET['mode'] == 'build':
         return
-    print 'PUBLISHING ===> %s' % ntpath.basename(pth)
+    echo_msg('PUBLISHING ===> %s' % ntpath.basename(pth))
     session = ftplib.FTP(
         DATASET['ftp_url'],
         DATASET['ftp_user'],
@@ -302,16 +317,16 @@ if is_linux():
     old_name = ''
     new_name = ''
     if not is_path(PROJECT_DIR):
-        print 'Cloning project %s' % url
+        echo_msg('Cloning project %s' % url)
         command('cd %s;git clone %s %s' % (BUILD_DIR, url, proj_name))
     else:
-        print 'Updating project %s' % url
+        echo_msg('Updating project %s' % url)
         command('cd %s;git pull' % PROJECT_DIR)
     if is_path(DIST_DIR):
         command('rm -rf %s' % DIST_DIR)
 
     if is_deb():
-        print "Building DEB package"
+        echo_msg("Building DEB package")
         command(
             'cd %s;python %s bdist_deb 1> /dev/null' % (PROJECT_DIR, script))
 
@@ -329,7 +344,7 @@ if is_linux():
                 package_name2 = prefix + ts + '_mint_18_' + suffix
 
     elif is_rpm():
-        print "Building RPM package"
+        echo_msg("Building RPM package")
         command(
             'cd %s;python %s bdist_rpm 1> /dev/null' % (PROJECT_DIR, script))
 
@@ -350,16 +365,16 @@ if is_linux():
 elif is_msw():
     # TODO: Implementation should be finished
     if not is_path(PROJECT_DIR):
-        print 'Cloning project %s' % url
+        echo_msg('Cloning project %s' % url)
         command('cd %s;git clone %s %s' % (BUILD_DIR, url, proj_name))
     else:
-        print 'Updating projects %s' % url
+        echo_msg('Updating projects %s' % url)
         command('cd %s;git pull' % PROJECT_DIR)
     if not is_path(PROJECT2_DIR):
-        print 'Cloning project %s' % url2
+        echo_msg('Cloning project %s' % url2)
         command('cd %s;git clone %s %s' % (BUILD_DIR, url, proj2_name))
     else:
-        print 'Updating projects %s' % url2
+        echo_msg('Updating projects %s' % url2)
         command('cd %s;git pull' % PROJECT2_DIR)
     if is_path(DIST_DIR):
         command('rm -rf %s' % DIST_DIR)
