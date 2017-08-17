@@ -384,7 +384,7 @@ def _make_dir(path):
     if not os.path.lexists(path):
         info('%s directory.' % path, MK_CODE)
         try:
-            os.makedirs(path,0o755)
+            os.makedirs(path)
         except:
             raise IOError('Error while creating %s directory.' % path)
 
