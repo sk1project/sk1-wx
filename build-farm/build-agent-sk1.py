@@ -183,24 +183,30 @@ def fetch_cli_args():
     print '...OK'
 
 
-def check_mode():
-    if DATASET['su_mode'] == 'yes' and not is_msw():
-        print 'SUPERUSER MODE'
-        items = DATASET.keys()
-        args = []
-        for item in items:
-            value = DATASET[item]
-            if not value or item == 'su_mode':
-                continue
-            if ' ' in value:
-                value = '"%s"' % value
-            args.append('%s=%s' % (item, value))
-        args = ' '.join(args)
-        name = __file__.split(os.path.sep)[-1]
-        os.system('echo %s | sudo -S python /home/%s/%s %s' % (
-            DATASET['user_pass'], DATASET['user'], name, args))
-        sys.exit()
+def check_su_mode():
+    if is_msw():
+        return
+    if DATASET['su_mode'] != 'yes':
+        return
+    print 'SUPERUSER MODE ON'
+    items = DATASET.keys()
+    args = []
+    for item in items:
+        value = DATASET[item]
+        if not value or item == 'su_mode':
+            continue
+        if ' ' in value:
+            value = '"%s"' % value
+        args.append('%s=%s' % (item, value))
+    args = ' '.join(args)
+    name = __file__.split(os.path.sep)[-1]
+    os.system('echo %s | sudo -S python /home/%s/%s %s' % (
+        DATASET['user_pass'], DATASET['user'], name, args))
+    print 'SUPERUSER MODE OFF'
+    sys.exit(0)
 
+
+def check_mode():
     print 'Checking mode...',
     if DATASET['mode'] == 'test':
         print '\nDATASET:'
@@ -251,7 +257,8 @@ def check_lan_connection():
 
 
 def publish_file(pth):
-    if DATASET['mode'] == 'build': return
+    if DATASET['mode'] == 'build':
+        return
     print 'PUBLISHING ===> %s' % ntpath.basename(pth)
     session = ftplib.FTP(
         DATASET['ftp_url'],
@@ -268,6 +275,7 @@ def publish_file(pth):
 
 # CLI args processing
 fetch_cli_args()
+check_su_mode()
 check_mode()
 
 BUILD_DIR = os.path.expanduser('~/buildfarm')
