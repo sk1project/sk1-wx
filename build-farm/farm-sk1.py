@@ -107,7 +107,11 @@ def run_agent(vmname):
     print '===>BUILD FINISHED ON "%s"' % vmname
 
 
+print ''
+print '|' * 20, 'START', '|' * 20
 for vmname in ['Ubuntu 14.04 32bit', ]:
     startvm(vmname)
     run_agent(vmname)
     suspendvm(vmname)
+
+print '|' * 20, 'END', '|' * 20
