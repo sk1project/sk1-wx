@@ -269,8 +269,8 @@ if DEB_PACKAGE:
         deb_scripts=deb_scripts,
         dst=install_path)
 
-# if CLEAR_BUILD:
-#     buildutils.clear_build()
+if CLEAR_BUILD:
+    buildutils.clear_build()
 
 for item in ['MANIFEST', 'MANIFEST.in', 'src/script/sk1', 'setup.cfg']:
     if os.path.lexists(item):
