@@ -200,8 +200,7 @@ def check_update():
     #build agent update
     name = __file__.split(os.path.sep)[-1]
     build_dir = os.path.expanduser('~/buildfarm')
-    src_dir = os.path.join(build_dir, DATASET['project'], 'src', 'build-farm')
-    source = os.path.join(src_dir, name)
+    source = os.path.join(build_dir, DATASET['project'], 'build-farm', name)
     if not os.path.lexists(source):
         echo_msg('...Aborted')
         return
