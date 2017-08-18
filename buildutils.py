@@ -638,7 +638,7 @@ class DebBuilder:
             copy_files(path, files)
 
     def make_package(self):
-        os.system('chmod -R 755 %s') % self.build_dir
+        os.system('chmod -R 755 %s' % self.build_dir)
         info('%s package.' % self.package_name, MK_CODE)
         if os.system('sudo dpkg --build %s/ dist/%s' % (
                 self.build_dir, self.package_name)):
