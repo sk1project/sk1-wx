@@ -639,7 +639,7 @@ class DebBuilder:
 
     def make_package(self):
         info('%s package.' % self.package_name, MK_CODE)
-        if os.system('dpkg --build %s/ dist/%s' % (
+        if os.system('sudo dpkg --build %s/ dist/%s' % (
                 self.build_dir, self.package_name)):
             raise IOError('Cannot create package %s' % self.package_name)
 
