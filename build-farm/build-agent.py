@@ -205,7 +205,7 @@ def check_update():
         echo_msg('...Aborted')
         return
 
-    with open(__file__,'rb') as fp:
+    with open(__file__,'wb') as fp:
         fp.write(open(source,'rb').read())
     echo_msg('...OK')
 
