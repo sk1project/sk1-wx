@@ -19,6 +19,13 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#   VBox guest preparation
+#   1.Install required headers and tools
+#   2.Install VBox Guest Addons
+#   3.Copy build-agent.py to home dir
+#   4.To execute sudo you need adding in /etc/sudoers following line:
+#       username ALL = NOPASSWD: ALL
+
 import os
 import sys
 
@@ -101,7 +108,7 @@ def run_agent(vmname):
     cmd += ' --password "%s"' % DATASET['user_pass']
     cmd += ' --wait-stdout --wait-stderr'
     cmd += ' -- sudo/arg0 "python"'
-    cmd += ' "/home/%s/build-agent-sk1.py"' % DATASET['user']
+    cmd += ' "/home/%s/build-agent.py"' % DATASET['user']
     for item in DATASET.keys():
         value = DATASET[item]
         if not value:
