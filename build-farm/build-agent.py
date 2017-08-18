@@ -50,10 +50,10 @@ class Error(Exception):
     pass
 
 
-VERSION = '1.0.0'
+VERSION = '1.0.1'
 
 DATASET = {
-    'agent_ver': '1.0.0',
+    'agent_ver': '1.0.1',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -180,7 +180,6 @@ def command(exec_cmd):
 
 
 def fetch_cli_args():
-    echo_msg('\n')
     if len(sys.argv) > 1:
         args = sys.argv[1:]
         for item in args:

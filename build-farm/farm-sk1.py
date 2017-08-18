@@ -30,6 +30,7 @@ import os
 import sys
 
 DATASET = {
+    'agent_ver': '1.0.1',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -89,15 +90,12 @@ def echo_msg(msg, newline=True, flush=True):
 
 
 def startvm(vmname):
-    echo_msg('\n===>STARTING "%s"' % vmname)
     os.system('VBoxManage startvm "%s" --type %s' % (vmname, VMTYPE))
-    echo_msg('===>"%s" WORKS!' % vmname)
 
 
 def suspendvm(vmname):
-    echo_msg('\n===>SUSPENDING "%s"' % vmname)
+    echo_msg('\nSUSPENDING "%s"' % vmname)
     os.system('VBoxManage controlvm "%s" savestate' % vmname)
-    echo_msg('\n===>"%s" SUSPENDED!' % vmname)
 
 
 def run_agent(vmname):
