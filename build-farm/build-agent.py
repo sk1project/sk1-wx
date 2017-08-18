@@ -50,7 +50,10 @@ class Error(Exception):
     pass
 
 
+VERSION = '1.0.0'
+
 DATASET = {
+    'agent_ver': '1.0.0',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -177,7 +180,7 @@ def command(exec_cmd):
 
 
 def fetch_cli_args():
-    echo_msg('\nProcessing CLI args', False)
+    echo_msg('\n')
     if len(sys.argv) > 1:
         args = sys.argv[1:]
         for item in args:
@@ -188,36 +191,43 @@ def fetch_cli_args():
                 if value[-1] in ('"', "'"):
                     value = value[:-1]
                 DATASET[key] = value
-                echo_msg('.', False)
+
+
+def check_update():
+    if DATASET['agent_ver'] == VERSION:
+        return
+    echo_msg('Agent update...', False)
+
+    #build agent update
+    name = __file__.split(os.path.sep)[-1]
+    build_dir = os.path.expanduser('~/buildfarm')
+    src_dir = os.path.join(build_dir, DATASET['project'], 'src', 'build-farm')
+    source = os.path.join(src_dir, name)
+    if not os.path.lexists(source):
+        echo_msg('...Aborted')
+        return
+
+    with open(__file__,'rb') as fp:
+        fp.write(open(source,'rb').read())
     echo_msg('...OK')
 
-
-def check_su_mode():
-    if is_msw():
-        return
-    if DATASET['su_mode'] != 'yes':
-        return
-    echo_msg('=====SUPERUSER MODE ON=====')
-    time.sleep(2)
     items = DATASET.keys()
     args = []
     for item in items:
         value = DATASET[item]
-        if not value or item == 'su_mode':
+        if not value:
             continue
         if ' ' in value:
             value = '"%s"' % value
         args.append('%s=%s' % (item, value))
     args = ' '.join(args)
-    name = __file__.split(os.path.sep)[-1]
+
     os.system('sudo python /home/%s/%s %s' % (
         DATASET['user'], name, args))
-    echo_msg('\n=====SUPERUSER MODE OFF=====')
     sys.exit(0)
 
 
 def check_mode():
-    echo_msg('Checking mode', False)
     if DATASET['mode'] == 'test':
         echo_msg('\nDATASET:')
         items = DATASET.keys()
@@ -233,7 +243,6 @@ def check_mode():
         sys.exit()
     elif DATASET['mode'] == 'release':
         DATASET['timestamp'] = ''
-    echo_msg('...OK')
 
 
 def restart_network():
@@ -324,6 +333,8 @@ if is_linux():
         command('cd %s;git pull' % PROJECT_DIR)
     if is_path(DIST_DIR):
         command('rm -rf %s' % DIST_DIR)
+
+    check_update()
 
     if is_deb():
         echo_msg("Building DEB package")
