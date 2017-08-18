@@ -20,14 +20,14 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 
 DATASET = {
-    'mode': 'test',
+    'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
     # build - to build package only
     # test - to run in test mode
-    'su_mode': 'yes',
     'project': 'sk1-wx',
     'project2': 'sk1-wx-msw',
     'git_url': 'https://github.com/sk1project/sk1-wx',
@@ -73,45 +73,52 @@ OSes = DEB + RPM + MSI
 VMTYPE = 'gui'  # 'headless'
 
 
+def echo_msg(msg, newline=True, flush=True):
+    if newline:
+        msg += '\n'
+    sys.stdout.write(msg)
+    if flush:
+        sys.stdout.flush()
+
+
 def startvm(vmname):
-    print '===>STARTING "%s"' % vmname
+    echo_msg('===>STARTING "%s"' % vmname)
     os.system('VBoxManage startvm "%s" --type %s' % (vmname, VMTYPE))
-    print '===>"%s" WORKS!' % vmname
+    echo_msg('===>"%s" WORKS!' % vmname)
 
 
 def suspendvm(vmname):
-    print '===>SUSPENDING "%s"' % vmname
+    echo_msg('===>SUSPENDING "%s"' % vmname)
     os.system('VBoxManage controlvm "%s" savestate' % vmname)
-    print '===>"%s" SUSPENDED!' % vmname
+    echo_msg('===>"%s" SUSPENDED!' % vmname)
 
 
 def run_agent(vmname):
-    print '===>STARTING BUILD ON "%s"' % vmname
+    echo_msg('===>STARTING BUILD ON "%s"' % vmname)
     cmd = 'VBoxManage --nologo guestcontrol "%s" run' % vmname
-    cmd += ' --exe "/usr/bin/python"'
+    cmd += ' --exe "/usr/bin/sudo"'
     cmd += ' --username "%s"' % DATASET['user']
     cmd += ' --password "%s"' % DATASET['user_pass']
     cmd += ' --wait-stdout --wait-stderr'
-    cmd += ' -- python/arg0 "/home/%s/build-agent-sk1.py"' % DATASET['user']
-    counter = 1
+    cmd += ' -- sudo/arg0 "python"'
+    cmd += ' "/home/%s/build-agent-sk1.py"' % DATASET['user']
     for item in DATASET.keys():
         value = DATASET[item]
         if not value:
             continue
         if ' ' in value:
             value = "'%s'" % value
-        cmd += ' -- python/arg%d "%s=%s"' % (counter, item, value)
-        counter += 1
+        cmd += ' "%s=%s"' % (item, value)
 
     os.system(cmd)
-    print '===>BUILD FINISHED ON "%s"' % vmname
+    echo_msg('===>BUILD FINISHED ON "%s"' % vmname)
 
 
-print ''
-print '|' * 20, 'START', '|' * 20
+echo_msg('')
+echo_msg('|' * 20 + 'STARTED FARM' + '|' * 20)
 for vmname in ['Ubuntu 14.04 32bit', ]:
     startvm(vmname)
     run_agent(vmname)
     suspendvm(vmname)
 
-print '|' * 20, 'END', '|' * 20
+echo_msg('|' * 20 + 'FARM TERMINATED' + '|' * 20)
