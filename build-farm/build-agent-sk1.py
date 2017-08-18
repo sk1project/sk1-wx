@@ -33,6 +33,9 @@
 #       ftp_user - upload server user
 #       ftp_pass - ftp user pass
 #       timestamp - optional build marker (like 20170624)
+#
+#   To execute sudo you need adding in /etc/sudoers following line:
+#   username ALL = NOPASSWD: ALL
 
 import datetime
 import ftplib
@@ -53,13 +56,11 @@ DATASET = {
     # release - to prepare release build
     # build - to build package only
     # test - to run in test mode
-    'su_mode': 'no',
     'project': 'sk1-wx',
     'project2': 'sk1-wx-msw',
     'git_url': 'https://github.com/sk1project/sk1-wx',
     'git_url2': 'https://github.com/sk1project/sk1-wx-msw',
     'user': 'igor',
-    'user_pass': '123',
     'ftp_url': '192.168.0.102',
     'ftp_path': '/home/igor/buildfarm',
     'ftp_user': 'igor',
@@ -176,7 +177,7 @@ def command(exec_cmd):
 
 
 def fetch_cli_args():
-    echo_msg('Processing CLI args', False)
+    echo_msg('\nProcessing CLI args', False)
     if len(sys.argv) > 1:
         args = sys.argv[1:]
         for item in args:
@@ -209,9 +210,9 @@ def check_su_mode():
         args.append('%s=%s' % (item, value))
     args = ' '.join(args)
     name = __file__.split(os.path.sep)[-1]
-    os.system('echo %s | sudo -S python /home/%s/%s %s' % (
-        DATASET['user_pass'], DATASET['user'], name, args))
-    echo_msg('=====SUPERUSER MODE OFF=====')
+    os.system('sudo python /home/%s/%s %s' % (
+        DATASET['user'], name, args))
+    echo_msg('\n=====SUPERUSER MODE OFF=====')
     sys.exit(0)
 
 
@@ -290,7 +291,6 @@ def publish_file(pth):
 
 # CLI args processing
 fetch_cli_args()
-check_su_mode()
 check_mode()
 
 BUILD_DIR = os.path.expanduser('~/buildfarm')
