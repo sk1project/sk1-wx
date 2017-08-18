@@ -70,7 +70,7 @@ MSI = [
 
 OSes = DEB + RPM + MSI
 
-VMTYPE = 'gui'  # 'headless'
+VMTYPE = 'headless'  # 'gui'
 
 
 def echo_msg(msg, newline=True, flush=True):
@@ -82,19 +82,19 @@ def echo_msg(msg, newline=True, flush=True):
 
 
 def startvm(vmname):
-    echo_msg('===>STARTING "%s"' % vmname)
+    echo_msg('\n===>STARTING "%s"' % vmname)
     os.system('VBoxManage startvm "%s" --type %s' % (vmname, VMTYPE))
     echo_msg('===>"%s" WORKS!' % vmname)
 
 
 def suspendvm(vmname):
-    echo_msg('===>SUSPENDING "%s"' % vmname)
+    echo_msg('\n===>SUSPENDING "%s"' % vmname)
     os.system('VBoxManage controlvm "%s" savestate' % vmname)
-    echo_msg('===>"%s" SUSPENDED!' % vmname)
+    echo_msg('\n===>"%s" SUSPENDED!' % vmname)
 
 
 def run_agent(vmname):
-    echo_msg('===>STARTING BUILD ON "%s"' % vmname)
+    echo_msg('\n===>STARTING BUILD ON "%s"' % vmname)
     cmd = 'VBoxManage --nologo guestcontrol "%s" run' % vmname
     cmd += ' --exe "/usr/bin/sudo"'
     cmd += ' --username "%s"' % DATASET['user']
@@ -114,11 +114,10 @@ def run_agent(vmname):
     echo_msg('===>BUILD FINISHED ON "%s"' % vmname)
 
 
-echo_msg('')
-echo_msg('|' * 20 + 'STARTED FARM' + '|' * 20)
+echo_msg('\n' + '|' * 20 + 'FARM STARTED' + '|' * 20)
 for vmname in ['Ubuntu 14.04 32bit', ]:
     startvm(vmname)
     run_agent(vmname)
     suspendvm(vmname)
 
-echo_msg('|' * 20 + 'FARM TERMINATED' + '|' * 20)
+echo_msg('\n' + '|' * 20 + 'FARM TERMINATED' + '|' * 20 + '\n')
