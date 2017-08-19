@@ -247,7 +247,7 @@ def restart_network():
     if is_ubuntu():
         os.system('service network-manager restart 1> /dev/null')
     elif is_debian():
-        os.system('service networking restart')
+        os.system('service networking restart 1> /dev/null')
 
 
 def check_lan_connection():
