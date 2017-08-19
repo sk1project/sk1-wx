@@ -50,10 +50,10 @@ class Error(Exception):
     pass
 
 
-VERSION = '1.0.2'
+VERSION = '1.0.3'
 
 DATASET = {
-    'agent_ver': '1.0.2',
+    'agent_ver': '1.0.3',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -119,6 +119,14 @@ def is_debian():
 
 def is_ubuntu():
     return platform.dist()[0] == UBUNTU
+
+
+def is_fedora():
+    return platform.dist()[0] == FEDORA
+
+
+def is_opensuse():
+    return platform.dist()[0] == OPENSUSE
 
 
 def is_rpm():
@@ -197,7 +205,7 @@ def check_update():
         return
     echo_msg('Agent update...', False)
 
-    #build agent update
+    # build agent update
     name = __file__.split(os.path.sep)[-1]
     build_dir = os.path.expanduser('~/buildfarm')
     source = os.path.join(build_dir, DATASET['project'], 'build-farm', name)
@@ -205,8 +213,8 @@ def check_update():
         echo_msg('...Aborted')
         return
 
-    with open(__file__,'wb') as fp:
-        fp.write(open(source,'rb').read())
+    with open(__file__, 'wb') as fp:
+        fp.write(open(source, 'rb').read())
     echo_msg('...OK')
 
     items = DATASET.keys()
@@ -248,6 +256,10 @@ def restart_network():
         os.system('service network-manager restart 1> /dev/null')
     elif is_debian():
         os.system('service networking restart 1> /dev/null')
+    elif is_fedora():
+        os.system('systemctl restart network 1> /dev/null')
+    elif is_opensuse():
+        os.system('systemctl restart network.service 1> /dev/null')
 
 
 def check_lan_connection():
