@@ -50,10 +50,10 @@ class Error(Exception):
     pass
 
 
-VERSION = '1.0.1'
+VERSION = '1.0.2'
 
 DATASET = {
-    'agent_ver': '1.0.1',
+    'agent_ver': '1.0.2',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -246,6 +246,8 @@ def check_mode():
 def restart_network():
     if is_ubuntu():
         os.system('service network-manager restart 1> /dev/null')
+    elif is_debian():
+        os.system('service networking restart')
 
 
 def check_lan_connection():
