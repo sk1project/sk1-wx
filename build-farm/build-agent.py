@@ -50,10 +50,10 @@ class Error(Exception):
     pass
 
 
-VERSION = '1.0.3'
+VERSION = '1.0.4'
 
 DATASET = {
-    'agent_ver': '1.0.3',
+    'agent_ver': '1.0.4',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -228,8 +228,7 @@ def check_update():
         args.append('%s=%s' % (item, value))
     args = ' '.join(args)
 
-    os.system('sudo python /home/%s/%s %s' % (
-        DATASET['user'], name, args))
+    os.system('python %s %s' % (__file__, args))
     sys.exit(0)
 
 
