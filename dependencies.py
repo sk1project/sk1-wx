@@ -34,6 +34,7 @@ UBUNTU17 = 'Ubuntu 17'
 DEBIAN = 'debian'
 DEBIAN7 = 'debian 7'
 DEBIAN8 = 'debian 8'
+DEBIAN9 = 'debian 9'
 
 FEDORA = 'fedora'
 FEDORA21 = 'fedora 21'
@@ -59,6 +60,7 @@ UC2_DEB_DEPENDENCIES = {
 
     DEBIAN7: DEB_GENERIC + 'libmagickwand5, python-imaging',
     DEBIAN8: DEB_GENERIC + 'libmagickwand-6.q16-2, python-pil',
+    DEBIAN9: DEB_GENERIC + 'libmagickwand-6.q16-3, python-pil',
 }
 
 SK1_DEB_DEPENDENCIES = {
