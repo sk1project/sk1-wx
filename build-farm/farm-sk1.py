@@ -22,15 +22,23 @@
 #   VBox guest preparation
 #   1.Install required headers and tools
 #   2.Install VBox Guest Addons
+#       for Ubuntu just insert addons disk and do autorun
+#       for Debian:
+#           1)Install required packages with:
+#               apt-get install build-essential module-assistant
+#           2)Configure your system for building kernel modules by running:
+#               m-a prepare
+#           3)Run sh VBoxLinuxAdditions.run
 #   3.Copy build-agent.py to home dir
 #   4.To execute sudo you need adding in /etc/sudoers following line:
 #       username ALL = NOPASSWD: ALL
 
+import datetime
 import os
 import sys
 
 DATASET = {
-    'agent_ver': '1.0.1',
+    'agent_ver': '1.0.2',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -46,34 +54,34 @@ DATASET = {
     'ftp_path': '/home/igor/buildfarm',
     'ftp_user': 'igor',
     'ftp_pass': '',
-    'timestamp': '',
+    'timestamp': datetime.datetime.now().strftime("%Y%m%d"),
     'script': 'setup-sk1.py',
 }
 
 DEB = [
-    'Ubuntu 14.04 32bit',
-    'Ubuntu 14.04 64bit',
-    'Ubuntu 16.04 32bit',
-    'Ubuntu 16.04 64bit',
-    'Ubuntu 17.04 32bit',
-    'Ubuntu 17.04 64bit',
-    'Debian 7.8 32bit',
-    'Debian 7.8 64bit',
+    # 'Ubuntu 14.04 32bit',
+    # 'Ubuntu 14.04 64bit',
+    # 'Ubuntu 16.04 32bit',
+    # 'Ubuntu 16.04 64bit',
+    # 'Ubuntu 17.04 32bit',
+    # 'Ubuntu 17.04 64bit',
+    # 'Debian 7.8 32bit',
+    # 'Debian 7.8 64bit',
     'Debian 8.6 32bit',
-    'Debian 8.6 64bit',
+    # 'Debian 8.6 64bit',
 ]
 RPM = [
-    'Fedora 23 32bit',
-    'Fedora 23 64bit',
-    'Fedora 24 32bit',
-    'Fedora 24 64bit',
-    'OpenSuse 13.2 32bit',
-    'OpenSuse 13.2 64bit',
-    'OpenSuse 42.1 64bit',
+    # 'Fedora 23 32bit',
+    # 'Fedora 23 64bit',
+    # 'Fedora 24 32bit',
+    # 'Fedora 24 64bit',
+    # 'OpenSuse 13.2 32bit',
+    # 'OpenSuse 13.2 64bit',
+    # 'OpenSuse 42.1 64bit',
 ]
 MSI = [
-    'Win7 32bit',
-    'Win7 64bit',
+    # 'Win7 32bit',
+    # 'Win7 64bit',
 ]
 
 OSes = DEB + RPM + MSI
@@ -119,8 +127,9 @@ def run_agent(vmname):
     echo_msg('===>BUILD FINISHED ON "%s"' % vmname)
 
 
-echo_msg('\n' + '|' * 20 + 'FARM STARTED' + '|' * 20)
-for vmname in ['Ubuntu 14.04 32bit', ]:
+echo_msg('\n' + '|' * 20 + 'FARM STARTED' + '|' * 20 + '\n')
+
+for vmname in OSes:
     startvm(vmname)
     run_agent(vmname)
     suspendvm(vmname)
