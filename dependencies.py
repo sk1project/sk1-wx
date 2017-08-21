@@ -44,7 +44,8 @@ FEDORA24 = 'fedora 24'
 
 OPENSUSE = 'SuSE'
 OPENSUSE13 = 'SuSE 13'
-OPENSUSE42 = 'SuSE 42'
+OPENSUSE42 = 'SuSE 42.1'
+OPENSUSE42_2 = 'SuSE 42.2'
 
 DEB_GENERIC = 'liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), '
 DEB_GENERIC += 'python-cairo, python-reportlab, '
@@ -84,6 +85,8 @@ UC2_RPM_DEPENDENCIES = {
                 'python-Pillow python-reportlab',
     OPENSUSE42: 'liblcms2-2 libpango-1_0-0 ImageMagick python-cairo '
                 'python-Pillow python-reportlab',
+    OPENSUSE42_2: 'liblcms2-2 libpango-1_0-0 ImageMagick python-cairo '
+                  'python-Pillow python-reportlab',
 }
 
 SK1_RPM_DEPENDENCIES = {
@@ -92,12 +95,15 @@ SK1_RPM_DEPENDENCIES = {
 
     OPENSUSE13: 'python-wxWidgets python-cups',
     OPENSUSE42: 'python-wxWidgets python-cups',
+    OPENSUSE42_2: 'python-wxWidgets python-cups',
 }
 
 
 def get_system_id():
     ver = platform.dist()[1].split('.')[0]
     dist = platform.dist()[0] + ' ' + ver
+    if platform.dist()[0] == OPENSUSE and ver == '42':
+        dist = platform.dist()[0] + ' ' + platform.dist()[1]
     return dist
 
 
