@@ -46,6 +46,7 @@ OPENSUSE = 'SuSE'
 OPENSUSE13 = 'SuSE 13'
 OPENSUSE42 = 'SuSE 42.1'
 OPENSUSE42_2 = 'SuSE 42.2'
+OPENSUSE42_3 = 'SuSE 42.3'
 
 DEB_GENERIC = 'liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), '
 DEB_GENERIC += 'python-cairo, python-reportlab, '
@@ -87,6 +88,8 @@ UC2_RPM_DEPENDENCIES = {
                 'python-Pillow python-reportlab',
     OPENSUSE42_2: 'liblcms2-2 libpango-1_0-0 ImageMagick python-cairo '
                   'python-Pillow python-reportlab',
+    OPENSUSE42_3: 'liblcms2-2 libpango-1_0-0 ImageMagick python-cairo '
+                  'python-Pillow python-reportlab',
 }
 
 SK1_RPM_DEPENDENCIES = {
@@ -96,6 +99,7 @@ SK1_RPM_DEPENDENCIES = {
     OPENSUSE13: 'python-wxWidgets python-cups',
     OPENSUSE42: 'python-wxWidgets python-cups',
     OPENSUSE42_2: 'python-wxWidgets python-cups',
+    OPENSUSE42_3: 'python-wxWidgets python-cups',
 }
 
 
