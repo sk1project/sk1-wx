@@ -1,10 +1,9 @@
 include LICENSE GPLv3.txt README.txt MANIFEST.in_sk1 setup.cfg_sk1
 include buildutils.py dependencies.py native_mods.py src/script/sk1.tmpl
 
-recursive-include src/uc2/utils/streamfilter *.*
-recursive-include src/uc2/formats/sk1/sk1objs *.*
 recursive-include src/uc2/libcairo *.c
 recursive-include src/uc2/libimg *.c
+recursive-include src/uc2/libpango *.c
 recursive-include src/uc2/cms *.c
 recursive-include src/uc2/cms *.h
 
