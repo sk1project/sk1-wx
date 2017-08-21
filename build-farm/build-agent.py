@@ -50,10 +50,10 @@ class Error(Exception):
     pass
 
 
-VERSION = '1.0.4'
+VERSION = '1.0.5'
 
 DATASET = {
-    'agent_ver': '1.0.4',
+    'agent_ver': '1.0.5',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -153,6 +153,8 @@ def get_marker():
             return marker
         elif is_rpm():
             ver = platform.dist()[1].split('.')[0]
+            if platform.dist()[0] == OPENSUSE:
+                ver = platform.dist()[1]
             marker = MARKERS[platform.dist()[0]] + ver
             if DATASET['timestamp']:
                 marker = '%s.%s' % (DATASET['timestamp'], marker)
