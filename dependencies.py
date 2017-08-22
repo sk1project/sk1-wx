@@ -41,6 +41,8 @@ FEDORA21 = 'fedora 21'
 FEDORA22 = 'fedora 22'
 FEDORA23 = 'fedora 23'
 FEDORA24 = 'fedora 24'
+FEDORA25 = 'fedora 25'
+FEDORA26 = 'fedora 26'
 
 OPENSUSE = 'SuSE'
 OPENSUSE13 = 'SuSE 13'
@@ -81,6 +83,8 @@ SK1_DEB_DEPENDENCIES = {
 UC2_RPM_DEPENDENCIES = {
     FEDORA23: 'lcms2 pango ImageMagick pycairo python-pillow python-reportlab',
     FEDORA24: 'lcms2 pango ImageMagick pycairo python-pillow python2-reportlab',
+    FEDORA25: 'lcms2 pango ImageMagick pycairo python2-pillow python2-reportlab',
+    FEDORA26: 'lcms2 pango ImageMagick pycairo python2-pillow python2-reportlab',
 
     OPENSUSE13: 'liblcms2-2 libpango-1_0-0 ImageMagick python-cairo '
                 'python-Pillow python-reportlab',
@@ -95,6 +99,8 @@ UC2_RPM_DEPENDENCIES = {
 SK1_RPM_DEPENDENCIES = {
     FEDORA23: 'wxPython python-cups',
     FEDORA24: 'wxPython python2-cups',
+    FEDORA25: 'wxPython python2-cups',
+    FEDORA26: 'wxPython python2-cups',
 
     OPENSUSE13: 'python-wxWidgets python-cups',
     OPENSUSE42: 'python-wxWidgets python-cups',
