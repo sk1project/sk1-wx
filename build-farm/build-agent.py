@@ -50,10 +50,10 @@ class Error(Exception):
     pass
 
 
-VERSION = '1.0.5'
+VERSION = '1.0.6'
 
 DATASET = {
-    'agent_ver': '1.0.5',
+    'agent_ver': '1.0.6',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -169,16 +169,17 @@ def get_marker():
 def get_package_name(pth):
     files = []
     file_items = os.listdir(pth)
-    for file_item in file_items:
-        if os.path.isfile(os.path.join(pth, file_item)):
-            files.append(file_item)
+    for fn in file_items:
+        if os.path.isfile(os.path.join(pth, fn)):
+            files.append(fn)
     if is_deb():
         if len(files) == 1 and files[0].endswith('.deb'):
             return files[0]
     elif is_rpm():
-        for file_item in files:
-            if file_item.endswith('.rpm') and not file_item.endswith('src.rpm'):
-                return file_item
+        for fn in files:
+            if fn.endswith('.rpm') and not fn.endswith('src.rpm') \
+                    and not 'debuginfo' in fn:
+                return fn
     elif is_msw():
         # TODO: Should be implemented
         pass
