@@ -95,6 +95,7 @@ class MainWindow(wx.Frame):
         self.app = app
         if app is None:
             self.app = Application()
+            self.app.mw = self
             on_close = self.app.exit
         self.maximized = maximized
 
