@@ -124,6 +124,12 @@ class MainWindow(wx.Frame):
     def set_size(self, size):
         self.SetSize(wx.Size(*size))
 
+    def center(self):
+        self.Centre()
+
+    def maximize(self, val=True):
+        self.Maximize(val)
+
     def is_maximized(self):
         return self.IsMaximized()
 
