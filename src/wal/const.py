@@ -269,6 +269,8 @@ DARK_GRAY = wx.Colour(89, 89, 89)
 GRAY = wx.Colour(129, 134, 134)
 LIGHT_GRAY = wx.Colour(240, 240, 240)
 RED = wx.Colour(255, 0, 0)
+GREEN = wx.Colour(0, 255, 0)
+BLUE = wx.Colour(0, 0, 255)
 
 
 def wxcolor_to_dec(wxcolor):
