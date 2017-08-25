@@ -31,7 +31,7 @@ class ListFrame(Frame):
 
     def on_select(self, *args):
         selection = self.list.curselection()[0]
-        if not selection: return
+        if selection < 0: return
         fname = '{}.py'.format(self.tests[selection])
         fpath = os.path.join(TPATH, fname)
         if not os.path.isfile(fpath): return
