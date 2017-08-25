@@ -6,7 +6,7 @@ from Tkinter import *
 
 PATH = os.path.abspath(os.path.dirname(__file__))
 TPATH = os.path.join(PATH, 'items')
-PYTHONPATH= os.path.abspath(os.path.join(PATH,'..','..','sk1-wx','src'))
+PYTHONPATH= os.path.abspath(os.path.join(PATH,'..','..','src'))
 os.environ['PYTHONPATH'] = PYTHONPATH
 
 class ListFrame(Frame):
