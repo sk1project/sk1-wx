@@ -107,6 +107,9 @@ class MainWindow(wx.Frame):
     def build(self):
         pass
 
+    def run(self):
+        self.app.run()
+
     def set_global_shortcuts(self, actions):
         global_entries = []
         for item in actions.keys():
