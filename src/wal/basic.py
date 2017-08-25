@@ -82,12 +82,16 @@ class Application(wx.App):
 
 
 class MainWindow(wx.Frame):
+    app = None
     mdi = None
     maximized = False
 
     def __init__(
-            self, title='Frame', size=(100, 100), orientation=wx.VERTICAL,
-            maximized=False, on_close=None):
+            self, app=None, title='Frame', size=(100, 100), 
+            orientation=wx.VERTICAL, maximized=False, on_close=None):
+        self.app = app
+        if app is None:
+            self.app = wx.App()
         self.maximized = maximized
 
         wx.Frame.__init__(
