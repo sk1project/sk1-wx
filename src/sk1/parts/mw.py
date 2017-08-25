@@ -35,7 +35,7 @@ class AppMainWindow(wal.MainWindow):
 
 	def __init__(self, app):
 		self.app = app
-		wal.MainWindow.__init__(self, '', config.mw_size,
+		wal.MainWindow.__init__(self, app, '', config.mw_size,
 							maximized=config.mw_maximized,
 							on_close=self.app.exit)
 		self.set_minsize(config.mw_min_size)
