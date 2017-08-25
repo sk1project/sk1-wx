@@ -80,6 +80,9 @@ class Application(wx.App):
         else:
             raise RuntimeError('Main window is not defined!')
 
+    def exit(self, *args):
+        self.Exit()
+
 
 class MainWindow(wx.Frame):
     app = None
@@ -91,7 +94,8 @@ class MainWindow(wx.Frame):
             orientation=wx.VERTICAL, maximized=False, on_close=None):
         self.app = app
         if app is None:
-            self.app = wx.App()
+            self.app = Application()
+            on_close = self.app.exit
         self.maximized = maximized
 
         wx.Frame.__init__(

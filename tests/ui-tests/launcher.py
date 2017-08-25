@@ -36,6 +36,7 @@ class ListFrame(Frame):
         fpath = os.path.join(TPATH, fname)
         if not os.path.isfile(fpath): return
         cmd = 'python %s' % fpath
+        print 'START OF TEST %s' % fname
         os.system(cmd)
         print 'END OF TEST %s' % fname
 
