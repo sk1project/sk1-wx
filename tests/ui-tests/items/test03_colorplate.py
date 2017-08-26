@@ -1,3 +1,7 @@
+#The test should generate six colored 
+#rectangles on the main window
+
+
 import wal
 
 class MW(wal.MainWindow):
