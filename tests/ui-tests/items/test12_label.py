@@ -1,5 +1,5 @@
-#The test should show vertical 
-#line (VLine) on the main window
+#The test should show six different 
+#labels on the main window
 
 import wal
 
