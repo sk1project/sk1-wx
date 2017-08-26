@@ -91,7 +91,7 @@ class MainWindow(wx.Frame):
 
     def __init__(
             self, app=None, title='Frame', size=(100, 100), 
-            orientation=wx.VERTICAL, maximized=False, on_close=None):
+            vertical=True, maximized=False, on_close=None):
         self.app = app
         if app is None:
             self.app = Application()
@@ -101,9 +101,11 @@ class MainWindow(wx.Frame):
 
         wx.Frame.__init__(
             self, None, wx.ID_ANY, title, pos=DEF_SIZE, size=size, name=title)
-        self.orientation = orientation
+        self.orientation = wx.VERTICAL
+        if not vertical: 
+            self.orientation = wx.HORIZONTAL
         self.Centre()
-        self.box = wx.BoxSizer(orientation)
+        self.box = wx.BoxSizer(self.orientation)
         self.SetSizer(self.box)
         self.set_title(title)
         if on_close:
