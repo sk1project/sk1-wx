@@ -7,12 +7,10 @@
 
 import wal
 
-app = wal.Application()
-app.mw = wal.MainWindow()
-mw = app.mw
+mw = wal.MainWindow()
 mw.set_title("Test 02")
 mw.set_minsize((500, 500))
 mw.set_size((1000, 700))
 mw.center()
 mw.maximize()
-app.run()
+mw.run()

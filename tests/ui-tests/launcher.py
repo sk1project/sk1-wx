@@ -1,7 +1,15 @@
 #/usr/in/python
 
 import os
+import sys
 from Tkinter import *
+
+def echo_msg(msg, newline=True, flush=True):
+    if newline:
+        msg += '\n'
+    sys.stdout.write(msg)
+    if flush:
+        sys.stdout.flush()
 
 
 PATH = os.path.abspath(os.path.dirname(__file__))
@@ -36,9 +44,9 @@ class ListFrame(Frame):
         fpath = os.path.join(TPATH, fname)
         if not os.path.isfile(fpath): return
         cmd = 'python %s' % fpath
-        print 'START OF TEST %s' % fname
-        os.system(cmd)
-        print 'END OF TEST %s' % fname
+        echo_msg('START %s' % fname, False)
+        if not os.system(cmd):
+            echo_msg('......[OK]')
 
     def scan_tests(self):
         self.tests = []
