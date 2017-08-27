@@ -38,12 +38,14 @@ class ListFrame(Frame):
         bframe = Frame(rframe)
         bframe.pack(fill=X, anchor=S, side=BOTTOM)
 
-        self.exec_btn = Button(bframe, text='Execute', command=self.execute)
+        self.exec_btn = Button(bframe, text='Execute', font=FONT, 
+            command=self.execute)
         self.exec_btn.pack(side=RIGHT)
 
         Frame(bframe, width=5).pack(side=RIGHT)
 
-        self.rescan_btn = Button(bframe, text='Rescan', command=self.scan_tests)
+        self.rescan_btn = Button(bframe, text='Rescan', font=FONT, 
+            command=self.scan_tests)
         self.rescan_btn.pack(side=RIGHT)
 
         Frame(rframe, height=5).pack(fill=X, anchor=S, side=BOTTOM)
