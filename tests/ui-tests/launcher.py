@@ -111,6 +111,7 @@ class ListFrame(Frame):
         self.text.configure(state='disabled')
         if self.tests:
             self.list.selection_set(0)
+            self.list.focus_set()
             self.read_info()
 
     def read_info(self, index=0):
