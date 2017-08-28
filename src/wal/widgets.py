@@ -540,22 +540,52 @@ class Entry(wx.TextCtrl, DataWidgetMixin):
 
 class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
     callback = None
+    callback1 = None
+    flag = True
+    ctxmenu_flag = False
 
     def __init__(
             self, parent, value=0, range_val=(0, 1), size=DEF_SIZE,
-            width=0, onchange=None):
+            width=5, onchange=None, onenter=None, check_focus=True):
+
         self.range_val = range_val
         size = self._set_width(size, width)
-        wx.SpinCtrl.__init__(self, parent, wx.ID_ANY, '', size)
+        wx.SpinCtrl.__init__(self, parent, wx.ID_ANY, '', size=size,
+            style=wx.SP_ARROW_KEYS | wx.ALIGN_LEFT | wx.TE_PROCESS_ENTER)
         self.SetRange(*range_val)
         self.SetValue(value)
         if onchange:
             self.callback = onchange
-            self.Bind(wx.EVT_SPINCTRL, onchange, self)
+            self.Bind(wx.EVT_SPINCTRL, self.on_change, self)
+        if onenter:
+            self.callback1 = onenter
+            self.Bind(wx.EVT_TEXT_ENTER, self.on_enter, self)
+        if check_focus:
+            self.Bind(
+                wx.EVT_KILL_FOCUS, self._entry_lost_focus, self)
+            self.Bind(wx.EVT_CONTEXT_MENU, self._ctxmenu, self)
 
-    def on_change(self, event):
+    def on_change(self, event=None):
         if self.callback:
             self.callback()
+
+    def on_enter(self, event=None):
+        if self.callback1:
+            self.callback1()
+
+    def _ctxmenu(self, event):
+        self.ctxmenu_flag = True
+        event.Skip()
+
+    def _entry_lost_focus(self, event):
+        if not self.flag and not self.ctxmenu_flag:
+            self.on_change()
+        elif not self.flag and self.ctxmenu_flag:
+            self.ctxmenu_flag = False
+        event.Skip()
+
+
+IntSpin = Spin
 
 
 class SpinButton(wx.SpinButton, RangeDataWidgetMixin):
@@ -776,20 +806,6 @@ class FloatSpin(wx.Panel, RangeDataWidgetMixin):
         self.SetValue(self.value)
 
 
-class IntSpin(FloatSpin):
-    def __init__(
-            self, parent, value=0, range_val=(0, 1), size=DEF_SIZE,
-            width=0, onchange=None, onenter=None, check_focus=True):
-        step = 1
-        digits = 0
-        if not width and const.is_msw():
-            width = 5
-        FloatSpin.__init__(
-            self, parent, value, range_val,
-            step, digits, size, width,
-            onchange, onenter, check_focus)
-
-
 class Slider(wx.Slider, RangeDataWidgetMixin):
     callback = None
     final_callback = None
@@ -802,7 +818,7 @@ class Slider(wx.Slider, RangeDataWidgetMixin):
         style = 0
         if vertical:
             style |= wx.SL_VERTICAL
-            if size == (100,-1):
+            if size == (100, -1):
                 size = (-1, 100)
         else:
             style |= wx.SL_HORIZONTAL
