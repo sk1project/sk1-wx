@@ -802,6 +802,8 @@ class Slider(wx.Slider, RangeDataWidgetMixin):
         style = 0
         if vertical:
             style |= wx.SL_VERTICAL
+            if size == (100,-1):
+                size = (-1, 100)
         else:
             style |= wx.SL_HORIZONTAL
         start, end = range_val
