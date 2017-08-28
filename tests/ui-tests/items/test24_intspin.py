@@ -1,4 +1,4 @@
-#The test should show FloatSpin widget 
+#The test should show IntSpin widget 
 #on the main window
 
 import wal
@@ -11,11 +11,11 @@ class MW(wal.MainWindow):
         wal.MainWindow.__init__(self)
         self.set_size(SIZE)
 
-        self.spin = wal.FloatSpin(self, 5, (0,10), 
+        self.spin = wal.IntSpin(self, 5, (0,10), 
             onchange=self.on_change, onenter=self.on_enter)
         self.pack(self.spin)
 
-        self.spin2 = wal.FloatSpin(self, 5, (0,10))
+        self.spin2 = wal.IntSpin(self, 5, (0,10))
         self.pack(self.spin2)
 
     def on_change(self):

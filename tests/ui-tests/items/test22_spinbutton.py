@@ -1,4 +1,4 @@
-#The test should show Spin widget 
+#The test should show SpinButton widget 
 #on the main window
 
 import wal
