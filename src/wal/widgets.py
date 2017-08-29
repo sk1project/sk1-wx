@@ -19,10 +19,10 @@ import wx
 import wx.combo
 from wx import animate
 
-from mixins import WidgetMixin, DataWidgetMixin, RangeDataWidgetMixin
 import const
-from const import DEF_SIZE
 from basic import HPanel
+from const import DEF_SIZE
+from mixins import WidgetMixin, DataWidgetMixin, RangeDataWidgetMixin
 from renderer import bmp_to_white, disabled_bmp
 
 
@@ -547,13 +547,11 @@ class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
     def __init__(
             self, parent, value=0, range_val=(0, 1), size=DEF_SIZE,
             width=5, onchange=None, onenter=None, check_focus=True):
-
-        self.range_val = range_val
         size = self._set_width(size, width)
         wx.SpinCtrl.__init__(self, parent, wx.ID_ANY, '', size=size,
             style=wx.SP_ARROW_KEYS | wx.ALIGN_LEFT | wx.TE_PROCESS_ENTER)
-        self.SetRange(*range_val)
-        self.SetValue(value)
+        self.set_range(range_val)
+        self.set_value(value)
         if onchange:
             self.callback = onchange
             self.Bind(wx.EVT_SPINCTRL, self.on_change, self)
@@ -565,13 +563,14 @@ class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
                 wx.EVT_KILL_FOCUS, self._entry_lost_focus, self)
             self.Bind(wx.EVT_CONTEXT_MENU, self._ctxmenu, self)
 
-    def on_change(self, event=None):
+    def on_change(self, *args):
         if self.callback:
             self.callback()
 
-    def on_enter(self, event=None):
+    def on_enter(self, event):
         if self.callback1:
             self.callback1()
+        event.Skip()
 
     def _ctxmenu(self, event):
         self.ctxmenu_flag = True
@@ -586,6 +585,72 @@ class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
 
 
 IntSpin = Spin
+
+if not const.is_wx2():
+    class SpinDouble(wx.SpinCtrlDouble, RangeDataWidgetMixin):
+        callback = None
+        callback1 = None
+        flag = True
+        ctxmenu_flag = False
+
+        def __init__(
+                self, parent, value=0.0, range_val=(0.0, 1.0), step=0.01,
+                digits=2, size=DEF_SIZE, width=5,
+                onchange=None, onenter=None, check_focus=True):
+
+            self.range_val = range_val
+            size = self._set_width(size, width)
+            wx.SpinCtrlDouble.__init__(self, parent, wx.ID_ANY, '', size=size,
+                style=wx.SP_ARROW_KEYS | wx.ALIGN_LEFT | wx.TE_PROCESS_ENTER,
+                min=0, max=100, initial=value, inc=step)
+            self.set_range(range_val)
+            self.set_value(value)
+            self.set_step(step)
+            self.set_digits(digits)
+            if onchange:
+                self.callback = onchange
+                self.Bind(wx.EVT_SPINCTRLDOUBLE, self.on_change, self)
+            if onenter:
+                self.callback1 = onenter
+                self.Bind(wx.EVT_TEXT_ENTER, self.on_enter, self)
+            if check_focus:
+                self.Bind(
+                    wx.EVT_KILL_FOCUS, self._entry_lost_focus, self)
+                self.Bind(wx.EVT_CONTEXT_MENU, self._ctxmenu, self)
+
+        def set_step(self, step):
+            self.step = step
+            self.SetIncrement(step)
+
+        def set_digits(self, digits):
+            self.digits = digits
+            self.SetDigits(digits)
+
+        def _set_digits(self, digits):
+            self.set_digits(digits)
+
+        def on_change(self, *args):
+            if self.callback:
+                self.callback()
+
+        def on_enter(self, event):
+            if self.callback1:
+                self.callback1()
+            event.Skip()
+
+        def _ctxmenu(self, event):
+            self.ctxmenu_flag = True
+            event.Skip()
+
+        def _entry_lost_focus(self, event):
+            if not self.flag and not self.ctxmenu_flag:
+                self.on_change()
+            elif not self.flag and self.ctxmenu_flag:
+                self.ctxmenu_flag = False
+            event.Skip()
+
+
+    FloatSpin = SpinDouble
 
 
 class SpinButton(wx.SpinButton, RangeDataWidgetMixin):
@@ -603,7 +668,7 @@ class SpinButton(wx.SpinButton, RangeDataWidgetMixin):
             self.Bind(wx.EVT_SPIN, onchange, self)
 
 
-class FloatSpin(wx.Panel, RangeDataWidgetMixin):
+class MegaSpin(wx.Panel, RangeDataWidgetMixin):
     entry = None
     sb = None
     line = None
@@ -804,6 +869,10 @@ class FloatSpin(wx.Panel, RangeDataWidgetMixin):
     def set_digits(self, digits):
         self._set_digits(digits)
         self.SetValue(self.value)
+
+
+if const.is_wx2():
+    FloatSpin = MegaSpin
 
 
 class Slider(wx.Slider, RangeDataWidgetMixin):
