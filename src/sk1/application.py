@@ -155,7 +155,7 @@ class SK1Application(wal.Application, UCApplication):
 		if self.close_all():
 			self.update_config()
 			self.mw.destroy()
-			wal.Application.exit()
+			wal.Application.exit(self)
 			return True
 		return False
 
