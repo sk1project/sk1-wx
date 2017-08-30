@@ -345,7 +345,7 @@ class RotateTransform(AbstractTransform):
 		self.angle = AngleSpin(grid, val_range=(-360.0, 360.0),
 							check_focus=True)
 		grid.pack(self.angle)
-		grid.pack(wal.Label(grid, _('degrees')))
+		grid.pack(wal.Label(grid, u'°'))
 
 		self.pack(grid, align_center=False, padding=5)
 		self.pack(wal.Label(grid, _('Center:')), align_center=False, padding=5)
