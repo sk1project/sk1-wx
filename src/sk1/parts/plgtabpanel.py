@@ -64,10 +64,10 @@ class TabsBgPanel(VPanel):
             dc = pdc
         dc.BeginDrawing()
 
-        color1 = wx.Colour(0, 0, 0, 20)
-        color2 = wx.Colour(0, 0, 0, 0)
-        rect = wx.Rect(0, 0, w / 2, h)
-        dc.GradientFillLinear(rect, color1, color2, nDirection=wx.EAST)
+        # color1 = wx.Colour(0, 0, 0, 20)
+        # color2 = wx.Colour(0, 0, 0, 0)
+        # rect = wx.Rect(0, 0, w / 2, h)
+        # dc.GradientFillLinear(rect, color1, color2, nDirection=wx.EAST)
 
         pdc.SetPen(wx.Pen(wx.Colour(*const.UI_COLORS['hover_solid_border']), 1))
         pdc.DrawLine(0, 0, 0, h)
