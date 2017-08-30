@@ -938,6 +938,9 @@ class Splitter(wx.SplitterWindow, WidgetMixin):
     def set_sash_position(self, val):
         self.SetSashPosition(val)
 
+    def get_sash_position(self):
+        return self.GetSashPosition()
+
 
 class ScrollBar(wx.ScrollBar, WidgetMixin):
     callback = None
