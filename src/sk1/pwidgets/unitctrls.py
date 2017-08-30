@@ -80,8 +80,7 @@ class StaticUnitSpin(FloatSpin):
             self.units = app.current_doc.model.doc_units
         val = self.point_value * point_dict[self.units]
         FloatSpin.__init__(
-            self, parent, val, self.point_range,
-            step=step, width=config.spin_width,
+            self, parent, val, self.point_range, step=step,
             onchange=self.update_point_value,
             onenter=onenter)
         self._set_digits(unit_accuracy[self.units])
@@ -224,7 +223,6 @@ class AngleSpin(FloatSpin):
         self.ucallback = onchange
         FloatSpin.__init__(
             self, parent, val, val_range, step=1.0,
-            width=config.spin_width,
             onchange=self.update_angle_value,
             onenter=onenter,
             check_focus=check_focus)
