@@ -40,7 +40,8 @@ class MDIArea(wal.VPanel):
         self.docareas = []
         wal.VPanel.__init__(self, parent)
 
-        if not wal.is_mac(): self.pack(wal.HLine(self), fill=True)
+        if not wal.is_mac():
+            self.pack(wal.HLine(self), fill=True)
 
         # ----- Context panel
         self.ctxpanel = AppCtxPanel(self.app, self)
@@ -99,7 +100,8 @@ class MDIArea(wal.VPanel):
         events.connect(events.CONFIG_MODIFIED, self.config_update)
 
     def config_update(self, attr, value):
-        if attr == 'palette_orientation': self.change_palette()
+        if attr == 'palette_orientation':
+            self.change_palette()
 
     def change_palette(self):
         if config.palette_orientation == uc2const.VERTICAL:
@@ -136,11 +138,13 @@ class MDIArea(wal.VPanel):
 
     def set_active(self, doc):
         doc_area = doc.docarea
-        if self.current_docarea: self.current_docarea.hide()
+        if self.current_docarea:
+            self.current_docarea.hide()
         doc_area.show()
         self.current_docarea = doc_area
         self.doc_tabs.set_active(doc)
-        if len(self.docareas) == 1: self.mw.show_mdi(True)
+        if len(self.docareas) == 1:
+            self.mw.show_mdi(True)
         self.doc_keeper.layout()
 
     def show_plugin_area(self, value=True):
