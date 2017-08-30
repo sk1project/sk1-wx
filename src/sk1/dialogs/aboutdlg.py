@@ -23,14 +23,14 @@ from sk1.resources import icons, get_bmp
 from sk1.dialogs.aboutdlg_license import LICENSE
 from sk1.dialogs.aboutdlg_credits import CREDITS
 
-class AboutDialog(wal.CloseDialog):
+class AboutDialog(wal.SimpleDialog):
 
 	sizer = None
 	app = None
 
 	def __init__(self, app, parent, title, size=config.about_dlg_size):
 		self.app = app
-		wal.CloseDialog.__init__(self, parent, title, size,
+		wal.SimpleDialog.__init__(self, parent, title, size,
 								resizable=False, add_line=False)
 
 	def build(self):
