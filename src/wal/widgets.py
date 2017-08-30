@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2013-2016 by Igor E. Novikov
+#  Copyright (C) 2013-2016 by Igor E. Novikov
 #
-# 	This program is free software: you can redistribute it and/or modify
-# 	it under the terms of the GNU General Public License as published by
-# 	the Free Software Foundation, either version 3 of the License, or
-# 	(at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-# 	This program is distributed in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# 	GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-# 	You should have received a copy of the GNU General Public License
-# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 import wx.combo
@@ -546,7 +546,7 @@ class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
 
     def __init__(
             self, parent, value=0, range_val=(0, 1), size=DEF_SIZE,
-            width=5, onchange=None, onenter=None, check_focus=True):
+            width=0, onchange=None, onenter=None, check_focus=True):
         size = self._set_width(size, width)
         wx.SpinCtrl.__init__(self, parent, wx.ID_ANY, '', size=size,
             style=wx.SP_ARROW_KEYS | wx.ALIGN_LEFT | wx.TE_PROCESS_ENTER)
@@ -595,7 +595,7 @@ if not const.is_wx2():
 
         def __init__(
                 self, parent, value=0.0, range_val=(0.0, 1.0), step=0.01,
-                digits=2, size=DEF_SIZE, width=5,
+                digits=2, size=DEF_SIZE, width=0,
                 onchange=None, onenter=None, check_focus=True):
 
             self.range_val = range_val
