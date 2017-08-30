@@ -37,7 +37,7 @@ class PolygonPlugin(CtxPlugin):
 		self.add(bmp, 0, LEFT | CENTER, 2)
 
 		self.num_spin = FloatSpin(self, 5, (3.0, 1000.0), 1.0, 0,
-							width=3, onchange=self.changes)
+							onchange=self.changes)
 		self.add(self.num_spin, 0, LEFT | CENTER, 2)
 
 	def changes(self, *args):
@@ -72,7 +72,7 @@ class PolygonCfgPlugin(CtxPlugin):
 
 		self.num_spin = FloatSpin(self, config.default_polygon_num,
 							(3.0, 1000.0), 1.0, 0,
-							width=3, onchange=self.changes)
+							onchange=self.changes)
 		self.add(self.num_spin, 0, LEFT | CENTER, 2)
 
 	def changes(self, *args):
