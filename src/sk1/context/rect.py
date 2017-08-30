@@ -17,168 +17,162 @@
 
 import wx
 
+from generic import CtxPlugin
+from sk1 import _, events
+from sk1.pwidgets import RatioToggle, BitmapToggle
+from sk1.resources import icons, get_bmp
 from wal import LEFT, CENTER, FloatSpin, Slider, VPanel, HORIZONTAL
 
-from sk1 import _, config, events
-from sk1.resources import icons, get_bmp
-from sk1.pwidgets import RatioToggle, BitmapToggle
-from generic import CtxPlugin
 
 class RectanglePlugin(CtxPlugin):
+    name = 'RectanglePlugin'
+    corners = [0, 0, 0, 0]
+    orig_corners = [0, 0, 0, 0]
+    update_flag = False
+    active_corner = 0
 
-	name = 'RectanglePlugin'
-	corners = [0, 0, 0, 0]
-	orig_corners = [0, 0, 0, 0]
-	update_flag = False
-	active_corner = 0
+    def __init__(self, app, parent):
+        CtxPlugin.__init__(self, app, parent)
+        events.connect(events.DOC_CHANGED, self.update)
+        events.connect(events.SELECTION_CHANGED, self.update)
 
-	def __init__(self, app, parent):
-		CtxPlugin.__init__(self, app, parent)
-		events.connect(events.DOC_CHANGED, self.update)
-		events.connect(events.SELECTION_CHANGED, self.update)
+    def build(self):
+        bmp = get_bmp(self, icons.CTX_ROUNDED_RECT, _('Rounded rectangle'))
+        self.add(bmp, 0, LEFT | CENTER, 2)
 
-	def build(self):
-		bmp = get_bmp(self, icons.CTX_ROUNDED_RECT, _('Rounded rectangle'))
-		self.add(bmp, 0, LEFT | CENTER, 2)
+        self.slider = Slider(self, 0, (0, 100), onchange=self.slider_changes,
+            on_final_change=self.slider_final_changes)
+        self.add(self.slider, 0, LEFT | CENTER, 2)
 
-		self.slider = Slider(self, 0, (0, 100), onchange=self.slider_changes,
-							on_final_change=self.slider_final_changes)
-		self.add(self.slider, 0, LEFT | CENTER, 2)
+        self.num_spin = FloatSpin(self, 0, (0.0, 100.0), 1.0, 0,
+            onchange=self.changes)
+        self.add(self.num_spin, 0, LEFT | CENTER, 2)
 
-		self.num_spin = FloatSpin(self, 0, (0.0, 100.0), 1.0, 0,
-							onchange=self.changes)
-		self.add(self.num_spin, 0, LEFT | CENTER, 2)
+        self.switch = RectAngleSwitch(self, onchange=self.switch_changed)
+        self.add(self.switch, 0, LEFT | CENTER, 3)
+        self.switch.hide()
 
-		self.switch = RectAngleSwitch(self, onchange=self.switch_changed)
-		self.add(self.switch, 0, LEFT | CENTER, 3)
-		self.switch.hide()
+        self.keep_ratio = RatioToggle(self, onchange=self.lock_changed)
+        self.add(self.keep_ratio, 0, LEFT | CENTER, 3)
 
-		self.keep_ratio = RatioToggle(self, onchange=self.lock_changed)
-		self.add(self.keep_ratio, 0, LEFT | CENTER, 3)
+    def lock_changed(self, *args):
+        self.switch.set_visible(not self.keep_ratio.get_active())
+        self.parent.Layout()
+        if self.keep_ratio.get_active():
+            val = self.corners[self.active_corner]
+            self.active_corner = 0
+            self.switch.set_index(0)
+            if not self.update_flag: self.apply_changes(val)
+        self.update_vals()
 
-	def lock_changed(self, *args):
-		self.switch.set_visible(not self.keep_ratio.get_active())
-		self.parent.Layout()
-		if self.keep_ratio.get_active():
-			val = self.corners[self.active_corner]
-			self.active_corner = 0
-			self.switch.set_index(0)
-			if not self.update_flag: self.apply_changes(val)
-		self.update_vals()
+    def switch_changed(self):
+        self.active_corner = self.switch.get_index()
+        self.update_vals()
 
-	def switch_changed(self):
-		self.active_corner = self.switch.get_index()
-		self.update_vals()
+    def slider_changes(self):
+        if self.update_flag: return
+        self.apply_changes(self.slider.get_value() / 100.0)
 
-	def slider_changes(self):
-		if self.update_flag: return
-		self.apply_changes(self.slider.get_value() / 100.0)
+    def slider_final_changes(self):
+        if self.update_flag: return
+        self.apply_changes(self.slider.get_value() / 100.0, True)
 
-	def slider_final_changes(self):
-		if self.update_flag: return
-		self.apply_changes(self.slider.get_value() / 100.0, True)
+    def changes(self, *args):
+        if self.update_flag: return
+        self.apply_changes(self.num_spin.get_value() / 100.0)
 
-	def changes(self, *args):
-		if self.update_flag: return
-		self.apply_changes(self.num_spin.get_value() / 100.0)
+    def apply_changes(self, val, final=False):
+        if self.insp.is_selection():
+            selection = self.app.current_doc.selection
+            if self.insp.is_obj_rect(selection.objs[0]):
+                if self.keep_ratio.get_active():
+                    self.corners = [val, val, val, val]
+                else:
+                    self.corners[self.active_corner] = val
+                api = self.app.current_doc.api
+                if final:
+                    api.set_rect_corners_final(self.corners, self.orig_corners)
+                    self.orig_corners = [] + self.corners
+                else:
+                    api.set_rect_corners(self.corners)
 
-	def apply_changes(self, val, final=False):
-		if self.insp.is_selection():
-			selection = self.app.current_doc.selection
-			if self.insp.is_obj_rect(selection.objs[0]):
-				if self.keep_ratio.get_active():
-					self.corners = [val, val, val, val]
-				else:
-					self.corners[self.active_corner] = val
-				api = self.app.current_doc.api
-				if final:
-					api.set_rect_corners_final(self.corners, self.orig_corners)
-					self.orig_corners = [] + self.corners
-				else:
-					api.set_rect_corners(self.corners)
+    def update_vals(self):
+        self.update_flag = True
+        self.slider.set_value(int(self.corners[self.active_corner] * 100))
+        self.num_spin.set_value(self.corners[self.active_corner] * 100.0)
+        self.update_flag = False
 
-	def update_vals(self):
-		self.update_flag = True
-		self.slider.set_value(int(self.corners[self.active_corner] * 100))
-		self.num_spin.set_value(self.corners[self.active_corner] * 100.0)
-		self.update_flag = False
-
-	def update(self, *args):
-		if self.insp.is_selection():
-			selection = self.app.current_doc.selection
-			if self.insp.is_obj_rect(selection.objs[0]):
-				corners = [] + selection.objs[0].corners
-				if self.corners == corners:
-					self.update_vals()
-				else:
-					self.corners = corners
-					self.orig_corners = [] + corners
-					self.update_flag = True
-					state = (corners[0] == corners[1] == corners[2] == corners[3])
-					self.keep_ratio.set_active(state)
-					self.lock_changed()
+    def update(self, *args):
+        if self.insp.is_selection():
+            selection = self.app.current_doc.selection
+            if self.insp.is_obj_rect(selection.objs[0]):
+                corners = [] + selection.objs[0].corners
+                if self.corners == corners:
+                    self.update_vals()
+                else:
+                    self.corners = corners
+                    self.orig_corners = [] + corners
+                    self.update_flag = True
+                    state = (
+                    corners[0] == corners[1] == corners[2] == corners[3])
+                    self.keep_ratio.set_active(state)
+                    self.lock_changed()
 
 
 class RectAngleSwitch(VPanel):
+    active = 0
+    toggles = []
+    onchange = None
 
-	active = 0
-	toggles = []
-	onchange = None
+    def __init__(self, parent, active=0, onchange=None):
+        self.active = active
+        self.toggles = [None, None, None, None]
+        self.onchange = onchange
+        VPanel.__init__(self, parent)
+        row1 = wx.BoxSizer(HORIZONTAL)
+        self.box.Add(row1)
 
-	def __init__(self, parent, active=0, onchange=None):
-		self.active = active
-		self.toggles = [None, None, None, None]
-		self.onchange = onchange
-		VPanel.__init__(self, parent)
-		row1 = wx.BoxSizer(HORIZONTAL)
-		self.box.Add(row1)
+        icons_dict = {True: [icons.CTX_ROUNDED_RECT2_ON, '', ],
+            False: [icons.CTX_ROUNDED_RECT2_OFF, '', ], }
+        tgl = BitmapToggle(self, False, icons_dict, self.changed)
+        self.toggles[1] = tgl
+        row1.Add(tgl)
+        icons_dict = {True: [icons.CTX_ROUNDED_RECT3_ON, '', ],
+            False: [icons.CTX_ROUNDED_RECT3_OFF, '', ], }
+        tgl = BitmapToggle(self, False, icons_dict, self.changed)
+        self.toggles[2] = tgl
+        row1.Add(tgl)
 
-		icons_dict = {True:[icons.CTX_ROUNDED_RECT2_ON, '', ],
-				False:[icons.CTX_ROUNDED_RECT2_OFF, '', ], }
-		tgl = BitmapToggle(self, False, icons_dict, self.changed)
-		self.toggles[1] = tgl
-		row1.Add(tgl)
-		icons_dict = {True:[icons.CTX_ROUNDED_RECT3_ON, '', ],
-				False:[icons.CTX_ROUNDED_RECT3_OFF, '', ], }
-		tgl = BitmapToggle(self, False, icons_dict, self.changed)
-		self.toggles[2] = tgl
-		row1.Add(tgl)
+        row2 = wx.BoxSizer(HORIZONTAL)
+        self.box.Add(row2, 0)
 
-		row2 = wx.BoxSizer(HORIZONTAL)
-		self.box.Add(row2, 0)
+        icons_dict = {True: [icons.CTX_ROUNDED_RECT1_ON, '', ],
+            False: [icons.CTX_ROUNDED_RECT1_OFF, '', ], }
+        tgl = BitmapToggle(self, False, icons_dict, self.changed)
+        self.toggles[0] = tgl
+        row2.Add(tgl)
+        icons_dict = {True: [icons.CTX_ROUNDED_RECT4_ON, '', ],
+            False: [icons.CTX_ROUNDED_RECT4_OFF, '', ], }
+        tgl = BitmapToggle(self, False, icons_dict, self.changed)
+        self.toggles[3] = tgl
+        row2.Add(tgl)
 
-		icons_dict = {True:[icons.CTX_ROUNDED_RECT1_ON, '', ],
-				False:[icons.CTX_ROUNDED_RECT1_OFF, '', ], }
-		tgl = BitmapToggle(self, False, icons_dict, self.changed)
-		self.toggles[0] = tgl
-		row2.Add(tgl)
-		icons_dict = {True:[icons.CTX_ROUNDED_RECT4_ON, '', ],
-				False:[icons.CTX_ROUNDED_RECT4_OFF, '', ], }
-		tgl = BitmapToggle(self, False, icons_dict, self.changed)
-		self.toggles[3] = tgl
-		row2.Add(tgl)
+        self.toggles[self.active].set_active(True)
 
-		self.toggles[self.active].set_active(True)
+    def changed(self, *args):
+        old_active = self.active
+        self.toggles[self.active].set_active(False)
+        for item in self.toggles:
+            if item.get_active(): self.active = self.toggles.index(item)
+        if old_active == self.active:
+            self.toggles[self.active].set_active(True)
+        else:
+            if not self.onchange is None: self.onchange()
 
+    def get_index(self):
+        return self.active
 
-	def changed(self, *args):
-		old_active = self.active
-		self.toggles[self.active].set_active(False)
-		for item in self.toggles:
-			if item.get_active():self.active = self.toggles.index(item)
-		if old_active == self.active:
-			self.toggles[self.active].set_active(True)
-		else:
-			if not self.onchange is None: self.onchange()
-
-
-	def get_index(self):
-		return self.active
-
-	def set_index(self, index):
-		self.toggles[self.active].set_active(False)
-		self.active = index
-		self.toggles[self.active].set_active(True)
-
-
-
+    def set_index(self, index):
+        self.toggles[self.active].set_active(False)
+        self.active = index
+        self.toggles[self.active].set_active(True)
