@@ -141,15 +141,15 @@ class MDIArea(wal.VPanel):
         self.current_docarea = doc_area
         self.doc_tabs.set_active(doc)
         if len(self.docareas) == 1: self.mw.show_mdi(True)
-        if self.plg_area.get_size()[0] > 400:
-            self.splitter.set_sash_position(-280)
         self.doc_keeper.layout()
 
     def show_plugin_area(self, value=True):
         if value:
             if not self.plg_area.is_shown():
                 self.splitter.split_vertically(self.doc_keeper,
-                    self.plg_area, -280)
+                    self.plg_area, config.sash_position)
         else:
             if self.plg_area.is_shown():
+                w = self.splitter.get_size()[0]
+                config.sash_position = self.splitter.get_sash_position() - w
                 self.splitter.unsplit()
