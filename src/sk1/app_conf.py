@@ -112,7 +112,8 @@ class AppConfig(UCConfig):
     history_list_size = 10
     spin_overlay = True
     spin_sep = False
-    spin_width = 5
+    spin_width = 0
+    sash_position = -270
     make_backup = True
     make_export_backup = False
     active_plugins = None
@@ -241,9 +242,9 @@ class AppConfig(UCConfig):
     # ============== SNAPPING OPTIONS ================
     snap_distance = 10.0  # in pixels
     snap_order = [appconst.SNAP_TO_GUIDES,
-                  appconst.SNAP_TO_GRID,
-                  appconst.SNAP_TO_OBJECTS,
-                  appconst.SNAP_TO_PAGE]
+        appconst.SNAP_TO_GRID,
+        appconst.SNAP_TO_OBJECTS,
+        appconst.SNAP_TO_PAGE]
     snap_to_grid = False
     snap_to_guides = True
     snap_to_objects = False
