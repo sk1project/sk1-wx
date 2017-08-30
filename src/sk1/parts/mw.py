@@ -1,78 +1,83 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2013 by Igor E. Novikov
+#  Copyright (C) 2013 by Igor E. Novikov
 #
-# 	This program is free software: you can redistribute it and/or modify
-# 	it under the terms of the GNU General Public License as published by
-# 	the Free Software Foundation, either version 3 of the License, or
-# 	(at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-# 	This program is distributed in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# 	GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-# 	You should have received a copy of the GNU General Public License
-# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 
 import wal
-
 from sk1 import config
-from sk1.parts.menubar import AppMenuBar
-from sk1.parts.toolbar import ToolbarCreator
 from sk1.parts.mdiarea import MDIArea
+from sk1.parts.menubar import AppMenuBar
 from sk1.parts.stubpanel import AppStubPanel
+from sk1.parts.toolbar import build_toolbar
+
 
 class AppMainWindow(wal.MainWindow):
+    menubar = None
+    mdi = None
+    stub = None
+    palette_panel = None
+    statusbar = None
+    toolbar = None
 
-	menubar = None
-	mdi = None
-	stub = None
-	palette_panel = None
-	statusbar = None
+    def __init__(self, app):
+        self.app = app
+        wal.MainWindow.__init__(
+            self, app, '', config.mw_size,
+            maximized=config.mw_maximized,
+            on_close=self.app.exit)
+        self.set_minsize(config.mw_min_size)
+        self.set_icons(os.path.join(config.resource_dir, 'icons',
+                       'generic', 'sk1-icon.ico'))
 
-	def __init__(self, app):
-		self.app = app
-		wal.MainWindow.__init__(self, app, '', config.mw_size,
-							maximized=config.mw_maximized,
-							on_close=self.app.exit)
-		self.set_minsize(config.mw_min_size)
-		self.set_icons(os.path.join(config.resource_dir, 'icons',
-								'generic', 'sk1-icon.ico'))
+    def build(self):
+        # ----- Menubar
+        self.menubar = AppMenuBar(self.app, self)
+        # ----- Toolbar
+        self.toolbar = build_toolbar(self)
 
-	def build(self):
-		#----- Menubar
-		self.menubar = AppMenuBar(self.app, self)
-		#----- Toolbar
-		self.toolbar = ToolbarCreator(self).tb
+        # ----- MDI Area
+        self.mdi = MDIArea(self.app, self)
+        self.pack(self.mdi, expand=True, fill=True)
+        if not config.new_doc_on_start:
+            self.mdi.hide()
 
-		#----- MDI Area
-		self.mdi = MDIArea(self.app, self)
-		self.pack(self.mdi, expand=True, fill=True)
-		if not config.new_doc_on_start:self.mdi.hide()
+        # ----- Stub panel
+        self.stub = AppStubPanel(self)
+        self.pack(self.stub, expand=True, fill=True)
+        if config.new_doc_on_start:
+            self.stub.hide()
 
-		#----- Stub panel
-		self.stub = AppStubPanel(self)
-		self.pack(self.stub, expand=True, fill=True)
-		if config.new_doc_on_start:self.stub.hide()
+        self.layout()
 
-		self.layout()
+    def set_title(self, title=''):
+        appname = self.app.appdata.app_name
+        if title:
+            title = '[%s] - %s' % (title, appname)
+        else:
+            title = appname
+        wal.MainWindow.set_title(self, title)
 
-	def set_title(self, title=''):
-		appname = self.app.appdata.app_name
-		if title: title = '[%s] - %s' % (title, appname)
-		else: title = appname
-		wal.MainWindow.set_title(self, title)
-
-	def show_mdi(self, value):
-		if value and not self.mdi.is_shown():
-			self.stub.hide()
-			self.mdi.layout()
-			self.mdi.show()
-		elif not value and self.mdi.is_shown():
-			self.stub.Layout()
-			self.stub.show()
-			self.mdi.hide()
-		self.layout()
+    def show_mdi(self, value):
+        if value and not self.mdi.is_shown():
+            self.stub.hide()
+            self.mdi.layout()
+            self.mdi.show()
+        elif not value and self.mdi.is_shown():
+            self.stub.Layout()
+            self.stub.show()
+            self.mdi.hide()
+        self.layout()
