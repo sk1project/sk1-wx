@@ -101,6 +101,7 @@ class PrefsDialog(wal.OkCancelDialog):
             if not self.current_plugin.built:
                 self.current_plugin.build()
                 self.current_plugin.layout()
+                self.current_plugin.show()
                 self.container.remove(self.current_plugin)
                 self.container.pack(self.current_plugin,
                     fill=True, expand=True, padding=5)
