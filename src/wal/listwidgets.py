@@ -75,6 +75,7 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, WidgetMixin):
         if not self.GetColumnCount():
             self.set_columns()
         self.set_data(self.data, self.alt_color)
+        self.SetColumnWidth(0, wx.LIST_AUTOSIZE)
 
     def set_columns(self):
         self.InsertColumn(0, '')
