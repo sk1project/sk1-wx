@@ -166,6 +166,7 @@ class Label(wx.StaticText, WidgetMixin):
         self.SetFont(font)
         if fg:
             self.SetForegroundColour(wx.Colour(*fg))
+        self.Wrap(-1)
 
     def set_text(self, text):
         self.SetLabel(text)
