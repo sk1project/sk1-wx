@@ -17,10 +17,10 @@
 #
 #   MacOS X env: export VERSIONER_PYTHON_PREFER_32_BIT=yes
 
-import const
 import wx
 import wx.lib.scrolledpanel as scrolled
 
+import const
 from const import FONT_SIZE, DEF_SIZE
 from mixins import WidgetMixin
 from renderer import copy_surface_to_bitmap
@@ -90,7 +90,7 @@ class MainWindow(wx.Frame):
     maximized = False
 
     def __init__(
-            self, app=None, title='Frame', size=(100, 100), 
+            self, app=None, title='Frame', size=(100, 100),
             vertical=True, maximized=False, on_close=None):
         self.app = app
         if app is None:
@@ -102,7 +102,7 @@ class MainWindow(wx.Frame):
         wx.Frame.__init__(
             self, None, wx.ID_ANY, title, pos=DEF_SIZE, size=size, name=title)
         self.orientation = wx.VERTICAL
-        if not vertical: 
+        if not vertical:
             self.orientation = wx.HORIZONTAL
         self.Centre()
         self.box = wx.BoxSizer(self.orientation)
@@ -574,6 +574,10 @@ class RoundedPanel(VPanel, Canvas):
         self.draw_rounded_rect(0, 0, w - 1, h - 1, 7.0)
         self.layout()
         if self.parent.widget_panel:
+            w, h = self.parent.widget_panel.get_size()
+            self.set_fill(const.UI_COLORS['bg'])
+            self.set_stroke(None)
+            self.draw_rect(0, 7, w, h)
             self.parent.widget_panel.refresh()
 
 
