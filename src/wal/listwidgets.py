@@ -40,7 +40,7 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, WidgetMixin):
         self.odd_color = odd_color
         self.even_color = even_color
         style = wx.LC_REPORT | wx.LC_VRULES
-        if border and not const.is_wx3():
+        if border:# and not const.is_wx3():
             style |= wx.BORDER_MASK
         if not header:
             style |= wx.LC_NO_HEADER
