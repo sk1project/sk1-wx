@@ -33,7 +33,7 @@ class RulersPrefs(PrefPanel):
         PrefPanel.__init__(self, app, dlg)
 
     def build(self):
-        self.pack(wal.Label(self, _('Size (px):'), fontbold=True))
+        self.pack(wal.Label(self, _('Size (px):'), fontbold=True), fill=True)
 
         grid = wal.GridPanel(self, rows=3, cols=4, hgap=10, vgap=5)
 
@@ -63,7 +63,7 @@ class RulersPrefs(PrefPanel):
 
         self.pack(grid, padding_all=10)
 
-        self.pack(wal.Label(self, _('Text shift (px):'), fontbold=True))
+        self.pack(wal.Label(self, _('Text shift (px):'), fontbold=True), fill=True)
 
         grid = wal.GridPanel(self, rows=1, cols=4, hgap=10, vgap=5)
 
@@ -99,7 +99,7 @@ class RulersPrefs(PrefPanel):
 
         # Testing ruler
         self.pack(wal.Label(self, _('Testing ruler:'), fontbold=True),
-            padding_all=10)
+            padding_all=10, fill=True)
         panel = wal.HPanel(self)
         panel.add((360, 1))
         panel.set_bg(wal.UI_COLORS['dark_shadow'])
