@@ -565,19 +565,26 @@ class RoundedPanel(VPanel, Canvas):
 
     def paint(self):
         w, h = self.get_size()
+        dx = 8
+        if self.parent.widget_panel:
+            dx += self.parent.widget_panel.get_size()[0]
         self.set_fill(None)
         color = const.UI_COLORS['light_shadow']
         self.set_stroke(color)
-        self.draw_rounded_rect(1, 1, w - 1, h - 1, 7.0)
+        self.draw_line(1, 1, 6, 1)
+        self.draw_line(1, 1, 1, h - 1)
+        self.draw_line(1, h - 1, w - 1, h - 1)
+        self.draw_line(w - 1, h - 1, w - 1, 1)
+        self.draw_line(w - 1, 1, dx, 1)
         color = const.UI_COLORS['dark_shadow']
         self.set_stroke(color)
-        self.draw_rounded_rect(0, 0, w - 1, h - 1, 7.0)
+        self.draw_line(0, 0, 6, 0)
+        self.draw_line(0, 0, 0, h - 2)
+        self.draw_line(0, h - 2, w - 2, h - 2)
+        self.draw_line(w - 2, h - 2, w - 2, 0)
+        self.draw_line(w - 2, 0, dx - 1, 0)
         self.layout()
         if self.parent.widget_panel:
-            w, h = self.parent.widget_panel.get_size()
-            self.set_fill(const.UI_COLORS['bg'])
-            self.set_stroke(None)
-            self.draw_rect(0, 7, w, h)
             self.parent.widget_panel.refresh()
 
 
