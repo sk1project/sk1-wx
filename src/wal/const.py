@@ -146,8 +146,8 @@ def get_system_fontsize():
 
 
 def mix_colors(fg, bg, alpha):
-    r1, g1, b1 = fg
-    r2, g2, b2 = bg
+    r1, g1, b1 = fg[:3]
+    r2, g2, b2 = bg[:3]
     a1 = alpha / 255.0
     a2 = 1.0 - a1
     r = int(r1 * a1 + r2 * a2)
@@ -168,9 +168,9 @@ def _init_gtk_colors(kw):
     infobk = wx.SystemSettings_GetColour(wx.SYS_COLOUR_INFOBK).Get()
     sel_bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT).Get()
     sel_text = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT).Get()
-    kw['fg'] = () + fg
-    kw['bg'] = () + bg
-    kw['text'] = () + fg
+    kw['fg'] = fg + (255,)
+    kw['bg'] = bg + (255,)
+    kw['text'] = fg + (255,)
     kw['selected_text_bg'] = () + sel_bg
     kw['selected_text'] = () + sel_text
     kw['disabled_text'] = mix_colors(fg, bg, 125)
