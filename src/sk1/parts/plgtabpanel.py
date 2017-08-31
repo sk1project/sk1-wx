@@ -64,10 +64,14 @@ class TabsBgPanel(VPanel):
             dc = pdc
         dc.BeginDrawing()
 
-        # color1 = wx.Colour(0, 0, 0, 20)
-        # color2 = wx.Colour(0, 0, 0, 0)
-        # rect = wx.Rect(0, 0, w / 2, h)
-        # dc.GradientFillLinear(rect, color1, color2, nDirection=wx.EAST)
+        dc.SetBrush(wx.Brush(wx.Colour(*const.UI_COLORS['bg'])))
+        dc.SetPen(wx.TRANSPARENT_PEN)
+        dc.DrawRectangle(0, 0, w, h)
+
+        color1 = wx.Colour(0, 0, 0, 20)
+        color2 = wx.Colour(0, 0, 0, 0)
+        rect = wx.Rect(0, 0, w / 2, h)
+        dc.GradientFillLinear(rect, color1, color2, nDirection=wx.EAST)
 
         pdc.SetPen(wx.Pen(wx.Colour(*const.UI_COLORS['hover_solid_border']), 1))
         pdc.DrawLine(0, 0, 0, h)
@@ -77,7 +81,6 @@ class TabsBgPanel(VPanel):
             pdc.EndDrawing()
         else:
             dc.EndDrawing()
-        pdc = dc = None
 
 
 class PlgTabs(VPanel):
@@ -131,6 +134,10 @@ class PlgTabs(VPanel):
             dc = pdc
         dc.BeginDrawing()
 
+        dc.SetBrush(wx.Brush(wx.Colour(*const.UI_COLORS['bg'])))
+        dc.SetPen(wx.TRANSPARENT_PEN)
+        dc.DrawRectangle(0, 0, w, h)
+
         color1 = wx.Colour(0, 0, 0, 20)
         color2 = wx.Colour(0, 0, 0, 0)
         rect = wx.Rect(0, 0, w / 2, h)
@@ -144,7 +151,6 @@ class PlgTabs(VPanel):
             pdc.EndDrawing()
         else:
             dc.EndDrawing()
-        pdc = dc = None
 
 
 class PlgTab(VPanel):
@@ -273,13 +279,12 @@ class PlgTab(VPanel):
         pdc.BeginDrawing()
         dc.BeginDrawing()
 
+        dc.SetBrush(wx.Brush(wx.Colour(*const.UI_COLORS['bg'])))
+        dc.SetPen(wx.TRANSPARENT_PEN)
+        dc.DrawRectangle(0, 0, w, h)
+
         # ----- colors definition
         border_color = const.UI_COLORS['hover_solid_border']
-        bg_color = const.UI_COLORS['bg']
-        light_bg_color = const.mix_colors((255, 255, 255), bg_color, 100)
-        dark_bg_color = const.mix_colors((0, 0, 0), bg_color, 5)
-        grad_start = wx.Colour(0, 0, 0, 10)
-        grad_end = wx.Colour(0, 0, 0, 0)
 
         if self.active:
             # ----- draw border
@@ -363,4 +368,3 @@ class PlgTab(VPanel):
             pdc.EndDrawing()
         else:
             dc.EndDrawing()
-        pdc = dc = None
