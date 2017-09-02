@@ -74,7 +74,7 @@ DATASET = {
     'ftp_url': '192.168.0.102',
     'ftp_path': '/home/igor/buildfarm',
     'ftp_user': 'igor',
-    'ftp_pass': 'Hes 6exks',
+    'ftp_pass': '',
     'timestamp': datetime.datetime.now().strftime("%Y%m%d"),
     'script': 'setup-sk1.py',
 }
