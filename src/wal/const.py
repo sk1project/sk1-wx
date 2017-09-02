@@ -46,6 +46,18 @@ def is_win7(): return is_msw() and platform.release() == '7'
 def is_gtk(): return wx.Platform == GTK
 
 
+def is_gtk2():
+    if is_gtk():
+        return 'gtk2' in get_version()
+    return False
+
+
+def is_gtk3():
+    if is_gtk():
+        return 'gtk3' in get_version()
+    return False
+
+
 def is_wx2(): return wx.VERSION[0] == 2
 
 
