@@ -81,7 +81,7 @@ class PrefsDialog(wal.OkCancelDialog):
         self.container = wal.HPanel(self.splitter)
         self.splitter.split_vertically(self.tree, self.container, 200)
         self.splitter.set_min_size(150)
-        if not wal.is_msw(): self.tree.set_indent(5)
+        if not wal.IS_MSW: self.tree.set_indent(5)
         self.tree.expand_all()
 
     def set_dialog_buttons(self):
