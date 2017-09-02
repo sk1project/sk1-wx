@@ -40,7 +40,7 @@ class MDIArea(wal.VPanel):
         self.docareas = []
         wal.VPanel.__init__(self, parent)
 
-        if not wal.is_mac():
+        if not wal.IS_MAC:
             self.pack(wal.HLine(self), fill=True)
 
         # ----- Context panel
