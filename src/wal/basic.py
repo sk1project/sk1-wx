@@ -616,7 +616,7 @@ class LabeledPanel(VPanel):
             self.widget_panel.pack(self.widget, padding=5)
             self.widget_panel.SetPosition((7, 0))
             self.widget_panel.Fit()
-            if const.is_msw():
+            if const.IS_MSW:
                 self.widget_panel.Raise()
 
         padding = 0

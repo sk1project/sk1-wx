@@ -17,7 +17,7 @@
 
 import wx
 
-from const import FONT_SIZE, is_msw
+import const
 
 
 class DialogMixin(object):
@@ -95,7 +95,7 @@ class WidgetMixin(object):
     def _set_width(self, size, width):
         if not width: return size
         width += 2
-        return (width * FONT_SIZE[0], size[1])
+        return (width * const.FONT_SIZE[0], size[1])
 
     def set_tooltip(self, tip=None):
         if tip:
@@ -110,7 +110,7 @@ class WidgetMixin(object):
         self.SetFocus()
 
     def set_double_buffered(self):
-        if is_msw(): self.SetDoubleBuffered(True)
+        if const.IS_MSW: self.SetDoubleBuffered(True)
 
     def refresh(self):
         self.Refresh()
@@ -152,7 +152,7 @@ class GenericGWidget(wx.Panel, WidgetMixin):
         self.onclick = onclick
         self.repeat = repeat
         wx.Panel.__init__(self, parent, wx.ID_ANY)
-        if is_msw(): self.SetDoubleBuffered(True)
+        if const.IS_MSW: self.SetDoubleBuffered(True)
         self.box = wx.BoxSizer(wx.HORIZONTAL)
         self.SetSizer(self.box)
         self.box.Add((1, 1))

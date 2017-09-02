@@ -52,7 +52,7 @@ class TreeWidget(wx.TreeCtrl, WidgetMixin):
             self, parent, data=[], border=True, alt_color=True,
             use_icons=True, on_select=None, highlight_row=True):
         style = wx.TR_DEFAULT_STYLE | wx.TR_HAS_BUTTONS | wx.TR_HIDE_ROOT
-        if const.is_msw():
+        if const.IS_MSW:
             highlight_row = False
         if highlight_row:
             style |= wx.TR_FULL_ROW_HIGHLIGHT
