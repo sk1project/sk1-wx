@@ -19,7 +19,7 @@ import wx
 
 from sk1 import config
 from sk1.resources import icons
-from wal import const, ALL, EXPAND, VPanel, is_msw
+import wal
 
 TAB_WIDTH = 25
 TAB_MARGIN = 1
@@ -29,7 +29,7 @@ PANEL_MARGIN = 3
 PANEL_WIDTH = 27
 
 
-class PlgTabsPanel(VPanel):
+class PlgTabsPanel(wal.VPanel):
     app = None
     active_plg = None
     plugins = []
@@ -38,21 +38,21 @@ class PlgTabsPanel(VPanel):
 
     def __init__(self, app, parent):
         self.app = app
-        VPanel.__init__(self, parent)
+        wal.VPanel.__init__(self, parent)
 
         self.tabs_bg = TabsBgPanel(self)
-        self.add(self.tabs_bg, 1, ALL | EXPAND)
+        self.add(self.tabs_bg, 1, wal.ALL | wal.EXPAND)
 
         self.plg_tabs = PlgTabs(self.tabs_bg, self.update_panel)
-        self.tabs_bg.add(self.plg_tabs, 0, ALL | EXPAND)
+        self.tabs_bg.add(self.plg_tabs, 0, wal.ALL | wal.EXPAND)
         self.plg_tabs.SetPosition((0, 0))
 
     def update_panel(self, *args): pass
 
 
-class TabsBgPanel(VPanel):
+class TabsBgPanel(wal.VPanel):
     def __init__(self, parent):
-        VPanel.__init__(self, parent)
+        wal.VPanel.__init__(self, parent)
         self.Bind(wx.EVT_PAINT, self._on_paint, self)
 
     def _on_paint(self, event):
@@ -64,7 +64,7 @@ class TabsBgPanel(VPanel):
             dc = pdc
         dc.BeginDrawing()
 
-        dc.SetBrush(wx.Brush(wx.Colour(*const.UI_COLORS['bg'])))
+        dc.SetBrush(wx.Brush(wx.Colour(*wal.UI_COLORS['bg'])))
         dc.SetPen(wx.TRANSPARENT_PEN)
         dc.DrawRectangle(0, 0, w, h)
 
@@ -73,7 +73,7 @@ class TabsBgPanel(VPanel):
         rect = wx.Rect(0, 0, w / 2, h)
         dc.GradientFillLinear(rect, color1, color2, nDirection=wx.EAST)
 
-        pdc.SetPen(wx.Pen(wx.Colour(*const.UI_COLORS['hover_solid_border']), 1))
+        pdc.SetPen(wx.Pen(wx.Colour(*wal.UI_COLORS['hover_solid_border']), 1))
         pdc.DrawLine(0, 0, 0, h)
 
         if not pdc == dc:
@@ -83,12 +83,12 @@ class TabsBgPanel(VPanel):
             dc.EndDrawing()
 
 
-class PlgTabs(VPanel):
+class PlgTabs(wal.VPanel):
     plg_tabs = []
     callback = None
 
     def __init__(self, parent, callback=None):
-        VPanel.__init__(self, parent)
+        wal.VPanel.__init__(self, parent)
         self.callback = callback
         self.plg_tabs = []
         self.add((PANEL_WIDTH, PANEL_MARGIN))
@@ -106,7 +106,7 @@ class PlgTabs(VPanel):
     def add_new_tab(self, plg):
         plg_tab = PlgTab(self.panel, plg)
         self.plg_tabs.append(plg_tab)
-        self.add(plg_tab, 0, ALL | EXPAND)
+        self.add(plg_tab, 0, wal.ALL | wal.EXPAND)
         self.add((TAB_MARGIN, TAB_MARGIN))
         plg.plg_tab = plg_tab
         self.set_active(plg)
@@ -134,7 +134,7 @@ class PlgTabs(VPanel):
             dc = pdc
         dc.BeginDrawing()
 
-        dc.SetBrush(wx.Brush(wx.Colour(*const.UI_COLORS['bg'])))
+        dc.SetBrush(wx.Brush(wx.Colour(*wal.UI_COLORS['bg'])))
         dc.SetPen(wx.TRANSPARENT_PEN)
         dc.DrawRectangle(0, 0, w, h)
 
@@ -143,7 +143,7 @@ class PlgTabs(VPanel):
         rect = wx.Rect(0, 0, w / 2, h)
         dc.GradientFillLinear(rect, color1, color2, nDirection=wx.EAST)
 
-        pdc.SetPen(wx.Pen(wx.Colour(*const.UI_COLORS['hover_solid_border']), 1))
+        pdc.SetPen(wx.Pen(wx.Colour(*wal.UI_COLORS['hover_solid_border']), 1))
         pdc.DrawLine(0, 0, 0, h)
 
         if not pdc == dc:
@@ -153,7 +153,7 @@ class PlgTabs(VPanel):
             dc.EndDrawing()
 
 
-class PlgTab(VPanel):
+class PlgTab(wal.VPanel):
     plg = None
     parent = None
 
@@ -175,7 +175,7 @@ class PlgTab(VPanel):
         self.close_but = wx.ArtProvider.GetBitmap(icons.PD_CLOSE_BUTTON_ACTIVE)
         self.inactive_close_but = wx.ArtProvider.GetBitmap(
             icons.PD_CLOSE_BUTTON)
-        VPanel.__init__(self, parent)
+        wal.VPanel.__init__(self, parent)
         self.add((TAB_WIDTH, self.get_best_height()))
         self.Bind(wx.EVT_PAINT, self._on_paint, self)
         self.Bind(wx.EVT_MOTION, self._on_move, self)
@@ -279,12 +279,12 @@ class PlgTab(VPanel):
         pdc.BeginDrawing()
         dc.BeginDrawing()
 
-        dc.SetBrush(wx.Brush(wx.Colour(*const.UI_COLORS['bg'])))
+        dc.SetBrush(wx.Brush(wx.Colour(*wal.UI_COLORS['bg'])))
         dc.SetPen(wx.TRANSPARENT_PEN)
         dc.DrawRectangle(0, 0, w, h)
 
         # ----- colors definition
-        border_color = const.UI_COLORS['hover_solid_border']
+        border_color = wal.UI_COLORS['hover_solid_border']
 
         if self.active:
             # ----- draw border
@@ -299,7 +299,7 @@ class PlgTab(VPanel):
             y += 3 + self.icon.GetSize()[0]
             txt_h = self._get_text_size(self.text, self.active)[1]
             x = (TAB_WIDTH - txt_h) / 2 + txt_h
-            if is_msw(): x += 3
+            if wal.IS_MSW: x += 3
             font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
             if config.tabs_use_bold:
                 font.SetWeight(wx.FONTWEIGHT_BOLD)
@@ -327,7 +327,7 @@ class PlgTab(VPanel):
             pdc.SetPen(wx.Pen(wx.Colour(*border_color), 1))
             pdc.DrawRoundedRectangle(-5, 0, w, h, 3.0)
             pdc.SetPen(
-                wx.Pen(wx.Colour(*const.UI_COLORS['hover_solid_border']), 1))
+                wx.Pen(wx.Colour(*wal.UI_COLORS['hover_solid_border']), 1))
             pdc.DrawLine(0, 0, 0, h)
             # ----- draw icon
             y = TAB_PADDING
@@ -337,7 +337,7 @@ class PlgTab(VPanel):
             y += 3 + self.icon.GetSize()[0]
             txt_h = self._get_text_size(self.text, self.active)[1]
             x = (TAB_WIDTH - txt_h) / 2 + txt_h - 1
-            if is_msw(): x += 3
+            if wal.IS_MSW: x += 3
             font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
             if config.tabs_fontsize:
                 if font.IsUsingSizeInPixels():
