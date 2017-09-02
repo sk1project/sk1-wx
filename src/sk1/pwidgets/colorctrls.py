@@ -1119,7 +1119,8 @@ class ColorSticker(wal.VPanel):
         if not color:
             color = get_registration_black()
         wal.VPanel.__init__(self, parent, True)
-        if wal.is_msw(): self.set_bg(wal.GRAY)
+        if wal.IS_MSW:
+            self.set_bg(wal.GRAY)
         inner_panel = wal.VPanel(self)
         inner_panel.set_bg(wal.WHITE)
 
@@ -1144,7 +1145,8 @@ class ColorSticker(wal.VPanel):
         inner_panel.pack(vf, fill=True)
         inner_panel.pack(self.color_swatch, fill=True, expand=True)
         padding = 0
-        if wal.is_msw(): padding = 1
+        if wal.IS_MSW:
+            padding = 1
         self.pack(inner_panel, fill=True, expand=True, padding_all=padding)
         self.layout()
 
