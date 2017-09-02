@@ -160,7 +160,7 @@ class BitmapToggle(wal.Bitmap):
         return self.state
 
     def _get_bitmap(self):
-        if not self.enabled and wal.is_msw():
+        if not self.enabled and wal.IS_MSW:
             return wal.disabled_bmp(self.icons_dict[self.state][0])
         return self.icons_dict[self.state][0]
 
