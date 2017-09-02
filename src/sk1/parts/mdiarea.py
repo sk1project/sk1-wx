@@ -57,7 +57,7 @@ class MDIArea(wal.VPanel):
 
         # ----- Tools
         self.tools = AppTools(self.app, hpanel)
-        hpanel.pack(self.tools, fill=True)
+        hpanel.pack(self.tools, fill=True, padding_all=2)
         hpanel.pack(wal.VLine(hpanel), fill=True)
 
         self.splitter = wal.Splitter(hpanel)
