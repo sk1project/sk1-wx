@@ -69,7 +69,7 @@ class AppData(UCData):
     def check_components(self):
         comp = self.components
         comp.append(['Python', sys.version])
-        comp.append(['wxWidgets', wal.get_version()])
+        comp.append(['wxWidgets', wal.VERSION])
         comp.append(
             ['UniConvertor', '%s %s' % (UCData.version, UCData.revision)])
         comp.append(['Cairo', libcairo.get_version()[0]])

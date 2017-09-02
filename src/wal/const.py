@@ -27,6 +27,8 @@ MSW = '__WXMSW__'
 GTK = '__WXGTK__'
 MAC = '__WXMAC__'
 
+VERSION = wx.version()
+
 
 def get_version(): return wx.version()
 
@@ -46,6 +48,7 @@ def is_win7(): return is_msw() and platform.release() == '7'
 def is_gtk(): return wx.Platform == GTK
 
 
+iS_GTK2 = wx.Platform == GTK and 'gtk2' in VERSION
 def is_gtk2():
     if is_gtk():
         return 'gtk2' in get_version()
