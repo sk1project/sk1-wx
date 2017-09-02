@@ -18,11 +18,11 @@
 import os
 import wx
 
+import wal
 from sk1 import _
 from uc2 import uc2const
 from uc2.formats import LOADER_FORMATS
 from uc2.utils.fs import path_system
-from wal.const import is_mac
 
 
 def _get_open_filters(items=[]):
@@ -36,7 +36,8 @@ def _get_open_filters(items=[]):
         for extension in ext[item]:
             wildcard += '*.' + extension + ';'
             wildcard += '*.' + extension.upper() + ';'
-    if is_mac(): return wildcard
+    if wal.IS_MAC:
+        return wildcard
 
     wildcard += '|'
 
@@ -57,7 +58,8 @@ def _get_open_filters(items=[]):
 def get_open_file_name(parent, app, start_dir, msg='', file_types=[]):
     ret = ''
     if not msg: msg = _('Open document')
-    if is_mac(): msg = ''
+    if wal.IS_MAC:
+        msg = ''
 
     if start_dir == '~': start_dir = os.path.expanduser(start_dir)
 
@@ -95,7 +97,8 @@ def get_save_file_name(parent, app, path, msg='',
         file_types=[], path_only=False):
     ret = None
     if not msg: msg = _('Save document As...')
-    if is_mac(): msg = ''
+    if wal.IS_MAC:
+        msg = ''
 
     if path == '~': path = os.path.expanduser(path)
 
@@ -127,8 +130,10 @@ def get_save_file_name(parent, app, path, msg='',
 
 def get_dir_path(parent, app, path='~', msg=''):
     ret = ''
-    if not msg: msg = _('Select directory')
-    if is_mac(): msg = ''
+    if not msg:
+        msg = _('Select directory')
+    if wal.IS_MAC:
+        msg = ''
 
     if path == '~': path = os.path.expanduser(path)
 
