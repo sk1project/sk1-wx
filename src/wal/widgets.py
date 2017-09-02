@@ -75,7 +75,7 @@ class Bitmap(wx.StaticBitmap, WidgetMixin):
             self.lcallback(MouseEvent(event))
 
     def _get_bitmap(self):
-        if const.is_msw() and not self.get_enabled():
+        if const.IS_MSW and not self.get_enabled():
             return disabled_bmp(self.bmp)
         return self.bmp
 
@@ -85,7 +85,7 @@ class Bitmap(wx.StaticBitmap, WidgetMixin):
 
     def set_enable(self, value):
         WidgetMixin.set_enable(self, value)
-        if const.is_msw():
+        if const.IS_MSW:
             self.set_bitmap(self.bmp)
 
 
@@ -696,9 +696,9 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
         self.enter_callback = onenter
         spin_overlay = const.SPIN['overlay']
         spin_sep = const.SPIN['sep']
-        if const.is_mac():
+        if const.IS_MAC:
             spin_overlay = False
-        if not width and const.is_msw():
+        if not width and const.IS_MSW:
             width = 5
 
         wx.Panel.__init__(self, parent)
@@ -718,7 +718,7 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
                     self.line.SetPosition((w_pos - 1, 1))
                 self.sb.SetPosition((w_pos, 0))
                 self.SetSize((-1, self.entry.GetSize()[1]))
-            elif const.is_msw():
+            elif const.IS_MSW:
                 width += 2
                 self.entry = Entry(
                     self, '', size=size, width=width,
