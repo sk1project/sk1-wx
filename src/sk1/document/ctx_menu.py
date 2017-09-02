@@ -126,7 +126,7 @@ class CtxActionMenuItem(wx.MenuItem):
         if self.action.is_acc:
             text += '\t' + self.action.get_shortcut_text()
         wx.MenuItem.__init__(self, parent, action_id, text=text)
-        if not config.is_mac() and self.action.is_icon:
+        if not wal.IS_MAC and self.action.is_icon:
             bmp = self.action.get_icon(config.menu_size, wx.ART_MENU)
             if bmp: self.SetBitmap(bmp)
         self.action.register_as_menuitem(self)
