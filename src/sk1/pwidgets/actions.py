@@ -1,25 +1,23 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2013 by Igor E. Novikov
+#  Copyright (C) 2013 by Igor E. Novikov
 #
-# 	This program is free software: you can redistribute it and/or modify
-# 	it under the terms of the GNU General Public License as published by
-# 	the Free Software Foundation, either version 3 of the License, or
-# 	(at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-# 	This program is distributed in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# 	GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-# 	You should have received a copy of the GNU General Public License
-# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx
-
-from wal import const, ImageButton, is_wx2
-
-from sk1 import events, resources
+import wal
+from sk1 import events
+from sk1 import resources
 
 
 class AppAction:
@@ -41,7 +39,8 @@ class AppAction:
     acc_entry = None
     global_accs = []
 
-    def __init__(self, action_id, callback, channels=[],
+    def __init__(
+            self, action_id, callback, channels=[],
             validator=None, checker=None,
             callable_args=[], validator_args=[], checker_args=[]):
 
@@ -70,12 +69,12 @@ class AppAction:
 
     def update(self):
         for widget in self.widgets:
-            if not is_wx2():
+            if not wal.IS_WX2:
                 if widget not in self.menuitem:
                     widget.update()
             else:
                 widget.update()
-        if self.toolbar is not None and not const.is_mac():
+        if self.toolbar is not None and not wal.IS_MAC:
             self.toolbar.EnableTool(self.action_id, self.enabled)
             self.toolbar.SetToolShortHelp(self.action_id, self.get_descr_text())
 
@@ -89,7 +88,7 @@ class AppAction:
     def register_as_menuitem(self, item):
         self.menuitem.append(item)
         self.widgets.append(item)
-        if is_wx2():
+        if wal.IS_WX2:
             self.update()
 
     def unregister(self, widget):
@@ -115,7 +114,7 @@ class AppAction:
             self.enabled = enabled
             for widget in self.widgets:
                 widget.set_enable(self.enabled)
-            if self.toolbar is not None and not const.is_mac():
+            if self.toolbar is not None and not wal.IS_MAC:
                 self.toolbar.EnableTool(self.action_id, self.enabled)
 
     def set_active(self, active):
@@ -141,7 +140,7 @@ class AppAction:
             return resources.get_art_by_id(self.action_id)
         return None
 
-    def get_icon(self, size=(16, 16), client=wx.ART_OTHER):
+    def get_icon(self, size=(16, 16), client=wal.ART_OTHER):
         if self.is_icon:
             return resources.get_bitmap_by_id(self.action_id, client, size)
         return None
@@ -172,7 +171,7 @@ class AppAction:
         return self.checker is not None
 
 
-class ActionButton(ImageButton):
+class ActionButton(wal.ImageButton):
     action = None
 
     def __init__(self, parent, action):
@@ -183,10 +182,11 @@ class ActionButton(ImageButton):
         if artid is None:
             text = tooltip
         native = True
-        if const.is_winxp():
+        if wal.is_winxp():
             native = False
-        ImageButton.__init__(self, parent, artid, const.DEF_SIZE, text, tooltip,
-            native=native, onclick=action.do_call)
+        wal.ImageButton.__init__(
+            self, parent, artid, wal.DEF_SIZE, text,
+            tooltip, native=native, onclick=action.do_call)
         action.register(self)
 
     def update(self):
