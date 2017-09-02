@@ -35,10 +35,10 @@ IS_MSW = wx.Platform == MSW
 def is_msw(): return wx.Platform == MSW
 
 
-def is_winxp(): return is_msw() and platform.release() == 'XP'
+def is_winxp(): return IS_MSW and platform.release() == 'XP'
 
 
-def is_win7(): return is_msw() and platform.release() == '7'
+def is_win7(): return IS_MSW and platform.release() == '7'
 
 
 def is_gtk(): return wx.Platform == GTK
@@ -138,7 +138,13 @@ ID_PRINT_SETUP = wx.ID_PRINT_SETUP
 ID_EXIT = wx.ID_EXIT
 ID_SELECTALL = wx.ID_SELECTALL
 ID_ABOUT = wx.ID_ABOUT
+
 ART_OTHER = wx.ART_OTHER
+
+BITMAP_TYPE_CUR = wx.BITMAP_TYPE_CUR
+BITMAP_TYPE_PNG = wx.BITMAP_TYPE_PNG
+
+CURSOR_WAIT = wx.CURSOR_WAIT
 
 FONT_SIZE = [1, 1]
 DEF_SIZE = (-1, -1)

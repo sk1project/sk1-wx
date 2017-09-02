@@ -30,6 +30,14 @@ def new_id():
     return wx.NewId()
 
 
+def cursor(path, bitmap_type, x=None, y=None):
+    if x is None:
+        return wx.Cursor(path, bitmap_type)
+    return wx.Cursor(path, bitmap_type, x, y)
+
+def stock_cursor(cursor_id):
+    return wx.StockCursor(cursor_id)
+
 class Application(wx.App):
     app_name = None
 
