@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2013 by Igor E. Novikov
+#  Copyright (C) 2013 by Igor E. Novikov
 #
-# 	This program is free software: you can redistribute it and/or modify
-# 	it under the terms of the GNU General Public License as published by
-# 	the Free Software Foundation, either version 3 of the License, or
-# 	(at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-# 	This program is distributed in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# 	GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-# 	You should have received a copy of the GNU General Public License
-# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import platform
@@ -28,12 +28,8 @@ GTK = '__WXGTK__'
 MAC = '__WXMAC__'
 
 VERSION = wx.version()
-
-
-def get_version(): return wx.version()
-
-
-def is_mac(): return wx.Platform == MAC
+IS_MAC = wx.Platform == MAC
+IS_MSW = wx.Platform == MSW
 
 
 def is_msw(): return wx.Platform == MSW
@@ -49,16 +45,22 @@ def is_gtk(): return wx.Platform == GTK
 
 
 iS_GTK2 = wx.Platform == GTK and 'gtk2' in VERSION
+
+
 def is_gtk2():
     if is_gtk():
-        return 'gtk2' in get_version()
+        return 'gtk2' in VERSION
     return False
 
 
 def is_gtk3():
     if is_gtk():
-        return 'gtk3' in get_version()
+        return 'gtk3' in VERSION
     return False
+
+
+IS_WX2 = wx.VERSION[0] == 2
+IS_WX3 = wx.VERSION[0] == 3
 
 
 def is_wx2(): return wx.VERSION[0] == 2
@@ -136,6 +138,7 @@ ID_PRINT_SETUP = wx.ID_PRINT_SETUP
 ID_EXIT = wx.ID_EXIT
 ID_SELECTALL = wx.ID_SELECTALL
 ID_ABOUT = wx.ID_ABOUT
+ART_OTHER = wx.ART_OTHER
 
 FONT_SIZE = [1, 1]
 DEF_SIZE = (-1, -1)
@@ -259,9 +262,9 @@ def get_sel_bg():
 
 
 def set_ui_colors(kw):
-    if is_mac():
+    if IS_MAC:
         _init_mac_colors(kw)
-    elif is_msw():
+    elif IS_MSW:
         _init_msw_colors(kw)
     else:
         _init_gtk_colors(kw)
