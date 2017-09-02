@@ -17,10 +17,9 @@
 
 import cairo
 import wx
-from const import UI_COLORS, DEF_SIZE, TOP, BOTTOM, LEFT, RIGHT
-from const import is_msw
-
 from PIL import Image, ImageOps
+
+import const
 
 
 def get_bitmap_size(bitmap):
@@ -162,7 +161,7 @@ def text_to_bitmap(text, bold=False):
     if bold:
         font.SetWeight(wx.FONTWEIGHT_BOLD)
     dc.SetFont(font)
-    dc.SetTextForeground(wx.Colour(*UI_COLORS['text']))
+    dc.SetTextForeground(wx.Colour(*const.UI_COLORS['text']))
     dc.DrawText(text, 0, 0)
     image = bitmap_to_pil_image(bmp)
     image.putalpha(ImageOps.invert(image).convert('L'))
@@ -193,7 +192,7 @@ class LabelRenderer:
     disabled_bmp = None
     text = ''
     font = None
-    textplace = RIGHT
+    textplace = const.RIGHT
 
     widget = None
     size = ()
@@ -206,8 +205,8 @@ class LabelRenderer:
     active_border = 3
 
     def __init__(
-            self, widget, art_id=None, art_size=DEF_SIZE, text='',
-            padding=0, fontbold=False, fontsize=0, textplace=RIGHT):
+            self, widget, art_id=None, art_size=const.DEF_SIZE, text='',
+            padding=0, fontbold=False, fontsize=0, textplace=const.RIGHT):
         self.widget = widget
         self.decoration_padding = widget.decoration_padding
         if art_id:
@@ -252,7 +251,7 @@ class LabelRenderer:
             bmp_size = self.bmp.GetSize()
         if self.text:
             text_size = self._get_text_size(self.text)
-        if self.textplace in [RIGHT, LEFT]:
+        if self.textplace in [const.RIGHT, const.LEFT]:
             h = max(bmp_size[1], text_size[1])
             w = bmp_size[0] + text_size[0]
         else:
@@ -269,7 +268,7 @@ class LabelRenderer:
                 pdc = self.pdc
             pdc.SetFont(self.font)
             height = pdc.GetCharHeight()
-            if self.textplace in [RIGHT, LEFT]:
+            if self.textplace in [const.RIGHT, const.LEFT]:
                 text += ' '
             width = pdc.GetTextExtent(text)[0]
             result = (width, height)
@@ -286,7 +285,7 @@ class LabelRenderer:
         self.size = self.widget.GetSize()
         if not self.size[0] or not self.size[1]:
             self.pdc = wx.PaintDC(self.widget)
-        elif is_msw() and self.widget.IsDoubleBuffered():
+        elif const.IS_MSW and self.widget.IsDoubleBuffered():
             self.widget.buffer = wx.EmptyBitmapRGBA(*self.size)
             self.pdc = wx.BufferedPaintDC(self.widget, self.widget.buffer)
         else:
@@ -309,14 +308,14 @@ class LabelRenderer:
         if self.text:
             self.pdc.SetFont(self.font)
             if self.widget.enabled:
-                color = UI_COLORS['text']
+                color = const.UI_COLORS['text']
                 self.pdc.SetTextForeground(wx.Colour(*color))
                 self.pdc.DrawText(text, x, y)
             else:
-                color = UI_COLORS['disabled_text_shadow']
+                color = const.UI_COLORS['disabled_text_shadow']
                 self.pdc.SetTextForeground(wx.Colour(*color))
                 self.pdc.DrawText(text, x + 1, y + 1)
-                color = UI_COLORS['disabled_text']
+                color = const.UI_COLORS['disabled_text']
                 self.pdc.SetTextForeground(wx.Colour(*color))
                 self.pdc.DrawText(text, x, y)
 
@@ -343,7 +342,7 @@ class LabelRenderer:
             bmp_size = self.bmp.GetSize()
         if self.text:
             text_size = self._get_text_size(self.text)
-        if self.textplace == TOP:
+        if self.textplace == const.TOP:
             bmp_hshift = 0
             if bmp_size[0] < w_min:
                 bmp_hshift = (w_min - 2 * border - bmp_size[0]) / 2
@@ -354,7 +353,7 @@ class LabelRenderer:
                 text_hshift = (w_min - 2 * border - text_size[0]) / 2
             self._draw_text(self.text, shift_x + text_hshift, shift_y)
 
-        elif self.textplace == LEFT:
+        elif self.textplace == const.LEFT:
             bmp_vshift = 0
             if bmp_size[1] < h_min:
                 bmp_vshift = (h_min - 2 * border - bmp_size[1]) / 2
@@ -365,7 +364,7 @@ class LabelRenderer:
             txt = self.text + ' '
             self._draw_text(txt, shift_x, shift_y + text_vshift)
 
-        elif self.textplace == BOTTOM:
+        elif self.textplace == const.BOTTOM:
             bmp_hshift = 0
             if bmp_size[0] < w_min:
                 bmp_hshift = (w_min - 2 * border - bmp_size[0]) / 2
@@ -401,8 +400,8 @@ class LabelRenderer:
 
 class ButtonRenderer(LabelRenderer):
     def __init__(
-            self, widget, art_id=None, art_size=DEF_SIZE, text='',
-            padding=0, fontbold=False, fontsize=0, textplace=RIGHT):
+            self, widget, art_id=None, art_size=const.DEF_SIZE, text='',
+            padding=0, fontbold=False, fontsize=0, textplace=const.RIGHT):
 
         LabelRenderer.__init__(
             self, widget, art_id, art_size,
@@ -411,7 +410,7 @@ class ButtonRenderer(LabelRenderer):
     # ----- RENDERING
 
     def _draw_border(self):
-        color = UI_COLORS['hover_solid_border']
+        color = const.UI_COLORS['hover_solid_border']
         self.pdc.SetPen(wx.Pen(wx.Colour(*color), 1))
         self.pdc.SetBrush(wx.TRANSPARENT_BRUSH)
         w, h = self.widget.GetSize()
@@ -430,18 +429,18 @@ class ButtonRenderer(LabelRenderer):
     def _draw_hover(self):
         w, h = self.size
 
-        color = UI_COLORS['light_shadow']
+        color = const.UI_COLORS['light_shadow']
         self.dc.SetPen(wx.Pen(wx.Colour(*color), 2))
         self.dc.SetBrush(wx.TRANSPARENT_BRUSH)
         self.dc.DrawRoundedRectangle(2, 2, w - 2, h - 2, 3.0)
 
-        color = UI_COLORS['dark_shadow']
+        color = const.UI_COLORS['dark_shadow']
         self.dc.SetPen(wx.Pen(wx.Colour(*color), self.active_border))
         self.dc.DrawLine(4, h - 2, w - 3, h - 2)
         self.dc.DrawLine(w - 2, 4, w - 2, h - 3)
 
-        color = UI_COLORS['hover_solid_border']
-        if is_msw() and self.widget.IsDoubleBuffered():
+        color = const.UI_COLORS['hover_solid_border']
+        if const.IS_MSW and self.widget.IsDoubleBuffered():
             gc = self.dc.GetGraphicsContext()
             gc.SetAntialiasMode(wx.ANTIALIAS_NONE)
             self.dc.SetPen(wx.Pen(wx.Colour(*color), 1))
@@ -455,18 +454,18 @@ class ButtonRenderer(LabelRenderer):
     def _draw_pressed(self):
         w, h = self.size
 
-        color = UI_COLORS['dark_shadow']
+        color = const.UI_COLORS['dark_shadow']
         self.dc.SetPen(wx.Pen(wx.Colour(*color), self.active_border))
         self.dc.DrawLine(3, 1, w - 3, 1)
         self.dc.DrawLine(1, 3, 1, h - 3)
 
-        color = UI_COLORS['dark_shadow']
+        color = const.UI_COLORS['dark_shadow']
         self.dc.SetPen(wx.Pen(wx.Colour(*color), self.active_border))
         self.dc.SetBrush(wx.Brush(wx.Colour(*color)))
         self.dc.DrawRoundedRectangle(2, 2, w - 2, h - 2, 3.0)
 
-        color = UI_COLORS['hover_solid_border']
-        if is_msw() and self.widget.IsDoubleBuffered():
+        color = const.UI_COLORS['hover_solid_border']
+        if const.IS_MSW and self.widget.IsDoubleBuffered():
             gc = self.dc.GetGraphicsContext()
             gc.SetAntialiasMode(wx.ANTIALIAS_NONE)
             self.dc.SetPen(wx.Pen(wx.Colour(*color), 1))
@@ -517,8 +516,8 @@ class NativeButtonRenderer(ButtonRenderer):
     nr = None
 
     def __init__(
-            self, widget, art_id=None, art_size=DEF_SIZE, text='',
-            padding=0, fontbold=False, fontsize=0, textplace=RIGHT):
+            self, widget, art_id=None, art_size=const.DEF_SIZE, text='',
+            padding=0, fontbold=False, fontsize=0, textplace=const.RIGHT):
 
         LabelRenderer.__init__(
             self, widget, art_id, art_size,
