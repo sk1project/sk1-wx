@@ -18,14 +18,13 @@
 import math
 
 import wal
-from sk1 import _, events, config
+from sk1 import _, events
 from sk1.resources import icons, get_icon
 from uc2 import uc2const
 from uc2.uc2const import point_dict, unit_dict, unit_accuracy
-from wal import Label, FloatSpin, const
 
 
-class StaticUnitLabel(Label):
+class StaticUnitLabel(wal.Label):
     app = None
     insp = None
     units = uc2const.UNIT_MM
@@ -36,7 +35,7 @@ class StaticUnitLabel(Label):
         if self.insp.is_doc():
             self.units = app.current_doc.model.doc_units
         text = uc2const.unit_short_names[self.units]
-        Label.__init__(self, parent, text)
+        wal.Label.__init__(self, parent, text)
 
 
 class UnitLabel(StaticUnitLabel):
@@ -59,7 +58,7 @@ class UnitLabel(StaticUnitLabel):
         self.set_text(text)
 
 
-class StaticUnitSpin(FloatSpin):
+class StaticUnitSpin(wal.FloatSpin):
     app = None
     insp = None
     ucallback = None
@@ -79,7 +78,7 @@ class StaticUnitSpin(FloatSpin):
         if self.insp.is_doc():
             self.units = app.current_doc.model.doc_units
         val = self.point_value * point_dict[self.units]
-        FloatSpin.__init__(
+        wal.FloatSpin.__init__(
             self, parent, val, self.point_range, step=step,
             onchange=self.update_point_value,
             onenter=onenter)
@@ -177,10 +176,10 @@ class BitmapToggle(wal.Bitmap):
 
     def update_icons(self):
         self.icons_dict[True] = [
-            get_icon(self.icons_dict[True][0], size=const.DEF_SIZE),
+            get_icon(self.icons_dict[True][0], size=wal.DEF_SIZE),
             self.icons_dict[True][1]]
         self.icons_dict[False] = [
-            get_icon(self.icons_dict[False][0], size=const.DEF_SIZE),
+            get_icon(self.icons_dict[False][0], size=wal.DEF_SIZE),
             self.icons_dict[False][1]]
 
     def set_icons_dict(self, icons_dict):
@@ -212,7 +211,7 @@ class ActionImageSwitch(BitmapToggle):
         self.set_active(self.action.active)
 
 
-class AngleSpin(FloatSpin):
+class AngleSpin(wal.FloatSpin):
     ucallback = None
     angle_value = 0.0
 
@@ -221,7 +220,7 @@ class AngleSpin(FloatSpin):
             onchange=None, onenter=None, check_focus=False):
         self.angle_value = val
         self.ucallback = onchange
-        FloatSpin.__init__(
+        wal.FloatSpin.__init__(
             self, parent, val, val_range, step=1.0,
             onchange=self.update_angle_value,
             onenter=onenter,
