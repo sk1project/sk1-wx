@@ -547,7 +547,9 @@ class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
 
     def __init__(
             self, parent, value=0, range_val=(0, 1), size=DEF_SIZE,
-            width=0, onchange=None, onenter=None, check_focus=True):
+            width=5, onchange=None, onenter=None, check_focus=True):
+        if const.is_gtk3():
+            width = 0
         size = self._set_width(size, width)
         wx.SpinCtrl.__init__(self, parent, wx.ID_ANY, '', size=size,
             style=wx.SP_ARROW_KEYS | wx.ALIGN_LEFT | wx.TE_PROCESS_ENTER)
@@ -596,10 +598,12 @@ if not const.is_wx2():
 
         def __init__(
                 self, parent, value=0.0, range_val=(0.0, 1.0), step=0.01,
-                digits=2, size=DEF_SIZE, width=0,
+                digits=2, size=DEF_SIZE, width=5,
                 onchange=None, onenter=None, check_focus=True):
 
             self.range_val = range_val
+            if const.is_gtk3():
+                width = 0
             size = self._set_width(size, width)
             wx.SpinCtrlDouble.__init__(self, parent, wx.ID_ANY, '', size=size,
                 style=wx.SP_ARROW_KEYS | wx.ALIGN_LEFT | wx.TE_PROCESS_ENTER,
@@ -685,7 +689,7 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
 
     def __init__(
             self, parent, value=0.0, range_val=(0.0, 1.0), step=0.01,
-            digits=2, size=DEF_SIZE, width=0,
+            digits=2, size=DEF_SIZE, width=5,
             onchange=None, onenter=None, check_focus=True):
 
         self.callback = onchange
