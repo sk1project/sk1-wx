@@ -17,19 +17,20 @@
 
 import wx
 
+import wal
 from sk1 import config, modes
 from sk1.resources import pdids
 
-UNDO = [wx.ID_UNDO, wx.ID_REDO]
-EDIT = [None, wx.ID_CUT, wx.ID_COPY, wx.ID_PASTE,
-    wx.ID_DELETE, pdids.ID_DUPLICATE, None, wx.ID_SELECTALL]
+UNDO = [wal.ID_UNDO, wal.ID_REDO]
+EDIT = [None, wal.ID_CUT, wal.ID_COPY, wal.ID_PASTE,
+    wal.ID_DELETE, pdids.ID_DUPLICATE, None, wal.ID_SELECTALL]
 STYLE = [None, pdids.FILL_MODE, pdids.STROKE_MODE, pdids.COPY_FILL,
     pdids.COPY_STROKE]
-DEFAULT = [None, wx.ID_PROPERTIES]
+DEFAULT = [None, wal.ID_PROPERTIES]
 COMBINE = [None, pdids.ID_COMBINE, pdids.ID_BREAK_APART, ]
 TO_CURVES = [None, pdids.ID_TO_CURVES]
 GROUP = [None, pdids.ID_GROUP, pdids.ID_UNGROUP, pdids.ID_UNGROUPALL, ]
-BEZIER_EDIT = [None, wx.ID_SELECTALL, pdids.ID_DESELECT, pdids.ID_INV_SELECT,
+BEZIER_EDIT = [None, wal.ID_SELECTALL, pdids.ID_DESELECT, pdids.ID_INV_SELECT,
     None, pdids.ID_BEZIER_ADD_NODE, pdids.ID_BEZIER_DELETE_NODE,
     None, pdids.ID_BEZIER_ADD_SEG, pdids.ID_BEZIER_DELETE_SEG,
     pdids.ID_BEZIER_JOIN_NODE, pdids.ID_BEZIER_SPLIT_NODE,
