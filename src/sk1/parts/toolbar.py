@@ -34,7 +34,7 @@ def build_toolbar(mw):
     icon_size = config.toolbar_icon_size
     tb.SetToolBitmapSize(config.toolbar_size)
 
-    if wal.is_mac():
+    if wal.IS_MAC:
         for items in BUTTONS:
             if items is not None:
                 if len(items) == 1:
@@ -59,7 +59,7 @@ def build_toolbar(mw):
                     bmp = action.get_icon(icon_size, wal.ART_TOOLBAR)
                     if not bmp:
                         continue
-                    if wal.is_msw():
+                    if wal.IS_MSW:
                         tb.AddLabelTool(aid, label_txt, bmp,
                                         bmpDisabled=wal.disabled_bmp(bmp),
                                         shortHelp=hlp_txt)
