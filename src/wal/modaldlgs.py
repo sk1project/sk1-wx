@@ -151,10 +151,10 @@ class OkCancelDialog(SimpleDialog):
         self.left_button_box = HPanel(self.button_box)
         self.button_box.pack(self.left_button_box, expand=True, fill=True)
 
-        if const.is_mac():
+        if const.IS_MAC:
             self.button_box.pack(self.ok_btn, padding=5)
             self.button_box.pack(self.cancel_btn, padding=5)
-        elif const.is_msw():
+        elif const.IS_MSW:
             self.button_box.pack(self.ok_btn, padding=2)
             self.button_box.pack(self.cancel_btn)
         else:
