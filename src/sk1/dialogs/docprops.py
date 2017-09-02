@@ -191,7 +191,7 @@ class PageProps(DP_Panel):
 
         # ---
         vpanel = wal.VPanel(self)
-        if wal.is_msw(): vpanel.pack((5, 5))
+        if wal.IS_MSW: vpanel.pack((5, 5))
 
         self.pattern_check = wal.Checkbox(vpanel,
             _('Use pattern for page fill'),
@@ -199,7 +199,7 @@ class PageProps(DP_Panel):
             onclick=self.pattern_check_changed)
         vpanel.pack(self.pattern_check, align_center=False)
 
-        if wal.is_msw(): vpanel.pack((5, 5))
+        if wal.IS_MSW: vpanel.pack((5, 5))
 
         self.border_flag = self.doc.methods.get_page_border()
         self.border_check = wal.Checkbox(vpanel,
@@ -506,7 +506,7 @@ class GuidePreview(wal.VPanel, wal.Canvas):
         for item in (0.3, 0.7):
             self.draw_line(0, int(item * h), w, int(item * h))
 
-        if wal.is_msw():
+        if wal.IS_MSW:
             self.set_stroke(wal.GRAY)
             self.set_fill()
             self.draw_rect(0, 0, w, h)
