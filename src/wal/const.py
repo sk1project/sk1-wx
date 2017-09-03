@@ -44,21 +44,21 @@ def get_desktop_name():
         return os.environ['XDG_CURRENT_DESKTOP']
     return None
 
+
 DESKTOP_NAME = get_desktop_name()
-
-
-def is_unity():
-    return DESKTOP_NAME == 'Unity'
 IS_UNITY = DESKTOP_NAME == 'Unity'
+
 
 def is_unity_16_04():
     if IS_GTK:
-        ver = platform.dist()[1].split('.')[0]
-        dist = platform.dist()[0] + ' ' + ver
-        if dist == 'Ubuntu 16' and get_desktop_name() == 'Unity':
+        ver = int(platform.dist()[1].split('.')[0])
+        dist = platform.dist()[0] + ' %d' % ver
+        if dist == 'Ubuntu' and ver >= 16 and IS_UNITY:
             return True
     return False
 
+
+IS_UNITY_16 = is_unity_16_04()
 
 TOP = wx.TOP
 BOTTOM = wx.BOTTOM

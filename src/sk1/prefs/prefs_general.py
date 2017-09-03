@@ -85,7 +85,7 @@ class GeneralPrefs(PrefPanel):
             self.spin_sep = wal.Checkbox(self, txt, config.spin_sep)
             self.pack(self.spin_sep, align_center=False)
 
-        if wal.is_unity():
+        if wal.IS_UNITY:
             txt = _('Unity related features')
             self.pack(wal.Label(grid, txt, fontsize=2, fontbold=True),
                 start_padding=10)
@@ -119,7 +119,7 @@ class GeneralPrefs(PrefPanel):
             config.spin_overlay = self.spin_overlay.get_value()
         if wal.IS_GTK and wal.IS_WX2:
             config.spin_sep = self.spin_sep.get_value()
-        if wal.is_unity():
+        if wal.IS_UNITY:
             config.ubuntu_global_menu = self.ubuntu_gm.get_value()
             config.ubuntu_scrollbar_overlay = self.ubuntu_overlay.get_value()
 
@@ -136,6 +136,6 @@ class GeneralPrefs(PrefPanel):
             self.spin_overlay.set_value(defaults['spin_overlay'])
         if wal.IS_GTK and wal.IS_WX2:
             self.spin_sep.set_value(defaults['spin_sep'])
-        if wal.is_unity():
+        if wal.IS_UNITY:
             self.ubuntu_gm.set_value(defaults['ubuntu_global_menu'])
             self.ubuntu_overlay.set_value(defaults['ubuntu_scrollbar_overlay'])
