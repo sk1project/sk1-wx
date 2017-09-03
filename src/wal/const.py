@@ -34,21 +34,15 @@ IS_WINXP = IS_MSW and platform.release() == 'XP'
 IS_WIN7 = IS_MSW and platform.release() == '7'
 IS_GTK = wx.Platform == GTK
 
+
 def is_gtk(): return wx.Platform == GTK
 
 
 IS_GTK2 = IS_GTK and 'gtk2' in VERSION
 IS_GTK3 = IS_GTK and 'gtk3' in VERSION
 
-
 IS_WX2 = wx.VERSION[0] == 2
 IS_WX3 = wx.VERSION[0] == 3
-
-
-def is_wx2(): return wx.VERSION[0] == 2
-
-
-def is_wx3(): return wx.VERSION[0] == 3
 
 
 def get_desktop_name():

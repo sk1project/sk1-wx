@@ -32,7 +32,7 @@ class AboutDialog(wal.SimpleDialog):
             resizable=False, add_line=False)
 
     def build(self):
-        if wal.is_wx3():
+        if wal.IS_WX3:
             header_panel = wal.VPanel(self)
             color = wal.GRAY
             if wal.is_gtk(): color = wal.UI_COLORS['pressed_border']

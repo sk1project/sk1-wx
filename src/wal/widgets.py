@@ -589,7 +589,7 @@ class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
 
 IntSpin = Spin
 
-if not const.is_wx2():
+if not const.IS_WX2:
     class SpinDouble(wx.SpinCtrlDouble, RangeDataWidgetMixin):
         callback = None
         callback1 = None
@@ -876,7 +876,7 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
         self.SetValue(self.value)
 
 
-if const.is_wx2():
+if const.IS_WX2:
     FloatSpin = MegaSpin
 
 

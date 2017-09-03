@@ -104,7 +104,7 @@ class SK1Application(wal.Application, UCApplication):
 
         self.proxy.update()
         self.insp.update()
-        if wal.is_wx2(): events.emit(events.NO_DOCS)
+        if wal.IS_WX2: events.emit(events.NO_DOCS)
         if config.make_font_cache_on_start: generate_fcache()
 
     def load_plugins(self):
@@ -124,7 +124,7 @@ class SK1Application(wal.Application, UCApplication):
             txt = _('To start, create new document or open existing')
             events.emit(events.APP_STATUS, txt)
             self.load_plugins()
-            if not wal.is_wx2(): events.emit(events.NO_DOCS)
+            if not wal.IS_WX2: events.emit(events.NO_DOCS)
         self.update_actions()
 
     def stub(self, *args):

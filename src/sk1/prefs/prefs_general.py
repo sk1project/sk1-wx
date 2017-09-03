@@ -75,12 +75,12 @@ class GeneralPrefs(PrefPanel):
 
         if wal.IS_MSW: self.pack((5, 5))
 
-        if not wal.IS_MAC and wal.is_wx2():
+        if not wal.IS_MAC and wal.IS_WX2:
             txt = _('Use overlay for spinbox widgets (*)')
             self.spin_overlay = wal.Checkbox(self, txt, config.spin_overlay)
             self.pack(self.spin_overlay, align_center=False)
 
-        if wal.is_gtk() and wal.is_wx2():
+        if wal.is_gtk() and wal.IS_WX2:
             txt = _('Separate spin in spinbox widgets (*)')
             self.spin_sep = wal.Checkbox(self, txt, config.spin_sep)
             self.pack(self.spin_sep, align_center=False)
@@ -115,9 +115,9 @@ class GeneralPrefs(PrefPanel):
         config.history_list_size = self.hist_menu_size.get_value()
         config.show_stub_buttons = self.stub_buttons.get_value()
         config.make_font_cache_on_start = self.fcache.get_value()
-        if not wal.IS_MAC and wal.is_wx2():
+        if not wal.IS_MAC and wal.IS_WX2:
             config.spin_overlay = self.spin_overlay.get_value()
-        if wal.is_gtk() and wal.is_wx2():
+        if wal.is_gtk() and wal.IS_WX2:
             config.spin_sep = self.spin_sep.get_value()
         if wal.is_unity():
             config.ubuntu_global_menu = self.ubuntu_gm.get_value()
@@ -132,9 +132,9 @@ class GeneralPrefs(PrefPanel):
         self.hist_menu_size.set_value(defaults['history_list_size'])
         self.stub_buttons.set_value(defaults['show_stub_buttons'])
         self.fcache.set_value(defaults['make_font_cache_on_start'])
-        if not wal.IS_MAC and wal.is_wx2():
+        if not wal.IS_MAC and wal.IS_WX2:
             self.spin_overlay.set_value(defaults['spin_overlay'])
-        if wal.is_gtk() and wal.is_wx2():
+        if wal.is_gtk() and wal.IS_WX2:
             self.spin_sep.set_value(defaults['spin_sep'])
         if wal.is_unity():
             self.ubuntu_gm.set_value(defaults['ubuntu_global_menu'])
