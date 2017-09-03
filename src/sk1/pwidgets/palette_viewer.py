@@ -247,12 +247,12 @@ class PaletteViewer(wal.VPanel):
         border = wal.VPanel(self, border=True)
         if wal.IS_WX3:
             color = wal.GRAY
-            if wal.is_gtk(): color = wal.UI_COLORS['pressed_border']
+            if wal.IS_GTK: color = wal.UI_COLORS['pressed_border']
             border.set_bg(color)
         self.pack(border, expand=True, fill=True)
         self.win = ScrolledPalette(border, self.cms, onclick=self.select_color)
         if wal.IS_WX3:
-            if wal.is_gtk():
+            if wal.IS_GTK:
                 inner_border = wal.VPanel(self)
                 inner_border.pack(self.win, expand=True, fill=True)
                 border.pack(inner_border, expand=True, fill=True, padding_all=1)

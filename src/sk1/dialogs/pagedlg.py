@@ -104,7 +104,7 @@ class InsertPageDialog(wal.OkCancelDialog):
         self.pack(panel, padding=5)
 
         margin = 0
-        if not wal.is_gtk(): margin = 3
+        if not wal.IS_GTK: margin = 3
 
         panel.pack((5, 5))
         vpanel = wal.VPanel(panel)

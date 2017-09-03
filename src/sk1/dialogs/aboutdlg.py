@@ -35,7 +35,7 @@ class AboutDialog(wal.SimpleDialog):
         if wal.IS_WX3:
             header_panel = wal.VPanel(self)
             color = wal.GRAY
-            if wal.is_gtk(): color = wal.UI_COLORS['pressed_border']
+            if wal.IS_GTK: color = wal.UI_COLORS['pressed_border']
             header_panel.set_bg(color)
             header = AboutHeader(self.app, header_panel)
             header_panel.pack(header, fill=True, padding_all=1)

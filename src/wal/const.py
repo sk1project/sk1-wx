@@ -33,14 +33,8 @@ IS_MSW = wx.Platform == MSW
 IS_WINXP = IS_MSW and platform.release() == 'XP'
 IS_WIN7 = IS_MSW and platform.release() == '7'
 IS_GTK = wx.Platform == GTK
-
-
-def is_gtk(): return wx.Platform == GTK
-
-
 IS_GTK2 = IS_GTK and 'gtk2' in VERSION
 IS_GTK3 = IS_GTK and 'gtk3' in VERSION
-
 IS_WX2 = wx.VERSION[0] == 2
 IS_WX3 = wx.VERSION[0] == 3
 
@@ -50,10 +44,12 @@ def get_desktop_name():
         return os.environ['XDG_CURRENT_DESKTOP']
     return None
 
+DESKTOP_NAME = get_desktop_name()
+
 
 def is_unity():
-    return get_desktop_name() == 'Unity'
-
+    return DESKTOP_NAME == 'Unity'
+IS_UNITY = DESKTOP_NAME == 'Unity'
 
 def is_unity_16_04():
     if IS_GTK:

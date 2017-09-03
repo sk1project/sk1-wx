@@ -703,7 +703,7 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
 
         wx.Panel.__init__(self, parent)
         if spin_overlay:
-            if const.is_gtk():
+            if const.IS_GTK:
                 self.entry = Entry(
                     self, '', size=size, width=width,
                     onchange=self._check_entry, onenter=self._entry_enter)

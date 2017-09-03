@@ -35,7 +35,7 @@ class AppStatusbar(wal.HPanel):
 
     def __init__(self, mw):
 
-        if wal.IS_MSW:
+        if wal.is_msw():
             FONTSIZE[0] = 0
         elif not FONTSIZE[0]:
             FONTSIZE[0] = str(wal.get_system_fontsize()[1])
@@ -213,7 +213,7 @@ class PageMonitor(wal.HPanel):
         wal.HPanel.__init__(self, parent)
 
         native = False
-        if wal.is_gtk():
+        if wal.IS_GTK:
             native = True
 
         callback = self.app.proxy.goto_start
