@@ -69,7 +69,7 @@ class SK1Application(wal.Application, UCApplication):
         wal.Application.__init__(self)
         UCApplication.__init__(self, path, cfgdir)
 
-        if wal.is_winxp():
+        if wal.IS_WINXP:
             msg = _('WindowsXP platform is obsolete and not supported!')
             dialogs.error_dialog(self.mw, 'sK1', msg)
             sys.exit()

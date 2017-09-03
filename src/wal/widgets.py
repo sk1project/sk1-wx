@@ -548,7 +548,7 @@ class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
     def __init__(
             self, parent, value=0, range_val=(0, 1), size=DEF_SIZE,
             width=5, onchange=None, onenter=None, check_focus=True):
-        if const.is_gtk3():
+        if const.IS_GTK3:
             width = 0
         size = self._set_width(size, width)
         wx.SpinCtrl.__init__(self, parent, wx.ID_ANY, '', size=size,
@@ -602,7 +602,7 @@ if not const.is_wx2():
                 onchange=None, onenter=None, check_focus=True):
 
             self.range_val = range_val
-            if const.is_gtk3():
+            if const.IS_GTK3:
                 width = 0
             size = self._set_width(size, width)
             wx.SpinCtrlDouble.__init__(self, parent, wx.ID_ANY, '', size=size,

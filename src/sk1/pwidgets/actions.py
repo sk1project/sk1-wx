@@ -182,7 +182,7 @@ class ActionButton(wal.ImageButton):
         if artid is None:
             text = tooltip
         native = True
-        if wal.is_winxp():
+        if wal.IS_WINXP:
             native = False
         wal.ImageButton.__init__(
             self, parent, artid, wal.DEF_SIZE, text,

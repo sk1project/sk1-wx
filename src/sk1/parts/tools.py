@@ -96,7 +96,7 @@ class ActionToolButton(wal.ImageButton):
 
         if wal.IS_MSW:
             decoration_padding = 2
-            if wal.is_winxp(): native = False
+            if wal.IS_WINXP: native = False
 
         wal.ImageButton.__init__(self, parent, art_id, art_size, text, tooltip,
             padding, decoration_padding, True, native,

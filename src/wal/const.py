@@ -30,33 +30,15 @@ MAC = '__WXMAC__'
 VERSION = wx.version()
 IS_MAC = wx.Platform == MAC
 IS_MSW = wx.Platform == MSW
-
-
-def is_msw(): return wx.Platform == MSW
-
-
-def is_winxp(): return IS_MSW and platform.release() == 'XP'
-
-
-def is_win7(): return IS_MSW and platform.release() == '7'
-
+IS_WINXP = IS_MSW and platform.release() == 'XP'
+IS_WIN7 = IS_MSW and platform.release() == '7'
+IS_GTK = wx.Platform == GTK
 
 def is_gtk(): return wx.Platform == GTK
 
 
-iS_GTK2 = wx.Platform == GTK and 'gtk2' in VERSION
-
-
-def is_gtk2():
-    if is_gtk():
-        return 'gtk2' in VERSION
-    return False
-
-
-def is_gtk3():
-    if is_gtk():
-        return 'gtk3' in VERSION
-    return False
+IS_GTK2 = IS_GTK and 'gtk2' in VERSION
+IS_GTK3 = IS_GTK and 'gtk3' in VERSION
 
 
 IS_WX2 = wx.VERSION[0] == 2
@@ -70,7 +52,7 @@ def is_wx3(): return wx.VERSION[0] == 3
 
 
 def get_desktop_name():
-    if is_gtk() and 'XDG_CURRENT_DESKTOP' in os.environ:
+    if IS_GTK and 'XDG_CURRENT_DESKTOP' in os.environ:
         return os.environ['XDG_CURRENT_DESKTOP']
     return None
 
@@ -80,7 +62,7 @@ def is_unity():
 
 
 def is_unity_16_04():
-    if is_gtk():
+    if IS_GTK:
         ver = platform.dist()[1].split('.')[0]
         dist = platform.dist()[0] + ' ' + ver
         if dist == 'Ubuntu 16' and get_desktop_name() == 'Unity':
