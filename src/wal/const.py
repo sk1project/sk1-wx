@@ -39,20 +39,20 @@ IS_WX2 = wx.VERSION[0] == 2
 IS_WX3 = wx.VERSION[0] == 3
 
 
-def get_desktop_name():
+def _get_desktop_name():
     if IS_GTK and 'XDG_CURRENT_DESKTOP' in os.environ:
         return os.environ['XDG_CURRENT_DESKTOP']
     return None
 
 
-DESKTOP_NAME = get_desktop_name()
+DESKTOP_NAME = _get_desktop_name()
 IS_UNITY = DESKTOP_NAME == 'Unity'
 
 
 def is_unity_16_04():
     if IS_GTK:
         ver = int(platform.dist()[1].split('.')[0])
-        dist = platform.dist()[0] + ' %d' % ver
+        dist = platform.dist()[0]
         if dist == 'Ubuntu' and ver >= 16 and IS_UNITY:
             return True
     return False
