@@ -64,10 +64,10 @@ DATASET = {
     'git_url': 'https://github.com/sk1project/sk1-wx',
     'git_url2': 'https://github.com/sk1project/sk1-wx-msw',
     'user': 'igor',
-    'ftp_url': '192.168.0.102',
+    'ftp_url': '192.168.0.33',
     'ftp_path': '/home/igor/buildfarm',
     'ftp_user': 'igor',
-    'ftp_pass': '',
+    'ftp_pass': 'Hes 6exks',
     'timeout': '10',
     'timestamp': datetime.datetime.now().strftime("%Y%m%d"),
     'script': 'setup-sk1.py',
@@ -210,7 +210,8 @@ def check_update():
 
     # build agent update
     name = __file__.split(os.path.sep)[-1]
-    build_dir = os.path.expanduser('~/buildfarm')
+    build_dir = os.path.join('~','buildfarm')
+    build_dir = os.path.expanduser(build_dir)
     source = os.path.join(build_dir, DATASET['project'], 'build-farm', name)
     if not os.path.lexists(source):
         echo_msg('...Aborted')
@@ -316,7 +317,8 @@ def publish_file(pth):
 fetch_cli_args()
 check_mode()
 
-BUILD_DIR = os.path.expanduser('~/buildfarm')
+build_dir = os.path.join('~','buildfarm')
+BUILD_DIR = os.path.expanduser(build_dir)
 PROJECT_DIR = os.path.join(BUILD_DIR, DATASET['project'])
 PROJECT2_DIR = os.path.join(BUILD_DIR, DATASET['project2'])
 DIST_DIR = os.path.join(PROJECT_DIR, 'dist')
@@ -390,20 +392,23 @@ if is_linux():
 elif is_msw():
     if not is_path(PROJECT_DIR):
         echo_msg('Cloning project %s' % url)
-        command('cd %s;git clone %s %s' % (BUILD_DIR, url, proj_name))
+        print BUILD_DIR
+        command('"cd %s \n\r git clone %s %s"' % (BUILD_DIR, url, proj_name))
     else:
         echo_msg('Updating projects %s' % url)
-        command('cd %s;git pull' % PROJECT_DIR)
+        print PROJECT_DIR
+        command('"cd %s \n\r git pull"' % PROJECT_DIR)
     if not is_path(PROJECT2_DIR):
         echo_msg('Cloning project %s' % url2)
-        command('cd %s;git clone %s %s' % (BUILD_DIR, url, proj2_name))
+        command('"cd %s \n\r git clone %s %s"' % (BUILD_DIR, url, proj2_name))
     else:
         echo_msg('Updating projects %s' % url2)
-        command('cd %s;git pull' % PROJECT2_DIR)
+        command('"cd %s \n\r git pull"' % PROJECT2_DIR)
     if is_path(DIST_DIR):
-        command('rm -rf %s' % DIST_DIR)
+        pass
+        #command('rm -rf %s' % DIST_DIR)
 
-    command('cd %s;python %s bdist_msi' % (PROJECT2_DIR, script))
-    command('cd %s;python %s bdist_portable' % (PROJECT2_DIR, script))
+    #command('"cd %s && python.exe %s bdist_msi"' % (PROJECT2_DIR, script))
+    #command('"cd %s && python.exe %s bdist_portable"' % (PROJECT2_DIR, script))
 elif is_macos():
     pass
