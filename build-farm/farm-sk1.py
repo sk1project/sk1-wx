@@ -59,7 +59,7 @@ STDOUT_BOLD = '\033[1m'
 STDOUT_UNDERLINE = '\033[4m'
 
 DATASET = {
-    'agent_ver': '1.0.6',
+    'agent_ver': '1.0.7',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -94,7 +94,7 @@ DEB = [
     # 'Debian 9.1 64bit',
 ]
 RPM = [
-    'Fedora 25 32bit',
+    # 'Fedora 25 32bit',
     # 'Fedora 25 64bit',
     # 'Fedora 26 32bit',
     # 'Fedora 26 64bit',
@@ -103,7 +103,7 @@ RPM = [
     # 'OpenSuse 42.3 64bit',
 ]
 MSI = [
-    # 'Win7 32bit',
+    'Win7 32bit',
     # 'Win7 64bit',
 ]
 
@@ -123,7 +123,10 @@ def echo_msg(msg, newline=True, flush=True, code=''):
 
 
 def startvm(vmname):
-    os.system('VBoxManage startvm "%s" --type %s' % (vmname, VMTYPE))
+    if vmname in MSI:
+        os.system('VBoxManage startvm "%s" --type %s' % (vmname, 'gui'))
+    else:
+        os.system('VBoxManage startvm "%s" --type %s' % (vmname, VMTYPE))
 
 
 def suspendvm(vmname):
@@ -152,6 +155,27 @@ def run_agent(vmname):
     echo_msg('===>BUILD FINISHED ON "%s"' % vmname, code=STDOUT_GREEN)
 
 
+def run_agent_windows(vmname):
+    echo_msg('\n===>STARTING BUILD ON "%s"' % vmname, code=STDOUT_GREEN)
+    cmd = 'VBoxManage --nologo guestcontrol "%s" run' % vmname
+    cmd += ' --exe "c:\\python27\\python.exe"'
+    cmd += ' --username "%s"' % DATASET['user']
+    cmd += ' --password "%s"' % DATASET['user_pass']
+    cmd += ' --wait-stdout --wait-stderr'
+    cmd += ' -- sudo/arg0'
+    cmd += ' "c:\\users\\%s\\build-agent.py"' % DATASET['user']
+    for item in DATASET.keys():
+        value = DATASET[item]
+        if not value:
+            continue
+        if ' ' in value:
+            value = "'%s'" % value
+        cmd += ' "%s=%s"' % (item, value)
+
+    os.system(cmd)
+    echo_msg('===>BUILD FINISHED ON "%s"' % vmname, code=STDOUT_GREEN)
+
+
 flr_left = '\n' + '|' * 20
 flr_right = '|' * 20 + '\n'
 echo_msg(flr_left + ' FARM STARTED ' + flr_right, code=STDOUT_YELLOW)
@@ -159,7 +183,10 @@ echo_msg(flr_left + ' FARM STARTED ' + flr_right, code=STDOUT_YELLOW)
 for vmname in OSes:
     echo_msg(vmname + '-' * 40 + '\n', code=STDOUT_BOLD)
     startvm(vmname)
-    run_agent(vmname)
+    if vmname in MSI:
+        run_agent_windows(vmname)
+    else:
+        run_agent(vmname)
     suspendvm(vmname)
 
 echo_msg(flr_left + 'FARM TERMINATED' + flr_right, code=STDOUT_YELLOW)

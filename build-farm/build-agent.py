@@ -50,7 +50,7 @@ class Error(Exception):
     pass
 
 
-VERSION = '1.0.6'
+VERSION = '1.0.7'
 
 DATASET = {
     'agent_ver': '1.0.6',
@@ -388,7 +388,6 @@ if is_linux():
 
 
 elif is_msw():
-    # TODO: Implementation should be finished
     if not is_path(PROJECT_DIR):
         echo_msg('Cloning project %s' % url)
         command('cd %s;git clone %s %s' % (BUILD_DIR, url, proj_name))
