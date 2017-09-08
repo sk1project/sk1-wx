@@ -42,6 +42,7 @@ import ftplib
 import ntpath
 import os
 import platform
+import shutil
 import sys
 import time
 
@@ -50,10 +51,10 @@ class Error(Exception):
     pass
 
 
-VERSION = '1.0.7'
+VERSION = '1.0.8'
 
 DATASET = {
-    'agent_ver': '1.0.6',
+    'agent_ver': '1.0.8',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -64,13 +65,14 @@ DATASET = {
     'git_url': 'https://github.com/sk1project/sk1-wx',
     'git_url2': 'https://github.com/sk1project/sk1-wx-msw',
     'user': 'igor',
-    'ftp_url': '192.168.0.33',
+    'ftp_url': '192.168.0.104',
     'ftp_path': '/home/igor/buildfarm',
     'ftp_user': 'igor',
-    'ftp_pass': 'Hes 6exks',
+    'ftp_pass': '',
     'timeout': '10',
     'timestamp': datetime.datetime.now().strftime("%Y%m%d"),
     'script': 'setup-sk1.py',
+    'script2': 'setup-sk1-msw.py',
 }
 
 WINDOWS = 'Windows'
@@ -181,8 +183,9 @@ def get_package_name(pth):
                     and not 'debuginfo' in fn:
                 return fn
     elif is_msw():
-        # TODO: Should be implemented
-        pass
+        if len(files) == 1:
+            if files[0].endswith('.zip') or files[0].endswith('.msi'):
+                return files[0]
     raise Error('Build failed! There is no build result.')
 
 
@@ -210,7 +213,7 @@ def check_update():
 
     # build agent update
     name = __file__.split(os.path.sep)[-1]
-    build_dir = os.path.join('~','buildfarm')
+    build_dir = os.path.join('~', 'buildfarm')
     build_dir = os.path.expanduser(build_dir)
     source = os.path.join(build_dir, DATASET['project'], 'build-farm', name)
     if not os.path.lexists(source):
@@ -317,7 +320,7 @@ def publish_file(pth):
 fetch_cli_args()
 check_mode()
 
-build_dir = os.path.join('~','buildfarm')
+build_dir = os.path.join('~', 'buildfarm')
 BUILD_DIR = os.path.expanduser(build_dir)
 PROJECT_DIR = os.path.join(BUILD_DIR, DATASET['project'])
 PROJECT2_DIR = os.path.join(BUILD_DIR, DATASET['project2'])
@@ -327,8 +330,10 @@ if is_msw():
 url = DATASET['git_url']
 url2 = DATASET['git_url2']
 script = DATASET['script']
+script2 = DATASET['script2']
 proj_name = DATASET['project']
 proj2_name = DATASET['project2']
+timestamp = DATASET['timestamp']
 
 if not is_path(BUILD_DIR):
     os.mkdir(BUILD_DIR)
@@ -362,8 +367,8 @@ if is_linux():
         new_name = prefix + get_marker() + suffix
         if is_ubuntu():
             ts = ''
-            if DATASET['timestamp']:
-                ts = '_' + DATASET['timestamp']
+            if timestamp:
+                ts = '_' + timestamp
 
             if platform.dist()[1] == '14.04':
                 package_name2 = prefix + ts + '_mint_17_' + suffix
@@ -392,23 +397,34 @@ if is_linux():
 elif is_msw():
     if not is_path(PROJECT_DIR):
         echo_msg('Cloning project %s' % url)
-        print BUILD_DIR
-        command('"cd %s \n\r git clone %s %s"' % (BUILD_DIR, url, proj_name))
+        os.chdir(BUILD_DIR)
+        command('git clone %s %s' % (url, proj_name))
     else:
         echo_msg('Updating projects %s' % url)
-        print PROJECT_DIR
-        command('"cd %s \n\r git pull"' % PROJECT_DIR)
+        os.chdir(PROJECT_DIR)
+        command('git pull')
     if not is_path(PROJECT2_DIR):
         echo_msg('Cloning project %s' % url2)
-        command('"cd %s \n\r git clone %s %s"' % (BUILD_DIR, url, proj2_name))
+        os.chdir(BUILD_DIR)
+        command('git clone %s %s' % (url, proj2_name))
     else:
         echo_msg('Updating projects %s' % url2)
-        command('"cd %s \n\r git pull"' % PROJECT2_DIR)
+        os.chdir(PROJECT2_DIR)
+        command('git pull')
     if is_path(DIST_DIR):
-        pass
-        #command('rm -rf %s' % DIST_DIR)
+        shutil.rmtree(DIST_DIR, True)
 
-    #command('"cd %s && python.exe %s bdist_msi"' % (PROJECT2_DIR, script))
-    #command('"cd %s && python.exe %s bdist_portable"' % (PROJECT2_DIR, script))
+    for cmd in ('bdist_portable', 'bdist_msi'):
+        os.chdir(PROJECT2_DIR)
+        command('c:\python27\python.exe %s %s' % (script2, cmd))
+        new_name = old_name = get_package_name(DIST_DIR)
+        os.chdir(DIST_DIR)
+        if timestamp:
+            new_name = old_name.replace('-win', '-%s-win' % timestamp)
+            command('ren %s %s' % (old_name, new_name))
+        package_name = os.path.join(DIST_DIR, new_name)
+        publish_file(package_name)
+
+
 elif is_macos():
     pass
