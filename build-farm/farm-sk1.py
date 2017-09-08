@@ -59,7 +59,7 @@ STDOUT_BOLD = '\033[1m'
 STDOUT_UNDERLINE = '\033[4m'
 
 DATASET = {
-    'agent_ver': '1.0.7',
+    'agent_ver': '1.0.8',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -77,6 +77,7 @@ DATASET = {
     'ftp_pass': '',
     'timestamp': datetime.datetime.now().strftime("%Y%m%d"),
     'script': 'setup-sk1.py',
+    'script2': 'setup-sk1-msw.py',
 }
 
 DEB = [
