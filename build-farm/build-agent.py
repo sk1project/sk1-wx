@@ -65,7 +65,7 @@ DATASET = {
     'git_url': 'https://github.com/sk1project/sk1-wx',
     'git_url2': 'https://github.com/sk1project/sk1-wx-msw',
     'user': 'igor',
-    'ftp_url': '192.168.0.104',
+    'ftp_url': '192.168.0.102',
     'ftp_path': '/home/igor/buildfarm',
     'ftp_user': 'igor',
     'ftp_pass': '',
