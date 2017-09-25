@@ -312,11 +312,12 @@ class UnitsProps(DP_Panel):
         if not self.origin == self.origin_keeper.get_mode():
             self.api.set_doc_origin(self.origin_keeper.get_mode())
 
+WIDTH = 300
 
 class GridPreview(wal.VPanel, wal.Canvas):
     color = []
-    vgrid = range(0, 200, 20)
-    hgrid = range(0, 200, 20)
+    vgrid = range(0, WIDTH, 20)
+    hgrid = range(0, WIDTH, 20)
 
     def __init__(self, parent, color):
         self.color = color
@@ -343,14 +344,19 @@ class GridPreview(wal.VPanel, wal.Canvas):
 
         self.set_stroke(cms.val_255(color1), 1.0)
         for item in self.vgrid:
-            self.draw_line(item, 0, item, 200)
+            self.draw_line(item, 0, item, WIDTH)
         for item in self.hgrid:
-            self.draw_line(0, item, 200, item)
+            self.draw_line(0, item, WIDTH, item)
         self.draw_line(0, self.get_size()[1] - 1, 200, self.get_size()[1] - 1)
 
         self.set_stroke(cms.val_255(color2), 1.0)
-        self.draw_line(self.vgrid[2], 0, self.vgrid[2], 200)
-        self.draw_line(0, self.hgrid[3], 200, self.hgrid[3])
+        self.draw_line(self.vgrid[2], 0, self.vgrid[2], WIDTH)
+        self.draw_line(0, self.hgrid[3], WIDTH, self.hgrid[3])
+
+        self.set_stroke(wal.UI_COLORS['hover_solid_border'])
+        self.set_fill(None)
+        w, h = self.get_size()
+        self.draw_rect(0, 0, w, h)
 
 
 class GridProps(DP_Panel):
@@ -506,10 +512,9 @@ class GuidePreview(wal.VPanel, wal.Canvas):
         for item in (0.3, 0.7):
             self.draw_line(0, int(item * h), w, int(item * h))
 
-        if wal.IS_MSW:
-            self.set_stroke(wal.GRAY)
-            self.set_fill()
-            self.draw_rect(0, 0, w, h)
+        self.set_stroke(wal.UI_COLORS['hover_solid_border'])
+        self.set_fill(None)
+        self.draw_rect(0, 0, w, h)
 
 
 GUIDE_COLORS = ['#0051FF', '#7DF7F6', '#503E8C', '#FF3C0B', '#8282FF',
