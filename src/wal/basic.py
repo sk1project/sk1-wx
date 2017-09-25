@@ -856,3 +856,9 @@ class ExpandedPanel(VPanel):
 
     def pack(self, *args, **kw):
         self.container.pack(*args, **kw)
+
+class PLine(VPanel):
+    def __init__(self, parent):
+        VPanel.__init__(self, parent)
+        self.pack((1,1))
+        self.set_bg(const.UI_COLORS['hover_solid_border'])
