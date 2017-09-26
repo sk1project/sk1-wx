@@ -51,10 +51,10 @@ class Error(Exception):
     pass
 
 
-VERSION = '1.0.8'
+VERSION = '1.0.9'
 
 DATASET = {
-    'agent_ver': '1.0.8',
+    'agent_ver': '1.0.9',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -135,6 +135,11 @@ def is_rpm():
     return platform.dist()[0] in [FEDORA, OPENSUSE]
 
 
+def is_src():
+    return is_deb() and platform.dist()[1] == '16.04' and \
+           platform.architecture()[0] == '64bit'
+
+
 def echo_msg(msg, newline=True, flush=True):
     if newline:
         msg += '\n'
@@ -175,8 +180,9 @@ def get_package_name(pth):
         if os.path.isfile(os.path.join(pth, fn)):
             files.append(fn)
     if is_deb():
-        if len(files) == 1 and files[0].endswith('.deb'):
-            return files[0]
+        if len(files) == 1:
+            if files[0].endswith('.deb') or files[0].endswith('.tar.gz'):
+                return files[0]
     elif is_rpm():
         for fn in files:
             if fn.endswith('.rpm') and not fn.endswith('src.rpm') \
@@ -393,6 +399,20 @@ if is_linux():
         command('cp %s %s' % (old_name, package_name2))
         publish_file(package_name2)
 
+    if is_src():
+        echo_msg("Creating source package")
+        if os.path.isdir(DIST_DIR):
+            shutil.rmtree(DIST_DIR, True)
+        command('cd %s;python %s sdist 1> /dev/null' % (PROJECT_DIR, script))
+        old_name = get_package_name(DIST_DIR)
+        marker = ''
+        if DATASET['timestamp']:
+            marker = '_%s' % DATASET['timestamp']
+        new_name = old_name.replace('.tar.gz', '%s.tar.gz' % marker)
+        old_name = os.path.join(DIST_DIR, old_name)
+        package_name = os.path.join(DIST_DIR, new_name)
+        command('cp %s %s' % (old_name, package_name))
+        publish_file(package_name)
 
 elif is_msw():
     if not is_path(PROJECT_DIR):
@@ -424,6 +444,7 @@ elif is_msw():
             command('ren %s %s' % (old_name, new_name))
         package_name = os.path.join(DIST_DIR, new_name)
         publish_file(package_name)
+        os.remove(package_name)
 
 
 elif is_macos():
