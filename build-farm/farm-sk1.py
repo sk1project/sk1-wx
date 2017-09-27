@@ -84,7 +84,7 @@ DEB = [
     # 'Ubuntu 14.04 32bit',
     # 'Ubuntu 14.04 64bit',
     # 'Ubuntu 16.04 32bit',
-    # 'Ubuntu 16.04 64bit',
+    'Ubuntu 16.04 64bit',
     # 'Ubuntu 17.04 32bit',
     # 'Ubuntu 17.04 64bit',
     # 'Debian 7.8 32bit',
@@ -104,13 +104,29 @@ RPM = [
     # 'OpenSuse 42.3 64bit',
 ]
 MSI = [
-    'Win7 32bit',
+    # 'Win7 32bit',
     # 'Win7 64bit',
 ]
 
 OSes = DEB + RPM + MSI
 
 VMTYPE = 'headless'  # 'gui'
+
+
+def fetch_cli_args():
+    if len(sys.argv) > 1:
+        args = sys.argv[1:]
+        for item in args:
+            if '=' in item:
+                key, value = item.split('=')[:2]
+                if value[0] in ('"', "'"):
+                    value = value[1:]
+                if value[-1] in ('"', "'"):
+                    value = value[:-1]
+                DATASET[key] = value
+
+
+fetch_cli_args()
 
 
 def echo_msg(msg, newline=True, flush=True, code=''):
