@@ -51,10 +51,10 @@ class Error(Exception):
     pass
 
 
-VERSION = '1.0.9'
+VERSION = '1.1.0'
 
 DATASET = {
-    'agent_ver': '1.0.9',
+    'agent_ver': '1.1.0',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -433,6 +433,8 @@ elif is_msw():
         command('git pull')
     if is_path(DIST_DIR):
         shutil.rmtree(DIST_DIR, True)
+
+    check_update()
 
     for cmd in ('bdist_portable', 'bdist_msi'):
         os.chdir(PROJECT2_DIR)
