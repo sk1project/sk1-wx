@@ -95,9 +95,10 @@ class SimpleDialog(wx.Dialog, mixins.DialogMixin):
 class CloseDialog(SimpleDialog):
     def __init__(
             self, parent, title, size=(-1, -1), style=VERTICAL,
-            resizable=True, on_load=None, add_line=True):
+            resizable=True, on_load=None, add_line=True, margin=None):
         SimpleDialog.__init__(
-            self, parent, title, size, style, resizable, on_load, add_line)
+            self, parent, title, size, style, resizable, on_load, 
+            add_line, margin)
 
     def set_dialog_buttons(self):
         if self.add_line:
@@ -123,14 +124,17 @@ class OkCancelDialog(SimpleDialog):
     ok_btn = None
     cancel_btn = None
     action_button = None
+    button_box_padding = 0
 
     def __init__(
             self, parent, title, size=(-1, -1), style=VERTICAL,
             resizable=False, action_button=const.BUTTON_OK, on_load=None,
-            add_line=True):
+            add_line=True, margin=None, button_box_padding = 0):
         self.action_button = action_button
+        self.button_box_padding = button_box_padding
         SimpleDialog.__init__(
-            self, parent, title, size, style, resizable, on_load, add_line)
+            self, parent, title, size, style, resizable, on_load, 
+            add_line, margin)
 
     def set_dialog_buttons(self):
         if self.add_line:
@@ -139,7 +143,8 @@ class OkCancelDialog(SimpleDialog):
             self.box.pack((3, 3))
 
         self.button_box = HPanel(self.box)
-        self.box.pack(self.button_box, fill=True)
+        self.box.pack(self.button_box, fill=True, 
+            padding_all = self.button_box_padding)
 
         self.ok_btn = Button(
             self.button_box, '', onclick=self.on_ok,
