@@ -123,8 +123,7 @@ class InsertPageDialog(wal.OkCancelDialog):
         page_num = len(pages)
         current_page = pages.index(self.presenter.active_page) + 1
 
-        self.page_index = wal.FloatSpin(panel, current_page,
-            (1, page_num), 1, 0)
+        self.page_index = wal.IntSpin(panel, current_page, (1, page_num))
         panel.pack(self.page_index, padding=5)
 
     def get_result(self):

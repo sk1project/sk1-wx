@@ -665,10 +665,13 @@ if not const.IS_WX2:
             event.Skip()
 
     def get_value(self):
+        if not self.digits:
+            return int(self.GetValue())
         return float(self.GetValue())
 
     def set_value(self, value):
-        self.SetValue(float(value))
+        if self.digits:
+            self.SetValue(float(value))
 
 
     FloatSpin = SpinDouble
