@@ -58,7 +58,7 @@ class MDIArea(wal.VPanel):
         # ----- Tools
         self.tools = AppTools(self.app, hpanel)
         hpanel.pack(self.tools, fill=True, padding_all=2)
-        hpanel.pack(wal.VLine(hpanel), fill=True)
+        hpanel.pack(wal.PLine(hpanel), fill=True)
 
         self.splitter = wal.Splitter(hpanel)
         self.doc_keeper = wal.VPanel(self.splitter)
@@ -75,24 +75,24 @@ class MDIArea(wal.VPanel):
 
         # ----- Vertical Palette panel
         self.vp_panel = wal.HPanel(hpanel)
-        self.vp_panel.pack(wal.VLine(self.vp_panel), fill=True, start_padding=2)
+        self.vp_panel.pack(wal.PLine(self.vp_panel), fill=True)
         vpalette_panel = AppVPalette(self.vp_panel, self.app)
         self.vp_panel.pack(vpalette_panel, fill=True, padding=2)
-        hpanel.pack(self.vp_panel, fill=True)
+        hpanel.pack(self.vp_panel, fill=True, start_padding=2)
         if config.palette_orientation == uc2const.HORIZONTAL:
             self.vp_panel.hide()
 
         # ----- Horizontal Palette panel
         self.hp_panel = wal.VPanel(self)
-        self.hp_panel.pack(wal.HLine(self.hp_panel), fill=True, padding=2)
+        self.hp_panel.pack(wal.PLine(self.hp_panel), fill=True)
         hpalette_panel = AppHPalette(self.hp_panel, self.app)
-        self.hp_panel.pack(hpalette_panel, fill=True)
+        self.hp_panel.pack(hpalette_panel, fill=True, padding=2)
         self.pack(self.hp_panel, fill=True)
 
         self.change_palette()
 
         # ----- Status bar
-        self.pack(wal.HLine(self), fill=True, start_padding=2)
+        self.pack(wal.PLine(self), fill=True)#, start_padding=2)
         self.statusbar = AppStatusbar(self)
         self.pack(self.statusbar, fill=True, padding=2)
 

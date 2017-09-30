@@ -30,7 +30,7 @@ class PlgArea(wal.HPanel):
 	def __init__(self, app, parent):
 		self.app = app
 		wal.HPanel.__init__(self, parent)
-		self.pack(wal.VLine(self), fill=True)
+		self.pack(wal.PLine(self), fill=True)
 		self.container = wal.VPanel(self)
 		self.pack(self.container, expand=True, fill=True)
 		self.tabs = PlgTabsPanel(app, self)
