@@ -588,10 +588,10 @@ class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
             self.ctxmenu_flag = False
         event.Skip()
 
-    def get_value():
+    def get_value(self):
         return int(self.GetValue())
 
-    def set_value(value):
+    def set_value(self, value):
         self.SetValue(int(value))
 
 
@@ -664,10 +664,10 @@ if not const.IS_WX2:
                 self.ctxmenu_flag = False
             event.Skip()
 
-    def get_value():
+    def get_value(self):
         return float(self.GetValue())
 
-    def set_value(value):
+    def set_value(self, value):
         self.SetValue(float(value))
 
 
