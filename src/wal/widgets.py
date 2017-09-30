@@ -588,6 +588,12 @@ class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
             self.ctxmenu_flag = False
         event.Skip()
 
+    def get_value():
+        return int(self.GetValue())
+
+    def set_value(value):
+        self.SetValue(int(value))
+
 
 IntSpin = Spin
 
@@ -657,6 +663,12 @@ if not const.IS_WX2:
             elif not self.flag and self.ctxmenu_flag:
                 self.ctxmenu_flag = False
             event.Skip()
+
+    def get_value():
+        return float(self.GetValue())
+
+    def set_value(value):
+        self.SetValue(float(value))
 
 
     FloatSpin = SpinDouble
