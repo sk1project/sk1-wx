@@ -36,15 +36,18 @@ class LogViewerDialog(wal.OkCancelDialog):
 		self.app = parent.app
 		size = config.history_dlg_size
 		wal.OkCancelDialog.__init__(self, parent, title, size, resizable=True,
-								action_button=wal.BUTTON_OPEN)
+			action_button=wal.BUTTON_OPEN, margin=0, add_line=False, 
+			button_box_padding=5)
 		self.set_minsize(config.history_dlg_minsize)
 		self.ok_btn.set_enable(False)
 		self.update_list()
 
 	def build(self):
+		self.panel.pack(wal.PLine(self.panel), fill=True)
 		self.lc = wal.ReportList(self.panel, on_select=self.update,
 								on_activate=self.on_ok)
 		self.panel.pack(self.lc, expand=True, fill=True)
+		self.panel.pack(wal.PLine(self.panel), fill=True)
 
 	def set_dialog_buttons(self):
 		wal.OkCancelDialog.set_dialog_buttons(self)
