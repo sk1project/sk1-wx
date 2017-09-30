@@ -63,26 +63,32 @@ class PrefsDialog(wal.OkCancelDialog):
     def __init__(self, parent, title, pid=''):
         self.app = parent.app
         size = config.prefs_dlg_size
-        wal.OkCancelDialog.__init__(self, parent, title, size, resizable=True)
+        wal.OkCancelDialog.__init__(self, parent, title, size, resizable=True,
+            margin=0, add_line=False, button_box_padding=5)
         self.set_minsize(config.prefs_dlg_minsize)
         if not pid: pid = 'General'
         self.tree.set_item_by_reference(self.get_plugin_by_pid(pid))
 
     def build(self):
+        self.panel.pack(wal.PLine(self.panel), fill=True)
         self.splitter = wal.Splitter(self.panel)
         self.panel.pack(self.splitter, expand=True, fill=True)
+        self.tree_container = wal.HPanel(self.splitter)
         if not PREFS_DATA:
             PREFS_DATA.append(PrefsAppItem(PREFS_APP))
             # 			PREFS_DATA.append(PrefsDocItem(PREFS_DOC))
             for item in PREFS_DATA:
                 item.init_prefs(self.app, self)
-        self.tree = wal.TreeWidget(self.splitter, data=PREFS_DATA,
-            on_select=self.on_select)
+        self.tree = wal.TreeWidget(self.tree_container, data=PREFS_DATA,
+            on_select=self.on_select, border=False)
+        self.tree_container.pack(self.tree, fill=True, expand=True)
+        self.tree_container.pack(wal.PLine(self.panel), fill=True)
         self.container = wal.HPanel(self.splitter)
-        self.splitter.split_vertically(self.tree, self.container, 200)
-        self.splitter.set_min_size(150)
+        self.splitter.split_vertically(self.tree_container, self.container, 200)
+        self.splitter.set_min_size(200)
         if not wal.IS_MSW: self.tree.set_indent(5)
         self.tree.expand_all()
+        self.panel.pack(wal.PLine(self.panel), fill=True)
 
     def set_dialog_buttons(self):
         wal.OkCancelDialog.set_dialog_buttons(self)
@@ -96,7 +102,7 @@ class PrefsDialog(wal.OkCancelDialog):
             if self.current_plugin:
                 self.container.remove(self.current_plugin)
                 self.current_plugin.hide()
-            self.container.pack(plugin, fill=True, expand=True, padding=5)
+            self.container.pack(plugin, fill=True, expand=True, padding_all=5)
             plugin.show()
             if not plugin.built:
                 plugin.build()
