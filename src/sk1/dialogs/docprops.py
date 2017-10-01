@@ -353,7 +353,7 @@ class GridPreview(wal.VPanel, wal.Canvas):
         self.draw_line(self.vgrid[2], 0, self.vgrid[2], WIDTH)
         self.draw_line(0, self.hgrid[3], WIDTH, self.hgrid[3])
 
-        self.set_stroke(wal.UI_COLORS['hover_solid_border'])
+        self.set_stroke(cms.val_255(color2), 1.0)
         self.set_fill(None)
         w, h = self.get_size()
         self.draw_rect(0, 0, w, h)
