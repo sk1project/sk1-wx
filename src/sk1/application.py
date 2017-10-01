@@ -150,7 +150,9 @@ class SK1Application(wal.Application, UCApplication):
         config.active_plugins = plugins
         if self.mw.mdi.plg_area.is_shown():
             w = self.mw.mdi.splitter.get_size()[0]
-            config.sash_position = self.mw.mdi.splitter.get_sash_position() - w
+            val = self.mw.mdi.splitter.get_sash_position() - w
+            if val < 0:
+                config.sash_position = val
         config.save(self.appdata.app_config)
 
     def exit(self, *args):
