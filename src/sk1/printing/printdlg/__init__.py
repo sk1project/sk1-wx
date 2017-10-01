@@ -55,6 +55,7 @@ class PrintDialog(wal.SimpleDialog):
         prnpanel = wal.VPanel(self)
         # --- Control panels
 
+        prnpanel.pack(wal.PLine(prnpanel), fill=True)
         prnpanel.pack(PrinterPanel(prnpanel, self, self.printsys), fill=True)
         prnpanel.pack(PrintModePanel(prnpanel, self.printer), fill=True)
         prnpanel.pack(PageRangePanel(prnpanel, self.printout), fill=True)
@@ -64,9 +65,10 @@ class PrintDialog(wal.SimpleDialog):
         # --- Control panels end
 
         self.pack(prnpanel, fill=True)
-        self.pack(wal.VLine(self), fill=True)
+        self.pack(wal.PLine(self), fill=True)
 
         cont = wal.VPanel(self)
+        cont.pack(wal.PLine(cont), fill=True)
 
         r_grid = wal.GridPanel(cont)
         cv_grid = wal.GridPanel(r_grid)
@@ -85,7 +87,7 @@ class PrintDialog(wal.SimpleDialog):
         self.canvas.set_ctrls(hscroll, vscroll, hruler, vruler, tb.pager)
 
         cont.pack(tb, fill=True)
-        cont.pack(wal.HLine(self), fill=True)
+        cont.pack(wal.PLine(cont), fill=True)
 
         cv_grid.add_growable_col(0)
         cv_grid.add_growable_row(0)
