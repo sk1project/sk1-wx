@@ -545,7 +545,7 @@ class GuidesProps(DP_Panel):
 
         val = self.doc.methods.is_guide_visible()
         self.show_guide_check = wal.Checkbox(vpanel,
-            _('Show grid on canvas'), val)
+            _('Show guides on canvas'), val)
         vpanel.pack(self.show_guide_check, align_center=False, padding=5)
 
         self.pack((10, 10))
