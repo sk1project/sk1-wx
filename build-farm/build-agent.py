@@ -414,6 +414,8 @@ if is_linux():
         command('cp %s %s' % (old_name, package_name))
         publish_file(package_name)
 
+        #TODO here should be arch pkgbuild
+
 elif is_msw():
     if not is_path(PROJECT_DIR):
         echo_msg('Cloning project %s' % url)
