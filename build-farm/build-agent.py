@@ -149,28 +149,23 @@ def echo_msg(msg, newline=True, flush=True):
 
 
 def get_marker():
-    if is_linux():
-        if is_deb():
+    if is_deb():
+        ver = platform.dist()[1]
+        if is_debian():
+            ver = ver.split('.')[0]
+        marker = '_%s_%s_' % (MARKERS[platform.dist()[0]], ver)
+        if DATASET['timestamp']:
+            marker = '_%s%s' % (DATASET['timestamp'], marker)
+        return marker
+    elif is_rpm():
+        ver = platform.dist()[1].split('.')[0]
+        if platform.dist()[0] == OPENSUSE:
             ver = platform.dist()[1]
-            if is_debian():
-                ver = ver.split('.')[0]
-            marker = '_%s_%s_' % (MARKERS[platform.dist()[0]], ver)
-            if DATASET['timestamp']:
-                marker = '_%s%s' % (DATASET['timestamp'], marker)
-            return marker
-        elif is_rpm():
-            ver = platform.dist()[1].split('.')[0]
-            if platform.dist()[0] == OPENSUSE:
-                ver = platform.dist()[1]
-            marker = MARKERS[platform.dist()[0]] + ver
-            if DATASET['timestamp']:
-                marker = '%s.%s' % (DATASET['timestamp'], marker)
-            return marker
-        return MARKERS[platform.dist()[0]]
-    elif is_msw():
-        # TODO: Should be implemented
-        return 'win'
-    return 'macos'
+        marker = MARKERS[platform.dist()[0]] + ver
+        if DATASET['timestamp']:
+            marker = '%s.%s' % (DATASET['timestamp'], marker)
+        return marker
+    return MARKERS[platform.dist()[0]]
 
 
 def get_package_name(pth):
