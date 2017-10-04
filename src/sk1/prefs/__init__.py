@@ -70,10 +70,9 @@ class PrefsDialog(wal.OkCancelDialog):
         self.tree.set_item_by_reference(self.get_plugin_by_pid(pid))
 
     def build(self):
-        self.panel.pack(wal.PLine(self.panel), fill=True)
         self.splitter = wal.Splitter(self.panel)
         self.panel.pack(self.splitter, expand=True, fill=True)
-        self.tree_container = wal.HPanel(self.splitter)
+        self.tree_container = wal.VPanel(self.splitter)
         if not PREFS_DATA:
             PREFS_DATA.append(PrefsAppItem(PREFS_APP))
             # 			PREFS_DATA.append(PrefsDocItem(PREFS_DOC))
@@ -82,13 +81,15 @@ class PrefsDialog(wal.OkCancelDialog):
         self.tree = wal.TreeWidget(self.tree_container, data=PREFS_DATA,
             on_select=self.on_select, border=False)
         self.tree_container.pack(self.tree, fill=True, expand=True)
-        self.tree_container.pack(wal.PLine(self.panel), fill=True)
-        self.container = wal.HPanel(self.splitter)
-        self.splitter.split_vertically(self.tree_container, self.container, 200)
+        cont = wal.VPanel(self.splitter)
+        cont.pack(wal.PLine(cont), fill=True)
+        self.container = wal.VPanel(cont)
+        cont.pack(self.container, fill=True, expand=True)
+        cont.pack(wal.PLine(cont), fill=True)
+        self.splitter.split_vertically(self.tree_container, cont, 200)
         self.splitter.set_min_size(200)
         if not wal.IS_MSW: self.tree.set_indent(5)
         self.tree.expand_all()
-        self.panel.pack(wal.PLine(self.panel), fill=True)
 
     def set_dialog_buttons(self):
         wal.OkCancelDialog.set_dialog_buttons(self)
