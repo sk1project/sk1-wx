@@ -20,35 +20,10 @@ import wx.combo
 from wx import animate
 
 import const
-from basic import HPanel
+from basic import HPanel, MouseEvent
 from const import DEF_SIZE
 from mixins import WidgetMixin, DataWidgetMixin, RangeDataWidgetMixin
 from renderer import bmp_to_white, disabled_bmp
-
-
-class MouseEvent(object):
-    event = None
-
-    def __init__(self, event):
-        self.event = event
-
-    def get_point(self):
-        return list(self.event.GetPositionTuple())
-
-    def get_rotation(self):
-        return self.event.GetWheelRotation()
-
-    def is_ctrl(self):
-        return self.event.ControlDown()
-
-    def is_alt(self):
-        return self.event.AltDown()
-
-    def is_shift(self):
-        return self.event.ShiftDown()
-
-    def is_cmd(self):
-        return self.event.CmdDown()
 
 
 class Bitmap(wx.StaticBitmap, WidgetMixin):
