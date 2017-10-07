@@ -350,6 +350,31 @@ class VPanel(SizedPanel):
         self.add(obj, expand, flags, padding)
 
 
+class MouseEvent(object):
+    event = None
+
+    def __init__(self, event):
+        self.event = event
+
+    def get_point(self):
+        return list(self.event.GetPositionTuple())
+
+    def get_rotation(self):
+        return self.event.GetWheelRotation()
+
+    def is_ctrl(self):
+        return self.event.ControlDown()
+
+    def is_alt(self):
+        return self.event.AltDown()
+
+    def is_shift(self):
+        return self.event.ShiftDown()
+
+    def is_cmd(self):
+        return self.event.CmdDown()
+
+
 class Canvas(object):
     dc = None
     pdc = None
@@ -862,3 +887,51 @@ class PLine(VPanel):
         VPanel.__init__(self, parent)
         self.pack((1,1))
         self.set_bg(const.UI_COLORS['hover_solid_border'])
+
+class HSizer(HPanel):
+    def __init__(self, parent, grip_width=5, visible=True):
+        HPanel.__init__(self, parent)
+        self.client = None
+        self.client_parent = None
+        self.client_min = 0
+        self.move = False
+        self.mouse_captured = False
+        self.grip_width = grip_width
+        self.visible = visible
+        if self.visible:
+            self.pack((self.grip_width, self.grip_width))
+        self.Bind(wx.EVT_LEFT_DOWN, self.mouse_left_down)
+        self.Bind(wx.EVT_LEFT_UP, self.mouse_left_up)
+        self.Bind(wx.EVT_MOTION, self.mouse_move)
+        self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self.capture_lost)
+        #self.SetCursor(self.current_cursor)
+
+    def set_client(self, client_parent, client, client_min=0):
+        self.client = client
+        self.client_parent = client_parent
+        self.client_min = client_min
+
+    def capture_mouse(self):
+        if const.IS_MSW:
+            self.CaptureMouse()
+            self.mouse_captured = True
+
+    def release_mouse(self):
+        if self.mouse_captured:
+            try:
+                self.ReleaseMouse()
+            except:
+                pass
+            self.mouse_captured = False
+
+    def capture_lost(self, event):
+        self.release_mouse()
+
+    def mouse_left_down(self, event):
+        self.move = True
+        self.capture_mouse()
+
+    def mouse_left_up(self, event):
+        self.release_mouse()
+
+    def mouse_move(self, event):pass
