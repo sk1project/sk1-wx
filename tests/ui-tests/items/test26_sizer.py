@@ -3,7 +3,7 @@
 
 import wal
 
-SIZE = (300, 200)
+SIZE = (500, 200)
 
 class MW(wal.MainWindow):
 
@@ -11,17 +11,24 @@ class MW(wal.MainWindow):
         wal.MainWindow.__init__(self)
         self.set_size(SIZE)
 
-        self.slider = wal.Slider(self, onchange=self.on_change,
-            on_final_change=self.on_final_change)
-        self.pack(self.slider)
+        hpanel = wal.HPanel(self)
+        self.pack(hpanel, fill=True, expand=True)
 
-        self.slider2 = wal.Slider(self, vertical=True)
-        self.pack(self.slider2)
+        lpanel = wal.VPanel(hpanel)
+        client = wal.VPanel(lpanel)
+        client.pack((200,0))
+        lpanel.pack(client)
+        lpanel.set_bg(wal.RED)
+        hpanel.pack(lpanel, fill=True)
 
-    def on_change(self):
-        print self.slider.get_value()
+        hsizer = wal.HSizer(hpanel)
+        hsizer.set_client(hpanel, client, 100)
+        hpanel.pack(hsizer, fill=True)
 
-    def on_final_change(self):
-        print 'final', self.slider.get_value()
+        rpanel = wal.VPanel(hpanel)
+        rpanel.pack((20,20))
+        rpanel.set_bg(wal.BLUE)
+        hpanel.pack(rpanel, fill=True, expand=True)
+
 
 MW().run()

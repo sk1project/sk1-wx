@@ -894,8 +894,12 @@ class HSizer(HPanel):
         self.client = None
         self.client_parent = None
         self.client_min = 0
+        self.left_side = True
         self.move = False
         self.mouse_captured = False
+        self.processing = False
+        self.start = 0
+        self.end = 0
         self.grip_width = grip_width
         self.visible = visible
         if self.visible:
@@ -906,10 +910,26 @@ class HSizer(HPanel):
         self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self.capture_lost)
         #self.SetCursor(self.current_cursor)
 
-    def set_client(self, client_parent, client, client_min=0):
+    def set_client(self, client_parent, client, client_min=0, left_side=True):
         self.client = client
         self.client_parent = client_parent
         self.client_min = client_min
+        self.left_side = left_side
+
+    def resize(self):
+        change = self.end - self.start
+        if not change:
+            return
+        w = self.client.get_size()[0]
+        if self.left_side:
+            w += change
+        else:
+            w -= change
+        if w < self.client_min:
+            w = self.client_min
+        self.client.remove_all()
+        self.client.pack((w,0))
+        self.client_parent.Layout()
 
     def capture_mouse(self):
         if const.IS_MSW:
@@ -930,8 +950,24 @@ class HSizer(HPanel):
     def mouse_left_down(self, event):
         self.move = True
         self.capture_mouse()
+        event = MouseEvent(event)
+        self.start = self.end = event.get_point()[0]
 
     def mouse_left_up(self, event):
         self.release_mouse()
+        self.move = False
+        event = MouseEvent(event)
+        self.end = event.get_point()[0]
+        self.resize()
 
-    def mouse_move(self, event):pass
+    def mouse_move(self, event):
+        if self.move:
+            if self.processing:
+                return
+            self.processing = True
+            event = MouseEvent(event)
+            self.end = event.get_point()[0]
+            self.resize()
+            self.processing = False
+
+
