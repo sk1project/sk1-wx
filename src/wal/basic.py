@@ -882,11 +882,13 @@ class ExpandedPanel(VPanel):
     def pack(self, *args, **kw):
         self.container.pack(*args, **kw)
 
+
 class PLine(VPanel):
     def __init__(self, parent):
         VPanel.__init__(self, parent)
-        self.pack((1,1))
+        self.pack((1, 1))
         self.set_bg(const.UI_COLORS['hover_solid_border'])
+
 
 class HSizer(HPanel):
     def __init__(self, parent, grip_width=5, visible=True):
@@ -908,7 +910,7 @@ class HSizer(HPanel):
         self.Bind(wx.EVT_LEFT_UP, self.mouse_left_up)
         self.Bind(wx.EVT_MOTION, self.mouse_move)
         self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self.capture_lost)
-        #self.SetCursor(self.current_cursor)
+        self.SetCursor(wx.StockCursor(wx.CURSOR_SIZEWE))
 
     def set_client(self, client_parent, client, client_min=0, left_side=True):
         self.client = client
@@ -928,7 +930,7 @@ class HSizer(HPanel):
         if w < self.client_min:
             w = self.client_min
         self.client.remove_all()
-        self.client.pack((w,0))
+        self.client.pack((w, 0))
         self.client_parent.Layout()
 
     def capture_mouse(self):
@@ -969,5 +971,3 @@ class HSizer(HPanel):
             self.end = event.get_point()[0]
             self.resize()
             self.processing = False
-
-
