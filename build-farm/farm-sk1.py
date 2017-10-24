@@ -87,6 +87,7 @@ DEB = [
     'Ubuntu 16.04 64bit',
     'Ubuntu 17.04 32bit',
     'Ubuntu 17.04 64bit',
+    'Ubuntu 17.10',
     'Debian 7.8 32bit',
     'Debian 7.8 64bit',
     'Debian 8.6 32bit',
