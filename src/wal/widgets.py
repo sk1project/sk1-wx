@@ -578,6 +578,7 @@ if not const.IS_WX2:
         callback1 = None
         flag = True
         ctxmenu_flag = False
+        digits = 2
 
         def __init__(
                 self, parent, value=0.0, range_val=(0.0, 1.0), step=0.01,
@@ -639,14 +640,16 @@ if not const.IS_WX2:
                 self.ctxmenu_flag = False
             event.Skip()
 
-    def get_value(self):
-        if not self.digits:
-            return int(self.GetValue())
-        return float(self.GetValue())
+        def get_value(self):
+            if not self.digits:
+                return int(self.GetValue())
+            return float(self.GetValue())
 
-    def set_value(self, value):
-        if self.digits:
-            self.SetValue(float(value))
+        def set_value(self, value):
+            if self.digits:
+                self.SetValue(float(value))
+            else:
+                self.SetValue(int(value))
 
 
     FloatSpin = SpinDouble
