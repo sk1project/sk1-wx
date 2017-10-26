@@ -15,6 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import wal
 from generic import CtxPlugin
 from sk1 import _, config, events
 from sk1.resources import icons, get_bmp
@@ -35,8 +36,7 @@ class PolygonPlugin(CtxPlugin):
             _('Number of polygon angles'))
         self.add(bmp, 0, LEFT | CENTER, 2)
 
-        self.num_spin = FloatSpin(self, 5, (3.0, 1000.0), 1.0, 0,
-            onchange=self.changes)
+        self.num_spin = wal.IntSpin(self, 5, (3, 1000), onchange=self.changes)
         self.add(self.num_spin, 0, LEFT | CENTER, 2)
 
     def changes(self, *args):
@@ -68,9 +68,8 @@ class PolygonCfgPlugin(CtxPlugin):
             _('Number of angles for newly created polygon'))
         self.add(bmp, 0, LEFT | CENTER, 2)
 
-        self.num_spin = FloatSpin(self, config.default_polygon_num,
-            (3.0, 1000.0), 1.0, 0,
-            onchange=self.changes)
+        self.num_spin = wal.IntSpin(self, config.default_polygon_num,
+            (3, 1000), onchange=self.changes)
         self.add(self.num_spin, 0, LEFT | CENTER, 2)
 
     def changes(self, *args):
