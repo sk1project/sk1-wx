@@ -32,18 +32,6 @@ class AboutDialog(wal.SimpleDialog):
             resizable=False, add_line=False)
 
     def build(self):
-        if wal.IS_WX3:
-            header_panel = wal.VPanel(self)
-            color = wal.GRAY
-            if wal.IS_GTK: color = wal.UI_COLORS['pressed_border']
-            header_panel.set_bg(color)
-            header = AboutHeader(self.app, header_panel)
-            header_panel.pack(header, fill=True, padding_all=1)
-            self.pack(header_panel, fill=True, padding=5)
-        else:
-            header = AboutHeader(self.app, self)
-            self.pack(header, fill=True, padding=5)
-
         nb = wal.Notebook(self)
         nb.add_page(AboutPage(self.app, nb), _('About'))
         nb.add_page(ComponentsPage(self.app, nb), _('Components'))
@@ -55,39 +43,28 @@ class AboutDialog(wal.SimpleDialog):
         self.pack(nb, expand=True, fill=True, padding=5)
 
 
-class AboutHeader(wal.VPanel):
-    def __init__(self, app, parent):
-        wal.VPanel.__init__(self, parent, border=True)
-        coef = 0.9
-        if wal.IS_MSW: coef = 0.2
-        color = wal.lighter_color(wal.UI_COLORS['bg'], coef)
-        self.set_bg(color)
-
-        panel = wal.HPanel(self)
-        panel.set_bg(color)
-        panel.pack(get_bmp(panel, icons.SK1_ICON32), padding=5)
-
-        data = app.appdata
-
-        p = wal.VPanel(panel)
-        p.set_bg(color)
-        p.pack(wal.Label(p, data.app_name, True, 3), fill=True)
-        txt = ('%s: %s %s') % (_('Version'), data.version, data.revision)
-        p.pack(wal.Label(p, txt), fill=True)
-        panel.pack(p)
-
-        self.pack(panel, expand=True, fill=True, padding_all=3)
-
-
 class AboutPage(wal.HPanel):
     def __init__(self, app, parent):
         wal.HPanel.__init__(self, parent)
-        self.pack((50, 10))
-        box = wal.VPanel(self)
-        self.pack(box, padding=5)
+        hp = wal.HPanel(self)
+        self.pack(hp)
+        hp.pack((55, 15))
+        logo_p = wal.VPanel(hp)
+        hp.pack(logo_p, fill=True)
+        logo_p.pack(get_bmp(logo_p, icons.SK1_ICON48), padding=5)
+        hp.pack((10, 5))
+
+        box = wal.VPanel(hp)
+        hp.pack(box, padding=5)
         data = app.appdata
-        txt = data.app_name + ' - ' + _('vector graphics editor') + '\n'
+        txt = data.app_name + ' - ' + _('vector graphics editor')
         box.pack(wal.Label(box, txt, True, 2), fill=True)
+
+        data = app.appdata
+        txt = ('%s: %s %s') % (_('Version'), data.version, data.revision)
+        box.pack(wal.Label(box, txt), fill=True)
+        box.pack((35, 35))
+
         import datetime
         year = str(datetime.date.today().year)
         txt = '(C) 2011-' + year + ' sK1 Project team' + '\n'
