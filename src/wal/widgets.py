@@ -393,7 +393,7 @@ class FloatCombobox(Combobox):
     digits = 0
 
     def __init__(
-            self, parent, value='', width=0, digits=1, items=[], onchange=None):
+            self, parent, value='', width=5, digits=1, items=[], onchange=None):
         vals = []
         for item in items:
             vals.append(str(item))
