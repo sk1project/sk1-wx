@@ -100,8 +100,8 @@ class AppConfig(UCConfig):
 	mw_width = 1134
 	mw_height = 700
 
-	mw_min_width = 1134
-	mw_min_height = 700
+	mw_min_width = 1200
+	mw_min_height = 600
 
 	show_splash = 1
 
