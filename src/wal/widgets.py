@@ -522,7 +522,7 @@ class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
 
     def __init__(
             self, parent, value=0, range_val=(0, 1), size=DEF_SIZE,
-            width=5, onchange=None, onenter=None, check_focus=True):
+            width=6, onchange=None, onenter=None, check_focus=True):
         if const.IS_GTK3:
             width = 0
         elif const.IS_MSW:
@@ -582,7 +582,7 @@ if not const.IS_WX2:
 
         def __init__(
                 self, parent, value=0.0, range_val=(0.0, 1.0), step=0.01,
-                digits=2, size=DEF_SIZE, width=5,
+                digits=2, size=DEF_SIZE, width=6,
                 onchange=None, onenter=None, check_focus=True):
 
             self.range_val = range_val
