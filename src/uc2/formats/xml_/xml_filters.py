@@ -106,7 +106,7 @@ class Advanced_XML_Saver(XML_Saver):
 			self.writeln(obj.comments)
 			self.writeln('-->')
 
-		if obj.tag == 'content_text':
+		if obj.tag == 'spacer':
 			self.write(obj.text)
 			return
 		attrs = self.get_obj_attrs(obj)

@@ -49,6 +49,6 @@ class XmlContentText(XMLObject):
 
 	def __init__(self, text=''):
 		self.text = text
-		XMLObject.__init__(self, 'content_text')
+		XMLObject.__init__(self, 'spacer')
 
 	def is_content(self): return True
