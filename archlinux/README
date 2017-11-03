@@ -11,7 +11,7 @@ file for sk1 is located:
 
 makepkg -s
 
-As a result you will get package file like: sk1-2.0rc3-x64.pkg.tar.gz
+As a result you will get package file like: sk1-2.0rc3-1-x86_64.pkg.tar.gz
 
 You could install it using UI tools or using command:
 
