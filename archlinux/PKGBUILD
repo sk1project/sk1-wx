@@ -1,0 +1,31 @@
+# Maintainer: Igor Novikov <sk1.project.org@gmail.com>
+
+pkgname=sk1
+pkgver=2.0rc3
+pkgrel=1
+pkgdesc="An open source vector graphics editor for prepress"
+url="https://sk1project.net/"
+arch=('i686' 'x86_64')
+license=('GPL')
+depends=('lcms2' 'cairo' 'imagemagick' 'pango' 'wxpython' 'python2-cairo' 
+	 'python2-pillow' 'python2-reportlab' 'python2-pycups')
+makedepends=('python2')
+provides=('sk1')
+conflicts=('sk1')
+source=('./sk1-2.0rc3_20171003.tar.gz')
+md5sums=('SKIP')
+
+prepare() {
+  cd "${srcdir}/$pkgname-$pkgver"
+  sed -i 's|"python"|"python2"|g' src/script/sk1
+}
+
+build() {
+  cd "${srcdir}/$pkgname-$pkgver"
+  LANG=en_US.UTF-8 python2 setup-sk1.py build
+}
+
+package() {
+  cd "${srcdir}/$pkgname-$pkgver"
+  LANG=en_US.UTF-8 python2 setup-sk1.py install --root="$pkgdir"
+}
