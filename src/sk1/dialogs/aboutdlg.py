@@ -28,7 +28,7 @@ class AboutDialog(wal.SimpleDialog):
 
     def __init__(self, app, parent, title, size=config.about_dlg_size):
         self.app = app
-        wal.SimpleDialog.__init__(self, parent, title, size,
+        wal.SimpleDialog.__init__(self, parent, title, size, margin=0,
             resizable=False, add_line=False)
 
     def build(self):
@@ -40,7 +40,7 @@ class AboutDialog(wal.SimpleDialog):
         nb.add_page(LicensePage(nb), _('License'))
 
         # 		nb.add_page(EvetLoopMonitor(nb), 'Event loops')
-        self.pack(nb, expand=True, fill=True, padding=5)
+        self.pack(nb, expand=True, fill=True, padding_all=5)
 
 
 class AboutPage(wal.HPanel):
