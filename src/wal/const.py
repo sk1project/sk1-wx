@@ -51,10 +51,11 @@ IS_UNITY = DESKTOP_NAME == 'Unity'
 
 def is_unity_16_04():
     if IS_GTK:
-        ver = int(platform.dist()[1].split('.')[0])
-        dist = platform.dist()[0]
-        if dist == 'Ubuntu' and ver >= 16 and IS_UNITY:
-            return True
+        if platform.dist()[1]:
+            ver = int(platform.dist()[1].split('.')[0])
+            dist = platform.dist()[0]
+            if dist == 'Ubuntu' and ver >= 16 and IS_UNITY:
+                return True
     return False
 
 
