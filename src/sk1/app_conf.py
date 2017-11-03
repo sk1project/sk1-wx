@@ -163,7 +163,7 @@ class AppConfig(UCConfig):
     change_color_dlg_size = (420, 300)
     change_color_dlg_minsize = (420, 300)
 
-    about_dlg_size = (500, 350)
+    about_dlg_size = (550, 400)
     dash_dlg_size = (300, 150)
 
     statusbar_fontsize = 0
@@ -403,7 +403,6 @@ class MacosxConfig(AppConfig):
     os_name = system.get_os_name()
     toolbar_size = (16, 16)
     toolbar_icon_size = (16, 16)
-    about_dlg_size = (550, 400)
     spin_overlay = False
 
 
