@@ -4,7 +4,7 @@ build tools:
 pacman -S base-devel
 pacman -S abs
 
-This commands you need to execute as a root.
+The commands you need to execute as a root or sudo user.
 
 After that you need running package build in current directory where PKGBUILD
 file for sk1 is located:
