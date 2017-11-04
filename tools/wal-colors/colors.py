@@ -49,7 +49,7 @@ class ColorPanel(wal.ScrolledPanel):
 
 
 app = wal.Application('wxWidgets')
-mw = wal.MainWindow('WAL colors', (350, 550))
+mw = wal.MainWindow(app, 'WAL colors', (350, 550))
 top_panel = wal.VPanel(mw)
 mw.pack(top_panel, expand=True, fill=True)
 panel = ColorPanel(top_panel)
