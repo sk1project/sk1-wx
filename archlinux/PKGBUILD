@@ -1,7 +1,7 @@
 # Maintainer: Igor Novikov <sk1.project.org@gmail.com>
 
 pkgname=sk1
-pkgver=2.0rc3
+pkgver=VERSION
 pkgrel=1
 pkgdesc="An open source vector graphics editor for prepress"
 url="https://sk1project.net/"
@@ -12,7 +12,7 @@ depends=('lcms2' 'cairo' 'imagemagick' 'pango' 'wxpython' 'python2-cairo'
 makedepends=('python2')
 provides=('sk1')
 conflicts=('sk1')
-source=('./sk1-2.0rc3_20171003.tar.gz')
+source=('./TARBALL')
 md5sums=('SKIP')
 
 prepare() {
