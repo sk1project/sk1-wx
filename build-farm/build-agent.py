@@ -46,20 +46,25 @@ import shutil
 import sys
 import time
 
+from zipfile import ZIP_DEFLATED
+from zipfile import ZipFile
+
 
 class Error(Exception):
     pass
 
 
-VERSION = '1.1.0'
+VERSION = '1.1.1'
 
 DATASET = {
-    'agent_ver': '1.1.0',
+    'agent_ver': '1.1.1',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
     # build - to build package only
     # test - to run in test mode
+    'app_name': 'sk1',
+    'app_ver': '2.0rc3',
     'project': 'sk1-wx',
     'project2': 'sk1-wx-msw',
     'git_url': 'https://github.com/sk1project/sk1-wx',
@@ -326,6 +331,8 @@ BUILD_DIR = os.path.expanduser(build_dir)
 PROJECT_DIR = os.path.join(BUILD_DIR, DATASET['project'])
 PROJECT2_DIR = os.path.join(BUILD_DIR, DATASET['project2'])
 DIST_DIR = os.path.join(PROJECT_DIR, 'dist')
+PKGBUILD_DIR = os.path.join(PROJECT_DIR, 'pkgbuild')
+ARCH_DIR = os.path.join(PROJECT_DIR, 'archlinux')
 if is_msw():
     DIST_DIR = os.path.join(PROJECT2_DIR, 'dist')
 url = DATASET['git_url']
@@ -409,7 +416,34 @@ if is_linux():
         command('cp %s %s' % (old_name, package_name))
         publish_file(package_name)
 
-        #TODO here should be arch pkgbuild
+        # ArchLinux PKGBUILD
+        if os.path.isdir(PKGBUILD_DIR):
+            shutil.rmtree(PKGBUILD_DIR, True)
+        os.mkdir(PKGBUILD_DIR)
+        os.chdir(PKGBUILD_DIR)
+
+        tarball = os.path.join(PKGBUILD_DIR, new_name)
+        command('cp %s %s' % (package_name, tarball))
+
+        dest = 'PKGBUILD'
+        src = os.path.join(ARCH_DIR, '%s-%s' % (dest, DATASET['app_name']))
+        command('cp %s %s' % (dest, src))
+        command('sed -i \'s|"VERSION"|"%s"|g\' %s' % (DATASET['app_ver'], dest))
+        command('sed -i \'s|"TARBALL"|"%s"|g\' %s' % (new_name, dest))
+
+        dest = 'README'
+        src = os.path.join(ARCH_DIR, '%s-%s' % (dest, DATASET['app_name']))
+        command('cp %s %s' % (dest, src))
+
+        pkg_name = new_name.replace('.tar.gz', 'archlinux.pkgbuild.zip')
+        pkg_name = os.path.join(DIST_DIR, pkg_name)
+        ziph = ZipFile(pkg_name, 'w', ZIP_DEFLATED)
+        for item in [new_name, 'PKGBUILD', 'README']:
+            path = os.path.join(PKGBUILD_DIR, item)
+            ziph.write(path)
+        ziph.close()
+        shutil.rmtree(PKGBUILD_DIR, True)
+        publish_file(pkg_name)
 
 elif is_msw():
     if not is_path(PROJECT_DIR):

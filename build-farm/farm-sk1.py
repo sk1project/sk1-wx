@@ -59,12 +59,14 @@ STDOUT_BOLD = '\033[1m'
 STDOUT_UNDERLINE = '\033[4m'
 
 DATASET = {
-    'agent_ver': '1.1.0',
+    'agent_ver': '1.1.1',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
     # build - to build package only
     # test - to run in test mode
+    'app_name': 'sk1',
+    'app_ver': '2.0rc3',
     'project': 'sk1-wx',
     'project2': 'sk1-wx-msw',
     'git_url': 'https://github.com/sk1project/sk1-wx',
