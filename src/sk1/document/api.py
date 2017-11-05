@@ -67,16 +67,8 @@ class AbstractAPI:
 		if not action: return
 		if len(action) == 1:
 			action[0]()
-		elif len(action) == 2:
-			action[0](action[1])
-		elif len(action) == 3:
-			action[0](action[1], action[2])
-		elif len(action) == 4:
-			action[0](action[1], action[2], action[3])
-		elif len(action) == 5:
-			action[0](action[1], action[2], action[3], action[4])
-		elif len(action) == 6:
-			action[0](action[1], action[2], action[3], action[4], action[5])
+		else:
+			action[0](*action[1:])
 
 	def _clear_history_stack(self, stack):
 		for obj in stack:
