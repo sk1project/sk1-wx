@@ -54,10 +54,10 @@ class Error(Exception):
     pass
 
 
-VERSION = '1.1.3'
+VERSION = '1.1.4'
 
 DATASET = {
-    'agent_ver': '1.1.3',
+    'agent_ver': '1.1.4',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -428,8 +428,8 @@ if is_linux():
         dest = 'PKGBUILD'
         src = os.path.join(ARCH_DIR, '%s-%s' % (dest, DATASET['app_name']))
         command('cp %s %s' % (src, dest))
-        command('sed -i \'s|"VERSION"|"%s"|g\' %s' % (DATASET['app_ver'], dest))
-        command('sed -i \'s|"TARBALL"|"%s"|g\' %s' % (new_name, dest))
+        command("sed -i 's/VERSION/%s/g' %s" % (DATASET['app_ver'], dest))
+        command("sed -i 's/TARBALL/%s/g' %s" % (new_name, dest))
 
         dest = 'README'
         src = os.path.join(ARCH_DIR, '%s-%s' % (dest, DATASET['app_name']))
