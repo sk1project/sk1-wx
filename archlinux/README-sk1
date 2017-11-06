@@ -6,14 +6,14 @@ pacman -S abs
 
 The commands you need to execute as a root or sudo user.
 
-After that you need running package build in current directory where PKGBUILD
-file for sk1 is located:
+After that you need running package build (as a regular user) in current
+directory where sk1 PKGBUILD file is located:
 
 makepkg -s
 
-As a result you will get package file like: sk1-2.0rc3-1-x86_64.pkg.tar.gz
+As a result you will get package file like: sk1-2.0rc3-1-x86_64.pkg.tar.xz
 
 You could install it using UI tools or using command:
 
-pacman -U <package_name>.pkg.tar.gz
+pacman -U <package_name>.pkg.tar.xz
 
