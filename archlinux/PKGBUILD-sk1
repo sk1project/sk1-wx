@@ -15,11 +15,6 @@ conflicts=('sk1')
 source=('./TARBALL')
 md5sums=('SKIP')
 
-prepare() {
-  cd "${srcdir}/$pkgname-$pkgver"
-  sed -i 's|"python"|"python2"|g' src/script/sk1
-}
-
 build() {
   cd "${srcdir}/$pkgname-$pkgver"
   LANG=en_US.UTF-8 python2 setup-sk1.py build
