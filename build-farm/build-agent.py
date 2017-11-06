@@ -54,10 +54,10 @@ class Error(Exception):
     pass
 
 
-VERSION = '1.1.5'
+VERSION = '1.1.6'
 
 DATASET = {
-    'agent_ver': '1.1.5',
+    'agent_ver': '1.1.6',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -435,7 +435,7 @@ if is_linux():
         src = os.path.join(ARCH_DIR, '%s-%s' % (dest, DATASET['app_name']))
         command('cp %s %s' % (src, dest))
 
-        pkg_name = new_name.replace('.tar.gz', 'archlinux.pkgbuild.zip')
+        pkg_name = new_name.replace('.tar.gz', '.archlinux.pkgbuild.zip')
         pkg_name = os.path.join(DIST_DIR, pkg_name)
         ziph = ZipFile(pkg_name, 'w', ZIP_DEFLATED)
         for item in [new_name, 'PKGBUILD', 'README']:
