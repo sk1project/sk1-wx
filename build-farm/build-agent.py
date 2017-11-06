@@ -368,7 +368,7 @@ if is_linux():
     if is_deb():
         echo_msg("Building DEB package")
         command(
-            'cd %s;python %s bdist_deb 1> /dev/null' % (PROJECT_DIR, script))
+            'cd %s;python2 %s bdist_deb 1> /dev/null' % (PROJECT_DIR, script))
 
         old_name = get_package_name(DIST_DIR)
         prefix, suffix = old_name.split('_')
@@ -386,7 +386,7 @@ if is_linux():
     elif is_rpm():
         echo_msg("Building RPM package")
         command(
-            'cd %s;python %s bdist_rpm 1> /dev/null' % (PROJECT_DIR, script))
+            'cd %s;python2 %s bdist_rpm 1> /dev/null' % (PROJECT_DIR, script))
 
         old_name = get_package_name(DIST_DIR)
         items = old_name.split('.')
@@ -405,7 +405,7 @@ if is_linux():
         echo_msg("Creating source package")
         if os.path.isdir(DIST_DIR):
             shutil.rmtree(DIST_DIR, True)
-        command('cd %s;python %s sdist 1> /dev/null' % (PROJECT_DIR, script))
+        command('cd %s;python2 %s sdist 1> /dev/null' % (PROJECT_DIR, script))
         old_name = get_package_name(DIST_DIR)
         marker = ''
         if DATASET['timestamp']:
