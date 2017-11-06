@@ -59,7 +59,7 @@ STDOUT_BOLD = '\033[1m'
 STDOUT_UNDERLINE = '\033[4m'
 
 DATASET = {
-    'agent_ver': '1.1.2',
+    'agent_ver': '1.1.3',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build

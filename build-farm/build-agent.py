@@ -54,10 +54,10 @@ class Error(Exception):
     pass
 
 
-VERSION = '1.1.2'
+VERSION = '1.1.3'
 
 DATASET = {
-    'agent_ver': '1.1.2',
+    'agent_ver': '1.1.3',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -440,7 +440,7 @@ if is_linux():
         ziph = ZipFile(pkg_name, 'w', ZIP_DEFLATED)
         for item in [new_name, 'PKGBUILD', 'README']:
             path = os.path.join(PKGBUILD_DIR, item)
-            ziph.write(path)
+            ziph.write(path, item)
         ziph.close()
         shutil.rmtree(PKGBUILD_DIR, True)
         publish_file(pkg_name)
