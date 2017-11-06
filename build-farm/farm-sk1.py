@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #
 # -*- coding: utf-8 -*-
 #
@@ -59,7 +59,7 @@ STDOUT_BOLD = '\033[1m'
 STDOUT_UNDERLINE = '\033[4m'
 
 DATASET = {
-    'agent_ver': '1.1.4',
+    'agent_ver': '1.1.5',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -161,7 +161,7 @@ def run_agent(vmname):
     cmd += ' --username "%s"' % DATASET['user']
     cmd += ' --password "%s"' % DATASET['user_pass']
     cmd += ' --wait-stdout --wait-stderr'
-    cmd += ' -- sudo/arg0 "python"'
+    cmd += ' -- sudo/arg0 "python2"'
     cmd += ' "/home/%s/build-agent.py"' % DATASET['user']
     for item in DATASET.keys():
         value = DATASET[item]

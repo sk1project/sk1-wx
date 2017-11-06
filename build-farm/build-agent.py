@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #
 # -*- coding: utf-8 -*-
 #
@@ -20,7 +20,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #   SYNOPSIS
-#   Agent assumes that git, compiler, python, dev-packages have been installed
+#   Agent assumes that git, compiler, python2, dev-packages have been installed
 #   on current build platform.
 #
 #   Agent gets on start following args:
@@ -54,10 +54,10 @@ class Error(Exception):
     pass
 
 
-VERSION = '1.1.4'
+VERSION = '1.1.5'
 
 DATASET = {
-    'agent_ver': '1.1.4',
+    'agent_ver': '1.1.5',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -241,7 +241,7 @@ def check_update():
         args.append('%s=%s' % (item, value))
     args = ' '.join(args)
 
-    os.system('python %s %s' % (__file__, args))
+    os.system('python2 %s %s' % (__file__, args))
     sys.exit(0)
 
 
