@@ -54,10 +54,10 @@ class Error(Exception):
     pass
 
 
-VERSION = '1.1.1'
+VERSION = '1.1.2'
 
 DATASET = {
-    'agent_ver': '1.1.1',
+    'agent_ver': '1.1.2',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -427,13 +427,13 @@ if is_linux():
 
         dest = 'PKGBUILD'
         src = os.path.join(ARCH_DIR, '%s-%s' % (dest, DATASET['app_name']))
-        command('cp %s %s' % (dest, src))
+        command('cp %s %s' % (src, dest))
         command('sed -i \'s|"VERSION"|"%s"|g\' %s' % (DATASET['app_ver'], dest))
         command('sed -i \'s|"TARBALL"|"%s"|g\' %s' % (new_name, dest))
 
         dest = 'README'
         src = os.path.join(ARCH_DIR, '%s-%s' % (dest, DATASET['app_name']))
-        command('cp %s %s' % (dest, src))
+        command('cp %s %s' % (src, dest))
 
         pkg_name = new_name.replace('.tar.gz', 'archlinux.pkgbuild.zip')
         pkg_name = os.path.join(DIST_DIR, pkg_name)
