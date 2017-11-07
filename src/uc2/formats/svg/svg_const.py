@@ -16,17 +16,17 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SVG_ATTRS = {
-"xmlns":"http://www.w3.org/2000/svg",
-"xmlns:dc":"http://purl.org/dc/elements/1.1/",
-"xmlns:cc":"http://creativecommons.org/ns#",
-"xmlns:rdf":"http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-"xmlns:svg":"http://www.w3.org/2000/svg",
-"xmlns:xlink":"http://www.w3.org/1999/xlink",
-"width":"210mm",
-"height":"297mm",
-"viewBox":"0 0 744.09448819 1052.3622047",
-"id":"svg2",
-"version":"1.1",
+    "xmlns": "http://www.w3.org/2000/svg",
+    "xmlns:dc": "http://purl.org/dc/elements/1.1/",
+    "xmlns:cc": "http://creativecommons.org/ns#",
+    "xmlns:rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "xmlns:svg": "http://www.w3.org/2000/svg",
+    "xmlns:xlink": "http://www.w3.org/1999/xlink",
+    "width": "210mm",
+    "height": "297mm",
+    "viewBox": "0 0 744.09448819 1052.3622047",
+    "id": "svg2",
+    "version": "1.1",
 }
 
 SVG_DPI = 90.0
@@ -47,24 +47,24 @@ SVG_FT = 'ft'
 SVG_M = 'm'
 
 SVG_STYLE = {
-    'opacity':'1',
-    'fill':'black',
-    'fill-rule':'nonzero',
-    'fill-opacity':'1',
-    'stroke':'none',
-    'stroke-width':'1',
-    'stroke-linecap':'butt',
-    'stroke-linejoin':'miter',
-    'stroke-miterlimit':'4',
-    'stroke-dasharray':'none',
-    'stroke-dashoffset':'0',
-    'stroke-opacity':'1',
-    'font-family':'Sans',
-    'font-style':'normal',
-    'font-weight':'normal',
-    'font-size':'12',
-    'text-align':'start',
-    'text-anchor':'start',
+    'opacity': '1',
+    'fill': 'black',
+    'fill-rule': 'nonzero',
+    'fill-opacity': '1',
+    'stroke': 'none',
+    'stroke-width': '1',
+    'stroke-linecap': 'butt',
+    'stroke-linejoin': 'miter',
+    'stroke-miterlimit': '4',
+    'stroke-dasharray': 'none',
+    'stroke-dashoffset': '0',
+    'stroke-opacity': '1',
+    'font-family': 'Sans',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'font-size': '12',
+    'text-align': 'start',
+    'text-anchor': 'start',
 }
 
 IMG_SIGS = ('data:image/jpeg;base64,', 'data:image/png;base64,')

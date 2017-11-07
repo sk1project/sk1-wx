@@ -20,15 +20,13 @@ import os
 from uc2 import uc2const
 from uc2.formats.generic import TaggedModelPresenter
 from uc2.formats.svg.svg_config import SVG_Config
-from uc2.formats.xml_.xml_filters import Advanced_XML_Loader, Advanced_XML_Saver
 from uc2.formats.svg.svg_methods import SVG_Methods, create_new_svg
-
 from uc2.formats.svg.svg_translators import SK2_to_SVG_Translator
 from uc2.formats.svg.svg_translators import SVG_to_SK2_Translator
+from uc2.formats.xml_.xml_filters import Advanced_XML_Loader, Advanced_XML_Saver
 
 
 class SVG_Presenter(TaggedModelPresenter):
-
     cid = uc2const.SVG
 
     config = None

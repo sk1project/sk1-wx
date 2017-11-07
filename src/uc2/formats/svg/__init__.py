@@ -15,17 +15,15 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import sys
 from xml.etree import cElementTree
 
 from uc2 import uc2const
-from uc2.formats.svg.svg_presenter import SVG_Presenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
+from uc2.formats.svg.svg_presenter import SVG_Presenter
 
 
 def svg_loader(appdata, filename=None, fileptr=None,
-               translate=True, cnf={}, **kw):
+        translate=True, cnf={}, **kw):
     if kw: cnf.update(kw)
     svg_doc = SVG_Presenter(appdata, cnf)
     svg_doc.load(filename, fileptr)
@@ -37,8 +35,9 @@ def svg_loader(appdata, filename=None, fileptr=None,
         return sk2_doc
     return svg_doc
 
+
 def svg_saver(sk2_doc, filename=None, fileptr=None,
-             translate=True, cnf={}, **kw):
+        translate=True, cnf={}, **kw):
     if kw: cnf.update(kw)
     if sk2_doc.cid == uc2const.SVG: translate = False
     if translate:
@@ -49,6 +48,7 @@ def svg_saver(sk2_doc, filename=None, fileptr=None,
     else:
         sk2_doc.save(filename, fileptr)
 
+
 def check_svg(path):
     tag = None
     with open(path, "r") as f:
@@ -56,5 +56,6 @@ def check_svg(path):
             for event, el in cElementTree.iterparse(f, ('start',)):
                 tag = el.tag
                 break
-        except cElementTree.ParseError: pass
+        except cElementTree.ParseError:
+            pass
     return tag == '{http://www.w3.org/2000/svg}svg' or tag == 'svg'
