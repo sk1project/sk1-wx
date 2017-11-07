@@ -23,7 +23,7 @@ from uc2.formats.svg.svg_presenter import SVG_Presenter
 
 
 def svg_loader(appdata, filename=None, fileptr=None,
-        translate=True, cnf={}, **kw):
+               translate=True, cnf={}, **kw):
     if kw: cnf.update(kw)
     svg_doc = SVG_Presenter(appdata, cnf)
     svg_doc.load(filename, fileptr)
@@ -37,7 +37,7 @@ def svg_loader(appdata, filename=None, fileptr=None,
 
 
 def svg_saver(sk2_doc, filename=None, fileptr=None,
-        translate=True, cnf={}, **kw):
+              translate=True, cnf={}, **kw):
     if kw: cnf.update(kw)
     if sk2_doc.cid == uc2const.SVG: translate = False
     if translate:
