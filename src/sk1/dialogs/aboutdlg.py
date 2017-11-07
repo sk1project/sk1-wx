@@ -84,7 +84,7 @@ class ComponentsPage(wal.VPanel):
         data.append(['Pango', libpango.get_version()])
         data.append(['Reportlab', reportlab.Version])
         slist = wal.ReportList(self, data, border=False,
-            odd_color=wal.YELLOW_ODD_COLOR)
+            odd_color=wal.ODD_COLOR)
         self.pack(slist, expand=True, fill=True, padding=5)
         slist.set_column_width(0, wal.LIST_AUTOSIZE)
 

@@ -32,13 +32,12 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, WidgetMixin):
 
     def __init__(
             self, parent, data=[], border=True, header=False,
-            single_sel=True, virtual=False, alt_color=False,
-            even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
-            on_select=None, on_activate=None):
+            single_sel=True, virtual=False, alt_color=False, even_color=None,
+            odd_color=None, on_select=None, on_activate=None):
         self.data = data
         self.alt_color = alt_color
-        self.odd_color = odd_color
-        self.even_color = even_color
+        self.odd_color = odd_color or const.ODD_COLOR
+        self.even_color = even_color or const.EVEN_COLOR
         style = wx.LC_REPORT | wx.LC_VRULES
         if border and not const.IS_WX3:
             style |= wx.BORDER_MASK
@@ -123,7 +122,7 @@ class ReportList(SimpleList):
     def __init__(
             self, parent, data=[], border=True, header=True,
             single_sel=True, virtual=False, alt_color=True,
-            even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
+            even_color=None, odd_color=None,
             on_select=None, on_activate=None):
 
         SimpleList.__init__(
@@ -174,7 +173,7 @@ def VirtualList(SimpleList):
     def __init__(
             self, parent, data=[], border=True, header=True,
             single_sel=True, virtual=True, alt_color=True,
-            even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
+            even_color=None, odd_color=None,
             on_select=None, on_activate=None):
         SimpleList.__init__(
             self, parent, data, border, header,

@@ -248,6 +248,11 @@ def set_ui_colors(kw):
     else:
         _init_gtk_colors(kw)
 
+    global EVEN_COLOR, ODD_COLOR
+    lb_bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_LISTBOX).Get()
+    EVEN_COLOR = wx.Colour(*mix_colors((0, 0, 0), lb_bg, 15))
+    ODD_COLOR = wx.Colour(*mix_colors((255, 255, 255), lb_bg, 15))
+
 
 UI_COLORS = {}
 
@@ -256,7 +261,7 @@ SPIN = {
     'sep': True,
 }
 
-EVEN_COLOR = wx.Colour(240, 240, 240)
+EVEN_COLOR = wx.Colour(255, 255, 255)#wx.Colour(240, 240, 240)
 ODD_COLOR = wx.Colour(255, 255, 255)
 YELLOW_EVEN_COLOR = wx.Colour(255, 255, 191)
 YELLOW_ODD_COLOR = wx.Colour(255, 255, 222)
