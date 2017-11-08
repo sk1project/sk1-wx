@@ -75,7 +75,6 @@ SK2_GRAD_EXTEND = {
 class SVG_to_SK2_Translator(object):
     page = None
     layer = None
-    defs = None
     trafo = []
     coeff = 1.0
     user_space = []
@@ -84,6 +83,7 @@ class SVG_to_SK2_Translator(object):
     id_dict = {}
     classes = {}
     profiles = {}
+    current_color = ''
 
     def translate(self, svg_doc, sk2_doc):
         self.svg_doc = svg_doc
@@ -94,6 +94,7 @@ class SVG_to_SK2_Translator(object):
         self.svg_mtds = svg_doc.methods
         self.defs = {}
         self.classes = {}
+        self.id_dict = {}
         self.profiles = {}
         self.current_color = ''
         self.translate_units()
@@ -586,9 +587,12 @@ class SVG_to_SK2_Translator(object):
             elif svg_obj.childs:
                 self.translate_unknown(parent, svg_obj, trafo, style)
         except:
+            print '-'*30
+            print 'obj', repr(svg_obj)
             print 'tag', svg_obj.tag
             if 'id' in svg_obj.attrs: print 'id', svg_obj.attrs['id']
             for item in sys.exc_info(): print item
+            print '='*30
 
     def translate_defs(self, svg_obj):
         for item in svg_obj.childs:
