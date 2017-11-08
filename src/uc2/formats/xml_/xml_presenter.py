@@ -34,6 +34,8 @@ class XML_Presenter(TaggedModelPresenter):
     cms = None
 
     def __init__(self, appdata, cnf={}, filepath=None):
+        self.doc_file = ''
+        self.resources = None
         self.config = XML_Config()
         config_file = os.path.join(appdata.app_config_dir, self.config.filename)
         self.config.load(config_file)

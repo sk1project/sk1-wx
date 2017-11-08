@@ -33,6 +33,7 @@ class XMLObject(TaggedModelObject):
         self.childs = []
         self.attrs = {}
         self.comments = ''
+        self.content = ''
         if tag: self.tag = tag
 
     def is_content(self): return False

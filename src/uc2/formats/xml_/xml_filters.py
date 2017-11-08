@@ -59,6 +59,7 @@ class XML_Saver(AbstractSaver):
     indent = 0
 
     def do_save(self):
+        self.indent = 0
         cfg = self.model.config.encoding
         self.writeln('<?xml version="1.0" encoding="%s"?>' % cfg)
         appdata = self.presenter.appdata

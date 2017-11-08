@@ -104,6 +104,19 @@ class SVG_to_SK2_Translator(object):
         if len(self.page.childs) > 1 and not self.layer.childs:
             self.page.childs.remove(self.layer)
         self.sk2_mt.do_update()
+        self._clear_objs()
+
+    def _clear_objs(self):
+        for item in self.__dict__.keys():
+            obj = self.__dict__[item]
+            if isinstance(obj, list):
+                self.__dict__[item] = []
+            elif isinstance(obj, dict):
+                self.__dict__[item] = {}
+            else:
+                self.__dict__[item] = None
+        self.coeff = 1.0
+        self.current_color = ''
 
     # --- Utility methods
 
@@ -924,6 +937,8 @@ class SVG_to_SK2_Translator(object):
                 self.translate_obj(parent, self.id_dict[obj_id], tr, stl)
             elif obj_id in self.defs:
                 self.translate_obj(parent, self.defs[obj_id], tr, stl)
+            else:
+                print 'id %s is not found' % obj_id
 
     def translate_text(self, parent, svg_obj, trafo, style):
         cfg = parent.config
