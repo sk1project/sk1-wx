@@ -107,6 +107,7 @@ deb_scripts = []
 data_files = [
     ('/usr/share/applications', ['src/sk1.desktop', ]),
     ('/usr/share/pixmaps', ['src/sk1.png', 'src/sk1.xpm', ]),
+    ('/usr/share/icons/hicolor/scalable/apps', ['src/sk1.svg', ]),
 ]
 
 EXCLUDES = ['sword', ]
