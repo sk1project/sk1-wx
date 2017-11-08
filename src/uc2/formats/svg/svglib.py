@@ -84,11 +84,11 @@ def get_svg_level_trafo(svg_obj, trafo):
     tr = [] + libgeom.NORMAL_TRAFO
     if 'transform' in svg_obj.attrs:
         tr = get_svg_trafo(svg_obj.attrs['transform'])
-    print 'tr=', tr
-    if 'x' in svg_obj.attrs:
-        tr[4] += float(svg_obj.attrs['x'])
-    if 'y' in svg_obj.attrs:
-        tr[5] += float(svg_obj.attrs['y'])
+    if svg_obj.tag == 'use':
+        if 'x' in svg_obj.attrs:
+            tr[4] += float(svg_obj.attrs['x'])
+        if 'y' in svg_obj.attrs:
+            tr[5] += float(svg_obj.attrs['y'])
     tr = libgeom.multiply_trafo(tr, trafo)
     return tr
 
