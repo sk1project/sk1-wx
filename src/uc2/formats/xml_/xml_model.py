@@ -18,6 +18,7 @@
 
 from uc2.formats.generic import TaggedModelObject
 
+
 class XMLObject(TaggedModelObject):
     """
     Represents generic XML tree object.
@@ -34,18 +35,20 @@ class XMLObject(TaggedModelObject):
         self.attrs = {}
         self.comments = ''
         self.content = ''
+        self.tag = ''
         if tag: self.tag = tag
 
-    def is_content(self): return False
+    def is_content(self):
+        return False
 
     def resolve(self):
         is_node = len(self.childs)
         info = ''
-        if is_node:info = '%d' % (len(self.childs))
+        if is_node: info = '%d' % (len(self.childs))
         return (not is_node, self.tag, info)
 
-class XmlContentText(XMLObject):
 
+class XmlContentText(XMLObject):
     text = ''
 
     def __init__(self, text=''):

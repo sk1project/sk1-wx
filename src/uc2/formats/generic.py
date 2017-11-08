@@ -37,10 +37,8 @@ class ModelObject(object):
     def destroy(self):
         for child in self.childs:
             child.destroy()
-        fields = self.__dict__
-        items = fields.keys()
-        for item in items:
-            fields[item] = None
+        for item in self.__dict__.keys():
+            self.__dict__[item] = None
 
     def update(self):
         pass
