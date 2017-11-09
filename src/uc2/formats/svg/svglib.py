@@ -114,7 +114,16 @@ def parse_svg_coords(scoords):
     scoords = scoords.replace('e -', 'e-').strip()
     scoords = re.sub('  *', ' ', scoords)
     if scoords:
-        return map(lambda x: float(x), scoords.split(' '))
+        processed_items = []
+        for item in scoords.split(' '):
+            count = item.count('.')
+            if count > 1:
+                subitems = item.rsplit('.', count - 1)
+                processed_items.append(subitems[0])
+                processed_items += ['.' + s for s in subitems[1:]]
+            else:
+                processed_items.append(item)
+        return [float(item) for item in processed_items]
     return None
 
 
@@ -129,7 +138,7 @@ def parse_svg_color(sclr, alpha=1.0, current_color=''):
             if len(vals) == 5:
                 color_vals = []
                 try:
-                    color_vals = map(lambda x: float(x), vals[1:])
+                    color_vals = [float(x) for x in vals[1:]]
                 except:
                     pass
                 if color_vals and len(color_vals) == 4:
@@ -139,7 +148,7 @@ def parse_svg_color(sclr, alpha=1.0, current_color=''):
             if len(vals) in (3, 4):
                 color_vals = []
                 try:
-                    color_vals = map(lambda x: float(x), vals[1:])
+                    color_vals = [float(x) for x in vals[1:]]
                 except:
                     pass
                 if color_vals and len(color_vals) in (3, 4):
