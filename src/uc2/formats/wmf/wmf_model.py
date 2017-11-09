@@ -21,131 +21,143 @@ from uc2 import utils
 from uc2.formats.generic import BinaryModelObject
 from uc2.formats.wmf import wmfconst, wmflib
 
-class  META_Header_Record(BinaryModelObject):
 
-	resolve_name = 'META_Header_Record'
+class META_Header_Record(BinaryModelObject):
+    resolve_name = 'META_Header_Record'
 
-	def __init__(self, chunk=''):
-		if chunk: self.chunk = chunk
-		self.childs = []
-		self.cache_fields = []
+    def __init__(self, chunk=''):
+        if chunk: self.chunk = chunk
+        self.childs = []
+        self.cache_fields = []
 
-	def is_placeable(self): return False
+    def is_placeable(self):
+        return False
 
-	def resolve(self, name=''):
-		is_leaf = False
-		info = '%d' % (len(self.childs))
-		return (is_leaf, self.resolve_name, info)
+    def resolve(self, name=''):
+        is_leaf = False
+        info = '%d' % (len(self.childs))
+        return (is_leaf, self.resolve_name, info)
 
-	def save(self, saver):
-		saver.write(self.chunk)
-		for child in self.childs:
-			child.save(saver)
+    def save(self, saver):
+        saver.write(self.chunk)
+        for child in self.childs:
+            child.save(saver)
 
-	def update_for_sword(self):
-		self.cache_fields = wmfconst.HEADER_MARKUP
+    def update_for_sword(self):
+        self.cache_fields = wmfconst.HEADER_MARKUP
+
 
 class META_Placeable_Record(META_Header_Record):
+    resolve_name = 'META_Placeable_Record'
 
-	resolve_name = 'META_Placeable_Record'
+    def is_placeable(self): return True
 
-	def is_placeable(self): return True
+    def update_for_sword(self):
+        self.cache_fields = wmfconst.PLACEABLE_MARKUP
 
-	def update_for_sword(self):
-		self.cache_fields = wmfconst.PLACEABLE_MARKUP
 
 class WMF_Record(BinaryModelObject):
+    resolve_name = 'Unknown record'
+    func = 0
 
-	resolve_name = 'Unknown record'
-	func = 0
+    def __init__(self, chunk):
+        self.cache_fields = []
+        self.chunk = chunk
+        self.func = utils.word2py_int(self.chunk[4:6])
+        if self.func in wmfconst.WMF_RECORD_NAMES:
+            self.resolve_name = wmfconst.WMF_RECORD_NAMES[self.func]
 
-	def __init__(self, chunk):
-		self.cache_fields = []
-		self.chunk = chunk
-		self.func = utils.word2py_int(self.chunk[4:6])
-		if self.func in wmfconst.WMF_RECORD_NAMES:
-			self.resolve_name = wmfconst.WMF_RECORD_NAMES[self.func]
+    def resolve(self, name=''):
+        is_leaf = True
+        info = '%d' % (len(self.childs))
+        return (is_leaf, self.resolve_name, info)
 
-	def resolve(self, name=''):
-		is_leaf = True
-		info = '%d' % (len(self.childs))
-		return (is_leaf, self.resolve_name, info)
+    def save(self, saver):
+        saver.write(self.chunk)
 
-	def save(self, saver):
-		saver.write(self.chunk)
-
-	def update_for_sword(self):
-		self.cache_fields = wmflib.get_markup(self)
+    def update_for_sword(self):
+        self.cache_fields = wmflib.get_markup(self)
 
 
 def get_eof_rec():
-	return WMF_Record('' + wmfconst.EOF_RECORD)
+    return WMF_Record('' + wmfconst.EOF_RECORD)
+
 
 def get_placeble_header(bbox, inch):
-	left, bottom, right, top = bbox
-	sig = wmfconst.WMF_SIGNATURE
-	handle = reserved = 0
-	chunk = pack('<4sHhhhhHI', sig, handle, left, top, right, bottom,
-		inch, reserved)
-	val = 0
-	for word in unpack('<10h', chunk):
-		val = val ^ word
-	chunk += pack('<H', val)
-	return META_Placeable_Record(chunk)
+    left, bottom, right, top = bbox
+    sig = wmfconst.WMF_SIGNATURE
+    handle = reserved = 0
+    chunk = pack('<4sHhhhhHI', sig, handle, left, top, right, bottom,
+        inch, reserved)
+    val = 0
+    for word in unpack('<10h', chunk):
+        val = val ^ word
+    chunk += pack('<H', val)
+    return META_Placeable_Record(chunk)
+
 
 def get_wmf_header(filesize, numobjs, maxrecord):
-	chunk = pack('<HHHIHIH',
-			wmfconst.DISKMETAFILE,
-			0x0009,
-			wmfconst.METAVERSION300,
-			filesize / 2,
-			numobjs,
-			maxrecord,
-			0x0000)
-	return META_Header_Record(chunk)
+    chunk = pack('<HHHIHIH',
+        wmfconst.DISKMETAFILE,
+        0x0009,
+        wmfconst.METAVERSION300,
+        filesize / 2,
+        numobjs,
+        maxrecord,
+        0x0000)
+    return META_Header_Record(chunk)
+
 
 def get_empty_wmf():
-	placeable = get_placeble_header((0, 0, 1000, 1000), 1000)
-	header = get_wmf_header(46, 0, 0)
-	placeable.childs.append(header)
-	header.childs.append(get_eof_rec())
-	return placeable
+    placeable = get_placeble_header((0, 0, 1000, 1000), 1000)
+    header = get_wmf_header(46, 0, 0)
+    placeable.childs.append(header)
+    header.childs.append(get_eof_rec())
+    return placeable
+
 
 def set_window_org(x, y):
-	chunk = pack('<LHhh', 5, wmfconst.META_SETWINDOWORG, y, x)
-	return WMF_Record(chunk)
+    chunk = pack('<LHhh', 5, wmfconst.META_SETWINDOWORG, y, x)
+    return WMF_Record(chunk)
+
 
 def set_window_ext(x, y):
-	chunk = pack('<LHhh', 5, wmfconst.META_SETWINDOWEXT, y, x)
-	return WMF_Record(chunk)
+    chunk = pack('<LHhh', 5, wmfconst.META_SETWINDOWEXT, y, x)
+    return WMF_Record(chunk)
+
 
 def set_bkmode(mode):
-	chunk = pack('<LHh', 4, wmfconst.META_SETBKMODE, mode)
-	return WMF_Record(chunk)
+    chunk = pack('<LHh', 4, wmfconst.META_SETBKMODE, mode)
+    return WMF_Record(chunk)
+
 
 def set_bkcolor(colorvals):
-	r, g, b = map(lambda x:int(255 * x), colorvals)
-	chunk = pack('<LHBBBB', 5, wmfconst.META_SETBKCOLOR, r, g, b, 0x00)
-	return WMF_Record(chunk)
+    r, g, b = [int(255 * x) for x in colorvals]
+    chunk = pack('<LHBBBB', 5, wmfconst.META_SETBKCOLOR, r, g, b, 0x00)
+    return WMF_Record(chunk)
+
 
 def set_rop2(mode):
-	chunk = pack('<LHh', 4, wmfconst.META_SETROP2, mode)
-	return WMF_Record(chunk)
+    chunk = pack('<LHh', 4, wmfconst.META_SETROP2, mode)
+    return WMF_Record(chunk)
+
 
 def set_polyfillmode(mode):
-	chunk = pack('<LHh', 4, wmfconst.META_SETPOLYFILLMODE, mode)
-	return WMF_Record(chunk)
+    chunk = pack('<LHh', 4, wmfconst.META_SETPOLYFILLMODE, mode)
+    return WMF_Record(chunk)
+
 
 def select_obj(indx):
-	chunk = pack('<LHH', 4, wmfconst.META_SELECTOBJECT, indx)
-	return WMF_Record(chunk)
+    chunk = pack('<LHH', 4, wmfconst.META_SELECTOBJECT, indx)
+    return WMF_Record(chunk)
+
 
 def delete_obj(indx):
-	chunk = pack('<LHH', 4, wmfconst.META_DELETEOBJECT, indx)
-	return WMF_Record(chunk)
+    chunk = pack('<LHH', 4, wmfconst.META_DELETEOBJECT, indx)
+    return WMF_Record(chunk)
+
 
 def create_pen_in():
-	chunk = pack('<LHhhhBBBx', 8, wmfconst.META_CREATEPENINDIRECT,
-				5, 0, 0, 0, 0, 0)
-	return WMF_Record(chunk)
-
+    chunk = pack('<LHhhhBBBx', 8, wmfconst.META_CREATEPENINDIRECT,
+        5, 0, 0, 0, 0, 0)
+    return WMF_Record(chunk)
