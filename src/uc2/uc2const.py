@@ -69,7 +69,7 @@ EPS = 73
 PDF = 'pdf'
 PSD = 75
 
-CGM = 100
+CGM = 'cgm'
 WMF = 'wmf'
 EMF = 102
 XPS = 103
@@ -236,6 +236,7 @@ ASE: "ASE",
 ACO: "ACO",
 JCW: "JCW",
 
+#Color profiles
 ICC: "ICC",
 ICM: "ICM",
 
@@ -247,10 +248,11 @@ ALL_FORMATS : '',
 PDXF : ('pdxf',), SK1 : ('sk1',), SK2 : ('sk2',), SK : ('sk',),
 SVG : ('svg',), SVGZ : ('svgz',), ODG : ('odg',), ORA : ('ora',),
 XCF : ('xcf',), SLA : ('sla',), FIG : ('fig',),
-CDR : ('cdr',), CDT : ('cdt',), CDRZ : ('cdr',), CDTZ : ('cdt',), CMX : ('cmx',),
-CCX : ('ccx',), CDRX : ('cdr',),
+CDR : ('cdr',), CDT : ('cdt',), CDRZ : ('cdr',), CDTZ : ('cdt',), 
+CMX : ('cmx',), CCX : ('ccx',), CDRX : ('cdr',),
 XAR : ('xar',),
-AI_PS : ('ai',), AI_PDF : ('ai',), PS : ('ps',), EPS : ('eps',), PDF : ('pdf',), PSD : ('psd',),
+AI_PS : ('ai',), AI_PDF : ('ai',), PS : ('ps',), EPS : ('eps',), PDF : ('pdf',), 
+PSD : ('psd',),
 CGM : ('cgm',), WMF : ('wmf',), EMF : ('emf',), XPS : ('xps',), VSD : ('vsd',),
 PLT : ('plt',), HPGL : ('hgl',), DXF : ('dxf',), DWG : ('dwg',),
 RIFF: ('riff',),
