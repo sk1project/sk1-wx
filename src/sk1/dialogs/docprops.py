@@ -280,14 +280,27 @@ class UnitsProps(DP_Panel):
         self.pack((5, 5))
 
         hpanel = wal.HPanel(self)
-        hpanel.pack(wal.Label(hpanel, _('Document units') + ':'))
+
+        vp = wal.LabeledPanel(hpanel, text=_('Document units'))
         names = []
         for item in unit_names: names.append(unit_full_names[item])
-        self.units_combo = wal.Combolist(hpanel, items=names)
+        self.units_combo = wal.Combolist(vp, items=names)
         self.units = self.doc.methods.get_doc_units()
         self.units_combo.set_active(unit_names.index(self.units))
-        hpanel.pack(self.units_combo, padding=5)
-        self.pack(hpanel)
+        vp.pack(self.units_combo, padding_all=15, fill=True)
+        hpanel.pack(vp, expand=True, fill=True)
+
+        hpanel.pack((10, 10))
+
+        vp = wal.LabeledPanel(hpanel, text=_('Document origin'))
+        self.origin = self.doc.methods.get_doc_origin()
+        self.origin_keeper = wal.HToggleKeeper(vp, ORIGINS, ORIGIN_ICONS,
+            ORIGIN_NAMES)
+        self.origin_keeper.set_mode(self.origin)
+        vp.pack(self.origin_keeper, padding_all=5)
+        hpanel.pack(vp, fill=True)
+
+        self.pack(hpanel, fill=True, padding_all=5)
 
         data = [[_('Unit'), _('Value in points')]]
         for item in uc2const.unit_names:
@@ -296,13 +309,6 @@ class UnitsProps(DP_Panel):
             data.append([name, value])
         slist = wal.ReportList(self, data)
         self.pack(slist, expand=True, fill=True, padding_all=5)
-
-        self.origin = self.doc.methods.get_doc_origin()
-        self.pack(wal.Label(self, _('Document origin:')), padding_all=5)
-        self.origin_keeper = wal.HToggleKeeper(self, ORIGINS, ORIGIN_ICONS,
-            ORIGIN_NAMES)
-        self.origin_keeper.set_mode(self.origin)
-        self.pack(self.origin_keeper)
         self.pack((5, 5))
 
     def save(self):
