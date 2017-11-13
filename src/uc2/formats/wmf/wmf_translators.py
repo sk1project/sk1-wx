@@ -85,8 +85,7 @@ class WMF_to_SK2_Translator(object):
             if val != checksum:
                 msg = 'Incorrect header checksum'
                 print msg
-            # 				events.emit(events.MESSAGES, msgconst.ERROR, msg)
-            # 				raise IOError(errno.ENODATA, msg, '')
+                #events.emit(events.MESSAGES, msgconst.WARNING, msg)
 
             header = self.wmf_mt.childs[0]
 
