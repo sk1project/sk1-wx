@@ -258,6 +258,7 @@ class WMF_to_SK2_Translator(object):
             except:
                 print 'Error -->', wmfconst.WMF_RECORD_NAMES[record.func]
                 for item in sys.exc_info(): print item
+                print 'Record index %d' % header.childs.index(record)
 
     def translate_record(self, record):
         if record.func in self.rec_funcs:
@@ -340,7 +341,7 @@ class WMF_to_SK2_Translator(object):
     def tr_create_pen_in(self, chunk):
         stroke = []
         style, width = get_data('<hh', chunk[:4])
-        r, g, b = get_data('<BBBx', chunk[6:])
+        r, g, b = get_data('<BBBx', chunk[6:10])
         if not style & 0x000F == wmfconst.PS_NULL:
             stroke_rule = sk2_const.STROKE_MIDDLE
             color_vals = [r / 255.0, g / 255.0, b / 255.0]
