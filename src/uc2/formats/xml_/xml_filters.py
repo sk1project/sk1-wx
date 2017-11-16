@@ -30,10 +30,15 @@ class XML_Loader(AbstractXMLLoader):
     def start_element(self, name, attrs):
         obj = XMLObject()
         obj.tag = name
-        if not self.stack: self.model = obj
+        if not self.stack:
+            self.model = obj
+            self.model.id_map = {}
 
         for item in attrs._attrs.keys():
             obj.attrs[item] = attrs._attrs[item].strip().encode('utf-8')
+
+        if 'id' in obj.attrs:
+            self.model.id_map[obj.attrs['id']] = obj
 
         if self.stack: self.stack[-1].childs.append(obj)
         self.stack.append(obj)

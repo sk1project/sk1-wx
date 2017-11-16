@@ -78,9 +78,7 @@ class SVG_to_SK2_Translator(object):
     trafo = []
     coeff = 1.0
     user_space = []
-    defs = {}
     style_opts = {}
-    id_dict = {}
     classes = {}
     profiles = {}
     current_color = ''
@@ -92,9 +90,8 @@ class SVG_to_SK2_Translator(object):
         self.sk2_mt = sk2_doc.model
         self.sk2_mtds = sk2_doc.methods
         self.svg_mtds = svg_doc.methods
-        self.defs = {}
         self.classes = {}
-        self.id_dict = {}
+        self.id_map = self.svg_mt.id_map
         self.profiles = {}
         self.current_color = ''
         self.translate_units()
@@ -169,8 +166,8 @@ class SVG_to_SK2_Translator(object):
         if svg_obj.tag == 'linearGradient':
             if 'xlink:href' in svg_obj.attrs:
                 cid = svg_obj.attrs['xlink:href'][1:]
-                if cid in self.defs:
-                    stops = self.parse_def(self.defs[cid])[2][2]
+                if cid in self.id_map:
+                    stops = self.parse_def(self.id_map[cid])[2][2]
                     if not stops: return []
             elif svg_obj.childs:
                 stops = parse_svg_stops(svg_obj.childs, self.current_color)
@@ -207,8 +204,8 @@ class SVG_to_SK2_Translator(object):
         elif svg_obj.tag == 'radialGradient':
             if 'xlink:href' in svg_obj.attrs:
                 cid = svg_obj.attrs['xlink:href'][1:]
-                if cid in self.defs:
-                    stops = self.parse_def(self.defs[cid])[2][2]
+                if cid in self.id_map:
+                    stops = self.parse_def(self.id_map[cid])[2][2]
                     if not stops: return []
             elif svg_obj.childs:
                 stops = parse_svg_stops(svg_obj.childs, self.current_color)
@@ -330,12 +327,12 @@ class SVG_to_SK2_Translator(object):
             def_id = ''
             if len(fill) > 3 and fill[:3] == 'url':
                 val = fill[5:].split(')')[0]
-                if val in self.defs: def_id = val
-            elif fill[0] == '#' and fill[1:] in self.defs:
+                if val in self.id_map: def_id = val
+            elif fill[0] == '#' and fill[1:] in self.id_map:
                 def_id = fill[1:]
 
             if def_id:
-                sk2_style[0] = self.parse_def(self.defs[def_id])
+                sk2_style[0] = self.parse_def(self.id_map[def_id])
                 if sk2_style[0]:
                     sk2_style[0][0] = fillrule
                     if sk2_style[0][1] == sk2_const.FILL_GRADIENT:
@@ -376,12 +373,12 @@ class SVG_to_SK2_Translator(object):
             def_id = ''
             if len(stroke) > 3 and stroke[:3] == 'url':
                 val = stroke[5:].split(')')[0]
-                if val in self.defs: def_id = val
-            elif stroke[0] == '#' and stroke[1:] in self.defs:
+                if val in self.id_map: def_id = val
+            elif stroke[0] == '#' and stroke[1:] in self.id_map:
                 def_id = stroke[1:]
 
             if def_id:
-                stroke_fill = self.parse_def(self.defs[def_id])
+                stroke_fill = self.parse_def(self.id_map[def_id])
                 if stroke_fill:
                     stroke_fill[0] = sk2_const.FILL_NONZERO
                     if stroke_fill[1] == sk2_const.FILL_GRADIENT:
@@ -542,8 +539,6 @@ class SVG_to_SK2_Translator(object):
 
     def translate_obj(self, parent, svg_obj, trafo, style):
         try:
-            if 'id' in svg_obj.attrs:
-                self.id_dict[svg_obj.attrs['id']] = svg_obj
             if svg_obj.tag == 'defs':
                 self.translate_defs(svg_obj)
             elif svg_obj.tag == 'sodipodi:namedview':
@@ -573,11 +568,9 @@ class SVG_to_SK2_Translator(object):
             elif svg_obj.tag == 'image':
                 self.translate_image(parent, svg_obj, trafo, style)
             elif svg_obj.tag == 'linearGradient':
-                if 'id' in svg_obj.attrs:
-                    self.defs[svg_obj.attrs['id']] = svg_obj
+                return
             elif svg_obj.tag == 'radialGradient':
-                if 'id' in svg_obj.attrs:
-                    self.defs[svg_obj.attrs['id']] = svg_obj
+                return
             elif svg_obj.tag == 'style':
                 self.translate_style(svg_obj)
             elif svg_obj.tag == 'pattern':
@@ -600,8 +593,6 @@ class SVG_to_SK2_Translator(object):
                 self.translate_style(item)
             elif item.tag == 'color-profile':
                 self.translate_color_profile(item)
-            elif 'id' in item.attrs:
-                self.defs[item.attrs['id']] = item
 
     def translate_namedview(self, svg_obj):
         for item in svg_obj.childs:
@@ -676,8 +667,8 @@ class SVG_to_SK2_Translator(object):
 
         elif 'clip-path' in svg_obj.attrs:
             clip_id = svg_obj.attrs['clip-path'][5:-1].strip()
-            if clip_id in self.defs:
-                container = self.parse_clippath(self.defs[clip_id])
+            if clip_id in self.id_map:
+                container = self.parse_clippath(self.id_map[clip_id])
 
             if container:
                 container.childs[0].trafo = [] + tr
@@ -738,8 +729,8 @@ class SVG_to_SK2_Translator(object):
         container = None
         if 'clip-path' in svg_obj.attrs:
             clip_id = svg_obj.attrs['clip-path'][5:-1].strip()
-            if clip_id in self.defs:
-                container = self.parse_clippath(self.defs[clip_id])
+            if clip_id in self.id_map:
+                container = self.parse_clippath(self.id_map[clip_id])
                 if container:
                     container.childs[0].trafo = [] + trafo
 
@@ -937,10 +928,8 @@ class SVG_to_SK2_Translator(object):
         stl = self.get_level_style(svg_obj, style)
         if 'xlink:href' in svg_obj.attrs:
             obj_id = svg_obj.attrs['xlink:href'][1:]
-            if obj_id in self.id_dict:
-                self.translate_obj(parent, self.id_dict[obj_id], tr, stl)
-            elif obj_id in self.defs:
-                self.translate_obj(parent, self.defs[obj_id], tr, stl)
+            if obj_id in self.id_map:
+                self.translate_obj(parent, self.id_map[obj_id], tr, stl)
             else:
                 print 'id %s is not found' % obj_id
 
@@ -1019,8 +1008,8 @@ class SVG_to_SK2_Translator(object):
         container = None
         if 'clip-path' in svg_obj.attrs:
             clip_id = svg_obj.attrs['clip-path'][5:-1].strip()
-            if clip_id in self.defs:
-                container = self.parse_clippath(self.defs[clip_id])
+            if clip_id in self.id_map:
+                container = self.parse_clippath(self.id_map[clip_id])
                 if container:
                     container.childs[0].trafo = [] + tr_level
 
