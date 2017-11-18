@@ -108,6 +108,7 @@ data_files = [
     ('/usr/share/applications', ['src/sk1.desktop', ]),
     ('/usr/share/pixmaps', ['src/sk1.png', 'src/sk1.xpm', ]),
     ('/usr/share/icons/hicolor/scalable/apps', ['src/sk1.svg', ]),
+    (install_path, ['GPLv3.txt', 'LICENSE', ]),
 ]
 
 EXCLUDES = ['sword', ]
@@ -169,6 +170,8 @@ if len(sys.argv) > 1:
                 for file_item in file_list:
                     filename = os.path.basename(file_item)
                     filepath = os.path.join(location, filename)
+                    if not os.path.isfile(filepath):
+                        continue
                     print 'REMOVE: ' + filepath
                     os.system('rm -rf ' + filepath)
             print 'Desktop database update: ',
