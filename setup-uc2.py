@@ -83,11 +83,11 @@ sK1 Project (http://sk1project.net),
 Copyright (C) 2007-2017 by Igor E. Novikov
 --------------------------------------------------------------------------------
 Supported input formats:  
- PDXF, CDR, CDT, CCX, CDRX, CMX, AI, PS, EPS, CGM, WMF, XFIG, SVG, SK, SK1, 
+ SK2, CDR, CDT, CCX, CDRX, CMX, AI, PS, EPS, CGM, WMF, XFIG, SVG, SK, SK1, 
  AFF, PLT, DXF, DST, PES, EXP, PCS
 --------------------------------------------------------------------------------
 Supported output formats: 
- PDXF, AI, SVG, SK, SK1, CGM, WMF, PDF, PS, PLT    
+ SK2, AI, SVG, SK, SK1, CGM, WMF, PDF, PS, PLT    
 --------------------------------------------------------------------------------
 '''
 LONG_DEB_DESCRIPTION = ''' .
@@ -170,7 +170,7 @@ if len(sys.argv) > 1:
 
     if sys.argv[1] == 'uninstall':
         if os.path.isdir(install_path):
-            # removing sk1 folder
+            # removing UC2 folder
             print 'REMOVE: ' + install_path
             os.system('rm -rf ' + install_path)
             # removing scripts
@@ -185,6 +185,8 @@ if len(sys.argv) > 1:
                 for file_item in file_list:
                     filename = os.path.basename(file_item)
                     filepath = os.path.join(location, filename)
+                    if not os.path.isfile(filepath):
+                        continue
                     print 'REMOVE: ' + filepath
                     os.system('rm -rf ' + filepath)
             print 'Desktop database update: ',
@@ -240,7 +242,8 @@ setup(
 ############################################################
 # .py source compiling
 ############################################################
-buildutils.compile_sources()
+if not UPDATE_MODULES:
+    buildutils.compile_sources()
 
 ############################################################
 # This section for developing purpose only

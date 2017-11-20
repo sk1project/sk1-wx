@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2016 by Igor E. Novikov
+#  Copyright (C) 2016-2017 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -778,15 +778,30 @@ class SK2_to_WMF_Translator(object):
             self.translate_group(curve)
             return
         curve.update()
-        self.translate_style(obj)
         trafo = libgeom.multiply_trafo(curve.trafo, self.trafo)
         paths = libgeom.apply_trafo_to_paths(curve.paths, trafo)
+        paths = libgeom.flat_paths(paths)
+        self.translate_style(obj, paths)
+
+    def translate_style(self, obj, paths):
+        if obj.style[1] and obj.style[1][7]:
+            self.translate_stroke(obj, paths)
+        if obj.style[0]:
+            self.translate_fill(obj, paths)
+        if obj.style[1] and not obj.style[1][7]:
+            self.translate_stroke(obj, paths)
+
+    def translate_stroke(self, obj, paths):
+        
 
         for item in [] + self.latest_objs:
             self.delete_obj(item)
 
-    def translate_style(self, obj):
-        pass
+    def translate_fill(self, obj, paths):
+
+
+        for item in [] + self.latest_objs:
+            self.delete_obj(item)
 
     def translate_pixmap(self, obj):
         pass
