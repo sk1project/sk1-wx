@@ -54,10 +54,10 @@ class Error(Exception):
     pass
 
 
-VERSION = '1.1.6'
+VERSION = '1.1.7'
 
 DATASET = {
-    'agent_ver': '1.1.6',
+    'agent_ver': '1.1.7',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -186,7 +186,7 @@ def get_package_name(pth):
     elif is_rpm():
         for fn in files:
             if fn.endswith('.rpm') and not fn.endswith('src.rpm') \
-                    and not 'debuginfo' in fn:
+                    and not 'debug' in fn:
                 return fn
     elif is_msw():
         if len(files) == 1:
