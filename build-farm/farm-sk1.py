@@ -102,6 +102,8 @@ RPM = [
     'Fedora 25 64bit',
     'Fedora 26 32bit',
     'Fedora 26 64bit',
+    'Fedora 27 32bit',
+    'Fedora 27 64bit',
     'OpenSuse 42.1 64bit',
     'OpenSuse 42.2 64bit',
     'OpenSuse 42.3 64bit',
