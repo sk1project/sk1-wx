@@ -47,6 +47,7 @@ class MSW_PS(AbstractPS):
     default_printer = ''
 
     def __init__(self, app, physical_only=False):
+        self.printers = []
         self.app = app
         self.collect_printers()
         if not physical_only:
