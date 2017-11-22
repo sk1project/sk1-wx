@@ -23,4 +23,5 @@ build() {
 package() {
   cd "${srcdir}/$pkgname-$pkgver"
   LANG=en_US.UTF-8 python2 setup-sk1.py install --root="$pkgdir"
+  chmod 644 "${pkgdir}/usr/share/applications/${pkgname}.desktop"
 }
