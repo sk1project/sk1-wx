@@ -21,7 +21,6 @@ import wx
 import wal
 from sk1 import _
 from uc2 import uc2const
-from uc2.formats import LOADER_FORMATS
 from uc2.utils.fs import path_system
 
 
@@ -30,7 +29,7 @@ def _get_open_filters(items=[]):
     descr = uc2const.FORMAT_DESCRIPTION
     ext = uc2const.FORMAT_EXTENSION
     if not items:
-        items = [] + LOADER_FORMATS
+        items = [] + uc2const.LOADER_FORMATS
     wildcard += _('All supported formats') + '|'
     for item in items:
         for extension in ext[item]:

@@ -19,7 +19,6 @@ import os, sys
 import gtk
 
 from uc2 import uc2const
-from uc2.formats import LOADER_FORMATS, EXPERIMENTAL_LOADERS
 
 from sword import _, config
 from sword import events, dialogs
@@ -30,7 +29,7 @@ from sword.widgets.captions import TabIconCaption
 def _get_open_filters():
 	result = []
 	ext = uc2const.FORMAT_EXTENSION
-	items = [] + LOADER_FORMATS + EXPERIMENTAL_LOADERS
+	items = [] + uc2const.LOADER_FORMATS + uc2const.EXPERIMENTAL_LOADERS
 	for item in items:
 		result.append(ext[item])
 	return result

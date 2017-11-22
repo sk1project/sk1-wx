@@ -19,8 +19,6 @@ import os, sys
 import gtk, gobject
 
 from uc2 import uc2const
-from uc2.formats import LOADER_FORMATS, EXPERIMENTAL_LOADERS, \
-SAVER_FORMATS, EXPERIMENTAL_SAVERS
 from uc2.utils.fs import expanduser_unicode
 from uc2 import events
 
@@ -82,7 +80,7 @@ def _get_open_fiters():
 	result = []
 	descr = uc2const.FORMAT_DESCRIPTION
 	ext = uc2const.FORMAT_EXTENSION
-	items = [] + LOADER_FORMATS + EXPERIMENTAL_LOADERS
+	items = [] + uc2const.LOADER_FORMATS + uc2const.EXPERIMENTAL_LOADERS
 
 	for item in items:
 		filter = gtk.FileFilter()
@@ -133,7 +131,7 @@ def _get_save_fiters():
 	result = []
 	descr = uc2const.FORMAT_DESCRIPTION
 	ext = uc2const.FORMAT_EXTENSION
-	items = [] + SAVER_FORMATS + EXPERIMENTAL_SAVERS
+	items = [] + uc2const.SAVER_FORMATS + uc2const.EXPERIMENTAL_SAVERS
 
 	for item in items:
 		filter = gtk.FileFilter()
