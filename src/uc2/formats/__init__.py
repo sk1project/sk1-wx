@@ -22,7 +22,7 @@ from uc2 import _
 from uc2 import uc2const
 from uc2 import events, msgconst
 from uc2.utils.fs import get_file_extension
-from uc2.formats.fallback import fallback_check, im_loader
+from fallback import fallback_check, im_loader
 
 LOADERS = {}
 SAVERS = {}

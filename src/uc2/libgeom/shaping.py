@@ -24,19 +24,18 @@ from bbox import is_bbox_overlap, sum_bbox
 from bezier_ops import bezier_base_point, get_paths_bbox
 from cwrap import create_cpath
 from points import mult_point, add_points, distance, midpoint
-from uc2 import libcairo
-from uc2.formats.sk2 import sk2_const
+from uc2 import libcairo, sk2const
 
 CAPS = {
-    sk2_const.CAP_BUTT: cairo.LINE_CAP_BUTT,
-    sk2_const.CAP_ROUND: cairo.LINE_CAP_ROUND,
-    sk2_const.CAP_SQUARE: cairo.LINE_CAP_SQUARE,
+    sk2const.CAP_BUTT: cairo.LINE_CAP_BUTT,
+    sk2const.CAP_ROUND: cairo.LINE_CAP_ROUND,
+    sk2const.CAP_SQUARE: cairo.LINE_CAP_SQUARE,
 }
 
 JOINS = {
-    sk2_const.JOIN_BEVEL: cairo.LINE_JOIN_BEVEL,
-    sk2_const.JOIN_MITER: cairo.LINE_JOIN_MITER,
-    sk2_const.JOIN_ROUND: cairo.LINE_JOIN_ROUND,
+    sk2const.JOIN_BEVEL: cairo.LINE_JOIN_BEVEL,
+    sk2const.JOIN_MITER: cairo.LINE_JOIN_MITER,
+    sk2const.JOIN_ROUND: cairo.LINE_JOIN_ROUND,
 }
 
 PRECISION = 8
@@ -276,7 +275,7 @@ class PathObject:
             start = self.get_start_point()
         else:
             start = bezier_base_point(self.get_seg(index - 1))
-        return [start, [self.get_seg(index), ], sk2_const.CURVE_OPENED]
+        return [start, [self.get_seg(index), ], sk2const.CURVE_OPENED]
 
     def get_node(self, index):
         index -= 1
@@ -307,7 +306,7 @@ class PathObject:
             return [[q1, q2, [] + q3, 0], q3, [q4, q5, [] + p3, 0]]
         else:
             new_point = add_points(mult_point(base_point, (1.0 - t)),
-                mult_point(point, t))
+                                   mult_point(point, t))
             return [new_point, [] + new_point, None]
 
     def split_path_at(self, at, cross_id=0):
@@ -528,7 +527,7 @@ def intersect_lines(p0, p1, p2, p3):
     c1 = p0[0] * p1[1] - p1[0] * p0[1]
     c2 = p2[0] * p3[1] - p3[0] * p2[1]
     cp = [(a1 * c2 - a2 * c1) / (b1 * a2 - a1 * b2),
-        (b1 * c2 - b2 * c1) / (a1 * b2 - b1 * a2)]
+          (b1 * c2 - b2 * c1) / (a1 * b2 - b1 * a2)]
     if in_range(cp, p0, p1) and in_range(cp, p2, p3):
         return cp
     return None
@@ -813,7 +812,7 @@ def dash_path(path, dash_size, dash_list):
     for i in range(len(result)):
         result[i] = result[i].get_path()
 
-    if path[2] == sk2_const.CURVE_CLOSED and not len(dashes) % 2:
+    if path[2] == sk2const.CURVE_CLOSED and not len(dashes) % 2:
         result[0][0] = result[-1][0]
         result[0][1] = result[-1][1] + result[0][1]
         result = result[:-1]
