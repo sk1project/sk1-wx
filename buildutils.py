@@ -791,9 +791,7 @@ class RpmBuilder:
             'python2 %s install --root=$RPM_BUILD_ROOT' % self.build_script,
             '',
             '%files',
-            '%license LICENSE GPLv3.txt',
-            '%doc README.txt',
-            '%{_bindir}/%{name}',
+            '%{_bindir}/' + self.name,
             self.install_path.replace('/usr/', '%{_usr}/'),
         ]
         for item in self.data_files:
