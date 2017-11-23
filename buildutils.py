@@ -799,7 +799,7 @@ class RpmBuilder:
                 path = item[0].replace('/usr/share/', '%{_datadir}/')
                 for filename in item[1]:
                     content.append('%s/%s' % (path, filename.split('/')[-1]))
-        content += ['-', '']
+        content += ['',]
 
         open(self.spec_path, 'w').write('\n'.join(content))
 
