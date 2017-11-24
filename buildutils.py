@@ -804,7 +804,8 @@ class RpmBuilder:
         open(self.spec_path, 'w').write('\n'.join(content))
 
     def build_rpm(self):
-        os.system('rpmbuild -bb %s ' % self.spec_path)
+        os.system('rpmbuild -bb %s --define "_topdir %s"' % (self.spec_path,
+                  self.rpmbuild_path))
         os.system('cp `find %s -name "*.rpm"` %s/' % (self.rpmbuild_path,
                                                       self.dist_dir))
 
