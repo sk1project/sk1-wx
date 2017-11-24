@@ -113,7 +113,7 @@ MSI = [
     # 'Win7 64bit',
 ]
 
-OSes = DEB + RPM + MSI
+OSes = RPM# + DEB + MSI
 
 VMTYPE = 'headless'  # 'gui'
 
@@ -156,7 +156,7 @@ def suspendvm(vmname):
     os.system('VBoxManage controlvm "%s" savestate' % vmname)
 
 
-def run_agent(vmname):
+def run_agent_deb(vmname):
     echo_msg('\n===>STARTING BUILD ON "%s"' % vmname, code=STDOUT_GREEN)
     cmd = 'VBoxManage --nologo guestcontrol "%s" run' % vmname
     cmd += ' --exe "/usr/bin/sudo"'
@@ -164,6 +164,27 @@ def run_agent(vmname):
     cmd += ' --password "%s"' % DATASET['user_pass']
     cmd += ' --wait-stdout --wait-stderr'
     cmd += ' -- sudo/arg0 "python2"'
+    cmd += ' "/home/%s/build-agent.py"' % DATASET['user']
+    for item in DATASET.keys():
+        value = DATASET[item]
+        if not value:
+            continue
+        if ' ' in value:
+            value = "'%s'" % value
+        cmd += ' "%s=%s"' % (item, value)
+
+    os.system(cmd)
+    echo_msg('===>BUILD FINISHED ON "%s"' % vmname, code=STDOUT_GREEN)
+
+
+def run_agent_rpm(vmname):
+    echo_msg('\n===>STARTING BUILD ON "%s"' % vmname, code=STDOUT_GREEN)
+    cmd = 'VBoxManage --nologo guestcontrol "%s" run' % vmname
+    cmd += ' --exe "/usr/bin/python2"'
+    cmd += ' --username "%s"' % DATASET['user']
+    cmd += ' --password "%s"' % DATASET['user_pass']
+    cmd += ' --wait-stdout --wait-stderr'
+    cmd += ' -- python2/arg0'
     cmd += ' "/home/%s/build-agent.py"' % DATASET['user']
     for item in DATASET.keys():
         value = DATASET[item]
@@ -207,8 +228,10 @@ for vmname in OSes:
     startvm(vmname)
     if vmname in MSI:
         run_agent_windows(vmname)
+    elif vmname in RPM:
+        run_agent_rpm(vmname)
     else:
-        run_agent(vmname)
+        run_agent_deb(vmname)
     suspendvm(vmname)
 
 echo_msg(flr_left + 'FARM TERMINATED' + flr_right, code=STDOUT_YELLOW)
