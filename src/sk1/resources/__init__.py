@@ -1,30 +1,28 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2013 by Igor E. Novikov
+#  Copyright (C) 2013 by Igor E. Novikov
 #
-# 	This program is free software: you can redistribute it and/or modify
-# 	it under the terms of the GNU General Public License as published by
-# 	the Free Software Foundation, either version 3 of the License, or
-# 	(at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-# 	This program is distributed in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# 	GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-# 	You should have received a copy of the GNU General Public License
-# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 
 import wal
 from artids import ART_IDS
 from labels import LABELS
-
-ACC_KEYS = {}
-
 from acc_keys import GENERIC_KEYS
 
+ACC_KEYS = {}
 ACC_KEYS.update(GENERIC_KEYS)
 
 if wal.IS_MAC:
@@ -39,13 +37,13 @@ else:
 
 
 def get_acc_by_id(action_id):
-    if ACC_KEYS.has_key(action_id):
+    if action_id in ACC_KEYS:
         return ACC_KEYS[action_id] + (action_id,)
     return None
 
 
 def get_accentry_by_id(action_id):
-    if ACC_KEYS.has_key(action_id):
+    if action_id in ACC_KEYS:
         items = ACC_KEYS[action_id]
         if isinstance(items, list):
             menu_item = items[0]
@@ -67,20 +65,23 @@ def get_accentry_by_id(action_id):
 
 def get_icon(icon_id, client=wx.ART_OTHER, size=wal.SIZE_16):
     bmp = wx.ArtProvider.GetBitmap(icon_id, client, size)
-    if not bmp == wx.NullBitmap: return bmp
+    if not bmp == wx.NullBitmap:
+        return bmp
     return None
 
 
 def get_bmp(parent, icon_id, tooltip=''):
     bmp = wx.ArtProvider.GetBitmap(icon_id, wx.ART_OTHER, wal.DEF_SIZE)
-    if bmp == wx.NullBitmap: return None
+    if bmp == wx.NullBitmap:
+        return None
     sb = wal.Bitmap(parent, bmp)
-    if tooltip: sb.SetToolTipString(tooltip)
+    if tooltip:
+        sb.SetToolTipString(tooltip)
     return sb
 
 
 def get_art_by_id(action_id):
-    if ART_IDS.has_key(action_id):
+    if action_id in ART_IDS:
         return ART_IDS[action_id]
     return None
 
@@ -95,19 +96,19 @@ def get_bitmap_by_id(action_id, client=wx.ART_OTHER, size=wal.SIZE_16):
 
 
 def get_menu_text(action_id):
-    if LABELS.has_key(action_id):
+    if action_id in LABELS:
         return LABELS[action_id][0]
     return ''
 
 
 def get_tooltip_text(action_id):
-    if LABELS.has_key(action_id):
+    if action_id in LABELS:
         return LABELS[action_id][0].replace('&', '')
     return ''
 
 
 def get_descr_text(action_id):
-    if LABELS.has_key(action_id):
+    if action_id in LABELS:
         if len(LABELS[action_id]) == 1:
             return get_tooltip_text(action_id)
         return LABELS[action_id][1]
