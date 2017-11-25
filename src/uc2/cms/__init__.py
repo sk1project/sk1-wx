@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2011-2015 by Igor E. Novikov
+#  Copyright (C) 2011-2015 by Igor E. Novikov
 #
-# 	This program is free software: you can redistribute it and/or modify
-# 	it under the terms of the GNU General Public License as published by
-# 	the Free Software Foundation, either version 3 of the License, or
-# 	(at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-# 	This program is distributed in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# 	GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-# 	You should have received a copy of the GNU General Public License
-# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import copy
 from copy import deepcopy
@@ -231,11 +231,11 @@ def lab_to_rgb(color):
 
     # normalized XYZ -> linear sRGB (in 0...1)
     R = X * (1219569.0 / 395920.0) + Y * (-608687.0 / 395920.0) + Z * (
-    -107481.0 / 197960.0)
+        -107481.0 / 197960.0)
     G = X * (-80960619.0 / 87888100.0) + Y * (82435961.0 / 43944050.0) + Z * (
-    3976797.0 / 87888100.0)
+        3976797.0 / 87888100.0)
     B = X * (93813.0 / 1774030.0) + Y * (-180961.0 / 887015.0) + Z * (
-    107481.0 / 93370.0)
+        107481.0 / 93370.0)
 
     # linear sRGB -> gamma-compressed sRGB (in 0...1)
     r = round(linear_to_rgb(R), 3)
@@ -251,7 +251,7 @@ def xyz_to_lab(c):
 
 def rgb_to_linear(c):
     if c > (0.0031308 * 12.92): return pow(c * (1.0 / 1.055) + (0.055 / 1.055),
-        2.4)
+                                           2.4)
     return c * (1.0 / 12.92)
 
 
@@ -266,13 +266,13 @@ def rgb_to_lab(color):
     # linear sRGB -> normalized XYZ (X,Y,Z are all in 0...1)
     X = xyz_to_lab(
         R * (10135552.0 / 23359437.0) + G * (8788810.0 / 23359437.0) + B * (
-        4435075.0 / 23359437.0))
+            4435075.0 / 23359437.0))
     Y = xyz_to_lab(
         R * (871024.0 / 4096299.0) + G * (8788810.0 / 12288897.0) + B * (
-        887015.0 / 12288897.0))
+            887015.0 / 12288897.0))
     Z = xyz_to_lab(
         R * (158368.0 / 8920923.0) + G * (8788810.0 / 80288307.0) + B * (
-        70074185.0 / 80288307.0))
+            70074185.0 / 80288307.0))
 
     # normalized XYZ -> Lab
     L = round((Y * 116.0 - 16.0) / 100.0, 3)
@@ -497,8 +497,8 @@ class ColorManager(object):
             handle_out = self.handles[cs_out]
             if cs_out == COLOR_DISPLAY: cs_out = COLOR_RGB
             tr = libcms.cms_create_transform(handle_in, cs_in,
-                handle_out, cs_out,
-                intent, self.flags)
+                                             handle_out, cs_out,
+                                             intent, self.flags)
             self.transforms[tr_type] = tr
         return self.transforms[tr_type]
 
@@ -516,10 +516,11 @@ class ColorManager(object):
                 handle_out = self.handles[COLOR_RGB]
             handle_proof = self.handles[COLOR_CMYK]
             tr = libcms.cms_create_proofing_transform(handle_in, cs_in,
-                handle_out, COLOR_RGB,
-                handle_proof,
-                self.cmyk_intent,
-                self.rgb_intent, self.flags)
+                                                      handle_out, COLOR_RGB,
+                                                      handle_proof,
+                                                      self.cmyk_intent,
+                                                      self.rgb_intent,
+                                                      self.flags)
             self.proof_transforms[tr_type] = tr
         return self.proof_transforms[tr_type]
 
@@ -645,9 +646,9 @@ class ColorManager(object):
         Stores alpha channel and color name.
         """
         METHOD_TO_CS = {COLOR_RGB: self.get_rgb_color,
-            COLOR_LAB: self.get_lab_color,
-            COLOR_CMYK: self.get_cmyk_color,
-            COLOR_GRAY: self.get_grayscale_color}
+                        COLOR_LAB: self.get_lab_color,
+                        COLOR_CMYK: self.get_cmyk_color,
+                        COLOR_GRAY: self.get_grayscale_color}
         return METHOD_TO_CS[cs](color)
 
     def mix_colors(self, color0, color1, coef=.5):
@@ -734,7 +735,8 @@ class ColorManager(object):
         intent = self.rgb_intent
         if cs_out == COLOR_CMYK: intent = self.cmyk_intent
         transform = libcms.cms_create_transform(custom_profile, cs_in,
-            out_profile, cs_out, intent, self.flags)
+                                                out_profile, cs_out, intent,
+                                                self.flags)
         return libcms.cms_do_bitmap_transform(transform, img, cs_in, cs_out)
 
     def get_display_image(self, img):
