@@ -69,7 +69,7 @@ class ScrolledPalette(wal.ScrolledCanvas, wal.SensitiveCanvas):
         self.large_sel = get_icon(icons.PD_LARGE_SEL_PALETTE, size=wal.DEF_SIZE)
         self.small_sel = get_icon(icons.PD_SMALL_SEL_PALETTE, size=wal.DEF_SIZE)
         self.width = (
-                     self.cell_width - 1) * self.cell_in_line + 3 + self.sb_width
+                         self.cell_width - 1) * self.cell_in_line + 3 + self.sb_width
         self.set_size((self.width, -1))
         self.set_bg(wal.WHITE)
 
@@ -151,7 +151,7 @@ class ScrolledPalette(wal.ScrolledCanvas, wal.SensitiveCanvas):
         self.set_stroke(wal.UI_COLORS['dark_shadow'])
         self.set_fill(wal.UI_COLORS['bg'])
         self.draw_rect(self.width - self.sb_width, -1,
-            self.sb_width + 1, self.get_size()[1] + 2)
+                       self.sb_width + 1, self.get_size()[1] + 2)
 
     def normal_mode_paint(self):
         self.cell_in_line = 10
@@ -241,7 +241,7 @@ class PaletteViewer(wal.VPanel):
         if wal.IS_WX3: self.pack((172, 1))
         options = wal.ExpandedPanel(self, _('Palette preview:'))
         changer = wal.HToggleKeeper(options, PREVIEW_MODES, MODE_ICON,
-            MODE_NAME, on_change=self.set_mode)
+                                    MODE_NAME, on_change=self.set_mode)
         options.pack(changer)
         self.pack(options, fill=True)
         border = wal.VPanel(self, border=True)

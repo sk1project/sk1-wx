@@ -148,13 +148,14 @@ class BitmapToggle(wal.Bitmap):
                 False: [icons.CTX_NO_RATIO, _("Don't keep ratio")]}
         self.update_icons()
         wal.Bitmap.__init__(self, parent, self.icons_dict[self.state][0],
-            on_left_click=self.on_change)
+                            on_left_click=self.on_change)
         if self.icons_dict[self.state][1]:
             self.set_tooltip(self.icons_dict[self.state][1])
 
     def on_change(self, event):
         self.set_active(not self.state)
-        if self.callback: self.callback()
+        if self.callback:
+            self.callback()
 
     def get_active(self):
         return self.state

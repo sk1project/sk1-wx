@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2015 by Igor E. Novikov
+#  Copyright (C) 2015 by Igor E. Novikov
 #
-# 	This program is free software: you can redistribute it and/or modify
-# 	it under the terms of the GNU General Public License as published by
-# 	the Free Software Foundation, either version 3 of the License, or
-# 	(at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-# 	This program is distributed in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# 	GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-# 	You should have received a copy of the GNU General Public License
-# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from copy import deepcopy
 
@@ -79,12 +79,12 @@ class CMYK_Panel(SolidFillPanel):
 
         bot_panel = wal.HPanel(self)
         self.refpanel = FillColorRefPanel(bot_panel, self.cms, [], [],
-            on_orig=self.set_orig_fill)
+                                          on_orig=self.set_orig_fill)
         bot_panel.pack(self.refpanel)
         bot_panel.pack(wal.HPanel(bot_panel), fill=True, expand=True)
 
         minipal = MiniPalette(bot_panel, self.cms, CMYK_PALETTE,
-            self.on_palette_click)
+                              self.on_palette_click)
         bot_panel.pack(minipal, padding_all=5)
 
         self.pack(bot_panel, fill=True)
@@ -121,12 +121,12 @@ class RGB_Panel(SolidFillPanel):
 
         bot_panel = wal.HPanel(self)
         self.refpanel = FillColorRefPanel(bot_panel, self.cms, [], [],
-            on_orig=self.set_orig_fill)
+                                          on_orig=self.set_orig_fill)
         bot_panel.pack(self.refpanel)
         bot_panel.pack(wal.HPanel(bot_panel), fill=True, expand=True)
 
         minipal = MiniPalette(bot_panel, self.cms, RGB_PALETTE,
-            self.on_palette_click)
+                              self.on_palette_click)
         bot_panel.pack(minipal, padding_all=5)
 
         self.pack(bot_panel, fill=True)
@@ -165,12 +165,12 @@ class Gray_Panel(SolidFillPanel):
 
         bot_panel = wal.HPanel(self)
         self.refpanel = FillColorRefPanel(bot_panel, self.cms, [], [],
-            on_orig=self.set_orig_fill)
+                                          on_orig=self.set_orig_fill)
         bot_panel.pack(self.refpanel)
         bot_panel.pack(wal.HPanel(bot_panel), fill=True, expand=True)
 
         minipal = MiniPalette(bot_panel, self.cms, GRAY_PALETTE,
-            self.on_palette_click)
+                              self.on_palette_click)
         bot_panel.pack(minipal, padding_all=5)
 
         self.pack(bot_panel, fill=True)
@@ -208,12 +208,12 @@ class SPOT_Panel(SolidFillPanel):
 
         bot_panel = wal.HPanel(self)
         self.refpanel = FillColorRefPanel(bot_panel, self.cms, [], [],
-            on_orig=self.set_orig_fill)
+                                          on_orig=self.set_orig_fill)
         bot_panel.pack(self.refpanel)
         bot_panel.pack(wal.HPanel(bot_panel), fill=True, expand=True)
 
         minipal = MiniPalette(bot_panel, self.cms, SPOT_PALETTE,
-            self.on_palette_click)
+                              self.on_palette_click)
         bot_panel.pack(minipal, padding_all=5)
 
         self.pack(bot_panel, fill=True)
@@ -258,7 +258,7 @@ class Empty_Panel(SolidFillPanel):
 class Palette_Panel(SolidFillPanel):
     def build(self):
         self.mixer = Palette_Mixer(self, self.app, self.cms,
-            onchange=self.set_color)
+                                   onchange=self.set_color)
         self.pack(self.mixer, fill=True, expand=True)
 
     def activate(self, cms, orig_fill, new_color):
@@ -348,7 +348,8 @@ class SolidFill(FillTab):
     use_rule = True
 
     def activate(self, fill_style, use_rule=True, onmodechange=None):
-        if onmodechange: self.callback = onmodechange
+        if onmodechange:
+            self.callback = onmodechange
         self.use_rule = use_rule
         FillTab.activate(self, fill_style)
         if not fill_style:
@@ -357,7 +358,7 @@ class SolidFill(FillTab):
         else:
             self.rule_keeper.set_mode(fill_style[0])
             if fill_style[1] in [sk2_const.FILL_GRADIENT,
-                sk2_const.FILL_PATTERN]:
+                                 sk2_const.FILL_PATTERN]:
                 mode = CMYK_MODE
             else:
                 mode = SOLID_MODE_MAP[fill_style[2][0]]
@@ -368,13 +369,15 @@ class SolidFill(FillTab):
         self.panels = {}
         panel = wal.HPanel(self)
         self.solid_keeper = wal.HToggleKeeper(panel, SOLID_MODES,
-            SOLID_MODE_ICONS,
-            SOLID_MODE_NAMES, self.on_mode_change)
+                                              SOLID_MODE_ICONS,
+                                              SOLID_MODE_NAMES,
+                                              self.on_mode_change)
         panel.pack(self.solid_keeper)
         panel.pack(wal.HPanel(panel), fill=True, expand=True)
         self.rule_keeper = FillRuleKeeper(panel)
         panel.pack(self.rule_keeper)
-        if not self.use_rule: self.rule_keeper.set_visible(False)
+        if not self.use_rule:
+            self.rule_keeper.set_visible(False)
         self.pack(panel, fill=True, padding_all=5)
         self.pack(wal.HLine(self), fill=True)
 
@@ -382,7 +385,7 @@ class SolidFill(FillTab):
             self.panels[item] = SOLID_MODE_CLASSES[item](self, self.app)
             if wal.IS_MSW:
                 self.pack(self.panels[item], fill=True,
-                    expand=True, padding_all=5)
+                          expand=True, padding_all=5)
                 self.layout()
                 self.panels[item].hide()
                 self.remove(self.panels[item])
@@ -399,7 +402,8 @@ class SolidFill(FillTab):
         self.active_panel.show()
         self.active_panel.activate(self.cms, self.orig_fill, self.new_color)
         self.rule_keeper.set_enable(not mode == EMPTY_MODE)
-        if self.callback: self.callback()
+        if self.callback:
+            self.callback()
 
     def get_result(self):
         clr = self.active_panel.get_color()
@@ -424,7 +428,7 @@ GRADIENT_MODE_NAMES = {
 }
 
 GRADIENT_CLR_MODES = [uc2const.COLOR_CMYK, uc2const.COLOR_RGB,
-    uc2const.COLOR_GRAY]
+                      uc2const.COLOR_GRAY]
 
 GRADIENT_CLR_ICONS = {
     uc2const.COLOR_CMYK: icons.PD_CONV_TO_CMYK,
@@ -476,20 +480,22 @@ class GradientFill(FillTab):
                         color1[3] = ''
                     stops = [[0.0, color0], [1.0, color1]]
         self.new_fill = [rule, sk2_const.FILL_GRADIENT,
-            [mode, self.vector, stops]]
+                         [mode, self.vector, stops]]
         self.update()
 
     def build(self):
         panel = wal.HPanel(self)
         self.grad_keeper = wal.HToggleKeeper(panel, GRADIENT_MODES,
-            GRADIENT_MODE_ICONS,
-            GRADIENT_MODE_NAMES, self.on_grad_mode_change)
+                                             GRADIENT_MODE_ICONS,
+                                             GRADIENT_MODE_NAMES,
+                                             self.on_grad_mode_change)
         panel.pack(self.grad_keeper)
         panel.pack(wal.HPanel(panel), fill=True, expand=True)
 
         self.grad_clrs = wal.HToggleKeeper(panel, GRADIENT_CLR_MODES,
-            GRADIENT_CLR_ICONS,
-            GRADIENT_CLR_NAMES, self.on_clr_mode_change)
+                                           GRADIENT_CLR_ICONS,
+                                           GRADIENT_CLR_NAMES,
+                                           self.on_clr_mode_change)
         panel.pack(self.grad_clrs)
         panel.pack(wal.HPanel(panel), fill=True, expand=True)
 
@@ -499,19 +505,21 @@ class GradientFill(FillTab):
         self.pack(wal.HLine(self), fill=True)
 
         self.grad_editor = GradientEditor(self, self.dlg, self.cms,
-            DEFAULT_STOPS, onchange=self.on_stops_change)
+                                          DEFAULT_STOPS,
+                                          onchange=self.on_stops_change)
         self.pack(self.grad_editor, fill=True, expand=True, padding=3)
         self.pack(wal.HLine(self), fill=True)
 
         panel = wal.HPanel(self)
         self.refpanel = FillFillRefPanel(self, self.cms, self.orig_fill,
-            deepcopy(self.orig_fill), on_orig=self.set_orig_fill)
+                                         deepcopy(self.orig_fill),
+                                         on_orig=self.set_orig_fill)
         panel.pack(self.refpanel)
 
         panel.pack(wal.HPanel(panel), fill=True, expand=True)
 
         self.presets = GradientMiniPalette(panel, self.cms,
-            onclick=self.on_presets_select)
+                                           onclick=self.on_presets_select)
         panel.pack(self.presets)
         self.pack(panel, fill=True, padding_all=5)
 
@@ -545,7 +553,8 @@ class GradientFill(FillTab):
     def get_result(self):
         stops = self.grad_editor.get_stops()
         vector = self.vector
-        if not self.grad_editor.use_vector(): vector = []
+        if not self.grad_editor.use_vector():
+            vector = []
         grad = [self.grad_keeper.get_mode(), vector, stops]
         return [self.rule_keeper.get_mode(), sk2_const.FILL_GRADIENT, grad]
 
@@ -603,14 +612,16 @@ class PatternFill(FillTab):
             image_style[1] = color1
 
         self.new_fill = [rule, sk2_const.FILL_PATTERN,
-            [pattern_type, pattern, image_style, trafo, transforms]]
+                         [pattern_type, pattern, image_style, trafo,
+                          transforms]]
         self.update()
 
     def build(self):
         panel = wal.HPanel(self)
         self.pattern_clrs = wal.HToggleKeeper(panel, GRADIENT_CLR_MODES,
-            GRADIENT_CLR_ICONS,
-            GRADIENT_CLR_NAMES, self.on_clr_mode_change)
+                                              GRADIENT_CLR_ICONS,
+                                              GRADIENT_CLR_NAMES,
+                                              self.on_clr_mode_change)
         panel.pack(self.pattern_clrs)
         panel.pack(wal.HPanel(panel), fill=True, expand=True)
 
@@ -620,23 +631,26 @@ class PatternFill(FillTab):
         self.pack(wal.HLine(self), fill=True)
 
         default_pattern_def = [sk2_const.PATTERN_IMG, '' + DEFAULT_PATTERN,
-            deepcopy([sk2_const.CMYK_BLACK, sk2_const.CMYK_WHITE]),
-            [] + sk2_const.NORMAL_TRAFO]
+                               deepcopy([sk2_const.CMYK_BLACK,
+                                         sk2_const.CMYK_WHITE]),
+                               [] + sk2_const.NORMAL_TRAFO]
         self.pattern_editor = PatternEditor(self, self.dlg, self.cms,
-            default_pattern_def, onchange=self.on_pattern_change)
+                                            default_pattern_def,
+                                            onchange=self.on_pattern_change)
         self.pack(self.pattern_editor, fill=True, expand=True, padding_all=5)
 
         self.pack(wal.HLine(self), fill=True)
 
         panel = wal.HPanel(self)
         self.refpanel = FillFillRefPanel(self, self.cms, self.orig_fill,
-            deepcopy(self.orig_fill), on_orig=self.set_orig_fill)
+                                         deepcopy(self.orig_fill),
+                                         on_orig=self.set_orig_fill)
         panel.pack(self.refpanel)
 
         panel.pack(wal.HPanel(panel), fill=True, expand=True)
 
         self.presets = PatternMiniPalette(panel, self.cms,
-            onclick=self.on_presets_select)
+                                          onclick=self.on_presets_select)
         panel.pack(self.presets)
         self.pack(panel, fill=True, padding_all=5)
 

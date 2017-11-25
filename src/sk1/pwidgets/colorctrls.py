@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2015 by Igor E. Novikov
+#  Copyright (C) 2015 by Igor E. Novikov
 #
-# 	This program is free software: you can redistribute it and/or modify
-# 	it under the terms of the GNU General Public License as published by
-# 	the Free Software Foundation, either version 3 of the License, or
-# 	(at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-# 	This program is distributed in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# 	GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-# 	You should have received a copy of the GNU General Public License
-# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import cairo
 import os
@@ -59,10 +59,10 @@ class FillRuleKeeper(wal.HPanel):
         self.mode = mode
         wal.HPanel.__init__(self, parent)
         self.fill_keeper = wal.HToggleKeeper(self, FILL_MODES,
-            FILL_MODE_ICONS, FILL_MODE_NAMES)
+                                             FILL_MODE_ICONS, FILL_MODE_NAMES)
         self.pack(self.fill_keeper)
         self.rule_keeper = wal.HToggleKeeper(self, RULE_MODES,
-            RULE_MODE_ICONS, RULE_MODE_NAMES)
+                                             RULE_MODE_ICONS, RULE_MODE_NAMES)
         self.pack(self.rule_keeper)
         self.set_mode(self.mode)
 
@@ -128,15 +128,15 @@ SPOT_PALETTE = [
     [uc2const.COLOR_SPOT, [[0.8471, 0.6118, 0.4667], []], 1.0, 'Bronze'],
     [uc2const.COLOR_SPOT, [[0.7098, 0.7098, 0.7098], []], 1.0, 'Silver'],
     [uc2const.COLOR_SPOT, [[1.0, 1.0, 1.0], [0.0, 0.0, 0.0, 0.0]], 1.0,
-        'Opaque White'],
+     'Opaque White'],
     [uc2const.COLOR_SPOT, [[1.0, 0.0, 0.0], []], 1.0, 'Fluorescent Red'],
     [uc2const.COLOR_SPOT, [[1.0, 0.5922, 0.0118], []], 1.0,
-        'Fluorescent Orange'],
+     'Fluorescent Orange'],
     [uc2const.COLOR_SPOT, [[0.9216, 1.0, 0.0], []], 1.0, 'Fluorescent Yellow'],
     [uc2const.COLOR_SPOT, [[0.0, 1.0, 0.0157], []], 1.0, 'Fluorescent Green'],
     [uc2const.COLOR_SPOT, [[0.0549, 0.5647, 1.0], []], 1.0, 'Fluorescent Blue'],
     [uc2const.COLOR_SPOT, [[1.0, 0.0039, 0.498], []], 1.0,
-        'Fluorescent Magenta'],
+     'Fluorescent Magenta'],
 ]
 
 REG_COLOR = [1.0, 1.0, 1.0, 1.0]
@@ -150,7 +150,7 @@ class HexField(wal.Entry):
 
     def __init__(self, parent, onchange=None):
         wal.Entry.__init__(self, parent, width=8, onchange=self.on_change,
-            onenter=self.on_enter)
+                           onenter=self.on_enter)
         if onchange: self.callback = onchange
 
     def set_color(self, color):
@@ -293,7 +293,7 @@ class SwatchCanvas(wal.SensitiveCanvas):
             grd = cairo.LinearGradient(0.0, h / 2.0, w, h / 2.0)
         else:
             grd = cairo.RadialGradient(w / 2.0, h / 2.0, 0,
-                w / 2.0, h / 2.0, w / 2.0)
+                                       w / 2.0, h / 2.0, w / 2.0)
         for stop in gradient[2]:
             grd.add_color_stop_rgba(stop[0], *self.get_cairo_color(stop[1]))
         ctx.set_source(grd)
@@ -313,7 +313,7 @@ class SwatchCanvas(wal.SensitiveCanvas):
         else:
             config = sk2_config.SK2_Config()
             config_file = os.path.join(self.cms.app.appdata.app_config_dir,
-                'sk2_config.xml')
+                                       'sk2_config.xml')
             config.load(config_file)
         image_obj = sk2_model.Pixmap(config)
         libimg.set_image_data(self.cms, image_obj, bmpstr)
@@ -382,7 +382,7 @@ class AlphaColorSwatch(wal.VPanel, SwatchCanvas):
     callback = None
 
     def __init__(self, parent, cms, color, size=(20, 20), border='wes',
-            even_odd=False, onclick=None):
+                 even_odd=False, onclick=None):
         self.color = color
         self.cms = cms
         wal.VPanel.__init__(self, parent)
@@ -405,7 +405,7 @@ class FillSwatch(wal.VPanel, SwatchCanvas):
     callback = None
 
     def __init__(self, parent, cms, fill, size=(20, 20), border='new',
-            even_odd=True, onclick=None):
+                 even_odd=True, onclick=None):
         self.cms = cms
         wal.VPanel.__init__(self, parent)
         SwatchCanvas.__init__(self, border, even_odd)
@@ -436,12 +436,12 @@ class SB_StrokeSwatch(AlphaColorSwatch):
     pattern_size = 8
 
     def __init__(self, parent, app, label, color=[], size=(35, 16),
-            onclick=None):
+                 onclick=None):
         self.app = app
         self.label = label
         cms = self.app.default_cms
         AlphaColorSwatch.__init__(self, parent, cms, color, size,
-            'news', onclick=onclick)
+                                  'news', onclick=onclick)
 
     def update_from_obj(self, obj):
         text = _('Stroke:')
@@ -468,12 +468,12 @@ class SB_FillSwatch(FillSwatch):
     pattern_size = 8
 
     def __init__(self, parent, app, label, fill=[], size=(35, 16),
-            onclick=None):
+                 onclick=None):
         self.app = app
         self.label = label
         cms = self.app.default_cms
         FillSwatch.__init__(self, parent, cms, fill, size,
-            'news', onclick=onclick)
+                            'news', onclick=onclick)
 
     def update_from_obj(self, obj):
         text = _('Fill:')
@@ -481,7 +481,7 @@ class SB_FillSwatch(FillSwatch):
         if self.app.insp.is_obj_pixmap(obj):
             text = _('Fg:')
             self.set_swatch_fill([sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID,
-                obj.style[3][0]])
+                                  obj.style[3][0]])
         else:
             fill = obj.style[0]
             self.set_swatch_fill(fill)
@@ -518,13 +518,13 @@ class ColorColorRefPanel(wal.VPanel):
         grid.pack(wal.Label(grid, _('Old color:')))
 
         self.before_swatch = AlphaColorSwatch(grid, cms, orig_color, (70, 30),
-            'new', onclick=on_orig)
+                                              'new', onclick=on_orig)
         grid.pack(self.before_swatch)
 
         grid.pack(wal.Label(grid, _('New color:')))
 
         self.after_swatch = AlphaColorSwatch(grid, cms, new_color, (70, 30),
-            even_odd=True)
+                                             even_odd=True)
         grid.pack(self.after_swatch)
 
         self.pack(grid, padding_all=2)
@@ -541,7 +541,7 @@ class FillColorRefPanel(wal.VPanel):
         grid.pack(wal.Label(grid, _('Old fill:')))
 
         self.before_swatch = FillSwatch(grid, cms, fill, (70, 30),
-            onclick=on_orig)
+                                        onclick=on_orig)
         grid.pack(self.before_swatch)
 
         grid.pack(wal.Label(grid, _('New fill:')))
@@ -563,13 +563,13 @@ class FillFillRefPanel(wal.VPanel):
         grid.pack(wal.Label(grid, _('Old fill:')))
 
         self.before_swatch = FillSwatch(grid, cms, fill, (70, 30),
-            onclick=on_orig)
+                                        onclick=on_orig)
         grid.pack(self.before_swatch)
 
         grid.pack(wal.Label(grid, _('New fill:')))
 
         self.after_swatch = FillSwatch(grid, cms, new_fill, (70, 30),
-            border='swe', even_odd=False)
+                                       border='swe', even_odd=False)
         grid.pack(self.after_swatch)
 
         self.pack(grid, padding_all=2)
@@ -585,10 +585,10 @@ class StyleMonitor(wal.VPanel):
         wal.VPanel.__init__(self, parent)
         self.pack((25, 25))
         self.stroke = AlphaColorSwatch(self, app.default_cms, [],
-            border='news', onclick=self.stroke_click)
+                                       border='news', onclick=self.stroke_click)
         self.stroke.set_position((5, 5))
         self.fill = FillSwatch(self, app.default_cms, [],
-            border='news', onclick=self.fill_click)
+                               border='news', onclick=self.fill_click)
         self.fill.set_position((0, 0))
         events.connect(events.DOC_CHANGED, self.doc_changed)
         events.connect(events.DOC_MODIFIED, self.doc_changed)
@@ -742,23 +742,23 @@ class CMYK_Mixer(wal.GridPanel):
         for item in labels:
             self.pack(wal.Label(self, item))
             self.color_sliders.append(ColoredSlider(self,
-                onchange=self.on_slider_change))
+                                                    onchange=self.on_slider_change))
             self.pack(self.color_sliders[-1])
             self.color_spins.append(wal.FloatSpin(self,
-                range_val=(0.0, 100.0),
-                onchange=self.on_change,
-                onenter=self.on_change))
+                                                  range_val=(0.0, 100.0),
+                                                  onchange=self.on_change,
+                                                  onenter=self.on_change))
             self.pack(self.color_spins[-1])
             self.pack(wal.Label(self, '%'))
 
         self.pack(wal.Label(self, 'A:'))
         self.alpha_slider = ColoredAlphaSlider(self,
-            onchange=self.on_slider_change)
+                                               onchange=self.on_slider_change)
         self.pack(self.alpha_slider)
         self.alpha_spin = wal.FloatSpin(self,
-            range_val=(0.0, 100.0),
-            onchange=self.on_change,
-            onenter=self.on_change)
+                                        range_val=(0.0, 100.0),
+                                        onchange=self.on_change,
+                                        onenter=self.on_change)
         self.pack(self.alpha_spin)
         self.pack(wal.Label(self, '%'))
 
@@ -837,22 +837,22 @@ class RGB_Mixer(wal.VPanel):
         for item in labels:
             grid.pack(wal.Label(grid, item))
             self.color_sliders.append(ColoredSlider(grid,
-                onchange=self.on_slider_change))
+                                                    onchange=self.on_slider_change))
             grid.pack(self.color_sliders[-1])
             self.color_spins.append(wal.IntSpin(grid,
-                range_val=(0, 255),
-                onchange=self.on_change,
-                onenter=self.on_change))
+                                                range_val=(0, 255),
+                                                onchange=self.on_change,
+                                                onenter=self.on_change))
             grid.pack(self.color_spins[-1])
 
         grid.pack(wal.Label(grid, 'A:'))
         self.alpha_slider = ColoredAlphaSlider(grid,
-            onchange=self.on_slider_change)
+                                               onchange=self.on_slider_change)
         grid.pack(self.alpha_slider)
         self.alpha_spin = wal.IntSpin(grid,
-            range_val=(0, 255),
-            onchange=self.on_change,
-            onenter=self.on_change)
+                                      range_val=(0, 255),
+                                      onchange=self.on_change,
+                                      onenter=self.on_change)
         grid.pack(self.alpha_spin)
 
         self.pack(grid)
@@ -951,22 +951,22 @@ class Gray_Mixer(wal.VPanel):
 
         grid.pack(wal.Label(grid, 'L:'))
         self.color_slider = ColoredSlider(grid, size=40,
-            onchange=self.on_slider_change)
+                                          onchange=self.on_slider_change)
         grid.pack(self.color_slider)
         self.color_spin = wal.IntSpin(grid,
-            range_val=(0, 255),
-            onchange=self.on_change,
-            onenter=self.on_change)
+                                      range_val=(0, 255),
+                                      onchange=self.on_change,
+                                      onenter=self.on_change)
         grid.pack(self.color_spin)
 
         grid.pack(wal.Label(grid, 'A:'))
         self.alpha_slider = ColoredAlphaSlider(grid, size=40,
-            onchange=self.on_slider_change)
+                                               onchange=self.on_slider_change)
         grid.pack(self.alpha_slider)
         self.alpha_spin = wal.IntSpin(grid,
-            range_val=(0, 255),
-            onchange=self.on_change,
-            onenter=self.on_change)
+                                      range_val=(0, 255),
+                                      onchange=self.on_change,
+                                      onenter=self.on_change)
         grid.pack(self.alpha_spin)
 
         self.pack(grid)
@@ -1032,7 +1032,7 @@ class SPOT_Mixer(wal.VPanel):
         name_panel = wal.HPanel(self)
         name_panel.pack(wal.Label(name_panel, 'Name:'), padding=5)
         self.name_field = wal.Entry(name_panel, width=30,
-            onchange=self.on_change)
+                                    onchange=self.on_change)
         name_panel.pack(self.name_field)
         self.pack(name_panel, padding_all=5)
 
@@ -1052,12 +1052,12 @@ class SPOT_Mixer(wal.VPanel):
 
         grid.pack(wal.Label(grid, 'A:'))
         self.alpha_slider = ColoredAlphaSlider(grid,
-            onchange=self.on_slider_change)
+                                               onchange=self.on_slider_change)
         grid.pack(self.alpha_slider)
         self.alpha_spin = wal.FloatSpin(grid,
-            range_val=(0.0, 100.0),
-            onchange=self.on_change,
-            onenter=self.on_change)
+                                        range_val=(0.0, 100.0),
+                                        onchange=self.on_change,
+                                        onenter=self.on_change)
         grid.pack(self.alpha_spin)
         grid.pack(wal.Label(self, '%'))
 
@@ -1139,7 +1139,7 @@ class ColorSticker(wal.VPanel):
         vf.pack(self.line2, padding_all=1)
 
         self.color_swatch = AlphaColorSwatch(inner_panel, self.cms,
-            color, (180, 100), border='')
+                                             color, (180, 100), border='')
 
         inner_panel.pack(nf, fill=True)
         inner_panel.pack(vf, fill=True)
@@ -1183,17 +1183,17 @@ class Palette_Mixer(wal.HPanel):
 
         current_palette = self.get_current_palette()
         self.palviewer = PaletteViewer(self, self.cms, current_palette,
-            self.on_change)
+                                       self.on_change)
         self.pack(self.palviewer, fill=True)
         self.pack((5, 5))
 
         view_panel = wal.VPanel(self)
         view_panel.pack(wal.Label(view_panel, _('Palette:')),
-            align_center=False)
+                        align_center=False)
 
         pal_list = self.get_palette_list()
         self.pal = wal.Combolist(view_panel, items=pal_list,
-            onchange=self.change_palette)
+                                 onchange=self.change_palette)
         current_palette_name = current_palette.model.name
         self.pal.set_active(pal_list.index(current_palette_name))
         view_panel.pack(self.pal, fill=True)

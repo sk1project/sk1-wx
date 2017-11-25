@@ -39,17 +39,19 @@ class PatternPaletteSwatch(wal.VPanel, SwatchCanvas):
         wal.VPanel.__init__(self, parent)
         SwatchCanvas.__init__(self)
         self.pack(size)
-        if onclick: self.callback = onclick
+        if onclick:
+            self.callback = onclick
         self.set_pattern(pattern)
 
     def set_pattern(self, pattern):
         self.pattern = pattern
         self.fill = [0, sk2_const.FILL_PATTERN,
-            [sk2_const.PATTERN_IMG, pattern]]
+                     [sk2_const.PATTERN_IMG, pattern]]
         self.refresh()
 
     def mouse_left_up(self, point):
-        if self.callback: self.callback(deepcopy(self.pattern))
+        if self.callback:
+            self.callback(deepcopy(self.pattern))
 
 
 class PatternMiniPalette(wal.VPanel):
@@ -65,13 +67,16 @@ class PatternMiniPalette(wal.VPanel):
 
         for item in range(12):
             self.cells.append(PatternPaletteSwatch(grid, cms,
-                PATTERN_PRESETS[item], onclick=self.on_click))
+                                                   PATTERN_PRESETS[item],
+                                                   onclick=self.on_click))
             grid.pack(self.cells[-1])
         self.pack(grid, padding_all=1)
-        if onclick: self.callback = onclick
+        if onclick:
+            self.callback = onclick
 
     def on_click(self, pattern):
-        if self.callback: self.callback(pattern)
+        if self.callback:
+            self.callback(pattern)
 
 
 class PatternSwatch(wal.VPanel, SwatchCanvas):
@@ -103,7 +108,7 @@ class PatternColorEditor(wal.HPanel):
         self.pack(wal.Label(self, _('Fg:')))
         txt = _('Change pattern foreground color')
         self.fg_btn = PDColorButton(self, dlg, cms, self.image_style[0], txt,
-            onchange=self.fg_changed)
+                                    onchange=self.fg_changed)
         self.pack(self.fg_btn, padding=5)
 
         self.pack((10, 1))
@@ -111,16 +116,18 @@ class PatternColorEditor(wal.HPanel):
         self.pack(wal.Label(self, _('Bg:')))
         txt = _('Change pattern background color')
         self.bg_btn = PDColorButton(self, dlg, cms, self.image_style[1], txt,
-            onchange=self.bg_changed)
+                                    onchange=self.bg_changed)
         self.pack(self.bg_btn, padding=5)
 
     def fg_changed(self, color):
         self.image_style[0] = deepcopy(color)
-        if self.callback: self.callback(self.get_image_style())
+        if self.callback:
+            self.callback(self.get_image_style())
 
     def bg_changed(self, color):
         self.image_style[1] = deepcopy(color)
-        if self.callback: self.callback(self.get_image_style())
+        if self.callback:
+            self.callback(self.get_image_style())
 
     def set_image_style(self, image_style):
         self.image_style = deepcopy(image_style)
@@ -137,7 +144,7 @@ class TransformEditor(wal.VPanel):
     transforms = []
 
     def __init__(self, parent, app, trafo=[] + sk2_const.NORMAL_TRAFO,
-            transforms=[] + sk2_const.PATTERN_TRANSFORMS, onchange=None):
+                 transforms=[] + sk2_const.PATTERN_TRANSFORMS, onchange=None):
         self.app = app
         self.callback = onchange
         wal.VPanel.__init__(self, parent)
@@ -148,7 +155,7 @@ class TransformEditor(wal.VPanel):
         txt = _('Horizontal origin shift')
         grid.pack(get_bmp(grid, icons.PD_PATTERN_ORIGIN_X, txt))
         self.origin_x = UnitSpin(app, grid, can_be_negative=True,
-            onchange=self.changes, onenter=self.changes)
+                                 onchange=self.changes, onenter=self.changes)
         grid.pack(self.origin_x)
         grid.pack(StaticUnitLabel(app, grid))
 
@@ -158,7 +165,7 @@ class TransformEditor(wal.VPanel):
         txt = _('Vertical origin shift')
         grid.pack(get_bmp(grid, icons.PD_PATTERN_ORIGIN_Y, txt))
         self.origin_y = UnitSpin(app, grid, can_be_negative=True,
-            onchange=self.changes, onenter=self.changes)
+                                 onchange=self.changes, onenter=self.changes)
         grid.pack(self.origin_y)
         grid.pack(StaticUnitLabel(app, grid))
 
@@ -166,7 +173,8 @@ class TransformEditor(wal.VPanel):
         txt = _('Scale horizontally')
         grid.pack(get_bmp(grid, icons.PD_PATTERN_SCALE_X, txt))
         self.scale_x = wal.FloatSpin(grid, range_val=(-1000000.0, 1000000.0),
-            step=1.0, onchange=self.changes, onenter=self.changes)
+                                     step=1.0, onchange=self.changes,
+                                     onenter=self.changes)
         grid.pack(self.scale_x)
         grid.pack(wal.Label(grid, '%'))
 
@@ -176,7 +184,8 @@ class TransformEditor(wal.VPanel):
         txt = _('Scale vertically')
         grid.pack(get_bmp(grid, icons.PD_PATTERN_SCALE_Y, txt))
         self.scale_y = wal.FloatSpin(grid, range_val=(-1000000.0, 1000000.0),
-            step=1.0, onchange=self.changes, onenter=self.changes)
+                                     step=1.0, onchange=self.changes,
+                                     onenter=self.changes)
         grid.pack(self.scale_y)
         grid.pack(wal.Label(grid, '%'))
 
@@ -184,7 +193,8 @@ class TransformEditor(wal.VPanel):
         txt = _('Shear horizontally')
         grid.pack(get_bmp(grid, icons.PD_PATTERN_SHEAR_X, txt))
         self.shear_x = wal.FloatSpin(grid, range_val=(0.0, 85.0),
-            step=1.0, onchange=self.changes, onenter=self.changes)
+                                     step=1.0, onchange=self.changes,
+                                     onenter=self.changes)
         grid.pack(self.shear_x)
         grid.pack(wal.Label(grid, u'°'))
 
@@ -194,7 +204,8 @@ class TransformEditor(wal.VPanel):
         txt = _('Shear vertically')
         grid.pack(get_bmp(grid, icons.PD_PATTERN_SHEAR_Y, txt))
         self.shear_y = wal.FloatSpin(grid, range_val=(0.0, 85.0),
-            step=1.0, onchange=self.changes, onenter=self.changes)
+                                     step=1.0, onchange=self.changes,
+                                     onenter=self.changes)
         grid.pack(self.shear_y)
         grid.pack(wal.Label(grid, u'°'))
 
@@ -205,7 +216,8 @@ class TransformEditor(wal.VPanel):
         txt = _('Rotate pattern')
         rot_panel.pack(get_bmp(rot_panel, icons.PD_PATTERN_ROTATE, txt))
         self.rotate = wal.FloatSpin(rot_panel, range_val=(-360.0, 360.0),
-            step=1.0, onchange=self.changes, onenter=self.changes)
+                                    step=1.0, onchange=self.changes,
+                                    onenter=self.changes)
         rot_panel.pack(self.rotate, padding=3)
         rot_panel.pack(wal.Label(rot_panel, u'°'))
 
@@ -247,7 +259,7 @@ class TransformEditor(wal.VPanel):
         trafo = [sx, 0.0, 0.0, sy, x0, y0]
         if angle:
             trafo2 = [math.cos(angle), math.sin(angle),
-                - math.sin(angle), math.cos(angle), 0.0, 0.0]
+                      - math.sin(angle), math.cos(angle), 0.0, 0.0]
             trafo = libgeom.multiply_trafo(trafo, trafo2)
         if shx or shy:
             trafo2 = [1.0, math.tan(shy), math.tan(shx), 1.0, 0.0, 0.0]
@@ -257,7 +269,8 @@ class TransformEditor(wal.VPanel):
         return trafo, [sx, sy, shx, shy, angle]
 
     def changes(self, *args):
-        if self.callback: self.callback(*self.get_trafo())
+        if self.callback:
+            self.callback(*self.get_trafo())
 
 
 class TrafoEditor(wal.VPanel):
@@ -265,7 +278,7 @@ class TrafoEditor(wal.VPanel):
     callback = None
 
     def __init__(self, parent, app, trafo=[] + sk2_const.NORMAL_TRAFO,
-            onchange=None):
+                 onchange=None):
         self.app = app
         self.callback = onchange
         wal.VPanel.__init__(self, parent)
@@ -277,7 +290,8 @@ class TrafoEditor(wal.VPanel):
         # ---M11
         grid.pack(wal.Label(grid, 'm11:'))
         self.m11 = wal.FloatSpin(grid, range_val=(-1000000.0, 1000000.0),
-            step=0.01, onchange=self.changes, onenter=self.changes)
+                                 step=0.01, onchange=self.changes,
+                                 onenter=self.changes)
         grid.pack(self.m11)
 
         grid.pack((5, 5))
@@ -285,13 +299,15 @@ class TrafoEditor(wal.VPanel):
         # ---M12
         grid.pack(wal.Label(grid, 'm12:'))
         self.m12 = wal.FloatSpin(grid, range_val=(-1000000.0, 1000000.0),
-            step=0.01, onchange=self.changes, onenter=self.changes)
+                                 step=0.01, onchange=self.changes,
+                                 onenter=self.changes)
         grid.pack(self.m12)
 
         # ---M21
         grid.pack(wal.Label(grid, 'm21:'))
         self.m21 = wal.FloatSpin(grid, range_val=(-1000000.0, 1000000.0),
-            step=0.01, onchange=self.changes, onenter=self.changes)
+                                 step=0.01, onchange=self.changes,
+                                 onenter=self.changes)
         grid.pack(self.m21)
 
         grid.pack((5, 5))
@@ -299,13 +315,15 @@ class TrafoEditor(wal.VPanel):
         # ---M22
         grid.pack(wal.Label(grid, 'm22:'))
         self.m22 = wal.FloatSpin(grid, range_val=(-1000000.0, 1000000.0),
-            step=0.01, onchange=self.changes, onenter=self.changes)
+                                 step=0.01, onchange=self.changes,
+                                 onenter=self.changes)
         grid.pack(self.m22)
 
         # ---dx
         grid.pack(wal.Label(grid, 'dx:'))
         self.dx = wal.FloatSpin(grid, range_val=(-1000000.0, 1000000.0),
-            step=0.01, onchange=self.changes, onenter=self.changes)
+                                step=0.01, onchange=self.changes,
+                                onenter=self.changes)
         grid.pack(self.dx)
 
         grid.pack((5, 5))
@@ -313,7 +331,8 @@ class TrafoEditor(wal.VPanel):
         # ---dy
         grid.pack(wal.Label(grid, 'dy:'))
         self.dy = wal.FloatSpin(grid, range_val=(-1000000.0, 1000000.0),
-            step=0.01, onchange=self.changes, onenter=self.changes)
+                                step=0.01, onchange=self.changes,
+                                onenter=self.changes)
         grid.pack(self.dy)
 
         self.pack(grid)
@@ -336,7 +355,8 @@ class TrafoEditor(wal.VPanel):
         return [m11, m12, m21, m22, dx, dy], []
 
     def changes(self, *args):
-        if self.callback: self.callback(*self.get_trafo())
+        if self.callback:
+            self.callback(*self.get_trafo())
 
 
 class PatternTrafoEditor(wal.VPanel):
@@ -346,12 +366,12 @@ class PatternTrafoEditor(wal.VPanel):
     active_panel = None
 
     def __init__(self, parent, app, trafo=[] + sk2_const.NORMAL_TRAFO,
-            transforms=[], onchange=None):
+                 transforms=[], onchange=None):
         wal.VPanel.__init__(self, parent)
         self.transfom_editor = TransformEditor(self, app,
-            onchange=onchange)
+                                               onchange=onchange)
         self.trafo_editor = TrafoEditor(self, app,
-            onchange=onchange)
+                                        onchange=onchange)
         self.transfom_editor.set_visible(False)
         self.pack(self.trafo_editor)
         self.active_panel = self.trafo_editor
@@ -398,10 +418,12 @@ class PatternEditor(wal.HPanel):
         button_panel = wal.HPanel(left_panel)
         txt = _('Load pattern from file')
         button_panel.pack(wal.ImageButton(self, icons.PD_OPEN, wal.SIZE_16,
-            tooltip=txt, flat=False, onclick=self.load_pattern), padding=1)
+                                          tooltip=txt, flat=False,
+                                          onclick=self.load_pattern), padding=1)
         txt = _('Save pattern into file')
         button_panel.pack(wal.ImageButton(self, icons.PD_FILE_SAVE, wal.SIZE_16,
-            tooltip=txt, flat=False, onclick=self.save_pattern), padding=1)
+                                          tooltip=txt, flat=False,
+                                          onclick=self.save_pattern), padding=1)
         left_panel.pack(button_panel, padding=2)
 
         self.pack(left_panel, fill=True)
@@ -409,23 +431,26 @@ class PatternEditor(wal.HPanel):
         right_panel = wal.VPanel(self)
 
         self.pattern_color_editor = PatternColorEditor(right_panel, dlg, cms,
-            pattern_def[2], onchange=self.color_changed)
+                                                       pattern_def[2],
+                                                       onchange=self.color_changed)
         right_panel.pack(self.pattern_color_editor, padding=5)
 
         self.trafo_editor = PatternTrafoEditor(right_panel, dlg.app,
-            onchange=self.trafo_changed)
+                                               onchange=self.trafo_changed)
         right_panel.pack(self.trafo_editor, padding=5)
 
         self.pack(right_panel, fill=True, expand=True)
 
     def color_changed(self, image_style):
         self.pattern_def[2] = image_style
-        if self.callback: self.callback(self.get_pattern_def())
+        if self.callback:
+            self.callback(self.get_pattern_def())
 
     def trafo_changed(self, trafo, transforms=[]):
         self.pattern_def[3] = trafo
         self.pattern_def[4] = transforms
-        if self.callback: self.callback(self.get_pattern_def())
+        if self.callback:
+            self.callback(self.get_pattern_def())
 
     def set_pattern_def(self, pattern_def):
         self.pattern_def = deepcopy(pattern_def)
@@ -453,8 +478,9 @@ class PatternEditor(wal.HPanel):
                     pattern_type = sk2_const.PATTERN_EPS
             self.pattern_def[0] = pattern_type
             self.pattern_def[1] = pattern
-            if self.callback: self.callback(self.get_pattern_def())
+            if self.callback:
+                self.callback(self.get_pattern_def())
 
     def save_pattern(self):
         self.app.extract_pattern(self.dlg, self.pattern_def[1],
-            self.pattern_def[0] == sk2_const.PATTERN_EPS)
+                                 self.pattern_def[0] == sk2_const.PATTERN_EPS)
