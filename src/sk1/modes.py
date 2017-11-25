@@ -66,11 +66,11 @@ TEXT_EDIT_MODE = 60
 WAIT_MODE = 100
 
 MODE_LIST = [SELECT_MODE, SHAPER_MODE, ZOOM_MODE, LINE_MODE,
-    CURVE_MODE, RECT_MODE, ELLIPSE_MODE, TEXT_MODE,
-    POLYGON_MODE, ZOOM_OUT_MODE, MOVE_MODE, RESIZE_MODE, ]
+             CURVE_MODE, RECT_MODE, ELLIPSE_MODE, TEXT_MODE,
+             POLYGON_MODE, ZOOM_OUT_MODE, MOVE_MODE, RESIZE_MODE, ]
 
 EDIT_MODES = [SHAPER_MODE, BEZIER_EDITOR_MODE, RECT_EDITOR_MODE,
-    ELLIPSE_EDITOR_MODE, POLYGON_EDITOR_MODE, TEXT_EDITOR_MODE]
+              ELLIPSE_EDITOR_MODE, POLYGON_EDITOR_MODE, TEXT_EDITOR_MODE]
 GRAD_MODES = [GR_SELECT_MODE, GR_EDIT_MODE, GR_CREATE_MODE]
 TEXT_MODES = [TEXT_MODE, TEXT_EDIT_MODE]
 
@@ -84,7 +84,7 @@ ET_X_SKEW_MODE = 6
 ET_Y_SKEW_MODE = 7
 
 ET_MODES = [ET_MOVING_MODE, ET_X_RESIZE_MODE, ET_Y_RESIZE_MODE,
-    ET_XY_RESIZE_MODE, ET_ROTATE_MODE, ET_X_SKEW_MODE, ET_Y_SKEW_MODE]
+            ET_XY_RESIZE_MODE, ET_ROTATE_MODE, ET_X_SKEW_MODE, ET_Y_SKEW_MODE]
 
 
 def get_cursors():
@@ -137,7 +137,7 @@ def get_cursors():
     if wal.IS_MSW: ext = '.cur'
     for key in keys:
         path = os.path.join(config.resource_dir, 'cursors',
-            cursors[key][0] + ext)
+                            cursors[key][0] + ext)
         x, y = cursors[key][1]
         if wal.IS_MSW:
             cursors[key] = wal.cursor(path, wal.BITMAP_TYPE_CUR)
