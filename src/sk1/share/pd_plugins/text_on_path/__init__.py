@@ -39,7 +39,7 @@ def get_plugin(app):
 PLUGIN_ICON = make_artid('icon')
 
 TEXT_ALIGNS = [sk2_const.TEXT_ALIGN_LEFT, sk2_const.TEXT_ALIGN_CENTER,
-    sk2_const.TEXT_ALIGN_RIGHT, sk2_const.TEXT_ALIGN_JUSTIFY]
+               sk2_const.TEXT_ALIGN_RIGHT, sk2_const.TEXT_ALIGN_JUSTIFY]
 
 TEXT_ALIGN_ICONS = {
     sk2_const.TEXT_ALIGN_LEFT: icons.PD_ALIGN_LEFT,
@@ -85,15 +85,16 @@ class TP_Plugin(RS_Plugin):
         hp = wal.HPanel(panel)
         hp.pack(wal.Label(hp, _('Base point:')))
         self.base_point = wal.FloatSpin(hp, value=50.0, range_val=(0.0, 100.0),
-            step=1.0)
+                                        step=1.0)
         hp.pack(self.base_point, padding=5)
         hp.pack(wal.Label(hp, _('%')))
 
         panel.pack(hp, padding=5)
 
         self.align_keeper = wal.HToggleKeeper(panel, TEXT_ALIGNS,
-            TEXT_ALIGN_ICONS,
-            TEXT_ALIGN_TEXTS, on_change=self.update_bmp)
+                                              TEXT_ALIGN_ICONS,
+                                              TEXT_ALIGN_TEXTS,
+                                              on_change=self.update_bmp)
         panel.pack(self.align_keeper)
         self.align_keeper.set_mode(TEXT_ALIGNS[1])
 
@@ -104,13 +105,13 @@ class TP_Plugin(RS_Plugin):
         self.pic_panel = wal.VPanel(border)
         self.pic_panel.set_bg(wal.WHITE)
         self.bmp = get_bmp(self.pic_panel,
-            TEXT_ALIGN_PICS[TEXT_ALIGNS[1]])
+                           TEXT_ALIGN_PICS[TEXT_ALIGNS[1]])
         self.pic_panel.pack(self.bmp, padding_all=5)
         border.pack(self.pic_panel, padding_all=1)
         panel.pack(border, padding=10)
 
         self.other_side = wal.Checkbox(panel, _('Place on other side'),
-            onclick=self.update_bmp)
+                                       onclick=self.update_bmp)
         panel.pack(self.other_side, padding=5)
 
         self.apply_btn = wal.Button(panel, _('Apply'), onclick=self.action)
@@ -181,7 +182,7 @@ class TP_Plugin(RS_Plugin):
 
     def get_data(self):
         return (self.base_point.get_value() / 100.0,
-        self.align_keeper.get_mode(), self.other_side.get_value())
+                self.align_keeper.get_mode(), self.other_side.get_value())
 
     def action(self):
         doc = self.app.current_doc
