@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2011 by Igor E. Novikov
+#  Copyright (C) 2011 by Igor E. Novikov
 #
-# 	This program is free software: you can redistribute it and/or modify
-# 	it under the terms of the GNU General Public License as published by
-# 	the Free Software Foundation, either version 3 of the License, or
-# 	(at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-# 	This program is distributed in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# 	GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-# 	You should have received a copy of the GNU General Public License
-# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import cairo
 import _libcairo
@@ -23,150 +23,166 @@ CTX = cairo.Context(SURFACE)
 DIRECT_MATRIX = cairo.Matrix()
 
 
-
 def get_version():
-	v0, v1, v2 = cairo.version_info
-	return (cairo.cairo_version_string(), '%d.%d.%d' % (v0, v1, v2))
+    v0, v1, v2 = cairo.version_info
+    return (cairo.cairo_version_string(), '%d.%d.%d' % (v0, v1, v2))
+
 
 def create_cpath(paths, cmatrix=None):
-	CTX.set_matrix(DIRECT_MATRIX)
-	CTX.new_path()
-	for path in paths:
-		CTX.new_sub_path()
-		start_point = path[0]
-		points = path[1]
-		end = path[2]
-		CTX.move_to(*start_point)
+    CTX.set_matrix(DIRECT_MATRIX)
+    CTX.new_path()
+    for path in paths:
+        CTX.new_sub_path()
+        start_point = path[0]
+        points = path[1]
+        end = path[2]
+        CTX.move_to(*start_point)
 
-		for point in points:
-			if len(point) == 2:
-				CTX.line_to(*point)
-			else:
-				p1, p2, p3 = point[:-1]
-				CTX.curve_to(*(p1 + p2 + p3))
-		if end:
-			CTX.close_path()
+        for point in points:
+            if len(point) == 2:
+                CTX.line_to(*point)
+            else:
+                p1, p2, p3 = point[:-1]
+                CTX.curve_to(*(p1 + p2 + p3))
+        if end:
+            CTX.close_path()
 
-	cairo_path = CTX.copy_path()
-	if not cmatrix is None:
-		cairo_path = apply_cmatrix(cairo_path, cmatrix)
-	return cairo_path
+    cairo_path = CTX.copy_path()
+    if not cmatrix is None:
+        cairo_path = apply_cmatrix(cairo_path, cmatrix)
+    return cairo_path
+
 
 def get_path_from_cpath(cairo_path):
-	return _libcairo.get_path_from_cpath(cairo_path)
+    return _libcairo.get_path_from_cpath(cairo_path)
+
 
 def get_flattened_path(cairo_path, tolerance=0.1):
-	CTX.set_matrix(DIRECT_MATRIX)
-	tlr = CTX.get_tolerance()
-	CTX.set_tolerance(tolerance)
-	CTX.new_path()
-	CTX.append_path(cairo_path)
-	result = CTX.copy_path_flat()
-	CTX.set_tolerance(tlr)
-	return result
+    CTX.set_matrix(DIRECT_MATRIX)
+    tlr = CTX.get_tolerance()
+    CTX.set_tolerance(tolerance)
+    CTX.new_path()
+    CTX.append_path(cairo_path)
+    result = CTX.copy_path_flat()
+    CTX.set_tolerance(tlr)
+    return result
+
 
 def apply_cmatrix(cairo_path, cmatrix):
-	trafo = get_trafo_from_matrix(cmatrix)
-	return apply_trafo(cairo_path, trafo)
+    trafo = get_trafo_from_matrix(cmatrix)
+    return apply_trafo(cairo_path, trafo)
+
 
 def copy_cpath(cairo_path):
-	CTX.set_matrix(DIRECT_MATRIX)
-	CTX.new_path()
-	CTX.append_path(cairo_path)
-	return CTX.copy_path()
+    CTX.set_matrix(DIRECT_MATRIX)
+    CTX.new_path()
+    CTX.append_path(cairo_path)
+    return CTX.copy_path()
+
 
 def apply_trafo(cairo_path, trafo, copy=False):
-	if copy:
-		cairo_path = copy_cpath(cairo_path)
-	m11, m21, m12, m22, dx, dy = trafo
-	_libcairo.apply_trafo(cairo_path, m11, m21, m12, m22, dx, dy)
-	return cairo_path
+    if copy:
+        cairo_path = copy_cpath(cairo_path)
+    m11, m21, m12, m22, dx, dy = trafo
+    _libcairo.apply_trafo(cairo_path, m11, m21, m12, m22, dx, dy)
+    return cairo_path
+
 
 def multiply_trafo(trafo1, trafo2):
-	matrix1 = get_matrix_from_trafo(trafo1)
-	matrix2 = get_matrix_from_trafo(trafo2)
-	matrix = matrix1.multiply(matrix2)
-	return _libcairo.get_trafo(matrix)
+    matrix1 = get_matrix_from_trafo(trafo1)
+    matrix2 = get_matrix_from_trafo(trafo2)
+    matrix = matrix1.multiply(matrix2)
+    return _libcairo.get_trafo(matrix)
+
 
 def normalize_bbox(bbox):
-	x0, y0, x1, y1 = bbox
-	return [min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)]
+    x0, y0, x1, y1 = bbox
+    return [min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)]
+
 
 def get_cpath_bbox(cpath):
-	CTX.set_matrix(DIRECT_MATRIX)
-	CTX.new_path()
-	CTX.append_path(cpath)
-	return normalize_bbox(CTX.path_extents())
+    CTX.set_matrix(DIRECT_MATRIX)
+    CTX.new_path()
+    CTX.append_path(cpath)
+    return normalize_bbox(CTX.path_extents())
+
 
 def _get_trafo(cmatrix):
-	result = []
-	val = cmatrix.__str__()
-	val = val.replace('cairo.Matrix(', '')
-	val = val.replace(')', '')
-	items = val.split(', ')
-	for item in items:
-		val = item.replace(',', '.')
-		result.append(float(val))
-	return result
+    result = []
+    val = cmatrix.__str__()
+    val = val.replace('cairo.Matrix(', '')
+    val = val.replace(')', '')
+    items = val.split(', ')
+    for item in items:
+        val = item.replace(',', '.')
+        result.append(float(val))
+    return result
+
 
 def get_trafo_from_matrix(cmatrix):
-	return _libcairo.get_trafo(cmatrix)
+    return _libcairo.get_trafo(cmatrix)
+
 
 def reverse_trafo(trafo):
-	m11, m21, m12, m22, dx, dy = trafo
-	if m11: m11 = 1.0 / m11
-	if m12: m12 = 1.0 / m12
-	if m21: m21 = 1.0 / m21
-	if m22: m22 = 1.0 / m22
-	dx = -dx
-	dy = -dy
-	return [m11, m21, m12, m22, dx, dy]
+    m11, m21, m12, m22, dx, dy = trafo
+    if m11: m11 = 1.0 / m11
+    if m12: m12 = 1.0 / m12
+    if m21: m21 = 1.0 / m21
+    if m22: m22 = 1.0 / m22
+    dx = -dx
+    dy = -dy
+    return [m11, m21, m12, m22, dx, dy]
+
 
 def get_matrix_from_trafo(trafo):
-	m11, m21, m12, m22, dx, dy = trafo
-	return cairo.Matrix(m11, m21, m12, m22, dx, dy)
+    m11, m21, m12, m22, dx, dy = trafo
+    return cairo.Matrix(m11, m21, m12, m22, dx, dy)
+
 
 def reverse_matrix(cmatrix):
-	return get_matrix_from_trafo(_get_trafo(cmatrix))
+    return get_matrix_from_trafo(_get_trafo(cmatrix))
+
 
 def invert_trafo(trafo):
-	cmatrix = get_matrix_from_trafo(trafo)
-	cmatrix.invert()
-	return get_trafo_from_matrix(cmatrix)
+    cmatrix = get_matrix_from_trafo(trafo)
+    cmatrix.invert()
+    return get_trafo_from_matrix(cmatrix)
+
 
 def apply_trafo_to_point(point, trafo):
-	x0, y0 = point
-	m11, m21, m12, m22, dx, dy = trafo
-	x1 = m11 * x0 + m12 * y0 + dx
-	y1 = m21 * x0 + m22 * y0 + dy
-	return [x1, y1]
+    x0, y0 = point
+    m11, m21, m12, m22, dx, dy = trafo
+    x1 = m11 * x0 + m12 * y0 + dx
+    y1 = m21 * x0 + m22 * y0 + dy
+    return [x1, y1]
+
 
 def apply_trafo_to_bbox(bbox, trafo):
-	x0, y0, x1, y1 = bbox
-	start = apply_trafo_to_point([x0, y0], trafo)
-	end = apply_trafo_to_point([x1, y1], trafo)
-	return start + end
+    x0, y0, x1, y1 = bbox
+    start = apply_trafo_to_point([x0, y0], trafo)
+    end = apply_trafo_to_point([x1, y1], trafo)
+    return start + end
+
 
 def convert_bbox_to_cpath(bbox):
-	x0, y0, x1, y1 = bbox
-	CTX.set_matrix(DIRECT_MATRIX)
-	CTX.new_path()
-	CTX.move_to(x0, y0)
-	CTX.line_to(x1, y0)
-	CTX.line_to(x1, y1)
-	CTX.line_to(x0, y1)
-	CTX.line_to(x0, y0)
-	CTX.close_path()
-	return CTX.copy_path()
+    x0, y0, x1, y1 = bbox
+    CTX.set_matrix(DIRECT_MATRIX)
+    CTX.new_path()
+    CTX.move_to(x0, y0)
+    CTX.line_to(x1, y0)
+    CTX.line_to(x1, y1)
+    CTX.line_to(x0, y1)
+    CTX.line_to(x0, y0)
+    CTX.close_path()
+    return CTX.copy_path()
+
 
 def get_surface_pixel(surface):
-	pixel = _libcairo.get_pixel(surface)
-	return pixel
+    pixel = _libcairo.get_pixel(surface)
+    return pixel
+
 
 def check_surface_whiteness(surface):
-	pixel = _libcairo.get_pixel(surface)
-	if pixel[0] == pixel[1] == pixel[2] == 255: return True
-	return False
-
-
-
+    pixel = _libcairo.get_pixel(surface)
+    if pixel[0] == pixel[1] == pixel[2] == 255: return True
+    return False

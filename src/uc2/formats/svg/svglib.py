@@ -19,13 +19,12 @@ import math
 import re
 from copy import deepcopy
 
-from uc2 import uc2const, libgeom, cms
-from uc2.formats.sk2 import sk2_const
+from uc2 import uc2const, libgeom, cms, sk2const
 from uc2.formats.svg import svg_colors
 from uc2.formats.xml_.xml_model import XMLObject, XmlContentText
 from uc2.libgeom import add_points, sub_points, mult_point
 
-PATH_STUB = [[], [], sk2_const.CURVE_OPENED]
+PATH_STUB = [[], [], sk2const.CURVE_OPENED]
 F13 = 1.0 / 3.0
 F23 = 2.0 / 3.0
 
@@ -236,7 +235,7 @@ def parse_svg_path_cmds(pathcmds):
             p1 = [] + path[0]
             if not libgeom.is_equal_points(p0, p1, 8):
                 path[1].append([] + path[0])
-            path[2] = sk2_const.CURVE_CLOSED
+            path[2] = sk2const.CURVE_CLOSED
             cpoint = [] + path[0]
         elif cmd[0] in 'Cc':
             rel_flag = cmd[0] == 'c'
@@ -248,7 +247,7 @@ def parse_svg_path_cmds(pathcmds):
                         add_points(base_point(cpoint), point[1]),
                         add_points(base_point(cpoint), point[2])]
                 qpoint = [] + point
-                qpoint.append(sk2_const.NODE_CUSP)
+                qpoint.append(sk2const.NODE_CUSP)
                 path[1].append(qpoint)
                 cpoint = point
         elif cmd[0] in 'Ll':
@@ -297,7 +296,7 @@ def parse_svg_path_cmds(pathcmds):
                     p2, p3 = point
                 point = [p1, p2, p3]
                 qpoint = [] + point
-                qpoint.append(sk2_const.NODE_CUSP)
+                qpoint.append(sk2const.NODE_CUSP)
                 path[1].append(qpoint)
                 cpoint = point
 
@@ -317,7 +316,7 @@ def parse_svg_path_cmds(pathcmds):
 
                 point = [p1, p2, p3]
                 qpoint = [] + point
-                qpoint.append(sk2_const.NODE_CUSP)
+                qpoint.append(sk2const.NODE_CUSP)
                 path[1].append(qpoint)
                 cpoint = point
                 last_quad = q
@@ -339,7 +338,7 @@ def parse_svg_path_cmds(pathcmds):
 
                 point = [p1, p2, p3]
                 qpoint = [] + point
-                qpoint.append(sk2_const.NODE_CUSP)
+                qpoint.append(sk2const.NODE_CUSP)
                 path[1].append(qpoint)
                 cpoint = point
                 last_quad = q
@@ -415,7 +414,7 @@ def parse_svg_path_cmds(pathcmds):
                         rev_flag = not rev_flag
 
                 pth = libgeom.get_circle_paths(start, end,
-                    sk2_const.ARC_ARC)[0]
+                    sk2const.ARC_ARC)[0]
 
                 if rev_flag:
                     pth = libgeom.reverse_path(pth)
@@ -423,7 +422,7 @@ def parse_svg_path_cmds(pathcmds):
                 points = pth[1]
                 for point in points:
                     if len(point) == 3:
-                        point.append(sk2_const.NODE_CUSP)
+                        point.append(sk2const.NODE_CUSP)
 
                 tr0 = [1.0, 0.0, 0.0, 1.0, -0.5, -0.5]
                 points = libgeom.apply_trafo_to_points(points, tr0)
@@ -549,6 +548,6 @@ def translate_paths_to_d(paths):
                 ret += point_to_str(item[0])
                 ret += point_to_str(item[1])
                 ret += point_to_str(item[2])
-        if path[2] == sk2_const.CURVE_CLOSED:
+        if path[2] == sk2const.CURVE_CLOSED:
             ret += ' Z'
     return ret.strip()

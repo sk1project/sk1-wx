@@ -18,27 +18,27 @@
 import sys
 from copy import deepcopy
 
-from uc2 import uc2const, libgeom, libpango, libimg
-from uc2.formats.sk2 import sk2_model, sk2_const
+from uc2 import uc2const, libgeom, libpango, libimg, sk2const
+from uc2.formats.sk2 import sk2_model
 from uc2.formats.wmf import wmfconst, wmf_hatches, wmflib, wmf_model
 from uc2.formats.wmf.wmflib import get_data, rndpoint
 from uc2.libgeom import multiply_trafo, apply_trafo_to_point
 
 SK2_CAPS = {
-    wmfconst.PS_ENDCAP_FLAT: sk2_const.CAP_BUTT,
-    wmfconst.PS_ENDCAP_ROUND: sk2_const.CAP_ROUND,
-    wmfconst.PS_ENDCAP_SQUARE: sk2_const.CAP_SQUARE,
+    wmfconst.PS_ENDCAP_FLAT: sk2const.CAP_BUTT,
+    wmfconst.PS_ENDCAP_ROUND: sk2const.CAP_ROUND,
+    wmfconst.PS_ENDCAP_SQUARE: sk2const.CAP_SQUARE,
 }
 
 SK2_JOIN = {
-    wmfconst.PS_JOIN_MITER: sk2_const.JOIN_MITER,
-    wmfconst.PS_JOIN_ROUND: sk2_const.JOIN_ROUND,
-    wmfconst.PS_JOIN_BEVEL: sk2_const.JOIN_BEVEL,
+    wmfconst.PS_JOIN_MITER: sk2const.JOIN_MITER,
+    wmfconst.PS_JOIN_ROUND: sk2const.JOIN_ROUND,
+    wmfconst.PS_JOIN_BEVEL: sk2const.JOIN_BEVEL,
 }
 
 SK2_FILL_RULE = {
-    wmfconst.ALTERNATE: sk2_const.FILL_EVENODD,
-    wmfconst.WINDING: sk2_const.FILL_NONZERO,
+    wmfconst.ALTERNATE: sk2const.FILL_EVENODD,
+    wmfconst.WINDING: sk2const.FILL_NONZERO,
 }
 
 
@@ -48,10 +48,10 @@ class DC_Data(object):
     trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
     opacity = True
     bgcolor = [1.0, 1.0, 1.0]
-    fill_rule = sk2_const.FILL_EVENODD
+    fill_rule = sk2const.FILL_EVENODD
     text_color = [0.0, 0.0, 0.0]
-    text_align = sk2_const.TEXT_ALIGN_LEFT
-    text_valign = sk2_const.TEXT_VALIGN_BASELINE
+    text_align = sk2const.TEXT_ALIGN_LEFT
+    text_valign = sk2const.TEXT_VALIGN_BASELINE
     text_update_cp = True
     text_rtl = False
     # (fontface, size, bold,italic,underline,strikeout, rotate, charset)
@@ -165,7 +165,7 @@ class WMF_to_SK2_Translator(object):
     def get_style(self):
         style = deepcopy(self.dc.style)
         if style[0]: style[0][0] = self.dc.fill_rule
-        if style[0] and style[0][1] == sk2_const.FILL_PATTERN:
+        if style[0] and style[0][1] == sk2const.FILL_PATTERN:
             alpha = 1.0
             if not self.dc.opacity: alpha = 0.0
             style[0][2][2][1][2] = alpha
@@ -199,7 +199,7 @@ class WMF_to_SK2_Translator(object):
         sk2_style = [[], [], [], []]
         clr = [] + self.dc.text_color
         clr = [uc2const.COLOR_RGB, clr, 1.0, '', '']
-        sk2_style[0] = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID, clr]
+        sk2_style[0] = [sk2const.FILL_EVENODD, sk2const.FILL_SOLID, clr]
 
         font = deepcopy(self.dc.font)
         faces = libpango.get_fonts()[1][font[0]]
@@ -303,18 +303,18 @@ class WMF_to_SK2_Translator(object):
         if not mode & 0x0001: self.dc.text_update_cp = False
 
         lower = mode & 0x0007
-        self.dc.text_align = sk2_const.TEXT_ALIGN_LEFT
+        self.dc.text_align = sk2const.TEXT_ALIGN_LEFT
         if lower & 0x0006 == wmfconst.TA_CENTER:
-            self.dc.text_align = sk2_const.TEXT_ALIGN_CENTER
+            self.dc.text_align = sk2const.TEXT_ALIGN_CENTER
         elif lower & wmfconst.TA_RIGHT:
-            self.dc.text_align = sk2_const.TEXT_ALIGN_RIGHT
+            self.dc.text_align = sk2const.TEXT_ALIGN_RIGHT
 
         if mode & wmfconst.TA_BASELINE == wmfconst.TA_BASELINE:
-            self.dc.text_valign = sk2_const.TEXT_VALIGN_BASELINE
+            self.dc.text_valign = sk2const.TEXT_VALIGN_BASELINE
         elif mode & wmfconst.TA_BOTTOM:
-            self.dc.text_valign = sk2_const.TEXT_VALIGN_BOTTOM
+            self.dc.text_valign = sk2const.TEXT_VALIGN_BOTTOM
         else:
-            self.dc.text_valign = sk2_const.TEXT_VALIGN_TOP
+            self.dc.text_valign = sk2const.TEXT_VALIGN_TOP
 
         self.dc.text_rtl = False
         if mode & wmfconst.TA_RTLREADING: self.dc.text_rtl = True
@@ -342,18 +342,18 @@ class WMF_to_SK2_Translator(object):
         style, width = get_data('<hh', chunk[:4])
         r, g, b = get_data('<BBBx', chunk[6:10])
         if not style & 0x000F == wmfconst.PS_NULL:
-            stroke_rule = sk2_const.STROKE_MIDDLE
+            stroke_rule = sk2const.STROKE_MIDDLE
             color_vals = [r / 255.0, g / 255.0, b / 255.0]
             color = [uc2const.COLOR_RGB, color_vals, 1.0, '']
             stroke_width = abs(width * self.get_trafo()[0])
             if stroke_width < 1.0: stroke_width = 1.0
 
-            stroke_linecap = sk2_const.CAP_ROUND
+            stroke_linecap = sk2const.CAP_ROUND
             cap = style & 0x0F00
             for item in SK2_CAPS.keys():
                 if cap == item: stroke_linecap = SK2_CAPS[item]
 
-            stroke_linejoin = sk2_const.JOIN_MITER
+            stroke_linejoin = sk2const.JOIN_MITER
             join = style & 0xF000
             for item in SK2_JOIN.keys():
                 if join == item: stroke_linejoin = SK2_JOIN[item]
@@ -376,20 +376,20 @@ class WMF_to_SK2_Translator(object):
         color_vals = [r / 255.0, g / 255.0, b / 255.0]
         color = [uc2const.COLOR_RGB, color_vals, 1.0, '']
         if style == wmfconst.BS_SOLID:
-            fill = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID, color]
+            fill = [sk2const.FILL_EVENODD, sk2const.FILL_SOLID, color]
         elif style == wmfconst.BS_HATCHED:
             if not hatch in wmf_hatches.WMF_HATCHES:
                 hatch = wmfconst.HS_HORIZONTAL
             ptrn = wmf_hatches.WMF_HATCHES[hatch]
-            ptrn_type = sk2_const.PATTERN_IMG
+            ptrn_type = sk2const.PATTERN_IMG
 
             bgcolor = [uc2const.COLOR_RGB, [] + self.dc.bgcolor, 1.0, '']
             ptrn_style = [color, bgcolor]
 
-            ptrn_trafo = [] + sk2_const.NORMAL_TRAFO
-            ptrn_transf = [] + sk2_const.PATTERN_TRANSFORMS
+            ptrn_trafo = [] + sk2const.NORMAL_TRAFO
+            ptrn_transf = [] + sk2const.PATTERN_TRANSFORMS
             pattern = [ptrn_type, ptrn, ptrn_style, ptrn_trafo, ptrn_transf]
-            fill = [sk2_const.FILL_EVENODD, sk2_const.FILL_PATTERN, pattern]
+            fill = [sk2const.FILL_EVENODD, sk2const.FILL_PATTERN, pattern]
         self.add_gdiobject(('fill', fill))
 
     def tr_create_font_in(self, chunk):
@@ -424,15 +424,15 @@ class WMF_to_SK2_Translator(object):
 
         ptrn, flag = libimg.read_pattern(imagestr)
 
-        ptrn_type = sk2_const.PATTERN_TRUECOLOR
-        if flag or bitsperpixel == 1: ptrn_type = sk2_const.PATTERN_IMG
-        ptrn_style = [deepcopy(sk2_const.RGB_BLACK),
-            deepcopy(sk2_const.RGB_WHITE)]
-        ptrn_trafo = [] + sk2_const.NORMAL_TRAFO
-        ptrn_transf = [] + sk2_const.PATTERN_TRANSFORMS
+        ptrn_type = sk2const.PATTERN_TRUECOLOR
+        if flag or bitsperpixel == 1: ptrn_type = sk2const.PATTERN_IMG
+        ptrn_style = [deepcopy(sk2const.RGB_BLACK),
+            deepcopy(sk2const.RGB_WHITE)]
+        ptrn_trafo = [] + sk2const.NORMAL_TRAFO
+        ptrn_transf = [] + sk2const.PATTERN_TRANSFORMS
 
         pattern = [ptrn_type, ptrn, ptrn_style, ptrn_trafo, ptrn_transf]
-        fill = [sk2_const.FILL_EVENODD, sk2_const.FILL_PATTERN, pattern]
+        fill = [sk2const.FILL_EVENODD, sk2const.FILL_PATTERN, pattern]
         self.add_gdiobject(('fill', fill))
 
     def tr_create_noop(self, chunk):
@@ -445,7 +445,7 @@ class WMF_to_SK2_Translator(object):
     def tr_lineto(self, chunk):
         y, x = get_data('<hh', chunk)
         p = [x, y]
-        paths = [[self.get_curpoint(), [p, ], sk2_const.CURVE_OPENED], ]
+        paths = [[self.get_curpoint(), [p, ], sk2const.CURVE_OPENED], ]
         self.set_curpoint([] + p)
 
         cfg = self.layer.config
@@ -466,7 +466,7 @@ class WMF_to_SK2_Translator(object):
         ellipse = sk2_model.Circle(cfg, self.layer, rect, style=sk2_style)
         self.layer.childs.append(ellipse)
 
-    def tr_arc(self, chunk, arc_type=sk2_const.ARC_ARC):
+    def tr_arc(self, chunk, arc_type=sk2const.ARC_ARC):
         ye, xe, ys, xs, bottom, right, top, left = get_data('<hhhhhhhh',
             chunk)
         left, top = apply_trafo_to_point([left, top], self.get_trafo())
@@ -487,17 +487,17 @@ class WMF_to_SK2_Translator(object):
 
         cfg = self.layer.config
         sk2_style = self.get_style()
-        if arc_type == sk2_const.ARC_ARC: sk2_style[0] = []
+        if arc_type == sk2const.ARC_ARC: sk2_style[0] = []
         rect = [left, top, right - left, bottom - top]
         ellipse = sk2_model.Circle(cfg, self.layer, rect, start_angle,
             end_angle, arc_type, sk2_style)
         self.layer.childs.append(ellipse)
 
     def tr_chord(self, chunk):
-        self.tr_arc(chunk, sk2_const.ARC_CHORD)
+        self.tr_arc(chunk, sk2const.ARC_CHORD)
 
     def tr_pie(self, chunk):
-        self.tr_arc(chunk, sk2_const.ARC_PIE_SLICE)
+        self.tr_arc(chunk, sk2const.ARC_PIE_SLICE)
 
     def tr_rectangle(self, chunk):
         bottom, right, top, left = get_data('<hhhh', chunk)
@@ -534,7 +534,7 @@ class WMF_to_SK2_Translator(object):
             points.append([float(x), float(y)])
         if not points[0] == points[-1]: points.append([] + points[0])
         if len(points) < 3: return
-        paths = [[points[0], points[1:], sk2_const.CURVE_CLOSED], ]
+        paths = [[points[0], points[1:], sk2const.CURVE_CLOSED], ]
 
         cfg = self.layer.config
         sk2_style = self.get_style()
@@ -557,7 +557,7 @@ class WMF_to_SK2_Translator(object):
                 points.append([float(x), float(y)])
                 pos += 4
             if not points[0] == points[-1]: points.append([] + points[0])
-            paths.append([points[0], points[1:], sk2_const.CURVE_CLOSED])
+            paths.append([points[0], points[1:], sk2const.CURVE_CLOSED])
         if not paths: return
 
         cfg = self.layer.config
@@ -573,7 +573,7 @@ class WMF_to_SK2_Translator(object):
             x, y = get_data('<hh', chunk[2 + i * 4:6 + i * 4])
             points.append([float(x), float(y)])
         if len(points) < 2: return
-        paths = [[points[0], points[1:], sk2_const.CURVE_OPENED], ]
+        paths = [[points[0], points[1:], sk2const.CURVE_OPENED], ]
 
         cfg = self.layer.config
         sk2_style = self.get_style()
@@ -602,7 +602,7 @@ class WMF_to_SK2_Translator(object):
             bg_style = [[], [], [], []]
             clr = [] + self.dc.bgcolor
             clr = [uc2const.COLOR_RGB, clr, 1.0, '', '']
-            bg_style[0] = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID, clr]
+            bg_style[0] = [sk2const.FILL_EVENODD, sk2const.FILL_SOLID, clr]
             text.update()
             bbox = [] + text.cache_bbox
             rect = bbox[:2] + [bbox[2] - bbox[0], bbox[3] - bbox[1]]
@@ -641,7 +641,7 @@ class WMF_to_SK2_Translator(object):
             bg_style = [[], [], [], []]
             clr = [] + self.dc.bgcolor
             clr = [uc2const.COLOR_RGB, clr, 1.0, '', '']
-            bg_style[0] = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID, clr]
+            bg_style[0] = [sk2const.FILL_EVENODD, sk2const.FILL_SOLID, clr]
             text.update()
             bbox = [] + text.cache_bbox
             rect = bbox[:2] + [bbox[2] - bbox[0], bbox[3] - bbox[1]]
@@ -657,9 +657,9 @@ class WMF_to_SK2_Translator(object):
 
     def _draw_point(self, point):
         style = [[], [], [], []]
-        clr = [] + sk2_const.RGB_BLACK
+        clr = [] + sk2const.RGB_BLACK
         clr[1] = [1.0, 0.0, 0.0]
-        style[0] = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID, clr]
+        style[0] = [sk2const.FILL_EVENODD, sk2const.FILL_SOLID, clr]
         rect = point + [3.0, 3.0]
         rect = sk2_model.Rectangle(self.layer.config, self.layer,
             rect, style=style)

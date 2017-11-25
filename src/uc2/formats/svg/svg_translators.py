@@ -22,8 +22,8 @@ from base64 import b64decode, b64encode
 from cStringIO import StringIO
 from copy import deepcopy
 
-from uc2 import uc2const, libgeom, libpango, libimg, cms
-from uc2.formats.sk2 import sk2_model, sk2_const
+from uc2 import uc2const, libgeom, libpango, libimg, cms, sk2const
+from uc2.formats.sk2 import sk2_model
 from uc2.formats.svg import svg_const, svglib
 from uc2.formats.svg.svglib import get_svg_trafo, check_svg_attr, \
     parse_svg_points, parse_svg_coords, parse_svg_color, parse_svg_stops, \
@@ -43,32 +43,32 @@ SK2_UNITS = {
 FONT_COEFF = 0.938
 
 SK2_FILL_RULE = {
-    'nonzero': sk2_const.FILL_NONZERO,
-    'evenodd': sk2_const.FILL_EVENODD,
+    'nonzero': sk2const.FILL_NONZERO,
+    'evenodd': sk2const.FILL_EVENODD,
 }
 
 SK2_LINE_JOIN = {
-    'miter': sk2_const.JOIN_MITER,
-    'round': sk2_const.JOIN_ROUND,
-    'bevel': sk2_const.JOIN_BEVEL,
+    'miter': sk2const.JOIN_MITER,
+    'round': sk2const.JOIN_ROUND,
+    'bevel': sk2const.JOIN_BEVEL,
 }
 
 SK2_LINE_CAP = {
-    'butt': sk2_const.CAP_BUTT,
-    'round': sk2_const.CAP_ROUND,
-    'square': sk2_const.CAP_SQUARE,
+    'butt': sk2const.CAP_BUTT,
+    'round': sk2const.CAP_ROUND,
+    'square': sk2const.CAP_SQUARE,
 }
 
 SK2_TEXT_ALIGN = {
-    'start': sk2_const.TEXT_ALIGN_LEFT,
-    'middle': sk2_const.TEXT_ALIGN_CENTER,
-    'end': sk2_const.TEXT_ALIGN_RIGHT,
+    'start': sk2const.TEXT_ALIGN_LEFT,
+    'middle': sk2const.TEXT_ALIGN_CENTER,
+    'end': sk2const.TEXT_ALIGN_RIGHT,
 }
 
 SK2_GRAD_EXTEND = {
-    'pad': sk2_const.GRADIENT_EXTEND_PAD,
-    'reflect': sk2_const.GRADIENT_EXTEND_REFLECT,
-    'repeat': sk2_const.GRADIENT_EXTEND_REPEAT,
+    'pad': sk2const.GRADIENT_EXTEND_PAD,
+    'reflect': sk2const.GRADIENT_EXTEND_REFLECT,
+    'repeat': sk2const.GRADIENT_EXTEND_REPEAT,
 }
 
 
@@ -192,14 +192,14 @@ class SVG_to_SK2_Translator(object):
                 strafo = svg_obj.attrs['gradientTransform']
                 self.style_opts['grad-trafo'] = get_svg_trafo(strafo)
 
-            extend = sk2_const.GRADIENT_EXTEND_PAD
+            extend = sk2const.GRADIENT_EXTEND_PAD
             if 'spreadMethod' in svg_obj.attrs:
                 val = svg_obj.attrs['spreadMethod']
                 if val in SK2_GRAD_EXTEND: extend = SK2_GRAD_EXTEND[val]
 
             vector = [[x1, y1], [x2, y2]]
-            return [0, sk2_const.FILL_GRADIENT,
-                [sk2_const.GRADIENT_LINEAR, vector, stops, extend]]
+            return [0, sk2const.FILL_GRADIENT,
+                    [sk2const.GRADIENT_LINEAR, vector, stops, extend]]
 
         elif svg_obj.tag == 'radialGradient':
             if 'xlink:href' in svg_obj.attrs:
@@ -228,14 +228,14 @@ class SVG_to_SK2_Translator(object):
                 strafo = svg_obj.attrs['gradientTransform']
                 self.style_opts['grad-trafo'] = get_svg_trafo(strafo)
 
-            extend = sk2_const.GRADIENT_EXTEND_PAD
+            extend = sk2const.GRADIENT_EXTEND_PAD
             if 'spreadMethod' in svg_obj.attrs:
                 val = svg_obj.attrs['spreadMethod']
                 if val in SK2_GRAD_EXTEND: extend = SK2_GRAD_EXTEND[val]
 
             vector = [[cx, cy], [cx + r, cy]]
-            return [0, sk2_const.FILL_GRADIENT,
-                [sk2_const.GRADIENT_RADIAL, vector, stops, extend]]
+            return [0, sk2const.FILL_GRADIENT,
+                    [sk2const.GRADIENT_RADIAL, vector, stops, extend]]
 
         return []
 
@@ -335,7 +335,7 @@ class SVG_to_SK2_Translator(object):
                 sk2_style[0] = self.parse_def(self.id_map[def_id])
                 if sk2_style[0]:
                     sk2_style[0][0] = fillrule
-                    if sk2_style[0][1] == sk2_const.FILL_GRADIENT:
+                    if sk2_style[0][1] == sk2const.FILL_GRADIENT:
                         for stop in sk2_style[0][2][2]:
                             color = stop[1]
                             color[2] *= alpha
@@ -345,12 +345,12 @@ class SVG_to_SK2_Translator(object):
             else:
                 clr = parse_svg_color(fill, alpha, self.current_color)
                 if clr:
-                    sk2_style[0] = [fillrule, sk2_const.FILL_SOLID, clr]
+                    sk2_style[0] = [fillrule, sk2const.FILL_SOLID, clr]
 
         # stroke parsing
         if not style['stroke'] == 'none':
             stroke = style['stroke'].replace('"', '')
-            stroke_rule = sk2_const.STROKE_MIDDLE
+            stroke_rule = sk2const.STROKE_MIDDLE
             stroke_width = self.get_size_pt(style['stroke-width'])
             stroke_linecap = SK2_LINE_CAP[style['stroke-linecap']]
             stroke_linejoin = SK2_LINE_JOIN[style['stroke-linejoin']]
@@ -361,7 +361,7 @@ class SVG_to_SK2_Translator(object):
             if not style['stroke-dasharray'] == 'none':
                 try:
                     code = compile('dash=[' + style['stroke-dasharray'] + ']',
-                        '<string>', 'exec')
+                                   '<string>', 'exec')
                     exec code
                 except:
                     dash = []
@@ -380,8 +380,8 @@ class SVG_to_SK2_Translator(object):
             if def_id:
                 stroke_fill = self.parse_def(self.id_map[def_id])
                 if stroke_fill:
-                    stroke_fill[0] = sk2_const.FILL_NONZERO
-                    if stroke_fill[1] == sk2_const.FILL_GRADIENT:
+                    stroke_fill[0] = sk2const.FILL_NONZERO
+                    if stroke_fill[1] == sk2const.FILL_GRADIENT:
                         for stop in stroke_fill[2][2]:
                             color = stop[1]
                             color[2] *= alpha
@@ -390,8 +390,8 @@ class SVG_to_SK2_Translator(object):
                         1]
                     clr = parse_svg_color('black')
                     sk2_style[1] = [stroke_rule, stroke_width, clr, dash,
-                        stroke_linecap, stroke_linejoin,
-                        stroke_miterlimit, 0, 1, []]
+                                    stroke_linecap, stroke_linejoin,
+                                    stroke_miterlimit, 0, 1, []]
                     if 'grad-trafo' in self.style_opts:
                         tr = [] + self.style_opts['grad-trafo']
                         self.style_opts['stroke-grad-trafo'] = tr
@@ -399,8 +399,8 @@ class SVG_to_SK2_Translator(object):
                 clr = parse_svg_color(stroke, alpha, self.current_color)
                 if clr:
                     sk2_style[1] = [stroke_rule, stroke_width, clr, dash,
-                        stroke_linecap, stroke_linejoin,
-                        stroke_miterlimit, 0, 1, []]
+                                    stroke_linecap, stroke_linejoin,
+                                    stroke_miterlimit, 0, 1, []]
 
         if text_style:
             # font family
@@ -441,12 +441,12 @@ class SVG_to_SK2_Translator(object):
                 pass
 
             # text alignment
-            alignment = sk2_const.TEXT_ALIGN_LEFT
+            alignment = sk2const.TEXT_ALIGN_LEFT
             if style['text-anchor'] in SK2_TEXT_ALIGN:
                 alignment = SK2_TEXT_ALIGN[style['text-anchor']]
 
             sk2_style[2] = [font_family, font_face, font_size,
-                alignment, [], True]
+                            alignment, [], True]
 
         return sk2_style
 
@@ -580,12 +580,12 @@ class SVG_to_SK2_Translator(object):
             elif svg_obj.childs:
                 self.translate_unknown(parent, svg_obj, trafo, style)
         except:
-            print '-'*30
+            print '-' * 30
             print 'obj', repr(svg_obj)
             print 'tag', svg_obj.tag
             if 'id' in svg_obj.attrs: print 'id', svg_obj.attrs['id']
             for item in sys.exc_info(): print item
-            print '='*30
+            print '=' * 30
 
     def translate_defs(self, svg_obj):
         for item in svg_obj.childs:
@@ -613,7 +613,7 @@ class SVG_to_SK2_Translator(object):
                 return
             guide_layer = self.sk2_mtds.get_guide_layer()
             guide = sk2_model.Guide(guide_layer.config, guide_layer,
-                position, orientation)
+                                    position, orientation)
             guide_layer.childs.append(guide)
 
     def translate_style(self, svg_obj):
@@ -698,7 +698,7 @@ class SVG_to_SK2_Translator(object):
 
     def append_obj(self, parent, svg_obj, obj, trafo, style):
         obj.stroke_trafo = [] + trafo
-        if style[0] and style[0][1] == sk2_const.FILL_GRADIENT:
+        if style[0] and style[0][1] == sk2const.FILL_GRADIENT:
             obj.fill_trafo = [] + trafo
             if 'fill-grad-trafo' in self.style_opts:
                 tr0 = self.style_opts['fill-grad-trafo']
@@ -709,12 +709,12 @@ class SVG_to_SK2_Translator(object):
             obj.update()
             stroke_obj = obj.to_curve()
             pths = libgeom.apply_trafo_to_paths(stroke_obj.get_initial_paths(),
-                stroke_obj.trafo)
+                                                stroke_obj.trafo)
             try:
                 pths = libgeom.stroke_to_curve(pths, obj.style[1])
                 obj_style = [self.style_opts['stroke-fill'], [], [], []]
                 curve = sk2_model.Curve(parent.config, parent, pths,
-                    style=obj_style)
+                                        style=obj_style)
                 obj.style[1] = []
                 curve.fill_trafo = [] + trafo
                 if 'stroke-grad-trafo' in self.style_opts:
@@ -759,7 +759,7 @@ class SVG_to_SK2_Translator(object):
 
         if not w or not h: return
 
-        corners = [] + sk2_const.CORNERS
+        corners = [] + sk2const.CORNERS
         rx = ry = None
         if 'rx' in svg_obj.attrs:
             rx = self.get_size_pt(svg_obj.attrs['rx'])
@@ -787,7 +787,7 @@ class SVG_to_SK2_Translator(object):
             corners = [2.0 * ry / min(w, h), ] * 4
 
         rect = sk2_model.Rectangle(cfg, parent, [x, y, w, h], tr,
-            sk2_style, corners)
+                                   sk2_style, corners)
         self.append_obj(parent, svg_obj, rect, tr, sk2_style)
 
     def translate_ellipse(self, parent, svg_obj, trafo, style):
@@ -845,13 +845,13 @@ class SVG_to_SK2_Translator(object):
         if 'y2' in svg_obj.attrs:
             y2 = self.get_size_pt(svg_obj.attrs['y2'])
 
-        paths = [[[x1, y1], [[x2, y2], ], sk2_const.CURVE_OPENED], ]
+        paths = [[[x1, y1], [[x2, y2], ], sk2const.CURVE_OPENED], ]
 
         curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
         self.append_obj(parent, svg_obj, curve, tr, sk2_style)
 
     def _line(self, point1, point2):
-        paths = [[[] + point1, [[] + point2, ], sk2_const.CURVE_OPENED], ]
+        paths = [[[] + point1, [[] + point2, ], sk2const.CURVE_OPENED], ]
         tr = [] + self.trafo
         style = [[], self.layer.config.default_stroke, [], []]
         curve = sk2_model.Curve(self.layer.config, self.layer, paths, tr, style)
@@ -861,8 +861,8 @@ class SVG_to_SK2_Translator(object):
         if not trafo: trafo = [] + self.trafo
         style = [[], self.layer.config.default_stroke, [], []]
         rect = sk2_model.Rectangle(self.layer.config, self.layer,
-            point + [1.0, 1.0],
-            trafo, style=style)
+                                   point + [1.0, 1.0],
+                                   trafo, style=style)
         self.layer.childs.append(rect)
 
     def translate_polyline(self, parent, svg_obj, trafo, style):
@@ -873,7 +873,7 @@ class SVG_to_SK2_Translator(object):
         if not 'points' in svg_obj.attrs: return
         points = parse_svg_points(svg_obj.attrs['points'])
         if not points or len(points) < 2: return
-        paths = [[points[0], points[1:], sk2_const.CURVE_OPENED], ]
+        paths = [[points[0], points[1:], sk2const.CURVE_OPENED], ]
 
         curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
         self.append_obj(parent, svg_obj, curve, tr, sk2_style)
@@ -887,7 +887,7 @@ class SVG_to_SK2_Translator(object):
         points = parse_svg_points(svg_obj.attrs['points'])
         if not points or len(points) < 3: return
         points.append([] + points[0])
-        paths = [[points[0], points[1:], sk2_const.CURVE_CLOSED], ]
+        paths = [[points[0], points[1:], sk2const.CURVE_CLOSED], ]
 
         curve = sk2_model.Curve(cfg, parent, paths, tr, sk2_style)
         self.append_obj(parent, svg_obj, curve, tr, sk2_style)
@@ -908,12 +908,12 @@ class SVG_to_SK2_Translator(object):
                 angle1 = float(svg_obj.attrs['sodipodi:start'])
             if 'sodipodi:end' in svg_obj.attrs:
                 angle2 = float(svg_obj.attrs['sodipodi:end'])
-            circle_type = sk2_const.ARC_PIE_SLICE
+            circle_type = sk2const.ARC_PIE_SLICE
             if check_svg_attr(svg_obj, 'sodipodi:open', 'true'):
-                circle_type = sk2_const.ARC_ARC
+                circle_type = sk2const.ARC_ARC
             rect = [cx - rx, cy - ry, 2.0 * rx, 2.0 * ry]
             curve = sk2_model.Circle(cfg, parent, rect, angle1, angle2,
-                circle_type, sk2_style)
+                                     circle_type, sk2_style)
             curve.trafo = libgeom.multiply_trafo(curve.trafo, tr)
             self.append_obj(parent, svg_obj, curve, tr, sk2_style)
         elif 'd' in svg_obj.attrs:
@@ -943,7 +943,7 @@ class SVG_to_SK2_Translator(object):
         inv_tr[3] *= -1.0
         tr = libgeom.multiply_trafo(tr_level, inv_tr)
         tr = libgeom.multiply_trafo([FONT_COEFF, 0.0, 0.0,
-            - FONT_COEFF, 0.0, 0.0], tr)
+                                     - FONT_COEFF, 0.0, 0.0], tr)
 
         x = y = 0.0
         if 'x' in svg_obj.attrs:
@@ -1021,26 +1021,26 @@ class SVG_to_SK2_Translator(object):
 
 
 SVG_FILL_RULE = {
-    sk2_const.FILL_NONZERO: 'nonzero',
-    sk2_const.FILL_EVENODD: 'evenodd',
+    sk2const.FILL_NONZERO: 'nonzero',
+    sk2const.FILL_EVENODD: 'evenodd',
 }
 
 SVG_LINE_JOIN = {
-    sk2_const.JOIN_MITER: 'miter',
-    sk2_const.JOIN_ROUND: 'round',
-    sk2_const.JOIN_BEVEL: 'bevel',
+    sk2const.JOIN_MITER: 'miter',
+    sk2const.JOIN_ROUND: 'round',
+    sk2const.JOIN_BEVEL: 'bevel',
 }
 
 SVG_LINE_CAP = {
-    sk2_const.CAP_BUTT: 'butt',
-    sk2_const.CAP_ROUND: 'round',
-    sk2_const.CAP_SQUARE: 'square',
+    sk2const.CAP_BUTT: 'butt',
+    sk2const.CAP_ROUND: 'round',
+    sk2const.CAP_SQUARE: 'square',
 }
 
 SVG_GRAD_EXTEND = {
-    sk2_const.GRADIENT_EXTEND_PAD: 'pad',
-    sk2_const.GRADIENT_EXTEND_REFLECT: 'reflect',
-    sk2_const.GRADIENT_EXTEND_REPEAT: 'repeat',
+    sk2const.GRADIENT_EXTEND_PAD: 'pad',
+    sk2const.GRADIENT_EXTEND_REFLECT: 'reflect',
+    sk2const.GRADIENT_EXTEND_REPEAT: 'repeat',
 }
 
 
@@ -1263,14 +1263,14 @@ class SK2_to_SVG_Translator(object):
     def set_fill(self, svg_style, obj):
         svg_style['fill'] = 'none'
         if not obj.style[0]: return
-        if obj.style[0][1] == sk2_const.FILL_SOLID:
-            if obj.style[0][0] == sk2_const.FILL_EVENODD:
+        if obj.style[0][1] == sk2const.FILL_SOLID:
+            if obj.style[0][0] == sk2const.FILL_EVENODD:
                 svg_style['fill-rule'] = 'evenodd'
             clr = self.sk2_doc.cms.get_rgb_color(obj.style[0][2])
             svg_style['fill'] = cms.rgb_to_hexcolor(clr[1])
             if clr[2] < 1.0: svg_style['fill-opacity'] = str(clr[2])
-        elif obj.style[0][1] == sk2_const.FILL_GRADIENT:
-            if obj.style[0][0] == sk2_const.FILL_EVENODD:
+        elif obj.style[0][1] == sk2const.FILL_GRADIENT:
+            if obj.style[0][0] == sk2const.FILL_EVENODD:
                 svg_style['fill-rule'] = 'evenodd'
             grad_id = self.translate_gradient(obj.style[0][2], obj)
             svg_style['fill'] = 'url(#%s)' % grad_id
@@ -1284,7 +1284,7 @@ class SK2_to_SVG_Translator(object):
         if len(gradient) > 3: spread = SVG_GRAD_EXTEND[gradient[3]]
         attrs = {}
         attrs['gradientUnits'] = 'userSpaceOnUse'
-        if gradient[0] == sk2_const.GRADIENT_RADIAL:
+        if gradient[0] == sk2const.GRADIENT_RADIAL:
             tag = 'radialGradient'
             attrs['id'] = grad_id
             attrs['spreadMethod'] = spread
