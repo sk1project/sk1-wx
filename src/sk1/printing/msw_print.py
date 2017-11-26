@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2016 by Igor E. Novikov
+#  Copyright (C) 2016 by Igor E. Novikov
 #
-# 	This program is free software: you can redistribute it and/or modify
-# 	it under the terms of the GNU General Public License as published by
-# 	the Free Software Foundation, either version 3 of the License, or
-# 	(at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-# 	This program is distributed in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# 	GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-# 	You should have received a copy of the GNU General Public License
-# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import wx
@@ -67,7 +67,8 @@ class MSW_PS(AbstractPS):
             self.printers.append(printer)
 
     def get_printer_by_name(self, name):
-        if not name: self.get_default_printer()
+        if not name:
+            self.get_default_printer()
         return AbstractPS.get_printer_by_name(self, name)
 
 
@@ -150,7 +151,7 @@ class MSWPrinter(AbstractPrinter):
 
         pd = ProgressDialog(_('Loading calibration page...'), win)
         ret = pd.run(loader, [app.appdata, path])
-        if ret and not pd.result is None:
+        if ret and pd.result is not None:
             doc_presenter = pd.result
 
         pd.destroy()
@@ -168,10 +169,10 @@ class MSWPrinter(AbstractPrinter):
 
     def print_test_page_a4(self, app, win):
         path = os.path.join(config.resource_dir, 'templates',
-            'print_calibration_a4.sk2')
+                            'print_calibration_a4.sk2')
         self.print_calibration(app, win, path, 'A4')
 
     def print_test_page_letter(self, app, win):
         path = os.path.join(config.resource_dir, 'templates',
-            'print_calibration_letter.sk2')
+                            'print_calibration_letter.sk2')
         self.print_calibration(app, win, path, 'Letter')

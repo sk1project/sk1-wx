@@ -88,21 +88,19 @@ class PreviewRuler(wal.HPanel, wal.Canvas):
         while dx < sdist + 3:
             i = i + 0.5
             dx = dx * 10.0 * i
-        if dx / 2.0 > sdist + 3 and \
-                                dx / 2.0 > udx * canvas.zoom:
+        if dx / 2.0 > sdist + 3 and dx / 2.0 > udx * canvas.zoom:
             dx = dx / 2.0
 
         i = 0.0
         while dy < sdist + 3:
             i = i + 0.5
             dy = dy * 10.0 * i
-        if dy / 2.0 > sdist + 3 and \
-                                dy / 2.0 > udy * canvas.zoom:
+        if dy / 2.0 > sdist + 3 and dy / 2.0 > udy * canvas.zoom:
             dy = dy / 2.0
 
         sx = (x0 / dx - math.floor(x0 / dx)) * dx
         sy = (y0 / dy - math.floor(y0 / dy)) * dy
-        return (x0, y0, dx, dy, sx, sy)
+        return x0, y0, dx, dy, sx, sy
 
     def get_ticks(self):
         canvas = self.canvas
@@ -119,17 +117,20 @@ class PreviewRuler(wal.HPanel, wal.Canvas):
             while pos < w:
                 pos = sx + i * dx
                 small_ticks.append(sx + i * dx)
-                if dx > 10: small_ticks.append(pos + dx * .5)
+                if dx > 10:
+                    small_ticks.append(pos + dx * .5)
                 i += 1
 
             coef = round(50.0 / dx)
-            if not coef: coef = 1.0
+            if not coef:
+                coef = 1.0
             dxt = dx * coef
             sxt = (x0 / dxt - math.floor(x0 / dxt)) * dxt
 
             float_flag = False
             unit_dx = dxt / (unit * canvas.zoom)
-            if unit_dx < 1.0: float_flag = True
+            if unit_dx < 1.0:
+                float_flag = True
 
             i = -1
             pos = 0
@@ -140,7 +141,8 @@ class PreviewRuler(wal.HPanel, wal.Canvas):
                 doc_pos *= uc2const.point_dict[self.units]
                 if float_flag:
                     txt = str(round(doc_pos, 4))
-                    if not doc_pos: txt = '0'
+                    if not doc_pos:
+                        txt = '0'
                 else:
                     txt = str(int(round(doc_pos)))
                 text_ticks.append((sxt + i * dxt, txt))
@@ -152,17 +154,20 @@ class PreviewRuler(wal.HPanel, wal.Canvas):
             while pos < h:
                 pos = sy + i * dy
                 small_ticks.append(sy + i * dy)
-                if dy > 10: small_ticks.append(pos + dy * .5)
+                if dy > 10:
+                    small_ticks.append(pos + dy * .5)
                 i += 1
 
             coef = round(50.0 / dy)
-            if not coef: coef = 1.0
+            if not coef:
+                coef = 1.0
             dyt = dy * coef
             syt = (y0 / dyt - math.floor(y0 / dyt)) * dyt
 
             float_flag = False
             unit_dy = dyt / (unit * canvas.zoom)
-            if unit_dy < 1.0: float_flag = True
+            if unit_dy < 1.0:
+                float_flag = True
 
             i = -1
             pos = 0
@@ -173,7 +178,8 @@ class PreviewRuler(wal.HPanel, wal.Canvas):
                 doc_pos *= uc2const.point_dict[self.units]
                 if float_flag:
                     txt = str(round(doc_pos, 4))
-                    if not doc_pos: txt = '0'
+                    if not doc_pos:
+                        txt = '0'
                 else:
                     txt = str(int(round(doc_pos)))
                 text_ticks.append((syt + i * dyt, txt))
@@ -183,15 +189,16 @@ class PreviewRuler(wal.HPanel, wal.Canvas):
     def paint(self):
         w, h = self.get_size()
         shift = 0
-        if wal.IS_MSW: shift = 1
+        if wal.IS_MSW:
+            shift = 1
         if self.surface is None:
             self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w - shift,
-                h - shift)
+                                              h - shift)
             self.width = w
             self.height = h
         elif self.width <> w or self.height <> h:
             self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w - shift,
-                h - shift)
+                                              h - shift)
             self.width = w
             self.height = h
         self.ctx = cairo.Context(self.surface)

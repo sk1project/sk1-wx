@@ -47,7 +47,8 @@ class PrintDialog(wal.SimpleDialog):
         self.printout = Printout(doc)
         size = config.print_preview_dlg_size
         title = _("Print preview") + ' - %s' % self.printer.get_name()
-        wal.SimpleDialog.__init__(self, win, title, size, wal.HORIZONTAL,
+        wal.SimpleDialog.__init__(
+            self, win, title, size, wal.HORIZONTAL,
             resizable=True, add_line=False, margin=0)
         self.set_minsize(config.print_preview_dlg_minsize)
 
@@ -59,8 +60,8 @@ class PrintDialog(wal.SimpleDialog):
         prnpanel.pack(PrinterPanel(prnpanel, self, self.printsys), fill=True)
         prnpanel.pack(PrintModePanel(prnpanel, self.printer), fill=True)
         prnpanel.pack(PageRangePanel(prnpanel, self.printout), fill=True)
-        prnpanel.pack(CopiesPanel(prnpanel, self.printer, self.printout),
-            fill=True)
+        prnpanel.pack(
+            CopiesPanel(prnpanel, self.printer, self.printout), fill=True)
 
         # --- Control panels end
 

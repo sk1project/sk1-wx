@@ -139,7 +139,6 @@ class PaperPanel(wal.LabeledPanel):
     def set_data(self):
         self.items = self.printer.get_format_items()
         self.size_combo.set_items(self.items)
-        index = 0
         if not self.printer.def_media[:6] == 'Custom':
             index = self.printer.pf_list.index(self.printer.def_media)
         else:
@@ -196,8 +195,8 @@ class OrientPanel(wal.LabeledPanel):
         hpanel = wal.HPanel(self)
 
         vpanel = wal.VPanel(hpanel)
-        self.port_opt = wal.Radiobutton(vpanel, _('Portrait'), group=True,
-            onclick=self.update)
+        self.port_opt = wal.Radiobutton(
+            vpanel, _('Portrait'), group=True, onclick=self.update)
         vpanel.pack(self.port_opt, align_center=False)
         vpanel.pack((5, 5))
         self.land_opt = wal.Radiobutton(vpanel, _('Landscape'),
@@ -286,7 +285,8 @@ class MainPanel(wal.VPanel):
 
         hpanel = wal.HPanel(self)
         icon_name = icons.PD_PRINTER_LASER
-        if self.printer.is_color(): icon_name = icons.PD_PRINTER_INKJET
+        if self.printer.is_color():
+            icon_name = icons.PD_PRINTER_INKJET
         icon = get_icon(icon_name, size=wal.DEF_SIZE)
         hpanel.pack(wal.Bitmap(hpanel, icon), padding=10)
 
@@ -323,11 +323,13 @@ class MainPanel(wal.VPanel):
         label.set_enable(False)
         self.pack(label, fill=True, padding_all=5, align_center=False)
 
-        self.panels = [self.prnmode_panel, self.paper_panel,
+        self.panels = [
+            self.prnmode_panel, self.paper_panel,
             self.orient_panel, self.margins_panel]
 
     def save(self):
-        for item in self.panels: item.save()
+        for item in self.panels:
+            item.save()
 
 
 class CUPS_PrnPropsDialog(PrnProsDialog):
