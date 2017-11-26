@@ -30,7 +30,8 @@ class RootItem(object):
     built = True
     leaf = False
 
-    def __init__(self, data=[]):
+    def __init__(self, data=None):
+        data = data or []
         if self.icon_id:
             self.icon = get_icon(self.icon_id)
         self.childs = data

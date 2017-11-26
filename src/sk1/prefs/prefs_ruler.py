@@ -29,7 +29,17 @@ class RulersPrefs(PrefPanel):
     name = _('Ruler preferences')
     icon_id = icons.PD_PREFS_RULER
 
-    def __init__(self, app, dlg, fmt_config=None):
+    ruler_size = None
+    ruler_font_size = None
+    ruler_small_tick = None
+    ruler_large_tick = None
+    ruler_text_vshift = None
+    ruler_text_hshift = None
+    bg_btn = None
+    fg_btn = None
+    ruler = None
+
+    def __init__(self, app, dlg, *args):
         PrefPanel.__init__(self, app, dlg)
 
     def build(self):
@@ -40,25 +50,26 @@ class RulersPrefs(PrefPanel):
         # Ruler size
         grid.pack(wal.Label(grid, _('Ruler:')))
         self.ruler_size = wal.IntSpin(grid, config.ruler_size,
-            (15, 30), onchange=self.update_ruler_size)
+                                      (15, 30), onchange=self.update_ruler_size)
         grid.pack(self.ruler_size)
 
         # Ruler font size
         grid.pack(wal.Label(grid, _('Ruler font:')))
         self.ruler_font_size = wal.IntSpin(grid, config.ruler_font_size,
-            (5, 8), onchange=self.update_ruler_font)
+                                           (5, 8),
+                                           onchange=self.update_ruler_font)
         grid.pack(self.ruler_font_size)
 
         # Small tick size
         grid.pack(wal.Label(grid, _('Small tick:')))
         self.ruler_small_tick = wal.IntSpin(grid, config.ruler_small_tick,
-            (2, 30), onchange=self.update_ruler)
+                                            (2, 30), onchange=self.update_ruler)
         grid.pack(self.ruler_small_tick)
 
         # Large tick size
         grid.pack(wal.Label(grid, _('Large tick:')))
         self.ruler_large_tick = wal.IntSpin(grid, config.ruler_large_tick,
-            (2, 30), onchange=self.update_ruler)
+                                            (2, 30), onchange=self.update_ruler)
         grid.pack(self.ruler_large_tick)
 
         self.pack(grid, padding_all=10)
@@ -70,13 +81,15 @@ class RulersPrefs(PrefPanel):
         # Vertical text shift
         grid.pack(wal.Label(grid, _('Vertical:')))
         self.ruler_text_vshift = wal.IntSpin(grid, config.ruler_text_vshift,
-            (0, 30), onchange=self.update_ruler)
+                                             (0, 30),
+                                             onchange=self.update_ruler)
         grid.pack(self.ruler_text_vshift)
 
         # Horizontal text shift
         grid.pack(wal.Label(grid, _('Horizontal:')))
         self.ruler_text_hshift = wal.IntSpin(grid, config.ruler_text_hshift,
-            (0, 30), onchange=self.update_ruler)
+                                             (0, 30),
+                                             onchange=self.update_ruler)
         grid.pack(self.ruler_text_hshift)
 
         self.pack(grid, padding_all=10)
@@ -86,20 +99,20 @@ class RulersPrefs(PrefPanel):
         # Ruler bg color
         grid.pack(wal.Label(grid, _('Ruler background color:')))
         self.bg_btn = wal.ColorButton(grid, config.ruler_bg,
-            onchange=self.update_ruler)
+                                      onchange=self.update_ruler)
         grid.pack(self.bg_btn)
 
         # Ruler fg color
         grid.pack(wal.Label(grid, _('Ruler mark color:')))
         self.fg_btn = wal.ColorButton(grid, config.ruler_fg,
-            onchange=self.update_ruler)
+                                      onchange=self.update_ruler)
         grid.pack(self.fg_btn)
 
         self.pack(grid, padding_all=15)
 
         # Testing ruler
         self.pack(wal.Label(self, _('Testing ruler:'), fontbold=True),
-            padding_all=10)
+                  padding_all=10)
         panel = wal.HPanel(self)
         panel.add((360, 1))
         panel.set_bg(wal.UI_COLORS['dark_shadow'])
@@ -145,12 +158,13 @@ class RulersPrefs(PrefPanel):
 
 
 SMALL_TICKS = [15.017, 34.373, 53.729, 73.085, 92.441, 111.797, 131.153,
-    150.509, 169.865, 189.221, 208.577, 227.933, 247.289, 266.645, 286.001,
-    305.357, 324.714, 344.070, ]
+               150.509, 169.865, 189.221, 208.577, 227.933, 247.289, 266.645,
+               286.001,
+               305.357, 324.714, 344.070, ]
 
 TEXT_TICKS = [(15.017, '-100'), (53.729, '-75'), (92.441, '-50'),
-    (131.153, '-25'), (169.865, '0'), (208.577, '25'),
-    (247.289, '50'), (286.001, '75'), (324.714, '100'), ]
+              (131.153, '-25'), (169.865, '0'), (208.577, '25'),
+              (247.289, '50'), (286.001, '75'), (324.714, '100'), ]
 
 
 class RulerTest(wal.HPanel, wal.Canvas):
@@ -166,7 +180,7 @@ class RulerTest(wal.HPanel, wal.Canvas):
         self.set_bg(wal.WHITE)
         self.load_font(self.prefs.ruler_font_size.get_value())
 
-    def set_size(self):
+    def set_size(self, **kwargs):
         self.remove_all()
         self.add((360, self.prefs.ruler_size.get_value()))
         self.parent.layout()

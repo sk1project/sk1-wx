@@ -26,8 +26,6 @@ from uc2.cms import get_profile_name, get_profile_descr
 from uc2.uc2const import COLOR_RGB, COLOR_CMYK, COLOR_LAB, \
     COLOR_GRAY, COLOR_DISPLAY, ICC, ICM, INTENTS
 
-# COLORSPACES = [COLOR_RGB, COLOR_CMYK, COLOR_LAB, COLOR_GRAY, COLOR_DISPLAY]
-
 COLORSPACES = [COLOR_RGB, COLOR_CMYK, COLOR_GRAY, COLOR_DISPLAY]
 
 
@@ -38,16 +36,21 @@ class CMSPrefs(PrefPanel):
     icon_id = icons.PD_PREFS_CMS
     tabs = []
 
-    def __init__(self, app, dlg, fmt_config=None):
+    nb = None
+    page0 = None
+    page1 = None
+    page2 = None
+
+    def __init__(self, app, dlg, *args):
         PrefPanel.__init__(self, app, dlg)
 
     def build(self):
         self.nb = wal.Notebook(self)
 
         # ========Color management options
-        self.page0 = CMS_Options(self.nb, self)
-        self.page1 = CMS_Profiles(self.nb, self)
-        self.page2 = CMS_Settings(self.nb, self)
+        self.page0 = CmsOptions(self.nb, self)
+        self.page1 = CmsProfiles(self.nb, self)
+        self.page2 = CmsSettings(self.nb, self)
 
         for item in [self.page0, self.page1, self.page2]:
             self.nb.add_page(item, item.name)
@@ -65,7 +68,7 @@ class CMSPrefs(PrefPanel):
             item.restore_defaults()
 
 
-class CMS_Tab(wal.VPanel):
+class CmsTab(wal.VPanel):
     name = ''
     prefpanel = None
 
@@ -78,16 +81,16 @@ class CMS_Tab(wal.VPanel):
     def restore_defaults(self): pass
 
 
-class CMS_Options(CMS_Tab):
+class CmsOptions(CmsTab):
     name = _('Color management')
 
     def __init__(self, parent, prefpanel):
-        CMS_Tab.__init__(self, parent, prefpanel)
+        CmsTab.__init__(self, parent, prefpanel)
         txt = _('Activate Color Management')
         panel = wal.VPanel(self)
         hp = wal.HPanel(panel)
         self.cms_check = wal.Checkbox(hp, txt, config.cms_use,
-            onclick=self.activate_cms)
+                                      onclick=self.activate_cms)
 
         hp.pack(self.cms_check)
         panel.pack(hp, fill=True, padding_all=3)
@@ -120,11 +123,11 @@ class CMS_Options(CMS_Tab):
         self.cms_check.set_value(defaults['cms_use'])
 
 
-class CMS_Profiles(CMS_Tab):
+class CmsProfiles(CmsTab):
     name = _('Color profiles')
 
     def __init__(self, parent, prefpanel):
-        CMS_Tab.__init__(self, parent, prefpanel)
+        CmsTab.__init__(self, parent, prefpanel)
 
         txt = _('Colorspace profiles')
         self.pack(wal.Label(self, txt, fontbold=True), padding=2)
@@ -138,10 +141,10 @@ class CMS_Profiles(CMS_Tab):
         self.cs_config_profiles = {}
 
         self.cs_config = {COLOR_RGB: config.cms_rgb_profile,
-            COLOR_CMYK: config.cms_cmyk_profile,
-            COLOR_LAB: config.cms_lab_profile,
-            COLOR_GRAY: config.cms_gray_profile,
-            COLOR_DISPLAY: config.cms_display_profile}
+                          COLOR_CMYK: config.cms_cmyk_profile,
+                          COLOR_LAB: config.cms_lab_profile,
+                          COLOR_GRAY: config.cms_gray_profile,
+                          COLOR_DISPLAY: config.cms_display_profile}
 
         for colorspace in COLORSPACES[:-1]:
             txt = _('%s profile:') % colorspace
@@ -173,8 +176,8 @@ class CMS_Profiles(CMS_Tab):
 
         txt = _('Use display profile')
         self.display_check = wal.Checkbox(self, txt,
-            config.cms_use_display_profile,
-            onclick=self.activate_display)
+                                          config.cms_use_display_profile,
+                                          onclick=self.activate_display)
         self.pack(self.display_check, align_center=False)
         self.pack(wal.HLine(self), fill=True, padding_all=2)
 
@@ -208,14 +211,15 @@ class CMS_Profiles(CMS_Tab):
         self.update_config_data(colorspace)
         combo = self.cs_widgets[colorspace]
         combo.set_items(self.cs_profiles[colorspace])
-        if not set_active: return
+        if not set_active:
+            return
         self.set_active_profile(combo, self.cs_config[colorspace], colorspace)
 
     def set_active_profile(self, widget, name, colorspace):
         profiles = self.get_profile_names(colorspace)
         if not name:
             widget.set_active(0)
-        elif not name in profiles:
+        elif name not in profiles:
             widget.set_active(0)
             if colorspace == COLOR_RGB:
                 config.cms_rgb_profile = ''
@@ -232,7 +236,7 @@ class CMS_Profiles(CMS_Tab):
 
     def get_profile_names(self, colorspace):
         names = []
-        default = _('Built-in %s profile') % (colorspace)
+        default = _('Built-in %s profile') % colorspace
         names.append(default)
         names += self.cs_config_profiles[colorspace].keys()
         return names
@@ -243,7 +247,8 @@ class CMS_Profiles(CMS_Tab):
             combo = self.cs_widgets[colorspace]
             index = combo.get_active()
             profile_name = ''
-            if index: profile_name = profiles[index]
+            if index:
+                profile_name = profiles[index]
             if colorspace == COLOR_RGB:
                 config.cms_rgb_profile = profile_name
             elif colorspace == COLOR_CMYK:
@@ -271,13 +276,14 @@ class ManageButton(wal.ImageButton):
     def __init__(self, parent, owner, colorspace):
         self.owner = owner
         self.colorspace = colorspace
-        txt = _('Add/remove %s profiles') % (colorspace)
+        txt = _('Add/remove %s profiles') % colorspace
         art_size = wal.SIZE_16
         decoration_padding = 6
-        if wal.IS_MSW: decoration_padding = 4
+        if wal.IS_MSW:
+            decoration_padding = 4
         wal.ImageButton.__init__(self, parent, icons.PD_EDIT, art_size=art_size,
-            decoration_padding=decoration_padding,
-            tooltip=txt, flat=False, onclick=self.action)
+                                 decoration_padding=decoration_padding,
+                                 tooltip=txt, flat=False, onclick=self.action)
 
     def action(self):
         app = self.owner.prefpanel.app
@@ -295,6 +301,11 @@ class ManageButton(wal.ImageButton):
 class ProfileManager(wal.CloseDialog):
     profiles = {}
     pf_list = []
+
+    viewer = None
+    import_btn = None
+    remove_btn = None
+    info_btn = None
 
     def __init__(self, app, parent, colorspace):
         self.app = app
@@ -332,39 +343,40 @@ class ProfileManager(wal.CloseDialog):
     def update_list(self):
         keys = self.profiles.keys()
         keys.sort()
-        default = _('Built-in %s profile') % (self.colorspace)
+        default = _('Built-in %s profile') % self.colorspace
         self.pf_list = [default, ] + keys
 
     def build(self):
         self.set_profiles()
         self.viewer = wal.SimpleList(self.panel, self.pf_list,
-            on_select=self.selection_changed)
+                                     on_select=self.selection_changed)
         self.panel.pack(self.viewer, expand=True, fill=True, padding_all=5)
         btn_box = wal.VPanel(self.panel)
         self.panel.pack(btn_box, fill=True, padding_all=5)
 
         self.import_btn = wal.Button(btn_box, _('Import'),
-            onclick=self.import_profile)
+                                     onclick=self.import_profile)
         btn_box.pack(self.import_btn, fill=True, end_padding=5)
         self.remove_btn = wal.Button(btn_box, _('Remove'),
-            onclick=self.remove_profile)
+                                     onclick=self.remove_profile)
         btn_box.pack(self.remove_btn, fill=True, end_padding=5)
         self.info_btn = wal.Button(btn_box, _('Info'),
-            onclick=self.profile_info)
+                                   onclick=self.profile_info)
         btn_box.pack(self.info_btn, fill=True, end_padding=5)
         self.viewer.set_active(0)
 
     def selection_changed(self, ret):
         index = self.viewer.get_active()
-        self.remove_btn.set_enable(not index in (0, -1))
-        self.info_btn.set_enable(not index in (0, -1))
+        self.remove_btn.set_enable(index not in (0, -1))
+        self.info_btn.set_enable(index not in (0, -1))
 
     def import_profile(self):
         src = dialogs.get_open_file_name(self, self,
-            config.profile_import_dir,
-            _('Select profile to import'),
-            file_types=[ICC, ICM])
-        if not src: return
+                                         config.profile_import_dir,
+                                         _('Select profile to import'),
+                                         file_types=[ICC, ICM])
+        if not src:
+            return
         name = get_profile_name(src)
         title = self.app.appdata.app_name
         if name is None:
@@ -390,7 +402,7 @@ class ProfileManager(wal.CloseDialog):
             return
         try:
             shutil.copy(src, dst)
-        except:
+        except Exception:
             msg = _('Cannot copy file')
             msg = "%s '%s'" % (msg, src)
             sec = _('Please check writing permissions for config directory:')
@@ -424,7 +436,8 @@ class ProfileManager(wal.CloseDialog):
         filename = self.profiles[name]
         dst_dir = self.app.appdata.app_color_profile_dir
         dst = os.path.join(dst_dir, filename)
-        if os.path.isfile(dst): ProfileInfoViewer(self, dst).show()
+        if os.path.isfile(dst):
+            ProfileInfoViewer(self, dst).show()
 
 
 class ProfileInfoViewer(wal.CloseDialog):
@@ -437,8 +450,8 @@ class ProfileInfoViewer(wal.CloseDialog):
     def build(self):
         name, copyrigth, info = get_profile_descr(self.filepath)
         filename = os.path.basename(self.filepath)
-        if not copyrigth: copyrigth = '--'
-        if not info: info = '--'
+        copyrigth = copyrigth or '--'
+        info = info or '--'
         grid = wal.GridPanel(self.panel, vgap=5, hgap=5)
         grid.add_growable_col(1)
         grid.add_growable_row(2)
@@ -449,18 +462,18 @@ class ProfileInfoViewer(wal.CloseDialog):
         grid.pack(wal.Label(grid, filename))
         grid.pack(wal.Label(grid, _('Copyrigth:')))
         grid.pack(wal.Entry(grid, copyrigth, multiline=True, editable=False),
-            fill=True)
+                  fill=True)
         grid.pack(wal.Label(grid, _('Description:')))
         grid.pack(wal.Entry(grid, info, multiline=True, editable=False),
-            fill=True)
+                  fill=True)
         self.panel.pack(grid, fill=True, expand=True)
 
 
-class CMS_Settings(CMS_Tab):
+class CmsSettings(CmsTab):
     name = _('Settings')
 
     def __init__(self, parent, prefpanel):
-        CMS_Tab.__init__(self, parent, prefpanel)
+        CmsTab.__init__(self, parent, prefpanel)
 
         self.intents = INTENTS.keys()
         self.intents.sort()
@@ -490,15 +503,15 @@ class CMS_Settings(CMS_Tab):
         # Simulate printer panel
         txt = _('Simulate printer on the screen')
         self.simulate_check = wal.Checkbox(panel, txt,
-            config.cms_proofing,
-            onclick=self.activate_simulation)
+                                           config.cms_proofing,
+                                           onclick=self.activate_simulation)
 
         sm_panel = wal.LabeledPanel(panel, widget=self.simulate_check)
 
         txt = _('Mark colors that are out of the printer gamut')
         self.outcolors_check = wal.Checkbox(sm_panel, txt,
-            config.cms_gamutcheck,
-            onclick=self.activate_outcolors)
+                                            config.cms_gamutcheck,
+                                            onclick=self.activate_outcolors)
         sm_panel.pack(self.outcolors_check, align_center=False, padding_all=5)
 
         clrpanel = wal.HPanel(sm_panel)
@@ -511,8 +524,8 @@ class CMS_Settings(CMS_Tab):
 
         txt = _('Separation for SPOT colors')
         self.separation_check = wal.Checkbox(sm_panel, txt,
-            config.cms_proof_for_spot,
-            onclick=self.activate_outcolors)
+                                             config.cms_proof_for_spot,
+                                             onclick=self.activate_outcolors)
         sm_panel.pack(self.separation_check, align_center=False, padding_all=5)
 
         panel.pack(sm_panel, fill=True, padding=5)
@@ -520,14 +533,15 @@ class CMS_Settings(CMS_Tab):
         # Bottom checks
         txt = _('Use Blackpoint Compensation')
         self.bpc_check = wal.Checkbox(panel, txt,
-            config.cms_bpc_flag)
+                                      config.cms_bpc_flag)
         panel.pack(self.bpc_check, align_center=False)
 
-        if wal.IS_MSW: panel.pack((5, 5))
+        if wal.IS_MSW:
+            panel.pack((5, 5))
 
         txt = _('Use Black preserving transforms')
         self.bpt_check = wal.Checkbox(panel, txt,
-            config.cms_bpt_flag)
+                                      config.cms_bpt_flag)
         panel.pack(self.bpt_check, align_center=False)
 
         self.panel.pack(panel, fill=True, padding_all=5)

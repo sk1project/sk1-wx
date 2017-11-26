@@ -27,7 +27,19 @@ class GeneralPrefs(PrefPanel):
     title = _('General application preferences')
     icon_id = icons.PD_PROPERTIES
 
-    def __init__(self, app, dlg, fmt_config=None):
+    newdoc = None
+    backup = None
+    expbackup = None
+    hist_size = None
+    hist_menu_size = None
+    fcache = None
+    stub_buttons = None
+    spin_overlay = None
+    spin_sep = None
+    ubuntu_gm = None
+    ubuntu_overlay = None
+
+    def __init__(self, app, dlg, *args):
         PrefPanel.__init__(self, app, dlg)
 
     def build(self):
@@ -35,19 +47,22 @@ class GeneralPrefs(PrefPanel):
         self.newdoc = wal.Checkbox(self, txt, config.new_doc_on_start)
         self.pack(self.newdoc, align_center=False, start_padding=5)
 
-        if wal.IS_MSW: self.pack((5, 5))
+        if wal.IS_MSW:
+            self.pack((5, 5))
 
         txt = _('Make backup on document save')
         self.backup = wal.Checkbox(self, txt, config.make_backup)
         self.pack(self.backup, align_center=False)
 
-        if wal.IS_MSW: self.pack((5, 5))
+        if wal.IS_MSW:
+            self.pack((5, 5))
 
         txt = _('Make backup on export')
         self.expbackup = wal.Checkbox(self, txt, config.make_export_backup)
         self.pack(self.expbackup, align_center=False)
 
-        if wal.IS_MSW: self.pack((5, 5))
+        if wal.IS_MSW:
+            self.pack((5, 5))
 
         grid = wal.GridPanel(self, rows=2, cols=3, hgap=5, vgap=3)
         grid.pack(wal.Label(grid, _('History log size:')))
@@ -56,24 +71,27 @@ class GeneralPrefs(PrefPanel):
         grid.pack(wal.Label(grid, _('records')))
         grid.pack(wal.Label(grid, _('History menu size:')))
         self.hist_menu_size = wal.IntSpin(grid, config.history_list_size,
-            (5, 20))
+                                          (5, 20))
         grid.pack(self.hist_menu_size)
         grid.pack(wal.Label(grid, _('records')))
         self.pack(grid, align_center=False, padding=5)
 
-        if wal.IS_MSW: self.pack((5, 5))
+        if wal.IS_MSW:
+            self.pack((5, 5))
 
         txt = _('Make font cache on start')
         self.fcache = wal.Checkbox(self, txt, config.make_font_cache_on_start)
         self.pack(self.fcache, align_center=False)
 
-        if wal.IS_MSW: self.pack((5, 5))
+        if wal.IS_MSW:
+            self.pack((5, 5))
 
         txt = _('Show quick access buttons')
         self.stub_buttons = wal.Checkbox(self, txt, config.show_stub_buttons)
         self.pack(self.stub_buttons, align_center=False)
 
-        if wal.IS_MSW: self.pack((5, 5))
+        if wal.IS_MSW:
+            self.pack((5, 5))
 
         if not wal.IS_MAC and wal.IS_WX2:
             txt = _('Use overlay for spinbox widgets (*)')
@@ -88,7 +106,7 @@ class GeneralPrefs(PrefPanel):
         if wal.IS_UNITY:
             txt = _('Unity related features')
             self.pack(wal.Label(grid, txt, fontsize=2, fontbold=True),
-                start_padding=10)
+                      start_padding=10)
             self.pack(wal.HLine(self), fill=True, padding=2)
 
             txt = _('Use Unity Global Menu (*)')
@@ -97,7 +115,7 @@ class GeneralPrefs(PrefPanel):
 
             txt = _('Allow overlay for scrollbars (*)')
             self.ubuntu_overlay = wal.Checkbox(self, txt,
-                config.ubuntu_scrollbar_overlay)
+                                               config.ubuntu_scrollbar_overlay)
             self.pack(self.ubuntu_overlay, align_center=False)
 
         if not wal.IS_MAC:

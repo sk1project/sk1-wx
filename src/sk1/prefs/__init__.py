@@ -29,9 +29,9 @@ from sk1.resources import icons
 from templates import GridPrefs
 
 PREFS_APP = [GeneralPrefs, CMSPrefs, RulersPrefs,
-    PalettesPrefs, FontPrefs,
-    # CanvasPrefs,
-    PrinterPrefs, ]
+             PalettesPrefs, FontPrefs,
+             # CanvasPrefs,
+             PrinterPrefs, ]
 
 PREFS_DOC = [GridPrefs, ]
 
@@ -41,7 +41,8 @@ class PrefsAppItem(RootItem):
     name = _('Application')
     icon_id = icons.SK1_ICON16
 
-    def __init__(self, data=[]):
+    def __init__(self, data=None):
+        data = data or []
         RootItem.__init__(self, data)
 
 
@@ -50,7 +51,8 @@ class PrefsDocItem(RootItem):
     name = _('New document')
     icon_id = icons.PD_NEW
 
-    def __init__(self, data=[]):
+    def __init__(self, data=None):
+        data = data or []
         RootItem.__init__(self, data)
 
 
@@ -60,13 +62,20 @@ PREFS_DATA = []
 class PrefsDialog(wal.OkCancelDialog):
     current_plugin = None
 
+    splitter = None
+    tree_container = None
+    tree = None
+    container = None
+    redo_btn = None
+
     def __init__(self, parent, title, pid=''):
         self.app = parent.app
         size = config.prefs_dlg_size
         wal.OkCancelDialog.__init__(self, parent, title, size, resizable=True,
-            margin=0, add_line=False, button_box_padding=5)
+                                    margin=0, add_line=False,
+                                    button_box_padding=5)
         self.set_minsize(config.prefs_dlg_minsize)
-        if not pid: pid = 'General'
+        pid = pid or 'General'
         self.tree.set_item_by_reference(self.get_plugin_by_pid(pid))
 
     def build(self):
@@ -75,11 +84,11 @@ class PrefsDialog(wal.OkCancelDialog):
         self.tree_container = wal.VPanel(self.splitter)
         if not PREFS_DATA:
             PREFS_DATA.append(PrefsAppItem(PREFS_APP))
-            # 			PREFS_DATA.append(PrefsDocItem(PREFS_DOC))
+            # PREFS_DATA.append(PrefsDocItem(PREFS_DOC))
             for item in PREFS_DATA:
                 item.init_prefs(self.app, self)
         self.tree = wal.TreeWidget(self.tree_container, data=PREFS_DATA,
-            on_select=self.on_select, border=False)
+                                   on_select=self.on_select, border=False)
         self.tree_container.pack(self.tree, fill=True, expand=True)
         cont = wal.VPanel(self.splitter)
         cont.pack(wal.PLine(cont), fill=True)
@@ -88,14 +97,15 @@ class PrefsDialog(wal.OkCancelDialog):
         cont.pack(wal.PLine(cont), fill=True)
         self.splitter.split_vertically(self.tree_container, cont, 200)
         self.splitter.set_min_size(200)
-        if not wal.IS_MSW: self.tree.set_indent(5)
+        if not wal.IS_MSW:
+            self.tree.set_indent(5)
         self.tree.expand_all()
 
     def set_dialog_buttons(self):
         wal.OkCancelDialog.set_dialog_buttons(self)
         title = _('Restore defaults')
         self.redo_btn = wal.Button(self.left_button_box, title,
-            onclick=self.restore_defaults)
+                                   onclick=self.restore_defaults)
         self.left_button_box.pack(self.redo_btn)
 
     def on_select(self, plugin):

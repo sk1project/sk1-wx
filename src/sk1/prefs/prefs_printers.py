@@ -34,7 +34,18 @@ class PrinterPrefs(PrefPanel):
     active_printer = None
     prn_list = []
 
-    def __init__(self, app, dlg, fmt_config=None):
+    prn_combo = None
+    insp = None
+    hshift = None
+    vshift = None
+    top_spin = None
+    left_spin = None
+    right_spin = None
+    bottom_spin = None
+    a4_calibrate_btn = None
+    letter_calibrate_btn = None
+
+    def __init__(self, app, dlg, *args):
         PrefPanel.__init__(self, app, dlg)
 
     def get_printsys(self):
@@ -54,7 +65,7 @@ class PrinterPrefs(PrefPanel):
             hpanel.pack(wal.Label(hpanel, _('Printer:')))
             hpanel.pack((5, 5))
             self.prn_combo = wal.Combolist(hpanel, items=self.prn_list,
-                onchange=self.set_data)
+                                           onchange=self.set_data)
             hpanel.pack(self.prn_combo, fill=True, expand=True)
             index = self.prn_list.index(self.active_printer.get_name())
             self.prn_combo.set_active(index)
@@ -80,14 +91,16 @@ class PrinterPrefs(PrefPanel):
 
             grid.pack(wal.Label(grid, _('Horizontal shift:')))
             self.hshift = StaticUnitSpin(self.app, grid, shifts[0],
-                can_be_negative=True,
-                onchange=self.save_data, onenter=self.save_data)
+                                         can_be_negative=True,
+                                         onchange=self.save_data,
+                                         onenter=self.save_data)
             grid.pack(self.hshift)
 
             grid.pack(wal.Label(grid, _('Vertical shift:')))
             self.vshift = StaticUnitSpin(self.app, grid, shifts[1],
-                can_be_negative=True,
-                onchange=self.save_data, onenter=self.save_data)
+                                         can_be_negative=True,
+                                         onchange=self.save_data,
+                                         onenter=self.save_data)
             grid.pack(self.vshift)
 
             spanel.pack(grid, padding_all=5)
@@ -104,18 +117,21 @@ class PrinterPrefs(PrefPanel):
 
             mrgs = self.active_printer.margins
             self.top_spin = StaticUnitSpin(self.app, mpanel, mrgs[0],
-                onchange=self.save_data, onenter=self.save_data)
+                                           onchange=self.save_data,
+                                           onenter=self.save_data)
             mpanel.pack(self.top_spin)
 
             mpanel.pack((5, 5))
 
             hp = wal.HPanel(self)
             self.left_spin = StaticUnitSpin(self.app, hp, mrgs[3],
-                onchange=self.save_data, onenter=self.save_data)
+                                            onchange=self.save_data,
+                                            onenter=self.save_data)
             hp.pack(self.left_spin)
             hp.pack((5, 5))
             self.right_spin = StaticUnitSpin(self.app, hp, mrgs[1],
-                onchange=self.save_data, onenter=self.save_data)
+                                             onchange=self.save_data,
+                                             onenter=self.save_data)
             hp.pack(self.right_spin)
 
             mpanel.pack(hp)
@@ -123,7 +139,8 @@ class PrinterPrefs(PrefPanel):
             mpanel.pack((5, 5))
 
             self.bottom_spin = StaticUnitSpin(self.app, mpanel, mrgs[2],
-                onchange=self.save_data, onenter=self.save_data)
+                                              onchange=self.save_data,
+                                              onenter=self.save_data)
             mpanel.pack(self.bottom_spin)
 
             mpanel.pack((10, 10))
@@ -137,22 +154,23 @@ class PrinterPrefs(PrefPanel):
 
             # ---Calibration page
             text = _("To measure real print area and vertical/horirizontal "
-                     "printing shift just print calibration page on the A4/Letter sheet.")
+                     "printing shift just print calibration page on the "
+                     "A4/Letter sheet.")
 
             label = wal.Label(self, text)
             label.wrap(470)
             self.pack(label, fill=True, padding_all=5, align_center=False)
 
             self.a4_calibrate_btn = wal.Button(self,
-                _('Print A4 calibration page'),
-                onclick=self.print_calibration_a4)
+                                           _('Print A4 calibration page'),
+                                           onclick=self.print_calibration_a4)
             self.pack(self.a4_calibrate_btn)
 
             self.pack((5, 5))
 
             self.letter_calibrate_btn = wal.Button(self,
-                _('Print Letter calibration page'),
-                onclick=self.print_calibration_letter)
+                                        _('Print Letter calibration page'),
+                                        onclick=self.print_calibration_letter)
             self.pack(self.letter_calibrate_btn)
 
             self.pack((5, 5))
@@ -180,22 +198,25 @@ class PrinterPrefs(PrefPanel):
 
     def save_data(self):
         self.active_printer.shifts = (self.hshift.get_point_value(),
-        self.vshift.get_point_value())
+                                      self.vshift.get_point_value())
 
         self.active_printer.margins = (self.top_spin.get_point_value(),
-        self.right_spin.get_point_value(),
-        self.bottom_spin.get_point_value(),
-        self.left_spin.get_point_value())
+                                       self.right_spin.get_point_value(),
+                                       self.bottom_spin.get_point_value(),
+                                       self.left_spin.get_point_value())
 
     def apply_changes(self):
-        if not self.prn_list: return
+        if not self.prn_list:
+            return
         config.printer_config = {}
         for name in self.prn_list:
             printer = self.printsys.get_printer_by_name(name)
-            if printer: printer.save_config()
+            if printer:
+                printer.save_config()
 
     def restore_defaults(self):
-        if not self.prn_list: return
+        if not self.prn_list:
+            return
         self.active_printer.shifts = STD_SHIFTS
         self.active_printer.margins = STD_MARGINS
         self.set_data()
