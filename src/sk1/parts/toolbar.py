@@ -21,12 +21,16 @@ from sk1.pwidgets import MacTB_ActionButton, MacTB_ActionNestedButtons
 from sk1.resources import pdids
 
 BUTTONS = [
-    (wal.ID_NEW,), None, (wal.ID_OPEN, wal.ID_SAVE, wal.ID_SAVEAS,
-    wal.ID_CLOSE), None, (wal.ID_PRINT,), None, (wal.ID_UNDO, wal.ID_REDO),
-    None, (wal.ID_CUT, wal.ID_COPY, wal.ID_PASTE, wal.ID_DELETE), None,
-    (wal.ID_REFRESH,), None, (wal.ID_ZOOM_IN, wal.ID_ZOOM_OUT,
-    pdids.ID_ZOOM_PAGE, wal.ID_ZOOM_100, wal.ID_ZOOM_FIT), None,
-    (wal.ID_PROPERTIES, wal.ID_PREFERENCES)]
+    (wal.ID_NEW,), None,
+    (wal.ID_OPEN, wal.ID_SAVE, wal.ID_SAVEAS, wal.ID_CLOSE), None,
+    (wal.ID_PRINT,), None,
+    (wal.ID_UNDO, wal.ID_REDO), None,
+    (wal.ID_CUT, wal.ID_COPY, wal.ID_PASTE, wal.ID_DELETE), None,
+    (wal.ID_REFRESH,), None,
+    (wal.ID_ZOOM_IN, wal.ID_ZOOM_OUT, pdids.ID_ZOOM_PAGE, wal.ID_ZOOM_100,
+     wal.ID_ZOOM_FIT), None,
+    (wal.ID_PROPERTIES, wal.ID_PREFERENCES)
+]
 
 
 def build_toolbar(mw):

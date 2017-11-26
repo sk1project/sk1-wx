@@ -47,7 +47,8 @@ class AppCtxPanel(wal.HPanel):
 
     def rebuild(self, *args):
         mode = self.get_mode()
-        if mode == self.mode: return
+        if mode == self.mode:
+            return
         for item in self.plugins:
             item.hide()
             self.remove(item)
@@ -62,11 +63,10 @@ class AppCtxPanel(wal.HPanel):
                 self.plugins_dict[item].show(update=False)
                 self.plugins.append(self.plugins_dict[item])
         self.layout()
-        #self.fit()
+        # self.fit()
         self.mode = mode
 
     def get_mode(self):
-        ret = []
         if not self.insp.is_doc():
             return NO_DOC
 

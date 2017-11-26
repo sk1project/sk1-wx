@@ -92,7 +92,7 @@ class MDIArea(wal.VPanel):
         self.change_palette()
 
         # ----- Status bar
-        self.pack(wal.PLine(self), fill=True)#, start_padding=2)
+        self.pack(wal.PLine(self), fill=True)
         self.statusbar = AppStatusbar(self)
         self.pack(self.statusbar, fill=True, padding=2)
 
@@ -151,7 +151,8 @@ class MDIArea(wal.VPanel):
         if value:
             if not self.plg_area.is_shown():
                 self.splitter.split_vertically(self.doc_keeper,
-                    self.plg_area, config.sash_position)
+                                               self.plg_area,
+                                               config.sash_position)
         else:
             if self.plg_area.is_shown():
                 w = self.splitter.get_size()[0]

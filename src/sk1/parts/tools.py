@@ -20,9 +20,9 @@ from sk1.pwidgets import StyleMonitor
 from sk1.resources import pdids
 
 BUTTONS = (pdids.SELECT_MODE, pdids.SHAPER_MODE, pdids.ZOOM_MODE,
-pdids.FLEUR_MODE, pdids.LINE_MODE, pdids.CURVE_MODE, pdids.RECT_MODE,
-pdids.ELLIPSE_MODE, pdids.POLYGON_MODE, pdids.TEXT_MODE,
-pdids.GRADIENT_MODE, None, pdids.FILL_MODE, pdids.STROKE_MODE, None)
+           pdids.FLEUR_MODE, pdids.LINE_MODE, pdids.CURVE_MODE, pdids.RECT_MODE,
+           pdids.ELLIPSE_MODE, pdids.POLYGON_MODE, pdids.TEXT_MODE,
+           pdids.GRADIENT_MODE, None, pdids.FILL_MODE, pdids.STROKE_MODE, None)
 
 
 class AppTools(wal.VPanel):
@@ -63,8 +63,9 @@ class ActionTool(wal.ImageToggleButton):
             decoration_padding = 2
 
         wal.ImageToggleButton.__init__(self, parent, value, art_id, art_size,
-            text, tooltip, padding, decoration_padding,
-            True, onchange=action.do_call)
+                                       text, tooltip, padding,
+                                       decoration_padding,
+                                       True, onchange=action.do_call)
         self.action.register(self)
 
     def update(self):
@@ -79,7 +80,8 @@ class ActionTool(wal.ImageToggleButton):
                     return
                 else:
                     self.value = True
-                if self.onchange: self.onchange()
+                if self.onchange:
+                    self.onchange()
         self.refresh()
 
 
@@ -96,11 +98,12 @@ class ActionToolButton(wal.ImageButton):
 
         if wal.IS_MSW:
             decoration_padding = 2
-            if wal.IS_WINXP: native = False
+            if wal.IS_WINXP:
+                native = False
 
         wal.ImageButton.__init__(self, parent, art_id, art_size, text, tooltip,
-            padding, decoration_padding, True, native,
-            onclick=action.do_call)
+                                 padding, decoration_padding, True, native,
+                                 onclick=action.do_call)
         self.action.register(self)
 
     def update(self):

@@ -95,13 +95,15 @@ class PlgTabs(wal.VPanel):
         self.Bind(wx.EVT_PAINT, self._on_paint, self)
 
     def refresh(self, x=0, y=0, w=0, h=0):
-        if not w: w, h = self.GetSize()
+        if not w:
+            w, h = self.GetSize()
         self.Refresh(rect=wx.Rect(x, y, w, h))
 
     def update(self):
         self.Layout()
         self.SetSize(self.GetBestSize())
-        if not self.callback is None: self.callback()
+        if self.callback is not None:
+            self.callback()
 
     def add_new_tab(self, plg):
         plg_tab = PlgTab(self.panel, plg)
@@ -121,7 +123,8 @@ class PlgTabs(wal.VPanel):
     def set_active(self, plg):
         plg_tab = plg.plg_tab
         for tab in self.plg_tabs:
-            if tab.active: tab.set_active(False)
+            if tab.active:
+                tab.set_active(False)
         plg_tab.set_active(True)
         self.update()
 
@@ -191,7 +194,8 @@ class PlgTab(wal.VPanel):
         self.parent.update()
 
     def refresh(self, x=0, y=0, w=0, h=0):
-        if not w: w, h = self.GetSize()
+        if not w:
+            w, h = self.GetSize()
         self.Refresh(rect=wx.Rect(x, y, w, h))
 
     def set_active(self, value):
@@ -299,7 +303,8 @@ class PlgTab(wal.VPanel):
             y += 3 + self.icon.GetSize()[0]
             txt_h = self._get_text_size(self.text, self.active)[1]
             x = (TAB_WIDTH - txt_h) / 2 + txt_h
-            if wal.IS_MSW: x += 3
+            if wal.IS_MSW:
+                x += 3
             font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
             if config.tabs_use_bold:
                 font.SetWeight(wx.FONTWEIGHT_BOLD)
@@ -313,10 +318,12 @@ class PlgTab(wal.VPanel):
             # ----- draw button
             y += self._get_text_size(self.text, self.active)[0]
             x = (TAB_WIDTH - self.inactive_close_but.GetSize()[0]) / 2
-            if not self.active: x -= 1
+            if not self.active:
+                x -= 1
             if self.but_active:
                 dc.DrawBitmap(self.close_but, x, y, True)
-                if self.but_pressed: dc.DrawBitmap(self.close_but, x, y, True)
+                if self.but_pressed:
+                    dc.DrawBitmap(self.close_but, x, y, True)
             else:
                 dc.DrawBitmap(self.inactive_close_but, x, y, True)
             but_w, but_h = self.inactive_close_but.GetSize()
@@ -337,7 +344,8 @@ class PlgTab(wal.VPanel):
             y += 3 + self.icon.GetSize()[0]
             txt_h = self._get_text_size(self.text, self.active)[1]
             x = (TAB_WIDTH - txt_h) / 2 + txt_h - 1
-            if wal.IS_MSW: x += 3
+            if wal.IS_MSW:
+                x += 3
             font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
             if config.tabs_fontsize:
                 if font.IsUsingSizeInPixels():
@@ -349,10 +357,12 @@ class PlgTab(wal.VPanel):
             # ----- draw button
             y += self._get_text_size(self.text, self.active)[0]
             x = (TAB_WIDTH - self.inactive_close_but.GetSize()[0]) / 2
-            if not self.active: x -= 1
+            if not self.active:
+                x -= 1
             if self.but_active:
                 dc.DrawBitmap(self.close_but, x, y, True)
-                if self.but_pressed: dc.DrawBitmap(self.close_but, x, y, True)
+                if self.but_pressed:
+                    dc.DrawBitmap(self.close_but, x, y, True)
             else:
                 dc.DrawBitmap(self.inactive_close_but, x, y, True)
             but_w, but_h = self.inactive_close_but.GetSize()

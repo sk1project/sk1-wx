@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2013 by Igor E. Novikov
+#  Copyright (C) 2013 by Igor E. Novikov
 #
-# 	This program is free software: you can redistribute it and/or modify
-# 	it under the terms of the GNU General Public License as published by
-# 	the Free Software Foundation, either version 3 of the License, or
-# 	(at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-# 	This program is distributed in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# 	GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-# 	You should have received a copy of the GNU General Public License
-# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 
@@ -34,8 +34,8 @@ class DocTabsPanel(HPanel):
         HPanel.__init__(self, parent)
 
         self.left_scroll = TabScroller(self, icons.ARROW_LEFT,
-            tooltip=_('Scroll tabs right'),
-            onclick=self.scroll_left)
+                                       tooltip=_('Scroll tabs right'),
+                                       onclick=self.scroll_left)
         self.add(self.left_scroll, 0, ALL | EXPAND)
 
         self.tabs_bg = TabsBgPanel(self)
@@ -46,9 +46,9 @@ class DocTabsPanel(HPanel):
         self.doc_tabs.SetPosition((0, 0))
 
         self.right_scroll = TabScroller(self, icons.ARROW_RIGHT,
-            tooltip=_('Scroll tabs left'),
-            border_side=LEFT,
-            onclick=self.scroll_right)
+                                        tooltip=_('Scroll tabs left'),
+                                        border_side=LEFT,
+                                        onclick=self.scroll_right)
         self.add(self.right_scroll, 0, ALL | EXPAND)
         self.Bind(wx.EVT_SIZE, self.resize, self)
 
@@ -73,7 +73,8 @@ class DocTabsPanel(HPanel):
 
     def scroll_left(self):
         x = self.doc_tabs.GetPosition()[0] + 10
-        if x > 0: x = 0
+        if x > 0:
+            x = 0
         self.doc_tabs.SetPosition((0, 0))
         self.doc_tabs.SetPosition((x, 0))
         self.update_panel()
@@ -130,7 +131,7 @@ class TabScroller(HPanel):
     pressed = False
 
     def __init__(self, parent, icon, tooltip='', border_side=RIGHT,
-            onclick=None):
+                 onclick=None):
         self.icon = wx.ArtProvider.GetBitmap(icon)
         self.callback = onclick
         self.tooltip = tooltip
@@ -169,10 +170,12 @@ class TabScroller(HPanel):
         self.refresh()
 
     def do_action(self, *args):
-        if not self.callback is None: self.callback()
+        if self.callback is not None:
+            self.callback()
 
     def refresh(self, x=0, y=0, w=0, h=0):
-        if not w: w, h = self.GetSize()
+        if not w:
+            w, h = self.GetSize()
         self.Refresh(rect=wx.Rect(x, y, w, h))
 
     def _on_paint(self, event):
@@ -205,7 +208,8 @@ class TabScroller(HPanel):
                 x -= 1
             else:
                 x += 1
-            if self.pressed: x += 1
+            if self.pressed:
+                x += 1
             dc.DrawBitmap(self.icon, x, y, True)
 
             color = const.UI_COLORS['hover_solid_border']
@@ -246,13 +250,15 @@ class DocTabs(HPanel):
         self.Bind(wx.EVT_PAINT, self._on_paint, self)
 
     def refresh(self, x=0, y=0, w=0, h=0):
-        if not w: w, h = self.GetSize()
+        if not w:
+            w, h = self.GetSize()
         self.Refresh(rect=wx.Rect(x, y, w, h))
 
     def update(self):
         self.Layout()
         self.SetSize(self.GetBestSize())
-        if not self.callback is None: self.callback()
+        if self.callback is not None:
+            self.callback()
 
     def add_new_tab(self, doc):
         doc_tab = DocTab(self.panel, doc)
@@ -271,7 +277,8 @@ class DocTabs(HPanel):
     def set_active(self, doc):
         doc_tab = doc.docarea.doc_tab
         for tab in self.doc_tabs:
-            if tab.active: tab.set_active(False)
+            if tab.active:
+                tab.set_active(False)
         doc_tab.set_active(True)
         self.update()
 
@@ -346,7 +353,8 @@ class DocTab(HPanel):
             self.__dict__[item] = None
 
     def refresh(self, x=0, y=0, w=0, h=0):
-        if not w: w, h = self.GetSize()
+        if not w:
+            w, h = self.GetSize()
         self.Refresh(rect=wx.Rect(x, y, w, h))
 
     def set_active(self, value):
@@ -458,9 +466,9 @@ class DocTab(HPanel):
             # ----- draw gradient
             rect = wx.Rect(0, h / 2, w, h / 2)
             dc.GradientFillLinear(rect, grad_start, grad_end,
-                nDirection=wx.NORTH)
+                                  nDirection=wx.NORTH)
             dc.GradientFillLinear(rect, grad_start, grad_end,
-                nDirection=wx.NORTH)
+                                  nDirection=wx.NORTH)
         else:
             # ----- draw background
             dc.SetBrush(wx.Brush(wx.Colour(*dark_bg_color)))
@@ -474,9 +482,9 @@ class DocTab(HPanel):
             # ----- draw gradient
             rect = wx.Rect(0, h / 2, w, h / 2)
             dc.GradientFillLinear(rect, grad_start, grad_end,
-                nDirection=wx.NORTH)
+                                  nDirection=wx.NORTH)
             dc.GradientFillLinear(rect, grad_start, grad_end,
-                nDirection=wx.NORTH)
+                                  nDirection=wx.NORTH)
 
             # ----- draw bottom line
             pdc.SetPen(wx.Pen(wx.Colour(*border_color), 1))
@@ -488,13 +496,16 @@ class DocTab(HPanel):
         # ----- draw icon
         x = TAB_PADDING
         y = (TAB_HEIGHT - self.icon.GetSize()[1]) / 2 + 3
-        if not self.active: y += 1
+        if not self.active:
+            y += 1
         dc.DrawBitmap(self.icon, x, y, True)
         # ----- draw text
         x += 3 + self.icon.GetSize()[0]
         y = (
-            TAB_HEIGHT - self._get_text_size(self.text, self.active)[1]) / 2 + 3
-        if not self.active: y += 1
+                TAB_HEIGHT - self._get_text_size(self.text, self.active)[
+                    1]) / 2 + 3
+        if not self.active:
+            y += 1
         font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         if self.active and config.tabs_use_bold:
             font.SetWeight(wx.FONTWEIGHT_BOLD)
@@ -508,10 +519,12 @@ class DocTab(HPanel):
         # ----- draw button
         x += self._get_text_size(self.text, self.active)[0]
         y = (TAB_HEIGHT - self.inactive_close_but.GetSize()[1]) / 2 + 3
-        if not self.active: y += 1
+        if not self.active:
+            y += 1
         if self.but_active:
             dc.DrawBitmap(self.close_but, x, y, True)
-            if self.but_pressed: dc.DrawBitmap(self.close_but, x, y, True)
+            if self.but_pressed:
+                dc.DrawBitmap(self.close_but, x, y, True)
         else:
             dc.DrawBitmap(self.inactive_close_but, x, y, True)
         but_w, but_h = self.inactive_close_but.GetSize()

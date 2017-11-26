@@ -35,32 +35,33 @@ class AppHPalette(wal.HPanel):
         self.pack((1, 1))
 
         self.palette = Palette(self.panel, self.app,
-            on_left_click=self.app.proxy.fill_selected,
-            on_right_click=self.app.proxy.stroke_selected,
-            onmin=self.left_enable,
-            onmax=self.right_enable)
-
-        native = False
-        if wal.IS_GTK: native = True
+                               on_left_click=self.app.proxy.fill_selected,
+                               on_right_click=self.app.proxy.stroke_selected,
+                               onmin=self.left_enable,
+                               onmax=self.right_enable)
 
         tip = _('Scroll palette to left')
         self.left_but = wal.ImageButton(self.panel, icons.ARROW_LEFT,
-            tooltip=tip, decoration_padding=4, native=native,
-            onclick=self.palette.scroll_start, repeat=True)
+                                        tooltip=tip, decoration_padding=4,
+                                        native=wal.IS_GTK,
+                                        onclick=self.palette.scroll_start,
+                                        repeat=True)
         self.pack(self.left_but)
 
         tip = _('Empty pattern')
         self.no_color = wal.ImageLabel(self.panel, icons.NO_COLOR, tooltip=tip,
-            onclick=self.set_no_fill,
-            onrightclick=self.set_no_stroke)
+                                       onclick=self.set_no_fill,
+                                       onrightclick=self.set_no_stroke)
         self.pack(self.no_color)
 
         self.pack(self.palette, expand=True, padding=1)
 
         tip = _('Scroll palette to right')
         self.right_but = wal.ImageButton(self.panel, icons.ARROW_RIGHT,
-            tooltip=tip, decoration_padding=4, native=native,
-            onclick=self.palette.scroll_end, repeat=True)
+                                         tooltip=tip, decoration_padding=4,
+                                         native=wal.IS_GTK,
+                                         onclick=self.palette.scroll_end,
+                                         repeat=True)
         self.pack(self.right_but)
 
     def set_no_fill(self):
@@ -96,25 +97,23 @@ class AppVPalette(wal.VPanel):
         self.pack((1, 1))
 
         self.palette = Palette(self.panel, self.app, hpal=False,
-            on_left_click=self.app.proxy.fill_selected,
-            on_right_click=self.app.proxy.stroke_selected,
-            onmin=self.left_enable,
-            onmax=self.right_enable)
-
-        native = False
-        if wal.IS_GTK: native = True
+                               on_left_click=self.app.proxy.fill_selected,
+                               on_right_click=self.app.proxy.stroke_selected,
+                               onmin=self.left_enable,
+                               onmax=self.right_enable)
 
         tip = _('Scroll palette to top')
         self.left_but = wal.ImageButton(self.panel, icons.ARROW_TOP,
-            tooltip=tip,
-            decoration_padding=4, native=native,
-            onclick=self.palette.scroll_start, repeat=True)
+                                        tooltip=tip,
+                                        decoration_padding=4, native=wal.IS_GTK,
+                                        onclick=self.palette.scroll_start,
+                                        repeat=True)
         self.pack(self.left_but)
 
         tip = _('Empty pattern')
         self.no_color = wal.ImageLabel(self.panel, icons.NO_COLOR, tooltip=tip,
-            onclick=self.set_no_fill,
-            onrightclick=self.set_no_stroke)
+                                       onclick=self.set_no_fill,
+                                       onrightclick=self.set_no_stroke)
 
         self.pack(self.no_color)
 
@@ -122,9 +121,11 @@ class AppVPalette(wal.VPanel):
 
         tip = _('Scroll palette to bottom')
         self.right_but = wal.ImageButton(self.panel, icons.ARROW_BOTTOM,
-            tooltip=tip,
-            decoration_padding=4, native=native,
-            onclick=self.palette.scroll_end, repeat=True)
+                                         tooltip=tip,
+                                         decoration_padding=4,
+                                         native=wal.IS_GTK,
+                                         onclick=self.palette.scroll_end,
+                                         repeat=True)
         self.pack(self.right_but)
 
     def set_no_fill(self):
