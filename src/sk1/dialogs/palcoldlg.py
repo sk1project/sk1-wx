@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2015 by Igor E. Novikov
+#  Copyright (C) 2015 by Igor E. Novikov
 #
-# 	This program is free software: you can redistribute it and/or modify
-# 	it under the terms of the GNU General Public License as published by
-# 	the Free Software Foundation, either version 3 of the License, or
-# 	(at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-# 	This program is distributed in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# 	GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-# 	You should have received a copy of the GNU General Public License
-# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import urllib2
@@ -24,18 +24,22 @@ from sk1 import _, config
 from sk1.pwidgets import PaletteViewer
 from uc2.formats.skp import skp_loader
 
+URL = 'http://104.237.146.215'
+
 
 class PaletteCollectionDialog(wal.OkCancelDialog):
     data = []
     palette = None
+    viewer = None
+    stub = None
 
     def __init__(self, app, parent):
         self.app = app
         size = config.palcol_dlg_size
         title = _('Palette Collection')
         wal.OkCancelDialog.__init__(self, parent, title, size, resizable=True,
-            action_button=wal.BUTTON_SAVE,
-            on_load=self.on_load)
+                                    action_button=wal.BUTTON_SAVE,
+                                    on_load=self.on_load)
         self.set_minsize(config.palcol_dlg_minsize)
 
     def build(self):
@@ -81,7 +85,7 @@ class DataStub(wal.HPanel):
         self.gif.play()
 
     def get_palette_list(self):
-        url = 'http://104.237.146.215/palettes.php?action=get_list'
+        url = '%s/palettes.php?action=get_list' % URL
         data = []
         try:
             txt = urllib2.urlopen(url).read()
@@ -99,7 +103,7 @@ class DataViewer(wal.HPanel):
         self.parent = parent
         wal.HPanel.__init__(self, parent)
         self.pal_list = wal.SimpleList(self, self.parent.data,
-            on_select=self.change_palette)
+                                       on_select=self.change_palette)
         self.pack(self.pal_list, expand=True, fill=True, padding_all=5)
         self.preview = PreViewer(self)
         self.pack(self.preview, fill=True, padding_all=5)
@@ -112,7 +116,7 @@ class DataViewer(wal.HPanel):
         palette = None
         index = self.parent.data.index(name) + 1
         pid = '0' * (4 - len(str(index))) + str(index)
-        url = 'http://104.237.146.215/palettes.php?action=get_palette&id=%s' % pid
+        url = '%s/palettes.php?action=get_palette&id=%s' % (URL, pid)
         try:
             pal_url = urllib2.urlopen(url).read()
             pal_txt = urllib2.urlopen(pal_url).read()

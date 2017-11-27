@@ -24,7 +24,8 @@ from uc2 import uc2const
 from uc2.utils.fs import path_system
 
 
-def _get_open_filters(items=[]):
+def _get_open_filters(items=None):
+    items = items or []
     wildcard = ''
     descr = uc2const.FORMAT_DESCRIPTION
     ext = uc2const.FORMAT_EXTENSION
@@ -54,20 +55,23 @@ def _get_open_filters(items=[]):
     return wildcard
 
 
-def get_open_file_name(parent, app, start_dir, msg='', file_types=[]):
+def get_open_file_name(parent, start_dir, msg='', file_types=None):
+    file_types = file_types or []
     ret = ''
-    if not msg: msg = _('Open document')
+    msg = msg or _('Open document')
     if wal.IS_MAC:
         msg = ''
 
-    if start_dir == '~': start_dir = os.path.expanduser(start_dir)
+    if start_dir == '~':
+        start_dir = os.path.expanduser(start_dir)
 
     dlg = wx.FileDialog(
         parent, message=msg,
         defaultDir=start_dir,
         defaultFile="",
         wildcard=_get_open_filters(file_types),
-        style=wx.FD_OPEN | wx.FD_CHANGE_DIR | wx.FD_FILE_MUST_EXIST | wx.FD_PREVIEW
+        style=wx.FD_OPEN | wx.FD_CHANGE_DIR |
+              wx.FD_FILE_MUST_EXIST | wx.FD_PREVIEW
     )
     dlg.CenterOnParent()
     if dlg.ShowModal() == wx.ID_OK:
@@ -76,7 +80,8 @@ def get_open_file_name(parent, app, start_dir, msg='', file_types=[]):
     return ret
 
 
-def _get_save_fiters(items=[]):
+def _get_save_fiters(items=None):
+    items = items or []
     wildcard = ''
     descr = uc2const.FORMAT_DESCRIPTION
     ext = uc2const.FORMAT_EXTENSION
@@ -92,14 +97,16 @@ def _get_save_fiters(items=[]):
     return wildcard
 
 
-def get_save_file_name(parent, app, path, msg='',
-        file_types=[], path_only=False):
+def get_save_file_name(parent, path, msg='',
+                       file_types=None, path_only=False):
+    file_types = file_types or []
     ret = None
-    if not msg: msg = _('Save document As...')
+    msg = msg or _('Save document As...')
     if wal.IS_MAC:
         msg = ''
 
-    if path == '~': path = os.path.expanduser(path)
+    if path == '~':
+        path = os.path.expanduser(path)
 
     doc_folder = os.path.dirname(path)
     doc_name = os.path.basename(path)
@@ -109,7 +116,8 @@ def get_save_file_name(parent, app, path, msg='',
         defaultDir=doc_folder,
         defaultFile=doc_name,
         wildcard=_get_save_fiters(file_types),
-        style=wx.FD_SAVE | wx.FD_CHANGE_DIR | wx.FD_OVERWRITE_PROMPT | wx.FD_PREVIEW
+        style=wx.FD_SAVE | wx.FD_CHANGE_DIR |
+              wx.FD_OVERWRITE_PROMPT | wx.FD_PREVIEW
     )
     dlg.CenterOnParent()
     if dlg.ShowModal() == wx.ID_OK:
@@ -127,14 +135,15 @@ def get_save_file_name(parent, app, path, msg='',
     return ret
 
 
-def get_dir_path(parent, app, path='~', msg=''):
+def get_dir_path(parent, path='~', msg=''):
     ret = ''
     if not msg:
         msg = _('Select directory')
     if wal.IS_MAC:
         msg = ''
 
-    if path == '~': path = os.path.expanduser(path)
+    if path == '~':
+        path = os.path.expanduser(path)
 
     dlg = wx.DirDialog(
         parent, message=msg,

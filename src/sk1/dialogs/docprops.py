@@ -69,16 +69,16 @@ class GeneralProps(DP_Panel):
 
         grid.pack(wal.Label(grid, _('Notes:')))
         self.notes_field = wal.Entry(grid, '' + self.metainfo[3],
-            multiline=True)
+                                     multiline=True)
         grid.pack(self.notes_field, fill=True)
 
         self.pack(grid, fill=True, expand=True, padding_all=5)
 
     def save(self):
         metainfo = [self.author_field.get_value(),
-            self.license_field.get_value(),
-            self.keys_field.get_value(),
-            self.notes_field.get_value()]
+                    self.license_field.get_value(),
+                    self.keys_field.get_value(),
+                    self.notes_field.get_value()]
         if not self.metainfo == metainfo:
             if metainfo[3]: metainfo[3] = b64encode(metainfo[3])
             self.api.set_doc_metainfo(metainfo)
@@ -108,7 +108,7 @@ class PageProps(DP_Panel):
         hpanel.pack(label)
         hpanel.pack((5, 5))
         self.page_combo = wal.Combolist(self, items=self.formats,
-            onchange=self.page_combo_changed)
+                                        onchange=self.page_combo_changed)
         index = 0
         state = True
         if self.page_format[0] in uc2const.PAGE_FORMAT_NAMES:
@@ -121,7 +121,8 @@ class PageProps(DP_Panel):
         hpanel.pack((15, 5))
 
         self.orient_keeper = wal.HToggleKeeper(self, ORIENTS, ORIENTS_ICONS,
-            ORIENTS_NAMES, on_change=self.orient_changed)
+                                               ORIENTS_NAMES,
+                                               on_change=self.orient_changed)
         self.orient_keeper.set_mode(self.page_format[2])
         hpanel.pack(self.orient_keeper)
 
@@ -136,11 +137,11 @@ class PageProps(DP_Panel):
         hpanel.pack((dx, 5))
 
         self.page_width = UnitSpin(self.app, hpanel, w,
-            onchange=self.page_spin_changed)
+                                   onchange=self.page_spin_changed)
         hpanel.pack(self.page_width)
         hpanel.pack(get_bmp(self, icons.CTX_W_ON_H), padding=5)
         self.page_height = UnitSpin(self.app, hpanel, h,
-            onchange=self.page_spin_changed)
+                                    onchange=self.page_spin_changed)
         hpanel.pack(self.page_height)
         hpanel.pack(StaticUnitLabel(self.app, hpanel), padding=5)
         self.page_width.set_enable(state)
@@ -179,7 +180,7 @@ class PageProps(DP_Panel):
         self.page_color2_btn = wal.ColorButton(hpanel, color2)
         grid.pack(self.page_color2_btn)
         self.colors2 = CBMiniPalette(grid,
-            onclick=self.page_color2_btn.set_value)
+                                     onclick=self.page_color2_btn.set_value)
         grid.pack(self.colors2)
         if not self.page_fill[0] == FILL_PATTERN:
             self.page_color2_btn.set_enable(False)
@@ -194,16 +195,17 @@ class PageProps(DP_Panel):
         if wal.IS_MSW: vpanel.pack((5, 5))
 
         self.pattern_check = wal.Checkbox(vpanel,
-            _('Use pattern for page fill'),
-            self.page_fill[0] == FILL_PATTERN,
-            onclick=self.pattern_check_changed)
+                                          _('Use pattern for page fill'),
+                                          self.page_fill[0] == FILL_PATTERN,
+                                          onclick=self.pattern_check_changed)
         vpanel.pack(self.pattern_check, align_center=False)
 
         if wal.IS_MSW: vpanel.pack((5, 5))
 
         self.border_flag = self.doc.methods.get_page_border()
         self.border_check = wal.Checkbox(vpanel,
-            _('Show page border'), self.border_flag)
+                                         _('Show page border'),
+                                         self.border_flag)
         vpanel.pack(self.border_check, align_center=False)
         self.pack(vpanel, fill=True, padding_all=5)
 
@@ -242,9 +244,9 @@ class PageProps(DP_Panel):
 
     def save(self):
         page_format = [self.page_combo.get_active_value(),
-            [self.page_width.get_point_value(),
-                self.page_height.get_point_value(), ],
-            self.orient_keeper.get_mode()]
+                       [self.page_width.get_point_value(),
+                        self.page_height.get_point_value(), ],
+                       self.orient_keeper.get_mode()]
         if not self.page_format == page_format:
             self.api.set_default_page_format(page_format)
         desktop_bg = self.desktop_color_btn.get_value()
@@ -267,7 +269,7 @@ class PageProps(DP_Panel):
 
 ORIGIN_ICONS = [icons.L_ORIGIN_CENTER, icons.L_ORIGIN_LL, icons.L_ORIGIN_LU]
 ORIGIN_NAMES = [_('Page center'),
-    _('Left lower page corner'), _('Left upper page corner')]
+                _('Left lower page corner'), _('Left upper page corner')]
 
 
 class UnitsProps(DP_Panel):
@@ -295,7 +297,7 @@ class UnitsProps(DP_Panel):
         vp = wal.LabeledPanel(hpanel, text=_('Document origin'))
         self.origin = self.doc.methods.get_doc_origin()
         self.origin_keeper = wal.HToggleKeeper(vp, ORIGINS, ORIGIN_ICONS,
-            ORIGIN_NAMES)
+                                               ORIGIN_NAMES)
         self.origin_keeper.set_mode(self.origin)
         vp.pack(self.origin_keeper, padding_all=5)
         hpanel.pack(vp, fill=True)
@@ -318,7 +320,9 @@ class UnitsProps(DP_Panel):
         if not self.origin == self.origin_keeper.get_mode():
             self.api.set_doc_origin(self.origin_keeper.get_mode())
 
+
 WIDTH = 300
+
 
 class GridPreview(wal.VPanel, wal.Canvas):
     color = []
@@ -425,7 +429,7 @@ class GridProps(DP_Panel):
         hpanel.pack((10, 5))
         self.color = self.doc.methods.get_grid_rgba_color()
         self.grid_color_btn = wal.ColorButton(hpanel, self.color[:3],
-            onchange=self.on_change)
+                                              onchange=self.on_change)
         hpanel.pack(self.grid_color_btn)
         vpanel.pack(hpanel, fill=True)
 
@@ -433,21 +437,22 @@ class GridProps(DP_Panel):
         hpanel.pack(wal.Label(hpanel, _('Grid opacity:')))
         hpanel.pack((10, 5))
         self.alpha_spin = wal.FloatSpin(hpanel, self.color[3] * 100.0,
-            range_val=(0.0, 100.0),
-            onchange=self.on_spin_change,
-            onenter=self.on_spin_change)
+                                        range_val=(0.0, 100.0),
+                                        onchange=self.on_spin_change,
+                                        onenter=self.on_spin_change)
         hpanel.pack(self.alpha_spin)
         hpanel.pack(wal.Label(hpanel, '%'), padding=3)
 
         vpanel.pack(hpanel, fill=True, padding=5)
 
         self.alpha_slider = wal.Slider(vpanel, int(self.color[3] * 100.0),
-            range_val=(0, 100), onchange=self.on_slider_change)
+                                       range_val=(0, 100),
+                                       onchange=self.on_slider_change)
         vpanel.pack(self.alpha_slider, fill=True, padding=5)
 
         val = self.doc.methods.is_grid_visible()
         self.show_grid_check = wal.Checkbox(vpanel,
-            _('Show grid on canvas'), val)
+                                            _('Show grid on canvas'), val)
         vpanel.pack(self.show_grid_check, fill=True, padding=5)
 
         color_panel.pack(vpanel)
@@ -480,7 +485,7 @@ class GridProps(DP_Panel):
 
     def save(self):
         geom = [self.x_val.get_point_value(), self.y_val.get_point_value(),
-            self.dx_val.get_point_value(), self.dy_val.get_point_value()]
+                self.dx_val.get_point_value(), self.dy_val.get_point_value()]
         if not self.geom == geom:
             self.api.set_grid_values(geom)
         color = list(self.grid_color_btn.get_value())
@@ -524,7 +529,7 @@ class GuidePreview(wal.VPanel, wal.Canvas):
 
 
 GUIDE_COLORS = ['#0051FF', '#7DF7F6', '#503E8C', '#FF3C0B', '#8282FF',
-    '#BEBEBE']
+                '#BEBEBE']
 
 
 class GuidesProps(DP_Panel):
@@ -542,16 +547,16 @@ class GuidesProps(DP_Panel):
         hpanel.pack((10, 5))
         self.color = self.doc.methods.get_guide_rgb_color()
         self.guide_color_btn = wal.ColorButton(hpanel, self.color[:3],
-            onchange=self.on_change)
+                                               onchange=self.on_change)
         hpanel.pack(self.guide_color_btn)
         hpanel.pack((10, 5))
         hpanel.pack(CBMiniPalette(hpanel, colors=GUIDE_COLORS,
-            onclick=self.change_color))
+                                  onclick=self.change_color))
         vpanel.pack(hpanel, fill=True, align_center=False)
 
         val = self.doc.methods.is_guide_visible()
         self.show_guide_check = wal.Checkbox(vpanel,
-            _('Show guides on canvas'), val)
+                                             _('Show guides on canvas'), val)
         vpanel.pack(self.show_guide_check, align_center=False, padding=5)
 
         self.pack((10, 10))
@@ -593,7 +598,7 @@ class DocPropertiesDialog(wal.OkCancelDialog):
         self.app = app
         size = config.docprops_dlg_size
         wal.OkCancelDialog.__init__(self, parent, title, size,
-            resizable=True, add_line=False)
+                                    resizable=True, add_line=False)
         self.set_minsize(config.docprops_dlg_minsize)
 
     def build(self):

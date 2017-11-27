@@ -29,7 +29,7 @@ class AboutDialog(wal.SimpleDialog):
     def __init__(self, app, parent, title, size=config.about_dlg_size):
         self.app = app
         wal.SimpleDialog.__init__(self, parent, title, size, margin=0,
-            resizable=False, add_line=False)
+                                  resizable=False, add_line=False)
 
     def build(self):
         nb = wal.Notebook(self)
@@ -61,7 +61,7 @@ class AboutPage(wal.HPanel):
         box.pack(wal.Label(box, txt, True, 2), fill=True)
 
         data = app.appdata
-        txt = ('%s: %s %s') % (_('Version'), data.version, data.revision)
+        txt = '%s: %s %s' % (_('Version'), data.version, data.revision)
         box.pack(wal.Label(box, txt), fill=True)
         box.pack((35, 35))
 

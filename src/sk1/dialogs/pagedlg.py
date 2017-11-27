@@ -23,6 +23,7 @@ from uc2 import uc2const
 
 class GotoPageDialog(wal.OkCancelDialog):
     presenter = None
+    spin = None
 
     def __init__(self, parent, title, presenter):
         self.presenter = presenter
@@ -50,6 +51,7 @@ def goto_page_dlg(parent, presenter):
 
 class DeletePageDialog(wal.OkCancelDialog):
     presenter = None
+    spin = None
 
     def __init__(self, parent, title, presenter):
         self.presenter = presenter
@@ -104,7 +106,8 @@ class InsertPageDialog(wal.OkCancelDialog):
         self.pack(panel, padding=5)
 
         margin = 0
-        if not wal.IS_GTK: margin = 3
+        if not wal.IS_GTK:
+            margin = 3
 
         panel.pack((5, 5))
         vpanel = wal.VPanel(panel)
@@ -130,8 +133,9 @@ class InsertPageDialog(wal.OkCancelDialog):
         number = self.page_num.get_value()
         target = self.page_index.get_value() - 1
         position = uc2const.BEFORE
-        if self.after_opt.get_value(): position = uc2const.AFTER
-        return (number, target, position)
+        if self.after_opt.get_value():
+            position = uc2const.AFTER
+        return number, target, position
 
 
 def insert_page_dlg(parent, presenter):
