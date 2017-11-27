@@ -24,7 +24,7 @@ from ctx_menu import ContextMenu
 from sk1 import events, modes, config
 from sk1.appconst import PAGEFIT, ZOOM_IN, ZOOM_OUT, RENDERING_DELAY
 from sk1.document import controllers
-from sk1.document.kbd_proc import Kbd_Processor
+from sk1.document.kbd_proc import KbdProcessor
 from sk1.document.renderer import PDRenderer
 from uc2 import uc2const, libcairo, libgeom
 from uc2.formats.sk2.sk2_const import DOC_ORIGIN_LL, DOC_ORIGIN_LU
@@ -123,7 +123,7 @@ class AppCanvas(wx.Panel):
         self.Bind(wx.EVT_MOTION, self.mouse_move)
         self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self.capture_lost)
         # ----- Keyboard binding
-        self.kbproc = Kbd_Processor(self)
+        self.kbproc = KbdProcessor(self)
         self.Bind(wx.EVT_KEY_DOWN, self.kbproc.on_key_down)
         self.Bind(wx.EVT_CHAR, self.kbproc.on_char)
         # 		self.Bind(wx.EVT_KEY_UP, self.OnKeyUp)

@@ -23,22 +23,22 @@ from sk1.resources import pdids
 
 UNDO = [wal.ID_UNDO, wal.ID_REDO]
 EDIT = [None, wal.ID_CUT, wal.ID_COPY, wal.ID_PASTE,
-    wal.ID_DELETE, pdids.ID_DUPLICATE, None, wal.ID_SELECTALL]
+        wal.ID_DELETE, pdids.ID_DUPLICATE, None, wal.ID_SELECTALL]
 STYLE = [None, pdids.FILL_MODE, pdids.STROKE_MODE, pdids.COPY_FILL,
-    pdids.COPY_STROKE]
+         pdids.COPY_STROKE]
 DEFAULT = [None, wal.ID_PROPERTIES]
 COMBINE = [None, pdids.ID_COMBINE, pdids.ID_BREAK_APART, ]
 TO_CURVES = [None, pdids.ID_TO_CURVES]
 GROUP = [None, pdids.ID_GROUP, pdids.ID_UNGROUP, pdids.ID_UNGROUPALL, ]
 BEZIER_EDIT = [None, wal.ID_SELECTALL, pdids.ID_DESELECT, pdids.ID_INV_SELECT,
-    None, pdids.ID_BEZIER_ADD_NODE, pdids.ID_BEZIER_DELETE_NODE,
-    None, pdids.ID_BEZIER_ADD_SEG, pdids.ID_BEZIER_DELETE_SEG,
-    pdids.ID_BEZIER_JOIN_NODE, pdids.ID_BEZIER_SPLIT_NODE,
-    None, pdids.ID_BEZIER_SEG_TO_LINE, pdids.ID_BEZIER_SEG_TO_CURVE,
-    None, pdids.ID_BEZIER_NODE_CUSP, pdids.ID_BEZIER_NODE_SMOOTH,
-    pdids.ID_BEZIER_NODE_SYMMETRICAL]
+               None, pdids.ID_BEZIER_ADD_NODE, pdids.ID_BEZIER_DELETE_NODE,
+               None, pdids.ID_BEZIER_ADD_SEG, pdids.ID_BEZIER_DELETE_SEG,
+               pdids.ID_BEZIER_JOIN_NODE, pdids.ID_BEZIER_SPLIT_NODE,
+               None, pdids.ID_BEZIER_SEG_TO_LINE, pdids.ID_BEZIER_SEG_TO_CURVE,
+               None, pdids.ID_BEZIER_NODE_CUSP, pdids.ID_BEZIER_NODE_SMOOTH,
+               pdids.ID_BEZIER_NODE_SYMMETRICAL]
 TEXT = [None, pdids.ID_UPPER_TEXT, pdids.ID_LOWER_TEXT,
-    pdids.ID_CAPITALIZE_TEXT]
+        pdids.ID_CAPITALIZE_TEXT]
 
 
 class ContextMenu(wx.Menu):
@@ -67,7 +67,8 @@ class ContextMenu(wx.Menu):
         self.build_menu(self.get_entries())
 
     def build_menu(self, entries):
-        for item in self.items: self.RemoveItem(item)
+        for item in self.items:
+            self.RemoveItem(item)
         self.items = []
         for item in entries:
             if item is None:
@@ -112,7 +113,8 @@ class ContextMenu(wx.Menu):
             ret += [pdids.ID_RAISE_TO_TOP, pdids.ID_RAISE]
         if self.insp.can_be_lower():
             ret += [pdids.ID_LOWER, pdids.ID_LOWER_TO_BOTTOM]
-        if ret: ret = [None, ] + ret
+        if ret:
+            ret = [None, ] + ret
         return ret
 
 
@@ -128,7 +130,8 @@ class CtxActionMenuItem(wx.MenuItem):
         wx.MenuItem.__init__(self, parent, action_id, text=text)
         if not wal.IS_MAC and self.action.is_icon:
             bmp = self.action.get_icon(config.menu_size, wx.ART_MENU)
-            if bmp: self.SetBitmap(bmp)
+            if bmp:
+                self.SetBitmap(bmp)
         self.action.register_as_menuitem(self)
         self.mw.Bind(wx.EVT_MENU, self.action.do_call, id=action_id)
         if self.action.is_toggle():
