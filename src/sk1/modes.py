@@ -134,7 +134,8 @@ def get_cursors():
     }
     keys = cursors.keys()
     ext = '.png'
-    if wal.IS_MSW: ext = '.cur'
+    if wal.IS_MSW:
+        ext = '.cur'
     for key in keys:
         path = os.path.join(config.resource_dir, 'cursors',
                             cursors[key][0] + ext)

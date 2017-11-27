@@ -184,8 +184,7 @@ class SK1Application(wal.Application, UCApplication):
 
     def new_from_template(self):
         msg = _('Select Template')
-        doc_file = dialogs.get_open_file_name(self.mw, self,
-                                              config.template_dir, msg)
+        doc_file = dialogs.get_open_file_name(self.mw, config.template_dir, msg)
         if os.path.lexists(doc_file) and os.path.isfile(doc_file):
             try:
                 doc = PD_Presenter(self, doc_file, template=True)
@@ -203,8 +202,7 @@ class SK1Application(wal.Application, UCApplication):
 
     def open(self, doc_file='', silent=False):
         if not doc_file:
-            doc_file = dialogs.get_open_file_name(self.mw, self,
-                                                  config.open_dir)
+            doc_file = dialogs.get_open_file_name(self.mw, config.open_dir)
         if os.path.lexists(doc_file) and os.path.isfile(doc_file):
             try:
                 doc = PD_Presenter(self, doc_file, silent)
@@ -213,8 +211,8 @@ class SK1Application(wal.Application, UCApplication):
                 msg = _('Cannot open file:')
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
                 msg += _('The file contains newer SK2 format.\n')
-                msg += _(
-                    'Try updating sK1 application from http://www.sk1project.net')
+                msg += _('Try updating sK1 application from '
+                         'http://www.sk1project.net')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
                 self.print_stacktrace()
                 return
@@ -268,8 +266,7 @@ class SK1Application(wal.Application, UCApplication):
         if not os.path.lexists(os.path.dirname(doc_file)):
             doc_file = os.path.join(config.save_dir,
                                     os.path.basename(doc_file))
-        doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
-                                              path_only=True)
+        doc_file = dialogs.get_save_file_name(self.mw, doc_file, path_only=True)
         if doc_file:
             old_file = self.current_doc.doc_file
             old_name = self.current_doc.doc_name
@@ -304,7 +301,7 @@ class SK1Application(wal.Application, UCApplication):
         if not os.path.lexists(os.path.dirname(doc_file)):
             doc_file = os.path.join(config.save_dir,
                                     os.path.basename(doc_file))
-        doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
+        doc_file = dialogs.get_save_file_name(self.mw, doc_file,
                                               _(
                                                   'Save selected objects only as...'),
                                               path_only=True)
@@ -363,7 +360,7 @@ class SK1Application(wal.Application, UCApplication):
         return result
 
     def import_file(self):
-        doc_file = dialogs.get_open_file_name(self.mw, self, config.import_dir,
+        doc_file = dialogs.get_open_file_name(self.mw, config.import_dir,
                                               _('Select file to import'))
         if os.path.lexists(doc_file) and os.path.isfile(doc_file):
             try:
@@ -389,7 +386,7 @@ class SK1Application(wal.Application, UCApplication):
         doc_file = os.path.splitext(doc_file)[0]
         doc_file = os.path.join(config.export_dir,
                                 os.path.basename(doc_file))
-        doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
+        doc_file = dialogs.get_save_file_name(self.mw, doc_file,
                                               _('Export document As...'),
                                               file_types=uc2const.SAVER_FORMATS[
                                                          1:], path_only=True)
@@ -411,7 +408,7 @@ class SK1Application(wal.Application, UCApplication):
     def extract_bitmap(self):
         doc_file = 'image'
         doc_file = os.path.join(config.save_dir, doc_file)
-        doc_file = dialogs.get_save_file_name(self.mw, self, doc_file,
+        doc_file = dialogs.get_save_file_name(self.mw, doc_file,
                                               _(
                                                   'Extract selected bitmap as...'),
                                               file_types=[uc2const.PNG],
@@ -436,7 +433,7 @@ class SK1Application(wal.Application, UCApplication):
         doc_file = '' + palette.model.name
         doc_file = os.path.splitext(doc_file)[0]
         doc_file = os.path.join(config.export_dir, os.path.basename(doc_file))
-        ret = dialogs.get_save_file_name(parent, self, doc_file,
+        ret = dialogs.get_save_file_name(parent, doc_file,
                                          _('Export palette as...'),
                                          file_types=uc2const.PALETTE_SAVERS)
         if not ret: return
@@ -480,7 +477,7 @@ class SK1Application(wal.Application, UCApplication):
 
     def import_palette(self, parent=None):
         if not parent: parent = self.mw
-        doc_file = dialogs.get_open_file_name(parent, self, config.import_dir,
+        doc_file = dialogs.get_open_file_name(parent, config.import_dir,
                                               _('Select palette to import'),
                                               file_types=uc2const.PALETTE_LOADERS)
         if os.path.lexists(doc_file) and os.path.isfile(doc_file):
@@ -522,7 +519,7 @@ class SK1Application(wal.Application, UCApplication):
         img_file = os.path.join(config.save_dir, img_file)
         file_types = [uc2const.TIF]
         if eps: file_types = [uc2const.EPS]
-        img_file = dialogs.get_save_file_name(parent, self, img_file,
+        img_file = dialogs.get_save_file_name(parent, img_file,
                                               _('Save pattern as...'),
                                               file_types=file_types,
                                               path_only=True)
@@ -542,7 +539,7 @@ class SK1Application(wal.Application, UCApplication):
 
     def import_pattern(self, parent=None):
         if not parent: parent = self.mw
-        img_file = dialogs.get_open_file_name(parent, self, config.import_dir,
+        img_file = dialogs.get_open_file_name(parent, config.import_dir,
                                               _('Select pattern to load'),
                                               file_types=uc2const.PATTERN_FORMATS)
         if os.path.lexists(img_file) and os.path.isfile(img_file):

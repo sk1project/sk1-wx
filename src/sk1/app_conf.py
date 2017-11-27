@@ -242,9 +242,9 @@ class AppConfig(UCConfig):
     # ============== SNAPPING OPTIONS ================
     snap_distance = 10.0  # in pixels
     snap_order = [appconst.SNAP_TO_GUIDES,
-        appconst.SNAP_TO_GRID,
-        appconst.SNAP_TO_OBJECTS,
-        appconst.SNAP_TO_PAGE]
+                  appconst.SNAP_TO_GRID,
+                  appconst.SNAP_TO_OBJECTS,
+                  appconst.SNAP_TO_PAGE]
     snap_to_grid = False
     snap_to_guides = True
     snap_to_objects = False

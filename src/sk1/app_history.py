@@ -15,7 +15,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, time, datetime
+import datetime
+import os
+import time
 
 from uc2.utils.fs import path_unicode
 from sk1 import config, appconst, events
@@ -37,8 +39,10 @@ class AppHistoryManager:
             fp = open(self.history_file, 'rb')
             while True:
                 line = fp.readline()
-                if line == '': break
-                if line[-1:] == '\n': line = line[:-1]
+                if line == '':
+                    break
+                if line[-1:] == '\n':
+                    line = line[:-1]
                 items = line.split('\t')
                 if len(items) == 3:
                     self.history.append(
@@ -66,7 +70,8 @@ class AppHistoryManager:
         return not self.history
 
     def is_history(self):
-        if self.history: return True
+        if self.history:
+            return True
         return False
 
     def is_more(self):
@@ -74,7 +79,8 @@ class AppHistoryManager:
 
     def get_menu_entries(self):
         entries = []
-        if not self.history: return entries
+        if not self.history:
+            return entries
         i = 1
         counter = 0
         ret = []
@@ -87,7 +93,8 @@ class AppHistoryManager:
                 ret.append([path_unicode(filename + ' [' + path + ']'), path])
                 counter += 1
             i += 1
-            if i > len(self.history): break
+            if i > len(self.history):
+                break
         return ret
 
     def get_history_entries(self):

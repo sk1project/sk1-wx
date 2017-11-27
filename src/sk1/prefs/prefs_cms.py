@@ -371,8 +371,7 @@ class ProfileManager(wal.CloseDialog):
         self.info_btn.set_enable(index not in (0, -1))
 
     def import_profile(self):
-        src = dialogs.get_open_file_name(self, self,
-                                         config.profile_import_dir,
+        src = dialogs.get_open_file_name(self, config.profile_import_dir,
                                          _('Select profile to import'),
                                          file_types=[ICC, ICM])
         if not src:

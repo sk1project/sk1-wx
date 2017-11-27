@@ -15,7 +15,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, sys
+import os
+import sys
 
 from wal import VPanel
 
@@ -24,8 +25,10 @@ from sk1 import _, config
 
 def check_package(path, name):
     full_path = os.path.join(path, name)
-    if not os.path.isdir(full_path): return False
-    if name[0] == '.': return False
+    if not os.path.isdir(full_path):
+        return False
+    if name[0] == '.':
+        return False
     py_file = os.path.join(full_path, '__init__.py')
     pyc_file = os.path.join(full_path, '__init__.pyc')
     return os.path.lexists(py_file) or os.path.lexists(pyc_file)

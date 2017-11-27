@@ -19,15 +19,15 @@ import os
 
 from sk1.app_conf import get_app_config
 
-global config
-
 
 def dummy_translator(text):
     return text
 
 
 _ = dummy_translator
+
 config = None
+global config
 
 
 def init_config(cfgdir='~'):

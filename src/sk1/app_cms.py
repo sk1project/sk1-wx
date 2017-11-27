@@ -60,7 +60,7 @@ class AppColorManager(ColorManager):
         for item in CS + [COLOR_DISPLAY, ]:
             path = None
             profile = profiles[index]
-            if profile and profile_dicts[index].has_key(profile):
+            if profile and profile in profile_dicts[index]:
                 profile_filename = profile_dicts[index][profile]
                 path = os.path.join(profile_dir, profile_filename)
             if path:
