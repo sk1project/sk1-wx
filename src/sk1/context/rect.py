@@ -30,6 +30,10 @@ class RectanglePlugin(CtxPlugin):
     orig_corners = [0, 0, 0, 0]
     update_flag = False
     active_corner = 0
+    slider = None
+    num_spin = None
+    switch = None
+    keep_ratio = None
 
     def __init__(self, app, parent):
         CtxPlugin.__init__(self, app, parent)
@@ -41,11 +45,11 @@ class RectanglePlugin(CtxPlugin):
         self.add(bmp, 0, LEFT | CENTER, 2)
 
         self.slider = Slider(self, 0, (0, 100), onchange=self.slider_changes,
-            on_final_change=self.slider_final_changes)
+                             on_final_change=self.slider_final_changes)
         self.add(self.slider, 0, LEFT | CENTER, 2)
 
         self.num_spin = FloatSpin(self, 0, (0.0, 100.0), 1.0, 0,
-            onchange=self.changes)
+                                  onchange=self.changes)
         self.add(self.num_spin, 0, LEFT | CENTER, 2)
 
         self.switch = RectAngleSwitch(self, onchange=self.switch_changed)
@@ -62,7 +66,8 @@ class RectanglePlugin(CtxPlugin):
             val = self.corners[self.active_corner]
             self.active_corner = 0
             self.switch.set_index(0)
-            if not self.update_flag: self.apply_changes(val)
+            if not self.update_flag:
+                self.apply_changes(val)
         self.update_vals()
 
     def switch_changed(self):
@@ -70,15 +75,18 @@ class RectanglePlugin(CtxPlugin):
         self.update_vals()
 
     def slider_changes(self):
-        if self.update_flag: return
+        if self.update_flag:
+            return
         self.apply_changes(self.slider.get_value() / 100.0)
 
     def slider_final_changes(self):
-        if self.update_flag: return
+        if self.update_flag:
+            return
         self.apply_changes(self.slider.get_value() / 100.0, True)
 
     def changes(self, *args):
-        if self.update_flag: return
+        if self.update_flag:
+            return
         self.apply_changes(self.num_spin.get_value() / 100.0)
 
     def apply_changes(self, val, final=False):
@@ -114,7 +122,7 @@ class RectanglePlugin(CtxPlugin):
                     self.orig_corners = [] + corners
                     self.update_flag = True
                     state = (
-                    corners[0] == corners[1] == corners[2] == corners[3])
+                        corners[0] == corners[1] == corners[2] == corners[3])
                     self.keep_ratio.set_active(state)
                     self.lock_changed()
 
@@ -133,12 +141,12 @@ class RectAngleSwitch(VPanel):
         self.box.Add(row1)
 
         icons_dict = {True: [icons.CTX_ROUNDED_RECT2_ON, '', ],
-            False: [icons.CTX_ROUNDED_RECT2_OFF, '', ], }
+                      False: [icons.CTX_ROUNDED_RECT2_OFF, '', ], }
         tgl = BitmapToggle(self, False, icons_dict, self.changed)
         self.toggles[1] = tgl
         row1.Add(tgl)
         icons_dict = {True: [icons.CTX_ROUNDED_RECT3_ON, '', ],
-            False: [icons.CTX_ROUNDED_RECT3_OFF, '', ], }
+                      False: [icons.CTX_ROUNDED_RECT3_OFF, '', ], }
         tgl = BitmapToggle(self, False, icons_dict, self.changed)
         self.toggles[2] = tgl
         row1.Add(tgl)
@@ -147,12 +155,12 @@ class RectAngleSwitch(VPanel):
         self.box.Add(row2, 0)
 
         icons_dict = {True: [icons.CTX_ROUNDED_RECT1_ON, '', ],
-            False: [icons.CTX_ROUNDED_RECT1_OFF, '', ], }
+                      False: [icons.CTX_ROUNDED_RECT1_OFF, '', ], }
         tgl = BitmapToggle(self, False, icons_dict, self.changed)
         self.toggles[0] = tgl
         row2.Add(tgl)
         icons_dict = {True: [icons.CTX_ROUNDED_RECT4_ON, '', ],
-            False: [icons.CTX_ROUNDED_RECT4_OFF, '', ], }
+                      False: [icons.CTX_ROUNDED_RECT4_OFF, '', ], }
         tgl = BitmapToggle(self, False, icons_dict, self.changed)
         self.toggles[3] = tgl
         row2.Add(tgl)
@@ -163,11 +171,13 @@ class RectAngleSwitch(VPanel):
         old_active = self.active
         self.toggles[self.active].set_active(False)
         for item in self.toggles:
-            if item.get_active(): self.active = self.toggles.index(item)
+            if item.get_active():
+                self.active = self.toggles.index(item)
         if old_active == self.active:
             self.toggles[self.active].set_active(True)
         else:
-            if not self.onchange is None: self.onchange()
+            if self.onchange is not None:
+                self.onchange()
 
     def get_index(self):
         return self.active

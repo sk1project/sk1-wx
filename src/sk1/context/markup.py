@@ -40,6 +40,12 @@ FONT_SIZES = range(5, 14) + range(14, 30, 2) + [32, 36, 40, 48, 56, 64, 72]
 
 class FontMarkupPlugin(CtxPlugin):
     name = 'FontMarkupPlugin'
+    families = None
+    faces_dict = None
+    families_combo = None
+    faces = None
+    faces_combo = None
+    size_combo = None
 
     def __init__(self, app, parent):
         CtxPlugin.__init__(self, app, parent)
@@ -58,25 +64,28 @@ class FontMarkupPlugin(CtxPlugin):
 
         self.faces = self.faces_dict['Sans']
         self.faces_combo = wal.Combolist(self, items=self.faces,
-            onchange=self.apply_changes)
+                                         onchange=self.apply_changes)
         self.faces_combo.set_active(0)
         self.add(self.faces_combo, 0, wal.LEFT | wal.CENTER, 2)
         self.add((3, 3))
 
         self.size_combo = wal.FloatCombobox(self, 12,
-            digits=2, items=FONT_SIZES, onchange=self.apply_changes)
+                                            digits=2, items=FONT_SIZES,
+                                            onchange=self.apply_changes)
         self.add(self.size_combo, 0, wal.LEFT | wal.CENTER, 2)
 
     def update(self, *args):
         insp = self.app.insp
-        if not insp.is_mode(modes.TEXT_EDIT_MODE): return
+        if not insp.is_mode(modes.TEXT_EDIT_MODE):
+            return
         val = insp.is_text_selection()
         for item in (self.families_combo, self.faces_combo, self.size_combo):
             item.set_enable(val)
         ctrl = self.app.current_doc.canvas.controller
         family, face, size = ctrl.get_fontdescr()
 
-        if not family in self.families: family = 'Sans'
+        if family not in self.families:
+            family = 'Sans'
         self.families_combo.set_font_family(family)
 
         self.faces = self.faces_dict['Sans']
@@ -91,13 +100,14 @@ class FontMarkupPlugin(CtxPlugin):
     def on_font_change(self, *args):
         self.faces = self.faces_dict[self.families_combo.get_font_family()]
         face = self.faces[self.faces_combo.get_active()]
-        if not face in self.faces:
+        if face not in self.faces:
             self.faces_combo.set_active(0)
         self.apply_changes()
 
     def apply_changes(self, *args):
         insp = self.app.insp
-        if not insp.is_mode(modes.TEXT_EDIT_MODE): return
+        if not insp.is_mode(modes.TEXT_EDIT_MODE):
+            return
         family = self.families_combo.get_font_family()
         face = self.faces[self.faces_combo.get_active()]
         size = self.size_combo.get_value()
@@ -107,6 +117,11 @@ class FontMarkupPlugin(CtxPlugin):
 
 class SimpleMarkupPlugin(CtxPlugin):
     name = 'SimpleMarkupPlugin'
+    bold = None
+    italic = None
+    underline = None
+    strike = None
+    size_combo = None
 
     def __init__(self, app, parent):
         CtxPlugin.__init__(self, app, parent)
@@ -116,26 +131,31 @@ class SimpleMarkupPlugin(CtxPlugin):
 
     def build(self):
         self.bold = wal.ImageToggleButton(self, art_id=icons.PD_TEXT_BOLD,
-            tooltip=_('Bold'), onchange=self.bold_changed)
+                                          tooltip=_('Bold'),
+                                          onchange=self.bold_changed)
         self.add(self.bold, 0, LEFT | CENTER, 2)
 
         self.italic = wal.ImageToggleButton(self, art_id=icons.PD_TEXT_ITALIC,
-            tooltip=_('Italic'), onchange=self.italic_changed)
+                                            tooltip=_('Italic'),
+                                            onchange=self.italic_changed)
         self.add(self.italic, 0, LEFT | CENTER, 2)
 
         self.underline = wal.ImageToggleButton(self,
-            art_id=icons.PD_TEXT_UNDERLINE,
-            tooltip=_('Underline'), onchange=self.underline_changed)
+                                               art_id=icons.PD_TEXT_UNDERLINE,
+                                               tooltip=_('Underline'),
+                                               onchange=self.underline_changed)
         self.add(self.underline, 0, LEFT | CENTER, 2)
 
         self.strike = wal.ImageToggleButton(self,
-            art_id=icons.PD_TEXT_STRIKETHROUGH,
-            tooltip=_('Strikethrough'), onchange=self.strike_changed)
+                                            art_id=icons.PD_TEXT_STRIKETHROUGH,
+                                            tooltip=_('Strikethrough'),
+                                            onchange=self.strike_changed)
         self.add(self.strike, 0, LEFT | CENTER, 2)
 
     def update(self, *args):
         insp = self.app.insp
-        if not insp.is_mode(modes.TEXT_EDIT_MODE): return
+        if not insp.is_mode(modes.TEXT_EDIT_MODE):
+            return
         val = insp.is_text_selection()
         for item in (self.bold, self.italic, self.underline, self.strike):
             item.set_enable(val)
@@ -164,6 +184,8 @@ class SimpleMarkupPlugin(CtxPlugin):
 
 class ScriptMarkupPlugin(CtxPlugin):
     name = 'ScriptMarkupPlugin'
+    sup = None
+    sub = None
 
     def __init__(self, app, parent):
         CtxPlugin.__init__(self, app, parent)
@@ -173,16 +195,19 @@ class ScriptMarkupPlugin(CtxPlugin):
 
     def build(self):
         self.sup = wal.ImageToggleButton(self, art_id=icons.PD_TEXT_SUPERSCRIPT,
-            tooltip=_('Superscript'), onchange=self.sup_changed)
+                                         tooltip=_('Superscript'),
+                                         onchange=self.sup_changed)
         self.add(self.sup, 0, LEFT | CENTER, 2)
 
         self.sub = wal.ImageToggleButton(self, art_id=icons.PD_TEXT_SUBSCRIPT,
-            tooltip=_('Subscript'), onchange=self.sub_changed)
+                                         tooltip=_('Subscript'),
+                                         onchange=self.sub_changed)
         self.add(self.sub, 0, LEFT | CENTER, 2)
 
     def update(self, *args):
         insp = self.app.insp
-        if not insp.is_mode(modes.TEXT_EDIT_MODE): return
+        if not insp.is_mode(modes.TEXT_EDIT_MODE):
+            return
         val = insp.is_text_selection()
         for item in (self.sup, self.sub):
             item.set_enable(val)

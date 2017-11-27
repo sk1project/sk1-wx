@@ -19,12 +19,13 @@ import wal
 from generic import CtxPlugin
 from sk1 import _, config, events
 from sk1.resources import icons, get_bmp
-from wal import LEFT, CENTER, FloatSpin
+from wal import LEFT, CENTER
 
 
 class PolygonPlugin(CtxPlugin):
     name = 'PolygonPlugin'
     update_flag = False
+    num_spin = None
 
     def __init__(self, app, parent):
         CtxPlugin.__init__(self, app, parent)
@@ -33,14 +34,15 @@ class PolygonPlugin(CtxPlugin):
 
     def build(self):
         bmp = get_bmp(self, icons.CTX_POLYGON_NUM,
-            _('Number of polygon angles'))
+                      _('Number of polygon angles'))
         self.add(bmp, 0, LEFT | CENTER, 2)
 
         self.num_spin = wal.IntSpin(self, 5, (3, 1000), onchange=self.changes)
         self.add(self.num_spin, 0, LEFT | CENTER, 2)
 
     def changes(self, *args):
-        if self.update_flag: return
+        if self.update_flag:
+            return
         val = self.num_spin.get_value()
         if self.insp.is_selection():
             selection = self.app.current_doc.selection
@@ -58,6 +60,7 @@ class PolygonPlugin(CtxPlugin):
 
 class PolygonCfgPlugin(CtxPlugin):
     name = 'PolygonCfgPlugin'
+    num_spin = None
 
     def __init__(self, app, parent):
         CtxPlugin.__init__(self, app, parent)
@@ -65,11 +68,11 @@ class PolygonCfgPlugin(CtxPlugin):
 
     def build(self):
         bmp = get_bmp(self, icons.CTX_POLYGON_CFG,
-            _('Number of angles for newly created polygon'))
+                      _('Number of angles for newly created polygon'))
         self.add(bmp, 0, LEFT | CENTER, 2)
 
         self.num_spin = wal.IntSpin(self, config.default_polygon_num,
-            (3, 1000), onchange=self.changes)
+                                    (3, 1000), onchange=self.changes)
         self.add(self.num_spin, 0, LEFT | CENTER, 2)
 
     def changes(self, *args):
@@ -79,6 +82,6 @@ class PolygonCfgPlugin(CtxPlugin):
 
     def config_changed(self, *args):
         if args[0][0] == 'default_polygon_num':
-            val = self.num_spin.get_point_value()
+            val = self.num_spin.get_value()
             if not config.default_polygon_num == val:
-                self.num_spin.set_point_value(config.default_polygon_num)
+                self.num_spin.set_value(config.default_polygon_num)

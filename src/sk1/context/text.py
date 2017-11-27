@@ -28,8 +28,8 @@ from uc2.formats.sk2 import sk2_const
 FONT_SIZES = range(5, 14) + range(14, 30, 2) + [32, 36, 40, 48, 56, 64, 72]
 
 ALIGN_MODES = [sk2_const.TEXT_ALIGN_LEFT,
-    sk2_const.TEXT_ALIGN_CENTER,
-    sk2_const.TEXT_ALIGN_RIGHT]
+               sk2_const.TEXT_ALIGN_CENTER,
+               sk2_const.TEXT_ALIGN_RIGHT]
 
 ALIGN_MODE_ICONS = {
     sk2_const.TEXT_ALIGN_LEFT: icons.PD_ALIGN_LEFT,
@@ -53,6 +53,12 @@ class TextStylePlugin(CtxPlugin):
     styles = []
     target = None
     changes_flag = False
+    styles_combo = None
+    families_combo = None
+    faces_combo = None
+    size_combo = None
+    align = None
+    ligature = None
 
     def __init__(self, app, parent):
         CtxPlugin.__init__(self, app, parent)
@@ -64,7 +70,7 @@ class TextStylePlugin(CtxPlugin):
         self.changes_flag = False
         self.styles = self._get_styles()
         self.styles_combo = wal.Combolist(self, items=self.styles,
-            onchange=self.on_style_change)
+                                          onchange=self.on_style_change)
         self.add(self.styles_combo, 0, wal.LEFT | wal.CENTER, 2)
         self.add((3, 3))
 
@@ -76,27 +82,30 @@ class TextStylePlugin(CtxPlugin):
 
         self.faces = self.faces_dict['Sans']
         self.faces_combo = wal.Combolist(self, items=self.faces,
-            onchange=self.apply_changes)
+                                         onchange=self.apply_changes)
         self.faces_combo.set_active(0)
         self.add(self.faces_combo, 0, wal.LEFT | wal.CENTER, 2)
         self.add((3, 3))
 
         self.size_combo = wal.FloatCombobox(self, 12,
-            digits=2, items=FONT_SIZES, onchange=self.apply_changes)
+                                            digits=2, items=FONT_SIZES,
+                                            onchange=self.apply_changes)
         self.add(self.size_combo, 0, wal.LEFT | wal.CENTER, 2)
 
         self.pack(wal.VLine(self), fill=True, padding_all=3)
 
         self.align = wal.HToggleKeeper(self, ALIGN_MODES,
-            ALIGN_MODE_ICONS, ALIGN_MODE_NAMES,
-            on_change=self.apply_changes, allow_none=False)
+                                       ALIGN_MODE_ICONS, ALIGN_MODE_NAMES,
+                                       on_change=self.apply_changes,
+                                       allow_none=False)
         self.align.set_mode(sk2_const.TEXT_ALIGN_LEFT)
         self.add(self.align, 0, wal.LEFT | wal.CENTER, 2)
 
         self.pack(wal.VLine(self), fill=True, padding_all=3)
 
         self.ligature = wal.ImageToggleButton(self, False, icons.PD_LIGATURE,
-            tooltip=_('Use ligatures'), onchange=self.apply_changes)
+                                              tooltip=_('Use ligatures'),
+                                              onchange=self.apply_changes)
         self.add(self.ligature, 0, wal.LEFT | wal.CENTER, 2)
 
     def _get_styles(self):
@@ -113,8 +122,10 @@ class TextStylePlugin(CtxPlugin):
         self.update()
 
     def update(self, *args):
-        if not self.is_shown(): return
-        if not self.app.current_doc: return
+        if not self.is_shown():
+            return
+        if not self.app.current_doc:
+            return
         doc = self.app.current_doc
         sel = doc.selection.objs
         if len(sel) == 1 and sel[0].is_text():
@@ -140,12 +151,14 @@ class TextStylePlugin(CtxPlugin):
 
     def update_from_style(self, text_style):
         family = text_style[0]
-        if not family in self.families: family = 'Sans'
+        if family not in self.families:
+            family = 'Sans'
         self.families_combo.set_font_family(family)
 
         face = text_style[1]
         faces = self.faces_dict[family]
-        if not face in faces: face = faces[0]
+        if face not in faces:
+            face = faces[0]
         self.faces = faces
         self.faces_combo.set_items(self.faces)
         self.faces_combo.set_active(self.faces.index(face))
@@ -165,7 +178,8 @@ class TextStylePlugin(CtxPlugin):
         family = self.families_combo.get_font_family()
         faces = self.faces_dict[family]
         face = self.faces[self.faces_combo.get_active()]
-        if not face in faces: face = faces[0]
+        if face not in faces:
+            face = faces[0]
         self.faces = faces
         self.faces_combo.set_items(self.faces)
         self.faces_combo.set_active(self.faces.index(face))
