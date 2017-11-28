@@ -151,8 +151,8 @@ def get_sk1_rpm_depend():
     sid = get_system_id()
     uc2_dep = get_uc2_rpm_depend()
     sk1_dep = ''
-    if sid in SK1_DEB_DEPENDENCIES:
-        sk1_dep = SK1_DEB_DEPENDENCIES[sid]
+    if sid in SK1_RPM_DEPENDENCIES:
+        sk1_dep = SK1_RPM_DEPENDENCIES[sid]
     if uc2_dep and sk1_dep:
         sk1_dep = '%s %s' % (uc2_dep, sk1_dep)
     elif uc2_dep:
