@@ -251,7 +251,7 @@ if not UPDATE_MODULES:
 ############################################################
 # This section for developing purpose only
 # Command 'python setup.py build_update' allows
-# automating build and native extension copying
+# automating build and copying of native extensions
 # into package directory
 ############################################################
 if UPDATE_MODULES:
