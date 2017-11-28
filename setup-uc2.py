@@ -47,6 +47,7 @@ from native_mods import make_modules
 ############################################################
 UPDATE_MODULES = False
 DEB_PACKAGE = False
+RPM_PACKAGE = False
 CLEAR_BUILD = False
 
 ############################################################
@@ -155,6 +156,8 @@ if len(sys.argv) > 1:
 
     if sys.argv[1] == 'bdist_rpm':
         CLEAR_BUILD = True
+        RPM_PACKAGE = True
+        sys.argv[1] = 'sdist'
         rpm_depends = dependencies.get_uc2_rpm_depend()
 
     if sys.argv[1] == 'build_update':
@@ -248,7 +251,7 @@ if not UPDATE_MODULES:
 ############################################################
 # This section for developing purpose only
 # Command 'python setup.py build_update' allows
-# automating build and native extension copying
+# automating build and copying of native extensions
 # into package directory
 ############################################################
 if UPDATE_MODULES:
@@ -272,6 +275,25 @@ if DEB_PACKAGE:
         data_files=data_files,
         deb_scripts=deb_scripts,
         dst=install_path)
+
+############################################################
+# Implementation of bdist_rpm command
+############################################################
+if RPM_PACKAGE:
+    buildutils.RpmBuilder(
+        name=NAME,
+        version=VERSION,
+        release='0',
+        arch='',
+        maintainer='%s <%s>' % (AUTHOR, AUTHOR_EMAIL),
+        summary=DESCRIPTION,
+        description=LONG_DESCRIPTION,
+        license=LICENSE,
+        url=URL,
+        depends=rpm_depends.split(' '),
+        build_script='setup-uc2.py',
+        install_path=install_path,
+        data_files=data_files,)
 
 if CLEAR_BUILD:
     buildutils.clear_build()
