@@ -15,7 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import types, math
+import math
 from copy import deepcopy
 
 from uc2 import libgeom, uc2const, libimg
@@ -25,6 +25,7 @@ from sk1 import events, config, modes
 
 
 class AbstractAPI:
+
     presenter = None
     view = None
     methods = None
@@ -37,6 +38,9 @@ class AbstractAPI:
     selection = None
     callback = None
     sk2_cfg = None
+
+    def __init__(self):
+        pass
 
     def do_undo(self):
         transaction_list = self.undo[-1][0]
@@ -63,7 +67,8 @@ class AbstractAPI:
             self.presenter.reflect_saving()
 
     def _do_action(self, action):
-        if not action: return
+        if not action:
+            return
         if len(action) == 1:
             action[0]()
         else:
@@ -71,8 +76,8 @@ class AbstractAPI:
 
     def _clear_history_stack(self, stack):
         for obj in stack:
-            if type(obj) == types.ListType:
-                obj = self._clear_history_stack(obj)
+            if isinstance(obj, list):
+                self._clear_history_stack(obj)
         return []
 
     def add_undo(self, transaction):
@@ -277,7 +282,7 @@ class AbstractAPI:
             obj.apply_trafo(trafo)
             after.append(obj.get_trafo_snapshot())
         self.selection.update_bbox()
-        return (before, after)
+        return before, after
 
     def _apply_trafos(self, obj_trafo_list):
         before = []
@@ -287,7 +292,7 @@ class AbstractAPI:
             obj.apply_trafo(trafo)
             after.append(obj.get_trafo_snapshot())
         self.selection.update_bbox()
-        return (before, after)
+        return before, after
 
     def _set_bitmap_trafo(self, obj, trafo):
         obj.trafo = trafo
@@ -308,7 +313,7 @@ class AbstractAPI:
             obj.update()
             after.append(obj.get_trafo_snapshot())
         self.selection.update_bbox()
-        return (before, after)
+        return before, after
 
     def _set_snapshots(self, snapshots):
         for snapshot in snapshots:
@@ -386,6 +391,7 @@ class AbstractAPI:
 
 class PresenterAPI(AbstractAPI):
     def __init__(self, presenter):
+        AbstractAPI.__init__(self)
         self.presenter = presenter
         self.selection = presenter.selection
         self.methods = self.presenter.methods
@@ -477,7 +483,8 @@ class PresenterAPI(AbstractAPI):
 
     def delete_page(self, index):
         pages = self.presenter.get_pages()
-        if index == 0 and len(pages) == 1: return
+        if index == 0 and len(pages) == 1:
+            return
 
         before = self._get_pages_snapshot()
         sel_before = [] + self.selection.objs
@@ -519,7 +526,8 @@ class PresenterAPI(AbstractAPI):
         active_index_before = pages.index(self.presenter.active_page)
 
         active_index_after = target
-        if position == uc2const.AFTER: active_index_after += 1
+        if position == uc2const.AFTER:
+            active_index_after += 1
 
         for item in range(number):
             page = self.methods.insert_page(active_index_after + item)
@@ -805,7 +813,7 @@ class PresenterAPI(AbstractAPI):
         self.add_undo(transaction)
         self.selection.update()
 
-    def create_guides(self, vals=[]):
+    def create_guides(self, vals=None):
         if vals:
             objs_list = []
             parent = self.methods.get_guide_layer()
@@ -834,7 +842,7 @@ class PresenterAPI(AbstractAPI):
             False]
         self.add_undo(transaction)
 
-    def delete_guides(self, objs=[]):
+    def delete_guides(self, objs=None):
         if objs:
             objs_list = []
             parent = self.methods.get_guide_layer()
@@ -936,7 +944,8 @@ class PresenterAPI(AbstractAPI):
             self.app.clipboard.set(self.selection.objs)
 
     def paste_selected(self, objs=None):
-        if objs is None: objs = self.app.clipboard.get()
+        if objs is None:
+            objs = self.app.clipboard.get()
         sel_before = [] + self.selection.objs
         before = self._get_layers_snapshot()
         self.methods.append_objects(objs, self.presenter.active_layer)
@@ -1124,8 +1133,8 @@ class PresenterAPI(AbstractAPI):
             m21 = math.sin(angle)
             m11 = m22 = math.cos(angle)
             m12 = -m21
-            dx = center_x - m11 * center_x + m21 * center_y;
-            dy = center_y - m21 * center_x - m11 * center_y;
+            dx = center_x - m11 * center_x + m21 * center_y
+            dy = center_y - m21 * center_x - m11 * center_y
 
             trafo = [m11, m21, m12, m22, dx, dy]
             self.transform_selected(trafo, copy)
@@ -1204,13 +1213,14 @@ class PresenterAPI(AbstractAPI):
         ret = []
         for obj in objs:
             if obj.is_primitive():
-                if exclude_pixmap and obj.is_pixmap(): continue
+                if exclude_pixmap and obj.is_pixmap():
+                    continue
                 ret.append(obj)
             else:
                 ret += self._get_primitive_objs(obj.childs, exclude_pixmap)
         return ret
 
-    def fill_selected(self, color, objs=[]):
+    def fill_selected(self, color, objs=None):
         if objs:
             color = deepcopy(color)
             objs = self._get_primitive_objs(objs)
@@ -1243,7 +1253,7 @@ class PresenterAPI(AbstractAPI):
         self.eventloop.emit(self.eventloop.DOC_MODIFIED)
         self.selection.update()
 
-    def set_fill_style(self, fill_style, objs=[]):
+    def set_fill_style(self, fill_style, objs=None):
         if objs:
             objs = self._get_primitive_objs(objs, True)
             initial_styles = self._get_objs_styles(objs)
@@ -1271,7 +1281,7 @@ class PresenterAPI(AbstractAPI):
             self.add_undo(transaction)
             self.selection.update()
 
-    def stroke_selected(self, color, objs=[]):
+    def stroke_selected(self, color, objs=None):
         if objs:
             color = deepcopy(color)
             objs = self._get_primitive_objs(objs)
@@ -1299,7 +1309,7 @@ class PresenterAPI(AbstractAPI):
             self.add_undo(transaction)
             self.selection.update()
 
-    def set_stroke_style(self, stroke_style, objs=[]):
+    def set_stroke_style(self, stroke_style, objs=None):
         if objs:
             objs = self._get_primitive_objs(objs, True)
             initial_styles = self._get_objs_styles(objs)
@@ -1516,7 +1526,8 @@ class PresenterAPI(AbstractAPI):
         self.insert_object(obj, parent, len(parent.childs))
         return obj
 
-    def update_curve(self, obj, paths, trafo=[1.0, 0.0, 0.0, 1.0, 0.0, 0.0]):
+    def update_curve(self, obj, paths, trafo=None):
+        trafo = trafo or [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
         sel_before = [obj, ]
         sel_after = [obj, ]
         trafo_before = obj.trafo
@@ -1554,7 +1565,7 @@ class PresenterAPI(AbstractAPI):
 
         parent = target.parent
         parent_index = parent.childs.index(target)
-        config = target.config
+        cfg = target.config
 
         paths = libgeom.get_transformed_paths(target)
 
@@ -1572,19 +1583,23 @@ class PresenterAPI(AbstractAPI):
         curve0 = curve1 = None
 
         if p1:
-            curve1 = sk2_model.Curve(config, parent)
+            curve1 = sk2_model.Curve(cfg, parent)
             curve1.paths = p1
             curve1.style = deepcopy(target.style)
-            if target.fill_trafo: curve1.fill_trafo = [] + target.fill_trafo
-            if target.stroke_trafo: curve1.stroke_trafo = [] + target.stroke_trafo
+            if target.fill_trafo:
+                curve1.fill_trafo = [] + target.fill_trafo
+            if target.stroke_trafo:
+                curve1.stroke_trafo = [] + target.stroke_trafo
             parent.childs.insert(parent_index, curve1)
             curve1.update()
         if p0:
-            curve0 = sk2_model.Curve(config, parent)
+            curve0 = sk2_model.Curve(cfg, parent)
             curve0.paths = p0
             curve0.style = deepcopy(target.style)
-            if target.fill_trafo: curve0.fill_trafo = [] + target.fill_trafo
-            if target.stroke_trafo: curve0.stroke_trafo = [] + target.stroke_trafo
+            if target.fill_trafo:
+                curve0.fill_trafo = [] + target.fill_trafo
+            if target.stroke_trafo:
+                curve0.stroke_trafo = [] + target.stroke_trafo
             parent.childs.insert(parent_index, curve0)
             curve0.update()
 
@@ -1606,7 +1621,7 @@ class PresenterAPI(AbstractAPI):
 
         parent = obj.parent
         index = parent.childs.index(obj)
-        config = obj.config
+        cfg = obj.config
 
         paths = libgeom.get_transformed_paths(obj)
 
@@ -1615,11 +1630,13 @@ class PresenterAPI(AbstractAPI):
         obj.parent.childs.remove(obj)
         for path in paths:
             if path and path[1]:
-                curve = sk2_model.Curve(config, parent)
+                curve = sk2_model.Curve(cfg, parent)
                 curve.paths = [path, ]
                 curve.style = deepcopy(obj.style)
-                if obj.fill_trafo: curve.fill_trafo = [] + obj.fill_trafo
-                if obj.stroke_trafo: curve.stroke_trafo = [] + obj.stroke_trafo
+                if obj.fill_trafo:
+                    curve.fill_trafo = [] + obj.fill_trafo
+                if obj.stroke_trafo:
+                    curve.stroke_trafo = [] + obj.stroke_trafo
                 objs += [curve, ]
                 parent.childs.insert(index, curve)
                 curve.update()
@@ -1644,12 +1661,13 @@ class PresenterAPI(AbstractAPI):
 
         style = deepcopy(objs[0].style)
         parent = objs[0].parent
-        config = objs[0].config
+        cfg = objs[0].config
         paths = []
         for obj in objs:
             for item in libgeom.get_transformed_paths(obj):
-                if item[1]: paths.append(item)
-        result = sk2_model.Curve(config, parent)
+                if item[1]:
+                    paths.append(item)
+        result = sk2_model.Curve(cfg, parent)
         result.paths = paths
         result.style = style
         result.update()
@@ -1703,7 +1721,7 @@ class PresenterAPI(AbstractAPI):
         self.eventloop.emit(self.eventloop.DOC_MODIFIED)
         self.selection.update()
 
-    def set_rect_corners_final(self, corners, corners_before=[], obj=None):
+    def set_rect_corners_final(self, corners, corners_before=None, obj=None):
         if obj is None:
             sel = [] + self.selection.objs
             obj = sel[0]
@@ -1816,7 +1834,7 @@ class PresenterAPI(AbstractAPI):
         self.eventloop.emit(self.eventloop.DOC_MODIFIED)
         self.selection.update()
 
-    def set_polygon_properties_final(self, props, props_before=[], obj=None):
+    def set_polygon_properties_final(self, props, props_before=None, obj=None):
         if obj is None:
             sel = [] + self.selection.objs
             obj = sel[0]
@@ -1907,12 +1925,13 @@ class PresenterAPI(AbstractAPI):
         self.selection.update()
 
     def set_bitmap_dpi(self, h_dpi, v_dpi=None):
-        # TODO: finish implementation
-        if not v_dpi: v_dpi = h_dpi
-        sel_before = [] + self.selection.objs
-        obj = sel_before[0]
-        trafo_before = obj.trafo
-        trafo_after = [] + obj.trafo
+        pass
+        # if not v_dpi:
+        #     v_dpi = h_dpi
+        # sel_before = [] + self.selection.objs
+        # obj = sel_before[0]
+        # trafo_before = obj.trafo
+        # trafo_after = [] + obj.trafo
 
     # --- TEXT
 
@@ -2000,7 +2019,8 @@ class PresenterAPI(AbstractAPI):
         self.selection.update()
 
     def change_tpgroup(self, tpgroup, text_obj, data):
-        if not text_obj in tpgroup.childs: return
+        if text_obj not in tpgroup.childs:
+            return
         sel = [] + self.selection.objs
         index = tpgroup.childs.index(text_obj)
         data_before = tpgroup.childs_data[index]
@@ -2029,8 +2049,8 @@ class PresenterAPI(AbstractAPI):
         mtds.set_circle_properties(circle, type_after,
                                    angle1_after, angle2_after)
 
-        parent = objs[-1].parent
-        group = sk2_model.TP_Group(objs[-1].config, parent, objs, childs_data)
+        parent = text_obj.parent
+        group = sk2_model.TP_Group(text_obj.config, parent, objs, childs_data)
         group.set_text_on_path(circle, text_obj, childs_data)
         group.update()
         for obj in objs:
@@ -2063,7 +2083,8 @@ class PresenterAPI(AbstractAPI):
         self.selection.update()
 
     def change_tcgroup(self, tpgroup, text_obj, position, side_flag):
-        if not text_obj in tpgroup.childs: return
+        if text_obj not in tpgroup.childs:
+            return
         mtds = self.methods
         data = [0.5, sk2_const.TEXT_ALIGN_CENTER, side_flag]
         circle = tpgroup.childs[0]
