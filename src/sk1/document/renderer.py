@@ -138,7 +138,8 @@ class PDRenderer(CairoRenderer):
                 ypos = ystart + j * dx
                 xpos = xstart = -w / 2.0 - sx
                 i = 0
-                if j % 2: xpos = xstart = -w / 2.0 + dx - sx
+                if j % 2:
+                    xpos = xstart = -w / 2.0 + dx - sx
                 while xpos < w / 2.0:
                     xpos = xstart + i * dx * 2.0
                     self.ctx.rectangle(xpos, ypos, dx, dx)
@@ -183,7 +184,8 @@ class PDRenderer(CairoRenderer):
         guides = []
         methods = self.presenter.methods
         guide_layer = methods.get_guide_layer()
-        if not methods.is_layer_visible(guide_layer): return
+        if not methods.is_layer_visible(guide_layer):
+            return
         for child in guide_layer.childs:
             if child.is_guide():
                 guides.append(child)
@@ -224,16 +226,14 @@ class PDRenderer(CairoRenderer):
         while dx < sdist + 3:
             i = i + 0.5
             dx = dx * 10.0 * i
-        if dx / 2.0 > sdist + 3 and \
-                                dx / 2.0 > gdx * self.canvas.zoom:
+        if dx / 2.0 > sdist + 3 and dx / 2.0 > gdx * self.canvas.zoom:
             dx = dx / 2.0
 
         i = 0.0
         while dy < sdist + 3:
             i = i + 0.5
             dy = dy * 10.0 * i
-        if dy / 2.0 > sdist + 3 and \
-                                dy / 2.0 > gdy * self.canvas.zoom:
+        if dy / 2.0 > sdist + 3 and dy / 2.0 > gdy * self.canvas.zoom:
             dy = dy / 2.0
 
         sx = (x0 / dx - math.floor(x0 / dx)) * dx
@@ -244,7 +244,8 @@ class PDRenderer(CairoRenderer):
     def render_grid(self):
         methods = self.presenter.methods
         grid_layer = methods.get_grid_layer()
-        if not methods.is_layer_visible(grid_layer): return
+        if not methods.is_layer_visible(grid_layer):
+            return
 
         self.ctx.set_matrix(self.direct_matrix)
         self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
@@ -330,21 +331,24 @@ class PDRenderer(CairoRenderer):
 
     def draw_regular_node(self, point, selected=False):
         fill = config.curve_point_fill
-        if selected: fill = config.selected_node_fill
+        if selected:
+            fill = config.selected_node_fill
         self.draw_curve_point(point, config.curve_point_size, fill,
                               config.curve_point_stroke,
                               config.curve_point_stroke_width)
 
     def draw_start_node(self, point, selected=False):
         fill = config.curve_start_point_fill
-        if selected: fill = config.selected_node_fill
+        if selected:
+            fill = config.selected_node_fill
         self.draw_curve_point(point, config.curve_start_point_size, fill,
                               config.curve_start_point_stroke,
                               config.curve_start_point_stroke_width)
 
     def draw_last_node(self, point, selected=False):
         fill = config.curve_last_point_fill
-        if selected: fill = config.selected_node_fill
+        if selected:
+            fill = config.selected_node_fill
         self.draw_curve_point(point, config.curve_last_point_size, fill,
                               config.curve_last_point_stroke,
                               config.curve_last_point_stroke_width)
@@ -405,7 +409,8 @@ class PDRenderer(CairoRenderer):
 
     def draw_text_point(self, point, selected=False):
         fill = config.text_point_fill
-        if selected: fill = config.text_selected_point_fill
+        if selected:
+            fill = config.text_selected_point_fill
         self.draw_curve_point(point, config.text_point_size, fill,
                               config.text_point_stroke,
                               config.text_point_stroke_width)
@@ -431,7 +436,8 @@ class PDRenderer(CairoRenderer):
                     self.ctx.stroke()
                 self.presenter.snap.active_snap = [None, None]
 
-    def paint_guide_dragging(self, point=[], orient=uc2const.HORIZONTAL):
+    def paint_guide_dragging(self, point=None, orient=uc2const.HORIZONTAL):
+        point = point or []
         self.start_soft_repaint()
         self.ctx.set_matrix(self.direct_matrix)
         self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
@@ -556,7 +562,7 @@ class PDRenderer(CairoRenderer):
         self._paint_selection()
         self.end_soft_repaint()
 
-    def stop_draw_frame(self, start, end):
+    def stop_draw_frame(self, *args):
         self.start_soft_repaint()
         self.end_soft_repaint()
 
@@ -601,7 +607,10 @@ class PDRenderer(CairoRenderer):
         self.ctx.stroke()
         self.ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
 
-    def paint_curve(self, paths, cursor=[], trace_path=[], cpoint=[]):
+    def paint_curve(self, paths, cursor=None, trace_path=None, cpoint=None):
+        cursor = cursor or []
+        trace_path = trace_path or []
+        cpoint = cpoint or []
         self.start_soft_repaint()
         if paths:
             for path in paths:
@@ -741,10 +750,12 @@ class PDRenderer(CairoRenderer):
 
     def cdc_to_int(self, *args):
         ret = []
-        for arg in args: ret.append(int(math.ceil(arg)))
+        for arg in args:
+            ret.append(int(math.ceil(arg)))
         return ret
 
-    def cdc_set_ctx(self, ctx, color=CAIRO_BLACK, dash=[]):
+    def cdc_set_ctx(self, ctx, color=CAIRO_BLACK, dash=None):
+        dash = dash or []
         ctx.set_antialias(cairo.ANTIALIAS_NONE)
         ctx.set_line_width(1.0)
         ctx.set_dash(dash)
@@ -772,7 +783,8 @@ class PDRenderer(CairoRenderer):
         dc.DrawBitmap(copy_surface_to_bitmap(surface), x - 1, 0)
 
     def cdc_draw_horizontal_line(self, y, color, dash, clear=False):
-        if y is None: return
+        if y is None:
+            return
         y = self.cdc_to_int(y)[0]
         surface = cairo.ImageSurface(cairo.FORMAT_RGB24, self.width, 1)
         ctx = cairo.Context(surface)
@@ -821,11 +833,13 @@ class PDRenderer(CairoRenderer):
         else:
             self.cdc_draw_horizontal_line(pos, color, dash, clear)
 
-    def cdc_drag_guide(self, guide=[]):
-        point = orient = 0
+    def cdc_drag_guide(self, guide=None):
+        guide = guide or []
+        pos = orient = 0
         if guide:
             point, orient = guide
-            if not point: return
+            if not point:
+                return
             if orient == uc2const.VERTICAL:
                 pos = self.canvas.point_doc_to_win(point)[0]
             else:
@@ -833,7 +847,8 @@ class PDRenderer(CairoRenderer):
         if self.guide:
             pos_old, orient_old = self.guide
             if guide:
-                if pos_old == pos and orient == orient_old: return
+                if pos_old == pos and orient == orient_old:
+                    return
             self.cdc_draw_guide(pos_old, orient_old, True)
             self.guide = []
         if guide:
@@ -844,12 +859,14 @@ class PDRenderer(CairoRenderer):
         if start and end:
             x, y, w, h = self.cdc_to_int(*self.cdc_normalize_rect(start, end))
             dc = wx.ClientDC(self.canvas)
-            x -= 2;
+            x -= 2
             y -= 2
-            w += 4;
+            w += 4
             h += 4
-            if not w: w = 1
-            if not h: h = 1
+            if not w:
+                w = 1
+            if not h:
+                h = 1
             surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
             ctx = cairo.Context(surface)
             ctx.set_source_surface(self.surface, -x, -y)
@@ -874,8 +891,10 @@ class PDRenderer(CairoRenderer):
             libcairo.apply_trafo(cpath, self.canvas.trafo)
             bbox = self.cdc_to_int(*libcairo.get_cpath_bbox(cpath))
             frame = self.cdc_bbox_to_frame(bbox)
-            if self.frame and frame == self.frame: return
-            if not self.frame: self.frame = frame
+            if self.frame and frame == self.frame:
+                return
+            if not self.frame:
+                self.frame = frame
             bbox2 = self.cdc_frame_to_bbox(self.frame)
             frame_sum = self.cdc_bbox_to_frame(libgeom.sum_bbox(bbox, bbox2))
             x, y, w, h = self.cdc_normalize_rect(*frame_sum)
@@ -893,11 +912,13 @@ class PDRenderer(CairoRenderer):
     def cdc_draw_frame(self, start, end, temp_surfase=False):
         if start and end:
             if self.frame:
-                if start == self.frame[0] and end == self.frame[1]: return
+                if start == self.frame[0] and end == self.frame[1]:
+                    return
             cpath = libcairo.convert_bbox_to_cpath(start + end)
             bbox = self.cdc_to_int(*libcairo.get_cpath_bbox(cpath))
             frame = self.cdc_bbox_to_frame(bbox)
-            if not self.frame: self.frame = frame
+            if not self.frame:
+                self.frame = frame
             bbox2 = self.cdc_frame_to_bbox(self.frame)
             frame_sum = self.cdc_bbox_to_frame(libgeom.sum_bbox(bbox, bbox2))
             x, y, w, h = self.cdc_normalize_rect(*frame_sum)

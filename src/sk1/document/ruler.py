@@ -346,14 +346,13 @@ class Ruler(wal.HPanel):
         shift = 0
         if wal.IS_MSW:
             shift = 1
+        fmt = cairo.FORMAT_RGB24
         if self.surface is None:
-            self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w - shift,
-                                              h - shift)
+            self.surface = cairo.ImageSurface(fmt, w - shift, h - shift)
             self.width = w
             self.height = h
-        elif self.width <> w or self.height <> h:
-            self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w - shift,
-                                              h - shift)
+        elif self.width != w or self.height != h:
+            self.surface = cairo.ImageSurface(fmt, w - shift, h - shift)
             self.width = w
             self.height = h
         self.ctx = cairo.Context(self.surface)

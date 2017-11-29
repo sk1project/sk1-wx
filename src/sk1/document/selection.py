@@ -156,7 +156,7 @@ class Selection:
     def select_at_point(self, point, add_flag=False):
         result = self._select_at_point(point)
         if not result:
-            result = self._select_at_point(point, check_unfilled=True)
+            result = self._select_at_point(point, True)
         if add_flag:
             self.add(result)
         else:
@@ -165,7 +165,7 @@ class Selection:
     def pick_at_point(self, point, check_unfilled=False):
         result = self._select_at_point(point)
         if not result:
-            result = self._select_at_point(point, check_unfilled=True)
+            result = self._select_at_point(point, check_unfilled)
         return result
 
     def can_be_any_selected(self):
