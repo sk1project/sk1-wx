@@ -23,12 +23,10 @@ from uc2 import uc2const
 class AppInspector:
     def __init__(self, app):
         self.app = app
+        self.mw = None
 
     def update(self):
         self.mw = self.app.mw
-
-    def stub(self, *args):
-        return False
 
     def is_doc(self):
         return not self.app.docs == []
