@@ -33,6 +33,8 @@ from sk1.prefs import get_prefs_dialog
 class AppProxy:
     def __init__(self, app):
         self.app = app
+        self.insp = None
+        self.mw = None
 
     def update(self):
         self.insp = self.app.insp
@@ -569,8 +571,8 @@ class AppProxy:
 
     def select_container(self, objs):
         selection = self.app.current_doc.selection
-        if len(objs) == 1 and objs[0].is_primitive() and not \
-                        objs[0] in selection.objs and not objs[0].is_pixmap():
+        if len(objs) == 1 and objs[0].is_primitive() and \
+                not objs[0] in selection.objs and not objs[0].is_pixmap():
             self.app.current_doc.api.pack_container(objs[0])
             return False
 
