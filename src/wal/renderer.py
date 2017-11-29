@@ -185,6 +185,22 @@ def disabled_bmp(bmp):
     return image.ConvertToBitmap()
 
 
+def get_dc(widget):
+    pdc = wx.PaintDC(widget)
+    try:
+        dc = wx.GCDC(pdc)
+    except:
+        dc = pdc
+    pdc.BeginDrawing()
+    dc.BeginDrawing()
+    return dc
+
+def get_buffered_dc(widget):
+    pdc = wx.BufferedPaintDC(widget)
+    pdc.BeginDrawing()
+    return pdc
+
+
 class LabelRenderer:
     art_id = None
     art_size = ()

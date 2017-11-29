@@ -113,13 +113,7 @@ class RulerCorner(wal.HPanel):
 
     def _on_paint(self, event):
         w, h = self.panel.GetSize()
-        pdc = wx.PaintDC(self.panel)
-        try:
-            dc = wx.GCDC(pdc)
-        except:
-            dc = pdc
-        pdc.BeginDrawing()
-        dc.BeginDrawing()
+        dc = wal.get_dc(self.panel)
         dc.SetPen(wx.NullPen)
         dc.SetBrush(wx.Brush(wx.Colour(*cms.val_255(config.ruler_bg))))
         dc.DrawRectangle(0, 0, w, h)
@@ -339,8 +333,7 @@ class Ruler(wal.HPanel):
 
     def _on_paint(self, event):
         w, h = self.panel.GetSize()
-        pdc = wx.BufferedPaintDC(self.panel)
-        pdc.BeginDrawing()
+        pdc = wal.get_buffered_dc(self.panel)
         if self.presenter is None:
             return
         shift = 0
