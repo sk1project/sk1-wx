@@ -41,7 +41,8 @@ class AppProxy:
     def stub(self, *args):
         dialogs.msg_dialog(self.mw, self.app.appdata.app_name,
                            'Sorry, but this feature is not implemented yet!\n' +
-                           'Be patient and watch project development of regularly updating the source code!')
+                           'Be patient and watch project development of '
+                           'regularly updating the source code!')
 
     def print_doc(self, *args):
         print_dlg(self.app.mw, self.app.current_doc)
@@ -58,13 +59,13 @@ class AppProxy:
             title = _('Fill')
             if doc.selection.objs:
                 style = self._get_style(doc.selection.objs)
-                if not style is None:
+                if style is not None:
                     fill_style = style[0]
             elif doc.canvas.mode in modes.EDIT_MODES and \
                     doc.canvas.controller.target:
                 objs.append(doc.canvas.controller.target)
                 style = self._get_style(objs)
-                if not style is None:
+                if style is not None:
                     fill_style = style[0]
         if fill_style is None:
             txt = _(
@@ -79,7 +80,7 @@ class AppProxy:
             else:
                 return
         new_fill_style = dialogs.fill_dlg(self.mw, doc, fill_style, title)
-        if not new_fill_style is None:
+        if new_fill_style is not None:
             if default_style:
                 new_style = doc.model.get_def_style()
                 new_style[0] = new_fill_style
@@ -96,7 +97,8 @@ class AppProxy:
                     break
             else:
                 ret = self._get_style(obj.childs)
-                if not ret is None: break
+                if ret is not None:
+                    break
         return ret
 
     def stroke_dialog(self, default_style=False):
@@ -111,13 +113,13 @@ class AppProxy:
             title = _('Stroke')
             if doc.selection.objs:
                 style = self._get_style(doc.selection.objs)
-                if not style is None:
+                if style is not None:
                     stroke_style = style[1]
             elif doc.canvas.mode in modes.EDIT_MODES and \
                     doc.canvas.controller.target:
                 objs.append(doc.canvas.controller.target)
                 style = self._get_style(objs)
-                if not style is None:
+                if style is not None:
                     stroke_style = style[1]
         if stroke_style is None:
             txt = _(
@@ -132,7 +134,7 @@ class AppProxy:
             else:
                 return
         new_stroke_style = dialogs.stroke_dlg(self.mw, doc, stroke_style, title)
-        if not new_stroke_style is None:
+        if new_stroke_style is not None:
             if default_style:
                 new_style = doc.model.get_def_style()
                 new_style[1] = new_stroke_style
@@ -145,10 +147,10 @@ class AppProxy:
         doc.canvas.set_temp_mode(modes.PICK_MODE, self.select_fill_donor)
 
     def select_fill_donor(self, objs):
-        if len(objs) == 1 and objs[0].is_primitive() and not objs[
-            0].is_pixmap():
+        if len(objs) == 1 and objs[0].is_primitive() and \
+                not objs[0].is_pixmap():
             style = self._get_style(objs)
-            if not style is None:
+            if style is not None:
                 fill_style = deepcopy(style[0])
                 if fill_style and fill_style[1] == sk2_const.FILL_GRADIENT:
                     fill_style[2][1] = []
@@ -167,10 +169,10 @@ class AppProxy:
         doc.canvas.set_temp_mode(modes.PICK_MODE, self.select_stroke_donor)
 
     def select_stroke_donor(self, objs):
-        if len(objs) == 1 and objs[0].is_primitive() and not objs[
-            0].is_pixmap():
+        if len(objs) == 1 and objs[0].is_primitive() and \
+                not objs[0].is_pixmap():
             style = self._get_style(objs)
-            if not style is None:
+            if style is not None:
                 stroke_style = deepcopy(style[1])
                 self.app.current_doc.api.set_stroke_style(stroke_style)
                 return False
@@ -246,7 +248,7 @@ class AppProxy:
         dialogs.docprops_dlg(self.app, self.mw)
 
     def set_text_mode(self):
-        if not self.app.current_doc.canvas.mode in modes.TEXT_MODES:
+        if self.app.current_doc.canvas.mode not in modes.TEXT_MODES:
             self.app.current_doc.canvas.set_mode(modes.TEXT_MODE)
 
     def undo(self):
@@ -449,11 +451,13 @@ class AppProxy:
 
     def delete_page(self):
         index = dialogs.delete_page_dlg(self.mw, self.app.current_doc)
-        if index >= 0: self.app.current_doc.api.delete_page(index)
+        if index >= 0:
+            self.app.current_doc.api.delete_page(index)
 
     def insert_page(self):
         ret = dialogs.insert_page_dlg(self.mw, self.app.current_doc)
-        if ret: self.app.current_doc.api.insert_page(*ret)
+        if ret:
+            self.app.current_doc.api.insert_page(*ret)
 
     def goto_start(self):
         self.goto_page(0)
@@ -464,7 +468,8 @@ class AppProxy:
     def goto_page(self, index=None):
         if index is None:
             index = dialogs.goto_page_dlg(self.mw, self.app.current_doc)
-            if index is None: return
+            if index is None:
+                return
         if index >= 0:
             self.app.current_doc.goto_page(index)
 
