@@ -25,9 +25,7 @@ def dummy_translator(text):
 
 
 _ = dummy_translator
-
 config = None
-global config
 
 
 def init_config(cfgdir='~'):
