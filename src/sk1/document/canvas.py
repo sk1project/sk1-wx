@@ -40,10 +40,12 @@ class CanvasTimer(wx.Timer):
         return self.IsRunning()
 
     def stop(self):
-        if self.IsRunning(): self.Stop()
+        if self.IsRunning():
+            self.Stop()
 
     def start(self, interval=RENDERING_DELAY):
-        if not self.IsRunning(): self.Start(interval)
+        if not self.IsRunning():
+            self.Start(interval)
 
 
 WORKSPACE_HEIGHT = 2000 * mm_to_pt
@@ -75,7 +77,6 @@ class AppCanvas(wx.Panel):
     width = 0
     height = 0
     orig_cursor = None
-    current_cursor = None
     resize_marker = 0
 
     stroke_view = False
@@ -131,7 +132,7 @@ class AppCanvas(wx.Panel):
         self.eventloop.connect(self.eventloop.DOC_MODIFIED, self.doc_modified)
         self.eventloop.connect(self.eventloop.PAGE_CHANGED, self.doc_modified)
         self.eventloop.connect(self.eventloop.SELECTION_CHANGED,
-            self.selection_redraw)
+                               self.selection_redraw)
 
     def destroy(self):
         self.timer.stop()
@@ -160,12 +161,13 @@ class AppCanvas(wx.Panel):
         self.vscroll.Bind(wx.EVT_SCROLL, self._scrolling, self.vscroll)
 
     def _scrolling(self, *args):
-        if self.my_changes: return
+        if self.my_changes:
+            return
         xpos = self.hscroll.GetThumbPosition() / 1000.0
         ypos = (1000 - self.vscroll.GetThumbPosition()) / 1000.0
         x = (xpos - 0.5) * self.workspace[0]
         y = (ypos - 0.5) * self.workspace[1]
-        center = self.doc_to_win((x, y))
+        center = self.doc_to_win([x, y])
         self._set_center(center)
         self.force_redraw()
 
@@ -183,10 +185,9 @@ class AppCanvas(wx.Panel):
     # ----- CONTROLLERS
 
     def init_controllers(self):
-        dummy = controllers.AbstractController(self, self.presenter)
-        ctrls = {
-            modes.SELECT_MODE: controllers.SelectController(self,
-                self.presenter),
+        presenter = self.presenter
+        return {
+            modes.SELECT_MODE: controllers.SelectController(self, presenter),
             modes.SHAPER_MODE: controllers.EditorChooser,
             modes.BEZIER_EDITOR_MODE: controllers.BezierEditor,
             modes.RECT_EDITOR_MODE: controllers.RectEditor,
@@ -212,7 +213,6 @@ class AppCanvas(wx.Panel):
             modes.GR_CREATE_MODE: controllers.GradientCreator,
             modes.GR_EDIT_MODE: controllers.GradientEditor,
         }
-        return ctrls
 
     def get_controller(self, mode):
         ctrl = self.ctrls[mode]
@@ -222,9 +222,9 @@ class AppCanvas(wx.Panel):
 
     def set_mode(self, mode=modes.SELECT_MODE):
         if not mode == self.mode:
-            if not self.previous_mode is None:
+            if self.previous_mode is not None:
                 self.restore_mode()
-            if not self.controller is None:
+            if self.controller is not None:
                 self.controller.stop_()
             self.mode = mode
             self.controller = self.get_controller(mode)
@@ -249,8 +249,8 @@ class AppCanvas(wx.Panel):
             self.controller.set_cursor()
 
     def restore_mode(self):
-        if not self.previous_mode is None:
-            if not self.controller is None:
+        if self.previous_mode is not None:
+            if self.controller is not None:
                 self.controller.stop_()
             self.mode = self.previous_mode
             self.controller = self.get_controller(self.mode)
@@ -267,7 +267,7 @@ class AppCanvas(wx.Panel):
         self.SetCursor(cursor)
 
     def restore_cursor(self):
-        if not self.orig_cursor is None:
+        if self.orig_cursor is not None:
             self.SetCursor(self.orig_cursor)
             self.current_cursor = self.orig_cursor
             self.orig_cursor = None
@@ -308,9 +308,10 @@ class AppCanvas(wx.Panel):
     def _get_center(self):
         x = self.width / 2.0
         y = self.height / 2.0
-        return self.win_to_doc((x, y))
+        return self.win_to_doc([x, y])
 
-    def doc_to_win(self, point=[0.0, 0.0]):
+    def doc_to_win(self, point=None):
+        point = point or [0.0, 0.0]
         x, y = point
         m11 = self.trafo[0]
         m22, dx, dy = self.trafo[3:]
@@ -318,16 +319,19 @@ class AppCanvas(wx.Panel):
         y_new = m22 * y + dy
         return [x_new, y_new]
 
-    def point_doc_to_win(self, point=[0.0, 0.0]):
-        if not point: return []
+    def point_doc_to_win(self, point=None):
+        point = point or [0.0, 0.0]
+        if not point:
+            return []
         if len(point) == 2:
             return self.doc_to_win(point)
         else:
             return [self.doc_to_win(point[0]),
-                self.doc_to_win(point[1]),
-                self.doc_to_win(point[2]), point[3]]
+                    self.doc_to_win(point[1]),
+                    self.doc_to_win(point[2]), point[3]]
 
-    def win_to_doc(self, point=[0, 0]):
+    def win_to_doc(self, point=None):
+        point = point or [0, 0]
         x, y = point
         x = float(x)
         y = float(y)
@@ -337,7 +341,8 @@ class AppCanvas(wx.Panel):
         y_new = (y - dy) / m22
         return [x_new, y_new]
 
-    def win_to_doc_coords(self, point=[0, 0]):
+    def win_to_doc_coords(self, point=None):
+        point = point or [0, 0]
         x, y = self.win_to_doc(point)
         origin = self.presenter.model.doc_origin
         w, h = self.presenter.get_page_size()
@@ -348,14 +353,16 @@ class AppCanvas(wx.Panel):
         else:
             return [x, y]
 
-    def point_win_to_doc(self, point=[0.0, 0.0]):
-        if not point: return []
+    def point_win_to_doc(self, point=None):
+        point = point or [0.0, 0.0]
+        if not point:
+            return []
         if len(point) == 2:
             return self.win_to_doc(point)
         else:
             return [self.win_to_doc(point[0]),
-                self.win_to_doc(point[1]),
-                self.win_to_doc(point[2]), point[3]]
+                    self.win_to_doc(point[1]),
+                    self.win_to_doc(point[2]), point[3]]
 
     def paths_doc_to_win(self, paths):
         result = []
@@ -454,7 +461,7 @@ class AppCanvas(wx.Panel):
         height = abs(end[1] - start[1])
         zoom = min(w / width, h / height) * 0.95
         center = [start[0] + (end[0] - start[0]) / 2,
-            start[1] + (end[1] - start[1]) / 2]
+                  start[1] + (end[1] - start[1]) / 2]
         self._set_center(center)
         self._zoom(zoom)
 
@@ -534,10 +541,12 @@ class AppCanvas(wx.Panel):
                 self.eventloop.emit(self.eventloop.VIEW_CHANGED)
                 self.full_repaint = False
                 self.soft_repaint = False
-            if not self.controller is None: self.controller.repaint()
+            if self.controller is not None:
+                self.controller.repaint()
             if self.dragged_guide:
                 self.renderer.paint_guide_dragging(*self.dragged_guide)
-                if not self.mode == modes.GUIDE_MODE: self.dragged_guide = ()
+                if not self.mode == modes.GUIDE_MODE:
+                    self.dragged_guide = ()
             self.renderer.finalize()
         except:
             self.app.print_stacktrace()
@@ -547,7 +556,7 @@ class AppCanvas(wx.Panel):
             self.request_redraw_flag = False
             self.force_redraw()
 
-        # ==============EVENT CONTROLLING==========================
+            # ==============EVENT CONTROLLING==========================
 
     def mouse_enter(self, enent):
         if wal.IS_MSW:
@@ -676,7 +685,8 @@ class HitSurface:
                 stroke = obj.style[1]
                 width = stroke[1] * trafo[0]
                 stroke_width /= trafo[0]
-                if width < stroke_width: width = stroke_width
+                if width < stroke_width:
+                    width = stroke_width
                 self.ctx.set_line_width(width)
                 self.ctx.stroke()
 
@@ -699,7 +709,8 @@ class HitSurface:
         self.ctx.set_matrix(libcairo.get_matrix_from_trafo(trafo))
         stroke_width = config.stroke_sensitive_size
         stroke_width /= trafo[0]
-        if len(start_point) > 2: start_point = start_point[2]
+        if len(start_point) > 2:
+            start_point = start_point[2]
         self.ctx.move_to(*start_point)
         if len(end_point) == 2:
             self.ctx.line_to(*end_point)
