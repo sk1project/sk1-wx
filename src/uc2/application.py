@@ -15,44 +15,41 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import datetime
+import sys
+import os
 
-'''
+import uc2
+from uc2 import _, cms, uc2const
+from uc2 import events, msgconst
+from uc2.uc_conf import UCData, UCConfig
+from uc2.formats import get_loader, get_saver
+from uc2.app_palettes import PaletteManager
+
+HELP_TEMPLATE = '''
 USAGE: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]
 
 Universal vector graphics format translator.
-sK1 Team (http://www.sk1project.net), copyright (C) 2007-2013 by Igor E. Novikov
+sK1 Team (http://www.sk1project.net), copyright (C) 2007-%s by Igor E. Novikov
 
- Allowed input formats:
-     AI  - Adobe Illustrator files (postscript based)
-     CDR - CorelDRAW Graphics files (6-X6 versions)
-     CDT - CorelDRAW templates files (6-X6 versions)
-     CCX - Corel Compressed Exchange files
-     CMX - Corel Presentation Exchange files (CMX1 format)
-     SVG - Scalable Vector Graphics files
-     FIG - XFig files
-     CGM - Computer Graphics Metafile files
-     AFF - Draw files
-     WMF - Windows Metafile files
-     SK  - Sketch/Skencil files
-     SK1 - sK1 vector graphics files
-     PLT - HPGL for cutting plotter files
-     DXF - Autocad Drawing Exchange Format
-     DST - Design format (Tajima)
-     PES - Embroidery file format (Brother)
-     EXP - Embroidery file format (Melco)
-     PCS - Design format (Pfaff home)
-     
+ Allowed input vector graphics file formats:
+   %s
 
- Allowed output formats:
-     AI  - Adobe Illustrator files (postscript based)
-     SVG - Scalable Vector Graphics files
-     CGM - Computer Graphics Metafile files
-     WMF - Windows Metafile files
-     SK  - Sketch/Skencil files
-     SK1 - sK1 vector graphics files
-     PDF - Portable Document Format
-     PS  - PostScript
-     PLT - HPGL for cutting plotter files
+ Allowed input palette file formats:
+   %s
+
+ Allowed input image file formats:
+   %s
+
+-------------------------------------------------------------------------------
+ Allowed output vector graphics file formats:
+   %s
+
+ Allowed output palette file formats:
+   %s
+
+ Allowed output image file formats:
+   %s
 
 Example: uniconvertor drawing.cdr drawing.svg
 
@@ -60,16 +57,6 @@ Example: uniconvertor drawing.cdr drawing.svg
  --help    Show this help
  -verbose  Internal logs printed while translation
 '''
-
-import sys
-import os
-
-import uc2
-from uc2 import _, cms
-from uc2 import events, msgconst
-from uc2.uc_conf import UCData, UCConfig
-from uc2.formats import get_loader, get_saver
-from uc2.app_palettes import PaletteManager
 
 
 class UCApplication(object):
@@ -87,9 +74,21 @@ class UCApplication(object):
         setattr(uc2, "config", self.config)
         setattr(uc2, "appdata", self.appdata)
 
+    def _get_infos(self, loaders):
+        infos = [uc2const.FORMAT_DESCRIPTION[loader] for loader in loaders]
+        return '\n   '.join(infos)
+
     def show_help(self):
-        print '\n', self.appdata.app_name, self.appdata.version
-        print __doc__
+        print '\n%s %s%s' % (self.appdata.app_name,
+                             self.appdata.version,
+                             self.appdata.revision)
+        print HELP_TEMPLATE % (str(datetime.date.today().year),
+                               self._get_infos(uc2const.MODEL_LOADERS),
+                               self._get_infos(uc2const.PALETTE_LOADERS),
+                               self._get_infos(uc2const.BITMAP_LOADERS),
+                               self._get_infos(uc2const.MODEL_SAVERS),
+                               self._get_infos(uc2const.PALETTE_SAVERS),
+                               self._get_infos(uc2const.BITMAP_SAVERS),)
         sys.exit(0)
 
     def verbose(self, *args):
@@ -116,8 +115,10 @@ class UCApplication(object):
             else:
                 files.append(item)
 
-        if len(files) <> 2: self.show_help()
-        if not os.path.lexists(files[0]): self.show_help()
+        if len(files) != 2:
+            self.show_help()
+        if not os.path.lexists(files[0]):
+            self.show_help()
 
         for item in options_list:
             result = item[1:].split('=')
@@ -125,8 +126,10 @@ class UCApplication(object):
                 continue
             else:
                 key, value = result
-                if value == 'yes': value = True
-                if value == 'no': value = False
+                if value == 'yes':
+                    value = True
+                if value == 'no':
+                    value = False
                 options[key] = value
 
         self.default_cms = cms.ColorManager()
@@ -134,7 +137,7 @@ class UCApplication(object):
 
         print ''
         msg = _('Translation of') + ' "%s" ' % (files[0]) + _('into "%s"') % (
-        files[1])
+            files[1])
         events.emit(events.MESSAGES, msgconst.JOB, msg)
 
         saver = get_saver(files[1])
