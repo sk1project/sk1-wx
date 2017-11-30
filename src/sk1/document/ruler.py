@@ -72,7 +72,7 @@ class RulerCorner(wal.HPanel):
             BITMAPS[sk2_const.DOC_ORIGIN_LL] = get_icon(icons.ORIGIN_LL)
             BITMAPS[sk2_const.DOC_ORIGIN_LU] = get_icon(icons.ORIGIN_LU)
         self.add((size, size))
-        self.SetBackgroundColour(wx.WHITE)
+        self.set_bg(wal.WHITE)
         self.Bind(wx.EVT_PAINT, self._on_paint, self)
         self.eventloop.connect(self.eventloop.DOC_MODIFIED, self.changes)
         self.Bind(wx.EVT_LEFT_UP, self.left_click)
@@ -158,7 +158,7 @@ class Ruler(wal.HPanel):
             self.guide_cursor = self.presenter.app.cursors[modes.HGUIDE_MODE]
         else:
             self.guide_cursor = self.presenter.app.cursors[modes.VGUIDE_MODE]
-        self.SetBackgroundColour(wx.WHITE)
+        self.set_bg(wal.WHITE)
         self.set_double_buffered()
         self.Bind(wx.EVT_PAINT, self._on_paint, self)
         self.Bind(wx.EVT_LEFT_DOWN, self.mouse_down)
