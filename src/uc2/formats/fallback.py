@@ -15,25 +15,17 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-
-from uc2 import _, events, msgconst, uc2const
+from uc2 import uc2const
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2.formats.sk2 import sk2_model, sk2_const
+from uc2.formats.generic_filters import get_fileptr
 from uc2 import libimg
 
 
 def im_loader(appdata, filename=None, fileptr=None, translate=True, cnf={},
               **kw):
     if filename and not fileptr:
-        try:
-            fileptr = open(filename, 'rb')
-        except:
-            errtype, value, traceback = sys.exc_info()
-            msg = _('Cannot read %s file') % (filename)
-            events.emit(events.MESSAGES, msgconst.ERROR, msg)
-            raise IOError(errtype, msg + '\n' + value, traceback)
-
+        fileptr = get_fileptr(filename)
     content = fileptr.read()
     fileptr.close()
 
@@ -49,7 +41,8 @@ def im_loader(appdata, filename=None, fileptr=None, translate=True, cnf={},
     orient = uc2const.PORTRAIT
     w = image_obj.size[0] * uc2const.px_to_pt
     h = image_obj.size[1] * uc2const.px_to_pt
-    if image_obj.size[0] > image_obj.size[1]: orient = uc2const.LANDSCAPE
+    if image_obj.size[0] > image_obj.size[1]:
+        orient = uc2const.LANDSCAPE
 
     image_obj.trafo = [1.0, 0.0, 0.0, 1.0, -w / 2.0, -h / 2.0]
 
