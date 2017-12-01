@@ -27,28 +27,30 @@ from uc2.formats import get_loader, get_saver
 from uc2.app_palettes import PaletteManager
 
 HELP_TEMPLATE = '''
+%s
+
 USAGE: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]
 
 Universal vector graphics format translator.
 sK1 Team (http://www.sk1project.net), copyright (C) 2007-%s by Igor E. Novikov
 
- Allowed input vector graphics file formats:
+ Supported input vector graphics file formats:
    %s
 
- Allowed input palette file formats:
+ Supported input palette file formats:
    %s
 
- Allowed input image file formats:
+ Supported input image file formats:
    %s
 
 -------------------------------------------------------------------------------
- Allowed output vector graphics file formats:
+ Supported output vector graphics file formats:
    %s
 
- Allowed output palette file formats:
+ Supported output palette file formats:
    %s
 
- Allowed output image file formats:
+ Supported output image file formats:
    %s
 
 Example: uniconvertor drawing.cdr drawing.svg
@@ -75,14 +77,11 @@ class UCApplication(object):
         setattr(uc2, "appdata", self.appdata)
 
     def _get_infos(self, loaders):
-        infos = [uc2const.FORMAT_DESCRIPTION[loader] for loader in loaders]
-        return '\n   '.join(infos)
+        return '\n   '.join([uc2const.FORMAT_DESCRIPTION[loader] for loader in loaders])
 
     def show_help(self):
-        print '\n%s %s%s' % (self.appdata.app_name,
-                             self.appdata.version,
-                             self.appdata.revision)
-        print HELP_TEMPLATE % (str(datetime.date.today().year),
+        app_name = '%s %s%s' % (self.appdata.app_name, self.appdata.version, self.appdata.revision)
+        print HELP_TEMPLATE % (app_name, str(datetime.date.today().year),
                                self._get_infos(uc2const.MODEL_LOADERS),
                                self._get_infos(uc2const.PALETTE_LOADERS),
                                self._get_infos(uc2const.BITMAP_LOADERS),
