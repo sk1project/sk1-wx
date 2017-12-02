@@ -16,13 +16,13 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import os, wal
+import os
 
-from uc2.formats.sk2 import sk2_const
-
+import wal
 from sk1 import _, events
 from sk1.app_plugins import RS_Plugin
 from sk1.resources import get_icon
+from uc2 import sk2const
 
 PLG_DIR = __path__[0]
 IMG_DIR = os.path.join(PLG_DIR, 'images')
@@ -204,7 +204,7 @@ class AlignPanel(wal.LabeledPanel):
         sh = source_bbox[3] - source_bbox[1]
         tw = target_bbox[2] - target_bbox[0]
         th = target_bbox[3] - target_bbox[1]
-        trafo = [] + sk2_const.NORMAL_TRAFO
+        trafo = [] + sk2const.NORMAL_TRAFO
         cs = source_bbox[:2]
         cs[0] += sw / 2.0
         cs[1] += sh / 2.0
@@ -385,7 +385,7 @@ class DistributePanel(wal.LabeledPanel):
         objs = [] + doc.selection.objs
         trafo_dict = {}
         for obj in objs:
-            trafo_dict[obj] = [] + sk2_const.NORMAL_TRAFO
+            trafo_dict[obj] = [] + sk2const.NORMAL_TRAFO
 
         if not self.hdistrib.get_mode() is None:
             mode = self.hdistrib.get_mode()

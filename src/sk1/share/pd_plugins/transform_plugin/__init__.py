@@ -16,13 +16,13 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import os, wal
+import os
+import wal
 
+from indicator import OrientationIndicator, OriginIndicator
 from sk1 import _, events
 from sk1.app_plugins import RS_Plugin
 from sk1.resources import get_icon, icons
-
-from indicator import OrientationIndicator, OriginIndicator
 from transforms import PositionTransform, ResizeTransform, ScaleTransform, \
     RotateTransform, ShearTransform
 

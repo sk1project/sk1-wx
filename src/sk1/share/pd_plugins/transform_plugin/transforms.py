@@ -15,13 +15,14 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, wal, math
+import math
+import os
 
-from uc2 import libgeom
-from uc2.formats.sk2 import sk2_const
+import wal
 from sk1 import _
-from sk1.resources import get_bmp
 from sk1.pwidgets import UnitSpin, UnitLabel, AngleSpin
+from sk1.resources import get_bmp
+from uc2 import libgeom, sk2const
 
 PLG_DIR = os.path.dirname(__file__)
 IMG_DIR = os.path.join(PLG_DIR, 'images')
@@ -68,7 +69,7 @@ class AbstractTransform(wal.VPanel):
         self.update()
 
     def get_trafo(self):
-        return [] + sk2_const.NORMAL_TRAFO
+        return [] + sk2const.NORMAL_TRAFO
 
     def get_selection_bbox(self):
         doc = self.app.current_doc
@@ -80,15 +81,15 @@ class AbstractTransform(wal.VPanel):
 
     def is_ll_coords(self):
         doc = self.app.current_doc
-        return doc.methods.get_doc_origin() == sk2_const.DOC_ORIGIN_LL
+        return doc.methods.get_doc_origin() == sk2const.DOC_ORIGIN_LL
 
     def is_lu_coords(self):
         doc = self.app.current_doc
-        return doc.methods.get_doc_origin() == sk2_const.DOC_ORIGIN_LU
+        return doc.methods.get_doc_origin() == sk2const.DOC_ORIGIN_LU
 
     def is_center_coords(self):
         doc = self.app.current_doc
-        return doc.methods.get_doc_origin() == sk2_const.DOC_ORIGIN_CENTER
+        return doc.methods.get_doc_origin() == sk2const.DOC_ORIGIN_CENTER
 
     def doc_to_coords(self, point):
         x, y = point
@@ -162,7 +163,7 @@ class PositionTransform(AbstractTransform):
             self.v_spin.set_point_value(dy)
 
     def get_trafo(self):
-        trafo = [] + sk2_const.NORMAL_TRAFO
+        trafo = [] + sk2const.NORMAL_TRAFO
         if self.abs_pos.get_value():
             bbox = self.get_selection_bbox()
             new_x = self.h_spin.get_point_value()
@@ -233,7 +234,7 @@ class ResizeTransform(AbstractTransform):
         self.v_spin.set_point_value(h)
 
     def get_trafo(self):
-        trafo = [] + sk2_const.NORMAL_TRAFO
+        trafo = [] + sk2const.NORMAL_TRAFO
         bbox = self.get_selection_bbox()
         w, h = self.get_selection_size()
         new_w = self.h_spin.get_point_value()
@@ -320,7 +321,7 @@ class ScaleTransform(AbstractTransform):
         self.v_scale = self.h_scale = 100.0
 
     def get_trafo(self):
-        trafo = [] + sk2_const.NORMAL_TRAFO
+        trafo = [] + sk2const.NORMAL_TRAFO
         bbox = self.get_selection_bbox()
         w, h = self.get_selection_size()
         trafo[0] = self.h_spin.get_value() / 100.0

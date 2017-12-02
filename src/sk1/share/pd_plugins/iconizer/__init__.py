@@ -16,17 +16,18 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import os, wal, cairo
+import cairo
+import os
+import wal
 from cStringIO import StringIO
-
-from uc2 import cms, libgeom, uc2const
-from uc2.formats.sk2 import sk2_const, crenderer
-from uc2.utils.config import XmlConfigParser
 
 from sk1 import _, events, config, dialogs
 from sk1.app_plugins import RS_Plugin
-from sk1.resources import get_icon
 from sk1.pwidgets import CBMiniPalette
+from sk1.resources import get_icon
+from uc2 import cms, libgeom, uc2const
+from uc2.formats.sk2 import crenderer
+from uc2.utils.config import XmlConfigParser
 
 PLG_DIR = __path__[0]
 IMG_DIR = os.path.join(PLG_DIR, 'images')

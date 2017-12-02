@@ -15,17 +15,13 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, wal
-from copy import deepcopy
+import os
+import wal
 
-from uc2.formats.sk2 import sk2_const
-from uc2.libgeom import apply_trafo_to_paths
-from uc2.libgeom import intersect_paths, fuse_paths, trim_paths, excluse_paths
-
-from sk1 import _, events, modes
-from sk1.dialogs import edit_dlg
-from sk1.resources import icons, get_icon, get_bmp
+from sk1 import _, events
 from sk1.app_plugins import RS_Plugin
+from sk1.dialogs import edit_dlg
+from sk1.resources import icons, get_icon
 
 PLG_DIR = __path__[0]
 IMG_DIR = os.path.join(PLG_DIR, 'images')

@@ -15,13 +15,13 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, wal
+import os
 
-from uc2.formats.sk2 import sk2_const
-
+import wal
 from sk1 import events
-from sk1.resources import icons, get_icon
 from sk1.pwidgets import BitmapToggle
+from sk1.resources import icons, get_icon
+from uc2 import sk2const
 
 PLG_DIR = os.path.dirname(__file__)
 IMG_DIR = os.path.join(PLG_DIR, 'images')
@@ -113,7 +113,7 @@ class OriginIndicator(wal.Bitmap):
 
     def __init__(self, parent, app):
         self.app = app
-        mode = sk2_const.DOC_ORIGIN_LL
+        mode = sk2const.DOC_ORIGIN_LL
         wal.Bitmap.__init__(self, parent, get_icon(ORIGIN_ICONS[mode],
                                                    size=wal.DEF_SIZE))
         events.connect(events.DOC_CHANGED, self.update)

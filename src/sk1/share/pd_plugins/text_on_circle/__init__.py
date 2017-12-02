@@ -16,13 +16,13 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import os, wal, math
-
-from uc2.formats.sk2 import sk2_const
+import math
+import os
+import wal
 
 from sk1 import _, events
 from sk1.app_plugins import RS_Plugin
-from sk1.resources import get_icon, icons
+from sk1.resources import get_icon
 
 PLG_DIR = __path__[0]
 IMG_DIR = os.path.join(PLG_DIR, 'images')

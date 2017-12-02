@@ -17,9 +17,9 @@
 
 
 import os
-import wal
 from copy import deepcopy
 
+import wal
 from sk1 import _, events, modes
 from sk1.app_plugins import RS_Plugin
 from sk1.dialogs import msg_dialog, yesno_dialog, error_dialog
@@ -259,8 +259,9 @@ class Shaping_Plugin(RS_Plugin):
         self.icon = get_icon(PLUGIN_ICON)
         self.panel.pack((5, 5))
         self.shaping_keeper = wal.HToggleKeeper(self.panel, SHAPING_MODES,
-            SHAPING_MODE_ICONS,
-            SHAPING_MODE_NAMES, self.on_mode_change)
+                                                SHAPING_MODE_ICONS,
+                                                SHAPING_MODE_NAMES,
+                                                self.on_mode_change)
         self.panel.pack(self.shaping_keeper)
         self.panel.pack(wal.HLine(self.panel), fill=True, padding=3)
 

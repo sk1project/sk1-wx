@@ -22,7 +22,7 @@ import wal
 from sk1 import _, events
 from sk1.app_plugins import RS_Plugin
 from sk1.resources import get_icon, icons, get_bmp
-from uc2.formats.sk2 import sk2_const
+from uc2 import sk2const
 
 PLG_DIR = __path__[0]
 IMG_DIR = os.path.join(PLG_DIR, 'images')
@@ -38,35 +38,35 @@ def get_plugin(app):
 
 PLUGIN_ICON = make_artid('icon')
 
-TEXT_ALIGNS = [sk2_const.TEXT_ALIGN_LEFT, sk2_const.TEXT_ALIGN_CENTER,
-               sk2_const.TEXT_ALIGN_RIGHT, sk2_const.TEXT_ALIGN_JUSTIFY]
+TEXT_ALIGNS = [sk2const.TEXT_ALIGN_LEFT, sk2const.TEXT_ALIGN_CENTER,
+               sk2const.TEXT_ALIGN_RIGHT, sk2const.TEXT_ALIGN_JUSTIFY]
 
 TEXT_ALIGN_ICONS = {
-    sk2_const.TEXT_ALIGN_LEFT: icons.PD_ALIGN_LEFT,
-    sk2_const.TEXT_ALIGN_CENTER: icons.PD_ALIGN_CENTER,
-    sk2_const.TEXT_ALIGN_RIGHT: icons.PD_ALIGN_RIGHT,
-    sk2_const.TEXT_ALIGN_JUSTIFY: icons.PD_ALIGN_JUSTIFY,
+    sk2const.TEXT_ALIGN_LEFT: icons.PD_ALIGN_LEFT,
+    sk2const.TEXT_ALIGN_CENTER: icons.PD_ALIGN_CENTER,
+    sk2const.TEXT_ALIGN_RIGHT: icons.PD_ALIGN_RIGHT,
+    sk2const.TEXT_ALIGN_JUSTIFY: icons.PD_ALIGN_JUSTIFY,
 }
 
 TEXT_ALIGN_TEXTS = {
-    sk2_const.TEXT_ALIGN_LEFT: _('Align to path start'),
-    sk2_const.TEXT_ALIGN_CENTER: _('Align to path center'),
-    sk2_const.TEXT_ALIGN_RIGHT: _('Align to path end'),
-    sk2_const.TEXT_ALIGN_JUSTIFY: _('Stretch along path'),
+    sk2const.TEXT_ALIGN_LEFT: _('Align to path start'),
+    sk2const.TEXT_ALIGN_CENTER: _('Align to path center'),
+    sk2const.TEXT_ALIGN_RIGHT: _('Align to path end'),
+    sk2const.TEXT_ALIGN_JUSTIFY: _('Stretch along path'),
 }
 
 TEXT_ALIGN_PICS = {
-    sk2_const.TEXT_ALIGN_LEFT: make_artid('pos-00'),
-    sk2_const.TEXT_ALIGN_CENTER: make_artid('pos-10'),
-    sk2_const.TEXT_ALIGN_RIGHT: make_artid('pos-20'),
-    sk2_const.TEXT_ALIGN_JUSTIFY: make_artid('pos-30'),
+    sk2const.TEXT_ALIGN_LEFT: make_artid('pos-00'),
+    sk2const.TEXT_ALIGN_CENTER: make_artid('pos-10'),
+    sk2const.TEXT_ALIGN_RIGHT: make_artid('pos-20'),
+    sk2const.TEXT_ALIGN_JUSTIFY: make_artid('pos-30'),
 }
 
 TEXT_ALIGN_PICS_OTHERSIDE = {
-    sk2_const.TEXT_ALIGN_LEFT: make_artid('pos-01'),
-    sk2_const.TEXT_ALIGN_CENTER: make_artid('pos-11'),
-    sk2_const.TEXT_ALIGN_RIGHT: make_artid('pos-21'),
-    sk2_const.TEXT_ALIGN_JUSTIFY: make_artid('pos-31'),
+    sk2const.TEXT_ALIGN_LEFT: make_artid('pos-01'),
+    sk2const.TEXT_ALIGN_CENTER: make_artid('pos-11'),
+    sk2const.TEXT_ALIGN_RIGHT: make_artid('pos-21'),
+    sk2const.TEXT_ALIGN_JUSTIFY: make_artid('pos-31'),
 }
 
 
