@@ -17,8 +17,7 @@
 
 import math
 
-from uc2 import libgeom
-from uc2.formats.sk2 import sk2_const
+from uc2 import libgeom, sk2const
 
 from sk1 import _, modes, config, events
 from generic import AbstractController
@@ -111,10 +110,10 @@ class EllipseEditor(AbstractController):
             if contra_point.is_pressed(point):
                 angle = contra_point.get_angle()
         circle_type = self.orig_type
-        if event.is_alt() and not circle_type == sk2_const.ARC_ARC:
-            circle_type = sk2_const.ARC_CHORD
+        if event.is_alt() and not circle_type == sk2const.ARC_ARC:
+            circle_type = sk2const.ARC_CHORD
             if libgeom.distance([x, y]) < 0.5:
-                circle_type = sk2_const.ARC_PIE_SLICE
+                circle_type = sk2const.ARC_PIE_SLICE
         angle1 = self.orig_angle1
         angle2 = self.orig_angle2
         if start:

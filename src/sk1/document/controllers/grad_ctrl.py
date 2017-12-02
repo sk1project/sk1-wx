@@ -17,8 +17,7 @@
 
 from copy import deepcopy
 
-from uc2 import uc2const, libgeom
-from uc2.formats.sk2 import sk2_const
+from uc2 import uc2const, libgeom, sk2const
 
 from sk1 import _, modes, config, events
 from generic import AbstractController
@@ -43,7 +42,7 @@ class GradientChooser(AbstractController):
         if len(sel_objs) == 1 and sel_objs[0].is_primitive() \
                 and not sel_objs[0].is_pixmap():
             if sel_objs[0].style[0] \
-                    and sel_objs[0].style[0][1] == sk2_const.FILL_GRADIENT:
+                    and sel_objs[0].style[0][1] == sk2const.FILL_GRADIENT:
                 self.canvas.set_temp_mode(modes.GR_EDIT_MODE)
             else:
                 self.canvas.set_temp_mode(modes.GR_CREATE_MODE)
@@ -105,8 +104,8 @@ class GradientCreator(AbstractController):
 
     def _update_style(self):
         fill_style = self.new_style[0]
-        mode = sk2_const.GRADIENT_LINEAR
-        rule = sk2_const.FILL_EVENODD
+        mode = sk2const.GRADIENT_LINEAR
+        rule = sk2const.FILL_EVENODD
         p0 = [] + self.start
         if self.end:
             p1 = [] + self.end
@@ -116,18 +115,18 @@ class GradientCreator(AbstractController):
         stops = deepcopy(DEFAULT_STOPS)
         if fill_style:
             rule = fill_style[0]
-            if fill_style[1] == sk2_const.FILL_SOLID:
+            if fill_style[1] == sk2const.FILL_SOLID:
                 rule = fill_style[0]
                 color0 = deepcopy(fill_style[2])
                 color0[3] = ''
                 color1 = deepcopy(color0)
                 color1[2] = 0.0
                 stops = [[0.0, color0], [1.0, color1]]
-            elif fill_style[1] == sk2_const.FILL_GRADIENT:
+            elif fill_style[1] == sk2const.FILL_GRADIENT:
                 rule = fill_style[0]
                 mode = fill_style[2][0]
                 stops = fill_style[2][2]
-        self.new_style[0] = [rule, sk2_const.FILL_GRADIENT,
+        self.new_style[0] = [rule, sk2const.FILL_GRADIENT,
                              [mode, vector, stops]]
 
     def mouse_down(self, event):

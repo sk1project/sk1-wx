@@ -15,9 +15,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from uc2 import sk2const
 from uc2.libgeom import contra_point, bezier_base_point, midpoint
 from uc2.libgeom import apply_trafo_to_paths, is_point_in_rect2
-from uc2.formats.sk2 import sk2_const as const
 
 from sk1 import modes, config
 
@@ -29,7 +29,7 @@ class PolyLineCreator(AbstractCreator):
 
     # drawing data
     paths = []
-    path = [[], [], const.CURVE_OPENED]
+    path = [[], [], sk2const.CURVE_OPENED]
     points = []
     cursor = []
     obj = None
@@ -182,7 +182,7 @@ class PolyLineCreator(AbstractCreator):
         self.cursor = []
         self.paths = []
         self.points = []
-        self.path = [[], [], const.CURVE_OPENED]
+        self.path = [[], [], sk2const.CURVE_OPENED]
         self.point = []
         self.doc_point = []
         self.obj = None
@@ -190,7 +190,7 @@ class PolyLineCreator(AbstractCreator):
     def clear_data(self):
         self.cursor = []
         self.points = []
-        self.path = [[], [], const.CURVE_OPENED]
+        self.path = [[], [], sk2const.CURVE_OPENED]
         self.point = []
         self.doc_point = []
 
@@ -201,7 +201,7 @@ class PolyLineCreator(AbstractCreator):
     def update_from_obj(self):
         self.paths = apply_trafo_to_paths(self.obj.paths, self.obj.trafo)
         path = self.paths[-1]
-        if path[-1] == const.CURVE_OPENED:
+        if path[-1] == sk2const.CURVE_OPENED:
             self.path = path
             self.points = self.path[1]
             paths = self.canvas.paths_doc_to_win(self.paths)
@@ -221,7 +221,7 @@ class PolyLineCreator(AbstractCreator):
                 last = bezier_base_point(p)
                 if is_point_in_rect2(subpoint, start, w, h) and len(
                         self.points) > 1:
-                    self.path[2] = const.CURVE_CLOSED
+                    self.path[2] = sk2const.CURVE_CLOSED
                     if len(point) == 2:
                         self.points.append([] + self.path[0])
                     else:
@@ -247,8 +247,8 @@ class PolyLineCreator(AbstractCreator):
     def release_curve(self):
         if self.points:
             flag = config.curve_autoclose_flag
-            if flag and self.path[2] == const.CURVE_OPENED:
-                self.path[2] = const.CURVE_CLOSED
+            if flag and self.path[2] == sk2const.CURVE_OPENED:
+                self.path[2] = sk2const.CURVE_CLOSED
                 self.points.append([] + self.path[0])
             paths = self.paths
             obj = self.obj
@@ -293,7 +293,7 @@ class PathsCreator(PolyLineCreator):
     def update_from_obj(self):
         self.paths = apply_trafo_to_paths(self.obj.paths, self.obj.trafo)
         path = self.paths[-1]
-        if path[-1] == const.CURVE_OPENED:
+        if path[-1] == sk2const.CURVE_OPENED:
             self.path = path
             self.points = self.path[1]
             paths = self.canvas.paths_doc_to_win(self.paths)
@@ -351,14 +351,14 @@ class PathsCreator(PolyLineCreator):
                     self.control_point2_doc,
                     self.curve_point_doc)
 
-                node_type = const.NODE_SYMMETRICAL
+                node_type = sk2const.NODE_SYMMETRICAL
                 if len(self.points):
                     bp_doc = bezier_base_point(self.points[-1])
                 else:
                     bp_doc = self.path[0]
                 if self.control_point0_doc == bp_doc and \
                    self.control_point1_doc == self.curve_point_doc:
-                    node_type = const.NODE_CUSP
+                    node_type = sk2const.NODE_CUSP
                     p0d = midpoint(bp_doc, self.curve_point_doc, 1.0 / 3.0)
                     self.control_point0_doc = p0d
                     p1d = midpoint(bp_doc, self.curve_point_doc, 2.0 / 3.0)

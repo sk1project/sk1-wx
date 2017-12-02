@@ -17,8 +17,7 @@
 
 from copy import deepcopy
 
-from uc2 import libgeom
-from uc2.formats.sk2 import sk2_const
+from uc2 import libgeom, sk2const
 
 from sk1 import _, modes, config, events
 from generic import AbstractController
@@ -498,7 +497,7 @@ class BezierEditor(AbstractController):
             if np.is_curve():
                 np.point = np.point[2]
             if path.is_closed():
-                path.closed = sk2_const.CURVE_OPENED
+                path.closed = sk2const.CURVE_OPENED
                 if node.is_end():
                     path.start_point.destroy()
                     path.start_point = np
@@ -513,7 +512,7 @@ class BezierEditor(AbstractController):
             elif index is not None:
                 new_path = BezierPath(self.canvas)
                 new_path.trafo = [] + path.trafo
-                new_path.closed = sk2_const.CURVE_OPENED
+                new_path.closed = sk2const.CURVE_OPENED
                 new_path.start_point = np
                 new_path.points = path.points[index + 1:]
                 for item in new_path.points:
@@ -532,7 +531,7 @@ class BezierEditor(AbstractController):
         if item0.path == item1.path:
             item0.set_base_point([] + np)
             item1.set_base_point(np)
-            item1.path.closed = sk2_const.CURVE_CLOSED
+            item1.path.closed = sk2const.CURVE_CLOSED
         else:
             if item0.is_start() and item1.is_start():
                 item0.path.reverse()
@@ -587,7 +586,7 @@ class BezierEditor(AbstractController):
         item1 = self.selected_nodes[1]
         self.set_selected_nodes()
         if item0.path == item1.path:
-            item1.path.closed = sk2_const.CURVE_CLOSED
+            item1.path.closed = sk2const.CURVE_CLOSED
             if item1.is_start():
                 item1, item0 = item0, item1
             item1.path.points.append(item0.get_copy())
@@ -630,7 +629,7 @@ class BezierEditor(AbstractController):
                     return True
         return False
 
-    def set_connection_type(self, conn_type=sk2_const.NODE_CUSP):
+    def set_connection_type(self, conn_type=sk2const.NODE_CUSP):
         if self.selected_nodes:
             for item in self.selected_nodes:
                 item.set_connection_type(conn_type)
@@ -703,7 +702,7 @@ class BezierPath:
     canvas = None
     start_point = None
     points = []
-    closed = sk2_const.CURVE_OPENED
+    closed = sk2const.CURVE_OPENED
     trafo = []
 
     def __init__(self, canvas, path=None, trafo=None):
@@ -734,7 +733,7 @@ class BezierPath:
             self.__dict__[item] = None
 
     def is_closed(self):
-        return self.closed == sk2_const.CURVE_CLOSED
+        return self.closed == sk2const.CURVE_CLOSED
 
     def get_all_points(self):
         return [self.start_point, ] + self.points
@@ -930,8 +929,8 @@ class BezierPoint:
 
     def is_cusp(self):
         if self.is_curve():
-            return self.point[3] in [sk2_const.NODE_CUSP,
-                                     sk2_const.NODE_SMOOTH_OPP]
+            return self.point[3] in [sk2const.NODE_CUSP,
+                                     sk2const.NODE_SMOOTH_OPP]
         else:
             after = self.get_point_after()
             if after and after.is_curve() and not after.is_opp_smooth():
@@ -940,8 +939,8 @@ class BezierPoint:
 
     def is_smooth(self):
         if self.is_curve():
-            return self.point[3] in (sk2_const.NODE_SMOOTH,
-                                     sk2_const.NODE_SMOOTH_BOTH)
+            return self.point[3] in (sk2const.NODE_SMOOTH,
+                                     sk2const.NODE_SMOOTH_BOTH)
         else:
             after = self.get_point_after()
             if after and after.is_curve() and after.is_opp_smooth():
@@ -950,15 +949,15 @@ class BezierPoint:
 
     def is_opp_smooth(self):
         if self.is_curve():
-            return self.point[3] in (sk2_const.NODE_SMOOTH_BOTH,
-                                     sk2_const.NODE_SMOOTH_OPP,
-                                     sk2_const.NODE_SYMM_SMOOTH)
+            return self.point[3] in (sk2const.NODE_SMOOTH_BOTH,
+                                     sk2const.NODE_SMOOTH_OPP,
+                                     sk2const.NODE_SYMM_SMOOTH)
         return False
 
     def is_symmetrical(self):
         if self.is_curve():
-            return self.point[3] in (sk2_const.NODE_SYMMETRICAL,
-                                     sk2_const.NODE_SYMM_SMOOTH)
+            return self.point[3] in (sk2const.NODE_SYMMETRICAL,
+                                     sk2const.NODE_SYMM_SMOOTH)
         return False
 
     def can_be_cusp(self):
@@ -1020,7 +1019,7 @@ class BezierPoint:
             y0 = 1.0 / 3.0 * (point[1] - before_point[1]) + before_point[1]
             x1 = 2.0 / 3.0 * (point[0] - before_point[0]) + before_point[0]
             y1 = 2.0 / 3.0 * (point[1] - before_point[1]) + before_point[1]
-            self.point = [[x0, y0], [x1, y1], point, sk2_const.NODE_CUSP]
+            self.point = [[x0, y0], [x1, y1], point, sk2const.NODE_CUSP]
 
     def get_connection_type(self):
         if self.is_curve():
@@ -1029,33 +1028,33 @@ class BezierPoint:
 
     def set_connection_type(self, conn_type):
         if self.is_curve():
-            if conn_type == sk2_const.NODE_CUSP and self.can_be_cusp():
+            if conn_type == sk2const.NODE_CUSP and self.can_be_cusp():
                 if self.is_opp_smooth():
-                    self.point[3] = sk2_const.NODE_SMOOTH_OPP
+                    self.point[3] = sk2const.NODE_SMOOTH_OPP
                 else:
-                    self.point[3] = sk2_const.NODE_CUSP
-            elif conn_type == sk2_const.NODE_SMOOTH and self.can_be_smooth():
-                if self.point[3] in (sk2_const.NODE_SYMM_SMOOTH,
-                                     sk2_const.NODE_SMOOTH_OPP):
-                    self.point[3] = sk2_const.NODE_SMOOTH_BOTH
+                    self.point[3] = sk2const.NODE_CUSP
+            elif conn_type == sk2const.NODE_SMOOTH and self.can_be_smooth():
+                if self.point[3] in (sk2const.NODE_SYMM_SMOOTH,
+                                     sk2const.NODE_SMOOTH_OPP):
+                    self.point[3] = sk2const.NODE_SMOOTH_BOTH
                 else:
-                    self.point[3] = sk2_const.NODE_SMOOTH
-            elif conn_type == sk2_const.NODE_SYMMETRICAL \
+                    self.point[3] = sk2const.NODE_SMOOTH
+            elif conn_type == sk2const.NODE_SYMMETRICAL \
                     and self.can_be_symmetrical():
                 if self.is_opp_smooth():
-                    self.point[3] = sk2_const.NODE_SYMM_SMOOTH
+                    self.point[3] = sk2const.NODE_SYMM_SMOOTH
                 else:
-                    self.point[3] = sk2_const.NODE_SYMMETRICAL
+                    self.point[3] = sk2const.NODE_SYMMETRICAL
         else:
-            if conn_type == sk2_const.NODE_CUSP and self.can_be_cusp():
+            if conn_type == sk2const.NODE_CUSP and self.can_be_cusp():
                 after = self.get_point_after()
                 if after and after.is_curve() and after.is_opp_smooth():
-                    after.point[3] &= sk2_const.NODE_NOT_SMOOTH_OPP
+                    after.point[3] &= sk2const.NODE_NOT_SMOOTH_OPP
                     after.update_connection()
-            elif conn_type == sk2_const.NODE_SMOOTH and self.can_be_smooth():
+            elif conn_type == sk2const.NODE_SMOOTH and self.can_be_smooth():
                 after = self.get_point_after()
                 if after and after.is_curve() and not after.is_opp_smooth():
-                    after.point[3] |= sk2_const.NODE_SMOOTH_OPP
+                    after.point[3] |= sk2const.NODE_SMOOTH_OPP
                     after.update_connection()
         self.update_connection()
 
