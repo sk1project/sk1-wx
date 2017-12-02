@@ -15,14 +15,13 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from copy import deepcopy
 import cairo
+from copy import deepcopy
+
 import wal
-
-from uc2.formats.sk2 import sk2_const
-
 from sk1 import _
 from sk1.resources import icons
+from uc2 import sk2const
 
 DASH_LIST = [
     # solid line
@@ -105,23 +104,23 @@ class DashChoice(wal.BitmapChoice):
         self.set_active(self.dash_list.index(dash))
 
 
-CAP_MODES = [sk2_const.CAP_BUTT, sk2_const.CAP_ROUND, sk2_const.CAP_SQUARE]
+CAP_MODES = [sk2const.CAP_BUTT, sk2const.CAP_ROUND, sk2const.CAP_SQUARE]
 
 CAP_MODE_NAMES = {
-    sk2_const.CAP_BUTT: _('Line exactly at the point'),
-    sk2_const.CAP_ROUND: _('Round ending'),
-    sk2_const.CAP_SQUARE: _('Squared ending'),
+    sk2const.CAP_BUTT: _('Line exactly at the point'),
+    sk2const.CAP_ROUND: _('Round ending'),
+    sk2const.CAP_SQUARE: _('Squared ending'),
 }
 
 CAP_MODE_ICONS = {
-    sk2_const.CAP_BUTT: icons.PD_CAP_BUTT,
-    sk2_const.CAP_ROUND: icons.PD_CAP_ROUND,
-    sk2_const.CAP_SQUARE: icons.PD_CAP_SQUARE,
+    sk2const.CAP_BUTT: icons.PD_CAP_BUTT,
+    sk2const.CAP_ROUND: icons.PD_CAP_ROUND,
+    sk2const.CAP_SQUARE: icons.PD_CAP_SQUARE,
 }
 
 
 class CapChoice(wal.HToggleKeeper):
-    def __init__(self, parent, val=sk2_const.CAP_BUTT):
+    def __init__(self, parent, val=sk2const.CAP_BUTT):
         wal.HToggleKeeper.__init__(self, parent, CAP_MODES, CAP_MODE_ICONS,
                                    CAP_MODE_NAMES)
         self.set_cap(val)
@@ -132,23 +131,23 @@ class CapChoice(wal.HToggleKeeper):
     def get_cap(self): return self.get_mode()
 
 
-JOIN_MODES = [sk2_const.JOIN_MITER, sk2_const.JOIN_ROUND, sk2_const.JOIN_BEVEL]
+JOIN_MODES = [sk2const.JOIN_MITER, sk2const.JOIN_ROUND, sk2const.JOIN_BEVEL]
 
 JOIN_MODE_NAMES = {
-    sk2_const.JOIN_BEVEL: _('Cut-off join'),
-    sk2_const.JOIN_MITER: _('Sharp (angled) corner'),
-    sk2_const.JOIN_ROUND: _('Rounded join'),
+    sk2const.JOIN_BEVEL: _('Cut-off join'),
+    sk2const.JOIN_MITER: _('Sharp (angled) corner'),
+    sk2const.JOIN_ROUND: _('Rounded join'),
 }
 
 JOIN_MODE_ICONS = {
-    sk2_const.JOIN_BEVEL: icons.PD_JOIN_BEVEL,
-    sk2_const.JOIN_MITER: icons.PD_JOIN_MITER,
-    sk2_const.JOIN_ROUND: icons.PD_JOIN_ROUND,
+    sk2const.JOIN_BEVEL: icons.PD_JOIN_BEVEL,
+    sk2const.JOIN_MITER: icons.PD_JOIN_MITER,
+    sk2const.JOIN_ROUND: icons.PD_JOIN_ROUND,
 }
 
 
 class JoinChoice(wal.HToggleKeeper):
-    def __init__(self, parent, val=sk2_const.JOIN_BEVEL):
+    def __init__(self, parent, val=sk2const.JOIN_BEVEL):
         wal.HToggleKeeper.__init__(self, parent, JOIN_MODES, JOIN_MODE_ICONS,
                                    JOIN_MODE_NAMES)
         self.set_join(val)

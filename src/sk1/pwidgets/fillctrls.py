@@ -27,9 +27,8 @@ from patternctrls import PatternMiniPalette, PatternEditor
 from patterns import DEFAULT_PATTERN
 from sk1 import _
 from sk1.resources import icons
-from uc2 import uc2const
+from uc2 import uc2const, sk2const
 from uc2.cms import get_registration_black, color_to_spot, rgb_to_hexcolor
-from uc2.formats.sk2 import sk2_const
 
 
 # --- Solid fill panels
@@ -99,7 +98,7 @@ class CMYK_Panel(SolidFillPanel):
 
     def activate(self, cms, orig_fill, new_color):
         fill = None
-        if orig_fill and orig_fill[1] == sk2_const.FILL_SOLID:
+        if orig_fill and orig_fill[1] == sk2const.FILL_SOLID:
             fill = orig_fill
         if not new_color and fill:
             new_color = cms.get_cmyk_color(fill[2])
@@ -141,7 +140,7 @@ class RGB_Panel(SolidFillPanel):
 
     def activate(self, cms, orig_fill, new_color):
         fill = None
-        if orig_fill and orig_fill[1] == sk2_const.FILL_SOLID:
+        if orig_fill and orig_fill[1] == sk2const.FILL_SOLID:
             fill = orig_fill
         if not new_color and fill:
             new_color = cms.get_rgb_color(fill[2])
@@ -185,7 +184,7 @@ class Gray_Panel(SolidFillPanel):
 
     def activate(self, cms, orig_fill, new_color):
         fill = None
-        if orig_fill and orig_fill[1] == sk2_const.FILL_SOLID:
+        if orig_fill and orig_fill[1] == sk2const.FILL_SOLID:
             fill = orig_fill
         if not new_color and fill:
             new_color = cms.get_grayscale_color(fill[2])
@@ -228,7 +227,7 @@ class SPOT_Panel(SolidFillPanel):
 
     def activate(self, cms, orig_fill, new_color):
         fill = None
-        if orig_fill and orig_fill[1] == sk2_const.FILL_SOLID:
+        if orig_fill and orig_fill[1] == sk2const.FILL_SOLID:
             fill = orig_fill
         if not new_color and fill:
             new_color = color_to_spot(fill[2])
@@ -354,11 +353,11 @@ class SolidFill(FillTab):
         FillTab.activate(self, fill_style)
         if not fill_style:
             mode = EMPTY_MODE
-            self.rule_keeper.set_mode(sk2_const.FILL_EVENODD)
+            self.rule_keeper.set_mode(sk2const.FILL_EVENODD)
         else:
             self.rule_keeper.set_mode(fill_style[0])
-            if fill_style[1] in [sk2_const.FILL_GRADIENT,
-                                 sk2_const.FILL_PATTERN]:
+            if fill_style[1] in [sk2const.FILL_GRADIENT,
+                                 sk2const.FILL_PATTERN]:
                 mode = CMYK_MODE
             else:
                 mode = SOLID_MODE_MAP[fill_style[2][0]]
@@ -408,23 +407,23 @@ class SolidFill(FillTab):
     def get_result(self):
         clr = self.active_panel.get_color()
         if clr:
-            return [self.rule_keeper.get_mode(), sk2_const.FILL_SOLID, clr]
+            return [self.rule_keeper.get_mode(), sk2const.FILL_SOLID, clr]
         else:
             return []
 
 
 # --- Gradient fill stuff
 
-GRADIENT_MODES = [sk2_const.GRADIENT_LINEAR, sk2_const.GRADIENT_RADIAL]
+GRADIENT_MODES = [sk2const.GRADIENT_LINEAR, sk2const.GRADIENT_RADIAL]
 
 GRADIENT_MODE_ICONS = {
-    sk2_const.GRADIENT_LINEAR: icons.PD_LINEAR_GRAD,
-    sk2_const.GRADIENT_RADIAL: icons.PD_RADIAL_GRAD,
+    sk2const.GRADIENT_LINEAR: icons.PD_LINEAR_GRAD,
+    sk2const.GRADIENT_RADIAL: icons.PD_RADIAL_GRAD,
 }
 
 GRADIENT_MODE_NAMES = {
-    sk2_const.GRADIENT_LINEAR: _('Linear gradient'),
-    sk2_const.GRADIENT_RADIAL: _('Radial gradient'),
+    sk2const.GRADIENT_LINEAR: _('Linear gradient'),
+    sk2const.GRADIENT_RADIAL: _('Radial gradient'),
 }
 
 GRADIENT_CLR_MODES = [uc2const.COLOR_CMYK, uc2const.COLOR_RGB,
@@ -455,17 +454,17 @@ class GradientFill(FillTab):
 
     def activate(self, fill_style, new_color=None):
         FillTab.activate(self, fill_style)
-        mode = sk2_const.GRADIENT_LINEAR
-        rule = sk2_const.FILL_EVENODD
+        mode = sk2const.GRADIENT_LINEAR
+        rule = sk2const.FILL_EVENODD
         self.vector = []
         stops = deepcopy(DEFAULT_STOPS)
         if fill_style:
             rule = fill_style[0]
-            if fill_style[1] == sk2_const.FILL_GRADIENT:
+            if fill_style[1] == sk2const.FILL_GRADIENT:
                 mode = fill_style[2][0]
                 self.vector = deepcopy(fill_style[2][1])
                 stops = deepcopy(fill_style[2][2])
-            elif fill_style[1] == sk2_const.FILL_SOLID:
+            elif fill_style[1] == sk2const.FILL_SOLID:
                 if fill_style[2][0] in GRADIENT_CLR_MODES:
                     color0 = deepcopy(fill_style[2])
                     color0[3] = ''
@@ -479,7 +478,7 @@ class GradientFill(FillTab):
                         color1[2] = 0.0
                         color1[3] = ''
                     stops = [[0.0, color0], [1.0, color1]]
-        self.new_fill = [rule, sk2_const.FILL_GRADIENT,
+        self.new_fill = [rule, sk2const.FILL_GRADIENT,
                          [mode, self.vector, stops]]
         self.update()
 
@@ -556,7 +555,7 @@ class GradientFill(FillTab):
         if not self.grad_editor.use_vector():
             vector = []
         grad = [self.grad_keeper.get_mode(), vector, stops]
-        return [self.rule_keeper.get_mode(), sk2_const.FILL_GRADIENT, grad]
+        return [self.rule_keeper.get_mode(), sk2const.FILL_GRADIENT, grad]
 
     def update(self):
         self.grad_keeper.set_mode(self.new_fill[2][0])
@@ -572,16 +571,16 @@ class PatternFill(FillTab):
 
     def activate(self, fill_style, new_color=None):
         FillTab.activate(self, fill_style)
-        rule = sk2_const.FILL_EVENODD
-        pattern_type = sk2_const.PATTERN_IMG
+        rule = sk2const.FILL_EVENODD
+        pattern_type = sk2const.PATTERN_IMG
         pattern = '' + DEFAULT_PATTERN
-        image_style = deepcopy([sk2_const.CMYK_BLACK, sk2_const.CMYK_WHITE])
-        trafo = [] + sk2_const.NORMAL_TRAFO
-        transforms = [] + sk2_const.PATTERN_TRANSFORMS
+        image_style = deepcopy([sk2const.CMYK_BLACK, sk2const.CMYK_WHITE])
+        trafo = [] + sk2const.NORMAL_TRAFO
+        transforms = [] + sk2const.PATTERN_TRANSFORMS
 
         if fill_style:
             rule = fill_style[0]
-            if fill_style[1] == sk2_const.FILL_PATTERN:
+            if fill_style[1] == sk2const.FILL_PATTERN:
                 pattern_type = fill_style[2][0]
                 pattern = deepcopy(fill_style[2][1])
                 if len(fill_style[2]) > 2:
@@ -592,11 +591,11 @@ class PatternFill(FillTab):
                     transforms = [] + fill_style[2][4]
                 else:
                     transforms = []
-            elif fill_style[1] == sk2_const.FILL_SOLID:
+            elif fill_style[1] == sk2const.FILL_SOLID:
                 if fill_style[2][0] in GRADIENT_CLR_MODES:
                     color0 = deepcopy(fill_style[2])
                     color0[3] = ''
-                    color1 = deepcopy(sk2_const.CMYK_WHITE)
+                    color1 = deepcopy(sk2const.CMYK_WHITE)
                     if not color0[0] == color1[0]:
                         color1 = self.cms.get_color(color1, color0[0])
                     color1[3] = ''
@@ -611,7 +610,7 @@ class PatternFill(FillTab):
             color1[3] = ''
             image_style[1] = color1
 
-        self.new_fill = [rule, sk2_const.FILL_PATTERN,
+        self.new_fill = [rule, sk2const.FILL_PATTERN,
                          [pattern_type, pattern, image_style, trafo,
                           transforms]]
         self.update()
@@ -630,10 +629,10 @@ class PatternFill(FillTab):
         self.pack(panel, fill=True, padding_all=5)
         self.pack(wal.HLine(self), fill=True)
 
-        default_pattern_def = [sk2_const.PATTERN_IMG, '' + DEFAULT_PATTERN,
-                               deepcopy([sk2_const.CMYK_BLACK,
-                                         sk2_const.CMYK_WHITE]),
-                               [] + sk2_const.NORMAL_TRAFO]
+        default_pattern_def = [sk2const.PATTERN_IMG, '' + DEFAULT_PATTERN,
+                               deepcopy([sk2const.CMYK_BLACK,
+                                         sk2const.CMYK_WHITE]),
+                               [] + sk2const.NORMAL_TRAFO]
         self.pattern_editor = PatternEditor(self, self.dlg, self.cms,
                                             default_pattern_def,
                                             onchange=self.on_pattern_change)
@@ -666,7 +665,7 @@ class PatternFill(FillTab):
 
     def on_presets_select(self, pattern):
         self.new_fill[2][1] = pattern
-        self.new_fill[2][0] = sk2_const.PATTERN_IMG
+        self.new_fill[2][0] = sk2const.PATTERN_IMG
         self.update()
 
     def on_pattern_change(self, pattern_def):
@@ -682,4 +681,4 @@ class PatternFill(FillTab):
         self.pattern_editor.set_pattern_def(self.new_fill[2])
         self.refpanel.update(self.orig_fill, self.new_fill)
         self.pattern_clrs.set_visible(
-            self.new_fill[2][0] == sk2_const.PATTERN_IMG)
+            self.new_fill[2][0] == sk2const.PATTERN_IMG)

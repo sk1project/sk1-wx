@@ -24,8 +24,7 @@ from colorctrls import SwatchCanvas
 from patterns import PATTERN_PRESETS
 from sk1 import _
 from sk1.resources import icons, get_bmp
-from uc2 import libgeom, libimg
-from uc2.formats.sk2 import sk2_const
+from uc2 import libgeom, libimg, sk2const
 from unitctrls import UnitSpin, StaticUnitLabel
 
 
@@ -45,8 +44,8 @@ class PatternPaletteSwatch(wal.VPanel, SwatchCanvas):
 
     def set_pattern(self, pattern):
         self.pattern = pattern
-        self.fill = [0, sk2_const.FILL_PATTERN,
-                     [sk2_const.PATTERN_IMG, pattern]]
+        self.fill = [0, sk2const.FILL_PATTERN,
+                     [sk2const.PATTERN_IMG, pattern]]
         self.refresh()
 
     def mouse_left_up(self, point):
@@ -92,7 +91,7 @@ class PatternSwatch(wal.VPanel, SwatchCanvas):
         self.set_pattern_def(pattern_def)
 
     def set_pattern_def(self, pattern_def):
-        self.fill = [0, sk2_const.FILL_PATTERN, pattern_def]
+        self.fill = [0, sk2const.FILL_PATTERN, pattern_def]
         self.refresh()
 
 
@@ -143,8 +142,8 @@ class TransformEditor(wal.VPanel):
     callback = None
     transforms = []
 
-    def __init__(self, parent, app, trafo=[] + sk2_const.NORMAL_TRAFO,
-                 transforms=[] + sk2_const.PATTERN_TRANSFORMS, onchange=None):
+    def __init__(self, parent, app, trafo=[] + sk2const.NORMAL_TRAFO,
+                 transforms=[] + sk2const.PATTERN_TRANSFORMS, onchange=None):
         self.app = app
         self.callback = onchange
         wal.VPanel.__init__(self, parent)
@@ -277,7 +276,7 @@ class TrafoEditor(wal.VPanel):
     app = None
     callback = None
 
-    def __init__(self, parent, app, trafo=[] + sk2_const.NORMAL_TRAFO,
+    def __init__(self, parent, app, trafo=[] + sk2const.NORMAL_TRAFO,
                  onchange=None):
         self.app = app
         self.callback = onchange
@@ -365,7 +364,7 @@ class PatternTrafoEditor(wal.VPanel):
     transforms = []
     active_panel = None
 
-    def __init__(self, parent, app, trafo=[] + sk2_const.NORMAL_TRAFO,
+    def __init__(self, parent, app, trafo=[] + sk2const.NORMAL_TRAFO,
                  transforms=[], onchange=None):
         wal.VPanel.__init__(self, parent)
         self.transfom_editor = TransformEditor(self, app,
@@ -464,18 +463,18 @@ class PatternEditor(wal.HPanel):
         self.pattern_color_editor.set_image_style(self.pattern_def[2])
         self.trafo_editor.set_trafo(self.pattern_def[3], self.pattern_def[4])
         self.pattern_color_editor.set_visible(
-            self.pattern_def[0] == sk2_const.PATTERN_IMG)
+            self.pattern_def[0] == sk2const.PATTERN_IMG)
 
     def load_pattern(self):
         img_file = self.app.import_pattern(self.dlg)
         if img_file:
             fobj = open(img_file, 'rb')
             pattern, flag = libimg.read_pattern(fobj.read())
-            pattern_type = sk2_const.PATTERN_TRUECOLOR
+            pattern_type = sk2const.PATTERN_TRUECOLOR
             if flag:
-                pattern_type = sk2_const.PATTERN_IMG
+                pattern_type = sk2const.PATTERN_IMG
                 if flag == 'EPS':
-                    pattern_type = sk2_const.PATTERN_EPS
+                    pattern_type = sk2const.PATTERN_EPS
             self.pattern_def[0] = pattern_type
             self.pattern_def[1] = pattern
             if self.callback:
@@ -483,4 +482,4 @@ class PatternEditor(wal.HPanel):
 
     def save_pattern(self):
         self.app.extract_pattern(self.dlg, self.pattern_def[1],
-                                 self.pattern_def[0] == sk2_const.PATTERN_EPS)
+                                 self.pattern_def[0] == sk2const.PATTERN_EPS)

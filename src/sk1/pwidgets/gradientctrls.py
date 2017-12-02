@@ -16,16 +16,13 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from copy import deepcopy
+
 import wal
-
-from uc2 import uc2const
-from uc2.formats.sk2 import sk2_const
-
+from colorbtn import PDColorButton
+from colorctrls import SwatchCanvas
 from sk1 import _
 from sk1.resources import icons, get_icon
-
-from colorctrls import SwatchCanvas
-from colorbtn import PDColorButton
+from uc2 import uc2const, sk2const
 
 CMYK_PALETTE = [
     [[0.0, [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, 'Black']],
@@ -80,8 +77,8 @@ class GradientPaletteSwatch(wal.VPanel, SwatchCanvas):
 
     def set_stops(self, stops):
         self.stops = stops
-        self.fill = [0, sk2_const.FILL_GRADIENT,
-                     [sk2_const.GRADIENT_LINEAR, [], self.stops]]
+        self.fill = [0, sk2const.FILL_GRADIENT,
+                     [sk2const.GRADIENT_LINEAR, [], self.stops]]
         self.refresh()
 
     def mouse_left_up(self, point):
@@ -307,8 +304,8 @@ class GradientViewer(wal.VPanel, SwatchCanvas):
         wal.VPanel.__init__(self, parent)
         SwatchCanvas.__init__(self, border)
         self.pack(size)
-        self.fill = [0, sk2_const.FILL_GRADIENT,
-                     [sk2_const.GRADIENT_LINEAR, [], []]]
+        self.fill = [0, sk2const.FILL_GRADIENT,
+                     [sk2const.GRADIENT_LINEAR, [], []]]
         self.set_stops(stops)
         if onclick:
             self.callback = onclick

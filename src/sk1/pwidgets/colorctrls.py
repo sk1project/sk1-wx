@@ -17,36 +17,36 @@
 
 import cairo
 import os
-import wal
 from base64 import b64decode
 from copy import deepcopy
 
+import wal
 from palette_viewer import PaletteViewer
 from sk1 import _, config, events
 from sk1.resources import icons, get_icon
-from uc2 import uc2const, cms, libimg, libgeom
+from uc2 import uc2const, cms, libimg, sk2const, libgeom
 from uc2.cms import get_registration_black, verbose_color, val_255_to_dec
-from uc2.formats.sk2 import sk2_const, sk2_model, sk2_config
+from uc2.formats.sk2 import sk2_model, sk2_config
 
-FILL_MODES = [sk2_const.FILL_ANY, sk2_const.FILL_CLOSED_ONLY]
-RULE_MODES = [sk2_const.FILL_EVENODD, sk2_const.FILL_NONZERO]
+FILL_MODES = [sk2const.FILL_ANY, sk2const.FILL_CLOSED_ONLY]
+RULE_MODES = [sk2const.FILL_EVENODD, sk2const.FILL_NONZERO]
 
 FILL_MODE_ICONS = {
-    sk2_const.FILL_ANY: icons.PD_FILL_ANY,
-    sk2_const.FILL_CLOSED_ONLY: icons.PD_FILL_CLOSED_ONLY,
+    sk2const.FILL_ANY: icons.PD_FILL_ANY,
+    sk2const.FILL_CLOSED_ONLY: icons.PD_FILL_CLOSED_ONLY,
 }
 RULE_MODE_ICONS = {
-    sk2_const.FILL_EVENODD: icons.PD_EVENODD,
-    sk2_const.FILL_NONZERO: icons.PD_NONZERO,
+    sk2const.FILL_EVENODD: icons.PD_EVENODD,
+    sk2const.FILL_NONZERO: icons.PD_NONZERO,
 }
 
 FILL_MODE_NAMES = {
-    sk2_const.FILL_ANY: _('Fill any contour'),
-    sk2_const.FILL_CLOSED_ONLY: _('Fill closed only'),
+    sk2const.FILL_ANY: _('Fill any contour'),
+    sk2const.FILL_CLOSED_ONLY: _('Fill closed only'),
 }
 RULE_MODE_NAMES = {
-    sk2_const.FILL_EVENODD: _('Evenodd fill'),
-    sk2_const.FILL_NONZERO: _('Nonzero fill'),
+    sk2const.FILL_EVENODD: _('Evenodd fill'),
+    sk2const.FILL_NONZERO: _('Nonzero fill'),
 }
 
 
@@ -55,7 +55,7 @@ class FillRuleKeeper(wal.HPanel):
     fill_keeper = None
     rule_keeper = None
 
-    def __init__(self, parent, mode=sk2_const.FILL_EVENODD):
+    def __init__(self, parent, mode=sk2const.FILL_EVENODD):
         self.mode = mode
         wal.HPanel.__init__(self, parent)
         self.fill_keeper = wal.HToggleKeeper(self, FILL_MODES,
@@ -67,8 +67,8 @@ class FillRuleKeeper(wal.HPanel):
         self.set_mode(self.mode)
 
     def set_mode(self, mode):
-        self.fill_keeper.set_mode(mode & sk2_const.FILL_CLOSED_ONLY)
-        self.rule_keeper.set_mode(mode & sk2_const.FILL_EVENODD)
+        self.fill_keeper.set_mode(mode & sk2const.FILL_CLOSED_ONLY)
+        self.rule_keeper.set_mode(mode & sk2const.FILL_EVENODD)
 
     def get_mode(self):
         return self.rule_keeper.mode | self.fill_keeper.mode
@@ -219,9 +219,9 @@ class SwatchCanvas(wal.SensitiveCanvas):
         if not self.color is None:
             self.draw_color()
         elif self.fill:
-            if self.fill[1] == sk2_const.FILL_GRADIENT:
+            if self.fill[1] == sk2const.FILL_GRADIENT:
                 self.draw_gradient()
-            elif self.fill[1] == sk2_const.FILL_PATTERN:
+            elif self.fill[1] == sk2const.FILL_PATTERN:
                 self.draw_pattern()
         self.draw_border()
 
@@ -289,7 +289,7 @@ class SwatchCanvas(wal.SensitiveCanvas):
         surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
         ctx = cairo.Context(surface)
         self.draw_cairo_background(ctx)
-        if gradient[0] == sk2_const.GRADIENT_LINEAR:
+        if gradient[0] == sk2const.GRADIENT_LINEAR:
             grd = cairo.LinearGradient(0.0, h / 2.0, w, h / 2.0)
         else:
             grd = cairo.RadialGradient(w / 2.0, h / 2.0, 0,
@@ -318,7 +318,7 @@ class SwatchCanvas(wal.SensitiveCanvas):
         image_obj = sk2_model.Pixmap(config)
         libimg.set_image_data(self.cms, image_obj, bmpstr)
         libimg.flip_left_to_right(image_obj)
-        if pattern[0] == sk2_const.PATTERN_IMG and len(pattern) > 2:
+        if pattern[0] == sk2const.PATTERN_IMG and len(pattern) > 2:
             image_obj.style[3] = deepcopy(pattern[2])
         libimg.update_image(self.cms, image_obj)
         sp = cairo.SurfacePattern(image_obj.cache_cdata)
@@ -420,10 +420,10 @@ class FillSwatch(wal.VPanel, SwatchCanvas):
         if not fill:
             self.color = []
             self.fill = None
-        elif fill[1] == sk2_const.FILL_SOLID:
+        elif fill[1] == sk2const.FILL_SOLID:
             self.color = fill[2]
             self.fill = None
-        elif fill[1] in [sk2_const.FILL_GRADIENT, sk2_const.FILL_PATTERN]:
+        elif fill[1] in [sk2const.FILL_GRADIENT, sk2const.FILL_PATTERN]:
             self.color = None
             self.fill = fill
         tooltip = ''
@@ -480,13 +480,13 @@ class SB_FillSwatch(FillSwatch):
         self.cms = self.app.current_doc.cms
         if self.app.insp.is_obj_pixmap(obj):
             text = _('Fg:')
-            self.set_swatch_fill([sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID,
+            self.set_swatch_fill([sk2const.FILL_EVENODD, sk2const.FILL_SOLID,
                                   obj.style[3][0]])
         else:
             fill = obj.style[0]
             self.set_swatch_fill(fill)
             if fill:
-                if fill[1] == sk2_const.FILL_SOLID:
+                if fill[1] == sk2const.FILL_SOLID:
                     text += ' ' + cms.verbose_color(fill[2])
             else:
                 text += ' ' + _('None')

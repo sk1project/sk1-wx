@@ -18,13 +18,10 @@
 from copy import deepcopy
 
 import wal
-
-from uc2.formats.sk2 import sk2_const
-
-from sk1.resources import icons
-from sk1.dialogs.colordlg import change_color_dlg
-
 from colorctrls import AlphaColorSwatch
+from sk1.dialogs.colordlg import change_color_dlg
+from sk1.resources import icons
+from uc2 import sk2const
 
 
 class PDColorButton(wal.HPanel):
@@ -33,7 +30,7 @@ class PDColorButton(wal.HPanel):
     color = []
     callback = None
 
-    def __init__(self, parent, dlg, cms, color=deepcopy(sk2_const.CMYK_BLACK),
+    def __init__(self, parent, dlg, cms, color=deepcopy(sk2const.CMYK_BLACK),
                  tooltip='', onchange=None):
         self.dlg = dlg
         self.cms = cms
@@ -62,4 +59,5 @@ class PDColorButton(wal.HPanel):
         if ret:
             self.color = ret
             self.swatch.set_color(ret)
-            if self.callback: self.callback(self.get_color())
+            if self.callback:
+                self.callback(self.get_color())
