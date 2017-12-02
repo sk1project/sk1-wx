@@ -22,25 +22,24 @@ from generic import CtxPlugin
 from sk1 import _, events
 from sk1.pwidgets import FontChoice
 from sk1.resources import icons
-from uc2 import libpango
-from uc2.formats.sk2 import sk2_const
+from uc2 import libpango, sk2const
 
 FONT_SIZES = range(5, 14) + range(14, 30, 2) + [32, 36, 40, 48, 56, 64, 72]
 
-ALIGN_MODES = [sk2_const.TEXT_ALIGN_LEFT,
-               sk2_const.TEXT_ALIGN_CENTER,
-               sk2_const.TEXT_ALIGN_RIGHT]
+ALIGN_MODES = [sk2const.TEXT_ALIGN_LEFT,
+               sk2const.TEXT_ALIGN_CENTER,
+               sk2const.TEXT_ALIGN_RIGHT]
 
 ALIGN_MODE_ICONS = {
-    sk2_const.TEXT_ALIGN_LEFT: icons.PD_ALIGN_LEFT,
-    sk2_const.TEXT_ALIGN_CENTER: icons.PD_ALIGN_CENTER,
-    sk2_const.TEXT_ALIGN_RIGHT: icons.PD_ALIGN_RIGHT
+    sk2const.TEXT_ALIGN_LEFT: icons.PD_ALIGN_LEFT,
+    sk2const.TEXT_ALIGN_CENTER: icons.PD_ALIGN_CENTER,
+    sk2const.TEXT_ALIGN_RIGHT: icons.PD_ALIGN_RIGHT
 }
 
 ALIGN_MODE_NAMES = {
-    sk2_const.TEXT_ALIGN_LEFT: _('Align Left'),
-    sk2_const.TEXT_ALIGN_CENTER: _('Centered'),
-    sk2_const.TEXT_ALIGN_RIGHT: _('Align Right')
+    sk2const.TEXT_ALIGN_LEFT: _('Align Left'),
+    sk2const.TEXT_ALIGN_CENTER: _('Centered'),
+    sk2const.TEXT_ALIGN_RIGHT: _('Align Right')
 }
 
 
@@ -98,7 +97,7 @@ class TextStylePlugin(CtxPlugin):
                                        ALIGN_MODE_ICONS, ALIGN_MODE_NAMES,
                                        on_change=self.apply_changes,
                                        allow_none=False)
-        self.align.set_mode(sk2_const.TEXT_ALIGN_LEFT)
+        self.align.set_mode(sk2const.TEXT_ALIGN_LEFT)
         self.add(self.align, 0, wal.LEFT | wal.CENTER, 2)
 
         self.pack(wal.VLine(self), fill=True, padding_all=3)

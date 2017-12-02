@@ -17,9 +17,9 @@
 
 import wal
 
-from uc2.formats.sk2 import sk2_const
 from sk1 import _, config
 from sk1.pwidgets import SolidFill, GradientFill, PatternFill
+from uc2 import sk2const
 
 
 class FillDialog(wal.OkCancelDialog):
@@ -50,12 +50,12 @@ class FillDialog(wal.OkCancelDialog):
             self.nb.add_page(item, item.name)
         self.pack(self.nb, fill=True, expand=True)
 
-        if not self.orig_fill or self.orig_fill[1] == sk2_const.FILL_SOLID:
+        if not self.orig_fill or self.orig_fill[1] == sk2const.FILL_SOLID:
             self.nb.set_active_index(0)
             self.tabs[0].activate(self.orig_fill)
-        elif self.orig_fill[1] == sk2_const.FILL_GRADIENT:
+        elif self.orig_fill[1] == sk2const.FILL_GRADIENT:
             self.nb.set_active_index(1)
-        elif self.orig_fill[1] == sk2_const.FILL_PATTERN:
+        elif self.orig_fill[1] == sk2const.FILL_PATTERN:
             self.nb.set_active_index(2)
         self.start = False
 

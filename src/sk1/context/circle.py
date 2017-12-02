@@ -19,7 +19,7 @@ import math
 
 import wal
 
-from uc2.formats.sk2.sk2_const import ARC_ARC, ARC_CHORD, ARC_PIE_SLICE
+from uc2.sk2const import ARC_ARC, ARC_CHORD, ARC_PIE_SLICE
 
 from sk1 import _, events
 from sk1.resources import icons

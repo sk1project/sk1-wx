@@ -23,7 +23,7 @@ from sk1 import _, config
 from sk1.pwidgets import StaticUnitLabel, UnitSpin, CBMiniPalette
 from sk1.resources import icons, get_bmp
 from uc2 import cms, uc2const
-from uc2.formats.sk2.sk2_const import ORIGINS, FILL_SOLID, FILL_PATTERN
+from uc2.sk2const import ORIGINS, FILL_SOLID, FILL_PATTERN
 from uc2.uc2const import unit_names, unit_full_names
 
 
