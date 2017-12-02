@@ -241,11 +241,7 @@ class SK2_Methods:
         layers += self.get_master_layers()
         if special:
             layers += [self.get_grid_layer(), self.get_guide_layer()]
-        ret = []
-        for item in layers:
-            if self.is_layer_visible(item):
-                ret.append(item)
-        return ret
+        return [layer for layer in layers if self.is_layer_visible(layer)]
 
     def get_active_layers(self, page):
         return [layer for layer in self.get_visible_layers(page)
