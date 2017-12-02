@@ -15,13 +15,10 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import sys
-
-from uc2 import _, events, msgconst
-from uc2.formats.sk2.sk2_presenter import SK2_Presenter
-from uc2.formats.sk2.sk2_const import SK2DOC_ID, SK2XML_ID, SK2VER
+from uc2 import _
 from uc2.formats.generic_filters import get_fileptr
+from uc2.formats.sk2.sk2_presenter import SK2_Presenter
+from uc2.sk2const import SK2DOC_ID, SK2XML_ID, SK2VER
 
 
 def sk2_loader(appdata, filename=None, fileptr=None, translate=True, cnf={},

@@ -17,8 +17,8 @@
 
 from copy import deepcopy
 
-from uc2.formats.sk2.sk2_const import FILL_EVENODD, FILL_SOLID, STROKE_MIDDLE
 from uc2.formats.sk2 import sk2_model
+from uc2.sk2const import FILL_EVENODD, FILL_SOLID, STROKE_MIDDLE
 
 
 class CDR_to_SK2_Translator:

@@ -15,9 +15,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2 import _
+from uc2 import _, sk2const
 from uc2.formats.generic import TextModelObject
-from uc2.formats.sk2 import sk2_const
 
 # Document object enumeration
 HEADER = 1
@@ -171,11 +170,11 @@ class PltJob(PltModelObject):
             self.cache_path = []
             self.cache_path.append(path[0])
             self.cache_path.append(path[1:])
-            self.cache_path.append(sk2_const.CURVE_OPENED)
+            self.cache_path.append(sk2const.CURVE_OPENED)
 
 
         elif self.cache_path and not self.string:
             self.string = 'PU%d,%d;' % (
-            self.cache_path[0][0], self.cache_path[0][1])
+                self.cache_path[0][0], self.cache_path[0][1])
             for point in self.cache_path[1]:
                 self.string += 'PD%d,%d;' % (point[0], point[1])

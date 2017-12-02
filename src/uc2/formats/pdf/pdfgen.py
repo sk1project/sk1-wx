@@ -16,21 +16,19 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
-from copy import deepcopy
+from PIL import Image
 from base64 import b64decode
 from cStringIO import StringIO
-from PIL import Image
-
-from reportlab.pdfgen.canvas import Canvas, FILL_EVEN_ODD, FILL_NON_ZERO
-from reportlab.pdfbase.pdfdoc import PDFInfo, PDFString, PDFDate, PDFDictionary
-from reportlab.lib.utils import ImageReader
+from copy import deepcopy
 from reportlab.lib.colors import CMYKColorSep, Color, CMYKColor
-
-from uc2 import _, uc2const, events
-from uc2 import libgeom, libimg
-from uc2.formats.sk2 import sk2_const, sk2_model
+from reportlab.lib.utils import ImageReader
+from reportlab.pdfbase.pdfdoc import PDFInfo, PDFString, PDFDate, PDFDictionary
+from reportlab.pdfgen.canvas import Canvas, FILL_EVEN_ODD, FILL_NON_ZERO
 
 from pdfconst import PDF_VERSION_DEFAULT
+from uc2 import _, uc2const, events
+from uc2 import libgeom, sk2const, libimg
+from uc2.formats.sk2 import sk2_model
 
 
 class UC_PDFInfo(PDFInfo):
@@ -164,10 +162,10 @@ class PDFGenerator(object):
         stroke_style = curve_obj.style[1]
         if stroke_style and stroke_style[7]:
             self.stroke_pdfpath(pdfpath, stroke_style, curve_obj.stroke_trafo)
-        if fill_style and fill_style[0] & sk2_const.FILL_CLOSED_ONLY and closed:
+        if fill_style and fill_style[0] & sk2const.FILL_CLOSED_ONLY and closed:
             self.fill_pdfpath(curve_obj, pdfpath, fill_style,
                               curve_obj.fill_trafo)
-        elif fill_style and not fill_style[0] & sk2_const.FILL_CLOSED_ONLY:
+        elif fill_style and not fill_style[0] & sk2const.FILL_CLOSED_ONLY:
             self.fill_pdfpath(curve_obj, pdfpath, fill_style,
                               curve_obj.fill_trafo)
         if stroke_style and not stroke_style[7]:
@@ -185,10 +183,10 @@ class PDFGenerator(object):
         self.canvas.saveState()
         self.canvas.clipPath(pdfpath, 0, 0)
 
-        if fill_style and fill_style[0] & sk2_const.FILL_CLOSED_ONLY and closed:
+        if fill_style and fill_style[0] & sk2const.FILL_CLOSED_ONLY and closed:
             self.fill_pdfpath(container, pdfpath, fill_style,
                               container.fill_trafo)
-        elif fill_style and not fill_style[0] & sk2_const.FILL_CLOSED_ONLY:
+        elif fill_style and not fill_style[0] & sk2const.FILL_CLOSED_ONLY:
             self.fill_pdfpath(container, pdfpath, fill_style,
                               container.fill_trafo)
 
@@ -217,8 +215,8 @@ class PDFGenerator(object):
         return pdfpath, closed
 
     def set_fill_rule(self, fillrule):
-        if fillrule in (sk2_const.FILL_EVENODD,
-                        sk2_const.FILL_EVENODD_CLOSED_ONLY):
+        if fillrule in (sk2const.FILL_EVENODD,
+                        sk2const.FILL_EVENODD_CLOSED_ONLY):
             fillrule = FILL_EVEN_ODD
         else:
             fillrule = FILL_NON_ZERO
@@ -274,7 +272,7 @@ class PDFGenerator(object):
             width = stroke_style[1]
         else:
             if not stroke_trafo:
-                stroke_trafo = [] + sk2_const.NORMAL_TRAFO
+                stroke_trafo = [] + sk2const.NORMAL_TRAFO
             points = [[0.0, 0.0], [1.0, 0.0]]
             points = libgeom.apply_trafo_to_points(points, stroke_trafo)
             coef = libgeom.distance(*points)
@@ -304,10 +302,10 @@ class PDFGenerator(object):
     def fill_pdfpath(self, obj, pdfpath, fill_style, fill_trafo=None):
         self.set_fill_rule(fill_style[0])
 
-        if fill_style[1] == sk2_const.FILL_SOLID:
+        if fill_style[1] == sk2const.FILL_SOLID:
             self.canvas.setFillColor(self.get_pdfcolor(fill_style[2]))
             self.canvas.drawPath(pdfpath, 0, 1)
-        elif fill_style[1] == sk2_const.FILL_GRADIENT:
+        elif fill_style[1] == sk2const.FILL_GRADIENT:
             gradient = fill_style[2]
             stops = gradient[2]
             transparency = False
@@ -320,7 +318,7 @@ class PDFGenerator(object):
             else:
                 self.fill_gradient(pdfpath, fill_trafo, gradient)
 
-        elif fill_style[1] == sk2_const.FILL_PATTERN:
+        elif fill_style[1] == sk2const.FILL_PATTERN:
             pattern = fill_style[2]
             self.fill_pattern(obj, pdfpath, fill_trafo, pattern)
 
@@ -337,7 +335,7 @@ class PDFGenerator(object):
         for offset, color in stops:
             positions.append(offset)
             colors.append(self.get_pdfcolor(color))
-        if grad_type == sk2_const.GRADIENT_RADIAL:
+        if grad_type == sk2const.GRADIENT_RADIAL:
             radius = libgeom.distance(sp, ep)
             self.canvas.radialGradient(sp[0], sp[1], radius, colors,
                                        positions, True)
@@ -350,7 +348,7 @@ class PDFGenerator(object):
 
     def fill_tr_gradient(self, obj, pdfpath, fill_trafo, gradient):
         grad_type = gradient[0]
-        if grad_type == sk2_const.GRADIENT_RADIAL:
+        if grad_type == sk2const.GRADIENT_RADIAL:
             self.fill_radial_tr_gradient(obj, pdfpath, fill_trafo, gradient)
         else:
             self.fill_linear_tr_gradient(obj, pdfpath, fill_trafo, gradient)
@@ -443,7 +441,7 @@ class PDFGenerator(object):
                                                              [0.0, 1.0]],
                                                             inv_trafo))
 
-        circle_paths = libgeom.get_circle_paths(0.0, 0.0, sk2_const.ARC_CHORD)
+        circle_paths = libgeom.get_circle_paths(0.0, 0.0, sk2const.ARC_CHORD)
         trafo = [2.0, 0.0, 0.0, 2.0, -1.0, -1.0]
         circle_paths = libgeom.apply_trafo_to_paths(circle_paths, trafo)
 
@@ -524,7 +522,7 @@ class PDFGenerator(object):
         bmpstr = b64decode(pattern[1])
         image_obj = sk2_model.Pixmap(obj.config)
         libimg.set_image_data(self.cms, image_obj, bmpstr)
-        if pattern[0] == sk2_const.PATTERN_IMG and \
+        if pattern[0] == sk2const.PATTERN_IMG and \
                         len(pattern) > 2:
             image_obj.style[3] = deepcopy(pattern[2])
         libimg.update_image(self.cms, image_obj)

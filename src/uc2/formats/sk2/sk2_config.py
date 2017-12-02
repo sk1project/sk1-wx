@@ -16,9 +16,8 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from uc2 import uc2const, sk2const
 from uc2.utils.config import XmlConfigParser
-from uc2.formats.sk2 import sk2_const
-from uc2 import uc2const
 
 
 class SK2_Config(XmlConfigParser):
@@ -30,7 +29,7 @@ class SK2_Config(XmlConfigParser):
     preview_transparent = False
 
     # --- DOCUMENT PROPERTIES
-    doc_origin = sk2_const.DOC_ORIGIN_LL
+    doc_origin = sk2const.DOC_ORIGIN_LL
     doc_units = uc2const.UNIT_MM
     doc_author = ''
     doc_license = ''
@@ -55,15 +54,15 @@ class SK2_Config(XmlConfigParser):
 
     # --- FILL STYLE
     default_fill = []
-    default_fill_rule = sk2_const.FILL_EVENODD
+    default_fill_rule = sk2const.FILL_EVENODD
 
     # --- STROKE STYLE
-    default_stroke_rule = sk2_const.STROKE_MIDDLE
+    default_stroke_rule = sk2const.STROKE_MIDDLE
     default_stroke_width = 0.1 * uc2const.mm_to_pt
-    default_stroke_color = sk2_const.CMYK_BLACK
+    default_stroke_color = sk2const.CMYK_BLACK
     default_stroke_dash = []
-    default_stroke_cap = sk2_const.CAP_BUTT
-    default_stroke_join = sk2_const.JOIN_MITER
+    default_stroke_cap = sk2const.CAP_BUTT
+    default_stroke_join = sk2const.JOIN_MITER
     default_stroke_miter_limit = 10.433
     default_stroke_behind_flag = 0
     default_stroke_scalable_flag = 0
@@ -87,7 +86,7 @@ class SK2_Config(XmlConfigParser):
     default_font_family = 'Sans'
     default_font_face = 'Regular'
     default_font_size = 12.0
-    default_text_alignment = sk2_const.TEXT_ALIGN_LEFT
+    default_text_alignment = sk2const.TEXT_ALIGN_LEFT
     default_text_spacing = []
     default_cluster_flag = True
     default_text_style = [default_font_family, default_font_face,
@@ -95,12 +94,12 @@ class SK2_Config(XmlConfigParser):
                           default_text_spacing,
                           default_cluster_flag]
 
-    default_text_fill = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID,
-                         sk2_const.CMYK_BLACK]
+    default_text_fill = [sk2const.FILL_EVENODD, sk2const.FILL_SOLID,
+                         sk2const.CMYK_BLACK]
 
     # --- PIXMAP STYLE
-    default_cmyk_image_style = [sk2_const.CMYK_BLACK, sk2_const.CMYK_WHITE]
-    default_rgb_image_style = [sk2_const.RGB_BLACK, sk2_const.RGB_WHITE]
+    default_cmyk_image_style = [sk2const.CMYK_BLACK, sk2const.CMYK_WHITE]
+    default_rgb_image_style = [sk2const.RGB_BLACK, sk2const.RGB_WHITE]
     default_image_style = [[], [], [], default_cmyk_image_style]
 
     # --- POLYGON

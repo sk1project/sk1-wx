@@ -19,31 +19,30 @@ import cairo
 from base64 import b64decode
 from copy import deepcopy
 
-from uc2 import libimg, libcairo, libgeom
+from uc2 import libimg, libcairo, libgeom, sk2const
 from uc2.formats.sk2 import sk2_model
-from uc2.formats.sk2 import sk2_const
 
 CAIRO_BLACK = [0.0, 0.0, 0.0]
 CAIRO_GRAY = [0.5, 0.5, 0.5]
 CAIRO_WHITE = [1.0, 1.0, 1.0]
 
 CAPS = {
-    sk2_const.CAP_BUTT: cairo.LINE_CAP_BUTT,
-    sk2_const.CAP_ROUND: cairo.LINE_CAP_ROUND,
-    sk2_const.CAP_SQUARE: cairo.LINE_CAP_SQUARE,
+    sk2const.CAP_BUTT: cairo.LINE_CAP_BUTT,
+    sk2const.CAP_ROUND: cairo.LINE_CAP_ROUND,
+    sk2const.CAP_SQUARE: cairo.LINE_CAP_SQUARE,
 }
 
 JOINS = {
-    sk2_const.JOIN_BEVEL: cairo.LINE_JOIN_BEVEL,
-    sk2_const.JOIN_MITER: cairo.LINE_JOIN_MITER,
-    sk2_const.JOIN_ROUND: cairo.LINE_JOIN_ROUND,
+    sk2const.JOIN_BEVEL: cairo.LINE_JOIN_BEVEL,
+    sk2const.JOIN_MITER: cairo.LINE_JOIN_MITER,
+    sk2const.JOIN_ROUND: cairo.LINE_JOIN_ROUND,
 }
 
 EXTEND = {
-    sk2_const.GRADIENT_EXTEND_NONE: cairo.EXTEND_NONE,
-    sk2_const.GRADIENT_EXTEND_PAD: cairo.EXTEND_PAD,
-    sk2_const.GRADIENT_EXTEND_REPEAT: cairo.EXTEND_REPEAT,
-    sk2_const.GRADIENT_EXTEND_REFLECT: cairo.EXTEND_REFLECT,
+    sk2const.GRADIENT_EXTEND_NONE: cairo.EXTEND_NONE,
+    sk2const.GRADIENT_EXTEND_PAD: cairo.EXTEND_PAD,
+    sk2const.GRADIENT_EXTEND_REPEAT: cairo.EXTEND_REPEAT,
+    sk2const.GRADIENT_EXTEND_REFLECT: cairo.EXTEND_REFLECT,
 }
 
 
@@ -88,7 +87,7 @@ class CairoRenderer:
         image_obj = sk2_model.Pixmap(obj.config)
         libimg.set_image_data(self.cms, image_obj, bmpstr)
         libimg.flip_top_to_bottom(image_obj)
-        if pattern_fill[0] == sk2_const.PATTERN_IMG and \
+        if pattern_fill[0] == sk2const.PATTERN_IMG and \
                         len(pattern_fill) > 2:
             image_obj.style[3] = deepcopy(pattern_fill[2])
         if gray:
@@ -268,32 +267,32 @@ class CairoRenderer:
     def process_fill(self, ctx, obj):
         fill = obj.style[0]
         fill_rule = fill[0]
-        if fill_rule & sk2_const.FILL_CLOSED_ONLY and not obj.is_closed():
+        if fill_rule & sk2const.FILL_CLOSED_ONLY and not obj.is_closed():
             ctx.set_source_rgba(0.0, 0.0, 0.0, 0.0)
             return
-        if fill_rule & sk2_const.FILL_EVENODD:
+        if fill_rule & sk2const.FILL_EVENODD:
             ctx.set_fill_rule(cairo.FILL_RULE_EVEN_ODD)
         else:
             ctx.set_fill_rule(cairo.FILL_RULE_WINDING)
-        if fill[1] == sk2_const.FILL_SOLID:
+        if fill[1] == sk2const.FILL_SOLID:
             if obj.fill_trafo: obj.fill_trafo = []
             color = fill[2]
             ctx.set_source_rgba(*self.get_color(color))
-        elif fill[1] == sk2_const.FILL_GRADIENT:
+        elif fill[1] == sk2const.FILL_GRADIENT:
             if not obj.fill_trafo:
-                obj.fill_trafo = [] + sk2_const.NORMAL_TRAFO
+                obj.fill_trafo = [] + sk2const.NORMAL_TRAFO
             gradient = fill[2]
             points = gradient[1]
             if not points:
-                obj.fill_trafo = [] + sk2_const.NORMAL_TRAFO
+                obj.fill_trafo = [] + sk2const.NORMAL_TRAFO
                 points = libgeom.bbox_middle_points(obj.cache_bbox)
-                if gradient[0] == sk2_const.GRADIENT_LINEAR:
+                if gradient[0] == sk2const.GRADIENT_LINEAR:
                     points = [points[0], points[2]]
                 else:
                     points = [[points[1][0], points[2][1]], points[2]]
                 gradient[1] = points
             coords = points[0] + points[1]
-            if gradient[0] == sk2_const.GRADIENT_LINEAR:
+            if gradient[0] == sk2const.GRADIENT_LINEAR:
                 grd = cairo.LinearGradient(*coords)
             else:
                 x0, y0 = coords[:2]
@@ -308,9 +307,9 @@ class CairoRenderer:
             grd.set_extend(extend)
             grd.set_matrix(matrix)
             ctx.set_source(grd)
-        elif fill[1] == sk2_const.FILL_PATTERN:
+        elif fill[1] == sk2const.FILL_PATTERN:
             if not obj.fill_trafo:
-                obj.fill_trafo = [] + sk2_const.NORMAL_TRAFO
+                obj.fill_trafo = [] + sk2const.NORMAL_TRAFO
                 obj.fill_trafo = obj.fill_trafo[:4] + \
                                  [obj.cache_bbox[0], obj.cache_bbox[3]]
             pattern_fill = fill[2]
@@ -346,7 +345,7 @@ class CairoRenderer:
             if obj and obj.stroke_trafo: obj.stroke_trafo = []
         else:
             if obj and not obj.stroke_trafo:
-                obj.stroke_trafo = [] + sk2_const.NORMAL_TRAFO
+                obj.stroke_trafo = [] + sk2const.NORMAL_TRAFO
             points = [[0.0, 0.0], [1.0, 0.0]]
             points = libgeom.apply_trafo_to_points(points, obj.stroke_trafo)
             coef = libgeom.distance(*points)

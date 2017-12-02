@@ -19,8 +19,7 @@ import math
 from copy import deepcopy
 from base64 import b64decode, b64encode
 
-from uc2 import _, cms, uc2const, libgeom
-from uc2.formats.sk2 import sk2_const
+from uc2 import _, cms, uc2const, libgeom, sk2const
 from uc2.formats.generic import TextModelObject
 from sk2_cids import *
 
@@ -178,7 +177,7 @@ class Pages(DocumentObject):
     page_format = []
     page_counter = 0
     desktop_bg = [1.0, 1.0, 1.0]
-    page_fill = [sk2_const.FILL_SOLID, [1.0, 1.0, 1.0]]
+    page_fill = [sk2const.FILL_SOLID, [1.0, 1.0, 1.0]]
     page_border = True
 
     def __init__(self, config, parent=None):
@@ -622,10 +621,10 @@ class Rectangle(PrimitiveObject):
     corners = []
 
     def __init__(self, config, parent=None,
-                 rect=[] + sk2_const.STUB_RECT,
-                 trafo=[] + sk2_const.NORMAL_TRAFO,
-                 style=[] + sk2_const.EMPTY_STYLE,
-                 corners=[] + sk2_const.CORNERS,
+                 rect=[] + sk2const.STUB_RECT,
+                 trafo=[] + sk2const.NORMAL_TRAFO,
+                 style=[] + sk2const.EMPTY_STYLE,
+                 corners=[] + sk2const.CORNERS,
                  ):
         self.cid = RECTANGLE
         self.parent = parent
@@ -702,15 +701,15 @@ class Circle(PrimitiveObject):
     cid = CIRCLE
     angle1 = 0.0
     angle2 = 0.0
-    circle_type = sk2_const.ARC_CHORD
-    initial_trafo = sk2_const.NORMAL_TRAFO
+    circle_type = sk2const.ARC_CHORD
+    initial_trafo = sk2const.NORMAL_TRAFO
 
     def __init__(self, config, parent=None,
-                 rect=[] + sk2_const.STUB_RECT,
+                 rect=[] + sk2const.STUB_RECT,
                  angle1=0.0,
                  angle2=0.0,
-                 circle_type=sk2_const.ARC_CHORD,
-                 style=[] + sk2_const.EMPTY_STYLE,
+                 circle_type=sk2const.ARC_CHORD,
+                 style=[] + sk2const.EMPTY_STYLE,
                  ):
         self.cid = CIRCLE
         self.parent = parent
@@ -725,7 +724,7 @@ class Circle(PrimitiveObject):
     def is_circle(self): return True
 
     def is_closed(self):
-        if self.circle_type == sk2_const.ARC_ARC: return False
+        if self.circle_type == sk2const.ARC_ARC: return False
         return True
 
     def get_center(self): return [0.5, 0.5]
@@ -753,16 +752,16 @@ class Polygon(PrimitiveObject):
     angle2 = 0.0
     coef1 = 1.0
     coef2 = 1.0
-    initial_trafo = sk2_const.NORMAL_TRAFO
+    initial_trafo = sk2const.NORMAL_TRAFO
 
     def __init__(self, config, parent=None,
-                 rect=[] + sk2_const.STUB_RECT,
+                 rect=[] + sk2const.STUB_RECT,
                  angel1=0.0,
                  angel2=0.0,
                  coef1=1.0,
                  coef2=1.0,
                  corners_num=0,
-                 style=[] + sk2_const.EMPTY_STYLE,
+                 style=[] + sk2const.EMPTY_STYLE,
                  ):
         self.cid = POLYGON
         self.parent = parent
@@ -834,9 +833,9 @@ class Curve(PrimitiveObject):
     paths = []
 
     def __init__(self, config, parent=None,
-                 paths=[] + sk2_const.STUB_PATHS,
-                 trafo=[] + sk2_const.NORMAL_TRAFO,
-                 style=[] + sk2_const.EMPTY_STYLE):
+                 paths=[] + sk2const.STUB_PATHS,
+                 trafo=[] + sk2const.NORMAL_TRAFO,
+                 style=[] + sk2const.EMPTY_STYLE):
         self.cid = CURVE
         self.config = config
         self.parent = parent
@@ -852,7 +851,7 @@ class Curve(PrimitiveObject):
 
     def is_closed(self):
         for path in self.paths:
-            if path[2] == sk2_const.CURVE_CLOSED:
+            if path[2] == sk2const.CURVE_CLOSED:
                 return True
         return False
 
@@ -875,7 +874,7 @@ class Text(PrimitiveObject):
     text = ""
     width = -1
     markup = []
-    initial_trafo = sk2_const.NORMAL_TRAFO
+    initial_trafo = sk2const.NORMAL_TRAFO
     trafos = None
 
     cache_glyphs = []
@@ -887,9 +886,9 @@ class Text(PrimitiveObject):
     def __init__(self, config, parent=None,
                  point=[0.0, 0.0],
                  text="",
-                 width=sk2_const.TEXTBLOCK_WIDTH,
-                 trafo=[] + sk2_const.NORMAL_TRAFO,
-                 style=[] + sk2_const.EMPTY_STYLE):
+                 width=sk2const.TEXTBLOCK_WIDTH,
+                 trafo=[] + sk2const.NORMAL_TRAFO,
+                 style=[] + sk2const.EMPTY_STYLE):
 
         self.config = config
         self.parent = parent
@@ -921,7 +920,7 @@ class Text(PrimitiveObject):
         return True
 
     def is_textblock(self):
-        return self.width == sk2_const.TEXTBLOCK_WIDTH
+        return self.width == sk2const.TEXTBLOCK_WIDTH
 
     def get_glyphs(self):
         glyphs, points, data, bbox, cl = libgeom.get_text_glyphs(
@@ -931,8 +930,8 @@ class Text(PrimitiveObject):
         self.cache_layout_data = data
         self.cache_clusters = cl
         dx = 0.0
-        if self.style[2][3] == sk2_const.TEXT_ALIGN_CENTER: dx = -bbox[2] / 2.0
-        if self.style[2][3] == sk2_const.TEXT_ALIGN_RIGHT: dx = -bbox[2]
+        if self.style[2][3] == sk2const.TEXT_ALIGN_CENTER: dx = -bbox[2] / 2.0
+        if self.style[2][3] == sk2const.TEXT_ALIGN_RIGHT: dx = -bbox[2]
         bbox[0] += dx
         bbox[2] += dx
         self.cache_layout_bbox = libgeom.normalize_bbox(bbox)
@@ -1081,7 +1080,7 @@ class Pixmap(PrimitiveObject):
                  bitmap='',
                  alpha_channel='',
                  size=(100, 100),
-                 trafo=[] + sk2_const.NORMAL_TRAFO,
+                 trafo=[] + sk2const.NORMAL_TRAFO,
                  style=[]):
         self.cid = PIXMAP
         self.config = config
@@ -1101,7 +1100,7 @@ class Pixmap(PrimitiveObject):
     def get_initial_paths(self):
         width, height = self.get_size()
         return libgeom.get_rect_paths([0, 0], width, height,
-                                      [] + sk2_const.CORNERS)
+                                      [] + sk2const.CORNERS)
 
     def get_resolution(self):
         path = libgeom.apply_trafo_to_paths(self.cache_paths, self.trafo)[0]

@@ -15,11 +15,11 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2 import uc2const
-from uc2.formats.sk2.sk2_presenter import SK2_Presenter
-from uc2.formats.sk2 import sk2_model, sk2_const
-from uc2.formats.generic_filters import get_fileptr
 from uc2 import libimg
+from uc2 import uc2const, sk2const
+from uc2.formats.generic_filters import get_fileptr
+from uc2.formats.sk2 import sk2_model
+from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 
 
 def im_loader(appdata, filename=None, fileptr=None, translate=True, cnf={},
@@ -31,7 +31,7 @@ def im_loader(appdata, filename=None, fileptr=None, translate=True, cnf={},
 
     sk2_doc = SK2_Presenter(appdata, cnf)
     sk2_doc.doc_file = filename
-    sk2_doc.methods.set_doc_origin(sk2_const.DOC_ORIGIN_LU)
+    sk2_doc.methods.set_doc_origin(sk2const.DOC_ORIGIN_LU)
     sk2_doc.methods.set_doc_units(uc2const.UNIT_PX)
     page = sk2_doc.methods.get_page()
 

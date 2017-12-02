@@ -15,15 +15,15 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 import cairo
+import sys
 from base64 import b64encode
 from cStringIO import StringIO
 
+from uc2 import libgeom, sk2const
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
-from uc2.formats.sk2 import sk2_model, sk2_const
+from uc2.formats.sk2 import sk2_model
 from uc2.formats.sk2.crenderer import CairoRenderer
-from uc2 import libgeom
 
 
 class SK2_Loader(AbstractLoader):
@@ -36,9 +36,9 @@ class SK2_Loader(AbstractLoader):
         self.break_flag = False
         self.parent_stack = []
         line = self.fileptr.readline()
-        if not line[:len(sk2_const.SK2DOC_ID)] == sk2_const.SK2DOC_ID:
+        if not line[:len(sk2const.SK2DOC_ID)] == sk2const.SK2DOC_ID:
             while not self.fileptr.readline().rstrip('\n') == \
-                    sk2_const.SK2DOC_START: pass
+                    sk2const.SK2DOC_START: pass
         while True:
             if self.break_flag: break
             self.line = self.fileptr.readline()
@@ -86,18 +86,18 @@ class SK2_Saver(AbstractSaver):
         if self.config.preview:
             preview = self.generate_preview()
             w, h = self.config.preview_size
-            self.writeln(sk2_const.SK2XML_START)
-            self.writeln(sk2_const.SK2XML_ID + sk2_const.SK2VER)
+            self.writeln(sk2const.SK2XML_START)
+            self.writeln(sk2const.SK2XML_ID + sk2const.SK2VER)
             size = '%x' % len(preview)
             size = '0' * (8 - len(size)) + size
             self.writeln('%s -->' % size)
-            self.writeln(sk2_const.SK2SVG_START % (w, h))
-            self.writeln(sk2_const.SK2IMG_TAG)
+            self.writeln(sk2const.SK2SVG_START % (w, h))
+            self.writeln(sk2const.SK2IMG_TAG)
             self.writeln(preview)
-            self.writeln(sk2_const.SK2IMG_TAG_END % (w, h))
-            self.writeln(sk2_const.SK2DOC_START)
+            self.writeln(sk2const.SK2IMG_TAG_END % (w, h))
+            self.writeln(sk2const.SK2DOC_START)
         else:
-            self.writeln(sk2_const.SK2DOC_ID + sk2_const.SK2VER)
+            self.writeln(sk2const.SK2DOC_ID + sk2const.SK2VER)
         self.save_obj(self.model)
         if self.config.preview:
             self.writeln('-->\n</svg>')
