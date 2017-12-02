@@ -17,20 +17,18 @@
 
 import os
 import sys
-
 from copy import deepcopy
 
-from uc2.formats import get_loader, get_saver
-from uc2.formats.sk2.sk2_presenter import SK2_Presenter
-from uc2 import uc2const
-from uc2.utils.fs import change_file_extension
-
 from sk1 import _, events, modes
+from sk1.dialogs import ProgressDialog
+from sk1.document.api import PresenterAPI
 from sk1.document.eventloop import EventLoop
 from sk1.document.selection import Selection
-from sk1.document.api import PresenterAPI
 from sk1.document.snapping import SnapManager
-from sk1.dialogs import ProgressDialog
+from uc2 import uc2const
+from uc2.formats import get_loader, get_saver
+from uc2.formats.sk2.sk2_presenter import SK2_Presenter
+from uc2.utils.fs import change_file_extension
 
 
 class PD_Presenter:
@@ -296,8 +294,11 @@ class PD_Presenter:
             events.emit(events.PAGE_CHANGED, self)
 
     def set_active_layer(self, page, layer_num=-1):
-        self.active_layer = self.doc_presenter.methods.get_layer(page,
-                                                                 layer_num)
+        dp = self.doc_presenter
+        if layer_num == -1:
+            self.active_layer = dp.methods.get_active_layers(page)[-1]
+        else:
+            self.active_layer = dp.methods.get_layer(page, layer_num)
 
     def get_layers(self, page=None):
         if page is None:

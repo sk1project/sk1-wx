@@ -247,6 +247,10 @@ class SK2_Methods:
                 ret.append(item)
         return ret
 
+    def get_active_layers(self, page):
+        return [layer for layer in self.get_visible_layers(page)
+                if self.is_layer_editable(layer)]
+
     def get_layer_color(self, layer):
         return deepcopy(layer.style[1][2])
 
