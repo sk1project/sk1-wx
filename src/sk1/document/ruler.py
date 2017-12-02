@@ -24,8 +24,7 @@ import wal
 from sk1 import config, modes, events
 from sk1.appconst import RENDERING_DELAY
 from sk1.resources import get_icon, icons
-from uc2 import uc2const, cms
-from uc2.formats.sk2 import sk2_const
+from uc2 import uc2const, cms, sk2const
 
 HFONT = {}
 VFONT = {}
@@ -60,7 +59,7 @@ class RulerCorner(wal.HPanel):
     bitmaps = {}
     presenter = None
     eventloop = None
-    origin = sk2_const.DOC_ORIGIN_LL
+    origin = sk2const.DOC_ORIGIN_LL
 
     def __init__(self, presenter, parent):
         self.presenter = presenter
@@ -68,9 +67,9 @@ class RulerCorner(wal.HPanel):
         wal.HPanel.__init__(self, parent)
         size = config.ruler_size
         if not BITMAPS:
-            BITMAPS[sk2_const.DOC_ORIGIN_CENTER] = get_icon(icons.ORIGIN_CENTER)
-            BITMAPS[sk2_const.DOC_ORIGIN_LL] = get_icon(icons.ORIGIN_LL)
-            BITMAPS[sk2_const.DOC_ORIGIN_LU] = get_icon(icons.ORIGIN_LU)
+            BITMAPS[sk2const.DOC_ORIGIN_CENTER] = get_icon(icons.ORIGIN_CENTER)
+            BITMAPS[sk2const.DOC_ORIGIN_LL] = get_icon(icons.ORIGIN_LL)
+            BITMAPS[sk2const.DOC_ORIGIN_LU] = get_icon(icons.ORIGIN_LU)
         self.add((size, size))
         self.set_bg(wal.WHITE)
         self.Bind(wx.EVT_PAINT, self._on_paint, self)
@@ -95,10 +94,10 @@ class RulerCorner(wal.HPanel):
 
     def left_click(self, *args):
         origin = self.presenter.model.doc_origin
-        if origin < sk2_const.ORIGINS[-1]:
+        if origin < sk2const.ORIGINS[-1]:
             origin += 1
         else:
-            origin = sk2_const.ORIGINS[0]
+            origin = sk2const.ORIGINS[0]
         self.presenter.api.set_doc_origin(origin)
 
     def destroy(self):
@@ -201,9 +200,9 @@ class Ruler(wal.HPanel):
         x = y = 0
         udx = udy = uc2const.unit_dict[self.presenter.model.doc_units]
         origin = self.presenter.model.doc_origin
-        if origin == sk2_const.DOC_ORIGIN_LL:
+        if origin == sk2const.DOC_ORIGIN_LL:
             x0, y0 = canvas.point_doc_to_win([-w / 2.0 + x, -h / 2.0 + y])
-        elif origin == sk2_const.DOC_ORIGIN_LU:
+        elif origin == sk2const.DOC_ORIGIN_LU:
             x0, y0 = canvas.point_doc_to_win([-w / 2.0 + x, h / 2.0 + y])
         else:
             x0, y0 = canvas.point_doc_to_win([x, y])
@@ -263,7 +262,7 @@ class Ruler(wal.HPanel):
             i = -1
             pos = 0
             shift = pw / 2.0
-            if origin == sk2_const.DOC_ORIGIN_CENTER:
+            if origin == sk2const.DOC_ORIGIN_CENTER:
                 shift = 0.0
             while pos < w:
                 pos = sxt + i * dxt
@@ -302,14 +301,14 @@ class Ruler(wal.HPanel):
             i = -1
             pos = 0
             shift = 0.0
-            if origin == sk2_const.DOC_ORIGIN_LL:
+            if origin == sk2const.DOC_ORIGIN_LL:
                 shift = ph / 2.0
-            if origin == sk2_const.DOC_ORIGIN_LU:
+            if origin == sk2const.DOC_ORIGIN_LU:
                 shift = -ph / 2.0
             while pos < h:
                 pos = syt + i * dyt
                 doc_pos = canvas.point_win_to_doc((0, pos))[1] + shift
-                if origin == sk2_const.DOC_ORIGIN_LU:
+                if origin == sk2const.DOC_ORIGIN_LU:
                     doc_pos *= -1.0
                 doc_pos *= uc2const.point_dict[self.presenter.model.doc_units]
                 if float_flag:

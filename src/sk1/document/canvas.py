@@ -17,9 +17,9 @@
 
 import cairo
 import inspect
-import wal
 import wx
 
+import wal
 from ctx_menu import ContextMenu
 from sk1 import events, modes, config
 from sk1.appconst import PAGEFIT, ZOOM_IN, ZOOM_OUT, RENDERING_DELAY
@@ -27,8 +27,8 @@ from sk1.document import controllers
 from sk1.document.kbd_proc import KbdProcessor
 from sk1.document.renderer import PDRenderer
 from uc2 import uc2const, libcairo, libgeom
-from uc2.formats.sk2.sk2_const import DOC_ORIGIN_LL, DOC_ORIGIN_LU
 from uc2.libcairo import normalize_bbox
+from uc2.sk2const import DOC_ORIGIN_LL, DOC_ORIGIN_LU
 from uc2.uc2const import mm_to_pt, point_dict
 
 

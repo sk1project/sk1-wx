@@ -15,20 +15,16 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from copy import deepcopy
-
 import cairo
 import math
 import wx
-
-from uc2 import uc2const
-from uc2.formats.sk2 import sk2_const
-from uc2.formats.sk2.crenderer import CairoRenderer
-from uc2 import libcairo, libgeom
-
-from wal import copy_surface_to_bitmap
+from copy import deepcopy
 
 from sk1 import config
+from uc2 import libcairo, libgeom
+from uc2 import uc2const, sk2const
+from uc2.formats.sk2.crenderer import CairoRenderer
+from wal import copy_surface_to_bitmap
 
 CAIRO_BLACK = [0.0, 0.0, 0.0]
 CAIRO_GRAY = [0.0, 0.0, 0.0, 0.5]
@@ -106,7 +102,7 @@ class PDRenderer(CairoRenderer):
 
         self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
         page_fill = self.doc_methods.get_page_fill()
-        if page_fill[0] == sk2_const.FILL_SOLID:
+        if page_fill[0] == sk2const.FILL_SOLID:
             self.ctx.rectangle(-w / 2.0, -h / 2.0, w, h)
             self.ctx.set_source_rgb(*page_fill[1])
             self.ctx.fill()
@@ -116,9 +112,9 @@ class PDRenderer(CairoRenderer):
             dx = self.calc_grid(0.0, 0.0, gdx, gdx)[2] / self.canvas.zoom
             origin = self.doc_methods.get_doc_origin()
             sx = sy = 0.0
-            if origin == sk2_const.DOC_ORIGIN_LU:
+            if origin == sk2const.DOC_ORIGIN_LU:
                 sy = dx - (h - float(int(h / dx)) * dx)
-            elif origin == sk2_const.DOC_ORIGIN_CENTER:
+            elif origin == sk2const.DOC_ORIGIN_CENTER:
                 sy = dx - (h / 2.0 - float(int(h / (2.0 * dx))) * dx)
                 sx = dx - (w / 2.0 - float(int(w / (2.0 * dx))) * dx)
 
@@ -212,9 +208,9 @@ class PDRenderer(CairoRenderer):
     def calc_grid(self, x, y, gdx, gdy):
         w, h = self.presenter.get_page_size()
         origin = self.presenter.model.doc_origin
-        if origin == sk2_const.DOC_ORIGIN_LL:
+        if origin == sk2const.DOC_ORIGIN_LL:
             x0, y0 = self.canvas.point_doc_to_win([-w / 2.0 + x, -h / 2.0 + y])
-        elif origin == sk2_const.DOC_ORIGIN_LU:
+        elif origin == sk2const.DOC_ORIGIN_LU:
             x0, y0 = self.canvas.point_doc_to_win([-w / 2.0 + x, h / 2.0 + y])
         else:
             x0, y0 = self.canvas.point_doc_to_win([x, y])

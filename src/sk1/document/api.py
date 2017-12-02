@@ -18,8 +18,8 @@
 import math
 from copy import deepcopy
 
-from uc2 import libgeom, uc2const, libimg
-from uc2.formats.sk2 import sk2_model, sk2_const
+from uc2 import libgeom, uc2const, libimg, sk2const
+from uc2.formats.sk2 import sk2_model
 
 from sk1 import events, config, modes
 
@@ -241,7 +241,7 @@ class AbstractAPI:
                         new_fill.append(self.sk2_cfg.default_fill_rule)
                     else:
                         new_fill.append(fill[0])
-                    new_fill.append(sk2_const.FILL_SOLID)
+                    new_fill.append(sk2const.FILL_SOLID)
                     new_fill.append(deepcopy(color))
                     style[0] = new_fill
                 else:
@@ -2036,7 +2036,7 @@ class PresenterAPI(AbstractAPI):
 
     def place_text_on_circle(self, circle, text_obj, position, side_flag):
         mtds = self.methods
-        childs_data = [0.5, sk2_const.TEXT_ALIGN_CENTER, side_flag]
+        childs_data = [0.5, sk2const.TEXT_ALIGN_CENTER, side_flag]
         before = self._get_layers_snapshot()
         objs = [circle, text_obj]
         sel_before = [circle, text_obj]
@@ -2086,7 +2086,7 @@ class PresenterAPI(AbstractAPI):
         if text_obj not in tpgroup.childs:
             return
         mtds = self.methods
-        data = [0.5, sk2_const.TEXT_ALIGN_CENTER, side_flag]
+        data = [0.5, sk2const.TEXT_ALIGN_CENTER, side_flag]
         circle = tpgroup.childs[0]
         type_before = type_after = circle.circle_type
         angle1_before = circle.angle1

@@ -17,8 +17,7 @@
 
 import math
 
-from uc2 import libgeom, uc2const
-from uc2.formats.sk2 import sk2_const
+from uc2 import libgeom, uc2const, sk2const
 
 from sk1 import config
 from sk1.appconst import SNAP_TO_GRID, SNAP_TO_GUIDES, SNAP_TO_OBJECTS, \
@@ -119,10 +118,10 @@ class SnapManager:
         w, h = self.presenter.get_page_size()
         x, y, dx, dy = grid_layer.grid
         origin = self.presenter.model.doc_origin
-        if origin == sk2_const.DOC_ORIGIN_LL:
+        if origin == sk2const.DOC_ORIGIN_LL:
             x0, y0 = self.canvas.point_doc_to_win([-w / 2.0 + x, -h / 2.0 + y])
             x0_doc, y0_doc = [-w / 2.0 + x, -h / 2.0 + y]
-        elif origin == sk2_const.DOC_ORIGIN_LU:
+        elif origin == sk2const.DOC_ORIGIN_LU:
             x0, y0 = self.canvas.point_doc_to_win([-w / 2.0 + x, h / 2.0 + y])
             x0_doc, y0_doc = [-w / 2.0 + x, h / 2.0 + y]
         else:
