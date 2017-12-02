@@ -19,15 +19,12 @@ import math
 from copy import deepcopy
 
 import wal
-
-from uc2 import uc2const
-from uc2.formats.sk2 import sk2_const
-from uc2.libgeom import stroke_to_curve, apply_trafo_to_paths
-
 from sk1 import _, dialogs, modes, events, config
 from sk1.dialogs import yesno_dialog, error_dialog
-from sk1.printing import print_dlg
 from sk1.prefs import get_prefs_dialog
+from sk1.printing import print_dlg
+from uc2 import uc2const, sk2const
+from uc2.libgeom import stroke_to_curve, apply_trafo_to_paths
 
 
 class AppProxy:
@@ -154,7 +151,7 @@ class AppProxy:
             style = self._get_style(objs)
             if style is not None:
                 fill_style = deepcopy(style[0])
-                if fill_style and fill_style[1] == sk2_const.FILL_GRADIENT:
+                if fill_style and fill_style[1] == sk2const.FILL_GRADIENT:
                     fill_style[2][1] = []
                 self.app.current_doc.api.set_fill_style(fill_style)
                 return False
@@ -526,7 +523,7 @@ class AppProxy:
                     pths = apply_trafo_to_paths(obj.get_initial_paths(),
                                                 obj.trafo)
                     style = doc.model.get_def_style()
-                    style[0] = [sk2_const.FILL_SOLID, deepcopy(obj.style[1][2])]
+                    style[0] = [sk2const.FILL_SOLID, deepcopy(obj.style[1][2])]
                     pths = stroke_to_curve(pths, obj.style[1])
                     objs.append(doc.api.create_curve(pths, style))
             selection.set(objs)
@@ -668,12 +665,12 @@ class AppProxy:
     def make_node_smooth(self):
         canvas = self.app.current_doc.canvas
         if canvas.mode == modes.BEZIER_EDITOR_MODE:
-            canvas.controller.set_connection_type(sk2_const.NODE_SMOOTH)
+            canvas.controller.set_connection_type(sk2const.NODE_SMOOTH)
 
     def make_node_symmetrical(self):
         canvas = self.app.current_doc.canvas
         if canvas.mode == modes.BEZIER_EDITOR_MODE:
-            canvas.controller.set_connection_type(sk2_const.NODE_SYMMETRICAL)
+            canvas.controller.set_connection_type(sk2const.NODE_SYMMETRICAL)
 
     def conv_to_cmyk(self):
         self.app.current_doc.api.convert_bitmap(uc2const.IMAGE_CMYK)
@@ -713,7 +710,7 @@ class AppProxy:
             if dialogs.yesno_dialog(self.mw, title, txt):
                 new_style = doc.model.get_def_style()
                 if color:
-                    fill_style = [sk2_const.FILL_EVENODD, sk2_const.FILL_SOLID,
+                    fill_style = [sk2const.FILL_EVENODD, sk2const.FILL_SOLID,
                                   deepcopy(color)]
                     new_style[0] = fill_style
                 else:
@@ -739,10 +736,10 @@ class AppProxy:
                     if new_style[1]:
                         new_style[1][2] = deepcopy(color)
                     else:
-                        new_style[1] = [sk2_const.STROKE_MIDDLE,
+                        new_style[1] = [sk2const.STROKE_MIDDLE,
                                         0.1 * uc2const.mm_to_pt,
-                                        deepcopy(color), [], sk2_const.CAP_BUTT,
-                                        sk2_const.JOIN_MITER,
+                                        deepcopy(color), [], sk2const.CAP_BUTT,
+                                        sk2const.JOIN_MITER,
                                         1.0 / math.sin(45.0 / 2.0),
                                         0, 0, []
                                         ]
