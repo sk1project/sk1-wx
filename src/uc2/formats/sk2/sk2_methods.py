@@ -42,7 +42,7 @@ def create_new_doc(config):
     return doc
 
 
-def add_childs(parent, childs=[]):
+def add_childs(parent, childs=None):
     if childs:
         for child in childs:
             parent.childs.append(child)
@@ -55,6 +55,8 @@ def add_child(parent, child):
 
 class SK2_Methods:
     presenter = None
+    model = None
+    config = None
 
     def __init__(self, presenter):
         self.presenter = presenter
@@ -146,7 +148,8 @@ class SK2_Methods:
         fmt = _('Custom size')
         size = (width, height)
         orient = uc2const.PORTRAIT
-        if width > height: orient = uc2const.LANDSCAPE
+        if width > height:
+            orient = uc2const.LANDSCAPE
         parent.page_format = [fmt, size, orient]
 
     def set_default_page_format(self, page_format):
@@ -159,7 +162,7 @@ class SK2_Methods:
     def get_page_size(self, page):
         return deepcopy(page.page_format[1])
 
-    def add_page(self, page_format=[]):
+    def add_page(self, page_format=None):
         parent = self.get_pages_obj()
         if page_format:
             page = sk2_model.Page(self.config)
@@ -168,10 +171,10 @@ class SK2_Methods:
             page = sk2_model.Page(self.config, parent)
         parent.childs.append(page)
         parent.page_counter += 1
-        page.name = _('Page') + ' %i' % (parent.page_counter)
+        page.name = _('Page') + ' %i' % parent.page_counter
         return page
 
-    def insert_page(self, index=0, page_format=[]):
+    def insert_page(self, index=0, page_format=None):
         parent = self.get_pages_obj()
         if page_format:
             page = sk2_model.Page(self.config)
@@ -185,7 +188,7 @@ class SK2_Methods:
             parent.childs.append(page)
 
         parent.page_counter += 1
-        page.name = _('Page') + ' %i' % (parent.page_counter)
+        page.name = _('Page') + ' %i' % parent.page_counter
         return page
 
     def delete_page(self, index=0):
