@@ -16,6 +16,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import cairo
+
 import _libcairo
 
 SURFACE = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
@@ -25,7 +26,7 @@ DIRECT_MATRIX = cairo.Matrix()
 
 def get_version():
     v0, v1, v2 = cairo.version_info
-    return (cairo.cairo_version_string(), '%d.%d.%d' % (v0, v1, v2))
+    return cairo.cairo_version_string(), '%d.%d.%d' % (v0, v1, v2)
 
 
 def create_cpath(paths, cmatrix=None):
@@ -48,7 +49,7 @@ def create_cpath(paths, cmatrix=None):
             CTX.close_path()
 
     cairo_path = CTX.copy_path()
-    if not cmatrix is None:
+    if cmatrix is not None:
         cairo_path = apply_cmatrix(cairo_path, cmatrix)
     return cairo_path
 
@@ -125,10 +126,14 @@ def get_trafo_from_matrix(cmatrix):
 
 def reverse_trafo(trafo):
     m11, m21, m12, m22, dx, dy = trafo
-    if m11: m11 = 1.0 / m11
-    if m12: m12 = 1.0 / m12
-    if m21: m21 = 1.0 / m21
-    if m22: m22 = 1.0 / m22
+    if m11:
+        m11 = 1.0 / m11
+    if m12:
+        m12 = 1.0 / m12
+    if m21:
+        m21 = 1.0 / m21
+    if m22:
+        m22 = 1.0 / m22
     dx = -dx
     dy = -dy
     return [m11, m21, m12, m22, dx, dy]
@@ -178,11 +183,8 @@ def convert_bbox_to_cpath(bbox):
 
 
 def get_surface_pixel(surface):
-    pixel = _libcairo.get_pixel(surface)
-    return pixel
+    return _libcairo.get_pixel(surface)
 
 
 def check_surface_whiteness(surface):
-    pixel = _libcairo.get_pixel(surface)
-    if pixel[0] == pixel[1] == pixel[2] == 255: return True
-    return False
+    return _libcairo.get_pixel(surface) == [255, 255, 255]
