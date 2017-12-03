@@ -15,17 +15,16 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from trafo import *
-from points import *
 from bbox import *
+from bezier_ops import *
+from contour import stroke_to_curve
 from cwrap import *
 from flattering import get_flattened_path, flat_paths, flat_path
 from objs import *
-from bezier_ops import *
+from points import *
 from shaping import intersect_paths, fuse_paths, trim_paths, excluse_paths
-from contour import stroke_to_curve
 from text_on_path import set_text_on_path
-
+from trafo import *
 
 """
 Package provides basic routines for Bezier curves.
@@ -50,9 +49,3 @@ line point - [x,y]
 curve point - [[x1,y1],[x2,y2],[x3,y3], marker]
 marker - NODE_CUSP = 0; NODE_SMOOTH = 1; NODE_SYMMETRICAL = 2 
 """
-
-
-
-
-
-
