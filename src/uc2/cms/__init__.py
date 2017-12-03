@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2011-2015 by Igor E. Novikov
+#  Copyright (C) 2011-2017 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -33,8 +33,10 @@ def get_registration_black():
 
 
 def color_to_spot(color):
-    if not color: return get_registration_black()
-    if color[0] == COLOR_SPOT: return deepcopy(color)
+    if not color:
+        return get_registration_black()
+    if color[0] == COLOR_SPOT:
+        return deepcopy(color)
     rgb = []
     cmyk = []
     name = ''
@@ -44,7 +46,8 @@ def color_to_spot(color):
         cmyk = deepcopy(color[1])
     elif color[0] == COLOR_GRAY:
         cmyk = gray_to_cmyk(color[1])
-    if color[3]: name += color[3]
+    if color[3]:
+        name += color[3]
     return [COLOR_SPOT, [rgb, cmyk], color[2], name]
 
 
@@ -72,7 +75,8 @@ def mix_vals(val1, val2, coef=0.5):
 
 
 def mix_lists(vals1, vals2, coef=0.5):
-    if not len(vals1) == len(vals2): return None
+    if not len(vals1) == len(vals2):
+        return None
     ret = []
     index = 0
     for val1 in vals1:
@@ -83,16 +87,14 @@ def mix_lists(vals1, vals2, coef=0.5):
 
 
 def rgb_to_hexcolor(color):
-    """
-    Converts list of RGB float values to hex color string.
+    """Converts list of RGB float values to hex color string.
     For example: [1.0, 0.0, 1.0] => #ff00ff
     """
     return '#%02x%02x%02x' % tuple(int(round(255 * x)) for x in color)
 
 
 def rgba_to_hexcolor(color):
-    """
-    Converts list of RGBA float values to hex color string.
+    """Converts list of RGBA float values to hex color string.
     For example: [1.0, 0.0, 1.0, 1.0] => #ff00ffff
     """
     return '#%02x%02x%02x%02x' % tuple(int(round(255 * x)) for x in color)
@@ -103,8 +105,7 @@ def cmyk_to_hexcolor(color):
 
 
 def hexcolor_to_rgb(hexcolor):
-    """
-    Converts hex color string as a list of float values.
+    """Converts hex color string as a list of float values.
     For example: #ff00ff => [1.0, 0.0, 1.0]
     """
     if len(hexcolor) == 4:
@@ -115,8 +116,7 @@ def hexcolor_to_rgb(hexcolor):
 
 
 def hexcolor_to_rgba(hexcolor):
-    """
-    Converts hex color string as a list of float values.
+    """Converts hex color string as a list of float values.
     For example: #ff00ffff => [1.0, 0.0, 1.0, 1.0]
     """
     vals = ('00', '00', '00', 'ff')
@@ -132,8 +132,7 @@ def hexcolor_to_cmyk(hexcolor):
 
 
 def gdk_hexcolor_to_rgb(hexcolor):
-    """
-    Converts hex color string as a list of float values.
+    """ Converts hex color string as a list of float values.
     For example: #ffff0000ffff => [1.0, 0.0, 1.0]
     """
     vals = (hexcolor[1:5], hexcolor[5:6], hexcolor[9:])
@@ -141,24 +140,21 @@ def gdk_hexcolor_to_rgb(hexcolor):
 
 
 def rgb_to_gdk_hexcolor(color):
-    """
-    Converts hex color string as a list of float values.
+    """Converts hex color string as a list of float values.
     For example: #ffff0000ffff => [1.0, 0.0, 1.0]
     """
     return '#%04x%04x%04x' % tuple(x * 65535.0 for x in color)
 
 
 def cmyk_to_rgb(color):
-    """
-    Converts list of CMYK values to RGB.
+    """Converts list of CMYK values to RGB.
     """
     c, m, y, k = color
     return [round(1.0 - min(1.0, x + k), 3) for x in (c, m, y)]
 
 
 def rgb_to_cmyk(color):
-    """
-    Converts list of RGB values to CMYK.
+    """Converts list of RGB values to CMYK.
     """
     r, g, b = color
     c = 1.0 - r
@@ -169,8 +165,7 @@ def rgb_to_cmyk(color):
 
 
 def gray_to_cmyk(color):
-    """
-    Converts Gray value to CMYK.
+    """Converts Gray value to CMYK.
     """
     k = 1.0 - color[0]
     c = m = y = 0.0
@@ -178,16 +173,14 @@ def gray_to_cmyk(color):
 
 
 def gray_to_rgb(color):
-    """
-    Converts Gray value to RGB.
+    """Converts Gray value to RGB.
     """
     r = g = b = color[0]
     return [r, g, b]
 
 
 def rgb_to_gray(color):
-    """
-    Converts RGB value to Gray.
+    """Converts RGB value to Gray.
     """
     r, g, b = color
     val = (r + g + b) / 3.0
@@ -195,13 +188,13 @@ def rgb_to_gray(color):
 
 
 def linear_to_rgb(c):
-    if c > 0.0031308: return pow(c, 1.0 / 2.4) * 1.055 - 0.055
+    if c > 0.0031308:
+        return pow(c, 1.0 / 2.4) * 1.055 - 0.055
     return c * 12.92
 
 
 def lab_to_rgb(color):
-    """
-    Converts CIE-L*ab value to RGB.
+    """Converts CIE-L*ab value to RGB.
     """
     L, a, b = color
     # L: 0..100
@@ -212,9 +205,9 @@ def lab_to_rgb(color):
     b = b * 255.0 - 128.0
 
     # Lab -> normalized XYZ (X,Y,Z are all in 0...1)
-    Y = L * (1.0 / 116.0) + 16.0 / 116.0;
-    X = a * (1.0 / 500.0) + Y;
-    Z = b * (-1.0 / 200.0) + Y;
+    Y = L * (1.0 / 116.0) + 16.0 / 116.0
+    X = a * (1.0 / 500.0) + Y
+    Z = b * (-1.0 / 200.0) + Y
 
     if X > 6.0 / 29.0:
         X = X * X * X
@@ -231,11 +224,11 @@ def lab_to_rgb(color):
 
     # normalized XYZ -> linear sRGB (in 0...1)
     R = X * (1219569.0 / 395920.0) + Y * (-608687.0 / 395920.0) + Z * (
-        -107481.0 / 197960.0)
+            -107481.0 / 197960.0)
     G = X * (-80960619.0 / 87888100.0) + Y * (82435961.0 / 43944050.0) + Z * (
-        3976797.0 / 87888100.0)
+            3976797.0 / 87888100.0)
     B = X * (93813.0 / 1774030.0) + Y * (-180961.0 / 887015.0) + Z * (
-        107481.0 / 93370.0)
+            107481.0 / 93370.0)
 
     # linear sRGB -> gamma-compressed sRGB (in 0...1)
     r = round(linear_to_rgb(R), 3)
@@ -245,13 +238,14 @@ def lab_to_rgb(color):
 
 
 def xyz_to_lab(c):
-    if c > 216.0 / 24389.0: return pow(c, 1.0 / 3.0)
+    if c > 216.0 / 24389.0:
+        return pow(c, 1.0 / 3.0)
     return c * (841.0 / 108.0) + (4.0 / 29.0)
 
 
 def rgb_to_linear(c):
-    if c > (0.0031308 * 12.92): return pow(c * (1.0 / 1.055) + (0.055 / 1.055),
-                                           2.4)
+    if c > (0.0031308 * 12.92):
+        return pow(c * (1.0 / 1.055) + (0.055 / 1.055), 2.4)
     return c * (1.0 / 12.92)
 
 
@@ -266,13 +260,13 @@ def rgb_to_lab(color):
     # linear sRGB -> normalized XYZ (X,Y,Z are all in 0...1)
     X = xyz_to_lab(
         R * (10135552.0 / 23359437.0) + G * (8788810.0 / 23359437.0) + B * (
-            4435075.0 / 23359437.0))
+                4435075.0 / 23359437.0))
     Y = xyz_to_lab(
         R * (871024.0 / 4096299.0) + G * (8788810.0 / 12288897.0) + B * (
-            887015.0 / 12288897.0))
+                887015.0 / 12288897.0))
     Z = xyz_to_lab(
         R * (158368.0 / 8920923.0) + G * (8788810.0 / 80288307.0) + B * (
-            70074185.0 / 80288307.0))
+                70074185.0 / 80288307.0))
 
     # normalized XYZ -> Lab
     L = round((Y * 116.0 - 16.0) / 100.0, 3)
@@ -285,7 +279,8 @@ def do_simple_transform(color, cs_in, cs_out):
     """
     Emulates color management library transformation
     """
-    if cs_in == cs_out: return copy.copy(color)
+    if cs_in == cs_out:
+        return copy.copy(color)
     if cs_in == COLOR_RGB:
         if cs_out == COLOR_CMYK:
             return rgb_to_cmyk(color)
@@ -370,30 +365,34 @@ def decode_colorb(colorb, color_type):
 
 
 def verbose_color(color):
-    if not color: return 'No color'
+    if not color:
+        return 'No color'
     cs = color[0]
     val = [] + color[1]
     alpha = color[2]
-    ret = ''
     if cs == COLOR_CMYK:
         c, m, y, k = val_100(val)
         ret = 'C-%d%% M-%d%% Y-%d%% K-%d%%' % (c, m, y, k)
-        if alpha < 1.0: ret += ' A-%d%%' % val_100([alpha, ])[0]
+        if alpha < 1.0:
+            ret += ' A-%d%%' % val_100([alpha, ])[0]
     elif cs == COLOR_RGB:
         r, g, b = val_255(val)
         ret = 'R-%d G-%d B-%d' % (r, g, b)
-        if alpha < 1.0: ret += ' A-%d' % val_255([alpha, ])[0]
+        if alpha < 1.0:
+            ret += ' A-%d' % val_255([alpha, ])[0]
     elif cs == COLOR_GRAY:
         g = val_255(val)[0]
         ret = 'Gray-%d' % g
-        if alpha < 1.0: ret += ' Alpha-%d' % val_255([alpha, ])[0]
+        if alpha < 1.0:
+            ret += ' Alpha-%d' % val_255([alpha, ])[0]
     elif cs == COLOR_LAB:
-        L, a, b = val
-        L = L * 100.0
+        l, a, b = val
+        l = l * 100.0
         a = a * 255.0 - 128.0
         b = b * 255.0 - 128.0
-        ret = 'L %d a %d b %d' % (L, a, b)
-        if alpha < 1.0: ret += ' Alpha-%d' % val_255([alpha, ])[0]
+        ret = 'L %d a %d b %d' % (l, a, b)
+        if alpha < 1.0:
+            ret += ' Alpha-%d' % val_255([alpha, ])[0]
     elif cs == COLOR_SPOT:
         ret = color[3]
     else:
@@ -403,8 +402,7 @@ def verbose_color(color):
 
 
 def get_profile_name(filepath):
-    """
-    Returns profile name.
+    """Returns profile name.
     If file is not suitable profile or doesn't exist
     returns None. 
     """
@@ -417,8 +415,7 @@ def get_profile_name(filepath):
 
 
 def get_profile_info(filepath):
-    """
-    Returns profile info.
+    """Returns profile info.
     If file is not suitable profile or doesn't exist
     returns None. 
     """
@@ -431,8 +428,7 @@ def get_profile_info(filepath):
 
 
 def get_profile_descr(filepath):
-    """
-    Returns profile description tuple (name, copyright, info).
+    """Returns profile description tuple (name, copyright, info).
     If file is not suitable profile or doesn't exist
     returns None. 
     """
@@ -447,15 +443,14 @@ def get_profile_descr(filepath):
 
 
 class ColorManager(object):
-    """
-    The class provides abstract color manager.
+    """The class provides abstract color manager.
     On CM object instantiation default built-in profiles
     are used to create internal stuff.
     """
 
-    handles = {}
-    transforms = {}
-    proof_transforms = {}
+    handles = None
+    transforms = None
+    proof_transforms = None
 
     use_cms = True
     use_display_profile = False
@@ -491,11 +486,13 @@ class ColorManager(object):
         """
         tr_type = cs_in + cs_out
         intent = self.rgb_intent
-        if cs_out == COLOR_CMYK: intent = self.cmyk_intent
-        if not self.transforms.has_key(tr_type):
+        if cs_out == COLOR_CMYK:
+            intent = self.cmyk_intent
+        if tr_type not in self.transforms:
             handle_in = self.handles[cs_in]
             handle_out = self.handles[cs_out]
-            if cs_out == COLOR_DISPLAY: cs_out = COLOR_RGB
+            if cs_out == COLOR_DISPLAY:
+                cs_out = COLOR_RGB
             tr = libcms.cms_create_transform(handle_in, cs_in,
                                              handle_out, cs_out,
                                              intent, self.flags)
@@ -508,9 +505,9 @@ class ColorManager(object):
         If requested transform is not initialized yet, creates it.
         """
         tr_type = cs_in
-        if not self.proof_transforms.has_key(tr_type):
+        if tr_type not in self.proof_transforms:
             handle_in = self.handles[cs_in]
-            if self.use_display_profile and self.handles.has_key(COLOR_DISPLAY):
+            if self.use_display_profile and COLOR_DISPLAY in self.handles:
                 handle_out = self.handles[COLOR_DISPLAY]
             else:
                 handle_out = self.handles[COLOR_RGB]
@@ -545,7 +542,8 @@ class ColorManager(object):
         if not self.use_cms and not img.mode == IMAGE_LAB:
             return img.convert(mode)
         cs_in = IMAGE_TO_COLOR[img.mode]
-        if not cs_out: cs_out = IMAGE_TO_COLOR[mode]
+        if not cs_out:
+            cs_out = IMAGE_TO_COLOR[mode]
         transform = self.get_transform(cs_in, cs_out)
         return libcms.cms_do_bitmap_transform(transform, img, img.mode, mode)
 
@@ -576,7 +574,8 @@ class ColorManager(object):
         Convert color into RGB color.
         Stores alpha channel and color name.
         """
-        if color[0] == COLOR_RGB: return deepcopy(color)
+        if color[0] == COLOR_RGB:
+            return deepcopy(color)
         if color[0] == COLOR_SPOT:
             if color[1][0]:
                 return [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
@@ -599,7 +598,8 @@ class ColorManager(object):
         Convert color into CMYK color.
         Stores alpha channel and color name.
         """
-        if color[0] == COLOR_CMYK: return deepcopy(color)
+        if color[0] == COLOR_CMYK:
+            return deepcopy(color)
         if color[0] == COLOR_SPOT:
             if color[1][1]:
                 return [COLOR_CMYK, [] + color[1][1], color[2], '' + color[3]]
@@ -617,7 +617,8 @@ class ColorManager(object):
         Convert color into L*a*b* color.
         Stores alpha channel and color name.
         """
-        if color[0] == COLOR_LAB: return deepcopy(color)
+        if color[0] == COLOR_LAB:
+            return deepcopy(color)
         if color[0] == COLOR_SPOT:
             if color[1][0]:
                 color = [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
@@ -631,7 +632,8 @@ class ColorManager(object):
         Convert color into Grayscale color.
         Stores alpha channel and color name.
         """
-        if color[0] == COLOR_GRAY: return deepcopy(color)
+        if color[0] == COLOR_GRAY:
+            return deepcopy(color)
         if color[0] == COLOR_SPOT:
             if color[1][0]:
                 color = [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
@@ -645,17 +647,20 @@ class ColorManager(object):
         Convert color into requested colorspace.
         Stores alpha channel and color name.
         """
-        METHOD_TO_CS = {COLOR_RGB: self.get_rgb_color,
-                        COLOR_LAB: self.get_lab_color,
-                        COLOR_CMYK: self.get_cmyk_color,
-                        COLOR_GRAY: self.get_grayscale_color}
-        return METHOD_TO_CS[cs](color)
+        methods_map = {COLOR_RGB: self.get_rgb_color,
+                       COLOR_LAB: self.get_lab_color,
+                       COLOR_CMYK: self.get_cmyk_color,
+                       COLOR_GRAY: self.get_grayscale_color}
+        return methods_map[cs](color)
 
     def mix_colors(self, color0, color1, coef=.5):
         supported = [COLOR_RGB, COLOR_CMYK, COLOR_GRAY]
-        if not color0[0] in supported: return None
-        if not color1[0] in supported: return None
-        if not color0[0] == color1[0]: return None
+        if not color0[0] in supported:
+            return None
+        if not color1[0] in supported:
+            return None
+        if not color0[0] == color1[0]:
+            return None
         clr_vals = mix_lists(color0[1], color1[1], coef)
         alpha = mix_vals(color0[2], color1[2], coef)
         return [color0[0], clr_vals, alpha, '']
@@ -676,7 +681,7 @@ class ColorManager(object):
 
         cs_in = color[0]
         cs_out = COLOR_RGB
-        if self.use_display_profile and self.handles.has_key(COLOR_DISPLAY):
+        if self.use_display_profile and COLOR_DISPLAY in self.handles:
             cs_out = COLOR_DISPLAY
         if self.proofing:
             if cs_in == COLOR_CMYK:
@@ -733,7 +738,8 @@ class ColorManager(object):
         cs_in = cs_out = IMAGE_TO_COLOR[img.mode]
         out_profile = self.handles[cs_in]
         intent = self.rgb_intent
-        if cs_out == COLOR_CMYK: intent = self.cmyk_intent
+        if cs_out == COLOR_CMYK:
+            intent = self.cmyk_intent
         transform = libcms.cms_create_transform(custom_profile, cs_in,
                                                 out_profile, cs_out, intent,
                                                 self.flags)
@@ -751,7 +757,7 @@ class ColorManager(object):
         if not self.use_cms:
             return self.convert_image(img, outmode)
 
-        if self.use_display_profile and self.handles.has_key(COLOR_DISPLAY):
+        if self.use_display_profile and COLOR_DISPLAY in self.handles:
             cs_out = COLOR_DISPLAY
 
         if self.proofing:
