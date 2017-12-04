@@ -54,10 +54,10 @@ class Error(Exception):
     pass
 
 
-VERSION = '1.1.7'
+VERSION = '1.1.8'
 
 DATASET = {
-    'agent_ver': '1.1.7',
+    'agent_ver': '1.1.8',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -158,18 +158,18 @@ def get_marker():
         ver = platform.dist()[1]
         if is_debian():
             ver = ver.split('.')[0]
-        marker = '_%s_%s_' % (MARKERS[platform.dist()[0]], ver)
+        mrk = '_%s_%s_' % (MARKERS[platform.dist()[0]], ver)
         if DATASET['timestamp']:
-            marker = '_%s%s' % (DATASET['timestamp'], marker)
-        return marker
+            mrk = '_%s%s' % (DATASET['timestamp'], mrk)
+        return mrk
     elif is_rpm():
         ver = platform.dist()[1].split('.')[0]
         if platform.dist()[0] == OPENSUSE:
             ver = platform.dist()[1]
-        marker = MARKERS[platform.dist()[0]] + ver
+        mrk = MARKERS[platform.dist()[0]] + ver
         if DATASET['timestamp']:
-            marker = '%s.%s' % (DATASET['timestamp'], marker)
-        return marker
+            mrk = '%s.%s' % (DATASET['timestamp'], mrk)
+        return mrk
     return MARKERS[platform.dist()[0]]
 
 
@@ -186,7 +186,7 @@ def get_package_name(pth):
     elif is_rpm():
         for fn in files:
             if fn.endswith('.rpm') and not fn.endswith('src.rpm') \
-                    and not 'debug' in fn:
+                    and 'debug' not in fn:
                 return fn
     elif is_msw():
         if len(files) == 1:
@@ -202,9 +202,9 @@ def command(exec_cmd):
 def fetch_cli_args():
     if len(sys.argv) > 1:
         args = sys.argv[1:]
-        for item in args:
-            if '=' in item:
-                key, value = item.split('=')[:2]
+        for arg in args:
+            if '=' in arg:
+                key, value = arg.split('=')[:2]
                 if value[0] in ('"', "'"):
                     value = value[1:]
                 if value[-1] in ('"', "'"):
@@ -219,9 +219,9 @@ def check_update():
 
     # build agent update
     name = __file__.split(os.path.sep)[-1]
-    build_dir = os.path.join('~', 'buildfarm')
-    build_dir = os.path.expanduser(build_dir)
-    source = os.path.join(build_dir, DATASET['project'], 'build-farm', name)
+    bld_dir = os.path.join('~', 'buildfarm')
+    bld_dir = os.path.expanduser(bld_dir)
+    source = os.path.join(bld_dir, DATASET['project'], 'build-farm', name)
     if not os.path.lexists(source):
         echo_msg('...Aborted')
         return
@@ -230,15 +230,15 @@ def check_update():
         fp.write(open(source, 'rb').read())
     echo_msg('...OK')
 
-    items = DATASET.keys()
+    keys = DATASET.keys()
     args = []
-    for item in items:
-        value = DATASET[item]
+    for key in keys:
+        value = DATASET[key]
         if not value:
             continue
         if ' ' in value:
             value = '"%s"' % value
-        args.append('%s=%s' % (item, value))
+        args.append('%s=%s' % (key, value))
     args = ' '.join(args)
 
     os.system('python2 %s %s' % (__file__, args))
@@ -248,15 +248,15 @@ def check_update():
 def check_mode():
     if DATASET['mode'] == 'test':
         echo_msg('\nDATASET:')
-        items = DATASET.keys()
-        items.sort()
-        for item in items:
-            value = DATASET[item]
+        keys = DATASET.keys()
+        keys.sort()
+        for key in keys:
+            value = DATASET[key]
             if not value:
                 continue
             if ' ' in value:
                 value = '"%s"' % value
-            echo_msg('%s=%s' % (item, value))
+            echo_msg('%s=%s' % (key, value))
         echo_msg('build dir: %s' % os.path.expanduser('~/buildfarm'))
         sys.exit()
     elif DATASET['mode'] == 'release':
@@ -275,9 +275,9 @@ def restart_network():
 
 
 def check_lan_connection():
-    for item in ('ftp_pass', 'ftp_user', 'ftp_url', 'ftp_path'):
-        if not DATASET[item]:
-            echo_msg('There is no %s value!' % item)
+    for key in ('ftp_pass', 'ftp_user', 'ftp_url', 'ftp_path'):
+        if not DATASET[key]:
+            echo_msg('There is no %s value!' % key)
             sys.exit(1)
     echo_msg('Checking LAN connection', False)
     counter = 0

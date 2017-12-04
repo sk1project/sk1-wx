@@ -2,7 +2,7 @@
 #
 # -*- coding: utf-8 -*-
 #
-#   Build orchestrator for VirtualBox build farm
+#   sK1 build orchestrator for VirtualBox build farm
 #
 #   Copyright (C) 2017 by Igor E. Novikov
 #
@@ -50,7 +50,7 @@ import datetime
 from farmutils import fetch_cli_args, launch_farm
 
 DATASET = {
-    'agent_ver': '1.1.7',
+    'agent_ver': '1.1.8',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
