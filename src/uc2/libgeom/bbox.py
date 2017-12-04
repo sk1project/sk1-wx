@@ -103,7 +103,7 @@ def bbox_trafo(bbox0, bbox1):
     :param bbox0: initial bounding box
 
     :type bbox1: list
-    :param bbox2: final bounding box
+    :param bbox1: final bounding box
 
     :rtype: list
     :return: affine transformation matrix
@@ -152,19 +152,19 @@ def is_point_in_bbox(point, bbox):
     :rtype: boolean
     :return: boolean check result
     """
-    if not len(point) == 2: point = point[2]
-    return point[0] >= bbox[0] and point[1] >= bbox[1] \
-           and point[0] <= bbox[2] and point[1] <= bbox[3]
+    if not len(point) == 2:
+        point = point[2]
+    return point[0] >= bbox[0] and bbox[2] >= bbox[1] <= point[1] <= bbox[3]
 
 
 def sum_bbox(bbox1, bbox2):
     """Summarizes two bounding boxes. The result will be bounding box which
     contains both provided bboxes.
 
-    :type bbox0: list
-    :param bbox0: first bounding box
-
     :type bbox1: list
+    :param bbox1: first bounding box
+
+    :type bbox2: list
     :param bbox2: second bounding box
 
     :rtype: list
@@ -196,10 +196,8 @@ def is_bbox_in_rect(rect, bbox):
     """
     x0, y0, x1, y1 = rect
     _x0, _y0, _x1, _y1 = bbox
-    if x0 > _x0: return False
-    if y0 > _y0: return False
-    if x1 < _x1: return False
-    if y1 < _y1: return False
+    if x0 > _x0 or y0 > _y0 or x1 < _x1 or y1 < _y1:
+        return False
     return True
 
 
@@ -230,7 +228,7 @@ def is_point_in_rect2(point, rect_center, rect_w, rect_h):
     :type point: list
     :param point: testing coordinate point
 
-    :type rect_center\: list
+    :type rect_center: list
     :param rect_center: point, center of rectangle
 
     :type rect_w: float
@@ -298,8 +296,10 @@ def is_bbox_in_bbox(bbox1, bbox2):
     w1, h1 = bbox_size(bbox1)
     w2, h2 = bbox_size(bbox2)
     w, h = bbox_size(new_bbox)
-    if w == w2 and h == h2: return True
-    if w == w1 and h == h1: return True
+    if w == w2 and h == h2:
+        return True
+    if w == w1 and h == h1:
+        return True
     return False
 
 
