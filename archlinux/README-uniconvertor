@@ -1,0 +1,19 @@
+Before building package please ensure that you have installed compiler and other
+build tools:
+
+pacman -S base-devel
+pacman -S abs
+
+The commands you need to execute as a root or sudo user.
+
+After that you need running package build (as a regular user) in current
+directory where uniconvertor PKGBUILD file is located:
+
+makepkg -s
+
+As a result you will get package file like: uniconvertor-2.0rc3-1-x86_64.pkg.tar.xz
+
+You could install it using UI tools or using command:
+
+pacman -U <package_name>.pkg.tar.xz
+

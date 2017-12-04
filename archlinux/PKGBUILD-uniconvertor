@@ -1,0 +1,28 @@
+# Maintainer: Igor Novikov <sk1.project.org@gmail.com>
+
+pkgname=uniconvertor
+pkgver=VERSION
+pkgrel=1
+pkgdesc="Universal vector graphics translator"
+url="https://sk1project.net/"
+arch=('i686' 'x86_64')
+license=('GPL')
+depends=('lcms2' 'cairo' 'imagemagick' 'pango' 'python2-cairo'
+	 'python2-pillow' 'python2-reportlab' 'python2-pycups')
+makedepends=('python2')
+provides=('uniconvertor')
+conflicts=('uniconvertor')
+source=('./TARBALL')
+md5sums=('SKIP')
+
+build() {
+  chmod -R 644 "${srcdir}/$pkgname-$pkgver"
+  cd "${srcdir}/$pkgname-$pkgver"
+  LANG=en_US.UTF-8 python2 setup-uc2.py build
+}
+
+package() {
+  cd "${srcdir}/$pkgname-$pkgver"
+  LANG=en_US.UTF-8 python2 setup-uc2.py install --root="$pkgdir"
+}
+
