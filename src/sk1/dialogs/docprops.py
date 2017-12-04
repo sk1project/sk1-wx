@@ -27,7 +27,7 @@ from uc2.sk2const import ORIGINS, FILL_SOLID, FILL_PATTERN
 from uc2.uc2const import unit_names, unit_full_names
 
 
-class DP_Panel(wal.VPanel):
+class DocPropsPanel(wal.VPanel):
     name = 'Panel'
 
     def __init__(self, parent, app, dlg):
@@ -43,13 +43,18 @@ class DP_Panel(wal.VPanel):
     def save(self): pass
 
 
-class GeneralProps(DP_Panel):
+class GeneralProps(DocPropsPanel):
     name = _('Description')
-    metainfo = []
+    metainfo = None
+    author_field = None
+    license_field = None
+    keys_field = None
+    notes_field = None
 
     def build(self):
         self.metainfo = deepcopy(self.doc.model.metainfo)
-        if self.metainfo[3]: self.metainfo[3] = b64decode(self.metainfo[3])
+        if self.metainfo[3]:
+            self.metainfo[3] = b64decode(self.metainfo[3])
 
         grid = wal.GridPanel(self, 4, 2, 5, 5)
         grid.add_growable_col(1)
@@ -80,7 +85,8 @@ class GeneralProps(DP_Panel):
                     self.keys_field.get_value(),
                     self.notes_field.get_value()]
         if not self.metainfo == metainfo:
-            if metainfo[3]: metainfo[3] = b64encode(metainfo[3])
+            if metainfo[3]:
+                metainfo[3] = b64encode(metainfo[3])
             self.api.set_doc_metainfo(metainfo)
 
 
@@ -89,12 +95,24 @@ ORIENTS_ICONS = [icons.CTX_PAGE_PORTRAIT, icons.CTX_PAGE_LANDSCAPE]
 ORIENTS_NAMES = [_('Portrait'), _('Landscape')]
 
 
-class PageProps(DP_Panel):
+class PageProps(DocPropsPanel):
     name = _('Page')
     page_format = None
     desktop_bg = None
     page_fill = None
     border_flag = False
+    formats = None
+
+    page_combo = None
+    orient_keeper = None
+    page_width = None
+    page_height = None
+    desktop_color_btn = None
+    page_color1_btn = None
+    page_color2_btn = None
+    colors2 = None
+    pattern_check = None
+    border_check = None
 
     def build(self):
         self.page_format = self.doc.methods.get_default_page_format()
@@ -192,7 +210,8 @@ class PageProps(DP_Panel):
 
         # ---
         vpanel = wal.VPanel(self)
-        if wal.IS_MSW: vpanel.pack((5, 5))
+        if wal.IS_MSW:
+            vpanel.pack((5, 5))
 
         self.pattern_check = wal.Checkbox(vpanel,
                                           _('Use pattern for page fill'),
@@ -200,7 +219,8 @@ class PageProps(DP_Panel):
                                           onclick=self.pattern_check_changed)
         vpanel.pack(self.pattern_check, align_center=False)
 
-        if wal.IS_MSW: vpanel.pack((5, 5))
+        if wal.IS_MSW:
+            vpanel.pack((5, 5))
 
         self.border_flag = self.doc.methods.get_page_border()
         self.border_check = wal.Checkbox(vpanel,
@@ -272,10 +292,13 @@ ORIGIN_NAMES = [_('Page center'),
                 _('Left lower page corner'), _('Left upper page corner')]
 
 
-class UnitsProps(DP_Panel):
+class UnitsProps(DocPropsPanel):
     name = _('Units')
     units = 'mm'
     origin = 0
+
+    units_combo = None
+    origin_keeper = None
 
     def build(self):
 
@@ -285,7 +308,8 @@ class UnitsProps(DP_Panel):
 
         vp = wal.LabeledPanel(hpanel, text=_('Document units'))
         names = []
-        for item in unit_names: names.append(unit_full_names[item])
+        for item in unit_names:
+            names.append(unit_full_names[item])
         self.units_combo = wal.Combolist(vp, items=names)
         self.units = self.doc.methods.get_doc_units()
         self.units_combo.set_active(unit_names.index(self.units))
@@ -339,7 +363,8 @@ class GridPreview(wal.VPanel, wal.Canvas):
         self.color = color
         self.refresh()
 
-    def _composite_color(self, color1, color2=[1.0, 1.0, 1.0]):
+    def _composite_color(self, color1, color2=None):
+        color2 = color2 or [1.0, 1.0, 1.0]
         r0, g0, b0, a0 = color1
         r1, g1, b1 = color2
         a1 = 1.0 - a0
@@ -369,10 +394,20 @@ class GridPreview(wal.VPanel, wal.Canvas):
         self.draw_rect(0, 0, w, h)
 
 
-class GridProps(DP_Panel):
+class GridProps(DocPropsPanel):
     name = _('Grid')
     geom = []
     color = []
+
+    x_val = None
+    y_val = None
+    dx_val = None
+    dy_val = None
+    grid_color_btn = None
+    alpha_spin = None
+    alpha_slider = None
+    show_grid_check = None
+    grid_preview = None
 
     def build(self):
         self.pack((5, 5))
@@ -497,7 +532,8 @@ class GridProps(DP_Panel):
             grid = self.doc.methods.get_grid_layer()
             props = self.doc.methods.get_grid_properties()
             props[0] = 0
-            if self.show_grid_check.get_value(): props[0] = 1
+            if self.show_grid_check.get_value():
+                props[0] = 1
             self.api.set_layer_properties(grid, props)
 
 
@@ -532,9 +568,13 @@ GUIDE_COLORS = ['#0051FF', '#7DF7F6', '#503E8C', '#FF3C0B', '#8282FF',
                 '#BEBEBE']
 
 
-class GuidesProps(DP_Panel):
+class GuidesProps(DocPropsPanel):
     name = _('Guides')
     color = []
+
+    guide_color_btn = None
+    show_guide_check = None
+    preview = None
 
     def build(self):
 
@@ -582,7 +622,8 @@ class GuidesProps(DP_Panel):
             guide = self.doc.methods.get_guide_layer()
             props = self.doc.methods.get_guide_properties()
             props[0] = 0
-            if self.show_guide_check.get_value(): props[0] = 1
+            if self.show_guide_check.get_value():
+                props[0] = 1
             self.api.set_layer_properties(guide, props)
 
 

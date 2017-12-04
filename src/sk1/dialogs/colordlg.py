@@ -16,13 +16,12 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from copy import deepcopy
+
 import wal
-
-from uc2 import uc2const
-
 from sk1 import _, config
 from sk1.pwidgets.colorctrls import CMYK_Mixer, RGB_Mixer, Gray_Mixer, \
     ColorColorRefPanel, MiniPalette, CMYK_PALETTE, RGB_PALETTE, GRAY_PALETTE
+from uc2 import uc2const
 
 MIXERS = {
     uc2const.COLOR_CMYK: CMYK_Mixer,
@@ -41,6 +40,9 @@ class ChangeColorDialog(wal.OkCancelDialog):
     cms = None
     orig_color = None
     new_color = None
+    mixer = None
+    refpanel = None
+    palette = None
 
     def __init__(self, parent, title, cms, color):
         self.cms = cms

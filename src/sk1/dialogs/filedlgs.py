@@ -65,13 +65,13 @@ def get_open_file_name(parent, start_dir, msg='', file_types=None):
     if start_dir == '~':
         start_dir = os.path.expanduser(start_dir)
 
+    style = wx.FD_CHANGE_DIR | wx.FD_FILE_MUST_EXIST | wx.FD_PREVIEW
     dlg = wx.FileDialog(
         parent, message=msg,
         defaultDir=start_dir,
         defaultFile="",
         wildcard=_get_open_filters(file_types),
-        style=wx.FD_OPEN | wx.FD_CHANGE_DIR |
-              wx.FD_FILE_MUST_EXIST | wx.FD_PREVIEW
+        style=wx.FD_OPEN | style
     )
     dlg.CenterOnParent()
     if dlg.ShowModal() == wx.ID_OK:
@@ -111,13 +111,13 @@ def get_save_file_name(parent, path, msg='',
     doc_folder = os.path.dirname(path)
     doc_name = os.path.basename(path)
 
+    style = wx.FD_CHANGE_DIR | wx.FD_OVERWRITE_PROMPT | wx.FD_PREVIEW
     dlg = wx.FileDialog(
         parent, message=msg,
         defaultDir=doc_folder,
         defaultFile=doc_name,
         wildcard=_get_save_fiters(file_types),
-        style=wx.FD_SAVE | wx.FD_CHANGE_DIR |
-              wx.FD_OVERWRITE_PROMPT | wx.FD_PREVIEW
+        style=wx.FD_SAVE | style
     )
     dlg.CenterOnParent()
     if dlg.ShowModal() == wx.ID_OK:
