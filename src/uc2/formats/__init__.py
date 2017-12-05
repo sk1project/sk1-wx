@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2012 by Igor E. Novikov
+# 	Copyright (C) 2012-2017 by Igor E. Novikov
 #
 # 	This program is free software: you can redistribute it and/or modify
 # 	it under the terms of the GNU General Public License as published by
@@ -30,41 +30,49 @@ CHECKERS = {}
 
 
 def _get_loader(pid):
-    if pid in uc2const.BITMAP_LOADERS: return im_loader
-    if not isinstance(pid, str): return None
-    if pid in LOADERS: return LOADERS[pid]
+    if pid in uc2const.BITMAP_LOADERS:
+        return im_loader
+    if not isinstance(pid, str):
+        return None
+    if pid in LOADERS:
+        return LOADERS[pid]
     loader = None
     try:
         loader_mod = import_module('uc2.formats.' + pid)
         loader = getattr(loader_mod, pid + '_loader')
-    except:
+    except Exception:
         pass
     LOADERS[pid] = loader
     return loader
 
 
 def _get_saver(pid):
-    if not isinstance(pid, str): return None
-    if pid in SAVERS: return SAVERS[pid]
+    if not isinstance(pid, str):
+        return None
+    if pid in SAVERS:
+        return SAVERS[pid]
     saver = None
     try:
         saver_mod = import_module('uc2.formats.' + pid)
         saver = getattr(saver_mod, pid + '_saver')
-    except:
+    except Exception:
         pass
     SAVERS[pid] = saver
     return saver
 
 
 def _get_checker(pid):
-    if pid in uc2const.BITMAP_LOADERS: return fallback_check
-    if not isinstance(pid, str): return None
-    if pid in CHECKERS: return CHECKERS[pid]
+    if pid in uc2const.BITMAP_LOADERS:
+        return fallback_check
+    if not isinstance(pid, str):
+        return None
+    if pid in CHECKERS:
+        return CHECKERS[pid]
     checker = None
     try:
         checker_mod = import_module('uc2.formats.' + pid)
         checker = getattr(checker_mod, 'check_' + pid)
-    except:
+    except Exception:
         pass
     CHECKERS[pid] = checker
     return checker
@@ -79,8 +87,10 @@ def get_loader_by_id(pid):
 
 
 def get_loader(path, experimental=False):
-    if not os.path.lexists(path): return None
-    if not os.path.isfile(path): return None
+    if not os.path.lexists(path):
+        return None
+    if not os.path.isfile(path):
+        return None
 
     ext = get_file_extension(path)
     loader = None
@@ -99,27 +109,28 @@ def get_loader(path, experimental=False):
                 break
 
     if loader is None:
-        msg = _('Loader is not found or not suitable for %s') % (path)
+        msg = _('Loader is not found or not suitable for %s') % path
         events.emit(events.MESSAGES, msgconst.WARNING, msg)
         msg = _('Start to search loader by file content')
         events.emit(events.MESSAGES, msgconst.INFO, msg)
 
         for item in ld_formats:
             checker = _get_checker(item)
-            if not checker is None:
+            if checker is not None:
                 if checker(path):
                     loader = _get_loader(item)
                     break
 
     if loader is None:
-        msg = _('By file content loader is not found for %s') % (path)
+        msg = _('By file content loader is not found for %s') % path
         events.emit(events.MESSAGES, msgconst.WARNING, msg)
         msg = _('Try using fallback loader')
         events.emit(events.MESSAGES, msgconst.INFO, msg)
-        if fallback_check(path): loader = im_loader
+        if fallback_check(path):
+            loader = im_loader
 
     if loader is None:
-        msg = _('Loader is not found for %s') % (path)
+        msg = _('Loader is not found for %s') % path
         events.emit(events.MESSAGES, msgconst.ERROR, msg)
     else:
         loader_name = loader.__str__().split(' ')[1]
@@ -131,7 +142,7 @@ def get_loader(path, experimental=False):
 def get_saver_by_id(pid):
     saver = _get_saver(pid)
     if not saver:
-        msg = _('Saver is not found for id %u') % (pid)
+        msg = _('Saver is not found for id %u') % pid
         events.emit(events.MESSAGES, msgconst.ERROR, msg)
     return saver
 
