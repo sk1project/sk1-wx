@@ -45,11 +45,11 @@ RPM = [
     'OpenSuse 42.3 64bit',
 ]
 MSI = [
-    # 'Win7 32bit',
-    # 'Win7 64bit',
+    'Win7 32bit',
+    'Win7 64bit',
 ]
 
-OSes = RPM  # + DEB + MSI
+OSes = RPM + DEB #+ MSI
 
 VMTYPE = 'headless'  # 'gui'
 
@@ -161,12 +161,13 @@ def run_agent_windows(vmname, dataset):
     echo_msg('===>BUILD FINISHED ON "%s"' % vmname, code=STDOUT_GREEN)
 
 
-def launch_farm(dataset):
+def launch_farm(dataset, os_list=None):
+    os_list = os_list or OSes
     flr_left = '\n' + '|' * 20
     flr_right = '|' * 20 + '\n'
     echo_msg(flr_left + ' FARM STARTED ' + flr_right, code=STDOUT_YELLOW)
 
-    for vmname in OSes:
+    for vmname in os_list:
         echo_msg(vmname + '-' * 40 + '\n', code=STDOUT_BOLD)
         startvm(vmname)
         if vmname in MSI:

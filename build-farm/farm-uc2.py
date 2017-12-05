@@ -65,7 +65,7 @@ DATASET = {
     'user': 'igor',
     'user_pass': '123',
     'ftp_url': '192.168.0.102',
-    'ftp_path': '/home/igor/buildfarm',
+    'ftp_path': '/home/igor/buildfarm2',
     'ftp_user': 'igor',
     'ftp_pass': '',
     'timestamp': datetime.datetime.now().strftime("%Y%m%d"),
