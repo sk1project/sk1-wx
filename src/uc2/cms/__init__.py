@@ -409,7 +409,7 @@ def get_profile_name(filepath):
     try:
         profile = libcms.cms_open_profile_from_file(filepath)
         ret = libcms.cms_get_profile_name(profile)
-    except:
+    except Exception:
         ret = None
     return ret
 
@@ -422,7 +422,7 @@ def get_profile_info(filepath):
     try:
         profile = libcms.cms_open_profile_from_file(filepath)
         ret = libcms.cms_get_profile_info(profile)
-    except:
+    except Exception:
         ret = None
     return ret
 
@@ -437,7 +437,7 @@ def get_profile_descr(filepath):
         ret = (libcms.cms_get_profile_name(profile),)
         ret += (libcms.cms_get_profile_copyright(profile),)
         ret += (libcms.cms_get_profile_info(profile),)
-    except:
+    except Exception:
         ret = ('', '', '')
     return ret
 
