@@ -44,7 +44,7 @@ def word_group(text_seq):
     i = 0
     index = None
     while i < len(text_seq):
-        if not index is None:
+        if index is not None:
             if not text_seq[i] in NONPRINTING_CHARS:
                 text_seq[index] += text_seq[i]
                 text_seq[i] = ' '
@@ -182,7 +182,7 @@ def is_item_in_rtl(index, rtl_regs):
             return False
         if index >= item[1]:
             continue
-        elif index >= item[0] and index < item[1]:
+        elif item[0] <= index < item[1]:
             return True
     return False
 
@@ -212,7 +212,7 @@ def get_glyphs(ctx, layout_data, text, width, text_style, markup):
             if markup and not item == '\n':
                 for mrk in markup:
                     if 'u' in mrk[0] or 's' in mrk[0]:
-                        if i >= mrk[1][0] and i < mrk[1][1]:
+                        if mrk[1][0] <= i < mrk[1][1]:
                             res = True
                             break
             if not res:
@@ -257,7 +257,7 @@ def get_rtl_glyphs(ctx, layout_data, log_layout_data, byte_dict, rtl_regs,
             else:
                 text_range = [index, index + len(txt)]
 
-        except:
+        except Exception:
             continue
 
         if txt in NONPRINTING_CHARS:
@@ -305,8 +305,6 @@ def get_text_paths(orig_text, width, text_style, markup):
 
     text = '' + orig_text
     clusters = []
-    rtl_regs = []
-    rtl_flag = False
 
     # Ligature support
     if text_style[5]:

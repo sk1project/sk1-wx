@@ -53,7 +53,7 @@ def get_glyph_cache(font_name, char):
 
 def set_glyph_cache(font_name, char, glyph):
     char = str(char)
-    if not font_name in GLYPH_CACHE:
+    if font_name not in GLYPH_CACHE:
         GLYPH_CACHE[font_name] = {}
     GLYPH_CACHE[font_name][char] = deepcopy(glyph)
 
@@ -66,13 +66,15 @@ def create_layout(ctx=CTX):
 
 def get_font_description(text_style, check_nt=False):
     font_size = text_style[2]
-    if check_nt and os.name == 'nt': font_size *= 10.0
+    if check_nt and os.name == 'nt':
+        font_size *= 10.0
     fnt_descr = text_style[0] + ', ' + text_style[1] + ' ' + str(font_size)
     return _libpango.create_font_description(fnt_descr)
 
 
 def set_layout(text, width, text_style, markup, layout=PANGO_LAYOUT):
-    if not width == -1: width *= PANGO_UNITS
+    if width != -1:
+        width *= PANGO_UNITS
     _libpango.set_layout_width(layout, width)
     fnt_descr = get_font_description(text_style)
     _libpango.set_layout_font_description(layout, fnt_descr)
@@ -81,9 +83,11 @@ def set_layout(text, width, text_style, markup, layout=PANGO_LAYOUT):
     _libpango.set_layout_markup(layout, markuped_text)
 
 
-def set_glyph_layout(text, width, text_style, markup, text_range=[],
+def set_glyph_layout(text, width, text_style, markup, text_range=None,
                      check_nt=False, layout=PANGO_LAYOUT):
-    if not width == -1: width *= PANGO_UNITS
+    text_range = text_range or []
+    if width != -1:
+        width *= PANGO_UNITS
     _libpango.set_layout_width(layout, width)
     fnt_descr = get_font_description(text_style, check_nt)
     _libpango.set_layout_font_description(layout, fnt_descr)

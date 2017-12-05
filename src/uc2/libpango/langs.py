@@ -25,21 +25,27 @@ ARABIC_FORMS_B = (u'\ufe70', u'\ufeff')
 
 
 def check_unicode_range(rng, symbol):
-	return rng[0] <= symbol and rng[1] >= symbol
+    return rng[0] <= symbol <= rng[1]
+
 
 def check_lang(text, ranges):
-	test = text
-	if len(test) > 20: test = test[:20]
-	ret = False
-	for item in test:
-		for reg in ranges:
-			if check_unicode_range(reg, item): ret = True
-		if ret: break
-	return ret
+    test = text
+    if len(test) > 20:
+        test = test[:20]
+    ret = False
+    for item in test:
+        for reg in ranges:
+            if check_unicode_range(reg, item):
+                ret = True
+        if ret:
+            break
+    return ret
+
 
 def check_maynmar(text):
-	return check_lang(text, (MYANMAR, MYANMAR_EXT))
+    return check_lang(text, (MYANMAR, MYANMAR_EXT))
+
 
 def check_arabic(text):
-	return check_lang(text, (ARABIC, ARABIC_SUPPLEMENT,
-							ARABIC_FORMS_A, ARABIC_FORMS_B))
+    return check_lang(text, (ARABIC, ARABIC_SUPPLEMENT,
+                             ARABIC_FORMS_A, ARABIC_FORMS_B))

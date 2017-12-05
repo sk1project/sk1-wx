@@ -49,7 +49,8 @@ def get_tags_from_descr(tag_descr, check_nt=False):
         if isinstance(item, tuple):
             if item[0] == 'font':
                 font_size = item[3]
-                if check_nt and os.name == 'nt': font_size *= 10.0
+                if check_nt and os.name == 'nt':
+                    font_size *= 10.0
                 start = '<span font="%s, %s %s">' % (item[1],
                                                      item[2],
                                                      str(font_size)) + start
@@ -90,9 +91,11 @@ def markup_to_tag_dict(markup):
 
 
 def apply_markup(text, markup):
-    if not markup: return escape(text)
+    if not markup:
+        return escape(text)
     local_markup = intersect_ranges([0, len(text)], markup)
-    if not local_markup: return escape(text)
+    if not local_markup:
+        return escape(text)
     text_list = []
     for item in text:
         text_list.append(escape(item))
@@ -129,9 +132,11 @@ def glyph_markup_to_tag_dict(markup, check_nt=False):
 
 
 def apply_glyph_markup(text, text_range, markup, check_nt=False):
-    if not markup: return escape(text), 0.0
+    if not markup:
+        return escape(text), 0.0
     local_markup = intersect_ranges(text_range, markup)
-    if not local_markup: return escape(text), 0.0
+    if not local_markup:
+        return escape(text), 0.0
     text_list = []
     for item in text:
         text_list.append(escape(item))

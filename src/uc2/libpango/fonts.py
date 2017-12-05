@@ -46,7 +46,8 @@ def update_fonts():
 
 
 def get_fonts():
-    if not FAMILIES_LIST: update_fonts()
+    if not FAMILIES_LIST:
+        update_fonts()
     return FAMILIES_LIST, FAMILIES_DICT
 
 
