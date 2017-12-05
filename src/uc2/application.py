@@ -77,10 +77,12 @@ class UCApplication(object):
         setattr(uc2, "appdata", self.appdata)
 
     def _get_infos(self, loaders):
-        return '\n   '.join([uc2const.FORMAT_DESCRIPTION[loader] for loader in loaders])
+        return '\n   '.join(
+            [uc2const.FORMAT_DESCRIPTION[loader] for loader in loaders])
 
     def show_help(self):
-        app_name = '%s %s%s' % (self.appdata.app_name, self.appdata.version, self.appdata.revision)
+        app_name = '%s %s%s' % (
+            self.appdata.app_name, self.appdata.version, self.appdata.revision)
         print HELP_TEMPLATE % (app_name, str(datetime.date.today().year),
                                self._get_infos(uc2const.MODEL_LOADERS),
                                self._get_infos(uc2const.PALETTE_LOADERS),
@@ -93,8 +95,8 @@ class UCApplication(object):
     def verbose(self, *args):
         args, = args
         status = msgconst.MESSAGES[args[0]]
-        status += ' ' * (msgconst.MAX_LEN - len(status)) + '| ' + args[1]
-        print status
+        ident = ' ' * (msgconst.MAX_LEN - len(status))
+        print '%s%s| %s' % (status, ident, args[1])
 
     def run(self):
 
@@ -139,7 +141,7 @@ class UCApplication(object):
             files[1])
         events.emit(events.MESSAGES, msgconst.JOB, msg)
 
-        saver = get_saver(files[1])
+        saver, saver_id = get_saver(files[1], return_id=True)
         if saver is None:
             msg = _("Output file format of '%s' is unsupported.") % (files[1])
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
@@ -149,7 +151,7 @@ class UCApplication(object):
 
             sys.exit(1)
 
-        loader = get_loader(files[0])
+        loader, loader_id = get_loader(files[0], return_id=True)
         if loader is None:
             msg = _("Input file format of '%s' is unsupported.") % (files[0])
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
@@ -160,8 +162,12 @@ class UCApplication(object):
             sys.exit(1)
 
         try:
-            doc = loader(self.appdata, files[0])
-        except:
+            if loader_id in uc2const.PALETTE_LOADERS and \
+                    saver_id in uc2const.PALETTE_SAVERS:
+                doc = loader(self.appdata, files[0], convert=True)
+            else:
+                doc = loader(self.appdata, files[0])
+        except Exception:
             msg = _("Error while loading '%s'") % (files[0])
             msg += _(
                 "The file may be corrupted or contains unknown file format.")
@@ -176,7 +182,7 @@ class UCApplication(object):
         if doc is not None:
             try:
                 saver(doc, files[1])
-            except:
+            except Exception:
                 msg = _("Error while translation and saving '%s'") % (files[0])
                 events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
