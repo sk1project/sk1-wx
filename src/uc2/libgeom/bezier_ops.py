@@ -25,12 +25,14 @@ from cwrap import get_cpath_bbox, create_cpath
 
 
 def is_curve_point(point):
-    if len(point) == 2: return False
+    if len(point) == 2:
+        return False
     return True
 
 
 def bezier_base_point(point):
-    if len(point) == 2: return [] + point
+    if len(point) == 2:
+        return [] + point
     return [] + point[2]
 
 
@@ -63,7 +65,8 @@ def get_paths_bbox(paths):
 
 def split_bezier_curve(start_point, end_point, t=0.5):
     p0 = [] + start_point
-    if len(start_point) > 2: p0 = [] + start_point[2]
+    if len(start_point) > 2:
+        p0 = [] + start_point[2]
     p1, p2, p3, flag = deepcopy(end_point)
     p0_1 = add_points(mult_point(p0, (1.0 - t)), mult_point(p1, t))
     p1_2 = add_points(mult_point(p1, (1.0 - t)), mult_point(p2, t))
@@ -78,7 +81,8 @@ def split_bezier_curve(start_point, end_point, t=0.5):
 
 
 def split_bezier_line(start_point, end_point, point):
-    if len(start_point) > 2: start_point = start_point[2]
+    if len(start_point) > 2:
+        start_point = start_point[2]
     dist1 = distance(start_point, end_point)
     dist2 = distance(start_point, point)
     coef = dist2 / dist1

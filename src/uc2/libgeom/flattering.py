@@ -44,21 +44,19 @@ def _flat_segment(p0, p1, p2, p3, tlr):
     elif abs_point(b) < tlr / 2.0:
         return [p9, p3]
     else:
-        N = normalize_point(b)
-        if ((mult_points(c1, N)) < -tlr
-            or (mult_points(c2, N)) > tlr
-            or cr_points(c1, b) * cr_points(c2, b) < 0
-            or abs(cr_points(N, s)) > tlr):
-            return _flat_segment(p0, p4, p7, p9, tlr) + _flat_segment(p9, p8,
-                                                                      p6, p3,
-                                                                      tlr)
+        n = normalize_point(b)
+        if ((mult_points(c1, n)) < -tlr
+                or (mult_points(c2, n)) > tlr
+                or cr_points(c1, b) * cr_points(c2, b) < 0
+                or abs(cr_points(n, s)) > tlr):
+            return _flat_segment(p0, p4, p7, p9, tlr) + \
+                   _flat_segment(p9, p8, p6, p3, tlr)
         else:
             return [p9, p3]
 
 
 def flat_path(path, tlr=0.5):
-    result = []
-    result.append([] + path[0])
+    result = [[] + path[0]]
     start = [] + path[0]
     for point in path[1]:
         if len(point) == 2:
@@ -86,6 +84,7 @@ def flat_paths(paths, tlr=0.5):
 def get_flattened_path(obj, trafo, tolerance=0.5):
     if obj.cache_paths is None:
         obj.update()
-    if obj.cache_paths is None: return None
+    if obj.cache_paths is None:
+        return None
     paths = apply_trafo_to_paths(obj.cache_paths, trafo)
     return flat_paths(paths, tolerance)

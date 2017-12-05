@@ -26,8 +26,8 @@ def trafo_rotate(angle, cx=0.0, cy=0.0):
     m21 = math.sin(angle)
     m11 = m22 = math.cos(angle)
     m12 = -m21
-    dx = cx - m11 * cx + m21 * cy;
-    dy = cy - m21 * cx - m11 * cy;
+    dx = cx - m11 * cx + m21 * cy
+    dy = cy - m21 * cx - m11 * cy
     return [m11, m21, m12, m22, dx, dy]
 
 
@@ -91,4 +91,4 @@ def get_transformed_paths(obj):
     elif obj.cache_paths:
         return apply_trafo_to_paths(obj.cache_paths, obj.trafo)
     else:
-        return cwrap._get_transformed_path(obj)
+        return cwrap.get_transformed_path(obj)

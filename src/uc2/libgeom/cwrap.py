@@ -42,9 +42,10 @@ def invert_trafo(trafo):
     return libcairo.invert_trafo(trafo)
 
 
-def _get_transformed_path(obj):
+def get_transformed_path(obj):
     if obj.cache_cpath is None:
         obj.update()
-    if obj.cache_cpath is None: return None
+    if obj.cache_cpath is None:
+        return None
 
     return libcairo.get_path_from_cpath(obj.cache_cpath)

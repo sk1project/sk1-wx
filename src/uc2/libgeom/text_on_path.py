@@ -28,21 +28,21 @@ TEXT_ALIGN_RIGHT = 2
 TEXT_ALIGN_JUSTIFY = 3
 
 
-def _get_point_on_path(flat_path, pos):
-    start = flat_path[0]
-    end = flat_path[0]
+def _get_point_on_path(flatpath, pos):
+    start = flatpath[0]
+    end = flatpath[0]
     point = None
-    l = 0
-    for item in flat_path[1]:
+    lenght = 0
+    for item in flatpath[1]:
         start, end = end, item
-        l += distance(start, end)
-        if l >= pos:
-            coef = 1.0 - (l - pos) / distance(start, end)
+        lenght += distance(start, end)
+        if lenght >= pos:
+            coef = 1.0 - (lenght - pos) / distance(start, end)
             point = midpoint(start, end, coef)
             break
     if not point:
         last = distance(start, end)
-        coef = (pos - l + last) / last
+        coef = (pos - lenght + last) / last
         point = midpoint(start, end, coef)
     angle = get_point_angle(end, start)
     return point, angle
@@ -51,7 +51,8 @@ def _get_point_on_path(flat_path, pos):
 def set_text_on_path(path_obj, text_obj, data):
     curve = path_obj.to_curve()
     path = apply_trafo_to_paths(curve.paths, curve.trafo)[0]
-    if data[2]: path = reverse_path(path)
+    if data[2]:
+        path = reverse_path(path)
     fpath = flat_path(path)
     fpath_len = get_path_length(fpath)
 
@@ -91,8 +92,8 @@ def set_text_on_path(path_obj, text_obj, data):
         m21 = math.sin(angle)
         m11 = m22 = math.cos(angle)
         m12 = -m21
-        dx = center_x - m11 * center_x + m21 * center_y;
-        dy = center_y - m21 * center_x - m11 * center_y;
+        dx = center_x - m11 * center_x + m21 * center_y
+        dy = center_y - m21 * center_x - m11 * center_y
 
         trafos[index] = [m11, m21, m12, m22,
                          dx + point[0] - x - shift, dy + point[1] - y]

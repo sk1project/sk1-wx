@@ -48,9 +48,9 @@ def contra_point(p0, p1, p3=None):
     if not p3:
         return [2.0 * p1[0] - p0[0], 2.0 * p1[1] - p0[1]]
     else:
-        l = distance(p1, p3)
-        l1 = distance(p1, p0)
-        coef = 1.0 + l / l1
+        lenght = distance(p1, p3)
+        lenght1 = distance(p1, p0)
+        coef = 1.0 + lenght / lenght1
         dx = coef * (p1[0] - p0[0])
         dy = coef * (p1[1] - p0[1])
         return [p0[0] + dx, p0[1] + dy]
@@ -75,11 +75,13 @@ def cr_points(p0, p1):
 def is_equal_points(p0, p1, precision=None):
     if precision is None:
         return p1[0] == p0[0] and p1[1] == p0[1]
-    return round(p0[0], precision) == round(p1[0], precision) and \
-           round(p0[1], precision) == round(p1[1], precision)
+    x_eq = round(p0[0], precision) == round(p1[0], precision)
+    y_eq = round(p0[1], precision) == round(p1[1], precision)
+    return x_eq and y_eq
 
 
-def distance(p0, p1=[0.0, 0.0]):
+def distance(p0, p1=None):
+    p1 = p1 or [0.0, 0.0]
     x0, y0 = p0
     x1, y1 = p1
     return math.sqrt(math.pow((x1 - x0), 2) + math.pow((y1 - y0), 2))
@@ -89,17 +91,19 @@ def rotate_point(center, point, angle):
     m21 = math.sin(angle)
     m11 = m22 = math.cos(angle)
     m12 = -m21
-    dx = center[0] - m11 * center[0] + m21 * center[1];
-    dy = center[1] - m21 * center[0] - m11 * center[1];
+    dx = center[0] - m11 * center[0] + m21 * center[1]
+    dy = center[1] - m21 * center[0] - m11 * center[1]
     trafo = [m11, m21, m12, m22, dx, dy]
     return apply_trafo_to_point(point, trafo)
 
 
-def get_point_radius(p, center=[0.5, 0.5]):
+def get_point_radius(p, center=None):
+    center = center or [0.5, 0.5]
     return distance(p, center)
 
 
-def get_point_angle(p, center=[0.5, 0.5]):
+def get_point_angle(p, center=None):
+    center = center or [0.5, 0.5]
     x0, y0 = center
     x, y = p
     r = get_point_radius(p, center)
@@ -124,5 +128,6 @@ def get_point_angle(p, center=[0.5, 0.5]):
 def to_polar(point):
     r = distance(point)
     angle = 0.0
-    if r: angle = get_point_angle(point, [0.0, 0.0])
-    return (r, angle)
+    if r:
+        angle = get_point_angle(point, [0.0, 0.0])
+    return r, angle

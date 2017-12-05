@@ -46,7 +46,7 @@ def subdivide(p, t=0.5):
     p012 = p01 * (1 - t) + p12 * t
     p123 = p12 * (1 - t) + p23 * t
     p0123 = p012 * (1 - t) + p123 * t
-    return (p[0], p01, p012, p0123, p123, p23, p[3])
+    return p[0], p01, p012, p0123, p123, p23, p[3]
 
 
 def subdivide_seg(seg, t=0.5):
@@ -61,7 +61,7 @@ def subdivide_seg(seg, t=0.5):
     p012 = add_points(mult_point(p01, t2), mult_point(p12, t))
     p123 = add_points(mult_point(p12, t2), mult_point(p23, t))
     p0123 = add_points(mult_point(p012, t2), mult_point(p123, t))
-    return (seg[0], p01, p012, p0123, p123, p23, seg[3])
+    return seg[0], p01, p012, p0123, p123, p23, seg[3]
 
 
 def circleparam(h):
@@ -90,7 +90,8 @@ def normalize(point):
     Returns a unit vector pointing in the same direction.
     """
     k = distance(point)
-    if not k: return [0.0, 0.0]
+    if not k:
+        return [0.0, 0.0]
     return [point[0] / k, point[1] / k]
 
 
@@ -109,7 +110,8 @@ def check_parallel(source, parallel, radius, tolerance=0.01):
         t = subdivide_seg(parallel, t0)
         ccenter = mult_point(normalize(sub_points(s[4], s[3])), radius)
         orig = add_points(s[3], [ccenter[1], -ccenter[0]])
-        if length(sub_points(orig, t[3])) >= tolerance * radius: return False
+        if length(sub_points(orig, t[3])) >= tolerance * radius:
+            return False
     return True
 
 
@@ -120,11 +122,14 @@ def build_parallel(p, radius, recursionlimit=6):
     the check for parallelity fails.	
     """
     # find tangent to calculate orthogonal neighbor of endpoint
+    c1 = c2 = []
     for i in p[1:]:
         c1 = sub_points(i, p[0])
-        if c1: break
+        if c1:
+            break
 
-    if c1 == [0, 0]: return []
+    if c1 == [0, 0]:
+        return []
 
     t1 = mult_point(normalize(c1), radius)
     p0 = add_points(p[0], [t1[1], -t1[0]])
@@ -132,7 +137,8 @@ def build_parallel(p, radius, recursionlimit=6):
 
     for i in [p[2], p[1], p[0]]:
         c2 = sub_points(p[3], i)
-        if not c2 == [0, 0]: break
+        if not c2 == [0, 0]:
+            break
 
     t2 = mult_point(normalize(c2), radius)
     p3 = add_points(p[3], [t2[1], -t2[0]])
@@ -198,7 +204,8 @@ def get_join_segment(startpoint, endpoint, radius, jointype,
     if jointype == sk2const.JOIN_MITER:
         d = mult_point(sub_points(endpoint, startpoint), 0.5)
 
-        if d == [0, 0]: return []
+        if d == [0, 0]:
+            return []
 
         o = normalize([d[1], -d[0]])
 
@@ -222,7 +229,8 @@ def get_join_segment(startpoint, endpoint, radius, jointype,
         f = CIRCLE_CONSTANT
         d = mult_point(sub_points(endpoint, startpoint), 0.5)
 
-        if d == [0, 0]: return []
+        if d == [0, 0]:
+            return []
 
         o = mult_point(normalize([d[1], -d[0]]), radius)
 
@@ -337,7 +345,6 @@ def intersect_segs(seg1, seg2):
                      [[seg2[1], seg2[2], seg2[3], sk2const.NODE_CUSP], ],
                      sk2const.CURVE_OPENED]
         return intersect_segments(path1, path2)
-    return None
 
 
 def join_segs(segs, radius, linejoin, miter_limit, close=False):
@@ -348,7 +355,8 @@ def join_segs(segs, radius, linejoin, miter_limit, close=False):
     line - [startpoint, endpoint]
     """
     i = 0
-    if close: i = -1
+    if close:
+        i = -1
     props = (radius, linejoin, miter_limit)
     while i < len(segs) - 1:
         if segs[i][-1] != segs[i + 1][0]:
@@ -376,7 +384,7 @@ def join_segs(segs, radius, linejoin, miter_limit, close=False):
                     seg2[3] = cp[1][1][2]
             else:
                 if linejoin == sk2const.JOIN_MITER and len(joint) == 7 and \
-                                len(seg1) == 2 and len(seg2) == 2:
+                        len(seg1) == 2 and len(seg2) == 2:
                     seg1[-1] = seg2[0] = joint[3]
                 else:
                     segs.insert(i + 1, joint)
@@ -475,7 +483,8 @@ def make_path(segments, close=1):
 # --- MODULE INTERFACE
 
 def stroke_to_curve(paths, stroke_style):
-    if not stroke_style: return []
+    if not stroke_style:
+        return []
     width = stroke_style[1]
     dash_list = stroke_style[3]
     caps = stroke_style[4]

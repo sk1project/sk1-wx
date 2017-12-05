@@ -33,8 +33,10 @@ def normalize_rect(rect):
     if height < 0:
         height = abs(height)
         y -= height
-    if not width: width = .0000000001
-    if not height: height = .0000000001
+    if not width:
+        width = .0000000001
+    if not height:
+        height = .0000000001
     return [x, y, width, height]
 
 
@@ -127,7 +129,8 @@ def _split_arcs_at_point(angle):
     index = _get_arc_index(angle)
     if angle in EXTREME_ANGLES:
         index += 1
-        if angle in START_ANGLES: index = 0
+        if angle in START_ANGLES:
+            index = 0
         points = segments[index:] + segments[:index]
         start = bezier_base_point(points[-1])
         return [[start, points, sk2const.CURVE_CLOSED], ]
@@ -142,19 +145,16 @@ def _split_arcs_at_point(angle):
         points[-1][3] = sk2const.NODE_SMOOTH
         start = bezier_base_point(new_point)
         return [[start, [new_end_point, ] + points + [new_point, ],
-            sk2const.CURVE_CLOSED], ]
+                 sk2const.CURVE_CLOSED], ]
 
 
 def _exclude_segment_from_arcs(angle1, angle2):
     segments = deepcopy(sk2const.STUB_ARCS)
-    points = []
-    start_index = 0
-    end_index = 0
-    start_point = None
 
     if angle1 in EXTREME_ANGLES:
         start_index = _get_arc_index(angle1) + 1
-        if angle1 in START_ANGLES: start_index = 0
+        if angle1 in START_ANGLES:
+            start_index = 0
         start_point = bezier_base_point(segments[start_index - 1])
         points = segments[start_index:] + segments[:start_index]
     else:
@@ -170,18 +170,20 @@ def _exclude_segment_from_arcs(angle1, angle2):
 
     if angle2 in EXTREME_ANGLES and angle1 in EXTREME_ANGLES:
         end_index = _get_arc_index(angle2) + 1
-        if angle2 in START_ANGLES: end_index = 0
+        if angle2 in START_ANGLES:
+            end_index = 0
         index = points.index(segments[end_index])
         points = points[:index]
-    elif angle2 in EXTREME_ANGLES and not angle1 in EXTREME_ANGLES:
+    elif angle2 in EXTREME_ANGLES and angle1 not in EXTREME_ANGLES:
         end_index = _get_arc_index(angle2) + 1
-        if angle2 in START_ANGLES: end_index = 0
+        if angle2 in START_ANGLES:
+            end_index = 0
         if segments[end_index] in points:
             index = points.index(segments[end_index])
         else:
             index = -1
         points = points[:index]
-    elif not angle2 in EXTREME_ANGLES and angle1 in EXTREME_ANGLES:
+    elif angle2 not in EXTREME_ANGLES and angle1 in EXTREME_ANGLES:
         end_index = _get_arc_index(angle2)
         seg_start = bezier_base_point(segments[end_index - 1])
         seg_end = segments[end_index]
@@ -220,7 +222,6 @@ def _exclude_segment_from_arcs(angle1, angle2):
 
 
 def get_circle_paths(angle1, angle2, circle_type):
-    paths = []
     if angle1 in START_ANGLES and angle2 in START_ANGLES:
         angle1 = angle2 = 0.0
     if angle1 == angle2:
@@ -246,7 +247,8 @@ def get_circle_paths(angle1, angle2, circle_type):
 # ------------- POLYGON -------------
 
 def get_polygon_paths(corners_num, angle1, angle2, coef1, coef2):
-    if corners_num < 3: corners_num = 3
+    if corners_num < 3:
+        corners_num = 3
     points = []
 
     center = [0.5, 0.5]
@@ -284,5 +286,6 @@ def get_paths_from_glyph(glyph):
     for item in glyph:
         if item and item[1]:
             ret.append(item)
-    if not ret: return None
+    if not ret:
+        return None
     return ret
