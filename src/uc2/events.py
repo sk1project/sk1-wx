@@ -45,8 +45,9 @@ def connect(channel, receiver):
     if callable(receiver):
         try:
             channel.append(receiver)
-        except:
-            print "Cannot connect to channel:", channel, "receiver:", receiver
+        except Exception:
+            print "Cannot connect to channel:", channel, \
+                "receiver:", receiver
 
 
 def disconnect(channel, receiver):
@@ -57,21 +58,22 @@ def disconnect(channel, receiver):
     if callable(receiver):
         try:
             channel.remove(receiver)
-        except:
-            print "Cannot disconnect from channel:", channel, "receiver:", receiver
+        except Exception:
+            print "Cannot disconnect from channel:", channel, \
+                "receiver:", receiver
 
 
 def emit(channel, *args):
     """
     Sends signal to all receivers in channel.
     """
-    #	print 'signal', channel[0]
+    # print 'signal', channel[0]
     try:
         for receiver in channel[1:]:
             try:
                 if callable(receiver):
                     receiver(args)
-            except:
+            except Exception:
                 pass
-    except:
+    except Exception:
         print "Cannot send signal to channel:", channel
