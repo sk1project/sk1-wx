@@ -1,0 +1,29 @@
+Добавить Debian Sid
+Сборки для Gentoo, Slackware
+WiX installer for MSW
+=============
+Создание кривых кайро на нативной части
+Оптимизация работы с имиджами PIL
+Переработать виджет палитры (скроллы, бордер)
+Логирование и работа с ошибками
+gevent для eventloops (?)
+фильтр-нормализатор модели (экспорт/рендеринг)
+=============
+WMF exporter
+CGM import/export (можно ли подмерджить UC1?)
+Добавить XCF, PSD (слои?)
+Динамическое описание для пакетов UC2
+Цветной вывод для linux консоли
+опция -output_format="GPL"
+=============
+UI для UC2
+=============
+/home/igor/Projects/sk1-wx/src/sk1/pwidgets
+/home/igor/Projects/sk1-wx/src/sk1/share/pd_plugins
+/home/igor/Projects/sk1-wx/src/uc2/formats/pdf/pdfgen.py
+/home/igor/Projects/sk1-wx/src/uc2/formats/plt/plt_model.py
+
+=============
+refactor sk.dialogs.filedlgs to wal
+
+=============
