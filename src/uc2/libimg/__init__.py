@@ -15,15 +15,15 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys, os
+import os
 import cairo
 from copy import deepcopy
 from base64 import b64decode, b64encode
 from cStringIO import StringIO
 from PIL import Image, ImageOps
 
-from uc2.cms import rgb_to_hexcolor, val_255
-from uc2.libimg.magickwand import get_magickwand_version, process_pattern
+from uc2.cms import val_255
+from uc2.libimg.magickwand import process_pattern
 from uc2.libimg.magickwand import check_image_file, process_image
 from uc2.uc2const import IMAGE_CMYK, IMAGE_RGB, IMAGE_RGBA, IMAGE_LAB
 from uc2.uc2const import IMAGE_GRAY, IMAGE_MONO, DUOTONES, SUPPORTED_CS
@@ -35,11 +35,12 @@ def get_version():
 
 
 def check_image(path):
-    return check_image_file
+    return check_image_file(path)
 
 
 def _get_saver_fmt(img):
-    if img.mode == IMAGE_CMYK: return 'TIFF'
+    if img.mode == IMAGE_CMYK:
+        return 'TIFF'
     return 'PNG'
 
 
@@ -68,7 +69,7 @@ def invert_image(cms, bmpstr):
 
 def convert_image(cms, pixmap, colorspace, raw=False):
     image_stream = StringIO()
-    if pixmap.colorspace in DUOTONES and not colorspace in DUOTONES:
+    if pixmap.colorspace in DUOTONES and colorspace not in DUOTONES:
         cdata_stream = StringIO()
         pixmap.cache_cdata.write_to_png(cdata_stream)
         cdata_stream.seek(0)
@@ -79,7 +80,8 @@ def convert_image(cms, pixmap, colorspace, raw=False):
         raw_image = Image.open(StringIO(b64decode(pixmap.bitmap)))
         raw_image.load()
     raw_image = cms.convert_image(raw_image, colorspace)
-    if raw: return raw_image
+    if raw:
+        return raw_image
     raw_image.save(image_stream, format=_get_saver_fmt(raw_image))
     return b64encode(image_stream.getvalue())
 
@@ -90,18 +92,22 @@ def convert_duotone_to_image(cms, pixmap, cs=None):
     bg = pixmap.style[3][1]
     raw_image = Image.open(StringIO(b64decode(pixmap.bitmap)))
     raw_image.load()
-    fg_img = None
-    bg_img = None
+    fg_img = bg_img = None
+    fg_cs = bg_cs = uc2const.IMAGE_RGB
     if pixmap.colorspace == uc2const.IMAGE_MONO:
         raw_image = raw_image.convert(IMAGE_GRAY)
     size = raw_image.size
     if cs == uc2const.IMAGE_CMYK:
-        if fg: fg = tuple(cms.get_cmyk_color255(fg))
-        if bg: bg = tuple(cms.get_cmyk_color255(bg))
+        if fg:
+            fg = tuple(cms.get_cmyk_color255(fg))
+        if bg:
+            bg = tuple(cms.get_cmyk_color255(bg))
         fg_cs = bg_cs = cs
     elif cs == uc2const.IMAGE_RGB:
-        if fg: fg = tuple(cms.get_rgb_color255(fg))
-        if bg: bg = tuple(cms.get_rgb_color255(bg))
+        if fg:
+            fg = tuple(cms.get_rgb_color255(fg))
+        if bg:
+            bg = tuple(cms.get_rgb_color255(bg))
         fg_cs = bg_cs = cs
     else:
         if fg:
@@ -110,8 +116,10 @@ def convert_duotone_to_image(cms, pixmap, cs=None):
         if bg:
             bg_cs = bg[0]
             bg = tuple(val_255(cms.get_color(bg, bg_cs)[1]))
-    if fg: fg_img = Image.new(fg_cs, size, fg)
-    if bg: bg_img = Image.new(bg_cs, size, bg)
+    if fg:
+        fg_img = Image.new(fg_cs, size, fg)
+    if bg:
+        bg_img = Image.new(bg_cs, size, bg)
 
     fg_alpha = ImageOps.invert(raw_image)
     bg_alpha = raw_image
@@ -122,12 +130,13 @@ def convert_duotone_to_image(cms, pixmap, cs=None):
         comp_img = Image.new('L', size, 0)
         fg_alpha.paste(comp_img, (0, 0), alpha_chnl)
         bg_alpha.paste(comp_img, (0, 0), alpha_chnl)
-    return ((fg_img, fg_alpha), (bg_img, bg_alpha))
+    return (fg_img, fg_alpha), (bg_img, bg_alpha)
 
 
 def extract_bitmap(pixmap, filepath):
     ext = '.png'
-    if pixmap.colorspace == IMAGE_CMYK: ext = '.tiff'
+    if pixmap.colorspace == IMAGE_CMYK:
+        ext = '.tiff'
     if not os.path.splitext(filepath)[1] == ext:
         filepath = os.path.splitext(filepath)[0] + ext
     fileptr = open(filepath, 'wb')
@@ -146,8 +155,6 @@ def update_image(cms, pixmap, force_proofing=False):
     raw_image = Image.open(StringIO(b64decode(pixmap.bitmap)))
     raw_image.load()
 
-    cache_image = None
-
     if pixmap.colorspace in DUOTONES:
         if pixmap.colorspace == IMAGE_MONO:
             raw_image = raw_image.convert(IMAGE_GRAY)
@@ -157,10 +164,10 @@ def update_image(cms, pixmap, force_proofing=False):
         bg_color = (255, 255, 255, 0)
         if fg:
             fg_color = tuple(cms.get_display_color255(fg)) + (
-            int(fg[2] * 255.0),)
+                int(fg[2] * 255.0),)
         if bg:
             bg_color = tuple(cms.get_display_color255(bg)) + (
-            int(bg[2] * 255.0),)
+                int(bg[2] * 255.0),)
         cache_image = Image.new(IMAGE_RGBA, pixmap.size, fg_color)
         bg_image = Image.new(IMAGE_RGBA, pixmap.size, bg_color)
         cache_image.paste(bg_image, (0, 0), raw_image)
@@ -208,10 +215,10 @@ def update_gray_image(cms, pixmap):
         bg_color = (255, 255, 255, 0)
         if fg:
             fg_color = tuple(cms.get_display_color255(fg)) + (
-            int(fg[2] * 255.0),)
+                int(fg[2] * 255.0),)
         if bg:
             bg_color = tuple(cms.get_display_color255(bg)) + (
-            int(bg[2] * 255.0),)
+                int(bg[2] * 255.0),)
         cache_image = Image.new(IMAGE_RGBA, pixmap.size, fg_color)
         bg_image = Image.new(IMAGE_RGBA, pixmap.size, bg_color)
         cache_image.paste(bg_image, (0, 0), raw_image)
@@ -245,11 +252,11 @@ def extract_profile(raw_content):
     profile = None
     mode = None
     try:
-        img = Image
+        img = Image.open(StringIO(raw_content))
         if 'icc_profile' in img.info.keys():
             profile = img.info.get('icc_profile')
             mode = img.mode
-    except:
+    except Exception:
         pass
     return profile, mode
 
@@ -263,16 +270,16 @@ def set_image_data(cms, pixmap, raw_content):
     base_image.load()
 
     pixmap.size = () + base_image.size
-    if not base_image.mode in SUPPORTED_CS:
+    if base_image.mode not in SUPPORTED_CS:
         base_image = base_image.convert(IMAGE_RGB)
 
-    if not base_image.mode in SUPPORTED_CS[1:]:
+    if base_image.mode not in SUPPORTED_CS[1:]:
         profile = mode = None
 
     if profile and base_image.mode == mode:
         try:
             base_image = cms.adjust_image(base_image, profile)
-        except:
+        except Exception:
             pass
 
     pixmap.colorspace = '' + base_image.mode
