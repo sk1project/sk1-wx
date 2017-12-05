@@ -86,11 +86,13 @@ def get_loader_by_id(pid):
     return loader
 
 
-def get_loader(path, experimental=False):
+def get_loader(path, experimental=False, return_id=False):
     if not os.path.lexists(path):
         return None
     if not os.path.isfile(path):
         return None
+
+    ret_id = None
 
     ext = get_file_extension(path)
     loader = None
@@ -106,6 +108,7 @@ def get_loader(path, experimental=False):
             checker = _get_checker(item)
             if checker and checker(path):
                 loader = _get_loader(item)
+                ret_id = item
                 break
 
     if loader is None:
@@ -119,6 +122,7 @@ def get_loader(path, experimental=False):
             if checker is not None:
                 if checker(path):
                     loader = _get_loader(item)
+                    ret_id = item
                     break
 
     if loader is None:
@@ -136,6 +140,9 @@ def get_loader(path, experimental=False):
         loader_name = loader.__str__().split(' ')[1]
         msg = _('Loader <%s> is found for %s') % (loader_name, path)
         events.emit(events.MESSAGES, msgconst.OK, msg)
+
+    if return_id:
+        return loader, ret_id
     return loader
 
 
@@ -147,7 +154,8 @@ def get_saver_by_id(pid):
     return saver
 
 
-def get_saver(path, experimental=False):
+def get_saver(path, experimental=False, return_id=False):
+    ret_id = None
     ext = get_file_extension(path)
     saver = None
     sv_formats = [] + uc2const.SAVER_FORMATS
@@ -160,6 +168,7 @@ def get_saver(path, experimental=False):
     for item in sv_formats:
         if ext in uc2const.FORMAT_EXTENSION[item]:
             saver = _get_saver(item)
+            ret_id = item
             break
     if saver is None:
         msg = _('Saver is not found for %s file format') % (ext.__str__())
@@ -167,4 +176,7 @@ def get_saver(path, experimental=False):
     else:
         msg = _('Saver is found for extension %s') % (ext.__str__())
         events.emit(events.MESSAGES, msgconst.OK, msg)
+
+    if return_id:
+        return saver, ret_id
     return saver
