@@ -16,7 +16,8 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import os, sys
+import os
+import sys
 
 from uc2.utils.fs import path_system, path_unicode
 
@@ -27,7 +28,8 @@ class SerializedConfig(object):
     """
     filename = ''
 
-    def update(self, cnf={}):
+    def update(self, cnf=None):
+        cnf = cnf or {}
         if cnf:
             for key in cnf.keys():
                 if hasattr(self, key):
@@ -38,31 +40,37 @@ class SerializedConfig(object):
         if os.path.lexists(filename):
             try:
                 fileobj = open(filename, "r")
-            except:
+            except Exception:
                 print 'ERROR>>> cannot read preferences from %s' % filename
                 print sys.exc_info()[1].__str__()
                 print sys.exc_info()[2].__str__()
+                return
 
             while True:
                 line = fileobj.readline()
-                if line.startswith('<?xml'): break
-                if not line: break
-                if line[0] == '#': continue
+                if line.startswith('<?xml'):
+                    break
+                if not line:
+                    break
+                if line.startswith('#'):
+                    continue
                 line = path_system('self.%s' % line)
                 try:
                     code = compile(line, '<string>', 'exec')
                     exec code
-                except:
+                except Exception:
                     print 'ERROR>>> %s' % line
             fileobj.close()
 
     def save(self, filename=None):
-        if self.filename and filename is None: filename = self.filename
-        if len(self.__dict__) == 0 or filename == None: return
+        if self.filename and filename is None:
+            filename = self.filename
+        if len(self.__dict__) == 0 or filename is None:
+            return
 
         try:
             fileobj = open(filename, 'w')
-        except:
+        except Exception:
             print 'ERROR>>> cannot write preferences into %s' % filename
             return
 
@@ -70,8 +78,10 @@ class SerializedConfig(object):
         items = self.__dict__.items()
         items.sort()
         for key, value in items:
-            if defaults.has_key(key) and defaults[key] == value: continue
-            if key in ['filename', 'app']: continue
+            if key in defaults and defaults[key] == value:
+                continue
+            if key in ['filename', 'app']:
+                continue
             line = path_unicode('%s = %s\n' % (key, value.__repr__()))
             fileobj.write(line)
         fileobj.close()

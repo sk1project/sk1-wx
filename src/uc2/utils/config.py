@@ -16,7 +16,8 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import os, sys
+import os
+import sys
 
 import xml.sax
 from xml.sax.xmlreader import InputSource
@@ -51,7 +52,8 @@ class XmlConfigParser(object):
     """
     filename = ''
 
-    def update(self, cnf={}):
+    def update(self, cnf=None):
+        cnf = cnf or {}
         if cnf:
             for key in cnf.keys():
                 if hasattr(self, key):
@@ -75,18 +77,20 @@ class XmlConfigParser(object):
                 xml_reader.setDTDHandler(dtd_handler)
                 xml_reader.parse(input_source)
                 input_file.close()
-            except:
+            except Exception:
                 print 'ERROR>>> cannot read preferences from %s' % filename
                 print sys.exc_info()[1].__str__()
                 print sys.exc_info()[2].__str__()
 
     def save(self, filename=None):
-        if self.filename and filename is None: filename = self.filename
-        if len(self.__dict__) == 0 or filename == None: return
+        if self.filename and filename is None:
+            filename = self.filename
+        if len(self.__dict__) == 0 or filename is None:
+            return
 
         try:
             fileobj = open(filename, 'w')
-        except:
+        except Exception:
             print 'ERROR>>> cannot write preferences into %s' % filename
             return
 
@@ -98,8 +102,10 @@ class XmlConfigParser(object):
         writer.startElement('preferences', {})
         writer.characters('\n')
         for key, value in items:
-            if defaults.has_key(key) and defaults[key] == value: continue
-            if key in ['filename', 'app']: continue
+            if key in defaults and defaults[key] == value:
+                continue
+            if key in ['filename', 'app']:
+                continue
             writer.characters('\t')
             writer.startElement('%s' % key, {})
 
@@ -113,13 +119,14 @@ class XmlConfigParser(object):
             writer.characters('\n')
         writer.endElement('preferences')
         writer.endDocument()
-        fileobj.close
+        fileobj.close()
 
 
 class XMLPrefReader(handler.ContentHandler):
     """Handler for xml file reading"""
 
     def __init__(self, pref=None):
+        handler.ContentHandler.__init__(self)
         self.key = None
         self.value = None
         self.pref = pref
@@ -141,10 +148,13 @@ class XMLPrefReader(handler.ContentHandler):
         self.value = data
 
 
-class ErrorHandler(handler.ErrorHandler): pass
+class ErrorHandler(handler.ErrorHandler):
+    pass
 
 
-class EntityResolver(handler.EntityResolver): pass
+class EntityResolver(handler.EntityResolver):
+    pass
 
 
-class DTDHandler(handler.DTDHandler): pass
+class DTDHandler(handler.DTDHandler):
+    pass
