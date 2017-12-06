@@ -1,28 +1,37 @@
+
+===INFRASTRUCTURE=========
 Добавить Debian Sid
 Сборки для Gentoo, Slackware
 WiX installer for MSW
-=============
+Динамическое описание для пакетов UC2
+
+===MODEL==========
 Создание кривых кайро на нативной части
 Оптимизация работы с имиджами PIL
+фильтр-нормализатор модели (экспорт/рендеринг)
+
+===UI===============
 Переработать виджет палитры (скроллы, бордер)
 Логирование и работа с ошибками
 gevent для eventloops (?)
-фильтр-нормализатор модели (экспорт/рендеринг)
-=============
+
+===UC2==========
+UI для UC2 (?)
+Цветной вывод для linux консоли
+
+===FILTERS==========
 WMF exporter
 CGM import/export (можно ли подмерджить UC1?)
 Добавить XCF, PSD (слои!!!)
-Динамическое описание для пакетов UC2
-Цветной вывод для linux консоли
-=============
-UI для UC2
-=============
+Детекция XCF
+
+===REFACTORING==========
 /home/igor/Projects/sk1-wx/src/sk1/pwidgets
 /home/igor/Projects/sk1-wx/src/sk1/share/pd_plugins
 /home/igor/Projects/sk1-wx/src/uc2/formats/pdf/pdfgen.py
 /home/igor/Projects/sk1-wx/src/uc2/formats/plt/plt_model.py
 
-=============
 refactor sk.dialogs.filedlgs to wal
 
-=============
+===CANVAS==========
+Улучшить работу редактора точек
