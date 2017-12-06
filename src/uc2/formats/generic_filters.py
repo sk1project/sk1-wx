@@ -26,24 +26,23 @@ from uc2 import _, events, msgconst, utils
 
 
 def get_fileptr(path, writable=False):
-    fileptr = None
     if not file:
         msg = _('There is no file path')
         raise IOError(errno.ENODATA, msg, '')
     if writable:
         try:
             fileptr = open(path, 'wb')
-        except:
+        except Exception:
             errtype, value, traceback = sys.exc_info()
-            msg = _('Cannot open %s file for writing') % (path)
+            msg = _('Cannot open %s file for writing') % path
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
             raise IOError(errtype, msg + '\n' + value, traceback)
     else:
         try:
             fileptr = open(path, 'rb')
-        except:
+        except Exception:
             errtype, value, traceback = sys.exc_info()
-            msg = _('Cannot open %s file for reading') % (path)
+            msg = _('Cannot open %s file for reading') % path
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
             raise IOError(errtype, msg + '\n' + value, traceback)
     return fileptr
@@ -101,7 +100,8 @@ class AbstractLoader(object):
 
     def readln(self, strip=True):
         line = self.fileptr.readline()
-        if strip: line = line.strip()
+        if strip:
+            line = line.strip()
         return line
 
     def check_loading(self):
@@ -153,13 +153,16 @@ class AbstractBinaryLoader(AbstractLoader):
         return utils.utf_16_le_bytes_2str(self.fileptr.read(size * 2))
 
 
-class ErrorHandler(handler.ErrorHandler): pass
+class ErrorHandler(handler.ErrorHandler):
+    pass
 
 
-class EntityResolver(handler.EntityResolver): pass
+class EntityResolver(handler.EntityResolver):
+    pass
 
 
-class DTDHandler(handler.DTDHandler): pass
+class DTDHandler(handler.DTDHandler):
+    pass
 
 
 class AbstractXMLLoader(AbstractLoader, handler.ContentHandler):
