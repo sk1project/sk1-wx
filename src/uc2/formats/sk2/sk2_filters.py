@@ -30,6 +30,7 @@ class SK2_Loader(AbstractLoader):
     name = 'SK2_Loader'
     parent_stack = []
     break_flag = False
+    line = None
 
     def do_load(self):
         self.model = None
@@ -37,10 +38,11 @@ class SK2_Loader(AbstractLoader):
         self.parent_stack = []
         line = self.fileptr.readline()
         if not line[:len(sk2const.SK2DOC_ID)] == sk2const.SK2DOC_ID:
-            while not self.fileptr.readline().rstrip('\n') == \
-                    sk2const.SK2DOC_START: pass
+            while self.fileptr.readline().rstrip('\n') != sk2const.SK2DOC_START:
+                pass
         while True:
-            if self.break_flag: break
+            if self.break_flag:
+                break
             self.line = self.fileptr.readline()
             self.line = self.line.rstrip('\n')
 
@@ -50,7 +52,7 @@ class SK2_Loader(AbstractLoader):
                 try:
                     code = compile('self.' + self.line, '<string>', 'exec')
                     exec code
-                except:
+                except Exception:
                     msg = 'error>> %s' % self.line
                     errtype, value, traceback = sys.exc_info()
                     self.send_error(msg)
@@ -72,14 +74,15 @@ class SK2_Loader(AbstractLoader):
 
     def obj_end(self):
         self.parent_stack = self.parent_stack[:-1]
-        if not self.parent_stack: self.break_flag = True
+        if not self.parent_stack:
+            self.break_flag = True
 
 
 class SK2_Saver(AbstractSaver):
     name = 'SK2_Saver'
 
     def __init__(self):
-        pass
+        super(SK2_Saver, self).__init__()
 
     def do_save(self):
         self.presenter.update()
@@ -106,7 +109,7 @@ class SK2_Saver(AbstractSaver):
         self.writeln("obj('%s')" % sk2_model.CID_TO_TAGNAME[obj.cid])
         props = obj.__dict__
         for item in props.keys():
-            if not item in sk2_model.GENERIC_FIELDS and not item[:5] == 'cache':
+            if item not in sk2_model.GENERIC_FIELDS and item[:5] != 'cache':
                 if item in ['bitmap', 'alpha_channel']:
                     item_str = "'%s'" % props[item]
                 else:

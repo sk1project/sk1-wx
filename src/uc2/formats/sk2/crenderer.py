@@ -87,8 +87,7 @@ class CairoRenderer:
         image_obj = sk2_model.Pixmap(obj.config)
         libimg.set_image_data(self.cms, image_obj, bmpstr)
         libimg.flip_top_to_bottom(image_obj)
-        if pattern_fill[0] == sk2const.PATTERN_IMG and \
-                        len(pattern_fill) > 2:
+        if pattern_fill[0] == sk2const.PATTERN_IMG and len(pattern_fill) > 2:
             image_obj.style[3] = deepcopy(pattern_fill[2])
         if gray:
             libimg.update_gray_image(self.cms, image_obj)
@@ -110,7 +109,8 @@ class CairoRenderer:
 
     # -------DOCUMENT RENDERING
 
-    def render(self, ctx, objs=[]):
+    def render(self, ctx, objs=None):
+        objs = objs or []
         if self.antialias_flag:
             ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
         else:
@@ -243,7 +243,7 @@ class CairoRenderer:
         if obj.style[0]:
             self.process_fill(ctx, obj)
             for item in obj.cache_cpath:
-                if not item is None:
+                if item is not None:
                     ctx.new_path()
                     ctx.append_path(item)
                     ctx.fill()
@@ -259,7 +259,7 @@ class CairoRenderer:
         if obj.style[1]:
             self.process_stroke(ctx, obj)
             for item in obj.cache_cpath:
-                if not item is None:
+                if item is not None:
                     ctx.new_path()
                     ctx.append_path(item)
                     ctx.stroke()
@@ -275,7 +275,8 @@ class CairoRenderer:
         else:
             ctx.set_fill_rule(cairo.FILL_RULE_WINDING)
         if fill[1] == sk2const.FILL_SOLID:
-            if obj.fill_trafo: obj.fill_trafo = []
+            if obj.fill_trafo:
+                obj.fill_trafo = []
             color = fill[2]
             ctx.set_source_rgba(*self.get_color(color))
         elif fill[1] == sk2const.FILL_GRADIENT:
@@ -303,15 +304,16 @@ class CairoRenderer:
             matrix = cairo.Matrix(*obj.fill_trafo)
             matrix.invert()
             extend = cairo.EXTEND_PAD
-            if len(gradient) > 3: extend = EXTEND[gradient[3]]
+            if len(gradient) > 3:
+                extend = EXTEND[gradient[3]]
             grd.set_extend(extend)
             grd.set_matrix(matrix)
             ctx.set_source(grd)
         elif fill[1] == sk2const.FILL_PATTERN:
             if not obj.fill_trafo:
                 obj.fill_trafo = [] + sk2const.NORMAL_TRAFO
-                obj.fill_trafo = obj.fill_trafo[:4] + \
-                                 [obj.cache_bbox[0], obj.cache_bbox[3]]
+                obj.fill_trafo = obj.fill_trafo[:4] + [obj.cache_bbox[0],
+                                                       obj.cache_bbox[3]]
             pattern_fill = fill[2]
             sp = cairo.SurfacePattern(self.get_pattern_image(obj))
             sp.set_extend(cairo.EXTEND_REPEAT)
@@ -337,12 +339,12 @@ class CairoRenderer:
             stroke = style[1]
         else:
             stroke = obj.style[1]
-        # FIXME: add stroke style
 
         # Line width
         if not stroke[8]:
             line_width = stroke[1]
-            if obj and obj.stroke_trafo: obj.stroke_trafo = []
+            if obj and obj.stroke_trafo:
+                obj.stroke_trafo = []
         else:
             if obj and not obj.stroke_trafo:
                 obj.stroke_trafo = [] + sk2const.NORMAL_TRAFO
@@ -355,7 +357,8 @@ class CairoRenderer:
         ctx.set_source_rgba(*self.get_color(stroke[2]))
         # Dashes
         dash = []
-        for item in stroke[3]: dash.append(item * line_width)
+        for item in stroke[3]:
+            dash.append(item * line_width)
         ctx.set_dash(dash)
 
         ctx.set_line_cap(CAPS[stroke[4]])

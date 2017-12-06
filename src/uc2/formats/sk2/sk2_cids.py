@@ -59,65 +59,64 @@ BITMAP_CLASS = 250
 PIXMAP = 251
 
 CID_TO_NAME = {
-	DOCUMENT: _('Document'),
+    DOCUMENT: _('Document'),
 
-	METAINFO: _('Metainfo'), STYLES: _('Styles'), STYLE: _('Style'),
-	PROFILES: _('Profiles'), PROFILE: _('Profile'), FONTS: _('Fonts'),
-	FONT: _('Font'), IMAGES: _('Images'), IMAGE: _('Image'),
+    METAINFO: _('Metainfo'), STYLES: _('Styles'), STYLE: _('Style'),
+    PROFILES: _('Profiles'), PROFILE: _('Profile'), FONTS: _('Fonts'),
+    FONT: _('Font'), IMAGES: _('Images'), IMAGE: _('Image'),
 
-	PAGES: _('Pages'), PAGE: _('Page'), LAYER_GROUP: _('Layer group'),
-	MASTER_LAYERS: _('Master layers'), LAYER: _('Layer'),
-	GRID_LAYER: _('Grid layer'), GUIDE_LAYER: _('Guide layer'),
-	DESKTOP_LAYERS: _('Desktop layers'), GUIDE: _('Guide'),
+    PAGES: _('Pages'), PAGE: _('Page'), LAYER_GROUP: _('Layer group'),
+    MASTER_LAYERS: _('Master layers'), LAYER: _('Layer'),
+    GRID_LAYER: _('Grid layer'), GUIDE_LAYER: _('Guide layer'),
+    DESKTOP_LAYERS: _('Desktop layers'), GUIDE: _('Guide'),
 
-	GROUP: _('Group'), CONTAINER: _('Container'),
-	TP_GROUP: _('Text on Path Group'),
+    GROUP: _('Group'), CONTAINER: _('Container'),
+    TP_GROUP: _('Text on Path Group'),
 
-	RECTANGLE: _('Rectangle'), CIRCLE: _('Ellipse'),
-	POLYGON: _('Polygon'), CURVE: _('Curve'),
-	TEXT_BLOCK: _('Text block'), TEXT_COLUMN: _('Text column'),
-	PIXMAP: _('Bitmap'),
-	}
-
+    RECTANGLE: _('Rectangle'), CIRCLE: _('Ellipse'),
+    POLYGON: _('Polygon'), CURVE: _('Curve'),
+    TEXT_BLOCK: _('Text block'), TEXT_COLUMN: _('Text column'),
+    PIXMAP: _('Bitmap'),
+}
 
 CID_TO_TAGNAME = {
-	DOCUMENT: 'Document',
+    DOCUMENT: 'Document',
 
-	METAINFO: 'Metainfo', STYLES: 'Styles', STYLE: 'Style',
-	PROFILES: 'Profiles', PROFILE: 'Profile', FONTS: 'Fonts',
-	FONT: 'Font', IMAGES: 'Images', IMAGE: 'Image',
+    METAINFO: 'Metainfo', STYLES: 'Styles', STYLE: 'Style',
+    PROFILES: 'Profiles', PROFILE: 'Profile', FONTS: 'Fonts',
+    FONT: 'Font', IMAGES: 'Images', IMAGE: 'Image',
 
-	PAGES: 'Pages', PAGE: 'Page', LAYER_GROUP: 'LayerGroup',
-	MASTER_LAYERS: 'MasterLayers', LAYER: 'Layer',
-	GRID_LAYER: 'GridLayer', GUIDE_LAYER: 'GuideLayer',
-	DESKTOP_LAYERS: 'DesktopLayers', GUIDE: 'Guide',
+    PAGES: 'Pages', PAGE: 'Page', LAYER_GROUP: 'LayerGroup',
+    MASTER_LAYERS: 'MasterLayers', LAYER: 'Layer',
+    GRID_LAYER: 'GridLayer', GUIDE_LAYER: 'GuideLayer',
+    DESKTOP_LAYERS: 'DesktopLayers', GUIDE: 'Guide',
 
-	GROUP: 'Group', CONTAINER: 'Container',
-	TP_GROUP: 'TP_Group',
+    GROUP: 'Group', CONTAINER: 'Container',
+    TP_GROUP: 'TP_Group',
 
-	RECTANGLE: 'Rectangle', CIRCLE: 'Ellipse',
-	POLYGON: 'Polygon', CURVE: 'Curve',
-	TEXT_BLOCK: 'TextBlock', TEXT_COLUMN: 'TextColumn',
-	PIXMAP: 'Pixmap',
-	}
+    RECTANGLE: 'Rectangle', CIRCLE: 'Ellipse',
+    POLYGON: 'Polygon', CURVE: 'Curve',
+    TEXT_BLOCK: 'TextBlock', TEXT_COLUMN: 'TextColumn',
+    PIXMAP: 'Pixmap',
+}
 
 TAGNAME_TO_CID = {
-	'Document': DOCUMENT,
+    'Document': DOCUMENT,
 
-	'Metainfo': METAINFO, 'Styles': STYLES, 'Style': STYLE,
-	'Profiles': PROFILES, 'Profile': PROFILE, 'Fonts': FONTS,
-	'Font': FONT, 'Images': IMAGES, 'Image': IMAGE,
+    'Metainfo': METAINFO, 'Styles': STYLES, 'Style': STYLE,
+    'Profiles': PROFILES, 'Profile': PROFILE, 'Fonts': FONTS,
+    'Font': FONT, 'Images': IMAGES, 'Image': IMAGE,
 
-	'Pages': PAGES, 'Page': PAGE, 'LayerGroup': LAYER_GROUP,
-	'MasterLayers': MASTER_LAYERS, 'Layer': LAYER,
-	'GridLayer': GRID_LAYER, 'GuideLayer': GUIDE_LAYER,
-	'DesktopLayers': DESKTOP_LAYERS, 'Guide': GUIDE,
+    'Pages': PAGES, 'Page': PAGE, 'LayerGroup': LAYER_GROUP,
+    'MasterLayers': MASTER_LAYERS, 'Layer': LAYER,
+    'GridLayer': GRID_LAYER, 'GuideLayer': GUIDE_LAYER,
+    'DesktopLayers': DESKTOP_LAYERS, 'Guide': GUIDE,
 
-	'Group': GROUP, 'Container': CONTAINER,
-	'TP_Group': TP_GROUP,
+    'Group': GROUP, 'Container': CONTAINER,
+    'TP_Group': TP_GROUP,
 
-	'Rectangle': RECTANGLE, 'Ellipse': CIRCLE,
-	'Polygon': POLYGON, 'Curve': CURVE,
-	'TextBlock': TEXT_BLOCK, 'TextColumn': TEXT_COLUMN,
-	'Pixmap': PIXMAP,
-	}
+    'Rectangle': RECTANGLE, 'Ellipse': CIRCLE,
+    'Polygon': POLYGON, 'Curve': CURVE,
+    'TextBlock': TEXT_BLOCK, 'TextColumn': TEXT_COLUMN,
+    'Pixmap': PIXMAP,
+}

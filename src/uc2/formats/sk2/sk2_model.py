@@ -41,9 +41,11 @@ class DocumentObject(TextModelObject):
         if self.cid < PRIMITIVE_CLASS:
             is_leaf = False
             info = '%d' % (len(self.childs))
-        if self.cid == GUIDE: is_leaf = True
-        if not name: name = self.get_class_name()
-        return (is_leaf, name, info)
+        if self.cid == GUIDE:
+            is_leaf = True
+        if not name:
+            name = self.get_class_name()
+        return is_leaf, name, info
 
     def get_resources(self):
         return []
@@ -52,7 +54,7 @@ class DocumentObject(TextModelObject):
         obj_copy = CID_TO_CLASS[self.cid](self.config)
         props = self.__dict__
         for item in props.keys():
-            if not item in GENERIC_FIELDS and not item[:5] == 'cache':
+            if item not in GENERIC_FIELDS and not item.startswith('cache'):
                 obj_copy.__dict__[item] = deepcopy(props[item])
         for child in self.childs:
             obj_copy.childs.append(child.copy())
@@ -125,10 +127,10 @@ class Document(DocumentObject):
         self.config = config
         self.doc_origin = self.config.doc_origin
         self.doc_units = self.config.doc_units
-        self.styles = {}
-        self.styles['Default Style'] = deepcopy([self.config.default_fill,
-                                                 self.config.default_stroke, [],
-                                                 []])
+        self.styles = {'Default Style': deepcopy([self.config.default_fill,
+                                                  self.config.default_stroke,
+                                                  [],
+                                                  []])}
         self.resources = {}
 
     def update(self):
@@ -137,7 +139,7 @@ class Document(DocumentObject):
                                       self.config.doc_license,
                                       self.config.doc_keywords,
                                       self.config.doc_notes, ])
-        if not 'Default Text Style' in self.styles:
+        if 'Default Text Style' not in self.styles:
             self.styles['Default Text Style'] = deepcopy([
                 self.config.default_text_fill, [],
                 self.config.default_text_style])
@@ -239,8 +241,8 @@ class Page(StructuralObject):
         else:
             self.page_format = deepcopy(parent.page_format)
 
-    def resolve(self):
-        return StructuralObject.resolve(self, '%s' % (self.name))
+    def resolve(self, name=''):
+        return StructuralObject.resolve(self, '%s' % self.name)
 
 
 class Layer(StructuralObject):
@@ -277,19 +279,20 @@ class Layer(StructuralObject):
     def is_layer(self):
         return True
 
-    def resolve(self):
-        return StructuralObject.resolve(self, '%s' % (self.name))
+    def resolve(self, name=''):
+        return StructuralObject.resolve(self, '%s' % self.name)
 
     def update(self):
         if isinstance(self.color, str):
             try:
                 self.color = cms.hexcolor_to_rgba(self.color)
-            except:
+            except Exception:
                 self.color = cms.hexcolor_to_rgba(self.config.layer_color)
         stroke = self.style[1]
         if stroke:
             stroke[2] = [uc2const.COLOR_RGB, self.color[:3], self.color[3], '']
-        if len(self.properties) == 3: self.properties += [1, ]
+        if len(self.properties) == 3:
+            self.properties += [1, ]
 
 
 class GuideLayer(Layer):
@@ -310,7 +313,8 @@ class GuideLayer(Layer):
 
     def update(self):
         Layer.update(self)
-        if self.properties[3]: self.properties[3] = 0
+        if self.properties[3]:
+            self.properties[3] = 0
 
 
 class GridLayer(Layer):
@@ -333,7 +337,8 @@ class GridLayer(Layer):
 
     def update(self):
         Layer.update(self)
-        if not self.properties[3]: self.properties[3] = 1
+        if not self.properties[3]:
+            self.properties[3] = 1
 
 
 class LayerGroup(StructuralObject):
@@ -430,7 +435,8 @@ class Group(SelectableObject):
     cid = GROUP
     childs = []
 
-    def __init__(self, config, parent=None, childs=[]):
+    def __init__(self, config, parent=None, childs=None):
+        childs = childs or []
         self.cid = GROUP
         self.childs = []
         self.config = config
@@ -461,7 +467,7 @@ class Group(SelectableObject):
         childs_snapshots = []
         for child in self.childs:
             childs_snapshots.append(child.get_trafo_snapshot())
-        return (self, None, [] + self.cache_bbox, childs_snapshots)
+        return self, None, [] + self.cache_bbox, childs_snapshots
 
     def set_trafo_snapshot(self, snapshot):
         self.cache_bbox, childs_snapshots = snapshot[2:]
@@ -487,11 +493,14 @@ class TP_Group(Group):
     childs = []
     childs_data = {}
 
-    def __init__(self, config, parent=None, childs=[], data=[]):
+    def __init__(self, config, parent=None, childs=None, data=None):
+        childs = childs or []
+        data = data or []
         Group.__init__(self, config, parent, childs)
         self.cid = TP_GROUP
         self.childs_data = [None, ]
-        if data: self.childs_data.append(data)
+        if data:
+            self.childs_data.append(data)
 
     def is_tpgroup(self): return True
 
@@ -510,7 +519,9 @@ class Container(Group):
     cid = CONTAINER
     cache_container = None
 
-    def __init__(self, config, parent=None, childs=[]):
+    def __init__(self, config, parent=None, childs=None):
+        childs = childs or []
+        super(Container, self).__init__(config, parent, childs)
         self.cid = CONTAINER
         self.childs = []
         self.config = config
@@ -550,7 +561,7 @@ class PrimitiveObject(SelectableObject):
         pass
 
     def destroy(self):
-        if not self.cache_cpath is None:
+        if self.cache_cpath is not None:
             del self.cache_cpath
         SelectableObject.destroy(self)
 
@@ -724,10 +735,10 @@ class Circle(PrimitiveObject):
     def is_circle(self): return True
 
     def is_closed(self):
-        if self.circle_type == sk2const.ARC_ARC: return False
-        return True
+        return self.circle_type != sk2const.ARC_ARC
 
-    def get_center(self): return [0.5, 0.5]
+    def get_center(self):
+        return [0.5, 0.5]
 
     def get_initial_paths(self):
         return libgeom.get_circle_paths(self.angle1, self.angle2,
@@ -798,12 +809,14 @@ class Polygon(PrimitiveObject):
     def get_corner_angle(self, index):
         val = 2.0 * math.pi / float(self.corners_num) * float(
             index) + math.pi / 2.0
-        if val > 2.0 * math.pi: val -= 2.0 * math.pi
+        if val > 2.0 * math.pi:
+            val -= 2.0 * math.pi
         return val
 
     def get_midpoint_angle(self, index):
         val = self.get_corner_angle(index) + math.pi / float(self.corners_num)
-        if val > 2.0 * math.pi: val -= 2.0 * math.pi
+        if val > 2.0 * math.pi:
+            val -= 2.0 * math.pi
         return val
 
 
@@ -884,12 +897,13 @@ class Text(PrimitiveObject):
     cache_clusters = []
 
     def __init__(self, config, parent=None,
-                 point=[0.0, 0.0],
+                 point=None,
                  text="",
                  width=sk2const.TEXTBLOCK_WIDTH,
                  trafo=[] + sk2const.NORMAL_TRAFO,
                  style=[] + sk2const.EMPTY_STYLE):
 
+        point = point or [0.0, 0.0]
         self.config = config
         self.parent = parent
         self.text = b64encode(text)
@@ -899,13 +913,6 @@ class Text(PrimitiveObject):
         self.style = style
         self.markup = []
         self.trafos = {}
-
-    # Test markup
-    # Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-    # tempor incididunt ut labore et dolore magna aliqua.
-    #		self.markup = [[('font', 'Serif', 'Regular', 24), (0, 5)], ['b', (6, 11)],
-    #						['i', (22, 26)], [['b', 'i'], (28, 39)], ['sub', (52, 55)],
-    #						['sup', (61, 63)], ['s', (73, 79)], ['u', (80, 90)], ]
 
     def get_text(self):
         return b64decode(self.text).decode('utf-8')
@@ -930,8 +937,10 @@ class Text(PrimitiveObject):
         self.cache_layout_data = data
         self.cache_clusters = cl
         dx = 0.0
-        if self.style[2][3] == sk2const.TEXT_ALIGN_CENTER: dx = -bbox[2] / 2.0
-        if self.style[2][3] == sk2const.TEXT_ALIGN_RIGHT: dx = -bbox[2]
+        if self.style[2][3] == sk2const.TEXT_ALIGN_CENTER:
+            dx = -bbox[2] / 2.0
+        if self.style[2][3] == sk2const.TEXT_ALIGN_RIGHT:
+            dx = -bbox[2]
         bbox[0] += dx
         bbox[2] += dx
         self.cache_layout_bbox = libgeom.normalize_bbox(bbox)
@@ -945,7 +954,8 @@ class Text(PrimitiveObject):
         subgroup = Group(self.config, group)
         for item in self.cache_cpath:
             paths = None
-            if item: paths = libgeom.get_paths_from_glyph(item)
+            if item:
+                paths = libgeom.get_paths_from_glyph(item)
             if not paths:
                 if len(subgroup.childs) == 1:
                     subgroup.childs[0].parent = group
@@ -964,7 +974,7 @@ class Text(PrimitiveObject):
                 curve.update()
                 subgroup.childs.append(curve)
 
-        if not subgroup in group.childs:
+        if subgroup not in group.childs:
             if len(subgroup.childs) == 1:
                 subgroup.childs[0].parent = group
                 group.childs.append(subgroup.childs[0])
@@ -981,7 +991,8 @@ class Text(PrimitiveObject):
         for item in self.cache_cpath:
             if item:
                 paths = libgeom.get_paths_from_glyph(item)
-                if paths: ret += paths
+                if paths:
+                    ret += paths
         return ret
 
     def update(self):
@@ -989,7 +1000,7 @@ class Text(PrimitiveObject):
         index = 0
         for item in self.cache_cpath:
             if item:
-                if not index in self.trafos:
+                if index not in self.trafos:
                     libgeom.apply_trafo(item, self.trafo)
                 else:
                     libgeom.apply_trafo(item, self.trafos[index])
@@ -999,7 +1010,7 @@ class Text(PrimitiveObject):
     def update_bbox(self):
         self.cache_bbox = []
         index = 0
-        if not self.trafos or not 0 in self.trafos:
+        if not self.trafos or 0 not in self.trafos:
             bp = [0.0, 0.0]
             self.cache_bbox = 2 * libgeom.apply_trafo_to_point(bp, self.trafo)
         for item in self.cache_cpath:
@@ -1022,7 +1033,8 @@ class Text(PrimitiveObject):
         for i in self.trafos.keys():
             self.trafos[i] = libgeom.multiply_trafo(self.trafos[i], trafo)
         for i in range(len(self.cache_cpath)):
-            if self.cache_cpath[i] is None: continue
+            if self.cache_cpath[i] is None:
+                continue
             self.cache_cpath[i] = libgeom.apply_trafo(self.cache_cpath[i],
                                                       trafo)
         self.trafo = libgeom.multiply_trafo(self.trafo, trafo)
@@ -1111,7 +1123,7 @@ class Pixmap(PrimitiveObject):
         m22 = (libgeom.distance(p2, p3)) / float(self.size[0])
         v_dpi = int(round(uc2const.in_to_pt / m11))
         h_dpi = int(round(uc2const.in_to_pt / m22))
-        return (h_dpi, v_dpi)
+        return h_dpi, v_dpi
 
     def update(self):
         self.cache_cdata = None
