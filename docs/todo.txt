@@ -36,3 +36,15 @@ refactor sk.dialogs.filedlgs to wal
 ===CANVAS==========
 Улучшить работу редактора точек
 Выбор точек работает некорректно
+
+
+
+
+
+
+
+
+
+
+Formula to determine brightness of RGB color
+https://stackoverflow.com/questions/596216/formula-to-determine-brightness-of-rgb-color

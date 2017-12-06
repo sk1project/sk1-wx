@@ -23,8 +23,7 @@ from cStringIO import StringIO
 from PIL import Image, ImageOps
 
 from uc2.cms import val_255
-from uc2.libimg.magickwand import process_pattern
-from uc2.libimg.magickwand import check_image_file, process_image
+from uc2.libimg import magickwand
 from uc2.uc2const import IMAGE_CMYK, IMAGE_RGB, IMAGE_RGBA, IMAGE_LAB
 from uc2.uc2const import IMAGE_GRAY, IMAGE_MONO, DUOTONES, SUPPORTED_CS
 from uc2 import uc2const
@@ -34,8 +33,12 @@ def get_version():
     return Image.PILLOW_VERSION
 
 
+def get_magickwand_version():
+    return magickwand.get_magickwand_version()
+
+
 def check_image(path):
-    return check_image_file(path)
+    return magickwand.check_image_file(path)
 
 
 def _get_saver_fmt(img):
@@ -265,7 +268,7 @@ def set_image_data(cms, pixmap, raw_content):
     alpha = ''
     profile, mode = extract_profile(raw_content)
 
-    base_stream, alpha_stream = process_image(raw_content)
+    base_stream, alpha_stream = magickwand.process_image(raw_content)
     base_image = Image.open(base_stream)
     base_image.load()
 
@@ -345,5 +348,5 @@ EPS_HEADER = '%!PS-Adobe-3.0 EPSF-3.0'
 def read_pattern(raw_content):
     if raw_content[:len(EPS_HEADER)] == EPS_HEADER:
         return b64encode(raw_content), 'EPS'
-    fobj, flag = process_pattern(raw_content)
+    fobj, flag = magickwand.process_pattern(raw_content)
     return b64encode(fobj.getvalue()), flag
