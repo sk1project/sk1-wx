@@ -100,7 +100,7 @@ class UCApplication(object):
 
     def run(self):
 
-        if len(sys.argv) < 3 or '--help' in sys.argv:
+        if len(sys.argv) < 3 or '--help' in sys.argv or '-help' in sys.argv:
             self.show_help()
 
         files = []
