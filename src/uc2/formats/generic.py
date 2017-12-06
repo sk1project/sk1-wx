@@ -52,7 +52,8 @@ class ModelObject(object):
             child.config = self.config
             child.do_update(presenter, action)
         self.update()
-        if action: self.update_for_sword()
+        if action:
+            self.update_for_sword()
 
     def count(self):
         val = len(self.childs)
@@ -61,8 +62,9 @@ class ModelObject(object):
         return val
 
     def resolve(self):
-        if self.childs: return (False, 'Node', '')
-        return (True, 'Leaf', '')
+        if self.childs:
+            return False, 'Node', ''
+        return True, 'Leaf', ''
 
 
 class TextModelObject(ModelObject):
@@ -118,22 +120,22 @@ class ModelPresenter(object):
             self.parsing_msg(0.03)
             self.send_info(_('Parsing is started...'))
             self.model = self.loader.load(self, filename, fileptr)
-        except:
+        except Exception:
             self.close()
             raise IOError(_('Error while loading') + ' ' + filename,
-                sys.exc_info()[1], sys.exc_info()[2])
+                          sys.exc_info()[1], sys.exc_info()[2])
 
         self.send_ok(_('Document model is created'))
         self.update()
 
     def update(self, action=False):
-        if not self.model is None:
+        if self.model is not None:
             self.obj_num = self.model.count() + 1
             self.update_msg(0.0)
             try:
                 self.model.config = self.config
                 self.model.do_update(self, action)
-            except:
+            except Exception:
                 print sys.exc_info()[1], sys.exc_info()[2]
                 msg = _('Exception while document model update')
                 self.send_error(msg)
@@ -155,7 +157,7 @@ class ModelPresenter(object):
             self.saving_msg(0.03)
             self.send_info(_('Saving is started...'))
             self.saver.save(self, filename, fileptr)
-        except:
+        except Exception:
             msg = _('Error while saving') + ' ' + filename
             self.send_error(msg)
             raise IOError(msg, sys.exc_info()[1], sys.exc_info()[2])
@@ -167,22 +169,22 @@ class ModelPresenter(object):
     def close(self):
         filename = self.doc_file
         self.doc_file = ''
-        if not self.model is None:
+        if self.model is not None:
             self.model.destroy()
         self.model = None
 
-        self.send_ok(_('Document model is destroyed for') + ' %s' % (filename))
+        self.send_ok(_('Document model is destroyed for') + ' %s' % filename)
 
         if self.doc_dir and os.path.lexists(self.doc_dir):
             try:
                 fs.xremove_dir(self.doc_dir)
-                self.send_ok(_('Cache is cleared for') + ' %s' % (filename))
+                self.send_ok(_('Cache is cleared for') + ' %s' % filename)
             except IOError:
                 self.send_error(_('Cache clearing is unsuccessful'))
 
     def update_msg(self, val):
         msg = _('%s model update in progress...') % (
-        uc2const.FORMAT_NAMES[self.cid])
+            uc2const.FORMAT_NAMES[self.cid])
         self.send_progress_message(msg, val)
 
     def parsing_msg(self, val):
