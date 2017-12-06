@@ -23,7 +23,7 @@ import uc2
 from uc2 import _, cms, uc2const
 from uc2 import events, msgconst
 from uc2.uc_conf import UCData, UCConfig
-from uc2.formats import get_loader, get_saver
+from uc2.formats import get_loader, get_saver, get_saver_by_id
 from uc2.app_palettes import PaletteManager
 
 HELP_TEMPLATE = '''
@@ -127,6 +127,7 @@ class UCApplication(object):
                 continue
             else:
                 key, value = result
+                value = value.replace('"','').replace("'",'')
                 if value == 'yes':
                     value = True
                 if value == 'no':
@@ -141,7 +142,14 @@ class UCApplication(object):
             files[1])
         events.emit(events.MESSAGES, msgconst.JOB, msg)
 
-        saver, saver_id = get_saver(files[1], return_id=True)
+        saver_ids = uc2const.PALETTE_SAVERS
+        saver_ids += uc2const.MODEL_SAVERS + uc2const.BITMAP_SAVERS
+        sid = options.get('output_format', '').lower()
+        if sid and sid in saver_ids:
+            saver_id = sid
+            saver = get_saver_by_id(saver_id)
+        else:
+            saver, saver_id = get_saver(files[1], return_id=True)
         if saver is None:
             msg = _("Output file format of '%s' is unsupported.") % (files[1])
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
@@ -181,7 +189,11 @@ class UCApplication(object):
 
         if doc is not None:
             try:
-                saver(doc, files[1])
+                if loader_id in uc2const.PALETTE_LOADERS and \
+                        saver_id in uc2const.PALETTE_SAVERS:
+                    saver(doc, files[1], translate=False, convert=True)
+                else:
+                    saver(doc, files[1])
             except Exception:
                 msg = _("Error while translation and saving '%s'") % (files[0])
                 events.emit(events.MESSAGES, msgconst.ERROR, msg)
