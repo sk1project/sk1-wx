@@ -25,21 +25,24 @@ from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 class SKP_Loader(AbstractLoader):
     name = 'SKP_Loader'
     stop_flag = False
+    line = None
 
     def do_load(self):
         self.fileptr.readline()
         while True:
             self.line = self.fileptr.readline()
-            if not self.line: break
+            if not self.line:
+                break
             self.line = self.line.rstrip('\r\n')
             self.check_loading()
             if self.line:
                 try:
                     code = compile('self.' + self.line, '<string>', 'exec')
                     exec code
-                except:
+                except Exception:
                     print 'ERROR LINE: ' + self.line
-                if self.stop_flag: break
+                if self.stop_flag:
+                    break
 
     def palette(self):
         self.stop_flag = False
@@ -61,12 +64,14 @@ class SKP_Loader(AbstractLoader):
 
     def hexcolor(self, hexcolor, name=''):
         rgb = cms.hexcolor_to_rgb(hexcolor)
-        if not name: name = '' + hexcolor
+        if not name:
+            name = '' + hexcolor
         self.model.colors.append([uc2const.COLOR_RGB, rgb, 1.0, name])
 
     def rgbcolor(self, r, g, b, name=''):
         rgb = cms.val_255_to_dec([r, g, b])
-        if not name: name = cms.rgb_to_hexcolor(rgb)
+        if not name:
+            name = cms.rgb_to_hexcolor(rgb)
         self.model.colors.append([uc2const.COLOR_RGB, rgb, 1.0, name])
 
     def palette_end(self):

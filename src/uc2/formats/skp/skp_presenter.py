@@ -38,7 +38,8 @@ class SKP_Presenter(TextModelPresenter):
     resources = None
     cms = None
 
-    def __init__(self, appdata, cnf={}, filepath=None):
+    def __init__(self, appdata, cnf=None, filepath=None):
+        cnf = cnf or {}
         self.config = SKP_Config()
         config_file = os.path.join(appdata.app_config_dir, self.config.filename)
         self.config.load(config_file)
@@ -61,7 +62,8 @@ class SKP_Presenter(TextModelPresenter):
 
     def translate_from_sk2(self, sk2_doc):
         doc_name = sk2_doc.doc_file.split('.')[0]
-        if not doc_name: doc_name = 'Untitled'
+        if not doc_name:
+            doc_name = 'Untitled'
         self.model.name = doc_name + ' palette'
         self.model.comments = 'The palette is extracted from "'
         self.model.comments += doc_name + '" document'
@@ -79,7 +81,8 @@ class SKP_Presenter(TextModelPresenter):
 
     def translate_to_sk2(self, sk2_doc):
         ncells = len(self.model.colors)
-        if not ncells: return
+        if not ncells:
+            return
         cellsize = self.config.large_cell
         if ncells > self.config.short_palette_size:
             cellsize = self.config.small_cell
@@ -102,7 +105,8 @@ class SKP_Presenter(TextModelPresenter):
         orient = uc2const.PORTRAIT
         w = columns * cellsize + 1
         h = rows * cellsize + 1
-        if w > h: orient = uc2const.LANDSCAPE
+        if w > h:
+            orient = uc2const.LANDSCAPE
         sk2_doc.methods.set_page_format(page, ['Custom', (w, h), orient])
         sk2_doc.methods.set_default_page_format(['Custom', (w, h), orient])
         grid_layer = sk2_doc.methods.get_grid_layer()
@@ -112,7 +116,7 @@ class SKP_Presenter(TextModelPresenter):
         layer = sk2_doc.methods.get_layer(page)
         cfg = sk2_doc.config
 
-        x = x_orign = -(w / 2.0) + 0.5 - cellsize
+        x_orign = -(w / 2.0) + 0.5 - cellsize
         y = h / 2.0 - 0.5
         stroke = deepcopy(cfg.default_stroke)
         stroke[1] = 1.0
@@ -131,6 +135,7 @@ class SKP_Presenter(TextModelPresenter):
                                                         trafo=trafo,
                                                         style=style))
                 index += 1
-                if index == ncells: break
+                if index == ncells:
+                    break
 
         sk2_doc.update()
