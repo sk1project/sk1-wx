@@ -35,7 +35,8 @@ class SK2_Presenter(TextModelPresenter):
     active_page = None
     doc_name = ''
 
-    def __init__(self, appdata, cnf={}, filepath=None):
+    def __init__(self, appdata, cnf=None, filepath=None):
+        cnf = cnf or {}
         self.config = SK2_Config()
         config_file = os.path.join(appdata.app_config_dir, 'sk2_config.xml')
         self.config.load(config_file)
@@ -58,5 +59,5 @@ class SK2_Presenter(TextModelPresenter):
 
     def update(self, action=False):
         TextModelPresenter.update(self, action)
-        if not self.model is None:
+        if self.model is not None:
             self.methods.update()

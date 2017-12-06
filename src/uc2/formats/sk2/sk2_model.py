@@ -1093,7 +1093,7 @@ class Pixmap(PrimitiveObject):
                  alpha_channel='',
                  size=(100, 100),
                  trafo=[] + sk2const.NORMAL_TRAFO,
-                 style=[]):
+                 style=[] + sk2const.EMPTY_STYLE):
         self.cid = PIXMAP
         self.config = config
         self.parent = parent
@@ -1101,6 +1101,7 @@ class Pixmap(PrimitiveObject):
         self.alpha_channel = alpha_channel
         self.size = size
         self.trafo = trafo
+        self.style = style
 
     def is_pixmap(self): return True
 
