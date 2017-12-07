@@ -275,6 +275,7 @@ if DEB_PACKAGE:
         homepage=URL,
         description=DESCRIPTION,
         long_description=LONG_DEB_DESCRIPTION,
+        section='graphics',
         package_dirs=buildutils.get_package_dirs(excludes=EXCLUDES),
         package_data=package_data,
         scripts=scripts,
