@@ -42,6 +42,10 @@ import buildutils
 import dependencies
 from native_mods import make_modules
 
+sys.path.insert(1, os.path.abspath('./src'))
+
+from uc2 import uc2const
+
 ############################################################
 # Flags
 ############################################################
@@ -54,7 +58,7 @@ CLEAR_BUILD = False
 # Package description
 ############################################################
 NAME = 'uniconvertor'
-VERSION = '2.0rc3'
+VERSION = uc2const.VERSION + uc2const.REVISION
 DESCRIPTION = 'Universal vector graphics translator'
 AUTHOR = 'Igor E. Novikov'
 AUTHOR_EMAIL = 'sk1.project.org@gmail.com'

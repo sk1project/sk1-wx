@@ -42,6 +42,10 @@ import buildutils
 import dependencies
 from native_mods import make_modules
 
+sys.path.insert(1, os.path.abspath('./src'))
+
+from uc2 import uc2const
+
 ############################################################
 # Flags
 ############################################################
@@ -54,7 +58,7 @@ CLEAR_BUILD = False
 # Package description
 ############################################################
 NAME = 'sk1'
-VERSION = '2.0rc3'
+VERSION = uc2const.VERSION + uc2const.REVISION
 DESCRIPTION = 'Vector graphics editor for prepress'
 AUTHOR = 'Igor E. Novikov'
 AUTHOR_EMAIL = 'sk1.project.org@gmail.com'
@@ -293,7 +297,7 @@ if RPM_PACKAGE:
         depends=rpm_depends.split(' '),
         build_script='setup-sk1.py',
         install_path=install_path,
-        data_files=data_files,)
+        data_files=data_files, )
 
 if CLEAR_BUILD:
     buildutils.clear_build()
