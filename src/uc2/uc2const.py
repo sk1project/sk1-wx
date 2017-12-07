@@ -20,6 +20,10 @@ from uc2 import _
 """
 The package provides generic application constants
 """
+# Version
+VERSION = '2.0'
+REVISION = 'rc3'
+
 # Placement constants
 BEFORE = 0
 AFTER = 1

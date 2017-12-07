@@ -29,8 +29,8 @@ class UCData:
     app_domain = 'sk1project.net'
     app_icon = None
     doc_icon = None
-    version = '2.0'
-    revision = 'rc3'
+    version = uc2const.VERSION
+    revision = uc2const.REVISION
     app_config_dir = ''
 
     def __init__(self, app, cfgdir='~'):
