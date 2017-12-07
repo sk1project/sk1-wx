@@ -94,6 +94,26 @@ im_LoadImageBlob(PyObject *self, PyObject *args) {
 	return Py_BuildValue("i", 1);
 }
 
+
+static PyObject *
+im_MergeLayers(PyObject *self, PyObject *args) {
+
+	void *magick_pointer;
+	MagickWand *magick_wand;
+
+	if (!PyArg_ParseTuple(args, "O", &magick_pointer)){
+		Py_INCREF(Py_None);
+		return Py_None;
+	}
+
+	magick_wand = (MagickWand *) PyCObject_AsVoidPtr(magick_pointer);
+	MagickResetIterator(magick_wand);
+
+	return Py_BuildValue("O",
+        PyCObject_FromVoidPtr((void *)MagickMergeImageLayers(magick_wand, MergeLayer),
+        (void *)DestroyMagickWand));
+}
+
 static PyObject *
 im_WriteImage(PyObject *self, PyObject *args) {
 
@@ -507,6 +527,7 @@ PyMethodDef im_methods[] = {
 		{"new_image", im_NewImage, METH_VARARGS},
 		{"load_image", im_LoadImage, METH_VARARGS},
 		{"load_image_blob", im_LoadImageBlob, METH_VARARGS},
+		{"merge_layers", im_MergeLayers, METH_VARARGS},
 		{"write_image", im_WriteImage, METH_VARARGS},
 		{"get_image_blob", im_GetImageBlob, METH_VARARGS},
 		{"get_number_images", im_GetNumberImages, METH_VARARGS},
