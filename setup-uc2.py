@@ -34,6 +34,7 @@ Usage:
 """
 
 from distutils.core import setup
+import datetime
 import os
 import shutil
 import sys
@@ -80,36 +81,47 @@ CLASSIFIERS = [
     'Programming Language :: C',
     "Topic :: Multimedia :: Graphics :: Graphics Conversion",
 ]
+loaders = uc2const.MODEL_LOADERS + uc2const.PALETTE_LOADERS + \
+          uc2const.BITMAP_LOADERS
+savers = uc2const.MODEL_SAVERS + uc2const.PALETTE_SAVERS + \
+         uc2const.BITMAP_SAVERS
+year = str(datetime.date.today().year)
+
 LONG_DESCRIPTION = '''
 UniConvertor is a multiplatform universal vector graphics translator.
-Uses PDXF model to convert one format to another. 
+Uses SK2 model to convert one format to another. 
 
 sK1 Project (http://sk1project.net),
-Copyright (C) 2007-2017 by Igor E. Novikov
+Copyright (C) 2007-%s by Igor E. Novikov
 --------------------------------------------------------------------------------
 Supported input formats:  
- SK2, CDR, CDT, CCX, CDRX, CMX, AI, PS, EPS, CGM, WMF, XFIG, SVG, SK, SK1, 
- AFF, PLT, DXF, DST, PES, EXP, PCS
+  %s
 --------------------------------------------------------------------------------
 Supported output formats: 
- SK2, AI, SVG, SK, SK1, CGM, WMF, PDF, PS, PLT    
+  %s
 --------------------------------------------------------------------------------
-'''
-LONG_DEB_DESCRIPTION = ''' .
+''' % (year,
+       '\n  '.join([uc2const.FORMAT_DESCRIPTION[item] for item in loaders]),
+       '\n  '.join([uc2const.FORMAT_DESCRIPTION[item] for item in savers]))
+
+LONG_DEB_DESCRIPTION = '''Universal vector graphics translator
  UniConvertor is a multiplatform universal vector graphics translator.
- Uses PDXF model to convert one format to another. 
+ Uses SK2 model to convert one format to another. 
  . 
  sK1 Project (http://sk1project.net),
- Copyright (C) 2007-2017 by Igor E. Novikov 
+ Copyright (C) 2007-%s by Igor E. Novikov 
  .
- Supported input formats:  
- PDXF, CDR, CDT, CCX, CDRX, CMX, AI, PS, EPS, CGM, WMF, XFIG, SVG, SK, SK1, 
- AFF, PLT, DXF, DST, PES, EXP, PCS
+ Supported input formats:
+ .
+ %s
  .
  Supported output formats: 
- PDXF, AI, SVG, SK, SK1, CGM, WMF, PDF, PS, PLT
  .
-'''
+ %s
+ .
+''' % (year,
+       '\n .\n '.join([uc2const.FORMAT_DESCRIPTION[item] for item in loaders]),
+       '\n .\n '.join([uc2const.FORMAT_DESCRIPTION[item] for item in savers]))
 
 ############################################################
 # Build data
@@ -297,7 +309,7 @@ if RPM_PACKAGE:
         depends=rpm_depends.split(' '),
         build_script='setup-uc2.py',
         install_path=install_path,
-        data_files=data_files,)
+        data_files=data_files, )
 
 if CLEAR_BUILD:
     buildutils.clear_build()

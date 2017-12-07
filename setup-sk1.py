@@ -34,6 +34,7 @@ Usage:
 """
 
 from distutils.core import setup
+import datetime
 import os
 import shutil
 import sys
@@ -86,8 +87,9 @@ Adobe Illustrator, or Freehand. First of all sK1 is oriented for prepress
 industry, therefore works with CMYK colorspace and produces CMYK-based PDF 
 and postscript output.
 sK1 Project (http://sk1project.net),
-Copyright (C) 2004-2017 by Igor E. Novikov 
-'''
+Copyright (C) 2004-%s by Igor E. Novikov 
+''' % str(datetime.date.today().year)
+
 LONG_DEB_DESCRIPTION = ''' .
  sK1 is an open source vector graphics editor similar to CorelDRAW, 
  Adobe Illustrator, or Freehand. First of all sK1 is oriented for prepress 
@@ -95,9 +97,9 @@ LONG_DEB_DESCRIPTION = ''' .
  and postscript output.
  . 
  sK1 Project (http://sk1project.net),
- Copyright (C) 2004-2017 by Igor E. Novikov 
+ Copyright (C) 2004-%s by Igor E. Novikov 
  .
-'''
+''' % str(datetime.date.today().year)
 
 ############################################################
 # Build data
