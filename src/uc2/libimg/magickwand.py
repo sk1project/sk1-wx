@@ -55,6 +55,8 @@ def process_image(raw_content):
     _libimg.init_magick()
     wand = _libimg.new_image()
     _libimg.load_image_blob(wand, raw_content)
+    if _libimg.get_number_images(wand) > 1:
+        wand = _libimg.merge_layers(wand)
 
     image_type = _libimg.get_image_type(wand)
     if image_type in ALPHA_TYPES:
