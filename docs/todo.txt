@@ -22,8 +22,6 @@ UI для UC2 (?)
 ===FILTERS==========
 WMF exporter
 CGM import/export (можно ли подмерджить UC1?)
-Добавить XCF, PSD (слои!!!)
-Детекция XCF
 
 ===REFACTORING==========
 /home/igor/Projects/sk1-wx/src/sk1/pwidgets

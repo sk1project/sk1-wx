@@ -22,7 +22,7 @@ import wal
 from sk1 import events, appconst
 from uc2 import uc2const, libimg, libcairo
 from uc2.cms import libcms
-from uc2.uc_conf import UCConfig, UCData
+from uc2.uc2conf import UCConfig, UCData
 from uc2.utils import system
 
 

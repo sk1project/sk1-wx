@@ -17,7 +17,7 @@
 
 import os
 
-from uc2.uc_conf import UCConfig, UCData
+from uc2.uc2conf import UCConfig, UCData
 from uc2.utils import system
 from uc2.utils.fs import expanduser_unicode
 

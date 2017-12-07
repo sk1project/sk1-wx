@@ -22,7 +22,7 @@ import os
 import uc2
 from uc2 import _, cms, uc2const
 from uc2 import events, msgconst
-from uc2.uc_conf import UCData, UCConfig
+from uc2.uc2conf import UCData, UCConfig
 from uc2.formats import get_loader, get_saver, get_saver_by_id
 from uc2.app_palettes import PaletteManager
 
@@ -127,7 +127,7 @@ class UCApplication(object):
                 continue
             else:
                 key, value = result
-                value = value.replace('"','').replace("'",'')
+                value = value.replace('"', '').replace("'", '')
                 if value == 'yes':
                     value = True
                 if value == 'no':
