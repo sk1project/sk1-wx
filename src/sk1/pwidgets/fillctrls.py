@@ -17,6 +17,8 @@
 
 from copy import deepcopy
 
+from uc2.cms import get_registration_black, color_to_spot, rgb_to_hexcolor
+
 import wal
 from colorctrls import FillColorRefPanel, MiniPalette, FillFillRefPanel, \
     FillRuleKeeper, CMYK_PALETTE, RGB_PALETTE, GRAY_PALETTE, SPOT_PALETTE
@@ -28,7 +30,6 @@ from patterns import DEFAULT_PATTERN
 from sk1 import _
 from sk1.resources import icons
 from uc2 import uc2const, sk2const
-from uc2.cms import get_registration_black, color_to_spot, rgb_to_hexcolor
 
 
 # --- Solid fill panels
@@ -64,9 +65,11 @@ class SolidFillPanel(wal.VPanel):
         self.activate(self.cms, self.orig_fill, [])
 
 
-class CMYK_Panel(SolidFillPanel):
+class CmykPanel(SolidFillPanel):
     color_sliders = []
     color_spins = []
+    mixer = None
+    refpanel = None
 
     def build(self):
 
@@ -110,7 +113,10 @@ class CMYK_Panel(SolidFillPanel):
         self.update()
 
 
-class RGB_Panel(SolidFillPanel):
+class RgbPanel(SolidFillPanel):
+    mixer = None
+    refpanel = None
+
     def build(self):
 
         self.mixer = RGB_Mixer(self, self.cms, onchange=self.update)
@@ -152,7 +158,10 @@ class RGB_Panel(SolidFillPanel):
         self.update()
 
 
-class Gray_Panel(SolidFillPanel):
+class GrayPanel(SolidFillPanel):
+    mixer = None
+    refpanel = None
+
     def build(self):
         self.pack(wal.HPanel(self), fill=True, expand=True)
 
@@ -196,7 +205,10 @@ class Gray_Panel(SolidFillPanel):
         self.update()
 
 
-class SPOT_Panel(SolidFillPanel):
+class SpotPanel(SolidFillPanel):
+    mixer = None
+    refpanel = None
+
     def build(self):
         self.pack(wal.HPanel(self), fill=True, expand=True)
         self.mixer = SPOT_Mixer(self, self.cms, onchange=self.update)
@@ -241,7 +253,7 @@ class SPOT_Panel(SolidFillPanel):
         self.update()
 
 
-class Empty_Panel(SolidFillPanel):
+class EmptyPanel(SolidFillPanel):
     def build(self):
         self.pack(wal.HPanel(self), fill=True, expand=True)
         self.pack(PaletteSwatch(self, self.cms, [], (250, 150)))
@@ -254,7 +266,9 @@ class Empty_Panel(SolidFillPanel):
         SolidFillPanel.activate(self, cms, orig_fill, new_color)
 
 
-class Palette_Panel(SolidFillPanel):
+class PalettePanel(SolidFillPanel):
+    mixer = None
+
     def build(self):
         self.mixer = Palette_Mixer(self, self.app, self.cms,
                                    onchange=self.set_color)
@@ -305,12 +319,12 @@ SOLID_MODE_MAP = {
 }
 
 SOLID_MODE_CLASSES = {
-    CMYK_MODE: CMYK_Panel,
-    RGB_MODE: RGB_Panel,
-    GRAY_MODE: Gray_Panel,
-    SPOT_MODE: SPOT_Panel,
-    PAL_MODE: Palette_Panel,
-    EMPTY_MODE: Empty_Panel,
+    CMYK_MODE: CmykPanel,
+    RGB_MODE: RgbPanel,
+    GRAY_MODE: GrayPanel,
+    SPOT_MODE: SpotPanel,
+    PAL_MODE: PalettePanel,
+    EMPTY_MODE: EmptyPanel,
 }
 
 
@@ -345,6 +359,8 @@ class SolidFill(FillTab):
     new_color = None
     callback = None
     use_rule = True
+    solid_keeper = None
+    rule_keeper = None
 
     def activate(self, fill_style, use_rule=True, onmodechange=None):
         if onmodechange:
@@ -451,6 +467,12 @@ class GradientFill(FillTab):
     name = _('Gradient Fill')
     vector = []
     new_fill = None
+    grad_keeper = None
+    grad_clrs = None
+    rule_keeper = None
+    grad_editor = None
+    refpanel = None
+    presets = None
 
     def activate(self, fill_style, new_color=None):
         FillTab.activate(self, fill_style)
@@ -568,6 +590,12 @@ class GradientFill(FillTab):
 
 class PatternFill(FillTab):
     name = _('Pattern Fill')
+    new_fill = None
+    pattern_clrs = None
+    rule_keeper = None
+    refpanel = None
+    presets = None
+    pattern_editor = None
 
     def activate(self, fill_style, new_color=None):
         FillTab.activate(self, fill_style)
