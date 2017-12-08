@@ -154,7 +154,9 @@ def is_point_in_bbox(point, bbox):
     """
     if not len(point) == 2:
         point = point[2]
-    return point[0] >= bbox[0] and bbox[2] >= bbox[1] <= point[1] <= bbox[3]
+    left_cond = point[0] >= bbox[0] and point[1] >= bbox[1]
+    right_cond = point[0] <= bbox[2] and point[1] <= bbox[3]
+    return left_cond and right_cond
 
 
 def sum_bbox(bbox1, bbox2):
@@ -196,9 +198,7 @@ def is_bbox_in_rect(rect, bbox):
     """
     x0, y0, x1, y1 = rect
     _x0, _y0, _x1, _y1 = bbox
-    if x0 > _x0 or y0 > _y0 or x1 < _x1 or y1 < _y1:
-        return False
-    return True
+    return not x0 > _x0 or y0 > _y0 or x1 < _x1 or y1 < _y1
 
 
 def is_point_in_rect(point, rect):
@@ -216,9 +216,7 @@ def is_point_in_rect(point, rect):
     """
     x0, y0, x1, y1 = rect
     x, y = point
-    if x0 <= x <= x1 and y0 <= y <= y1:
-        return True
-    return False
+    return x0 <= x <= x1 and y0 <= y <= y1
 
 
 def is_point_in_rect2(point, rect_center, rect_w, rect_h):
@@ -242,9 +240,7 @@ def is_point_in_rect2(point, rect_center, rect_w, rect_h):
     """
     cx, cy = rect_center
     x, y = point
-    if abs(x - cx) <= rect_w / 2.0 and abs(y - cy) <= rect_h / 2.0:
-        return True
-    return False
+    return abs(x - cx) <= rect_w / 2.0 and abs(y - cy) <= rect_h / 2.0
 
 
 def bbox_size(bbox):
