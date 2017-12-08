@@ -152,11 +152,11 @@ FORMAT_DESCRIPTION = {
     JPG: _("JPEG - Joint Photographic Experts Group files"),
     JP2: _("JPEG2000 - Joint Photographic Experts Group files"),
     TIF: _("TIFF - Tagged Image File Format files"),
-    BMP: _("BMP -  Bitmap Picture files"),
+    BMP: _("BMP - Bitmap Picture files"),
     PCX: _("PCX - PCExchange files"),
     GIF: _("GIF - Graphics Interchange Format files"),
     PNG: _("PNG - Portable Network Graphics files"),
-    PPM: _("PPM - Netpbm Color Image format  files"),
+    PPM: _("PPM - Netpbm Color Image format files"),
     XBM: _("XBM - X bitmap files"),
     XPM: _("XPM - X pixmap files"),
 

@@ -104,20 +104,26 @@ Supported output formats:
        '\n  '.join([uc2const.FORMAT_DESCRIPTION[item] for item in loaders]),
        '\n  '.join([uc2const.FORMAT_DESCRIPTION[item] for item in savers]))
 
-LONG_DEB_DESCRIPTION = '''Universal vector graphics translator
+LONG_DEB_DESCRIPTION = ''' .
  UniConvertor is a multiplatform universal vector graphics translator.
  Uses SK2 model to convert one format to another. 
  . 
  sK1 Project (http://sk1project.net),
  Copyright (C) 2007-%s by Igor E. Novikov 
  .
+ ##############################################
+ .
  Supported input formats:
  .
  %s
  .
+ ##############################################
+ .
  Supported output formats: 
  .
  %s
+ .
+ ##############################################
  .
 ''' % (year,
        '\n .\n '.join([uc2const.FORMAT_DESCRIPTION[item] for item in loaders]),
