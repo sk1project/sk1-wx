@@ -64,6 +64,7 @@ DEFAULT_STOPS = [
 
 class GradientPaletteSwatch(wal.VPanel, SwatchCanvas):
     callback = None
+    stops = None
 
     def __init__(self, parent, cms, stops, size=(80, 20), onclick=None):
         self.color = None
@@ -88,9 +89,10 @@ class GradientPaletteSwatch(wal.VPanel, SwatchCanvas):
 
 class GradientMiniPalette(wal.VPanel):
     callback = None
-    cells = []
+    cells = None
 
-    def __init__(self, parent, cms, stops=[], onclick=None):
+    def __init__(self, parent, cms_ref, stops=None, onclick=None):
+        stops = stops or []
         wal.VPanel.__init__(self, parent)
         self.set_bg(wal.BLACK)
         grid = wal.GridPanel(parent, 2, 3, 1, 1)
@@ -98,7 +100,7 @@ class GradientMiniPalette(wal.VPanel):
         self.cells = []
 
         for item in range(6):
-            self.cells.append(GradientPaletteSwatch(grid, cms,
+            self.cells.append(GradientPaletteSwatch(grid, cms_ref,
                                                     deepcopy(DEFAULT_STOPS),
                                                     onclick=self.on_click))
             grid.pack(self.cells[-1])
@@ -107,7 +109,7 @@ class GradientMiniPalette(wal.VPanel):
             self.callback = onclick
         self.set_stops(stops)
 
-    def set_stops(self, stops=[]):
+    def set_stops(self, stops=None):
         if stops:
             palette = PALETTES[stops[0][1][0]]
             for item in palette:
@@ -311,9 +313,8 @@ class GradientViewer(wal.VPanel, SwatchCanvas):
             self.callback = onclick
 
     def mouse_left_dclick(self, point):
-        x = point[0]
-        if x > 400: x = 400
-        if x: x -= 1
+        x = point[0] if point[0] <= 400 else 400
+        x = x - 1 if x else 0
         if self.callback:
             self.callback(x / 400.0)
 
@@ -482,8 +483,6 @@ class GradientEditor(wal.VPanel):
                 if item[0] <= pos:
                     before = index
             after = 1 + before
-        else:
-            before = after - 1
         stops.insert(after, stop)
         self.stops = stops
         if self.callback:
