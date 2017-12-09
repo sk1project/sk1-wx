@@ -68,8 +68,8 @@ class ScrolledPalette(wal.ScrolledCanvas, wal.SensitiveCanvas):
         sb.destroy()
         self.large_sel = get_icon(icons.PD_LARGE_SEL_PALETTE, size=wal.DEF_SIZE)
         self.small_sel = get_icon(icons.PD_SMALL_SEL_PALETTE, size=wal.DEF_SIZE)
-        self.width = (
-                         self.cell_width - 1) * self.cell_in_line + 3 + self.sb_width
+        self.width = (self.cell_width - 1) * self.cell_in_line
+        self.width += 3 + self.sb_width
         self.set_size((self.width, -1))
         self.set_bg(wal.WHITE)
 
@@ -77,13 +77,14 @@ class ScrolledPalette(wal.ScrolledCanvas, wal.SensitiveCanvas):
         if self.colors:
             index = self.get_color_index_in_point(point)
             self.set_tooltip()
-            if not index is None and self.colors[index][3]:
+            if index is not None and self.colors[index][3]:
                 self.set_tooltip('' + self.colors[index][3])
 
     def mouse_left_up(self, point):
         self.selected_index = self.get_color_index_in_point(point)
         self.refresh()
-        if self.callback: self.callback()
+        if self.callback:
+            self.callback()
 
     def get_color_index_in_point(self, point):
         if self.mode == NORMAL_MODE:
@@ -102,9 +103,9 @@ class ScrolledPalette(wal.ScrolledCanvas, wal.SensitiveCanvas):
 
     def get_color_index_normal(self, point):
         x, y = self.win_to_doc(*point)
-        if x < 2: x = 3
-        if x > 156: x = 155
-        if y < 2: y = 3
+        x = 3 if x < 2 else x
+        x = 155 if x > 156 else x
+        y = 3 if y < 2 else y
         index = int(y / 15) * 10 + int(x / 15)
         if index < len(self.colors):
             return index
@@ -112,9 +113,9 @@ class ScrolledPalette(wal.ScrolledCanvas, wal.SensitiveCanvas):
 
     def get_color_index_large(self, point):
         x, y = self.win_to_doc(*point)
-        if x < 2: x = 3
-        if x > 156: x = 155
-        if y < 2: y = 3
+        x = 3 if x < 2 else x
+        x = 155 if x > 156 else x
+        y = 3 if y < 2 else y
         index = int(y / 30) * 5 + int(x / 30)
         if index < len(self.colors):
             return index
@@ -238,7 +239,8 @@ class PaletteViewer(wal.VPanel):
         self.cms = cms
         self.callback = onclick
         wal.VPanel.__init__(self, parent)
-        if wal.IS_WX3: self.pack((172, 1))
+        if wal.IS_WX3:
+            self.pack((172, 1))
         options = wal.ExpandedPanel(self, _('Palette preview:'))
         changer = wal.HToggleKeeper(options, PREVIEW_MODES, MODE_ICON,
                                     MODE_NAME, on_change=self.set_mode)
@@ -247,7 +249,8 @@ class PaletteViewer(wal.VPanel):
         border = wal.VPanel(self, border=True)
         if wal.IS_WX3:
             color = wal.GRAY
-            if wal.IS_GTK: color = wal.UI_COLORS['pressed_border']
+            if wal.IS_GTK:
+                color = wal.UI_COLORS['pressed_border']
             border.set_bg(color)
         self.pack(border, expand=True, fill=True)
         self.win = ScrolledPalette(border, self.cms, onclick=self.select_color)
@@ -261,7 +264,8 @@ class PaletteViewer(wal.VPanel):
         else:
             border.pack(self.win, expand=True, fill=True)
         changer.set_mode(AUTO_MODE)
-        if palette: self.draw_palette(palette)
+        if palette:
+            self.draw_palette(palette)
 
     def draw_palette(self, palette=None):
         if not palette:
@@ -274,9 +278,9 @@ class PaletteViewer(wal.VPanel):
         self.win.refresh()
 
     def set_mode(self, mode):
-        if not self.palette: return
-        self.win.mode = mode
-        self.win.refresh()
+        if self.palette:
+            self.win.mode = mode
+            self.win.refresh()
 
     def get_color(self):
         return self.sel_color
@@ -288,6 +292,6 @@ class PaletteViewer(wal.VPanel):
             self.win.refresh()
 
     def select_color(self):
-        if self.callback and not self.win.selected_index is None:
+        if self.callback and self.win.selected_index is not None:
             self.sel_color = deepcopy(self.win.colors[self.win.selected_index])
             self.callback()
