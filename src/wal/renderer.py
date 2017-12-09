@@ -189,11 +189,12 @@ def get_dc(widget):
     pdc = wx.PaintDC(widget)
     try:
         dc = wx.GCDC(pdc)
-    except:
+    except Exception:
         dc = pdc
     pdc.BeginDrawing()
     dc.BeginDrawing()
     return dc
+
 
 def get_buffered_dc(widget):
     pdc = wx.BufferedPaintDC(widget)
@@ -308,7 +309,7 @@ class LabelRenderer:
             self.pdc = wx.PaintDC(self.widget)
         try:
             self.dc = wx.GCDC(self.pdc)
-        except:
+        except Exception:
             self.dc = self.pdc
         self.dc.BeginDrawing()
 

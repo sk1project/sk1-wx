@@ -15,13 +15,12 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wal
 import cairo
 
-from uc2 import libpango, cms
-
+import wal
 from sk1 import _, config, events, warn
 from sk1.resources import icons, get_icon
+from uc2 import libpango, cms
 
 FONTNAME_CACHE = []
 FONTSAMPLE_CACHE = []
@@ -34,7 +33,7 @@ def generate_fontname_cache(fonts):
     for item in fonts:
         try:
             bmp, size = wal.text_to_bitmap(item)
-        except:
+        except Exception:
             continue
         FONTNAME_CACHE.append(bmp)
         maxwidth = max(size[0], maxwidth)
@@ -90,8 +89,8 @@ class FontChoice(wal.FontBitmapChoice):
                                       FONTSAMPLE_CACHE, icon, onchange)
         events.connect(events.CONFIG_MODIFIED, self.check_config)
 
-    def check_config(self, attr, value):
-        if len(attr) > 12 and attr[:12] == 'font_preview':
+    def check_config(self, *args):
+        if args[0].startswith('font_preview'):
             FONTSAMPLE_CACHE[:] = []
             generate_fontsample_cache(self.fonts)
             index = self._get_active()
@@ -100,7 +99,7 @@ class FontChoice(wal.FontBitmapChoice):
 
     def get_font_family(self):
         index = self._get_active()
-        return '' + self.fonts[index]
+        return self.fonts[index]
 
     def set_font_family(self, family):
         if family not in self.fonts:
