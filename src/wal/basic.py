@@ -383,6 +383,13 @@ class Canvas(object):
         self.Bind(wx.EVT_PAINT, self._on_paint, self)
         self.Bind(wx.EVT_SIZE, self._on_size_change, self)
 
+    def set_double_buffered(self):
+        if const.IS_MSW:
+            self.SetDoubleBuffered(True)
+
+    def get_size(self):
+        return self.GetSizeTuple()
+
     def _on_size_change(self, event):
         self.refresh()
 
@@ -942,7 +949,7 @@ class HSizer(HPanel):
         if self.mouse_captured:
             try:
                 self.ReleaseMouse()
-            except:
+            except Exception:
                 pass
             self.mouse_captured = False
 

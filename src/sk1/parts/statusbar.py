@@ -17,7 +17,7 @@
 
 import wal
 from sk1 import _, config, events
-from sk1.pwidgets import SB_FillSwatch, SB_StrokeSwatch, ActionImageSwitch
+from sk1.pwidgets import SbFillSwatch, SbStrokeSwatch, ActionImageSwitch
 from sk1.resources import get_bmp, icons
 from sk1.resources import pdids, get_tooltip_text
 from uc2.uc2const import IMAGE_NAMES, IMAGE_CMYK, IMAGE_RGB
@@ -131,14 +131,14 @@ class ColorMonitor(wal.HPanel):
         self.pack(self.image_txt, padding=4)
         self.fill_txt = wal.Label(self, text=_('Fill:'), fontsize=FONTSIZE[0])
         self.pack(self.fill_txt)
-        self.fill_swatch = SB_FillSwatch(
+        self.fill_swatch = SbFillSwatch(
             self, self.app, self.fill_txt, onclick=self.app.proxy.fill_dialog)
         self.pack(self.fill_swatch, padding=2)
         self.pack((5, 5))
         self.stroke_txt = wal.Label(
             self, text=_('Stroke:'), fontsize=FONTSIZE[0])
         self.pack(self.stroke_txt)
-        self.stroke_swatch = SB_StrokeSwatch(
+        self.stroke_swatch = SbStrokeSwatch(
             self, self.app, self.stroke_txt,
             onclick=self.app.proxy.stroke_dialog)
         self.pack(self.stroke_swatch, padding=2)

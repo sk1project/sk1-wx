@@ -20,12 +20,13 @@ import os
 from base64 import b64decode
 from copy import deepcopy
 
+from uc2.cms import get_registration_black, verbose_color, val_255_to_dec
+
 import wal
 from palette_viewer import PaletteViewer
 from sk1 import _, config, events
 from sk1.resources import icons, get_icon
 from uc2 import uc2const, cms, libimg, sk2const, libgeom
-from uc2.cms import get_registration_black, verbose_color, val_255_to_dec
 from uc2.formats.sk2 import sk2_model, sk2_config
 
 FILL_MODES = [sk2const.FILL_ANY, sk2const.FILL_CLOSED_ONLY]
@@ -151,7 +152,8 @@ class HexField(wal.Entry):
     def __init__(self, parent, onchange=None):
         wal.Entry.__init__(self, parent, width=8, onchange=self.on_change,
                            onenter=self.on_enter)
-        if onchange: self.callback = onchange
+        if onchange:
+            self.callback = onchange
 
     def set_color(self, color):
         self.color = color
@@ -185,14 +187,16 @@ class HexField(wal.Entry):
             if len(val) == 4:
                 self.hexcolor = '#' + val[1] * 2 + val[2] * 2 + val[3] * 2
                 self.set_value(self.hexcolor)
-            if self.callback: self.callback()
+            if self.callback:
+                self.callback()
 
     def on_change(self):
         self._check_input()
         val = self.get_value()
         if len(val) in (7, 9):
             self.hexcolor = val
-            if self.callback: self.callback()
+            if self.callback:
+                self.callback()
 
 
 class SwatchCanvas(wal.SensitiveCanvas):
@@ -216,7 +220,7 @@ class SwatchCanvas(wal.SensitiveCanvas):
 
     def paint(self):
         self.draw_background()
-        if not self.color is None:
+        if self.color is not None:
             self.draw_color()
         elif self.fill:
             if self.fill[1] == sk2const.FILL_GRADIENT:
@@ -226,7 +230,8 @@ class SwatchCanvas(wal.SensitiveCanvas):
         self.draw_border()
 
     def draw_background(self):
-        if self.color and self.color[2] == 1.0: return
+        if self.color and self.color[2] == 1.0:
+            return
         w, h = self.get_size()
         x1 = y1 = 0
         flag_y = self.even_odd
@@ -235,7 +240,8 @@ class SwatchCanvas(wal.SensitiveCanvas):
             flag_x = flag_y
             while x1 < w:
                 clr = wal.WHITE
-                if not flag_x: clr = wal.LIGHT_GRAY
+                if not flag_x:
+                    clr = wal.LIGHT_GRAY
                 self.set_fill(clr)
                 self.draw_rect(x1, y1, self.pattern_size, self.pattern_size)
                 flag_x = not flag_x
@@ -245,7 +251,8 @@ class SwatchCanvas(wal.SensitiveCanvas):
             x1 = 0
 
     def draw_color(self):
-        if self.color is None: return
+        if self.color is None:
+            return
         if not self.color:
             self.draw_empty_pattern()
             return
@@ -258,7 +265,7 @@ class SwatchCanvas(wal.SensitiveCanvas):
             self.set_stroke()
             self.set_fill(self.cms.get_rgb_color255(self.color))
             self.draw_rect(0, 0, w, h)
-        if self.color[1] in [REG_COLOR, REG_SPOT_COLOR]:
+        if self.color[1] in (REG_COLOR, REG_SPOT_COLOR):
             if not self.reg_icon:
                 self.reg_icon = get_icon(icons.REG_SIGN, size=wal.DEF_SIZE)
             x = (w - 19) / 2
@@ -273,7 +280,8 @@ class SwatchCanvas(wal.SensitiveCanvas):
             flag_x = flag_y
             while x1 < w:
                 clr = wal.WHITE
-                if not flag_x: clr = wal.LIGHT_GRAY
+                if not flag_x:
+                    clr = wal.LIGHT_GRAY
                 ctx.set_source_rgb(*val_255_to_dec(clr.Get()))
                 ctx.rectangle(x1, y1, self.pattern_size, self.pattern_size)
                 ctx.fill()
@@ -309,13 +317,13 @@ class SwatchCanvas(wal.SensitiveCanvas):
         self.draw_cairo_background(ctx)
         bmpstr = b64decode(pattern[1])
         if self.cms.app.current_doc:
-            config = self.cms.app.current_doc.model.config
+            cfg = self.cms.app.current_doc.model.config
         else:
-            config = sk2_config.SK2_Config()
+            cfg = sk2_config.SK2_Config()
             config_file = os.path.join(self.cms.app.appdata.app_config_dir,
                                        'sk2_config.xml')
-            config.load(config_file)
-        image_obj = sk2_model.Pixmap(config)
+            cfg.load(config_file)
+        image_obj = sk2_model.Pixmap(cfg)
         libimg.set_image_data(self.cms, image_obj, bmpstr)
         libimg.flip_left_to_right(image_obj)
         if pattern[0] == sk2const.PATTERN_IMG and len(pattern) > 2:
@@ -349,13 +357,13 @@ class SwatchCanvas(wal.SensitiveCanvas):
         self.draw_rect(0, 0, w, h)
 
     def draw_border(self):
-        if not self.border: return
-        x0 = y0 = 0
+        if not self.border:
+            return
         x1, y1 = self.get_size()
-        if not 'n' in self.border: y0 = -1
-        if not 'w' in self.border: x0 = -1
-        if not 'e' in self.border: x1 += 1
-        if not 's' in self.border: y1 += 1
+        y0 = -1 if 'n' not in self.border else 0
+        x0 = -1 if 'w' not in self.border else 0
+        x1 = x1 + 1 if 'e' not in self.border else x1
+        y1 = y1 + 1 if 's' not in self.border else y1
         self.set_stroke(wal.BLACK)
         self.set_fill()
         self.draw_rect(x0, y0, x1 - x0, y1 - y0)
@@ -364,39 +372,44 @@ class SwatchCanvas(wal.SensitiveCanvas):
 class PaletteSwatch(wal.VPanel, SwatchCanvas):
     callback = None
 
-    def __init__(self, parent, cms, color, size=(20, 20), onclick=None):
+    def __init__(self, parent, cms_ref, color, size=(20, 20), onclick=None):
         self.color = color
-        self.cms = cms
+        self.cms = cms_ref
         wal.VPanel.__init__(self, parent)
         SwatchCanvas.__init__(self)
         self.pack(size)
         if self.color and self.color[3]:
             self.set_tooltip(self.color[3])
-        if onclick: self.callback = onclick
+        if onclick:
+            self.callback = onclick
 
     def mouse_left_up(self, point):
-        if self.callback: self.callback(deepcopy(self.color))
+        if self.callback:
+            self.callback(deepcopy(self.color))
 
 
 class AlphaColorSwatch(wal.VPanel, SwatchCanvas):
     callback = None
 
-    def __init__(self, parent, cms, color, size=(20, 20), border='wes',
+    def __init__(self, parent, cms_ref, color, size=(20, 20), border='wes',
                  even_odd=False, onclick=None):
         self.color = color
-        self.cms = cms
+        self.cms = cms_ref
         wal.VPanel.__init__(self, parent)
         SwatchCanvas.__init__(self, border, even_odd)
         self.pack(size)
-        if onclick: self.callback = onclick
+        if onclick:
+            self.callback = onclick
 
     def mouse_left_up(self, point):
-        if self.callback: self.callback()
+        if self.callback:
+            self.callback()
 
     def set_color(self, color):
         self.color = color
         tooltip = ''
-        if self.color and self.color[3]: tooltip = self.color[3]
+        if self.color and self.color[3]:
+            tooltip = self.color[3]
         self.set_tooltip(tooltip)
         self.refresh()
 
@@ -404,17 +417,19 @@ class AlphaColorSwatch(wal.VPanel, SwatchCanvas):
 class FillSwatch(wal.VPanel, SwatchCanvas):
     callback = None
 
-    def __init__(self, parent, cms, fill, size=(20, 20), border='new',
+    def __init__(self, parent, cms_ref, fill, size=(20, 20), border='new',
                  even_odd=True, onclick=None):
-        self.cms = cms
+        self.cms = cms_ref
         wal.VPanel.__init__(self, parent)
         SwatchCanvas.__init__(self, border, even_odd)
         self.pack(size)
         self.set_swatch_fill(fill)
-        if onclick: self.callback = onclick
+        if onclick:
+            self.callback = onclick
 
     def mouse_left_up(self, point):
-        if self.callback: self.callback()
+        if self.callback:
+            self.callback()
 
     def set_swatch_fill(self, fill):
         if not fill:
@@ -427,21 +442,22 @@ class FillSwatch(wal.VPanel, SwatchCanvas):
             self.color = None
             self.fill = fill
         tooltip = ''
-        if self.color and self.color[3]: tooltip = self.color[3]
+        if self.color and self.color[3]:
+            tooltip = self.color[3]
         self.set_tooltip(tooltip)
         self.refresh()
 
 
-class SB_StrokeSwatch(AlphaColorSwatch):
+class SbStrokeSwatch(AlphaColorSwatch):
     pattern_size = 8
 
-    def __init__(self, parent, app, label, color=[], size=(35, 16),
+    def __init__(self, parent, app, label, color=None, size=(35, 16),
                  onclick=None):
+        color = color or []
         self.app = app
         self.label = label
-        cms = self.app.default_cms
-        AlphaColorSwatch.__init__(self, parent, cms, color, size,
-                                  'news', onclick=onclick)
+        AlphaColorSwatch.__init__(self, parent, self.app.default_cms,
+                                  color, size, 'news', onclick=onclick)
 
     def update_from_obj(self, obj):
         text = _('Stroke:')
@@ -464,15 +480,15 @@ class SB_StrokeSwatch(AlphaColorSwatch):
         self.label.set_text(text)
 
 
-class SB_FillSwatch(FillSwatch):
+class SbFillSwatch(FillSwatch):
     pattern_size = 8
 
-    def __init__(self, parent, app, label, fill=[], size=(35, 16),
+    def __init__(self, parent, app, label, fill=None, size=(35, 16),
                  onclick=None):
+        fill = fill or []
         self.app = app
         self.label = label
-        cms = self.app.default_cms
-        FillSwatch.__init__(self, parent, cms, fill, size,
+        FillSwatch.__init__(self, parent, self.app.default_cms, fill, size,
                             'news', onclick=onclick)
 
     def update_from_obj(self, obj):
@@ -497,34 +513,37 @@ class SB_FillSwatch(FillSwatch):
 class MiniPalette(wal.VPanel):
     callback = None
 
-    def __init__(self, parent, cms, palette=CMYK_PALETTE, onclick=None):
+    def __init__(self, parent, cms_ref, palette=CMYK_PALETTE, onclick=None):
         wal.VPanel.__init__(self, parent)
         self.set_bg(wal.BLACK)
         grid = wal.GridPanel(parent, 2, 6, 1, 1)
         grid.set_bg(wal.BLACK)
         for item in palette:
-            grid.pack(PaletteSwatch(grid, cms, item, (40, 20), self.on_click))
+            grid.pack(PaletteSwatch(grid, cms_ref, item,
+                                    (40, 20), self.on_click))
         self.pack(grid, padding_all=1)
-        if onclick: self.callback = onclick
+        if onclick:
+            self.callback = onclick
 
     def on_click(self, color):
-        if self.callback: self.callback(color)
+        if self.callback:
+            self.callback(color)
 
 
 class ColorColorRefPanel(wal.VPanel):
-    def __init__(self, parent, cms, orig_color, new_color, on_orig=None):
+    def __init__(self, parent, cms_ref, orig_color, new_color, on_orig=None):
         wal.VPanel.__init__(self, parent)
         grid = wal.GridPanel(self, hgap=5)
         grid.pack(wal.Label(grid, _('Old color:')))
 
-        self.before_swatch = AlphaColorSwatch(grid, cms, orig_color, (70, 30),
-                                              'new', onclick=on_orig)
+        self.before_swatch = AlphaColorSwatch(grid, cms_ref, orig_color,
+                                              (70, 30), 'new', onclick=on_orig)
         grid.pack(self.before_swatch)
 
         grid.pack(wal.Label(grid, _('New color:')))
 
-        self.after_swatch = AlphaColorSwatch(grid, cms, new_color, (70, 30),
-                                             even_odd=True)
+        self.after_swatch = AlphaColorSwatch(grid, cms_ref, new_color,
+                                             (70, 30), even_odd=True)
         grid.pack(self.after_swatch)
 
         self.pack(grid, padding_all=2)
@@ -535,18 +554,18 @@ class ColorColorRefPanel(wal.VPanel):
 
 
 class FillColorRefPanel(wal.VPanel):
-    def __init__(self, parent, cms, fill, new_color, on_orig=None):
+    def __init__(self, parent, cms_ref, fill, new_color, on_orig=None):
         wal.VPanel.__init__(self, parent)
         grid = wal.GridPanel(self, hgap=5)
         grid.pack(wal.Label(grid, _('Old fill:')))
 
-        self.before_swatch = FillSwatch(grid, cms, fill, (70, 30),
+        self.before_swatch = FillSwatch(grid, cms_ref, fill, (70, 30),
                                         onclick=on_orig)
         grid.pack(self.before_swatch)
 
         grid.pack(wal.Label(grid, _('New fill:')))
 
-        self.after_swatch = AlphaColorSwatch(grid, cms, new_color, (70, 30))
+        self.after_swatch = AlphaColorSwatch(grid, cms_ref, new_color, (70, 30))
         grid.pack(self.after_swatch)
 
         self.pack(grid, padding_all=2)
@@ -557,18 +576,18 @@ class FillColorRefPanel(wal.VPanel):
 
 
 class FillFillRefPanel(wal.VPanel):
-    def __init__(self, parent, cms, fill, new_fill, on_orig=None):
+    def __init__(self, parent, cms_ref, fill, new_fill, on_orig=None):
         wal.VPanel.__init__(self, parent)
         grid = wal.GridPanel(self, hgap=5)
         grid.pack(wal.Label(grid, _('Old fill:')))
 
-        self.before_swatch = FillSwatch(grid, cms, fill, (70, 30),
+        self.before_swatch = FillSwatch(grid, cms_ref, fill, (70, 30),
                                         onclick=on_orig)
         grid.pack(self.before_swatch)
 
         grid.pack(wal.Label(grid, _('New fill:')))
 
-        self.after_swatch = FillSwatch(grid, cms, new_fill, (70, 30),
+        self.after_swatch = FillSwatch(grid, cms_ref, new_fill, (70, 30),
                                        border='swe', even_odd=False)
         grid.pack(self.after_swatch)
 
@@ -595,11 +614,9 @@ class StyleMonitor(wal.VPanel):
         events.connect(events.NO_DOCS, self.no_docs)
 
     def doc_changed(self, doc):
-        cms = doc.cms
         fill_style = doc.model.get_def_style()[0]
         stroke_style = doc.model.get_def_style()[1]
-        self.stroke.cms = cms
-        self.fill.cms = cms
+        self.stroke.cms = self.fill.cms = doc.cms
         self.fill.set_swatch_fill(fill_style)
         if stroke_style:
             self.stroke.set_color(stroke_style[2])
@@ -607,8 +624,7 @@ class StyleMonitor(wal.VPanel):
             self.stroke.set_color([])
 
     def no_docs(self):
-        self.stroke.cms = self.app.default_cms
-        self.fill.cms = self.app.default_cms
+        self.stroke.cms = self.fill.cms = self.app.default_cms
         self.stroke.set_color([])
         self.fill.set_swatch_fill([])
 
@@ -638,10 +654,9 @@ class ColoredSlider(wal.VPanel, wal.SensitiveCanvas):
 
     def paint(self):
         w, h = self.get_size()
-        w -= 6;
+        w -= 6
         h -= 10
-        x = 3;
-        y = 5
+        x, y = 3, 5
         self.draw_linear_gradient((x, y, w, h), self.start_clr, self.stop_clr)
         self.set_fill()
         self.set_stroke(wal.BLACK)
@@ -650,12 +665,13 @@ class ColoredSlider(wal.VPanel, wal.SensitiveCanvas):
         self.draw_bitmap(self.knob, pos, y + h)
 
     def _set_value(self, val):
-        if val < 4: val = 4
-        if val > 259: val = 259
+        val = 4 if val < 4 else val
+        val = 259 if val > 259 else val
         val = (val - 4) / 255.0
         self.value = val
         self.refresh()
-        if self.callback: self.callback()
+        if self.callback:
+            self.callback()
 
     def set_value(self, val, start_clr=wal.BLACK, stop_clr=wal.WHITE):
         self.value = val
@@ -685,10 +701,9 @@ class ColoredAlphaSlider(ColoredSlider):
 
     def paint(self):
         w, h = self.get_size()
-        w -= 6;
+        w -= 6
         h -= 10
-        x = 3;
-        y = 5
+        x, y = 3, 5
         x1 = y1 = 0
         flag_y = True
         self.set_stroke()
@@ -696,7 +711,8 @@ class ColoredAlphaSlider(ColoredSlider):
             flag_x = flag_y
             while x + x1 < w:
                 clr = wal.WHITE
-                if not flag_x: clr = wal.LIGHT_GRAY
+                if not flag_x:
+                    clr = wal.LIGHT_GRAY
                 self.set_fill(clr)
                 rh = rw = 10
                 if x + x1 + rw > w:
@@ -709,10 +725,9 @@ class ColoredAlphaSlider(ColoredSlider):
             x1 = 0
 
         w, h = self.get_size()
-        w -= 6;
+        w -= 6
         h -= 10
-        x = 3;
-        y = 5
+        x, y = 3, 5
         rect = (x, y, w, h)
         self.gc_draw_linear_gradient(rect, self.start_clr, self.stop_clr)
         self.set_fill()
@@ -722,18 +737,19 @@ class ColoredAlphaSlider(ColoredSlider):
         self.draw_bitmap(self.knob, pos, y + h)
 
 
-class CMYK_Mixer(wal.GridPanel):
+class CmykMixer(wal.GridPanel):
     color = None
     callback = None
 
-    def __init__(self, parent, cms, color=None, onchange=None):
+    def __init__(self, parent, cms_ref, color=None, onchange=None):
         wal.GridPanel.__init__(self, parent, 5, 4, 3, 5)
-        self.cms = cms
+        self.cms = cms_ref
         if color:
             self.color = color
         else:
             self.color = [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, '']
-        if onchange: self.callback = onchange
+        if onchange:
+            self.callback = onchange
 
         self.color_sliders = []
         self.color_spins = []
@@ -741,13 +757,13 @@ class CMYK_Mixer(wal.GridPanel):
         labels = ['C:', 'M:', 'Y:', 'K:']
         for item in labels:
             self.pack(wal.Label(self, item))
-            self.color_sliders.append(ColoredSlider(self,
-                                                    onchange=self.on_slider_change))
+            slider = ColoredSlider(self, onchange=self.on_slider_change)
+            self.color_sliders.append(slider)
             self.pack(self.color_sliders[-1])
-            self.color_spins.append(wal.FloatSpin(self,
-                                                  range_val=(0.0, 100.0),
-                                                  onchange=self.on_change,
-                                                  onenter=self.on_change))
+            spin = wal.FloatSpin(self, range_val=(0.0, 100.0),
+                                 onchange=self.on_change,
+                                 onenter=self.on_change)
+            self.color_spins.append(spin)
             self.pack(self.color_spins[-1])
             self.pack(wal.Label(self, '%'))
 
@@ -816,18 +832,19 @@ class CMYK_Mixer(wal.GridPanel):
         self.alpha_spin.set_value(self.color[2] * 100.0)
 
 
-class RGB_Mixer(wal.VPanel):
+class RgbMixer(wal.VPanel):
     color = None
     callback = None
 
-    def __init__(self, parent, cms, color=None, onchange=None):
+    def __init__(self, parent, cms_ref, color=None, onchange=None):
         wal.VPanel.__init__(self, parent)
-        self.cms = cms
+        self.cms = cms_ref
         if color:
             self.color = color
         else:
             self.color = [uc2const.COLOR_RGB, [0.0, 0.0, 0.0], 1.0, '']
-        if onchange: self.callback = onchange
+        if onchange:
+            self.callback = onchange
 
         self.color_sliders = []
         self.color_spins = []
@@ -836,13 +853,14 @@ class RGB_Mixer(wal.VPanel):
         labels = ['R:', 'G:', 'B:']
         for item in labels:
             grid.pack(wal.Label(grid, item))
-            self.color_sliders.append(ColoredSlider(grid,
-                                                    onchange=self.on_slider_change))
+            slider = ColoredSlider(grid, onchange=self.on_slider_change)
+            self.color_sliders.append(slider)
             grid.pack(self.color_sliders[-1])
-            self.color_spins.append(wal.IntSpin(grid,
-                                                range_val=(0, 255),
-                                                onchange=self.on_change,
-                                                onenter=self.on_change))
+            spin = wal.IntSpin(grid,
+                               range_val=(0, 255),
+                               onchange=self.on_change,
+                               onenter=self.on_change)
+            self.color_spins.append(spin)
             grid.pack(self.color_spins[-1])
 
         grid.pack(wal.Label(grid, 'A:'))
@@ -934,18 +952,19 @@ class RGB_Mixer(wal.VPanel):
         self.html.set_color(self.color)
 
 
-class Gray_Mixer(wal.VPanel):
+class GrayMixer(wal.VPanel):
     color = None
     callback = None
 
-    def __init__(self, parent, cms, color=None, onchange=None):
+    def __init__(self, parent, cms_ref, color=None, onchange=None):
         wal.VPanel.__init__(self, parent)
-        self.cms = cms
+        self.cms = cms_ref
         if color:
             self.color = color
         else:
             self.color = [uc2const.COLOR_GRAY, [0.0, ], 1.0, '']
-        if onchange: self.callback = onchange
+        if onchange:
+            self.callback = onchange
 
         grid = wal.GridPanel(self, 2, 3, 3, 5)
 
@@ -1016,18 +1035,19 @@ class Gray_Mixer(wal.VPanel):
         self.alpha_spin.set_value(self.color[2] * 255.0)
 
 
-class SPOT_Mixer(wal.VPanel):
+class SpotMixer(wal.VPanel):
     color = None
     callback = None
 
-    def __init__(self, parent, cms, color=None, onchange=None):
+    def __init__(self, parent, cms_ref, color=None, onchange=None):
         wal.VPanel.__init__(self, parent)
-        self.cms = cms
+        self.cms = cms_ref
         if color:
             self.color = color
         else:
             self.color = get_registration_black()
-        if onchange: self.callback = onchange
+        if onchange:
+            self.callback = onchange
 
         name_panel = wal.HPanel(self)
         name_panel.pack(wal.Label(name_panel, 'Name:'), padding=5)
@@ -1114,8 +1134,8 @@ class SPOT_Mixer(wal.VPanel):
 
 
 class ColorSticker(wal.VPanel):
-    def __init__(self, parent, cms, color=None):
-        self.cms = cms
+    def __init__(self, parent, cms_ref, color=None):
+        self.cms = cms_ref
         if not color:
             color = get_registration_black()
         wal.VPanel.__init__(self, parent, True)
@@ -1151,9 +1171,9 @@ class ColorSticker(wal.VPanel):
         self.layout()
 
     def set_color(self, color):
-        if not color: return
-        txt = '' + color[3]
-        if not txt: txt = '???'
+        if not color:
+            return
+        txt = '???' if not color[3] else color[3]
         self.name_field.set_text(txt)
         self.color_swatch.set_color(color)
         self.color_type.set_text(color[0] + ' ' + _('color'))
@@ -1161,8 +1181,7 @@ class ColorSticker(wal.VPanel):
             self.line1.set_text(cms.verbose_color(color))
             self.line2.set_text('')
         else:
-            txt1 = ''
-            txt2 = ''
+            txt1 = txt2 = ''
             if color[1][0]:
                 txt1 = cms.verbose_color(self.cms.get_rgb_color(color))
             if color[1][1]:
@@ -1172,11 +1191,12 @@ class ColorSticker(wal.VPanel):
         self.parent.layout()
 
 
-class Palette_Mixer(wal.HPanel):
+class PaletteMixer(wal.HPanel):
     callback = None
+    color = None
 
-    def __init__(self, parent, app, cms, onchange=None):
-        self.cms = cms
+    def __init__(self, parent, app, cms_ref, onchange=None):
+        self.cms = cms_ref
         self.app = app
         self.callback = onchange
         wal.HPanel.__init__(self, parent)
@@ -1213,7 +1233,8 @@ class Palette_Mixer(wal.HPanel):
     def on_change(self):
         self.color = self.palviewer.get_color()
         self.sticker.set_color(self.color)
-        if self.callback: self.callback(self.color)
+        if self.callback:
+            self.callback(self.color)
 
     def get_color(self):
         return self.color
@@ -1234,7 +1255,7 @@ class Palette_Mixer(wal.HPanel):
     def get_palette_by_name(self, name):
         palettes = self.app.palettes.palettes
         pal_list = self.get_palette_list()
-        if not name in pal_list:
+        if name not in pal_list:
             name = self.app.palettes.get_default_palette_name()
         return palettes[name]
 
@@ -1244,6 +1265,6 @@ class Palette_Mixer(wal.HPanel):
 
     def get_index_by_palette_name(self, name=''):
         pal_list = self.get_palette_list()
-        if not name in pal_list:
+        if name not in pal_list:
             name = self.app.palettes.get_default_palette_name()
         return pal_list.index(name)

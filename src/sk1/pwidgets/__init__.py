@@ -23,7 +23,7 @@ from mactoolbar import MacTB_ActionButton, MacTB_ActionNestedButtons
 from palette_viewer import PaletteViewer
 from palette import Palette
 from fillctrls import SolidFill, GradientFill, PatternFill
-from colorctrls import SB_StrokeSwatch, SB_FillSwatch, StyleMonitor
+from colorctrls import SbStrokeSwatch, SbFillSwatch, StyleMonitor
 from strokectrls import DashChoice, CapChoice, JoinChoice
 from fontctrl import FontChoice, generate_fcache
 from minipalette import CBMiniPalette

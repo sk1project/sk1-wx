@@ -22,8 +22,8 @@ from uc2.cms import get_registration_black, color_to_spot, rgb_to_hexcolor
 import wal
 from colorctrls import FillColorRefPanel, MiniPalette, FillFillRefPanel, \
     FillRuleKeeper, CMYK_PALETTE, RGB_PALETTE, GRAY_PALETTE, SPOT_PALETTE
-from colorctrls import PaletteSwatch, CMYK_Mixer, RGB_Mixer, Gray_Mixer, \
-    SPOT_Mixer, Palette_Mixer
+from colorctrls import PaletteSwatch, CmykMixer, RgbMixer, GrayMixer, \
+    SpotMixer, PaletteMixer
 from gradientctrls import GradientEditor, GradientMiniPalette
 from patternctrls import PatternMiniPalette, PatternEditor
 from patterns import DEFAULT_PATTERN
@@ -73,7 +73,7 @@ class CmykPanel(SolidFillPanel):
 
     def build(self):
 
-        self.mixer = CMYK_Mixer(self, self.cms, onchange=self.update)
+        self.mixer = CmykMixer(self, self.cms, onchange=self.update)
         self.pack(self.mixer)
 
         self.pack(wal.HPanel(self), fill=True, expand=True)
@@ -119,7 +119,7 @@ class RgbPanel(SolidFillPanel):
 
     def build(self):
 
-        self.mixer = RGB_Mixer(self, self.cms, onchange=self.update)
+        self.mixer = RgbMixer(self, self.cms, onchange=self.update)
         self.pack(self.mixer)
 
         self.pack(wal.HLine(self), fill=True, padding=5)
@@ -165,7 +165,7 @@ class GrayPanel(SolidFillPanel):
     def build(self):
         self.pack(wal.HPanel(self), fill=True, expand=True)
 
-        self.mixer = Gray_Mixer(self, self.cms, onchange=self.update)
+        self.mixer = GrayMixer(self, self.cms, onchange=self.update)
         self.pack(self.mixer)
 
         self.pack(wal.HPanel(self), fill=True, expand=True)
@@ -211,7 +211,7 @@ class SpotPanel(SolidFillPanel):
 
     def build(self):
         self.pack(wal.HPanel(self), fill=True, expand=True)
-        self.mixer = SPOT_Mixer(self, self.cms, onchange=self.update)
+        self.mixer = SpotMixer(self, self.cms, onchange=self.update)
         self.pack(self.mixer)
 
         self.pack(wal.HPanel(self), fill=True, expand=True)
@@ -270,8 +270,8 @@ class PalettePanel(SolidFillPanel):
     mixer = None
 
     def build(self):
-        self.mixer = Palette_Mixer(self, self.app, self.cms,
-                                   onchange=self.set_color)
+        self.mixer = PaletteMixer(self, self.app, self.cms,
+                                  onchange=self.set_color)
         self.pack(self.mixer, fill=True, expand=True)
 
     def activate(self, cms, orig_fill, new_color):
