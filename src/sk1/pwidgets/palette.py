@@ -45,13 +45,13 @@ class Palette(wal.VPanel, wal.SensitiveCanvas):
         events.connect(events.CONFIG_MODIFIED, self.config_update)
         events.connect(events.CMS_CHANGED, self.palette_refresh)
 
-    def config_update(self, attr, val):
-        if not attr[:7] == 'palette':
-            return
-        self.refresh()
+    def config_update(self, *args):
+        if args[0].startswith('palette'):
+            self.refresh()
 
     def palette_refresh(self, *args):
-        self.refresh()
+        if args:
+            self.refresh()
 
     def set_palette_size(self):
         self.remove_all()
