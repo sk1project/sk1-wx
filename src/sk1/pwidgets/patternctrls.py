@@ -267,7 +267,7 @@ class TransformEditor(wal.VPanel):
         self.transforms = [sx, sy, shx, shy, angle]
         return trafo, [sx, sy, shx, shy, angle]
 
-    def changes(self, *args):
+    def changes(self):
         if self.callback:
             self.callback(*self.get_trafo())
 
@@ -276,8 +276,7 @@ class TrafoEditor(wal.VPanel):
     app = None
     callback = None
 
-    def __init__(self, parent, app, trafo=[] + sk2const.NORMAL_TRAFO,
-                 onchange=None):
+    def __init__(self, parent, app, onchange=None):
         self.app = app
         self.callback = onchange
         wal.VPanel.__init__(self, parent)
@@ -336,7 +335,8 @@ class TrafoEditor(wal.VPanel):
 
         self.pack(grid)
 
-    def set_trafo(self, trafo, transforms):
+    def set_trafo(self, *args):
+        trafo = args[0]
         self.m11.set_value(trafo[0])
         self.m12.set_value(trafo[1])
         self.m21.set_value(trafo[2])
@@ -353,7 +353,7 @@ class TrafoEditor(wal.VPanel):
         dy = self.dy.get_value()
         return [m11, m12, m21, m22, dx, dy], []
 
-    def changes(self, *args):
+    def changes(self):
         if self.callback:
             self.callback(*self.get_trafo())
 
@@ -364,8 +364,7 @@ class PatternTrafoEditor(wal.VPanel):
     transforms = []
     active_panel = None
 
-    def __init__(self, parent, app, trafo=[] + sk2const.NORMAL_TRAFO,
-                 transforms=[], onchange=None):
+    def __init__(self, parent, app, onchange=None):
         wal.VPanel.__init__(self, parent)
         self.transfom_editor = TransformEditor(self, app,
                                                onchange=onchange)
@@ -429,9 +428,9 @@ class PatternEditor(wal.HPanel):
 
         right_panel = wal.VPanel(self)
 
-        self.pattern_color_editor = PatternColorEditor(right_panel, dlg, cms,
-                                                       pattern_def[2],
-                                                       onchange=self.color_changed)
+        pce = PatternColorEditor(right_panel, dlg, cms, pattern_def[2],
+                                 onchange=self.color_changed)
+        self.pattern_color_editor = pce
         right_panel.pack(self.pattern_color_editor, padding=5)
 
         self.trafo_editor = PatternTrafoEditor(right_panel, dlg.app,
@@ -445,7 +444,8 @@ class PatternEditor(wal.HPanel):
         if self.callback:
             self.callback(self.get_pattern_def())
 
-    def trafo_changed(self, trafo, transforms=[]):
+    def trafo_changed(self, trafo, transforms=None):
+        transforms = transforms or []
         self.pattern_def[3] = trafo
         self.pattern_def[4] = transforms
         if self.callback:
