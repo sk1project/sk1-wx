@@ -78,8 +78,7 @@ class AbstractShapingPanel(wal.VPanel):
         self.pack(wal.Label(self, SHAPING_MODE_NAMES[self.pid], fontbold=True))
 
         border = wal.VPanel(self)
-        color = wal.GRAY
-        if wal.IS_GTK: color = wal.UI_COLORS['pressed_border']
+        color = wal.UI_COLORS['pressed_border'] if wal.IS_GTK else wal.GRAY
         border.set_bg(color)
         self.pic_panel = wal.VPanel(border)
         self.pic_panel.set_bg(wal.WHITE)
@@ -92,7 +91,8 @@ class AbstractShapingPanel(wal.VPanel):
         self.pack(self.del_check)
 
         txt = _('Apply')
-        if self.pid == TRIM_MODE: txt = _('Apply to...')
+        if self.pid == TRIM_MODE:
+            txt = _('Apply to...')
         self.apply_btn = wal.Button(self, txt, onclick=self.action)
         self.pack(self.apply_btn, fill=True, padding_all=5)
 
@@ -104,7 +104,8 @@ class AbstractShapingPanel(wal.VPanel):
 
     def get_sel_count(self):
         doc = self.app.current_doc
-        if not doc: return 0
+        if not doc:
+            return 0
         return len(doc.selection.objs)
 
     def check_selection(self, sel):
@@ -140,7 +141,8 @@ class AbstractShapingPanel(wal.VPanel):
     def action(self):
         doc = self.app.current_doc
         objs = self.get_selection()
-        if not objs: return
+        if not objs:
+            return
         if self.pid == TRIM_MODE:
             doc.canvas.set_temp_mode(modes.PICK_MODE, self.select_trim_target)
         else:
@@ -150,7 +152,8 @@ class AbstractShapingPanel(wal.VPanel):
         if len(selected) == 1 and selected[0].is_primitive():
             sel_obj = selected[0]
             objs = self.get_selection()
-            if sel_obj in objs: objs.remove(sel_obj)
+            if sel_obj in objs:
+                objs.remove(sel_obj)
             if objs:
                 objs = [sel_obj, ] + objs
                 self._action(objs)
@@ -171,12 +174,11 @@ class AbstractShapingPanel(wal.VPanel):
         doc.canvas.set_temp_mode(modes.WAIT_MODE)
         try:
             result = self.do_action(paths)
-        except:
+        except Exception:
             doc.canvas.restore_mode()
-            result = []
-            msg = _('Error occurred during this operation.')
-            msg += '\n' + _(
-                'Perhaps this was due to the imperfection of the algorithm.')
+            msg = _('Error occurred during this operation.') + '\n'
+            msg += _('Perhaps this was due to the imperfection'
+                     ' of the algorithm.')
             error_dialog(self.app.mw, self.app.appdata.app_name, msg)
             return
 
@@ -196,7 +198,7 @@ class AbstractShapingPanel(wal.VPanel):
                 objs_list.append([obj, obj.parent, index])
             doc.api.delete_objects(objs_list)
 
-    def do_action(self):
+    def do_action(self, *args):
         return []
 
 
@@ -217,7 +219,8 @@ class IntersectionPanel(AbstractShapingPanel):
     def do_action(self, paths):
         result = paths[0]
         for item in paths[1:]:
-            if result: result = intersect_paths(result, item)
+            if result:
+                result = intersect_paths(result, item)
         return result
 
 
@@ -249,11 +252,13 @@ SHAPING_CLASSES = {
 }
 
 
-class Shaping_Plugin(RS_Plugin):
+class ShapingPlugin(RS_Plugin):
     pid = 'ShapingPlugin'
     name = _('Shaping')
     active_panel = None
     panels = {}
+    shaping_keeper = None
+    shaping_panel = None
 
     def build_ui(self):
         self.icon = get_icon(PLUGIN_ICON)
@@ -301,4 +306,4 @@ class Shaping_Plugin(RS_Plugin):
 
 
 def get_plugin(app):
-    return Shaping_Plugin(app)
+    return ShapingPlugin(app)
