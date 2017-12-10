@@ -18,8 +18,8 @@
 
 import math
 import os
-import wal
 
+import wal
 from sk1 import _, events
 from sk1.app_plugins import RS_Plugin
 from sk1.resources import get_icon
@@ -33,7 +33,7 @@ def make_artid(name):
 
 
 def get_plugin(app):
-    return TC_Plugin(app)
+    return TextOnCirclePlugin(app)
 
 
 RIGHT_POS = 2
@@ -98,6 +98,7 @@ class PositionSwitch(wal.Bitmap):
         self.set_bitmap(self.load_bmp())
 
     def on_click(self, event):
+        mode = LEFT_POS
         w, h = self.get_size()
         x, y = event.get_point()
         if y < h / 2.0 and x < w / 2.0:
@@ -123,11 +124,14 @@ class PositionSwitch(wal.Bitmap):
         self.set_mode(mode)
 
 
-class TC_Plugin(RS_Plugin):
+class TextOnCirclePlugin(RS_Plugin):
     pid = 'TextOnCirclePlugin'
     name = _('Text on Circle')
     active_transform = None
     transforms = {}
+    bmp = None
+    other_side = None
+    apply_btn = None
 
     def build_ui(self):
         self.icon = get_icon(PLUGIN_ICON)
@@ -201,13 +205,15 @@ class TC_Plugin(RS_Plugin):
         return False
 
     def update(self, *args):
-        if not self.is_shown(): return
-        state = False
-        if self.app.insp.is_selection():
-            ret = self.check_selection()
-            if ret: state = True
-            if ret == 1: self.update_from_tpgroup()
-        self.set_state(state)
+        if self.is_shown():
+            state = False
+            if self.app.insp.is_selection():
+                ret = self.check_selection()
+                if ret:
+                    state = True
+                if ret == 1:
+                    self.update_from_tpgroup()
+            self.set_state(state)
 
     def action(self):
         doc = self.app.current_doc
