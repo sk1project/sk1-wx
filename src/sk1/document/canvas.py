@@ -548,7 +548,7 @@ class AppCanvas(wx.Panel):
                 if not self.mode == modes.GUIDE_MODE:
                     self.dragged_guide = ()
             self.renderer.finalize()
-        except:
+        except Exception:
             self.app.print_stacktrace()
 
         self.redraw_flag = False
@@ -571,7 +571,7 @@ class AppCanvas(wx.Panel):
         if self.mouse_captured:
             try:
                 self.ReleaseMouse()
-            except:
+            except Exception:
                 pass
             self.mouse_captured = False
 
