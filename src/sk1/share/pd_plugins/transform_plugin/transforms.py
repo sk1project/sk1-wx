@@ -50,7 +50,8 @@ class AbstractTransform(wal.VPanel):
     def on_reset(self):
         self.orientation = (0.0, 0.0)
         self.user_changes = True
-        if self.callback: self.callback()
+        if self.callback:
+            self.callback()
 
     def build(self):
         pass
@@ -61,7 +62,8 @@ class AbstractTransform(wal.VPanel):
     def set_enable(self, state):
         for widget in self.active_widgets:
             widget.set_enable(state)
-        if state: self.update()
+        if state:
+            self.update()
 
     def set_orientation(self, orientation=(0.0, 0.0)):
         self.orientation = orientation
@@ -77,7 +79,7 @@ class AbstractTransform(wal.VPanel):
 
     def get_selection_size(self):
         bbox = self.get_selection_bbox()
-        return (bbox[2] - bbox[0], bbox[3] - bbox[1])
+        return bbox[2] - bbox[0], bbox[3] - bbox[1]
 
     def is_ll_coords(self):
         doc = self.app.current_doc
@@ -100,7 +102,7 @@ class AbstractTransform(wal.VPanel):
         elif self.is_lu_coords():
             x += pw / 2.0
             y -= ph / 2.0
-            if y: y *= -1.0
+            y = -y if y else y
         return [x, y]
 
     def coords_to_doc(self, point):
@@ -112,7 +114,7 @@ class AbstractTransform(wal.VPanel):
         elif self.is_lu_coords():
             x -= pw / 2.0
             y += ph / 2.0
-            if y: y *= -1.0
+            y = -y if y else y
         return [x, y]
 
 
@@ -120,6 +122,9 @@ class PositionTransform(AbstractTransform):
     name = _('Position')
     dx = 0.0
     dy = 0.0
+    h_spin = None
+    v_spin = None
+    abs_pos = None
 
     def build(self):
         grid = wal.GridPanel(self, 2, 3, 2, 2)
@@ -144,14 +149,17 @@ class PositionTransform(AbstractTransform):
         self.active_widgets = [self.h_spin, self.v_spin, self.abs_pos]
 
     def update(self):
-        if not self.app.insp.is_selection(): return
-        if self.user_changes: return
+        if not self.app.insp.is_selection():
+            return
+        if self.user_changes:
+            return
         bbox = self.get_selection_bbox()
         w = bbox[2] - bbox[0]
         h = bbox[3] - bbox[1]
         dx = self.orientation[0] * w
         dy = self.orientation[1] * h
-        if self.is_lu_coords() and dy: dy *= -1.0
+        if self.is_lu_coords() and dy:
+            dy *= -1.0
         if self.abs_pos.get_value():
             new_x = bbox[0] + dx
             new_y = bbox[1] + dy
@@ -174,12 +182,16 @@ class PositionTransform(AbstractTransform):
         else:
             trafo[4] = self.h_spin.get_point_value()
             trafo[5] = self.v_spin.get_point_value()
-            if self.is_lu_coords() and trafo[5]: trafo[5] *= -1.0
+            if self.is_lu_coords() and trafo[5]:
+                trafo[5] *= -1.0
         return trafo
 
 
 class ResizeTransform(AbstractTransform):
     name = _('Resizing')
+    h_spin = None
+    v_spin = None
+    proportion = None
 
     def build(self):
         grid = wal.GridPanel(self, 2, 3, 2, 2)
@@ -227,8 +239,10 @@ class ResizeTransform(AbstractTransform):
         self.update()
 
     def update(self):
-        if not self.app.insp.is_selection(): return
-        if self.user_changes: return
+        if not self.app.insp.is_selection():
+            return
+        if self.user_changes:
+            return
         w, h = self.get_selection_size()
         self.h_spin.set_point_value(w)
         self.v_spin.set_point_value(h)
@@ -255,6 +269,11 @@ class ScaleTransform(AbstractTransform):
     name = _('Scale and mirror')
     v_scale = 100.0
     h_scale = 100.0
+    h_spin = None
+    h_mirror = None
+    v_spin = None
+    v_mirror = None
+    proportion = None
 
     def build(self):
         grid = wal.GridPanel(self, 2, 5, 2, 2)
@@ -314,8 +333,10 @@ class ScaleTransform(AbstractTransform):
         self.update()
 
     def update(self):
-        if not self.app.insp.is_selection(): return
-        if self.user_changes: return
+        if not self.app.insp.is_selection():
+            return
+        if self.user_changes:
+            return
         self.h_spin.set_value(100.0)
         self.v_spin.set_value(100.0)
         self.v_scale = self.h_scale = 100.0
@@ -327,8 +348,10 @@ class ScaleTransform(AbstractTransform):
         trafo[0] = self.h_spin.get_value() / 100.0
         trafo[3] = self.v_spin.get_value() / 100.0
 
-        if self.h_mirror.get_value(): trafo[0] *= -1.0
-        if self.v_mirror.get_value(): trafo[3] *= -1.0
+        if self.h_mirror.get_value():
+            trafo[0] *= -1.0
+        if self.v_mirror.get_value():
+            trafo[3] *= -1.0
 
         bp = [bbox[0] + w * (1.0 + self.orientation[0]) / 2.0,
               bbox[1] + h * (1.0 + self.orientation[1]) / 2.0]
@@ -341,6 +364,10 @@ class ScaleTransform(AbstractTransform):
 
 class RotateTransform(AbstractTransform):
     name = _('Rotation')
+    angle = None
+    h_spin = None
+    v_spin = None
+    center = None
 
     def build(self):
         grid = wal.GridPanel(self, 1, 3, 2, 2)
@@ -379,7 +406,8 @@ class RotateTransform(AbstractTransform):
         if self.center.get_value():
             state = True
             self.user_changes = True
-            if self.callback: self.callback()
+            if self.callback:
+                self.callback()
         self.v_spin.set_enable(state)
         self.h_spin.set_enable(state)
 
@@ -392,8 +420,10 @@ class RotateTransform(AbstractTransform):
         AbstractTransform.set_enable(self, state)
 
     def update(self):
-        if not self.app.insp.is_selection(): return
-        if self.user_changes: return
+        if not self.app.insp.is_selection():
+            return
+        if self.user_changes:
+            return
         bbox = self.get_selection_bbox()
         w, h = self.get_selection_size()
         bp = self.doc_to_coords(
@@ -410,13 +440,15 @@ class RotateTransform(AbstractTransform):
         m21 = math.sin(angle)
         m11 = m22 = math.cos(angle)
         m12 = -m21
-        dx = center_x - m11 * center_x + m21 * center_y;
-        dy = center_y - m21 * center_x - m11 * center_y;
+        dx = center_x - m11 * center_x + m21 * center_y
+        dy = center_y - m21 * center_x - m11 * center_y
         return [m11, m21, m12, m22, dx, dy]
 
 
 class ShearTransform(AbstractTransform):
     name = _('Shearing')
+    h_shear = None
+    v_shear = None
 
     def build(self):
         grid = wal.GridPanel(self, 3, 3, 2, 2)
