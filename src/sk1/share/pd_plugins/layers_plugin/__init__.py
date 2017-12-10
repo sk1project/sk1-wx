@@ -16,8 +16,8 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import wal
 
+import wal
 from sk1 import _, events
 from sk1.app_plugins import RS_Plugin
 from sk1.dialogs import edit_dlg
@@ -46,12 +46,20 @@ ACTIONS = [
 ]
 
 
-class Layers_Plugin(RS_Plugin):
+class LayersPlugin(RS_Plugin):
     pid = 'LayersPlugin'
     name = _('Layers')
     active_panel = None
     panels = {}
     select_idx = None
+    layer_new = None
+    layer_to_bottom = None
+    layer_lower = None
+    layer_raise = None
+    layer_to_top = None
+    layer_delete = None
+    layer_edit = None
+    viewer = None
 
     def build_ui(self):
         self.icon = get_icon(PLUGIN_ICON)
@@ -90,8 +98,7 @@ class Layers_Plugin(RS_Plugin):
         pnl.pack(self.layer_edit)
         self.panel.pack(pnl)
 
-        bmp = []
-        for item in BITMAPS: bmp.append(make_artid(item))
+        bmp = [make_artid(item) for item in BITMAPS]
         pnl = wal.VPanel(self.panel, border=True)
         self.viewer = wal.LayerList(pnl, self.get_data(), bmp,
                                     on_select=self.update,
@@ -106,7 +113,8 @@ class Layers_Plugin(RS_Plugin):
 
     def get_data(self):
         doc = self.app.current_doc
-        if not doc: return []
+        if not doc:
+            return []
         result = []
         for layer in doc.get_layers():
             props = []
@@ -154,10 +162,11 @@ class Layers_Plugin(RS_Plugin):
                 flag = False
                 for item in layers:
                     if item.properties[0] and item.properties[1] and not \
-                                    layer == item:
+                            layer == item:
                         doc.api.set_active_layer(item)
                         flag = True
-                if not flag: return
+                if not flag:
+                    return
             props = [] + layer.properties
             props[col - 1] = abs(props[col - 1] - 1)
             doc.api.set_layer_properties(layer, props)
@@ -199,29 +208,29 @@ class Layers_Plugin(RS_Plugin):
     def rename_layer(self):
         layer = self.get_selected_layer()
         txt = edit_dlg(self.app.mw, _('Rename layer'), layer.name)
-        if not txt is None and not layer.name == txt:
+        if txt is not None and not layer.name == txt:
             self.app.current_doc.api.set_layer_name(layer, txt)
 
     def update(self, *args):
         doc = self.app.current_doc
-        if not doc: return
-        layers = doc.get_layers()
-        lnums = len(layers)
-        self.viewer.update(self.get_data())
-        sel_idx = self.viewer.get_selected()
-        if sel_idx is None:
-            self.viewer.set_selected(0)
-            sel_idx = 0
-        sel_layer = self.get_selected_layer()
-        self.layer_to_bottom.set_enable(sel_idx < lnums - 1)
-        self.layer_lower.set_enable(sel_idx < lnums - 1)
-        self.layer_raise.set_enable(sel_idx > 0)
-        self.layer_to_top.set_enable(sel_idx > 0)
-        self.layer_delete.set_enable(not sel_layer == doc.active_layer)
+        if doc:
+            layers = doc.get_layers()
+            lnums = len(layers)
+            self.viewer.update(self.get_data())
+            sel_idx = self.viewer.get_selected()
+            if sel_idx is None:
+                self.viewer.set_selected(0)
+                sel_idx = 0
+            sel_layer = self.get_selected_layer()
+            self.layer_to_bottom.set_enable(sel_idx < lnums - 1)
+            self.layer_lower.set_enable(sel_idx < lnums - 1)
+            self.layer_raise.set_enable(sel_idx > 0)
+            self.layer_to_top.set_enable(sel_idx > 0)
+            self.layer_delete.set_enable(not sel_layer == doc.active_layer)
 
     def show_signal(self, *args):
         self.update()
 
 
 def get_plugin(app):
-    return Layers_Plugin(app)
+    return LayersPlugin(app)
