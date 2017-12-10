@@ -33,7 +33,7 @@ def make_artid(name):
 
 
 def get_plugin(app):
-    return Align_Plugin(app)
+    return AlignPlugin(app)
 
 
 PLUGIN_ICON = make_artid('icon')
@@ -93,11 +93,13 @@ V_ALIGN_MODE_NAMES = {
 }
 
 
-class Align_Plugin(RS_Plugin):
+class AlignPlugin(RS_Plugin):
     pid = 'AlignPlugin'
     name = _('Align and Distribute')
     active_transform = None
     transforms = {}
+    apanel = None
+    dpanel = None
 
     def build_ui(self):
         self.icon = get_icon(PLUGIN_ICON)
@@ -162,7 +164,7 @@ class AlignPanel(wal.LabeledPanel):
 
     def get_selection_size(self):
         bbox = self.get_selection_bbox()
-        return (bbox[2] - bbox[0], bbox[3] - bbox[1])
+        return bbox[2] - bbox[0], bbox[3] - bbox[1]
 
     def update(self, *args):
         self.source.set_enable(False)
@@ -170,12 +172,15 @@ class AlignPanel(wal.LabeledPanel):
         self.valign.set_enable(False)
         self.group.set_enable(False)
         self.apply_btn.set_enable(False)
-        if not self.app.insp.is_selection(): return
+        if not self.app.insp.is_selection():
+            return
         self.source.set_enable(True)
         if self.source.get_active():
             self.group.set_value(False, False)
-            if self.get_sel_count() < 2: return
-            if self.get_sel_count() == 2 and self.group.get_value(): return
+            if self.get_sel_count() < 2:
+                return
+            if self.get_sel_count() == 2 and self.group.get_value():
+                return
         self.halign.set_enable(True)
         self.valign.set_enable(True)
         if self.get_sel_count() > 1 and not self.source.get_active():
@@ -221,6 +226,8 @@ class AlignPanel(wal.LabeledPanel):
 
     def action(self):
         doc = self.app.current_doc
+        sel_objs = []
+        source_bbox = []
         if self.source.get_active() == SOURCE_PAGE:
             pw, ph = doc.get_page_size()
             source_bbox = [-pw / 2.0, -ph / 2.0, pw / 2.0, ph / 2.0]
@@ -229,25 +236,25 @@ class AlignPanel(wal.LabeledPanel):
                 doc.api.transform_selected(trafo)
                 return
             else:
-                sel_objs = [] + doc.selection.objs
+                sel_objs += doc.selection.objs
         elif self.source.get_active() == SOURCE_SEL:
             source_bbox = self.get_selection_bbox()
-            sel_objs = [] + doc.selection.objs
+            sel_objs += doc.selection.objs
         elif self.source.get_active() == SOURCE_FIRST:
-            source_bbox = [] + doc.selection.objs[0].cache_bbox
+            source_bbox += doc.selection.objs[0].cache_bbox
             sel_objs = self.app.current_doc.selection.objs[1:]
         elif self.source.get_active() == SOURCE_LAST:
-            source_bbox = [] + doc.selection.objs[-1].cache_bbox
+            source_bbox += doc.selection.objs[-1].cache_bbox
             sel_objs = self.app.current_doc.selection.objs[:-1]
         elif self.source.get_active() == SOURCE_SMALLEST:
-            sel_objs = [] + doc.selection.objs
+            sel_objs += doc.selection.objs
             smallest = self.get_smallest_obj(sel_objs)
-            source_bbox = [] + smallest.cache_bbox
+            source_bbox += smallest.cache_bbox
             sel_objs.remove(smallest)
         elif self.source.get_active() == SOURCE_BIGGEST:
-            sel_objs = [] + doc.selection.objs
+            sel_objs += doc.selection.objs
             biggest = self.get_biggest_obj(sel_objs)
-            source_bbox = [] + biggest.cache_bbox
+            source_bbox += biggest.cache_bbox
             sel_objs.remove(biggest)
 
         obj_trafo_list = []
@@ -335,8 +342,10 @@ class DistributePanel(wal.LabeledPanel):
         self.hdistrib.set_enable(False)
         self.vdistrib.set_enable(False)
         self.apply_btn.set_enable(False)
-        if not self.app.insp.is_selection(): return
-        if len(self.app.current_doc.selection.objs) < 3: return
+        if not self.app.insp.is_selection():
+            return
+        if len(self.app.current_doc.selection.objs) < 3:
+            return
         self.hdistrib.set_enable(True)
         self.vdistrib.set_enable(True)
         if not self.hdistrib.get_mode() is None or \
