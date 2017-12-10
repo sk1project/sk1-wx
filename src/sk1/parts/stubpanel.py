@@ -53,8 +53,8 @@ class AppStubPanel(wx.Panel):
         events.connect(events.HISTORY_CHANGED, self.check_history)
         events.connect(events.CONFIG_MODIFIED, self.update)
 
-    def update(self, attr, val):
-        if attr == 'show_stub_buttons':
+    def update(self, *args):
+        if args[0] == 'show_stub_buttons':
             self.refresh()
 
     def check_history(self, *args):
