@@ -33,7 +33,7 @@ def make_artid(name):
 
 
 def get_plugin(app):
-    return TP_Plugin(app)
+    return TextOnPathPlugin(app)
 
 
 PLUGIN_ICON = make_artid('icon')
@@ -70,11 +70,17 @@ TEXT_ALIGN_PICS_OTHERSIDE = {
 }
 
 
-class TP_Plugin(RS_Plugin):
+class TextOnPathPlugin(RS_Plugin):
     pid = 'TextOnPathPlugin'
     name = _('Text on Path')
     active_transform = None
     transforms = {}
+    base_point = None
+    align_keeper = None
+    pic_panel = None
+    bmp = None
+    other_side = None
+    apply_btn = None
 
     def build_ui(self):
         self.icon = get_icon(PLUGIN_ICON)
@@ -99,8 +105,7 @@ class TP_Plugin(RS_Plugin):
         self.align_keeper.set_mode(TEXT_ALIGNS[1])
 
         border = wal.VPanel(panel)
-        color = wal.GRAY
-        if wal.IS_GTK: color = wal.UI_COLORS['pressed_border']
+        color = wal.UI_COLORS['pressed_border'] if wal.IS_GTK else wal.GRAY
         border.set_bg(color)
         self.pic_panel = wal.VPanel(border)
         self.pic_panel.set_bg(wal.WHITE)
@@ -137,7 +142,8 @@ class TP_Plugin(RS_Plugin):
         self.other_side.set_enable(state)
 
     def is_path(self, obj):
-        if obj.is_curve() and not len(obj.paths) == 1: return False
+        if obj.is_curve() and not len(obj.paths) == 1:
+            return False
         return obj.is_primitive() and not obj.is_text() and not obj.is_pixmap()
 
     def check_selection(self):
@@ -172,13 +178,15 @@ class TP_Plugin(RS_Plugin):
             self.update_bmp()
 
     def update(self, *args):
-        if not self.is_shown(): return
-        state = False
-        if self.app.insp.is_selection():
-            ret = self.check_selection()
-            if ret: state = True
-            if ret == 1: self.update_from_tpgroup()
-        self.set_state(state)
+        if self.is_shown():
+            state = False
+            if self.app.insp.is_selection():
+                ret = self.check_selection()
+                if ret:
+                    state = True
+                if ret == 1:
+                    self.update_from_tpgroup()
+            self.set_state(state)
 
     def get_data(self):
         return (self.base_point.get_value() / 100.0,
