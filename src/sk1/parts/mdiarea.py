@@ -99,8 +99,8 @@ class MDIArea(wal.VPanel):
         self.layout()
         events.connect(events.CONFIG_MODIFIED, self.config_update)
 
-    def config_update(self, attr, value):
-        if attr == 'palette_orientation':
+    def config_update(self, *args):
+        if args[0] == 'palette_orientation':
             self.change_palette()
 
     def change_palette(self):
