@@ -99,7 +99,7 @@ class TabsBgPanel(HPanel):
         pdc = wx.PaintDC(self.panel)
         try:
             dc = wx.GCDC(pdc)
-        except:
+        except Exception:
             dc = pdc
         dc.BeginDrawing()
 
@@ -183,7 +183,7 @@ class TabScroller(HPanel):
         pdc = wx.PaintDC(self.panel)
         try:
             dc = wx.GCDC(pdc)
-        except:
+        except Exception:
             dc = pdc
         dc.BeginDrawing()
 
@@ -287,7 +287,7 @@ class DocTabs(HPanel):
         pdc = wx.PaintDC(self.panel)
         try:
             dc = wx.GCDC(pdc)
-        except:
+        except Exception:
             dc = pdc
         dc.BeginDrawing()
 
@@ -434,7 +434,7 @@ class DocTab(HPanel):
         pdc = wx.PaintDC(self.panel)
         try:
             dc = wx.GCDC(pdc)
-        except:
+        except Exception:
             dc = pdc
         pdc.BeginDrawing()
         dc.BeginDrawing()
