@@ -31,7 +31,7 @@ from sk1.app_insp import AppInspector
 from sk1.app_palettes import AppPaletteManager
 from sk1.app_proxy import AppProxy
 from sk1.clipboard import AppClipboard
-from sk1.document import PD_Presenter
+from sk1.document import SK1Presenter
 from sk1.parts.artprovider import create_artprovider
 from sk1.parts.mw import AppMainWindow
 from sk1.pwidgets import generate_fcache
@@ -183,7 +183,7 @@ class SK1Application(wal.Application, UCApplication):
         events.emit(events.APP_STATUS, _('Document is changed'))
 
     def new(self):
-        doc = PD_Presenter(self)
+        doc = SK1Presenter(self)
         self.docs.append(doc)
         self.set_current_doc(doc)
         events.emit(events.APP_STATUS, _('New document created'))
@@ -193,7 +193,7 @@ class SK1Application(wal.Application, UCApplication):
         doc_file = dialogs.get_open_file_name(self.mw, config.template_dir, msg)
         if os.path.lexists(doc_file) and os.path.isfile(doc_file):
             try:
-                doc = PD_Presenter(self, doc_file, template=True)
+                doc = SK1Presenter(self, doc_file, template=True)
             except:
                 msg = _('Cannot parse file:')
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
@@ -211,7 +211,7 @@ class SK1Application(wal.Application, UCApplication):
             doc_file = dialogs.get_open_file_name(self.mw, config.open_dir)
         if os.path.lexists(doc_file) and os.path.isfile(doc_file):
             try:
-                doc = PD_Presenter(self, doc_file, silent)
+                doc = SK1Presenter(self, doc_file, silent)
 
             except RuntimeError:
                 msg = _('Cannot open file:')

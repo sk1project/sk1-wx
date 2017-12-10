@@ -16,4 +16,4 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from docarea import DocArea
-from presenter import PD_Presenter
+from presenter import SK1Presenter

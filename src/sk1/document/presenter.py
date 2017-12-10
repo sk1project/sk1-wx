@@ -31,7 +31,7 @@ from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2.utils.fs import change_file_extension
 
 
-class PD_Presenter:
+class SK1Presenter:
     api = None
     doc_presenter = None
     doc_file = ''
