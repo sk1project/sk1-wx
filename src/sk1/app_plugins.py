@@ -50,12 +50,12 @@ def scan_plugins(app):
                     plg_mod = getattr(pkg, item)
                     pobj = plg_mod.get_plugin(app)
                     ret[pobj.pid] = pobj
-                except:
+                except Exception:
                     print 'Error while importing ' + item + ' plugin'
     return ret
 
 
-class RS_Plugin:
+class RsPlugin:
     pid = 'plugin'
     name = _('plugin')
     activated = False

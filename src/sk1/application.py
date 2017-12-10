@@ -113,7 +113,7 @@ class SK1Application(wal.Application, UCApplication):
             for item in config.active_plugins:
                 try:
                     self.mw.mdi.plg_area.show_plugin(item)
-                except:
+                except Exception:
                     pass
 
     def call_after(self, *args):
@@ -194,7 +194,7 @@ class SK1Application(wal.Application, UCApplication):
         if os.path.lexists(doc_file) and os.path.isfile(doc_file):
             try:
                 doc = SK1Presenter(self, doc_file, template=True)
-            except:
+            except Exception:
                 msg = _('Cannot parse file:')
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
                 msg += _('The file may be corrupted or not supported format')
@@ -222,7 +222,7 @@ class SK1Application(wal.Application, UCApplication):
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
                 self.print_stacktrace()
                 return
-            except:
+            except Exception:
                 msg = _('Cannot open file:')
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
                 msg += _('The file may be corrupted or not supported format')
@@ -251,7 +251,7 @@ class SK1Application(wal.Application, UCApplication):
             doc.save()
             self.history.add_entry(self.current_doc.doc_file, appconst.SAVED)
             events.emit(events.DOC_SAVED, doc)
-        except:
+        except Exception:
             msg = _('Cannot save file:')
             msg = "%s\n'%s'" % (msg, self.current_doc.doc_file) + '\n'
             msg += _('Please check file write permissions')
@@ -280,7 +280,7 @@ class SK1Application(wal.Application, UCApplication):
             try:
                 self.make_backup(doc_file)
                 self.current_doc.save()
-            except:
+            except Exception:
                 self.current_doc.set_doc_file(old_file, old_name)
                 first = _('Cannot save document:')
                 msg = "%s\n'%s'." % (first, self.current_doc.doc_name) + '\n'
@@ -315,7 +315,7 @@ class SK1Application(wal.Application, UCApplication):
                 self.make_backup(doc_file)
                 self.current_doc.save_selected(doc_file)
                 self.history.add_entry(doc_file, appconst.SAVED)
-            except:
+            except Exception:
                 first = _('Cannot save document:')
                 msg = "%s\n'%s'." % (first, doc_file) + '\n'
                 msg += _('Please check requested file format '
@@ -383,7 +383,7 @@ class SK1Application(wal.Application, UCApplication):
                              'contains unsupported objects.')
                     dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
                 config.import_dir = str(os.path.dirname(doc_file))
-            except:
+            except Exception:
                 msg = _('Cannot import file:')
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
                 msg += _('The file may be corrupted or not supported format')
@@ -405,7 +405,7 @@ class SK1Application(wal.Application, UCApplication):
             try:
                 self.make_backup(doc_file, True)
                 self.current_doc.export_as(doc_file)
-            except:
+            except Exception:
                 first = _('Cannot save document:')
                 msg = "%s\n'%s'." % (first, self.current_doc.doc_name) + '\n'
                 msg += _('Please check file name and write permissions')
@@ -427,7 +427,7 @@ class SK1Application(wal.Application, UCApplication):
             try:
                 pixmap = self.current_doc.selection.objs[0]
                 libimg.extract_bitmap(pixmap, doc_file)
-            except:
+            except Exception:
                 first = _('Cannot save bitmap:')
                 msg = "%s\n'%s'." % (first, doc_file) + '\n'
                 msg += _('Please check file name and write permissions')
@@ -516,7 +516,7 @@ class SK1Application(wal.Application, UCApplication):
                     msg = _('Palette is successfully imported')
                     events.emit(events.APP_STATUS, msg)
                     return palette.model.name
-            except:
+            except Exception:
                 msg = _('Cannot import file:')
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
                 msg += _('The file may be corrupted or not supported format')
@@ -539,7 +539,7 @@ class SK1Application(wal.Application, UCApplication):
                 fobj = open(img_file, 'wb')
                 fobj.write(b64decode(pattern))
                 fobj.close()
-            except:
+            except Exception:
                 first = _('Cannot save pattern from:')
                 msg = "%s\n'%s'." % (first, self.current_doc.doc_name) + '\n'
                 msg += _('Please check file name and write permissions')
@@ -566,7 +566,7 @@ class SK1Application(wal.Application, UCApplication):
                 else:
                     dialogs.error_dialog(parent, self.appdata.app_name, msg)
                     self.print_stacktrace()
-            except:
+            except Exception:
                 dialogs.error_dialog(parent, self.appdata.app_name, msg)
                 self.print_stacktrace()
 

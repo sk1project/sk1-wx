@@ -21,7 +21,7 @@ import os
 
 import wal
 from sk1 import _, events
-from sk1.app_plugins import RS_Plugin
+from sk1.app_plugins import RsPlugin
 from sk1.resources import get_icon
 
 PLG_DIR = __path__[0]
@@ -124,7 +124,7 @@ class PositionSwitch(wal.Bitmap):
         self.set_mode(mode)
 
 
-class TextOnCirclePlugin(RS_Plugin):
+class TextOnCirclePlugin(RsPlugin):
     pid = 'TextOnCirclePlugin'
     name = _('Text on Circle')
     active_transform = None

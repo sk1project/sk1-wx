@@ -17,11 +17,11 @@
 
 
 import os
-import wal
 
+import wal
 from indicator import OrientationIndicator, OriginIndicator
 from sk1 import _, events
-from sk1.app_plugins import RS_Plugin
+from sk1.app_plugins import RsPlugin
 from sk1.resources import get_icon, icons
 from transforms import PositionTransform, ResizeTransform, ScaleTransform, \
     RotateTransform, ShearTransform
@@ -66,14 +66,19 @@ TRANSFORM_CLASSES = [PositionTransform, ResizeTransform, ScaleTransform,
 
 
 def get_plugin(app):
-    return Transform_Plugin(app)
+    return TransformPlugin(app)
 
 
-class Transform_Plugin(RS_Plugin):
+class TransformPlugin(RsPlugin):
     pid = 'TransformPlugin'
     name = _('Transformations')
     active_transform = None
     transforms = {}
+    transform_keeper = None
+    transform_panel = None
+    oi = None
+    apply_copy_btn = None
+    apply_btn = None
 
     def build_ui(self):
         self.icon = get_icon(PLUGIN_ICON)
@@ -147,7 +152,8 @@ class Transform_Plugin(RS_Plugin):
 
     def update(self, *args):
         state = False
-        if self.app.insp.is_selection(): state = True
+        if self.app.insp.is_selection():
+            state = True
         self.apply_btn.set_enable(state)
         self.apply_copy_btn.set_enable(state)
         self.oi.set_enable(state)

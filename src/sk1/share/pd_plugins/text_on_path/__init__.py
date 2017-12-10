@@ -20,7 +20,7 @@ import os
 
 import wal
 from sk1 import _, events
-from sk1.app_plugins import RS_Plugin
+from sk1.app_plugins import RsPlugin
 from sk1.resources import get_icon, icons, get_bmp
 from uc2 import sk2const
 
@@ -70,7 +70,7 @@ TEXT_ALIGN_PICS_OTHERSIDE = {
 }
 
 
-class TextOnPathPlugin(RS_Plugin):
+class TextOnPathPlugin(RsPlugin):
     pid = 'TextOnPathPlugin'
     name = _('Text on Path')
     active_transform = None
@@ -81,6 +81,7 @@ class TextOnPathPlugin(RS_Plugin):
     bmp = None
     other_side = None
     apply_btn = None
+    icon = None
 
     def build_ui(self):
         self.icon = get_icon(PLUGIN_ICON)

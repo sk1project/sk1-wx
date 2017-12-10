@@ -66,13 +66,13 @@ class AppPaletteManager(PaletteManager):
             try:
                 self.palettes[item] = loader(self.app.appdata, filepath, False,
                                              False, True)
-            except:
+            except Exception:
                 if os.path.isfile(filepath):
                     os.remove(filepath)
                 del config.palette_files[item]
 
-    def update(self, attr, val):
-        if attr == 'palette':
+    def update(self, *args):
+        if args[0] == 'palette':
             self.set_palette(config.palette)
 
     def get_default_palette_name(self):

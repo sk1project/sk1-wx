@@ -527,7 +527,7 @@ class AppProxy:
                     pths = stroke_to_curve(pths, obj.style[1])
                     objs.append(doc.api.create_curve(pths, style))
             selection.set(objs)
-        except:
+        except Exception:
             doc.canvas.set_mode()
             msg = _('Error occurred during this operation.')
             msg += '\n' + _(

@@ -22,7 +22,7 @@ from cStringIO import StringIO
 
 import wal
 from sk1 import _, events, config, dialogs
-from sk1.app_plugins import RS_Plugin
+from sk1.app_plugins import RsPlugin
 from sk1.pwidgets import CBMiniPalette
 from sk1.resources import get_icon
 from uc2 import cms, libgeom, uc2const
@@ -151,7 +151,7 @@ class ImageViewer(wal.HPanel):
         self.canvas.refresh()
 
 
-class IconizerPlugin(RS_Plugin):
+class IconizerPlugin(RsPlugin):
     pid = 'IconizerPlugin'
     name = _('Iconizer')
     active_transform = None

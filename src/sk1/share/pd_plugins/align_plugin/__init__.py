@@ -20,7 +20,7 @@ import os
 
 import wal
 from sk1 import _, events
-from sk1.app_plugins import RS_Plugin
+from sk1.app_plugins import RsPlugin
 from sk1.resources import get_icon
 from uc2 import sk2const
 
@@ -93,7 +93,7 @@ V_ALIGN_MODE_NAMES = {
 }
 
 
-class AlignPlugin(RS_Plugin):
+class AlignPlugin(RsPlugin):
     pid = 'AlignPlugin'
     name = _('Align and Distribute')
     active_transform = None

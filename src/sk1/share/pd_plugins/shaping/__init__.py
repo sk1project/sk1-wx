@@ -21,7 +21,7 @@ from copy import deepcopy
 
 import wal
 from sk1 import _, events, modes
-from sk1.app_plugins import RS_Plugin
+from sk1.app_plugins import RsPlugin
 from sk1.dialogs import msg_dialog, yesno_dialog, error_dialog
 from sk1.resources import icons, get_icon, get_bmp
 from uc2.libgeom import apply_trafo_to_paths
@@ -252,7 +252,7 @@ SHAPING_CLASSES = {
 }
 
 
-class ShapingPlugin(RS_Plugin):
+class ShapingPlugin(RsPlugin):
     pid = 'ShapingPlugin'
     name = _('Shaping')
     active_panel = None

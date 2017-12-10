@@ -19,7 +19,7 @@ import os
 
 import wal
 from sk1 import _, events
-from sk1.app_plugins import RS_Plugin
+from sk1.app_plugins import RsPlugin
 from sk1.dialogs import edit_dlg
 from sk1.resources import icons, get_icon
 
@@ -46,7 +46,7 @@ ACTIONS = [
 ]
 
 
-class LayersPlugin(RS_Plugin):
+class LayersPlugin(RsPlugin):
     pid = 'LayersPlugin'
     name = _('Layers')
     active_panel = None
