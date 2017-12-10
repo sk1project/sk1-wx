@@ -60,7 +60,7 @@ class TabsBgPanel(wal.VPanel):
         pdc = wx.PaintDC(self.panel)
         try:
             dc = wx.GCDC(pdc)
-        except:
+        except Exception:
             dc = pdc
         dc.BeginDrawing()
 
@@ -133,7 +133,7 @@ class PlgTabs(wal.VPanel):
         pdc = wx.PaintDC(self.panel)
         try:
             dc = wx.GCDC(pdc)
-        except:
+        except Exception:
             dc = pdc
         dc.BeginDrawing()
 
@@ -278,7 +278,7 @@ class PlgTab(wal.VPanel):
         pdc = wx.PaintDC(self.panel)
         try:
             dc = wx.GCDC(pdc)
-        except:
+        except Exception:
             dc = pdc
         pdc.BeginDrawing()
         dc.BeginDrawing()
