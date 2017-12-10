@@ -78,13 +78,13 @@ class RulerCorner(wal.HPanel):
         events.connect(events.CONFIG_MODIFIED, self.check_config)
         self.changes()
 
-    def check_config(self, attr, value):
-        if attr == 'ruler_size':
-            size = config.ruler_size
-            self.remove_all()
-            self.add((size, size))
-            self.parent.layout()
-        if attr[:6] == 'ruler_':
+    def check_config(self, *args):
+        if args[0].startswith('ruler_'):
+            if args[0] == 'ruler_size':
+                size = config.ruler_size
+                self.remove_all()
+                self.add((size, size))
+                self.parent.layout()
             self.refresh()
 
     def changes(self, *args):
@@ -173,17 +173,16 @@ class Ruler(wal.HPanel):
             self.Bind(wx.EVT_TIMER, self._repaint_after)
             self.timer.Start(50)
 
-    def check_config(self, attr, value):
-        if not attr[:6] == 'ruler_':
-            return
-        if attr == 'ruler_size':
-            size = config.ruler_size
-            self.remove_all()
-            self.add((size, size))
-            self.parent.layout()
-        if attr == 'ruler_font_size':
-            load_font()
-        self.repaint()
+    def check_config(self, *args):
+        if args[0].startswith('ruler_'):
+            if args[0] == 'ruler_size':
+                size = config.ruler_size
+                self.remove_all()
+                self.add((size, size))
+                self.parent.layout()
+            if args[0] == 'ruler_font_size':
+                load_font()
+            self.repaint()
 
     def _repaint_after(self, event):
         self.repaint()
