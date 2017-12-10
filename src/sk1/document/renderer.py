@@ -41,6 +41,7 @@ class PDRenderer(CairoRenderer):
     presenter = None
     doc_methods = None
     for_display = True
+    temp_surface = None
 
     frame = []
     snap = []
@@ -298,7 +299,7 @@ class PDRenderer(CairoRenderer):
             path = libcairo.convert_bbox_to_cpath(start + end)
             self._draw_frame(path)
 
-    def draw_gradient_vector(self, start, end, stops=[]):
+    def draw_gradient_vector(self, start, end, stops=None):
         self.ctx.set_matrix(self.direct_matrix)
         self.ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
         self.ctx.set_source_rgba(*config.gradient_vector_bg_color)
@@ -745,10 +746,7 @@ class PDRenderer(CairoRenderer):
         return [x_min, y_min, w, h]
 
     def cdc_to_int(self, *args):
-        ret = []
-        for arg in args:
-            ret.append(int(math.ceil(arg)))
-        return ret
+        return [int(math.ceil(arg)) for arg in args]
 
     def cdc_set_ctx(self, ctx, color=CAIRO_BLACK, dash=None):
         dash = dash or []
@@ -764,35 +762,34 @@ class PDRenderer(CairoRenderer):
         return [bbox[:2], bbox[2:]]
 
     def cdc_draw_vertical_line(self, x, color, dash, clear=False):
-        if x is None: return
-        x = self.cdc_to_int(x)[0]
-        surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, self.height)
-        ctx = cairo.Context(surface)
-        ctx.set_source_surface(self.temp_surface, -x + 1, 0)
-        ctx.paint()
-        if not clear:
-            self.cdc_set_ctx(ctx, color, dash)
-            ctx.move_to(1, 0)
-            ctx.line_to(1, self.height)
-            ctx.stroke()
-        dc = wx.ClientDC(self.canvas)
-        dc.DrawBitmap(copy_surface_to_bitmap(surface), x - 1, 0)
+        if x is not None:
+            x = self.cdc_to_int(x)[0]
+            surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, self.height)
+            ctx = cairo.Context(surface)
+            ctx.set_source_surface(self.temp_surface, -x + 1, 0)
+            ctx.paint()
+            if not clear:
+                self.cdc_set_ctx(ctx, color, dash)
+                ctx.move_to(1, 0)
+                ctx.line_to(1, self.height)
+                ctx.stroke()
+            dc = wx.ClientDC(self.canvas)
+            dc.DrawBitmap(copy_surface_to_bitmap(surface), x - 1, 0)
 
     def cdc_draw_horizontal_line(self, y, color, dash, clear=False):
-        if y is None:
-            return
-        y = self.cdc_to_int(y)[0]
-        surface = cairo.ImageSurface(cairo.FORMAT_RGB24, self.width, 1)
-        ctx = cairo.Context(surface)
-        ctx.set_source_surface(self.temp_surface, 0, -y + 1)
-        ctx.paint()
-        if not clear:
-            self.cdc_set_ctx(ctx, color, dash)
-            ctx.move_to(0, 1)
-            ctx.line_to(self.width, 1)
-            ctx.stroke()
-        dc = wx.ClientDC(self.canvas)
-        dc.DrawBitmap(copy_surface_to_bitmap(surface), 0, y - 1)
+        if y is not None:
+            y = self.cdc_to_int(y)[0]
+            surface = cairo.ImageSurface(cairo.FORMAT_RGB24, self.width, 1)
+            ctx = cairo.Context(surface)
+            ctx.set_source_surface(self.temp_surface, 0, -y + 1)
+            ctx.paint()
+            if not clear:
+                self.cdc_set_ctx(ctx, color, dash)
+                ctx.move_to(0, 1)
+                ctx.line_to(self.width, 1)
+                ctx.stroke()
+            dc = wx.ClientDC(self.canvas)
+            dc.DrawBitmap(copy_surface_to_bitmap(surface), 0, y - 1)
 
     def cdc_draw_snap_line(self, pos, vertical=True, clear=False):
         color = config.snap_line_color
