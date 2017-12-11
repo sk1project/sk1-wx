@@ -56,7 +56,7 @@ class SOC_Presenter(TextModelPresenter):
     def convert_from_skp(self, skp_doc):
         skp_model = skp_doc.model
         soc = self.model
-        soc.name = '' + skp_model.name.encode('utf-8')
+        soc.name = skp_model.name.encode('utf-8')
         soc.columns = skp_model.columns
         soc.comments = ''
         if skp_model.source:
@@ -75,9 +75,9 @@ class SOC_Presenter(TextModelPresenter):
             skp_model.name += ' palette'
         else:
             skp_model.name = 'SOC palette'
-        skp_model.source = '' + self.model.source
+        skp_model.source = self.model.source
         skp_model.columns = self.model.columns
-        skp_model.comments = '' + self.model.comments.decode('utf-8')
+        skp_model.comments = self.model.comments.decode('utf-8')
         if self.doc_file:
             filename = os.path.basename(self.doc_file)
             if skp_model.comments: skp_model.comments += 'n'

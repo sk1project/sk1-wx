@@ -76,19 +76,19 @@ class ScribusPalette_Presenter(TaggedModelPresenter):
                     obj.CMYK = cms.cmyk_to_hexcolor(item[1][1])
                 else:
                     obj.RGB = cms.rgb_to_hexcolor(item[1][0])
-                obj.NAME = '' + item[3].encode('utf-8')
+                obj.NAME = item[3].encode('utf-8')
                 if item[3] == COLOR_REG:
                     obj.Register = '1'
             elif item[0] == COLOR_CMYK:
                 obj.CMYK = cms.cmyk_to_hexcolor(item[1])
-                obj.NAME = '' + item[3].encode('utf-8')
+                obj.NAME = item[3].encode('utf-8')
             elif item[0] == COLOR_RGB:
                 obj.RGB = cms.rgb_to_hexcolor(item[1])
-                obj.NAME = '' + item[3].encode('utf-8')
+                obj.NAME = item[3].encode('utf-8')
             else:
                 clr = self.cms.get_rgb_color(item)
                 obj.RGB = cms.rgb_to_hexcolor(clr[1])
-                obj.NAME = '' + clr[3].encode('utf-8')
+                obj.NAME = clr[3].encode('utf-8')
             sp.childs.append(obj)
 
     def convert_to_skp(self, skp_doc):
@@ -103,16 +103,18 @@ class ScribusPalette_Presenter(TaggedModelPresenter):
         if self.doc_file:
             filename = os.path.basename(self.doc_file)
             skp.comments = 'Converted from %s' % filename
-        skp.source = '' + self.config.source
+        skp.source = self.config.source
         for item in self.model.childs:
             color = None
             if item.Register == '1':
                 color = cms.get_registration_black()
-            if item.Spot == '1':
+            elif item.Spot == '1':
                 rgb = []
                 cmyk = []
-                if item.RGB: rgb = cms.hexcolor_to_rgb(item.RGB)
-                if item.CMYK: cmyk = cms.hexcolor_to_cmyk(item.CMYK)
+                if item.RGB:
+                    rgb = cms.hexcolor_to_rgb(item.RGB)
+                if item.CMYK:
+                    cmyk = cms.hexcolor_to_cmyk(item.CMYK)
                 name = item.NAME.decode('utf-8')
                 color = [COLOR_SPOT, [rgb, cmyk], 1.0, name]
             elif item.CMYK:

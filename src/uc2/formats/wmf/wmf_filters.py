@@ -52,7 +52,7 @@ class WMF_Loader(AbstractBinaryLoader):
                 self.parent.childs.append(WMF_Record(chunk))
             except:
                 func = META_EOF
-                self.parent.childs.append(WMF_Record('' + EOF_RECORD))
+                self.parent.childs.append(WMF_Record(EOF_RECORD))
 
 
 class WMF_Saver(AbstractSaver):

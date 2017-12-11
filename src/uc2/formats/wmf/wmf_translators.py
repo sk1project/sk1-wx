@@ -85,7 +85,7 @@ class WMF_to_SK2_Translator(object):
             if val != checksum:
                 msg = 'Incorrect header checksum'
                 print msg
-                #events.emit(events.MESSAGES, msgconst.WARNING, msg)
+                # events.emit(events.MESSAGES, msgconst.WARNING, msg)
 
             header = self.wmf_mt.childs[0]
 
@@ -99,8 +99,8 @@ class WMF_to_SK2_Translator(object):
         self.wy = self.vy = top
 
         self.base_trafo = [self.coef, 0, 0, -self.coef,
-            - self.coef * self.vwidth / 2.0 - self.coef * self.vx,
-            self.coef * self.vheight / 2.0 + self.coef * self.vy]
+                           - self.coef * self.vwidth / 2.0 - self.coef * self.vx,
+                           self.coef * self.vheight / 2.0 + self.coef * self.vy]
         self.update_trafo()
 
         self.rec_funcs = {
@@ -152,7 +152,7 @@ class WMF_to_SK2_Translator(object):
         wt = [1.0, 0.0, 0.0, 1.0, -self.wx, -self.wy]
         vt = [1.0, 0.0, 0.0, 1.0, self.vx, self.vy]
         scale = [float(self.vwidth) / self.wwidth, 0.0, 0.0,
-            float(self.vheight) / self.wheight, 0.0, 0.0]
+                 float(self.vheight) / self.wheight, 0.0, 0.0]
         tr = multiply_trafo(multiply_trafo(wt, scale), vt)
         self.set_trafo(multiply_trafo(tr, self.base_trafo))
 
@@ -193,7 +193,7 @@ class WMF_to_SK2_Translator(object):
         self.dc.trafo = [] + trafo
 
     def get_encoding(self):
-        return '' + self.dc.font[-1]
+        return self.dc.font[-1]
 
     def get_text_style(self):
         sk2_style = [[], [], [], []]
@@ -210,7 +210,7 @@ class WMF_to_SK2_Translator(object):
             font_face = 'Normal'
 
         sk2_style[2] = [font[0], font_face, font[1],
-            self.dc.text_align, [], True]
+                        self.dc.text_align, [], True]
         tags = []
         if font[2]: tags.append('b')
         if font[3]: tags.append('i')
@@ -366,8 +366,8 @@ class WMF_to_SK2_Translator(object):
             stroke_miterlimit = 9.0
 
             stroke = [stroke_rule, stroke_width, color, dashes,
-                stroke_linecap, stroke_linejoin,
-                stroke_miterlimit, 0, 1, []]
+                      stroke_linecap, stroke_linejoin,
+                      stroke_miterlimit, 0, 1, []]
         self.add_gdiobject(('stroke', stroke))
 
     def tr_create_brush_in(self, chunk):
@@ -427,7 +427,7 @@ class WMF_to_SK2_Translator(object):
         ptrn_type = sk2const.PATTERN_TRUECOLOR
         if flag or bitsperpixel == 1: ptrn_type = sk2const.PATTERN_IMG
         ptrn_style = [deepcopy(sk2const.RGB_BLACK),
-            deepcopy(sk2const.RGB_WHITE)]
+                      deepcopy(sk2const.RGB_WHITE)]
         ptrn_trafo = [] + sk2const.NORMAL_TRAFO
         ptrn_transf = [] + sk2const.PATTERN_TRANSFORMS
 
@@ -452,7 +452,7 @@ class WMF_to_SK2_Translator(object):
         sk2_style = self.get_style()
         sk2_style[0] = []
         curve = sk2_model.Curve(cfg, self.layer, paths,
-            self.get_trafo(), sk2_style)
+                                self.get_trafo(), sk2_style)
         self.layer.childs.append(curve)
 
     def tr_ellipse(self, chunk):
@@ -468,7 +468,7 @@ class WMF_to_SK2_Translator(object):
 
     def tr_arc(self, chunk, arc_type=sk2const.ARC_ARC):
         ye, xe, ys, xs, bottom, right, top, left = get_data('<hhhhhhhh',
-            chunk)
+                                                            chunk)
         left, top = apply_trafo_to_point([left, top], self.get_trafo())
         right, bottom = apply_trafo_to_point([right, bottom], self.get_trafo())
         xs, ys = apply_trafo_to_point([xs, ys], self.get_trafo())
@@ -476,7 +476,7 @@ class WMF_to_SK2_Translator(object):
 
         if left != right and top != bottom:
             t = [(right - left) / 2, 0, 0, (bottom - top) / 2,
-                (right + left) / 2, (top + bottom) / 2]
+                 (right + left) / 2, (top + bottom) / 2]
             t = libgeom.invert_trafo(t)
             xs, ys = apply_trafo_to_point([xs, ys], t)
             xe, ye = apply_trafo_to_point([xe, ye], t)
@@ -490,7 +490,7 @@ class WMF_to_SK2_Translator(object):
         if arc_type == sk2const.ARC_ARC: sk2_style[0] = []
         rect = [left, top, right - left, bottom - top]
         ellipse = sk2_model.Circle(cfg, self.layer, rect, start_angle,
-            end_angle, arc_type, sk2_style)
+                                   end_angle, arc_type, sk2_style)
         self.layer.childs.append(ellipse)
 
     def tr_chord(self, chunk):
@@ -523,7 +523,7 @@ class WMF_to_SK2_Translator(object):
         sk2_style = self.get_style()
         rect = [left, top, right - left, bottom - top]
         rect = sk2_model.Rectangle(cfg, self.layer, rect,
-            style=sk2_style, corners=corners)
+                                   style=sk2_style, corners=corners)
         self.layer.childs.append(rect)
 
     def tr_polygon(self, chunk):
@@ -539,7 +539,7 @@ class WMF_to_SK2_Translator(object):
         cfg = self.layer.config
         sk2_style = self.get_style()
         curve = sk2_model.Curve(cfg, self.layer, paths,
-            self.get_trafo(), sk2_style)
+                                self.get_trafo(), sk2_style)
         self.layer.childs.append(curve)
 
     def tr_polypolygon(self, chunk):
@@ -563,7 +563,7 @@ class WMF_to_SK2_Translator(object):
         cfg = self.layer.config
         sk2_style = self.get_style()
         curve = sk2_model.Curve(cfg, self.layer, paths,
-            self.get_trafo(), sk2_style)
+                                self.get_trafo(), sk2_style)
         self.layer.childs.append(curve)
 
     def tr_polyline(self, chunk):
@@ -579,7 +579,7 @@ class WMF_to_SK2_Translator(object):
         sk2_style = self.get_style()
         sk2_style[0] = []
         curve = sk2_model.Curve(cfg, self.layer, paths,
-            self.get_trafo(), sk2_style)
+                                self.get_trafo(), sk2_style)
         self.layer.childs.append(curve)
 
     def tr_textout(self, chunk):
@@ -662,7 +662,7 @@ class WMF_to_SK2_Translator(object):
         style[0] = [sk2const.FILL_EVENODD, sk2const.FILL_SOLID, clr]
         rect = point + [3.0, 3.0]
         rect = sk2_model.Rectangle(self.layer.config, self.layer,
-            rect, style=style)
+                                   rect, style=style)
         self.layer.childs.append(rect)
 
     def tr_stretch_dib(self, chunk):
@@ -792,13 +792,11 @@ class SK2_to_WMF_Translator(object):
             self.translate_stroke(obj, paths)
 
     def translate_stroke(self, obj, paths):
-        
 
         for item in [] + self.latest_objs:
             self.delete_obj(item)
 
     def translate_fill(self, obj, paths):
-
 
         for item in [] + self.latest_objs:
             self.delete_obj(item)

@@ -131,7 +131,7 @@ def parse_svg_color(sclr, alpha=1.0, current_color=''):
     clr = deepcopy(svg_colors.SVG_COLORS['black'])
     clr[2] = alpha
     if sclr == 'currentColor' and current_color:
-        sclr = '' + current_color
+        sclr = current_color
     if sclr[0] == '#':
         if 'icc-color' in sclr:
             vals = sclr.split('icc-color(')[1].replace(')', '').split(',')

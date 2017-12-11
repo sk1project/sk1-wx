@@ -82,5 +82,5 @@ class CorelPalette_Presenter(TaggedModelPresenter):
         if self.doc_file:
             filename = os.path.basename(self.doc_file)
             skp.comments = 'Converted from %s' % filename
-        skp.source = '' + self.config.source
+        skp.source = self.config.source
         skp.colors = mtds.get_colors()

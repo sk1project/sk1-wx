@@ -19,12 +19,12 @@ import os
 from copy import deepcopy
 
 from uc2 import uc2const, cms
-from uc2.formats.generic import BinaryModelPresenter
+from uc2.formats.ase import ase_const
 from uc2.formats.ase.ase_config import ASE_Config
+from uc2.formats.ase.ase_filters import ASE_Loader, ASE_Saver
 from uc2.formats.ase.ase_model import ASE_Palette, ASE_Group, ASE_Group_End, \
     ASE_Color
-from uc2.formats.ase.ase_filters import ASE_Loader, ASE_Saver
-from uc2.formats.ase import ase_const
+from uc2.formats.generic import BinaryModelPresenter
 
 
 class ASE_Presenter(BinaryModelPresenter):
@@ -34,7 +34,8 @@ class ASE_Presenter(BinaryModelPresenter):
     doc_file = ''
     model = None
 
-    def __init__(self, appdata, cnf={}):
+    def __init__(self, appdata, cnf=None):
+        cnf = cnf or {}
         self.config = ASE_Config()
         config_file = os.path.join(appdata.app_config_dir, self.config.filename)
         self.config.load(config_file)
@@ -52,7 +53,7 @@ class ASE_Presenter(BinaryModelPresenter):
         ret = ''
         for child in self.model.childs:
             if child.identifier == ase_const.ASE_GROUP:
-                ret = '' + child.group_name
+                ret = child.group_name
                 break
         if not ret:
             ret = 'ASE palette'
@@ -60,7 +61,7 @@ class ASE_Presenter(BinaryModelPresenter):
 
     def convert_from_skp(self, skp_doc):
         skp_model = skp_doc.model
-        self.model.childs.append(ASE_Group('' + skp_model.name))
+        self.model.childs.append(ASE_Group(skp_model.name))
         for item in skp_model.colors:
             if item[0] == uc2const.COLOR_SPOT:
                 marker = ase_const.ASE_SPOT
@@ -82,7 +83,7 @@ class ASE_Presenter(BinaryModelPresenter):
                 cs = ase_const.CS_MATCH[item[0]]
                 vals = tuple(deepcopy(item[1]))
             if item[3]:
-                name = '' + item[3]
+                name = item[3]
             else:
                 name = cms.verbose_color(item)
             self.model.childs.append(ASE_Color(name, cs, vals, marker))
@@ -93,24 +94,26 @@ class ASE_Presenter(BinaryModelPresenter):
         if obj.color_marker == ase_const.ASE_SPOT:
             if obj.colorspace == ase_const.ASE_RGB:
                 vals = [list(obj.color_vals), []]
-                return [uc2const.COLOR_SPOT, vals, 1.0, '' + obj.color_name]
+                return [uc2const.COLOR_SPOT, vals, 1.0, obj.color_name]
             elif obj.colorspace == ase_const.ASE_CMYK:
                 vals = [[], list(obj.color_vals)]
-                return [uc2const.COLOR_SPOT, vals, 1.0, '' + obj.color_name]
+                return [uc2const.COLOR_SPOT, vals, 1.0, obj.color_name]
         cs = ase_const.CS_MATCH[obj.colorspace]
-        return [cs, list(obj.color_vals), 1.0, '' + obj.color_name]
+        return [cs, list(obj.color_vals), 1.0, obj.color_name]
 
     def convert_to_skp(self, skp_doc):
         skp_model = skp_doc.model
         skp_model.name = self.get_palette_name()
-        skp_model.source = '' + self.config.source
+        skp_model.source = self.config.source
         skp_model.comments = ''
         if self.doc_file:
             filename = os.path.basename(self.doc_file)
-            if skp_model.comments: skp_model.comments += 'n'
+            if skp_model.comments:
+                skp_model.comments += '\n'
             skp_model.comments += 'Converted from %s' % filename
 
         for child in self.model.childs:
             if child.identifier == ase_const.ASE_COLOR:
                 clr = self.convert_to_skcolor(child)
-                if clr: skp_model.colors.append(clr)
+                if clr:
+                    skp_model.colors.append(clr)

@@ -64,14 +64,12 @@ class SKP_Loader(AbstractLoader):
 
     def hexcolor(self, hexcolor, name=''):
         rgb = cms.hexcolor_to_rgb(hexcolor)
-        if not name:
-            name = '' + hexcolor
+        name = name or hexcolor
         self.model.colors.append([uc2const.COLOR_RGB, rgb, 1.0, name])
 
     def rgbcolor(self, r, g, b, name=''):
         rgb = cms.val_255_to_dec([r, g, b])
-        if not name:
-            name = cms.rgb_to_hexcolor(rgb)
+        name = name or cms.rgb_to_hexcolor(rgb)
         self.model.colors.append([uc2const.COLOR_RGB, rgb, 1.0, name])
 
     def palette_end(self):

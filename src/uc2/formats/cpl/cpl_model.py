@@ -430,7 +430,7 @@ class CPL12_Color(CPL7_Color):
         if color:
             self.colorspace, self.valbytes = cdr_utils.get_cdr_color(color)
             if color[3]:
-                self.name = '' + color[3]
+                self.name = color[3]
             else:
                 self.name = cms.verbose_color(color)
 

@@ -46,7 +46,7 @@ class CPL_Presenter(BinaryModelPresenter):
 
     def convert_from_skp(self, skp_doc):
         skp_model = skp_doc.model
-        name = '' + skp_model.name
+        name = skp_model.name
         self.model = CPL12_Palette(name)
         for color in skp_model.colors:
             self.model.childs.append(CPL12_Color(color))
@@ -54,8 +54,8 @@ class CPL_Presenter(BinaryModelPresenter):
 
     def convert_to_skp(self, skp_doc):
         skp_model = skp_doc.model
-        skp_model.name = '' + self.model.name
-        skp_model.source = '' + self.config.source
+        skp_model.name = self.model.name
+        skp_model.source = self.config.source
         if self.doc_file:
             filename = os.path.basename(self.doc_file)
             if skp_model.comments: skp_model.comments += 'n'

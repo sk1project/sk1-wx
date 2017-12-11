@@ -112,7 +112,7 @@ def get_sk2_style(sk1_style):
 def get_sk2_txt_style(source_text):
     sk1_style = source_text.properties
     sk2_style = get_sk2_style(sk1_style)
-    sk2_style[2] = ['' + sk1_style.font, '' + sk1_style.font_face,
+    sk2_style[2] = [sk1_style.font, sk1_style.font_face,
                     sk1_style.font_size,
                     SK2_TEXT_ALIGN[source_text.horiz_align], [], True]
     return sk2_style
@@ -194,7 +194,7 @@ class SK1_to_SK2_Translator(object):
         return dest_objs
 
     def translate_page(self, dest_parent, source_page):
-        name = '' + source_page.name
+        name = source_page.name
         fmt = get_sk2_page(source_page.format, source_page.size,
                            source_page.orientation)
         self.dx = -source_page.size[0] / 2.0
@@ -206,7 +206,7 @@ class SK1_to_SK2_Translator(object):
         return dest_page
 
     def translate_layer(self, dest_parent, source_layer):
-        name = '' + source_layer.name
+        name = source_layer.name
         props = get_sk2_layer_props(source_layer)
         dest_layer = sk2_model.Layer(dest_parent.config, dest_parent, name)
         color = get_sk2_color(source_layer.layer_color)
@@ -269,7 +269,7 @@ class SK1_to_SK2_Translator(object):
         return dest_curve
 
     def translate_text(self, dest_parent, source_text):
-        text = '' + source_text.text
+        text = source_text.text
         trafo = list(source_text.trafo)
         if len(source_text.trafo) == 2:
             trafo = [1.0, 0.0, 0.0, 1.0] + trafo
@@ -393,7 +393,7 @@ class SK2_to_SK1_Translator(object):
             if item.cid == sk2_model.PAGES:
                 layout = sk1mtds.get_layout_obj()
                 fmt, size, ornt = item.page_format
-                layout.format = '' + fmt
+                layout.format = fmt
                 layout.size = () + tuple(size)
                 layout.orientation = ornt
                 dx = size[0] / 2.0
@@ -452,7 +452,7 @@ class SK2_to_SK1_Translator(object):
         return dest_objs
 
     def translate_page(self, dest_parent, source_obj):
-        name = '' + source_obj.name
+        name = source_obj.name
         fmt, size, ornt = deepcopy(source_obj.page_format)
         self.dx = size[0] / 2.0
         self.dy = size[1] / 2.0
@@ -461,7 +461,7 @@ class SK2_to_SK1_Translator(object):
         return dest_page
 
     def translate_layer(self, dest_parent, source_obj):
-        name = '' + source_obj.name
+        name = source_obj.name
         visible, editable, printable = source_obj.properties[:-1]
         locked = abs(editable - 1)
         color = get_sk1_color(source_obj.style[1][2], self.sk2_doc.cms)

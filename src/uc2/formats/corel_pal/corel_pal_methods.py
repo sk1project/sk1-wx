@@ -17,11 +17,12 @@
 
 from copy import deepcopy
 
+from uc2.cms import verbose_color
+
 from uc2.formats.xml_.xml_model import XMLObject
-from uc2.utils import generate_guid
 from uc2.uc2const import COLOR_RGB, COLOR_CMYK, COLOR_SPOT, COLOR_GRAY, \
     COLOR_LAB
-from uc2.cms import verbose_color
+from uc2.utils import generate_guid
 
 CS_MATCH = {
     COLOR_RGB: 'RGB',
@@ -34,7 +35,7 @@ CS_MATCH = {
 
 def create_new_palette(config):
     model = XMLObject('palette')
-    model.attrs['name'] = '' + config.default_name
+    model.attrs['name'] = config.default_name
     model.attrs['guid'] = generate_guid()
     colors = XMLObject('colors')
     model.childs.append(colors)
@@ -69,7 +70,7 @@ class CorelPalette_Methods:
             if len(cs.childs) == 1 and cs.childs[0].attrs['cs'] == 'LAB':
                 encoding = self.config.encoding
                 vals = self.get_color_vals(cs.childs[0].attrs['tints'])
-                name = ('' + cs.attrs['name']).decode(encoding)
+                name = cs.attrs['name'].decode(encoding)
                 palette_name = self.get_palette_name().decode(encoding)
                 vals = [COLOR_LAB, vals, 1.0, name, palette_name]
             else:
@@ -126,9 +127,9 @@ class CorelPalette_Methods:
             return self.model.attrs['name']
         elif 'resid' in self.model.attrs.keys() \
                 and self.model.attrs['resid'] in self.localizations.keys():
-            return '' + self.localizations[self.model.attrs['resid']]
+            return self.localizations[self.model.attrs['resid']]
         else:
-            return '' + self.model.config.default_name
+            return self.model.config.default_name
 
     def set_palette_comments(self, comments):
         self.model.comments = comments
@@ -169,8 +170,8 @@ class CorelPalette_Methods:
         page = self.get_page_obj()
         clr = XMLObject('color')
         name = color[3].encode(self.config.encoding)
-        clr.attrs['cs'] = '' + name
-        clr.attrs['name'] = '' + name
+        clr.attrs['cs'] = name
+        clr.attrs['name'] = name
         clr.attrs['tints'] = '1'
         page.childs.append(clr)
 
@@ -179,7 +180,7 @@ class CorelPalette_Methods:
         cs = XMLObject('color')
         cs.attrs['fixedID'] = str(fixed_id)
         cs.attrs['version'] = '1500'
-        cs.attrs['name'] = '' + name
+        cs.attrs['name'] = name
         colorspaces.childs.append(cs)
 
         if color[1][1]:
@@ -200,15 +201,15 @@ class CorelPalette_Methods:
             vals = self.get_color_vals(color.attrs['tints'])
             name = ''
             if 'name' in color.attrs.keys():
-                name = '' + color.attrs['name']
+                name = color.attrs['name']
             elif 'resid' in color.attrs.keys():
-                name = '' + self.localizations[color.attrs['resid']]
+                name = self.localizations[color.attrs['resid']]
             return [cs, vals, 1.0, name]
         elif color.attrs['cs'] in self.colorspaces.keys():
             cs = COLOR_SPOT
             vals = deepcopy(self.colorspaces[color.attrs['cs']])
             if vals[0] == COLOR_LAB: return vals
-            name = ('' + color.attrs['cs']).decode(self.config.encoding)
+            name = color.attrs['cs'].decode(self.config.encoding)
             palette_name = self.get_palette_name().decode(self.config.encoding)
             return [cs, vals, 1.0, name, palette_name]
         else:

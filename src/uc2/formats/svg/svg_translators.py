@@ -162,7 +162,7 @@ class SVG_to_SK2_Translator(object):
             if svg_obj.attrs['color'] == 'inherit':
                 pass
             else:
-                self.current_color = '' + svg_obj.attrs['color']
+                self.current_color = svg_obj.attrs['color']
         if svg_obj.tag == 'linearGradient':
             if 'xlink:href' in svg_obj.attrs:
                 cid = svg_obj.attrs['xlink:href'][1:]
@@ -275,13 +275,13 @@ class SVG_to_SK2_Translator(object):
             if svg_obj.attrs['color'] == 'inherit':
                 pass
             else:
-                self.current_color = '' + svg_obj.attrs['color']
+                self.current_color = svg_obj.attrs['color']
         style = deepcopy(style_in)
         for item in svg_const.SVG_STYLE.keys():
             if item in svg_obj.attrs:
-                val = '' + svg_obj.attrs[item]
+                val = svg_obj.attrs[item]
                 if not val == 'inherit':
-                    style['' + item] = val
+                    style[item] = val
         if 'class' in svg_obj.attrs:
             class_names = svg_obj.attrs['class'].split(' ')
             for class_name in class_names:
@@ -292,7 +292,7 @@ class SVG_to_SK2_Translator(object):
                             op = float(class_[item]) * float(style_in[item])
                             style['opacity'] = str(op)
                         else:
-                            style['' + item] = '' + class_[item]
+                            style[item] = class_[item]
         if 'style' in svg_obj.attrs:
             stls = svg_obj.attrs['style'].split(';')
             for stl in stls:
@@ -412,7 +412,7 @@ class SVG_to_SK2_Translator(object):
             font_face = 'Regular'
             faces = libpango.get_fonts()[1][font_family]
             if not font_face in faces:
-                font_face = '' + faces[0]
+                font_face = faces[0]
 
             bold = italic = False
             if style['font-style'] in ('italic', 'oblique'):
@@ -1184,7 +1184,7 @@ class SK2_to_SVG_Translator(object):
         self.ident_level += 1
         self.translate_primitive(clippath, source_obj)
         self.ident_level = lvl
-        return '' + clippath.attrs['id']
+        return clippath.attrs['id']
 
     def translate_primitive(self, dest_parent, source_obj):
         curve = source_obj.to_curve()
@@ -1252,10 +1252,10 @@ class SK2_to_SVG_Translator(object):
                 vals.append(str(round(item * line_width, 4)))
             svg_style['stroke-dasharray'] = ', '.join(vals)
         # Stroke caps
-        caps = '' + SVG_LINE_CAP[obj.style[1][4]]
+        caps = SVG_LINE_CAP[obj.style[1][4]]
         if not caps == 'butt': svg_style['stroke-linecap'] = caps
         # Stroke join
-        join = '' + SVG_LINE_JOIN[obj.style[1][5]]
+        join = SVG_LINE_JOIN[obj.style[1][5]]
         if not join == 'miter': svg_style['stroke-linejoin'] = join
         # Miter limit
         svg_style['stroke-miterlimit'] = str(round(obj.style[1][6], 4))
