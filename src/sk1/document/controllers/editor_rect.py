@@ -137,8 +137,10 @@ class RectEditor(AbstractController):
         p0 = self.canvas.point_doc_to_win([x0, y0])
         p1 = self.canvas.point_doc_to_win([x1, y1])
         self.canvas.renderer.draw_frame(p0, p1)
-        for item in self.midpoints: item.repaint()
-        for item in self.points: item.repaint()
+        for item in self.midpoints:
+            item.repaint()
+        for item in self.points:
+            item.repaint()
 
     # ----- CHANGE APPLY
     def apply_resizing(self, point, final=False):
@@ -194,7 +196,6 @@ class RectEditor(AbstractController):
         corners = [] + self.target.corners
         name = str(self.rnd_index) + str(self.rnd_subindex)
 
-        res = 0.0
         if self.stop2:
             val = abs(wpoint[0] - self.start[0])
             val2 = abs(wpoint[1] - self.start[1])
@@ -221,8 +222,8 @@ class RectEditor(AbstractController):
             else:
                 res = (wpoint[1] - start[1]) / (stop[1] - start[1])
 
-        if res < 0.0: res = 0.0
-        if res > 1.0: res = 1.0
+        res = 0.0 if res < 0.0 else res
+        res = 1.0 if res > 1.0 else res
 
         if inplace:
             corners[self.rnd_index] = res
@@ -291,14 +292,14 @@ class ControlPoint:
     index = 0
     subindex = 0
 
-    def __init__(self, canvas, target, start, stop, start2=[], stop2=[],
+    def __init__(self, canvas, target, start, stop, start2=None, stop2=None,
                  coef=0.0, index=0, subindex=0):
         self.canvas = canvas
         self.target = target
         self.start = start
-        self.start2 = start2
+        self.start2 = start2 or []
         self.stop = stop
-        self.stop2 = stop2
+        self.stop2 = stop2 or []
         self.coef = coef
         self.index = index
         self.subindex = subindex
