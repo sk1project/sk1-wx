@@ -128,7 +128,7 @@ class ResourceViewWidget(gtk.VBox):
 		self.update_view()
 
 	def update_view(self, *args):
-		path = '' + self.current_dir
+		path = self.current_dir
 		if self.root:
 			path = path.replace(self.root, '::')
 		self.column.set_title(path)
