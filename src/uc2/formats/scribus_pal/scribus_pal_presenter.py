@@ -108,11 +108,13 @@ class ScribusPalette_Presenter(TaggedModelPresenter):
             color = None
             if item.Register == '1':
                 color = cms.get_registration_black()
-            if item.Spot == '1':
+            elif item.Spot == '1':
                 rgb = []
                 cmyk = []
-                if item.RGB: rgb = cms.hexcolor_to_rgb(item.RGB)
-                if item.CMYK: cmyk = cms.hexcolor_to_cmyk(item.CMYK)
+                if item.RGB:
+                    rgb = cms.hexcolor_to_rgb(item.RGB)
+                if item.CMYK:
+                    cmyk = cms.hexcolor_to_cmyk(item.CMYK)
                 name = item.NAME.decode('utf-8')
                 color = [COLOR_SPOT, [rgb, cmyk], 1.0, name]
             elif item.CMYK:

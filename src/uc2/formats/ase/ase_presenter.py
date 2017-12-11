@@ -19,12 +19,12 @@ import os
 from copy import deepcopy
 
 from uc2 import uc2const, cms
-from uc2.formats.generic import BinaryModelPresenter
+from uc2.formats.ase import ase_const
 from uc2.formats.ase.ase_config import ASE_Config
+from uc2.formats.ase.ase_filters import ASE_Loader, ASE_Saver
 from uc2.formats.ase.ase_model import ASE_Palette, ASE_Group, ASE_Group_End, \
     ASE_Color
-from uc2.formats.ase.ase_filters import ASE_Loader, ASE_Saver
-from uc2.formats.ase import ase_const
+from uc2.formats.generic import BinaryModelPresenter
 
 
 class ASE_Presenter(BinaryModelPresenter):
@@ -34,7 +34,8 @@ class ASE_Presenter(BinaryModelPresenter):
     doc_file = ''
     model = None
 
-    def __init__(self, appdata, cnf={}):
+    def __init__(self, appdata, cnf=None):
+        cnf = cnf or {}
         self.config = ASE_Config()
         config_file = os.path.join(appdata.app_config_dir, self.config.filename)
         self.config.load(config_file)
@@ -107,10 +108,12 @@ class ASE_Presenter(BinaryModelPresenter):
         skp_model.comments = ''
         if self.doc_file:
             filename = os.path.basename(self.doc_file)
-            if skp_model.comments: skp_model.comments += 'n'
+            if skp_model.comments:
+                skp_model.comments += '\n'
             skp_model.comments += 'Converted from %s' % filename
 
         for child in self.model.childs:
             if child.identifier == ase_const.ASE_COLOR:
                 clr = self.convert_to_skcolor(child)
-                if clr: skp_model.colors.append(clr)
+                if clr:
+                    skp_model.colors.append(clr)
