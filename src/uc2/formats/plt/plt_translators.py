@@ -93,7 +93,8 @@ class SK2_to_PLT_Translator(object):
 
                 paths = libgeom.get_flattened_path(obj, trafo,
                                                    self.plt_doc.config.tolerance)
-                if paths is None: continue
+                if paths is None:
+                    continue
 
                 for path in paths:
                     if path and path[1]:

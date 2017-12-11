@@ -19,21 +19,22 @@ import os
 
 from uc2 import uc2const
 from uc2.formats.generic import TextModelPresenter
-from uc2.formats.plt.plt_config import PLT_Config
 from uc2.formats.plt import plt_model
+from uc2.formats.plt.plt_config import PLT_Config
 from uc2.formats.plt.plt_filters import PLT_Loader, PLT_Saver
-from uc2.formats.plt.plt_translators import SK2_to_PLT_Translator
 from uc2.formats.plt.plt_translators import PLT_to_SK2_Translator
+from uc2.formats.plt.plt_translators import SK2_to_PLT_Translator
 
 
-class PLT_Presenter(TextModelPresenter):
+class PltPresenter(TextModelPresenter):
     cid = uc2const.PLT
 
     config = None
     doc_file = ''
     model = None
 
-    def __init__(self, appdata, cnf={}):
+    def __init__(self, appdata, cnf=None):
+        cnf = cnf or {}
         self.config = PLT_Config()
         config_file = os.path.join(appdata.app_config_dir, 'plt_config.xml')
         self.config.load(config_file)
@@ -45,11 +46,9 @@ class PLT_Presenter(TextModelPresenter):
 
     def new(self):
         self.model = plt_model.PltHeader()
-        childs = []
-        childs.append(plt_model.PltStart())
-        childs.append(plt_model.PltJobs())
-        childs.append(plt_model.PltEnd())
-        self.model.childs = childs
+        self.model.childs = [plt_model.PltStart(),
+                             plt_model.PltJobs(),
+                             plt_model.PltEnd()]
 
     def get_jobs(self):
         return self.model.childs[1].childs

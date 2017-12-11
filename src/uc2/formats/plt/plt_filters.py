@@ -16,14 +16,15 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from uc2 import _, events, msgconst
-from uc2.formats.plt import plt_model
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
+from uc2.formats.plt import plt_model
 
 PLT_CMDS = ['PU', 'PD']
 
 
 class PLT_Loader(AbstractLoader):
     name = 'PLT_Loader'
+    jobs = None
 
     def do_load(self):
         self.jobs = []
