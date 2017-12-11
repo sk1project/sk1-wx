@@ -303,7 +303,7 @@ def get_text_paths(orig_text, width, text_style, markup):
     for item in core.get_line_positions():
         line_points.append([0.0, item])
 
-    text = '' + orig_text
+    text = orig_text
     clusters = []
 
     # Ligature support

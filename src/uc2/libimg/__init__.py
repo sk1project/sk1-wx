@@ -285,7 +285,7 @@ def set_image_data(cms, pixmap, raw_content):
         except Exception:
             pass
 
-    pixmap.colorspace = '' + base_image.mode
+    pixmap.colorspace = base_image.mode
 
     fobj = StringIO()
     base_image = base_image.copy()
