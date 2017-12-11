@@ -31,6 +31,8 @@ def create_new_svg(config):
 
 class SVG_Methods:
     presenter = None
+    model = None
+    config = None
 
     def __init__(self, presenter):
         self.presenter = presenter

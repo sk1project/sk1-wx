@@ -23,13 +23,16 @@ from uc2.formats.svg.svg_presenter import SVG_Presenter
 
 
 def svg_loader(appdata, filename=None, fileptr=None,
-               translate=True, cnf={}, **kw):
-    if kw: cnf.update(kw)
+               translate=True, cnf=None, **kw):
+    cnf = cnf or {}
+    if kw:
+        cnf.update(kw)
     svg_doc = SVG_Presenter(appdata, cnf)
     svg_doc.load(filename, fileptr)
     if translate:
         sk2_doc = SK2_Presenter(appdata, cnf)
-        if filename: sk2_doc.doc_file = filename
+        if filename:
+            sk2_doc.doc_file = filename
         svg_doc.translate_to_sk2(sk2_doc)
         svg_doc.close()
         return sk2_doc
@@ -37,9 +40,12 @@ def svg_loader(appdata, filename=None, fileptr=None,
 
 
 def svg_saver(sk2_doc, filename=None, fileptr=None,
-              translate=True, cnf={}, **kw):
-    if kw: cnf.update(kw)
-    if sk2_doc.cid == uc2const.SVG: translate = False
+              translate=True, cnf=None, **kw):
+    cnf = cnf or {}
+    if kw:
+        cnf.update(kw)
+    if sk2_doc.cid == uc2const.SVG:
+        translate = False
     if translate:
         svg_doc = SVG_Presenter(sk2_doc.appdata, cnf)
         svg_doc.translate_from_sk2(sk2_doc)

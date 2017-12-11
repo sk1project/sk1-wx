@@ -34,7 +34,8 @@ class SVG_Presenter(TaggedModelPresenter):
     resources = None
     cms = None
 
-    def __init__(self, appdata, cnf={}, filepath=None):
+    def __init__(self, appdata, cnf=None, filepath=None):
+        cnf = cnf or {}
         self.config = SVG_Config()
         config_file = os.path.join(appdata.app_config_dir, self.config.filename)
         self.config.load(config_file)
