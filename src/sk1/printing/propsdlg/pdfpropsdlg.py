@@ -219,9 +219,9 @@ class DocInfoPanel(wal.LabeledPanel):
 
     def import_data(self):
         metainfo = self.app.current_doc.model.metainfo
-        self.title.set_value('' + self.app.current_doc.doc_name)
-        self.author.set_value('' + metainfo[0])
-        self.keywords.set_value('' + metainfo[2])
+        self.title.set_value(self.app.current_doc.doc_name)
+        self.author.set_value(metainfo[0])
+        self.keywords.set_value(metainfo[2])
 
     def save(self):
         self.printer.meta_title = self.title.get_value()
