@@ -35,7 +35,6 @@ Landscape = uc2const.LANDSCAPE
 
 # Alignment. Defaults are 0
 ALIGN_BASE = 0
-ALIGN_CENTER = 1
 ALIGN_TOP = 2
 ALIGN_BOTTOM = 3
 ALIGN_LEFT = 0

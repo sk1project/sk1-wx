@@ -35,6 +35,8 @@ def create_new_doc(config):
 
 class SK_Methods:
     presenter = None
+    model = None
+    config = None
 
     def __init__(self, presenter):
         self.presenter = presenter
@@ -74,7 +76,8 @@ class SK_Methods:
         return layers[layer_num]
 
     def is_layer_visible(self, layer):
-        if layer.visible: return True
+        if layer.visible:
+            return True
         return False
 
     def get_grid_layer(self):
