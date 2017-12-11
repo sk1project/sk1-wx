@@ -50,10 +50,11 @@ class PltModelObject(TextModelObject):
 
     def resolve(self):
         is_leaf = True
-        if self.childs: is_leaf = False
+        if self.childs:
+            is_leaf = False
         name = CID_TO_NAME[self.cid]
         info = ''
-        return (is_leaf, name, info)
+        return is_leaf, name, info
 
 
 class PltHeader(PltModelObject):
@@ -123,7 +124,7 @@ class PltJobs(PltModelObject):
 
     cid = JOBS
 
-    def __init__(self, jobs=[]):
+    def __init__(self, jobs=None):
         if not jobs:
             self.childs = []
 
@@ -152,9 +153,9 @@ class PltJob(PltModelObject):
     cid = JOB
     cache_path = []
 
-    def __init__(self, string='', path=[]):
+    def __init__(self, string='', path=None):
         self.string = string
-        self.cache_path = path
+        self.cache_path = path or []
 
     def update(self):
         if self.string and not self.cache_path:
@@ -164,14 +165,13 @@ class PltJob(PltModelObject):
             cmd = cmd.replace(";", "],")
             cmd = cmd.replace("PU", "[")
             cmd = cmd.replace("PD", "[")
-            cmd = 'path=[%s]' % (cmd)
+            cmd = 'path=[%s]' % cmd
             code = compile(cmd, '<string>', 'exec')
             exec code
             self.cache_path = []
             self.cache_path.append(path[0])
             self.cache_path.append(path[1:])
             self.cache_path.append(sk2const.CURVE_OPENED)
-
 
         elif self.cache_path and not self.string:
             self.string = 'PU%d,%d;' % (
