@@ -176,9 +176,9 @@ class Application:
 		return True
 
 	def save_as(self):
-		doc_file = '' + self.current_doc.doc_file
+		doc_file = self.current_doc.doc_file
 		if not doc_file:
-			doc_file = '' + self.current_doc.doc_name
+			doc_file = self.current_doc.doc_name
 		if not os.path.lexists(os.path.dirname(doc_file)):
 			doc_file = os.path.join(config.save_dir,
 								os.path.basename(doc_file))
@@ -247,16 +247,16 @@ class Application:
 		webbrowser.open_new(url)
 
 	def external_app_open(self, pathname):
-		cmd = '' + config.ext_text_view
+		cmd = config.ext_text_view
 		ext = os.path.splitext(pathname)[1][1:]
 		if ext in config.pseudomime.keys():
-			cmd = '' + config.pseudomime[ext]
+			cmd = config.pseudomime[ext]
 		cmd = cmd.replace('$file', pathname) + ' 2>/dev/null &'
 		os.popen(cmd)
 
 	def external_bineditor_open(self, pathname):
-		cmd = '' + config.ext_text_view
+		cmd = config.ext_text_view
 		ext = os.path.splitext(pathname)[1][1:]
-		cmd = '' + config.ext_binary_view
+		cmd = config.ext_binary_view
 		cmd = cmd.replace('$file', pathname) + ' 2>/dev/null &'
 		os.popen(cmd)

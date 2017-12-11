@@ -148,7 +148,7 @@ class FileBrowserTool(gtk.VBox):
 		self.update_view()
 
 	def update_view(self, *args):
-		path = '' + config.fb_current_directory
+		path = config.fb_current_directory
 		if self.root:
 			path = path.replace(self.root, '::')
 		self.column.set_title(path)
