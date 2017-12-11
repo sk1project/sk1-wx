@@ -61,20 +61,19 @@ class GeneralProps(DocPropsPanel):
         grid.add_growable_row(3)
 
         grid.pack(wal.Label(grid, _('Author:')))
-        self.author_field = wal.Entry(grid, '' + self.metainfo[0])
+        self.author_field = wal.Entry(grid, self.metainfo[0])
         grid.pack(self.author_field, fill=True)
 
         grid.pack(wal.Label(grid, _('License:')))
-        self.license_field = wal.Entry(grid, '' + self.metainfo[1])
+        self.license_field = wal.Entry(grid, self.metainfo[1])
         grid.pack(self.license_field, fill=True)
 
         grid.pack(wal.Label(grid, _('Keywords:')))
-        self.keys_field = wal.Entry(grid, '' + self.metainfo[2])
+        self.keys_field = wal.Entry(grid, self.metainfo[2])
         grid.pack(self.keys_field, fill=True)
 
         grid.pack(wal.Label(grid, _('Notes:')))
-        self.notes_field = wal.Entry(grid, '' + self.metainfo[3],
-                                     multiline=True)
+        self.notes_field = wal.Entry(grid, self.metainfo[3], multiline=True)
         grid.pack(self.notes_field, fill=True)
 
         self.pack(grid, fill=True, expand=True, padding_all=5)

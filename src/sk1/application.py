@@ -262,9 +262,9 @@ class SK1Application(wal.Application, UCApplication):
         return True
 
     def save_as(self):
-        doc_file = '' + self.current_doc.doc_file
+        doc_file = self.current_doc.doc_file
         if not doc_file:
-            doc_file = '' + self.current_doc.doc_name
+            doc_file = self.current_doc.doc_name
         if not os.path.splitext(doc_file)[1] == "." + \
                 uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
             doc_file = os.path.splitext(doc_file)[0] + "." + \
@@ -297,9 +297,9 @@ class SK1Application(wal.Application, UCApplication):
             return False
 
     def save_selected(self):
-        doc_file = '' + self.current_doc.doc_file
+        doc_file = self.current_doc.doc_file
         if not doc_file:
-            doc_file = '' + self.current_doc.doc_name
+            doc_file = self.current_doc.doc_name
         if not os.path.splitext(doc_file)[1] == "." + \
                 uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
             doc_file = os.path.splitext(doc_file)[0] + "." + \
@@ -391,9 +391,9 @@ class SK1Application(wal.Application, UCApplication):
                 self.print_stacktrace()
 
     def export_as(self):
-        doc_file = '' + self.current_doc.doc_file
+        doc_file = self.current_doc.doc_file
         if not doc_file:
-            doc_file = '' + self.current_doc.doc_name
+            doc_file = self.current_doc.doc_name
         doc_file = os.path.splitext(doc_file)[0]
         doc_file = os.path.join(config.export_dir,
                                 os.path.basename(doc_file))
@@ -441,7 +441,7 @@ class SK1Application(wal.Application, UCApplication):
     def export_palette(self, palette, parent=None):
         if not parent:
             parent = self.mw
-        doc_file = '' + palette.model.name
+        doc_file = palette.model.name
         doc_file = os.path.splitext(doc_file)[0]
         doc_file = os.path.join(config.export_dir, os.path.basename(doc_file))
         ret = dialogs.get_save_file_name(parent, doc_file,

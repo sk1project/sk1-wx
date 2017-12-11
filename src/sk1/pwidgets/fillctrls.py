@@ -601,7 +601,7 @@ class PatternFill(FillTab):
         FillTab.activate(self, fill_style)
         rule = sk2const.FILL_EVENODD
         pattern_type = sk2const.PATTERN_IMG
-        pattern = '' + DEFAULT_PATTERN
+        pattern = DEFAULT_PATTERN
         image_style = deepcopy([sk2const.CMYK_BLACK, sk2const.CMYK_WHITE])
         trafo = [] + sk2const.NORMAL_TRAFO
         transforms = [] + sk2const.PATTERN_TRANSFORMS
@@ -657,7 +657,7 @@ class PatternFill(FillTab):
         self.pack(panel, fill=True, padding_all=5)
         self.pack(wal.HLine(self), fill=True)
 
-        default_pattern_def = [sk2const.PATTERN_IMG, '' + DEFAULT_PATTERN,
+        default_pattern_def = [sk2const.PATTERN_IMG, DEFAULT_PATTERN,
                                deepcopy([sk2const.CMYK_BLACK,
                                          sk2const.CMYK_WHITE]),
                                [] + sk2const.NORMAL_TRAFO]

@@ -24,8 +24,7 @@ RESTRICTED = ('UniConvertor', 'Python', 'ImageMagick')
 
 
 def get_path_var():
-    path = '' + os.environ["PATH"]
-    paths = path.split(os.pathsep)
+    paths = os.environ["PATH"].split(os.pathsep)
     ret = []
     for path in paths:
         for item in RESTRICTED:

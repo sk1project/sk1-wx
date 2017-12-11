@@ -59,7 +59,7 @@ class AppHistoryManager:
     def add_entry(self, path, operation=appconst.OPENED):
         if not len(self.history) < config.history_size:
             self.history = self.history[1:]
-        self.history.append([operation, '' + path, int(time.time())])
+        self.history.append([operation, path, int(time.time())])
         self.save_history()
 
     def clear_history(self):
