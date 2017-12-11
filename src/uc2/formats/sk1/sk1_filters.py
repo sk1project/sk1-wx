@@ -18,8 +18,8 @@
 import sys
 
 from uc2 import uc2const
-from uc2.formats.sk1 import sk1const
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
+from uc2.formats.sk1 import sk1const
 from uc2.formats.sk1.model import SK1Document, SK1Layout, SK1Grid, SK1Pages, \
     SK1Page, SK1Layer, SK1MasterLayer, SK1GuideLayer, SK1Guide, SK1Group, \
     SK1MaskGroup, Rectangle, Ellipse, PolyBezier, SK1Text, SK1BitmapData, \
