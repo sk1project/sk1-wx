@@ -15,12 +15,12 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import cairo
-from copy import deepcopy
-from markup import apply_markup, apply_glyph_markup
-
 import _libpango
+import cairo
+import os
+from copy import deepcopy
+
+from markup import apply_markup, apply_glyph_markup
 
 PANGO_UNITS = 1024
 
@@ -73,7 +73,7 @@ def get_font_description(text_style, check_nt=False):
 
 
 def set_layout(text, width, text_style, markup, layout=PANGO_LAYOUT):
-    if width != -1:
+    if not width == -1:
         width *= PANGO_UNITS
     _libpango.set_layout_width(layout, width)
     fnt_descr = get_font_description(text_style)
@@ -86,7 +86,7 @@ def set_layout(text, width, text_style, markup, layout=PANGO_LAYOUT):
 def set_glyph_layout(text, width, text_style, markup, text_range=None,
                      check_nt=False, layout=PANGO_LAYOUT):
     text_range = text_range or []
-    if width != -1:
+    if not width == -1:
         width *= PANGO_UNITS
     _libpango.set_layout_width(layout, width)
     fnt_descr = get_font_description(text_style, check_nt)
