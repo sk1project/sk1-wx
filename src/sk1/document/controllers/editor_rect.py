@@ -1,24 +1,23 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2015 by Igor E. Novikov
 #
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2 import libgeom
-
-from sk1 import _, modes, config, events
 from generic import AbstractController
+from sk1 import _, modes, config, events
+from uc2 import libgeom
 
 H_ORIENT = ['00', '11', '20', '31']
 
@@ -98,7 +97,7 @@ class RectEditor(AbstractController):
                 stop = stops[index][0]
                 start2 = []
                 if len(stops[index]) == 1 and \
-                   self.target.corners[index - 3] == 1.0:
+                        self.target.corners[index - 3] == 1.0:
                     start2 = corner_points[index - 3]
                 coef = self.target.corners[index]
                 self.points.append(ControlPoint(self.canvas, self.target, start,
@@ -138,10 +137,8 @@ class RectEditor(AbstractController):
         p0 = self.canvas.point_doc_to_win([x0, y0])
         p1 = self.canvas.point_doc_to_win([x1, y1])
         self.canvas.renderer.draw_frame(p0, p1)
-        for item in self.midpoints:
-            item.repaint()
-        for item in self.points:
-            item.repaint()
+        for item in self.midpoints: item.repaint()
+        for item in self.points: item.repaint()
 
     # ----- CHANGE APPLY
     def apply_resizing(self, point, final=False):
@@ -197,6 +194,7 @@ class RectEditor(AbstractController):
         corners = [] + self.target.corners
         name = str(self.rnd_index) + str(self.rnd_subindex)
 
+        res = 0.0
         if self.stop2:
             val = abs(wpoint[0] - self.start[0])
             val2 = abs(wpoint[1] - self.start[1])
@@ -223,10 +221,8 @@ class RectEditor(AbstractController):
             else:
                 res = (wpoint[1] - start[1]) / (stop[1] - start[1])
 
-        if res < 0.0:
-            res = 0.0
-        if res > 1.0:
-            res = 1.0
+        if res < 0.0: res = 0.0
+        if res > 1.0: res = 1.0
 
         if inplace:
             corners[self.rnd_index] = res
@@ -295,7 +291,7 @@ class ControlPoint:
     index = 0
     subindex = 0
 
-    def __init__(self, canvas, target, start, stop, start2=None, stop2=None,
+    def __init__(self, canvas, target, start, stop, start2=[], stop2=[],
                  coef=0.0, index=0, subindex=0):
         self.canvas = canvas
         self.target = target
