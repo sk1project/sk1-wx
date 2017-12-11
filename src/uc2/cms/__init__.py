@@ -19,6 +19,7 @@ import copy
 from copy import deepcopy
 
 import libcms
+
 from uc2 import uc2const
 from uc2.uc2const import COLOR_RGB, COLOR_CMYK, COLOR_LAB, COLOR_GRAY, \
     COLOR_SPOT, COLOR_DISPLAY, COLOR_REG
@@ -578,12 +579,12 @@ class ColorManager(object):
             return deepcopy(color)
         if color[0] == COLOR_SPOT:
             if color[1][0]:
-                return [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
+                return [COLOR_RGB, [] + color[1][0], color[2], color[3]]
             else:
-                clr = [COLOR_CMYK, [] + color[1][1], color[2], '' + color[3]]
+                clr = [COLOR_CMYK, [] + color[1][1], color[2], color[3]]
             return self.get_rgb_color(clr)
         res = self.do_transform(color, color[0], COLOR_RGB)
-        return [COLOR_RGB, res, color[2], '' + color[3]]
+        return [COLOR_RGB, res, color[2], color[3]]
 
     def get_rgb_color255(self, color):
         return val_255(self.get_rgb_color(color)[1])
@@ -602,12 +603,12 @@ class ColorManager(object):
             return deepcopy(color)
         if color[0] == COLOR_SPOT:
             if color[1][1]:
-                return [COLOR_CMYK, [] + color[1][1], color[2], '' + color[3]]
+                return [COLOR_CMYK, [] + color[1][1], color[2], color[3]]
             else:
-                clr = [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
+                clr = [COLOR_RGB, [] + color[1][0], color[2], color[3]]
                 return self.get_cmyk_color(clr)
         res = self.do_transform(color, color[0], COLOR_CMYK)
-        return [COLOR_CMYK, res, color[2], '' + color[3]]
+        return [COLOR_CMYK, res, color[2], color[3]]
 
     def get_cmyk_color255(self, color):
         return val_255(self.get_cmyk_color(color)[1])
@@ -621,11 +622,11 @@ class ColorManager(object):
             return deepcopy(color)
         if color[0] == COLOR_SPOT:
             if color[1][0]:
-                color = [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
+                color = [COLOR_RGB, [] + color[1][0], color[2], color[3]]
             else:
-                color = [COLOR_CMYK, [] + color[1][1], color[2], '' + color[3]]
+                color = [COLOR_CMYK, [] + color[1][1], color[2], color[3]]
         res = self.do_transform(color, color[0], COLOR_LAB)
-        return [COLOR_LAB, res, color[2], '' + color[3]]
+        return [COLOR_LAB, res, color[2], color[3]]
 
     def get_grayscale_color(self, color):
         """
@@ -636,11 +637,11 @@ class ColorManager(object):
             return deepcopy(color)
         if color[0] == COLOR_SPOT:
             if color[1][0]:
-                color = [COLOR_RGB, [] + color[1][0], color[2], '' + color[3]]
+                color = [COLOR_RGB, [] + color[1][0], color[2], color[3]]
             else:
-                color = [COLOR_CMYK, [] + color[1][1], color[2], '' + color[3]]
+                color = [COLOR_CMYK, [] + color[1][1], color[2], color[3]]
         res = self.do_transform(color, color[0], COLOR_GRAY)
-        return [COLOR_GRAY, res, color[2], '' + color[3]]
+        return [COLOR_GRAY, res, color[2], color[3]]
 
     def get_color(self, color, cs=COLOR_RGB):
         """
