@@ -43,7 +43,7 @@ class PltModelObject(TextModelObject):
     """
 
     def get_content(self):
-        result = '' + self.string
+        result = self.string
         for child in self.childs:
             result += child.get_content()
         return result

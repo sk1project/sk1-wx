@@ -60,7 +60,7 @@ class JCW_Palette(BinaryModelObject):
 
     def update_for_save(self):
         for child in self.childs: child.update_for_save()
-        self.chunk = '' + JCW_ID
+        self.chunk = JCW_ID
         self.chunk += JCW_VER
         self.chunk += utils.py_int2word(len(self.childs))
         self.chunk += utils.py_int2byte(self.colorspace)
@@ -90,7 +90,7 @@ class JCW_Color(BinaryModelObject):
         self.namesize = namesize
         if color:
             self.valbytes = get_jcw_color(color)
-            self.name = '' + color[3]
+            self.name = color[3]
 
     def parse(self, loader):
         self.chunk = loader.readbytes(8 + self.namesize)

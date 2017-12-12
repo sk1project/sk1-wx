@@ -56,20 +56,20 @@ class GPL_Presenter(TextModelPresenter):
 
     def convert_from_skp(self, skp_doc):
         skp_model = skp_doc.model
-        self.model.name = '' + skp_model.name
+        self.model.name = skp_model.name
         self.model.columns = skp_model.columns
         self.model.comments = 'Palette source: ' + skp_model.source
         self.model.comments += '\n' + skp_model.comments
         for item in skp_model.colors:
             r, g, b = self.cms.get_rgb_color255(item)
-            self.model.colors.append([r, g, b, '' + item[3]])
+            self.model.colors.append([r, g, b, item[3]])
 
     def convert_to_skp(self, skp_doc):
         skp_model = skp_doc.model
-        skp_model.name = '' + self.model.name
-        skp_model.source = '' + self.config.source
+        skp_model.name = self.model.name
+        skp_model.source = self.config.source
         skp_model.columns = self.model.columns
-        skp_model.comments = '' + self.model.comments
+        skp_model.comments = self.model.comments
         if self.doc_file:
             filename = os.path.basename(self.doc_file)
             if skp_model.comments: skp_model.comments += 'n'

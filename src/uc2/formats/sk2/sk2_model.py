@@ -188,7 +188,7 @@ class Pages(DocumentObject):
         self.page_counter = 0
         self.parent = parent
         self.config = config
-        fmt = '' + self.config.page_format
+        fmt = self.config.page_format
         size = deepcopy(uc2const.PAGE_FORMATS[fmt])
         orient = config.page_orientation
         self.page_format = [fmt, size, orient]
@@ -234,7 +234,7 @@ class Page(StructuralObject):
         else:
             self.name = name
         if parent is None:
-            fmt = '' + self.config.page_format
+            fmt = self.config.page_format
             size = deepcopy(uc2const.PAGE_FORMATS[fmt])
             orient = config.page_orientation
             self.page_format = [fmt, size, orient]
@@ -271,7 +271,7 @@ class Layer(StructuralObject):
             self.name = name
 
         self.parent = parent
-        self.color = '' + self.config.layer_color
+        self.color = self.config.layer_color
         self.style = [[], deepcopy(self.config.default_stroke), [], []]
         self.properties = [] + self.config.layer_propeties
         self.childs = []
@@ -308,7 +308,7 @@ class GuideLayer(Layer):
         Layer.__init__(self, config, parent, name)
         self.cid = GUIDE_LAYER
         self.childs = []
-        self.color = '' + self.config.guide_layer_color
+        self.color = self.config.guide_layer_color
         self.properties = [] + self.config.guide_layer_propeties
 
     def update(self):

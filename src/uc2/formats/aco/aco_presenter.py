@@ -50,6 +50,6 @@ class ACO_Presenter(BinaryModelPresenter):
     def convert_to_skp(self, skp_doc):
         skp_model = skp_doc.model
         skp_model.name = 'ACO palette'
-        skp_model.source = '' + self.config.source
+        skp_model.source = self.config.source
         skp_model.comments = ''
         skp_model.colors = self.model.get_color_list()

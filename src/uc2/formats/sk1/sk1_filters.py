@@ -219,7 +219,7 @@ class SK1_Loader(AbstractLoader):
         if self.pages is None:
             self.add_pages()
         if not pformat and not size:
-            pformat = '' + self.model.layout.format
+            pformat = self.model.layout.format
             size = () + self.model.layout.size
             orientation = self.model.layout.orientation
         page = SK1Page(name, pformat, size, orientation)

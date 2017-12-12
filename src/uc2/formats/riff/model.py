@@ -26,173 +26,180 @@ RIFF_CMPR_LIST = 5
 RIFF_PACK = 9
 RIFF_OBJECT = 10
 
+
 class RiffModelObject(BinaryModelObject):
-	"""
-	Generic RIFF model object.
-	The class provides basic RIFF object features.
-	
-	Details about RIFF format:
-	http://en.wikipedia.org/wiki/Resource_Interchange_File_Format
-	"""
+    """
+    Generic RIFF model object.
+    The class provides basic RIFF object features.
 
-	identifier = ''
-	chunk_tag = ''
-	chunk_size = 0
-	version = ''
+    Details about RIFF format:
+    http://en.wikipedia.org/wiki/Resource_Interchange_File_Format
+    """
 
-	def resolve(self):
-		name = ''
-		if self.chunk_tag:
-			name = '<%s>' % (self.chunk_tag)
-		if self.cid < RIFF_OBJECT: return (False, name, str(self.chunk_size))
-		return (True, name, str(self.chunk_size))
+    identifier = ''
+    chunk_tag = ''
+    chunk_size = 0
+    version = ''
 
-	def get_chunk(self):
-		chunk = ''
-		for child in self.childs:
-			chunk += child.get_chunk()
-		chunk = self.chunk + chunk
-		return chunk
+    def resolve(self):
+        name = ''
+        if self.chunk_tag:
+            name = '<%s>' % (self.chunk_tag)
+        if self.cid < RIFF_OBJECT: return (False, name, str(self.chunk_size))
+        return (True, name, str(self.chunk_size))
 
-	def update(self):pass
+    def get_chunk(self):
+        chunk = ''
+        for child in self.childs:
+            chunk += child.get_chunk()
+        chunk = self.chunk + chunk
+        return chunk
 
-	def do_update(self, presenter, action=False):
-		for child in self.childs:
-			child.parent = self
-			child.version = self.version
-			child.config = self.config
-			child.do_update(presenter)
-		self.update()
+    def update(self):
+        pass
 
-	def translate(self, translator):
-		for child in self.childs:
-			child.translate(translator)
+    def do_update(self, presenter, action=False):
+        for child in self.childs:
+            child.parent = self
+            child.version = self.version
+            child.config = self.config
+            child.do_update(presenter)
+        self.update()
+
+    def translate(self, translator):
+        for child in self.childs:
+            child.translate(translator)
 
 
 class RiffList(RiffModelObject):
-	"""
-	RIFF model list.
-	The class provides RIFF list features. The object is a RIFF model node.
-	
-	Details about RIFF format:
-	http://en.wikipedia.org/wiki/Resource_Interchange_File_Format
-	"""
+    """
+    RIFF model list.
+    The class provides RIFF list features. The object is a RIFF model node.
 
-	cid = RIFF_LIST
+    Details about RIFF format:
+    http://en.wikipedia.org/wiki/Resource_Interchange_File_Format
+    """
 
-	def __init__(self, chunk):
-		self.childs = []
-		self.chunk = chunk
-		self.identifier = 'LIST'
-		self.chunk_tag = self.chunk[8:12]
-		self.chunk_size = dword2py_int(chunk[4:8])
-		self.cache_fields = [
-						(0, 4, 'list identifier'),
-						(4, 4, 'chunk size'),
-						(8, 4, 'chunk tag')
-						]
+    cid = RIFF_LIST
+
+    def __init__(self, chunk):
+        self.childs = []
+        self.chunk = chunk
+        self.identifier = 'LIST'
+        self.chunk_tag = self.chunk[8:12]
+        self.chunk_size = dword2py_int(chunk[4:8])
+        self.cache_fields = [
+            (0, 4, 'list identifier'),
+            (4, 4, 'chunk size'),
+            (8, 4, 'chunk tag')
+        ]
+
 
 class RiffRootList(RiffList):
-	"""
-	Root RIFF model list.
-	The class provides root RIFF list features. According to RIFF specification
-	the object has always 'RIFF' identifier. The root list size is a file
-	size excluding the list header 12 bytes.
-	
-	Details about RIFF format:
-	http://en.wikipedia.org/wiki/Resource_Interchange_File_Format
-	"""
+    """
+    Root RIFF model list.
+    The class provides root RIFF list features. According to RIFF specification
+    the object has always 'RIFF' identifier. The root list size is a file
+    size excluding the list header 12 bytes.
 
-	cid = RIFF_ROOT
+    Details about RIFF format:
+    http://en.wikipedia.org/wiki/Resource_Interchange_File_Format
+    """
 
-	def __init__(self, chunk=''):
-		if not chunk:
-			chunk = 'RIFF' + py_int2dword(4) + 'riff'
-		RiffList.__init__(self, chunk)
-		self.version = self.chunk_tag
+    cid = RIFF_ROOT
+
+    def __init__(self, chunk=''):
+        if not chunk:
+            chunk = 'RIFF' + py_int2dword(4) + 'riff'
+        RiffList.__init__(self, chunk)
+        self.version = self.chunk_tag
+
 
 class RiffUnparsedList(RiffList):
-	"""
-	Unparsed RIFF model list.
-	Some list objects contain non-RIFF content. This list type is used
-	for such cases. The object just stores unparsed internal list content.
-	
-	Details about RIFF format:
-	http://en.wikipedia.org/wiki/Resource_Interchange_File_Format
-	"""
+    """
+    Unparsed RIFF model list.
+    Some list objects contain non-RIFF content. This list type is used
+    for such cases. The object just stores unparsed internal list content.
 
-	cid = RIFF_UNPARSED_LIST
+    Details about RIFF format:
+    http://en.wikipedia.org/wiki/Resource_Interchange_File_Format
+    """
 
-	def __init__(self, chunk):
-		RiffList.__init__(self, chunk)
+    cid = RIFF_UNPARSED_LIST
+
+    def __init__(self, chunk):
+        RiffList.__init__(self, chunk)
+
 
 class RiffCmprList(RiffUnparsedList):
-	"""
-	Compressed RIFF model list.
-	The list has unusual structure because packed child object size is redefined
-	in special list. For CDR format the list type contains all graphics data.
-	
-	Details about RIFF format:
-	http://en.wikipedia.org/wiki/Resource_Interchange_File_Format
-	"""
+    """
+    Compressed RIFF model list.
+    The list has unusual structure because packed child object size is redefined
+    in special list. For CDR format the list type contains all graphics data.
 
-	cid = RIFF_CMPR_LIST
+    Details about RIFF format:
+    http://en.wikipedia.org/wiki/Resource_Interchange_File_Format
+    """
 
-	def __init__(self, chunk):
-		RiffList.__init__(self, chunk)
+    cid = RIFF_CMPR_LIST
 
-		self.compressedsize = dword2py_int(chunk[12:16])
-		self.uncompressedsize = dword2py_int(chunk[16:20])
-		self.blocksizessize = dword2py_int(chunk[20:24])
+    def __init__(self, chunk):
+        RiffList.__init__(self, chunk)
 
-	def get_chunk(self):
-		return self.chunk
+        self.compressedsize = dword2py_int(chunk[12:16])
+        self.uncompressedsize = dword2py_int(chunk[16:20])
+        self.blocksizessize = dword2py_int(chunk[20:24])
+
+    def get_chunk(self):
+        return self.chunk
+
 
 class RiffObject(RiffModelObject):
-	"""
-	RIFF model object.
-	The class provides RIFF object features. The object is a RIFF model leaf.
-	
-	Details about RIFF format:
-	http://en.wikipedia.org/wiki/Resource_Interchange_File_Format
-	"""
+    """
+    RIFF model object.
+    The class provides RIFF object features. The object is a RIFF model leaf.
 
-	cid = RIFF_OBJECT
+    Details about RIFF format:
+    http://en.wikipedia.org/wiki/Resource_Interchange_File_Format
+    """
 
-	def __init__(self, chunk):
-		self.chunk = chunk
-		self.identifier = chunk[:4]
-		self.chunk_size = dword2py_int(chunk[4:8])
-		self.chunk_tag = '' + self.identifier
-		self.cache_fields = [
-						(0, 4, 'identifier'),
-						(4, 4, 'chunk size'),
-						]
+    cid = RIFF_OBJECT
 
-	def get_chunk(self):
-		return self.chunk
+    def __init__(self, chunk):
+        self.chunk = chunk
+        self.identifier = chunk[:4]
+        self.chunk_size = dword2py_int(chunk[4:8])
+        self.chunk_tag = self.identifier
+        self.cache_fields = [
+            (0, 4, 'identifier'),
+            (4, 4, 'chunk size'),
+        ]
+
+    def get_chunk(self):
+        return self.chunk
+
 
 class RiffPackObject(RiffObject):
-	"""
-	Compressed RIFF object.
-	Actually the object serves as a list because contains a lot of childs,
-	but according to RIFF specification the object is not a list.
-	It seems the object is CDRX format specific. 
-	
-	Details about RIFF format:
-	http://en.wikipedia.org/wiki/Resource_Interchange_File_Format
-	"""
+    """
+    Compressed RIFF object.
+    Actually the object serves as a list because contains a lot of childs,
+    but according to RIFF specification the object is not a list.
+    It seems the object is CDRX format specific.
 
-	cid = RIFF_PACK
+    Details about RIFF format:
+    http://en.wikipedia.org/wiki/Resource_Interchange_File_Format
+    """
 
-	def __init__(self, chunk):
-		RiffObject.__init__(self, chunk)
-		self.childs = []
+    cid = RIFF_PACK
+
+    def __init__(self, chunk):
+        RiffObject.__init__(self, chunk)
+        self.childs = []
 
 
 TAG_TO_CLASS = {
-'RIFF':RiffRootList,
-'LIST':RiffList,
-'pack':RiffPackObject,
-'generic':RiffObject
+    'RIFF': RiffRootList,
+    'LIST': RiffList,
+    'pack': RiffPackObject,
+    'generic': RiffObject
 }

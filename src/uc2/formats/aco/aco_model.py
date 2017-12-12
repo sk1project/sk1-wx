@@ -121,7 +121,7 @@ class ACO1_Header(BinaryModelObject):
             self.childs.append(clr)
 
     def update(self):
-        self.chunk = '' + self.version
+        self.chunk = self.version
         self.chunk += struct.pack('>H', len(self.childs))
 
     def save(self, saver):

@@ -115,7 +115,7 @@ class SKModelObject(TextModelObject):
         return (is_leaf, name, info)
 
     def get_content(self):
-        result = '' + self.string
+        result = self.string
         for child in self.childs:
             result += child.get_content()
         if self.end_string:
@@ -579,7 +579,7 @@ class Style:
         if self.line_arrow2:
             style_copy.line_arrow2 = deepcopy(self.line_arrow2)
         if self.font:
-            style_copy.font = '' + self.font
+            style_copy.font = self.font
         style_copy.font_size = self.font_size
         return style_copy
 

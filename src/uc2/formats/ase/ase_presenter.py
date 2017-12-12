@@ -52,7 +52,7 @@ class ASE_Presenter(BinaryModelPresenter):
         ret = ''
         for child in self.model.childs:
             if child.identifier == ase_const.ASE_GROUP:
-                ret = '' + child.group_name
+                ret = child.group_name
                 break
         if not ret:
             ret = 'ASE palette'
@@ -60,7 +60,7 @@ class ASE_Presenter(BinaryModelPresenter):
 
     def convert_from_skp(self, skp_doc):
         skp_model = skp_doc.model
-        self.model.childs.append(ASE_Group('' + skp_model.name))
+        self.model.childs.append(ASE_Group(skp_model.name))
         for item in skp_model.colors:
             if item[0] == uc2const.COLOR_SPOT:
                 marker = ase_const.ASE_SPOT
@@ -82,7 +82,7 @@ class ASE_Presenter(BinaryModelPresenter):
                 cs = ase_const.CS_MATCH[item[0]]
                 vals = tuple(deepcopy(item[1]))
             if item[3]:
-                name = '' + item[3]
+                name = item[3]
             else:
                 name = cms.verbose_color(item)
             self.model.childs.append(ASE_Color(name, cs, vals, marker))
@@ -93,17 +93,17 @@ class ASE_Presenter(BinaryModelPresenter):
         if obj.color_marker == ase_const.ASE_SPOT:
             if obj.colorspace == ase_const.ASE_RGB:
                 vals = [list(obj.color_vals), []]
-                return [uc2const.COLOR_SPOT, vals, 1.0, '' + obj.color_name]
+                return [uc2const.COLOR_SPOT, vals, 1.0, obj.color_name]
             elif obj.colorspace == ase_const.ASE_CMYK:
                 vals = [[], list(obj.color_vals)]
-                return [uc2const.COLOR_SPOT, vals, 1.0, '' + obj.color_name]
+                return [uc2const.COLOR_SPOT, vals, 1.0, obj.color_name]
         cs = ase_const.CS_MATCH[obj.colorspace]
-        return [cs, list(obj.color_vals), 1.0, '' + obj.color_name]
+        return [cs, list(obj.color_vals), 1.0, obj.color_name]
 
     def convert_to_skp(self, skp_doc):
         skp_model = skp_doc.model
         skp_model.name = self.get_palette_name()
-        skp_model.source = '' + self.config.source
+        skp_model.source = self.config.source
         skp_model.comments = ''
         if self.doc_file:
             filename = os.path.basename(self.doc_file)

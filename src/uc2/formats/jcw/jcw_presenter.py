@@ -81,10 +81,10 @@ class JCW_Presenter(BinaryModelPresenter):
     def convert_to_skp(self, skp_doc):
         skp_model = skp_doc.model
         if self.model.name:
-            skp_model.name = '' + self.model.name
+            skp_model.name = self.model.name
         else:
-            skp_model.name = '' + self.model.resolve_name
-        skp_model.source = '' + self.config.source
+            skp_model.name = self.model.resolve_name
+        skp_model.source = self.config.source
         if self.doc_file:
             filename = os.path.basename(self.doc_file)
             if skp_model.comments: skp_model.comments += 'n'

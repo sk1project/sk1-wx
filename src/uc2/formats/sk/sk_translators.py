@@ -58,7 +58,6 @@ def get_sk2_color(clr):
 
 
 def get_sk2_page(fmt, size, ornt):
-    fmt = '' + fmt
     if fmt in uc2const.PAGE_FORMAT_NAMES:
         size = () + uc2const.PAGE_FORMATS[fmt]
     else:
@@ -412,7 +411,7 @@ class SK2_to_SK_Translator(object):
             if item.cid == sk2_model.PAGES:
                 layout = skmtds.get_layout_obj()
                 fmt, size, ornt = item.childs[0].page_format
-                layout.format = '' + fmt
+                layout.format = fmt
                 layout.size = () + tuple(size)
                 layout.orientation = ornt
                 self.dx = size[0] / 2.0
@@ -492,7 +491,7 @@ class SK2_to_SK_Translator(object):
         return layers
 
     def translate_layer(self, dest_parent, source_obj):
-        name = '' + source_obj.name
+        name = source_obj.name
         visible, editable, printable = source_obj.properties[:-1]
         locked = abs(editable - 1)
         color = get_sk_color(source_obj.style[1][2], self.sk2_doc.cms)

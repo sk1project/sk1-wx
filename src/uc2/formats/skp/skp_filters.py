@@ -65,7 +65,7 @@ class SKP_Loader(AbstractLoader):
     def hexcolor(self, hexcolor, name=''):
         rgb = cms.hexcolor_to_rgb(hexcolor)
         if not name:
-            name = '' + hexcolor
+            name = hexcolor
         self.model.colors.append([uc2const.COLOR_RGB, rgb, 1.0, name])
 
     def rgbcolor(self, r, g, b, name=''):
