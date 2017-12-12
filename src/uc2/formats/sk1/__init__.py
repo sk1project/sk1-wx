@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2013 by Igor E. Novikov
+#  Copyright (C) 2013 by Igor E. Novikov
 #
-# 	This program is free software: you can redistribute it and/or modify
-# 	it under the terms of the GNU General Public License as published by
-# 	the Free Software Foundation, either version 3 of the License, or
-# 	(at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-# 	This program is distributed in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# 	GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-# 	You should have received a copy of the GNU General Public License
-# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import sys
@@ -25,31 +25,35 @@ from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2.formats.generic_filters import get_fileptr
 
 
-def sk1_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
-	if kw: cnf.update(kw)
-	sk1_doc = SK1_Presenter(appdata, cnf)
-	sk1_doc.load(filename, fileptr)
-	if translate:
-		sk2_doc = SK2_Presenter(appdata, cnf)
-		if filename: sk2_doc.doc_file = filename
-		sk1_doc.translate_to_sk2(sk2_doc)
-		sk1_doc.close()
-		return sk2_doc
-	return sk1_doc
+def sk1_loader(appdata, filename=None, fileptr=None, translate=True, cnf={},
+               **kw):
+    if kw: cnf.update(kw)
+    sk1_doc = SK1_Presenter(appdata, cnf)
+    sk1_doc.load(filename, fileptr)
+    if translate:
+        sk2_doc = SK2_Presenter(appdata, cnf)
+        if filename: sk2_doc.doc_file = filename
+        sk1_doc.translate_to_sk2(sk2_doc)
+        sk1_doc.close()
+        return sk2_doc
+    return sk1_doc
 
-def sk1_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf={}, **kw):
-	if kw: cnf.update(kw)
-	if sk2_doc.cid == uc2const.SK1: translate = False
-	if translate:
-		sk1_doc = SK1_Presenter(sk2_doc.appdata, cnf)
-		sk1_doc.translate_from_sk2(sk2_doc)
-		sk1_doc.save(filename, fileptr)
-		sk1_doc.close()
-	else:
-		sk2_doc.save(filename, fileptr)
+
+def sk1_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf={},
+              **kw):
+    if kw: cnf.update(kw)
+    if sk2_doc.cid == uc2const.SK1: translate = False
+    if translate:
+        sk1_doc = SK1_Presenter(sk2_doc.appdata, cnf)
+        sk1_doc.translate_from_sk2(sk2_doc)
+        sk1_doc.save(filename, fileptr)
+        sk1_doc.close()
+    else:
+        sk2_doc.save(filename, fileptr)
+
 
 def check_sk1(path):
-	fileptr = get_fileptr(path)
-	string = fileptr.read(7)
-	fileptr.close()
-	return string == '##sK1 1'
+    fileptr = get_fileptr(path)
+    string = fileptr.read(7)
+    fileptr.close()
+    return string == '##sK1 1'
