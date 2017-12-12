@@ -20,8 +20,8 @@ The package provides Qt-like signal-slot functionality
 for printing events processing.
 
 Signal arguments:
-PRINTER_CHANGED	  prn - new printer instance 
-PRINTER_MODIFIED  no args 
+PRINTER_CHANGED   prn - new printer instance
+PRINTER_MODIFIED  no args
 PRINTOUT_MODIFIED no args
 """
 
@@ -42,7 +42,7 @@ def connect(channel, receiver):
     if callable(receiver):
         try:
             channel.append(receiver)
-        except:
+        except Exception:
             msg = "Cannot connect to channel:"
             print msg, channel, "receiver:", receiver
 
@@ -55,7 +55,7 @@ def disconnect(channel, receiver):
     if callable(receiver):
         try:
             channel.remove(receiver)
-        except:
+        except Exception:
             msg = "Cannot disconnect from channel:"
             print msg, channel, "receiver:", receiver
 
@@ -69,9 +69,9 @@ def emit(channel, *args):
             try:
                 if callable(receiver):
                     receiver(*args)
-            except:
+            except Exception:
                 pass
-    except:
+    except Exception:
         print "Cannot send signal to channel:", channel
 
 

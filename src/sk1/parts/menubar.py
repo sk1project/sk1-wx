@@ -98,9 +98,9 @@ class AppMenuBar(wx.MenuBar):
         self.entries.append(entry)
 
         # ---Effects menu
-        # 		sub = (pdids.ID_TO_CONTAINER, pdids.ID_FROM_CONTAINER,)
-        # 		entry = (_("Effe&cts"), sub)
-        # 		self.entries.append(entry)
+        # sub = (pdids.ID_TO_CONTAINER, pdids.ID_FROM_CONTAINER,)
+        # entry = (_("Effe&cts"), sub)
+        # self.entries.append(entry)
 
         # ---Paths menu
         sub = (pdids.ID_BEZIER_SEL_ALL_NODES, pdids.ID_BEZIER_REVERSE_ALL_PATHS,
@@ -135,11 +135,9 @@ class AppMenuBar(wx.MenuBar):
         self.entries.append(entry)
 
         # ---Tools menu
-        # 		sub = (
-        # 			pdids.ID_TOOL_PAGES,
-        # 			pdids.ID_TOOL_OBJBROWSER,)
-        # 		entry = (_("T&ools"), sub)
-        # 		self.entries.append(entry)
+        # sub = (pdids.ID_TOOL_PAGES, pdids.ID_TOOL_OBJBROWSER,)
+        # entry = (_("T&ools"), sub)
+        # self.entries.append(entry)
 
         # ---Help menu
         sub = (pdids.ID_REPORT_BUG, None, pdids.ID_APP_WEBSITE,

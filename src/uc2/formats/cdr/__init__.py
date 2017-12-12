@@ -23,26 +23,33 @@ from uc2.formats.cdr import cdr_const
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2.formats.generic_filters import get_fileptr
 
-def cdr_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
-	if kw: cnf.update(kw)
-	doc = CDR_Presenter(appdata, cnf)
-	doc.load(filename)
-	if translate:
-		sk2_doc = SK2_Presenter(appdata, cnf)
-		sk2_doc.doc_file = filename
-		doc.traslate_to_sk2(sk2_doc)
-		doc.close()
-		doc = sk2_doc
-	return doc
 
-def cdr_saver(cdr_doc, filename=None, fileptr=None, translate=True, cnf={}, **kw):
-	if kw: cnf.update(kw)
-	cdr_doc.save(filename)
+def cdr_loader(appdata, filename=None, fileptr=None, translate=True, cnf={},
+               **kw):
+    if kw: cnf.update(kw)
+    doc = CDR_Presenter(appdata, cnf)
+    doc.load(filename)
+    if translate:
+        sk2_doc = SK2_Presenter(appdata, cnf)
+        sk2_doc.doc_file = filename
+        doc.traslate_to_sk2(sk2_doc)
+        doc.close()
+        doc = sk2_doc
+    return doc
+
+
+def cdr_saver(cdr_doc, filename=None, fileptr=None, translate=True, cnf={},
+              **kw):
+    if kw: cnf.update(kw)
+    cdr_doc.save(filename)
+
 
 def check_cdr(path):
-	fileptr = get_fileptr(path)
-	header = fileptr.read(12)
-	fileptr.close()
-	if not header[:4] == cdr_const.RIFF_ID: return False
-	if header[8:] in cdr_const.CDR_VERSIONS: return True
-	else: return False
+    fileptr = get_fileptr(path)
+    header = fileptr.read(12)
+    fileptr.close()
+    if not header[:4] == cdr_const.RIFF_ID: return False
+    if header[8:] in cdr_const.CDR_VERSIONS:
+        return True
+    else:
+        return False

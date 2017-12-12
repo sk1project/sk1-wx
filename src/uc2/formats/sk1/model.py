@@ -843,7 +843,7 @@ class PolyBezier(SK1ModelObject):
     b()             start a bezier obj
     bs(X, Y, CONT)  append a line segment
     bc(X1, Y1, X2, Y2, X3, Y3, CONT)  append a bezier segment
-    bn()	        start a new path
+    bn()            start a new path
     bC()            close path
     """
     string = ''

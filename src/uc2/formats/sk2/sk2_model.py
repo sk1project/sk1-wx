@@ -513,7 +513,7 @@ class Container(Group):
     Represents container group object. 
     All child objects are in childs list. 
     First child object is a container.
-    Other child objects are container's content.	
+    Other child objects are container's content.
     """
 
     cid = CONTAINER
@@ -839,7 +839,7 @@ class Curve(PrimitiveObject):
     marker - NODE_CUSP = 0; NODE_SMOOTH = 1; NODE_SYMMETRICAL = 2
     
     Curve affine transformation is stored and collected separately,
-    i.e. curve points are not modified to avoid accurancy lost.	
+    i.e. curve points are not modified to avoid accurancy lost.
     """
 
     cid = CURVE

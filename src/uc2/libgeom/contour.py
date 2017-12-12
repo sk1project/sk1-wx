@@ -69,7 +69,7 @@ def circleparam(h):
     For joining lines we need circle-segments with arbitrary
     angles, we need to subdivide the approximating bezier segments.
     Iterative approach to determine at what parameter t0 you have
-    to subdivide a circle segment to get height h.	
+    to subdivide a circle segment to get height h.
     """
     t0 = 0.5
     dt = 0.25
@@ -119,7 +119,7 @@ def build_parallel(p, radius, recursionlimit=6):
     """
     This builds a list of bezier segments that are "sufficiently"
     close to a given source segment. It recursively subdivides, if
-    the check for parallelity fails.	
+    the check for parallelity fails.
     """
     # find tangent to calculate orthogonal neighbor of endpoint
     c1 = c2 = []
@@ -198,7 +198,7 @@ def get_join_segment(startpoint, endpoint, radius, jointype,
     This returns a list of bezier segments that joins two points
     with a given radius (fails if the radius is smaller than the
     distance between startpoint) and endpoint). 
-    jointype is one of 	JOIN_MITER, JOIN_ROUND, JOIN_BEVEL	
+    jointype is one of JOIN_MITER, JOIN_ROUND, JOIN_BEVEL
     """
 
     if jointype == sk2const.JOIN_MITER:
@@ -267,7 +267,7 @@ def get_join_segment(startpoint, endpoint, radius, jointype,
 def get_cap_segment(startpoint, endpoint, captype):
     """
     This returns a list of bezier segments that form the end cap of
-    a line. Valid captypes are: CAP_BUTT, CAP_ROUND, CAP_SQUARE	
+    a line. Valid captypes are: CAP_BUTT, CAP_ROUND, CAP_SQUARE
     """
 
     #  =====|
@@ -450,7 +450,7 @@ def create_stroke_outline(path, radius, linejoin=sk2const.JOIN_MITER,
 def make_path(segments, close=1):
     """
     This function prepares a path given by a list of lists of
-    coordinates for the use with app.	
+    coordinates for the use with app.
     """
     first_point = segments[0][0]
     last_point = first_point

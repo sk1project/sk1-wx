@@ -179,7 +179,7 @@ def _init_gtk_colors(kw):
     kw['dark_shadow'] = mix_colors(border, bg, 200)
     kw['dark_face'] = border + (40,)
     kw['light_face'] = (255, 255, 255, 60)
-    # 	kw['workspace'] = () + ws
+    # kw['workspace'] = () + ws
     kw['workspace'] = (89, 89, 89)
     kw['tooltip_bg'] = () + infobk
 

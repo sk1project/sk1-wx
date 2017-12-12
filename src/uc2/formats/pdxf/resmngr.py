@@ -165,7 +165,3 @@ class ResourceManager:
         If id is not provided, generates new unique id.
         """
         return self.registry_file(filepath, const.DOC_PREVIEW_DIR, id)
-
-# if __name__ == '__main__':
-#	print OS_FAMILY
-#	print convert_resource_path('Image/test.png')

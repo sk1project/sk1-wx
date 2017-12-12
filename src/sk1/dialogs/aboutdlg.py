@@ -39,7 +39,7 @@ class AboutDialog(wal.SimpleDialog):
         nb.add_page(ThanksPage(nb), _('Thanks to'))
         nb.add_page(LicensePage(nb), _('License'))
 
-        # 		nb.add_page(EvetLoopMonitor(nb), 'Event loops')
+        # nb.add_page(EvetLoopMonitor(nb), 'Event loops')
         self.pack(nb, expand=True, fill=True, padding_all=5)
 
 
