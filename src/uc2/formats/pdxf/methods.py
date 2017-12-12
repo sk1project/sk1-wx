@@ -158,7 +158,7 @@ class PDXF_Methods:
         if not layer_name:
             layer_name = _('Layer') + ' %i' % (page.layer_counter + 1)
         layer = model.Layer(self.config, page)
-        layer.name = "" + layer_name
+        layer.name = layer_name
         if index < len(page.childs):
             page.childs.insert(index, layer)
         else:
