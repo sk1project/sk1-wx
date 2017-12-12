@@ -36,7 +36,7 @@ STRUCT_PLACEABLE = ('<'
                     'H'  # Inch
                     'I'  # Reserved
                     'H'  # Checksum
-)
+                    )
 
 STRUCT_HEADER = ('<'
                  'H'  # Type
@@ -46,7 +46,7 @@ STRUCT_HEADER = ('<'
                  'H'  # Num. objects
                  'I'  # Max. record size
                  'H'  # Num. Parameters
-)
+                 )
 
 MEMORYMETAFILE = 0x0001
 DISKMETAFILE = 0x0002
@@ -312,11 +312,12 @@ META_CHARSETS = {
 }
 
 PLACEABLE_MARKUP = [(0, 4, 'WMF Signature'), (4, 2, 'HWmf handle'),
-    (6, 8, 'BoundingBox'), (14, 2, 'Inch'), (16, 4, 'Reserved'),
-    (20, 2, 'Checksum')]
+                    (6, 8, 'BoundingBox'), (14, 2, 'Inch'), (16, 4, 'Reserved'),
+                    (20, 2, 'Checksum')]
 HEADER_MARKUP = [(0, 2, 'Type'), (2, 2, 'HeaderSize'), (4, 2, 'Version'),
-    (6, 2, 'SizeLow'), (8, 2, 'SizeHigh'), (10, 2, 'NumberOfObjects'),
-    (12, 4, 'MaxRecord'), (16, 2, 'NumberOfMembers (0x0000)'), ]
+                 (6, 2, 'SizeLow'), (8, 2, 'SizeHigh'),
+                 (10, 2, 'NumberOfObjects'),
+                 (12, 4, 'MaxRecord'), (16, 2, 'NumberOfMembers (0x0000)'), ]
 
 GENERIC_FIELDS = [(0, 4, 'Record size'), (4, 2, 'WMF record type')]
 
@@ -336,29 +337,30 @@ RECORD_MARKUPS = {
     META_SELECTOBJECT: [(6, 2, 'Object id'), ],
     META_DELETEOBJECT: [(6, 2, 'Object id'), ],
     META_CREATEPENINDIRECT: [(6, 2, 'PenStyle'), (8, 4, 'Width'),
-        (12, 4, 'ColorRef'), ],
+                             (12, 4, 'ColorRef'), ],
     META_CREATEBRUSHINDIRECT: [(6, 2, 'BrushStyle'), (8, 4, 'ColorRef'),
-        (12, 2, 'BrushHatch'), ],
+                               (12, 2, 'BrushHatch'), ],
 
     # Drawing Record Types
     META_ELLIPSE: [(6, 2, 'bottom'), (8, 2, 'right'), (10, 2, 'top'),
-        (12, 2, 'left'), ],
+                   (12, 2, 'left'), ],
     META_ARC: [(6, 2, 'YEndArc'), (8, 2, 'XEndArc'), (10, 2, 'YStartArc'),
-        (12, 2, 'XStartArc'),
-        (14, 2, 'BottomRect'), (16, 2, 'RightRect'), (18, 2, 'TopRect'),
-        (20, 2, 'LeftRect'), ],
+               (12, 2, 'XStartArc'),
+               (14, 2, 'BottomRect'), (16, 2, 'RightRect'), (18, 2, 'TopRect'),
+               (20, 2, 'LeftRect'), ],
     META_PIE: [(6, 2, 'YRadial2'), (8, 2, 'XRadial2'), (10, 2, 'YRadial1'),
-        (12, 2, 'XRadial1'),
-        (14, 2, 'BottomRect'), (16, 2, 'RightRect'), (18, 2, 'TopRect'),
-        (20, 2, 'LeftRect'), ],
+               (12, 2, 'XRadial1'),
+               (14, 2, 'BottomRect'), (16, 2, 'RightRect'), (18, 2, 'TopRect'),
+               (20, 2, 'LeftRect'), ],
     META_CHORD: [(6, 2, 'YRadial2'), (8, 2, 'XRadial2'), (10, 2, 'YRadial1'),
-        (12, 2, 'XRadial1'),
-        (14, 2, 'BottomRect'), (16, 2, 'RightRect'), (18, 2, 'TopRect'),
-        (20, 2, 'LeftRect'), ],
+                 (12, 2, 'XRadial1'),
+                 (14, 2, 'BottomRect'), (16, 2, 'RightRect'),
+                 (18, 2, 'TopRect'),
+                 (20, 2, 'LeftRect'), ],
     META_RECTANGLE: [(6, 2, 'bottom'), (8, 2, 'right'), (10, 2, 'top'),
-        (12, 2, 'left'), ],
+                     (12, 2, 'left'), ],
     META_ROUNDRECT: [(6, 2, 'Height'), (8, 2, 'Width'), (10, 2, 'bottom'),
-        (12, 2, 'right'), (14, 2, 'top'), (16, 2, 'left'), ],
+                     (12, 2, 'right'), (14, 2, 'top'), (16, 2, 'left'), ],
     META_POLYGON: [(6, 2, 'NumberofPoints'), ],
     META_MOVETO: [(6, 2, 'Y'), (8, 2, 'X')],
     META_LINETO: [(6, 2, 'Y'), (8, 2, 'X')],

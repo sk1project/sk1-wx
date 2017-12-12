@@ -80,7 +80,7 @@ class WMF_Record(BinaryModelObject):
 
 
 def get_eof_rec():
-    return WMF_Record('' + wmfconst.EOF_RECORD)
+    return WMF_Record(wmfconst.EOF_RECORD)
 
 
 def get_placeble_header(bbox, inch):
@@ -88,7 +88,7 @@ def get_placeble_header(bbox, inch):
     sig = wmfconst.WMF_SIGNATURE
     handle = reserved = 0
     chunk = pack('<4sHhhhhHI', sig, handle, left, top, right, bottom,
-        inch, reserved)
+                 inch, reserved)
     val = 0
     for word in unpack('<10h', chunk):
         val = val ^ word
@@ -98,13 +98,13 @@ def get_placeble_header(bbox, inch):
 
 def get_wmf_header(filesize, numobjs, maxrecord):
     chunk = pack('<HHHIHIH',
-        wmfconst.DISKMETAFILE,
-        0x0009,
-        wmfconst.METAVERSION300,
-        filesize / 2,
-        numobjs,
-        maxrecord,
-        0x0000)
+                 wmfconst.DISKMETAFILE,
+                 0x0009,
+                 wmfconst.METAVERSION300,
+                 filesize / 2,
+                 numobjs,
+                 maxrecord,
+                 0x0000)
     return META_Header_Record(chunk)
 
 
@@ -159,5 +159,5 @@ def delete_obj(indx):
 
 def create_pen_in():
     chunk = pack('<LHhhhBBBx', 8, wmfconst.META_CREATEPENINDIRECT,
-        5, 0, 0, 0, 0, 0)
+                 5, 0, 0, 0, 0, 0)
     return WMF_Record(chunk)

@@ -193,7 +193,7 @@ class WMF_to_SK2_Translator(object):
         self.dc.trafo = [] + trafo
 
     def get_encoding(self):
-        return '' + self.dc.font[-1]
+        return self.dc.font[-1]
 
     def get_text_style(self):
         sk2_style = [[], [], [], []]

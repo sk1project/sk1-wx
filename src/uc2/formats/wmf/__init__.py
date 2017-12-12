@@ -25,7 +25,7 @@ from uc2.formats.wmf.wmfconst import WMF_SIGNATURE, METAFILETYPES, METAVERSIONS
 
 
 def wmf_loader(appdata, filename=None, fileptr=None,
-        translate=True, cnf={}, **kw):
+               translate=True, cnf={}, **kw):
     if kw: cnf.update(kw)
     wmf_doc = WMF_Presenter(appdata, cnf)
     wmf_doc.load(filename, fileptr)
@@ -39,7 +39,7 @@ def wmf_loader(appdata, filename=None, fileptr=None,
 
 
 def wmf_saver(sk2_doc, filename=None, fileptr=None,
-        translate=True, cnf={}, **kw):
+              translate=True, cnf={}, **kw):
     if kw: cnf.update(kw)
     if sk2_doc.cid == uc2const.WMF: translate = False
     if translate:
