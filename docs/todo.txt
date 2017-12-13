@@ -3,6 +3,7 @@
 Добавить Debian Sid
 Сборки для Gentoo, Slackware
 WiX installer for MSW
+Добавить сохранение SRC.RPM
 
 ===MODEL==========
 Создание кривых кайро на нативной части
