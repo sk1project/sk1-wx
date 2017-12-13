@@ -23,8 +23,6 @@ WMF exporter
 CGM import/export (можно ли подмерджить UC1?)
 
 ===REFACTORING==========
-/home/igor/Projects/sk1-wx/src/sk1/pwidgets
-/home/igor/Projects/sk1-wx/src/sk1/share/pd_plugins
 /home/igor/Projects/sk1-wx/src/uc2/formats/pdf/pdfgen.py
 /home/igor/Projects/sk1-wx/src/uc2/formats/plt/plt_model.py
 
