@@ -32,11 +32,14 @@ class LayerList(UltimateListCtrl):
     change_callback = None
     double_click_callback = None
     selection_flag = True
+    data = None
 
     def __init__(
-            self, parent, data=[], images=[], alt_color=True,
+            self, parent, data=None, images=None, alt_color=True,
             even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
             on_select=None, on_change=None, on_double_click=None):
+        data = data or []
+        images = images or []
         self.alt_color = alt_color
         self.attr1 = UltimateListItemAttr()
         self.attr1.SetBackgroundColour(odd_color)
@@ -75,9 +78,9 @@ class LayerList(UltimateListCtrl):
     def get_selected(self):
         return self.current_item
 
-    def update(self, data=[]):
+    def update(self, data=None):
         self.selection_flag = False
-        self.data = data
+        self.data = data or []
         self.SetItemCount(len(self.data))
         self.selection_flag = True
 

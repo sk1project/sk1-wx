@@ -394,7 +394,8 @@ class Canvas(object):
         self.refresh()
 
     def refresh(self, x=0, y=0, w=0, h=0):
-        if not w: w, h = self.GetSize()
+        if not w:
+            w, h = self.GetSize()
         self.Refresh(rect=wx.Rect(x, y, w, h))
 
     def _on_paint(self, event):
@@ -404,7 +405,7 @@ class Canvas(object):
         self.pdc = wx.PaintDC(self)
         try:
             self.dc = wx.GCDC(self.pdc)
-        except:
+        except Exception:
             self.dc = self.pdc
         self.dc.BeginDrawing()
 

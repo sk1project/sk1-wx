@@ -240,8 +240,9 @@ class Combolist(wx.Choice, WidgetMixin):
     items = []
     callback = None
 
-    def __init__(self, parent, size=DEF_SIZE, width=0, items=[], onchange=None):
-        self.items = items
+    def __init__(self, parent, size=DEF_SIZE,
+                 width=0, items=None, onchange=None):
+        self.items = items or []
         size = self._set_width(size, width)
         wx.Choice.__init__(self, parent, wx.ID_ANY, size, choices=self.items)
         if onchange:
@@ -273,16 +274,16 @@ class Combolist(wx.Choice, WidgetMixin):
         return self.items[self.get_selection()]
 
     def set_active_value(self, val):
-        if not val in self.items:
+        if val not in self.items:
             self.items.append(val)
             self.SetItems(self.items)
         self.set_active(self.items.index[val])
 
 
 class BitmapChoice(wx.combo.OwnerDrawnComboBox, WidgetMixin):
-    def __init__(self, parent, value=0, bitmaps=[]):
+    def __init__(self, parent, value=0, bitmaps=None):
 
-        self.bitmaps = bitmaps
+        self.bitmaps = bitmaps or []
         choices = self._create_items()
         x, y = self.bitmaps[0].GetSize()
         x += 4
@@ -295,29 +296,30 @@ class BitmapChoice(wx.combo.OwnerDrawnComboBox, WidgetMixin):
         self.set_active(value)
 
     def OnDrawItem(self, dc, rect, item, flags):
-        if item == wx.NOT_FOUND:
-            return
-        x, y, w, h = wx.Rect(*rect)
-        color = wx.Colour(*const.UI_COLORS['selected_text_bg'])
-        if flags & wx.combo.ODCB_PAINTING_SELECTED and \
-                        flags & wx.combo.ODCB_PAINTING_CONTROL:
-            dc.SetBrush(wx.Brush(wx.WHITE))
-            dc.DrawRectangle(x - 1, y - 1, w + 2, h + 2)
-            bitmap = self.bitmaps[item]
-        elif flags & wx.combo.ODCB_PAINTING_SELECTED:
-            dc.SetBrush(wx.Brush(color))
-            dc.DrawRectangle(x, y, w, h)
-            bitmap = bmp_to_white(self.bitmaps[item])
-        else:
-            bitmap = self.bitmaps[item]
-        dc.DrawBitmap(bitmap, x + 2, y + 4, True)
+        if item != wx.NOT_FOUND:
+            x, y, w, h = wx.Rect(*rect)
+            color = wx.Colour(*const.UI_COLORS['selected_text_bg'])
+            if flags & wx.combo.ODCB_PAINTING_SELECTED and \
+               flags & wx.combo.ODCB_PAINTING_CONTROL:
+                dc.SetBrush(wx.Brush(wx.WHITE))
+                dc.DrawRectangle(x - 1, y - 1, w + 2, h + 2)
+                bitmap = self.bitmaps[item]
+            elif flags & wx.combo.ODCB_PAINTING_SELECTED:
+                dc.SetBrush(wx.Brush(color))
+                dc.DrawRectangle(x, y, w, h)
+                bitmap = bmp_to_white(self.bitmaps[item])
+            else:
+                bitmap = self.bitmaps[item]
+            dc.DrawBitmap(bitmap, x + 2, y + 4, True)
 
     def OnMeasureItem(self, item):
-        if item == wx.NOT_FOUND: return 1
+        if item == wx.NOT_FOUND:
+            return 1
         return self.bitmaps[item].GetSize()[1] + 7
 
     def OnMeasureItemWidth(self, item):
-        if item == wx.NOT_FOUND: return 1
+        if item == wx.NOT_FOUND:
+            return 1
         return self.bitmaps[item].GetSize()[0] - 4
 
     def _create_items(self):
@@ -354,10 +356,8 @@ class Combobox(wx.ComboBox, DataWidgetMixin):
 
     def __init__(
             self, parent, value='', pos=(-1, 1), size=DEF_SIZE, width=0,
-            items=[], onchange=None):
-        self.items = []
-        if items:
-            self.items = items
+            items=None, onchange=None):
+        self.items = items or []
         flags = wx.CB_DROPDOWN | wx.TE_PROCESS_ENTER
         size = self._set_width(size, width)
         wx.ComboBox.__init__(
@@ -393,10 +393,10 @@ class FloatCombobox(Combobox):
     digits = 0
 
     def __init__(
-            self, parent, value='', width=5, digits=1, items=[], onchange=None):
-        vals = []
-        for item in items:
-            vals.append(str(item))
+            self, parent, value='', width=5, digits=1,
+            items=None, onchange=None):
+        items = items or []
+        vals = [str(item) for item in items]
         Combobox.__init__(
             self, parent, str(value), width=width,
             items=vals, onchange=onchange)
@@ -528,7 +528,8 @@ class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
         elif const.IS_MSW:
             width += 2
         size = self._set_width(size, width)
-        wx.SpinCtrl.__init__(self, parent, wx.ID_ANY, '', size=size,
+        wx.SpinCtrl.__init__(
+            self, parent, wx.ID_ANY, '', size=size,
             style=wx.SP_ARROW_KEYS | wx.ALIGN_LEFT | wx.TE_PROCESS_ENTER)
         self.set_range(range_val)
         self.set_value(value)
@@ -579,6 +580,7 @@ if not const.IS_WX2:
         flag = True
         ctxmenu_flag = False
         digits = 2
+        step = None
 
         def __init__(
                 self, parent, value=0.0, range_val=(0.0, 1.0), step=0.01,
@@ -591,7 +593,8 @@ if not const.IS_WX2:
             elif const.IS_MSW:
                 width += 2
             size = self._set_width(size, width)
-            wx.SpinCtrlDouble.__init__(self, parent, wx.ID_ANY, '', size=size,
+            wx.SpinCtrlDouble.__init__(
+                self, parent, wx.ID_ANY, '', size=size,
                 style=wx.SP_ARROW_KEYS | wx.ALIGN_LEFT | wx.TE_PROCESS_ENTER,
                 min=0, max=100, initial=value, inc=step)
             self.set_range(range_val)
@@ -814,7 +817,7 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
             line = 'val=' + txt
             code = compile(line, '<string>', 'exec')
             exec code
-        except:
+        except Exception:
             return self.value
         return val
 
@@ -994,19 +997,13 @@ class ColorButton(wx.ColourPickerCtrl, WidgetMixin):
         r = int(hexcolor[1:3], 0x10)
         g = int(hexcolor[3:5], 0x10)
         b = int(hexcolor[5:], 0x10)
-        return (r, g, b)
+        return r, g, b
 
     def val255(self, vals):
-        ret = []
-        for item in vals:
-            ret.append(int(item * 255))
-        return tuple(ret)
+        return tuple(int(item * 255) for item in vals)
 
     def val255_to_dec(self, vals):
-        ret = []
-        for item in vals:
-            ret.append(item / 255.0)
-        return tuple(ret)
+        return tuple(item / 255.0 for item in vals)
 
     def set_value(self, color):
         self.SetColour(wx.Colour(*self.val255(color)))
