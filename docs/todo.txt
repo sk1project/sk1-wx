@@ -17,6 +17,7 @@ gevent для eventloops (?)
 ===UC2==========
 UI для UC2 (?)
 Цветной вывод для linux консоли
+MSW build
 
 ===FILTERS==========
 WMF exporter
