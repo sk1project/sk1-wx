@@ -18,11 +18,11 @@
 import os
 from importlib import import_module
 
-from uc2 import _
-from uc2 import uc2const
-from uc2 import events, msgconst
-from uc2.utils.fs import get_file_extension
 from fallback import fallback_check, im_loader
+from uc2 import events, msgconst
+from uc2 import translator as _
+from uc2 import uc2const
+from uc2.utils.fs import get_file_extension
 
 LOADERS = {}
 SAVERS = {}

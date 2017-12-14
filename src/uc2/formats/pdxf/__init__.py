@@ -15,32 +15,33 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import zipfile
 
-from uc2.formats.pdxf.presenter import PDXF_Presenter
 from uc2.formats.pdxf import const
 from uc2.formats.pdxf import model
+from uc2.formats.pdxf.presenter import PDXF_Presenter
+from uc2.utils.mixutils import merge_cnf
 
 PDXF_HEADER = (b'\x50\x4b\x03\x04\x14\x00\x00\x00')
 
 
-def pdxf_loader(appdata, filename, translate=True, cnf={}, **kw):
-    if kw: cnf.update(kw)
+def pdxf_loader(appdata, filename, translate=True, cnf=None, **kw):
+    cnf = merge_cnf(cnf, kw)
     pdxf_doc = PDXF_Presenter(appdata, cnf, filename)
     return pdxf_doc
 
 
-def pdxf_saver(pdxf_doc, filename, translate=True, cnf={}, **kw):
-    if kw: cnf.update(kw)
+def pdxf_saver(pdxf_doc, filename, translate=True, cnf=None, **kw):
+    cnf = merge_cnf(cnf, kw)
     pdxf_doc.save(filename)
 
 
 def check_pdxf(path):
-    if not zipfile.is_zipfile(path): return False
+    if not zipfile.is_zipfile(path):
+        return False
 
     pdxf_file = zipfile.ZipFile(path, 'r')
     fl = pdxf_file.namelist()
-    if not 'mimetype' in fl or not pdxf_file.read('mimetype') == const.DOC_MIME:
+    if 'mimetype' not in fl or pdxf_file.read('mimetype') != const.DOC_MIME:
         return False
     return True

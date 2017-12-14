@@ -15,22 +15,25 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 
 from uc2 import uc2const
-from uc2.formats.generic_filters import get_fileptr
-from uc2.formats.sk2.sk2_presenter import SK2_Presenter
-from uc2.formats.cgm.cgm_presenter import CGM_Presenter
 from uc2.formats.cgm.cgm_const import CGM_SIGNATURE
+from uc2.formats.cgm.cgm_presenter import CGM_Presenter
+from uc2.formats.sk2.sk2_presenter import SK2_Presenter
+from uc2.utils.fsutils import get_fileptr
+from uc2.utils.mixutils import merge_cnf
 
 
 def cgm_loader(appdata, filename=None, fileptr=None,
-        translate=True, cnf={}, **kw):
-    if kw: cnf.update(kw)
+               translate=True, cnf=None, **kw):
+    cnf = merge_cnf(cnf, kw)
     cgm_doc = CGM_Presenter(appdata, cnf)
     cgm_doc.load(filename, fileptr)
     if translate:
         sk2_doc = SK2_Presenter(appdata, cnf)
-        if filename: sk2_doc.doc_file = filename
+        if filename:
+            sk2_doc.doc_file = filename
         cgm_doc.translate_to_sk2(sk2_doc)
         cgm_doc.close()
         return sk2_doc
@@ -38,15 +41,17 @@ def cgm_loader(appdata, filename=None, fileptr=None,
 
 
 def cgm_saver(sk2_doc, filename=None, fileptr=None,
-        translate=True, cnf={}, **kw):
-    if kw: cnf.update(kw)
-    if sk2_doc.cid == uc2const.CGM: translate = False
+              translate=True, cnf=None, **kw):
+    cnf = merge_cnf(cnf, kw)
+    if sk2_doc.cid == uc2const.CGM:
+        translate = False
     if translate:
         cgm_doc = CGM_Presenter(sk2_doc.appdata, cnf)
         try:
             cgm_doc.translate_from_sk2(sk2_doc)
-        except:
-            for item in sys.exc_info(): print item
+        except Exception:
+            for item in sys.exc_info():
+                print item
         cgm_doc.save(filename, fileptr)
         cgm_doc.close()
     else:

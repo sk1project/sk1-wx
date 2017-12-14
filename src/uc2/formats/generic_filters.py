@@ -17,35 +17,13 @@
 
 import errno
 import os
-import sys
 import xml.sax
 from xml.sax import handler
 from xml.sax.xmlreader import InputSource
 
-from uc2 import _, events, msgconst, utils
-
-
-def get_fileptr(path, writable=False):
-    if not file:
-        msg = _('There is no file path')
-        raise IOError(errno.ENODATA, msg, '')
-    if writable:
-        try:
-            fileptr = open(path, 'wb')
-        except Exception:
-            errtype, value, traceback = sys.exc_info()
-            msg = _('Cannot open %s file for writing') % path
-            events.emit(events.MESSAGES, msgconst.ERROR, msg)
-            raise IOError(errtype, msg + '\n' + value, traceback)
-    else:
-        try:
-            fileptr = open(path, 'rb')
-        except Exception:
-            errtype, value, traceback = sys.exc_info()
-            msg = _('Cannot open %s file for reading') % path
-            events.emit(events.MESSAGES, msgconst.ERROR, msg)
-            raise IOError(errtype, msg + '\n' + value, traceback)
-    return fileptr
+from uc2 import events, msgconst, utils
+from uc2 import translator as _
+from uc2.utils.fsutils import get_fileptr
 
 
 class AbstractLoader(object):

@@ -19,8 +19,9 @@
 import os
 import sys
 
-from uc2 import _, uc2const
 from uc2 import events, msgconst
+from uc2 import translator as _
+from uc2 import uc2const
 from uc2.utils import fs
 
 

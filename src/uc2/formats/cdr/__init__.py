@@ -15,18 +15,16 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-
-from uc2 import events, msgconst
-from uc2.formats.cdr.cdr_presenter import CDR_Presenter
 from uc2.formats.cdr import cdr_const
+from uc2.formats.cdr.cdr_presenter import CDR_Presenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
-from uc2.formats.generic_filters import get_fileptr
+from uc2.utils.fsutils import get_fileptr
+from uc2.utils.mixutils import merge_cnf
 
 
-def cdr_loader(appdata, filename=None, fileptr=None, translate=True, cnf={},
+def cdr_loader(appdata, filename=None, fileptr=None, translate=True, cnf=None,
                **kw):
-    if kw: cnf.update(kw)
+    cnf = merge_cnf(cnf, kw)
     doc = CDR_Presenter(appdata, cnf)
     doc.load(filename)
     if translate:
@@ -38,9 +36,9 @@ def cdr_loader(appdata, filename=None, fileptr=None, translate=True, cnf={},
     return doc
 
 
-def cdr_saver(cdr_doc, filename=None, fileptr=None, translate=True, cnf={},
+def cdr_saver(cdr_doc, filename=None, fileptr=None, translate=True, cnf=None,
               **kw):
-    if kw: cnf.update(kw)
+    cnf = merge_cnf(cnf, kw)
     cdr_doc.save(filename)
 
 
@@ -48,7 +46,8 @@ def check_cdr(path):
     fileptr = get_fileptr(path)
     header = fileptr.read(12)
     fileptr.close()
-    if not header[:4] == cdr_const.RIFF_ID: return False
+    if not header[:4] == cdr_const.RIFF_ID:
+        return False
     if header[8:] in cdr_const.CDR_VERSIONS:
         return True
     else:

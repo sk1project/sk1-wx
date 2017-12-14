@@ -15,23 +15,21 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import sys
-
-from uc2 import _, events, msgconst
-from uc2.formats.generic_filters import get_fileptr
-from uc2.formats.pdf.pdfconst import PDF_SIGNATURE
 from uc2.formats.pdf.pdf_filters import PDF_Saver
+from uc2.formats.pdf.pdfconst import PDF_SIGNATURE
+from uc2.utils.fsutils import get_fileptr
+from uc2.utils.mixutils import merge_cnf
 
 
-def pdf_loader(appdata, filename=None, fileptr=None, translate=True, cnf={},
+def pdf_loader(appdata, filename=None, fileptr=None, translate=True, cnf=None,
                **kw):
+    cnf = merge_cnf(cnf, kw)
     pass
 
 
-def pdf_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf={},
+def pdf_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf=None,
               **kw):
-    if kw: cnf.update(kw)
+    cnf = merge_cnf(cnf, kw)
     sk2_saver = sk2_doc.saver
     sk2_doc.saver = PDF_Saver()
     sk2_doc.save(filename, fileptr)

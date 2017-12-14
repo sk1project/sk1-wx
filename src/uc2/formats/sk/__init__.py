@@ -16,34 +16,34 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import os
-import sys
-
-from uc2 import _, events, msgconst, uc2const
+from uc2 import uc2const
 from uc2.formats.sk import sk_model, sk_const
 from uc2.formats.sk.sk_presenter import SK_Presenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
-from uc2.formats.generic_filters import get_fileptr
+from uc2.utils.fsutils import get_fileptr
+from uc2.utils.mixutils import merge_cnf
 
 
-def sk_loader(appdata, filename=None, fileptr=None, translate=True, cnf={},
+def sk_loader(appdata, filename=None, fileptr=None, translate=True, cnf=None,
               **kw):
-    if kw: cnf.update(kw)
+    cnf = merge_cnf(cnf, kw)
     sk_doc = SK_Presenter(appdata, cnf)
     sk_doc.load(filename, fileptr)
     if translate:
         sk2_doc = SK2_Presenter(appdata, cnf)
-        if filename: sk2_doc.doc_file = filename
+        if filename:
+            sk2_doc.doc_file = filename
         sk_doc.translate_to_sk2(sk2_doc)
         sk_doc.close()
         return sk2_doc
     return sk_doc
 
 
-def sk_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf={},
+def sk_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf=None,
              **kw):
-    if kw: cnf.update(kw)
-    if sk2_doc.cid == uc2const.SK: translate = False
+    cnf = merge_cnf(cnf, kw)
+    if sk2_doc.cid == uc2const.SK:
+        translate = False
     if translate:
         sk_doc = SK_Presenter(sk2_doc.appdata, cnf)
         sk_doc.translate_from_sk2(sk2_doc)
