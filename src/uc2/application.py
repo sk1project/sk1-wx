@@ -100,9 +100,9 @@ class UCApplication(object):
         result = []
         for loader in loaders:
             if loader in (uc2const.COREL_PAL, uc2const.SCRIBUS_PAL):
-                descr = uc2const.FORMAT_DESCRIPTION[loader]
-                descr = descr.replace(' - ', ') - ')
-                result.append('%s (%s' % (loader.upper(), descr))
+                desc = uc2const.FORMAT_DESCRIPTION[loader]
+                desc = desc.replace(' - ', ') - ')
+                result.append('%s (%s' % (loader.upper(), desc))
             else:
                 result.append(uc2const.FORMAT_DESCRIPTION[loader])
         return '\n   '.join(result)
@@ -217,16 +217,16 @@ class UCApplication(object):
                 doc = loader(self.appdata, files[0], convert=True)
             else:
                 doc = loader(self.appdata, files[0])
-        except Exception:
+        except Exception as e:
             msg = _("Error while loading '%s'") % files[0]
             msg += _(
                 "The file may be corrupted or contains unknown file format.")
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
-            msg = _('Translation is interrupted')
+            msg = _('Loading is interrupted')
             events.emit(events.MESSAGES, msgconst.STOP, msg)
 
-            echo('\n' + sys.exc_info()[1] + '\n' + sys.exc_info()[2])
+            LOG.error('%s %s', msg, e)
             sys.exit(1)
 
         if doc is not None:
@@ -236,14 +236,14 @@ class UCApplication(object):
                     saver(doc, files[1], translate=False, convert=True)
                 else:
                     saver(doc, files[1])
-            except Exception:
+            except Exception as e:
                 msg = _("Error while translation and saving '%s'") % files[0]
                 events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
                 msg = _('Translation is interrupted')
                 events.emit(events.MESSAGES, msgconst.STOP, msg)
 
-                echo('\n' + sys.exc_info()[1] + '\n' + sys.exc_info()[2])
+                LOG.error('%s %s', msg, e)
                 sys.exit(1)
         else:
             msg = _("Error while model creating for '%s'") % files[0]
