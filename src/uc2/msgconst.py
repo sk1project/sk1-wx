@@ -33,8 +33,4 @@ MESSAGES = {
     STOP: _('STOP'),
 }
 
-lns = []
-for key, val in MESSAGES.items():
-    lns.append(len(val))
-
-MAX_LEN = max(*lns)
+MAX_LEN = max(*[val for val in MESSAGES.values()])

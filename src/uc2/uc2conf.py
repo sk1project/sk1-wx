@@ -60,8 +60,9 @@ class UCData:
 
 class UCConfig(SerializedConfig):
     # ============== GENERIC SECTION ===================
-    uc_version = '2.0rc3'
     system_encoding = 'utf-8'  # default encoding (GUI uses utf-8 only)
+    log_level = 'INFO'
+
 
     # ============== COLOR MANAGEMENT SECTION ===================
 

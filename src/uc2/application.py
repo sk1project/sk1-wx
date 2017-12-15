@@ -16,6 +16,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
+import logging
 import os
 import sys
 
@@ -25,7 +26,18 @@ from uc2 import events, msgconst
 from uc2.app_palettes import PaletteManager
 from uc2.formats import get_loader, get_saver, get_saver_by_id
 from uc2.uc2conf import UCData, UCConfig
-from uc2.utils.mixutils import echo
+from uc2.utils.mixutils import echo, config_logging
+
+LOG = logging.getLogger(__name__)
+
+LOG_MAP = {
+    msgconst.JOB: LOG.info,
+    msgconst.INFO: LOG.info,
+    msgconst.OK: LOG.info,
+    msgconst.WARNING: LOG.warn,
+    msgconst.ERROR: LOG.error,
+    msgconst.STOP: LOG.error,
+}
 
 HELP_TEMPLATE = '''
 %s
@@ -107,17 +119,25 @@ class UCApplication(object):
                               self._get_infos(uc2const.BITMAP_SAVERS),))
         sys.exit(0)
 
+    def show_short_help(self, msg):
+        echo(msg)
+        echo('USAGE: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]')
+        echo('Use --help for more details.')
+        sys.exit(1)
+
     def verbose(self, *args):
         status = msgconst.MESSAGES[args[0]]
-        msg = args[1]
+        LOG_MAP[args[0]](args[1])
         if self.do_verbose:
             ident = ' ' * (msgconst.MAX_LEN - len(status))
-            echo('%s%s| %s' % (status, ident, msg))
+            echo('%s%s| %s' % (status, ident, args[1]))
 
     def run(self):
 
-        if len(sys.argv) < 3 or '--help' in sys.argv or '-help' in sys.argv:
+        if '--help' in sys.argv or '-help' in sys.argv:
             self.show_help()
+        elif len(sys.argv) < 3:
+            self.show_short_help('Not enough arguments!')
 
         files = []
         options_list = []
@@ -126,20 +146,22 @@ class UCApplication(object):
         for item in sys.argv[1:]:
             if item.startswith('--'):
                 options_list.append(item)
+            elif item.startswith('-'):
+                self.show_short_help('Unknown option %s' % item)
             else:
                 files.append(item)
 
-        self.do_verbose = '--verbose' in options_list
-
-        if len(files) != 2 or not os.path.lexists(files[0]):
-            self.show_help()
-
-        events.connect(events.MESSAGES, self.verbose)
+        if not file:
+            self.show_short_help('File names are not provided!')
+        elif len(files) == 1:
+            self.show_short_help('Destination file name is not provided!')
+        elif not os.path.lexists(files[0]):
+            self.show_short_help('Source file % is not found!' % files[0])
 
         for item in options_list:
-            result = item[1:].split('=')
+            result = item[2:].split('=')
             if not len(result) == 2:
-                continue
+                options[result[0]] = True
             else:
                 key, value = result
                 value = value.replace('"', '').replace("'", '')
@@ -148,6 +170,12 @@ class UCApplication(object):
                 if value == 'no':
                     value = False
                 options[key] = value
+
+        self.do_verbose = options.get('verbose', False)
+        events.connect(events.MESSAGES, self.verbose)
+        log_level = options.get('log', self.config.log_level)
+        filepath = os.path.join(self.appdata.app_config_dir, 'uc2.log')
+        config_logging(filepath, log_level)
 
         self.default_cms = cms.ColorManager()
         self.palettes = PaletteManager(self)
