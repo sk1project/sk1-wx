@@ -15,9 +15,27 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
+
 
 def merge_cnf(cnf=None, kw=None):
     cnf = cnf or {}
     if kw:
         cnf.update(kw)
     return cnf
+
+
+LOGGING_MAP = {
+    'DEBUG': logging.DEBUG,
+    'INFO': logging.INFO,
+    'WARN': logging.WARN,
+    'WARNING': logging.WARN,
+    'ERROR': logging.ERROR,
+}
+
+
+def config_logging(filepath, level='INFO'):
+    level = LOGGING_MAP.get(level.upper(), logging.INFO)
+    logging.basicConfig(level=level,
+                        filename=filepath,
+                        filemode='w')
