@@ -15,25 +15,24 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 import cairo
 
+from uc2 import _, events, msgconst
 from uc2.formats.fallback import im_loader
 from uc2.formats.sk2.crenderer import CairoRenderer
-from uc2.utils.fsutils import get_fileptr
-from uc2.utils.mixutils import merge_cnf
+from uc2.formats.generic_filters import get_fileptr
 
 PNG_ID = '\x89\x50\x4e\x47'
 
 
-def png_loader(appdata, filename=None, fileptr=None, translate=True, cnf=None,
+def png_loader(appdata, filename=None, fileptr=None, translate=True, cnf={},
                **kw):
-    cnf = merge_cnf(cnf, kw)
     return im_loader(appdata, filename, fileptr, translate, cnf, **kw)
 
 
-def png_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf=None,
+def png_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf={},
               **kw):
-    cnf = merge_cnf(cnf, kw)
     if filename and not fileptr:
         fileptr = get_fileptr(filename, True)
     page = sk2_doc.methods.get_page()
@@ -47,8 +46,8 @@ def png_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf=None,
 
     rend = CairoRenderer(sk2_doc.cms)
     antialias_flag = True
-    if 'antialiasing' in cnf:
-        if not cnf['antialiasing'] in ('True', '1'):
+    if 'antialiasing' in kw.keys():
+        if not kw['antialiasing'] in ('True', '1'):
             antialias_flag = False
     rend.antialias_flag = antialias_flag
     layers = sk2_doc.methods.get_visible_layers(page)
@@ -68,6 +67,5 @@ def check_png(path):
     fileptr = get_fileptr(path)
     mstr = fileptr.read(len(PNG_ID))
     fileptr.close()
-    if mstr == PNG_ID:
-        return True
+    if mstr == PNG_ID: return True
     return False

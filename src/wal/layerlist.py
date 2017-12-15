@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2016 by Igor E. Novikov
+# 	Copyright (C) 2016 by Igor E. Novikov
 #
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from wx.lib.agw.ultimatelistctrl import UltimateListCtrl
@@ -32,14 +32,11 @@ class LayerList(UltimateListCtrl):
     change_callback = None
     double_click_callback = None
     selection_flag = True
-    data = None
 
     def __init__(
-            self, parent, data=None, images=None, alt_color=True,
+            self, parent, data=[], images=[], alt_color=True,
             even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
             on_select=None, on_change=None, on_double_click=None):
-        data = data or []
-        images = images or []
         self.alt_color = alt_color
         self.attr1 = UltimateListItemAttr()
         self.attr1.SetBackgroundColour(odd_color)
@@ -78,9 +75,9 @@ class LayerList(UltimateListCtrl):
     def get_selected(self):
         return self.current_item
 
-    def update(self, data=None):
+    def update(self, data=[]):
         self.selection_flag = False
-        self.data = data or []
+        self.data = data
         self.SetItemCount(len(self.data))
         self.selection_flag = True
 

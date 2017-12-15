@@ -15,16 +15,17 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 import zipfile
 
-from uc2.formats.cdrz import const
+from uc2 import events, msgconst
 from uc2.formats.cdrz.presenter import CDRZ_Presenter
+from uc2.formats.cdrz import const
 from uc2.formats.pdxf.presenter import PDXF_Presenter
-from uc2.utils.mixutils import merge_cnf
 
 
-def cdrz_loader(appdata, filename, translate=True, cnf=None, **kw):
-    cnf = merge_cnf(cnf, kw)
+def cdrz_loader(appdata, filename, translate=True, cnf={}, **kw):
+    if kw: cnf.update(kw)
     doc = CDRZ_Presenter(appdata, cnf)
     doc.load(filename)
     if translate:
@@ -36,17 +37,15 @@ def cdrz_loader(appdata, filename, translate=True, cnf=None, **kw):
     return doc
 
 
-def cdrz_saver(cdr_doc, filename, translate=True, cnf=None, **kw):
-    cnf = merge_cnf(cnf, kw)
+def cdrz_saver(cdr_doc, filename, translate=True, cnf={}, **kw):
+    if kw: cnf.update(kw)
     cdr_doc.save(filename)
 
 
 def check_cdrz(path):
-    if not zipfile.is_zipfile(path):
-        return False
+    if not zipfile.is_zipfile(path): return False
 
     cdrz_file = zipfile.ZipFile(path, 'r')
     fl = cdrz_file.namelist()
-    if 'content/riffData.cdr' not in fl:
-        return False
+    if not 'content/riffData.cdr' in fl: return False
     return True

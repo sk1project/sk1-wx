@@ -45,7 +45,7 @@ from native_mods import make_modules
 
 sys.path.insert(1, os.path.abspath('./src'))
 
-from sk1 import appconst
+from uc2 import uc2const
 
 ############################################################
 # Flags
@@ -59,7 +59,7 @@ CLEAR_BUILD = False
 # Package description
 ############################################################
 NAME = 'sk1'
-VERSION = appconst.VERSION + appconst.REVISION
+VERSION = uc2const.VERSION + uc2const.REVISION
 DESCRIPTION = 'Vector graphics editor for prepress'
 AUTHOR = 'Igor E. Novikov'
 AUTHOR_EMAIL = 'sk1.project.org@gmail.com'

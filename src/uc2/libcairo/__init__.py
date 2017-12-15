@@ -108,6 +108,18 @@ def get_cpath_bbox(cpath):
     return normalize_bbox(CTX.path_extents())
 
 
+def _get_trafo(cmatrix):
+    result = []
+    val = cmatrix.__str__()
+    val = val.replace('cairo.Matrix(', '')
+    val = val.replace(')', '')
+    items = val.split(', ')
+    for item in items:
+        val = item.replace(',', '.')
+        result.append(float(val))
+    return result
+
+
 def get_trafo_from_matrix(cmatrix):
     return _libcairo.get_trafo(cmatrix)
 
@@ -133,8 +145,7 @@ def get_matrix_from_trafo(trafo):
 
 
 def reverse_matrix(cmatrix):
-    trafo = reverse_trafo(get_trafo_from_matrix(cmatrix))
-    return get_matrix_from_trafo(trafo)
+    return get_matrix_from_trafo(_get_trafo(cmatrix))
 
 
 def invert_trafo(trafo):

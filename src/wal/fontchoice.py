@@ -30,12 +30,12 @@ class FontBitmapChoice(wx.combo.OwnerDrawnComboBox, WidgetMixin):
     control_height = 0
 
     def __init__(self, parent, value=0, size=(10, 30),
-                 fontnames=None, fontname_bitmaps=None,
-                 fontsample_bitmaps=None, font_icon=None, onchange=None):
+            fontnames=[], fontname_bitmaps=[],
+            fontsample_bitmaps=[], font_icon=None, onchange=None):
 
-        self.fontnames = fontnames or []
-        self.bitmaps = fontname_bitmaps or []
-        self.sample_bitmaps = fontsample_bitmaps or []
+        self.fontnames = fontnames
+        self.bitmaps = fontname_bitmaps
+        self.sample_bitmaps = fontsample_bitmaps
         self.font_icon = font_icon
 
         self.font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
@@ -74,7 +74,7 @@ class FontBitmapChoice(wx.combo.OwnerDrawnComboBox, WidgetMixin):
         icon_y = self.control_height / 2 - icon_size[1] / 2 + label_y
         sample_y = label_y + self.control_height + 2
         if flags & wx.combo.ODCB_PAINTING_SELECTED and not \
-                flags & wx.combo.ODCB_PAINTING_CONTROL:
+                        flags & wx.combo.ODCB_PAINTING_CONTROL:
             dc.SetBrush(
                 wx.Brush(wx.Colour(*const.UI_COLORS['selected_text_bg'])))
             dc.DrawRectangle(*r)
@@ -122,7 +122,7 @@ class FontBitmapChoice(wx.combo.OwnerDrawnComboBox, WidgetMixin):
         if item == wx.NOT_FOUND:
             return 1
         val = max(self.bitmaps[item].GetSize()[0],
-                  self.sample_bitmaps[item].GetSize()[0])
+            self.sample_bitmaps[item].GetSize()[0])
         if self.font_icon:
             val += self.font_icon.GetSize()[0] + 2
         return val - 4

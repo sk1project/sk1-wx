@@ -31,10 +31,10 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, WidgetMixin):
     alt_color = False
 
     def __init__(
-            self, parent, data=None, border=True, header=False,
+            self, parent, data=[], border=True, header=False,
             single_sel=True, virtual=False, alt_color=False, even_color=None,
             odd_color=None, on_select=None, on_activate=None):
-        self.data = data or []
+        self.data = data
         self.alt_color = alt_color
         self.odd_color = odd_color or const.ODD_COLOR
         self.even_color = even_color or const.EVEN_COLOR
@@ -83,7 +83,7 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, WidgetMixin):
         even = False
         i = 0
         for item in data:
-            if isinstance(item, str):
+            if type(item) == types.StringType:
                 item = item.decode('utf8')
             self.Append([item])
             if alt_color:
@@ -120,12 +120,11 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, WidgetMixin):
 
 class ReportList(SimpleList):
     def __init__(
-            self, parent, data=None, border=True, header=True,
+            self, parent, data=[], border=True, header=True,
             single_sel=True, virtual=False, alt_color=True,
             even_color=None, odd_color=None,
             on_select=None, on_activate=None):
 
-        data = data or []
         SimpleList.__init__(
             self, parent, data, border, header,
             single_sel, virtual, alt_color, even_color, odd_color,
@@ -170,14 +169,12 @@ class ReportList(SimpleList):
         return None
 
 
-class VirtualList(SimpleList):
+def VirtualList(SimpleList):
     def __init__(
-            self, parent, data=None, border=True, header=True,
+            self, parent, data=[], border=True, header=True,
             single_sel=True, virtual=True, alt_color=True,
             even_color=None, odd_color=None,
             on_select=None, on_activate=None):
-
-        data = data or []
         SimpleList.__init__(
             self, parent, data, border, header,
             single_sel, virtual, alt_color, even_color, odd_color,

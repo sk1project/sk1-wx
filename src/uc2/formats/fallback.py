@@ -1,31 +1,29 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2015 by Igor E. Novikov
 #
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from uc2 import libimg
 from uc2 import uc2const, sk2const
+from uc2.formats.generic_filters import get_fileptr
 from uc2.formats.sk2 import sk2_model
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
-from uc2.utils.fsutils import get_fileptr
-from uc2.utils.mixutils import merge_cnf
 
 
-def im_loader(appdata, filename=None, fileptr=None, translate=True, cnf=None,
+def im_loader(appdata, filename=None, fileptr=None, translate=True, cnf={},
               **kw):
-    cnf = merge_cnf(cnf, kw)
     if filename and not fileptr:
         fileptr = get_fileptr(filename)
     content = fileptr.read()

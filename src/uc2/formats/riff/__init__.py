@@ -15,22 +15,24 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+
+from uc2 import events, msgconst
 from uc2.formats.riff.presenter import RIFF_Presenter
-from uc2.utils.fsutils import get_fileptr
-from uc2.utils.mixutils import merge_cnf
+from uc2.formats.generic_filters import get_fileptr
 
 
-def riff_loader(appdata, filename=None, fileptr=None, translate=True, cnf=None,
+def riff_loader(appdata, filename=None, fileptr=None, translate=True, cnf={},
                 **kw):
-    cnf = merge_cnf(cnf, kw)
+    if kw: cnf.update(kw)
     doc = RIFF_Presenter(appdata, cnf)
     doc.load(filename, fileptr)
     return doc
 
 
-def riff_saver(riff_doc, filename=None, fileptr=None, translate=True, cnf=None,
+def riff_saver(riff_doc, filename=None, fileptr=None, translate=True, cnf={},
                **kw):
-    cnf = merge_cnf(cnf, kw)
+    if kw: cnf.update(kw)
     riff_doc.save(filename, fileptr)
 
 

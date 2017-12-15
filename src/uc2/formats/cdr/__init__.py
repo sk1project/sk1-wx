@@ -15,40 +15,34 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2.formats.cdr import cdr_const
+import sys
+
+from uc2 import events, msgconst
 from uc2.formats.cdr.cdr_presenter import CDR_Presenter
+from uc2.formats.cdr import cdr_const
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
-from uc2.utils.fsutils import get_fileptr
-from uc2.utils.mixutils import merge_cnf
+from uc2.formats.generic_filters import get_fileptr
 
+def cdr_loader(appdata, filename=None, fileptr=None, translate=True, cnf={}, **kw):
+	if kw: cnf.update(kw)
+	doc = CDR_Presenter(appdata, cnf)
+	doc.load(filename)
+	if translate:
+		sk2_doc = SK2_Presenter(appdata, cnf)
+		sk2_doc.doc_file = filename
+		doc.traslate_to_sk2(sk2_doc)
+		doc.close()
+		doc = sk2_doc
+	return doc
 
-def cdr_loader(appdata, filename=None, fileptr=None, translate=True, cnf=None,
-               **kw):
-    cnf = merge_cnf(cnf, kw)
-    doc = CDR_Presenter(appdata, cnf)
-    doc.load(filename)
-    if translate:
-        sk2_doc = SK2_Presenter(appdata, cnf)
-        sk2_doc.doc_file = filename
-        doc.traslate_to_sk2(sk2_doc)
-        doc.close()
-        doc = sk2_doc
-    return doc
-
-
-def cdr_saver(cdr_doc, filename=None, fileptr=None, translate=True, cnf=None,
-              **kw):
-    cnf = merge_cnf(cnf, kw)
-    cdr_doc.save(filename)
-
+def cdr_saver(cdr_doc, filename=None, fileptr=None, translate=True, cnf={}, **kw):
+	if kw: cnf.update(kw)
+	cdr_doc.save(filename)
 
 def check_cdr(path):
-    fileptr = get_fileptr(path)
-    header = fileptr.read(12)
-    fileptr.close()
-    if not header[:4] == cdr_const.RIFF_ID:
-        return False
-    if header[8:] in cdr_const.CDR_VERSIONS:
-        return True
-    else:
-        return False
+	fileptr = get_fileptr(path)
+	header = fileptr.read(12)
+	fileptr.close()
+	if not header[:4] == cdr_const.RIFF_ID: return False
+	if header[8:] in cdr_const.CDR_VERSIONS: return True
+	else: return False

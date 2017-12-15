@@ -156,5 +156,5 @@ class PrefsDialog(wal.OkCancelDialog):
 def get_prefs_dialog(parent, pid=''):
     dlg = PrefsDialog(parent, _("sK1 Preferences"), pid)
     dlg.show()
-    # PREFS_DATA.remove(PREFS_DATA[1])
+    # 	PREFS_DATA.remove(PREFS_DATA[1])
     PREFS_DATA.remove(PREFS_DATA[0])
