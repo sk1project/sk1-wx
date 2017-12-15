@@ -1,28 +1,28 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013-2016 by Igor E. Novikov
+# 	Copyright (C) 2013-2016 by Igor E. Novikov
 #
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
+# 	This program is free software: you can redistribute it and/or modify
+# 	it under the terms of the GNU General Public License as published by
+# 	the Free Software Foundation, either version 3 of the License, or
+# 	(at your option) any later version.
 #
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+# 	This program is distributed in the hope that it will be useful,
+# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# 	GNU General Public License for more details.
 #
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 	You should have received a copy of the GNU General Public License
+# 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from copy import deepcopy
 from PIL import Image
 from base64 import b64decode, b64encode
 from cStringIO import StringIO
+from copy import deepcopy
 
 from uc2 import _, uc2const
-from uc2.formats.sk1 import sk1const
 from uc2.formats.generic import TextModelObject
+from uc2.formats.sk1 import sk1const
 
 # Document object enumeration
 DOCUMENT = 1
@@ -843,7 +843,7 @@ class PolyBezier(SK1ModelObject):
     b()             start a bezier obj
     bs(X, Y, CONT)  append a line segment
     bc(X1, Y1, X2, Y2, X3, Y3, CONT)  append a bezier segment
-    bn()            start a new path
+    bn()	        start a new path
     bC()            close path
     """
     string = ''

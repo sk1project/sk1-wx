@@ -17,11 +17,12 @@
 
 from copy import deepcopy
 
+from uc2.cms import verbose_color
+
 from uc2.formats.xml_.xml_model import XMLObject
-from uc2.utils import generate_guid
 from uc2.uc2const import COLOR_RGB, COLOR_CMYK, COLOR_SPOT, COLOR_GRAY, \
     COLOR_LAB
-from uc2.cms import verbose_color
+from uc2.utils import generate_guid
 
 CS_MATCH = {
     COLOR_RGB: 'RGB',
@@ -208,7 +209,7 @@ class CorelPalette_Methods:
             cs = COLOR_SPOT
             vals = deepcopy(self.colorspaces[color.attrs['cs']])
             if vals[0] == COLOR_LAB: return vals
-            name = (color.attrs['cs']).decode(self.config.encoding)
+            name = color.attrs['cs'].decode(self.config.encoding)
             palette_name = self.get_palette_name().decode(self.config.encoding)
             return [cs, vals, 1.0, name, palette_name]
         else:

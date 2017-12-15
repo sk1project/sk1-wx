@@ -15,7 +15,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys, os
+import os
+import sys
 
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 from uc2.formats.sk import sk_model, sk_const
@@ -50,7 +51,8 @@ class SK_Loader(AbstractLoader):
         self.style_obj = sk_model.Style()
         while True:
             self.line = self.fileptr.readline()
-            if not self.line: break
+            if not self.line:
+                break
             self.line = self.line.rstrip('\r\n')
 
             self.check_loading()
@@ -59,7 +61,7 @@ class SK_Loader(AbstractLoader):
                 try:
                     code = compile('self.' + self.line, '<string>', 'exec')
                     exec code
-                except:
+                except Exception:
                     print 'parsing error>>', self.line
                     errtype, value, traceback = sys.exc_info()
                     print errtype, value, traceback
@@ -92,17 +94,20 @@ class SK_Loader(AbstractLoader):
         self.pattern = sk_model.SolidPattern(color)
 
     def pgl(self, dx, dy, border=0):
-        if not self.gradient: self.gradient = sk_model.MultiGradient()
+        if not self.gradient:
+            self.gradient = sk_model.MultiGradient()
         self.pattern = sk_model.LinearGradient(self.gradient,
                                                sk_model.Point(dx, dy), border)
 
     def pgr(self, dx, dy, border=0):
-        if not self.gradient: self.gradient = sk_model.MultiGradient()
+        if not self.gradient:
+            self.gradient = sk_model.MultiGradient()
         self.pattern = sk_model.RadialGradient(self.gradient,
                                                sk_model.Point(dx, dy), border)
 
     def pgc(self, cx, cy, dx, dy):
-        if not self.gradient: self.gradient = sk_model.MultiGradient()
+        if not self.gradient:
+            self.gradient = sk_model.MultiGradient()
         self.pattern = sk_model.ConicalGradient(self.gradient,
                                                 sk_model.Point(cx, cy),
                                                 sk_model.Point(dx, dy))
@@ -114,7 +119,7 @@ class SK_Loader(AbstractLoader):
 
     def pit(self, obj_id, trafo):
         trafo = sk_model.Trafo(*trafo)
-        if self.presenter.resources.has_key(obj_id):
+        if obj_id in self.presenter.resources:
             image = self.presenter.resources[obj_id]
             self.pattern = sk_model.ImageTilePattern(image, trafo)
 
@@ -143,7 +148,7 @@ class SK_Loader(AbstractLoader):
         self.style_obj.line_width = width
 
     def lc(self, cap):
-        if not 1 <= cap <= 3: cap = 1
+        cap = 1 if not 1 <= cap <= 3 else cap
         self.style_obj.line_cap = cap
 
     def lj(self, join):
@@ -204,7 +209,8 @@ class SK_Loader(AbstractLoader):
         if not isinstance(args[0], tuple):
             pformat = args[0]
             orientation = args[1]
-            if not pformat in sk_const.PAGE_FORMATS.keys(): pformat = 'A4'
+            if pformat not in sk_const.PAGE_FORMATS.keys():
+                pformat = 'A4'
             size = sk_const.PAGE_FORMATS[pformat]
         else:
             pformat = ''
@@ -332,7 +338,8 @@ class SK_Loader(AbstractLoader):
 
     def txt(self, text, trafo, horiz_align=sk_const.ALIGN_LEFT,
             vert_align=sk_const.ALIGN_BASE):
-        if not text: return
+        if not text:
+            return
         obj = sk_model.SKText(text, trafo, horiz_align, vert_align)
         self.set_style(obj)
         self.add_object(obj)
@@ -343,7 +350,7 @@ class SK_Loader(AbstractLoader):
         if filename is None:
             try:
                 bmd_obj.read_data(self.fileptr)
-            except:
+            except Exception:
                 print 'error>>', self.line
                 errtype, value, traceback = sys.exc_info()
                 print errtype, value, traceback
@@ -355,10 +362,11 @@ class SK_Loader(AbstractLoader):
             self.presenter.resources[obj_id] = bmd_obj.raw_image
 
     def im(self, trafo, obj_id):
-        if len(trafo) == 2: trafo = (1.0, 0.0, 0.0, 1.0) + trafo
+        if len(trafo) == 2:
+            trafo = (1.0, 0.0, 0.0, 1.0) + trafo
         trafo = sk_model.Trafo(*trafo)
         image = None
-        if self.presenter.resources.has_key(obj_id):
+        if obj_id in self.presenter.resources:
             image = self.presenter.resources[obj_id]
         self.add_object(sk_model.SKImage(trafo, obj_id, image))
 

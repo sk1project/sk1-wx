@@ -21,21 +21,21 @@ for internal events processing.
 
 Signal arguments:
 CONFIG_MODIFIED   attr, value - modified config field
-APP_STATUS        msg - statusbar message
-MOUSE_STATUS      msg - mouse status msg
-CMS_CHANGED       no args
-HISTORY_CHANGED   no args
-NO_DOCS           no args
-DOC_MODIFIED      doc - presenter instance
-DOC_CHANGED       doc - actual presenter instance
-DOC_SAVED         doc - saved presenter instance
-DOC_CLOSED        no args
-MODE_CHANGED      mode - canvas MODE value
+APP_STATUS		  msg - statusbar message
+MOUSE_STATUS	  msg - mouse status msg
+CMS_CHANGED		  no args 
+HISTORY_CHANGED	  no args 
+NO_DOCS		      no args
+DOC_MODIFIED	  doc - presenter instance
+DOC_CHANGED	      doc - actual presenter instance
+DOC_SAVED		  doc - saved presenter instance
+DOC_CLOSED		  no args
+MODE_CHANGED	  mode - canvas MODE value
 SELECTION_CHANGED doc - presenter instance
-CLIPBOARD         no args
+CLIPBOARD		  no args 
 PAGE_CHANGED      doc - presenter instance
-SNAP_CHANGED      no args
-UPDATE_CHANNEL    id - recipient id
+SNAP_CHANGED	  no args
+UPDATE_CHANNEL    id - recipient id 
 """
 
 # Signal channels
@@ -76,7 +76,7 @@ def connect(channel, receiver):
     if callable(receiver):
         try:
             channel.append(receiver)
-        except Exception:
+        except:
             msg = "Cannot connect to channel:"
             print msg, channel, "receiver:", receiver
 
@@ -89,7 +89,7 @@ def disconnect(channel, receiver):
     if callable(receiver):
         try:
             channel.remove(receiver)
-        except Exception:
+        except:
             msg = "Cannot disconnect from channel:"
             print msg, channel, "receiver:", receiver
 
@@ -103,9 +103,9 @@ def emit(channel, *args):
             try:
                 if callable(receiver):
                     receiver(*args)
-            except Exception:
+            except:
                 pass
-    except Exception:
+    except:
         print "Cannot send signal to channel:", channel
 
 

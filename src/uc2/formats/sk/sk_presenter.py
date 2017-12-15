@@ -20,8 +20,8 @@ import os
 from uc2 import uc2const
 from uc2.formats.generic import TextModelPresenter
 from uc2.formats.sk.sk_config import SK_Config
-from uc2.formats.sk.sk_methods import create_new_doc, SK_Methods
 from uc2.formats.sk.sk_filters import SK_Loader, SK_Saver
+from uc2.formats.sk.sk_methods import create_new_doc, SK_Methods
 from uc2.formats.sk.sk_translators import SK2_to_SK_Translator
 from uc2.formats.sk.sk_translators import SK_to_SK2_Translator
 
@@ -33,7 +33,8 @@ class SK_Presenter(TextModelPresenter):
     doc_file = ''
     resources = None
 
-    def __init__(self, appdata, cnf={}):
+    def __init__(self, appdata, cnf=None):
+        cnf = cnf or {}
         self.config = SK_Config()
         config_file = os.path.join(appdata.app_config_dir, 'sk_config.xml')
         self.config.load(config_file)
@@ -59,5 +60,5 @@ class SK_Presenter(TextModelPresenter):
 
     def update(self, action=False):
         TextModelPresenter.update(self, action)
-        if not self.model is None:
+        if self.model is not None:
             self.methods.update()

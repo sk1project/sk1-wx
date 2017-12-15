@@ -118,7 +118,7 @@ def get_files_tree(path='.', ext='*'):
 
 
 #
-# Filename manipulation
+#	Filename manipulation
 #
 
 def find_in_path(paths, file):

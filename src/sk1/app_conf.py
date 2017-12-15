@@ -33,8 +33,8 @@ class AppData(UCData):
     app_domain = 'sk1project.net'
     app_icon = None
     doc_icon = None
-    version = appconst.VERSION
-    revision = appconst.REVISION
+    version = uc2const.VERSION
+    revision = uc2const.REVISION
     app_config_dir = ''
     plugin_dir = ''
     app_palette_dir = ''

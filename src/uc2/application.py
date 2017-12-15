@@ -57,8 +57,7 @@ Example: uniconvertor drawing.cdr drawing.svg
 
  Available options:
  --help    Show this help
- --verbose Internal logs printed while translation
- --log=    Logging level (DEBUG, INFO, ERRROR)
+ -verbose  Internal logs printed while translation
 '''
 
 
@@ -110,7 +109,7 @@ class UCApplication(object):
 
         for item in sys.argv[1:]:
             if item[0] == '-':
-                if item == '--verbose':
+                if item == '-verbose':
                     events.connect(events.MESSAGES, self.verbose)
                 else:
                     options_list.append(item)
