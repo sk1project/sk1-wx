@@ -17,9 +17,10 @@
 
 import os
 
+from uc2.cms import libcms
+
 from uc2 import uc2const
 from uc2.utils.sconfig import SerializedConfig
-from uc2.cms import libcms
 
 
 class UCData:
@@ -62,7 +63,6 @@ class UCConfig(SerializedConfig):
     # ============== GENERIC SECTION ===================
     system_encoding = 'utf-8'  # default encoding (GUI uses utf-8 only)
     log_level = 'INFO'
-
 
     # ============== COLOR MANAGEMENT SECTION ===================
 

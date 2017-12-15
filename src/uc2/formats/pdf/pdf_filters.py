@@ -52,7 +52,6 @@ class PDF_Saver(AbstractSaver):
         renderer.set_keywords(keywords)
         # ---PDF doc data end
 
-        self.presenter.update()
         renderer.set_compression(True)
 
         methods = self.presenter.methods

@@ -33,4 +33,4 @@ MESSAGES = {
     STOP: _('STOP'),
 }
 
-MAX_LEN = max(*[val for val in MESSAGES.values()])
+MAX_LEN = max(*[len(val) for val in MESSAGES.values()])

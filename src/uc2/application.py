@@ -129,8 +129,8 @@ class UCApplication(object):
         status = msgconst.MESSAGES[args[0]]
         LOG_MAP[args[0]](args[1])
         if self.do_verbose:
-            ident = ' ' * (msgconst.MAX_LEN - len(status))
-            echo('%s%s| %s' % (status, ident, args[1]))
+            indent = ' ' * (msgconst.MAX_LEN - len(status))
+            echo('%s%s| %s' % (status, indent, args[1]))
 
     def run(self):
 
@@ -151,7 +151,7 @@ class UCApplication(object):
             else:
                 files.append(item)
 
-        if not file:
+        if not files:
             self.show_short_help('File names are not provided!')
         elif len(files) == 1:
             self.show_short_help('Destination file name is not provided!')
@@ -165,9 +165,9 @@ class UCApplication(object):
             else:
                 key, value = result
                 value = value.replace('"', '').replace("'", '')
-                if value == 'yes':
+                if value.lower() == 'yes':
                     value = True
-                if value == 'no':
+                if value.lower() == 'no':
                     value = False
                 options[key] = value
 
@@ -181,8 +181,7 @@ class UCApplication(object):
         self.palettes = PaletteManager(self)
 
         echo('')
-        msg = _('Translation of') + ' "%s" ' % (files[0]) + _('into "%s"') % (
-            files[1])
+        msg = _('Translation of "%s" into "%s"') % (files[0], files[1])
         events.emit(events.MESSAGES, msgconst.JOB, msg)
 
         saver_ids = uc2const.PALETTE_SAVERS
@@ -194,7 +193,7 @@ class UCApplication(object):
         else:
             saver, saver_id = get_saver(files[1], return_id=True)
         if saver is None:
-            msg = _("Output file format of '%s' is unsupported.") % (files[1])
+            msg = _("Output file format of '%s' is unsupported.") % files[1]
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
             msg = _('Translation is interrupted')
@@ -204,7 +203,7 @@ class UCApplication(object):
 
         loader, loader_id = get_loader(files[0], return_id=True)
         if loader is None:
-            msg = _("Input file format of '%s' is unsupported.") % (files[0])
+            msg = _("Input file format of '%s' is unsupported.") % files[0]
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
             msg = _('Translation is interrupted')
@@ -219,7 +218,7 @@ class UCApplication(object):
             else:
                 doc = loader(self.appdata, files[0])
         except Exception:
-            msg = _("Error while loading '%s'") % (files[0])
+            msg = _("Error while loading '%s'") % files[0]
             msg += _(
                 "The file may be corrupted or contains unknown file format.")
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
@@ -238,7 +237,7 @@ class UCApplication(object):
                 else:
                     saver(doc, files[1])
             except Exception:
-                msg = _("Error while translation and saving '%s'") % (files[0])
+                msg = _("Error while translation and saving '%s'") % files[0]
                 events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
                 msg = _('Translation is interrupted')
@@ -247,7 +246,7 @@ class UCApplication(object):
                 echo('\n' + sys.exc_info()[1] + '\n' + sys.exc_info()[2])
                 sys.exit(1)
         else:
-            msg = _("Error while model creating for '%s'") % (files[0])
+            msg = _("Error while model creating for '%s'") % files[0]
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
             msg = _('Translation is interrupted')

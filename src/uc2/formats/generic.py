@@ -125,7 +125,8 @@ class ModelPresenter(object):
             raise IOError(_('Error while loading') + ' ' + filename,
                           sys.exc_info()[1], sys.exc_info()[2])
 
-        self.send_ok(_('Document model is created'))
+        model_name = uc2const.FORMAT_NAMES[self.cid]
+        self.send_ok(_('<%s> document model is created') % model_name)
         self.update()
 
     def update(self, action=False):
@@ -141,7 +142,8 @@ class ModelPresenter(object):
                 self.send_error(msg)
                 raise IOError(msg)
 
-            msg = _('Document model is updated successfully')
+            model_name = uc2const.FORMAT_NAMES[self.cid]
+            msg = _('<%s> document model is updated successfully' % model_name)
             self.send_progress_message(msg, 0.99)
             self.send_ok(msg)
 
@@ -162,7 +164,8 @@ class ModelPresenter(object):
             self.send_error(msg)
             raise IOError(msg, sys.exc_info()[1], sys.exc_info()[2])
 
-        msg = _('Document model is saved successfully')
+        model_name = uc2const.FORMAT_NAMES[self.cid]
+        msg = _('<%s> document model is saved successfully') % model_name
         self.send_progress_message(msg, 0.95)
         self.send_ok(msg)
 
@@ -173,7 +176,9 @@ class ModelPresenter(object):
             self.model.destroy()
         self.model = None
 
-        self.send_ok(_('Document model is destroyed for') + ' %s' % filename)
+        model_name = uc2const.FORMAT_NAMES[self.cid]
+        self.send_ok(_('<%s> document model is destroyed for %s') % (model_name,
+                                                                     filename))
 
         if self.doc_dir and os.path.lexists(self.doc_dir):
             try:
