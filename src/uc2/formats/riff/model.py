@@ -16,8 +16,8 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from uc2.utils import dword2py_int, py_int2dword
 from uc2.formats.generic import BinaryModelObject
+from uc2.utils import dword2py_int, py_int2dword
 
 RIFF_ROOT = 1
 RIFF_LIST = 2
@@ -44,9 +44,10 @@ class RiffModelObject(BinaryModelObject):
     def resolve(self):
         name = ''
         if self.chunk_tag:
-            name = '<%s>' % (self.chunk_tag)
-        if self.cid < RIFF_OBJECT: return (False, name, str(self.chunk_size))
-        return (True, name, str(self.chunk_size))
+            name = '<%s>' % self.chunk_tag
+        if self.cid < RIFF_OBJECT:
+            return False, name, str(self.chunk_size)
+        return True, name, str(self.chunk_size)
 
     def get_chunk(self):
         chunk = ''

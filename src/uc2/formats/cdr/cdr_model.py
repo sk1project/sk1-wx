@@ -72,7 +72,7 @@ def parse_trafo(obj):
 def parse_rectangle(obj):
     data = obj.loda.chunk[8:]
     offset = 100
-    # if self.version == CDR6: offset = 96
+    #		if self.version == CDR6: offset = 96
 
     for item in obj.loda.data_list:
         if item[0] == const.DATA_COORDS:
@@ -257,7 +257,7 @@ class CdrRectangle(CdrGraphObj):
         CdrGraphObj.update(self)
         data = self.loda.chunk[8:]
         offset = 100
-        # if self.version == CDR6: offset = 96
+        #		if self.version == CDR6: offset = 96
 
         for item in self.loda.data_list:
             if item[0] == const.DATA_COORDS:

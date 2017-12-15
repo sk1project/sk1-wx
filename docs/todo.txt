@@ -3,10 +3,11 @@
 Добавить Debian Sid
 Сборки для Gentoo, Slackware
 WiX installer for MSW
-Добавить сохранение SRC.RPM
 
 ===MODEL==========
+Создание кривых кайро на нативной части
 Оптимизация работы с имиджами PIL
+фильтр-нормализатор модели (экспорт/рендеринг)
 
 ===UI===============
 Переработать виджет палитры (скроллы, бордер)
@@ -15,22 +16,15 @@ gevent для eventloops (?)
 
 ===UC2==========
 UI для UC2 (?)
-Цветной вывод для linux консоли (?)
-MSW build
-Покрыть pytest'ами cms, libgeom, imglib, libcairo, libpango
-
-===libcairo=========
-Создание кривых кайро на нативной части
-Отрефакторить дубликаты с libgeom
-Добавить работу с PIL
-
+Цветной вывод для linux консоли
 
 ===FILTERS==========
-фильтр-нормализатор модели (экспорт/рендеринг)
 WMF exporter
 CGM import/export (можно ли подмерджить UC1?)
 
 ===REFACTORING==========
+/home/igor/Projects/sk1-wx/src/sk1/pwidgets
+/home/igor/Projects/sk1-wx/src/sk1/share/pd_plugins
 /home/igor/Projects/sk1-wx/src/uc2/formats/pdf/pdfgen.py
 /home/igor/Projects/sk1-wx/src/uc2/formats/plt/plt_model.py
 

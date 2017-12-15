@@ -42,7 +42,7 @@ def parse_matrix(data):
 
 def parse_cmyk(data):
     """
-    Parses CMYK color bytes and returns fill style list.
+    Parses CMYK color bytes and	returns fill style list.
     """
     c = ord(data[0]) / 100.0
     m = ord(data[1]) / 100.0

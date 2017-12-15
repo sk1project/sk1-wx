@@ -36,7 +36,7 @@ from uc2.utils import fs
 
 def encode_quotes(line):
     result = line.replace('"', '&quot;')
-    # result = result.replace("'", "&#039;")
+    #	result = result.replace("'", "&#039;")
     return result
 
 

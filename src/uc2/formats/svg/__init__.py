@@ -20,13 +20,13 @@ from xml.etree import cElementTree
 from uc2 import uc2const
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2.formats.svg.svg_presenter import SVG_Presenter
-from uc2.utils.fsutils import get_fileptr
-from uc2.utils.mixutils import merge_cnf
 
 
 def svg_loader(appdata, filename=None, fileptr=None,
                translate=True, cnf=None, **kw):
-    cnf = merge_cnf(cnf, kw)
+    cnf = cnf or {}
+    if kw:
+        cnf.update(kw)
     svg_doc = SVG_Presenter(appdata, cnf)
     svg_doc.load(filename, fileptr)
     if translate:
@@ -41,7 +41,9 @@ def svg_loader(appdata, filename=None, fileptr=None,
 
 def svg_saver(sk2_doc, filename=None, fileptr=None,
               translate=True, cnf=None, **kw):
-    cnf = merge_cnf(cnf, kw)
+    cnf = cnf or {}
+    if kw:
+        cnf.update(kw)
     if sk2_doc.cid == uc2const.SVG:
         translate = False
     if translate:
@@ -55,12 +57,11 @@ def svg_saver(sk2_doc, filename=None, fileptr=None,
 
 def check_svg(path):
     tag = None
-    fileptr = get_fileptr(path)
-    try:
-        for event, el in cElementTree.iterparse(fileptr, ('start',)):
-            tag = el.tag
-            break
-    except cElementTree.ParseError:
-        pass
-    fileptr.close()
+    with open(path, "r") as f:
+        try:
+            for event, el in cElementTree.iterparse(f, ('start',)):
+                tag = el.tag
+                break
+        except cElementTree.ParseError:
+            pass
     return tag == '{http://www.w3.org/2000/svg}svg' or tag == 'svg'

@@ -16,11 +16,10 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-
-from copy import deepcopy
 from PIL import Image
 from base64 import b64decode, b64encode
 from cStringIO import StringIO
+from copy import deepcopy
 
 from uc2 import _, uc2const
 from uc2.formats.generic import TextModelObject
@@ -49,7 +48,7 @@ IMAGE = 35
 CID_TO_NAME = {
     DOCUMENT: _('Document'), LAYOUT: _('Layout'), GRID: _('Grid'),
     LAYER: _('Layer'),
-    GUIDELAYER: _('GuideLayer'), GUIDE: _('Guideline'), GUIDE: _('Guideline'),
+    GUIDELAYER: _('GuideLayer'), GUIDE: _('Guideline'),
 
     STYLE: _('Style'),
     GROUP: _('Group'), MASKGROUP: _('MaskGroup'),
@@ -70,16 +69,19 @@ class Trafo(object):
         self.v2 = v2
 
     def coeff(self):
-        return (self.m11, self.m12, self.m21, self.m22, self.v1, self.v2)
+        return self.m11, self.m12, self.m21, self.m22, self.v1, self.v2
 
 
-class Scale(object): pass
+class Scale(object):
+    pass
 
 
-class Translation(object): pass
+class Translation(object):
+    pass
 
 
-def CreatePath(): return ()
+def CreatePath():
+    return ()
 
 
 class Point(object):
@@ -111,8 +113,9 @@ class SKModelObject(TextModelObject):
         if self.cid == GUIDE or self.cid == LAYOUT: is_leaf = True
         name = CID_TO_NAME[self.cid]
         info = ''
-        if not is_leaf: info = len(self.childs)
-        return (is_leaf, name, info)
+        if not is_leaf:
+            info = len(self.childs)
+        return is_leaf, name, info
 
     def get_content(self):
         result = self.string
@@ -123,7 +126,7 @@ class SKModelObject(TextModelObject):
         return result
 
     def write_content(self, fileobj):
-        if not self.properties is None:
+        if self.properties is not None:
             self.properties.write_content(fileobj)
         fileobj.write(self.string)
         for child in self.childs:
@@ -133,7 +136,8 @@ class SKModelObject(TextModelObject):
 
 
 # --- STRUCTURAL OBJECTS
-class MetaInfo(object): pass
+class MetaInfo(object):
+    pass
 
 
 class SKDocument(SKModelObject):
@@ -353,7 +357,8 @@ class SolidPattern(Pattern):
 class MultiGradient:
     colors = []
 
-    def __init__(self, colors=[], duplicate=None):
+    def __init__(self, colors=None, duplicate=None):
+        colors = colors or []
         if not colors:
             start_color = deepcopy(sk_const.black_color)
             end_color = deepcopy(sk_const.white_color)
@@ -449,9 +454,11 @@ class HatchingPattern(Pattern):
     def __init__(self, foreground=None, background=None,
                  direction=Point(1, 0),
                  spacing=5.0, width=0.5, duplicate=None):
-        if foreground is None:    foreground = deepcopy(sk_const.black_color)
+        if foreground is None:
+            foreground = deepcopy(sk_const.black_color)
         self.foreground = foreground
-        if background is None:    background = deepcopy(sk_const.white_color)
+        if background is None:
+            background = deepcopy(sk_const.white_color)
         self.background = background
         self.spacing = spacing
         self.width = width
@@ -473,7 +480,7 @@ class HatchingPattern(Pattern):
         fileptr.write('phs(%s,%s,%g,%g,%g,%g)\n'
                       % (color, background,
                          self.direction.x, self.direction.y,
-                         self.distance, self.width))
+                         self.spacing, self.width))
 
 
 class ImageTilePattern(Pattern):
@@ -481,9 +488,11 @@ class ImageTilePattern(Pattern):
     is_Image = 1
     data = None
     bid = None
+    raw_image = None
 
     def __init__(self, data=None, trafo=None, duplicate=None):
-        if trafo is None: trafo = Trafo(1, 0, 0, -1, 0, 0)
+        if trafo is None:
+            trafo = Trafo(1, 0, 0, -1, 0, 0)
         self.trafo = trafo
         self.data = data
         self.image = self.data
@@ -497,7 +506,7 @@ class ImageTilePattern(Pattern):
         if self.image and not self.bid:
             self.bid = id(self.image)
         if self.image:
-            fileptr.write('bm(%d)\n' % (self.bid))
+            fileptr.write('bm(%d)\n' % self.bid)
 
             image_stream = StringIO()
             if self.raw_image.mode == "CMYK":
@@ -740,18 +749,18 @@ class SKEllipse(SKModelObject):
             self.string = 'e' + args.__str__() + '\n'
         else:
             args = self.trafo.coeff() + (
-            self.start_angle, self.end_angle, self.arc_type)
+                self.start_angle, self.end_angle, self.arc_type)
             self.string = 'e' + args.__str__() + '\n'
 
 
 class SKPolyBezier(SKModelObject):
     """
     Represents Bezier curve object.
-    b()             start a bezier obj
+    b()			 start a bezier obj
     bs(X, Y, CONT)  append a line segment
     bc(X1, Y1, X2, Y2, X3, Y3, CONT)  append a bezier segment
-    bn()            start a new path
-    bC()            close path
+    bn()			start a new path
+    bC()			close path
     """
     string = ''
     cid = CURVE
@@ -779,7 +788,8 @@ class SKPolyBezier(SKModelObject):
     def add_segment(self, point):
         point0, point1, point2, cont = point
         args = (
-        point0[0], point0[1], point1[0], point1[1], point2[0], point2[1], cont)
+            point0[0], point0[1], point1[0], point1[1], point2[0], point2[1],
+            cont)
         self.string += 'bc' + args.__str__() + '\n'
 
     def update(self):

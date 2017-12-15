@@ -15,11 +15,6 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Version
-VERSION = '2.0'
-REVISION = 'rc3'
-
-# Action constants
 OPENED = 0
 SAVED = 1
 

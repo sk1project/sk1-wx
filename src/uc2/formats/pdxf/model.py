@@ -758,7 +758,7 @@ class Text(PrimitiveObject):
         text.cid = self.cid
         text.width = self.width
         text.trafo = [] + self.trafo
-        text.text = self.text
+        text.text = "" + self.text
         text.attributes = deepcopy(self.attributes)
         text.style = deepcopy(self.style)
         return text
