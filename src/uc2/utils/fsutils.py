@@ -16,9 +16,12 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import errno
+import logging
 
 from uc2 import translator as _
 from uc2 import events, msgconst
+
+LOG = logging.getLogger(__name__)
 
 
 def get_fileptr(path, writable=False):
