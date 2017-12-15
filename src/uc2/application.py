@@ -16,15 +16,16 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
-import sys
 import os
+import sys
 
 import uc2
 from uc2 import _, cms, uc2const
 from uc2 import events, msgconst
-from uc2.uc2conf import UCData, UCConfig
-from uc2.formats import get_loader, get_saver, get_saver_by_id
 from uc2.app_palettes import PaletteManager
+from uc2.formats import get_loader, get_saver, get_saver_by_id
+from uc2.uc2conf import UCData, UCConfig
+from uc2.utils.mixutils import echo
 
 HELP_TEMPLATE = '''
 %s
@@ -83,26 +84,33 @@ class UCApplication(object):
         setattr(uc2, "appdata", self.appdata)
 
     def _get_infos(self, loaders):
-        return '\n   '.join(
-            [uc2const.FORMAT_DESCRIPTION[loader] for loader in loaders])
+        result = []
+        for loader in loaders:
+            if loader in (uc2const.COREL_PAL, uc2const.SCRIBUS_PAL):
+                descr = uc2const.FORMAT_DESCRIPTION[loader]
+                descr = descr.replace(' - ', ') - ')
+                result.append('%s (%s' % (loader.upper(), descr))
+            else:
+                result.append(uc2const.FORMAT_DESCRIPTION[loader])
+        return '\n   '.join(result)
 
     def show_help(self):
         app_name = '%s %s%s' % (
             self.appdata.app_name, self.appdata.version, self.appdata.revision)
-        print HELP_TEMPLATE % (app_name, str(datetime.date.today().year),
-                               self._get_infos(uc2const.MODEL_LOADERS),
-                               self._get_infos(uc2const.PALETTE_LOADERS),
-                               self._get_infos(uc2const.BITMAP_LOADERS),
-                               self._get_infos(uc2const.MODEL_SAVERS),
-                               self._get_infos(uc2const.PALETTE_SAVERS),
-                               self._get_infos(uc2const.BITMAP_SAVERS),)
+        echo(HELP_TEMPLATE % (app_name, str(datetime.date.today().year),
+                              self._get_infos(uc2const.MODEL_LOADERS),
+                              self._get_infos(uc2const.PALETTE_LOADERS),
+                              self._get_infos(uc2const.BITMAP_LOADERS),
+                              self._get_infos(uc2const.MODEL_SAVERS),
+                              self._get_infos(uc2const.PALETTE_SAVERS),
+                              self._get_infos(uc2const.BITMAP_SAVERS),))
         sys.exit(0)
 
     def verbose(self, *args):
         args, = args
         status = msgconst.MESSAGES[args[0]]
         ident = ' ' * (msgconst.MAX_LEN - len(status))
-        print '%s%s| %s' % (status, ident, args[1])
+        echo('%s%s| %s' % (status, ident, args[1]))
 
     def run(self):
 
@@ -143,7 +151,7 @@ class UCApplication(object):
         self.default_cms = cms.ColorManager()
         self.palettes = PaletteManager(self)
 
-        print ''
+        echo('')
         msg = _('Translation of') + ' "%s" ' % (files[0]) + _('into "%s"') % (
             files[1])
         events.emit(events.MESSAGES, msgconst.JOB, msg)
@@ -190,7 +198,7 @@ class UCApplication(object):
             msg = _('Translation is interrupted')
             events.emit(events.MESSAGES, msgconst.STOP, msg)
 
-            print '\n', sys.exc_info()[1], sys.exc_info()[2]
+            echo('\n' + sys.exc_info()[1] + '\n' + sys.exc_info()[2])
             sys.exit(1)
 
         if doc is not None:
@@ -207,7 +215,7 @@ class UCApplication(object):
                 msg = _('Translation is interrupted')
                 events.emit(events.MESSAGES, msgconst.STOP, msg)
 
-                print '\n', sys.exc_info()[1], sys.exc_info()[2]
+                echo('\n' + sys.exc_info()[1] + '\n' + sys.exc_info()[2])
                 sys.exit(1)
         else:
             msg = _("Error while model creating for '%s'") % (files[0])
@@ -218,8 +226,8 @@ class UCApplication(object):
             sys.exit(1)
 
         doc.close()
-        events.emit(events.MESSAGES, msgconst.OK,
-                    _('Translation is successful'))
-        print ''
+        msg = _('Translation is successful')
+        events.emit(events.MESSAGES, msgconst.OK, msg)
+        echo('')
 
         sys.exit(0)
