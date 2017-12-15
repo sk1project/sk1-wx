@@ -29,11 +29,18 @@ from uc2.app_palettes import PaletteManager
 HELP_TEMPLATE = '''
 %s
 
+Universal vector graphics format translator
+sK1 Team (http://www.sk1project.net), copyright (C) 2007-%s by Igor E. Novikov
+
 USAGE: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]
 Example: uniconvertor drawing.cdr drawing.svg
 
-Universal vector graphics format translator
-sK1 Team (http://www.sk1project.net), copyright (C) 2007-%s by Igor E. Novikov
+ Available options:
+ --help            Show this help
+ --verbose         Internal logs printed while translation
+ --log=            Logging level: DEBUG, INFO, WARN, ERRROR (default INFO)
+ --output_format=  Type of output file format
+
 ----------------------------------------------------
 
  Supported input vector graphics file formats:
@@ -57,11 +64,6 @@ sK1 Team (http://www.sk1project.net), copyright (C) 2007-%s by Igor E. Novikov
    %s
 
 ----------------------------------------------------
-
- Available options:
- --help    Show this help
- --verbose Internal logs printed while translation
- --log=    Logging level (DEBUG, INFO, ERRROR)
 '''
 
 
