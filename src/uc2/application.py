@@ -37,10 +37,10 @@ USAGE: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]
 Example: uniconvertor drawing.cdr drawing.svg
 
  Available options:
- --help            Show this help
- --verbose         Internal logs printed while translation
- --log=            Logging level: DEBUG, INFO, WARN, ERRROR (default INFO)
- --output_format=  Type of output file format
+ --help      Show this help
+ --verbose   Internal logs printed while translation
+ --log=      Logging level: DEBUG, INFO, WARN, ERRROR (default INFO)
+ --format=   Type of output file format
 
 ----------------------------------------------------
 
@@ -74,6 +74,7 @@ class UCApplication(object):
     appdata = None
     default_cms = None
     palettes = None
+    do_verbose = False
 
     def __init__(self, path='', cfgdir='~'):
         self.path = path
@@ -107,10 +108,11 @@ class UCApplication(object):
         sys.exit(0)
 
     def verbose(self, *args):
-        args, = args
         status = msgconst.MESSAGES[args[0]]
-        ident = ' ' * (msgconst.MAX_LEN - len(status))
-        echo('%s%s| %s' % (status, ident, args[1]))
+        msg = args[1]
+        if self.do_verbose:
+            ident = ' ' * (msgconst.MAX_LEN - len(status))
+            echo('%s%s| %s' % (status, ident, msg))
 
     def run(self):
 
@@ -122,18 +124,17 @@ class UCApplication(object):
         options = {}
 
         for item in sys.argv[1:]:
-            if item[0] == '-':
-                if item == '--verbose':
-                    events.connect(events.MESSAGES, self.verbose)
-                else:
-                    options_list.append(item)
+            if item.startswith('--'):
+                options_list.append(item)
             else:
                 files.append(item)
 
-        if len(files) != 2:
+        self.do_verbose = '--verbose' in options_list
+
+        if len(files) != 2 or not os.path.lexists(files[0]):
             self.show_help()
-        if not os.path.lexists(files[0]):
-            self.show_help()
+
+        events.connect(events.MESSAGES, self.verbose)
 
         for item in options_list:
             result = item[1:].split('=')
@@ -158,7 +159,7 @@ class UCApplication(object):
 
         saver_ids = uc2const.PALETTE_SAVERS
         saver_ids += uc2const.MODEL_SAVERS + uc2const.BITMAP_SAVERS
-        sid = options.get('output_format', '').lower()
+        sid = options.get('format', '').lower()
         if sid and sid in saver_ids:
             saver_id = sid
             saver = get_saver_by_id(saver_id)

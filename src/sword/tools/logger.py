@@ -137,6 +137,5 @@ class Logger(gtk.VBox):
 			self.connected = False
 
 	def listener(self, *args):
-		args, = args
 		self.logs.append(args)
 		self.update_view()

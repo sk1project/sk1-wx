@@ -16,7 +16,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-The package provides Qt-like signal-slot functionality
+This module provides Qt-like signal-slot functionality
 for internal events processing.
 
 Signal arguments:
@@ -67,12 +67,11 @@ def emit(channel, *args):
     """
     Sends signal to all receivers in channel.
     """
-    # print 'signal', channel[0]
     try:
         for receiver in channel[1:]:
             try:
                 if callable(receiver):
-                    receiver(args)
+                    receiver(*args)
             except Exception:
                 pass
     except Exception:

@@ -50,8 +50,8 @@ class ProgressDialog:
         return True
 
     def _listener(self, *args):
-        val = round(args[0][1], 2)
-        info = args[0][0]
+        val = round(args[1], 2)
+        info = args[0]
         self.dlg.Update(int(val * 100.0), info)
 
     def destroy(self):

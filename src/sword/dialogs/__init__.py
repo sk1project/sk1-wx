@@ -225,8 +225,8 @@ class ProgressDialog(gtk.Dialog):
 			self.response(gtk.RESPONSE_OK)
 
 	def listener(self, *args):
-		val = round(args[0][1], 2)
-		info = args[0][0]
+		val = round(args[1], 2)
+		info = args[0]
 		self.label.set_label(info)
 		self.progress_bar.set_text('%d %%' % (val * 100.0))
 		if val > 1.0:val = 1.0
