@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2012 by Igor E. Novikov
+#  Copyright (C) 2012-2017 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -30,9 +30,11 @@ HELP_TEMPLATE = '''
 %s
 
 USAGE: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]
+Example: uniconvertor drawing.cdr drawing.svg
 
-Universal vector graphics format translator.
+Universal vector graphics format translator
 sK1 Team (http://www.sk1project.net), copyright (C) 2007-%s by Igor E. Novikov
+----------------------------------------------------
 
  Supported input vector graphics file formats:
    %s
@@ -43,7 +45,8 @@ sK1 Team (http://www.sk1project.net), copyright (C) 2007-%s by Igor E. Novikov
  Supported input image file formats:
    %s
 
--------------------------------------------------------------------------------
+----------------------------------------------------
+
  Supported output vector graphics file formats:
    %s
 
@@ -53,7 +56,7 @@ sK1 Team (http://www.sk1project.net), copyright (C) 2007-%s by Igor E. Novikov
  Supported output image file formats:
    %s
 
-Example: uniconvertor drawing.cdr drawing.svg
+----------------------------------------------------
 
  Available options:
  --help    Show this help
