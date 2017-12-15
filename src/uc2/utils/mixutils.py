@@ -16,6 +16,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+import sys
 
 
 def merge_cnf(cnf=None, kw=None):
@@ -39,3 +40,23 @@ def config_logging(filepath, level='INFO'):
     logging.basicConfig(level=level,
                         filename=filepath,
                         filemode='w')
+
+
+MAGENTA = '\033[95m'
+BLUE = '\033[94m'
+GREEN = '\033[92m'
+YELLOW = '\033[93m'
+FAIL = '\033[91m'
+ENDC = '\033[0m'
+BOLD = '\033[1m'
+UNDERLINE = '\033[4m'
+
+
+def echo(msg, newline=True, flush=True, code=''):
+    if newline:
+        msg += '\n'
+    if code:
+        msg = code + msg + ENDC
+    sys.stdout.write(msg)
+    if flush:
+        sys.stdout.flush()
