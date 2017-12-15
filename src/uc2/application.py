@@ -30,13 +30,18 @@ from uc2.utils.mixutils import echo, config_logging
 
 LOG = logging.getLogger(__name__)
 
+
+def log_stub(msg):
+    pass
+
+
 LOG_MAP = {
     msgconst.JOB: LOG.info,
     msgconst.INFO: LOG.info,
     msgconst.OK: LOG.info,
     msgconst.WARNING: LOG.warn,
     msgconst.ERROR: LOG.error,
-    msgconst.STOP: LOG.error,
+    msgconst.STOP: log_stub,
 }
 
 HELP_TEMPLATE = '''
@@ -87,6 +92,7 @@ class UCApplication(object):
     default_cms = None
     palettes = None
     do_verbose = False
+    log_filepath = ''
 
     def __init__(self, path='', cfgdir='~'):
         self.path = path
@@ -128,12 +134,14 @@ class UCApplication(object):
     def verbose(self, *args):
         status = msgconst.MESSAGES[args[0]]
         LOG_MAP[args[0]](args[1])
-        if self.do_verbose:
+        if self.do_verbose or args[0] in (msgconst.ERROR, msgconst.STOP):
             indent = ' ' * (msgconst.MAX_LEN - len(status))
             echo('%s%s| %s' % (status, indent, args[1]))
+        if args[0] == msgconst.STOP:
+            echo(_('For details see logs: %s') % self.log_filepath)
+            sys.exit(1)
 
     def run(self):
-
         if '--help' in sys.argv or '-help' in sys.argv:
             self.show_help()
         elif len(sys.argv) < 3:
@@ -174,8 +182,8 @@ class UCApplication(object):
         self.do_verbose = options.get('verbose', False)
         events.connect(events.MESSAGES, self.verbose)
         log_level = options.get('log', self.config.log_level)
-        filepath = os.path.join(self.appdata.app_config_dir, 'uc2.log')
-        config_logging(filepath, log_level)
+        self.log_filepath = os.path.join(self.appdata.app_config_dir, 'uc2.log')
+        config_logging(self.log_filepath, log_level)
 
         self.default_cms = cms.ColorManager()
         self.palettes = PaletteManager(self)
@@ -199,8 +207,6 @@ class UCApplication(object):
             msg = _('Translation is interrupted')
             events.emit(events.MESSAGES, msgconst.STOP, msg)
 
-            sys.exit(1)
-
         loader, loader_id = get_loader(files[0], return_id=True)
         if loader is None:
             msg = _("Input file format of '%s' is unsupported.") % files[0]
@@ -209,8 +215,7 @@ class UCApplication(object):
             msg = _('Translation is interrupted')
             events.emit(events.MESSAGES, msgconst.STOP, msg)
 
-            sys.exit(1)
-
+        doc = None
         try:
             if loader_id in uc2const.PALETTE_LOADERS and \
                     saver_id in uc2const.PALETTE_SAVERS:
@@ -224,10 +229,8 @@ class UCApplication(object):
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
             msg = _('Loading is interrupted')
-            events.emit(events.MESSAGES, msgconst.STOP, msg)
-
             LOG.error('%s %s', msg, e)
-            sys.exit(1)
+            events.emit(events.MESSAGES, msgconst.STOP, msg)
 
         if doc is not None:
             try:
@@ -241,17 +244,14 @@ class UCApplication(object):
                 events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
                 msg = _('Translation is interrupted')
-                events.emit(events.MESSAGES, msgconst.STOP, msg)
-
                 LOG.error('%s %s', msg, e)
-                sys.exit(1)
+                events.emit(events.MESSAGES, msgconst.STOP, msg)
         else:
             msg = _("Error while model creating for '%s'") % files[0]
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
             msg = _('Translation is interrupted')
             events.emit(events.MESSAGES, msgconst.STOP, msg)
-            sys.exit(1)
 
         doc.close()
         msg = _('Translation is successful')

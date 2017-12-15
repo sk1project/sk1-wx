@@ -15,6 +15,10 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
+
+LOG = logging.getLogger(__name__)
+
 """
 This module provides Qt-like signal-slot functionality
 for internal events processing.
@@ -45,9 +49,9 @@ def connect(channel, receiver):
     if callable(receiver):
         try:
             channel.append(receiver)
-        except Exception:
-            print "Cannot connect to channel:", channel, \
-                "receiver:", receiver
+        except Exception as e:
+            msg = 'Cannot connect <%s> receiver to <%s> channel. %s'
+            LOG.error(msg, receiver, channel, e)
 
 
 def disconnect(channel, receiver):
@@ -58,21 +62,20 @@ def disconnect(channel, receiver):
     if callable(receiver):
         try:
             channel.remove(receiver)
-        except Exception:
-            print "Cannot disconnect from channel:", channel, \
-                "receiver:", receiver
+        except Exception as e:
+            msg = 'Cannot disconnect <%s> receiver from <%s> channel. %s'
+            LOG.error(msg, receiver, channel, e)
 
 
 def emit(channel, *args):
     """
     Sends signal to all receivers in channel.
     """
-    try:
-        for receiver in channel[1:]:
-            try:
-                if callable(receiver):
-                    receiver(*args)
-            except Exception:
-                pass
-    except Exception:
-        print "Cannot send signal to channel:", channel
+    for receiver in channel[1:]:
+        try:
+            if callable(receiver):
+                receiver(*args)
+        except Exception as e:
+            msg = 'Error calling <%s> receiver with %s %s'
+            LOG.error(msg, receiver, args, e)
+            continue
