@@ -44,22 +44,22 @@ LOG_MAP = {
     msgconst.STOP: log_stub,
 }
 
-HELP_TEMPLATE = '''
+HELP_TEMPLATE = _('''
 %s
 
 Universal vector graphics format translator
 sK1 Team (http://www.sk1project.net), copyright (C) 2007-%s by Igor E. Novikov
 
-USAGE: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]
+Usage: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]
 Example: uniconvertor drawing.cdr drawing.svg
 
  Available options:
- --help      Show this help
- --verbose   Internal logs printed while translation
- --log=      Logging level: DEBUG, INFO, WARN, ERRROR (default INFO)
- --format=   Type of output file format
+ --help      Display this help and exit
+ --verbose   Show internal logs
+ --log=      Logging level: DEBUG, INFO, WARN, ERROR (default INFO)
+ --format=   Type of output file format (values provided below)
 
-----------------------------------------------------
+---INPUT FILE FORMATS-------------------------------
 
  Supported input vector graphics file formats:
    %s
@@ -70,7 +70,7 @@ Example: uniconvertor drawing.cdr drawing.svg
  Supported input image file formats:
    %s
 
-----------------------------------------------------
+---OUTPUT FILE FORMATS------------------------------
 
  Supported output vector graphics file formats:
    %s
@@ -82,7 +82,7 @@ Example: uniconvertor drawing.cdr drawing.svg
    %s
 
 ----------------------------------------------------
-'''
+''')
 
 
 class UCApplication(object):
