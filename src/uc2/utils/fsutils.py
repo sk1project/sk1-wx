@@ -18,8 +18,7 @@
 import errno
 import logging
 
-from uc2 import translator as _
-from uc2 import events, msgconst
+from uc2 import _, events, msgconst
 
 LOG = logging.getLogger(__name__)
 
