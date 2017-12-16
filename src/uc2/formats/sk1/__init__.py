@@ -17,7 +17,7 @@
 
 from uc2 import uc2const
 from uc2.formats.sk1 import model
-from uc2.formats.sk1.presenter import SK1_Presenter
+from uc2.formats.sk1.presenter import SK1Presenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2.utils.fsutils import get_fileptr
 from uc2.utils.mixutils import merge_cnf
@@ -26,7 +26,7 @@ from uc2.utils.mixutils import merge_cnf
 def sk1_loader(appdata, filename=None, fileptr=None, translate=True, cnf=None,
                **kw):
     cnf = merge_cnf(cnf, kw)
-    sk1_doc = SK1_Presenter(appdata, cnf)
+    sk1_doc = SK1Presenter(appdata, cnf)
     sk1_doc.load(filename, fileptr)
     if translate:
         sk2_doc = SK2_Presenter(appdata, cnf)
@@ -44,7 +44,7 @@ def sk1_saver(sk2_doc, filename=None, fileptr=None, translate=True, cnf=None,
     if sk2_doc.cid == uc2const.SK1:
         translate = False
     if translate:
-        sk1_doc = SK1_Presenter(sk2_doc.appdata, cnf)
+        sk1_doc = SK1Presenter(sk2_doc.appdata, cnf)
         sk1_doc.translate_from_sk2(sk2_doc)
         sk1_doc.save(filename, fileptr)
         sk1_doc.close()

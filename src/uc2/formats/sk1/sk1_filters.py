@@ -15,7 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>..
 
-import sys
+import logging
 
 from uc2 import uc2const
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
@@ -27,8 +27,10 @@ from uc2.formats.sk1.model import SK1Document, SK1Layout, SK1Grid, SK1Pages, \
     MultiGradient, EmptyPattern, SolidPattern, LinearGradient, RadialGradient, \
     ConicalGradient, HatchingPattern, ImageTilePattern, Style, Trafo, Point
 
+LOG = logging.getLogger(__name__)
 
-class SK1_Loader(AbstractLoader):
+
+class SK1Loader(AbstractLoader):
     name = 'SK1_Loader'
 
     paths = []
@@ -58,7 +60,8 @@ class SK1_Loader(AbstractLoader):
         self.style_obj = Style()
         while True:
             self.line = self.fileptr.readline()
-            if not self.line: break
+            if not self.line:
+                break
             self.line = self.line.rstrip('\r\n')
 
             self.check_loading()
@@ -67,10 +70,8 @@ class SK1_Loader(AbstractLoader):
                 try:
                     code = compile('self.' + self.line, '<string>', 'exec')
                     exec code
-                except:
-                    print 'error>>', self.line
-                    errtype, value, traceback = sys.exc_info()
-                    print errtype, value, traceback
+                except Exception:
+                    LOG.warn('error>> %s', self.line)
 
     def set_style(self, obj):
         obj.properties = self.style_obj
@@ -100,15 +101,18 @@ class SK1_Loader(AbstractLoader):
         self.pattern = SolidPattern(color)
 
     def pgl(self, dx, dy, border=0):
-        if not self.gradient: self.gradient = MultiGradient()
+        if not self.gradient:
+            self.gradient = MultiGradient()
         self.pattern = LinearGradient(self.gradient, Point(dx, dy), border)
 
     def pgr(self, dx, dy, border=0):
-        if not self.gradient: self.gradient = MultiGradient()
+        if not self.gradient:
+            self.gradient = MultiGradient()
         self.pattern = RadialGradient(self.gradient, Point(dx, dy), border)
 
     def pgc(self, cx, cy, dx, dy):
-        if not self.gradient: self.gradient = MultiGradient()
+        if not self.gradient:
+            self.gradient = MultiGradient()
         self.pattern = ConicalGradient(self.gradient, Point(cx, cy),
                                        Point(dx, dy))
 
@@ -118,7 +122,7 @@ class SK1_Loader(AbstractLoader):
 
     def pit(self, obj_id, trafo):
         trafo = Trafo(*trafo)
-        if self.presenter.resources.has_key(obj_id):
+        if obj_id in self.presenter.resources:
             image = self.presenter.resources[obj_id]
             self.pattern = ImageTilePattern(image, trafo)
 
@@ -147,7 +151,8 @@ class SK1_Loader(AbstractLoader):
         self.style_obj.line_width = width
 
     def lc(self, cap):
-        if not 1 <= cap <= 3: cap = 1
+        if not 1 <= cap <= 3:
+            cap = 1
         self.style_obj.line_cap = cap
 
     def lj(self, join):
@@ -195,7 +200,8 @@ class SK1_Loader(AbstractLoader):
             if not isinstance(args[0], tuple):
                 pformat = args[0]
                 orientation = args[1]
-                if not pformat in uc2const.PAGE_FORMAT_NAMES: pformat = 'A4'
+                if pformat not in uc2const.PAGE_FORMAT_NAMES:
+                    pformat = 'A4'
                 size = uc2const.PAGE_FORMATS[pformat]
             else:
                 pformat = ''
@@ -349,7 +355,8 @@ class SK1_Loader(AbstractLoader):
 
     def txt(self, text, trafo, horiz_align, vert_align, chargap, wordgap,
             linegap):
-        if not text: return
+        if not text:
+            return
         if isinstance(text, int):
             lines = text
             text = ''
@@ -378,17 +385,16 @@ class SK1_Loader(AbstractLoader):
         self.add_object(bmd_obj)
         try:
             bmd_obj.read_data(self.fileptr)
-        except:
-            print 'error>>', self.line
-            errtype, value, traceback = sys.exc_info()
-            print errtype, value, traceback
+        except Exception as e:
+            LOG.error('Error reading bitmap %s', e)
         self.presenter.resources[obj_id] = bmd_obj.raw_image
 
     def im(self, trafo, obj_id):
-        if len(trafo) == 2: trafo = (1.0, 0.0, 0.0, 1.0) + trafo
+        if len(trafo) == 2:
+            trafo = (1.0, 0.0, 0.0, 1.0) + trafo
         trafo = Trafo(*trafo)
         image = None
-        if self.presenter.resources.has_key(obj_id):
+        if obj_id in self.presenter.resources:
             image = self.presenter.resources[obj_id]
         self.add_object(SK1Image(trafo, obj_id, image))
 
@@ -396,7 +402,7 @@ class SK1_Loader(AbstractLoader):
         self.string = ''
 
 
-class SK1_Saver(AbstractSaver):
+class SK1Saver(AbstractSaver):
     name = 'SK1_Saver'
 
     def do_save(self):

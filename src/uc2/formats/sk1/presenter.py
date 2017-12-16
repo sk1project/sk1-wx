@@ -21,12 +21,12 @@ from uc2 import uc2const
 from uc2.formats.generic import TextModelPresenter
 from uc2.formats.sk1.methods import create_new_doc, SK1_Methods
 from uc2.formats.sk1.sk1_config import SK1_Config
-from uc2.formats.sk1.sk1_filters import SK1_Loader, SK1_Saver
+from uc2.formats.sk1.sk1_filters import SK1Loader, SK1Saver
 from uc2.formats.sk1.sk1_translators import SK1_to_SK2_Translator
 from uc2.formats.sk1.sk1_translators import SK2_to_SK1_Translator
 
 
-class SK1_Presenter(TextModelPresenter):
+class SK1Presenter(TextModelPresenter):
     cid = uc2const.SK1
 
     config = None
@@ -40,8 +40,8 @@ class SK1_Presenter(TextModelPresenter):
         self.config.load(config_file)
         self.config.update(cnf)
         self.appdata = appdata
-        self.loader = SK1_Loader()
-        self.saver = SK1_Saver()
+        self.loader = SK1Loader()
+        self.saver = SK1Saver()
         self.methods = SK1_Methods(self)
         self.resources = {}
         self.new()

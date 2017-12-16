@@ -15,16 +15,15 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from copy import deepcopy
-from cStringIO import StringIO
-from base64 import b64decode
 from PIL import Image
+from base64 import b64decode
+from cStringIO import StringIO
+from copy import deepcopy
 
+import model
 from uc2 import uc2const, libgeom, libimg, sk2const
 from uc2.formats.sk1 import sk1const
 from uc2.formats.sk2 import sk2_model
-
-import model
 
 # --- SK1 to SK2 translation
 
@@ -54,22 +53,26 @@ SK2_TEXT_ALIGN = {
 
 
 def get_sk2_color(clr):
-    if not clr: return deepcopy(sk1const.fallback_color)
+    if not clr:
+        return deepcopy(sk1const.fallback_color)
     color_spec = clr[0]
     if color_spec == sk1const.RGB:
         result = [uc2const.COLOR_RGB, [clr[1], clr[2], clr[3]], 1.0, '', '']
-        if len(clr) == 5: result[2] = clr[4]
+        if len(clr) == 5:
+            result[2] = clr[4]
         return result
     elif color_spec == sk1const.CMYK:
         result = [uc2const.COLOR_CMYK,
                   [clr[1], clr[2], clr[3], clr[4]], 1.0, '', '']
-        if len(clr) == 6: result[2] = clr[5]
+        if len(clr) == 6:
+            result[2] = clr[5]
         return result
     elif color_spec == sk1const.SPOT:
         result = [uc2const.COLOR_SPOT, [[clr[3], clr[4], clr[5]],
                                         [clr[6], clr[7], clr[8], clr[9]]], 1.0,
                   clr[2], clr[1]]
-        if len(clr) == 11: result[2] = clr[10]
+        if len(clr) == 11:
+            result[2] = clr[10]
         return result
     else:
         return deepcopy(sk1const.fallback_color)
@@ -120,6 +123,8 @@ def get_sk2_txt_style(source_text):
 
 class SK1_to_SK2_Translator(object):
     dx = dy = 0.0
+    sk2mtds = None
+    sk2_doc = None
 
     def translate(self, sk1_doc, sk2_doc):
         sk1_model = sk1_doc.model
@@ -137,13 +142,15 @@ class SK1_to_SK2_Translator(object):
                 gl = sk2mtds.get_guide_layer()
                 sk2mtds.set_guide_color(get_sk2_color(item.layer_color))
                 props = get_sk2_layer_props(item)
-                if props[3]: props[3] = 0
+                if props[3]:
+                    props[3] = 0
                 gl.properties = props
                 for chld in item.childs:
                     if chld.cid == model.GUIDE:
                         orientation = abs(chld.orientation - 1)
                         position = chld.position - dy
-                        if orientation: position = chld.position - dx
+                        if orientation:
+                            position = chld.position - dx
                         guide = sk2_model.Guide(gl.config, gl,
                                                 position, orientation)
                         gl.childs.append(guide)
@@ -152,7 +159,8 @@ class SK1_to_SK2_Translator(object):
                 grid.geometry = list(item.geometry)
                 sk2mtds.set_grid_color(get_sk2_color(item.grid_color))
                 props = get_sk2_layer_props(item)
-                if props[3]: props[3] = 0
+                if props[3]:
+                    props[3] = 0
                 grid.properties = props
             elif item.cid == model.PAGES:
                 pages_obj = sk2mtds.get_pages_obj()
@@ -190,7 +198,8 @@ class SK1_to_SK2_Translator(object):
                     dest_obj = self.translate_text(dest_parent, source_obj)
                 elif source_obj.cid == model.IMAGE:
                     dest_obj = self.translate_image(dest_parent, source_obj)
-                if dest_obj: dest_objs.append(dest_obj)
+                if dest_obj:
+                    dest_objs.append(dest_obj)
         return dest_objs
 
     def translate_page(self, dest_parent, source_page):
@@ -327,7 +336,8 @@ SK1_TEXT_ALIGN = {
 
 
 def get_sk1_color(clr, cms):
-    if not clr: return deepcopy(sk1const.fallback_sk1color)
+    if not clr:
+        return deepcopy(sk1const.fallback_sk1color)
     color_spec = clr[0]
     val = clr[1]
     alpha = clr[2]
@@ -382,6 +392,9 @@ def get_sk1_style(source_obj, cms):
 
 class SK2_to_SK1_Translator(object):
     dx = dy = 0.0
+    sk1mtds = None
+    sk1_doc = None
+    sk2_doc = None
 
     def translate(self, sk2_doc, sk1_doc):
         sk2model = sk2_doc.model
@@ -416,7 +429,8 @@ class SK2_to_SK1_Translator(object):
                     if chld.cid == sk2_model.GUIDE:
                         position = chld.position + dx
                         orientation = abs(chld.orientation - 1)
-                        if orientation: position = chld.position + dy
+                        if orientation:
+                            position = chld.position + dy
                         guide = model.SK1Guide(position, orientation)
                         gl.childs.append(guide)
 
@@ -448,7 +462,8 @@ class SK2_to_SK1_Translator(object):
                     continue
                 elif source_obj.cid == sk2_model.PIXMAP:
                     dest_obj = self.translate_image(dest_parent, source_obj)
-                if dest_obj: dest_objs.append(dest_obj)
+                if dest_obj:
+                    dest_objs.append(dest_obj)
         return dest_objs
 
     def translate_page(self, dest_parent, source_obj):

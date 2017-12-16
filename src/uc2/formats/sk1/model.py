@@ -51,7 +51,7 @@ CID_TO_NAME = {
     DOCUMENT: _('Document'), LAYOUT: _('Layout'), GRID: _('Grid'),
     PAGES: _('Pages'), PAGE: _('Page'), LAYER: _('Layer'),
     MASTERLAYER: _('MasterLayer'),
-    GUIDELAYER: _('GuideLayer'), GUIDE: _('Guideline'), GUIDE: _('Guideline'),
+    GUIDELAYER: _('GuideLayer'), GUIDE: _('Guideline'),
 
     STYLE: _('Style'),
     GROUP: _('Group'), MASKGROUP: _('MaskGroup'),
@@ -72,16 +72,19 @@ class Trafo(object):
         self.v2 = v2
 
     def coeff(self):
-        return (self.m11, self.m12, self.m21, self.m22, self.v1, self.v2)
+        return self.m11, self.m12, self.m21, self.m22, self.v1, self.v2
 
 
-class Scale(object): pass
+class Scale(object):
+    pass
 
 
-class Translation(object): pass
+class Translation(object):
+    pass
 
 
-def CreatePath(): return ()
+def CreatePath():
+    return ()
 
 
 class Point(object):
@@ -109,12 +112,15 @@ class SK1ModelObject(TextModelObject):
 
     def resolve(self):
         is_leaf = True
-        if self.cid < RECTANGLE: is_leaf = False
-        if self.cid == GUIDE or self.cid == LAYOUT: is_leaf = True
+        if self.cid < RECTANGLE:
+            is_leaf = False
+        if self.cid == GUIDE or self.cid == LAYOUT:
+            is_leaf = True
         name = CID_TO_NAME[self.cid]
         info = ''
-        if not is_leaf: info = len(self.childs)
-        return (is_leaf, name, info)
+        if not is_leaf:
+            info = len(self.childs)
+        return is_leaf, name, info
 
     def get_content(self):
         result = self.string
@@ -125,7 +131,7 @@ class SK1ModelObject(TextModelObject):
         return result
 
     def write_content(self, fileobj):
-        if not self.properties is None:
+        if self.properties is not None:
             self.properties.write_content(fileobj)
         fileobj.write(self.string)
         for child in self.childs:
@@ -158,7 +164,8 @@ class SK1Document(SK1ModelObject):
         SK1ModelObject.__init__(self, config)
 
 
-class MetaInfo(object): pass
+class MetaInfo(object):
+    pass
 
 
 class SK1Layout(SK1ModelObject):
@@ -252,10 +259,10 @@ class SK1Page(SK1ModelObject):
     orientation = uc2const.PORTRAIT
 
     def __init__(self, name='', fmt='', size=(), orientation=uc2const.PORTRAIT):
-        if name: self.name = name
-        if fmt: self.format = fmt
-        if size: self.size = size
-        if orientation: self.orientation = orientation
+        self.name = name or ''
+        self.format = fmt or 'A4'
+        self.size = size or uc2const.PAGE_FORMATS['A4']
+        self.orientation = orientation or uc2const.PORTRAIT
         SK1ModelObject.__init__(self)
 
     def update(self):
@@ -307,7 +314,8 @@ class SK1MasterLayer(SK1ModelObject):
     Layer values are defined as:
     (layer_name,visible,printable,locked,outlined,layer_color)
     """
-    string = "masterlayer('MasterLayer 1',1,1,0,0,(\"RGB\",0.196,0.314,0.635))\n"
+    string = "masterlayer('MasterLayer 1',1,1,0,0," \
+             "(\"RGB\",0.196,0.314,0.635))\n"
     cid = MASTERLAYER
     name = ''
     layer_properties = []
@@ -443,7 +451,8 @@ class SolidPattern(Pattern):
 class MultiGradient:
     colors = []
 
-    def __init__(self, colors=[], duplicate=None):
+    def __init__(self, colors=None, duplicate=None):
+        colors = colors or []
         if not colors:
             start_color = deepcopy(sk1const.black_color)
             end_color = deepcopy(sk1const.white_color)
@@ -539,9 +548,11 @@ class HatchingPattern(Pattern):
     def __init__(self, foreground=None, background=None,
                  direction=Point(1, 0),
                  spacing=5.0, width=0.5, duplicate=None):
-        if foreground is None:    foreground = deepcopy(sk1const.black_color)
+        if foreground is None:
+            foreground = deepcopy(sk1const.black_color)
         self.foreground = foreground
-        if background is None:    background = deepcopy(sk1const.white_color)
+        if background is None:
+            background = deepcopy(sk1const.white_color)
         self.background = background
         self.spacing = spacing
         self.width = width
@@ -573,7 +584,8 @@ class ImageTilePattern(Pattern):
     bid = None
 
     def __init__(self, data=None, trafo=None, duplicate=None):
-        if trafo is None: trafo = Trafo(1, 0, 0, -1, 0, 0)
+        if trafo is None:
+            trafo = Trafo(1, 0, 0, -1, 0, 0)
         self.trafo = trafo
         self.data = data
         self.image = self.data
@@ -587,7 +599,7 @@ class ImageTilePattern(Pattern):
         if self.image and not self.bid:
             self.bid = id(self.image)
         if self.image:
-            fileptr.write('bm(%d)\n' % (self.bid))
+            fileptr.write('bm(%d)\n' % self.bid)
 
             image_stream = StringIO()
             if self.raw_image.mode == "CMYK":
@@ -781,7 +793,8 @@ class Rectangle(SK1ModelObject):
     def __init__(self, trafo=None, radius1=0, radius2=0,
                  properties=None, duplicate=None):
 
-        if trafo is not None and trafo.m11 == trafo.m21 == trafo.m12 == trafo.m22 == 0:
+        if trafo is not None and \
+                trafo.m11 == trafo.m21 == trafo.m12 == trafo.m22 == 0:
             trafo = Trafo(1, 0, 0, -1, trafo.v1, trafo.v2)
         self.trafo = trafo
         self.radius1 = radius1
@@ -818,7 +831,8 @@ class Ellipse(SK1ModelObject):
                  arc_type=sk1const.ArcPieSlice, properties=None,
                  duplicate=None):
 
-        if trafo is not None and trafo.m11 == trafo.m21 == trafo.m12 == trafo.m22 == 0:
+        if trafo is not None and \
+                trafo.m11 == trafo.m21 == trafo.m12 == trafo.m22 == 0:
             trafo = Trafo(1, 0, 0, -1, trafo.v1, trafo.v2)
         self.trafo = trafo
         self.start_angle = start_angle
@@ -854,7 +868,8 @@ class PolyBezier(SK1ModelObject):
 
     is_Bezier = 1
 
-    def __init__(self, paths_list=[], properties=None):
+    def __init__(self, paths_list=None, properties=None):
+        paths_list = paths_list or []
         self.properties = properties
         self.paths_list = paths_list
         SK1ModelObject.__init__(self)
@@ -944,20 +959,22 @@ class SK1BitmapData(SK1ModelObject):
     bid = ''
 
     def __init__(self, bid=''):
-        if bid: self.bid = bid
+        if bid:
+            self.bid = bid
         SK1ModelObject.__init__(self)
 
     def read_data(self, fileobj):
         raw = ''
         while True:
             line = fileobj.readline().strip('\r\n')
-            if line == '-': break
+            if line == '-':
+                break
             raw += line
         self.raw_image = Image.open(StringIO(b64decode(raw)))
         self.raw_image.load()
 
     def update(self):
-        self.string = 'bm(%d)\n' % (self.bid)
+        self.string = 'bm(%d)\n' % self.bid
         self.end_string = '-\n'
 
     def write_content(self, fileptr):
@@ -989,7 +1006,7 @@ class SK1Image(SK1ModelObject):
 
     def write_content(self, fileptr):
         if self.image:
-            fileptr.write('bm(%d)\n' % (self.bid))
+            fileptr.write('bm(%d)\n' % self.bid)
 
             image_stream = StringIO()
             if self.image.mode == "CMYK":
