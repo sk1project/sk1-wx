@@ -15,16 +15,17 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2.formats.generic_filters import get_fileptr
 from uc2.formats.ase.ase_const import ASEF
 from uc2.formats.ase.ase_presenter import ASE_Presenter
-from uc2.formats.skp.skp_presenter import SKP_Presenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
+from uc2.formats.skp.skp_presenter import SKP_Presenter
+from uc2.utils.fsutils import get_fileptr
+from uc2.utils.mixutils import merge_cnf
 
 
 def ase_loader(appdata, filename=None, fileptr=None, translate=True,
-               convert=False, cnf={}, **kw):
-    if kw: cnf.update(kw)
+               convert=False, cnf=None, **kw):
+    cnf = merge_cnf(cnf, kw)
     doc = ASE_Presenter(appdata, cnf)
     doc.load(filename, fileptr)
     if convert:
@@ -44,8 +45,8 @@ def ase_loader(appdata, filename=None, fileptr=None, translate=True,
 
 
 def ase_saver(doc, filename=None, fileptr=None, translate=True,
-              convert=False, cnf={}, **kw):
-    if kw: cnf.update(kw)
+              convert=False, cnf=None, **kw):
+    cnf = merge_cnf(cnf, kw)
     appdata = doc.appdata
     if translate:
         skp_doc = SKP_Presenter(appdata, cnf)

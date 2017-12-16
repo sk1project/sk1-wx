@@ -15,14 +15,14 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from copy import deepcopy
 from PIL import Image
 from base64 import b64decode, b64encode
 from cStringIO import StringIO
+from copy import deepcopy
 
 from uc2 import _, uc2const
-from uc2.formats.sk1 import sk1const
 from uc2.formats.generic import TextModelObject
+from uc2.formats.sk1 import sk1const
 
 # Document object enumeration
 DOCUMENT = 1
@@ -833,7 +833,7 @@ class Ellipse(SK1ModelObject):
             self.string = 'e' + args.__str__() + '\n'
         else:
             args = self.trafo.coeff() + (
-            self.start_angle, self.end_angle, self.arc_type)
+                self.start_angle, self.end_angle, self.arc_type)
             self.string = 'e' + args.__str__() + '\n'
 
 
@@ -872,7 +872,8 @@ class PolyBezier(SK1ModelObject):
     def add_segment(self, point):
         point0, point1, point2, cont = point
         args = (
-        point0[0], point0[1], point1[0], point1[1], point2[0], point2[1], cont)
+            point0[0], point0[1], point1[0], point1[1], point2[0], point2[1],
+            cont)
         self.string += 'bc' + args.__str__() + '\n'
 
     def update(self):

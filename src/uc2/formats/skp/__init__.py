@@ -15,17 +15,16 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2.formats.skp.skp_presenter import SKP_Presenter
-from uc2.formats.skp.skp_const import SKP_ID
-from uc2.formats.generic_filters import get_fileptr
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
+from uc2.formats.skp.skp_const import SKP_ID
+from uc2.formats.skp.skp_presenter import SKP_Presenter
+from uc2.utils.fsutils import get_fileptr
+from uc2.utils.mixutils import merge_cnf
 
 
 def skp_loader(appdata, filename=None, fileptr=None, translate=True,
                convert=False, cnf=None, **kw):
-    cnf = cnf or {}
-    if kw:
-        cnf.update(kw)
+    cnf = merge_cnf(cnf, kw)
     doc = SKP_Presenter(appdata, cnf)
     doc.load(filename, fileptr)
     if translate:
@@ -38,9 +37,7 @@ def skp_loader(appdata, filename=None, fileptr=None, translate=True,
 
 def skp_saver(doc, filename=None, fileptr=None, translate=True,
               convert=False, cnf=None, **kw):
-    cnf = cnf or {}
-    if kw:
-        cnf.update(kw)
+    cnf = merge_cnf(cnf, kw)
     if translate:
         skp_doc = SKP_Presenter(doc.appdata, cnf)
         skp_doc.translate_from_sk2(doc)

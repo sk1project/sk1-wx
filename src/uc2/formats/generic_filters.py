@@ -23,31 +23,9 @@ from xml.sax import handler
 from xml.sax.xmlreader import InputSource
 
 from uc2 import _, events, msgconst, utils
+from uc2.utils.fsutils import get_fileptr
 
 LOG = logging.getLogger(__name__)
-
-
-def get_fileptr(path, writable=False):
-    if not path:
-        msg = _('There is no file path')
-        raise IOError(errno.ENODATA, msg, '')
-    if writable:
-        try:
-            fileptr = open(path, 'wb')
-        except Exception:
-            msg = _('Cannot open %s file for writing') % path
-            events.emit(events.MESSAGES, msgconst.ERROR, msg)
-            LOG.error(msg)
-            raise
-    else:
-        try:
-            fileptr = open(path, 'rb')
-        except Exception:
-            msg = _('Cannot open %s file for reading') % path
-            events.emit(events.MESSAGES, msgconst.ERROR, msg)
-            LOG.error(msg)
-            raise
-    return fileptr
 
 
 class AbstractLoader(object):

@@ -17,16 +17,15 @@
 
 import os
 
-from uc2.formats.generic_filters import get_fileptr
 from uc2.formats.plt.plt_presenter import PltPresenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
+from uc2.utils.fsutils import get_fileptr
+from uc2.utils.mixutils import merge_cnf
 
 
 def plt_loader(appdata, filename=None, fileptr=None, translate=True, cnf=None,
                **kw):
-    cnf = cnf or {}
-    if kw:
-        cnf.update(kw)
+    cnf = merge_cnf(cnf, kw)
     doc = PltPresenter(appdata, cnf)
     doc.load(filename, fileptr)
     if translate:
@@ -39,9 +38,7 @@ def plt_loader(appdata, filename=None, fileptr=None, translate=True, cnf=None,
 
 
 def plt_saver(doc, filename=None, fileptr=None, translate=True, cnf=None, **kw):
-    cnf = cnf or {}
-    if kw:
-        cnf.update(kw)
+    cnf = merge_cnf(cnf, kw)
     if translate:
         plt_doc = PltPresenter(doc.appdata, cnf)
         plt_doc.translate_from_sk2(doc)

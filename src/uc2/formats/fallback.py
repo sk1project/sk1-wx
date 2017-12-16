@@ -17,13 +17,15 @@
 
 from uc2 import libimg
 from uc2 import uc2const, sk2const
-from uc2.formats.generic_filters import get_fileptr
 from uc2.formats.sk2 import sk2_model
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
+from uc2.utils.fsutils import get_fileptr
+from uc2.utils.mixutils import merge_cnf
 
 
-def im_loader(appdata, filename=None, fileptr=None, translate=True, cnf={},
+def im_loader(appdata, filename=None, fileptr=None, translate=True, cnf=None,
               **kw):
+    cnf = merge_cnf(cnf, kw)
     if filename and not fileptr:
         fileptr = get_fileptr(filename)
     content = fileptr.read()
