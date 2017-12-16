@@ -31,7 +31,7 @@ from uc2.utils.mixutils import echo, config_logging
 LOG = logging.getLogger(__name__)
 
 
-def log_stub(msg):
+def log_stub(*args):
     pass
 
 
@@ -128,8 +128,8 @@ class UCApplication(object):
     def show_short_help(self, msg):
         echo('')
         echo(msg)
-        echo('USAGE: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]')
-        echo('Use --help for more details.\n')
+        echo(_('USAGE: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]'))
+        echo(_('Use --help for more details.') + '\n')
         sys.exit(1)
 
     def verbose(self, *args):
@@ -146,7 +146,7 @@ class UCApplication(object):
         if '--help' in sys.argv or '-help' in sys.argv:
             self.show_help()
         elif len(sys.argv) < 3:
-            self.show_short_help('Not enough arguments!')
+            self.show_short_help(_('Not enough arguments!'))
 
         files = []
         options_list = []
@@ -156,16 +156,16 @@ class UCApplication(object):
             if item.startswith('--'):
                 options_list.append(item)
             elif item.startswith('-'):
-                self.show_short_help('Unknown option %s' % item)
+                self.show_short_help(_('Unknown option %s') % item)
             else:
                 files.append(item)
 
         if not files:
-            self.show_short_help('File names are not provided!')
+            self.show_short_help(_('File names are not provided!'))
         elif len(files) == 1:
-            self.show_short_help('Destination file name is not provided!')
+            self.show_short_help(_('Destination file name is not provided!'))
         elif not os.path.lexists(files[0]):
-            self.show_short_help('Source file % is not found!' % files[0])
+            self.show_short_help(_('Source file %s is not found!') % files[0])
 
         for item in options_list:
             result = item[2:].split('=')
