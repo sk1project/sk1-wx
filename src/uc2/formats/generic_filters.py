@@ -18,7 +18,6 @@
 import errno
 import logging
 import os
-import sys
 import xml.sax
 from xml.sax import handler
 from xml.sax.xmlreader import InputSource
@@ -85,8 +84,8 @@ class AbstractLoader(object):
 
         try:
             self.init_load()
-        except Exception as e:
-            LOG.error('Error loading file content %s', e)
+        except Exception:
+            LOG.error('Error loading file content')
             raise
 
         self.fileptr.close()

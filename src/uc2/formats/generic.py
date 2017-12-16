@@ -121,9 +121,9 @@ class ModelPresenter(object):
             self.parsing_msg(0.03)
             self.send_info(_('Parsing is started...'))
             self.model = self.loader.load(self, filename, fileptr)
-        except Exception as e:
+        except Exception:
             self.close()
-            LOG.error(_('Error loading %s %s'), filename, e)
+            LOG.error(_('Error loading %s'), filename)
             raise
 
         model_name = uc2const.FORMAT_NAMES[self.cid]
@@ -137,8 +137,8 @@ class ModelPresenter(object):
             try:
                 self.model.config = self.config
                 self.model.do_update(self, action)
-            except Exception as e:
-                LOG.error(_('Error updating document model %s'), e)
+            except Exception:
+                LOG.error(_('Error updating document model'))
                 raise
 
             model_name = uc2const.FORMAT_NAMES[self.cid]
@@ -150,7 +150,7 @@ class ModelPresenter(object):
         if filename:
             self.doc_file = filename
         elif not fileptr:
-            msg = _('Error while saving:') + ' ' + _('No file data')
+            msg = _('Error while saving:') + ' ' + _('No file object')
             self.send_error(msg)
             raise IOError(msg)
 
@@ -158,9 +158,9 @@ class ModelPresenter(object):
             self.saving_msg(0.03)
             self.send_info(_('Saving is started...'))
             self.saver.save(self, filename, fileptr)
-        except Exception as e:
+        except Exception:
             msg = _('Error while saving') + ' ' + filename + ' %s'
-            LOG.error(msg, e)
+            LOG.error(msg)
             raise
 
         model_name = uc2const.FORMAT_NAMES[self.cid]
@@ -186,7 +186,7 @@ class ModelPresenter(object):
             except Exception as e:
                 msg = _('Cache clearing is unsuccessful')
                 self.send_error(msg)
-                LOG.error(msg + ' %s', e)
+                LOG.warn(msg + ' %s', e)
 
     def update_msg(self, val):
         model_name = uc2const.FORMAT_NAMES[self.cid]
