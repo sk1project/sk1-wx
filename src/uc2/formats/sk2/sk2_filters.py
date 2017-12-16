@@ -16,7 +16,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import cairo
-import sys
+import logging
 from base64 import b64encode
 from cStringIO import StringIO
 
@@ -24,6 +24,8 @@ from uc2 import libgeom, sk2const
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 from uc2.formats.sk2 import sk2_model
 from uc2.formats.sk2.crenderer import CairoRenderer
+
+LOG = logging.getLogger(__name__)
 
 
 class SK2_Loader(AbstractLoader):
@@ -52,11 +54,10 @@ class SK2_Loader(AbstractLoader):
                 try:
                     code = compile('self.' + self.line, '<string>', 'exec')
                     exec code
-                except Exception:
-                    msg = 'error>> %s' % self.line
-                    errtype, value, traceback = sys.exc_info()
+                except Exception as e:
+                    msg = 'Parsing error in "%s"', self.line
                     self.send_error(msg)
-                    raise IOError(errtype, msg + '\n' + value, traceback)
+                    raise
 
     def obj(self, tag):
         obj_cid = sk2_model.TAGNAME_TO_CID[tag]

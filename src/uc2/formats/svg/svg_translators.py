@@ -15,6 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import os
 import sys
 from PIL import Image
@@ -28,6 +29,8 @@ from uc2.formats.svg import svg_const, svglib
 from uc2.formats.svg.svglib import get_svg_trafo, check_svg_attr, \
     parse_svg_points, parse_svg_coords, parse_svg_color, parse_svg_stops, \
     get_svg_level_trafo
+
+LOG = logging.getLogger(__name__)
 
 SK2_UNITS = {
     svg_const.SVG_PX: uc2const.UNIT_PX,
@@ -315,7 +318,7 @@ class SVG_to_SK2_Translator(object):
         if 'display' in style and style['display'] == 'none':
             return sk2_style
         if 'visibility' in style and \
-                        style['visibility'] in ('hidden', 'collapse'):
+                style['visibility'] in ('hidden', 'collapse'):
             return sk2_style
 
         # fill parsing
@@ -530,7 +533,7 @@ class SVG_to_SK2_Translator(object):
             xx = width / vbox[2]
             yy = height / vbox[3]
             if 'xml:space' in self.svg_mt.attrs and \
-                            self.svg_mt.attrs['xml:space'] == 'preserve':
+                    self.svg_mt.attrs['xml:space'] == 'preserve':
                 xx = yy = min(xx, yy)
             tr = [xx, 0.0, 0.0, yy, 0.0, 0.0]
             tr = libgeom.multiply_trafo([1.0, 0.0, 0.0, 1.0, dx, dy], tr)
@@ -579,13 +582,12 @@ class SVG_to_SK2_Translator(object):
                 return
             elif svg_obj.childs:
                 self.translate_unknown(parent, svg_obj, trafo, style)
-        except:
-            print '-' * 30
-            print 'obj', repr(svg_obj)
-            print 'tag', svg_obj.tag
-            if 'id' in svg_obj.attrs: print 'id', svg_obj.attrs['id']
-            for item in sys.exc_info(): print item
-            print '=' * 30
+        except Exception as e:
+            LOG.warn('Cannot translate <%s> object, tag <%s>',
+                     repr(svg_obj), svg_obj.tag)
+            if 'id' in svg_obj.attrs:
+                LOG.warn('Object id: %s', svg_obj.attrs['id'])
+            LOG.warn('Error traceback: %s', e)
 
     def translate_defs(self, svg_obj):
         for item in svg_obj.childs:
@@ -931,7 +933,7 @@ class SVG_to_SK2_Translator(object):
             if obj_id in self.id_map:
                 self.translate_obj(parent, self.id_map[obj_id], tr, stl)
             else:
-                print 'id %s is not found' % obj_id
+                LOG.warn('<use> object id %s is not found', obj_id)
 
     def translate_text(self, parent, svg_obj, trafo, style):
         cfg = parent.config

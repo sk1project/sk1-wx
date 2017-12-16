@@ -132,7 +132,6 @@ class RIFF_Loader(AbstractLoader):
     def parse_compressed_list(self, stream, identifier, blocksizes):
         rawsize = dword2py_int(stream.read(4))
         list_identifier = stream.read(4)
-        print list_identifier
 
         size = blocksizes[rawsize]
 

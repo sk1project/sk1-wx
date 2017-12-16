@@ -70,8 +70,9 @@ class SK1Loader(AbstractLoader):
                 try:
                     code = compile('self.' + self.line, '<string>', 'exec')
                     exec code
-                except Exception:
-                    LOG.warn('error>> %s', self.line)
+                except Exception as e:
+                    LOG.warn('Parsing error in "%s"', self.line)
+                    LOG.warn('Error traceback: %s', e)
 
     def set_style(self, obj):
         obj.properties = self.style_obj

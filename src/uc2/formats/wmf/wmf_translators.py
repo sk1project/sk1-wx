@@ -85,9 +85,7 @@ class WMF_to_SK2_Translator(object):
             for word in get_data('<10h', self.wmf_mt.chunk[:20]):
                 val = val ^ word
             if val != checksum:
-                msg = 'Incorrect header checksum'
-                print msg
-                # events.emit(events.MESSAGES, msgconst.WARNING, msg)
+                LOG.warn('Incorrect WMF header checksum!')
 
             header = self.wmf_mt.childs[0]
 

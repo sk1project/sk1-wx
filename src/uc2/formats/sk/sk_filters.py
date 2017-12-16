@@ -15,12 +15,14 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import os
 import sys
 
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 from uc2.formats.sk import sk_model, sk_const
 
+LOG = logging.getLogger(__name__)
 
 class SK_Loader(AbstractLoader):
     name = 'SK_Loader'
@@ -61,10 +63,9 @@ class SK_Loader(AbstractLoader):
                 try:
                     code = compile('self.' + self.line, '<string>', 'exec')
                     exec code
-                except Exception:
-                    print 'parsing error>>', self.line
-                    errtype, value, traceback = sys.exc_info()
-                    print errtype, value, traceback
+                except Exception as e:
+                    LOG.error('Parsing error in "%s"', self.line)
+                    LOG.error('Error traceback: %s', e)
 
     def set_style(self, obj):
         obj.properties = self.style_obj
@@ -350,10 +351,9 @@ class SK_Loader(AbstractLoader):
         if filename is None:
             try:
                 bmd_obj.read_data(self.fileptr)
-            except Exception:
-                print 'error>>', self.line
-                errtype, value, traceback = sys.exc_info()
-                print errtype, value, traceback
+            except Exception as e:
+                LOG.error('Error reading bitmap "%s"', self.line)
+                LOG.error('Error traceback: %s', e)
         elif self.filepath:
             image_dir = os.path.dirname(self.filepath)
             image_path = os.path.join(image_dir, filename)

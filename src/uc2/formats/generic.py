@@ -123,7 +123,7 @@ class ModelPresenter(object):
             self.model = self.loader.load(self, filename, fileptr)
         except Exception:
             self.close()
-            LOG.error(_('Error loading %s'), filename)
+            LOG.error('Error loading %s', filename)
             raise
 
         model_name = uc2const.FORMAT_NAMES[self.cid]

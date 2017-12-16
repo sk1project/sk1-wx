@@ -15,11 +15,14 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import os
 
 from uc2 import cms, uc2const
-from uc2.formats.skp.skp_const import SKP_ID
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
+from uc2.formats.skp.skp_const import SKP_ID
+
+LOG = logging.getLogger(__name__)
 
 
 class SKP_Loader(AbstractLoader):
@@ -39,8 +42,10 @@ class SKP_Loader(AbstractLoader):
                 try:
                     code = compile('self.' + self.line, '<string>', 'exec')
                     exec code
-                except Exception:
-                    print 'ERROR LINE: ' + self.line
+
+                except Exception as e:
+                    LOG.error('Parsing error in "%s"', self.line)
+                    LOG.error('Error traceback: %s', e)
                 if self.stop_flag:
                     break
 
