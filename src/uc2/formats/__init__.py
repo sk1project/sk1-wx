@@ -15,14 +15,17 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import os
 from importlib import import_module
 
-from uc2 import _
-from uc2 import uc2const
-from uc2 import events, msgconst
-from uc2.utils.fs import get_file_extension
 from fallback import fallback_check, im_loader
+from uc2 import _
+from uc2 import events, msgconst
+from uc2 import uc2const
+from uc2.utils.fs import get_file_extension
+
+LOG = logging.getLogger(__name__)
 
 LOADERS = {}
 SAVERS = {}
@@ -40,8 +43,8 @@ def _get_loader(pid):
     try:
         loader_mod = import_module('uc2.formats.' + pid)
         loader = getattr(loader_mod, pid + '_loader')
-    except Exception:
-        pass
+    except Exception as e:
+        LOG.error(_('Error accessing <%s> loader %s'), pid, e)
     LOADERS[pid] = loader
     return loader
 
@@ -55,8 +58,8 @@ def _get_saver(pid):
     try:
         saver_mod = import_module('uc2.formats.' + pid)
         saver = getattr(saver_mod, pid + '_saver')
-    except Exception:
-        pass
+    except Exception as e:
+        LOG.error(_('Error accessing <%s> saver %s'), pid, e)
     SAVERS[pid] = saver
     return saver
 
@@ -72,8 +75,8 @@ def _get_checker(pid):
     try:
         checker_mod = import_module('uc2.formats.' + pid)
         checker = getattr(checker_mod, 'check_' + pid)
-    except Exception:
-        pass
+    except Exception as e:
+        LOG.error(_('Error accessing <%s> checker %s'), pid, e)
     CHECKERS[pid] = checker
     return checker
 
