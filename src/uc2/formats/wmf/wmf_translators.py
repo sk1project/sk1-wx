@@ -15,7 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
+import logging
 from copy import deepcopy
 
 from uc2 import uc2const, libgeom, libpango, libimg, sk2const
@@ -23,6 +23,8 @@ from uc2.formats.sk2 import sk2_model
 from uc2.formats.wmf import wmfconst, wmf_hatches, wmflib, wmf_model
 from uc2.formats.wmf.wmflib import get_data, rndpoint
 from uc2.libgeom import multiply_trafo, apply_trafo_to_point
+
+LOG = logging.getLogger(__name__)
 
 SK2_CAPS = {
     wmfconst.PS_ENDCAP_FLAT: sk2const.CAP_BUTT,
@@ -254,10 +256,10 @@ class WMF_to_SK2_Translator(object):
         for record in header.childs:
             try:
                 self.translate_record(record)
-            except:
-                print 'Error -->', wmfconst.WMF_RECORD_NAMES[record.func]
-                for item in sys.exc_info(): print item
-                print 'Record index %d' % header.childs.index(record)
+            except Exception as e:
+                LOG.error('ERREC-->%s', wmfconst.WMF_RECORD_NAMES[record.func])
+                LOG.error('Record index %s', str(header.childs.index(record)))
+                LOG.error('Error: %s', e)
 
     def translate_record(self, record):
         if record.func in self.rec_funcs:

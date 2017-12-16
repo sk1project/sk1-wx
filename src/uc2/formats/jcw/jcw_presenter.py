@@ -20,9 +20,9 @@ import os
 from uc2 import uc2const, cms
 from uc2.formats.generic import BinaryModelPresenter
 from uc2.formats.jcw.jcw_config import JCW_Config
-from uc2.formats.jcw.jcw_model import JCW_Palette, JCW_Color
-from uc2.formats.jcw.jcw_filters import JCW_Loader, JCW_Saver
 from uc2.formats.jcw.jcw_const import JCW_CMYK, JCW_RGB, JCW_NAMESIZE
+from uc2.formats.jcw.jcw_filters import JCW_Loader, JCW_Saver
+from uc2.formats.jcw.jcw_model import JCW_Palette, JCW_Color
 
 
 class JCW_Presenter(BinaryModelPresenter):
@@ -32,7 +32,8 @@ class JCW_Presenter(BinaryModelPresenter):
     doc_file = ''
     model = None
 
-    def __init__(self, appdata, cnf={}):
+    def __init__(self, appdata, cnf=None):
+        cnf = cnf or {}
         self.config = JCW_Config()
         config_file = os.path.join(appdata.app_config_dir, self.config.filename)
         self.config.load(config_file)
@@ -65,10 +66,7 @@ class JCW_Presenter(BinaryModelPresenter):
             else:
                 clr = self.cms.get_rgb_color(color)
             if clr[3]:
-                try:
-                    txt = clr[3].encode('iso-8859-1')
-                except:
-                    clr[3] = ''
+                clr[3] = clr[3].encode('iso-8859-1', errors='ignore')
             if not clr[3]:
                 if colorspace == JCW_CMYK:
                     clr[3] += cms.cmyk_to_hexcolor(color[1])
@@ -87,8 +85,10 @@ class JCW_Presenter(BinaryModelPresenter):
         skp_model.source = self.config.source
         if self.doc_file:
             filename = os.path.basename(self.doc_file)
-            if skp_model.comments: skp_model.comments += 'n'
+            if skp_model.comments:
+                skp_model.comments += 'n'
             skp_model.comments += 'Converted from %s' % filename
         for item in self.model.childs:
             clr = item.get_color()
-            if clr: skp_model.colors.append(clr)
+            if clr:
+                skp_model.colors.append(clr)

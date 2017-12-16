@@ -358,7 +358,7 @@ class SVG_to_SK2_Translator(object):
             alpha = float(style['stroke-opacity']) * float(style['opacity'])
 
             dash = []
-            if not style['stroke-dasharray'] == 'none':
+            if style['stroke-dasharray'] != 'none':
                 try:
                     code = compile('dash=[' + style['stroke-dasharray'] + ']',
                                    '<string>', 'exec')
