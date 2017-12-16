@@ -108,7 +108,7 @@ class UCApplication(object):
             if loader in (uc2const.COREL_PAL, uc2const.SCRIBUS_PAL):
                 desc = uc2const.FORMAT_DESCRIPTION[loader]
                 desc = desc.replace(' - ', ') - ')
-                result.append('%s (%s' % (loader.upper(), desc))
+                result.append('%s (%s' % (uc2const.FORMAT_NAMES[loader], desc))
             else:
                 result.append(uc2const.FORMAT_DESCRIPTION[loader])
         return '\n   '.join(result)
@@ -126,9 +126,10 @@ class UCApplication(object):
         sys.exit(0)
 
     def show_short_help(self, msg):
+        echo('')
         echo(msg)
         echo('USAGE: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]')
-        echo('Use --help for more details.')
+        echo('Use --help for more details.\n')
         sys.exit(1)
 
     def verbose(self, *args):
@@ -138,7 +139,7 @@ class UCApplication(object):
             indent = ' ' * (msgconst.MAX_LEN - len(status))
             echo('%s%s| %s' % (status, indent, args[1]))
         if args[0] == msgconst.STOP:
-            echo(_('For details see logs: %s') % self.log_filepath)
+            echo(_('For details see logs: %s\n') % self.log_filepath)
             sys.exit(1)
 
     def run(self):

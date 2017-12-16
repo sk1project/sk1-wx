@@ -15,13 +15,14 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
+import logging
 import os
-import sys
 
 from uc2 import _, uc2const
 from uc2 import events, msgconst
 from uc2.utils import fs
+
+LOG = logging.getLogger(__name__)
 
 
 class ModelObject(object):
@@ -120,10 +121,10 @@ class ModelPresenter(object):
             self.parsing_msg(0.03)
             self.send_info(_('Parsing is started...'))
             self.model = self.loader.load(self, filename, fileptr)
-        except Exception:
+        except Exception as e:
             self.close()
-            raise IOError(_('Error while loading') + ' ' + filename,
-                          sys.exc_info()[1], sys.exc_info()[2])
+            LOG.error(_('Error loading %s %s'), filename, e)
+            raise
 
         model_name = uc2const.FORMAT_NAMES[self.cid]
         self.send_ok(_('<%s> document model is created') % model_name)
@@ -136,11 +137,9 @@ class ModelPresenter(object):
             try:
                 self.model.config = self.config
                 self.model.do_update(self, action)
-            except Exception:
-                print sys.exc_info()[1], sys.exc_info()[2]
-                msg = _('Exception while document model update')
-                self.send_error(msg)
-                raise IOError(msg)
+            except Exception as e:
+                LOG.error(_('Error updating document model %s'), e)
+                raise
 
             model_name = uc2const.FORMAT_NAMES[self.cid]
             msg = _('<%s> document model is updated successfully' % model_name)
@@ -159,10 +158,10 @@ class ModelPresenter(object):
             self.saving_msg(0.03)
             self.send_info(_('Saving is started...'))
             self.saver.save(self, filename, fileptr)
-        except Exception:
-            msg = _('Error while saving') + ' ' + filename
-            self.send_error(msg)
-            raise IOError(msg, sys.exc_info()[1], sys.exc_info()[2])
+        except Exception as e:
+            msg = _('Error while saving') + ' ' + filename + ' %s'
+            LOG.error(msg, e)
+            raise
 
         model_name = uc2const.FORMAT_NAMES[self.cid]
         msg = _('<%s> document model is saved successfully') % model_name
@@ -184,12 +183,14 @@ class ModelPresenter(object):
             try:
                 fs.xremove_dir(self.doc_dir)
                 self.send_ok(_('Cache is cleared for') + ' %s' % filename)
-            except IOError:
-                self.send_error(_('Cache clearing is unsuccessful'))
+            except Exception as e:
+                msg = _('Cache clearing is unsuccessful')
+                self.send_error(msg)
+                LOG.error(msg + ' %s', e)
 
     def update_msg(self, val):
-        msg = _('%s model update in progress...') % (
-            uc2const.FORMAT_NAMES[self.cid])
+        model_name = uc2const.FORMAT_NAMES[self.cid]
+        msg = _('%s model update in progress...') % model_name
         self.send_progress_message(msg, val)
 
     def parsing_msg(self, val):
