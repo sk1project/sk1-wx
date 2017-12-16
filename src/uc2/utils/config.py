@@ -15,16 +15,17 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
+import logging
 import os
 import sys
-
 import xml.sax
-from xml.sax.xmlreader import InputSource
 from xml.sax import handler
 from xml.sax.saxutils import XMLGenerator
+from xml.sax.xmlreader import InputSource
 
 from uc2.utils.fs import path_system, path_unicode
+
+LOG = logging.getLogger(__name__)
 
 IDENT = '\t'
 
@@ -77,10 +78,8 @@ class XmlConfigParser(object):
                 xml_reader.setDTDHandler(dtd_handler)
                 xml_reader.parse(input_source)
                 input_file.close()
-            except Exception:
-                print 'ERROR>>> cannot read preferences from %s' % filename
-                print sys.exc_info()[1].__str__()
-                print sys.exc_info()[2].__str__()
+            except Exception as e:
+                LOG.error('Cannot read preferences from %s %s', filename, e)
 
     def save(self, filename=None):
         if self.filename and filename is None:
@@ -90,8 +89,8 @@ class XmlConfigParser(object):
 
         try:
             fileobj = open(filename, 'w')
-        except Exception:
-            print 'ERROR>>> cannot write preferences into %s' % filename
+        except Exception as e:
+            LOG.error('Cannot write preferences into %s %s', filename, e)
             return
 
         writer = XMLGenerator(out=fileobj, encoding=self.system_encoding)
@@ -141,8 +140,8 @@ class XMLPrefReader(handler.ContentHandler):
                 code = compile(line, '<string>', 'exec')
                 exec code
                 self.pref.__dict__[self.key] = self.value
-            except Exception:
-                print sys.exc_info()[0] + sys.exc_info()[1]
+            except Exception as e:
+                LOG.error('Error in "%s" %s', line, e)
 
     def characters(self, data):
         self.value = data

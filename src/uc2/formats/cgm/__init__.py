@@ -43,10 +43,7 @@ def cgm_saver(sk2_doc, filename=None, fileptr=None,
     if sk2_doc.cid == uc2const.CGM: translate = False
     if translate:
         cgm_doc = CGM_Presenter(sk2_doc.appdata, cnf)
-        try:
-            cgm_doc.translate_from_sk2(sk2_doc)
-        except:
-            for item in sys.exc_info(): print item
+        cgm_doc.translate_from_sk2(sk2_doc)
         cgm_doc.save(filename, fileptr)
         cgm_doc.close()
     else:

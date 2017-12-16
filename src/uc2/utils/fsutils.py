@@ -34,6 +34,7 @@ def get_fileptr(path, writable=False):
         except Exception:
             msg = _('Cannot open %s file for writing') % path
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
+            LOG.error(msg)
             raise
     else:
         try:
@@ -41,5 +42,6 @@ def get_fileptr(path, writable=False):
         except Exception:
             msg = _('Cannot open %s file for reading') % path
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
+            LOG.error(msg)
             raise
     return fileptr

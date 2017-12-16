@@ -16,6 +16,7 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import errno
+import logging
 import os
 import sys
 import xml.sax
@@ -24,27 +25,29 @@ from xml.sax.xmlreader import InputSource
 
 from uc2 import _, events, msgconst, utils
 
+LOG = logging.getLogger(__name__)
+
 
 def get_fileptr(path, writable=False):
-    if not file:
+    if not path:
         msg = _('There is no file path')
         raise IOError(errno.ENODATA, msg, '')
     if writable:
         try:
             fileptr = open(path, 'wb')
         except Exception:
-            errtype, value, traceback = sys.exc_info()
             msg = _('Cannot open %s file for writing') % path
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
-            raise IOError(errtype, msg + '\n' + value, traceback)
+            LOG.error(msg)
+            raise
     else:
         try:
             fileptr = open(path, 'rb')
         except Exception:
-            errtype, value, traceback = sys.exc_info()
             msg = _('Cannot open %s file for reading') % path
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
-            raise IOError(errtype, msg + '\n' + value, traceback)
+            LOG.error(msg)
+            raise
     return fileptr
 
 
@@ -82,11 +85,9 @@ class AbstractLoader(object):
 
         try:
             self.init_load()
-        except Exception as inst:
-            print type(inst)
-            print inst.args
-            print inst
-            raise IOError(type(inst), str(inst.args) + '\n' + str(inst), '')
+        except Exception as e:
+            LOG.error('Error loading file content %s', e)
+            raise
 
         self.fileptr.close()
         self.position = 0
@@ -230,11 +231,9 @@ class AbstractSaver(object):
         self.presenter.update()
         try:
             self.do_save()
-        except Exception as inst:
-            print type(inst)
-            print inst.args
-            print inst
-            raise IOError(type(inst), str(inst.args) + '\n' + str(inst), '')
+        except Exception as e:
+            LOG.error('Error saving file content %s', e)
+            raise
         self.fileptr.close()
         self.fileptr = None
 

@@ -15,11 +15,13 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
+import logging
 import os
-import sys
 
 from uc2.utils.fs import path_system, path_unicode
+from uc2.utils.fsutils import get_fileptr
+
+LOG = logging.getLogger(__name__)
 
 
 class SerializedConfig(object):
@@ -39,11 +41,8 @@ class SerializedConfig(object):
         self.filename = filename
         if os.path.lexists(filename):
             try:
-                fileobj = open(filename, "r")
+                fileobj = get_fileptr(filename)
             except Exception:
-                print 'ERROR>>> cannot read preferences from %s' % filename
-                print sys.exc_info()[1].__str__()
-                print sys.exc_info()[2].__str__()
                 return
 
             while True:
@@ -58,8 +57,9 @@ class SerializedConfig(object):
                 try:
                     code = compile(line, '<string>', 'exec')
                     exec code
-                except Exception:
-                    print 'ERROR>>> %s' % line
+                except Exception as e:
+                    LOG.error('ERROR>>> %s\n%s', line, e)
+                    print
             fileobj.close()
 
     def save(self, filename=None):
@@ -69,9 +69,8 @@ class SerializedConfig(object):
             return
 
         try:
-            fileobj = open(filename, 'w')
+            fileobj = get_fileptr(filename, True)
         except Exception:
-            print 'ERROR>>> cannot write preferences into %s' % filename
             return
 
         defaults = SerializedConfig.__dict__
