@@ -56,7 +56,7 @@ Example: uniconvertor drawing.cdr drawing.svg
  Available options:
  --help      Display this help and exit
  --verbose   Show internal logs
- --log=      Logging level: DEBUG, INFO, WARN, ERROR (default INFO)
+ --log=      Logging level: DEBUG, INFO, WARN, ERROR (by default, INFO)
  --format=   Type of output file format (values provided below)
 
 ---INPUT FILE FORMATS-------------------------------
