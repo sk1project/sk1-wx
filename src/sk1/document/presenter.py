@@ -16,7 +16,6 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import sys
 from copy import deepcopy
 
 from sk1 import _, events, modes
@@ -62,28 +61,28 @@ class SK1Presenter:
 
         if doc_file:
             loader = get_loader(doc_file)
+            if not loader:
+                raise IOError(_('Loader is not found for <%s>') % doc_file)
 
             if silent:
                 self.doc_presenter = loader(app.appdata, doc_file)
             else:
                 pd = ProgressDialog(_('Opening file...'), self.app.mw)
-                ret = pd.run(loader, [self.app.appdata, doc_file])
-                if ret:
-                    if pd.result is None:
-                        pd.destroy()
-                        raise IOError(*pd.error_info)
-
+                try:
+                    ret = pd.run(loader, [self.app.appdata, doc_file])
+                    if not ret or pd.result is None:
+                        raise IOError(_('Error while opening <%s>') % doc_file)
                     self.doc_presenter = pd.result
+                except Exception:
+                    raise
+                finally:
                     pd.destroy()
-                else:
-                    pd.destroy()
-                    raise IOError(_('Error while opening'), doc_file)
+
             if not template:
                 self.doc_file = self.doc_presenter.doc_file
                 self.doc_name = os.path.basename(self.doc_file)
-                self.doc_name = change_file_extension(self.doc_name,
-                                                      uc2const.FORMAT_EXTENSION[
-                                                          uc2const.SK2][0])
+                ext = uc2const.FORMAT_EXTENSION[uc2const.SK2][0]
+                self.doc_name = change_file_extension(self.doc_name, ext)
             else:
                 self.doc_name = self.app.get_new_docname()
                 self.doc_presenter.doc_file = ''
@@ -124,25 +123,19 @@ class SK1Presenter:
         self.set_title()
 
     def save(self):
+        saver = get_saver(self.doc_file)
+        if saver is None:
+            msg = _('Unknown file format is requested for saving! <%s>')
+            raise IOError(msg % self.doc_file)
+
+        pd = ProgressDialog(_('Saving file...'), self.app.mw)
         try:
-            saver = get_saver(self.doc_file)
-            if saver is None:
-                raise IOError(_('Unknown file format is requested for saving!'),
-                              self.doc_file)
-
-            pd = ProgressDialog(_('Saving file...'), self.app.mw)
-            ret = pd.run(saver, [self.doc_presenter, self.doc_file], False)
-            if ret:
-                if pd.error_info is not None:
-                    pd.destroy()
-                    raise IOError(*pd.error_info)
-                pd.destroy()
-            else:
-                pd.destroy()
-                raise IOError(_('Error while saving'), self.doc_file)
-
-        except IOError:
-            raise IOError(*sys.exc_info())
+            if not pd.run(saver, [self.doc_presenter, self.doc_file], False):
+                raise IOError(_('Error saving <%s>') % self.doc_file)
+        except Exception:
+            raise
+        finally:
+            pd.destroy()
         self.reflect_saving()
 
     def save_selected(self, doc_file):
@@ -163,22 +156,18 @@ class SK1Presenter:
         saver = get_saver(doc_file)
         if saver is None:
             doc.close()
-            raise IOError(_('Unknown file format is requested for saving!'),
-                          doc_file)
+            msg = _('Unknown file format is requested for saving <%s>')
+            raise IOError(msg % doc_file)
 
         pd = ProgressDialog(_('Saving file...'), self.app.mw)
-        ret = pd.run(saver, [doc, doc_file], False)
-        if ret:
-            if pd.error_info is not None:
-                pd.destroy()
-                doc.close()
-                raise IOError(*pd.error_info)
+        try:
+            if not pd.run(saver, [doc, doc_file], False):
+                raise IOError(_('Error saving <%s>') % doc_file)
+        except Exception:
+            raise
+        finally:
             pd.destroy()
             doc.close()
-        else:
-            pd.destroy()
-            doc.close()
-            raise IOError(_('Error while saving'), doc_file)
 
     def close(self):
         self.app.mdi.remove_doc(self)
@@ -197,18 +186,19 @@ class SK1Presenter:
     def import_file(self, doc_file):
         retval = True
         loader = get_loader(doc_file)
+        if not loader:
+            raise IOError(_('Loader is not found for <%s>') % doc_file)
         pd = ProgressDialog(_('Opening file...'), self.app.mw)
-        ret = pd.run(loader, [self.app.appdata, doc_file])
-        if ret:
-            if pd.result is None:
-                pd.destroy()
-                raise IOError(*pd.error_info)
-
+        try:
+            ret = pd.run(loader, [self.app.appdata, doc_file])
+            if not ret or pd.result is None:
+                raise IOError(_('Error while opening'), doc_file)
             doc_presenter = pd.result
+        except Exception:
+            raise
+        finally:
             pd.destroy()
-        else:
-            pd.destroy()
-            raise IOError(_('Error while opening'), doc_file)
+
         pages = doc_presenter.methods.get_pages()
         if len(pages) == 1:
             page = doc_presenter.methods.get_page()
@@ -233,30 +223,25 @@ class SK1Presenter:
         return retval
 
     def export_as(self, doc_file):
+        saver = get_saver(doc_file)
+        if saver is None:
+            msg = _('Unknown file format is requested for export <%s>')
+            raise IOError(msg % doc_file)
+
+        pd = ProgressDialog(_('Exporting...'), self.app.mw)
         try:
-            saver = get_saver(doc_file)
-            if saver is None:
-                raise IOError(_('Unknown file format is requested for export!'),
-                              doc_file)
-
-            pd = ProgressDialog(_('Exporting...'), self.app.mw)
-            ret = pd.run(saver, [self.doc_presenter, doc_file], False)
-            if ret:
-                if pd.error_info is not None:
-                    pd.destroy()
-                    raise IOError(*pd.error_info)
-                pd.destroy()
-            else:
-                pd.destroy()
+            if not pd.run(saver, [self.doc_presenter, doc_file], False):
                 raise IOError(_('Error while exporting'), doc_file)
-
-        except IOError:
-            raise IOError(*sys.exc_info())
+        except Exception:
+            raise
+        finally:
+            pd.destroy()
 
     def modified(self, *args):
         self.saved = False
         self.set_title()
         events.emit(events.DOC_MODIFIED, self)
+        return args
 
     def reflect_saving(self):
         self.saved = True

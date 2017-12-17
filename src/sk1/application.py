@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013-2015 by Igor E. Novikov
+#  Copyright (C) 2013-2017 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -15,12 +15,13 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import os
 import sys
-import traceback
 import webbrowser
 from base64 import b64decode
 
+import uc2.events
 import wal
 from sk1 import _, config, events, modes, dialogs, appconst
 from sk1 import app_plugins, app_actions
@@ -35,10 +36,13 @@ from sk1.document import SK1Presenter
 from sk1.parts.artprovider import create_artprovider
 from sk1.parts.mw import AppMainWindow
 from sk1.pwidgets import generate_fcache
-from uc2 import uc2const, libimg
+from uc2 import uc2const, libimg, msgconst
 from uc2.application import UCApplication
 from uc2.formats import get_saver_by_id, get_loader
 from uc2.utils.fs import path_unicode
+from uc2.utils.mixutils import config_logging
+
+LOG = logging.getLogger(__name__)
 
 
 class SK1Application(wal.Application, UCApplication):
@@ -60,6 +64,7 @@ class SK1Application(wal.Application, UCApplication):
     mdiarea = None
     plg_area = None
     print_data = None
+    log_filepath = None
 
     def __init__(self, path, cfgdir='~'):
 
@@ -76,6 +81,10 @@ class SK1Application(wal.Application, UCApplication):
         self.appdata = AppData(self, cfgdir)
         config.load(self.appdata.app_config)
         config.resource_dir = os.path.join(path_unicode(self.path), 'share')
+        log_level = config.log_level
+        self.log_filepath = os.path.join(self.appdata.app_config_dir, 'sk1.log')
+        config_logging(self.log_filepath, log_level)
+
         self.update_wal()
         plg_dir = os.path.join(self.path, 'share', 'pd_plugins')
         custom_plg_dir = self.appdata.plugin_dir
@@ -83,6 +92,7 @@ class SK1Application(wal.Application, UCApplication):
         sys.path.insert(1, self.appdata.app_config)
         sys.path.insert(1, os.path.join(self.path, 'share'))
         config.app = self
+        LOG.info('Config is updated')
 
         self.history = AppHistoryManager(self)
 
@@ -103,6 +113,10 @@ class SK1Application(wal.Application, UCApplication):
 
         self.proxy.update()
         self.insp.update()
+        LOG.info('Application is initialized')
+        uc2.events.connect(uc2.events.MESSAGES, self.uc2_event_logging)
+        events.connect(events.APP_STATUS, self.sk1_event_logging)
+
         if wal.IS_WX2:
             events.emit(events.NO_DOCS)
         if config.make_font_cache_on_start:
@@ -113,8 +127,8 @@ class SK1Application(wal.Application, UCApplication):
             for item in config.active_plugins:
                 try:
                     self.mw.mdi.plg_area.show_plugin(item)
-                except Exception:
-                    pass
+                except Exception as e:
+                    LOG.warn('Cannot load plugin <%s> %s', item, e)
 
     def call_after(self, *args):
         if self.docs:
@@ -131,7 +145,7 @@ class SK1Application(wal.Application, UCApplication):
         self.update_actions()
 
     def stub(self, *args):
-        pass
+        return args
 
     def update_wal(self):
         wal.SPIN['overlay'] = config.spin_overlay
@@ -194,12 +208,12 @@ class SK1Application(wal.Application, UCApplication):
         if os.path.lexists(doc_file) and os.path.isfile(doc_file):
             try:
                 doc = SK1Presenter(self, doc_file, template=True)
-            except Exception:
+            except Exception as e:
                 msg = _('Cannot parse file:')
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
                 msg += _('The file may be corrupted or not supported format')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-                self.print_stacktrace()
+                LOG.error('Cannot parse file <%s> %s', doc_file, e)
                 return
             self.docs.append(doc)
             config.template_dir = str(os.path.dirname(doc_file))
@@ -220,14 +234,14 @@ class SK1Application(wal.Application, UCApplication):
                 msg += _('Try updating sK1 application from '
                          'http://www.sk1project.net')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-                self.print_stacktrace()
+                LOG.error('Cannot open file <%s>: newer SK2 format.', doc_file)
                 return
-            except Exception:
+            except Exception as e:
                 msg = _('Cannot open file:')
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
                 msg += _('The file may be corrupted or not supported format')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-                self.print_stacktrace()
+                LOG.error('Cannot open file <%s> %s', doc_file, e)
                 return
             self.docs.append(doc)
             config.open_dir = str(os.path.dirname(doc_file))
@@ -251,12 +265,12 @@ class SK1Application(wal.Application, UCApplication):
             doc.save()
             self.history.add_entry(self.current_doc.doc_file, appconst.SAVED)
             events.emit(events.DOC_SAVED, doc)
-        except Exception:
+        except Exception as e:
             msg = _('Cannot save file:')
             msg = "%s\n'%s'" % (msg, self.current_doc.doc_file) + '\n'
             msg += _('Please check file write permissions')
             dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-            self.print_stacktrace()
+            LOG.error('Cannot save file <%s> %s', self.current_doc.doc_file, e)
             return False
         events.emit(events.APP_STATUS, _('Document saved'))
         return True
@@ -265,7 +279,7 @@ class SK1Application(wal.Application, UCApplication):
         doc_file = self.current_doc.doc_file
         if not doc_file:
             doc_file = self.current_doc.doc_name
-        if not os.path.splitext(doc_file)[1] == "." + \
+        if os.path.splitext(doc_file)[1] != "." + \
                 uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
             doc_file = os.path.splitext(doc_file)[0] + "." + \
                        uc2const.FORMAT_EXTENSION[uc2const.SK2][0]
@@ -280,13 +294,13 @@ class SK1Application(wal.Application, UCApplication):
             try:
                 self.make_backup(doc_file)
                 self.current_doc.save()
-            except Exception:
+            except Exception as e:
                 self.current_doc.set_doc_file(old_file, old_name)
                 first = _('Cannot save document:')
                 msg = "%s\n'%s'." % (first, self.current_doc.doc_name) + '\n'
                 msg += _('Please check file name and write permissions')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-                self.print_stacktrace()
+                LOG.error('Cannot save file <%s> %s', doc_file, e)
                 return False
             config.save_dir = str(os.path.dirname(doc_file))
             self.history.add_entry(doc_file, appconst.SAVED)
@@ -300,7 +314,7 @@ class SK1Application(wal.Application, UCApplication):
         doc_file = self.current_doc.doc_file
         if not doc_file:
             doc_file = self.current_doc.doc_name
-        if not os.path.splitext(doc_file)[1] == "." + \
+        if os.path.splitext(doc_file)[1] != "." + \
                 uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
             doc_file = os.path.splitext(doc_file)[0] + "." + \
                        uc2const.FORMAT_EXTENSION[uc2const.SK2][0]
@@ -315,13 +329,13 @@ class SK1Application(wal.Application, UCApplication):
                 self.make_backup(doc_file)
                 self.current_doc.save_selected(doc_file)
                 self.history.add_entry(doc_file, appconst.SAVED)
-            except Exception:
+            except Exception as e:
                 first = _('Cannot save document:')
                 msg = "%s\n'%s'." % (first, doc_file) + '\n'
                 msg += _('Please check requested file format '
                          'and write permissions')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-                self.print_stacktrace()
+                LOG.error('Cannot save file <%s> %s', doc_file, e)
 
     def save_all(self):
         for doc in self.docs:
@@ -382,13 +396,14 @@ class SK1Application(wal.Application, UCApplication):
                     msg += _('It seems the document is empty or '
                              'contains unsupported objects.')
                     dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
+                    LOG.warn('Cannot import graphics from file <%s>', doc_file)
                 config.import_dir = str(os.path.dirname(doc_file))
-            except Exception:
+            except Exception as e:
                 msg = _('Cannot import file:')
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
                 msg += _('The file may be corrupted or not supported format')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-                self.print_stacktrace()
+                LOG.warn('Cannot import file <%s>', doc_file, e)
 
     def export_as(self):
         doc_file = self.current_doc.doc_file
@@ -405,12 +420,12 @@ class SK1Application(wal.Application, UCApplication):
             try:
                 self.make_backup(doc_file, True)
                 self.current_doc.export_as(doc_file)
-            except Exception:
+            except Exception as e:
                 first = _('Cannot save document:')
                 msg = "%s\n'%s'." % (first, self.current_doc.doc_name) + '\n'
                 msg += _('Please check file name and write permissions')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-                self.print_stacktrace()
+                LOG.warn('Cannot save file <%s>', doc_file, e)
                 return
             config.export_dir = str(os.path.dirname(doc_file))
             msg = _('Document is successfully exported')
@@ -427,12 +442,12 @@ class SK1Application(wal.Application, UCApplication):
             try:
                 pixmap = self.current_doc.selection.objs[0]
                 libimg.extract_bitmap(pixmap, doc_file)
-            except Exception:
+            except Exception as e:
                 first = _('Cannot save bitmap:')
                 msg = "%s\n'%s'." % (first, doc_file) + '\n'
                 msg += _('Please check file name and write permissions')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-                self.print_stacktrace()
+                LOG.warn('Cannot save bitmap in <%s>', doc_file, e)
                 return
             config.save_dir = str(os.path.dirname(doc_file))
             events.emit(events.APP_STATUS,
@@ -454,7 +469,7 @@ class SK1Application(wal.Application, UCApplication):
 
         if doc_file:
             if not os.path.splitext(doc_file)[1] == "." + \
-                    uc2const.FORMAT_EXTENSION[saver_id][0]:
+                   uc2const.FORMAT_EXTENSION[saver_id][0]:
                 doc_file = os.path.splitext(doc_file)[0] + "." + \
                            uc2const.FORMAT_EXTENSION[saver_id][0]
 
@@ -479,8 +494,12 @@ class SK1Application(wal.Application, UCApplication):
                     pd.destroy()
                     raise IOError(_('Error while exporting'), doc_file)
 
-            except IOError:
-                raise IOError(*sys.exc_info())
+            except Exception as e:
+                first = _('Cannot export palette:')
+                msg = "%s\n'%s'." % (first, doc_file) + '\n'
+                msg += _('Please check file name and write permissions')
+                dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
+                LOG.error('Cannot save bitmap in <%s>', doc_file, e)
 
             config.export_dir = str(os.path.dirname(doc_file))
             events.emit(events.APP_STATUS,
@@ -516,12 +535,12 @@ class SK1Application(wal.Application, UCApplication):
                     msg = _('Palette is successfully imported')
                     events.emit(events.APP_STATUS, msg)
                     return palette.model.name
-            except Exception:
+            except Exception as e:
                 msg = _('Cannot import file:')
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
                 msg += _('The file may be corrupted or not supported format')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-                self.print_stacktrace()
+                LOG.error('Cannot import file <%s> %s', doc_file, e)
         return None
 
     def extract_pattern(self, parent, pattern, eps=False):
@@ -539,12 +558,12 @@ class SK1Application(wal.Application, UCApplication):
                 fobj = open(img_file, 'wb')
                 fobj.write(b64decode(pattern))
                 fobj.close()
-            except Exception:
+            except Exception as e:
                 first = _('Cannot save pattern from:')
                 msg = "%s\n'%s'." % (first, self.current_doc.doc_name) + '\n'
                 msg += _('Please check file name and write permissions')
                 dialogs.error_dialog(parent, self.appdata.app_name, msg)
-                self.print_stacktrace()
+                LOG.error('Cannot save pattern in <%s> %s', img_file, e)
                 return
             config.save_dir = str(os.path.dirname(img_file))
 
@@ -565,11 +584,10 @@ class SK1Application(wal.Application, UCApplication):
                     return img_file
                 else:
                     dialogs.error_dialog(parent, self.appdata.app_name, msg)
-                    self.print_stacktrace()
-            except Exception:
+                    LOG.error('Cannot load pattern <%s>', img_file)
+            except Exception as e:
                 dialogs.error_dialog(parent, self.appdata.app_name, msg)
-                self.print_stacktrace()
-
+                LOG.error('Cannot load pattern <%s> %s', img_file, e)
         return None
 
     def make_backup(self, doc_file, export=False):
@@ -582,10 +600,19 @@ class SK1Application(wal.Application, UCApplication):
                 os.remove(doc_file + '~')
             os.rename(doc_file, doc_file + '~')
 
-    def print_stacktrace(self):
-        if config.print_stacktrace:
-            print sys.exc_info()[1].__str__()
-            print traceback.format_tb(sys.exc_info()[2])
+    def uc2_event_logging(self, *args):
+        log_map = {
+            msgconst.JOB: LOG.info,
+            msgconst.INFO: LOG.info,
+            msgconst.OK: LOG.info,
+            msgconst.WARNING: LOG.warn,
+            msgconst.ERROR: LOG.error,
+            msgconst.STOP: self.stub,
+        }
+        log_map[args[0]](args[1])
+
+    def sk1_event_logging(self, msg):
+        LOG.info(msg)
 
     def open_url(self, url):
         webbrowser.open(url, new=1, autoraise=True)

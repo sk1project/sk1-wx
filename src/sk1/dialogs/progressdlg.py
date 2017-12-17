@@ -15,10 +15,12 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
+import logging
 import wx
 
 from uc2 import events
+
+LOG = logging.getLogger(__name__)
 
 
 class ProgressDialog:
@@ -43,10 +45,9 @@ class ProgressDialog:
                 self.result = executable(*args)
             else:
                 executable(*args)
-        except:
+        except Exception:
             self.result = None
-            self.error_info = sys.exc_info()
-            return False
+            raise
         return True
 
     def _listener(self, *args):

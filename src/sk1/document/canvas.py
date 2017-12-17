@@ -17,6 +17,7 @@
 
 import cairo
 import inspect
+import logging
 import wx
 
 import wal
@@ -30,6 +31,8 @@ from uc2 import uc2const, libcairo, libgeom
 from uc2.libcairo import normalize_bbox
 from uc2.sk2const import DOC_ORIGIN_LL, DOC_ORIGIN_LU
 from uc2.uc2const import mm_to_pt, point_dict
+
+LOG = logging.getLogger(__name__)
 
 
 class CanvasTimer(wx.Timer):
@@ -548,8 +551,8 @@ class AppCanvas(wx.Panel):
                 if not self.mode == modes.GUIDE_MODE:
                     self.dragged_guide = ()
             self.renderer.finalize()
-        except Exception:
-            self.app.print_stacktrace()
+        except Exception as e:
+            LOG.error('Painting error %s', e)
 
         self.redraw_flag = False
         if self.request_redraw_flag:

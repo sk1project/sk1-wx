@@ -15,6 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import cairo
 
 import wal
@@ -26,6 +27,8 @@ FONTNAME_CACHE = []
 FONTSAMPLE_CACHE = []
 MAXSIZE = []
 
+LOG = logging.getLogger(__name__)
+
 
 def generate_fontname_cache(fonts):
     maxwidth = 0
@@ -33,7 +36,8 @@ def generate_fontname_cache(fonts):
     for item in fonts:
         try:
             bmp, size = wal.text_to_bitmap(item)
-        except Exception:
+        except Exception as e:
+            LOG.error('Cannot process font <%s> %s', item, e)
             continue
         FONTNAME_CACHE.append(bmp)
         maxwidth = max(size[0], maxwidth)
@@ -51,7 +55,7 @@ def generate_fontsample_cache(fonts):
         h = libpango.get_sample_size(text, item, fontsize)[1]
         if not h:
             h = 10
-            warn(_('incorrect font') + ' - %s' % item)
+            LOG.warn('Incorrect font <%s>: zero font height', item)
         surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
         ctx = cairo.Context(surface)
         ctx.set_source_rgb(0.0, 0.0, 0.0)
