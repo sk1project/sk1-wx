@@ -32,7 +32,7 @@ LOG = logging.getLogger(__name__)
 
 
 def log_stub(*args):
-    pass
+    return args
 
 
 LOG_MAP = {
@@ -99,8 +99,8 @@ class UCApplication(object):
         self.config = UCConfig()
         self.config.app = self
         self.appdata = UCData(self, cfgdir)
-        setattr(uc2, "config", self.config)
-        setattr(uc2, "appdata", self.appdata)
+        setattr(uc2, 'config', self.config)
+        setattr(uc2, 'appdata', self.appdata)
 
     def _get_infos(self, loaders):
         result = []
@@ -143,9 +143,9 @@ class UCApplication(object):
             sys.exit(1)
 
     def run(self):
-        if '--help' in sys.argv or '-help' in sys.argv:
+        if '--help' in sys.argv or '-help' in sys.argv or len(sys.argv) == 1:
             self.show_help()
-        elif len(sys.argv) < 3:
+        elif len(sys.argv) == 2:
             self.show_short_help(_('Not enough arguments!'))
 
         files = []
@@ -156,7 +156,7 @@ class UCApplication(object):
             if item.startswith('--'):
                 options_list.append(item)
             elif item.startswith('-'):
-                self.show_short_help(_('Unknown option %s') % item)
+                self.show_short_help(_('Unknown option "%s"') % item)
             else:
                 files.append(item)
 
@@ -165,7 +165,7 @@ class UCApplication(object):
         elif len(files) == 1:
             self.show_short_help(_('Destination file name is not provided!'))
         elif not os.path.lexists(files[0]):
-            self.show_short_help(_('Source file %s is not found!') % files[0])
+            self.show_short_help(_('Source file "%s" is not found!') % files[0])
 
         for item in options_list:
             result = item[2:].split('=')
@@ -202,7 +202,7 @@ class UCApplication(object):
         else:
             saver, saver_id = get_saver(files[1], return_id=True)
         if saver is None:
-            msg = _("Output file format of '%s' is unsupported.") % files[1]
+            msg = _('Output file format of "%s" is unsupported.') % files[1]
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
             msg = _('Translation is interrupted')
@@ -210,7 +210,7 @@ class UCApplication(object):
 
         loader, loader_id = get_loader(files[0], return_id=True)
         if loader is None:
-            msg = _("Input file format of '%s' is unsupported.") % files[0]
+            msg = _('Input file format of "%s" is unsupported.') % files[0]
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
             msg = _('Translation is interrupted')
@@ -224,9 +224,9 @@ class UCApplication(object):
             else:
                 doc = loader(self.appdata, files[0])
         except Exception as e:
-            msg = _("Error while loading '%s'") % files[0]
+            msg = _('Error while loading "%s"') % files[0]
             msg += _(
-                "The file may be corrupted or contains unknown file format.")
+                'The file may be corrupted or contains unknown file format.')
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
             msg = _('Loading is interrupted')
@@ -241,14 +241,14 @@ class UCApplication(object):
                 else:
                     saver(doc, files[1])
             except Exception as e:
-                msg = _("Error while translation and saving '%s'") % files[0]
+                msg = _('Error while translation and saving "%s"') % files[0]
                 events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
                 msg = _('Translation is interrupted')
                 LOG.error('%s %s', msg, e)
                 events.emit(events.MESSAGES, msgconst.STOP, msg)
         else:
-            msg = _("Error while model creating for '%s'") % files[0]
+            msg = _('Error creating model for "%s"') % files[0]
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
             msg = _('Translation is interrupted')
