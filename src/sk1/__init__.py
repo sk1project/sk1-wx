@@ -54,8 +54,3 @@ def sk1_run(cfgdir='~'):
 
     app = SK1Application(_pkgdir, cfgdir)
     app.run()
-
-
-def warn(msg):
-    if config.print_warnings:
-        print _('WARNING:'), msg
