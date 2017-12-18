@@ -142,8 +142,9 @@ class AppMenuBar(wx.MenuBar):
         # 		self.entries.append(entry)
 
         # ---Help menu
-        sub = (pdids.ID_REPORT_BUG, None, pdids.ID_APP_WEBSITE,
-               pdids.ID_APP_FORUM, pdids.ID_APP_FBPAGE, None, wal.ID_ABOUT,)
+        sub = (pdids.ID_REPORT_BUG, pdids.ID_CONSOLE, None,
+               pdids.ID_APP_WEBSITE, pdids.ID_APP_FORUM, pdids.ID_APP_FBPAGE,
+               None, wal.ID_ABOUT,)
         entry = (_("&Help"), sub)
         self.entries.append(entry)
 

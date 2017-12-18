@@ -97,7 +97,7 @@ class CloseDialog(SimpleDialog):
             self, parent, title, size=(-1, -1), style=VERTICAL,
             resizable=True, on_load=None, add_line=True, margin=None):
         SimpleDialog.__init__(
-            self, parent, title, size, style, resizable, on_load, 
+            self, parent, title, size, style, resizable, on_load,
             add_line, margin)
 
     def set_dialog_buttons(self):
@@ -110,7 +110,7 @@ class CloseDialog(SimpleDialog):
         self.box.pack(self.button_box, fill=True)
 
         self.close_btn = Button(self.button_box, '', onclick=self.on_close,
-            default=True, pid=const.BUTTON_CLOSE)
+                                default=True, pid=const.BUTTON_CLOSE)
 
         self.left_button_box = HPanel(self.button_box)
         self.button_box.pack(self.left_button_box, expand=True, fill=True)
@@ -129,11 +129,11 @@ class OkCancelDialog(SimpleDialog):
     def __init__(
             self, parent, title, size=(-1, -1), style=VERTICAL,
             resizable=False, action_button=const.BUTTON_OK, on_load=None,
-            add_line=True, margin=None, button_box_padding = 0):
+            add_line=True, margin=None, button_box_padding=0):
         self.action_button = action_button
         self.button_box_padding = button_box_padding
         SimpleDialog.__init__(
-            self, parent, title, size, style, resizable, on_load, 
+            self, parent, title, size, style, resizable, on_load,
             add_line, margin)
 
     def set_dialog_buttons(self):
@@ -143,8 +143,8 @@ class OkCancelDialog(SimpleDialog):
             self.box.pack((3, 3))
 
         self.button_box = HPanel(self.box)
-        self.box.pack(self.button_box, fill=True, 
-            padding_all = self.button_box_padding)
+        self.box.pack(self.button_box, fill=True,
+                      padding_all=self.button_box_padding)
 
         self.ok_btn = Button(
             self.button_box, '', onclick=self.on_ok,

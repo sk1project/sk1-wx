@@ -289,6 +289,7 @@ def create_actions(app):
         # ------ Help menu -------
         (pdids.ID_REPORT_BUG, proxy.open_url, [], None, None,
          ('http://www.sk1project.net/contact.php',)),
+        (pdids.ID_CONSOLE, proxy.show_console),
         (pdids.ID_APP_WEBSITE, proxy.open_url, [], None, None,
          ('http://www.sk1project.net',)),
         (pdids.ID_APP_FORUM, proxy.open_url, [], None, None,

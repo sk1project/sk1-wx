@@ -176,6 +176,7 @@ LABELS = {
     pdids.ID_TOOL_OBJBROWSER: (_('Object browser'),),
 
     pdids.ID_REPORT_BUG: (_('&Report bug'),),
+    pdids.ID_CONSOLE: (_('&Log console'),),
     pdids.ID_APP_WEBSITE: (_('Project web site'),),
     pdids.ID_APP_FORUM: (_('Project forum'),),
     pdids.ID_APP_FBPAGE: (_('Project page on Face&book'),),

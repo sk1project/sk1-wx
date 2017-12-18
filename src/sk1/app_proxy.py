@@ -780,3 +780,6 @@ class AppProxy:
         doc.api.clear_text_markup(obj)
         if canvas.mode == modes.TEXT_EDITOR_MODE:
             canvas.controller.update_points()
+
+    def show_console(self):
+        dialogs.console_dlg(self.mw, _('Application logs'))

@@ -156,6 +156,7 @@ ID_TOOL_LAYERS = new_id()
 ID_TOOL_OBJBROWSER = new_id()
 # ----- Help menu
 ID_REPORT_BUG = new_id()
+ID_CONSOLE = new_id()
 ID_APP_WEBSITE = new_id()
 ID_APP_FORUM = new_id()
 ID_APP_FBPAGE = new_id()
