@@ -37,9 +37,14 @@ LOGGING_MAP = {
 
 def config_logging(filepath, level='INFO'):
     level = LOGGING_MAP.get(level.upper(), logging.INFO)
-    logging.basicConfig(level=level,
-                        filename=filepath,
-                        filemode='w')
+    logging.basicConfig(
+        format=' %(levelname)-7s | %(asctime)s | %(name)s --> %(message)s',
+        datefmt='%I:%M:%S %p',
+        level=level,
+        filename=filepath,
+        filemode='w',
+        stream=sys.stderr,
+    )
 
 
 MAGENTA = '\033[95m'

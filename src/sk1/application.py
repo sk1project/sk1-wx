@@ -84,6 +84,7 @@ class SK1Application(wal.Application, UCApplication):
         log_level = config.log_level
         self.log_filepath = os.path.join(self.appdata.app_config_dir, 'sk1.log')
         config_logging(self.log_filepath, log_level)
+        LOG.info('Logging started')
 
         self.update_wal()
         plg_dir = os.path.join(self.path, 'share', 'pd_plugins')
@@ -180,6 +181,7 @@ class SK1Application(wal.Application, UCApplication):
             self.update_config()
             self.mw.destroy()
             wal.Application.exit(self)
+            LOG.info('Application terminated')
             return True
         return False
 
