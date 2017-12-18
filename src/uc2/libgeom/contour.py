@@ -459,7 +459,6 @@ def make_path(segments, close=1):
     points = new_path[1]
     for seg in segments:
         if seg[0] != last_point:
-            # print "Need to fix up! Should not happen."
             points.append(deepcopy(seg[0]))
 
         if len(seg) == 2:

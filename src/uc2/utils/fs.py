@@ -301,16 +301,3 @@ def change_file_extension(path, ext):
     ext = ext.lower().replace('.', '')
     return filename + '.' + ext
 
-
-def _test():
-    files = get_file_objs("~")
-    if files is None:
-        print 'ERROR!'
-    else:
-        for file in files:
-            if not file.is_hidden:
-                print file.basename
-
-
-if __name__ == '__main__':
-    _test()
