@@ -15,6 +15,10 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
+
+LOG = logging.getLogger(__name__)
+
 
 class EventLoop:
     presenter = None
@@ -46,9 +50,9 @@ class EventLoop:
         if callable(receiver):
             try:
                 channel.append(receiver)
-            except Exception:
-                msg = "Cannot connect to channel:"
-                print msg, channel, "receiver:", receiver
+            except Exception as e:
+                msg = "Cannot connect to channel <%s> receiver: <%s> %s"
+                LOG.error(msg, channel, receiver, e)
 
     def disconnect(self, channel, receiver):
         """
@@ -58,22 +62,19 @@ class EventLoop:
         if callable(receiver):
             try:
                 channel.remove(receiver)
-            except Exception:
-                msg = "Cannot disconnect from channel:"
-                print msg, channel, "receiver:", receiver
+            except Exception as e:
+                msg = "Cannot disconnect from channel <%s> receiver: <%s> %s"
+                LOG.error(msg, channel, receiver, e)
 
     def emit(self, channel, *args):
         """
         Sends signal to all receivers in channel.
         """
-        # print 'signal', channel, args
-        try:
-            for receiver in channel:
-                try:
-                    if callable(receiver):
-                        receiver(args)
-                except Exception:
-                    # print 'error', receiver
-                    pass
-        except Exception:
-            print "Cannot send signal to channel:", channel
+        for receiver in channel:
+            try:
+                if callable(receiver):
+                    receiver(*args)
+            except Exception as e:
+                msg = 'Error calling <%s> receiver with %s %s'
+                LOG.error(msg, receiver, args, e)
+                continue

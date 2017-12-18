@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2011-2012 by Igor E. Novikov
+#  Copyright (C) 2011-2017 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -15,8 +15,12 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
+
+LOG = logging.getLogger(__name__)
+
 """
-The package provides Qt-like signal-slot functionality
+Module provides Qt-like signal-slot functionality
 for internal events processing.
 
 Signal arguments:
@@ -76,9 +80,9 @@ def connect(channel, receiver):
     if callable(receiver):
         try:
             channel.append(receiver)
-        except:
-            msg = "Cannot connect to channel:"
-            print msg, channel, "receiver:", receiver
+        except Exception as e:
+            msg = "Cannot connect to channel <%s> receiver: <%s> %s"
+            LOG.error(msg, channel, receiver, e)
 
 
 def disconnect(channel, receiver):
@@ -89,24 +93,23 @@ def disconnect(channel, receiver):
     if callable(receiver):
         try:
             channel.remove(receiver)
-        except:
-            msg = "Cannot disconnect from channel:"
-            print msg, channel, "receiver:", receiver
+        except Exception as e:
+            msg = "Cannot disconnect from channel <%s> receiver: <%s> %s"
+            LOG.error(msg, channel, receiver, e)
 
 
 def emit(channel, *args):
     """
     Sends signal to all receivers in channel.
     """
-    try:
-        for receiver in channel[1:]:
-            try:
-                if callable(receiver):
-                    receiver(*args)
-            except:
-                pass
-    except:
-        print "Cannot send signal to channel:", channel
+    for receiver in channel[1:]:
+        try:
+            if callable(receiver):
+                receiver(*args)
+        except Exception as e:
+            msg = 'Error calling <%s> receiver with %s %s'
+            LOG.error(msg, receiver, args, e)
+            continue
 
 
 def clean_channel(channel):

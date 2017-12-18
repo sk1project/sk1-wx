@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2011 by Igor E. Novikov
+#  Copyright (C) 2011-2017 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -79,3 +79,20 @@ def emit(channel, *args):
             msg = 'Error calling <%s> receiver with %s %s'
             LOG.error(msg, receiver, args, e)
             continue
+
+
+def clean_channel(channel):
+    """
+    Cleans channel queue.
+    """
+    name = channel[0]
+    channel[:] = []
+    channel.append(name)
+
+
+def clean_all_channels():
+    """
+    Cleans all channels.
+    """
+    for item in (CONFIG_MODIFIED, MESSAGES, FILTER_INFO):
+        clean_channel(item)

@@ -38,6 +38,7 @@ class PrintDialog(wal.SimpleDialog):
     printout = None
     win = None
     app = None
+    canvas = None
 
     def __init__(self, win, app, doc):
         self.win = win

@@ -15,12 +15,15 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import os
 import sys
 
 from wal import VPanel
 
 from sk1 import _, config
+
+LOG = logging.getLogger(__name__)
 
 
 def check_package(path, name):
@@ -51,7 +54,7 @@ def scan_plugins(app):
                     pobj = plg_mod.get_plugin(app)
                     ret[pobj.pid] = pobj
                 except Exception:
-                    print 'Error while importing ' + item + ' plugin'
+                    LOG.error('Error while importing <%s> plugin', item)
     return ret
 
 
