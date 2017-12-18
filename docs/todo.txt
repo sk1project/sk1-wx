@@ -11,24 +11,24 @@ WiX installer for MSW
 
 ===UI===============
 Переработать виджет палитры (скроллы, бордер)
-Логирование и работа с ошибками
 gevent для eventloops (?)
 
 ===UC2==========
 UI для UC2 (?)
 Цветной вывод для linux консоли
 
+===sk1==========
+Протестировать все операции, связанные с ProgressDialog
+Логирование и работа с ошибками
+
 ===FILTERS==========
 WMF exporter
 CGM import/export (можно ли подмерджить UC1?)
+PLT export wrong
 
 ===REFACTORING==========
-/home/igor/Projects/sk1-wx/src/sk1/pwidgets
-/home/igor/Projects/sk1-wx/src/sk1/share/pd_plugins
-/home/igor/Projects/sk1-wx/src/uc2/formats/pdf/pdfgen.py
-/home/igor/Projects/sk1-wx/src/uc2/formats/plt/plt_model.py
-
 refactor sk.dialogs.filedlgs to wal
+refactor sk.dialogs.progressdlg to wal
 
 ===CANVAS==========
 Полное тестирование
