@@ -59,24 +59,22 @@ class SK1Presenter:
         self.eventloop = EventLoop(self)
         self.selection = Selection(self)
 
-        if doc_file:
+        if doc_file and silent:
             loader = get_loader(doc_file)
             if not loader:
                 raise IOError(_('Loader is not found for <%s>') % doc_file)
-
-            if silent:
-                self.doc_presenter = loader(app.appdata, doc_file)
-            else:
-                pd = ProgressDialog(_('Opening file...'), self.app.mw)
-                try:
-                    ret = pd.run(loader, [self.app.appdata, doc_file])
-                    if not ret or pd.result is None:
-                        raise IOError(_('Error while opening <%s>') % doc_file)
-                    self.doc_presenter = pd.result
-                except Exception:
-                    raise
-                finally:
-                    pd.destroy()
+            self.doc_presenter = loader(app.appdata, doc_file)
+        elif doc_file and not silent:
+            pd = ProgressDialog(_('Opening file...'), self.app.mw)
+            try:
+                loader = get_loader(doc_file)
+                if not loader:
+                    raise IOError(_('Loader is not found for <%s>') % doc_file)
+                self.doc_presenter = pd.run(loader, [app.appdata, doc_file])
+            except Exception:
+                raise
+            finally:
+                pd.destroy()
 
             if not template:
                 self.doc_file = self.doc_presenter.doc_file
@@ -123,15 +121,13 @@ class SK1Presenter:
         self.set_title()
 
     def save(self):
-        saver = get_saver(self.doc_file)
-        if saver is None:
-            msg = _('Unknown file format is requested for saving! <%s>')
-            raise IOError(msg % self.doc_file)
-
         pd = ProgressDialog(_('Saving file...'), self.app.mw)
         try:
-            if not pd.run(saver, [self.doc_presenter, self.doc_file], False):
-                raise IOError(_('Error saving <%s>') % self.doc_file)
+            saver = get_saver(self.doc_file)
+            if saver is None:
+                msg = _('Unknown file format is requested for saving! <%s>')
+                raise IOError(msg % self.doc_file)
+            pd.run(saver, [self.doc_presenter, self.doc_file])
         except Exception:
             raise
         finally:
@@ -153,16 +149,13 @@ class SK1Presenter:
         layer = doc.methods.get_layer(page)
         layer.childs = objs
 
-        saver = get_saver(doc_file)
-        if saver is None:
-            doc.close()
-            msg = _('Unknown file format is requested for saving <%s>')
-            raise IOError(msg % doc_file)
-
         pd = ProgressDialog(_('Saving file...'), self.app.mw)
         try:
-            if not pd.run(saver, [doc, doc_file], False):
-                raise IOError(_('Error saving <%s>') % doc_file)
+            saver = get_saver(doc_file)
+            if saver is None:
+                msg = _('Unknown file format is requested for saving <%s>')
+                raise IOError(msg % doc_file)
+            pd.run(saver, [doc, doc_file])
         except Exception:
             raise
         finally:
@@ -185,15 +178,13 @@ class SK1Presenter:
 
     def import_file(self, doc_file):
         retval = True
-        loader = get_loader(doc_file)
-        if not loader:
-            raise IOError(_('Loader is not found for <%s>') % doc_file)
-        pd = ProgressDialog(_('Opening file...'), self.app.mw)
+
+        pd = ProgressDialog(_('Importing...'), self.app.mw)
         try:
-            ret = pd.run(loader, [self.app.appdata, doc_file])
-            if not ret or pd.result is None:
-                raise IOError(_('Error while opening'), doc_file)
-            doc_presenter = pd.result
+            loader = get_loader(doc_file)
+            if not loader:
+                raise IOError(_('Loader is not found for <%s>') % doc_file)
+            doc_presenter = pd.run(loader, [self.app.appdata, doc_file])
         except Exception:
             raise
         finally:
@@ -223,15 +214,13 @@ class SK1Presenter:
         return retval
 
     def export_as(self, doc_file):
-        saver = get_saver(doc_file)
-        if saver is None:
-            msg = _('Unknown file format is requested for export <%s>')
-            raise IOError(msg % doc_file)
-
         pd = ProgressDialog(_('Exporting...'), self.app.mw)
         try:
-            if not pd.run(saver, [self.doc_presenter, doc_file], False):
-                raise IOError(_('Error while exporting'), doc_file)
+            saver = get_saver(doc_file)
+            if saver is None:
+                msg = _('Unknown file format is requested for export <%s>')
+                raise IOError(msg % doc_file)
+            pd.run(saver, [self.doc_presenter, doc_file])
         except Exception:
             raise
         finally:

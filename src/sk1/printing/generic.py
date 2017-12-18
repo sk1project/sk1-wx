@@ -129,10 +129,10 @@ class AbstractPrinter(object):
     def run_propsdlg(self, win):
         return False
 
-    def print_test_page_a4(self, win):
+    def print_test_page_a4(self, app, win):
         pass
 
-    def print_test_page_letter(self, win):
+    def print_test_page_letter(self, app, win):
         pass
 
     def get_page_size(self):
@@ -142,10 +142,12 @@ class AbstractPrinter(object):
 
     def run_printdlg(self, win, printout):
         pd = ProgressDialog(_('Printing...'), win)
-        ret = pd.run(self.printing, [printout, ], save_result=False)
-        pd.destroy()
-        if not ret:
+        try:
+            pd.run(self.printing, [printout, ])
+        except Exception:
             msg = _('Error while printing!')
             error_dialog(win, win.app.appdata.app_name, msg)
             return False
+        finally:
+            pd.destroy()
         return True

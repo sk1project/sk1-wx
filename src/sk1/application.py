@@ -473,37 +473,27 @@ class SK1Application(wal.Application, UCApplication):
                 doc_file = os.path.splitext(doc_file)[0] + "." + \
                            uc2const.FORMAT_EXTENSION[saver_id][0]
 
+            pd = dialogs.ProgressDialog(_('Exporting...'), parent)
             try:
                 saver = get_saver_by_id(saver_id)
                 if saver is None:
-                    raise IOError(
-                        _('Unknown file format is requested for export!'),
-                        doc_file)
-
+                    msg = _('Unknown file format is requested for export <%s>')
+                    raise IOError(msg % doc_file)
                 self.make_backup(doc_file, True)
-
-                pd = dialogs.ProgressDialog(_('Exporting...'), parent)
-                ret = pd.run(saver, [palette, doc_file, None, False, True],
-                             False)
-                if ret:
-                    if pd.error_info is not None:
-                        pd.destroy()
-                        raise IOError(*pd.error_info)
-                    pd.destroy()
-                else:
-                    pd.destroy()
-                    raise IOError(_('Error while exporting'), doc_file)
-
+                pd.run(saver, [palette, doc_file, None, False, True])
             except Exception as e:
-                first = _('Cannot export palette:')
-                msg = "%s\n'%s'." % (first, doc_file) + '\n'
+                msg = _('Cannot export palette:')
+                msg = "%s\n'%s'." % (msg, doc_file) + '\n'
                 msg += _('Please check file name and write permissions')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
                 LOG.error('Cannot save bitmap in <%s>', doc_file, e)
+                return
+            finally:
+                pd.destroy()
 
             config.export_dir = str(os.path.dirname(doc_file))
-            events.emit(events.APP_STATUS,
-                        _('Palette is successfully exported'))
+            msg = _('Palette is successfully exported')
+            events.emit(events.APP_STATUS, msg)
 
     def import_palette(self, parent=None):
         if not parent:
@@ -513,35 +503,29 @@ class SK1Application(wal.Application, UCApplication):
                                               _('Select palette to import'),
                                               file_types=file_types)
         if os.path.lexists(doc_file) and os.path.isfile(doc_file):
+
+            pd = dialogs.ProgressDialog(_('Opening file...'), parent)
             try:
                 loader = get_loader(doc_file)
-                pd = dialogs.ProgressDialog(_('Opening file...'), parent)
-                ret = pd.run(loader,
-                             [self.appdata, doc_file, None, False, True])
-                if ret:
-                    if pd.result is None:
-                        pd.destroy()
-                        raise IOError(*pd.error_info)
-
-                    palette = pd.result
-                    pd.destroy()
-                else:
-                    pd.destroy()
+                if not loader:
+                    raise IOError(_('Loader is not found for <%s>') % doc_file)
+                palette = pd.run(loader,
+                                 [self.appdata, doc_file, None, False, True])
+                if not palette:
                     raise IOError(_('Error while opening'), doc_file)
-
-                if palette:
-                    self.palettes.add_palette(palette)
-                    config.import_dir = str(os.path.dirname(doc_file))
-                    msg = _('Palette is successfully imported')
-                    events.emit(events.APP_STATUS, msg)
-                    return palette.model.name
+                self.palettes.add_palette(palette)
+                config.import_dir = str(os.path.dirname(doc_file))
+                msg = _('Palette is successfully imported')
+                events.emit(events.APP_STATUS, msg)
+                return palette.model.name
             except Exception as e:
                 msg = _('Cannot import file:')
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
                 msg += _('The file may be corrupted or not supported format')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
                 LOG.error('Cannot import file <%s> %s', doc_file, e)
-        return None
+            finally:
+                pd.destroy()
 
     def extract_pattern(self, parent, pattern, eps=False):
         img_file = 'image'
@@ -588,7 +572,6 @@ class SK1Application(wal.Application, UCApplication):
             except Exception as e:
                 dialogs.error_dialog(parent, self.appdata.app_name, msg)
                 LOG.error('Cannot load pattern <%s> %s', img_file, e)
-        return None
 
     def make_backup(self, doc_file, export=False):
         if not export and not config.make_backup:

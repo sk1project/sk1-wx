@@ -19,7 +19,7 @@ import logging
 import cairo
 
 import wal
-from sk1 import _, config, events, warn
+from sk1 import _, config, events
 from sk1.resources import icons, get_icon
 from uc2 import libpango, cms
 

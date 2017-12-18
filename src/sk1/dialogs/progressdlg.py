@@ -15,46 +15,29 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import logging
 import wx
 
 from uc2 import events
 
-LOG = logging.getLogger(__name__)
-
 
 class ProgressDialog:
     caption = ''
-    result = None
     dlg = None
-    error_info = None
 
     def __init__(self, caption, parent):
         self.caption = caption
         self.parent = parent
 
-    def run(self, executable, args, save_result=True):
-        events.connect(events.FILTER_INFO, self._listener)
-        self.dlg = wx.ProgressDialog(self.caption,
-                                     ' ' * 80,
-                                     parent=self.parent,
-                                     style=wx.PD_APP_MODAL | wx.PD_AUTO_HIDE)
+    def run(self, callback, args):
+        events.connect(events.FILTER_INFO, self.listener)
+        style = wx.PD_APP_MODAL | wx.PD_AUTO_HIDE
+        self.dlg = wx.ProgressDialog(self.caption, ' ' * 100,
+                                     parent=self.parent, style=style)
+        return callback(*args)
 
-        try:
-            if save_result:
-                self.result = executable(*args)
-            else:
-                executable(*args)
-        except Exception:
-            self.result = None
-            raise
-        return True
-
-    def _listener(self, *args):
-        val = round(args[1], 2)
-        info = args[0]
-        self.dlg.Update(int(val * 100.0), info)
+    def listener(self, *args):
+        self.dlg.Update(int(round(args[1] * 100.0)), args[0])
 
     def destroy(self):
         self.dlg.Destroy()
-        events.disconnect(events.FILTER_INFO, self._listener)
+        events.disconnect(events.FILTER_INFO, self.listener)

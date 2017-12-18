@@ -146,26 +146,17 @@ class MSWPrinter(AbstractPrinter):
         return printer.Print(win, printout, True)
 
     def print_calibration(self, app, win, path, media=''):
-        doc_presenter = None
-        loader = get_loader(path)
-
         pd = ProgressDialog(_('Loading calibration page...'), win)
-        ret = pd.run(loader, [app.appdata, path])
-        if ret and pd.result is not None:
-            doc_presenter = pd.result
-
-        pd.destroy()
-
-        if doc_presenter:
-            try:
-                self.run_printdlg(win, Printout(doc_presenter))
-            except:
-                doc_presenter = None
-
-        if not doc_presenter:
+        try:
+            loader = get_loader(path)
+            doc_presenter = pd.run(loader, [app.appdata, path])
+            self.run_printdlg(win, Printout(doc_presenter))
+        except Exception:
             txt = _('Error while printing of calibration page!')
             txt += '\n' + _('Check your printer status and connection.')
             error_dialog(win, app.appdata.app_name, txt)
+        finally:
+            pd.destroy()
 
     def print_test_page_a4(self, app, win):
         path = os.path.join(config.resource_dir, 'templates',
