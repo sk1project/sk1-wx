@@ -24,12 +24,13 @@ from uc2.utils.fsutils import get_fileptr
 
 FUCSIA = (144, 84, 141)
 YELLOW = (217, 175, 106)
+RED = (170, 73, 38)
 BLUE = (81, 124, 194)
 DARK = (122, 122, 122)
 LIGHT = (170, 181, 189)
 
 COLOR_MAP = {
-    ' ERROR   ': FUCSIA,
+    ' ERROR   ': RED,
     ' WARNING ': YELLOW,
     ' DEBUG   ': DARK,
     ' INFO    ': LIGHT,
@@ -104,6 +105,7 @@ class ConsoleToolbar(wal.HPanel):
             (icons.PD_ZOOM_IN, self.stub, _('Zoom in')),
             (icons.PD_ZOOM_OUT, self.stub, _('Zoom out')),
             None,
+            (icons.PD_PREFERENCES, self.stub, _('Viewer preferences')),
         ]
 
         for item in buttons:
