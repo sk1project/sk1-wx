@@ -205,7 +205,7 @@ class AppProxy:
         self.app.history.clear_history()
 
     def view_log(self):
-        dialogs.log_viewer_dlg(self.mw)
+        dialogs.filelog_viewer_dlg(self.mw)
 
     def save(self):
         self.app.save()
@@ -782,4 +782,4 @@ class AppProxy:
             canvas.controller.update_points()
 
     def show_console(self):
-        dialogs.console_dlg(self.mw, _('Application logs'))
+        dialogs.logconsole_dlg(self.mw, _('Application logs'))

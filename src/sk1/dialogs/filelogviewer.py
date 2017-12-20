@@ -117,7 +117,7 @@ class LogViewerDialog(wal.OkCancelDialog):
         return ret
 
 
-def log_viewer_dlg(parent):
+def filelog_viewer_dlg(parent):
     dlg = LogViewerDialog(parent, _("Recent documents"))
     ret = dlg.show()
     if ret:

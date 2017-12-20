@@ -75,6 +75,6 @@ class ConsoleDialog(wal.SimpleDialog):
             self.entry.append(line)
 
 
-def console_dlg(parent, dlg_name='Logs', log_path=''):
+def logconsole_dlg(parent, dlg_name='Logs', log_path=''):
     dlg = ConsoleDialog(parent, dlg_name, log_path)
     return dlg.show()

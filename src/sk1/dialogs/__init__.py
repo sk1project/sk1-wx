@@ -20,11 +20,11 @@ from filedlgs import get_open_file_name, get_save_file_name, get_dir_path
 from progressdlg import ProgressDialog
 from aboutdlg import about_dialog
 from pagedlg import goto_page_dlg, delete_page_dlg, insert_page_dlg
-from logviewer import log_viewer_dlg
+from filelogviewer import filelog_viewer_dlg
 from paletteinfo import palette_info_dlg
 from palcoldlg import palette_collection_dlg
 from filldlg import fill_dlg
 from strokedlg import stroke_dlg
 from docprops import docprops_dlg
 from editdlg import edit_dlg, multiline_edit_dlg
-from console import console_dlg
+from logconsole import logconsole_dlg
