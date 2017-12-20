@@ -435,12 +435,14 @@ class Entry(wx.TextCtrl, DataWidgetMixin):
     value = ''
     _callback = None
     _callback1 = None
+    editable = True
 
-    def __init__(
-            self, parent, value='', size=DEF_SIZE, width=0, onchange=None,
-            multiline=False, richtext=False, onenter=None, editable=True,
-            no_border=False, no_wrap=False):
-        value = value.decode('utf-8')
+    def __init__(self, parent, value='', size=DEF_SIZE, width=0, onchange=None,
+                 multiline=False, richtext=False, onenter=None, editable=True,
+                 no_border=False, no_wrap=False):
+        self.value = value.decode('utf-8')
+        self.editable = editable
+        self._callback = onchange
         style = wx.TE_MULTILINE if multiline else 0
         style = style | wx.TE_RICH2 if richtext else style
         style = style | wx.NO_BORDER if no_border else style
@@ -450,18 +452,13 @@ class Entry(wx.TextCtrl, DataWidgetMixin):
         size = self._set_width(size, width)
         wx.TextCtrl.__init__(
             self, parent, wx.ID_ANY, value, size=size, style=style)
-        if onchange:
-            self._callback = onchange
-            self.Bind(wx.EVT_TEXT, self._on_change, self)
         if onenter:
             self._callback1 = onenter
             self.Bind(wx.EVT_TEXT_ENTER, self._on_enter, self)
-        if not editable:
-            self.value = value
-            self.Bind(wx.EVT_TEXT, self._on_change_noneditable, self)
-            self.Bind(wx.EVT_TEXT_ENTER, self._on_change_noneditable, self)
         if multiline:
             self.ScrollPages(0)
+        self.SetEditable(editable)
+        self.Bind(wx.EVT_TEXT, self._on_change, self)
 
     def get_cursor_pos(self):
         return self.GetInsertionPoint()
@@ -474,9 +471,6 @@ class Entry(wx.TextCtrl, DataWidgetMixin):
         self.SetInsertionPoint(pos)
 
     def _on_change(self, event):
-        if self.my_changes:
-            self.my_changes = False
-            return
         self.value = self.GetValue()
         if self._callback:
             self._callback()
@@ -488,13 +482,6 @@ class Entry(wx.TextCtrl, DataWidgetMixin):
         if self._callback1:
             self._callback1()
 
-    def _on_change_noneditable(self, event):
-        if self.my_changes:
-            self.my_changes = False
-            return
-        self.my_changes = True
-        self.SetValue(self.value)
-
     def get_value(self):
         return self.GetValue().encode('utf-8')
 
@@ -502,6 +489,9 @@ class Entry(wx.TextCtrl, DataWidgetMixin):
         self.my_changes = True
         self.value = val.decode('utf-8')
         self.SetValue(self.value)
+
+    def set_editable(self, val):
+        self.SetEditable(val)
 
     def set_bg(self, color):
         self.SetBackgroundColour(color)
@@ -518,6 +508,7 @@ class Entry(wx.TextCtrl, DataWidgetMixin):
 
     def append(self, txt):
         self.AppendText(txt.decode('utf-8'))
+        self.value = self.GetValue()
 
 
 class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
