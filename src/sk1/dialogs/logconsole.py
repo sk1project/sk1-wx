@@ -54,7 +54,7 @@ class ConsoleDialog(wal.SimpleDialog):
         self.lpanel.pack((26, 26))
         self.pack(self.lpanel, fill=True)
         self.pack(wal.PLine(self, (85, 85, 85)), fill=True)
-        self.entry = wal.Entry(self, '', multiline=True, editable=True,
+        self.entry = wal.Entry(self, '', multiline=True, editable=False,
                                richtext=True, no_border=True)
         self.entry.set_monospace()
         self.entry.set_bg(BG_COLOR)
