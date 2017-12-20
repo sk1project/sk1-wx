@@ -30,6 +30,7 @@ COLOR_MAP = {
     ' ERROR   ': FUCSIA,
     ' WARNING ': YELLOW,
     ' DEBUG   ': DARK,
+    ' INFO    ': LIGHT,
 }
 
 FG_COLOR = LIGHT
@@ -70,7 +71,13 @@ class ConsoleDialog(wal.SimpleDialog):
             line = fileptr.readline()
             if not line:
                 break
-            color = COLOR_MAP.get(line[:9], FG_COLOR)
+            color = COLOR_MAP.get(line[:9], None)
+            if not color:
+                for item in COLOR_MAP:
+                    if item.strip() in line:
+                        color = COLOR_MAP[item]
+                        break
+            color = color or DARK
             self.entry.set_text_colors(color)
             self.entry.append(line)
 
