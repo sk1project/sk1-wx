@@ -18,6 +18,8 @@
 import os
 import wal
 
+from sk1 import _
+from sk1.resources import icons
 from uc2.utils.fsutils import get_fileptr
 
 FUCSIA = (144, 84, 141)
@@ -46,20 +48,24 @@ class ConsoleDialog(wal.SimpleDialog):
         self.app = parent.app
         self.log_path = log_path
         wal.SimpleDialog.__init__(self, parent, title, (800, 500),
-                                  style=wal.HORIZONTAL, resizable=True,
+                                  style=wal.VERTICAL, resizable=True,
                                   add_line=False, margin=0)
 
     def build(self):
-        self.lpanel = wal.VPanel(self)
+        self.toolbar = ConsoleToolbar(self, self)
+        self.pack(self.toolbar, fill=True)
+        hpanel = wal.HPanel(self)
+        self.pack(hpanel, fill=True, expand=True)
+        self.lpanel = wal.VPanel(hpanel)
         self.lpanel.set_bg((49, 51, 53))
         self.lpanel.pack((26, 26))
-        self.pack(self.lpanel, fill=True)
-        self.pack(wal.PLine(self, (85, 85, 85)), fill=True)
-        self.entry = wal.Entry(self, '', multiline=True, editable=False,
+        hpanel.pack(self.lpanel, fill=True)
+        hpanel.pack(wal.PLine(hpanel, (85, 85, 85)), fill=True)
+        self.entry = wal.Entry(hpanel, '', multiline=True, editable=False,
                                richtext=True, no_border=True)
         self.entry.set_monospace()
         self.entry.set_bg(BG_COLOR)
-        self.pack(self.entry, fill=True, expand=True)
+        hpanel.pack(self.entry, fill=True, expand=True)
         self.load_logs()
 
     def load_logs(self):
@@ -80,6 +86,37 @@ class ConsoleDialog(wal.SimpleDialog):
             color = color or DARK
             self.entry.set_text_colors(color)
             self.entry.append(line)
+
+
+class ConsoleToolbar(wal.HPanel):
+
+    def __init__(self, parent, dlg):
+        self.dlg = dlg
+        wal.HPanel.__init__(self, parent)
+
+        Btn = wal.ImageButton
+
+        buttons = [
+            None,
+            (icons.PD_OPEN, self.stub, _('Open log file...')),
+            (icons.PD_FILE_SAVE_AS, self.stub,_('Save logs as...')),
+            None,
+            (icons.PD_ZOOM_IN, self.stub, _('Zoom in')),
+            (icons.PD_ZOOM_OUT, self.stub, _('Zoom out')),
+            None,
+        ]
+
+        for item in buttons:
+            if item:
+                self.pack(Btn(self, item[0], wal.SIZE_22,
+                              tooltip=item[2], onclick=item[1]))
+            elif item is None:
+                self.pack(wal.VLine(self), padding_all=5, fill=True)
+            else:
+                self.pack((5, 5), expand=True)
+
+    def stub(self):
+        pass
 
 
 def logconsole_dlg(parent, dlg_name='Logs', log_path=''):
