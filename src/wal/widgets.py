@@ -160,9 +160,8 @@ class HtmlLabel(wx.HyperlinkCtrl, WidgetMixin):
 class Button(wx.Button, WidgetMixin):
     callback = None
 
-    def __init__(
-            self, parent, text, size=DEF_SIZE,
-            onclick=None, tooltip='', default=False, pid=wx.ID_ANY):
+    def __init__(self, parent, text, size=DEF_SIZE, onclick=None, tooltip='',
+                 default=False, pid=wx.ID_ANY):
         wx.Button.__init__(self, parent, pid, text, size=size)
         if default:
             self.SetDefault()
@@ -184,9 +183,7 @@ class Checkbox(wx.CheckBox, DataWidgetMixin):
     callback = None
 
     def __init__(self, parent, text='', value=False, onclick=None, right=False):
-        style = 0
-        if right:
-            style = wx.ALIGN_RIGHT
+        style = wx.ALIGN_RIGHT if right else 0
         wx.CheckBox.__init__(self, parent, wx.ID_ANY, text, style=style)
         if value:
             self.SetValue(True)
@@ -223,9 +220,7 @@ class Radiobutton(wx.RadioButton, DataWidgetMixin):
     callback = None
 
     def __init__(self, parent, text='', onclick=None, group=False):
-        style = 0
-        if group:
-            style = wx.RB_GROUP
+        style = wx.RB_GROUP if group else 0
         wx.RadioButton.__init__(self, parent, wx.ID_ANY, text, style=style)
         if onclick:
             self.callback = onclick
@@ -240,8 +235,9 @@ class Combolist(wx.Choice, WidgetMixin):
     items = []
     callback = None
 
-    def __init__(self, parent, size=DEF_SIZE, width=0, items=[], onchange=None):
-        self.items = items
+    def __init__(self, parent, size=DEF_SIZE, width=0,
+                 items=None, onchange=None):
+        self.items = items or []
         size = self._set_width(size, width)
         wx.Choice.__init__(self, parent, wx.ID_ANY, size, choices=self.items)
         if onchange:
@@ -273,16 +269,15 @@ class Combolist(wx.Choice, WidgetMixin):
         return self.items[self.get_selection()]
 
     def set_active_value(self, val):
-        if not val in self.items:
+        if val not in self.items:
             self.items.append(val)
             self.SetItems(self.items)
         self.set_active(self.items.index[val])
 
 
 class BitmapChoice(wx.combo.OwnerDrawnComboBox, WidgetMixin):
-    def __init__(self, parent, value=0, bitmaps=[]):
-
-        self.bitmaps = bitmaps
+    def __init__(self, parent, value=0, bitmaps=None):
+        self.bitmaps = bitmaps or []
         choices = self._create_items()
         x, y = self.bitmaps[0].GetSize()
         x += 4
@@ -300,7 +295,7 @@ class BitmapChoice(wx.combo.OwnerDrawnComboBox, WidgetMixin):
         x, y, w, h = wx.Rect(*rect)
         color = wx.Colour(*const.UI_COLORS['selected_text_bg'])
         if flags & wx.combo.ODCB_PAINTING_SELECTED and \
-                        flags & wx.combo.ODCB_PAINTING_CONTROL:
+                flags & wx.combo.ODCB_PAINTING_CONTROL:
             dc.SetBrush(wx.Brush(wx.WHITE))
             dc.DrawRectangle(x - 1, y - 1, w + 2, h + 2)
             bitmap = self.bitmaps[item]
@@ -352,16 +347,13 @@ class Combobox(wx.ComboBox, DataWidgetMixin):
     callback = None
     flag = False
 
-    def __init__(
-            self, parent, value='', pos=(-1, 1), size=DEF_SIZE, width=0,
-            items=[], onchange=None):
-        self.items = []
-        if items:
-            self.items = items
+    def __init__(self, parent, value='', pos=(-1, 1), size=DEF_SIZE, width=0,
+                 items=None, onchange=None):
+        self.items = items or []
         flags = wx.CB_DROPDOWN | wx.TE_PROCESS_ENTER
         size = self._set_width(size, width)
-        wx.ComboBox.__init__(
-            self, parent, wx.ID_ANY, value, pos, size, items, flags)
+        wx.ComboBox.__init__(self, parent, wx.ID_ANY, value,
+                             pos, size, items, flags)
         if onchange:
             self.callback = onchange
             self.Bind(wx.EVT_COMBOBOX, self.on_change, self)
@@ -392,14 +384,12 @@ class Combobox(wx.ComboBox, DataWidgetMixin):
 class FloatCombobox(Combobox):
     digits = 0
 
-    def __init__(
-            self, parent, value='', width=5, digits=1, items=[], onchange=None):
-        vals = []
-        for item in items:
-            vals.append(str(item))
-        Combobox.__init__(
-            self, parent, str(value), width=width,
-            items=vals, onchange=onchange)
+    def __init__(self, parent, value='', width=5, digits=1,
+                 items=None, onchange=None):
+        items = items or []
+        vals = [str(item) for item in items]
+        Combobox.__init__(self, parent, str(value), width=width,
+                          items=vals, onchange=onchange)
         self.digits = digits
 
     def on_typing(self, event):
@@ -448,15 +438,15 @@ class Entry(wx.TextCtrl, DataWidgetMixin):
 
     def __init__(
             self, parent, value='', size=DEF_SIZE, width=0, onchange=None,
-            multiline=False, richtext=False, onenter=None, editable=True):
-        style = 0
+            multiline=False, richtext=False, onenter=None, editable=True,
+            no_border=False, no_wrap=False):
         value = value.decode('utf-8')
-        if multiline:
-            style |= wx.TE_MULTILINE
-        if richtext:
-            style |= wx.TE_RICH2
-        if onenter:
-            style |= wx.TE_PROCESS_ENTER
+        style = wx.TE_MULTILINE if multiline else 0
+        style = style | wx.TE_RICH2 if richtext else style
+        style = style | wx.NO_BORDER if no_border else style
+        style = style | wx.TE_PROCESS_ENTER if onenter else style
+        style = style | wx.TE_DONTWRAP if no_wrap else style
+
         size = self._set_width(size, width)
         wx.TextCtrl.__init__(
             self, parent, wx.ID_ANY, value, size=size, style=style)
@@ -513,6 +503,22 @@ class Entry(wx.TextCtrl, DataWidgetMixin):
         self.value = val.decode('utf-8')
         self.SetValue(self.value)
 
+    def set_bg(self, color):
+        self.SetBackgroundColour(color)
+
+    def set_text_colors(self, fg=(), bg=()):
+        fg = wx.Colour(*fg) if fg else wx.NullColour
+        bg = wx.Colour(*bg) if bg else wx.NullColour
+        self.SetDefaultStyle(wx.TextAttr(fg, bg))
+
+    def set_monospace(self):
+        points = self.GetFont().GetPointSize()
+        f = wx.Font(points+1, wx.MODERN, wx.NORMAL, wx.NORMAL)
+        self.SetDefaultStyle(wx.TextAttr(wx.NullColour, wx.NullColour, f))
+
+    def append(self, txt):
+        self.AppendText(txt.decode('utf-8'))
+
 
 class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
     callback = None
@@ -523,13 +529,12 @@ class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
     def __init__(
             self, parent, value=0, range_val=(0, 1), size=DEF_SIZE,
             width=6, onchange=None, onenter=None, check_focus=True):
-        if const.IS_GTK3:
-            width = 0
-        elif const.IS_MSW:
-            width += 2
+        width = 0 if const.IS_GTK3 else width
+        width = width + 2 if const.IS_MSW else width
         size = self._set_width(size, width)
-        wx.SpinCtrl.__init__(self, parent, wx.ID_ANY, '', size=size,
-            style=wx.SP_ARROW_KEYS | wx.ALIGN_LEFT | wx.TE_PROCESS_ENTER)
+        style = wx.SP_ARROW_KEYS | wx.ALIGN_LEFT | wx.TE_PROCESS_ENTER
+        wx.SpinCtrl.__init__(self, parent, wx.ID_ANY, '',
+                             size=size, style=style)
         self.set_range(range_val)
         self.set_value(value)
         if onchange:
@@ -539,8 +544,7 @@ class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
             self.callback1 = onenter
             self.Bind(wx.EVT_TEXT_ENTER, self.on_enter, self)
         if check_focus:
-            self.Bind(
-                wx.EVT_KILL_FOCUS, self._entry_lost_focus, self)
+            self.Bind(wx.EVT_KILL_FOCUS, self._entry_lost_focus, self)
             self.Bind(wx.EVT_CONTEXT_MENU, self._ctxmenu, self)
 
     def on_change(self, *args):
@@ -579,6 +583,7 @@ if not const.IS_WX2:
         flag = True
         ctxmenu_flag = False
         digits = 2
+        step = 0
 
         def __init__(
                 self, parent, value=0.0, range_val=(0.0, 1.0), step=0.01,
@@ -586,14 +591,13 @@ if not const.IS_WX2:
                 onchange=None, onenter=None, check_focus=True):
 
             self.range_val = range_val
-            if const.IS_GTK3:
-                width = 0
-            elif const.IS_MSW:
-                width += 2
+            width = 0 if const.IS_GTK3 else width
+            width = width + 2 if const.IS_MSW else width
             size = self._set_width(size, width)
-            wx.SpinCtrlDouble.__init__(self, parent, wx.ID_ANY, '', size=size,
-                style=wx.SP_ARROW_KEYS | wx.ALIGN_LEFT | wx.TE_PROCESS_ENTER,
-                min=0, max=100, initial=value, inc=step)
+            style = wx.SP_ARROW_KEYS | wx.ALIGN_LEFT | wx.TE_PROCESS_ENTER
+            wx.SpinCtrlDouble.__init__(self, parent, wx.ID_ANY, '',
+                                       size=size, style=style,
+                                       min=0, max=100, initial=value, inc=step)
             self.set_range(range_val)
             self.set_value(value)
             self.set_step(step)
@@ -814,7 +818,7 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
             line = 'val=' + txt
             code = compile(line, '<string>', 'exec')
             exec code
-        except:
+        except Exception:
             return self.value
         return val
 
@@ -994,7 +998,7 @@ class ColorButton(wx.ColourPickerCtrl, WidgetMixin):
         r = int(hexcolor[1:3], 0x10)
         g = int(hexcolor[3:5], 0x10)
         b = int(hexcolor[5:], 0x10)
-        return (r, g, b)
+        return r, g, b
 
     def val255(self, vals):
         ret = []
