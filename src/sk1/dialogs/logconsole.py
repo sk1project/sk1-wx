@@ -15,10 +15,11 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import datetime
 import os
 import wal
 
-from sk1 import _, config
+from sk1 import _, config, appconst
 from sk1.dialogs import filedlgs
 from sk1.resources import icons
 from uc2 import uc2const
@@ -84,6 +85,10 @@ class ConsoleDialog(wal.SimpleDialog):
         self.zoom = self.zoom - 1 if self.zoom > -3 else self.zoom
         self.load_logs(self.log_path)
 
+    def change_title(self, log_path):
+        self.log_path = log_path
+        self.set_title('%s - [%s]' % (self.title, log_path))
+
     def load_logs(self, log_path):
         if not os.path.lexists(log_path):
             return
@@ -103,20 +108,30 @@ class ConsoleDialog(wal.SimpleDialog):
             color = color or DARK
             self.entry.set_text_colors(color)
             self.entry.append(line)
-        self.set_title('%s - [%s]' % (self.title, log_path))
+        self.change_title(log_path)
+
+    def write_log(self, log_path):
+        fileptr = get_fileptr(log_path, True)
+        fileptr.write(self.entry.get_value())
+        fileptr.close()
+        self.change_title(log_path)
 
     def open_log(self):
         log_file = filedlgs.get_open_file_name(self, config.log_dir,
                                                _('Select log to open'),
                                                file_types=[uc2const.LOG, ])
-        print log_file
+        if log_file:
+            self.load_logs(log_file)
 
     def save_as_log(self):
-        path = os.path.join(config.log_dir, 'sk1.log')
-        log_file = filedlgs.get_save_file_name(self, path,
-                                               _('Save log As...'),
-                                               file_types=[uc2const.LOG, ])
-        print log_file
+        appname = 'sk1-%s%s' % (appconst.VERSION, appconst.REVISION)
+        timestamp = datetime.datetime.now().strftime("%Y%m%d")
+        filename = '%s_%s.log' % (appname, timestamp)
+        path = os.path.join(config.log_dir, filename)
+        log_path = filedlgs.get_save_file_name(self, path, _('Save log As...'),
+                                               file_types=[uc2const.LOG, ])[0]
+        if log_path:
+            self.write_log(log_path)
 
     def show(self):
         self.show_modal()
@@ -142,8 +157,8 @@ class ConsoleToolbar(wal.HPanel):
             None,
             (icons.PD_ZOOM_IN, self.dlg.zoom_in, _('Zoom in')),
             (icons.PD_ZOOM_OUT, self.dlg.zoom_out, _('Zoom out')),
-            None,
-            (icons.PD_PREFERENCES, self.stub, _('Viewer preferences')),
+            # None,
+            # (icons.PD_PREFERENCES, self.stub, _('Viewer preferences')),
         ]
 
         for item in buttons:
@@ -154,9 +169,6 @@ class ConsoleToolbar(wal.HPanel):
                 self.pack(wal.VLine(self), padding_all=5, fill=True)
             else:
                 self.pack((5, 5), expand=True)
-
-    def stub(self):
-        pass
 
 
 def logconsole_dlg(parent, title='Logs'):
