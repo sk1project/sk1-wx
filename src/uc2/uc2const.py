@@ -109,6 +109,7 @@ ICC = 600
 ICM = 601
 
 XML = 'xml_'
+LOG = 'log'
 
 FORMAT_DESCRIPTION = {
     ALL_FORMATS: _("All supported formats"),
@@ -175,7 +176,8 @@ FORMAT_DESCRIPTION = {
     ICC: _("ICC - International Color Consortium profiles"),
     ICM: _("ICM - Image Color Matching profiles"),
 
-    XML: _("XML - eXtensible Markup Language files")
+    XML: _("XML - eXtensible Markup Language files"),
+    LOG: _("LOG - Log files"),
 }
 
 FORMAT_NAMES = {
@@ -244,6 +246,7 @@ FORMAT_NAMES = {
     ICM: "ICM",
 
     XML: "XML",
+    LOG: "LOG"
 }
 
 MODEL_LOADERS = [SK2, SVG, WMF, PLT, SK1, SK, CDR, CDT]
@@ -287,6 +290,7 @@ FORMAT_EXTENSION = {
     ICC: ('icc',), ICM: ('icm',),
 
     XML: ('xml', 'svg', 'sla',),
+    LOG: ('log',),
 }
 
 IMAGE_FORMATS = [JPG, TIF, BMP, PCX, GIF, PNG, PPM, XBM, XPM, ]

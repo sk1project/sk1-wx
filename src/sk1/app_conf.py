@@ -191,6 +191,7 @@ class AppConfig(UCConfig):
     profile_import_dir = '~'
     collection_dir = '~'
     print_dir = '~'
+    log_dir = '~'
 
     # ============== MOUSE OPTIONS ================
     mouse_scroll_sensitivity = 3.0

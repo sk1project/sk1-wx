@@ -19,7 +19,9 @@ import os
 import wal
 
 from sk1 import _, config
+from sk1.dialogs import filedlgs
 from sk1.resources import icons
+from uc2 import uc2const
 from uc2.utils.fsutils import get_fileptr
 
 FUCSIA = (144, 84, 141)
@@ -50,13 +52,12 @@ class ConsoleDialog(wal.SimpleDialog):
     def __init__(self, parent, title):
         self.app = parent.app
         self.title = title
+        self.zoom = config.console_dlg_zoom
         size = config.console_dlg_size
         wal.SimpleDialog.__init__(self, parent, title, size,
                                   style=wal.VERTICAL, resizable=True,
                                   add_line=False, margin=0)
         self.set_minsize(config.console_dlg_minsize)
-        self.zoom = config.console_dlg_zoom
-        print 'zoom', self.zoom
 
     def build(self):
         self.toolbar = ConsoleToolbar(self, self)
@@ -87,9 +88,8 @@ class ConsoleDialog(wal.SimpleDialog):
         if not os.path.lexists(log_path):
             return
         fileptr = get_fileptr(log_path)
-        self.entry.set_monospace(self.zoom)
-        self.entry.append(' ')
         self.entry.clear()
+        self.entry.set_monospace(self.zoom)
         while True:
             line = fileptr.readline()
             if not line:
@@ -105,6 +105,19 @@ class ConsoleDialog(wal.SimpleDialog):
             self.entry.append(line)
         self.set_title('%s - [%s]' % (self.title, log_path))
 
+    def open_log(self):
+        log_file = filedlgs.get_open_file_name(self, config.log_dir,
+                                               _('Select log to open'),
+                                               file_types=[uc2const.LOG, ])
+        print log_file
+
+    def save_as_log(self):
+        path = os.path.join(config.log_dir, 'sk1.log')
+        log_file = filedlgs.get_save_file_name(self, path,
+                                               _('Save log As...'),
+                                               file_types=[uc2const.LOG, ])
+        print log_file
+
     def show(self):
         self.show_modal()
         w, h = self.get_size()
@@ -112,8 +125,6 @@ class ConsoleDialog(wal.SimpleDialog):
             h = max(h - 28, config.console_dlg_minsize[1])
         config.console_dlg_size = (w, h)
         config.console_dlg_zoom = self.zoom
-        print 'here', config.console_dlg_zoom
-        print 'zoom', self.zoom
         self.destroy()
 
 
@@ -126,8 +137,8 @@ class ConsoleToolbar(wal.HPanel):
         Btn = wal.ImageButton
 
         buttons = [
-            (icons.PD_OPEN, self.stub, _('Open log file...')),
-            (icons.PD_FILE_SAVE_AS, self.stub,_('Save logs as...')),
+            (icons.PD_OPEN, self.dlg.open_log, _('Open log file...')),
+            (icons.PD_FILE_SAVE_AS, self.dlg.save_as_log, _('Save logs as...')),
             None,
             (icons.PD_ZOOM_IN, self.dlg.zoom_in, _('Zoom in')),
             (icons.PD_ZOOM_OUT, self.dlg.zoom_out, _('Zoom out')),
