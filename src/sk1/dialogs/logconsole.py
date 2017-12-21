@@ -18,7 +18,7 @@
 import os
 import wal
 
-from sk1 import _
+from sk1 import _, config
 from sk1.resources import icons
 from uc2.utils.fsutils import get_fileptr
 
@@ -30,10 +30,10 @@ DARK = (122, 122, 122)
 LIGHT = (170, 181, 189)
 
 COLOR_MAP = {
-    ' ERROR   ': RED,
-    ' WARNING ': YELLOW,
-    ' DEBUG   ': DARK,
-    ' INFO    ': LIGHT,
+    'ERROR': RED,
+    'WARNING': YELLOW,
+    'DEBUG': DARK,
+    'INFO': LIGHT,
 }
 
 FG_COLOR = LIGHT
@@ -44,13 +44,19 @@ class ConsoleDialog(wal.SimpleDialog):
     presenter = None
     entry = None
     lpanel = None
+    log_path = None
+    zoom = 0
 
-    def __init__(self, parent, title, log_path):
+    def __init__(self, parent, title):
         self.app = parent.app
-        self.log_path = log_path
-        wal.SimpleDialog.__init__(self, parent, title, (800, 500),
+        self.title = title
+        size = config.console_dlg_size
+        wal.SimpleDialog.__init__(self, parent, title, size,
                                   style=wal.VERTICAL, resizable=True,
                                   add_line=False, margin=0)
+        self.set_minsize(config.console_dlg_minsize)
+        self.zoom = config.console_dlg_zoom
+        print 'zoom', self.zoom
 
     def build(self):
         self.toolbar = ConsoleToolbar(self, self)
@@ -64,29 +70,51 @@ class ConsoleDialog(wal.SimpleDialog):
         hpanel.pack(wal.PLine(hpanel, (85, 85, 85)), fill=True)
         self.entry = wal.Entry(hpanel, '', multiline=True, editable=False,
                                richtext=True, no_border=True)
-        self.entry.set_monospace()
         self.entry.set_bg(BG_COLOR)
         hpanel.pack(self.entry, fill=True, expand=True)
-        self.load_logs()
+        self.log_path = os.path.join(self.app.appdata.app_config_dir, 'sk1.log')
+        self.load_logs(self.log_path)
 
-    def load_logs(self):
-        filepath = os.path.join(self.app.appdata.app_config_dir, 'sk1.log')
-        if not os.path.lexists(filepath):
+    def zoom_in(self):
+        self.zoom = self.zoom + 1 if self.zoom < 7 else self.zoom
+        self.load_logs(self.log_path)
+
+    def zoom_out(self):
+        self.zoom = self.zoom - 1 if self.zoom > -3 else self.zoom
+        self.load_logs(self.log_path)
+
+    def load_logs(self, log_path):
+        if not os.path.lexists(log_path):
             return
-        fileptr = get_fileptr(filepath)
+        fileptr = get_fileptr(log_path)
+        self.entry.set_monospace(self.zoom)
+        self.entry.append(' ')
+        self.entry.clear()
         while True:
             line = fileptr.readline()
             if not line:
                 break
-            color = COLOR_MAP.get(line[:9], None)
+            color = COLOR_MAP.get(line[:9].strip(), None)
             if not color:
                 for item in COLOR_MAP:
-                    if item.strip() in line:
+                    if item in line:
                         color = COLOR_MAP[item]
                         break
             color = color or DARK
             self.entry.set_text_colors(color)
             self.entry.append(line)
+        self.set_title('%s - [%s]' % (self.title, log_path))
+
+    def show(self):
+        self.show_modal()
+        w, h = self.get_size()
+        if wal.IS_UNITY_16:
+            h = max(h - 28, config.console_dlg_minsize[1])
+        config.console_dlg_size = (w, h)
+        config.console_dlg_zoom = self.zoom
+        print 'here', config.console_dlg_zoom
+        print 'zoom', self.zoom
+        self.destroy()
 
 
 class ConsoleToolbar(wal.HPanel):
@@ -98,12 +126,11 @@ class ConsoleToolbar(wal.HPanel):
         Btn = wal.ImageButton
 
         buttons = [
-            None,
             (icons.PD_OPEN, self.stub, _('Open log file...')),
             (icons.PD_FILE_SAVE_AS, self.stub,_('Save logs as...')),
             None,
-            (icons.PD_ZOOM_IN, self.stub, _('Zoom in')),
-            (icons.PD_ZOOM_OUT, self.stub, _('Zoom out')),
+            (icons.PD_ZOOM_IN, self.dlg.zoom_in, _('Zoom in')),
+            (icons.PD_ZOOM_OUT, self.dlg.zoom_out, _('Zoom out')),
             None,
             (icons.PD_PREFERENCES, self.stub, _('Viewer preferences')),
         ]
@@ -121,6 +148,6 @@ class ConsoleToolbar(wal.HPanel):
         pass
 
 
-def logconsole_dlg(parent, dlg_name='Logs', log_path=''):
-    dlg = ConsoleDialog(parent, dlg_name, log_path)
+def logconsole_dlg(parent, title='Logs'):
+    dlg = ConsoleDialog(parent, title)
     return dlg.show()

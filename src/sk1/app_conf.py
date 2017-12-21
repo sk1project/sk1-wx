@@ -165,6 +165,10 @@ class AppConfig(UCConfig):
     about_dlg_size = (550, 400)
     dash_dlg_size = (300, 150)
 
+    console_dlg_size = (800, 500)
+    console_dlg_minsize = (800, 500)
+    console_dlg_zoom = 0
+
     statusbar_fontsize = 0
     tabs_fontsize = 0
     tabs_use_bold = True

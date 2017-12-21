@@ -471,9 +471,12 @@ class Entry(wx.TextCtrl, DataWidgetMixin):
         self.SetInsertionPoint(pos)
 
     def _on_change(self, event):
-        self.value = self.GetValue()
-        if self._callback:
-            self._callback()
+        if self.my_changes:
+            self.my_changes = False
+        else:
+            self.value = self.GetValue()
+            if self._callback:
+                self._callback()
         event.Skip()
 
     def _on_enter(self, event):
@@ -501,14 +504,18 @@ class Entry(wx.TextCtrl, DataWidgetMixin):
         bg = wx.Colour(*bg) if bg else wx.NullColour
         self.SetDefaultStyle(wx.TextAttr(fg, bg))
 
-    def set_monospace(self):
+    def set_monospace(self, zoom=0):
         points = self.GetFont().GetPointSize()
-        f = wx.Font(points+1, wx.MODERN, wx.NORMAL, wx.NORMAL)
+        f = wx.Font(points + zoom, wx.MODERN, wx.NORMAL, wx.NORMAL)
         self.SetDefaultStyle(wx.TextAttr(wx.NullColour, wx.NullColour, f))
 
     def append(self, txt):
         self.AppendText(txt.decode('utf-8'))
         self.value = self.GetValue()
+
+    def clear(self):
+        self.Clear()
+        self.value = ''
 
 
 class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
@@ -517,9 +524,8 @@ class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
     flag = True
     ctxmenu_flag = False
 
-    def __init__(
-            self, parent, value=0, range_val=(0, 1), size=DEF_SIZE,
-            width=6, onchange=None, onenter=None, check_focus=True):
+    def __init__(self, parent, value=0, range_val=(0, 1), size=DEF_SIZE,
+                 width=6, onchange=None, onenter=None, check_focus=True):
         width = 0 if const.IS_GTK3 else width
         width = width + 2 if const.IS_MSW else width
         size = self._set_width(size, width)
