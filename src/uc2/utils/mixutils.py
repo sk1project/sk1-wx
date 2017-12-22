@@ -38,7 +38,7 @@ LOGGING_MAP = {
 def config_logging(filepath, level='INFO'):
     level = LOGGING_MAP.get(level.upper(), logging.INFO)
     logging.basicConfig(
-        format=' %(levelname)-7s | %(asctime)s | %(name)s --> %(message)s',
+        format=' %(levelname)-8s | %(asctime)s | %(name)s --> %(message)s',
         datefmt='%I:%M:%S %p',
         level=level,
         filename=filepath,

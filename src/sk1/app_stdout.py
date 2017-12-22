@@ -23,19 +23,27 @@ LOG = logging.getLogger(__name__)
 
 class StreamLogger:
     msg = ''
+    counter = 0
 
     def __init__(self):
         self.logger = LOG.critical
 
     def write(self, msg):
-        if not msg.endswith('\n'):
-            self.logger(self.msg + msg)
-            self.msg = ''
+        if not msg.endswith('\n') and not msg.startswith(' '):
+            if self.counter < 2:
+                self.msg += msg
+                self.counter += 1
+            else:
+                self.logger(self.msg + msg)
+                self.msg = ''
+                self.counter = 0
         else:
             self.msg += msg
 
     def close(self):
+        self.logger('close')
         pass
 
     def flush(self):
+        self.logger('flush')
         pass
