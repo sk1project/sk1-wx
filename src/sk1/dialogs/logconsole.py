@@ -31,12 +31,14 @@ RED = (170, 73, 38)
 BLUE = (81, 124, 194)
 DARK = (122, 122, 122)
 LIGHT = (170, 181, 189)
+GREEN = (165, 194, 97)
 
 COLOR_MAP = {
+    'CRITICAL': GREEN,
     'ERROR': RED,
     'WARNING': YELLOW,
-    'DEBUG': DARK,
     'INFO': LIGHT,
+    'DEBUG': DARK,
 }
 
 FG_COLOR = LIGHT

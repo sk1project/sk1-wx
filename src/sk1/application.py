@@ -31,6 +31,7 @@ from sk1.app_history import AppHistoryManager
 from sk1.app_insp import AppInspector
 from sk1.app_palettes import AppPaletteManager
 from sk1.app_proxy import AppProxy
+from sk1.app_stdout import StreamLogger
 from sk1.clipboard import AppClipboard
 from sk1.document import SK1Presenter
 from sk1.parts.artprovider import create_artprovider
@@ -84,6 +85,7 @@ class SK1Application(wal.Application, UCApplication):
         log_level = config.log_level
         self.log_filepath = os.path.join(self.appdata.app_config_dir, 'sk1.log')
         config_logging(self.log_filepath, log_level)
+        sys.stderr = StreamLogger()
         LOG.info('Logging started')
 
         self.update_wal()
