@@ -229,6 +229,8 @@ class IconizerPlugin(RsPlugin):
 
     def render(self, sel_flag=False):
         doc = self.app.current_doc
+        if not doc:
+            return
         if sel_flag:
             if not doc.selection.objs:
                 return None
