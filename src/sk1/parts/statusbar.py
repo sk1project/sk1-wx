@@ -149,6 +149,8 @@ class ColorMonitor(wal.HPanel):
         events.connect(events.NO_DOCS, self.update)
 
     def update(self, *args):
+        if not self.app.current_doc:
+            return
         sel = self.app.current_doc.get_selected_objs()
         if sel:
             if len(sel) == 1 and self.app.insp.is_obj_primitive(sel[0]):
