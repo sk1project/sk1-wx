@@ -1,0 +1,21 @@
+# using 'language: minimal' because 'language: python' ran into some trouble
+# lining up the versions of gtk, wxwidgets and wxpython correctly.
+language: minimal
+
+addons:
+  apt:
+    packages:
+    - python-imaging
+    - python-cairo-dev
+    - libpango1.0-dev
+    - python-wxgtk2.8
+    - python-wxtools
+    - wx2.8-headers
+    - wx2.8-i18n
+    - libwxgtk2.8-dev
+    - libgtk2.0-dev
+    - libmagickwand-dev
+
+script:
+  - python setup-uc2.py build
+  - python setup-sk1.py build
