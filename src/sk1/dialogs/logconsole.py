@@ -25,7 +25,7 @@ from sk1.resources import icons
 from uc2 import uc2const
 from uc2.utils.fsutils import get_fileptr
 
-FUCSIA = (144, 84, 141)
+PINK = (144, 84, 141)
 YELLOW = (217, 175, 106)
 RED = (170, 73, 38)
 BLUE = (81, 124, 194)
