@@ -131,18 +131,6 @@ class AbstractBinaryLoader(AbstractLoader):
         return utils.utf_16_le_bytes_2str(self.fileptr.read(size * 2))
 
 
-class ErrorHandler(handler.ErrorHandler):
-    pass
-
-
-class EntityResolver(handler.EntityResolver):
-    pass
-
-
-class DTDHandler(handler.DTDHandler):
-    pass
-
-
 class AbstractXMLLoader(AbstractLoader, handler.ContentHandler):
     xml_reader = None
     input_source = None
@@ -152,9 +140,9 @@ class AbstractXMLLoader(AbstractLoader, handler.ContentHandler):
         self.input_source.setByteStream(self.fileptr)
         self.xml_reader = xml.sax.make_parser()
         self.xml_reader.setContentHandler(self)
-        self.xml_reader.setErrorHandler(ErrorHandler())
-        self.xml_reader.setEntityResolver(EntityResolver())
-        self.xml_reader.setDTDHandler(DTDHandler())
+        self.xml_reader.setErrorHandler(handler.ErrorHandler())
+        self.xml_reader.setEntityResolver(handler.EntityResolver())
+        self.xml_reader.setDTDHandler(handler.DTDHandler())
         self.xml_reader.setFeature(handler.feature_external_ges, False)
         self.do_load()
 
@@ -206,11 +194,13 @@ class AbstractSaver(object):
             raise IOError(errno.ENODATA, msg, '')
 
         self.presenter.update()
+        self.saving_msg(.01)
         try:
             self.do_save()
         except Exception as e:
             LOG.error('Error saving file content %s', e)
             raise
+        self.saving_msg(.99)
         self.fileptr.close()
         self.fileptr = None
 

@@ -54,7 +54,7 @@ def scan_plugins(app):
                     pobj = plg_mod.get_plugin(app)
                     ret[pobj.pid] = pobj
                 except Exception as e:
-                    LOG.error('Error while importing <%s> plugin', item, e)
+                    LOG.error('Error while importing <%s> plugin %s', item, e)
     return ret
 
 
