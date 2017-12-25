@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2016 by Igor E. Novikov
+#  Copyright (C) 2017 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ LOGGING_MAP = {
     'WARN': logging.WARN,
     'WARNING': logging.WARN,
     'ERROR': logging.ERROR,
+    'CRITICAL': logging.CRITICAL,
 }
 
 
