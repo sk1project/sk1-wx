@@ -15,11 +15,14 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 import wal
+
 from sk1 import _, events, config
 from sk1.dialogs.aboutdlg_credits import CREDITS
 from sk1.dialogs.aboutdlg_license import LICENSE
 from sk1.resources import icons, get_bmp
+from uc2 import uc2const
 
 
 class AboutDialog(wal.SimpleDialog):
@@ -34,7 +37,7 @@ class AboutDialog(wal.SimpleDialog):
     def build(self):
         nb = wal.Notebook(self)
         nb.add_page(AboutPage(self.app, nb), _('About'))
-        nb.add_page(ComponentsPage(self.app, nb), _('Components'))
+        nb.add_page(ComponentsPage(nb), _('Components'))
         nb.add_page(AuthorsPage(nb), _('Authors'))
         nb.add_page(ThanksPage(nb), _('Thanks to'))
         nb.add_page(LicensePage(nb), _('License'))
@@ -67,7 +70,7 @@ class AboutPage(wal.HPanel):
 
         import datetime
         year = str(datetime.date.today().year)
-        txt = '(C) 2011-' + year + ' sK1 Project team' + '\n'
+        txt = '(C) 2011-%s sK1 Project team' % year + '\n'
         box.pack(wal.Label(box, txt), fill=True)
         p = wal.HPanel(box)
         p.pack(wal.HtmlLabel(p, 'http://sk1project.net'))
@@ -75,14 +78,23 @@ class AboutPage(wal.HPanel):
 
 
 class ComponentsPage(wal.VPanel):
-    def __init__(self, app, parent):
+    def __init__(self, parent):
         wal.VPanel.__init__(self, parent)
-        from uc2 import libimg, libpango
+        from uc2 import libimg, libpango, libcairo
         import reportlab
-        data = [[_('Component'), _('Version')]] + app.appdata.components
+
+        data = [[_('Component'), _('Version')]]
+        uc_ver = '%s %s' % (uc2const.VERSION, uc2const.REVISION)
+        data.append(['Python', sys.version])
+        data.append(['wxWidgets', wal.VERSION])
+        data.append(['UniConvertor', uc_ver])
+        data.append(['Cairo', libcairo.get_version()[0]])
+        data.append(['pycairo', libcairo.get_version()[1]])
+        data.append(['Pillow', libimg.get_version()])
         data.append(['ImageMagick', libimg.get_magickwand_version()[0]])
         data.append(['Pango', libpango.get_version()])
         data.append(['Reportlab', reportlab.Version])
+
         slist = wal.ReportList(self, data, border=False)
         self.pack(slist, expand=True, fill=True, padding=5)
         slist.set_column_width(0, wal.LIST_AUTOSIZE)

@@ -20,8 +20,7 @@ import sys
 
 import wal
 from sk1 import events, appconst
-from uc2 import uc2const, libimg, libcairo
-from uc2.cms import libcms
+from uc2 import uc2const
 from uc2.uc2conf import UCConfig, UCData
 from uc2.utils import system
 
@@ -40,7 +39,6 @@ class AppData(UCData):
     app_palette_dir = ''
     app_temp_dir = ''
     plugin_dirs = []
-    components = []
 
     def __init__(self, app, cfgdir='~'):
         # --- Init paths
@@ -64,18 +62,6 @@ class AppData(UCData):
         if not os.path.lexists(plugin_dir_init):
             fp = open(plugin_dir_init, 'w')
             fp.close()
-        self.check_components()
-
-    def check_components(self):
-        comp = self.components
-        comp.append(['Python', sys.version])
-        comp.append(['wxWidgets', wal.VERSION])
-        comp.append(
-            ['UniConvertor', '%s %s' % (UCData.version, UCData.revision)])
-        comp.append(['Cairo', libcairo.get_version()[0]])
-        comp.append(['pycairo', libcairo.get_version()[1]])
-        comp.append(['Pillow', libimg.get_version()])
-        comp.append(['LittleCMS', libcms.get_version()])
 
 
 class AppConfig(UCConfig):
