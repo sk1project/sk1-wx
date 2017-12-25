@@ -79,6 +79,7 @@ SK1_DEB_DEPENDENCIES = {
 
     DEBIAN7: 'python-wxgtk2.8, python-cups',
     DEBIAN8: 'python-wxgtk3.0, python-cups',
+    DEBIAN9: 'python-wxgtk3.0, python-cups',
 }
 
 UC2_RPM_DEPENDENCIES = {
