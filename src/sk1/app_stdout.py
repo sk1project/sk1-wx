@@ -41,9 +41,7 @@ class StreamLogger:
             self.msg += msg
 
     def close(self):
-        self.logger('close')
         pass
 
     def flush(self):
-        self.logger('flush')
         pass
