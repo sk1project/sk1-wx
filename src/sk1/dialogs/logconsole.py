@@ -43,6 +43,8 @@ COLOR_MAP = {
 
 FG_COLOR = LIGHT
 BG_COLOR = (43, 43, 43)
+LEFT_PANEL = (49, 51, 53)
+SEP = (85, 85, 85)
 
 
 class ConsoleDialog(wal.SimpleDialog):
@@ -51,11 +53,14 @@ class ConsoleDialog(wal.SimpleDialog):
     lpanel = None
     log_path = None
     zoom = 0
+    toolbar = None
+    logs = []
 
     def __init__(self, parent, title):
         self.app = parent.app
         self.title = title
         self.zoom = config.console_dlg_zoom
+        self.logs = []
         size = config.console_dlg_size
         wal.SimpleDialog.__init__(self, parent, title, size,
                                   style=wal.VERTICAL, resizable=True,
@@ -68,10 +73,10 @@ class ConsoleDialog(wal.SimpleDialog):
         hpanel = wal.HPanel(self)
         self.pack(hpanel, fill=True, expand=True)
         self.lpanel = wal.VPanel(hpanel)
-        self.lpanel.set_bg((49, 51, 53))
+        self.lpanel.set_bg(LEFT_PANEL)
         self.lpanel.pack((26, 26))
         hpanel.pack(self.lpanel, fill=True)
-        hpanel.pack(wal.PLine(hpanel, (85, 85, 85)), fill=True)
+        hpanel.pack(wal.PLine(hpanel, SEP), fill=True)
         self.entry = wal.Entry(hpanel, '', multiline=True, editable=False,
                                richtext=True, no_border=True)
         self.entry.set_bg(BG_COLOR)
@@ -81,11 +86,11 @@ class ConsoleDialog(wal.SimpleDialog):
 
     def zoom_in(self):
         self.zoom = self.zoom + 1 if self.zoom < 7 else self.zoom
-        self.load_logs(self.log_path)
+        self.parse_logs()
 
     def zoom_out(self):
         self.zoom = self.zoom - 1 if self.zoom > -3 else self.zoom
-        self.load_logs(self.log_path)
+        self.parse_logs()
 
     def change_title(self, log_path):
         self.log_path = log_path
@@ -95,12 +100,19 @@ class ConsoleDialog(wal.SimpleDialog):
         if not os.path.lexists(log_path):
             return
         fileptr = get_fileptr(log_path)
-        self.entry.clear()
-        self.entry.set_monospace(self.zoom)
+        self.logs = []
         while True:
             line = fileptr.readline()
             if not line:
                 break
+            self.logs.append(line)
+        self.parse_logs()
+        self.change_title(log_path)
+
+    def parse_logs(self):
+        self.entry.clear()
+        self.entry.set_monospace(self.zoom)
+        for line in self.logs:
             color = COLOR_MAP.get(line[:9].strip(), None)
             if not color:
                 for item in COLOR_MAP:
@@ -110,7 +122,6 @@ class ConsoleDialog(wal.SimpleDialog):
             color = color or DARK
             self.entry.set_text_colors(color)
             self.entry.append(line)
-        self.change_title(log_path)
 
     def write_log(self, log_path):
         fileptr = get_fileptr(log_path, True)
@@ -151,7 +162,7 @@ class ConsoleToolbar(wal.HPanel):
         self.dlg = dlg
         wal.HPanel.__init__(self, parent)
 
-        Btn = wal.ImageButton
+        btn = wal.ImageButton
 
         buttons = [
             (icons.PD_OPEN, self.dlg.open_log, _('Open log file...')),
@@ -165,7 +176,7 @@ class ConsoleToolbar(wal.HPanel):
 
         for item in buttons:
             if item:
-                self.pack(Btn(self, item[0], wal.SIZE_22,
+                self.pack(btn(self, item[0], wal.SIZE_22,
                               tooltip=item[2], onclick=item[1]))
             elif item is None:
                 self.pack(wal.VLine(self), padding_all=5, fill=True)
