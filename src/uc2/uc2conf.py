@@ -17,8 +17,6 @@
 
 import os
 
-from uc2.cms import libcms
-
 from uc2 import uc2const
 from uc2.utils.sconfig import SerializedConfig
 
@@ -51,6 +49,8 @@ class UCData:
                                                   'profiles')
         if not os.path.lexists(self.app_color_profile_dir):
             os.makedirs(self.app_color_profile_dir)
+
+        from uc2.cms import libcms
 
         for item in uc2const.COLORSPACES + [uc2const.COLOR_DISPLAY, ]:
             filename = 'built-in_%s.icm' % item
