@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2016 by Igor E. Novikov
+#  Copyright (C) 2016-2017 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -267,6 +267,7 @@ class CUPS_Printer(AbstractPrinter):
             loader = get_loader(path)
             doc_presenter = pd.run(loader, [app.appdata, path])
             self.printing(Printout(doc_presenter), media)
+            pd.listener(_('Done'), 1.0)
         except Exception:
             txt = _('Error while printing of calibration page!')
             txt += '\n' + _('Check your printer status and connection.')

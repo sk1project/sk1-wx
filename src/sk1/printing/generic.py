@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2016 by Igor E. Novikov
+#  Copyright (C) 2016-2017 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -144,6 +144,7 @@ class AbstractPrinter(object):
         pd = ProgressDialog(_('Printing...'), win)
         try:
             pd.run(self.printing, [printout, ])
+            pd.listener(_('Done'), 1.0)
         except Exception:
             msg = _('Error while printing!')
             error_dialog(win, win.app.appdata.app_name, msg)
