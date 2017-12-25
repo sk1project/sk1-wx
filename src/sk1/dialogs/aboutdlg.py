@@ -100,18 +100,25 @@ class ComponentsPage(wal.VPanel):
         slist.set_column_width(0, wal.LIST_AUTOSIZE)
 
 
+AUTHORS = """------------------------------
+
+Igor E. Novikov
+(sK1 2.0, wxWidgets version; sK1, Tk version)
+<sk1.project.org@gmail.com>
+
+------------------------------
+sK1 2.0 is based on sK1 0.9.x and Skencil 0.6.x experience.
+------------------------------
+Bernhard Herzog (Skencil, Tk version)
+<bernhard@users.sourceforge.net>
+------------------------------
+"""
+
+
 class AuthorsPage(wal.VPanel):
     def __init__(self, parent):
         wal.VPanel.__init__(self, parent)
-        sep = "------------------------------\n"
-        dev = "\nIgor E. Novikov\n"
-        dev += "(sK1 2.0, wxWidgets version; sK1, Tk version)\n"
-        dev += "<sk1.project.org@gmail.com>\n\n" + sep
-        dev += 'sK1 2.0 is based on sK1 0.9.x and Skencil 0.6.x experience.'
-        dev += '\n' + sep
-        dev += "Bernhard Herzog (Skencil, Tk version)\n"
-        dev += "<bernhard@users.sourceforge.net>\n" + sep
-        entry = wal.Entry(self, dev, multiline=True, editable=False)
+        entry = wal.Entry(self, AUTHORS, multiline=True, editable=False)
         self.pack(entry, expand=True, fill=True, padding=5)
 
 
