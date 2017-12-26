@@ -189,7 +189,6 @@ class UCApplication(object):
         self.default_cms = cms.ColorManager()
         self.palettes = PaletteManager(self)
 
-        echo('')
         msg = _('Translation of "%s" into "%s"') % (files[0], files[1])
         events.emit(events.MESSAGES, msgconst.JOB, msg)
 
@@ -257,6 +256,5 @@ class UCApplication(object):
         doc.close()
         msg = _('Translation is successful')
         events.emit(events.MESSAGES, msgconst.OK, msg)
-        echo('')
 
         sys.exit(0)
