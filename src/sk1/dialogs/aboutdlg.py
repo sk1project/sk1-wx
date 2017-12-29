@@ -38,11 +38,9 @@ class AboutDialog(wal.SimpleDialog):
         nb = wal.Notebook(self)
         nb.add_page(AboutPage(self.app, nb), _('About'))
         nb.add_page(ComponentsPage(nb), _('Components'))
-        nb.add_page(AuthorsPage(nb), _('Authors'))
+        nb.add_page(TranslatorsPage(nb), _('Translators'))
         nb.add_page(ThanksPage(nb), _('Thanks to'))
         nb.add_page(LicensePage(nb), _('License'))
-
-        # 		nb.add_page(EvetLoopMonitor(nb), 'Event loops')
         self.pack(nb, expand=True, fill=True, padding_all=5)
 
 
@@ -100,25 +98,17 @@ class ComponentsPage(wal.VPanel):
         slist.set_column_width(0, wal.LIST_AUTOSIZE)
 
 
-AUTHORS = """------------------------------
-
-Igor E. Novikov
-(sK1 2.0, wxWidgets version; sK1, Tk version)
-<sk1.project.org@gmail.com>
-
-------------------------------
-sK1 2.0 is based on sK1 0.9.x and Skencil 0.6.x experience.
-------------------------------
-Bernhard Herzog (Skencil, Tk version)
-<bernhard@users.sourceforge.net>
-------------------------------
+TRANSLATORS = """
+Here will be translators credentials 
+who will take part in localization.
+Join us and let's make this wolrd better! :)
 """
 
 
-class AuthorsPage(wal.VPanel):
+class TranslatorsPage(wal.VPanel):
     def __init__(self, parent):
         wal.VPanel.__init__(self, parent)
-        entry = wal.Entry(self, AUTHORS, multiline=True, editable=False)
+        entry = wal.Entry(self, TRANSLATORS, multiline=True, editable=False)
         self.pack(entry, expand=True, fill=True, padding=5)
 
 
