@@ -92,7 +92,7 @@ UniConvertor is a multiplatform universal vector graphics translator.
 Uses SK2 model to convert one format to another. 
 
 sK1 Project (http://sk1project.net),
-Copyright (C) 2007-%s by Igor E. Novikov
+Copyright (C) 2007-%s sK1 Project Team
 --------------------------------------------------------------------------------
 Supported input formats:  
   %s
@@ -108,7 +108,7 @@ LONG_DEB_DESCRIPTION = ''' UniConvertor is a multiplatform universal vector grap
  Uses SK2 model to convert one format to another. 
  . 
  sK1 Project (http://sk1project.net),
- Copyright (C) 2007-%s by Igor E. Novikov 
+ Copyright (C) 2007-%s sK1 Project Team 
  .
  ##############################################
  .

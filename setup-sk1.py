@@ -87,7 +87,7 @@ Adobe Illustrator, or Freehand. First of all sK1 is oriented for prepress
 industry, therefore works with CMYK colorspace and produces CMYK-based PDF 
 and postscript output.
 sK1 Project (http://sk1project.net),
-Copyright (C) 2004-%s by Igor E. Novikov 
+Copyright (C) 2004-%s sK1 Project Team
 ''' % str(datetime.date.today().year)
 
 LONG_DEB_DESCRIPTION = ''' .
@@ -97,7 +97,7 @@ LONG_DEB_DESCRIPTION = ''' .
  and postscript output.
  . 
  sK1 Project (http://sk1project.net),
- Copyright (C) 2004-%s by Igor E. Novikov 
+ Copyright (C) 2004-%s sK1 Project Team
  .
 ''' % str(datetime.date.today().year)
 
