@@ -166,8 +166,6 @@ class Ruler(wal.HPanel):
         self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self.capture_lost)
         self.eventloop.connect(self.eventloop.VIEW_CHANGED, self.repaint)
         events.connect(events.CONFIG_MODIFIED, self.check_config)
-        if wal.IS_MSW:
-            self.SetDoubleBuffered(True)
         if wal.IS_MAC:
             self.timer = wx.Timer(self)
             self.Bind(wx.EVT_TIMER, self._repaint_after)
@@ -330,22 +328,15 @@ class Ruler(wal.HPanel):
         self.Refresh(rect=wx.Rect(x, y, w, h), eraseBackground=False)
 
     def _on_paint(self, event):
-        w, h = self.panel.GetSize()
-        pdc = wal.get_buffered_dc(self.panel)
         if self.presenter is None:
             return
-        shift = 0
-        if wal.IS_MSW:
-            shift = 1
+        w, h = self.get_size()
+        pdc = wal.get_buffered_dc(self.panel)
+        shift = 1 if wal.IS_MSW else 0
         fmt = cairo.FORMAT_RGB24
-        if self.surface is None:
+        if self.surface is None or self.width != w or self.height != h:
             self.surface = cairo.ImageSurface(fmt, w - shift, h - shift)
-            self.width = w
-            self.height = h
-        elif self.width != w or self.height != h:
-            self.surface = cairo.ImageSurface(fmt, w - shift, h - shift)
-            self.width = w
-            self.height = h
+            self.width, self.height = w, h
         self.ctx = cairo.Context(self.surface)
         self.ctx.set_matrix(cairo.Matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0))
         self.ctx.set_source_rgb(*config.ruler_bg)
@@ -425,11 +416,7 @@ class Ruler(wal.HPanel):
         self.set_cursor()
 
     def mouse_down(self, event):
-        w, h = self.GetSize()
-        w = float(w)
-        h = float(h)
-        self.width = w
-        self.height = h
+        self.width, self.height = (float(item) for item in self.get_size())
         self.draw_guide = True
         self.set_cursor(True)
         if wal.IS_MSW:
@@ -454,15 +441,15 @@ class Ruler(wal.HPanel):
             if y_win > 0.0:
                 p = [self.pointer[0], y_win]
                 p, p_doc = self.presenter.snap.snap_point(p, snap_x=False)[1:]
-                self.presenter.api.create_guides(
-                    [[p_doc[1], uc2const.HORIZONTAL], ])
+                guides = [[p_doc[1], uc2const.HORIZONTAL], ]
+                self.presenter.api.create_guides(guides)
         else:
             x_win = self.pointer[0] - self.width
             if x_win > 0.0:
                 p = [x_win, self.pointer[1]]
                 p, p_doc = self.presenter.snap.snap_point(p, snap_y=False)[1:]
-                self.presenter.api.create_guides(
-                    [[p_doc[0], uc2const.VERTICAL], ])
+                guides = [[p_doc[0], uc2const.VERTICAL], ]
+                self.presenter.api.create_guides(guides)
         self.set_cursor()
         self.presenter.canvas.timer.Stop()
         self.presenter.canvas.restore_mode()
