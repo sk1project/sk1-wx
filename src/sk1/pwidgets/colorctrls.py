@@ -351,7 +351,7 @@ class SwatchCanvas(wal.SensitiveCanvas):
         self.set_gc_stroke(wal.RED)
         self.set_gc_fill()
         self.gc_draw_line(0, 0, w, h)
-        self.gc_draw_line(w - 1, 0, 0, h -1)
+        self.gc_draw_line(w - 1, 0, 0, h - 1)
         self.set_stroke(wal.BLACK)
         self.set_fill()
         self.draw_rect(0, 0, w, h)

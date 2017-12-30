@@ -111,7 +111,7 @@ class RulerCorner(wal.HPanel):
         self.Refresh(rect=wx.Rect(x, y, w, h))
 
     def _on_paint(self, event):
-        w, h = self.panel.GetSize()
+        w, h = self.get_size()
         dc = wal.get_dc(self.panel)
         dc.SetPen(wx.NullPen)
         dc.SetBrush(wx.Brush(wx.Colour(*cms.val_255(config.ruler_bg))))
