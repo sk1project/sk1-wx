@@ -29,6 +29,7 @@ from widgets import *
 
 from msgdlgs import *
 from modaldlgs import *
+from filedlgs import *
 
 from clipboard import *
 from renderer import *

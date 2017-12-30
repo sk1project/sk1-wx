@@ -28,7 +28,6 @@ PLT export wrong
 
 ===REFACTORING==========
 refactor sk.dialogs.filedlgs to wal
-refactor sk.dialogs.progressdlg to wal
 
 ===CANVAS==========
 Полное тестирование
