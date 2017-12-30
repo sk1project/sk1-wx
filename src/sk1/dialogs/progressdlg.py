@@ -15,29 +15,27 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx
 
+import wal
 from uc2 import events
 
 
 class ProgressDialog:
-    caption = ''
+    title = ''
     dlg = None
 
-    def __init__(self, caption, parent):
-        self.caption = caption
+    def __init__(self, title, parent):
+        self.title = title
         self.parent = parent
 
     def run(self, callback, args):
         events.connect(events.FILTER_INFO, self.listener)
-        style = wx.PD_APP_MODAL | wx.PD_AUTO_HIDE
-        self.dlg = wx.ProgressDialog(self.caption, ' ' * 100,
-                                     parent=self.parent, style=style)
+        self.dlg = wal.ProgressDialog(self.parent, self.title)
         return callback(*args)
 
     def listener(self, *args):
-        self.dlg.Update(int(round(args[1] * 100.0)), args[0])
+        self.dlg.update(int(round(args[1] * 100.0)), args[0])
 
     def destroy(self):
-        self.dlg.Destroy()
         events.disconnect(events.FILTER_INFO, self.listener)
+        self.dlg.destroy()
