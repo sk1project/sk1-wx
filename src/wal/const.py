@@ -42,6 +42,7 @@ ID_ZOOM_IN = wx.ID_ZOOM_IN
 ID_ZOOM_OUT = wx.ID_ZOOM_OUT
 ID_ZOOM_FIT = wx.ID_ZOOM_FIT
 ID_REFRESH = wx.ID_REFRESH
+ID_ABOUT = wx.ID_ABOUT
 
 # Editable preference list
 # [OVERLAY,]
