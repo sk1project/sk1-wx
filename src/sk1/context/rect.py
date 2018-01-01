@@ -21,7 +21,6 @@ from generic import CtxPlugin
 from sk1 import _, events
 from sk1.pwidgets import RatioToggle, BitmapToggle
 from sk1.resources import icons, get_bmp
-from wal import LEFT, CENTER
 
 
 class RectanglePlugin(CtxPlugin):
@@ -122,8 +121,7 @@ class RectanglePlugin(CtxPlugin):
                     self.corners = corners
                     self.orig_corners = [] + corners
                     self.update_flag = True
-                    state = (
-                        corners[0] == corners[1] == corners[2] == corners[3])
+                    state = corners[0] == corners[1] == corners[2] == corners[3]
                     self.keep_ratio.set_active(state)
                     self.lock_changed()
 
