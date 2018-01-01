@@ -15,13 +15,13 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx
+import wal
 
 from generic import CtxPlugin
 from sk1 import _, events
 from sk1.pwidgets import RatioToggle, BitmapToggle
 from sk1.resources import icons, get_bmp
-from wal import LEFT, CENTER, FloatSpin, Slider, VPanel, HORIZONTAL
+from wal import LEFT, CENTER
 
 
 class RectanglePlugin(CtxPlugin):
@@ -44,11 +44,12 @@ class RectanglePlugin(CtxPlugin):
         bmp = get_bmp(self, icons.CTX_ROUNDED_RECT, _('Rounded rectangle'))
         self.add(bmp, 0, LEFT | CENTER, 2)
 
-        self.slider = Slider(self, 0, (0, 100), onchange=self.slider_changes,
-                             on_final_change=self.slider_final_changes)
+        self.slider = wal.Slider(self, 0, (0, 100),
+                                 onchange=self.slider_changes,
+                                 on_final_change=self.slider_final_changes)
         self.add(self.slider, 0, LEFT | CENTER, 2)
 
-        self.num_spin = FloatSpin(self, 0, (0.0, 100.0), 1.0, 0,
+        self.num_spin = wal.FloatSpin(self, 0, (0.0, 100.0), 1.0, 0,
                                   onchange=self.changes)
         self.add(self.num_spin, 0, LEFT | CENTER, 2)
 
@@ -127,7 +128,7 @@ class RectanglePlugin(CtxPlugin):
                     self.lock_changed()
 
 
-class RectAngleSwitch(VPanel):
+class RectAngleSwitch(wal.GridPanel):
     active = 0
     toggles = []
     onchange = None
@@ -136,34 +137,31 @@ class RectAngleSwitch(VPanel):
         self.active = active
         self.toggles = [None, None, None, None]
         self.onchange = onchange
-        VPanel.__init__(self, parent)
-        row1 = wx.BoxSizer(HORIZONTAL)
-        self.box.Add(row1)
+        wal.GridPanel.__init__(self, parent)
 
         icons_dict = {True: [icons.CTX_ROUNDED_RECT2_ON, '', ],
                       False: [icons.CTX_ROUNDED_RECT2_OFF, '', ], }
         tgl = BitmapToggle(self, False, icons_dict, self.changed)
         self.toggles[1] = tgl
-        row1.Add(tgl)
+        self.add(tgl)
+
         icons_dict = {True: [icons.CTX_ROUNDED_RECT3_ON, '', ],
                       False: [icons.CTX_ROUNDED_RECT3_OFF, '', ], }
         tgl = BitmapToggle(self, False, icons_dict, self.changed)
         self.toggles[2] = tgl
-        row1.Add(tgl)
-
-        row2 = wx.BoxSizer(HORIZONTAL)
-        self.box.Add(row2, 0)
+        self.add(tgl)
 
         icons_dict = {True: [icons.CTX_ROUNDED_RECT1_ON, '', ],
                       False: [icons.CTX_ROUNDED_RECT1_OFF, '', ], }
         tgl = BitmapToggle(self, False, icons_dict, self.changed)
         self.toggles[0] = tgl
-        row2.Add(tgl)
+        self.add(tgl)
+
         icons_dict = {True: [icons.CTX_ROUNDED_RECT4_ON, '', ],
                       False: [icons.CTX_ROUNDED_RECT4_OFF, '', ], }
         tgl = BitmapToggle(self, False, icons_dict, self.changed)
         self.toggles[3] = tgl
-        row2.Add(tgl)
+        self.add(tgl)
 
         self.toggles[self.active].set_active(True)
 
