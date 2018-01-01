@@ -42,23 +42,23 @@ class RectanglePlugin(CtxPlugin):
 
     def build(self):
         bmp = get_bmp(self, icons.CTX_ROUNDED_RECT, _('Rounded rectangle'))
-        self.add(bmp, 0, LEFT | CENTER, 2)
+        self.pack(bmp, padding=2)
 
         self.slider = wal.Slider(self, 0, (0, 100),
                                  onchange=self.slider_changes,
                                  on_final_change=self.slider_final_changes)
-        self.add(self.slider, 0, LEFT | CENTER, 2)
+        self.pack(self.slider, padding=2)
 
         self.num_spin = wal.FloatSpin(self, 0, (0.0, 100.0), 1.0, 0,
-                                  onchange=self.changes)
-        self.add(self.num_spin, 0, LEFT | CENTER, 2)
+                                      onchange=self.changes)
+        self.pack(self.num_spin, padding=2)
 
         self.switch = RectAngleSwitch(self, onchange=self.switch_changed)
-        self.add(self.switch, 0, LEFT | CENTER, 3)
+        self.pack(self.switch, padding=3)
         self.switch.hide()
 
         self.keep_ratio = RatioToggle(self, onchange=self.lock_changed)
-        self.add(self.keep_ratio, 0, LEFT | CENTER, 3)
+        self.pack(self.keep_ratio, padding=3)
 
     def lock_changed(self, *args):
         self.switch.set_visible(not self.keep_ratio.get_active())
