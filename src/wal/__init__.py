@@ -33,3 +33,4 @@ from filedlgs import *
 
 from clipboard import *
 from renderer import *
+from artprovider import ArtProvider, push_provider

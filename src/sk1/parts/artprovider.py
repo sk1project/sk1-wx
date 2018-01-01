@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013 by Igor E. Novikov
+#  Copyright (C) 2013-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -16,14 +16,13 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import wx
 
 import wal
 from sk1 import config
 from sk1.resources import icons
 
 
-class AbstractArtProvider(wx.ArtProvider):
+class AbstractArtProvider(wal.ArtProvider):
     iconset = icons.GENERIC_ICONS
     iconmatch = {}
     iconset_path = ''
@@ -31,17 +30,16 @@ class AbstractArtProvider(wx.ArtProvider):
     theme_path = ''
     match_keys = []
     file_ext = '.png'
-    image_type = wx.BITMAP_TYPE_PNG
 
     def __init__(self):
-        wx.ArtProvider.__init__(self)
+        wal.ArtProvider.__init__(self)
         self.iconset_path = os.path.join(
             config.resource_dir, 'icons', 'generic')
         self.theme_path = os.path.join(
             config.resource_dir, 'icons', self.theme_dir)
         self.match_keys = self.iconmatch.keys()
 
-    def CreateBitmap(self, artid, client, size):
+    def create_bitmap(self, artid, client, size):
         if artid in self.match_keys:
             filename = self.iconmatch[artid] + self.file_ext
             size_dir = '%sx%s' % (size[0], size[0])
@@ -49,15 +47,15 @@ class AbstractArtProvider(wx.ArtProvider):
                 size_dir = 'fixed'
             path = os.path.join(self.theme_path, size_dir, filename)
             if os.path.isfile(path):
-                return wx.Bitmap(path, self.image_type)
+                return self.get_bitmap(path)
         elif artid in self.iconset:
             path = os.path.join(self.iconset_path, artid + self.file_ext)
             sized_name = artid + '-' + str(size[0]) + self.file_ext
             sized_path = os.path.join(self.iconset_path, sized_name)
             if os.path.isfile(sized_path):
-                return wx.Bitmap(sized_path, self.image_type)
+                return self.get_bitmap(sized_path)
             elif os.path.isfile(path):
-                return wx.Bitmap(path, self.image_type)
+                return self.get_bitmap(path)
         else:
             filename = artid + self.file_ext
             size_dir = '%sx%s' % (size[0], size[0])
@@ -65,10 +63,10 @@ class AbstractArtProvider(wx.ArtProvider):
                 size_dir = 'fixed'
             path = os.path.join(self.theme_path, size_dir, filename)
             if os.path.isfile(path):
-                return wx.Bitmap(path, self.image_type)
+                return self.get_bitmap(path)
         if os.path.isfile(artid):
-            return wx.Bitmap(artid, self.image_type)
-        return wx.NullIcon
+            return self.get_bitmap(artid)
+        return self.get_bitmap()
 
 
 class LinuxArtProvider(AbstractArtProvider):
@@ -96,5 +94,5 @@ def create_artprovider():
         provider = MacArtProvider()
     else:
         provider = LinuxArtProvider()
-    wx.ArtProvider_Push(provider)
+    wal.push_provider(provider)
     return provider
