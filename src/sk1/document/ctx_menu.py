@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013 by Igor E. Novikov
+#  Copyright (C) 2013-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -14,8 +14,6 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-import wx
 
 import wal
 from sk1 import config, modes
@@ -41,7 +39,7 @@ TEXT = [None, pdids.ID_UPPER_TEXT, pdids.ID_LOWER_TEXT,
         pdids.ID_CAPITALIZE_TEXT]
 
 
-class ContextMenu(wx.Menu):
+class ContextMenu(wal.Menu):
     app = None
     mw = None
     insp = None
@@ -54,7 +52,7 @@ class ContextMenu(wx.Menu):
         self.parent = parent
         self.insp = self.app.insp
         self.actions = self.app.actions
-        wx.Menu.__init__(self)
+        wal.Menu.__init__(self)
         self.build_menu(UNDO)
         self.items = []
 
@@ -68,15 +66,15 @@ class ContextMenu(wx.Menu):
 
     def build_menu(self, entries):
         for item in self.items:
-            self.RemoveItem(item)
+            self.remove_item(item)
         self.items = []
         for item in entries:
             if item is None:
-                self.items.append(self.AppendSeparator())
+                self.items.append(self.append_separator())
             else:
                 action = self.app.actions[item]
                 menuitem = CtxActionMenuItem(self.parent, self, action)
-                self.AppendItem(menuitem)
+                self.append_item(menuitem)
                 menuitem.update()
                 self.items.append(menuitem)
 
@@ -118,33 +116,28 @@ class ContextMenu(wx.Menu):
         return ret
 
 
-class CtxActionMenuItem(wx.MenuItem):
+class CtxActionMenuItem(wal.MenuItem):
     def __init__(self, mw, parent, action):
         self.mw = mw
         self.parent = parent
         self.action = action
         action_id = action.action_id
-        text = self.action.get_menu_text()
-        if self.action.is_acc:
-            text += '\t' + self.action.get_shortcut_text()
-        wx.MenuItem.__init__(self, parent, action_id, text=text)
-        if not wal.IS_MAC and self.action.is_icon:
-            bmp = self.action.get_icon(config.menu_size, wx.ART_MENU)
-            if bmp:
-                self.SetBitmap(bmp)
-        self.action.register_as_menuitem(self)
-        self.mw.Bind(wx.EVT_MENU, self.action.do_call, id=action_id)
-        if self.action.is_toggle():
-            self.SetCheckable(True)
+        text = action.get_menu_text()
+        if action.is_acc:
+            text += '\t' + action.get_shortcut_text()
+        wal.MenuItem.__init__(self, parent, action_id, text=text)
+        if action.is_icon:
+            self.set_bitmap(action.get_icon(config.menu_size, wal.ART_MENU))
+        action.register_as_menuitem(self)
+        self.bind_to(self.mw, action.do_call, action_id)
+        if action.is_toggle():
+            self.set_checkable(True)
 
     def update(self):
         self.set_enable(self.action.enabled)
         if self.action.is_toggle():
             self.set_active(self.action.active)
 
-    def set_enable(self, enabled):
-        self.Enable(enabled)
-
     def set_active(self, val):
-        if not self.IsChecked() == val and self.IsCheckable():
-            self.Toggle()
+        if self.is_checkable() and self.is_checked() != val:
+            self.toggle()
