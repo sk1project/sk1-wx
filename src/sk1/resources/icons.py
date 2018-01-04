@@ -15,7 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx
+import wal
 
 ICON_SIZES = [16, 22, 24, 32, 48, 64, 128]
 
@@ -238,19 +238,19 @@ MAC_TBNB_SPACER_ACTIVE = 'tbnb-spacer-active'
 MAC_TBNB_SPACER_NORMAL = 'tbnb-spacer-normal'
 
 ICON_MATCH = {
-    wx.ART_NEW: PD_NEW,
-    wx.ART_FILE_OPEN: PD_OPEN,
-    wx.ART_FILE_SAVE: PD_FILE_SAVE,
-    wx.ART_FILE_SAVE_AS: PD_FILE_SAVE_AS,
-    wx.ART_PRINT: PD_PRINT,
-    wx.ART_QUIT: PD_QUIT,
-    wx.ART_UNDO: PD_UNDO,
-    wx.ART_REDO: PD_REDO,
-    wx.ART_CUT: PD_CUT,
-    wx.ART_COPY: PD_COPY,
-    wx.ART_PASTE: PD_PASTE,
-    wx.ART_DELETE: PD_DELETE,
-    wx.ART_WARNING: PD_WARNING,
+    wal.ART_NEW: PD_NEW,
+    wal.ART_FILE_OPEN: PD_OPEN,
+    wal.ART_FILE_SAVE: PD_FILE_SAVE,
+    wal.ART_FILE_SAVE_AS: PD_FILE_SAVE_AS,
+    wal.ART_PRINT: PD_PRINT,
+    wal.ART_QUIT: PD_QUIT,
+    wal.ART_UNDO: PD_UNDO,
+    wal.ART_REDO: PD_REDO,
+    wal.ART_CUT: PD_CUT,
+    wal.ART_COPY: PD_COPY,
+    wal.ART_PASTE: PD_PASTE,
+    wal.ART_DELETE: PD_DELETE,
+    wal.ART_WARNING: PD_WARNING,
 }
 
 SK1_ICON16 = 'sk1-icon-16x16'
