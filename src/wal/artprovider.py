@@ -38,3 +38,7 @@ class ArtProvider(wx.ArtProvider):
 
 def push_provider(provider):
     wx.ArtProvider_Push(provider)
+
+
+def provider_get_bitmap(icon_id, client, size):
+    return wx.ArtProvider.GetBitmap(icon_id, client, size)
