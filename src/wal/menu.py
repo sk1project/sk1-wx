@@ -19,6 +19,9 @@ import wx
 import const
 
 
+def get_accelerator_entry(*args):
+    return wx.AcceleratorEntry(*args)
+
 class Menu(wx.Menu):
     def __init__(self):
         wx.Menu.__init__(self)
