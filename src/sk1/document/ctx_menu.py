@@ -137,7 +137,3 @@ class CtxActionMenuItem(wal.MenuItem):
         self.set_enable(self.action.enabled)
         if self.action.is_toggle():
             self.set_active(self.action.active)
-
-    def set_active(self, val):
-        if self.is_checkable() and self.is_checked() != val:
-            self.toggle()

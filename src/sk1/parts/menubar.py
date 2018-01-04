@@ -15,18 +15,16 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx
-
 import wal
 from sk1 import _, config, events
 from sk1.resources import pdids
 
 
-class AppMenuBar(wx.MenuBar):
+class AppMenuBar(wal.MenuBar):
     def __init__(self, app, mw):
         self.app = app
         self.mw = mw
-        wx.MenuBar.__init__(self)
+        wal.MenuBar.__init__(self)
         self.entries = []
 
         # ---File menu
@@ -97,11 +95,6 @@ class AppMenuBar(wx.MenuBar):
         entry = (_("&Arrange"), sub)
         self.entries.append(entry)
 
-        # ---Effects menu
-        # 		sub = (pdids.ID_TO_CONTAINER, pdids.ID_FROM_CONTAINER,)
-        # 		entry = (_("Effe&cts"), sub)
-        # 		self.entries.append(entry)
-
         # ---Paths menu
         sub = (pdids.ID_BEZIER_SEL_ALL_NODES, pdids.ID_BEZIER_REVERSE_ALL_PATHS,
                None, pdids.ID_BEZIER_SEL_SUBPATH_NODES,
@@ -134,13 +127,6 @@ class AppMenuBar(wx.MenuBar):
         entry = (_("&Text"), sub)
         self.entries.append(entry)
 
-        # ---Tools menu
-        # 		sub = (
-        # 			pdids.ID_TOOL_PAGES,
-        # 			pdids.ID_TOOL_OBJBROWSER,)
-        # 		entry = (_("T&ools"), sub)
-        # 		self.entries.append(entry)
-
         # ---Help menu
         sub = (pdids.ID_REPORT_BUG, pdids.ID_CONSOLE, None,
                pdids.ID_APP_WEBSITE, pdids.ID_APP_FORUM, pdids.ID_APP_FBPAGE,
@@ -149,30 +135,26 @@ class AppMenuBar(wx.MenuBar):
         self.entries.append(entry)
 
         self.create_menu(self, self.entries)
-        self.mw.SetMenuBar(self)
 
     def create_menu(self, parent, entries):
         for entry in entries:
-            menu = wx.Menu()
+            menu = wal.Menu()
             subentries = entry[1]
             for item in subentries:
                 if item is None:
-                    menu.AppendSeparator()
-                elif isinstance(item, wx.Menu):
+                    menu.append_separator()
+                elif isinstance(item, wal.Menu):
                     menu = item
                 elif isinstance(item, tuple):
                     self.create_menu(menu, (item,))
                 else:
                     action = self.app.actions[item]
                     menuitem = ActionMenuItem(self.mw, menu, action)
-                    menu.AppendItem(menuitem)
-            parent.AppendMenu(wal.new_id(), entry[0], menu)
-
-    def AppendMenu(self, menu_id, txt, menu):
-        self.Append(menu, txt)
+                    menu.append_item(menuitem)
+            parent.append_menu(wal.new_id(), entry[0], menu)
 
 
-class HistoryMenu(wx.Menu):
+class HistoryMenu(wal.Menu):
     app = None
     mw = None
     items = []
@@ -182,16 +164,16 @@ class HistoryMenu(wx.Menu):
     def __init__(self, app, mw):
         self.app = app
         self.mw = mw
-        wx.Menu.__init__(self)
+        wal.Menu.__init__(self)
 
-        self.empty_item = wx.MenuItem(self, wal.new_id(), _('Empty'))
+        self.empty_item = wal.MenuItem(self, wal.new_id(), _('Empty'))
         if not wal.IS_WX3:
-            self.empty_item.Enable(False)
+            self.empty_item.set_enable(False)
 
-        self.items.append(self.AppendSeparator())
+        self.items.append(self.append_separator())
         action = self.app.actions[pdids.ID_CLEAR_LOG]
         menuitem = ActionMenuItem(self.mw, self, action)
-        self.AppendItem(menuitem)
+        self.append_item(menuitem)
         self.items.append(menuitem)
 
         self.persistent_items += self.items
@@ -201,24 +183,24 @@ class HistoryMenu(wx.Menu):
 
     def rebuild(self, *args):
         for item in self.items:
-            self.RemoveItem(item)
+            self.remove_item(item)
         self.items = []
         if self.app.history.is_empty():
             self.items.append(self.empty_item)
-            self.AppendItem(self.empty_item)
-            self.empty_item.Enable(False)
+            self.append_item(self.empty_item)
+            self.empty_item.set_enable(False)
         else:
             entries = self.app.history.get_menu_entries()
             for entry in entries:
                 menuitem = HistoryMenuItem(self.mw, self, entry[0], entry[1])
                 self.items.append(menuitem)
-                self.AppendItem(menuitem)
+                self.append_item(menuitem)
             for menuitem in self.persistent_items:
                 self.items.append(menuitem)
-                self.AppendItem(menuitem)
+                self.append_item(menuitem)
 
 
-class HistoryMenuItem(wx.MenuItem):
+class HistoryMenuItem(wal.MenuItem):
     app = None
     path = None
     id = None
@@ -227,44 +209,31 @@ class HistoryMenuItem(wx.MenuItem):
         self.app = mw.app
         self.path = path
         self.id = wal.new_id()
-        wx.MenuItem.__init__(self, parent, self.id, text=text)
-        mw.Bind(wx.EVT_MENU, self.action, id=self.id)
+        wal.MenuItem.__init__(self, parent, self.id, text)
+        self.bind_to(mw, self.action, self.id)
 
     def action(self, event):
         self.app.open(self.path)
 
 
-class ActionMenuItem(wx.MenuItem):
+class ActionMenuItem(wal.MenuItem):
     def __init__(self, mw, parent, action):
         self.mw = mw
         self.parent = parent
         self.action = action
         action_id = action.action_id
-        text = self.action.get_menu_text()
-        if self.action.is_acc:
-            text += '\t' + self.action.get_shortcut_text()
-        wx.MenuItem.__init__(self, parent, action_id, text=text)
-        if not wal.IS_MAC and self.action.is_icon:
-            bmp = self.action.get_icon(config.menu_size, wx.ART_MENU)
-            if bmp:
-                self.SetBitmap(bmp)
-        self.action.register_as_menuitem(self)
-        self.mw.Bind(wx.EVT_MENU, self.action.do_call, id=action_id)
-        if self.action.is_toggle():
-            self.SetCheckable(True)
+        text = action.get_menu_text()
+        if action.is_acc:
+            text += '\t' + action.get_shortcut_text()
+        wal.MenuItem.__init__(self, parent, action_id, text=text)
+        if action.is_icon:
+            self.set_bitmap(action.get_icon(config.menu_size, wal.ART_MENU))
+        action.register_as_menuitem(self)
+        self.bind_to(self.mw, action.do_call, action_id)
+        if action.is_toggle():
+            self.set_checkable(True)
 
     def update(self):
         self.set_enable(self.action.enabled)
         if self.action.is_toggle():
             self.set_active(self.action.active)
-
-    def set_enable(self, enabled):
-        if not enabled == self.get_enable():
-            self.Enable(enabled)
-
-    def set_active(self, val):
-        if not self.IsChecked() == val and self.IsCheckable():
-            self.Toggle()
-
-    def get_enable(self):
-        return self.IsEnabled()

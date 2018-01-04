@@ -46,6 +46,7 @@ class AppMainWindow(wal.MainWindow):
     def build(self):
         # ----- Menubar
         self.menubar = AppMenuBar(self.app, self)
+        self.set_menubar(self.menubar)
         # ----- Toolbar
         self.toolbar = build_toolbar(self)
 

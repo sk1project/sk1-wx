@@ -23,6 +23,9 @@ class Menu(wx.Menu):
     def __init__(self):
         wx.Menu.__init__(self)
 
+    def append_menu(self, item_id, text, menu):
+        self.AppendMenu(item_id, text, menu)
+
     def remove_item(self, item):
         self.RemoveItem(item)
 
@@ -40,8 +43,12 @@ class MenuItem(wx.MenuItem):
     def bind_to(self, mw, callback, action_id):
         mw.Bind(wx.EVT_MENU, callback, id=action_id)
 
+    def get_enable(self):
+        return self.IsEnabled()
+
     def set_enable(self, enabled):
-        self.Enable(enabled)
+        if not enabled == self.get_enable():
+            self.Enable(enabled)
 
     def set_checkable(self, val):
         self.SetCheckable(val)
@@ -58,3 +65,15 @@ class MenuItem(wx.MenuItem):
 
     def toggle(self):
         self.Toggle()
+
+    def set_active(self, val):
+        if self.is_checkable() and self.is_checked() != val:
+            self.toggle()
+
+
+class MenuBar(wx.MenuBar):
+    def __init__(self):
+        wx.MenuBar.__init__(self)
+
+    def append_menu(self, menu_id, txt, menu):
+        self.Append(menu, txt)

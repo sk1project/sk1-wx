@@ -219,6 +219,9 @@ class MainWindow(wx.Frame):
         icons.AddIconFromFile(filepath, wx.BITMAP_TYPE_ANY)
         self.SetIcons(icons)
 
+    def set_menubar(self, menubar):
+        self.SetMenuBar(menubar)
+
 
 class Panel(wx.Panel, WidgetMixin):
     def __init__(self, parent, border=False, allow_input=False):
