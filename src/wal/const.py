@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013 by Igor E. Novikov
+#  Copyright (C) 2013-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -57,6 +57,28 @@ ART_COPY = wx.ART_COPY
 ART_PASTE = wx.ART_PASTE
 ART_DELETE = wx.ART_DELETE
 ART_WARNING = wx.ART_WARNING
+
+ACCEL_NORMAL = wx.ACCEL_NORMAL
+ACCEL_CTRL = wx.ACCEL_CTRL
+ACCEL_ALT = wx.ACCEL_ALT
+ACCEL_SHIFT = wx.ACCEL_SHIFT
+
+KEY_F3 = wx.WXK_F3
+KEY_F4 = wx.WXK_F4
+KEY_F5 = wx.WXK_F5
+KEY_F6 = wx.WXK_F6
+KEY_F7 = wx.WXK_F7
+KEY_F8 = wx.WXK_F8
+KEY_F9 = wx.WXK_F9
+KEY_F11 = wx.WXK_F11
+KEY_F12 = wx.WXK_F12
+KEY_DELETE = wx.WXK_DELETE
+KEY_INSERT = wx.WXK_INSERT
+KEY_PAGEDOWN = wx.WXK_PAGEDOWN
+KEY_PAGEUP = wx.WXK_PAGEUP
+KEY_NUMPAD_DELETE = wx.WXK_NUMPAD_DELETE
+KEY_NUMPAD_PAGEDOWN = wx.WXK_NUMPAD_PAGEDOWN
+KEY_NUMPAD_PAGEUP = wx.WXK_NUMPAD_PAGEUP
 
 # Editable preference list
 # [OVERLAY,]
