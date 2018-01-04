@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013 by Igor E. Novikov
+#  Copyright (C) 2013-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -15,59 +15,41 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx
-
-from wal import EXPAND, HORIZONTAL, VERTICAL
-from wal import VPanel
+import wal
 
 from sk1.document.ruler import Ruler, RulerCorner
 from sk1.document.canvas import AppCanvas
 from sk1.document.viewer import DocViewer
 
 
-class DocArea(VPanel):
+class DocArea(wal.GridPanel):
     doc_tab = None
 
     def __init__(self, presenter, parent):
         self.presenter = presenter
-        VPanel.__init__(self, parent)
+        wal.GridPanel.__init__(self, parent)
+        self.add_growable_col(1)
+        self.add_growable_row(1)
 
-        # ----- First row
-        row_hbox = wx.BoxSizer(HORIZONTAL)
         self.corner = RulerCorner(presenter, self)
-        row_hbox.Add(self.corner)
-        self.hruler = Ruler(presenter, self, HORIZONTAL)
-        row_hbox.Add(self.hruler, 1, EXPAND)
-        self.box.Add(row_hbox, 0, EXPAND)
+        self.add(self.corner)
+        self.hruler = Ruler(presenter, self, wal.HORIZONTAL)
+        self.pack(self.hruler, fill=True)
+        self.vruler = Ruler(presenter, self, wal.VERTICAL)
+        self.pack(self.vruler, fill=True)
+        canvas_grid = wal.GridPanel(self)
+        canvas_grid.add_growable_col(0)
+        canvas_grid.add_growable_row(0)
+        self.pack(canvas_grid, fill=True)
 
-        # ----- Second row
-        row_hbox = wx.BoxSizer(HORIZONTAL)
-        self.vruler = Ruler(presenter, self, VERTICAL)
-        row_hbox.Add(self.vruler, 0, EXPAND)
-
-        vbox = wx.BoxSizer(VERTICAL)
-        hbox = wx.BoxSizer(HORIZONTAL)
-        vbox.Add(hbox, 1, EXPAND)
-        self.canvas = AppCanvas(presenter, self)
-        hbox.Add(self.canvas, 1, EXPAND)
-        self.vscroll = wx.ScrollBar(self, wx.ID_ANY, style=wx.SB_VERTICAL)
-        hbox.Add(self.vscroll, 0, EXPAND)
-
-        # ----- Bottom row
-        bottom_hbox = wx.BoxSizer(HORIZONTAL)
-        # bottom_vbox = wx.BoxSizer(VERTICAL)
-        self.hscroll = wx.ScrollBar(self, wx.ID_ANY, style=wx.SB_HORIZONTAL)
-        bottom_hbox.Add(self.hscroll, 1, EXPAND)
-        self.bottom_corner = VPanel(self)
-
-        size = self.vscroll.GetSize()[0]
-        self.viewer = DocViewer(presenter, self, (size, size))
-        self.bottom_corner.add(self.viewer)
-        bottom_hbox.Add(self.bottom_corner)
-
-        vbox.Add(bottom_hbox, 0, EXPAND)
-        row_hbox.Add(vbox, 1, EXPAND)
-        self.box.Add(row_hbox, 1, EXPAND)
+        self.canvas = AppCanvas(presenter, canvas_grid)
+        canvas_grid.pack(self.canvas, fill=True)
+        self.vscroll = wal.ScrollBar(canvas_grid)
+        canvas_grid.pack(self.vscroll, fill=True)
+        self.hscroll = wal.ScrollBar(canvas_grid, vertical=False)
+        canvas_grid.pack(self.hscroll, fill=True)
+        self.viewer = DocViewer(presenter, self, (1, 1))
+        canvas_grid.pack(self.viewer)
 
         self.canvas._set_scrolls(self.hscroll, self.vscroll)
 

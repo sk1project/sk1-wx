@@ -101,7 +101,6 @@ KEY_NUMPAD_END = wx.WXK_NUMPAD_END
 KEY_NUMPAD_ENTER = wx.WXK_NUMPAD_ENTER
 
 # Editable preference list
-# [OVERLAY,]
 CFG = [True, ]
 
 MSW = '__WXMSW__'

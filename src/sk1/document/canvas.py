@@ -150,6 +150,9 @@ class AppCanvas(wx.Panel):
         for item in items:
             self.__dict__[item] = None
 
+    def show(self):
+        self.Show()
+
     def set_focus(self):
         self.SetFocus()
 
