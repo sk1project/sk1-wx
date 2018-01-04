@@ -15,7 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx
+import wal
 
 from sk1 import _
 from sk1.resources import pdids
@@ -43,47 +43,47 @@ LABELS = {
     pdids.COPY_FILL: (_('Copy fill from...'),),
     pdids.COPY_STROKE: (_('Copy stroke from...'),),
 
-    wx.ID_NEW: (_('&New'), _('New document')),
+    wal.ID_NEW: (_('&New'), _('New document')),
     pdids.ID_NEW_FROM_TEMPLATE: (
         _('New From Template...'), _('New document from template...')),
-    wx.ID_OPEN: (_('&Open...'), _('Open document')),
+    wal.ID_OPEN: (_('&Open...'), _('Open document')),
     pdids.ID_CLEAR_LOG: (_('&Clear history'),),
-    wx.ID_SAVE: (_('&Save'), _('Save document')),
-    wx.ID_SAVEAS: (_('Save &As...'), _('Save document as...')),
+    wal.ID_SAVE: (_('&Save'), _('Save document')),
+    wal.ID_SAVEAS: (_('Save &As...'), _('Save document as...')),
     pdids.ID_SAVE_SEL: (
-        _('Save Selected Only...'), ('Save selected objects only...')),
-    pdids.ID_SAVEALL: (_('Save All'), ('Save all documents')),
-    pdids.ID_IMPORT: (_('&Import...'), ('Import graphics...')),
-    pdids.ID_EXPORT: (_('E&xport As...'), ('Export graphics as...')),
-    wx.ID_CLOSE: (_('&Close'), _('Close document')),
-    wx.ID_CLOSE_ALL: (_('Close All'), _('Close all documents')),
-    wx.ID_PRINT_SETUP: (_('Page Setup for Print...'),),
-    wx.ID_PRINT: (_('&Print...'), _('Print document')),
-    wx.ID_EXIT: (_('&Exit'), _('Exit application')),
+        _('Save Selected Only...'), _('Save selected objects only...')),
+    pdids.ID_SAVEALL: (_('Save All'), _('Save all documents')),
+    pdids.ID_IMPORT: (_('&Import...'), _('Import graphics...')),
+    pdids.ID_EXPORT: (_('E&xport As...'), _('Export graphics as...')),
+    wal.ID_CLOSE: (_('&Close'), _('Close document')),
+    wal.ID_CLOSE_ALL: (_('Close All'), _('Close all documents')),
+    wal.ID_PRINT_SETUP: (_('Page Setup for Print...'),),
+    wal.ID_PRINT: (_('&Print...'), _('Print document')),
+    wal.ID_EXIT: (_('&Exit'), _('Exit application')),
 
-    wx.ID_UNDO: (_('&Undo'),),
-    wx.ID_REDO: (_('&Redo'),),
+    wal.ID_UNDO: (_('&Undo'),),
+    wal.ID_REDO: (_('&Redo'),),
     pdids.ID_CLEAR_UNDO: (_('Clear undo history'),),
-    wx.ID_CUT: (_('Cu&t'),),
-    wx.ID_COPY: (_('&Copy'),),
-    wx.ID_PASTE: (_('&Paste'),),
-    wx.ID_DELETE: (_('&Delete'),),
+    wal.ID_CUT: (_('Cu&t'),),
+    wal.ID_COPY: (_('&Copy'),),
+    wal.ID_PASTE: (_('&Paste'),),
+    wal.ID_DELETE: (_('&Delete'),),
     pdids.ID_DUPLICATE: (_('Duplicate'),),
-    wx.ID_SELECTALL: (_('&Select All'),),
+    wal.ID_SELECTALL: (_('&Select All'),),
     pdids.ID_DESELECT: (_('D&eselect'),),
     pdids.ID_INV_SELECT: (_('&Invert selection'),),
     pdids.ID_VIEW_LOG: (_('&File history logs'),),
-    wx.ID_PROPERTIES: (_('Document properties'),),
-    wx.ID_PREFERENCES: (_('Preferences'),),
+    wal.ID_PROPERTIES: (_('Document properties'),),
+    wal.ID_PREFERENCES: (_('Preferences'),),
 
     pdids.ID_STROKE_VIEW: (_('Stroke view'),),
     pdids.ID_DRAFT_VIEW: (_('Draft view'),),
-    wx.ID_ZOOM_100: (_('Zoom 100%'),),
-    wx.ID_ZOOM_IN: (_('Zoom in'),),
-    wx.ID_ZOOM_OUT: (_('Zoom out'),),
+    wal.ID_ZOOM_100: (_('Zoom 100%'),),
+    wal.ID_ZOOM_IN: (_('Zoom in'),),
+    wal.ID_ZOOM_OUT: (_('Zoom out'),),
     pdids.ID_PREV_ZOOM: (_('Previous zoom'),),
     pdids.ID_ZOOM_PAGE: (_('Fit zoom to page'),),
-    wx.ID_ZOOM_FIT: (_('Zoom selected'),),
+    wal.ID_ZOOM_FIT: (_('Zoom selected'),),
     pdids.ID_SHOW_GRID: (_('Show grid'),),
     pdids.ID_SHOW_GUIDES: (_('Show guides'),),
     pdids.ID_SHOW_SNAP: (_('Show active snapping'),),
@@ -93,7 +93,7 @@ LABELS = {
     pdids.ID_SNAP_TO_OBJ: (_('Snap to objects'),),
     pdids.ID_SNAP_TO_PAGE: (_('Snap to page'),),
     pdids.ID_ICONIZER: (_('Iconizer...'),),
-    wx.ID_REFRESH: (_('Redraw document'),),
+    wal.ID_REFRESH: (_('Redraw document'),),
 
     pdids.ID_INSERT_PAGE: (_('Insert page...'),),
     pdids.ID_DELETE_PAGE: (_('Delete page...'),),
@@ -180,5 +180,5 @@ LABELS = {
     pdids.ID_APP_WEBSITE: (_('Project web site'),),
     pdids.ID_APP_FORUM: (_('Project forum'),),
     pdids.ID_APP_FBPAGE: (_('Project page on Face&book'),),
-    wx.ID_ABOUT: (_('&About sK1...'),),
+    wal.ID_ABOUT: (_('&About sK1...'),),
 }
