@@ -15,7 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx
+import wal
 
 from sk1.resources import pdids, icons
 
@@ -37,32 +37,32 @@ ART_IDS = {
     pdids.GRADIENT_MODE: icons.TOOL_GRADIENT,
 
     # ----- File menu
-    wx.ID_NEW: wx.ART_NEW,
-    wx.ID_OPEN: wx.ART_FILE_OPEN,
-    wx.ID_SAVE: wx.ART_FILE_SAVE,
-    wx.ID_SAVEAS: wx.ART_FILE_SAVE_AS,
-    wx.ID_CLOSE: icons.PD_CLOSE,
-    wx.ID_PRINT_SETUP: icons.PD_PRINT_PREVIEW,
-    wx.ID_PRINT: wx.ART_PRINT,
-    wx.ID_EXIT: wx.ART_QUIT,
+    wal.ID_NEW: wal.ART_NEW,
+    wal.ID_OPEN: wal.ART_FILE_OPEN,
+    wal.ID_SAVE: wal.ART_FILE_SAVE,
+    wal.ID_SAVEAS: wal.ART_FILE_SAVE_AS,
+    wal.ID_CLOSE: icons.PD_CLOSE,
+    wal.ID_PRINT_SETUP: icons.PD_PRINT_PREVIEW,
+    wal.ID_PRINT: wal.ART_PRINT,
+    wal.ID_EXIT: wal.ART_QUIT,
     # ----- Edit menu
-    wx.ID_UNDO: wx.ART_UNDO,
-    wx.ID_REDO: wx.ART_REDO,
-    wx.ID_CUT: wx.ART_CUT,
-    wx.ID_COPY: wx.ART_COPY,
-    wx.ID_PASTE: wx.ART_PASTE,
-    wx.ID_DELETE: wx.ART_DELETE,
-    wx.ID_SELECTALL: icons.PD_SELECTALL,
-    wx.ID_PROPERTIES: icons.PD_PROPERTIES,
-    wx.ID_PREFERENCES: icons.PD_PREFERENCES,
+    wal.ID_UNDO: wal.ART_UNDO,
+    wal.ID_REDO: wal.ART_REDO,
+    wal.ID_CUT: wal.ART_CUT,
+    wal.ID_COPY: wal.ART_COPY,
+    wal.ID_PASTE: wal.ART_PASTE,
+    wal.ID_DELETE: wal.ART_DELETE,
+    wal.ID_SELECTALL: icons.PD_SELECTALL,
+    wal.ID_PROPERTIES: icons.PD_PROPERTIES,
+    wal.ID_PREFERENCES: icons.PD_PREFERENCES,
     # ----- View menu
-    wx.ID_ZOOM_100: icons.PD_ZOOM_100,
-    wx.ID_ZOOM_IN: icons.PD_ZOOM_IN,
-    wx.ID_ZOOM_OUT: icons.PD_ZOOM_OUT,
+    wal.ID_ZOOM_100: icons.PD_ZOOM_100,
+    wal.ID_ZOOM_IN: icons.PD_ZOOM_IN,
+    wal.ID_ZOOM_OUT: icons.PD_ZOOM_OUT,
     pdids.ID_ZOOM_PAGE: icons.PD_ZOOM_PAGE,
-    wx.ID_ZOOM_FIT: icons.PD_ZOOM_FIT,
+    wal.ID_ZOOM_FIT: icons.PD_ZOOM_FIT,
     pdids.ID_ICONIZER: icons.PD_PLUGIN_ICONIZER,
-    wx.ID_REFRESH: icons.PD_REFRESH,
+    wal.ID_REFRESH: icons.PD_REFRESH,
     # ----- Layout menu
     pdids.ID_INSERT_PAGE: icons.PD_INSERT_PAGE,
     pdids.ID_DELETE_PAGE: icons.PD_DELETE_PAGE,
@@ -131,8 +131,8 @@ ART_IDS = {
     pdids.ID_CLEAR_MARKUP: icons.PD_TEXT_CLEAR_MARKUP,
 
     # ----- Help menu
-    pdids.ID_REPORT_BUG: wx.ART_WARNING,
+    pdids.ID_REPORT_BUG: wal.ART_WARNING,
     pdids.ID_APP_WEBSITE: icons.PD_HOME,
     pdids.ID_APP_FBPAGE: icons.PD_FBPAGE,
-    wx.ID_ABOUT: icons.PD_ABOUT,
+    wal.ID_ABOUT: icons.PD_ABOUT,
 }
