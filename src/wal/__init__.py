@@ -33,5 +33,5 @@ from filedlgs import *
 
 from clipboard import *
 from renderer import *
-from artprovider import ArtProvider, push_provider
-from menu import Menu, MenuItem, MenuBar
+from artprovider import ArtProvider, push_provider, provider_get_bitmap
+from menu import Menu, MenuItem, MenuBar, get_accelerator_entry

@@ -15,12 +15,10 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx
-
 import wal
+from acc_keys import GENERIC_KEYS
 from artids import ART_IDS
 from labels import LABELS
-from acc_keys import GENERIC_KEYS
 
 ACC_KEYS = {}
 ACC_KEYS.update(GENERIC_KEYS)
@@ -29,7 +27,7 @@ if wal.IS_MAC:
     pass
 elif wal.IS_MSW:
     MSW_KEYS = {
-        wx.ID_EXIT: (wx.ACCEL_ALT, wx.WXK_F4),
+        wal.ID_EXIT: (wal.ACCEL_ALT, wal.KEY_F4),
     }
     ACC_KEYS.update(MSW_KEYS)
 else:
@@ -54,25 +52,25 @@ def get_accentry_by_id(action_id):
         menu_entry = None
         global_entries = []
         if menu_item:
-            menu_entry = wx.AcceleratorEntry(*(menu_item + (action_id,)))
+            menu_entry = wal.get_accelerator_entry(*(menu_item + (action_id,)))
         if global_items:
             for item in global_items:
-                entry = wx.AcceleratorEntry(*(item + (action_id,)))
+                entry = wal.get_accelerator_entry(*(item + (action_id,)))
                 global_entries.append(entry)
         return menu_entry, global_entries
     return None, []
 
 
-def get_icon(icon_id, client=wx.ART_OTHER, size=wal.SIZE_16):
-    bmp = wx.ArtProvider.GetBitmap(icon_id, client, size)
-    if not bmp == wx.NullBitmap:
+def get_icon(icon_id, client=wal.ART_OTHER, size=wal.SIZE_16):
+    bmp = wal.provider_get_bitmap(icon_id, client, size)
+    if not bmp == wal.NullBitmap:
         return bmp
     return None
 
 
 def get_bmp(parent, icon_id, tooltip=''):
-    bmp = wx.ArtProvider.GetBitmap(icon_id, wx.ART_OTHER, wal.DEF_SIZE)
-    if bmp == wx.NullBitmap:
+    bmp = wal.provider_get_bitmap(icon_id, wal.ART_OTHER, wal.DEF_SIZE)
+    if bmp == wal.NullBitmap:
         return None
     sb = wal.Bitmap(parent, bmp)
     if tooltip:
@@ -86,11 +84,11 @@ def get_art_by_id(action_id):
     return None
 
 
-def get_bitmap_by_id(action_id, client=wx.ART_OTHER, size=wal.SIZE_16):
+def get_bitmap_by_id(action_id, client=wal.ART_OTHER, size=wal.SIZE_16):
     art_id = get_art_by_id(action_id)
     if art_id:
-        bmp = wx.ArtProvider.GetBitmap(art_id, client, size)
-        if not bmp == wx.NullBitmap:
+        bmp = wal.provider_get_bitmap(art_id, client, size)
+        if not bmp == wal.NullBitmap:
             return bmp
     return None
 
