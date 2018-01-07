@@ -28,7 +28,8 @@ class PrnPage(object):
     childs = []
 
     def __init__(self, childs=None):
-        self.childs = [] if childs is None else childs
+        self.childs = []
+        childs = [] if childs is None else childs
         self.childs.append(TrafoGroup(childs))
 
 
