@@ -562,8 +562,11 @@ class Canvas(object):
 
 
 class SensitiveCanvas(Canvas):
-    def __init__(self, check_move=False):
+    kbdproc = None
+
+    def __init__(self, check_move=False, kbdproc=None):
         Canvas.__init__(self)
+        self.kbdproc = kbdproc
         self.Bind(wx.EVT_LEFT_UP, self._mouse_left_up)
         self.Bind(wx.EVT_LEFT_DOWN, self._mouse_left_down)
         self.Bind(wx.EVT_MOUSEWHEEL, self._mouse_wheel)
@@ -571,6 +574,15 @@ class SensitiveCanvas(Canvas):
         self.Bind(wx.EVT_LEFT_DCLICK, self._mouse_left_dclick)
         if check_move:
             self.Bind(wx.EVT_MOTION, self._mouse_move)
+        if self.kbdproc is not None:
+            self.Bind(wx.EVT_KEY_DOWN, self._on_key_down)
+
+    def _on_key_down(self, event):
+        key_code = event.GetKeyCode()
+        raw_code = event.GetRawKeyCode()
+        modifiers = event.GetModifiers()
+        if self.kbdproc.on_key_down(key_code, raw_code, modifiers):
+            event.Skip()
 
     def _mouse_left_down(self, event):
         self.mouse_left_down(event.GetPositionTuple())

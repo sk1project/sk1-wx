@@ -20,7 +20,6 @@ import cairo
 import wal
 
 from sk1.appconst import PAGEFIT, ZOOM_IN, ZOOM_OUT
-from sk1.printing.printrend import PrintRenderer
 from kbd_proc import Kbd_Processor
 
 CAIRO_BLACK = [0.0, 0.0, 0.0]
@@ -58,8 +57,7 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
         self.printout = printout
         self.zoom_stack = []
         wal.Panel.__init__(self, parent, allow_input=True)
-        self.kbdproc = Kbd_Processor(self)
-        wal.SensitiveCanvas.__init__(self, True)
+        wal.SensitiveCanvas.__init__(self, True, Kbd_Processor(self))
         self.set_bg(wal.GRAY)
         self.pages = self.printout.get_print_pages()
         self.renderer = self.printout.renderer

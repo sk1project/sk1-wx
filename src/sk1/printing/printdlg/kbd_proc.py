@@ -15,7 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import wx
+import wal
 
 
 class Kbd_Processor:
@@ -23,23 +23,19 @@ class Kbd_Processor:
 
     def __init__(self, canvas):
         self.canvas = canvas
-        self.canvas.Bind(wx.EVT_KEY_DOWN, self.on_key_down)
 
-    def on_key_down(self, event):
-        key_code = event.GetKeyCode()
-        raw_code = event.GetRawKeyCode()
-        modifiers = event.GetModifiers()
+    def on_key_down(self, key_code, raw_code, modifiers):
 
-        if key_code == wx.WXK_ESCAPE:
+        if key_code == wal.KEY_ESCAPE:
             self.canvas.dlg.on_close()
             return
 
-        if key_code in (wx.WXK_PAGEDOWN, wx.WXK_NUMPAD_PAGEDOWN):
+        if key_code in (wal.KEY_PAGEDOWN, wal.KEY_NUMPAD_PAGEDOWN):
             self.canvas.next_page()
             return
 
-        if key_code in (wx.WXK_PAGEUP, wx.WXK_NUMPAD_PAGEUP):
+        if key_code in (wal.KEY_PAGEUP, wal.KEY_NUMPAD_PAGEUP):
             self.canvas.previous_page()
             return
 
-        event.Skip()
+        return True
