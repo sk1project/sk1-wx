@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2016 by Igor E. Novikov
+#  Copyright (C) 2016-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import cairo
-import wx
+import wal
 
 from uc2 import uc2const
 from sk1.printing import prn_events
@@ -27,8 +27,8 @@ from generic import STD_SHIFTS
 class PrnPage(object):
     childs = []
 
-    def __init__(self, childs=[]):
-        self.childs = []
+    def __init__(self, childs=None):
+        self.childs = [] if childs is None else childs
         self.childs.append(TrafoGroup(childs))
 
 
@@ -36,8 +36,8 @@ class TrafoGroup(object):
     childs = []
     trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
 
-    def __init__(self, childs=[]):
-        self.childs = childs
+    def __init__(self, childs=None):
+        self.childs = [] if childs is None else childs
 
 
 PRINT_ALL = 0
@@ -46,7 +46,7 @@ PRINT_CURRENT_PAGE = 2
 PRINT_PAGE_RANGE = 4
 
 
-class Printout(wx.Printout):
+class Printout(wal.Printout):
     app = None
     doc = None
     pages = []
@@ -64,7 +64,7 @@ class Printout(wx.Printout):
         self.pages, self.current_page = self.collect_pages(doc)
         if self.app.insp.is_selection():
             self.selection = self.doc.selection.objs
-        wx.Printout.__init__(self)
+        wal.Printout.__init__(self)
         self.renderer = PrintRenderer(self.get_cms())
 
     def collect_pages(self, doc):
@@ -117,9 +117,9 @@ class Printout(wx.Printout):
         if self.reverse_flag:
             self.print_pages.reverse()
 
-    def set_print_range(self, print_range, page_range=[]):
+    def set_print_range(self, print_range, page_range=None):
         self.print_range = print_range
-        self.page_range = page_range
+        self.page_range = page_range if page_range is not None else []
         self.print_pages = []
         prn_events.emit(prn_events.PRINTOUT_MODIFIED)
 
@@ -134,19 +134,19 @@ class Printout(wx.Printout):
             self._make_print_pages()
         return self.print_pages
 
-    # --- wx framework related methods
+    # --- printing framework related methods
 
-    def HasPage(self, page):
+    def has_page(self, page):
         if page <= self.get_num_print_pages():
             return True
         else:
             return False
 
-    def GetPageInfo(self):
+    def get_page_info(self):
         val = self.get_num_print_pages()
         return 1, val, 1, val
 
-    def OnPrintPage(self, page):
+    def on_print_page(self, page):
         page_obj = self.get_print_pages()[page - 1]
         dc = self.GetDC()
         w, h = dc.GetSizeTuple()
@@ -165,5 +165,3 @@ class Printout(wx.Printout):
 
         for group in page_obj.childs:
             self.renderer.render(ctx, group.childs)
-
-        return True
