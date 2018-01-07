@@ -15,24 +15,20 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from listwidgets import SimpleList, ReportList
-from layerlist import LayerList
-from fontchoice import FontBitmapChoice
-from treewidgets import TreeElement, TreeWidget
-
-from gctrls import ImageLabel, ImageButton, ImageToggleButton
-from togglectrls import HToggleKeeper, ModeToggleButton
-
-from const import *
-from basic import *
-from widgets import *
-
-from msgdlgs import *
-from modaldlgs import *
-from filedlgs import *
-
-from clipboard import *
-from renderer import *
 from artprovider import ArtProvider, push_provider, provider_get_bitmap
+from basic import *
+from clipboard import *
+from const import *
+from filedlgs import *
+from fontchoice import FontBitmapChoice
+from gctrls import ImageLabel, ImageButton, ImageToggleButton
+from layerlist import LayerList
+from listwidgets import SimpleList, ReportList
 from menu import Menu, MenuItem, MenuBar, get_accelerator_entry
-from printing import Printout
+from modaldlgs import *
+from msgdlgs import *
+from printing import *
+from renderer import *
+from togglectrls import HToggleKeeper, ModeToggleButton
+from treewidgets import TreeElement, TreeWidget
+from widgets import *

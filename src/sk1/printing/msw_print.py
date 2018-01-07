@@ -16,8 +16,8 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import wx
 
+import wal
 import winspool
 from generic import AbstractPrinter, AbstractPS, COLOR_MODE, MONOCHROME_MODE
 from pdf_printer import PDF_Printer
@@ -31,15 +31,8 @@ from uc2.formats import get_loader
 
 def get_print_data(app):
     if app.print_data is None:
-        app.print_data = create_print_data()
+        app.print_data = wal.PrintData()
     return app.print_data
-
-
-def create_print_data():
-    print_data = wx.PrintData()
-    print_data.SetPaperId(wx.PAPER_A4)
-    print_data.SetPrintMode(wx.PRINT_MODE_PRINTER)
-    return print_data
 
 
 class MSW_PS(AbstractPS):
@@ -98,52 +91,43 @@ class MSWPrinter(AbstractPrinter):
 
     def update_from_psd(self, page_setup_data):
         # --- Margins
-        x0, y0 = page_setup_data.GetMarginTopLeft()
-        x1, y1 = page_setup_data.GetMarginBottomRight()
-        mrgns = (y0, x1, y1, x0)
+        mrgns = page_setup_data.get_margins()
         self.margins = tuple(uc2const.mm_to_pt * x for x in mrgns)
         # --- Page Orientation
-        print_data = self.app.print_data
-        self.page_orientation = uc2const.PORTRAIT
-        if print_data.GetOrientation() == wx.LANDSCAPE:
-            self.page_orientation = uc2const.LANDSCAPE
+        print_data = get_print_data(self.app)
+        self.page_orientation = uc2const.LANDSCAPE \
+            if print_data.is_landscape() else uc2const.PORTRAIT
         # --- Page format
-        page_id = page_setup_data.GetPaperId()
-        page_size = tuple(page_setup_data.GetPaperSize())
+        page_id = page_setup_data.get_paper_id()
+        page_size = page_setup_data.get_paper_size()
         page_size = tuple(uc2const.mm_to_pt * x for x in page_size)
         self.page_format = (page_id, page_size)
 
     def run_propsdlg(self, win):
         print_data = get_print_data(self.app)
-        print_data.SetPrinterName(self.name)
-        data = wx.PageSetupDialogData(print_data)
-        data.CalculatePaperSizeFromId()
+        print_data.set_printer_name(self.name)
+        data = wal.PageSetupDialogData(printdata=print_data)
+        data.set_paper_size_from_id()
         # --- Margins
         mrgns = [uc2const.pt_to_mm * x for x in self.margins]
-        data.SetMarginTopLeft(wx.Point(mrgns[-1], mrgns[0]))
-        data.SetMarginBottomRight(wx.Point(mrgns[1], mrgns[2]))
+        data.set_margins(mrgns)
 
-        dlg = wx.PageSetupDialog(win, data)
-        if dlg.ShowModal() == wx.ID_OK:
-            data = wx.PrintData(dlg.GetPageSetupData().GetPrintData())
-            self.app.print_data = data
-            self.update_from_psd(dlg.GetPageSetupData())
-            dlg.Destroy()
+        page_setup_data = wal.run_page_setup_dialog(win, data)
+        if page_setup_data:
+            self.app.print_data = page_setup_data.get_print_data()
+            self.update_from_psd(page_setup_data)
             prn_events.emit(prn_events.PRINTER_MODIFIED)
             return True
         return False
 
     def run_printdlg(self, win, printout):
-        printout.shifts = () + self.shifts
+        printout.shifts = self.shifts
         print_data = get_print_data(self.app)
-        print_data.SetPrinterName(self.name)
-        print_data.SetColour(self.color_mode == COLOR_MODE)
-        print_data.SetCollate(self.collate)
-        print_data.SetNoCopies(self.copies)
-        data = wx.PrintDialogData(print_data)
-        data.EnablePageNumbers(False)
-        printer = wx.Printer(data)
-        return printer.Print(win, printout, True)
+        print_data.set_printer_name(self.name)
+        print_data.set_color(self.color_mode == COLOR_MODE)
+        print_data.set_collate(self.collate)
+        print_data.set_no_copies(self.copies)
+        return wal.MSWPrinter(print_data).Print(win, printout, True)
 
     def print_calibration(self, app, win, path, media=''):
         pd = ProgressDialog(_('Loading calibration page...'), win)
