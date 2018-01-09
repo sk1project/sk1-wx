@@ -29,7 +29,7 @@ from modaldlgs import *
 from msgdlgs import *
 from printing import *
 from renderer import *
-from stubpanel import StubPanel
+from stubpanel import StubPanel, StubBtn
 from togglectrls import HToggleKeeper, ModeToggleButton
 from treewidgets import TreeElement, TreeWidget
 from widgets import *
