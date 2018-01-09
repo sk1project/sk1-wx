@@ -22,77 +22,38 @@ from sk1 import _, appconst, events, config
 from sk1.resources import icons, get_icon, pdids
 
 
-class AppStubPanel(wx.Panel):
+class AppStubPanel(wal.StubPanel):
     app = None
-    bmp = None
-    bmp_size = ()
 
-    def __init__(self, parent):
-        self.app = parent.app
-        wx.Panel.__init__(self, parent)
-        self.SetBackgroundColour(wal.DARK_GRAY)
+    def __init__(self, mw):
+        self.app = mw.app
         self.bmp = get_icon(icons.CAIRO_BANNER, size=wal.DEF_SIZE)
-        self.bmp_size = self.bmp.GetSize()
+        wal.StubPanel.__init__(self, mw)
+        self.set_bg(wal.DARK_GRAY)
 
         action = self.app.actions[wal.ID_NEW]
         tooltip = action.get_descr_text()
-        self.new_btn = StubButton(self, icons.PD_STUB_NEW, action, tooltip)
+        self.buttons.append(StubButton(self, icons.PD_STUB_NEW, action, tooltip))
 
         action = self.app.actions[wal.ID_OPEN]
         tooltip = action.get_descr_text()
-        self.open_btn = StubButton(self, icons.PD_STUB_OPEN, action, tooltip)
+        self.buttons.append(StubButton(self, icons.PD_STUB_OPEN, action, tooltip))
 
         action = self.app.actions[pdids.ID_VIEW_LOG]
         tooltip = _('Open Recent')
-        self.recent_btn = StubButton(self, icons.PD_STUB_RECENT, action,
-                                     tooltip)
-        self.recent_btn.set_active(self.app.history.is_history())
+        self.buttons.append(StubButton(self, icons.PD_STUB_RECENT, action, tooltip))
+        self.buttons[-1].set_active(self.app.history.is_history())
 
-        self.Bind(wx.EVT_PAINT, self._on_paint, self)
-        self.Bind(wx.EVT_SIZE, self._on_resize, self)
         events.connect(events.HISTORY_CHANGED, self.check_history)
         events.connect(events.CONFIG_MODIFIED, self.update)
 
     def update(self, *args):
         if args[0] == 'show_stub_buttons':
+            self.buttons_visible = config.show_stub_buttons
             self.refresh()
 
     def check_history(self, *args):
-        self.recent_btn.set_active(self.app.history.is_history())
-
-    def hide(self):
-        self.Hide()
-
-    def show(self):
-        self.Show()
-
-    def refresh(self, x=0, y=0, w=0, h=0):
-        self.new_btn.set_visible(config.show_stub_buttons)
-        self.open_btn.set_visible(config.show_stub_buttons)
-        self.recent_btn.set_visible(config.show_stub_buttons)
-        if not w:
-            w, h = self.GetSize()
-        self.Refresh(rect=wx.Rect(x, y, w, h))
-
-    def _on_resize(self, event):
-        h = self.new_btn.GetSize()[1]
-        w0 = self.new_btn.GetSize()[0]
-        w = 3 * w0
-        win_w, win_h = self.GetSize()
-        x = (win_w - w) / 2
-        y = (win_h - h) / 3
-        self.new_btn.SetPosition((x, y))
-        self.open_btn.SetPosition((x + w0, y))
-        self.recent_btn.SetPosition((x + 2 * w0, y))
-        self.refresh()
-
-    def _on_paint(self, event):
-        h = self.GetSize()[1]
-        pdc = wx.PaintDC(self)
-        dc = wx.GCDC(pdc)
-        x = 10
-        y = h - self.bmp_size[1] - 10
-        dc.DrawBitmap(self.bmp, x, y, True)
+        self.buttons[-1].set_active(self.app.history.is_history())
 
 
 class StubButton(wx.Panel):
