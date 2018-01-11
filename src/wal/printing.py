@@ -20,7 +20,10 @@ import wx
 
 class PrintData(wx.PrintData):
     def __init__(self, printdata=None):
-        wx.PrintData.__init__(self, printdata)
+        if printdata:
+            wx.PrintData.__init__(self, printdata)
+        else:
+            wx.PrintData.__init__(self)
         if printdata is None:
             self.SetPaperId(wx.PAPER_A4)
             self.SetPrintMode(wx.PRINT_MODE_PRINTER)
