@@ -110,10 +110,17 @@ class WidgetMixin(object):
         self.SetFocus()
 
     def set_double_buffered(self):
-        if const.IS_MSW: self.SetDoubleBuffered(True)
+        if const.IS_MSW:
+            self.SetDoubleBuffered(True)
 
     def refresh(self):
         self.Refresh()
+
+    def get_cursor(self):
+        return self.GetCursor()
+
+    def set_cursor(self, cursor):
+        self.SetCursor(cursor)
 
 
 class DataWidgetMixin(WidgetMixin):

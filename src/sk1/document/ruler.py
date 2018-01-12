@@ -18,11 +18,9 @@
 import cairo
 import math
 import os
-import wx
 
 import wal
 from sk1 import config, modes, events
-from sk1.appconst import RENDERING_DELAY
 from sk1.resources import get_icon, icons
 from uc2 import uc2const, cms, sk2const
 
@@ -111,7 +109,7 @@ class RulerCorner(wal.RulerCanvas):
         self.draw_bitmap(BITMAPS[self.origin], shift, shift)
 
 
-class Ruler(wal.HPanel):
+class Ruler(wal.RulerCanvas):
     presenter = None
     eventloop = None
     style = None
@@ -131,44 +129,26 @@ class Ruler(wal.HPanel):
         self.presenter = presenter
         self.eventloop = presenter.eventloop
         self.style = style
-        wal.HPanel.__init__(self, parent)
+        wal.RulerCanvas.__init__(self, parent, size=config.ruler_size,
+                                 check_move=True)
         if not VFONT:
             load_font()
-        size = config.ruler_size
-        self.add((size, size))
-        self.default_cursor = self.GetCursor()
+        self.default_cursor = self.get_cursor()
         if self.style == wal.HORIZONTAL:
             self.guide_cursor = self.presenter.app.cursors[modes.HGUIDE_MODE]
         else:
             self.guide_cursor = self.presenter.app.cursors[modes.VGUIDE_MODE]
         self.set_bg(wal.WHITE)
-        self.set_double_buffered()
-        self.Bind(wx.EVT_PAINT, self._on_paint, self)
-        self.Bind(wx.EVT_LEFT_DOWN, self.mouse_down)
-        self.Bind(wx.EVT_LEFT_UP, self.mouse_up)
-        self.Bind(wx.EVT_MOTION, self.mouse_move)
-        self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self.capture_lost)
-        self.eventloop.connect(self.eventloop.VIEW_CHANGED, self.repaint)
+        self.eventloop.connect(self.eventloop.VIEW_CHANGED, self.refresh)
         events.connect(events.CONFIG_MODIFIED, self.check_config)
-        if wal.IS_MAC:
-            self.timer = wx.Timer(self)
-            self.Bind(wx.EVT_TIMER, self._repaint_after)
-            self.timer.Start(50)
 
     def check_config(self, *args):
         if args[0].startswith('ruler_'):
             if args[0] == 'ruler_size':
-                size = config.ruler_size
-                self.remove_all()
-                self.add((size, size))
-                self.parent.layout()
+                self.fix_size(config.ruler_size)
             if args[0] == 'ruler_font_size':
                 load_font()
-            self.repaint()
-
-    def _repaint_after(self, event):
-        self.repaint()
-        self.timer.Stop()
+            self.refresh()
 
     def destroy(self):
         items = self.__dict__.keys()
@@ -214,7 +194,7 @@ class Ruler(wal.HPanel):
         pw, ph = self.presenter.get_page_size()
         origin = self.presenter.model.doc_origin
         unit = uc2const.unit_dict[self.presenter.model.doc_units]
-        w, h = self.panel.GetSize()
+        w, h = self.get_size()
         x0, y0, dx, dy, sx, sy = self.calc_ruler()
         small_ticks = []
         text_ticks = []
@@ -235,10 +215,8 @@ class Ruler(wal.HPanel):
             dxt = dx * coef
             sxt = (x0 / dxt - math.floor(x0 / dxt)) * dxt
 
-            float_flag = False
             unit_dx = dxt / (unit * canvas.zoom)
-            if unit_dx < 1.0:
-                float_flag = True
+            float_flag = True if unit_dx < 1.0 else False
 
             i = -1
             pos = 0
@@ -302,16 +280,7 @@ class Ruler(wal.HPanel):
                 i += 1
         return small_ticks, text_ticks
 
-    def repaint(self, *args):
-        self.init_flag = True
-        self.refresh()
-
-    def refresh(self, x=0, y=0, w=0, h=0):
-        if not w:
-            w, h = self.GetSize()
-        self.Refresh(rect=wx.Rect(x, y, w, h), eraseBackground=False)
-
-    def _on_paint(self, event):
+    def paint(self):
         if self.presenter is None:
             return
         w, h = self.get_size()
@@ -329,11 +298,10 @@ class Ruler(wal.HPanel):
         self.ctx.set_line_width(1.0)
         self.ctx.set_dash([])
         self.ctx.set_source_rgb(*config.ruler_fg)
-        if self.init_flag:
-            if self.style == wal.HORIZONTAL:
-                self.hrender(w, h)
-            else:
-                self.vrender(w, h)
+        if self.style == wal.HORIZONTAL:
+            self.hrender(w, h)
+        else:
+            self.vrender(w, h)
         pdc.DrawBitmap(wal.copy_surface_to_bitmap(self.surface), 0, 0, True)
 
     def hrender(self, w, h):
@@ -387,39 +355,30 @@ class Ruler(wal.HPanel):
                 pos -= data[0]
 
     # ------ Guides creation
-    def set_cursor(self, mode=False):
-        if not mode:
-            self.SetCursor(self.default_cursor)
-        else:
-            self.SetCursor(self.guide_cursor)
+    def set_ruler_cursor(self, mode=False):
+        self.set_cursor(self.guide_cursor if mode else self.default_cursor)
 
-    def capture_lost(self, event):
-        if self.mouse_captured:
-            self.mouse_captured = False
-            self.ReleaseMouse()
-        self.set_cursor()
+    def capture_lost(self):
+        self.release_mouse()
+        self.set_ruler_cursor()
 
-    def mouse_down(self, event):
+    def mouse_left_down(self, point):
         self.width, self.height = (float(item) for item in self.get_size())
         self.draw_guide = True
-        self.set_cursor(True)
-        if wal.IS_MSW:
-            self.CaptureMouse()
-            self.mouse_captured = True
-        self.presenter.canvas.timer.Start(RENDERING_DELAY)
-        self.presenter.canvas.set_temp_mode(modes.GUIDE_MODE)
+        self.set_ruler_cursor(True)
+        self.capture_mouse()
+        canvas = self.presenter.canvas
+        canvas.timer.start()
+        canvas.set_temp_mode(modes.GUIDE_MODE)
         if self.style == wal.HORIZONTAL:
-            self.presenter.canvas.controller.mode = modes.HGUIDE_MODE
+            canvas.controller.mode = modes.HGUIDE_MODE
         else:
-            self.presenter.canvas.controller.mode = modes.VGUIDE_MODE
-        self.presenter.canvas.set_canvas_cursor(
-            self.presenter.canvas.controller.mode)
+            canvas.controller.mode = modes.VGUIDE_MODE
+        canvas.set_canvas_cursor(canvas.controller.mode)
 
-    def mouse_up(self, event):
-        self.pointer = list(event.GetPositionTuple())
-        if self.mouse_captured:
-            self.mouse_captured = False
-            self.ReleaseMouse()
+    def mouse_left_up(self, point):
+        self.pointer = point
+        self.release_mouse()
         if self.style == wal.HORIZONTAL:
             y_win = self.pointer[1] - self.height
             if y_win > 0.0:
@@ -434,20 +393,20 @@ class Ruler(wal.HPanel):
                 p, p_doc = self.presenter.snap.snap_point(p, snap_y=False)[1:]
                 guides = [[p_doc[0], uc2const.VERTICAL], ]
                 self.presenter.api.create_guides(guides)
-        self.set_cursor()
-        self.presenter.canvas.timer.Stop()
+        self.set_ruler_cursor()
+        self.presenter.canvas.timer.stop()
         self.presenter.canvas.restore_mode()
         self.draw_guide = False
         self.pointer = []
         self.presenter.canvas.dragged_guide = ()
         self.presenter.canvas.force_redraw()
 
-    def mouse_move(self, event):
+    def mouse_move(self, point):
         if self.draw_guide:
-            self.pointer = list(event.GetPositionTuple())
+            self.pointer = point
             self.repaint_guide()
 
-    def repaint_guide(self, *args):
+    def repaint_guide(self):
         p = 0
         if self.draw_guide and self.pointer:
             if self.style == wal.HORIZONTAL:

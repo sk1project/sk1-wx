@@ -22,17 +22,14 @@ from basic import SizedPanel, SensitiveCanvas
 
 class RulerCanvas(SizedPanel, SensitiveCanvas):
 
-    def __init__(self, parent, size=20):
+    def __init__(self, parent, size=20, check_move=False):
         SizedPanel.__init__(self, parent)
-        SensitiveCanvas.__init__(self)
+        SensitiveCanvas.__init__(self, check_move=check_move)
         self.fix_size(size)
+        self.set_double_buffered()
 
     def fix_size(self, size=0):
         self.remove_all()
         size = size if size > 0 else 20
         self.add((size, size))
         self.parent.layout()
-
-    def refresh(self):
-        w, h = self.GetSize()
-        self.Refresh(rect=wx.Rect(0, 0, w, h))

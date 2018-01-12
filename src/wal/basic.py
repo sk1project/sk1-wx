@@ -385,6 +385,14 @@ class Canvas(object):
     def __init__(self):
         self.Bind(wx.EVT_PAINT, self._on_paint, self)
         self.Bind(wx.EVT_SIZE, self._on_size_change, self)
+        if const.IS_MAC:
+            self.timer = wx.Timer(self)
+            self.Bind(wx.EVT_TIMER, self._repaint_after)
+            self.timer.Start(50)
+
+    def _repaint_after(self, event):
+        self.repaint_after()
+        self.timer.Stop()
 
     def set_double_buffered(self):
         if const.IS_MSW:
@@ -420,9 +428,12 @@ class Canvas(object):
             self.dc.EndDrawing()
         self.pdc = self.dc = None
 
-    # Paint method for inherited class
+    # Paint methods for inherited class
     def paint(self):
         pass
+
+    def repaint_after(self):
+        self.refresh()
 
     # ========PaintDC
 
@@ -563,6 +574,7 @@ class Canvas(object):
 
 class SensitiveCanvas(Canvas):
     kbdproc = None
+    mouse_captured = False
 
     def __init__(self, check_move=False, kbdproc=None):
         Canvas.__init__(self)
@@ -574,6 +586,7 @@ class SensitiveCanvas(Canvas):
         self.Bind(wx.EVT_LEFT_DCLICK, self._mouse_left_dclick)
         if check_move:
             self.Bind(wx.EVT_MOTION, self._mouse_move)
+            self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self._capture_lost)
         if self.kbdproc is not None:
             self.Bind(wx.EVT_KEY_DOWN, self._on_key_down)
 
@@ -583,6 +596,16 @@ class SensitiveCanvas(Canvas):
         modifiers = event.GetModifiers()
         if self.kbdproc.on_key_down(key_code, raw_code, modifiers):
             event.Skip()
+
+    def capture_mouse(self):
+        if const.IS_MSW:
+            self.mouse_captured = True
+            self.CaptureMouse()
+
+    def release_mouse(self):
+        if self.mouse_captured:
+            self.mouse_captured = False
+            self.ReleaseMouse()
 
     def _mouse_left_down(self, event):
         self.mouse_left_down(event.GetPositionTuple())
@@ -599,6 +622,9 @@ class SensitiveCanvas(Canvas):
     def _mouse_move(self, event):
         self.mouse_move(event.GetPositionTuple())
 
+    def _capture_lost(self, event):
+        self.capture_lost()
+
     def _mouse_left_dclick(self, event):
         self.mouse_left_dclick(event.GetPositionTuple())
 
@@ -611,6 +637,8 @@ class SensitiveCanvas(Canvas):
     def mouse_wheel(self, val): pass
 
     def mouse_move(self, point): pass
+
+    def capture_lost(self): pass
 
     def mouse_left_dclick(self, point): pass
 
