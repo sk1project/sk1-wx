@@ -17,6 +17,7 @@
 
 from artprovider import ArtProvider, push_provider, provider_get_bitmap
 from basic import *
+from canvas import *
 from clipboard import *
 from const import *
 from filedlgs import *

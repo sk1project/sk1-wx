@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013 by Igor E. Novikov
+#  Copyright (C) 2013-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ CAIRO_WHITE = [1.0, 1.0, 1.0]
 CAIRO_BLACK = [0.0, 0.0, 0.0]
 
 
-class RulerCorner(wal.HPanel):
+class RulerCorner(wal.RulerCanvas):
     bitmaps = {}
     presenter = None
     eventloop = None
@@ -64,35 +64,28 @@ class RulerCorner(wal.HPanel):
     def __init__(self, presenter, parent):
         self.presenter = presenter
         self.eventloop = presenter.eventloop
-        wal.HPanel.__init__(self, parent)
-        size = config.ruler_size
+        wal.RulerCanvas.__init__(self, parent, size=config.ruler_size)
         if not BITMAPS:
             BITMAPS[sk2const.DOC_ORIGIN_CENTER] = get_icon(icons.ORIGIN_CENTER)
             BITMAPS[sk2const.DOC_ORIGIN_LL] = get_icon(icons.ORIGIN_LL)
             BITMAPS[sk2const.DOC_ORIGIN_LU] = get_icon(icons.ORIGIN_LU)
-        self.add((size, size))
         self.set_bg(wal.WHITE)
-        self.Bind(wx.EVT_PAINT, self._on_paint, self)
         self.eventloop.connect(self.eventloop.DOC_MODIFIED, self.changes)
-        self.Bind(wx.EVT_LEFT_UP, self.left_click)
         events.connect(events.CONFIG_MODIFIED, self.check_config)
         self.changes()
 
     def check_config(self, *args):
         if args[0].startswith('ruler_'):
             if args[0] == 'ruler_size':
-                size = config.ruler_size
-                self.remove_all()
-                self.add((size, size))
-                self.parent.layout()
+                self.fix_size(config.ruler_size)
             self.refresh()
 
-    def changes(self, *args):
+    def changes(self):
         if not self.origin == self.presenter.model.doc_origin:
             self.origin = self.presenter.model.doc_origin
             self.refresh()
 
-    def left_click(self, *args):
+    def mouse_left_up(self, *args):
         origin = self.presenter.model.doc_origin
         if origin < sk2const.ORIGINS[-1]:
             origin += 1
@@ -105,26 +98,17 @@ class RulerCorner(wal.HPanel):
         for item in items:
             self.__dict__[item] = None
 
-    def refresh(self, x=0, y=0, w=0, h=0):
-        if not w:
-            w, h = self.GetSize()
-        self.Refresh(rect=wx.Rect(x, y, w, h))
-
-    def _on_paint(self, event):
+    def paint(self):
         w, h = self.get_size()
-        dc = wal.get_dc(self.panel)
-        dc.SetPen(wx.NullPen)
-        dc.SetBrush(wx.Brush(wx.Colour(*cms.val_255(config.ruler_bg))))
-        dc.DrawRectangle(0, 0, w, h)
-        color = cms.val_255(config.ruler_fg)
-        grad_start = wx.Colour(*(color + [255]))
-        grad_end = wx.Colour(*(color + [0]))
-        rect = wx.Rect(0, h - 1, w * 2, 1)
-        dc.GradientFillLinear(rect, grad_start, grad_end, nDirection=wx.WEST)
-        rect = wx.Rect(w - 1, 0, 1, h * 2)
-        dc.GradientFillLinear(rect, grad_start, grad_end, nDirection=wx.NORTH)
+        fg = cms.val_255(config.ruler_fg)
+        bg = cms.val_255(config.ruler_bg)
+        self.set_stroke(None)
+        self.set_fill(bg)
+        self.draw_rect(0, 0, w, h)
+        self.draw_linear_gradient((0, h - 1, w * 2, 1), bg, fg)
+        self.draw_linear_gradient((w - 1, 0, 1, h * 2), bg, fg, True)
         shift = (w - 19) / 2 + 1
-        dc.DrawBitmap(BITMAPS[self.origin], shift, shift, True)
+        self.draw_bitmap(BITMAPS[self.origin], shift, shift)
 
 
 class Ruler(wal.HPanel):
