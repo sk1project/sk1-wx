@@ -112,7 +112,7 @@ class RulerCorner(wal.RulerCanvas):
 class Ruler(wal.RulerCanvas):
     presenter = None
     eventloop = None
-    style = None
+    vertical = False
 
     init_flag = False
     draw_guide = False
@@ -125,16 +125,16 @@ class Ruler(wal.RulerCanvas):
     height = 0
     pointer = []
 
-    def __init__(self, presenter, parent, style=wal.HORIZONTAL):
+    def __init__(self, presenter, parent, vertical=True):
         self.presenter = presenter
         self.eventloop = presenter.eventloop
-        self.style = style
+        self.vertical = vertical
         wal.RulerCanvas.__init__(self, parent, size=config.ruler_size,
                                  check_move=True)
         if not VFONT:
             load_font()
         self.default_cursor = self.get_cursor()
-        if self.style == wal.HORIZONTAL:
+        if not self.vertical:
             self.guide_cursor = self.presenter.app.cursors[modes.HGUIDE_MODE]
         else:
             self.guide_cursor = self.presenter.app.cursors[modes.VGUIDE_MODE]
@@ -199,7 +199,7 @@ class Ruler(wal.RulerCanvas):
         small_ticks = []
         text_ticks = []
 
-        if self.style == wal.HORIZONTAL:
+        if not self.vertical:
             i = -1
             pos = 0
             while pos < w:
@@ -298,10 +298,10 @@ class Ruler(wal.RulerCanvas):
         self.ctx.set_line_width(1.0)
         self.ctx.set_dash([])
         self.ctx.set_source_rgb(*config.ruler_fg)
-        if self.style == wal.HORIZONTAL:
-            self.hrender(w, h)
-        else:
+        if self.vertical:
             self.vrender(w, h)
+        else:
+            self.hrender(w, h)
         pdc.DrawBitmap(wal.copy_surface_to_bitmap(self.surface), 0, 0, True)
 
     def hrender(self, w, h):
@@ -370,7 +370,7 @@ class Ruler(wal.RulerCanvas):
         canvas = self.presenter.canvas
         canvas.timer.start()
         canvas.set_temp_mode(modes.GUIDE_MODE)
-        if self.style == wal.HORIZONTAL:
+        if not self.vertical:
             canvas.controller.mode = modes.HGUIDE_MODE
         else:
             canvas.controller.mode = modes.VGUIDE_MODE
@@ -379,7 +379,7 @@ class Ruler(wal.RulerCanvas):
     def mouse_left_up(self, point):
         self.pointer = point
         self.release_mouse()
-        if self.style == wal.HORIZONTAL:
+        if not self.vertical:
             y_win = self.pointer[1] - self.height
             if y_win > 0.0:
                 p = [self.pointer[0], y_win]
@@ -409,7 +409,7 @@ class Ruler(wal.RulerCanvas):
     def repaint_guide(self):
         p = 0
         if self.draw_guide and self.pointer:
-            if self.style == wal.HORIZONTAL:
+            if not self.vertical:
                 y_win = self.pointer[1] - self.height
                 p = [self.pointer[0], y_win]
                 p = self.presenter.snap.snap_point(p, snap_x=False)[1]
