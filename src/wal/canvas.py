@@ -28,6 +28,11 @@ class RulerCanvas(SizedPanel, SensitiveCanvas):
         self.fix_size(size)
         self.set_double_buffered()
 
+    def destroy(self):
+        items = self.__dict__.keys()
+        for item in items:
+            self.__dict__[item] = None
+
     def fix_size(self, size=0):
         self.remove_all()
         size = size if size > 0 else 20

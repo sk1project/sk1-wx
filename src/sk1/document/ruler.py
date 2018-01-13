@@ -91,11 +91,6 @@ class RulerCorner(wal.RulerCanvas):
             origin = sk2const.ORIGINS[0]
         self.presenter.api.set_doc_origin(origin)
 
-    def destroy(self):
-        items = self.__dict__.keys()
-        for item in items:
-            self.__dict__[item] = None
-
     def paint(self):
         w, h = self.get_size()
         fg = cms.val_255(config.ruler_fg)
@@ -149,11 +144,6 @@ class Ruler(wal.RulerCanvas):
             if args[0] == 'ruler_font_size':
                 load_font()
             self.refresh()
-
-    def destroy(self):
-        items = self.__dict__.keys()
-        for item in items:
-            self.__dict__[item] = None
 
     def calc_ruler(self):
         canvas = self.presenter.canvas
