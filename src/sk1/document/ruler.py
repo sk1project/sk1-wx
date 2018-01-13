@@ -199,9 +199,7 @@ class Ruler(wal.RulerCanvas):
                     small_ticks.append(pos + dx * .5)
                 i += 1
 
-            coef = round(50.0 / dx)
-            if not coef:
-                coef = 1.0
+            coef = round(50.0 / dx) or 1.0
             dxt = dx * coef
             sxt = (x0 / dxt - math.floor(x0 / dxt)) * dxt
 
@@ -210,17 +208,13 @@ class Ruler(wal.RulerCanvas):
 
             i = -1
             pos = 0
-            shift = pw / 2.0
-            if origin == sk2const.DOC_ORIGIN_CENTER:
-                shift = 0.0
+            shift = 0.0 if origin == sk2const.DOC_ORIGIN_CENTER else pw / 2.0
             while pos < w:
                 pos = sxt + i * dxt
                 doc_pos = canvas.point_win_to_doc((pos, 0))[0] + shift
                 doc_pos *= uc2const.point_dict[self.presenter.model.doc_units]
                 if float_flag:
-                    txt = str(round(doc_pos, 4))
-                    if not doc_pos:
-                        txt = '0'
+                    txt = str(round(doc_pos, 4)) if doc_pos else '0'
                 else:
                     txt = str(int(round(doc_pos)))
                 text_ticks.append((sxt + i * dxt, txt))
@@ -236,24 +230,18 @@ class Ruler(wal.RulerCanvas):
                     small_ticks.append(pos + dy * .5)
                 i += 1
 
-            coef = round(50.0 / dy)
-            if not coef:
-                coef = 1.0
+            coef = round(50.0 / dy) or 1.0
             dyt = dy * coef
             syt = (y0 / dyt - math.floor(y0 / dyt)) * dyt
 
-            float_flag = False
             unit_dy = dyt / (unit * canvas.zoom)
-            if unit_dy < 1.0:
-                float_flag = True
+            float_flag = True if unit_dy < 1.0 else False
 
             i = -1
             pos = 0
-            shift = 0.0
-            if origin == sk2const.DOC_ORIGIN_LL:
-                shift = ph / 2.0
-            if origin == sk2const.DOC_ORIGIN_LU:
-                shift = -ph / 2.0
+            shift = 0.0 if origin == sk2const.DOC_ORIGIN_CENTER else ph / 2.0
+            shift = -shift if origin == sk2const.DOC_ORIGIN_LU else shift
+
             while pos < h:
                 pos = syt + i * dyt
                 doc_pos = canvas.point_win_to_doc((0, pos))[1] + shift
@@ -261,9 +249,7 @@ class Ruler(wal.RulerCanvas):
                     doc_pos *= -1.0
                 doc_pos *= uc2const.point_dict[self.presenter.model.doc_units]
                 if float_flag:
-                    txt = str(round(doc_pos, 4))
-                    if not doc_pos:
-                        txt = '0'
+                    txt = str(round(doc_pos, 4)) if doc_pos else '0'
                 else:
                     txt = str(int(round(doc_pos)))
                 text_ticks.append((syt + i * dyt, txt))
@@ -274,7 +260,6 @@ class Ruler(wal.RulerCanvas):
         if self.presenter is None:
             return
         w, h = self.get_size()
-        pdc = wal.get_buffered_dc(self.panel)
         shift = 1 if wal.IS_MSW else 0
         fmt = cairo.FORMAT_RGB24
         if self.surface is None or self.width != w or self.height != h:
@@ -292,7 +277,7 @@ class Ruler(wal.RulerCanvas):
             self.vrender(w, h)
         else:
             self.hrender(w, h)
-        pdc.DrawBitmap(wal.copy_surface_to_bitmap(self.surface), 0, 0, True)
+        self.draw_surface(self.surface, 0, 0)
 
     def hrender(self, w, h):
         self.ctx.move_to(0, h)
