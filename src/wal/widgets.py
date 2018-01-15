@@ -962,6 +962,9 @@ class ScrollBar(wx.ScrollBar, WidgetMixin):
     def set_scrollbar(self, pos, thumbsize, rng, pagesize, refresh=True):
         self.SetScrollbar(pos, thumbsize, rng, pagesize, refresh)
 
+    def set_callback(self, callback):
+        self.callback = callback
+
     def _scrolling(self, *args):
         if self.callback:
             self.callback()

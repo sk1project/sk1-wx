@@ -18,7 +18,6 @@
 import cairo
 import inspect
 import logging
-import wx
 
 import wal
 from ctx_menu import ContextMenu
@@ -116,16 +115,16 @@ class AppCanvas(wal.MainCanvas):
     def _set_scrolls(self, hscroll, vscroll):
         self.hscroll = hscroll
         self.vscroll = vscroll
-        self.hscroll.SetScrollbar(500, 100, 1100, 100, refresh=True)
-        self.vscroll.SetScrollbar(500, 100, 1100, 100, refresh=True)
-        self.hscroll.Bind(wx.EVT_SCROLL, self._scrolling, self.hscroll)
-        self.vscroll.Bind(wx.EVT_SCROLL, self._scrolling, self.vscroll)
+        self.hscroll.set_scrollbar(500, 100, 1100, 100, refresh=True)
+        self.vscroll.set_scrollbar(500, 100, 1100, 100, refresh=True)
+        self.hscroll.set_callback(self._scrolling)
+        self.vscroll.set_callback(self._scrolling)
 
-    def _scrolling(self, *args):
+    def _scrolling(self):
         if self.my_changes:
             return
-        xpos = self.hscroll.GetThumbPosition() / 1000.0
-        ypos = (1000 - self.vscroll.GetThumbPosition()) / 1000.0
+        xpos = self.hscroll.get_thumb_pos() / 1000.0
+        ypos = (1000 - self.vscroll.get_thumb_pos()) / 1000.0
         x = (xpos - 0.5) * self.workspace[0]
         y = (ypos - 0.5) * self.workspace[1]
         center = self.doc_to_win([x, y])
@@ -139,8 +138,8 @@ class AppCanvas(wal.MainCanvas):
         y = (center[1] + self.workspace[1] / 2.0) / self.workspace[1]
         hscroll = int(1000 * x)
         vscroll = int(1000 - 1000 * y)
-        self.hscroll.SetScrollbar(hscroll, 100, 1100, 100, refresh=True)
-        self.vscroll.SetScrollbar(vscroll, 100, 1100, 100, refresh=True)
+        self.hscroll.set_scrollbar(hscroll, 100, 1100, 100, refresh=True)
+        self.vscroll.set_scrollbar(vscroll, 100, 1100, 100, refresh=True)
         self.my_changes = False
 
     # ----- CONTROLLERS
