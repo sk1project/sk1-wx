@@ -17,7 +17,8 @@
 
 import wx
 
-from basic import SizedPanel, SensitiveCanvas
+import const
+from basic import SizedPanel, SensitiveCanvas, Canvas, Panel
 
 
 class RulerCanvas(SizedPanel, SensitiveCanvas):
@@ -38,3 +39,44 @@ class RulerCanvas(SizedPanel, SensitiveCanvas):
         size = size if size > 0 else 20
         self.add((size, size))
         self.parent.layout()
+
+
+REDNDERING_DELAY = 25
+
+
+class CanvasTimer(wx.Timer):
+    delay = 0
+
+    def __init__(self, parent, delay=0):
+        self.delay = delay or REDNDERING_DELAY
+        wx.Timer.__init__(self, parent)
+
+    def is_running(self):
+        return self.IsRunning()
+
+    def stop(self):
+        if self.IsRunning():
+            self.Stop()
+
+    def start(self, interval=0):
+        if not self.IsRunning():
+            self.Start(interval or self.delay)
+
+
+class MainCanvas(Panel, Canvas):
+    timer = None
+
+    def __init__(self, parent, rendering_delay=0):
+        rendering_delay = rendering_delay or REDNDERING_DELAY
+        Panel.__init__(self, parent, allow_input=True,
+                       style=wx.FULL_REPAINT_ON_RESIZE)
+        Canvas.__init__(self, set_timer=False)
+        self.set_bg(const.WHITE)
+        self.timer = CanvasTimer(self, rendering_delay)
+        self.Bind(wx.EVT_TIMER, self._on_timer)
+
+    def _on_timer(self, event):
+        self.on_timer()
+
+    def on_timer(self):
+        pass

@@ -203,8 +203,8 @@ class MainWindow(wx.Frame):
 
 
 class Panel(wx.Panel, WidgetMixin):
-    def __init__(self, parent, border=False, allow_input=False):
-        style = wx.TAB_TRAVERSAL
+    def __init__(self, parent, border=False, allow_input=False,
+                 style=wx.TAB_TRAVERSAL):
         style = style | wx.WANTS_CHARS if allow_input else style
         style = style | wx.BORDER_MASK if border and not const.IS_WX3 else style
         wx.Panel.__init__(self, parent, wx.ID_ANY, style=style)
@@ -326,10 +326,10 @@ class Canvas(object):
     dc = None
     pdc = None
 
-    def __init__(self):
+    def __init__(self, set_timer=True):
         self.Bind(wx.EVT_PAINT, self._on_paint, self)
         self.Bind(wx.EVT_SIZE, self._on_size_change, self)
-        if const.IS_MAC:
+        if set_timer and const.IS_MAC:
             self.timer = wx.Timer(self)
             self.Bind(wx.EVT_TIMER, self._repaint_after)
             self.timer.Start(50)

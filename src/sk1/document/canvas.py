@@ -35,27 +35,11 @@ from uc2.uc2const import mm_to_pt, point_dict
 LOG = logging.getLogger(__name__)
 
 
-class CanvasTimer(wx.Timer):
-    def __init__(self, parent):
-        wx.Timer.__init__(self, parent)
-
-    def is_running(self):
-        return self.IsRunning()
-
-    def stop(self):
-        if self.IsRunning():
-            self.Stop()
-
-    def start(self, interval=RENDERING_DELAY):
-        if not self.IsRunning():
-            self.Start(interval)
-
-
 WORKSPACE_HEIGHT = 2000 * mm_to_pt
 WORKSPACE_WIDTH = 4000 * mm_to_pt
 
 
-class AppCanvas(wx.Panel):
+class AppCanvas(wal.MainCanvas):
     presenter = None
     app = None
     eventloop = None
@@ -101,19 +85,14 @@ class AppCanvas(wx.Panel):
         self.app = presenter.app
         self.doc = self.presenter.model
         self.renderer = PDRenderer(self)
-        style = wx.FULL_REPAINT_ON_RESIZE | wx.WANTS_CHARS
-        wx.Panel.__init__(self, parent, style=style)
-        self.SetBackgroundColour(wx.Colour(255, 255, 255))
+        wal.MainCanvas.__init__(self, parent, rendering_delay=RENDERING_DELAY)
         self.hit_surface = HitSurface(self)
         self.zoom_stack = []
 
         self.ctx_menu = ContextMenu(self.app, self)
 
-        self.timer = CanvasTimer(self)
-        self.Bind(wx.EVT_TIMER, self._on_timer)
-
         self.ctrls = self.init_controllers()
-        self.Bind(wx.EVT_PAINT, self.on_paint, self)
+        # self.Bind(wx.EVT_PAINT, self.on_paint, self)
         self.Bind(wx.EVT_ENTER_WINDOW, self.mouse_enter, self)
         # ----- Mouse binding
         self.Bind(wx.EVT_LEFT_DOWN, self.mouse_left_down)
@@ -130,7 +109,6 @@ class AppCanvas(wx.Panel):
         self.kbproc = KbdProcessor(self)
         self.Bind(wx.EVT_KEY_DOWN, self.kbproc.on_key_down)
         self.Bind(wx.EVT_CHAR, self.kbproc.on_char)
-        # 		self.Bind(wx.EVT_KEY_UP, self.OnKeyUp)
         # ----- Application eventloop bindings
         self.eventloop.connect(self.eventloop.DOC_MODIFIED, self.doc_modified)
         self.eventloop.connect(self.eventloop.PAGE_CHANGED, self.doc_modified)
@@ -521,7 +499,7 @@ class AppCanvas(wx.Panel):
             self.redraw_flag = True
             self.Refresh(rect=wx.Rect(0, 0, w, h), eraseBackground=False)
 
-    def on_paint(self, event):
+    def paint(self):
         if self.matrix is None:
             self.zoom_fit_to_page()
             self.set_mode(modes.SELECT_MODE)
@@ -564,7 +542,7 @@ class AppCanvas(wx.Panel):
 
             # ==============EVENT CONTROLLING==========================
 
-    def mouse_enter(self, enent):
+    def mouse_enter(self, event):
         if wal.IS_MSW:
             self.SetFocus()
 
@@ -584,7 +562,7 @@ class AppCanvas(wx.Panel):
     def capture_lost(self, event):
         self.release_mouse()
 
-    def _on_timer(self, event):
+    def on_timer(self):
         self.controller.on_timer()
 
     def mouse_left_down(self, event):
