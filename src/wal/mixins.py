@@ -113,8 +113,10 @@ class WidgetMixin(object):
         if const.IS_MSW:
             self.SetDoubleBuffered(True)
 
-    def refresh(self):
-        self.Refresh()
+    def refresh(self, x=0, y=0, w=0, h=0, clear=True):
+        if not w:
+            w, h = self.GetSize()
+        self.Refresh(rect=wx.Rect(x, y, w, h), eraseBackground=clear)
 
     def get_cursor(self):
         return self.GetCursor()

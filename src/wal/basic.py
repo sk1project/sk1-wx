@@ -348,10 +348,6 @@ class Canvas(object):
     def _on_size_change(self, event):
         self.refresh()
 
-    def refresh(self, x=0, y=0, w=0, h=0):
-        if not w: w, h = self.GetSize()
-        self.Refresh(rect=wx.Rect(x, y, w, h))
-
     def _on_paint(self, event):
         w, h = self.GetSize()
         if not w or not h:

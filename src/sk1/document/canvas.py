@@ -71,7 +71,6 @@ class AppCanvas(wal.MainCanvas):
     soft_repaint = False
     full_repaint = False
     selection_repaint = True
-    mouse_captured = False
     show_snapping = config.show_snap
     dragged_guide = ()
 
@@ -92,8 +91,6 @@ class AppCanvas(wal.MainCanvas):
         self.ctx_menu = ContextMenu(self.app, self)
 
         self.ctrls = self.init_controllers()
-        # self.Bind(wx.EVT_PAINT, self.on_paint, self)
-        self.Bind(wx.EVT_ENTER_WINDOW, self.mouse_enter, self)
         # ----- Mouse binding
         self.Bind(wx.EVT_LEFT_DOWN, self.mouse_left_down)
         self.Bind(wx.EVT_LEFT_UP, self.mouse_left_up)
@@ -104,7 +101,6 @@ class AppCanvas(wal.MainCanvas):
         self.Bind(wx.EVT_MIDDLE_UP, self.mouse_middle_up)
         self.Bind(wx.EVT_MOUSEWHEEL, self.mouse_wheel)
         self.Bind(wx.EVT_MOTION, self.mouse_move)
-        self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self.capture_lost)
         # ----- Keyboard binding
         self.kbproc = KbdProcessor(self)
         self.Bind(wx.EVT_KEY_DOWN, self.kbproc.on_key_down)
@@ -127,12 +123,6 @@ class AppCanvas(wal.MainCanvas):
         items = self.__dict__.keys()
         for item in items:
             self.__dict__[item] = None
-
-    def show(self):
-        self.Show()
-
-    def set_focus(self):
-        self.SetFocus()
 
     # ----- SCROLLING
 
@@ -220,7 +210,7 @@ class AppCanvas(wal.MainCanvas):
 
     def set_canvas_cursor(self, mode):
         self.current_cursor = self.app.cursors[mode]
-        self.SetCursor(self.current_cursor)
+        self.set_cursor(self.current_cursor)
 
     def set_temp_mode(self, mode=modes.SELECT_MODE, callback=None):
         if not mode == self.mode:
@@ -248,11 +238,11 @@ class AppCanvas(wal.MainCanvas):
     def set_temp_cursor(self, cursor):
         self.orig_cursor = self.app.cursors[self.mode]
         self.current_cursor = cursor
-        self.SetCursor(cursor)
+        self.set_cursor(cursor)
 
     def restore_cursor(self):
         if self.orig_cursor is not None:
-            self.SetCursor(self.orig_cursor)
+            self.set_cursor(self.orig_cursor)
             self.current_cursor = self.orig_cursor
             self.orig_cursor = None
 
@@ -482,22 +472,21 @@ class AppCanvas(wal.MainCanvas):
         self.presenter.selection.select_by_rect(rect, flag)
 
     # ----- RENDERING -----
-    def selection_redraw(self, *args):
+    def selection_redraw(self):
         if not self.full_repaint:
             self.soft_repaint = True
         self.force_redraw()
 
-    def doc_modified(self, *args):
+    def doc_modified(self):
         self.full_repaint = True
         self.force_redraw()
 
-    def force_redraw(self, *args):
+    def force_redraw(self):
         if self.redraw_flag:
             self.request_redraw_flag = True
         else:
-            w, h = self.GetSize()
             self.redraw_flag = True
-            self.Refresh(rect=wx.Rect(0, 0, w, h), eraseBackground=False)
+            self.refresh(clear=False)
 
     def paint(self):
         if self.matrix is None:
@@ -540,27 +529,7 @@ class AppCanvas(wal.MainCanvas):
             self.request_redraw_flag = False
             self.force_redraw()
 
-            # ==============EVENT CONTROLLING==========================
-
-    def mouse_enter(self, event):
-        if wal.IS_MSW:
-            self.SetFocus()
-
-    def capture_mouse(self):
-        if wal.IS_MSW:
-            self.CaptureMouse()
-            self.mouse_captured = True
-
-    def release_mouse(self):
-        if self.mouse_captured:
-            try:
-                self.ReleaseMouse()
-            except Exception:
-                pass
-            self.mouse_captured = False
-
-    def capture_lost(self, event):
-        self.release_mouse()
+    # ==============EVENT CONTROLLING==========================
 
     def on_timer(self):
         self.controller.on_timer()

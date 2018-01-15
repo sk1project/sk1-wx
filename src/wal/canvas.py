@@ -65,6 +65,7 @@ class CanvasTimer(wx.Timer):
 
 class MainCanvas(Panel, Canvas):
     timer = None
+    mouse_captured = False
 
     def __init__(self, parent, rendering_delay=0):
         rendering_delay = rendering_delay or REDNDERING_DELAY
@@ -74,9 +75,31 @@ class MainCanvas(Panel, Canvas):
         self.set_bg(const.WHITE)
         self.timer = CanvasTimer(self, rendering_delay)
         self.Bind(wx.EVT_TIMER, self._on_timer)
+        self.Bind(wx.EVT_ENTER_WINDOW, self.mouse_enter, self)
+        self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self.capture_lost)
 
     def _on_timer(self, event):
         self.on_timer()
 
     def on_timer(self):
         pass
+
+    def mouse_enter(self, event):
+        if const.IS_MSW:
+            self.set_focus()
+
+    def capture_mouse(self):
+        if const.IS_MSW:
+            self.CaptureMouse()
+            self.mouse_captured = True
+
+    def release_mouse(self):
+        if self.mouse_captured:
+            try:
+                self.ReleaseMouse()
+            except Exception:
+                pass
+            self.mouse_captured = False
+
+    def capture_lost(self, event):
+        self.release_mouse()
