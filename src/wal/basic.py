@@ -170,42 +170,22 @@ class MainWindow(wx.Frame):
         """Arguments: object, expandable (0 or 1), flag, border"""
         self.box.Add(*args, **kw)
 
-    def pack(
-            self, obj, expand=False, fill=False,
-            padding=0, start_padding=0, end_padding=0):
+    def pack(self, obj, expand=False, fill=False,
+             padding=0, start_padding=0, end_padding=0):
+        expand = 1 if expand else 0
         if self.orientation == wx.VERTICAL:
-            if expand:
-                expand = 1
-            else:
-                expand = 0
             flags = wx.ALIGN_TOP | wx.ALIGN_CENTER_HORIZONTAL
-            if padding:
-                flags = flags | wx.TOP | wx.BOTTOM
-            elif start_padding:
-                flags = flags | wx.TOP
-                padding = start_padding
-            elif end_padding:
-                flags = flags | wx.BOTTOM
-                padding = end_padding
-            if fill:
-                flags = flags | wx.EXPAND
+            flags = flags | wx.TOP | wx.BOTTOM if padding else flags
+            flags = flags | wx.TOP if start_padding else flags
+            flags = flags | wx.BOTTOM if end_padding else flags
+            flags = flags | wx.EXPAND if fill else flags
             self.box.Add(obj, expand, flags, padding)
         else:
-            if expand:
-                expand = 1
-            else:
-                expand = 0
             flags = wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL
-            if padding:
-                flags = flags | wx.LEFT | wx.RIGHT
-            elif start_padding:
-                flags = flags | wx.LEFT
-                padding = start_padding
-            elif end_padding:
-                flags = flags | wx.RIGHT
-                padding = end_padding
-            if fill:
-                flags = flags | wx.EXPAND
+            flags = flags | wx.LEFT | wx.RIGHT if padding else flags
+            flags = flags | wx.LEFT if start_padding else flags
+            flags = flags | wx.RIGHT if end_padding else flags
+            flags = flags | wx.EXPAND if fill else flags
             self.box.Add(obj, expand, flags, padding)
 
     def set_title(self, title):
@@ -226,20 +206,9 @@ class MainWindow(wx.Frame):
 class Panel(wx.Panel, WidgetMixin):
     def __init__(self, parent, border=False, allow_input=False):
         style = wx.TAB_TRAVERSAL
-        if allow_input:
-            style |= wx.WANTS_CHARS
-        if border and not const.IS_WX3:
-            style |= wx.BORDER_MASK
+        style = style | wx.WANTS_CHARS if allow_input else style
+        style = style | wx.BORDER_MASK if border and not const.IS_WX3 else style
         wx.Panel.__init__(self, parent, wx.ID_ANY, style=style)
-
-    def set_bg(self, color):
-        if isinstance(color, tuple):
-            self.SetBackgroundColour(wx.Colour(*color))
-        else:
-            self.SetBackgroundColour(color)
-
-    def get_bg(self):
-        return self.GetBackgroundColour().Get()
 
     def set_size(self, size):
         self.SetSize(size)
@@ -292,28 +261,17 @@ class HPanel(SizedPanel):
     def pack(
             self, obj, expand=False, fill=False,
             padding=0, start_padding=0, end_padding=0, padding_all=0):
-
-        if expand:
-            expand = 1
-        else:
-            expand = 0
+        expand = 1 if expand else 0
 
         flags = wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL
-
-        if padding:
-            flags = flags | wx.LEFT | wx.RIGHT
-        elif padding_all:
-            flags = flags | wx.ALL
-            padding = padding_all
-        elif start_padding:
-            flags = flags | wx.LEFT
-            padding = start_padding
-        elif end_padding:
-            flags = flags | wx.RIGHT
-            padding = end_padding
-
-        if fill:
-            flags = flags | wx.EXPAND
+        flags = flags | wx.LEFT | wx.RIGHT if padding else flags
+        flags = flags | wx.ALL if padding_all else flags
+        padding = padding_all or padding
+        flags = flags | wx.LEFT if start_padding else flags
+        padding = start_padding or padding
+        flags = flags | wx.RIGHT if end_padding else flags
+        padding = end_padding or padding
+        flags = flags | wx.EXPAND if fill else flags
 
         self.add(obj, expand, flags, padding)
 
@@ -325,30 +283,18 @@ class VPanel(SizedPanel):
     def pack(
             self, obj, expand=False, fill=False, align_center=True,
             padding=0, start_padding=0, end_padding=0, padding_all=0):
-
-        if expand:
-            expand = 1
-        else:
-            expand = 0
+        expand = 1 if expand else 0
 
         flags = wx.ALIGN_TOP
-        if align_center:
-            flags |= wx.ALIGN_CENTER_HORIZONTAL
-
-        if padding:
-            flags = flags | wx.TOP | wx.BOTTOM
-        elif padding_all:
-            flags = flags | wx.ALL
-            padding = padding_all
-        elif start_padding:
-            flags = flags | wx.TOP
-            padding = start_padding
-        elif end_padding:
-            flags = flags | wx.BOTTOM
-            padding = end_padding
-
-        if fill:
-            flags = flags | wx.EXPAND
+        flags = flags | wx.ALIGN_CENTER_HORIZONTAL if align_center else flags
+        flags = flags | wx.TOP | wx.BOTTOM if padding else flags
+        flags = flags | wx.ALL if padding_all else flags
+        padding = padding_all or padding
+        flags = flags | wx.TOP if start_padding else flags
+        padding = start_padding or padding
+        flags = flags | wx.BOTTOM if end_padding else flags
+        padding = end_padding or padding
+        flags = flags | wx.EXPAND if fill else flags
 
         self.add(obj, expand, flags, padding)
 
@@ -460,10 +406,7 @@ class Canvas(object):
 
     def set_font(self, bold=False, size_incr=0):
         font = self.GetFont()
-        if bold:
-            font.SetWeight(wx.FONTWEIGHT_BOLD)
-        else:
-            font.SetWeight(wx.FONTWEIGHT_NORMAL)
+        font.SetWeight(wx.FONTWEIGHT_BOLD if bold else wx.FONTWEIGHT_NORMAL)
         if size_incr:
             if font.IsUsingSizeInPixels():
                 sz = font.GetPixelSize() + size_incr
@@ -493,10 +436,7 @@ class Canvas(object):
         self.pdc.DrawBitmap(copy_surface_to_bitmap(surface), x, y, use_mask)
 
     def draw_linear_gradient(self, rect, start_clr, stop_clr, ndir=False):
-        if ndir:
-            ndir = wx.SOUTH
-        else:
-            ndir = wx.EAST
+        ndir = wx.SOUTH if ndir else wx.EAST
         self.pdc.GradientFillLinear(
             wx.Rect(*rect),
             wx.Colour(*start_clr),
@@ -525,10 +465,7 @@ class Canvas(object):
 
     def set_gc_font(self, bold=False, size_incr=0):
         font = self.GetFont()
-        if bold:
-            font.SetWeight(wx.FONTWEIGHT_BOLD)
-        else:
-            font.SetWeight(wx.FONTWEIGHT_NORMAL)
+        font.SetWeight(wx.FONTWEIGHT_BOLD if bold else wx.FONTWEIGHT_NORMAL)
         if size_incr:
             if font.IsUsingSizeInPixels():
                 sz = font.GetPixelSize() + size_incr
@@ -558,10 +495,7 @@ class Canvas(object):
         self.dc.DrawBitmap(copy_surface_to_bitmap(surface), x, y, use_mask)
 
     def gc_draw_linear_gradient(self, rect, start_clr, stop_clr, ndir=False):
-        if ndir:
-            ndir = wx.SOUTH
-        else:
-            ndir = wx.EAST
+        ndir = wx.SOUTH if ndir else wx.EAST
         self.dc.GradientFillLinear(
             wx.Rect(*rect),
             wx.Colour(*start_clr),

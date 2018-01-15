@@ -122,6 +122,15 @@ class WidgetMixin(object):
     def set_cursor(self, cursor):
         self.SetCursor(cursor)
 
+    def set_bg(self, color):
+        if isinstance(color, tuple):
+            self.SetBackgroundColour(wx.Colour(*color))
+        else:
+            self.SetBackgroundColour(color)
+
+    def get_bg(self):
+        return self.GetBackgroundColour().Get()
+
 
 class DataWidgetMixin(WidgetMixin):
     def set_value(self, value):
