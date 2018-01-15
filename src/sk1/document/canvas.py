@@ -85,6 +85,7 @@ class AppCanvas(wal.MainCanvas):
         self.doc = self.presenter.model
         self.renderer = PDRenderer(self)
         wal.MainCanvas.__init__(self, parent, rendering_delay=RENDERING_DELAY)
+        self.kbproc = KbdProcessor(self)
         self.hit_surface = HitSurface(self)
         self.zoom_stack = []
 
@@ -101,10 +102,6 @@ class AppCanvas(wal.MainCanvas):
         self.Bind(wx.EVT_MIDDLE_UP, self.mouse_middle_up)
         self.Bind(wx.EVT_MOUSEWHEEL, self.mouse_wheel)
         self.Bind(wx.EVT_MOTION, self.mouse_move)
-        # ----- Keyboard binding
-        self.kbproc = KbdProcessor(self)
-        self.Bind(wx.EVT_KEY_DOWN, self.kbproc.on_key_down)
-        self.Bind(wx.EVT_CHAR, self.kbproc.on_char)
         # ----- Application eventloop bindings
         self.eventloop.connect(self.eventloop.DOC_MODIFIED, self.doc_modified)
         self.eventloop.connect(self.eventloop.PAGE_CHANGED, self.doc_modified)

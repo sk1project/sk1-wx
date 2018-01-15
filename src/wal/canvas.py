@@ -66,6 +66,7 @@ class CanvasTimer(wx.Timer):
 class MainCanvas(Panel, Canvas):
     timer = None
     mouse_captured = False
+    kbproc = None
 
     def __init__(self, parent, rendering_delay=0):
         rendering_delay = rendering_delay or REDNDERING_DELAY
@@ -77,6 +78,23 @@ class MainCanvas(Panel, Canvas):
         self.Bind(wx.EVT_TIMER, self._on_timer)
         self.Bind(wx.EVT_ENTER_WINDOW, self.mouse_enter, self)
         self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self.capture_lost)
+        # ----- Keyboard binding
+        self.Bind(wx.EVT_KEY_DOWN, self._on_key_down)
+        self.Bind(wx.EVT_CHAR, self._on_char)
+
+    def _on_key_down(self, event):
+        key_code = event.GetKeyCode()
+        modifiers = event.GetModifiers()
+        if self.kbproc and not self.kbproc.on_key_down(key_code, modifiers):
+                return
+        event.Skip()
+
+    def _on_char(self, event):
+        modifiers = event.GetModifiers()
+        unichar = unichr(event.GetUniChar())
+        if self.kbproc and not self.kbproc.on_char(modifiers, unichar):
+            return
+        event.Skip()
 
     def _on_timer(self, event):
         self.on_timer()

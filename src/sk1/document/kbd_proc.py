@@ -29,10 +29,7 @@ class KbdProcessor:
         self.app = canvas.app
         self.actions = self.app.actions
 
-    def on_key_down(self, event):
-        key_code = event.GetKeyCode()
-        raw_code = event.GetRawKeyCode()
-        modifiers = event.GetModifiers()
+    def on_key_down(self, key_code, modifiers):
 
         if key_code == wal.KEY_ESCAPE and not modifiers:
             self.canvas.controller.escape_pressed()
@@ -47,8 +44,7 @@ class KbdProcessor:
             return
 
         if self.canvas.mode == modes.TEXT_EDIT_MODE:
-            self.text_edit_mode(event, key_code, raw_code, modifiers)
-            return
+            return self.text_edit_mode(key_code, modifiers)
 
         if key_code in (wal.KEY_UP, wal.KEY_NUMPAD_UP) and not modifiers:
             self.actions[pdids.MOVE_UP].do_call()
@@ -78,9 +74,9 @@ class KbdProcessor:
                 self.canvas.set_mode(modes.SELECT_MODE)
                 return
 
-        event.Skip()
+        return True
 
-    def text_edit_mode(self, event, key_code, raw_code, modifiers):
+    def text_edit_mode(self, key_code, modifiers):
         if not modifiers:
             if key_code in (wal.KEY_UP, wal.KEY_NUMPAD_UP):
                 self.canvas.controller.key_up()
@@ -143,17 +139,16 @@ class KbdProcessor:
                 self.canvas.controller.key_down(True)
                 return
 
-        event.Skip()
+        return True
 
-    def on_char(self, event):
-        modifiers = event.GetModifiers()
+    def on_char(self, modifiers, unichar):
         if modifiers not in (wal.ACCEL_CTRL, wal.ACCEL_CTRL | wal.ACCEL_SHIFT):
             if self.canvas.mode == modes.TEXT_EDIT_MODE:
-                self.canvas.controller.insert_text(unichr(event.GetUniChar()))
+                self.canvas.controller.insert_text(unichar)
                 return
             elif self.canvas.mode == modes.TEXT_EDITOR_MODE:
-                char = int(unichr(event.GetUniChar()))
+                char = int(unichar)
                 if char in modes.ET_MODES:
                     self.canvas.controller.set_mode(char)
                     return
-        event.Skip()
+        return True
