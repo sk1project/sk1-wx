@@ -99,9 +99,8 @@ class MainWindow(wx.Frame):
     mdi = None
     maximized = False
 
-    def __init__(
-            self, app=None, title='Frame', size=(100, 100),
-            vertical=True, maximized=False, on_close=None):
+    def __init__(self, app=None, title='Frame', size=(100, 100),
+                 vertical=True, maximized=False, on_close=None):
         self.app = app
         if app is None:
             self.app = Application()
@@ -258,9 +257,8 @@ class HPanel(SizedPanel):
     def __init__(self, parent, border=False):
         SizedPanel.__init__(self, parent, wx.HORIZONTAL, border)
 
-    def pack(
-            self, obj, expand=False, fill=False,
-            padding=0, start_padding=0, end_padding=0, padding_all=0):
+    def pack(self, obj, expand=False, fill=False,
+             padding=0, start_padding=0, end_padding=0, padding_all=0):
         expand = 1 if expand else 0
 
         flags = wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL
@@ -669,23 +667,14 @@ class GridPanel(Panel, WidgetMixin):
     def add_growable_row(self, index):
         self.grid.AddGrowableRow(index)
 
-    def pack(
-            self, obj, expand=False, fill=False, align_right=False,
-            align_left=True):
-        if expand:
-            expand = 1
-        else:
-            expand = 0
-        if align_right:
-            flags = wx.ALIGN_RIGHT
-        elif align_left:
-            flags = wx.ALIGN_LEFT
-        else:
-            flags = wx.ALIGN_CENTER_HORIZONTAL
+    def pack(self, obj, expand=False, fill=False, align_right=False,
+             align_left=True):
+        expand = 1 if expand else 0
+        flags = wx.ALIGN_CENTER_HORIZONTAL
+        flags = wx.ALIGN_RIGHT if align_right else flags
+        flags = wx.ALIGN_LEFT if align_left else flags
         flags |= wx.ALIGN_CENTER_VERTICAL
-
-        if fill:
-            flags = flags | wx.EXPAND
+        flags = flags | wx.EXPAND if fill else flags
         self.add(obj, expand, flags)
 
     def add(self, *args, **kw):
@@ -708,12 +697,6 @@ class ScrolledPanel(scrolled.ScrolledPanel, WidgetMixin):
         self.SetupScrolling()
         self.panel = self
 
-    def set_bg(self, color):
-        self.SetBackgroundColour(wx.Colour(*color))
-
-    def get_bg(self):
-        return self.GetBackgroundColour().Get()
-
     def set_size(self, size):
         self.SetSize(size)
 
@@ -723,33 +706,20 @@ class ScrolledPanel(scrolled.ScrolledPanel, WidgetMixin):
     def fit(self):
         self.Fit()
 
-    def pack(
-            self, obj, expand=False, fill=False, align_center=True,
-            padding=0, start_padding=0, end_padding=0, padding_all=0):
-
-        if expand:
-            expand = 1
-        else:
-            expand = 0
+    def pack(self, obj, expand=False, fill=False, align_center=True,
+             padding=0, start_padding=0, end_padding=0, padding_all=0):
+        expand = 1 if expand else 0
 
         flags = wx.ALIGN_TOP
-        if align_center:
-            flags |= wx.ALIGN_CENTER_HORIZONTAL
-
-        if padding:
-            flags = flags | wx.TOP | wx.BOTTOM
-        elif padding_all:
-            flags = flags | wx.ALL
-            padding = padding_all
-        elif start_padding:
-            flags = flags | wx.TOP
-            padding = start_padding
-        elif end_padding:
-            flags = flags | wx.BOTTOM
-            padding = end_padding
-
-        if fill:
-            flags = flags | wx.EXPAND
+        flags = flags | wx.ALIGN_CENTER_HORIZONTAL if align_center else flags
+        flags = flags | wx.TOP | wx.BOTTOM if padding else flags
+        flags = flags | wx.ALL if padding_all else flags
+        padding = padding_all or padding
+        flags = flags | wx.TOP if start_padding else flags
+        padding = start_padding or padding
+        flags = flags | wx.BOTTOM if end_padding else flags
+        padding = end_padding or padding
+        flags = flags | wx.EXPAND if fill else flags
 
         self.add(obj, expand, flags, padding)
 
@@ -790,9 +760,6 @@ class ScrolledCanvas(wx.ScrolledWindow, WidgetMixin):
 
     def set_scroll_rate(self, h=20, v=20):
         self.SetScrollRate(h, v)
-
-    def set_bg(self, color):
-        self.SetBackgroundColour(wx.Colour(*color))
 
     def refresh(self, x=0, y=0, w=0, h=0):
         if not w:
