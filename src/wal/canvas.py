@@ -41,14 +41,14 @@ class RulerCanvas(SizedPanel, SensitiveCanvas):
         self.parent.layout()
 
 
-REDNDERING_DELAY = 25
+RENDERING_DELAY = 25
 
 
 class CanvasTimer(wx.Timer):
     delay = 0
 
     def __init__(self, parent, delay=0):
-        self.delay = delay or REDNDERING_DELAY
+        self.delay = delay or RENDERING_DELAY
         wx.Timer.__init__(self, parent)
 
     def is_running(self):
@@ -69,7 +69,7 @@ class MainCanvas(Panel, Canvas):
     kbproc = None
 
     def __init__(self, parent, rendering_delay=0):
-        rendering_delay = rendering_delay or REDNDERING_DELAY
+        rendering_delay = rendering_delay or RENDERING_DELAY
         Panel.__init__(self, parent, allow_input=True,
                        style=wx.FULL_REPAINT_ON_RESIZE)
         Canvas.__init__(self, set_timer=False)
