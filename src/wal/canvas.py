@@ -81,6 +81,16 @@ class MainCanvas(Panel, Canvas):
         # ----- Keyboard binding
         self.Bind(wx.EVT_KEY_DOWN, self._on_key_down)
         self.Bind(wx.EVT_CHAR, self._on_char)
+        # ----- Mouse binding
+        self.Bind(wx.EVT_LEFT_DOWN, self._mouse_left_down)
+        self.Bind(wx.EVT_LEFT_UP, self._mouse_left_up)
+        self.Bind(wx.EVT_LEFT_DCLICK, self._mouse_left_dclick)
+        self.Bind(wx.EVT_RIGHT_DOWN, self._mouse_right_down)
+        self.Bind(wx.EVT_RIGHT_UP, self._mouse_right_up)
+        self.Bind(wx.EVT_MIDDLE_DOWN, self._mouse_middle_down)
+        self.Bind(wx.EVT_MIDDLE_UP, self._mouse_middle_up)
+        self.Bind(wx.EVT_MOUSEWHEEL, self._mouse_wheel)
+        self.Bind(wx.EVT_MOTION, self._mouse_move)
 
     def _on_key_down(self, event):
         key_code = event.GetKeyCode()
@@ -121,3 +131,60 @@ class MainCanvas(Panel, Canvas):
 
     def capture_lost(self, event):
         self.release_mouse()
+
+    def _mouse_left_down(self, event):
+        self.capture_mouse()
+        self.mouse_left_down(event)
+        event.Skip()
+
+    def mouse_left_down(self, event):
+        pass
+
+    def _mouse_left_up(self, event):
+        self.release_mouse()
+        self.mouse_left_up(event)
+
+    def mouse_left_up(self, event):
+        pass
+
+    def _mouse_left_dclick(self, event):
+        self.mouse_left_dclick(event)
+
+    def mouse_left_dclick(self, event):
+        pass
+
+    def _mouse_move(self, event):
+        self.mouse_move(event)
+
+    def mouse_move(self, event):
+        pass
+
+    def _mouse_right_down(self, event):
+        self.mouse_right_down(event)
+
+    def mouse_right_down(self, event):
+        pass
+
+    def _mouse_right_up(self, event):
+        self.mouse_right_up(event)
+
+    def mouse_right_up(self, event):
+        pass
+
+    def _mouse_middle_down(self, event):
+        self.mouse_middle_down(event)
+
+    def mouse_middle_down(self, event):
+        pass
+
+    def _mouse_middle_up(self, event):
+        self.mouse_middle_up(event)
+
+    def mouse_middle_up(self, event):
+        pass
+
+    def _mouse_wheel(self, event):
+        self.mouse_wheel(event)
+
+    def mouse_wheel(self, event):
+        pass

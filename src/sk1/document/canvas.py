@@ -92,16 +92,6 @@ class AppCanvas(wal.MainCanvas):
         self.ctx_menu = ContextMenu(self.app, self)
 
         self.ctrls = self.init_controllers()
-        # ----- Mouse binding
-        self.Bind(wx.EVT_LEFT_DOWN, self.mouse_left_down)
-        self.Bind(wx.EVT_LEFT_UP, self.mouse_left_up)
-        self.Bind(wx.EVT_LEFT_DCLICK, self.mouse_left_dclick)
-        self.Bind(wx.EVT_RIGHT_DOWN, self.mouse_right_down)
-        self.Bind(wx.EVT_RIGHT_UP, self.mouse_right_up)
-        self.Bind(wx.EVT_MIDDLE_DOWN, self.mouse_middle_down)
-        self.Bind(wx.EVT_MIDDLE_UP, self.mouse_middle_up)
-        self.Bind(wx.EVT_MOUSEWHEEL, self.mouse_wheel)
-        self.Bind(wx.EVT_MOTION, self.mouse_move)
         # ----- Application eventloop bindings
         self.eventloop.connect(self.eventloop.DOC_MODIFIED, self.doc_modified)
         self.eventloop.connect(self.eventloop.PAGE_CHANGED, self.doc_modified)
@@ -532,13 +522,10 @@ class AppCanvas(wal.MainCanvas):
         self.controller.on_timer()
 
     def mouse_left_down(self, event):
-        self.capture_mouse()
         self.controller.set_cursor()
         self.controller.mouse_down(CanvasEvent(event))
-        event.Skip()
 
     def mouse_left_up(self, event):
-        self.release_mouse()
         self.controller.mouse_up(CanvasEvent(event))
 
     def mouse_left_dclick(self, event):
@@ -546,12 +533,13 @@ class AppCanvas(wal.MainCanvas):
         self.controller.mouse_double_click(CanvasEvent(event))
 
     def mouse_move(self, event):
-        x, y = self.win_to_doc_coords(list(event.GetPositionTuple()))
+        event = CanvasEvent(event)
+        x, y = self.win_to_doc_coords(event.get_point())
         unit = self.presenter.model.doc_units
         tr_unit = uc2const.unit_short_names[unit]
         msg = '  %i x %i' % (x * point_dict[unit], y * point_dict[unit])
         events.emit(events.MOUSE_STATUS, '%s %s' % (msg, tr_unit))
-        self.controller.mouse_move(CanvasEvent(event))
+        self.controller.mouse_move(event)
 
     def mouse_right_down(self, event):
         self.controller.mouse_right_down(CanvasEvent(event))
