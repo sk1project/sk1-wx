@@ -17,14 +17,12 @@
 
 import cairo
 import math
-import wx
 from copy import deepcopy
 
 from sk1 import config
 from uc2 import libcairo, libgeom
 from uc2 import uc2const, sk2const
 from uc2.formats.sk2.crenderer import CairoRenderer
-from wal import copy_surface_to_bitmap
 
 CAIRO_BLACK = [0.0, 0.0, 0.0]
 CAIRO_GRAY = [0.0, 0.0, 0.0, 0.5]
@@ -88,8 +86,7 @@ class PDRenderer(CairoRenderer):
         self.ctx.set_matrix(self.canvas.matrix)
 
     def finalize(self):
-        dc = wx.PaintDC(self.canvas)
-        dc.DrawBitmap(copy_surface_to_bitmap(self.temp_surface), 0, 0, False)
+        self.canvas.draw_surface(self.temp_surface, 0, 0, False)
 
     def paint_page(self):
         self.ctx.set_line_width(1.0 / self.canvas.zoom)
@@ -727,12 +724,10 @@ class PDRenderer(CairoRenderer):
         # ------DIRECT DRAWING
 
     def cdc_paint_doc(self):
-        dc = wx.ClientDC(self.canvas)
-        dc.DrawBitmap(copy_surface_to_bitmap(self.surface), 0, 0, False)
+        self.canvas.put_surface(self.surface, 0, 0, False)
 
     def cdc_paint_selection(self):
-        dc = wx.ClientDC(self.canvas)
-        dc.DrawBitmap(copy_surface_to_bitmap(self.temp_surface), 0, 0, False)
+        self.canvas.put_surface(self.temp_surface, 0, 0, False)
 
     def cdc_normalize_rect(self, start, end):
         x0, y0 = start
@@ -773,8 +768,7 @@ class PDRenderer(CairoRenderer):
                 ctx.move_to(1, 0)
                 ctx.line_to(1, self.height)
                 ctx.stroke()
-            dc = wx.ClientDC(self.canvas)
-            dc.DrawBitmap(copy_surface_to_bitmap(surface), x - 1, 0)
+            self.canvas.put_surface(surface, x - 1, 0, False)
 
     def cdc_draw_horizontal_line(self, y, color, dash, clear=False):
         if y is not None:
@@ -788,8 +782,7 @@ class PDRenderer(CairoRenderer):
                 ctx.move_to(0, 1)
                 ctx.line_to(self.width, 1)
                 ctx.stroke()
-            dc = wx.ClientDC(self.canvas)
-            dc.DrawBitmap(copy_surface_to_bitmap(surface), 0, y - 1)
+            self.canvas.put_surface(surface, 0, y - 1, False)
 
     def cdc_draw_snap_line(self, pos, vertical=True, clear=False):
         color = config.snap_line_color
@@ -851,7 +844,6 @@ class PDRenderer(CairoRenderer):
     def cdc_clear_rect(self, start, end):
         if start and end:
             x, y, w, h = self.cdc_to_int(*self.cdc_normalize_rect(start, end))
-            dc = wx.ClientDC(self.canvas)
             x -= 2
             y -= 2
             w += 4
@@ -864,7 +856,7 @@ class PDRenderer(CairoRenderer):
             ctx = cairo.Context(surface)
             ctx.set_source_surface(self.surface, -x, -y)
             ctx.paint()
-            dc.DrawBitmap(copy_surface_to_bitmap(surface), x, y)
+            self.canvas.put_surface(surface, x, y, False)
 
     def _cdc_draw_cpath(self, ctx, cpath):
         self.cdc_set_ctx(ctx, CAIRO_WHITE)
@@ -898,8 +890,7 @@ class PDRenderer(CairoRenderer):
             ctx.paint()
             ctx.set_matrix(cairo.Matrix(1.0, 0.0, 0.0, 1.0, -x + 1, -y + 1))
             self._cdc_draw_cpath(ctx, cpath)
-            dc = wx.ClientDC(self.canvas)
-            dc.DrawBitmap(copy_surface_to_bitmap(surface), x - 1, y - 1)
+            self.canvas.put_surface(surface, x - 1, y - 1, False)
             self.cdc_reflect_snapping()
 
     def cdc_draw_frame(self, start, end, temp_surfase=False):
@@ -925,8 +916,7 @@ class PDRenderer(CairoRenderer):
             ctx.paint()
             ctx.set_matrix(cairo.Matrix(1.0, 0.0, 0.0, 1.0, -x + 1, -y + 1))
             self._cdc_draw_cpath(ctx, cpath)
-            dc = wx.ClientDC(self.canvas)
-            dc.DrawBitmap(copy_surface_to_bitmap(surface), x - 1, y - 1)
+            self.canvas.put_surface(surface, x - 1, y - 1)
             self.cdc_reflect_snapping()
 
     def cdc_hide_move_frame(self):

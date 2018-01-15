@@ -428,6 +428,10 @@ class Canvas(object):
     def draw_surface(self, surface, x=0, y=0, use_mask=True):
         self.pdc.DrawBitmap(copy_surface_to_bitmap(surface), x, y, use_mask)
 
+    def put_surface(self, surface, x=0, y=0, use_mask=True):
+        dc = wx.ClientDC(self)
+        dc.DrawBitmap(copy_surface_to_bitmap(surface), x, y, use_mask)
+
     def draw_linear_gradient(self, rect, start_clr, stop_clr, ndir=False):
         ndir = wx.SOUTH if ndir else wx.EAST
         self.pdc.GradientFillLinear(
