@@ -385,8 +385,7 @@ class Canvas(object):
         self.pdc.SetDeviceOrigin(x, y)
 
     def set_stroke(self, color=None, width=1, dashes=None):
-        if dashes is None:
-            dashes = []
+        dashes = dashes or []
         if color is None:
             self.pdc.SetPen(wx.TRANSPARENT_PEN)
         else:
@@ -616,9 +615,8 @@ class LabeledPanel(VPanel):
 
         if widget or text:
             self.widget_panel = HPanel(self)
-            if widget:
-                self.widget = widget
-            elif text:
+            self.widget = widget
+            if text:
                 self.widget = wx.StaticText(self.widget_panel, wx.ID_ANY, text)
             self.widget_panel.pack(self.widget, padding=5)
             self.widget_panel.SetPosition((7, 0))
@@ -874,12 +872,8 @@ class HSizer(HPanel):
         if not change:
             return
         w = self.client.get_size()[0]
-        if self.left_side:
-            w += change
-        else:
-            w -= change
-        if w < self.client_min:
-            w = self.client_min
+        w = w + change if self.left_side else w - change
+        w = self.client_min if w < self.client_min else w
         self.client.remove_all()
         self.client.pack((w, 0))
         self.client_parent.Layout()
