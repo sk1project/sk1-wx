@@ -25,9 +25,7 @@ class ArtProvider(wx.ArtProvider):
         wx.ArtProvider.__init__(self)
 
     def get_bitmap(self, path=''):
-        if not path:
-            return wx.NullBitmap
-        return wx.Bitmap(path, self.image_type)
+        return wx.Bitmap(path, self.image_type) if path else wx.NullBitmap
 
     def create_bitmap(self, artid, client, size):
         return self.get_bitmap()
