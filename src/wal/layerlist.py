@@ -32,11 +32,14 @@ class LayerList(UltimateListCtrl):
     change_callback = None
     double_click_callback = None
     selection_flag = True
+    data = None
 
     def __init__(
-            self, parent, data=[], images=[], alt_color=True,
+            self, parent, data=None, images=None, alt_color=True,
             even_color=const.EVEN_COLOR, odd_color=const.ODD_COLOR,
             on_select=None, on_change=None, on_double_click=None):
+        data = data or []
+        images = images or []
         self.alt_color = alt_color
         self.attr1 = UltimateListItemAttr()
         self.attr1.SetBackgroundColour(odd_color)
@@ -75,9 +78,9 @@ class LayerList(UltimateListCtrl):
     def get_selected(self):
         return self.current_item
 
-    def update(self, data=[]):
+    def update(self, data=None):
         self.selection_flag = False
-        self.data = data
+        self.data = data or []
         self.SetItemCount(len(self.data))
         self.selection_flag = True
 
@@ -103,40 +106,29 @@ class LayerList(UltimateListCtrl):
             self.sel_callback(self.current_item)
         if self.pos_x is not None and self.change_callback:
             column = self.pos_x / WIDTH
-            if column > 5:
-                column = 5
+            column = 5 if column > 5 else column
             self.change_callback(self.current_item, column)
             self.pos_x = None
 
     def OnGetItemToolTip(self, item, col):
-        if col == 5:
-            return self.data[item][5]
-        return None
+        return self.data[item][5] if col == 5 else None
 
     def OnGetItemTextColour(self, item, col):
         return const.BLACK
 
     def OnGetItemText(self, item, col):
-        if col == 5:
-            return self.data[item][5]
-        return ''
+        return self.data[item][5] if col == 5 else ''
 
     def OnGetItemImage(self, item):
         return -1
 
     def OnGetItemAttr(self, item):
         if self.alt_color:
-            if not item % 2:
-                return self.attr1
-            else:
-                return self.attr2
+            return self.attr2 if item % 2 else self.attr1
         return None
 
     def OnGetItemColumnImage(self, item, column=0):
-        if column == 5:
-            return []
-        else:
-            return [column * 2 + self.data[item][column]]
+        return [] if column == 5 else [column * 2 + self.data[item][column]]
 
     def OnGetItemColumnCheck(self, item, column=0):
         return []
