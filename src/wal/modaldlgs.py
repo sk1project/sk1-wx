@@ -102,6 +102,10 @@ class SimpleDialog(wx.Dialog, mixins.DialogMixin):
 
 
 class CloseDialog(SimpleDialog):
+    button_box = None
+    close_btn = None
+    left_button_box = None
+
     def __init__(self, parent, title, size=(-1, -1), style=VERTICAL,
                  resizable=True, on_load=None, add_line=True, margin=None):
         SimpleDialog.__init__(self, parent, title, size, style, resizable,
@@ -131,17 +135,16 @@ class OkCancelDialog(SimpleDialog):
     ok_btn = None
     cancel_btn = None
     action_button = None
+    left_button_box = None
     button_box_padding = 0
 
-    def __init__(
-            self, parent, title, size=(-1, -1), style=VERTICAL,
-            resizable=False, action_button=const.BUTTON_OK, on_load=None,
-            add_line=True, margin=None, button_box_padding=0):
+    def __init__(self, parent, title, size=(-1, -1), style=VERTICAL,
+                 resizable=False, action_button=const.BUTTON_OK, on_load=None,
+                 add_line=True, margin=None, button_box_padding=0):
         self.action_button = action_button
         self.button_box_padding = button_box_padding
-        SimpleDialog.__init__(
-            self, parent, title, size, style, resizable, on_load,
-            add_line, margin)
+        SimpleDialog.__init__(self, parent, title, size, style, resizable,
+                              on_load, add_line, margin)
 
     def set_dialog_buttons(self):
         if self.add_line:
@@ -153,12 +156,10 @@ class OkCancelDialog(SimpleDialog):
         self.box.pack(self.button_box, fill=True,
                       padding_all=self.button_box_padding)
 
-        self.ok_btn = Button(
-            self.button_box, '', onclick=self.on_ok,
-            default=True, pid=self.action_button)
-        self.cancel_btn = Button(
-            self.button_box, '', onclick=self.on_cancel,
-            pid=const.BUTTON_CANCEL)
+        self.ok_btn = Button(self.button_box, '', onclick=self.on_ok,
+                             default=True, pid=self.action_button)
+        self.cancel_btn = Button(self.button_box, '', onclick=self.on_cancel,
+                                 pid=const.BUTTON_CANCEL)
 
         self.left_button_box = HPanel(self.button_box)
         self.button_box.pack(self.left_button_box, expand=True, fill=True)

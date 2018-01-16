@@ -34,9 +34,7 @@ class EditDialog(wal.OkCancelDialog):
 
     def get_result(self):
         txt = self.entry.get_value()
-        if not txt:
-            txt = self.text
-        return txt
+        return txt if txt else self.text
 
 
 def edit_dlg(parent, dlg_name, text, width=25):
@@ -59,9 +57,7 @@ class MultilineEditDialog(wal.OkCancelDialog):
 
     def get_result(self):
         txt = self.entry.get_value()
-        if not txt:
-            txt = self.text
-        return txt
+        return txt if txt else self.text
 
 
 def multiline_edit_dlg(parent, dlg_name, text):

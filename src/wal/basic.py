@@ -231,8 +231,8 @@ class SizedPanel(Panel):
         """Arguments: object, expandable (0 or 1), flag, border"""
         obj = args[0]
         if not isinstance(obj, tuple):
-            if not obj.GetParent() == self:
-                obj.Reparent(self)
+            if not obj.GetParent() == self.panel:
+                obj.Reparent(self.panel)
         self.box.Add(*args, **kw)
         if not isinstance(obj, tuple) and not isinstance(obj, int):
             obj.Show()
