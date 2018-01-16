@@ -95,7 +95,7 @@ class WidgetMixin(object):
     def _set_width(self, size, width):
         if not width: return size
         width += 2
-        return (width * const.FONT_SIZE[0], size[1])
+        return width * const.FONT_SIZE[0], size[1]
 
     def set_tooltip(self, tip=None):
         if tip:
@@ -170,7 +170,8 @@ class GenericGWidget(wx.Panel, WidgetMixin):
         self.onclick = onclick
         self.repeat = repeat
         wx.Panel.__init__(self, parent, wx.ID_ANY)
-        if const.IS_MSW: self.SetDoubleBuffered(True)
+        if const.IS_MSW:
+            self.SetDoubleBuffered(True)
         self.box = wx.BoxSizer(wx.HORIZONTAL)
         self.SetSizer(self.box)
         self.box.Add((1, 1))
@@ -201,10 +202,6 @@ class GenericGWidget(wx.Panel, WidgetMixin):
         self.box.Add((w, h))
         self.GetParent().Layout()
         self.refresh()
-
-    def refresh(self, x=0, y=0, w=0, h=0):
-        if not w: w, h = self.GetSize()
-        self.Refresh(rect=wx.Rect(x, y, w, h))
 
     def _on_paint(self, event):
         pass
