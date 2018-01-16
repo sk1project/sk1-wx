@@ -152,8 +152,7 @@ class Label(wx.StaticText, WidgetMixin):
 
 class HtmlLabel(wx.HyperlinkCtrl, WidgetMixin):
     def __init__(self, parent, text, url=''):
-        if not url:
-            url = text
+        url = text if not url else url
         wx.HyperlinkCtrl.__init__(self, parent, wx.ID_ANY, text, url)
 
 
@@ -185,8 +184,7 @@ class Checkbox(wx.CheckBox, DataWidgetMixin):
     def __init__(self, parent, text='', value=False, onclick=None, right=False):
         style = wx.ALIGN_RIGHT if right else 0
         wx.CheckBox.__init__(self, parent, wx.ID_ANY, text, style=style)
-        if value:
-            self.SetValue(True)
+        self.SetValue(True if value else False)
         if onclick:
             self.callback = onclick
             self.Bind(wx.EVT_CHECKBOX, self.on_click, self)
@@ -203,17 +201,12 @@ class Checkbox(wx.CheckBox, DataWidgetMixin):
 
 class NumCheckbox(Checkbox):
     def set_value(self, val, action=True):
-        boolval = False
-        if val:
-            boolval = True
-        self.SetValue(boolval)
+        self.SetValue(True if val else False)
         if action:
             self.on_click()
 
     def get_value(self):
-        if self.GetValue():
-            return 1
-        return 0
+        return 1 if self.GetValue() else 0
 
 
 class Radiobutton(wx.RadioButton, DataWidgetMixin):
@@ -308,18 +301,15 @@ class BitmapChoice(wx.combo.OwnerDrawnComboBox, WidgetMixin):
         dc.DrawBitmap(bitmap, x + 2, y + 4, True)
 
     def OnMeasureItem(self, item):
-        if item == wx.NOT_FOUND: return 1
-        return self.bitmaps[item].GetSize()[1] + 7
+        return 1 if item == wx.NOT_FOUND \
+            else self.bitmaps[item].GetSize()[1] + 7
 
     def OnMeasureItemWidth(self, item):
-        if item == wx.NOT_FOUND: return 1
-        return self.bitmaps[item].GetSize()[0] - 4
+        return 1 if item == wx.NOT_FOUND \
+            else self.bitmaps[item].GetSize()[0] - 4
 
     def _create_items(self):
-        items = []
-        for item in range(len(self.bitmaps)):
-            items.append(str(item))
-        return items
+        return [str(item) for item in range(len(self.bitmaps))]
 
     def set_bitmaps(self, bitmaps):
         self.bitmaps = bitmaps
@@ -343,7 +333,7 @@ class BitmapChoice(wx.combo.OwnerDrawnComboBox, WidgetMixin):
 
 
 class Combobox(wx.ComboBox, DataWidgetMixin):
-    items = []
+    items = None
     callback = None
     flag = False
 
@@ -410,13 +400,8 @@ class FloatCombobox(Combobox):
         event.Skip()
 
     def get_value(self):
-        if not Combobox.get_value(self):
-            return 1
-        if self.digits:
-            val = float(Combobox.get_value(self))
-        else:
-            val = int(Combobox.get_value(self))
-        return val
+        val = Combobox.get_value(self) or 1
+        return float(val) if self.digits else int(val)
 
     def set_value(self, val):
         val = str(val)
@@ -424,10 +409,7 @@ class FloatCombobox(Combobox):
             Combobox.set_value(self, val)
 
     def set_items(self, items):
-        sizes = []
-        for item in items:
-            sizes.append(str(item))
-        self.SetItems(sizes)
+        self.SetItems([str(item) for item in items])
 
 
 class Entry(wx.TextCtrl, DataWidgetMixin):
@@ -464,10 +446,8 @@ class Entry(wx.TextCtrl, DataWidgetMixin):
         return self.GetInsertionPoint()
 
     def set_cursor_pos(self, pos):
-        if pos > len(self.value):
-            pos = len(self.value)
-        if pos < 0:
-            pos = 0
+        pos = 0 if pos < 0 else pos
+        pos = len(self.value) if pos > len(self.value) else pos
         self.SetInsertionPoint(pos)
 
     def _on_change(self, event):
@@ -495,9 +475,6 @@ class Entry(wx.TextCtrl, DataWidgetMixin):
 
     def set_editable(self, val):
         self.SetEditable(val)
-
-    def set_bg(self, color):
-        self.SetBackgroundColour(color)
 
     def set_text_colors(self, fg=(), bg=()):
         fg = wx.Colour(*fg) if fg else wx.NullColour
@@ -642,15 +619,11 @@ if not const.IS_WX2:
             event.Skip()
 
         def get_value(self):
-            if not self.digits:
-                return int(self.GetValue())
-            return float(self.GetValue())
+            return float(self.GetValue()) if self.digits \
+                else int(self.GetValue())
 
         def set_value(self, value):
-            if self.digits:
-                self.SetValue(float(value))
-            else:
-                self.SetValue(int(value))
+            self.SetValue(float(value) if self.digits else int(value))
 
 
     FloatSpin = SpinDouble
@@ -919,8 +892,7 @@ class Slider(wx.Slider, RangeDataWidgetMixin):
 class Splitter(wx.SplitterWindow, WidgetMixin):
     def __init__(self, parent, live_update=True):
         style = wx.SP_NOBORDER
-        if live_update:
-            style |= wx.SP_LIVE_UPDATE
+        style = style | wx.SP_LIVE_UPDATE if live_update else style
         wx.SplitterWindow.__init__(self, parent, wx.ID_ANY, style=style)
 
     def split_vertically(self, win1, win2, sash_pos=0):
@@ -950,12 +922,9 @@ class ScrollBar(wx.ScrollBar, WidgetMixin):
     autohide = False
 
     def __init__(self, parent, vertical=True, onscroll=None, autohide=False):
-        style = wx.SB_VERTICAL
-        if not vertical:
-            style = wx.SB_HORIZONTAL
+        style = wx.SB_VERTICAL if vertical else wx.SB_HORIZONTAL
         wx.ScrollBar.__init__(self, parent, wx.ID_ANY, style=style)
-        if onscroll:
-            self.callback = onscroll
+        self.callback = onscroll
         self.autohide = autohide
         self.Bind(wx.EVT_SCROLL, self._scrolling, self)
 
@@ -995,22 +964,14 @@ class ColorButton(wx.ColourPickerCtrl, WidgetMixin):
             self.callback()
 
     def hex_to_val255(self, hexcolor):
-        r = int(hexcolor[1:3], 0x10)
-        g = int(hexcolor[3:5], 0x10)
-        b = int(hexcolor[5:], 0x10)
-        return r, g, b
+        return tuple(int(hexcolor[a:b], 0x10)
+                     for a, b in ((1, 3), (3, 5), (5, -1)))
 
     def val255(self, vals):
-        ret = []
-        for item in vals:
-            ret.append(int(item * 255))
-        return tuple(ret)
+        return tuple(int(item * 255) for item in vals)
 
     def val255_to_dec(self, vals):
-        ret = []
-        for item in vals:
-            ret.append(item / 255.0)
-        return tuple(ret)
+        return tuple(item / 255.0 for item in vals)
 
     def set_value(self, color):
         self.SetColour(wx.Colour(*self.val255(color)))
