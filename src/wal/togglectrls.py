@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2015 by Igor E. Novikov
+# 	Copyright (C) 2015-2018 by Igor E. Novikov
 #
 # 	This program is free software: you can redistribute it and/or modify
 # 	it under the terms of the GNU General Public License as published by
@@ -25,9 +25,8 @@ class ModeToggleButton(ImageToggleButton):
     callback = None
     allow_off = False
 
-    def __init__(
-            self, parent, keeper, mode, icons, names, on_change=None,
-            allow_off=False):
+    def __init__(self, parent, keeper, mode, icons, names, on_change=None,
+                 allow_off=False):
         self.keeper = keeper
         self.mode = mode
         self.callback = on_change
@@ -64,9 +63,8 @@ class HToggleKeeper(HPanel):
     callback = None
     allow_none = False
 
-    def __init__(
-            self, parent, modes, icons, names, on_change=None,
-            allow_none=False):
+    def __init__(self, parent, modes, icons, names, on_change=None,
+                 allow_none=False):
         self.modes = modes
         self.mode_buts = []
         self.callback = on_change

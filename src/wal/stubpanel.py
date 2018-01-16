@@ -35,7 +35,7 @@ class StubPanel(Panel):
         self.Bind(wx.EVT_PAINT, self._on_paint, self)
         self.Bind(wx.EVT_SIZE, self._on_resize, self)
 
-    def refresh(self):
+    def refresh(self, **kwargs):
         for item in self.buttons:
             item.set_visible(self.buttons_visible)
         w, h = self.GetSize()

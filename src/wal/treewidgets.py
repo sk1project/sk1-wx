@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015 by Igor E. Novikov
+#  Copyright (C) 2015-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -49,17 +49,14 @@ class TreeWidget(wx.TreeCtrl, WidgetMixin):
     select_cmd = None
 
     def __init__(
-            self, parent, data=[], border=True, alt_color=True,
+            self, parent, data=None, border=True, alt_color=True,
             use_icons=True, on_select=None, highlight_row=True):
+        data = data or []
         style = wx.TR_DEFAULT_STYLE | wx.TR_HAS_BUTTONS | wx.TR_HIDE_ROOT
-        if const.IS_MSW:
-            highlight_row = False
-        if highlight_row:
-            style |= wx.TR_FULL_ROW_HIGHLIGHT
-        if not highlight_row:
-            alt_color = False
-        if border and not const.IS_WX3:
-            style |= wx.BORDER_MASK
+        highlight_row = False if const.IS_MSW else highlight_row
+        style = style | wx.TR_FULL_ROW_HIGHLIGHT if highlight_row else style
+        alt_color = False if not highlight_row else alt_color
+        style = style | wx.BORDER_MASK if border and not const.IS_WX3 else style
         wx.TreeCtrl.__init__(self, parent, wx.ID_ANY, style=style)
         self.alt_color = alt_color
         self.use_icons = use_icons
@@ -130,27 +127,25 @@ class TreeWidget(wx.TreeCtrl, WidgetMixin):
             self.SetFocus()
 
     def recolor_all_items(self):
-        if not self.alt_color:
-            return
-        even = False
-        for item in self.items:
-            if even:
-                self.SetItemBackgroundColour(item, const.ODD_COLOR)
-            else:
-                self.SetItemBackgroundColour(item, const.EVEN_COLOR)
-            even = not even
-
-    def recolor_items(self, *args):
-        if not self.alt_color:
-            return
-        even = False
-        for item in self.items:
-            if self.IsVisible(item):
+        if self.alt_color:
+            even = False
+            for item in self.items:
                 if even:
                     self.SetItemBackgroundColour(item, const.ODD_COLOR)
                 else:
                     self.SetItemBackgroundColour(item, const.EVEN_COLOR)
                 even = not even
+
+    def recolor_items(self, *args):
+        if self.alt_color:
+            even = False
+            for item in self.items:
+                if self.IsVisible(item):
+                    if even:
+                        self.SetItemBackgroundColour(item, const.ODD_COLOR)
+                    else:
+                        self.SetItemBackgroundColour(item, const.EVEN_COLOR)
+                    even = not even
 
     def set_indent(self, val):
         self.SetIndent(val)
