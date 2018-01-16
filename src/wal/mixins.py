@@ -175,7 +175,8 @@ class GenericGWidget(wx.Panel, WidgetMixin):
         self.box = wx.BoxSizer(wx.HORIZONTAL)
         self.SetSizer(self.box)
         self.box.Add((1, 1))
-        if tooltip: self.set_tooltip(tooltip)
+        if tooltip:
+            self.set_tooltip(tooltip)
 
         self.timer = wx.Timer(self)
         self.Bind(wx.EVT_PAINT, self._on_paint, self)

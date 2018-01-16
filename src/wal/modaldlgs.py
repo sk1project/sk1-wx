@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013-2015 by Igor E. Novikov
+#  Copyright (C) 2013-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -42,25 +42,20 @@ class SimpleDialog(wx.Dialog, mixins.DialogMixin):
     _timer = None
     add_line = True
 
-    def __init__(
-            self, parent, title, size=(-1, -1), style=VERTICAL,
-            resizable=False, on_load=None, add_line=True, margin=None):
-        dlg_style = wx.DEFAULT_DIALOG_STYLE
-        if resizable:
-            dlg_style |= wx.RESIZE_BORDER | wx.MAXIMIZE_BOX
+    def __init__(self, parent, title, size=(-1, -1), style=VERTICAL,
+                 resizable=False, on_load=None, add_line=True, margin=None):
+        stl = wx.DEFAULT_DIALOG_STYLE
+        stl = stl | wx.RESIZE_BORDER | wx.MAXIMIZE_BOX if resizable else stl
         self.add_line = add_line
 
-        wx.Dialog.__init__(
-            self, parent, -1, title, wx.DefaultPosition,
-            size, style=dlg_style)
+        wx.Dialog.__init__(self, parent, -1, title, wx.DefaultPosition,
+                           size, style=stl)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(sizer)
 
         if margin is None:
-            margin = 5
-            if not const.IS_GTK:
-                margin = 10
+            margin = 5 if const.IS_GTK else margin = 10
 
         self.box = VPanel(self)
         sizer.Add(self.box, 1, ALL | EXPAND, margin)
@@ -107,12 +102,10 @@ class SimpleDialog(wx.Dialog, mixins.DialogMixin):
 
 
 class CloseDialog(SimpleDialog):
-    def __init__(
-            self, parent, title, size=(-1, -1), style=VERTICAL,
-            resizable=True, on_load=None, add_line=True, margin=None):
-        SimpleDialog.__init__(
-            self, parent, title, size, style, resizable, on_load,
-            add_line, margin)
+    def __init__(self, parent, title, size=(-1, -1), style=VERTICAL,
+                 resizable=True, on_load=None, add_line=True, margin=None):
+        SimpleDialog.__init__(self, parent, title, size, style, resizable,
+                              on_load, add_line, margin)
 
     def set_dialog_buttons(self):
         if self.add_line:
@@ -187,8 +180,7 @@ class OkCancelDialog(SimpleDialog):
         self.end_modal(const.BUTTON_CANCEL)
 
     def show(self):
-        ret = None
-        if self.show_modal() == const.BUTTON_OK:
-            ret = self.get_result()
+        ret = self.get_result() if self.show_modal() == const.BUTTON_OK \
+            else None
         self.destroy()
         return ret
