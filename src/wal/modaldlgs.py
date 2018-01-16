@@ -55,7 +55,7 @@ class SimpleDialog(wx.Dialog, mixins.DialogMixin):
         self.SetSizer(sizer)
 
         if margin is None:
-            margin = 5 if const.IS_GTK else margin = 10
+            margin = 5 if const.IS_GTK else 10
 
         self.box = VPanel(self)
         sizer.Add(self.box, 1, ALL | EXPAND, margin)
