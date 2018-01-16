@@ -108,8 +108,8 @@ class MainWindow(wx.Frame):
             on_close = self.app.exit
         self.maximized = maximized
 
-        wx.Frame.__init__(
-            self, None, wx.ID_ANY, title, pos=DEF_SIZE, size=size, name=title)
+        wx.Frame.__init__(self, None, wx.ID_ANY, title,
+                          pos=DEF_SIZE, size=size, name=title)
         self.orientation = wx.VERTICAL if vertical else wx.HORIZONTAL
         self.Centre()
         self.box = wx.BoxSizer(self.orientation)
@@ -320,6 +320,7 @@ class MouseEvent(object):
 class Canvas(object):
     dc = None
     pdc = None
+    dashes = None
 
     def __init__(self, set_timer=True):
         self.Bind(wx.EVT_PAINT, self._on_paint, self)
@@ -376,14 +377,15 @@ class Canvas(object):
         self.pdc.SetDeviceOrigin(x, y)
 
     def set_stroke(self, color=None, width=1, dashes=None):
-        dashes = dashes or []
+        self.dashes = [] + dashes if dashes else []
         if color is None:
             self.pdc.SetPen(wx.TRANSPARENT_PEN)
         else:
             pen = wx.Pen(wx.Colour(*color), width)
             if dashes:
                 pen = wx.Pen(wx.Colour(*color), width, wx.USER_DASH)
-                pen.SetDashes(dashes)
+                pen.SetDashes(self.dashes)
+            pen.SetCap(wx.CAP_BUTT)
             self.pdc.SetPen(pen)
 
     def set_fill(self, color=None):
@@ -442,14 +444,15 @@ class Canvas(object):
         self.dc.SetDeviceOrigin(x, y)
 
     def set_gc_stroke(self, color=None, width=1, dashes=None):
-        dashes = dashes or []
+        self.dashes = [] + dashes if dashes else []
         if color is None:
             self.dc.SetPen(wx.TRANSPARENT_PEN)
         else:
             pen = wx.Pen(wx.Colour(*color), width)
-            if dashes:
+            if self.dashes:
                 pen = wx.Pen(wx.Colour(*color), width, wx.USER_DASH)
-                pen.SetDashes(dashes)
+                pen.SetDashes(self.dashes)
+            pen.SetCap(wx.CAP_BUTT)
             self.dc.SetPen(pen)
 
     def set_gc_fill(self, color=None):
@@ -555,19 +558,26 @@ class SensitiveCanvas(Canvas):
     def _mouse_left_dclick(self, event):
         self.mouse_left_dclick(event.GetPositionTuple())
 
-    def mouse_left_down(self, point): pass
+    def mouse_left_down(self, point):
+        pass
 
-    def mouse_left_up(self, point): pass
+    def mouse_left_up(self, point):
+        pass
 
-    def mouse_right_up(self, point): pass
+    def mouse_right_up(self, point):
+        pass
 
-    def mouse_wheel(self, val): pass
+    def mouse_wheel(self, val):
+        pass
 
-    def mouse_move(self, point): pass
+    def mouse_move(self, point):
+        pass
 
-    def capture_lost(self): pass
+    def capture_lost(self):
+        pass
 
-    def mouse_left_dclick(self, point): pass
+    def mouse_left_dclick(self, point):
+        pass
 
 
 class RoundedPanel(VPanel, Canvas):
@@ -755,7 +765,7 @@ class ScrolledCanvas(wx.ScrolledWindow, WidgetMixin):
     def set_scroll_rate(self, h=20, v=20):
         self.SetScrollRate(h, v)
 
-    def refresh(self, x=0, y=0, w=0, h=0):
+    def refresh(self, x=0, y=0, w=0, h=0, clear=True):
         if not w:
             w, h = self.GetVirtualSize()
         self.Refresh(rect=wx.Rect(x, y, w, h))
