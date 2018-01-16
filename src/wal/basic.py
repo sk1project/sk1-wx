@@ -110,9 +110,7 @@ class MainWindow(wx.Frame):
 
         wx.Frame.__init__(
             self, None, wx.ID_ANY, title, pos=DEF_SIZE, size=size, name=title)
-        self.orientation = wx.VERTICAL
-        if not vertical:
-            self.orientation = wx.HORIZONTAL
+        self.orientation = wx.VERTICAL if vertical else wx.HORIZONTAL
         self.Centre()
         self.box = wx.BoxSizer(self.orientation)
         self.SetSizer(self.box)
@@ -132,9 +130,8 @@ class MainWindow(wx.Frame):
             if actions[item].global_accs:
                 for acc in actions[item].global_accs:
                     global_entries.append(acc)
-                    self.Bind(
-                        wx.EVT_KEY_DOWN, actions[item].do_call, self,
-                        id=acc.GetCommand())
+                    self.Bind(wx.EVT_KEY_DOWN, actions[item].do_call, self,
+                              id=acc.GetCommand())
         if global_entries:
             self.SetAcceleratorTable(wx.AcceleratorTable(global_entries))
 
@@ -234,8 +231,8 @@ class SizedPanel(Panel):
         """Arguments: object, expandable (0 or 1), flag, border"""
         obj = args[0]
         if not isinstance(obj, tuple):
-            if not obj.GetParent() == self.panel:
-                obj.Reparent(self.panel)
+            if not obj.GetParent() == self:
+                obj.Reparent(self)
         self.box.Add(*args, **kw)
         if not isinstance(obj, tuple) and not isinstance(obj, int):
             obj.Show()
@@ -260,7 +257,6 @@ class HPanel(SizedPanel):
     def pack(self, obj, expand=False, fill=False,
              padding=0, start_padding=0, end_padding=0, padding_all=0):
         expand = 1 if expand else 0
-
         flags = wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL
         flags = flags | wx.LEFT | wx.RIGHT if padding else flags
         flags = flags | wx.ALL if padding_all else flags
@@ -282,7 +278,6 @@ class VPanel(SizedPanel):
             self, obj, expand=False, fill=False, align_center=True,
             padding=0, start_padding=0, end_padding=0, padding_all=0):
         expand = 1 if expand else 0
-
         flags = wx.ALIGN_TOP
         flags = flags | wx.ALIGN_CENTER_HORIZONTAL if align_center else flags
         flags = flags | wx.TOP | wx.BOTTOM if padding else flags
@@ -355,7 +350,7 @@ class Canvas(object):
         self.pdc = wx.PaintDC(self)
         try:
             self.dc = wx.GCDC(self.pdc)
-        except:
+        except Exception:
             self.dc = self.pdc
         self.dc.BeginDrawing()
 
@@ -392,10 +387,8 @@ class Canvas(object):
             self.pdc.SetPen(pen)
 
     def set_fill(self, color=None):
-        if color is None:
-            self.pdc.SetBrush(wx.TRANSPARENT_BRUSH)
-        else:
-            self.pdc.SetBrush(wx.Brush(wx.Colour(*color)))
+        self.pdc.SetBrush(wx.TRANSPARENT_BRUSH if color is None
+                          else wx.Brush(wx.Colour(*color)))
 
     def set_font(self, bold=False, size_incr=0):
         font = self.GetFont()
@@ -448,17 +441,20 @@ class Canvas(object):
     def set_gc_origin(self, x=0, y=0):
         self.dc.SetDeviceOrigin(x, y)
 
-    def set_gc_stroke(self, color=None, width=1):
+    def set_gc_stroke(self, color=None, width=1, dashes=None):
+        dashes = dashes or []
         if color is None:
             self.dc.SetPen(wx.TRANSPARENT_PEN)
         else:
-            self.dc.SetPen(wx.Pen(wx.Colour(*color), width))
+            pen = wx.Pen(wx.Colour(*color), width)
+            if dashes:
+                pen = wx.Pen(wx.Colour(*color), width, wx.USER_DASH)
+                pen.SetDashes(dashes)
+            self.dc.SetPen(pen)
 
     def set_gc_fill(self, color=None):
-        if color is None:
-            self.dc.SetBrush(wx.TRANSPARENT_BRUSH)
-        else:
-            self.dc.SetBrush(wx.Brush(wx.Colour(*color)))
+        self.dc.SetBrush(wx.TRANSPARENT_BRUSH if color is None
+                         else wx.Brush(wx.Colour(*color)))
 
     def set_gc_font(self, bold=False, size_incr=0):
         font = self.GetFont()
