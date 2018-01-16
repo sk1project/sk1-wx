@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015 by Igor E. Novikov
+#  Copyright (C) 2015-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -30,23 +30,19 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, WidgetMixin):
     activate_cmd = None
     alt_color = False
 
-    def __init__(
-            self, parent, data=[], border=True, header=False,
-            single_sel=True, virtual=False, alt_color=False, even_color=None,
-            odd_color=None, on_select=None, on_activate=None):
-        self.data = data
+    def __init__(self, parent, data=None, border=True, header=False,
+                 single_sel=True, virtual=False, alt_color=False,
+                 even_color=None, odd_color=None,
+                 on_select=None, on_activate=None):
+        self.data = data or []
         self.alt_color = alt_color
         self.odd_color = odd_color or const.ODD_COLOR
         self.even_color = even_color or const.EVEN_COLOR
         style = wx.LC_REPORT | wx.LC_VRULES
-        if border and not const.IS_WX3:
-            style |= wx.BORDER_MASK
-        if not header:
-            style |= wx.LC_NO_HEADER
-        if single_sel:
-            style |= wx.LC_SINGLE_SEL
-        if virtual:
-            style |= wx.LC_VIRTUAL
+        style = style | wx.BORDER_MASK if border and not const.IS_WX3 else style
+        style = style | wx.LC_NO_HEADER if not header else style
+        style = style | wx.LC_SINGLE_SEL if single_sel else style
+        style = style | wx.LC_VIRTUAL if virtual else style
         wx.ListCtrl.__init__(self, parent, wx.ID_ANY, style=style)
         listmix.ListCtrlAutoWidthMixin.__init__(self)
         if self.data:
@@ -83,7 +79,7 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, WidgetMixin):
         even = False
         i = 0
         for item in data:
-            if type(item) == types.StringType:
+            if isinstance(item, str):
                 item = item.decode('utf8')
             self.Append([item])
             if alt_color:
@@ -97,10 +93,8 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, WidgetMixin):
                 i += 1
 
     def on_select(self, *args):
-        ret = None
         index = self.GetFocusedItem()
-        if index >= 0:
-            ret = self.data[index]
+        ret = self.data[index] if index >= 0 else None
         self.select_cmd(ret)
 
     def on_activate(self, *args):
@@ -110,25 +104,21 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, WidgetMixin):
 
     def get_selected(self):
         index = self.GetFocusedItem()
-        if not index < 0:
-            return self.data[index]
-        return None
+        return self.data[index] if not index < 0 else None
 
     def get_active(self):
         return self.GetFocusedItem()
 
 
 class ReportList(SimpleList):
-    def __init__(
-            self, parent, data=[], border=True, header=True,
-            single_sel=True, virtual=False, alt_color=True,
-            even_color=None, odd_color=None,
-            on_select=None, on_activate=None):
-
-        SimpleList.__init__(
-            self, parent, data, border, header,
-            single_sel, virtual, alt_color, even_color, odd_color,
-            on_select, on_activate)
+    def __init__(self, parent, data=None, border=True, header=True,
+                 single_sel=True, virtual=False, alt_color=True,
+                 even_color=None, odd_color=None,
+                 on_select=None, on_activate=None):
+        data = data or []
+        SimpleList.__init__(self, parent, data, border, header, single_sel,
+                            virtual, alt_color, even_color, odd_color,
+                            on_select, on_activate)
 
     def set_columns(self):
         for item in self.data[0]:
@@ -151,10 +141,8 @@ class ReportList(SimpleList):
                 i += 1
 
     def on_select(self, *args):
-        ret = None
         index = self.GetFocusedItem()
-        if index >= 0:
-            ret = self.data[index + 1]
+        ret = self.data[index + 1] if index >= 0 else None
         self.select_cmd(ret)
 
     def on_activate(self, *args):
@@ -164,21 +152,18 @@ class ReportList(SimpleList):
 
     def get_selected(self):
         index = self.GetFocusedItem()
-        if not index < 0:
-            return self.data[index + 1]
-        return None
+        return self.data[index + 1] if not index < 0 else None
 
 
-def VirtualList(SimpleList):
-    def __init__(
-            self, parent, data=[], border=True, header=True,
-            single_sel=True, virtual=True, alt_color=True,
-            even_color=None, odd_color=None,
-            on_select=None, on_activate=None):
-        SimpleList.__init__(
-            self, parent, data, border, header,
-            single_sel, virtual, alt_color, even_color, odd_color,
-            on_select, on_activate)
+class VirtualList(SimpleList):
+    def __init__(self, parent, data=None, border=True, header=True,
+                 single_sel=True, virtual=True, alt_color=True,
+                 even_color=None, odd_color=None,
+                 on_select=None, on_activate=None):
+        data = data or []
+        SimpleList.__init__(self, parent, data, border, header, single_sel,
+                            virtual, alt_color, even_color, odd_color,
+                            on_select, on_activate)
 
     def OnGetItemText(self, item, col):
         return self.get_item_text(item, col)
