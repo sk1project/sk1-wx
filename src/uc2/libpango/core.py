@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2016 by Igor E. Novikov
+#  Copyright (C) 2016-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -43,19 +43,14 @@ GLYPH_CACHE = {}
 
 
 def get_glyph_cache(font_name, char):
-    ret = None
     char = str(char)
-    if font_name in GLYPH_CACHE:
-        if char in GLYPH_CACHE[font_name]:
-            ret = deepcopy(GLYPH_CACHE[font_name][char])
-    return ret
+    if font_name in GLYPH_CACHE and char in GLYPH_CACHE[font_name]:
+        return deepcopy(GLYPH_CACHE[font_name][char])
 
 
 def set_glyph_cache(font_name, char, glyph):
-    char = str(char)
-    if font_name not in GLYPH_CACHE:
-        GLYPH_CACHE[font_name] = {}
-    GLYPH_CACHE[font_name][char] = deepcopy(glyph)
+    GLYPH_CACHE[font_name] = GLYPH_CACHE.get(font_name, {})
+    GLYPH_CACHE[font_name][str(char)] = deepcopy(glyph)
 
 
 # --- Pango context functionality
@@ -65,9 +60,8 @@ def create_layout(ctx=CTX):
 
 
 def get_font_description(text_style, check_nt=False):
-    font_size = text_style[2]
-    if check_nt and os.name == 'nt':
-        font_size *= 10.0
+    font_size = text_style[2] * 10.0 \
+        if check_nt and os.name == 'nt' else text_style[2]
     fnt_descr = text_style[0] + ', ' + text_style[1] + ' ' + str(font_size)
     return _libpango.create_font_description(fnt_descr)
 
