@@ -72,7 +72,7 @@ class SK1Application(wal.Application, UCApplication):
         self.path = path
 
         wal.Application.__init__(self)
-        UCApplication.__init__(self, path, cfgdir)
+        UCApplication.__init__(self, path, cfgdir, False)
 
         if wal.IS_WINXP:
             msg = _('WindowsXP platform is obsolete and not supported!')

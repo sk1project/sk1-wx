@@ -22,6 +22,7 @@ from uc2.utils.sconfig import SerializedConfig
 
 
 class UCData:
+    app = None
     app_name = 'UniConvertor'
     app_proc = 'uniconvertor'
     app_org = 'sK1 Project'
@@ -32,12 +33,16 @@ class UCData:
     revision = uc2const.REVISION
     app_config_dir = ''
 
-    def __init__(self, app, cfgdir='~'):
+    def __init__(self, app, cfgdir='~', check=True):
 
         self.app = app
         if not self.app_config_dir:
             path = os.path.expanduser(os.path.join(cfgdir, '.config', 'uc2'))
             self.app_config_dir = path
+        if check:
+            self.check_config_dirs()
+
+    def check_config_dirs(self):
 
         if not os.path.lexists(self.app_config_dir):
             os.makedirs(self.app_config_dir)

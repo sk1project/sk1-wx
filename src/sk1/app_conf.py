@@ -43,7 +43,8 @@ class AppData(UCData):
         path = os.path.expanduser(os.path.join(cfgdir, '.config', 'sk1-wx'))
         self.app_config_dir = path
 
-        UCData.__init__(self, app)
+        UCData.__init__(self, app, check=False)
+        self.check_config_dirs()
 
         self.app_palette_dir = os.path.join(path, 'palettes')
         self.plugin_dir = os.path.join(path, 'sk1_custom_plugins')

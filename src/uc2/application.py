@@ -94,11 +94,11 @@ class UCApplication(object):
     do_verbose = False
     log_filepath = ''
 
-    def __init__(self, path='', cfgdir='~'):
+    def __init__(self, path='', cfgdir='~', check=True):
         self.path = path
         self.config = UCConfig()
         self.config.app = self
-        self.appdata = UCData(self, cfgdir)
+        self.appdata = UCData(self, cfgdir, check=check)
         setattr(uc2, 'config', self.config)
         setattr(uc2, 'appdata', self.appdata)
 
