@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015 by Igor E. Novikov
+#  Copyright (C) 2015-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -25,15 +25,11 @@ from cwrap import get_cpath_bbox, create_cpath
 
 
 def is_curve_point(point):
-    if len(point) == 2:
-        return False
-    return True
+    return len(point) != 2
 
 
 def bezier_base_point(point):
-    if len(point) == 2:
-        return [] + point
-    return [] + point[2]
+    return [] + point if len(point) == 2 else [] + point[2]
 
 
 def get_path_length(path, tolerance=0.5):
@@ -53,10 +49,7 @@ def get_path_length(path, tolerance=0.5):
 
 
 def get_paths_length(paths):
-    ret = 0
-    for item in paths:
-        ret += get_path_length(item)
-    return ret
+    return sum(get_path_length(item) for item in paths)
 
 
 def get_paths_bbox(paths):
@@ -121,7 +114,4 @@ def reverse_path(path):
 
 
 def reverse_paths(paths):
-    new_paths = []
-    for path in paths:
-        new_paths.append(reverse_path(path))
-    return new_paths
+    return [reverse_path(path) for path in paths]
