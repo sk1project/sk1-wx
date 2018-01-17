@@ -281,11 +281,6 @@ def get_text_glyphs(text, width, text_style, markup):
 
 
 def get_paths_from_glyph(glyph):
-    glyph = libcairo.get_path_from_cpath(glyph)
-    ret = []
-    for item in glyph:
-        if item and item[1]:
-            ret.append(item)
-    if not ret:
-        return None
-    return ret
+    ret = [item for item in libcairo.get_path_from_cpath(glyph)
+           if item and item[1]]
+    return ret if ret else None
