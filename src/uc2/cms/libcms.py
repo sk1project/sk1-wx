@@ -2,7 +2,7 @@
 #
 #  cms - module which provides binding to LittleCMS2 library.
 #
-#  Copyright (C) 2012-2017 by Igor E. Novikov
+#  Copyright (C) 2012-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -36,9 +36,8 @@ def get_version():
     :return: version string
     """
     ver = str(_cms.getVersion())
-    if ver[0] == '2':
-        return '%s.%s' % (ver[0], ver[2])
-    return '%s.%s' % (ver[0], ver[1:])
+    return '%s.%s' % (ver[0], ver[2]) if ver[0] == '2' \
+        else '%s.%s' % (ver[0], ver[1:])
 
 
 COLOR_RNG = range(256)
@@ -298,9 +297,7 @@ def cms_create_default_profile(colorspace):
     :return: handle to lcms profile or None
     """
     profile = FUNC_MAP.get(colorspace, None)
-    if profile is not None:
-        return profile[0]()
-    return None
+    return None if profile is None else profile[0]()
 
 
 def cms_get_default_profile_resource(colorspace):
@@ -311,9 +308,7 @@ def cms_get_default_profile_resource(colorspace):
     :return: path to built-in profile
     """
     profile = FUNC_MAP.get(colorspace, None)
-    if profile is not None:
-        return profile[1]()
-    return None
+    return None if profile is None else profile[1]()
 
 
 def cms_save_default_profile(path, colorspace):
