@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015 by Igor E. Novikov
+#  Copyright (C) 2015-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -75,10 +75,7 @@ def flat_path(path, tlr=0.5):
 
 
 def flat_paths(paths, tlr=0.5):
-    result = []
-    for path in paths:
-        result.append(flat_path(path, tlr))
-    return result
+    return [flat_path(path, tlr) for path in paths]
 
 
 def get_flattened_path(obj, trafo, tolerance=0.5):
