@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015 by Igor E. Novikov
+#  Copyright (C) 2015-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -45,7 +45,5 @@ def invert_trafo(trafo):
 def get_transformed_path(obj):
     if obj.cache_cpath is None:
         obj.update()
-    if obj.cache_cpath is None:
-        return None
-
-    return libcairo.get_path_from_cpath(obj.cache_cpath)
+    return None if obj.cache_cpath is None \
+        else libcairo.get_path_from_cpath(obj.cache_cpath)
