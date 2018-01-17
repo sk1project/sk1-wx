@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015 by Igor E. Novikov
+#  Copyright (C) 2015-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -54,28 +54,17 @@ def apply_trafo_to_point(point, trafo):
 
 
 def apply_trafo_to_points(points, trafo):
-    ret = []
-    for point in points:
-        ret.append(apply_trafo_to_point(point, trafo))
-    return ret
+    return [apply_trafo_to_point(point, trafo) for point in points]
 
 
 def apply_trafo_to_path(path, trafo):
-    new_path = []
-    new_points = []
-    new_path.append(apply_trafo_to_point(path[0], trafo))
-    for point in path[1]:
-        new_points.append(apply_trafo_to_point(point, trafo))
-    new_path.append(new_points)
-    new_path.append(path[2])
-    return new_path
+    return [apply_trafo_to_point(path[0], trafo),
+            [apply_trafo_to_point(point, trafo) for point in path[1]],
+            path[2]]
 
 
 def apply_trafo_to_paths(paths, trafo):
-    new_paths = []
-    for path in paths:
-        new_paths.append(apply_trafo_to_path(path, trafo))
-    return new_paths
+    return [apply_trafo_to_path(path, trafo) for path in paths]
 
 
 def apply_trafo_to_bbox(bbox, trafo):
