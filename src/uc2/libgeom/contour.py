@@ -87,12 +87,10 @@ def circleparam(h):
 
 def normalize(point):
     """
-    Returns a unit vector pointing in the same direction.
+    Returns an unit vector pointing in the same direction.
     """
     k = distance(point)
-    if not k:
-        return [0.0, 0.0]
-    return [point[0] / k, point[1] / k]
+    return [point[0] / k, point[1] / k] if k else [0.0, 0.0]
 
 
 def check_parallel(source, parallel, radius, tolerance=0.01):
@@ -303,7 +301,7 @@ def get_cap_segment(startpoint, endpoint, captype):
                 new_p2, new_p2, new_p2, endpoint, endpoint]
 
     else:
-        raise "Unknown captype %d" % captype
+        raise 'Unknown captype %d' % captype
 
 
 def unpack_seg(seg, startpoint=None):
