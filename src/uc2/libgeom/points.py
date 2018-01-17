@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015 by Igor E. Novikov
+#  Copyright (C) 2015-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -98,8 +98,7 @@ def rotate_point(center, point, angle):
 
 
 def get_point_radius(p, center=None):
-    center = center or [0.5, 0.5]
-    return distance(p, center)
+    return distance(p, center or [0.5, 0.5])
 
 
 def get_point_angle(p, center=None):
@@ -127,7 +126,4 @@ def get_point_angle(p, center=None):
 
 def to_polar(point):
     r = distance(point)
-    angle = 0.0
-    if r:
-        angle = get_point_angle(point, [0.0, 0.0])
-    return r, angle
+    return r, get_point_angle(point, [0.0, 0.0]) if r else 0.0
