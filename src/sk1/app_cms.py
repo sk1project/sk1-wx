@@ -25,7 +25,8 @@ from sk1 import config, events
 
 
 class AppColorManager(ColorManager):
-    color_mngrs = []
+    color_mngrs = None
+    app = None
 
     def __init__(self, app):
         self.app = app

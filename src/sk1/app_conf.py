@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2011-2012 by Igor E. Novikov
+#  Copyright (C) 2011-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -52,15 +52,11 @@ class AppData(UCData):
 
         # --- Check config directories
         paths = (self.app_palette_dir, self.plugin_dir, self.app_temp_dir)
-
-        for item in paths:
-            if not os.path.lexists(item):
-                os.makedirs(item)
+        [os.makedirs(item) for item in paths if not os.path.lexists(item)]
 
         plugin_dir_init = os.path.join(self.plugin_dir, '__init__.py')
         if not os.path.lexists(plugin_dir_init):
-            fp = open(plugin_dir_init, 'w')
-            fp.close()
+            open(plugin_dir_init, 'w').close()
 
 
 class AppConfig(UCConfig):
@@ -359,24 +355,16 @@ class AppConfig(UCConfig):
     default_polygon_num = 5
 
     def is_linux(self):
-        if self.os == system.LINUX:
-            return True
-        return False
+        return self.os == system.LINUX
 
     def is_ubuntu(self):
-        if self.os_name == system.UBUNTU:
-            return True
-        return False
+        return self.os_name == system.UBUNTU
 
     def is_mac(self):
-        if self.os == system.MACOSX:
-            return True
-        return False
+        return self.os == system.MACOSX
 
     def is_win(self):
-        if self.os == system.WINDOWS:
-            return True
-        return False
+        return self.os == system.WINDOWS
 
 
 class LinuxConfig(AppConfig):
@@ -413,10 +401,5 @@ class WinConfig(AppConfig):
 
 
 def get_app_config():
-    os_family = system.get_os_family()
-    if os_family == system.MACOSX:
-        return MacosxConfig()
-    elif os_family == system.WINDOWS:
-        return WinConfig()
-    else:
-        return LinuxConfig()
+    os_mapping = {system.MACOSX: MacosxConfig, system.WINDOWS: WinConfig}
+    return os_mapping.get(system.get_os_family(), LinuxConfig)()
