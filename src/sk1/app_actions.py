@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013 by Igor E. Novikov
+#  Copyright (C) 2013-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -16,16 +16,14 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wal
-
-from sk1.resources import pdids
-from sk1.pwidgets import AppAction
-
-from sk1.modes import SELECT_MODE, SHAPER_MODE, ZOOM_MODE, FLEUR_MODE, \
-    LINE_MODE, CURVE_MODE, RECT_MODE, ELLIPSE_MODE, TEXT_MODE, POLYGON_MODE, \
-    ZOOM_OUT_MODE, GR_SELECT_MODE, GRAD_MODES, EDIT_MODES, TEXT_MODES
 from sk1.events import CLIPBOARD, DOC_CHANGED, PAGE_CHANGED, \
     DOC_MODIFIED, DOC_SAVED, NO_DOCS, SELECTION_CHANGED, MODE_CHANGED, \
     HISTORY_CHANGED, SNAP_CHANGED
+from sk1.modes import SELECT_MODE, SHAPER_MODE, ZOOM_MODE, FLEUR_MODE, \
+    LINE_MODE, CURVE_MODE, RECT_MODE, ELLIPSE_MODE, TEXT_MODE, POLYGON_MODE, \
+    ZOOM_OUT_MODE, GR_SELECT_MODE, GRAD_MODES, EDIT_MODES, TEXT_MODES
+from sk1.pwidgets import AppAction
+from sk1.resources import pdids
 
 
 def create_actions(app):
@@ -40,7 +38,6 @@ def create_actions(app):
     snap_chnls = [NO_DOCS, DOC_CHANGED, SNAP_CHANGED]
     insp = app.insp
     proxy = app.proxy
-    actions = {}
     entries = [
         # ----- Canvas modes -----
         (pdids.SELECT_MODE, proxy.set_mode, tool_chnls, insp.is_doc,
@@ -49,14 +46,12 @@ def create_actions(app):
          insp.is_mode, [SHAPER_MODE], [], EDIT_MODES),
         (pdids.ZOOM_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode,
          [ZOOM_MODE], [], [ZOOM_MODE]),
-        (
-        pdids.FLEUR_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode,
-        [FLEUR_MODE], [], [FLEUR_MODE]),
+        (pdids.FLEUR_MODE, proxy.set_mode, tool_chnls, insp.is_doc,
+         insp.is_mode, [FLEUR_MODE], [], [FLEUR_MODE]),
         (pdids.LINE_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode,
          [LINE_MODE], [], [LINE_MODE]),
-        (
-        pdids.CURVE_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode,
-        [CURVE_MODE], [], [CURVE_MODE]),
+        (pdids.CURVE_MODE, proxy.set_mode, tool_chnls, insp.is_doc,
+         insp.is_mode, [CURVE_MODE], [], [CURVE_MODE]),
         (pdids.RECT_MODE, proxy.set_mode, tool_chnls, insp.is_doc, insp.is_mode,
          [RECT_MODE], [], [RECT_MODE]),
         (pdids.ELLIPSE_MODE, proxy.set_mode, tool_chnls, insp.is_doc,
@@ -150,8 +145,8 @@ def create_actions(app):
         (pdids.ID_DELETE_PAGE, proxy.delete_page, page_chnls,
          insp.can_delete_page),
         (pdids.ID_GOTO_PAGE, proxy.goto_page, page_chnls, insp.can_goto_page),
-        (
-        pdids.ID_NEXT_PAGE, proxy.next_page, page_chnls, insp.can_be_next_page),
+        (pdids.ID_NEXT_PAGE, proxy.next_page, page_chnls,
+         insp.can_be_next_page),
         (pdids.ID_PREV_PAGE, proxy.previous_page, page_chnls,
          insp.can_be_previous_page),
         (pdids.ID_TOOL_LAYERS, proxy.show_plugin, doc_chnls, insp.is_doc, None,
@@ -166,9 +161,8 @@ def create_actions(app):
         # ------ Arrange menu -------
         (pdids.ID_CLEAR_TRANSFORM, proxy.clear_trafo, sel_chnls,
          insp.can_clear_trafo),
-        (
-        pdids.ID_POSITION_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None,
-        ('TransformPlugin', 0)),
+        (pdids.ID_POSITION_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc,
+         None, ('TransformPlugin', 0)),
         (pdids.ID_RESIZE_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None,
          ('TransformPlugin', 1)),
         (pdids.ID_SCALE_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None,
@@ -251,12 +245,12 @@ def create_actions(app):
         (pdids.ID_BEZIER_NODE_SYMMETRICAL, proxy.make_node_symmetrical,
          sel_chnls, insp.can_be_node_symmetrical),
         # ------ Bitmaps menu -------
-        (
-        pdids.ID_CONV_TO_CMYK, proxy.conv_to_cmyk, sel_chnls, insp.can_be_cmyk),
+        (pdids.ID_CONV_TO_CMYK, proxy.conv_to_cmyk, sel_chnls,
+         insp.can_be_cmyk),
         (pdids.ID_CONV_TO_RGB, proxy.conv_to_rgb, sel_chnls, insp.can_be_rgb),
         (pdids.ID_CONV_TO_LAB, proxy.conv_to_lab, sel_chnls, insp.can_be_lab),
-        (
-        pdids.ID_CONV_TO_GRAY, proxy.conv_to_gray, sel_chnls, insp.can_be_gray),
+        (pdids.ID_CONV_TO_GRAY, proxy.conv_to_gray, sel_chnls,
+         insp.can_be_gray),
         (pdids.ID_CONV_TO_BW, proxy.conv_to_bw, sel_chnls, insp.can_be_bw),
         (pdids.ID_INVERT_BITMAP, proxy.invert_bitmap, sel_chnls,
          insp.is_pixmap_selected),
@@ -300,7 +294,4 @@ def create_actions(app):
     ]
     # action_id, callback, channels, validator, checker,
     # callable_args, validator_args, checker_args
-    for entry in entries:
-        actions[entry[0]] = AppAction(*entry)
-
-    return actions
+    return {entry[0]: AppAction(*entry) for entry in entries}
