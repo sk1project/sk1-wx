@@ -19,8 +19,8 @@ import datetime
 import os
 import time
 
-from uc2.utils.fs import path_unicode
 from sk1 import config, appconst, events
+from uc2.utils.fs import path_unicode
 
 
 class AppHistoryManager:
@@ -47,7 +47,8 @@ class AppHistoryManager:
     def save_history(self):
         with open(self.history_file, 'wb') as fp:
             for item in self.history:
-                fp.write('%s\t%s\t%s\n' % (str(item[0]), item[1], str(item[2])))
+                state, path, timestamp = str(item[0]), item[1], str(item[2])
+                fp.write('%s\t%s\t%s\n' % (state, path, timestamp))
         events.emit(events.HISTORY_CHANGED)
 
     def add_entry(self, path, operation=appconst.OPENED):

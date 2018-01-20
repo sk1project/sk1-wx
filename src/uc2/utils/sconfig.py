@@ -59,7 +59,6 @@ class SerializedConfig(object):
                     exec code
                 except Exception as e:
                     LOG.error('ERROR>>> %s\n%s', line, e)
-                    print
             fileobj.close()
 
     def save(self, filename=None):
