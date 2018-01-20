@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2017 by Igor E. Novikov
+#  Copyright (C) 2017-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -47,9 +47,7 @@ class SerializedConfig(object):
 
             while True:
                 line = fileobj.readline()
-                if line.startswith('<?xml'):
-                    break
-                if not line:
+                if line.startswith('<?xml') or not line:
                     break
                 if line.startswith('#'):
                     continue
