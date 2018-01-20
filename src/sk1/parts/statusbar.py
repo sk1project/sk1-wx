@@ -266,9 +266,6 @@ class PageMonitor(wal.HPanel):
         events.connect(events.DOC_MODIFIED, self.update)
         events.connect(events.PAGE_CHANGED, self.update)
 
-    def stub(self, *args):
-        pass
-
     def update(self, *args):
         if self.app.current_doc:
             presenter = self.app.current_doc

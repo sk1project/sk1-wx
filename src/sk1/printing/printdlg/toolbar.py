@@ -65,9 +65,6 @@ class PreviewToolbar(wal.HPanel):
 
         prn_events.connect(prn_events.PRINTER_CHANGED, self.printer_changed)
 
-    def stub(self):
-        pass
-
     def on_printer_props(self):
         if self.printer.run_propsdlg(self.dlg):
             self.canvas.refresh()

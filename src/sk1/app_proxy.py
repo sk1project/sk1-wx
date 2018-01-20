@@ -43,7 +43,7 @@ class AppProxy:
                            'Be patient and watch project development of '
                            'regularly updating the source code!')
 
-    def print_doc(self, *args):
+    def print_doc(self):
         print_dlg(self.app.mw, self.app.current_doc)
 
     def fill_dialog(self, default_style=False):
@@ -490,7 +490,7 @@ class AppProxy:
         self.app.current_doc.api.create_guides([[0, uc2const.VERTICAL],
                                                 [0, uc2const.HORIZONTAL]])
 
-    def remove_all_guides(self, *args):
+    def remove_all_guides(self):
         self.app.current_doc.api.delete_all_guides()
 
     def clear_trafo(self):

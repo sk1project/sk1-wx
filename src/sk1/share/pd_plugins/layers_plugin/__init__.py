@@ -146,9 +146,6 @@ class LayersPlugin(RsPlugin):
         index = layers.index(layer)
         return len(layers) - index - 1
 
-    def stub(self):
-        pass
-
     def changed(self, item, col):
         doc = self.app.current_doc
         layers = doc.get_layers()
