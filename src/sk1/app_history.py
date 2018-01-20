@@ -36,24 +36,18 @@ class AppHistoryManager:
 
     def read_history(self):
         if os.path.isfile(self.history_file):
-            fp = open(self.history_file, 'rb')
-            while True:
-                line = fp.readline()
-                if line == '':
-                    break
-                if line[-1:] == '\n':
-                    line = line[:-1]
-                items = line.split('\t')
-                if len(items) == 3:
-                    self.history.append(
-                        [int(items[0]), items[1], int(items[2])])
-            fp.close()
+            with open(self.history_file, 'rb') as fp:
+                lines = [line.strip(' \n\r') for line in fp.readlines()]
+                for line in lines:
+                    items = line.split('\t')
+                    if len(items) == 3:
+                        self.history.append([int(items[0]),
+                                             items[1], int(items[2])])
 
     def save_history(self):
-        fp = open(self.history_file, 'wb')
-        for item in self.history:
-            fp.write(str(item[0]) + '\t' + item[1] + '\t' + str(item[2]) + '\n')
-        fp.close()
+        with open(self.history_file, 'wb') as fp:
+            for item in self.history:
+                fp.write('%s\t%s\t%s\n' % (str(item[0]), item[1], str(item[2])))
         events.emit(events.HISTORY_CHANGED)
 
     def add_entry(self, path, operation=appconst.OPENED):
