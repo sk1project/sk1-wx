@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013-2017 by Igor E. Novikov
+#  Copyright (C) 2013-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -50,8 +50,8 @@ class SK1Application(wal.Application, UCApplication):
     appdata = None
     history = None
 
-    actions = {}
-    plugins = {}
+    actions = None
+    plugins = None
     docs = []
     current_doc = None
     doc_counter = 0
@@ -147,9 +147,6 @@ class SK1Application(wal.Application, UCApplication):
                 events.emit(events.NO_DOCS)
         self.update_actions()
 
-    def stub(self, *args):
-        return args
-
     def update_wal(self):
         wal.SPIN['overlay'] = config.spin_overlay
         wal.SPIN['sep'] = config.spin_sep
@@ -165,9 +162,7 @@ class SK1Application(wal.Application, UCApplication):
         config.mw_maximized = self.mw.is_maximized()
         if self.mw.is_maximized():
             config.mw_size = config.mw_min_size
-        plugins = []
-        for item in self.mw.mdi.plg_area.plugins:
-            plugins.append(item.pid)
+        plugins = [item.pid for item in self.mw.mdi.plg_area.plugins]
         config.active_plugins = plugins
         if self.mw.mdi.plg_area.is_shown():
             w = self.mw.mdi.splitter.get_size()[0]
@@ -225,8 +220,8 @@ class SK1Application(wal.Application, UCApplication):
             events.emit(events.APP_STATUS, _('New document from template'))
 
     def open(self, doc_file='', silent=False):
-        if not doc_file:
-            doc_file = dialogs.get_open_file_name(self.mw, config.open_dir)
+        doc_file = doc_file or \
+                   dialogs.get_open_file_name(self.mw, config.open_dir)
         if os.path.lexists(doc_file) and os.path.isfile(doc_file):
             try:
                 doc = SK1Presenter(self, doc_file, silent)
@@ -253,9 +248,8 @@ class SK1Application(wal.Application, UCApplication):
             self.set_current_doc(doc)
             events.emit(events.APP_STATUS, _('Document opened'))
 
-    def save(self, doc=''):
-        if not doc:
-            doc = self.current_doc
+    def save(self, doc=None):
+        doc = doc or self.current_doc
         if not doc.doc_file:
             return self.save_as()
         ext = os.path.splitext(self.current_doc.doc_file)[1]
@@ -281,8 +275,7 @@ class SK1Application(wal.Application, UCApplication):
 
     def save_as(self):
         doc_file = self.current_doc.doc_file
-        if not doc_file:
-            doc_file = self.current_doc.doc_name
+        doc_file = doc_file or self.current_doc.doc_name
         if os.path.splitext(doc_file)[1] != "." + \
                 uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
             doc_file = os.path.splitext(doc_file)[0] + "." + \
@@ -316,8 +309,7 @@ class SK1Application(wal.Application, UCApplication):
 
     def save_selected(self):
         doc_file = self.current_doc.doc_file
-        if not doc_file:
-            doc_file = self.current_doc.doc_name
+        doc_file = doc_file or self.current_doc.doc_name
         if os.path.splitext(doc_file)[1] != "." + \
                 uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
             doc_file = os.path.splitext(doc_file)[0] + "." + \
@@ -349,8 +341,7 @@ class SK1Application(wal.Application, UCApplication):
     def close(self, doc=None):
         if not self.docs:
             return
-        if doc is None:
-            doc = self.current_doc
+        doc = doc or self.current_doc
         if not doc == self.current_doc:
             self.set_current_doc(doc)
 
@@ -411,15 +402,14 @@ class SK1Application(wal.Application, UCApplication):
 
     def export_as(self):
         doc_file = self.current_doc.doc_file
-        if not doc_file:
-            doc_file = self.current_doc.doc_name
+        doc_file = doc_file or self.current_doc.doc_name
         doc_file = os.path.splitext(doc_file)[0]
         doc_file = os.path.join(config.export_dir,
                                 os.path.basename(doc_file))
+        ftype = uc2const.SAVER_FORMATS[1:]
         doc_file = dialogs.get_save_file_name(self.mw, doc_file,
                                               _('Export document As...'),
-                                              file_types=uc2const.SAVER_FORMATS[
-                                                         1:], path_only=True)
+                                              file_types=ftype, path_only=True)
         if doc_file:
             try:
                 self.make_backup(doc_file, True)
@@ -458,8 +448,7 @@ class SK1Application(wal.Application, UCApplication):
                         _('Bitmap is successfully extracted'))
 
     def export_palette(self, palette, parent=None):
-        if not parent:
-            parent = self.mw
+        parent = parent or self.mw
         doc_file = palette.model.name
         doc_file = os.path.splitext(doc_file)[0]
         doc_file = os.path.join(config.export_dir, os.path.basename(doc_file))
@@ -500,8 +489,7 @@ class SK1Application(wal.Application, UCApplication):
             events.emit(events.APP_STATUS, msg)
 
     def import_palette(self, parent=None):
-        if not parent:
-            parent = self.mw
+        parent = parent or self.mw
         file_types = uc2const.PALETTE_LOADERS
         doc_file = dialogs.get_open_file_name(parent, config.import_dir,
                                               _('Select palette to import'),
@@ -534,9 +522,7 @@ class SK1Application(wal.Application, UCApplication):
     def extract_pattern(self, parent, pattern, eps=False):
         img_file = 'image'
         img_file = os.path.join(config.save_dir, img_file)
-        file_types = [uc2const.TIF]
-        if eps:
-            file_types = [uc2const.EPS]
+        file_types = [uc2const.EPS] if eps else [uc2const.TIF]
         img_file = dialogs.get_save_file_name(parent, img_file,
                                               _('Save pattern as...'),
                                               file_types=file_types,
@@ -556,8 +542,7 @@ class SK1Application(wal.Application, UCApplication):
             config.save_dir = str(os.path.dirname(img_file))
 
     def import_pattern(self, parent=None):
-        if not parent:
-            parent = self.mw
+        parent = parent or self.mw
         file_types = uc2const.PATTERN_FORMATS
         img_file = dialogs.get_open_file_name(parent, config.import_dir,
                                               _('Select pattern to load'),
@@ -594,7 +579,7 @@ class SK1Application(wal.Application, UCApplication):
             msgconst.OK: LOG.info,
             msgconst.WARNING: LOG.warn,
             msgconst.ERROR: LOG.error,
-            msgconst.STOP: self.stub,
+            msgconst.STOP: LOG.critical,
         }
         log_map[args[0]](args[1])
 
