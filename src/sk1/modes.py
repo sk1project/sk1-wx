@@ -133,9 +133,7 @@ def get_cursors():
         TEXT_EDITOR_MODE: ('cur_edit', (5, 5)),
     }
     keys = cursors.keys()
-    ext = '.png'
-    if wal.IS_MSW:
-        ext = '.cur'
+    ext = '.cur' if wal.IS_MSW else '.png'
     for key in keys:
         path = os.path.join(config.resource_dir, 'cursors',
                             cursors[key][0] + ext)

@@ -58,8 +58,8 @@ class ModeToggleButton(ImageToggleButton):
 
 class HToggleKeeper(HPanel):
     mode = 0
-    mode_buts = []
-    modes = []
+    mode_buts = None
+    modes = None
     callback = None
     allow_none = False
 
