@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013 by Igor E. Novikov
+#  Copyright (C) 2013-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -19,20 +19,15 @@ from sk1 import events
 
 
 class AppClipboard:
-    contents = []
+    contents = None
 
     def __init__(self, app):
         self.app = app
         self.contents = []
 
     def set(self, objs):
-        self.contents = []
-        for obj in objs:
-            self.contents.append(obj.copy())
+        self.contents = [obj.copy() for obj in objs]
         events.emit(events.CLIPBOARD)
 
     def get(self):
-        result = []
-        for obj in self.contents:
-            result.append(obj.copy())
-        return result
+        return [obj.copy() for obj in self.contents]
