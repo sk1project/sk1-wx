@@ -59,10 +59,8 @@ UNDERLINE = '\033[4m'
 
 
 def echo(msg, newline=True, flush=True, code=''):
-    if newline:
-        msg += '\n'
-    if code:
-        msg = code + msg + ENDC
+    msg = '%s\n' % msg if newline else msg
+    msg = '%s%s%s' % (code, msg, ENDC) if code else msg
     sys.stdout.write(msg)
     if flush:
         sys.stdout.flush()
