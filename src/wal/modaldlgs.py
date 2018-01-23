@@ -26,7 +26,7 @@ from widgets import HLine, Button
 
 class ProgressDialog(wx.ProgressDialog):
 
-    def __init__(self, parent=None, title='', width=100):
+    def __init__(self, parent=None, title='', width=130):
         style = wx.PD_APP_MODAL | wx.PD_AUTO_HIDE
         wx.ProgressDialog.__init__(self, title, ' ' * width,
                                    parent=parent, style=style)
