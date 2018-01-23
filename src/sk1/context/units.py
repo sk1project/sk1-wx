@@ -41,9 +41,7 @@ class UnitsPlugin(CtxPlugin):
 
         self.add((2, 2))
 
-        names = []
-        for item in unit_names:
-            names.append(unit_full_names[item])
+        names = [unit_full_names[item] for item in unit_names]
         self.combo = Combolist(self, items=names, onchange=self.changed)
         self.add(self.combo, 0, LEFT | CENTER, 2)
 
