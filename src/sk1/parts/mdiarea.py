@@ -62,7 +62,7 @@ class MDIArea(wal.VPanel):
 
         self.splitter = wal.Splitter(hpanel)
         self.doc_keeper = wal.VPanel(self.splitter)
-        self.doc_keeper.SetBackgroundColour(wal.WHITE)
+        self.doc_keeper.set_bg(wal.WHITE)
         self.plg_area = PlgArea(self.app, self.splitter)
         self.app.mdiarea = self
         self.app.plg_area = self.plg_area
