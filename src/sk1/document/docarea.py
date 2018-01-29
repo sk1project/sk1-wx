@@ -54,8 +54,8 @@ class DocArea(wal.GridPanel):
         self.canvas._set_scrolls(self.hscroll, self.vscroll)
 
     def destroy(self):
-        objs = [self.doc_tab, self.hruler,
-                self.vruler, self.corner, self.canvas]
+        objs = [self.hruler, self.vruler, self.corner, self.canvas]
+        # self.doc_tab,
         for obj in objs:
             obj.destroy()
 

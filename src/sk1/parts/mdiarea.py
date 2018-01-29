@@ -19,7 +19,7 @@ import wal
 from sk1 import config, events
 from sk1.document import DocArea
 from sk1.parts.ctxpanel import AppCtxPanel
-from sk1.parts.doctabpanel import DocTabsPanel
+from sk1.parts.doctabs import DocTabs
 from sk1.parts.palettepanel import AppHPalette, AppVPalette
 from sk1.parts.plgarea import PlgArea
 from sk1.parts.statusbar import AppStatusbar
@@ -48,9 +48,8 @@ class MDIArea(wal.VPanel):
         self.pack(self.ctxpanel, fill=True, padding=1)
 
         # ----- Doc tabs
-        self.dtp = DocTabsPanel(self)
-        self.doc_tabs = self.dtp.doc_tabs
-        self.pack(self.dtp, fill=True)
+        self.doc_tabs = DocTabs(self)
+        self.pack(self.doc_tabs, fill=True)
 
         hpanel = wal.HPanel(self)
         self.pack(hpanel, expand=True, fill=True)
