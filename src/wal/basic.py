@@ -343,6 +343,7 @@ class Canvas(object):
 
     def _on_size_change(self, event):
         self.refresh()
+        event.Skip()
 
     def _on_paint(self, event):
         w, h = self.GetSize()
