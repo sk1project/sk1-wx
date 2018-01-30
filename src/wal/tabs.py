@@ -89,6 +89,7 @@ class DocTabs(HPanel, SensitiveCanvas):
 
 class LWDocTab(object):
     active = True
+    saved = True
     text = 'Untitled'
     pos = 0
 
@@ -113,15 +114,21 @@ class LWDocTab(object):
         stroke_color = const.UI_COLORS['hover_solid_border']
         bg_color = const.UI_COLORS['bg']
         dc = self.parent
+
+        # tab rect
         dc.set_fill(bg_color)
         dc.set_stroke(stroke_color)
         dc.draw_rect(self.pos, 0, self.get_width() + 1, TAB_HEIGHT + 5)
-        dc.set_gc_fill(const.RED if self.active else None)
-        dc.set_gc_stroke(stroke_color)
+
+        # tab indicator
+        dc.set_gc_fill(const.RED if not self.saved else None)
+        dc.set_gc_stroke(stroke_color if self.saved else bg_color)
         dc.gc_draw_rounded_rect(self.pos + 8, 10, 8, 8, 4)
-        if not self.active:
+        if not self.saved:
             dc.set_gc_stroke((255, 255, 255, 150))
             dc.gc_draw_rounded_rect(self.pos + 8, 11, 8, 8, 4)
+
+        # tab marker
         if self.active:
             r = (self.pos + 2, 1, self.get_width() - 2, 2)
             render = wx.RendererNative.Get()
