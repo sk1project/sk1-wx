@@ -87,6 +87,9 @@ class DocTabs(HPanel, SensitiveCanvas):
         active_tab.paint()
 
 
+INDICATOR_SIZE = 8
+
+
 class LWDocTab(object):
     active = True
     saved = True
@@ -110,6 +113,27 @@ class LWDocTab(object):
     def close(self):
         pass
 
+    def _get_text_size(self, text, bold=False, size_incr=0):
+        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        if bold:
+            font.SetWeight(wx.FONTWEIGHT_BOLD)
+        if size_incr:
+            if font.IsUsingSizeInPixels():
+                sz = font.GetPixelSize()[1] + size_incr
+                font.SetPixelSize((0, sz))
+            else:
+                sz = font.GetPointSize() + size_incr
+                font.SetPointSize(sz)
+        pdc = wx.MemoryDC()
+        bmp = wx.EmptyBitmap(1, 1)
+        pdc.SelectObject(bmp)
+        pdc.SetFont(font)
+        height = pdc.GetCharHeight()
+        width = pdc.GetTextExtent(text)[0]
+        result = (width, height)
+        pdc.SelectObject(wx.NullBitmap)
+        return result
+
     def paint(self):
         stroke_color = const.UI_COLORS['hover_solid_border']
         bg_color = const.UI_COLORS['bg']
@@ -121,12 +145,30 @@ class LWDocTab(object):
         dc.draw_rect(self.pos, 0, self.get_width() + 1, TAB_HEIGHT + 5)
 
         # tab indicator
+        s = INDICATOR_SIZE
         dc.set_gc_fill(const.RED if not self.saved else None)
-        dc.set_gc_stroke(stroke_color if self.saved else bg_color)
-        dc.gc_draw_rounded_rect(self.pos + 8, 10, 8, 8, 4)
-        if not self.saved:
+        dc.set_gc_stroke(stroke_color if self.saved else (145, 45, 45))
+        dc.gc_draw_rounded_rect(self.pos + s, 10, s, s, s / 2)
+        if self.saved:
             dc.set_gc_stroke((255, 255, 255, 150))
-            dc.gc_draw_rounded_rect(self.pos + 8, 11, 8, 8, 4)
+            dc.gc_draw_rounded_rect(self.pos + s, 11, s, s, s / 2)
+
+        # tab caption
+        pos = self.pos + 3 * s - 2
+        width = self.get_width() - 5 * s
+        txt = self.text
+        while self._get_text_size(txt, size_incr=-1)[0] > width:
+            txt = txt[:-1]
+
+        y = int(TAB_HEIGHT / 2 - dc.set_font(size_incr=-1) / 2) + 1
+        dc.draw_text(txt, pos, y)
+
+        # tab caption shade
+        pos = self.pos + self.get_width() - 5 * s
+        start = bg_color[:-1] + (0,)
+        stop = bg_color[:-1] + (255,)
+        dc.gc_draw_linear_gradient((pos, 4, 3 * s, TAB_HEIGHT),
+                                   start, stop, False)
 
         # tab marker
         if self.active:
