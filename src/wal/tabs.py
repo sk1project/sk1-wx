@@ -95,6 +95,7 @@ class LWDocTab(object):
     saved = True
     text = 'Untitled'
     pos = 0
+    close_active = False
 
     def __init__(self, parent, active=True):
         self.parent = parent
@@ -137,6 +138,9 @@ class LWDocTab(object):
     def paint(self):
         stroke_color = const.UI_COLORS['hover_solid_border']
         bg_color = const.UI_COLORS['bg']
+        fg_color = const.UI_COLORS['fg']
+        brown = (145, 45, 45)
+        dark_red = (206, 99, 99)
         dc = self.parent
 
         # tab rect
@@ -147,14 +151,14 @@ class LWDocTab(object):
         # tab indicator
         s = INDICATOR_SIZE
         dc.set_gc_fill(const.RED if not self.saved else None)
-        dc.set_gc_stroke(stroke_color if self.saved else (145, 45, 45))
+        dc.set_gc_stroke(stroke_color if self.saved else brown)
         dc.gc_draw_rounded_rect(self.pos + s, 10, s, s, s / 2)
         if self.saved:
             dc.set_gc_stroke((255, 255, 255, 150))
             dc.gc_draw_rounded_rect(self.pos + s, 11, s, s, s / 2)
 
         # tab caption
-        pos = self.pos + 3 * s - 2
+        pos = self.pos + 3 * s - 3
         width = self.get_width() - 5 * s
         txt = self.text
         while self._get_text_size(txt, size_incr=-1)[0] > width:
@@ -175,3 +179,20 @@ class LWDocTab(object):
             r = (self.pos + 2, 1, self.get_width() - 2, 2)
             render = wx.RendererNative.Get()
             render.DrawItemSelectionRect(dc, dc.dc, r, wx.CONTROL_SELECTED)
+
+        # close button
+        pos = self.pos + self.get_width() - 2 * s - int(s / 2) + 1
+        y = int(TAB_HEIGHT / 2 - s) + 2
+        if self.close_active:
+            dc.set_gc_fill(dark_red)
+            dc.set_gc_stroke(None)
+            dc.gc_draw_rounded_rect(pos, y, 2 * s, 2 * s, s)
+
+        dc.set_gc_fill(None)
+        dc.set_gc_stroke(const.WHITE if self.close_active else fg_color, 2)
+        x0 = pos + 4
+        y0 = y + 4
+        x1 = pos + 2 * s - 4
+        y1 = y + 2 * s - 4
+        dc.gc_draw_line(x0, y0, x1, y1)
+        dc.gc_draw_line(x0, y1, x1, y0)
