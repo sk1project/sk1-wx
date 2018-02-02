@@ -194,8 +194,6 @@ class LWDocTab(object):
         stroke_color = const.UI_COLORS['hover_solid_border']
         bg_color = const.UI_COLORS['bg']
         fg_color = const.UI_COLORS['fg']
-        brown = (145, 45, 45)
-        dark_red = (250, 65, 40)
         dc = self.parent
 
         # tab rect
@@ -206,7 +204,7 @@ class LWDocTab(object):
         # tab indicator
         s = INDICATOR_SIZE
         dc.set_gc_fill(const.RED if not self.saved else None)
-        dc.set_gc_stroke(stroke_color if self.saved else brown)
+        dc.set_gc_stroke(stroke_color if self.saved else const.BROWN)
         dc.gc_draw_rounded_rect(self.pos + s, 10, s, s, s / 2)
         if self.saved:
             dc.set_gc_stroke((255, 255, 255, 150))
@@ -239,7 +237,8 @@ class LWDocTab(object):
         pos = self.close_rect[0]
         y = self.close_rect[1]
         if self.close_active:
-            dc.set_gc_fill(brown if self.close_pressed else dark_red)
+            dc.set_gc_fill(const.BROWN if self.close_pressed
+                           else const.DARK_RED)
             dc.set_gc_stroke(None)
             dc.gc_draw_rounded_rect(pos + 1, y + 1, 2 * s - 2, 2 * s - 2, s)
 

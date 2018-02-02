@@ -327,6 +327,8 @@ DARK_GRAY = wx.Colour(89, 89, 89)
 GRAY = wx.Colour(129, 134, 134)
 LIGHT_GRAY = wx.Colour(240, 240, 240)
 RED = wx.Colour(255, 0, 0)
+DARK_RED = wx.Colour(230, 50, 50)
+BROWN = wx.Colour(145, 45, 45)
 GREEN = wx.Colour(0, 255, 0)
 BLUE = wx.Colour(0, 0, 255)
 
