@@ -73,6 +73,12 @@ class DocTabs(HPanel, SensitiveCanvas):
                 tab.mouse_left_up(point)
                 break
 
+    def mouse_right_down(self, point):
+        for tab in self.doc_tabs:
+            if tab.is_point_in_tab(point):
+                tab.mouse_right_down()
+                break
+
     def mouse_move(self, point):
         for tab in self.doc_tabs:
             if tab.is_point_in_tab(point):
@@ -105,7 +111,8 @@ class DocTabs(HPanel, SensitiveCanvas):
                                      start, stop, True)
         self.set_stroke(color)
         self.draw_line(0, h - 1, w, h - 1)
-        active_tab.paint()
+        if active_tab:
+            active_tab.paint()
 
 
 INDICATOR_SIZE = 8
@@ -166,6 +173,9 @@ class LWDocTab(object):
         if self.close_active:
             self.close()
         self.close_pressed = False
+
+    def mouse_right_down(self):
+        pass
 
     def mouse_move(self, point):
         if self.is_close_active(point) != self.close_active:

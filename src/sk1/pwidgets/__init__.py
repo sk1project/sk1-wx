@@ -16,14 +16,15 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from actions import AppAction, ActionButton
+from colorctrls import SbStrokeSwatch, SbFillSwatch, StyleMonitor
+from ctxmenu import ContextMenu
+from fillctrls import SolidFill, GradientFill, PatternFill
+from fontctrl import FontChoice, generate_fcache
+from mactoolbar import MacTB_ActionButton, MacTB_ActionNestedButtons
+from minipalette import CBMiniPalette
+from palette import Palette
+from palette_viewer import PaletteViewer
+from strokectrls import DashChoice, CapChoice, JoinChoice
+from unitctrls import RatioToggle, BitmapToggle, ActionImageSwitch
 from unitctrls import StaticUnitLabel, StaticUnitSpin
 from unitctrls import UnitLabel, UnitSpin, AngleSpin
-from unitctrls import RatioToggle, BitmapToggle, ActionImageSwitch
-from mactoolbar import MacTB_ActionButton, MacTB_ActionNestedButtons
-from palette_viewer import PaletteViewer
-from palette import Palette
-from fillctrls import SolidFill, GradientFill, PatternFill
-from colorctrls import SbStrokeSwatch, SbFillSwatch, StyleMonitor
-from strokectrls import DashChoice, CapChoice, JoinChoice
-from fontctrl import FontChoice, generate_fcache
-from minipalette import CBMiniPalette

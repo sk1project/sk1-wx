@@ -48,7 +48,7 @@ class MDIArea(wal.VPanel):
         self.pack(self.ctxpanel, fill=True, padding=1)
 
         # ----- Doc tabs
-        self.doc_tabs = DocTabs(self)
+        self.doc_tabs = DocTabs(app, self)
         self.pack(self.doc_tabs, fill=True)
 
         hpanel = wal.HPanel(self)

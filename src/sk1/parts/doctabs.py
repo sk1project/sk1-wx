@@ -17,11 +17,19 @@
 
 import wal
 
+from sk1.pwidgets import ContextMenu
+from sk1.resources import pdids
+
 
 class DocTabs(wal.DocTabs):
+    ctx_menu = None
 
-    def __init__(self, parent):
+    def __init__(self, app, parent):
         wal.DocTabs.__init__(self, parent)
+        ITEMS = [wal.ID_NEW, None,
+                 wal.ID_CLOSE, wal.ID_CLOSE_ALL, None,
+                 wal.ID_PROPERTIES]
+        self.ctx_menu = ContextMenu(app, self, ITEMS)
 
     def add_new_tab(self, doc):
         return wal.DocTabs.add_new_tab(self, LWDocTab(self, doc))
@@ -31,6 +39,9 @@ class DocTabs(wal.DocTabs):
 
     def set_active(self, doc):
         wal.DocTabs.set_active(self, doc.docarea.doc_tab)
+
+    def show_context_menu(self):
+        self.popup_menu(self.ctx_menu)
 
 
 class LWDocTab(wal.LWDocTab):
@@ -53,4 +64,7 @@ class LWDocTab(wal.LWDocTab):
             if not self.active:
                 self.doc.app.set_current_doc(self.doc)
 
-
+    def mouse_right_down(self):
+        if not self.active:
+            self.doc.app.set_current_doc(self.doc)
+        self.parent.show_context_menu()
