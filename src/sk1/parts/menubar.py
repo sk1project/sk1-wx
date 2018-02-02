@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013 by Igor E. Novikov
+#  Copyright (C) 2013-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -31,10 +31,9 @@ class AppMenuBar(wal.MenuBar):
         sub = (wal.ID_NEW, pdids.ID_NEW_FROM_TEMPLATE, None, wal.ID_OPEN,
                (_("Open &Recent"), (HistoryMenu(self.app, self.mw),)),
                pdids.ID_VIEW_LOG, None,
-               wal.ID_SAVE, wal.ID_SAVEAS, pdids.ID_SAVE_SEL,
-               pdids.ID_SAVEALL, None, wal.ID_CLOSE, wal.ID_CLOSE_ALL, None,
-               pdids.ID_IMPORT, pdids.ID_EXPORT, None, wal.ID_PRINT,
-               # wal.ID_PRINT_SETUP,
+               wal.ID_SAVE, wal.ID_SAVEAS, pdids.ID_SAVE_SEL, pdids.ID_SAVEALL,
+               None, wal.ID_CLOSE, pdids.ID_CLOSE_OTHERS, wal.ID_CLOSE_ALL,
+               None, pdids.ID_IMPORT, pdids.ID_EXPORT, None, wal.ID_PRINT,
                None, wal.ID_EXIT,)
         entry = (_("&File"), sub)
         self.entries.append(entry)

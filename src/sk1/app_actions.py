@@ -84,6 +84,7 @@ def create_actions(app):
         (pdids.ID_SAVEALL, proxy.save_all, doc_save_chnls,
          insp.is_any_doc_not_saved),
         (wal.ID_CLOSE, proxy.close, doc_chnls, insp.is_doc),
+        (pdids.ID_CLOSE_OTHERS, proxy.close_others, doc_chnls, insp.is_others),
         (wal.ID_CLOSE_ALL, proxy.close_all, doc_chnls, insp.is_doc),
         (pdids.ID_IMPORT, proxy.import_file, doc_chnls, insp.is_doc),
         (pdids.ID_EXPORT, proxy.export_as, doc_chnls, insp.is_doc),

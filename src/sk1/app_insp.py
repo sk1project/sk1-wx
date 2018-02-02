@@ -34,6 +34,9 @@ class AppInspector:
     def is_not_doc(self):
         return self.app.docs == []
 
+    def is_others(self):
+        return len(self.app.docs) > 1
+
     def is_doc_saved(self, doc=None):
         if doc:
             return doc.saved

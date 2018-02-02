@@ -371,14 +371,20 @@ class SK1Application(wal.Application, UCApplication):
                 self.set_current_doc(self.docs[-1])
         return True
 
+    def close_others(self):
+        docs = [] + self.docs
+        docs.remove(self.current_doc)
+        for doc in docs:
+            if not self.close(doc):
+                return False
+        return True
+
     def close_all(self):
-        result = True
         if self.docs:
             while self.docs:
-                result = self.close(self.docs[0])
-                if not result:
-                    break
-        return result
+                if not self.close(self.docs[0]):
+                    return False
+        return True
 
     def import_file(self):
         doc_file = dialogs.get_open_file_name(self.mw, config.import_dir,

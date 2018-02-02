@@ -225,6 +225,9 @@ class AppProxy:
     def close_all(self):
         self.app.close_all()
 
+    def close_others(self):
+        self.app.close_others()
+
     def import_file(self):
         self.app.import_file()
 

@@ -26,9 +26,10 @@ class DocTabs(wal.DocTabs):
 
     def __init__(self, app, parent):
         wal.DocTabs.__init__(self, parent)
-        ITEMS = [wal.ID_NEW, None,
-                 wal.ID_CLOSE, wal.ID_CLOSE_ALL, None,
-                 wal.ID_PROPERTIES]
+        ITEMS = [wal.ID_CLOSE, pdids.ID_CLOSE_OTHERS, wal.ID_CLOSE_ALL, None,
+                 wal.ID_SAVE, wal.ID_SAVEAS, pdids.ID_SAVE_SEL,
+                 pdids.ID_SAVEALL, None, pdids.ID_IMPORT, pdids.ID_EXPORT,
+                 None, wal.ID_PRINT, None, wal.ID_PROPERTIES]
         self.ctx_menu = ContextMenu(app, self, ITEMS)
 
     def add_new_tab(self, doc):
@@ -57,6 +58,8 @@ class LWDocTab(wal.LWDocTab):
         wal.LWDocTab.set_title(self, self.doc.doc_name)
 
     def close(self):
+        self.mouse_leaved_tab()
+        self.parent.refresh()
         self.doc.app.close(self.doc)
 
     def mouse_left_down(self, point):

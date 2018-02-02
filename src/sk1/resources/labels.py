@@ -57,6 +57,7 @@ LABELS = {
     pdids.ID_EXPORT: (_('E&xport As...'), _('Export graphics as...')),
     wal.ID_CLOSE: (_('&Close'), _('Close document')),
     wal.ID_CLOSE_ALL: (_('Close All'), _('Close all documents')),
+    pdids.ID_CLOSE_OTHERS: (_('Close Others'), _('Close other documents')),
     wal.ID_PRINT_SETUP: (_('Page Setup for Print...'),),
     wal.ID_PRINT: (_('&Print...'), _('Print document')),
     wal.ID_EXIT: (_('&Exit'), _('Exit application')),
