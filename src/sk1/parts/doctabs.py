@@ -24,8 +24,8 @@ from sk1.resources import pdids
 class DocTabs(wal.DocTabs):
     ctx_menu = None
 
-    def __init__(self, app, parent):
-        wal.DocTabs.__init__(self, parent)
+    def __init__(self, app, parent, draw_top=True):
+        wal.DocTabs.__init__(self, parent, draw_top)
         ITEMS = [wal.ID_CLOSE, pdids.ID_CLOSE_OTHERS, wal.ID_CLOSE_ALL, None,
                  wal.ID_SAVE, wal.ID_SAVEAS, pdids.ID_SAVE_SEL,
                  pdids.ID_SAVEALL, None, pdids.ID_IMPORT, pdids.ID_EXPORT,

@@ -18,7 +18,7 @@
 import os
 
 import wal
-from sk1 import config
+from sk1 import config, appconst
 from sk1.parts.mdiarea import MDIArea
 from sk1.parts.menubar import AppMenuBar
 from sk1.parts.stubpanel import AppStubPanel
@@ -48,7 +48,8 @@ class AppMainWindow(wal.MainWindow):
         self.menubar = AppMenuBar(self.app, self)
         self.set_menubar(self.menubar)
         # ----- Toolbar
-        self.toolbar = build_toolbar(self)
+        if config.gui_style == appconst.GUI_CLASSIC:
+            self.toolbar = build_toolbar(self)
 
         # ----- MDI Area
         self.mdi = MDIArea(self.app, self)

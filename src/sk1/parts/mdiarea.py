@@ -16,7 +16,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wal
-from sk1 import config, events
+from sk1 import config, events, appconst
 from sk1.document import DocArea
 from sk1.parts.ctxpanel import AppCtxPanel
 from sk1.parts.doctabs import DocTabs
@@ -40,17 +40,22 @@ class MDIArea(wal.VPanel):
         self.docareas = []
         wal.VPanel.__init__(self, parent)
 
-        if not wal.IS_MAC:
-            self.pack(wal.HLine(self), fill=True)
-
-        # ----- Context panel
         self.ctxpanel = AppCtxPanel(self.app, self)
-        self.pack(self.ctxpanel, fill=True, padding=1)
+        self.doc_tabs = DocTabs(app, self,
+                                config.gui_style == appconst.GUI_CLASSIC)
 
-        # ----- Doc tabs
-        self.doc_tabs = DocTabs(app, self)
-        self.pack(self.doc_tabs, fill=True)
+        if config.gui_style == appconst.GUI_CLASSIC:
+            if not wal.IS_MAC:
+                self.pack(wal.HLine(self), fill=True)
+            self.pack(self.ctxpanel, fill=True, padding=1)
+            self.pack(self.doc_tabs, fill=True)
 
+        if config.gui_style == appconst.GUI_TABBED:
+            self.pack(self.doc_tabs, fill=True)
+            self.pack(self.ctxpanel, fill=True, padding=2)
+            self.pack(wal.PLine(self), fill=True)
+
+        # ===== Main part
         hpanel = wal.HPanel(self)
         self.pack(hpanel, expand=True, fill=True)
 

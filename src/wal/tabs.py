@@ -28,8 +28,10 @@ TAB_SIZE = 150
 
 class DocTabs(HPanel, SensitiveCanvas):
     doc_tabs = []
+    draw_top = True
 
-    def __init__(self, parent):
+    def __init__(self, parent, draw_top=True):
+        self.draw_top = draw_top
         HPanel.__init__(self, parent)
         SensitiveCanvas.__init__(self, check_move=True)
         self.pack((TAB_PADDING, TAB_HEIGHT))
@@ -98,8 +100,9 @@ class DocTabs(HPanel, SensitiveCanvas):
         color = const.UI_COLORS['hover_solid_border']
         active_tab = None
         w, h = self.get_size()
-        self.set_stroke(color)
-        self.draw_line(0, 0, w, 0)
+        if self.draw_top:
+            self.set_stroke(color)
+            self.draw_line(0, 0, w, 0)
         for tab in self.doc_tabs:
             if not tab.active:
                 tab.paint()
