@@ -51,10 +51,15 @@ class DocTabs(HPanel, SensitiveCanvas):
         self.refresh()
 
     def arrange_tabs(self):
-        pos = TAB_HEIGHT
-        for tab in self.doc_tabs:
-            tab.set_position(pos)
-            pos += tab.get_width()
+        if self.doc_tabs:
+            pos = TAB_HEIGHT
+            width = self.get_size()[0] - 2 * pos - TAB_SIZE
+            total_docs = len(self.doc_tabs)
+            size = TAB_SIZE if total_docs < 2 else width // (total_docs - 1)
+            for tab in self.doc_tabs:
+                tab.size = size
+                tab.set_position(pos)
+                pos += tab.get_width()
 
     def mouse_left_down(self, point):
         for tab in self.doc_tabs:
@@ -114,13 +119,14 @@ class LWDocTab(object):
     close_active = False
     close_pressed = False
     close_rect = (0, 0, 1, 1)
+    size = TAB_SIZE
 
     def __init__(self, parent, active=True):
         self.parent = parent
         self.active = active
 
     def get_width(self):
-        return TAB_SIZE
+        return TAB_SIZE if self.active else min(TAB_SIZE, self.size)
 
     def set_title(self, title):
         self.text = title
