@@ -195,7 +195,7 @@ class LWDocTab(object):
         bg_color = const.UI_COLORS['bg']
         fg_color = const.UI_COLORS['fg']
         brown = (145, 45, 45)
-        dark_red = (206, 99, 99)
+        dark_red = (250, 65, 40)
         dc = self.parent
 
         # tab rect
@@ -236,12 +236,12 @@ class LWDocTab(object):
             render.DrawItemSelectionRect(dc, dc.dc, r, wx.CONTROL_SELECTED)
 
         # close button --------
-        pos = self.pos + self.get_width() - 2 * s - int(s / 2) + 1
-        y = int(TAB_HEIGHT / 2 - s) + 2
+        pos = self.close_rect[0]
+        y = self.close_rect[1]
         if self.close_active:
             dc.set_gc_fill(brown if self.close_pressed else dark_red)
             dc.set_gc_stroke(None)
-            dc.gc_draw_rounded_rect(pos, y, 2 * s, 2 * s, s)
+            dc.gc_draw_rounded_rect(pos + 1, y + 1, 2 * s - 2, 2 * s - 2, s)
 
         dc.set_gc_fill(None)
         dc.set_gc_stroke(const.WHITE if self.close_active else fg_color,
