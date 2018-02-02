@@ -515,6 +515,7 @@ class SensitiveCanvas(Canvas):
         self.Bind(wx.EVT_MOUSEWHEEL, self._mouse_wheel)
         self.Bind(wx.EVT_RIGHT_UP, self._mouse_right_up)
         self.Bind(wx.EVT_LEFT_DCLICK, self._mouse_left_dclick)
+        self.Bind(wx.EVT_LEAVE_WINDOW, self._mouse_leave)
         if check_move:
             self.Bind(wx.EVT_MOTION, self._mouse_move)
             self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self._capture_lost)
@@ -538,6 +539,9 @@ class SensitiveCanvas(Canvas):
             self.mouse_captured = False
             self.ReleaseMouse()
 
+    def _mouse_leave(self, event):
+        self.mouse_leave(event.GetPositionTuple())
+
     def _mouse_left_down(self, event):
         self.mouse_left_down(event.GetPositionTuple())
 
@@ -558,6 +562,9 @@ class SensitiveCanvas(Canvas):
 
     def _mouse_left_dclick(self, event):
         self.mouse_left_dclick(event.GetPositionTuple())
+
+    def mouse_leave(self, point):
+        pass
 
     def mouse_left_down(self, point):
         pass
