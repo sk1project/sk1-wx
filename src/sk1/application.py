@@ -342,10 +342,11 @@ class SK1Application(wal.Application, UCApplication):
         if not self.docs:
             return
         doc = doc or self.current_doc
-        if not doc == self.current_doc:
-            self.set_current_doc(doc)
 
         if self.insp.is_doc_not_saved(doc):
+            if not doc == self.current_doc:
+                self.set_current_doc(doc)
+
             msg = _("Document '%s' has been modified.") % doc.doc_name + '\n'
             msg += _('Do you want to save your changes?')
             ret = dialogs.ync_dialog(self.mw, self.appdata.app_name, msg)
