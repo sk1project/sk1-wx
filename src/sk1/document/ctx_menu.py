@@ -16,8 +16,9 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wal
-from sk1 import config, modes
+from sk1 import modes
 from sk1.resources import pdids
+from sk1.pwidgets import ContextMenu
 
 UNDO = [wal.ID_UNDO, wal.ID_REDO]
 EDIT = [None, wal.ID_CUT, wal.ID_COPY, wal.ID_PASTE,
@@ -39,44 +40,9 @@ TEXT = [None, pdids.ID_UPPER_TEXT, pdids.ID_LOWER_TEXT,
         pdids.ID_CAPITALIZE_TEXT]
 
 
-class ContextMenu(wal.Menu):
-    app = None
-    mw = None
-    insp = None
-    actions = None
-    items = []
-
+class CanvasCtxMenu(ContextMenu):
     def __init__(self, app, parent):
-        self.app = app
-        self.mw = app.mw
-        self.parent = parent
-        self.insp = self.app.insp
-        self.actions = self.app.actions
-        wal.Menu.__init__(self)
-        self.build_menu(UNDO)
-        self.items = []
-
-    def destroy(self):
-        items = self.__dict__.keys()
-        for item in items:
-            self.__dict__[item] = None
-
-    def rebuild(self):
-        self.build_menu(self.get_entries())
-
-    def build_menu(self, entries):
-        for item in self.items:
-            self.remove_item(item)
-        self.items = []
-        for item in entries:
-            if item is None:
-                self.items.append(self.append_separator())
-            else:
-                action = self.app.actions[item]
-                menuitem = CtxActionMenuItem(self.parent, self, action)
-                self.append_item(menuitem)
-                menuitem.update()
-                self.items.append(menuitem)
+        ContextMenu.__init__(self, app, parent, UNDO)
 
     def get_entries(self):
         if not self.insp.is_selection():
@@ -114,26 +80,3 @@ class ContextMenu(wal.Menu):
         if ret:
             ret = [None, ] + ret
         return ret
-
-
-class CtxActionMenuItem(wal.MenuItem):
-    def __init__(self, mw, parent, action):
-        self.mw = mw
-        self.parent = parent
-        self.action = action
-        action_id = action.action_id
-        text = action.get_menu_text()
-        if action.is_acc:
-            text += '\t' + action.get_shortcut_text()
-        wal.MenuItem.__init__(self, parent, action_id, text=text)
-        if action.is_icon:
-            self.set_bitmap(action.get_icon(config.menu_size, wal.ART_MENU))
-        action.register_as_menuitem(self)
-        self.bind_to(self.mw, action.do_call, action_id)
-        if action.is_toggle():
-            self.set_checkable(True)
-
-    def update(self):
-        self.set_enable(self.action.enabled)
-        if self.action.is_toggle():
-            self.set_active(self.action.active)

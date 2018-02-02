@@ -20,7 +20,7 @@ import inspect
 import logging
 
 import wal
-from ctx_menu import ContextMenu
+from ctx_menu import CanvasCtxMenu
 from sk1 import events, modes, config
 from sk1.appconst import PAGEFIT, ZOOM_IN, ZOOM_OUT, RENDERING_DELAY
 from sk1.document import controllers
@@ -88,7 +88,7 @@ class AppCanvas(wal.MainCanvas):
         self.hit_surface = HitSurface(self)
         self.zoom_stack = []
 
-        self.ctx_menu = ContextMenu(self.app, self)
+        self.ctx_menu = CanvasCtxMenu(self.app, self)
 
         self.ctrls = self.init_controllers()
         # ----- Application eventloop bindings
