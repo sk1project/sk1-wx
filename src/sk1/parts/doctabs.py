@@ -45,7 +45,12 @@ class LWDocTab(wal.LWDocTab):
         self.saved = self.doc.saved
         wal.LWDocTab.set_title(self, self.doc.doc_name)
 
+    def close(self):
+        self.doc.app.close(self.doc)
+
     def mouse_left_down(self, point):
-        if not self.active:
-            self.doc.app.set_current_doc(self.doc)
+        if wal.LWDocTab.mouse_left_down(self, point):
+            if not self.active:
+                self.doc.app.set_current_doc(self.doc)
+
 
