@@ -133,6 +133,9 @@ class WidgetMixin(object):
     def get_bg(self):
         return self.GetBackgroundColour().Get()
 
+    def popup_menu(self, menu):
+        self.PopupMenu(menu)
+
 
 class DataWidgetMixin(WidgetMixin):
     def set_value(self, value):
