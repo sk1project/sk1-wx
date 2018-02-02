@@ -513,6 +513,7 @@ class SensitiveCanvas(Canvas):
         self.Bind(wx.EVT_LEFT_UP, self._mouse_left_up)
         self.Bind(wx.EVT_LEFT_DOWN, self._mouse_left_down)
         self.Bind(wx.EVT_MOUSEWHEEL, self._mouse_wheel)
+        self.Bind(wx.EVT_RIGHT_DOWN, self._mouse_right_down)
         self.Bind(wx.EVT_RIGHT_UP, self._mouse_right_up)
         self.Bind(wx.EVT_LEFT_DCLICK, self._mouse_left_dclick)
         self.Bind(wx.EVT_LEAVE_WINDOW, self._mouse_leave)
@@ -548,6 +549,9 @@ class SensitiveCanvas(Canvas):
     def _mouse_left_up(self, event):
         self.mouse_left_up(event.GetPositionTuple())
 
+    def _mouse_right_down(self, event):
+        self.mouse_right_down(event.GetPositionTuple())
+
     def _mouse_right_up(self, event):
         self.mouse_right_up(event.GetPositionTuple())
 
@@ -570,6 +574,9 @@ class SensitiveCanvas(Canvas):
         pass
 
     def mouse_left_up(self, point):
+        pass
+
+    def mouse_right_down(self, point):
         pass
 
     def mouse_right_up(self, point):
