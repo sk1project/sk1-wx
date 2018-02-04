@@ -29,6 +29,8 @@ TAB_SIZE = 150
 class DocTabs(HPanel, SensitiveCanvas):
     doc_tabs = []
     draw_top = True
+    pos_min = 0
+    pos_max = 0
 
     def __init__(self, parent, draw_top=True):
         self.draw_top = draw_top
@@ -54,14 +56,38 @@ class DocTabs(HPanel, SensitiveCanvas):
 
     def arrange_tabs(self):
         if self.doc_tabs:
-            pos = TAB_HEIGHT
-            width = self.get_size()[0] - 2 * pos - TAB_SIZE
+            self.pos_min = pos = TAB_HEIGHT
+            self.pos_max = self.get_size()[0] - pos
+            width = self.pos_max - self.pos_min - TAB_SIZE
             total_docs = len(self.doc_tabs)
             size = TAB_SIZE if total_docs < 2 else width // (total_docs - 1)
             for tab in self.doc_tabs:
                 tab.size = size
-                tab.set_position(pos)
+                if not tab.moves:
+                    tab.set_position(pos)
                 pos += tab.get_width()
+
+    def reorder_tabs(self, tab):
+        index = self.doc_tabs.index(tab)
+        dx = tab.pos - tab.orig_pos
+        if dx > 0 and index == len(self.doc_tabs) - 1:
+            pass
+        elif dx < 0 and not index:
+            pass
+        elif dx > 0:
+            pos1 = tab.pos + tab.get_width()
+            after = self.doc_tabs[index + 1]
+            pos2 = after.pos + after.get_width() // 2
+            if pos1 > pos2:
+                self.doc_tabs.remove(tab)
+                self.doc_tabs.insert(index + 1, tab)
+        elif dx < 0:
+            pos1 = tab.pos
+            before = self.doc_tabs[index - 1]
+            pos2 = before.pos + before.get_width() // 2
+            if pos1 < pos2:
+                self.doc_tabs.remove(tab)
+                self.doc_tabs.insert(index - 1, tab)
 
     def mouse_left_down(self, point):
         for tab in self.doc_tabs:
@@ -70,6 +96,10 @@ class DocTabs(HPanel, SensitiveCanvas):
                 break
 
     def mouse_left_up(self, point):
+        for tab in self.doc_tabs:
+            if tab.moves:
+                tab.mouse_left_up(point)
+                return
         for tab in self.doc_tabs:
             if tab.is_point_in_tab(point):
                 tab.mouse_left_up(point)
@@ -82,6 +112,10 @@ class DocTabs(HPanel, SensitiveCanvas):
                 break
 
     def mouse_move(self, point):
+        for tab in self.doc_tabs:
+            if tab.moves:
+                tab.mouse_move(point)
+                return
         for tab in self.doc_tabs:
             if tab.is_point_in_tab(point):
                 tab.mouse_move(point)
@@ -128,6 +162,9 @@ class LWDocTab(object):
     pos = 0
     close_active = False
     close_pressed = False
+    moves = False
+    move_start = None
+    orig_pos = 0
     close_rect = (0, 0, 1, 1)
     size = TAB_SIZE
 
@@ -144,11 +181,12 @@ class LWDocTab(object):
 
     def set_active(self, value):
         self.active = value
+        self.set_position(self.pos)
 
     def set_position(self, pos):
         self.pos = pos
         s = INDICATOR_SIZE
-        x0 = self.pos + self.get_width() - 2 * s - int(s / 2) + 1
+        x0 = self.get_width() - 2 * s - int(s / 2) + 1
         y0 = int(TAB_HEIGHT / 2 - s) + 2
         self.close_rect = (x0, y0, x0 + 2 * s, y0 + 2 * s)
 
@@ -158,6 +196,8 @@ class LWDocTab(object):
     def is_close_active(self, point):
         x, y = point
         x0, y0, x1, y1 = self.close_rect
+        x0 += self.pos
+        x1 += self.pos
         return x0 < x < x1 and y0 < y < y1
 
     def mouse_leaved_tab(self):
@@ -168,19 +208,34 @@ class LWDocTab(object):
 
     def mouse_left_down(self, point):
         self.close_pressed = self.close_active
+        self.moves = not self.close_active
         if self.close_pressed:
             self.parent.refresh()
+        if self.moves:
+            self.move_start = point
+            self.orig_pos = self.pos
         return not self.close_active
 
     def mouse_left_up(self, point):
         if self.close_active:
             self.close()
         self.close_pressed = False
+        if self.moves:
+            self.moves = False
+            self.parent.refresh()
 
     def mouse_right_down(self):
         pass
 
     def mouse_move(self, point):
+        if self.moves:
+            pos = self.orig_pos + point[0] - self.move_start[0]
+            pos = min(pos, self.parent.pos_max - self.get_width())
+            pos = max(pos, self.parent.pos_min)
+            self.set_position(pos)
+            self.parent.reorder_tabs(self)
+            self.parent.refresh()
+            return
         if self.is_close_active(point) != self.close_active:
             self.close_active = not self.close_active
             self.parent.refresh()
@@ -253,7 +308,7 @@ class LWDocTab(object):
             render.DrawItemSelectionRect(dc, dc.dc, r, wx.CONTROL_SELECTED)
 
         # close button --------
-        pos = self.close_rect[0]
+        pos = self.pos + self.close_rect[0]
         y = self.close_rect[1]
         if self.close_active:
             dc.set_gc_fill(const.BROWN if self.close_pressed

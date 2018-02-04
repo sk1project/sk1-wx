@@ -98,7 +98,7 @@ class AppConfig(UCConfig):
     make_export_backup = False
     active_plugins = None
     make_font_cache_on_start = False
-    gui_style = appconst.GUI_CLASSIC
+    gui_style = appconst.GUI_TABBED
 
     printer_config = {}
 
