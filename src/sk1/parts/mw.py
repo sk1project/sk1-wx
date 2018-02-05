@@ -48,7 +48,7 @@ class AppMainWindow(wal.MainWindow):
         self.menubar = AppMenuBar(self.app, self)
         self.set_menubar(self.menubar)
         # ----- Toolbar
-        if config.gui_style == appconst.GUI_CLASSIC:
+        if config.ui_style == appconst.GUI_CLASSIC:
             self.toolbar = build_toolbar(self)
 
         # ----- MDI Area

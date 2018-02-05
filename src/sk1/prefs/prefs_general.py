@@ -18,7 +18,18 @@
 import wal
 from generic import PrefPanel
 from sk1 import _, config
+from sk1.pwidgets import CBMiniPalette
 from sk1.resources import icons
+from uc2 import cms
+
+COLORS = [
+    ('#FFFFFF', 'White'),
+    ('#D4D0C8', 'Win2k'),
+    ('#ECE9D8', 'WinXP'),
+    ('#E0DFE3', 'WinXP Silver'),
+    ('#F0F0F0', 'Win7'),
+    ('#F2F1F0', 'Ubuntu'),
+]
 
 
 class GeneralPrefs(PrefPanel):
@@ -27,6 +38,10 @@ class GeneralPrefs(PrefPanel):
     title = _('General application preferences')
     icon_id = icons.PD_PROPERTIES
 
+    ui_style = None
+    tab_bg = None
+    palette = None
+    use_tab_bg = None
     newdoc = None
     backup = None
     expbackup = None
@@ -43,26 +58,68 @@ class GeneralPrefs(PrefPanel):
         PrefPanel.__init__(self, app, dlg)
 
     def build(self):
-        txt = _('Create new document on start')
-        self.newdoc = wal.Checkbox(self, txt, config.new_doc_on_start)
-        self.pack(self.newdoc, align_center=False, start_padding=5)
+        vpanel = wal.VPanel(self)
+        grid = wal.GridPanel(vpanel, rows=2, cols=2, hgap=5, vgap=5)
+        grid.pack(wal.Label(grid, _('UI style*:')))
 
-        if wal.IS_MSW:
-            self.pack((5, 5))
+        items = [_('Classic'), _('Tabbed')]
+        self.ui_style = wal.Combolist(grid, items=items)
+        self.ui_style.set_active(config.ui_style)
+        grid.pack(self.ui_style, fill=True)
 
-        txt = _('Make backup on document save')
-        self.backup = wal.Checkbox(self, txt, config.make_backup)
-        self.pack(self.backup, align_center=False)
+        grid.pack(wal.Label(grid, _('Tab panel color:')))
+        panel = wal.HPanel(grid)
+        self.tab_bg = wal.ColorButton(panel)
+        self.tab_bg.set_value(config.tab_bg
+                              or cms.val_255_to_dec(wal.UI_COLORS['bg']))
+        self.palette = CBMiniPalette(panel, COLORS,
+                                     onclick=self.tab_bg.set_value)
+        panel.pack(self.tab_bg)
+        panel.pack((10, 5))
+        panel.pack(self.palette)
+        grid.pack(panel)
 
-        if wal.IS_MSW:
-            self.pack((5, 5))
+        vpanel.pack(grid, start_padding=5)
 
-        txt = _('Make backup on export')
-        self.expbackup = wal.Checkbox(self, txt, config.make_export_backup)
-        self.pack(self.expbackup, align_center=False)
+        txt = _('Custom color for tab panel background')
+        self.use_tab_bg = wal.Checkbox(vpanel, txt, config.use_tab_bg,
+                                       onclick=self.on_click_use_tab_bg)
+        self.on_click_use_tab_bg()
 
-        if wal.IS_MSW:
-            self.pack((5, 5))
+        vpanel.pack(self.use_tab_bg, align_center=False, start_padding=5)
+        self.pack(vpanel)
+
+        self.pack((5, 5))
+
+        self.pack(wal.HLine(self), fill=True)
+
+        table = wal.GridPanel(self, rows=1, cols=3, hgap=5, vgap=5)
+        self.pack(table, fill=True, padding=5)
+
+        grid = wal.VPanel(table)
+
+        txt = _('New document on start')
+        self.newdoc = wal.Checkbox(grid, txt, config.new_doc_on_start)
+        grid.pack(self.newdoc, align_center=False)
+
+        txt = _('Backup on document save')
+        self.backup = wal.Checkbox(grid, txt, config.make_backup)
+        grid.pack(self.backup, align_center=False)
+
+        txt = _('Make font cache on start')
+        self.fcache = wal.Checkbox(grid, txt, config.make_font_cache_on_start)
+        grid.pack(self.fcache, align_center=False)
+
+        txt = _('Backup on export')
+        self.expbackup = wal.Checkbox(grid, txt, config.make_export_backup)
+        grid.pack(self.expbackup, align_center=False)
+
+        txt = _('Show quick access buttons')
+        self.stub_buttons = wal.Checkbox(grid, txt, config.show_stub_buttons)
+        grid.pack(self.stub_buttons, align_center=False)
+
+        table.pack(grid)
+        table.pack((20, 5))
 
         grid = wal.GridPanel(self, rows=2, cols=3, hgap=5, vgap=3)
         grid.pack(wal.Label(grid, _('History log size:')))
@@ -74,21 +131,7 @@ class GeneralPrefs(PrefPanel):
                                           (5, 20))
         grid.pack(self.hist_menu_size)
         grid.pack(wal.Label(grid, _('records')))
-        self.pack(grid, align_center=False, padding=5)
-
-        if wal.IS_MSW:
-            self.pack((5, 5))
-
-        txt = _('Make font cache on start')
-        self.fcache = wal.Checkbox(self, txt, config.make_font_cache_on_start)
-        self.pack(self.fcache, align_center=False)
-
-        if wal.IS_MSW:
-            self.pack((5, 5))
-
-        txt = _('Show quick access buttons')
-        self.stub_buttons = wal.Checkbox(self, txt, config.show_stub_buttons)
-        self.pack(self.stub_buttons, align_center=False)
+        table.pack(grid)
 
         if wal.IS_MSW:
             self.pack((5, 5))
@@ -118,12 +161,15 @@ class GeneralPrefs(PrefPanel):
                                                config.ubuntu_scrollbar_overlay)
             self.pack(self.ubuntu_overlay, align_center=False)
 
-        if not wal.IS_MAC:
-            self.pack(wal.HPanel(self), expand=True, fill=True)
-            txt = _('(*) - These options require application restart')
-            self.pack(wal.Label(grid, txt, fontsize=-1), align_center=False)
+        self.pack(wal.HPanel(self), expand=True, fill=True)
+        txt = _('(*) - These options require application restart')
+        self.pack(wal.Label(grid, txt, fontsize=-1), align_center=False)
 
         self.built = True
+
+    def on_click_use_tab_bg(self):
+        self.tab_bg.set_enable(self.use_tab_bg.get_value())
+        self.palette.set_enable(self.use_tab_bg.get_value())
 
     def apply_changes(self):
         config.new_doc_on_start = self.newdoc.get_value()
