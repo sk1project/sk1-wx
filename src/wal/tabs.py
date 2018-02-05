@@ -67,9 +67,8 @@ class DocTabs(HPanel, SensitiveCanvas):
                     tab.set_position(pos)
                 pos += tab.get_width()
 
-    def reorder_tabs(self, tab):
+    def reorder_tabs(self, tab, dx):
         index = self.doc_tabs.index(tab)
-        dx = tab.pos - tab.orig_pos
         if dx > 0 and index == len(self.doc_tabs) - 1:
             pass
         elif dx < 0 and not index:
@@ -229,11 +228,13 @@ class LWDocTab(object):
 
     def mouse_move(self, point):
         if self.moves:
+            dx = - self.pos
             pos = self.orig_pos + point[0] - self.move_start[0]
             pos = min(pos, self.parent.pos_max - self.get_width())
             pos = max(pos, self.parent.pos_min)
             self.set_position(pos)
-            self.parent.reorder_tabs(self)
+            dx += self.pos
+            self.parent.reorder_tabs(self, dx)
             self.parent.refresh()
             return
         if self.is_close_active(point) != self.close_active:
