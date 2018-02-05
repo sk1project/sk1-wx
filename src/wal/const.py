@@ -139,7 +139,15 @@ def is_unity_16_04():
     return False
 
 
+def is_ambiance():
+    if IS_GTK:
+        cmd = "gsettings get org.gnome.desktop.wm.preferences theme"
+        return os.popen(cmd).readline().strip("'\n") == 'Ambiance'
+    return False
+
+
 IS_UNITY_16 = is_unity_16_04()
+IS_AMBIANCE = is_ambiance()
 
 TOP = wx.TOP
 BOTTOM = wx.BOTTOM
@@ -331,6 +339,7 @@ DARK_RED = wx.Colour(230, 50, 50)
 BROWN = wx.Colour(145, 45, 45)
 GREEN = wx.Colour(0, 255, 0)
 BLUE = wx.Colour(0, 0, 255)
+AMBIANCE_GRAY = wx.Colour(60, 59, 55)
 
 
 def wxcolor_to_dec(wxcolor):

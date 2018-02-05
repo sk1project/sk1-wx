@@ -29,11 +29,13 @@ TAB_SIZE = 150
 class DocTabs(HPanel, SensitiveCanvas):
     doc_tabs = []
     draw_top = True
+    custom_bg = None
     pos_min = 0
     pos_max = 0
 
-    def __init__(self, parent, draw_top=True):
+    def __init__(self, parent, draw_top=True, custom_bg=None):
         self.draw_top = draw_top
+        self.custom_bg = custom_bg
         HPanel.__init__(self, parent)
         SensitiveCanvas.__init__(self, check_move=True)
         self.pack((TAB_PADDING, TAB_HEIGHT))
@@ -133,20 +135,37 @@ class DocTabs(HPanel, SensitiveCanvas):
         color = const.UI_COLORS['hover_solid_border']
         active_tab = None
         w, h = self.get_size()
+
+        # optional panel background
+        if self.custom_bg:
+            self.set_stroke(None)
+            self.set_fill(self.custom_bg)
+            self.draw_rect(0, 0, w, h)
+        elif const.IS_AMBIANCE:
+            self.set_stroke(None)
+            self.set_fill(const.AMBIANCE_GRAY)
+            self.draw_rect(0, 0, w, h)
+
         if self.draw_top:
             self.set_stroke(color)
             self.draw_line(0, 0, w, 0)
+
+        # tab rendering
         for tab in self.doc_tabs:
             if not tab.active:
                 tab.paint()
             else:
                 active_tab = tab
+
+        # gradient
         start = (0, 0, 0, 0)
         stop = (0, 0, 0, 30)
         self.gc_draw_linear_gradient((0, h / 4, w, h * 3 / 4),
                                      start, stop, True)
         self.set_stroke(color)
         self.draw_line(0, h - 1, w, h - 1)
+
+        # active tab rendering
         if active_tab:
             active_tab.paint()
 
@@ -272,9 +291,11 @@ class LWDocTab(object):
         dc = self.parent
 
         # tab rect
-        dc.set_fill(bg_color)
-        dc.set_stroke(stroke_color)
-        dc.draw_rect(self.pos, 0, self.get_width() + 1, TAB_HEIGHT + 5)
+        dc.set_gc_fill(bg_color)
+        dc.set_gc_stroke(stroke_color)
+        r = 0 if self.active or self.parent.draw_top else 6
+        dc.gc_draw_rounded_rect(self.pos, 0,
+                                self.get_width() + 1, TAB_HEIGHT + 5, r)
 
         # tab indicator
         s = INDICATOR_SIZE
@@ -304,9 +325,14 @@ class LWDocTab(object):
 
         # tab marker
         if self.active:
-            r = (self.pos + 2, 1, self.get_width() - 2, 2)
-            render = wx.RendererNative.Get()
-            render.DrawItemSelectionRect(dc, dc.dc, r, wx.CONTROL_SELECTED)
+            r = (self.pos + 1, 1, self.get_width() - 1, 2)
+            if const.IS_AMBIANCE:
+                dc.set_stroke(None)
+                dc.set_fill(const.UI_COLORS['selected_text_bg'])
+                dc.draw_rect(*r)
+            else:
+                render = wx.RendererNative.Get()
+                render.DrawItemSelectionRect(dc, dc.dc, r, wx.CONTROL_SELECTED)
 
         # close button --------
         pos = self.pos + self.close_rect[0]
