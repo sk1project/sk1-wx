@@ -64,8 +64,8 @@ class GeneralPrefs(PrefPanel):
         # ----------------------
 
         vpanel = wal.VPanel(self.nb)
-        grid = wal.GridPanel(vpanel, rows=2, cols=2, hgap=5, vgap=5)
-        grid.pack(wal.Label(grid, _('UI style*:')))
+        grid = wal.GridPanel(vpanel, rows=2, cols=2, hgap=10, vgap=5)
+        grid.pack(wal.Label(grid, _('UI style (*):')))
 
         items = [_('Classic'), _('Tabbed')]
         self.ui_style = wal.Combolist(grid, items=items)
@@ -179,6 +179,8 @@ class GeneralPrefs(PrefPanel):
         self.palette.set_enable(self.use_tab_bg.get_value())
 
     def apply_changes(self):
+        config.ui_style = self.ui_style.get_active()
+        # -----------
         config.new_doc_on_start = self.newdoc.get_value()
         config.make_backup = self.backup.get_value()
         config.make_export_backup = self.expbackup.get_value()
@@ -196,6 +198,8 @@ class GeneralPrefs(PrefPanel):
 
     def restore_defaults(self):
         defaults = config.get_defaults()
+        self.ui_style.set_active(defaults['ui_style'])
+        # --------
         self.newdoc.set_value(defaults['new_doc_on_start'])
         self.backup.set_value(defaults['make_backup'])
         self.expbackup.set_value(defaults['make_export_backup'])

@@ -99,7 +99,7 @@ class AppConfig(UCConfig):
     active_plugins = None
     make_font_cache_on_start = False
 
-    ui_style = appconst.GUI_TABBED
+    ui_style = appconst.GUI_CLASSIC
     tab_bg = ()
     use_tab_bg = False
 
