@@ -294,7 +294,8 @@ class LWDocTab(object):
         dc.set_gc_fill(bg_color)
         dc.set_gc_stroke(stroke_color)
         r = 0 if self.active or self.parent.draw_top else 6
-        dc.gc_draw_rounded_rect(self.pos, 0,
+        y = 0 if self.active or self.parent.draw_top else 2
+        dc.gc_draw_rounded_rect(self.pos, y,
                                 self.get_width() + 1, TAB_HEIGHT + 5, r)
 
         # tab indicator
