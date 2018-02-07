@@ -38,6 +38,7 @@ class GeneralPrefs(PrefPanel):
     title = _('General application preferences')
     icon_id = icons.PD_PROPERTIES
 
+    nb = None
     ui_style = None
     tab_bg = None
     palette = None
@@ -58,7 +59,11 @@ class GeneralPrefs(PrefPanel):
         PrefPanel.__init__(self, app, dlg)
 
     def build(self):
-        vpanel = wal.VPanel(self)
+        self.nb = wal.Notebook(self)
+
+        # ----------------------
+
+        vpanel = wal.VPanel(self.nb)
         grid = wal.GridPanel(vpanel, rows=2, cols=2, hgap=5, vgap=5)
         grid.pack(wal.Label(grid, _('UI style*:')))
 
@@ -79,47 +84,46 @@ class GeneralPrefs(PrefPanel):
         panel.pack(self.palette)
         grid.pack(panel)
 
-        vpanel.pack(grid, start_padding=5)
+        vpanel.pack(grid, align_center=False, padding_all=10)
 
-        txt = _('Custom color for tab panel background')
+        txt = _('Custom colors for tab panel')
         self.use_tab_bg = wal.Checkbox(vpanel, txt, config.use_tab_bg,
                                        onclick=self.on_click_use_tab_bg)
         self.on_click_use_tab_bg()
+        vpanel.pack(self.use_tab_bg, align_center=False, padding_all=5)
 
-        vpanel.pack(self.use_tab_bg, align_center=False, start_padding=5)
-        self.pack(vpanel)
+        self.nb.add_page(vpanel, _('UI style'))
 
-        self.pack((5, 5))
+        # ----------------------
 
-        self.pack(wal.HLine(self), fill=True)
-
-        table = wal.GridPanel(self, rows=1, cols=3, hgap=5, vgap=5)
-        self.pack(table, fill=True, padding=5)
+        vpanel = wal.VPanel(self.nb)
+        table = wal.GridPanel(vpanel, rows=1, cols=3, hgap=5, vgap=5)
+        vpanel.pack(table, fill=True, padding_all=5)
 
         grid = wal.VPanel(table)
 
         txt = _('New document on start')
         self.newdoc = wal.Checkbox(grid, txt, config.new_doc_on_start)
-        grid.pack(self.newdoc, align_center=False)
+        grid.pack(self.newdoc, align_center=False, padding=3)
 
         txt = _('Backup on document save')
         self.backup = wal.Checkbox(grid, txt, config.make_backup)
-        grid.pack(self.backup, align_center=False)
+        grid.pack(self.backup, align_center=False, padding=3)
 
         txt = _('Make font cache on start')
         self.fcache = wal.Checkbox(grid, txt, config.make_font_cache_on_start)
-        grid.pack(self.fcache, align_center=False)
+        grid.pack(self.fcache, align_center=False, padding=3)
 
         txt = _('Backup on export')
         self.expbackup = wal.Checkbox(grid, txt, config.make_export_backup)
-        grid.pack(self.expbackup, align_center=False)
+        grid.pack(self.expbackup, align_center=False, padding=3)
 
         txt = _('Show quick access buttons')
         self.stub_buttons = wal.Checkbox(grid, txt, config.show_stub_buttons)
-        grid.pack(self.stub_buttons, align_center=False)
+        grid.pack(self.stub_buttons, align_center=False, padding=3)
 
         table.pack(grid)
-        table.pack((20, 5))
+        table.pack((15, 5))
 
         grid = wal.GridPanel(self, rows=2, cols=3, hgap=5, vgap=3)
         grid.pack(wal.Label(grid, _('History log size:')))
@@ -134,34 +138,37 @@ class GeneralPrefs(PrefPanel):
         table.pack(grid)
 
         if wal.IS_MSW:
-            self.pack((5, 5))
+            vpanel.pack((5, 5))
 
         if not wal.IS_MAC and wal.IS_WX2:
             txt = _('Use overlay for spinbox widgets (*)')
-            self.spin_overlay = wal.Checkbox(self, txt, config.spin_overlay)
-            self.pack(self.spin_overlay, align_center=False)
+            self.spin_overlay = wal.Checkbox(vpanel, txt, config.spin_overlay)
+            vpanel.pack(self.spin_overlay, align_center=False)
 
         if wal.IS_GTK and wal.IS_WX2:
             txt = _('Separate spin in spinbox widgets (*)')
-            self.spin_sep = wal.Checkbox(self, txt, config.spin_sep)
-            self.pack(self.spin_sep, align_center=False)
+            self.spin_sep = wal.Checkbox(vpanel, txt, config.spin_sep)
+            vpanel.pack(self.spin_sep, align_center=False)
 
         if wal.IS_UNITY:
             txt = _('Unity related features')
-            self.pack(wal.Label(grid, txt, fontsize=2, fontbold=True),
-                      start_padding=10)
-            self.pack(wal.HLine(self), fill=True, padding=2)
+            vpanel.pack(wal.Label(vpanel, txt, fontsize=2, fontbold=True),
+                        start_padding=10)
+            vpanel.pack(wal.HLine(vpanel), fill=True, padding=2)
 
             txt = _('Use Unity Global Menu (*)')
-            self.ubuntu_gm = wal.Checkbox(self, txt, config.ubuntu_global_menu)
-            self.pack(self.ubuntu_gm, align_center=False)
+            self.ubuntu_gm = wal.Checkbox(vpanel, txt,
+                                          config.ubuntu_global_menu)
+            vpanel.pack(self.ubuntu_gm, align_center=False)
 
             txt = _('Allow overlay for scrollbars (*)')
-            self.ubuntu_overlay = wal.Checkbox(self, txt,
+            self.ubuntu_overlay = wal.Checkbox(vpanel, txt,
                                                config.ubuntu_scrollbar_overlay)
-            self.pack(self.ubuntu_overlay, align_center=False)
+            vpanel.pack(self.ubuntu_overlay, align_center=False)
 
-        self.pack(wal.HPanel(self), expand=True, fill=True)
+        self.nb.add_page(vpanel, _('Generic features'))
+        self.pack(self.nb, fill=True, expand=True, padding=5)
+
         txt = _('(*) - These options require application restart')
         self.pack(wal.Label(grid, txt, fontsize=-1), align_center=False)
 
