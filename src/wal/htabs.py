@@ -24,21 +24,188 @@ TAB_HEIGHT = 25
 TAB_MARGIN = 1
 TAB_PADDING = 5
 TAB_SIZE = 150
+INDICATOR_SIZE = 8
+
+
+def get_text_size(text, bold=False, size_incr=0):
+    font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+    if bold:
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
+    if size_incr:
+        if font.IsUsingSizeInPixels():
+            sz = font.GetPixelSize()[1] + size_incr
+            font.SetPixelSize((0, sz))
+        else:
+            sz = font.GetPointSize() + size_incr
+            font.SetPointSize(sz)
+    pdc = wx.MemoryDC()
+    bmp = wx.EmptyBitmap(1, 1)
+    pdc.SelectObject(bmp)
+    pdc.SetFont(font)
+    height = pdc.GetCharHeight()
+    width = pdc.GetTextExtent(text)[0]
+    result = (width, height)
+    pdc.SelectObject(wx.NullBitmap)
+    return result
+
+
+class RoundedTabPainter(object):
+    def __init__(self, panel):
+        self.panel = panel
+        self.border_color = const.UI_COLORS['hover_solid_border']
+        self.bg_color = const.UI_COLORS['bg']
+        self.fg_color = const.UI_COLORS['fg']
+
+    def paint_panel(self):
+        active_tab = None
+
+        self.paint_panel_bg()
+        self.paint_panel_top()
+
+        for tab in self.panel.doc_tabs:
+            if not tab.active:
+                self.paint_tab(tab)
+            else:
+                active_tab = tab
+
+        self.paint_panel_shadow()
+
+        if active_tab:
+            self.paint_tab(active_tab)
+
+    def paint_panel_bg(self):
+        dc = self.panel
+        w, h = dc.get_size()
+
+        if dc.custom_bg:
+            dc.set_stroke(None)
+            dc.set_fill(dc.custom_bg)
+            dc.draw_rect(0, 0, w, h)
+        elif const.IS_AMBIANCE:
+            dc.set_stroke(None)
+            dc.set_fill(const.AMBIANCE_GRAY)
+            dc.draw_rect(0, 0, w, h)
+
+    def paint_panel_top(self):
+        dc = self.panel
+        if dc.draw_top:
+            w, h = dc.get_size()
+            dc.set_stroke(self.border_color)
+            dc.draw_line(0, 0, w, 0)
+
+    def paint_panel_shadow(self):
+        dc = self.panel
+        w, h = dc.get_size()
+        start = (0, 0, 0, 0)
+        stop = (0, 0, 0, 30)
+        dc.gc_draw_linear_gradient((0, h / 4, w, h * 3 / 4),
+                                   start, stop, True)
+        dc.set_stroke(self.border_color)
+        dc.draw_line(0, h - 1, w, h - 1)
+
+    def paint_tab(self, tab):
+        self.paint_tab_rect(tab)
+        self.paint_tab_indicator(tab)
+        self.paint_tab_text(tab)
+        self.paint_tab_marker(tab)
+        self.paint_tab_close_btn(tab)
+
+    def paint_tab_rect(self, tab):
+        dc = self.panel
+        dc.set_gc_fill(self.bg_color)
+        dc.set_gc_stroke(self.border_color)
+        r = 0 if tab.active or self.panel.draw_top else 6
+        y = 0 if tab.active or self.panel.draw_top else 2
+        dc.gc_draw_rounded_rect(tab.pos, y,
+                                tab.get_width() + 1, TAB_HEIGHT + 5, r)
+
+    def paint_tab_indicator(self, tab):
+        dc = self.panel
+        s = INDICATOR_SIZE
+        dc.set_gc_fill(const.RED if not tab.saved else None)
+        dc.set_gc_stroke(self.border_color if tab.saved else const.BROWN)
+        dc.gc_draw_rounded_rect(tab.pos + s, 10, s, s, s / 2)
+        if tab.saved:
+            dc.set_gc_stroke((255, 255, 255, 150))
+            dc.gc_draw_rounded_rect(tab.pos + s, 11, s, s, s / 2)
+
+    def paint_tab_text(self, tab):
+        dc = self.panel
+        s = INDICATOR_SIZE
+        pos = tab.pos + 3 * s - 3
+        width = tab.get_width() - 5 * s
+        txt = tab.text
+        while get_text_size(txt, size_incr=-1)[0] > width:
+            txt = txt[:-1]
+
+        y = int(TAB_HEIGHT / 2 - dc.set_font(size_incr=-1) / 2) + 1
+        dc.draw_text(txt, pos, y)
+        # text shade
+        pos = tab.pos + tab.get_width() - 5 * s
+        start = self.bg_color[:-1] + (0,)
+        stop = self.bg_color[:-1] + (255,)
+        dc.gc_draw_linear_gradient((pos, 4, 3 * s, TAB_HEIGHT),
+                                   start, stop, False)
+
+    def paint_tab_marker(self, tab):
+        dc = self.panel
+        if tab.active:
+            r = (tab.pos + 1, 1, tab.get_width() - 1, 2)
+            if const.IS_AMBIANCE:
+                dc.set_stroke(None)
+                dc.set_fill(const.UI_COLORS['selected_text_bg'])
+                dc.draw_rect(*r)
+            else:
+                render = wx.RendererNative.Get()
+                render.DrawItemSelectionRect(dc, dc.dc, r, wx.CONTROL_SELECTED)
+
+    def paint_tab_close_btn(self, tab):
+        dc = self.panel
+        s = INDICATOR_SIZE
+        pos = tab.pos + tab.close_rect[0]
+        y = tab.close_rect[1]
+        if tab.close_active:
+            dc.set_gc_fill(const.BROWN if tab.close_pressed
+                           else const.DARK_RED)
+            dc.set_gc_stroke(None)
+            dc.gc_draw_rounded_rect(pos + 1, y + 1, 2 * s - 2, 2 * s - 2, s)
+
+        dc.set_gc_fill(None)
+        dc.set_gc_stroke(const.WHITE if tab.close_active else self.fg_color,
+                         2.0 if tab.close_active else 1.5)
+        x0 = pos + 5
+        y0 = y + 5
+        x1 = pos + 2 * s - 5
+        y1 = y + 2 * s - 5
+        dc.gc_draw_line(x0, y0, x1, y1)
+        dc.gc_draw_line(x0, y1, x1, y0)
+
+
+PAINTERS = {
+    0: RoundedTabPainter,
+}
 
 
 class DocTabs(HPanel, SensitiveCanvas):
+    painter = None
     doc_tabs = []
     draw_top = True
     custom_bg = None
     pos_min = 0
     pos_max = 0
 
-    def __init__(self, parent, draw_top=True, custom_bg=None):
+    def __init__(self, parent, draw_top=True, custom_bg=None, painter=0):
         self.draw_top = draw_top
         self.custom_bg = custom_bg
         HPanel.__init__(self, parent)
         SensitiveCanvas.__init__(self, check_move=True)
         self.pack((TAB_PADDING, TAB_HEIGHT))
+        painter = painter if painter in PAINTERS else 0
+        self.set_painter(painter)
+
+    def set_painter(self, painter):
+        self.painter = PAINTERS[painter](self)
+        self.refresh()
 
     def add_new_tab(self, doc_tab):
         self.doc_tabs.append(doc_tab)
@@ -99,11 +266,11 @@ class DocTabs(HPanel, SensitiveCanvas):
     def mouse_left_up(self, point):
         for tab in self.doc_tabs:
             if tab.moves:
-                tab.mouse_left_up(point)
+                tab.mouse_left_up()
                 return
         for tab in self.doc_tabs:
             if tab.is_point_in_tab(point):
-                tab.mouse_left_up(point)
+                tab.mouse_left_up()
                 break
 
     def mouse_right_down(self, point):
@@ -127,50 +294,12 @@ class DocTabs(HPanel, SensitiveCanvas):
         for tab in self.doc_tabs:
             tab.mouse_leaved_tab()
 
-    def refresh(self):
+    def refresh(self, **kwargs):
         self.arrange_tabs()
         HPanel.refresh(self)
 
     def paint(self):
-        color = const.UI_COLORS['hover_solid_border']
-        active_tab = None
-        w, h = self.get_size()
-
-        # optional panel background
-        if self.custom_bg:
-            self.set_stroke(None)
-            self.set_fill(self.custom_bg)
-            self.draw_rect(0, 0, w, h)
-        elif const.IS_AMBIANCE:
-            self.set_stroke(None)
-            self.set_fill(const.AMBIANCE_GRAY)
-            self.draw_rect(0, 0, w, h)
-
-        if self.draw_top:
-            self.set_stroke(color)
-            self.draw_line(0, 0, w, 0)
-
-        # tab rendering
-        for tab in self.doc_tabs:
-            if not tab.active:
-                tab.paint()
-            else:
-                active_tab = tab
-
-        # gradient
-        start = (0, 0, 0, 0)
-        stop = (0, 0, 0, 30)
-        self.gc_draw_linear_gradient((0, h / 4, w, h * 3 / 4),
-                                     start, stop, True)
-        self.set_stroke(color)
-        self.draw_line(0, h - 1, w, h - 1)
-
-        # active tab rendering
-        if active_tab:
-            active_tab.paint()
-
-
-INDICATOR_SIZE = 8
+        self.painter.paint_panel()
 
 
 class LWDocTab(object):
@@ -234,7 +363,7 @@ class LWDocTab(object):
             self.orig_pos = self.pos
         return not self.close_active
 
-    def mouse_left_up(self, point):
+    def mouse_left_up(self):
         if self.close_active:
             self.close()
         self.close_pressed = False
@@ -262,99 +391,3 @@ class LWDocTab(object):
 
     def close(self):
         pass
-
-    def _get_text_size(self, text, bold=False, size_incr=0):
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        if bold:
-            font.SetWeight(wx.FONTWEIGHT_BOLD)
-        if size_incr:
-            if font.IsUsingSizeInPixels():
-                sz = font.GetPixelSize()[1] + size_incr
-                font.SetPixelSize((0, sz))
-            else:
-                sz = font.GetPointSize() + size_incr
-                font.SetPointSize(sz)
-        pdc = wx.MemoryDC()
-        bmp = wx.EmptyBitmap(1, 1)
-        pdc.SelectObject(bmp)
-        pdc.SetFont(font)
-        height = pdc.GetCharHeight()
-        width = pdc.GetTextExtent(text)[0]
-        result = (width, height)
-        pdc.SelectObject(wx.NullBitmap)
-        return result
-
-    def paint(self):
-        stroke_color = const.UI_COLORS['hover_solid_border']
-        bg_color = const.UI_COLORS['bg']
-        fg_color = const.UI_COLORS['fg']
-        dc = self.parent
-
-        # tab rect
-        dc.set_gc_fill(bg_color)
-        dc.set_gc_stroke(stroke_color)
-        r = 0 if self.active or self.parent.draw_top else 6
-        y = 0 if self.active or self.parent.draw_top else 2
-        dc.gc_draw_rounded_rect(self.pos, y,
-                                self.get_width() + 1, TAB_HEIGHT + 5, r)
-
-        # tab indicator
-        s = INDICATOR_SIZE
-        dc.set_gc_fill(const.RED if not self.saved else None)
-        dc.set_gc_stroke(stroke_color if self.saved else const.BROWN)
-        dc.gc_draw_rounded_rect(self.pos + s, 10, s, s, s / 2)
-        if self.saved:
-            dc.set_gc_stroke((255, 255, 255, 150))
-            dc.gc_draw_rounded_rect(self.pos + s, 11, s, s, s / 2)
-
-        # tab caption
-        pos = self.pos + 3 * s - 3
-        width = self.get_width() - 5 * s
-        txt = self.text
-        while self._get_text_size(txt, size_incr=-1)[0] > width:
-            txt = txt[:-1]
-
-        y = int(TAB_HEIGHT / 2 - dc.set_font(size_incr=-1) / 2) + 1
-        dc.draw_text(txt, pos, y)
-
-        # tab caption shade
-        pos = self.pos + self.get_width() - 5 * s
-        start = bg_color[:-1] + (0,)
-        stop = bg_color[:-1] + (255,)
-        dc.gc_draw_linear_gradient((pos, 4, 3 * s, TAB_HEIGHT),
-                                   start, stop, False)
-
-        # tab marker
-        if self.active:
-            r = (self.pos + 1, 1, self.get_width() - 1, 2)
-            if const.IS_AMBIANCE:
-                dc.set_stroke(None)
-                dc.set_fill(const.UI_COLORS['selected_text_bg'])
-                dc.draw_rect(*r)
-            else:
-                render = wx.RendererNative.Get()
-                render.DrawItemSelectionRect(dc, dc.dc, r, wx.CONTROL_SELECTED)
-
-        # close button --------
-        pos = self.pos + self.close_rect[0]
-        y = self.close_rect[1]
-        if self.close_active:
-            dc.set_gc_fill(const.BROWN if self.close_pressed
-                           else const.DARK_RED)
-            dc.set_gc_stroke(None)
-            dc.gc_draw_rounded_rect(pos + 1, y + 1, 2 * s - 2, 2 * s - 2, s)
-
-        dc.set_gc_fill(None)
-        dc.set_gc_stroke(const.WHITE if self.close_active else fg_color,
-                         2.0 if self.close_active else 1.5)
-        x0 = pos + 5
-        y0 = y + 5
-        x1 = pos + 2 * s - 5
-        y1 = y + 2 * s - 5
-        dc.gc_draw_line(x0, y0, x1, y1)
-        dc.gc_draw_line(x0, y1, x1, y0)
-
-
-class RoundedTabPainter(object):
-    def __init__(self, panel):
-        self.panel = panel
