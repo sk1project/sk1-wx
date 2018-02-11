@@ -353,3 +353,8 @@ class LWDocTab(object):
         y1 = y + 2 * s - 5
         dc.gc_draw_line(x0, y0, x1, y1)
         dc.gc_draw_line(x0, y1, x1, y0)
+
+
+class RoundedTabPainter(object):
+    def __init__(self, panel):
+        self.panel = panel
