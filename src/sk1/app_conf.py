@@ -100,8 +100,8 @@ class AppConfig(UCConfig):
     make_font_cache_on_start = False
 
     ui_style = appconst.GUI_CLASSIC
-    tab_bg = ()
-    use_tab_bg = False
+    tab_panel_bg = ()
+    use_tab_colors = False
 
     printer_config = {}
 

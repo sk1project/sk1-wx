@@ -42,7 +42,7 @@ class GeneralPrefs(PrefPanel):
     ui_style = None
     tab_bg = None
     palette = None
-    use_tab_bg = None
+    use_tab_colors = None
     newdoc = None
     backup = None
     expbackup = None
@@ -74,12 +74,12 @@ class GeneralPrefs(PrefPanel):
 
         grid.pack(wal.Label(grid, _('Tab panel color:')))
         panel = wal.HPanel(grid)
-        self.tab_bg = wal.ColorButton(panel)
-        self.tab_bg.set_value(config.tab_bg
-                              or cms.val_255_to_dec(wal.UI_COLORS['bg']))
+        self.tab_panel_bg = wal.ColorButton(panel)
+        self.tab_panel_bg.set_value(config.tab_panel_bg
+                                    or cms.val_255_to_dec(wal.UI_COLORS['bg']))
         self.palette = CBMiniPalette(panel, COLORS,
-                                     onclick=self.tab_bg.set_value)
-        panel.pack(self.tab_bg)
+                                     onclick=self.tab_panel_bg.set_value)
+        panel.pack(self.tab_panel_bg)
         panel.pack((10, 5))
         panel.pack(self.palette)
         grid.pack(panel)
@@ -87,10 +87,10 @@ class GeneralPrefs(PrefPanel):
         vpanel.pack(grid, align_center=False, padding_all=10)
 
         txt = _('Custom colors for tab panel')
-        self.use_tab_bg = wal.Checkbox(vpanel, txt, config.use_tab_bg,
-                                       onclick=self.on_click_use_tab_bg)
-        self.on_click_use_tab_bg()
-        vpanel.pack(self.use_tab_bg, align_center=False, padding_all=5)
+        self.use_tab_colors = wal.Checkbox(vpanel, txt, config.use_tab_colors,
+                                           onclick=self.on_click_use_tab_colors)
+        self.on_click_use_tab_colors()
+        vpanel.pack(self.use_tab_colors, align_center=False, padding_all=5)
 
         self.nb.add_page(vpanel, _('UI style'))
 
@@ -174,12 +174,15 @@ class GeneralPrefs(PrefPanel):
 
         self.built = True
 
-    def on_click_use_tab_bg(self):
-        self.tab_bg.set_enable(self.use_tab_bg.get_value())
-        self.palette.set_enable(self.use_tab_bg.get_value())
+    def on_click_use_tab_colors(self):
+        val = self.use_tab_colors.get_value()
+        self.tab_panel_bg.set_enable(val)
+        self.palette.set_enable(val)
 
     def apply_changes(self):
         config.ui_style = self.ui_style.get_active()
+        config.tab_panel_bg = self.tab_panel_bg.get_value()
+        config.use_tab_colors = self.use_tab_colors.get_value()
         # -----------
         config.new_doc_on_start = self.newdoc.get_value()
         config.make_backup = self.backup.get_value()
@@ -199,6 +202,8 @@ class GeneralPrefs(PrefPanel):
     def restore_defaults(self):
         defaults = config.get_defaults()
         self.ui_style.set_active(defaults['ui_style'])
+        self.tab_panel_bg.set_value(defaults['tab_panel_bg'])
+        self.use_tab_colors.set_value(defaults['use_tab_colors'])
         # --------
         self.newdoc.set_value(defaults['new_doc_on_start'])
         self.backup.set_value(defaults['make_backup'])
