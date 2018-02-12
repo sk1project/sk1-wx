@@ -42,7 +42,7 @@ class MDIArea(wal.VPanel):
 
         self.ctxpanel = AppCtxPanel(self.app, self)
         self.doc_tabs = DocTabs(app, self,
-                                config.ui_style == appconst.GUI_CLASSIC)
+                                config.ui_style != appconst.GUI_CLASSIC)
 
         if config.ui_style == appconst.GUI_CLASSIC:
             if not wal.IS_MAC:

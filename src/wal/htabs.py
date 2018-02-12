@@ -49,7 +49,7 @@ def get_text_size(text, bold=False, size_incr=0):
     return result
 
 
-class RoundedTabPainter(object):
+class TabPainter(object):
     def __init__(self, panel):
         self.panel = panel
         self.border_color = const.UI_COLORS['hover_solid_border']
@@ -88,7 +88,7 @@ class RoundedTabPainter(object):
 
     def paint_panel_top(self):
         dc = self.panel
-        if dc.draw_top:
+        if not dc.draw_top:
             w, h = dc.get_size()
             dc.set_stroke(self.border_color)
             dc.draw_line(0, 0, w, 0)
@@ -110,12 +110,10 @@ class RoundedTabPainter(object):
         self.paint_tab_marker(tab)
         self.paint_tab_close_btn(tab)
 
-    def paint_tab_rect(self, tab):
+    def paint_tab_rect(self, tab, r=0, y=0):
         dc = self.panel
         dc.set_gc_fill(self.bg_color)
         dc.set_gc_stroke(self.border_color)
-        r = 0 if tab.active or self.panel.draw_top else 6
-        y = 0 if tab.active or self.panel.draw_top else 2
         dc.gc_draw_rounded_rect(tab.pos, y,
                                 tab.get_width() + 1, TAB_HEIGHT + 5, r)
 
@@ -181,8 +179,40 @@ class RoundedTabPainter(object):
         dc.gc_draw_line(x0, y1, x1, y0)
 
 
+class RoundedTabPainter(TabPainter):
+    def paint_tab_rect(self, tab, **kwargs):
+        y = 3 if not tab.active and not self.panel.draw_top else 0
+        y = 2 if not tab.active and self.panel.draw_top else y
+        TabPainter.paint_tab_rect(self, tab, 6, y)
+
+    def paint_tab_marker(self, tab):
+        pass
+
+
+class RectTabPainter(TabPainter):
+    def paint_tab_rect(self, tab, **kwargs):
+        y = 2 if not tab.active and self.panel.draw_top else 0
+        TabPainter.paint_tab_rect(self, tab, 0, y)
+
+
+class FlatTabPainter(TabPainter):
+    def paint_tab_rect(self, tab, **kwargs):
+        if tab.active:
+            TabPainter.paint_tab_rect(self, tab)
+        else:
+            index = self.panel.doc_tabs.index(tab)
+            dc = self.panel
+            dc.set_stroke(self.fg_color, dashes=[1, 1])
+            if not index or dc.doc_tabs[index-1].active:
+                dc.draw_line(tab.pos, 4, tab.pos, TAB_HEIGHT - 4)
+            pos = tab.pos + tab.get_width()
+            dc.draw_line(pos, 4, pos, TAB_HEIGHT - 4)
+
+
 PAINTERS = {
-    0: RoundedTabPainter,
+    0: RectTabPainter,
+    1: RoundedTabPainter,
+    2: FlatTabPainter,
 }
 
 
@@ -200,8 +230,7 @@ class DocTabs(HPanel, SensitiveCanvas):
         HPanel.__init__(self, parent)
         SensitiveCanvas.__init__(self, check_move=True)
         self.pack((TAB_PADDING, TAB_HEIGHT))
-        painter = painter if painter in PAINTERS else 0
-        self.set_painter(painter)
+        self.set_painter(painter if painter in PAINTERS else 0)
 
     def set_painter(self, painter):
         self.painter = PAINTERS[painter](self)

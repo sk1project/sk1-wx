@@ -17,6 +17,7 @@
 
 import wal
 
+from sk1 import events, config
 from sk1.pwidgets import ContextMenu
 from sk1.resources import pdids
 
@@ -25,12 +26,19 @@ class DocTabs(wal.DocTabs):
     ctx_menu = None
 
     def __init__(self, app, parent, draw_top=True):
-        wal.DocTabs.__init__(self, parent, draw_top)
+        wal.DocTabs.__init__(self, parent, draw_top=draw_top,
+                             painter=config.tab_style)
         ITEMS = [wal.ID_CLOSE, pdids.ID_CLOSE_OTHERS, wal.ID_CLOSE_ALL, None,
                  wal.ID_SAVE, wal.ID_SAVEAS, pdids.ID_SAVE_SEL,
                  pdids.ID_SAVEALL, None, pdids.ID_IMPORT, pdids.ID_EXPORT,
                  None, wal.ID_PRINT, None, wal.ID_PROPERTIES]
         self.ctx_menu = ContextMenu(app, self, ITEMS)
+        events.connect(events.CONFIG_MODIFIED, self.check_config)
+
+    def check_config(self, *args):
+        if args[0] == 'tab_style':
+            self.set_painter(config.tab_style)
+            self.refresh()
 
     def add_new_tab(self, doc):
         return wal.DocTabs.add_new_tab(self, LWDocTab(self, doc))

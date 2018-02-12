@@ -40,7 +40,8 @@ class GeneralPrefs(PrefPanel):
 
     nb = None
     ui_style = None
-    tab_bg = None
+    tab_style = None
+    tab_panel_bg = None
     palette = None
     use_tab_colors = None
     newdoc = None
@@ -64,13 +65,19 @@ class GeneralPrefs(PrefPanel):
         # ----------------------
 
         vpanel = wal.VPanel(self.nb)
-        grid = wal.GridPanel(vpanel, rows=2, cols=2, hgap=10, vgap=5)
-        grid.pack(wal.Label(grid, _('UI style (*):')))
+        grid = wal.GridPanel(vpanel, rows=3, cols=2, hgap=10, vgap=5)
 
+        grid.pack(wal.Label(grid, _('UI style (*):')))
         items = [_('Classic'), _('Tabbed')]
         self.ui_style = wal.Combolist(grid, items=items)
         self.ui_style.set_active(config.ui_style)
         grid.pack(self.ui_style, fill=True)
+
+        grid.pack(wal.Label(grid, _('Tab style:')))
+        items = [_('Rectangle tabs'), _('Rounded tabs'), _('Flat tabs')]
+        self.tab_style = wal.Combolist(grid, items=items)
+        self.tab_style.set_active(config.tab_style)
+        grid.pack(self.tab_style, fill=True)
 
         grid.pack(wal.Label(grid, _('Tab panel color:')))
         panel = wal.HPanel(grid)
@@ -181,6 +188,7 @@ class GeneralPrefs(PrefPanel):
 
     def apply_changes(self):
         config.ui_style = self.ui_style.get_active()
+        config.tab_style = self.tab_style.get_active()
         config.tab_panel_bg = self.tab_panel_bg.get_value()
         config.use_tab_colors = self.use_tab_colors.get_value()
         # -----------
@@ -202,6 +210,7 @@ class GeneralPrefs(PrefPanel):
     def restore_defaults(self):
         defaults = config.get_defaults()
         self.ui_style.set_active(defaults['ui_style'])
+        self.tab_style.set_active(defaults['tab_style'])
         self.tab_panel_bg.set_value(defaults['tab_panel_bg'])
         self.use_tab_colors.set_value(defaults['use_tab_colors'])
         # --------
