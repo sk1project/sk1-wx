@@ -81,10 +81,6 @@ class TabPainter(object):
             dc.set_stroke(None)
             dc.set_fill(dc.custom_bg)
             dc.draw_rect(0, 0, w, h)
-        elif const.IS_AMBIANCE:
-            dc.set_stroke(None)
-            dc.set_fill(const.AMBIANCE_GRAY)
-            dc.draw_rect(0, 0, w, h)
 
     def paint_panel_top(self):
         dc = self.panel
