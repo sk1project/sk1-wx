@@ -421,6 +421,9 @@ class Canvas(object):
     def draw_text(self, text, x, y):
         self.pdc.DrawText(text, x, y)
 
+    def draw_polygon(self, points):
+        self.pdc.DrawPolygon(points)
+
     def draw_surface(self, surface, x=0, y=0, use_mask=True):
         self.pdc.DrawBitmap(copy_surface_to_bitmap(surface), x, y, use_mask)
 
@@ -484,6 +487,9 @@ class Canvas(object):
 
     def gc_draw_rect(self, x=0, y=0, w=1, h=1):
         self.dc.DrawRectangle(x, y, w, h)
+
+    def gc_draw_polygon(self, points):
+        self.dc.DrawPolygon(points)
 
     def gc_draw_text(self, text, x, y):
         self.dc.DrawText(text, x, y)

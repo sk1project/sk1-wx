@@ -29,6 +29,7 @@ class DocTabs(wal.DocTabs):
         wal.DocTabs.__init__(self, parent, draw_top=draw_top,
                              painter=config.tab_style)
         ITEMS = [wal.ID_CLOSE, pdids.ID_CLOSE_OTHERS, wal.ID_CLOSE_ALL, None,
+                 wal.ID_NEW, wal.ID_OPEN, None,
                  wal.ID_SAVE, wal.ID_SAVEAS, pdids.ID_SAVE_SEL,
                  pdids.ID_SAVEALL, None, pdids.ID_IMPORT, pdids.ID_EXPORT,
                  None, wal.ID_PRINT, None, wal.ID_PROPERTIES]

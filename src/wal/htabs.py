@@ -199,16 +199,52 @@ class FlatTabPainter(TabPainter):
             index = self.panel.doc_tabs.index(tab)
             dc = self.panel
             dc.set_stroke(self.fg_color, dashes=[1, 1])
-            if not index or dc.doc_tabs[index-1].active:
+            if not index or dc.doc_tabs[index - 1].active:
                 dc.draw_line(tab.pos, 4, tab.pos, TAB_HEIGHT - 4)
             pos = tab.pos + tab.get_width()
             dc.draw_line(pos, 4, pos, TAB_HEIGHT - 4)
+
+
+class TrapeziodalTabPainter(TabPainter):
+    def paint_panel(self):
+        active_tab = None
+
+        self.paint_panel_bg()
+        self.paint_panel_top()
+        tabs = [] + self.panel.doc_tabs
+        tabs.reverse()
+
+        for tab in tabs:
+            if not tab.active:
+                self.paint_tab(tab)
+            else:
+                active_tab = tab
+
+        self.paint_panel_shadow()
+
+        if active_tab:
+            self.paint_tab(active_tab)
+
+    def paint_tab_marker(self, tab):
+        pass
+
+    def paint_tab_rect(self, tab, **kwargs):
+        dc = self.panel
+        dc.set_gc_fill(self.bg_color)
+        dc.set_gc_stroke(self.border_color)
+        x, y = tab.pos, 2
+        points = [(x - 7, TAB_HEIGHT + 3),
+                  (x + 6, y),
+                  (x + tab.get_width() - 6, y),
+                  (x + tab.get_width() + 7, TAB_HEIGHT + 3)]
+        dc.gc_draw_polygon(points)
 
 
 PAINTERS = {
     0: RectTabPainter,
     1: RoundedTabPainter,
     2: FlatTabPainter,
+    3: TrapeziodalTabPainter,
 }
 
 
