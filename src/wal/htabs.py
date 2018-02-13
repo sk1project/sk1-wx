@@ -415,6 +415,7 @@ class LWDocTab(object):
             self.parent.refresh()
 
     def mouse_left_down(self, point):
+        self.parent.capture_mouse()
         self.close_pressed = self.close_active
         self.moves = not self.close_active
         if self.close_pressed:
@@ -425,6 +426,7 @@ class LWDocTab(object):
         return not self.close_active
 
     def mouse_left_up(self):
+        self.parent.release_mouse()
         if self.close_active:
             self.close()
         self.close_pressed = False
