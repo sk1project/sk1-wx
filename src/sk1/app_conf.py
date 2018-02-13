@@ -99,10 +99,8 @@ class AppConfig(UCConfig):
     active_plugins = None
     make_font_cache_on_start = False
 
-    ui_style = appconst.GUI_CLASSIC
-    tab_style = 0
-    tab_panel_bg = ()
-    use_tab_colors = False
+    ui_style = appconst.GUI_TABBED
+    tab_style = 4
 
     printer_config = {}
 

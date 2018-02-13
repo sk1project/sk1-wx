@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015 by Igor E. Novikov
+#  Copyright (C) 2015-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -80,70 +80,14 @@ class GeneralPrefs(PrefPanel):
         self.tab_style.set_active(config.tab_style)
         grid.pack(self.tab_style, fill=True)
 
-        grid.pack(wal.Label(grid, _('Tab panel color:')))
-        panel = wal.HPanel(grid)
-        self.tab_panel_bg = wal.ColorButton(panel)
-        self.tab_panel_bg.set_value(config.tab_panel_bg
-                                    or cms.val_255_to_dec(wal.UI_COLORS['bg']))
-        self.palette = CBMiniPalette(panel, COLORS,
-                                     onclick=self.tab_panel_bg.set_value)
-        panel.pack(self.tab_panel_bg)
-        panel.pack((10, 5))
-        panel.pack(self.palette)
-        grid.pack(panel)
+        grid.pack((1,1))
+        grid.pack((300,1))
 
         vpanel.pack(grid, align_center=False, padding_all=10)
 
-        txt = _('Custom colors for tab panel')
-        self.use_tab_colors = wal.Checkbox(vpanel, txt, config.use_tab_colors,
-                                           onclick=self.on_click_use_tab_colors)
-        self.on_click_use_tab_colors()
-        vpanel.pack(self.use_tab_colors, align_center=False, padding_all=5)
-
-        self.nb.add_page(vpanel, _('UI style'))
-
-        # ----------------------
-
-        vpanel = wal.VPanel(self.nb)
-        table = wal.GridPanel(vpanel, rows=1, cols=3, hgap=5, vgap=5)
-        vpanel.pack(table, fill=True, padding_all=5)
-
-        grid = wal.VPanel(table)
-
-        txt = _('New document on start')
-        self.newdoc = wal.Checkbox(grid, txt, config.new_doc_on_start)
-        grid.pack(self.newdoc, align_center=False, padding=3)
-
-        txt = _('Backup on document save')
-        self.backup = wal.Checkbox(grid, txt, config.make_backup)
-        grid.pack(self.backup, align_center=False, padding=3)
-
-        txt = _('Make font cache on start')
-        self.fcache = wal.Checkbox(grid, txt, config.make_font_cache_on_start)
-        grid.pack(self.fcache, align_center=False, padding=3)
-
-        txt = _('Backup on export')
-        self.expbackup = wal.Checkbox(grid, txt, config.make_export_backup)
-        grid.pack(self.expbackup, align_center=False, padding=3)
-
         txt = _('Show quick access buttons')
         self.stub_buttons = wal.Checkbox(grid, txt, config.show_stub_buttons)
-        grid.pack(self.stub_buttons, align_center=False, padding=3)
-
-        table.pack(grid)
-        table.pack((15, 5))
-
-        grid = wal.GridPanel(self, rows=2, cols=3, hgap=5, vgap=3)
-        grid.pack(wal.Label(grid, _('History log size:')))
-        self.hist_size = wal.IntSpin(grid, config.history_size, (10, 1000))
-        grid.pack(self.hist_size)
-        grid.pack(wal.Label(grid, _('records')))
-        grid.pack(wal.Label(grid, _('History menu size:')))
-        self.hist_menu_size = wal.IntSpin(grid, config.history_list_size,
-                                          (5, 20))
-        grid.pack(self.hist_menu_size)
-        grid.pack(wal.Label(grid, _('records')))
-        table.pack(grid)
+        vpanel.pack(self.stub_buttons, align_center=False, padding_all=5)
 
         if wal.IS_MSW:
             vpanel.pack((5, 5))
@@ -174,6 +118,45 @@ class GeneralPrefs(PrefPanel):
                                                config.ubuntu_scrollbar_overlay)
             vpanel.pack(self.ubuntu_overlay, align_center=False)
 
+        self.nb.add_page(vpanel, _('UI style'))
+
+        # ----------------------
+
+        vpanel = wal.VPanel(self.nb)
+        table = wal.GridPanel(vpanel, rows=1, cols=3, hgap=5, vgap=5)
+        vpanel.pack(table, fill=True, padding_all=5)
+
+        int_vp = wal.VPanel(table)
+
+        txt = _('New document on start')
+        self.newdoc = wal.Checkbox(int_vp, txt, config.new_doc_on_start)
+        int_vp.pack(self.newdoc, align_center=False, padding=3)
+
+        txt = _('Backup on document save')
+        self.backup = wal.Checkbox(int_vp, txt, config.make_backup)
+        int_vp.pack(self.backup, align_center=False, padding=3)
+
+        txt = _('Make font cache on start')
+        self.fcache = wal.Checkbox(int_vp, txt, config.make_font_cache_on_start)
+        int_vp.pack(self.fcache, align_center=False, padding=3)
+
+        txt = _('Backup on export')
+        self.expbackup = wal.Checkbox(int_vp, txt, config.make_export_backup)
+        int_vp.pack(self.expbackup, align_center=False, padding=3)
+
+        table.pack(int_vp)
+        table.pack((15, 5))
+
+        grid = wal.GridPanel(self, rows=2, cols=2, hgap=5, vgap=3)
+        grid.pack(wal.Label(grid, _('History log size:')))
+        self.hist_size = wal.IntSpin(grid, config.history_size, (10, 1000))
+        grid.pack(self.hist_size)
+        grid.pack(wal.Label(grid, _('History menu size:')))
+        self.hist_menu_size = wal.IntSpin(grid, config.history_list_size,
+                                          (5, 20))
+        grid.pack(self.hist_menu_size)
+        table.pack(grid)
+
         self.nb.add_page(vpanel, _('Generic features'))
         self.pack(self.nb, fill=True, expand=True, padding=5)
 
@@ -182,16 +165,9 @@ class GeneralPrefs(PrefPanel):
 
         self.built = True
 
-    def on_click_use_tab_colors(self):
-        val = self.use_tab_colors.get_value()
-        self.tab_panel_bg.set_enable(val)
-        self.palette.set_enable(val)
-
     def apply_changes(self):
         config.ui_style = self.ui_style.get_active()
         config.tab_style = self.tab_style.get_active()
-        config.tab_panel_bg = self.tab_panel_bg.get_value()
-        config.use_tab_colors = self.use_tab_colors.get_value()
         # -----------
         config.new_doc_on_start = self.newdoc.get_value()
         config.make_backup = self.backup.get_value()
@@ -212,8 +188,6 @@ class GeneralPrefs(PrefPanel):
         defaults = config.get_defaults()
         self.ui_style.set_active(defaults['ui_style'])
         self.tab_style.set_active(defaults['tab_style'])
-        self.tab_panel_bg.set_value(defaults['tab_panel_bg'])
-        self.use_tab_colors.set_value(defaults['use_tab_colors'])
         # --------
         self.newdoc.set_value(defaults['new_doc_on_start'])
         self.backup.set_value(defaults['make_backup'])
