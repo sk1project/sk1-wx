@@ -132,7 +132,7 @@ class TabPainter(object):
         while get_text_size(txt, size_incr=-1)[0] > width:
             txt = txt[:-1]
 
-        y = int(TAB_HEIGHT / 2 - dc.set_font(size_incr=-1) / 2) + 1
+        y = int(TAB_HEIGHT / 2 - dc.set_font(size_incr=-1) / 2) + 2
         dc.draw_text(txt, pos, y)
         # text shade
         pos = tab.pos + tab.get_width() - 5 * s
