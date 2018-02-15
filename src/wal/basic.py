@@ -325,6 +325,7 @@ class Canvas(object):
     def __init__(self, set_timer=True):
         self.Bind(wx.EVT_PAINT, self._on_paint, self)
         self.Bind(wx.EVT_SIZE, self._on_size_change, self)
+        self.set_double_buffered()
         if set_timer and const.IS_MAC:
             self.timer = wx.Timer(self)
             self.Bind(wx.EVT_TIMER, self._repaint_after)
@@ -398,8 +399,8 @@ class Canvas(object):
         font.SetWeight(wx.FONTWEIGHT_BOLD if bold else wx.FONTWEIGHT_NORMAL)
         if size_incr:
             if font.IsUsingSizeInPixels():
-                sz = font.GetPixelSize() + size_incr
-                font.SetPixelSize(sz)
+                sz = font.GetPixelSize()[1] + size_incr
+                font.SetPixelSize((0, sz))
             else:
                 sz = font.GetPointSize() + size_incr
                 font.SetPointSize(sz)
