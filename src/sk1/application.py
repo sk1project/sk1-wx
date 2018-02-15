@@ -222,7 +222,7 @@ class SK1Application(wal.Application, UCApplication):
     def open(self, doc_file='', silent=False):
         doc_file = doc_file or \
                    dialogs.get_open_file_name(self.mw, config.open_dir)
-        if os.path.lexists(doc_file) and os.path.isfile(doc_file):
+        if doc_file and os.path.lexists(doc_file) and os.path.isfile(doc_file):
             try:
                 doc = SK1Presenter(self, doc_file, silent)
 
