@@ -84,7 +84,7 @@ class TabPainter(object):
 
     def paint_panel_top(self):
         dc = self.panel
-        if not dc.draw_top:
+        if not dc.draw_top or const.IS_MSW:
             w, h = dc.get_size()
             dc.set_stroke(self.border_color)
             dc.draw_line(0, 0, w, 0)
@@ -129,17 +129,25 @@ class TabPainter(object):
         pos = tab.pos + 3 * s - 3
         width = tab.get_width() - 5 * s
         txt = tab.text
-        while get_text_size(txt, size_incr=-1)[0] > width:
-            txt = txt[:-1]
+        if const.IS_MSW:
+            if get_text_size(txt, size_incr=-1)[0] > width:
+                while get_text_size(txt + '...', size_incr=-1)[0] > width:
+                    txt = txt[:-1]
+                txt += '...'
+        else:
+            while get_text_size(txt, size_incr=-1)[0] > width:
+                txt = txt[:-1]
 
         y = int(TAB_HEIGHT / 2 - dc.set_font(size_incr=-1) / 2) + 2
         dc.draw_text(txt, pos, y)
-        # text shade
-        pos = tab.pos + tab.get_width() - 5 * s
-        start = self.bg_color[:-1] + (0,)
-        stop = self.bg_color[:-1] + (255,)
-        dc.gc_draw_linear_gradient((pos, 4, 3 * s, TAB_HEIGHT),
-                                   start, stop, False)
+
+        if not const.IS_MSW:
+            # text shade
+            pos = tab.pos + tab.get_width() - 5 * s
+            start = self.bg_color[:-1] + (0,)
+            stop = self.bg_color[:-1] + (255,)
+            dc.gc_draw_linear_gradient((pos, 4, 3 * s, TAB_HEIGHT),
+                                       start, stop, False)
 
     def paint_tab_marker(self, tab):
         dc = self.panel
