@@ -77,7 +77,8 @@ class GeneralPrefs(PrefPanel):
         items = [_('Rectangle tabs'), _('Rounded tabs'), _('Flat tabs'),
                  _('Trapezoidal tabs')]
         self.tab_style = wal.Combolist(grid, items=items)
-        self.tab_style.set_active(config.tab_style)
+        index = config.tab_style if config.tab_style < len(items) else 0
+        self.tab_style.set_active(index)
         grid.pack(self.tab_style, fill=True)
 
         grid.pack((1,1))
