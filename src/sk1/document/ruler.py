@@ -260,10 +260,9 @@ class Ruler(wal.RulerCanvas):
         if self.presenter is None:
             return
         w, h = self.get_size()
-        shift = 1 if wal.IS_MSW else 0
         fmt = cairo.FORMAT_RGB24
         if self.surface is None or self.width != w or self.height != h:
-            self.surface = cairo.ImageSurface(fmt, w - shift, h - shift)
+            self.surface = cairo.ImageSurface(fmt, w, h)
             self.width, self.height = w, h
         self.ctx = cairo.Context(self.surface)
         self.ctx.set_matrix(cairo.Matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0))
