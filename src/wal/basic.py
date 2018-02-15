@@ -322,7 +322,7 @@ class Canvas(object):
     pdc = None
     dashes = None
 
-    def __init__(self, set_timer=True, buffered=True):
+    def __init__(self, set_timer=True, buffered=False):
         self.Bind(wx.EVT_PAINT, self._on_paint, self)
         self.Bind(wx.EVT_SIZE, self._on_size_change, self)
         if buffered:
