@@ -112,6 +112,7 @@ IS_MAC = wx.Platform == MAC
 IS_MSW = wx.Platform == MSW
 IS_WINXP = IS_MSW and platform.release() == 'XP'
 IS_WIN7 = IS_MSW and platform.release() == '7'
+IS_WIN10 = IS_MSW and platform.release() == '10'
 IS_GTK = wx.Platform == GTK
 IS_GTK2 = IS_GTK and 'gtk2' in VERSION
 IS_GTK3 = IS_GTK and 'gtk3' in VERSION
