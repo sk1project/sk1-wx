@@ -72,7 +72,7 @@ class MainCanvas(Panel, Canvas):
         rendering_delay = rendering_delay or RENDERING_DELAY
         Panel.__init__(self, parent, allow_input=True,
                        style=wx.FULL_REPAINT_ON_RESIZE)
-        Canvas.__init__(self, set_timer=False)
+        Canvas.__init__(self, set_timer=False, buffered=False)
         self.set_bg(const.WHITE)
         self.timer = CanvasTimer(self, rendering_delay)
         self.Bind(wx.EVT_TIMER, self._on_timer)

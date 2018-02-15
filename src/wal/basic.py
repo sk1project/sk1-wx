@@ -322,10 +322,11 @@ class Canvas(object):
     pdc = None
     dashes = None
 
-    def __init__(self, set_timer=True):
+    def __init__(self, set_timer=True, buffered=True):
         self.Bind(wx.EVT_PAINT, self._on_paint, self)
         self.Bind(wx.EVT_SIZE, self._on_size_change, self)
-        self.set_double_buffered()
+        if buffered:
+            self.set_double_buffered()
         if set_timer and const.IS_MAC:
             self.timer = wx.Timer(self)
             self.Bind(wx.EVT_TIMER, self._repaint_after)
