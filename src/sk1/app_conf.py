@@ -100,7 +100,7 @@ class AppConfig(UCConfig):
     make_font_cache_on_start = False
 
     ui_style = appconst.GUI_TABBED
-    tab_style = 4
+    tab_style = 3
 
     printer_config = {}
 
