@@ -65,8 +65,12 @@ class MDIArea(wal.VPanel):
         hpanel.pack(wal.PLine(hpanel), fill=True)
 
         self.splitter = wal.Splitter(hpanel)
+
+        # ----- Doc Area
         self.doc_keeper = wal.VPanel(self.splitter)
         self.doc_keeper.set_bg(wal.WHITE)
+
+        # ----- Doc Area End
         self.plg_area = PlgArea(self.app, self.splitter)
         self.app.mdiarea = self
         self.app.plg_area = self.plg_area
