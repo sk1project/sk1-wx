@@ -37,6 +37,7 @@ class DocArea(wal.GridPanel):
         self.pack(self.hruler, fill=True)
         self.vruler = Ruler(presenter, self)
         self.pack(self.vruler, fill=True)
+
         canvas_grid = wal.GridPanel(self)
         canvas_grid.add_growable_col(0)
         canvas_grid.add_growable_row(0)
