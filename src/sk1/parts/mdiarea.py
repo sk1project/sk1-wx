@@ -24,6 +24,7 @@ from sk1.parts.palettepanel import AppHPalette, AppVPalette
 from sk1.parts.plgarea import PlgArea
 from sk1.parts.statusbar import AppStatusbar
 from sk1.parts.tools import AppTools
+from sk1.pwidgets import RulerSurface, HRulerSurface, VRulerSurface
 from uc2 import uc2const
 
 
@@ -67,15 +68,26 @@ class MDIArea(wal.VPanel):
         self.splitter = wal.Splitter(hpanel)
 
         # ----- Doc Area
-        self.doc_keeper = wal.VPanel(self.splitter)
+        self.grid_panel = wal.GridPanel(self.splitter)
+        self.grid_panel.add_growable_col(1)
+        self.grid_panel.add_growable_row(1)
+        self.corner = RulerSurface(self.app, self.grid_panel)
+        self.grid_panel.add(self.corner)
+        self.hruler = HRulerSurface(self.app, self.grid_panel)
+        self.grid_panel.pack(self.hruler, fill=True)
+        self.vruler = VRulerSurface(self.app, self.grid_panel)
+        self.grid_panel.pack(self.vruler, fill=True)
+
+        self.doc_keeper = wal.VPanel(self.grid_panel)
         self.doc_keeper.set_bg(wal.WHITE)
+        self.grid_panel.pack(self.doc_keeper, fill=True)
 
         # ----- Doc Area End
         self.plg_area = PlgArea(self.app, self.splitter)
         self.app.mdiarea = self
         self.app.plg_area = self.plg_area
 
-        self.splitter.split_vertically(self.doc_keeper, self.plg_area)
+        self.splitter.split_vertically(self.grid_panel, self.plg_area)
         self.splitter.set_min_size(200)
         self.splitter.set_sash_gravity(1.0)
         self.splitter.unsplit()
@@ -125,6 +137,9 @@ class MDIArea(wal.VPanel):
         docarea.doc_tab = self.doc_tabs.add_new_tab(doc)
         self.docareas.append(docarea)
         self.doc_keeper.pack(docarea, expand=True, fill=True)
+        self.corner.refresh()
+        self.hruler.refresh()
+        self.vruler.refresh()
         return docarea
 
     def remove_doc(self, doc):
@@ -154,11 +169,14 @@ class MDIArea(wal.VPanel):
         if len(self.docareas) == 1:
             self.mw.show_mdi(True)
         self.doc_keeper.layout()
+        self.corner.refresh()
+        self.hruler.refresh()
+        self.vruler.refresh()
 
     def show_plugin_area(self, value=True):
         if value:
             if not self.plg_area.is_shown():
-                self.splitter.split_vertically(self.doc_keeper,
+                self.splitter.split_vertically(self.grid_panel,
                                                self.plg_area,
                                                config.sash_position)
         else:

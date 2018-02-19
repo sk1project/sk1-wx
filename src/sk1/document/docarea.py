@@ -27,36 +27,27 @@ class DocArea(wal.GridPanel):
 
     def __init__(self, presenter, parent):
         self.presenter = presenter
+        self.corner = RulerCorner(presenter)
+        self.hruler = Ruler(presenter, vertical=False)
+        self.vruler = Ruler(presenter)
+
         wal.GridPanel.__init__(self, parent)
-        self.add_growable_col(1)
-        self.add_growable_row(1)
+        self.add_growable_col(0)
+        self.add_growable_row(0)
 
-        self.corner = RulerCorner(presenter, self)
-        self.add(self.corner)
-        self.hruler = Ruler(presenter, self, vertical=False)
-        self.pack(self.hruler, fill=True)
-        self.vruler = Ruler(presenter, self)
-        self.pack(self.vruler, fill=True)
-
-        canvas_grid = wal.GridPanel(self)
-        canvas_grid.add_growable_col(0)
-        canvas_grid.add_growable_row(0)
-        self.pack(canvas_grid, fill=True)
-
-        self.canvas = AppCanvas(presenter, canvas_grid)
-        canvas_grid.pack(self.canvas, fill=True)
-        self.vscroll = wal.ScrollBar(canvas_grid)
-        canvas_grid.pack(self.vscroll, fill=True)
-        self.hscroll = wal.ScrollBar(canvas_grid, vertical=False)
-        canvas_grid.pack(self.hscroll, fill=True)
+        self.canvas = AppCanvas(presenter, self)
+        self.pack(self.canvas, fill=True)
+        self.vscroll = wal.ScrollBar(self)
+        self.pack(self.vscroll, fill=True)
+        self.hscroll = wal.ScrollBar(self, vertical=False)
+        self.pack(self.hscroll, fill=True)
         self.viewer = DocViewer(presenter, self, (1, 1))
-        canvas_grid.pack(self.viewer)
+        self.pack(self.viewer)
 
         self.canvas._set_scrolls(self.hscroll, self.vscroll)
 
     def destroy(self):
         objs = [self.hruler, self.vruler, self.corner, self.canvas]
-        # self.doc_tab,
         for obj in objs:
             obj.destroy()
 

@@ -25,6 +25,7 @@ from minipalette import CBMiniPalette
 from palette import Palette
 from palette_viewer import PaletteViewer
 from strokectrls import DashChoice, CapChoice, JoinChoice
+from surfaces import Painter, RulerSurface, HRulerSurface, VRulerSurface
 from unitctrls import RatioToggle, BitmapToggle, ActionImageSwitch
 from unitctrls import StaticUnitLabel, StaticUnitSpin
 from unitctrls import UnitLabel, UnitSpin, AngleSpin

@@ -26,6 +26,7 @@ class RulerCanvas(SizedPanel, SensitiveCanvas):
     def __init__(self, parent, size=20, check_move=False):
         SizedPanel.__init__(self, parent)
         SensitiveCanvas.__init__(self, check_move=check_move)
+        self.set_bg(const.WHITE)
         self.fix_size(size)
         self.set_double_buffered()
 

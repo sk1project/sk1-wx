@@ -21,6 +21,12 @@ from sk1 import events, config
 
 
 class Painter(object):
+
+    def destroy(self):
+        items = self.__dict__.keys()
+        for item in items:
+            self.__dict__[item] = None
+
     def check_config(self, *args):
         pass
 
@@ -38,15 +44,14 @@ class Painter(object):
 
 
 class RulerSurface(wal.RulerCanvas):
-    def __init__(self, app, parent, size=20):
+    def __init__(self, app, parent):
         self.app = app
-        wal.RulerCanvas.__init__(self, parent, size)
-        self.set_bg(wal.WHITE)
+        wal.RulerCanvas.__init__(self, parent, config.ruler_size)
         events.connect(events.CONFIG_MODIFIED, self.check_config)
 
     @property
     def painter(self):
-        return self.app.current_doc.corner
+        return self.app.current_doc.docarea.corner
 
     def check_config(self, *args):
         if args[0].startswith('ruler_'):
@@ -71,10 +76,10 @@ class RulerSurface(wal.RulerCanvas):
 class HRulerSurface(RulerSurface):
     @property
     def painter(self):
-        return self.app.current_doc.hruler
+        return self.app.current_doc.docarea.hruler
 
 
 class VRulerSurface(HRulerSurface):
     @property
     def painter(self):
-        return self.app.current_doc.vruler
+        return self.app.current_doc.docarea.vruler
