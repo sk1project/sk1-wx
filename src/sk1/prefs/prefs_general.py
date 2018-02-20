@@ -90,34 +90,34 @@ class GeneralPrefs(PrefPanel):
         self.stub_buttons = wal.Checkbox(grid, txt, config.show_stub_buttons)
         vpanel.pack(self.stub_buttons, align_center=False, padding_all=5)
 
-        if wal.IS_MSW:
-            vpanel.pack((5, 5))
+        int_vp = wal.VPanel(vpanel)
+        vpanel.pack(int_vp, fill=True, padding_all=5)
 
         if not wal.IS_MAC and wal.IS_WX2:
             txt = _('Use overlay for spinbox widgets (*)')
-            self.spin_overlay = wal.Checkbox(vpanel, txt, config.spin_overlay)
-            vpanel.pack(self.spin_overlay, align_center=False)
+            self.spin_overlay = wal.Checkbox(int_vp, txt, config.spin_overlay)
+            int_vp.pack(self.spin_overlay, align_center=False)
 
         if wal.IS_GTK and wal.IS_WX2:
             txt = _('Separate spin in spinbox widgets (*)')
-            self.spin_sep = wal.Checkbox(vpanel, txt, config.spin_sep)
-            vpanel.pack(self.spin_sep, align_center=False)
+            self.spin_sep = wal.Checkbox(int_vp, txt, config.spin_sep)
+            int_vp.pack(self.spin_sep, align_center=False)
 
         if wal.IS_UNITY:
             txt = _('Unity related features')
-            vpanel.pack(wal.Label(vpanel, txt, fontsize=2, fontbold=True),
+            int_vp.pack(wal.Label(int_vp, txt, fontsize=2, fontbold=True),
                         start_padding=10)
-            vpanel.pack(wal.HLine(vpanel), fill=True, padding=2)
+            int_vp.pack(wal.HLine(int_vp), fill=True, padding=2)
 
             txt = _('Use Unity Global Menu (*)')
-            self.ubuntu_gm = wal.Checkbox(vpanel, txt,
+            self.ubuntu_gm = wal.Checkbox(int_vp, txt,
                                           config.ubuntu_global_menu)
-            vpanel.pack(self.ubuntu_gm, align_center=False)
+            int_vp.pack(self.ubuntu_gm, align_center=False)
 
             txt = _('Allow overlay for scrollbars (*)')
-            self.ubuntu_overlay = wal.Checkbox(vpanel, txt,
+            self.ubuntu_overlay = wal.Checkbox(int_vp, txt,
                                                config.ubuntu_scrollbar_overlay)
-            vpanel.pack(self.ubuntu_overlay, align_center=False)
+            int_vp.pack(self.ubuntu_overlay, align_center=False)
 
         self.nb.add_page(vpanel, _('UI style'))
 

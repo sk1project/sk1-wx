@@ -19,9 +19,9 @@ import cairo
 import math
 import os
 
-import wal
 from sk1 import config, modes, events
 from sk1.resources import get_icon, icons
+from sk1.pwidgets import Painter
 from uc2 import uc2const, cms, sk2const
 
 HFONT = {}
@@ -53,35 +53,28 @@ CAIRO_WHITE = [1.0, 1.0, 1.0]
 CAIRO_BLACK = [0.0, 0.0, 0.0]
 
 
-class RulerCorner(wal.RulerCanvas):
+class RulerCorner(Painter):
     bitmaps = {}
     presenter = None
     eventloop = None
     origin = sk2const.DOC_ORIGIN_LL
 
-    def __init__(self, presenter, parent):
+    def __init__(self, presenter):
         self.presenter = presenter
         self.eventloop = presenter.eventloop
-        wal.RulerCanvas.__init__(self, parent, size=config.ruler_size)
+        self.dc = self.presenter.app.mw.mdi.corner
+        Painter.__init__(self)
         if not BITMAPS:
             BITMAPS[sk2const.DOC_ORIGIN_CENTER] = get_icon(icons.ORIGIN_CENTER)
             BITMAPS[sk2const.DOC_ORIGIN_LL] = get_icon(icons.ORIGIN_LL)
             BITMAPS[sk2const.DOC_ORIGIN_LU] = get_icon(icons.ORIGIN_LU)
-        self.set_bg(wal.WHITE)
         self.eventloop.connect(self.eventloop.DOC_MODIFIED, self.changes)
-        events.connect(events.CONFIG_MODIFIED, self.check_config)
         self.changes()
-
-    def check_config(self, *args):
-        if args[0].startswith('ruler_'):
-            if args[0] == 'ruler_size':
-                self.fix_size(config.ruler_size)
-            self.refresh()
 
     def changes(self):
         if not self.origin == self.presenter.model.doc_origin:
             self.origin = self.presenter.model.doc_origin
-            self.refresh()
+            self.dc.refresh()
 
     def mouse_left_up(self, *args):
         origin = self.presenter.model.doc_origin
@@ -92,19 +85,20 @@ class RulerCorner(wal.RulerCanvas):
         self.presenter.api.set_doc_origin(origin)
 
     def paint(self):
-        w, h = self.get_size()
+        print 'repaint'
+        w, h = self.dc.get_size()
         fg = cms.val_255(config.ruler_fg)
         bg = cms.val_255(config.ruler_bg)
-        self.set_stroke(None)
-        self.set_fill(bg)
-        self.draw_rect(0, 0, w, h)
-        self.draw_linear_gradient((0, h - 1, w * 2, 1), bg, fg)
-        self.draw_linear_gradient((w - 1, 0, 1, h * 2), bg, fg, True)
+        self.dc.set_stroke(None)
+        self.dc.set_fill(bg)
+        self.dc.draw_rect(0, 0, w, h)
+        self.dc.draw_linear_gradient((0, h - 1, w * 2, 1), bg, fg)
+        self.dc.draw_linear_gradient((w - 1, 0, 1, h * 2), bg, fg, True)
         shift = (w - 19) / 2 + 1
-        self.draw_bitmap(BITMAPS[self.origin], shift, shift)
+        self.dc.draw_bitmap(BITMAPS[self.origin], shift, shift)
 
 
-class Ruler(wal.RulerCanvas):
+class Ruler(Painter):
     presenter = None
     eventloop = None
     vertical = False
@@ -120,30 +114,27 @@ class Ruler(wal.RulerCanvas):
     height = 0
     pointer = []
 
-    def __init__(self, presenter, parent, vertical=True):
+    def __init__(self, presenter, vertical=True):
         self.presenter = presenter
         self.eventloop = presenter.eventloop
         self.vertical = vertical
-        wal.RulerCanvas.__init__(self, parent, size=config.ruler_size,
-                                 check_move=True)
+        Painter.__init__(self)
+        mdi = self.presenter.app.mw.mdi
+        self.dc = mdi.vruler if vertical else mdi.hruler
+
         if not VFONT:
             load_font()
-        self.default_cursor = self.get_cursor()
+        self.default_cursor = self.dc.get_cursor()
         if not self.vertical:
             self.guide_cursor = self.presenter.app.cursors[modes.HGUIDE_MODE]
         else:
             self.guide_cursor = self.presenter.app.cursors[modes.VGUIDE_MODE]
-        self.set_bg(wal.WHITE)
-        self.eventloop.connect(self.eventloop.VIEW_CHANGED, self.refresh)
+        self.eventloop.connect(self.eventloop.VIEW_CHANGED, self.dc.refresh)
         events.connect(events.CONFIG_MODIFIED, self.check_config)
 
     def check_config(self, *args):
-        if args[0].startswith('ruler_'):
-            if args[0] == 'ruler_size':
-                self.fix_size(config.ruler_size)
-            if args[0] == 'ruler_font_size':
-                load_font()
-            self.refresh()
+        if args[0] == 'ruler_font_size':
+            load_font()
 
     def calc_ruler(self):
         canvas = self.presenter.canvas
@@ -184,7 +175,7 @@ class Ruler(wal.RulerCanvas):
         pw, ph = self.presenter.get_page_size()
         origin = self.presenter.model.doc_origin
         unit = uc2const.unit_dict[self.presenter.model.doc_units]
-        w, h = self.get_size()
+        w, h = self.dc.get_size()
         x0, y0, dx, dy, sx, sy = self.calc_ruler()
         small_ticks = []
         text_ticks = []
@@ -259,7 +250,7 @@ class Ruler(wal.RulerCanvas):
     def paint(self):
         if self.presenter is None:
             return
-        w, h = self.get_size()
+        w, h = self.dc.get_size()
         fmt = cairo.FORMAT_RGB24
         if self.surface is None or self.width != w or self.height != h:
             self.surface = cairo.ImageSurface(fmt, w, h)
@@ -276,7 +267,7 @@ class Ruler(wal.RulerCanvas):
             self.vrender(w, h)
         else:
             self.hrender(w, h)
-        self.draw_surface(self.surface, 0, 0)
+        self.dc.draw_surface(self.surface, 0, 0)
 
     def hrender(self, w, h):
         self.ctx.move_to(0, h)
@@ -330,17 +321,17 @@ class Ruler(wal.RulerCanvas):
 
     # ------ Guides creation
     def set_ruler_cursor(self, mode=False):
-        self.set_cursor(self.guide_cursor if mode else self.default_cursor)
+        self.dc.set_cursor(self.guide_cursor if mode else self.default_cursor)
 
     def capture_lost(self):
-        self.release_mouse()
+        self.dc.release_mouse()
         self.set_ruler_cursor()
 
     def mouse_left_down(self, point):
-        self.width, self.height = (float(item) for item in self.get_size())
+        self.width, self.height = (float(item) for item in self.dc.get_size())
         self.draw_guide = True
         self.set_ruler_cursor(True)
-        self.capture_mouse()
+        self.dc.capture_mouse()
         canvas = self.presenter.canvas
         canvas.timer.start()
         canvas.set_temp_mode(modes.GUIDE_MODE)
@@ -352,7 +343,7 @@ class Ruler(wal.RulerCanvas):
 
     def mouse_left_up(self, point):
         self.pointer = point
-        self.release_mouse()
+        self.dc.release_mouse()
         if not self.vertical:
             y_win = self.pointer[1] - self.height
             if y_win > 0.0:

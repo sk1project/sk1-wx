@@ -24,15 +24,18 @@ from sk1.resources import pdids
 class KbdProcessor:
     canvas = None
 
-    def __init__(self, canvas):
-        self.canvas = canvas
-        self.app = canvas.app
+    def __init__(self, app):
+        self.app = app
         self.actions = self.app.actions
+
+    @property
+    def painter(self):
+        return self.app.current_doc.docarea.canvas
 
     def on_key_down(self, key_code, modifiers):
 
         if key_code == wal.KEY_ESCAPE and not modifiers:
-            self.canvas.controller.escape_pressed()
+            self.painter.controller.escape_pressed()
             return
 
         if key_code == wal.KEY_NUMPAD_DECIMAL and modifiers == wal.ACCEL_SHIFT:
@@ -43,7 +46,7 @@ class KbdProcessor:
             self.actions[wal.ID_PASTE].do_call()
             return
 
-        if self.canvas.mode == modes.TEXT_EDIT_MODE:
+        if self.painter.mode == modes.TEXT_EDIT_MODE:
             return self.text_edit_mode(key_code, modifiers)
 
         if key_code in (wal.KEY_UP, wal.KEY_NUMPAD_UP) and not modifiers:
@@ -63,15 +66,15 @@ class KbdProcessor:
             return
 
         if key_code == wal.KEY_F2 and not modifiers:
-            self.canvas.set_mode(modes.ZOOM_MODE)
+            self.painter.set_mode(modes.ZOOM_MODE)
             return
 
         if key_code == wal.KEY_SPACE and not modifiers:
-            if self.canvas.mode == modes.SELECT_MODE:
-                self.canvas.set_mode(modes.SHAPER_MODE)
+            if self.painter.mode == modes.SELECT_MODE:
+                self.painter.set_mode(modes.SHAPER_MODE)
                 return
-            elif self.canvas.mode in modes.EDIT_MODES:
-                self.canvas.set_mode(modes.SELECT_MODE)
+            elif self.painter.mode in modes.EDIT_MODES:
+                self.painter.set_mode(modes.SELECT_MODE)
                 return
 
         return True
@@ -79,76 +82,76 @@ class KbdProcessor:
     def text_edit_mode(self, key_code, modifiers):
         if not modifiers:
             if key_code in (wal.KEY_UP, wal.KEY_NUMPAD_UP):
-                self.canvas.controller.key_up()
+                self.painter.controller.key_up()
                 return
             if key_code in (wal.KEY_DOWN, wal.KEY_NUMPAD_DOWN):
-                self.canvas.controller.key_down()
+                self.painter.controller.key_down()
                 return
             if key_code in (wal.KEY_LEFT, wal.KEY_NUMPAD_LEFT):
-                self.canvas.controller.key_left()
+                self.painter.controller.key_left()
                 return
             if key_code in (wal.KEY_RIGHT, wal.KEY_NUMPAD_RIGHT):
-                self.canvas.controller.key_right()
+                self.painter.controller.key_right()
                 return
             if key_code in (wal.KEY_HOME, wal.KEY_NUMPAD_HOME):
-                self.canvas.controller.key_home()
+                self.painter.controller.key_home()
                 return
             if key_code in (wal.KEY_END, wal.KEY_NUMPAD_END):
-                self.canvas.controller.key_end()
+                self.painter.controller.key_end()
                 return
             if key_code == wal.KEY_BACK:
-                self.canvas.controller.key_backspace()
+                self.painter.controller.key_backspace()
                 return
             if key_code in (wal.KEY_RETURN, wal.KEY_NUMPAD_ENTER):
-                self.canvas.controller.insert_text('\n')
+                self.painter.controller.insert_text('\n')
                 return
             if key_code in (wal.KEY_DELETE, wal.KEY_NUMPAD_DELETE):
-                self.canvas.controller.key_del()
+                self.painter.controller.key_del()
                 return
         elif modifiers == wal.ACCEL_CTRL:
             if key_code in (wal.KEY_HOME, wal.KEY_NUMPAD_HOME):
-                self.canvas.controller.key_ctrl_home()
+                self.painter.controller.key_ctrl_home()
                 return
             if key_code in (wal.KEY_END, wal.KEY_NUMPAD_END):
-                self.canvas.controller.key_ctrl_end()
+                self.painter.controller.key_ctrl_end()
                 return
         elif modifiers == wal.ACCEL_CTRL | wal.ACCEL_SHIFT:
             if key_code in (wal.KEY_HOME, wal.KEY_NUMPAD_HOME):
-                self.canvas.controller.key_ctrl_home(True)
+                self.painter.controller.key_ctrl_home(True)
                 return
             if key_code in (wal.KEY_END, wal.KEY_NUMPAD_END):
-                self.canvas.controller.key_ctrl_end(True)
+                self.painter.controller.key_ctrl_end(True)
                 return
         elif modifiers == wal.ACCEL_SHIFT:
             if key_code in (wal.KEY_LEFT, wal.KEY_NUMPAD_LEFT):
-                self.canvas.controller.key_left(True)
+                self.painter.controller.key_left(True)
                 return
             if key_code in (wal.KEY_RIGHT, wal.KEY_NUMPAD_RIGHT):
-                self.canvas.controller.key_right(True)
+                self.painter.controller.key_right(True)
                 return
             if key_code in (wal.KEY_HOME, wal.KEY_NUMPAD_HOME):
-                self.canvas.controller.key_home(True)
+                self.painter.controller.key_home(True)
                 return
             if key_code in (wal.KEY_END, wal.KEY_NUMPAD_END):
-                self.canvas.controller.key_end(True)
+                self.painter.controller.key_end(True)
                 return
             if key_code in (wal.KEY_UP, wal.KEY_NUMPAD_UP):
-                self.canvas.controller.key_up(True)
+                self.painter.controller.key_up(True)
                 return
             if key_code in (wal.KEY_DOWN, wal.KEY_NUMPAD_DOWN):
-                self.canvas.controller.key_down(True)
+                self.painter.controller.key_down(True)
                 return
 
         return True
 
     def on_char(self, modifiers, unichar):
         if modifiers not in (wal.ACCEL_CTRL, wal.ACCEL_CTRL | wal.ACCEL_SHIFT):
-            if self.canvas.mode == modes.TEXT_EDIT_MODE:
-                self.canvas.controller.insert_text(unichar)
+            if self.painter.mode == modes.TEXT_EDIT_MODE:
+                self.painter.controller.insert_text(unichar)
                 return
-            elif self.canvas.mode == modes.TEXT_EDITOR_MODE:
+            elif self.painter.mode == modes.TEXT_EDITOR_MODE:
                 char = int(unichar)
                 if char in modes.ET_MODES:
-                    self.canvas.controller.set_mode(char)
+                    self.painter.controller.set_mode(char)
                     return
         return True
