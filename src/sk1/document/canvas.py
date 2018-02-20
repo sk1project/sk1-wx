@@ -31,7 +31,6 @@ from uc2.uc2const import mm_to_pt
 
 LOG = logging.getLogger(__name__)
 
-
 WORKSPACE_HEIGHT = 2000 * mm_to_pt
 WORKSPACE_WIDTH = 4000 * mm_to_pt
 
@@ -41,8 +40,6 @@ class AppCanvas(Painter):
     app = None
     eventloop = None
     renderer = None
-    hscroll = None
-    vscroll = None
     timer = None
     hit_surface = None
 
@@ -70,13 +67,14 @@ class AppCanvas(Painter):
     show_snapping = config.show_snap
     dragged_guide = ()
 
-    def __init__(self, presenter, parent):
+    def __init__(self, presenter):
         self.presenter = presenter
         self.eventloop = self.presenter.eventloop
         self.app = presenter.app
         self.doc = self.presenter.model
         self.renderer = PDRenderer(self)
         self.dc = self.app.mw.mdi.canvas
+        self.timer = self.dc.timer
         Painter.__init__(self)
         self.hit_surface = HitSurface(self)
         self.zoom_stack = []

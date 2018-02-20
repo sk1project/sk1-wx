@@ -71,7 +71,7 @@ class PDRenderer(CairoRenderer):
         self.render_guides()
 
     def start(self):
-        width, height = self.canvas.GetSize()
+        width, height = self.canvas.dc.get_size()
         if self.surface is None:
             self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
             self.width = width
@@ -86,7 +86,7 @@ class PDRenderer(CairoRenderer):
         self.ctx.set_matrix(self.canvas.matrix)
 
     def finalize(self):
-        self.canvas.draw_surface(self.temp_surface, 0, 0, False)
+        self.canvas.dc.draw_surface(self.temp_surface, 0, 0, False)
 
     def paint_page(self):
         self.ctx.set_line_width(1.0 / self.canvas.zoom)
@@ -724,10 +724,10 @@ class PDRenderer(CairoRenderer):
         # ------DIRECT DRAWING
 
     def cdc_paint_doc(self):
-        self.canvas.put_surface(self.surface, 0, 0, False)
+        self.canvas.dc.put_surface(self.surface, 0, 0, False)
 
     def cdc_paint_selection(self):
-        self.canvas.put_surface(self.temp_surface, 0, 0, False)
+        self.canvas.dc.put_surface(self.temp_surface, 0, 0, False)
 
     def cdc_normalize_rect(self, start, end):
         x0, y0 = start
@@ -768,7 +768,7 @@ class PDRenderer(CairoRenderer):
                 ctx.move_to(1, 0)
                 ctx.line_to(1, self.height)
                 ctx.stroke()
-            self.canvas.put_surface(surface, x - 1, 0, False)
+            self.canvas.dc.put_surface(surface, x - 1, 0, False)
 
     def cdc_draw_horizontal_line(self, y, color, dash, clear=False):
         if y is not None:
@@ -782,7 +782,7 @@ class PDRenderer(CairoRenderer):
                 ctx.move_to(0, 1)
                 ctx.line_to(self.width, 1)
                 ctx.stroke()
-            self.canvas.put_surface(surface, 0, y - 1, False)
+            self.canvas.dc.put_surface(surface, 0, y - 1, False)
 
     def cdc_draw_snap_line(self, pos, vertical=True, clear=False):
         color = config.snap_line_color
@@ -856,7 +856,7 @@ class PDRenderer(CairoRenderer):
             ctx = cairo.Context(surface)
             ctx.set_source_surface(self.surface, -x, -y)
             ctx.paint()
-            self.canvas.put_surface(surface, x, y, False)
+            self.canvas.dc.put_surface(surface, x, y, False)
 
     def _cdc_draw_cpath(self, ctx, cpath):
         self.cdc_set_ctx(ctx, CAIRO_WHITE)
@@ -890,7 +890,7 @@ class PDRenderer(CairoRenderer):
             ctx.paint()
             ctx.set_matrix(cairo.Matrix(1.0, 0.0, 0.0, 1.0, -x + 1, -y + 1))
             self._cdc_draw_cpath(ctx, cpath)
-            self.canvas.put_surface(surface, x - 1, y - 1, False)
+            self.canvas.dc.put_surface(surface, x - 1, y - 1, False)
             self.cdc_reflect_snapping()
 
     def cdc_draw_frame(self, start, end, temp_surfase=False):
@@ -916,7 +916,7 @@ class PDRenderer(CairoRenderer):
             ctx.paint()
             ctx.set_matrix(cairo.Matrix(1.0, 0.0, 0.0, 1.0, -x + 1, -y + 1))
             self._cdc_draw_cpath(ctx, cpath)
-            self.canvas.put_surface(surface, x - 1, y - 1)
+            self.canvas.dc.put_surface(surface, x - 1, y - 1)
             self.cdc_reflect_snapping()
 
     def cdc_hide_move_frame(self):

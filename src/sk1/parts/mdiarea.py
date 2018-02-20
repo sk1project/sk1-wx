@@ -25,6 +25,7 @@ from sk1.parts.plgarea import PlgArea
 from sk1.parts.statusbar import AppStatusbar
 from sk1.parts.tools import AppTools
 from sk1.pwidgets import RulerSurface, HRulerSurface, VRulerSurface
+from sk1.pwidgets import CanvasSurface
 from uc2 import uc2const
 
 
@@ -78,9 +79,20 @@ class MDIArea(wal.VPanel):
         self.vruler = VRulerSurface(self.app, self.grid_panel)
         self.grid_panel.pack(self.vruler, fill=True)
 
-        self.doc_keeper = wal.VPanel(self.grid_panel)
-        self.doc_keeper.set_bg(wal.WHITE)
-        self.grid_panel.pack(self.doc_keeper, fill=True)
+        int_grid = wal.GridPanel(self.grid_panel)
+        int_grid.add_growable_col(0)
+        int_grid.add_growable_row(0)
+        self.canvas = CanvasSurface(self.app, int_grid)
+        int_grid.pack(self.canvas, fill=True)
+        self.vscroll = wal.ScrollBar(int_grid)
+        int_grid.pack(self.vscroll, fill=True)
+        self.hscroll = wal.ScrollBar(int_grid, vertical=False)
+        int_grid.pack(self.hscroll, fill=True)
+        self.viewer = wal.VPanel(int_grid)
+        int_grid.pack(self.viewer, fill=True)
+
+        self.canvas._set_scrolls(self.hscroll, self.vscroll)
+        self.grid_panel.pack(int_grid, fill=True)
 
         # ----- Doc Area End
         self.plg_area = PlgArea(self.app, self.splitter)
@@ -132,22 +144,20 @@ class MDIArea(wal.VPanel):
             self.vp_panel.hide()
 
     def create_docarea(self, doc):
-        docarea = DocArea(doc, self.doc_keeper)
-        docarea.hide()
+        docarea = DocArea(doc)
         docarea.doc_tab = self.doc_tabs.add_new_tab(doc)
         self.docareas.append(docarea)
-        self.doc_keeper.pack(docarea, expand=True, fill=True)
         self.corner.refresh()
         self.hruler.refresh()
         self.vruler.refresh()
+        self.canvas.refresh()
+        self.canvas.update_scrolls()
         return docarea
 
     def remove_doc(self, doc):
         docarea = doc.docarea
         self.docareas.remove(docarea)
-        self.doc_keeper.remove(docarea)
         self.doc_tabs.remove_tab(doc)
-        docarea.hide()
         if not self.docareas:
             self.mw.show_mdi(False)
             self.current_docarea = None
@@ -161,17 +171,15 @@ class MDIArea(wal.VPanel):
 
     def set_active(self, doc):
         doc_area = doc.docarea
-        if self.current_docarea:
-            self.current_docarea.hide()
-        doc_area.show()
         self.current_docarea = doc_area
         self.doc_tabs.set_active(doc)
         if len(self.docareas) == 1:
             self.mw.show_mdi(True)
-        self.doc_keeper.layout()
         self.corner.refresh()
         self.hruler.refresh()
         self.vruler.refresh()
+        self.canvas.refresh()
+        self.canvas.update_scrolls()
 
     def show_plugin_area(self, value=True):
         if value:
