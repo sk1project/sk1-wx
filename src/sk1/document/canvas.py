@@ -19,17 +19,15 @@ import cairo
 import inspect
 import logging
 
-import wal
-from ctx_menu import CanvasCtxMenu
 from sk1 import events, modes, config
-from sk1.appconst import PAGEFIT, ZOOM_IN, ZOOM_OUT, RENDERING_DELAY
+from sk1.appconst import PAGEFIT, ZOOM_IN, ZOOM_OUT
 from sk1.document import controllers
-from sk1.document.kbd_proc import KbdProcessor
 from sk1.document.renderer import PDRenderer
-from uc2 import uc2const, libcairo, libgeom
+from sk1.pwidgets import Painter
+from uc2 import libcairo, libgeom
 from uc2.libcairo import normalize_bbox
 from uc2.sk2const import DOC_ORIGIN_LL, DOC_ORIGIN_LU
-from uc2.uc2const import mm_to_pt, point_dict
+from uc2.uc2const import mm_to_pt
 
 LOG = logging.getLogger(__name__)
 
@@ -38,7 +36,7 @@ WORKSPACE_HEIGHT = 2000 * mm_to_pt
 WORKSPACE_WIDTH = 4000 * mm_to_pt
 
 
-class AppCanvas(wal.MainCanvas):
+class AppCanvas(Painter):
     presenter = None
     app = None
     eventloop = None
@@ -46,7 +44,6 @@ class AppCanvas(wal.MainCanvas):
     hscroll = None
     vscroll = None
     timer = None
-    ctx_menu = None
     hit_surface = None
 
     mode = None
@@ -73,22 +70,16 @@ class AppCanvas(wal.MainCanvas):
     show_snapping = config.show_snap
     dragged_guide = ()
 
-    my_changes = False
-    redraw_flag = False
-    request_redraw_flag = False
-
     def __init__(self, presenter, parent):
         self.presenter = presenter
         self.eventloop = self.presenter.eventloop
         self.app = presenter.app
         self.doc = self.presenter.model
         self.renderer = PDRenderer(self)
-        wal.MainCanvas.__init__(self, parent, rendering_delay=RENDERING_DELAY)
-        self.kbproc = KbdProcessor(self)
+        self.dc = self.app.mw.mdi.canvas
+        Painter.__init__(self)
         self.hit_surface = HitSurface(self)
         self.zoom_stack = []
-
-        self.ctx_menu = CanvasCtxMenu(self.app, self)
 
         self.ctrls = self.init_controllers()
         # ----- Application eventloop bindings
@@ -99,7 +90,6 @@ class AppCanvas(wal.MainCanvas):
 
     def destroy(self):
         self.timer.stop()
-        self.ctx_menu.destroy()
         self.renderer.destroy()
         self.hit_surface.destroy()
         items = self.ctrls.keys()
@@ -109,38 +99,6 @@ class AppCanvas(wal.MainCanvas):
         items = self.__dict__.keys()
         for item in items:
             self.__dict__[item] = None
-
-    # ----- SCROLLING
-
-    def _set_scrolls(self, hscroll, vscroll):
-        self.hscroll = hscroll
-        self.vscroll = vscroll
-        self.hscroll.set_scrollbar(500, 100, 1100, 100, refresh=True)
-        self.vscroll.set_scrollbar(500, 100, 1100, 100, refresh=True)
-        self.hscroll.set_callback(self._scrolling)
-        self.vscroll.set_callback(self._scrolling)
-
-    def _scrolling(self):
-        if self.my_changes:
-            return
-        xpos = self.hscroll.get_thumb_pos() / 1000.0
-        ypos = (1000 - self.vscroll.get_thumb_pos()) / 1000.0
-        x = (xpos - 0.5) * self.workspace[0]
-        y = (ypos - 0.5) * self.workspace[1]
-        center = self.doc_to_win([x, y])
-        self._set_center(center)
-        self.force_redraw()
-
-    def update_scrolls(self):
-        self.my_changes = True
-        center = self._get_center()
-        x = (center[0] + self.workspace[0] / 2.0) / self.workspace[0]
-        y = (center[1] + self.workspace[1] / 2.0) / self.workspace[1]
-        hscroll = int(1000 * x)
-        vscroll = int(1000 - 1000 * y)
-        self.hscroll.set_scrollbar(hscroll, 100, 1100, 100, refresh=True)
-        self.vscroll.set_scrollbar(vscroll, 100, 1100, 100, refresh=True)
-        self.my_changes = False
 
     # ----- CONTROLLERS
 
@@ -233,13 +191,12 @@ class AppCanvas(wal.MainCanvas):
             self.orig_cursor = None
 
     def show_context_menu(self):
-        self.ctx_menu.rebuild()
-        self.PopupMenu(self.ctx_menu)
+        self.dc.show_context_menu()
 
     # ----- CANVAS MATH
 
     def _keep_center(self):
-        w, h = self.GetSize()
+        w, h = self.dc.get_size()
         w = float(w)
         h = float(h)
         if not w == self.width or not h == self.height:
@@ -359,7 +316,7 @@ class AppCanvas(wal.MainCanvas):
 
     def _fit_to_page(self):
         width, height = self.presenter.get_page_size()
-        w, h = self.GetSize()
+        w, h = self.dc.get_size()
         w = float(w)
         h = float(h)
         self.width = w
@@ -412,7 +369,7 @@ class AppCanvas(wal.MainCanvas):
         self.force_redraw()
 
     def zoom_to_rectangle(self, start, end):
-        w, h = self.GetSize()
+        w, h = self.dc.get_size()
         w = float(w)
         h = float(h)
         self.width = w
@@ -468,11 +425,16 @@ class AppCanvas(wal.MainCanvas):
         self.force_redraw()
 
     def force_redraw(self):
-        if self.redraw_flag:
-            self.request_redraw_flag = True
-        else:
-            self.redraw_flag = True
-            self.refresh(clear=False)
+        if self.presenter == self.app.current_doc:
+            self.dc.force_redraw()
+
+    def update_scrolls(self):
+        if self.presenter == self.app.current_doc:
+            self.dc.update_scrolls()
+
+    def set_cursor(self, cursor):
+        if self.presenter == self.app.current_doc:
+            self.dc.set_cursor(cursor)
 
     def paint(self):
         if self.matrix is None:
@@ -509,57 +471,6 @@ class AppCanvas(wal.MainCanvas):
             self.renderer.finalize()
         except Exception as e:
             LOG.error('Painting error %s', e)
-
-        self.redraw_flag = False
-        if self.request_redraw_flag:
-            self.request_redraw_flag = False
-            self.force_redraw()
-
-    # ==============EVENT CONTROLLING==========================
-
-    def on_timer(self):
-        self.controller.on_timer()
-
-    def mouse_left_down(self, event):
-        self.controller.set_cursor()
-        self.controller.mouse_down(CanvasEvent(event))
-
-    def mouse_left_up(self, event):
-        self.controller.mouse_up(CanvasEvent(event))
-
-    def mouse_left_dclick(self, event):
-        self.controller.set_cursor()
-        self.controller.mouse_double_click(CanvasEvent(event))
-
-    def mouse_move(self, event):
-        event = CanvasEvent(event)
-        x, y = self.win_to_doc_coords(event.get_point())
-        unit = self.presenter.model.doc_units
-        tr_unit = uc2const.unit_short_names[unit]
-        msg = '  %i x %i' % (x * point_dict[unit], y * point_dict[unit])
-        events.emit(events.MOUSE_STATUS, '%s %s' % (msg, tr_unit))
-        self.controller.mouse_move(event)
-
-    def mouse_right_down(self, event):
-        self.controller.mouse_right_down(CanvasEvent(event))
-
-    def mouse_right_up(self, event):
-        self.controller.mouse_right_up(CanvasEvent(event))
-
-    def mouse_middle_down(self, event):
-        self.controller.mouse_middle_down(CanvasEvent(event))
-
-    def mouse_middle_up(self, event):
-        self.controller.mouse_middle_up(CanvasEvent(event))
-
-    def mouse_wheel(self, event):
-        self.controller.wheel(CanvasEvent(event))
-
-
-class CanvasEvent(wal.MouseEvent):
-    def get_rotation(self):
-        return wal.MouseEvent.get_rotation(
-            self) / config.mouse_scroll_sensitivity
 
 
 class HitSurface:
