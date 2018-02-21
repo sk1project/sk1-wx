@@ -186,21 +186,30 @@ class OkCancelDialog(SimpleDialog):
         self.destroy()
         return ret
 
-class CustomProgressDialog(SimpleDialog):
-    def __init__(self, parent, title,size=(200, -1), style=VERTICAL,
-                 resizable=False, action_button=const.BUTTON_CANCEL,
-                 on_load=None, add_line=False, margin=None,
-                 button_box_padding=0):
 
+class CustomProgressDialog(SimpleDialog):
+    label = None
+    progressbar = None
+    button_box = None
+    cancel_btn = None
+    result = None
+    callback = None
+    args = None
+    destroyed = False
+
+    def __init__(self, parent, title, size=(500, 100), style=VERTICAL,
+                 resizable=False, action_button=const.BUTTON_CANCEL,
+                 add_line=False, margin=None,
+                 button_box_padding=0):
         self.action_button = action_button
         self.button_box_padding = button_box_padding
         SimpleDialog.__init__(self, parent, title, size, style, resizable,
-                              on_load, add_line, margin)
+                              self.on_load, add_line, margin)
 
     def build(self):
-        self.panel.pack((5,5))
-        self.label = Label(self.panel,'')
-        self.panel.pack(self.label, align_center=False)
+        self.panel.pack((5, 5))
+        self.label = Label(self.panel, ' ')
+        self.panel.pack(self.label, fill=True)
         self.progressbar = ProgressBar(self.panel)
         self.panel.pack(self.progressbar, fill=True, padding=5)
 
@@ -208,14 +217,30 @@ class CustomProgressDialog(SimpleDialog):
         self.button_box = HPanel(self.box)
         self.box.pack(self.button_box, fill=True,
                       padding_all=self.button_box_padding)
+        self.button_box.pack(HPanel(self.button_box), fill=True, expand=True)
         self.cancel_btn = Button(self.button_box, '', onclick=self.on_cancel,
                                  default=True, pid=const.BUTTON_CANCEL)
+        self.cancel_btn.set_enable(False)
+        self.button_box.pack(self.cancel_btn)
 
     def on_cancel(self):
         self.end_modal(const.BUTTON_CANCEL)
 
     def show(self):
-        ret = self.get_result() if self.show_modal() == const.BUTTON_OK \
-            else None
+        self.show_modal()
         self.destroy()
-        return ret
+        return self.result
+
+    def update_data(self, value, msg):
+        self.label.set_text(msg)
+        self.progressbar.set_value(value)
+        self.Update()
+
+    def on_load(self, *args):
+        self._timer.Stop()
+        self.result = self.callback(*self.args)
+        self.end_modal(const.BUTTON_CANCEL)
+
+    def run(self, callback, args):
+        self.callback, self.args = callback, args
+        return self.show()

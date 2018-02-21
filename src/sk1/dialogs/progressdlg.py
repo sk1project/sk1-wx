@@ -20,22 +20,15 @@ import wal
 from uc2 import events
 
 
-class ProgressDialog:
-    title = ''
-    dlg = None
-
+class ProgressDialog(wal.CustomProgressDialog):
     def __init__(self, title, parent):
-        self.title = title
-        self.parent = parent
+        wal.CustomProgressDialog.__init__(self, parent, title)
 
     def run(self, callback, args):
         events.connect(events.FILTER_INFO, self.listener)
-        self.dlg = wal.ProgressDialog(self.parent, self.title)
-        return callback(*args)
+        result = wal.CustomProgressDialog.run(self, callback, args)
+        events.disconnect(events.FILTER_INFO, self.listener)
+        return result
 
     def listener(self, *args):
-        self.dlg.update(int(round(args[1] * 100.0)), args[0])
-
-    def destroy(self):
-        events.disconnect(events.FILTER_INFO, self.listener)
-        self.dlg.destroy()
+        self.update_data(int(round(args[1] * 100.0)), args[0])
