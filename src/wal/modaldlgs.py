@@ -201,6 +201,7 @@ class CustomProgressDialog(SimpleDialog):
                  resizable=False, action_button=const.BUTTON_CANCEL,
                  add_line=False, margin=None,
                  button_box_padding=0):
+        self.label = title
         self.action_button = action_button
         self.button_box_padding = button_box_padding
         SimpleDialog.__init__(self, parent, title, size, style, resizable,
@@ -208,7 +209,7 @@ class CustomProgressDialog(SimpleDialog):
 
     def build(self):
         self.panel.pack((5, 5))
-        self.label = Label(self.panel, ' ')
+        self.label = Label(self.panel, self.label)
         self.panel.pack(self.label, fill=True)
         self.progressbar = ProgressBar(self.panel)
         self.panel.pack(self.progressbar, fill=True, padding=5)
