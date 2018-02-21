@@ -1001,13 +1001,16 @@ class AnimatedGif(animate.GIFAnimationCtrl):
 
 class ProgressBar(wx.Gauge, WidgetMixin):
     def __init__(self, parent):
-        wx.Gauge.__init__(self, parent, range=100)
+        size = (400, 15)
+        wx.Gauge.__init__(self, parent, range=100, size=size,
+                          style=wx.GA_HORIZONTAL | wx.GA_SMOOTH)
         self.SetRange(100)
 
     def set_value(self, val):
         if val < 0:
             return self.pulse()
         self.SetValue(int(val))
+        self.Update()
 
     def set_dec_value(self, val):
         self.set_value(val * 100)

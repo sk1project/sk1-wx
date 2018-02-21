@@ -195,6 +195,7 @@ class CustomProgressDialog(SimpleDialog):
     result = None
     callback = None
     args = None
+    msg = ''
 
     def __init__(self, parent, title, size=(500, 100), style=VERTICAL,
                  resizable=False, action_button=const.BUTTON_CANCEL,
@@ -211,7 +212,7 @@ class CustomProgressDialog(SimpleDialog):
         self.label = Label(self.panel, self.label)
         self.panel.pack(self.label, fill=True)
         self.progressbar = ProgressBar(self.panel)
-        self.panel.pack(self.progressbar, fill=True, padding=5)
+        self.panel.pack(self.progressbar, fill=True, padding=15)
 
     def set_dialog_buttons(self):
         self.button_box = HPanel(self.box)
@@ -222,6 +223,7 @@ class CustomProgressDialog(SimpleDialog):
                                  default=True, pid=const.BUTTON_CANCEL)
         self.cancel_btn.set_enable(False)
         self.button_box.pack(self.cancel_btn)
+        self.fit()
 
     def on_cancel(self):
         self.end_modal(const.BUTTON_CANCEL)
@@ -234,10 +236,13 @@ class CustomProgressDialog(SimpleDialog):
         self.label.set_text(msg)
         self.progressbar.set_value(value)
         self.Update()
+        wx.Yield()
 
     def on_load(self, *args):
         self._timer.Stop()
+        self.progressbar.set_value(5)
         self.result = self.callback(*self.args)
+        self.progressbar.set_value(98)
         self.end_modal(const.BUTTON_CANCEL)
 
     def run(self, callback, args):
