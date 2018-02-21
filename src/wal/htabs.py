@@ -269,6 +269,7 @@ class DocTabs(HPanel, SensitiveCanvas):
         self.custom_bg = custom_bg
         HPanel.__init__(self, parent)
         SensitiveCanvas.__init__(self, check_move=True)
+        self.set_double_buffered()
         self.pack((TAB_PADDING, TAB_HEIGHT))
         self.set_painter(painter if painter in PAINTERS else 0)
 

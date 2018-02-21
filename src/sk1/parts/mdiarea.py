@@ -147,10 +147,10 @@ class MDIArea(wal.VPanel):
         docarea = DocArea(doc)
         docarea.doc_tab = self.doc_tabs.add_new_tab(doc)
         self.docareas.append(docarea)
-        self.corner.refresh()
-        self.hruler.refresh()
-        self.vruler.refresh()
-        self.canvas.refresh()
+        self.corner.refresh(clear=False)
+        self.hruler.refresh(clear=False)
+        self.vruler.refresh(clear=False)
+        self.canvas.refresh(clear=False)
         self.canvas.update_scrolls()
         return docarea
 
@@ -167,7 +167,6 @@ class MDIArea(wal.VPanel):
 
     def set_tab_title(self, docarea, title):
         docarea.doc_tab.set_title(title)
-        self.doc_tabs.layout()
 
     def set_active(self, doc):
         doc_area = doc.docarea
@@ -175,10 +174,10 @@ class MDIArea(wal.VPanel):
         self.doc_tabs.set_active(doc)
         if len(self.docareas) == 1:
             self.mw.show_mdi(True)
-        self.corner.refresh()
-        self.hruler.refresh()
-        self.vruler.refresh()
-        self.canvas.refresh()
+        self.corner.refresh(clear=False)
+        self.hruler.refresh(clear=False)
+        self.vruler.refresh(clear=False)
+        self.canvas.refresh(clear=False)
         self.canvas.update_scrolls()
 
     def show_plugin_area(self, value=True):

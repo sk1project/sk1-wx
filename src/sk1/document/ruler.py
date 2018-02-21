@@ -85,7 +85,6 @@ class RulerCorner(Painter):
         self.presenter.api.set_doc_origin(origin)
 
     def paint(self):
-        print 'repaint'
         w, h = self.dc.get_size()
         fg = cms.val_255(config.ruler_fg)
         bg = cms.val_255(config.ruler_bg)

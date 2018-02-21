@@ -172,9 +172,8 @@ class SK1Application(wal.Application, UCApplication):
         config.save(self.appdata.app_config)
 
     def exit(self, *args):
-        if not self.insp.is_any_doc_not_saved():
-            self.mw.hide()
         if self.close_all():
+            self.mw.hide()
             self.update_config()
             self.mw.destroy()
             wal.Application.exit(self)

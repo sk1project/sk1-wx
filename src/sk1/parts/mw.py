@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013 by Igor E. Novikov
+#  Copyright (C) 2013-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ class AppMainWindow(wal.MainWindow):
             on_close=self.app.exit)
         self.set_minsize(config.mw_min_size)
         self.set_icons(os.path.join(config.resource_dir, 'icons',
-                       'generic', 'sk1-icon.ico'))
+                                    'generic', 'sk1-icon.ico'))
 
     def build(self):
         # ----- Menubar
@@ -75,11 +75,8 @@ class AppMainWindow(wal.MainWindow):
 
     def show_mdi(self, value):
         if value and not self.mdi.is_shown():
-            self.stub.hide()
-            self.mdi.layout()
             self.mdi.show()
+            self.stub.hide()
         elif not value and self.mdi.is_shown():
-            self.stub.Layout()
             self.stub.show()
             self.mdi.hide()
-        self.layout()
