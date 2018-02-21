@@ -73,6 +73,8 @@ class SK1Presenter:
                 self.doc_presenter = pd.run(loader, [app.appdata, doc_file])
             except Exception:
                 raise
+            finally:
+                pd.destroy()
 
             if not template:
                 self.doc_file = self.doc_presenter.doc_file

@@ -76,7 +76,7 @@ class SimpleDialog(wx.Dialog, mixins.DialogMixin):
         if on_load:
             self._timer = wx.Timer(self)
             self.Bind(wx.EVT_TIMER, on_load)
-            self._timer.Start(500)
+            self._timer.Start(200)
 
     def build(self):
         pass
@@ -195,7 +195,6 @@ class CustomProgressDialog(SimpleDialog):
     result = None
     callback = None
     args = None
-    destroyed = False
 
     def __init__(self, parent, title, size=(500, 100), style=VERTICAL,
                  resizable=False, action_button=const.BUTTON_CANCEL,
@@ -229,7 +228,6 @@ class CustomProgressDialog(SimpleDialog):
 
     def show(self):
         self.show_modal()
-        self.destroy()
         return self.result
 
     def update_data(self, value, msg):
