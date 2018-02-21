@@ -128,7 +128,7 @@ class TabPainter(object):
         s = INDICATOR_SIZE
         pos = tab.pos + 3 * s - 3
         width = tab.get_width() - 5 * s
-        txt = tab.text
+        txt = tab.text.decode('utf-8')
         if const.IS_MSW:
             if get_text_size(txt, size_incr=-1)[0] > width:
                 while get_text_size(txt + '...', size_incr=-1)[0] > width:
