@@ -21,7 +21,7 @@ import const
 import mixins
 from basic import HPanel, VPanel
 from const import EXPAND, ALL, VERTICAL, HORIZONTAL
-from widgets import HLine, Button
+from widgets import HLine, Button, Label, ProgressBar
 
 
 class ProgressDialog(wx.ProgressDialog):
@@ -176,6 +176,40 @@ class OkCancelDialog(SimpleDialog):
 
     def on_ok(self):
         self.end_modal(const.BUTTON_OK)
+
+    def on_cancel(self):
+        self.end_modal(const.BUTTON_CANCEL)
+
+    def show(self):
+        ret = self.get_result() if self.show_modal() == const.BUTTON_OK \
+            else None
+        self.destroy()
+        return ret
+
+class CustomProgressDialog(SimpleDialog):
+    def __init__(self, parent, title,size=(200, -1), style=VERTICAL,
+                 resizable=False, action_button=const.BUTTON_CANCEL,
+                 on_load=None, add_line=False, margin=None,
+                 button_box_padding=0):
+
+        self.action_button = action_button
+        self.button_box_padding = button_box_padding
+        SimpleDialog.__init__(self, parent, title, size, style, resizable,
+                              on_load, add_line, margin)
+
+    def build(self):
+        self.panel.pack((5,5))
+        self.label = Label(self.panel,'')
+        self.panel.pack(self.label, align_center=False)
+        self.progressbar = ProgressBar(self.panel)
+        self.panel.pack(self.progressbar, fill=True, padding=5)
+
+    def set_dialog_buttons(self):
+        self.button_box = HPanel(self.box)
+        self.box.pack(self.button_box, fill=True,
+                      padding_all=self.button_box_padding)
+        self.cancel_btn = Button(self.button_box, '', onclick=self.on_cancel,
+                                 default=True, pid=const.BUTTON_CANCEL)
 
     def on_cancel(self):
         self.end_modal(const.BUTTON_CANCEL)
