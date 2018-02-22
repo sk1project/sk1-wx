@@ -233,10 +233,10 @@ class CustomProgressDialog(SimpleDialog):
         return self.result
 
     def update_data(self, value, msg):
+        wx.Yield()
         self.label.set_text(msg)
         self.progressbar.set_value(value)
         self.Update()
-        wx.Yield()
 
     def on_load(self, *args):
         self._timer.Stop()
