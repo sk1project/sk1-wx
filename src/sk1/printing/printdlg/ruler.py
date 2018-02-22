@@ -62,6 +62,8 @@ class PreviewRuler(wal.HPanel, wal.Canvas):
     canvas = None
     surface = None
     ctx = None
+    width = 0
+    height = 0
 
     def __init__(self, parent, canvas, units=uc2const.UNIT_MM, horizontal=True):
         self.canvas = canvas
@@ -188,19 +190,9 @@ class PreviewRuler(wal.HPanel, wal.Canvas):
 
     def paint(self):
         w, h = self.get_size()
-        shift = 0
-        if wal.IS_MSW:
-            shift = 1
-        if self.surface is None:
-            self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w - shift,
-                                              h - shift)
-            self.width = w
-            self.height = h
-        elif self.width <> w or self.height <> h:
-            self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w - shift,
-                                              h - shift)
-            self.width = w
-            self.height = h
+        if self.surface is None or self.width != w or self.height != h:
+            self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
+            self.width, self.height = w, h
         self.ctx = cairo.Context(self.surface)
         self.ctx.set_matrix(cairo.Matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0))
         self.ctx.set_source_rgb(*config.ruler_bg)
