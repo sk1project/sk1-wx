@@ -22,7 +22,7 @@ import wx.lib.scrolledpanel as scrolled
 
 import const
 from const import FONT_SIZE, DEF_SIZE
-from mixins import WidgetMixin
+from mixins import WidgetMixin, DialogMixin
 from renderer import copy_surface_to_bitmap
 
 
@@ -94,7 +94,7 @@ class Application(wx.App):
         self.Exit()
 
 
-class MainWindow(wx.Frame):
+class MainWindow(wx.Frame, DialogMixin):
     app = None
     mdi = None
     maximized = False
@@ -135,27 +135,6 @@ class MainWindow(wx.Frame):
         if global_entries:
             self.SetAcceleratorTable(wx.AcceleratorTable(global_entries))
 
-    def layout(self):
-        self.Layout()
-
-    def get_size(self):
-        return self.GetSize()
-
-    def set_size(self, size):
-        self.SetSize(wx.Size(*size))
-
-    def center(self):
-        self.Centre()
-
-    def maximize(self, val=True):
-        self.Maximize(val)
-
-    def is_maximized(self):
-        return self.IsMaximized()
-
-    def destroy(self):
-        self.Destroy()
-
     def hide(self):
         self.Hide()
 
@@ -183,12 +162,6 @@ class MainWindow(wx.Frame):
             flags = flags | wx.RIGHT if end_padding else flags
             flags = flags | wx.EXPAND if fill else flags
             self.box.Add(obj, expand, flags, padding)
-
-    def set_title(self, title):
-        self.SetTitle(title)
-
-    def set_minsize(self, size):
-        self.SetMinSize(size)
 
     def set_icons(self, filepath):
         icons = wx.IconBundle()

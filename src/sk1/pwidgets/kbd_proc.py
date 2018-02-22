@@ -30,7 +30,7 @@ class KbdProcessor:
 
     @property
     def painter(self):
-        return self.app.current_doc.docarea.canvas
+        return self.app.current_doc.canvas
 
     def on_key_down(self, key_code, modifiers):
 

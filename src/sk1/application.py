@@ -33,7 +33,7 @@ from sk1.app_palettes import AppPaletteManager
 from sk1.app_proxy import AppProxy
 from sk1.app_stdout import StreamLogger
 from sk1.clipboard import AppClipboard
-from sk1.document import SK1Presenter
+from sk1.document.presenter import SK1Presenter
 from sk1.parts.artprovider import create_artprovider
 from sk1.parts.mw import AppMainWindow
 from sk1.pwidgets import generate_fcache
@@ -187,9 +187,10 @@ class SK1Application(wal.Application, UCApplication):
 
     def set_current_doc(self, doc):
         self.current_doc = doc
-        self.current_doc.set_title()
+        if not self.mw.mdi.is_shown():
+            self.mw.show_mdi(True)
         self.mw.mdi.set_active(doc)
-        self.mw.mdi.canvas.set_focus()
+        self.current_doc.set_title()
         events.emit(events.DOC_CHANGED, doc)
         events.emit(events.SNAP_CHANGED)
         events.emit(events.APP_STATUS, _('Document is changed'))
@@ -357,17 +358,22 @@ class SK1Application(wal.Application, UCApplication):
                     return False
 
         if doc in self.docs:
+            index = self.docs.index(doc)
+            active = doc == self.current_doc
             self.docs.remove(doc)
+            self.mdi.remove_doc(doc)
             doc.close()
             events.emit(events.DOC_CLOSED)
             if not len(self.docs):
                 self.current_doc = None
+                self.mw.show_mdi(False)
                 events.emit(events.NO_DOCS)
                 msg = _('To start create new or open existing document')
                 events.emit(events.APP_STATUS, msg)
                 self.mw.set_title()
-            else:
-                self.set_current_doc(self.docs[-1])
+            elif active:
+                index = index if len(self.docs)> index else -1
+                self.set_current_doc(self.docs[index])
         return True
 
     def close_others(self):

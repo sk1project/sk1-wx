@@ -76,9 +76,9 @@ class AppMainWindow(wal.MainWindow):
     def show_mdi(self, value):
         if value and not self.mdi.is_shown():
             self.stub.hide()
-            self.Update()
+            self.update()
             self.mdi.show()
         elif not value and self.mdi.is_shown():
             self.mdi.hide()
-            self.Update()
+            self.update()
             self.stub.show()

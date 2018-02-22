@@ -58,7 +58,7 @@ class RulerSurface(wal.RulerCanvas):
     @property
     def painter(self):
         if self.app.current_doc:
-            return self.app.current_doc.docarea.corner
+            return self.app.current_doc.corner
 
     def check_config(self, *args):
         if args[0].startswith('ruler_'):
@@ -88,14 +88,14 @@ class HRulerSurface(RulerSurface):
     @property
     def painter(self):
         if self.app.current_doc:
-            return self.app.current_doc.docarea.hruler
+            return self.app.current_doc.hruler
 
 
 class VRulerSurface(HRulerSurface):
     @property
     def painter(self):
         if self.app.current_doc:
-            return self.app.current_doc.docarea.vruler
+            return self.app.current_doc.vruler
 
 
 class CanvasEvent(wal.MouseEvent):
@@ -119,7 +119,7 @@ class CanvasSurface(wal.MainCanvas):
     @property
     def painter(self):
         if self.app.current_doc:
-            return self.app.current_doc.docarea.canvas
+            return self.app.current_doc.canvas
 
     def show_context_menu(self):
         self.ctx_menu.rebuild()
@@ -134,7 +134,7 @@ class CanvasSurface(wal.MainCanvas):
 
     # ==============SCROLLING==========================
 
-    def _set_scrolls(self, hscroll, vscroll):
+    def set_scrolls(self, hscroll, vscroll):
         self.hscroll = hscroll
         self.vscroll = vscroll
         self.hscroll.set_scrollbar(500, 100, 1100, 100, refresh=True)

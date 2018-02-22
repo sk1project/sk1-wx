@@ -45,13 +45,18 @@ class DocTabs(wal.DocTabs):
         return wal.DocTabs.add_new_tab(self, LWDocTab(self, doc))
 
     def remove_tab(self, doc):
-        wal.DocTabs.remove_tab(self, doc.docarea.doc_tab)
+        wal.DocTabs.remove_tab(self, self.find_doctab(doc))
 
     def set_active(self, doc):
-        wal.DocTabs.set_active(self, doc.docarea.doc_tab)
+        wal.DocTabs.set_active(self, self.find_doctab(doc))
 
     def show_context_menu(self):
         self.popup_menu(self.ctx_menu)
+
+    def find_doctab(self, doc):
+        for tab in self.doc_tabs:
+            if doc == tab.doc:
+                return tab
 
 
 class LWDocTab(wal.LWDocTab):

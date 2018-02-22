@@ -33,8 +33,11 @@ class DialogMixin(object):
     def is_maximized(self):
         return self.IsMaximized()
 
-    def maximize(self):
-        self.Maximize()
+    def maximize(self, val=True):
+        self.Maximize(val)
+
+    def center(self):
+        self.Centre()
 
     def get_size(self):
         return self.GetSizeTuple()
@@ -50,6 +53,12 @@ class DialogMixin(object):
 
     def destroy(self):
         self.Destroy()
+
+    def layout(self):
+        self.Layout()
+
+    def update(self):
+        self.Update()
 
 
 class WidgetMixin(object):

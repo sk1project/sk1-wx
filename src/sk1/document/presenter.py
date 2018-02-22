@@ -24,6 +24,8 @@ from sk1.document.api import PresenterAPI
 from sk1.document.eventloop import EventLoop
 from sk1.document.selection import Selection
 from sk1.document.snapping import SnapManager
+from sk1.document.ruler import RulerCorner, Ruler
+from sk1.document.canvas import AppCanvas
 from uc2 import uc2const
 from uc2.formats import get_loader, get_saver
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
@@ -46,7 +48,6 @@ class SK1Presenter:
     saved = True
 
     eventloop = None
-    docarea = None
     canvas = None
     selection = None
     traced_objects = None
@@ -96,19 +97,20 @@ class SK1Presenter:
         # self.app.default_cms.registry_cm(self.cms)
 
         self.api = PresenterAPI(self)
-        self.docarea = self.app.mdi.create_docarea(self)
-        self.canvas = self.docarea.canvas
+        self.corner = RulerCorner(self)
+        self.hruler = Ruler(self, vertical=False)
+        self.vruler = Ruler(self)
+        self.canvas = AppCanvas(self)
         self.canvas.set_mode()
         self.eventloop.connect(self.eventloop.DOC_MODIFIED, self.modified)
         self.snap = SnapManager(self)
-        self.set_title()
 
     def set_title(self):
         if self.saved:
             title = self.doc_name
         else:
             title = self.doc_name + '*'
-        self.app.mdi.set_tab_title(self.docarea, title)
+        self.app.mdi.set_tab_title(self, title)
         if self == self.app.current_doc:
             self.app.mw.set_title(title)
 
@@ -163,14 +165,13 @@ class SK1Presenter:
             doc.close()
 
     def close(self):
-        self.app.mdi.remove_doc(self)
         # self.app.default_cms.unregistry_cm(self.cms)
         self.eventloop.destroy()
         self.api.destroy()
         self.doc_presenter.close()
-        self.docarea.destroy()
-        self.selection.destroy()
-        self.snap.destroy()
+        for item in [self.canvas, self.corner, self.vruler, self.hruler,
+                 self.selection, self.snap]:
+            item.destroy()
 
         items = self.__dict__.keys()
         for item in items:

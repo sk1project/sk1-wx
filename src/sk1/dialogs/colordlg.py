@@ -79,7 +79,7 @@ class ChangeColorDialog(wal.OkCancelDialog):
         hpanel.pack(self.palette)
 
         self.pack(hpanel, fill=True)
-        self.update()
+        self.update_data()
 
     def get_result(self):
         return self.mixer.get_color()
@@ -97,17 +97,17 @@ class ChangeColorDialog(wal.OkCancelDialog):
 
     def mixer_changed(self):
         self.new_color = self.mixer.get_color()
-        self.update()
+        self.update_data()
 
     def refpanel_click(self):
         self.new_color = deepcopy(self.orig_color)
-        self.update()
+        self.update_data()
 
     def palette_click(self, color):
         self.new_color = color
-        self.update()
+        self.update_data()
 
-    def update(self):
+    def update_data(self):
         self.mixer.set_color(self.new_color)
         self.refpanel.update(self.orig_color, self.new_color)
 

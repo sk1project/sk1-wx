@@ -17,7 +17,6 @@
 
 import wal
 from sk1 import config, events, appconst
-from sk1.document import DocArea
 from sk1.parts.ctxpanel import AppCtxPanel
 from sk1.parts.doctabs import DocTabs
 from sk1.parts.palettepanel import AppHPalette, AppVPalette
@@ -32,14 +31,11 @@ from uc2 import uc2const
 class MDIArea(wal.VPanel):
     app = None
     mw = None
-    docareas = []
     ctxpanel = None
-    current_docarea = None
 
     def __init__(self, app, parent):
         self.app = app
         self.mw = parent
-        self.docareas = []
         wal.VPanel.__init__(self, parent)
 
         self.ctxpanel = AppCtxPanel(self.app, self)
@@ -91,7 +87,7 @@ class MDIArea(wal.VPanel):
         self.viewer = wal.VPanel(int_grid)
         int_grid.pack(self.viewer, fill=True)
 
-        self.canvas._set_scrolls(self.hscroll, self.vscroll)
+        self.canvas.set_scrolls(self.hscroll, self.vscroll)
         self.grid_panel.pack(int_grid, fill=True)
 
         # ----- Doc Area End
@@ -143,42 +139,30 @@ class MDIArea(wal.VPanel):
             self.hp_panel.show()
             self.vp_panel.hide()
 
-    def create_docarea(self, doc):
-        docarea = DocArea(doc)
-        docarea.doc_tab = self.doc_tabs.add_new_tab(doc)
-        self.docareas.append(docarea)
+    def create_doctab(self, doc):
+        self.doc_tabs.add_new_tab(doc)
         self.corner.refresh(clear=False)
         self.hruler.refresh(clear=False)
         self.vruler.refresh(clear=False)
         self.canvas.refresh(clear=False)
         self.canvas.update_scrolls()
-        return docarea
 
     def remove_doc(self, doc):
-        docarea = doc.docarea
-        self.docareas.remove(docarea)
         self.doc_tabs.remove_tab(doc)
-        if not self.docareas:
-            self.mw.show_mdi(False)
-            self.current_docarea = None
-        else:
-            if docarea == self.current_docarea:
-                self.set_active(self.docareas[-1].presenter)
 
-    def set_tab_title(self, docarea, title):
-        docarea.doc_tab.set_title(title)
+    def set_tab_title(self, doc, title):
+        self.doc_tabs.find_doctab(doc).set_title(title)
 
     def set_active(self, doc):
-        doc_area = doc.docarea
-        self.current_docarea = doc_area
+        if not self.doc_tabs.find_doctab(doc):
+            self.create_doctab(doc)
         self.doc_tabs.set_active(doc)
-        if len(self.docareas) == 1:
-            self.mw.show_mdi(True)
         self.corner.refresh(clear=False)
         self.hruler.refresh(clear=False)
         self.vruler.refresh(clear=False)
         self.canvas.refresh(clear=False)
         self.canvas.update_scrolls()
+        self.canvas.set_focus()
 
     def show_plugin_area(self, value=True):
         if value:
