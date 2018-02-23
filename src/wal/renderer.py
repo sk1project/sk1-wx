@@ -125,20 +125,25 @@ def copy_bitmap_to_surface(bitmap):
 
 # ----- Text routines
 
-def _get_text_size(text, bold=False):
+def get_text_size(text, bold=False, size_incr=0):
     font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
     if bold:
         font.SetWeight(wx.FONTWEIGHT_BOLD)
-    result = (0, 0)
-    if text:
-        pdc = wx.MemoryDC()
-        bmp = wx.EmptyBitmap(1, 1)
-        pdc.SelectObject(bmp)
-        pdc.SetFont(font)
-        height = pdc.GetCharHeight()
-        width = pdc.GetTextExtent(text)[0]
-        result = (width, height)
-        pdc.SelectObject(wx.NullBitmap)
+    if size_incr:
+        if font.IsUsingSizeInPixels():
+            sz = font.GetPixelSize()[1] + size_incr
+            font.SetPixelSize((0, sz))
+        else:
+            sz = font.GetPointSize() + size_incr
+            font.SetPointSize(sz)
+    pdc = wx.MemoryDC()
+    bmp = wx.EmptyBitmap(1, 1)
+    pdc.SelectObject(bmp)
+    pdc.SetFont(font)
+    height = pdc.GetCharHeight()
+    width = pdc.GetTextExtent(text)[0]
+    result = (width, height)
+    pdc.SelectObject(wx.NullBitmap)
     return result
 
 
@@ -151,7 +156,7 @@ def invert_text_bitmap(bmp, color=(0, 0, 0)):
 
 
 def text_to_bitmap(text, bold=False):
-    w, h = _get_text_size(text, bold)
+    w, h = get_text_size(text, bold)
     dc = wx.MemoryDC()
     bmp = wx.EmptyBitmap(w, h)
     dc.SelectObject(bmp)

@@ -16,3 +16,8 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wal
+
+class DocTabs(wal.VTabs):
+
+    def __init__(self, app, parent):
+        wal.DocTabs.__init__(self, parent)

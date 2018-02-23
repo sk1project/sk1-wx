@@ -19,34 +19,13 @@ import wx
 
 import const
 from basic import HPanel, SensitiveCanvas
+from renderer import get_text_size
 
 TAB_HEIGHT = 25
 TAB_MARGIN = 1
 TAB_PADDING = 5
 TAB_SIZE = 150
 INDICATOR_SIZE = 8
-
-
-def get_text_size(text, bold=False, size_incr=0):
-    font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-    if bold:
-        font.SetWeight(wx.FONTWEIGHT_BOLD)
-    if size_incr:
-        if font.IsUsingSizeInPixels():
-            sz = font.GetPixelSize()[1] + size_incr
-            font.SetPixelSize((0, sz))
-        else:
-            sz = font.GetPointSize() + size_incr
-            font.SetPointSize(sz)
-    pdc = wx.MemoryDC()
-    bmp = wx.EmptyBitmap(1, 1)
-    pdc.SelectObject(bmp)
-    pdc.SetFont(font)
-    height = pdc.GetCharHeight()
-    width = pdc.GetTextExtent(text)[0]
-    result = (width, height)
-    pdc.SelectObject(wx.NullBitmap)
-    return result
 
 
 class TabPainter(object):
@@ -153,7 +132,7 @@ class TabPainter(object):
         dc = self.panel
         if tab.active:
             r = (tab.pos + 1, 1, tab.get_width() - 1, 2)
-            if const.IS_AMBIANCE:
+            if const.IS_AMBIANCE or const.IS_MSW:
                 dc.set_stroke(None)
                 dc.set_fill(const.UI_COLORS['selected_text_bg'])
                 dc.draw_rect(*r)

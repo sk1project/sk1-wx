@@ -18,3 +18,43 @@
 import wx
 
 import const
+from basic import VPanel, SensitiveCanvas
+from renderer import get_text_size
+
+TAB_WIDTH = 25
+TAB_MARGIN = 1
+TAB_PADDING = 5
+TAB_SIZE = 150
+INDICATOR_SIZE = 8
+
+
+class VTabPainter(object):
+    def __init__(self, panel):
+        self.panel = panel
+        self.border_color = const.UI_COLORS['hover_solid_border']
+        self.bg_color = const.UI_COLORS['bg']
+        self.fg_color = const.UI_COLORS['fg']
+
+
+PAINTERS = {
+    0: VTabPainter,
+}
+
+class VTabs(VPanel, SensitiveCanvas):
+    painter = None
+    doc_tabs = []
+    draw_top = True
+    custom_bg = None
+    pos_min = 0
+    pos_max = 0
+
+    def __init__(self, parent, painter=0):
+        VPanel.__init__(self, parent)
+        SensitiveCanvas.__init__(self, check_move=True)
+        self.set_double_buffered()
+        self.pack((TAB_WIDTH, TAB_PADDING))
+        self.set_painter(painter if painter in PAINTERS else 0)
+
+    def set_painter(self, painter):
+        self.painter = PAINTERS[painter](self)
+        self.refresh()
