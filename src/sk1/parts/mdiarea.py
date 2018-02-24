@@ -18,7 +18,7 @@
 import wal
 from sk1 import config, events, appconst
 from sk1.parts.ctxpanel import AppCtxPanel
-from sk1.parts.doctabs import DocTabs
+from sk1.parts.doctabs import DocTabPanel
 from sk1.parts.palettepanel import AppHPalette, AppVPalette
 from sk1.parts.plgarea import PlgArea
 from sk1.parts.statusbar import AppStatusbar
@@ -39,8 +39,8 @@ class MDIArea(wal.VPanel):
         wal.VPanel.__init__(self, parent)
 
         self.ctxpanel = AppCtxPanel(self.app, self)
-        self.doc_tabs = DocTabs(app, self,
-                                config.ui_style != appconst.GUI_CLASSIC)
+        self.doc_tabs = DocTabPanel(app, self,
+                                    config.ui_style != appconst.GUI_CLASSIC)
 
         if config.ui_style == appconst.GUI_CLASSIC:
             if not wal.IS_MAC:

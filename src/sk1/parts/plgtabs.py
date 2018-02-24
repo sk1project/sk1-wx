@@ -17,7 +17,15 @@
 
 import wal
 
-class DocTabs(wal.VTabs):
+class PlgnTabs(wal.VTabs):
 
     def __init__(self, app, parent):
-        wal.DocTabs.__init__(self, parent)
+        wal.VTabs.__init__(self, parent)
+
+    def add_new_tab(self, plgn):
+        pass
+
+    def set_active(self, plgn):
+        pass
+
+    def remove_tab(self, plgn):

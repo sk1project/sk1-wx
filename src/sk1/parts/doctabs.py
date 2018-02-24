@@ -21,20 +21,21 @@ from sk1 import events, config
 from sk1.pwidgets import ContextMenu
 from sk1.resources import pdids
 
+ITEMS = [wal.ID_CLOSE, pdids.ID_CLOSE_OTHERS, wal.ID_CLOSE_ALL, None,
+         wal.ID_NEW, wal.ID_OPEN, None,
+         wal.ID_SAVE, wal.ID_SAVEAS, pdids.ID_SAVE_SEL,
+         pdids.ID_SAVEALL, None, pdids.ID_IMPORT, pdids.ID_EXPORT,
+         None, wal.ID_PRINT, None, wal.ID_PROPERTIES]
 
-class DocTabs(wal.DocTabs):
+
+class DocTabPanel(wal.HTabPanel):
     app = None
     ctx_menu = None
 
     def __init__(self, app, parent, draw_top=True):
         self.app = app
-        wal.DocTabs.__init__(self, parent, draw_top=draw_top,
-                             painter=config.tab_style)
-        ITEMS = [wal.ID_CLOSE, pdids.ID_CLOSE_OTHERS, wal.ID_CLOSE_ALL, None,
-                 wal.ID_NEW, wal.ID_OPEN, None,
-                 wal.ID_SAVE, wal.ID_SAVEAS, pdids.ID_SAVE_SEL,
-                 pdids.ID_SAVEALL, None, pdids.ID_IMPORT, pdids.ID_EXPORT,
-                 None, wal.ID_PRINT, None, wal.ID_PROPERTIES]
+        wal.HTabPanel.__init__(self, parent, draw_top=draw_top,
+                               painter_index=config.tab_style)
         self.ctx_menu = ContextMenu(app, self, ITEMS)
         events.connect(events.CONFIG_MODIFIED, self.check_config)
 
@@ -44,40 +45,40 @@ class DocTabs(wal.DocTabs):
             self.refresh()
 
     def add_new_tab(self, doc):
-        return wal.DocTabs.add_new_tab(self, LWDocTab(self, doc))
+        return wal.HTabPanel.add_new_tab(self, DocTab(self, doc))
 
     def remove_tab(self, doc):
-        wal.DocTabs.remove_tab(self, self.find_doctab(doc))
+        wal.HTabPanel.remove_tab(self, self.find_doctab(doc))
 
     def set_active(self, doc):
-        wal.DocTabs.set_active(self, self.find_doctab(doc))
+        wal.HTabPanel.set_active(self, self.find_doctab(doc))
 
     def change_tab_index(self, index, tab):
         doc = tab.doc
         self.app.docs.remove(doc)
         self.app.docs.insert(index, doc)
-        wal.DocTabs.change_tab_index(self, index, tab)
+        wal.HTabPanel.change_tab_index(self, index, tab)
 
     def show_context_menu(self):
         self.popup_menu(self.ctx_menu)
 
     def find_doctab(self, doc):
-        for tab in self.doc_tabs:
+        for tab in self.tabs:
             if doc == tab.doc:
                 return tab
 
 
-class LWDocTab(wal.LWDocTab):
+class DocTab(wal.HTab):
     doc = None
 
     def __init__(self, parent, doc, active=True):
         self.doc = doc
         self.text = self.doc.doc_name
-        wal.LWDocTab.__init__(self, parent, active)
+        wal.HTab.__init__(self, parent, active)
 
     def set_title(self, title):
         self.saved = self.doc.saved
-        wal.LWDocTab.set_title(self, self.doc.doc_name)
+        wal.HTab.set_title(self, self.doc.doc_name)
 
     def close(self):
         self.mouse_leaved_tab()
@@ -85,7 +86,7 @@ class LWDocTab(wal.LWDocTab):
         self.doc.app.close(self.doc)
 
     def mouse_left_down(self, point):
-        if wal.LWDocTab.mouse_left_down(self, point):
+        if wal.HTab.mouse_left_down(self, point):
             if not self.active:
                 self.doc.app.set_current_doc(self.doc)
 
