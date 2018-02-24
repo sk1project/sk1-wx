@@ -105,7 +105,8 @@ class CanvasEvent(wal.MouseEvent):
 
 
 class CanvasSurface(wal.MainCanvas):
-
+    hscroll = None
+    vscroll = None
     my_changes = False
     redraw_flag = False
     request_redraw_flag = False
