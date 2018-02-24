@@ -23,9 +23,11 @@ from sk1.resources import pdids
 
 
 class DocTabs(wal.DocTabs):
+    app = None
     ctx_menu = None
 
     def __init__(self, app, parent, draw_top=True):
+        self.app = app
         wal.DocTabs.__init__(self, parent, draw_top=draw_top,
                              painter=config.tab_style)
         ITEMS = [wal.ID_CLOSE, pdids.ID_CLOSE_OTHERS, wal.ID_CLOSE_ALL, None,
@@ -49,6 +51,12 @@ class DocTabs(wal.DocTabs):
 
     def set_active(self, doc):
         wal.DocTabs.set_active(self, self.find_doctab(doc))
+
+    def change_tab_index(self, index, tab):
+        doc = tab.doc
+        self.app.docs.remove(doc)
+        self.app.docs.insert(index, doc)
+        wal.DocTabs.change_tab_index(self, index, tab)
 
     def show_context_menu(self):
         self.popup_menu(self.ctx_menu)

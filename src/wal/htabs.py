@@ -296,15 +296,17 @@ class DocTabs(HPanel, SensitiveCanvas):
             after = self.doc_tabs[index + 1]
             pos2 = after.pos + after.get_width() // 2
             if pos1 > pos2:
-                self.doc_tabs.remove(tab)
-                self.doc_tabs.insert(index + 1, tab)
+                self.change_tab_index(index + 1, tab)
         elif dx < 0:
             pos1 = tab.pos
             before = self.doc_tabs[index - 1]
             pos2 = before.pos + before.get_width() // 2
             if pos1 < pos2:
-                self.doc_tabs.remove(tab)
-                self.doc_tabs.insert(index - 1, tab)
+                self.change_tab_index(index - 1, tab)
+
+    def change_tab_index(self, index, tab):
+        self.doc_tabs.remove(tab)
+        self.doc_tabs.insert(index, tab)
 
     def mouse_left_down(self, point):
         for tab in self.doc_tabs:
