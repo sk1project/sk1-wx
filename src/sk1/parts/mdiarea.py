@@ -139,13 +139,17 @@ class MDIArea(wal.VPanel):
             self.hp_panel.show()
             self.vp_panel.hide()
 
-    def create_doctab(self, doc):
-        self.doc_tabs.add_new_tab(doc)
+    def update_view(self):
         self.corner.refresh(clear=False)
         self.hruler.refresh(clear=False)
         self.vruler.refresh(clear=False)
         self.canvas.refresh(clear=False)
         self.canvas.update_scrolls()
+        self.canvas.set_focus()
+
+    def create_doctab(self, doc):
+        self.doc_tabs.add_new_tab(doc)
+        self.update_view()
 
     def remove_doc(self, doc):
         self.doc_tabs.remove_tab(doc)
@@ -157,12 +161,7 @@ class MDIArea(wal.VPanel):
         if not self.doc_tabs.find_doctab(doc):
             self.create_doctab(doc)
         self.doc_tabs.set_active(doc)
-        self.corner.refresh(clear=False)
-        self.hruler.refresh(clear=False)
-        self.vruler.refresh(clear=False)
-        self.canvas.refresh(clear=False)
-        self.canvas.update_scrolls()
-        self.canvas.set_focus()
+        self.update_view()
 
     def show_plugin_area(self, value=True):
         if value:
