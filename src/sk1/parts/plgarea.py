@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013 by Igor E. Novikov
+#  Copyright (C) 2013-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 
 import wal
 
-from sk1.parts.plgtabpanel import PlgTabsPanel
+from sk1.parts.plgtabs import PlgnTabPanel
 
 
 class PlgArea(wal.HPanel):
@@ -33,7 +33,7 @@ class PlgArea(wal.HPanel):
         self.pack(wal.PLine(self), fill=True)
         self.container = wal.VPanel(self)
         self.pack(self.container, expand=True, fill=True)
-        self.tabs = PlgTabsPanel(app, self)
+        self.tabs = PlgnTabPanel(app, self)
         self.pack(self.tabs, fill=True)
         self.layout()
 
@@ -62,10 +62,10 @@ class PlgArea(wal.HPanel):
         if not item:
             item = self.load_plugin(pid)
             self.container.pack(item.panel, expand=True, fill=True)
-            self.tabs.plg_tabs.add_new_tab(item)
+            self.tabs.add_new_tab(item)
             item.panel.layout()
         else:
-            self.tabs.plg_tabs.set_active(item)
+            self.tabs.set_active(item)
         self.active_plg = item
         self.active_plg.show(*args)
         self.layout()
@@ -76,7 +76,7 @@ class PlgArea(wal.HPanel):
         item = self.check_pid(pid)
         if not item:
             return
-        self.tabs.plg_tabs.remove_tab(item)
+        self.tabs.remove_tab(item)
         self.plugins.remove(item)
         self.container.box.Detach(item.panel)
         item.hide()

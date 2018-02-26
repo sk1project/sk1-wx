@@ -31,7 +31,7 @@ from msgdlgs import *
 from printing import *
 from renderer import *
 from stubpanel import StubPanel, StubBtn
-from htabs import HTabPanel, HTab
+from tabs import HTabPanel, HTab, VTabPanel, VTab
 from togglectrls import HToggleKeeper, ModeToggleButton
 from treewidgets import TreeElement, TreeWidget
 from widgets import *

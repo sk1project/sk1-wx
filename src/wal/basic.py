@@ -396,6 +396,9 @@ class Canvas(object):
     def draw_text(self, text, x, y):
         self.pdc.DrawText(text, x, y)
 
+    def draw_rotated_text(self, text, x, y, angle):
+        self.pdc.DrawRotatedText(text, x, y, angle)
+
     def draw_polygon(self, points):
         self.pdc.DrawPolygon(points)
 
@@ -468,6 +471,9 @@ class Canvas(object):
 
     def gc_draw_text(self, text, x, y):
         self.dc.DrawText(text, x, y)
+
+    def gc_draw_rotated_text(self, text, x, y, angle):
+        self.dc.DrawRotatedText(text, x, y, angle)
 
     def gc_draw_surface(self, surface, x=0, y=0, use_mask=True):
         self.dc.DrawBitmap(copy_surface_to_bitmap(surface), x, y, use_mask)

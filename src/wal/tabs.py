@@ -27,6 +27,9 @@ TAB_SIZE = 150
 INDICATOR_SIZE = 8
 HTAB = 0
 VTAB = 1
+HTAB_HEIGHT = 25
+VTAB_WIDTH = 25
+ICON_SIZE = 16
 
 
 class TabPanel(HPanel, SensitiveCanvas):
@@ -40,18 +43,19 @@ class TabPanel(HPanel, SensitiveCanvas):
     def __init__(self, parent, draw_top=True, custom_bg=None, painter_index=0):
         self.draw_top = draw_top
         self.custom_bg = custom_bg
+        self.tabs = []
         HPanel.__init__(self, parent)
         SensitiveCanvas.__init__(self, check_move=True)
         self.set_double_buffered()
         self.set_panel_size()
         self.set_painter(painter_index)
-        
+
     def set_panel_size(self):
         pass
-    
+
     def set_painter(self, painter_index):
         pass
-    
+
     def arrange_tabs(self):
         pass
 
@@ -74,10 +78,13 @@ class TabPanel(HPanel, SensitiveCanvas):
             if pos1 < pos2:
                 self.change_tab_index(index - 1, tab)
 
-    def add_new_tab(self, tab):
-        self.tabs.append(tab)
+    def add_new_tab(self, new_tab):
+        for tab in self.tabs:
+            if tab.active:
+                tab.set_active(False)
+        self.tabs.append(new_tab)
         self.refresh()
-        return tab
+        return new_tab
 
     def remove_tab(self, tab):
         self.tabs.remove(tab)
@@ -139,7 +146,7 @@ class TabPanel(HPanel, SensitiveCanvas):
         if self.painter:
             self.painter.paint_panel()
 
-            
+
 class Tab(object):
     stl = HTAB
     active = True
@@ -228,9 +235,6 @@ class Tab(object):
 
     def close(self):
         pass
-        
-        
-HTAB_HEIGHT = 25
 
 
 class TabPainter(object):
@@ -470,3 +474,134 @@ class HTab(Tab):
         x0 = self.get_tab_size() - 2 * s - int(s / 2) + 1
         y0 = int(HTAB_HEIGHT / 2 - s) + 2
         self.close_rect = (x0, y0, x0 + 2 * s, y0 + 2 * s)
+
+
+class VRectTabPainter(TabPainter):
+    def paint_panel_top(self):
+        dc = self.panel
+        if not dc.draw_top or const.IS_MSW:
+            w, h = dc.get_size()
+            dc.set_stroke(self.border_color)
+            dc.draw_line(w, 0, w, h)
+
+    def paint_panel_shadow(self):
+        dc = self.panel
+        w, h = dc.get_size()
+        start = (0, 0, 0, 30)
+        stop = (0, 0, 0, 0)
+        dc.gc_draw_linear_gradient((0, 0, w * 3 / 4, h),
+                                   start, stop, False)
+        dc.set_stroke(self.border_color)
+        dc.draw_line(0, 0, 0, h)
+
+    def paint_tab_rect(self, tab, r=0, y=0):
+        dc = self.panel
+        dc.set_gc_fill(self.bg_color)
+        dc.set_gc_stroke(self.border_color)
+        dc.gc_draw_rounded_rect(-2, tab.pos,
+                                VTAB_WIDTH + 5, tab.get_tab_size() + 1, r)
+
+    def paint_tab_indicator(self, tab):
+        if 'icon' in tab.__dict__:
+            dc = self.panel
+            x = (VTAB_WIDTH - ICON_SIZE) // 2
+            x = x + 1 if tab.active else x
+            y = tab.pos + 3
+            dc.gc_draw_bitmap(tab.icon, x, y)
+
+    def paint_tab_text(self, tab):
+        dc = self.panel
+        s = INDICATOR_SIZE
+        pos = tab.pos + 3 * s - 3
+        width = tab.get_tab_size() - 5 * s
+        txt = tab.text.decode('utf-8')
+        if const.IS_MSW:
+            if get_text_size(txt, size_incr=-1)[0] > width:
+                while get_text_size(txt + '...', size_incr=-1)[0] > width:
+                    txt = txt[:-1]
+                txt += '...'
+        else:
+            while get_text_size(txt, size_incr=-1)[0] > width:
+                txt = txt[:-1]
+        shift = 2 if tab.active else 1
+        x = int(VTAB_WIDTH / 2 + dc.set_font(size_incr=-1) / 2) + shift
+        dc.draw_rotated_text(txt, x, pos, 270)
+
+        if not const.IS_MSW:
+            # text shade
+            pos = tab.pos + tab.get_tab_size() - 5 * s
+            start = self.bg_color[:-1] + (0,)
+            stop = self.bg_color[:-1] + (255,)
+            dc.gc_draw_linear_gradient((4, pos, 3 * s, VTAB_WIDTH),
+                                       start, stop, True)
+
+    def paint_tab_marker(self, tab):
+        pass
+
+    def paint_tab_close_btn(self, tab):
+        dc = self.panel
+        s = INDICATOR_SIZE
+        pos = tab.pos + tab.close_rect[1]
+        x = tab.close_rect[0]
+        shift = 1 if tab.active else 0
+        if tab.close_active:
+            dc.set_gc_fill(const.BROWN if tab.close_pressed
+                           else const.DARK_RED)
+            dc.set_gc_stroke(None)
+            dc.gc_draw_rounded_rect(x + shift, pos + 1, 2 * s - 2, 2 * s - 2, s)
+
+        dc.set_gc_fill(None)
+        dc.set_gc_stroke(const.WHITE if tab.close_active else self.fg_color,
+                         2.0 if tab.close_active else 1.5)
+        y0 = pos + 5
+        x0 = x + 4 + shift
+        y1 = pos + 2 * s - 5
+        x1 = x + 2 * s - 6 + shift
+        dc.gc_draw_line(x0, y0, x1, y1)
+        dc.gc_draw_line(x0, y1, x1, y0)
+
+
+VPAINTERS = {
+    0: VRectTabPainter,
+}
+
+
+class VTabPanel(TabPanel):
+    def set_panel_size(self):
+        self.pack((VTAB_WIDTH, TAB_PADDING))
+
+    def set_painter(self, painter_index):
+        painter_index = painter_index if painter_index in HPAINTERS else 0
+        self.painter = VPAINTERS[painter_index](self)
+        self.refresh()
+
+    def arrange_tabs(self):
+        if self.tabs:
+            self.pos_min = pos = TAB_PADDING
+            self.pos_max = self.get_size()[1] - pos
+            width = self.pos_max - self.pos_min - TAB_SIZE
+            total_docs = len(self.tabs)
+            size = TAB_SIZE if total_docs < 2 else width // (total_docs - 1)
+            for tab in self.tabs:
+                tab.size = size
+                if not tab.moves:
+                    tab.set_position(pos)
+                pos += tab.get_tab_size()
+
+
+class VTab(Tab):
+    stl = VTAB
+
+    def set_position(self, pos):
+        self.pos = pos
+        s = INDICATOR_SIZE
+        y0 = self.get_tab_size() - 2 * s - int(s / 2) + 1
+        x0 = int(HTAB_HEIGHT / 2 - s) + 2
+        self.close_rect = (x0, y0, x0 + 2 * s, y0 + 2 * s)
+
+    def is_close_active(self, point):
+        x, y = point
+        x0, y0, x1, y1 = self.close_rect
+        y0 += self.pos
+        y1 += self.pos
+        return x0 < x < x1 and y0 < y < y1
