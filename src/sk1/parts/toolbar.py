@@ -17,7 +17,6 @@
 
 import wal
 from sk1 import config
-from sk1.pwidgets import MacTB_ActionButton, MacTB_ActionNestedButtons
 from sk1.resources import pdids
 
 BUTTONS = [
@@ -38,38 +37,25 @@ def build_toolbar(mw):
     icon_size = config.toolbar_icon_size
     tb.SetToolBitmapSize(config.toolbar_size)
 
-    if wal.IS_MAC:
-        for items in BUTTONS:
-            if items is not None:
-                if len(items) == 1:
-                    action = mw.app.actions[items[0]]
-                    button = MacTB_ActionButton(tb, action)
+    for items in BUTTONS:
+        if items is None:
+            tb.AddSeparator()
+        else:
+            for item in items:
+                action = mw.app.actions[item]
+                aid = action.action_id
+                label_txt = action.get_tooltip_text()
+                hlp_txt = action.get_descr_text()
+                bmp = action.get_icon(icon_size, wal.ART_TOOLBAR)
+                if not bmp:
+                    continue
+                if wal.IS_MSW:
+                    tb.AddLabelTool(aid, label_txt, bmp,
+                                    bmpDisabled=wal.disabled_bmp(bmp),
+                                    shortHelp=hlp_txt)
                 else:
-                    actions = []
-                    for item in items:
-                        actions.append(mw.app.actions[item])
-                    button = MacTB_ActionNestedButtons(tb, actions)
-                tb.AddControl(button)
-    else:
-        for items in BUTTONS:
-            if items is None:
-                tb.AddSeparator()
-            else:
-                for item in items:
-                    action = mw.app.actions[item]
-                    aid = action.action_id
-                    label_txt = action.get_tooltip_text()
-                    hlp_txt = action.get_descr_text()
-                    bmp = action.get_icon(icon_size, wal.ART_TOOLBAR)
-                    if not bmp:
-                        continue
-                    if wal.IS_MSW:
-                        tb.AddLabelTool(aid, label_txt, bmp,
-                                        bmpDisabled=wal.disabled_bmp(bmp),
-                                        shortHelp=hlp_txt)
-                    else:
-                        tb.AddLabelTool(aid, label_txt, bmp,
-                                        shortHelp=hlp_txt)
-                    action.register_as_tool(tb)
+                    tb.AddLabelTool(aid, label_txt, bmp,
+                                    shortHelp=hlp_txt)
+                action.register_as_tool(tb)
     tb.Realize()
     return tb
