@@ -83,6 +83,6 @@ class PlgArea(wal.HPanel):
         if self.active_plg == item:
             self.active_plg = None
             if self.plugins:
-                self.show_plugin(self.plugins[-1].pid)
+                self.show_plugin(self.plugins[0].pid)
             else:
                 self.app.mdiarea.show_plugin_area(False)
