@@ -509,6 +509,23 @@ class VRectTabPainter(TabPainter):
             y = tab.pos + 3
             dc.gc_draw_bitmap(tab.icon, x, y)
 
+            # icon color marker
+            x += 1
+            y += 1
+            w = 14
+            h = 2
+
+            if const.IS_AMBIANCE:
+                return
+            elif const.IS_MSW:
+                dc.set_stroke(None)
+                dc.set_fill(const.UI_COLORS['selected_text_bg'])
+                dc.draw_rect(x, y, w, h)
+            else:
+                render = wx.RendererNative.Get()
+                render.DrawItemSelectionRect(dc, dc.dc, (x + 1, y, w - 2, h),
+                                             wx.CONTROL_SELECTED)
+
     def paint_tab_text(self, tab):
         dc = self.panel
         s = INDICATOR_SIZE
@@ -597,7 +614,7 @@ class VTab(Tab):
         self.pos = pos
         s = INDICATOR_SIZE
         y0 = self.get_tab_size() - 2 * s - int(s / 2) + 1
-        x0 = int(HTAB_HEIGHT / 2 - s) #+ 2
+        x0 = int(HTAB_HEIGHT / 2 - s)  # + 2
         self.close_rect = (x0, y0, x0 + 2 * s, y0 + 2 * s)
 
     def is_close_active(self, point):
