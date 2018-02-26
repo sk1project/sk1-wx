@@ -20,7 +20,6 @@ from colorctrls import SbStrokeSwatch, SbFillSwatch, StyleMonitor
 from ctxmenu import ContextMenu
 from fillctrls import SolidFill, GradientFill, PatternFill
 from fontctrl import FontChoice, generate_fcache
-from mactoolbar import MacTB_ActionButton, MacTB_ActionNestedButtons
 from minipalette import CBMiniPalette
 from palette import Palette
 from palette_viewer import PaletteViewer
