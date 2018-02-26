@@ -524,6 +524,7 @@ class VRectTabPainter(TabPainter):
             while get_text_size(txt, size_incr=-1)[0] > width:
                 txt = txt[:-1]
         shift = 2 if tab.active else 1
+        shift = shift + 2 if const.IS_MSW else shift
         x = int(VTAB_WIDTH / 2 + dc.set_font(size_incr=-1) / 2) + shift
         dc.draw_rotated_text(txt, x, pos, 270)
 
