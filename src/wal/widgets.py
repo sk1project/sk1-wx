@@ -285,15 +285,23 @@ class BitmapChoice(wx.combo.OwnerDrawnComboBox, WidgetMixin):
     def OnDrawItem(self, dc, rect, item, flags):
         if item == wx.NOT_FOUND:
             return
-        x, y, w, h = wx.Rect(*rect)
+        x, y, w, h = wx.Rect(*rect).Get()
         if flags & wx.combo.ODCB_PAINTING_SELECTED and \
                 flags & wx.combo.ODCB_PAINTING_CONTROL:
             dc.SetBrush(wx.Brush(wx.WHITE))
             dc.DrawRectangle(x - 1, y - 1, w + 2, h + 2)
             bitmap = self.bitmaps[item]
         elif flags & wx.combo.ODCB_PAINTING_SELECTED:
-            render = wx.RendererNative.Get()
-            render.DrawItemSelectionRect(self, dc, rect, wx.CONTROL_SELECTED)
+            if const.IS_MSW:
+                pdc = wx.PaintDC(self)
+                pdc.SetPen(wx.TRANSPARENT_PEN)
+                pdc.SetBrush(wx.Brush(
+                    wx.Colour(*const.UI_COLORS['selected_text_bg'])))
+                pdc.DrawRectangle(x, y, w, h)
+            else:
+                render = wx.RendererNative.Get()
+                render.DrawItemSelectionRect(self, dc, rect,
+                                             wx.CONTROL_SELECTED)
             bitmap = bmp_to_white(self.bitmaps[item])
         else:
             bitmap = self.bitmaps[item]
