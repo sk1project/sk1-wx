@@ -78,7 +78,7 @@ class PlgArea(wal.HPanel):
             return
         self.tabs.remove_tab(item)
         self.plugins.remove(item)
-        self.container.box.Detach(item.panel)
+        self.container.remove(item.panel)
         item.hide()
         if self.active_plg == item:
             self.active_plg = None
