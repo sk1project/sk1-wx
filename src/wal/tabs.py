@@ -597,7 +597,7 @@ class VTab(Tab):
         self.pos = pos
         s = INDICATOR_SIZE
         y0 = self.get_tab_size() - 2 * s - int(s / 2) + 1
-        x0 = int(HTAB_HEIGHT / 2 - s) + 2
+        x0 = int(HTAB_HEIGHT / 2 - s) #+ 2
         self.close_rect = (x0, y0, x0 + 2 * s, y0 + 2 * s)
 
     def is_close_active(self, point):

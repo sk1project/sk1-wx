@@ -106,7 +106,7 @@ class MDIArea(wal.VPanel):
         self.vp_panel.pack(wal.PLine(self.vp_panel), fill=True)
         vpalette_panel = AppVPalette(self.vp_panel, self.app)
         self.vp_panel.pack(vpalette_panel, fill=True, padding=2)
-        hpanel.pack(self.vp_panel, fill=True, start_padding=2)
+        hpanel.pack(self.vp_panel, fill=True)
         if config.palette_orientation == uc2const.HORIZONTAL:
             self.vp_panel.hide()
 
