@@ -73,8 +73,15 @@ class FontBitmapChoice(wx.combo.OwnerDrawnComboBox, WidgetMixin):
         sample_y = label_y + self.control_height + 2
         if flags & wx.combo.ODCB_PAINTING_SELECTED and not \
                 flags & wx.combo.ODCB_PAINTING_CONTROL:
-            render = wx.RendererNative.Get()
-            render.DrawItemSelectionRect(self, dc, r, wx.CONTROL_SELECTED)
+            if const.IS_MSW:
+                pdc = wx.PaintDC(self)
+                pdc.SetPen(wx.TRANSPARENT_PEN)
+                pdc.SetBrush(wx.Brush(
+                    wx.Colour(*const.UI_COLORS['selected_text_bg'])))
+                pdc.DrawRectangle(*r.Get())
+            else:
+                render = wx.RendererNative.Get()
+                render.DrawItemSelectionRect(self, dc, r, wx.CONTROL_SELECTED)
             if self.font_icon:
                 icon = bmp_to_white(self.font_icon)
                 dc.DrawBitmap(icon, icon_x, icon_y, True)
