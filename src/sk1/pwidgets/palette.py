@@ -50,8 +50,7 @@ class Palette(wal.VPanel, wal.SensitiveCanvas):
             self.refresh()
 
     def palette_refresh(self, *args):
-        if args:
-            self.refresh()
+        self.refresh()
 
     def set_palette_size(self):
         self.remove_all()
