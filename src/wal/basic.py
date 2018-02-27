@@ -583,6 +583,8 @@ class SensitiveCanvas(Canvas):
 
 
 class RoundedPanel(VPanel, Canvas):
+    widget_panel = None
+
     def __init__(self, parent):
         VPanel.__init__(self, parent)
         Canvas.__init__(self)
@@ -590,36 +592,38 @@ class RoundedPanel(VPanel, Canvas):
     def paint(self):
         w, h = self.get_size()
         dx = 8
-        if self.parent.widget_panel:
-            dx += self.parent.widget_panel.get_size()[0]
+        dy = 0
+        if self.widget_panel:
+            dx += self.widget_panel.get_size()[0]
+            dy += self.widget_panel.get_size()[1] // 2
         self.set_fill(None)
         color = const.UI_COLORS['light_shadow']
         self.set_stroke(color)
-        self.draw_line(1, 1, 6, 1)
-        self.draw_line(1, 1, 1, h - 1)
+        self.draw_line(1, dy + 1, 6, dy + 1)
+        self.draw_line(1, dy + 1, 1, h - 1)
         self.draw_line(1, h - 1, w - 1, h - 1)
-        self.draw_line(w - 1, h - 1, w - 1, 1)
-        self.draw_line(w - 1, 1, dx, 1)
+        self.draw_line(w - 1, h - 1, w - 1, dy + 1)
+        self.draw_line(w - 1, dy + 1, dx, dy + 1)
         color = const.UI_COLORS['dark_shadow']
         self.set_stroke(color)
-        self.draw_line(0, 0, 6, 0)
-        self.draw_line(0, 0, 0, h - 2)
+        self.draw_line(0, dy, 6, dy)
+        self.draw_line(0, dy, 0, h - 2)
         self.draw_line(0, h - 2, w - 2, h - 2)
-        self.draw_line(w - 2, h - 2, w - 2, 0)
-        self.draw_line(w - 2, 0, dx - 1, 0)
+        self.draw_line(w - 2, h - 2, w - 2, dy)
+        self.draw_line(w - 2, dy, dx - 1, dy)
         self.layout()
-        if self.parent.widget_panel:
-            self.parent.widget_panel.refresh()
+        if self.widget_panel:
+            self.widget_panel.refresh()
 
 
-class LabeledPanel(VPanel):
+class LabeledPanel(RoundedPanel):
     panel = None
     widget_panel = None
     widget = None
 
     def __init__(self, parent, text='', widget=None):
-        VPanel.__init__(self, parent)
-        self.inner_panel = RoundedPanel(self)
+        RoundedPanel.__init__(self, parent)
+        self.inner_panel = VPanel(self)
 
         if widget or text:
             self.widget_panel = HPanel(self)
@@ -627,20 +631,14 @@ class LabeledPanel(VPanel):
             if text:
                 self.widget = wx.StaticText(self.widget_panel, wx.ID_ANY, text)
             self.widget_panel.pack(self.widget, padding=5)
-            self.widget_panel.SetPosition((7, 0))
             self.widget_panel.Fit()
-            if const.IS_MSW:
-                self.widget_panel.Raise()
+            self.add(self.widget_panel, 0, wx.ALIGN_LEFT | wx.LEFT, 7)
+            # if const.IS_MSW:
+            #     self.widget_panel.Raise()
 
-        padding = 0
-        if self.widget_panel:
-            padding = round(self.widget_panel.get_size()[1] / 2.0)
-            self.inner_panel.pack((1, padding))
-        self.refresh()
-
-        VPanel.pack(
-            self, self.inner_panel, expand=True, fill=True,
-            start_padding=padding)
+        self.add(self.inner_panel, 1,
+                 wx.ALIGN_LEFT | wx.LEFT | wx.BOTTOM | wx.RIGHT | wx.EXPAND, 5)
+        self.parent.refresh()
 
     def pack(self, *args, **kw):
         obj = args[0]
