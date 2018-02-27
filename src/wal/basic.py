@@ -633,8 +633,6 @@ class LabeledPanel(RoundedPanel):
             self.widget_panel.pack(self.widget, padding=5)
             self.widget_panel.Fit()
             self.add(self.widget_panel, 0, wx.ALIGN_LEFT | wx.LEFT, 7)
-            # if const.IS_MSW:
-            #     self.widget_panel.Raise()
 
         self.add(self.inner_panel, 1,
                  wx.ALIGN_LEFT | wx.LEFT | wx.BOTTOM | wx.RIGHT | wx.EXPAND, 5)
