@@ -35,7 +35,7 @@ class CtxPlugin(wal.HPanel):
         self.actions = self.app.actions
         wal.HPanel.__init__(self, parent)
         self.build()
-        self.add(wal.VLine(self), 0, wal.ALL | wal.EXPAND, 2)
+        self.pack(wal.VLine(self), fill=True, padding=3)
         self.hide()
 
     def update(self, *args): pass
@@ -52,7 +52,7 @@ class ActionCtxPlugin(CtxPlugin):
     def build(self):
         for item in self.ids:
             if item is None:
-                self.add(wal.VLine(self), 0, wal.ALL | wal.EXPAND, 2)
+                self.pack(wal.VLine(self), fill=True, padding=3)
             else:
                 btn = ActionButton(self, self.actions[item])
-                self.add(btn, 0, wal.LEFT | wal.CENTER, 2)
+                self.pack(btn, padding=1)

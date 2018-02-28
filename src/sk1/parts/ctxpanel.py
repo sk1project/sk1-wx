@@ -59,7 +59,7 @@ class AppCtxPanel(wal.HPanel):
                 if inspect.isclass(plg):
                     self.plugins_dict[item] = plg(self.app, self)
                     self.plugins_dict[item].update()
-                self.pack(self.plugins_dict[item])
+                self.pack(self.plugins_dict[item], fill=True)
                 self.plugins_dict[item].show(update=False)
                 self.plugins.append(self.plugins_dict[item])
         self.layout()
