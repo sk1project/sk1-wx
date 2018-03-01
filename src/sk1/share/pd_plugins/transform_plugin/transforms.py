@@ -113,8 +113,8 @@ class AbstractTransform(wal.VPanel):
             y -= ph / 2.0
         elif self.is_lu_coords():
             x -= pw / 2.0
+            y = -y
             y += ph / 2.0
-            y = -y if y else y
         return [x, y]
 
 
