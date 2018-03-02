@@ -541,6 +541,20 @@ class SVG_to_SK2_Translator(object):
             self.user_space = vbox
 
     def translate_obj(self, parent, svg_obj, trafo, style):
+        obj_mapping = {
+            'g': self.translate_g,
+            'rect': self.translate_rect,
+            'circle': self.translate_circle,
+            'ellipse': self.translate_ellipse,
+            'line': self.translate_line,
+            'polyline': self.translate_polyline,
+            'polygon': self.translate_polygon,
+            'path': self.translate_path,
+            'use': self.translate_use,
+            'text': self.translate_text,
+            'image': self.translate_image,
+        }
+
         try:
             if svg_obj.tag == 'defs':
                 self.translate_defs(svg_obj)
@@ -548,28 +562,8 @@ class SVG_to_SK2_Translator(object):
                 self.translate_namedview(svg_obj)
             elif svg_obj.tag == 'sodipodi:guide':
                 self.translate_guide(svg_obj)
-            elif svg_obj.tag == 'g':
-                self.translate_g(parent, svg_obj, trafo, style)
-            elif svg_obj.tag == 'rect':
-                self.translate_rect(parent, svg_obj, trafo, style)
-            elif svg_obj.tag == 'circle':
-                self.translate_circle(parent, svg_obj, trafo, style)
-            elif svg_obj.tag == 'ellipse':
-                self.translate_ellipse(parent, svg_obj, trafo, style)
-            elif svg_obj.tag == 'line':
-                self.translate_line(parent, svg_obj, trafo, style)
-            elif svg_obj.tag == 'polyline':
-                self.translate_polyline(parent, svg_obj, trafo, style)
-            elif svg_obj.tag == 'polygon':
-                self.translate_polygon(parent, svg_obj, trafo, style)
-            elif svg_obj.tag == 'path':
-                self.translate_path(parent, svg_obj, trafo, style)
-            elif svg_obj.tag == 'use':
-                self.translate_use(parent, svg_obj, trafo, style)
-            elif svg_obj.tag == 'text':
-                self.translate_text(parent, svg_obj, trafo, style)
-            elif svg_obj.tag == 'image':
-                self.translate_image(parent, svg_obj, trafo, style)
+            elif svg_obj.tag in obj_mapping:
+                obj_mapping[svg_obj.tag](parent, svg_obj, trafo, style)
             elif svg_obj.tag == 'linearGradient':
                 return
             elif svg_obj.tag == 'radialGradient':
