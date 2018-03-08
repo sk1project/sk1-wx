@@ -15,6 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import math
 import re
 from copy import deepcopy
@@ -27,6 +28,7 @@ from uc2.libgeom import add_points, sub_points, mult_point
 PATH_STUB = [[], [], sk2const.CURVE_OPENED]
 F13 = 1.0 / 3.0
 F23 = 2.0 / 3.0
+LOG = logging.getLogger(__name__)
 
 
 def check_svg_attr(svg_obj, attr, value=None):
@@ -56,6 +58,7 @@ def trafo_scale(m11, m22=None):
 
 
 def trafo_translate(dx, dy=0.0):
+    LOG.debug('translate %s', [1.0, 0.0, 0.0, 1.0, dx, dy])
     return [1.0, 0.0, 0.0, 1.0, dx, dy]
 
 

@@ -17,11 +17,11 @@
 
 import logging
 import os
-import sys
-from PIL import Image
 from base64 import b64decode, b64encode
 from cStringIO import StringIO
 from copy import deepcopy
+
+from PIL import Image
 
 from uc2 import uc2const, libgeom, libpango, libimg, cms, sk2const
 from uc2.formats.sk2 import sk2_model
@@ -505,12 +505,13 @@ class SVG_to_SK2_Translator(object):
             width = vbox[2]
             height = vbox[3]
 
-        if not width: width = self.get_size_pt('210mm')
-        if not height: height = self.get_size_pt('297mm')
+        if not width:
+            width = self.get_size_pt('210mm')
+        if not height:
+            height = self.get_size_pt('297mm')
 
-        ornt = uc2const.PORTRAIT
-        if width > height: ornt = uc2const.LANDSCAPE
-        page_fmt = ['Custom', (width, height), ornt]
+        page_fmt = ['Custom', (width, height),
+                    uc2const.LANDSCAPE if width > height else uc2const.PORTRAIT]
 
         pages_obj = self.sk2_mtds.get_pages_obj()
         pages_obj.page_format = page_fmt
@@ -526,6 +527,8 @@ class SVG_to_SK2_Translator(object):
         dy = height / 2.0
         self.trafo = [1.0, 0.0, 0.0, -1.0, dx, dy]
         self.user_space = [0.0, 0.0, width, height]
+        LOG.debug('width %s, height %s', width, height)
+        LOG.debug('vbox %s', vbox)
 
         if vbox:
             dx = -vbox[0]
@@ -537,6 +540,7 @@ class SVG_to_SK2_Translator(object):
                 xx = yy = min(xx, yy)
             tr = [xx, 0.0, 0.0, yy, 0.0, 0.0]
             tr = libgeom.multiply_trafo([1.0, 0.0, 0.0, 1.0, dx, dy], tr)
+            LOG.debug('vbox trafo %s', tr)
             self.trafo = libgeom.multiply_trafo(tr, self.trafo)
             self.user_space = vbox
 
