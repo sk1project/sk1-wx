@@ -21,6 +21,24 @@ from sk1 import modes
 from sk1.resources import pdids
 
 
+MAPPING = {
+    (wal.KEY_DELETE, wal.ACCEL_NORMAL): wal.ID_DELETE,
+    (wal.KEY_NUMPAD_DECIMAL, wal.ACCEL_NORMAL): wal.ID_DELETE,
+    (wal.KEY_DELETE, wal.ACCEL_SHIFT): wal.ID_CUT,
+    (wal.KEY_NUMPAD_DECIMAL, wal.ACCEL_SHIFT): wal.ID_CUT,
+    (wal.KEY_NUMPAD0, wal.ACCEL_SHIFT): wal.ID_PASTE,
+    (wal.KEY_UP, wal.ACCEL_NORMAL): pdids.MOVE_UP,
+    (wal.KEY_NUMPAD_UP, wal.ACCEL_NORMAL): pdids.MOVE_UP,
+    (wal.KEY_DOWN, wal.ACCEL_NORMAL): pdids.MOVE_DOWN,
+    (wal.KEY_NUMPAD_DOWN, wal.ACCEL_NORMAL): pdids.MOVE_DOWN,
+    (wal.KEY_LEFT, wal.ACCEL_NORMAL): pdids.MOVE_LEFT,
+    (wal.KEY_NUMPAD_LEFT, wal.ACCEL_NORMAL): pdids.MOVE_LEFT,
+    (wal.KEY_RIGHT, wal.ACCEL_NORMAL): pdids.MOVE_RIGHT,
+    (wal.KEY_NUMPAD_RIGHT, wal.ACCEL_NORMAL): pdids.MOVE_RIGHT,
+    (wal.KEY_U, wal.ACCEL_SHIFT|wal.ACCEL_CTRL): pdids.ID_UNGROUPALL,
+}
+
+
 class KbdProcessor:
     canvas = None
 
@@ -38,35 +56,11 @@ class KbdProcessor:
             self.painter.controller.escape_pressed()
             return
 
-        if key_code == wal.KEY_NUMPAD_DECIMAL and modifiers == wal.ACCEL_SHIFT:
-            self.actions[wal.ID_CUT].do_call()
-            return
-
-        if key_code == wal.KEY_NUMPAD0 and modifiers == wal.ACCEL_SHIFT:
-            self.actions[wal.ID_PASTE].do_call()
-            return
-
         if self.painter.mode == modes.TEXT_EDIT_MODE:
             return self.text_edit_mode(key_code, modifiers)
 
-        if key_code in (wal.KEY_UP, wal.KEY_NUMPAD_UP) and not modifiers:
-            self.actions[pdids.MOVE_UP].do_call()
-            return
-
-        if key_code in (wal.KEY_DOWN, wal.KEY_NUMPAD_DOWN) and not modifiers:
-            self.actions[pdids.MOVE_DOWN].do_call()
-            return
-
-        if key_code in (wal.KEY_LEFT, wal.KEY_NUMPAD_LEFT) and not modifiers:
-            self.actions[pdids.MOVE_LEFT].do_call()
-            return
-
-        if key_code in (wal.KEY_RIGHT, wal.KEY_NUMPAD_RIGHT) and not modifiers:
-            self.actions[pdids.MOVE_RIGHT].do_call()
-            return
-
-        if key_code == wal.KEY_F2 and not modifiers:
-            self.painter.set_mode(modes.ZOOM_MODE)
+        if (key_code, modifiers) in MAPPING:
+            self.actions[MAPPING[(key_code, modifiers)]].do_call()
             return
 
         if key_code == wal.KEY_SPACE and not modifiers:
@@ -77,9 +71,22 @@ class KbdProcessor:
                 self.painter.set_mode(modes.SELECT_MODE)
                 return
 
+        if key_code == wal.KEY_F2 and not modifiers:
+            self.painter.set_mode(modes.ZOOM_MODE)
+            return
+
         return True
 
     def text_edit_mode(self, key_code, modifiers):
+
+        if key_code == wal.KEY_NUMPAD_DECIMAL and modifiers == wal.ACCEL_SHIFT:
+            self.actions[wal.ID_CUT].do_call()
+            return
+
+        if key_code == wal.KEY_NUMPAD0 and modifiers == wal.ACCEL_SHIFT:
+            self.actions[wal.ID_PASTE].do_call()
+            return
+
         if not modifiers:
             if key_code in (wal.KEY_UP, wal.KEY_NUMPAD_UP):
                 self.painter.controller.key_up()
