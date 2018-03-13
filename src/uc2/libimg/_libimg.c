@@ -17,12 +17,17 @@
  */
 
 #include <Python.h>
-#include <wand/MagickWand.h>
+#include <wand/magick_wand.h>
 
 static PyObject *
 im_InitMagick(PyObject *self, PyObject *args) {
+	const char *path = NULL;
+	PyObject *py_path = NULL;
+	if (PyArg_UnpackTuple(args, "path", 0, 1, &py_path)) {
+		path = PyString_AsString(py_path);
+	}
 
-	MagickWandGenesis();
+	InitializeMagick(path);
 
 	Py_INCREF(Py_None);
 	return Py_None;
@@ -30,8 +35,7 @@ im_InitMagick(PyObject *self, PyObject *args) {
 
 static PyObject *
 im_TerminateMagick(PyObject *self, PyObject *args) {
-
-	MagickWandTerminus();
+	DestroyMagick();
 
 	Py_INCREF(Py_None);
 	return Py_None;
@@ -54,7 +58,7 @@ im_LoadImage(PyObject *self, PyObject *args) {
 	void *magick_pointer;
 	MagickWand *magick_wand;
 	char *filepath = NULL;
-	MagickBooleanType status;
+	MagickBool status;
 
 	if (!PyArg_ParseTuple(args, "Os", &magick_pointer, &filepath)){
 		return Py_BuildValue("i", 0);
@@ -120,7 +124,7 @@ im_WriteImage(PyObject *self, PyObject *args) {
 	void *magick_pointer;
 	MagickWand *magick_wand;
 	char *filepath = NULL;
-	MagickBooleanType status;
+	MagickBool status;
 
 	if (!PyArg_ParseTuple(args, "Os", &magick_pointer, &filepath)){
 		return Py_BuildValue("i", 0);
@@ -196,7 +200,7 @@ im_NextImage(PyObject *self, PyObject *args) {
 
 	void *magick_pointer;
 	MagickWand *magick_wand;
-	MagickBooleanType status;
+	MagickBool status;
 
 	if (!PyArg_ParseTuple(args, "O", &magick_pointer)){
 		Py_INCREF(Py_None);
@@ -227,7 +231,6 @@ im_NextImage(PyObject *self, PyObject *args) {
 //	  ColorSeparationType,
 //	  ColorSeparationMatteType,
 //	  OptimizeType,
-//	  PaletteBilevelMatteType
 
 static PyObject *
 im_GetImageType(PyObject *self, PyObject *args) {
@@ -274,9 +277,6 @@ im_GetImageType(PyObject *self, PyObject *args) {
 	else if (img_type == OptimizeType){
 		return Py_BuildValue("s", "OptimizeType");
 	}
-	else if (img_type == PaletteBilevelMatteType){
-		return Py_BuildValue("s", "PaletteBilevelMatteType");
-	}
 	else {
 		return Py_BuildValue("s", "UndefinedType");
 	}
@@ -289,7 +289,6 @@ im_GetImageType(PyObject *self, PyObject *args) {
 //GRAYColorspace,
 //TransparentColorspace,
 //OHTAColorspace,
-//LabColorspace,
 //XYZColorspace,
 //YCbCrColorspace,
 //YCCColorspace,
@@ -298,15 +297,12 @@ im_GetImageType(PyObject *self, PyObject *args) {
 //YUVColorspace,
 //CMYKColorspace,
 //sRGBColorspace,
-//HSBColorspace,
 //HSLColorspace,
 //HWBColorspace,
 //Rec601LumaColorspace,
 //Rec601YCbCrColorspace,
 //Rec709LumaColorspace,
 //Rec709YCbCrColorspace,
-//LogColorspace,
-//CMYColorspace
 
 static PyObject *
 im_GetColorspace(PyObject *self, PyObject *args) {
@@ -335,9 +331,6 @@ im_GetColorspace(PyObject *self, PyObject *args) {
 	else if (cs == OHTAColorspace){
 		return Py_BuildValue("s", "OHTAColorspace");
 	}
-	else if (cs == LabColorspace){
-		return Py_BuildValue("s", "LabColorspace");
-	}
 	else if (cs == XYZColorspace){
 		return Py_BuildValue("s", "XYZColorspace");
 	}
@@ -362,9 +355,6 @@ im_GetColorspace(PyObject *self, PyObject *args) {
 	else if (cs == sRGBColorspace){
 		return Py_BuildValue("s", "sRGBColorspace");
 	}
-	else if (cs == HSBColorspace){
-		return Py_BuildValue("s", "HSBColorspace");
-	}
 	else if (cs == HSLColorspace){
 		return Py_BuildValue("s", "HSLColorspace");
 	}
@@ -382,12 +372,6 @@ im_GetColorspace(PyObject *self, PyObject *args) {
 	}
 	else if (cs == Rec709YCbCrColorspace){
 		return Py_BuildValue("s", "Rec709YCbCrColorspace");
-	}
-	else if (cs == LogColorspace){
-		return Py_BuildValue("s", "LogColorspace");
-	}
-	else if (cs == CMYColorspace){
-		return Py_BuildValue("s", "CMYColorspace");
 	}
 	else {
 		return Py_BuildValue("s", "UndefinedColorspace");
