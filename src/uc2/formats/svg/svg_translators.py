@@ -79,7 +79,7 @@ class SVG_to_SK2_Translator(object):
     page = None
     layer = None
     trafo = []
-    coeff = 1.0
+    coeff = 1.25
     user_space = []
     style_opts = {}
     classes = {}
@@ -123,41 +123,36 @@ class SVG_to_SK2_Translator(object):
                 self.__dict__[item] = {}
             else:
                 self.__dict__[item] = None
-        self.coeff = 1.0
+        self.coeff = 1.25
         self.current_color = ''
 
     # --- Utility methods
 
-    def _px_to_pt(self, sval):
-        return svg_const.svg_px_to_pt * float(sval)
-
-    def get_size_pt(self, sval):
-        if not sval:
+    def recalc_size(self, val):
+        if not val:
             return None
-        if len(sval) == 1:
-            if sval.isdigit():
-                return self._px_to_pt(sval) * self.coeff
-            return None
-        if sval[-1].isdigit():
-            return self._px_to_pt(sval) * self.coeff
+        mapping ={
+            'px': svg_const.svg_px_to_pt,
+            'pt': 1.0,
+            'pc': 15.0 * svg_const.svg_px_to_pt,
+            'mm': uc2const.mm_to_pt,
+            'cm': uc2const.cm_to_pt,
+            'in': uc2const.in_to_pt,
+            'm': uc2const.m_to_pt,
+        }
+        if val[-1].isdigit():
+            size = float(val)
+            unit = 'px'
+        elif val[-2].isdigit():
+            size = float(val[:-1])
+            unit = val[-1] if val[-1] in mapping else 'px'
         else:
-            unit = sval[-2:]
-            sval = sval[:-2]
-            if unit == 'px':
-                return self._px_to_pt(sval) * self.coeff
-            elif unit == 'pc':
-                return 15.0 * self._px_to_pt(sval) * self.coeff
-            elif unit == 'mm':
-                return uc2const.mm_to_pt * float(sval) * self.coeff
-            elif unit == 'cm':
-                return uc2const.cm_to_pt * float(sval) * self.coeff
-            elif unit == 'in':
-                return uc2const.in_to_pt * float(sval) * self.coeff
-            else:
-                return self._px_to_pt(sval) * self.coeff
+            size = float(val[:-2])
+            unit = val[-2:] if val[-2:] in mapping else 'px'
+        return size * mapping[unit] * self.coeff
 
     def get_font_size(self, sval):
-        val = self.get_size_pt(sval) / self.coeff
+        val = self.recalc_size(sval) / self.coeff
         pts = [[0.0, 0.0], [0.0, val]]
         pts = libgeom.apply_trafo_to_points(pts, self.trafo)
         return libgeom.distance(*pts)
@@ -165,7 +160,7 @@ class SVG_to_SK2_Translator(object):
     def get_viewbox(self, svbox):
         vbox = []
         for item in svbox.split(' '):
-            vbox.append(self.get_size_pt(item))
+            vbox.append(self.recalc_size(item))
         return vbox
 
     def parse_def(self, svg_obj):
@@ -194,13 +189,13 @@ class SVG_to_SK2_Translator(object):
             x2 = self.user_space[2]
             y2 = 0.0
             if 'x1' in svg_obj.attrs:
-                x1 = self.get_size_pt(svg_obj.attrs['x1'])
+                x1 = self.recalc_size(svg_obj.attrs['x1'])
             if 'y1' in svg_obj.attrs:
-                y1 = self.get_size_pt(svg_obj.attrs['y1'])
+                y1 = self.recalc_size(svg_obj.attrs['y1'])
             if 'x2' in svg_obj.attrs:
-                x2 = self.get_size_pt(svg_obj.attrs['x2'])
+                x2 = self.recalc_size(svg_obj.attrs['x2'])
             if 'y2' in svg_obj.attrs:
-                y2 = self.get_size_pt(svg_obj.attrs['y2'])
+                y2 = self.recalc_size(svg_obj.attrs['y2'])
 
             if 'gradientTransform' in svg_obj.attrs:
                 strafo = svg_obj.attrs['gradientTransform']
@@ -233,13 +228,13 @@ class SVG_to_SK2_Translator(object):
             cx = self.user_space[2] / 2.0 + self.user_space[0]
             cy = self.user_space[3] / 2.0 + self.user_space[1]
             if 'cx' in svg_obj.attrs:
-                cx = self.get_size_pt(svg_obj.attrs['cx'])
+                cx = self.recalc_size(svg_obj.attrs['cx'])
             if 'cy' in svg_obj.attrs:
-                cy = self.get_size_pt(svg_obj.attrs['cy'])
+                cy = self.recalc_size(svg_obj.attrs['cy'])
 
             r = self.user_space[2] / 2.0 + self.user_space[0]
             if 'r' in svg_obj.attrs:
-                r = self.get_size_pt(svg_obj.attrs['r'])
+                r = self.recalc_size(svg_obj.attrs['r'])
 
             if 'gradientTransform' in svg_obj.attrs:
                 strafo = svg_obj.attrs['gradientTransform']
@@ -372,7 +367,7 @@ class SVG_to_SK2_Translator(object):
         if not style['stroke'] == 'none':
             stroke = style['stroke'].replace('"', '')
             stroke_rule = sk2const.STROKE_MIDDLE
-            stroke_width = self.get_size_pt(style['stroke-width'])
+            stroke_width = self.recalc_size(style['stroke-width'])
             stroke_linecap = SK2_LINE_CAP[style['stroke-linecap']]
             stroke_linejoin = SK2_LINE_JOIN[style['stroke-linejoin']]
             stroke_miterlimit = float(style['stroke-miterlimit'])
@@ -506,8 +501,6 @@ class SVG_to_SK2_Translator(object):
 
     def translate_units(self):
         units = SK2_UNITS[self.svg_mtds.doc_units()]
-        if units == uc2const.UNIT_PX:
-            self.coeff = 1.25
         self.sk2_mt.doc_units = units
 
     def translate_page(self):
@@ -518,12 +511,12 @@ class SVG_to_SK2_Translator(object):
 
         if 'width' in self.svg_mt.attrs:
             if not self.svg_mt.attrs['width'][-1] == '%':
-                width = self.get_size_pt(self.svg_mt.attrs['width'])
+                width = self.recalc_size(self.svg_mt.attrs['width'])
             else:
                 if vbox:
                     width = vbox[2]
             if not self.svg_mt.attrs['height'][-1] == '%':
-                height = self.get_size_pt(self.svg_mt.attrs['height'])
+                height = self.recalc_size(self.svg_mt.attrs['height'])
             else:
                 if vbox:
                     height = vbox[3]
@@ -532,9 +525,9 @@ class SVG_to_SK2_Translator(object):
             height = vbox[3]
 
         if not width:
-            width = self.get_size_pt('210mm')
+            width = self.recalc_size('210mm')
         if not height:
-            height = self.get_size_pt('297mm')
+            height = self.recalc_size('297mm')
 
         page_fmt = ['Custom', (width, height),
                     uc2const.LANDSCAPE if width > height else uc2const.PORTRAIT]
@@ -629,10 +622,10 @@ class SVG_to_SK2_Translator(object):
         position = libgeom.apply_trafo_to_point(position, self.trafo)
         orientation = parse_svg_points(svg_obj.attrs['orientation'])[0]
         if position and orientation:
-            if not orientation[0] and orientation[1] == 1.0:
+            if not orientation[0] and orientation[1]:
                 orientation = uc2const.HORIZONTAL
                 position = -position[1]
-            elif not orientation[1] and orientation[0] == 1.0:
+            elif not orientation[1] and orientation[0]:
                 orientation = uc2const.VERTICAL
                 position = position[0]
             else:
@@ -781,13 +774,13 @@ class SVG_to_SK2_Translator(object):
 
         x = y = w = h = 0
         if 'x' in svg_obj.attrs:
-            x = self.get_size_pt(svg_obj.attrs['x'])
+            x = self.recalc_size(svg_obj.attrs['x'])
         if 'y' in svg_obj.attrs:
-            y = self.get_size_pt(svg_obj.attrs['y'])
+            y = self.recalc_size(svg_obj.attrs['y'])
         if 'width' in svg_obj.attrs:
-            w = self.get_size_pt(svg_obj.attrs['width'])
+            w = self.recalc_size(svg_obj.attrs['width'])
         if 'height' in svg_obj.attrs:
-            h = self.get_size_pt(svg_obj.attrs['height'])
+            h = self.recalc_size(svg_obj.attrs['height'])
 
         if not w or not h:
             return
@@ -795,9 +788,9 @@ class SVG_to_SK2_Translator(object):
         corners = [] + sk2const.CORNERS
         rx = ry = None
         if 'rx' in svg_obj.attrs:
-            rx = self.get_size_pt(svg_obj.attrs['rx'])
+            rx = self.recalc_size(svg_obj.attrs['rx'])
         if 'ry' in svg_obj.attrs:
-            ry = self.get_size_pt(svg_obj.attrs['ry'])
+            ry = self.recalc_size(svg_obj.attrs['ry'])
         if rx is None and ry is not None:
             rx = ry
         elif ry is None and rx is not None:
@@ -833,13 +826,13 @@ class SVG_to_SK2_Translator(object):
 
         cx = cy = rx = ry = 0.0
         if 'cx' in svg_obj.attrs:
-            cx = self.get_size_pt(svg_obj.attrs['cx'])
+            cx = self.recalc_size(svg_obj.attrs['cx'])
         if 'cy' in svg_obj.attrs:
-            cy = self.get_size_pt(svg_obj.attrs['cy'])
+            cy = self.recalc_size(svg_obj.attrs['cy'])
         if 'rx' in svg_obj.attrs:
-            rx = self.get_size_pt(svg_obj.attrs['rx'])
+            rx = self.recalc_size(svg_obj.attrs['rx'])
         if 'ry' in svg_obj.attrs:
-            ry = self.get_size_pt(svg_obj.attrs['ry'])
+            ry = self.recalc_size(svg_obj.attrs['ry'])
         if not rx or not ry:
             return
         rect = [cx - rx, cy - ry, 2.0 * rx, 2.0 * ry]
@@ -855,11 +848,11 @@ class SVG_to_SK2_Translator(object):
 
         cx = cy = r = 0.0
         if 'cx' in svg_obj.attrs:
-            cx = self.get_size_pt(svg_obj.attrs['cx'])
+            cx = self.recalc_size(svg_obj.attrs['cx'])
         if 'cy' in svg_obj.attrs:
-            cy = self.get_size_pt(svg_obj.attrs['cy'])
+            cy = self.recalc_size(svg_obj.attrs['cy'])
         if 'r' in svg_obj.attrs:
-            r = self.get_size_pt(svg_obj.attrs['r'])
+            r = self.recalc_size(svg_obj.attrs['r'])
         if not r:
             return
         rect = [cx - r, cy - r, 2.0 * r, 2.0 * r]
@@ -875,13 +868,13 @@ class SVG_to_SK2_Translator(object):
 
         x1 = y1 = x2 = y2 = 0.0
         if 'x1' in svg_obj.attrs:
-            x1 = self.get_size_pt(svg_obj.attrs['x1'])
+            x1 = self.recalc_size(svg_obj.attrs['x1'])
         if 'y1' in svg_obj.attrs:
-            y1 = self.get_size_pt(svg_obj.attrs['y1'])
+            y1 = self.recalc_size(svg_obj.attrs['y1'])
         if 'x2' in svg_obj.attrs:
-            x2 = self.get_size_pt(svg_obj.attrs['x2'])
+            x2 = self.recalc_size(svg_obj.attrs['x2'])
         if 'y2' in svg_obj.attrs:
-            y2 = self.get_size_pt(svg_obj.attrs['y2'])
+            y2 = self.recalc_size(svg_obj.attrs['y2'])
 
         paths = [[[x1, y1], [[x2, y2], ], sk2const.CURVE_OPENED], ]
 
@@ -941,10 +934,10 @@ class SVG_to_SK2_Translator(object):
         tr = get_svg_level_trafo(svg_obj, trafo)
 
         if check_svg_attr(svg_obj, 'sodipodi:type', 'arc'):
-            cx = self.get_size_pt(svg_obj.attrs['sodipodi:cx'])
-            cy = self.get_size_pt(svg_obj.attrs['sodipodi:cy'])
-            rx = self.get_size_pt(svg_obj.attrs['sodipodi:rx'])
-            ry = self.get_size_pt(svg_obj.attrs['sodipodi:ry'])
+            cx = self.recalc_size(svg_obj.attrs['sodipodi:cx'])
+            cy = self.recalc_size(svg_obj.attrs['sodipodi:cy'])
+            rx = self.recalc_size(svg_obj.attrs['sodipodi:rx'])
+            ry = self.recalc_size(svg_obj.attrs['sodipodi:ry'])
             angle1 = angle2 = 0.0
             if 'sodipodi:start' in svg_obj.attrs:
                 angle1 = float(svg_obj.attrs['sodipodi:start'])
