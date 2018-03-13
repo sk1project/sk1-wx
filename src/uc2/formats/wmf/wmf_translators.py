@@ -61,6 +61,30 @@ class DC_Data(object):
 
 
 class WMF_to_SK2_Translator(object):
+    wmf_doc = None
+    sk2_doc = None
+    wmf_mt = None
+    sk2_mt = None
+    sk2_mtds = None
+    gdiobjects = None
+    dcstack = None
+    dc = None
+    inch = None
+    bbox = None
+    coef = None
+    wx = 0
+    vx = 0
+    vwidth = 0
+    wwidth = 0
+    vheight = 0
+    wheight = 0
+    wy = 0
+    vy = 0
+    base_trafo = None
+    rec_funcs = None
+    page = None
+    layer = None
+
     def translate(self, wmf_doc, sk2_doc):
         self.wmf_doc = wmf_doc
         self.sk2_doc = sk2_doc
@@ -98,9 +122,10 @@ class WMF_to_SK2_Translator(object):
         self.vheight = self.wheight = bottom - top
         self.wy = self.vy = top
 
-        self.base_trafo = [self.coef, 0, 0, -self.coef,
-                           - self.coef * self.vwidth / 2.0 - self.coef * self.vx,
-                           self.coef * self.vheight / 2.0 + self.coef * self.vy]
+        self.base_trafo = [
+            self.coef, 0, 0, -self.coef,
+            - self.coef * self.vwidth / 2.0 - self.coef * self.vx,
+            self.coef * self.vheight / 2.0 + self.coef * self.vy]
         self.update_trafo()
 
         self.rec_funcs = {
@@ -164,10 +189,12 @@ class WMF_to_SK2_Translator(object):
 
     def get_style(self):
         style = deepcopy(self.dc.style)
-        if style[0]: style[0][0] = self.dc.fill_rule
+        if style[0]:
+            style[0][0] = self.dc.fill_rule
         if style[0] and style[0][1] == sk2const.FILL_PATTERN:
             alpha = 1.0
-            if not self.dc.opacity: alpha = 0.0
+            if not self.dc.opacity:
+                alpha = 0.0
             style[0][2][2][1][2] = alpha
         return style
 
@@ -212,10 +239,14 @@ class WMF_to_SK2_Translator(object):
         sk2_style[2] = [font[0], font_face, font[1],
                         self.dc.text_align, [], True]
         tags = []
-        if font[2]: tags.append('b')
-        if font[3]: tags.append('i')
-        if font[4]: tags.append('u')
-        if font[5]: tags.append('s')
+        if font[2]:
+            tags.append('b')
+        if font[3]:
+            tags.append('i')
+        if font[4]:
+            tags.append('u')
+        if font[5]:
+            tags.append('s')
         return sk2_style, tags
 
     def add_gdiobject(self, obj):
@@ -238,7 +269,8 @@ class WMF_to_SK2_Translator(object):
         height = abs(y1 - y0)
 
         ornt = uc2const.PORTRAIT
-        if width > height: ornt = uc2const.LANDSCAPE
+        if width > height:
+            ornt = uc2const.LANDSCAPE
         page_fmt = ['Custom', (width, height), ornt]
 
         pages_obj = self.sk2_mtds.get_pages_obj()
@@ -300,7 +332,8 @@ class WMF_to_SK2_Translator(object):
         mode = get_data('<h', chunk[:2])[0]
 
         self.dc.text_update_cp = True
-        if not mode & 0x0001: self.dc.text_update_cp = False
+        if not mode & 0x0001:
+            self.dc.text_update_cp = False
 
         lower = mode & 0x0007
         self.dc.text_align = sk2const.TEXT_ALIGN_LEFT
@@ -317,7 +350,8 @@ class WMF_to_SK2_Translator(object):
             self.dc.text_valign = sk2const.TEXT_VALIGN_TOP
 
         self.dc.text_rtl = False
-        if mode & wmfconst.TA_RTLREADING: self.dc.text_rtl = True
+        if mode & wmfconst.TA_RTLREADING:
+            self.dc.text_rtl = True
 
     def tr_select_object(self, chunk):
         obj = None
@@ -346,22 +380,26 @@ class WMF_to_SK2_Translator(object):
             color_vals = [r / 255.0, g / 255.0, b / 255.0]
             color = [uc2const.COLOR_RGB, color_vals, 1.0, '']
             stroke_width = abs(width * self.get_trafo()[0])
-            if stroke_width < 1.0: stroke_width = 1.0
+            if stroke_width < 1.0:
+                stroke_width = 1.0
 
             stroke_linecap = sk2const.CAP_ROUND
             cap = style & 0x0F00
             for item in SK2_CAPS.keys():
-                if cap == item: stroke_linecap = SK2_CAPS[item]
+                if cap == item:
+                    stroke_linecap = SK2_CAPS[item]
 
             stroke_linejoin = sk2const.JOIN_MITER
             join = style & 0xF000
             for item in SK2_JOIN.keys():
-                if join == item: stroke_linejoin = SK2_JOIN[item]
+                if join == item:
+                    stroke_linejoin = SK2_JOIN[item]
 
             dashes = []
             dash = style & 0x000F
             for item in wmfconst.META_DASHES.keys():
-                if dash == item: dashes = [] + wmfconst.META_DASHES[item]
+                if dash == item:
+                    dashes = [] + wmfconst.META_DASHES[item]
 
             stroke_miterlimit = 9.0
 
@@ -378,7 +416,7 @@ class WMF_to_SK2_Translator(object):
         if style == wmfconst.BS_SOLID:
             fill = [sk2const.FILL_EVENODD, sk2const.FILL_SOLID, color]
         elif style == wmfconst.BS_HATCHED:
-            if not hatch in wmf_hatches.WMF_HATCHES:
+            if hatch not in wmf_hatches.WMF_HATCHES:
                 hatch = wmfconst.HS_HORIZONTAL
             ptrn = wmf_hatches.WMF_HATCHES[hatch]
             ptrn_type = sk2const.PATTERN_IMG
@@ -397,8 +435,8 @@ class WMF_to_SK2_Translator(object):
         esc = get_data('<h', chunk[4:6])[0]
         weight = get_data('<h', chunk[8:10])[0]
         size = round(abs(self.coef * h), 1) * .7
-        if not size: size = 12.0
-        if size < 5.0: size = 5.0
+        size = 12.0 if not size else size
+        size = 5.0 if size < 5.0 else size
         fl_b = weight >= 500
         fl_i, fl_u, fl_s, charset = get_data('<BBBB', chunk[10:14])
         fl_i = fl_i == wmfconst.META_TRUE
@@ -412,7 +450,8 @@ class WMF_to_SK2_Translator(object):
 
         fontface = wmflib.parse_nt_string(chunk[18:]).encode('utf-8')
         font_family = 'Sans'
-        if fontface in libpango.get_fonts()[0]: font_family = fontface
+        if fontface in libpango.get_fonts()[0]:
+            font_family = fontface
 
         font = (font_family, size, fl_b, fl_i, fl_u, fl_s, esc / 10.0, charset)
         self.add_gdiobject(('font', font))
@@ -425,7 +464,8 @@ class WMF_to_SK2_Translator(object):
         ptrn, flag = libimg.read_pattern(imagestr)
 
         ptrn_type = sk2const.PATTERN_TRUECOLOR
-        if flag or bitsperpixel == 1: ptrn_type = sk2const.PATTERN_IMG
+        if flag or bitsperpixel == 1:
+            ptrn_type = sk2const.PATTERN_IMG
         ptrn_style = [deepcopy(sk2const.RGB_BLACK),
                       deepcopy(sk2const.RGB_WHITE)]
         ptrn_trafo = [] + sk2const.NORMAL_TRAFO
@@ -487,7 +527,8 @@ class WMF_to_SK2_Translator(object):
 
         cfg = self.layer.config
         sk2_style = self.get_style()
-        if arc_type == sk2const.ARC_ARC: sk2_style[0] = []
+        if arc_type == sk2const.ARC_ARC:
+            sk2_style[0] = []
         rect = [left, top, right - left, bottom - top]
         ellipse = sk2_model.Circle(cfg, self.layer, rect, start_angle,
                                    end_angle, arc_type, sk2_style)
@@ -532,8 +573,10 @@ class WMF_to_SK2_Translator(object):
         for i in range(pointnum):
             x, y = get_data('<hh', chunk[2 + i * 4:6 + i * 4])
             points.append([float(x), float(y)])
-        if not points[0] == points[-1]: points.append([] + points[0])
-        if len(points) < 3: return
+        if not points[0] == points[-1]:
+            points.append([] + points[0])
+        if len(points) < 3:
+            return
         paths = [[points[0], points[1:], sk2const.CURVE_CLOSED], ]
 
         cfg = self.layer.config
@@ -556,9 +599,11 @@ class WMF_to_SK2_Translator(object):
                 x, y = get_data('<hh', chunk[pos:4 + pos])
                 points.append([float(x), float(y)])
                 pos += 4
-            if not points[0] == points[-1]: points.append([] + points[0])
+            if not points[0] == points[-1]:
+                points.append([] + points[0])
             paths.append([points[0], points[1:], sk2const.CURVE_CLOSED])
-        if not paths: return
+        if not paths:
+            return
 
         cfg = self.layer.config
         sk2_style = self.get_style()
@@ -572,7 +617,8 @@ class WMF_to_SK2_Translator(object):
         for i in range(pointnum):
             x, y = get_data('<hh', chunk[2 + i * 4:6 + i * 4])
             points.append([float(x), float(y)])
-        if len(points) < 2: return
+        if len(points) < 2:
+            return
         paths = [[points[0], points[1:], sk2const.CURVE_OPENED], ]
 
         cfg = self.layer.config
@@ -598,6 +644,7 @@ class WMF_to_SK2_Translator(object):
         tr = [] + libgeom.NORMAL_TRAFO
         text = sk2_model.Text(cfg, self.layer, p, txt, -1, tr, sk2_style)
         text.markup = markup
+        rect = None
         if self.dc.opacity:
             bg_style = [[], [], [], []]
             clr = [] + self.dc.bgcolor
@@ -624,8 +671,7 @@ class WMF_to_SK2_Translator(object):
         p = apply_trafo_to_point([x, y], self.get_trafo())
 
         encoding = self.get_encoding()
-        pos = 8
-        if not len(chunk) - 8 == length: pos = 16
+        pos = 16 if not len(chunk) - 8 == length else 8
         txt = chunk[pos:pos + length - dl].decode(encoding)
         txt_length = len(txt)
         txt = txt.encode('utf-8')
@@ -637,6 +683,7 @@ class WMF_to_SK2_Translator(object):
 
         text = sk2_model.Text(cfg, self.layer, p, txt, -1, tr, sk2_style)
         text.markup = markup
+        rect = None
         if self.dc.opacity:
             bg_style = [[], [], [], []]
             clr = [] + self.dc.bgcolor
@@ -688,6 +735,18 @@ INCH = 1440
 
 
 class SK2_to_WMF_Translator(object):
+    wmf_doc = None
+    sk2_doc = None
+    sk2_mt = None
+    sk2_mtds = None
+    wmf_records = None
+    wmf_objs = None
+    latest_objs = None
+    inch = 0
+    scale = 1.0
+    trafo = None
+    bbox = None
+
     def translate(self, sk2_doc, wmf_doc):
         self.wmf_doc = wmf_doc
         self.sk2_doc = sk2_doc
@@ -718,7 +777,9 @@ class SK2_to_WMF_Translator(object):
         self.add(wmf_model.set_rop2(wmfconst.R2_COPYPEN))
         self.add(wmf_model.set_polyfillmode(wmfconst.ALTERNATE))
 
-        self.translate_objs(page.childs)
+        for layer in page.childs:
+            if self.sk2_mtds.is_layer_visible(layer):
+                self.translate_objs(layer.childs)
 
         self.add(wmf_model.get_eof_rec())
 
