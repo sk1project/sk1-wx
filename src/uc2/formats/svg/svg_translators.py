@@ -131,7 +131,7 @@ class SVG_to_SK2_Translator(object):
     def recalc_size(self, val):
         if not val:
             return None
-        mapping ={
+        mapping = {
             'px': svg_const.svg_px_to_pt,
             'pt': 1.0,
             'pc': 15.0 * svg_const.svg_px_to_pt,
@@ -456,7 +456,7 @@ class SVG_to_SK2_Translator(object):
             font_size = 12.0
             try:
                 font_size = self.get_font_size(style['font-size'])
-            except:
+            except Exception:
                 pass
 
             # text alignment
@@ -1277,12 +1277,13 @@ class SK2_to_SVG_Translator(object):
         if not obj.style[1]:
             return
         # Stroke width
+        line_width = 0.0
         if obj.style[1][8]:
             stroke_trafo = obj.stroke_trafo
             if not stroke_trafo:
                 stroke_trafo = [] + libgeom.NORMAL_TRAFO
             points = [[0.0, 0.0], [1.0, 0.0]]
-            points = libgeom.apply_trafo_to_points(points, obj.stroke_trafo)
+            points = libgeom.apply_trafo_to_points(points, stroke_trafo)
             coef = libgeom.distance(*points)
             line_width = obj.style[1][1] * coef
             svg_style['stroke-width'] = str(round(line_width, 4))
@@ -1293,7 +1294,8 @@ class SK2_to_SVG_Translator(object):
         # Stroke color
         clr = self.sk2_doc.cms.get_rgb_color(obj.style[1][2])
         svg_style['stroke'] = cms.rgb_to_hexcolor(clr[1])
-        if clr[2] < 1.0: svg_style['stroke-opacity'] = str(clr[2])
+        if clr[2] < 1.0:
+            svg_style['stroke-opacity'] = str(clr[2])
         # Stroke dash
         if obj.style[1][3]:
             vals = []
@@ -1302,22 +1304,26 @@ class SK2_to_SVG_Translator(object):
             svg_style['stroke-dasharray'] = ', '.join(vals)
         # Stroke caps
         caps = SVG_LINE_CAP[obj.style[1][4]]
-        if not caps == 'butt': svg_style['stroke-linecap'] = caps
+        if not caps == 'butt':
+            svg_style['stroke-linecap'] = caps
         # Stroke join
         join = SVG_LINE_JOIN[obj.style[1][5]]
-        if not join == 'miter': svg_style['stroke-linejoin'] = join
+        if not join == 'miter':
+            svg_style['stroke-linejoin'] = join
         # Miter limit
         svg_style['stroke-miterlimit'] = str(round(obj.style[1][6], 4))
 
     def set_fill(self, svg_style, obj):
         svg_style['fill'] = 'none'
-        if not obj.style[0]: return
+        if not obj.style[0]:
+            return
         if obj.style[0][1] == sk2const.FILL_SOLID:
             if obj.style[0][0] == sk2const.FILL_EVENODD:
                 svg_style['fill-rule'] = 'evenodd'
             clr = self.sk2_doc.cms.get_rgb_color(obj.style[0][2])
             svg_style['fill'] = cms.rgb_to_hexcolor(clr[1])
-            if clr[2] < 1.0: svg_style['fill-opacity'] = str(clr[2])
+            if clr[2] < 1.0:
+                svg_style['fill-opacity'] = str(clr[2])
         elif obj.style[0][1] == sk2const.FILL_GRADIENT:
             if obj.style[0][0] == sk2const.FILL_EVENODD:
                 svg_style['fill-rule'] = 'evenodd'
@@ -1330,9 +1336,9 @@ class SK2_to_SVG_Translator(object):
         trafo = libgeom.multiply_trafo(obj.fill_trafo, self.trafo)
         vector = libgeom.apply_trafo_to_points(gradient[1], trafo)
         spread = 'pad'
-        if len(gradient) > 3: spread = SVG_GRAD_EXTEND[gradient[3]]
-        attrs = {}
-        attrs['gradientUnits'] = 'userSpaceOnUse'
+        if len(gradient) > 3:
+            spread = SVG_GRAD_EXTEND[gradient[3]]
+        attrs = {'gradientUnits': 'userSpaceOnUse'}
         if gradient[0] == sk2const.GRADIENT_RADIAL:
             tag = 'radialGradient'
             attrs['id'] = grad_id
