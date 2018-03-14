@@ -546,8 +546,6 @@ class SVG_to_SK2_Translator(object):
         dy = height / 2.0
         self.trafo = [1.0, 0.0, 0.0, -1.0, dx, dy]
         self.user_space = [0.0, 0.0, width, height]
-        LOG.debug('width %s, height %s', width, height)
-        LOG.debug('vbox %s', vbox)
 
         if vbox:
             dx = -vbox[0]
@@ -559,7 +557,6 @@ class SVG_to_SK2_Translator(object):
                 xx = yy = min(xx, yy)
             tr = [xx, 0.0, 0.0, yy, 0.0, 0.0]
             tr = libgeom.multiply_trafo([1.0, 0.0, 0.0, 1.0, dx, dy], tr)
-            LOG.debug('vbox trafo %s', tr)
             self.trafo = libgeom.multiply_trafo(tr, self.trafo)
             self.user_space = vbox
 
