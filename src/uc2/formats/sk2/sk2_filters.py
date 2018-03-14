@@ -110,7 +110,8 @@ class SK2_Saver(AbstractSaver):
         self.writeln("obj('%s')" % sk2_model.CID_TO_TAGNAME[obj.cid])
         props = obj.__dict__
         for item in props.keys():
-            if item not in sk2_model.GENERIC_FIELDS and item[:5] != 'cache':
+            if item not in sk2_model.GENERIC_FIELDS and \
+                    not item.startswith('cache'):
                 if item in ['bitmap', 'alpha_channel']:
                     item_str = "'%s'" % props[item]
                 else:
