@@ -18,9 +18,7 @@
 import wal
 from generic import PrefPanel
 from sk1 import _, config
-from sk1.pwidgets import CBMiniPalette
 from sk1.resources import icons
-from uc2 import cms
 
 COLORS = [
     ('#FFFFFF', 'White'),
@@ -32,6 +30,7 @@ COLORS = [
 ]
 
 LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR']
+
 
 class GeneralPrefs(PrefPanel):
     pid = 'General'
@@ -50,6 +49,7 @@ class GeneralPrefs(PrefPanel):
     expbackup = None
     hist_size = None
     hist_menu_size = None
+    log_level = None
     fcache = None
     stub_buttons = None
     spin_overlay = None
@@ -82,8 +82,8 @@ class GeneralPrefs(PrefPanel):
         self.tab_style.set_active(index)
         grid.pack(self.tab_style, fill=True)
 
-        grid.pack((1,1))
-        grid.pack((300,1))
+        grid.pack((1, 1))
+        grid.pack((300, 1))
 
         vpanel.pack(grid, align_center=False, padding_all=10)
 
