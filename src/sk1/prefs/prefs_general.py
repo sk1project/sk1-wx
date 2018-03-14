@@ -31,6 +31,7 @@ COLORS = [
     ('#F2F1F0', 'Ubuntu'),
 ]
 
+LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR']
 
 class GeneralPrefs(PrefPanel):
     pid = 'General'
@@ -148,7 +149,7 @@ class GeneralPrefs(PrefPanel):
         table.pack(int_vp)
         table.pack((15, 5))
 
-        grid = wal.GridPanel(self, rows=2, cols=2, hgap=5, vgap=3)
+        grid = wal.GridPanel(self, rows=3, cols=2, hgap=5, vgap=3)
         grid.pack(wal.Label(grid, _('History log size:')))
         self.hist_size = wal.IntSpin(grid, config.history_size, (10, 1000))
         grid.pack(self.hist_size)
@@ -156,6 +157,12 @@ class GeneralPrefs(PrefPanel):
         self.hist_menu_size = wal.IntSpin(grid, config.history_list_size,
                                           (5, 20))
         grid.pack(self.hist_menu_size)
+
+        grid.pack(wal.Label(grid, _('Logging level (*):')))
+        self.log_level = wal.Combolist(grid, items=LEVELS)
+        self.log_level.set_active(LEVELS.index(config.log_level))
+        grid.pack(self.log_level)
+
         table.pack(grid)
 
         self.nb.add_page(vpanel, _('Generic features'))
@@ -175,6 +182,7 @@ class GeneralPrefs(PrefPanel):
         config.make_export_backup = self.expbackup.get_value()
         config.history_size = self.hist_size.get_value()
         config.history_list_size = self.hist_menu_size.get_value()
+        config.log_level = self.log_level.get_active_value()
         config.show_stub_buttons = self.stub_buttons.get_value()
         config.make_font_cache_on_start = self.fcache.get_value()
         if not wal.IS_MAC and wal.IS_WX2:
@@ -195,6 +203,7 @@ class GeneralPrefs(PrefPanel):
         self.expbackup.set_value(defaults['make_export_backup'])
         self.hist_size.set_value(defaults['history_size'])
         self.hist_menu_size.set_value(defaults['history_list_size'])
+        self.log_level.set_active(LEVELS.index(defaults['log_level']))
         self.stub_buttons.set_value(defaults['show_stub_buttons'])
         self.fcache.set_value(defaults['make_font_cache_on_start'])
         if not wal.IS_MAC and wal.IS_WX2:
