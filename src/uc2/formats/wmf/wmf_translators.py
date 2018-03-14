@@ -321,12 +321,10 @@ class WMF_to_SK2_Translator(object):
         self.dc.opacity = mode == wmfconst.OPAQUE
 
     def tr_set_bg_color(self, chunk):
-        r, g, b = get_data('<BBBx', chunk)
-        self.dc.bgcolor = [r / 255.0, g / 255.0, b / 255.0]
+        self.dc.bgcolor = [val / 255.0 for val in get_data('<BBBx', chunk)]
 
     def tr_set_text_color(self, chunk):
-        r, g, b = get_data('<BBBx', chunk)
-        self.dc.text_color = [r / 255.0, g / 255.0, b / 255.0]
+        self.dc.text_color = [val / 255.0 for val in get_data('<BBBx', chunk)]
 
     def tr_set_text_align(self, chunk):
         mode = get_data('<h', chunk[:2])[0]
@@ -810,6 +808,10 @@ class SK2_to_WMF_Translator(object):
         if indx in self.latest_objs:
             self.latest_objs.remove(indx)
 
+    def delete_latest_objs(self):
+        for item in [] + self.latest_objs:
+            self.delete_obj(item)
+
     def count_record_size(self):
         total_size = 0
         maxrecord = 0
@@ -842,25 +844,23 @@ class SK2_to_WMF_Translator(object):
         trafo = libgeom.multiply_trafo(curve.trafo, self.trafo)
         paths = libgeom.apply_trafo_to_paths(curve.paths, trafo)
         paths = libgeom.flat_paths(paths)
-        self.translate_style(obj, paths)
+        self.translate_paths(obj.style, paths)
 
-    def translate_style(self, obj, paths):
-        if obj.style[1] and obj.style[1][7]:
-            self.translate_stroke(obj, paths)
-        if obj.style[0]:
-            self.translate_fill(obj, paths)
-        if obj.style[1] and not obj.style[1][7]:
-            self.translate_stroke(obj, paths)
+    def translate_paths(self, style, paths):
+        if style[1] and style[1][7]:
+            self.translate_stroke(style, paths)
+        if style[0]:
+            self.translate_fill(style, paths)
+        if style[1] and not style[1][7]:
+            self.translate_stroke(style, paths)
 
-    def translate_stroke(self, obj, paths):
+    def translate_stroke(self, style, paths):
 
-        for item in [] + self.latest_objs:
-            self.delete_obj(item)
+        self.delete_latest_objs()
 
-    def translate_fill(self, obj, paths):
+    def translate_fill(self, style, paths):
 
-        for item in [] + self.latest_objs:
-            self.delete_obj(item)
+        self.delete_latest_objs()
 
     def translate_pixmap(self, obj):
         pass

@@ -157,7 +157,8 @@ def delete_obj(indx):
     return WMF_Record(chunk)
 
 
-def create_pen_in():
-    chunk = pack('<LHhhhBBBx', 8, wmfconst.META_CREATEPENINDIRECT,
-                 5, 0, 0, 0, 0, 0)
+def create_pen_in(colorvals, width):
+    r, g, b = [int(255 * x) for x in colorvals]
+    chunk = pack('<LHhhhBBBB', 8, wmfconst.META_CREATEPENINDIRECT,
+                 5, width, r, g, b, 0x00)
     return WMF_Record(chunk)
