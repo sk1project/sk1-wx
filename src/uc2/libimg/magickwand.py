@@ -16,6 +16,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from cStringIO import StringIO
+import logging
 
 BILEVEL_TYPE = 'BilevelType'
 L_TYPE = 'GrayscaleType'
@@ -33,6 +34,8 @@ ALPHA_TYPES = [LA_TYPE, PA_TYPE, RGBA_TYPE, CMYKA_TYPE]
 CMYK_TYPES = [CMYK_TYPE, CMYKA_TYPE]
 DUOTONES = [BILEVEL_TYPE, L_TYPE, LA_TYPE]
 
+LOG = logging.getLogger(__name__)
+
 
 def get_magickwand_version():
     import _libimg
@@ -46,11 +49,13 @@ def check_image_file(filepath):
     wand = _libimg.new_image()
     ret = _libimg.load_image(wand, filepath)
     _libimg.terminate_magick()
+    LOG.debug('MagickWand check: %s', ret == 1)
     return ret == 1
 
 
 def process_image(raw_content):
     import _libimg
+    LOG.debug('MagickWand processing started')
     alpha = None
     _libimg.init_magick()
     wand = _libimg.new_image()
@@ -81,6 +86,7 @@ def process_image(raw_content):
 
 def process_pattern(raw_content):
     import _libimg
+    LOG.debug('MagickWand duotone processing started')
     _libimg.init_magick()
     wand = _libimg.new_image()
     _libimg.load_image_blob(wand, raw_content)
