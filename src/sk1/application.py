@@ -238,7 +238,9 @@ class SK1Application(wal.Application, UCApplication):
             except Exception as e:
                 msg = _('Cannot open file:')
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
-                msg += _('The file may be corrupted or not supported format')
+                msg += _('The file may be corrupted or not supported format.')
+                msg += '\n'
+                msg += _('Details see in application logs.')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
                 LOG.error('Cannot open file <%s> %s', doc_file, e)
                 return
@@ -372,7 +374,7 @@ class SK1Application(wal.Application, UCApplication):
                 events.emit(events.APP_STATUS, msg)
                 self.mw.set_title()
             elif active:
-                index = index if len(self.docs)> index else -1
+                index = index if len(self.docs) > index else -1
                 self.set_current_doc(self.docs[index])
         return True
 
@@ -408,7 +410,9 @@ class SK1Application(wal.Application, UCApplication):
             except Exception as e:
                 msg = _('Cannot import file:')
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
-                msg += _('The file may be corrupted or not supported format')
+                msg += _('The file may be corrupted or not supported format.')
+                msg += '\n'
+                msg += _('Details see in application logs.')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
                 LOG.warn('Cannot import file <%s>', doc_file, e)
 
@@ -525,7 +529,9 @@ class SK1Application(wal.Application, UCApplication):
             except Exception as e:
                 msg = _('Cannot import file:')
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
-                msg += _('The file may be corrupted or not supported format')
+                msg += _('The file may be corrupted or not supported format.')
+                msg += '\n'
+                msg += _('Details see in application logs.')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
                 LOG.error('Cannot import file <%s> %s', doc_file, e)
             finally:
@@ -563,6 +569,8 @@ class SK1Application(wal.Application, UCApplication):
             first = _('Cannot load pattern for:')
             msg = "%s\n'%s'." % (first, self.current_doc.doc_name) + '\n'
             msg += _('The file may be corrupted or not supported format')
+            msg += '\n'
+            msg += _('Details see in application logs.')
             try:
                 if libimg.check_image(img_file):
                     config.import_dir = str(os.path.dirname(img_file))

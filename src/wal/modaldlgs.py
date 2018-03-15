@@ -15,6 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import wx
 
 import const
@@ -22,6 +23,8 @@ import mixins
 from basic import HPanel, VPanel
 from const import EXPAND, ALL, VERTICAL, HORIZONTAL
 from widgets import HLine, Button, Label, ProgressBar
+
+LOG = logging.getLogger(__name__)
 
 
 class ProgressDialog(wx.ProgressDialog):
@@ -243,9 +246,13 @@ class CustomProgressDialog(SimpleDialog):
     def on_load(self, *args):
         self._timer.Stop()
         self.progressbar.set_value(5)
-        self.result = self.callback(*self.args)
-        self.progressbar.set_value(98)
-        self.end_modal(const.BUTTON_CANCEL)
+        try:
+            self.result = self.callback(*self.args)
+        except Exception as e:
+            LOG.exception('Error in progress dialog running: %s', e)
+        finally:
+            self.progressbar.set_value(98)
+            self.end_modal(const.BUTTON_CANCEL)
 
     def run(self, callback, args):
         self.callback, self.args = callback, args

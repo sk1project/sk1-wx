@@ -15,6 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import os
 from copy import deepcopy
 
@@ -30,6 +31,8 @@ from uc2 import uc2const
 from uc2.formats import get_loader, get_saver
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2.utils.fs import change_file_extension
+
+LOG = logging.getLogger(__name__)
 
 
 class SK1Presenter:
@@ -72,6 +75,9 @@ class SK1Presenter:
                 if not loader:
                     raise IOError(_('Loader is not found for <%s>') % doc_file)
                 self.doc_presenter = pd.run(loader, [app.appdata, doc_file])
+                if not self.doc_presenter:
+                    LOG.error('Cannot load <%s>', doc_file)
+                    raise IOError(_('Cannot load <%s>') % doc_file)
             except Exception:
                 raise
             finally:
@@ -170,7 +176,7 @@ class SK1Presenter:
         self.api.destroy()
         self.doc_presenter.close()
         for item in [self.canvas, self.corner, self.vruler, self.hruler,
-                 self.selection, self.snap]:
+                     self.selection, self.snap]:
             item.destroy()
 
         items = self.__dict__.keys()
@@ -186,6 +192,9 @@ class SK1Presenter:
             if not loader:
                 raise IOError(_('Loader is not found for <%s>') % doc_file)
             doc_presenter = pd.run(loader, [self.app.appdata, doc_file])
+            if not doc_presenter:
+                LOG.error('Cannot load <%s>', doc_file)
+                raise IOError(_('Cannot load <%s>') % doc_file)
         except Exception:
             raise
         finally:
