@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2016 by Igor E. Novikov
+#  Copyright (C) 2016-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 from cStringIO import StringIO
 import logging
 
+UNDEFINED_TYPE = 'UndefinedType'
 BILEVEL_TYPE = 'BilevelType'
 L_TYPE = 'GrayscaleType'
 LA_TYPE = 'GrayscaleMatteType'
@@ -61,9 +62,12 @@ def process_image(raw_content):
     wand = _libimg.new_image()
     _libimg.load_image_blob(wand, raw_content)
     if _libimg.get_number_images(wand) > 1:
+        LOG.debug('Wand merging.')
         wand = _libimg.merge_layers(wand)
 
     image_type = _libimg.get_image_type(wand)
+    LOG.debug('Wand image type: %s', image_type)
+
     if image_type in ALPHA_TYPES:
         alpha_wand = _libimg.clone_image(wand)
         _libimg.remove_alpha_channel(wand)
