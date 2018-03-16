@@ -284,29 +284,40 @@ im_GetImageType(PyObject *self, PyObject *args) {
 
 // Colorspace types from magick/colorspace.h
 //
-//UndefinedColorspace,
-//RGBColorspace,
-//GRAYColorspace,
-//TransparentColorspace,
-//OHTAColorspace,
-//LabColorspace,
-//XYZColorspace,
-//YCbCrColorspace,
-//YCCColorspace,
-//YIQColorspace,
-//YPbPrColorspace,
-//YUVColorspace,
-//CMYKColorspace,
-//sRGBColorspace,
-//HSBColorspace,
-//HSLColorspace,
-//HWBColorspace,
-//Rec601LumaColorspace,
-//Rec601YCbCrColorspace,
-//Rec709LumaColorspace,
-//Rec709YCbCrColorspace,
-//LogColorspace,
-//CMYColorspace
+// UndefinedColorspace
+// CMYColorspace
+// CMYKColorspace
+// GRAYColorspace
+// HCLColorspace
+// HCLpColorspace
+// HSBColorspace
+// HSIColorspace
+// HSLColorspace
+// HSVColorspace
+// HWBColorspace
+// LabColorspace
+// LCHColorspace
+// LCHabColorspace
+// LCHuvColorspace
+// LogColorspace
+// LMSColorspace
+// LuvColorspace
+// OHTAColorspace
+// Rec601YCbCrColorspace
+// Rec709YCbCrColorspace
+// RGBColorspace
+// scRGBColorspace
+// sRGBColorspace
+// TransparentColorspace
+// xyYColorspace
+// XYZColorspace
+// YCbCrColorspace
+// YCCColorspace
+// YDbDrColorspace
+// YIQColorspace
+// YPbPrColorspace
+// YUVColorspace
+// LinearGRAYColorspace
 
 static PyObject *
 im_GetColorspace(PyObject *self, PyObject *args) {
@@ -371,14 +382,8 @@ im_GetColorspace(PyObject *self, PyObject *args) {
 	else if (cs == HWBColorspace){
 		return Py_BuildValue("s", "HWBColorspace");
 	}
-	else if (cs == Rec601LumaColorspace){
-		return Py_BuildValue("s", "Rec601LumaColorspace");
-	}
 	else if (cs == Rec601YCbCrColorspace){
 		return Py_BuildValue("s", "Rec601YCbCrColorspace");
-	}
-	else if (cs == Rec709LumaColorspace){
-		return Py_BuildValue("s", "Rec709LumaColorspace");
 	}
 	else if (cs == Rec709YCbCrColorspace){
 		return Py_BuildValue("s", "Rec709YCbCrColorspace");
