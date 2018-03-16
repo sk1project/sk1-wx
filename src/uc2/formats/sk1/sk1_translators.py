@@ -16,7 +16,6 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PIL import Image
-from base64 import b64decode
 from cStringIO import StringIO
 from copy import deepcopy
 
@@ -508,7 +507,7 @@ class SK2_to_SK1_Translator(object):
     def translate_image(self, dest_parent, source_obj):
         image_stream = StringIO()
         if source_obj.colorspace == uc2const.IMAGE_CMYK:
-            image_stream.write(b64decode(source_obj.bitmap))
+            image_stream.write(source_obj.bitmap)
         else:
             if source_obj.cache_cdata is None:
                 libimg.update_image(self.sk2_doc.cms, source_obj)
