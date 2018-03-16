@@ -492,11 +492,11 @@ class PDFGenerator(object):
             self.draw_image(*bg)
             self.draw_image(*fg)
         else:
-            raw_image = Image.open(StringIO(b64decode(obj.bitmap)))
+            raw_image = Image.open(StringIO(obj.bitmap))
             raw_image.load()
             alpha_chnl = None
             if obj.alpha_channel:
-                alpha_chnl = Image.open(StringIO(b64decode(obj.alpha_channel)))
+                alpha_chnl = Image.open(StringIO(obj.alpha_channel))
                 alpha_chnl.load()
             self.draw_image(raw_image, alpha_chnl)
 

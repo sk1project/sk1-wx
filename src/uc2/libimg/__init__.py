@@ -18,7 +18,7 @@
 import os
 import cairo
 from copy import deepcopy
-from base64 import b64decode, b64encode
+from base64 import b64encode
 from cStringIO import StringIO
 from PIL import Image, ImageOps
 
@@ -49,7 +49,7 @@ def _get_saver_fmt(img):
 
 def invert_image(cms, bmpstr):
     image_stream = StringIO()
-    raw_image = Image.open(StringIO(b64decode(bmpstr)))
+    raw_image = Image.open(StringIO(bmpstr))
     raw_image.load()
 
     if raw_image.mode == IMAGE_MONO:
@@ -67,7 +67,7 @@ def invert_image(cms, bmpstr):
         raw_image = ImageOps.invert(raw_image)
 
     raw_image.save(image_stream, format=_get_saver_fmt(raw_image))
-    return b64encode(image_stream.getvalue())
+    return image_stream.getvalue()
 
 
 def convert_image(cms, pixmap, colorspace, raw=False):
@@ -80,20 +80,20 @@ def convert_image(cms, pixmap, colorspace, raw=False):
         raw_image.load()
         raw_image = raw_image.convert("RGB")
     else:
-        raw_image = Image.open(StringIO(b64decode(pixmap.bitmap)))
+        raw_image = Image.open(StringIO(pixmap.bitmap))
         raw_image.load()
     raw_image = cms.convert_image(raw_image, colorspace)
     if raw:
         return raw_image
     raw_image.save(image_stream, format=_get_saver_fmt(raw_image))
-    return b64encode(image_stream.getvalue())
+    return image_stream.getvalue()
 
 
 def convert_duotone_to_image(cms, pixmap, cs=None):
     update_image(cms, pixmap)
     fg = pixmap.style[3][0]
     bg = pixmap.style[3][1]
-    raw_image = Image.open(StringIO(b64decode(pixmap.bitmap)))
+    raw_image = Image.open(StringIO(pixmap.bitmap))
     raw_image.load()
     fg_img = bg_img = None
     fg_cs = bg_cs = uc2const.IMAGE_RGB
@@ -127,7 +127,7 @@ def convert_duotone_to_image(cms, pixmap, cs=None):
     fg_alpha = ImageOps.invert(raw_image)
     bg_alpha = raw_image
     if pixmap.alpha_channel:
-        alpha_chnl = Image.open(StringIO(b64decode(pixmap.alpha_channel)))
+        alpha_chnl = Image.open(StringIO(pixmap.alpha_channel))
         alpha_chnl.load()
         alpha_chnl = ImageOps.invert(alpha_chnl)
         comp_img = Image.new('L', size, 0)
@@ -143,19 +143,19 @@ def extract_bitmap(pixmap, filepath):
     if not os.path.splitext(filepath)[1] == ext:
         filepath = os.path.splitext(filepath)[0] + ext
     fileptr = open(filepath, 'wb')
-    fileptr.write(b64decode(pixmap.bitmap))
+    fileptr.write(pixmap.bitmap)
     fileptr.close()
     if pixmap.alpha_channel:
         filepath = os.path.splitext(filepath)[0] + '_alphachannel.png'
         fileptr = open(filepath, 'wb')
-        fileptr.write(b64decode(pixmap.alpha_channel))
+        fileptr.write(pixmap.alpha_channel)
         fileptr.close()
 
 
 def update_image(cms, pixmap, force_proofing=False):
     png_stream = StringIO()
 
-    raw_image = Image.open(StringIO(b64decode(pixmap.bitmap)))
+    raw_image = Image.open(StringIO(pixmap.bitmap))
     raw_image.load()
 
     if pixmap.colorspace in DUOTONES:
@@ -186,7 +186,7 @@ def update_image(cms, pixmap, force_proofing=False):
         cache_image = cms.get_display_image(raw_image)
 
     if pixmap.alpha_channel:
-        raw_alpha = b64decode(pixmap.alpha_channel)
+        raw_alpha = pixmap.alpha_channel
         raw_alpha = Image.open(StringIO(raw_alpha))
         if cache_image.mode == IMAGE_RGB:
             cache_image = cache_image.convert(IMAGE_RGBA)
@@ -206,7 +206,7 @@ def update_image(cms, pixmap, force_proofing=False):
 def update_gray_image(cms, pixmap):
     png_stream = StringIO()
 
-    raw_image = Image.open(StringIO(b64decode(pixmap.bitmap)))
+    raw_image = Image.open(StringIO(pixmap.bitmap))
     raw_image.load()
 
     if pixmap.colorspace in DUOTONES:
@@ -227,7 +227,7 @@ def update_gray_image(cms, pixmap):
         cache_image.paste(bg_image, (0, 0), raw_image)
         rgb_image = cache_image.convert(IMAGE_GRAY).convert(IMAGE_RGBA)
         if pixmap.alpha_channel:
-            raw_alpha = b64decode(pixmap.alpha_channel)
+            raw_alpha = pixmap.alpha_channel
             raw_alpha = Image.open(StringIO(raw_alpha))
             cache_alpha = Image.new(IMAGE_GRAY, pixmap.size)
             mask = ImageOps.invert(cache_image.split()[3])
@@ -238,7 +238,7 @@ def update_gray_image(cms, pixmap):
     else:
         raw_image = raw_image.convert(IMAGE_GRAY)
         if pixmap.alpha_channel:
-            raw_alpha = b64decode(pixmap.alpha_channel)
+            raw_alpha = pixmap.alpha_channel
             raw_alpha = Image.open(StringIO(raw_alpha))
             rgb_image = raw_image.convert(IMAGE_RGBA)
             rgb_image.putalpha(raw_alpha)
@@ -290,7 +290,7 @@ def set_image_data(cms, pixmap, raw_content):
     fobj = StringIO()
     base_image = base_image.copy()
     base_image.save(fobj, format=_get_saver_fmt(base_image))
-    bmp = b64encode(fobj.getvalue())
+    bmp = fobj.getvalue()
 
     style = deepcopy(pixmap.config.default_image_style)
     if base_image.mode in [IMAGE_RGB, IMAGE_LAB]:
@@ -308,7 +308,7 @@ def set_image_data(cms, pixmap, raw_content):
                 band = alpha_image.split()[3]
             fobj = StringIO()
             band.save(fobj, format=_get_saver_fmt(band))
-            alpha = b64encode(fobj.getvalue())
+            alpha = fobj.getvalue()
 
     pixmap.bitmap = bmp
     pixmap.alpha_channel = alpha
@@ -316,21 +316,21 @@ def set_image_data(cms, pixmap, raw_content):
 
 
 def transpose(image_obj, method=Image.FLIP_TOP_BOTTOM):
-    image = Image.open(StringIO(b64decode(image_obj.bitmap)))
+    image = Image.open(StringIO(image_obj.bitmap))
     image.load()
 
     image = image.transpose(method)
     fobj = StringIO()
     image.save(fobj, format='TIFF')
-    image_obj.bitmap = b64encode(fobj.getvalue())
+    image_obj.bitmap = fobj.getvalue()
     if image_obj.alpha_channel:
-        alpha = Image.open(StringIO(b64decode(image_obj.alpha_channel)))
+        alpha = Image.open(StringIO(image_obj.alpha_channel))
         alpha.load()
 
         alpha = alpha.transpose(method)
         fobj = StringIO()
         alpha.save(fobj, format=_get_saver_fmt(alpha))
-        image_obj.alpha_channel = b64encode(fobj.getvalue())
+        image_obj.alpha_channel = fobj.getvalue()
     image_obj.cache_cdata = None
 
 

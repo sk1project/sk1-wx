@@ -17,7 +17,7 @@
 
 import cairo
 import logging
-from base64 import b64encode
+from base64 import b64encode, b64decode
 from cStringIO import StringIO
 
 from uc2 import libgeom, sk2const
@@ -71,6 +71,8 @@ class SK2_Loader(AbstractLoader):
 
     def set_field(self, item, val):
         obj = self.parent_stack[-1]
+        if item in ('bitmap', 'alpha_channel'):
+            val = b64decode(val)
         obj.__dict__[item] = val
 
     def obj_end(self):
@@ -113,7 +115,7 @@ class SK2_Saver(AbstractSaver):
             if item not in sk2_model.GENERIC_FIELDS and \
                     not item.startswith('cache'):
                 if item in ['bitmap', 'alpha_channel']:
-                    item_str = "'%s'" % props[item]
+                    item_str = "'%s'" % b64encode(props[item])
                 else:
                     item_str = self.field_to_str(props[item])
                 self.writeln("set_field('%s',%s)" % (item, item_str))
