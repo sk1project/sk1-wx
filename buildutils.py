@@ -315,6 +315,10 @@ def copy_modules(modules, src_root='src'):
 #
 ############################################################
 
+def get_pkg_version(pkg_name):
+    return commands.getoutput("pkg-config --modversion %s" % pkg_name).strip()
+
+
 def get_pkg_includes(pkg_names):
     includes = []
     for item in pkg_names:
