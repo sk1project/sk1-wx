@@ -214,20 +214,20 @@ im_NextImage(PyObject *self, PyObject *args) {
 }
 
 
-// Image types from magick/image.h
+// Image types from MagickCore/image.h
 //
-//	  UndefinedType,
-//	  BilevelType,
-//	  GrayscaleType,
-//	  GrayscaleMatteType,
-//	  PaletteType,
-//	  PaletteMatteType,
-//	  TrueColorType,
-//	  TrueColorMatteType,
-//	  ColorSeparationType,
-//	  ColorSeparationMatteType,
-//	  OptimizeType,
-//	  PaletteBilevelMatteType
+//   UndefinedType,
+//   BilevelType,
+//   GrayscaleType,
+//   GrayscaleAlphaType,
+//   PaletteType,
+//   PaletteAlphaType,
+//   TrueColorType,
+//   TrueColorAlphaType,
+//   ColorSeparationType,
+//   ColorSeparationAlphaType,
+//   OptimizeType,
+//   PaletteBilevelAlphaType
 
 static PyObject *
 im_GetImageType(PyObject *self, PyObject *args) {
@@ -250,31 +250,31 @@ im_GetImageType(PyObject *self, PyObject *args) {
 	else if (img_type == GrayscaleType){
 		return Py_BuildValue("s", "GrayscaleType");
 	}
-	else if (img_type == GrayscaleMatteType){
+	else if (img_type == GrayscaleAlphaType){
 		return Py_BuildValue("s", "GrayscaleMatteType");
 	}
 	else if (img_type == PaletteType){
 		return Py_BuildValue("s", "PaletteType");
 	}
-	else if (img_type == PaletteMatteType){
+	else if (img_type == PaletteAlphaType){
 		return Py_BuildValue("s", "PaletteMatteType");
 	}
 	else if (img_type == TrueColorType){
 		return Py_BuildValue("s", "TrueColorType");
 	}
-	else if (img_type == TrueColorMatteType){
+	else if (img_type == TrueColorAlphaType){
 		return Py_BuildValue("s", "TrueColorMatteType");
 	}
 	else if (img_type == ColorSeparationType){
 		return Py_BuildValue("s", "ColorSeparationType");
 	}
-	else if (img_type == ColorSeparationMatteType){
+	else if (img_type == ColorSeparationAlphaType){
 		return Py_BuildValue("s", "ColorSeparationMatteType");
 	}
 	else if (img_type == OptimizeType){
 		return Py_BuildValue("s", "OptimizeType");
 	}
-	else if (img_type == PaletteBilevelMatteType){
+	else if (img_type == PaletteBilevelAlphaType){
 		return Py_BuildValue("s", "PaletteBilevelMatteType");
 	}
 	else {
@@ -446,25 +446,25 @@ get_image_type(char* mode) {
     return GrayscaleType;
   }
   else if (strcmp(mode, "GrayscaleMatteType") == 0) {
-    return GrayscaleMatteType;
+    return GrayscaleAlphaType;
   }
   else if (strcmp(mode, "PaletteType") == 0) {
     return PaletteType;
   }
   else if (strcmp(mode, "PaletteMatteType") == 0) {
-    return PaletteMatteType;
+    return PaletteAlphaType;
   }
   else if (strcmp(mode, "TrueColorType") == 0) {
     return TrueColorType;
   }
   else if (strcmp(mode, "TrueColorMatteType") == 0) {
-    return TrueColorMatteType;
+    return TrueColorAlphaType;
   }
   else if (strcmp(mode, "ColorSeparationType") == 0) {
     return ColorSeparationType;
   }
   else if (strcmp(mode, "ColorSeparationMatteType") == 0) {
-    return ColorSeparationMatteType;
+    return ColorSeparationAlphaType;
   }
   else {
     return TrueColorType;
