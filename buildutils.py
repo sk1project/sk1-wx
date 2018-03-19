@@ -816,3 +816,11 @@ class RpmBuilder:
     def clear_rpmbuild(self):
         if os.path.exists(self.rpmbuild_path):
             os.system('rm -rf %s' % self.rpmbuild_path)
+
+
+def build_pot(paths):
+    print 'POT FILE UPDATE',
+    files = []
+    for path in paths:
+        files += get_files_tree(path, 'py')
+    open('messages/locale.in', 'w').write('\n'.join(files))
