@@ -243,7 +243,7 @@ class AppConfig(UCConfig):
     snap_line_color = (1.0, 0.0, 0.0, 1.0)
 
     guide_line_dash = [5, 5]
-    guide_line_dragging_color = (0.0, 0.0, 0.0, 0.25)
+    guide_line_dragging_color = (0.4, 0.73, 0.31)
 
     # ============== POINT DATA =============
 
