@@ -23,7 +23,7 @@ from basic import SizedPanel, SensitiveCanvas, Canvas, Panel
 
 class RulerCanvas(SizedPanel, SensitiveCanvas):
 
-    def __init__(self, parent, size=20, check_move=False):
+    def __init__(self, parent, size=20, check_move=True):
         SizedPanel.__init__(self, parent)
         SensitiveCanvas.__init__(self, check_move=check_move)
         self.set_bg(const.WHITE)
