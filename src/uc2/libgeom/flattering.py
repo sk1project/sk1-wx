@@ -71,6 +71,8 @@ def flat_path(path, tlr=0.1):
                 p = add_points(item, start)
                 result.append(p)
             start = [] + point[2]
+    if path[2] and result[0] != result[-1]:
+        result.append([] + result[0])
     return [result[0], result[1:], path[2]]
 
 
