@@ -9,10 +9,6 @@ addons:
     - python-cairo-dev
     - libpango1.0-dev
     - python-wxgtk2.8
-    - python-wxtools
-    - wx2.8-headers
-    - wx2.8-i18n
-    - libwxgtk2.8-dev
     - libgtk2.0-dev
     - libmagickwand-dev
 
