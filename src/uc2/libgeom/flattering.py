@@ -19,7 +19,7 @@
 from points import midpoint, sub_points, abs_point, normalize_point, \
     mult_points, cr_points, add_points
 
-from trafo import apply_trafo_to_paths
+from trafo import apply_trafo_to_paths, NORMAL_TRAFO
 
 
 # ------------- Flattering -------------
@@ -55,7 +55,7 @@ def _flat_segment(p0, p1, p2, p3, tlr):
             return [p9, p3]
 
 
-def flat_path(path, tlr=0.5):
+def flat_path(path, tlr=0.1):
     result = [[] + path[0]]
     start = [] + path[0]
     for point in path[1]:
@@ -74,14 +74,12 @@ def flat_path(path, tlr=0.5):
     return [result[0], result[1:], path[2]]
 
 
-def flat_paths(paths, tlr=0.5):
+def flat_paths(paths, tlr=0.1):
     return [flat_path(path, tlr) for path in paths]
 
 
-def get_flattened_path(obj, trafo, tolerance=0.5):
-    if obj.cache_paths is None:
-        obj.update()
-    if obj.cache_paths is None:
-        return None
-    paths = apply_trafo_to_paths(obj.cache_paths, trafo)
+def get_flattened_path(curve_obj, trafo=NORMAL_TRAFO, tolerance=0.1):
+    paths = apply_trafo_to_paths(curve_obj.paths, curve_obj.trafo)
+    if trafo != NORMAL_TRAFO:
+        paths = apply_trafo_to_paths(paths, trafo)
     return flat_paths(paths, tolerance)

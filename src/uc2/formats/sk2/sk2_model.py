@@ -570,7 +570,8 @@ class PrimitiveObject(SelectableObject):
 
     def to_curve(self):
         curve = Curve(self.config)
-        curve.paths = deepcopy(self.cache_paths)
+        curve.paths = deepcopy(self.paths if self.is_curve()
+                               else self.cache_paths)
         curve.trafo = [] + self.trafo
         curve.fill_trafo = [] + self.fill_trafo
         curve.stroke_trafo = [] + self.stroke_trafo

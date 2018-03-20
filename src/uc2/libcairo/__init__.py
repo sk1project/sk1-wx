@@ -58,7 +58,7 @@ def get_path_from_cpath(cairo_path):
     return _libcairo.get_path_from_cpath(cairo_path)
 
 
-def get_flattened_path(cairo_path, tolerance=0.1):
+def get_flattened_cpath(cairo_path, tolerance=0.1):
     CTX.set_matrix(DIRECT_MATRIX)
     tlr = CTX.get_tolerance()
     CTX.set_tolerance(tolerance)
