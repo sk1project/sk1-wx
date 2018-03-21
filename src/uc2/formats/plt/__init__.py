@@ -52,13 +52,10 @@ def check_plt(path):
     file_size = os.path.getsize(path)
     fileptr = get_fileptr(path)
 
-    if file_size > 200:
-        string = fileptr.read(200)
+    if file_size > 20:
+        string = fileptr.read(20)
     else:
         string = fileptr.read()
 
     fileptr.close()
-    if len(string.split("IN;")) > 1 and len(string.split(";")) > 2:
-        if len(string.split(";PD")) > 1:
-            return True
-    return False
+    return string.startswith('IN;')

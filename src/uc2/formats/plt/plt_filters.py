@@ -43,6 +43,7 @@ class PLT_Loader(AbstractLoader):
         job = []
         stack = ''
         for cmd in cmds:
+            cmd = cmd.strip()
             if cmd[:2] == 'PU':
                 stack = cmd
                 if job:
