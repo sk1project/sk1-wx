@@ -15,65 +15,65 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from copy import deepcopy
 
-from points import midpoint, sub_points, abs_point, normalize_point, \
-    mult_points, cr_points, add_points
-
+from points import add_points, mult_point, get_point_angle
 from trafo import apply_trafo_to_paths, NORMAL_TRAFO
 
 
 # ------------- Flattering -------------
 
-def _flat_segment(p0, p1, p2, p3, tlr):
-    p4 = midpoint(p0, p1)
-    p5 = midpoint(p1, p2)
-    p6 = midpoint(p2, p3)
-    p7 = midpoint(p4, p5)
-    p8 = midpoint(p5, p6)
-    p9 = midpoint(p7, p8)
+def split_segment(start_point, end_point, t=0.5):
+    p0 = start_point[2] if len(start_point) > 2 else start_point
+    p1, p2, p3, flag = end_point
+    p0_1 = add_points(mult_point(p0, (1.0 - t)), mult_point(p1, t))
+    p1_2 = add_points(mult_point(p1, (1.0 - t)), mult_point(p2, t))
+    p2_3 = add_points(mult_point(p2, (1.0 - t)), mult_point(p3, t))
+    p01_12 = add_points(mult_point(p0_1, (1.0 - t)), mult_point(p1_2, t))
+    p12_23 = add_points(mult_point(p1_2, (1.0 - t)), mult_point(p2_3, t))
+    p0112_1223 = add_points(mult_point(p01_12, (1.0 - t)),
+                            mult_point(p12_23, t))
+    new_point = [p0_1, p01_12, p0112_1223, flag]
+    new_end_point = [p12_23, p2_3, p3, flag]
+    return new_point, new_end_point
 
-    b = sub_points(p3, p0)
-    s = sub_points(p9, p0)
-    c1 = sub_points(p1, p0)
-    c2 = sub_points(p2, p3)
 
-    if abs_point(c1) > abs_point(b) or abs_point(c2) > abs_point(b):
-        return _flat_segment(p0, p4, p7, p9, tlr) + _flat_segment(p9, p8, p6,
-                                                                  p3, tlr)
+def base_point(point):
+    return point if len(point) == 2 else point[2]
 
-    elif abs_point(b) < tlr / 2.0:
-        return [p9, p3]
+
+def check_flatness(p0, p1, p2, tlr=0.5):
+    p0, p1, p2 = (base_point(p) for p in (p0, p1, p2))
+    a1 = get_point_angle(p1, p0)
+    a2 = get_point_angle(p2, p1)
+    return abs(a2 - a1) < tlr
+
+
+def flat_segment(start_point, end_point, tlr=0.5):
+    ret = []
+    p0 = start_point
+    p1, p2 = split_segment(start_point, end_point)
+    if check_flatness(p0, p1, p2, tlr):
+        ret += [base_point(p) for p in (p0, p1, p2)]
     else:
-        n = normalize_point(b)
-        if ((mult_points(c1, n)) < -tlr
-                or (mult_points(c2, n)) > tlr
-                or cr_points(c1, b) * cr_points(c2, b) < 0
-                or abs(cr_points(n, s)) > tlr):
-            return _flat_segment(p0, p4, p7, p9, tlr) + \
-                   _flat_segment(p9, p8, p6, p3, tlr)
-        else:
-            return [p9, p3]
+        ret += flat_segment(p0, p1, tlr)[:-1]
+        ret += flat_segment(p1, p2, tlr)
+    return ret
 
 
 def flat_path(path, tlr=0.1):
-    result = [[] + path[0]]
-    start = [] + path[0]
+    path = deepcopy(path)
+    ret_points = []
+    start = path[0]
     for point in path[1]:
         if len(point) == 2:
-            result.append([] + point)
-            start = [] + point
+            ret_points.append(point)
         else:
-            p0 = sub_points(point[0], start)
-            p1 = sub_points(point[1], start)
-            p2 = sub_points(point[2], start)
-            points = _flat_segment([0.0, 0.0], p0, p1, p2, tlr)
-            for item in points:
-                p = add_points(item, start)
-                result.append(p)
-            start = [] + point[2]
-    if path[2] and result[0] != result[-1]:
-        result.append([] + result[0])
-    return [result[0], result[1:], path[2]]
+            ret_points += flat_segment(start, point, tlr)[1:]
+        start = point
+    if path[2] and path[0] != ret_points[-1]:
+        ret_points.append([] + path[0])
+    return [path[0], ret_points, path[2]]
 
 
 def flat_paths(paths, tlr=0.1):
@@ -81,7 +81,8 @@ def flat_paths(paths, tlr=0.1):
 
 
 def get_flattened_path(curve_obj, trafo=NORMAL_TRAFO, tolerance=0.1):
-    paths = apply_trafo_to_paths(curve_obj.paths, curve_obj.trafo)
+    paths = flat_paths(curve_obj.paths, tolerance)
+    paths = apply_trafo_to_paths(paths, curve_obj.trafo)
     if trafo != NORMAL_TRAFO:
         paths = apply_trafo_to_paths(paths, trafo)
-    return flat_paths(paths, tolerance)
+    return paths

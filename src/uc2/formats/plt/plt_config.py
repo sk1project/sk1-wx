@@ -21,5 +21,5 @@ from uc2.utils.config import XmlConfigParser
 class PLT_Config(XmlConfigParser):
     system_encoding = 'utf-8'
 
-    tolerance = 0.1
+    tolerance = 0.05
     force_zero = True
