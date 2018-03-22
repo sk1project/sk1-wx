@@ -3814,4 +3814,7 @@ msgid "Bitmap"
 msgstr ""
 
 msgid "Language (*):"
-msgstr ""
+msgstr "Язык (*):"
+
+msgid "system"
+msgstr "системы"
