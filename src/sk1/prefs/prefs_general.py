@@ -36,9 +36,12 @@ LANGS = []
 
 def get_langs():
     if not LANGS:
+        LANGS.append('system')
         LANGS.append('en')
         LANGS.append('ru')
-    return LANGS
+
+
+get_langs()
 
 
 class GeneralPrefs(PrefPanel):
@@ -174,8 +177,8 @@ class GeneralPrefs(PrefPanel):
         grid.pack(self.log_level)
 
         grid.pack(wal.Label(grid, _('Language (*):')))
-        self.lang = wal.Combolist(grid, items=get_langs())
-        self.lang.set_active(LEVELS.index(config.language))
+        self.lang = wal.Combolist(grid, items=LANGS)
+        self.lang.set_active(LANGS.index(config.language))
         grid.pack(self.lang)
 
         table.pack(grid)
