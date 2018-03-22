@@ -3806,3 +3806,6 @@ msgstr ""
 #: src/uc2/formats/sk2/sk2_cids.py:79
 msgid "Bitmap"
 msgstr ""
+
+msgid "Language(*):"
+msgstr ""
