@@ -792,10 +792,10 @@ class RpmBuilder:
             '',
             '%install',
             'rm -rf $RPM_BUILD_ROOT',
-            '/usr/bin/python2 %s install --root=$RPM_BUILD_ROOT' % self.build_script,
+                      '/usr/bin/python2 %s install --root=$RPM_BUILD_ROOT' % self.build_script,
             '',
             '%files',
-            '%{_bindir}/' + self.name,
+                      '%{_bindir}/' + self.name,
             self.install_path.replace('/usr/', '%{_usr}/'),
         ]
         for item in self.data_files:
@@ -803,13 +803,13 @@ class RpmBuilder:
                 path = item[0].replace('/usr/share/', '%{_datadir}/')
                 for filename in item[1]:
                     content.append('%s/%s' % (path, filename.split('/')[-1]))
-        content += ['',]
+        content += ['', ]
 
         open(self.spec_path, 'w').write('\n'.join(content))
 
     def build_rpm(self):
         os.system('rpmbuild -bb %s --define "_topdir %s"' % (self.spec_path,
-                  self.rpmbuild_path))
+                                                             self.rpmbuild_path))
         os.system('cp `find %s -name "*.rpm"` %s/' % (self.rpmbuild_path,
                                                       self.dist_dir))
 
@@ -819,13 +819,15 @@ class RpmBuilder:
 
 
 def build_pot(paths, po_file='messages.po', error_logs=False):
+    ret = 0
     files = []
-    error_logs = 'warn.log' if error_logs else '/dev/null'
+    error_logs = 'warnings.log' if error_logs else '/dev/null'
     file_list = 'locale.in'
     for path in paths:
         files += get_files_tree(path, 'py')
     open(file_list, 'w').write('\n'.join(files))
-    os.system('xgettext -f %s -L Python -o %s 2>%s' %
-              (file_list, po_file ,error_logs))
-    os.system('rm -f %s' % file_list)
-    print 'PO file updated'
+    ret += os.system('xgettext -f %s -L Python -o %s 2>%s' %
+                     (file_list, po_file, error_logs))
+    ret += os.system('rm -f %s' % file_list)
+    if not ret:
+        print 'PO file updated', ret
