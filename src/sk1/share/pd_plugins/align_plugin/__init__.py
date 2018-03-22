@@ -110,6 +110,9 @@ class AlignPlugin(RsPlugin):
         self.dpanel = DistributePanel(self.panel, self.app)
         self.panel.pack(self.dpanel, fill=True, padding_all=5)
 
+        # self.fpanel = FlatteringPanel(self.panel, self.app)
+        # self.panel.pack(self.fpanel, fill=True, padding_all=5)
+
         events.connect(events.DOC_CHANGED, self.update)
         events.connect(events.SELECTION_CHANGED, self.update)
         events.connect(events.DOC_MODIFIED, self.update)
@@ -118,6 +121,7 @@ class AlignPlugin(RsPlugin):
     def update(self, *args):
         self.apanel.update()
         self.dpanel.update()
+        # self.fpanel.update()
 
 
 class AlignPanel(wal.LabeledPanel):
@@ -452,3 +456,25 @@ class DistributePanel(wal.LabeledPanel):
         for item in objs:
             obj_trafo_list.append((item, trafo_dict[item]))
         doc.api.trasform_objs(obj_trafo_list)
+
+
+class FlatteringPanel(wal.LabeledPanel):
+    app = None
+
+    def __init__(self, parent, app):
+        self.app = app
+        wal.LabeledPanel.__init__(self, parent, _('Flattering'))
+        self.apply_btn = wal.Button(self, _('Apply'), onclick=self.action)
+        self.pack(self.apply_btn, padding_all=5, fill=True)
+
+    def update(self):
+        self.apply_btn.set_enable(False)
+        if not self.app.insp.is_selection():
+            return
+        for obj in self.app.current_doc.selection.objs:
+            if not obj.is_curve():
+                return
+        self.apply_btn.set_enable(True)
+
+    def action(self):
+        self.app.current_doc.api.flat_curve_selected()

@@ -1687,6 +1687,33 @@ class PresenterAPI(AbstractAPI):
         self.add_undo(transaction)
         self.selection.update()
 
+    def flat_curve_selected(self):
+        if self.selection.objs:
+            before = self._get_layers_snapshot()
+            sel = self.selection.objs
+            objs = [] + sel
+            sel_before = [] + sel
+
+            for obj in objs:
+                if obj.is_primitive() and obj.is_curve():
+                    curve = obj.copy()
+                    curve.paths = libgeom.flat_paths(curve.paths)
+                    parent = obj.parent
+                    curve.parent = parent
+                    parent.childs[parent.childs.index(obj)] = curve
+                    sel.objs[sel.index(obj)] = curve
+
+            after = self._get_layers_snapshot()
+            sel_after = [] + sel
+            transaction = [
+                [[self._set_layers_snapshot, before],
+                 [self._set_selection, sel_before]],
+                [[self._set_layers_snapshot, after],
+                 [self._set_selection, sel_after]],
+                False]
+            self.add_undo(transaction)
+            self.selection.update()
+
     # --- RECTANGLE
 
     def create_rectangle(self, rect):
