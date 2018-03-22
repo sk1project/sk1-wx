@@ -36,7 +36,7 @@ LANGS = []
 
 def get_langs():
     if not LANGS:
-        LANGS.append('system')
+        LANGS.append(_('system'))
         LANGS.append('en')
         LANGS.append('ru')
 
@@ -178,7 +178,9 @@ class GeneralPrefs(PrefPanel):
 
         grid.pack(wal.Label(grid, _('Language (*):')))
         self.lang = wal.Combolist(grid, items=LANGS)
-        self.lang.set_active(LANGS.index(config.language))
+        index = 0 if config.language == 'system' \
+            else LANGS.index(config.language)
+        self.lang.set_active(index)
         grid.pack(self.lang)
 
         table.pack(grid)
@@ -201,7 +203,8 @@ class GeneralPrefs(PrefPanel):
         config.history_size = self.hist_size.get_value()
         config.history_list_size = self.hist_menu_size.get_value()
         config.log_level = self.log_level.get_active_value()
-        config.language = self.lang.get_active_value()
+        config.language = 'system' if not self.lang.get_active() \
+            else self.lang.get_active_value()
         config.show_stub_buttons = self.stub_buttons.get_value()
         config.make_font_cache_on_start = self.fcache.get_value()
         if not wal.IS_MAC and wal.IS_WX2:
@@ -223,7 +226,9 @@ class GeneralPrefs(PrefPanel):
         self.hist_size.set_value(defaults['history_size'])
         self.hist_menu_size.set_value(defaults['history_list_size'])
         self.log_level.set_active(LEVELS.index(defaults['log_level']))
-        self.lang.set_active(LANGS.index(defaults['language']))
+        index = 0 if defaults['language'] == 'system' \
+            else LANGS.index(defaults['language'])
+        self.lang.set_active(index)
         self.stub_buttons.set_value(defaults['show_stub_buttons'])
         self.fcache.set_value(defaults['make_font_cache_on_start'])
         if not wal.IS_MAC and wal.IS_WX2:
