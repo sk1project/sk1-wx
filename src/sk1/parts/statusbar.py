@@ -287,8 +287,8 @@ class PageMonitor(wal.HPanel):
             else:
                 self.end_but.set_enable(True)
 
-            text = _(" Page %i of %i ") % (current_index + 1, len(pages))
-            self.page_txt.set_text(text)
+            text = _("Page %i of %i") % (current_index + 1, len(pages))
+            self.page_txt.set_text(' %s ' % text)
             self.show()
 
     def hide_monitor(self, *args):
