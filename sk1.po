@@ -3807,5 +3807,5 @@ msgstr ""
 msgid "Bitmap"
 msgstr ""
 
-msgid "Language(*):"
+msgid "Language (*):"
 msgstr ""
