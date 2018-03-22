@@ -151,18 +151,18 @@ if len(sys.argv) > 1:
         sys.argv[1] = 'sdist'
         rpm_depends = dependencies.get_sk1_rpm_depend()
 
-    if sys.argv[1] == 'build_update':
+    elif sys.argv[1] == 'build_update':
         UPDATE_MODULES = True
         CLEAR_BUILD = True
         sys.argv[1] = 'build'
 
-    if sys.argv[1] == 'bdist_deb':
+    elif sys.argv[1] == 'bdist_deb':
         DEB_PACKAGE = True
         CLEAR_BUILD = True
         sys.argv[1] = 'build'
         deb_depends = dependencies.get_sk1_deb_depend()
 
-    if sys.argv[1] == 'uninstall':
+    elif sys.argv[1] == 'uninstall':
         if os.path.isdir(install_path):
             # removing sk1 folder
             print 'REMOVE: ' + install_path
@@ -188,6 +188,11 @@ if len(sys.argv) > 1:
             print 'DONE!'
         else:
             print 'sK1 installation is not found!'
+        sys.exit(0)
+
+    elif sys.argv[1] == 'update_pot':
+        paths = ['src/sk1', 'src/uc2']
+        buildutils.build_pot(paths, 'sk1.po', False)
         sys.exit(0)
 
 # Preparing start script

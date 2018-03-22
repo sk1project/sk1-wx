@@ -818,9 +818,14 @@ class RpmBuilder:
             os.system('rm -rf %s' % self.rpmbuild_path)
 
 
-def build_pot(paths):
-    print 'POT FILE UPDATE',
+def build_pot(paths, po_file='messages.po', error_logs=False):
     files = []
+    error_logs = 'warn.log' if error_logs else '/dev/null'
+    file_list = 'locale.in'
     for path in paths:
         files += get_files_tree(path, 'py')
-    open('messages/locale.in', 'w').write('\n'.join(files))
+    open(file_list, 'w').write('\n'.join(files))
+    os.system('xgettext -f %s -L Python -o %s 2>%s' %
+              (file_list, po_file ,error_logs))
+    os.system('rm -f %s' % file_list)
+    print 'PO file updated'
