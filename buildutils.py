@@ -831,3 +831,7 @@ def build_pot(paths, po_file='messages.po', error_logs=False):
     ret += os.system('rm -f %s' % file_list)
     if not ret:
         print 'PO file updated'
+
+
+def build_locales(src_path, dest_path):
+    pass

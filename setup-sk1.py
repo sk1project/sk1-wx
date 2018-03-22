@@ -195,6 +195,12 @@ if len(sys.argv) > 1:
         buildutils.build_pot(paths, 'sk1.po', False)
         sys.exit(0)
 
+    elif sys.argv[1] == 'build_locales':
+        src_path = 'po-sk1'
+        dest_path = 'src/sk1/share/locales'
+        buildutils.build_locales(src_path, dest_path)
+        sys.exit(0)
+
 # Preparing start script
 src_script = 'src/script/sk1.tmpl'
 dst_script = 'src/script/sk1'
