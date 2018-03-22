@@ -175,6 +175,6 @@ class PltJob(PltModelObject):
 
         elif self.cache_path and not self.string:
             self.string = 'PU%d,%d;' % (
-                self.cache_path[0][0], self.cache_path[0][1])
+                round(self.cache_path[0][0]), round(self.cache_path[0][1]))
             for point in self.cache_path[1]:
-                self.string += 'PD%d,%d;' % (point[0], point[1])
+                self.string += 'PD%d,%d;' % (round(point[0]), round(point[1]))
