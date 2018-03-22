@@ -84,6 +84,7 @@ class AppConfig(UCConfig):
     os_name = system.UBUNTU
     system_encoding = 'utf-8'  # default encoding (GUI uses utf-8 only)
     log_level = 'INFO'
+    language = 'en'
 
     show_splash = False
 

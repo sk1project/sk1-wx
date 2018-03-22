@@ -31,6 +31,15 @@ COLORS = [
 
 LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR']
 
+LANGS = []
+
+
+def get_langs():
+    if not LANGS:
+        LANGS.append('en')
+        LANGS.append('ru')
+    return LANGS
+
 
 class GeneralPrefs(PrefPanel):
     pid = 'General'
@@ -50,6 +59,7 @@ class GeneralPrefs(PrefPanel):
     hist_size = None
     hist_menu_size = None
     log_level = None
+    lang = None
     fcache = None
     stub_buttons = None
     spin_overlay = None
@@ -149,7 +159,7 @@ class GeneralPrefs(PrefPanel):
         table.pack(int_vp)
         table.pack((15, 5))
 
-        grid = wal.GridPanel(self, rows=3, cols=2, hgap=5, vgap=3)
+        grid = wal.GridPanel(self, rows=4, cols=2, hgap=5, vgap=3)
         grid.pack(wal.Label(grid, _('History log size:')))
         self.hist_size = wal.IntSpin(grid, config.history_size, (10, 1000))
         grid.pack(self.hist_size)
@@ -162,6 +172,11 @@ class GeneralPrefs(PrefPanel):
         self.log_level = wal.Combolist(grid, items=LEVELS)
         self.log_level.set_active(LEVELS.index(config.log_level))
         grid.pack(self.log_level)
+
+        grid.pack(wal.Label(grid, _('Language (*):')))
+        self.lang = wal.Combolist(grid, items=get_langs())
+        self.lang.set_active(LEVELS.index(config.language))
+        grid.pack(self.lang)
 
         table.pack(grid)
 
@@ -183,6 +198,7 @@ class GeneralPrefs(PrefPanel):
         config.history_size = self.hist_size.get_value()
         config.history_list_size = self.hist_menu_size.get_value()
         config.log_level = self.log_level.get_active_value()
+        config.language = self.lang.get_active_value()
         config.show_stub_buttons = self.stub_buttons.get_value()
         config.make_font_cache_on_start = self.fcache.get_value()
         if not wal.IS_MAC and wal.IS_WX2:
@@ -204,6 +220,7 @@ class GeneralPrefs(PrefPanel):
         self.hist_size.set_value(defaults['history_size'])
         self.hist_menu_size.set_value(defaults['history_list_size'])
         self.log_level.set_active(LEVELS.index(defaults['log_level']))
+        self.lang.set_active(LANGS.index(defaults['language']))
         self.stub_buttons.set_value(defaults['show_stub_buttons'])
         self.fcache.set_value(defaults['make_font_cache_on_start'])
         if not wal.IS_MAC and wal.IS_WX2:
