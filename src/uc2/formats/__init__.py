@@ -141,7 +141,7 @@ def get_loader(path, experimental=False, return_id=False):
         events.emit(events.MESSAGES, msgconst.ERROR, msg)
     else:
         loader_name = loader.__str__().split(' ')[1]
-        msg = _('Loader <%s> is found for %s') % (loader_name, path)
+        msg = _('Loader "%s" is found for %s') % (loader_name, path)
         events.emit(events.MESSAGES, msgconst.OK, msg)
 
     if return_id:
