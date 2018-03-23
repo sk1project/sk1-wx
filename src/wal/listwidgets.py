@@ -76,12 +76,9 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, WidgetMixin):
     def set_data(self, data, alt_color=True):
         even = False
         i = 0
-        LOG.debug('listwidget data %s', data)
         for item in data:
             if isinstance(item, str):
                 item = item.decode('utf8')
-            elif isinstance(item, list):
-                item = [label.decode('utf8') for label in item]
             self.Append([item])
             if alt_color:
                 list_item = self.GetItem(i)
