@@ -17,14 +17,10 @@
 
 import os
 
+import uc2
 from sk1.app_conf import get_app_config
 
-
-def dummy_translator(text):
-    return text
-
-
-_ = dummy_translator
+_ = uc2._
 config = None
 
 
@@ -37,6 +33,9 @@ def init_config(cfgdir='~'):
     cfg_path = os.path.join(cfg_dir, 'preferences.cfg')
     config.load(cfg_path)
     config.resource_dir = os.path.join(__path__[0], 'share')
+    _.set_locale('sk1',
+                 os.path.join(config.resource_dir, 'locales'),
+                 config.language)
 
 
 def sk1_run(cfgdir='~'):

@@ -15,6 +15,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import gettext
+import os
+
 
 class MsgTranslator(object):
     translate = None
@@ -24,6 +27,15 @@ class MsgTranslator(object):
 
     def dummy_translate(self, msg):
         return msg
+
+    def set_locale(self, textdomain, msgs_path, locale='system'):
+        if locale == 'en' or not os.path.lexists(msgs_path):
+            return
+        if locale and not locale == 'system':
+            os.environ['LANGUAGE'] = locale
+        gettext.bindtextdomain(textdomain, msgs_path)
+        gettext.textdomain(textdomain)
+        self.translate = gettext.gettext
 
     def __call__(self, msg):
         return self.translate(msg)

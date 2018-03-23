@@ -15,6 +15,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import translator
+
 config = None
 appdata = None
 
@@ -23,7 +25,7 @@ def dummy_translator(text):
     return text
 
 
-_ = dummy_translator
+_ = translator.MsgTranslator()
 
 
 def uc2_init():
