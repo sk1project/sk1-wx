@@ -38,7 +38,6 @@ def get_langs():
     if not LANGS:
         LANGS.append(_('system'))
         LANGS.append('en')
-        LANGS.append('ru')
 
 
 get_langs()
