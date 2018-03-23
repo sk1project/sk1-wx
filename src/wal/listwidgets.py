@@ -15,8 +15,6 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import types
-
 import wx
 import wx.lib.mixins.listctrl as listmix
 
@@ -78,9 +76,12 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, WidgetMixin):
     def set_data(self, data, alt_color=True):
         even = False
         i = 0
+        LOG.debug('listwidget data %s', data)
         for item in data:
             if isinstance(item, str):
                 item = item.decode('utf8')
+            elif isinstance(item, list):
+                item = [label.decode('utf8') for label in item]
             self.Append([item])
             if alt_color:
                 list_item = self.GetItem(i)
@@ -123,12 +124,14 @@ class ReportList(SimpleList):
     def set_columns(self):
         for item in self.data[0]:
             index = self.data[0].index(item)
-            self.InsertColumn(index, item)
+            self.InsertColumn(index, item.decode('utf8'))
 
     def set_data(self, data, alt_color=True):
         even = False
         i = 0
         for item in data[1:]:
+            if isinstance(item, list):
+                item = [label.decode('utf8') for label in item]
             self.Append(item)
             if alt_color:
                 list_item = self.GetItem(i)

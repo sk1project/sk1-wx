@@ -15,6 +15,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 import wal
 from generic import PrefPanel
 from sk1 import _, config
@@ -37,7 +39,14 @@ LANGS = []
 def get_langs():
     if not LANGS:
         LANGS.append(_('system'))
-        LANGS.append('en')
+    path = os.path.join(config.resource_dir, 'locales')
+    langs = ['en', ]
+    if os.path.lexists(path):
+        langs += [item for item in os.listdir(path)
+                  if os.path.isdir(os.path.join(path, item))]
+    langs.sort()
+    for item in langs:
+        LANGS.append(item)
 
 
 get_langs()
