@@ -208,7 +208,7 @@ class HistoryMenuItem(wal.MenuItem):
         self.app = mw.app
         self.path = path
         self.id = wal.new_id()
-        wal.MenuItem.__init__(self, parent, self.id, text)
+        wal.MenuItem.__init__(self, parent, self.id, text.encode('utf-8'))
         self.bind_to(mw, self.action, self.id)
 
     def action(self, event):
