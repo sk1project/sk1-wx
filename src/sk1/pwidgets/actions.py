@@ -164,7 +164,7 @@ class AppAction:
 
     def get_shortcut_text(self):
         if self.is_acc:
-            return self.acc_entry.ToString()
+            return self.acc_entry.ToString().encode('utf-8')
         return ''
 
     def is_toggle(self):

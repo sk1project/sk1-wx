@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-22 17:34+0200\n"
-"PO-Revision-Date: 2018-03-23 19:40+0200\n"
+"PO-Revision-Date: 2018-03-23 22:29+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -837,7 +837,7 @@ msgstr ""
 
 #: src/sk1/parts/menubar.py:38
 msgid "&File"
-msgstr ""
+msgstr "&Файл"
 
 #: src/sk1/parts/menubar.py:48
 msgid "&Edit"
@@ -1843,7 +1843,7 @@ msgstr ""
 
 #: src/sk1/resources/labels.py:46
 msgid "&New"
-msgstr ""
+msgstr "&Создать"
 
 #: src/sk1/resources/labels.py:48
 msgid "New From Template..."

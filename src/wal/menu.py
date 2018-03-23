@@ -41,7 +41,8 @@ class Menu(wx.Menu):
 
 class MenuItem(wx.MenuItem):
     def __init__(self, parent, action_id, text):
-        wx.MenuItem.__init__(self, parent, action_id, text=text)
+        wx.MenuItem.__init__(self, parent, action_id,
+                             text=text.decode('utf-8'))
 
     def bind_to(self, mw, callback, action_id):
         mw.Bind(wx.EVT_MENU, callback, id=action_id)
@@ -79,4 +80,4 @@ class MenuBar(wx.MenuBar):
         wx.MenuBar.__init__(self)
 
     def append_menu(self, menu_id, txt, menu):
-        self.Append(menu, txt)
+        self.Append(menu, txt.decode('utf-8'))
