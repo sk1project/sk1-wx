@@ -833,5 +833,14 @@ def build_pot(paths, po_file='messages.po', error_logs=False):
         print 'POT file updated'
 
 
-def build_locales(src_path, dest_path):
-    pass
+def build_locales(src_path, dest_path, textdomain):
+    print 'Building locales'
+    for item in get_files(src_path, 'po'):
+        lang = item.split('.')[0]
+        po_file = os.path.join(src_path, item)
+        mo_dir = os.path.join(dest_path, lang, 'LC_MESSAGES')
+        mo_file = os.path.join(mo_dir, textdomain + '.mo')
+        if not os.path.lexists(mo_dir):
+            os.makedirs(mo_dir)
+        print po_file, '==>', mo_file
+        os.system('msgfmt -o %s %s' % (mo_file, po_file))

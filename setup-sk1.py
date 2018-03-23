@@ -198,7 +198,7 @@ if len(sys.argv) > 1:
     elif sys.argv[1] == 'build_locales':
         src_path = 'po-sk1'
         dest_path = 'src/sk1/share/locales'
-        buildutils.build_locales(src_path, dest_path)
+        buildutils.build_locales(src_path, dest_path, 'sk1')
         sys.exit(0)
 
 # Preparing start script
