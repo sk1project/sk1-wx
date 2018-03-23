@@ -192,7 +192,7 @@ if len(sys.argv) > 1:
 
     elif sys.argv[1] == 'update_pot':
         paths = ['src/sk1', 'src/uc2']
-        buildutils.build_pot(paths, 'sk1.po', False)
+        buildutils.build_pot(paths, 'sk1.pot', False)
         sys.exit(0)
 
     elif sys.argv[1] == 'build_locales':
