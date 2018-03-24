@@ -67,7 +67,6 @@ def flat_path(path, tlr=0.1):
     ret_points = []
     start = path[0]
     for point in path[1]:
-        print point
         if len(point) == 2:
             ret_points.append(point)
         else:
