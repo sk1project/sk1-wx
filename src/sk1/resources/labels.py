@@ -73,7 +73,7 @@ LABELS = {
     wal.ID_SELECTALL: (_('&Select All'),),
     pdids.ID_DESELECT: (_('D&eselect'),),
     pdids.ID_INV_SELECT: (_('&Invert selection'),),
-    pdids.ID_VIEW_LOG: (_('&File history logs'),),
+    pdids.ID_VIEW_LOG: (_('&File history logs...'),),
     wal.ID_PROPERTIES: (_('Document properties'),),
     wal.ID_PREFERENCES: (_('Preferences'),),
 
