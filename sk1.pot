@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 17:34+0200\n"
+"POT-Creation-Date: 2018-03-24 22:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1168,107 +1168,115 @@ msgstr ""
 msgid "Preview width:"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:37
+#: src/sk1/prefs/prefs_general.py:41
+msgid "system"
+msgstr ""
+
+#: src/sk1/prefs/prefs_general.py:57
 msgid "General"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:38
+#: src/sk1/prefs/prefs_general.py:58
 msgid "General application preferences"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:71
+#: src/sk1/prefs/prefs_general.py:92
 msgid "UI style (*):"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:72
+#: src/sk1/prefs/prefs_general.py:93
 msgid "Classic"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:72
+#: src/sk1/prefs/prefs_general.py:93
 msgid "Tabbed"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:77
+#: src/sk1/prefs/prefs_general.py:98
 msgid "Tab style:"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:78
+#: src/sk1/prefs/prefs_general.py:99
 msgid "Rectangle tabs"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:78
+#: src/sk1/prefs/prefs_general.py:99
 msgid "Rounded tabs"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:78
+#: src/sk1/prefs/prefs_general.py:99
 msgid "Flat tabs"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:79
+#: src/sk1/prefs/prefs_general.py:100
 msgid "Trapezoidal tabs"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:90
+#: src/sk1/prefs/prefs_general.py:111
 msgid "Show quick access buttons"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:98
+#: src/sk1/prefs/prefs_general.py:119
 msgid "Use overlay for spinbox widgets (*)"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:103
+#: src/sk1/prefs/prefs_general.py:124
 msgid "Separate spin in spinbox widgets (*)"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:108
+#: src/sk1/prefs/prefs_general.py:129
 msgid "Unity related features"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:113
+#: src/sk1/prefs/prefs_general.py:134
 msgid "Use Unity Global Menu (*)"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:118
+#: src/sk1/prefs/prefs_general.py:139
 msgid "Allow overlay for scrollbars (*)"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:123
+#: src/sk1/prefs/prefs_general.py:144
 msgid "UI style"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:133
+#: src/sk1/prefs/prefs_general.py:154
 msgid "New document on start"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:137
+#: src/sk1/prefs/prefs_general.py:158
 msgid "Backup on document save"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:141
+#: src/sk1/prefs/prefs_general.py:162
 msgid "Make font cache on start"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:145
+#: src/sk1/prefs/prefs_general.py:166
 msgid "Backup on export"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:153
+#: src/sk1/prefs/prefs_general.py:174
 msgid "History log size:"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:156
+#: src/sk1/prefs/prefs_general.py:177
 msgid "History menu size:"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:161
+#: src/sk1/prefs/prefs_general.py:182
 msgid "Logging level (*):"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:168
+#: src/sk1/prefs/prefs_general.py:187
+msgid "Language (*):"
+msgstr ""
+
+#: src/sk1/prefs/prefs_general.py:196
 msgid "Generic features"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:171
+#: src/sk1/prefs/prefs_general.py:199
 msgid "(*) - These options require application restart"
 msgstr ""
 
@@ -1996,7 +2004,7 @@ msgid "&Invert selection"
 msgstr ""
 
 #: src/sk1/resources/labels.py:76
-msgid "&File history logs"
+msgid "&File history logs..."
 msgstr ""
 
 #: src/sk1/resources/labels.py:78
@@ -3805,10 +3813,4 @@ msgstr ""
 
 #: src/uc2/formats/sk2/sk2_cids.py:79
 msgid "Bitmap"
-msgstr ""
-
-msgid "Language (*):"
-msgstr ""
-
-msgid "system"
 msgstr ""
