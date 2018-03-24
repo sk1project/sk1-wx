@@ -52,7 +52,8 @@ def get_paths_bbox(paths):
 
 def split_bezier_curve(start_point, end_point, t=0.5):
     p0 = start_point[2] if len(start_point) > 2 else start_point
-    p1, p2, p3, flag = end_point
+    p1, p2, p3 = end_point[:3]
+    flag = end_point[3] if len(end_point) == 4 else sk2const.NODE_CUSP
     p0_1 = add_points(mult_point(p0, (1.0 - t)), mult_point(p1, t))
     p1_2 = add_points(mult_point(p1, (1.0 - t)), mult_point(p2, t))
     p2_3 = add_points(mult_point(p2, (1.0 - t)), mult_point(p3, t))

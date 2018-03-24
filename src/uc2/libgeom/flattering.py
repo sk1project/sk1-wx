@@ -25,7 +25,8 @@ from trafo import apply_trafo_to_paths, NORMAL_TRAFO
 
 def split_segment(start_point, end_point, t=0.5):
     p0 = start_point[2] if len(start_point) > 2 else start_point
-    p1, p2, p3, flag = end_point
+    p1, p2, p3 = end_point[:3]
+    flag = end_point[3] if len(end_point) == 4 else 0
     p0_1 = add_points(mult_point(p0, (1.0 - t)), mult_point(p1, t))
     p1_2 = add_points(mult_point(p1, (1.0 - t)), mult_point(p2, t))
     p2_3 = add_points(mult_point(p2, (1.0 - t)), mult_point(p3, t))
@@ -66,6 +67,7 @@ def flat_path(path, tlr=0.1):
     ret_points = []
     start = path[0]
     for point in path[1]:
+        print point
         if len(point) == 2:
             ret_points.append(point)
         else:
