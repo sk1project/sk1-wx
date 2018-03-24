@@ -18,7 +18,6 @@
 import os
 
 import uc2
-from sk1.app_conf import get_app_config
 
 _ = uc2._
 config = None
@@ -27,15 +26,31 @@ config = None
 def init_config(cfgdir='~'):
     """sK1 config initialization"""
 
-    global config
-    config = get_app_config()
     cfg_dir = os.path.expanduser(os.path.join(cfgdir, '.config', 'sk1-wx'))
     cfg_path = os.path.join(cfg_dir, 'preferences.cfg')
+    resource_dir = os.path.join(__path__[0], 'share')
+
+    # Setting locale before app initialization
+    lang = 'system'
+    if os.path.lexists(cfg_path) and os.path.isfile(cfg_path):
+        try:
+            with open(cfg_path) as fp:
+                while True:
+                    line = fp.readline()
+                    if not line:
+                        break
+                    if line.startswith('language'):
+                        lang = line.split('=')[1].strip().replace('\'', '')
+                        break
+        except Exception:
+            lang = 'system'
+    _.set_locale('sk1', os.path.join(resource_dir, 'locales'), lang)
+
+    global config
+    from sk1.app_conf import get_app_config
+    config = get_app_config()
     config.load(cfg_path)
-    config.resource_dir = os.path.join(__path__[0], 'share')
-    _.set_locale('sk1',
-                 os.path.join(config.resource_dir, 'locales'),
-                 config.language)
+    config.resource_dir = resource_dir
 
 
 def sk1_run(cfgdir='~'):
