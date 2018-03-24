@@ -96,8 +96,8 @@ class AppHistoryManager:
         ret = []
         for item in self.history:
             path = item[1]
-            unicode_path = path_unicode(path)
-            filename = path_unicode(os.path.basename(path))
+            unicode_path = path_unicode(path).encode('utf-8')
+            filename = path_unicode(os.path.basename(path)).encode('utf-8')
             timestamp = datetime.datetime.fromtimestamp(item[2])
             timestr = timestamp.strftime('%Y-%m-%d %H:%M:%S')
             ret.append([item[0], filename, unicode_path, path, timestr])
