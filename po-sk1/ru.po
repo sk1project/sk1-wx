@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-22 17:34+0200\n"
-"PO-Revision-Date: 2018-03-23 22:53+0200\n"
+"PO-Revision-Date: 2018-03-24 11:08+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -808,32 +808,32 @@ msgstr "Сохранение файла..."
 #: src/sk1/document/presenter.py:136
 #, python-format
 msgid "Unknown file format is requested for saving! <%s>"
-msgstr ""
+msgstr "Запрошен неизвестный формат для сохранения! <%s>"
 
 #: src/sk1/document/presenter.py:164
 #, python-format
 msgid "Unknown file format is requested for saving <%s>"
-msgstr ""
+msgstr "Запрошен неизвестный формат для сохранения <%s>"
 
 #: src/sk1/document/presenter.py:189
 msgid "Importing..."
-msgstr ""
+msgstr "Импортирование..."
 
 #: src/sk1/document/selection.py:52
 msgid " object in selection"
-msgstr ""
+msgstr " объект выбран"
 
 #: src/sk1/document/selection.py:60
 msgid "No selection"
-msgstr ""
+msgstr "Нет выделенных объектов"
 
 #: src/sk1/document/selection.py:62
 msgid "objects in selection"
-msgstr ""
+msgstr "объектов выбрано"
 
 #: src/sk1/parts/menubar.py:32
 msgid "Open &Recent"
-msgstr ""
+msgstr "Последние файлы"
 
 #: src/sk1/parts/menubar.py:38
 msgid "&File"
@@ -841,92 +841,92 @@ msgstr "&Файл"
 
 #: src/sk1/parts/menubar.py:48
 msgid "&Edit"
-msgstr ""
+msgstr "&Правка"
 
 #: src/sk1/parts/menubar.py:57
 msgid "&Show"
-msgstr ""
+msgstr "Показать или скрыть"
 
 #: src/sk1/parts/menubar.py:60
 msgid "S&nap to"
-msgstr ""
+msgstr "Прилипать к"
 
 #: src/sk1/parts/menubar.py:64
 msgid "&View"
-msgstr ""
+msgstr "&Вид"
 
 #: src/sk1/parts/menubar.py:73
 msgid "&Layout"
-msgstr ""
+msgstr "&Макет"
 
 #: src/sk1/parts/menubar.py:78
 msgid "Trans&form"
-msgstr ""
+msgstr "Преобразования"
 
 #: src/sk1/parts/menubar.py:86
 msgid "&Order"
-msgstr ""
+msgstr "Очередность"
 
 #: src/sk1/parts/menubar.py:90
 msgid "&Shaping"
-msgstr ""
+msgstr "Геометрия"
 
 #: src/sk1/parts/menubar.py:94
 msgid "&Arrange"
-msgstr ""
+msgstr "Поря&док"
 
 #: src/sk1/parts/menubar.py:108
 msgid "&Paths"
-msgstr ""
+msgstr "&Кривые"
 
 #: src/sk1/parts/menubar.py:118
 msgid "&Bitmaps"
-msgstr ""
+msgstr "&Растр"
 
 #: src/sk1/parts/menubar.py:126
 msgid "&Text"
-msgstr ""
+msgstr "&Текст"
 
 #: src/sk1/parts/menubar.py:133
 msgid "&Help"
-msgstr ""
+msgstr "&Справка"
 
 #: src/sk1/parts/menubar.py:168
 msgid "Empty"
-msgstr ""
+msgstr "Пусто"
 
 #: src/sk1/parts/palettepanel.py:43
 msgid "Scroll palette to left"
-msgstr ""
+msgstr "Пролистать палитру влево"
 
 #: src/sk1/parts/palettepanel.py:51 src/sk1/parts/palettepanel.py:113
 #: src/sk1/pwidgets/fillctrls.py:311
 msgid "Empty pattern"
-msgstr ""
+msgstr "Пустой паттерн"
 
 #: src/sk1/parts/palettepanel.py:59
 msgid "Scroll palette to right"
-msgstr ""
+msgstr "Пролистать палитру вправо"
 
 #: src/sk1/parts/palettepanel.py:105
 msgid "Scroll palette to top"
-msgstr ""
+msgstr "Пролистать палитру вверх"
 
 #: src/sk1/parts/palettepanel.py:122
 msgid "Scroll palette to bottom"
-msgstr ""
+msgstr "Пролистать палитру вниз"
 
 #: src/sk1/parts/statusbar.py:130 src/sk1/parts/statusbar.py:160
 msgid "Image type: "
-msgstr ""
+msgstr "Тип растра:"
 
 #: src/sk1/parts/statusbar.py:132 src/sk1/pwidgets/colorctrls.py:495
 msgid "Fill:"
-msgstr ""
+msgstr "Заливка:"
 
 #: src/sk1/parts/statusbar.py:139 src/sk1/pwidgets/colorctrls.py:463
 msgid "Stroke:"
-msgstr ""
+msgstr "Обводка:"
 
 #: src/sk1/parts/statusbar.py:196
 msgid "No coords"
@@ -934,293 +934,293 @@ msgstr ""
 
 #: src/sk1/parts/statusbar.py:224
 msgid "Go to fist page"
-msgstr ""
+msgstr "К первой странице"
 
 #: src/sk1/parts/statusbar.py:234
 msgid "Go to previous page"
-msgstr ""
+msgstr "К предыдущей странице"
 
 #: src/sk1/parts/statusbar.py:247
 msgid "Go to next page"
-msgstr ""
+msgstr "К следующей странице"
 
 #: src/sk1/parts/statusbar.py:257
 msgid "Go to last page"
-msgstr ""
+msgstr "К последней странице"
 
 #: src/sk1/parts/statusbar.py:290
 #, python-format
 msgid "Page %i of %i"
-msgstr ""
+msgstr "Страница %i из %i"
 
 #: src/sk1/parts/stubpanel.py:39
 msgid "Open Recent"
-msgstr ""
+msgstr "Последние документы"
 
 #: src/sk1/prefs/__init__.py:41
 msgid "Application"
-msgstr ""
+msgstr "Приложение"
 
 #: src/sk1/prefs/__init__.py:51 src/sk1/resources/labels.py:46
 msgid "New document"
-msgstr ""
+msgstr "Новый документ"
 
 #: src/sk1/prefs/__init__.py:106
 msgid "Restore defaults"
-msgstr ""
+msgstr "Исходные значения"
 
 #: src/sk1/prefs/__init__.py:158
 msgid "sK1 Preferences"
-msgstr ""
+msgstr "Настройки sK1"
 
 #: src/sk1/prefs/prefs_canvas.py:28
 msgid "Canvas"
-msgstr ""
+msgstr "Холст"
 
 #: src/sk1/prefs/prefs_canvas.py:29
 msgid "Canvas marker preferences"
-msgstr ""
+msgstr "Настройки маркеров холста"
 
 #: src/sk1/prefs/prefs_cms.py:34 src/sk1/prefs/prefs_cms.py:85
 msgid "Color management"
-msgstr ""
+msgstr "Управление цветом"
 
 #: src/sk1/prefs/prefs_cms.py:35
 msgid "Color management and color profiles"
-msgstr ""
+msgstr "Управление цветом и цветовые профайлы"
 
 #: src/sk1/prefs/prefs_cms.py:89
 msgid "Activate Color Management"
-msgstr ""
+msgstr "Активировать управление цветом"
 
 #: src/sk1/prefs/prefs_cms.py:103
 msgid "Note: If not activated the color values will be not accurate."
-msgstr ""
+msgstr "Прим.: Если не активировано, цвет будет не точным."
 
 #: src/sk1/prefs/prefs_cms.py:127
 msgid "Color profiles"
-msgstr ""
+msgstr "Цветовые профайлы"
 
 #: src/sk1/prefs/prefs_cms.py:132
 msgid "Colorspace profiles"
-msgstr ""
+msgstr "Цветовые профайлы"
 
 #: src/sk1/prefs/prefs_cms.py:150
 #, python-format
 msgid "%s profile:"
-msgstr ""
+msgstr "%s профайл:"
 
 #: src/sk1/prefs/prefs_cms.py:160
 msgid "Hardware profiles"
-msgstr ""
+msgstr "Профайлы оборудования"
 
 #: src/sk1/prefs/prefs_cms.py:167
 msgid "Display profile:"
-msgstr ""
+msgstr "Профайл монитора:"
 
 #: src/sk1/prefs/prefs_cms.py:177
 msgid "Use display profile"
-msgstr ""
+msgstr "Использовать профайл монитора"
 
 #: src/sk1/prefs/prefs_cms.py:184
 msgid "Note: Display profile for your hardware you could fetch here:"
-msgstr ""
+msgstr "Профайл для вашего монитора вы можете взять тут:"
 
 #: src/sk1/prefs/prefs_cms.py:239 src/sk1/prefs/prefs_cms.py:346
 #, python-format
 msgid "Built-in %s profile"
-msgstr ""
+msgstr "Встроенный %s профайл"
 
 #: src/sk1/prefs/prefs_cms.py:279
 #, python-format
 msgid "Add/remove %s profiles"
-msgstr ""
+msgstr "Добавить/удалить %s профайлы"
 
 #: src/sk1/prefs/prefs_cms.py:314
 #, python-format
 msgid "%s profiles"
-msgstr ""
+msgstr "%s профайлы"
 
 #: src/sk1/prefs/prefs_cms.py:357 src/sk1/prefs/prefs_palettes.py:226
 msgid "Import"
-msgstr ""
+msgstr "Импорт"
 
 #: src/sk1/prefs/prefs_cms.py:360 src/sk1/prefs/prefs_palettes.py:234
 msgid "Remove"
-msgstr ""
+msgstr "Удалить"
 
 #: src/sk1/prefs/prefs_cms.py:363
 msgid "Info"
-msgstr ""
+msgstr "Инфо"
 
 #: src/sk1/prefs/prefs_cms.py:375
 msgid "Select profile to import"
-msgstr ""
+msgstr "Выбрать профайл для импорта"
 
 #: src/sk1/prefs/prefs_cms.py:382
 msgid "Cannot open profile"
-msgstr ""
+msgstr "Не могу открыть профайл"
 
 #: src/sk1/prefs/prefs_cms.py:384
 msgid "The profile may be corrupted or not supported format"
-msgstr ""
+msgstr "Профайл поврежден или не поддерживаемого формата"
 
 #: src/sk1/prefs/prefs_cms.py:388
 msgid "Selected profile cannot be added to profile list:"
-msgstr ""
+msgstr "Выбранный профайл не может быть добавлен:"
 
 #: src/sk1/prefs/prefs_cms.py:390
 msgid "It seems you have imported this profile"
-msgstr ""
+msgstr "Похоже, что профайл уже был импортирован"
 
 #: src/sk1/prefs/prefs_cms.py:397
 msgid "Selected file has been added to profile pool"
-msgstr ""
+msgstr "Выбранный файл был добавлен в набор профайлов"
 
 #: src/sk1/prefs/prefs_cms.py:399
 msgid "If you sure to import the file try renaming it"
-msgstr ""
+msgstr "Можете попробовать переименовать файл"
 
 #: src/sk1/prefs/prefs_cms.py:405
 msgid "Cannot copy file"
-msgstr ""
+msgstr "Не могу скопировать файл"
 
 #: src/sk1/prefs/prefs_cms.py:407
 msgid "Please check writing permissions for config directory:"
-msgstr ""
+msgstr "Проверьте права на запись для папки настроек:"
 
 #: src/sk1/prefs/prefs_cms.py:446
 msgid "Profile info"
-msgstr ""
+msgstr "О профайле"
 
 #: src/sk1/prefs/prefs_cms.py:458
 msgid "Name:"
-msgstr ""
+msgstr "Имя:"
 
 #: src/sk1/prefs/prefs_cms.py:460
 msgid "File:"
-msgstr ""
+msgstr "Файл:"
 
 #: src/sk1/prefs/prefs_cms.py:462
 msgid "Copyrigth:"
-msgstr ""
+msgstr "Автор:"
 
 #: src/sk1/prefs/prefs_cms.py:472
 msgid "Settings"
-msgstr ""
+msgstr "Настройки"
 
 #: src/sk1/prefs/prefs_cms.py:486
 msgid "Rendering intents"
-msgstr ""
+msgstr "Цветопередача"
 
 #: src/sk1/prefs/prefs_cms.py:489
 msgid "Display/RGB intent:"
-msgstr ""
+msgstr "Монитора:"
 
 #: src/sk1/prefs/prefs_cms.py:494
 msgid "Printer/CMYK intent:"
-msgstr ""
+msgstr "Принтера:"
 
 #: src/sk1/prefs/prefs_cms.py:503
 msgid "Simulate printer on the screen"
-msgstr ""
+msgstr "Имитировать принтер на экране"
 
 #: src/sk1/prefs/prefs_cms.py:510
 msgid "Mark colors that are out of the printer gamut"
-msgstr ""
+msgstr "Отмечать цвета вне цветового охвата принтера"
 
 #: src/sk1/prefs/prefs_cms.py:518
 msgid "Alarm color:"
-msgstr ""
+msgstr "Цвет отметки:"
 
 #: src/sk1/prefs/prefs_cms.py:524
 msgid "Separation for SPOT colors"
-msgstr ""
+msgstr "Цветоделение SPOT цветов"
 
 #: src/sk1/prefs/prefs_cms.py:533
 msgid "Use Blackpoint Compensation"
-msgstr ""
+msgstr "Использовать компенсацию \"черной точки\""
 
 #: src/sk1/prefs/prefs_cms.py:541
 msgid "Use Black preserving transforms"
-msgstr ""
+msgstr "Использовать трансформацию сохранения черного"
 
 #: src/sk1/prefs/prefs_fonts.py:28 src/uc2/formats/pdxf/model.py:70
 #: src/uc2/formats/sk2/sk2_cids.py:65
 msgid "Fonts"
-msgstr ""
+msgstr "Шрифты"
 
 #: src/sk1/prefs/prefs_fonts.py:29
 msgid "Font preview preferences"
-msgstr ""
+msgstr "Настройки предосмотра шрифтов"
 
 #: src/sk1/prefs/prefs_fonts.py:45
 msgid "Text filler:"
-msgstr ""
+msgstr "Заполнитель:"
 
 #: src/sk1/prefs/prefs_fonts.py:49
 msgid "Font size:"
-msgstr ""
+msgstr "Размер шрифта:"
 
 #: src/sk1/prefs/prefs_fonts.py:53
 msgid "Font color:"
-msgstr ""
+msgstr "Цвет шрифта:"
 
 #: src/sk1/prefs/prefs_fonts.py:57
 msgid "Selection color:"
-msgstr ""
+msgstr "Цвет выделения:"
 
 #: src/sk1/prefs/prefs_fonts.py:62
 msgid "Preview width:"
-msgstr ""
+msgstr "Ширина образца:"
 
 #: src/sk1/prefs/prefs_general.py:37
 msgid "General"
-msgstr ""
+msgstr "Общие"
 
 #: src/sk1/prefs/prefs_general.py:38
 msgid "General application preferences"
-msgstr ""
+msgstr "Общие настройки приложения"
 
 #: src/sk1/prefs/prefs_general.py:71
 msgid "UI style (*):"
-msgstr ""
+msgstr "Стиль UI (*):"
 
 #: src/sk1/prefs/prefs_general.py:72
 msgid "Classic"
-msgstr ""
+msgstr "Классический"
 
 #: src/sk1/prefs/prefs_general.py:72
 msgid "Tabbed"
-msgstr ""
+msgstr "На табах"
 
 #: src/sk1/prefs/prefs_general.py:77
 msgid "Tab style:"
-msgstr ""
+msgstr "Стиль табов:"
 
 #: src/sk1/prefs/prefs_general.py:78
 msgid "Rectangle tabs"
-msgstr ""
+msgstr "Прямоугольные табы"
 
 #: src/sk1/prefs/prefs_general.py:78
 msgid "Rounded tabs"
-msgstr ""
+msgstr "Закругленные табы"
 
 #: src/sk1/prefs/prefs_general.py:78
 msgid "Flat tabs"
-msgstr ""
+msgstr "Плоские табы"
 
 #: src/sk1/prefs/prefs_general.py:79
 msgid "Trapezoidal tabs"
-msgstr ""
+msgstr "Табы-трапеции"
 
 #: src/sk1/prefs/prefs_general.py:90
 msgid "Show quick access buttons"
-msgstr ""
+msgstr "Показывать кнопки быстрого доступа"
 
 #: src/sk1/prefs/prefs_general.py:98
 msgid "Use overlay for spinbox widgets (*)"
-msgstr ""
+msgstr "Использовать оверлей в спинбоксах (*)"
 
 #: src/sk1/prefs/prefs_general.py:103
 msgid "Separate spin in spinbox widgets (*)"
