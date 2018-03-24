@@ -50,7 +50,7 @@ def generate_fontsample_cache(fonts):
     w = config.font_preview_width
     fontsize = config.font_preview_size
     color = cms.val_255(config.font_preview_color)
-    text = config.font_preview_text
+    text = config.font_preview_text.decode('utf-8')
     for item in fonts:
         h = libpango.get_sample_size(text, item, fontsize)[1]
         if not h:
