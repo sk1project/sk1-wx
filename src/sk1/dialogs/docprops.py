@@ -21,7 +21,7 @@ from copy import deepcopy
 import wal
 from sk1 import _, config
 from sk1.pwidgets import StaticUnitLabel, UnitSpin, CBMiniPalette
-from sk1.resources import icons, get_bmp
+from sk1.resources import icons, get_bmp, pdids
 from uc2 import cms, uc2const
 from uc2.sk2const import ORIGINS, FILL_SOLID, FILL_PATTERN
 from uc2.uc2const import unit_names, unit_full_names
@@ -281,9 +281,9 @@ class PageProps(DocPropsPanel):
         if not self.page_fill == page_fill:
             self.api.set_page_fill(page_fill)
 
-        border_flag = self.border_check.get_value()
-        if not self.border_flag == border_flag:
-            self.api.set_page_border(border_flag)
+        visibility = self.app.insp.is_draw_page_border()
+        if not visibility == self.border_check.get_value():
+            self.app.actions[pdids.ID_SHOW_PAGE_BORDER].do_call()
 
 
 ORIGIN_ICONS = [icons.L_ORIGIN_CENTER, icons.L_ORIGIN_LL, icons.L_ORIGIN_LU]
@@ -498,11 +498,12 @@ class GridProps(DocPropsPanel):
         preview_panel.pack((5, 5))
         self.grid_preview = GridPreview(preview_panel, self.color)
         preview_panel.pack(self.grid_preview, fill=True, expand=True)
+        preview_panel.pack((5, 5))
         color_panel.pack(preview_panel, fill=True, expand=True)
 
         color_panel.pack((10, 10))
 
-        self.pack(color_panel, fill=True)
+        self.pack(color_panel, fill=True, expand=True)
 
     def on_slider_change(self):
         self.alpha_spin.set_value(float(self.alpha_slider.get_value()))
@@ -526,14 +527,9 @@ class GridProps(DocPropsPanel):
         color.append(self.alpha_spin.get_value() / 100.0)
         if not self.color == color:
             self.api.set_grid_color(color)
-        visibility = self.doc.methods.is_grid_visible()
+        visibility = self.app.insp.is_grid_visible()
         if not visibility == self.show_grid_check.get_value():
-            grid = self.doc.methods.get_grid_layer()
-            props = self.doc.methods.get_grid_properties()
-            props[0] = 0
-            if self.show_grid_check.get_value():
-                props[0] = 1
-            self.api.set_layer_properties(grid, props)
+            self.app.actions[pdids.ID_SHOW_GRID].do_call()
 
 
 class GuidePreview(wal.VPanel, wal.Canvas):
@@ -616,14 +612,9 @@ class GuidesProps(DocPropsPanel):
         color = list(self.guide_color_btn.get_value())
         if not self.color == color:
             self.api.set_guide_color(color)
-        visibility = self.doc.methods.is_guide_visible()
+        visibility = self.app.insp.is_guides_visible()
         if not visibility == self.show_guide_check.get_value():
-            guide = self.doc.methods.get_guide_layer()
-            props = self.doc.methods.get_guide_properties()
-            props[0] = 0
-            if self.show_guide_check.get_value():
-                props[0] = 1
-            self.api.set_layer_properties(guide, props)
+            self.app.actions[pdids.ID_SHOW_GUIDES].do_call()
 
 
 PANELS = [GeneralProps, PageProps, UnitsProps, GridProps, GuidesProps]

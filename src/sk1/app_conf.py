@@ -128,8 +128,8 @@ class AppConfig(UCConfig):
     palinfo_dlg_minsize = (400, 350)
     palcol_dlg_size = (600, 350)
     palcol_dlg_minsize = (600, 350)
-    docprops_dlg_size = (540, 400)
-    docprops_dlg_minsize = (540, 400)
+    docprops_dlg_size = (510, 380)
+    docprops_dlg_minsize = (510, 380)
 
     print_preview_dlg_size = (850, 650)
     print_preview_dlg_minsize = (850, 650)

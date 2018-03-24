@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 17:34+0200\n"
-"PO-Revision-Date: 2018-03-24 11:08+0200\n"
+"POT-Creation-Date: 2018-03-25 00:12+0200\n"
+"PO-Revision-Date: 2018-03-25 00:14+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language-Team: \n"
 "X-Generator: Poedit 1.8.7.1\n"
-"Last-Translator: \n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"Language: ru\n"
 
 #: src/sk1/app_plugins.py:57
 msgid "plugin"
@@ -594,7 +594,7 @@ msgstr "Цвет направляющих:"
 msgid "Show guides on canvas"
 msgstr "Показывать направляющие"
 
-#: src/sk1/dialogs/docprops.py:668 src/sk1/resources/labels.py:77
+#: src/sk1/dialogs/docprops.py:668
 msgid "Document properties"
 msgstr "Свойства документа"
 
@@ -1174,107 +1174,115 @@ msgstr "Цвет выделения:"
 msgid "Preview width:"
 msgstr "Ширина образца:"
 
-#: src/sk1/prefs/prefs_general.py:37
+#: src/sk1/prefs/prefs_general.py:41
+msgid "system"
+msgstr "системный"
+
+#: src/sk1/prefs/prefs_general.py:57
 msgid "General"
 msgstr "Общие"
 
-#: src/sk1/prefs/prefs_general.py:38
+#: src/sk1/prefs/prefs_general.py:58
 msgid "General application preferences"
 msgstr "Общие настройки приложения"
 
-#: src/sk1/prefs/prefs_general.py:71
+#: src/sk1/prefs/prefs_general.py:92
 msgid "UI style (*):"
 msgstr "Стиль UI (*):"
 
-#: src/sk1/prefs/prefs_general.py:72
+#: src/sk1/prefs/prefs_general.py:93
 msgid "Classic"
 msgstr "Классический"
 
-#: src/sk1/prefs/prefs_general.py:72
+#: src/sk1/prefs/prefs_general.py:93
 msgid "Tabbed"
 msgstr "На табах"
 
-#: src/sk1/prefs/prefs_general.py:77
+#: src/sk1/prefs/prefs_general.py:98
 msgid "Tab style:"
 msgstr "Стиль табов:"
 
-#: src/sk1/prefs/prefs_general.py:78
+#: src/sk1/prefs/prefs_general.py:99
 msgid "Rectangle tabs"
 msgstr "Прямоугольные табы"
 
-#: src/sk1/prefs/prefs_general.py:78
+#: src/sk1/prefs/prefs_general.py:99
 msgid "Rounded tabs"
 msgstr "Закругленные табы"
 
-#: src/sk1/prefs/prefs_general.py:78
+#: src/sk1/prefs/prefs_general.py:99
 msgid "Flat tabs"
 msgstr "Плоские табы"
 
-#: src/sk1/prefs/prefs_general.py:79
+#: src/sk1/prefs/prefs_general.py:100
 msgid "Trapezoidal tabs"
 msgstr "Табы-трапеции"
 
-#: src/sk1/prefs/prefs_general.py:90
+#: src/sk1/prefs/prefs_general.py:111
 msgid "Show quick access buttons"
 msgstr "Показывать кнопки быстрого доступа"
 
-#: src/sk1/prefs/prefs_general.py:98
+#: src/sk1/prefs/prefs_general.py:119
 msgid "Use overlay for spinbox widgets (*)"
 msgstr "Использовать оверлей в спинбоксах (*)"
 
-#: src/sk1/prefs/prefs_general.py:103
+#: src/sk1/prefs/prefs_general.py:124
 msgid "Separate spin in spinbox widgets (*)"
-msgstr ""
+msgstr "Отделять спин в спинбоксах (*)"
 
-#: src/sk1/prefs/prefs_general.py:108
+#: src/sk1/prefs/prefs_general.py:129
 msgid "Unity related features"
-msgstr ""
+msgstr "Свойства для Unity"
 
-#: src/sk1/prefs/prefs_general.py:113
+#: src/sk1/prefs/prefs_general.py:134
 msgid "Use Unity Global Menu (*)"
-msgstr ""
+msgstr "Использовать глобальное меню (*)"
 
-#: src/sk1/prefs/prefs_general.py:118
+#: src/sk1/prefs/prefs_general.py:139
 msgid "Allow overlay for scrollbars (*)"
-msgstr ""
+msgstr "Разрешить оверлей полос прокрутки (*)"
 
-#: src/sk1/prefs/prefs_general.py:123
+#: src/sk1/prefs/prefs_general.py:144
 msgid "UI style"
-msgstr ""
+msgstr "Стиль UI"
 
-#: src/sk1/prefs/prefs_general.py:133
+#: src/sk1/prefs/prefs_general.py:154
 msgid "New document on start"
-msgstr ""
+msgstr "Новый документ на старте"
 
-#: src/sk1/prefs/prefs_general.py:137
+#: src/sk1/prefs/prefs_general.py:158
 msgid "Backup on document save"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:141
+#: src/sk1/prefs/prefs_general.py:162
 msgid "Make font cache on start"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:145
+#: src/sk1/prefs/prefs_general.py:166
 msgid "Backup on export"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:153
+#: src/sk1/prefs/prefs_general.py:174
 msgid "History log size:"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:156
+#: src/sk1/prefs/prefs_general.py:177
 msgid "History menu size:"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:161
+#: src/sk1/prefs/prefs_general.py:182
 msgid "Logging level (*):"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:168
+#: src/sk1/prefs/prefs_general.py:187
+msgid "Language (*):"
+msgstr "Язык (*):"
+
+#: src/sk1/prefs/prefs_general.py:196
 msgid "Generic features"
 msgstr ""
 
-#: src/sk1/prefs/prefs_general.py:171
+#: src/sk1/prefs/prefs_general.py:199
 msgid "(*) - These options require application restart"
 msgstr ""
 
@@ -2002,11 +2010,15 @@ msgid "&Invert selection"
 msgstr ""
 
 #: src/sk1/resources/labels.py:76
-msgid "&File history logs"
+msgid "&File history logs..."
+msgstr ""
+
+#: src/sk1/resources/labels.py:77
+msgid "Document properties..."
 msgstr ""
 
 #: src/sk1/resources/labels.py:78
-msgid "Preferences"
+msgid "Preferences..."
 msgstr ""
 
 #: src/sk1/resources/labels.py:80
@@ -3369,7 +3381,7 @@ msgstr ""
 
 #: src/uc2/uc2const.py:379
 msgid "mm"
-msgstr ""
+msgstr "мм"
 
 #: src/uc2/uc2const.py:455
 msgid "Perceptual"
@@ -3812,9 +3824,3 @@ msgstr ""
 #: src/uc2/formats/sk2/sk2_cids.py:79
 msgid "Bitmap"
 msgstr ""
-
-msgid "Language (*):"
-msgstr "Язык (*):"
-
-msgid "system"
-msgstr "системы"
