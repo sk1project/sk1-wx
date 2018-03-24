@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-24 22:51+0200\n"
+"POT-Creation-Date: 2018-03-25 00:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -588,7 +588,7 @@ msgstr ""
 msgid "Show guides on canvas"
 msgstr ""
 
-#: src/sk1/dialogs/docprops.py:668 src/sk1/resources/labels.py:77
+#: src/sk1/dialogs/docprops.py:668
 msgid "Document properties"
 msgstr ""
 
@@ -2007,8 +2007,12 @@ msgstr ""
 msgid "&File history logs..."
 msgstr ""
 
+#: src/sk1/resources/labels.py:77
+msgid "Document properties..."
+msgstr ""
+
 #: src/sk1/resources/labels.py:78
-msgid "Preferences"
+msgid "Preferences..."
 msgstr ""
 
 #: src/sk1/resources/labels.py:80
