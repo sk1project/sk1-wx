@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-25 00:12+0200\n"
-"PO-Revision-Date: 2018-03-25 00:14+0200\n"
+"POT-Creation-Date: 2018-03-25 05:30+0300\n"
+"PO-Revision-Date: 2018-03-25 05:30+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -115,7 +115,7 @@ msgstr "Чтобы начать, создайте новый документ и
 
 #: src/sk1/application.py:186
 msgid "Untitled"
-msgstr "Рисунок"
+msgstr "Документ"
 
 #: src/sk1/application.py:196
 msgid "Document is changed"

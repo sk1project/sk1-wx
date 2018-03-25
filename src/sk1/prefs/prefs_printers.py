@@ -153,7 +153,7 @@ class PrinterPrefs(PrefPanel):
             self.pack((10, 10))
 
             # ---Calibration page
-            text = _("To measure real print area and vertical/horirizontal "
+            text = _("To measure real print area and vertical/horizontal "
                      "printing shift just print calibration page on the "
                      "A4/Letter sheet.")
 

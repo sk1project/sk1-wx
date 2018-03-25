@@ -459,7 +459,7 @@ class ProfileInfoViewer(wal.CloseDialog):
         grid.pack(wal.Label(grid, name, True))
         grid.pack(wal.Label(grid, _('File:')))
         grid.pack(wal.Label(grid, filename))
-        grid.pack(wal.Label(grid, _('Copyrigth:')))
+        grid.pack(wal.Label(grid, _('Copyright:')))
         grid.pack(wal.Entry(grid, copyrigth, multiline=True, editable=False),
                   fill=True)
         grid.pack(wal.Label(grid, _('Description:')))
