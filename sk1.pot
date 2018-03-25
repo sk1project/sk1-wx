@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-25 00:06+0200\n"
+"POT-Creation-Date: 2018-03-25 21:54+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -576,19 +576,19 @@ msgstr ""
 msgid "Grid preview:"
 msgstr ""
 
-#: src/sk1/dialogs/docprops.py:571
+#: src/sk1/dialogs/docprops.py:567
 msgid "Guides"
 msgstr ""
 
-#: src/sk1/dialogs/docprops.py:585
+#: src/sk1/dialogs/docprops.py:581
 msgid "Guide color:"
 msgstr ""
 
-#: src/sk1/dialogs/docprops.py:598
+#: src/sk1/dialogs/docprops.py:594
 msgid "Show guides on canvas"
 msgstr ""
 
-#: src/sk1/dialogs/docprops.py:668
+#: src/sk1/dialogs/docprops.py:659
 msgid "Document properties"
 msgstr ""
 
@@ -1096,7 +1096,7 @@ msgid "File:"
 msgstr ""
 
 #: src/sk1/prefs/prefs_cms.py:462
-msgid "Copyrigth:"
+msgid "Copyright:"
 msgstr ""
 
 #: src/sk1/prefs/prefs_cms.py:472
@@ -1380,8 +1380,8 @@ msgstr ""
 
 #: src/sk1/prefs/prefs_printers.py:156
 msgid ""
-"To measure real print area and vertical/horirizontal printing shift just "
-"print calibration page on the A4/Letter sheet."
+"To measure real print area and vertical/horizontal printing shift just print "
+"calibration page on the A4/Letter sheet."
 msgstr ""
 
 #: src/sk1/prefs/prefs_printers.py:165
