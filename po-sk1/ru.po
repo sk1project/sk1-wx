@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-26 09:38+0300\n"
-"PO-Revision-Date: 2018-03-26 09:38+0300\n"
+"POT-Creation-Date: 2018-03-26 22:29+0300\n"
+"PO-Revision-Date: 2018-03-26 22:29+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -1103,7 +1103,7 @@ msgstr "Файл:"
 
 #: src/sk1/prefs/prefs_cms.py:462
 msgid "Copyright:"
-msgstr ""
+msgstr "Автор:"
 
 #: src/sk1/prefs/prefs_cms.py:472
 msgid "Settings"
@@ -1252,27 +1252,27 @@ msgstr "Новый документ на старте"
 
 #: src/sk1/prefs/prefs_general.py:158
 msgid "Backup on document save"
-msgstr ""
+msgstr "Резервная копия при сохранении"
 
 #: src/sk1/prefs/prefs_general.py:162
 msgid "Make font cache on start"
-msgstr ""
+msgstr "Кешировать шрифты на старте"
 
 #: src/sk1/prefs/prefs_general.py:166
 msgid "Backup on export"
-msgstr ""
+msgstr "Резервная копия при экспорте"
 
 #: src/sk1/prefs/prefs_general.py:174
 msgid "History log size:"
-msgstr ""
+msgstr "Файловая история:"
 
 #: src/sk1/prefs/prefs_general.py:177
 msgid "History menu size:"
-msgstr ""
+msgstr "Меню истории:"
 
 #: src/sk1/prefs/prefs_general.py:182
 msgid "Logging level (*):"
-msgstr ""
+msgstr "Уровень логов:"
 
 #: src/sk1/prefs/prefs_general.py:187
 msgid "Language (*):"
@@ -1280,43 +1280,43 @@ msgstr "Язык (*):"
 
 #: src/sk1/prefs/prefs_general.py:196
 msgid "Generic features"
-msgstr ""
+msgstr "Общие опции"
 
 #: src/sk1/prefs/prefs_general.py:199
 msgid "(*) - These options require application restart"
-msgstr ""
+msgstr "(*) - Эти опции требуют повторного запуска приложения"
 
 #: src/sk1/prefs/prefs_palettes.py:25
 msgid "Horizontal"
-msgstr ""
+msgstr "Горизонтальная"
 
 #: src/sk1/prefs/prefs_palettes.py:25
 msgid "Vertical"
-msgstr ""
+msgstr "Вертикальная"
 
 #: src/sk1/prefs/prefs_palettes.py:30
 msgid "Palettes"
-msgstr ""
+msgstr "Палитры"
 
 #: src/sk1/prefs/prefs_palettes.py:31
 msgid "Palette options and palette management"
-msgstr ""
+msgstr "Свойства палитр и управление ими"
 
 #: src/sk1/prefs/prefs_palettes.py:58
 msgid "Current palette:"
-msgstr ""
+msgstr "Текущая палитра:"
 
 #: src/sk1/prefs/prefs_palettes.py:69
 msgid "Palette orientation:"
-msgstr ""
+msgstr "Ориентация палитры:"
 
 #: src/sk1/prefs/prefs_palettes.py:84
 msgid "Vertical palette"
-msgstr ""
+msgstr "Вертикальная палитра"
 
 #: src/sk1/prefs/prefs_palettes.py:90 src/sk1/prefs/prefs_palettes.py:114
 msgid "Cell width:"
-msgstr ""
+msgstr "Ширина ячейки:"
 
 #: src/sk1/prefs/prefs_palettes.py:95 src/sk1/prefs/prefs_palettes.py:102
 #: src/sk1/prefs/prefs_palettes.py:118 src/sk1/prefs/prefs_palettes.py:126
@@ -1326,528 +1326,530 @@ msgstr ""
 
 #: src/sk1/prefs/prefs_palettes.py:98 src/sk1/prefs/prefs_palettes.py:121
 msgid "Cell height:"
-msgstr ""
+msgstr "Высота ячейки:"
 
 #: src/sk1/prefs/prefs_palettes.py:108
 msgid "Horizontal palette"
-msgstr ""
+msgstr "Горизонтальная палитра"
 
 #: src/sk1/prefs/prefs_palettes.py:132
 msgid "Expand short palettes"
-msgstr ""
+msgstr "Растянуть короткую палитру"
 
 #: src/sk1/prefs/prefs_palettes.py:140
 msgid "Palette options"
-msgstr ""
+msgstr "Свойства палитры"
 
 #: src/sk1/prefs/prefs_palettes.py:144
 msgid "Palette management"
-msgstr ""
+msgstr "Управление палитрами"
 
 #: src/sk1/prefs/prefs_palettes.py:230
 msgid "Export"
-msgstr ""
+msgstr "Экспорт"
 
 #: src/sk1/prefs/prefs_palettes.py:238
 msgid "Edit info"
-msgstr ""
+msgstr "Правка"
 
 #: src/sk1/prefs/prefs_palettes.py:245
 msgid "Download more palettes"
-msgstr ""
+msgstr "Загрузить дополнительные палитры"
 
 #: src/sk1/prefs/prefs_printers.py:29
 msgid "Printers"
-msgstr ""
+msgstr "Притеры"
 
 #: src/sk1/prefs/prefs_printers.py:30
 msgid "Printer preferences"
-msgstr ""
+msgstr "Настройки принтеров"
 
 #: src/sk1/prefs/prefs_printers.py:65
 msgid "Printer:"
-msgstr ""
+msgstr "Принтер:"
 
 #: src/sk1/prefs/prefs_printers.py:86
 msgid "Printing shift"
-msgstr ""
+msgstr "Смещение распечатки"
 
 #: src/sk1/prefs/prefs_printers.py:92
 msgid "Horizontal shift:"
-msgstr ""
+msgstr "Горизонтально:"
 
 #: src/sk1/prefs/prefs_printers.py:99
 msgid "Vertical shift:"
-msgstr ""
+msgstr "Вертикально:"
 
 #: src/sk1/prefs/prefs_printers.py:114
 msgid "Printing margins"
-msgstr ""
+msgstr "Отступы распечатки"
 
 #: src/sk1/prefs/prefs_printers.py:156
 msgid ""
 "To measure real print area and vertical/horizontal printing shift just print "
 "calibration page on the A4/Letter sheet."
 msgstr ""
+"Для измерения реальных размеров распечатки, просто распечатайте "
+"калибровочную страницу A4/Letter."
 
 #: src/sk1/prefs/prefs_printers.py:165
 msgid "Print A4 calibration page"
-msgstr ""
+msgstr "Печатать калибровочную A4 страницу"
 
 #: src/sk1/prefs/prefs_printers.py:172
 msgid "Print Letter calibration page"
-msgstr ""
+msgstr "Печатать калибровочную Letter страницу"
 
 #: src/sk1/prefs/prefs_printers.py:181
 msgid "Cannot found installed printers!"
-msgstr ""
+msgstr "Нет установленных принтеров!"
 
 #: src/sk1/prefs/prefs_ruler.py:29
 msgid "Ruler preferences"
-msgstr ""
+msgstr "Настройки линеек"
 
 #: src/sk1/prefs/prefs_ruler.py:46
 msgid "Size (px):"
-msgstr ""
+msgstr "Размер (px):"
 
 #: src/sk1/prefs/prefs_ruler.py:51
 msgid "Ruler:"
-msgstr ""
+msgstr "ЛинейкаЖ"
 
 #: src/sk1/prefs/prefs_ruler.py:57
 msgid "Ruler font:"
-msgstr ""
+msgstr "Шрифт:"
 
 #: src/sk1/prefs/prefs_ruler.py:64
 msgid "Small tick:"
-msgstr ""
+msgstr "Малые риски:"
 
 #: src/sk1/prefs/prefs_ruler.py:70
 msgid "Large tick:"
-msgstr ""
+msgstr "Большие риски:"
 
 #: src/sk1/prefs/prefs_ruler.py:77
 msgid "Text shift (px):"
-msgstr ""
+msgstr "Смещение текста (px):"
 
 #: src/sk1/prefs/prefs_ruler.py:82
 msgid "Vertical:"
-msgstr ""
+msgstr "Вертикальное:"
 
 #: src/sk1/prefs/prefs_ruler.py:89
 msgid "Horizontal:"
-msgstr ""
+msgstr "Горизонтальное:"
 
 #: src/sk1/prefs/prefs_ruler.py:100
 msgid "Ruler background color:"
-msgstr ""
+msgstr "Фон линейки:"
 
 #: src/sk1/prefs/prefs_ruler.py:106
 msgid "Ruler mark color:"
-msgstr ""
+msgstr "Цвет рисок линейки:"
 
 #: src/sk1/prefs/prefs_ruler.py:114
 msgid "Testing ruler:"
-msgstr ""
+msgstr "Линейка для тестирования:"
 
 #: src/sk1/prefs/templates.py:26
 msgid "Grid and guides"
-msgstr ""
+msgstr "Сетка и направляющие"
 
 #: src/sk1/prefs/templates.py:27
 msgid "Grid and guides options"
-msgstr ""
+msgstr "Свойства сетки и направляющих"
 
 #: src/sk1/printing/cups_print.py:48 src/sk1/printing/pdf_printer.py:30
 #: src/uc2/formats/pdxf/methods.py:101 src/uc2/formats/sk2/sk2_methods.py:148
 msgid "Custom size"
-msgstr ""
+msgstr "Пользовательский размер"
 
 #: src/sk1/printing/cups_print.py:192 src/sk1/printing/pdf_printer.py:75
 msgid "Driver:"
-msgstr ""
+msgstr "Драйвер:"
 
 #: src/sk1/printing/cups_print.py:193 src/sk1/printing/pdf_printer.py:76
 msgid "Connection"
-msgstr ""
+msgstr "Подключение"
 
 #: src/sk1/printing/cups_print.py:245 src/sk1/printing/pdf_printer.py:101
 msgid "Printing in progress..."
-msgstr ""
+msgstr "Печать в процессе..."
 
 #: src/sk1/printing/cups_print.py:265 src/sk1/printing/msw_print.py:133
 msgid "Loading calibration page..."
-msgstr ""
+msgstr "Загрузка калибровочной страницы..."
 
 #: src/sk1/printing/cups_print.py:270 src/sk1/printing/generic.py:147
 msgid "Done"
-msgstr ""
+msgstr "Готово"
 
 #: src/sk1/printing/cups_print.py:272 src/sk1/printing/msw_print.py:139
 msgid "Error while printing of calibration page!"
-msgstr ""
+msgstr "Ошибка при печати калибровочной страницы!"
 
 #: src/sk1/printing/cups_print.py:273 src/sk1/printing/msw_print.py:140
 msgid "Check your printer status and connection."
-msgstr ""
+msgstr "Проверьте состояние и подключение принтера."
 
 #: src/sk1/printing/generic.py:144
 msgid "Printing..."
-msgstr ""
+msgstr "Печать..."
 
 #: src/sk1/printing/generic.py:149
 msgid "Error while printing!"
-msgstr ""
+msgstr "Ошибка при печати!"
 
 #: src/sk1/printing/msw_print.py:72
 msgid "Default printer"
-msgstr ""
+msgstr "Принтер по умолчанию"
 
 #: src/sk1/printing/pdf_printer.py:34
 msgid "Print to file (PDF)"
-msgstr ""
+msgstr "Печать в файл (PDF)"
 
 #: src/sk1/printing/pdf_printer.py:54
 msgid "Internal PDF writer"
-msgstr ""
+msgstr "Внутренний PDF драйвер"
 
 #: src/sk1/printing/pdf_printer.py:57
 msgid "Software interface"
-msgstr ""
+msgstr "Программный интерфейс"
 
 #: src/sk1/printing/pdf_printer.py:60
 msgid "Idle"
-msgstr ""
+msgstr "Ожидание"
 
 #: src/sk1/printing/pdf_printer.py:128
 msgid "Select output file"
-msgstr ""
+msgstr "Выбрать файл для записи"
 
 #: src/sk1/pwidgets/colorctrls.py:45
 msgid "Fill any contour"
-msgstr ""
+msgstr "Заполнять любой контур"
 
 #: src/sk1/pwidgets/colorctrls.py:46
 msgid "Fill closed only"
-msgstr ""
+msgstr "Заполнять только замкнутые контуры"
 
 #: src/sk1/pwidgets/colorctrls.py:49
 msgid "Evenodd fill"
-msgstr ""
+msgstr "Заливка чет-нечет"
 
 #: src/sk1/pwidgets/colorctrls.py:50
 msgid "Nonzero fill"
-msgstr ""
+msgstr "Заливка без выборок"
 
 #: src/sk1/pwidgets/colorctrls.py:467 src/sk1/pwidgets/patternctrls.py:115
 msgid "Bg:"
-msgstr ""
+msgstr "Фон:"
 
 #: src/sk1/pwidgets/colorctrls.py:479 src/sk1/pwidgets/colorctrls.py:508
 msgid "None"
-msgstr ""
+msgstr "Нет"
 
 #: src/sk1/pwidgets/colorctrls.py:498 src/sk1/pwidgets/patternctrls.py:107
 msgid "Fg:"
-msgstr ""
+msgstr "Фронт:"
 
 #: src/sk1/pwidgets/colorctrls.py:537
 msgid "Old color:"
-msgstr ""
+msgstr "До:"
 
 #: src/sk1/pwidgets/colorctrls.py:543
 msgid "New color:"
-msgstr ""
+msgstr "После:"
 
 #: src/sk1/pwidgets/colorctrls.py:560 src/sk1/pwidgets/colorctrls.py:582
 msgid "Old fill:"
-msgstr ""
+msgstr "До:"
 
 #: src/sk1/pwidgets/colorctrls.py:566 src/sk1/pwidgets/colorctrls.py:588
 msgid "New fill:"
-msgstr ""
+msgstr "После:"
 
 #: src/sk1/pwidgets/colorctrls.py:881
 msgid "HTML notation:"
-msgstr ""
+msgstr "HTML нотация:"
 
 #: src/sk1/pwidgets/colorctrls.py:1179
 msgid "color"
-msgstr ""
+msgstr "цвет"
 
 #: src/sk1/pwidgets/colorctrls.py:1211
 msgid "Palette:"
-msgstr ""
+msgstr "Палитра:"
 
 #: src/sk1/pwidgets/fillctrls.py:260
 msgid "Empty pattern selected"
-msgstr ""
+msgstr "Выбран пустой паттерн"
 
 #: src/sk1/pwidgets/fillctrls.py:306 src/sk1/pwidgets/fillctrls.py:455
 msgid "CMYK colorspace"
-msgstr ""
+msgstr "CMYK цвет"
 
 #: src/sk1/pwidgets/fillctrls.py:307 src/sk1/pwidgets/fillctrls.py:456
 msgid "RGB colorspace"
-msgstr ""
+msgstr "RGB цвет"
 
 #: src/sk1/pwidgets/fillctrls.py:308 src/sk1/pwidgets/fillctrls.py:457
 msgid "Grayscale colorspace"
-msgstr ""
+msgstr "Оттенки серого"
 
 #: src/sk1/pwidgets/fillctrls.py:309
 msgid "SPOT colors"
-msgstr ""
+msgstr "SPOT цвета"
 
 #: src/sk1/pwidgets/fillctrls.py:310
 msgid "Color from palette"
-msgstr ""
+msgstr "Цвет из палитры"
 
 #: src/sk1/pwidgets/fillctrls.py:356
 msgid "Solid Fill"
-msgstr ""
+msgstr "Сплошная заливка"
 
 #: src/sk1/pwidgets/fillctrls.py:441
 msgid "Linear gradient"
-msgstr ""
+msgstr "Линейный градиент"
 
 #: src/sk1/pwidgets/fillctrls.py:442
 msgid "Radial gradient"
-msgstr ""
+msgstr "Радиальный градиент"
 
 #: src/sk1/pwidgets/fillctrls.py:467
 msgid "Gradient Fill"
-msgstr ""
+msgstr "Градиентная заливка"
 
 #: src/sk1/pwidgets/fillctrls.py:592
 msgid "Pattern Fill"
-msgstr ""
+msgstr "Заливка паттерном"
 
 #: src/sk1/pwidgets/gradientctrls.py:154
 msgid "Gradient stop"
-msgstr ""
+msgstr "Точка градиента"
 
 #: src/sk1/pwidgets/gradientctrls.py:157
 msgid "Color value:"
-msgstr ""
+msgstr "Цвет:"
 
 #: src/sk1/pwidgets/gradientctrls.py:160
 msgid "Change stop color"
-msgstr ""
+msgstr "Изменить цвет точки"
 
 #: src/sk1/pwidgets/gradientctrls.py:166
 msgid "Position:"
-msgstr ""
+msgstr "Позиция:"
 
 #: src/sk1/pwidgets/gradientctrls.py:360
 msgid "Select first stop"
-msgstr ""
+msgstr "Выбрать первую точку"
 
 #: src/sk1/pwidgets/gradientctrls.py:366
 msgid "Select previous stop"
-msgstr ""
+msgstr "Выбрать предыдущую точку"
 
 #: src/sk1/pwidgets/gradientctrls.py:372
 msgid "Select next stop"
-msgstr ""
+msgstr "Выбрать следущую точку"
 
 #: src/sk1/pwidgets/gradientctrls.py:378
 msgid "Select last stop"
-msgstr ""
+msgstr "Выбрать последнюю точку"
 
 #: src/sk1/pwidgets/gradientctrls.py:388
 msgid "Add stop"
-msgstr ""
+msgstr "Добавить точку"
 
 #: src/sk1/pwidgets/gradientctrls.py:394
 msgid "Delete selected stop"
-msgstr ""
+msgstr "Удалить выбранную точку"
 
 #: src/sk1/pwidgets/gradientctrls.py:400
 msgid "Reverse gradient"
-msgstr ""
+msgstr "Перевернуть градиент"
 
 #: src/sk1/pwidgets/gradientctrls.py:401 src/sk1/printing/printdlg/panels.py:82
 msgid "Reverse"
-msgstr ""
+msgstr "Перевернуть"
 
 #: src/sk1/pwidgets/gradientctrls.py:406
 msgid "Keep gradient vector"
-msgstr ""
+msgstr "Сохранять вектор градиента"
 
 #: src/sk1/pwidgets/palette_viewer.py:37
 msgid "Auto mode"
-msgstr ""
+msgstr "Авторежим"
 
 #: src/sk1/pwidgets/palette_viewer.py:38
 msgid "Small cells"
-msgstr ""
+msgstr "Маленькие"
 
 #: src/sk1/pwidgets/palette_viewer.py:39
 msgid "Large cells"
-msgstr ""
+msgstr "Большие"
 
 #: src/sk1/pwidgets/palette_viewer.py:40
 msgid "List view"
-msgstr ""
+msgstr "Список"
 
 #: src/sk1/pwidgets/palette_viewer.py:244
 msgid "Palette preview:"
-msgstr ""
+msgstr "Обзор палитры:"
 
 #: src/sk1/pwidgets/patternctrls.py:108
 msgid "Change pattern foreground color"
-msgstr ""
+msgstr "Изменить цвет фронта паттерна"
 
 #: src/sk1/pwidgets/patternctrls.py:116
 msgid "Change pattern background color"
-msgstr ""
+msgstr "Изменить цвет вона паттерна"
 
 #: src/sk1/pwidgets/patternctrls.py:154
 msgid "Horizontal origin shift"
-msgstr ""
+msgstr "Исходный горизонтальный сдвиг"
 
 #: src/sk1/pwidgets/patternctrls.py:164
 msgid "Vertical origin shift"
-msgstr ""
+msgstr "Исходный вертикальный сдвиг"
 
 #: src/sk1/pwidgets/patternctrls.py:172
 msgid "Scale horizontally"
-msgstr ""
+msgstr "Масштабировать горизонтально"
 
 #: src/sk1/pwidgets/patternctrls.py:183
 msgid "Scale vertically"
-msgstr ""
+msgstr "Масштабировать вертикально"
 
 #: src/sk1/pwidgets/patternctrls.py:192
 msgid "Shear horizontally"
-msgstr ""
+msgstr "Сдвиг горизонтально"
 
 #: src/sk1/pwidgets/patternctrls.py:203
 msgid "Shear vertically"
-msgstr ""
+msgstr "Сдвиг вертикально"
 
 #: src/sk1/pwidgets/patternctrls.py:215
 msgid "Rotate pattern"
-msgstr ""
+msgstr "Повернуть паттерн"
 
 #: src/sk1/pwidgets/patternctrls.py:284
 msgid "Transformation matrix:"
-msgstr ""
+msgstr "Матрица преобразования:"
 
 #: src/sk1/pwidgets/patternctrls.py:417
 msgid "Load pattern from file"
-msgstr ""
+msgstr "Загрузить паттерн из файла"
 
 #: src/sk1/pwidgets/patternctrls.py:421
 msgid "Save pattern into file"
-msgstr ""
+msgstr "Сохранить паттерн в файл"
 
 #: src/sk1/pwidgets/strokectrls.py:110
 msgid "Line exactly at the point"
-msgstr ""
+msgstr "Концы в обрез"
 
 #: src/sk1/pwidgets/strokectrls.py:111
 msgid "Round ending"
-msgstr ""
+msgstr "Закругленные углы"
 
 #: src/sk1/pwidgets/strokectrls.py:112
 msgid "Squared ending"
-msgstr ""
+msgstr "Квадратные концы"
 
 #: src/sk1/pwidgets/strokectrls.py:137
 msgid "Cut-off join"
-msgstr ""
+msgstr "Обрезанный угол"
 
 #: src/sk1/pwidgets/strokectrls.py:138
 msgid "Sharp (angled) corner"
-msgstr ""
+msgstr "Острый угол"
 
 #: src/sk1/pwidgets/strokectrls.py:139
 msgid "Rounded join"
-msgstr ""
+msgstr "Закругленный угол"
 
 #: src/sk1/pwidgets/unitctrls.py:147
 #: src/sk1/share/pd_plugins/transform_plugin/transforms.py:210
 #: src/sk1/share/pd_plugins/transform_plugin/transforms.py:306
 msgid "Keep ratio"
-msgstr ""
+msgstr "Сохранять пропорцию"
 
 #: src/sk1/pwidgets/unitctrls.py:148
 msgid "Don't keep ratio"
-msgstr ""
+msgstr "Не сохранять пропорцию"
 
 #: src/sk1/resources/labels.py:26
 msgid "Selection mode (Esc)"
-msgstr ""
+msgstr "Режим выделения (Esc)"
 
 #: src/sk1/resources/labels.py:27
 msgid "Edit mode (Space)"
-msgstr ""
+msgstr "Режим редактирования (Space)"
 
 #: src/sk1/resources/labels.py:28
 msgid "Zoom mode (F2)"
-msgstr ""
+msgstr "Режим масштабирования (F2)"
 
 #: src/sk1/resources/labels.py:29
 msgid "Fleur mode"
-msgstr ""
+msgstr "Режим прокрутки"
 
 #: src/sk1/resources/labels.py:30
 msgid "Create polyline"
-msgstr ""
+msgstr "Рисование линий"
 
 #: src/sk1/resources/labels.py:31
 msgid "Create curve"
-msgstr ""
+msgstr "Рисование кривых"
 
 #: src/sk1/resources/labels.py:32
 msgid "Create rectangle"
-msgstr ""
+msgstr "Создание прямоугольников"
 
 #: src/sk1/resources/labels.py:33
 msgid "Create ellipse"
-msgstr ""
+msgstr "Создание эллипсов"
 
 #: src/sk1/resources/labels.py:34
 msgid "Create text (F8)"
-msgstr ""
+msgstr "Создание текста"
 
 #: src/sk1/resources/labels.py:35
 msgid "Create polygon"
-msgstr ""
+msgstr "Создание многоугольников"
 
 #: src/sk1/resources/labels.py:36
 msgid "Zoom out mode"
-msgstr ""
+msgstr "Режим уменьшения"
 
 #: src/sk1/resources/labels.py:37
 msgid "Move mode"
-msgstr ""
+msgstr "Режим перемещения"
 
 #: src/sk1/resources/labels.py:38
 msgid "Copy mode"
-msgstr ""
+msgstr "Режим копирования"
 
 #: src/sk1/resources/labels.py:39
 msgid "Edit gradient"
-msgstr ""
+msgstr "Редактирование градиента"
 
 #: src/sk1/resources/labels.py:40
 msgid "Stroke..."
-msgstr ""
+msgstr "Обводка..."
 
 #: src/sk1/resources/labels.py:41
 msgid "Fill..."
-msgstr ""
+msgstr "Заливка..."
 
 #: src/sk1/resources/labels.py:43
 msgid "Copy fill from..."
-msgstr ""
+msgstr "Копирование заливки из..."
 
 #: src/sk1/resources/labels.py:44
 msgid "Copy stroke from..."
-msgstr ""
+msgstr "Копирование обводки из..."
 
 #: src/sk1/resources/labels.py:46
 msgid "&New"
@@ -1855,19 +1857,19 @@ msgstr "&Создать"
 
 #: src/sk1/resources/labels.py:48
 msgid "New From Template..."
-msgstr ""
+msgstr "Создать из шаблона..."
 
 #: src/sk1/resources/labels.py:48
 msgid "New document from template..."
-msgstr ""
+msgstr "Новый документ из шаблона..."
 
 #: src/sk1/resources/labels.py:49
 msgid "&Open..."
-msgstr ""
+msgstr "&Открыть..."
 
 #: src/sk1/resources/labels.py:49
 msgid "Open document"
-msgstr ""
+msgstr "Открыть документ"
 
 #: src/sk1/resources/labels.py:50
 msgid "&Clear history"
@@ -1875,427 +1877,427 @@ msgstr "Очистить историю"
 
 #: src/sk1/resources/labels.py:51
 msgid "&Save"
-msgstr ""
+msgstr "Со&хранить"
 
 #: src/sk1/resources/labels.py:51
 msgid "Save document"
-msgstr ""
+msgstr "Сохранить документ"
 
 #: src/sk1/resources/labels.py:52
 msgid "Save &As..."
-msgstr ""
+msgstr "Сохранить &как..."
 
 #: src/sk1/resources/labels.py:52
 msgid "Save document as..."
-msgstr ""
+msgstr "Сохранить документ как..."
 
 #: src/sk1/resources/labels.py:54
 msgid "Save Selected Only..."
-msgstr ""
+msgstr "Сохранить только выбранное..."
 
 #: src/sk1/resources/labels.py:54
 msgid "Save selected objects only..."
-msgstr ""
+msgstr "Сохранить только выбранные объекты..."
 
 #: src/sk1/resources/labels.py:55
 msgid "Save All"
-msgstr ""
+msgstr "Сохранить все"
 
 #: src/sk1/resources/labels.py:55
 msgid "Save all documents"
-msgstr ""
+msgstr "Сохранить все документы"
 
 #: src/sk1/resources/labels.py:56
 msgid "&Import..."
-msgstr ""
+msgstr "&Импорт..."
 
 #: src/sk1/resources/labels.py:56
 msgid "Import graphics..."
-msgstr ""
+msgstr "Импортировать графику..."
 
 #: src/sk1/resources/labels.py:57
 msgid "E&xport As..."
-msgstr ""
+msgstr "&Экспорт как..."
 
 #: src/sk1/resources/labels.py:57
 msgid "Export graphics as..."
-msgstr ""
+msgstr "Экспорт графики как"
 
 #: src/sk1/resources/labels.py:58
 msgid "&Close"
-msgstr ""
+msgstr "&Закрыть"
 
 #: src/sk1/resources/labels.py:58
 msgid "Close document"
-msgstr ""
+msgstr "Закрыть документ"
 
 #: src/sk1/resources/labels.py:59
 msgid "Close All"
-msgstr ""
+msgstr "Закрыть все"
 
 #: src/sk1/resources/labels.py:59
 msgid "Close all documents"
-msgstr ""
+msgstr "Закрыть все документы"
 
 #: src/sk1/resources/labels.py:60
 msgid "Close Others"
-msgstr ""
+msgstr "Закрыть другие"
 
 #: src/sk1/resources/labels.py:60
 msgid "Close other documents"
-msgstr ""
+msgstr "Закрыть другие документы"
 
 #: src/sk1/resources/labels.py:61
 msgid "Page Setup for Print..."
-msgstr ""
+msgstr "Параметры страницы для печати"
 
 #: src/sk1/resources/labels.py:62
 msgid "&Print..."
-msgstr ""
+msgstr "&Печать..."
 
 #: src/sk1/resources/labels.py:62
 msgid "Print document"
-msgstr ""
+msgstr "Печать документа"
 
 #: src/sk1/resources/labels.py:63
 msgid "&Exit"
-msgstr ""
+msgstr "&Выход"
 
 #: src/sk1/resources/labels.py:63
 msgid "Exit application"
-msgstr ""
+msgstr "Завершить приложение"
 
 #: src/sk1/resources/labels.py:65
 msgid "&Undo"
-msgstr ""
+msgstr "&Отменить"
 
 #: src/sk1/resources/labels.py:66
 msgid "&Redo"
-msgstr ""
+msgstr "Ве&рнуть"
 
 #: src/sk1/resources/labels.py:67
 msgid "Clear undo history"
-msgstr ""
+msgstr "Очистить историю"
 
 #: src/sk1/resources/labels.py:68
 msgid "Cu&t"
-msgstr ""
+msgstr "&Вырезать"
 
 #: src/sk1/resources/labels.py:69
 msgid "&Copy"
-msgstr ""
+msgstr "&Копировать"
 
 #: src/sk1/resources/labels.py:70
 msgid "&Paste"
-msgstr ""
+msgstr "Вставить"
 
 #: src/sk1/resources/labels.py:71
 msgid "&Delete"
-msgstr ""
+msgstr "Удалить"
 
 #: src/sk1/resources/labels.py:72
 msgid "Duplicate"
-msgstr ""
+msgstr "Дуплицировать"
 
 #: src/sk1/resources/labels.py:73
 msgid "&Select All"
-msgstr ""
+msgstr "Выбрать все"
 
 #: src/sk1/resources/labels.py:74
 msgid "D&eselect"
-msgstr ""
+msgstr "Сбросить выделение"
 
 #: src/sk1/resources/labels.py:75
 msgid "&Invert selection"
-msgstr ""
+msgstr "Инвертировать выделение"
 
 #: src/sk1/resources/labels.py:76
 msgid "&File history logs..."
-msgstr ""
+msgstr "Файловая история..."
 
 #: src/sk1/resources/labels.py:77
 msgid "Document properties..."
-msgstr ""
+msgstr "Свойства документа..."
 
 #: src/sk1/resources/labels.py:78
 msgid "Preferences..."
-msgstr ""
+msgstr "Настройки..."
 
 #: src/sk1/resources/labels.py:80
 msgid "Stroke view"
-msgstr ""
+msgstr "Каркасный режим"
 
 #: src/sk1/resources/labels.py:81
 msgid "Draft view"
-msgstr ""
+msgstr "Упрощенный режим"
 
 #: src/sk1/resources/labels.py:82 src/sk1/printing/printdlg/toolbar.py:53
 msgid "Zoom 100%"
-msgstr ""
+msgstr "Масштаб 100%"
 
 #: src/sk1/resources/labels.py:85
 msgid "Previous zoom"
-msgstr ""
+msgstr "Предыдущий масштаб"
 
 #: src/sk1/resources/labels.py:86
 msgid "Fit zoom to page"
-msgstr ""
+msgstr "Вписать страницу"
 
 #: src/sk1/resources/labels.py:87
 msgid "Zoom selected"
-msgstr ""
+msgstr "Показать выделенное"
 
 #: src/sk1/resources/labels.py:88
 msgid "Show grid"
-msgstr ""
+msgstr "Показать сетку"
 
 #: src/sk1/resources/labels.py:89
 msgid "Show guides"
-msgstr ""
+msgstr "Показать направляющие"
 
 #: src/sk1/resources/labels.py:90
 msgid "Show active snapping"
-msgstr ""
+msgstr "Показать прилипание"
 
 #: src/sk1/resources/labels.py:92
 msgid "Snap to grid"
-msgstr ""
+msgstr "Прилипать к сетке"
 
 #: src/sk1/resources/labels.py:93
 msgid "Snap to guide"
-msgstr ""
+msgstr "Прилипать к направляющим"
 
 #: src/sk1/resources/labels.py:94
 msgid "Snap to objects"
-msgstr ""
+msgstr "Прилипать к объектам"
 
 #: src/sk1/resources/labels.py:95
 msgid "Snap to page"
-msgstr ""
+msgstr "Прилипать к странице"
 
 #: src/sk1/resources/labels.py:96
 msgid "Iconizer..."
-msgstr ""
+msgstr "Иконайзер..."
 
 #: src/sk1/resources/labels.py:97
 msgid "Redraw document"
-msgstr ""
+msgstr "Обновить документ"
 
 #: src/sk1/resources/labels.py:99
 msgid "Insert page..."
-msgstr ""
+msgstr "Вставить страницу..."
 
 #: src/sk1/resources/labels.py:100
 msgid "Delete page..."
-msgstr ""
+msgstr "Удалить страницу..."
 
 #: src/sk1/resources/labels.py:101
 msgid "Go to page..."
-msgstr ""
+msgstr "Перейти к странице"
 
 #: src/sk1/resources/labels.py:102
 msgid "Next page"
-msgstr ""
+msgstr "Следующая страница"
 
 #: src/sk1/resources/labels.py:103
 msgid "Previous page"
-msgstr ""
+msgstr "Предыдущая страница"
 
 #: src/sk1/resources/labels.py:104
 msgid "Guides at page center"
-msgstr ""
+msgstr "Направляющие по осям страницы"
 
 #: src/sk1/resources/labels.py:105
 msgid "Page frame"
-msgstr ""
+msgstr "Рамка страницы"
 
 #: src/sk1/resources/labels.py:106
 msgid "Guides around page"
-msgstr ""
+msgstr "Направляющие вокруг страницы"
 
 #: src/sk1/resources/labels.py:107
 msgid "Remove all guides"
-msgstr ""
+msgstr "Удалить все направляющие"
 
 #: src/sk1/resources/labels.py:109
 msgid "Clear transformations"
-msgstr ""
+msgstr "Очистить преобразования"
 
 #: src/sk1/resources/labels.py:110
 msgid "Position..."
-msgstr ""
+msgstr "Позиция..."
 
 #: src/sk1/resources/labels.py:111
 msgid "Resizing..."
-msgstr ""
+msgstr "Размер..."
 
 #: src/sk1/resources/labels.py:112
 msgid "Scale and mirror..."
-msgstr ""
+msgstr "Масштаб и отражение..."
 
 #: src/sk1/resources/labels.py:113
 msgid "Rotation..."
-msgstr ""
+msgstr "Вращение..."
 
 #: src/sk1/resources/labels.py:114
 msgid "Shearing..."
-msgstr ""
+msgstr "Сдвиг..."
 
 #: src/sk1/resources/labels.py:115
 msgid "Rotate &left 90 degrees"
-msgstr ""
+msgstr "Повернуть влево на 90 градусов"
 
 #: src/sk1/resources/labels.py:116
 msgid "Rotate &right 90 degrees"
-msgstr ""
+msgstr "Повернуть вправо на 90 градусов"
 
 #: src/sk1/resources/labels.py:117
 msgid "&Horizontal mirror"
-msgstr ""
+msgstr "Отразить горизонтально"
 
 #: src/sk1/resources/labels.py:118
 msgid "&Vertical mirror"
-msgstr ""
+msgstr "Отразить вертикально"
 
 #: src/sk1/resources/labels.py:119
 msgid "Align and Distribute..."
-msgstr ""
+msgstr "Выравнивание и размещение..."
 
 #: src/sk1/resources/labels.py:120
 msgid "&Combine"
-msgstr ""
+msgstr "Комбинировать"
 
 #: src/sk1/resources/labels.py:121
 msgid "&Break Apart"
-msgstr ""
+msgstr "Разбить"
 
 #: src/sk1/resources/labels.py:122
 msgid "Raise to &Top"
-msgstr ""
+msgstr "Поднять вверх"
 
 #: src/sk1/resources/labels.py:123
 msgid "&Raise"
-msgstr ""
+msgstr "Поднять"
 
 #: src/sk1/resources/labels.py:124
 msgid "&Lower"
-msgstr ""
+msgstr "Опустить"
 
 #: src/sk1/resources/labels.py:125
 msgid "Lower to &Bottom"
-msgstr ""
+msgstr "Опустить вниз"
 
 #: src/sk1/resources/labels.py:126
 msgid "&Group"
-msgstr ""
+msgstr "Группировать"
 
 #: src/sk1/resources/labels.py:127
 msgid "&Ungroup"
-msgstr ""
+msgstr "Разгруппировать"
 
 #: src/sk1/resources/labels.py:128
 msgid "U&ngroup All"
-msgstr ""
+msgstr "Разгруппировать все"
 
 #: src/sk1/resources/labels.py:129
 msgid "Trim..."
-msgstr ""
+msgstr "Обрезка..."
 
 #: src/sk1/resources/labels.py:130
 msgid "Intersection..."
-msgstr ""
+msgstr "Пересечение..."
 
 #: src/sk1/resources/labels.py:131
 msgid "Exclusion..."
-msgstr ""
+msgstr "Исключение..."
 
 #: src/sk1/resources/labels.py:132
 msgid "Fusion..."
-msgstr ""
+msgstr "Слияние..."
 
 #: src/sk1/resources/labels.py:133
 msgid "&Place into container"
-msgstr ""
+msgstr "Поместить в контейнер"
 
 #: src/sk1/resources/labels.py:134
 msgid "&Extract from container"
-msgstr ""
+msgstr "Достать из контейнера"
 
 #: src/sk1/resources/labels.py:135
 msgid "Con&vert to curves"
-msgstr ""
+msgstr "Конвертировать в кривые"
 
 #: src/sk1/resources/labels.py:136
 msgid "Convert stroke to curves"
-msgstr ""
+msgstr "Конвертировать обводку в кривые"
 
 #: src/sk1/resources/labels.py:138
 msgid "Select all nodes"
-msgstr ""
+msgstr "Выбрать все точки"
 
 #: src/sk1/resources/labels.py:139
 msgid "Reverse all paths"
-msgstr ""
+msgstr "Перевернуть все кривые"
 
 #: src/sk1/resources/labels.py:140
 msgid "Select all subpath nodes"
-msgstr ""
+msgstr "Выбрать все точки фрагмента"
 
 #: src/sk1/resources/labels.py:141
 msgid "Delete subpaths"
-msgstr ""
+msgstr "Удалить фрагменты"
 
 #: src/sk1/resources/labels.py:142
 msgid "Reverse subpaths"
-msgstr ""
+msgstr "Перевернуть фрагменты"
 
 #: src/sk1/resources/labels.py:143
 msgid "Extract subpaths"
-msgstr ""
+msgstr "Экстрагировать фрагменты"
 
 #: src/sk1/resources/labels.py:144
 msgid "Add node"
-msgstr ""
+msgstr "Добавить точку"
 
 #: src/sk1/resources/labels.py:145
 msgid "Delete nodes"
-msgstr ""
+msgstr "Удалить точки"
 
 #: src/sk1/resources/labels.py:146
 msgid "Create segment"
-msgstr ""
+msgstr "Создать сегмент"
 
 #: src/sk1/resources/labels.py:147
 msgid "Delete segment"
-msgstr ""
+msgstr "Удалить сегмент"
 
 #: src/sk1/resources/labels.py:148
 msgid "Join nodes"
-msgstr ""
+msgstr "Соединить точки"
 
 #: src/sk1/resources/labels.py:149
 msgid "Split nodes"
-msgstr ""
+msgstr "Разъединить точки"
 
 #: src/sk1/resources/labels.py:150
 msgid "Convert segments to line"
-msgstr ""
+msgstr "Сегменты в линии"
 
 #: src/sk1/resources/labels.py:151
 msgid "Convert segments to curve"
-msgstr ""
+msgstr "Сегменты в кривые"
 
 #: src/sk1/resources/labels.py:152
 msgid "Make nodes cusp"
-msgstr ""
+msgstr "Сделать точки независимыми"
 
 #: src/sk1/resources/labels.py:153
 msgid "Make nodes smooth"
-msgstr ""
+msgstr "Сделать точки сглаженными"
 
 #: src/sk1/resources/labels.py:154
 msgid "Make nodes symmetrical"
-msgstr ""
+msgstr "Сделать точки симметричными"
 
 #: src/sk1/resources/labels.py:156
 msgid "Convert to CMYK"
@@ -2314,7 +2316,7 @@ msgid "Convert to Grayscale"
 msgstr ""
 
 #: src/sk1/resources/labels.py:160
-msgid "Convert to B&&W"
+msgid "Convert to B&W"
 msgstr ""
 
 #: src/sk1/resources/labels.py:161
