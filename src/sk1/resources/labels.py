@@ -157,7 +157,7 @@ LABELS = {
     pdids.ID_CONV_TO_RGB: (_('Convert to RGB'),),
     pdids.ID_CONV_TO_LAB: (_('Convert to LAB'),),
     pdids.ID_CONV_TO_GRAY: (_('Convert to Grayscale'),),
-    pdids.ID_CONV_TO_BW: (_('Convert to B&&W'),),
+    pdids.ID_CONV_TO_BW: (_('Convert to B&W'),),
     pdids.ID_INVERT_BITMAP: (_('Invert bitmap'),),
     pdids.ID_REMOVE_ALPHA: (_('Remove alpha-channel'),),
     pdids.ID_INVERT_ALPHA: (_('Invert alpha-channel'),),
