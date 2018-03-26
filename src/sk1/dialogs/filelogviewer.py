@@ -90,7 +90,8 @@ class LogViewerDialog(wal.OkCancelDialog):
         self.lc.clear_all()
 
     def on_ok(self, *args):
-        path = self.lc.get_selected()[2].encode(sys.getfilesystemencoding())
+        path = self.lc.get_selected()[2].decode('utf-8')\
+            .encode(sys.getfilesystemencoding())
         if os.path.isfile(path):
             self.ret = path
             self.end_modal(wal.BUTTON_OK)
