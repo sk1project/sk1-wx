@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-26 22:29+0300\n"
-"PO-Revision-Date: 2018-03-26 23:04+0300\n"
+"POT-Creation-Date: 2018-03-27 15:36+0300\n"
+"PO-Revision-Date: 2018-03-27 17:45+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -638,19 +638,19 @@ msgstr "Открыт"
 msgid "Saved"
 msgstr "Сохранен"
 
-#: src/sk1/dialogs/filelogviewer.py:98
+#: src/sk1/dialogs/filelogviewer.py:99
 msgid "File"
 msgstr "Файл"
 
-#: src/sk1/dialogs/filelogviewer.py:98
+#: src/sk1/dialogs/filelogviewer.py:99
 msgid "is not found."
 msgstr "не найден."
 
-#: src/sk1/dialogs/filelogviewer.py:99
+#: src/sk1/dialogs/filelogviewer.py:100
 msgid "File not found"
 msgstr "Файл не найден"
 
-#: src/sk1/dialogs/filelogviewer.py:121
+#: src/sk1/dialogs/filelogviewer.py:122
 msgid "Recent documents"
 msgstr "Недавние документы"
 
@@ -2161,7 +2161,7 @@ msgstr "Отразить вертикально"
 
 #: src/sk1/resources/labels.py:119
 msgid "Align and Distribute..."
-msgstr "Выравнивание и размещение..."
+msgstr "Выровнять и разместить..."
 
 #: src/sk1/resources/labels.py:120
 msgid "&Combine"
@@ -2301,366 +2301,368 @@ msgstr "Сделать точки симметричными"
 
 #: src/sk1/resources/labels.py:156
 msgid "Convert to CMYK"
-msgstr ""
+msgstr "Конвертировать в CMYK"
 
 #: src/sk1/resources/labels.py:157
 msgid "Convert to RGB"
-msgstr ""
+msgstr "Конвертировать в RGB"
 
 #: src/sk1/resources/labels.py:158
 msgid "Convert to LAB"
-msgstr ""
+msgstr "Конвертировать в LAB"
 
 #: src/sk1/resources/labels.py:159
 msgid "Convert to Grayscale"
-msgstr ""
+msgstr "В оттенки серого"
 
 #: src/sk1/resources/labels.py:160
 msgid "Convert to B&W"
-msgstr ""
+msgstr "В монохром"
 
 #: src/sk1/resources/labels.py:161
 msgid "Invert bitmap"
-msgstr ""
+msgstr "Инвертировать"
 
 #: src/sk1/resources/labels.py:162
 msgid "Remove alpha-channel"
-msgstr ""
+msgstr "Удалить альфа-канал"
 
 #: src/sk1/resources/labels.py:163
 msgid "Invert alpha-channel"
-msgstr ""
+msgstr "Инвертировать альфа-канал"
 
 #: src/sk1/resources/labels.py:164
 msgid "Extract embedded bitmap..."
-msgstr ""
+msgstr "Сохранить изображение..."
 
 #: src/sk1/resources/labels.py:166
 msgid "&Edit text"
-msgstr ""
+msgstr "Правка текста"
 
 #: src/sk1/resources/labels.py:167
 msgid "Text on path..."
-msgstr ""
+msgstr "Текст на кривой..."
 
 #: src/sk1/resources/labels.py:168
 msgid "Text on circle..."
-msgstr ""
+msgstr "Текст на круге..."
 
 #: src/sk1/resources/labels.py:169
 msgid "&Straighten text"
-msgstr ""
+msgstr "Выпрямить текст"
 
 #: src/sk1/resources/labels.py:170
 msgid "Clear text markup"
-msgstr ""
+msgstr "Очистить разметку"
 
 #: src/sk1/resources/labels.py:171
 msgid "Uppercase"
-msgstr ""
+msgstr "Верхний регистр"
 
 #: src/sk1/resources/labels.py:172
 msgid "Lowercase"
-msgstr ""
+msgstr "Нижний регистр"
 
 #: src/sk1/resources/labels.py:173
 msgid "Capitalize"
-msgstr ""
+msgstr "Все заглавными"
 
 #: src/sk1/resources/labels.py:175 src/uc2/formats/pdxf/model.py:73
 #: src/uc2/formats/sk1/model.py:52 src/uc2/formats/sk2/sk2_cids.py:68
 msgid "Pages"
-msgstr ""
+msgstr "Страницы"
 
 #: src/sk1/resources/labels.py:176
 msgid "Layers..."
-msgstr ""
+msgstr "Слои..."
 
 #: src/sk1/resources/labels.py:177
 msgid "Object browser"
-msgstr ""
+msgstr "Браузер объектов"
 
 #: src/sk1/resources/labels.py:179
 msgid "&Report bug"
-msgstr ""
+msgstr "Сообщить об ошибке"
 
 #: src/sk1/resources/labels.py:180
 msgid "&Log console"
-msgstr ""
+msgstr "Консоль логов"
 
 #: src/sk1/resources/labels.py:181
 msgid "Project web site"
-msgstr ""
+msgstr "Сайт проекта"
 
 #: src/sk1/resources/labels.py:182
 msgid "Project forum"
-msgstr ""
+msgstr "Форум проекта"
 
 #: src/sk1/resources/labels.py:183
 msgid "Project page on Face&book"
-msgstr ""
+msgstr "Страница проекта в Facebook"
 
 #: src/sk1/resources/labels.py:184
 msgid "&About sK1..."
-msgstr ""
+msgstr "О программе..."
 
 #: src/sk1/document/controllers/editor_bezier.py:52
 #: src/sk1/document/controllers/editor_bezier.py:239
 msgid "No selected nodes"
-msgstr ""
+msgstr "Точки не выбраны"
 
 #: src/sk1/document/controllers/editor_bezier.py:241
 #, python-format
 msgid "Selected %d node(s)"
-msgstr ""
+msgstr "Выбрано %d точки(ек)"
 
 #: src/sk1/document/controllers/editor_ellipse.py:48
 #: src/sk1/document/controllers/editor_ellipse.py:62
 msgid "Ellipse in editing"
-msgstr ""
+msgstr "Редактируется эллипс"
 
 #: src/sk1/document/controllers/editor_polygon.py:52
 #: src/sk1/document/controllers/editor_polygon.py:95
 msgid "Polygon in editing"
-msgstr ""
+msgstr "Редактируется многоугольник"
 
 #: src/sk1/document/controllers/editor_rect.py:57
 #: src/sk1/document/controllers/editor_rect.py:122
 msgid "Rectangle in editing"
-msgstr ""
+msgstr "Редактируется прямоугольник"
 
 #: src/sk1/document/controllers/editor_text.py:50
 msgid "Text in shaping"
-msgstr ""
+msgstr "Редактируются глифы текста"
 
 #: src/sk1/document/controllers/grad_ctrl.py:87
 msgid "Gradient creating"
-msgstr ""
+msgstr "Создается градиент"
 
 #: src/sk1/document/controllers/grad_ctrl.py:184
 msgid "Gradient in editing"
-msgstr ""
+msgstr "Редактируется градиент"
 
 #: src/sk1/document/controllers/text_ctrl.py:58
 msgid "Text in editing"
-msgstr ""
+msgstr "Редактируется текст"
 
 #: src/sk1/printing/printdlg/__init__.py:50
 #: src/sk1/printing/printdlg/__init__.py:138
 msgid "Print preview"
-msgstr ""
+msgstr "Предварительный просмотр печати"
 
 #: src/sk1/printing/printdlg/panels.py:60
 msgid "Copies"
-msgstr ""
+msgstr "Копии"
 
 #: src/sk1/printing/printdlg/panels.py:67
 msgid "Number of copies:"
-msgstr ""
+msgstr "Число копий:"
 
 #: src/sk1/printing/printdlg/panels.py:78
 msgid "Collate"
-msgstr ""
+msgstr "Подобрать"
 
 #: src/sk1/printing/printdlg/panels.py:130
 msgid "Page range"
-msgstr ""
+msgstr "Страницы"
 
 #: src/sk1/printing/printdlg/panels.py:135
 msgid "All"
-msgstr ""
+msgstr "Все"
 
 #: src/sk1/printing/printdlg/panels.py:137
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:52
 msgid "Selection"
-msgstr ""
+msgstr "Выделенное"
 
 #: src/sk1/printing/printdlg/panels.py:139
 msgid "Current page"
-msgstr ""
+msgstr "Текущая страница"
 
 #: src/sk1/printing/printdlg/panels.py:141
 msgid "Pages:"
-msgstr ""
+msgstr "Страницы:"
 
 #: src/sk1/printing/printdlg/panels.py:149
 msgid "Enter page numbers or page ranges."
-msgstr ""
+msgstr "Введите номера или наборы."
 
 #: src/sk1/printing/printdlg/panels.py:150
 msgid "For example: 1,2,5-6"
-msgstr ""
+msgstr "Например: 1,2,5-6"
 
 #: src/sk1/printing/printdlg/panels.py:228
 #: src/sk1/printing/propsdlg/cupspropsdlg.py:34
 msgid "Print mode"
-msgstr ""
+msgstr "Режим печати"
 
 #: src/sk1/printing/printdlg/panels.py:238
 #: src/sk1/printing/propsdlg/cupspropsdlg.py:38
 msgid "Monochrome"
-msgstr ""
+msgstr "Монохромный"
 
 #: src/sk1/printing/printdlg/panels.py:246
 #: src/sk1/printing/propsdlg/cupspropsdlg.py:45
 msgid "Color"
-msgstr ""
+msgstr "Цветной"
 
 #: src/sk1/printing/printdlg/panels.py:277
 msgid "Printer"
-msgstr ""
+msgstr "Принтер"
 
 #: src/sk1/printing/printdlg/panels.py:290
 #: src/sk1/printing/printdlg/toolbar.py:46
 msgid "Print"
-msgstr ""
+msgstr "Печать"
 
 #: src/sk1/printing/printdlg/toolbar.py:48
 #: src/sk1/printing/propsdlg/generic.py:33
 msgid "Printer properties"
-msgstr ""
+msgstr "Свойства принтера"
 
 #: src/sk1/printing/printdlg/toolbar.py:52
 msgid "Fit to page"
-msgstr ""
+msgstr "Вписать в страницу"
 
 #: src/sk1/printing/propsdlg/cupspropsdlg.py:56
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:49
 msgid "Color space:"
-msgstr ""
+msgstr "Цвет:"
 
 #: src/sk1/printing/propsdlg/cupspropsdlg.py:107
 msgid "Paper"
-msgstr ""
+msgstr "Бумага"
 
 #: src/sk1/printing/propsdlg/cupspropsdlg.py:112
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:93
 msgid "Page size:"
-msgstr ""
+msgstr "Размер:"
 
 #: src/sk1/printing/propsdlg/cupspropsdlg.py:117
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:98
 msgid "Width:"
-msgstr ""
+msgstr "Ширина:"
 
 #: src/sk1/printing/propsdlg/cupspropsdlg.py:127
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:107
 msgid "Height:"
-msgstr ""
+msgstr "Высота:"
 
 #: src/sk1/printing/propsdlg/cupspropsdlg.py:193
 msgid "Orientation"
-msgstr ""
+msgstr "Ориентация"
 
 #: src/sk1/printing/propsdlg/cupspropsdlg.py:242
 msgid "Margins"
-msgstr ""
+msgstr "Отступы"
 
 #: src/sk1/printing/propsdlg/cupspropsdlg.py:316
 msgid ""
 "Note: To adjust specific printer options you could use system configuration "
 "tools like 'system-config-printer'"
 msgstr ""
+"Прим.: Специфические опции принтера можно настроить программами типа 'system-"
+"config-printer'"
 
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:37
 msgid "Generation options"
-msgstr ""
+msgstr "Опции генерации"
 
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:44
 msgid "PDF version:"
-msgstr ""
+msgstr "Версия PDF:"
 
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:58
 msgid "Use SPOT colors"
-msgstr ""
+msgstr "SPOT цвета"
 
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:61
 msgid "Use compression"
-msgstr ""
+msgstr "Сжатие"
 
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:88
 msgid "Document page"
-msgstr ""
+msgstr "Страница документа"
 
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:115
 msgid "Orientation:"
-msgstr ""
+msgstr "Ориентация:"
 
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:191
 msgid "Document metainfo"
-msgstr ""
+msgstr "Метаинформация"
 
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:196
 msgid "Title:"
-msgstr ""
+msgstr "Заглавие:"
 
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:200
 msgid "Subject:"
-msgstr ""
+msgstr "Тема:"
 
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:275
 msgid "Set metainfo"
-msgstr ""
+msgstr "Метаинфо"
 
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:276
 msgid "Set metainfo from current document"
-msgstr ""
+msgstr "Взять метаинформацию из документа"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:53
 msgid "First selected"
-msgstr ""
+msgstr "Первого объекта"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:54
 msgid "Last selected"
-msgstr ""
+msgstr "Последнего объекта"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:55
 msgid "Biggest object"
-msgstr ""
+msgstr "Наибольшего объекта"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:56
 msgid "Smallest object"
-msgstr ""
+msgstr "Наименьшего объекта"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:76
 msgid "Align to left side"
-msgstr ""
+msgstr "Выровнять слева"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:77
 msgid "Align to center horizontally"
-msgstr ""
+msgstr "Выровнять по центру горизонтально"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:78
 msgid "Align to right side"
-msgstr ""
+msgstr "Выровнять справа"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:90
 msgid "Align to bottom"
-msgstr ""
+msgstr "Выровнять по низу"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:91
 msgid "Align to center vertically"
-msgstr ""
+msgstr "Выровнять по центру вертикально"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:92
 msgid "Align to top"
-msgstr ""
+msgstr "Выровнять по верху"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:98
 msgid "Align and Distribute"
-msgstr ""
+msgstr "Выровнять и разместить"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:132
 msgid "Align"
-msgstr ""
+msgstr "Выровнять"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:135
 msgid "Relative to:"
-msgstr ""
+msgstr "Относительно:"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:154
 msgid "Selection as group"
-msgstr ""
+msgstr "Выбранное как группа"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:158
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:342
@@ -2670,161 +2672,157 @@ msgstr ""
 #: src/sk1/share/pd_plugins/text_on_path/__init__.py:123
 #: src/sk1/share/pd_plugins/transform_plugin/__init__.py:116
 msgid "Apply"
-msgstr ""
+msgstr "Применить"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:293
 msgid "Distribute by left side horizontally"
-msgstr ""
+msgstr "Разместить от левого края горизонтально"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:294
 msgid "Distribute by center horizontally"
-msgstr ""
+msgstr "Разместить от от сентра горизонтально"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:295
 msgid "Distribute by right side horizontally"
-msgstr ""
+msgstr "Разместить от правого края горизонтально"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:296
 msgid "Equal gap horizontally"
-msgstr ""
+msgstr "Одинаковый зазор горизонтально"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:310
 msgid "Distribute by bottom side vertically"
-msgstr ""
+msgstr "Разместить от низа вертикально"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:311
 msgid "Distribute by center vertically"
-msgstr ""
+msgstr "Разместить от центра вертикально"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:312
 msgid "Distribute by top side vertically"
-msgstr ""
+msgstr "Разместить от верха вертикально"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:313
 msgid "Equal gap vertically"
-msgstr ""
+msgstr "Одинаковый зазор вертикально"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:322
 msgid "Distribute"
-msgstr ""
-
-#: src/sk1/share/pd_plugins/align_plugin/__init__.py:466
-msgid "Flattering"
-msgstr ""
+msgstr "Разместить"
 
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:142
 msgid "Size:"
-msgstr ""
+msgstr "Размер:"
 
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:156
 msgid "Iconizer"
-msgstr ""
+msgstr "Иконайзер"
 
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:178
 msgid "Background:"
-msgstr ""
+msgstr "Фон:"
 
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:198
 msgid "Show image border"
-msgstr ""
+msgstr "Граница картинки"
 
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:203
 msgid "Draw selected only"
-msgstr ""
+msgstr "Только выделенное"
 
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:210
 msgid "Save image"
-msgstr ""
+msgstr "Сохранить"
 
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:293
 msgid "Save image as..."
-msgstr ""
+msgstr "Сохранить изображение как..."
 
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:302
 msgid "Cannot save image:"
-msgstr ""
+msgstr "Не могу сохранить изображение:"
 
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:309
 msgid "Image is successfully saved"
-msgstr ""
+msgstr "Изображение успешно сохранено"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:51
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:66
 msgid "Layers"
-msgstr ""
+msgstr "Слои"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:72
 msgid "Create new layer"
-msgstr ""
+msgstr "Новый слой"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:75
 msgid "Layer to bottom"
-msgstr ""
+msgstr "Слой в самый низ"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:78
 msgid "Lower layer"
-msgstr ""
+msgstr "Слой опустить ниже"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:81
 msgid "Raise layer"
-msgstr ""
+msgstr "Слой поднять выше"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:84
 msgid "Layer to top"
-msgstr ""
+msgstr "Слой на самый верх"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:87
 msgid "Delete layer"
-msgstr ""
+msgstr "Удалить слой"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:90
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:207
 msgid "Rename layer"
-msgstr ""
+msgstr "Переименовать слой"
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:55
 msgid "Trim"
-msgstr ""
+msgstr "Обрезка"
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:56
 msgid "Intersection"
-msgstr ""
+msgstr "Пересечение"
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:57
 msgid "Exclusion"
-msgstr ""
+msgstr "Исключение"
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:58
 msgid "Fusion"
-msgstr ""
+msgstr "Объединение"
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:90
 msgid "Delete originals"
-msgstr ""
+msgstr "Удалить исходные"
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:95
 msgid "Apply to..."
-msgstr ""
+msgstr "Применить к..."
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:122
 msgid "Selected objects cannot be used for this operation."
-msgstr ""
+msgstr "Выбранные объекты не подходят для этой операции."
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:123
 msgid "Try ungroup selection."
-msgstr ""
+msgstr "Попытайтесь разгруппировать выделенное."
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:167
 msgid "Selected object cannot be target for trim operation."
-msgstr ""
+msgstr "Выбранный объект не может быть целью для операции обрезки."
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:190
 msgid "Selected objects cannot be intersected."
-msgstr ""
+msgstr "Выбранные объекты не подходят для операции пересечения."
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:257
 msgid "Shaping"
-msgstr ""
+msgstr "Геометрия"
 
 #: src/sk1/share/pd_plugins/text_on_circle/__init__.py:47
 msgid "Text on right side"
