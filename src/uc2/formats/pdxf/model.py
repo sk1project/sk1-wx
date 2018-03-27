@@ -64,23 +64,23 @@ TEXT_BLOCK = 205
 TEXT_COLUMN = 206
 
 CID_TO_NAME = {
-    DOCUMENT: _('Document'),
+    DOCUMENT: 'Document',
 
-    METAINFO: _('Metainfo'), STYLES: _('Styles'), STYLE: _('Style'),
-    PROFILES: _('Profiles'), PROFILE: _('Profile'), FONTS: _('Fonts'),
-    FONT: _('Font'), IMAGES: _('Images'), IMAGE: _('Image'),
+    METAINFO: 'Metainfo', STYLES: 'Styles', STYLE: 'Style',
+    PROFILES: 'Profiles', PROFILE: 'Profile', FONTS: 'Fonts',
+    FONT: 'Font', IMAGES: 'Images', IMAGE: 'Image',
 
-    PAGES: _('Pages'), PAGE: _('Page'), LAYER_GROUP: _('Layer group'),
-    MASTER_LAYERS: _('Master layers'), LAYER: _('Layer'),
-    GRID_LAYER: _('Grid layer'), GUIDE_LAYER: _('Guide layer'),
-    DESKTOP_LAYERS: _('Desktop layers'), GUIDE: _('Guide'),
+    PAGES: 'Pages', PAGE: 'Page', LAYER_GROUP: 'Layer group',
+    MASTER_LAYERS: 'Master layers', LAYER: 'Layer',
+    GRID_LAYER: 'Grid layer', GUIDE_LAYER: 'Guide layer',
+    DESKTOP_LAYERS: 'Desktop layers', GUIDE: 'Guide',
 
-    GROUP: _('Group'), CONTAINER: _('Container'),
-    TEXT_BLOCK: _('Text block'), TEXT_COLUMN: _('Text column'),
+    GROUP: 'Group', CONTAINER: 'Container',
+    TEXT_BLOCK: 'Text block', TEXT_COLUMN: 'Text column',
 
-    RECTANGLE: _('Rectangle'), CIRCLE: _('Ellipse'),
-    POLYGON: _('Polygon'), CURVE: _('Curve'),
-    PIXMAP: _('Pixmap'),
+    RECTANGLE: 'Rectangle', CIRCLE: 'Ellipse',
+    POLYGON: 'Polygon', CURVE: 'Curve',
+    PIXMAP: 'Pixmap',
 }
 
 CID_TO_TAGNAME = {

@@ -64,7 +64,7 @@ class PDXF_Loader:
         self.path = path
 
         if not zipfile.is_zipfile(self.path):
-            msg = _('It seems the file is not PDXF file')
+            msg = 'It seems the file is not PDXF file'
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
             raise IOError(2, msg)
 
@@ -78,12 +78,12 @@ class PDXF_Loader:
             fl = pdxf_file.namelist()
         except:
             errtype, value, traceback = sys.exc_info()
-            msg = _('It seems the PDXF file is corrupted') + '\n' + value
+            msg = 'It seems the PDXF file is corrupted' + '\n' + value
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
             raise IOError(errtype, msg, traceback)
         if not 'mimetype' in fl or not pdxf_file.read(
                 'mimetype') == const.DOC_MIME:
-            msg = _('The file is corrupted or not PDXF file')
+            msg = 'The file is corrupted or not PDXF file'
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
             raise IOError(2, msg)
 
@@ -98,7 +98,7 @@ class PDXF_Loader:
             dest = open(os.path.join(self.presenter.doc_dir, item), 'wb')
             dest.write(source)
             dest.close()
-        msg = _('The file content is extracted successfully')
+        msg = 'The file content is extracted successfully'
         events.emit(events.MESSAGES, msgconst.OK, msg)
 
     def _build_model(self):
@@ -125,12 +125,12 @@ class PDXF_Loader:
             content_handler.file = None
         except:
             errtype, value, traceback = sys.exc_info()
-            msg = _('It seems content.xml is corrupted') + '\n' + value
+            msg = 'It seems content.xml is corrupted' + '\n' + value
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
             raise IOError(errtype, msg, traceback)
         self.model = content_handler.model
 
-        msg = _('Content.xml is parsed successfully')
+        msg = 'Content.xml is parsed successfully'
         events.emit(events.MESSAGES, msgconst.OK, msg)
 
 
@@ -153,7 +153,7 @@ class XMLDocReader(handler.ContentHandler):
         else:
             position = float(self.locator.getLineNumber()) / self.lines
             if position - self.position > 0.05:
-                msg = _('Parsing in process...')
+                msg = 'Parsing in process...'
                 events.emit(events.FILTER_INFO, msg, position)
                 self.position = position
             obj = None
@@ -220,7 +220,7 @@ class PDXF_Saver:
             self.file = open(content_xml, 'wb')
         except:
             errtype, value, traceback = sys.exc_info()
-            msg = _('Cannot open %s file for writing') % (content_xml)
+            msg = 'Cannot open %s file for writing' % content_xml
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
             raise IOError(errtype, msg + '\n' + value, traceback)
 
@@ -230,7 +230,7 @@ class PDXF_Saver:
         self._write_tree(doc)
         self._finish()
 
-        msg = _('PDXF file content.xml is created')
+        msg = 'PDXF file content.xml is created'
         events.emit(events.MESSAGES, msgconst.OK, msg)
 
     def _start(self):
@@ -242,7 +242,7 @@ class PDXF_Saver:
         self.counter += 1
         position = float(self.counter) / self.obj_num
         if position - self.position > 0.05:
-            msg = _('Saving in process...')
+            msg = 'Saving in process...'
             events.emit(events.FILTER_INFO, msg, position)
             self.position = position
 
@@ -294,7 +294,7 @@ class PDXF_Saver:
             self.file = open(xml, 'wb')
         except:
             errtype, value, traceback = sys.exc_info()
-            msg = _('Cannot open %s file for writing') % (xml)
+            msg = 'Cannot open %s file for writing' % xml
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
             raise IOError(errtype, msg + '\n' + value, traceback)
         self._start()
@@ -305,7 +305,7 @@ class PDXF_Saver:
         filename = os.path.join('META-INF', 'manifest.xml')
         self.content.append((xml, filename))
 
-        msg = _('PDXF file manifest.xml is created')
+        msg = 'PDXF file manifest.xml is created'
         events.emit(events.MESSAGES, msgconst.OK, msg)
 
     def _write_manifest_entries(self):
@@ -360,5 +360,5 @@ class PDXF_Saver:
             pdxf_file.write(path, filename, zipfile.ZIP_DEFLATED)
         pdxf_file.close()
 
-        msg = _('PDXF file is created successfully')
+        msg = 'PDXF file is created successfully'
         events.emit(events.MESSAGES, msgconst.OK, msg)
