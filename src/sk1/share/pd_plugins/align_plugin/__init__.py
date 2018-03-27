@@ -463,7 +463,7 @@ class FlatteringPanel(wal.LabeledPanel):
 
     def __init__(self, parent, app):
         self.app = app
-        wal.LabeledPanel.__init__(self, parent, _('Flattering'))
+        wal.LabeledPanel.__init__(self, parent, 'Flattering')
         self.apply_btn = wal.Button(self, _('Apply'), onclick=self.action)
         self.pack(self.apply_btn, padding_all=5, fill=True)
 
