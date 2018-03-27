@@ -20,7 +20,6 @@ import os
 from importlib import import_module
 
 from fallback import fallback_check, im_loader
-from uc2 import _
 from uc2 import events, msgconst
 from uc2 import uc2const
 from uc2.utils.fs import get_file_extension
@@ -84,7 +83,7 @@ def _get_checker(pid):
 def get_loader_by_id(pid):
     loader = _get_loader(pid)
     if not loader:
-        msg = _('Loader is not found for id %s') % (uc2const.FORMAT_NAMES[pid],)
+        msg = 'Loader is not found for id %s' % (uc2const.FORMAT_NAMES[pid],)
         events.emit(events.MESSAGES, msgconst.ERROR, msg)
     return loader
 
@@ -101,7 +100,7 @@ def get_loader(path, experimental=False, return_id=False):
     loader = None
     ld_formats = [] + uc2const.LOADER_FORMATS
 
-    msg = _('Start to search for loader by file extension %s') % (ext.__str__())
+    msg = 'Start to search for loader by file extension %s' % (ext.__str__())
     events.emit(events.MESSAGES, msgconst.INFO, msg)
 
     if experimental:
@@ -115,9 +114,9 @@ def get_loader(path, experimental=False, return_id=False):
                 break
 
     if loader is None:
-        msg = _('Loader is not found or not suitable for %s') % path
+        msg = 'Loader is not found or not suitable for %s' % path
         events.emit(events.MESSAGES, msgconst.WARNING, msg)
-        msg = _('Start to search loader by file content')
+        msg = 'Start to search loader by file content'
         events.emit(events.MESSAGES, msgconst.INFO, msg)
 
         for item in ld_formats:
@@ -129,19 +128,19 @@ def get_loader(path, experimental=False, return_id=False):
                     break
 
     if loader is None:
-        msg = _('By file content loader is not found for %s') % path
+        msg = 'By file content loader is not found for %s' % path
         events.emit(events.MESSAGES, msgconst.WARNING, msg)
-        msg = _('Try using fallback loader')
+        msg = 'Try using fallback loader'
         events.emit(events.MESSAGES, msgconst.INFO, msg)
         if fallback_check(path):
             loader = im_loader
 
     if loader is None:
-        msg = _('Loader is not found for %s') % path
+        msg = 'Loader is not found for %s' % path
         events.emit(events.MESSAGES, msgconst.ERROR, msg)
     else:
         loader_name = loader.__str__().split(' ')[1]
-        msg = _('Loader "%s" is found for %s') % (loader_name, path)
+        msg = 'Loader "%s" is found for %s' % (loader_name, path)
         events.emit(events.MESSAGES, msgconst.OK, msg)
 
     if return_id:
@@ -152,7 +151,7 @@ def get_loader(path, experimental=False, return_id=False):
 def get_saver_by_id(pid):
     saver = _get_saver(pid)
     if not saver:
-        msg = _('Saver is not found for id %u') % pid
+        msg = 'Saver is not found for id %u' % pid
         events.emit(events.MESSAGES, msgconst.ERROR, msg)
     return saver
 
@@ -163,7 +162,7 @@ def get_saver(path, experimental=False, return_id=False):
     saver = None
     sv_formats = [] + uc2const.SAVER_FORMATS
 
-    msg = _('Start to search saver by file extension %s') % (ext.__str__())
+    msg = 'Start to search saver by file extension %s' % (ext.__str__())
     events.emit(events.MESSAGES, msgconst.INFO, msg)
 
     if experimental:
@@ -174,10 +173,10 @@ def get_saver(path, experimental=False, return_id=False):
             ret_id = item
             break
     if saver is None:
-        msg = _('Saver is not found for %s file format') % (ext.__str__())
+        msg = 'Saver is not found for %s file format' % (ext.__str__())
         events.emit(events.MESSAGES, msgconst.ERROR, msg)
     else:
-        msg = _('Saver is found for extension %s') % (ext.__str__())
+        msg = 'Saver is found for extension %s' % (ext.__str__())
         events.emit(events.MESSAGES, msgconst.OK, msg)
 
     if return_id:

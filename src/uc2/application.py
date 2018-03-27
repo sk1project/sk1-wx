@@ -21,7 +21,7 @@ import os
 import sys
 
 import uc2
-from uc2 import _, cms, uc2const
+from uc2 import cms, uc2const
 from uc2 import events, msgconst
 from uc2.app_palettes import PaletteManager
 from uc2.formats import get_loader, get_saver, get_saver_by_id
@@ -44,7 +44,7 @@ LOG_MAP = {
     msgconst.STOP: log_stub,
 }
 
-HELP_TEMPLATE = _('''
+HELP_TEMPLATE = '''
 %s
 
 Universal vector graphics format translator
@@ -82,7 +82,7 @@ Example: uniconvertor drawing.cdr drawing.svg
    %s
 
 ----------------------------------------------------
-''')
+'''
 
 
 class UCApplication(object):
@@ -128,8 +128,8 @@ class UCApplication(object):
     def show_short_help(self, msg):
         echo('')
         echo(msg)
-        echo(_('USAGE: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]'))
-        echo(_('Use --help for more details.') + '\n')
+        echo('USAGE: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]')
+        echo('Use --help for more details.' + '\n')
         sys.exit(1)
 
     def verbose(self, *args):
@@ -139,14 +139,14 @@ class UCApplication(object):
             indent = ' ' * (msgconst.MAX_LEN - len(status))
             echo('%s%s| %s' % (status, indent, args[1]))
         if args[0] == msgconst.STOP:
-            echo(_('For details see logs: %s\n') % self.log_filepath)
+            echo('For details see logs: %s\n' % self.log_filepath)
             sys.exit(1)
 
     def run(self):
         if '--help' in sys.argv or '-help' in sys.argv or len(sys.argv) == 1:
             self.show_help()
         elif len(sys.argv) == 2:
-            self.show_short_help(_('Not enough arguments!'))
+            self.show_short_help('Not enough arguments!')
 
         files = []
         options_list = []
@@ -156,16 +156,16 @@ class UCApplication(object):
             if item.startswith('--'):
                 options_list.append(item)
             elif item.startswith('-'):
-                self.show_short_help(_('Unknown option "%s"') % item)
+                self.show_short_help('Unknown option "%s"' % item)
             else:
                 files.append(item)
 
         if not files:
-            self.show_short_help(_('File names are not provided!'))
+            self.show_short_help('File names are not provided!')
         elif len(files) == 1:
-            self.show_short_help(_('Destination file name is not provided!'))
+            self.show_short_help('Destination file name is not provided!')
         elif not os.path.lexists(files[0]):
-            self.show_short_help(_('Source file "%s" is not found!') % files[0])
+            self.show_short_help('Source file "%s" is not found!' % files[0])
 
         for item in options_list:
             result = item[2:].split('=')
@@ -189,7 +189,7 @@ class UCApplication(object):
         self.default_cms = cms.ColorManager()
         self.palettes = PaletteManager(self)
 
-        msg = _('Translation of "%s" into "%s"') % (files[0], files[1])
+        msg = 'Translation of "%s" into "%s"' % (files[0], files[1])
         events.emit(events.MESSAGES, msgconst.JOB, msg)
 
         saver_ids = uc2const.PALETTE_SAVERS
@@ -201,18 +201,18 @@ class UCApplication(object):
         else:
             saver, saver_id = get_saver(files[1], return_id=True)
         if saver is None:
-            msg = _('Output file format of "%s" is unsupported.') % files[1]
+            msg = 'Output file format of "%s" is unsupported.' % files[1]
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
-            msg = _('Translation is interrupted')
+            msg = 'Translation is interrupted'
             events.emit(events.MESSAGES, msgconst.STOP, msg)
 
         loader, loader_id = get_loader(files[0], return_id=True)
         if loader is None:
-            msg = _('Input file format of "%s" is unsupported.') % files[0]
+            msg = 'Input file format of "%s" is unsupported.' % files[0]
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
-            msg = _('Translation is interrupted')
+            msg = 'Translation is interrupted'
             events.emit(events.MESSAGES, msgconst.STOP, msg)
 
         doc = None
@@ -223,12 +223,11 @@ class UCApplication(object):
             else:
                 doc = loader(self.appdata, files[0])
         except Exception as e:
-            msg = _('Error while loading "%s"') % files[0]
-            msg += _(
-                'The file may be corrupted or contains unknown file format.')
+            msg = 'Error while loading "%s"' % files[0]
+            msg += 'The file may be corrupted or contains unknown file format.'
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
-            msg = _('Loading is interrupted')
+            msg = 'Loading is interrupted'
             LOG.error('%s %s', msg, e)
             events.emit(events.MESSAGES, msgconst.STOP, msg)
 
@@ -240,21 +239,21 @@ class UCApplication(object):
                 else:
                     saver(doc, files[1])
             except Exception as e:
-                msg = _('Error while translation and saving "%s"') % files[0]
+                msg = 'Error while translation and saving "%s"' % files[0]
                 events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
-                msg = _('Translation is interrupted')
+                msg = 'Translation is interrupted'
                 LOG.error('%s %s', msg, e)
                 events.emit(events.MESSAGES, msgconst.STOP, msg)
         else:
-            msg = _('Error creating model for "%s"') % files[0]
+            msg = 'Error creating model for "%s"' % files[0]
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
-            msg = _('Translation is interrupted')
+            msg = 'Translation is interrupted'
             events.emit(events.MESSAGES, msgconst.STOP, msg)
 
         doc.close()
-        msg = _('Translation is successful')
+        msg = 'Translation is successful'
         events.emit(events.MESSAGES, msgconst.OK, msg)
         if self.do_verbose:
             echo('')
