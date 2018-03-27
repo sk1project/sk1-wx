@@ -15,7 +15,6 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2 import _
 
 JOB = 0
 OK = 1
@@ -25,12 +24,12 @@ ERROR = 4
 STOP = 5
 
 MESSAGES = {
-    JOB: _('JOB'),
-    OK: _('OK'),
-    INFO: _('INFO'),
-    WARNING: _('WARNING'),
-    ERROR: _('ERROR'),
-    STOP: _('STOP'),
+    JOB: 'JOB',
+    OK: 'OK',
+    INFO: 'INFO',
+    WARNING: 'WARNING',
+    ERROR: 'ERROR',
+    STOP: 'STOP',
 }
 
 MAX_LEN = max(*[len(val) for val in MESSAGES.values()])
