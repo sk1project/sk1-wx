@@ -94,7 +94,7 @@ class TextOnPathPlugin(RsPlugin):
         self.base_point = wal.FloatSpin(hp, value=50.0, range_val=(0.0, 100.0),
                                         step=1.0)
         hp.pack(self.base_point, padding=5)
-        hp.pack(wal.Label(hp, _('%')))
+        hp.pack(wal.Label(hp, '%'))
 
         panel.pack(hp, padding=5)
 
