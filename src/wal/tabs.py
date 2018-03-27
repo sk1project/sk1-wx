@@ -326,7 +326,7 @@ class TabPainter(object):
             while get_text_size(txt, size_incr=-1)[0] > width:
                 txt = txt[:-1]
 
-        y = int(HTAB_HEIGHT / 2 - dc.set_font(size_incr=-1) / 2) + 2
+        y = int(HTAB_HEIGHT / 2 - dc.set_font(size_incr=-1) / 2) + 1
         dc.draw_text(txt, pos, y)
 
         if not const.IS_MSW:
