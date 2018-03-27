@@ -472,12 +472,12 @@ IMAGE_CMYK = 'CMYK'
 IMAGE_LAB = 'LAB'
 
 IMAGE_NAMES = {
-    IMAGE_MONO: _('Bilevel'),
-    IMAGE_GRAY: _('Grayscale'),
-    IMAGE_RGB: _('RGB'),
-    IMAGE_RGBA: _('RGBA'),
-    IMAGE_CMYK: _('CMYK'),
-    IMAGE_LAB: _('LAB'),
+    IMAGE_MONO: 'Bilevel',
+    IMAGE_GRAY: 'Grayscale',
+    IMAGE_RGB: 'RGB',
+    IMAGE_RGBA: 'RGBA',
+    IMAGE_CMYK: 'CMYK',
+    IMAGE_LAB: 'LAB',
 }
 
 IMAGE_TO_COLOR = {
