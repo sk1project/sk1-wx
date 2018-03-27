@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-27 21:36+0300\n"
-"PO-Revision-Date: 2018-03-27 21:37+0300\n"
+"PO-Revision-Date: 2018-03-27 23:32+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -2884,26 +2884,26 @@ msgstr "Базовая точка:"
 #: src/sk1/share/pd_plugins/transform_plugin/__init__.py:55
 #: src/sk1/share/pd_plugins/transform_plugin/transforms.py:122
 msgid "Position"
-msgstr ""
+msgstr "Позиция"
 
 #: src/sk1/share/pd_plugins/transform_plugin/__init__.py:56
 #: src/sk1/share/pd_plugins/transform_plugin/transforms.py:191
 msgid "Resizing"
-msgstr ""
+msgstr "Размер"
 
 #: src/sk1/share/pd_plugins/transform_plugin/__init__.py:57
 #: src/sk1/share/pd_plugins/transform_plugin/transforms.py:269
 msgid "Scale and mirror"
-msgstr ""
+msgstr "Масштаб и отражение"
 
 #: src/sk1/share/pd_plugins/transform_plugin/__init__.py:58
 msgid "Rotating"
-msgstr ""
+msgstr "Вращение"
 
 #: src/sk1/share/pd_plugins/transform_plugin/__init__.py:59
 #: src/sk1/share/pd_plugins/transform_plugin/transforms.py:449
 msgid "Shearing"
-msgstr ""
+msgstr "Сдвиг"
 
 #: src/sk1/share/pd_plugins/transform_plugin/__init__.py:74
 msgid "Transformations"

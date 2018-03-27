@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-26 22:28+0300\n"
-"PO-Revision-Date: 2018-03-27 23:00+0300\n"
+"POT-Creation-Date: 2018-03-27 23:32+0300\n"
+"PO-Revision-Date: 2018-03-27 23:34+0300\n"
 "Last-Translator: Maxim Baramash <maxim.s.barabash@gmail.com>\n"
 "Language-Team: \n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.4\n"
+"X-Generator: Poedit 1.8.7.1\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -640,19 +640,19 @@ msgstr "Відкритий"
 msgid "Saved"
 msgstr "Збережено"
 
-#: src/sk1/dialogs/filelogviewer.py:98
+#: src/sk1/dialogs/filelogviewer.py:99
 msgid "File"
 msgstr "Файл"
 
-#: src/sk1/dialogs/filelogviewer.py:98
+#: src/sk1/dialogs/filelogviewer.py:99
 msgid "is not found."
 msgstr "не знайдений."
 
-#: src/sk1/dialogs/filelogviewer.py:99
+#: src/sk1/dialogs/filelogviewer.py:100
 msgid "File not found"
 msgstr "Не знайдено файла"
 
-#: src/sk1/dialogs/filelogviewer.py:121
+#: src/sk1/dialogs/filelogviewer.py:122
 msgid "Recent documents"
 msgstr "Попередні документи"
 
@@ -2712,10 +2712,6 @@ msgstr "Розподілити вертикально"
 msgid "Distribute"
 msgstr "Розподілити"
 
-#: src/sk1/share/pd_plugins/align_plugin/__init__.py:466
-msgid "Flattering"
-msgstr ""
-
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:142
 msgid "Size:"
 msgstr "Розмір:"
@@ -2886,10 +2882,6 @@ msgstr "Положення тексту за контуром"
 #: src/sk1/share/pd_plugins/text_on_path/__init__.py:93
 msgid "Base point:"
 msgstr "Базова точка:"
-
-#: src/sk1/share/pd_plugins/text_on_path/__init__.py:97
-msgid "%"
-msgstr "%"
 
 #: src/sk1/share/pd_plugins/transform_plugin/__init__.py:55
 #: src/sk1/share/pd_plugins/transform_plugin/transforms.py:122
@@ -3830,3 +3822,6 @@ msgstr "Текст за групою контурів"
 #: src/uc2/formats/sk2/sk2_cids.py:79
 msgid "Bitmap"
 msgstr "Растрове зображення"
+
+#~ msgid "%"
+#~ msgstr "%"
