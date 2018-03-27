@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-28 01:22+0300\n"
+"POT-Creation-Date: 2018-03-28 01:45+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -486,9 +486,8 @@ msgstr ""
 #: src/sk1/dialogs/docprops.py:98
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:51
 #: src/uc2/formats/pdxf/methods.py:123 src/uc2/formats/pdxf/methods.py:140
-#: src/uc2/formats/pdxf/model.py:73 src/uc2/formats/pdxf/model.py:232
-#: src/uc2/formats/sk1/model.py:52 src/uc2/formats/sk2/sk2_cids.py:68
-#: src/uc2/formats/sk2/sk2_methods.py:174
+#: src/uc2/formats/pdxf/model.py:232 src/uc2/formats/sk1/model.py:52
+#: src/uc2/formats/sk2/sk2_cids.py:68 src/uc2/formats/sk2/sk2_methods.py:174
 #: src/uc2/formats/sk2/sk2_methods.py:191 src/uc2/formats/sk2/sk2_model.py:233
 msgid "Page"
 msgstr ""
@@ -1139,8 +1138,7 @@ msgstr ""
 msgid "Use Black preserving transforms"
 msgstr ""
 
-#: src/sk1/prefs/prefs_fonts.py:28 src/uc2/formats/pdxf/model.py:70
-#: src/uc2/formats/sk2/sk2_cids.py:65
+#: src/sk1/prefs/prefs_fonts.py:28 src/uc2/formats/sk2/sk2_cids.py:65
 msgid "Fonts"
 msgstr ""
 
@@ -2359,8 +2357,8 @@ msgstr ""
 msgid "Capitalize"
 msgstr ""
 
-#: src/sk1/resources/labels.py:175 src/uc2/formats/pdxf/model.py:73
-#: src/uc2/formats/sk1/model.py:52 src/uc2/formats/sk2/sk2_cids.py:68
+#: src/sk1/resources/labels.py:175 src/uc2/formats/sk1/model.py:52
+#: src/uc2/formats/sk2/sk2_cids.py:68
 msgid "Pages"
 msgstr ""
 
@@ -3220,30 +3218,6 @@ msgstr ""
 msgid "Absolute Colorimetric"
 msgstr ""
 
-#: src/uc2/uc2const.py:475
-msgid "Bilevel"
-msgstr ""
-
-#: src/uc2/uc2const.py:476
-msgid "Grayscale"
-msgstr ""
-
-#: src/uc2/uc2const.py:477
-msgid "RGB"
-msgstr ""
-
-#: src/uc2/uc2const.py:478
-msgid "RGBA"
-msgstr ""
-
-#: src/uc2/uc2const.py:479
-msgid "CMYK"
-msgstr ""
-
-#: src/uc2/uc2const.py:480
-msgid "LAB"
-msgstr ""
-
 #: src/uc2/formats/generic.py:116
 msgid "Error while loading:"
 msgstr ""
@@ -3330,8 +3304,6 @@ msgid "There is no file path"
 msgstr ""
 
 #: src/uc2/utils/fsutils.py:34 src/uc2/formats/cdrz/cdrz_filters.py:236
-#: src/uc2/formats/pdxf/pdxf_filters.py:223
-#: src/uc2/formats/pdxf/pdxf_filters.py:297
 #, python-format
 msgid "Cannot open %s file for writing"
 msgstr ""
@@ -3358,124 +3330,19 @@ msgid "It seems the CDR file is corrupted"
 msgstr ""
 
 #: src/uc2/formats/cdrz/cdrz_filters.py:86
-#: src/uc2/formats/pdxf/pdxf_filters.py:101
 msgid "The file content is extracted successfully"
 msgstr ""
 
-#: src/uc2/formats/pdf/pdfgen.py:65 src/uc2/formats/pdxf/pdxf_filters.py:245
-#: src/uc2/formats/plt/plt_translators.py:95
+#: src/uc2/formats/pdf/pdfgen.py:65 src/uc2/formats/plt/plt_translators.py:95
 msgid "Saving in process..."
 msgstr ""
 
 #: src/uc2/formats/pdxf/methods.py:151 src/uc2/formats/pdxf/methods.py:159
-#: src/uc2/formats/pdxf/model.py:74 src/uc2/formats/pdxf/model.py:267
-#: src/uc2/formats/sk/sk_model.py:50 src/uc2/formats/sk1/model.py:52
-#: src/uc2/formats/sk2/sk2_cids.py:69 src/uc2/formats/sk2/sk2_methods.py:204
+#: src/uc2/formats/pdxf/model.py:267 src/uc2/formats/sk/sk_model.py:50
+#: src/uc2/formats/sk1/model.py:52 src/uc2/formats/sk2/sk2_cids.py:69
+#: src/uc2/formats/sk2/sk2_methods.py:204
 #: src/uc2/formats/sk2/sk2_methods.py:212 src/uc2/formats/sk2/sk2_model.py:269
 msgid "Layer"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:67 src/uc2/formats/sk/sk_model.py:49
-#: src/uc2/formats/sk1/model.py:51 src/uc2/formats/sk2/sk2_cids.py:62
-msgid "Document"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:69 src/uc2/formats/sk2/sk2_cids.py:64
-msgid "Metainfo"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:69 src/uc2/formats/sk2/sk2_cids.py:64
-msgid "Styles"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:69 src/uc2/formats/sk/sk_model.py:53
-#: src/uc2/formats/sk1/model.py:56 src/uc2/formats/sk2/sk2_cids.py:64
-msgid "Style"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:70 src/uc2/formats/sk2/sk2_cids.py:65
-msgid "Profiles"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:70 src/uc2/formats/sk2/sk2_cids.py:65
-msgid "Profile"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:71 src/uc2/formats/sk2/sk2_cids.py:66
-msgid "Font"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:71 src/uc2/formats/sk2/sk2_cids.py:66
-msgid "Images"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:71 src/uc2/formats/sk/sk_model.py:57
-#: src/uc2/formats/sk1/model.py:60 src/uc2/formats/sk2/sk2_cids.py:66
-msgid "Image"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:73 src/uc2/formats/sk2/sk2_cids.py:68
-msgid "Layer group"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:74 src/uc2/formats/sk2/sk2_cids.py:69
-msgid "Master layers"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:75 src/uc2/formats/sk2/sk2_cids.py:70
-msgid "Grid layer"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:75 src/uc2/formats/sk2/sk2_cids.py:70
-msgid "Guide layer"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:76 src/uc2/formats/sk2/sk2_cids.py:71
-msgid "Desktop layers"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:76 src/uc2/formats/sk2/sk2_cids.py:71
-msgid "Guide"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:78 src/uc2/formats/sk/sk_model.py:54
-#: src/uc2/formats/sk1/model.py:57 src/uc2/formats/sk2/sk2_cids.py:73
-msgid "Group"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:78 src/uc2/formats/sk2/sk2_cids.py:73
-msgid "Container"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:79 src/uc2/formats/sk2/sk2_cids.py:78
-msgid "Text block"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:79 src/uc2/formats/sk2/sk2_cids.py:78
-msgid "Text column"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:81 src/uc2/formats/sk/sk_model.py:56
-#: src/uc2/formats/sk1/model.py:59 src/uc2/formats/sk2/sk2_cids.py:76
-msgid "Rectangle"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:81 src/uc2/formats/sk/sk_model.py:56
-#: src/uc2/formats/sk1/model.py:59 src/uc2/formats/sk2/sk2_cids.py:76
-msgid "Ellipse"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:82 src/uc2/formats/sk2/sk2_cids.py:77
-msgid "Polygon"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:82 src/uc2/formats/sk/sk_model.py:56
-#: src/uc2/formats/sk1/model.py:59 src/uc2/formats/sk2/sk2_cids.py:77
-msgid "Curve"
-msgstr ""
-
-#: src/uc2/formats/pdxf/model.py:83
-msgid "Pixmap"
 msgstr ""
 
 #: src/uc2/formats/pdxf/model.py:303 src/uc2/formats/sk/sk_model.py:51
@@ -3486,42 +3353,6 @@ msgstr ""
 
 #: src/uc2/formats/pdxf/model.py:327 src/uc2/formats/sk2/sk2_model.py:330
 msgid "GridLayer"
-msgstr ""
-
-#: src/uc2/formats/pdxf/pdxf_filters.py:67
-msgid "It seems the file is not PDXF file"
-msgstr ""
-
-#: src/uc2/formats/pdxf/pdxf_filters.py:81
-msgid "It seems the PDXF file is corrupted"
-msgstr ""
-
-#: src/uc2/formats/pdxf/pdxf_filters.py:86
-msgid "The file is corrupted or not PDXF file"
-msgstr ""
-
-#: src/uc2/formats/pdxf/pdxf_filters.py:128
-msgid "It seems content.xml is corrupted"
-msgstr ""
-
-#: src/uc2/formats/pdxf/pdxf_filters.py:133
-msgid "Content.xml is parsed successfully"
-msgstr ""
-
-#: src/uc2/formats/pdxf/pdxf_filters.py:156
-msgid "Parsing in process..."
-msgstr ""
-
-#: src/uc2/formats/pdxf/pdxf_filters.py:233
-msgid "PDXF file content.xml is created"
-msgstr ""
-
-#: src/uc2/formats/pdxf/pdxf_filters.py:308
-msgid "PDXF file manifest.xml is created"
-msgstr ""
-
-#: src/uc2/formats/pdxf/pdxf_filters.py:363
-msgid "PDXF file is created successfully"
 msgstr ""
 
 #: src/uc2/formats/plt/plt_filters.py:35
@@ -3553,6 +3384,11 @@ msgid "END"
 msgstr ""
 
 #: src/uc2/formats/sk/sk_model.py:49 src/uc2/formats/sk1/model.py:51
+#: src/uc2/formats/sk2/sk2_cids.py:62
+msgid "Document"
+msgstr ""
+
+#: src/uc2/formats/sk/sk_model.py:49 src/uc2/formats/sk1/model.py:51
 msgid "Layout"
 msgstr ""
 
@@ -3560,8 +3396,33 @@ msgstr ""
 msgid "Guideline"
 msgstr ""
 
+#: src/uc2/formats/sk/sk_model.py:53 src/uc2/formats/sk1/model.py:56
+#: src/uc2/formats/sk2/sk2_cids.py:64
+msgid "Style"
+msgstr ""
+
+#: src/uc2/formats/sk/sk_model.py:54 src/uc2/formats/sk1/model.py:57
+#: src/uc2/formats/sk2/sk2_cids.py:73
+msgid "Group"
+msgstr ""
+
 #: src/uc2/formats/sk/sk_model.py:54 src/uc2/formats/sk1/model.py:57
 msgid "MaskGroup"
+msgstr ""
+
+#: src/uc2/formats/sk/sk_model.py:56 src/uc2/formats/sk1/model.py:59
+#: src/uc2/formats/sk2/sk2_cids.py:76
+msgid "Rectangle"
+msgstr ""
+
+#: src/uc2/formats/sk/sk_model.py:56 src/uc2/formats/sk1/model.py:59
+#: src/uc2/formats/sk2/sk2_cids.py:76
+msgid "Ellipse"
+msgstr ""
+
+#: src/uc2/formats/sk/sk_model.py:56 src/uc2/formats/sk1/model.py:59
+#: src/uc2/formats/sk2/sk2_cids.py:77
+msgid "Curve"
 msgstr ""
 
 #: src/uc2/formats/sk/sk_model.py:57 src/uc2/formats/sk1/model.py:60
@@ -3570,6 +3431,11 @@ msgstr ""
 
 #: src/uc2/formats/sk/sk_model.py:57 src/uc2/formats/sk1/model.py:60
 msgid "BitmapData"
+msgstr ""
+
+#: src/uc2/formats/sk/sk_model.py:57 src/uc2/formats/sk1/model.py:60
+#: src/uc2/formats/sk2/sk2_cids.py:66
+msgid "Image"
 msgstr ""
 
 #: src/uc2/formats/sk/sk_model.py:208 src/uc2/formats/sk1/model.py:291
@@ -3584,8 +3450,72 @@ msgstr ""
 msgid "Newer version of SK2 format is found!"
 msgstr ""
 
+#: src/uc2/formats/sk2/sk2_cids.py:64
+msgid "Metainfo"
+msgstr ""
+
+#: src/uc2/formats/sk2/sk2_cids.py:64
+msgid "Styles"
+msgstr ""
+
+#: src/uc2/formats/sk2/sk2_cids.py:65
+msgid "Profiles"
+msgstr ""
+
+#: src/uc2/formats/sk2/sk2_cids.py:65
+msgid "Profile"
+msgstr ""
+
+#: src/uc2/formats/sk2/sk2_cids.py:66
+msgid "Font"
+msgstr ""
+
+#: src/uc2/formats/sk2/sk2_cids.py:66
+msgid "Images"
+msgstr ""
+
+#: src/uc2/formats/sk2/sk2_cids.py:68
+msgid "Layer group"
+msgstr ""
+
+#: src/uc2/formats/sk2/sk2_cids.py:69
+msgid "Master layers"
+msgstr ""
+
+#: src/uc2/formats/sk2/sk2_cids.py:70
+msgid "Grid layer"
+msgstr ""
+
+#: src/uc2/formats/sk2/sk2_cids.py:70
+msgid "Guide layer"
+msgstr ""
+
+#: src/uc2/formats/sk2/sk2_cids.py:71
+msgid "Desktop layers"
+msgstr ""
+
+#: src/uc2/formats/sk2/sk2_cids.py:71
+msgid "Guide"
+msgstr ""
+
+#: src/uc2/formats/sk2/sk2_cids.py:73
+msgid "Container"
+msgstr ""
+
 #: src/uc2/formats/sk2/sk2_cids.py:74
 msgid "Text on Path Group"
+msgstr ""
+
+#: src/uc2/formats/sk2/sk2_cids.py:77
+msgid "Polygon"
+msgstr ""
+
+#: src/uc2/formats/sk2/sk2_cids.py:78
+msgid "Text block"
+msgstr ""
+
+#: src/uc2/formats/sk2/sk2_cids.py:78
+msgid "Text column"
 msgstr ""
 
 #: src/uc2/formats/sk2/sk2_cids.py:79
