@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-27 15:36+0300\n"
-"PO-Revision-Date: 2018-03-27 17:45+0300\n"
+"POT-Creation-Date: 2018-03-27 21:36+0300\n"
+"PO-Revision-Date: 2018-03-27 21:37+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -2826,64 +2826,60 @@ msgstr "Геометрия"
 
 #: src/sk1/share/pd_plugins/text_on_circle/__init__.py:47
 msgid "Text on right side"
-msgstr ""
+msgstr "Текст на правой стороне"
 
 #: src/sk1/share/pd_plugins/text_on_circle/__init__.py:48
 msgid "Text at top"
-msgstr ""
+msgstr "Текст сверху"
 
 #: src/sk1/share/pd_plugins/text_on_circle/__init__.py:49
 msgid "Text on left side"
-msgstr ""
+msgstr "Текст на левой стороне"
 
 #: src/sk1/share/pd_plugins/text_on_circle/__init__.py:50
 msgid "Text at bottom"
-msgstr ""
+msgstr "Текст снизу"
 
 #: src/sk1/share/pd_plugins/text_on_circle/__init__.py:129
 msgid "Text on Circle"
-msgstr ""
+msgstr "Текст на круге"
 
 #: src/sk1/share/pd_plugins/text_on_circle/__init__.py:140
 msgid "Text position on circle"
-msgstr ""
+msgstr "Расположение текста на круге"
 
 #: src/sk1/share/pd_plugins/text_on_circle/__init__.py:146
 #: src/sk1/share/pd_plugins/text_on_path/__init__.py:119
 msgid "Place on other side"
-msgstr ""
+msgstr "Поместить с другой стороны"
 
 #: src/sk1/share/pd_plugins/text_on_path/__init__.py:52
 msgid "Align to path start"
-msgstr ""
+msgstr "Привязка к началу"
 
 #: src/sk1/share/pd_plugins/text_on_path/__init__.py:53
 msgid "Align to path center"
-msgstr ""
+msgstr "Привязка к центру"
 
 #: src/sk1/share/pd_plugins/text_on_path/__init__.py:54
 msgid "Align to path end"
-msgstr ""
+msgstr "Привязка к концу"
 
 #: src/sk1/share/pd_plugins/text_on_path/__init__.py:55
 msgid "Stretch along path"
-msgstr ""
+msgstr "Растянуть по кривой"
 
 #: src/sk1/share/pd_plugins/text_on_path/__init__.py:75
 msgid "Text on Path"
-msgstr ""
+msgstr "Текст на кривой"
 
 #: src/sk1/share/pd_plugins/text_on_path/__init__.py:90
 msgid "Text position on path"
-msgstr ""
+msgstr "Позиция текста на кривой"
 
 #: src/sk1/share/pd_plugins/text_on_path/__init__.py:93
 msgid "Base point:"
-msgstr ""
-
-#: src/sk1/share/pd_plugins/text_on_path/__init__.py:97
-msgid "%"
-msgstr ""
+msgstr "Базовая точка:"
 
 #: src/sk1/share/pd_plugins/transform_plugin/__init__.py:55
 #: src/sk1/share/pd_plugins/transform_plugin/transforms.py:122
