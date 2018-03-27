@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-27 15:36+0300\n"
+"POT-Creation-Date: 2018-03-28 01:22+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2871,10 +2871,6 @@ msgstr ""
 msgid "Base point:"
 msgstr ""
 
-#: src/sk1/share/pd_plugins/text_on_path/__init__.py:97
-msgid "%"
-msgstr ""
-
 #: src/sk1/share/pd_plugins/transform_plugin/__init__.py:55
 #: src/sk1/share/pd_plugins/transform_plugin/transforms.py:122
 msgid "Position"
@@ -2940,155 +2936,6 @@ msgstr ""
 msgid "degrees"
 msgstr ""
 
-#: src/uc2/application.py:47
-#, python-format
-msgid ""
-"\n"
-"%s\n"
-"\n"
-"Universal vector graphics format translator\n"
-"copyright (C) 2007-%s sK1 Project Team (http://www.sk1project.net)\n"
-"\n"
-"Usage: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]\n"
-"Example: uniconvertor drawing.cdr drawing.svg\n"
-"\n"
-" Available options:\n"
-" --help      Display this help and exit\n"
-" --verbose   Show internal logs\n"
-" --log=      Logging level: DEBUG, INFO, WARN, ERROR (by default, INFO)\n"
-" --format=   Type of output file format (values provided below)\n"
-"\n"
-"---INPUT FILE FORMATS-------------------------------\n"
-"\n"
-" Supported input vector graphics file formats:\n"
-"   %s\n"
-"\n"
-" Supported input palette file formats:\n"
-"   %s\n"
-"\n"
-" Supported input image file formats:\n"
-"   %s\n"
-"\n"
-"---OUTPUT FILE FORMATS------------------------------\n"
-"\n"
-" Supported output vector graphics file formats:\n"
-"   %s\n"
-"\n"
-" Supported output palette file formats:\n"
-"   %s\n"
-"\n"
-" Supported output image file formats:\n"
-"   %s\n"
-"\n"
-"----------------------------------------------------\n"
-msgstr ""
-
-#: src/uc2/application.py:131
-msgid "USAGE: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]"
-msgstr ""
-
-#: src/uc2/application.py:132
-msgid "Use --help for more details."
-msgstr ""
-
-#: src/uc2/application.py:142
-#, python-format
-msgid "For details see logs: %s\n"
-msgstr ""
-
-#: src/uc2/application.py:149
-msgid "Not enough arguments!"
-msgstr ""
-
-#: src/uc2/application.py:159
-#, python-format
-msgid "Unknown option \"%s\""
-msgstr ""
-
-#: src/uc2/application.py:164
-msgid "File names are not provided!"
-msgstr ""
-
-#: src/uc2/application.py:166
-msgid "Destination file name is not provided!"
-msgstr ""
-
-#: src/uc2/application.py:168
-#, python-format
-msgid "Source file \"%s\" is not found!"
-msgstr ""
-
-#: src/uc2/application.py:192
-#, python-format
-msgid "Translation of \"%s\" into \"%s\""
-msgstr ""
-
-#: src/uc2/application.py:204
-#, python-format
-msgid "Output file format of \"%s\" is unsupported."
-msgstr ""
-
-#: src/uc2/application.py:207 src/uc2/application.py:215
-#: src/uc2/application.py:246 src/uc2/application.py:253
-msgid "Translation is interrupted"
-msgstr ""
-
-#: src/uc2/application.py:212
-#, python-format
-msgid "Input file format of \"%s\" is unsupported."
-msgstr ""
-
-#: src/uc2/application.py:226
-#, python-format
-msgid "Error while loading \"%s\""
-msgstr ""
-
-#: src/uc2/application.py:228
-msgid "The file may be corrupted or contains unknown file format."
-msgstr ""
-
-#: src/uc2/application.py:231
-msgid "Loading is interrupted"
-msgstr ""
-
-#: src/uc2/application.py:243
-#, python-format
-msgid "Error while translation and saving \"%s\""
-msgstr ""
-
-#: src/uc2/application.py:250
-#, python-format
-msgid "Error creating model for \"%s\""
-msgstr ""
-
-#: src/uc2/application.py:257
-msgid "Translation is successful"
-msgstr ""
-
-#: src/uc2/msgconst.py:28 src/uc2/formats/plt/plt_model.py:33
-msgid "JOB"
-msgstr ""
-
-#: src/uc2/msgconst.py:29
-msgid "OK"
-msgstr ""
-
-#: src/uc2/msgconst.py:30
-msgid "INFO"
-msgstr ""
-
-#: src/uc2/msgconst.py:31
-msgid "WARNING"
-msgstr ""
-
-#: src/uc2/msgconst.py:32
-msgid "ERROR"
-msgstr ""
-
-#: src/uc2/msgconst.py:33
-msgid "STOP"
-msgstr ""
-
 #: src/uc2/uc2const.py:116
 msgid "PDXF - PrintDesign XML Format graphics"
 msgstr ""
@@ -3129,20 +2976,12 @@ msgstr ""
 msgid "SLA - Scribus documents"
 msgstr ""
 
-#: src/uc2/uc2const.py:126
-msgid "CDR - CorelDRAW Graphics files /6-X3 ver./"
+#: src/uc2/uc2const.py:126 src/uc2/uc2const.py:128 src/uc2/uc2const.py:132
+msgid "CDR - CorelDRAW Graphics files"
 msgstr ""
 
-#: src/uc2/uc2const.py:127
-msgid "CDT - CorelDRAW Templates files /6-X3 ver./"
-msgstr ""
-
-#: src/uc2/uc2const.py:128
-msgid "CDR - CorelDRAW Graphics files /X4-X6 ver./"
-msgstr ""
-
-#: src/uc2/uc2const.py:129
-msgid "CDT - CorelDRAW Templates files /X4-X6 ver./"
+#: src/uc2/uc2const.py:127 src/uc2/uc2const.py:129
+msgid "CDT - CorelDRAW Templates files"
 msgstr ""
 
 #: src/uc2/uc2const.py:130
@@ -3150,11 +2989,7 @@ msgid "CMX - CorelDRAW Presentation Exchange files"
 msgstr ""
 
 #: src/uc2/uc2const.py:131
-msgid "CCX - CorelDRAW Compressed Exchange files /CDRX format/"
-msgstr ""
-
-#: src/uc2/uc2const.py:132
-msgid "CDR - CorelDRAW Compressed Exchange files /CDRX format/"
+msgid "CCX - CorelDRAW Compressed Exchange files"
 msgstr ""
 
 #: src/uc2/uc2const.py:133
@@ -3165,12 +3000,8 @@ msgstr ""
 msgid "FIG - XFig files"
 msgstr ""
 
-#: src/uc2/uc2const.py:135
-msgid "AI - Adobe Illustrator files /PostScript/"
-msgstr ""
-
-#: src/uc2/uc2const.py:136
-msgid "AI - Adobe Illustrator files /PDF/"
+#: src/uc2/uc2const.py:135 src/uc2/uc2const.py:136
+msgid "AI - Adobe Illustrator files"
 msgstr ""
 
 #: src/uc2/uc2const.py:137
@@ -3278,7 +3109,7 @@ msgid "GPL - GIMP palette files"
 msgstr ""
 
 #: src/uc2/uc2const.py:167
-msgid "CPL - CorelDRAW palette files (v7-X4)"
+msgid "CPL - CorelDRAW palette files"
 msgstr ""
 
 #: src/uc2/uc2const.py:168
@@ -3411,64 +3242,6 @@ msgstr ""
 
 #: src/uc2/uc2const.py:480
 msgid "LAB"
-msgstr ""
-
-#: src/uc2/formats/__init__.py:87
-#, python-format
-msgid "Loader is not found for id %s"
-msgstr ""
-
-#: src/uc2/formats/__init__.py:104
-#, python-format
-msgid "Start to search for loader by file extension %s"
-msgstr ""
-
-#: src/uc2/formats/__init__.py:118
-#, python-format
-msgid "Loader is not found or not suitable for %s"
-msgstr ""
-
-#: src/uc2/formats/__init__.py:120
-msgid "Start to search loader by file content"
-msgstr ""
-
-#: src/uc2/formats/__init__.py:132
-#, python-format
-msgid "By file content loader is not found for %s"
-msgstr ""
-
-#: src/uc2/formats/__init__.py:134
-msgid "Try using fallback loader"
-msgstr ""
-
-#: src/uc2/formats/__init__.py:140
-#, python-format
-msgid "Loader is not found for %s"
-msgstr ""
-
-#: src/uc2/formats/__init__.py:144
-#, python-format
-msgid "Loader \"%s\" is found for %s"
-msgstr ""
-
-#: src/uc2/formats/__init__.py:155
-#, python-format
-msgid "Saver is not found for id %u"
-msgstr ""
-
-#: src/uc2/formats/__init__.py:166
-#, python-format
-msgid "Start to search saver by file extension %s"
-msgstr ""
-
-#: src/uc2/formats/__init__.py:177
-#, python-format
-msgid "Saver is not found for %s file format"
-msgstr ""
-
-#: src/uc2/formats/__init__.py:180
-#, python-format
-msgid "Saver is found for extension %s"
 msgstr ""
 
 #: src/uc2/formats/generic.py:116
@@ -3765,6 +3538,10 @@ msgstr ""
 
 #: src/uc2/formats/plt/plt_model.py:32
 msgid "JOBS"
+msgstr ""
+
+#: src/uc2/formats/plt/plt_model.py:33
+msgid "JOB"
 msgstr ""
 
 #: src/uc2/formats/plt/plt_model.py:34
