@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-27 21:36+0300\n"
-"PO-Revision-Date: 2018-03-27 23:32+0300\n"
+"POT-Creation-Date: 2018-03-28 00:42+0300\n"
+"PO-Revision-Date: 2018-03-28 00:42+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -3135,20 +3135,12 @@ msgstr ""
 msgid "SLA - Scribus documents"
 msgstr ""
 
-#: src/uc2/uc2const.py:126
-msgid "CDR - CorelDRAW Graphics files /6-X3 ver./"
+#: src/uc2/uc2const.py:126 src/uc2/uc2const.py:128 src/uc2/uc2const.py:132
+msgid "CDR - CorelDRAW Graphics files"
 msgstr ""
 
-#: src/uc2/uc2const.py:127
-msgid "CDT - CorelDRAW Templates files /6-X3 ver./"
-msgstr ""
-
-#: src/uc2/uc2const.py:128
-msgid "CDR - CorelDRAW Graphics files /X4-X6 ver./"
-msgstr ""
-
-#: src/uc2/uc2const.py:129
-msgid "CDT - CorelDRAW Templates files /X4-X6 ver./"
+#: src/uc2/uc2const.py:127 src/uc2/uc2const.py:129
+msgid "CDT - CorelDRAW Templates files"
 msgstr ""
 
 #: src/uc2/uc2const.py:130
@@ -3156,11 +3148,7 @@ msgid "CMX - CorelDRAW Presentation Exchange files"
 msgstr ""
 
 #: src/uc2/uc2const.py:131
-msgid "CCX - CorelDRAW Compressed Exchange files /CDRX format/"
-msgstr ""
-
-#: src/uc2/uc2const.py:132
-msgid "CDR - CorelDRAW Compressed Exchange files /CDRX format/"
+msgid "CCX - CorelDRAW Compressed Exchange files"
 msgstr ""
 
 #: src/uc2/uc2const.py:133
@@ -3171,12 +3159,8 @@ msgstr ""
 msgid "FIG - XFig files"
 msgstr ""
 
-#: src/uc2/uc2const.py:135
-msgid "AI - Adobe Illustrator files /PostScript/"
-msgstr ""
-
-#: src/uc2/uc2const.py:136
-msgid "AI - Adobe Illustrator files /PDF/"
+#: src/uc2/uc2const.py:135 src/uc2/uc2const.py:136
+msgid "AI - Adobe Illustrator files"
 msgstr ""
 
 #: src/uc2/uc2const.py:137
@@ -3284,7 +3268,7 @@ msgid "GPL - GIMP palette files"
 msgstr ""
 
 #: src/uc2/uc2const.py:167
-msgid "CPL - CorelDRAW palette files (v7-X4)"
+msgid "CPL - CorelDRAW palette files"
 msgstr ""
 
 #: src/uc2/uc2const.py:168
