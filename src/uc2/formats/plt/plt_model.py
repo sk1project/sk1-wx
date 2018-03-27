@@ -15,7 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2 import _, sk2const
+from uc2 import sk2const
 from uc2.formats.generic import TextModelObject
 
 # Document object enumeration
@@ -27,12 +27,12 @@ COMMAND = 5
 END = 6
 
 CID_TO_NAME = {
-    HEADER: _('HEADER'),
-    START: _('START'),
-    JOBS: _('JOBS'),
-    JOB: _('JOB'),
-    COMMAND: _('COMMAND'),
-    END: _('END'),
+    HEADER: 'HEADER',
+    START: 'START',
+    JOBS: 'JOBS',
+    JOB: 'JOB',
+    COMMAND: 'COMMAND',
+    END: 'END',
 }
 
 

@@ -15,7 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2 import _, events, msgconst
+from uc2 import events, msgconst
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 from uc2.formats.plt import plt_model
 
@@ -32,7 +32,7 @@ class PLT_Loader(AbstractLoader):
         res = self.fileptr.read().split('IN;')
 
         if not len(res) == 2:
-            msg = _('Wrong content: "IN;" instruction should be unique')
+            msg = 'Wrong content: "IN;" instruction should be unique'
             events.emit(events.MESSAGES, msgconst.ERROR, msg)
             raise IOError(msg)
 
