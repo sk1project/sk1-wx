@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-26 22:28+0300\n"
+"POT-Creation-Date: 2018-03-27 15:36+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -632,19 +632,19 @@ msgstr ""
 msgid "Saved"
 msgstr ""
 
-#: src/sk1/dialogs/filelogviewer.py:98
+#: src/sk1/dialogs/filelogviewer.py:99
 msgid "File"
 msgstr ""
 
-#: src/sk1/dialogs/filelogviewer.py:98
+#: src/sk1/dialogs/filelogviewer.py:99
 msgid "is not found."
 msgstr ""
 
-#: src/sk1/dialogs/filelogviewer.py:99
+#: src/sk1/dialogs/filelogviewer.py:100
 msgid "File not found"
 msgstr ""
 
-#: src/sk1/dialogs/filelogviewer.py:121
+#: src/sk1/dialogs/filelogviewer.py:122
 msgid "Recent documents"
 msgstr ""
 
@@ -2698,10 +2698,6 @@ msgstr ""
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:322
 msgid "Distribute"
-msgstr ""
-
-#: src/sk1/share/pd_plugins/align_plugin/__init__.py:466
-msgid "Flattering"
 msgstr ""
 
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:142
