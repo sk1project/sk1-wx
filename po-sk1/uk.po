@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-28 09:46+0300\n"
-"PO-Revision-Date: 2018-03-28 10:13+0300\n"
+"POT-Creation-Date: 2018-03-28 09:45+0300\n"
+"PO-Revision-Date: 2018-03-28 21:51+0300\n"
 "Last-Translator: Maxim Barabash <maxim.s.barabash@gmail.com>\n"
 "Language-Team: \n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.4\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -2430,7 +2430,7 @@ msgstr "Редагується прямокутник"
 
 #: src/sk1/document/controllers/editor_text.py:50
 msgid "Text in shaping"
-msgstr ""
+msgstr "Редагуються гліфи тексту"
 
 #: src/sk1/document/controllers/grad_ctrl.py:87
 msgid "Gradient creating"
@@ -2625,7 +2625,7 @@ msgstr "Найменший об'єкт"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:76
 msgid "Align to left side"
-msgstr "Вирівняний по лівій стороні"
+msgstr "Вирівняти по лівій стороні"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:77
 msgid "Align to center horizontally"
@@ -2633,11 +2633,11 @@ msgstr "Центрувати по горизонталі"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:78
 msgid "Align to right side"
-msgstr "Вирівняний по правій стороні"
+msgstr "Вирівняти по правій стороні"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:90
 msgid "Align to bottom"
-msgstr "Вирівнювання знизу"
+msgstr "Вирівняти по знизу"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:91
 msgid "Align to center vertically"
@@ -2645,7 +2645,7 @@ msgstr "Центрувати по вертикалі"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:92
 msgid "Align to top"
-msgstr "Вирівнювання вгори"
+msgstr "Вирівняти по верху"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:98
 msgid "Align and Distribute"
@@ -2661,7 +2661,7 @@ msgstr "Відносно:"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:154
 msgid "Selection as group"
-msgstr "Вважати вибране групою"
+msgstr "Позначене як група"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:158
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:342
@@ -3015,11 +3015,11 @@ msgstr "AI - файли Adobe Illustrator"
 
 #: src/uc2/uc2const.py:137
 msgid "PS - PostScript files"
-msgstr "PS - PostScript файли"
+msgstr "PS - файли PostScript"
 
 #: src/uc2/uc2const.py:138
 msgid "EPS - Encapsulated PostScript files"
-msgstr "EPS - Encapsulated PostScript файли"
+msgstr "EPS - файли Encapsulated PostScript"
 
 #: src/uc2/uc2const.py:139
 msgid "PDF - Portable Document Format files"
@@ -3051,7 +3051,7 @@ msgstr "VSD - файли Visio"
 
 #: src/uc2/uc2const.py:146
 msgid "PLT - HPGL cutting plotter files"
-msgstr "PLT - файли рiжущего HPGL плоттера"
+msgstr "PLT - файли ріжучих HPGL плотерів"
 
 #: src/uc2/uc2const.py:147
 msgid "HPGL - HPGL plotter files"
@@ -3244,55 +3244,55 @@ msgstr "Розбір розпочато..."
 #: src/uc2/formats/generic.py:130
 #, python-format
 msgid "<%s> document model is created"
-msgstr ""
+msgstr "<%s> модель документа створена"
 
 #: src/uc2/formats/generic.py:141
 msgid "Error updating document model"
-msgstr ""
+msgstr "Помила оновлення моделі"
 
 #: src/uc2/formats/generic.py:145
 #, python-format
 msgid "<%s> document model is updated successfully"
-msgstr ""
+msgstr "<%s> модель документа успішно оновлена"
 
 #: src/uc2/formats/generic.py:153
 msgid "Error while saving:"
-msgstr ""
+msgstr "Помилка при збереженні:"
 
 #: src/uc2/formats/generic.py:153
 msgid "No file object"
-msgstr ""
+msgstr "Нема файлового об'єкта"
 
 #: src/uc2/formats/generic.py:159
 msgid "Saving is started..."
-msgstr ""
+msgstr "Збереження розпочато..."
 
 #: src/uc2/formats/generic.py:162
 msgid "Error while saving"
-msgstr ""
+msgstr "Помилка при збереженні"
 
 #: src/uc2/formats/generic.py:167
 #, python-format
 msgid "<%s> document model is saved successfully"
-msgstr ""
+msgstr "<%s> модель документа успішно збережена"
 
 #: src/uc2/formats/generic.py:179
 #, python-format
 msgid "<%s> document model is destroyed for %s"
-msgstr ""
+msgstr "<%s> модель документа знищена для %s"
 
 #: src/uc2/formats/generic.py:185
 msgid "Cache is cleared for"
-msgstr ""
+msgstr "Кеш очищений для"
 
 #: src/uc2/formats/generic.py:187
 msgid "Cache clearing is unsuccessful"
-msgstr ""
+msgstr "Не вдалося очистити кеш"
 
 #: src/uc2/formats/generic.py:193
 #, python-format
 msgid "%s model update in progress..."
-msgstr ""
+msgstr "Оновлення моделі %s в процесі..."
 
 #: src/uc2/formats/generic.py:197 src/uc2/formats/generic_filters.py:95
 msgid "Parsing in progress..."
@@ -3300,29 +3300,29 @@ msgstr "Розбір в процесі..."
 
 #: src/uc2/formats/generic.py:201 src/uc2/formats/generic_filters.py:227
 msgid "Saving in progress..."
-msgstr ""
+msgstr "Збереження в процесі..."
 
 #: src/uc2/formats/generic_filters.py:60
 msgid "There is no file for reading"
-msgstr ""
+msgstr "Немає файлу для читання"
 
 #: src/uc2/formats/generic_filters.py:193
 msgid "There is no file for writting"
-msgstr ""
+msgstr "Немає файлу для запису"
 
 #: src/uc2/utils/fsutils.py:28
 msgid "There is no file path"
-msgstr ""
+msgstr "Шлях до файлу не знайдено"
 
 #: src/uc2/utils/fsutils.py:34 src/uc2/formats/cdrz/cdrz_filters.py:236
 #, python-format
 msgid "Cannot open %s file for writing"
-msgstr ""
+msgstr "Не вдалося відкрити файл %s для запису"
 
 #: src/uc2/utils/fsutils.py:42
 #, python-format
 msgid "Cannot open %s file for reading"
-msgstr ""
+msgstr "Не вдалося відкрити файл %s для читання"
 
 #: src/uc2/formats/cdr/cdr_filters.py:46
 msgid "Parsing is under process..."
@@ -3330,23 +3330,23 @@ msgstr "Розбір в процесі..."
 
 #: src/uc2/formats/cdr/cdr_presenter.py:57
 msgid "Translation is under process..."
-msgstr ""
+msgstr "Переклад в процесі..."
 
 #: src/uc2/formats/cdrz/cdrz_filters.py:43
 msgid "It seems the file is not CDRZ file"
-msgstr ""
+msgstr "Схоже, файл не є формату CDRZ"
 
 #: src/uc2/formats/cdrz/cdrz_filters.py:71
 msgid "It seems the CDR file is corrupted"
-msgstr ""
+msgstr "Схоже, файл CDR пошкоджений"
 
 #: src/uc2/formats/cdrz/cdrz_filters.py:86
 msgid "The file content is extracted successfully"
-msgstr ""
+msgstr "Вмісту файлу успішно вилучено"
 
 #: src/uc2/formats/pdf/pdfgen.py:65 src/uc2/formats/plt/plt_translators.py:95
 msgid "Saving in process..."
-msgstr ""
+msgstr "Збереження в процесі..."
 
 #: src/uc2/formats/pdxf/methods.py:151 src/uc2/formats/pdxf/methods.py:159
 #: src/uc2/formats/pdxf/model.py:267 src/uc2/formats/sk/sk_model.py:50
