@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-28 01:07+0300\n"
-"PO-Revision-Date: 2018-03-28 01:07+0300\n"
+"POT-Creation-Date: 2018-03-28 09:46+0300\n"
+"PO-Revision-Date: 2018-03-28 10:13+0300\n"
 "Last-Translator: Maxim Barabash <maxim.s.barabash@gmail.com>\n"
 "Language-Team: \n"
 "Language: uk\n"
@@ -493,9 +493,8 @@ msgstr "Примітки:"
 #: src/sk1/dialogs/docprops.py:98
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:51
 #: src/uc2/formats/pdxf/methods.py:123 src/uc2/formats/pdxf/methods.py:140
-#: src/uc2/formats/pdxf/model.py:73 src/uc2/formats/pdxf/model.py:232
-#: src/uc2/formats/sk1/model.py:52 src/uc2/formats/sk2/sk2_cids.py:68
-#: src/uc2/formats/sk2/sk2_methods.py:174
+#: src/uc2/formats/pdxf/model.py:232 src/uc2/formats/sk1/model.py:52
+#: src/uc2/formats/sk2/sk2_cids.py:68 src/uc2/formats/sk2/sk2_methods.py:174
 #: src/uc2/formats/sk2/sk2_methods.py:191 src/uc2/formats/sk2/sk2_model.py:233
 msgid "Page"
 msgstr "Сторінка"
@@ -1146,8 +1145,7 @@ msgstr "Компенсація чорної точки"
 msgid "Use Black preserving transforms"
 msgstr "Зберегти чорний (K) канал під час корекції кольору"
 
-#: src/sk1/prefs/prefs_fonts.py:28 src/uc2/formats/pdxf/model.py:70
-#: src/uc2/formats/sk2/sk2_cids.py:65
+#: src/sk1/prefs/prefs_fonts.py:28 src/uc2/formats/sk2/sk2_cids.py:65
 msgid "Fonts"
 msgstr "Шрифти"
 
@@ -2368,8 +2366,8 @@ msgstr "Малими літерами"
 msgid "Capitalize"
 msgstr "З великої літери"
 
-#: src/sk1/resources/labels.py:175 src/uc2/formats/pdxf/model.py:73
-#: src/uc2/formats/sk1/model.py:52 src/uc2/formats/sk2/sk2_cids.py:68
+#: src/sk1/resources/labels.py:175 src/uc2/formats/sk1/model.py:52
+#: src/uc2/formats/sk2/sk2_cids.py:68
 msgid "Pages"
 msgstr "Сторінки"
 
@@ -2947,370 +2945,221 @@ msgstr "Відносний центр"
 msgid "degrees"
 msgstr "градусів"
 
-#: src/uc2/application.py:47
-#, python-format
-msgid ""
-"\n"
-"%s\n"
-"\n"
-"Universal vector graphics format translator\n"
-"copyright (C) 2007-%s sK1 Project Team (http://www.sk1project.net)\n"
-"\n"
-"Usage: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]\n"
-"Example: uniconvertor drawing.cdr drawing.svg\n"
-"\n"
-" Available options:\n"
-" --help      Display this help and exit\n"
-" --verbose   Show internal logs\n"
-" --log=      Logging level: DEBUG, INFO, WARN, ERROR (by default, INFO)\n"
-" --format=   Type of output file format (values provided below)\n"
-"\n"
-"---INPUT FILE FORMATS-------------------------------\n"
-"\n"
-" Supported input vector graphics file formats:\n"
-"   %s\n"
-"\n"
-" Supported input palette file formats:\n"
-"   %s\n"
-"\n"
-" Supported input image file formats:\n"
-"   %s\n"
-"\n"
-"---OUTPUT FILE FORMATS------------------------------\n"
-"\n"
-" Supported output vector graphics file formats:\n"
-"   %s\n"
-"\n"
-" Supported output palette file formats:\n"
-"   %s\n"
-"\n"
-" Supported output image file formats:\n"
-"   %s\n"
-"\n"
-"----------------------------------------------------\n"
-msgstr ""
-
-#: src/uc2/application.py:131
-msgid "USAGE: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]"
-msgstr ""
-
-#: src/uc2/application.py:132
-msgid "Use --help for more details."
-msgstr ""
-
-#: src/uc2/application.py:142
-#, python-format
-msgid "For details see logs: %s\n"
-msgstr ""
-
-#: src/uc2/application.py:149
-msgid "Not enough arguments!"
-msgstr ""
-
-#: src/uc2/application.py:159
-#, python-format
-msgid "Unknown option \"%s\""
-msgstr ""
-
-#: src/uc2/application.py:164
-msgid "File names are not provided!"
-msgstr ""
-
-#: src/uc2/application.py:166
-msgid "Destination file name is not provided!"
-msgstr ""
-
-#: src/uc2/application.py:168
-#, python-format
-msgid "Source file \"%s\" is not found!"
-msgstr ""
-
-#: src/uc2/application.py:192
-#, python-format
-msgid "Translation of \"%s\" into \"%s\""
-msgstr "Конвертація \"%s\" на \"%s\""
-
-#: src/uc2/application.py:204
-#, python-format
-msgid "Output file format of \"%s\" is unsupported."
-msgstr "Формат вихідного файлу \"%s\" не підтримується."
-
-#: src/uc2/application.py:207 src/uc2/application.py:215
-#: src/uc2/application.py:246 src/uc2/application.py:253
-msgid "Translation is interrupted"
-msgstr "Конвертація перерваний"
-
-#: src/uc2/application.py:212
-#, python-format
-msgid "Input file format of \"%s\" is unsupported."
-msgstr "Формат вхідного файлу \"%s\" не підтримується."
-
-#: src/uc2/application.py:226
-#, python-format
-msgid "Error while loading \"%s\""
-msgstr "Помилка при завантаженні \"%s\""
-
-#: src/uc2/application.py:228
-msgid "The file may be corrupted or contains unknown file format."
-msgstr "Файл може бути пошкоджений або невідомого формату."
-
-#: src/uc2/application.py:231
-msgid "Loading is interrupted"
-msgstr "Завантаження переривано"
-
-#: src/uc2/application.py:243
-#, python-format
-msgid "Error while translation and saving \"%s\""
-msgstr "Помилка під час конвертації та збереження \"%s\""
-
-#: src/uc2/application.py:250
-#, python-format
-msgid "Error creating model for \"%s\""
-msgstr "Помилка створення моделі для \"%s\""
-
-#: src/uc2/application.py:257
-msgid "Translation is successful"
-msgstr "Конвертація пройшла успішно"
-
-#: src/uc2/msgconst.py:28 src/uc2/formats/plt/plt_model.py:33
-msgid "JOB"
-msgstr "JOB"
-
-#: src/uc2/msgconst.py:29
-msgid "OK"
-msgstr "OK"
-
-#: src/uc2/msgconst.py:30
-msgid "INFO"
-msgstr "INFO"
-
-#: src/uc2/msgconst.py:31
-msgid "WARNING"
-msgstr "WARNING"
-
-#: src/uc2/msgconst.py:32
-msgid "ERROR"
-msgstr "ERROR"
-
-#: src/uc2/msgconst.py:33
-msgid "STOP"
-msgstr "STOP"
-
 #: src/uc2/uc2const.py:116
-msgid "PDXF - PrintDesign XML Format graphics"
-msgstr ""
+msgid "PDXF - PrintDesign XML Format graphics files"
+msgstr "PDXF - файли PrintDesign XML Format"
 
 #: src/uc2/uc2const.py:117
 msgid "SK1 - sK1 0.9.x graphics files"
-msgstr ""
+msgstr "SK1 - файли sK1 0.9.x"
 
 #: src/uc2/uc2const.py:118
 msgid "SK2 - sK1 2.x graphics files"
-msgstr ""
+msgstr "SK2 - файли sK1 2.x"
 
 #: src/uc2/uc2const.py:119
 msgid "SK - Sketch/Skencil files"
-msgstr ""
+msgstr "SK - файли Sketch/Skencil"
 
 #: src/uc2/uc2const.py:120
 msgid "SVG - Scalable Vector Graphics files"
-msgstr ""
+msgstr "SVG - файли Scalable Vector Graphics"
 
 #: src/uc2/uc2const.py:121
 msgid "SVGZ - Compressed Scalable Vector Graphics files"
-msgstr ""
+msgstr "SVGZ - стиснутi файли Scalable Vector Graphics"
 
 #: src/uc2/uc2const.py:122
 msgid "ODG - Open Document Drawing files"
-msgstr ""
+msgstr "ODG - файли Open Document Drawing"
 
 #: src/uc2/uc2const.py:123
 msgid "ORA - Open Raster Format files"
-msgstr ""
+msgstr "ORA - файли Open Raster"
 
 #: src/uc2/uc2const.py:124
 msgid "XCF - GIMP files"
-msgstr ""
+msgstr "XCF - файли GIMP"
 
 #: src/uc2/uc2const.py:125
 msgid "SLA - Scribus documents"
-msgstr ""
+msgstr "SLA - файли Scribus"
 
 #: src/uc2/uc2const.py:126 src/uc2/uc2const.py:128 src/uc2/uc2const.py:132
 msgid "CDR - CorelDRAW Graphics files"
-msgstr ""
+msgstr "CDR - файли графiки CorelDRAW"
 
 #: src/uc2/uc2const.py:127 src/uc2/uc2const.py:129
 msgid "CDT - CorelDRAW Templates files"
-msgstr ""
+msgstr "CDT - файли шаблонiв CorelDRAW"
 
 #: src/uc2/uc2const.py:130
 msgid "CMX - CorelDRAW Presentation Exchange files"
-msgstr ""
+msgstr "CMX - файли клiпартiв CorelDRAW"
 
 #: src/uc2/uc2const.py:131
 msgid "CCX - CorelDRAW Compressed Exchange files"
-msgstr ""
+msgstr "CCX - стиснутi файли клiпартiв CorelDRAW"
 
 #: src/uc2/uc2const.py:133
 msgid "XAR - Xara graphics files"
-msgstr ""
+msgstr "XAR - файли Xara"
 
 #: src/uc2/uc2const.py:134
 msgid "FIG - XFig files"
-msgstr ""
+msgstr "FIG - файли XFig"
 
 #: src/uc2/uc2const.py:135 src/uc2/uc2const.py:136
 msgid "AI - Adobe Illustrator files"
-msgstr ""
+msgstr "AI - файли Adobe Illustrator"
 
 #: src/uc2/uc2const.py:137
 msgid "PS - PostScript files"
-msgstr ""
+msgstr "PS - PostScript файли"
 
 #: src/uc2/uc2const.py:138
 msgid "EPS - Encapsulated PostScript files"
-msgstr ""
+msgstr "EPS - Encapsulated PostScript файли"
 
 #: src/uc2/uc2const.py:139
-msgid "PDF - Portable Document Format"
-msgstr ""
+msgid "PDF - Portable Document Format files"
+msgstr "PDF - файли Portable Document Format"
 
 #: src/uc2/uc2const.py:140
 msgid "PSD - Adobe Photoshop files"
-msgstr ""
+msgstr "PSD - файли Adobe Photoshop"
 
 #: src/uc2/uc2const.py:141
 msgid "CGM - Computer Graphics Metafile files"
-msgstr ""
+msgstr "CGM - файли Computer Graphics Metafile"
 
 #: src/uc2/uc2const.py:142
 msgid "WMF - Windows Metafile files"
-msgstr ""
+msgstr "WMF - файли Windows Metafile"
 
 #: src/uc2/uc2const.py:143
 msgid "EMF - Windows Enhanced Metafile files"
-msgstr ""
+msgstr "EMF - файли Windows Enhanced Metafile"
 
 #: src/uc2/uc2const.py:144
-msgid "XPS - XML Paper Specification"
-msgstr ""
+msgid "XPS - XML Paper Specification files"
+msgstr "XPS - файли XML Paper Specification"
 
 #: src/uc2/uc2const.py:145
-msgid "VSD - Visio Drawing"
-msgstr ""
+msgid "VSD - Visio Drawing files"
+msgstr "VSD - файли Visio"
 
 #: src/uc2/uc2const.py:146
 msgid "PLT - HPGL cutting plotter files"
-msgstr ""
+msgstr "PLT - файли рiжущего HPGL плоттера"
 
 #: src/uc2/uc2const.py:147
-msgid "HPGL plotter files"
-msgstr ""
+msgid "HPGL - HPGL plotter files"
+msgstr "HPGL - файли HPGL плоттера"
 
 #: src/uc2/uc2const.py:148
-msgid "DXF - AutoCAD DXF files"
-msgstr ""
+msgid "DXF - AutoCAD files"
+msgstr "DXF - файли AutoCAD"
 
 #: src/uc2/uc2const.py:149
-msgid "DWG - AutoCAD DWG files"
-msgstr ""
+msgid "DWG - AutoCAD files"
+msgstr "DWG - файли AutoCAD"
 
 #: src/uc2/uc2const.py:150
-msgid "RIFF files"
-msgstr ""
+msgid "RIF - RIFF files"
+msgstr "RIF - RIFF файли"
 
 #: src/uc2/uc2const.py:153
 msgid "JPEG - Joint Photographic Experts Group files"
-msgstr ""
+msgstr "JPEG - файли Joint Photographic Experts Group"
 
 #: src/uc2/uc2const.py:154
 msgid "JPEG2000 - Joint Photographic Experts Group files"
-msgstr ""
+msgstr "JPEG - файли Joint Photographic Experts Group"
 
 #: src/uc2/uc2const.py:155
 msgid "TIFF - Tagged Image File Format files"
-msgstr ""
+msgstr "TIFF - файли Tagged Image File Format"
 
 #: src/uc2/uc2const.py:156
 msgid "BMP - Bitmap Picture files"
-msgstr ""
+msgstr "BMP - файли Bitmap Picture"
 
 #: src/uc2/uc2const.py:157
-msgid "PCX - PCExchange files"
-msgstr ""
+msgid "PCX - PCeXchange files"
+msgstr "PCX - файли PCeXchange"
 
 #: src/uc2/uc2const.py:158
 msgid "GIF - Graphics Interchange Format files"
-msgstr ""
+msgstr "GIF - файли Graphics Interchange Format"
 
 #: src/uc2/uc2const.py:159
 msgid "PNG - Portable Network Graphics files"
-msgstr ""
+msgstr "PNG - файли Portable Network Graphics"
 
 #: src/uc2/uc2const.py:160
 msgid "PPM - Netpbm Color Image format files"
-msgstr ""
+msgstr "PPM - файли Netpbm Color Image"
 
 #: src/uc2/uc2const.py:161
 msgid "XBM - X bitmap files"
-msgstr ""
+msgstr "XBM - файли X bitmap"
 
 #: src/uc2/uc2const.py:162
 msgid "XPM - X pixmap files"
-msgstr ""
+msgstr "XPM - файли X pixmap"
 
 #: src/uc2/uc2const.py:165
 msgid "SKP - sK1 palette files"
-msgstr ""
+msgstr "SKP - файли палiтр sK1"
 
 #: src/uc2/uc2const.py:166
 msgid "GPL - GIMP palette files"
-msgstr ""
+msgstr "GPL - файли палiтр GIMP"
 
 #: src/uc2/uc2const.py:167
 msgid "CPL - CorelDRAW palette files"
-msgstr ""
+msgstr "CPL - файли палiтр CorelDRAW"
 
 #: src/uc2/uc2const.py:168
 msgid "XML - Scribus palette files"
-msgstr ""
+msgstr "XML - файли палiтр Scribus"
 
 #: src/uc2/uc2const.py:169
 msgid "SOC - LibreOffice palette files"
-msgstr ""
+msgstr "SOC - файли палiтр LibreOffice"
 
 #: src/uc2/uc2const.py:170
 msgid "XML - CorelDRAW X5-X7 palette files"
-msgstr ""
+msgstr "XML - файли палiтр CorelDRAW X5-X7"
 
 #: src/uc2/uc2const.py:171
 msgid "ASE - Adobe Swatch Exchange files"
-msgstr ""
+msgstr "ASE - файли Adobe Swatch Exchange"
 
 #: src/uc2/uc2const.py:172
 msgid "ACO - Adobe Color files"
-msgstr ""
+msgstr "ACO - файли Adobe Color"
 
 #: src/uc2/uc2const.py:173
 msgid "JCW - Xara color palette files"
-msgstr ""
+msgstr "JCW - файли палiтр Xara"
 
 #: src/uc2/uc2const.py:176
 msgid "ICC - International Color Consortium profiles"
-msgstr ""
+msgstr "ICC - профайли International Color Consortium"
 
 #: src/uc2/uc2const.py:177
 msgid "ICM - Image Color Matching profiles"
-msgstr ""
+msgstr "ICM - профайли Image Color Matching"
 
 #: src/uc2/uc2const.py:179
 msgid "XML - eXtensible Markup Language files"
-msgstr ""
+msgstr "XML - файли eXtensible Markup Language"
 
 #: src/uc2/uc2const.py:180
 msgid "LOG - Log files"
-msgstr ""
+msgstr "LOG - лог файли"
 
 #: src/uc2/uc2const.py:363 src/uc2/uc2const.py:383
 msgid "pixels"
@@ -3379,88 +3228,6 @@ msgstr "Насиченість"
 #: src/uc2/uc2const.py:458
 msgid "Absolute Colorimetric"
 msgstr "Абсолютна колориметрична"
-
-#: src/uc2/uc2const.py:475
-msgid "Bilevel"
-msgstr "Двокольорове"
-
-#: src/uc2/uc2const.py:476
-msgid "Grayscale"
-msgstr "Grayscale"
-
-#: src/uc2/uc2const.py:477
-msgid "RGB"
-msgstr "RGB"
-
-#: src/uc2/uc2const.py:478
-msgid "RGBA"
-msgstr "RGBA"
-
-#: src/uc2/uc2const.py:479
-msgid "CMYK"
-msgstr "CMYK"
-
-#: src/uc2/uc2const.py:480
-msgid "LAB"
-msgstr "LAB"
-
-#: src/uc2/formats/__init__.py:87
-#, python-format
-msgid "Loader is not found for id %s"
-msgstr "Завантажувач не знайдено для id %s"
-
-#: src/uc2/formats/__init__.py:104
-#, python-format
-msgid "Start to search for loader by file extension %s"
-msgstr "Розпочат пошук для завантажувача за розширенням %s"
-
-#: src/uc2/formats/__init__.py:118
-#, python-format
-msgid "Loader is not found or not suitable for %s"
-msgstr "Завантажувач не знайдено або не підходить для %s"
-
-#: src/uc2/formats/__init__.py:120
-msgid "Start to search loader by file content"
-msgstr "Розпочат пошук завантажувача за вмістом файлу"
-
-#: src/uc2/formats/__init__.py:132
-#, python-format
-msgid "By file content loader is not found for %s"
-msgstr "Завантажувач за вмістом файлу не знайдено для %s"
-
-#: src/uc2/formats/__init__.py:134
-msgid "Try using fallback loader"
-msgstr "Спробуйте резервний завантажувач"
-
-#: src/uc2/formats/__init__.py:140
-#, python-format
-msgid "Loader is not found for %s"
-msgstr "Завантажувач не знайдено для %s"
-
-#: src/uc2/formats/__init__.py:144
-#, python-format
-msgid "Loader \"%s\" is found for %s"
-msgstr "Знайдено завантажувач \"%s\" для %s"
-
-#: src/uc2/formats/__init__.py:155
-#, python-format
-msgid "Saver is not found for id %u"
-msgstr ""
-
-#: src/uc2/formats/__init__.py:166
-#, python-format
-msgid "Start to search saver by file extension %s"
-msgstr ""
-
-#: src/uc2/formats/__init__.py:177
-#, python-format
-msgid "Saver is not found for %s file format"
-msgstr ""
-
-#: src/uc2/formats/__init__.py:180
-#, python-format
-msgid "Saver is found for extension %s"
-msgstr ""
 
 #: src/uc2/formats/generic.py:116
 msgid "Error while loading:"
@@ -3548,8 +3315,6 @@ msgid "There is no file path"
 msgstr ""
 
 #: src/uc2/utils/fsutils.py:34 src/uc2/formats/cdrz/cdrz_filters.py:236
-#: src/uc2/formats/pdxf/pdxf_filters.py:223
-#: src/uc2/formats/pdxf/pdxf_filters.py:297
 #, python-format
 msgid "Cannot open %s file for writing"
 msgstr ""
@@ -3576,125 +3341,20 @@ msgid "It seems the CDR file is corrupted"
 msgstr ""
 
 #: src/uc2/formats/cdrz/cdrz_filters.py:86
-#: src/uc2/formats/pdxf/pdxf_filters.py:101
 msgid "The file content is extracted successfully"
 msgstr ""
 
-#: src/uc2/formats/pdf/pdfgen.py:65 src/uc2/formats/pdxf/pdxf_filters.py:245
-#: src/uc2/formats/plt/plt_translators.py:95
+#: src/uc2/formats/pdf/pdfgen.py:65 src/uc2/formats/plt/plt_translators.py:95
 msgid "Saving in process..."
 msgstr ""
 
 #: src/uc2/formats/pdxf/methods.py:151 src/uc2/formats/pdxf/methods.py:159
-#: src/uc2/formats/pdxf/model.py:74 src/uc2/formats/pdxf/model.py:267
-#: src/uc2/formats/sk/sk_model.py:50 src/uc2/formats/sk1/model.py:52
-#: src/uc2/formats/sk2/sk2_cids.py:69 src/uc2/formats/sk2/sk2_methods.py:204
+#: src/uc2/formats/pdxf/model.py:267 src/uc2/formats/sk/sk_model.py:50
+#: src/uc2/formats/sk1/model.py:52 src/uc2/formats/sk2/sk2_cids.py:69
+#: src/uc2/formats/sk2/sk2_methods.py:204
 #: src/uc2/formats/sk2/sk2_methods.py:212 src/uc2/formats/sk2/sk2_model.py:269
 msgid "Layer"
 msgstr "Шар"
-
-#: src/uc2/formats/pdxf/model.py:67 src/uc2/formats/sk/sk_model.py:49
-#: src/uc2/formats/sk1/model.py:51 src/uc2/formats/sk2/sk2_cids.py:62
-msgid "Document"
-msgstr "Документ"
-
-#: src/uc2/formats/pdxf/model.py:69 src/uc2/formats/sk2/sk2_cids.py:64
-msgid "Metainfo"
-msgstr "Метаінформація"
-
-#: src/uc2/formats/pdxf/model.py:69 src/uc2/formats/sk2/sk2_cids.py:64
-msgid "Styles"
-msgstr "Стилі"
-
-#: src/uc2/formats/pdxf/model.py:69 src/uc2/formats/sk/sk_model.py:53
-#: src/uc2/formats/sk1/model.py:56 src/uc2/formats/sk2/sk2_cids.py:64
-msgid "Style"
-msgstr "Стиль"
-
-#: src/uc2/formats/pdxf/model.py:70 src/uc2/formats/sk2/sk2_cids.py:65
-msgid "Profiles"
-msgstr "Профілі"
-
-#: src/uc2/formats/pdxf/model.py:70 src/uc2/formats/sk2/sk2_cids.py:65
-msgid "Profile"
-msgstr "Профіль"
-
-#: src/uc2/formats/pdxf/model.py:71 src/uc2/formats/sk2/sk2_cids.py:66
-msgid "Font"
-msgstr "Шрифт"
-
-#: src/uc2/formats/pdxf/model.py:71 src/uc2/formats/sk2/sk2_cids.py:66
-msgid "Images"
-msgstr "Зображення"
-
-#: src/uc2/formats/pdxf/model.py:71 src/uc2/formats/sk/sk_model.py:57
-#: src/uc2/formats/sk1/model.py:60 src/uc2/formats/sk2/sk2_cids.py:66
-msgid "Image"
-msgstr "Зображення"
-
-#: src/uc2/formats/pdxf/model.py:73 src/uc2/formats/sk2/sk2_cids.py:68
-msgid "Layer group"
-msgstr "Шар групування"
-
-#: src/uc2/formats/pdxf/model.py:74 src/uc2/formats/sk2/sk2_cids.py:69
-msgid "Master layers"
-msgstr "Майстер шари"
-
-#: src/uc2/formats/pdxf/model.py:75 src/uc2/formats/sk2/sk2_cids.py:70
-msgid "Grid layer"
-msgstr "Шар сітки"
-
-#: src/uc2/formats/pdxf/model.py:75 src/uc2/formats/sk2/sk2_cids.py:70
-msgid "Guide layer"
-msgstr "Шар напрямних"
-
-#: src/uc2/formats/pdxf/model.py:76 src/uc2/formats/sk2/sk2_cids.py:71
-msgid "Desktop layers"
-msgstr "Шар робочого столу"
-
-#: src/uc2/formats/pdxf/model.py:76 src/uc2/formats/sk2/sk2_cids.py:71
-msgid "Guide"
-msgstr "Напрямна"
-
-#: src/uc2/formats/pdxf/model.py:78 src/uc2/formats/sk/sk_model.py:54
-#: src/uc2/formats/sk1/model.py:57 src/uc2/formats/sk2/sk2_cids.py:73
-msgid "Group"
-msgstr "Група"
-
-#: src/uc2/formats/pdxf/model.py:78 src/uc2/formats/sk2/sk2_cids.py:73
-msgid "Container"
-msgstr "Контейнер"
-
-#: src/uc2/formats/pdxf/model.py:79 src/uc2/formats/sk2/sk2_cids.py:78
-msgid "Text block"
-msgstr "Текстовий блок"
-
-#: src/uc2/formats/pdxf/model.py:79 src/uc2/formats/sk2/sk2_cids.py:78
-msgid "Text column"
-msgstr "Текстовий стовпчик"
-
-#: src/uc2/formats/pdxf/model.py:81 src/uc2/formats/sk/sk_model.py:56
-#: src/uc2/formats/sk1/model.py:59 src/uc2/formats/sk2/sk2_cids.py:76
-msgid "Rectangle"
-msgstr "Прямокутник"
-
-#: src/uc2/formats/pdxf/model.py:81 src/uc2/formats/sk/sk_model.py:56
-#: src/uc2/formats/sk1/model.py:59 src/uc2/formats/sk2/sk2_cids.py:76
-msgid "Ellipse"
-msgstr "Еліпс"
-
-#: src/uc2/formats/pdxf/model.py:82 src/uc2/formats/sk2/sk2_cids.py:77
-msgid "Polygon"
-msgstr "Багатокутник"
-
-#: src/uc2/formats/pdxf/model.py:82 src/uc2/formats/sk/sk_model.py:56
-#: src/uc2/formats/sk1/model.py:59 src/uc2/formats/sk2/sk2_cids.py:77
-msgid "Curve"
-msgstr "Крива"
-
-#: src/uc2/formats/pdxf/model.py:83
-msgid "Pixmap"
-msgstr ""
 
 #: src/uc2/formats/pdxf/model.py:303 src/uc2/formats/sk/sk_model.py:51
 #: src/uc2/formats/sk/sk_model.py:241 src/uc2/formats/sk1/model.py:54
@@ -3706,65 +3366,10 @@ msgstr "Шар напрямних"
 msgid "GridLayer"
 msgstr "Шар сітки"
 
-#: src/uc2/formats/pdxf/pdxf_filters.py:67
-msgid "It seems the file is not PDXF file"
-msgstr ""
-
-#: src/uc2/formats/pdxf/pdxf_filters.py:81
-msgid "It seems the PDXF file is corrupted"
-msgstr ""
-
-#: src/uc2/formats/pdxf/pdxf_filters.py:86
-msgid "The file is corrupted or not PDXF file"
-msgstr ""
-
-#: src/uc2/formats/pdxf/pdxf_filters.py:128
-msgid "It seems content.xml is corrupted"
-msgstr ""
-
-#: src/uc2/formats/pdxf/pdxf_filters.py:133
-msgid "Content.xml is parsed successfully"
-msgstr ""
-
-#: src/uc2/formats/pdxf/pdxf_filters.py:156
-msgid "Parsing in process..."
-msgstr "Розбір в процесі..."
-
-#: src/uc2/formats/pdxf/pdxf_filters.py:233
-msgid "PDXF file content.xml is created"
-msgstr ""
-
-#: src/uc2/formats/pdxf/pdxf_filters.py:308
-msgid "PDXF file manifest.xml is created"
-msgstr ""
-
-#: src/uc2/formats/pdxf/pdxf_filters.py:363
-msgid "PDXF file is created successfully"
-msgstr ""
-
-#: src/uc2/formats/plt/plt_filters.py:35
-msgid "Wrong content: \"IN;\" instruction should be unique"
-msgstr ""
-
-#: src/uc2/formats/plt/plt_model.py:30
-msgid "HEADER"
-msgstr "ЗАГОЛОВОК"
-
-#: src/uc2/formats/plt/plt_model.py:31
-msgid "START"
-msgstr "ПАЧАТОК"
-
-#: src/uc2/formats/plt/plt_model.py:32
-msgid "JOBS"
-msgstr "ЗАВДАННЯ"
-
-#: src/uc2/formats/plt/plt_model.py:34
-msgid "COMMAND"
-msgstr "КОМАНДА"
-
-#: src/uc2/formats/plt/plt_model.py:35
-msgid "END"
-msgstr "КІНЕЦЬ"
+#: src/uc2/formats/sk/sk_model.py:49 src/uc2/formats/sk1/model.py:51
+#: src/uc2/formats/sk2/sk2_cids.py:62
+msgid "Document"
+msgstr "Документ"
 
 #: src/uc2/formats/sk/sk_model.py:49 src/uc2/formats/sk1/model.py:51
 msgid "Layout"
@@ -3774,9 +3379,34 @@ msgstr "Макет"
 msgid "Guideline"
 msgstr "Напрямна"
 
+#: src/uc2/formats/sk/sk_model.py:53 src/uc2/formats/sk1/model.py:56
+#: src/uc2/formats/sk2/sk2_cids.py:64
+msgid "Style"
+msgstr "Стиль"
+
+#: src/uc2/formats/sk/sk_model.py:54 src/uc2/formats/sk1/model.py:57
+#: src/uc2/formats/sk2/sk2_cids.py:73
+msgid "Group"
+msgstr "Група"
+
 #: src/uc2/formats/sk/sk_model.py:54 src/uc2/formats/sk1/model.py:57
 msgid "MaskGroup"
 msgstr "Група маскування"
+
+#: src/uc2/formats/sk/sk_model.py:56 src/uc2/formats/sk1/model.py:59
+#: src/uc2/formats/sk2/sk2_cids.py:76
+msgid "Rectangle"
+msgstr "Прямокутник"
+
+#: src/uc2/formats/sk/sk_model.py:56 src/uc2/formats/sk1/model.py:59
+#: src/uc2/formats/sk2/sk2_cids.py:76
+msgid "Ellipse"
+msgstr "Еліпс"
+
+#: src/uc2/formats/sk/sk_model.py:56 src/uc2/formats/sk1/model.py:59
+#: src/uc2/formats/sk2/sk2_cids.py:77
+msgid "Curve"
+msgstr "Крива"
 
 #: src/uc2/formats/sk/sk_model.py:57 src/uc2/formats/sk1/model.py:60
 msgid "Text"
@@ -3785,6 +3415,11 @@ msgstr "Текст"
 #: src/uc2/formats/sk/sk_model.py:57 src/uc2/formats/sk1/model.py:60
 msgid "BitmapData"
 msgstr "Данні растрового зображення"
+
+#: src/uc2/formats/sk/sk_model.py:57 src/uc2/formats/sk1/model.py:60
+#: src/uc2/formats/sk2/sk2_cids.py:66
+msgid "Image"
+msgstr "Зображення"
 
 #: src/uc2/formats/sk/sk_model.py:208 src/uc2/formats/sk1/model.py:291
 msgid "New Layer"
@@ -3798,13 +3433,185 @@ msgstr "МайстерШар"
 msgid "Newer version of SK2 format is found!"
 msgstr "Новіша версія формату SK2!"
 
+#: src/uc2/formats/sk2/sk2_cids.py:64
+msgid "Metainfo"
+msgstr "Метаінформація"
+
+#: src/uc2/formats/sk2/sk2_cids.py:64
+msgid "Styles"
+msgstr "Стилі"
+
+#: src/uc2/formats/sk2/sk2_cids.py:65
+msgid "Profiles"
+msgstr "Профілі"
+
+#: src/uc2/formats/sk2/sk2_cids.py:65
+msgid "Profile"
+msgstr "Профіль"
+
+#: src/uc2/formats/sk2/sk2_cids.py:66
+msgid "Font"
+msgstr "Шрифт"
+
+#: src/uc2/formats/sk2/sk2_cids.py:66
+msgid "Images"
+msgstr "Зображення"
+
+#: src/uc2/formats/sk2/sk2_cids.py:68
+msgid "Layer group"
+msgstr "Шар групування"
+
+#: src/uc2/formats/sk2/sk2_cids.py:69
+msgid "Master layers"
+msgstr "Майстер шари"
+
+#: src/uc2/formats/sk2/sk2_cids.py:70
+msgid "Grid layer"
+msgstr "Шар сітки"
+
+#: src/uc2/formats/sk2/sk2_cids.py:70
+msgid "Guide layer"
+msgstr "Шар напрямних"
+
+#: src/uc2/formats/sk2/sk2_cids.py:71
+msgid "Desktop layers"
+msgstr "Шар робочого столу"
+
+#: src/uc2/formats/sk2/sk2_cids.py:71
+msgid "Guide"
+msgstr "Напрямна"
+
+#: src/uc2/formats/sk2/sk2_cids.py:73
+msgid "Container"
+msgstr "Контейнер"
+
 #: src/uc2/formats/sk2/sk2_cids.py:74
 msgid "Text on Path Group"
 msgstr "Текст за групою контурів"
 
+#: src/uc2/formats/sk2/sk2_cids.py:77
+msgid "Polygon"
+msgstr "Багатокутник"
+
+#: src/uc2/formats/sk2/sk2_cids.py:78
+msgid "Text block"
+msgstr "Текстовий блок"
+
+#: src/uc2/formats/sk2/sk2_cids.py:78
+msgid "Text column"
+msgstr "Текстовий стовпчик"
+
 #: src/uc2/formats/sk2/sk2_cids.py:79
 msgid "Bitmap"
 msgstr "Растрове зображення"
+
+#~ msgid "HEADER"
+#~ msgstr "ЗАГОЛОВОК"
+
+#~ msgid "START"
+#~ msgstr "ПАЧАТОК"
+
+#~ msgid "JOBS"
+#~ msgstr "ЗАВДАННЯ"
+
+#~ msgid "JOB"
+#~ msgstr "JOB"
+
+#~ msgid "COMMAND"
+#~ msgstr "КОМАНДА"
+
+#~ msgid "END"
+#~ msgstr "КІНЕЦЬ"
+
+#~ msgid "Bilevel"
+#~ msgstr "Двокольорове"
+
+#~ msgid "Grayscale"
+#~ msgstr "Grayscale"
+
+#~ msgid "RGB"
+#~ msgstr "RGB"
+
+#~ msgid "RGBA"
+#~ msgstr "RGBA"
+
+#~ msgid "CMYK"
+#~ msgstr "CMYK"
+
+#~ msgid "LAB"
+#~ msgstr "LAB"
+
+#~ msgid "Parsing in process..."
+#~ msgstr "Розбір в процесі..."
+
+#~ msgid "Translation of \"%s\" into \"%s\""
+#~ msgstr "Конвертація \"%s\" на \"%s\""
+
+#~ msgid "Output file format of \"%s\" is unsupported."
+#~ msgstr "Формат вихідного файлу \"%s\" не підтримується."
+
+#~ msgid "Translation is interrupted"
+#~ msgstr "Конвертація перерваний"
+
+#~ msgid "Input file format of \"%s\" is unsupported."
+#~ msgstr "Формат вхідного файлу \"%s\" не підтримується."
+
+#~ msgid "Error while loading \"%s\""
+#~ msgstr "Помилка при завантаженні \"%s\""
+
+#~ msgid "The file may be corrupted or contains unknown file format."
+#~ msgstr "Файл може бути пошкоджений або невідомого формату."
+
+#~ msgid "Loading is interrupted"
+#~ msgstr "Завантаження переривано"
+
+#~ msgid "Error while translation and saving \"%s\""
+#~ msgstr "Помилка під час конвертації та збереження \"%s\""
+
+#~ msgid "Error creating model for \"%s\""
+#~ msgstr "Помилка створення моделі для \"%s\""
+
+#~ msgid "Translation is successful"
+#~ msgstr "Конвертація пройшла успішно"
+
+#~ msgid "OK"
+#~ msgstr "OK"
+
+#~ msgid "INFO"
+#~ msgstr "INFO"
+
+#~ msgid "WARNING"
+#~ msgstr "WARNING"
+
+#~ msgid "ERROR"
+#~ msgstr "ERROR"
+
+#~ msgid "STOP"
+#~ msgstr "STOP"
+
+#~ msgid "Loader is not found for id %s"
+#~ msgstr "Завантажувач не знайдено для id %s"
+
+#~ msgid "Start to search for loader by file extension %s"
+#~ msgstr "Розпочат пошук для завантажувача за розширенням %s"
+
+#~ msgid "Loader is not found or not suitable for %s"
+#~ msgstr "Завантажувач не знайдено або не підходить для %s"
+
+#~ msgid "Start to search loader by file content"
+#~ msgstr "Розпочат пошук завантажувача за вмістом файлу"
+
+#~ msgid "By file content loader is not found for %s"
+#~ msgstr "Завантажувач за вмістом файлу не знайдено для %s"
+
+#~ msgid "Try using fallback loader"
+#~ msgstr "Спробуйте резервний завантажувач"
+
+#~ msgid "Loader is not found for %s"
+#~ msgstr "Завантажувач не знайдено для %s"
+
+#~ msgid "Loader \"%s\" is found for %s"
+#~ msgstr "Знайдено завантажувач \"%s\" для %s"
 
 #~ msgid "%"
 #~ msgstr "%"
