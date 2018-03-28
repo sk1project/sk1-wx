@@ -37,7 +37,6 @@ def check_package(path, name):
 def scan_plugins(app):
     ret = {}
     for path in config.plugin_dirs:
-        sys.path.insert(0, path)
         plgs = [item for item in os.listdir(path) if check_package(path, item)]
         if plgs:
             bn = os.path.basename(path)
