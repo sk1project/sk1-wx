@@ -147,7 +147,7 @@ FORMAT_DESCRIPTION = {
     HPGL: _("HPGL - HPGL plotter files"),
     DXF: _("DXF - AutoCAD files"),
     DWG: _("DWG - AutoCAD files"),
-    RIFF: _("RIFF files"),
+    RIFF: _("RIF - RIFF files"),
 
     # Bitmap file formats
     JPG: _("JPEG - Joint Photographic Experts Group files"),
