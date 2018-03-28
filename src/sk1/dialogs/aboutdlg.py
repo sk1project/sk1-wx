@@ -99,9 +99,11 @@ class ComponentsPage(wal.VPanel):
 
 
 TRANSLATORS = """
-Here will be translators credentials 
-who will take part in localization.
+Here are translators credentials who takes part in localization.
 Join us and let's make this wolrd better! :)
+
+Russian - Igor Novikov <sk1.project.org@gmail.com>
+Ukrainian - Maxim Barabash <maxim.s.barabash@gmail.com>
 """
 
 
