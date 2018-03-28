@@ -144,9 +144,9 @@ FORMAT_DESCRIPTION = {
     XPS: _("XPS - XML Paper Specification files"),
     VSD: _("VSD - Visio Drawing files"),
     PLT: _("PLT - HPGL cutting plotter files"),
-    HPGL: _("HPGL plotter files"),
-    DXF: _("DXF - AutoCAD DXF files"),
-    DWG: _("DWG - AutoCAD DWG files"),
+    HPGL: _("HPGL - HPGL plotter files"),
+    DXF: _("DXF - AutoCAD files"),
+    DWG: _("DWG - AutoCAD files"),
     RIFF: _("RIFF files"),
 
     # Bitmap file formats
@@ -154,7 +154,7 @@ FORMAT_DESCRIPTION = {
     JP2: _("JPEG2000 - Joint Photographic Experts Group files"),
     TIF: _("TIFF - Tagged Image File Format files"),
     BMP: _("BMP - Bitmap Picture files"),
-    PCX: _("PCX - PCExchange files"),
+    PCX: _("PCX - PCeXchange files"),
     GIF: _("GIF - Graphics Interchange Format files"),
     PNG: _("PNG - Portable Network Graphics files"),
     PPM: _("PPM - Netpbm Color Image format files"),
