@@ -90,9 +90,9 @@ class SK1Application(wal.Application, UCApplication):
 
         self.update_wal()
         plg_dir = os.path.join(self.path, 'share', 'pd_plugins')
-        custom_plg_dir = self.appdata.app_config_dir
+        custom_plg_dir = self.appdata.plugin_dir
         config.plugin_dirs = [plg_dir, custom_plg_dir]
-        sys.path.insert(1, self.appdata.app_config)
+        sys.path.insert(1, self.appdata.app_config_dir)
         sys.path.insert(1, os.path.join(self.path, 'share'))
         config.app = self
         LOG.info('Config is updated')
