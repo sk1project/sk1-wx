@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-28 01:45+0300\n"
+"POT-Creation-Date: 2018-03-28 09:45+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2935,7 +2935,7 @@ msgid "degrees"
 msgstr ""
 
 #: src/uc2/uc2const.py:116
-msgid "PDXF - PrintDesign XML Format graphics"
+msgid "PDXF - PrintDesign XML Format graphics files"
 msgstr ""
 
 #: src/uc2/uc2const.py:117
@@ -3011,7 +3011,7 @@ msgid "EPS - Encapsulated PostScript files"
 msgstr ""
 
 #: src/uc2/uc2const.py:139
-msgid "PDF - Portable Document Format"
+msgid "PDF - Portable Document Format files"
 msgstr ""
 
 #: src/uc2/uc2const.py:140
@@ -3031,11 +3031,11 @@ msgid "EMF - Windows Enhanced Metafile files"
 msgstr ""
 
 #: src/uc2/uc2const.py:144
-msgid "XPS - XML Paper Specification"
+msgid "XPS - XML Paper Specification files"
 msgstr ""
 
 #: src/uc2/uc2const.py:145
-msgid "VSD - Visio Drawing"
+msgid "VSD - Visio Drawing files"
 msgstr ""
 
 #: src/uc2/uc2const.py:146
@@ -3043,19 +3043,19 @@ msgid "PLT - HPGL cutting plotter files"
 msgstr ""
 
 #: src/uc2/uc2const.py:147
-msgid "HPGL plotter files"
+msgid "HPGL - HPGL plotter files"
 msgstr ""
 
 #: src/uc2/uc2const.py:148
-msgid "DXF - AutoCAD DXF files"
+msgid "DXF - AutoCAD files"
 msgstr ""
 
 #: src/uc2/uc2const.py:149
-msgid "DWG - AutoCAD DWG files"
+msgid "DWG - AutoCAD files"
 msgstr ""
 
 #: src/uc2/uc2const.py:150
-msgid "RIFF files"
+msgid "RIF - RIFF files"
 msgstr ""
 
 #: src/uc2/uc2const.py:153
@@ -3075,7 +3075,7 @@ msgid "BMP - Bitmap Picture files"
 msgstr ""
 
 #: src/uc2/uc2const.py:157
-msgid "PCX - PCExchange files"
+msgid "PCX - PCeXchange files"
 msgstr ""
 
 #: src/uc2/uc2const.py:158
@@ -3353,34 +3353,6 @@ msgstr ""
 
 #: src/uc2/formats/pdxf/model.py:327 src/uc2/formats/sk2/sk2_model.py:330
 msgid "GridLayer"
-msgstr ""
-
-#: src/uc2/formats/plt/plt_filters.py:35
-msgid "Wrong content: \"IN;\" instruction should be unique"
-msgstr ""
-
-#: src/uc2/formats/plt/plt_model.py:30
-msgid "HEADER"
-msgstr ""
-
-#: src/uc2/formats/plt/plt_model.py:31
-msgid "START"
-msgstr ""
-
-#: src/uc2/formats/plt/plt_model.py:32
-msgid "JOBS"
-msgstr ""
-
-#: src/uc2/formats/plt/plt_model.py:33
-msgid "JOB"
-msgstr ""
-
-#: src/uc2/formats/plt/plt_model.py:34
-msgid "COMMAND"
-msgstr ""
-
-#: src/uc2/formats/plt/plt_model.py:35
-msgid "END"
 msgstr ""
 
 #: src/uc2/formats/sk/sk_model.py:49 src/uc2/formats/sk1/model.py:51
