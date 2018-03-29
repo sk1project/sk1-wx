@@ -35,10 +35,10 @@ def get_open_file_name(parent, title='Open', default_dir='~',
 
     style = wx.FD_CHANGE_DIR | wx.FD_FILE_MUST_EXIST | wx.FD_PREVIEW
     dlg = wx.FileDialog(
-        parent, message=title,
+        parent, message=const.tr(title),
         defaultDir=default_dir,
         defaultFile="",
-        wildcard=wildcard,
+        wildcard=const.tr(wildcard),
         style=wx.FD_OPEN | style
     )
     dlg.CenterOnParent()
@@ -61,10 +61,10 @@ def get_save_file_name(parent, path, title='', wildcard='*.txt'):
 
     style = wx.FD_CHANGE_DIR | wx.FD_OVERWRITE_PROMPT | wx.FD_PREVIEW
     dlg = wx.FileDialog(
-        parent, message=title,
+        parent, message=const.tr(title),
         defaultDir=doc_folder,
-        defaultFile=doc_name,
-        wildcard=wildcard,
+        defaultFile=const.tr(doc_name),
+        wildcard=const.tr(wildcard),
         style=wx.FD_SAVE | style
     )
     dlg.CenterOnParent()

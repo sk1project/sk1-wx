@@ -16,12 +16,13 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
+from const import tr
 
 
 def _dialog(parent, title, text, icon, yesno=False, cancel=False):
     ret = None
     if not yesno and not cancel:
-        dlg = wx.MessageDialog(parent, text, title, wx.OK | icon)
+        dlg = wx.MessageDialog(parent, tr(text), tr(title), wx.OK | icon)
         dlg.ShowModal()
         dlg.Destroy()
     else:
@@ -33,7 +34,7 @@ def _dialog(parent, title, text, icon, yesno=False, cancel=False):
                 buttons = wx.OK | wx.CANCEL
             else:
                 buttons |= wx.CANCEL
-        dlg = wx.MessageDialog(parent, text, title, icon | buttons)
+        dlg = wx.MessageDialog(parent, tr(text), tr(title), icon | buttons)
         ret = dlg.ShowModal()
         dlg.Destroy()
     return ret

@@ -76,7 +76,8 @@ class AppAction:
                 widget.update()
         if self.toolbar is not None and not wal.IS_MAC:
             self.toolbar.EnableTool(self.action_id, self.enabled)
-            self.toolbar.SetToolShortHelp(self.action_id, self.get_descr_text())
+            self.toolbar.SetToolShortHelp(self.action_id,
+                                          self.get_descr_text().decode('utf-8'))
 
     def register(self, widget):
         self.widgets.append(widget)

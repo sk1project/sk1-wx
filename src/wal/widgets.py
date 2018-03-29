@@ -21,7 +21,7 @@ from wx import animate
 
 import const
 from basic import HPanel, MouseEvent
-from const import DEF_SIZE
+from const import DEF_SIZE, tr
 from mixins import WidgetMixin, DataWidgetMixin, RangeDataWidgetMixin
 from renderer import bmp_to_white, disabled_bmp
 
@@ -83,7 +83,7 @@ class Notebook(wx.Notebook, WidgetMixin):
     def add_page(self, page, title):
         page.layout()
         self.childs.append(page)
-        self.AddPage(page, title)
+        self.AddPage(page, tr(title))
 
     def remove_page(self, page):
         index = self.childs.index(page)
@@ -120,7 +120,7 @@ class HLine(wx.StaticLine, WidgetMixin):
 
 class Label(wx.StaticText, WidgetMixin):
     def __init__(self, parent, text='', fontbold=False, fontsize=0, fg=()):
-        wx.StaticText.__init__(self, parent, wx.ID_ANY, text)
+        wx.StaticText.__init__(self, parent, wx.ID_ANY, tr(text))
         font = self.GetFont()
         if fontbold:
             font.SetWeight(wx.FONTWEIGHT_BOLD)
@@ -144,7 +144,7 @@ class Label(wx.StaticText, WidgetMixin):
         self.Wrap(-1)
 
     def set_text(self, text):
-        self.SetLabel(text)
+        self.SetLabel(tr(text))
 
     def wrap(self, width):
         self.Wrap(width)
@@ -153,7 +153,7 @@ class Label(wx.StaticText, WidgetMixin):
 class HtmlLabel(wx.HyperlinkCtrl, WidgetMixin):
     def __init__(self, parent, text, url=''):
         url = text if not url else url
-        wx.HyperlinkCtrl.__init__(self, parent, wx.ID_ANY, text, url)
+        wx.HyperlinkCtrl.__init__(self, parent, wx.ID_ANY, tr(text), url)
 
 
 class Button(wx.Button, WidgetMixin):
@@ -161,7 +161,7 @@ class Button(wx.Button, WidgetMixin):
 
     def __init__(self, parent, text, size=DEF_SIZE, onclick=None, tooltip='',
                  default=False, pid=wx.ID_ANY):
-        wx.Button.__init__(self, parent, pid, text, size=size)
+        wx.Button.__init__(self, parent, pid, tr(text), size=size)
         if default:
             self.SetDefault()
         if onclick:
@@ -183,7 +183,7 @@ class Checkbox(wx.CheckBox, DataWidgetMixin):
 
     def __init__(self, parent, text='', value=False, onclick=None, right=False):
         style = wx.ALIGN_RIGHT if right else 0
-        wx.CheckBox.__init__(self, parent, wx.ID_ANY, text, style=style)
+        wx.CheckBox.__init__(self, parent, wx.ID_ANY, tr(text), style=style)
         self.SetValue(True if value else False)
         if onclick:
             self.callback = onclick
@@ -214,7 +214,7 @@ class Radiobutton(wx.RadioButton, DataWidgetMixin):
 
     def __init__(self, parent, text='', onclick=None, group=False):
         style = wx.RB_GROUP if group else 0
-        wx.RadioButton.__init__(self, parent, wx.ID_ANY, text, style=style)
+        wx.RadioButton.__init__(self, parent, wx.ID_ANY, tr(text), style=style)
         if onclick:
             self.callback = onclick
             self.Bind(wx.wx.EVT_RADIOBUTTON, self.on_click, self)
@@ -230,7 +230,7 @@ class Combolist(wx.Choice, WidgetMixin):
 
     def __init__(self, parent, size=DEF_SIZE, width=0,
                  items=None, onchange=None):
-        self.items = items or []
+        self.items = [tr(item) for item in items]
         size = self._set_width(size, width)
         wx.Choice.__init__(self, parent, wx.ID_ANY, size, choices=self.items)
         if onchange:
@@ -242,8 +242,8 @@ class Combolist(wx.Choice, WidgetMixin):
             self.callback()
 
     def set_items(self, items):
-        self.items = items
-        self.SetItems(items)
+        self.items = [tr(item) for item in items]
+        self.SetItems(self.items)
 
     def set_selection(self, index):
         if index < self.GetCount():
@@ -259,9 +259,10 @@ class Combolist(wx.Choice, WidgetMixin):
         return self.get_selection()
 
     def get_active_value(self):
-        return self.items[self.get_selection()]
+        return self.items[self.get_selection()].encode('utf-8')
 
     def set_active_value(self, val):
+        val = tr(val)
         if val not in self.items:
             self.items.append(val)
             self.SetItems(self.items)
@@ -346,7 +347,7 @@ class Combobox(wx.ComboBox, DataWidgetMixin):
 
     def __init__(self, parent, value='', pos=(-1, 1), size=DEF_SIZE, width=0,
                  items=None, onchange=None):
-        self.items = items or []
+        self.items = [tr(item) for item in items]
         flags = wx.CB_DROPDOWN | wx.TE_PROCESS_ENTER
         size = self._set_width(size, width)
         wx.ComboBox.__init__(self, parent, wx.ID_ANY, value,
@@ -375,7 +376,7 @@ class Combobox(wx.ComboBox, DataWidgetMixin):
         event.Skip()
 
     def set_items(self, items):
-        self.SetItems(items)
+        self.SetItems([tr(item) for item in items])
 
 
 class FloatCombobox(Combobox):
@@ -429,7 +430,7 @@ class Entry(wx.TextCtrl, DataWidgetMixin):
     def __init__(self, parent, value='', size=DEF_SIZE, width=0, onchange=None,
                  multiline=False, richtext=False, onenter=None, editable=True,
                  no_border=False, no_wrap=False):
-        self.value = value.decode('utf-8')
+        self.value = tr(value)
         self.editable = editable
         self._callback = onchange
         style = wx.TE_MULTILINE if multiline else 0
@@ -440,7 +441,7 @@ class Entry(wx.TextCtrl, DataWidgetMixin):
 
         size = self._set_width(size, width)
         wx.TextCtrl.__init__(
-            self, parent, wx.ID_ANY, value, size=size, style=style)
+            self, parent, wx.ID_ANY, self.value, size=size, style=style)
         if onenter:
             self._callback1 = onenter
             self.Bind(wx.EVT_TEXT_ENTER, self._on_enter, self)
@@ -477,7 +478,7 @@ class Entry(wx.TextCtrl, DataWidgetMixin):
 
     def set_value(self, val):
         self.my_changes = True
-        self.value = val.decode('utf-8')
+        self.value = tr(val)
         self.SetValue(self.value)
 
     def set_editable(self, val):

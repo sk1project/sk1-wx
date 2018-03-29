@@ -18,14 +18,14 @@
 import wx
 
 import const
-
+from const import tr
 
 class DialogMixin(object):
     def fit(self):
         self.Fit()
 
     def set_title(self, title):
-        self.SetTitle(title)
+        self.SetTitle(tr(title))
 
     def set_minsize(self, size):
         self.SetMinSize(size)
@@ -108,7 +108,7 @@ class WidgetMixin(object):
 
     def set_tooltip(self, tip=None):
         if tip:
-            self.SetToolTipString(tip)
+            self.SetToolTipString(tr(tip))
         else:
             self.SetToolTip(None)
 

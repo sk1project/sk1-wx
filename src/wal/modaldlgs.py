@@ -21,7 +21,7 @@ import wx
 import const
 import mixins
 from basic import HPanel, VPanel
-from const import EXPAND, ALL, VERTICAL, HORIZONTAL
+from const import EXPAND, ALL, VERTICAL, HORIZONTAL, tr
 from widgets import HLine, Button, Label, ProgressBar
 
 LOG = logging.getLogger(__name__)
@@ -31,11 +31,11 @@ class ProgressDialog(wx.ProgressDialog):
 
     def __init__(self, parent=None, title='', width=130):
         style = wx.PD_APP_MODAL | wx.PD_AUTO_HIDE
-        wx.ProgressDialog.__init__(self, title, ' ' * width,
+        wx.ProgressDialog.__init__(self, tr(title), ' ' * width,
                                    parent=parent, style=style)
 
     def update(self, value, msg):
-        self.Update(value, msg)
+        self.Update(value, tr(msg))
 
     def destroy(self):
         self.Destroy()
@@ -51,7 +51,7 @@ class SimpleDialog(wx.Dialog, mixins.DialogMixin):
         stl = stl | wx.RESIZE_BORDER | wx.MAXIMIZE_BOX if resizable else stl
         self.add_line = add_line
 
-        wx.Dialog.__init__(self, parent, -1, title, wx.DefaultPosition,
+        wx.Dialog.__init__(self, parent, -1, tr(title), wx.DefaultPosition,
                            size, style=stl)
 
         sizer = wx.BoxSizer(wx.VERTICAL)

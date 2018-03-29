@@ -74,7 +74,7 @@ def get_bmp(parent, icon_id, tooltip=''):
         return None
     sb = wal.Bitmap(parent, bmp)
     if tooltip:
-        sb.SetToolTipString(tooltip)
+        sb.set_tooltip(tooltip)
     return sb
 
 

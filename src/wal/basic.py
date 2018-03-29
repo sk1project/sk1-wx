@@ -21,7 +21,7 @@ import wx
 import wx.lib.scrolledpanel as scrolled
 
 import const
-from const import FONT_SIZE, DEF_SIZE
+from const import FONT_SIZE, DEF_SIZE, tr
 from mixins import WidgetMixin, DialogMixin
 from renderer import copy_surface_to_bitmap
 
@@ -629,7 +629,8 @@ class LabeledPanel(RoundedPanel):
             self.widget_panel = HPanel(self)
             self.widget = widget
             if text:
-                self.widget = wx.StaticText(self.widget_panel, wx.ID_ANY, text)
+                self.widget = wx.StaticText(self.widget_panel,
+                                            wx.ID_ANY, tr(text))
             self.widget_panel.pack(self.widget, padding=5)
             self.widget_panel.Fit()
             self.add(self.widget_panel, 0, wx.ALIGN_LEFT | wx.LEFT, 7)
@@ -820,7 +821,7 @@ class ExpandedPanel(VPanel):
         self.expander = Expander(header, on_click=self.expand)
         header.pack(self.expander, padding=2)
         if txt:
-            header.pack(wx.StaticText(header, wx.ID_ANY, txt))
+            header.pack(wx.StaticText(header, wx.ID_ANY, tr(txt)))
         VPanel.pack(self, header, fill=True)
         self.container = VPanel(self)
         VPanel.pack(self, self.container, fill=True)
