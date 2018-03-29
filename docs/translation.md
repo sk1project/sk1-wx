@@ -13,7 +13,7 @@ Briefly translation has following steps:
 * Translate step-by-step each message string
 
 ![Translation](./images/tr-03.png "Translation")
-* Save result as a <your_lang>.po file and send it to us
+* Save result as a <your_lang>.po file and send it to us in Facebook messanger
 
 Please note, sk1.pot file contains ~850 messages, so this is not a fast
 job. But you could cooperate with other translators to simplify this
