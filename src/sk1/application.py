@@ -183,7 +183,8 @@ class SK1Application(wal.Application, UCApplication):
 
     def get_new_docname(self):
         self.doc_counter += 1
-        return _('Untitled') + ' ' + str(self.doc_counter)
+        doc_name = '%s %d' % (_('Untitled'), self.doc_counter)
+        return doc_name.decode('utf-8').encode(sys.getfilesystemencoding())
 
     def set_current_doc(self, doc):
         self.current_doc = doc

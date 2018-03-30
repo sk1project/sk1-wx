@@ -15,6 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 import wx
 
 import const
@@ -316,7 +317,7 @@ class TabPainter(object):
         s = INDICATOR_SIZE
         pos = tab.pos + 3 * s - 3
         width = tab.get_tab_size() - 5 * s
-        txt = tab.text.decode('utf-8')
+        txt = tab.text.decode(sys.getfilesystemencoding())
         if const.IS_MSW:
             if get_text_size(txt, size_incr=-1)[0] > width:
                 while get_text_size(txt + '...', size_incr=-1)[0] > width:

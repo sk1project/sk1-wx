@@ -17,6 +17,7 @@
 
 import logging
 import os
+import sys
 from copy import deepcopy
 
 from sk1 import _, events, modes
@@ -112,10 +113,9 @@ class SK1Presenter:
         self.snap = SnapManager(self)
 
     def set_title(self):
-        if self.saved:
-            title = self.doc_name
-        else:
-            title = self.doc_name + '*'
+        enc = sys.getfilesystemencoding()
+        title = self.doc_name.decode(enc).encode('utf-8')
+        title = title + '*' if not self.saved else title
         self.app.mdi.set_tab_title(self, title)
         if self == self.app.current_doc:
             self.app.mw.set_title(title)

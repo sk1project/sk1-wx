@@ -63,7 +63,7 @@ def get_save_file_name(parent, path, title='', wildcard='*.txt'):
     dlg = wx.FileDialog(
         parent, message=const.tr(title),
         defaultDir=doc_folder,
-        defaultFile=const.tr(doc_name),
+        defaultFile=doc_name.decode(sys.getfilesystemencoding()),
         wildcard=const.tr(wildcard),
         style=wx.FD_SAVE | style
     )
