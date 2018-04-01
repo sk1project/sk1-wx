@@ -102,7 +102,9 @@ TRANSLATORS = """
 Here are translators credentials who takes part in localization.
 Join us and let's make this world better! :)
 
+Brazilian Portuguese - João Lima Neto <contato@joaolimaneto.com.br>
 Russian - Igor Novikov <sk1.project.org@gmail.com>
+Spanish - Carlos Jesús Atagua Díaz <atacarlos@gmail.com>
 Ukrainian - Maxim Barabash <maxim.s.barabash@gmail.com>
 """
 
