@@ -77,8 +77,7 @@ class SimpleList(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin, WidgetMixin):
         even = False
         i = 0
         for item in data:
-            if isinstance(item, str):
-                item = item.decode('utf8')
+            item = const.tr(item)
             self.Append([item])
             if alt_color:
                 list_item = self.GetItem(i)
@@ -121,14 +120,14 @@ class ReportList(SimpleList):
     def set_columns(self):
         for item in self.data[0]:
             index = self.data[0].index(item)
-            self.InsertColumn(index, item.decode('utf8'))
+            self.InsertColumn(index, const.tr(item))
 
     def set_data(self, data, alt_color=True):
         even = False
         i = 0
         for item in data[1:]:
             if isinstance(item, list):
-                item = [label.decode('utf8') for label in item]
+                item = [const.tr(label) for label in item]
             self.Append(item)
             if alt_color:
                 list_item = self.GetItem(i)

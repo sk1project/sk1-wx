@@ -17,6 +17,7 @@
 
 import cups
 import os
+import wal
 
 from generic import AbstractPrinter, AbstractPS, COLOR_MODE
 from pdf_printer import PDF_Printer
@@ -177,16 +178,16 @@ class CUPS_Printer(AbstractPrinter):
         return False
 
     def get_name(self):
-        return self.details['printer-info']
+        return wal.untr(self.details['printer-info'])
 
     def get_ps_name(self):
         return self.cups_name
 
     def get_driver_name(self):
-        return self.details['printer-make-and-model']
+        return wal.untr(self.details['printer-make-and-model'])
 
     def get_connection(self):
-        return self.details['device-uri']
+        return wal.untr(self.details['device-uri'])
 
     def get_prn_info(self):
         return ((_('Driver:'), self.get_driver_name()),

@@ -20,7 +20,7 @@ import os
 from sk1 import events, appconst
 from uc2 import uc2const
 from uc2.uc2conf import UCConfig, UCData
-from uc2.utils import system
+from uc2.utils import system, fsutils
 
 
 class AppData(UCData):
@@ -40,7 +40,7 @@ class AppData(UCData):
 
     def __init__(self, app, cfgdir='~'):
         # --- Init paths
-        path = os.path.expanduser(os.path.join(cfgdir, '.config', 'sk1-wx'))
+        path = fsutils.expanduser(os.path.join(cfgdir, '.config', 'sk1-wx'))
         self.app_config_dir = path
 
         UCData.__init__(self, app, check=False)
@@ -52,11 +52,11 @@ class AppData(UCData):
 
         # --- Check config directories
         paths = (self.app_palette_dir, self.plugin_dir, self.app_temp_dir)
-        [os.makedirs(item) for item in paths if not os.path.lexists(item)]
+        [fsutils.makedirs(item) for item in paths if not fsutils.lexists(item)]
 
         plugin_dir_init = os.path.join(self.plugin_dir, '__init__.py')
-        if not os.path.lexists(plugin_dir_init):
-            open(plugin_dir_init, 'w').close()
+        if not fsutils.lexists(plugin_dir_init):
+            fsutils.get_fileptr(plugin_dir_init, True).close()
 
 
 class AppConfig(UCConfig):

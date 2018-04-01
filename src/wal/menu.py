@@ -18,8 +18,6 @@
 import wx
 import const
 
-from const import tr
-
 
 def get_accelerator_entry(*args):
     return wx.AcceleratorEntry(*args)
@@ -30,7 +28,7 @@ class Menu(wx.Menu):
         wx.Menu.__init__(self)
 
     def append_menu(self, item_id, text, menu):
-        self.AppendMenu(item_id, tr(text), menu)
+        self.AppendMenu(item_id, const.tr(text), menu)
 
     def remove_item(self, item):
         self.RemoveItem(item)
@@ -44,7 +42,7 @@ class Menu(wx.Menu):
 
 class MenuItem(wx.MenuItem):
     def __init__(self, parent, action_id, text):
-        wx.MenuItem.__init__(self, parent, action_id, text=tr(text))
+        wx.MenuItem.__init__(self, parent, action_id, text=const.tr(text))
 
     def bind_to(self, mw, callback, action_id):
         mw.Bind(wx.EVT_MENU, callback, id=action_id)
@@ -82,4 +80,4 @@ class MenuBar(wx.MenuBar):
         wx.MenuBar.__init__(self)
 
     def append_menu(self, menu_id, txt, menu):
-        self.Append(menu, txt.decode('utf-8'))
+        self.Append(menu, const.tr(txt))

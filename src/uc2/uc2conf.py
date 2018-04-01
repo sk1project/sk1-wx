@@ -19,6 +19,7 @@ import os
 
 from uc2 import uc2const
 from uc2.utils.sconfig import SerializedConfig
+from uc2.utils import fsutils
 
 
 class UCData:
@@ -31,36 +32,38 @@ class UCData:
     doc_icon = None
     version = uc2const.VERSION
     revision = uc2const.REVISION
+    app_config = ''
     app_config_dir = ''
+    app_color_profile_dir = ''
 
     def __init__(self, app, cfgdir='~', check=True):
 
         self.app = app
         if not self.app_config_dir:
-            path = os.path.expanduser(os.path.join(cfgdir, '.config', 'uc2'))
+            path = fsutils.expanduser(os.path.join(cfgdir, '.config', 'uc2'))
             self.app_config_dir = path
         if check:
             self.check_config_dirs()
 
     def check_config_dirs(self):
 
-        if not os.path.lexists(self.app_config_dir):
-            os.makedirs(self.app_config_dir)
+        if not fsutils.lexists(self.app_config_dir):
+            fsutils.makedirs(self.app_config_dir)
 
         self.app_config = os.path.join(self.app_config_dir, 'preferences.cfg')
 
         # Check color profiles directory
         self.app_color_profile_dir = os.path.join(self.app_config_dir,
                                                   'profiles')
-        if not os.path.lexists(self.app_color_profile_dir):
-            os.makedirs(self.app_color_profile_dir)
+        if not fsutils.lexists(self.app_color_profile_dir):
+            fsutils.makedirs(self.app_color_profile_dir)
 
         from uc2.cms import libcms
 
         for item in uc2const.COLORSPACES + [uc2const.COLOR_DISPLAY, ]:
             filename = 'built-in_%s.icm' % item
             path = os.path.join(self.app_color_profile_dir, filename)
-            if not os.path.lexists(path):
+            if not fsutils.lexists(path):
                 libcms.cms_save_default_profile(path, item)
 
 

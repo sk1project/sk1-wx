@@ -15,18 +15,56 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 import errno
 import logging
+import os
+import sys
 
 from uc2 import _, events, msgconst
+from uc2.utils import system
 
 LOG = logging.getLogger(__name__)
+
+# Platform
+IS_MSW = system.get_os_family() == system.WINDOWS
+IS_MAC = system.get_os_family() == system.MACOSX
+
+HOME = os.path.expanduser('~'). \
+    decode(sys.getfilesystemencoding()).encode('utf-8')
+
+
+def expanduser(path=''):
+    if path.startswith('~'):
+        path = path.replace('~', HOME)
+    return path
+
+
+def get_sys_path(path):
+    if IS_MSW:
+        path = path.decode('utf-8').encode(sys.getfilesystemencoding())
+    return path
+
+
+def get_utf8_path(path):
+    if IS_MSW:
+        path = path.decode(sys.getfilesystemencoding()).encode('utf-8')
+    return path
+
+
+def isfile(path):
+    return os.path.isfile(get_sys_path(path))
+
+
+def isdir(path):
+    return os.path.isdir(get_sys_path(path))
 
 
 def get_fileptr(path, writable=False):
     if not path:
         msg = _('There is no file path')
         raise IOError(errno.ENODATA, msg, '')
+    path = get_sys_path(path)
     if writable:
         try:
             fileptr = open(path, 'wb')
@@ -44,3 +82,11 @@ def get_fileptr(path, writable=False):
             LOG.error(msg)
             raise
     return fileptr
+
+
+def makedirs(path):
+    os.makedirs(get_sys_path(path))
+
+
+def lexists(path):
+    return os.path.lexists(get_sys_path(path))

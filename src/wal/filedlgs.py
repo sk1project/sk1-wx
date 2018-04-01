@@ -18,11 +18,17 @@
 import os
 import sys
 import wx
+
 import const
 
+HOME = os.path.expanduser('~'). \
+    decode(sys.getfilesystemencoding()).encode('utf-8')
 
-def path_system(path):
-    return path.encode(sys.getfilesystemencoding())
+
+def expanduser(path=''):
+    if path.startswith('~'):
+        path = path.replace('~', HOME)
+    return path
 
 
 def get_open_file_name(parent, title='Open', default_dir='~',
@@ -30,20 +36,17 @@ def get_open_file_name(parent, title='Open', default_dir='~',
     ret = None
     title = '' if const.IS_MAC else title
 
-    if default_dir.startswith('~'):
-        default_dir = os.path.expanduser(default_dir)
-
     style = wx.FD_CHANGE_DIR | wx.FD_FILE_MUST_EXIST | wx.FD_PREVIEW
     dlg = wx.FileDialog(
         parent, message=const.tr(title),
-        defaultDir=default_dir,
+        defaultDir=expanduser(default_dir),
         defaultFile="",
         wildcard=const.tr(wildcard),
         style=wx.FD_OPEN | style
     )
     dlg.CenterOnParent()
     if dlg.ShowModal() == wx.ID_OK:
-        ret = path_system(dlg.GetPath())
+        ret = const.untr(dlg.GetPath())
     dlg.Destroy()
     return ret
 
@@ -53,9 +56,9 @@ def get_save_file_name(parent, path, title='', wildcard='*.txt'):
     title = title or 'Save As...'
     title = '' if const.IS_MAC else title
 
-    if path.startswith('~'):
-        path = os.path.expanduser(path)
-
+    print path
+    path = expanduser(path)
+    print path
     doc_folder = os.path.dirname(path)
     doc_name = os.path.basename(path)
 
@@ -63,13 +66,13 @@ def get_save_file_name(parent, path, title='', wildcard='*.txt'):
     dlg = wx.FileDialog(
         parent, message=const.tr(title),
         defaultDir=doc_folder,
-        defaultFile=doc_name.decode(sys.getfilesystemencoding()),
+        defaultFile=const.tr(doc_name),
         wildcard=const.tr(wildcard),
         style=wx.FD_SAVE | style
     )
     dlg.CenterOnParent()
     if dlg.ShowModal() == wx.ID_OK:
-        ret = (path_system(dlg.GetPath()), dlg.GetFilterIndex())
+        ret = (const.untr(dlg.GetPath()), dlg.GetFilterIndex())
     dlg.Destroy()
     return ret
 
@@ -80,16 +83,15 @@ def get_dir_path(parent, path='~', title=''):
 
     title = '' if const.IS_MAC else title
 
-    if path.startswith('~'):
-        path = os.path.expanduser(path)
+    path = expanduser(path)
 
     dlg = wx.DirDialog(
-        parent, message=title,
-        defaultPath=path,
+        parent, message=const.tr(title),
+        defaultPath=const.tr(path),
         style=wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST
     )
     dlg.CenterOnParent()
     if dlg.ShowModal() == wx.ID_OK:
-        ret = path_system(dlg.GetPath())
+        ret = const.untr(dlg.GetPath())
     dlg.Destroy()
     return ret

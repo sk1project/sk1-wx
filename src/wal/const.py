@@ -149,6 +149,10 @@ def tr(msg):
     return msg.decode('utf-8') if isinstance(msg, str) else msg
 
 
+def untr(msg):
+    return msg.encode('utf-8') if isinstance(msg, unicode) else msg
+
+
 IS_UNITY_16 = is_unity_16_04()
 IS_AMBIANCE = is_ambiance()
 

@@ -128,7 +128,8 @@ def get_default_printer():
 
 
 def open_printer(prtname):
-    if not prtname: prtname = get_default_printer()
+    if not prtname:
+        prtname = get_default_printer()
     hptr = c_ulong()
     if winspool.OpenPrinterW(prtname, byref(hptr), None): return hptr
     return None

@@ -20,7 +20,7 @@ import os
 import time
 
 from sk1 import config, appconst, events
-from uc2.utils.fs import path_unicode
+from uc2.utils import fsutils
 
 
 class AppHistoryManager:
@@ -35,20 +35,21 @@ class AppHistoryManager:
         self.read_history()
 
     def read_history(self):
-        if os.path.isfile(self.history_file):
-            with open(self.history_file, 'rb') as fp:
-                lines = [line.strip(' \n\r') for line in fp.readlines()]
-                for line in lines:
-                    items = line.split('\t')
-                    if len(items) == 3:
-                        self.history.append([int(items[0]),
-                                             items[1], int(items[2])])
+        if fsutils.isfile(self.history_file):
+            fp = fsutils.get_fileptr(self.history_file)
+            lines = [line.strip(' \n\r') for line in fp.readlines()]
+            for line in lines:
+                items = line.split('\t')
+                if len(items) == 3:
+                    self.history.append([int(items[0]), items[1], int(items[2])])
+            fp.close()
 
     def save_history(self):
-        with open(self.history_file, 'wb') as fp:
-            for item in self.history:
-                state, path, timestamp = str(item[0]), item[1], str(item[2])
-                fp.write('%s\t%s\t%s\n' % (state, path, timestamp))
+        fp = fsutils.get_fileptr(self.history_file, True)
+        for item in self.history:
+            state, path, timestamp = str(item[0]), item[1], str(item[2])
+            fp.write('%s\t%s\t%s\n' % (state, path, timestamp))
+        fp.close()
         events.emit(events.HISTORY_CHANGED)
 
     def add_entry(self, path, operation=appconst.OPENED):
@@ -85,7 +86,7 @@ class AppHistoryManager:
                 path = item[1]
                 entries.append(path)
                 filename = os.path.basename(path)
-                ret.append([path_unicode(filename + ' [' + path + ']'), path])
+                ret.append([filename + ' [' + path + ']', path])
                 counter += 1
             i += 1
             if i > len(self.history):
@@ -96,10 +97,9 @@ class AppHistoryManager:
         ret = []
         for item in self.history:
             path = item[1]
-            unicode_path = path_unicode(path).encode('utf-8')
-            filename = path_unicode(os.path.basename(path)).encode('utf-8')
+            filename = os.path.basename(path)
             timestamp = datetime.datetime.fromtimestamp(item[2])
             timestr = timestamp.strftime('%Y-%m-%d %H:%M:%S')
-            ret.append([item[0], filename, unicode_path, path, timestr])
+            ret.append([item[0], filename, path, timestr])
         ret.reverse()
         return ret

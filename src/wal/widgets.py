@@ -21,7 +21,7 @@ from wx import animate
 
 import const
 from basic import HPanel, MouseEvent
-from const import DEF_SIZE, tr
+from const import DEF_SIZE, tr, untr
 from mixins import WidgetMixin, DataWidgetMixin, RangeDataWidgetMixin
 from renderer import bmp_to_white, disabled_bmp
 
@@ -230,6 +230,7 @@ class Combolist(wx.Choice, WidgetMixin):
 
     def __init__(self, parent, size=DEF_SIZE, width=0,
                  items=None, onchange=None):
+        items = items or []
         self.items = [tr(item) for item in items]
         size = self._set_width(size, width)
         wx.Choice.__init__(self, parent, wx.ID_ANY, size, choices=self.items)
@@ -259,7 +260,7 @@ class Combolist(wx.Choice, WidgetMixin):
         return self.get_selection()
 
     def get_active_value(self):
-        return self.items[self.get_selection()].encode('utf-8')
+        return untr(self.items[self.get_selection()])
 
     def set_active_value(self, val):
         val = tr(val)
@@ -347,6 +348,7 @@ class Combobox(wx.ComboBox, DataWidgetMixin):
 
     def __init__(self, parent, value='', pos=(-1, 1), size=DEF_SIZE, width=0,
                  items=None, onchange=None):
+        items = items or []
         self.items = [tr(item) for item in items]
         flags = wx.CB_DROPDOWN | wx.TE_PROCESS_ENTER
         size = self._set_width(size, width)
@@ -376,7 +378,8 @@ class Combobox(wx.ComboBox, DataWidgetMixin):
         event.Skip()
 
     def set_items(self, items):
-        self.SetItems([tr(item) for item in items])
+        self.items = [tr(item) for item in items]
+        self.SetItems(self.items)
 
 
 class FloatCombobox(Combobox):
@@ -473,9 +476,6 @@ class Entry(wx.TextCtrl, DataWidgetMixin):
         if self._callback1:
             self._callback1()
 
-    def get_value(self):
-        return self.GetValue().encode('utf-8')
-
     def set_value(self, val):
         self.my_changes = True
         self.value = tr(val)
@@ -495,7 +495,7 @@ class Entry(wx.TextCtrl, DataWidgetMixin):
         self.SetDefaultStyle(wx.TextAttr(wx.NullColour, wx.NullColour, f))
 
     def append(self, txt):
-        self.AppendText(txt.decode('utf-8'))
+        self.AppendText(tr(txt))
         self.value = self.GetValue()
 
     def clear(self):

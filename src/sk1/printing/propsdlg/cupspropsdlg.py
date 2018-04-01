@@ -318,9 +318,7 @@ class MainPanel(wal.VPanel):
                  "use system configuration tools like 'system-config-printer'")
 
         label = wal.Label(self, text, fontsize=-2)
-        if wal.IS_MSW:
-            label.wrap(380)
-        label.set_enable(False)
+        label.wrap(380)
         self.pack(label, fill=True, padding_all=5, align_center=False)
 
         self.panels = [
