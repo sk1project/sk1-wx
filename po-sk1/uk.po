@@ -1,20 +1,21 @@
-# Copyright (C) 2018, Maxim Barabash
+# Copyright (C) 2018, Maxim Barabash, Eugeniy Fedirets
 # This file is distributed under the same license as the PACKAGE package.
 # Maxim Barabash <maxim.s.barabash@gmail.com>, 2018.
+# Eugeniy Fedirets <evgeniy_fedirets@ukr.net>, 2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-28 09:45+0300\n"
-"PO-Revision-Date: 2018-03-28 21:51+0300\n"
-"Last-Translator: Maxim Barabash <maxim.s.barabash@gmail.com>\n"
+"PO-Revision-Date: 2018-04-03 00:58+0300\n"
+"Last-Translator: Eugeniy Fedirets <evgeniy_fedirets@ukr.net>\n"
 "Language-Team: \n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.4\n"
+"X-Generator: Poedit 1.8.11\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -55,11 +56,11 @@ msgstr "Бажаєте змінити типовий стиль штриху д�
 
 #: src/sk1/app_proxy.py:160
 msgid "Source object is not selected to copy fill property."
-msgstr "Для копіювання властивості заповнення не вибраний вихідний об'єкт."
+msgstr "Для копіювання властивості заповнення не обрано вихідний об'єкт."
 
 #: src/sk1/app_proxy.py:162
 msgid "Selected object cannot be source of fill property."
-msgstr "Вибраний об'єкт не може бути джерелом властивості заповнення."
+msgstr "Обраний об'єкт не може бути джерелом властивості заповнення."
 
 #: src/sk1/app_proxy.py:163 src/sk1/app_proxy.py:183 src/sk1/app_proxy.py:586
 #: src/sk1/share/pd_plugins/shaping/__init__.py:168
@@ -68,11 +69,11 @@ msgstr "Бажаєте спробувати ще раз?"
 
 #: src/sk1/app_proxy.py:180
 msgid "Source object is not selected to copy stroke property."
-msgstr "Для копіювання властивості штриху не вибраний вихідний об'єкт."
+msgstr "Для копіювання властивості штриху не обрано вихідний об'єкт."
 
 #: src/sk1/app_proxy.py:182
 msgid "Selected object cannot be source of stroke property."
-msgstr "Вибраний об'єкт не може бути джерелом властивості штриху."
+msgstr "Обраний об'єкт не може бути джерелом властивості штриху."
 
 #: src/sk1/app_proxy.py:535 src/sk1/share/pd_plugins/shaping/__init__.py:179
 msgid "Error occurred during this operation."
@@ -84,7 +85,7 @@ msgstr "Можливо, це було пов'язано з недосконал�
 
 #: src/sk1/app_proxy.py:580 src/sk1/share/pd_plugins/shaping/__init__.py:165
 msgid "There is no selected object."
-msgstr "Немає вибраного об'єкта."
+msgstr "Немає обраного об'єкта."
 
 #: src/sk1/app_proxy.py:582
 msgid "Object from current selection cannot be container."
@@ -92,7 +93,7 @@ msgstr "Об'єкт з поточного позначення не може б�
 
 #: src/sk1/app_proxy.py:584
 msgid "Selected object cannot be container."
-msgstr "Вибраний об'єкт не може бути контейнером."
+msgstr "Обраний об'єкт не може бути контейнером."
 
 #: src/sk1/app_proxy.py:709
 msgid "Do you wish to change default fill color for this document?"
@@ -128,7 +129,7 @@ msgstr "Документ створено"
 
 #: src/sk1/application.py:205
 msgid "Select Template"
-msgstr "Виберіть шаблон"
+msgstr "Оберіть шаблон"
 
 #: src/sk1/application.py:211
 msgid "Cannot parse file:"
@@ -166,7 +167,7 @@ msgstr "Детальнішу інформацію дивіться в журна
 
 #: src/sk1/application.py:251
 msgid "Document opened"
-msgstr "Документ відкритий"
+msgstr "Документ відкрито"
 
 #: src/sk1/application.py:269
 msgid "Cannot save file:"
@@ -193,7 +194,7 @@ msgstr "Перевірте ім'я файлу та права на запис"
 
 #: src/sk1/application.py:322
 msgid "Save selected objects only as..."
-msgstr "Зберегти тільки вибрані об'єкти як..."
+msgstr "Зберегти тільки обрані об'єкти як..."
 
 #: src/sk1/application.py:333
 msgid "Please check requested file format and write permissions"
@@ -202,7 +203,7 @@ msgstr "Будь-ласка, перевірте формат файлу та д�
 #: src/sk1/application.py:352
 #, python-format
 msgid "Document '%s' has been modified."
-msgstr "Документ '%s' був змінений."
+msgstr "Документ '%s' змінено."
 
 #: src/sk1/application.py:353
 msgid "Do you want to save your changes?"
@@ -210,11 +211,11 @@ msgstr "Бажаєте зберегти внесені вами зміни?"
 
 #: src/sk1/application.py:373
 msgid "To start create new or open existing document"
-msgstr "Щоб почати створіть новий або завантажте існуючий документ"
+msgstr "Щоб почати створіть новий або відкрийте існуючий документ"
 
 #: src/sk1/application.py:398
 msgid "Select file to import"
-msgstr "Виберіть файл для імпорту"
+msgstr "Оберіть файл для імпорту"
 
 #: src/sk1/application.py:403
 msgid "Cannot import graphics from file:"
@@ -259,7 +260,7 @@ msgstr "Експортуємо..."
 #: src/sk1/application.py:489 src/sk1/document/presenter.py:231
 #, python-format
 msgid "Unknown file format is requested for export <%s>"
-msgstr "Для експорту запитано невідомий формат файлу <%s>"
+msgstr "Для експорту вказано невідомий формат файлу <%s>"
 
 #: src/sk1/application.py:494
 msgid "Cannot export palette:"
@@ -271,11 +272,11 @@ msgstr "Палітру успішно експортовано"
 
 #: src/sk1/application.py:511
 msgid "Select palette to import"
-msgstr "Виберіть палітру для імпорту"
+msgstr "Оберіть палітру для імпорту"
 
 #: src/sk1/application.py:515 src/sk1/document/presenter.py:72
 msgid "Opening file..."
-msgstr "Завантажити файл..."
+msgstr "Відкрити файл..."
 
 #: src/sk1/application.py:519 src/sk1/document/presenter.py:69
 #: src/sk1/document/presenter.py:76 src/sk1/document/presenter.py:193
@@ -285,7 +286,7 @@ msgstr "Не знайдено завантажувач для <%s>"
 
 #: src/sk1/application.py:523
 msgid "Error while opening"
-msgstr "Помилка при завантажені"
+msgstr "Помилка при відкриванні"
 
 #: src/sk1/application.py:526
 msgid "Palette is successfully imported"
@@ -301,7 +302,7 @@ msgstr "Не вдається зберегти візерунок з:"
 
 #: src/sk1/application.py:566
 msgid "Select pattern to load"
-msgstr "Виберіть візерунок для завантаження"
+msgstr "Оберіть візерунок для завантаження"
 
 #: src/sk1/application.py:569
 msgid "Cannot load pattern for:"
@@ -410,11 +411,11 @@ msgstr "Використовувати лігатури"
 
 #: src/sk1/context/transform.py:34
 msgid "Rotate selection"
-msgstr "Повернути вибране"
+msgstr "Крутити обране"
 
 #: src/sk1/context/units.py:39 src/sk1/dialogs/docprops.py:308
 msgid "Document units"
-msgstr "Одиниця виміру документу"
+msgstr "Одиниці виміру у документі"
 
 #: src/sk1/dialogs/aboutdlg.py:39 src/sk1/dialogs/aboutdlg.py:141
 msgid "About"
@@ -462,9 +463,9 @@ msgid ""
 "means no dash, i.e. solid line."
 msgstr ""
 "Стиль пунктиру це набір (штрих-пробіл-штрих-пробіл- тощо) чисел,\n"
-"Розділених пробілами, які описують розмір елементів штриху.\n"
-"Значення даються щодо ширини лінії. Приклад: '2 1' або '5 1 1 1'.\n"
-"Пусте значення означає немає пунктиру, тобто суцільна лінія."
+"розділених пробілами, які описують розмір елементів штриху.\n"
+"Значення подаються відносно ширини лінії. Наприклад: '2 1' або '5 1 1 1'.\n"
+"Порожнє значення означає відсутність пунктиру, тобто це суцільна лінія."
 
 #: src/sk1/dialogs/dashedit_dlg.py:79 src/sk1/dialogs/strokedlg.py:126
 msgid "Edit dash pattern"
@@ -608,7 +609,7 @@ msgstr "Усі файли (*.*)"
 
 #: src/sk1/dialogs/filedlgs.py:96
 msgid "Select directory"
-msgstr "Виберіть каталог"
+msgstr "Оберіть теку"
 
 #: src/sk1/dialogs/filelogviewer.py:57
 msgid "Clear log"
@@ -632,7 +633,7 @@ msgstr "Час"
 
 #: src/sk1/dialogs/filelogviewer.py:76
 msgid "Opened"
-msgstr "Відкритий"
+msgstr "Відкрито"
 
 #: src/sk1/dialogs/filelogviewer.py:78
 msgid "Saved"
@@ -644,7 +645,7 @@ msgstr "Файл"
 
 #: src/sk1/dialogs/filelogviewer.py:99
 msgid "is not found."
-msgstr "не знайдений."
+msgstr "не знайдено."
 
 #: src/sk1/dialogs/filelogviewer.py:100
 msgid "File not found"
@@ -652,7 +653,7 @@ msgstr "Не знайдено файла"
 
 #: src/sk1/dialogs/filelogviewer.py:122
 msgid "Recent documents"
-msgstr "Попередні документи"
+msgstr "Неодавні документи"
 
 #: src/sk1/dialogs/logconsole.py:134
 msgid "Select log to open"
@@ -698,7 +699,7 @@ msgstr "Видалити сторінку"
 
 #: src/sk1/dialogs/pagedlg.py:96
 msgid "Insert:"
-msgstr "Додати:"
+msgstr "Вставити:"
 
 #: src/sk1/dialogs/pagedlg.py:102
 msgid "page(s)"
@@ -730,7 +731,7 @@ msgstr "Неможливо з'єднатися з сервером!"
 
 #: src/sk1/dialogs/palcoldlg.py:65
 msgid "Please check Internet connection"
-msgstr "Будь ласка, перевірте підключення до Інтернету"
+msgstr "Будь ласка, перевірте  з'єднання з Інтернетом"
 
 #: src/sk1/dialogs/palcoldlg.py:66
 msgid "and access to http://sk1project.net"
@@ -808,12 +809,12 @@ msgstr "Збереження файлу..."
 #: src/sk1/document/presenter.py:136
 #, python-format
 msgid "Unknown file format is requested for saving! <%s>"
-msgstr "Для збереження запитано невідомий формат файлу! <%s>"
+msgstr "Для збереження вказано невідомий формат файлу! <%s>"
 
 #: src/sk1/document/presenter.py:164
 #, python-format
 msgid "Unknown file format is requested for saving <%s>"
-msgstr "Для збереження запитано невідомий формат файлу <%s>"
+msgstr "Для збереження вказано невідомий формат файлу <%s>"
 
 #: src/sk1/document/presenter.py:189
 msgid "Importing..."
@@ -821,7 +822,7 @@ msgstr "Імпорт..."
 
 #: src/sk1/document/selection.py:52
 msgid " object in selection"
-msgstr " об'єкт у вибраному"
+msgstr " об'єкт у обраному"
 
 #: src/sk1/document/selection.py:60
 msgid "No selection"
@@ -833,7 +834,7 @@ msgstr "об'єктів у вибраному"
 
 #: src/sk1/parts/menubar.py:32
 msgid "Open &Recent"
-msgstr "Відкрити &недавній документ"
+msgstr "Відкрити &нещодавній документ"
 
 #: src/sk1/parts/menubar.py:38
 msgid "&File"
@@ -897,24 +898,24 @@ msgstr "Відсутнє"
 
 #: src/sk1/parts/palettepanel.py:43
 msgid "Scroll palette to left"
-msgstr "Прокрутить палітру ліворуч"
+msgstr "Прокрутити палітру ліворуч"
 
 #: src/sk1/parts/palettepanel.py:51 src/sk1/parts/palettepanel.py:113
 #: src/sk1/pwidgets/fillctrls.py:311
 msgid "Empty pattern"
-msgstr "Пустий шаблон"
+msgstr "Порожній шаблон"
 
 #: src/sk1/parts/palettepanel.py:59
 msgid "Scroll palette to right"
-msgstr "Прокрутить палітру праворич"
+msgstr "Прокрутити палітру праворич"
 
 #: src/sk1/parts/palettepanel.py:105
 msgid "Scroll palette to top"
-msgstr "Прокрутить палітру в гору"
+msgstr "Прокрутити палітру в гору"
 
 #: src/sk1/parts/palettepanel.py:122
 msgid "Scroll palette to bottom"
-msgstr "Прокрутить палітру до низу"
+msgstr "Прокрутити палітру до низу"
 
 #: src/sk1/parts/statusbar.py:130 src/sk1/parts/statusbar.py:160
 msgid "Image type: "
@@ -955,7 +956,7 @@ msgstr "Сторінка %i з %i"
 
 #: src/sk1/parts/stubpanel.py:39
 msgid "Open Recent"
-msgstr "Відкрити недавній документ"
+msgstr "Відкрити нещодавній документ"
 
 #: src/sk1/prefs/__init__.py:41
 msgid "Application"
@@ -1020,7 +1021,7 @@ msgstr "Профіль дисплея:"
 
 #: src/sk1/prefs/prefs_cms.py:177
 msgid "Use display profile"
-msgstr "Вживати профіль дисплея"
+msgstr "Використовувати профіль дисплея"
 
 #: src/sk1/prefs/prefs_cms.py:184
 msgid "Note: Display profile for your hardware you could fetch here:"
@@ -1055,7 +1056,7 @@ msgstr "Відомості"
 
 #: src/sk1/prefs/prefs_cms.py:375
 msgid "Select profile to import"
-msgstr "Виберіть профіль для імпорту"
+msgstr "Оберіть профіль для імпорту"
 
 #: src/sk1/prefs/prefs_cms.py:382
 msgid "Cannot open profile"
@@ -1063,7 +1064,7 @@ msgstr "Неможливо відкрити профіль"
 
 #: src/sk1/prefs/prefs_cms.py:384
 msgid "The profile may be corrupted or not supported format"
-msgstr "Профіль може бути пошкоджений або формату що не підтримується"
+msgstr "Профіль можливо пошкоджений або у форматі що не підтримується"
 
 #: src/sk1/prefs/prefs_cms.py:388
 msgid "Selected profile cannot be added to profile list:"
@@ -1075,7 +1076,7 @@ msgstr "Здається цей профіль вже імпортовано"
 
 #: src/sk1/prefs/prefs_cms.py:397
 msgid "Selected file has been added to profile pool"
-msgstr "Вибраний файл був доданий до пулу профілів"
+msgstr "Обраний файл був доданий до пулу профілів"
 
 #: src/sk1/prefs/prefs_cms.py:399
 msgid "If you sure to import the file try renaming it"
@@ -1151,11 +1152,11 @@ msgstr "Шрифти"
 
 #: src/sk1/prefs/prefs_fonts.py:29
 msgid "Font preview preferences"
-msgstr "Параметри зразку шрифтів"
+msgstr "Параметри зразка шрифтів"
 
 #: src/sk1/prefs/prefs_fonts.py:45
 msgid "Text filler:"
-msgstr "Текст зразку:"
+msgstr "Текст зразка:"
 
 #: src/sk1/prefs/prefs_fonts.py:49
 msgid "Font size:"
@@ -1171,7 +1172,7 @@ msgstr "Колір позначення:"
 
 #: src/sk1/prefs/prefs_fonts.py:62
 msgid "Preview width:"
-msgstr "Ширина зразку:"
+msgstr "Ширина зразка:"
 
 #: src/sk1/prefs/prefs_general.py:41
 msgid "system"
@@ -1223,23 +1224,23 @@ msgstr "Показувати клавіші швидкого доступу"
 
 #: src/sk1/prefs/prefs_general.py:119
 msgid "Use overlay for spinbox widgets (*)"
-msgstr "Використовувати оверлей в спінбоксах (*)"
+msgstr "Використовувати оверлей у спінбоксах (*)"
 
 #: src/sk1/prefs/prefs_general.py:124
 msgid "Separate spin in spinbox widgets (*)"
-msgstr "Відокремлювати спин в спінбоксах (*)"
+msgstr "Відокремлювати спін в спінбоксах (*)"
 
 #: src/sk1/prefs/prefs_general.py:129
 msgid "Unity related features"
-msgstr "Пов'язані функції з Unity"
+msgstr "Функції пов'язані  з Unity"
 
 #: src/sk1/prefs/prefs_general.py:134
 msgid "Use Unity Global Menu (*)"
-msgstr "Вживати Unity глобальне меню (*)"
+msgstr "Використовувати глобальне меню Unity (*)"
 
 #: src/sk1/prefs/prefs_general.py:139
 msgid "Allow overlay for scrollbars (*)"
-msgstr "Дозволити накладання для смуги прокрутки (*)"
+msgstr "Дозволити накладання для смуги прокручування (*)"
 
 #: src/sk1/prefs/prefs_general.py:144
 msgid "UI style"
@@ -1251,15 +1252,15 @@ msgstr "Починати з нового документу"
 
 #: src/sk1/prefs/prefs_general.py:158
 msgid "Backup on document save"
-msgstr "Резервна копія при збереженні"
+msgstr "Робити резервну копію при збереженні"
 
 #: src/sk1/prefs/prefs_general.py:162
 msgid "Make font cache on start"
-msgstr "Зробити кеш шрифтів на старті"
+msgstr "Робити кеш шрифтів на старті"
 
 #: src/sk1/prefs/prefs_general.py:166
 msgid "Backup on export"
-msgstr "Резервна копія при експорті"
+msgstr "Робити резервну копію при експорті"
 
 #: src/sk1/prefs/prefs_general.py:174
 msgid "History log size:"
@@ -1299,7 +1300,7 @@ msgstr "Палітра"
 
 #: src/sk1/prefs/prefs_palettes.py:31
 msgid "Palette options and palette management"
-msgstr "Параметри палітри та керування палітра"
+msgstr "Параметри палітри та керування палітрами"
 
 #: src/sk1/prefs/prefs_palettes.py:58
 msgid "Current palette:"
@@ -1506,7 +1507,7 @@ msgstr "Типовий принтер"
 
 #: src/sk1/printing/pdf_printer.py:34
 msgid "Print to file (PDF)"
-msgstr "Друкувати у PDF"
+msgstr "Друкувати у файл (PDF)"
 
 #: src/sk1/printing/pdf_printer.py:54
 msgid "Internal PDF writer"
@@ -1518,15 +1519,15 @@ msgstr "Програмний інтерфейс"
 
 #: src/sk1/printing/pdf_printer.py:60
 msgid "Idle"
-msgstr "Незайнятий"
+msgstr "Вільний"
 
 #: src/sk1/printing/pdf_printer.py:128
 msgid "Select output file"
-msgstr "Задайте вихідний файл"
+msgstr "Оберіть вихідний файл"
 
 #: src/sk1/pwidgets/colorctrls.py:45
 msgid "Fill any contour"
-msgstr "Заповніть будь-який контур"
+msgstr "Заповнити будь-який контур"
 
 #: src/sk1/pwidgets/colorctrls.py:46
 msgid "Fill closed only"
@@ -1554,7 +1555,7 @@ msgstr "План:"
 
 #: src/sk1/pwidgets/colorctrls.py:537
 msgid "Old color:"
-msgstr "Попередній колір:"
+msgstr "Старий колір:"
 
 #: src/sk1/pwidgets/colorctrls.py:543
 msgid "New color:"
@@ -1582,7 +1583,7 @@ msgstr "Палітра:"
 
 #: src/sk1/pwidgets/fillctrls.py:260
 msgid "Empty pattern selected"
-msgstr "Вибрано порожній візерунок"
+msgstr "Обрано порожній візерунок"
 
 #: src/sk1/pwidgets/fillctrls.py:306 src/sk1/pwidgets/fillctrls.py:455
 msgid "CMYK colorspace"
@@ -1626,7 +1627,7 @@ msgstr "Візерунк"
 
 #: src/sk1/pwidgets/gradientctrls.py:154
 msgid "Gradient stop"
-msgstr "Опорної точки градієнта"
+msgstr "Опорні точки градієнта"
 
 #: src/sk1/pwidgets/gradientctrls.py:157
 msgid "Color value:"
@@ -1662,15 +1663,15 @@ msgstr "Додати опорну точку"
 
 #: src/sk1/pwidgets/gradientctrls.py:394
 msgid "Delete selected stop"
-msgstr "Видалити видрані опорні точки"
+msgstr "Видалити обрані опорні точки"
 
 #: src/sk1/pwidgets/gradientctrls.py:400
 msgid "Reverse gradient"
-msgstr "Обернути градієнт"
+msgstr "Розвернути градієнт"
 
 #: src/sk1/pwidgets/gradientctrls.py:401 src/sk1/printing/printdlg/panels.py:82
 msgid "Reverse"
-msgstr "Обернути"
+msgstr "Розвернути"
 
 #: src/sk1/pwidgets/gradientctrls.py:406
 msgid "Keep gradient vector"
@@ -1710,11 +1711,11 @@ msgstr "Опорна точка горизонтального зсуву"
 
 #: src/sk1/pwidgets/patternctrls.py:164
 msgid "Vertical origin shift"
-msgstr "Опорна точка вертивального зсуву"
+msgstr "Опорна точка вертикального зсуву"
 
 #: src/sk1/pwidgets/patternctrls.py:172
 msgid "Scale horizontally"
-msgstr "Горизонтально масштаб"
+msgstr "Горизонтальний масштаб"
 
 #: src/sk1/pwidgets/patternctrls.py:183
 msgid "Scale vertically"
@@ -1730,7 +1731,7 @@ msgstr "Зсув по вертикалі"
 
 #: src/sk1/pwidgets/patternctrls.py:215
 msgid "Rotate pattern"
-msgstr "Повернути візерунок"
+msgstr "Обертати візерунок"
 
 #: src/sk1/pwidgets/patternctrls.py:284
 msgid "Transformation matrix:"
@@ -1742,11 +1743,11 @@ msgstr "Завантажити візерунок з файла"
 
 #: src/sk1/pwidgets/patternctrls.py:421
 msgid "Save pattern into file"
-msgstr "Зберегти візерунок до файлу"
+msgstr "Зберегти візерунок у файл"
 
 #: src/sk1/pwidgets/strokectrls.py:110
 msgid "Line exactly at the point"
-msgstr "Лінія точно до вузла"
+msgstr "Лінія точно через вузол"
 
 #: src/sk1/pwidgets/strokectrls.py:111
 msgid "Round ending"
@@ -1892,11 +1893,11 @@ msgstr "Зберегти документ як..."
 
 #: src/sk1/resources/labels.py:54
 msgid "Save Selected Only..."
-msgstr "Зберегти тільки вибране..."
+msgstr "Зберегти тільки обране..."
 
 #: src/sk1/resources/labels.py:54
 msgid "Save selected objects only..."
-msgstr "Зберегти тільки вибрані об'єкти..."
+msgstr "Зберегти тільки обрані об'єкти..."
 
 #: src/sk1/resources/labels.py:55
 msgid "Save All"
@@ -1964,7 +1965,7 @@ msgstr "В&ийти"
 
 #: src/sk1/resources/labels.py:63
 msgid "Exit application"
-msgstr "Вийти з sK1"
+msgstr "Вийти з програми"
 
 #: src/sk1/resources/labels.py:65
 msgid "&Undo"
@@ -2076,7 +2077,7 @@ msgstr "Прив'язка до сторінки"
 
 #: src/sk1/resources/labels.py:96
 msgid "Iconizer..."
-msgstr "Иконізер..."
+msgstr "Іконайзер..."
 
 #: src/sk1/resources/labels.py:97
 msgid "Redraw document"
@@ -2084,7 +2085,7 @@ msgstr "Оновити документ"
 
 #: src/sk1/resources/labels.py:99
 msgid "Insert page..."
-msgstr "Додати сторінку..."
+msgstr "Вставити сторінку..."
 
 #: src/sk1/resources/labels.py:100
 msgid "Delete page..."
@@ -2144,11 +2145,11 @@ msgstr "Зсув..."
 
 #: src/sk1/resources/labels.py:115
 msgid "Rotate &left 90 degrees"
-msgstr "Повернути в&ліво на 90°"
+msgstr "Нахилити в&ліво на 90°"
 
 #: src/sk1/resources/labels.py:116
 msgid "Rotate &right 90 degrees"
-msgstr "Повернути в&право на 90°"
+msgstr "Нахилити в&право на 90°"
 
 #: src/sk1/resources/labels.py:117
 msgid "&Horizontal mirror"
@@ -2200,7 +2201,7 @@ msgstr "Розгрупувати все"
 
 #: src/sk1/resources/labels.py:129
 msgid "Trim..."
-msgstr "Підрізування..."
+msgstr "Обрізати..."
 
 #: src/sk1/resources/labels.py:130
 msgid "Intersection..."
@@ -2216,7 +2217,7 @@ msgstr "Злиття..."
 
 #: src/sk1/resources/labels.py:133
 msgid "&Place into container"
-msgstr "&Помістити в контейнер"
+msgstr "&Помістити у контейнер"
 
 #: src/sk1/resources/labels.py:134
 msgid "&Extract from container"
@@ -2232,11 +2233,11 @@ msgstr "Перетворити штрих на криву"
 
 #: src/sk1/resources/labels.py:138
 msgid "Select all nodes"
-msgstr "Позначити всі вузли"
+msgstr "Позначити усі вузли"
 
 #: src/sk1/resources/labels.py:139
 msgid "Reverse all paths"
-msgstr "Обернути всі контури"
+msgstr "Обернути усі контури"
 
 #: src/sk1/resources/labels.py:140
 msgid "Select all subpath nodes"
@@ -2312,7 +2313,7 @@ msgstr "Перетворити у LAB"
 
 #: src/sk1/resources/labels.py:159
 msgid "Convert to Grayscale"
-msgstr "Перетворити у Grayscale"
+msgstr "Перетворити у відтінки сірого"
 
 #: src/sk1/resources/labels.py:160
 msgid "Convert to B&W"
@@ -2320,7 +2321,7 @@ msgstr "Перетворити у чорно-біле"
 
 #: src/sk1/resources/labels.py:161
 msgid "Invert bitmap"
-msgstr "Інвертувати зображення"
+msgstr "Інвертувати растр"
 
 #: src/sk1/resources/labels.py:162
 msgid "Remove alpha-channel"
@@ -2406,12 +2407,12 @@ msgstr "Про програму sK1..."
 #: src/sk1/document/controllers/editor_bezier.py:52
 #: src/sk1/document/controllers/editor_bezier.py:239
 msgid "No selected nodes"
-msgstr "Немає вибраних вузлів"
+msgstr "Немає обраних вузлів"
 
 #: src/sk1/document/controllers/editor_bezier.py:241
 #, python-format
 msgid "Selected %d node(s)"
-msgstr "Вибраних вузлів %d"
+msgstr "Обрано %d вузлів"
 
 #: src/sk1/document/controllers/editor_ellipse.py:48
 #: src/sk1/document/controllers/editor_ellipse.py:62
@@ -2467,7 +2468,7 @@ msgstr "Діапазон сторінок"
 
 #: src/sk1/printing/printdlg/panels.py:135
 msgid "All"
-msgstr "Все"
+msgstr "Усе"
 
 #: src/sk1/printing/printdlg/panels.py:137
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:52
@@ -2503,7 +2504,7 @@ msgstr "Монохромний"
 #: src/sk1/printing/printdlg/panels.py:246
 #: src/sk1/printing/propsdlg/cupspropsdlg.py:45
 msgid "Color"
-msgstr "Кольорове"
+msgstr "Кольоровий"
 
 #: src/sk1/printing/printdlg/panels.py:277
 msgid "Printer"
@@ -2560,7 +2561,7 @@ msgid ""
 "Note: To adjust specific printer options you could use system configuration "
 "tools like 'system-config-printer'"
 msgstr ""
-"Примітка: Специфічні параметри принтера можна настроїти програмами типу "
+"Примітка: Специфічні параметри принтера можна налаштувати програмами типу "
 "'system-config-printer'"
 
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:37
@@ -2573,11 +2574,11 @@ msgstr "Версія PDF:"
 
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:58
 msgid "Use SPOT colors"
-msgstr "Уживати плашкові кольори"
+msgstr "Використовувати плашкові кольори"
 
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:61
 msgid "Use compression"
-msgstr "Стискати"
+msgstr "Використовувати стискання"
 
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:88
 msgid "Document page"
@@ -2715,7 +2716,7 @@ msgstr "Розмір:"
 
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:156
 msgid "Iconizer"
-msgstr "Иконізер"
+msgstr "Іконайзер"
 
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:178
 msgid "Background:"
@@ -2781,7 +2782,7 @@ msgstr "Перейменувати шар"
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:55
 msgid "Trim"
-msgstr "Підрізування"
+msgstr "Обрізання"
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:56
 msgid "Intersection"
@@ -2797,7 +2798,7 @@ msgstr "Злиття"
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:90
 msgid "Delete originals"
-msgstr "Видалити вихідні"
+msgstr "Видалити оригінали"
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:95
 msgid "Apply to..."
@@ -2947,7 +2948,7 @@ msgstr "градусів"
 
 #: src/uc2/uc2const.py:116
 msgid "PDXF - PrintDesign XML Format graphics files"
-msgstr "PDXF - файли PrintDesign XML Format"
+msgstr "PDXF - файли графіки PrintDesign XML Format"
 
 #: src/uc2/uc2const.py:117
 msgid "SK1 - sK1 0.9.x graphics files"
@@ -3003,7 +3004,7 @@ msgstr "CCX - стиснутi файли клiпартiв CorelDRAW"
 
 #: src/uc2/uc2const.py:133
 msgid "XAR - Xara graphics files"
-msgstr "XAR - файли Xara"
+msgstr "XAR - файли графіки Xara"
 
 #: src/uc2/uc2const.py:134
 msgid "FIG - XFig files"
@@ -3067,7 +3068,7 @@ msgstr "DWG - файли AutoCAD"
 
 #: src/uc2/uc2const.py:150
 msgid "RIF - RIFF files"
-msgstr "RIF - RIFF файли"
+msgstr "RIF - файли RIFF"
 
 #: src/uc2/uc2const.py:153
 msgid "JPEG - Joint Photographic Experts Group files"
@@ -3135,11 +3136,11 @@ msgstr "XML - файли палiтр CorelDRAW X5-X7"
 
 #: src/uc2/uc2const.py:171
 msgid "ASE - Adobe Swatch Exchange files"
-msgstr "ASE - файли Adobe Swatch Exchange"
+msgstr "ASE - файли палітр Adobe Swatch Exchange"
 
 #: src/uc2/uc2const.py:172
 msgid "ACO - Adobe Color files"
-msgstr "ACO - файли Adobe Color"
+msgstr "ACO - файли палітр Adobe Color"
 
 #: src/uc2/uc2const.py:173
 msgid "JCW - Xara color palette files"
@@ -3167,7 +3168,7 @@ msgstr "пікселі"
 
 #: src/uc2/uc2const.py:364 src/uc2/uc2const.py:389
 msgid "millimeters"
-msgstr "мііліметри"
+msgstr "міліметри"
 
 #: src/uc2/uc2const.py:365 src/uc2/uc2const.py:388
 msgid "centimeters"
@@ -3261,7 +3262,7 @@ msgstr "Помилка при збереженні:"
 
 #: src/uc2/formats/generic.py:153
 msgid "No file object"
-msgstr "Нема файлового об'єкта"
+msgstr "Немає файлового об'єкта"
 
 #: src/uc2/formats/generic.py:159
 msgid "Saving is started..."
@@ -3274,16 +3275,16 @@ msgstr "Помилка при збереженні"
 #: src/uc2/formats/generic.py:167
 #, python-format
 msgid "<%s> document model is saved successfully"
-msgstr "<%s> модель документа успішно збережена"
+msgstr "<%s> модель документа успішно збережено"
 
 #: src/uc2/formats/generic.py:179
 #, python-format
 msgid "<%s> document model is destroyed for %s"
-msgstr "<%s> модель документа знищена для %s"
+msgstr "<%s> модель документа знищено для %s"
 
 #: src/uc2/formats/generic.py:185
 msgid "Cache is cleared for"
-msgstr "Кеш очищений для"
+msgstr "Кеш очищено для"
 
 #: src/uc2/formats/generic.py:187
 msgid "Cache clearing is unsuccessful"
@@ -3334,7 +3335,7 @@ msgstr "Переклад в процесі..."
 
 #: src/uc2/formats/cdrz/cdrz_filters.py:43
 msgid "It seems the file is not CDRZ file"
-msgstr "Схоже, файл не є формату CDRZ"
+msgstr "Схоже, файл не є CDRZ файлом"
 
 #: src/uc2/formats/cdrz/cdrz_filters.py:71
 msgid "It seems the CDR file is corrupted"
@@ -3459,7 +3460,7 @@ msgstr "Зображення"
 
 #: src/uc2/formats/sk2/sk2_cids.py:68
 msgid "Layer group"
-msgstr "Шар групування"
+msgstr "Група шарів"
 
 #: src/uc2/formats/sk2/sk2_cids.py:69
 msgid "Master layers"
