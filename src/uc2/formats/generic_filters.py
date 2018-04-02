@@ -150,12 +150,22 @@ class AbstractXMLLoader(AbstractLoader, handler.ContentHandler):
         self.xml_reader.parse(self.input_source)
 
     def startElement(self, name, attrs):
+        if isinstance(name, unicode):
+            name = name.encode('utf-8')
+            ret = {}
+            for key,value in attrs._attrs.items():
+                ret[key.encode('utf-8')] = attrs[key].encode('utf-8')
+            attrs._attrs = ret
         self.start_element(name, attrs)
 
     def endElement(self, name):
+        if isinstance(name, unicode):
+            name = name.encode('utf-8')
         self.end_element(name)
 
     def characters(self, data):
+        if isinstance(data, unicode):
+            data = data.encode('utf-8')
         self.element_data(data)
 
     def start_element(self, name, attrs): pass

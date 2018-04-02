@@ -16,11 +16,10 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-import os
 
 from uc2 import _, uc2const
 from uc2 import events, msgconst
-from uc2.utils import fs
+from uc2.utils import fs, fsutils
 
 LOG = logging.getLogger(__name__)
 
@@ -110,7 +109,7 @@ class ModelPresenter(object):
         pass
 
     def load(self, filename=None, fileptr=None):
-        if filename and os.path.lexists(filename):
+        if filename and fsutils.lexists(filename):
             self.doc_file = filename
         elif not fileptr:
             msg = _('Error while loading:') + ' ' + _('No file')
@@ -174,14 +173,15 @@ class ModelPresenter(object):
         if self.model is not None:
             self.model.destroy()
         self.model = None
-
+        filename = filename.encode('utf-8') \
+            if isinstance(filename, unicode) else filename
         model_name = uc2const.FORMAT_NAMES[self.cid]
-        self.send_ok(_('<%s> document model is destroyed for %s') % (model_name,
-                                                                     filename))
+        self.send_ok(_('<%s> document model is destroyed for %s') %
+                     (model_name, filename))
 
-        if self.doc_dir and os.path.lexists(self.doc_dir):
+        if self.doc_dir and fsutils.lexists(self.doc_dir):
             try:
-                fs.xremove_dir(self.doc_dir)
+                fs.xremove_dir(fsutils.get_sys_path(self.doc_dir))
                 self.send_ok(_('Cache is cleared for') + ' %s' % filename)
             except Exception as e:
                 msg = _('Cache clearing is unsuccessful')

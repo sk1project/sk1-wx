@@ -117,7 +117,8 @@ def latin1_bytes_2str(data):
     Converts Latin1 bytes to Python string value.
     """
     length = len(data)
-    return unicode(struct.unpack(str(length) + 's', data)[0], 'latin1')
+    return unicode(struct.unpack(str(length) + 's', data)[0], 'latin1').\
+        encode('utf-8')
 
 
 def utf_16_le_bytes_2str(data):
@@ -125,7 +126,8 @@ def utf_16_le_bytes_2str(data):
     Converts utf16 bytes to Python string value.
     """
     length = len(data)
-    return unicode(struct.unpack(str(length) + 's', data)[0], 'utf_16_le')
+    return unicode(struct.unpack(str(length) + 's', data)[0], 'utf_16_le').\
+        encode('utf-8')
 
 
 def get_chunk_size(size_field):

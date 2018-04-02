@@ -95,6 +95,7 @@ class ScribusPalette_Presenter(TaggedModelPresenter):
     def convert_to_skp(self, skp_doc):
         skp = skp_doc.model
         skp.name = self.model.Name
+        print 'skp.name', isinstance(skp.name,unicode)
         if not skp.name:
             if self.doc_file:
                 name = os.path.basename(self.doc_file)

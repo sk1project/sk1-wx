@@ -47,7 +47,7 @@ class AbstractCPLColor(BinaryModelObject):
 
     def resolve(self, name=''):
         name = cdr_const.CDR_COLOR_NAMES[self.colorspace]
-        return (True, '%s color' % name, '')
+        return True, '%s color' % name, ''
 
     def save(self, saver):
         saver.write(self.chunk)

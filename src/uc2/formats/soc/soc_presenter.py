@@ -33,7 +33,8 @@ class SOC_Presenter(TextModelPresenter):
     resources = None
     cms = None
 
-    def __init__(self, appdata, cnf={}, filepath=None):
+    def __init__(self, appdata, cnf=None, filepath=None):
+        cnf = cnf or {}
         self.config = SOC_Config()
         config_file = os.path.join(appdata.app_config_dir, self.config.filename)
         self.config.load(config_file)
@@ -56,17 +57,17 @@ class SOC_Presenter(TextModelPresenter):
     def convert_from_skp(self, skp_doc):
         skp_model = skp_doc.model
         soc = self.model
-        soc.name = skp_model.name.encode('utf-8')
+        soc.name = skp_model.name
         soc.columns = skp_model.columns
         soc.comments = ''
         if skp_model.source:
             soc.comments += 'Palette source: ' + skp_model.source + '\n'
         soc.comments += skp_model.comments
-        soc.comments = soc.comments.encode('utf-8')
+        soc.comments = soc.comments
         for item in skp_model.colors:
             color = self.cms.get_rgb_color(item)[1]
             rgb = cms.rgb_to_hexcolor(color)
-            soc.colors.append([rgb, item[3].encode('utf-8')])
+            soc.colors.append([rgb, item[3]])
 
     def convert_to_skp(self, skp_doc):
         skp_model = skp_doc.model
@@ -77,7 +78,7 @@ class SOC_Presenter(TextModelPresenter):
             skp_model.name = 'SOC palette'
         skp_model.source = self.model.source
         skp_model.columns = self.model.columns
-        skp_model.comments = self.model.comments.decode('utf-8')
+        skp_model.comments = self.model.comments
         if self.doc_file:
             filename = os.path.basename(self.doc_file)
             if skp_model.comments: skp_model.comments += 'n'
@@ -86,4 +87,4 @@ class SOC_Presenter(TextModelPresenter):
         for item in self.model.colors:
             rgb, name = item
             clr = cms.hexcolor_to_rgb(rgb)
-            skp_model.colors.append([COLOR_RGB, clr, 1.0, name.decode('utf-8')])
+            skp_model.colors.append([COLOR_RGB, clr, 1.0, name])
