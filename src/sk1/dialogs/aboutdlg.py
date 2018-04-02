@@ -98,22 +98,22 @@ class ComponentsPage(wal.VPanel):
         slist.set_column_width(0, wal.LIST_AUTOSIZE)
 
 
-TRANSLATORS = """
-Here are translators credentials who takes part in localization.
-Join us and let's make this world better! :)
-
-Brazilian Portuguese - João Lima Neto <contato@joaolimaneto.com.br>
-Russian - Igor Novikov <sk1.project.org@gmail.com>
-Spanish - Carlos Jesús Atagua Díaz <atacarlos@gmail.com>
-Ukrainian - Maxim Barabash <maxim.s.barabash@gmail.com>
-"""
+TR_LIST = [
+    ['LANG', 'Translators'],
+    ['Brazilian Portuguese','João Lima Neto <contato@joaolimaneto.com.br>'],
+    ['Russian', 'Igor Novikov <sk1.project.org@gmail.com>'],
+    ['Spanish', 'Carlos Jesús Atagua Díaz <atacarlos@gmail.com>'],
+    ['Ukrainian', 'Maxim Barabash <maxim.s.barabash@gmail.com>,'],
+    ['',          'Eugeniy Fedirets <evgeniy_fedirets@ukr.net>'],
+]
 
 
 class TranslatorsPage(wal.VPanel):
     def __init__(self, parent):
         wal.VPanel.__init__(self, parent)
-        entry = wal.Entry(self, TRANSLATORS, multiline=True, editable=False)
-        self.pack(entry, expand=True, fill=True, padding=5)
+        tr_list = wal.ReportList(self, TR_LIST, border=False)
+        self.pack(tr_list, expand=True, fill=True, padding=5)
+        tr_list.set_column_width(0, wal.LIST_AUTOSIZE)
 
 
 class ThanksPage(wal.VPanel):
