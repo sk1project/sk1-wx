@@ -70,12 +70,6 @@ class AppHPalette(wal.HPanel):
     def set_no_stroke(self):
         self.app.proxy.stroke_selected([])
 
-    def set_fill(self, color):
-        print color
-
-    def set_stroke(self, color):
-        print color
-
     def left_enable(self, value):
         if not value == self.left_but.get_enabled():
             self.left_but.set_enable(value)
@@ -133,12 +127,6 @@ class AppVPalette(wal.VPanel):
 
     def set_no_stroke(self):
         self.app.proxy.stroke_selected([])
-
-    def set_fill(self, color):
-        print color
-
-    def set_stroke(self, color):
-        print color
 
     def left_enable(self, value):
         if not value == self.left_but.get_enabled():
