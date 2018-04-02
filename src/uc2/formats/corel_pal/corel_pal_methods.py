@@ -46,6 +46,11 @@ def create_new_palette(config):
 
 class CorelPalette_Methods:
     presenter = None
+    model = None
+    config = None
+    cms = None
+    localizations = None
+    colorspaces = None
 
     def __init__(self, presenter):
         self.presenter = presenter
@@ -160,16 +165,17 @@ class CorelPalette_Methods:
             color = self.cms.get_rgb_color(color)
         page = self.get_page_obj()
         clr = XMLObject('color')
-        clr.attrs['cs'] = CS_MATCH[color[0]].encode(self.config.encoding)
+        clr.attrs['cs'] = CS_MATCH[color[0]]. \
+            decode('utf-8').encode(self.config.encoding)
         name = self.get_color_name(color)
-        clr.attrs['name'] = name.encode(self.config.encoding)
+        clr.attrs['name'] = name.decode('utf-8').encode(self.config.encoding)
         clr.attrs['tints'] = self.get_tints(color[1])
         page.childs.append(clr)
 
     def add_spot_color(self, color):
         page = self.get_page_obj()
         clr = XMLObject('color')
-        name = color[3].encode(self.config.encoding)
+        name = color[3].decode('utf-8').encode(self.config.encoding)
         clr.attrs['cs'] = name
         clr.attrs['name'] = name
         clr.attrs['tints'] = '1'
@@ -208,7 +214,8 @@ class CorelPalette_Methods:
         elif color.attrs['cs'] in self.colorspaces.keys():
             cs = COLOR_SPOT
             vals = deepcopy(self.colorspaces[color.attrs['cs']])
-            if vals[0] == COLOR_LAB: return vals
+            if vals[0] == COLOR_LAB:
+                return vals
             name = color.attrs['cs'].decode(self.config.encoding)
             palette_name = self.get_palette_name().decode(self.config.encoding)
             return [cs, vals, 1.0, name, palette_name]
@@ -220,5 +227,6 @@ class CorelPalette_Methods:
         for page in self.get_colors_obj().childs:
             for color in page.childs:
                 clr = self.convert_color(color)
-                if clr: ret.append(clr)
+                if clr:
+                    ret.append(clr)
         return ret

@@ -29,14 +29,15 @@ class GPL_Loader(AbstractLoader):
         comments = ''
         self.readln()
         name = self.readln().split(NAME_STR)[1].strip()
-        self.model.name = name.decode('utf-8')
+        self.model.name = name
 
         line = self.readln()
         if line[:len(COL_STR)] == COL_STR:
             self.model.columns = int(line.split(COL_STR)[1].strip())
         while True:
             line = self.readln(False)
-            if not line[0] == '#': break
+            if not line[0] == '#':
+                break
             if len(line) > 1:
                 line = line[1:].strip()
             else:
@@ -46,26 +47,33 @@ class GPL_Loader(AbstractLoader):
         while True:
             self.add_color(line)
             line = self.readln(False)
-            if not line: break
+            if not line:
+                break
 
     def set_comments(self, comments):
-        if not len(comments): return
+        if not len(comments):
+            return
         lines = comments.splitlines()
-        if len(lines) < 2: return
-        while not lines[0]: lines = lines[1:]
-        while not lines[-1]: lines = lines[:-1]
+        if len(lines) < 2:
+            return
+        while not lines[0]:
+            lines = lines[1:]
+        while not lines[-1]:
+            lines = lines[:-1]
         for item in lines:
             self.model.comments += item + os.linesep
-        self.model.comments = self.model.comments.decode('utf-8')
+        self.model.comments = self.model.comments
 
     def add_color(self, line):
-        if line[0] == '#' or not line: return
+        if line[0] == '#' or not line:
+            return
         parts = line.replace('\t', ' ')
         parts = parts.replace('  ', ' ').replace('  ', ' ').strip().split(' ')
         name = ''
         if len(parts) > 3:
-            name = ' '.join(parts[3:]).decode('utf-8')
-        if len(parts) < 3: return
+            name = ' '.join(parts[3:])
+        if len(parts) < 3:
+            return
         vals = parts[:3]
         r, g, b = [int(x) for x in vals]
         if not name and self.config.set_color_name:
@@ -78,7 +86,7 @@ class GPL_Saver(AbstractSaver):
 
     def do_save(self):
         self.writeln(GPL_HEADER)
-        self.writeln('%s %s' % (NAME_STR, self.model.name.encode('utf-8')))
+        self.writeln('%s %s' % (NAME_STR, self.model.name))
         if self.model.columns > 1:
             self.writeln('%s %u' % (COL_STR, self.model.columns))
         self.writeln('#')
@@ -90,10 +98,10 @@ class GPL_Saver(AbstractSaver):
                 else:
                     break
             for line in lines:
-                self.writeln('# %s' % line.encode('utf-8'))
+                self.writeln('# %s' % line)
             self.writeln('#')
         for item in self.model.colors:
             line = '%3u %3u %3u' % (item[0], item[1], item[2])
             if item[3]:
-                line += '\t' + item[3].encode('utf-8')
+                line += '\t' + item[3]
             self.writeln(line)

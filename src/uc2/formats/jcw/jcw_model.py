@@ -59,7 +59,8 @@ class JCW_Palette(BinaryModelObject):
         self.cache_fields.append((7, 1, 'size of color name'))
 
     def update_for_save(self):
-        for child in self.childs: child.update_for_save()
+        for child in self.childs:
+            child.update_for_save()
         self.chunk = JCW_ID
         self.chunk += JCW_VER
         self.chunk += utils.py_int2word(len(self.childs))
@@ -74,7 +75,7 @@ class JCW_Palette(BinaryModelObject):
     def resolve(self, name=''):
         is_leaf = False
         info = '%d' % (len(self.childs))
-        return (is_leaf, self.resolve_name, info)
+        return is_leaf, self.resolve_name, info
 
 
 class JCW_Color(BinaryModelObject):
@@ -95,7 +96,8 @@ class JCW_Color(BinaryModelObject):
     def parse(self, loader):
         self.chunk = loader.readbytes(8 + self.namesize)
         self.valbytes = self.chunk[0:8]
-        self.name = self.chunk[8:].decode('iso-8859-1')
+        self.name = self.chunk[8:]. \
+            decode('iso-8859-1', errors='ignore').encode('utf-8')
 
     def update_for_sword(self):
         self.cache_fields.append((0, 8, 'color vals'))
@@ -104,7 +106,8 @@ class JCW_Color(BinaryModelObject):
     def update_for_save(self):
         self.chunk = ''
         self.chunk += self.valbytes
-        self.chunk += self.name.encode('iso-8859-1')
+        self.chunk += self.name.decode('utf-8'). \
+            encode('iso-8859-1', errors='ignore')
         if len(self.name) < self.namesize:
             self.chunk += '\x00' * (self.namesize - len(self.name))
 
@@ -113,9 +116,10 @@ class JCW_Color(BinaryModelObject):
 
     def resolve(self, name=''):
         name = JCW_COLOR_NAMES[self.colorspace] + ' color'
-        return ('True', name, 0)
+        return 'True', name, 0
 
     def get_color(self):
         clr = parse_jcw_color(self.colorspace, self.valbytes)
-        if clr: clr[3] += self.name
+        if clr:
+            clr[3] += self.name
         return clr

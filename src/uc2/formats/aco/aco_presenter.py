@@ -31,7 +31,8 @@ class ACO_Presenter(BinaryModelPresenter):
     doc_file = ''
     model = None
 
-    def __init__(self, appdata, cnf={}):
+    def __init__(self, appdata, cnf=None):
+        cnf = cnf or {}
         self.config = ACO_Config()
         config_file = os.path.join(appdata.app_config_dir, self.config.filename)
         self.config.load(config_file)

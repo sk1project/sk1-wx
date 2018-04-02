@@ -86,7 +86,7 @@ class JCW_Presenter(BinaryModelPresenter):
         if self.doc_file:
             filename = os.path.basename(self.doc_file)
             if skp_model.comments:
-                skp_model.comments += 'n'
+                skp_model.comments += '\n'
             skp_model.comments += 'Converted from %s' % filename
         for item in self.model.childs:
             clr = item.get_color()

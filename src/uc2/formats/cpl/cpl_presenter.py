@@ -31,7 +31,8 @@ class CPL_Presenter(BinaryModelPresenter):
     doc_file = ''
     model = None
 
-    def __init__(self, appdata, cnf={}):
+    def __init__(self, appdata, cnf=None):
+        cnf = cnf or {}
         self.config = CPL_Config()
         config_file = os.path.join(appdata.app_config_dir, self.config.filename)
         self.config.load(config_file)
@@ -58,7 +59,8 @@ class CPL_Presenter(BinaryModelPresenter):
         skp_model.source = self.config.source
         if self.doc_file:
             filename = os.path.basename(self.doc_file)
-            if skp_model.comments: skp_model.comments += 'n'
+            if skp_model.comments:
+                skp_model.comments += '\n'
             skp_model.comments += 'Converted from %s' % filename
         for item in self.model.childs:
             skp_model.colors.append(item.get_color())

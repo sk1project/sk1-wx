@@ -40,7 +40,8 @@ class ScribusPalette_Loader(AbstractXMLLoader):
         for item in attrs._attrs.keys():
             obj.__dict__[item] = attrs._attrs[item]
 
-        if self.stack: self.stack[-1].childs.append(obj)
+        if self.stack:
+            self.stack[-1].childs.append(obj)
         self.stack.append(obj)
 
     def end_element(self, name):

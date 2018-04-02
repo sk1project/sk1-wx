@@ -64,8 +64,9 @@ def aco_chunk2color(chunk):
         return None
     if len(chunk) > 10:
         name = chunk[12:-2]
-        if chunk[12:13] < '\x00\x1f': name = name[2:]
-        color[3] = name.decode('utf_16_be').strip()
+        if chunk[12:13] < '\x00\x1f':
+            name = name[2:]
+        color[3] = name.decode('utf_16_be').encode('utf-8').strip()
     else:
         color[3] = cms.verbose_color(color)
     return color
@@ -107,8 +108,9 @@ def color2aco_chunk(color, version=ACO1_VER):
 
     if version == ACO2_VER:
         chunk += '\x00\x00'
-        name = unicode(color[3])
-        if not name: name = unicode(cms.verbose_color(color))
+        name = color[3].decode('utf-8')
+        if not name:
+            name = cms.verbose_color(color).decode('utf-8')
         chunk += struct.pack('>H', len(name) + 1)
         chunk += name.encode('utf_16_be') + '\x00\x00'
     return chunk

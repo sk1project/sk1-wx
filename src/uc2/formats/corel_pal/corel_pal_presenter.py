@@ -33,7 +33,8 @@ class CorelPalette_Presenter(TaggedModelPresenter):
     resources = None
     cms = None
 
-    def __init__(self, appdata, cnf={}, filepath=None):
+    def __init__(self, appdata, cnf=None, filepath=None):
+        cnf = cnf or {}
         self.config = CorelPalette_Config()
         config_file = os.path.join(appdata.app_config_dir, self.config.filename)
         self.config.load(config_file)
@@ -60,7 +61,7 @@ class CorelPalette_Presenter(TaggedModelPresenter):
         mtds = self.methods
         skp = skp_doc.model
         encoding = self.config.encoding
-        mtds.set_palette_name(skp.name.encode(encoding))
+        mtds.set_palette_name(skp.name.decode('utf-8').encode(encoding))
 
         comments = ''
         if skp.source:
@@ -68,7 +69,7 @@ class CorelPalette_Presenter(TaggedModelPresenter):
         if skp.comments:
             for item in skp.comments.splitlines():
                 comments += item + '\n'
-        mtds.set_palette_comments(comments.encode(encoding))
+        mtds.set_palette_comments(comments.decode('utf-8').encode(encoding))
         for item in skp.colors:
             mtds.add_color(item)
         mtds.clear_model()
@@ -78,7 +79,7 @@ class CorelPalette_Presenter(TaggedModelPresenter):
         mtds = self.methods
         encoding = self.config.encoding
 
-        skp.name = mtds.get_palette_name().decode(encoding)
+        skp.name = mtds.get_palette_name().decode(encoding).encode('utf-8')
         if self.doc_file:
             filename = os.path.basename(self.doc_file)
             skp.comments = 'Converted from %s' % filename

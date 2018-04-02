@@ -37,7 +37,8 @@ class ScribusPalette_Presenter(TaggedModelPresenter):
     resources = None
     cms = None
 
-    def __init__(self, appdata, cnf={}, filepath=None):
+    def __init__(self, appdata, cnf=None, filepath=None):
+        cnf = cnf or {}
         self.config = ScribusPalette_Config()
         config_file = os.path.join(appdata.app_config_dir, self.config.filename)
         self.config.load(config_file)
@@ -61,13 +62,13 @@ class ScribusPalette_Presenter(TaggedModelPresenter):
     def convert_from_skp(self, skp_doc):
         sp = self.model
         skp = skp_doc.model
-        sp.Name = skp.name.encode('utf-8')
+        sp.Name = skp.name
         if skp.source:
             sp.comments += 'Palette source: ' + skp.source + '\n'
         if skp.comments:
             for item in skp.comments.splitlines():
                 sp.comments += item + '\n'
-        sp.comments = sp.comments.encode('utf-8')
+        sp.comments = sp.comments
         for item in skp.colors:
             obj = SPColor()
             if item[0] == COLOR_SPOT:
@@ -76,24 +77,24 @@ class ScribusPalette_Presenter(TaggedModelPresenter):
                     obj.CMYK = cms.cmyk_to_hexcolor(item[1][1])
                 else:
                     obj.RGB = cms.rgb_to_hexcolor(item[1][0])
-                obj.NAME = item[3].encode('utf-8')
+                obj.NAME = item[3]
                 if item[3] == COLOR_REG:
                     obj.Register = '1'
             elif item[0] == COLOR_CMYK:
                 obj.CMYK = cms.cmyk_to_hexcolor(item[1])
-                obj.NAME = item[3].encode('utf-8')
+                obj.NAME = item[3]
             elif item[0] == COLOR_RGB:
                 obj.RGB = cms.rgb_to_hexcolor(item[1])
-                obj.NAME = item[3].encode('utf-8')
+                obj.NAME = item[3]
             else:
                 clr = self.cms.get_rgb_color(item)
                 obj.RGB = cms.rgb_to_hexcolor(clr[1])
-                obj.NAME = clr[3].encode('utf-8')
+                obj.NAME = clr[3]
             sp.childs.append(obj)
 
     def convert_to_skp(self, skp_doc):
         skp = skp_doc.model
-        skp.name = self.model.Name.decode('utf-8')
+        skp.name = self.model.Name
         if not skp.name:
             if self.doc_file:
                 name = os.path.basename(self.doc_file)
@@ -115,15 +116,15 @@ class ScribusPalette_Presenter(TaggedModelPresenter):
                     rgb = cms.hexcolor_to_rgb(item.RGB)
                 if item.CMYK:
                     cmyk = cms.hexcolor_to_cmyk(item.CMYK)
-                name = item.NAME.decode('utf-8')
+                name = item.NAME
                 color = [COLOR_SPOT, [rgb, cmyk], 1.0, name]
             elif item.CMYK:
                 cmyk = cms.hexcolor_to_cmyk(item.CMYK)
-                name = item.NAME.decode('utf-8')
+                name = item.NAME
                 color = [COLOR_CMYK, cmyk, 1.0, name]
             elif item.RGB:
                 rgb = cms.hexcolor_to_rgb(item.RGB)
-                name = item.NAME.decode('utf-8')
+                name = item.NAME
                 color = [COLOR_RGB, rgb, 1.0, name]
             else:
                 continue

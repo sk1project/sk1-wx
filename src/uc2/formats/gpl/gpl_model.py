@@ -32,12 +32,13 @@ class GPL_Palette(TextModelObject):
     columns = 1
     colors = []
 
-    def __init__(self, name='', colors=[]):
+    def __init__(self, name='', colors=None):
         self.name = name
-        if not colors: self.colors = []
+        if not colors:
+            self.colors = []
 
     def resolve(self, name=''):
         is_leaf = False
         info = '%d' % (len(self.colors))
         name = 'GPL Palette'
-        return (is_leaf, name, info)
+        return is_leaf, name, info
