@@ -20,6 +20,7 @@ import os
 import wal
 from sk1 import config
 from sk1.resources import icons
+from uc2.utils import fsutils
 
 
 class AbstractArtProvider(wal.ArtProvider):
@@ -46,15 +47,15 @@ class AbstractArtProvider(wal.ArtProvider):
             if size == wal.DEF_SIZE:
                 size_dir = 'fixed'
             path = os.path.join(self.theme_path, size_dir, filename)
-            if os.path.isfile(path):
+            if fsutils.isfile(path):
                 return self.get_bitmap(path)
         elif artid in self.iconset:
             path = os.path.join(self.iconset_path, artid + self.file_ext)
             sized_name = artid + '-' + str(size[0]) + self.file_ext
             sized_path = os.path.join(self.iconset_path, sized_name)
-            if os.path.isfile(sized_path):
+            if fsutils.isfile(sized_path):
                 return self.get_bitmap(sized_path)
-            elif os.path.isfile(path):
+            elif fsutils.isfile(path):
                 return self.get_bitmap(path)
         else:
             filename = artid + self.file_ext
@@ -62,9 +63,9 @@ class AbstractArtProvider(wal.ArtProvider):
             if size == wal.DEF_SIZE:
                 size_dir = 'fixed'
             path = os.path.join(self.theme_path, size_dir, filename)
-            if os.path.isfile(path):
+            if fsutils.isfile(path):
                 return self.get_bitmap(path)
-        if os.path.isfile(artid):
+        if fsutils.isfile(artid):
             return self.get_bitmap(artid)
         return self.get_bitmap()
 

@@ -17,9 +17,8 @@
 
 import logging
 import os
-import sys
 
-from sk1 import _, config
+from sk1 import _, config, get_sys_path
 from wal import VPanel
 
 LOG = logging.getLogger(__name__)
@@ -37,6 +36,7 @@ def check_package(path, name):
 def scan_plugins(app):
     ret = {}
     for path in config.plugin_dirs:
+        path = get_sys_path(path)
         plgs = [item for item in os.listdir(path) if check_package(path, item)]
         if plgs:
             bn = os.path.basename(path)

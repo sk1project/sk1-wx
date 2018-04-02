@@ -16,6 +16,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 
 import uc2
 
@@ -23,11 +24,20 @@ _ = uc2._
 config = None
 
 
-def read_locale(cfg_path):
+def get_sys_path(path):
+    return path.decode('utf-8').encode(sys.getfilesystemencoding())
+
+
+def get_utf8_path(path):
+    return path.decode(sys.getfilesystemencoding()).encode('utf-8')
+
+
+def read_locale(cfg_file):
+    cfg_file = get_sys_path(cfg_file)
     lang = 'system'
-    if os.path.lexists(cfg_path) and os.path.isfile(cfg_path):
+    if os.path.lexists(cfg_file) and os.path.isfile(cfg_file):
         try:
-            with open(cfg_path) as fp:
+            with open(cfg_file) as fp:
                 while True:
                     line = fp.readline()
                     if not line:
@@ -43,25 +53,28 @@ def read_locale(cfg_path):
 def init_config(cfgdir='~'):
     """sK1 config initialization"""
 
-    cfg_dir = os.path.expanduser(os.path.join(cfgdir, '.config', 'sk1-wx'))
-    cfg_path = os.path.join(cfg_dir, 'preferences.cfg')
+    cfg_dir = os.path.join(cfgdir, '.config', 'sk1-wx')
+    cfg_file = os.path.join(cfg_dir, 'preferences.cfg')
     resource_dir = os.path.join(__path__[0], 'share')
 
     # Setting locale before app initialization
-    lang = read_locale(cfg_path)
-    _.set_locale('sk1', os.path.join(resource_dir, 'locales'), lang)
+    lang = read_locale(cfg_file)
+    lang_path = get_sys_path(os.path.join(resource_dir, 'locales'))
+    _.set_locale('sk1', lang_path, lang)
 
     global config
     from sk1.app_conf import get_app_config
     config = get_app_config()
-    config.load(cfg_path)
+    config.load(cfg_file)
     config.resource_dir = resource_dir
 
 
 def sk1_run(cfgdir='~'):
     """sK1 application launch routine"""
 
-    _pkgdir = __path__[0]
+    cfgdir = get_utf8_path(os.path.expanduser(cfgdir))
+    _pkgdir = get_utf8_path(__path__[0])
+
     init_config(cfgdir)
 
     if not config.ubuntu_global_menu:

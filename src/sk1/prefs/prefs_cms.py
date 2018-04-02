@@ -25,6 +25,7 @@ from sk1.resources import icons, get_bmp
 from uc2.cms import get_profile_name, get_profile_descr
 from uc2.uc2const import COLOR_RGB, COLOR_CMYK, COLOR_LAB, \
     COLOR_GRAY, COLOR_DISPLAY, ICC, ICM, INTENTS
+from uc2.utils import fsutils
 
 COLORSPACES = [COLOR_RGB, COLOR_CMYK, COLOR_GRAY, COLOR_DISPLAY]
 
@@ -393,14 +394,14 @@ class ProfileManager(wal.CloseDialog):
         filename = os.path.basename(src)
         dst_dir = self.app.appdata.app_color_profile_dir
         dst = os.path.join(dst_dir, filename)
-        if os.path.lexists(dst):
+        if fsutils.lexists(dst):
             msg = _('Selected file has been added to profile pool')
             msg = "%s '%s'" % (msg, src)
             sec = _('If you sure to import the file try renaming it')
             wal.error_dialog(self, title, msg + '\n' + sec)
             return
         try:
-            shutil.copy(src, dst)
+            shutil.copy(fsutils.get_sys_path(src), fsutils.get_sys_path(dst))
         except Exception:
             msg = _('Cannot copy file')
             msg = "%s '%s'" % (msg, src)
@@ -419,8 +420,8 @@ class ProfileManager(wal.CloseDialog):
         filename = self.profiles[name]
         dst_dir = self.app.appdata.app_color_profile_dir
         dst = os.path.join(dst_dir, filename)
-        if os.path.isfile(dst):
-            os.remove(dst)
+        if fsutils.isfile(dst):
+            os.remove(fsutils.get_sys_path(dst))
         self.profiles.pop(name)
         self.apply_changes()
         self.viewer.set_active(index - 1)
@@ -435,7 +436,7 @@ class ProfileManager(wal.CloseDialog):
         filename = self.profiles[name]
         dst_dir = self.app.appdata.app_color_profile_dir
         dst = os.path.join(dst_dir, filename)
-        if os.path.isfile(dst):
+        if fsutils.isfile(dst):
             ProfileInfoViewer(self, dst).show()
 
 

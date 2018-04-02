@@ -19,6 +19,7 @@ import os
 
 from uc2 import uc2const
 from uc2.uc2const import COLOR_DISPLAY
+from uc2.utils import fsutils
 
 from uc2.cms import ColorManager, CS, libcms, val_255
 from sk1 import config, events
@@ -65,11 +66,13 @@ class AppColorManager(ColorManager):
                 profile_filename = profile_dicts[index][profile]
                 path = os.path.join(profile_dir, profile_filename)
             if path:
+                path = fsutils.get_sys_path(path)
                 self.handles[item] = libcms.cms_open_profile_from_file(path)
             else:
                 profile_dir = self.app.appdata.app_color_profile_dir
                 filename = 'built-in_%s.icm' % item
                 path = os.path.join(profile_dir, filename)
+                path = fsutils.get_sys_path(path)
                 self.handles[item] = libcms.cms_open_profile_from_file(path)
             index += 1
         self.use_cms = config.cms_use

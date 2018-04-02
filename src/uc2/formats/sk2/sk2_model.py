@@ -919,7 +919,8 @@ class Text(PrimitiveObject):
         return b64decode(self.text).decode('utf-8')
 
     def set_text(self, text):
-        self.text = b64encode(text.encode('utf-8'))
+        tex = text.encode('utf-8') if isinstance(text, unicode) else text
+        self.text = b64encode(text)
 
     def is_text(self):
         return True

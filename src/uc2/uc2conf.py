@@ -64,6 +64,7 @@ class UCData:
             filename = 'built-in_%s.icm' % item
             path = os.path.join(self.app_color_profile_dir, filename)
             if not fsutils.lexists(path):
+                path = fsutils.get_sys_path(path)
                 libcms.cms_save_default_profile(path, item)
 
 

@@ -25,6 +25,7 @@ from uc2.uc2const import COLOR_RGB, COLOR_CMYK, COLOR_LAB, COLOR_GRAY, \
     COLOR_SPOT, COLOR_DISPLAY, COLOR_REG
 from uc2.uc2const import IMAGE_MONO, IMAGE_GRAY, IMAGE_RGB, IMAGE_CMYK, \
     IMAGE_LAB, IMAGE_TO_COLOR
+from uc2.utils import fsutils
 
 CS = [COLOR_RGB, COLOR_CMYK, COLOR_LAB, COLOR_GRAY]
 
@@ -408,6 +409,7 @@ def get_profile_name(filepath):
     returns None. 
     """
     try:
+        filepath = fsutils.get_sys_path(filepath)
         profile = libcms.cms_open_profile_from_file(filepath)
         ret = libcms.cms_get_profile_name(profile)
     except Exception:
@@ -421,6 +423,7 @@ def get_profile_info(filepath):
     returns None. 
     """
     try:
+        filepath = fsutils.get_sys_path(filepath)
         profile = libcms.cms_open_profile_from_file(filepath)
         ret = libcms.cms_get_profile_info(profile)
     except Exception:
@@ -434,6 +437,7 @@ def get_profile_descr(filepath):
     returns None. 
     """
     try:
+        filepath = fsutils.get_sys_path(filepath)
         profile = libcms.cms_open_profile_from_file(filepath)
         ret = (libcms.cms_get_profile_name(profile),)
         ret += (libcms.cms_get_profile_copyright(profile),)

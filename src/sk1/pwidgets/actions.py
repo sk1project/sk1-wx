@@ -77,7 +77,7 @@ class AppAction:
         if self.toolbar is not None and not wal.IS_MAC:
             self.toolbar.EnableTool(self.action_id, self.enabled)
             self.toolbar.SetToolShortHelp(self.action_id,
-                                          self.get_descr_text().decode('utf-8'))
+                                          wal.tr(self.get_descr_text()))
 
     def register(self, widget):
         self.widgets.append(widget)
@@ -165,7 +165,7 @@ class AppAction:
 
     def get_shortcut_text(self):
         if self.is_acc:
-            return self.acc_entry.ToString().encode('utf-8')
+            return wal.untr(self.acc_entry.ToString())
         return ''
 
     def is_toggle(self):

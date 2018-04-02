@@ -27,6 +27,7 @@ from uc2.libimg import magickwand
 from uc2.uc2const import IMAGE_CMYK, IMAGE_RGB, IMAGE_RGBA, IMAGE_LAB
 from uc2.uc2const import IMAGE_GRAY, IMAGE_MONO, DUOTONES, SUPPORTED_CS
 from uc2 import uc2const
+from uc2.utils import fsutils
 
 
 def get_version():
@@ -142,12 +143,12 @@ def extract_bitmap(pixmap, filepath):
         ext = '.tiff'
     if not os.path.splitext(filepath)[1] == ext:
         filepath = os.path.splitext(filepath)[0] + ext
-    fileptr = open(filepath, 'wb')
+    fileptr = fsutils.get_fileptr(filepath, True)
     fileptr.write(pixmap.bitmap)
     fileptr.close()
     if pixmap.alpha_channel:
         filepath = os.path.splitext(filepath)[0] + '_alphachannel.png'
-        fileptr = open(filepath, 'wb')
+        fileptr = fsutils.get_fileptr(filepath, True)
         fileptr.write(pixmap.alpha_channel)
         fileptr.close()
 

@@ -113,8 +113,7 @@ class SK1Presenter:
         self.snap = SnapManager(self)
 
     def set_title(self):
-        enc = sys.getfilesystemencoding()
-        title = self.doc_name.decode(enc).encode('utf-8')
+        title = self.doc_name
         title = title + '*' if not self.saved else title
         self.app.mdi.set_tab_title(self, title)
         if self == self.app.current_doc:

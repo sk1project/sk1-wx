@@ -29,6 +29,7 @@ from sk1.printing import prn_events
 from uc2 import uc2const
 from uc2.formats import get_loader
 from uc2.formats.pdf import pdfconst, pdfgen
+from uc2.utils import fsutils
 
 
 class CUPS_PS(AbstractPS):
@@ -228,7 +229,7 @@ class CUPS_Printer(AbstractPrinter):
     def printing(self, printout, media=''):
         appdata = printout.app.appdata
         path = os.path.join(appdata.app_temp_dir, 'printout.pdf')
-        fileptr = open(path, 'wb')
+        fileptr = fsutils.get_fileptr(path, True)
         pages = printout.get_print_pages()
         renderer = pdfgen.PDFGenerator(fileptr, printout.get_cms(),
                                        pdfconst.PDF_VERSION_DEFAULT)

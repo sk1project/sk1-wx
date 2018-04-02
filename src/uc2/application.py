@@ -27,6 +27,7 @@ from uc2.app_palettes import PaletteManager
 from uc2.formats import get_loader, get_saver, get_saver_by_id
 from uc2.uc2conf import UCData, UCConfig
 from uc2.utils.mixutils import echo, config_logging
+from uc2.utils import fsutils
 
 LOG = logging.getLogger(__name__)
 
@@ -96,6 +97,7 @@ class UCApplication(object):
 
     def __init__(self, path='', cfgdir='~', check=True):
         self.path = path
+        cfgdir = fsutils.expanduser(fsutils.get_utf8_path(cfgdir))
         self.config = UCConfig()
         self.config.app = self
         self.appdata = UCData(self, cfgdir, check=check)
@@ -158,7 +160,7 @@ class UCApplication(object):
             elif item.startswith('-'):
                 self.show_short_help('Unknown option "%s"' % item)
             else:
-                files.append(item)
+                files.append(fsutils.get_utf8_path(item))
 
         if not files:
             self.show_short_help('File names are not provided!')

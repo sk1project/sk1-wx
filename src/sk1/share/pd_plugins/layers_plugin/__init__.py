@@ -124,7 +124,7 @@ class LayersPlugin(RsPlugin):
                 props.append(0)
             for item in layer.properties:
                 props.append(item)
-            props.append(layer.name.decode('utf8'))
+            props.append(layer.name)
             result.append(props)
         result.reverse()
         return result

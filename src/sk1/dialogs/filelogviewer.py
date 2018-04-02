@@ -15,12 +15,10 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import sys
-
 import wal
 
 from sk1 import _, config, appconst
+from uc2.utils import fsutils
 
 
 class LogViewerDialog(wal.OkCancelDialog):
@@ -47,7 +45,7 @@ class LogViewerDialog(wal.OkCancelDialog):
 
     def build(self):
         self.panel.pack(wal.PLine(self.panel), fill=True)
-        self.lc = wal.ReportList(self.panel, on_select=self.update,
+        self.lc = wal.ReportList(self.panel, on_select=self.update_dlg,
                                  on_activate=self.on_ok)
         self.panel.pack(self.lc, expand=True, fill=True)
         self.panel.pack(wal.PLine(self.panel), fill=True)
@@ -58,7 +56,7 @@ class LogViewerDialog(wal.OkCancelDialog):
                                     onclick=self.clear_history)
         self.left_button_box.pack(self.clear_btn)
 
-    def update(self, value):
+    def update_dlg(self, value):
         if value:
             self.ok_btn.set_enable(True)
         else:
@@ -76,23 +74,22 @@ class LogViewerDialog(wal.OkCancelDialog):
             op = _('Opened')
             if item[0] == appconst.SAVED:
                 op = _('Saved')
-            self.data.append([op, item[1], item[2], item[4]])
+            self.data.append([op, item[1], item[2], item[3]])
         data = [header] + self.data
         self.lc.update(data)
         self.lc.set_column_width(0, wal.LIST_AUTOSIZE)
         self.lc.set_column_width(1, wal.LIST_AUTOSIZE)
         self.lc.set_column_width(2, wal.LIST_AUTOSIZE)
         self.lc.set_column_width(3, wal.LIST_AUTOSIZE)
-        self.update(False)
+        self.update_dlg(False)
 
     def clear_history(self):
         self.app.history.clear_history()
         self.lc.clear_all()
 
     def on_ok(self, *args):
-        path = self.lc.get_selected()[2].decode('utf-8')\
-            .encode(sys.getfilesystemencoding())
-        if os.path.isfile(path):
+        path = self.lc.get_selected()[2]
+        if fsutils.isfile(path):
             self.ret = path
             self.end_modal(wal.BUTTON_OK)
         else:

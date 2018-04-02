@@ -27,6 +27,7 @@ from sk1.pwidgets import CBMiniPalette
 from sk1.resources import get_icon
 from uc2 import cms, libgeom, uc2const
 from uc2.formats.sk2 import crenderer
+from uc2.utils import fsutils
 from uc2.utils.config import XmlConfigParser
 
 PLG_DIR = __path__[0]
@@ -295,7 +296,7 @@ class IconizerPlugin(RsPlugin):
                                               path_only=True)
         if doc_file:
             try:
-                fileptr = open(doc_file, 'wb')
+                fileptr = fsutils.get_fileptr(doc_file, True)
                 fileptr.write(self.picture.getvalue())
                 fileptr.close()
             except Exception:

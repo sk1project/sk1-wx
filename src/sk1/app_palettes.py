@@ -23,7 +23,7 @@ from uc2 import uc2const
 from uc2.app_palettes import PaletteManager
 from uc2.formats import get_loader_by_id
 from uc2.formats.skp.skp_presenter import SKP_Presenter
-from uc2.utils import generate_id
+from uc2.utils import generate_id, fsutils
 
 STD_CMYK_PALETTE = 'sK1 CMYK palette'
 STD_RGB_PALETTE = 'sK1 RGB palette'
@@ -67,8 +67,8 @@ class AppPaletteManager(PaletteManager):
                 self.palettes[item] = loader(self.app.appdata, filepath, False,
                                              False, True)
             except Exception:
-                if os.path.isfile(filepath):
-                    os.remove(filepath)
+                if fsutils.isfile(filepath):
+                    os.remove(fsutils.get_sys_path(filepath))
                 del config.palette_files[item]
 
     def update(self, *args):
@@ -106,7 +106,7 @@ class AppPaletteManager(PaletteManager):
     def remove_palette(self, palette_name):
         filepath = os.path.join(self.app.appdata.app_palette_dir,
                                 config.palette_files[palette_name])
-        if os.path.isfile(filepath):
-            os.remove(filepath)
+        if fsutils.isfile(filepath):
+            os.remove(fsutils.get_sys_path(filepath))
         del self.palettes[palette_name]
         del config.palette_files[palette_name]

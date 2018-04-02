@@ -21,6 +21,7 @@ from uc2 import uc2const
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2.formats.svg.svg_presenter import SVG_Presenter
 from uc2.utils.mixutils import merge_cnf
+from uc2.utils.fsutils import get_fileptr
 
 
 def svg_loader(appdata, filename=None, fileptr=None,
@@ -54,11 +55,13 @@ def svg_saver(sk2_doc, filename=None, fileptr=None,
 
 def check_svg(path):
     tag = None
-    with open(path, "r") as f:
-        try:
-            for event, el in cElementTree.iterparse(f, ('start',)):
-                tag = el.tag
-                break
-        except cElementTree.ParseError:
-            pass
+    fileptr = get_fileptr(path)
+    try:
+        for event, el in cElementTree.iterparse(fileptr, ('start',)):
+            tag = el.tag
+            break
+    except cElementTree.ParseError:
+        pass
+    finally:
+        fileptr.close()
     return tag == '{http://www.w3.org/2000/svg}svg' or tag == 'svg'

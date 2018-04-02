@@ -25,6 +25,7 @@ from patterns import PATTERN_PRESETS
 from sk1 import _
 from sk1.resources import icons, get_bmp
 from uc2 import libgeom, libimg, sk2const
+from uc2.utils import fsutils
 from unitctrls import UnitSpin, StaticUnitLabel
 
 
@@ -468,7 +469,7 @@ class PatternEditor(wal.HPanel):
     def load_pattern(self):
         img_file = self.app.import_pattern(self.dlg)
         if img_file:
-            fobj = open(img_file, 'rb')
+            fobj = fsutils.get_fileptr(img_file)
             pattern, flag = libimg.read_pattern(fobj.read())
             pattern_type = sk2const.PATTERN_TRUECOLOR
             if flag:

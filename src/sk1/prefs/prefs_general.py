@@ -21,6 +21,7 @@ import wal
 from generic import PrefPanel
 from sk1 import _, config
 from sk1.resources import icons
+from uc2.utils import fsutils
 
 COLORS = [
     ('#FFFFFF', 'White'),
@@ -41,9 +42,9 @@ def get_langs():
         LANGS.append(_('system'))
     path = os.path.join(config.resource_dir, 'locales')
     langs = ['en', ]
-    if os.path.lexists(path):
-        langs += [item for item in os.listdir(path)
-                  if os.path.isdir(os.path.join(path, item))]
+    if fsutils.lexists(path):
+        langs += [item for item in os.listdir(fsutils.get_sys_path(path))
+                  if fsutils.isdir(os.path.join(path, item))]
     langs.sort()
     for item in langs:
         LANGS.append(item)
