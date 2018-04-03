@@ -18,6 +18,7 @@
 import wx
 
 from basic import Panel
+import const
 
 
 class StubPanel(Panel):
@@ -85,7 +86,7 @@ class StubBtn(wx.Panel):
         self.SetSize(self.icon.GetSize())
 
         if tooltip:
-            self.SetToolTipString(tooltip)
+            self.SetToolTipString(const.tr(tooltip))
 
         self.timer = wx.Timer(self)
         self.Bind(wx.EVT_PAINT, self._on_paint, self)
