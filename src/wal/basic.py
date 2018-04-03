@@ -163,7 +163,7 @@ class MainWindow(wx.Frame, DialogMixin):
 
     def set_icons(self, filepath):
         icons = wx.IconBundle()
-        icons.AddIconFromFile(filepath, wx.BITMAP_TYPE_ANY)
+        icons.AddIconFromFile(tr(filepath), wx.BITMAP_TYPE_ANY)
         self.SetIcons(icons)
 
     def set_menubar(self, menubar):
