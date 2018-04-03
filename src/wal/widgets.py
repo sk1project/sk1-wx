@@ -1000,7 +1000,7 @@ class ColorButton(wx.ColourPickerCtrl, WidgetMixin):
 
 class AnimatedGif(animate.GIFAnimationCtrl):
     def __init__(self, parent, filepath):
-        animate.GIFAnimationCtrl.__init__(self, parent, wx.ID_ANY, filepath)
+        animate.GIFAnimationCtrl.__init__(self, parent, wx.ID_ANY, tr(filepath))
         self.GetPlayer().UseBackgroundColour(True)
 
     def stop(self): self.Stop()
