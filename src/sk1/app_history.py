@@ -17,6 +17,7 @@
 
 import datetime
 import os
+import sys
 import time
 
 from sk1 import config, appconst, events
@@ -41,7 +42,16 @@ class AppHistoryManager:
             for line in lines:
                 items = line.split('\t')
                 if len(items) == 3:
-                    self.history.append([int(items[0]), items[1], int(items[2])])
+                    status = int(items[0])
+                    path = items[1]
+                    try:
+                        path = path.decode('utf-8')
+                    except Exception:
+                        path = path.decode(sys.getfilesystemencoding())
+                    finally:
+                        path = path.encode('utf-8')
+                    timestamp = int(items[2])
+                    self.history.append([status, path, timestamp])
             fp.close()
 
     def save_history(self):
