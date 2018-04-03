@@ -247,7 +247,8 @@ class CustomProgressDialog(SimpleDialog):
         self._timer.Stop()
         self.progressbar.set_value(5)
         try:
-            self.result = self.callback(*self.args)
+            if self.callback and self.args:
+                self.result = self.callback(*self.args)
         except Exception as e:
             LOG.exception('Error in progress dialog running: %s', e)
         finally:

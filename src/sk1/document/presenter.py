@@ -64,17 +64,17 @@ class SK1Presenter:
         self.eventloop = EventLoop(self)
         self.selection = Selection(self)
 
-        if doc_file and silent:
+        loader = None
+        if doc_file:
             loader = get_loader(doc_file)
             if not loader:
                 raise IOError(_('Loader is not found for <%s>') % doc_file)
+
+        if loader and silent:
             self.doc_presenter = loader(app.appdata, doc_file)
         elif doc_file and not silent:
             pd = ProgressDialog(_('Opening file...'), self.app.mw)
             try:
-                loader = get_loader(doc_file)
-                if not loader:
-                    raise IOError(_('Loader is not found for <%s>') % doc_file)
                 self.doc_presenter = pd.run(loader, [app.appdata, doc_file])
                 if not self.doc_presenter:
                     LOG.error('Cannot load <%s>', doc_file)
