@@ -23,6 +23,7 @@ from sk1 import config, modes, events
 from sk1.resources import get_icon, icons
 from sk1.pwidgets import Painter
 from uc2 import uc2const, cms, sk2const
+from uc2.utils import fsutils
 
 HFONT = {}
 VFONT = {}
@@ -36,6 +37,7 @@ def load_font():
             file_name = os.path.join(fntdir, 'hdot.png')
         else:
             file_name = os.path.join(fntdir, 'h%s.png' % char)
+        file_name = fsutils.get_sys_path(file_name)
         surface = cairo.ImageSurface.create_from_png(file_name)
         HFONT[char] = (surface.get_width(), surface)
 
@@ -43,6 +45,7 @@ def load_font():
             file_name = os.path.join(fntdir, 'vdot.png')
         else:
             file_name = os.path.join(fntdir, 'v%s.png' % char)
+        file_name = fsutils.get_sys_path(file_name)
         surface = cairo.ImageSurface.create_from_png(file_name)
         VFONT[char] = (surface.get_height(), surface)
 
