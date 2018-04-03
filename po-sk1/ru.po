@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-28 09:45+0300\n"
-"PO-Revision-Date: 2018-03-28 09:46+0300\n"
+"PO-Revision-Date: 2018-04-04 01:17+0300\n"
 "Last-Translator: Igor Novikov <sk1.project.org@gmail.com>\n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -1412,7 +1412,7 @@ msgstr "Размер (px):"
 
 #: src/sk1/prefs/prefs_ruler.py:51
 msgid "Ruler:"
-msgstr "ЛинейкаЖ"
+msgstr "Линейка:"
 
 #: src/sk1/prefs/prefs_ruler.py:57
 msgid "Ruler font:"
