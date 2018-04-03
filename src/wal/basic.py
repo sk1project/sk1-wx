@@ -30,10 +30,8 @@ def new_id():
     return wx.NewId()
 
 
-def cursor(path, bitmap_type, x=None, y=None):
-    if x is None:
-        return wx.Cursor(path, bitmap_type)
-    return wx.Cursor(path, bitmap_type, x, y)
+def cursor(path, bitmap_type, x=0, y=0):
+    return wx.Cursor(tr(path), bitmap_type, x, y)
 
 
 def stock_cursor(cursor_id):
