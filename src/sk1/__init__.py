@@ -55,7 +55,7 @@ def init_config(cfgdir='~'):
 
     cfg_dir = os.path.join(cfgdir, '.config', 'sk1-wx')
     cfg_file = os.path.join(cfg_dir, 'preferences.cfg')
-    resource_dir = os.path.join(__path__[0], 'share')
+    resource_dir = get_utf8_path(os.path.join(__path__[0], 'share'))
 
     # Setting locale before app initialization
     lang = read_locale(cfg_file)
