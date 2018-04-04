@@ -22,6 +22,7 @@ import wal
 from generic import PrefPanel
 from sk1 import _, config
 from sk1.resources import icons
+from uc2.utils import fsutils
 
 
 class RulersPrefs(PrefPanel):
@@ -193,6 +194,7 @@ class RulerTest(wal.HPanel, wal.Canvas):
                 file_name = os.path.join(fntdir, 'hdot.png')
             else:
                 file_name = os.path.join(fntdir, 'h%s.png' % char)
+            file_name = fsutils.get_sys_path(file_name)
             surface = cairo.ImageSurface.create_from_png(file_name)
             self.font[char] = (surface.get_width(), surface)
 

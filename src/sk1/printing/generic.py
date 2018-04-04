@@ -15,6 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import wal
 
 from uc2 import uc2const
 
@@ -92,10 +93,10 @@ class AbstractPrinter(object):
                 self.colorspace = uc2const.COLOR_GRAY
 
     def get_name(self):
-        return self.name
+        return wal.untr(self.name)
 
     def get_ps_name(self):
-        return self.name
+        return wal.untr(self.name)
 
     def is_virtual(self):
         return True

@@ -48,7 +48,6 @@ class PrintDialog(wal.SimpleDialog):
         self.printout = Printout(doc)
         size = config.print_preview_dlg_size
         title = _("Print preview") + ' - %s' % self.printer.get_name()
-        print title
         wal.SimpleDialog.__init__(
             self, win, title, size, wal.HORIZONTAL,
             resizable=True, add_line=False, margin=0)

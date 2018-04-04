@@ -19,6 +19,15 @@ import os
 import platform
 import wx
 
+
+def tr(msg):
+    return msg.decode('utf-8') if isinstance(msg, str) else msg
+
+
+def untr(msg):
+    return msg.encode('utf-8') if isinstance(msg, unicode) else msg
+
+
 ID_NEW = wx.ID_NEW
 ID_OPEN = wx.ID_OPEN
 ID_SAVE = wx.ID_SAVE
@@ -44,19 +53,19 @@ ID_ZOOM_FIT = wx.ID_ZOOM_FIT
 ID_REFRESH = wx.ID_REFRESH
 ID_ABOUT = wx.ID_ABOUT
 
-ART_NEW = wx.ART_NEW
-ART_FILE_OPEN = wx.ART_FILE_OPEN
-ART_FILE_SAVE = wx.ART_FILE_SAVE
-ART_FILE_SAVE_AS = wx.ART_FILE_SAVE_AS
-ART_PRINT = wx.ART_PRINT
-ART_QUIT = wx.ART_QUIT
-ART_UNDO = wx.ART_UNDO
-ART_REDO = wx.ART_REDO
-ART_CUT = wx.ART_CUT
-ART_COPY = wx.ART_COPY
-ART_PASTE = wx.ART_PASTE
-ART_DELETE = wx.ART_DELETE
-ART_WARNING = wx.ART_WARNING
+ART_NEW = untr(wx.ART_NEW)
+ART_FILE_OPEN = untr(wx.ART_FILE_OPEN)
+ART_FILE_SAVE = untr(wx.ART_FILE_SAVE)
+ART_FILE_SAVE_AS = untr(wx.ART_FILE_SAVE_AS)
+ART_PRINT = untr(wx.ART_PRINT)
+ART_QUIT = untr(wx.ART_QUIT)
+ART_UNDO = untr(wx.ART_UNDO)
+ART_REDO = untr(wx.ART_REDO)
+ART_CUT = untr(wx.ART_CUT)
+ART_COPY = untr(wx.ART_COPY)
+ART_PASTE = untr(wx.ART_PASTE)
+ART_DELETE = untr(wx.ART_DELETE)
+ART_WARNING = untr(wx.ART_WARNING)
 
 ACCEL_NORMAL = wx.ACCEL_NORMAL
 ACCEL_CTRL = wx.ACCEL_CTRL
@@ -143,14 +152,6 @@ def is_ambiance():
         cmd = "gsettings get org.gnome.desktop.wm.preferences theme"
         return os.popen(cmd).readline().strip("'\n") == 'Ambiance'
     return False
-
-
-def tr(msg):
-    return msg.decode('utf-8') if isinstance(msg, str) else msg
-
-
-def untr(msg):
-    return msg.encode('utf-8') if isinstance(msg, unicode) else msg
 
 
 IS_UNITY_16 = is_unity_16_04()
