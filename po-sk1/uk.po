@@ -653,7 +653,7 @@ msgstr "Не знайдено файла"
 
 #: src/sk1/dialogs/filelogviewer.py:122
 msgid "Recent documents"
-msgstr "Неодавні документи"
+msgstr "Нещодавні документи"
 
 #: src/sk1/dialogs/logconsole.py:134
 msgid "Select log to open"
@@ -739,7 +739,7 @@ msgstr "та доступ до http://sk1project.net"
 
 #: src/sk1/dialogs/palcoldlg.py:80
 msgid "Loading data..."
-msgstr "Завантаження даних…"
+msgstr "Завантаження даних..."
 
 #: src/sk1/dialogs/paletteinfo.py:43
 msgid "Palette name:"
@@ -1052,7 +1052,7 @@ msgstr "Видалити"
 
 #: src/sk1/prefs/prefs_cms.py:363
 msgid "Info"
-msgstr "Відомості"
+msgstr "Інформація"
 
 #: src/sk1/prefs/prefs_cms.py:375
 msgid "Select profile to import"
@@ -1422,11 +1422,11 @@ msgstr "Шрифт лінійки:"
 
 #: src/sk1/prefs/prefs_ruler.py:64
 msgid "Small tick:"
-msgstr "Мала риска:"
+msgstr "Мала поділка:"
 
 #: src/sk1/prefs/prefs_ruler.py:70
 msgid "Large tick:"
-msgstr "Велика риска:"
+msgstr "Велика поділка:"
 
 #: src/sk1/prefs/prefs_ruler.py:77
 msgid "Text shift (px):"
@@ -1495,7 +1495,7 @@ msgstr "Перевірте стан принтера та підключення
 
 #: src/sk1/printing/generic.py:144
 msgid "Printing..."
-msgstr "Друк…"
+msgstr "Друк..."
 
 #: src/sk1/printing/generic.py:149
 msgid "Error while printing!"
@@ -1531,7 +1531,7 @@ msgstr "Заповнити будь-який контур"
 
 #: src/sk1/pwidgets/colorctrls.py:46
 msgid "Fill closed only"
-msgstr "Заповнити тільки закриті"
+msgstr "Заповнити тільки замкнені"
 
 #: src/sk1/pwidgets/colorctrls.py:49
 msgid "Evenodd fill"
@@ -1865,7 +1865,7 @@ msgstr "Створити документ на основі шаблону..."
 
 #: src/sk1/resources/labels.py:49
 msgid "&Open..."
-msgstr "&Відкрити…"
+msgstr "&Відкрити..."
 
 #: src/sk1/resources/labels.py:49
 msgid "Open document"
@@ -1885,7 +1885,7 @@ msgstr "Зберегти документ"
 
 #: src/sk1/resources/labels.py:52
 msgid "Save &As..."
-msgstr "Зберегти &як…"
+msgstr "Зберегти &як..."
 
 #: src/sk1/resources/labels.py:52
 msgid "Save document as..."
@@ -1909,11 +1909,11 @@ msgstr "Зберегти всі документи"
 
 #: src/sk1/resources/labels.py:56
 msgid "&Import..."
-msgstr "&Імпорт…"
+msgstr "&Імпорт..."
 
 #: src/sk1/resources/labels.py:56
 msgid "Import graphics..."
-msgstr "Імпортувати зображення…"
+msgstr "Імпортувати зображення..."
 
 #: src/sk1/resources/labels.py:57
 msgid "E&xport As..."
@@ -1953,7 +1953,7 @@ msgstr "Налаштування сторінки для друку ..."
 
 #: src/sk1/resources/labels.py:62
 msgid "&Print..."
-msgstr "&Друк…"
+msgstr "&Друк..."
 
 #: src/sk1/resources/labels.py:62
 msgid "Print document"
@@ -2145,11 +2145,11 @@ msgstr "Зсув..."
 
 #: src/sk1/resources/labels.py:115
 msgid "Rotate &left 90 degrees"
-msgstr "Нахилити в&ліво на 90°"
+msgstr "Обернути в&ліво на 90°"
 
 #: src/sk1/resources/labels.py:116
 msgid "Rotate &right 90 degrees"
-msgstr "Нахилити в&право на 90°"
+msgstr "Обернути в&право на 90°"
 
 #: src/sk1/resources/labels.py:117
 msgid "&Horizontal mirror"
@@ -2161,7 +2161,7 @@ msgstr "Віддзеркалити &вертикально"
 
 #: src/sk1/resources/labels.py:119
 msgid "Align and Distribute..."
-msgstr "Вирів&няти та розподілити…"
+msgstr "Вирів&няти та розподілити..."
 
 #: src/sk1/resources/labels.py:120
 msgid "&Combine"
@@ -2217,11 +2217,11 @@ msgstr "Злиття..."
 
 #: src/sk1/resources/labels.py:133
 msgid "&Place into container"
-msgstr "&Помістити у контейнер"
+msgstr "&Помістити в контейнер"
 
 #: src/sk1/resources/labels.py:134
 msgid "&Extract from container"
-msgstr "Видобути з контейнеру"
+msgstr "Видобути з контейнера"
 
 #: src/sk1/resources/labels.py:135
 msgid "Con&vert to curves"
@@ -2736,7 +2736,7 @@ msgstr "Зберегти зображення"
 
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:293
 msgid "Save image as..."
-msgstr "Зберегти зображення як…"
+msgstr "Зберегти зображення як..."
 
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:302
 msgid "Cannot save image:"
@@ -3505,114 +3505,3 @@ msgstr "Текстовий стовпчик"
 #: src/uc2/formats/sk2/sk2_cids.py:79
 msgid "Bitmap"
 msgstr "Растрове зображення"
-
-#~ msgid "HEADER"
-#~ msgstr "ЗАГОЛОВОК"
-
-#~ msgid "START"
-#~ msgstr "ПАЧАТОК"
-
-#~ msgid "JOBS"
-#~ msgstr "ЗАВДАННЯ"
-
-#~ msgid "JOB"
-#~ msgstr "JOB"
-
-#~ msgid "COMMAND"
-#~ msgstr "КОМАНДА"
-
-#~ msgid "END"
-#~ msgstr "КІНЕЦЬ"
-
-#~ msgid "Bilevel"
-#~ msgstr "Двокольорове"
-
-#~ msgid "Grayscale"
-#~ msgstr "Grayscale"
-
-#~ msgid "RGB"
-#~ msgstr "RGB"
-
-#~ msgid "RGBA"
-#~ msgstr "RGBA"
-
-#~ msgid "CMYK"
-#~ msgstr "CMYK"
-
-#~ msgid "LAB"
-#~ msgstr "LAB"
-
-#~ msgid "Parsing in process..."
-#~ msgstr "Розбір в процесі..."
-
-#~ msgid "Translation of \"%s\" into \"%s\""
-#~ msgstr "Конвертація \"%s\" на \"%s\""
-
-#~ msgid "Output file format of \"%s\" is unsupported."
-#~ msgstr "Формат вихідного файлу \"%s\" не підтримується."
-
-#~ msgid "Translation is interrupted"
-#~ msgstr "Конвертація перерваний"
-
-#~ msgid "Input file format of \"%s\" is unsupported."
-#~ msgstr "Формат вхідного файлу \"%s\" не підтримується."
-
-#~ msgid "Error while loading \"%s\""
-#~ msgstr "Помилка при завантаженні \"%s\""
-
-#~ msgid "The file may be corrupted or contains unknown file format."
-#~ msgstr "Файл може бути пошкоджений або невідомого формату."
-
-#~ msgid "Loading is interrupted"
-#~ msgstr "Завантаження переривано"
-
-#~ msgid "Error while translation and saving \"%s\""
-#~ msgstr "Помилка під час конвертації та збереження \"%s\""
-
-#~ msgid "Error creating model for \"%s\""
-#~ msgstr "Помилка створення моделі для \"%s\""
-
-#~ msgid "Translation is successful"
-#~ msgstr "Конвертація пройшла успішно"
-
-#~ msgid "OK"
-#~ msgstr "OK"
-
-#~ msgid "INFO"
-#~ msgstr "INFO"
-
-#~ msgid "WARNING"
-#~ msgstr "WARNING"
-
-#~ msgid "ERROR"
-#~ msgstr "ERROR"
-
-#~ msgid "STOP"
-#~ msgstr "STOP"
-
-#~ msgid "Loader is not found for id %s"
-#~ msgstr "Завантажувач не знайдено для id %s"
-
-#~ msgid "Start to search for loader by file extension %s"
-#~ msgstr "Розпочат пошук для завантажувача за розширенням %s"
-
-#~ msgid "Loader is not found or not suitable for %s"
-#~ msgstr "Завантажувач не знайдено або не підходить для %s"
-
-#~ msgid "Start to search loader by file content"
-#~ msgstr "Розпочат пошук завантажувача за вмістом файлу"
-
-#~ msgid "By file content loader is not found for %s"
-#~ msgstr "Завантажувач за вмістом файлу не знайдено для %s"
-
-#~ msgid "Try using fallback loader"
-#~ msgstr "Спробуйте резервний завантажувач"
-
-#~ msgid "Loader is not found for %s"
-#~ msgstr "Завантажувач не знайдено для %s"
-
-#~ msgid "Loader \"%s\" is found for %s"
-#~ msgstr "Знайдено завантажувач \"%s\" для %s"
-
-#~ msgid "%"
-#~ msgstr "%"
