@@ -150,7 +150,8 @@ class AppCanvas(Painter):
             if self.presenter.selection and self.presenter.selection.objs:
                 self.presenter.selection.update()
 
-    def set_canvas_cursor(self, mode):
+    def set_canvas_cursor(self, mode=None):
+        mode = mode or self.mode or modes.SELECT_MODE
         self.current_cursor = self.app.cursors[mode]
         self.set_cursor(self.current_cursor)
 

@@ -162,6 +162,7 @@ class MDIArea(wal.VPanel):
             self.create_doctab(doc)
         self.doc_tabs.set_active(doc)
         self.update_view()
+        doc.canvas.set_canvas_cursor()
 
     def show_plugin_area(self, value=True):
         if value:
