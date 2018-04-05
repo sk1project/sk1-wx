@@ -95,8 +95,9 @@ class PrefsDialog(wal.OkCancelDialog):
         self.container = wal.VPanel(cont)
         cont.pack(self.container, fill=True, expand=True)
         cont.pack(wal.PLine(cont), fill=True)
-        self.splitter.split_vertically(self.tree_container, cont, 200)
-        self.splitter.set_min_size(200)
+        sash_pos = config.prefs_sash_pos
+        self.splitter.split_vertically(self.tree_container, cont, sash_pos)
+        self.splitter.set_min_size(sash_pos)
         if not wal.IS_MSW:
             self.tree.set_indent(5)
         self.tree.expand_all()
@@ -151,6 +152,7 @@ class PrefsDialog(wal.OkCancelDialog):
         if wal.is_unity_16_04():
             h = max(h - 28, config.prefs_dlg_minsize[1])
         config.prefs_dlg_size = (w, h)
+        config.prefs_sash_pos = self.splitter.get_sash_position()
         self.destroy()
 
 

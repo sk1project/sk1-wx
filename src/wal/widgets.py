@@ -912,6 +912,9 @@ class Splitter(wx.SplitterWindow, WidgetMixin):
     def set_min_size(self, size):
         self.SetMinimumPaneSize(size)
 
+    def get_pane_size(self):
+        return self.GetSashPosition()
+
     def unsplit(self, remove_win=None):
         self.Unsplit(remove_win)
 

@@ -123,6 +123,7 @@ class AppConfig(UCConfig):
 
     prefs_dlg_size = (700, 440)
     prefs_dlg_minsize = (700, 440)
+    prefs_sash_pos = 200
 
     palinfo_dlg_size = (400, 350)
     palinfo_dlg_minsize = (400, 350)
