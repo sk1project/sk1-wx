@@ -16,7 +16,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-import sys
+from uc2.utils import fsutils
 
 LOG = logging.getLogger(__name__)
 
@@ -29,6 +29,7 @@ class StreamLogger:
         self.logger = LOG.critical
 
     def write(self, msg):
+        msg = fsutils.get_utf8_path(msg)
         if not msg.endswith('\n') and not msg.startswith(' '):
             if self.counter < 2:
                 self.msg += msg
