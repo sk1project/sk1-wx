@@ -141,7 +141,7 @@ class ModelPresenter(object):
                 raise
 
             model_name = uc2const.FORMAT_NAMES[self.cid]
-            msg = _('<%s> document model is updated successfully' % model_name)
+            msg = _('<%s> document model is updated successfully') % model_name
             self.send_progress_message(msg, 0.99)
             self.send_ok(msg)
 
