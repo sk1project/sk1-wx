@@ -452,7 +452,7 @@ class ProfileInfoViewer(wal.CloseDialog):
         filename = os.path.basename(self.filepath)
         copyrigth = copyrigth or '--'
         info = info or '--'
-        grid = wal.GridPanel(self.panel, vgap=5, hgap=5)
+        grid = wal.GridPanel(self.panel, rows=4, cols=2, vgap=5, hgap=5)
         grid.add_growable_col(1)
         grid.add_growable_row(2)
         grid.add_growable_row(3)
@@ -460,10 +460,18 @@ class ProfileInfoViewer(wal.CloseDialog):
         grid.pack(wal.Label(grid, name, True))
         grid.pack(wal.Label(grid, _('File:')))
         grid.pack(wal.Label(grid, filename))
-        grid.pack(wal.Label(grid, _('Copyright:')))
+
+        panel = wal.VPanel(grid)
+        panel.pack(wal.Label(grid, _('Copyright:')), align_center=False)
+        grid.pack(panel, fill=True)
+
         grid.pack(wal.Entry(grid, copyrigth, multiline=True, editable=False),
                   fill=True)
-        grid.pack(wal.Label(grid, _('Description:')))
+
+        panel = wal.VPanel(grid)
+        panel.pack(wal.Label(grid, _('Description:')), align_center=False)
+        grid.pack(panel, fill=True)
+
         grid.pack(wal.Entry(grid, info, multiline=True, editable=False),
                   fill=True)
         self.panel.pack(grid, fill=True, expand=True)
