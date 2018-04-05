@@ -36,10 +36,8 @@ def get_path_var():
 if os.name == 'nt':
 
     cur_path = os.path.abspath('..\\..\\sk1-wx-msw')
-
-    devresdir = 'win32-devres'
-    if platform.architecture()[0] == '64bit':
-        devresdir = 'win64-devres'
+    arch = platform.architecture()[0]
+    devresdir = 'win64-devres' if arch == '64bit' else 'win32-devres'
 
     devres = os.path.join(cur_path, devresdir)
     bindir = os.path.join(devres, 'dlls') + os.pathsep
