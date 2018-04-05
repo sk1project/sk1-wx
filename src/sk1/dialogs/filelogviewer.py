@@ -46,7 +46,7 @@ class LogViewerDialog(wal.OkCancelDialog):
     def build(self):
         self.panel.pack(wal.PLine(self.panel), fill=True)
         self.lc = wal.ReportList(self.panel, on_select=self.update_dlg,
-                                 on_activate=self.on_ok)
+                                 on_activate=self.on_ok, border=False)
         self.panel.pack(self.lc, expand=True, fill=True)
         self.panel.pack(wal.PLine(self.panel), fill=True)
 

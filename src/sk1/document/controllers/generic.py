@@ -83,14 +83,14 @@ class AbstractController:
 
     def mouse_right_down(self, event):
         if event.is_ctrl() and not self.start:
-            self.canvas.capture_mouse()
+            self.canvas.dc.capture_mouse()
             self.canvas.set_temp_mode(modes.TEMP_FLEUR_MODE)
 
     def mouse_right_up(self, event):
         self.canvas.show_context_menu()
 
     def mouse_middle_down(self, event):
-        self.canvas.capture_mouse()
+        self.canvas.dc.capture_mouse()
         self.canvas.set_temp_mode(modes.TEMP_FLEUR_MODE)
 
     def mouse_middle_up(self, event):
