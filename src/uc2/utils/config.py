@@ -16,14 +16,15 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-import os
-import sys
+
 import xml.sax
 from xml.sax import handler
 from xml.sax.saxutils import XMLGenerator
 from xml.sax.xmlreader import InputSource
 
 from uc2.utils.fs import path_system, path_unicode
+from uc2.utils import fsutils
+from uc2.utils.fsutils import get_fileptr
 
 LOG = logging.getLogger(__name__)
 
@@ -62,13 +63,13 @@ class XmlConfigParser(object):
 
     def load(self, filename=None):
         self.filename = filename
-        if os.path.lexists(filename):
+        if fsutils.lexists(filename):
             content_handler = XMLPrefReader(pref=self)
             error_handler = ErrorHandler()
             entity_resolver = EntityResolver()
             dtd_handler = DTDHandler()
             try:
-                input_file = open(filename, "r")
+                input_file = get_fileptr(filename)
                 input_source = InputSource()
                 input_source.setByteStream(input_file)
                 xml_reader = xml.sax.make_parser()
@@ -88,7 +89,7 @@ class XmlConfigParser(object):
             return
 
         try:
-            fileobj = open(filename, 'w')
+            fileobj = get_fileptr(filename, True)
         except Exception as e:
             LOG.error('Cannot write preferences into %s %s', filename, e)
             return
