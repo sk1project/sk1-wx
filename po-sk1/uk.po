@@ -731,7 +731,7 @@ msgstr "Неможливо з'єднатися з сервером!"
 
 #: src/sk1/dialogs/palcoldlg.py:65
 msgid "Please check Internet connection"
-msgstr "Будь ласка, перевірте  з'єднання з Інтернетом"
+msgstr "Будь ласка, перевірте з'єднання з Інтернетом"
 
 #: src/sk1/dialogs/palcoldlg.py:66
 msgid "and access to http://sk1project.net"
@@ -2443,7 +2443,7 @@ msgstr "Редагується градієнт"
 
 #: src/sk1/document/controllers/text_ctrl.py:58
 msgid "Text in editing"
-msgstr "Редагується тект"
+msgstr "Редагується текст"
 
 #: src/sk1/printing/printdlg/__init__.py:50
 #: src/sk1/printing/printdlg/__init__.py:138
@@ -2527,7 +2527,7 @@ msgstr "Підігнати за сторінкою"
 #: src/sk1/printing/propsdlg/cupspropsdlg.py:56
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:49
 msgid "Color space:"
-msgstr "Простір кольорів:"
+msgstr "Колірний простір:"
 
 #: src/sk1/printing/propsdlg/cupspropsdlg.py:107
 msgid "Paper"
@@ -2638,7 +2638,7 @@ msgstr "Вирівняти по правій стороні"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:90
 msgid "Align to bottom"
-msgstr "Вирівняти по знизу"
+msgstr "Вирівняти за нижнім краєм"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:91
 msgid "Align to center vertically"
@@ -2646,11 +2646,11 @@ msgstr "Центрувати по вертикалі"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:92
 msgid "Align to top"
-msgstr "Вирівняти по верху"
+msgstr "Вирівняти за верхнім краєм"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:98
 msgid "Align and Distribute"
-msgstr "Вирівнювання і розподіл"
+msgstr "Вирівнювання і розподілити"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:132
 msgid "Align"
@@ -3249,7 +3249,7 @@ msgstr "<%s> модель документа створена"
 
 #: src/uc2/formats/generic.py:141
 msgid "Error updating document model"
-msgstr "Помила оновлення моделі"
+msgstr "Помилка оновлення моделі"
 
 #: src/uc2/formats/generic.py:145
 #, python-format
