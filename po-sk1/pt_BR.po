@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-28 09:45+0300\n"
-"PO-Revision-Date: 2018-03-30 19:20-0300\n"
+"PO-Revision-Date: 2018-04-05 21:06-0300\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -102,7 +102,7 @@ msgstr "Deseja alterar a cor de contorno padrão para este documento?"
 
 #: src/sk1/app_proxy.py:788
 msgid "Application logs"
-msgstr "Logs de aplicativo"
+msgstr "Logs do aplicativo"
 
 #: src/sk1/application.py:78
 msgid "WindowsXP platform is obsolete and not supported!"
@@ -2022,7 +2022,7 @@ msgstr "Aramado"
 
 #: src/sk1/resources/labels.py:81
 msgid "Draft view"
-msgstr "Normal"
+msgstr "Rascunho"
 
 #: src/sk1/resources/labels.py:82 src/sk1/printing/printdlg/toolbar.py:53
 msgid "Zoom 100%"
@@ -2182,7 +2182,7 @@ msgstr "Nível mais &Baixo"
 
 #: src/sk1/resources/labels.py:126
 msgid "&Group"
-msgstr "&Agroupar"
+msgstr "&Agrupar"
 
 #: src/sk1/resources/labels.py:127
 msgid "&Ungroup"
@@ -2198,7 +2198,7 @@ msgstr "Diferença..."
 
 #: src/sk1/resources/labels.py:130
 msgid "Intersection..."
-msgstr "Interscão..."
+msgstr "Interseção..."
 
 #: src/sk1/resources/labels.py:131
 msgid "Exclusion..."
@@ -2270,11 +2270,11 @@ msgstr "Juntar nós"
 
 #: src/sk1/resources/labels.py:149
 msgid "Split nodes"
-msgstr "Nós divididos"
+msgstr "Dividir nós"
 
 #: src/sk1/resources/labels.py:150
 msgid "Convert segments to line"
-msgstr "Converter segmentos em linha"
+msgstr "Converter segmentos em linha reta"
 
 #: src/sk1/resources/labels.py:151
 msgid "Convert segments to curve"
