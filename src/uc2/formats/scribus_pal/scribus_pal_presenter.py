@@ -29,7 +29,7 @@ from uc2.uc2const import COLOR_RGB, COLOR_CMYK, COLOR_SPOT, COLOR_REG
 def create_new_palette(config): pass
 
 
-class ScribusPalette_Presenter(TaggedModelPresenter):
+class ScribusPalettePresenter(TaggedModelPresenter):
     cid = uc2const.SCRIBUS_PAL
 
     config = None
@@ -95,7 +95,6 @@ class ScribusPalette_Presenter(TaggedModelPresenter):
     def convert_to_skp(self, skp_doc):
         skp = skp_doc.model
         skp.name = self.model.Name
-        print 'skp.name', isinstance(skp.name,unicode)
         if not skp.name:
             if self.doc_file:
                 name = os.path.basename(self.doc_file)
@@ -107,7 +106,6 @@ class ScribusPalette_Presenter(TaggedModelPresenter):
             skp.comments = 'Converted from %s' % filename
         skp.source = self.config.source
         for item in self.model.childs:
-            color = None
             if item.Register == '1':
                 color = cms.get_registration_black()
             elif item.Spot == '1':

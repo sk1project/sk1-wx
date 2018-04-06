@@ -65,9 +65,13 @@ class ScribusPalette_Saver(AbstractSaver):
 
     def write_color(self, color):
         line = '\t<%s' % color.tag
-        if color.RGB: line += ' RGB="%s"' % color.RGB
-        if color.CMYK: line += ' CMYK="%s"' % color.CMYK
-        if color.Spot == '1': line += ' Spot="%s"' % color.Spot
-        if color.Register == '1': line += ' Register="%s"' % color.Register
+        if color.RGB:
+            line += ' RGB="%s"' % color.RGB
+        if color.CMYK:
+            line += ' CMYK="%s"' % color.CMYK
+        if color.Spot == '1':
+            line += ' Spot="%s"' % color.Spot
+        if color.Register == '1':
+            line += ' Register="%s"' % color.Register
         line += ' NAME="%s" />' % color.NAME
         self.writeln(line)

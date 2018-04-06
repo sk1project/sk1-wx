@@ -17,7 +17,7 @@
 
 from uc2.formats.scribus_pal.scribus_pal_model import SP_TAG
 from uc2.formats.scribus_pal.scribus_pal_presenter import \
-    ScribusPalette_Presenter
+    ScribusPalettePresenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2.formats.skp.skp_presenter import SKP_Presenter
 from uc2.utils.fsutils import get_fileptr
@@ -27,7 +27,7 @@ from uc2.utils.mixutils import merge_cnf
 def scribus_pal_loader(appdata, filename=None, fileptr=None, translate=True,
                        convert=False, cnf=None, **kw):
     cnf = merge_cnf(cnf, kw)
-    doc = ScribusPalette_Presenter(appdata, cnf)
+    doc = ScribusPalettePresenter(appdata, cnf)
     doc.load(filename, fileptr)
     if convert:
         skp_doc = SKP_Presenter(appdata, cnf)
@@ -52,13 +52,13 @@ def scribus_pal_saver(doc, filename=None, fileptr=None, translate=True,
     if translate:
         skp_doc = SKP_Presenter(appdata, cnf)
         skp_doc.translate_from_sk2(doc)
-        scrb_doc = ScribusPalette_Presenter(appdata, cnf)
+        scrb_doc = ScribusPalettePresenter(appdata, cnf)
         scrb_doc.convert_from_skp(skp_doc)
         scrb_doc.save(filename, fileptr)
         scrb_doc.close()
         skp_doc.close()
     elif convert:
-        scrb_doc = ScribusPalette_Presenter(appdata, cnf)
+        scrb_doc = ScribusPalettePresenter(appdata, cnf)
         scrb_doc.convert_from_skp(doc)
         scrb_doc.save(filename, fileptr)
         scrb_doc.close()
