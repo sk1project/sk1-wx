@@ -18,6 +18,7 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 import platform
 
 RESTRICTED = ('UniConvertor', 'Python', 'ImageMagick')
@@ -41,7 +42,8 @@ if os.name == 'nt':
 
     devres = os.path.join(cur_path, devresdir)
     bindir = os.path.join(devres, 'dlls') + os.pathsep
-    magickdir = os.path.join(devres, 'dlls', 'modules') + os.pathsep
+    devres_utf8 = devres.decode(sys.getfilesystemencoding()).encode('utf-8')
+    magickdir = os.path.join(devres_utf8, 'dlls', 'modules') + os.pathsep
 
     os.environ["PATH"] = magickdir + bindir + get_path_var()
     os.environ["MAGICK_CODER_MODULE_PATH"] = magickdir
