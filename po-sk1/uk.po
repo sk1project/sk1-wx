@@ -2650,7 +2650,7 @@ msgstr "Вирівняти за верхнім краєм"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:98
 msgid "Align and Distribute"
-msgstr "Вирівнювання і розподілити"
+msgstr "Вирівняти та розподілити"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:132
 msgid "Align"
