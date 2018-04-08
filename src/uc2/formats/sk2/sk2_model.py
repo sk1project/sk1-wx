@@ -1129,9 +1129,7 @@ class Pixmap(PrimitiveObject):
         return h_dpi, v_dpi
 
     def update(self):
-        self.cache_cdata = None
-        self.cache_ps_cdata = None
-        self.cache_gray_cdata = None
+        self.clear_color_cache()
         PrimitiveObject.update(self)
 
     def clear_color_cache(self):
