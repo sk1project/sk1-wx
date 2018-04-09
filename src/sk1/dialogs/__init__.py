@@ -28,3 +28,4 @@ from strokedlg import stroke_dlg
 from docprops import docprops_dlg
 from editdlg import edit_dlg, multiline_edit_dlg
 from logconsole import logconsole_dlg
+from docinfodlg import docinfo_dlg

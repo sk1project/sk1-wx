@@ -110,6 +110,7 @@ def create_actions(app):
         (pdids.COPY_FILL, proxy.copy_fill, sel_chnls, insp.is_selection),
         (pdids.COPY_STROKE, proxy.copy_stroke, sel_chnls, insp.is_selection),
         (wal.ID_PROPERTIES, proxy.properties, doc_chnls, insp.is_doc),
+        (pdids.ID_DOCINFO, proxy.docinfo, doc_chnls, insp.is_doc),
         (wal.ID_PREFERENCES, proxy.preferences),
         # ------ View menu -------
         (pdids.ID_STROKE_VIEW, proxy.stroke_view, doc_chnls, insp.is_doc,

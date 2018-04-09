@@ -149,6 +149,7 @@ class AppConfig(UCConfig):
     change_color_dlg_minsize = (420, 300)
 
     about_dlg_size = (550, 400)
+    docinfo_dlg_size = (550, 400)
     dash_dlg_size = (300, 150)
 
     console_dlg_size = (800, 500)

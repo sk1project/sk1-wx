@@ -33,7 +33,9 @@ class AppMenuBar(wal.MenuBar):
                pdids.ID_VIEW_LOG, None,
                wal.ID_SAVE, wal.ID_SAVEAS, pdids.ID_SAVE_SEL, pdids.ID_SAVEALL,
                None, wal.ID_CLOSE, pdids.ID_CLOSE_OTHERS, wal.ID_CLOSE_ALL,
-               None, pdids.ID_IMPORT, pdids.ID_EXPORT, None, wal.ID_PRINT,
+               None, pdids.ID_IMPORT, pdids.ID_EXPORT,
+               None, pdids.ID_DOCINFO,
+               None, wal.ID_PRINT,
                None, wal.ID_EXIT,)
         entry = (_("&File"), sub)
         self.entries.append(entry)
