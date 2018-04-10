@@ -21,7 +21,7 @@ from collections import defaultdict
 
 import wal
 from sk1 import _, config
-from uc2 import uc2const, sk2const
+from uc2 import uc2const, sk2const, libgeom
 
 
 ORIENTS_NAMES = [_('Portrait'), _('Landscape')]
@@ -56,8 +56,11 @@ class DocInfoDialog(wal.CloseDialog):
     @staticmethod
     def _analyze_path(obj, info):
         info['subpaths'] += len(obj.paths)
-        for path in obj.paths:
-            # TODO: calc path length
+        for path in libgeom.apply_trafo_to_paths(obj.paths, obj.trafo):
+            try:
+                info['path_length'] += libgeom.get_path_length(path)
+            except RuntimeError:
+                info['path_length'] = float('nan')
             if path[2] == sk2const.CURVE_CLOSED:
                 info['path_closed'] += 1
                 nodes = len(path[1])
@@ -136,9 +139,12 @@ class DocInfoDialog(wal.CloseDialog):
 
     def objects_info(self, objects):
         info = self._walk_objects(objects)
+        subpaths = info['subpaths']
         closed = info['path_closed']
         opened = info['subpaths'] - info['path_closed']
-        curve_subpaths = _('%s, opened %s, closed %s') % (info['subpaths'], opened, closed)
+        units = self.doc.model.doc_units
+        path_length = pt_to_units(info['path_length'], units)
+        curve_subpaths = _('%i, opened %i, closed %i, length %g %s') % (subpaths, opened, closed, path_length, units)
         data = [
             [_('Graphic Objects')],
             [_('Number of objects:'), info['object']],
