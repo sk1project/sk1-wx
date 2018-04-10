@@ -41,17 +41,16 @@ class DocInfoDialog(wal.CloseDialog):
         self.doc = app.current_doc
         wal.CloseDialog.__init__(self, parent, title, size, add_line=False)
 
-    def get_all_layers(self):
-        layers = []
+    def get_layers(self):
         for page in self.doc.get_pages():
-            layers.extend(self.doc.get_layers(page))
+            for layer in self.doc.get_layers(page):
+                yield layer
         for layer in self.doc.methods.get_master_layers():
-            layers.append(layer)
-        return layers
+            yield layer
 
-    def get_all_objects(self, layers=None):
-        layers = layers or self.get_all_layers()
-        return [obj for layer in layers for obj in layer.childs]
+    def get_objects(self, layers=None):
+        layers = layers or self.get_layers()
+        return (obj for layer in layers for obj in layer.childs)
 
     @staticmethod
     def _analyze_path(obj, info):
@@ -97,7 +96,7 @@ class DocInfoDialog(wal.CloseDialog):
 
     def document_info(self, objects):
         pages = self.doc.get_pages()
-        layers = self.get_all_layers()
+        layers = list(self.get_layers())
         units = self.doc.model.doc_units
         page_format = self.doc.methods.get_default_page_format()
         width = pt_to_units(page_format[1][0], units)
@@ -295,14 +294,13 @@ class DocInfoDialog(wal.CloseDialog):
         return data
 
     def build(self):
-        objects = self.get_all_objects()
         block = []
         data = [[_('Property'), _('Value')]]
         r = ['file_info', 'document_info', 'objects_info', 'text_info',
              'bitmap_info', 'fill_info', 'stroke_info']
         for item in r:
             block.append(len(data) - 1)
-            data += getattr(self, item)(objects)
+            data += getattr(self, item)(self.get_objects())
         slist = wal.ReportList(self, data, alt_color=False)
         for idx in block:
             list_item = slist.GetItem(idx)
