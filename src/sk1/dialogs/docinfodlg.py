@@ -52,8 +52,7 @@ class DocInfoDialog(wal.CloseDialog):
         layers = layers or self.get_layers()
         return (obj for layer in layers for obj in layer.childs)
 
-    @staticmethod
-    def _analyze_path(obj, info):
+    def _analyze_path(self, obj, info):
         info['subpaths'] += len(obj.paths)
         for path in libgeom.apply_trafo_to_paths(obj.paths, obj.trafo):
             try:
@@ -68,8 +67,7 @@ class DocInfoDialog(wal.CloseDialog):
             info['max_path_point'] = max(nodes, info['max_path_point'])
             info['node'] += nodes
 
-    @staticmethod
-    def _analyze_text(obj, info):
+    def _analyze_text(self, obj, info):
         text = obj.get_text()
         lines = text.split('\n')
         words = [word for line in lines for word in line.split()]

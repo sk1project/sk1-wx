@@ -54,7 +54,6 @@ ID_IMPORT = new_id()
 ID_EXPORT = new_id()
 ID_CLEAR_LOG = new_id()
 ID_VIEW_LOG = new_id()
-ID_DOCINFO = new_id()
 # ----- Edit menu
 ID_CLEAR_UNDO = new_id()
 ID_DESELECT = new_id()

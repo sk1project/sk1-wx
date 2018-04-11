@@ -246,9 +246,6 @@ class AppProxy:
     def about(self):
         dialogs.about_dialog(self.app, self.mw)
 
-    def docinfo(self):
-        dialogs.docinfo_dlg(self.app, self.mw)
-
     def properties(self):
         dialogs.docprops_dlg(self.app, self.mw)
 

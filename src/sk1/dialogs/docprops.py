@@ -632,7 +632,7 @@ class DocPropertiesDialog(wal.OkCancelDialog):
         wal.OkCancelDialog.__init__(self, parent, title, size,
                                     resizable=True, add_line=False)
         self.info_btn = wal.Button(self.button_box, _('Statistics...'), tooltip=_("Document info"),
-                                   onclick=self.on_info, default=True, pid=pdids.ID_DOCINFO)
+                                   onclick=self.on_info, default=True)
         self.left_button_box.pack(self.info_btn, padding=2)
         self.set_minsize(config.docprops_dlg_minsize)
 

@@ -60,7 +60,6 @@ LABELS = {
     pdids.ID_CLOSE_OTHERS: (_('Close Others'), _('Close other documents')),
     wal.ID_PRINT_SETUP: (_('Page Setup for Print...'),),
     wal.ID_PRINT: (_('&Print...'), _('Print document')),
-    pdids.ID_DOCINFO: (_('Document info...'),),
     wal.ID_EXIT: (_('&Exit'), _('Exit application')),
 
     wal.ID_UNDO: (_('&Undo'),),
