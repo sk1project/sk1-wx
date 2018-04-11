@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2011-2015 by Igor E. Novikov
+#  Copyright (C) 2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -15,6 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 from cStringIO import StringIO
 from PIL import Image, ImageOps
 
@@ -33,13 +34,8 @@ class ImageHandler(object):
     ps_cdata = None
     gray_cdata = None
 
-    def __init__(self, pixmap, bitmap_str=None, alpha_str=None,
-                 bitmap=None, alpha=None):
+    def __init__(self, pixmap):
         self.pixmap = pixmap
-        if bitmap_str:
-            self.set_images_from_str(bitmap_str, alpha_str)
-        elif bitmap:
-            self.set_images(bitmap, alpha)
 
     def _get_saver_fmt(self, image):
         return 'TIFF' if image.mode == IMAGE_CMYK else 'PNG'
@@ -73,3 +69,20 @@ class ImageHandler(object):
     def copy(self, pixmap):
         hdl = ImageHandler(pixmap)
         hdl.set_images(self.bitmap.copy(), self.alpha.copy())
+
+    def _load_by_pil(self, fileptr):
+        fileptr.seek(0)
+        image = Image.open(fileptr)
+
+    def _load_by_magickwand(self, fileptr):
+        fileptr.seek(0)
+        content = fileptr.read()
+
+    def load_from_fileptr(self, fileptr):
+        try:
+            self._load_by_pil(fileptr)
+        except IOError:
+            self._load_by_magickwand(fileptr)
+
+    def load_from_file(self, filepath):
+        self.load_from_fileptr(fsutils.get_fileptr(filepath))
