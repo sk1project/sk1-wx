@@ -24,9 +24,6 @@ from sk1 import _, config
 from uc2 import uc2const, sk2const, libgeom
 
 
-ORIENTS_NAMES = [_('Portrait'), _('Landscape')]
-
-
 def pt_to_units(val, units):
     factor = uc2const.point_dict[units]
     accuracy = uc2const.unit_accuracy[units]
@@ -105,7 +102,7 @@ class DocInfoDialog(wal.CloseDialog):
             [_('Pages:'), len(pages)],
             [_('Layers:'), len(layers)],
             [_('Page size:'), page_size],
-            [_('Page orientation:'), ORIENTS_NAMES[page_format[2]]]
+            [_('Page orientation:'), uc2const.ORIENTS_NAMES[page_format[2]]]
         ]
         return data
 

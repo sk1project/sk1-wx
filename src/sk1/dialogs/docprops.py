@@ -24,7 +24,7 @@ from sk1.pwidgets import StaticUnitLabel, UnitSpin, CBMiniPalette
 from sk1.resources import icons, get_bmp, pdids
 from uc2 import cms, uc2const
 from uc2.sk2const import ORIGINS, FILL_SOLID, FILL_PATTERN
-from uc2.uc2const import unit_names, unit_full_names
+from uc2.uc2const import unit_names, unit_full_names, ORIENTS_NAMES
 from . import docinfodlg
 
 
@@ -92,7 +92,6 @@ class GeneralProps(DocPropsPanel):
 
 ORIENTS = [uc2const.PORTRAIT, uc2const.LANDSCAPE]
 ORIENTS_ICONS = [icons.CTX_PAGE_PORTRAIT, icons.CTX_PAGE_LANDSCAPE]
-ORIENTS_NAMES = [_('Portrait'), _('Landscape')]
 
 
 class PageProps(DocPropsPanel):
