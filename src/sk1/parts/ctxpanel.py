@@ -49,6 +49,7 @@ class AppCtxPanel(wal.HPanel):
         mode = self.get_mode()
         if mode == self.mode:
             return
+        self.hide(update=False)
         for item in self.plugins:
             item.hide()
             self.remove(item)
@@ -63,7 +64,7 @@ class AppCtxPanel(wal.HPanel):
                 self.plugins_dict[item].show(update=False)
                 self.plugins.append(self.plugins_dict[item])
         self.layout()
-        # self.fit()
+        self.show()
         self.mode = mode
 
     def get_mode(self):

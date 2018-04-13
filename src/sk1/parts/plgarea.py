@@ -55,22 +55,23 @@ class PlgArea(wal.HPanel):
         if self.active_plg and pid == self.active_plg.pid:
             self.active_plg.show_signal(*args)
             return
-        self.app.mdiarea.show_plugin_area()
         item = self.check_pid(pid)
         if self.active_plg:
             self.active_plg.hide()
         if not item:
+            self.container.hide(update=False)
             item = self.load_plugin(pid)
             self.container.pack(item.panel, expand=True, fill=True)
             self.tabs.add_new_tab(item)
             item.panel.layout()
+            self.container.show()
         else:
             self.tabs.set_active(item)
         self.active_plg = item
-        self.active_plg.show(*args)
-        self.layout()
         self.container.layout()
+        self.active_plg.show(*args)
         self.active_plg.panel.refresh()
+        self.app.mdiarea.show_plugin_area()
 
     def close_plugin(self, pid):
         item = self.check_pid(pid)

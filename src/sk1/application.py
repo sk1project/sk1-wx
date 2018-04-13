@@ -187,13 +187,13 @@ class SK1Application(wal.Application, UCApplication):
 
     def set_current_doc(self, doc):
         self.current_doc = doc
-        if not self.mw.mdi.is_shown():
-            self.mw.show_mdi(True)
         self.mw.mdi.set_active(doc)
         self.current_doc.set_title()
         events.emit(events.DOC_CHANGED, doc)
         events.emit(events.SNAP_CHANGED)
         events.emit(events.APP_STATUS, _('Document is changed'))
+        if not self.mw.mdi.is_shown():
+            self.mw.show_mdi(True)
 
     def new(self):
         doc = SK1Presenter(self)
