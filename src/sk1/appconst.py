@@ -17,7 +17,7 @@
 
 APPNAME = 'sk1'
 VERSION = '2.0'
-REVISION = 'rc3'
+REVISION = 'rc4'
 
 OPENED = 0
 SAVED = 1
