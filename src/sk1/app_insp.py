@@ -380,7 +380,7 @@ class AppInspector:
         return obj.is_circle
 
     def is_obj_polygon(self, obj):
-        return obj.is_polygon()
+        return obj.is_polygon
 
     def is_obj_text(self, obj):
         return obj.is_text()

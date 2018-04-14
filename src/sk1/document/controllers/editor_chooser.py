@@ -38,7 +38,7 @@ class EditorChooser(AbstractController):
                 self.canvas.set_mode(modes.RECT_EDITOR_MODE)
             elif obj.is_circle:
                 self.canvas.set_mode(modes.ELLIPSE_EDITOR_MODE)
-            elif obj.is_polygon():
+            elif obj.is_polygon:
                 self.canvas.set_mode(modes.POLYGON_EDITOR_MODE)
             elif obj.is_text():
                 self.canvas.set_mode(modes.TEXT_EDITOR_MODE)

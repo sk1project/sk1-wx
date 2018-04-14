@@ -38,6 +38,7 @@ class DocumentObject(TextModelObject):
     is_rect = False
     is_pixmap = False
     is_circle = False
+    is_polygon = False
 
     def get_class_name(self):
         return CID_TO_NAME[self.cid]
@@ -70,9 +71,6 @@ class DocumentObject(TextModelObject):
     def clear_color_cache(self):
         for child in self.childs:
             child.clear_color_cache()
-
-    def is_polygon(self):
-        return False
 
     def is_text(self):
         return False
@@ -743,6 +741,7 @@ class Polygon(PrimitiveObject):
     coef1 = 1.0
     coef2 = 1.0
     initial_trafo = sk2const.NORMAL_TRAFO
+    is_polygon = True
 
     def __init__(self, config, parent=None,
                  rect=[] + sk2const.STUB_RECT,
@@ -766,9 +765,6 @@ class Polygon(PrimitiveObject):
         self.trafo = [rect[2], 0.0, 0.0, rect[3], rect[0], rect[1]]
         self.initial_trafo = [] + self.trafo
         self.style = style
-
-    def is_polygon(self):
-        return True
 
     def is_closed(self):
         return True
