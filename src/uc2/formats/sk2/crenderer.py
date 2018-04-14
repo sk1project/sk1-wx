@@ -202,7 +202,7 @@ class CairoRenderer:
         if obj.is_pixmap:
             self.render_image(ctx, obj)
             return
-        if obj.is_text():
+        if obj.is_text:
             if self.contour_flag:
                 self.process_stroke(ctx, None, self.stroke_style)
                 for item in obj.cache_cpath:

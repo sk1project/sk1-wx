@@ -39,6 +39,7 @@ class DocumentObject(TextModelObject):
     is_pixmap = False
     is_circle = False
     is_polygon = False
+    is_text = False
 
     def get_class_name(self):
         return CID_TO_NAME[self.cid]
@@ -71,9 +72,6 @@ class DocumentObject(TextModelObject):
     def clear_color_cache(self):
         for child in self.childs:
             child.clear_color_cache()
-
-    def is_text(self):
-        return False
 
     def is_closed(self):
         return False
@@ -868,6 +866,7 @@ class Text(PrimitiveObject):
     cache_layout_data = ()
     cache_layout_bbox = []
     cache_clusters = []
+    is_text = True
 
     def __init__(self, config, parent=None,
                  point=None,
@@ -893,9 +892,6 @@ class Text(PrimitiveObject):
     def set_text(self, text):
         text = text.encode('utf-8') if isinstance(text, unicode) else text
         self.text = b64encode(text)
-
-    def is_text(self):
-        return True
 
     def is_closed(self):
         return True

@@ -198,9 +198,9 @@ class TextOnCirclePlugin(RsPlugin):
         elif len(doc.selection.objs) == 2:
             obj1 = doc.selection.objs[0]
             obj2 = doc.selection.objs[1]
-            if obj1.is_circle and obj2.is_text():
+            if obj1.is_circle and obj2.is_text:
                 return 2
-            elif obj2.is_circle and obj1.is_text():
+            elif obj2.is_circle and obj1.is_text:
                 return 2
         return False
 
@@ -220,7 +220,7 @@ class TextOnCirclePlugin(RsPlugin):
         if self.check_selection() == 2:
             circle = doc.selection.objs[0]
             text_obj = doc.selection.objs[1]
-            if text_obj.is_circle and circle.is_text():
+            if text_obj.is_circle and circle.is_text:
                 circle, text_obj = text_obj, circle
             doc.api.place_text_on_circle(circle, text_obj, self.bmp.get_mode(),
                                          not self.other_side.get_value())

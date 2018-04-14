@@ -383,7 +383,7 @@ class AppInspector:
         return obj.is_polygon
 
     def is_obj_text(self, obj):
-        return obj.is_text()
+        return obj.is_text
 
     def is_obj_pixmap(self, obj):
         return obj.is_pixmap
@@ -619,7 +619,7 @@ class AppInspector:
             objs = doc.selection.objs
             if len(objs) == 1:
                 obj = objs[0]
-                if obj.is_text() and obj.trafos:
+                if obj.is_text and obj.trafos:
                     return True
         elif doc.canvas.mode in (modes.TEXT_EDIT_MODE, modes.TEXT_EDITOR_MODE):
             if doc.canvas.controller.target.trafos:
@@ -634,7 +634,7 @@ class AppInspector:
             objs = doc.selection.objs
             if len(objs) == 1:
                 obj = objs[0]
-                if obj.is_text() and obj.markup:
+                if obj.is_text and obj.markup:
                     return True
         elif doc.canvas.mode in (modes.TEXT_EDIT_MODE, modes.TEXT_EDITOR_MODE):
             if doc.canvas.controller.target.markup:

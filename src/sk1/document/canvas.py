@@ -511,7 +511,7 @@ class HitSurface:
         else:
             path = obj.cache_cpath
 
-            if obj.is_text():
+            if obj.is_text:
                 path = libcairo.convert_bbox_to_cpath(obj.cache_bbox)
                 fill_anyway = True
             if obj.is_curve and len(obj.paths) > 100:

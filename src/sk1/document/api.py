@@ -304,7 +304,7 @@ class AbstractAPI:
         after = []
         for obj in objs:
             before.append(obj.get_trafo_snapshot())
-            if obj.is_circle or obj.is_polygon or obj.is_text():
+            if obj.is_circle or obj.is_polygon or obj.is_text:
                 obj.trafo = [] + obj.initial_trafo
             else:
                 obj.trafo = [] + normal_trafo
