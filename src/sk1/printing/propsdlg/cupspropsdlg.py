@@ -196,10 +196,10 @@ class OrientPanel(wal.LabeledPanel):
 
         vpanel = wal.VPanel(hpanel)
         self.port_opt = wal.Radiobutton(
-            vpanel, _('Portrait'), group=True, onclick=self.update)
+            vpanel, uc2const.ORIENTS_NAMES[0], group=True, onclick=self.update)
         vpanel.pack(self.port_opt, align_center=False)
         vpanel.pack((5, 5))
-        self.land_opt = wal.Radiobutton(vpanel, _('Landscape'),
+        self.land_opt = wal.Radiobutton(vpanel, uc2const.ORIENTS_NAMES[1],
             onclick=self.update)
         vpanel.pack(self.land_opt, align_center=False)
 

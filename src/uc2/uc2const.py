@@ -444,6 +444,8 @@ PAGE_FORMAT_NAMES = [
 PORTRAIT = 0
 LANDSCAPE = 1
 
+ORIENTS_NAMES = (_('Portrait'), _('Landscape'))
+
 # Color management constants
 
 INTENT_PERCEPTUAL = 0
