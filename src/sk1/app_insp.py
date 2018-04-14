@@ -371,7 +371,7 @@ class AppInspector:
         return obj.is_primitive
 
     def is_obj_curve(self, obj):
-        return obj.is_curve()
+        return obj.is_curve
 
     def is_obj_rect(self, obj):
         return obj.is_rect()
@@ -513,7 +513,7 @@ class AppInspector:
         elif self.is_selection(doc):
             result = False
             objs = doc.selection.objs
-            if len(objs) == 1 and objs[0].is_curve():
+            if len(objs) == 1 and objs[0].is_curve:
                 if len(objs[0].paths) > 1:
                     result = True
             return result
@@ -527,7 +527,7 @@ class AppInspector:
         elif self.is_selection(doc):
             result = False
             for obj in doc.selection.objs:
-                if obj.is_primitive and not obj.is_curve() \
+                if obj.is_primitive and not obj.is_curve \
                         and not obj.is_pixmap():
                     result = True
                     break

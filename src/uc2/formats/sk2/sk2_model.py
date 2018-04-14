@@ -34,6 +34,7 @@ class DocumentObject(TextModelObject):
     is_layer = False
     is_guide = False
     is_primitive = False
+    is_curve = False
 
     def get_class_name(self):
         return CID_TO_NAME[self.cid]
@@ -66,9 +67,6 @@ class DocumentObject(TextModelObject):
     def clear_color_cache(self):
         for child in self.childs:
             child.clear_color_cache()
-
-    def is_curve(self):
-        return False
 
     def is_rect(self):
         return False
@@ -559,7 +557,7 @@ class PrimitiveObject(SelectableObject):
 
     def to_curve(self):
         curve = Curve(self.config)
-        curve.paths = deepcopy(self.paths if self.is_curve()
+        curve.paths = deepcopy(self.paths if self.is_curve
                                else self.cache_paths)
         curve.trafo = [] + self.trafo
         curve.fill_trafo = [] + self.fill_trafo
@@ -834,6 +832,7 @@ class Curve(PrimitiveObject):
 
     cid = CURVE
     paths = []
+    is_curve = True
 
     def __init__(self, config, parent=None,
                  paths=[] + sk2const.STUB_PATHS,
@@ -848,9 +847,6 @@ class Curve(PrimitiveObject):
 
     def get_initial_paths(self):
         return self.paths
-
-    def is_curve(self):
-        return True
 
     def is_closed(self):
         for path in self.paths:

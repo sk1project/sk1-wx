@@ -32,7 +32,7 @@ class EditorChooser(AbstractController):
             self.selection.clear()
         else:
             obj = sel_objs[0]
-            if obj.is_curve():
+            if obj.is_curve:
                 self.canvas.set_mode(modes.BEZIER_EDITOR_MODE)
             elif obj.is_rect():
                 self.canvas.set_mode(modes.RECT_EDITOR_MODE)
