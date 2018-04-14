@@ -37,6 +37,7 @@ class DocumentObject(TextModelObject):
     is_curve = False
     is_rect = False
     is_pixmap = False
+    is_circle = False
 
     def get_class_name(self):
         return CID_TO_NAME[self.cid]
@@ -69,9 +70,6 @@ class DocumentObject(TextModelObject):
     def clear_color_cache(self):
         for child in self.childs:
             child.clear_color_cache()
-
-    def is_circle(self):
-        return False
 
     def is_polygon(self):
         return False
@@ -696,6 +694,7 @@ class Circle(PrimitiveObject):
     angle2 = 0.0
     circle_type = sk2const.ARC_CHORD
     initial_trafo = sk2const.NORMAL_TRAFO
+    is_circle = True
 
     def __init__(self, config, parent=None,
                  rect=[] + sk2const.STUB_RECT,
@@ -713,8 +712,6 @@ class Circle(PrimitiveObject):
         self.initial_trafo = [] + self.trafo
         self.circle_type = circle_type
         self.style = style
-
-    def is_circle(self): return True
 
     def is_closed(self):
         return self.circle_type != sk2const.ARC_ARC

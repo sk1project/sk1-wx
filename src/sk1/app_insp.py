@@ -377,7 +377,7 @@ class AppInspector:
         return obj.is_rect
 
     def is_obj_circle(self, obj):
-        return obj.is_circle()
+        return obj.is_circle
 
     def is_obj_polygon(self, obj):
         return obj.is_polygon()
