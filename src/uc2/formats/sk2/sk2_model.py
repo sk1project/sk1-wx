@@ -43,6 +43,7 @@ class DocumentObject(TextModelObject):
     is_group = False
     is_tpgroup = False
     is_container = False
+    is_selectable = False
 
     def get_class_name(self):
         return CID_TO_NAME[self.cid]
@@ -77,9 +78,6 @@ class DocumentObject(TextModelObject):
             child.clear_color_cache()
 
     def is_closed(self):
-        return False
-
-    def is_selectable(self):
         return False
 
 
@@ -392,10 +390,9 @@ class SelectableObject(DocumentObject):
     style = [[], [], [], []]
 
     cache_bbox = []
+    is_selectable = True
 
     def to_curve(self): return None
-
-    def is_selectable(self): return True
 
 
 # ---------------Compound objects---------------------

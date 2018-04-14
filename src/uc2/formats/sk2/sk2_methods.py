@@ -374,7 +374,7 @@ class SK2_Methods:
     def count_bbox(self, objs):
         bbox = []
         for obj in objs:
-            if obj.is_selectable():
+            if obj.is_selectable:
                 bbox = libgeom.sum_bbox(bbox, obj.cache_bbox)
             elif obj.childs:
                 bbox = libgeom.sum_bbox(bbox, self.count_bbox(obj.childs))
