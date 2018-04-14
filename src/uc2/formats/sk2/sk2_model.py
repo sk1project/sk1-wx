@@ -32,6 +32,7 @@ class DocumentObject(TextModelObject):
     objects. Provides common object properties.
     """
     is_layer = False
+    is_guide = False
 
     def get_class_name(self):
         return CID_TO_NAME[self.cid]
@@ -64,9 +65,6 @@ class DocumentObject(TextModelObject):
     def clear_color_cache(self):
         for child in self.childs:
             child.clear_color_cache()
-
-    def is_guide(self):
-        return False
 
     def is_primitive(self):
         return False
@@ -391,6 +389,7 @@ class Guide(StructuralObject):
     cid = GUIDE
     orientation = uc2const.HORIZONTAL
     position = 0.0
+    is_guide = True
 
     def __init__(self, config, parent=None, pos=0.0,
                  orient=uc2const.HORIZONTAL):
@@ -400,8 +399,6 @@ class Guide(StructuralObject):
         self.position = pos
         self.orientation = orient
         self.childs = []
-
-    def is_guide(self): return True
 
 
 # ================Selectable Objects==================

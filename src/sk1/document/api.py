@@ -859,7 +859,7 @@ class PresenterAPI(AbstractAPI):
         guides = []
         guide_layer = self.methods.get_guide_layer()
         for child in guide_layer.childs:
-            if child.is_guide():
+            if child.is_guide:
                 guides.append(child)
         self.delete_guides(guides)
 

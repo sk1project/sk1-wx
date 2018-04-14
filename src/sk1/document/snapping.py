@@ -94,7 +94,7 @@ class SnapManager:
         if not self.methods.is_layer_visible(guide_layer):
             return
         for child in guide_layer.childs:
-            if child.is_guide():
+            if child.is_guide:
                 if child.orientation == uc2const.HORIZONTAL:
                     self.guides_grid[1].append(child.position)
                 else:
@@ -287,7 +287,7 @@ class SnapManager:
         if not self.methods.is_layer_visible(guide_layer):
             return
         for child in guide_layer.childs:
-            if child.is_guide():
+            if child.is_guide:
                 if child.orientation == orient and child.position == pos:
                     return child
         return None
