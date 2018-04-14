@@ -126,7 +126,7 @@ class ReportList(SimpleList):
         even = False
         i = 0
         cols = len(data[0])
-        subheader = bool(sum(isinstance(i, str) for i in data))
+        subheader = sum(isinstance(i, str) for i in data)
         for item in data[1:]:
             if isinstance(item, list):
                 list_item = [const.tr(label) for label in item]
