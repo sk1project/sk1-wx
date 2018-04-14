@@ -31,6 +31,7 @@ class DocumentObject(TextModelObject):
     Abstract parent class for all document 
     objects. Provides common object properties.
     """
+    is_layer = False
 
     def get_class_name(self):
         return CID_TO_NAME[self.cid]
@@ -63,9 +64,6 @@ class DocumentObject(TextModelObject):
     def clear_color_cache(self):
         for child in self.childs:
             child.clear_color_cache()
-
-    def is_layer(self):
-        return False
 
     def is_guide(self):
         return False
@@ -255,6 +253,7 @@ class Layer(StructuralObject):
     color = ''
     properties = []
     name = ''
+    is_layer = True
 
     def __init__(self, config, parent=None, name=''):
         self.cid = LAYER
@@ -275,9 +274,6 @@ class Layer(StructuralObject):
         self.style = [[], deepcopy(self.config.default_stroke), [], []]
         self.properties = [] + self.config.layer_propeties
         self.childs = []
-
-    def is_layer(self):
-        return True
 
     def resolve(self, name=''):
         return StructuralObject.resolve(self, '%s' % self.name)

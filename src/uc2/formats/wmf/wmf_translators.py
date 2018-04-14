@@ -824,7 +824,7 @@ class SK2_to_WMF_Translator(object):
         for obj in objs:
             if obj.is_primitive():
                 self.translate_primitive(obj)
-            elif obj.is_layer():
+            elif obj.is_layer:
                 if obj.properties[0]:
                     self.translate_group(obj)
             elif obj.is_pixmap():

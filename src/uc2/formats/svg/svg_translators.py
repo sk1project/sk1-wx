@@ -1154,7 +1154,7 @@ class SK2_to_SVG_Translator(object):
     def translate_objs(self, dest_parent, source_objs):
         self.ident_level += 1
         for source_obj in source_objs:
-            if source_obj.is_layer():
+            if source_obj.is_layer:
                 self.translate_layer(dest_parent, source_obj)
             elif source_obj.is_group():
                 self.translate_group(dest_parent, source_obj)
