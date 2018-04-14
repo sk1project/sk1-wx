@@ -111,7 +111,7 @@ class AbstractShapingPanel(wal.VPanel):
     def check_selection(self, sel):
         ret = True
         for obj in sel:
-            if not obj.is_primitive():
+            if not obj.is_primitive:
                 ret = False
         return ret
 
@@ -149,7 +149,7 @@ class AbstractShapingPanel(wal.VPanel):
             self._action(objs)
 
     def select_trim_target(self, selected):
-        if len(selected) == 1 and selected[0].is_primitive():
+        if len(selected) == 1 and selected[0].is_primitive:
             sel_obj = selected[0]
             objs = self.get_selection()
             if sel_obj in objs:

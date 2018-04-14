@@ -125,19 +125,27 @@ class ReportList(SimpleList):
     def set_data(self, data, alt_color=True):
         even = False
         i = 0
+        cols = len(data[0])
+        subheader = bool(sum(isinstance(i, str) for i in data))
         for item in data[1:]:
             if isinstance(item, list):
-                item = [const.tr(label) for label in item]
-            self.Append(item)
-            if alt_color:
-                list_item = self.GetItem(i)
-                if even:
+                list_item = [const.tr(label) for label in item]
+            elif isinstance(item, str):
+                list_item = [const.tr(item), ] + ['', ] * (cols - 1)
+            else:
+                continue
+            self.Append(list_item)
+            list_item = self.GetItem(i)
+            if subheader:
+                if isinstance(item, str):
                     list_item.SetBackgroundColour(self.even_color)
-                else:
-                    list_item.SetBackgroundColour(self.odd_color)
+                    self.SetItem(list_item)
+            elif alt_color:
+                color = self.even_color if even else self.odd_color
+                list_item.SetBackgroundColour(color)
                 self.SetItem(list_item)
                 even = not even
-                i += 1
+            i += 1
 
     def on_select(self, *args):
         index = self.GetFocusedItem()

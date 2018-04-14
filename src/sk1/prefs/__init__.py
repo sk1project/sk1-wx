@@ -111,16 +111,17 @@ class PrefsDialog(wal.OkCancelDialog):
 
     def on_select(self, plugin):
         if not self.current_plugin == plugin and plugin.leaf:
+            self.container.hide()
+            if not plugin.built:
+                plugin.build()
+            self.container.pack(plugin, fill=True, expand=True, padding_all=5)
             if self.current_plugin:
                 self.container.remove(self.current_plugin)
                 self.current_plugin.hide()
-            self.container.pack(plugin, fill=True, expand=True, padding_all=5)
             plugin.show()
-            if not plugin.built:
-                plugin.build()
             self.current_plugin = plugin
             self.container.layout()
-            plugin.refresh()
+            self.container.show()
 
     def get_plugin_by_pid(self, pid):
         ret = None

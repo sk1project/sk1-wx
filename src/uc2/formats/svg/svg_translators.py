@@ -1154,13 +1154,13 @@ class SK2_to_SVG_Translator(object):
     def translate_objs(self, dest_parent, source_objs):
         self.ident_level += 1
         for source_obj in source_objs:
-            if source_obj.is_layer():
+            if source_obj.is_layer:
                 self.translate_layer(dest_parent, source_obj)
-            elif source_obj.is_group():
+            elif source_obj.is_group:
                 self.translate_group(dest_parent, source_obj)
-            elif source_obj.is_pixmap():
+            elif source_obj.is_pixmap:
                 self.translate_pixmap(dest_parent, source_obj)
-            elif source_obj.is_primitive():
+            elif source_obj.is_primitive:
                 if source_obj.style[0] and source_obj.style[1] \
                         and source_obj.style[1][7]:
                     stroke_obj = source_obj.copy()
@@ -1185,7 +1185,7 @@ class SK2_to_SVG_Translator(object):
         self.append_obj(dest_parent, group)
 
     def translate_group(self, dest_parent, source_obj):
-        if source_obj.is_container():
+        if source_obj.is_container:
             clip = source_obj.childs[0]
             clip_id = self.make_clippath(clip)
 
@@ -1233,7 +1233,7 @@ class SK2_to_SVG_Translator(object):
 
     def translate_primitive(self, dest_parent, source_obj):
         curve = source_obj.to_curve()
-        if curve.is_group():
+        if curve.is_group:
             self.translate_group(dest_parent, curve)
             return
         curve.update()

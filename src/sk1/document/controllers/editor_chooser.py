@@ -32,15 +32,15 @@ class EditorChooser(AbstractController):
             self.selection.clear()
         else:
             obj = sel_objs[0]
-            if obj.is_curve():
+            if obj.is_curve:
                 self.canvas.set_mode(modes.BEZIER_EDITOR_MODE)
-            elif obj.is_rect():
+            elif obj.is_rect:
                 self.canvas.set_mode(modes.RECT_EDITOR_MODE)
-            elif obj.is_circle():
+            elif obj.is_circle:
                 self.canvas.set_mode(modes.ELLIPSE_EDITOR_MODE)
-            elif obj.is_polygon():
+            elif obj.is_polygon:
                 self.canvas.set_mode(modes.POLYGON_EDITOR_MODE)
-            elif obj.is_text():
+            elif obj.is_text:
                 self.canvas.set_mode(modes.TEXT_EDITOR_MODE)
             else:
                 self.selection.clear()
@@ -67,6 +67,6 @@ class EditorChooser(AbstractController):
 
     def do_action(self, event=None):
         objs = self.canvas.pick_at_point(self.end)
-        if objs and objs[0].is_primitive() and not objs[0].is_pixmap():
+        if objs and objs[0].is_primitive and not objs[0].is_pixmap:
             self.selection.set([objs[0], ])
             self.start_()

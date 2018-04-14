@@ -31,6 +31,19 @@ class DocumentObject(TextModelObject):
     Abstract parent class for all document 
     objects. Provides common object properties.
     """
+    is_layer = False
+    is_guide = False
+    is_primitive = False
+    is_curve = False
+    is_rect = False
+    is_pixmap = False
+    is_circle = False
+    is_polygon = False
+    is_text = False
+    is_group = False
+    is_tpgroup = False
+    is_container = False
+    is_selectable = False
 
     def get_class_name(self):
         return CID_TO_NAME[self.cid]
@@ -64,46 +77,7 @@ class DocumentObject(TextModelObject):
         for child in self.childs:
             child.clear_color_cache()
 
-    def is_layer(self):
-        return False
-
-    def is_guide(self):
-        return False
-
-    def is_primitive(self):
-        return False
-
-    def is_curve(self):
-        return False
-
-    def is_rect(self):
-        return False
-
-    def is_pixmap(self):
-        return False
-
-    def is_circle(self):
-        return False
-
-    def is_polygon(self):
-        return False
-
-    def is_text(self):
-        return False
-
     def is_closed(self):
-        return False
-
-    def is_group(self):
-        return False
-
-    def is_tpgroup(self):
-        return False
-
-    def is_container(self):
-        return False
-
-    def is_selectable(self):
         return False
 
 
@@ -255,6 +229,7 @@ class Layer(StructuralObject):
     color = ''
     properties = []
     name = ''
+    is_layer = True
 
     def __init__(self, config, parent=None, name=''):
         self.cid = LAYER
@@ -275,9 +250,6 @@ class Layer(StructuralObject):
         self.style = [[], deepcopy(self.config.default_stroke), [], []]
         self.properties = [] + self.config.layer_propeties
         self.childs = []
-
-    def is_layer(self):
-        return True
 
     def resolve(self, name=''):
         return StructuralObject.resolve(self, '%s' % self.name)
@@ -395,6 +367,7 @@ class Guide(StructuralObject):
     cid = GUIDE
     orientation = uc2const.HORIZONTAL
     position = 0.0
+    is_guide = True
 
     def __init__(self, config, parent=None, pos=0.0,
                  orient=uc2const.HORIZONTAL):
@@ -404,8 +377,6 @@ class Guide(StructuralObject):
         self.position = pos
         self.orientation = orient
         self.childs = []
-
-    def is_guide(self): return True
 
 
 # ================Selectable Objects==================
@@ -419,10 +390,9 @@ class SelectableObject(DocumentObject):
     style = [[], [], [], []]
 
     cache_bbox = []
+    is_selectable = True
 
     def to_curve(self): return None
-
-    def is_selectable(self): return True
 
 
 # ---------------Compound objects---------------------
@@ -434,6 +404,7 @@ class Group(SelectableObject):
 
     cid = GROUP
     childs = []
+    is_group = True
 
     def __init__(self, config, parent=None, childs=None):
         childs = childs or []
@@ -442,9 +413,6 @@ class Group(SelectableObject):
         self.config = config
         self.parent = parent
         self.childs += childs
-
-    def is_group(self):
-        return True
 
     def apply_trafo(self, trafo):
         for child in self.childs:
@@ -492,6 +460,7 @@ class TP_Group(Group):
     cid = TP_GROUP
     childs = []
     childs_data = {}
+    is_tpgroup = True
 
     def __init__(self, config, parent=None, childs=None, data=None):
         childs = childs or []
@@ -501,8 +470,6 @@ class TP_Group(Group):
         self.childs_data = [None, ]
         if data:
             self.childs_data.append(data)
-
-    def is_tpgroup(self): return True
 
     def set_text_on_path(self, path_obj, text_obj, data):
         libgeom.set_text_on_path(path_obj, text_obj, data)
@@ -518,6 +485,7 @@ class Container(Group):
 
     cid = CONTAINER
     cache_container = None
+    is_container = True
 
     def __init__(self, config, parent=None, childs=None):
         childs = childs or []
@@ -537,8 +505,6 @@ class Container(Group):
         self.cache_container = self.childs[0]
         self.cache_bbox = deepcopy(self.cache_container.cache_bbox)
 
-    def is_container(self): return True
-
 
 class PrimitiveObject(SelectableObject):
     """
@@ -556,6 +522,7 @@ class PrimitiveObject(SelectableObject):
     cache_pattern_img = None
     cache_ps_pattern_img = None
     cache_gray_pattern_img = None
+    is_primitive = True
 
     def get_initial_paths(self):
         pass
@@ -565,12 +532,9 @@ class PrimitiveObject(SelectableObject):
             del self.cache_cpath
         SelectableObject.destroy(self)
 
-    def is_primitive(self):
-        return True
-
     def to_curve(self):
         curve = Curve(self.config)
-        curve.paths = deepcopy(self.paths if self.is_curve()
+        curve.paths = deepcopy(self.paths if self.is_curve
                                else self.cache_paths)
         curve.trafo = [] + self.trafo
         curve.fill_trafo = [] + self.fill_trafo
@@ -631,6 +595,7 @@ class Rectangle(PrimitiveObject):
     width = 1.0
     height = 1.0
     corners = []
+    is_rect = True
 
     def __init__(self, config, parent=None,
                  rect=[] + sk2const.STUB_RECT,
@@ -653,9 +618,6 @@ class Rectangle(PrimitiveObject):
         self.start = rect[0:2]
         self.width = rect[2]
         self.height = rect[3]
-
-    def is_rect(self):
-        return True
 
     def is_closed(self):
         return True
@@ -715,6 +677,7 @@ class Circle(PrimitiveObject):
     angle2 = 0.0
     circle_type = sk2const.ARC_CHORD
     initial_trafo = sk2const.NORMAL_TRAFO
+    is_circle = True
 
     def __init__(self, config, parent=None,
                  rect=[] + sk2const.STUB_RECT,
@@ -732,8 +695,6 @@ class Circle(PrimitiveObject):
         self.initial_trafo = [] + self.trafo
         self.circle_type = circle_type
         self.style = style
-
-    def is_circle(self): return True
 
     def is_closed(self):
         return self.circle_type != sk2const.ARC_ARC
@@ -765,6 +726,7 @@ class Polygon(PrimitiveObject):
     coef1 = 1.0
     coef2 = 1.0
     initial_trafo = sk2const.NORMAL_TRAFO
+    is_polygon = True
 
     def __init__(self, config, parent=None,
                  rect=[] + sk2const.STUB_RECT,
@@ -788,9 +750,6 @@ class Polygon(PrimitiveObject):
         self.trafo = [rect[2], 0.0, 0.0, rect[3], rect[0], rect[1]]
         self.initial_trafo = [] + self.trafo
         self.style = style
-
-    def is_polygon(self):
-        return True
 
     def is_closed(self):
         return True
@@ -845,6 +804,7 @@ class Curve(PrimitiveObject):
 
     cid = CURVE
     paths = []
+    is_curve = True
 
     def __init__(self, config, parent=None,
                  paths=[] + sk2const.STUB_PATHS,
@@ -859,9 +819,6 @@ class Curve(PrimitiveObject):
 
     def get_initial_paths(self):
         return self.paths
-
-    def is_curve(self):
-        return True
 
     def is_closed(self):
         for path in self.paths:
@@ -896,6 +853,7 @@ class Text(PrimitiveObject):
     cache_layout_data = ()
     cache_layout_bbox = []
     cache_clusters = []
+    is_text = True
 
     def __init__(self, config, parent=None,
                  point=None,
@@ -919,11 +877,8 @@ class Text(PrimitiveObject):
         return b64decode(self.text).decode('utf-8')
 
     def set_text(self, text):
-        tex = text.encode('utf-8') if isinstance(text, unicode) else text
+        text = text.encode('utf-8') if isinstance(text, unicode) else text
         self.text = b64encode(text)
-
-    def is_text(self):
-        return True
 
     def is_closed(self):
         return True
@@ -1089,6 +1044,7 @@ class Pixmap(PrimitiveObject):
     cache_cdata = None
     cache_ps_cdata = None
     cache_gray_cdata = None
+    is_pixmap = True
 
     def __init__(self, config, parent=None,
                  bitmap='',
@@ -1104,8 +1060,6 @@ class Pixmap(PrimitiveObject):
         self.size = size
         self.trafo = trafo
         self.style = style
-
-    def is_pixmap(self): return True
 
     def get_size(self):
         width = float(self.size[0]) * uc2const.px_to_pt

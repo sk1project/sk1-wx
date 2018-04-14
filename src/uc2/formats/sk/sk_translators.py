@@ -468,7 +468,7 @@ class SK2_to_SK_Translator(object):
                                         sk2_model.POLYGON):
                     source_obj = source_obj.to_curve()
                     dest_obj = self.translate_curve(dest_parent, source_obj)
-                elif source_obj.is_text():
+                elif source_obj.is_text:
                     source_obj = source_obj.to_curve()
                     objs = self.translate_objs(dest_parent, [source_obj, ])
                     if objs:

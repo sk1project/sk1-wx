@@ -344,9 +344,11 @@ class FillTab(wal.VPanel):
     def activate(self, fill_style):
         self.orig_fill = fill_style
         if not self.built:
+            self.hide(update=False)
             self.build()
             self.built = True
             self.layout()
+            self.show()
 
     def get_result(self):
         return deepcopy(self.orig_fill)
@@ -414,11 +416,11 @@ class SolidFill(FillTab):
             self.remove(self.active_panel)
         self.active_panel = self.panels[mode]
         self.pack(self.active_panel, fill=True, expand=True, padding_all=5)
-        self.active_panel.show()
         self.active_panel.activate(self.cms, self.orig_fill, self.new_color)
         self.rule_keeper.set_enable(not mode == EMPTY_MODE)
         if self.callback:
             self.callback()
+        self.active_panel.show()
 
     def get_result(self):
         clr = self.active_panel.get_color()

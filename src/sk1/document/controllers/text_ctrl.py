@@ -379,7 +379,7 @@ class TextEditController(AbstractController):
                     index = parent.childs.index(self.target)
                     self.api.delete_object(self.target, parent, index)
                 objs = self.canvas.pick_at_point(point)
-                if objs and objs[0].is_text():
+                if objs and objs[0].is_text:
                     self.target = objs[0]
                 else:
                     doc_point = self.canvas.win_to_doc(point)

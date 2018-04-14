@@ -127,7 +127,7 @@ class TextStylePlugin(CtxPlugin):
             return
         doc = self.app.current_doc
         sel = doc.selection.objs
-        if len(sel) == 1 and sel[0].is_text():
+        if len(sel) == 1 and sel[0].is_text:
             self.styles_combo.hide(True)
             self.target = sel[0]
             doc = self.app.current_doc

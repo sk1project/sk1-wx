@@ -143,20 +143,20 @@ class TextOnPathPlugin(RsPlugin):
         self.other_side.set_enable(state)
 
     def is_path(self, obj):
-        if obj.is_curve() and not len(obj.paths) == 1:
+        if obj.is_curve and not len(obj.paths) == 1:
             return False
-        return obj.is_primitive() and not obj.is_text() and not obj.is_pixmap()
+        return obj.is_primitive and not obj.is_text and not obj.is_pixmap
 
     def check_selection(self):
         doc = self.app.current_doc
-        if len(doc.selection.objs) == 1 and doc.selection.objs[0].is_tpgroup():
+        if len(doc.selection.objs) == 1 and doc.selection.objs[0].is_tpgroup:
             return 1
         elif len(doc.selection.objs) == 2:
             obj1 = doc.selection.objs[0]
             obj2 = doc.selection.objs[1]
-            if self.is_path(obj1) and obj2.is_text():
+            if self.is_path(obj1) and obj2.is_text:
                 return 2
-            elif self.is_path(obj2) and obj1.is_text():
+            elif self.is_path(obj2) and obj1.is_text:
                 return 2
         return False
 
@@ -170,7 +170,7 @@ class TextOnPathPlugin(RsPlugin):
 
     def update_from_tpgroup(self):
         doc = self.app.current_doc
-        if len(doc.selection.objs) == 1 and doc.selection.objs[0].is_tpgroup():
+        if len(doc.selection.objs) == 1 and doc.selection.objs[0].is_tpgroup:
             tpgroup = doc.selection.objs[0]
             data = tpgroup.childs_data[1]
             self.base_point.set_value(data[0] * 100.0)
@@ -198,7 +198,7 @@ class TextOnPathPlugin(RsPlugin):
         if self.check_selection() == 2:
             path = doc.selection.objs[0]
             text_obj = doc.selection.objs[1]
-            if self.is_path(text_obj) and path.is_text():
+            if self.is_path(text_obj) and path.is_text:
                 path, text_obj = text_obj, path
             doc.api.place_text_on_path(path, text_obj, self.get_data())
         elif self.check_selection() == 1:

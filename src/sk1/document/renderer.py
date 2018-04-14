@@ -181,7 +181,7 @@ class PDRenderer(CairoRenderer):
         if not methods.is_layer_visible(guide_layer):
             return
         for child in guide_layer.childs:
-            if child.is_guide():
+            if child.is_guide:
                 guides.append(child)
         if guides:
             self.ctx.set_matrix(self.direct_matrix)

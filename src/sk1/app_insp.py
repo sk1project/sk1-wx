@@ -368,25 +368,25 @@ class AppInspector:
         return False
 
     def is_obj_primitive(self, obj):
-        return obj.is_primitive()
+        return obj.is_primitive
 
     def is_obj_curve(self, obj):
-        return obj.is_curve()
+        return obj.is_curve
 
     def is_obj_rect(self, obj):
-        return obj.is_rect()
+        return obj.is_rect
 
     def is_obj_circle(self, obj):
-        return obj.is_circle()
+        return obj.is_circle
 
     def is_obj_polygon(self, obj):
-        return obj.is_polygon()
+        return obj.is_polygon
 
     def is_obj_text(self, obj):
-        return obj.is_text()
+        return obj.is_text
 
     def is_obj_pixmap(self, obj):
-        return obj.is_pixmap()
+        return obj.is_pixmap
 
     def can_clear_trafo(self, doc=None):
         doc = doc or self.app.current_doc
@@ -409,7 +409,7 @@ class AppInspector:
             return False
         elif self.is_selection(doc):
             objs = doc.selection.objs
-            if len(objs) == 1 and objs[0].is_container():
+            if len(objs) == 1 and objs[0].is_container:
                 return True
         return False
 
@@ -419,7 +419,7 @@ class AppInspector:
             return False
         elif self.is_selection(doc):
             objs = doc.selection.objs
-            if len(objs) == 1 and objs[0].is_pixmap():
+            if len(objs) == 1 and objs[0].is_pixmap:
                 return True
         return False
 
@@ -429,7 +429,7 @@ class AppInspector:
             return False
         elif self.is_selection(doc):
             objs = doc.selection.objs
-            if len(objs) == 1 and objs[0].is_pixmap():
+            if len(objs) == 1 and objs[0].is_pixmap:
                 if objs[0].alpha_channel:
                     return True
         return False
@@ -440,7 +440,7 @@ class AppInspector:
             return False
         elif self.is_selection(doc):
             objs = doc.selection.objs
-            if len(objs) == 1 and objs[0].is_pixmap():
+            if len(objs) == 1 and objs[0].is_pixmap:
                 if not objs[0].colorspace == uc2const.IMAGE_CMYK:
                     return True
         return False
@@ -451,7 +451,7 @@ class AppInspector:
             return False
         elif self.is_selection(doc):
             objs = doc.selection.objs
-            if len(objs) == 1 and objs[0].is_pixmap():
+            if len(objs) == 1 and objs[0].is_pixmap:
                 if not objs[0].colorspace == uc2const.IMAGE_RGB:
                     return True
         return False
@@ -462,7 +462,7 @@ class AppInspector:
             return False
         elif self.is_selection(doc):
             objs = doc.selection.objs
-            if len(objs) == 1 and objs[0].is_pixmap():
+            if len(objs) == 1 and objs[0].is_pixmap:
                 if not objs[0].colorspace == uc2const.IMAGE_LAB:
                     return True
         return False
@@ -473,7 +473,7 @@ class AppInspector:
             return False
         elif self.is_selection(doc):
             objs = doc.selection.objs
-            if len(objs) == 1 and objs[0].is_pixmap():
+            if len(objs) == 1 and objs[0].is_pixmap:
                 if not objs[0].colorspace == uc2const.IMAGE_GRAY:
                     return True
         return False
@@ -484,7 +484,7 @@ class AppInspector:
             return False
         elif self.is_selection(doc):
             objs = doc.selection.objs
-            if len(objs) == 1 and objs[0].is_pixmap():
+            if len(objs) == 1 and objs[0].is_pixmap:
                 if not objs[0].colorspace == uc2const.IMAGE_MONO:
                     return True
         return False
@@ -499,7 +499,7 @@ class AppInspector:
             if len(objs) < 2:
                 return False
             for obj in objs:
-                if not obj.is_primitive() or obj.is_pixmap():
+                if not obj.is_primitive or obj.is_pixmap:
                     result = False
                     break
             return result
@@ -513,7 +513,7 @@ class AppInspector:
         elif self.is_selection(doc):
             result = False
             objs = doc.selection.objs
-            if len(objs) == 1 and objs[0].is_curve():
+            if len(objs) == 1 and objs[0].is_curve:
                 if len(objs[0].paths) > 1:
                     result = True
             return result
@@ -527,8 +527,7 @@ class AppInspector:
         elif self.is_selection(doc):
             result = False
             for obj in doc.selection.objs:
-                if obj.is_primitive() and not obj.is_curve() \
-                        and not obj.is_pixmap():
+                if obj.is_primitive and not obj.is_curve and not obj.is_pixmap:
                     result = True
                     break
             return result
@@ -542,7 +541,7 @@ class AppInspector:
         elif self.is_selection(doc):
             result = False
             for obj in doc.selection.objs:
-                if obj.is_primitive() and not obj.is_pixmap():
+                if obj.is_primitive and not obj.is_pixmap:
                     if obj.style[1] and obj.style[1][1]:
                         result = True
                         break
@@ -568,7 +567,7 @@ class AppInspector:
             return False
         elif self.is_selection(doc) and len(doc.selection.objs) == 1:
             result = False
-            if doc.selection.objs[0].is_group():
+            if doc.selection.objs[0].is_group:
                 result = True
             return result
         else:
@@ -581,7 +580,7 @@ class AppInspector:
         elif self.is_selection(doc):
             result = False
             for obj in doc.selection.objs:
-                if obj.is_group():
+                if obj.is_group:
                     result = True
                     break
             return result
@@ -620,7 +619,7 @@ class AppInspector:
             objs = doc.selection.objs
             if len(objs) == 1:
                 obj = objs[0]
-                if obj.is_text() and obj.trafos:
+                if obj.is_text and obj.trafos:
                     return True
         elif doc.canvas.mode in (modes.TEXT_EDIT_MODE, modes.TEXT_EDITOR_MODE):
             if doc.canvas.controller.target.trafos:
@@ -635,7 +634,7 @@ class AppInspector:
             objs = doc.selection.objs
             if len(objs) == 1:
                 obj = objs[0]
-                if obj.is_text() and obj.markup:
+                if obj.is_text and obj.markup:
                     return True
         elif doc.canvas.mode in (modes.TEXT_EDIT_MODE, modes.TEXT_EDITOR_MODE):
             if doc.canvas.controller.target.markup:

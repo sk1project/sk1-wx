@@ -822,12 +822,12 @@ class SK2_to_WMF_Translator(object):
 
     def translate_objs(self, objs):
         for obj in objs:
-            if obj.is_primitive():
+            if obj.is_primitive:
                 self.translate_primitive(obj)
-            elif obj.is_layer():
+            elif obj.is_layer:
                 if obj.properties[0]:
                     self.translate_group(obj)
-            elif obj.is_pixmap():
+            elif obj.is_pixmap:
                 self.translate_pixmap(obj)
             else:
                 self.translate_group(obj)
@@ -837,7 +837,7 @@ class SK2_to_WMF_Translator(object):
 
     def translate_primitive(self, obj):
         curve = obj.to_curve()
-        if curve.is_group():
+        if curve.is_group:
             self.translate_group(curve)
             return
         curve.update()

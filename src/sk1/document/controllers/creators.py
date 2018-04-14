@@ -130,7 +130,7 @@ class TextCreator(AbstractCreator):
             self.selection.clear()
         else:
             obj = sel_objs[0]
-            if obj.is_text():
+            if obj.is_text:
                 self.canvas.set_mode(modes.TEXT_EDIT_MODE)
             else:
                 self.selection.clear()
@@ -141,7 +141,7 @@ class TextCreator(AbstractCreator):
     def do_action(self, event):
         if self.end_doc:
             objs = self.canvas.pick_at_point(self.end)
-            if objs and objs[0].is_text():
+            if objs and objs[0].is_text:
                 self.selection.set([objs[0], ])
             else:
                 self.api.create_text(self.end_doc)

@@ -228,7 +228,7 @@ class AbstractAPI:
         for obj in objs:
             style = deepcopy(obj.style)
             obj.clear_color_cache()
-            if obj.is_pixmap():
+            if obj.is_pixmap:
                 if color:
                     style[3][0] = deepcopy(color)
                 else:
@@ -251,7 +251,7 @@ class AbstractAPI:
 
     def _set_objs_fill_style(self, objs, fill_style):
         for obj in objs:
-            if not obj.is_pixmap():
+            if not obj.is_pixmap:
                 style = deepcopy(obj.style)
                 style[0] = deepcopy(fill_style)
                 obj.style = style
@@ -304,7 +304,7 @@ class AbstractAPI:
         after = []
         for obj in objs:
             before.append(obj.get_trafo_snapshot())
-            if obj.is_circle() or obj.is_polygon() or obj.is_text():
+            if obj.is_circle or obj.is_polygon or obj.is_text:
                 obj.trafo = [] + obj.initial_trafo
             else:
                 obj.trafo = [] + normal_trafo
@@ -325,7 +325,7 @@ class AbstractAPI:
         for obj in objs:
             style = deepcopy(obj.style)
             obj.clear_color_cache()
-            if obj.is_pixmap():
+            if obj.is_pixmap:
                 if color:
                     style[3][1] = deepcopy(color)
                 else:
@@ -346,7 +346,7 @@ class AbstractAPI:
 
     def _set_objs_stroke_style(self, objs, stroke_style):
         for obj in objs:
-            if not obj.is_pixmap():
+            if not obj.is_pixmap:
                 style = deepcopy(obj.style)
                 style[1] = deepcopy(stroke_style)
                 obj.style = style
@@ -859,7 +859,7 @@ class PresenterAPI(AbstractAPI):
         guides = []
         guide_layer = self.methods.get_guide_layer()
         for child in guide_layer.childs:
-            if child.is_guide():
+            if child.is_guide:
                 guides.append(child)
         self.delete_guides(guides)
 
@@ -1105,7 +1105,7 @@ class PresenterAPI(AbstractAPI):
             objs = [] + self.selection.objs
             cleared_objs = []
             for obj in objs:
-                if obj.is_primitive():
+                if obj.is_primitive:
                     if not obj.trafo == normal_trafo:
                         cleared_objs.append(obj)
             if cleared_objs:
@@ -1164,7 +1164,7 @@ class PresenterAPI(AbstractAPI):
             sel_before = [] + self.selection.objs
 
             for obj in objs:
-                if obj.is_primitive() and not obj.is_curve():
+                if obj.is_primitive and not obj.is_curve:
                     curve = obj.to_curve()
                     if curve is not None:
                         parent = obj.parent
@@ -1212,8 +1212,8 @@ class PresenterAPI(AbstractAPI):
     def _get_primitive_objs(self, objs, exclude_pixmap=False):
         ret = []
         for obj in objs:
-            if obj.is_primitive():
-                if exclude_pixmap and obj.is_pixmap():
+            if obj.is_primitive:
+                if exclude_pixmap and obj.is_pixmap:
                     continue
                 ret.append(obj)
             else:
@@ -1404,7 +1404,7 @@ class PresenterAPI(AbstractAPI):
 
     def _ungroup_tree(self, group, objs_list, parent_list):
         for obj in group.childs:
-            if not obj.is_group():
+            if not obj.is_group:
                 objs_list += [obj]
                 parent_list += [[obj, obj.parent]]
             else:
@@ -1420,7 +1420,7 @@ class PresenterAPI(AbstractAPI):
             before = self._get_layers_snapshot()
 
             for obj in self.selection.objs:
-                if obj.is_group():
+                if obj.is_group:
                     objs_list = []
                     self._ungroup_tree(obj, objs_list, parent_list_before)
                     index = obj.parent.childs.index(obj)
@@ -1695,7 +1695,7 @@ class PresenterAPI(AbstractAPI):
             sel_before = [] + sel
 
             for obj in objs:
-                if obj.is_primitive() and obj.is_curve():
+                if obj.is_primitive and obj.is_curve:
                     curve = obj.copy()
                     curve.paths = libgeom.flat_paths(curve.paths)
                     parent = obj.parent

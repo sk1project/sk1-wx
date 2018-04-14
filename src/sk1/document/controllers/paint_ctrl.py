@@ -63,7 +63,7 @@ class PolyLineCreator(AbstractCreator):
         self.init_data()
         self.init_timer()
         sel_objs = self.selection.objs
-        if len(sel_objs) == 1 and sel_objs[0].is_curve():
+        if len(sel_objs) == 1 and sel_objs[0].is_curve:
             if self.obj is None:
                 self.obj = sel_objs[0]
                 self.update_from_obj()

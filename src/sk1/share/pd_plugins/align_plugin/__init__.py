@@ -472,7 +472,7 @@ class FlatteringPanel(wal.LabeledPanel):
         if not self.app.insp.is_selection():
             return
         for obj in self.app.current_doc.selection.objs:
-            if not obj.is_curve():
+            if not obj.is_curve:
                 return
         self.apply_btn.set_enable(True)
 

@@ -121,11 +121,11 @@ class CairoRenderer:
                 self.render_object(ctx, obj)
 
     def render_object(self, ctx, obj):
-        if obj.is_primitive():
+        if obj.is_primitive:
             self.render_primitives(ctx, obj)
-        elif obj.is_container():
+        elif obj.is_container:
             self.render_container(ctx, obj)
-        elif obj.is_group():
+        elif obj.is_group:
             for obj in obj.childs:
                 self.render_object(ctx, obj)
         else:
@@ -199,10 +199,10 @@ class CairoRenderer:
     def render_primitives(self, ctx, obj):
         if obj.cache_cpath is None:
             obj.update()
-        if obj.is_pixmap():
+        if obj.is_pixmap:
             self.render_image(ctx, obj)
             return
-        if obj.is_text():
+        if obj.is_text:
             if self.contour_flag:
                 self.process_stroke(ctx, None, self.stroke_style)
                 for item in obj.cache_cpath:
