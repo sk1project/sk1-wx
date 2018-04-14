@@ -149,7 +149,7 @@ class TextOnPathPlugin(RsPlugin):
 
     def check_selection(self):
         doc = self.app.current_doc
-        if len(doc.selection.objs) == 1 and doc.selection.objs[0].is_tpgroup():
+        if len(doc.selection.objs) == 1 and doc.selection.objs[0].is_tpgroup:
             return 1
         elif len(doc.selection.objs) == 2:
             obj1 = doc.selection.objs[0]
@@ -170,7 +170,7 @@ class TextOnPathPlugin(RsPlugin):
 
     def update_from_tpgroup(self):
         doc = self.app.current_doc
-        if len(doc.selection.objs) == 1 and doc.selection.objs[0].is_tpgroup():
+        if len(doc.selection.objs) == 1 and doc.selection.objs[0].is_tpgroup:
             tpgroup = doc.selection.objs[0]
             data = tpgroup.childs_data[1]
             self.base_point.set_value(data[0] * 100.0)

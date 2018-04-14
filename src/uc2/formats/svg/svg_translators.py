@@ -1156,7 +1156,7 @@ class SK2_to_SVG_Translator(object):
         for source_obj in source_objs:
             if source_obj.is_layer:
                 self.translate_layer(dest_parent, source_obj)
-            elif source_obj.is_group():
+            elif source_obj.is_group:
                 self.translate_group(dest_parent, source_obj)
             elif source_obj.is_pixmap:
                 self.translate_pixmap(dest_parent, source_obj)
@@ -1233,7 +1233,7 @@ class SK2_to_SVG_Translator(object):
 
     def translate_primitive(self, dest_parent, source_obj):
         curve = source_obj.to_curve()
-        if curve.is_group():
+        if curve.is_group:
             self.translate_group(dest_parent, curve)
             return
         curve.update()

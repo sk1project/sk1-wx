@@ -125,7 +125,7 @@ class CairoRenderer:
             self.render_primitives(ctx, obj)
         elif obj.is_container():
             self.render_container(ctx, obj)
-        elif obj.is_group():
+        elif obj.is_group:
             for obj in obj.childs:
                 self.render_object(ctx, obj)
         else:

@@ -567,7 +567,7 @@ class AppInspector:
             return False
         elif self.is_selection(doc) and len(doc.selection.objs) == 1:
             result = False
-            if doc.selection.objs[0].is_group():
+            if doc.selection.objs[0].is_group:
                 result = True
             return result
         else:
@@ -580,7 +580,7 @@ class AppInspector:
         elif self.is_selection(doc):
             result = False
             for obj in doc.selection.objs:
-                if obj.is_group():
+                if obj.is_group:
                     result = True
                     break
             return result

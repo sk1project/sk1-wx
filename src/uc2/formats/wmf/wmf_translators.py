@@ -837,7 +837,7 @@ class SK2_to_WMF_Translator(object):
 
     def translate_primitive(self, obj):
         curve = obj.to_curve()
-        if curve.is_group():
+        if curve.is_group:
             self.translate_group(curve)
             return
         curve.update()

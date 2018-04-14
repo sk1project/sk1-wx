@@ -173,7 +173,7 @@ class TextOnCirclePlugin(RsPlugin):
     def update_from_tpgroup(self):
         doc = self.app.current_doc
         if len(doc.selection.objs) == 1 and \
-                doc.selection.objs[0].is_tpgroup() and \
+                doc.selection.objs[0].is_tpgroup and \
                 doc.selection.objs[0].childs[0].is_circle:
             tpgroup = doc.selection.objs[0]
             data = tpgroup.childs_data[1]
@@ -192,7 +192,7 @@ class TextOnCirclePlugin(RsPlugin):
     def check_selection(self):
         doc = self.app.current_doc
         if len(doc.selection.objs) == 1 and \
-                doc.selection.objs[0].is_tpgroup() and \
+                doc.selection.objs[0].is_tpgroup and \
                 doc.selection.objs[0].childs[0].is_circle:
             return 1
         elif len(doc.selection.objs) == 2:

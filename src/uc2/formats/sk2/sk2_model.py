@@ -40,6 +40,8 @@ class DocumentObject(TextModelObject):
     is_circle = False
     is_polygon = False
     is_text = False
+    is_group = False
+    is_tpgroup = False
 
     def get_class_name(self):
         return CID_TO_NAME[self.cid]
@@ -74,12 +76,6 @@ class DocumentObject(TextModelObject):
             child.clear_color_cache()
 
     def is_closed(self):
-        return False
-
-    def is_group(self):
-        return False
-
-    def is_tpgroup(self):
         return False
 
     def is_container(self):
@@ -413,6 +409,7 @@ class Group(SelectableObject):
 
     cid = GROUP
     childs = []
+    is_group = True
 
     def __init__(self, config, parent=None, childs=None):
         childs = childs or []
@@ -421,9 +418,6 @@ class Group(SelectableObject):
         self.config = config
         self.parent = parent
         self.childs += childs
-
-    def is_group(self):
-        return True
 
     def apply_trafo(self, trafo):
         for child in self.childs:
@@ -471,6 +465,7 @@ class TP_Group(Group):
     cid = TP_GROUP
     childs = []
     childs_data = {}
+    is_tpgroup = True
 
     def __init__(self, config, parent=None, childs=None, data=None):
         childs = childs or []
@@ -480,8 +475,6 @@ class TP_Group(Group):
         self.childs_data = [None, ]
         if data:
             self.childs_data.append(data)
-
-    def is_tpgroup(self): return True
 
     def set_text_on_path(self, path_obj, text_obj, data):
         libgeom.set_text_on_path(path_obj, text_obj, data)

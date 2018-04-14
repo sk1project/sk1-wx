@@ -1404,7 +1404,7 @@ class PresenterAPI(AbstractAPI):
 
     def _ungroup_tree(self, group, objs_list, parent_list):
         for obj in group.childs:
-            if not obj.is_group():
+            if not obj.is_group:
                 objs_list += [obj]
                 parent_list += [[obj, obj.parent]]
             else:
@@ -1420,7 +1420,7 @@ class PresenterAPI(AbstractAPI):
             before = self._get_layers_snapshot()
 
             for obj in self.selection.objs:
-                if obj.is_group():
+                if obj.is_group:
                     objs_list = []
                     self._ungroup_tree(obj, objs_list, parent_list_before)
                     index = obj.parent.childs.index(obj)
