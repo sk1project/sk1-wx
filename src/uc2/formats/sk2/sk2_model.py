@@ -42,6 +42,7 @@ class DocumentObject(TextModelObject):
     is_text = False
     is_group = False
     is_tpgroup = False
+    is_container = False
 
     def get_class_name(self):
         return CID_TO_NAME[self.cid]
@@ -76,9 +77,6 @@ class DocumentObject(TextModelObject):
             child.clear_color_cache()
 
     def is_closed(self):
-        return False
-
-    def is_container(self):
         return False
 
     def is_selectable(self):
@@ -490,6 +488,7 @@ class Container(Group):
 
     cid = CONTAINER
     cache_container = None
+    is_container = True
 
     def __init__(self, config, parent=None, childs=None):
         childs = childs or []
@@ -508,8 +507,6 @@ class Container(Group):
     def update_bbox(self):
         self.cache_container = self.childs[0]
         self.cache_bbox = deepcopy(self.cache_container.cache_bbox)
-
-    def is_container(self): return True
 
 
 class PrimitiveObject(SelectableObject):

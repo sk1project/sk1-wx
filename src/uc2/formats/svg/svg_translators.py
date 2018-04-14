@@ -1185,7 +1185,7 @@ class SK2_to_SVG_Translator(object):
         self.append_obj(dest_parent, group)
 
     def translate_group(self, dest_parent, source_obj):
-        if source_obj.is_container():
+        if source_obj.is_container:
             clip = source_obj.childs[0]
             clip_id = self.make_clippath(clip)
 

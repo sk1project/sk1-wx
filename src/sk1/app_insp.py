@@ -409,7 +409,7 @@ class AppInspector:
             return False
         elif self.is_selection(doc):
             objs = doc.selection.objs
-            if len(objs) == 1 and objs[0].is_container():
+            if len(objs) == 1 and objs[0].is_container:
                 return True
         return False
 

@@ -140,7 +140,7 @@ class PDFGenerator(object):
                     self.draw_curve(curve_obj)
                 else:
                     self.render(curve_obj.childs)
-            elif obj.is_container():
+            elif obj.is_container:
                 self.draw_container(obj)
             else:
                 self.render(obj.childs)

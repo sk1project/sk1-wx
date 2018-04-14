@@ -123,7 +123,7 @@ class CairoRenderer:
     def render_object(self, ctx, obj):
         if obj.is_primitive:
             self.render_primitives(ctx, obj)
-        elif obj.is_container():
+        elif obj.is_container:
             self.render_container(ctx, obj)
         elif obj.is_group:
             for obj in obj.childs:
