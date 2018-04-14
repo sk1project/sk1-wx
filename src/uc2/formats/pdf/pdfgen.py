@@ -134,9 +134,9 @@ class PDFGenerator(object):
         for obj in objs:
             if obj.is_pixmap():
                 self.draw_pixmap(obj)
-            elif obj.is_primitive():
+            elif obj.is_primitive:
                 curve_obj = obj.to_curve()
-                if curve_obj.is_primitive():
+                if curve_obj.is_primitive:
                     self.draw_curve(curve_obj)
                 else:
                     self.render(curve_obj.childs)

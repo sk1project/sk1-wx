@@ -145,7 +145,7 @@ class TextOnPathPlugin(RsPlugin):
     def is_path(self, obj):
         if obj.is_curve() and not len(obj.paths) == 1:
             return False
-        return obj.is_primitive() and not obj.is_text() and not obj.is_pixmap()
+        return obj.is_primitive and not obj.is_text() and not obj.is_pixmap()
 
     def check_selection(self):
         doc = self.app.current_doc

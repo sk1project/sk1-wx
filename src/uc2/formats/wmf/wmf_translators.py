@@ -822,7 +822,7 @@ class SK2_to_WMF_Translator(object):
 
     def translate_objs(self, objs):
         for obj in objs:
-            if obj.is_primitive():
+            if obj.is_primitive:
                 self.translate_primitive(obj)
             elif obj.is_layer:
                 if obj.properties[0]:

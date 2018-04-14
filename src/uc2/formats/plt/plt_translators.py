@@ -62,9 +62,9 @@ class SK2_to_PLT_Translator(object):
 
     def recursive_processing(self, objs):
         for obj in objs:
-            if obj.is_primitive():
+            if obj.is_primitive:
                 curve = obj.to_curve()
-                if not curve.is_primitive():
+                if not curve.is_primitive:
                     self.recursive_processing(curve.childs)
                 else:
                     self.obj_stack.append(curve)

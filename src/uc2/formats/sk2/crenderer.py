@@ -121,7 +121,7 @@ class CairoRenderer:
                 self.render_object(ctx, obj)
 
     def render_object(self, ctx, obj):
-        if obj.is_primitive():
+        if obj.is_primitive:
             self.render_primitives(ctx, obj)
         elif obj.is_container():
             self.render_container(ctx, obj)

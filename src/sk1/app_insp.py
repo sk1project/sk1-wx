@@ -368,7 +368,7 @@ class AppInspector:
         return False
 
     def is_obj_primitive(self, obj):
-        return obj.is_primitive()
+        return obj.is_primitive
 
     def is_obj_curve(self, obj):
         return obj.is_curve()
@@ -499,7 +499,7 @@ class AppInspector:
             if len(objs) < 2:
                 return False
             for obj in objs:
-                if not obj.is_primitive() or obj.is_pixmap():
+                if not obj.is_primitive or obj.is_pixmap():
                     result = False
                     break
             return result
@@ -527,7 +527,7 @@ class AppInspector:
         elif self.is_selection(doc):
             result = False
             for obj in doc.selection.objs:
-                if obj.is_primitive() and not obj.is_curve() \
+                if obj.is_primitive and not obj.is_curve() \
                         and not obj.is_pixmap():
                     result = True
                     break
@@ -542,7 +542,7 @@ class AppInspector:
         elif self.is_selection(doc):
             result = False
             for obj in doc.selection.objs:
-                if obj.is_primitive() and not obj.is_pixmap():
+                if obj.is_primitive and not obj.is_pixmap():
                     if obj.style[1] and obj.style[1][1]:
                         result = True
                         break

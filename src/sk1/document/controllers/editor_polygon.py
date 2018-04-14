@@ -169,7 +169,7 @@ class PolygonEditor(AbstractController):
                 self.store_props()
                 return
         objs = self.canvas.pick_at_point(event.get_point())
-        if objs and not objs[0] == self.target and objs[0].is_primitive():
+        if objs and not objs[0] == self.target and objs[0].is_primitive:
             self.selected_obj = objs[0]
 
     def mouse_up(self, event):

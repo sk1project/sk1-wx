@@ -39,7 +39,7 @@ class GradientChooser(AbstractController):
 
     def start_(self):
         sel_objs = self.selection.objs
-        if len(sel_objs) == 1 and sel_objs[0].is_primitive() \
+        if len(sel_objs) == 1 and sel_objs[0].is_primitive \
                 and not sel_objs[0].is_pixmap():
             if sel_objs[0].style[0] \
                     and sel_objs[0].style[0][1] == sk2const.FILL_GRADIENT:
@@ -71,7 +71,7 @@ class GradientChooser(AbstractController):
 
     def do_action(self, event=None):
         objs = self.canvas.pick_at_point(self.end)
-        if objs and objs[0].is_primitive() and not objs[0].is_pixmap():
+        if objs and objs[0].is_primitive and not objs[0].is_pixmap():
             self.selection.set([objs[0], ])
             self.start_()
 
@@ -268,7 +268,7 @@ class GradientEditor(AbstractController):
             self.moved_point = None
         else:
             objs = self.canvas.pick_at_point(point)
-            if objs and objs[0].is_primitive() and not objs[0].is_pixmap():
+            if objs and objs[0].is_primitive and not objs[0].is_pixmap():
                 self._set_target_vector(False)
                 self.target = None
                 self.selection.set([objs[0], ])

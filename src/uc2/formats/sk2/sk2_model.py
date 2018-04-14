@@ -33,6 +33,7 @@ class DocumentObject(TextModelObject):
     """
     is_layer = False
     is_guide = False
+    is_primitive = False
 
     def get_class_name(self):
         return CID_TO_NAME[self.cid]
@@ -65,9 +66,6 @@ class DocumentObject(TextModelObject):
     def clear_color_cache(self):
         for child in self.childs:
             child.clear_color_cache()
-
-    def is_primitive(self):
-        return False
 
     def is_curve(self):
         return False
@@ -549,6 +547,7 @@ class PrimitiveObject(SelectableObject):
     cache_pattern_img = None
     cache_ps_pattern_img = None
     cache_gray_pattern_img = None
+    is_primitive = True
 
     def get_initial_paths(self):
         pass
@@ -557,9 +556,6 @@ class PrimitiveObject(SelectableObject):
         if self.cache_cpath is not None:
             del self.cache_cpath
         SelectableObject.destroy(self)
-
-    def is_primitive(self):
-        return True
 
     def to_curve(self):
         curve = Curve(self.config)

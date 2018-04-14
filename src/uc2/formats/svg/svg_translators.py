@@ -1160,7 +1160,7 @@ class SK2_to_SVG_Translator(object):
                 self.translate_group(dest_parent, source_obj)
             elif source_obj.is_pixmap():
                 self.translate_pixmap(dest_parent, source_obj)
-            elif source_obj.is_primitive():
+            elif source_obj.is_primitive:
                 if source_obj.style[0] and source_obj.style[1] \
                         and source_obj.style[1][7]:
                     stroke_obj = source_obj.copy()

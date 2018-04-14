@@ -1105,7 +1105,7 @@ class PresenterAPI(AbstractAPI):
             objs = [] + self.selection.objs
             cleared_objs = []
             for obj in objs:
-                if obj.is_primitive():
+                if obj.is_primitive:
                     if not obj.trafo == normal_trafo:
                         cleared_objs.append(obj)
             if cleared_objs:
@@ -1164,7 +1164,7 @@ class PresenterAPI(AbstractAPI):
             sel_before = [] + self.selection.objs
 
             for obj in objs:
-                if obj.is_primitive() and not obj.is_curve():
+                if obj.is_primitive and not obj.is_curve():
                     curve = obj.to_curve()
                     if curve is not None:
                         parent = obj.parent
@@ -1212,7 +1212,7 @@ class PresenterAPI(AbstractAPI):
     def _get_primitive_objs(self, objs, exclude_pixmap=False):
         ret = []
         for obj in objs:
-            if obj.is_primitive():
+            if obj.is_primitive:
                 if exclude_pixmap and obj.is_pixmap():
                     continue
                 ret.append(obj)
@@ -1695,7 +1695,7 @@ class PresenterAPI(AbstractAPI):
             sel_before = [] + sel
 
             for obj in objs:
-                if obj.is_primitive() and obj.is_curve():
+                if obj.is_primitive and obj.is_curve():
                     curve = obj.copy()
                     curve.paths = libgeom.flat_paths(curve.paths)
                     parent = obj.parent
