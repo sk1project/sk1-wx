@@ -50,7 +50,7 @@ class Selection:
         eventloop.emit(eventloop.SELECTION_CHANGED)
         if len(self.objs) == 1:
             msg = self.objs[0].get_class_name() + _(' object in selection')
-            if self.objs[0].is_pixmap():
+            if self.objs[0].is_pixmap:
                 h_dpi, v_dpi = self.objs[0].get_resolution()
                 msg += ', %ix%i dpi' % (h_dpi, v_dpi)
             parent = self.objs[0].parent

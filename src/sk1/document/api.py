@@ -228,7 +228,7 @@ class AbstractAPI:
         for obj in objs:
             style = deepcopy(obj.style)
             obj.clear_color_cache()
-            if obj.is_pixmap():
+            if obj.is_pixmap:
                 if color:
                     style[3][0] = deepcopy(color)
                 else:
@@ -251,7 +251,7 @@ class AbstractAPI:
 
     def _set_objs_fill_style(self, objs, fill_style):
         for obj in objs:
-            if not obj.is_pixmap():
+            if not obj.is_pixmap:
                 style = deepcopy(obj.style)
                 style[0] = deepcopy(fill_style)
                 obj.style = style
@@ -325,7 +325,7 @@ class AbstractAPI:
         for obj in objs:
             style = deepcopy(obj.style)
             obj.clear_color_cache()
-            if obj.is_pixmap():
+            if obj.is_pixmap:
                 if color:
                     style[3][1] = deepcopy(color)
                 else:
@@ -346,7 +346,7 @@ class AbstractAPI:
 
     def _set_objs_stroke_style(self, objs, stroke_style):
         for obj in objs:
-            if not obj.is_pixmap():
+            if not obj.is_pixmap:
                 style = deepcopy(obj.style)
                 style[1] = deepcopy(stroke_style)
                 obj.style = style
@@ -1213,7 +1213,7 @@ class PresenterAPI(AbstractAPI):
         ret = []
         for obj in objs:
             if obj.is_primitive:
-                if exclude_pixmap and obj.is_pixmap():
+                if exclude_pixmap and obj.is_pixmap:
                     continue
                 ret.append(obj)
             else:

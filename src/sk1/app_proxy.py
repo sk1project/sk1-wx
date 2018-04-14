@@ -91,7 +91,7 @@ class AppProxy:
         ret = None
         for obj in objs:
             if obj.is_primitive:
-                if not obj.is_pixmap():
+                if not obj.is_pixmap:
                     ret = obj.style
                     break
             else:
@@ -146,8 +146,7 @@ class AppProxy:
         doc.canvas.set_temp_mode(modes.PICK_MODE, self.select_fill_donor)
 
     def select_fill_donor(self, objs):
-        if len(objs) == 1 and objs[0].is_primitive and \
-                not objs[0].is_pixmap():
+        if len(objs) == 1 and objs[0].is_primitive and not objs[0].is_pixmap:
             style = self._get_style(objs)
             if style is not None:
                 fill_style = deepcopy(style[0])
@@ -168,8 +167,7 @@ class AppProxy:
         doc.canvas.set_temp_mode(modes.PICK_MODE, self.select_stroke_donor)
 
     def select_stroke_donor(self, objs):
-        if len(objs) == 1 and objs[0].is_primitive and \
-                not objs[0].is_pixmap():
+        if len(objs) == 1 and objs[0].is_primitive and not objs[0].is_pixmap:
             style = self._get_style(objs)
             if style is not None:
                 stroke_style = deepcopy(style[1])
@@ -521,7 +519,7 @@ class AppProxy:
         try:
             objs = []
             for obj in selection.objs:
-                if obj.is_primitive and not obj.is_pixmap() and obj.style[1] \
+                if obj.is_primitive and not obj.is_pixmap and obj.style[1] \
                         and obj.style[1][1]:
                     pths = apply_trafo_to_paths(obj.get_initial_paths(),
                                                 obj.trafo)
@@ -572,7 +570,7 @@ class AppProxy:
     def select_container(self, objs):
         selection = self.app.current_doc.selection
         if len(objs) == 1 and objs[0].is_primitive and \
-                not objs[0] in selection.objs and not objs[0].is_pixmap():
+                not objs[0] in selection.objs and not objs[0].is_pixmap:
             self.app.current_doc.api.pack_container(objs[0])
             return False
 

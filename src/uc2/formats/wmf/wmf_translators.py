@@ -827,7 +827,7 @@ class SK2_to_WMF_Translator(object):
             elif obj.is_layer:
                 if obj.properties[0]:
                     self.translate_group(obj)
-            elif obj.is_pixmap():
+            elif obj.is_pixmap:
                 self.translate_pixmap(obj)
             else:
                 self.translate_group(obj)

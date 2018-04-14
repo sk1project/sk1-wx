@@ -199,7 +199,7 @@ class CairoRenderer:
     def render_primitives(self, ctx, obj):
         if obj.cache_cpath is None:
             obj.update()
-        if obj.is_pixmap():
+        if obj.is_pixmap:
             self.render_image(ctx, obj)
             return
         if obj.is_text():

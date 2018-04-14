@@ -386,7 +386,7 @@ class AppInspector:
         return obj.is_text()
 
     def is_obj_pixmap(self, obj):
-        return obj.is_pixmap()
+        return obj.is_pixmap
 
     def can_clear_trafo(self, doc=None):
         doc = doc or self.app.current_doc
@@ -419,7 +419,7 @@ class AppInspector:
             return False
         elif self.is_selection(doc):
             objs = doc.selection.objs
-            if len(objs) == 1 and objs[0].is_pixmap():
+            if len(objs) == 1 and objs[0].is_pixmap:
                 return True
         return False
 
@@ -429,7 +429,7 @@ class AppInspector:
             return False
         elif self.is_selection(doc):
             objs = doc.selection.objs
-            if len(objs) == 1 and objs[0].is_pixmap():
+            if len(objs) == 1 and objs[0].is_pixmap:
                 if objs[0].alpha_channel:
                     return True
         return False
@@ -440,7 +440,7 @@ class AppInspector:
             return False
         elif self.is_selection(doc):
             objs = doc.selection.objs
-            if len(objs) == 1 and objs[0].is_pixmap():
+            if len(objs) == 1 and objs[0].is_pixmap:
                 if not objs[0].colorspace == uc2const.IMAGE_CMYK:
                     return True
         return False
@@ -451,7 +451,7 @@ class AppInspector:
             return False
         elif self.is_selection(doc):
             objs = doc.selection.objs
-            if len(objs) == 1 and objs[0].is_pixmap():
+            if len(objs) == 1 and objs[0].is_pixmap:
                 if not objs[0].colorspace == uc2const.IMAGE_RGB:
                     return True
         return False
@@ -462,7 +462,7 @@ class AppInspector:
             return False
         elif self.is_selection(doc):
             objs = doc.selection.objs
-            if len(objs) == 1 and objs[0].is_pixmap():
+            if len(objs) == 1 and objs[0].is_pixmap:
                 if not objs[0].colorspace == uc2const.IMAGE_LAB:
                     return True
         return False
@@ -473,7 +473,7 @@ class AppInspector:
             return False
         elif self.is_selection(doc):
             objs = doc.selection.objs
-            if len(objs) == 1 and objs[0].is_pixmap():
+            if len(objs) == 1 and objs[0].is_pixmap:
                 if not objs[0].colorspace == uc2const.IMAGE_GRAY:
                     return True
         return False
@@ -484,7 +484,7 @@ class AppInspector:
             return False
         elif self.is_selection(doc):
             objs = doc.selection.objs
-            if len(objs) == 1 and objs[0].is_pixmap():
+            if len(objs) == 1 and objs[0].is_pixmap:
                 if not objs[0].colorspace == uc2const.IMAGE_MONO:
                     return True
         return False
@@ -499,7 +499,7 @@ class AppInspector:
             if len(objs) < 2:
                 return False
             for obj in objs:
-                if not obj.is_primitive or obj.is_pixmap():
+                if not obj.is_primitive or obj.is_pixmap:
                     result = False
                     break
             return result
@@ -527,8 +527,7 @@ class AppInspector:
         elif self.is_selection(doc):
             result = False
             for obj in doc.selection.objs:
-                if obj.is_primitive and not obj.is_curve \
-                        and not obj.is_pixmap():
+                if obj.is_primitive and not obj.is_curve and not obj.is_pixmap:
                     result = True
                     break
             return result
@@ -542,7 +541,7 @@ class AppInspector:
         elif self.is_selection(doc):
             result = False
             for obj in doc.selection.objs:
-                if obj.is_primitive and not obj.is_pixmap():
+                if obj.is_primitive and not obj.is_pixmap:
                     if obj.style[1] and obj.style[1][1]:
                         result = True
                         break

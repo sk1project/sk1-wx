@@ -1158,7 +1158,7 @@ class SK2_to_SVG_Translator(object):
                 self.translate_layer(dest_parent, source_obj)
             elif source_obj.is_group():
                 self.translate_group(dest_parent, source_obj)
-            elif source_obj.is_pixmap():
+            elif source_obj.is_pixmap:
                 self.translate_pixmap(dest_parent, source_obj)
             elif source_obj.is_primitive:
                 if source_obj.style[0] and source_obj.style[1] \

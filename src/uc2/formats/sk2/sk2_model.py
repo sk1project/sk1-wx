@@ -36,6 +36,7 @@ class DocumentObject(TextModelObject):
     is_primitive = False
     is_curve = False
     is_rect = False
+    is_pixmap = False
 
     def get_class_name(self):
         return CID_TO_NAME[self.cid]
@@ -68,9 +69,6 @@ class DocumentObject(TextModelObject):
     def clear_color_cache(self):
         for child in self.childs:
             child.clear_color_cache()
-
-    def is_pixmap(self):
-        return False
 
     def is_circle(self):
         return False
@@ -1070,6 +1068,7 @@ class Pixmap(PrimitiveObject):
     cache_cdata = None
     cache_ps_cdata = None
     cache_gray_cdata = None
+    is_pixmap = True
 
     def __init__(self, config, parent=None,
                  bitmap='',
@@ -1085,8 +1084,6 @@ class Pixmap(PrimitiveObject):
         self.size = size
         self.trafo = trafo
         self.style = style
-
-    def is_pixmap(self): return True
 
     def get_size(self):
         width = float(self.size[0]) * uc2const.px_to_pt
