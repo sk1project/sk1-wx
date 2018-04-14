@@ -35,6 +35,7 @@ class DocumentObject(TextModelObject):
     is_guide = False
     is_primitive = False
     is_curve = False
+    is_rect = False
 
     def get_class_name(self):
         return CID_TO_NAME[self.cid]
@@ -67,9 +68,6 @@ class DocumentObject(TextModelObject):
     def clear_color_cache(self):
         for child in self.childs:
             child.clear_color_cache()
-
-    def is_rect(self):
-        return False
 
     def is_pixmap(self):
         return False
@@ -618,6 +616,7 @@ class Rectangle(PrimitiveObject):
     width = 1.0
     height = 1.0
     corners = []
+    is_rect = True
 
     def __init__(self, config, parent=None,
                  rect=[] + sk2const.STUB_RECT,
@@ -640,9 +639,6 @@ class Rectangle(PrimitiveObject):
         self.start = rect[0:2]
         self.width = rect[2]
         self.height = rect[3]
-
-    def is_rect(self):
-        return True
 
     def is_closed(self):
         return True
