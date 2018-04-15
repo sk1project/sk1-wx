@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-28 09:45+0300\n"
-"PO-Revision-Date: 2018-04-13 01:06+0300\n"
+"PO-Revision-Date: 2018-04-15 15:57+0300\n"
 "Last-Translator: Maxim Barabash <maxim.s.barabash@gmail.com>\n"
 "Language-Team: \n"
 "Language: uk\n"
@@ -145,7 +145,7 @@ msgstr "Створити документ з шаблону"
 
 #: src/sk1/application.py:230 src/sk1/application.py:239
 msgid "Cannot open file:"
-msgstr "Не вдається відкрити документ:"
+msgstr "Не вдалося відкрити документ:"
 
 #: src/sk1/application.py:232
 msgid "The file contains newer SK2 format.\n"
@@ -171,7 +171,7 @@ msgstr "Документ відкрито"
 
 #: src/sk1/application.py:269
 msgid "Cannot save file:"
-msgstr "Не вдається зберегти файл:"
+msgstr "Не вдалося зберегти файл:"
 
 #: src/sk1/application.py:271
 msgid "Please check file write permissions"
@@ -184,7 +184,7 @@ msgstr "Документ збережено"
 #: src/sk1/application.py:298 src/sk1/application.py:331
 #: src/sk1/application.py:434
 msgid "Cannot save document:"
-msgstr "Не вдається зберегти документ:"
+msgstr "Не вдалося зберегти документ:"
 
 #: src/sk1/application.py:300 src/sk1/application.py:436
 #: src/sk1/application.py:458 src/sk1/application.py:496
@@ -243,7 +243,7 @@ msgstr "Вилучити вибране растрове зображення я
 
 #: src/sk1/application.py:456
 msgid "Cannot save bitmap:"
-msgstr "Не вдається зберегти растрове зображення:"
+msgstr "Не вдалося зберегти растрове зображення:"
 
 #: src/sk1/application.py:464
 msgid "Bitmap is successfully extracted"
@@ -298,7 +298,7 @@ msgstr "Зберегти палітру як..."
 
 #: src/sk1/application.py:554
 msgid "Cannot save pattern from:"
-msgstr "Не вдається зберегти візерунок з:"
+msgstr "Не вдалося зберегти візерунок з:"
 
 #: src/sk1/application.py:566
 msgid "Select pattern to load"
@@ -306,7 +306,7 @@ msgstr "Оберіть візерунок для завантаження"
 
 #: src/sk1/application.py:569
 msgid "Cannot load pattern for:"
-msgstr "Не вдається завантажити візерунок для:"
+msgstr "Не вдалося завантажити візерунок для:"
 
 #: src/sk1/application.py:611
 msgid "Requested page is opened in default browser"
@@ -649,7 +649,7 @@ msgstr "не знайдено."
 
 #: src/sk1/dialogs/filelogviewer.py:100
 msgid "File not found"
-msgstr "Не знайдено файла"
+msgstr "Не знайдено файл"
 
 #: src/sk1/dialogs/filelogviewer.py:122
 msgid "Recent documents"
@@ -1084,7 +1084,7 @@ msgstr "Спробуйте перейменувати файл"
 
 #: src/sk1/prefs/prefs_cms.py:405
 msgid "Cannot copy file"
-msgstr "Не вдається скопіювати файл"
+msgstr "Не вдалося скопіювати файл"
 
 #: src/sk1/prefs/prefs_cms.py:407
 msgid "Please check writing permissions for config directory:"
@@ -1739,7 +1739,7 @@ msgstr "Матриця трансформації:"
 
 #: src/sk1/pwidgets/patternctrls.py:417
 msgid "Load pattern from file"
-msgstr "Завантажити візерунок з файла"
+msgstr "Завантажити візерунок з файлу"
 
 #: src/sk1/pwidgets/patternctrls.py:421
 msgid "Save pattern into file"
