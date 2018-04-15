@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-28 09:45+0300\n"
-"PO-Revision-Date: 2018-04-15 15:57+0300\n"
+"PO-Revision-Date: 2018-04-15 17:41+0300\n"
 "Last-Translator: Maxim Barabash <maxim.s.barabash@gmail.com>\n"
 "Language-Team: \n"
 "Language: uk\n"
@@ -1997,7 +1997,7 @@ msgstr "&Видалити"
 
 #: src/sk1/resources/labels.py:72
 msgid "Duplicate"
-msgstr "Створити копію"
+msgstr "Дублювати"
 
 #: src/sk1/resources/labels.py:73
 msgid "&Select All"
