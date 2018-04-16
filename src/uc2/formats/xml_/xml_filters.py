@@ -35,7 +35,7 @@ class XML_Loader(AbstractXMLLoader):
             self.model.id_map = {}
 
         for item in attrs._attrs.keys():
-            obj.attrs[item] = attrs._attrs[item].strip().encode('utf-8')
+            obj.attrs[item] = attrs._attrs[item].strip()
 
         if 'id' in obj.attrs:
             self.model.id_map[obj.attrs['id']] = obj
@@ -55,7 +55,7 @@ class Advanced_XML_Loader(XML_Loader):
     name = 'Advanced_XML_Loader'
 
     def element_data(self, data):
-        obj = XmlContentText(data.encode('utf-8'))
+        obj = XmlContentText(data)
         if self.stack: self.stack[-1].childs.append(obj)
 
 class XML_Saver(AbstractSaver):
