@@ -15,6 +15,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
+from base64 import b64decode
 from copy import deepcopy
 from cStringIO import StringIO
 from PIL import Image, ImageOps
@@ -25,6 +28,8 @@ from uc2.utils import fsutils
 
 from . import magickwand
 
+TIFF_FMT = 'TIFF'
+PNG_FMT = 'PNG'
 
 class ImageHandler(object):
     pixmap = None
@@ -52,7 +57,7 @@ class ImageHandler(object):
                        self.alpha.copy() if self.alpha else None)
 
     def _get_saver_fmt(self, image):
-        return 'TIFF' if image.mode == uc2const.IMAGE_CMYK else 'PNG'
+        return TIFF_FMT if image.mode == uc2const.IMAGE_CMYK else PNG_FMT
 
     def _image2str(self, image):
         fobj = StringIO()
@@ -136,7 +141,22 @@ class ImageHandler(object):
     def load_from_file(self, cms, filepath):
         self.load_from_fileptr(cms, fsutils.get_fileptr(filepath))
 
-    # Rendering
+    def load_from_b64str(self, cms, b64str):
+        self.load_from_fileptr(cms, StringIO(b64decode(b64str)))
+
+    def extract_bitmap(self, filepath):
+        ext = '.tiff' if self.bitmap.mode == uc2const.IMAGE_CMYK else '.png'
+        path, file_ext = os.path.splitext(filepath)
+        filepath = path + ext if not file_ext == ext else filepath
+        fileptr = fsutils.get_fileptr(filepath, True)
+        self.bitmap.save(fileptr, format=self._get_saver_fmt(self.bitmap))
+        fileptr.close()
+        if self.alpha:
+            fileptr = fsutils.get_fileptr(path + '_alphachannel.png', True)
+            self.bitmap.save(fileptr, format=PNG_FMT)
+            fileptr.close()
+
+class DrawableImageHandler(ImageHandler):
     def convert_duotone_to_image(self, cms, cs=None):
         fg = self.pixmap.style[3][0]
         bg = self.pixmap.style[3][1]
@@ -178,3 +198,43 @@ class ImageHandler(object):
                 bg_alpha.paste(comp_img, (0, 0), alpha_chnl)
         return (fg_img, fg_alpha) if fg else None, \
                (bg_img, bg_alpha) if bg else None
+
+
+class EditableImageHandler(DrawableImageHandler):
+    def invert_image(self, cms):
+        if self.bitmap.mode == uc2const.IMAGE_MONO:
+            image = ImageOps.invert(self.bitmap.convert(uc2const.IMAGE_GRAY))
+            self.bitmap = image.convert(uc2const.IMAGE_MONO)
+        elif self.bitmap.mode == uc2const.IMAGE_CMYK:
+            image = cms.convert_image(self.bitmap, uc2const.IMAGE_RGB)
+            inv_image = ImageOps.invert(image)
+            self.bitmap = cms.convert_image(inv_image, uc2const.IMAGE_CMYK)
+        elif self.bitmap.mode == uc2const.IMAGE_LAB:
+            image = cms.convert_image(self.bitmap, uc2const.IMAGE_RGB)
+            inv_image = ImageOps.invert(image)
+            self.bitmap = cms.convert_image(inv_image, uc2const.IMAGE_LAB)
+        else:
+            self.bitmap = ImageOps.invert(self.bitmap)
+        self.clear_cache()
+
+    def convert_image(self, cms, colorspace):
+        if self.bitmap.mode in uc2const.DUOTONES \
+                and colorspace not in uc2const.DUOTONES:
+            # TODO: duotone processing should be implemented
+            pass
+        self.bitmap = cms.convert_image(self.bitmap, colorspace)
+        self.clear_cache()
+
+    def _transpose(self, method=None):
+        if method is not None:
+            self.bitmap = self.bitmap.transpose(method)
+            if self.alpha:
+                self.alpha = self.alpha.transpose(method)
+            self.clear_cache()
+
+    def flip_top_to_bottom(self):
+        self._transpose(Image.FLIP_TOP_BOTTOM)
+
+    def flip_left_to_right(self):
+        self._transpose(Image.FLIP_LEFT_RIGHT)
+
