@@ -16,20 +16,20 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-
 from base64 import b64decode
-from copy import deepcopy
 from cStringIO import StringIO
+from copy import deepcopy
+
 from PIL import Image, ImageOps
+from uc2.cms import val_255
 
 from uc2 import uc2const
-from uc2.cms import val_255
 from uc2.utils import fsutils
-
 from . import magickwand
 
 TIFF_FMT = 'TIFF'
 PNG_FMT = 'PNG'
+
 
 class ImageHandler(object):
     pixmap = None
@@ -156,6 +156,7 @@ class ImageHandler(object):
             self.bitmap.save(fileptr, format=PNG_FMT)
             fileptr.close()
 
+
 class DrawableImageHandler(ImageHandler):
     def convert_duotone_to_image(self, cms, cs=None):
         fg = self.pixmap.style[3][0]
@@ -237,4 +238,3 @@ class EditableImageHandler(DrawableImageHandler):
 
     def flip_left_to_right(self):
         self._transpose(Image.FLIP_LEFT_RIGHT)
-
