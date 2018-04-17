@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-28 09:45+0300\n"
-"PO-Revision-Date: 2018-04-03 00:58+0300\n"
-"Last-Translator: Eugeniy Fedirets <evgeniy_fedirets@ukr.net>\n"
+"PO-Revision-Date: 2018-04-15 17:41+0300\n"
+"Last-Translator: Maxim Barabash <maxim.s.barabash@gmail.com>\n"
 "Language-Team: \n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 2.0.4\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -133,7 +133,7 @@ msgstr "Оберіть шаблон"
 
 #: src/sk1/application.py:211
 msgid "Cannot parse file:"
-msgstr "Неможливо розібрати файл:"
+msgstr "Не вдалося розібрати файл:"
 
 #: src/sk1/application.py:213 src/sk1/application.py:571
 msgid "The file may be corrupted or not supported format"
@@ -145,7 +145,7 @@ msgstr "Створити документ з шаблону"
 
 #: src/sk1/application.py:230 src/sk1/application.py:239
 msgid "Cannot open file:"
-msgstr "Неможливо відкрити документ:"
+msgstr "Не вдалося відкрити документ:"
 
 #: src/sk1/application.py:232
 msgid "The file contains newer SK2 format.\n"
@@ -171,7 +171,7 @@ msgstr "Документ відкрито"
 
 #: src/sk1/application.py:269
 msgid "Cannot save file:"
-msgstr "Не вдається зберегти файл:"
+msgstr "Не вдалося зберегти файл:"
 
 #: src/sk1/application.py:271
 msgid "Please check file write permissions"
@@ -184,7 +184,7 @@ msgstr "Документ збережено"
 #: src/sk1/application.py:298 src/sk1/application.py:331
 #: src/sk1/application.py:434
 msgid "Cannot save document:"
-msgstr "Не вдається зберегти документ:"
+msgstr "Не вдалося зберегти документ:"
 
 #: src/sk1/application.py:300 src/sk1/application.py:436
 #: src/sk1/application.py:458 src/sk1/application.py:496
@@ -227,7 +227,7 @@ msgstr "Здається, документ порожній або містит�
 
 #: src/sk1/application.py:411 src/sk1/application.py:530
 msgid "Cannot import file:"
-msgstr "Неможливо імпортувати файл:"
+msgstr "Не вдалося імпортувати файл:"
 
 #: src/sk1/application.py:427
 msgid "Export document As..."
@@ -243,7 +243,7 @@ msgstr "Вилучити вибране растрове зображення я
 
 #: src/sk1/application.py:456
 msgid "Cannot save bitmap:"
-msgstr "Не вдається зберегти растрове зображення:"
+msgstr "Не вдалося зберегти растрове зображення:"
 
 #: src/sk1/application.py:464
 msgid "Bitmap is successfully extracted"
@@ -264,7 +264,7 @@ msgstr "Для експорту вказано невідомий формат �
 
 #: src/sk1/application.py:494
 msgid "Cannot export palette:"
-msgstr "Неможливо експортувати палітру:"
+msgstr "Не вдалося експортувати палітру:"
 
 #: src/sk1/application.py:504
 msgid "Palette is successfully exported"
@@ -298,7 +298,7 @@ msgstr "Зберегти палітру як..."
 
 #: src/sk1/application.py:554
 msgid "Cannot save pattern from:"
-msgstr "Не вдається зберегти візерунок з:"
+msgstr "Не вдалося зберегти візерунок з:"
 
 #: src/sk1/application.py:566
 msgid "Select pattern to load"
@@ -306,7 +306,7 @@ msgstr "Оберіть візерунок для завантаження"
 
 #: src/sk1/application.py:569
 msgid "Cannot load pattern for:"
-msgstr "Не вдається завантажити візерунок для:"
+msgstr "Не вдалося завантажити візерунок для:"
 
 #: src/sk1/application.py:611
 msgid "Requested page is opened in default browser"
@@ -649,7 +649,7 @@ msgstr "не знайдено."
 
 #: src/sk1/dialogs/filelogviewer.py:100
 msgid "File not found"
-msgstr "Не знайдено файла"
+msgstr "Не знайдено файл"
 
 #: src/sk1/dialogs/filelogviewer.py:122
 msgid "Recent documents"
@@ -727,11 +727,11 @@ msgstr "Колекція палітр"
 
 #: src/sk1/dialogs/palcoldlg.py:64
 msgid "Cannot connect to server!"
-msgstr "Неможливо з'єднатися з сервером!"
+msgstr "Не вдалося з'єднатися з сервером!"
 
 #: src/sk1/dialogs/palcoldlg.py:65
 msgid "Please check Internet connection"
-msgstr "Будь ласка, перевірте з'єднання з Інтернетом"
+msgstr "Будь-ласка, перевірте з'єднання з Інтернетом"
 
 #: src/sk1/dialogs/palcoldlg.py:66
 msgid "and access to http://sk1project.net"
@@ -800,7 +800,7 @@ msgstr "Маштабувати ширину штриху"
 #: src/sk1/document/presenter.py:80 src/sk1/document/presenter.py:197
 #, python-format
 msgid "Cannot load <%s>"
-msgstr "Неможливо завантажити <%s>"
+msgstr "Не вдалося завантажити <%s>"
 
 #: src/sk1/document/presenter.py:132 src/sk1/document/presenter.py:160
 msgid "Saving file..."
@@ -1060,7 +1060,7 @@ msgstr "Оберіть профіль для імпорту"
 
 #: src/sk1/prefs/prefs_cms.py:382
 msgid "Cannot open profile"
-msgstr "Неможливо відкрити профіль"
+msgstr "Не вдалося відкрити профіль"
 
 #: src/sk1/prefs/prefs_cms.py:384
 msgid "The profile may be corrupted or not supported format"
@@ -1084,11 +1084,11 @@ msgstr "Спробуйте перейменувати файл"
 
 #: src/sk1/prefs/prefs_cms.py:405
 msgid "Cannot copy file"
-msgstr "Не вдається скопіювати файл"
+msgstr "Не вдалося скопіювати файл"
 
 #: src/sk1/prefs/prefs_cms.py:407
 msgid "Please check writing permissions for config directory:"
-msgstr "Будь-ласка, перевірте права на запис для каталога з конфігураціями:"
+msgstr "Будь-ласка, перевірте права на запис для теки з конфігураціями:"
 
 #: src/sk1/prefs/prefs_cms.py:446
 msgid "Profile info"
@@ -1232,7 +1232,7 @@ msgstr "Відокремлювати спін в спінбоксах (*)"
 
 #: src/sk1/prefs/prefs_general.py:129
 msgid "Unity related features"
-msgstr "Функції пов'язані  з Unity"
+msgstr "Функції пов'язані з Unity"
 
 #: src/sk1/prefs/prefs_general.py:134
 msgid "Use Unity Global Menu (*)"
@@ -1296,7 +1296,7 @@ msgstr "Вертикально"
 
 #: src/sk1/prefs/prefs_palettes.py:30
 msgid "Palettes"
-msgstr "Палітра"
+msgstr "Палітри"
 
 #: src/sk1/prefs/prefs_palettes.py:31
 msgid "Palette options and palette management"
@@ -1402,7 +1402,7 @@ msgstr "Друк сторінки для калібрування Letter"
 
 #: src/sk1/prefs/prefs_printers.py:181
 msgid "Cannot found installed printers!"
-msgstr "Не вдається знайти встановлені принтери!"
+msgstr "Не вдалося знайти встановлені принтери!"
 
 #: src/sk1/prefs/prefs_ruler.py:29
 msgid "Ruler preferences"
@@ -1623,7 +1623,7 @@ msgstr "Градієнт"
 
 #: src/sk1/pwidgets/fillctrls.py:592
 msgid "Pattern Fill"
-msgstr "Візерунк"
+msgstr "Візерунок"
 
 #: src/sk1/pwidgets/gradientctrls.py:154
 msgid "Gradient stop"
@@ -1707,19 +1707,19 @@ msgstr "Колір заднього плану візерунку"
 
 #: src/sk1/pwidgets/patternctrls.py:154
 msgid "Horizontal origin shift"
-msgstr "Опорна точка горизонтального зсуву"
+msgstr "Опорна точка зсуву по горизонталі"
 
 #: src/sk1/pwidgets/patternctrls.py:164
 msgid "Vertical origin shift"
-msgstr "Опорна точка вертикального зсуву"
+msgstr "Опорна точка зсуву по вертикалі"
 
 #: src/sk1/pwidgets/patternctrls.py:172
 msgid "Scale horizontally"
-msgstr "Горизонтальний масштаб"
+msgstr "Масштаб по горизонталі"
 
 #: src/sk1/pwidgets/patternctrls.py:183
 msgid "Scale vertically"
-msgstr "Вертикальний масштаб"
+msgstr "Масштаб по вертикалі"
 
 #: src/sk1/pwidgets/patternctrls.py:192
 msgid "Shear horizontally"
@@ -1739,7 +1739,7 @@ msgstr "Матриця трансформації:"
 
 #: src/sk1/pwidgets/patternctrls.py:417
 msgid "Load pattern from file"
-msgstr "Завантажити візерунок з файла"
+msgstr "Завантажити візерунок з файлу"
 
 #: src/sk1/pwidgets/patternctrls.py:421
 msgid "Save pattern into file"
@@ -2089,7 +2089,7 @@ msgstr "Вставити сторінку..."
 
 #: src/sk1/resources/labels.py:100
 msgid "Delete page..."
-msgstr "Видалити сторінку ..."
+msgstr "Видалити сторінку..."
 
 #: src/sk1/resources/labels.py:101
 msgid "Go to page..."
@@ -2676,15 +2676,15 @@ msgstr "Застосувати"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:293
 msgid "Distribute by left side horizontally"
-msgstr "Розмістити від лівого краю горизонтально"
+msgstr "Розподілити від лівого краю горизонтально"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:294
 msgid "Distribute by center horizontally"
-msgstr "Розмістити від центру горизонтально"
+msgstr "Розподілити від центру горизонтально"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:295
 msgid "Distribute by right side horizontally"
-msgstr "Розмістити від правого краю горизонтально"
+msgstr "Розподілити від правого краю горизонтально"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:296
 msgid "Equal gap horizontally"
@@ -2692,15 +2692,15 @@ msgstr "Розподілити горизонтально"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:310
 msgid "Distribute by bottom side vertically"
-msgstr "Розмістити від верхнього краю вертикально"
+msgstr "Розподілити від нижнього краю вертикально"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:311
 msgid "Distribute by center vertically"
-msgstr "Розмістити від центру вертікально"
+msgstr "Розподілити від центру вертікально"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:312
 msgid "Distribute by top side vertically"
-msgstr "Розмістити від верхнього краю вертикально"
+msgstr "Розподілити від верхнього краю вертикально"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:313
 msgid "Equal gap vertically"
@@ -2740,7 +2740,7 @@ msgstr "Зберегти зображення як..."
 
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:302
 msgid "Cannot save image:"
-msgstr "Неможливо зберегти зображення:"
+msgstr "Не вдалося зберегти зображення:"
 
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:309
 msgid "Image is successfully saved"
@@ -2782,7 +2782,7 @@ msgstr "Перейменувати шар"
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:55
 msgid "Trim"
-msgstr "Обрізання"
+msgstr "Обрізати"
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:56
 msgid "Intersection"
@@ -2814,7 +2814,7 @@ msgstr "Спробуйте розгрупувати позначене."
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:167
 msgid "Selected object cannot be target for trim operation."
-msgstr "Позначений об'єкт не можна підрізати."
+msgstr "Позначений об'єкт не можна обрізати."
 
 #: src/sk1/share/pd_plugins/shaping/__init__.py:190
 msgid "Selected objects cannot be intersected."
@@ -3343,7 +3343,7 @@ msgstr "Схоже, файл CDR пошкоджений"
 
 #: src/uc2/formats/cdrz/cdrz_filters.py:86
 msgid "The file content is extracted successfully"
-msgstr "Вмісту файлу успішно вилучено"
+msgstr "Вміст файлу успішно вилучено"
 
 #: src/uc2/formats/pdf/pdfgen.py:65 src/uc2/formats/plt/plt_translators.py:95
 msgid "Saving in process..."
