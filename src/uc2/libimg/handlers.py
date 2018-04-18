@@ -15,6 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import cairo
 import os
 from base64 import b64decode
 from cStringIO import StringIO
@@ -199,6 +200,72 @@ class DrawableImageHandler(ImageHandler):
                 bg_alpha.paste(comp_img, (0, 0), alpha_chnl)
         return (fg_img, fg_alpha) if fg else None, \
                (bg_img, bg_alpha) if bg else None
+
+    def _get_display_image(self, cms, proofing=False):
+        image = self.bitmap
+        if image.mode in uc2const.DUOTONES:
+            if image.mode == uc2const.IMAGE_MONO:
+                image = image.convert(uc2const.IMAGE_GRAY)
+            size = image.size
+            fg = self.pixmap.style[3][0]
+            bg = self.pixmap.style[3][1]
+            if proofing:
+                fg = cms.get_cmyk_color(fg) if fg else None
+                bg = cms.get_cmyk_color(bg) if bg else None
+            fg = tuple(cms.get_display_color255(fg)) if fg else None
+            bg = tuple(cms.get_display_color255(bg)) if bg else None
+
+            display_image = fg_img = bg_img = None
+            if fg:
+                fg_img = Image.new(uc2const.IMAGE_RGB, size, fg)
+                fg_img.putalpha(ImageOps.invert(image))
+            if bg:
+                bg_img = Image.new(uc2const.IMAGE_RGB, size, bg)
+                bg_img.putalpha(image)
+            if fg_img and bg_img:
+                # TODO check correctness
+                bg_img.paste(fg_img, (0,0))
+                display_image = bg_img
+            elif fg_img:
+                display_image = fg_img
+            elif bg_img:
+                display_image = bg_img
+            return display_image
+        if proofing and image.mode != uc2const.IMAGE_CMYK:
+            image = cms.convert_image(image, uc2const.IMAGE_CMYK)
+        return cms.get_display_image(image)
+
+    def _get_surface(self, cms, proofing=False, stroke_mode=False):
+        if stroke_mode:
+            gray_image = self.bitmap.convert(uc2const.IMAGE_GRAY)
+            rgb_image = gray_image.convert(uc2const.IMAGE_RGB)
+        else:
+            rgb_image = self._get_display_image(cms, proofing)
+
+        if rgb_image is None:
+            return None
+
+        if self.alpha and rgb_image.mode == uc2const.IMAGE_RGB:
+            rgb_image = rgb_image.copy()
+            rgb_image.putalpha(self.alpha)
+        png_stream = StringIO()
+        rgb_image.save(png_stream, format=PNG_FMT)
+        png_stream.seek(0)
+        return cairo.ImageSurface.create_from_png(png_stream)
+
+    def get_surface(self, cms, proofing=False, stroke_mode=False):
+        if stroke_mode:
+            if not self.gray_cdata:
+                self.gray_cdata = self._get_surface(cms, stroke_mode=True)
+            return self.gray_cdata
+        elif proofing:
+            if not self.ps_cdata:
+                self.ps_cdata = self._get_surface(cms, proofing=True)
+            return self.ps_cdata
+        else:
+            if not self.cdata:
+                self.cdata = self._get_surface(cms)
+            return self.cdata
 
 
 class EditableImageHandler(DrawableImageHandler):
