@@ -17,7 +17,7 @@
 
 import cairo
 import os
-from base64 import b64decode
+from base64 import b64decode, b64encode
 from cStringIO import StringIO
 from copy import deepcopy
 
@@ -47,6 +47,12 @@ class ImageHandler(object):
     def get_size(self):
         return self.bitmap.size if self.bitmap else (0, 0)
 
+    def get_mode(self):
+        return self.bitmap.mode if self.bitmap else None
+
+    def has_alpha(self):
+        return self.alpha is not None
+
     def clear_cache(self):
         self.cdata = None
         self.ps_cdata = None
@@ -61,16 +67,26 @@ class ImageHandler(object):
         return TIFF_FMT if image.mode == uc2const.IMAGE_CMYK else PNG_FMT
 
     def _image2str(self, image):
+        if not image:
+            return None
         fobj = StringIO()
         image.save(fobj, format=self._get_saver_fmt(image))
         return fobj.getvalue()
 
     def _str2image(self, image_str=None):
-        if image_str is None:
+        if not image_str:
             return None
         image = Image.open(StringIO(image_str))
         image.load()
         return image
+
+    def get_bitmap_b64str(self):
+        bitmap_str = self._image2str(self.bitmap)
+        return b64encode(bitmap_str) if bitmap_str else None
+
+    def get_alpha_b64str(self):
+        alpha_str = self._image2str(self.alpha)
+        return b64encode(alpha_str) if alpha_str else None
 
     def set_images_from_str(self, bitmap_str=None, alpha_str=None):
         self.set_images(self._str2image(bitmap_str),
@@ -103,10 +119,7 @@ class ImageHandler(object):
             profile = None
 
         if profile:
-            try:
-                image = cms.adjust_image(image, profile)
-            except Exception:
-                pass
+            image = cms.adjust_image(image, profile)
 
         cfg = self.pixmap.config
         style = deepcopy(cfg.default_image_style)
@@ -224,7 +237,7 @@ class DrawableImageHandler(ImageHandler):
                 bg_img.putalpha(image)
             if fg_img and bg_img:
                 # TODO check correctness
-                bg_img.paste(fg_img, (0,0))
+                bg_img.paste(fg_img, (0, 0))
                 display_image = bg_img
             elif fg_img:
                 display_image = fg_img
