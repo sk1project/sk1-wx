@@ -88,13 +88,14 @@ class ImageHandler(object):
         alpha_str = self._image2str(self.alpha)
         return b64encode(alpha_str) if alpha_str else None
 
-    def set_images_from_str(self, bitmap_str=None, alpha_str=None):
-        self.set_images(self._str2image(bitmap_str),
-                        self._str2image(alpha_str))
-
     def set_images(self, bitmap=None, alpha=None):
         self.bitmap = bitmap if bitmap else self.bitmap
         self.alpha = alpha if alpha else self.alpha
+        self.clear_cache()
+
+    def set_images_from_str(self, bitmap_str=None, alpha_str=None):
+        self.set_images(self._str2image(bitmap_str),
+                        self._str2image(alpha_str))
 
     # Pixmap loading
     def load_from_images(self, cms, image, alpha=None):
