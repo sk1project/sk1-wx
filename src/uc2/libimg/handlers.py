@@ -283,36 +283,39 @@ class DrawableImageHandler(ImageHandler):
 
 
 class EditableImageHandler(DrawableImageHandler):
+    def remove_aplha(self):
+        self.alpha = None
+        self.clear_cache()
+
     def invert_image(self, cms):
         if self.bitmap.mode == uc2const.IMAGE_MONO:
             image = ImageOps.invert(self.bitmap.convert(uc2const.IMAGE_GRAY))
-            self.bitmap = image.convert(uc2const.IMAGE_MONO)
+            bitmap = image.convert(uc2const.IMAGE_MONO)
         elif self.bitmap.mode == uc2const.IMAGE_CMYK:
             image = cms.convert_image(self.bitmap, uc2const.IMAGE_RGB)
             inv_image = ImageOps.invert(image)
-            self.bitmap = cms.convert_image(inv_image, uc2const.IMAGE_CMYK)
+            bitmap = cms.convert_image(inv_image, uc2const.IMAGE_CMYK)
         elif self.bitmap.mode == uc2const.IMAGE_LAB:
             image = cms.convert_image(self.bitmap, uc2const.IMAGE_RGB)
             inv_image = ImageOps.invert(image)
-            self.bitmap = cms.convert_image(inv_image, uc2const.IMAGE_LAB)
+            bitmap = cms.convert_image(inv_image, uc2const.IMAGE_LAB)
         else:
-            self.bitmap = ImageOps.invert(self.bitmap)
-        self.clear_cache()
+            bitmap = ImageOps.invert(self.bitmap)
+        self.set_images(bitmap)
 
     def convert_image(self, cms, colorspace):
         if self.bitmap.mode in uc2const.DUOTONES \
                 and colorspace not in uc2const.DUOTONES:
             # TODO: duotone processing should be implemented
             pass
-        self.bitmap = cms.convert_image(self.bitmap, colorspace)
-        self.clear_cache()
+        bitmap = cms.convert_image(self.bitmap, colorspace)
+        self.set_images(bitmap)
 
     def _transpose(self, method=None):
         if method is not None:
-            self.bitmap = self.bitmap.transpose(method)
-            if self.alpha:
-                self.alpha = self.alpha.transpose(method)
-            self.clear_cache()
+            bitmap = self.bitmap.transpose(method)
+            alpha = self.alpha.transpose(method) if self.alpha else None
+            self.set_images(bitmap, alpha)
 
     def flip_top_to_bottom(self):
         self._transpose(Image.FLIP_TOP_BOTTOM)
