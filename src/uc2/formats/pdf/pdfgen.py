@@ -474,7 +474,8 @@ class PDFGenerator(object):
         self.canvas.restoreState()
 
     def draw_image(self, image, alpha_channel=None):
-        if not image: return
+        if not image:
+            return
         if self.colorspace == uc2const.COLOR_CMYK:
             image = self.cms.convert_image(image, uc2const.IMAGE_CMYK)
         elif self.colorspace == uc2const.COLOR_RGB:
@@ -483,7 +484,8 @@ class PDFGenerator(object):
             image = self.cms.convert_image(image, uc2const.IMAGE_GRAY)
         img = ImageReader(image)
         img.getRGBData()
-        if alpha_channel: img._dataA = ImageReader(alpha_channel)
+        if alpha_channel:
+            img._dataA = ImageReader(alpha_channel)
         self.canvas.drawImage(img, 0, 0, mask='auto')
 
     def draw_pixmap_obj(self, obj):
@@ -495,8 +497,8 @@ class PDFGenerator(object):
             raw_image = Image.open(StringIO(obj.bitmap))
             raw_image.load()
             alpha_chnl = None
-            if obj.alpha_channel:
-                alpha_chnl = Image.open(StringIO(obj.alpha_channel))
+            if obj.has_alpha():
+                alpha_chnl = Image.open(StringIO(obj.get_alpha_channel()))
                 alpha_chnl.load()
             self.draw_image(raw_image, alpha_chnl)
 

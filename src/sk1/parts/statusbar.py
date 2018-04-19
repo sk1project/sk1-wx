@@ -158,7 +158,7 @@ class ColorMonitor(wal.HPanel):
                 self.stroke_swatch.update_from_obj(sel[0])
                 if self.app.insp.is_obj_pixmap(sel[0]):
                     txt = _('Image type: ') + IMAGE_NAMES[sel[0].colorspace]
-                    if sel[0].alpha_channel:
+                    if sel[0].has_alpha():
                         if sel[0].colorspace in [IMAGE_CMYK, IMAGE_RGB]:
                             txt += 'A'
                         else:

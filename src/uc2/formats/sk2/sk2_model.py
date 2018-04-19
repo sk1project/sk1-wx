@@ -1056,10 +1056,22 @@ class Pixmap(PrimitiveObject):
         self.config = config
         self.parent = parent
         self.bitmap = bitmap
-        self.alpha_channel = alpha_channel
+        self.set_alpha_channel(alpha_channel)
         self.size = size
         self.trafo = trafo
         self.style = style
+
+    def has_alpha(self):
+        if not self.alpha_channel:
+            return False
+        return True
+
+    def set_alpha_channel(self, alpha):
+        self.alpha_channel = alpha
+        self.clear_color_cache()
+
+    def get_alpha_channel(self):
+        return self.alpha_channel
 
     def get_size(self):
         width = float(self.size[0]) * uc2const.px_to_pt

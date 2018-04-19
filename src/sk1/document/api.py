@@ -366,8 +366,7 @@ class AbstractAPI:
             obj.colorspace = colorspace
 
     def _set_alpha(self, obj, alphastr):
-        obj.alpha_channel = alphastr
-        obj.clear_color_cache()
+        obj.set_alpha_channel(alphastr)
 
     def _get_text_data(self, text_obj):
         text = text_obj.get_text()
@@ -1924,7 +1923,7 @@ class PresenterAPI(AbstractAPI):
     def remove_alpha(self):
         sel_before = [] + self.selection.objs
         obj = sel_before[0]
-        old_alphastr = obj.alpha_channel
+        old_alphastr = obj.get_alpha_channel()
         new_alphastr = ''
         self._set_alpha(obj, new_alphastr)
         transaction = [
@@ -1939,7 +1938,7 @@ class PresenterAPI(AbstractAPI):
     def invert_alpha(self):
         sel_before = [] + self.selection.objs
         obj = sel_before[0]
-        old_alphastr = obj.alpha_channel
+        old_alphastr = obj.get_alpha_channel()
         new_alphastr = libimg.invert_image(self.presenter.cms, old_alphastr)
         self._set_alpha(obj, new_alphastr)
         transaction = [

@@ -127,8 +127,8 @@ def convert_duotone_to_image(cms, pixmap, cs=None):
 
     fg_alpha = ImageOps.invert(raw_image)
     bg_alpha = raw_image
-    if pixmap.alpha_channel:
-        alpha_chnl = Image.open(StringIO(pixmap.alpha_channel))
+    if pixmap.has_alpha():
+        alpha_chnl = Image.open(StringIO(pixmap.get_alpha_channel()))
         alpha_chnl.load()
         alpha_chnl = ImageOps.invert(alpha_chnl)
         comp_img = Image.new('L', size, 0)
@@ -146,10 +146,10 @@ def extract_bitmap(pixmap, filepath):
     fileptr = fsutils.get_fileptr(filepath, True)
     fileptr.write(pixmap.bitmap)
     fileptr.close()
-    if pixmap.alpha_channel:
+    if pixmap.has_alpha():
         filepath = os.path.splitext(filepath)[0] + '_alphachannel.png'
         fileptr = fsutils.get_fileptr(filepath, True)
-        fileptr.write(pixmap.alpha_channel)
+        fileptr.write(pixmap.get_alpha_channel())
         fileptr.close()
 
 
@@ -186,8 +186,8 @@ def update_image(cms, pixmap, force_proofing=False):
             raw_image = cms.convert_image(raw_image, IMAGE_CMYK)
         cache_image = cms.get_display_image(raw_image)
 
-    if pixmap.alpha_channel:
-        raw_alpha = pixmap.alpha_channel
+    if pixmap.has_alpha():
+        raw_alpha = pixmap.get_alpha_channel()
         raw_alpha = Image.open(StringIO(raw_alpha))
         if cache_image.mode == IMAGE_RGB:
             cache_image = cache_image.convert(IMAGE_RGBA)
@@ -227,8 +227,8 @@ def update_gray_image(cms, pixmap):
         bg_image = Image.new(IMAGE_RGBA, pixmap.size, bg_color)
         cache_image.paste(bg_image, (0, 0), raw_image)
         rgb_image = cache_image.convert(IMAGE_GRAY).convert(IMAGE_RGBA)
-        if pixmap.alpha_channel:
-            raw_alpha = pixmap.alpha_channel
+        if pixmap.has_alpha():
+            raw_alpha = pixmap.get_alpha_channel()
             raw_alpha = Image.open(StringIO(raw_alpha))
             cache_alpha = Image.new(IMAGE_GRAY, pixmap.size)
             mask = ImageOps.invert(cache_image.split()[3])
@@ -238,8 +238,8 @@ def update_gray_image(cms, pixmap):
             rgb_image.putalpha(cache_image.split()[3])
     else:
         raw_image = raw_image.convert(IMAGE_GRAY)
-        if pixmap.alpha_channel:
-            raw_alpha = pixmap.alpha_channel
+        if pixmap.has_alpha():
+            raw_alpha = pixmap.get_alpha_channel()
             raw_alpha = Image.open(StringIO(raw_alpha))
             rgb_image = raw_image.convert(IMAGE_RGBA)
             rgb_image.putalpha(raw_alpha)
@@ -312,7 +312,7 @@ def set_image_data(cms, pixmap, raw_content):
             alpha = fobj.getvalue()
 
     pixmap.bitmap = bmp
-    pixmap.alpha_channel = alpha
+    pixmap.set_alpha_channel(alpha)
     pixmap.style = style
 
 
@@ -324,14 +324,14 @@ def transpose(image_obj, method=Image.FLIP_TOP_BOTTOM):
     fobj = StringIO()
     image.save(fobj, format='TIFF')
     image_obj.bitmap = fobj.getvalue()
-    if image_obj.alpha_channel:
-        alpha = Image.open(StringIO(image_obj.alpha_channel))
+    if image_obj.has_alpha():
+        alpha = Image.open(StringIO(image_obj.get_alpha_channel()))
         alpha.load()
 
         alpha = alpha.transpose(method)
         fobj = StringIO()
         alpha.save(fobj, format=_get_saver_fmt(alpha))
-        image_obj.alpha_channel = fobj.getvalue()
+        image_obj.set_alpha_channel(fobj.getvalue())
     image_obj.cache_cdata = None
 
 

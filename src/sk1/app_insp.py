@@ -430,7 +430,7 @@ class AppInspector:
         elif self.is_selection(doc):
             objs = doc.selection.objs
             if len(objs) == 1 and objs[0].is_pixmap:
-                if objs[0].alpha_channel:
+                if objs[0].has_alpha():
                     return True
         return False
 
