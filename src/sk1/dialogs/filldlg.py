@@ -50,13 +50,14 @@ class FillDialog(wal.OkCancelDialog):
             self.nb.add_page(item, item.name)
         self.pack(self.nb, fill=True, expand=True)
 
-        if not self.orig_fill or self.orig_fill[1] == sk2const.FILL_SOLID:
-            self.nb.set_active_index(0)
-            self.tabs[0].activate(self.orig_fill)
-        elif self.orig_fill[1] == sk2const.FILL_GRADIENT:
-            self.nb.set_active_index(1)
-        elif self.orig_fill[1] == sk2const.FILL_PATTERN:
-            self.nb.set_active_index(2)
+        index = 0
+        if self.orig_fill:
+            if self.orig_fill[1] == sk2const.FILL_GRADIENT:
+                index = 1
+            elif self.orig_fill[1] == sk2const.FILL_PATTERN:
+                index = 2
+        self.tabs[index].activate(self.orig_fill)
+        self.nb.set_active_index(index)
         self.start = False
 
     def on_change(self, index):
