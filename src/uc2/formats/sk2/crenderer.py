@@ -163,6 +163,9 @@ class CairoRenderer:
             ctx.stroke()
 
     def render_image(self, ctx, obj):
+        surface = self.get_surface(obj)
+        if not surface:
+            return
         canvas_matrix = ctx.get_matrix()
         canvas_trafo = libcairo.get_trafo_from_matrix(canvas_matrix)
         zoom = canvas_trafo[0]
@@ -176,7 +179,7 @@ class CairoRenderer:
                               - zoom * m21, zoom * m22, x0, y0)
         ctx.set_matrix(matrix)
 
-        ctx.set_source_surface(self.get_surface(obj))
+        ctx.set_source_surface(surface)
         if zoom * abs(m11) > .98:
             ctx.get_source().set_filter(cairo.FILTER_NEAREST)
 
