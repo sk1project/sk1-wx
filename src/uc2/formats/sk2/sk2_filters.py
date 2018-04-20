@@ -71,8 +71,18 @@ class SK2_Loader(AbstractLoader):
 
     def set_field(self, item, val):
         obj = self.parent_stack[-1]
-        if item in ('bitmap', 'alpha_channel'):
-            val = b64decode(val)
+        if item.startswith('is_'):
+            return
+        if obj.is_pixmap:
+            if item == 'bitmap':
+                obj.set_bitmap(b64decode(val))
+                return
+            elif item == 'alpha_channel':
+                if val:
+                    obj.set_alpha_channel(b64decode(val))
+                return
+            elif item in ('size', 'colorspace'):
+                return
         obj.__dict__[item] = val
 
     def obj_end(self):
@@ -113,12 +123,22 @@ class SK2_Saver(AbstractSaver):
         props = obj.__dict__
         for item in props.keys():
             if item not in sk2_model.GENERIC_FIELDS and \
-                    not item.startswith('cache'):
-                if item in ['bitmap', 'alpha_channel']:
-                    item_str = "'%s'" % b64encode(props[item])
+                    not item.startswith('cache') and \
+                    not item.startswith('is_'):
+                if item == 'bitmap':
+                    item_str = "'%s'" % obj.handler.get_bitmap_b64str()
+                elif item == 'alpha_channel':
+                    alpha_channel = obj.handler.get_alpha_b64str()
+                    item_str = None
+                    if alpha_channel:
+                        item_str = "'%s'" % alpha_channel
+                elif obj.is_pixmap and item in ('handler',
+                                                'size', 'colorspace'):
+                    item_str = None
                 else:
                     item_str = self.field_to_str(props[item])
-                self.writeln("set_field('%s',%s)" % (item, item_str))
+                if item_str is not None:
+                    self.writeln("set_field('%s',%s)" % (item, item_str))
         for child in obj.childs:
             self.save_obj(child)
         self.writeln("obj_end()")

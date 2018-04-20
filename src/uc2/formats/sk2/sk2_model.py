@@ -15,15 +15,18 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import math
-from copy import deepcopy
 from base64 import b64decode, b64encode
+from copy import deepcopy
 
+from sk2_cids import *
 from uc2 import _, cms, uc2const, libgeom, sk2const
 from uc2.formats.generic import TextModelObject
-from sk2_cids import *
+from uc2.libimg.handlers import EditableImageHandler
 
-GENERIC_FIELDS = ['cid', 'childs', 'parent', 'config']
+GENERIC_FIELDS = ['cid', 'childs', 'parent', 'config', 'handler']
+LOG = logging.getLogger(__name__)
 
 
 class DocumentObject(TextModelObject):
@@ -1034,10 +1037,10 @@ class Pixmap(PrimitiveObject):
 
     cid = PIXMAP
 
-    bitmap = ''
-    alpha_channel = ''
-    size = (100, 100)
-    colorspace = None
+    bitmap = None
+    alpha_channel = None
+
+    handler = None
 
     cache_paths = None
     cache_cpath = None
@@ -1047,27 +1050,37 @@ class Pixmap(PrimitiveObject):
     is_pixmap = True
 
     def __init__(self, config, parent=None,
-                 bitmap='',
-                 alpha_channel='',
-                 size=(100, 100),
+                 bitmap=None,
+                 alpha_channel=None,
                  trafo=[] + sk2const.NORMAL_TRAFO,
                  style=[] + sk2const.EMPTY_STYLE):
         self.cid = PIXMAP
         self.config = config
         self.parent = parent
-        self.bitmap = bitmap
-        self.set_alpha_channel(alpha_channel)
-        self.size = size
+        self.handler = EditableImageHandler(self)
+        self.handler.set_images_from_str(bitmap, alpha_channel)
         self.trafo = trafo
         self.style = style
 
+    @property
+    def colorspace(self):
+        return self.handler.get_mode()
+
+    @property
+    def size(self):
+        return self.handler.get_size()
+
     def has_alpha(self):
-        if not self.alpha_channel:
-            return False
-        return True
+        return self.handler.has_alpha()
+
+    def set_bitmap(self, bitmap):
+        self.handler.set_images_from_str(bitmap)
+
+    def get_bitmap(self):
+        return self.bitmap
 
     def set_alpha_channel(self, alpha):
-        self.alpha_channel = alpha
+        self.alpha_channel = alpha if alpha else None
         self.clear_color_cache()
 
     def get_alpha_channel(self):
@@ -1095,13 +1108,15 @@ class Pixmap(PrimitiveObject):
         return h_dpi, v_dpi
 
     def update(self):
-        self.clear_color_cache()
         PrimitiveObject.update(self)
 
+    def copy(self, src=None, dst=None):
+        obj = PrimitiveObject.copy(self, src, dst)
+        obj.handler = self.handler.copy(obj)
+        return obj
+
     def clear_color_cache(self):
-        self.cache_cdata = None
-        self.cache_ps_cdata = None
-        self.cache_gray_cdata = None
+        self.handler.clear_cache()
 
 
 CID_TO_CLASS = {

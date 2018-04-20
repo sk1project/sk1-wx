@@ -40,38 +40,28 @@ class PrintRenderer(CairoRenderer):
             r, g, b = self.cms.get_display_color(gc)
         return r, g, b, color[2]
 
-    def get_image(self, pixmap):
+    def get_surface(self, obj):
         if self.colorspace == uc2const.COLOR_RGB:
-            if not pixmap.cache_cdata:
-                proofing = self.cms.proofing
-                self.cms.proofing = False
-                libimg.update_image(self.cms, pixmap)
-                self.cms.proofing = proofing
-            return pixmap.cache_cdata
+            return obj.handler.get_surface(self.cms)
         elif self.colorspace == uc2const.COLOR_CMYK:
-            if not pixmap.cache_ps_cdata:
-                libimg.update_image(self.cms, pixmap, True)
-                pixmap.cache_ps_cdata = pixmap.cache_cdata
-                pixmap.cache_cdata = None
-            return pixmap.cache_ps_cdata
+            return obj.handler.get_surface(self.cms, True)
         else:
-            if not pixmap.cache_gray_cdata:
-                libimg.update_gray_image(self.cms, pixmap)
-            return pixmap.cache_gray_cdata
+            return obj.handler.get_surface(self.cms, stroke_mode=True)
 
-    def get_pattern_image(self, obj):
+    def get_pattern_surface(self, obj):
+        image_obj = self._create_pattern_image(obj)
         if self.colorspace == uc2const.COLOR_RGB:
             if not obj.cache_pattern_img:
-                image_obj = self._create_pattern_image(obj)
-                obj.cache_pattern_img = image_obj.cache_cdata
+                s = image_obj.handler.get_surface(self.cms)
+                obj.cache_pattern_img = s
             return obj.cache_pattern_img
         elif self.colorspace == uc2const.COLOR_CMYK:
             if not obj.cache_ps_pattern_img:
-                image_obj = self._create_pattern_image(obj, force_proofing=True)
-                obj.cache_ps_pattern_img = image_obj.cache_cdata
-            return obj.cache_ps_pattern_img
+                s = image_obj.handler.get_surface(self.cms, True)
+                obj.cache_ps_pattern_img = s
+            return obj.cache_ps_pattern_im
         else:
             if not obj.cache_gray_pattern_img:
-                image_obj = self._create_pattern_image(obj, gray=True)
-                obj.cache_gray_pattern_img = image_obj.cache_gray_cdata
+                s = image_obj.handler.get_surface(self.cms, stroke_mode=True)
+                obj.cache_gray_pattern_img = s
             return obj.cache_gray_pattern_img

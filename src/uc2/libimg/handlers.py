@@ -16,6 +16,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import cairo
+import logging
 import os
 from base64 import b64decode, b64encode
 from cStringIO import StringIO
@@ -30,6 +31,8 @@ from . import magickwand
 
 TIFF_FMT = 'TIFF'
 PNG_FMT = 'PNG'
+
+LOG = logging.getLogger(__name__)
 
 
 class ImageHandler(object):
@@ -57,11 +60,6 @@ class ImageHandler(object):
         self.cdata = None
         self.ps_cdata = None
         self.gray_cdata = None
-
-    def copy(self, pixmap):
-        hdl = ImageHandler(pixmap)
-        hdl.set_images(self.bitmap.copy() if self.bitmap else None,
-                       self.alpha.copy() if self.alpha else None)
 
     def _get_saver_fmt(self, image):
         return TIFF_FMT if image.mode == uc2const.IMAGE_CMYK else PNG_FMT
@@ -98,6 +96,9 @@ class ImageHandler(object):
                         self._str2image(alpha_str))
 
     # Pixmap loading
+    def update_cache(self, cms):
+        pass
+
     def load_from_images(self, cms, image, alpha=None):
         image.load()
         if alpha:
@@ -134,6 +135,7 @@ class ImageHandler(object):
             if alpha.mode.endswith('A'):
                 alpha = alpha.split()[-1]
         self.set_images(image, alpha)
+        self.update_cache(cms)
 
     def _load_by_pil(self, cms, fileptr):
         fileptr.seek(0)
@@ -149,8 +151,10 @@ class ImageHandler(object):
 
     def load_from_fileptr(self, cms, fileptr):
         try:
+            LOG.debug('Try loading by PIL')
             self._load_by_pil(cms, fileptr)
         except IOError:
+            LOG.debug('PIL cannot load this image. Try loading by ImageMagick')
             self._load_by_magickwand(cms, fileptr)
 
     def load_from_file(self, cms, filepath):
@@ -281,8 +285,18 @@ class DrawableImageHandler(ImageHandler):
                 self.cdata = self._get_surface(cms)
             return self.cdata
 
+    def update_cache(self, cms):
+        self.get_surface(cms, cms.proofing)
+
 
 class EditableImageHandler(DrawableImageHandler):
+
+    def copy(self, pixmap):
+        hdl = EditableImageHandler(pixmap)
+        hdl.set_images(self.bitmap.copy() if self.bitmap else None,
+                       self.alpha.copy() if self.alpha else None)
+        return hdl
+
     def remove_aplha(self):
         self.alpha = None
         self.clear_cache()

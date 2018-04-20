@@ -68,43 +68,38 @@ class CairoRenderer:
             r, g, b = self.cms.get_rgb_color(color)[1]
         return r, g, b, color[2]
 
-    def get_image(self, pixmap):
-        if self.cms.proofing:
-            if not pixmap.cache_ps_cdata:
-                libimg.update_image(self.cms, pixmap)
-                pixmap.cache_ps_cdata = pixmap.cache_cdata
-                pixmap.cache_cdata = None
-            return pixmap.cache_ps_cdata
+    def get_surface(self, obj):
+        if self.contour_flag:
+            return obj.handler.get_surface(self.cms, stroke_mode=True)
         else:
-            if not pixmap.cache_cdata:
-                libimg.update_image(self.cms, pixmap)
-            return pixmap.cache_cdata
+            return obj.handler.get_surface(self.cms, self.cms.proofing)
 
-    def _create_pattern_image(self, obj, force_proofing=False, gray=False):
+    def _create_pattern_image(self, obj):
         fill = obj.style[0]
         pattern_fill = fill[2]
-        bmpstr = b64decode(pattern_fill[1])
         image_obj = sk2_model.Pixmap(obj.config)
-        libimg.set_image_data(self.cms, image_obj, bmpstr)
-        libimg.flip_top_to_bottom(image_obj)
+        image_obj.handler.load_from_b64str(pattern_fill[1])
+        image_obj.handler.flip_top_to_bottom()
         if pattern_fill[0] == sk2const.PATTERN_IMG and len(pattern_fill) > 2:
             image_obj.style[3] = deepcopy(pattern_fill[2])
-        if gray:
-            libimg.update_gray_image(self.cms, image_obj)
-        else:
-            libimg.update_image(self.cms, image_obj, force_proofing)
         return image_obj
 
-    def get_pattern_image(self, obj):
-        if self.cms.proofing:
+    def get_pattern_surface(self, obj):
+        image_obj = self._create_pattern_image(obj)
+        if self.contour_flag:
+            if not obj.cache_gray_pattern_img:
+                s = image_obj.handler.get_surface(self.cms, stroke_mode=True)
+                obj.cache_gray_pattern_img = s
+            return obj.cache_gray_pattern_img
+        elif self.cms.proofing:
             if not obj.cache_ps_pattern_img:
-                image_obj = self._create_pattern_image(obj)
-                obj.cache_ps_pattern_img = image_obj.cache_cdata
-            return obj.cache_ps_pattern_img
+                s = image_obj.handler.get_surface(self.cms, True)
+                obj.cache_ps_pattern_img = s
+            return obj.cache_ps_pattern_im
         else:
             if not obj.cache_pattern_img:
-                image_obj = self._create_pattern_image(obj)
-                obj.cache_pattern_img = image_obj.cache_cdata
+                s = image_obj.handler.get_surface(self.cms)
+                obj.cache_pattern_img = s
             return obj.cache_pattern_img
 
     # -------DOCUMENT RENDERING
@@ -181,17 +176,13 @@ class CairoRenderer:
                               - zoom * m21, zoom * m22, x0, y0)
         ctx.set_matrix(matrix)
 
+        ctx.set_source_surface(self.get_surface(obj))
+        if zoom * abs(m11) > .98:
+            ctx.get_source().set_filter(cairo.FILTER_NEAREST)
+
         if self.contour_flag:
-            if not obj.cache_gray_cdata:
-                libimg.update_gray_image(self.cms, obj)
-            ctx.set_source_surface(obj.cache_gray_cdata)
-            if zoom * abs(m11) > .98:
-                ctx.get_source().set_filter(cairo.FILTER_NEAREST)
             ctx.paint_with_alpha(0.3)
         else:
-            ctx.set_source_surface(self.get_image(obj))
-            if zoom * abs(m11) > .98:
-                ctx.get_source().set_filter(cairo.FILTER_NEAREST)
             ctx.paint()
 
         ctx.set_matrix(canvas_matrix)
@@ -315,7 +306,7 @@ class CairoRenderer:
                 obj.fill_trafo = obj.fill_trafo[:4] + [obj.cache_bbox[0],
                                                        obj.cache_bbox[3]]
             pattern_fill = fill[2]
-            sp = cairo.SurfacePattern(self.get_pattern_image(obj))
+            sp = cairo.SurfacePattern(self.get_pattern_surface(obj))
             sp.set_extend(cairo.EXTEND_REPEAT)
             flip_matrix = cairo.Matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
             if len(pattern_fill) > 3:

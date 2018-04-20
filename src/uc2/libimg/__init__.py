@@ -15,6 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import os
 import cairo
 from copy import deepcopy
@@ -29,6 +30,8 @@ from uc2.uc2const import IMAGE_GRAY, IMAGE_MONO, DUOTONES, SUPPORTED_CS
 from uc2 import uc2const
 from uc2.utils import fsutils
 
+LOG = logging.getLogger(__name__)
+
 
 def get_version():
     return Image.PILLOW_VERSION
@@ -39,7 +42,12 @@ def get_magickwand_version():
 
 
 def check_image(path):
-    return magickwand.check_image_file(path)
+    try:
+        Image.open(path)
+        LOG.debug('PIL check: True')
+        return True
+    except Exception:
+        return magickwand.check_image_file(path)
 
 
 def _get_saver_fmt(img):

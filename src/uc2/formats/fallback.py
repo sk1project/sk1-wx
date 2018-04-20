@@ -26,10 +26,6 @@ from uc2.utils.mixutils import merge_cnf
 def im_loader(appdata, filename=None, fileptr=None, translate=True, cnf=None,
               **kw):
     cnf = merge_cnf(cnf, kw)
-    if filename and not fileptr:
-        fileptr = get_fileptr(filename)
-    content = fileptr.read()
-    fileptr.close()
 
     sk2_doc = SK2_Presenter(appdata, cnf)
     sk2_doc.doc_file = filename
@@ -38,7 +34,7 @@ def im_loader(appdata, filename=None, fileptr=None, translate=True, cnf=None,
     page = sk2_doc.methods.get_page()
 
     image_obj = sk2_model.Pixmap(sk2_doc.config)
-    libimg.set_image_data(sk2_doc.cms, image_obj, content)
+    image_obj.handler.load_from_file(sk2_doc.cms, filename)
 
     orient = uc2const.PORTRAIT
     w = image_obj.size[0] * uc2const.px_to_pt
