@@ -25,7 +25,6 @@ from sk1 import events, config, modes
 
 
 class AbstractAPI:
-
     presenter = None
     view = None
     methods = None
@@ -367,6 +366,9 @@ class AbstractAPI:
 
     def _set_alpha(self, obj, alphastr):
         obj.set_alpha_channel(alphastr)
+
+    def _set_handler(self, obj, handler):
+        obj.handler = handler
 
     def _get_text_data(self, text_obj):
         text = text_obj.get_text()
@@ -1888,67 +1890,46 @@ class PresenterAPI(AbstractAPI):
 
     # --- PIXMAP
 
+    def _change_handler(self, obj, old_handler, new_handler):
+        self._set_handler(obj, new_handler)
+        transaction = [
+            [[self._set_handler, obj, old_handler],
+             [self._set_selection, [obj, ]]],
+            [[self._set_handler, obj, new_handler],
+             [self._set_selection, [obj, ]]],
+            False]
+        self.add_undo(transaction)
+        self.selection.update()
+
     def convert_bitmap(self, colorspace):
         cms = self.presenter.cms
-        sel_before = [] + self.selection.objs
-        obj = sel_before[0]
-        old_bmpstr = obj.bitmap
-        old_colorspace = obj.colorspace
-        new_bmpstr = libimg.convert_image(cms, obj, colorspace)
-        self._set_bitmap(obj, new_bmpstr, colorspace)
-        transaction = [
-            [[self._set_bitmap, obj, old_bmpstr, old_colorspace],
-             [self._set_selection, sel_before]],
-            [[self._set_bitmap, obj, new_bmpstr, colorspace],
-             [self._set_selection, sel_before]],
-            False]
-        self.add_undo(transaction)
-        self.selection.update()
+        obj = self.selection.objs[0]
+        old_handler = obj.handler
+        new_handler = old_handler.copy()
+        new_handler.convert_image(cms, colorspace)
+        self._change_handler(obj, old_handler, new_handler)
 
     def invert_bitmap(self):
-        sel_before = [] + self.selection.objs
-        obj = sel_before[0]
-        old_bmpstr = obj.bitmap
-        new_bmpstr = libimg.invert_image(self.presenter.cms, old_bmpstr)
-        self._set_bitmap(obj, new_bmpstr)
-        transaction = [
-            [[self._set_bitmap, obj, old_bmpstr],
-             [self._set_selection, sel_before]],
-            [[self._set_bitmap, obj, new_bmpstr],
-             [self._set_selection, sel_before]],
-            False]
-        self.add_undo(transaction)
-        self.selection.update()
+        cms = self.presenter.cms
+        obj = self.selection.objs[0]
+        old_handler = obj.handler
+        new_handler = old_handler.copy()
+        new_handler.invert_image(cms)
+        self._change_handler(obj, old_handler, new_handler)
 
     def remove_alpha(self):
-        sel_before = [] + self.selection.objs
-        obj = sel_before[0]
-        old_alphastr = obj.get_alpha_channel()
-        new_alphastr = ''
-        self._set_alpha(obj, new_alphastr)
-        transaction = [
-            [[self._set_alpha, obj, old_alphastr],
-             [self._set_selection, sel_before]],
-            [[self._set_alpha, obj, new_alphastr],
-             [self._set_selection, sel_before]],
-            False]
-        self.add_undo(transaction)
-        self.selection.update()
+        obj = self.selection.objs[0]
+        old_handler = obj.handler
+        new_handler = old_handler.copy()
+        new_handler.remove_alpha()
+        self._change_handler(obj, old_handler, new_handler)
 
     def invert_alpha(self):
-        sel_before = [] + self.selection.objs
-        obj = sel_before[0]
-        old_alphastr = obj.get_alpha_channel()
-        new_alphastr = libimg.invert_image(self.presenter.cms, old_alphastr)
-        self._set_alpha(obj, new_alphastr)
-        transaction = [
-            [[self._set_alpha, obj, old_alphastr],
-             [self._set_selection, sel_before]],
-            [[self._set_alpha, obj, new_alphastr],
-             [self._set_selection, sel_before]],
-            False]
-        self.add_undo(transaction)
-        self.selection.update()
+        obj = self.selection.objs[0]
+        old_handler = obj.handler
+        new_handler = old_handler.copy()
+        new_handler.invert_alpha()
+        self._change_handler(obj, old_handler, new_handler)
 
     def set_bitmap_dpi(self, h_dpi, v_dpi=None):
         pass

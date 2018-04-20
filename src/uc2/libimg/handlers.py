@@ -294,15 +294,21 @@ class DrawableImageHandler(ImageHandler):
 
 class EditableImageHandler(DrawableImageHandler):
 
-    def copy(self, pixmap):
+    def copy(self, pixmap=None):
+        pixmap = pixmap or self.pixmap
         hdl = EditableImageHandler(pixmap)
         hdl.set_images(self.bitmap.copy() if self.bitmap else None,
                        self.alpha.copy() if self.alpha else None)
         return hdl
 
-    def remove_aplha(self):
+    def remove_alpha(self):
         self.alpha = None
         self.clear_cache()
+
+    def invert_alpha(self):
+        if self.alpha:
+            self.alpha = ImageOps.invert(self.alpha)
+            self.clear_cache()
 
     def invert_image(self, cms):
         if self.bitmap.mode == uc2const.IMAGE_MONO:
