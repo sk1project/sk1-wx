@@ -138,7 +138,7 @@ modules = []
 scripts = ['src/script/uniconvertor', ]
 deb_scripts = []
 data_files = [
-    (install_path, ['GPLv3.txt', 'LICENSE', ]),
+    (install_path, ['LICENSE', ]),
 ]
 
 ############################################################
