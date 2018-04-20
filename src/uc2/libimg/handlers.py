@@ -121,7 +121,10 @@ class ImageHandler(object):
             profile = None
 
         if profile:
-            image = cms.adjust_image(image, profile)
+            try:
+                image = cms.adjust_image(image, profile)
+            except Exception as e:
+                LOG.warning('Error adjusting image: %s', e)
 
         cfg = self.pixmap.config
         style = deepcopy(cfg.default_image_style)
