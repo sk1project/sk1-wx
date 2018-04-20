@@ -59,7 +59,7 @@ class PrintRenderer(CairoRenderer):
             if not obj.cache_ps_pattern_img:
                 s = image_obj.handler.get_surface(self.cms, True)
                 obj.cache_ps_pattern_img = s
-            return obj.cache_ps_pattern_im
+            return obj.cache_ps_pattern_img
         else:
             if not obj.cache_gray_pattern_img:
                 s = image_obj.handler.get_surface(self.cms, stroke_mode=True)

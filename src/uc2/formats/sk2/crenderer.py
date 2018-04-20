@@ -78,7 +78,7 @@ class CairoRenderer:
         fill = obj.style[0]
         pattern_fill = fill[2]
         image_obj = sk2_model.Pixmap(obj.config)
-        image_obj.handler.load_from_b64str(pattern_fill[1])
+        image_obj.handler.load_from_b64str(self.cms, pattern_fill[1])
         image_obj.handler.flip_top_to_bottom()
         if pattern_fill[0] == sk2const.PATTERN_IMG and len(pattern_fill) > 2:
             image_obj.style[3] = deepcopy(pattern_fill[2])
@@ -95,7 +95,7 @@ class CairoRenderer:
             if not obj.cache_ps_pattern_img:
                 s = image_obj.handler.get_surface(self.cms, True)
                 obj.cache_ps_pattern_img = s
-            return obj.cache_ps_pattern_im
+            return obj.cache_ps_pattern_img
         else:
             if not obj.cache_pattern_img:
                 s = image_obj.handler.get_surface(self.cms)

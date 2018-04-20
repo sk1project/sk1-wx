@@ -315,7 +315,7 @@ class SwatchCanvas(wal.SensitiveCanvas):
         surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
         ctx = cairo.Context(surface)
         self.draw_cairo_background(ctx)
-        bmpstr = b64decode(pattern[1])
+        #bmpstr = b64decode(pattern[1])
         if self.cms.app.current_doc:
             cfg = self.cms.app.current_doc.model.config
         else:
@@ -324,12 +324,14 @@ class SwatchCanvas(wal.SensitiveCanvas):
                                        'sk2_config.xml')
             cfg.load(config_file)
         image_obj = sk2_model.Pixmap(cfg)
-        libimg.set_image_data(self.cms, image_obj, bmpstr)
-        libimg.flip_left_to_right(image_obj)
+        hndl=image_obj.handler
+        hndl.load_from_b64str(self.cms, pattern[1])
+        #libimg.set_image_data(self.cms, image_obj, bmpstr)
+        hndl.flip_left_to_right()
         if pattern[0] == sk2const.PATTERN_IMG and len(pattern) > 2:
             image_obj.style[3] = deepcopy(pattern[2])
-        libimg.update_image(self.cms, image_obj)
-        sp = cairo.SurfacePattern(image_obj.cache_cdata)
+        #libimg.update_image(self.cms, image_obj)
+        sp = cairo.SurfacePattern(hndl.get_surface(self.cms))
         sp.set_extend(cairo.EXTEND_REPEAT)
         trafo = [-1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
         if len(pattern) > 3:
@@ -340,7 +342,7 @@ class SwatchCanvas(wal.SensitiveCanvas):
         ctx.set_source(sp)
         ctx.rectangle(0, 0, w, h)
         ctx.fill()
-        image_obj.cache_cdata = None
+        #image_obj.cache_cdata = None
         self.gc_draw_bitmap(wal.copy_surface_to_bitmap(surface), 0, 0)
 
     def draw_empty_pattern(self):
