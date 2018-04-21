@@ -1032,14 +1032,7 @@ class SVG_to_SK2_Translator(object):
         trafo = libgeom.multiply_trafo(trafo, tr)
 
         pixmap = sk2_model.Pixmap(cfg)
-        image_stream = StringIO()
-        if raw_image.mode == "CMYK":
-            raw_image.save(image_stream, 'JPEG', quality=100)
-        else:
-            raw_image.save(image_stream, 'PNG')
-        content = image_stream.getvalue()
-
-        libimg.set_image_data(self.sk2_doc.cms, pixmap, content)
+        pixmap.handler.load_from_images(self.sk2_doc.cms, raw_image)
         pixmap.trafo = trafo
 
         container = None
@@ -1246,10 +1239,9 @@ class SK2_to_SVG_Translator(object):
         self.append_obj(dest_parent, pth)
 
     def translate_pixmap(self, dest_parent, source_obj):
+        surface = source_obj.handler.get_surface(self.sk2_doc.cms)
         image_stream = StringIO()
-        if source_obj.cache_cdata is None:
-            libimg.update_image(self.sk2_doc.cms, source_obj)
-        source_obj.cache_cdata.write_to_png(image_stream)
+        surface.write_to_png(image_stream)
         content = b64encode(image_stream.getvalue())
         image = svglib.create_xmlobj('image')
         w, h = source_obj.get_size()

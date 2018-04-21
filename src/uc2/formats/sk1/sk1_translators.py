@@ -292,16 +292,8 @@ class SK1_to_SK2_Translator(object):
     def translate_image(self, dest_parent, source_image):
         trafo = self.get_sk2_trafo(source_image)
         dest_image = sk2_model.Pixmap(dest_parent.config)
-
-        image = source_image.image
-        image_stream = StringIO()
-        if image.mode == "CMYK":
-            image.save(image_stream, 'JPEG', quality=100)
-        else:
-            image.save(image_stream, 'PNG')
-        content = image_stream.getvalue()
-
-        libimg.set_image_data(self.sk2_doc.cms, dest_image, content)
+        image = source_image.image.copy()
+        dest_image.handler.load_from_images(image)
         dest_image.trafo = trafo
         return dest_image
 
@@ -505,16 +497,7 @@ class SK2_to_SK1_Translator(object):
         return dest_curve
 
     def translate_image(self, dest_parent, source_obj):
-        image_stream = StringIO()
-        if source_obj.colorspace == uc2const.IMAGE_CMYK:
-            image_stream.write(source_obj.bitmap)
-        else:
-            if source_obj.cache_cdata is None:
-                libimg.update_image(self.sk2_doc.cms, source_obj)
-            source_obj.cache_cdata.write_to_png(image_stream)
-        image_stream.seek(0)
-        image = Image.open(image_stream)
-        image.load()
+        image = source_obj.handler.get_display_image(self.sk2_doc.cms)
         m11, m12, m21, m22, v1, v2 = source_obj.trafo
         v1 += self.dx
         v2 += self.dy

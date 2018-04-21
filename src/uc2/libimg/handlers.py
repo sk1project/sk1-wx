@@ -222,7 +222,7 @@ class DrawableImageHandler(ImageHandler):
         return (fg_img, fg_alpha) if fg else None, \
                (bg_img, bg_alpha) if bg else None
 
-    def _get_display_image(self, cms, proofing=False):
+    def get_display_image(self, cms, proofing=False):
         image = self.bitmap
         if image.mode in uc2const.DUOTONES:
             if image.mode == uc2const.IMAGE_MONO:
@@ -264,7 +264,7 @@ class DrawableImageHandler(ImageHandler):
             gray_image = self.bitmap.convert(uc2const.IMAGE_GRAY)
             rgb_image = gray_image.convert(uc2const.IMAGE_RGB)
         else:
-            rgb_image = self._get_display_image(cms, proofing)
+            rgb_image = self.get_display_image(cms, proofing)
 
         if rgb_image is None:
             return None

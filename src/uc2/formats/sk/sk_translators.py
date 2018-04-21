@@ -333,13 +333,8 @@ class SK_to_SK2_Translator(object):
     def translate_image(self, dest_parent, source_image):
         trafo = self.get_sk2_trafo(source_image)
         dest_image = sk2_model.Pixmap(dest_parent.config)
-
-        image = source_image.image
-        image_stream = StringIO()
-        image.save(image_stream, 'PNG')
-        content = image_stream.getvalue()
-
-        libimg.set_image_data(self.sk2_doc.cms, dest_image, content)
+        image = source_image.image.copy()
+        dest_image.handler.load_from_images(image)
         dest_image.trafo = trafo
         return dest_image
 

@@ -17,6 +17,7 @@
 
 import logging
 from copy import deepcopy
+from cStringIO import StringIO
 
 from uc2 import uc2const, libgeom, libpango, libimg, sk2const
 from uc2.formats.sk2 import sk2_model
@@ -723,8 +724,7 @@ class WMF_to_SK2_Translator(object):
         trafo = [w / src_w, 0.0, 0.0, h / src_h, p0[0], p0[1] - h]
 
         pixmap = sk2_model.Pixmap(self.layer.config)
-
-        libimg.set_image_data(self.sk2_doc.cms, pixmap, imagestr)
+        pixmap.handler.load_from_fileptr(self.sk2_doc.cms, StringIO(imagestr))
         pixmap.trafo = trafo
         self.layer.childs.append(pixmap)
 
