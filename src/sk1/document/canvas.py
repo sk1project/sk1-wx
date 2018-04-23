@@ -469,7 +469,7 @@ class AppCanvas(Painter):
                     self.dragged_guide = ()
             self.renderer.finalize()
         except Exception as e:
-            LOG.error('Painting error %s', e)
+            LOG.error('Painting error %s', e, exc_info=True)
 
 
 class HitSurface:
