@@ -15,7 +15,6 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import cairo
 import logging
 import os
 from base64 import b64decode, b64encode
@@ -102,6 +101,7 @@ class ImageHandler(object):
 
     def load_from_images(self, cms, image, alpha=None):
         image.load()
+        LOG.debug('Image mode %s', image.mode)
         if alpha:
             alpha.load()
 
@@ -109,14 +109,18 @@ class ImageHandler(object):
 
         if image.mode == 'P' and 'transparency' in image.info:
             image = image.convert(uc2const.IMAGE_RGBA)
+        LOG.debug('Image mode %s', image.mode)
 
         if not alpha and image.mode.endswith('A'):
             alpha = image.split()[-1]
+        if image.mode == uc2const.IMAGE_GRAY_A:
+            image = image.convert(uc2const.IMAGE_GRAY)
 
         if image.mode not in uc2const.SUPPORTED_CS:
             if image.mode != uc2const.IMAGE_RGBA:
                 profile = None
             image = image.convert(uc2const.IMAGE_RGB)
+        LOG.debug('Image mode %s', image.mode)
 
         if image.mode not in uc2const.SUPPORTED_CS[1:]:
             profile = None
