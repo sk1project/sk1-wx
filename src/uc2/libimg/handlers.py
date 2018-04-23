@@ -251,13 +251,19 @@ class DrawableImageHandler(ImageHandler):
                 display_image = bg_img
             elif fg_img:
                 display_image = fg_img
-                alpha = self.alpha.copy()
-                alpha.paste(ImageOps.invert(image), (0, 0), image)
+                if self.alpha:
+                    alpha = self.alpha.copy()
+                    alpha.paste(ImageOps.invert(image), (0, 0), image)
+                else:
+                    alpha = ImageOps.invert(image)
                 display_image.putalpha(alpha)
             elif bg_img:
                 display_image = bg_img
-                alpha = self.alpha.copy()
-                alpha.paste(image, (0, 0), ImageOps.invert(image))
+                if self.alpha:
+                    alpha = self.alpha.copy()
+                    alpha.paste(image, (0, 0), ImageOps.invert(image))
+                else:
+                    alpha = image.copy()
                 display_image.putalpha(alpha)
             return display_image
         if proofing and image.mode != uc2const.IMAGE_CMYK:
