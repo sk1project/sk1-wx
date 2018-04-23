@@ -16,6 +16,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import cairo
+from cStringIO import StringIO
 
 import _libcairo
 
@@ -188,3 +189,10 @@ def get_surface_pixel(surface):
 
 def check_surface_whiteness(surface):
     return _libcairo.get_pixel(surface) == [255, 255, 255]
+
+
+def image_to_surface(image):
+    png_stream = StringIO()
+    image.save(png_stream, format='PNG')
+    png_stream.seek(0)
+    return cairo.ImageSurface.create_from_png(png_stream)

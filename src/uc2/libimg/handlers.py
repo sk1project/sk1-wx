@@ -23,9 +23,10 @@ from cStringIO import StringIO
 from copy import deepcopy
 
 from PIL import Image, ImageOps
-from uc2.cms import val_255
 
 from uc2 import uc2const
+from uc2.cms import val_255
+from uc2.libcairo import image_to_surface
 from uc2.utils import fsutils
 from . import magickwand
 
@@ -272,10 +273,8 @@ class DrawableImageHandler(ImageHandler):
         if self.alpha and rgb_image.mode == uc2const.IMAGE_RGB:
             rgb_image = rgb_image.copy()
             rgb_image.putalpha(self.alpha)
-        png_stream = StringIO()
-        rgb_image.save(png_stream, format=PNG_FMT)
-        png_stream.seek(0)
-        return cairo.ImageSurface.create_from_png(png_stream)
+
+        return image_to_surface(rgb_image)
 
     def get_surface(self, cms, proofing=False, stroke_mode=False):
         if stroke_mode:
