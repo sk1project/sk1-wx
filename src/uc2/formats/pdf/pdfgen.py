@@ -16,9 +16,6 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
-from PIL import Image
-from base64 import b64decode
-from cStringIO import StringIO
 from copy import deepcopy
 from reportlab.lib.colors import CMYKColorSep, Color, CMYKColor
 from reportlab.lib.utils import ImageReader
@@ -27,11 +24,11 @@ from reportlab.pdfgen.canvas import Canvas, FILL_EVEN_ODD, FILL_NON_ZERO
 
 from pdfconst import PDF_VERSION_DEFAULT
 from uc2 import _, uc2const, events
-from uc2 import libgeom, sk2const, libimg
+from uc2 import libgeom, sk2const
 from uc2.formats.sk2 import sk2_model
 
 
-class UC_PDFInfo(PDFInfo):
+class UC2PDFInfo(PDFInfo):
     pdfxversion = 'PDF/X-4'
 
     def __init__(self, pdfdoc):
@@ -40,20 +37,19 @@ class UC_PDFInfo(PDFInfo):
         self.invariant = pdfdoc.invariant
 
     def format(self, document):
-        D = {}
-        D["Title"] = PDFString(self.title)
-        D["Author"] = PDFString(self.author)
-        D["CreationDate"] = PDFDate(invariant=self.invariant,
-                                    dateFormatter=self._dateFormatter)
-        D["Producer"] = PDFString(self.producer)
+        d = {"Title": PDFString(self.title),
+             "Author": PDFString(self.author),
+             "CreationDate": PDFDate(invariant=self.invariant,
+                                     dateFormatter=self._dateFormatter),
+             "Producer": PDFString(self.producer)}
         if self.pdfxversion:
-            D["GTS_PDFXVersion"] = PDFString(self.pdfxversion)
-        D["Creator"] = PDFString(self.creator)
-        D["Subject"] = PDFString(self.subject)
-        D["Keywords"] = PDFString(self.keywords)
+            d["GTS_PDFXVersion"] = PDFString(self.pdfxversion)
+        d["Creator"] = PDFString(self.creator)
+        d["Subject"] = PDFString(self.subject)
+        d["Keywords"] = PDFString(self.keywords)
 
-        PD = PDFDictionary(D)
-        return PD.format(document)
+        pd = PDFDictionary(d)
+        return pd.format(document)
 
 
 class PDFGenerator(object):
@@ -67,7 +63,7 @@ class PDFGenerator(object):
     def __init__(self, fileptr, cms, version=PDF_VERSION_DEFAULT):
         self.cms = cms
         self.canvas = Canvas(fileptr, pdfVersion=version[0])
-        self.info = UC_PDFInfo(self.canvas._doc)
+        self.info = UC2PDFInfo(self.canvas._doc)
         self.info.pdfxversion = version[1]
         self.info.subject = '---'
         self.canvas.setPageCompression(1)
@@ -232,12 +228,12 @@ class PDFGenerator(object):
         pdfcolor.red, pdfcolor.green, pdfcolor.blue = (r, g, b)
 
     def get_pdfcolor(self, color):
-        pdfcolor = None
         alpha = color[2]
         if self.use_spot and color[0] == uc2const.COLOR_SPOT:
             c, m, y, k = self.cms.get_cmyk_color(color)[1]
             spotname = color[3]
-            if spotname == uc2const.COLOR_REG: spotname = 'All'
+            if spotname == uc2const.COLOR_REG:
+                spotname = 'All'
             pdfcolor = CMYKColorSep(c, m, y, k, spotName=spotname, alpha=alpha)
         elif self.colorspace == uc2const.COLOR_CMYK:
             c, m, y, k = self.cms.get_cmyk_color(color)[1]
@@ -265,8 +261,8 @@ class PDFGenerator(object):
         self.set_rgb_values(color, pdfcolor)
         return pdfcolor
 
-    def stroke_pdfpath(self, pdfpath, stroke_style, stroke_trafo=[]):
-        width = stroke_style[1]
+    def stroke_pdfpath(self, pdfpath, stroke_style, stroke_trafo=None):
+        stroke_trafo = stroke_trafo or []
 
         if not stroke_style[8]:
             width = stroke_style[1]
@@ -291,7 +287,8 @@ class PDFGenerator(object):
         if dash:
             dashes = list(dash)
             w = width
-            if w < 1.0: w = 1.0
+            if w < 1.0:
+                w = 1.0
             for i in range(len(dashes)):
                 dashes[i] = w * dashes[i]
         self.canvas.setDash(dashes)
@@ -354,12 +351,15 @@ class PDFGenerator(object):
             self.fill_linear_tr_gradient(obj, pdfpath, fill_trafo, gradient)
 
     def get_grcolor_at_point(self, stops, point=0.0):
-        if not point: return self.get_pdfcolor(stops[0][1])
-        if point == 1.0: return self.get_pdfcolor(stops[-1][1])
+        if not point:
+            return self.get_pdfcolor(stops[0][1])
+        if point == 1.0:
+            return self.get_pdfcolor(stops[-1][1])
         stop0 = stops[0]
         stop1 = None
         for item in stops:
-            if item[0] < point: stop0 = item
+            if item[0] < point:
+                stop0 = item
             if item[0] >= point:
                 stop1 = item
                 break
@@ -489,18 +489,14 @@ class PDFGenerator(object):
         self.canvas.drawImage(img, 0, 0, mask='auto')
 
     def draw_pixmap_obj(self, obj):
+        hnd = obj.handler
+        cs = self.colorspace
         if obj.colorspace in uc2const.DUOTONES:
-            fg, bg = libimg.convert_duotone_to_image(self.cms, obj)
-            self.draw_image(*bg)
-            self.draw_image(*fg)
+            for bundle in hnd.convert_duotone_to_image(self.cms, cs):
+                if bundle:
+                    self.draw_image(*bundle)
         else:
-            raw_image = Image.open(StringIO(obj.bitmap))
-            raw_image.load()
-            alpha_chnl = None
-            if obj.has_alpha():
-                alpha_chnl = Image.open(StringIO(obj.get_alpha_channel()))
-                alpha_chnl.load()
-            self.draw_image(raw_image, alpha_chnl)
+            self.draw_image(hnd.bitmap, hnd.alpha)
 
     def draw_pixmap(self, obj):
         self.canvas.saveState()
@@ -521,13 +517,10 @@ class PDFGenerator(object):
         bbox = libgeom.get_paths_bbox(paths)
         cv_trafo = libgeom.multiply_trafo(pattern[3], fill_trafo)
 
-        bmpstr = b64decode(pattern[1])
         image_obj = sk2_model.Pixmap(obj.config)
-        libimg.set_image_data(self.cms, image_obj, bmpstr)
-        if pattern[0] == sk2const.PATTERN_IMG and \
-                        len(pattern) > 2:
+        image_obj.handler.load_from_b64str(self.cms, pattern[1])
+        if pattern[0] == sk2const.PATTERN_IMG and len(pattern) > 2:
             image_obj.style[3] = deepcopy(pattern[2])
-        libimg.update_image(self.cms, image_obj)
 
         self.canvas.saveState()
         self.canvas.clipPath(pdfpath, 0, 0)
