@@ -451,7 +451,7 @@ class SK1Application(wal.Application, UCApplication):
         if doc_file:
             try:
                 pixmap = self.current_doc.selection.objs[0]
-                libimg.extract_bitmap(pixmap, doc_file)
+                pixmap.handler.extract_bitmap(doc_file)
             except Exception as e:
                 first = _('Cannot save bitmap:')
                 msg = "%s\n'%s'." % (first, doc_file) + '\n'
