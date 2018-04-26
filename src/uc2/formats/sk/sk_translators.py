@@ -17,10 +17,8 @@
 
 import math
 from copy import deepcopy
-from cStringIO import StringIO
-from PIL import Image
 
-from uc2 import uc2const, libgeom, libimg, sk2const
+from uc2 import uc2const, libgeom, sk2const
 from uc2.formats.sk import sk_const, sk_model
 from uc2.formats.sk2 import sk2_model
 
@@ -516,13 +514,7 @@ class SK2_to_SK_Translator(object):
         return dest_curve
 
     def translate_image(self, dest_parent, source_obj):
-        image_stream = StringIO()
-        if source_obj.cache_cdata is None:
-            libimg.update_image(self.sk2_doc.cms, source_obj)
-        source_obj.cache_cdata.write_to_png(image_stream)
-        image_stream.seek(0)
-        image = Image.open(image_stream)
-        image.load()
+        image = source_obj.handler.get_display_image(self.sk2_doc.cms)
         m11, m12, m21, m22, v1, v2 = source_obj.trafo
         v1 += self.dx
         v2 += self.dy
