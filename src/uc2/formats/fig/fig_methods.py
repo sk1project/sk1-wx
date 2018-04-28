@@ -54,15 +54,25 @@ class FIGMethods(object):
             metainfo = '\n'.join(metainfo)
         self.model.comment = metainfo
 
+    def fig_to_in(self):
+        return self.model.resolution / uc2const.in_to_pt
+
+    def get_doc_trafo(self):
+        fig_to_in = self.fig_to_in()
+        return [1.0 / fig_to_in, 0.0, 0.0, -1.0 / fig_to_in, 0, 0]
+
     # --- PAGES
 
-    def get_pages_obj(self):
-        model = self.model
-        paper_size = uc2const.PAGE_FORMATS.get(model.paper_size)
+    def get_pages_size(self):
+        paper_size = uc2const.PAGE_FORMATS.get(self.model.paper_size)
         if not paper_size:
-            paper_size = uc2const.PAGE_FORMATS['A4']
-        if model.orientation == fig_const.LANDSCAPE:
+            paper_size = uc2const.PAGE_FORMATS['Letter']
+        if self.model.orientation == fig_const.LANDSCAPE:
             size = max(paper_size), min(paper_size)
         else:
             size = min(paper_size), max(paper_size)
-        return [model.paper_size, size, model.orientation]
+        return size
+
+    def get_pages_format(self):
+        size = self.get_pages_size()
+        return [self.model.paper_size, size, self.model.orientation]
