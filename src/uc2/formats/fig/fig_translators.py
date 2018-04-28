@@ -85,7 +85,14 @@ class FIG_to_SK2_Translator(object):
         self.translate_units()
         self.translate_metainfo()
         self.translate_page()
-        self.translate_obj(self.fig_mt.childs)
+        self.translate_obj(self.fig_mt.childs, sk2_doc.config)
+        self.apply_translate()
+
+    def apply_translate(self):
+        layer = self.sk2_mtds.get_layer(self.page)
+        for depth in sorted(self.depth_layer, reverse=True):
+            objects = self.depth_layer[depth]
+            self.sk2_mtds.append_objects(objects, layer)
 
     def translate_trafo(self):
         trafo1 = self.fig_mtds.get_doc_trafo()
@@ -106,40 +113,31 @@ class FIG_to_SK2_Translator(object):
         self.page = self.sk2_mtds.get_page()
         self.sk2_mtds.set_page_format(self.page, page_fmt)
 
-    def get_polyline_style(self, obj):
-        fill = self.get_fill(obj.fill_color, obj.area_fill)
-        stroke = self.get_stoke(obj)
-        style = [fill, stroke, [], []]
-        return style
-
-    def translate_obj(self, childs):
+    def translate_obj(self, childs, cfg):
         for child in childs:
             new_obj = None
             if child.cid == fig_model.OBJ_COLOR_DEF:
-                self.translate_color(child)
+                self.translate_color(child, cfg)
+            elif child.cid == fig_model.OBJ_COMPOUND:
+                self.translate_obj(child.childs, cfg)
             elif child.cid == fig_model.OBJ_POLYLINE:
-                new_obj = self.translate_polyline(child)
+                new_obj = self.translate_polyline(child, cfg)
             if new_obj:
                 self.get_depth_layer(child.depth).append(new_obj)
 
-        layer = self.sk2_mtds.get_layer(self.page)
-        for depth in sorted(self.depth_layer, reverse=True):
-            objects = self.depth_layer[depth]
-            self.sk2_mtds.append_objects(objects, layer)
-
-    def translate_color(self, obj):
-        if obj.idx > max(FIG_COLORS.keys()):
+    def translate_color(self, obj, cfg):
+        if obj.idx not in FIG_COLORS:
             rgb = cms.hexcolor_to_rgb(obj.hexcolor)
             color = [uc2const.COLOR_RGB, rgb, 1.0, obj.hexcolor]
             self.pallet[obj.idx] = color
 
-    def translate_polyline(self, obj):
-        cfg = self.sk2_doc.config
+    def translate_polyline(self, obj, cfg):
         tr = self.trafo
         style = self.get_polyline_style(obj)
         if obj.sub_type in (fig_const.T_ARC_BOX, fig_const.T_PIC_BOX):
             bbox = libgeom.bbox_for_points(obj.points)
             bbox_size = libgeom.bbox_size(bbox)
+            rect = [bbox[0], bbox[1], bbox_size[0], bbox_size[1]]
             corners = sk2const.CORNERS
             if obj.sub_type == fig_const.T_ARC_BOX:
                 try:
@@ -151,7 +149,7 @@ class FIG_to_SK2_Translator(object):
             else:
                 pass  # TODO: implement fig_const.T_PIC_BOX
             props = dict(
-                rect=bbox, trafo=tr[:], style=style, corners=corners[:]
+                rect=rect, trafo=tr[:], style=style, corners=corners[:]
             )
             new_obj = sk2_model.Rectangle(cfg, **props)
         else:
@@ -161,6 +159,12 @@ class FIG_to_SK2_Translator(object):
             props = dict(paths=paths, trafo=tr[:], style=style)
             new_obj = sk2_model.Curve(cfg, **props)
         return new_obj
+
+    def get_polyline_style(self, obj):
+        fill = self.get_fill(obj.fill_color, obj.area_fill)
+        stroke = self.get_stoke(obj)
+        style = [fill, stroke, [], []]
+        return style
 
     def get_depth_layer(self, depth):
         return self.depth_layer.setdefault(depth, [])
