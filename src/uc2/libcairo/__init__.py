@@ -18,6 +18,7 @@
 import cairo
 from cStringIO import StringIO
 
+from uc2 import uc2const
 import _libcairo
 
 SURFACE = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
@@ -191,8 +192,24 @@ def check_surface_whiteness(surface):
     return _libcairo.get_pixel(surface) == [255, 255, 255]
 
 
-def image_to_surface(image):
+def image_to_surface_n(image):
     png_stream = StringIO()
     image.save(png_stream, format='PNG')
     png_stream.seek(0)
     return cairo.ImageSurface.create_from_png(png_stream)
+
+
+def image_to_surface(image):
+    if image.mode not in (uc2const.IMAGE_RGB, uc2const.IMAGE_RGBA):
+        image = image.convert(uc2const.IMAGE_RGBA if image.mode.endswith('A')
+                              else uc2const.IMAGE_RGB)
+    surface = None
+    w,h = image.size
+    image.load()
+    if image.mode == uc2const.IMAGE_RGBA:
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+        _libcairo.draw_rgba_image(surface, image.im, w, h)
+    elif image.mode == uc2const.IMAGE_RGB:
+        surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
+        _libcairo.draw_rgb_image(surface, image.im, w, h)
+    return surface

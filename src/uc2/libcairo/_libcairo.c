@@ -19,8 +19,15 @@
 #include <Python.h>
 #include <pycairo.h>
 #include <cairo.h>
+#include "Imaging.h"
 
 static Pycairo_CAPI_t *Pycairo_CAPI;
+
+/* redefine the ImagingObject struct defined in _imagingmodule.c */
+typedef struct {
+    PyObject_HEAD
+    Imaging image;
+} ImagingObject;
 
 static PyObject *
 cairo_DrawRectangle (PyObject *self, PyObject *args) {
@@ -232,6 +239,92 @@ cairo_ConvertMatrixToTrafo (PyObject *self, PyObject *args) {
 	return Py_BuildValue("[dddddd]", m11, m21, m12, m22, dx, dy);
 }
 
+static PyObject *
+cairo_DrawRGBImage (PyObject *self, PyObject *args) {
+
+	PycairoSurface *pysurface;
+	cairo_surface_t *surface;
+	int width, height, offset, x, y, stride;
+	ImagingObject* src;
+	Imaging imaging;
+
+	char* imagebuf;
+	unsigned char* rgb;
+	unsigned char *dest;
+
+	if (!PyArg_ParseTuple(args, "OOii", &pysurface, &src, &width, &height)) {
+		return NULL;
+	}
+
+
+	surface = pysurface -> surface;
+	imaging = src -> image;
+
+	cairo_surface_flush(surface);
+	dest = cairo_image_surface_get_data(surface);
+	stride = cairo_image_surface_get_stride(surface);
+	offset=0;
+	for(y=0; y<height; y++) {
+		imagebuf = imaging -> image[y];
+		for(x=0; x<width; x++) {
+		    rgb = (unsigned char*)(imagebuf + x*4);
+            dest[offset + x*4 + 2] = rgb[0];//R
+            dest[offset + x*4 + 1] = rgb[1];//G
+            dest[offset + x*4] = rgb[2];//B
+            dest[offset + x*4 + 3] = 0;//A
+			//resulted order BGR
+        }
+		offset += stride;
+    }
+    cairo_surface_mark_dirty(surface);
+
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+static PyObject *
+cairo_DrawRGBAImage (PyObject *self, PyObject *args) {
+
+	PycairoSurface *pysurface;
+	cairo_surface_t *surface;
+	int width, height, offset, x, y, stride;
+	ImagingObject* src;
+	Imaging imaging;
+
+	char* imagebuf;
+	unsigned char* rgb;
+	unsigned char *dest;
+
+	if (!PyArg_ParseTuple(args, "OOii", &pysurface, &src, &width, &height)) {
+		return NULL;
+	}
+
+
+	surface = pysurface -> surface;
+	imaging = src -> image;
+
+	cairo_surface_flush(surface);
+	dest = cairo_image_surface_get_data(surface);
+	stride = cairo_image_surface_get_stride(surface);
+	offset=0;
+	for(y=0; y<height; y++) {
+		imagebuf = imaging -> image[y];
+		for(x=0; x<width; x++) {
+		    rgb = (unsigned char*)(imagebuf + x*4);
+            dest[offset + x*4 + 2] = rgb[0]*rgb[3]/256;//R
+            dest[offset + x*4 + 1] = rgb[1]*rgb[3]/256;//G
+            dest[offset + x*4] = rgb[2]*rgb[3]/256;//B
+            dest[offset + x*4 + 3] = rgb[3];//A
+			//resulted order BGRA
+        }
+		offset += stride;
+    }
+    cairo_surface_mark_dirty(surface);
+
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
 static
 PyMethodDef cairo_methods[] = {
 	{"get_path_from_cpath", cairo_GetPDPathFromPath, METH_VARARGS},
@@ -239,6 +332,8 @@ PyMethodDef cairo_methods[] = {
 	{"get_trafo", cairo_ConvertMatrixToTrafo, METH_VARARGS},
 	{"apply_trafo", cairo_ApplyTrafoToPath, METH_VARARGS},
 	{"get_pixel", cairo_GetSurfaceFirstPixel, METH_VARARGS},
+	{"draw_rgb_image", cairo_DrawRGBImage, METH_VARARGS},
+	{"draw_rgba_image", cairo_DrawRGBAImage, METH_VARARGS},
 	{NULL, NULL}
 };
 
