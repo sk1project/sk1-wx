@@ -25,7 +25,6 @@ OBJ_FORWARD_ARROW = 'ForwardArrow'
 OBJ_BACKWARD_ARROW = 'BackwardArrow'
 OBJ_PICTURE = 'Picture'
 
-OBJ_ARROW_DEF = 0
 OBJ_COLOR_DEF = 0
 OBJ_ELLIPSE = 1
 OBJ_POLYLINE = 2
@@ -155,7 +154,7 @@ class FIGColorDef(FIGModelObject):
     type   name            (brief description)
     ----   ----            -------------------
     int    cid             (always 0)
-    int    color_number    (color number, from 32-543 (512 total))
+    int    idx             (color number, from 32-543 (512 total))
     string rgb values      (hexadecimal string describing red,
                             green and blue values (e.g. #330099) )
     """
@@ -167,7 +166,7 @@ class FIGColorDef(FIGModelObject):
         chunk = FIGModelObject.parse(self, loader, chunk)
         _, idx, hexcolor = chunk.split(' ', 2)
         self.idx = int(idx)
-        self.hexcolor = hexcolor
+        self.hexcolor = hexcolor.strip()
 
     def save(self, saver):
         FIGModelObject.save(self, saver)
@@ -358,7 +357,7 @@ class FIGPolyline(FIGModelObject):
     int    sub_type           (1: polyline
                                2: box
                                3: polygon
-                               4: arc-box)
+                               4: arc-box
                                5: imported-picture bounding-box)
     int    line_style         (enumeration type)
     int    thickness          (1/80 inch)
