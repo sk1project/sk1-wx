@@ -55,6 +55,10 @@ FIG_TO_SK2_LINE_STYLE = {
     fig_const.DASH_3_DOTS_LINE: [2, 1, 1, 1, 1, 1, 1, 1],
 }
 
+FIG_TO_SK2_ARC = {
+    fig_const.T_OPEN_ARC: sk2const.ARC_ARC,
+    fig_const.T_PIE_WEDGE_ARC: sk2const.ARC_PIE_SLICE
+}
 
 class FIG_to_SK2_Translator(object):
     page = None
@@ -122,10 +126,32 @@ class FIG_to_SK2_Translator(object):
                 self.translate_obj(child.childs, cfg)
             elif child.cid == fig_model.OBJ_ELLIPSE:
                 new_obj = self.translate_ellipse(child, cfg)
+            elif child.cid == fig_model.OBJ_ARC:
+                new_obj = self.translate_arc(child, cfg)
             elif child.cid == fig_model.OBJ_POLYLINE:
                 new_obj = self.translate_polyline(child, cfg)
             if new_obj:
                 self.get_depth_layer(child.depth).append(new_obj)
+
+    def translate_arc(self, obj, cfg):
+        cx = obj.center_x
+        cy = obj.center_y
+        r = libgeom.distance((cx, cy), (obj.x1, obj.y1))
+        end_angle = libgeom.get_point_angle((obj.x1, obj.y1), (cx, cy))
+        start_angle = libgeom.get_point_angle((obj.x3, obj.y3), (cx, cy))
+        if not obj.direction:
+            start_angle, end_angle = end_angle, start_angle
+        circle_type = FIG_TO_SK2_ARC.get(obj.sub_type, sk2const.ARC_PIE_SLICE)
+        props = dict(
+            circle_type=circle_type,
+            rect=[cx - r, cy - r, 2.0 * r, 2.0 * r],
+            style=self.get_style(obj),
+            angle1=start_angle,
+            angle2=end_angle
+        )
+        new_obg = sk2_model.Circle(cfg, **props)
+        new_obg.trafo = libgeom.multiply_trafo(new_obg.trafo, self.trafo)
+        return new_obg
 
     def translate_ellipse(self, obj, cfg):
         cx = obj.center_x
