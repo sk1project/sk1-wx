@@ -23,8 +23,10 @@ NO_FILL = -1
 WHITE_FILL = 0
 BLACK_FILL = 20
 
-DEFAULT_RESOLUTION = 1200
+DEFAULT_RESOLUTION = 1200.0
 
+"""Line thicknesses are given in 1/80 inch (0.3175mm)"""
+LINE_RESOLUTION = 80.0
 
 T_ELLIPSE_BY_RAD = 1
 T_ELLIPSE_BY_DIA = 2
@@ -93,3 +95,22 @@ UNITS = ("Inches", "Metric")
 SINGLE = 0
 MULTIPLE = 1
 MULTIPLE_PAGE = ("Single", "Multiple")
+
+
+"""
+ 0 = Miter (the default in xfig 2.1 and earlier)
+ 1 = Round
+ 2 = Bevel
+"""
+JOIN_MITER = 0
+JOIN_ROUND = 1
+JOIN_BEVEL = 2
+
+"""
+ 0 = Butt (the default in xfig 2.1 and earlier)
+ 1 = Round
+ 2 = Projecting/square
+"""
+CAP_BUTT = 0
+CAP_ROUND = 1
+CAP_SQUARE = 2
