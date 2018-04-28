@@ -16,6 +16,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from uc2.uc2const import COLOR_RGB
+from uc2 import cms
 
 
 FIG_COLORS = {
@@ -53,3 +54,10 @@ FIG_COLORS = {
     30: [COLOR_RGB, [1.00, 0.88, 0.88], 1.0, 'pink4'],
     31: [COLOR_RGB, [1.00, 0.84, 0.00], 1.0, 'gold']
 }
+
+
+def color_mix(color1, color2, coef=0.5):
+    rgb = cms.mix_lists(color1[1], color2[1], coef)
+    a = cms.mix_vals(color1[2], color2[2], coef)
+    name = cms.rgb_to_hexcolor(rgb)
+    return [COLOR_RGB, rgb, a, name]
