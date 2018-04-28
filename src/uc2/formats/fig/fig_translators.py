@@ -120,10 +120,27 @@ class FIG_to_SK2_Translator(object):
                 self.translate_color(child, cfg)
             elif child.cid == fig_model.OBJ_COMPOUND:
                 self.translate_obj(child.childs, cfg)
+            elif child.cid == fig_model.OBJ_ELLIPSE:
+                new_obj = self.translate_ellipse(child, cfg)
             elif child.cid == fig_model.OBJ_POLYLINE:
                 new_obj = self.translate_polyline(child, cfg)
             if new_obj:
                 self.get_depth_layer(child.depth).append(new_obj)
+
+    def translate_ellipse(self, obj, cfg):
+        cx = obj.center_x
+        cy = obj.center_y
+        rx = obj.radius_x
+        ry = obj.radius_y
+        props = dict(
+            rect=[cx - rx, cy - ry, 2.0 * rx, 2.0 * ry],
+            style=self.get_style(obj),
+        )
+        new_obg = sk2_model.Circle(cfg, **props)
+        trafo_rotate = libgeom.trafo_rotate(-obj.angle, cx, cy)
+        trafo = libgeom.multiply_trafo(new_obg.trafo, trafo_rotate)
+        new_obg.trafo = libgeom.multiply_trafo(trafo, self.trafo)
+        return new_obg
 
     def translate_color(self, obj, cfg):
         if obj.idx not in FIG_COLORS:
@@ -133,7 +150,7 @@ class FIG_to_SK2_Translator(object):
 
     def translate_polyline(self, obj, cfg):
         tr = self.trafo
-        style = self.get_polyline_style(obj)
+        style = self.get_style(obj)
         if obj.sub_type in (fig_const.T_ARC_BOX, fig_const.T_PIC_BOX):
             bbox = libgeom.bbox_for_points(obj.points)
             bbox_size = libgeom.bbox_size(bbox)
@@ -160,7 +177,7 @@ class FIG_to_SK2_Translator(object):
             new_obj = sk2_model.Curve(cfg, **props)
         return new_obj
 
-    def get_polyline_style(self, obj):
+    def get_style(self, obj):
         fill = self.get_fill(obj.fill_color, obj.area_fill)
         stroke = self.get_stoke(obj)
         style = [fill, stroke, [], []]
@@ -193,13 +210,19 @@ class FIG_to_SK2_Translator(object):
         return fill
 
     def get_stoke(self, obj):
+        cap_style = sk2const.CAP_BUTT
+        join_style = sk2const.JOIN_MITER
+        if hasattr(obj, 'cap_style'):
+            cap_style = FIG_TO_SK2_CAP.get(obj.cap_style, cap_style)
+        if hasattr(obj, 'join_style'):
+            join_style = FIG_TO_SK2_JOIN.get(obj.join_style, join_style)
         stroke = [
             sk2const.STROKE_MIDDLE,
             obj.thickness * self.thickness,
-            self.pallet.get(obj.pen_color),
+            deepcopy(self.pallet.get(obj.pen_color)),
             FIG_TO_SK2_LINE_STYLE.get(obj.line_style, [])[:],
-            FIG_TO_SK2_CAP.get(obj.cap_style, 0),
-            FIG_TO_SK2_JOIN.get(obj.join_style, 0),
+            cap_style,
+            join_style,
             10.433,
             0,
             0,
