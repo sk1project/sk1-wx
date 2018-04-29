@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2017 by Igor E. Novikov
+#  Copyright (C) 2017-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,10 +23,10 @@ DEB = [
     'Ubuntu 14.04 64bit',
     'Ubuntu 16.04 32bit',
     'Ubuntu 16.04 64bit',
-    # 'Ubuntu 17.04 32bit',
-    # 'Ubuntu 17.04 64bit',
+    # # 'Ubuntu 17.04 32bit',
+    # # 'Ubuntu 17.04 64bit',
     'Ubuntu 17.10',
-    'Ubuntu 18.04',
+    # 'Ubuntu 18.04',
     'Debian 7.8 32bit',
     'Debian 7.8 64bit',
     'Debian 8.6 32bit',
