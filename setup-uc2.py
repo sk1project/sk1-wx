@@ -33,13 +33,17 @@ Usage:
  Help on available distribution formats: --help-formats
 """
 
-from distutils.core import setup
 import datetime
 import os
 import shutil
 import sys
+from distutils.core import setup
 
+
+import utils.deb
+import utils.rpm
 from utils import buildutils
+
 import dependencies
 from native_mods import make_modules
 
@@ -281,7 +285,7 @@ if UPDATE_MODULES:
 # Implementation of bdist_deb command
 ############################################################
 if DEB_PACKAGE:
-    buildutils.DebBuilder(
+    utils.deb.DebBuilder(
         name=NAME,
         version=VERSION,
         maintainer='%s <%s>' % (AUTHOR, AUTHOR_EMAIL),
@@ -301,7 +305,7 @@ if DEB_PACKAGE:
 # Implementation of bdist_rpm command
 ############################################################
 if RPM_PACKAGE:
-    buildutils.RpmBuilder(
+    utils.rpm.RpmBuilder(
         name=NAME,
         version=VERSION,
         release='0',

@@ -39,6 +39,8 @@ import os
 import shutil
 import sys
 
+import utils.deb
+import utils.rpm
 from utils import buildutils
 from utils import po
 
@@ -300,7 +302,7 @@ if DEB_PACKAGE:
 # Implementation of bdist_rpm command
 ############################################################
 if RPM_PACKAGE:
-    buildutils.RpmBuilder(
+    utils.rpm.RpmBuilder(
         name=NAME,
         version=VERSION,
         release='0',
