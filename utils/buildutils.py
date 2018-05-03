@@ -311,49 +311,6 @@ def copy_modules(modules, src_root='src'):
 
 ############################################################
 #
-# --- PKG_CONFIG functions
-#
-############################################################
-
-def get_pkg_version(pkg_name):
-    return commands.getoutput("pkg-config --modversion %s" % pkg_name).strip()
-
-
-def get_pkg_includes(pkg_names):
-    includes = []
-    for item in pkg_names:
-        output = commands.getoutput("pkg-config --cflags-only-I %s" % item)
-        names = output.replace('-I', '').strip().split(' ')
-        for name in names:
-            if name not in includes:
-                includes.append(name)
-    return includes
-
-
-def get_pkg_libs(pkg_names):
-    libs = []
-    for item in pkg_names:
-        output = commands.getoutput("pkg-config --libs-only-l %s" % item)
-        names = output.replace('-l', '').strip().split(' ')
-        for name in names:
-            if name not in libs:
-                libs.append(name)
-    return libs
-
-
-def get_pkg_cflags(pkg_names):
-    flags = []
-    for item in pkg_names:
-        output = commands.getoutput("pkg-config --cflags-only-other %s" % item)
-        names = output.strip().split(' ')
-        for name in names:
-            if name not in flags:
-                flags.append(name)
-    return flags
-
-
-############################################################
-#
 # --- DEB package builder
 #
 ############################################################

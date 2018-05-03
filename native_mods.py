@@ -21,6 +21,7 @@ import os
 import platform
 
 from utils import buildutils
+from utils import pkg
 
 from distutils.core import Extension
 
@@ -43,8 +44,8 @@ def make_modules(src_path, include_path, lib_path=None):
             include_path,
             ['cairo', 'pycairo'])
     elif os.name == 'posix':
-        include_dirs = buildutils.get_pkg_includes(['pycairo', ])
-        cairo_libs = buildutils.get_pkg_libs(['pycairo', ])
+        include_dirs = pkg.get_pkg_includes(['pycairo', ])
+        cairo_libs = pkg.get_pkg_libs(['pycairo', ])
 
     cairo_module = Extension(
         'uc2.libcairo._libcairo',
@@ -66,7 +67,7 @@ def make_modules(src_path, include_path, lib_path=None):
         else:
             pycms_libraries = ['liblcms2-2']
     elif os.name == 'posix':
-        pycms_libraries = buildutils.get_pkg_libs(['lcms2', ])
+        pycms_libraries = pkg.get_pkg_libs(['lcms2', ])
         extra_compile_args = ["-Wall"]
 
     pycms_src = os.path.join(src_path, 'uc2', 'cms')
@@ -92,8 +93,8 @@ def make_modules(src_path, include_path, lib_path=None):
         include_dirs = buildutils.make_source_list(
             include_path, ['cairo', 'pycairo', 'pango-1.0', 'glib-2.0'])
     elif os.name == 'posix':
-        include_dirs = buildutils.get_pkg_includes(['pangocairo', 'pycairo'])
-        pango_libs = buildutils.get_pkg_libs(['pangocairo', ])
+        include_dirs = pkg.get_pkg_includes(['pangocairo', 'pycairo'])
+        pango_libs = pkg.get_pkg_libs(['pangocairo', ])
 
     pango_module = Extension(
         'uc2.libpango._libpango',
@@ -112,10 +113,10 @@ def make_modules(src_path, include_path, lib_path=None):
     if os.name == 'nt':
         include_dirs = [include_path, include_path + '/ImageMagick']
     elif os.name == 'posix':
-        im_ver = buildutils.get_pkg_version('MagickWand')[0]
-        libimg_libraries = buildutils.get_pkg_libs(['MagickWand', ])
-        include_dirs = buildutils.get_pkg_includes(['MagickWand', ])
-        compile_args = buildutils.get_pkg_cflags(['MagickWand', ])
+        im_ver = pkg.get_pkg_version('MagickWand')[0]
+        libimg_libraries = pkg.get_pkg_libs(['MagickWand', ])
+        include_dirs = pkg.get_pkg_includes(['MagickWand', ])
+        compile_args = pkg.get_pkg_cflags(['MagickWand', ])
 
     libimg_src = os.path.join(src_path, 'uc2', 'libimg')
     files = buildutils.make_source_list(libimg_src, ['_libimg%s.c' % im_ver, ])
