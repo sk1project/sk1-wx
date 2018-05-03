@@ -44,7 +44,7 @@ def get_filenames(path='.', ext='*'):
 
 def get_filepaths(path='.', ext='*'):
     """
-    Returns full file names list for provided path
+    Returns file path list for provided path filtering by extension.
     """
     import glob
     file_items = glob.glob(os.path.join(path, "*." + ext))
@@ -58,7 +58,7 @@ def get_filepaths(path='.', ext='*'):
 
 def get_dirpaths(path='.'):
     """
-    Return full  directory names list for provided path
+    Return directory path list for provided path
     """
     result = []
     names = []
@@ -69,7 +69,7 @@ def get_dirpaths(path='.'):
             return names
     names.sort()
     for name in names:
-        if os.path.isdir(os.path.join(path, name)) and not name == '.svn':
+        if os.path.isdir(os.path.join(path, name)) and not name.startswith('.'):
             result.append(os.path.join(path, name))
     return result
 
