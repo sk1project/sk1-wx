@@ -39,7 +39,7 @@ import os
 import shutil
 import sys
 
-import buildutils
+from utils import buildutils
 import dependencies
 from native_mods import make_modules
 

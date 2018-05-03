@@ -20,7 +20,7 @@
 import os
 import platform
 
-import buildutils
+from utils import buildutils
 
 from distutils.core import Extension
 
