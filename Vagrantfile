@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
         end
 
         machine.vm.provision "base", type: "shell" do |shell|
-            shell.path = "buildbox/ubuntu.sh"
+            shell.path = "infra/bbox/bbox_update.sh"
         end
     end
 end
