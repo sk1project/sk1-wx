@@ -2,7 +2,7 @@
 
 Briefly translation has following steps:
 
-* [Download sk1.pot template](https://raw.githubusercontent.com/sk1project/sk1-wx/master/sk1.pot)
+* [Download sk1.pot template](https://raw.githubusercontent.com/sk1project/sk1-wx/master/po-sk1/sk1.pot)
 * Install Poedit and setup correct preferences for it (see below)
 * Open this template in [Poedit application](http://www.poedit.net/download.php)
 
