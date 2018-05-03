@@ -40,6 +40,8 @@ import shutil
 import sys
 
 from utils import buildutils
+from utils import po
+
 import dependencies
 from native_mods import make_modules
 
@@ -192,13 +194,13 @@ if len(sys.argv) > 1:
 
     elif sys.argv[1] == 'update_pot':
         paths = ['src/sk1', 'src/uc2']
-        buildutils.build_pot(paths, 'po-sk1/sk1.pot', False)
+        po.build_pot(paths, 'po-sk1/sk1.pot', False)
         sys.exit(0)
 
     elif sys.argv[1] == 'build_locales':
         src_path = 'po-sk1'
         dest_path = 'src/sk1/share/locales'
-        buildutils.build_locales(src_path, dest_path, 'sk1')
+        po.build_locales(src_path, dest_path, 'sk1')
         sys.exit(0)
 
 # Preparing start script

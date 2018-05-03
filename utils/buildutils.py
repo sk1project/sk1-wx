@@ -17,138 +17,13 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import commands
 import os
 import platform
 import shutil
 import string
 import sys
 
-
-############################################################
-#
-# File system routines
-#
-############################################################
-
-def get_dirs(path='.'):
-    """
-    Return directory list for provided path
-    """
-    result = []
-    names = []
-    if path:
-        if os.path.isdir(path):
-            try:
-                names = os.listdir(path)
-            except os.error:
-                return []
-        names.sort()
-        for name in names:
-            if os.path.isdir(os.path.join(path, name)):
-                result.append(name)
-        return result
-
-
-def get_dirs_withpath(path='.'):
-    """
-    Return full  directory names list for provided path
-    """
-    result = []
-    names = []
-    if os.path.isdir(path):
-        try:
-            names = os.listdir(path)
-        except os.error:
-            return names
-    names.sort()
-    for name in names:
-        if os.path.isdir(os.path.join(path, name)) and not name == '.svn':
-            result.append(os.path.join(path, name))
-    return result
-
-
-def get_files(path='.', ext='*'):
-    """
-    Returns file list for provided path
-    """
-    result = []
-    names = []
-    if path:
-        if os.path.isdir(path):
-            try:
-                names = os.listdir(path)
-            except os.error:
-                return []
-        names.sort()
-        for name in names:
-            if not os.path.isdir(os.path.join(path, name)):
-                if ext == '*':
-                    result.append(name)
-                elif '.' + ext == name[-1 * (len(ext) + 1):]:
-                    result.append(name)
-    return result
-
-
-def get_files_withpath(path='.', ext='*'):
-    """
-    Returns full file names list for provided path
-    """
-    import glob
-    file_items = glob.glob(os.path.join(path, "*." + ext))
-    file_items.sort()
-    result = []
-    for file_item in file_items:
-        if os.path.isfile(file_item):
-            result.append(file_item)
-    return result
-
-
-def get_dirs_tree(path='.'):
-    """
-    Returns recursive directories list for provided path
-    """
-    tree = get_dirs_withpath(path)
-    res = [] + tree
-    for node in tree:
-        subtree = get_dirs_tree(node)
-        res += subtree
-    return res
-
-
-def get_files_tree(path='.', ext='*'):
-    """
-    Returns recursive files list for provided path
-    """
-    tree = []
-    dirs = [path, ]
-    dirs += get_dirs_tree(path)
-    for dir_item in dirs:
-        files = get_files_withpath(dir_item, ext)
-        files.sort()
-        tree += files
-    return tree
-
-
-def generate_locales():
-    """
-    Generates *.mo files Resources/Messages
-    """
-    print 'LOCALES BUILD'
-    files = get_files('po', 'po')
-    if len(files):
-        for file_item in files:
-            lang = file_item.split('.')[0]
-            po_file = os.path.join('po', file_item)
-            mo_file = os.path.join(
-                'src', 'Resources', 'Messages', lang,
-                'LC_MESSAGES', 'skencil.mo')
-            if not os.path.lexists(os.path.join(
-                    'src', 'Resources', 'Messages', lang, 'LC_MESSAGES')):
-                os.makedirs(os.path.join(
-                    'src', 'share', 'Messages', lang, 'LC_MESSAGES'))
-            print po_file, '==>', mo_file
-            os.system('msgfmt -o ' + mo_file + ' ' + po_file)
+from . import fsutils
 
 
 ############################################################
@@ -161,7 +36,7 @@ def get_resources(pkg_path, path):
     path = os.path.normpath(path)
     pkg_path = os.path.normpath(pkg_path)
     size = len(pkg_path) + 1
-    dirs = get_dirs_tree(path)
+    dirs = fsutils.get_dirs_tree(path)
     dirs.append(path)
     res_dirs = []
     for item in dirs:
@@ -173,7 +48,6 @@ def clear_build():
     """
     Clears build result.
     """
-    os.system('rm -f MANIFEST')
     os.system('rm -rf build')
 
 
@@ -222,7 +96,7 @@ def get_packages(path):
         except os.error:
             pass
         for item in items:
-            if item == '.svn':
+            if item.startswith('.'):
                 continue
             folder = os.path.join(path, item)
             if is_package(folder):
@@ -749,10 +623,9 @@ class RpmBuilder:
             '',
             '%install',
             'rm -rf $RPM_BUILD_ROOT',
-                      '/usr/bin/python2 %s install --root=$RPM_BUILD_ROOT' % self.build_script,
+            '/usr/bin/python2 %s install --root=$RPM_BUILD_ROOT' % self.build_script,
             '',
-            '%files',
-                      '%{_bindir}/' + self.name,
+            '%files', '%{_bindir}/' + self.name,
             self.install_path.replace('/usr/', '%{_usr}/'),
         ]
         for item in self.data_files:
@@ -773,31 +646,3 @@ class RpmBuilder:
     def clear_rpmbuild(self):
         if os.path.exists(self.rpmbuild_path):
             os.system('rm -rf %s' % self.rpmbuild_path)
-
-
-def build_pot(paths, po_file='messages.po', error_logs=False):
-    ret = 0
-    files = []
-    error_logs = 'warnings.log' if error_logs else '/dev/null'
-    file_list = 'locale.in'
-    for path in paths:
-        files += get_files_tree(path, 'py')
-    open(file_list, 'w').write('\n'.join(files))
-    ret += os.system('xgettext -f %s -L Python -o %s 2>%s' %
-                     (file_list, po_file, error_logs))
-    ret += os.system('rm -f %s' % file_list)
-    if not ret:
-        print 'POT file updated'
-
-
-def build_locales(src_path, dest_path, textdomain):
-    print 'Building locales'
-    for item in get_files(src_path, 'po'):
-        lang = item.split('.')[0]
-        po_file = os.path.join(src_path, item)
-        mo_dir = os.path.join(dest_path, lang, 'LC_MESSAGES')
-        mo_file = os.path.join(mo_dir, textdomain + '.mo')
-        if not os.path.lexists(mo_dir):
-            os.makedirs(mo_dir)
-        print po_file, '==>', mo_file
-        os.system('msgfmt -o %s %s' % (mo_file, po_file))
