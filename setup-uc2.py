@@ -42,7 +42,7 @@ from distutils.core import setup
 
 import utils.deb
 import utils.rpm
-from utils import buildutils
+from utils import build
 
 import dependencies
 from native_mods import make_modules
@@ -259,7 +259,7 @@ setup(
     download_url=DOWNLOAD_URL,
     long_description=LONG_DESCRIPTION,
     classifiers=CLASSIFIERS,
-    packages=buildutils.get_source_structure('src/uc2') + ['uc2'],
+    packages=build.get_source_structure('src/uc2') + ['uc2'],
     package_dir={'uc2': 'src/uc2'},
     package_data=package_data,
     data_files=data_files,
@@ -270,7 +270,7 @@ setup(
 # .py source compiling
 ############################################################
 if not UPDATE_MODULES:
-    buildutils.compile_sources()
+    build.compile_sources()
 
 ############################################################
 # This section for developing purpose only
@@ -279,7 +279,7 @@ if not UPDATE_MODULES:
 # into package directory
 ############################################################
 if UPDATE_MODULES:
-    buildutils.copy_modules(modules)
+    build.copy_modules(modules)
 
 ############################################################
 # Implementation of bdist_deb command
@@ -294,7 +294,7 @@ if DEB_PACKAGE:
         description=DESCRIPTION,
         long_description=LONG_DEB_DESCRIPTION,
         section='graphics',
-        package_dirs=buildutils.get_package_dirs('src/uc2'),
+        package_dirs=build.get_package_dirs('src/uc2'),
         package_data=package_data,
         scripts=scripts,
         data_files=data_files,
@@ -321,7 +321,7 @@ if RPM_PACKAGE:
         data_files=data_files, )
 
 if CLEAR_BUILD:
-    buildutils.clear_build()
+    build.clear_build()
 
 for item in ['MANIFEST', 'MANIFEST.in', 'src/script/uniconvertor', 'setup.cfg']:
     if os.path.lexists(item):

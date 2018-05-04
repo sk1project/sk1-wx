@@ -41,7 +41,8 @@ import sys
 
 import utils.deb
 import utils.rpm
-from utils import buildutils
+from utils import build
+from utils import fsutils
 from utils import po
 
 import dependencies
@@ -129,7 +130,7 @@ deb_depends = ''
 rpm_depends = ''
 ############################################################
 
-dirs = buildutils.get_dirs_tree('src/sk1/share')
+dirs = fsutils.get_dirs_tree('src/sk1/share')
 share_dirs = []
 for item in dirs:
     share_dirs.append(os.path.join(item[8:], '*.*'))
@@ -256,8 +257,8 @@ setup(
     download_url=DOWNLOAD_URL,
     long_description=LONG_DESCRIPTION,
     classifiers=CLASSIFIERS,
-    packages=buildutils.get_source_structure(excludes=EXCLUDES),
-    package_dir=buildutils.get_package_dirs(excludes=EXCLUDES),
+    packages=build.get_source_structure(excludes=EXCLUDES),
+    package_dir=build.get_package_dirs(excludes=EXCLUDES),
     package_data=package_data,
     data_files=data_files,
     scripts=scripts,
@@ -267,7 +268,7 @@ setup(
 # .py source compiling
 ############################################################
 if not UPDATE_MODULES:
-    buildutils.compile_sources()
+    build.compile_sources()
 
 ############################################################
 # This section for developing purpose only
@@ -276,13 +277,13 @@ if not UPDATE_MODULES:
 # into package directory
 ############################################################
 if UPDATE_MODULES:
-    buildutils.copy_modules(modules)
+    build.copy_modules(modules)
 
 ############################################################
 # Implementation of bdist_deb command
 ############################################################
 if DEB_PACKAGE:
-    buildutils.DebBuilder(
+    utils.deb.DebBuilder(
         name=NAME,
         version=VERSION,
         maintainer='%s <%s>' % (AUTHOR, AUTHOR_EMAIL),
@@ -291,7 +292,7 @@ if DEB_PACKAGE:
         description=DESCRIPTION,
         long_description=LONG_DEB_DESCRIPTION,
         section='graphics',
-        package_dirs=buildutils.get_package_dirs(excludes=EXCLUDES),
+        package_dirs=build.get_package_dirs(excludes=EXCLUDES),
         package_data=package_data,
         scripts=scripts,
         data_files=data_files,
@@ -318,7 +319,7 @@ if RPM_PACKAGE:
         data_files=data_files, )
 
 if CLEAR_BUILD:
-    buildutils.clear_build()
+    build.clear_build()
 
 for item in ['MANIFEST', 'MANIFEST.in', 'src/script/sk1', 'setup.cfg']:
     if os.path.lexists(item):

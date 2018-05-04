@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #
-#   Setup utils module
+#   Build utils
 #
-# 	Copyright (C) 2013-2016 by Igor E. Novikov
+# 	Copyright (C) 2018 by Igor E. Novikov
 #
 # 	This program is free software: you can redistribute it and/or modify
 # 	it under the terms of the GNU General Public License as published by
@@ -20,17 +20,10 @@
 import os
 import platform
 import shutil
-import string
 import sys
 
 from . import fsutils
 
-
-############################################################
-#
-# Routines for setup build
-#
-############################################################
 
 def get_resources(pkg_path, path):
     path = os.path.normpath(path)
@@ -132,7 +125,7 @@ def get_package_dirs(path='src', excludes=None):
 
 def get_source_structure(path='src', excludes=None):
     """
-    Returns recursive list of python packages. 
+    Returns recursive list of python packages.
     """
     if excludes is None:
         excludes = []
@@ -163,7 +156,7 @@ def copy_modules(modules, src_root='src'):
     The routine implements build_update command
     functionality and executed after "setup.py build" command.
     """
-    version = (string.split(sys.version)[0])[0:3]
+    version = '.'.join(sys.version.split()[0].split('.')[:2])
     machine = platform.machine()
     ext = '.so'
     prefix = 'build/lib.linux-' + machine + '-' + version
@@ -181,11 +174,3 @@ def copy_modules(modules, src_root='src'):
         dst = os.path.join(src_root, path)
         shutil.copy(src, dst)
         print '>>>Module %s has been copied to src/ directory' % path
-
-
-############################################################
-#
-# --- DEB package builder
-#
-############################################################
-
