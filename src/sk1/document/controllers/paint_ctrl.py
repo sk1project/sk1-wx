@@ -15,13 +15,11 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uc2 import sk2const
-from uc2.libgeom import contra_point, bezier_base_point, midpoint
-from uc2.libgeom import apply_trafo_to_paths, is_point_in_rect2
-
-from sk1 import modes, config
-
 from creators import AbstractCreator
+from sk1 import modes, config
+from uc2 import sk2const
+from uc2.libgeom import apply_trafo_to_paths, is_point_in_rect2
+from uc2.libgeom import contra_point, bezier_base_point, midpoint
 
 
 class PolyLineCreator(AbstractCreator):
@@ -357,7 +355,7 @@ class PathsCreator(PolyLineCreator):
                 else:
                     bp_doc = self.path[0]
                 if self.control_point0_doc == bp_doc and \
-                   self.control_point1_doc == self.curve_point_doc:
+                        self.control_point1_doc == self.curve_point_doc:
                     node_type = sk2const.NODE_CUSP
                     p0d = midpoint(bp_doc, self.curve_point_doc, 1.0 / 3.0)
                     self.control_point0_doc = p0d
@@ -389,10 +387,9 @@ class PathsCreator(PolyLineCreator):
 
     def mouse_move(self, event):
         if self.draw:
-            p = event.get_point()
-            self.control_point2, self.control_point2_doc = self.snap.snap_point(
-                p)[1:]
-            self.cursor = [] + p
+            self.cursor = event.get_point()
+            snapped = self.snap.snap_point(self.cursor)[1:]
+            self.control_point2, self.control_point2_doc = snapped
             if not self.create:
                 self.curve_point = [] + self.control_point2
                 self.curve_point_doc = [] + self.control_point2_doc
@@ -410,22 +407,30 @@ class PathsCreator(PolyLineCreator):
                     self.cursor = []
                     self.canvas.set_temp_mode(modes.RESIZE_MODE)
 
+    def wheel(self, event):
+        self.cursor = event.get_point()
+        PolyLineCreator.wheel(self, event)
+
     def repaint_draw(self):
         if self.path[0] or self.paths:
             paths = self.canvas.paths_doc_to_win(self.paths)
             cursor = self.cursor
             if not self.path[0]:
                 cursor = []
+            elif cursor and not self.create:
+                snapped = self.snap.snap_point(cursor)[1:]
+                self.curve_point, self.curve_point_doc = snapped
             path = []
             if self.control_point0:
-                self.control_point1 = contra_point(self.control_point2,
-                                                   self.curve_point)
-                path = [self.point, [self.control_point0,
-                                     self.control_point1,
-                                     self.curve_point]]
+                self.control_point1_doc = contra_point(self.control_point2_doc,
+                                                       self.curve_point_doc)
+                path = [self.point_doc, [self.control_point0_doc,
+                                         self.control_point1_doc,
+                                         self.curve_point_doc], 0]
+                path = self.canvas.paths_doc_to_win([path, ])[0]
             cpoint = []
             if self.create:
-                cpoint = self.control_point2
+                cpoint = self.canvas.doc_to_win(self.control_point2_doc)
             self.canvas.renderer.paint_curve(paths, cursor, path, cpoint)
         return True
 
