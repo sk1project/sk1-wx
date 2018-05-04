@@ -20,7 +20,7 @@
 import os
 import platform
 
-from utils import buildutils
+from utils import build
 from utils import pkg
 
 from distutils.core import Extension
@@ -34,13 +34,13 @@ def make_modules(src_path, include_path, lib_path=None):
     # --- Cairo module
 
     cairo_src = os.path.join(src_path, 'uc2', 'libcairo')
-    files = buildutils.make_source_list(cairo_src, ['_libcairo.c', ])
+    files = build.make_source_list(cairo_src, ['_libcairo.c', ])
 
     include_dirs = []
     cairo_libs = ['cairo']
 
     if os.name == 'nt':
-        include_dirs = buildutils.make_source_list(
+        include_dirs = build.make_source_list(
             include_path,
             ['cairo', 'pycairo'])
     elif os.name == 'posix':
@@ -71,7 +71,7 @@ def make_modules(src_path, include_path, lib_path=None):
         extra_compile_args = ["-Wall"]
 
     pycms_src = os.path.join(src_path, 'uc2', 'cms')
-    files = buildutils.make_source_list(pycms_src, pycms_files)
+    files = build.make_source_list(pycms_src, pycms_files)
     include_dirs = [include_path, ]
     pycms_module = Extension(
         'uc2.cms._cms',
@@ -85,12 +85,12 @@ def make_modules(src_path, include_path, lib_path=None):
     # --- Pango module
 
     pango_src = os.path.join(src_path, 'uc2', 'libpango')
-    files = buildutils.make_source_list(pango_src, ['_libpango.c', ])
+    files = build.make_source_list(pango_src, ['_libpango.c', ])
     pango_libs = [
         'pango-1.0', 'pangocairo-1.0', 'cairo', 'glib-2.0', 'gobject-2.0']
 
     if os.name == 'nt':
-        include_dirs = buildutils.make_source_list(
+        include_dirs = build.make_source_list(
             include_path, ['cairo', 'pycairo', 'pango-1.0', 'glib-2.0'])
     elif os.name == 'posix':
         include_dirs = pkg.get_pkg_includes(['pangocairo', 'pycairo'])
@@ -119,7 +119,7 @@ def make_modules(src_path, include_path, lib_path=None):
         compile_args = pkg.get_pkg_cflags(['MagickWand', ])
 
     libimg_src = os.path.join(src_path, 'uc2', 'libimg')
-    files = buildutils.make_source_list(libimg_src, ['_libimg%s.c' % im_ver, ])
+    files = build.make_source_list(libimg_src, ['_libimg%s.c' % im_ver, ])
     libimg_module = Extension(
         'uc2.libimg._libimg',
         define_macros=[('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
