@@ -1,7 +1,7 @@
 include LICENSE README.txt MANIFEST.in_sk1 setup.cfg_sk1
 include dependencies.py native_mods.py src/script/sk1.tmpl
 
-recursive-include utils *.*
+recursive-include utils *.py
 recursive-include src/uc2/libcairo *.c
 recursive-include src/uc2/libcairo *.h
 recursive-include src/uc2/libimg *.c

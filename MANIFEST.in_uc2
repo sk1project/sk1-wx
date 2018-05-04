@@ -1,7 +1,7 @@
 include LICENSE README.txt MANIFEST.in_uc2 setup.cfg_uc2
 include dependencies.py native_mods.py src/script/uniconvertor.tmpl
 
-recursive-include utils *.*
+recursive-include utils *.py
 recursive-include src/uc2/libcairo *.c
 recursive-include src/uc2/libcairo *.h
 recursive-include src/uc2/libimg *.c
