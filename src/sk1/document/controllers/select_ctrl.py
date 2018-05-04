@@ -62,7 +62,8 @@ class SelectController(AbstractController):
                 self.canvas.select_by_rect(self.start, self.end, add_flag)
 
             dpoint = self.canvas.win_to_doc(self.start)
-            if self.selection.is_point_over(dpoint):
+            if self.selection.is_point_over(dpoint) or \
+                    self.selection.pick_at_point(dpoint, True):
                 self.canvas.set_temp_mode(modes.MOVE_MODE)
         return True
 

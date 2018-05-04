@@ -91,7 +91,7 @@ class MoveController(AbstractController):
             elif self.presenter.snap.is_over_guide(point)[0]:
                 self.canvas.restore_mode()
                 self.canvas.set_temp_mode(modes.GUIDE_MODE)
-            elif not self.selection.pick_at_point(dpoint):
+            elif not self.selection.pick_at_point(dpoint, True):
                 self.canvas.restore_mode()
 
     def mouse_up(self, event):
