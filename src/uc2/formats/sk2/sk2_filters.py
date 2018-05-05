@@ -17,7 +17,7 @@
 
 import cairo
 import logging
-from base64 import b64encode, b64decode
+from base64 import b64encode
 from cStringIO import StringIO
 
 from uc2 import libgeom, sk2const
@@ -75,11 +75,11 @@ class SK2_Loader(AbstractLoader):
             return
         if obj.is_pixmap:
             if item == 'bitmap':
-                obj.set_bitmap(b64decode(val))
+                obj.set_bitmap(val, True)
                 return
             elif item == 'alpha_channel':
                 if val:
-                    obj.set_alpha_channel(b64decode(val))
+                    obj.set_alpha_channel(val, True)
                 return
             elif item in ('size', 'colorspace'):
                 return

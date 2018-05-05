@@ -1073,14 +1073,20 @@ class Pixmap(PrimitiveObject):
     def has_alpha(self):
         return self.handler.has_alpha()
 
-    def set_bitmap(self, bitmap):
-        self.handler.set_images_from_str(bitmap)
+    def set_bitmap(self, bitmap, b64=False):
+        if b64:
+            self.handler.set_images_from_b64str(bitmap)
+        else:
+            self.handler.set_images_from_str(bitmap)
 
     def get_bitmap(self):
         return self.handler.get_bitmap_b64str()
 
-    def set_alpha_channel(self, alpha):
-        self.handler.set_images_from_str(None, alpha)
+    def set_alpha_channel(self, alpha, b64=False):
+        if b64:
+            self.handler.set_images_from_b64str(None, alpha)
+        else:
+            self.handler.set_images_from_str(None, alpha)
 
     def get_alpha_channel(self):
         return self.handler.get_alpha_b64str()

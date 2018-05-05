@@ -95,6 +95,11 @@ class ImageHandler(object):
         self.set_images(self._str2image(bitmap_str),
                         self._str2image(alpha_str))
 
+    def set_images_from_b64str(self, bitmap_str=None, alpha_str=None):
+        bitmap_str = b64decode(bitmap_str) if bitmap_str else None
+        alpha_str = b64decode(alpha_str) if alpha_str else None
+        self.set_images_from_str(bitmap_str, alpha_str)
+
     # Pixmap loading
     def update_cache(self, cms):
         pass
