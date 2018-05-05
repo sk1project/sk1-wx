@@ -56,9 +56,7 @@ def get_save_file_name(parent, path, title='', wildcard='*.txt'):
     title = title or 'Save As...'
     title = '' if const.IS_MAC else title
 
-    print path
     path = expanduser(path)
-    print path
     doc_folder = os.path.dirname(path)
     doc_name = os.path.basename(path)
 
