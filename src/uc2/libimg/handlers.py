@@ -286,7 +286,6 @@ class DrawableImageHandler(ImageHandler):
             return None
 
         if self.alpha and rgb_image.mode == uc2const.IMAGE_RGB:
-            rgb_image = rgb_image.copy()
             rgb_image.putalpha(self.alpha)
 
         return image_to_surface(rgb_image)
@@ -344,12 +343,29 @@ class EditableImageHandler(DrawableImageHandler):
         self.set_images(bitmap)
 
     def convert_image(self, cms, colorspace):
-        if self.bitmap.mode in uc2const.DUOTONES \
-                and colorspace not in uc2const.DUOTONES:
-            # TODO: duotone processing should be implemented
-            pass
-        bitmap = cms.convert_image(self.bitmap, colorspace)
-        self.set_images(bitmap)
+        if self.bitmap.mode in uc2const.DUOTONES:
+            if colorspace not in uc2const.DUOTONES:
+                bitmap = self.get_display_image(cms)
+                alpha = None
+                if self.alpha and bitmap.mode == uc2const.IMAGE_RGB:
+                    alpha = self.alpha
+                elif bitmap.mode == uc2const.IMAGE_RGBA:
+                    alpha = bitmap.split()[-1]
+                    bitmap = bitmap.convert(uc2const.IMAGE_RGB)
+                if colorspace != uc2const.IMAGE_RGB:
+                    bitmap = cms.convert_image(bitmap, colorspace)
+                self.set_images(bitmap, alpha)
+            else:
+                bitmap = self.bitmap.convert(colorspace)
+                self.set_images(bitmap)
+        else:
+            if colorspace == uc2const.IMAGE_MONO:
+                bitmap = cms.convert_image(self.bitmap, uc2const.IMAGE_GRAY)
+                bitmap = bitmap.convert(colorspace)
+                self.set_images(bitmap)
+            else:
+                bitmap = cms.convert_image(self.bitmap, colorspace)
+                self.set_images(bitmap)
 
     def _transpose(self, method=None):
         if method is not None:
