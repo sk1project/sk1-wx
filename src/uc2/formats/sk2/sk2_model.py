@@ -1077,14 +1077,13 @@ class Pixmap(PrimitiveObject):
         self.handler.set_images_from_str(bitmap)
 
     def get_bitmap(self):
-        return self.bitmap
+        return self.handler.get_bitmap_b64str()
 
     def set_alpha_channel(self, alpha):
-        self.alpha_channel = alpha if alpha else None
-        self.clear_color_cache()
+        self.handler.set_images_from_str(None, alpha)
 
     def get_alpha_channel(self):
-        return self.alpha_channel
+        return self.handler.get_alpha_b64str()
 
     def get_size(self):
         width = float(self.size[0]) * uc2const.px_to_pt

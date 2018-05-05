@@ -121,19 +121,18 @@ class SK2_Saver(AbstractSaver):
     def save_obj(self, obj):
         self.writeln("obj('%s')" % sk2_model.CID_TO_TAGNAME[obj.cid])
         props = obj.__dict__
-        for item in props.keys():
+        keys = props.keys() if not obj.is_pixmap \
+            else props.keys() + ['bitmap', 'alpha_channel']
+        for item in keys:
             if item not in sk2_model.GENERIC_FIELDS and \
                     not item.startswith('cache') and \
                     not item.startswith('is_'):
                 if item == 'bitmap':
-                    item_str = "'%s'" % obj.handler.get_bitmap_b64str()
+                    item_str = "'%s'" % obj.get_bitmap()
                 elif item == 'alpha_channel':
-                    alpha_channel = obj.handler.get_alpha_b64str()
-                    item_str = None
-                    if alpha_channel:
-                        item_str = "'%s'" % alpha_channel
-                elif obj.is_pixmap and item in ('handler',
-                                                'size', 'colorspace'):
+                    item_str = None if not obj.has_alpha() \
+                        else "'%s'" % obj.get_alpha_channel()
+                elif obj.is_pixmap and item in ('size', 'colorspace'):
                     item_str = None
                 else:
                     item_str = self.field_to_str(props[item])
