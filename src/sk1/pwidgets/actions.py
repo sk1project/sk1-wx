@@ -20,7 +20,7 @@ from sk1 import events
 from sk1 import resources
 
 
-class AppAction:
+class AppAction(object):
     action_id = None
     callback = None
     channels = []
@@ -39,10 +39,9 @@ class AppAction:
     acc_entry = None
     global_accs = []
 
-    def __init__(
-            self, action_id, callback, channels=[],
-            validator=None, checker=None,
-            callable_args=[], validator_args=[], checker_args=[]):
+    def __init__(self, action_id, callback, channels=None,
+                 validator=None, checker=None,
+                 callable_args=None, validator_args=None, checker_args=None):
 
         self.action_id = action_id
         self.is_acc = action_id in resources.ACC_KEYS
@@ -53,12 +52,12 @@ class AppAction:
             self.is_acc = False
         self.is_icon = action_id in resources.ART_IDS
         self.callback = callback
-        self.channels = channels
+        self.channels = channels or []
         self.validator = validator
         self.checker = checker
-        self.callable_args = callable_args
-        self.validator_args = validator_args
-        self.checker_args = checker_args
+        self.callable_args = callable_args or []
+        self.validator_args = validator_args or []
+        self.checker_args = checker_args or []
 
         self.widgets = []
         self.menuitem = []
@@ -179,15 +178,12 @@ class ActionButton(wal.ImageButton):
         self.action = action
         artid = action.get_artid()
         tooltip = action.get_tooltip_text()
-        text = ''
-        if artid is None:
-            text = tooltip
-        native = True
-        if wal.IS_WINXP:
-            native = False
-        wal.ImageButton.__init__(
-            self, parent, artid, wal.DEF_SIZE, text,
-            tooltip, native=native, onclick=action)
+        text = tooltip if artid is None else ''
+        native = False if wal.IS_WINXP else True
+        size = wal.DEF_SIZE
+        super(ActionButton, self).__init__(parent, artid, size, text, tooltip,
+                                           native=native,
+                                           onclick=action)
         action.register(self)
 
     def update(self):
