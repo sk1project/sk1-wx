@@ -60,7 +60,7 @@ class KbdProcessor:
             return self.text_edit_mode(key_code, modifiers)
 
         if (key_code, modifiers) in MAPPING:
-            self.actions[MAPPING[(key_code, modifiers)]].do_call()
+            self.actions[MAPPING[(key_code, modifiers)]]()
             return
 
         if key_code == wal.KEY_SPACE and not modifiers:
@@ -80,11 +80,11 @@ class KbdProcessor:
     def text_edit_mode(self, key_code, modifiers):
 
         if key_code == wal.KEY_NUMPAD_DECIMAL and modifiers == wal.ACCEL_SHIFT:
-            self.actions[wal.ID_CUT].do_call()
+            self.actions[wal.ID_CUT]()
             return
 
         if key_code == wal.KEY_NUMPAD0 and modifiers == wal.ACCEL_SHIFT:
-            self.actions[wal.ID_PASTE].do_call()
+            self.actions[wal.ID_PASTE]()
             return
 
         if not modifiers:

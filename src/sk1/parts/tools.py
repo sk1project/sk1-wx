@@ -65,7 +65,7 @@ class ActionTool(wal.ImageToggleButton):
         wal.ImageToggleButton.__init__(self, parent, value, art_id, art_size,
                                        text, tooltip, padding,
                                        decoration_padding,
-                                       True, onchange=action.do_call)
+                                       True, onchange=action)
         self.action.register(self)
 
     def update(self):
@@ -103,7 +103,7 @@ class ActionToolButton(wal.ImageButton):
 
         wal.ImageButton.__init__(self, parent, art_id, art_size, text, tooltip,
                                  padding, decoration_padding, True, native,
-                                 onclick=action.do_call)
+                                 onclick=action)
         self.action.register(self)
 
     def update(self):

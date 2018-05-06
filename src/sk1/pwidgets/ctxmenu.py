@@ -79,7 +79,7 @@ class CtxActionMenuItem(wal.MenuItem):
         if action.is_icon:
             self.set_bitmap(action.get_icon(config.menu_size, wal.ART_MENU))
         action.register_as_menuitem(self)
-        self.bind_to(self.mw, action.do_call, action_id)
+        self.bind_to(self.mw, action, action_id)
         if action.is_toggle():
             self.set_checkable(True)
 

@@ -38,9 +38,8 @@ class AppStubPanel(wal.StubPanel):
             action = self.app.actions[pid]
             tooltip = _('Open Recent') if pid == pdids.ID_VIEW_LOG \
                 else action.get_descr_text()
-            callback = action.do_call
             icon = get_icon(icon, size=wal.DEF_SIZE)
-            self.buttons.append(wal.StubBtn(self, bg, icon, callback, tooltip))
+            self.buttons.append(wal.StubBtn(self, bg, icon, action, tooltip))
 
         self.buttons[-1].set_active(self.app.history.is_history())
 

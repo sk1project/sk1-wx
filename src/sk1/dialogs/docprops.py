@@ -283,7 +283,7 @@ class PageProps(DocPropsPanel):
 
         visibility = self.app.insp.is_draw_page_border()
         if not visibility == self.border_check.get_value():
-            self.app.actions[pdids.ID_SHOW_PAGE_BORDER].do_call()
+            self.app.actions[pdids.ID_SHOW_PAGE_BORDER]()
 
 
 ORIGIN_ICONS = [icons.L_ORIGIN_CENTER, icons.L_ORIGIN_LL, icons.L_ORIGIN_LU]
@@ -529,7 +529,7 @@ class GridProps(DocPropsPanel):
             self.api.set_grid_color(color)
         visibility = self.app.insp.is_grid_visible()
         if not visibility == self.show_grid_check.get_value():
-            self.app.actions[pdids.ID_SHOW_GRID].do_call()
+            self.app.actions[pdids.ID_SHOW_GRID]()
 
 
 class GuidePreview(wal.VPanel, wal.Canvas):
@@ -614,7 +614,7 @@ class GuidesProps(DocPropsPanel):
             self.api.set_guide_color(color)
         visibility = self.app.insp.is_guides_visible()
         if not visibility == self.show_guide_check.get_value():
-            self.app.actions[pdids.ID_SHOW_GUIDES].do_call()
+            self.app.actions[pdids.ID_SHOW_GUIDES]()
 
 
 PANELS = [GeneralProps, PageProps, UnitsProps, GridProps, GuidesProps]

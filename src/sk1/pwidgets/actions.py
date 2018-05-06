@@ -125,9 +125,6 @@ class AppAction:
                 widget.set_active(self.active)
 
     def __call__(self, *args, **kwargs):
-        self.do_call()
-
-    def do_call(self, *args):
         if self.enabled:
             if self.callable_args:
                 self.callback(*self.callable_args)
@@ -190,7 +187,7 @@ class ActionButton(wal.ImageButton):
             native = False
         wal.ImageButton.__init__(
             self, parent, artid, wal.DEF_SIZE, text,
-            tooltip, native=native, onclick=action.do_call)
+            tooltip, native=native, onclick=action)
         action.register(self)
 
     def update(self):
