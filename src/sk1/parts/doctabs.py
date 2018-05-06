@@ -44,6 +44,9 @@ class DocTabPanel(wal.HTabPanel):
             self.set_painter(config.tab_style)
             self.refresh()
 
+    def double_click(self):
+        self.app.actions[wal.ID_NEW]()
+
     def add_new_tab(self, doc):
         return wal.HTabPanel.add_new_tab(self, DocTab(self, doc))
 

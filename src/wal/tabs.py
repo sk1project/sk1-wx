@@ -101,6 +101,15 @@ class TabPanel(HPanel, SensitiveCanvas):
         self.tabs.remove(tab)
         self.tabs.insert(index, tab)
 
+    def mouse_left_dclick(self, point):
+        for tab in self.tabs:
+            if tab.is_point_in_tab(point):
+                return
+        self.double_click()
+
+    def double_click(self):
+        pass
+
     def mouse_left_down(self, point):
         for tab in self.tabs:
             if tab.is_point_in_tab(point):
