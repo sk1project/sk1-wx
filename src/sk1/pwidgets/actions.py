@@ -124,6 +124,9 @@ class AppAction:
             for widget in self.widgets:
                 widget.set_active(self.active)
 
+    def __call__(self, *args, **kwargs):
+        self.do_call()
+
     def do_call(self, *args):
         if self.enabled:
             if self.callable_args:
