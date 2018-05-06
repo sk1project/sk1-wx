@@ -35,12 +35,12 @@ class StaticUnitLabel(wal.Label):
         if self.insp.is_doc():
             self.units = app.current_doc.model.doc_units
         text = uc2const.unit_short_names[self.units]
-        wal.Label.__init__(self, parent, text)
+        super(StaticUnitLabel, self).__init__(parent, text)
 
 
 class UnitLabel(StaticUnitLabel):
     def __init__(self, app, parent):
-        StaticUnitLabel.__init__(self, app, parent)
+        super(UnitLabel, self).__init__(app, parent)
         events.connect(events.DOC_CHANGED, self.update)
         events.connect(events.DOC_MODIFIED, self.update)
 
@@ -58,30 +58,33 @@ class UnitLabel(StaticUnitLabel):
         self.set_text(text)
 
 
+POIN_RANGE = (0.0, 100000.0)
+NEGATIVE_POINT_RANGE = (-100000.0, 100000.0)
+
+
 class StaticUnitSpin(wal.FloatSpin):
     app = None
     insp = None
     ucallback = None
     point_value = 0.0
-    point_range = (0.0, 100000.0)
+    point_range = POIN_RANGE
     units = uc2const.UNIT_MM
 
-    def __init__(
-            self, app, parent, val=0.0, step=1.0,
-            onchange=None, onenter=None, can_be_negative=False):
+    def __init__(self, app, parent, val=0.0, step=1.0, onchange=None,
+                 onenter=None, can_be_negative=False):
         self.app = app
         self.insp = app.insp
         self.point_value = val
         self.ucallback = onchange
         if can_be_negative:
-            self.point_range = (-100000.0, 100000.0)
+            self.point_range = NEGATIVE_POINT_RANGE
         if self.insp.is_doc():
             self.units = app.current_doc.model.doc_units
         val = self.point_value * point_dict[self.units]
-        wal.FloatSpin.__init__(
-            self, parent, val, self.point_range, step=step,
-            onchange=self.update_point_value,
-            onenter=onenter)
+        super(StaticUnitSpin, self).__init__(parent, val, self.point_range,
+                                             step=step,
+                                             onchange=self.update_point_value,
+                                             onenter=onenter)
         self._set_digits(unit_accuracy[self.units])
         self.set_value(self.point_value * point_dict[self.units])
 
@@ -98,22 +101,20 @@ class StaticUnitSpin(wal.FloatSpin):
             self.point_value = val
             self.set_value(self.point_value * point_dict[self.units])
 
-    def set_point_range(self, range_val=()):
+    def set_point_range(self, range_val=POIN_RANGE):
         if range_val:
             self.point_range = range_val
-        minv, maxv = self.point_range
-        minv *= point_dict[self.units]
-        maxv *= point_dict[self.units]
-        self.set_range((minv, maxv))
+            minv, maxv = self.point_range
+            minv *= point_dict[self.units]
+            maxv *= point_dict[self.units]
+            self.set_range((minv, maxv))
 
 
 class UnitSpin(StaticUnitSpin):
-    def __init__(
-            self, app, parent, val=0.0, step=1.0,
-            onchange=None, onenter=None, can_be_negative=False):
-        StaticUnitSpin.__init__(
-            self, app, parent, val, step,
-            onchange, onenter, can_be_negative)
+    def __init__(self, app, parent, val=0.0, step=1.0,
+                 onchange=None, onenter=None, can_be_negative=False):
+        super(UnitSpin, self).__init__(app, parent, val, step,
+                                       onchange, onenter, can_be_negative)
         events.connect(events.DOC_MODIFIED, self.update_units)
         events.connect(events.DOC_CHANGED, self.update_units)
 
@@ -137,7 +138,8 @@ class BitmapToggle(wal.Bitmap):
     icons_dict = {}
     callback = None
 
-    def __init__(self, parent, state=True, icons_dict={}, onchange=None):
+    def __init__(self, parent, state=True, icons_dict=None, onchange=None):
+        icons_dict = icons_dict or {}
         self.state = state
         self.callback = onchange
         if icons_dict:
@@ -147,8 +149,9 @@ class BitmapToggle(wal.Bitmap):
                 True: [icons.CTX_RATIO, _("Keep ratio")],
                 False: [icons.CTX_NO_RATIO, _("Don't keep ratio")]}
         self.update_icons()
-        wal.Bitmap.__init__(self, parent, self.icons_dict[self.state][0],
-                            on_left_click=self.on_change)
+        super(BitmapToggle, self).__init__(parent,
+                                           self.icons_dict[self.state][0],
+                                           on_left_click=self.on_change)
         if self.icons_dict[self.state][1]:
             self.set_tooltip(self.icons_dict[self.state][1])
 
@@ -195,17 +198,17 @@ class BitmapToggle(wal.Bitmap):
 
 class RatioToggle(BitmapToggle):
     def __init__(self, parent, state=True, onchange=None):
-        BitmapToggle.__init__(self, parent, state, {}, onchange)
+        super(RatioToggle, self).__init__(parent, state, {}, onchange)
 
 
 class ActionImageSwitch(BitmapToggle):
     action = None
 
-    def __init__(self, parent, action, icons_dict={}, state=False):
+    def __init__(self, parent, action, icons_dict=None, state=False):
+        icons_dict = icons_dict or {}
         self.action = action
-        BitmapToggle.__init__(
-            self, parent, state, icons_dict,
-            onchange=action.do_call)
+        super(ActionImageSwitch, self).__init__(parent, state, icons_dict,
+                                                onchange=action)
         action.register(self)
 
     def update(self):
@@ -216,16 +219,15 @@ class AngleSpin(wal.FloatSpin):
     ucallback = None
     angle_value = 0.0
 
-    def __init__(
-            self, parent, val=0.0, val_range=(-360.0, 360.0),
-            onchange=None, onenter=None, check_focus=False):
+    def __init__(self, parent, val=0.0, val_range=(-360.0, 360.0),
+                 onchange=None, onenter=None, check_focus=False):
         self.angle_value = val
         self.ucallback = onchange
-        wal.FloatSpin.__init__(
-            self, parent, val, val_range, step=1.0,
-            onchange=self.update_angle_value,
-            onenter=onenter,
-            check_focus=check_focus)
+        super(AngleSpin, self).__init__(parent, val, val_range,
+                                        step=1.0,
+                                        onchange=self.update_angle_value,
+                                        onenter=onenter,
+                                        check_focus=check_focus)
 
     def update_angle_value(self, *args):
         self.angle_value = self.get_value() * math.pi / 180.0
