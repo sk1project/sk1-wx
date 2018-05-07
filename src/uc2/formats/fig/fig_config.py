@@ -23,3 +23,4 @@ class FIGConfig(XmlConfigParser):
     encoding = 'utf-8'
     filename = 'fig_config.xml'
     version = 3.2
+    line_resolution = 80.0

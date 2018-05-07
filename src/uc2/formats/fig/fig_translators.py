@@ -15,13 +15,14 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import logging
 from base64 import b64decode, b64encode
 from copy import deepcopy
 
 from uc2 import uc2const, sk2const, cms, libgeom
 from uc2.formats.sk2 import sk2_model
-from . import fig_const, fig_model
+from . import fig_const, fig_model, figlib
 from .fig_colors import color_mix, FIG_COLORS
 from .fig_const import (BLACK_COLOR, WHITE_COLOR, BLACK_FILL,
                         WHITE_FILL, NO_FILL, DEFAULT_COLOR)
@@ -83,7 +84,8 @@ class FIG_to_SK2_Translator(object):
         self.sk2_mt = sk2_doc.model
         self.fig_mtds = fig_doc.methods
         self.sk2_mtds = sk2_doc.methods
-        self.thickness = uc2const.in_to_pt / fig_const.LINE_RESOLUTION
+        lr = fig_doc.config.line_resolution or fig_const.LINE_RESOLUTION
+        self.thickness = uc2const.in_to_pt / lr
         self.depth_layer = {}
         self.translate_trafo()
         self.translate_units()
@@ -206,8 +208,7 @@ class FIG_to_SK2_Translator(object):
     def get_style(self, obj):
         fill = self.get_fill(obj.fill_color, obj.area_fill)
         stroke = self.get_stoke(obj)
-        style = [fill, stroke, [], []]
-        return style
+        return [fill, stroke, [], []]
 
     def get_depth_layer(self, depth):
         return self.depth_layer.setdefault(depth, [])
@@ -242,19 +243,19 @@ class FIG_to_SK2_Translator(object):
             cap_style = FIG_TO_SK2_CAP.get(obj.cap_style, cap_style)
         if hasattr(obj, 'join_style'):
             join_style = FIG_TO_SK2_JOIN.get(obj.join_style, join_style)
-        stroke = [
-            sk2const.STROKE_MIDDLE,
-            obj.thickness * self.thickness,
-            deepcopy(self.pallet.get(obj.pen_color)),
-            FIG_TO_SK2_LINE_STYLE.get(obj.line_style, [])[:],
-            cap_style,
-            join_style,
-            10.433,
-            0,
-            0,
-            []
-        ]
-        return stroke
+
+        rule = sk2const.STROKE_MIDDLE
+        width = obj.thickness * self.thickness
+        color = deepcopy(self.pallet.get(obj.pen_color))
+        dash = FIG_TO_SK2_LINE_STYLE.get(obj.line_style, [])[:]
+        cap = cap_style
+        join = join_style
+        miter_limit = 10.433
+        behind_flag = 0
+        scalable_flag = 0
+        markers = []  # TODO: implement translation arrows
+        return [rule, width, color, dash, cap, join, miter_limit, behind_flag,
+                scalable_flag, markers]
 
 
 class SK2_to_FIG_Translator(object):
