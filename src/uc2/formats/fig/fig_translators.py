@@ -132,8 +132,22 @@ class FIG_to_SK2_Translator(object):
                 new_obj = self.translate_arc(child, cfg)
             elif child.cid == fig_model.OBJ_POLYLINE:
                 new_obj = self.translate_polyline(child, cfg)
+            elif child.cid == fig_model.OBJ_SPLINE:
+                new_obj = self.translate_spline(child, cfg)
             if new_obj:
                 self.get_depth_layer(child.depth).append(new_obj)
+
+    def translate_spline(self, obj, cfg):
+        closed = obj.sub_type & 1
+        path = figlib.xpolyline2path(obj.points, obj.control_points, closed)
+        end_marker = sk2const.CURVE_CLOSED if closed else sk2const.CURVE_OPENED
+        if path:
+            style = self.get_style(obj)
+            start_point, points = path[0], path[1:]
+            paths = [[start_point, points, end_marker]]
+            props = dict(paths=paths, trafo=self.trafo[:], style=style)
+            new_obj = sk2_model.Curve(cfg, **props)
+            return new_obj
 
     def translate_arc(self, obj, cfg):
         cx = obj.center_x

@@ -16,6 +16,9 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from uc2 import libgeom
+
+
 def list_chunks(items, size):
     """Yield successive sized chunks from iteml."""
     for i in range(0, len(items), size):
@@ -57,3 +60,25 @@ def unpack(fmt, string):
             yield str(chunk)
         else:
             yield chunk
+
+
+def ctrl_points(p0, p1, p2, t=1.0):
+    d01 = libgeom.distance(p1, p0)
+    d12 = libgeom.distance(p2, p1)
+    if not d01 or not d12:
+        return p0[:], p1[:]
+
+    fa = t * d01 / (d01 + d12)
+    fb = t * d12 / (d01 + d12)
+
+    p1x = p1[0] - fa * (p2[0] - p0[0])
+    p1y = p1[1] - fa * (p2[1] - p0[1])
+
+    p2x = p1[0] + fb * (p2[0] - p0[0])
+    p2y = p1[1] + fb * (p2[1] - p0[1])
+    return [p1x, p1y], [p2x, p2y]
+
+
+def xpolyline2path(pts, cpts, closed=False):
+    # TODO: implementation thes
+    pass
