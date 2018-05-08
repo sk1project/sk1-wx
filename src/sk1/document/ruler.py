@@ -18,6 +18,7 @@
 import cairo
 import math
 import os
+import wal
 
 from sk1 import config, modes, events
 from sk1.resources import get_icon, icons
@@ -29,7 +30,7 @@ HFONT = {}
 VFONT = {}
 
 
-def load_font():
+def load_font(color=(0, 0, 0)):
     fntdir = 'ruler-font%dpx' % config.ruler_font_size
     fntdir = os.path.join(config.resource_dir, 'fonts', fntdir)
     for char in '.,-0123456789':
@@ -39,7 +40,14 @@ def load_font():
             file_name = os.path.join(fntdir, 'h%s.png' % char)
         file_name = fsutils.get_sys_path(file_name)
         surface = cairo.ImageSurface.create_from_png(file_name)
-        HFONT[char] = (surface.get_width(), surface)
+
+        w, h = surface.get_width(), surface.get_height()
+        res = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+        cr = cairo.Context(res)
+        cr.set_source_rgb(*color)
+        cr.mask_surface(surface, 0, 0)
+        cr.fill()
+        HFONT[char] = (w, res)
 
         if char in '.,':
             file_name = os.path.join(fntdir, 'vdot.png')
@@ -47,7 +55,14 @@ def load_font():
             file_name = os.path.join(fntdir, 'v%s.png' % char)
         file_name = fsutils.get_sys_path(file_name)
         surface = cairo.ImageSurface.create_from_png(file_name)
-        VFONT[char] = (surface.get_height(), surface)
+
+        w, h = surface.get_width(), surface.get_height()
+        res = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+        cr = cairo.Context(res)
+        cr.set_source_rgb(*color)
+        cr.mask_surface(surface, 0, 0)
+        cr.fill()
+        VFONT[char] = (h, res)
 
 
 BITMAPS = {}
@@ -97,8 +112,18 @@ class RulerCorner(Painter):
         self.dc.draw_linear_gradient((0, h - 1, w * 2, 1), bg, fg)
         self.dc.draw_linear_gradient((w - 1, 0, 1, h * 2), bg, fg, True)
         shift = (w - 19) / 2 + 1
-        self.dc.draw_bitmap(BITMAPS[self.origin], shift, shift)
 
+        surface = wal.copy_bitmap_to_surface(BITMAPS[self.origin])
+        w, h = surface.get_width(), surface.get_height()
+        res = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+        cr = cairo.Context(res)
+        cr.mask_surface(surface, 0, 0)
+        cr.set_source_rgb(*config.ruler_fg)
+        cr.fill()
+
+        # self.dc.draw_bitmap(BITMAPS[self.origin], shift, shift)
+        self.dc.draw_surface(res, shift, shift)
+0
 
 class Ruler(Painter):
     presenter = None
@@ -125,7 +150,7 @@ class Ruler(Painter):
         self.dc = mdi.vruler if vertical else mdi.hruler
 
         if not VFONT:
-            load_font()
+            load_font(config.ruler_fg)
         self.default_cursor = self.dc.get_cursor()
         if not self.vertical:
             self.guide_cursor = self.presenter.app.cursors[modes.HGUIDE_MODE]
@@ -135,8 +160,8 @@ class Ruler(Painter):
         events.connect(events.CONFIG_MODIFIED, self.check_config)
 
     def check_config(self, *args):
-        if args[0] == 'ruler_font_size':
-            load_font()
+        if args[0] in ('ruler_font_size', 'ruler_fg'):
+            load_font(config.ruler_fg)
 
     def calc_ruler(self):
         canvas = self.presenter.canvas
