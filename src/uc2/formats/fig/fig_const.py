@@ -114,3 +114,64 @@ JOIN_BEVEL = 2
 CAP_BUTT = 0
 CAP_ROUND = 1
 CAP_SQUARE = 2
+
+DEF_FONTSIZE = 12
+DEF_PS_FONT = 0
+DEF_LATEX_FONT = 0
+
+PS_FONT = {
+    -1: 'Default',
+    0: 'Times-Roman',
+    1: 'Times-Italic',
+    2: 'Times-Bold',
+    3: 'Times-BoldItalic',
+    4: 'AvantGarde-Book',
+    5: 'AvantGarde-BookOblique',
+    6: 'AvantGarde-Demi',
+    7: 'AvantGarde-DemiOblique',
+    8: 'Bookman-Light',
+    9: 'Bookman-LightItalic',
+    10: 'Bookman-Demi',
+    11: 'Bookman-DemiItalic',
+    12: 'Courier',
+    13: 'Courier-Oblique',
+    14: 'Courier-Bold',
+    15: 'Courier-BoldOblique',
+    16: 'Helvetica',
+    17: 'Helvetica-Oblique',
+    18: 'Helvetica-Bold',
+    19: 'Helvetica-BoldOblique',
+    20: 'Helvetica-Narrow',
+    21: 'Helvetica-Narrow-Oblique',
+    22: 'Helvetica-Narrow-Bold',
+    23: 'Helvetica-Narrow-BoldOblique',
+    24: 'NewCenturySchlbk-Roman',
+    25: 'NewCenturySchlbk-Italic',
+    26: 'NewCenturySchlbk-Bold',
+    27: 'NewCenturySchlbk-BoldItalic',
+    28: 'Palatino-Roman',
+    29: 'Palatino-Italic',
+    30: 'Palatino-Bold',
+    31: 'Palatino-BoldItalic',
+    32: 'Symbol',
+    33: 'ZapfChancery-MediumItalic',
+    34: 'ZapfDingbats',
+}
+
+LATEX_FONT = {
+    DEFAULT_FONT: 'Roman',
+    ROMAN_FONT: 'Roman',
+    BOLD_FONT: 'Bold',
+    ITALIC_FONT: 'Italic',
+    MODERN_FONT: 'Sans Serif',
+    MAX_FONT: 'Typewriter'
+}
+
+LATEX_FONT_MAP = {
+    DEFAULT_FONT: 'Times-Roman',
+    ROMAN_FONT: 'Times-Roman',
+    BOLD_FONT: 'Times-Bold',
+    ITALIC_FONT: 'Times-Italic',
+    MODERN_FONT: 'Helvetica',
+    MAX_FONT: 'Courier'
+}

@@ -76,3 +76,14 @@ class FIGMethods(object):
     def get_pages_format(self):
         size = self.get_pages_size()
         return [self.model.paper_size, size, self.model.orientation]
+
+    # --- TEXT
+
+    def get_font(self, font, font_flags):
+        if font_flags & fig_const.PSFONT_TEXT:
+            # A PostScript font
+            name = fig_const.PS_FONT.get(font)
+        else:
+            # A TeX font. map to psfont
+            name = fig_const.LATEX_FONT_MAP.get(font)
+        return name

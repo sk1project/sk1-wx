@@ -61,6 +61,13 @@ FIG_TO_SK2_ARC = {
     fig_const.T_PIE_WEDGE_ARC: sk2const.ARC_PIE_SLICE
 }
 
+FIG_TO_SK2_TEXT_ALIGN = {
+    fig_const.T_LEFT_JUSTIFIED: sk2const.TEXT_ALIGN_LEFT,
+    fig_const.T_CENTER_JUSTIFIED: sk2const.TEXT_ALIGN_CENTER,
+    fig_const.T_RIGHT_JUSTIFIED: sk2const.TEXT_ALIGN_RIGHT
+}
+
+
 class FIG_to_SK2_Translator(object):
     page = None
     layer = None
@@ -136,6 +143,26 @@ class FIG_to_SK2_Translator(object):
                 new_obj = self.translate_spline(child, cfg)
             if new_obj:
                 self.get_depth_layer(child.depth).append(new_obj)
+
+    def translate_compound(self, obj, cfg):
+        return self.translate_obj(obj.childs, cfg)
+
+    def translate_text(self, obj, cfg):
+        trafo = [10.0, 0.0, 0.0, -10.0, obj.x, obj.y]
+        trafo_rotate = libgeom.trafo_rotate(obj.angle)
+        trafo = libgeom.multiply_trafo(trafo_rotate, trafo)
+        trafo = libgeom.multiply_trafo(trafo, self.trafo)
+        trafo[5] -= obj.font_size
+        hidden = obj.font_flags & fig_const.HIDDEN_TEXT
+        fill = [] if hidden else self.get_fill(obj.color, fig_const.BLACK_FILL)
+        text_style = self.get_text_style(obj)
+        props = dict(
+            point=[0.0, obj.font_size],
+            style=[fill, [], text_style, []],
+            text=obj.string,
+            trafo=trafo
+        )
+        return sk2_model.Text(cfg, **props)
 
     def translate_spline(self, obj, cfg):
         closed = obj.sub_type & 1
@@ -219,6 +246,15 @@ class FIG_to_SK2_Translator(object):
             new_obj = sk2_model.Curve(cfg, **props)
         return new_obj
 
+    def get_text_style(self, obj):
+        font = self.fig_mtds.get_font(obj.font, obj.font_flags) or 'Times'
+        font_family, _, font_face = font.partition('-')
+        font_face = font_face or "Regular"
+        font_size = obj.font_size
+        alignment = sk2const.TEXT_ALIGN_LEFT
+        alignment = FIG_TO_SK2_TEXT_ALIGN.get(obj.sub_type, alignment)
+        return [font_family, font_face, font_size, alignment, [], True]
+
     def get_style(self, obj):
         fill = self.get_fill(obj.fill_color, obj.area_fill)
         stroke = self.get_stoke(obj)
@@ -227,7 +263,7 @@ class FIG_to_SK2_Translator(object):
     def get_depth_layer(self, depth):
         return self.depth_layer.setdefault(depth, [])
 
-    def get_fill(self, color, style):
+    def get_fill(self, color, style=BLACK_FILL):
         if style == NO_FILL:
             return []
         pallet = self.pallet
