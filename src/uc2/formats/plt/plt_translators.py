@@ -92,7 +92,7 @@ class SK2_to_PLT_Translator(object):
                 self.counter += 1
                 position = float(self.counter) / obj_num
                 if position - self.position > 0.05:
-                    msg = _('Saving in process...')
+                    msg = _('Saving in progress...')
                     events.emit(events.FILTER_INFO, msg, position)
                     self.position = position
 

@@ -132,7 +132,7 @@ class SK1Presenter:
         try:
             saver = get_saver(self.doc_file)
             if saver is None:
-                msg = _('Unknown file format is requested for saving! <%s>')
+                msg = _('Unknown file format is requested for saving <%s>')
                 raise IOError(msg % self.doc_file)
             pd.run(saver, [self.doc_presenter, self.doc_file])
         except Exception:

@@ -141,7 +141,7 @@ class ConsoleDialog(wal.SimpleDialog):
         timestamp = datetime.datetime.now().strftime("%Y%m%d")
         filename = '%s_%s.log' % (appname, timestamp)
         path = os.path.join(config.log_dir, filename)
-        log_path = filedlgs.get_save_file_name(self, path, _('Save log As...'),
+        log_path = filedlgs.get_save_file_name(self, path, _('Save logs as...'),
                                                file_types=[uc2const.LOG, ])[0]
         if log_path:
             self.write_log(log_path)

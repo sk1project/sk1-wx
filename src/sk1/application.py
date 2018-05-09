@@ -238,7 +238,7 @@ class SK1Application(wal.Application, UCApplication):
             except Exception as e:
                 msg = _('Cannot open file:')
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
-                msg += _('The file may be corrupted or not supported format.')
+                msg += _('The file may be corrupted or not supported format')
                 msg += '\n'
                 msg += _('Details see in application logs.')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
@@ -370,7 +370,7 @@ class SK1Application(wal.Application, UCApplication):
                 self.current_doc = None
                 self.mw.show_mdi(False)
                 events.emit(events.NO_DOCS)
-                msg = _('To start create new or open existing document')
+                msg = _('To start, create new document or open existing')
                 events.emit(events.APP_STATUS, msg)
                 self.mw.set_title()
             elif active:
@@ -410,7 +410,7 @@ class SK1Application(wal.Application, UCApplication):
             except Exception as e:
                 msg = _('Cannot import file:')
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
-                msg += _('The file may be corrupted or not supported format.')
+                msg += _('The file may be corrupted or not supported format')
                 msg += '\n'
                 msg += _('Details see in application logs.')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
@@ -529,7 +529,7 @@ class SK1Application(wal.Application, UCApplication):
             except Exception as e:
                 msg = _('Cannot import file:')
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
-                msg += _('The file may be corrupted or not supported format.')
+                msg += _('The file may be corrupted or not supported format')
                 msg += '\n'
                 msg += _('Details see in application logs.')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
