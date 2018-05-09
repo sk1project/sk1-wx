@@ -125,7 +125,7 @@ class RulersPrefs(PrefPanel):
 
     def update_ruler(self):
         self.ruler.load_font(self.ruler_font_size.get_value(),
-                       self.fg_btn.get_value())
+                             self.fg_btn.get_value())
         self.ruler.set_size()
 
     def apply_changes(self):
