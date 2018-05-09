@@ -171,8 +171,7 @@ class FIG_to_SK2_Translator(object):
             start_point, points = path[0], path[1:]
             paths = [[start_point, points, end_marker]]
             props = dict(paths=paths, trafo=self.trafo[:], style=style)
-            new_obj = sk2_model.Curve(cfg, **props)
-            return new_obj
+            return sk2_model.Curve(cfg, **props)
 
     def translate_arc(self, obj, cfg):
         cx = obj.center_x
@@ -215,6 +214,34 @@ class FIG_to_SK2_Translator(object):
             color = [uc2const.COLOR_RGB, rgb, 1.0, obj.hexcolor]
             self.pallet[obj.idx] = color
 
+    def translate_pic(self, obj, cfg, bbox):
+        filename = obj.file
+        if filename:
+            file_dir = os.path.dirname(self.fig_doc.doc_file)
+            image_path = os.path.join(file_dir, filename)
+            image_path = os.path.abspath(image_path)
+            if os.path.lexists(image_path):
+                pixmap = sk2_model.Pixmap(cfg)
+                pixmap.handler.load_from_file(self.sk2_doc.cms, image_path)
+                img_w, img_h = pixmap.size
+                x, y = bbox[0], bbox[1]
+                w, h = libgeom.bbox_size(bbox)
+                # if obj.flipped:
+                #     trafo_rotate = libgeom.trafo_rotate_grad(-90.0)
+                # else:
+                #     trafo_rotate = [-1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+                trafo = [1.0, 0.0, 0.0, -1.0, img_w / 2.0, img_h / 2.0]
+                trafo1 = [1.0*w/img_w, 0.0, 0.0, 1.0*h/img_h, 0.0, 0.0]
+                trafo2 = [1.0, 0.0, 0.0, 1.0, x, y]
+                trafo = libgeom.multiply_trafo(trafo, trafo1)
+                trafo = libgeom.multiply_trafo(trafo, trafo2)
+                # trafo = libgeom.multiply_trafo(trafo, trafo_rotate)
+                trafo3 = [1.0, 0.0, 0.0, 1.0, - w / 2.0, h / 2.0]
+                trafo = libgeom.multiply_trafo(trafo, trafo3)
+                trafo = libgeom.multiply_trafo(trafo, self.trafo)
+                pixmap.trafo = trafo
+                return pixmap
+
     def translate_polyline(self, obj, cfg):
         tr = self.trafo
         style = self.get_style(obj)
@@ -232,6 +259,9 @@ class FIG_to_SK2_Translator(object):
                     pass
             else:
                 pass  # TODO: implement fig_const.T_PIC_BOX
+                # pic = self.translate_pic(obj.childs[0], cfg, bbox)
+                # if pic:
+                #     self.get_depth_layer(obj.depth).append(pic)
             props = dict(
                 rect=rect, trafo=tr[:], style=style, corners=corners[:]
             )
