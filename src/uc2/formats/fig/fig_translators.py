@@ -127,20 +127,18 @@ class FIG_to_SK2_Translator(object):
         self.sk2_mtds.set_page_format(self.page, page_fmt)
 
     def translate_obj(self, childs, cfg):
+        obj_map = {
+            fig_model.OBJ_COMPOUND: 'translate_compound',
+            fig_model.OBJ_COLOR_DEF: 'translate_color',
+            fig_model.OBJ_ELLIPSE: 'translate_ellipse',
+            fig_model.OBJ_ARC: 'translate_arc',
+            fig_model.OBJ_POLYLINE: 'translate_polyline',
+            fig_model.OBJ_SPLINE: 'translate_spline',
+            fig_model.OBJ_TEXT:  'translate_text'
+        }
         for child in childs:
-            new_obj = None
-            if child.cid == fig_model.OBJ_COLOR_DEF:
-                self.translate_color(child, cfg)
-            elif child.cid == fig_model.OBJ_COMPOUND:
-                self.translate_obj(child.childs, cfg)
-            elif child.cid == fig_model.OBJ_ELLIPSE:
-                new_obj = self.translate_ellipse(child, cfg)
-            elif child.cid == fig_model.OBJ_ARC:
-                new_obj = self.translate_arc(child, cfg)
-            elif child.cid == fig_model.OBJ_POLYLINE:
-                new_obj = self.translate_polyline(child, cfg)
-            elif child.cid == fig_model.OBJ_SPLINE:
-                new_obj = self.translate_spline(child, cfg)
+            mapper = obj_map.get(child.cid)
+            new_obj = getattr(self, mapper)(child, cfg) if mapper else None
             if new_obj:
                 self.get_depth_layer(child.depth).append(new_obj)
 
