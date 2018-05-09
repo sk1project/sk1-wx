@@ -18,10 +18,8 @@
 import cairo
 import math
 import os
-import wal
 
 from sk1 import config, modes, events
-from sk1.resources import get_icon, icons
 from sk1.pwidgets import Painter
 from uc2 import uc2const, cms, sk2const
 from uc2.utils import fsutils
@@ -33,59 +31,54 @@ VFONT = {}
 def load_font(color=(0, 0, 0)):
     fntdir = 'ruler-font%dpx' % config.ruler_font_size
     fntdir = os.path.join(config.resource_dir, 'fonts', fntdir)
+
+    def get_colored_surface(file_name, color):
+        file_name = fsutils.get_sys_path(file_name)
+        surface = cairo.ImageSurface.create_from_png(file_name)
+        w, h = surface.get_width(), surface.get_height()
+        res = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+        cr = cairo.Context(res)
+        cr.set_source_rgb(*color)
+        cr.mask_surface(surface, 0, 0)
+        cr.fill()
+        return w, res
+
     for char in '.,-0123456789':
-        if char in '.,':
-            file_name = os.path.join(fntdir, 'hdot.png')
-        else:
-            file_name = os.path.join(fntdir, 'h%s.png' % char)
-        file_name = fsutils.get_sys_path(file_name)
-        surface = cairo.ImageSurface.create_from_png(file_name)
+        file_name = 'hdot.png' if char in '.,' else 'h%s.png' % char
+        file_name = os.path.join(fntdir, file_name)
+        HFONT[char] = get_colored_surface(file_name, color)
 
-        w, h = surface.get_width(), surface.get_height()
-        res = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
-        cr = cairo.Context(res)
-        cr.set_source_rgb(*color)
-        cr.mask_surface(surface, 0, 0)
-        cr.fill()
-        HFONT[char] = (w, res)
+        file_name = 'vdot.png' if char in '.,' else 'v%s.png' % char
+        file_name = os.path.join(fntdir, file_name)
+        VFONT[char] = get_colored_surface(file_name, color)
 
-        if char in '.,':
-            file_name = os.path.join(fntdir, 'vdot.png')
-        else:
-            file_name = os.path.join(fntdir, 'v%s.png' % char)
-        file_name = fsutils.get_sys_path(file_name)
-        surface = cairo.ImageSurface.create_from_png(file_name)
-
-        w, h = surface.get_width(), surface.get_height()
-        res = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
-        cr = cairo.Context(res)
-        cr.set_source_rgb(*color)
-        cr.mask_surface(surface, 0, 0)
-        cr.fill()
-        VFONT[char] = (h, res)
-
-
-BITMAPS = {}
 
 CAIRO_WHITE = [1.0, 1.0, 1.0]
 CAIRO_BLACK = [0.0, 0.0, 0.0]
 
+CORNER = {
+    sk2const.DOC_ORIGIN_CENTER: ((8, 1, 8, 6), (8, 11, 8, 16), (8, 8, 8, 9),
+                                 (1, 8, 6, 8), (11, 8, 16, 8),),
+    sk2const.DOC_ORIGIN_LL: ((3, 1, 3, 16), (2, 2, 5, 2), (1, 13, 16, 13),
+                             (14, 12, 14, 15), (5, 11, 6, 10), (7, 9, 8, 8),
+                             (9, 7, 10, 6), (11, 5, 12, 4),  (13, 3, 14, 2)),
+    sk2const.DOC_ORIGIN_LU: ((3, 1, 3, 16), (2, 14, 5, 14), (1, 3, 16, 3),
+                             (14, 2, 14, 5), (5, 5, 6, 6), (7, 7, 8, 8),
+                             (9, 9, 10, 10), (11, 11, 12, 12), (13, 13, 14, 14))
+}
+
 
 class RulerCorner(Painter):
-    bitmaps = {}
     presenter = None
     eventloop = None
     origin = sk2const.DOC_ORIGIN_LL
+    mtds = None
 
     def __init__(self, presenter):
         self.presenter = presenter
         self.eventloop = presenter.eventloop
         self.dc = self.presenter.app.mw.mdi.corner
         Painter.__init__(self)
-        if not BITMAPS:
-            BITMAPS[sk2const.DOC_ORIGIN_CENTER] = get_icon(icons.ORIGIN_CENTER)
-            BITMAPS[sk2const.DOC_ORIGIN_LL] = get_icon(icons.ORIGIN_LL)
-            BITMAPS[sk2const.DOC_ORIGIN_LU] = get_icon(icons.ORIGIN_LU)
         self.eventloop.connect(self.eventloop.DOC_MODIFIED, self.changes)
         self.changes()
 
@@ -111,19 +104,11 @@ class RulerCorner(Painter):
         self.dc.draw_rect(0, 0, w, h)
         self.dc.draw_linear_gradient((0, h - 1, w * 2, 1), bg, fg)
         self.dc.draw_linear_gradient((w - 1, 0, 1, h * 2), bg, fg, True)
+        self.dc.set_stroke(fg)
         shift = (w - 19) / 2 + 1
+        for x0, y0, x1, y1 in CORNER[self.origin]:
+            self.dc.draw_line(x0 + shift, y0 + shift, x1 + shift, y1 + shift)
 
-        surface = wal.copy_bitmap_to_surface(BITMAPS[self.origin])
-        w, h = surface.get_width(), surface.get_height()
-        res = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
-        cr = cairo.Context(res)
-        cr.mask_surface(surface, 0, 0)
-        cr.set_source_rgb(*config.ruler_fg)
-        cr.fill()
-
-        # self.dc.draw_bitmap(BITMAPS[self.origin], shift, shift)
-        self.dc.draw_surface(res, shift, shift)
-0
 
 class Ruler(Painter):
     presenter = None
