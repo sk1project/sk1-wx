@@ -51,14 +51,13 @@ class RulersPrefs(PrefPanel):
         # Ruler size
         grid.pack(wal.Label(grid, _('Ruler:')))
         self.ruler_size = wal.IntSpin(grid, config.ruler_size,
-                                      (15, 30), onchange=self.update_ruler_size)
+                                      (15, 30), onchange=self.update_ruler)
         grid.pack(self.ruler_size)
 
         # Ruler font size
         grid.pack(wal.Label(grid, _('Ruler font:')))
         self.ruler_font_size = wal.IntSpin(grid, config.ruler_font_size,
-                                           (5, 8),
-                                           onchange=self.update_ruler_font)
+                                           (5, 8), onchange=self.update_ruler)
         grid.pack(self.ruler_font_size)
 
         # Small tick size
@@ -124,14 +123,9 @@ class RulersPrefs(PrefPanel):
 
         self.built = True
 
-    def update_ruler_font(self):
-        self.ruler.load_font(self.ruler_font_size.get_value())
-        self.ruler.refresh()
-
     def update_ruler(self):
-        self.ruler.refresh()
-
-    def update_ruler_size(self):
+        self.ruler.load_font(self.ruler_font_size.get_value(),
+                       self.fg_btn.get_value())
         self.ruler.set_size()
 
     def apply_changes(self):
@@ -154,8 +148,7 @@ class RulersPrefs(PrefPanel):
         self.ruler_large_tick.set_value(defaults['ruler_large_tick'])
         self.ruler_text_vshift.set_value(defaults['ruler_text_vshift'])
         self.ruler_text_hshift.set_value(defaults['ruler_text_hshift'])
-        self.update_ruler_size()
-        self.update_ruler_font()
+        self.update_ruler()
 
 
 SMALL_TICKS = [15.017, 34.373, 53.729, 73.085, 92.441, 111.797, 131.153,
@@ -179,24 +172,33 @@ class RulerTest(wal.HPanel, wal.Canvas):
         wal.Canvas.__init__(self)
         self.set_size()
         self.set_bg(wal.WHITE)
-        self.load_font(self.prefs.ruler_font_size.get_value())
+        self.load_font(self.prefs.ruler_font_size.get_value(),
+                       self.prefs.fg_btn.get_value())
 
     def set_size(self, **kwargs):
         self.remove_all()
         self.add((360, self.prefs.ruler_size.get_value()))
         self.parent.layout()
 
-    def load_font(self, font_size):
+    def load_font(self, font_size, color):
         fntdir = 'ruler-font%dpx' % font_size
         fntdir = os.path.join(config.resource_dir, 'fonts', fntdir)
-        for char in '.,-0123456789':
-            if char in '.,':
-                file_name = os.path.join(fntdir, 'hdot.png')
-            else:
-                file_name = os.path.join(fntdir, 'h%s.png' % char)
+
+        def get_colored_surface(file_name, color):
             file_name = fsutils.get_sys_path(file_name)
             surface = cairo.ImageSurface.create_from_png(file_name)
-            self.font[char] = (surface.get_width(), surface)
+            w, h = surface.get_width(), surface.get_height()
+            res = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+            cr = cairo.Context(res)
+            cr.set_source_rgb(*color)
+            cr.mask_surface(surface, 0, 0)
+            cr.fill()
+            return w, res
+
+        for char in '.,-0123456789':
+            file_name = 'hdot.png' if char in '.,' else 'h%s.png' % char
+            file_name = os.path.join(fntdir, file_name)
+            self.font[char] = get_colored_surface(file_name, color)
 
     def paint(self):
         w, h = self.get_size()
