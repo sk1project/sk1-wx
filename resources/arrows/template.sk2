@@ -1,6 +1,13 @@
-##sK1 2 0
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- sK1 2 0
+0000051c -->
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="300" height="300">
+<image y="0.0"  x="0.0" xlink:href="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAIAAAD2HxkiAAAABmJLR0QA/wD/AP+gvaeTAAADiklEQVR4nO3WMW7CABBFQRvRQBTllOlS0HEJmoiGc7owXTbHeIVnTvCbp911Zhagc6oHwNGJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGLnZVm2x3P7fdVL4HA+f76/7jeXEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYuvMzP7+2/d6CRzO6XJZP67rzNRL4NC8oxATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBD7B85KF09nj1MlAAAAAElFTkSuQmCC
+"  height="300" width="300" />
+<!-- Encapsulated SK2
 obj('Document')
-set_field('styles',{'Default Style': [[], [0, 0.28346456692913385, ['CMYK', [0.0, 0.0, 0.0, 1.0], 1.0, 'Black'], [], 1, 0, 10.433, 0, 0, []], [], []]})
+set_field('styles',{'Default Style': [[], [0, 0.28346456692913385, ['CMYK', [0.0, 0.0, 0.0, 1.0], 1.0, 'Black'], [], 1, 0, 10.433, 0, 0, []], [], []], 'Default Text Style': [[1, 0, ['CMYK', [0.0, 0.0, 0.0, 1.0], 1.0, 'Black']], [], ['Sans', 'Regular', 12.0, 0, [], True]]})
 set_field('doc_units','pt')
 set_field('metainfo',['', '', '', ''])
 set_field('doc_origin',0)
@@ -11,12 +18,28 @@ set_field('page_format',['A4', (595.275590551181, 841.8897637795275), 0])
 obj('Page')
 set_field('name','Page 1')
 set_field('page_format',['Custom', (10.0, 10.0), 0])
-set_field('layer_counter',1)
+set_field('layer_counter',2)
 obj('Layer')
 set_field('style',[[], [0, 0.28346456692913385, ['RGB', [0.19607843137254902, 0.3215686274509804, 0.6352941176470588], 1.0, ''], [], 1, 0, 10.433, 0, 0, []], [], []])
 set_field('name','Layer 1')
 set_field('color',[0.19607843137254902, 0.3215686274509804, 0.6352941176470588, 1.0])
-set_field('properties',[1, 1, 1])
+set_field('properties',[1, 0, 1, 1])
+obj('Rectangle')
+set_field('style',[[1, 0, ['CMYK', [0.0, 1.0, 1.0, 0.0], 1.0, 'Red']], [], [], []])
+set_field('width',5.00113147771)
+set_field('corners',[0.0, 0.0, 0.0, 0.0])
+set_field('stroke_trafo',[])
+set_field('height',1.0070151618)
+set_field('start',[-5.0011314777098885, 0])
+set_field('fill_trafo',[])
+set_field('trafo',[1.1001226618274902, 0.0, 0.0, 0.9939302813602154, 0.5004454437410537, -0.5016953616833422])
+obj_end()
+obj_end()
+obj('Layer')
+set_field('style',[[], [0, 0.28346456692913385, ['RGB', [0.19607843137254902, 0.3215686274509804, 0.6352941176470588], 1.0, ''], [], 1, 0, 10.433, 0, 0, []], [], []])
+set_field('name','Layer 2')
+set_field('color',[0.19607843137254902, 0.3215686274509804, 0.6352941176470588, 1.0])
+set_field('properties',[1, 1, 1, 1])
 obj_end()
 obj_end()
 obj_end()
@@ -29,13 +52,13 @@ set_field('style',[[], [0, 0.28346456692913385, ['RGB', [0.0, 0.0, 1.0], 0.15, '
 set_field('name','GridLayer')
 set_field('color',[0.0, 0.0, 1.0, 0.15])
 set_field('grid',[0.0, 0.0, 0.5, 0.5])
-set_field('properties',[1, 0, 0])
+set_field('properties',[1, 0, 0, 1])
 obj_end()
 obj('GuideLayer')
 set_field('style',[[], [0, 0.28346456692913385, ['RGB', [0.0, 0.3176470588235294, 1.0], 1.0, ''], [], 1, 0, 10.433, 0, 0, []], [], []])
 set_field('name','GuideLayer')
 set_field('color',[0.0, 0.3176470588235294, 1.0, 1.0])
-set_field('properties',[1, 1, 0])
+set_field('properties',[1, 1, 0, 0])
 obj('Guide')
 set_field('orientation',0)
 set_field('position',0)
@@ -46,3 +69,5 @@ set_field('position',0)
 obj_end()
 obj_end()
 obj_end()
+-->
+</svg>
