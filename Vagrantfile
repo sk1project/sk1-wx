@@ -19,10 +19,6 @@ Vagrant.configure("2") do |config|
         machine.vm.box = "ubuntu/trusty64"
         machine.vm.box_url = "https://app.vagrantup.com/ubuntu/boxes/trusty64"
 
-        machine.vm.provider :virtualbox do |vbox|
-            vbox.customize ["setextradata", :id, "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled", options["get_host_time_disabled"] ||= "0"]
-        end
-
         machine.vm.provision "base", type: "shell" do |shell|
             shell.path = "infra/bbox/bbox_update.sh"
         end
