@@ -199,9 +199,12 @@ class DocInfoDialog(wal.CloseDialog):
         if not items:
             data.append([_('No Bitmaps in this document.')])
         for i in items:
-            dpi_w, dpi_h = i.get_resolution()
-            val = (i.colorspace, dpi_w, dpi_h, len(i.bitmap))
-            data.append(['', _('%s (%s x %s dpi), %s bytes') % val])
+            txt = uc2const.IMAGE_NAMES[i.colorspace]
+            if i.has_alpha():
+                txt += 'A' if i.colorspace in [uc2const.IMAGE_CMYK,
+                                               uc2const.IMAGE_RGB] else '+A'
+            val = (txt,) + i.get_resolution() + i.get_size()
+            data.append(['', '%s (%s x %s dpi), %d x %d px' % val])
         return data
 
     def _walk_fill(self, items, info=None):
