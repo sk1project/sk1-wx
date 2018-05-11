@@ -43,7 +43,7 @@ class CDR_Loader(AbstractLoader):
 
     def report_position(self, position):
         if 100.0 * (position - self.file_position) / self.file_size > 3.0:
-            msg = _('Parsing is under process...')
+            msg = _('Parsing in progress...')
             events.emit(events.FILTER_INFO, msg, position / self.file_size)
         self.file_position = position
 

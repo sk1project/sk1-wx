@@ -58,7 +58,7 @@ class PDFGenerator(object):
     use_spot = True
     num_pages = 0
     page_count = 0
-    prgs_msg = _('Saving in process...')
+    prgs_msg = _('Saving in progress...')
 
     def __init__(self, fileptr, cms, version=PDF_VERSION_DEFAULT):
         self.cms = cms

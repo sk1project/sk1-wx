@@ -118,7 +118,7 @@ class ModelPresenter(object):
 
         try:
             self.parsing_msg(0.03)
-            self.send_info(_('Parsing is started...'))
+            self.send_info(_('Parsing in progress...'))
             self.model = self.loader.load(self, filename, fileptr)
         except Exception:
             self.close()

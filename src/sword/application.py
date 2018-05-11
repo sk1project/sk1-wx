@@ -70,7 +70,7 @@ class Application:
 	def run(self):
 		events.emit(events.NO_DOCS)
 		events.emit(events.APP_STATUS,
-				_('To start create new or open existing document'))
+				_('To start, create new document or open existing'))
 		gtk.main()
 
 	def exit(self):
@@ -229,7 +229,7 @@ class Application:
 			if not len(self.docs):
 				self.current_doc = None
 				events.emit(events.NO_DOCS)
-				msg = _('To start create new or open existing document')
+				msg = _('To start, create new document or open existing')
 				events.emit(events.APP_STATUS, msg)
 		return True
 

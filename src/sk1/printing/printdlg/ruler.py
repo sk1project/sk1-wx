@@ -21,8 +21,11 @@ import math
 import wal
 from sk1 import config
 from sk1.document.ruler import VFONT, HFONT
-from sk1.resources import icons, get_icon
 from uc2 import cms, uc2const
+
+CORNER = ((3, 1, 3, 16), (2, 2, 5, 2), (1, 13, 16, 13),
+          (14, 12, 14, 15), (5, 11, 6, 10), (7, 9, 8, 8),
+          (9, 7, 10, 6), (11, 5, 12, 4), (13, 3, 14, 2))
 
 
 class PreviewCorner(wal.HPanel, wal.Canvas):
@@ -34,7 +37,6 @@ class PreviewCorner(wal.HPanel, wal.Canvas):
         wal.Canvas.__init__(self)
         self.pack((size, size))
         self.set_bg(wal.WHITE)
-        self.icon = get_icon(icons.ORIGIN_LL)
         self.set_double_buffered()
 
     def paint(self):
@@ -53,7 +55,9 @@ class PreviewCorner(wal.HPanel, wal.Canvas):
         self.gc_draw_linear_gradient(rect, start_clr, stop_clr, True)
 
         shift = (w - 19) / 2 + 1
-        self.draw_bitmap(self.icon, shift, shift)
+        self.set_stroke(cms.val_255(config.ruler_fg))
+        for x0, y0, x1, y1 in CORNER:
+            self.draw_line(x0 + shift, y0 + shift, x1 + shift, y1 + shift)
 
 
 class PreviewRuler(wal.HPanel, wal.Canvas):
