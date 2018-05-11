@@ -24,7 +24,8 @@ from sk1.pwidgets import StaticUnitLabel, UnitSpin, CBMiniPalette
 from sk1.resources import icons, get_bmp, pdids
 from uc2 import cms, uc2const
 from uc2.sk2const import ORIGINS, FILL_SOLID, FILL_PATTERN
-from uc2.uc2const import unit_names, unit_full_names
+from uc2.uc2const import unit_names, unit_full_names, ORIENTS_NAMES
+from . import docinfodlg
 
 
 class DocPropsPanel(wal.VPanel):
@@ -91,7 +92,6 @@ class GeneralProps(DocPropsPanel):
 
 ORIENTS = [uc2const.PORTRAIT, uc2const.LANDSCAPE]
 ORIENTS_ICONS = [icons.CTX_PAGE_PORTRAIT, icons.CTX_PAGE_LANDSCAPE]
-ORIENTS_NAMES = [_('Portrait'), _('Landscape')]
 
 
 class PageProps(DocPropsPanel):
@@ -630,7 +630,13 @@ class DocPropertiesDialog(wal.OkCancelDialog):
         size = config.docprops_dlg_size
         wal.OkCancelDialog.__init__(self, parent, title, size,
                                     resizable=True, add_line=False)
+        self.info_btn = wal.Button(self.button_box, _('Statistics...'), tooltip=_("Document info"),
+                                   onclick=self.on_info, default=True)
+        self.left_button_box.pack(self.info_btn, padding=2)
         self.set_minsize(config.docprops_dlg_minsize)
+
+    def on_info(self):
+        docinfodlg.docinfo_dlg(self.app, self)
 
     def build(self):
         self.panels = []

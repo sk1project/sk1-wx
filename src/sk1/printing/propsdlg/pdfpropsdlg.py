@@ -116,8 +116,9 @@ class PagePanel(wal.LabeledPanel):
 
         hpanel = wal.HPanel(grid)
 
-        self.port_opt = wal.Radiobutton(hpanel, _('Portrait'), group=True)
-        self.land_opt = wal.Radiobutton(hpanel, _('Landscape'))
+        self.port_opt = wal.Radiobutton(hpanel, uc2const.ORIENTS_NAMES[0],
+                                        group=True)
+        self.land_opt = wal.Radiobutton(hpanel, uc2const.ORIENTS_NAMES[1])
 
         hpanel.pack(self.port_opt)
         hpanel.pack((15, 5))

@@ -16,6 +16,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from uc2.uc2const import PAGE_FORMATS, PAGE_FORMAT_NAMES, PORTRAIT, LANDSCAPE
+from uc2.uc2const import ORIENTS_NAMES
 
 from wal import VLine, ALL, EXPAND
 from wal import Combolist, LEFT, CENTER, ImageToggleButton
@@ -63,13 +64,13 @@ class PagePlugin(CtxPlugin):
 
         self.portrait = ImageToggleButton(self, True, icons.CTX_PAGE_PORTRAIT,
                                           onchange=self.portrait_toggled,
-                                          tooltip=_('Portrait'))
+                                          tooltip=ORIENTS_NAMES[0])
         self.add(self.portrait, 0, LEFT | CENTER, 2)
 
         self.landscape = ImageToggleButton(self, False,
                                            icons.CTX_PAGE_LANDSCAPE,
                                            onchange=self.landscape_toggled,
-                                           tooltip=_('Landscape'))
+                                           tooltip=ORIENTS_NAMES[1])
         self.add(self.landscape, 0, LEFT | CENTER, 2)
 
         self.width_spin.set_enable(False)
