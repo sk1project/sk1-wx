@@ -214,8 +214,11 @@ class FIG_to_SK2_Translator(object):
             color = [uc2const.COLOR_RGB, rgb, 1.0, obj.hexcolor]
             self.pallet[obj.idx] = color
 
-    def translate_pic(self, obj, cfg, bbox):
-        filename = obj.file
+    def translate_pic(self, obj, cfg):
+        if not obj.childs:
+            return
+        pic = obj.childs[0]
+        filename = pic.file
         if filename:
             file_dir = os.path.dirname(self.fig_doc.doc_file)
             image_path = os.path.join(file_dir, filename)
@@ -224,20 +227,33 @@ class FIG_to_SK2_Translator(object):
                 pixmap = sk2_model.Pixmap(cfg)
                 pixmap.handler.load_from_file(self.sk2_doc.cms, image_path)
                 img_w, img_h = pixmap.size
-                x, y = bbox[0], bbox[1]
-                w, h = libgeom.bbox_size(bbox)
-                # if obj.flipped:
-                #     trafo_rotate = libgeom.trafo_rotate_grad(-90.0)
-                # else:
-                #     trafo_rotate = [-1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
-                trafo = [1.0, 0.0, 0.0, -1.0, img_w / 2.0, img_h / 2.0]
-                trafo1 = [1.0*w/img_w, 0.0, 0.0, 1.0*h/img_h, 0.0, 0.0]
-                trafo2 = [1.0, 0.0, 0.0, 1.0, x, y]
+
+                bbox = libgeom.bbox_for_points(obj.points)
+                size = libgeom.bbox_size(bbox)
+                x, y = 1.0 * bbox[0], 1.0 * bbox[1]
+                w, h = 1.0 * size[0], 1.0 * size[1]
+
+                trafo = [1.0, 0.0, 0.0, 1.0, -img_w / 2.0, -img_h / 2.0]
+                if pic.flipped:
+                    trafo_rotate = libgeom.trafo_rotate_grad(90.0)
+                    trafo = libgeom.multiply_trafo(trafo, trafo_rotate)
+                    trafo_f = [1.0 * img_w / img_h, 0.0, 0.0,
+                               1.0 * img_h / img_w, 0.0, 0.0]
+                    trafo = libgeom.multiply_trafo(trafo, trafo_f)
+
+                # rotate
+                angle = self.fig_mtds.get_pic_angle(obj)
+                trafo_r = libgeom.trafo_rotate_grad(angle)
+                trafo = libgeom.multiply_trafo(trafo, trafo_r)
+                # scale to box size
+                if angle in [90.0, 270.0]:
+                    img_w, img_h = img_h, img_w
+                trafo1 = [w / img_w, 0.0, 0.0, -h / img_h, 0.0, 0.0]
                 trafo = libgeom.multiply_trafo(trafo, trafo1)
-                trafo = libgeom.multiply_trafo(trafo, trafo2)
-                # trafo = libgeom.multiply_trafo(trafo, trafo_rotate)
-                trafo3 = [1.0, 0.0, 0.0, 1.0, - w / 2.0, h / 2.0]
+                # move to origin point
+                trafo3 = [1.0, 0.0, 0.0, 1.0, w / 2.0 + x, h / 2.0 + y]
                 trafo = libgeom.multiply_trafo(trafo, trafo3)
+                # applying document trafo
                 trafo = libgeom.multiply_trafo(trafo, self.trafo)
                 pixmap.trafo = trafo
                 return pixmap
@@ -250,6 +266,7 @@ class FIG_to_SK2_Translator(object):
             bbox_size = libgeom.bbox_size(bbox)
             rect = [bbox[0], bbox[1], bbox_size[0], bbox_size[1]]
             corners = sk2const.CORNERS
+
             if obj.sub_type == fig_const.T_ARC_BOX:
                 try:
                     wide_side = max(bbox_size) * tr[0]
@@ -258,10 +275,13 @@ class FIG_to_SK2_Translator(object):
                 except ZeroDivisionError:
                     pass
             else:
-                pass  # TODO: implement fig_const.T_PIC_BOX
-                # pic = self.translate_pic(obj.childs[0], cfg, bbox)
-                # if pic:
-                #     self.get_depth_layer(obj.depth).append(pic)
+                try:
+                    pic = self.translate_pic(obj, cfg)
+                    if pic:
+                        return pic
+                except Exception:
+                    pass
+
             props = dict(
                 rect=rect, trafo=tr[:], style=style, corners=corners[:]
             )

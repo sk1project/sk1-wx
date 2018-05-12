@@ -87,3 +87,16 @@ class FIGMethods(object):
             # A TeX font. map to psfont
             name = fig_const.LATEX_FONT_MAP.get(font)
         return name
+
+    # --- PIC
+
+    def get_pic_angle(self, obj):
+        p = obj.points
+        direction = (p[0][0] < p[1][0], p[1][1] < p[2][1])
+        direction_map = {
+            (True, True): 0.0,
+            (True, False): 90.0,
+            (False, True): 270.0,
+            (False, False): 180.0
+        }
+        return direction_map.get(direction, 0.0)
