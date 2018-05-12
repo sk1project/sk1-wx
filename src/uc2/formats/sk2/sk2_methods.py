@@ -332,6 +332,12 @@ class SK2_Methods:
     def is_guide_visible(self):
         return self.get_guide_layer().properties[0] == 1
 
+    def is_guide_editable(self):
+        return self.get_guide_layer().properties[1] == 1
+
+    def set_guide_editable(self, editable=True):
+        self.get_guide_layer().properties[1] = int(editable)
+
     def get_guide_properties(self):
         return self.get_layer_properties(self.get_guide_layer())
 

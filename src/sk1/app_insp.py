@@ -283,11 +283,13 @@ class AppInspector:
         doc = doc or self.app.current_doc
         if doc is None:
             return False
-        methods = self.app.current_doc.methods
-        guide_layer = methods.get_guide_layer()
-        if guide_layer.properties[0]:
-            return True
-        return False
+        return doc.methods.is_guide_visible()
+
+    def is_guides_editable(self, doc=None):
+        doc = doc or self.app.current_doc
+        if doc is None:
+            return False
+        return doc.methods.is_guide_editable()
 
     def is_grid_visible(self, doc=None):
         doc = doc or self.app.current_doc

@@ -127,6 +127,9 @@ class AbstractAPI:
     def _set_guide_color(self, color):
         self.methods.set_guide_rgb_color(color)
 
+    def _set_guide_editable(self, val):
+        self.methods.set_guide_editable(val)
+
     def _set_guide_properties(self, guide, pos, orient):
         guide.position = pos
         guide.orientation = orient
@@ -810,6 +813,17 @@ class PresenterAPI(AbstractAPI):
         transaction = [
             [[self._set_guide_color, before]],
             [[self._set_guide_color, after]],
+            False]
+        self.add_undo(transaction)
+        self.selection.update()
+
+    def set_guide_editable(self, editable=True):
+        before = self.methods.is_guide_editable()
+        after = editable
+        self.methods.set_guide_editable(after)
+        transaction = [
+            [[self._set_guide_editable, before]],
+            [[self._set_guide_editable, after]],
             False]
         self.add_undo(transaction)
         self.selection.update()

@@ -569,6 +569,7 @@ class GuidesProps(DocPropsPanel):
 
     guide_color_btn = None
     show_guide_check = None
+    edit_guide_check = None
     preview = None
 
     def build(self):
@@ -589,10 +590,18 @@ class GuidesProps(DocPropsPanel):
                                   onclick=self.change_color))
         vpanel.pack(hpanel, fill=True, align_center=False)
 
+        hpanel = wal.HPanel(vpanel)
+
         val = self.doc.methods.is_guide_visible()
-        self.show_guide_check = wal.Checkbox(vpanel,
-                                             _('Show guides on canvas'), val)
-        vpanel.pack(self.show_guide_check, align_center=False, padding=5)
+        self.show_guide_check = wal.Checkbox(hpanel, _('Show guides on canvas'),
+                                             val)
+        hpanel.pack(self.show_guide_check)
+
+        val = self.doc.methods.is_guide_editable()
+        self.edit_guide_check = wal.Checkbox(hpanel, _('Edit guides'), val)
+        hpanel.pack(self.edit_guide_check, padding=10)
+
+        vpanel.pack(hpanel, fill=True, padding=5)
 
         self.pack((10, 10))
 
@@ -615,6 +624,9 @@ class GuidesProps(DocPropsPanel):
         visibility = self.app.insp.is_guides_visible()
         if not visibility == self.show_guide_check.get_value():
             self.app.actions[pdids.ID_SHOW_GUIDES]()
+        editable = self.app.insp.is_guides_editable()
+        if not editable == self.edit_guide_check.get_value():
+            self.api.set_guide_editable(not editable)
 
 
 PANELS = [GeneralProps, PageProps, UnitsProps, GridProps, GuidesProps]
@@ -630,7 +642,8 @@ class DocPropertiesDialog(wal.OkCancelDialog):
         size = config.docprops_dlg_size
         wal.OkCancelDialog.__init__(self, parent, title, size,
                                     resizable=True, add_line=False)
-        self.info_btn = wal.Button(self.button_box, _('Statistics...'), tooltip=_("Document info"),
+        self.info_btn = wal.Button(self.button_box, _('Statistics...'),
+                                   tooltip=_("Document info"),
                                    onclick=self.on_info, default=True)
         self.left_button_box.pack(self.info_btn, padding=2)
         self.set_minsize(config.docprops_dlg_minsize)
