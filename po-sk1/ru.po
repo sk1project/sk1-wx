@@ -1340,7 +1340,7 @@ msgstr "Загрузить дополнительные палитры"
 
 #: src/sk1/prefs/prefs_printers.py:29
 msgid "Printers"
-msgstr "Притеры"
+msgstr "Принтеры"
 
 #: src/sk1/prefs/prefs_printers.py:30
 msgid "Printer preferences"
