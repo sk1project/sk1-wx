@@ -46,16 +46,6 @@ FIG_TO_SK2_CAP = {
     fig_const.CAP_SQUARE: sk2const.CAP_SQUARE
 }
 
-#  FIXME: in line style the point size is not controlled
-FIG_TO_SK2_LINE_STYLE = {
-    fig_const.SOLID_LINE: [],
-    fig_const.DASH_LINE: [2, 2],
-    fig_const.DOTTED_LINE: [1, 1],
-    fig_const.DASH_DOT_LINE: [2, 1, 1, 1],
-    fig_const.DASH_2_DOTS_LINE: [2, 1, 1, 1, 1, 1],
-    fig_const.DASH_3_DOTS_LINE: [2, 1, 1, 1, 1, 1, 1, 1],
-}
-
 FIG_TO_SK2_ARC = {
     fig_const.T_OPEN_ARC: sk2const.ARC_ARC,
     fig_const.T_PIE_WEDGE_ARC: sk2const.ARC_PIE_SLICE
@@ -345,7 +335,7 @@ class FIG_to_SK2_Translator(object):
         rule = sk2const.STROKE_MIDDLE
         width = obj.thickness * self.thickness
         color = deepcopy(self.pallet.get(obj.pen_color))
-        dash = FIG_TO_SK2_LINE_STYLE.get(obj.line_style, [])[:]
+        dash = self.get_line_style(obj.thickness, obj.line_style, obj.style_val)
         cap = cap_style
         join = join_style
         miter_limit = 10.433
@@ -354,6 +344,28 @@ class FIG_to_SK2_Translator(object):
         markers = []  # TODO: implement translation arrows
         return [rule, width, color, dash, cap, join, miter_limit, behind_flag,
                 scalable_flag, markers]
+
+    def get_line_style(self, thickness, line_style, style_val):
+        val = 1.0 * style_val / thickness
+        width = 1.0 / (thickness * self.thickness)
+        dashes = []
+        if line_style == 1:
+            # dashed
+            dashes = [val, val]
+        elif line_style == 2:
+            # dotted
+            dashes = [width, val]
+        elif line_style == 3:
+            # dash-dot
+            dashes = [val, 0.500 * val, width, 0.500 * val]
+        elif line_style == 4:
+            # dash-dot-dot
+            dashes = [val, 0.450 * val, width, 0.333 * val, width, 0.450 * val]
+        elif line_style == 5:
+            # dash-dot-dot-dot
+            dashes = [val, 0.400 * val, width, 0.333 * val, width, 0.333 * val,
+                      width, 0.400 * val]
+        return dashes
 
 
 class SK2_to_FIG_Translator(object):
