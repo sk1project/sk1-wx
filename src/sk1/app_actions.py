@@ -155,8 +155,8 @@ def create_actions(app):
         (pdids.ID_PAGE_FRAME, proxy.create_page_border, doc_chnls, insp.is_doc),
         (pdids.ID_PAGE_GUIDE_FRAME, proxy.create_guide_border, doc_save_chnls,
          insp.is_guides_editable),
-        (pdids.ID_GUIDES_AT_CENTER, proxy.create_guides_at_center, doc_save_chnls,
-         insp.is_guides_editable),
+        (pdids.ID_GUIDES_AT_CENTER, proxy.create_guides_at_center,
+         doc_save_chnls, insp.is_guides_editable),
         (pdids.ID_REMOVE_ALL_GUIDES, proxy.remove_all_guides, doc_save_chnls,
          insp.is_guides_editable),
         # ------ Arrange menu -------
