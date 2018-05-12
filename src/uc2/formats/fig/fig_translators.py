@@ -346,9 +346,12 @@ class FIG_to_SK2_Translator(object):
                 scalable_flag, markers]
 
     def get_line_style(self, thickness, line_style, style_val):
-        val = 1.0 * style_val / thickness
-        width = 1.0 / (thickness * self.thickness)
         dashes = []
+        try:
+            val = 1.0 * style_val / thickness
+            width = 1.0 / (thickness * self.thickness)
+        except ZeroDivisionError:
+            return dashes
         if line_style == 1:
             # dashed
             dashes = [val, val]
