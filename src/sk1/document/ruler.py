@@ -340,6 +340,8 @@ class Ruler(Painter):
         self.set_ruler_cursor()
 
     def mouse_left_down(self, point):
+        if not self.presenter.methods.is_guide_editable():
+            return
         self.width, self.height = (float(item) for item in self.dc.get_size())
         self.draw_guide = True
         self.set_ruler_cursor(True)
@@ -354,6 +356,8 @@ class Ruler(Painter):
         canvas.set_canvas_cursor(canvas.controller.mode)
 
     def mouse_left_up(self, point):
+        if not self.presenter.methods.is_guide_editable():
+            return
         self.pointer = point
         self.dc.release_mouse()
         if not self.vertical:
