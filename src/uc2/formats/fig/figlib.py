@@ -78,7 +78,3 @@ def ctrl_points(p0, p1, p2, t=1.0):
     p2y = p1[1] + fb * (p2[1] - p0[1])
     return [p1x, p1y], [p2x, p2y]
 
-
-def xpolyline2path(pts, cpts, closed=False):
-    # TODO: implementation thes
-    pass

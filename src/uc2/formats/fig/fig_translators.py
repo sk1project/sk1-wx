@@ -154,7 +154,7 @@ class FIG_to_SK2_Translator(object):
 
     def translate_spline(self, obj, cfg):
         closed = obj.sub_type & 1
-        path = figlib.xpolyline2path(obj.points, obj.control_points, closed)
+        path = self.xpolyline2path(obj.points, obj.control_points, closed)
         end_marker = sk2const.CURVE_CLOSED if closed else sk2const.CURVE_OPENED
         if path:
             style = self.get_style(obj)
@@ -369,6 +369,59 @@ class FIG_to_SK2_Translator(object):
             dashes = [val, 0.400 * val, width, 0.333 * val, width, 0.333 * val,
                       width, 0.400 * val]
         return dashes
+
+    def xpolyline2path(self, pts, cpts, closed=False):
+        F13 = 1.0 / 3.0
+        F23 = 2.0 / 3.0
+        points = []
+        last = pts[0]
+        c1 = pts[0]
+
+        # points.append(pts[0])
+
+        for idx, cpt in enumerate(cpts[0:-1], 0):
+            cur = pts[idx]
+            foll = pts[idx + 1]
+
+            if cpt == 0.0:
+                # 'angular point'
+                points.append(cur[:])
+                c1 = cur[:]
+            elif cpt < 0.0:
+                # 'interpolation'
+                c2, c1n = figlib.ctrl_points(last, cur, foll, 0.5)
+                if not points:
+                    points.append(cur)
+                else:
+                    points.append([c1, c2, cur, sk2const.NODE_CUSP])
+                c1 = c1n
+            else:
+                # 'approximated'
+                coeff = 1.0 - F13 + F13 * (1.0 - cpt)
+                mp = libgeom.midpoint(last, foll)
+                node = libgeom.midpoint(mp, cur, coeff)
+                c1n = libgeom.midpoint(foll, cur, coeff)
+                c2 = libgeom.midpoint(last, cur, coeff)
+                if not points:
+                    points.append(node)
+                else:
+                    points.append([c1, c2, node, sk2const.NODE_CUSP])
+                c1 = c1n
+            last = cur
+        cpt = cpts[-1]
+        if cpt == 0.0:
+            cur = pts[-1]
+            foll = pts[-1]
+            c1n, c2 = figlib.ctrl_points(last, cur, foll, 0.5)
+            points.append([c1, c2, cur, sk2const.NODE_CUSP])
+        elif cpt < 0.0:
+            cur = pts[-1]
+            foll = pts[-1]
+            c1n, c2 = figlib.ctrl_points(last, cur, foll, 0.5)
+            points.append([c1, c1n, cur, sk2const.NODE_CUSP])
+        else:
+            points.append(pts[-1][:])
+        return points
 
 
 class SK2_to_FIG_Translator(object):
