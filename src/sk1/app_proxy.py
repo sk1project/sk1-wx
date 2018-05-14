@@ -497,6 +497,9 @@ class AppProxy:
     def clear_trafo(self):
         self.app.current_doc.api.clear_trafo()
 
+    def inline_trafo(self):
+        self.app.current_doc.api.inline_trafo()
+
     def rotate_left(self):
         self.app.current_doc.api.rotate_selected(math.pi / 2.0)
 

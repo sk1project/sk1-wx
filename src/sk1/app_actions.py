@@ -162,6 +162,8 @@ def create_actions(app):
         # ------ Arrange menu -------
         (pdids.ID_CLEAR_TRANSFORM, proxy.clear_trafo, sel_chnls,
          insp.can_clear_trafo),
+        (pdids.ID_INLINE_TRANSFORM, proxy.inline_trafo, sel_chnls,
+         insp.can_inline_trafo),
         (pdids.ID_POSITION_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc,
          None, ('TransformPlugin', 0)),
         (pdids.ID_RESIZE_PLGN, proxy.show_plugin, doc_chnls, insp.is_doc, None,

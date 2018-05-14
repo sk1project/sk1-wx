@@ -81,7 +81,7 @@ class AppMenuBar(wal.MenuBar):
                                None, pdids.ID_ROTATE_LEFT,
                                pdids.ID_ROTATE_RIGHT,
                                None, pdids.ID_MIRROR_H, pdids.ID_MIRROR_V)),
-            pdids.ID_CLEAR_TRANSFORM,
+            pdids.ID_CLEAR_TRANSFORM, pdids.ID_INLINE_TRANSFORM,
             None, pdids.ID_ALIGN_PLGN,
             (_("&Order"), (pdids.ID_RAISE_TO_TOP, pdids.ID_RAISE,
                            pdids.ID_LOWER, pdids.ID_LOWER_TO_BOTTOM)),

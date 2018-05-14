@@ -405,6 +405,21 @@ class AppInspector:
             return ret
         return False
 
+    def can_inline_trafo(self, doc=None):
+        doc = doc or self.app.current_doc
+        if doc is None:
+            return False
+        elif self.is_selection(doc):
+            objs = doc.selection.objs
+            ret = False
+            for obj in objs:
+                if obj.is_curve:
+                    if not obj.trafo == [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]:
+                        ret = True
+                        break
+            return ret
+        return False
+
     def is_container_selected(self, doc=None):
         doc = doc or self.app.current_doc
         if doc is None:
