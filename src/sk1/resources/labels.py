@@ -107,6 +107,7 @@ LABELS = {
     pdids.ID_REMOVE_ALL_GUIDES: (_('Remove all guides'),),
 
     pdids.ID_CLEAR_TRANSFORM: (_('Clear transformations'),),
+    pdids.ID_INLINE_TRANSFORM: (_('Inline transformations'),),
     pdids.ID_POSITION_PLGN: (_('Position...'),),
     pdids.ID_RESIZE_PLGN: (_('Resizing...'),),
     pdids.ID_SCALE_PLGN: (_('Scale and mirror...'),),

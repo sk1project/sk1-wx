@@ -317,10 +317,28 @@ class AbstractAPI:
         self.selection.update_bbox()
         return before, after
 
+    def _inline_trafo(self, objs):
+        normal_trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+        before = []
+        after = []
+        for obj in objs:
+            before.append((obj, obj.paths, obj.trafo))
+            obj.paths = libgeom.apply_trafo_to_paths(obj.paths, obj.trafo)
+            obj.trafo = [] + normal_trafo
+            obj.update()
+            after.append((obj, obj.paths, obj.trafo))
+        self.selection.update_bbox()
+        return before, after
+
     def _set_snapshots(self, snapshots):
         for snapshot in snapshots:
             obj = snapshot[0]
             obj.set_trafo_snapshot(snapshot)
+        self.selection.update_bbox()
+
+    def _set_paths_trafo_snapshots(self, snapshots):
+        for snapshot in snapshots:
+            self._set_paths_and_trafo(*snapshot)
         self.selection.update_bbox()
 
     def _stroke_objs(self, objs, color):
@@ -1129,6 +1147,26 @@ class PresenterAPI(AbstractAPI):
                     [[self._set_snapshots, before],
                      [self._set_selection, sel_before]],
                     [[self._set_snapshots, after],
+                     [self._set_selection, sel_before]],
+                    False]
+                self.add_undo(transaction)
+                self.selection.update()
+
+    def inline_trafo(self):
+        normal_trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+        if self.selection.objs:
+            sel_before = [] + self.selection.objs
+            objs = [] + self.selection.objs
+            inlined_objs = []
+            for obj in objs:
+                if obj.is_curve and not obj.trafo == normal_trafo:
+                    inlined_objs.append(obj)
+            if inlined_objs:
+                before, after = self._inline_trafo(inlined_objs)
+                transaction = [
+                    [[self._set_paths_trafo_snapshots, before],
+                     [self._set_selection, sel_before]],
+                    [[self._set_paths_trafo_snapshots, after],
                      [self._set_selection, sel_before]],
                     False]
                 self.add_undo(transaction)

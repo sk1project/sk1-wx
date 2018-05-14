@@ -85,6 +85,7 @@ ID_PAGE_GUIDE_FRAME = new_id()
 ID_REMOVE_ALL_GUIDES = new_id()
 # ----- Arrange menu
 ID_CLEAR_TRANSFORM = new_id()
+ID_INLINE_TRANSFORM = new_id()
 ID_POSITION_PLGN = new_id()
 ID_RESIZE_PLGN = new_id()
 ID_SCALE_PLGN = new_id()
