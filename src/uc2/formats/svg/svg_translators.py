@@ -575,6 +575,8 @@ class SVG_to_SK2_Translator(object):
             'image': self.translate_image,
         }
 
+        if svg_obj.attrs.get('display') == 'none':
+            return
         try:
             if svg_obj.tag == 'defs':
                 self.translate_defs(svg_obj)

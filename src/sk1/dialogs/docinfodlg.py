@@ -52,10 +52,10 @@ class DocInfoDialog(wal.CloseDialog):
     def _analyze_path(self, obj, info):
         info['subpaths'] += len(obj.paths)
         for path in libgeom.apply_trafo_to_paths(obj.paths, obj.trafo):
-            try:
-                info['path_length'] += libgeom.get_path_length(path)
-            except RuntimeError:
-                info['path_length'] = float('nan')
+            # try:
+            #     info['path_length'] += libgeom.get_path_length(path)
+            # except RuntimeError:
+            #     info['path_length'] = float('nan')
             if path[2] == sk2const.CURVE_CLOSED:
                 info['path_closed'] += 1
                 nodes = len(path[1])
@@ -124,12 +124,12 @@ class DocInfoDialog(wal.CloseDialog):
 
     def objects_info(self, objects):
         info = self._walk_objects(objects)
-        units = self.doc.model.doc_units
-        subpaths_tmpl = _('%i, opened %i, closed %i, length %g %s')
+        # units = self.doc.model.doc_units
+        subpaths_tmpl = _('%i, opened %i, closed %i') #, length %g %s')
         subpaths = (
             info['subpaths'], info['path_opened'], info['path_closed'],
-            pt_to_units(info['path_length'], units),
-            units
+            # pt_to_units(info['path_length'], units),
+            # units
         )
         data = [
             _('Graphic Objects'),
