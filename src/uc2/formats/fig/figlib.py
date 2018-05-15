@@ -16,7 +16,11 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import re
 from uc2 import libgeom
+
+
+RE_CHUNK = re.compile(r'(\s*[\S]+\s?)')
 
 
 def list_chunks(items, size):
@@ -48,18 +52,16 @@ def unpack(fmt, string):
     :param string: string to unpack
     :return: generator
     """
-    string = string or ''
-    chunks = string.split(' ', len(fmt) - 1)
-    for i, f in enumerate(fmt):
+    chunks = RE_CHUNK.findall(string)
+    for i, c in enumerate(fmt):
         chunk = chunks[i]
-        if f == 'i':
-            yield int(chunk)
-        elif f == 'f':
-            yield float(chunk)
-        elif f == 's':
-            yield str(chunk)
-        else:
-            yield chunk
+        if c == 'i':
+            chunk = int(chunk)
+        elif c == 'f':
+            chunk = float(chunk )
+        elif c == 's':
+            chunk = ''.join(chunks[i:])
+        yield chunk
 
 
 def ctrl_points(p0, p1, p2, t=1.0):
