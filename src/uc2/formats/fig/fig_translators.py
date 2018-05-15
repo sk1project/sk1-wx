@@ -368,7 +368,7 @@ class FIG_to_SK2_Translator(object):
             # dash-dot-dot-dot
             dashes = [val, 0.400 * val, width, 0.333 * val, width, 0.333 * val,
                       width, 0.400 * val]
-        return dashes
+        return [round(x, 2) for x in dashes]
 
     def xpolyline2path(self, pts, cpts, closed=False):
         F13 = 1.0 / 3.0
