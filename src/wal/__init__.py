@@ -32,6 +32,6 @@ from printing import *
 from renderer import *
 from stubpanel import StubPanel, StubBtn
 from tabs import HTabPanel, HTab, VTabPanel, VTab
-from togglectrls import HToggleKeeper, ModeToggleButton
+from togglectrls import HToggleKeeper, VToggleKeeper, ModeToggleButton
 from treewidgets import TreeElement, TreeWidget
 from widgets import *
