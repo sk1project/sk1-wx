@@ -119,9 +119,9 @@ CAP_MODE_ICONS = {
 }
 
 
-class CapChoice(wal.HToggleKeeper):
+class CapChoice(wal.VToggleKeeper):
     def __init__(self, parent, val=sk2const.CAP_BUTT):
-        wal.HToggleKeeper.__init__(self, parent, CAP_MODES, CAP_MODE_ICONS,
+        wal.VToggleKeeper.__init__(self, parent, CAP_MODES, CAP_MODE_ICONS,
                                    CAP_MODE_NAMES)
         self.set_cap(val)
 
@@ -146,9 +146,9 @@ JOIN_MODE_ICONS = {
 }
 
 
-class JoinChoice(wal.HToggleKeeper):
+class JoinChoice(wal.VToggleKeeper):
     def __init__(self, parent, val=sk2const.JOIN_BEVEL):
-        wal.HToggleKeeper.__init__(self, parent, JOIN_MODES, JOIN_MODE_ICONS,
+        wal.VToggleKeeper.__init__(self, parent, JOIN_MODES, JOIN_MODE_ICONS,
                                    JOIN_MODE_NAMES)
         self.set_join(val)
 

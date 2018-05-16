@@ -129,7 +129,8 @@ class StrokeStyle(wal.VPanel):
                                onclick=self.edit_dash), padding=5)
         self.pack(p)
 
-        grid = wal.GridPanel(self, vgap=15, hgap=15)
+        grid = wal.GridPanel(self, rows=1, cols=3, vgap=15, hgap=15)
+        grid.add_growable_col(2)
 
         caps_p = wal.LabeledPanel(grid, _('Caps:'))
         self.caps = CapChoice(caps_p, self.stroke[4])
@@ -141,22 +142,24 @@ class StrokeStyle(wal.VPanel):
         join_p.pack(self.join, align_center=False, padding_all=10)
         grid.pack(join_p)
 
-        self.pack(grid, padding_all=10)
+        opt_p = wal.LabeledPanel(grid, _('Options:'))
 
-        p = wal.HPanel(self)
+        p = wal.HPanel(opt_p)
         p.pack(wal.Label(p, _('Miter limit:')), padding=5)
         self.miter_limit = wal.FloatSpin(p, self.stroke[6],
                                          range_val=(0.0, 1000.0), digits=5)
         p.pack(self.miter_limit)
-        self.pack(p)
+        opt_p.pack(p, align_center=False, padding_all=10)
 
-        p = wal.HPanel(self)
-        self.behind = wal.NumCheckbox(p, _('Behind fill'), self.stroke[7])
-        p.pack(self.behind)
-        p.pack((30, 10))
-        self.scalable = wal.NumCheckbox(p, _('Scalable stroke'), self.stroke[8])
-        p.pack(self.scalable)
-        self.pack(p, padding=10)
+        self.behind = wal.NumCheckbox(opt_p, _('Behind fill'), self.stroke[7])
+        opt_p.pack(self.behind, align_center=False, padding_all=10)
+
+        self.scalable = wal.NumCheckbox(opt_p, _('Scalable stroke'), self.stroke[8])
+        opt_p.pack(self.scalable, align_center=False, padding_all=10)
+
+        grid.pack(opt_p, fill=True)
+
+        self.pack(grid, padding_all=10, fill=True)
         self.layout()
 
     def edit_dash(self):
