@@ -358,3 +358,6 @@ class CairoRenderer:
         ctx.set_line_cap(CAPS[stroke[4]])
         ctx.set_line_join(JOINS[stroke[5]])
         ctx.set_miter_limit(stroke[6])
+
+    def process_arrows(self, ctx, obj, stroke):
+        pass

@@ -108,16 +108,24 @@ class StrokeStyle(wal.VPanel):
         self.stroke = new_stroke
         wal.VPanel.__init__(self, parent)
 
-        self.pack((30, 30))
+        hp = wal.HPanel(self)
+        vp = wal.VPanel(hp)
+        vp.pack((10, 10))
 
         p = wal.HPanel(self)
-        p.pack(wal.Label(p, _('Stroke width:')), padding=5)
+        p.pack(wal.Label(p, _('Width:')), padding=5)
         self.width_spin = UnitSpin(self.app, p, self.stroke[1], step=0.1)
         p.pack(self.width_spin)
         p.pack(StaticUnitLabel(self.app, p), padding=5)
-        self.pack(p)
+        vp.pack(p)
 
-        self.pack((20, 20))
+        vp.pack((10, 10))
+        hp.pack(vp)
+        hp.pack((5,5))
+        arrow_p = wal.LabeledPanel(hp, _('Arrows:'))
+
+        hp.pack(arrow_p, expand=True, fill=True)
+        self.pack(hp, fill=True, padding_all=10)
 
         p = wal.HPanel(self)
         p.pack(wal.Label(p, _('Dashes:')), padding=5)
@@ -151,11 +159,13 @@ class StrokeStyle(wal.VPanel):
         p.pack(self.miter_limit)
         opt_p.pack(p, align_center=False, padding_all=10)
 
-        self.behind = wal.NumCheckbox(opt_p, _('Behind fill'), self.stroke[7])
-        opt_p.pack(self.behind, align_center=False, padding_all=10)
+        p = wal.VPanel(opt_p)
+        self.behind = wal.NumCheckbox(p, _('Behind fill'), self.stroke[7])
+        p.pack(self.behind, align_center=False)
 
-        self.scalable = wal.NumCheckbox(opt_p, _('Scalable stroke'), self.stroke[8])
-        opt_p.pack(self.scalable, align_center=False, padding_all=10)
+        self.scalable = wal.NumCheckbox(p, _('Scalable stroke'), self.stroke[8])
+        p.pack(self.scalable, align_center=False, padding=10)
+        opt_p.pack(p, align_center=False, padding_all=10)
 
         grid.pack(opt_p, fill=True)
 
