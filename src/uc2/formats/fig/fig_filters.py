@@ -26,13 +26,15 @@ class FIGLoader(AbstractLoader):
     name = 'FIGLoader'
     _comment = None
     stack = None
+    version = None
 
     def do_load(self):
         self.stack = []
         line = self.readln()
         magic = re.match(RX_MAGIC, line)
         if magic and self.model:
-            self.model.parse(self, line)
+            self.version = float(magic.groups()[0])
+            self.model.parse(self)
         else:
             raise Exception('Not supported')
 
