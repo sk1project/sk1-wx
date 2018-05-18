@@ -133,6 +133,7 @@ class FIG_to_SK2_Translator(object):
                 self.get_depth_layer(child.depth).append(new_obj)
 
     def translate_compound(self, obj, cfg):
+        # TODO: Create a group if all children object are at the same depth
         return self.translate_obj(obj.childs, cfg)
 
     def translate_text(self, obj, cfg):
@@ -154,7 +155,13 @@ class FIG_to_SK2_Translator(object):
 
     def translate_spline(self, obj, cfg):
         closed = obj.sub_type & 1
-        path = self.xpolyline2path(obj.points, obj.control_points, closed)
+        if obj.sub_type in fig_const.T_XSPLINE:
+            path = self.xspline2path(obj.points, obj.control_points, closed)
+        elif obj.sub_type in fig_const.T_INTERPOLATED:
+            path = self.interpolated2path(obj.points, obj.control_points)
+        elif obj.sub_type in fig_const.T_APPROX:
+            path = self.aprox2path(obj.points, closed)
+
         end_marker = sk2const.CURVE_CLOSED if closed else sk2const.CURVE_OPENED
         if path:
             style = self.get_style(obj)
@@ -370,7 +377,7 @@ class FIG_to_SK2_Translator(object):
                       width, 0.400 * val]
         return [round(x, 2) for x in dashes]
 
-    def xpolyline2path(self, pts, cpts, closed=False):
+    def xspline2path(self, pts, cpts, closed=False):
         F13 = 1.0 / 3.0
         F23 = 2.0 / 3.0
         points = []
@@ -388,7 +395,7 @@ class FIG_to_SK2_Translator(object):
                 points.append(cur[:])
                 c1 = cur[:]
             elif cpt < 0.0:
-                # 'interpolation'
+                # 'interpolation point'
                 c2, c1n = figlib.ctrl_points(last, cur, foll, 0.5)
                 if not points:
                     points.append(cur)
@@ -396,7 +403,7 @@ class FIG_to_SK2_Translator(object):
                     points.append([c1, c2, cur, sk2const.NODE_CUSP])
                 c1 = c1n
             else:
-                # 'approximated'
+                # 'approximated point'
                 coeff = 1.0 - F13 + F13 * (1.0 - cpt)
                 mp = libgeom.midpoint(last, foll)
                 node = libgeom.midpoint(mp, cur, coeff)
@@ -421,6 +428,41 @@ class FIG_to_SK2_Translator(object):
             points.append([c1, c1n, cur, sk2const.NODE_CUSP])
         else:
             points.append(pts[-1][:])
+        return points
+
+    def interpolated2path(self, pts, cpts):
+        """interpolated spline"""
+        path = [pts[0]]
+        for i, cur in enumerate(pts[1:]):
+            c1 = cpts[i * 2 + 1]
+            c2 = cpts[i * 2 + 2]
+            path.append([c1, c2, cur, sk2const.NODE_SMOOTH])
+        return path
+
+    def aprox2path(self, pts, closed):
+        """approximated spline"""
+        f23 = 2.0 / 3.0
+        last = pts[0]
+        cur = pts[1]
+        start = libgeom.midpoint(last, cur)
+        node = start[:]
+        points = []
+        if closed:
+            points.append(node)
+        else:
+            points.append(last)
+            points.append(node)
+        last = cur
+        for cur in pts[2:]:
+            c1 = libgeom.midpoint(node, last, f23)
+            node = libgeom.midpoint(last, cur)
+            c2 = libgeom.midpoint(node, last, f23)
+            points.append([c1, c2, node, sk2const.NODE_SMOOTH])
+            last = cur
+        if closed:
+            c1 = libgeom.midpoint(node, last, f23)
+            c2 = libgeom.midpoint(start, last, f23)
+            points.append([c1, c2, start, sk2const.NODE_SMOOTH])
         return points
 
 
