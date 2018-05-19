@@ -15,6 +15,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from copy import deepcopy
+from uc2 import libgeom
+
 ARROWS = [
     # arrow01
     [[[-0.0703358759842482, -0.500848400807721],
@@ -212,3 +215,31 @@ ARROWS = [
         [[3.679957434383202, -2.5], [4.799479166666667, -1.380478267716535],
          [4.799479166666667, 0.0], 4]], 1]],
 ]
+
+ARROWS_CACHE = []
+
+
+def get_arrow_paths(arrow):
+    if isinstance(arrow, int):
+        if not arrow < len(ARROWS):
+            arrow = 0
+        return deepcopy(ARROWS[arrow])
+    return arrow
+
+
+def get_arrow_cpath(arrow):
+    if isinstance(arrow, int):
+        if not ARROWS_CACHE:
+            ARROWS_CACHE.extend([None, ] * len(ARROWS))
+        if not arrow < len(ARROWS):
+            arrow = 0
+        if ARROWS_CACHE[arrow] is None:
+            ARROWS_CACHE[arrow] = libgeom.create_cpath(ARROWS[arrow])
+        return ARROWS_CACHE[arrow]
+    ret = None
+    if arrow and isinstance(arrow, list):
+        try:
+            ret = libgeom.create_cpath(arrow)
+        except Exception:
+            ret = None
+    return ret
