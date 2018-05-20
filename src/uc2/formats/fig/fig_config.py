@@ -24,3 +24,4 @@ class FIGConfig(XmlConfigParser):
     filename = 'fig_config.xml'
     version = 3.2
     line_resolution = 80.0
+    userscale = 1.0

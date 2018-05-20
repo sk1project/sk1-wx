@@ -55,11 +55,17 @@ class FIGMethods(object):
         self.model.comment = metainfo
 
     def fig_to_in(self):
-        return self.model.resolution / uc2const.in_to_pt
+        if self.model.units == fig_const.INCHES:
+            coef = fig_const.PIX_PER_INCH / fig_const.DEFAULT_RESOLUTION
+        else:
+            coef = fig_const.PIX_PER_CM / (fig_const.PIX_PER_INCH / 2.54)
+        user_scale = self.model.config.userscale or 1.0
+        resolution = self.model.resolution or fig_const.DEFAULT_RESOLUTION
+        return 1.0 / (resolution * coef) * user_scale * uc2const.in_to_pt
 
     def get_doc_trafo(self):
         fig_to_in = self.fig_to_in()
-        return [1.0 / fig_to_in, 0.0, 0.0, -1.0 / fig_to_in, 0, 0]
+        return [fig_to_in, 0.0, 0.0, -fig_to_in, 0.0, 0.0]
 
     # --- PAGES
 

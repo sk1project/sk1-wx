@@ -24,6 +24,8 @@ WHITE_FILL = 0.0
 BLACK_FILL = 20.0
 
 DEFAULT_RESOLUTION = 1200.0
+PIX_PER_INCH = 1200.0
+PIX_PER_CM = 450.0
 
 """Line thicknesses are given in 1/80 inch (0.3175mm)"""
 LINE_RESOLUTION = 80.0
