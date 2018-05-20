@@ -355,8 +355,8 @@ class FIG_to_SK2_Translator(object):
     def get_line_style(self, thickness, line_style, style_val):
         dashes = []
         try:
-            val = 1.0 * style_val / thickness
             width = 1.0 / (thickness * self.thickness)
+            val = 1.0 * style_val / thickness or width
         except ZeroDivisionError:
             return dashes
         if line_style == 1:
@@ -407,8 +407,6 @@ class FIG_to_SK2_Translator(object):
                 coeff = 1.0 - F13 + F13 * (1.0 - cpt)
                 mp = libgeom.midpoint(last, foll)
                 node = libgeom.midpoint(mp, cur, coeff)
-                c1n = libgeom.midpoint(foll, cur, coeff)
-                c2 = libgeom.midpoint(last, cur, coeff)
                 if not points:
                     points.append(node)
                 else:
