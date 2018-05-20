@@ -57,6 +57,9 @@ FIG_TO_SK2_TEXT_ALIGN = {
     fig_const.T_RIGHT_JUSTIFIED: sk2const.TEXT_ALIGN_RIGHT
 }
 
+F13 = 1.0 / 3.0
+F23 = 2.0 / 3.0
+
 
 class FIG_to_SK2_Translator(object):
     page = None
@@ -378,68 +381,84 @@ class FIG_to_SK2_Translator(object):
         return [round(x, 2) for x in dashes]
 
     def xspline2path(self, pts, cpts, closed=False):
-        F13 = 1.0 / 3.0
-        F23 = 2.0 / 3.0
+        marker = sk2const.NODE_SMOOTH
         points = []
-        last = pts[0]
-        c1 = pts[0]
-
-        # points.append(pts[0])
+        pts = pts[:]
+        cpts = cpts[:]
+        if closed:
+            last = pts[-1]
+            pts.append(pts[0])
+            cpts.append(cpts[0])
+        else:
+            last = libgeom.contra_point(pts[1], pts[0])
+            ipt = libgeom.contra_point(pts[-2], pts[-1])
+            pts.append(ipt)
+            cpts.append(0.0)
 
         for idx, cpt in enumerate(cpts[0:-1], 0):
-            cur = pts[idx]
+            cur = pts[idx][:]
             foll = pts[idx + 1]
 
             if cpt == 0.0:
                 # 'angular point'
-                points.append(cur[:])
-                c1 = cur[:]
-            elif cpt < 0.0:
-                # 'interpolation point'
-                c2, c1n = figlib.ctrl_points(last, cur, foll, 0.5)
                 if not points:
                     points.append(cur)
                 else:
-                    points.append([c1, c2, cur, sk2const.NODE_CUSP])
+                    points.append([c1, cur[:], cur[:], marker])
+                c1 = cur[:]
+            elif cpt < 0.0:
+                # 'interpolation point'
+                coef = 0.5 * abs(cpt)
+                c2, c1n = figlib.ctrl_points(last, cur, foll, coef)
+                if not points:
+                    points.append(cur)
+                else:
+                    points.append([c1, c2, cur, marker])
                 c1 = c1n
             else:
                 # 'approximated point'
-                coeff = 1.0 - F13 + F13 * (1.0 - cpt)
+                coef = 1.0 - F13 + F13 * (1.0 - cpt)
                 mp = libgeom.midpoint(last, foll)
-                node = libgeom.midpoint(mp, cur, coeff)
+                node = libgeom.midpoint(mp, cur, coef)
                 if not points:
                     points.append(node)
                 else:
-                    points.append([c1, c2, node, sk2const.NODE_CUSP])
-                c1 = c1n
+                    c2 = libgeom.midpoint(last, cur, coef)
+                    points.append([c1, c2, node, marker])
+                c1 = libgeom.midpoint(foll, cur, coef)
             last = cur
-        cpt = cpts[-1]
-        if cpt == 0.0:
+
+        if closed:
+            cpt = cpts[-1]
             cur = pts[-1]
-            foll = pts[-1]
-            c1n, c2 = figlib.ctrl_points(last, cur, foll, 0.5)
-            points.append([c1, c2, cur, sk2const.NODE_CUSP])
-        elif cpt < 0.0:
-            cur = pts[-1]
-            foll = pts[-1]
-            c1n, c2 = figlib.ctrl_points(last, cur, foll, 0.5)
-            points.append([c1, c1n, cur, sk2const.NODE_CUSP])
-        else:
-            points.append(pts[-1][:])
+            foll = pts[1]
+            if cpt == 0.0:
+                points.append([c1, cur[:], cur[:], marker])
+            elif cpt < 0.0:
+                coef = 0.5 * abs(cpt)
+                c2, c1n = figlib.ctrl_points(last, cur, foll, coef)
+                points.append([c1, c2, cur, marker])
+            else:
+                coef = 1.0 - F13 + F13 * (1.0 - cpt)
+                mp = libgeom.midpoint(last, foll)
+                node = libgeom.midpoint(mp, cur, coef)
+                c2 = libgeom.midpoint(last, cur, coef)
+                points.append([c1, c2, node, marker])
         return points
 
     def interpolated2path(self, pts, cpts):
         """interpolated spline"""
+        marker = sk2const.NODE_SMOOTH
         path = [pts[0]]
         for i, cur in enumerate(pts[1:]):
             c1 = cpts[i * 2 + 1]
             c2 = cpts[i * 2 + 2]
-            path.append([c1, c2, cur, sk2const.NODE_SMOOTH])
+            path.append([c1, c2, cur, marker])
         return path
 
     def aprox2path(self, pts, closed):
         """approximated spline"""
-        f23 = 2.0 / 3.0
+        marker = sk2const.NODE_SMOOTH
         last = pts[0]
         cur = pts[1]
         start = libgeom.midpoint(last, cur)
@@ -452,15 +471,15 @@ class FIG_to_SK2_Translator(object):
             points.append(node)
         last = cur
         for cur in pts[2:]:
-            c1 = libgeom.midpoint(node, last, f23)
+            c1 = libgeom.midpoint(node, last, F23)
             node = libgeom.midpoint(last, cur)
-            c2 = libgeom.midpoint(node, last, f23)
-            points.append([c1, c2, node, sk2const.NODE_SMOOTH])
+            c2 = libgeom.midpoint(node, last, F23)
+            points.append([c1, c2, node, marker])
             last = cur
         if closed:
-            c1 = libgeom.midpoint(node, last, f23)
-            c2 = libgeom.midpoint(start, last, f23)
-            points.append([c1, c2, start, sk2const.NODE_SMOOTH])
+            c1 = libgeom.midpoint(node, last, F23)
+            c2 = libgeom.midpoint(start, last, F23)
+            points.append([c1, c2, start, marker])
         return points
 
 
