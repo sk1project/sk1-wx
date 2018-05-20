@@ -542,6 +542,7 @@ class FIGSpline(FIGModelObject):
         s = figlib.unpack(self._frm32, chunk)
         data = dict(zip(self._names32, s))
         self.__dict__.update(data)
+        self.sub_type = figlib.spline_sub_type(self.sub_type, loader.version)
 
         if self.forward_arrow:
             fa = FIGFArrow()
@@ -561,13 +562,25 @@ class FIGSpline(FIGModelObject):
             items = ([int(x), int(y)] for x, y in figlib.list_chunks(data, 2))
             self.points.extend(items)
 
-        self.control_points = []
-        while len(self.control_points) < self.npoints:
-            line = loader.readln()
-            if line is None:
-                raise Exception('Line is corrupted')
-            items = map(float, line.split())
-            self.control_points.extend(items)
+        if self.sub_type in fig_const.T_INTERPOLATED:
+            self.control_points = []
+            ncontrols = self.npoints * 2
+            while len(self.control_points) < ncontrols:
+                line = loader.readln()
+                if line is None:
+                    raise Exception('Line is corrupted')
+                data = line.split()
+                items = ([float(x), float(y)] for x, y in
+                         figlib.list_chunks(data, 2))
+                self.control_points.extend(items)
+        elif self.sub_type in fig_const.T_XSPLINE:
+            self.control_points = []
+            while len(self.control_points) < self.npoints:
+                line = loader.readln()
+                if line is None:
+                    raise Exception('Line is corrupted')
+                items = map(float, line.split())
+                self.control_points.extend(items)
 
     def save(self, saver):
         FIGModelObject.save(self, saver)
@@ -794,6 +807,7 @@ class FIGDocument(FIGModelObject):
             child.save(saver)
 
     def parse(self, loader, chunk=None):
+        self.version = loader.version
         loader.stack.append(self.childs)
         self.read_header(loader)
         self.read_obj(loader)
@@ -826,29 +840,30 @@ class FIGDocument(FIGModelObject):
                 loader.stack.pop()
 
     def read_header(self, loader):
-        if loader.startswith_line('land'):
-            self.orientation = fig_const.LANDSCAPE
-        else:
-            self.orientation = fig_const.PORTRAIT
+        if loader.version >= 3.0:
+            if loader.startswith_line('land'):
+                self.orientation = fig_const.LANDSCAPE
+            else:
+                self.orientation = fig_const.PORTRAIT
 
-        if loader.startswith_line('cent'):
-            self.justification = fig_const.CENTER_JUSTIFIED
-        else:
-            self.justification = fig_const.FLUSH_LEFT_JUSTIFIED
+            if loader.startswith_line('cent'):
+                self.justification = fig_const.CENTER_JUSTIFIED
+            else:
+                self.justification = fig_const.FLUSH_LEFT_JUSTIFIED
 
-        if loader.startswith_line('metric'):
-            self.units = fig_const.METRIC
-        else:
-            self.units = fig_const.INCHES
+            if loader.startswith_line('metric'):
+                self.units = fig_const.METRIC
+            else:
+                self.units = fig_const.INCHES
 
-        self.paper_size, = figlib.unpack('s', loader.get_line())
-        self.magnification, = figlib.unpack('f', loader.get_line())
+        if loader.version >= 3.2:
+            self.paper_size, = figlib.unpack('s', loader.get_line())
+            self.magnification, = figlib.unpack('f', loader.get_line())
+            if loader.startswith_line('multiple'):
+                self.multiple_page = fig_const.MULTIPLE
+            else:
+                self.multiple_page = fig_const.SINGLE
+            self.transparent_color, = figlib.unpack('i', loader.get_line())
 
-        if loader.startswith_line('multiple'):
-            self.multiple_page = fig_const.MULTIPLE
-        else:
-            self.multiple_page = fig_const.SINGLE
-
-        self.transparent_color, = figlib.unpack('i', loader.get_line())
         self.resolution, self.coord_system = figlib.unpack('ii', loader.get_line())
         self.comment = loader.pop_comment()

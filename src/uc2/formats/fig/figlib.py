@@ -18,6 +18,7 @@
 
 import re
 from uc2 import libgeom
+from . import fig_const
 
 
 RE_CHUNK = re.compile(r'(\s*[\S]+\s?)')
@@ -80,3 +81,19 @@ def ctrl_points(p0, p1, p2, t=1.0):
     p2y = p1[1] + fb * (p2[1] - p0[1])
     return [p1x, p1y], [p2x, p2y]
 
+
+def spline_sub_type(sub_type, version):
+    if version >= 3.2:
+        t_open = (
+            fig_const.T_OPEN_APPROX,
+            fig_const.T_OPEN_INTERPOLATED,
+        )
+        t_closed = (
+            fig_const.T_CLOSED_APPROX,
+            fig_const.T_CLOSED_INTERPOLATED,
+        )
+        if sub_type in t_open:
+            sub_type = fig_const.T_OPEN_XSPLINE
+        elif sub_type in t_closed:
+            sub_type = fig_const.T_CLOSED_XSPLINE
+    return sub_type
