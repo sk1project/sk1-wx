@@ -109,18 +109,16 @@ class StrokeStyle(wal.VPanel):
         wal.VPanel.__init__(self, parent)
 
         hp = wal.HPanel(self)
-        vp = wal.VPanel(hp)
-        vp.pack((10, 10))
 
-        p = wal.HPanel(self)
-        p.pack(wal.Label(p, _('Width:')), padding=5)
+        width_p = wal.LabeledPanel(hp, _('Width:'))
+        p = wal.HPanel(width_p)
         self.width_spin = UnitSpin(self.app, p, self.stroke[1], step=0.1)
         p.pack(self.width_spin)
-        p.pack(StaticUnitLabel(self.app, p), padding=5)
-        vp.pack(p)
+        p.pack((5, 5))
+        p.pack(StaticUnitLabel(self.app, p))
+        width_p.pack(p, padding_all=5)
+        hp.pack(width_p, fill=True)
 
-        vp.pack((10, 10))
-        hp.pack(vp)
         hp.pack((5,5))
         arrow_p = wal.LabeledPanel(hp, _('Arrows:'))
 
