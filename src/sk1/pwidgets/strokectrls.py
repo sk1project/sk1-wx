@@ -22,6 +22,7 @@ import wal
 from sk1 import _
 from sk1.resources import icons
 from uc2 import sk2const
+from uc2.formats.sk2 import arrows
 
 DASH_LIST = [
     # solid line
@@ -55,7 +56,7 @@ def generate_dash_bitmap(dash=None):
     w, h = DASH_BITMAP_SIZE
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
     ctx = cairo.Context(surface)
-    y = h / 2
+    y = round(h / 2.0)
 
     ctx.set_source_rgba(0.0, 0.0, 0.0, 1.0)
     ctx.set_line_width(DASH_LINE_WIDTH)
@@ -102,6 +103,51 @@ class DashChoice(wal.BitmapChoice):
         bitmaps = DASH_BITMAPS + custom_dash
         self.set_bitmaps(bitmaps)
         self.set_active(self.dash_list.index(dash))
+
+
+ARROW_BITMAP_SIZE = (120, 21)
+ARROW_LINE_WIDTH = 3
+ARROW_START_BITMAPS = []
+ARROW_END_BITMAPS = []
+
+
+def generate_arrow_bitmap(arrow=0, end=False):
+    w, h = ARROW_BITMAP_SIZE
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+    ctx = cairo.Context(surface)
+    y = round(h / 2.0)
+    x = w / 2
+
+    ctx.set_source_rgba(0.0, 0.0, 0.0, 1.0)
+    ctx.set_line_width(ARROW_LINE_WIDTH)
+    x = x - 15 if end else x - 5
+    ctx.move_to(x, y)
+    x2 = w if end else 0
+    ctx.line_to(x2, y)
+    ctx.stroke()
+    # TODO: here should be arrow drawing
+
+    return wal.copy_surface_to_bitmap(surface)
+
+
+class ArrowChoice(wal.BitmapChoice):
+    arrow_list = []
+
+    def __init__(self, parent, arrow=None, end=False):
+        bitmaps = ARROW_END_BITMAPS if end else ARROW_START_BITMAPS
+        if not bitmaps:
+            for indx in range(len(arrows.ARROWS) + 1):
+                bitmaps.append(generate_arrow_bitmap(indx, end))
+        wal.BitmapChoice.__init__(self, parent, 0, bitmaps)
+        self.set_active(arrow + 1 if arrow is not None else 0)
+
+    def get_arrow(self):
+        val = self.get_active()
+        return val - 1 if val else []
+
+    def set_dash(self, arrow):
+        arrow = 0 if arrow == [] else arrow + 1
+        self.set_active(arrow)
 
 
 CAP_MODES = [sk2const.CAP_BUTT, sk2const.CAP_ROUND, sk2const.CAP_SQUARE]

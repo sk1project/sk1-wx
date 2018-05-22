@@ -23,7 +23,7 @@ from fontctrl import FontChoice, generate_fcache
 from minipalette import CBMiniPalette
 from palette import Palette
 from palette_viewer import PaletteViewer
-from strokectrls import DashChoice, CapChoice, JoinChoice
+from strokectrls import DashChoice, CapChoice, JoinChoice, ArrowChoice
 from surfaces import Painter, RulerSurface, HRulerSurface, VRulerSurface, \
     CanvasSurface
 from unitctrls import RatioToggle, BitmapToggle, ActionImageSwitch
