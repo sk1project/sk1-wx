@@ -16,11 +16,10 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import cairo
-from base64 import b64decode
 from copy import deepcopy
 
-from uc2 import libimg, libcairo, libgeom, sk2const
-from uc2.formats.sk2 import sk2_model
+from uc2 import libcairo, libgeom, sk2const
+from uc2.formats.sk2 import sk2_model, arrows
 
 CAIRO_BLACK = [0.0, 0.0, 0.0]
 CAIRO_GRAY = [0.5, 0.5, 0.5]
@@ -218,13 +217,16 @@ class CairoRenderer:
             self.process_stroke(ctx, None, self.stroke_style)
             ctx.append_path(obj.cache_cpath)
             ctx.stroke()
+            self.draw_arrows(ctx, obj, self.stroke_style)
         else:
             if obj.style[1] and obj.style[1][7]:
                 self.stroke_obj(ctx, obj)
+                self.draw_arrows(ctx, obj)
                 self.fill_obj(ctx, obj)
             else:
                 self.fill_obj(ctx, obj)
                 self.stroke_obj(ctx, obj)
+                self.draw_arrows(ctx, obj)
 
     def fill_obj(self, ctx, obj):
         if obj.style[0]:
@@ -359,5 +361,14 @@ class CairoRenderer:
         ctx.set_line_join(JOINS[stroke[5]])
         ctx.set_miter_limit(stroke[6])
 
-    def process_arrows(self, ctx, obj, stroke):
-        pass
+    def draw_arrows(self, ctx, obj, stroke=None):
+        if not obj.is_curve:
+            return
+        obj_stroke = obj.style[1]
+        if not obj_stroke or not obj_stroke[-1]:
+            return
+        arw_start, arw_end = [arrows.get_arrow_cpath(arw)
+                              for arw in obj_stroke[-1]]
+
+        line_width = obj.cache_line_width
+        trafo0 = [line_width, 0.0, 0.0, line_width, 0.0, 0.0]
