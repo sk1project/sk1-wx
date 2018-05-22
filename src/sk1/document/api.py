@@ -363,6 +363,7 @@ class AbstractAPI:
                     style[1] = []
                     obj.stroke_trafo = []
             obj.style = style
+            obj.update_stroke()
 
     def _set_objs_stroke_style(self, objs, stroke_style):
         for obj in objs:
@@ -370,6 +371,7 @@ class AbstractAPI:
                 style = deepcopy(obj.style)
                 style[1] = deepcopy(stroke_style)
                 obj.style = style
+                obj.update_stroke()
 
     def _set_parent(self, objs, parent):
         for obj in objs:

@@ -108,16 +108,22 @@ class StrokeStyle(wal.VPanel):
         self.stroke = new_stroke
         wal.VPanel.__init__(self, parent)
 
-        self.pack((30, 30))
+        hp = wal.HPanel(self)
 
-        p = wal.HPanel(self)
-        p.pack(wal.Label(p, _('Stroke width:')), padding=5)
+        width_p = wal.LabeledPanel(hp, _('Width:'))
+        p = wal.HPanel(width_p)
         self.width_spin = UnitSpin(self.app, p, self.stroke[1], step=0.1)
         p.pack(self.width_spin)
-        p.pack(StaticUnitLabel(self.app, p), padding=5)
-        self.pack(p)
+        p.pack((5, 5))
+        p.pack(StaticUnitLabel(self.app, p))
+        width_p.pack(p, padding_all=5)
+        hp.pack(width_p, fill=True)
 
-        self.pack((20, 20))
+        hp.pack((5,5))
+        arrow_p = wal.LabeledPanel(hp, _('Arrows:'))
+
+        hp.pack(arrow_p, expand=True, fill=True)
+        self.pack(hp, fill=True, padding_all=10)
 
         p = wal.HPanel(self)
         p.pack(wal.Label(p, _('Dashes:')), padding=5)
@@ -129,7 +135,8 @@ class StrokeStyle(wal.VPanel):
                                onclick=self.edit_dash), padding=5)
         self.pack(p)
 
-        grid = wal.GridPanel(self, vgap=15, hgap=15)
+        grid = wal.GridPanel(self, rows=1, cols=3, vgap=15, hgap=15)
+        grid.add_growable_col(2)
 
         caps_p = wal.LabeledPanel(grid, _('Caps:'))
         self.caps = CapChoice(caps_p, self.stroke[4])
@@ -141,22 +148,26 @@ class StrokeStyle(wal.VPanel):
         join_p.pack(self.join, align_center=False, padding_all=10)
         grid.pack(join_p)
 
-        self.pack(grid, padding_all=10)
+        opt_p = wal.LabeledPanel(grid, _('Options:'))
 
-        p = wal.HPanel(self)
+        p = wal.HPanel(opt_p)
         p.pack(wal.Label(p, _('Miter limit:')), padding=5)
         self.miter_limit = wal.FloatSpin(p, self.stroke[6],
                                          range_val=(0.0, 1000.0), digits=5)
         p.pack(self.miter_limit)
-        self.pack(p)
+        opt_p.pack(p, align_center=False, padding_all=10)
 
-        p = wal.HPanel(self)
+        p = wal.VPanel(opt_p)
         self.behind = wal.NumCheckbox(p, _('Behind fill'), self.stroke[7])
-        p.pack(self.behind)
-        p.pack((30, 10))
+        p.pack(self.behind, align_center=False)
+
         self.scalable = wal.NumCheckbox(p, _('Scalable stroke'), self.stroke[8])
-        p.pack(self.scalable)
-        self.pack(p, padding=10)
+        p.pack(self.scalable, align_center=False, padding=10)
+        opt_p.pack(p, align_center=False, padding_all=10)
+
+        grid.pack(opt_p, fill=True)
+
+        self.pack(grid, padding_all=10, fill=True)
         self.layout()
 
     def edit_dash(self):

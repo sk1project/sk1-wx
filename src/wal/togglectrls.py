@@ -15,7 +15,7 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from basic import HPanel
+from basic import HPanel, VPanel
 from gctrls import ImageToggleButton
 
 
@@ -70,6 +70,47 @@ class HToggleKeeper(HPanel):
         self.callback = on_change
         self.allow_none = allow_none
         HPanel.__init__(self, parent)
+        for item in self.modes:
+            but = ModeToggleButton(
+                self, self, item, icons, names,
+                self.changed, self.allow_none)
+            self.mode_buts.append(but)
+            self.pack(but)
+
+    def set_enable(self, val):
+        for item in self.mode_buts:
+            item.set_enable(val)
+
+    def changed(self, mode):
+        self.mode = mode
+        for item in self.mode_buts:
+            item.set_mode(mode)
+        if self.callback:
+            self.callback(mode)
+
+    def set_mode(self, mode):
+        self.mode = mode
+        for item in self.mode_buts:
+            item.set_mode(mode)
+
+    def get_mode(self):
+        return self.mode
+
+
+class VToggleKeeper(VPanel):
+    mode = 0
+    mode_buts = None
+    modes = None
+    callback = None
+    allow_none = False
+
+    def __init__(self, parent, modes, icons, names, on_change=None,
+                 allow_none=False):
+        self.modes = modes
+        self.mode_buts = []
+        self.callback = on_change
+        self.allow_none = allow_none
+        VPanel.__init__(self, parent)
         for item in self.modes:
             but = ModeToggleButton(
                 self, self, item, icons, names,

@@ -522,10 +522,12 @@ class PrimitiveObject(SelectableObject):
 
     cache_paths = None
     cache_cpath = None
+    cache_line_width = None
     cache_pattern_img = None
     cache_ps_pattern_img = None
     cache_gray_pattern_img = None
     is_primitive = True
+    cache_arrows = None
 
     def get_initial_paths(self):
         pass
@@ -553,7 +555,27 @@ class PrimitiveObject(SelectableObject):
         self.cache_paths = self.get_initial_paths()
         self.cache_cpath = libgeom.create_cpath(self.cache_paths)
         libgeom.apply_trafo(self.cache_cpath, self.trafo)
+        self.update_stroke()
         self.update_bbox()
+
+    def update_stroke(self):
+        stroke = self.style[1]
+        if not stroke:
+            return
+        if not stroke[8]:
+            self.cache_line_width = stroke[1]
+            self.stroke_trafo = []
+        else:
+            if not self.stroke_trafo:
+                self.stroke_trafo = [] + sk2const.NORMAL_TRAFO
+            points = [[0.0, 0.0], [1.0, 0.0]]
+            points = libgeom.apply_trafo_to_points(points, self.stroke_trafo)
+            coef = libgeom.distance(*points)
+            self.cache_line_width = stroke[1] * coef
+        self.update_arrows()
+
+    def update_arrows(self):
+        self.cache_arrows = []
 
     def clear_color_cache(self):
         self.cache_pattern_img = None
@@ -570,6 +592,7 @@ class PrimitiveObject(SelectableObject):
             self.fill_trafo = libgeom.multiply_trafo(self.fill_trafo, trafo)
         if self.stroke_trafo:
             self.stroke_trafo = libgeom.multiply_trafo(self.stroke_trafo, trafo)
+            self.update_stroke()
         self.update_bbox()
 
     def get_trafo_snapshot(self):
@@ -580,6 +603,7 @@ class PrimitiveObject(SelectableObject):
     def set_trafo_snapshot(self, snapshot):
         self.trafo, self.fill_trafo, self.stroke_trafo = snapshot[1:4]
         self.cache_bbox, self.cache_cpath = snapshot[4:]
+        self.update_stroke()
 
 
 # ---------------Primitives---------------------------
