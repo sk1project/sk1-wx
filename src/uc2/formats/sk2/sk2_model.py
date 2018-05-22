@@ -560,6 +560,8 @@ class PrimitiveObject(SelectableObject):
 
     def update_stroke(self):
         stroke = self.style[1]
+        if not stroke:
+            return
         if not stroke[8]:
             self.cache_line_width = stroke[1]
             self.stroke_trafo = []
