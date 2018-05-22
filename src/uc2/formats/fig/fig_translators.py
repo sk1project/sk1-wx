@@ -20,10 +20,11 @@ import logging
 from base64 import b64decode, b64encode
 from copy import deepcopy
 
-from uc2 import uc2const, sk2const, cms, libgeom
+from uc2 import uc2const, sk2const, cms, libgeom, libimg
 from uc2.formats.sk2 import sk2_model
 from . import fig_const, fig_model, figlib
 from .fig_colors import color_mix, FIG_COLORS
+from .fig_patterns import PATTERN
 from .fig_const import (BLACK_COLOR, WHITE_COLOR, BLACK_FILL,
                         WHITE_FILL, NO_FILL, DEFAULT_COLOR)
 
@@ -146,7 +147,7 @@ class FIG_to_SK2_Translator(object):
         trafo = libgeom.multiply_trafo(trafo, self.trafo)
         trafo[5] -= obj.font_size
         hidden = obj.font_flags & fig_const.HIDDEN_TEXT
-        fill = [] if hidden else self.get_fill(obj.color, fig_const.BLACK_FILL)
+        fill = [] if hidden else self.get_fill(None, obj.color, fig_const.BLACK_FILL)
         text_style = self.get_text_style(obj)
         props = dict(
             point=[0.0, obj.font_size],
@@ -304,35 +305,43 @@ class FIG_to_SK2_Translator(object):
         return [font_family, font_face, font_size, alignment, [], True]
 
     def get_style(self, obj):
-        fill = self.get_fill(obj.fill_color, obj.area_fill)
+        fill = self.get_fill(obj.pen_color, obj.fill_color, obj.area_fill)
         stroke = self.get_stoke(obj)
         return [fill, stroke, [], []]
 
     def get_depth_layer(self, depth):
         return self.depth_layer.setdefault(depth, [])
 
-    def get_fill(self, color, style=BLACK_FILL):
-        if style == NO_FILL:
-            return []
-        pallet = self.pallet
-        rgb = pallet[color]
-        coef = (BLACK_FILL - style) / BLACK_FILL
-        if color == WHITE_COLOR:
-            rgb = color_mix(rgb, pallet[BLACK_COLOR], coef)
-        elif color in (BLACK_COLOR, DEFAULT_COLOR):
-            rgb = color_mix(rgb, pallet[WHITE_COLOR], coef)
-        else:
-            if WHITE_FILL <= style < BLACK_FILL:
+    def get_fill(self, pen_color, fill_color, style=BLACK_FILL):
+        fill = None
+        if style != NO_FILL:
+            pallet = self.pallet
+            rgb = pallet[fill_color]
+            coef = (BLACK_FILL - style) / BLACK_FILL
+            if fill_color == WHITE_COLOR:
                 rgb = color_mix(rgb, pallet[BLACK_COLOR], coef)
-            elif BLACK_FILL < style <= BLACK_FILL * 2:
-                coef = (style - BLACK_FILL) / BLACK_FILL
+            elif fill_color in (BLACK_COLOR, DEFAULT_COLOR):
                 rgb = color_mix(rgb, pallet[WHITE_COLOR], coef)
-        if style > fig_const.BLACK_FILL * 2:
-            # TODO: implement FILL_PATTERN
-            fill = [sk2const.FILL_EVENODD, sk2const.FILL_SOLID, rgb]
-        else:
-            fill = [sk2const.FILL_EVENODD, sk2const.FILL_SOLID, rgb]
-        return fill
+            else:
+                if WHITE_FILL <= style < BLACK_FILL:
+                    rgb = color_mix(rgb, pallet[BLACK_COLOR], coef)
+                elif BLACK_FILL < style <= BLACK_FILL * 2:
+                    coef = (style - BLACK_FILL) / BLACK_FILL
+                    rgb = color_mix(rgb, pallet[WHITE_COLOR], coef)
+            if style > fig_const.BLACK_FILL * 2:
+                ptrn = PATTERN.get(style)
+                if ptrn:
+                    fg_color = deepcopy(self.pallet.get(pen_color))
+                    ptrn_type = sk2const.PATTERN_IMG
+                    ptrn_style = [fg_color, rgb]
+                    ptrn_trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+                    ptrn_transf = [1.0, 1.0, 0.0, 0.0, 0.0]
+                    pattern = [ptrn_type, ptrn, ptrn_style, ptrn_trafo,
+                               ptrn_transf]
+                    fill = [sk2const.FILL_EVENODD, sk2const.FILL_PATTERN, pattern]
+            else:
+                fill = [sk2const.FILL_EVENODD, sk2const.FILL_SOLID, rgb]
+        return fill or []
 
     def get_stoke(self, obj):
         cap_style = sk2const.CAP_BUTT
