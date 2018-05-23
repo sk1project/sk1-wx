@@ -16,7 +16,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from copy import deepcopy
-from uc2 import libgeom
+from uc2 import libgeom, sk2const
 
 ARROWS = [
     # arrow01
@@ -227,7 +227,9 @@ def get_arrow_paths(arrow):
     return arrow
 
 
-def get_arrow_cpath(arrow):
+def get_arrow_cpath(arrow, trafo=None):
+    if trafo is None:
+        trafo = sk2const.NORMAL_TRAFO
     if isinstance(arrow, int):
         if not ARROWS_CACHE:
             ARROWS_CACHE.extend([None, ] * len(ARROWS))
@@ -235,11 +237,13 @@ def get_arrow_cpath(arrow):
             arrow = 0
         if ARROWS_CACHE[arrow] is None:
             ARROWS_CACHE[arrow] = libgeom.create_cpath(ARROWS[arrow])
-        return ARROWS_CACHE[arrow]
+        return libgeom.apply_trafo(ARROWS_CACHE[arrow], trafo, True)
     ret = None
     if arrow and isinstance(arrow, list):
         try:
             ret = libgeom.create_cpath(arrow)
         except Exception:
             ret = None
+    if ret:
+        return libgeom.apply_trafo(ret, trafo, True)
     return ret
