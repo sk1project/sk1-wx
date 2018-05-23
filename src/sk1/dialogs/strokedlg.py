@@ -16,14 +16,14 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from copy import deepcopy
-import wal
 
-from uc2 import uc2const
-from sk1 import _, config
-from sk1.resources import icons
-from sk1.pwidgets import SolidFill, StaticUnitLabel, UnitSpin, DashChoice, \
-    CapChoice, JoinChoice
+import wal
 from dashedit_dlg import dash_editor_dlg
+from sk1 import _, config
+from sk1.pwidgets import SolidFill, StaticUnitLabel, UnitSpin, DashChoice, \
+    CapChoice, JoinChoice, ArrowChoice
+from sk1.resources import icons
+from uc2 import uc2const
 
 FALLBACK_STROKE = [0, 0.28346456692913385,
                    [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, ''],
@@ -119,8 +119,18 @@ class StrokeStyle(wal.VPanel):
         width_p.pack(p, padding_all=5)
         hp.pack(width_p, fill=True)
 
-        hp.pack((5,5))
+        hp.pack((5, 5))
         arrow_p = wal.LabeledPanel(hp, _('Arrows:'))
+
+        p = wal.HPanel(arrow_p)
+
+        self.end_arrow = ArrowChoice(p, end=True)
+        p.pack(self.end_arrow)
+        p.pack((5, 5))
+        self.start_arrow = ArrowChoice(p)
+        p.pack(self.start_arrow)
+
+        arrow_p.pack(p)
 
         hp.pack(arrow_p, expand=True, fill=True)
         self.pack(hp, fill=True, padding_all=10)
