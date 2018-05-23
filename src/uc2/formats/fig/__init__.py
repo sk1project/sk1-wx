@@ -55,7 +55,7 @@ def fig_saver(sk2_doc, filename=None, fileptr=None,
 def check_fig(path):
     file_size = os.path.getsize(path)
     fileptr = get_fileptr(path)
-    magic = '#FIG 3.2'
+    magic = '#FIG 3'
 
     if file_size > len(magic):
         string = fileptr.read(len(magic))

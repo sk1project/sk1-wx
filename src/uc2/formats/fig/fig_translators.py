@@ -338,7 +338,8 @@ class FIG_to_SK2_Translator(object):
                     ptrn_transf = [1.0, 1.0, 0.0, 0.0, 0.0]
                     pattern = [ptrn_type, ptrn, ptrn_style, ptrn_trafo,
                                ptrn_transf]
-                    fill = [sk2const.FILL_EVENODD, sk2const.FILL_PATTERN, pattern]
+                    fill = [sk2const.FILL_EVENODD, sk2const.FILL_PATTERN,
+                            pattern]
             else:
                 fill = [sk2const.FILL_EVENODD, sk2const.FILL_SOLID, rgb]
         return fill or []
