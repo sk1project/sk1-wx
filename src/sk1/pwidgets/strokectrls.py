@@ -105,7 +105,7 @@ class DashChoice(wal.BitmapChoice):
         self.set_active(self.dash_list.index(dash))
 
 
-ARROW_BITMAP_SIZE = (120, 21)
+ARROW_BITMAP_SIZE = (120, 25)
 ARROW_LINE_WIDTH = 3
 ARROW_START_BITMAPS = []
 ARROW_END_BITMAPS = []
@@ -120,12 +120,17 @@ def generate_arrow_bitmap(arrow=0, end=False):
 
     ctx.set_source_rgba(0.0, 0.0, 0.0, 1.0)
     ctx.set_line_width(ARROW_LINE_WIDTH)
-    x = x - 15 if end else x - 5
+    x = x - 15 if end else x - 15
     ctx.move_to(x, y)
     x2 = w if end else 0
     ctx.line_to(x2, y)
     ctx.stroke()
-    # TODO: here should be arrow drawing
+
+    if arrow:
+        ctx.new_path()
+        trafo = [-4, 0.0, 0.0, 4, x, y] if end else [4, 0.0, 0.0, 4, x, y]
+        ctx.append_path(arrows.get_arrow_cpath(arrow-1, trafo))
+        ctx.fill()
 
     return wal.copy_surface_to_bitmap(surface)
 

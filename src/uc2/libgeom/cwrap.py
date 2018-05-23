@@ -30,8 +30,8 @@ def get_cpath_bbox(cache_cpath):
     return libcairo.get_cpath_bbox(cache_cpath)
 
 
-def apply_trafo(cache_cpath, trafo):
-    return libcairo.apply_trafo(cache_cpath, trafo)
+def apply_trafo(cache_cpath, trafo, copy=False):
+    return libcairo.apply_trafo(cache_cpath, trafo, copy)
 
 
 def multiply_trafo(trafo1, trafo2):
