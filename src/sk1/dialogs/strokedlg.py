@@ -120,14 +120,20 @@ class StrokeStyle(wal.VPanel):
         hp.pack(width_p, fill=True)
 
         hp.pack((5, 5))
-        arrow_p = wal.LabeledPanel(hp, _('Arrows:'))
+        arrow_p = wal.LabeledPanel(hp, _('Markers:'))
 
         p = wal.HPanel(arrow_p)
 
-        self.end_arrow = ArrowChoice(p, end=True)
+        end, start = [], []
+        if self.stroke[9]:
+            end, start = self.stroke[9]
+
+        self.end_arrow = ArrowChoice(p, arrow=end, end=True)
+        self.end_arrow.set_arrow(end)
         p.pack(self.end_arrow)
         p.pack((5, 5))
-        self.start_arrow = ArrowChoice(p)
+        self.start_arrow = ArrowChoice(p, arrow=start)
+        self.start_arrow.set_arrow(start)
         p.pack(self.start_arrow)
 
         arrow_p.pack(p)
@@ -193,6 +199,9 @@ class StrokeStyle(wal.VPanel):
         self.stroke[6] = self.miter_limit.get_value()
         self.stroke[7] = self.behind.get_value()
         self.stroke[8] = self.scalable.get_value()
+        start = self.start_arrow.get_arrow()
+        end = self.end_arrow.get_arrow()
+        self.stroke[9] = [] if start == [] and end == [] else [end, start]
         return self.stroke
 
 
