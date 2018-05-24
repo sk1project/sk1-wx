@@ -144,13 +144,13 @@ class ArrowChoice(wal.BitmapChoice):
             for indx in range(len(arrows.ARROWS) + 1):
                 bitmaps.append(generate_arrow_bitmap(indx, end))
         wal.BitmapChoice.__init__(self, parent, 0, bitmaps)
-        self.set_active(arrow + 1 if arrow is not None else 0)
+        self.set_active(arrow + 1 if isinstance(arrow, int) else 0)
 
     def get_arrow(self):
         val = self.get_active()
         return val - 1 if val else []
 
-    def set_dash(self, arrow):
+    def set_arrow(self, arrow):
         arrow = 0 if arrow == [] else arrow + 1
         self.set_active(arrow)
 
