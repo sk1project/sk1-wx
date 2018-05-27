@@ -19,7 +19,7 @@ import cairo
 from copy import deepcopy
 
 from uc2 import libcairo, libgeom, sk2const
-from uc2.formats.sk2 import sk2_model, arrows
+from uc2.formats.sk2 import sk2_model
 
 CAIRO_BLACK = [0.0, 0.0, 0.0]
 CAIRO_GRAY = [0.5, 0.5, 0.5]
@@ -367,8 +367,12 @@ class CairoRenderer:
         obj_stroke = obj.style[1]
         if not obj_stroke or not obj_stroke[-1]:
             return
-        arw_start, arw_end = [arrows.get_arrow_cpath(arw)
-                              for arw in obj_stroke[-1]]
-
-        line_width = obj.cache_line_width
-        trafo0 = [line_width, 0.0, 0.0, line_width, 0.0, 0.0]
+        for pair in obj.cache_arrows:
+            for item in pair:
+                if item:
+                    ctx.new_path()
+                    ctx.append_path(item)
+                    if stroke:
+                        ctx.stroke()
+                    else:
+                        ctx.fill()

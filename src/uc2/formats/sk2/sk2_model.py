@@ -24,6 +24,7 @@ from sk2_cids import *
 from uc2 import _, cms, uc2const, libgeom, sk2const
 from uc2.formats.generic import TextModelObject
 from uc2.libimg.handlers import EditableImageHandler
+from . import arrows
 
 GENERIC_FIELDS = ['cid', 'childs', 'parent', 'config', 'handler']
 LOG = logging.getLogger(__name__)
@@ -575,7 +576,7 @@ class PrimitiveObject(SelectableObject):
         self.update_arrows()
 
     def update_arrows(self):
-        self.cache_arrows = []
+        pass
 
     def clear_color_cache(self):
         self.cache_pattern_img = None
@@ -593,6 +594,8 @@ class PrimitiveObject(SelectableObject):
         if self.stroke_trafo:
             self.stroke_trafo = libgeom.multiply_trafo(self.stroke_trafo, trafo)
             self.update_stroke()
+        else:
+            self.update_arrows()
         self.update_bbox()
 
     def get_trafo_snapshot(self):
@@ -855,6 +858,52 @@ class Curve(PrimitiveObject):
 
     def to_curve(self):
         return self
+
+    def update_arrows(self):
+        self.cache_arrows = []
+        if self.is_curve:
+            stroke = self.style[1]
+            arrs = stroke[9]
+            if not arrs:
+                return
+            for path in self.paths:
+                if path[-1] == sk2const.CURVE_CLOSED:
+                    self.cache_arrows.append([])
+                    continue
+                tr = libgeom.multiply_trafo
+                coef = self.cache_line_width
+                end = start = None
+                # end arrow
+                if arrs[0]:
+                    end_trafo = [coef, 0.0, 0.0, coef, 0.0, 0.0]
+                    p1 = libgeom.apply_trafo_to_point(path[0], self.trafo)
+                    p0 = libgeom.apply_trafo_to_point(path[1][0], self.trafo)
+                    if libgeom.is_curve_point(p0):
+                        p0 = p0[0]
+                    angle = libgeom.get_point_angle(p1, p0)
+                    end_trafo = tr(end_trafo, libgeom.trafo_rotate(angle))
+                    trafo = [1.0, 0.0, 0.0, 1.0, p1[0], p1[1]]
+                    end_trafo = tr(end_trafo, trafo)
+                    end = arrows.get_arrow_cpath(arrs[0], end_trafo)
+                #start arrow
+                if arrs[1]:
+                    start_trafo = [coef, 0.0, 0.0, coef, 0.0, 0.0]
+                    p1 = libgeom.apply_trafo_to_point(path[1][-1], self.trafo)
+                    if len(path[1]) == 1:
+                        p0 = libgeom.apply_trafo_to_point(path[0], self.trafo)
+                    else:
+                        if libgeom.is_curve_point(p1):
+                            p0 = p1[1]
+                            p1 = p1[2]
+                        else:
+                            p0 = libgeom.bezier_base_point(path[1][-2])
+                            p0 = libgeom.apply_trafo_to_point(p0, self.trafo)
+                    angle = libgeom.get_point_angle(p1, p0)
+                    start_trafo = tr(start_trafo, libgeom.trafo_rotate(angle))
+                    trafo = [1.0, 0.0, 0.0, 1.0, p1[0], p1[1]]
+                    start_trafo = tr(start_trafo, trafo)
+                    start = arrows.get_arrow_cpath(arrs[1], start_trafo)
+                self.cache_arrows.append([end, start])
 
 
 class Text(PrimitiveObject):
