@@ -15,6 +15,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+DEFAULT_COORD_SYSTEM = 2
+
 BLACK_COLOR = 0
 WHITE_COLOR = 7
 DEFAULT_COLOR = -1

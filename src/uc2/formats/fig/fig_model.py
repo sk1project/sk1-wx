@@ -773,13 +773,13 @@ class FIGDocument(FIGModelObject):
     version = 3.2
     orientation = fig_const.LANDSCAPE
     justification = fig_const.CENTER_JUSTIFIED
-    units = fig_const.METRIC
+    units = fig_const.INCHES
     paper_size = 'Letter'
     magnification = 100.0
     multiple_page = fig_const.SINGLE
     transparent_color = fig_const.DEFAULT_COLOR
     resolution = fig_const.DEFAULT_RESOLUTION
-    coord_system = 2
+    coord_system = fig_const.DEFAULT_COORD_SYSTEM
 
     def __init__(self, config):
         self.config = config
