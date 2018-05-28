@@ -190,9 +190,9 @@ class FIG_to_SK2_Translator(object):
             angle1=start_angle,
             angle2=end_angle
         )
-        new_obg = sk2_model.Circle(cfg, **props)
-        new_obg.trafo = libgeom.multiply_trafo(new_obg.trafo, self.trafo)
-        return new_obg
+        new_obj = sk2_model.Circle(cfg, **props)
+        new_obj.trafo = libgeom.multiply_trafo(new_obj.trafo, self.trafo)
+        return new_obj
 
     def translate_ellipse(self, obj, cfg):
         cx = obj.center_x
@@ -203,11 +203,11 @@ class FIG_to_SK2_Translator(object):
             rect=[cx - rx, cy - ry, 2.0 * rx, 2.0 * ry],
             style=self.get_style(obj),
         )
-        new_obg = sk2_model.Circle(cfg, **props)
+        new_obj = sk2_model.Circle(cfg, **props)
         trafo_rotate = libgeom.trafo_rotate(-obj.angle, cx, cy)
-        trafo = libgeom.multiply_trafo(new_obg.trafo, trafo_rotate)
-        new_obg.trafo = libgeom.multiply_trafo(trafo, self.trafo)
-        return new_obg
+        trafo = libgeom.multiply_trafo(new_obj.trafo, trafo_rotate)
+        new_obj.trafo = libgeom.multiply_trafo(trafo, self.trafo)
+        return new_obj
 
     def translate_color(self, obj, cfg):
         if obj.idx not in FIG_COLORS:

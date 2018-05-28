@@ -69,7 +69,7 @@ class FIGMethods(object):
 
     # --- PAGES
 
-    def get_pages_size(self):
+    def get_page_size(self):
         paper_size = uc2const.PAGE_FORMATS.get(self.model.paper_size)
         if not paper_size:
             paper_size = uc2const.PAGE_FORMATS['Letter']
@@ -80,7 +80,7 @@ class FIGMethods(object):
         return size
 
     def get_pages_format(self):
-        size = self.get_pages_size()
+        size = self.get_page_size()
         return [self.model.paper_size, size, self.model.orientation]
 
     # --- TEXT
