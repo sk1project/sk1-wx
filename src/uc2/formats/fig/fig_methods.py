@@ -63,6 +63,14 @@ class FIGMethods(object):
         resolution = self.model.resolution or fig_const.DEFAULT_RESOLUTION
         return 1.0 / (resolution * coef) * user_scale * uc2const.in_to_pt
 
+    def in_to_fig(self):
+        if self.model.units == fig_const.INCHES:
+            coef = fig_const.PIX_PER_INCH / fig_const.DEFAULT_RESOLUTION
+        else:
+            coef = fig_const.PIX_PER_CM / (fig_const.PIX_PER_INCH / 2.54)
+        resolution = self.model.resolution or fig_const.DEFAULT_RESOLUTION
+        return resolution * uc2const.pt_to_in * coef
+
     def get_doc_trafo(self):
         fig_to_in = self.fig_to_in()
         return [fig_to_in, 0.0, 0.0, -fig_to_in, 0.0, 0.0]
