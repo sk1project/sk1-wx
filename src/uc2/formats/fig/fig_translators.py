@@ -103,7 +103,7 @@ class FIG_to_SK2_Translator(object):
 
     def translate_trafo(self):
         trafo1 = self.fig_mtds.get_doc_trafo()
-        width, height = self.fig_mtds.get_pages_size()
+        width, height = self.fig_mtds.get_page_size()
         trafo2 = [1.0, 0.0, 0.0, 1.0, -width / 2.0, height / 2.0]
         self.trafo = libgeom.multiply_trafo(trafo1, trafo2)
 
