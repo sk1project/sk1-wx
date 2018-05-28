@@ -501,6 +501,9 @@ class SK2_to_FIG_Translator(object):
     sk2_mt = None
     sk2_mtds = None
     fig_mtds = None
+    stack = None
+    current_depth = 50
+    trafo = None
 
     def translate(self, sk2_doc, fig_doc):
         self.fig_doc = fig_doc
@@ -529,3 +532,10 @@ class SK2_to_FIG_Translator(object):
             mt.orientation = fig_const.LANDSCAPE
         else:
             mt.orientation = fig_const.PORTRAIT
+
+    def translate_trafo(self, page):
+        fig = self.fig_mtds.in_to_fig()
+        width, height = self.sk2_mtds.get_page_size(page)
+        trafo1 = [1.0, 0.0, 0.0, -1.0, width / 2.0, height / 2.0]
+        trafo2 = [fig, 0.0, 0.0, fig, 0.0, 0.0]
+        self.trafo = libgeom.multiply_trafo(trafo1, trafo2)
