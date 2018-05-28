@@ -865,5 +865,6 @@ class FIGDocument(FIGModelObject):
                 self.multiple_page = fig_const.SINGLE
             self.transparent_color, = figlib.unpack('i', loader.get_line())
 
-        self.resolution, self.coord_system = figlib.unpack('ii', loader.get_line())
+        data = figlib.unpack('ii', loader.get_line())
+        self.resolution, self.coord_system = data
         self.comment = loader.pop_comment()
