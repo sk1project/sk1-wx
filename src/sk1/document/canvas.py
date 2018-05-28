@@ -536,6 +536,16 @@ class HitSurface:
                     width = stroke_width
                 self.ctx.set_line_width(width)
                 self.ctx.stroke()
+            if obj.style[1] and obj.cache_arrows:
+                for pair in obj.cache_arrows:
+                    for item in pair:
+                        if item:
+                            self.ctx.new_path()
+                            self.ctx.append_path(item)
+                            if self.canvas.stroke_view:
+                                self.ctx.stroke()
+                            else:
+                                self.ctx.fill()
 
     def is_point_on_path(self, win_point, path):
         self.clear()

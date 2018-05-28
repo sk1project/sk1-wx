@@ -117,7 +117,14 @@ class Selection:
         else:
             self.set(result)
 
-    def _get_fixed_bbox(self, bbox):
+    def _get_fixed_bbox(self, obj):
+        bbox = obj.cache_bbox
+        if obj.cache_arrows:
+            for pair in obj.cache_arrows:
+                for item in pair:
+                    if item:
+                        arrow_bbox = libgeom.get_cpath_bbox(item)
+                        bbox = libgeom.sum_bbox(bbox, arrow_bbox)
         bbox = self.presenter.canvas.bbox_doc_to_win(bbox)
         bbox = libgeom.normalize_bbox(bbox)
         if not bbox[2] - bbox[0]:
@@ -141,7 +148,7 @@ class Selection:
             objs = [] + layer.childs
             objs.reverse()
             for obj in objs:
-                bbox = self._get_fixed_bbox(obj.cache_bbox)
+                bbox = self._get_fixed_bbox(obj)
                 d = 0.0
                 if obj.style[1]:
                     d = doc.canvas.zoom * obj.style[1][1]
