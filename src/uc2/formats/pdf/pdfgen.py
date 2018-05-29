@@ -24,7 +24,7 @@ from reportlab.pdfgen.canvas import Canvas, FILL_EVEN_ODD, FILL_NON_ZERO
 
 from pdfconst import PDF_VERSION_DEFAULT
 from uc2 import _, uc2const, events
-from uc2 import libgeom, sk2const
+from uc2 import libgeom, libcairo, sk2const
 from uc2.formats.sk2 import sk2_model
 
 
@@ -153,11 +153,25 @@ class PDFGenerator(object):
 
     def draw_curve(self, curve_obj):
         paths = libgeom.apply_trafo_to_paths(curve_obj.paths, curve_obj.trafo)
+        arrow_paths = []
+        if curve_obj.cache_arrows:
+            for pair in curve_obj.cache_arrows:
+                for item in pair:
+                    if item:
+                        arrow_paths += libcairo.get_path_from_cpath(item)
+            arrow_paths = self.make_pdfpath(arrow_paths)[0]
+        arrow_fill_style = None
+        if arrow_paths and curve_obj.style[1]:
+            color = curve_obj.style[1][2]
+            arrow_fill_style = [sk2const.FILL_NONZERO,
+                                sk2const.FILL_SOLID, color]
         pdfpath, closed = self.make_pdfpath(paths)
         fill_style = curve_obj.style[0]
         stroke_style = curve_obj.style[1]
         if stroke_style and stroke_style[7]:
             self.stroke_pdfpath(pdfpath, stroke_style, curve_obj.stroke_trafo)
+            if arrow_paths and arrow_fill_style:
+                self.fill_pdfpath(None, arrow_paths, arrow_fill_style, None)
         if fill_style and fill_style[0] & sk2const.FILL_CLOSED_ONLY and closed:
             self.fill_pdfpath(curve_obj, pdfpath, fill_style,
                               curve_obj.fill_trafo)
@@ -166,6 +180,8 @@ class PDFGenerator(object):
                               curve_obj.fill_trafo)
         if stroke_style and not stroke_style[7]:
             self.stroke_pdfpath(pdfpath, stroke_style, curve_obj.stroke_trafo)
+            if arrow_paths and arrow_fill_style:
+                self.fill_pdfpath(None, arrow_paths, arrow_fill_style, None)
 
     def draw_container(self, obj):
         container = obj.childs[0].to_curve()
