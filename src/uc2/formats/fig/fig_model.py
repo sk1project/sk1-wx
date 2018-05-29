@@ -454,7 +454,7 @@ class FIGPolyline(FIGModelObject):
             if line is None:
                 raise Exception('Line is corrupted')
             data = line.split()
-            items = ((int(x), int(y)) for x, y in figlib.list_chunks(data, 2))
+            items = ([int(x), int(y)] for x, y in figlib.list_chunks(data, 2))
             self.points.extend(items)
 
     def save(self, saver):
