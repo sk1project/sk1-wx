@@ -70,7 +70,7 @@ STROKE DEFINITION:
  miter limit, - miter limit = 1/sin(angle/2)
  behind flag,
  scalable flag,
- markers,
+ markers, # [end, start] int indexes (0-17), [[], 1] - no end marker
  ]
 
 -------------------------------------------------------------------------------

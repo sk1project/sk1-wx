@@ -874,7 +874,7 @@ class Curve(PrimitiveObject):
                 coef = self.cache_line_width
                 end = start = None
                 # end arrow
-                if arrs[0]:
+                if isinstance(arrs[0], int):
                     end_trafo = [coef, 0.0, 0.0, coef, 0.0, 0.0]
                     p1 = libgeom.apply_trafo_to_point(path[0], self.trafo)
                     p0 = libgeom.apply_trafo_to_point(path[1][0], self.trafo)
@@ -886,7 +886,7 @@ class Curve(PrimitiveObject):
                     end_trafo = tr(end_trafo, trafo)
                     end = arrows.get_arrow_cpath(arrs[0], end_trafo)
                 #start arrow
-                if arrs[1]:
+                if isinstance(arrs[1], int):
                     start_trafo = [coef, 0.0, 0.0, coef, 0.0, 0.0]
                     p1 = libgeom.apply_trafo_to_point(path[1][-1], self.trafo)
                     if len(path[1]) == 1:
