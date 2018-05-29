@@ -59,6 +59,9 @@ class FIGModelObject(TextModelObject):
     """
     comment = None
 
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
     def resolve(self):
         is_leaf = not bool(self.childs)
         name = CID_TO_NAME[self.cid]
