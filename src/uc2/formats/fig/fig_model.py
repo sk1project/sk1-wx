@@ -161,18 +161,19 @@ class FIGColorDef(FIGModelObject):
     cid = OBJ_COLOR_DEF
     idx = None
     hexcolor = None
+    _names32 = ('cid', 'idx', 'hexcolor')
+    _frm32 = 'iis'
 
     def parse(self, loader, chunk=None):
-        chunk = FIGModelObject.parse(self, loader, chunk)
-        _, idx, hexcolor = chunk.split(' ', 2)
-        self.idx = int(idx)
-        self.hexcolor = hexcolor.strip()
+        chunk = chunk or loader.readln()
+        s = figlib.unpack(self._frm32, chunk.strip())
+        data = dict(zip(self._names32, s))
+        self.__dict__.update(data)
 
     def save(self, saver):
         FIGModelObject.save(self, saver)
-        tmpl = '{cid} {idx} {hexcolor}\n'
-        line = tmpl.format(cid=self.cid, idx=self.idx, hexcolor=self.hexcolor)
-        saver.write(line)
+        line = ' '.join(['%s' % getattr(self, name) for name in self._names32])
+        saver.write('%s\n' % line)
 
 
 class FIGEllipse(FIGModelObject):
