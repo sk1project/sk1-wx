@@ -515,7 +515,8 @@ class SVG_to_SK2_Translator(object):
             else:
                 if vbox:
                     width = vbox[2]
-            if not self.svg_mt.attrs['height'][-1] == '%':
+            if 'height' in self.svg_mt.attrs and \
+                    not self.svg_mt.attrs['height'][-1] == '%':
                 height = self.recalc_size(self.svg_mt.attrs['height'])
             else:
                 if vbox:
