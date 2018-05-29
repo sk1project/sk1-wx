@@ -35,7 +35,8 @@ class JumpPlugin(CtxPlugin):
         bmp = get_bmp(self, icons.CTX_OBJECT_JUMP, _('Default object jump'))
         self.add(bmp, 0, LEFT | CENTER, 2)
 
-        self.jump_spin = UnitSpin(self.app, self, onenter=self.user_changes)
+        self.jump_spin = UnitSpin(self.app, self, onenter=self.user_changes,
+                                  onchange=self.user_changes)
         self.jump_spin.set_point_value(config.obj_jump)
         self.add(self.jump_spin, 0, LEFT | CENTER, 2)
 
