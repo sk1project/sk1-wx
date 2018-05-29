@@ -596,10 +596,16 @@ class FIGSpline(FIGModelObject):
             flat_list = [str(item) for sublist in chunk for item in sublist]
             line = ' '.join(flat_list)
             saver.write('\t %s\n' % line)
-        for chunk in figlib.list_chunks(self.control_points, 8):
-            flat_list = ['%1.3f' % item for item in chunk]
-            line = ' '.join(flat_list)
-            saver.write('\t %s\n' % line)
+        if self.sub_type in fig_const.T_INTERPOLATED:
+            for chunk in figlib.list_chunks(self.control_points, 4):
+                flat_list = ['{:1.2f} {:1.2f}'.format(*item) for item in chunk]
+                line = ' '.join(flat_list)
+                saver.write('\t %s\n' % line)
+        elif self.sub_type in fig_const.T_XSPLINE:
+            for chunk in figlib.list_chunks(self.control_points, 8):
+                flat_list = ['%1.3f' % item for item in chunk]
+                line = ' '.join(flat_list)
+                saver.write('\t %s\n' % line)
 
 
 class FIGText(FIGModelObject):
@@ -800,11 +806,12 @@ class FIGDocument(FIGModelObject):
         saver.write('%s\n' % fig_const.ORIENTATION[self.orientation])
         saver.write('%s\n' % fig_const.JUSTIFICATION[self.justification])
         saver.write('%s\n' % fig_const.UNITS[self.units])
-        saver.write('%s\n' % self.paper_size)
-        saver.write('%3.2f\n' % self.magnification)
-        saver.write('%s\n' % fig_const.MULTIPLE_PAGE[self.multiple_page])
-        saver.write('%i\n' % self.transparent_color)
-        FIGModelObject.save(self, saver)
+        if self.version >= 3.2:
+            saver.write('%s\n' % self.paper_size)
+            saver.write('%3.2f\n' % self.magnification)
+            saver.write('%s\n' % fig_const.MULTIPLE_PAGE[self.multiple_page])
+            saver.write('%i\n' % self.transparent_color)
+            FIGModelObject.save(self, saver)
         saver.write('%i %i\n' % (self.resolution, self.coord_system))
 
         for child in self.childs:
