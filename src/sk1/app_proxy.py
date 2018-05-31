@@ -15,6 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import math
 from copy import deepcopy
 
@@ -23,9 +24,10 @@ from sk1 import _, dialogs, modes, events, config
 from sk1.dialogs import yesno_dialog, error_dialog
 from sk1.prefs import get_prefs_dialog
 from sk1.printing import print_dlg
-from uc2 import uc2const, sk2const
-from uc2.libgeom import stroke_to_curve, apply_trafo_to_paths
+from uc2 import uc2const, sk2const, libgeom, libcairo
 
+
+LOG = logging.getLogger(__name__)
 
 class AppProxy:
     def __init__(self, app):
@@ -524,14 +526,24 @@ class AppProxy:
             for obj in selection.objs:
                 if obj.is_primitive and not obj.is_pixmap and obj.style[1] \
                         and obj.style[1][1]:
-                    pths = apply_trafo_to_paths(obj.get_initial_paths(),
-                                                obj.trafo)
+                    pths = libgeom.apply_trafo_to_paths(obj.get_initial_paths(),
+                                                        obj.trafo)
                     style = doc.model.get_def_style()
-                    style[0] = [sk2const.FILL_SOLID, deepcopy(obj.style[1][2])]
-                    pths = stroke_to_curve(pths, obj.style[1])
+                    style[0] = [sk2const.FILL_EVENODD,
+                                sk2const.FILL_SOLID,
+                                deepcopy(obj.style[1][2])]
+                    pths = libgeom.stroke_to_curve(pths, obj.style[1])
                     objs.append(doc.api.create_curve(pths, style))
+                    if obj.cache_arrows:
+                        for pair in obj.cache_arrows:
+                            [objs.append(doc.api.create_curve(
+                                libcairo.get_path_from_cpath(item), style))
+                                for item in pair if item]
             selection.set(objs)
-        except Exception:
+            if len(objs) >1:
+                doc.api.group_selected()
+        except Exception as e:
+            LOG.error('Error in convert_stroke_to_curve(), %s', e)
             doc.canvas.set_mode()
             msg = _('Error occurred during this operation.')
             msg += '\n' + _(
@@ -586,7 +598,7 @@ class AppProxy:
 
         txt += '\n' + _('Do you want to try again?')
 
-        return yesno_dialog(self.app.mw, self.app.appdata.app_name, txt)
+        return yesno_dialog(self.app.mw, selfapp.appdata.app_name, txt)
 
     def unpack_container(self):
         self.app.current_doc.api.unpack_container()
