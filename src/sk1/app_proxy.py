@@ -26,8 +26,8 @@ from sk1.prefs import get_prefs_dialog
 from sk1.printing import print_dlg
 from uc2 import uc2const, sk2const, libgeom, libcairo
 
-
 LOG = logging.getLogger(__name__)
+
 
 class AppProxy:
     def __init__(self, app):
@@ -540,7 +540,7 @@ class AppProxy:
                                 libcairo.get_path_from_cpath(item), style))
                                 for item in pair if item]
             selection.set(objs)
-            if len(objs) >1:
+            if len(objs) > 1:
                 doc.api.group_selected()
         except Exception as e:
             LOG.error('Error in convert_stroke_to_curve(), %s', e)
@@ -598,7 +598,7 @@ class AppProxy:
 
         txt += '\n' + _('Do you want to try again?')
 
-        return yesno_dialog(self.app.mw, selfapp.appdata.app_name, txt)
+        return yesno_dialog(self.app.mw, self.app.appdata.app_name, txt)
 
     def unpack_container(self):
         self.app.current_doc.api.unpack_container()
