@@ -119,7 +119,7 @@ class Selection:
 
     def _get_fixed_bbox(self, obj):
         bbox = obj.cache_bbox
-        if obj.cache_arrows:
+        if obj.is_curve and obj.cache_arrows:
             for pair in obj.cache_arrows:
                 for item in pair:
                     if item:
