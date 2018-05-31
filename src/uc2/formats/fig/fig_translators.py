@@ -375,13 +375,13 @@ class FIG_to_SK2_Translator(object):
         miter_limit = 10.433
         behind_flag = 0
         scalable_flag = 0
-        farrow = [f for f in obj.childs if f.cid == fig_model.OBJ_FORWARD_ARROW]
-        barrow = [f for f in obj.childs if f.cid == fig_model.OBJ_BACKWARD_ARROW]
         markers = [[], []]  # TODO: implement translation arrows
-        if farrow:
-            markers[1] = farrow[0].type + farrow[0].style*8
-        if barrow:
-            markers[0] = barrow[0].type + barrow[0].style*8
+        # farrow = [f for f in obj.childs if f.cid == fig_model.OBJ_FORWARD_ARROW]
+        # barrow = [f for f in obj.childs if f.cid == fig_model.OBJ_BACKWARD_ARROW]
+        # if farrow:
+        #     markers[1] = farrow[0].type + farrow[0].style*8
+        # if barrow:
+        #     markers[0] = barrow[0].type + barrow[0].style*8
         return [rule, width, color, dash, cap, join, miter_limit, behind_flag,
                 scalable_flag, markers]
 
