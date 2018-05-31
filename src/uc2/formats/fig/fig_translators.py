@@ -17,13 +17,14 @@
 
 import os
 import logging
+from math import ceil
 from base64 import b64decode, b64encode
 from copy import deepcopy
 
 from uc2 import uc2const, sk2const, cms, libgeom, libimg
 from uc2.formats.sk2 import sk2_model
 from . import fig_const, fig_model, figlib
-from .fig_colors import color_mix, FIG_COLORS
+from .fig_colors import color_mix, FIG_COLORS, get_base_color
 from .fig_patterns import PATTERN
 from .fig_const import (BLACK_COLOR, WHITE_COLOR, BLACK_FILL,
                         WHITE_FILL, NO_FILL, DEFAULT_COLOR)
@@ -60,6 +61,19 @@ FIG_TO_SK2_TEXT_ALIGN = {
 
 F13 = 1.0 / 3.0
 F23 = 2.0 / 3.0
+
+
+SK2_TO_FIG_JOIN = {
+    sk2const.JOIN_MITER: fig_const.JOIN_MITER,
+    sk2const.JOIN_ROUND: fig_const.JOIN_ROUND,
+    sk2const.JOIN_BEVEL: fig_const.JOIN_BEVEL
+}
+
+SK2_TO_FIG_CAP = {
+    sk2const.CAP_BUTT: fig_const.CAP_BUTT,
+    sk2const.CAP_ROUND: fig_const.CAP_ROUND,
+    sk2const.CAP_SQUARE: fig_const.CAP_SQUARE
+}
 
 
 class FIG_to_SK2_Translator(object):
@@ -361,7 +375,13 @@ class FIG_to_SK2_Translator(object):
         miter_limit = 10.433
         behind_flag = 0
         scalable_flag = 0
-        markers = []  # TODO: implement translation arrows
+        farrow = [f for f in obj.childs if f.cid == fig_model.OBJ_FORWARD_ARROW]
+        barrow = [f for f in obj.childs if f.cid == fig_model.OBJ_BACKWARD_ARROW]
+        markers = [[], []]  # TODO: implement translation arrows
+        if farrow:
+            markers[1] = farrow[0].type + farrow[0].style*8
+        if barrow:
+            markers[0] = barrow[0].type + barrow[0].style*8
         return [rule, width, color, dash, cap, join, miter_limit, behind_flag,
                 scalable_flag, markers]
 
@@ -494,7 +514,6 @@ class FIG_to_SK2_Translator(object):
 
 
 class SK2_to_FIG_Translator(object):
-    dx = dy = page_dx = 0.0
     fig_doc = None
     sk2_doc = None
     fig_mt = None
@@ -503,6 +522,7 @@ class SK2_to_FIG_Translator(object):
     fig_mtds = None
     stack = None
     current_depth = 50
+    thickness = 0
     trafo = None
 
     def translate(self, sk2_doc, fig_doc):
@@ -511,12 +531,33 @@ class SK2_to_FIG_Translator(object):
         self.fig_mt = fig_doc.model
         self.sk2_mt = sk2_doc.model
         self.sk2_mtds = sk2_doc.methods
+        lr = fig_doc.config.line_resolution or fig_const.LINE_RESOLUTION
+        self.thickness = lr * uc2const.pt_to_in
         self.fig_mtds = fig_doc.methods
+        page = self.sk2_mtds.get_page()
+        self.translate_page(page)
+        self.translate_trafo(page)
         self.translate_metainfo()
-        for item in self.sk2_mt.childs:
-            if item.cid == sk2_model.PAGES:
-                for page in item.childs:
-                    self.translate_page(page)
+        self.stack = [self.fig_mt.childs]
+        for layer in reversed(page.childs):
+            if self.sk2_mtds.is_layer_visible(layer):
+                self.translate_objs(layer.childs)
+                self.current_depth += 1
+
+    def add(self, obj):
+        self.stack[-1].append(obj)
+
+    def translate_objs(self, objs):
+        for obj in objs:
+            if obj.is_primitive:
+                self.translate_primitive(obj)
+            # elif obj.is_layer:
+            #     if obj.properties[0]:
+            #         self.translate_group(obj)
+            # elif obj.is_pixmap:
+            #     self.translate_pixmap(obj)
+            # else:
+            #     self.translate_group(obj)
 
     def translate_metainfo(self):
         fields = ["Author", "License", "Keywords", "Notes"]
@@ -539,3 +580,88 @@ class SK2_to_FIG_Translator(object):
         trafo1 = [1.0, 0.0, 0.0, -1.0, width / 2.0, height / 2.0]
         trafo2 = [fig, 0.0, 0.0, fig, 0.0, 0.0]
         self.trafo = libgeom.multiply_trafo(trafo1, trafo2)
+
+    def translate_primitive(self, obj):
+        curve = obj.to_curve()
+        # if curve.is_group:
+        #     self.translate_group(curve)
+        #     return
+        curve.update()
+        trafo = libgeom.multiply_trafo(curve.trafo, self.trafo)
+        paths = libgeom.apply_trafo_to_paths(curve.paths, trafo)
+        points = [paths[0][0]] + paths[0][1]
+        points = [[int(p[0]), int(p[1])] for p in points]
+        param = dict(
+            sub_type=fig_const.T_POLYLINE,
+            npoints=len(points),
+            points=points,
+            depth=self.current_depth,
+        )
+        fill = self.get_fill(obj)
+        stroke = self.get_stroke(obj)
+        param.update(fill)
+        param.update(stroke)
+        new_obj = fig_model.FIGPolyline(**param)
+        self.add(new_obj)
+
+    def get_stroke(self, obj):
+        stroke = obj.style[1]
+        props = dict(
+            thickness=0,
+            pen_color=fig_const.DEFAULT_COLOR,
+            cap_style=fig_const.CAP_BUTT,
+            join_style=fig_const.JOIN_MITER,
+            line_style=fig_const.SOLID_LINE,
+            style_val=0.0
+        )
+        if stroke:
+            clr = self.sk2_doc.cms.get_rgb_color(stroke[2])
+            base_color = get_base_color(clr)
+            if base_color is not None:
+                pen_color = base_color
+            else:
+                pen_color = fig_const.DEFAULT_COLOR
+            props = dict(
+                thickness=int(ceil(stroke[1] * self.thickness)),
+                pen_color=pen_color,
+                # TODO: implement translate dash
+                # stroke[3] -> line_style, style_val
+                line_style=fig_const.SOLID_LINE,
+                style_val=0.0,
+                cap_style=SK2_TO_FIG_CAP.get(stroke[4], fig_const.CAP_BUTT),
+                join_style=SK2_TO_FIG_JOIN.get(stroke[5], fig_const.JOIN_MITER),
+            )
+        # TODO: implement translate markers - stroke[9]
+        return props
+
+    def get_fill(self, obj):
+        fill = obj.style[0]
+        if not fill:
+            props = dict(
+                fill_color=fig_const.DEFAULT_COLOR,
+                area_fill=fig_const.NO_FILL
+            )
+        elif fill[1] == sk2const.FILL_SOLID:
+            clr = self.sk2_doc.cms.get_rgb_color(fill[2])
+            base_color = get_base_color(clr)
+            if base_color is not None:
+                fill_color = base_color
+            else:
+                fill_color = fig_const.BLACK_COLOR
+            props = dict(
+                fill_color=fill_color,
+                area_fill=int(BLACK_FILL)
+            )
+        elif fill[1] == sk2const.FILL_PATTERN:
+            # TODO: implement translate FILL_PATTERN
+            props = dict(
+                fill_color=fig_const.BLACK_COLOR,
+                area_fill=int(BLACK_FILL)
+            )
+        elif fill[1] == sk2const.FILL_GRADIENT:
+            # TODO: implement translate FILL_GRADIENT
+            props = dict(
+                fill_color=fig_const.BLACK_COLOR,
+                area_fill=int(BLACK_FILL)
+            )
+        return props
