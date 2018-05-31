@@ -549,7 +549,9 @@ class SK2_to_FIG_Translator(object):
 
     def translate_objs(self, objs):
         for obj in objs:
-            if obj.is_primitive:
+            if obj.is_group:
+                self.translate_group(obj)
+            elif obj.is_primitive:
                 self.translate_primitive(obj)
             # elif obj.is_layer:
             #     if obj.properties[0]:
@@ -580,6 +582,23 @@ class SK2_to_FIG_Translator(object):
         trafo1 = [1.0, 0.0, 0.0, -1.0, width / 2.0, height / 2.0]
         trafo2 = [fig, 0.0, 0.0, fig, 0.0, 0.0]
         self.trafo = libgeom.multiply_trafo(trafo1, trafo2)
+
+    def translate_group(self, obj):
+        # childs = []
+        # self.current_depth += 1
+        # self.stack.append(childs)
+        self.translate_objs(obj.childs)
+        # self.stack.pop()
+        # props = dict(
+        #     childs=childs,
+        #     upperleft_corner_x=0,
+        #     upperleft_corner_y=0,
+        #     lowerright_corner_x=0,
+        #     lowerright_corner_y=0,
+        # )
+        # new_obj = fig_model.FIGCompound(**props)
+        # self.add(new_obj)
+        # self.current_depth += 1
 
     def translate_primitive(self, obj):
         curve = obj.to_curve()
