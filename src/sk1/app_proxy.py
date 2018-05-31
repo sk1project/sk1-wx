@@ -528,10 +528,11 @@ class AppProxy:
                         and obj.style[1][1]:
                     pths = libgeom.apply_trafo_to_paths(obj.get_initial_paths(),
                                                         obj.trafo)
-                    style = doc.model.get_def_style()
-                    style[0] = [sk2const.FILL_EVENODD,
-                                sk2const.FILL_SOLID,
-                                deepcopy(obj.style[1][2])]
+                    style = [
+                        [sk2const.FILL_EVENODD,
+                         sk2const.FILL_SOLID,
+                         deepcopy(obj.style[1][2])],
+                        [], [], []]
                     pths = libgeom.stroke_to_curve(pths, obj.style[1])
                     objs.append(doc.api.create_curve(pths, style))
                     if obj.cache_arrows:
