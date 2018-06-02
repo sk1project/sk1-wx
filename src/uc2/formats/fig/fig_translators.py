@@ -85,10 +85,8 @@ class FIG_to_SK2_Translator(object):
     sk2_mt = None
     sk2_mtds = None
     fig_mtds = None
-    id_map = None
     pallet = None
     thickness = None
-    depth_layer = None
 
     def translate(self, fig_doc, sk2_doc):
         self.pallet = deepcopy(FIG_COLORS)
@@ -100,7 +98,7 @@ class FIG_to_SK2_Translator(object):
         self.sk2_mtds = sk2_doc.methods
         lr = fig_doc.config.line_resolution or fig_const.LINE_RESOLUTION
         self.thickness = uc2const.in_to_pt / lr
-        self.depth_layer = {}
+        self.layer = {}
         self.translate_trafo()
         self.translate_units()
         self.translate_metainfo()
@@ -110,8 +108,8 @@ class FIG_to_SK2_Translator(object):
 
     def apply_translate(self):
         layer = self.sk2_mtds.get_layer(self.page)
-        for depth in sorted(self.depth_layer, reverse=True):
-            objects = self.depth_layer[depth]
+        for depth in sorted(self.layer, reverse=True):
+            objects = self.layer[depth]
             self.sk2_mtds.append_objects(objects, layer)
 
     def translate_trafo(self):
@@ -147,7 +145,7 @@ class FIG_to_SK2_Translator(object):
             mapper = obj_map.get(child.cid)
             new_obj = getattr(self, mapper)(child, cfg) if mapper else None
             if new_obj:
-                self.get_depth_layer(child.depth).append(new_obj)
+                self.get_layer(child.depth).append(new_obj)
 
     def translate_compound(self, obj, cfg):
         # TODO: Create a group if all children object are at the same depth
@@ -322,8 +320,8 @@ class FIG_to_SK2_Translator(object):
         stroke = self.get_stoke(obj)
         return [fill, stroke, [], []]
 
-    def get_depth_layer(self, depth):
-        return self.depth_layer.setdefault(depth, [])
+    def get_layer(self, depth):
+        return self.layer.setdefault(depth, [])
 
     def get_fill(self, pen_color, fill_color, style=BLACK_FILL):
         fill = None
