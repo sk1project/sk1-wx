@@ -17,6 +17,7 @@
 
 
 import re
+from math import ceil
 from uc2 import libgeom
 from . import fig_const
 
@@ -63,6 +64,19 @@ def unpack(fmt, string):
         elif c == 's':
             chunk = ''.join(chunks[i:])
         yield chunk
+
+
+def pack(data, fmt):
+    chunks = []
+    for idx, c in enumerate(fmt):
+        val = data[idx]
+        if c == 'i':
+            chunks.append('{:.0f}'.format(ceil(val)))
+        elif c == 'f':
+            chunks.append('{}'.format(val))
+        elif c == 's':
+            chunks.append(val)
+    return ' '.join(chunks)
 
 
 def ctrl_points(p0, p1, p2, t=1.0):

@@ -112,7 +112,8 @@ class FIGArrow(FIGModelObject):
 
     def save(self, saver):
         FIGModelObject.save(self, saver)
-        line = ' '.join(['%s' % getattr(self, name) for name in self._names32])
+        data = [getattr(self, name) for name in self._names32]
+        line = figlib.pack(data, self._frm32)
         saver.write('%s\n' % line)
 
 
@@ -145,7 +146,8 @@ class FIGPicture(FIGModelObject):
 
     def save(self, saver):
         FIGModelObject.save(self, saver)
-        line = ' '.join(['%s' % getattr(self, name) for name in self._names32])
+        data = [getattr(self, name) for name in self._names32]
+        line = figlib.pack(data, self._frm32)
         saver.write('\t %s\n' % line)
 
 
@@ -175,7 +177,8 @@ class FIGColorDef(FIGModelObject):
 
     def save(self, saver):
         FIGModelObject.save(self, saver)
-        line = ' '.join(['%s' % getattr(self, name) for name in self._names32])
+        data = [getattr(self, name) for name in self._names32]
+        line = figlib.pack(data, self._frm32)
         saver.write('%s\n' % line)
 
 
@@ -244,7 +247,8 @@ class FIGEllipse(FIGModelObject):
 
     def save(self, saver):
         FIGModelObject.save(self, saver)
-        line = ' '.join(['%s' % getattr(self, name) for name in self._names32])
+        data = [getattr(self, name) for name in self._names32]
+        line = figlib.pack(data, self._frm32)
         saver.write('%s\n' % line)
 
 
@@ -344,7 +348,8 @@ class FIGArc(FIGModelObject):
 
     def save(self, saver):
         FIGModelObject.save(self, saver)
-        line = ' '.join(['%s' % getattr(self, name) for name in self._names32])
+        data = [getattr(self, name) for name in self._names32]
+        line = figlib.pack(data, self._frm32)
         saver.write('%s\n' % line)
         for item in self.childs:
             item.save(saver)
@@ -459,12 +464,13 @@ class FIGPolyline(FIGModelObject):
 
     def save(self, saver):
         FIGModelObject.save(self, saver)
-        line = ' '.join(['%s' % getattr(self, name) for name in self._names32])
+        data = [getattr(self, name) for name in self._names32]
+        line = figlib.pack(data, self._frm32)
         saver.write('%s\n' % line)
         for item in self.childs:
             item.save(saver)
         for chunk in figlib.list_chunks(self.points, 6):
-            flat_list = [str(item) for sublist in chunk for item in sublist]
+            flat_list = [str(int(item)) for items in chunk for item in items]
             line = ' '.join(flat_list)
             saver.write('\t %s\n' % line)
 
@@ -588,12 +594,14 @@ class FIGSpline(FIGModelObject):
 
     def save(self, saver):
         FIGModelObject.save(self, saver)
-        line = ' '.join([str(getattr(self, name)) for name in self._names32])
+        data = [getattr(self, name) for name in self._names32]
+        line = figlib.pack(data, self._frm32)
         saver.write('%s\n' % line)
         for item in self.childs:
             item.save(saver)
+
         for chunk in figlib.list_chunks(self.points, 6):
-            flat_list = [str(item) for sublist in chunk for item in sublist]
+            flat_list = [str(int(item)) for items in chunk for item in items]
             line = ' '.join(flat_list)
             saver.write('\t %s\n' % line)
         if self.sub_type in fig_const.T_INTERPOLATED:
@@ -682,15 +690,9 @@ class FIGText(FIGModelObject):
 
     def save(self, saver):
         FIGModelObject.save(self, saver)
-        f = []
-        for name in self._names32:
-            val = getattr(self, name)
-            if name != 'string':
-                f.append(str(val))
-            else:
-                f.append(self.string + STR_TERMINATOR)
-        line = ' '.join(f)
-        saver.write('%s\n' % line)
+        data = [getattr(self, name) for name in self._names32]
+        line = figlib.pack(data, self._frm32)
+        saver.write('{}{}\n'.format(line, STR_TERMINATOR))
 
 
 class FIGCompound(FIGModelObject):
@@ -733,7 +735,8 @@ class FIGCompound(FIGModelObject):
 
     def save(self, saver):
         FIGModelObject.save(self, saver)
-        line = ' '.join(['%s' % getattr(self, name) for name in self._names32])
+        data = [getattr(self, name) for name in self._names32]
+        line = figlib.pack(data, self._frm32)
         saver.write('%s\n' % line)
         for child in self.childs:
             child.save(saver)
