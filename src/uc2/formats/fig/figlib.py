@@ -60,7 +60,7 @@ def unpack(fmt, string):
         if c == 'i':
             chunk = int(chunk)
         elif c == 'f':
-            chunk = float(chunk )
+            chunk = float(chunk)
         elif c == 's':
             chunk = ''.join(chunks[i:])
         yield chunk
