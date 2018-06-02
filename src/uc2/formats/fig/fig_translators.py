@@ -17,7 +17,6 @@
 
 import os
 import logging
-from math import ceil
 from base64 import b64decode, b64encode
 from copy import deepcopy
 
@@ -601,25 +600,36 @@ class SK2_to_FIG_Translator(object):
         # self.current_depth += 1
 
     def translate_primitive(self, obj):
+        obj.update()
         curve = obj.to_curve()
-        # if curve.is_group:
-        #     self.translate_group(curve)
-        #     return
-        curve.update()
+        if curve.is_group:
+            return self.translate_group(curve)
+        # curve.update()
+        param = self.get_fill(obj)
+        param.update(self.get_stroke(obj))
         trafo = libgeom.multiply_trafo(curve.trafo, self.trafo)
         paths = libgeom.apply_trafo_to_paths(curve.paths, trafo)
-        points = [paths[0][0]] + paths[0][1]
-        points = [[int(p[0]), int(p[1])] for p in points]
+        for path in paths:
+            if all(map(lambda a: len(a) == 2, path[1])):
+                self.add_polyline(path, **param)
+            else:
+                pass
+                # TODO: implement translate obj as spline
+
+    def add_polyline(self, path, **kwargs):
+        points = [path[0]] + path[1]
+        sub_type = fig_const.T_POLYLINE
+        if path[2] == sk2const.CURVE_CLOSED:
+            sub_type = fig_const.T_POLYGON
+            if points[0] != points[-1]:
+                points.append(points[0])
         param = dict(
-            sub_type=fig_const.T_POLYLINE,
+            sub_type=sub_type,
             npoints=len(points),
             points=points,
             depth=self.current_depth,
         )
-        fill = self.get_fill(obj)
-        stroke = self.get_stroke(obj)
-        param.update(fill)
-        param.update(stroke)
+        param.update(kwargs)
         new_obj = fig_model.FIGPolyline(**param)
         self.add(new_obj)
 
@@ -641,7 +651,7 @@ class SK2_to_FIG_Translator(object):
             else:
                 pen_color = fig_const.DEFAULT_COLOR
             props = dict(
-                thickness=int(ceil(stroke[1] * self.thickness)),
+                thickness=stroke[1] * self.thickness,
                 pen_color=pen_color,
                 # TODO: implement translate dash
                 # stroke[3] -> line_style, style_val
