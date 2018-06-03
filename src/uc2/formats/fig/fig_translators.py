@@ -654,8 +654,9 @@ class SK2_to_FIG_Translator(object):
             if all(map(lambda a: len(a) == 2, path[1])):
                 self.add_polyline(path, **param)
             else:
-                pass
                 # TODO: implement translate obj as spline
+                path = libgeom.flat_path(path)
+                self.add_polyline(path, **param)
 
     def add_polyline(self, path, **kwargs):
         points = [path[0]] + path[1]
