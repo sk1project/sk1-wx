@@ -61,9 +61,3 @@ def color_mix(color1, color2, coef=0.5):
     a = cms.mix_vals(color1[2], color2[2], coef)
     name = cms.rgb_to_hexcolor(rgb)
     return [COLOR_RGB, rgb, a, name]
-
-
-def get_base_color(rgb):
-    for idx, color in FIG_COLORS.items():
-        if color[:-1] == rgb[:-1]:
-            return idx

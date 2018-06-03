@@ -23,7 +23,7 @@ from copy import deepcopy
 from uc2 import uc2const, sk2const, cms, libgeom, libimg
 from uc2.formats.sk2 import sk2_model
 from . import fig_const, fig_model, figlib
-from .fig_colors import color_mix, FIG_COLORS, get_base_color
+from .fig_colors import color_mix, FIG_COLORS
 from .fig_patterns import PATTERN
 from .fig_const import (BLACK_COLOR, WHITE_COLOR, BLACK_FILL,
                         WHITE_FILL, NO_FILL, DEFAULT_COLOR)
@@ -518,11 +518,16 @@ class SK2_to_FIG_Translator(object):
     sk2_mtds = None
     fig_mtds = None
     stack = None
-    current_depth = 50
-    thickness = 0
+    current_depth = fig_const.DEFAULT_DEPTH
+    pallet = None
+    thickness = None
     trafo = None
 
+    def add(self, obj):
+        self.stack[-1].append(obj)
+
     def translate(self, sk2_doc, fig_doc):
+        self.init_pallet()
         self.fig_doc = fig_doc
         self.sk2_doc = sk2_doc
         self.fig_mt = fig_doc.model
@@ -540,9 +545,7 @@ class SK2_to_FIG_Translator(object):
             if self.sk2_mtds.is_layer_visible(layer):
                 self.translate_objs(layer.childs)
                 self.current_depth += 1
-
-    def add(self, obj):
-        self.stack[-1].append(obj)
+        self.translate_pallet()
 
     def translate_objs(self, objs):
         for obj in objs:
@@ -643,11 +646,8 @@ class SK2_to_FIG_Translator(object):
         )
         if stroke:
             clr = self.sk2_doc.cms.get_rgb_color(stroke[2])
-            base_color = get_base_color(clr)
-            if base_color is not None:
-                pen_color = base_color
-            else:
-                pen_color = fig_const.DEFAULT_COLOR
+            hexcolor = cms.rgb_to_hexcolor(clr[1])
+            pen_color = self.color_index(hexcolor)
             props = dict(
                 thickness=stroke[1] * self.thickness,
                 pen_color=pen_color,
@@ -670,11 +670,8 @@ class SK2_to_FIG_Translator(object):
             )
         elif fill[1] == sk2const.FILL_SOLID:
             clr = self.sk2_doc.cms.get_rgb_color(fill[2])
-            base_color = get_base_color(clr)
-            if base_color is not None:
-                fill_color = base_color
-            else:
-                fill_color = fig_const.BLACK_COLOR
+            hexcolor = cms.rgb_to_hexcolor(clr[1])
+            fill_color = self.color_index(hexcolor)
             props = dict(
                 fill_color=fill_color,
                 area_fill=int(BLACK_FILL)
@@ -692,3 +689,26 @@ class SK2_to_FIG_Translator(object):
                 area_fill=int(BLACK_FILL)
             )
         return props
+
+    def init_pallet(self):
+        self.pallet = {}
+        for idx, clr in FIG_COLORS.items():
+            if idx >= 0:
+                hexcolor = cms.rgb_to_hexcolor(clr[1])
+                self.pallet[hexcolor] = idx
+
+    def color_index(self, hexcolor):
+        idx = self.pallet.get(hexcolor)
+        if idx is None:
+            idx = max(self.pallet.values()) + 1
+            self.pallet[hexcolor] = idx
+        return idx
+
+    def translate_pallet(self):
+        base_color = max(FIG_COLORS.keys())
+        pallet = sorted(self.pallet.items(), key=lambda a: a[1], reverse=True)
+        for hexcolor, idx in pallet:
+            if idx <= base_color:
+                break
+            color = fig_model.FIGColorDef(idx=idx, hexcolor=hexcolor)
+            self.fig_mt.childs.insert(0, color)
