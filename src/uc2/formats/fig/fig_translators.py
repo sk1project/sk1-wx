@@ -597,6 +597,7 @@ class SK2_to_FIG_Translator(object):
                 x=point[0],
                 y=point[1],
                 angle=trafo_split['rotate'] - math.pi,
+                depth=self.current_depth,
             )
             new_obg = fig_model.FIGText(**props)
             self.add(new_obg)
