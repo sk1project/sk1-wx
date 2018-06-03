@@ -16,13 +16,14 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import math
 import logging
 from base64 import b64decode, b64encode
 from copy import deepcopy
 
 from uc2 import uc2const, sk2const, cms, libgeom, libimg
 from uc2.formats.sk2 import sk2_model
-from . import fig_const, fig_model, figlib
+from . import fig_const, fig_model, figlib, trafolib
 from .fig_colors import color_mix, FIG_COLORS
 from .fig_patterns import PATTERN
 from .fig_const import (BLACK_COLOR, WHITE_COLOR, BLACK_FILL,
@@ -72,6 +73,12 @@ SK2_TO_FIG_CAP = {
     sk2const.CAP_BUTT: fig_const.CAP_BUTT,
     sk2const.CAP_ROUND: fig_const.CAP_ROUND,
     sk2const.CAP_SQUARE: fig_const.CAP_SQUARE
+}
+
+SK2_TO_FIG_TEXT_ALIGN = {
+    sk2const.TEXT_ALIGN_LEFT: fig_const.T_LEFT_JUSTIFIED,
+    sk2const.TEXT_ALIGN_CENTER: fig_const.T_CENTER_JUSTIFIED,
+    sk2const.TEXT_ALIGN_RIGHT: fig_const.T_RIGHT_JUSTIFIED
 }
 
 
@@ -551,6 +558,8 @@ class SK2_to_FIG_Translator(object):
         for obj in objs:
             if obj.is_group:
                 self.translate_group(obj)
+            elif obj.is_text:
+                self.translate_text(obj)
             elif obj.is_primitive:
                 self.translate_primitive(obj)
             # elif obj.is_layer:
@@ -560,6 +569,37 @@ class SK2_to_FIG_Translator(object):
             #     self.translate_pixmap(obj)
             # else:
             #     self.translate_group(obj)
+
+    def translate_text(self, obj):
+        obj.update()
+        font_family, font_face, font_size, alignment = obj.style[2][:4]
+        font = fig_const.DEF_PS_FONT
+
+        trafo = libgeom.multiply_trafo(obj.trafo, self.trafo)
+        trafo_split = trafolib.trafo_split(obj.trafo)
+
+        fill = self.get_fill(obj)
+        font_flags = fig_const.PSFONT_TEXT
+        if fill['area_fill'] == fig_const.NO_FILL:
+            font_flags = font_flags | fig_const.HIDDEN_TEXT
+
+        font_size *= trafo_split['scale_x'] * 1.57
+        text = obj.get_text().encode('utf-8')
+        for idx, string in enumerate(text.splitlines()):
+            point = libgeom.apply_trafo_to_point([0.0, -idx * font_size], trafo)
+            props = dict(
+                color=fill['fill_color'],
+                font=font,
+                font_flags=font_flags,
+                font_size=font_size,
+                sub_type=SK2_TO_FIG_TEXT_ALIGN[alignment],
+                string=string,
+                x=point[0],
+                y=point[1],
+                angle=trafo_split['rotate'] - math.pi,
+            )
+            new_obg = fig_model.FIGText(**props)
+            self.add(new_obg)
 
     def translate_metainfo(self):
         fields = ["Author", "License", "Keywords", "Notes"]
