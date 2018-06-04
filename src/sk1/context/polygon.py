@@ -79,6 +79,10 @@ class PolygonCfgPlugin(CtxPlugin):
         val = self.num_spin.get_value()
         if not config.default_polygon_num == val:
             config.default_polygon_num = val
+        if self.insp.is_selection():
+            selection = self.app.current_doc.selection
+            if self.insp.is_obj_polygon(selection.objs[0]):
+                self.app.current_doc.api.set_polygon_corners_num(val)
 
     def config_changed(self, *args):
         if args[0][0] == 'default_polygon_num':

@@ -50,6 +50,7 @@ class AppProxy:
 
     def fill_dialog(self, default_style=False):
         doc = self.app.current_doc
+        doc.canvas.set_mode()
         objs = []
         if default_style:
             fill_style = doc.model.styles['Default Style'][0]
@@ -104,6 +105,7 @@ class AppProxy:
 
     def stroke_dialog(self, default_style=False):
         doc = self.app.current_doc
+        doc.canvas.set_mode()
         objs = []
         if default_style:
             stroke_style = doc.model.styles['Default Style'][1]

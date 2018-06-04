@@ -36,7 +36,6 @@ class PolyLineCreator(AbstractCreator):
     point = []
     doc_point = []
     ctrl_mask = False
-    alt_mask = False
 
     # Drawing timer to avoid repainting overhead
     timer = None
@@ -96,7 +95,6 @@ class PolyLineCreator(AbstractCreator):
         if self.draw:
             self.create = False
             self.ctrl_mask = event.is_ctrl()
-            self.alt_mask = event.is_alt()
             point = event.get_point()
             point, doc_point = self.snap.snap_point(point)[1:]
             self.add_point(point, doc_point)
@@ -105,6 +103,7 @@ class PolyLineCreator(AbstractCreator):
     def mouse_double_click(self, event):
         if self.ctrl_mask:
             self.draw = False
+            self.release_curve(False)
         else:
             self.release_curve()
 
@@ -230,6 +229,7 @@ class PolyLineCreator(AbstractCreator):
                         self.release_curve()
                     else:
                         self.draw = False
+                        self.release_curve(False)
                     self.on_timer()
                 elif not is_point_in_rect2(subpoint, last, w, h):
                     self.points.append(doc_point)
@@ -242,7 +242,7 @@ class PolyLineCreator(AbstractCreator):
             self.path[0] = doc_point
             self.paths.append(self.path)
 
-    def release_curve(self):
+    def release_curve(self, stop=True):
         if self.points:
             flag = config.curve_autoclose_flag
             if flag and self.path[2] == sk2const.CURVE_OPENED:
@@ -250,9 +250,10 @@ class PolyLineCreator(AbstractCreator):
                 self.points.append([] + self.path[0])
             paths = self.paths
             obj = self.obj
-            self.stop_()
+            if stop:
+                self.stop_()
             if obj is None:
-                self.api.create_curve(paths)
+                self.obj = self.api.create_curve(paths)
             else:
                 self.api.update_curve(obj, paths)
 

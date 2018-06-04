@@ -26,7 +26,7 @@ LABELS = {
     pdids.SELECT_MODE: (_('Selection mode (Esc)'),),
     pdids.SHAPER_MODE: (_('Edit mode (Space)'),),
     pdids.ZOOM_MODE: (_('Zoom mode (F2)'),),
-    pdids.FLEUR_MODE: (_('Fleur mode'),),
+    pdids.FLEUR_MODE: (_('Pan mode'),),
     pdids.LINE_MODE: (_('Create polyline'),),
     pdids.CURVE_MODE: (_('Create curve'),),
     pdids.RECT_MODE: (_('Create rectangle'),),
