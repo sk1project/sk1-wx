@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-09 14:54+0300\n"
-"PO-Revision-Date: 2018-05-09 14:54+0300\n"
+"POT-Creation-Date: 2018-06-04 06:08+0300\n"
+"PO-Revision-Date: 2018-06-04 06:08+0300\n"
 "Last-Translator: Maxim Barabash <maxim.s.barabash@gmail.com>\n"
 "Language-Team: \n"
 "Language: uk\n"
@@ -25,85 +25,85 @@ msgstr ""
 msgid "plugin"
 msgstr "модуль"
 
-#: src/sk1/app_proxy.py:55 src/sk1/app_proxy.py:78
+#: src/sk1/app_proxy.py:57 src/sk1/app_proxy.py:80
 msgid "Default document fill"
 msgstr "Типове заповнення"
 
-#: src/sk1/app_proxy.py:58 src/sk1/dialogs/filldlg.py:87
+#: src/sk1/app_proxy.py:60 src/sk1/dialogs/filldlg.py:87
 msgid "Fill"
 msgstr "Заповнення"
 
-#: src/sk1/app_proxy.py:71
+#: src/sk1/app_proxy.py:73
 msgid "Do you wish to change default fill style for this document?"
 msgstr "Бажаєте змінити стиль типового заповнення для цього документа?"
 
-#: src/sk1/app_proxy.py:73 src/sk1/app_proxy.py:127 src/sk1/app_proxy.py:709
-#: src/sk1/app_proxy.py:732
+#: src/sk1/app_proxy.py:75 src/sk1/app_proxy.py:129 src/sk1/app_proxy.py:725
+#: src/sk1/app_proxy.py:748
 msgid "This style will be applied to newly created objects."
 msgstr "Цей стиль буде застосовано до нових об'єктів."
 
-#: src/sk1/app_proxy.py:109 src/sk1/app_proxy.py:132
+#: src/sk1/app_proxy.py:111 src/sk1/app_proxy.py:134
 msgid "Default document stroke"
 msgstr "Типовий штрих"
 
-#: src/sk1/app_proxy.py:112 src/sk1/dialogs/strokedlg.py:100
+#: src/sk1/app_proxy.py:114 src/sk1/dialogs/strokedlg.py:100
 msgid "Stroke"
 msgstr "Штрихи"
 
-#: src/sk1/app_proxy.py:125
+#: src/sk1/app_proxy.py:127
 msgid "Do you wish to change default stroke style for this document?"
 msgstr "Бажаєте змінити типовий стиль штриху для цього документа?"
 
-#: src/sk1/app_proxy.py:159
+#: src/sk1/app_proxy.py:161
 msgid "Source object is not selected to copy fill property."
 msgstr "Для копіювання властивості заповнення не обрано вихідний об'єкт."
 
-#: src/sk1/app_proxy.py:161
+#: src/sk1/app_proxy.py:163
 msgid "Selected object cannot be source of fill property."
 msgstr "Обраний об'єкт не може бути джерелом властивості заповнення."
 
-#: src/sk1/app_proxy.py:162 src/sk1/app_proxy.py:181 src/sk1/app_proxy.py:584
+#: src/sk1/app_proxy.py:164 src/sk1/app_proxy.py:183 src/sk1/app_proxy.py:600
 #: src/sk1/share/pd_plugins/shaping/__init__.py:168
 msgid "Do you want to try again?"
 msgstr "Бажаєте спробувати ще раз?"
 
-#: src/sk1/app_proxy.py:178
+#: src/sk1/app_proxy.py:180
 msgid "Source object is not selected to copy stroke property."
 msgstr "Для копіювання властивості штриху не обрано вихідний об'єкт."
 
-#: src/sk1/app_proxy.py:180
+#: src/sk1/app_proxy.py:182
 msgid "Selected object cannot be source of stroke property."
 msgstr "Обраний об'єкт не може бути джерелом властивості штриху."
 
-#: src/sk1/app_proxy.py:533 src/sk1/share/pd_plugins/shaping/__init__.py:179
+#: src/sk1/app_proxy.py:549 src/sk1/share/pd_plugins/shaping/__init__.py:179
 msgid "Error occurred during this operation."
 msgstr "Під час цієї операції сталася помилка."
 
-#: src/sk1/app_proxy.py:535 src/sk1/share/pd_plugins/shaping/__init__.py:180
+#: src/sk1/app_proxy.py:551 src/sk1/share/pd_plugins/shaping/__init__.py:180
 msgid "Perhaps this was due to the imperfection of the algorithm."
 msgstr "Можливо, це було пов'язано з недосконалістю алгоритму."
 
-#: src/sk1/app_proxy.py:578 src/sk1/share/pd_plugins/shaping/__init__.py:165
+#: src/sk1/app_proxy.py:594 src/sk1/share/pd_plugins/shaping/__init__.py:165
 msgid "There is no selected object."
 msgstr "Немає обраного об'єкта."
 
-#: src/sk1/app_proxy.py:580
+#: src/sk1/app_proxy.py:596
 msgid "Object from current selection cannot be container."
 msgstr "Об'єкт з поточного позначення не може бути контейнером."
 
-#: src/sk1/app_proxy.py:582
+#: src/sk1/app_proxy.py:598
 msgid "Selected object cannot be container."
 msgstr "Обраний об'єкт не може бути контейнером."
 
-#: src/sk1/app_proxy.py:707
+#: src/sk1/app_proxy.py:723
 msgid "Do you wish to change default fill color for this document?"
 msgstr "Бажаєте змінити типовий колір заповнення для цього документа?"
 
-#: src/sk1/app_proxy.py:730
+#: src/sk1/app_proxy.py:746
 msgid "Do you wish to change default stroke color for this document?"
 msgstr "Бажаєте змінити типовий колір штриху для цього документа?"
 
-#: src/sk1/app_proxy.py:786
+#: src/sk1/app_proxy.py:802
 msgid "Application logs"
 msgstr "Журнал використання"
 
@@ -353,22 +353,10 @@ msgstr "Верхній індекс"
 msgid "Subscript"
 msgstr "Нижній індекс"
 
-#: src/sk1/context/page_format.py:46 src/sk1/context/page_format.py:97
+#: src/sk1/context/page_format.py:47 src/sk1/context/page_format.py:98
 #: src/sk1/dialogs/docprops.py:118
 msgid "Custom"
 msgstr "Інший"
-
-#: src/sk1/context/page_format.py:66 src/sk1/dialogs/docprops.py:94
-#: src/sk1/printing/propsdlg/cupspropsdlg.py:199
-#: src/sk1/printing/propsdlg/pdfpropsdlg.py:119
-msgid "Portrait"
-msgstr "Книжкова"
-
-#: src/sk1/context/page_format.py:72 src/sk1/dialogs/docprops.py:94
-#: src/sk1/printing/propsdlg/cupspropsdlg.py:202
-#: src/sk1/printing/propsdlg/pdfpropsdlg.py:120
-msgid "Landscape"
-msgstr "Альбомна"
 
 #: src/sk1/context/polygon.py:37
 msgid "Number of polygon angles"
@@ -460,27 +448,191 @@ msgstr ""
 "Значення подаються відносно ширини лінії. Наприклад: '2 1' або '5 1 1 1'.\n"
 "Порожнє значення означає відсутність пунктиру, тобто це суцільна лінія."
 
-#: src/sk1/dialogs/dashedit_dlg.py:79 src/sk1/dialogs/strokedlg.py:126
+#: src/sk1/dialogs/dashedit_dlg.py:79 src/sk1/dialogs/strokedlg.py:148
 msgid "Edit dash pattern"
 msgstr "Редагувати стиль пунктиру"
 
-#: src/sk1/dialogs/docprops.py:47
+#: src/sk1/dialogs/docinfodlg.py:80 src/sk1/dialogs/filelogviewer.py:96
+msgid "File"
+msgstr "Файл"
+
+#: src/sk1/dialogs/docinfodlg.py:81
+msgid "Name and location:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:88
+msgid "File size:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:89
+msgid "Modified:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:100 src/uc2/formats/sk/sk_model.py:49
+#: src/uc2/formats/sk1/model.py:51 src/uc2/formats/sk2/sk2_cids.py:62
+msgid "Document"
+msgstr "Документ"
+
+#: src/sk1/dialogs/docinfodlg.py:101 src/sk1/printing/printdlg/panels.py:141
+msgid "Pages:"
+msgstr "Сторінок:"
+
+#: src/sk1/dialogs/docinfodlg.py:102
+msgid "Layers:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:103
+#: src/sk1/printing/propsdlg/cupspropsdlg.py:112
+#: src/sk1/printing/propsdlg/pdfpropsdlg.py:93
+msgid "Page size:"
+msgstr "Розмір сторінки:"
+
+#: src/sk1/dialogs/docinfodlg.py:104
+msgid "Page orientation:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:128
+#, python-format
+msgid "%i, opened %i, closed %i"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:135
+msgid "Graphic Objects"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:136
+msgid "Number of objects:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:137
+msgid "Number of points:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:138
+msgid "Max. # of curve points:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:139
+msgid "Max. # of curve subpaths:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:140
+msgid "Groups:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:141
+msgid "Rectangles:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:142
+msgid "Ellipses:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:143
+msgid "Containers:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:144
+msgid "Polygons:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:166
+msgid "Text Statistics"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:168
+msgid "No Text in this document."
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:171
+msgid "Artistic text:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:172
+msgid "Lines:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:173
+msgid "Words:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:174
+msgid "Characters:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:176
+msgid "Fonts used:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:196
+msgid "Bitmap Objects"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:200
+msgid "No Bitmaps in this document."
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:240
+msgid "Fills"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:241
+msgid "No fill:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:242 src/sk1/dialogs/docinfodlg.py:279
+msgid "Solid:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:243
+msgid "Gradients:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:244
+msgid "Patterns:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:248 src/sk1/dialogs/docinfodlg.py:283
+msgid "Objects and Color models"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:277
+msgid "Strokes"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:278
+msgid "No stroke:"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:289
+msgid "Property"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:289
+msgid "Value"
+msgstr ""
+
+#: src/sk1/dialogs/docinfodlg.py:301 src/sk1/dialogs/docprops.py:646
+msgid "Document info"
+msgstr ""
+
+#: src/sk1/dialogs/docprops.py:48
 msgid "Description"
 msgstr "Опис"
 
-#: src/sk1/dialogs/docprops.py:63 src/sk1/printing/propsdlg/pdfpropsdlg.py:204
+#: src/sk1/dialogs/docprops.py:64 src/sk1/printing/propsdlg/pdfpropsdlg.py:205
 msgid "Author:"
 msgstr "Автор:"
 
-#: src/sk1/dialogs/docprops.py:67
+#: src/sk1/dialogs/docprops.py:68
 msgid "License:"
 msgstr "Ліцензія:"
 
-#: src/sk1/dialogs/docprops.py:71 src/sk1/printing/propsdlg/pdfpropsdlg.py:208
+#: src/sk1/dialogs/docprops.py:72 src/sk1/printing/propsdlg/pdfpropsdlg.py:209
 msgid "Keywords:"
 msgstr "Ключові слова:"
 
-#: src/sk1/dialogs/docprops.py:75
+#: src/sk1/dialogs/docprops.py:76
 msgid "Notes:"
 msgstr "Примітки:"
 
@@ -489,7 +641,7 @@ msgstr "Примітки:"
 #: src/uc2/formats/pdxf/methods.py:123 src/uc2/formats/pdxf/methods.py:140
 #: src/uc2/formats/pdxf/model.py:232 src/uc2/formats/sk1/model.py:52
 #: src/uc2/formats/sk2/sk2_cids.py:68 src/uc2/formats/sk2/sk2_methods.py:174
-#: src/uc2/formats/sk2/sk2_methods.py:191 src/uc2/formats/sk2/sk2_model.py:210
+#: src/uc2/formats/sk2/sk2_methods.py:191 src/uc2/formats/sk2/sk2_model.py:211
 msgid "Page"
 msgstr "Сторінка"
 
@@ -580,15 +732,23 @@ msgstr "Вигляд сітки:"
 msgid "Guides"
 msgstr "Напрямні"
 
-#: src/sk1/dialogs/docprops.py:581
+#: src/sk1/dialogs/docprops.py:582
 msgid "Guide color:"
 msgstr "Колір напрямної:"
 
-#: src/sk1/dialogs/docprops.py:594
+#: src/sk1/dialogs/docprops.py:596
 msgid "Show guides on canvas"
 msgstr "Показати напрямні на полотні"
 
-#: src/sk1/dialogs/docprops.py:659
+#: src/sk1/dialogs/docprops.py:601
+msgid "Edit guides"
+msgstr ""
+
+#: src/sk1/dialogs/docprops.py:645
+msgid "Statistics..."
+msgstr ""
+
+#: src/sk1/dialogs/docprops.py:678
 msgid "Document properties"
 msgstr "Властивості документу"
 
@@ -631,10 +791,6 @@ msgstr "Відкрито"
 #: src/sk1/dialogs/filelogviewer.py:76
 msgid "Saved"
 msgstr "Збережено"
-
-#: src/sk1/dialogs/filelogviewer.py:96
-msgid "File"
-msgstr "Файл"
 
 #: src/sk1/dialogs/filelogviewer.py:96
 msgid "is not found."
@@ -758,31 +914,41 @@ msgstr "Колір штриха"
 msgid "Stroke Style"
 msgstr "Стиль штриха"
 
-#: src/sk1/dialogs/strokedlg.py:114
-msgid "Stroke width:"
-msgstr "Товщина штриха:"
+#: src/sk1/dialogs/strokedlg.py:113
+#: src/sk1/printing/propsdlg/cupspropsdlg.py:117
+#: src/sk1/printing/propsdlg/pdfpropsdlg.py:98
+msgid "Width:"
+msgstr "Ширина:"
 
 #: src/sk1/dialogs/strokedlg.py:123
+msgid "Markers:"
+msgstr ""
+
+#: src/sk1/dialogs/strokedlg.py:145
 msgid "Dashes:"
 msgstr "Пунктир:"
 
-#: src/sk1/dialogs/strokedlg.py:134
+#: src/sk1/dialogs/strokedlg.py:157
 msgid "Caps:"
 msgstr "Кінці:"
 
-#: src/sk1/dialogs/strokedlg.py:139
+#: src/sk1/dialogs/strokedlg.py:162
 msgid "Join:"
 msgstr "З'єднання:"
 
-#: src/sk1/dialogs/strokedlg.py:147
+#: src/sk1/dialogs/strokedlg.py:167
+msgid "Options:"
+msgstr ""
+
+#: src/sk1/dialogs/strokedlg.py:170
 msgid "Miter limit:"
 msgstr "Межа вістря:"
 
-#: src/sk1/dialogs/strokedlg.py:154
+#: src/sk1/dialogs/strokedlg.py:177
 msgid "Behind fill"
 msgstr "Позаду заповнення"
 
-#: src/sk1/dialogs/strokedlg.py:157
+#: src/sk1/dialogs/strokedlg.py:180
 msgid "Scalable stroke"
 msgstr "Маштабувати ширину штриху"
 
@@ -1729,27 +1895,27 @@ msgstr "Завантажити візерунок з файлу"
 msgid "Save pattern into file"
 msgstr "Зберегти візерунок у файл"
 
-#: src/sk1/pwidgets/strokectrls.py:110
+#: src/sk1/pwidgets/strokectrls.py:161
 msgid "Line exactly at the point"
 msgstr "Лінія точно через вузол"
 
-#: src/sk1/pwidgets/strokectrls.py:111
+#: src/sk1/pwidgets/strokectrls.py:162
 msgid "Round ending"
 msgstr "Округлені кінці"
 
-#: src/sk1/pwidgets/strokectrls.py:112
+#: src/sk1/pwidgets/strokectrls.py:163
 msgid "Squared ending"
 msgstr "Квадратні кінці"
 
-#: src/sk1/pwidgets/strokectrls.py:137
+#: src/sk1/pwidgets/strokectrls.py:188
 msgid "Cut-off join"
 msgstr "Фасочне з'єднання"
 
-#: src/sk1/pwidgets/strokectrls.py:138
+#: src/sk1/pwidgets/strokectrls.py:189
 msgid "Sharp (angled) corner"
 msgstr "Гостре з'єднання"
 
-#: src/sk1/pwidgets/strokectrls.py:139
+#: src/sk1/pwidgets/strokectrls.py:190
 msgid "Rounded join"
 msgstr "Округлене з'єднання"
 
@@ -1776,7 +1942,7 @@ msgid "Zoom mode (F2)"
 msgstr "Змінити масштаб (F2)"
 
 #: src/sk1/resources/labels.py:29
-msgid "Fleur mode"
+msgid "Pan mode"
 msgstr "Перемістити монтажну область"
 
 #: src/sk1/resources/labels.py:30
@@ -2108,283 +2274,287 @@ msgid "Clear transformations"
 msgstr "Скинути трансформацію"
 
 #: src/sk1/resources/labels.py:110
+msgid "Inline transformations"
+msgstr ""
+
+#: src/sk1/resources/labels.py:111
 msgid "Position..."
 msgstr "Положення..."
 
-#: src/sk1/resources/labels.py:111
+#: src/sk1/resources/labels.py:112
 msgid "Resizing..."
 msgstr "Зміна розміру..."
 
-#: src/sk1/resources/labels.py:112
+#: src/sk1/resources/labels.py:113
 msgid "Scale and mirror..."
 msgstr "Масштабування та віддзеркалення..."
 
-#: src/sk1/resources/labels.py:113
+#: src/sk1/resources/labels.py:114
 msgid "Rotation..."
 msgstr "Обертання..."
 
-#: src/sk1/resources/labels.py:114
+#: src/sk1/resources/labels.py:115
 msgid "Shearing..."
 msgstr "Зсув..."
 
-#: src/sk1/resources/labels.py:115
+#: src/sk1/resources/labels.py:116
 msgid "Rotate &left 90 degrees"
 msgstr "Обернути в&ліво на 90°"
 
-#: src/sk1/resources/labels.py:116
+#: src/sk1/resources/labels.py:117
 msgid "Rotate &right 90 degrees"
 msgstr "Обернути в&право на 90°"
 
-#: src/sk1/resources/labels.py:117
+#: src/sk1/resources/labels.py:118
 msgid "&Horizontal mirror"
 msgstr "Віддзеркалити &горизонтально"
 
-#: src/sk1/resources/labels.py:118
+#: src/sk1/resources/labels.py:119
 msgid "&Vertical mirror"
 msgstr "Віддзеркалити &вертикально"
 
-#: src/sk1/resources/labels.py:119
+#: src/sk1/resources/labels.py:120
 msgid "Align and Distribute..."
 msgstr "Вирів&няти та розподілити..."
 
-#: src/sk1/resources/labels.py:120
+#: src/sk1/resources/labels.py:121
 msgid "&Combine"
 msgstr "Об'&єднати"
 
-#: src/sk1/resources/labels.py:121
+#: src/sk1/resources/labels.py:122
 msgid "&Break Apart"
 msgstr "&Розділити"
 
-#: src/sk1/resources/labels.py:122
+#: src/sk1/resources/labels.py:123
 msgid "Raise to &Top"
 msgstr "Підняти на п&ередній план"
 
-#: src/sk1/resources/labels.py:123
+#: src/sk1/resources/labels.py:124
 msgid "&Raise"
 msgstr "&Підняти"
 
-#: src/sk1/resources/labels.py:124
+#: src/sk1/resources/labels.py:125
 msgid "&Lower"
 msgstr "&Опустити"
 
-#: src/sk1/resources/labels.py:125
+#: src/sk1/resources/labels.py:126
 msgid "Lower to &Bottom"
 msgstr "Опустити на з&адній план"
 
-#: src/sk1/resources/labels.py:126
+#: src/sk1/resources/labels.py:127
 msgid "&Group"
 msgstr "З&групувати"
 
-#: src/sk1/resources/labels.py:127
+#: src/sk1/resources/labels.py:128
 msgid "&Ungroup"
 msgstr "&Розгрупувати"
 
-#: src/sk1/resources/labels.py:128
+#: src/sk1/resources/labels.py:129
 msgid "U&ngroup All"
 msgstr "Розгрупувати все"
 
-#: src/sk1/resources/labels.py:129
+#: src/sk1/resources/labels.py:130
 msgid "Trim..."
 msgstr "Обрізати..."
 
-#: src/sk1/resources/labels.py:130
+#: src/sk1/resources/labels.py:131
 msgid "Intersection..."
 msgstr "Перетин..."
 
-#: src/sk1/resources/labels.py:131
+#: src/sk1/resources/labels.py:132
 msgid "Exclusion..."
 msgstr "Виключення..."
 
-#: src/sk1/resources/labels.py:132
+#: src/sk1/resources/labels.py:133
 msgid "Fusion..."
 msgstr "Злиття..."
 
-#: src/sk1/resources/labels.py:133
+#: src/sk1/resources/labels.py:134
 msgid "&Place into container"
 msgstr "&Помістити в контейнер"
 
-#: src/sk1/resources/labels.py:134
+#: src/sk1/resources/labels.py:135
 msgid "&Extract from container"
 msgstr "Видобути з контейнера"
 
-#: src/sk1/resources/labels.py:135
+#: src/sk1/resources/labels.py:136
 msgid "Con&vert to curves"
 msgstr "Перетворити на криву"
 
-#: src/sk1/resources/labels.py:136
+#: src/sk1/resources/labels.py:137
 msgid "Convert stroke to curves"
 msgstr "Перетворити штрих на криву"
 
-#: src/sk1/resources/labels.py:138
+#: src/sk1/resources/labels.py:139
 msgid "Select all nodes"
 msgstr "Позначити усі вузли"
 
-#: src/sk1/resources/labels.py:139
+#: src/sk1/resources/labels.py:140
 msgid "Reverse all paths"
 msgstr "Обернути усі контури"
 
-#: src/sk1/resources/labels.py:140
+#: src/sk1/resources/labels.py:141
 msgid "Select all subpath nodes"
 msgstr "Позначити усі вузли у підконтурі"
 
-#: src/sk1/resources/labels.py:141
+#: src/sk1/resources/labels.py:142
 msgid "Delete subpaths"
 msgstr "Видалити підконтури"
 
-#: src/sk1/resources/labels.py:142
+#: src/sk1/resources/labels.py:143
 msgid "Reverse subpaths"
 msgstr "Обернути підконтури"
 
-#: src/sk1/resources/labels.py:143
+#: src/sk1/resources/labels.py:144
 msgid "Extract subpaths"
 msgstr "Видобути підконтур"
 
-#: src/sk1/resources/labels.py:144
+#: src/sk1/resources/labels.py:145
 msgid "Add node"
 msgstr "Додати вузол"
 
-#: src/sk1/resources/labels.py:145
+#: src/sk1/resources/labels.py:146
 msgid "Delete nodes"
 msgstr "Видалити вузли"
 
-#: src/sk1/resources/labels.py:146
+#: src/sk1/resources/labels.py:147
 msgid "Create segment"
 msgstr "Створити сегмент"
 
-#: src/sk1/resources/labels.py:147
+#: src/sk1/resources/labels.py:148
 msgid "Delete segment"
 msgstr "Видалити сегмент"
 
-#: src/sk1/resources/labels.py:148
+#: src/sk1/resources/labels.py:149
 msgid "Join nodes"
 msgstr "З'єднати вузли"
 
-#: src/sk1/resources/labels.py:149
+#: src/sk1/resources/labels.py:150
 msgid "Split nodes"
 msgstr "Роз'єднати вузли"
 
-#: src/sk1/resources/labels.py:150
+#: src/sk1/resources/labels.py:151
 msgid "Convert segments to line"
 msgstr "Перетворити сегмент на пряму"
 
-#: src/sk1/resources/labels.py:151
+#: src/sk1/resources/labels.py:152
 msgid "Convert segments to curve"
 msgstr "Перетворити сегмент на криву"
 
-#: src/sk1/resources/labels.py:152
+#: src/sk1/resources/labels.py:153
 msgid "Make nodes cusp"
 msgstr "Зробити позначені вузли гострими"
 
-#: src/sk1/resources/labels.py:153
+#: src/sk1/resources/labels.py:154
 msgid "Make nodes smooth"
 msgstr "Зробити позначені вузли гладкими"
 
-#: src/sk1/resources/labels.py:154
+#: src/sk1/resources/labels.py:155
 msgid "Make nodes symmetrical"
 msgstr "Зробити позначені вузли симетричними"
 
-#: src/sk1/resources/labels.py:156
+#: src/sk1/resources/labels.py:157
 msgid "Convert to CMYK"
 msgstr "Перетворити у CMYK"
 
-#: src/sk1/resources/labels.py:157
+#: src/sk1/resources/labels.py:158
 msgid "Convert to RGB"
 msgstr "Перетворити у RGB"
 
-#: src/sk1/resources/labels.py:158
+#: src/sk1/resources/labels.py:159
 msgid "Convert to LAB"
 msgstr "Перетворити у LAB"
 
-#: src/sk1/resources/labels.py:159
+#: src/sk1/resources/labels.py:160
 msgid "Convert to Grayscale"
 msgstr "Перетворити у відтінки сірого"
 
-#: src/sk1/resources/labels.py:160
+#: src/sk1/resources/labels.py:161
 msgid "Convert to B&W"
 msgstr "Перетворити у чорно-біле"
 
-#: src/sk1/resources/labels.py:161
+#: src/sk1/resources/labels.py:162
 msgid "Invert bitmap"
 msgstr "Інвертувати растр"
 
-#: src/sk1/resources/labels.py:162
+#: src/sk1/resources/labels.py:163
 msgid "Remove alpha-channel"
 msgstr "Відкинути альфа-канал"
 
-#: src/sk1/resources/labels.py:163
+#: src/sk1/resources/labels.py:164
 msgid "Invert alpha-channel"
 msgstr "Інвертувати альфа-канал"
 
-#: src/sk1/resources/labels.py:164
+#: src/sk1/resources/labels.py:165
 msgid "Extract embedded bitmap..."
 msgstr "Зберегти растр..."
 
-#: src/sk1/resources/labels.py:166
+#: src/sk1/resources/labels.py:167
 msgid "&Edit text"
 msgstr "&Редагувати текст"
 
-#: src/sk1/resources/labels.py:167
+#: src/sk1/resources/labels.py:168
 msgid "Text on path..."
 msgstr "Текст за контуром..."
 
-#: src/sk1/resources/labels.py:168
+#: src/sk1/resources/labels.py:169
 msgid "Text on circle..."
 msgstr "Текст по колу..."
 
-#: src/sk1/resources/labels.py:169
+#: src/sk1/resources/labels.py:170
 msgid "&Straighten text"
 msgstr "&Випрямити текст"
 
-#: src/sk1/resources/labels.py:170
+#: src/sk1/resources/labels.py:171
 msgid "Clear text markup"
 msgstr "Скасувати форматування"
 
-#: src/sk1/resources/labels.py:171
+#: src/sk1/resources/labels.py:172
 msgid "Uppercase"
 msgstr "Великими літерами"
 
-#: src/sk1/resources/labels.py:172
+#: src/sk1/resources/labels.py:173
 msgid "Lowercase"
 msgstr "Малими літерами"
 
-#: src/sk1/resources/labels.py:173
+#: src/sk1/resources/labels.py:174
 msgid "Capitalize"
 msgstr "З великої літери"
 
-#: src/sk1/resources/labels.py:175 src/uc2/formats/sk1/model.py:52
+#: src/sk1/resources/labels.py:176 src/uc2/formats/sk1/model.py:52
 #: src/uc2/formats/sk2/sk2_cids.py:68
 msgid "Pages"
 msgstr "Сторінки"
 
-#: src/sk1/resources/labels.py:176
+#: src/sk1/resources/labels.py:177
 msgid "Layers..."
 msgstr "Шари..."
 
-#: src/sk1/resources/labels.py:177
+#: src/sk1/resources/labels.py:178
 msgid "Object browser"
 msgstr "Браузер об'єктів"
 
-#: src/sk1/resources/labels.py:179
+#: src/sk1/resources/labels.py:180
 msgid "&Report bug"
 msgstr "Надіслати &звіт про помилку"
 
-#: src/sk1/resources/labels.py:180
+#: src/sk1/resources/labels.py:181
 msgid "&Log console"
 msgstr "Консоль журналу"
 
-#: src/sk1/resources/labels.py:181
+#: src/sk1/resources/labels.py:182
 msgid "Project web site"
 msgstr "Веб-сайт проекту"
 
-#: src/sk1/resources/labels.py:182
+#: src/sk1/resources/labels.py:183
 msgid "Project forum"
 msgstr "Онлайн-форум"
 
-#: src/sk1/resources/labels.py:183
+#: src/sk1/resources/labels.py:184
 msgid "Project page on Face&book"
 msgstr "Сторінка проекту на Face&book"
 
-#: src/sk1/resources/labels.py:184
+#: src/sk1/resources/labels.py:185
 msgid "&About sK1..."
 msgstr "Про програму sK1..."
 
@@ -2463,10 +2633,6 @@ msgstr "Позначеного"
 msgid "Current page"
 msgstr "Поточна сторінка"
 
-#: src/sk1/printing/printdlg/panels.py:141
-msgid "Pages:"
-msgstr "Сторінок:"
-
 #: src/sk1/printing/printdlg/panels.py:149
 msgid "Enter page numbers or page ranges."
 msgstr "Введіть номери або діапазони сторінок."
@@ -2517,16 +2683,6 @@ msgstr "Колірний простір:"
 msgid "Paper"
 msgstr "Папір"
 
-#: src/sk1/printing/propsdlg/cupspropsdlg.py:112
-#: src/sk1/printing/propsdlg/pdfpropsdlg.py:93
-msgid "Page size:"
-msgstr "Розмір сторінки:"
-
-#: src/sk1/printing/propsdlg/cupspropsdlg.py:117
-#: src/sk1/printing/propsdlg/pdfpropsdlg.py:98
-msgid "Width:"
-msgstr "Ширина:"
-
 #: src/sk1/printing/propsdlg/cupspropsdlg.py:127
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:107
 msgid "Height:"
@@ -2572,23 +2728,23 @@ msgstr "Сторінки документа"
 msgid "Orientation:"
 msgstr "Орієнтація:"
 
-#: src/sk1/printing/propsdlg/pdfpropsdlg.py:191
+#: src/sk1/printing/propsdlg/pdfpropsdlg.py:192
 msgid "Document metainfo"
 msgstr "Метаінформація"
 
-#: src/sk1/printing/propsdlg/pdfpropsdlg.py:196
+#: src/sk1/printing/propsdlg/pdfpropsdlg.py:197
 msgid "Title:"
 msgstr "Заголовок:"
 
-#: src/sk1/printing/propsdlg/pdfpropsdlg.py:200
+#: src/sk1/printing/propsdlg/pdfpropsdlg.py:201
 msgid "Subject:"
 msgstr "Тема:"
 
-#: src/sk1/printing/propsdlg/pdfpropsdlg.py:275
+#: src/sk1/printing/propsdlg/pdfpropsdlg.py:276
 msgid "Set metainfo"
 msgstr "Задати метаінформацію"
 
-#: src/sk1/printing/propsdlg/pdfpropsdlg.py:276
+#: src/sk1/printing/propsdlg/pdfpropsdlg.py:277
 msgid "Set metainfo from current document"
 msgstr "Задати метаінформацію для поточного документа"
 
@@ -3198,19 +3354,27 @@ msgstr "см"
 msgid "mm"
 msgstr "мм"
 
-#: src/uc2/uc2const.py:455
+#: src/uc2/uc2const.py:447
+msgid "Portrait"
+msgstr "Книжкова"
+
+#: src/uc2/uc2const.py:447
+msgid "Landscape"
+msgstr "Альбомна"
+
+#: src/uc2/uc2const.py:457
 msgid "Perceptual"
 msgstr "Придатна для сприйняття"
 
-#: src/uc2/uc2const.py:456
+#: src/uc2/uc2const.py:458
 msgid "Relative Colorimetric"
 msgstr "Відносна колориметрична"
 
-#: src/uc2/uc2const.py:457
+#: src/uc2/uc2const.py:459
 msgid "Saturation"
 msgstr "Насиченість"
 
-#: src/uc2/uc2const.py:458
+#: src/uc2/uc2const.py:460
 msgid "Absolute Colorimetric"
 msgstr "Абсолютна колориметрична"
 
@@ -3327,24 +3491,19 @@ msgstr "Вміст файлу успішно вилучено"
 #: src/uc2/formats/pdxf/model.py:267 src/uc2/formats/sk/sk_model.py:50
 #: src/uc2/formats/sk1/model.py:52 src/uc2/formats/sk2/sk2_cids.py:69
 #: src/uc2/formats/sk2/sk2_methods.py:204
-#: src/uc2/formats/sk2/sk2_methods.py:212 src/uc2/formats/sk2/sk2_model.py:247
+#: src/uc2/formats/sk2/sk2_methods.py:212 src/uc2/formats/sk2/sk2_model.py:248
 msgid "Layer"
 msgstr "Шар"
 
 #: src/uc2/formats/pdxf/model.py:303 src/uc2/formats/sk/sk_model.py:51
 #: src/uc2/formats/sk/sk_model.py:241 src/uc2/formats/sk1/model.py:54
-#: src/uc2/formats/sk1/model.py:368 src/uc2/formats/sk2/sk2_model.py:282
+#: src/uc2/formats/sk1/model.py:368 src/uc2/formats/sk2/sk2_model.py:283
 msgid "GuideLayer"
 msgstr "Шар напрямних"
 
-#: src/uc2/formats/pdxf/model.py:327 src/uc2/formats/sk2/sk2_model.py:305
+#: src/uc2/formats/pdxf/model.py:327 src/uc2/formats/sk2/sk2_model.py:306
 msgid "GridLayer"
 msgstr "Шар сітки"
-
-#: src/uc2/formats/sk/sk_model.py:49 src/uc2/formats/sk1/model.py:51
-#: src/uc2/formats/sk2/sk2_cids.py:62
-msgid "Document"
-msgstr "Документ"
 
 #: src/uc2/formats/sk/sk_model.py:49 src/uc2/formats/sk1/model.py:51
 msgid "Layout"
@@ -3479,6 +3638,9 @@ msgstr "Текстовий стовпчик"
 #: src/uc2/formats/sk2/sk2_cids.py:79
 msgid "Bitmap"
 msgstr "Растрове зображення"
+
+#~ msgid "Stroke width:"
+#~ msgstr "Товщина штриха:"
 
 #~ msgid "The file may be corrupted or not supported format."
 #~ msgstr "Файл може бути пошкоджений або формат файлу не підтримується."
