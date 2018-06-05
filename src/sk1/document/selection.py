@@ -224,13 +224,27 @@ class Selection:
                 self.objs.remove(obj)
         self.update()
 
+    def _sort_objs_by_zorder(self):
+        sorted = []
+        page = self.presenter.active_page
+        layers = self.presenter.methods.get_active_layers(page)
+        for layer in layers:
+            for child in layer.childs:
+                if child in self.objs:
+                    sorted.append(child)
+        self.objs = sorted
+
     def add(self, objs):
+        added = False
         for obj in objs:
             if obj in self.objs:
                 if len(self.objs) > 1:
                     self.objs.remove(obj)
             else:
                 self.objs.append(obj)
+                added = True
+        if added:
+            self._sort_objs_by_zorder()
         self.update()
 
     def set(self, objs):
