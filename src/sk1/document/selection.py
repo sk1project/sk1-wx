@@ -117,6 +117,18 @@ class Selection:
         else:
             self.set(result)
 
+    def select_overlap_rect(self, rect, flag=False):
+        result = []
+        layers = self.presenter.get_editable_layers()
+        for layer in layers:
+            for obj in layer.childs:
+                if libgeom.is_bbox_overlap(rect, obj.cache_bbox):
+                    result.append(obj)
+        if flag:
+            self.add(result)
+        else:
+            self.set(result)
+
     def _get_fixed_bbox(self, obj):
         bbox = obj.cache_bbox
         if obj.is_curve and obj.cache_arrows:

@@ -413,6 +413,13 @@ class AppCanvas(Painter):
         rect = normalize_bbox(rect)
         self.presenter.selection.select_by_rect(rect, flag)
 
+    def select_overlap_rect(self, start, end, flag=False):
+        start = self.win_to_doc(start)
+        end = self.win_to_doc(end)
+        rect = start + end
+        rect = normalize_bbox(rect)
+        self.presenter.selection.select_overlap_rect(rect, flag)
+
     # ----- RENDERING -----
     def selection_redraw(self):
         if not self.full_repaint:

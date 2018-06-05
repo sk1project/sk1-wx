@@ -59,6 +59,8 @@ class SelectController(AbstractController):
             change_y = abs(self.end[1] - self.start[1])
             if change_x < 5 and change_y < 5:
                 self.canvas.select_at_point(self.start, add_flag)
+            elif event.is_alt():
+                self.canvas.select_overlap_rect(self.start, self.end, add_flag)
             else:
                 self.canvas.select_by_rect(self.start, self.end, add_flag)
 
