@@ -396,20 +396,15 @@ class FIG_to_SK2_Translator(object):
             val = 1.0 * style_val / thickness or width
         except ZeroDivisionError:
             return dashes
-        if line_style == 1:
-            # dashed
+        if line_style == fig_const.DASH_LINE:
             dashes = [val, val]
-        elif line_style == 2:
-            # dotted
+        elif line_style == fig_const.DOTTED_LINE:
             dashes = [width, val]
-        elif line_style == 3:
-            # dash-dot
+        elif line_style == fig_const.DASH_DOT_LINE:
             dashes = [val, 0.500 * val, width, 0.500 * val]
-        elif line_style == 4:
-            # dash-dot-dot
+        elif line_style == fig_const.DASH_2_DOTS_LINE:
             dashes = [val, 0.450 * val, width, 0.333 * val, width, 0.450 * val]
-        elif line_style == 5:
-            # dash-dot-dot-dot
+        elif line_style == fig_const.DASH_3_DOTS_LINE:
             dashes = [val, 0.400 * val, width, 0.333 * val, width, 0.333 * val,
                       width, 0.400 * val]
         return [round(x, 2) for x in dashes]
