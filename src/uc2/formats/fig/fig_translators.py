@@ -690,13 +690,41 @@ class SK2_to_FIG_Translator(object):
                 pen_color=pen_color,
                 # TODO: implement translate dash
                 # stroke[3] -> line_style, style_val
-                line_style=fig_const.SOLID_LINE,
-                style_val=0.0,
+                line_style=self.get_line_style(obj),
+                style_val=self.get_style_val(obj),
                 cap_style=SK2_TO_FIG_CAP.get(stroke[4], fig_const.CAP_BUTT),
                 join_style=SK2_TO_FIG_JOIN.get(stroke[5], fig_const.JOIN_MITER),
             )
         # TODO: implement translate markers - stroke[9]
         return props
+
+    def get_line_style(self, obj):
+        line_style = fig_const.SOLID_LINE
+        stroke = obj.style[1]
+        if stroke:
+            dashes = stroke[3]
+            len_dashes = len(dashes)
+            if not len_dashes:
+                return fig_const.SOLID_LINE
+            if len_dashes == 2 and dashes[0] == dashes[1]:
+                return fig_const.DASH_LINE
+            elif len_dashes == 2:
+                return fig_const.DOTTED_LINE
+            elif len_dashes == 4:
+                return fig_const.DASH_DOT_LINE
+            elif len_dashes == 6:
+                return fig_const.DASH_2_DOTS_LINE
+            elif len_dashes == 8:
+                return fig_const.DASH_3_DOTS_LINE
+        return line_style
+
+    def get_style_val(self, obj):
+        style_val = 0.0
+        stroke = obj.style[1]
+        if stroke and stroke[3]:
+            dashes = stroke[3]
+            style_val = max(dashes)
+        return style_val
 
     def get_fill(self, obj):
         fill = obj.style[0]
