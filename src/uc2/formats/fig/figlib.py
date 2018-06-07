@@ -32,6 +32,8 @@ def list_chunks(items, size):
 
 
 def octal_escape(char):
+    if char == '\\':
+        return '\\\\'
     code = ord(char)
     return char if 1 < code <= 127 else '\\{:03o}'.format(code)
 
@@ -41,7 +43,6 @@ def un_escape(source):
 
 
 def escape(encoded):
-    encoded = encoded.replace('\\', '\\\\')
     return ''.join(octal_escape(c) for c in encoded.decode('utf-8'))
 
 
