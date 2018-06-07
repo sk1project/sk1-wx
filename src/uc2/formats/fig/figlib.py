@@ -41,6 +41,7 @@ def un_escape(source):
 
 
 def escape(encoded):
+    encoded = encoded.replace('\\', '\\\\')
     return ''.join(octal_escape(c) for c in encoded.decode('utf-8'))
 
 
