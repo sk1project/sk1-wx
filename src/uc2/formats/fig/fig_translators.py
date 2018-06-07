@@ -685,8 +685,12 @@ class SK2_to_FIG_Translator(object):
             clr = self.sk2_doc.cms.get_rgb_color(stroke[2])
             hexcolor = cms.rgb_to_hexcolor(clr[1])
             pen_color = self.color_index(hexcolor)
+            scalable_flag = stroke[8]
+            thickness = stroke[1] * self.thickness
+            if scalable_flag:
+                thickness *= obj.trafo[0]
             props = dict(
-                thickness=stroke[1] * self.thickness,
+                thickness=thickness,
                 pen_color=pen_color,
                 # TODO: implement translate dash
                 # stroke[3] -> line_style, style_val
@@ -723,7 +727,11 @@ class SK2_to_FIG_Translator(object):
         stroke = obj.style[1]
         if stroke and stroke[3]:
             dashes = stroke[3]
-            style_val = max(dashes)
+            scalable_flag = stroke[8]
+            thickness = stroke[1] * self.thickness
+            if scalable_flag:
+                thickness *= obj.trafo[0]
+            style_val = max(dashes) * thickness
         return style_val
 
     def get_fill(self, obj):
