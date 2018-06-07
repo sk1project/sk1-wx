@@ -719,10 +719,19 @@ class SK2_to_FIG_Translator(object):
                 area_fill=int(BLACK_FILL)
             )
         elif fill[1] == sk2const.FILL_PATTERN:
-            # TODO: implement translate FILL_PATTERN
+            pattern_type, pattern, image_style, trafo, transforms = fill[2]
+            area_fill = int(BLACK_FILL)
+            clr = self.sk2_doc.cms.get_rgb_color(image_style[1])
+            hexcolor = cms.rgb_to_hexcolor(clr[1])
+            fill_color = self.color_index(hexcolor)
+            if pattern_type == sk2const.PATTERN_IMG:
+                for idx, sample in PATTERN.items():
+                    if sample == pattern:
+                        area_fill = idx
+                        break
             props = dict(
-                fill_color=fig_const.BLACK_COLOR,
-                area_fill=int(BLACK_FILL)
+                fill_color=fill_color,
+                area_fill=area_fill
             )
         elif fill[1] == sk2const.FILL_GRADIENT:
             # TODO: implement translate FILL_GRADIENT
