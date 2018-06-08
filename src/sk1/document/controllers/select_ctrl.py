@@ -42,15 +42,14 @@ class SelectController(AbstractController):
                     mark = self.selection.is_point_over_marker(dpoint)[0]
                     self.canvas.resize_marker = mark
                     self.canvas.set_temp_mode(modes.RESIZE_MODE)
-                elif event.is_shift():
-                    self.canvas.set_temp_mode(modes.SELECT_MODE)
-                elif self.presenter.methods.is_guide_editable() and \
-                        self.snap.is_over_guide(point)[0]:
-                    self.canvas.set_temp_mode(modes.GUIDE_MODE)
-                elif self.selection.is_point_over(dpoint):
-                    self.canvas.set_temp_mode(modes.MOVE_MODE)
-                elif self.selection.pick_at_point(dpoint, True):
-                    self.canvas.set_temp_mode(modes.MOVE_MODE)
+                elif not event.is_shift():
+                    if self.presenter.methods.is_guide_editable() and \
+                            self.snap.is_over_guide(point)[0]:
+                        self.canvas.set_temp_mode(modes.GUIDE_MODE)
+                    elif self.selection.is_point_over(dpoint):
+                        self.canvas.set_temp_mode(modes.MOVE_MODE)
+                    elif self.selection.pick_at_point(dpoint, True):
+                        self.canvas.set_temp_mode(modes.MOVE_MODE)
 
     def do_action(self, event):
         if self.start and self.end:
