@@ -710,7 +710,7 @@ class SK2_to_FIG_Translator(object):
             len_dashes = len(dashes)
             if not len_dashes:
                 return fig_const.SOLID_LINE
-            if len_dashes == 2 and dashes[0] == dashes[1]:
+            if len_dashes == 2 and dashes[0] >= dashes[1]:
                 return fig_const.DASH_LINE
             elif len_dashes == 2:
                 return fig_const.DOTTED_LINE
