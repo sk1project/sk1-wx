@@ -555,15 +555,10 @@ class SK2_to_FIG_Translator(object):
                 self.translate_group(obj)
             elif obj.is_text:
                 self.translate_text(obj)
-            elif obj.is_primitive:
-                self.translate_primitive(obj)
-            # elif obj.is_layer:
-            #     if obj.properties[0]:
-            #         self.translate_group(obj)
             # elif obj.is_pixmap:
             #     self.translate_pixmap(obj)
-            # else:
-            #     self.translate_group(obj)
+            elif obj.is_primitive:
+                self.translate_primitive(obj)
 
     def translate_text(self, obj):
         obj.update()
@@ -620,32 +615,18 @@ class SK2_to_FIG_Translator(object):
         self.trafo = libgeom.multiply_trafo(trafo1, trafo2)
 
     def translate_group(self, obj):
-        # childs = []
-        # self.current_depth += 1
-        # self.stack.append(childs)
         self.translate_objs(obj.childs)
-        # self.stack.pop()
-        # props = dict(
-        #     childs=childs,
-        #     upperleft_corner_x=0,
-        #     upperleft_corner_y=0,
-        #     lowerright_corner_x=0,
-        #     lowerright_corner_y=0,
-        # )
-        # new_obj = fig_model.FIGCompound(**props)
-        # self.add(new_obj)
-        # self.current_depth += 1
 
     def translate_primitive(self, obj):
         obj.update()
         curve = obj.to_curve()
         if curve.is_group:
             return self.translate_group(curve)
-        # curve.update()
         param = self.get_fill(obj)
         param.update(self.get_stroke(obj))
         trafo = libgeom.multiply_trafo(curve.trafo, self.trafo)
         paths = libgeom.apply_trafo_to_paths(curve.paths, trafo)
+        # TODO: implement support behind flag
         for path in paths:
             if all(map(lambda a: len(a) == 2, path[1])):
                 self.add_polyline(path, **param)
@@ -692,8 +673,6 @@ class SK2_to_FIG_Translator(object):
             props = dict(
                 thickness=thickness,
                 pen_color=pen_color,
-                # TODO: implement translate dash
-                # stroke[3] -> line_style, style_val
                 line_style=self.get_line_style(obj),
                 style_val=self.get_style_val(obj),
                 cap_style=SK2_TO_FIG_CAP.get(stroke[4], fig_const.CAP_BUTT),
