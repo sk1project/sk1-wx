@@ -105,26 +105,18 @@ class Selection:
                 self.markers.append([x - 2 * offset, y - 2 * offset,
                                      x + 2 * offset, y + 2 * offset])
 
-    def select_by_rect(self, rect, flag=False):
+    def select_by_rect(self, rect, add_flag=False, overlap_flag=False):
         result = []
         layers = self.presenter.get_editable_layers()
-        for layer in layers:
-            for obj in layer.childs:
-                if libgeom.is_bbox_in_rect(rect, obj.cache_bbox):
-                    result.append(obj)
-        if flag:
-            self.add(result)
+        if overlap_flag:
+            rule = libgeom.is_bbox_overlap
         else:
-            self.set(result)
-
-    def select_overlap_rect(self, rect, flag=False):
-        result = []
-        layers = self.presenter.get_editable_layers()
+            rule = libgeom.is_bbox_in_rect
         for layer in layers:
             for obj in layer.childs:
-                if libgeom.is_bbox_overlap(rect, obj.cache_bbox):
+                if rule(rect, obj.cache_bbox):
                     result.append(obj)
-        if flag:
+        if add_flag:
             self.add(result)
         else:
             self.set(result)
