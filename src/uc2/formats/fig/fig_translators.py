@@ -688,7 +688,7 @@ class SK2_to_FIG_Translator(object):
             scalable_flag = stroke[8]
             thickness = stroke[1] * self.thickness
             if scalable_flag:
-                thickness *= obj.trafo[0]
+                thickness *= abs(obj.stroke_trafo[0])
             props = dict(
                 thickness=thickness,
                 pen_color=pen_color,
@@ -730,7 +730,7 @@ class SK2_to_FIG_Translator(object):
             scalable_flag = stroke[8]
             thickness = stroke[1] * self.thickness
             if scalable_flag:
-                thickness *= obj.trafo[0]
+                thickness *= abs(obj.stroke_trafo[0])
             style_val = max(dashes) * thickness
         return style_val
 
