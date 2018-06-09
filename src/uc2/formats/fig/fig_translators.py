@@ -159,12 +159,11 @@ class FIG_to_SK2_Translator(object):
         return self.translate_obj(obj.childs, cfg)
 
     def translate_text(self, obj, cfg):
-        trafo = [10.0, 0.0, 0.0, -10.0, obj.x, obj.y]
         trafo_rotate = libgeom.trafo_rotate(obj.angle)
+        base_point = libgeom.apply_trafo_to_point([obj.x, obj.y], self.trafo)
+        base_point[1] -= obj.font_size
+        trafo = [72.0/90.0, 0.0, 0.0, 72.0/90.0] + base_point
         trafo = libgeom.multiply_trafo(trafo_rotate, trafo)
-        trafo = libgeom.multiply_trafo(trafo, self.trafo)
-        trafo[5] -= obj.font_size
-
         text_style = self.get_text_style(obj)
         props = dict(
             point=[0.0, obj.font_size],
@@ -574,15 +573,17 @@ class SK2_to_FIG_Translator(object):
         obj.update()
         font_family, font_face, font_size, alignment = obj.style[2][:4]
 
-        trafo = libgeom.multiply_trafo(obj.trafo, self.trafo)
-        trafo_split = trafolib.trafo_split(obj.trafo)
+        trafo = [90.0/72.0, 0.0, 0.0, 90.0/72.0, 0.0, 0.0]
+        trafo2 = libgeom.multiply_trafo(obj.trafo, trafo)
+        trafo_split = trafolib.trafo_split(trafo2)
+        font_size *= abs(trafo_split['scale_x'])
 
+        trafo = libgeom.multiply_trafo(obj.trafo, self.trafo)
         fill = self.get_fill(obj)
         font_flags = fig_const.PSFONT_TEXT
         if fill['area_fill'] == fig_const.NO_FILL:
             font_flags = font_flags | fig_const.HIDDEN_TEXT
 
-        font_size *= trafo_split['scale_x'] * 1.57
         text = obj.get_text().encode('utf-8')
 
         for idx, string in enumerate(text.splitlines()):
@@ -591,7 +592,7 @@ class SK2_to_FIG_Translator(object):
                 color=fill['fill_color'],
                 font=figlib.font(obj.style[2][0], obj.style[2][1]),
                 font_flags=font_flags,
-                font_size=font_size,
+                font_size=round(font_size, 3),
                 sub_type=SK2_TO_FIG_TEXT_ALIGN[alignment],
                 string=string,
                 x=point[0],
