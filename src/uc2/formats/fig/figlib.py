@@ -116,6 +116,7 @@ def spline_sub_type(sub_type, version):
 
 
 def font_description(font):
+    # FIXME: This is a dirty implementation. requires reimplementation
     font_family, _, font_face = font.partition('-')
     if not font_family or font_family == "Default":
         font_family = 'Times'
@@ -125,3 +126,17 @@ def font_description(font):
         if face == 'Demi':
             font_face[i] = 'Bold'
     return font_family, font_face
+
+
+def font(font_family, font_face):
+    # FIXME: This is a dirty implementation. requires reimplementation
+    font_face = [face for face in font_face.split(' ') if face != 'Regular']
+    if font_face:
+        font_name = '{}-{}'.format(font_family, ''.join(font_face))
+    else:
+        font_name = font_family
+    for font_idx, base_fn in fig_const.PS_FONT.items():
+        base_fn = base_fn.replace('Demi', 'Bold')
+        if font_name == base_fn:
+            return font_idx
+    return fig_const.DEF_PS_FONT

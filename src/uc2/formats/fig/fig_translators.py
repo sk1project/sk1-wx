@@ -573,7 +573,6 @@ class SK2_to_FIG_Translator(object):
     def translate_text(self, obj):
         obj.update()
         font_family, font_face, font_size, alignment = obj.style[2][:4]
-        font = fig_const.DEF_PS_FONT
 
         trafo = libgeom.multiply_trafo(obj.trafo, self.trafo)
         trafo_split = trafolib.trafo_split(obj.trafo)
@@ -585,11 +584,12 @@ class SK2_to_FIG_Translator(object):
 
         font_size *= trafo_split['scale_x'] * 1.57
         text = obj.get_text().encode('utf-8')
+
         for idx, string in enumerate(text.splitlines()):
             point = libgeom.apply_trafo_to_point([0.0, -idx * font_size], trafo)
             props = dict(
                 color=fill['fill_color'],
-                font=font,
+                font=figlib.font(obj.style[2][0], obj.style[2][1]),
                 font_flags=font_flags,
                 font_size=font_size,
                 sub_type=SK2_TO_FIG_TEXT_ALIGN[alignment],
