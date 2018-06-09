@@ -164,16 +164,20 @@ class FIG_to_SK2_Translator(object):
         trafo = libgeom.multiply_trafo(trafo_rotate, trafo)
         trafo = libgeom.multiply_trafo(trafo, self.trafo)
         trafo[5] -= obj.font_size
-        hidden = obj.font_flags & fig_const.HIDDEN_TEXT
-        fill = [] if hidden else self.get_fill(None, obj.color, fig_const.BLACK_FILL)
+
         text_style = self.get_text_style(obj)
         props = dict(
             point=[0.0, obj.font_size],
-            style=[fill, [], text_style, []],
+            style=text_style,
             text=obj.string,
             trafo=trafo
         )
-        return sk2_model.Text(cfg, **props)
+        new_obj = sk2_model.Text(cfg, **props)
+
+        txt_length = len(obj.string)
+        tags = []
+        new_obj.markup = [[tags, (0, txt_length)]]
+        return new_obj
 
     def translate_spline(self, obj, cfg):
         closed = obj.sub_type & 1
@@ -314,13 +318,19 @@ class FIG_to_SK2_Translator(object):
         return new_obj
 
     def get_text_style(self, obj):
-        font = self.fig_mtds.get_font(obj.font, obj.font_flags) or 'Times'
-        font_family, _, font_face = font.partition('-')
-        font_face = font_face or "Regular"
+        if obj.font_flags & fig_const.HIDDEN_TEXT:
+            fill = []
+        else:
+            fill = self.get_fill(None, obj.color, fig_const.BLACK_FILL)
+
+        font = self.fig_mtds.get_font(obj.font, obj.font_flags)
+        font_family, font_face = figlib.font_description(font)
+        font_face = ' '.join(font_face)
         font_size = obj.font_size
         alignment = sk2const.TEXT_ALIGN_LEFT
         alignment = FIG_TO_SK2_TEXT_ALIGN.get(obj.sub_type, alignment)
-        return [font_family, font_face, font_size, alignment, [], True]
+        text_style = [font_family, font_face, font_size, alignment, [], True]
+        return [fill, [], text_style, []]
 
     def get_style(self, obj):
         fill = self.get_fill(obj.pen_color, obj.fill_color, obj.area_fill)

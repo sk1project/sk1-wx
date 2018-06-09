@@ -113,3 +113,15 @@ def spline_sub_type(sub_type, version):
         elif sub_type in t_closed:
             sub_type = fig_const.T_CLOSED_XSPLINE
     return sub_type
+
+
+def font_description(font):
+    font_family, _, font_face = font.partition('-')
+    if not font_family or font_family == "Default":
+        font_family = 'Times'
+    font_face = font_face or 'Regular'
+    font_face = re.findall('[A-Z][^A-Z]*', font_face)
+    for i, face in enumerate(font_face):
+        if face == 'Demi':
+            font_face[i] = 'Bold'
+    return font_family, font_face
