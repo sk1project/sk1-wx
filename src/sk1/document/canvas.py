@@ -406,12 +406,12 @@ class AppCanvas(Painter):
         point = self.win_to_doc(point)
         return self.presenter.selection.pick_at_point(point)
 
-    def select_by_rect(self, start, end, flag=False):
+    def select_by_rect(self, start, end, add_flag=False, overlap_flag=False):
         start = self.win_to_doc(start)
         end = self.win_to_doc(end)
         rect = start + end
         rect = normalize_bbox(rect)
-        self.presenter.selection.select_by_rect(rect, flag)
+        self.presenter.selection.select_by_rect(rect, add_flag, overlap_flag)
 
     # ----- RENDERING -----
     def selection_redraw(self):

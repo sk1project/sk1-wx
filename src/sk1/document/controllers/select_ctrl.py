@@ -42,25 +42,25 @@ class SelectController(AbstractController):
                     mark = self.selection.is_point_over_marker(dpoint)[0]
                     self.canvas.resize_marker = mark
                     self.canvas.set_temp_mode(modes.RESIZE_MODE)
-                elif self.presenter.methods.is_guide_editable() and \
-                        self.snap.is_over_guide(point)[0]:
-                    self.canvas.set_temp_mode(modes.GUIDE_MODE)
-                elif self.selection.is_point_over(dpoint):
-                    self.canvas.set_temp_mode(modes.MOVE_MODE)
-                elif self.selection.pick_at_point(dpoint, True):
-                    self.canvas.set_temp_mode(modes.MOVE_MODE)
+                elif not event.is_shift():
+                    if self.presenter.methods.is_guide_editable() and \
+                            self.snap.is_over_guide(point)[0]:
+                        self.canvas.set_temp_mode(modes.GUIDE_MODE)
+                    elif self.selection.is_point_over(dpoint):
+                        self.canvas.set_temp_mode(modes.MOVE_MODE)
+                    elif self.selection.pick_at_point(dpoint, True):
+                        self.canvas.set_temp_mode(modes.MOVE_MODE)
 
     def do_action(self, event):
         if self.start and self.end:
-            add_flag = False
-            if event.is_shift():
-                add_flag = True
+            add_flag = event.is_shift()
             change_x = abs(self.end[0] - self.start[0])
             change_y = abs(self.end[1] - self.start[1])
             if change_x < 5 and change_y < 5:
                 self.canvas.select_at_point(self.start, add_flag)
             else:
-                self.canvas.select_by_rect(self.start, self.end, add_flag)
+                self.canvas.select_by_rect(self.start, self.end, add_flag,
+                                           event.is_alt() or event.is_ctrl())
 
             dpoint = self.canvas.win_to_doc(self.start)
             if self.selection.is_point_over(dpoint) or \

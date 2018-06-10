@@ -105,14 +105,18 @@ class Selection:
                 self.markers.append([x - 2 * offset, y - 2 * offset,
                                      x + 2 * offset, y + 2 * offset])
 
-    def select_by_rect(self, rect, flag=False):
+    def select_by_rect(self, rect, add_flag=False, overlap_flag=False):
         result = []
         layers = self.presenter.get_editable_layers()
+        if overlap_flag:
+            rule = libgeom.is_bbox_overlap
+        else:
+            rule = libgeom.is_bbox_in_rect
         for layer in layers:
             for obj in layer.childs:
-                if libgeom.is_bbox_in_rect(rect, obj.cache_bbox):
+                if rule(rect, obj.cache_bbox):
                     result.append(obj)
-        if flag:
+        if add_flag:
             self.add(result)
         else:
             self.set(result)
@@ -165,7 +169,7 @@ class Selection:
         if not result:
             result = self._select_at_point(point, True)
         if add_flag:
-            self.add(result)
+            self.xor(result)
         else:
             self.set(result)
 
@@ -237,9 +241,18 @@ class Selection:
     def add(self, objs):
         added = False
         for obj in objs:
-            if obj in self.objs:
-                if len(self.objs) > 1:
-                    self.objs.remove(obj)
+            if obj not in self.objs:
+                self.objs.append(obj)
+                added = True
+        if added:
+            self._sort_objs_by_zorder()
+        self.update()
+
+    def xor(self, objs):
+        added = False
+        for obj in objs:
+            if self.objs and obj in self.objs:
+                self.objs.remove(obj)
             else:
                 self.objs.append(obj)
                 added = True
