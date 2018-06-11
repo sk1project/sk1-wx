@@ -537,6 +537,16 @@ class SK2_to_FIG_Translator(object):
     trafo = None
 
     def add(self, obj):
+        last_obj = self.stack[-1][-1] if self.stack[-1] else None
+        if last_obj and last_obj.cid != obj.cid:
+            self.stack.pop()
+            c = fig_model.FIGCompound(childs=[])
+            self.stack[-1].append(c)
+            self.stack.append(c.childs)
+        elif last_obj is None:
+            c = fig_model.FIGCompound(childs=[])
+            self.stack[-1].append(c)
+            self.stack.append(c.childs)
         self.stack[-1].append(obj)
 
     def translate(self, sk2_doc, fig_doc):
@@ -558,7 +568,13 @@ class SK2_to_FIG_Translator(object):
             if self.sk2_mtds.is_layer_visible(layer):
                 self.translate_objs(layer.childs)
                 self.current_depth += 1
+        self.fig_mt.childs = self.simplify_childs(self.fig_mt.childs)
         self.translate_pallet()
+
+    def simplify_childs(self, childs):
+        if len(childs) == 1 and childs[0].cid == fig_model.OBJ_COMPOUND:
+            childs = childs[0].childs
+        return childs
 
     def translate_objs(self, objs):
         for obj in objs:
