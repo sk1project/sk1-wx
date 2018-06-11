@@ -43,7 +43,7 @@ class FIGMethods(object):
     def get_doc_units(self):
         return self.model.units
 
-    def set_doc_unit(self, units):
+    def set_doc_units(self, units):
         self.model.units = units
 
     def get_doc_metainfo(self):
