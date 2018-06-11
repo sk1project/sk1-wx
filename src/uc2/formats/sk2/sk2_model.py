@@ -859,6 +859,27 @@ class Curve(PrimitiveObject):
     def to_curve(self):
         return self
 
+    def arrows_to_curve(self):
+        if not self.cache_arrows or not self.style[1]:
+            return None
+        curve = None
+        arrow_paths = []
+        if self.cache_arrows:
+            for pair in self.cache_arrows:
+                for item in pair:
+                    if item:
+                        arrow_paths += libgeom.get_path_from_cpath(item)
+        arrow_style = None
+        if arrow_paths and self.style[1]:
+            color = self.style[1][2]
+            arrow_fill_style = [sk2const.FILL_NONZERO,
+                                sk2const.FILL_SOLID, color]
+            arrow_style = [arrow_fill_style, [], [], []]
+        if arrow_paths:
+            curve = Curve(self.config, self.parent,
+                          paths=arrow_paths, style=arrow_style)
+        return curve
+
     def update_arrows(self):
         self.cache_arrows = []
         if self.is_curve and self.style[1]:
