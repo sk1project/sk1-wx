@@ -1240,6 +1240,9 @@ class SK2_to_SVG_Translator(object):
         pth.attrs['style'] = style
         pth.attrs['d'] = svglib.translate_paths_to_d(paths)
         self.append_obj(dest_parent, pth)
+        arrows = curve.arrows_to_curve()
+        if arrows:
+            self.translate_primitive(dest_parent, arrows)
 
     def translate_pixmap(self, dest_parent, source_obj):
         surface = source_obj.handler.get_surface(self.sk2_doc.cms)
