@@ -31,6 +31,8 @@ from .fig_const import (BLACK_COLOR, WHITE_COLOR, BLACK_FILL,
 
 LOG = logging.getLogger(__name__)
 
+EPSILON_SHEAR = 0.0001
+
 SK2_UNITS = {
     fig_const.METRIC: uc2const.UNIT_MM,
     fig_const.INCHES: uc2const.UNIT_IN
@@ -566,8 +568,40 @@ class SK2_to_FIG_Translator(object):
                 self.translate_text(obj)
             # elif obj.is_pixmap:
             #     self.translate_pixmap(obj)
+            elif obj.is_circle:
+                self.translate_circle(obj)
             elif obj.is_primitive:
                 self.translate_primitive(obj)
+
+    def translate_circle(self, obj):
+        # obj.update()
+        trafo = libgeom.multiply_trafo(obj.trafo, self.trafo)
+        trafo_split = trafolib.trafo_split(trafo)
+        is_shear = abs(trafo_split['shear']) > EPSILON_SHEAR
+        if is_shear or obj.angle1 != obj.angle2:
+            return self.translate_primitive(obj)
+
+        center = libgeom.apply_trafo_to_point([0.5, 0.5], trafo)
+        end = libgeom.apply_trafo_to_point([1.0, 1.0], trafo)
+        props = dict(
+            sub_type=fig_const.T_ELLIPSE_BY_RAD,
+            angle=trafo_split['rotate'] - math.pi,
+            center_x=center[0],
+            center_y=center[1],
+            radius_x=trafo_split['scale_x'] / 2.0,
+            radius_y=trafo_split['scale_y'] / 2.0,
+            start_x=center[0],
+            start_y=center[1],
+            end_x=end[0],
+            end_y=end[1],
+            depth=self.current_depth,
+        )
+
+        props.update(self.get_fill(obj))
+        props.update(self.get_stroke(obj))
+        new_obj = fig_model.FIGEllipse(**props)
+
+        self.add(new_obj)
 
     def translate_text(self, obj):
         obj.update()
@@ -600,8 +634,8 @@ class SK2_to_FIG_Translator(object):
                 angle=trafo_split['rotate'] - math.pi,
                 depth=self.current_depth,
             )
-            new_obg = fig_model.FIGText(**props)
-            self.add(new_obg)
+            new_obj = fig_model.FIGText(**props)
+            self.add(new_obj)
 
     def translate_metainfo(self):
         fields = ["Author", "License", "Keywords", "Notes"]
@@ -643,7 +677,7 @@ class SK2_to_FIG_Translator(object):
                 self.add_polyline(path, **param)
             else:
                 # TODO: implement translate obj as spline
-                path = libgeom.flat_path(path)
+                path = libgeom.flat_path(path, tlr=0.05)
                 self.add_polyline(path, **param)
 
     def add_polyline(self, path, **kwargs):
