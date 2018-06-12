@@ -538,12 +538,10 @@ class SK2_to_FIG_Translator(object):
 
     def add(self, obj):
         last_obj = self.stack[-1][-1] if self.stack[-1] else None
-        if last_obj and last_obj.cid != obj.cid:
+        if last_obj and last_obj.cid > obj.cid:
             self.stack.pop()
-            c = fig_model.FIGCompound(childs=[])
-            self.stack[-1].append(c)
-            self.stack.append(c.childs)
-        elif last_obj is None:
+            last_obj = None
+        if last_obj is None:
             c = fig_model.FIGCompound(childs=[])
             self.stack[-1].append(c)
             self.stack.append(c.childs)
