@@ -119,6 +119,7 @@ class FIG_to_SK2_Translator(object):
         layer = self.sk2_mtds.get_layer(self.page)
         for depth in sorted(self.layer, reverse=True):
             objects = self.layer[depth]
+            objects = sorted(objects, key=lambda a: a.cid if a.cid < 6 else -1)
             self.sk2_mtds.append_objects(objects, layer)
 
     def translate_trafo(self):
