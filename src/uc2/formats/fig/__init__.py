@@ -45,6 +45,10 @@ def fig_saver(sk2_doc, filename=None, fileptr=None,
         translate = False
     if translate:
         fig_doc = FIG_Presenter(sk2_doc.appdata, cnf)
+        doc_file = filename or fileptr and fileptr.name
+        fig_doc.doc_file = doc_file
+        name = os.path.basename(doc_file)
+        fig_doc.doc_id = os.path.splitext(name)[0]
         fig_doc.translate_from_sk2(sk2_doc)
         fig_doc.save(filename, fileptr)
         fig_doc.close()

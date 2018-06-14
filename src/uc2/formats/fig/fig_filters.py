@@ -16,8 +16,10 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
+import os
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 from . import figlib
+from uc2.utils import fsutils
 
 RX_MAGIC = r'^#FIG (?P<version>[0-9].[0-9])(?P<comment>.*$)'
 
@@ -73,7 +75,18 @@ class FIGSaver(AbstractSaver):
     name = 'FIGSaver'
 
     def do_save(self):
+        doc_dir = os.path.dirname(self.presenter.doc_file)
+        for filename, res in self.presenter.resources.items():
+            self.save_resource(res, os.path.join(doc_dir, filename))
         self.model.save(self)
+
+    def save_resource(self, res, filename):
+        try:
+            with fsutils.get_fileptr(filename, writable=True) as fileptr:
+                fileptr.write(res)
+                fileptr.close()
+        except Exception:
+            pass
 
     def write(self, data):
         AbstractSaver.write(self, figlib.escape(data))

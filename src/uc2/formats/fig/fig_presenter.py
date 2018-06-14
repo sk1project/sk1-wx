@@ -45,6 +45,7 @@ class FIG_Presenter(TextModelPresenter):
         self.loader = FIGLoader()
         self.saver = FIGSaver()
         self.methods = FIGMethods(self)
+        self.resources = {}
         if filepath is None:
             self.new()
         else:

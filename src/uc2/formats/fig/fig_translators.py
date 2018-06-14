@@ -23,7 +23,7 @@ from copy import deepcopy
 
 from uc2 import uc2const, sk2const, cms, libgeom, libimg
 from uc2.formats.sk2 import sk2_model
-from . import fig_const, fig_model, figlib, trafolib
+from . import fig_const, fig_model, figlib, trafolib, crenderer
 from .fig_colors import color_mix, FIG_COLORS
 from .fig_patterns import PATTERN
 from .fig_const import (BLACK_COLOR, WHITE_COLOR, BLACK_FILL,
@@ -581,12 +581,32 @@ class SK2_to_FIG_Translator(object):
                 self.translate_group(obj)
             elif obj.is_text:
                 self.translate_text(obj)
-            # elif obj.is_pixmap:
-            #     self.translate_pixmap(obj)
+            elif obj.is_pixmap:
+                self.translate_pixmap(obj)
             elif obj.is_circle:
                 self.translate_circle(obj)
             elif obj.is_primitive:
                 self.translate_primitive(obj)
+
+    def translate_pixmap(self, obj):
+        obj.update()
+        idx = len(self.fig_doc.resources)
+
+        filename = '{}-{}.png'.format(self.fig_doc.doc_id, idx)
+        image_stream = crenderer.render([obj], self.sk2_doc.cms)
+        self.fig_doc.resources[filename] = image_stream.getvalue()
+        x0, y0, x1, y1 = obj.cache_bbox
+        points = [[x0, y1], [x1, y1], [x1, y0], [x0, y0], [x0, y1]]
+        points = libgeom.apply_trafo_to_points(points, self.trafo)
+
+        props = dict(
+            sub_type=fig_const.T_PIC_BOX,
+            childs=[fig_model.FIGPicture(file=filename)],
+            npoints=len(points),
+            points=points,
+            depth=self.current_depth,
+        )
+        self.add(fig_model.FIGPolyline(**props))
 
     def translate_circle(self, obj):
         # obj.update()
