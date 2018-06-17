@@ -87,9 +87,8 @@ class MdObject(TextModelObject):
         return self.is_leaf(), MAPPING.get(self.name, self.name), ''
 
     def write(self, fileptr):
-        if isinstance(self.childs, list):
-            for item in self.childs:
-                item.write(fileptr)
+        for item in self.childs:
+            item.write(fileptr)
 
 
 class MdGroup(MdObject):
