@@ -63,10 +63,10 @@ python setup-sk1.py install
 
 But this way is not recommended. The most preferred option is a package 
 installation (deb or rpm). You can create package using command:
-````
+```
 python setup-sk1.py bdist_deb (for Ubuntu|Mint|Debian etc.)
 python setup-sk1.py bdist_rpm (for Fedora|OpenSuse|Mageia etc.)
-````
+```
 By installing the package you have full control over all the installed files 
 and can easily remove them from the system (it's important for application
 preview).
@@ -79,20 +79,20 @@ and python based dependencies should be for 2.x, but not 3.x
 For successful build either distutils or deb|rpm package you need installing
 some development packages. We describe dev-packages for Ubuntu|Debian, but for
 other distros they have similar names. So, you need:
-````
+```
 libcairo2-dev
 liblcms2-dev
 libmagickwand-dev
 libpango1.0-dev
 python-dev
 python-cairo-dev
-````
+```
 
 To run application you need installing also:
-````
+```
 python-wxgtk2.8 or python-wxgtk3.0 (for sK1 only)
 python-pil 
 python-reportlab
 python-cairo
 python-cups
-````
+```
