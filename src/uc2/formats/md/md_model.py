@@ -46,6 +46,7 @@ mdLINE = 'LINE'
 mdHB = 'HTML'
 mdCODE = '```'
 
+# SWord specific
 MAPPING = {
     mdH1: 'Header H1',
     mdH2: 'Header H2',
