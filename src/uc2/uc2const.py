@@ -110,6 +110,7 @@ ICM = 601
 
 XML = 'xml_'
 LOG = 'log'
+MD = 'md'
 
 FORMAT_DESCRIPTION = {
     ALL_FORMATS: _("All supported formats"),
@@ -178,6 +179,7 @@ FORMAT_DESCRIPTION = {
 
     XML: _("XML - eXtensible Markup Language files"),
     LOG: _("LOG - Log files"),
+    MD: _("MD - Markdown markup files"),
 }
 
 FORMAT_NAMES = {
@@ -246,18 +248,19 @@ FORMAT_NAMES = {
     ICM: "ICM",
 
     XML: "XML",
-    LOG: "LOG"
+    LOG: "LOG",
+    MD: "MD",
 }
 
 MODEL_LOADERS = [SK2, SVG, WMF, PLT, SK1, SK, CDR, CDT]
 BITMAP_LOADERS = [PNG, JPG, PSD, XCF, JP2, TIF, GIF, BMP, PCX, PPM, XBM, XPM]
 PALETTE_LOADERS = [SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL, ASE, ACO, JCW]
-EXPERIMENTAL_LOADERS = [RIFF, CDRZ, XML, CGM, ]
+EXPERIMENTAL_LOADERS = [MD, RIFF, CDRZ, XML, CGM, ]
 
 MODEL_SAVERS = [SK2, SVG, PLT, PDF, SK1, SK, ]
 BITMAP_SAVERS = [PNG, ]
 PALETTE_SAVERS = [SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL, ASE, ACO, JCW]
-EXPERIMENTAL_SAVERS = [RIFF, CDR, XML, CGM, WMF, ]
+EXPERIMENTAL_SAVERS = [MD, RIFF, CDR, XML, CGM, WMF, ]
 
 PATTERN_FORMATS = [EPS, PNG, JPG, JP2, TIF, GIF, BMP, PCX, PPM, XBM, XPM]
 
@@ -291,6 +294,7 @@ FORMAT_EXTENSION = {
 
     XML: ('xml', 'svg', 'sla',),
     LOG: ('log',),
+    MD: ('md',),
 }
 
 IMAGE_FORMATS = [JPG, TIF, BMP, PCX, GIF, PNG, PPM, XBM, XPM, ]
