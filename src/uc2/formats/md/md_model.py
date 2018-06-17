@@ -31,8 +31,10 @@ mdH5 = '##### '
 mdH6 = '###### '
 HEADERS = (mdH1, mdH2, mdH3, mdH4, mdH5, mdH6)
 mdHRULE = '---'
+mdIMAGE = '!['
 
 mdUL = 'UL'
+mdOL = 'OL'
 mdLI = '* '
 
 mdQB = 'QUOTE'
@@ -52,6 +54,7 @@ MAPPING = {
     mdH5: 'Header H5',
     mdH6: 'Header H6',
     mdHRULE: 'Horizontal rule',
+    mdOL: 'Ordered list',
     mdUL: 'Unordered list',
     mdLI: 'List item',
     mdQB: 'Quote block',
@@ -60,6 +63,7 @@ MAPPING = {
     mdLINE: 'Text line',
     mdHB: 'HTML block',
     mdCODE: 'Code block',
+    mdIMAGE: 'Image',
 }
 
 
@@ -165,6 +169,16 @@ class MdLoader(AbstractLoader):
             elif self.check_header(line):
                 name = line.split(' ')[0] + ' '
                 self.add_line(None, name, line)
+            # Image
+            elif line.startswith(mdIMAGE) and line.strip().endswith(')'):
+                self.add_line(None, mdIMAGE, line)
+            # Ordered list
+            elif line.startswith('1. '):
+                self.last = None
+                self.add_line(mdOL, mdLI, line)
+            elif self.last and self.last.name == mdOL and \
+                    line.startswith('%d. ' % (len(self.last.childs) + 1)):
+                self.add_line(mdOL, mdLI, line)
             # Unordered list items
             elif line.startswith(mdLI):
                 self.add_line(mdUL, mdLI, line)
