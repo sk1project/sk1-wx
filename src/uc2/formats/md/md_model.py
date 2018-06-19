@@ -163,7 +163,9 @@ class MdLoader(AbstractLoader):
             elif not line.strip():
                 self.add_line(None, mdSPACE, line)
             # Horizontal rule
-            elif line.startswith(mdHRULE):
+            elif line.startswith(mdHRULE) \
+                    or line.startswith('***') \
+                    or line.startswith('___'):
                 self.add_line(None, mdHRULE, line)
             # Headers
             elif self.check_header(line):
@@ -180,7 +182,8 @@ class MdLoader(AbstractLoader):
                     line.startswith('%d. ' % (len(self.last.childs) + 1)):
                 self.add_line(mdOL, mdLI, line)
             # Unordered list items
-            elif line.startswith(mdLI):
+            elif line.startswith(mdLI) or \
+                    line.startswith('+ ') or line.startswith('- '):
                 self.add_line(mdUL, mdLI, line)
             # Quote
             elif line.startswith(mdQL):
