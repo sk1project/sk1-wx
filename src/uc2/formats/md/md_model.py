@@ -132,7 +132,8 @@ class MdLoader(AbstractLoader):
         return False
 
     def rotate_last(self, group=None):
-        if self.last.name == mdTABLE and '---' not in self.last.childs[1].text:
+        if self.last and self.last.name == mdTABLE and \
+                '---' not in self.last.childs[1].text:
             self.last.name = mdPARA
         self.last = group
 
