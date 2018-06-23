@@ -132,9 +132,10 @@ class MdLoader(AbstractLoader):
         return False
 
     def rotate_last(self, group=None):
-        if self.last and self.last.name == mdTABLE and \
-                '---' not in self.last.childs[1].text:
-            self.last.name = mdPARA
+        if self.last and self.last.name == mdTABLE:
+            if len(self.last.childs) < 3 or \
+                    '---' not in self.last.childs[1].text:
+                self.last.name = mdPARA
         self.last = group
 
     def add_line(self, group_name, name, line):
