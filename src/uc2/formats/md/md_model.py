@@ -170,6 +170,9 @@ class MdLoader(AbstractLoader):
             # Empty line
             elif not line.strip():
                 self.add_line(None, mdSPACE, line)
+            # Table
+            elif '|' in line:
+                self.add_line(mdTABLE, mdLINE, line)
             # Horizontal rule
             elif line.startswith(mdHRULE) \
                     or line.startswith('***') \
@@ -199,9 +202,6 @@ class MdLoader(AbstractLoader):
             # HTML block
             elif line.strip().startswith('<') and line.strip().endswith('>'):
                 self.add_line(mdHB, mdLINE, line)
-            # Table
-            elif '|' in line:
-                self.add_line(mdTABLE, mdLINE, line)
             # Paragraph
             else:
                 self.add_line(mdPARA, mdLINE, line)
