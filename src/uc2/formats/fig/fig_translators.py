@@ -18,7 +18,7 @@
 import os
 import math
 import logging
-from base64 import b64decode, b64encode
+from base64 import b64decode, b64encode, urlsafe_b64encode
 from copy import deepcopy
 
 from uc2 import uc2const, sk2const, cms, libgeom, libimg
@@ -590,9 +590,9 @@ class SK2_to_FIG_Translator(object):
 
     def translate_pixmap(self, obj):
         obj.update()
+        doc_id = urlsafe_b64encode(self.fig_doc.doc_id)
         idx = len(self.fig_doc.resources)
-
-        filename = '{}-{}.png'.format(self.fig_doc.doc_id, idx)
+        filename = '{}-{}.png'.format(doc_id, idx)
         image_stream = crenderer.render([obj], self.sk2_doc.cms)
         self.fig_doc.resources[filename] = image_stream.getvalue()
         x0, y0, x1, y1 = obj.cache_bbox
