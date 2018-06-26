@@ -23,7 +23,7 @@ from copy import deepcopy
 
 from PIL import Image
 
-from uc2 import uc2const, libgeom, libpango, libimg, cms, sk2const
+from uc2 import uc2const, libgeom, libpango, cms, sk2const
 from uc2.formats.sk2 import sk2_model
 from uc2.formats.svg import svg_const, svglib
 from uc2.formats.svg.svglib import get_svg_trafo, check_svg_attr, \
@@ -158,10 +158,10 @@ class SVG_to_SK2_Translator(object):
         return libgeom.distance(*pts)
 
     def get_viewbox(self, svbox):
-        vbox = []
+        items = []
         for item in svbox.split(' '):
-            vbox.append(self.recalc_size(item))
-        return vbox
+            items += item.split(',')
+        return [self.recalc_size(item) for item in items]
 
     def parse_def(self, svg_obj):
         if 'color' in svg_obj.attrs:
