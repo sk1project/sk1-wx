@@ -47,3 +47,7 @@ def get_transformed_path(obj):
         obj.update()
     return None if obj.cache_cpath is None \
         else libcairo.get_path_from_cpath(obj.cache_cpath)
+
+
+def get_path_from_cpath(cpath):
+    return libcairo.get_path_from_cpath(cpath)

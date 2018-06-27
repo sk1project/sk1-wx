@@ -105,17 +105,16 @@ class Selection:
                 self.markers.append([x - 2 * offset, y - 2 * offset,
                                      x + 2 * offset, y + 2 * offset])
 
-    def select_by_rect(self, rect, flag=False):
+    def select_by_rect(self, rect, add_flag=False, overlap_flag=False):
         result = []
         layers = self.presenter.get_editable_layers()
+        rule = libgeom.is_bbox_overlap if overlap_flag \
+            else libgeom.is_bbox_in_rect
         for layer in layers:
             for obj in layer.childs:
-                if libgeom.is_bbox_in_rect(rect, obj.cache_bbox):
+                if rule(rect, obj.cache_bbox):
                     result.append(obj)
-        if flag:
-            self.add(result)
-        else:
-            self.set(result)
+        self.add(result) if add_flag else self.set(result)
 
     def _get_fixed_bbox(self, obj):
         bbox = obj.cache_bbox
@@ -165,7 +164,7 @@ class Selection:
         if not result:
             result = self._select_at_point(point, True)
         if add_flag:
-            self.add(result)
+            self.add(result, xor=True)
         else:
             self.set(result)
 
@@ -225,24 +224,23 @@ class Selection:
         self.update()
 
     def _sort_objs_by_zorder(self):
-        sorted = []
+        sorted_objs = []
         page = self.presenter.active_page
         layers = self.presenter.methods.get_active_layers(page)
         for layer in layers:
             for child in layer.childs:
                 if child in self.objs:
-                    sorted.append(child)
-        self.objs = sorted
+                    sorted_objs.append(child)
+        self.objs = sorted_objs
 
-    def add(self, objs):
+    def add(self, objs, xor=False):
         added = False
         for obj in objs:
-            if obj in self.objs:
-                if len(self.objs) > 1:
-                    self.objs.remove(obj)
-            else:
+            if obj not in self.objs:
                 self.objs.append(obj)
                 added = True
+            elif xor:
+                self.objs.remove(obj)
         if added:
             self._sort_objs_by_zorder()
         self.update()
