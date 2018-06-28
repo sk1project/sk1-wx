@@ -245,7 +245,7 @@ class UCApplication(object):
                 events.emit(events.MESSAGES, msgconst.ERROR, msg)
 
                 msg = 'Translation is interrupted'
-                LOG.error('%s %s', msg, e)
+                LOG.error('%s %s', msg, e, exc_info=True)
                 events.emit(events.MESSAGES, msgconst.STOP, msg)
         else:
             msg = 'Error creating model for "%s"' % files[0]
