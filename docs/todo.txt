@@ -1,5 +1,6 @@
 
 ===INFRASTRUCTURE=========
+Vagrant/Docker build (BuildBox)
 Добавить Debian Sid
 Сборки для Gentoo, Slackware
 WiX installer for MSW
@@ -10,7 +11,6 @@ WiX installer for MSW
 
 ===UI===============
 Переработать виджет палитры (скроллы, бордер)
-gevent для eventloops (?)
 
 ===UC2==========
 UI для UC2 (?)
@@ -25,6 +25,7 @@ CGM import/export (можно ли подмерджить UC1?)
 PLT export wrong
 
 ===REFACTORING==========
+Toolbar
 
 ===CANVAS==========
 Полное тестирование
@@ -56,8 +57,7 @@ PLT export wrong
 13. Цветовой профиль не является свойством документа и на уровне документа
 никак не меняется. В настройках самой программы профили называются
 Built-in CMYK/RGB/Grayscale profile. Офигенно говорящее название.
-14. Софтпруф включается только через общие настройки программы (!),
-а не через меню. Даже в гимпе это уже исправлено.
+
 
 
 Formula to determine brightness of RGB color
