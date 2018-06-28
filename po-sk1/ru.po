@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-06-29 00:28+0300\n"
-"PO-Revision-Date: 2018-06-29 00:28+0300\n"
+"PO-Revision-Date: 2018-06-29 00:44+0300\n"
 "Last-Translator: Igor Novikov <sk1.project.org@gmail.com>\n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -456,15 +456,15 @@ msgstr "Файл"
 
 #: src/sk1/dialogs/docinfodlg.py:81
 msgid "Name and location:"
-msgstr ""
+msgstr "Имя и локация:"
 
 #: src/sk1/dialogs/docinfodlg.py:88
 msgid "File size:"
-msgstr ""
+msgstr "Размер файла:"
 
 #: src/sk1/dialogs/docinfodlg.py:89
 msgid "Modified:"
-msgstr ""
+msgstr "Изменено:"
 
 #: src/sk1/dialogs/docinfodlg.py:100 src/uc2/formats/sk/sk_model.py:49
 #: src/uc2/formats/sk1/model.py:51 src/uc2/formats/sk2/sk2_cids.py:62
@@ -477,7 +477,7 @@ msgstr "Страницы:"
 
 #: src/sk1/dialogs/docinfodlg.py:102
 msgid "Layers:"
-msgstr ""
+msgstr "Слои:"
 
 #: src/sk1/dialogs/docinfodlg.py:103
 #: src/sk1/printing/propsdlg/cupspropsdlg.py:112
@@ -487,132 +487,132 @@ msgstr "Размер:"
 
 #: src/sk1/dialogs/docinfodlg.py:104
 msgid "Page orientation:"
-msgstr ""
+msgstr "Ориентация страницы:"
 
 #: src/sk1/dialogs/docinfodlg.py:128
 #, python-format
 msgid "%i, opened %i, closed %i"
-msgstr ""
+msgstr "%i, открытых %i, замкнутых %i"
 
 #: src/sk1/dialogs/docinfodlg.py:135
 msgid "Graphic Objects"
-msgstr ""
+msgstr "Графические объекты"
 
 #: src/sk1/dialogs/docinfodlg.py:136
 msgid "Number of objects:"
-msgstr ""
+msgstr "Число объектов:"
 
 #: src/sk1/dialogs/docinfodlg.py:137
 msgid "Number of points:"
-msgstr ""
+msgstr "Число точек:"
 
 #: src/sk1/dialogs/docinfodlg.py:138
 msgid "Max. # of curve points:"
-msgstr ""
+msgstr "Макс. # точек кривых:"
 
 #: src/sk1/dialogs/docinfodlg.py:139
 msgid "Max. # of curve subpaths:"
-msgstr ""
+msgstr "Макс. # компонентов кривых:"
 
 #: src/sk1/dialogs/docinfodlg.py:140
 msgid "Groups:"
-msgstr ""
+msgstr "Группы:"
 
 #: src/sk1/dialogs/docinfodlg.py:141
 msgid "Rectangles:"
-msgstr ""
+msgstr "Прямоугольники:"
 
 #: src/sk1/dialogs/docinfodlg.py:142
 msgid "Ellipses:"
-msgstr ""
+msgstr "Эллипсы:"
 
 #: src/sk1/dialogs/docinfodlg.py:143
 msgid "Containers:"
-msgstr ""
+msgstr "Контейнеры:"
 
 #: src/sk1/dialogs/docinfodlg.py:144
 msgid "Polygons:"
-msgstr ""
+msgstr "Полигоны:"
 
 #: src/sk1/dialogs/docinfodlg.py:166
 msgid "Text Statistics"
-msgstr ""
+msgstr "Статистика по тексту"
 
 #: src/sk1/dialogs/docinfodlg.py:168
 msgid "No Text in this document."
-msgstr ""
+msgstr "Нет текста в этом документе"
 
 #: src/sk1/dialogs/docinfodlg.py:171
 msgid "Artistic text:"
-msgstr ""
+msgstr "Фигурный текст:"
 
 #: src/sk1/dialogs/docinfodlg.py:172
 msgid "Lines:"
-msgstr ""
+msgstr "Строки:"
 
 #: src/sk1/dialogs/docinfodlg.py:173
 msgid "Words:"
-msgstr ""
+msgstr "Слова:"
 
 #: src/sk1/dialogs/docinfodlg.py:174
 msgid "Characters:"
-msgstr ""
+msgstr "Символы:"
 
 #: src/sk1/dialogs/docinfodlg.py:176
 msgid "Fonts used:"
-msgstr ""
+msgstr "Используемые шрифты:"
 
 #: src/sk1/dialogs/docinfodlg.py:196
 msgid "Bitmap Objects"
-msgstr ""
+msgstr "Растровые объекты"
 
 #: src/sk1/dialogs/docinfodlg.py:200
 msgid "No Bitmaps in this document."
-msgstr ""
+msgstr "Нет растра в этом документе."
 
 #: src/sk1/dialogs/docinfodlg.py:240
 msgid "Fills"
-msgstr ""
+msgstr "Заливки"
 
 #: src/sk1/dialogs/docinfodlg.py:241
 msgid "No fill:"
-msgstr ""
+msgstr "Без заливки:"
 
 #: src/sk1/dialogs/docinfodlg.py:242 src/sk1/dialogs/docinfodlg.py:279
 msgid "Solid:"
-msgstr ""
+msgstr "Сплошная:"
 
 #: src/sk1/dialogs/docinfodlg.py:243
 msgid "Gradients:"
-msgstr ""
+msgstr "Градиенты:"
 
 #: src/sk1/dialogs/docinfodlg.py:244
 msgid "Patterns:"
-msgstr ""
+msgstr "Паттерны:"
 
 #: src/sk1/dialogs/docinfodlg.py:248 src/sk1/dialogs/docinfodlg.py:283
 msgid "Objects and Color models"
-msgstr ""
+msgstr "Объекты и цветовые модели"
 
 #: src/sk1/dialogs/docinfodlg.py:277
 msgid "Strokes"
-msgstr ""
+msgstr "Обводки"
 
 #: src/sk1/dialogs/docinfodlg.py:278
 msgid "No stroke:"
-msgstr ""
+msgstr "Без обводки:"
 
 #: src/sk1/dialogs/docinfodlg.py:289
 msgid "Property"
-msgstr ""
+msgstr "Свойство"
 
 #: src/sk1/dialogs/docinfodlg.py:289
 msgid "Value"
-msgstr ""
+msgstr "Значение"
 
 #: src/sk1/dialogs/docinfodlg.py:301 src/sk1/dialogs/docprops.py:646
 msgid "Document info"
-msgstr ""
+msgstr "Статистика"
 
 #: src/sk1/dialogs/docprops.py:48
 msgid "Description"
@@ -740,11 +740,11 @@ msgstr "Показывать направляющие"
 
 #: src/sk1/dialogs/docprops.py:601
 msgid "Edit guides"
-msgstr ""
+msgstr "Правка направляющих"
 
 #: src/sk1/dialogs/docprops.py:645
 msgid "Statistics..."
-msgstr ""
+msgstr "Статистика..."
 
 #: src/sk1/dialogs/docprops.py:678
 msgid "Document properties"
@@ -920,7 +920,7 @@ msgstr "Ширина:"
 
 #: src/sk1/dialogs/strokedlg.py:123
 msgid "Markers:"
-msgstr ""
+msgstr "Маркеры:"
 
 #: src/sk1/dialogs/strokedlg.py:145
 msgid "Dashes:"
@@ -936,7 +936,7 @@ msgstr "Стык:"
 
 #: src/sk1/dialogs/strokedlg.py:167
 msgid "Options:"
-msgstr ""
+msgstr "Свойства:"
 
 #: src/sk1/dialogs/strokedlg.py:170
 msgid "Miter limit:"
@@ -2181,7 +2181,7 @@ msgstr "Упрощенный режим"
 
 #: src/sk1/resources/labels.py:82
 msgid "Simulate printer"
-msgstr ""
+msgstr "Имитировать принтер"
 
 #: src/sk1/resources/labels.py:83 src/sk1/printing/printdlg/toolbar.py:53
 msgid "Zoom 100%"
@@ -2277,7 +2277,7 @@ msgstr "Очистить преобразования"
 
 #: src/sk1/resources/labels.py:111
 msgid "Inline transformations"
-msgstr ""
+msgstr "Встроить трансформацию"
 
 #: src/sk1/resources/labels.py:112
 msgid "Position..."
@@ -3306,7 +3306,7 @@ msgstr "LOG - лог файлы"
 
 #: src/uc2/uc2const.py:182
 msgid "MD - Markdown markup files"
-msgstr ""
+msgstr "MD -  файлы с Markdown разметкой"
 
 #: src/uc2/uc2const.py:367 src/uc2/uc2const.py:387
 msgid "pixels"
