@@ -49,7 +49,8 @@ class AppMenuBar(wal.MenuBar):
         self.entries.append(entry)
 
         # ---View menu
-        sub = (pdids.ID_STROKE_VIEW, pdids.ID_DRAFT_VIEW, None,
+        sub = (pdids.ID_STROKE_VIEW, pdids.ID_DRAFT_VIEW, 
+               pdids.ID_SIMULATE_PRINTER, None,
                wal.ID_ZOOM_100, wal.ID_ZOOM_IN, wal.ID_ZOOM_OUT,
                pdids.ID_PREV_ZOOM, None,
                pdids.ID_ZOOM_PAGE, wal.ID_ZOOM_FIT,

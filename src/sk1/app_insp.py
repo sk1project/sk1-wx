@@ -16,7 +16,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from sk1 import modes
+from sk1 import modes, config
 from uc2 import uc2const
 
 
@@ -33,6 +33,16 @@ class AppInspector:
 
     def is_not_doc(self):
         return self.app.docs == []
+
+    def is_cms(self):
+        if not self.is_doc():
+            return False
+        return config.cms_use
+
+    def is_cms_proofing(self):
+        if not self.is_doc():
+            return False
+        return config.cms_proofing
 
     def is_others(self):
         return len(self.app.docs) > 1

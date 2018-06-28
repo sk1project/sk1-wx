@@ -48,6 +48,7 @@ GENERIC_KEYS = {
     pdids.COPY_STROKE: (wal.ACCEL_SHIFT, wal.KEY_F12),
     # ----- View menu
     pdids.ID_STROKE_VIEW: (wal.ACCEL_SHIFT, wal.KEY_F9),
+    pdids.ID_SIMULATE_PRINTER: (wal.ACCEL_NORMAL, wal.KEY_F9),
     pdids.ID_PREV_ZOOM: (wal.ACCEL_NORMAL, wal.KEY_F3),
     pdids.ID_ZOOM_PAGE: (wal.ACCEL_SHIFT, wal.KEY_F4),
     wal.ID_ZOOM_FIT: (wal.ACCEL_NORMAL, wal.KEY_F4),

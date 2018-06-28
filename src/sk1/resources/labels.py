@@ -79,6 +79,7 @@ LABELS = {
 
     pdids.ID_STROKE_VIEW: (_('Stroke view'),),
     pdids.ID_DRAFT_VIEW: (_('Draft view'),),
+    pdids.ID_SIMULATE_PRINTER: (_('Simulate printer'),),
     wal.ID_ZOOM_100: (_('Zoom 100%'),),
     wal.ID_ZOOM_IN: (_('Zoom in'),),
     wal.ID_ZOOM_OUT: (_('Zoom out'),),

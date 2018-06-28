@@ -62,6 +62,7 @@ ID_DUPLICATE = new_id()
 # ----- View menu
 ID_STROKE_VIEW = new_id()
 ID_DRAFT_VIEW = new_id()
+ID_SIMULATE_PRINTER = new_id()
 ID_PREV_ZOOM = new_id()
 ID_ZOOM_PAGE = new_id()
 ID_SHOW_GRID = new_id()
