@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013 by Igor E. Novikov
+#  Copyright (C) 2013-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -62,6 +62,7 @@ ID_DUPLICATE = new_id()
 # ----- View menu
 ID_STROKE_VIEW = new_id()
 ID_DRAFT_VIEW = new_id()
+ID_SIMULATE_PRINTER = new_id()
 ID_PREV_ZOOM = new_id()
 ID_ZOOM_PAGE = new_id()
 ID_SHOW_GRID = new_id()

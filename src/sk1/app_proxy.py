@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013 by Igor E. Novikov
+#  Copyright (C) 2013-2018 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -371,12 +371,11 @@ class AppProxy:
     def draft_view(self):
         if self.insp.is_doc():
             canvas = self.app.current_doc.canvas
-            if canvas.draft_view:
-                canvas.draft_view = False
-                canvas.force_redraw()
-            else:
-                canvas.draft_view = True
+            canvas.draft_view = not canvas.draft_view
             canvas.force_redraw()
+
+    def simulate_printer(self):
+        config.cms_proofing = not config.cms_proofing
 
     def show_snapping(self):
         if self.insp.is_doc():

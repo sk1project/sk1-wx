@@ -906,12 +906,17 @@ class Curve(PrimitiveObject):
                     trafo = [1.0, 0.0, 0.0, 1.0, p1[0], p1[1]]
                     end_trafo = tr(end_trafo, trafo)
                     end = arrows.get_arrow_cpath(arrs[0], end_trafo)
-                #start arrow
+                # start arrow
                 if isinstance(arrs[1], int):
                     start_trafo = [coef, 0.0, 0.0, coef, 0.0, 0.0]
                     p1 = libgeom.apply_trafo_to_point(path[1][-1], self.trafo)
                     if len(path[1]) == 1:
-                        p0 = libgeom.apply_trafo_to_point(path[0], self.trafo)
+                        if libgeom.is_curve_point(p1):
+                            p0 = p1[1]
+                            p1 = p1[2]
+                        else:
+                            p0 = libgeom.apply_trafo_to_point(path[0], 
+                                                              self.trafo)
                     else:
                         if libgeom.is_curve_point(p1):
                             p0 = p1[1]
@@ -925,7 +930,7 @@ class Curve(PrimitiveObject):
                     start_trafo = tr(start_trafo, trafo)
                     start = arrows.get_arrow_cpath(arrs[1], start_trafo)
                 self.cache_arrows.append([end, start])
-
+    
 
 class Text(PrimitiveObject):
     """

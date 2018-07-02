@@ -18,7 +18,7 @@
 import wal
 from sk1.events import CLIPBOARD, DOC_CHANGED, PAGE_CHANGED, \
     DOC_MODIFIED, DOC_SAVED, NO_DOCS, SELECTION_CHANGED, MODE_CHANGED, \
-    HISTORY_CHANGED, SNAP_CHANGED
+    HISTORY_CHANGED, SNAP_CHANGED, CONFIG_MODIFIED
 from sk1.modes import SELECT_MODE, SHAPER_MODE, ZOOM_MODE, FLEUR_MODE, \
     LINE_MODE, CURVE_MODE, RECT_MODE, ELLIPSE_MODE, TEXT_MODE, POLYGON_MODE, \
     ZOOM_OUT_MODE, GR_SELECT_MODE, GRAD_MODES, EDIT_MODES, TEXT_MODES
@@ -116,6 +116,8 @@ def create_actions(app):
          insp.is_stroke_view),
         (pdids.ID_DRAFT_VIEW, proxy.draft_view, doc_chnls, insp.is_doc,
          insp.is_draft_view),
+        (pdids.ID_SIMULATE_PRINTER, proxy.simulate_printer, 
+         doc_chnls + [CONFIG_MODIFIED,], insp.is_cms, insp.is_cms_proofing),
         (wal.ID_ZOOM_100, proxy.zoom_100, doc_chnls, insp.is_doc),
         (wal.ID_ZOOM_IN, proxy.zoom_in, doc_chnls, insp.is_doc),
         (wal.ID_ZOOM_OUT, proxy.zoom_out, doc_chnls, insp.is_doc),
