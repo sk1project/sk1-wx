@@ -142,7 +142,7 @@ class StopPanel(wal.LabeledPanel):
     selected_stop = 0
     pos_callback = None
     color_callback = None
-    my_changes = False
+    stop = 0.0
 
     def __init__(self, parent, dlg, cms, stops, sel_stop=0, onposition=None,
                  oncolor=None):
@@ -179,13 +179,10 @@ class StopPanel(wal.LabeledPanel):
             self.color_callback()
 
     def pos_changed(self):
-        if self.pos_callback and not self.my_changes:
-            self.my_changes = True
-            print 'here'
+        if self.pos_callback and not self.stop == self.position.get_value():
+            self.stop = self.position.get_value()
             pos = self.position.get_value() / 100.0
             self.pos_callback(self.selected_stop, pos)
-        elif self.my_changes:
-            self.my_changes = False
 
     def set_selected_stop(self, index):
         self.selected_stop = index
