@@ -54,10 +54,10 @@ class Error(Exception):
     pass
 
 
-VERSION = '1.1.8'
+VERSION = '1.1.9'
 
 DATASET = {
-    'agent_ver': '1.1.8',
+    'agent_ver': '1.1.9',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
@@ -378,10 +378,13 @@ if is_linux():
             if timestamp:
                 ts = '_' + timestamp
 
-            if platform.dist()[1] == '14.04':
+            ver = platform.dist()[1]
+            if ver == '14.04':
                 package_name2 = prefix + ts + '_mint_17_' + suffix
-            elif platform.dist()[1] == '16.04':
+            elif ver == '16.04':
                 package_name2 = prefix + ts + '_mint_18_' + suffix
+            elif ver == '18.04':
+                package_name2 = prefix + ts + '_mint_19_' + suffix
 
     elif is_rpm():
         echo_msg("Building RPM package")
