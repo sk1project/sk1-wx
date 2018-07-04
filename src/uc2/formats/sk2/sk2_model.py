@@ -915,7 +915,7 @@ class Curve(PrimitiveObject):
                             p0 = p1[1]
                             p1 = p1[2]
                         else:
-                            p0 = libgeom.apply_trafo_to_point(path[0], 
+                            p0 = libgeom.apply_trafo_to_point(path[0],
                                                               self.trafo)
                     else:
                         if libgeom.is_curve_point(p1):
@@ -930,11 +930,11 @@ class Curve(PrimitiveObject):
                     start_trafo = tr(start_trafo, trafo)
                     start = arrows.get_arrow_cpath(arrs[1], start_trafo)
                 self.cache_arrows.append([end, start])
-    
+
 
 class Text(PrimitiveObject):
     """
-    Represents text object. 
+    Represents text object.
     Text content is stored in 'text' field as a base64 encoded string
     to resolve EOL and other special character issues.
     'trafos' contains glyph specific transformations.
