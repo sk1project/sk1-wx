@@ -50,14 +50,14 @@ import datetime
 from farmutils import fetch_cli_args, launch_farm
 
 DATASET = {
-    'agent_ver': '1.1.8',
+    'agent_ver': '1.1.9',
     'mode': 'publish',
     # publish - to build and publish build result
     # release - to prepare release build
     # build - to build package only
     # test - to run in test mode
     'app_name': 'sk1',
-    'app_ver': '2.0rc3',
+    'app_ver': '2.0rc4',
     'project': 'sk1-wx',
     'project2': 'sk1-wx-msw',
     'git_url': 'https://github.com/sk1project/sk1-wx',
