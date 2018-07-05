@@ -894,38 +894,35 @@ class Curve(PrimitiveObject):
                 tr = libgeom.multiply_trafo
                 coef = self.cache_line_width
                 end = start = None
+                stroke_trafo = [coef, 0.0, 0.0, coef, 0.0, 0.0]
+
+                def get_vector(path, trafo):
+                    p0 = p1 = path[0]
+                    is_cp = libgeom.is_curve_point
+                    atp = libgeom.apply_trafo_to_point
+                    t = 0.001
+                    for point in path[1]:
+                        p0 = point[0] if is_cp(point) else point
+                        if not p0 == p1:
+                            break
+                        elif is_cp(point) and p1 != point[2]:
+                            p0 = libgeom.split_bezier_curve(p1, point, t)[0][2]
+                            break
+                    return [atp(p, trafo) for p in (p0, p1)]
+
                 # end arrow
                 if isinstance(arrs[0], int):
-                    end_trafo = [coef, 0.0, 0.0, coef, 0.0, 0.0]
-                    p1 = libgeom.apply_trafo_to_point(path[0], self.trafo)
-                    p0 = libgeom.apply_trafo_to_point(path[1][0], self.trafo)
-                    if libgeom.is_curve_point(p0):
-                        p0 = p0[0]
+                    p0, p1 = get_vector(path, self.trafo)
                     angle = libgeom.get_point_angle(p1, p0)
-                    end_trafo = tr(end_trafo, libgeom.trafo_rotate(angle))
+                    end_trafo = tr(stroke_trafo, libgeom.trafo_rotate(angle))
                     trafo = [1.0, 0.0, 0.0, 1.0, p1[0], p1[1]]
                     end_trafo = tr(end_trafo, trafo)
                     end = arrows.get_arrow_cpath(arrs[0], end_trafo)
                 # start arrow
                 if isinstance(arrs[1], int):
-                    start_trafo = [coef, 0.0, 0.0, coef, 0.0, 0.0]
-                    p1 = libgeom.apply_trafo_to_point(path[1][-1], self.trafo)
-                    if len(path[1]) == 1:
-                        if libgeom.is_curve_point(p1):
-                            p0 = p1[1]
-                            p1 = p1[2]
-                        else:
-                            p0 = libgeom.apply_trafo_to_point(path[0],
-                                                              self.trafo)
-                    else:
-                        if libgeom.is_curve_point(p1):
-                            p0 = p1[1]
-                            p1 = p1[2]
-                        else:
-                            p0 = libgeom.bezier_base_point(path[1][-2])
-                            p0 = libgeom.apply_trafo_to_point(p0, self.trafo)
+                    p0, p1 = get_vector(libgeom.reverse_path(path), self.trafo)
                     angle = libgeom.get_point_angle(p1, p0)
-                    start_trafo = tr(start_trafo, libgeom.trafo_rotate(angle))
+                    start_trafo = tr(stroke_trafo, libgeom.trafo_rotate(angle))
                     trafo = [1.0, 0.0, 0.0, 1.0, p1[0], p1[1]]
                     start_trafo = tr(start_trafo, trafo)
                     start = arrows.get_arrow_cpath(arrs[1], start_trafo)
