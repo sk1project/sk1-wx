@@ -59,11 +59,7 @@ class PolyLineCreator(AbstractCreator):
         self.init_flags()
         self.init_data()
         self.init_timer()
-        sel_objs = self.selection.objs
-        if len(sel_objs) == 1 and sel_objs[0].is_curve:
-            if self.obj is None:
-                self.obj = sel_objs[0]
-                self.update_from_obj()
+        self.update_from_selection()
         self.presenter.selection.clear()
         self.on_timer()
 
@@ -195,7 +191,13 @@ class PolyLineCreator(AbstractCreator):
         self.create = False
         self.draw = False
 
-    def update_from_obj(self):
+    def update_from_selection(self):
+        sel_objs = self.selection.objs
+        if len(sel_objs) == 1 and sel_objs[0].is_curve and self.obj is None:
+            self.update_from_obj(sel_objs[0])
+
+    def update_from_obj(self, obj):
+        self.obj = obj
         self.paths = apply_trafo_to_paths(self.obj.paths, self.obj.trafo)
         path = self.paths[-1]
         if path[-1] == sk2const.CURVE_OPENED:
@@ -253,9 +255,11 @@ class PolyLineCreator(AbstractCreator):
             if stop:
                 self.stop_()
             if obj is None:
-                self.obj = self.api.create_curve(paths)
+                obj = self.api.create_curve(paths)
             else:
                 self.api.update_curve(obj, paths)
+            if not stop:
+                self.obj = obj
 
 
 class PathsCreator(PolyLineCreator):

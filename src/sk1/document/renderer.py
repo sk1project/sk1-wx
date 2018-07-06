@@ -624,11 +624,21 @@ class PDRenderer(CairoRenderer):
                     self.ctx.close_path()
                 self.ctx.stroke()
 
-                self.draw_curve_point(path[0],
-                                      config.curve_start_point_size,
-                                      config.curve_start_point_fill,
-                                      config.curve_start_point_stroke,
-                                      config.curve_start_point_stroke_width)
+                # Start point rendering
+                w = h = config.curve_point_sensitivity_size
+                if cursor and libgeom.is_point_in_rect2(cursor, path[0], w, h):
+                    self.draw_curve_point(path[0],
+                                          config.curve_active_point_size,
+                                          config.curve_active_point_fill,
+                                          config.curve_active_point_stroke,
+                                          config.curve_active_point_stroke_width)
+                else:
+                    self.draw_curve_point(path[0],
+                                          config.curve_start_point_size,
+                                          config.curve_start_point_fill,
+                                          config.curve_start_point_stroke,
+                                          config.curve_start_point_stroke_width)
+
                 for point in points:
                     self.draw_curve_point(point,
                                           config.curve_point_size,

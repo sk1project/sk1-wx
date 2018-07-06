@@ -899,7 +899,6 @@ class Curve(PrimitiveObject):
                 def get_vector(path, trafo):
                     p0 = p1 = path[0]
                     is_cp = libgeom.is_curve_point
-                    atp = libgeom.apply_trafo_to_point
                     t = 0.001
                     for point in path[1]:
                         p0 = point[0] if is_cp(point) else point
@@ -908,7 +907,8 @@ class Curve(PrimitiveObject):
                         elif is_cp(point) and p1 != point[2]:
                             p0 = libgeom.split_bezier_curve(p1, point, t)[0][2]
                             break
-                    return [atp(p, trafo) for p in (p0, p1)]
+                    return [libgeom.apply_trafo_to_point(p, trafo)
+                            for p in (p0, p1)]
 
                 # end arrow
                 if isinstance(arrs[0], int):
