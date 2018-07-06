@@ -628,10 +628,10 @@ class PDRenderer(CairoRenderer):
                 w = h = config.curve_point_sensitivity_size
                 if cursor and libgeom.is_point_in_rect2(cursor, path[0], w, h):
                     self.draw_curve_point(path[0],
-                                          config.curve_new_point_size,
-                                          config.curve_new_point_fill,
-                                          config.curve_new_point_stroke,
-                                          config.curve_new_point_stroke_width)
+                                          config.curve_active_point_size,
+                                          config.curve_active_point_fill,
+                                          config.curve_active_point_stroke,
+                                          config.curve_active_point_stroke_width)
                 else:
                     self.draw_curve_point(path[0],
                                           config.curve_start_point_size,
