@@ -31,6 +31,7 @@ CAIRO_WHITE = [1.0, 1.0, 1.0]
 
 class PDRenderer(CairoRenderer):
     direct_matrix = None
+    point_data = None
 
     canvas = None
     ctx = None
@@ -58,7 +59,63 @@ class PDRenderer(CairoRenderer):
         for item in items:
             self.__dict__[item] = None
 
-            # -------DOCUMENT RENDERING
+    def set_point_data(self):
+        self.point_data = {
+            'curve_point': (config.curve_point_size,
+                            config.curve_point_fill,
+                            config.curve_point_stroke,
+                            config.curve_point_stroke_width),
+            'start_point': (config.curve_start_point_size,
+                            config.curve_start_point_fill,
+                            config.curve_start_point_stroke,
+                            config.curve_start_point_stroke_width),
+            'last_point': (config.curve_last_point_size,
+                           config.curve_last_point_fill,
+                           config.curve_last_point_stroke,
+                           config.curve_last_point_stroke_width),
+            'new_point': (config.curve_new_point_size,
+                          config.curve_new_point_fill,
+                          config.curve_new_point_stroke,
+                          config.curve_new_point_stroke_width),
+            'active_point': (config.curve_active_point_size,
+                             config.curve_active_point_fill,
+                             config.curve_active_point_stroke,
+                             config.curve_active_point_stroke_width),
+            'control_point': (config.control_point_size,
+                              config.control_point_fill,
+                              config.control_point_stroke,
+                              config.control_point_stroke_width),
+            'gradient_point': (config.gradient_vector_point_size,
+                               config.gradient_vector_point_fill,
+                               config.gradient_vector_point_stroke,
+                               config.gradient_vector_point_stroke_width),
+            'rect_point': (config.rect_point_size,
+                           config.rect_point_fill,
+                           config.rect_point_stroke,
+                           config.rect_point_stroke_width),
+            'rect_midpoint': (config.rect_midpoint_size,
+                              config.rect_midpoint_fill,
+                              config.rect_midpoint_stroke,
+                              config.rect_midpoint_stroke_width),
+            'ellipse_start': (config.ellipse_start_point_size,
+                              config.ellipse_start_point_fill,
+                              config.ellipse_start_point_stroke,
+                              config.ellipse_start_point_stroke_width),
+            'ellipse_end': (config.ellipse_end_point_size,
+                            config.ellipse_end_point_fill,
+                            config.ellipse_end_point_stroke,
+                            config.ellipse_end_point_stroke_width),
+            'polygon_point': (config.polygon_point_size,
+                              config.polygon_point_fill,
+                              config.polygon_point_stroke,
+                              config.polygon_point_stroke_width),
+            'text_point': (config.text_point_size,
+                           config.text_point_fill,
+                           config.text_point_stroke,
+                           config.text_point_stroke_width),
+        }
+
+        # -------DOCUMENT RENDERING
 
     def paint_document(self):
         self.presenter = self.canvas.presenter
@@ -71,6 +128,7 @@ class PDRenderer(CairoRenderer):
         self.render_guides()
 
     def start(self):
+        self.set_point_data()
         width, height = self.canvas.dc.get_size()
         if self.surface is None:
             self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
@@ -311,41 +369,26 @@ class PDRenderer(CairoRenderer):
         self.ctx.move_to(*start)
         self.ctx.line_to(*end)
         self.ctx.stroke()
-        self.draw_curve_point(start, config.gradient_vector_point_size,
-                              config.gradient_vector_point_fill,
-                              config.gradient_vector_point_stroke,
-                              config.gradient_vector_point_stroke_width)
-        self.draw_curve_point(end, config.gradient_vector_point_size,
-                              config.gradient_vector_point_fill,
-                              config.gradient_vector_point_stroke,
-                              config.gradient_vector_point_stroke_width)
+        self.draw_curve_point(start, 'gradient_point')
+        self.draw_curve_point(end, 'gradient_point')
 
     def set_direct_matrix(self):
         self.ctx.set_matrix(self.direct_matrix)
 
     def draw_regular_node(self, point, selected=False):
-        fill = config.curve_point_fill
-        if selected:
-            fill = config.selected_node_fill
-        self.draw_curve_point(point, config.curve_point_size, fill,
-                              config.curve_point_stroke,
-                              config.curve_point_stroke_width)
+        size, fill, stroke, stroke_width = self.point_data['curve_point']
+        fill = config.selected_node_fill if selected else fill
+        self.draw_curve_point(point, (size, fill, stroke, stroke_width))
 
     def draw_start_node(self, point, selected=False):
-        fill = config.curve_start_point_fill
-        if selected:
-            fill = config.selected_node_fill
-        self.draw_curve_point(point, config.curve_start_point_size, fill,
-                              config.curve_start_point_stroke,
-                              config.curve_start_point_stroke_width)
+        size, fill, stroke, stroke_width = self.point_data['start_point']
+        fill = config.selected_node_fill if selected else fill
+        self.draw_curve_point(point, (size, fill, stroke, stroke_width))
 
     def draw_last_node(self, point, selected=False):
-        fill = config.curve_last_point_fill
-        if selected:
-            fill = config.selected_node_fill
-        self.draw_curve_point(point, config.curve_last_point_size, fill,
-                              config.curve_last_point_stroke,
-                              config.curve_last_point_stroke_width)
+        size, fill, stroke, stroke_width = self.point_data['last_point']
+        fill = config.selected_node_fill if selected else fill
+        self.draw_curve_point(point, (size, fill, stroke, stroke_width))
 
     def draw_control_point(self, start, end):
         self.ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
@@ -360,54 +403,30 @@ class PDRenderer(CairoRenderer):
         self.ctx.move_to(*start)
         self.ctx.line_to(*end)
         self.ctx.stroke()
-        self.draw_curve_point(end, config.control_point_size,
-                              config.control_point_fill,
-                              config.control_point_stroke,
-                              config.control_point_stroke_width)
+        self.draw_curve_point(end, 'control_point')
 
     def draw_new_node(self, point):
-        fill = config.curve_new_point_fill
-        self.draw_curve_point(point, config.curve_new_point_size, fill,
-                              config.curve_new_point_stroke,
-                              config.curve_new_point_stroke_width)
+        self.draw_curve_point(point, 'new_point')
 
     def draw_rect_midpoint(self, point):
-        fill = config.rect_midpoint_fill
-        self.draw_curve_point(point, config.rect_midpoint_size, fill,
-                              config.rect_midpoint_stroke,
-                              config.rect_midpoint_stroke_width)
+        self.draw_curve_point(point, 'rect_midpoint')
 
     def draw_rect_point(self, point):
-        fill = config.rect_point_fill
-        self.draw_curve_point(point, config.rect_point_size, fill,
-                              config.rect_point_stroke,
-                              config.rect_point_stroke_width)
+        self.draw_curve_point(point, 'rect_point')
 
     def draw_ellipse_start_point(self, point):
-        fill = config.ellipse_start_point_fill
-        self.draw_curve_point(point, config.ellipse_start_point_size, fill,
-                              config.ellipse_start_point_stroke,
-                              config.ellipse_start_point_stroke_width)
+        self.draw_curve_point(point, 'ellipse_start')
 
     def draw_ellipse_end_point(self, point):
-        fill = config.ellipse_end_point_fill
-        self.draw_curve_point(point, config.ellipse_end_point_size, fill,
-                              config.ellipse_end_point_stroke,
-                              config.ellipse_end_point_stroke_width)
+        self.draw_curve_point(point, 'ellipse_end')
 
     def draw_polygon_point(self, point):
-        fill = config.polygon_point_fill
-        self.draw_curve_point(point, config.polygon_point_size, fill,
-                              config.polygon_point_stroke,
-                              config.polygon_point_stroke_width)
+        self.draw_curve_point(point, 'polygon_point')
 
     def draw_text_point(self, point, selected=False):
-        fill = config.text_point_fill
-        if selected:
-            fill = config.text_selected_point_fill
-        self.draw_curve_point(point, config.text_point_size, fill,
-                              config.text_point_stroke,
-                              config.text_point_stroke_width)
+        size, fill, stroke, stroke_width = self.point_data['text_point']
+        fill = config.selected_node_fill if selected else fill
+        self.draw_curve_point(point, (size, fill, stroke, stroke_width))
 
     def reflect_snap(self):
         if self.canvas.show_snapping:
@@ -582,7 +601,14 @@ class PDRenderer(CairoRenderer):
 
         # ------DRAWING MARKER RENDERING
 
-    def draw_curve_point(self, point, size, fill, stroke, stroke_width):
+    def draw_curve_point(self, point, data):
+        if isinstance(data, tuple):
+            size, fill, stroke, stroke_width = data
+        elif data in self.point_data:
+            size, fill, stroke, stroke_width = self.point_data[data]
+        else:
+            return
+
         if len(point) == 2:
             cx, cy = point
         else:
@@ -627,30 +653,14 @@ class PDRenderer(CairoRenderer):
                 # Start point rendering
                 w = h = config.curve_point_sensitivity_size
                 if cursor and libgeom.is_point_in_rect2(cursor, path[0], w, h):
-                    self.draw_curve_point(path[0],
-                                          config.curve_active_point_size,
-                                          config.curve_active_point_fill,
-                                          config.curve_active_point_stroke,
-                                          config.curve_active_point_stroke_width)
+                    self.draw_curve_point(path[0], 'active_point')
                 else:
-                    self.draw_curve_point(path[0],
-                                          config.curve_start_point_size,
-                                          config.curve_start_point_fill,
-                                          config.curve_start_point_stroke,
-                                          config.curve_start_point_stroke_width)
+                    self.draw_curve_point(path[0], 'start_point')
 
                 for point in points:
-                    self.draw_curve_point(point,
-                                          config.curve_point_size,
-                                          config.curve_point_fill,
-                                          config.curve_point_stroke,
-                                          config.curve_point_stroke_width)
+                    self.draw_curve_point(point, 'curve_point')
                 if points:
-                    self.draw_curve_point(points[-1],
-                                          config.curve_last_point_size,
-                                          config.curve_last_point_fill,
-                                          config.curve_last_point_stroke,
-                                          config.curve_last_point_stroke_width)
+                    self.draw_curve_point(points[-1], 'last_point')
         if cursor:
             self.ctx.set_source_rgb(*config.curve_trace_color)
             self.ctx.set_line_width(config.curve_stroke_width)
@@ -677,16 +687,8 @@ class PDRenderer(CairoRenderer):
                     self.ctx.stroke()
                     self.ctx.set_dash([])
                     for point in [[x0, y0], [x1, y1], cpoint]:
-                        self.draw_curve_point(point,
-                                              config.control_point_size,
-                                              config.control_point_fill,
-                                              config.control_point_stroke,
-                                              config.control_point_stroke_width)
-                    self.draw_curve_point([x2, y2],
-                                          config.curve_point_size,
-                                          config.curve_point_fill,
-                                          config.curve_point_stroke,
-                                          config.curve_point_stroke_width)
+                        self.draw_curve_point(point, 'control_point')
+                    self.draw_curve_point([x2, y2], 'curve_point')
             else:
                 if paths[-1][1]:
                     end_point = paths[-1][1][-1]
