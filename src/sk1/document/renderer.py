@@ -230,36 +230,30 @@ class PDRenderer(CairoRenderer):
                 if not layer.properties[3] and not self.canvas.draft_view:
                     self.antialias_flag = True
 
-                    # ------GUIDES RENDERING
+    # ------GUIDES RENDERING
 
     def render_guides(self):
-        guides = []
-        methods = self.presenter.methods
-        guide_layer = methods.get_guide_layer()
-        if not methods.is_layer_visible(guide_layer):
+        guide_layer = self.presenter.methods.get_guide_layer()
+        if not self.presenter.methods.is_layer_visible(guide_layer):
             return
-        for child in guide_layer.childs:
-            if child.is_guide:
-                guides.append(child)
-        if guides:
-            self.ctx.set_matrix(self.direct_matrix)
-            self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
-            self.ctx.set_line_width(1.0)
-            self.ctx.set_dash(config.guide_line_dash)
-            self.ctx.set_source_rgba(*guide_layer.color)
-            for item in guides:
-                if item.orientation == uc2const.HORIZONTAL:
-                    y_win = self.canvas.point_doc_to_win([0, item.position])[1]
-                    self.ctx.move_to(0, y_win)
-                    self.ctx.line_to(self.width, y_win)
-                    self.ctx.stroke()
-                else:
-                    x_win = self.canvas.point_doc_to_win([item.position, 0])[0]
-                    self.ctx.move_to(x_win, 0)
-                    self.ctx.line_to(x_win, self.height)
-                    self.ctx.stroke()
+        guides = [child for child in guide_layer.childs if child.is_guide]
 
-                    # ------GRID RENDERING
+        self.ctx.set_matrix(self.direct_matrix)
+        self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
+        self.ctx.set_line_width(1.0)
+        self.ctx.set_dash(config.guide_line_dash)
+        self.ctx.set_source_rgba(*guide_layer.color)
+        for item in guides:
+            x_win, y_win = self.canvas.point_doc_to_win(2 * [item.position])
+            if item.orientation == uc2const.HORIZONTAL:
+                self.ctx.move_to(0, y_win)
+                self.ctx.line_to(self.width, y_win)
+            else:
+                self.ctx.move_to(x_win, 0)
+                self.ctx.line_to(x_win, self.height)
+            self.ctx.stroke()
+
+    # ------GRID RENDERING
 
     def calc_grid(self, x, y, gdx, gdy):
         w, h = self.presenter.get_page_size()
@@ -336,7 +330,7 @@ class PDRenderer(CairoRenderer):
 
         self.ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
 
-        # ------MARKER RENDERING
+    # ------MARKER RENDERING
 
     def start_soft_repaint(self):
         self.temp_surface = cairo.ImageSurface(cairo.FORMAT_RGB24,
@@ -528,7 +522,7 @@ class PDRenderer(CairoRenderer):
                     self.ctx.rectangle(x0, y0, x1 - x0, y1 - y0)
                     self.ctx.stroke()
 
-                    # Selection markers
+            # Selection markers
             markers = selection.markers
             size = config.sel_marker_size / zoom
             i = 0
@@ -599,22 +593,13 @@ class PDRenderer(CairoRenderer):
         self._paint_selection()
         self.end_soft_repaint()
 
-        # ------DRAWING MARKER RENDERING
+    # ------DRAWING MARKER RENDERING
 
     def draw_curve_point(self, point, data):
-        if isinstance(data, tuple):
-            size, fill, stroke, stroke_width = data
-        elif data in self.point_data:
-            size, fill, stroke, stroke_width = self.point_data[data]
-        else:
-            return
-
-        if len(point) == 2:
-            cx, cy = point
-        else:
-            cx, cy = point[2]
-        x = cx - int(size / 2.0)
-        y = cy - int(size / 2.0)
+        size, fill, stroke, stroke_width = data if isinstance(data, tuple) \
+            else self.point_data[data]
+        cx, cy = point if len(point) == 2 else point[2]
+        x, y = cx - int(size / 2.0), cy - int(size / 2.0)
         self.ctx.move_to(x, y)
         self.ctx.set_antialias(cairo.ANTIALIAS_NONE)
         self.ctx.set_dash([])
@@ -860,10 +845,8 @@ class PDRenderer(CairoRenderer):
             y -= 2
             w += 4
             h += 4
-            if not w:
-                w = 1
-            if not h:
-                h = 1
+            w = 1 if not w else w
+            h = 1 if not h else h
             surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
             ctx = cairo.Context(surface)
             ctx.set_source_surface(self.surface, -x, -y)
