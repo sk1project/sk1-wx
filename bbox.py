@@ -24,17 +24,15 @@ Usage:
  to run build for all images:  python bbox.py build
  to build package:             python bbox.py
 --------------------------------------------------------------------------
-BuildBox is designed to be launched into Vagrant VM. To prepare environment
-on Linux OS you need installing VirtualBox and Vagrant. After that initialize
+BuildBox is designed to be used alongside Docker. To prepare environment
+on Linux OS you need installing Docker. After that initialize
 environment from sk1-wx project folder:
 
->vagrant up ubuntu
->vagrant ssh ubuntu
 >sudo -s
->cd /vagrant
+> ln -s . /vagrant
 >python bbox.py pull
 
-To run build launch BuildBox inside Vagrant VM:
+To run build, just launch BuildBox:
 
 >python bbox.py build
 """
@@ -61,7 +59,8 @@ STDOUT_UNDERLINE = '\033[4m'
 
 # Build constants
 IMAGE_PREFIX = 'sk1project/'
-PROJECT_DIR = '/vagrant'
+VAGRANT_DIR = '/vagrant'
+PROJECT_DIR = VAGRANT_DIR
 BUILD_DIR = os.path.join(PROJECT_DIR, 'build')
 DIST_DIR = os.path.join(PROJECT_DIR, 'dist')
 RELEASE_DIR = os.path.join(PROJECT_DIR, 'release')
@@ -76,13 +75,18 @@ APP_VER = '2.0rc4'
 # APP_VER = '2.0rc4'
 
 RELEASE = False
+DEBUG_MODE = False
 
 IMAGES = [
-    'ubuntu_14.04_32bit',
-    'ubuntu_14.04_64bit',
-    'ubuntu_16.04_32bit',
-    'ubuntu_16.04_64bit',
-    'ubuntu_18.04_64bit',
+    # 'ubuntu_14.04_32bit',
+    # 'ubuntu_14.04_64bit',
+    # 'ubuntu_16.04_32bit',
+    # 'ubuntu_16.04_64bit',
+    # 'ubuntu_17.10_64bit',
+    # 'ubuntu_18.04_64bit',
+    # 'debian_7_32bit',
+    # 'debian_7_64bit',
+    'debian_8_32bit',
 ]
 
 
@@ -109,32 +113,37 @@ def pull_images():
 
 
 def run_build(verbose=False):
+    if not is_path(PROJECT_DIR):
+        command('ln -s %s %s' % (VAGRANT_DIR, PROJECT_DIR))
+    if is_path(RELEASE_DIR):
+        command('rm -rf %s' % RELEASE_DIR)
     for image in IMAGES:
         os_name = image.capitalize().replace('_', ' ')
         echo_msg('Build on %s' % os_name, code=STDOUT_YELLOW)
-        flag = '-d' if verbose else ''
-        command('docker run %s -v %s:%s %s' %
-                (flag, PROJECT_DIR, PROJECT_DIR, image))
+        flag = '-d' if not verbose else ''
+        command('docker run %s -v %s:%s %s%s' %
+                (flag, PROJECT_DIR, PROJECT_DIR, IMAGE_PREFIX, image))
+        echo_msg('Removing containers:', code=STDOUT_BLUE)
+        command('docker stop $(docker ps -a -q)')
+        command('docker rm $(docker ps -a -q)')
+        echo_msg('=' * 30, code=STDOUT_GREEN)
 
 
 def build_package():
     package_name2 = ''
+    out = ' 1> /dev/null' if not DEBUG_MODE else ''
 
     clear_folders()
 
     if bbox.is_deb():
         echo_msg("Building DEB package")
-        command('cd %s;python2 %s bdist_deb 1> /dev/null' %
-                (PROJECT_DIR, SCRIPT))
+        command('cd %s;python2 %s bdist_deb%s' % (PROJECT_DIR, SCRIPT, out))
 
         old_name = bbox.get_package_name(DIST_DIR)
         prefix, suffix = old_name.split('_')
         new_name = prefix + bbox.get_marker(not RELEASE) + suffix
         if bbox.is_ubuntu():
-            ts = ''
-            if not RELEASE:
-                ts = '_' + bbox.TIMESTAMP
-
+            ts = '_' + bbox.TIMESTAMP if not RELEASE else ''
             ver = platform.dist()[1]
             if ver == '14.04':
                 package_name2 = prefix + ts + '_mint_17_' + suffix
@@ -145,8 +154,7 @@ def build_package():
 
     elif bbox.is_rpm():
         echo_msg("Building RPM package")
-        command('cd %s;python2 %s bdist_rpm 1> /dev/null' %
-                (PROJECT_DIR, SCRIPT))
+        command('cd %s;python2 %s bdist_rpm%s' % (PROJECT_DIR, SCRIPT, out))
 
         old_name = bbox.get_package_name(DIST_DIR)
         items = old_name.split('.')
@@ -156,22 +164,24 @@ def build_package():
         echo_msg('Unsupported distro!', code=STDOUT_FAIL)
         sys.exit(1)
 
+    distro_folder = bbox.get_distro_folder()
+    os.makedirs(os.path.join(RELEASE_DIR,distro_folder))
     old_name = os.path.join(DIST_DIR, old_name)
-    package_name = os.path.join(RELEASE_DIR, new_name)
+    package_name = os.path.join(RELEASE_DIR, distro_folder, new_name)
     command('cp %s %s' % (old_name, package_name))
     if package_name2:
-        package_name2 = os.path.join(RELEASE_DIR, package_name2)
+        distro_folder = 'LinuxMint/'
+        os.makedirs(os.path.join(RELEASE_DIR, distro_folder))
+        package_name2 = os.path.join(RELEASE_DIR, distro_folder, package_name2)
         command('cp %s %s' % (old_name, package_name2))
 
     if bbox.is_src():
         echo_msg("Creating source package")
         if os.path.isdir(DIST_DIR):
             shutil.rmtree(DIST_DIR, True)
-        command('cd %s;python2 %s sdist 1> /dev/null' % (PROJECT_DIR, SCRIPT))
+        command('cd %s;python2 %s sdist%s' % (PROJECT_DIR, SCRIPT, out))
         old_name = bbox.get_package_name(DIST_DIR)
-        marker = ''
-        if not RELEASE:
-            marker = '_%s' % bbox.TIMESTAMP
+        marker = '_%s' % bbox.TIMESTAMP if not RELEASE else ''
         new_name = old_name.replace('.tar.gz', '%s.tar.gz' % marker)
         old_name = os.path.join(DIST_DIR, old_name)
         package_name = os.path.join(RELEASE_DIR, new_name)
@@ -197,7 +207,9 @@ def build_package():
         command('cp %s %s' % (src, dest))
 
         pkg_name = new_name.replace('.tar.gz', '.archlinux.pkgbuild.zip')
-        pkg_name = os.path.join(RELEASE_DIR, pkg_name)
+        distro_folder = 'ArchLinux/'
+        os.makedirs(os.path.join(RELEASE_DIR, distro_folder))
+        pkg_name = os.path.join(RELEASE_DIR, distro_folder, pkg_name)
         ziph = ZipFile(pkg_name, 'w', ZIP_DEFLATED)
         for item in [new_name, 'PKGBUILD', 'README']:
             path = os.path.join(PKGBUILD_DIR, item)
@@ -217,7 +229,7 @@ if len(sys.argv) > 1:
     if sys.argv[1] == 'pull':
         pull_images()
     elif sys.argv[1] == 'build':
-        run_build(len(sys.argv) > 2 and sys.argv[2] == 'verbose')
+        run_build(DEBUG_MODE)
     else:
         build_package()
 else:
