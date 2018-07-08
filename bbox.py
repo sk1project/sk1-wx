@@ -28,12 +28,13 @@ BuildBox is designed to be launched into Vagrant VM. To prepare environment
 on Linux OS you need installing VirtualBox and Vagrant. After that initialize
 environment from sk1-wx project folder:
 
->$vagrant up ubuntu
->$vagrant ssh ubuntu
->$cd /vagrant
+>vagrant up ubuntu
+>vagrant ssh ubuntu
+>sudo -s
+>cd /vagrant
 >python bbox.py pull
 
-To run build launcn BuildBox inside Vagrant VM:
+To run build launch BuildBox inside Vagrant VM:
 
 >python bbox.py build
 """
