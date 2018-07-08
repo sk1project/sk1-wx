@@ -60,12 +60,12 @@ STDOUT_UNDERLINE = '\033[4m'
 
 # Build constants
 IMAGE_PREFIX = 'sk1project/'
-PROJECT_DIR = '/sk1-wx'
-BUILD_DIR = '/sk1-wx/build'
-DIST_DIR = '/sk1-wx/dist'
-RELEASE_DIR = '/sk1-wx/release'
-PKGBUILD_DIR = '/sk1-wx/pkgbuild'
-ARCH_DIR = '/sk1-wx/archlinux'
+PROJECT_DIR = '/vagrant'
+BUILD_DIR = os.path.join(PROJECT_DIR, 'build')
+DIST_DIR = os.path.join(PROJECT_DIR, 'dist')
+RELEASE_DIR = os.path.join(PROJECT_DIR, 'release')
+PKGBUILD_DIR = os.path.join(PROJECT_DIR, 'pkgbuild')
+ARCH_DIR = os.path.join(PROJECT_DIR, 'archlinux')
 
 SCRIPT = 'setup-sk1.py'
 APP_NAME = 'sk1'
@@ -88,7 +88,7 @@ IMAGES = [
 def clear_folders():
     # Clear build folders
     if is_path(BUILD_DIR):
-        command('rm -rf %s' % DIST_DIR)
+        command('rm -rf %s' % BUILD_DIR)
     if is_path(DIST_DIR):
         command('rm -rf %s' % DIST_DIR)
     if not is_path(RELEASE_DIR):
