@@ -30,7 +30,7 @@ environment from sk1-wx project folder:
 
 >$vagrant up ubuntu
 >$vagrant ssh ubuntu
->$cd /sk1-wx
+>$cd /vagrant
 >python bbox.py pull
 
 To run build launcn BuildBox inside Vagrant VM:
