@@ -150,3 +150,15 @@ def get_package_name(pth):
             if files[0].endswith('.zip') or files[0].endswith('.msi'):
                 return files[0]
     raise Error('Build failed! There is no build result.')
+
+
+def get_distro_folder():
+    if is_debian():
+        return 'Debian/'
+    elif is_ubuntu():
+        return 'Ubuntu/'
+    elif is_fedora():
+        return 'Fedora/'
+    elif is_opensuse():
+        return 'OpenSuse/'
+    return ''
