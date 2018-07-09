@@ -52,6 +52,7 @@ OPENSUSE13 = 'SuSE 13'
 OPENSUSE42 = 'SuSE 42.1'
 OPENSUSE42_2 = 'SuSE 42.2'
 OPENSUSE42_3 = 'SuSE 42.3'
+OPENSUSE15_0 = 'SuSE 15.0'
 
 
 def get_system_id():
