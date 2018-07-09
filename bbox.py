@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #
 #   BuildBox for sK1/UniConvertor 2.x
 #
@@ -83,7 +83,7 @@ APP_VER = '2.0rc4'
 # APP_VER = '2.0rc4'
 
 RELEASE = False
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 IMAGES = [
     'ubuntu_14.04_32bit',
@@ -98,6 +98,7 @@ IMAGES = [
     'debian_8_64bit',
     'debian_9_32bit',
     'debian_9_64bit',
+    'fedora_28_64bit',
 ]
 
 
@@ -129,14 +130,14 @@ def remove_images():
 
 
 def rebuild_images():
-    command('docker rmi $(docker images -a -q)')
+    # command('docker rmi $(docker images -a -q)')
     for image in IMAGES:
         echo_msg('Rebuilding %s%s image' % (IMAGE_PREFIX, image),
                  code=STDOUT_MAGENTA)
         dockerfile = os.path.join(PROJECT_DIR, 'infra', 'bbox', 'docker', image)
         command('docker build -t %s%s %s' % (IMAGE_PREFIX, image, dockerfile))
-        if not command('docker push %s%s' % (IMAGE_PREFIX, image)):
-            command('docker rmi $(docker images -a -q)')
+        # if not command('docker push %s%s' % (IMAGE_PREFIX, image)):
+        #     command('docker rmi $(docker images -a -q)')
 
 
 def run_build():
