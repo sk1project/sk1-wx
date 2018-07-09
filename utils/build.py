@@ -41,7 +41,8 @@ def clear_build():
     """
     Clears build result.
     """
-    os.system('rm -rf build')
+    if os.path.exists('build'):
+        os.system('rm -rf build')
 
 
 def clear_msw_build():
