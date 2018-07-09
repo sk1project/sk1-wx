@@ -21,6 +21,7 @@
 Usage:
 --------------------------------------------------------------------------
  to pull docker images:        python bbox.py pull
+ to remove docker images:      python bbox.py rmi
  to run build for all images:  python bbox.py build
  to build package:             python bbox.py
 --------------------------------------------------------------------------
@@ -86,7 +87,10 @@ IMAGES = [
     # 'ubuntu_18.04_64bit',
     # 'debian_7_32bit',
     # 'debian_7_64bit',
-    'debian_8_32bit',
+    # 'debian_8_32bit',
+    # 'debian_8_64bit',
+    # 'debian_9_32bit',
+    'debian_9_64bit',
 ]
 
 
@@ -112,7 +116,21 @@ def pull_images():
         command('docker pull %s%s' % (IMAGE_PREFIX, image))
 
 
-def run_build(verbose=False):
+def remove_images():
+    for image in IMAGES:
+        command('docker rmi %s%s' % (IMAGE_PREFIX, image))
+
+
+def rebuild_images():
+    command('docker rmi $(docker images -a -q)')
+    for image in IMAGES:
+        dockerfile = os.path.join(PROJECT_DIR, 'infra', 'bbox', 'docker', image)
+        command('docker build -t %s%s %s' % (IMAGE_PREFIX, image, dockerfile))
+        command('docker push %s%s' % (IMAGE_PREFIX, image))
+        command('docker rmi $(docker images -a -q)')
+
+
+def run_build():
     if not is_path(PROJECT_DIR):
         command('ln -s %s %s' % (VAGRANT_DIR, PROJECT_DIR))
     if is_path(RELEASE_DIR):
@@ -120,13 +138,14 @@ def run_build(verbose=False):
     for image in IMAGES:
         os_name = image.capitalize().replace('_', ' ')
         echo_msg('Build on %s' % os_name, code=STDOUT_YELLOW)
-        flag = '-d' if not verbose else ''
+        flag = '-d' if not DEBUG_MODE else ''
         command('docker run %s -v %s:%s %s%s' %
                 (flag, PROJECT_DIR, PROJECT_DIR, IMAGE_PREFIX, image))
         echo_msg('Removing containers:', code=STDOUT_BLUE)
         command('docker stop $(docker ps -a -q)')
         command('docker rm $(docker ps -a -q)')
         echo_msg('=' * 30, code=STDOUT_GREEN)
+    command('chmod -R 777 %s' % RELEASE_DIR)
 
 
 def build_package():
@@ -165,7 +184,7 @@ def build_package():
         sys.exit(1)
 
     distro_folder = bbox.get_distro_folder()
-    os.makedirs(os.path.join(RELEASE_DIR,distro_folder))
+    os.makedirs(os.path.join(RELEASE_DIR, distro_folder))
     old_name = os.path.join(DIST_DIR, old_name)
     package_name = os.path.join(RELEASE_DIR, distro_folder, new_name)
     command('cp %s %s' % (old_name, package_name))
@@ -228,8 +247,12 @@ def build_package():
 if len(sys.argv) > 1:
     if sys.argv[1] == 'pull':
         pull_images()
+    elif sys.argv[1] == 'rmi':
+        remove_images()
+    elif sys.argv[1] == 'rebuild_images':
+        rebuild_images()
     elif sys.argv[1] == 'build':
-        run_build(DEBUG_MODE)
+        run_build()
     else:
         build_package()
 else:
