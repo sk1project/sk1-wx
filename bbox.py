@@ -30,12 +30,19 @@ on Linux OS you need installing Docker. After that initialize
 environment from sk1-wx project folder:
 
 >sudo -s
-> ln -s . /vagrant
 >python bbox.py pull
 
 To run build, just launch BuildBox:
 
 >python bbox.py build
+--------------------------------------------------------------------------
+BuildBox can be used with Vagrant VM. To run in VM:
+
+>vagrant up ubuntu
+>vagrant ssh ubuntu
+>sudo -s
+>/vagrant/bbox.py build
+--------------------------------------------------------------------------
 """
 
 import os
@@ -133,9 +140,10 @@ def rebuild_images():
 
 
 def run_build():
-    if is_path(VAGRANT_DIR):
-        command('rm -f %s' % VAGRANT_DIR)
-    command('ln -s %s %s' % (PROJECT_DIR, VAGRANT_DIR))
+    if VAGRANT_DIR != PROJECT_DIR:
+        if is_path(VAGRANT_DIR):
+            command('rm -f %s' % VAGRANT_DIR)
+        command('ln -s %s %s' % (PROJECT_DIR, VAGRANT_DIR))
     if is_path(RELEASE_DIR):
         command('rm -rf %s' % RELEASE_DIR)
     for image in IMAGES:
@@ -148,7 +156,8 @@ def run_build():
             code=STDOUT_MAGENTA
         echo_msg('=' * 30, code=code)
     command('chmod -R 777 %s' % RELEASE_DIR)
-    command('rm -f %s' % VAGRANT_DIR)
+    if VAGRANT_DIR != PROJECT_DIR:
+        command('rm -f %s' % VAGRANT_DIR)
 
 
 def build_package():
