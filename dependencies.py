@@ -69,6 +69,8 @@ UC2_RPM_DEPENDENCIES = {
                   'python-Pillow python-reportlab',
     OPENSUSE42_3: 'liblcms2-2 libpango-1_0-0 ImageMagick python-cairo '
                   'python-Pillow python-reportlab',
+    OPENSUSE15_0: 'liblcms2-2 libpango-1_0-0 ImageMagick python-cairo '
+                  'python-Pillow python-reportlab',
 }
 
 SK1_RPM_DEPENDENCIES = {
@@ -83,6 +85,7 @@ SK1_RPM_DEPENDENCIES = {
     OPENSUSE42: 'python-wxWidgets python-cups',
     OPENSUSE42_2: 'python-wxWidgets python-cups',
     OPENSUSE42_3: 'python-wxWidgets python-cups',
+    OPENSUSE15_0: 'python-wxWidgets python-cups',
 }
 
 
