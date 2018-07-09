@@ -49,7 +49,7 @@ class Error(Exception):
 
 
 def command(exec_cmd):
-    os.system(exec_cmd)
+    return os.system(exec_cmd)
 
 
 def echo_msg(msg, newline=True, flush=True, code=''):

@@ -61,7 +61,7 @@ STDOUT_UNDERLINE = '\033[4m'
 # Build constants
 IMAGE_PREFIX = 'sk1project/'
 VAGRANT_DIR = '/vagrant'
-PROJECT_DIR = VAGRANT_DIR
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 BUILD_DIR = os.path.join(PROJECT_DIR, 'build')
 DIST_DIR = os.path.join(PROJECT_DIR, 'dist')
 RELEASE_DIR = os.path.join(PROJECT_DIR, 'release')
@@ -79,17 +79,17 @@ RELEASE = False
 DEBUG_MODE = False
 
 IMAGES = [
-    # 'ubuntu_14.04_32bit',
-    # 'ubuntu_14.04_64bit',
-    # 'ubuntu_16.04_32bit',
-    # 'ubuntu_16.04_64bit',
-    # 'ubuntu_17.10_64bit',
-    # 'ubuntu_18.04_64bit',
-    # 'debian_7_32bit',
-    # 'debian_7_64bit',
-    # 'debian_8_32bit',
-    # 'debian_8_64bit',
-    # 'debian_9_32bit',
+    'ubuntu_14.04_32bit',
+    'ubuntu_14.04_64bit',
+    'ubuntu_16.04_32bit',
+    'ubuntu_16.04_64bit',
+    'ubuntu_17.10_64bit',
+    'ubuntu_18.04_64bit',
+    'debian_7_32bit',
+    'debian_7_64bit',
+    'debian_8_32bit',
+    'debian_8_64bit',
+    'debian_9_32bit',
     'debian_9_64bit',
 ]
 
@@ -124,35 +124,39 @@ def remove_images():
 def rebuild_images():
     command('docker rmi $(docker images -a -q)')
     for image in IMAGES:
+        echo_msg('Rebuilding %s%s image' % (IMAGE_PREFIX, image),
+                 code=STDOUT_MAGENTA)
         dockerfile = os.path.join(PROJECT_DIR, 'infra', 'bbox', 'docker', image)
         command('docker build -t %s%s %s' % (IMAGE_PREFIX, image, dockerfile))
-        command('docker push %s%s' % (IMAGE_PREFIX, image))
-        command('docker rmi $(docker images -a -q)')
+        if not command('docker push %s%s' % (IMAGE_PREFIX, image)):
+            command('docker rmi $(docker images -a -q)')
 
 
 def run_build():
-    if not is_path(PROJECT_DIR):
-        command('ln -s %s %s' % (VAGRANT_DIR, PROJECT_DIR))
+    if is_path(VAGRANT_DIR):
+        command('rm -f %s' % VAGRANT_DIR)
+    command('ln -s %s %s' % (PROJECT_DIR, VAGRANT_DIR))
     if is_path(RELEASE_DIR):
         command('rm -rf %s' % RELEASE_DIR)
     for image in IMAGES:
         os_name = image.capitalize().replace('_', ' ')
         echo_msg('Build on %s' % os_name, code=STDOUT_YELLOW)
-        flag = '-d' if not DEBUG_MODE else ''
-        command('docker run %s -v %s:%s %s%s' %
-                (flag, PROJECT_DIR, PROJECT_DIR, IMAGE_PREFIX, image))
-        echo_msg('Removing containers:', code=STDOUT_BLUE)
-        command('docker stop $(docker ps -a -q)')
-        command('docker rm $(docker ps -a -q)')
-        echo_msg('=' * 30, code=STDOUT_GREEN)
+        output = ' 1> /dev/null' if not DEBUG_MODE else ''
+        code = STDOUT_GREEN
+        if command('docker run --rm -v %s:%s %s%s %s' %
+                   (PROJECT_DIR, VAGRANT_DIR, IMAGE_PREFIX, image, output)):
+            code=STDOUT_MAGENTA
+        echo_msg('=' * 30, code=code)
     command('chmod -R 777 %s' % RELEASE_DIR)
+    command('rm -f %s' % VAGRANT_DIR)
 
 
 def build_package():
     package_name2 = ''
-    out = ' 1> /dev/null' if not DEBUG_MODE else ''
+    out = ' 1> /dev/null  2> /dev/null' if not DEBUG_MODE else ''
 
     clear_folders()
+    mint_folder = os.path.join(RELEASE_DIR, 'LinuxMint')
 
     if bbox.is_deb():
         echo_msg("Building DEB package")
@@ -183,15 +187,16 @@ def build_package():
         echo_msg('Unsupported distro!', code=STDOUT_FAIL)
         sys.exit(1)
 
-    distro_folder = bbox.get_distro_folder()
-    os.makedirs(os.path.join(RELEASE_DIR, distro_folder))
+    distro_folder = os.path.join(RELEASE_DIR, bbox.get_distro_folder())
+    if not is_path(distro_folder):
+        os.makedirs(distro_folder)
     old_name = os.path.join(DIST_DIR, old_name)
     package_name = os.path.join(RELEASE_DIR, distro_folder, new_name)
     command('cp %s %s' % (old_name, package_name))
     if package_name2:
-        distro_folder = 'LinuxMint/'
-        os.makedirs(os.path.join(RELEASE_DIR, distro_folder))
-        package_name2 = os.path.join(RELEASE_DIR, distro_folder, package_name2)
+        if not is_path(mint_folder):
+            os.makedirs(mint_folder)
+        package_name2 = os.path.join(RELEASE_DIR, mint_folder, package_name2)
         command('cp %s %s' % (old_name, package_name2))
 
     if bbox.is_src():
@@ -226,9 +231,9 @@ def build_package():
         command('cp %s %s' % (src, dest))
 
         pkg_name = new_name.replace('.tar.gz', '.archlinux.pkgbuild.zip')
-        distro_folder = 'ArchLinux/'
-        os.makedirs(os.path.join(RELEASE_DIR, distro_folder))
-        pkg_name = os.path.join(RELEASE_DIR, distro_folder, pkg_name)
+        arch_folder = os.path.join(RELEASE_DIR, 'ArchLinux')
+        os.makedirs(arch_folder)
+        pkg_name = os.path.join(arch_folder, pkg_name)
         ziph = ZipFile(pkg_name, 'w', ZIP_DEFLATED)
         for item in [new_name, 'PKGBUILD', 'README']:
             path = os.path.join(PKGBUILD_DIR, item)
