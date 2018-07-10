@@ -20,25 +20,9 @@
 import datetime
 import os
 import sys
-import platform
 
-WINDOWS = 'Windows'
-LINUX = 'Linux'
-MACOS = 'Darwin'
+from .dist import SYSFACTS
 
-MINT = 'LinuxMint'
-UBUNTU = 'Ubuntu'
-DEBIAN = 'debian'
-FEDORA = 'fedora'
-OPENSUSE = 'SuSE'
-
-MARKERS = {
-    MINT: 'mint',
-    UBUNTU: 'ubuntu',
-    DEBIAN: 'debian',
-    FEDORA: 'fc',
-    OPENSUSE: 'opensuse',
-}
 
 TIMESTAMP = datetime.datetime.now().strftime("%Y%m%d")
 STDOUT_ENDC = '\033[0m'
@@ -62,72 +46,26 @@ def echo_msg(msg, newline=True, flush=True, code=''):
         sys.stdout.flush()
 
 
-def is_64bit():
-    return platform.architecture()[0] == '64bit'
-
-
-def is_msw():
-    return platform.system() == WINDOWS
-
-
-def is_linux():
-    return platform.system() == LINUX
-
-
-def is_macos():
-    return platform.system() == MACOS
-
-
 def is_path(pth):
     return os.path.lexists(pth)
 
 
-def is_deb():
-    return platform.dist()[0] in [MINT, UBUNTU, DEBIAN]
-
-
-def is_debian():
-    return platform.dist()[0] == DEBIAN
-
-
-def is_ubuntu():
-    return platform.dist()[0] == UBUNTU
-
-
-def is_fedora():
-    return platform.dist()[0] == FEDORA
-
-
-def is_opensuse():
-    return platform.dist()[0] == OPENSUSE
-
-
-def is_rpm():
-    return platform.dist()[0] in [FEDORA, OPENSUSE]
-
-
-def is_src():
-    return is_deb() and platform.dist()[1] == '16.04' and is_64bit()
-
-
 def get_marker(timestamp=True):
-    if is_deb():
-        ver = platform.dist()[1]
-        if is_debian():
+    ver = SYSFACTS.version
+    mrk = SYSFACTS.marker
+    if SYSFACTS.is_deb:
+        if SYSFACTS.is_debian:
             ver = ver.split('.')[0]
-        mrk = '_%s_%s_' % (MARKERS[platform.dist()[0]], ver)
+        mrk = '_%s_%s_' % (SYSFACTS.marker, ver)
         if timestamp:
             mrk = '_%s%s' % (TIMESTAMP, mrk)
-        return mrk
-    elif is_rpm():
-        ver = platform.dist()[1].split('.')[0]
-        if platform.dist()[0] == OPENSUSE:
-            ver = platform.dist()[1]
-        mrk = MARKERS[platform.dist()[0]] + ver
+    elif SYSFACTS.is_rpm:
+        if not SYSFACTS.is_opensuse and not ver.startswith('42'):
+            ver = ver.split('.')[0]
+        mrk = SYSFACTS.marker + ver
         if timestamp:
             mrk = '%s.%s' % (TIMESTAMP, mrk)
-        return mrk
-    return MARKERS[platform.dist()[0]]
+    return mrk
 
 
 def get_package_name(pth):
@@ -136,29 +74,17 @@ def get_package_name(pth):
     for fn in file_items:
         if os.path.isfile(os.path.join(pth, fn)):
             files.append(fn)
-    if is_deb():
+    if SYSFACTS.is_deb:
         if len(files) == 1:
             if files[0].endswith('.deb') or files[0].endswith('.tar.gz'):
                 return files[0]
-    elif is_rpm():
+    elif SYSFACTS.is_rpm:
         for fn in files:
             if fn.endswith('.rpm') and not fn.endswith('src.rpm') \
                     and 'debug' not in fn:
                 return fn
-    elif is_msw():
+    elif SYSFACTS.is_msw:
         if len(files) == 1:
             if files[0].endswith('.zip') or files[0].endswith('.msi'):
                 return files[0]
     raise Error('Build failed! There is no build result.')
-
-
-def get_distro_folder():
-    if is_debian():
-        return 'Debian/'
-    elif is_ubuntu():
-        return 'Ubuntu/'
-    elif is_fedora():
-        return 'Fedora/'
-    elif is_opensuse():
-        return 'OpenSuse/'
-    return ''

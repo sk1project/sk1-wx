@@ -19,10 +19,15 @@
 
 import platform
 
+WINDOWS = 'Windows'
+LINUX = 'Linux'
+MACOS = 'Darwin'
+
 MINT = 'LinuxMint'
 MINT13 = 'LinuxMint 13'
 MINT17 = 'LinuxMint 17'
 MINT18 = 'LinuxMint 18'
+MINT19 = 'LinuxMint 19'
 
 UBUNTU = 'Ubuntu'
 UBUNTU12 = 'Ubuntu 12'
@@ -52,12 +57,47 @@ OPENSUSE13 = 'SuSE 13'
 OPENSUSE42 = 'SuSE 42.1'
 OPENSUSE42_2 = 'SuSE 42.2'
 OPENSUSE42_3 = 'SuSE 42.3'
-OPENSUSE15_0 = 'SuSE 15.0'
+OPENSUSE15_0 = 'SuSE 15'
+
+MARKERS = {
+    MINT: ('mint', 'LinuxMint'),
+    UBUNTU: ('ubuntu', 'Ubuntu'),
+    DEBIAN: ('debian', 'Debian'),
+    FEDORA: ('fc', 'Fedora'),
+    OPENSUSE: ('opensuse', 'OpenSuse'),
+}
 
 
-def get_system_id():
-    ver = platform.dist()[1].split('.')[0]
-    dist = platform.dist()[0] + ' ' + ver
-    if platform.dist()[0] == OPENSUSE and ver == '42':
-        dist = platform.dist()[0] + ' ' + platform.dist()[1]
-    return dist
+class SystemFacts(object):
+    def __init__(self):
+        self.family, self.version = platform.dist()[:2]
+
+        # Workaround for Leap 15.0 bug
+        if not self.family and not self.version:
+            self.family, self.version = OPENSUSE, '15.0'
+
+        # Workaround for Suse 42.x
+        if self.family == OPENSUSE and self.version.startswith('42'):
+            self.sid = '%s %s' % (self.family, self.version)
+        else:
+            self.sid = '%s %s' % (self.family, self.version.split('.')[0])
+
+        self.arch = platform.architecture()[0]
+        self.is_64bit = self.arch == '64bit'
+
+        self.system = platform.system()
+        self.is_msw = self.system == WINDOWS
+        self.is_linux = self.system == LINUX
+        self.is_macos = self.system == MACOS
+        self.is_deb = self.family in [MINT, UBUNTU, DEBIAN]
+        self.is_debian = self.family == DEBIAN
+        self.is_ubuntu = self.family == UBUNTU
+        self.is_rpm = self.family in [FEDORA, OPENSUSE]
+        self.is_fedora = self.family == FEDORA
+        self.is_opensuse = self.family == OPENSUSE
+        self.is_src = all([self.is_64bit, self.is_deb, self.version == '16.04'])
+        self.marker = MARKERS.get(self.family, ('', 'unknown'))[0]
+        self.hmarker = MARKERS.get(self.family, ('Unknown', ''))[1]
+
+
+SYSFACTS = SystemFacts()

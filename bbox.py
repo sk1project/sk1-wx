@@ -46,14 +46,13 @@ BuildBox can be used with Vagrant VM. To run in VM:
 """
 
 import os
-import platform
 import shutil
 import sys
 from zipfile import ZIP_DEFLATED
 from zipfile import ZipFile
 
 from utils import bbox
-from utils.bbox import is_path, command, echo_msg
+from utils.bbox import is_path, command, echo_msg, SYSFACTS
 
 # Output colors
 STDOUT_MAGENTA = '\033[95m'
@@ -86,22 +85,22 @@ RELEASE = False
 DEBUG_MODE = True
 
 IMAGES = [
-    'ubuntu_14.04_32bit',
-    'ubuntu_14.04_64bit',
-    'ubuntu_16.04_32bit',
-    'ubuntu_16.04_64bit',
-    'ubuntu_17.10_64bit',
-    'ubuntu_18.04_64bit',
-    'debian_7_32bit',
-    'debian_7_64bit',
-    'debian_8_32bit',
-    'debian_8_64bit',
-    'debian_9_32bit',
-    'debian_9_64bit',
-    'fedora_26_64bit',
-    'fedora_27_64bit',
-    'fedora_28_64bit',
-    'opensuse_42.3_64bit',
+    # 'ubuntu_14.04_32bit',
+    # 'ubuntu_14.04_64bit',
+    # 'ubuntu_16.04_32bit',
+    # 'ubuntu_16.04_64bit',
+    # 'ubuntu_17.10_64bit',
+    # 'ubuntu_18.04_64bit',
+    # 'debian_7_32bit',
+    # 'debian_7_64bit',
+    # 'debian_8_32bit',
+    # 'debian_8_64bit',
+    # 'debian_9_32bit',
+    # 'debian_9_64bit',
+    # 'fedora_26_64bit',
+    # 'fedora_27_64bit',
+    # 'fedora_28_64bit',
+    # 'opensuse_42.3_64bit',
     'opensuse_15.0_64bit',
 ]
 
@@ -134,17 +133,20 @@ def remove_images():
 
 
 def rebuild_images():
-    # command('docker rmi $(docker images -a -q)')
+    command('docker rm $(docker ps -a -q)  2> /dev/null')
+    command('docker rmi $(docker images -a -q)  2> /dev/null')
     for image in IMAGES:
         echo_msg('Rebuilding %s%s image' % (IMAGE_PREFIX, image),
                  code=STDOUT_MAGENTA)
         dockerfile = os.path.join(PROJECT_DIR, 'infra', 'bbox', 'docker', image)
         command('docker build -t %s%s %s' % (IMAGE_PREFIX, image, dockerfile))
-        # if not command('docker push %s%s' % (IMAGE_PREFIX, image)):
-        #     command('docker rmi $(docker images -a -q)')
+        if not command('docker push %s%s' % (IMAGE_PREFIX, image)):
+            command('docker rmi $(docker images -a -q)')
 
 
 def run_build():
+    echo_msg('BuildBox started', code=STDOUT_MAGENTA)
+    echo_msg('=' * 30, code=STDOUT_MAGENTA)
     if VAGRANT_DIR != PROJECT_DIR:
         if is_path(VAGRANT_DIR):
             command('rm -f %s' % VAGRANT_DIR)
@@ -155,41 +157,44 @@ def run_build():
         os_name = image.capitalize().replace('_', ' ')
         echo_msg('Build on %s' % os_name, code=STDOUT_YELLOW)
         output = ' 1> /dev/null' if not DEBUG_MODE else ''
-        code = STDOUT_GREEN
         if command('docker run --rm -v %s:%s %s%s %s' %
                    (PROJECT_DIR, VAGRANT_DIR, IMAGE_PREFIX, image, output)):
-            code=STDOUT_MAGENTA
-        echo_msg('=' * 30, code=code)
+            echo_msg('=' * 30 + '> FAIL', code=STDOUT_FAIL)
+        else:
+            echo_msg('=' * 30 + '> OK', code=STDOUT_GREEN)
     command('chmod -R 777 %s' % RELEASE_DIR)
     if VAGRANT_DIR != PROJECT_DIR:
         command('rm -f %s' % VAGRANT_DIR)
 
 
 def build_package():
-    package_name2 = ''
+    mint_folder = os.path.join(RELEASE_DIR, 'LinuxMint')
+    eos_folder = os.path.join(RELEASE_DIR, 'elementaryOS')
+    copies = []
     out = ' 1> /dev/null  2> /dev/null' if not DEBUG_MODE else ''
 
     clear_folders()
-    mint_folder = os.path.join(RELEASE_DIR, 'LinuxMint')
 
-    if bbox.is_deb():
+    if SYSFACTS.is_deb:
         echo_msg("Building DEB package")
         command('cd %s;python2 %s bdist_deb%s' % (PROJECT_DIR, SCRIPT, out))
 
         old_name = bbox.get_package_name(DIST_DIR)
         prefix, suffix = old_name.split('_')
         new_name = prefix + bbox.get_marker(not RELEASE) + suffix
-        if bbox.is_ubuntu():
-            ts = '_' + bbox.TIMESTAMP if not RELEASE else ''
-            ver = platform.dist()[1]
-            if ver == '14.04':
-                package_name2 = prefix + ts + '_mint_17_' + suffix
-            elif ver == '16.04':
-                package_name2 = prefix + ts + '_mint_18_' + suffix
-            elif ver == '18.04':
-                package_name2 = prefix + ts + '_mint_19_' + suffix
+        prefix += '_' + bbox.TIMESTAMP if not RELEASE else ''
+        if SYSFACTS.is_ubuntu and SYSFACTS.version == '14.04':
+            copies.append((prefix + '_mint_17_' + suffix, mint_folder))
+            if SYSFACTS.is_64bit:
+                copies.append((prefix + '_elementary0.3_' + suffix, eos_folder))
+        elif SYSFACTS.is_ubuntu and SYSFACTS.version == '16.04':
+            copies.append((prefix + '_mint_18_' + suffix, mint_folder))
+            if SYSFACTS.is_64bit:
+                copies.append((prefix + '_elementary0.4_' + suffix, eos_folder))
+        elif SYSFACTS.is_ubuntu and SYSFACTS.version == '18.04':
+            copies.append((prefix + '_mint_19_' + suffix, mint_folder))
 
-    elif bbox.is_rpm():
+    elif SYSFACTS.is_rpm:
         echo_msg("Building RPM package")
         command('cd %s;python2 %s bdist_rpm%s' % (PROJECT_DIR, SCRIPT, out))
 
@@ -201,19 +206,21 @@ def build_package():
         echo_msg('Unsupported distro!', code=STDOUT_FAIL)
         sys.exit(1)
 
-    distro_folder = os.path.join(RELEASE_DIR, bbox.get_distro_folder())
+    distro_folder = os.path.join(RELEASE_DIR, SYSFACTS.hmarker)
     if not is_path(distro_folder):
         os.makedirs(distro_folder)
     old_name = os.path.join(DIST_DIR, old_name)
     package_name = os.path.join(RELEASE_DIR, distro_folder, new_name)
     command('cp %s %s' % (old_name, package_name))
-    if package_name2:
-        if not is_path(mint_folder):
-            os.makedirs(mint_folder)
-        package_name2 = os.path.join(RELEASE_DIR, mint_folder, package_name2)
-        command('cp %s %s' % (old_name, package_name2))
 
-    if bbox.is_src():
+    # Package copies
+    for name, folder in copies:
+        if not is_path(folder):
+            os.makedirs(folder)
+        name = os.path.join(RELEASE_DIR, folder, name)
+        command('cp %s %s' % (old_name, name))
+
+    if SYSFACTS.is_src:
         echo_msg("Creating source package")
         if os.path.isdir(DIST_DIR):
             shutil.rmtree(DIST_DIR, True)
