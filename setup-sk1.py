@@ -50,7 +50,7 @@ from native_mods import make_modules
 
 sys.path.insert(1, os.path.abspath('./src'))
 
-current_path = os.path.dirname(os.path.abspath(__file__))
+CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 from sk1 import appconst
 
@@ -321,7 +321,7 @@ if RPM_PACKAGE:
         data_files=data_files, )
 
 
-os.chdir(current_path)
+os.chdir(CURRENT_PATH)
 
 if CLEAR_BUILD:
     build.clear_build()
