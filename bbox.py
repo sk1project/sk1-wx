@@ -64,6 +64,10 @@ STDOUT_ENDC = '\033[0m'
 STDOUT_BOLD = '\033[1m'
 STDOUT_UNDERLINE = '\033[4m'
 
+SK1 = 'sk1'
+UC2 = 'uc2'
+PROJECT = SK1  # change point
+
 # Build constants
 IMAGE_PREFIX = 'sk1project/'
 VAGRANT_DIR = '/vagrant'
@@ -74,33 +78,30 @@ RELEASE_DIR = os.path.join(PROJECT_DIR, 'release')
 PKGBUILD_DIR = os.path.join(PROJECT_DIR, 'pkgbuild')
 ARCH_DIR = os.path.join(PROJECT_DIR, 'archlinux')
 
-SCRIPT = 'setup-sk1.py'
-APP_NAME = 'sk1'
+SCRIPT = 'setup-%s.py' % PROJECT
+APP_NAME = PROJECT
 APP_VER = '2.0rc4'
-# SCRIPT = 'setup-uc2.py'
-# APP_NAME = 'uc2'
-# APP_VER = '2.0rc4'
 
 RELEASE = False
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 IMAGES = [
-    # 'ubuntu_14.04_32bit',
-    # 'ubuntu_14.04_64bit',
-    # 'ubuntu_16.04_32bit',
-    # 'ubuntu_16.04_64bit',
-    # 'ubuntu_17.10_64bit',
-    # 'ubuntu_18.04_64bit',
-    # 'debian_7_32bit',
-    # 'debian_7_64bit',
-    # 'debian_8_32bit',
-    # 'debian_8_64bit',
-    # 'debian_9_32bit',
-    # 'debian_9_64bit',
-    # 'fedora_26_64bit',
-    # 'fedora_27_64bit',
-    # 'fedora_28_64bit',
-    # 'opensuse_42.3_64bit',
+    'ubuntu_14.04_32bit',
+    'ubuntu_14.04_64bit',
+    'ubuntu_16.04_32bit',
+    'ubuntu_16.04_64bit',
+    'ubuntu_17.10_64bit',
+    'ubuntu_18.04_64bit',
+    'debian_7_32bit',
+    'debian_7_64bit',
+    'debian_8_32bit',
+    'debian_8_64bit',
+    'debian_9_32bit',
+    'debian_9_64bit',
+    'fedora_26_64bit',
+    'fedora_27_64bit',
+    'fedora_28_64bit',
+    'opensuse_42.3_64bit',
     'opensuse_15.0_64bit',
 ]
 
