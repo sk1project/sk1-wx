@@ -266,6 +266,10 @@ def build_package():
     clear_folders()
 
 
+def build_msw_packages():
+    pass
+
+
 ############################################################
 # Main build procedure
 ############################################################
@@ -280,6 +284,8 @@ if len(sys.argv) > 1:
         rebuild_images()
     elif sys.argv[1] == 'build':
         run_build()
+    elif sys.argv[1] == 'msw_build':
+        build_msw_packages()
     else:
         build_package()
 else:
