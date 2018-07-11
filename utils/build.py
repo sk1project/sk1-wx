@@ -161,17 +161,26 @@ def copy_modules(modules, src_root='src'):
     machine = platform.machine()
     ext = '.so'
     prefix = 'build/lib.linux-' + machine + '-' + version
+    marker = ''
 
     if os.name == 'nt' and platform.architecture()[0] == '32bit':
         prefix = 'build/lib.win32-' + version
         ext = '.pyd'
+        marker = 'win32'
     elif os.name == 'nt' and platform.architecture()[0] == '64bit':
         prefix = 'build/lib.win-amd64-' + version
         ext = '.pyd'
+        marker = 'win64'
 
     for item in modules:
         path = os.path.join(*item.name.split('.')) + ext
         src = os.path.join(prefix, path)
         dst = os.path.join(src_root, path)
         shutil.copy(src, dst)
+        if os.name == 'nt':
+            dst2 = os.path.join('%s-devres' % marker, 'pyd',
+                                os.path.basename(src))
+            if os.path.exists(dst2):
+                os.remove(dst2)
+            shutil.copy(src, dst)
         print '>>>Module %s has been copied to src/ directory' % path
