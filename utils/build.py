@@ -143,12 +143,12 @@ def get_source_structure(path='src', excludes=None):
     return pkgs
 
 
-def compile_sources():
+def compile_sources(folder='build'):
     """
     Compiles python sources in build/ directory.
     """
     import compileall
-    compileall.compile_dir('build')
+    compileall.compile_dir(folder)
 
 
 def copy_modules(modules, src_root='src'):
