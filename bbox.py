@@ -51,8 +51,9 @@ import sys
 from zipfile import ZIP_DEFLATED
 from zipfile import ZipFile
 
-from utils import bbox
-from utils.bbox import is_path, command, echo_msg, SYSFACTS
+from utils import bbox, build
+from utils.bbox import is_path, command, echo_msg, SYSFACTS, TIMESTAMP
+from utils.fsutils import get_files_tree
 
 # Output colors
 STDOUT_MAGENTA = '\033[95m'
@@ -86,23 +87,24 @@ RELEASE = False
 DEBUG_MODE = False
 
 IMAGES = [
-    'ubuntu_14.04_32bit',
-    'ubuntu_14.04_64bit',
-    'ubuntu_16.04_32bit',
-    'ubuntu_16.04_64bit',
-    'ubuntu_17.10_64bit',
-    'ubuntu_18.04_64bit',
-    'debian_7_32bit',
-    'debian_7_64bit',
-    'debian_8_32bit',
-    'debian_8_64bit',
-    'debian_9_32bit',
-    'debian_9_64bit',
-    'fedora_26_64bit',
-    'fedora_27_64bit',
-    'fedora_28_64bit',
-    'opensuse_42.3_64bit',
-    'opensuse_15.0_64bit',
+    # 'ubuntu_14.04_32bit',
+    # 'ubuntu_14.04_64bit',
+    # 'ubuntu_16.04_32bit',
+    # 'ubuntu_16.04_64bit',
+    # 'ubuntu_17.10_64bit',
+    # 'ubuntu_18.04_64bit',
+    # 'debian_7_32bit',
+    # 'debian_7_64bit',
+    # 'debian_8_32bit',
+    # 'debian_8_64bit',
+    # 'debian_9_32bit',
+    # 'debian_9_64bit',
+    # 'fedora_26_64bit',
+    # 'fedora_27_64bit',
+    # 'fedora_28_64bit',
+    # 'opensuse_42.3_64bit',
+    # 'opensuse_15.0_64bit',
+    'msw-packager'
 ]
 
 
@@ -114,6 +116,12 @@ def clear_folders():
         command('rm -rf %s' % DIST_DIR)
     if not is_path(RELEASE_DIR):
         os.makedirs(RELEASE_DIR)
+
+
+def clear_files(folder, ext='py'):
+    for path in get_files_tree(folder, ext):
+        if os.path.exists(path) and path.endswith(ext):
+            os.remove(path)
 
 
 ############################################################
@@ -177,7 +185,7 @@ def build_package():
     clear_folders()
 
     if SYSFACTS.is_deb:
-        echo_msg("Building DEB package")
+        echo_msg('Building DEB package')
         command('cd %s;python2 %s bdist_deb%s' % (PROJECT_DIR, SCRIPT, out))
 
         old_name = bbox.get_package_name(DIST_DIR)
@@ -196,7 +204,7 @@ def build_package():
             copies.append((prefix + '_mint_19_' + suffix, mint_folder))
 
     elif SYSFACTS.is_rpm:
-        echo_msg("Building RPM package")
+        echo_msg('Building RPM package')
         command('cd %s;python2 %s bdist_rpm%s' % (PROJECT_DIR, SCRIPT, out))
 
         old_name = bbox.get_package_name(DIST_DIR)
@@ -222,10 +230,10 @@ def build_package():
         command('cp %s %s' % (old_name, name))
 
     if SYSFACTS.is_src:
-        echo_msg("Creating source package")
+        echo_msg('Creating source package')
         if os.path.isdir(DIST_DIR):
             shutil.rmtree(DIST_DIR, True)
-        command('cd %s;python2 %s sdist%s' % (PROJECT_DIR, SCRIPT, out))
+        command('cd %s;python2 %s sdist %s' % (PROJECT_DIR, SCRIPT, out))
         old_name = bbox.get_package_name(DIST_DIR)
         marker = '_%s' % bbox.TIMESTAMP if not RELEASE else ''
         new_name = old_name.replace('.tar.gz', '%s.tar.gz' % marker)
@@ -266,9 +274,83 @@ def build_package():
     clear_folders()
 
 
-def build_msw_packages():
-    pass
+PKGS = ['sk1', 'uc2', 'wal']
+EXTENSIONS = [
+    'uc2/cms/_cms.pyd',
+    'uc2/libcairo/_libcairo.pyd',
+    'uc2/libimg/_libimg.pyd',
+    'uc2/libpango/_libpango.pyd',
+]
 
+
+def build_msw_packages():
+    echo_msg('Creating portable package')
+    distro_folder = os.path.join(RELEASE_DIR, 'MS_Windows')
+    out = ' 1> /dev/null  2> /dev/null' if not DEBUG_MODE else ''
+
+    clear_folders()
+    if os.path.isdir(DIST_DIR):
+        shutil.rmtree(DIST_DIR, True)
+
+    command('cd %s;python2 %s build %s' % (PROJECT_DIR, SCRIPT, out))
+    libdir = os.path.join(BUILD_DIR, 'lib.linux-x86_64-2.7')
+    build.compile_sources(libdir)
+    clear_files(libdir)
+    clear_files(libdir, 'so')
+
+    for arch in ['win32', 'win64']:
+        portable_name = '%s-%s-%s-portable' % (APP_NAME, APP_VER, arch)
+        if not RELEASE:
+            portable_name = '%s-%s-%s-%s-portable' % \
+                            (APP_NAME, APP_VER, TIMESTAMP, arch)
+        portable_folder = os.path.join(PROJECT_DIR, portable_name)
+        if os.path.exists(portable_folder):
+            shutil.rmtree(portable_folder, True)
+        os.mkdir(portable_folder)
+        portable = os.path.join('/%s-devres' % arch, 'portable.zip')
+
+        echo_msg('Extracting portable files from %s' % portable)
+        ZipFile(portable, 'r').extractall(portable_folder)
+
+        build.compile_sources(portable_folder)
+        clear_files(portable_folder)
+
+        portable_libs = os.path.join(portable_folder, 'libs')
+        for item in PKGS:
+            src = os.path.join(libdir, item)
+            echo_msg('Copying tree %s' % src)
+            shutil.copytree(src, os.path.join(portable_libs, item))
+
+        for item in EXTENSIONS:
+            filename = os.path.basename(item)
+            src = os.path.join('/%s-devres' % arch, 'pyd', filename)
+            dst = os.path.join(portable_libs, item)
+            shutil.copy(src, dst)
+
+        if not is_path(distro_folder):
+            os.makedirs(distro_folder)
+
+        portable_zip = os.path.join(distro_folder, portable_name + '.zip')
+        ziph = ZipFile(portable_zip, 'w', ZIP_DEFLATED)
+
+        echo_msg('Compressing into %s' % portable_zip)
+        for root, dirs, files in os.walk(portable_folder):
+            for item in files:
+                path = os.path.join(root, item)
+                local_path = path.split(portable_name)[1][1:]
+                ziph.write(path, os.path.join(portable_name, local_path))
+        ziph.close()
+        shutil.rmtree(portable_folder, True)
+
+    # Build clearing #####
+
+    shutil.rmtree(BUILD_DIR, True)
+
+    for item in ['MANIFEST', 'MANIFEST.in', 'src/script/sk1',
+                 'src/script/uniconvertor', 'setup.cfg']:
+        item = os.path.join(PROJECT_DIR, item)
+        if os.path.lexists(item):
+            os.remove(item)
 
 ############################################################
 # Main build procedure
