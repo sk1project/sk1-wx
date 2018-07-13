@@ -84,7 +84,7 @@ APP_NAME = PROJECT
 APP_VER = '2.0rc4'
 
 RELEASE = False
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 IMAGES = [
     'ubuntu_14.04_32bit',
@@ -282,6 +282,38 @@ EXTENSIONS = [
     'uc2/libpango/_libpango.pyd',
 ]
 
+MSI_DATA = {
+    # Required
+    'Name': 'sK1 2.0',
+    'UpgradeCode': '3AC4B4FF-10C4-4B8F-81AD-BAC3238BF693',
+    'Version': '2.0rc4',
+    # Optional
+    'Manufacturer': 'sK1 Project',
+    'Description': 'sK1 2.0 Installer',
+    'Comments': 'Licensed under GPL v3',
+    'Keywords': 'Vector graphics, Prepress',
+    # Language
+    'Language': '1033',
+    'Languages': '1033',
+    'Codepage': '1252',
+    # Internals
+    'InstallerVersion': '200',
+    'Compressed': 'yes',
+
+    # Structural elements
+    '_Icon': '/win32-devres/sk1.ico',
+    '_ProgramMenuFolder': 'sK1 Project',
+    '_Shotcuts': [
+        {'Name': '',
+         'Description': '',
+         'Target': 'sk1.exe'},
+    ],
+    '_Arch': 'x86',
+    '_SourceDir': '.',
+    '_OutputName': '',
+
+}
+
 
 def build_msw_packages():
     echo_msg('Creating portable package')
@@ -352,23 +384,16 @@ def build_msw_packages():
         if os.path.lexists(item):
             os.remove(item)
 
+
 ############################################################
 # Main build procedure
 ############################################################
 
-
-if len(sys.argv) > 1:
-    if sys.argv[1] == 'pull':
-        pull_images()
-    elif sys.argv[1] == 'rmi':
-        remove_images()
-    elif sys.argv[1] == 'rebuild_images':
-        rebuild_images()
-    elif sys.argv[1] == 'build':
-        run_build()
-    elif sys.argv[1] == 'msw_build':
-        build_msw_packages()
-    else:
-        build_package()
-else:
-    build_package()
+option = sys.argv[1] if len(sys.argv) > 1 else ''
+{
+    'pull': pull_images,
+    'rmi': remove_images,
+    'rebuild_images': rebuild_images,
+    'build': run_build,
+    'msw_build': build_msw_packages,
+}.get(option, build_package)()
