@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+  <Product Name='sK1 2.0' Id='ABCDDCBA-86C7-4D14-AEC0-86416A69ABDE' UpgradeCode='3AC4B4FF-10C4-4B8F-81AD-BAC3238BF693'
+    Language='1033' Codepage='1252' Version='2.0' Manufacturer='sK1 Project'>
+
+    <Package Id='*' Keywords='Vector graphics, Prepress' Description="sK1 2.0 Installer"
+      Comments='Licensed under GPL v3' Manufacturer='sK1 Project'
+      InstallerVersion='200' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
+
+    <Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" />
+    <Property Id='DiskPrompt' Value="sK 2.0 Installation" />
+    
+    <Icon Id="sk1.ico" SourceFile="sk1.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="sk1.ico" />
+
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+        <!-- ProgramFiles64Folder or ProgramFilesFolder -->
+      <Directory Id='ProgramFiles64Folder' Name='PFiles'>
+          <Directory Id='INSTALLDIR' Name='sK1 2.0rc4'>
+
+            <Component Id='MainExecutable' Guid='ABCDDCBA-83F1-4F22-985B-FDB3C8ABD471' Win64='yes'>
+              <File Id='sk1.exe' Name='sk1.exe' DiskId='1' Source='src/sk1.exe' KeyPath='yes' />
+            </Component>
+
+            <Directory Id="dir7CF186F38DDB5B54BE518E852847066C" Name="node_modules">
+                <Component Id="MainIcon" Guid="ABCDDCBA-83F1-4F22-985B-FDB3C8ABD472" Win64='yes'>
+                <File Id="fil0E6CD2F45881A582326E300D1D42A6C4" DiskId='1' Name='sk1.ico' KeyPath="yes" Source="src/sk1.ico" />
+                </Component>
+            </Directory>
+            
+          </Directory>
+      </Directory>
+            
+        <!-- Step 1: Define ProgramMenuFolder -->
+        <Directory Id="ProgramMenuFolder">
+            <Directory Id="dir53FE5D4C454E6751B1EDF03B54913F5C" Name="sK1 Project"/>
+        </Directory>
+        
+    </Directory>
+
+    <!-- Step 2: Add the shortcut to main executable -->
+    <DirectoryRef Id="dir53FE5D4C454E6751B1EDF03B54913F5C">
+        <Component Id="ApplicationShortcut333" Guid="ABCDDCBA-83F3-4F22-985B-FDB3C8ABD473" Win64='yes'>
+            <Shortcut Id="ApplicationStartMenuShortcut444" 
+                Name="sK1 illustration program" 
+                Description="Open source vector graphics editor"
+                Target="[#sk1.exe]"
+                WorkingDirectory="dir7CF186F38DDB5B54BE518E852847066C"/>
+            <RemoveFolder Id="dir53FE5D4C454E6751B1EDF03B54913F5C" On="uninstall"/>
+            <RegistryValue Root="HKCU" Key="Software\sK1_Project\sK1_2.0rc4" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+        </Component>
+    </DirectoryRef>
+
+    <Feature  Id="MainApplication" Title="Main Application" Level='1'>
+        <ComponentRef Id='MainExecutable' />
+        <ComponentRef Id='MainIcon' />
+        <!-- Step 3: Tell wixl to install the shortcut -->
+        <ComponentRef Id="ApplicationShortcut333" /> 
+    </Feature>
+
+  </Product>
+</Wix>

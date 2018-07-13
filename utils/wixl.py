@@ -19,6 +19,24 @@
 
 import uuid
 
+ATTRS = {
+    'Wix': ('xmlns',),
+    'Product': ('Id', 'Name', 'UpgradeCode', 'Language', 'Codepage', 'Version',
+                'Manufacturer'),
+    'Package': ('Id', 'Keywords', 'Description', 'Comments', 'InstallerVersion',
+                'Languages', 'Compressed', 'Manufacturer', 'SummaryCodepage'),
+    'Media': ('Id', 'Cabinet', 'EmbedCab', 'DiskPrompt'),
+    'Property': ('Id', 'Value',),
+    'Icon': ('Id', 'SourceFile',),
+    'Directory': ('Id', 'Name',),
+    'DirectoryRef': ('Id', ),
+    'Component': ('Id', 'Guid', 'Win64'),
+    'ComponentRef': ('Id', ),
+    'File': ('Id', 'DiskId', 'Name', 'KeyPath', 'Source'),
+    'Shortcut': ('Id', 'Name', 'Description', 'Target' 'WorkingDirectory'),
+    'Feature': ('Id', 'Title', 'Level'),
+}
+
 INDENT = 4
 
 
@@ -26,26 +44,38 @@ class XmtElement(object):
     childs = None
     tag = None
     attrs = None
+    comment = None
 
     def __init__(self, tag, **kwargs):
         self.childs = []
         self.tag = tag
-        self.attrs = kwargs
+        self.attrs = {key: value for key, value in kwargs
+                      if key in ATTRS[self.tag]}
         if 'Id' not in self.attrs:
             self.attrs['Id'] = str(uuid.uuid4())
 
     def add(self, child):
         self.childs.append(child)
 
+    def set(self, **kwargs):
+        self.attrs.update(kwargs)
+
+    def pop(self, key):
+        if key in self.attrs:
+            self.attrs.pop(key)
+
     def write(self, fp, indent=0):
-        fp.write('%s<%s' % (indent * ' ', self.tag))
+        tab = indent * ' '
+        if self.comment:
+            fp.write('%s<!-- %s -->\n' % (tab, self.comment))
+        fp.write('%s<%s' % (tab, self.tag))
         for key, value in self.attrs:
             fp.write(' %s="%s"' % (key, value))
         if self.childs:
             fp.write('>\n')
             for child in self.childs:
                 child.write(fp, indent + INDENT)
-            fp.write('%s</%s>\n' % (indent * ' ', self.tag))
+            fp.write('%s</%s>\n' % (tab, self.tag))
         else:
             fp.write(' />\n')
 
