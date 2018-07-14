@@ -292,13 +292,7 @@ MSI_DATA = {
     'Description': 'sK1 2.0 Installer',
     'Comments': 'Licensed under GPL v3',
     'Keywords': 'Vector graphics, Prepress',
-    # Language
-    'Language': '1033',
-    'Languages': '1033',
-    'Codepage': '1252',
-    # Internals
-    'InstallerVersion': '200',
-    'Compressed': 'yes',
+    'Win64': 'yes',
 
     # Structural elements
     '_Icon': '/win32-devres/sk1.ico',
@@ -308,7 +302,6 @@ MSI_DATA = {
          'Description': '',
          'Target': 'sk1.exe'},
     ],
-    '_Arch': 'x86',
     '_SourceDir': '.',
     '_OutputName': '',
 
