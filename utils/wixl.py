@@ -19,17 +19,18 @@
 
 """
 Supported features:
-
 * JSON-driven MSI generation
 * recursive app folder scanning
 * msi package icon
 * 32/64bit installations
 * ProgramMenu folder and shortcuts
 
+Planned features:
+* GUI for compiled msi-installers
+* Extension associations (Open, Open with)
 """
 
 import os
-import sys
 import tempfile
 import uuid
 
@@ -390,12 +391,14 @@ def build(json_data, xml_only=False):
     if xml_only:
         with open(output_path, 'wb') as fp:
             Wix(json_data).write(fp)
-    else:
+    elif WIXL:
         xml_file = tempfile.NamedTemporaryFile(delete=True)
         with open(xml_file.name, 'wb') as fp:
             Wix(json_data).write(fp)
         arch = '-a x64' if json_data.get('Win64') else ''
         os.system('wixl -v %s -o %s %s' % (arch, output_path, xml_file.name))
+    else:
+        raise Exception('WiX backend support is not implemented yet!')
 
 
 if __name__ == "__main__":
@@ -411,7 +414,7 @@ if __name__ == "__main__":
         'Keywords': 'Vector graphics, Prepress',
         'Win64': 'yes',
 
-        # Structural elements
+        # Installation infrastructure
         '_Icon': '/home/igor/Projects/sk1-icon.ico',
         '_ProgramMenuFolder': 'sK1 Project',
         '_Shortcuts': [
@@ -419,9 +422,9 @@ if __name__ == "__main__":
              'Description': 'Open source vector graphics editor',
              'Target': 'bin/deco.py'},
         ],
-        '_SourceDir': '/home/igor/Projects/tests',
+        '_SourceDir': '/home/igor/Projects/sk1',
         '_InstallDir': 'sk1-2.0rc4',
         '_OutputName': 'sk1-2.0rc4-win64.msi',
         '_OutputDir': '/home/igor/Projects',
     }
-    build(MSI_DATA)#, xml_only=True)
+    build(MSI_DATA)  # , xml_only=True)
