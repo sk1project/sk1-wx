@@ -20,6 +20,7 @@
 """
 Supported features:
 
+* JSON-driven MSI generation
 * recursive app folder scanning
 * msi package icon
 * 32/64bit installations
@@ -29,6 +30,7 @@ Supported features:
 
 import os
 import sys
+import tempfile
 import uuid
 
 WIXL = os.name != 'nt'
@@ -63,6 +65,9 @@ ATTRS = {
 
 def defaults():
     return {
+        'Description': '---',
+        'Comments': '-',
+        'Keywords': '---',
         # Language
         'Language': '1033',
         'Languages': '1033',
@@ -145,7 +150,7 @@ class WixMedia(XmlElement):
 
     def __init__(self, data):
         self.msi_data = data
-        super(WixMedia, self).__init__(self.tag, **data)
+        super(WixMedia, self).__init__(self.tag, Id='1', **data)
 
     def write(self, fp, indent=0):
         fp.write('\n')
@@ -299,6 +304,14 @@ class WixPackage(XmlElement):
     def __init__(self, data):
         self.msi_data = data
         super(WixPackage, self).__init__(self.tag, **data)
+
+
+class WixProduct(XmlElement):
+    tag = 'Product'
+
+    def __init__(self, data):
+        super(WixProduct, self).__init__(self.tag, **data)
+        self.add(WixPackage(data))
         COMPONENTS[:] = []
         self.add(WixMedia(data))
         if data.get('_Icon'):
@@ -345,14 +358,6 @@ class WixPackage(XmlElement):
         return work_dir_id, target_id
 
 
-class WixProduct(XmlElement):
-    tag = 'Product'
-
-    def __init__(self, data):
-        super(WixProduct, self).__init__(self.tag, **data)
-        self.add(WixPackage(data))
-
-
 class Wix(XmlElement):
     tag = 'Wix'
 
@@ -367,8 +372,30 @@ class Wix(XmlElement):
 
     def write(self, fp, indent=0):
         tab = indent * ' '
-        fp.write('%s<?xml version="1.0" encoding="windows-1252"?>\n' % tab)
+        fp.write('%s<?xml version="1.0" encoding="utf-8"?>\n' % tab)
         super(Wix, self).write(fp, indent)
+
+
+def build(json_data, xml_only=False):
+    output = json_data.get('_OutputName')
+    if not output:
+        raise Exception('Output filename is not defined!')
+    if not xml_only and not output.endswith('.msi'):
+        output += '.msi'
+    elif xml_only and not output.endswith('.wxs'):
+        output += '.wxs'
+
+    output_path = os.path.join(json_data.get('_OutputDir', './'), output)
+
+    if xml_only:
+        with open(output_path, 'wb') as fp:
+            Wix(json_data).write(fp)
+    else:
+        xml_file = tempfile.NamedTemporaryFile(delete=True)
+        with open(xml_file.name, 'wb') as fp:
+            Wix(json_data).write(fp)
+        arch = '-a x64' if json_data.get('Win64') else ''
+        os.system('wixl -v %s -o %s %s' % (arch, output_path, xml_file.name))
 
 
 if __name__ == "__main__":
@@ -385,7 +412,7 @@ if __name__ == "__main__":
         'Win64': 'yes',
 
         # Structural elements
-        '_Icon': '/win32-devres/sk1.ico',
+        '_Icon': '/home/igor/Projects/sk1-icon.ico',
         '_ProgramMenuFolder': 'sK1 Project',
         '_Shortcuts': [
             {'Name': 'sK1 illustration program',
@@ -395,5 +422,6 @@ if __name__ == "__main__":
         '_SourceDir': '/home/igor/Projects/tests',
         '_InstallDir': 'sk1-2.0rc4',
         '_OutputName': 'sk1-2.0rc4-win64.msi',
+        '_OutputDir': '/home/igor/Projects',
     }
-    Wix(MSI_DATA).write(sys.stdout)
+    build(MSI_DATA)#, xml_only=True)
