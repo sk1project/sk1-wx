@@ -118,10 +118,13 @@ def clear_folders():
         os.makedirs(RELEASE_DIR)
 
 
-def clear_files(folder, ext='py'):
-    for path in get_files_tree(folder, ext):
-        if os.path.exists(path) and path.endswith(ext):
-            os.remove(path)
+def clear_files(folder, ext=None):
+    ext = 'py' if ext is None else ext
+    exts = [ext] if not isinstance(ext, list) else ext
+    for ext in exts:
+        for path in get_files_tree(folder, ext):
+            if os.path.exists(path) and path.endswith(ext):
+                os.remove(path)
 
 
 ############################################################
@@ -320,8 +323,7 @@ def build_msw_packages():
     command('cd %s;python2 %s build %s' % (PROJECT_DIR, SCRIPT, out))
     libdir = os.path.join(BUILD_DIR, 'lib.linux-x86_64-2.7')
     build.compile_sources(libdir)
-    clear_files(libdir)
-    clear_files(libdir, 'so')
+    clear_files(libdir, ['py', 'so', 'pyo'])
 
     for arch in ['win32', 'win64']:
         portable_name = '%s-%s-%s-portable' % (APP_NAME, APP_VER, arch)
@@ -338,7 +340,7 @@ def build_msw_packages():
         ZipFile(portable, 'r').extractall(portable_folder)
 
         build.compile_sources(portable_folder)
-        clear_files(portable_folder)
+        clear_files(portable_folder, ['py', 'pyo'])
 
         portable_libs = os.path.join(portable_folder, 'libs')
         for item in PKGS:
