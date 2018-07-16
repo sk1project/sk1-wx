@@ -96,7 +96,7 @@ APP_REVISION = {SK1: sk1.appconst.REVISION,
 APP_VER = '%s%s' % (APP_MAJOR_VER, APP_REVISION)
 
 RELEASE = False
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 IMAGES = [
     # 'ubuntu_14.04_32bit',
