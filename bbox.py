@@ -36,7 +36,7 @@ To run build, just launch BuildBox:
 
 >python bbox.py build
 --------------------------------------------------------------------------
-BuildBox can be used with Vagrant VM. To run in VM:
+BuildBox can be used alongside Vagrant VM. To run in VM:
 
 >vagrant up ubuntu
 >vagrant ssh ubuntu
@@ -51,7 +51,7 @@ import sys
 from zipfile import ZIP_DEFLATED
 from zipfile import ZipFile
 
-from utils import bbox, build
+from utils import bbox, build, wixl
 from utils.bbox import is_path, command, echo_msg, SYSFACTS, TIMESTAMP
 from utils.fsutils import get_files_tree
 
@@ -73,6 +73,7 @@ PROJECT = SK1  # change point
 IMAGE_PREFIX = 'sk1project/'
 VAGRANT_DIR = '/vagrant'
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+SRC_DIR = os.path.join(PROJECT_DIR, 'src')
 BUILD_DIR = os.path.join(PROJECT_DIR, 'build')
 DIST_DIR = os.path.join(PROJECT_DIR, 'dist')
 RELEASE_DIR = os.path.join(PROJECT_DIR, 'release')
@@ -81,10 +82,11 @@ ARCH_DIR = os.path.join(PROJECT_DIR, 'archlinux')
 
 SCRIPT = 'setup-%s.py' % PROJECT
 APP_NAME = PROJECT
+APP_FULL_NAME = {SK1: 'sK1', UC2: 'UniConvertor'}[PROJECT]
 APP_VER = '2.0rc4'
 
 RELEASE = False
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 IMAGES = [
     'ubuntu_14.04_32bit',
@@ -287,43 +289,36 @@ EXTENSIONS = [
 
 MSI_DATA = {
     # Required
-    'Name': 'sK1 2.0',
-    'UpgradeCode': '3AC4B4FF-10C4-4B8F-81AD-BAC3238BF693',
-    'Version': '2.0rc4',
-    # Optional
+    'Name': '%s %s' % (APP_FULL_NAME, APP_VER),
+    'UpgradeCode': {SK1: '3AC4B4FF-10C4-4B8F-81AD-BAC3238BF693',
+                    UC2: '3AC4B4FF-10C4-4B8F-81AD-BAC3238BF694'}[PROJECT],
+    'Version': '%s' % APP_VER,
     'Manufacturer': 'sK1 Project',
-    'Description': 'sK1 2.0 Installer',
+    # Optional
+    'Description': '%s %s Installer' % (APP_FULL_NAME, APP_VER),
     'Comments': 'Licensed under GPL v3',
     'Keywords': 'Vector graphics, Prepress',
-    'Win64': 'yes',
 
     # Structural elements
-    '_Icon': '/win32-devres/sk1.ico',
+    '_Icon': '/win32-devres/%s.ico' % PROJECT,
     '_ProgramMenuFolder': 'sK1 Project',
     '_Shotcuts': [
-        {'Name': '',
-         'Description': '',
-         'Target': 'sk1.exe'},
+        {'Name': {SK1: 'sK1 illustration program',
+                  UC2: '%s %s' % (APP_FULL_NAME, APP_VER)}[PROJECT],
+         'Description': {SK1: 'Open source vector graphics editor',
+                         UC2: 'Universal vector graphics translator'}[PROJECT],
+         'Target': '%s.exe' % PROJECT},
     ],
-    '_SourceDir': '.',
+    '_SourceDir': '',
+    '_InstallDir': '%s-%s' % (APP_FULL_NAME, APP_VER),
     '_OutputName': '',
-
+    '_OutputDir': '',
 }
 
 
 def build_msw_packages():
     echo_msg('Creating portable package')
     distro_folder = os.path.join(RELEASE_DIR, 'MS_Windows')
-    out = ' 1> /dev/null  2> /dev/null' if not DEBUG_MODE else ''
-
-    clear_folders()
-    if os.path.isdir(DIST_DIR):
-        shutil.rmtree(DIST_DIR, True)
-
-    command('cd %s;python2 %s build %s' % (PROJECT_DIR, SCRIPT, out))
-    libdir = os.path.join(BUILD_DIR, 'lib.linux-x86_64-2.7')
-    build.compile_sources(libdir)
-    clear_files(libdir, ['py', 'so', 'pyo'])
 
     for arch in ['win32', 'win64']:
         portable_name = '%s-%s-%s-portable' % (APP_NAME, APP_VER, arch)
@@ -339,14 +334,17 @@ def build_msw_packages():
         echo_msg('Extracting portable files from %s' % portable)
         ZipFile(portable, 'r').extractall(portable_folder)
 
-        build.compile_sources(portable_folder)
-        clear_files(portable_folder, ['py', 'pyo'])
+        for folder in ['stdlib/test/', 'stdlib/lib2to3/tests/']:
+            shutil.rmtree(os.path.join(portable_folder, folder), True)
 
         portable_libs = os.path.join(portable_folder, 'libs')
         for item in PKGS:
-            src = os.path.join(libdir, item)
+            src = os.path.join(SRC_DIR, item)
             echo_msg('Copying tree %s' % src)
             shutil.copytree(src, os.path.join(portable_libs, item))
+
+        build.compile_sources(portable_folder)
+        clear_files(portable_folder, ['py', 'so', 'pyo'])
 
         for item in EXTENSIONS:
             filename = os.path.basename(item)
@@ -367,6 +365,25 @@ def build_msw_packages():
                 local_path = path.split(portable_name)[1][1:]
                 ziph.write(path, os.path.join(portable_name, local_path))
         ziph.close()
+
+        # MSI build
+        clear_files(portable_folder, ['exe'])
+        nonportable = os.path.join('/%s-devres' % arch, '%s.zip' % PROJECT)
+
+        echo_msg('Extracting non-portable executables from %s' % nonportable)
+        ZipFile(portable, 'r').extractall(portable_folder)
+
+        msi_name = portable_name.replace('-portable', '')
+        msi_data = {}
+        msi_data.update(MSI_DATA)
+        msi_data['_SourceDir'] = portable_folder
+        if arch == 'win64':
+            msi_data['Win64'] = 'yes'
+        msi_data['_OutputDir'] = distro_folder
+        msi_data['_OutputName'] = msi_name + '.msi'
+        wixl.build(msi_data)
+
+        # Clearing
         shutil.rmtree(portable_folder, True)
 
     # Build clearing #####
