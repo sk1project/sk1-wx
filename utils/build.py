@@ -148,7 +148,7 @@ def compile_sources(folder='build'):
     Compiles python sources in build/ directory.
     """
     import compileall
-    compileall.compile_dir(folder)
+    compileall.compile_dir(folder, quiet=1)
 
 
 def copy_modules(modules, src_root='src'):
