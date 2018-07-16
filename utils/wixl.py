@@ -312,6 +312,7 @@ class WixProduct(XmlElement):
 
     def __init__(self, data):
         super(WixProduct, self).__init__(self.tag, **data)
+        self.attrs['Id'] = data.get('AppGuid')
         self.add(WixPackage(data))
         COMPONENTS[:] = []
         self.add(WixMedia(data))
@@ -405,8 +406,9 @@ if __name__ == "__main__":
     MSI_DATA = {
         # Required
         'Name': 'sK1 2.0rc4',
+        'AppGuid': '3AC4B4FF-10C4-4B8F-81AD-BAC3238BF692',
         'UpgradeCode': '3AC4B4FF-10C4-4B8F-81AD-BAC3238BF693',
-        'Version': '2.0rc4',
+        'Version': '2.0 rc4',
         'Manufacturer': 'sK1 Project',
         # Optional
         'Description': 'sK1 2.0 Installer',
@@ -415,16 +417,16 @@ if __name__ == "__main__":
         'Win64': 'yes',
 
         # Installation infrastructure
-        '_Icon': '/home/igor/Projects/sk1-icon.ico',
+        '_Icon': '~/Projects/sk1-icon.ico',
         '_ProgramMenuFolder': 'sK1 Project',
         '_Shortcuts': [
             {'Name': 'sK1 illustration program',
              'Description': 'Open source vector graphics editor',
              'Target': 'bin/deco.py'},
         ],
-        '_SourceDir': '/home/igor/Projects/sk1',
-        '_InstallDir': 'sk1-2.0rc4',
+        '_SourceDir': '~/Projects/sk1',
+        '_InstallDir': 'sK1 2.0rc4',
         '_OutputName': 'sk1-2.0rc4-win64.msi',
-        '_OutputDir': '/home/igor/Projects',
+        '_OutputDir': '~/Projects',
     }
     build(MSI_DATA)  # , xml_only=True)
