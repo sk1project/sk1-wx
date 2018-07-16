@@ -397,7 +397,7 @@ def build(json_data, xml_only=False):
             Wix(json_data).write(fp)
         arch = '-a x64' if json_data.get('Win64') else ''
         os.system('wixl -v %s -o %s %s' % (arch, output_path, xml_file.name))
-    else:
+    elif not WIXL:
         raise Exception('WiX backend support is not implemented yet!')
 
 
