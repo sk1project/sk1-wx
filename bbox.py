@@ -55,6 +55,12 @@ from utils import bbox, build, wixl
 from utils.bbox import is_path, command, echo_msg, SYSFACTS, TIMESTAMP
 from utils.fsutils import get_files_tree
 
+CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(1, os.path.join(CURRENT_PATH, 'src'))
+
+import sk1.appconst
+import uc2.uc2const
+
 # Output colors
 STDOUT_MAGENTA = '\033[95m'
 STDOUT_BLUE = '\033[94m'
@@ -83,29 +89,33 @@ ARCH_DIR = os.path.join(PROJECT_DIR, 'archlinux')
 SCRIPT = 'setup-%s.py' % PROJECT
 APP_NAME = PROJECT
 APP_FULL_NAME = {SK1: 'sK1', UC2: 'UniConvertor'}[PROJECT]
-APP_VER = '2.0rc4'
+APP_MAJOR_VER = {SK1: sk1.appconst.VERSION,
+                 UC2: uc2.uc2const.VERSION}[PROJECT]
+APP_REVISION = {SK1: sk1.appconst.REVISION,
+                 UC2: uc2.uc2const.REVISION}[PROJECT]
+APP_VER = '%s%s' % (APP_MAJOR_VER, APP_REVISION)
 
 RELEASE = False
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 IMAGES = [
-    'ubuntu_14.04_32bit',
-    'ubuntu_14.04_64bit',
-    'ubuntu_16.04_32bit',
-    'ubuntu_16.04_64bit',
-    'ubuntu_17.10_64bit',
-    'ubuntu_18.04_64bit',
-    'debian_7_32bit',
-    'debian_7_64bit',
-    'debian_8_32bit',
-    'debian_8_64bit',
-    'debian_9_32bit',
-    'debian_9_64bit',
-    'fedora_26_64bit',
-    'fedora_27_64bit',
-    'fedora_28_64bit',
-    'opensuse_42.3_64bit',
-    'opensuse_15.0_64bit',
+    # 'ubuntu_14.04_32bit',
+    # 'ubuntu_14.04_64bit',
+    # 'ubuntu_16.04_32bit',
+    # 'ubuntu_16.04_64bit',
+    # 'ubuntu_17.10_64bit',
+    # 'ubuntu_18.04_64bit',
+    # 'debian_7_32bit',
+    # 'debian_7_64bit',
+    # 'debian_8_32bit',
+    # 'debian_8_64bit',
+    # 'debian_9_32bit',
+    # 'debian_9_64bit',
+    # 'fedora_26_64bit',
+    # 'fedora_27_64bit',
+    # 'fedora_28_64bit',
+    # 'opensuse_42.3_64bit',
+    # 'opensuse_15.0_64bit',
     'msw-packager'
 ]
 
@@ -279,7 +289,7 @@ def build_package():
     clear_folders()
 
 
-PKGS = ['sk1', 'uc2', 'wal']
+PKGS = ['sk1', 'uc2', 'wal'] if PROJECT == SK1 else ['uc2']
 EXTENSIONS = [
     'uc2/cms/_cms.pyd',
     'uc2/libcairo/_libcairo.pyd',
@@ -287,12 +297,17 @@ EXTENSIONS = [
     'uc2/libpango/_libpango.pyd',
 ]
 
+MSI_APP_VERSION = APP_MAJOR_VER if RELEASE \
+    else '%s.%s %s' % (APP_MAJOR_VER, TIMESTAMP, APP_REVISION)
+
 MSI_DATA = {
     # Required
     'Name': '%s %s' % (APP_FULL_NAME, APP_VER),
+    'AppGuid': {SK1: '3AC4B4FF-10C4-4B8F-81AD-BAC3238BF692',
+                UC2: '3AC4B4FF-10C4-4B8F-81AD-BAC3238BF694'}[PROJECT],
     'UpgradeCode': {SK1: '3AC4B4FF-10C4-4B8F-81AD-BAC3238BF693',
-                    UC2: '3AC4B4FF-10C4-4B8F-81AD-BAC3238BF694'}[PROJECT],
-    'Version': '%s' % APP_VER,
+                    UC2: '3AC4B4FF-10C4-4B8F-81AD-BAC3238BF695'}[PROJECT],
+    'Version': MSI_APP_VERSION,
     'Manufacturer': 'sK1 Project',
     # Optional
     'Description': '%s %s Installer' % (APP_FULL_NAME, APP_VER),
@@ -302,8 +317,8 @@ MSI_DATA = {
     # Structural elements
     '_Icon': '/win32-devres/%s.ico' % PROJECT,
     '_ProgramMenuFolder': 'sK1 Project',
-    '_Shotcuts': [
-        {'Name': {SK1: 'sK1 illustration program',
+    '_Shortcuts': [
+        {'Name': {SK1: 'sK1 %s illustration program' % APP_VER,
                   UC2: '%s %s' % (APP_FULL_NAME, APP_VER)}[PROJECT],
          'Description': {SK1: 'Open source vector graphics editor',
                          UC2: 'Universal vector graphics translator'}[PROJECT],
@@ -317,10 +332,10 @@ MSI_DATA = {
 
 
 def build_msw_packages():
-    echo_msg('Creating portable package')
     distro_folder = os.path.join(RELEASE_DIR, 'MS_Windows')
 
     for arch in ['win32', 'win64']:
+        echo_msg('=== Arch %s ===' % arch)
         portable_name = '%s-%s-%s-portable' % (APP_NAME, APP_VER, arch)
         if not RELEASE:
             portable_name = '%s-%s-%s-%s-portable' % \
@@ -329,6 +344,13 @@ def build_msw_packages():
         if os.path.exists(portable_folder):
             shutil.rmtree(portable_folder, True)
         os.mkdir(portable_folder)
+
+        if not is_path(distro_folder):
+            os.makedirs(distro_folder)
+
+        # Portable package
+        echo_msg('Creating portable package')
+
         portable = os.path.join('/%s-devres' % arch, 'portable.zip')
 
         echo_msg('Extracting portable files from %s' % portable)
@@ -352,9 +374,6 @@ def build_msw_packages():
             dst = os.path.join(portable_libs, item)
             shutil.copy(src, dst)
 
-        if not is_path(distro_folder):
-            os.makedirs(distro_folder)
-
         portable_zip = os.path.join(distro_folder, portable_name + '.zip')
         ziph = ZipFile(portable_zip, 'w', ZIP_DEFLATED)
 
@@ -367,11 +386,13 @@ def build_msw_packages():
         ziph.close()
 
         # MSI build
+        echo_msg('Creating MSI package')
+
         clear_files(portable_folder, ['exe'])
-        nonportable = os.path.join('/%s-devres' % arch, '%s.zip' % PROJECT)
+        nonportable = os.path.join('/%s-devres' % arch, '%s_msi.zip' % PROJECT)
 
         echo_msg('Extracting non-portable executables from %s' % nonportable)
-        ZipFile(portable, 'r').extractall(portable_folder)
+        ZipFile(nonportable, 'r').extractall(portable_folder)
 
         msi_name = portable_name.replace('-portable', '')
         msi_data = {}
