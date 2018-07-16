@@ -61,6 +61,7 @@ ATTRS = {
     'Feature': ('Id', 'Title', 'Level'),
     'RemoveFolder': ('Id', 'On'),
     'RegistryValue': ('Root', 'Key', 'Name', 'Type', 'Value', 'KeyPath'),
+    'Condition': ('Message', ),
 }
 
 
@@ -83,6 +84,7 @@ def defaults():
         'DiskPrompt': 'CD-ROM #1',
         'DiskId': '1',
         '_SkipHidden': True,
+        '_OsCondition': '601',
     }
 
 
@@ -128,6 +130,39 @@ class XmlElement(object):
             fp.write('%s</%s>\n' % (tab, self.tag))
         else:
             fp.write(' />\n')
+
+
+class WixCDATA(object):
+    data = None
+
+    def __init__(self, data):
+        self.data = data
+
+    def write(self, fp, indent=0):
+        tab = indent * ' '
+        fp.write('%s<![CDATA[%s]]>\n' % (tab, self.data))
+
+
+OS_CONDITION = {
+    '501': 'Windows XP, Windows Server 2003',
+    '502': 'Windows Server 2003',
+    '600': 'Windows Vista, Windows Server 2008',
+    '601': 'Windows 7, Windows Server 2008R2',
+    '602': 'Windows 8, Windows Server 2012',
+}
+
+
+class WixOsCondition(XmlElement):
+    tag = 'Condition'
+
+    def __init__(self, os_condition):
+        os_condition = '501' if os_condition not in OS_CONDITION \
+            else os_condition
+        msg = 'This application is only ' \
+              'supported on %s or higher.' % OS_CONDITION[os_condition]
+        super(WixOsCondition, self).__init__(self.tag, Message=msg)
+        self.pop('Id')
+        self.add(WixCDATA('Installed OR (VersionNT >= %s)' % os_condition))
 
 
 class WixIcon(XmlElement):
