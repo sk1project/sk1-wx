@@ -104,6 +104,7 @@ class XmlElement(object):
     is_file = False
     is_dir = False
     is_comp = False
+    nl = False
 
     def __init__(self, tag, **kwargs):
         self.childs = []
@@ -124,6 +125,8 @@ class XmlElement(object):
             self.attrs.pop(key)
 
     def write(self, fp, indent=0):
+        if self.nl:
+            fp.write('\n')
         tab = indent * ' '
         if self.comment:
             fp.write('%s<!-- %s -->\n' % (tab, self.comment))
@@ -162,6 +165,7 @@ OS_CONDITION = {
 
 class WixOsCondition(XmlElement):
     tag = 'Condition'
+    nl = True
 
     def __init__(self, os_condition):
         os_condition = '501' if os_condition not in OS_CONDITION \
@@ -175,6 +179,7 @@ class WixOsCondition(XmlElement):
 
 class WixIcon(XmlElement):
     tag = 'Icon'
+    nl = True
 
     def __init__(self, data):
         self.source = data.get('_Icon', '')
@@ -183,7 +188,6 @@ class WixIcon(XmlElement):
                                       Id=os.path.basename(self.source))
 
     def write(self, fp, indent=0):
-        fp.write('\n')
         super(WixIcon, self).write(fp, indent)
         fp.write('%s<Property Id="ARPPRODUCTICON" Value="%s" />\n' %
                  (indent * ' ', os.path.basename(self.source)))
@@ -191,6 +195,7 @@ class WixIcon(XmlElement):
 
 class WixMedia(XmlElement):
     tag = 'Media'
+    nl = True
 
     def __init__(self, data):
         self.msi_data = data
@@ -286,6 +291,7 @@ class WixPfDir(XmlElement):
 class WixTargetDir(XmlElement):
     tag = 'Directory'
     is_dir = True
+    nl = True
 
     def __init__(self, data):
         super(WixTargetDir, self).__init__(self.tag, Id='TARGETDIR',
@@ -300,6 +306,7 @@ class WixTargetDir(XmlElement):
 
 class WixFeature(XmlElement):
     tag = 'Feature'
+    nl = True
 
     def __init__(self, data):
         super(WixFeature, self).__init__(self.tag,
@@ -353,6 +360,8 @@ class WixProduct(XmlElement):
         self.add(WixPackage(data))
         COMPONENTS[:] = []
         self.add(WixMedia(data))
+        if not WIXL and data.get('_OsCondition'):
+            self.add(WixOsCondition(data['_OsCondition']))
         if data.get('_Icon'):
             self.add(WixIcon(data))
         target_dir = WixTargetDir(data)
@@ -417,6 +426,13 @@ class Wix(XmlElement):
 
 def build(json_data, xml_only=False):
     output = json_data.get('_OutputName')
+    if 'Win64' in json_data:
+        if json_data['Win64'] in [True, 'yes']:
+            json_data['Win64'] = 'yes'
+            json_data['_CheckX64'] = True
+        else:
+            json_data.pop('Win64')
+            json_data['_CheckX64'] = False
     if not output:
         raise Exception('Output filename is not defined!')
     if not xml_only and not output.endswith('.msi'):
@@ -450,9 +466,11 @@ if __name__ == "__main__":
         'Description': 'sK1 2.0 Installer',
         'Comments': 'Licensed under GPLv3',
         'Keywords': 'Vector graphics, Prepress',
-        'Win64': 'yes',
+        'Win64': True,
 
         # Installation infrastructure
+        '_OsCondition': '601',
+        '_CheckX64': True,
         '_Icon': '~/Projects/sk1-icon.ico',
         '_ProgramMenuFolder': 'sK1 Project',
         '_Shortcuts': [
