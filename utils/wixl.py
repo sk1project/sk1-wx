@@ -177,6 +177,20 @@ class WixOsCondition(XmlElement):
         self.add(WixCDATA('Installed OR (VersionNT >= %s)' % os_condition))
 
 
+class WixArchCondition(XmlElement):
+    tag = 'Condition'
+    nl = True
+
+    def __init__(self):
+        self.comment = 'Launch Condition to check that ' \
+                       'x64 installer is used on x64 systems'
+        msg = '64-bit operating system was not detected, ' \
+              'please use the 32-bit installer. '
+        super(WixArchCondition, self).__init__(self.tag, Message=msg)
+        self.pop('Id')
+        self.add(WixCDATA('VersionNT64'))
+
+
 class WixIcon(XmlElement):
     tag = 'Icon'
     nl = True
@@ -360,8 +374,11 @@ class WixProduct(XmlElement):
         self.add(WixPackage(data))
         COMPONENTS[:] = []
         self.add(WixMedia(data))
-        if not WIXL and data.get('_OsCondition'):
-            self.add(WixOsCondition(data['_OsCondition']))
+        if not WIXL:
+            if data.get('_OsCondition'):
+                self.add(WixOsCondition(data['_OsCondition']))
+            if data.get('CheckX64'):
+                self.add(WixArchCondition())
         if data.get('_Icon'):
             self.add(WixIcon(data))
         target_dir = WixTargetDir(data)
