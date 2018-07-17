@@ -18,12 +18,16 @@
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-Supported features:
+Supported features (WiX & wixl):
 * JSON-driven MSI generation
 * recursive app folder scanning
 * msi package icon
 * 32/64bit installations
 * ProgramMenu folder and shortcuts
+
+WiX only features:
+* OS version check
+* x64 arch check
 
 Planned features:
 * GUI for compiled msi-installers
