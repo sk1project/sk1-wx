@@ -61,7 +61,7 @@ ATTRS = {
     'Feature': ('Id', 'Title', 'Level'),
     'RemoveFolder': ('Id', 'On'),
     'RegistryValue': ('Root', 'Key', 'Name', 'Type', 'Value', 'KeyPath'),
-    'Condition': ('Message', ),
+    'Condition': ('Message',),
 }
 
 
@@ -88,6 +88,14 @@ def defaults():
     }
 
 
+def get_guid():
+    return str(uuid.uuid4()).upper()
+
+
+def get_id():
+    return get_guid().replace('-', '')
+
+
 class XmlElement(object):
     childs = None
     tag = None
@@ -103,7 +111,7 @@ class XmlElement(object):
         self.attrs = {key: value for key, value in kwargs.items()
                       if key in ATTRS[self.tag]}
         if 'Id' not in self.attrs:
-            self.attrs['Id'] = str(uuid.uuid4()).replace('-', '').upper()
+            self.attrs['Id'] = get_id()
 
     def add(self, child):
         self.childs.append(child)
@@ -202,11 +210,9 @@ class WixFile(XmlElement):
 
     def __init__(self, data, path, rel_path):
         self.path = path
-        pid = str(uuid.uuid4()).replace('-', '').upper()
+        pid = 'fil%s' % get_id()
         super(WixFile, self).__init__(self.tag, **data)
-        self.set(Id='fil%s' % pid,
-                 Name=os.path.basename(rel_path),
-                 Source=path)
+        self.set(Id=pid, Name=os.path.basename(rel_path), Source=path)
 
 
 class WixComponent(XmlElement):
@@ -214,10 +220,8 @@ class WixComponent(XmlElement):
     is_comp = True
 
     def __init__(self, data, path, rel_path):
-        pid = str(uuid.uuid4()).replace('-', '').upper()
-        super(WixComponent, self).__init__(self.tag,
-                                           Guid=str(uuid.uuid4()).upper(),
-                                           **data)
+        pid = get_id()
+        super(WixComponent, self).__init__(self.tag, Guid=get_guid(), **data)
         self.add(WixFile(data, path, rel_path))
         self.set(Id='cmp%s' % pid)
         COMPONENTS.append(self.attrs['Id'])
@@ -229,10 +233,8 @@ class WixDirectory(XmlElement):
 
     def __init__(self, data, path, rel_path):
         name = os.path.basename(rel_path)
-        pid = str(uuid.uuid4()).replace('-', '').upper()
-        super(WixDirectory, self).__init__(self.tag,
-                                           Id='dir%s' % pid,
-                                           Name=name)
+        pid = 'dir%s' % get_id()
+        super(WixDirectory, self).__init__(self.tag, Id=pid, Name=name)
 
         for item in os.listdir(path):
             if data.get('_SkipHidden') and item.startswith('.'):
@@ -318,8 +320,8 @@ class WixShortcutComponent(XmlElement):
     tag = 'Component'
 
     def __init__(self, data, shortcut_data):
-        pid = str(uuid.uuid4()).replace('-', '').upper()
-        guid = str(uuid.uuid4()).upper()
+        pid = get_id()
+        guid = get_guid()
         super(WixShortcutComponent, self).__init__(self.tag, Guid=guid, **data)
         self.add(WixShortcut(shortcut_data))
         self.add(XmlElement('RemoveFolder',
@@ -347,7 +349,7 @@ class WixProduct(XmlElement):
 
     def __init__(self, data):
         super(WixProduct, self).__init__(self.tag, **data)
-        self.attrs['Id'] = data.get('AppGuid')
+        self.set(Id=get_guid())
         self.add(WixPackage(data))
         COMPONENTS[:] = []
         self.add(WixMedia(data))
@@ -441,7 +443,6 @@ if __name__ == "__main__":
     MSI_DATA = {
         # Required
         'Name': 'sK1 2.0rc4',
-        'AppGuid': '3AC4B4FF-10C4-4B8F-81AD-BAC3238BF692',
         'UpgradeCode': '3AC4B4FF-10C4-4B8F-81AD-BAC3238BF693',
         'Version': '2.0 rc4',
         'Manufacturer': 'sK1 Project',
