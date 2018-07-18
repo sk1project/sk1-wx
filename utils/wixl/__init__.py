@@ -32,6 +32,7 @@ WiX only features:
 Planned features:
 * GUI for compiled msi-installers
 * Extension associations (Open, Open with)
+* add to system PATH
 """
 
 import os
@@ -39,9 +40,14 @@ import tempfile
 
 from . import wix
 
+PROJECT = 'pyWiXL'
+VERSION = '0.1'
+
 
 def build(json_data, xml_only=False):
-    output = json_data.get('_OutputName')
+    json_data['_pkgname'] = PROJECT
+    json_data['_pkgver'] = VERSION
+
     if 'Win64' in json_data:
         if json_data['Win64'] in [True, 'yes']:
             json_data['Win64'] = 'yes'
@@ -49,13 +55,14 @@ def build(json_data, xml_only=False):
         else:
             json_data.pop('Win64')
             json_data['_CheckX64'] = False
+
+    output = json_data.get('_OutputName')
     if not output:
         raise Exception('Output filename is not defined!')
     if not xml_only and not output.endswith('.msi'):
         output += '.msi'
     elif xml_only and not output.endswith('.wxs'):
         output += '.wxs'
-
     output_path = os.path.join(json_data.get('_OutputDir', './'), output)
 
     if xml_only:
