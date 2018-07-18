@@ -152,6 +152,7 @@ class WixOsCondition(XmlElement):
     nl = True
 
     def __init__(self, os_condition):
+        self.comment = 'Launch Condition to check suitable system version'
         os_condition = '501' if os_condition not in OS_CONDITION \
             else os_condition
         msg = 'This application is only ' \
@@ -292,6 +293,7 @@ class WixTargetDir(XmlElement):
     nl = True
 
     def __init__(self, data):
+        self.comment = 'Installed file tree'
         super(WixTargetDir, self).__init__(self.tag, Id='TARGETDIR',
                                            Name='SourceDir')
         self.add(WixPfDir(data))

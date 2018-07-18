@@ -33,6 +33,7 @@ Planned features:
 * GUI for compiled msi-installers
 * Extension associations (Open, Open with)
 * add to system PATH
+* custom conditions
 """
 
 import os
@@ -110,4 +111,4 @@ if __name__ == "__main__":
         '_OutputName': '%s-%s-win64.msi' % (PROJECT.lower(), VERSION),
         '_OutputDir': os.path.expanduser('~'),
     }
-    build(MSI_DATA , xml_only=True)
+    build(MSI_DATA, xml_only=True)
