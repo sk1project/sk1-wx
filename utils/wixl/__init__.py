@@ -38,7 +38,7 @@ Planned features:
 import os
 import tempfile
 
-from . import wix
+import wix
 
 PROJECT = 'pyWiXL'
 VERSION = '0.1'
@@ -79,31 +79,33 @@ def build(json_data, xml_only=False):
 
 
 if __name__ == "__main__":
+    current_path = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.dirname(current_path)
     MSI_DATA = {
         # Required
-        'Name': 'sK1 2.0rc4',
-        'UpgradeCode': '3AC4B4FF-10C4-4B8F-81AD-BAC3238BF693',
-        'Version': '2.0 rc4',
+        'Name': PROJECT,
+        'UpgradeCode': '3AC4B4FF-10C4-4B8F-81AD-BAC3238BF690',
+        'Version': VERSION,
         'Manufacturer': 'sK1 Project',
         # Optional
-        'Description': 'sK1 2.0 Installer',
+        'Description': '%s %s Installer' % (PROJECT, VERSION),
         'Comments': 'Licensed under GPLv3',
-        'Keywords': 'Vector graphics, Prepress',
+        'Keywords': 'msi, wix, build',
         'Win64': True,
 
         # Installation infrastructure
         '_OsCondition': '601',
         '_CheckX64': True,
-        '_Icon': '~/Projects/sk1-icon.ico',
+        # '_Icon': '~/Projects/sk1-icon.ico',
         '_ProgramMenuFolder': 'sK1 Project',
         '_Shortcuts': [
-            {'Name': 'sK1 illustration program',
-             'Description': 'Open source vector graphics editor',
-             'Target': 'bin/deco.py'},
+            {'Name': PROJECT,
+             'Description': 'Multiplatform MSI builder',
+             'Target': '__init__.py'},
         ],
-        '_SourceDir': '~/Projects/sk1',
-        '_InstallDir': 'sK1 2.0rc4',
-        '_OutputName': 'sk1-2.0rc4-win64.msi',
-        '_OutputDir': '~/Projects',
+        '_SourceDir': current_path,
+        '_InstallDir': 'wixl-%s' % VERSION,
+        '_OutputName': '%s-%s-win64.msi' % (PROJECT.lower(), VERSION),
+        '_OutputDir': os.path.expanduser('~'),
     }
-    build(MSI_DATA)  # , xml_only=True)
+    build(MSI_DATA , xml_only=True)
