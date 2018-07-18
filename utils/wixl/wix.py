@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#   MSW MSI builder
+#   WiXL/WiX model
 #
 # 	Copyright (C) 2018 by Igor E. Novikov
 #
@@ -17,25 +17,7 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-Supported features (WiX & wixl):
-* JSON-driven MSI generation
-* recursive app folder scanning
-* msi package icon
-* 32/64bit installations
-* ProgramMenu folder and shortcuts
-
-WiX only features:
-* OS version check
-* x64 arch check
-
-Planned features:
-* GUI for compiled msi-installers
-* Extension associations (Open, Open with)
-"""
-
 import os
-import tempfile
 import uuid
 
 WIXL = os.name != 'nt'
