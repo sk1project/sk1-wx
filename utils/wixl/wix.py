@@ -361,7 +361,7 @@ class WixProduct(XmlElement):
         if not WIXL:
             if data.get('_OsCondition'):
                 self.add(WixOsCondition(data['_OsCondition']))
-            if data.get('CheckX64'):
+            if data.get('_CheckX64'):
                 self.add(WixArchCondition())
         if data.get('_Icon'):
             self.add(WixIcon(data))

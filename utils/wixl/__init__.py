@@ -66,6 +66,7 @@ def build(json_data, xml_only=False):
     output_path = os.path.join(json_data.get('_OutputDir', './'), output)
 
     if xml_only:
+        print 'Writing XML into %s...' % output_path
         with open(output_path, 'wb') as fp:
             wix.Wix(json_data).write(fp)
     elif wix.WIXL:
@@ -81,6 +82,7 @@ def build(json_data, xml_only=False):
 if __name__ == "__main__":
     current_path = os.path.dirname(os.path.abspath(__file__))
     path = os.path.dirname(current_path)
+    wix.WIXL = False
     MSI_DATA = {
         # Required
         'Name': PROJECT,
