@@ -69,11 +69,11 @@ def build(json_data, xml_only=False):
     if xml_only:
         print 'Writing XML into %s...' % output_path
         with open(output_path, 'wb') as fp:
-            wix.Wix(json_data).write(fp)
+            wix.Wix(json_data).write_xml(fp)
     elif wix.WIXL:
         xml_file = tempfile.NamedTemporaryFile(delete=True)
         with open(xml_file.name, 'wb') as fp:
-            wix.Wix(json_data).write(fp)
+            wix.Wix(json_data).write_xml(fp)
         arch = '-a x64' if json_data.get('Win64') else ''
         os.system('wixl -v %s -o %s %s' % (arch, output_path, xml_file.name))
     elif not wix.WIXL:
