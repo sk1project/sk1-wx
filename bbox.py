@@ -99,23 +99,23 @@ RELEASE = False
 DEBUG_MODE = False
 
 IMAGES = [
-    # 'ubuntu_14.04_32bit',
-    # 'ubuntu_14.04_64bit',
-    # 'ubuntu_16.04_32bit',
-    # 'ubuntu_16.04_64bit',
-    # 'ubuntu_17.10_64bit',
-    # 'ubuntu_18.04_64bit',
-    # 'debian_7_32bit',
-    # 'debian_7_64bit',
-    # 'debian_8_32bit',
-    # 'debian_8_64bit',
-    # 'debian_9_32bit',
-    # 'debian_9_64bit',
-    # 'fedora_26_64bit',
-    # 'fedora_27_64bit',
-    # 'fedora_28_64bit',
-    # 'opensuse_42.3_64bit',
-    # 'opensuse_15.0_64bit',
+    'ubuntu_14.04_32bit',
+    'ubuntu_14.04_64bit',
+    'ubuntu_16.04_32bit',
+    'ubuntu_16.04_64bit',
+    'ubuntu_17.10_64bit',
+    'ubuntu_18.04_64bit',
+    'debian_7_32bit',
+    'debian_7_64bit',
+    'debian_8_32bit',
+    'debian_8_64bit',
+    'debian_9_32bit',
+    'debian_9_64bit',
+    'fedora_26_64bit',
+    'fedora_27_64bit',
+    'fedora_28_64bit',
+    'opensuse_42.3_64bit',
+    'opensuse_15.0_64bit',
     'msw-packager'
 ]
 
@@ -347,41 +347,41 @@ def build_msw_packages():
             os.makedirs(distro_folder)
 
         # Portable package
-        # echo_msg('Creating portable package')
-        #
-        # portable = os.path.join('/%s-devres' % arch, 'portable.zip')
-        #
-        # echo_msg('Extracting portable files from %s' % portable)
-        # ZipFile(portable, 'r').extractall(portable_folder)
-        #
-        # for folder in ['stdlib/test/', 'stdlib/lib2to3/tests/']:
-        #     shutil.rmtree(os.path.join(portable_folder, folder), True)
-        #
-        # portable_libs = os.path.join(portable_folder, 'libs')
-        # for item in PKGS:
-        #     src = os.path.join(SRC_DIR, item)
-        #     echo_msg('Copying tree %s' % src)
-        #     shutil.copytree(src, os.path.join(portable_libs, item))
-        #
-        # build.compile_sources(portable_folder)
-        # clear_files(portable_folder, ['py', 'so', 'pyo'])
-        #
-        # for item in EXTENSIONS:
-        #     filename = os.path.basename(item)
-        #     src = os.path.join('/%s-devres' % arch, 'pyd', filename)
-        #     dst = os.path.join(portable_libs, item)
-        #     shutil.copy(src, dst)
-        #
-        # portable_zip = os.path.join(distro_folder, portable_name + '.zip')
-        # ziph = ZipFile(portable_zip, 'w', ZIP_DEFLATED)
-        #
-        # echo_msg('Compressing into %s' % portable_zip)
-        # for root, dirs, files in os.walk(portable_folder):
-        #     for item in files:
-        #         path = os.path.join(root, item)
-        #         local_path = path.split(portable_name)[1][1:]
-        #         ziph.write(path, os.path.join(portable_name, local_path))
-        # ziph.close()
+        echo_msg('Creating portable package')
+
+        portable = os.path.join('/%s-devres' % arch, 'portable.zip')
+
+        echo_msg('Extracting portable files from %s' % portable)
+        ZipFile(portable, 'r').extractall(portable_folder)
+
+        for folder in ['stdlib/test/', 'stdlib/lib2to3/tests/']:
+            shutil.rmtree(os.path.join(portable_folder, folder), True)
+
+        portable_libs = os.path.join(portable_folder, 'libs')
+        for item in PKGS:
+            src = os.path.join(SRC_DIR, item)
+            echo_msg('Copying tree %s' % src)
+            shutil.copytree(src, os.path.join(portable_libs, item))
+
+        build.compile_sources(portable_folder)
+        clear_files(portable_folder, ['py', 'so', 'pyo'])
+
+        for item in EXTENSIONS:
+            filename = os.path.basename(item)
+            src = os.path.join('/%s-devres' % arch, 'pyd', filename)
+            dst = os.path.join(portable_libs, item)
+            shutil.copy(src, dst)
+
+        portable_zip = os.path.join(distro_folder, portable_name + '.zip')
+        ziph = ZipFile(portable_zip, 'w', ZIP_DEFLATED)
+
+        echo_msg('Compressing into %s' % portable_zip)
+        for root, dirs, files in os.walk(portable_folder):
+            for item in files:
+                path = os.path.join(root, item)
+                local_path = path.split(portable_name)[1][1:]
+                ziph.write(path, os.path.join(portable_name, local_path))
+        ziph.close()
 
         # MSI build
         echo_msg('Creating MSI package')
@@ -399,7 +399,8 @@ def build_msw_packages():
         if arch == 'win64':
             msi_data['Win64'] = 'yes'
         msi_data['_OutputDir'] = distro_folder
-        msi_data['_OutputName'] = msi_name + '.msi'
+        suffix = '_headless.msi' if os.name != 'nt' else '.msi'
+        msi_data['_OutputName'] = msi_name + suffix
         wixl.build(msi_data) # , xml_only=True)
 
         # Clearing
