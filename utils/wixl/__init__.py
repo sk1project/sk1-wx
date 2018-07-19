@@ -28,12 +28,12 @@ Supported features (WiX & wixl):
 WiX only features:
 * OS version check
 * x64 arch check
+* custom conditions
 
 Planned features:
 * GUI for compiled msi-installers
 * Extension associations (Open, Open with)
 * add to system PATH
-* custom conditions
 """
 
 import os
@@ -99,7 +99,8 @@ if __name__ == "__main__":
         # Installation infrastructure
         '_OsCondition': '601',
         '_CheckX64': True,
-        # '_Icon': '~/Projects/sk1-icon.ico',
+        '_Conditions': [],  # [[msg,condition], ...]
+        '_Icon': '~/Projects/pywixl.ico',
         '_ProgramMenuFolder': 'sK1 Project',
         '_Shortcuts': [
             {'Name': PROJECT,

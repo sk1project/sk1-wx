@@ -128,14 +128,25 @@ class XmlElement(object):
 
 
 class WixCDATA(object):
-    data = None
+    condition = None
 
-    def __init__(self, data):
-        self.data = data
+    def __init__(self, condition):
+        self.condition = condition
 
     def write_xml(self, fp, indent=0):
         tab = indent * ' '
-        fp.write('%s<![CDATA[%s]]>\n' % (tab, self.data))
+        fp.write('%s<![CDATA[%s]]>\n' % (tab, self.condition))
+
+
+class WixCondition(XmlElement):
+    tag = 'Condition'
+    nl = True
+
+    def __init__(self, msg, condition, comment=None):
+        self.comment = comment
+        super(WixCondition, self).__init__(self.tag, Message=msg)
+        self.pop('Id')
+        self.add(WixCDATA(condition))
 
 
 OS_CONDITION = {
@@ -147,33 +158,23 @@ OS_CONDITION = {
 }
 
 
-class WixOsCondition(XmlElement):
-    tag = 'Condition'
-    nl = True
-
+class WixOsCondition(WixCondition):
     def __init__(self, os_condition):
-        self.comment = 'Launch Condition to check suitable system version'
+        comment = 'Launch Condition to check suitable system version'
         os_condition = '501' if os_condition not in OS_CONDITION \
             else os_condition
         msg = 'This application is only ' \
               'supported on %s or higher.' % OS_CONDITION[os_condition]
-        super(WixOsCondition, self).__init__(self.tag, Message=msg)
-        self.pop('Id')
-        self.add(WixCDATA('Installed OR (VersionNT >= %s)' % os_condition))
+        super(WixOsCondition, self).__init__(msg, os_condition, comment)
 
 
-class WixArchCondition(XmlElement):
-    tag = 'Condition'
-    nl = True
-
+class WixArchCondition(WixCondition):
     def __init__(self):
-        self.comment = 'Launch Condition to check that ' \
+        comment = 'Launch Condition to check that ' \
                        'x64 installer is used on x64 systems'
         msg = '64-bit operating system was not detected, ' \
               'please use the 32-bit installer. '
-        super(WixArchCondition, self).__init__(self.tag, Message=msg)
-        self.pop('Id')
-        self.add(WixCDATA('VersionNT64'))
+        super(WixArchCondition, self).__init__(msg, 'VersionNT64', comment)
 
 
 class WixIcon(XmlElement):
@@ -365,6 +366,9 @@ class WixProduct(XmlElement):
                 self.add(WixOsCondition(data['_OsCondition']))
             if data.get('_CheckX64'):
                 self.add(WixArchCondition())
+            if data.get('_Conditions'):
+                for msg, cnd in data['_Conditions']:
+                    self.add(WixCondition(msg, cnd))
         if data.get('_Icon'):
             self.add(WixIcon(data))
         target_dir = WixTargetDir(data)
