@@ -95,8 +95,10 @@ class XmlElement(object):
         self.tag = tag
         self.attrs = {key: value for key, value in kwargs.items()
                       if key in ATTRS[self.tag]}
-        if 'Id' not in self.attrs:
+        if 'Id' not in self.attrs or self.attrs['Id'] == '*':
             self.attrs['Id'] = get_id()
+        if self.attrs.get('Guid') == '*':
+            self.attrs['Guid'] = get_guid()
 
     def add(self, child):
         self.childs.append(child)
@@ -171,7 +173,7 @@ class WixOsCondition(WixCondition):
 class WixArchCondition(WixCondition):
     def __init__(self):
         comment = 'Launch Condition to check that ' \
-                       'x64 installer is used on x64 systems'
+                  'x64 installer is used on x64 systems'
         msg = '64-bit operating system was not detected, ' \
               'please use the 32-bit installer. '
         super(WixArchCondition, self).__init__(msg, 'VersionNT64', comment)
