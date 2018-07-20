@@ -164,9 +164,9 @@ class WixOsCondition(WixCondition):
         comment = 'Launch Condition to check suitable system version'
         os_condition = '501' if os_condition not in OS_CONDITION \
             else os_condition
-        os_condition = 'Installed OR (VersionNT >= %s)' % os_condition
         msg = 'This application is only ' \
               'supported on %s or higher.' % OS_CONDITION[os_condition]
+        os_condition = 'Installed OR (VersionNT >= %s)' % os_condition
         super(WixOsCondition, self).__init__(msg, os_condition, comment)
 
 
