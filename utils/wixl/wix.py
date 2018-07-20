@@ -136,8 +136,7 @@ class WixCDATA(object):
         self.condition = condition
 
     def write_xml(self, fp, indent=0):
-        tab = indent * ' '
-        fp.write('%s<![CDATA[%s]]>\n' % (tab, self.condition))
+        fp.write('%s<![CDATA[%s]]>\n' % (indent * ' ', self.condition))
 
 
 class WixCondition(XmlElement):
@@ -179,6 +178,13 @@ class WixArchCondition(WixCondition):
         super(WixArchCondition, self).__init__(msg, 'VersionNT64', comment)
 
 
+class WixProperty(XmlElement):
+    tag = 'Property'
+
+    def __init__(self, pid, value):
+        super(WixProperty, self).__init__(self.tag, Id=pid, Value=value)
+
+
 class WixIcon(XmlElement):
     tag = 'Icon'
     nl = True
@@ -189,25 +195,13 @@ class WixIcon(XmlElement):
                                       SourceFile=data.get('_Icon', ''),
                                       Id=os.path.basename(self.source))
 
-    def write_xml(self, fp, indent=0):
-        super(WixIcon, self).write_xml(fp, indent)
-        fp.write('%s<Property Id="ARPPRODUCTICON" Value="%s" />\n' %
-                 (indent * ' ', os.path.basename(self.source)))
-
 
 class WixMedia(XmlElement):
     tag = 'Media'
     nl = True
 
     def __init__(self, data):
-        self.msi_data = data
         super(WixMedia, self).__init__(self.tag, Id='1', **data)
-
-    def write_xml(self, fp, indent=0):
-        fp.write('\n')
-        super(WixMedia, self).write_xml(fp, indent)
-        fp.write('%s<Property Id="DiskPrompt" Value="%s Installation" />\n' %
-                 (indent * ' ', self.msi_data.get('Version', '1.0')))
 
 
 class WixFile(XmlElement):
@@ -253,10 +247,6 @@ class WixDirectory(XmlElement):
             elif os.path.isfile(item_path):
                 self.add(WixComponent(data, item_path, item_rel_path))
 
-    def write_xml(self, fp, indent=0):
-        if self.childs:
-            super(WixDirectory, self).write_xml(fp, indent)
-
 
 class WixInstallDir(XmlElement):
     tag = 'Directory'
@@ -300,11 +290,6 @@ class WixTargetDir(XmlElement):
         super(WixTargetDir, self).__init__(self.tag, Id='TARGETDIR',
                                            Name='SourceDir')
         self.add(WixPfDir(data))
-
-    def write_xml(self, fp, indent=0):
-        fp.write('\n')
-        super(WixTargetDir, self).write_xml(fp, indent)
-        fp.write('\n')
 
 
 class WixFeature(XmlElement):
@@ -363,6 +348,8 @@ class WixProduct(XmlElement):
         self.add(WixPackage(data))
         COMPONENTS[:] = []
         self.add(WixMedia(data))
+        media_name = '%s %s Installation' % (data['Name'], data['Version'])
+        self.add(WixProperty('DiskPrompt', media_name))
         if not WIXL:
             if data.get('_OsCondition'):
                 self.add(WixOsCondition(data['_OsCondition']))
@@ -373,6 +360,8 @@ class WixProduct(XmlElement):
                     self.add(WixCondition(msg, cnd))
         if data.get('_Icon'):
             self.add(WixIcon(data))
+            icon_name = os.path.basename(data['_Icon'])
+            self.add(WixProperty('ARPPRODUCTICON', icon_name))
         target_dir = WixTargetDir(data)
         self.add(target_dir)
 
