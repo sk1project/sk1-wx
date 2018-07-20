@@ -41,7 +41,8 @@ def clear_build():
     """
     Clears build result.
     """
-    os.system('rm -rf build')
+    if os.path.exists('build'):
+        os.system('rm -rf build')
 
 
 def clear_msw_build():
@@ -142,12 +143,12 @@ def get_source_structure(path='src', excludes=None):
     return pkgs
 
 
-def compile_sources():
+def compile_sources(folder='build'):
     """
     Compiles python sources in build/ directory.
     """
     import compileall
-    compileall.compile_dir('build')
+    compileall.compile_dir(folder, quiet=1)
 
 
 def copy_modules(modules, src_root='src'):
@@ -160,17 +161,26 @@ def copy_modules(modules, src_root='src'):
     machine = platform.machine()
     ext = '.so'
     prefix = 'build/lib.linux-' + machine + '-' + version
+    marker = ''
 
     if os.name == 'nt' and platform.architecture()[0] == '32bit':
         prefix = 'build/lib.win32-' + version
         ext = '.pyd'
+        marker = 'win32'
     elif os.name == 'nt' and platform.architecture()[0] == '64bit':
         prefix = 'build/lib.win-amd64-' + version
         ext = '.pyd'
+        marker = 'win64'
 
     for item in modules:
         path = os.path.join(*item.name.split('.')) + ext
         src = os.path.join(prefix, path)
         dst = os.path.join(src_root, path)
         shutil.copy(src, dst)
+        if os.name == 'nt':
+            dst2 = os.path.join('%s-devres' % marker, 'pyd',
+                                os.path.basename(src))
+            if os.path.exists(dst2):
+                os.remove(dst2)
+            shutil.copy(src, dst)
         print '>>>Module %s has been copied to src/ directory' % path

@@ -49,6 +49,8 @@ from native_mods import make_modules
 
 sys.path.insert(1, os.path.abspath('./src'))
 
+CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
+
 from uc2 import uc2const
 
 ############################################################
@@ -319,6 +321,8 @@ if RPM_PACKAGE:
         build_script='setup-uc2.py',
         install_path=install_path,
         data_files=data_files, )
+
+os.chdir(CURRENT_PATH)
 
 if CLEAR_BUILD:
     build.clear_build()

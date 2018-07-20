@@ -32,6 +32,7 @@ UC2_DEB_DEPENDENCIES = {
 
     MINT17: DEB_GENERIC + 'libmagickwand5, python-pil',
     MINT18: DEB_GENERIC + 'libmagickwand-6.q16-2, python-pil',
+    MINT19: DEB_GENERIC + 'libmagickwand-6.q16-3, python-pil',
 
     DEBIAN7: DEB_GENERIC + 'libmagickwand5, python-imaging',
     DEBIAN8: DEB_GENERIC + 'libmagickwand-6.q16-2, python-pil',
@@ -47,6 +48,7 @@ SK1_DEB_DEPENDENCIES = {
 
     MINT17: 'python-wxgtk2.8, python-cups',
     MINT18: 'python-wxgtk3.0, python-cups',
+    MINT19: 'python-wxgtk3.0, python-cups',
 
     DEBIAN7: 'python-wxgtk2.8, python-cups',
     DEBIAN8: 'python-wxgtk3.0, python-cups',
@@ -59,6 +61,7 @@ UC2_RPM_DEPENDENCIES = {
     FEDORA25: 'lcms2 pango ImageMagick pycairo python2-pillow python2-reportlab',
     FEDORA26: 'lcms2 pango ImageMagick pycairo python2-pillow python2-reportlab',
     FEDORA27: 'lcms2 pango ImageMagick pycairo python2-pillow python2-reportlab',
+    FEDORA28: 'lcms2 pango ImageMagick python2-cairo python2-pillow python2-reportlab',
 
     OPENSUSE13: 'liblcms2-2 libpango-1_0-0 ImageMagick python-cairo '
                 'python-Pillow python-reportlab',
@@ -68,6 +71,8 @@ UC2_RPM_DEPENDENCIES = {
                   'python-Pillow python-reportlab',
     OPENSUSE42_3: 'liblcms2-2 libpango-1_0-0 ImageMagick python-cairo '
                   'python-Pillow python-reportlab',
+    OPENSUSE15_0: 'liblcms2-2 libpango-1_0-0 ImageMagick python-cairo '
+                  'python-Pillow python-reportlab',
 }
 
 SK1_RPM_DEPENDENCIES = {
@@ -76,27 +81,27 @@ SK1_RPM_DEPENDENCIES = {
     FEDORA25: 'wxPython python2-cups',
     FEDORA26: 'wxPython python2-cups',
     FEDORA27: 'wxPython python2-cups',
+    FEDORA28: 'python2-wxpython python2-cups',
 
     OPENSUSE13: 'python-wxWidgets python-cups',
     OPENSUSE42: 'python-wxWidgets python-cups',
     OPENSUSE42_2: 'python-wxWidgets python-cups',
     OPENSUSE42_3: 'python-wxWidgets python-cups',
+    OPENSUSE15_0: 'python-wxWidgets python-cups',
 }
 
 
 def get_uc2_deb_depend():
-    sid = get_system_id()
-    if sid in UC2_DEB_DEPENDENCIES:
-        return UC2_DEB_DEPENDENCIES[sid]
+    if SYSFACTS.sid in UC2_DEB_DEPENDENCIES:
+        return UC2_DEB_DEPENDENCIES[SYSFACTS.sid]
     return ''
 
 
 def get_sk1_deb_depend():
-    sid = get_system_id()
     uc2_dep = get_uc2_deb_depend()
     sk1_dep = ''
-    if sid in SK1_DEB_DEPENDENCIES:
-        sk1_dep = SK1_DEB_DEPENDENCIES[sid]
+    if SYSFACTS.sid in SK1_DEB_DEPENDENCIES:
+        sk1_dep = SK1_DEB_DEPENDENCIES[SYSFACTS.sid]
     if uc2_dep and sk1_dep:
         sk1_dep = '%s, %s' % (uc2_dep, sk1_dep)
     elif uc2_dep:
@@ -105,18 +110,16 @@ def get_sk1_deb_depend():
 
 
 def get_uc2_rpm_depend():
-    sid = get_system_id()
-    if sid in UC2_RPM_DEPENDENCIES:
-        return UC2_RPM_DEPENDENCIES[sid]
+    if SYSFACTS.sid in UC2_RPM_DEPENDENCIES:
+        return UC2_RPM_DEPENDENCIES[SYSFACTS.sid]
     return ''
 
 
 def get_sk1_rpm_depend():
-    sid = get_system_id()
     uc2_dep = get_uc2_rpm_depend()
     sk1_dep = ''
-    if sid in SK1_RPM_DEPENDENCIES:
-        sk1_dep = SK1_RPM_DEPENDENCIES[sid]
+    if SYSFACTS.sid in SK1_RPM_DEPENDENCIES:
+        sk1_dep = SK1_RPM_DEPENDENCIES[SYSFACTS.sid]
     if uc2_dep and sk1_dep:
         sk1_dep = '%s %s' % (uc2_dep, sk1_dep)
     elif uc2_dep:

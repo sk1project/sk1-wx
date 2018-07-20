@@ -50,6 +50,8 @@ from native_mods import make_modules
 
 sys.path.insert(1, os.path.abspath('./src'))
 
+CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
+
 from sk1 import appconst
 
 ############################################################
@@ -317,6 +319,9 @@ if RPM_PACKAGE:
         build_script='setup-sk1.py',
         install_path=install_path,
         data_files=data_files, )
+
+
+os.chdir(CURRENT_PATH)
 
 if CLEAR_BUILD:
     build.clear_build()
