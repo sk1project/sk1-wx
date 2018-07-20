@@ -80,7 +80,7 @@ def get_id():
     return get_guid().replace('-', '')
 
 
-class XmlElement(object):
+class WixElement(object):
     childs = None
     tag = None
     attrs = None
@@ -123,7 +123,7 @@ class XmlElement(object):
         if self.childs:
             fp.write('>\n')
             for child in self.childs:
-                child.write(fp, indent + INDENT)
+                child.write_xml(fp, indent + INDENT)
             fp.write('%s</%s>\n' % (tab, self.tag))
         else:
             fp.write(' />\n')
@@ -139,7 +139,7 @@ class WixCDATA(object):
         fp.write('%s<![CDATA[%s]]>\n' % (indent * ' ', self.condition))
 
 
-class WixCondition(XmlElement):
+class WixCondition(WixElement):
     tag = 'Condition'
     nl = True
 
@@ -178,14 +178,14 @@ class WixArchCondition(WixCondition):
         super(WixArchCondition, self).__init__(msg, 'VersionNT64', comment)
 
 
-class WixProperty(XmlElement):
+class WixProperty(WixElement):
     tag = 'Property'
 
     def __init__(self, pid, value):
         super(WixProperty, self).__init__(self.tag, Id=pid, Value=value)
 
 
-class WixIcon(XmlElement):
+class WixIcon(WixElement):
     tag = 'Icon'
     nl = True
 
@@ -196,7 +196,7 @@ class WixIcon(XmlElement):
                                       Id=os.path.basename(self.source))
 
 
-class WixMedia(XmlElement):
+class WixMedia(WixElement):
     tag = 'Media'
     nl = True
 
@@ -204,7 +204,7 @@ class WixMedia(XmlElement):
         super(WixMedia, self).__init__(self.tag, Id='1', **data)
 
 
-class WixFile(XmlElement):
+class WixFile(WixElement):
     tag = 'File'
     path = None
     is_file = True
@@ -216,7 +216,7 @@ class WixFile(XmlElement):
         self.set(Id=pid, Name=os.path.basename(rel_path), Source=path)
 
 
-class WixComponent(XmlElement):
+class WixComponent(WixElement):
     tag = 'Component'
     is_comp = True
 
@@ -228,7 +228,7 @@ class WixComponent(XmlElement):
         COMPONENTS.append(self.attrs['Id'])
 
 
-class WixDirectory(XmlElement):
+class WixDirectory(WixElement):
     tag = 'Directory'
     is_dir = True
 
@@ -248,7 +248,7 @@ class WixDirectory(XmlElement):
                 self.add(WixComponent(data, item_path, item_rel_path))
 
 
-class WixInstallDir(XmlElement):
+class WixInstallDir(WixElement):
     tag = 'Directory'
     is_dir = True
 
@@ -269,7 +269,7 @@ class WixInstallDir(XmlElement):
                 self.add(WixComponent(data, item_path, item_rel_path))
 
 
-class WixPfDir(XmlElement):
+class WixPfDir(WixElement):
     tag = 'Directory'
     is_dir = True
 
@@ -280,7 +280,7 @@ class WixPfDir(XmlElement):
         self.add(WixInstallDir(data))
 
 
-class WixTargetDir(XmlElement):
+class WixTargetDir(WixElement):
     tag = 'Directory'
     is_dir = True
     nl = True
@@ -292,7 +292,7 @@ class WixTargetDir(XmlElement):
         self.add(WixPfDir(data))
 
 
-class WixFeature(XmlElement):
+class WixFeature(WixElement):
     tag = 'Feature'
     nl = True
 
@@ -301,17 +301,38 @@ class WixFeature(XmlElement):
                                          Title=data.get('Name'),
                                          Level='1')
         for item in COMPONENTS:
-            self.add(XmlElement('ComponentRef', Id=item))
+            self.add(WixElement('ComponentRef', Id=item))
 
 
-class WixShortcut(XmlElement):
+class WixShortcut(WixElement):
     tag = 'Shortcut'
 
     def __init__(self, shortcut_data):
         super(WixShortcut, self).__init__(self.tag, **shortcut_data)
 
 
-class WixShortcutComponent(XmlElement):
+class WixRemoveFolder(WixElement):
+    tag = 'RemoveFolder'
+
+    def __init__(self, **kwargs):
+        super(WixRemoveFolder, self).__init__(self.tag, **kwargs)
+
+
+class WixRegistryValue(WixElement):
+    tag = 'RegistryValue'
+
+    def __init__(self, **kwargs):
+        super(WixRegistryValue, self).__init__(self.tag, **kwargs)
+
+
+class WixDirectoryRef(WixElement):
+    tag = 'DirectoryRef'
+
+    def __init__(self, **kwargs):
+        super(WixDirectoryRef, self).__init__(self.tag, **kwargs)
+
+
+class WixShortcutComponent(WixElement):
     tag = 'Component'
 
     def __init__(self, data, shortcut_data):
@@ -319,27 +340,25 @@ class WixShortcutComponent(XmlElement):
         guid = get_guid()
         super(WixShortcutComponent, self).__init__(self.tag, Guid=guid, **data)
         self.add(WixShortcut(shortcut_data))
-        self.add(XmlElement('RemoveFolder',
-                            Id=shortcut_data['DirectoryRef'],
-                            On='uninstall'))
+        self.add(WixRemoveFolder(Id=shortcut_data['DirectoryRef'],
+                                 On='uninstall'))
         reg_key = 'Software\\%s\\%s' % (data['Manufacturer'].replace(' ', '_'),
                                         data['Name'].replace(' ', '_'))
-        self.add(XmlElement('RegistryValue', Root='HKCU', Key=reg_key,
-                            Name='installed', Type='integer',
-                            Value='1', KeyPath='yes'))
+        self.add(WixRegistryValue(Root='HKCU', Key=reg_key,
+                                  Name='installed', Type='integer',
+                                  Value='1', KeyPath='yes'))
         self.set(Id='cmp%s' % pid)
         COMPONENTS.append(self.attrs['Id'])
 
 
-class WixPackage(XmlElement):
+class WixPackage(WixElement):
     tag = 'Package'
 
     def __init__(self, data):
-        self.msi_data = data
         super(WixPackage, self).__init__(self.tag, **data)
 
 
-class WixProduct(XmlElement):
+class WixProduct(WixElement):
     tag = 'Product'
 
     def __init__(self, data):
@@ -366,15 +385,15 @@ class WixProduct(XmlElement):
         self.add(target_dir)
 
         if data.get('_Shortcuts') and data.get('_ProgramMenuFolder'):
-            pm_dir = XmlElement('Directory', Id='ProgramMenuFolder')
+            pm_dir = WixElement('Directory', Id='ProgramMenuFolder')
             pm_dir.comment = 'Application ProgramMenu folder'
             target_dir.add(pm_dir)
-            shortcut_dir = XmlElement('Directory',
+            shortcut_dir = WixElement('Directory',
                                       Name=data.get('_ProgramMenuFolder'))
             pm_dir.add(shortcut_dir)
             ref = shortcut_dir.attrs['Id']
 
-            dir_ref = XmlElement('DirectoryRef', Id=ref)
+            dir_ref = WixDirectoryRef(Id=ref)
             self.add(dir_ref)
             for shortcut in data.get('_Shortcuts'):
                 target = os.path.join(data['_SourceDir'], shortcut['Target'])
@@ -404,7 +423,7 @@ class WixProduct(XmlElement):
         return work_dir_id, target_id
 
 
-class Wix(XmlElement):
+class Wix(WixElement):
     tag = 'Wix'
 
     def __init__(self, data):
