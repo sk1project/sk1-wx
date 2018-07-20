@@ -76,8 +76,8 @@ def get_guid():
     return str(uuid.uuid4()).upper()
 
 
-def get_id():
-    return get_guid().replace('-', '')
+def get_id(prefix=''):
+    return '%s%s' % (prefix, get_guid().replace('-', ''))
 
 
 class WixElement(object):
@@ -211,7 +211,7 @@ class WixFile(WixElement):
 
     def __init__(self, data, path, rel_path):
         self.path = path
-        pid = 'fil%s' % get_id()
+        pid = get_id('fil')
         super(WixFile, self).__init__(self.tag, **data)
         self.set(Id=pid, Name=os.path.basename(rel_path), Source=path)
 
@@ -221,10 +221,9 @@ class WixComponent(WixElement):
     is_comp = True
 
     def __init__(self, data, path, rel_path):
-        pid = get_id()
         super(WixComponent, self).__init__(self.tag, Guid=get_guid(), **data)
         self.add(WixFile(data, path, rel_path))
-        self.set(Id='cmp%s' % pid)
+        self.set(Id=get_id('cmp'))
         COMPONENTS.append(self.attrs['Id'])
 
 
@@ -232,20 +231,23 @@ class WixDirectory(WixElement):
     tag = 'Directory'
     is_dir = True
 
-    def __init__(self, data, path, rel_path):
-        name = os.path.basename(rel_path)
-        pid = 'dir%s' % get_id()
+    def __init__(self, data=None, path=None, rel_path=None, **kwargs):
+        name = kwargs['Name'] if 'Name' in kwargs \
+            else os.path.basename(rel_path)
+        pid = kwargs['Id'] if 'Id' in kwargs \
+            else get_id('dir')
         super(WixDirectory, self).__init__(self.tag, Id=pid, Name=name)
 
-        for item in os.listdir(path):
-            if data.get('_SkipHidden') and item.startswith('.'):
-                continue
-            item_path = os.path.join(path, item)
-            item_rel_path = os.path.join(rel_path, item)
-            if os.path.isdir(item_path):
-                self.add(WixDirectory(data, item_path, item_rel_path))
-            elif os.path.isfile(item_path):
-                self.add(WixComponent(data, item_path, item_rel_path))
+        if data is not None:
+            for item in os.listdir(path):
+                if data.get('_SkipHidden') and item.startswith('.'):
+                    continue
+                item_path = os.path.join(path, item)
+                item_rel_path = os.path.join(rel_path, item)
+                if os.path.isdir(item_path):
+                    self.add(WixDirectory(data, item_path, item_rel_path))
+                elif os.path.isfile(item_path):
+                    self.add(WixComponent(data, item_path, item_rel_path))
 
 
 class WixInstallDir(WixElement):
@@ -301,7 +303,7 @@ class WixFeature(WixElement):
                                          Title=data.get('Name'),
                                          Level='1')
         for item in COMPONENTS:
-            self.add(WixElement('ComponentRef', Id=item))
+            self.add(WixComponentRef(Id=item))
 
 
 class WixShortcut(WixElement):
@@ -330,6 +332,13 @@ class WixDirectoryRef(WixElement):
 
     def __init__(self, **kwargs):
         super(WixDirectoryRef, self).__init__(self.tag, **kwargs)
+
+
+class WixComponentRef(WixElement):
+    tag = 'ComponentRef'
+
+    def __init__(self, **kwargs):
+        super(WixComponentRef, self).__init__(self.tag, **kwargs)
 
 
 class WixShortcutComponent(WixElement):
@@ -385,11 +394,12 @@ class WixProduct(WixElement):
         self.add(target_dir)
 
         if data.get('_Shortcuts') and data.get('_ProgramMenuFolder'):
-            pm_dir = WixElement('Directory', Id='ProgramMenuFolder')
+            pm_dir = WixDirectory(Id='ProgramMenuFolder', Name='')
+            pm_dir.pop('Name')
             pm_dir.comment = 'Application ProgramMenu folder'
             target_dir.add(pm_dir)
-            shortcut_dir = WixElement('Directory',
-                                      Name=data.get('_ProgramMenuFolder'))
+            shortcut_dir = WixDirectory(Id=get_id('mnu'),
+                                        Name=data.get('_ProgramMenuFolder'))
             pm_dir.add(shortcut_dir)
             ref = shortcut_dir.attrs['Id']
 
