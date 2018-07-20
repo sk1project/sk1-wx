@@ -87,7 +87,7 @@ class CmsOptions(CmsTab):
 
     def __init__(self, parent, prefpanel):
         CmsTab.__init__(self, parent, prefpanel)
-        txt = _('Activate Color Management')
+        txt = _('Enable Color Management')
         panel = wal.VPanel(self)
         hp = wal.HPanel(panel)
         self.cms_check = wal.Checkbox(hp, txt, config.cms_use,
@@ -101,7 +101,7 @@ class CmsOptions(CmsTab):
         bmp = get_bmp(self.banner, icons.PD_PREFS_CMS_BANNER)
         self.banner.pack(bmp, padding=2)
         panel.pack(self.banner, expand=True, fill=True)
-        txt = _('Note: If not activated the color values will be not accurate.')
+        txt = _('Note: If Color Management is disabled, color values will be inaccurate.')
         label = wal.Label(self, txt, fontsize=-1)
         panel.pack(label, fill=True, padding_all=5)
         self.pack(panel, fill=True, expand=True)
@@ -130,7 +130,7 @@ class CmsProfiles(CmsTab):
     def __init__(self, parent, prefpanel):
         CmsTab.__init__(self, parent, prefpanel)
 
-        txt = _('Colorspace profiles')
+        txt = _('Color space profiles')
         self.pack(wal.Label(self, txt, fontbold=True), padding=2)
         self.pack(wal.HLine(self), fill=True, padding_all=2)
 
@@ -182,7 +182,7 @@ class CmsProfiles(CmsTab):
         self.pack(self.display_check, align_center=False)
         self.pack(wal.HLine(self), fill=True, padding_all=2)
 
-        txt = _('Note: Display profile for your hardware you could fetch here:')
+        txt = _('Note: Display profile for your hardware can be found here:')
         label = wal.Label(self, txt, fontsize=-1)
         self.pack(label, fill=True, padding_all=5)
         self.pack(wal.HtmlLabel(self, 'http://icc.opensuse.org/'))
@@ -382,13 +382,13 @@ class ProfileManager(wal.CloseDialog):
         if name is None:
             msg = _('Cannot open profile')
             msg = "%s '%s'" % (msg, src)
-            sec = _('The profile may be corrupted or not supported format')
+            sec = _('The profile may be corrupted or in an unsupported format')
             wal.error_dialog(self, title, msg + '\n' + sec)
             return
         if name in self.pf_list:
             msg = _('Selected profile cannot be added to profile list:')
             msg = "%s '%s'" % (msg, name)
-            sec = _('It seems you have imported this profile')
+            sec = _('It seems like you have already imported this profile')
             wal.error_dialog(self, title, msg + '\n' + sec)
             return
         filename = os.path.basename(src)
@@ -397,7 +397,7 @@ class ProfileManager(wal.CloseDialog):
         if fsutils.lexists(dst):
             msg = _('Selected file has been added to profile pool')
             msg = "%s '%s'" % (msg, src)
-            sec = _('If you sure to import the file try renaming it')
+            sec = _('If you still wish to import the file, try renaming it')
             wal.error_dialog(self, title, msg + '\n' + sec)
             return
         try:
@@ -405,7 +405,7 @@ class ProfileManager(wal.CloseDialog):
         except Exception:
             msg = _('Cannot copy file')
             msg = "%s '%s'" % (msg, src)
-            sec = _('Please check writing permissions for config directory:')
+            sec = _('Please check write permissions for config directory:')
             sec += '\n%s' % dst_dir
             wal.error_dialog(self, title, msg + '\n' + sec)
             return
@@ -516,7 +516,7 @@ class CmsSettings(CmsTab):
 
         sm_panel = wal.LabeledPanel(panel, widget=self.simulate_check)
 
-        txt = _('Mark colors that are out of the printer gamut')
+        txt = _('Highlight colors that are outside of the printer's gamut')
         self.outcolors_check = wal.Checkbox(sm_panel, txt,
                                             config.cms_gamutcheck,
                                             onclick=self.activate_outcolors)
@@ -524,7 +524,7 @@ class CmsSettings(CmsTab):
 
         clrpanel = wal.HPanel(sm_panel)
         clrpanel.pack((20, 1))
-        self.alarm_label = wal.Label(clrpanel, _('Alarm color:'))
+        self.alarm_label = wal.Label(clrpanel, _('Highlight color:'))
         clrpanel.pack(self.alarm_label, padding=5)
         self.color_btn = wal.ColorButton(clrpanel, config.cms_alarmcodes)
         clrpanel.pack(self.color_btn)

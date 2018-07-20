@@ -2,9 +2,9 @@
 
 
 CREDITS = """
-Many thanks to all who have commented on sK1/Skencil, sent 
-suggestions and bug reports and helped in testing or 
-contributed to sK1/Skencil with code or through minipayments.
+Many thanks to everyone who has commented on sK1/Skencil, submitted 
+suggestions or bug reports, helped in the testing or 
+contributed to sK1/Skencil with code or through mini payments.
 
 In particular, thanks to (in alphabetical order):
 

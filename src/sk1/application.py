@@ -608,5 +608,5 @@ class SK1Application(wal.Application, UCApplication):
 
     def open_url(self, url):
         webbrowser.open(url, new=1, autoraise=True)
-        msg = _('Requested page is opened in default browser')
+        msg = _('Requested page was opened in the default browser')
         events.emit(events.APP_STATUS, msg)

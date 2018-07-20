@@ -286,7 +286,7 @@ class ScaleTransform(AbstractTransform):
         grid.pack((5, 5))
         self.h_mirror = wal.ImageToggleButton(grid, False,
                                               make_artid('h-mirror'),
-                                              tooltip=_('Horizontal mirror'),
+                                              tooltip=_('Flip horizontal'),
                                               flat=False)
         grid.pack(self.h_mirror)
 
@@ -298,7 +298,7 @@ class ScaleTransform(AbstractTransform):
         grid.pack((5, 5))
         self.v_mirror = wal.ImageToggleButton(grid, False,
                                               make_artid('v-mirror'),
-                                              tooltip=_('Vertical mirror'),
+                                              tooltip=_('Flip vertical'),
                                               flat=False)
         grid.pack(self.v_mirror)
 

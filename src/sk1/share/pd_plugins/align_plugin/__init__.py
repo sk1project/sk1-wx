@@ -52,7 +52,7 @@ SOURCE_NAMES = [
     _('Selection'),
     _('First selected'),
     _('Last selected'),
-    _('Biggest object'),
+    _('Largest object'),
     _('Smallest object'),
 ]
 

@@ -370,7 +370,7 @@ unit_full_names = {
     UNIT_M: _('meters'),
     UNIT_PT: _('points'),
     UNIT_IN: _('inches'),
-    UNIT_FT: _('foots'),
+    UNIT_FT: _('feet'),
 }
 
 unit_short_names = {
@@ -387,7 +387,7 @@ unit_by_name = {
     _('pixels'): UNIT_PX,
     _('points'): UNIT_PT,
     _('inches'): UNIT_IN,
-    _('foots'): UNIT_FT,
+    _('feet'): UNIT_FT,
     _('meters'): UNIT_M,
     _('centimeters'): UNIT_CM,
     _('millimeters'): UNIT_MM

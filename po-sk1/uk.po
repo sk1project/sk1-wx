@@ -302,7 +302,7 @@ msgid "Cannot load pattern for:"
 msgstr "Не вдалося завантажити візерунок для:"
 
 #: src/sk1/application.py:611
-msgid "Requested page is opened in default browser"
+msgid "Requested page was opened in the default browser"
 msgstr "Сторінка відкрита в браузері за замовчуванням"
 
 #: src/sk1/context/circle.py:60
@@ -1141,11 +1141,11 @@ msgid "Color management and color profiles"
 msgstr "Керування кольором і кольорові профілі"
 
 #: src/sk1/prefs/prefs_cms.py:90
-msgid "Activate Color Management"
+msgid "Enable Color Management"
 msgstr "Активувати керування кольором"
 
 #: src/sk1/prefs/prefs_cms.py:104
-msgid "Note: If not activated the color values will be not accurate."
+msgid "Note: If Color Management is disabled, color values will be inaccurate."
 msgstr "Примітка: Якщо не активовано, значення кольорів буде неточним."
 
 #: src/sk1/prefs/prefs_cms.py:128
@@ -1153,7 +1153,7 @@ msgid "Color profiles"
 msgstr "Кольорові профілі"
 
 #: src/sk1/prefs/prefs_cms.py:133
-msgid "Colorspace profiles"
+msgid "Color space profiles"
 msgstr "Профіль кольорового простору"
 
 #: src/sk1/prefs/prefs_cms.py:151
@@ -1174,7 +1174,7 @@ msgid "Use display profile"
 msgstr "Використовувати профіль дисплея"
 
 #: src/sk1/prefs/prefs_cms.py:185
-msgid "Note: Display profile for your hardware you could fetch here:"
+msgid "Note: Display profile for your hardware can be found here:"
 msgstr "Примітка: профіль дисплея для вашого обладнання можна отримати тут:"
 
 #: src/sk1/prefs/prefs_cms.py:240 src/sk1/prefs/prefs_cms.py:347
@@ -1213,7 +1213,7 @@ msgid "Cannot open profile"
 msgstr "Не вдалося відкрити профіль"
 
 #: src/sk1/prefs/prefs_cms.py:385
-msgid "The profile may be corrupted or not supported format"
+msgid "The profile may be corrupted or in an unsupported format"
 msgstr "Профіль можливо пошкоджений або у форматі що не підтримується"
 
 #: src/sk1/prefs/prefs_cms.py:389
@@ -1221,7 +1221,7 @@ msgid "Selected profile cannot be added to profile list:"
 msgstr "Вибраний профіль не можна додати до списку профілів:"
 
 #: src/sk1/prefs/prefs_cms.py:391
-msgid "It seems you have imported this profile"
+msgid "It seems like you have already imported this profile"
 msgstr "Здається цей профіль вже імпортовано"
 
 #: src/sk1/prefs/prefs_cms.py:398
@@ -1229,7 +1229,7 @@ msgid "Selected file has been added to profile pool"
 msgstr "Обраний файл був доданий до пулу профілів"
 
 #: src/sk1/prefs/prefs_cms.py:400
-msgid "If you sure to import the file try renaming it"
+msgid "If you still wish to import the file, try renaming it"
 msgstr "Спробуйте перейменувати файл"
 
 #: src/sk1/prefs/prefs_cms.py:406
@@ -1237,7 +1237,7 @@ msgid "Cannot copy file"
 msgstr "Не вдалося скопіювати файл"
 
 #: src/sk1/prefs/prefs_cms.py:408
-msgid "Please check writing permissions for config directory:"
+msgid "Please check write permissions for config directory:"
 msgstr "Будь-ласка, перевірте права на запис для теки з конфігураціями:"
 
 #: src/sk1/prefs/prefs_cms.py:447
@@ -1277,11 +1277,11 @@ msgid "Simulate printer on the screen"
 msgstr "Імітувати пристрій виводу"
 
 #: src/sk1/prefs/prefs_cms.py:519
-msgid "Mark colors that are out of the printer gamut"
+msgid "Highlight colors that are outside of the printer's gamut"
 msgstr "Позначати кольори поза гамою"
 
 #: src/sk1/prefs/prefs_cms.py:527
-msgid "Alarm color:"
+msgid "Highlight color:"
 msgstr "Колір попередження:"
 
 #: src/sk1/prefs/prefs_cms.py:533
@@ -1305,7 +1305,7 @@ msgid "Font preview preferences"
 msgstr "Параметри зразка шрифтів"
 
 #: src/sk1/prefs/prefs_fonts.py:45
-msgid "Text filler:"
+msgid "Placeholder text:"
 msgstr "Текст зразка:"
 
 #: src/sk1/prefs/prefs_fonts.py:49
@@ -1353,7 +1353,7 @@ msgid "Tab style:"
 msgstr "Стиль вкладок:"
 
 #: src/sk1/prefs/prefs_general.py:100
-msgid "Rectangle tabs"
+msgid "Rectangular tabs"
 msgstr "Прямокутні вкладки"
 
 #: src/sk1/prefs/prefs_general.py:100
@@ -1433,7 +1433,7 @@ msgid "Generic features"
 msgstr "Загальні особливості"
 
 #: src/sk1/prefs/prefs_general.py:200
-msgid "(*) - These options require application restart"
+msgid "(*) - A restart is required to apply these options"
 msgstr "(*) - Програму необхідно перезапустити, щоб активувати зміни"
 
 #: src/sk1/prefs/prefs_palettes.py:25
@@ -1536,8 +1536,8 @@ msgstr "Поля друку"
 
 #: src/sk1/prefs/prefs_printers.py:156
 msgid ""
-"To measure real print area and vertical/horizontal printing shift just print "
-"calibration page on the A4/Letter sheet."
+"To measure actual print area and vertical/horizontal printing shift, just print "
+"the calibration page on A4/Letter paper."
 msgstr ""
 "Для вимірювання реальних розмірів роздруківки, просто роздрукуйте сторінку "
 "калібрування A4/Letter."
@@ -1551,7 +1551,7 @@ msgid "Print Letter calibration page"
 msgstr "Друк сторінки для калібрування Letter"
 
 #: src/sk1/prefs/prefs_printers.py:181
-msgid "Cannot found installed printers!"
+msgid "No printers found"
 msgstr "Не вдалося знайти встановлені принтери!"
 
 #: src/sk1/prefs/prefs_ruler.py:30
@@ -1599,7 +1599,7 @@ msgid "Ruler mark color:"
 msgstr "Колір рисок лінійки:"
 
 #: src/sk1/prefs/prefs_ruler.py:114
-msgid "Testing ruler:"
+msgid "Ruler preview:"
 msgstr "Вигляд лінійки:"
 
 #: src/sk1/prefs/templates.py:26
@@ -1736,15 +1736,15 @@ msgid "Empty pattern selected"
 msgstr "Обрано порожній візерунок"
 
 #: src/sk1/pwidgets/fillctrls.py:306 src/sk1/pwidgets/fillctrls.py:457
-msgid "CMYK colorspace"
+msgid "CMYK color space"
 msgstr "Колірний простір CMYK"
 
 #: src/sk1/pwidgets/fillctrls.py:307 src/sk1/pwidgets/fillctrls.py:458
-msgid "RGB colorspace"
+msgid "RGB color space"
 msgstr "Колірний простір RGB"
 
 #: src/sk1/pwidgets/fillctrls.py:308 src/sk1/pwidgets/fillctrls.py:459
-msgid "Grayscale colorspace"
+msgid "Grayscale color space"
 msgstr "Колірний простір градації сірого"
 
 #: src/sk1/pwidgets/fillctrls.py:309
@@ -2258,7 +2258,7 @@ msgid "Previous page"
 msgstr "Попередня сторінка"
 
 #: src/sk1/resources/labels.py:105
-msgid "Guides at page center"
+msgid "Guides in page center"
 msgstr "Додати напрямні по центру сторінки"
 
 #: src/sk1/resources/labels.py:106
@@ -2310,11 +2310,11 @@ msgid "Rotate &right 90 degrees"
 msgstr "Обернути в&право на 90°"
 
 #: src/sk1/resources/labels.py:119
-msgid "&Horizontal mirror"
+msgid "&Flip horizontal"
 msgstr "Віддзеркалити &горизонтально"
 
 #: src/sk1/resources/labels.py:120
-msgid "&Vertical mirror"
+msgid "&Flip vertical"
 msgstr "Віддзеркалити &вертикально"
 
 #: src/sk1/resources/labels.py:121
@@ -2330,19 +2330,19 @@ msgid "&Break Apart"
 msgstr "&Розділити"
 
 #: src/sk1/resources/labels.py:124
-msgid "Raise to &Top"
+msgid "Move to &Top"
 msgstr "Підняти на п&ередній план"
 
 #: src/sk1/resources/labels.py:125
-msgid "&Raise"
+msgid "Move Up"
 msgstr "&Підняти"
 
 #: src/sk1/resources/labels.py:126
-msgid "&Lower"
+msgid "Move Down"
 msgstr "&Опустити"
 
 #: src/sk1/resources/labels.py:127
-msgid "Lower to &Bottom"
+msgid "Move to &Bottom"
 msgstr "Опустити на з&адній план"
 
 #: src/sk1/resources/labels.py:128
@@ -2482,11 +2482,11 @@ msgid "Invert bitmap"
 msgstr "Інвертувати растр"
 
 #: src/sk1/resources/labels.py:164
-msgid "Remove alpha-channel"
+msgid "Remove alpha channel"
 msgstr "Відкинути альфа-канал"
 
 #: src/sk1/resources/labels.py:165
-msgid "Invert alpha-channel"
+msgid "Invert alpha channel"
 msgstr "Інвертувати альфа-канал"
 
 #: src/sk1/resources/labels.py:166
@@ -2761,7 +2761,7 @@ msgid "Last selected"
 msgstr "Останній позначений"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:55
-msgid "Biggest object"
+msgid "Largest object"
 msgstr "Найбільший об'єкт"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:56
@@ -2900,19 +2900,19 @@ msgid "Create new layer"
 msgstr "Створити новий шар"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:75
-msgid "Layer to bottom"
+msgid "Move layer to bottom"
 msgstr "Опустити шар додолу"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:78
-msgid "Lower layer"
+msgid "Move layer down"
 msgstr "Опустити шар"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:81
-msgid "Raise layer"
+msgid "Move layer up"
 msgstr "Підняти шар"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:84
-msgid "Layer to top"
+msgid "Move layer to top"
 msgstr "Підняти шар нагору"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:87
@@ -2994,7 +2994,7 @@ msgstr "Положення тексту на колі"
 
 #: src/sk1/share/pd_plugins/text_on_circle/__init__.py:146
 #: src/sk1/share/pd_plugins/text_on_path/__init__.py:119
-msgid "Place on other side"
+msgid "Place on the other side"
 msgstr "Місце на іншому боці"
 
 #: src/sk1/share/pd_plugins/text_on_path/__init__.py:52
@@ -3062,11 +3062,11 @@ msgid "Absolute position"
 msgstr "Абсолютне положення"
 
 #: src/sk1/share/pd_plugins/transform_plugin/transforms.py:289
-msgid "Horizontal mirror"
+msgid "Flip horizontal"
 msgstr "Віддзеркалити горизонтально"
 
 #: src/sk1/share/pd_plugins/transform_plugin/transforms.py:301
-msgid "Vertical mirror"
+msgid "Flip vertical"
 msgstr "Віддзеркалити вертикально"
 
 #: src/sk1/share/pd_plugins/transform_plugin/transforms.py:366
@@ -3335,7 +3335,7 @@ msgid "inches"
 msgstr "дюйми"
 
 #: src/uc2/uc2const.py:373 src/uc2/uc2const.py:390
-msgid "foots"
+msgid "feet"
 msgstr "фути"
 
 #: src/uc2/uc2const.py:377
