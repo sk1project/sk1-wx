@@ -37,6 +37,7 @@ Planned features:
 """
 
 import os
+import sys
 import tempfile
 
 import wix
@@ -45,7 +46,7 @@ PROJECT = 'pyWiXL'
 VERSION = '0.1'
 
 
-def build(json_data, xml_only=False):
+def build(json_data, xml_only=False, stdout=False):
     json_data['_pkgname'] = PROJECT
     json_data['_pkgver'] = VERSION
 
@@ -68,8 +69,11 @@ def build(json_data, xml_only=False):
 
     if xml_only:
         print 'Writing XML into %s...' % output_path
-        with open(output_path, 'wb') as fp:
-            wix.Wix(json_data).write_xml(fp)
+        if stdout:
+            wix.Wix(json_data).write_xml(sys.stdout)
+        else:
+            with open(output_path, 'wb') as fp:
+                wix.Wix(json_data).write_xml(fp)
     elif wix.WIXL:
         xml_file = tempfile.NamedTemporaryFile(delete=True)
         with open(xml_file.name, 'wb') as fp:
@@ -112,4 +116,4 @@ if __name__ == "__main__":
         '_OutputName': '%s-%s-win64.msi' % (PROJECT.lower(), VERSION),
         '_OutputDir': os.path.expanduser('~'),
     }
-    build(MSI_DATA, xml_only=True)
+    build(MSI_DATA, xml_only=True, stdout=True)
