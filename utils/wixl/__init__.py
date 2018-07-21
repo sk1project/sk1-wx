@@ -56,6 +56,9 @@ def build(json_data, xml_only=False, stdout=False):
             json_data.pop('Win64')
             json_data['_CheckX64'] = False
 
+    if '_OsCondition' in json_data:
+        json_data['_OsCondition'] = str(json_data['_OsCondition'])
+
     output = json_data.get('_OutputName')
     if not output:
         raise Exception('Output filename is not defined!')
@@ -99,7 +102,7 @@ if __name__ == "__main__":
         'Win64': True,
 
         # Installation infrastructure
-        '_OsCondition': '601',
+        '_OsCondition': 601,
         '_CheckX64': True,
         '_Conditions': [],  # [[msg,condition,level], ...]
         '_Icon': os.path.expanduser('~/Projects/pywixl.ico'),
@@ -113,6 +116,7 @@ if __name__ == "__main__":
         '_InstallDir': 'wixl-%s' % VERSION,
         '_OutputName': '%s-%s-win64.msi' % (PROJECT.lower(), VERSION),
         '_OutputDir': os.path.expanduser('~'),
+        '_SkipHidden': True,
     }
     build(MSI_DATA, xml_only=True, stdout=True)
     # build(MSI_DATA, xml_only=True)
