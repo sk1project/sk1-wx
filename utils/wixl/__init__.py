@@ -24,19 +24,18 @@ Supported features (WiX & wixl):
 * msi package icon
 * 32/64bit installations
 * ProgramMenu folder and shortcuts
-
-WiX only features:
 * OS version check
 * x64 arch check
+* custom conditions
 
 Planned features:
 * GUI for compiled msi-installers
 * Extension associations (Open, Open with)
 * add to system PATH
-* custom conditions
 """
 
 import os
+import sys
 import tempfile
 
 import wix
@@ -45,7 +44,7 @@ PROJECT = 'pyWiXL'
 VERSION = '0.1'
 
 
-def build(json_data, xml_only=False):
+def build(json_data, xml_only=False, stdout=False):
     json_data['_pkgname'] = PROJECT
     json_data['_pkgver'] = VERSION
 
@@ -67,13 +66,16 @@ def build(json_data, xml_only=False):
     output_path = os.path.join(json_data.get('_OutputDir', './'), output)
 
     if xml_only:
-        print 'Writing XML into %s...' % output_path
-        with open(output_path, 'wb') as fp:
-            wix.Wix(json_data).write(fp)
+        if stdout:
+            wix.Wix(json_data).write_xml(sys.stdout)
+        else:
+            print 'Writing XML into %s...' % output_path
+            with open(output_path, 'wb') as fp:
+                wix.Wix(json_data).write_xml(fp)
     elif wix.WIXL:
         xml_file = tempfile.NamedTemporaryFile(delete=True)
         with open(xml_file.name, 'wb') as fp:
-            wix.Wix(json_data).write(fp)
+            wix.Wix(json_data).write_xml(fp)
         arch = '-a x64' if json_data.get('Win64') else ''
         os.system('wixl -v %s -o %s %s' % (arch, output_path, xml_file.name))
     elif not wix.WIXL:
@@ -83,7 +85,7 @@ def build(json_data, xml_only=False):
 if __name__ == "__main__":
     current_path = os.path.dirname(os.path.abspath(__file__))
     path = os.path.dirname(current_path)
-    wix.WIXL = False
+    # wix.WIXL = False
     MSI_DATA = {
         # Required
         'Name': PROJECT,
@@ -99,16 +101,19 @@ if __name__ == "__main__":
         # Installation infrastructure
         '_OsCondition': '601',
         '_CheckX64': True,
-        # '_Icon': '~/Projects/sk1-icon.ico',
+        '_Conditions': [],  # [[msg,condition,level], ...]
+        '_Icon': os.path.expanduser('~/Projects/pywixl.ico'),
         '_ProgramMenuFolder': 'sK1 Project',
         '_Shortcuts': [
             {'Name': PROJECT,
              'Description': 'Multiplatform MSI builder',
              'Target': '__init__.py'},
         ],
-        '_SourceDir': current_path,
+        '_SourceDir': path,
         '_InstallDir': 'wixl-%s' % VERSION,
         '_OutputName': '%s-%s-win64.msi' % (PROJECT.lower(), VERSION),
         '_OutputDir': os.path.expanduser('~'),
     }
-    build(MSI_DATA, xml_only=True)
+    build(MSI_DATA, xml_only=True, stdout=True)
+    # build(MSI_DATA, xml_only=True)
+    # build(MSI_DATA)

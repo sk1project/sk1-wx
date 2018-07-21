@@ -45,7 +45,7 @@ ATTRS = {
     'Feature': ('Id', 'Title', 'Level'),
     'RemoveFolder': ('Id', 'On'),
     'RegistryValue': ('Root', 'Key', 'Name', 'Type', 'Value', 'KeyPath'),
-    'Condition': ('Message',),
+    'Condition': ('Message', 'Level'),
 }
 
 
@@ -76,11 +76,11 @@ def get_guid():
     return str(uuid.uuid4()).upper()
 
 
-def get_id():
-    return get_guid().replace('-', '')
+def get_id(prefix=''):
+    return '%s%s' % (prefix, get_guid().replace('-', ''))
 
 
-class XmlElement(object):
+class WixElement(object):
     childs = None
     tag = None
     attrs = None
@@ -95,8 +95,10 @@ class XmlElement(object):
         self.tag = tag
         self.attrs = {key: value for key, value in kwargs.items()
                       if key in ATTRS[self.tag]}
-        if 'Id' not in self.attrs:
+        if 'Id' not in self.attrs or self.attrs['Id'] == '*':
             self.attrs['Id'] = get_id()
+        if self.attrs.get('Guid') == '*':
+            self.attrs['Guid'] = get_guid()
 
     def add(self, child):
         self.childs.append(child)
@@ -108,7 +110,7 @@ class XmlElement(object):
         if key in self.attrs:
             self.attrs.pop(key)
 
-    def write(self, fp, indent=0):
+    def write_xml(self, fp, indent=0):
         if self.nl:
             fp.write('\n')
         tab = indent * ' '
@@ -121,21 +123,41 @@ class XmlElement(object):
         if self.childs:
             fp.write('>\n')
             for child in self.childs:
-                child.write(fp, indent + INDENT)
+                child.write_xml(fp, indent + INDENT)
             fp.write('%s</%s>\n' % (tab, self.tag))
         else:
             fp.write(' />\n')
 
 
-class WixCDATA(object):
-    data = None
+class WixCondition(WixElement):
+    tag = 'Condition'
+    nl = True
 
-    def __init__(self, data):
-        self.data = data
+    def __init__(self, msg, condition, level=None, comment=None):
+        self.comment = comment
+        self.condition = condition
+        super(WixCondition, self).__init__(self.tag, Message=msg)
+        if level:
+            self.set(Level=str(level))
+        self.pop('Id')
 
-    def write(self, fp, indent=0):
+    def write_xml(self, fp, indent=0):
+        if self.nl:
+            fp.write('\n')
         tab = indent * ' '
-        fp.write('%s<![CDATA[%s]]>\n' % (tab, self.data))
+        if self.comment:
+            fp.write('%s<!-- %s -->\n' % (tab, self.comment))
+        fp.write('%s<%s' % (tab, self.tag))
+        prefix = '\n%s  ' % tab if len(self.attrs) > WRAP else ' '
+        for key, value in self.attrs.items():
+            fp.write('%s%s="%s"' % (prefix, key, value))
+        if WIXL:
+            condition = self.condition
+            fp.write('>%s</%s>\n' % (condition, self.tag))
+        else:
+            tab_int = (indent + INDENT) * ' '
+            condition = '%s<![CDATA[%s]]>' % (tab_int, self.condition)
+            fp.write('>\n%s\n%s</%s>\n' % (condition, tab, self.tag))
 
 
 OS_CONDITION = {
@@ -147,36 +169,36 @@ OS_CONDITION = {
 }
 
 
-class WixOsCondition(XmlElement):
-    tag = 'Condition'
-    nl = True
-
+class WixOsCondition(WixCondition):
     def __init__(self, os_condition):
-        self.comment = 'Launch Condition to check suitable system version'
-        os_condition = '501' if os_condition not in OS_CONDITION \
-            else os_condition
+        comment = 'Launch Condition to check suitable system version'
+        os_condition = '501' if str(os_condition) not in OS_CONDITION \
+            else str(os_condition)
         msg = 'This application is only ' \
               'supported on %s or higher.' % OS_CONDITION[os_condition]
-        super(WixOsCondition, self).__init__(self.tag, Message=msg)
-        self.pop('Id')
-        self.add(WixCDATA('Installed OR (VersionNT >= %s)' % os_condition))
+        os_condition = 'Installed OR (VersionNT >= %s)' % os_condition
+        super(WixOsCondition, self).__init__(msg, os_condition,
+                                             comment=comment)
 
 
-class WixArchCondition(XmlElement):
-    tag = 'Condition'
-    nl = True
-
+class WixArchCondition(WixCondition):
     def __init__(self):
-        self.comment = 'Launch Condition to check that ' \
-                       'x64 installer is used on x64 systems'
+        comment = 'Launch Condition to check that ' \
+                  'x64 installer is used on x64 systems'
         msg = '64-bit operating system was not detected, ' \
-              'please use the 32-bit installer. '
-        super(WixArchCondition, self).__init__(self.tag, Message=msg)
-        self.pop('Id')
-        self.add(WixCDATA('VersionNT64'))
+              'please use the 32-bit installer.'
+        super(WixArchCondition, self).__init__(msg, 'VersionNT64',
+                                               comment=comment)
 
 
-class WixIcon(XmlElement):
+class WixProperty(WixElement):
+    tag = 'Property'
+
+    def __init__(self, pid, value):
+        super(WixProperty, self).__init__(self.tag, Id=pid, Value=value)
+
+
+class WixIcon(WixElement):
     tag = 'Icon'
     nl = True
 
@@ -186,76 +208,62 @@ class WixIcon(XmlElement):
                                       SourceFile=data.get('_Icon', ''),
                                       Id=os.path.basename(self.source))
 
-    def write(self, fp, indent=0):
-        super(WixIcon, self).write(fp, indent)
-        fp.write('%s<Property Id="ARPPRODUCTICON" Value="%s" />\n' %
-                 (indent * ' ', os.path.basename(self.source)))
 
-
-class WixMedia(XmlElement):
+class WixMedia(WixElement):
     tag = 'Media'
     nl = True
 
     def __init__(self, data):
-        self.msi_data = data
         super(WixMedia, self).__init__(self.tag, Id='1', **data)
 
-    def write(self, fp, indent=0):
-        fp.write('\n')
-        super(WixMedia, self).write(fp, indent)
-        fp.write('%s<Property Id="DiskPrompt" Value="%s Installation" />\n' %
-                 (indent * ' ', self.msi_data.get('Version', '1.0')))
 
-
-class WixFile(XmlElement):
+class WixFile(WixElement):
     tag = 'File'
     path = None
     is_file = True
 
     def __init__(self, data, path, rel_path):
         self.path = path
-        pid = 'fil%s' % get_id()
+        pid = get_id('fil')
         super(WixFile, self).__init__(self.tag, **data)
         self.set(Id=pid, Name=os.path.basename(rel_path), Source=path)
 
 
-class WixComponent(XmlElement):
+class WixComponent(WixElement):
     tag = 'Component'
     is_comp = True
 
     def __init__(self, data, path, rel_path):
-        pid = get_id()
         super(WixComponent, self).__init__(self.tag, Guid=get_guid(), **data)
         self.add(WixFile(data, path, rel_path))
-        self.set(Id='cmp%s' % pid)
+        self.set(Id=get_id('cmp'))
         COMPONENTS.append(self.attrs['Id'])
 
 
-class WixDirectory(XmlElement):
+class WixDirectory(WixElement):
     tag = 'Directory'
     is_dir = True
 
-    def __init__(self, data, path, rel_path):
-        name = os.path.basename(rel_path)
-        pid = 'dir%s' % get_id()
+    def __init__(self, data=None, path=None, rel_path=None, **kwargs):
+        name = kwargs['Name'] if 'Name' in kwargs \
+            else os.path.basename(rel_path)
+        pid = kwargs['Id'] if 'Id' in kwargs \
+            else get_id('dir')
         super(WixDirectory, self).__init__(self.tag, Id=pid, Name=name)
 
-        for item in os.listdir(path):
-            if data.get('_SkipHidden') and item.startswith('.'):
-                continue
-            item_path = os.path.join(path, item)
-            item_rel_path = os.path.join(rel_path, item)
-            if os.path.isdir(item_path):
-                self.add(WixDirectory(data, item_path, item_rel_path))
-            elif os.path.isfile(item_path):
-                self.add(WixComponent(data, item_path, item_rel_path))
-
-    def write(self, fp, indent=0):
-        if self.childs:
-            super(WixDirectory, self).write(fp, indent)
+        if data is not None:
+            for item in os.listdir(path):
+                if data.get('_SkipHidden') and item.startswith('.'):
+                    continue
+                item_path = os.path.join(path, item)
+                item_rel_path = os.path.join(rel_path, item)
+                if os.path.isdir(item_path):
+                    self.add(WixDirectory(data, item_path, item_rel_path))
+                elif os.path.isfile(item_path):
+                    self.add(WixComponent(data, item_path, item_rel_path))
 
 
-class WixInstallDir(XmlElement):
+class WixInstallDir(WixElement):
     tag = 'Directory'
     is_dir = True
 
@@ -276,7 +284,7 @@ class WixInstallDir(XmlElement):
                 self.add(WixComponent(data, item_path, item_rel_path))
 
 
-class WixPfDir(XmlElement):
+class WixPfDir(WixElement):
     tag = 'Directory'
     is_dir = True
 
@@ -287,7 +295,7 @@ class WixPfDir(XmlElement):
         self.add(WixInstallDir(data))
 
 
-class WixTargetDir(XmlElement):
+class WixTargetDir(WixElement):
     tag = 'Directory'
     is_dir = True
     nl = True
@@ -298,13 +306,8 @@ class WixTargetDir(XmlElement):
                                            Name='SourceDir')
         self.add(WixPfDir(data))
 
-    def write(self, fp, indent=0):
-        fp.write('\n')
-        super(WixTargetDir, self).write(fp, indent)
-        fp.write('\n')
 
-
-class WixFeature(XmlElement):
+class WixFeature(WixElement):
     tag = 'Feature'
     nl = True
 
@@ -313,17 +316,45 @@ class WixFeature(XmlElement):
                                          Title=data.get('Name'),
                                          Level='1')
         for item in COMPONENTS:
-            self.add(XmlElement('ComponentRef', Id=item))
+            self.add(WixComponentRef(Id=item))
 
 
-class WixShortcut(XmlElement):
+class WixShortcut(WixElement):
     tag = 'Shortcut'
 
     def __init__(self, shortcut_data):
         super(WixShortcut, self).__init__(self.tag, **shortcut_data)
 
 
-class WixShortcutComponent(XmlElement):
+class WixRemoveFolder(WixElement):
+    tag = 'RemoveFolder'
+
+    def __init__(self, **kwargs):
+        super(WixRemoveFolder, self).__init__(self.tag, **kwargs)
+
+
+class WixRegistryValue(WixElement):
+    tag = 'RegistryValue'
+
+    def __init__(self, **kwargs):
+        super(WixRegistryValue, self).__init__(self.tag, **kwargs)
+
+
+class WixDirectoryRef(WixElement):
+    tag = 'DirectoryRef'
+
+    def __init__(self, **kwargs):
+        super(WixDirectoryRef, self).__init__(self.tag, **kwargs)
+
+
+class WixComponentRef(WixElement):
+    tag = 'ComponentRef'
+
+    def __init__(self, **kwargs):
+        super(WixComponentRef, self).__init__(self.tag, **kwargs)
+
+
+class WixShortcutComponent(WixElement):
     tag = 'Component'
 
     def __init__(self, data, shortcut_data):
@@ -331,27 +362,25 @@ class WixShortcutComponent(XmlElement):
         guid = get_guid()
         super(WixShortcutComponent, self).__init__(self.tag, Guid=guid, **data)
         self.add(WixShortcut(shortcut_data))
-        self.add(XmlElement('RemoveFolder',
-                            Id=shortcut_data['DirectoryRef'],
-                            On='uninstall'))
+        self.add(WixRemoveFolder(Id=shortcut_data['DirectoryRef'],
+                                 On='uninstall'))
         reg_key = 'Software\\%s\\%s' % (data['Manufacturer'].replace(' ', '_'),
                                         data['Name'].replace(' ', '_'))
-        self.add(XmlElement('RegistryValue', Root='HKCU', Key=reg_key,
-                            Name='installed', Type='integer',
-                            Value='1', KeyPath='yes'))
+        self.add(WixRegistryValue(Root='HKCU', Key=reg_key,
+                                  Name='installed', Type='integer',
+                                  Value='1', KeyPath='yes'))
         self.set(Id='cmp%s' % pid)
         COMPONENTS.append(self.attrs['Id'])
 
 
-class WixPackage(XmlElement):
+class WixPackage(WixElement):
     tag = 'Package'
 
     def __init__(self, data):
-        self.msi_data = data
         super(WixPackage, self).__init__(self.tag, **data)
 
 
-class WixProduct(XmlElement):
+class WixProduct(WixElement):
     tag = 'Product'
 
     def __init__(self, data):
@@ -360,26 +389,35 @@ class WixProduct(XmlElement):
         self.add(WixPackage(data))
         COMPONENTS[:] = []
         self.add(WixMedia(data))
-        if not WIXL:
-            if data.get('_OsCondition'):
-                self.add(WixOsCondition(data['_OsCondition']))
-            if data.get('_CheckX64'):
-                self.add(WixArchCondition())
+        media_name = '%s %s Installation' % (data['Name'], data['Version'])
+        self.add(WixProperty('DiskPrompt', media_name))
+
+        if data.get('_OsCondition'):
+            self.add(WixOsCondition(data['_OsCondition']))
+        if data.get('_CheckX64'):
+            self.add(WixArchCondition())
+        if data.get('_Conditions'):
+            for msg, cnd in data['_Conditions']:
+                self.add(WixCondition(msg, cnd))
+
         if data.get('_Icon'):
             self.add(WixIcon(data))
+            icon_name = os.path.basename(data['_Icon'])
+            self.add(WixProperty('ARPPRODUCTICON', icon_name))
         target_dir = WixTargetDir(data)
         self.add(target_dir)
 
         if data.get('_Shortcuts') and data.get('_ProgramMenuFolder'):
-            pm_dir = XmlElement('Directory', Id='ProgramMenuFolder')
+            pm_dir = WixDirectory(Id='ProgramMenuFolder', Name='')
+            pm_dir.pop('Name')
             pm_dir.comment = 'Application ProgramMenu folder'
             target_dir.add(pm_dir)
-            shortcut_dir = XmlElement('Directory',
-                                      Name=data.get('_ProgramMenuFolder'))
+            shortcut_dir = WixDirectory(Id=get_id('mnu'),
+                                        Name=data.get('_ProgramMenuFolder'))
             pm_dir.add(shortcut_dir)
             ref = shortcut_dir.attrs['Id']
 
-            dir_ref = XmlElement('DirectoryRef', Id=ref)
+            dir_ref = WixDirectoryRef(Id=ref)
             self.add(dir_ref)
             for shortcut in data.get('_Shortcuts'):
                 target = os.path.join(data['_SourceDir'], shortcut['Target'])
@@ -409,7 +447,7 @@ class WixProduct(XmlElement):
         return work_dir_id, target_id
 
 
-class Wix(XmlElement):
+class Wix(WixElement):
     tag = 'Wix'
 
     def __init__(self, data):
@@ -422,7 +460,7 @@ class Wix(XmlElement):
         self.comment = 'Generated by %s %s' % \
                        (data['_pkgname'], data['_pkgver'])
 
-    def write(self, fp, indent=0):
+    def write_xml(self, fp, indent=0):
         tab = indent * ' '
         fp.write('%s<?xml version="1.0" encoding="utf-8"?>\n' % tab)
-        super(Wix, self).write(fp, indent)
+        super(Wix, self).write_xml(fp, indent)
