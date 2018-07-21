@@ -315,6 +315,7 @@ MSI_DATA = {
     # Structural elements
     '_Icon': '/win32-devres/%s.ico' % PROJECT,
     '_ProgramMenuFolder': 'sK1 Project',
+    '_OsCondition': '601',
     '_Shortcuts': [
         {'Name': {SK1: 'sK1 %s illustration program' % APP_VER,
                   UC2: '%s %s' % (APP_FULL_NAME, APP_VER)}[PROJECT],
@@ -398,6 +399,7 @@ def build_msw_packages():
         msi_data['_SourceDir'] = portable_folder
         if arch == 'win64':
             msi_data['Win64'] = 'yes'
+            msi_data['_CheckX64'] = True
         msi_data['_OutputDir'] = distro_folder
         suffix = '_headless.msi' if os.name != 'nt' else '.msi'
         msi_data['_OutputName'] = msi_name + suffix
