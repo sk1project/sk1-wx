@@ -24,8 +24,6 @@ Supported features (WiX & wixl):
 * msi package icon
 * 32/64bit installations
 * ProgramMenu folder and shortcuts
-
-WiX only features:
 * OS version check
 * x64 arch check
 * custom conditions

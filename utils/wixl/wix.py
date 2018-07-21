@@ -45,7 +45,7 @@ ATTRS = {
     'Feature': ('Id', 'Title', 'Level'),
     'RemoveFolder': ('Id', 'On'),
     'RegistryValue': ('Root', 'Key', 'Name', 'Type', 'Value', 'KeyPath'),
-    'Condition': ('Message',),
+    'Condition': ('Message', 'Level'),
 }
 
 
@@ -129,25 +129,35 @@ class WixElement(object):
             fp.write(' />\n')
 
 
-class WixCDATA(object):
-    condition = None
-
-    def __init__(self, condition):
-        self.condition = condition
-
-    def write_xml(self, fp, indent=0):
-        fp.write('%s<![CDATA[%s]]>\n' % (indent * ' ', self.condition))
-
-
 class WixCondition(WixElement):
     tag = 'Condition'
     nl = True
 
-    def __init__(self, msg, condition, comment=None):
+    def __init__(self, msg, condition, level=None, comment=None):
         self.comment = comment
+        self.condition = condition
         super(WixCondition, self).__init__(self.tag, Message=msg)
+        if level:
+            self.set(Level=str(level))
         self.pop('Id')
-        self.add(WixCDATA(condition))
+
+    def write_xml(self, fp, indent=0):
+        if self.nl:
+            fp.write('\n')
+        tab = indent * ' '
+        if self.comment:
+            fp.write('%s<!-- %s -->\n' % (tab, self.comment))
+        fp.write('%s<%s' % (tab, self.tag))
+        prefix = '\n%s  ' % tab if len(self.attrs) > WRAP else ' '
+        for key, value in self.attrs.items():
+            fp.write('%s%s="%s"' % (prefix, key, value))
+        if WIXL:
+            condition = self.condition
+            fp.write('>%s</%s>\n' % (condition, self.tag))
+        else:
+            tab_int = (indent + INDENT) * ' '
+            condition = '%s<![CDATA[%s]]>' % (tab_int, self.condition)
+            fp.write('>\n%s\n%s</%s>\n' % (condition, tab, self.tag))
 
 
 OS_CONDITION = {
@@ -162,12 +172,13 @@ OS_CONDITION = {
 class WixOsCondition(WixCondition):
     def __init__(self, os_condition):
         comment = 'Launch Condition to check suitable system version'
-        os_condition = '501' if os_condition not in OS_CONDITION \
-            else os_condition
+        os_condition = '501' if str(os_condition) not in OS_CONDITION \
+            else str(os_condition)
         msg = 'This application is only ' \
               'supported on %s or higher.' % OS_CONDITION[os_condition]
         os_condition = 'Installed OR (VersionNT >= %s)' % os_condition
-        super(WixOsCondition, self).__init__(msg, os_condition, comment)
+        super(WixOsCondition, self).__init__(msg, os_condition,
+                                             comment=comment)
 
 
 class WixArchCondition(WixCondition):
@@ -175,8 +186,9 @@ class WixArchCondition(WixCondition):
         comment = 'Launch Condition to check that ' \
                   'x64 installer is used on x64 systems'
         msg = '64-bit operating system was not detected, ' \
-              'please use the 32-bit installer. '
-        super(WixArchCondition, self).__init__(msg, 'VersionNT64', comment)
+              'please use the 32-bit installer.'
+        super(WixArchCondition, self).__init__(msg, 'VersionNT64',
+                                               comment=comment)
 
 
 class WixProperty(WixElement):
@@ -379,14 +391,15 @@ class WixProduct(WixElement):
         self.add(WixMedia(data))
         media_name = '%s %s Installation' % (data['Name'], data['Version'])
         self.add(WixProperty('DiskPrompt', media_name))
-        if not WIXL:
-            if data.get('_OsCondition'):
-                self.add(WixOsCondition(data['_OsCondition']))
-            if data.get('_CheckX64'):
-                self.add(WixArchCondition())
-            if data.get('_Conditions'):
-                for msg, cnd in data['_Conditions']:
-                    self.add(WixCondition(msg, cnd))
+
+        if data.get('_OsCondition'):
+            self.add(WixOsCondition(data['_OsCondition']))
+        if data.get('_CheckX64'):
+            self.add(WixArchCondition())
+        if data.get('_Conditions'):
+            for msg, cnd in data['_Conditions']:
+                self.add(WixCondition(msg, cnd))
+
         if data.get('_Icon'):
             self.add(WixIcon(data))
             icon_name = os.path.basename(data['_Icon'])
