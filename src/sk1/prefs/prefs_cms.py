@@ -516,7 +516,7 @@ class CmsSettings(CmsTab):
 
         sm_panel = wal.LabeledPanel(panel, widget=self.simulate_check)
 
-        txt = _('Highlight colors that are outside of the printer's gamut')
+        txt = _("Highlight colors that are outside of the printer's gamut")
         self.outcolors_check = wal.Checkbox(sm_panel, txt,
                                             config.cms_gamutcheck,
                                             onclick=self.activate_outcolors)
