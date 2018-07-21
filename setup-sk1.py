@@ -91,7 +91,7 @@ CLASSIFIERS = [
 LONG_DESCRIPTION = '''
 sK1 is an open source vector graphics editor similar to CorelDRAW, 
 Adobe Illustrator, or Freehand. First of all sK1 is oriented for prepress 
-industry, therefore works with CMYK colorspace and produces CMYK-based PDF 
+industry, therefore works with CMYK color space and produces CMYK-based PDF 
 and postscript output.
 sK1 Project (http://sk1project.net),
 Copyright (C) 2004-%s sK1 Project Team
@@ -100,7 +100,7 @@ Copyright (C) 2004-%s sK1 Project Team
 LONG_DEB_DESCRIPTION = ''' .
  sK1 is an open source vector graphics editor similar to CorelDRAW, 
  Adobe Illustrator, or Freehand. First of all sK1 is oriented for prepress 
- industry, therefore works with CMYK colorspace and produces CMYK-based PDF 
+ industry, therefore works with CMYK color space and produces CMYK-based PDF 
  and postscript output.
  . 
  sK1 Project (http://sk1project.net),

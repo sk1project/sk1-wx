@@ -8,7 +8,7 @@
 
 sK1 2.0 is an open source vector graphics editor similar to CorelDRAW, 
 Adobe Illustrator, or Freehand. sK1 is oriented for prepress industry, 
-so it works with CMYK colorspace and produces CMYK-based PDF and PS output. 
+so it works with CMYK color space and produces CMYK-based PDF and PS output.
 
 # UniConvertor 2.0
 

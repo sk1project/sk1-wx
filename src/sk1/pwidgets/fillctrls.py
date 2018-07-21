@@ -303,9 +303,9 @@ SOLID_MODE_ICONS = {
 }
 
 SOLID_MODE_NAMES = {
-    CMYK_MODE: _('CMYK colorspace'),
-    RGB_MODE: _('RGB colorspace'),
-    GRAY_MODE: _('Grayscale colorspace'),
+    CMYK_MODE: _('CMYK color space'),
+    RGB_MODE: _('RGB color space'),
+    GRAY_MODE: _('Grayscale color space'),
     SPOT_MODE: _('SPOT colors'),
     PAL_MODE: _('Color from palette'),
     EMPTY_MODE: _('Empty pattern'),
@@ -454,9 +454,9 @@ GRADIENT_CLR_ICONS = {
 }
 
 GRADIENT_CLR_NAMES = {
-    uc2const.COLOR_CMYK: _('CMYK colorspace'),
-    uc2const.COLOR_RGB: _('RGB colorspace'),
-    uc2const.COLOR_GRAY: _('Grayscale colorspace'),
+    uc2const.COLOR_CMYK: _('CMYK color space'),
+    uc2const.COLOR_RGB: _('RGB color space'),
+    uc2const.COLOR_GRAY: _('Grayscale color space'),
 }
 
 DEFAULT_STOPS = [

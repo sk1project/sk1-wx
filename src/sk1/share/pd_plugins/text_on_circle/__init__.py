@@ -143,7 +143,7 @@ class TextOnCirclePlugin(RsPlugin):
         self.bmp = PositionSwitch(panel)
         panel.pack(self.bmp, padding_all=5)
 
-        self.other_side = wal.Checkbox(panel, _('Place on other side'),
+        self.other_side = wal.Checkbox(panel, _('Place on the other side'),
                                        onclick=self.update_bmp)
         panel.pack(self.other_side, padding=5)
 

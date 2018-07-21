@@ -111,7 +111,7 @@ class RulersPrefs(PrefPanel):
         self.pack(grid, padding_all=15)
 
         # Testing ruler
-        self.pack(wal.Label(self, _('Testing ruler:'), fontbold=True),
+        self.pack(wal.Label(self, _('Ruler preview:'), fontbold=True),
                   padding_all=10)
         panel = wal.HPanel(self)
         panel.add((360, 1))

@@ -153,9 +153,9 @@ class PrinterPrefs(PrefPanel):
             self.pack((10, 10))
 
             # ---Calibration page
-            text = _("To measure real print area and vertical/horizontal "
-                     "printing shift just print calibration page on the "
-                     "A4/Letter sheet.")
+            text = _("To measure actual print area and vertical/horizontal "
+                     "printing shift, just print the calibration page on "
+                     "A4/Letter paper.")
 
             label = wal.Label(self, text)
             label.wrap(470)
@@ -178,7 +178,7 @@ class PrinterPrefs(PrefPanel):
         else:
             self.pack((5, 5), expand=True)
             self.pack(get_bmp(self, icons.PD_NO_PRINTERS), padding=10)
-            self.pack(wal.Label(self, _('Cannot found installed printers!')))
+            self.pack(wal.Label(self, _('No printers found')))
             self.pack((10, 10))
             self.pack((5, 5), expand=True)
         self.built = True

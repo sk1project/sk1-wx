@@ -301,7 +301,7 @@ msgid "Cannot load pattern for:"
 msgstr "No se puede cargar el patrón para:"
 
 #: src/sk1/application.py:611
-msgid "Requested page is opened in default browser"
+msgid "Requested page was opened in the default browser"
 msgstr "La página solicitada está abierta en el navegador por defecto"
 
 #: src/sk1/context/circle.py:60
@@ -1143,11 +1143,11 @@ msgid "Color management and color profiles"
 msgstr "Gestión de perfiles de color"
 
 #: src/sk1/prefs/prefs_cms.py:90
-msgid "Activate Color Management"
+msgid "Enable Color Management"
 msgstr "Activar gestión de color"
 
 #: src/sk1/prefs/prefs_cms.py:104
-msgid "Note: If not activated the color values will be not accurate."
+msgid "Note: If Color Management is disabled, color values will be inaccurate."
 msgstr "Nota: Si no está activado, los valores de color no serán precisos."
 
 #: src/sk1/prefs/prefs_cms.py:128
@@ -1155,7 +1155,7 @@ msgid "Color profiles"
 msgstr "Perfiles de color"
 
 #: src/sk1/prefs/prefs_cms.py:133
-msgid "Colorspace profiles"
+msgid "Color space profiles"
 msgstr "Perfiles de espacios de color"
 
 #: src/sk1/prefs/prefs_cms.py:151
@@ -1176,7 +1176,7 @@ msgid "Use display profile"
 msgstr "Usar perfil de monitor"
 
 #: src/sk1/prefs/prefs_cms.py:185
-msgid "Note: Display profile for your hardware you could fetch here:"
+msgid "Note: Display profile for your hardware can be found here:"
 msgstr "Nota: El perfil de su hardware puede estar aquí:"
 
 #: src/sk1/prefs/prefs_cms.py:240 src/sk1/prefs/prefs_cms.py:347
@@ -1215,7 +1215,7 @@ msgid "Cannot open profile"
 msgstr "No se puede abrir el perfil"
 
 #: src/sk1/prefs/prefs_cms.py:385
-msgid "The profile may be corrupted or not supported format"
+msgid "The profile may be corrupted or in an unsupported format"
 msgstr "El perfil puede estar dañado o está en un formato no admitido"
 
 #: src/sk1/prefs/prefs_cms.py:389
@@ -1223,7 +1223,7 @@ msgid "Selected profile cannot be added to profile list:"
 msgstr "El perfil elegido no puede ser agregado a la lista de perfiles:"
 
 #: src/sk1/prefs/prefs_cms.py:391
-msgid "It seems you have imported this profile"
+msgid "It seems like you have already imported this profile"
 msgstr "Al parecer has importado este perfil"
 
 #: src/sk1/prefs/prefs_cms.py:398
@@ -1231,7 +1231,7 @@ msgid "Selected file has been added to profile pool"
 msgstr "El objeto seleccionado ha sido agregado al banco de perfiles"
 
 #: src/sk1/prefs/prefs_cms.py:400
-msgid "If you sure to import the file try renaming it"
+msgid "If you still wish to import the file, try renaming it"
 msgstr "Si está seguro de importar el archivo intente renombrarlo"
 
 #: src/sk1/prefs/prefs_cms.py:406
@@ -1239,7 +1239,7 @@ msgid "Cannot copy file"
 msgstr "No se puede copiar el archivo"
 
 #: src/sk1/prefs/prefs_cms.py:408
-msgid "Please check writing permissions for config directory:"
+msgid "Please check write permissions for config directory:"
 msgstr "Por favor revise los permisos del directorio de configuración:"
 
 #: src/sk1/prefs/prefs_cms.py:447
@@ -1279,11 +1279,11 @@ msgid "Simulate printer on the screen"
 msgstr "Simular impresora en pantalla"
 
 #: src/sk1/prefs/prefs_cms.py:519
-msgid "Mark colors that are out of the printer gamut"
+msgid "Highlight colors that are outside of the printer's gamut"
 msgstr "Marcar colores que están fuera del de la gama de la impresora"
 
 #: src/sk1/prefs/prefs_cms.py:527
-msgid "Alarm color:"
+msgid "Highlight color:"
 msgstr "Color de alarma:"
 
 #: src/sk1/prefs/prefs_cms.py:533
@@ -1307,7 +1307,7 @@ msgid "Font preview preferences"
 msgstr "Preferencias de vista previa de fuentes"
 
 #: src/sk1/prefs/prefs_fonts.py:45
-msgid "Text filler:"
+msgid "Placeholder text:"
 msgstr "Relleno de texto:"
 
 #: src/sk1/prefs/prefs_fonts.py:49
@@ -1355,7 +1355,7 @@ msgid "Tab style:"
 msgstr "Estilo de pestañas:"
 
 #: src/sk1/prefs/prefs_general.py:100
-msgid "Rectangle tabs"
+msgid "Rectangular tabs"
 msgstr "Pestañas rectangulares"
 
 #: src/sk1/prefs/prefs_general.py:100
@@ -1435,7 +1435,7 @@ msgid "Generic features"
 msgstr "Funciones generales"
 
 #: src/sk1/prefs/prefs_general.py:200
-msgid "(*) - These options require application restart"
+msgid "(*) - A restart is required to apply these options"
 msgstr "(*) - Estas opciones requieren reiniciar la aplicación"
 
 #: src/sk1/prefs/prefs_palettes.py:25
@@ -1538,8 +1538,8 @@ msgstr "Márgenes de impresión"
 
 #: src/sk1/prefs/prefs_printers.py:156
 msgid ""
-"To measure real print area and vertical/horizontal printing shift just print "
-"calibration page on the A4/Letter sheet."
+"To measure actual print area and vertical/horizontal printing shift, just print "
+"the calibration page on A4/Letter paper."
 msgstr ""
 "Para medidas de área de impresión real e impresión vertical/horizontal solo "
 "imprima la página de calibración tamaño A4/Carta."
@@ -1553,7 +1553,7 @@ msgid "Print Letter calibration page"
 msgstr "Imprimir página de calibración tamaño Carta"
 
 #: src/sk1/prefs/prefs_printers.py:181
-msgid "Cannot found installed printers!"
+msgid "No printers found"
 msgstr "¡No se hallaron impresoras instaladas!hallaron"
 
 #: src/sk1/prefs/prefs_ruler.py:30
@@ -1601,7 +1601,7 @@ msgid "Ruler mark color:"
 msgstr "Color de marcas de regla:"
 
 #: src/sk1/prefs/prefs_ruler.py:114
-msgid "Testing ruler:"
+msgid "Ruler preview:"
 msgstr "Vista previa de regla:"
 
 #: src/sk1/prefs/templates.py:26
@@ -1738,15 +1738,15 @@ msgid "Empty pattern selected"
 msgstr "Patrón vacío seleccionado"
 
 #: src/sk1/pwidgets/fillctrls.py:306 src/sk1/pwidgets/fillctrls.py:457
-msgid "CMYK colorspace"
+msgid "CMYK color space"
 msgstr "Espacio de color CMYK"
 
 #: src/sk1/pwidgets/fillctrls.py:307 src/sk1/pwidgets/fillctrls.py:458
-msgid "RGB colorspace"
+msgid "RGB color space"
 msgstr "Espacio de color RGB"
 
 #: src/sk1/pwidgets/fillctrls.py:308 src/sk1/pwidgets/fillctrls.py:459
-msgid "Grayscale colorspace"
+msgid "Grayscale color space"
 msgstr "Escala de grises"
 
 #: src/sk1/pwidgets/fillctrls.py:309
@@ -2260,7 +2260,7 @@ msgid "Previous page"
 msgstr "Página anterior"
 
 #: src/sk1/resources/labels.py:105
-msgid "Guides at page center"
+msgid "Guides in page center"
 msgstr "Guías al centro de la página"
 
 #: src/sk1/resources/labels.py:106
@@ -2312,11 +2312,11 @@ msgid "Rotate &right 90 degrees"
 msgstr "Rotar 90 grados a la &derecha"
 
 #: src/sk1/resources/labels.py:119
-msgid "&Horizontal mirror"
+msgid "&Flip horizontal"
 msgstr "&Reflejo horizontal"
 
 #: src/sk1/resources/labels.py:120
-msgid "&Vertical mirror"
+msgid "&Flip vertical"
 msgstr "Reflejo &Vertical"
 
 #: src/sk1/resources/labels.py:121
@@ -2332,19 +2332,19 @@ msgid "&Break Apart"
 msgstr "&Descombinar"
 
 #: src/sk1/resources/labels.py:124
-msgid "Raise to &Top"
+msgid "Move to &Top"
 msgstr "Subir al &Tope"
 
 #: src/sk1/resources/labels.py:125
-msgid "&Raise"
+msgid "Move Up"
 msgstr "&Subir"
 
 #: src/sk1/resources/labels.py:126
-msgid "&Lower"
+msgid "Move Down"
 msgstr "&Bajar"
 
 #: src/sk1/resources/labels.py:127
-msgid "Lower to &Bottom"
+msgid "Move to &Bottom"
 msgstr "Bajar al &Final"
 
 #: src/sk1/resources/labels.py:128
@@ -2484,11 +2484,11 @@ msgid "Invert bitmap"
 msgstr "Invertir mapa de bits"
 
 #: src/sk1/resources/labels.py:164
-msgid "Remove alpha-channel"
+msgid "Remove alpha channel"
 msgstr "Quitar canal Alfa"
 
 #: src/sk1/resources/labels.py:165
-msgid "Invert alpha-channel"
+msgid "Invert alpha channel"
 msgstr "Invertir canal Alfa"
 
 #: src/sk1/resources/labels.py:166
@@ -2763,7 +2763,7 @@ msgid "Last selected"
 msgstr "Último seleccionado"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:55
-msgid "Biggest object"
+msgid "Largest object"
 msgstr "Objeto más grande"
 
 #: src/sk1/share/pd_plugins/align_plugin/__init__.py:56
@@ -2902,19 +2902,19 @@ msgid "Create new layer"
 msgstr "Crear capa nueva"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:75
-msgid "Layer to bottom"
+msgid "Move layer to bottom"
 msgstr "Capa al fondo"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:78
-msgid "Lower layer"
+msgid "Move layer down"
 msgstr "Bajar capa"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:81
-msgid "Raise layer"
+msgid "Move layer up"
 msgstr "Subir capa"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:84
-msgid "Layer to top"
+msgid "Move layer to top"
 msgstr "Capa al tope"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:87
@@ -2998,7 +2998,7 @@ msgstr "Posición de texto en círculo"
 
 #: src/sk1/share/pd_plugins/text_on_circle/__init__.py:146
 #: src/sk1/share/pd_plugins/text_on_path/__init__.py:119
-msgid "Place on other side"
+msgid "Place on the other side"
 msgstr "Colocar dentro"
 
 #: src/sk1/share/pd_plugins/text_on_path/__init__.py:52
@@ -3066,11 +3066,11 @@ msgid "Absolute position"
 msgstr "Posición absoluta"
 
 #: src/sk1/share/pd_plugins/transform_plugin/transforms.py:289
-msgid "Horizontal mirror"
+msgid "Flip horizontal"
 msgstr "Reflejar horizontalmente"
 
 #: src/sk1/share/pd_plugins/transform_plugin/transforms.py:301
-msgid "Vertical mirror"
+msgid "Flip vertical"
 msgstr "Reflejar verticalmente"
 
 #: src/sk1/share/pd_plugins/transform_plugin/transforms.py:366
@@ -3339,7 +3339,7 @@ msgid "inches"
 msgstr "pulgadas (in) "
 
 #: src/uc2/uc2const.py:373 src/uc2/uc2const.py:390
-msgid "foots"
+msgid "feet"
 msgstr "pies (ft)"
 
 #: src/uc2/uc2const.py:377
