@@ -103,17 +103,18 @@ if __name__ == "__main__":
         # Installation infrastructure
         '_OsCondition': '601',
         '_CheckX64': True,
-        '_Conditions': [],  # [[msg,condition], ...]
-        '_Icon': '~/Projects/pywixl.ico',
+        '_Conditions': [],  # [[msg,condition,level], ...]
+        '_Icon': os.path.expanduser('~/Projects/pywixl.ico'),
         '_ProgramMenuFolder': 'sK1 Project',
         '_Shortcuts': [
             {'Name': PROJECT,
              'Description': 'Multiplatform MSI builder',
              'Target': '__init__.py'},
         ],
-        '_SourceDir': current_path,
+        '_SourceDir': path,
         '_InstallDir': 'wixl-%s' % VERSION,
         '_OutputName': '%s-%s-win64.msi' % (PROJECT.lower(), VERSION),
         '_OutputDir': os.path.expanduser('~'),
     }
     build(MSI_DATA, xml_only=True, stdout=True)
+    # build(MSI_DATA)
