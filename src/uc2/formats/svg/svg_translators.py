@@ -701,6 +701,9 @@ class SVG_to_SK2_Translator(object):
                     parent.childs.append(container)
                     return
 
+        if not svg_obj.childs:
+            return
+
         group = sk2_model.Group(parent.config, parent)
         for item in svg_obj.childs:
             self.translate_obj(group, item, tr, stl)
