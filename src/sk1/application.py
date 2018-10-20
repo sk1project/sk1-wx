@@ -393,10 +393,12 @@ class SK1Application(wal.Application, UCApplication):
                     return False
         return True
 
-    def import_file(self):
-        doc_file = dialogs.get_open_file_name(self.mw, config.import_dir,
-                                              _('Select file to import'))
-        if fsutils.lexists(doc_file) and fsutils.isfile(doc_file):
+    def import_file(self, doc_file=None):
+        msg = _('Select file to import')
+        if not doc_file:
+            doc_file = dialogs.get_open_file_name(self.mw,
+                                                  config.import_dir, msg)
+        if doc_file and fsutils.lexists(doc_file) and fsutils.isfile(doc_file):
             try:
                 ret = self.current_doc.import_file(doc_file)
                 if not ret:
