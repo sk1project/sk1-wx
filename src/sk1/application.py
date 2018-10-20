@@ -231,7 +231,7 @@ class SK1Application(wal.Application, UCApplication):
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
                 msg += _('The file contains newer SK2 format.\n')
                 msg += _('Try updating sK1 application from '
-                         'http://www.sk1project.net')
+                         'https://sk1project.net')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
                 LOG.error('Cannot open file <%s>: newer SK2 format.', doc_file)
                 return

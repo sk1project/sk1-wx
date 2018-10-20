@@ -185,7 +185,7 @@ class CmsProfiles(CmsTab):
         txt = _('Note: Display profile for your hardware can be found here:')
         label = wal.Label(self, txt, fontsize=-1)
         self.pack(label, fill=True, padding_all=5)
-        self.pack(wal.HtmlLabel(self, 'http://icc.opensuse.org/'))
+        self.pack(wal.HtmlLabel(self, 'https://icc.opensuse.org/'))
         self.activate_display()
 
     def activate_display(self):
