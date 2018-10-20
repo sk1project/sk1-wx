@@ -116,6 +116,7 @@ class CanvasSurface(wal.MainCanvas):
         wal.MainCanvas.__init__(self, parent, rendering_delay=RENDERING_DELAY)
         self.ctx_menu = CanvasCtxMenu(self.app, self)
         self.kbproc = KbdProcessor(self.app)
+        self.set_drop_target(wal.FileDropHandler(self, self.drop_file))
 
     @property
     def painter(self):
@@ -132,6 +133,9 @@ class CanvasSurface(wal.MainCanvas):
         else:
             self.redraw_flag = True
             self.refresh(clear=False)
+
+    def drop_file(self, x, y, filename):
+        self.app.import_file(filename)
 
     # ==============SCROLLING==========================
 
