@@ -393,7 +393,7 @@ class SK1Application(wal.Application, UCApplication):
                     return False
         return True
 
-    def import_file(self, doc_file=None):
+    def import_file(self, doc_file=None, point=None):
         msg = _('Select file to import')
         if not doc_file:
             doc_file = dialogs.get_open_file_name(self.mw,
@@ -408,6 +408,14 @@ class SK1Application(wal.Application, UCApplication):
                              'contains unsupported objects.')
                     dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
                     LOG.warn('Cannot import graphics from file <%s>', doc_file)
+                elif point and self.current_doc.selection.bbox:
+                    x0, y0 = self.current_doc.canvas.win_to_doc(point)
+                    x1 = self.current_doc.selection.bbox[0]
+                    y1 = self.current_doc.selection.bbox[-1]
+                    dx = x0 - x1
+                    dy = y0 - y1
+                    self.current_doc.api.move_selected(dx, dy)
+
                 config.import_dir = str(os.path.dirname(doc_file))
             except Exception as e:
                 msg = _('Cannot import file:')

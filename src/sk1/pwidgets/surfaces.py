@@ -135,7 +135,7 @@ class CanvasSurface(wal.MainCanvas):
             self.refresh(clear=False)
 
     def drop_file(self, x, y, filename):
-        self.app.import_file(filename)
+        self.app.import_file(filename, [x, y])
 
     # ==============SCROLLING==========================
 
