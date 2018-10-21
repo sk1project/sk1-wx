@@ -135,7 +135,8 @@ class SK1Application(wal.Application, UCApplication):
     def call_after(self, *args):
         if self.docs:
             return
-        if config.new_doc_on_start:
+        docs = self._get_docs()
+        if config.new_doc_on_start and not docs:
             self.load_plugins()
             self.new()
         else:
@@ -145,6 +146,16 @@ class SK1Application(wal.Application, UCApplication):
             if not wal.IS_WX2:
                 events.emit(events.NO_DOCS)
         self.update_actions()
+        for item in docs:
+            self.open(item)
+
+    def _get_docs(self):
+        docs = []
+        if len(sys.argv) > 1:
+            for item in sys.argv[1:]:
+                if os.path.exists(item):
+                    docs.append(fsutils.get_utf8_path(item))
+        return docs
 
     def update_wal(self):
         wal.SPIN['overlay'] = config.spin_overlay
