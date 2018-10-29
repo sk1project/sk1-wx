@@ -51,7 +51,7 @@ import sys
 from zipfile import ZIP_DEFLATED
 from zipfile import ZipFile
 
-from utils import bbox, build, wixl
+from utils import bbox, build
 from utils.bbox import is_path, command, echo_msg, SYSFACTS, TIMESTAMP
 from utils.fsutils import get_files_tree
 
@@ -331,6 +331,7 @@ MSI_DATA = {
 
 
 def build_msw_packages():
+    import wixpy
     distro_folder = os.path.join(RELEASE_DIR, 'MS_Windows')
 
     for arch in ['win32', 'win64']:
@@ -403,7 +404,7 @@ def build_msw_packages():
         msi_data['_OutputDir'] = distro_folder
         suffix = '_headless.msi' if os.name != 'nt' else '.msi'
         msi_data['_OutputName'] = msi_name + suffix
-        wixl.build(msi_data)  # , xml_only=True)
+        wixpy.build(msi_data)  # , xml_only=True)
 
         # Clearing
         shutil.rmtree(portable_folder, True)
