@@ -76,6 +76,7 @@ def sk1_run(cfgdir='~'):
     _pkgdir = get_utf8_path(__path__[0])
 
     init_config(cfgdir)
+    os.environ["NO_AT_BRIDGE"] = "1"
 
     if not config.ubuntu_global_menu:
         os.environ["UBUNTU_MENUPROXY"] = "0"
