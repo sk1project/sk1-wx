@@ -314,20 +314,30 @@ MSI_DATA = {
 
     # Structural elements
     '_Icon': '/win32-devres/%s.ico' % PROJECT,
-    '_ProgramMenuFolder': 'sK1 Project',
     '_OsCondition': '601',
-    '_Shortcuts': [
-        {'Name': {SK1: 'sK1 %s illustration program' % APP_VER,
-                  UC2: '%s %s' % (APP_FULL_NAME, APP_VER)}[PROJECT],
-         'Description': {SK1: 'Open source vector graphics editor',
-                         UC2: 'Universal vector graphics translator'}[PROJECT],
-         'Target': '%s.exe' % PROJECT},
-    ],
     '_SourceDir': '',
     '_InstallDir': '%s-%s' % (APP_FULL_NAME, APP_VER),
     '_OutputName': '',
     '_OutputDir': '',
 }
+
+if PROJECT == SK1:
+    MSI_DATA['_Shortcuts'] = [
+        {'Name': 'sK1 %s illustration program' % APP_VER,
+         'Description': 'Open source vector graphics editor',
+         'Target': 'sk1.exe',
+         'AddOnDesktop': True,
+         'OpenWith': ['.sk2', '.sk1', '.sk', '.svg', '.plt', '.wmf', '.fig',
+                      # '.cdr', '.cmx', '.cdt',
+                      # '.ai', '.ps', '.pdf', '.eps',
+                      '.bmp', '.jpg', '.jpeg', '.j2p', '.png', '.tif', '.tiff',
+                      '.gif', '.xcf', '.psd', '.pcx', '.xbm', '.xpm', '.ppm',
+                      '.webp',
+                      '.skp', '.gpl', '.xml', '.soc', '.ase', '.aco', '.cpl',
+                      '.jcw']
+         },
+    ]
+    MSI_DATA['_ProgramMenuFolder'] = 'sK1 Project'
 
 
 def build_msw_packages():
