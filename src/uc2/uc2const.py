@@ -94,6 +94,7 @@ PNG = 'png'
 PPM = 314
 XBM = 315
 XPM = 316
+WEBP = 317
 
 SKP = 'skp'
 GPL = 'gpl'
@@ -161,6 +162,7 @@ FORMAT_DESCRIPTION = {
     PPM: _("PPM - Netpbm Color Image format files"),
     XBM: _("XBM - X bitmap files"),
     XPM: _("XPM - X pixmap files"),
+    WEBP: _("WebP - Google image format files"),
 
     # Palette file formats
     SKP: _("SKP - sK1 palette files"),
@@ -231,6 +233,7 @@ FORMAT_NAMES = {
     PPM: "PPM",
     XBM: "XBM",
     XPM: "XPM",
+    WEBP: "WEBP",
 
     # Palette file formats
     SKP: "SKP",
@@ -253,7 +256,8 @@ FORMAT_NAMES = {
 }
 
 MODEL_LOADERS = [SK2, SVG, WMF, PLT, SK1, SK, CDR, CDT, FIG]
-BITMAP_LOADERS = [PNG, JPG, PSD, XCF, JP2, TIF, GIF, BMP, PCX, PPM, XBM, XPM]
+BITMAP_LOADERS = [PNG, JPG, PSD, XCF, JP2, TIF, GIF, BMP, PCX, PPM, XBM, XPM,
+                  WEBP]
 PALETTE_LOADERS = [SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL, ASE, ACO, JCW]
 EXPERIMENTAL_LOADERS = [MD, RIFF, CDRZ, XML, CGM, ]
 
@@ -284,7 +288,7 @@ FORMAT_EXTENSION = {
     JPG: ('jpg', 'jpeg', 'jpe', 'jfif'), TIF: ('tif', 'tiff'),
     BMP: ('bmp', 'dib'),
     PCX: ('pcx',), GIF: ('gif',), PNG: ('png',), PPM: ('pbm', 'pgm', 'pgm'),
-    XBM: ('xbm',), XPM: ('xpm',), JP2: ('jp2', 'jpx', 'jpf'),
+    XBM: ('xbm',), XPM: ('xpm',), JP2: ('jp2', 'jpx', 'jpf'), WEBP: ('webp',),
 
     SKP: ('skp',), GPL: ('gpl',), CPL: ('cpl',), SCRIBUS_PAL: ('xml',),
     SOC: ('soc',),
@@ -297,7 +301,7 @@ FORMAT_EXTENSION = {
     MD: ('md',),
 }
 
-IMAGE_FORMATS = [JPG, TIF, BMP, PCX, GIF, PNG, PPM, XBM, XPM, ]
+IMAGE_FORMATS = [JPG, TIF, BMP, PCX, GIF, PNG, PPM, XBM, XPM, WEBP, ]
 
 MIMES = {
     'pdxf': 'application/vnd.sk1project.pdxf-graphics',
