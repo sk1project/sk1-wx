@@ -327,6 +327,7 @@ if PROJECT == SK1:
          'Description': 'Open source vector graphics editor',
          'Target': 'sk1.exe',
          'AddOnDesktop': True,
+         'Open': [],
          'OpenWith': ['.sk2', '.sk1', '.sk', '.svg', '.plt', '.wmf', '.fig',
                       # '.cdr', '.cmx', '.cdt',
                       # '.ai', '.ps', '.pdf', '.eps',
