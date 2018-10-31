@@ -168,6 +168,10 @@ class GeneralPrefs(PrefPanel):
         self.expbackup = wal.Checkbox(int_vp, txt, config.make_export_backup)
         int_vp.pack(self.expbackup, align_center=False, padding=3)
 
+        txt = _('Run as server')
+        self.server = wal.Checkbox(int_vp, txt, config.app_server)
+        int_vp.pack(self.server, align_center=False, padding=3)
+
         table.pack(int_vp)
         table.pack((15, 5))
 
@@ -209,6 +213,7 @@ class GeneralPrefs(PrefPanel):
         config.new_doc_on_start = self.newdoc.get_value()
         config.make_backup = self.backup.get_value()
         config.make_export_backup = self.expbackup.get_value()
+        config.app_server = self.server.get_value()
         config.history_size = self.hist_size.get_value()
         config.history_list_size = self.hist_menu_size.get_value()
         config.log_level = self.log_level.get_active_value()
@@ -232,6 +237,7 @@ class GeneralPrefs(PrefPanel):
         self.newdoc.set_value(defaults['new_doc_on_start'])
         self.backup.set_value(defaults['make_backup'])
         self.expbackup.set_value(defaults['make_export_backup'])
+        self.server.set_value(defaults['app_server'])
         self.hist_size.set_value(defaults['history_size'])
         self.hist_menu_size.set_value(defaults['history_list_size'])
         self.log_level.set_active(LEVELS.index(defaults['log_level']))
