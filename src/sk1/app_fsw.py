@@ -38,9 +38,11 @@ class AppFileWatcher(object):
             with open(self.lock, 'wb') as fp:
                 fp.write('\n')
 
-    def __del__(self):
+    def destroy(self):
         if os.path.exists(self.lock):
             os.remove(self.lock)
+        if self.timer.is_running():
+            self.timer.stop()
 
     def check_config(self, *args):
         if config.app_server and not self.timer.is_running():

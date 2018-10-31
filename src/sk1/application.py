@@ -188,6 +188,7 @@ class SK1Application(wal.Application, UCApplication):
             self.mw.hide()
             self.update_config()
             self.mw.destroy()
+            self.fsw.destroy()
             wal.Application.exit(self)
             LOG.info('Application terminated')
             return True
