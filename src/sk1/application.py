@@ -27,6 +27,7 @@ from sk1 import _, config, events, modes, dialogs, appconst
 from sk1 import app_plugins, app_actions
 from sk1.app_cms import AppColorManager
 from sk1.app_conf import AppData
+from sk1.app_fsw import AppFileWatcher
 from sk1.app_history import AppHistoryManager
 from sk1.app_insp import AppInspector
 from sk1.app_palettes import AppPaletteManager
@@ -118,6 +119,7 @@ class SK1Application(wal.Application, UCApplication):
         LOG.info('Application is initialized')
         uc2.events.connect(uc2.events.MESSAGES, self.uc2_event_logging)
         events.connect(events.APP_STATUS, self.sk1_event_logging)
+        self.fsw = AppFileWatcher(self, self.mw)
 
         if wal.IS_WX2:
             events.emit(events.NO_DOCS)

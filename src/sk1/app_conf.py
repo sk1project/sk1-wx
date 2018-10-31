@@ -85,6 +85,7 @@ class AppConfig(UCConfig):
     system_encoding = 'utf-8'  # default encoding (GUI uses utf-8 only)
     log_level = 'INFO'
     language = 'system'
+    app_server = True
 
     show_splash = False
 

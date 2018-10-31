@@ -17,6 +17,7 @@
 
 import os
 import sys
+import time
 
 import uc2
 
@@ -69,6 +70,21 @@ def init_config(cfgdir='~'):
     config.resource_dir = resource_dir
 
 
+def check_server(cfgdir):
+    cfg_dir = os.path.join(cfgdir, '.config', 'sk1-wx')
+    lock = os.path.join(cfg_dir, 'lock')
+    if config.app_server and len(sys.argv) > 1 and os.path.exists(lock):
+        socket = os.path.join(cfg_dir, 'socket')
+        with open(socket, 'wb') as fp:
+            for item in sys.argv[1:]:
+                fp.write('%s\n' % item)
+        time.sleep(2)
+        if os.path.exists(socket):
+            os.remove(socket)
+        else:
+            sys.exit(0)
+
+
 def sk1_run(cfgdir='~'):
     """sK1 application launch routine"""
 
@@ -76,6 +92,7 @@ def sk1_run(cfgdir='~'):
     _pkgdir = get_utf8_path(__path__[0])
 
     init_config(cfgdir)
+    check_server(get_sys_path(cfgdir))
     os.environ["NO_AT_BRIDGE"] = "1"
 
     if not config.ubuntu_global_menu:
