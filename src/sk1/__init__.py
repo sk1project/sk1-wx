@@ -73,7 +73,7 @@ def init_config(cfgdir='~'):
 def check_server(cfgdir):
     cfg_dir = os.path.join(cfgdir, '.config', 'sk1-wx')
     lock = os.path.join(cfg_dir, 'lock')
-    if config.app_server and len(sys.argv) > 1 and os.path.exists(lock):
+    if config.app_server and os.path.exists(lock):
         socket = os.path.join(cfg_dir, 'socket')
         with open(socket, 'wb') as fp:
             for item in sys.argv[1:]:

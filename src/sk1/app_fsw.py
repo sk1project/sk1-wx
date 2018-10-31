@@ -52,6 +52,7 @@ class AppFileWatcher(object):
 
     def on_timer(self, *args):
         if os.path.exists(self.socket):
+            self.mw.raise_window()
             with open(self.socket, 'rb') as fp:
                 lines = fp.readlines()
             os.remove(self.socket)
