@@ -1,23 +1,20 @@
 
 ===INFRASTRUCTURE=========
-Vagrant/Docker build (BuildBox)
 Добавить Debian Sid
 Сборки для Gentoo, Slackware
-WiX installer for MSW
 
 ===MODEL==========
 Создание кривых кайро на нативной части
 фильтр-нормализатор модели (экспорт/рендеринг)
 
 ===UI===============
+Spinbox for Gtk3
 Переработать виджет палитры (скроллы, бордер)
 
 ===UC2==========
 UI для UC2 (?)
-Цветной вывод для linux консоли
 
 ===sk1==========
-Протестировать все операции, связанные с ProgressDialog
 
 ===FILTERS==========
 WMF exporter
@@ -25,10 +22,8 @@ CGM import/export (можно ли подмерджить UC1?)
 PLT export wrong
 
 ===REFACTORING==========
-Toolbar
 
 ===CANVAS==========
-Полное тестирование
 
 
 
