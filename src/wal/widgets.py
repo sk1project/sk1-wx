@@ -19,6 +19,7 @@ import wx
 import wx.combo
 from wx import animate
 
+import basic
 import const
 from basic import HPanel, MouseEvent
 from const import DEF_SIZE, tr, untr
@@ -558,7 +559,7 @@ class Spin(wx.SpinCtrl, RangeDataWidgetMixin):
 
 IntSpin = Spin
 
-if not const.IS_WX2:
+if not const.IS_WX2 and not const.IS_GTK3:
     class SpinDouble(wx.SpinCtrlDouble, RangeDataWidgetMixin):
         callback = None
         callback1 = None
@@ -637,7 +638,7 @@ if not const.IS_WX2:
     FloatSpin = SpinDouble
 
 
-class SpinButton(wx.SpinButton, RangeDataWidgetMixin):
+class NativeSpinButton(wx.SpinButton, RangeDataWidgetMixin):
     def __init__(
             self, parent, value=0, range_val=(0, 10), size=DEF_SIZE,
             onchange=None, vertical=True):
@@ -650,6 +651,64 @@ class SpinButton(wx.SpinButton, RangeDataWidgetMixin):
         self.SetRange(*range_val)
         if onchange:
             self.Bind(wx.EVT_SPIN, onchange, self)
+
+
+class MegaSpinButton(basic.Panel, basic.Canvas):
+    def __init__(
+            self, parent, value=0, range_val=(0, 10), size=DEF_SIZE,
+            onchange=None, vertical=True):
+        self.enabled = True
+        self.range_val = range_val
+        self.value = value
+        self.range_val = range_val
+        self.callback = onchange
+        if size == DEF_SIZE:
+            size = (13, 20)
+        elif size[0] < 13:
+            size = (13, size[1])
+        basic.Panel.__init__(self, parent, wx.ID_ANY)
+        basic.Canvas.__init__(self)
+        self.set_size(size)
+
+    def Enable(self, val):
+        self.enabled = val
+        self.refresh()
+
+    def get_value(self):
+        return self.value
+
+    def set_value(self, val):
+        self.value = val
+
+    def set_range(self, range_val):
+        self.range_val = range_val
+
+    def paint(self):
+        self.set_gc_fill(const.UI_COLORS['bg'])
+        self.set_gc_stroke(const.UI_COLORS['dark_shadow'])
+        w, h = self.GetSizeTuple()
+        self.gc_draw_rounded_rect(-5, 1, w + 5, h - 2, 3)
+
+        # Drawing signs
+        h0 = h - 2
+        mx = 6
+        my0 = h0 // 4 + 4
+        my1 = h0 // 4 * 3 - 2
+        s = 3
+        self.set_gc_fill(const.UI_COLORS['text'])
+        self.set_gc_stroke()
+        self.gc_draw_polygon([(mx - s, my0), (mx + s, my0),
+                             (mx, my0 - s), (mx - s, my0)])
+
+        self.gc_draw_polygon([(mx - s, my1), (mx + s, my1),
+                             (mx, my1 + s), (mx - s, my1)])
+
+
+if const.IS_GTK3:
+    SpinButton = MegaSpinButton
+else:
+    SpinButton = NativeSpinButton
+# SpinButton = MegaSpinButton
 
 
 class MegaSpin(wx.Panel, RangeDataWidgetMixin):
@@ -855,7 +914,7 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
         self.SetValue(self.value)
 
 
-if const.IS_WX2:
+if const.IS_WX2 or const.IS_GTK3:
     FloatSpin = MegaSpin
 
 
