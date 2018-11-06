@@ -653,21 +653,33 @@ class NativeSpinButton(wx.SpinButton, RangeDataWidgetMixin):
             self.Bind(wx.EVT_SPIN, onchange, self)
 
 
-class MegaSpinButton(basic.Panel, basic.Canvas):
+class DummyEvent(object):
+    def Skip(self): pass
+
+
+_dummy_event = DummyEvent()
+
+
+class MegaSpinButton(basic.Panel, basic.SensitiveCanvas):
+    top_pressed = False
+    bottom_pressed = False
+    top_enabled = True
+    bottom_enabled = True
+    enabled = True
+    width = 14
+
     def __init__(
             self, parent, value=0, range_val=(0, 10), size=DEF_SIZE,
             onchange=None, vertical=True):
-        self.enabled = True
         self.range_val = range_val
         self.value = value
         self.range_val = range_val
         self.callback = onchange
-        if size == DEF_SIZE:
-            size = (13, 20)
-        elif size[0] < 13:
-            size = (13, size[1])
+        self.bitmaps = ()
+        self._check_range()
+        size = (self.width, 20) if size == DEF_SIZE else (self.width, size[1])
         basic.Panel.__init__(self, parent, wx.ID_ANY)
-        basic.Canvas.__init__(self)
+        basic.SensitiveCanvas.__init__(self)
         self.set_size(size)
 
     def Enable(self, val):
@@ -679,36 +691,116 @@ class MegaSpinButton(basic.Panel, basic.Canvas):
 
     def set_value(self, val):
         self.value = val
+        self._check_range()
 
     def set_range(self, range_val):
         self.range_val = range_val
+        self._check_range()
+
+    def _check_range(self):
+        self.top_enabled = self.bottom_enabled = True
+        if self.value == self.range_val[0]:
+            self.bottom_enabled = False
+        if self.value == self.range_val[1]:
+            self.top_enabled = False
+
+    def mouse_left_down(self, point):
+        if point[1] < self.GetSizeTuple()[1] // 2:
+            self.top_pressed = True
+            self.top_btn_down()
+        else:
+            self.bottom_pressed = True
+            self.bottom_btn_down()
+        self.refresh()
+
+    def mouse_left_up(self, point):
+        self.top_pressed = self.bottom_pressed = False
+        self.refresh()
+
+    def mouse_wheel(self, val):
+        if val < 0:
+            self.bottom_btn_down()
+        else:
+            self.top_btn_down()
+        self.refresh()
+
+    def top_btn_down(self):
+        if self.value < self.range_val[1]:
+            self.value += 1
+            if self.callback:
+                self.callback(_dummy_event)
+        self._check_range()
+
+    def bottom_btn_down(self):
+        if self.value > self.range_val[0]:
+            self.value -= 1
+            if self.callback:
+                self.callback(_dummy_event)
+        self._check_range()
+
+    def _cache_bitmaps(self, w, h):
+        middle_point = h // 2
+        nr = wx.RendererNative.Get()
+        nr.DrawPushButton(self, self.pdc, (-20, 0, w + 20, h),
+                          wx.CONTROL_DIRTY)
+        bmp1 = wx.EmptyBitmap(w, middle_point)
+        bmp2 = wx.EmptyBitmap(w, h - middle_point)
+        mdc = wx.MemoryDC()
+        mdc.SelectObject(bmp1)
+        mdc.Blit(0, 0, w, middle_point, self.pdc,
+                 0, 0, wx.COPY, False)
+        mdc.SelectObject(bmp2)
+        mdc.Blit(0, 0, w, h - middle_point, self.pdc,
+                 0, middle_point, wx.COPY, False)
+        mdc.SelectObject(wx.NullBitmap)
+        self.bitmaps = (bmp1, bmp2)
 
     def paint(self):
-        self.set_gc_fill(const.UI_COLORS['bg'])
-        self.set_gc_stroke(const.UI_COLORS['dark_shadow'])
         w, h = self.GetSizeTuple()
-        self.gc_draw_rounded_rect(-5, 1, w + 5, h - 2, 3)
-
-        # Drawing signs
         h0 = h - 2
         mx = 6
         my0 = h0 // 4 + 4
         my1 = h0 // 4 * 3 - 2
         s = 3
-        self.set_gc_fill(const.UI_COLORS['text'])
+        my2 = h // 2
+
+        if not self.bitmaps:
+            self._cache_bitmaps(w, h)
+
+        nr = wx.RendererNative.Get()
+
+        flag = wx.CONTROL_DIRTY
+        if not self.enabled:
+            flag = wx.CONTROL_DIRTY | wx.CONTROL_DISABLED
+        elif (self.top_pressed and self.top_enabled) or \
+                (self.bottom_pressed and self.bottom_enabled):
+            flag = wx.CONTROL_PRESSED | wx.CONTROL_SELECTED
+
+        nr.DrawPushButton(self, self.pdc, (-10, 0, w + 10, h), flag)
+        if (self.top_pressed or self.bottom_pressed) and self.enabled:
+            y, bmp = (my2, self.bitmaps[1]) if self.top_pressed \
+                else (0, self.bitmaps[0])
+            self.draw_bitmap(bmp, 0, y)
+
+        # Drawing signs
+
         self.set_gc_stroke()
+        self.set_gc_fill(const.UI_COLORS['text'] if self.top_enabled
+                         else const.UI_COLORS['disabled_text'])
         self.gc_draw_polygon([(mx - s, my0), (mx + s, my0),
-                             (mx, my0 - s), (mx - s, my0)])
+                              (mx, my0 - s), (mx - s, my0)])
 
+        self.set_gc_fill(const.UI_COLORS['text'] if self.bottom_enabled
+                         else const.UI_COLORS['disabled_text'])
         self.gc_draw_polygon([(mx - s, my1), (mx + s, my1),
-                             (mx, my1 + s), (mx - s, my1)])
+                              (mx, my1 + s), (mx - s, my1)])
 
 
-if const.IS_GTK3:
-    SpinButton = MegaSpinButton
-else:
-    SpinButton = NativeSpinButton
-# SpinButton = MegaSpinButton
+# if const.IS_GTK3:
+#     SpinButton = MegaSpinButton
+# else:
+#     SpinButton = NativeSpinButton
+SpinButton = MegaSpinButton
 
 
 class MegaSpin(wx.Panel, RangeDataWidgetMixin):
@@ -838,10 +930,12 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
         txt = self.entry.get_value()
         res = ''
         for item in txt:
-            chars = '.0123456789-+/*'
+            chars = '.0123456789' #-+/*'
             if not self.digits:
-                chars = '0123456789-+/*'
+                chars = '0123456789' #-+/*'
             if item in chars:
+                if item == '.' and item in res:
+                    continue
                 res += item
         if not txt == res:
             self.flag = True
