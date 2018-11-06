@@ -668,9 +668,8 @@ class MegaSpinButton(basic.Panel, basic.SensitiveCanvas):
     enabled = True
     width = 14
 
-    def __init__(
-            self, parent, value=0, range_val=(0, 10), size=DEF_SIZE,
-            onchange=None, vertical=True):
+    def __init__(self, parent, value=0, range_val=(0, 10), size=DEF_SIZE,
+                 onchange=None, vertical=True):
         self.range_val = range_val
         self.value = value
         self.range_val = range_val
@@ -819,7 +818,7 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
 
     def __init__(
             self, parent, value=0.0, range_val=(0.0, 1.0), step=0.01,
-            digits=2, size=DEF_SIZE, width=5,
+            digits=2, size=DEF_SIZE, width=7,
             onchange=None, onenter=None, check_focus=True):
 
         self.callback = onchange
@@ -829,7 +828,7 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
         if const.IS_MAC:
             spin_overlay = False
         if not width and const.IS_MSW:
-            width = 5
+            width = 7
 
         wx.Panel.__init__(self, parent)
         if spin_overlay:
