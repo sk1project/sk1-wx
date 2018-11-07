@@ -680,6 +680,8 @@ class MegaSpinButton(basic.Panel, basic.SensitiveCanvas):
         basic.Panel.__init__(self, parent, wx.ID_ANY)
         basic.SensitiveCanvas.__init__(self)
         self.set_size(size)
+        self.timer = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER, self._repeat_on_timer)
 
     def Enable(self, val):
         self.enabled = val
@@ -691,6 +693,7 @@ class MegaSpinButton(basic.Panel, basic.SensitiveCanvas):
     def set_value(self, val):
         self.value = val
         self._check_range()
+        self.refresh()
 
     def set_range(self, range_val):
         self.range_val = range_val
@@ -704,19 +707,26 @@ class MegaSpinButton(basic.Panel, basic.SensitiveCanvas):
             self.top_enabled = False
 
     def mouse_left_down(self, point):
+        if not self.enabled:
+            return
         if point[1] < self.GetSizeTuple()[1] // 2:
             self.top_pressed = True
             self.top_btn_down()
         else:
             self.bottom_pressed = True
             self.bottom_btn_down()
+        self.timer.Start(100)
         self.refresh()
 
     def mouse_left_up(self, point):
         self.top_pressed = self.bottom_pressed = False
+        if self.timer.IsRunning():
+            self.timer.Stop()
         self.refresh()
 
     def mouse_wheel(self, val):
+        if not self.enabled:
+            return
         if val < 0:
             self.bottom_btn_down()
         else:
@@ -736,6 +746,17 @@ class MegaSpinButton(basic.Panel, basic.SensitiveCanvas):
             if self.callback:
                 self.callback(_dummy_event)
         self._check_range()
+
+    def _repeat_on_timer(self, event):
+        if self.top_pressed and self.top_enabled:
+            self.top_btn_down()
+            self.refresh()
+        elif self.bottom_pressed and self.bottom_enabled:
+            self.bottom_btn_down()
+            self.refresh()
+        else:
+            if self.timer.IsRunning():
+                self.timer.Stop()
 
     def _cache_bitmaps(self, w, h):
         middle_point = h // 2
@@ -795,11 +816,10 @@ class MegaSpinButton(basic.Panel, basic.SensitiveCanvas):
                               (mx, my1 + s), (mx - s, my1)])
 
 
-# if const.IS_GTK3:
-#     SpinButton = MegaSpinButton
-# else:
-#     SpinButton = NativeSpinButton
-SpinButton = MegaSpinButton
+if const.IS_GTK3:
+    SpinButton = MegaSpinButton
+else:
+    SpinButton = NativeSpinButton
 
 
 class MegaSpin(wx.Panel, RangeDataWidgetMixin):
@@ -818,7 +838,7 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
 
     def __init__(
             self, parent, value=0.0, range_val=(0.0, 1.0), step=0.01,
-            digits=2, size=DEF_SIZE, width=7,
+            digits=2, size=DEF_SIZE, width=5,
             onchange=None, onenter=None, check_focus=True):
 
         self.callback = onchange
@@ -828,7 +848,7 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
         if const.IS_MAC:
             spin_overlay = False
         if not width and const.IS_MSW:
-            width = 7
+            width = 5
 
         wx.Panel.__init__(self, parent)
         if spin_overlay:
@@ -882,6 +902,7 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
         self._set_value(value)
         self.flag = False
         self.Fit()
+        self.Bind(wx.EVT_MOUSEWHEEL, self._mouse_wheel)
 
     def set_enable(self, val):
         self.entry.Enable(val)
@@ -912,6 +933,12 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
         if self.enter_callback is not None:
             self.enter_callback()
 
+    def _mouse_wheel(self, event):
+        if event.GetWheelRotation() < 0:
+            self.SetValue(self.value - self.step)
+        else:
+            self.SetValue(self.value + self.step)
+
     def _ctxmenu(self, event):
         self.ctxmenu_flag = True
         event.Skip()
@@ -929,9 +956,9 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
         txt = self.entry.get_value()
         res = ''
         for item in txt:
-            chars = '.0123456789' #-+/*'
+            chars = '.0123456789'  # -+/*'
             if not self.digits:
-                chars = '0123456789' #-+/*'
+                chars = '0123456789'  # -+/*'
             if item in chars:
                 if item == '.' and item in res:
                     continue
