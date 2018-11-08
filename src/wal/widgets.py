@@ -663,6 +663,7 @@ _dummy_event = DummyEvent()
 class _MBtn(basic.Panel, basic.SensitiveCanvas):
     _pressed = False
     _enabled = True
+    _active = True
     _top = True
     parent = None
     callback = None
@@ -683,12 +684,12 @@ class _MBtn(basic.Panel, basic.SensitiveCanvas):
 
     def _get_points(self):
         w, h = self.GetSizeTuple()
-        h0 = h - 2
         mx = 6
-        my = h0 // 2
+        my = h // 2 + 4
         s = 3
         points = [(mx - s, my), (mx + s, my), (mx, my - s), (mx - s, my)]
         if not self._top:
+            my = h // 2 - 4
             points = [(mx - s, my), (mx + s, my), (mx, my + s), (mx - s, my)]
         return points
 
@@ -702,13 +703,25 @@ class _MBtn(basic.Panel, basic.SensitiveCanvas):
 
     def set_enable(self, value):
         self._enabled = value
+        self._pressed = False if not value else self._pressed
         self.refresh()
+
+    def get_enabled(self):
+        return self._enabled
+
+    def set_active(self, value):
+        self._active = value
+        self._pressed = False if not value else self._pressed
+        self.refresh()
+
+    def get_active(self):
+        return self._active
 
     def mouse_left_down(self, point):
         if self._enabled:
             self._pressed = True
             self.btn_down()
-        self.timer.Start(100)
+        self.timer.Start(200)
         self.refresh()
 
     def mouse_left_up(self, point):
@@ -716,7 +729,7 @@ class _MBtn(basic.Panel, basic.SensitiveCanvas):
         self.refresh()
 
     def mouse_wheel(self, val):
-        if self.callback_wheel:
+        if self.callback_wheel and self._enabled:
             self.callback_wheel(val)
 
     def btn_down(self):
@@ -739,7 +752,8 @@ class _MBtn(basic.Panel, basic.SensitiveCanvas):
 
         # Drawing signs
         self.set_gc_stroke()
-        self.set_gc_fill(const.UI_COLORS['text'] if self._enabled
+        self.set_gc_fill(const.UI_COLORS['text']
+                         if self._enabled and self._active
                          else const.UI_COLORS['disabled_text'])
         self.gc_draw_polygon(self.points)
 
@@ -753,24 +767,25 @@ class MegaSpinButton(basic.Panel):
         self.range_val = range_val
         self.value = value
         self.callback = onchange
-        self._check_range()
         size = (self.width, 20) if size == DEF_SIZE else (self.width, size[1])
         basic.Panel.__init__(self, parent, wx.ID_ANY)
         self.set_size(size)
         w, h = size
         my = h // 2
         self.top_btn = _MBtn(self, (w, my),
-                             onclick=self.top_btn_down,
-                             onwheel=self.mouse_wheel)
+                             onclick=self._top_btn_down,
+                             onwheel=self._mouse_wheel)
         self.top_btn.SetPosition((0, 0))
         self.bottom_btn = _MBtn(self, (w, h - my), False,
-                                onclick=self.top_btn_down,
-                                onwheel=self.mouse_wheel)
+                                onclick=self._bottom_btn_down,
+                                onwheel=self._mouse_wheel)
         self.bottom_btn.SetPosition((0, my))
+        self._check_range()
 
     def Enable(self, val):
         self.enabled = val
-        self.refresh()
+        self.top_btn.set_enable(val)
+        self.bottom_btn.set_enable(val)
 
     def get_value(self):
         return self.value
@@ -778,36 +793,37 @@ class MegaSpinButton(basic.Panel):
     def set_value(self, val):
         self.value = val
         self._check_range()
-        self.refresh()
 
     def set_range(self, range_val):
         self.range_val = range_val
         self._check_range()
 
     def _check_range(self):
-        self.top_enabled = self.bottom_enabled = True
         if self.value == self.range_val[0]:
-            self.bottom_enabled = False
+            self.bottom_btn.set_active(False)
+        elif not self.bottom_btn.get_active():
+            self.bottom_btn.set_active(True)
         if self.value == self.range_val[1]:
-            self.top_enabled = False
+            self.top_btn.set_active(False)
+        elif not self.top_btn.get_active():
+            self.top_btn.set_active(True)
 
-    def mouse_wheel(self, val):
+    def _mouse_wheel(self, val):
         if not self.enabled:
             return
         if val < 0:
-            self.bottom_btn_down()
+            self._bottom_btn_down()
         else:
-            self.top_btn_down()
-        self.refresh()
+            self._top_btn_down()
 
-    def top_btn_down(self):
+    def _top_btn_down(self):
         if self.value < self.range_val[1]:
             self.value += 1
             if self.callback:
                 self.callback(_dummy_event)
         self._check_range()
 
-    def bottom_btn_down(self):
+    def _bottom_btn_down(self):
         if self.value > self.range_val[0]:
             self.value -= 1
             if self.callback:
@@ -815,10 +831,11 @@ class MegaSpinButton(basic.Panel):
         self._check_range()
 
 
-if const.IS_GTK3:
-    SpinButton = MegaSpinButton
-else:
-    SpinButton = NativeSpinButton
+# if const.IS_GTK3:
+#     SpinButton = MegaSpinButton
+# else:
+#     SpinButton = NativeSpinButton
+SpinButton = MegaSpinButton
 
 
 class MegaSpin(wx.Panel, RangeDataWidgetMixin):
@@ -929,14 +946,15 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
         if self.flag:
             return
         self.SetValue(self._calc_entry())
-        if self.enter_callback is not None:
+        if self.enter_callback:
             self.enter_callback()
 
     def _mouse_wheel(self, event):
-        if event.GetWheelRotation() < 0:
-            self.SetValue(self.value - self.step)
-        else:
-            self.SetValue(self.value + self.step)
+        if self.get_enabled():
+            if event.GetWheelRotation() < 0:
+                self.SetValue(self._calc_entry() - self.step)
+            else:
+                self.SetValue(self._calc_entry() + self.step)
 
     def _ctxmenu(self, event):
         self.ctxmenu_flag = True

@@ -18,7 +18,7 @@ class MW(wal.MainWindow):
 
         self.spin1 = wal.MegaSpin(self, 5, (0, 20), onchange=self.onchange1)
         self.pack(self.spin1)
-        # self.spin1.set_enable(False)
+        self.spin1.set_enable(False)
 
     def onchange(self):
         print self.spin.get_value()
