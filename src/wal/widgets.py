@@ -879,7 +879,7 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
                 if spin_sep:
                     self.line = HPanel(self)
                     self.line.SetSize((1, self.sb.GetSize()[1] - 2))
-                    self.line.set_bg(const.UI_COLORS['dark_shadow'])
+                    self.line.set_bg(const.UI_COLORS['hover_solid_border'])
                     self.line.SetPosition((w_pos - 1, 1))
                 self.sb.SetPosition((w_pos, 0))
                 self.SetSize((-1, self.entry.GetSize()[1]))
@@ -925,7 +925,7 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
         self.sb.Enable(val)
         if self.line is not None:
             if val:
-                self.line.set_bg(const.UI_COLORS['dark_shadow'])
+                self.line.set_bg(const.UI_COLORS['hover_solid_border'])
             else:
                 self.line.set_bg(const.UI_COLORS['light_shadow'])
 
