@@ -245,10 +245,10 @@ def _init_gtk_colors(kw):
     kw['disabled_text'] = mix_colors(fg, bg, 125)
     kw['disabled_text_shadow'] = mix_colors((255, 255, 255), bg, 200)
     kw['hover_border'] = border + (90,)
-    kw['hover_solid_border'] = mix_colors(border, bg, 100 if IS_GTK3 else 200)
+    kw['hover_solid_border'] = mix_colors(border, bg, 250 if IS_GTK3 else 200)
     kw['pressed_border'] = border + (0,)
     kw['light_shadow'] = mix_colors((255, 255, 255), bg, 40)
-    kw['dark_shadow'] = mix_colors(border, bg, 100 if IS_GTK3 else 200)
+    kw['dark_shadow'] = mix_colors(border, bg, 250 if IS_GTK3 else 200)
     kw['dark_face'] = border + (40,)
     kw['light_face'] = (255, 255, 255, 60)
     # 	kw['workspace'] = () + ws
