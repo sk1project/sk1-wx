@@ -831,11 +831,11 @@ class MegaSpinButton(basic.Panel):
         self._check_range()
 
 
-# if const.IS_GTK3:
-#     SpinButton = MegaSpinButton
-# else:
-#     SpinButton = NativeSpinButton
-SpinButton = MegaSpinButton
+if const.IS_GTK3:
+    SpinButton = MegaSpinButton
+else:
+    SpinButton = NativeSpinButton
+# SpinButton = MegaSpinButton
 
 
 class MegaSpin(wx.Panel, RangeDataWidgetMixin):
