@@ -99,24 +99,24 @@ RELEASE = False
 DEBUG_MODE = False
 
 IMAGES = [
-    'ubuntu_14.04_32bit',
-    'ubuntu_14.04_64bit',
-    'ubuntu_16.04_32bit',
-    'ubuntu_16.04_64bit',
-    'ubuntu_17.10_64bit',
+    # 'ubuntu_14.04_32bit',
+    # 'ubuntu_14.04_64bit',
+    # 'ubuntu_16.04_32bit',
+    # 'ubuntu_16.04_64bit',
+    # 'ubuntu_17.10_64bit',
     'ubuntu_18.04_64bit',
-    'debian_7_32bit',
-    'debian_7_64bit',
-    'debian_8_32bit',
-    'debian_8_64bit',
-    'debian_9_32bit',
-    'debian_9_64bit',
-    'fedora_26_64bit',
-    'fedora_27_64bit',
+    # 'debian_7_32bit',
+    # 'debian_7_64bit',
+    # 'debian_8_32bit',
+    # 'debian_8_64bit',
+    # 'debian_9_32bit',
+    # 'debian_9_64bit',
+    # 'fedora_26_64bit',
+    # 'fedora_27_64bit',
     'fedora_28_64bit',
-    'opensuse_42.3_64bit',
-    'opensuse_15.0_64bit',
-    'msw-packager'
+    # 'opensuse_42.3_64bit',
+    # 'opensuse_15.0_64bit',
+    # 'msw-packager'
 ]
 
 

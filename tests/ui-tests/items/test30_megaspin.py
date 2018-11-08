@@ -11,12 +11,13 @@ class MW(wal.MainWindow):
         wal.MainWindow.__init__(self)
         self.set_size(SIZE)
 
-        self.spin = wal.MegaSpin(self, 5, (0, 5), width=5,
-                                     onchange=self.onchange,
-                                     onenter=self.onenter)
+        self.spin = wal.MegaSpinDouble(self, 5, (0, 5), width=5,
+                                       onchange=self.onchange,
+                                       onenter=self.onenter)
         self.pack(self.spin)
 
-        self.spin1 = wal.MegaSpin(self, 5, (0, 20), onchange=self.onchange1)
+        self.spin1 = wal.MegaSpinDouble(self, 5, (0, 20),
+                                        onchange=self.onchange1)
         self.pack(self.spin1)
         self.spin1.set_enable(False)
 
