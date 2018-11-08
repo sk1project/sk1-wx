@@ -923,11 +923,10 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
     def set_enable(self, val):
         self.entry.Enable(val)
         self.sb.Enable(val)
-        if self.line is not None:
-            if val:
-                self.line.set_bg(const.UI_COLORS['hover_solid_border'])
-            else:
-                self.line.set_bg(const.UI_COLORS['light_shadow'])
+        if self.line:
+            color = const.UI_COLORS['hover_solid_border'] if val \
+                else const.UI_COLORS['light_shadow']
+            self.line.set_bg(color)
 
     def get_enabled(self):
         return self.entry.IsEnabled()
@@ -968,22 +967,14 @@ class MegaSpin(wx.Panel, RangeDataWidgetMixin):
         event.Skip()
 
     def _check_entry(self):
-        if self.flag:
-            return
-        txt = self.entry.get_value()
-        res = ''
-        for item in txt:
-            chars = '.0123456789'  # -+/*'
-            if not self.digits:
-                chars = '0123456789'  # -+/*'
-            if item in chars:
-                if item == '.' and item in res:
-                    continue
-                res += item
-        if not txt == res:
-            self.flag = True
-            self.entry.set_value(res)
-            self.flag = False
+        if not self.flag:
+            value = self.entry.get_value()
+            chars = '.0123456789+-*/' if self.digits else '0123456789+-*/'
+            result = ''.join([item for item in value if item in chars])
+            if not value == result:
+                self.flag = True
+                self.entry.set_value(result)
+                self.flag = False
 
     def _calc_entry(self):
         txt = self.entry.get_value()
