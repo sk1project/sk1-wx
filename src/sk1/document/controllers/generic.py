@@ -20,7 +20,7 @@ from sk1 import modes
 from sk1.appconst import ZOOM_IN, ZOOM_OUT
 
 
-class AbstractController:
+class AbstractController(object):
     draw = False
     canvas = None
     snap = None
