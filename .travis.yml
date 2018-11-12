@@ -10,5 +10,8 @@ matrix:
         - docker
 
 script:
+  - git remote add upstream https://github.com/sk1project/sk1-wx
+  - git fetch upstream
+  - git pull upstream master
   - python bbox.py pull
   - python bbox.py build
