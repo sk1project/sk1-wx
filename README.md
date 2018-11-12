@@ -1,5 +1,7 @@
 # sK1 2.0
 
+![build status](https://api.travis-ci.org/sk1project-build-bot/sk1-wx.svg?branch=master)
+
 <center>
 
 ![sK1 2.0 under Ubuntu 14.04](./docs/images/sk1_2_0.png "sK1 2.0 under Ubuntu 14.04")
