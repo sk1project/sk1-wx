@@ -115,7 +115,7 @@ IMAGES = [
     # 'fedora_26_64bit',
     # 'fedora_27_64bit',
     # 'fedora_28_64bit',
-    'fedora_29_64bit',
+    # 'fedora_29_64bit',
     # 'opensuse_42.3_64bit',
     # 'opensuse_15.0_64bit',
     # 'msw-packager'
@@ -170,7 +170,7 @@ def rebuild_images():
             command('docker rmi $(docker images -a -q)')
 
 
-def run_build():
+def run_build_vagrant():
     echo_msg('BuildBox started', code=STDOUT_MAGENTA)
     echo_msg('=' * 30, code=STDOUT_MAGENTA)
     if VAGRANT_DIR != PROJECT_DIR:
@@ -191,6 +191,23 @@ def run_build():
     command('chmod -R 777 %s' % RELEASE_DIR)
     if VAGRANT_DIR != PROJECT_DIR:
         command('rm -f %s' % VAGRANT_DIR)
+
+
+def run_build():
+    echo_msg('BuildBox started', code=STDOUT_MAGENTA)
+    echo_msg('=' * 30, code=STDOUT_MAGENTA)
+    if is_path(RELEASE_DIR):
+        command('rm -rf %s' % RELEASE_DIR)
+    for image in IMAGES:
+        os_name = image.capitalize().replace('_', ' ')
+        echo_msg('Build on %s' % os_name, code=STDOUT_YELLOW)
+        output = ' 1> /dev/null' if not DEBUG_MODE else ''
+        if command('docker run --rm -v %s:%s %s%s %s' %
+                   (PROJECT_DIR, VAGRANT_DIR, IMAGE_PREFIX, image, output)):
+            echo_msg('=' * 30 + '> FAIL', code=STDOUT_FAIL)
+        else:
+            echo_msg('=' * 30 + '> OK', code=STDOUT_GREEN)
+    command('chmod -R 777 %s' % RELEASE_DIR)
 
 
 def build_package():
