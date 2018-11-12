@@ -99,26 +99,26 @@ RELEASE = False
 DEBUG_MODE = False
 
 IMAGES = [
-    # 'ubuntu_14.04_32bit',
-    # 'ubuntu_14.04_64bit',
-    # 'ubuntu_16.04_32bit',
-    # 'ubuntu_16.04_64bit',
-    # 'ubuntu_17.10_64bit',
-    # 'ubuntu_18.04_64bit',
+    'ubuntu_14.04_32bit',
+    'ubuntu_14.04_64bit',
+    'ubuntu_16.04_32bit',
+    'ubuntu_16.04_64bit',
+    'ubuntu_17.10_64bit',
+    'ubuntu_18.04_64bit',
     'ubuntu_18.10_64bit',
-    # 'debian_7_32bit',
-    # 'debian_7_64bit',
-    # 'debian_8_32bit',
-    # 'debian_8_64bit',
-    # 'debian_9_32bit',
-    # 'debian_9_64bit',
-    # 'fedora_26_64bit',
-    # 'fedora_27_64bit',
-    # 'fedora_28_64bit',
+    'debian_7_32bit',
+    'debian_7_64bit',
+    'debian_8_32bit',
+    'debian_8_64bit',
+    'debian_9_32bit',
+    'debian_9_64bit',
+    'fedora_26_64bit',
+    'fedora_27_64bit',
+    'fedora_28_64bit',
     # 'fedora_29_64bit',
-    # 'opensuse_42.3_64bit',
-    # 'opensuse_15.0_64bit',
-    # 'msw-packager'
+    'opensuse_42.3_64bit',
+    'opensuse_15.0_64bit',
+    'msw-packager'
 ]
 
 
@@ -207,6 +207,10 @@ def run_build():
             echo_msg('=' * 30 + '> FAIL', code=STDOUT_FAIL)
         else:
             echo_msg('=' * 30 + '> OK', code=STDOUT_GREEN)
+
+
+def run_build_local():
+    run_build()
     command('chmod -R 777 %s' % RELEASE_DIR)
 
 
@@ -460,5 +464,6 @@ option = sys.argv[1] if len(sys.argv) > 1 else ''
     'rmi': remove_images,
     'rebuild_images': rebuild_images,
     'build': run_build,
+    'build_local': run_build_local,
     'msw_build': build_msw_packages,
 }.get(option, build_package)()
