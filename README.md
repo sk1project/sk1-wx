@@ -14,6 +14,8 @@ so it works with CMYK color space and produces CMYK-based PDF and PS output.
 
 # UniConvertor 2.0
 
+![build status](https://api.travis-ci.org/sk1project-build-bot/sk1-wx.svg?branch=master)
+
 <center>
 
 ![UniConvertor 2.0](./docs/images/uc2_0.png "UniConvertor 2.0")
