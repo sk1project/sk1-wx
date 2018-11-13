@@ -201,7 +201,7 @@ def run_build():
     for image in IMAGES:
         os_name = image.capitalize().replace('_', ' ')
         echo_msg('Build on %s' % os_name, code=STDOUT_YELLOW)
-        output = ' 1> /dev/null' if not DEBUG_MODE else ''
+        output = ' 1> /dev/null 2> /dev/null' if not DEBUG_MODE else ''
         if command('docker run --rm -v %s:%s %s%s %s' %
                    (PROJECT_DIR, VAGRANT_DIR, IMAGE_PREFIX, image, output)):
             echo_msg('=' * 30 + '> FAIL', code=STDOUT_FAIL)
