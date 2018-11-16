@@ -96,29 +96,29 @@ APP_REVISION = {SK1: sk1.appconst.REVISION,
 APP_VER = '%s%s' % (APP_MAJOR_VER, APP_REVISION)
 
 RELEASE = False
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 IMAGES = [
-    'ubuntu_14.04_32bit',
-    'ubuntu_14.04_64bit',
-    'ubuntu_16.04_32bit',
-    'ubuntu_16.04_64bit',
-    'ubuntu_17.10_64bit',
-    'ubuntu_18.04_64bit',
-    'ubuntu_18.10_64bit',
-    'debian_7_32bit',
-    'debian_7_64bit',
-    'debian_8_32bit',
-    'debian_8_64bit',
-    'debian_9_32bit',
-    'debian_9_64bit',
-    'fedora_26_64bit',
-    'fedora_27_64bit',
-    'fedora_28_64bit',
-    # 'fedora_29_64bit',
-    'opensuse_42.3_64bit',
-    'opensuse_15.0_64bit',
-    'msw-packager'
+    # 'ubuntu_14.04_32bit',
+    # 'ubuntu_14.04_64bit',
+    # 'ubuntu_16.04_32bit',
+    # 'ubuntu_16.04_64bit',
+    # 'ubuntu_17.10_64bit',
+    # 'ubuntu_18.04_64bit',
+    # 'ubuntu_18.10_64bit',
+    # 'debian_7_32bit',
+    # 'debian_7_64bit',
+    # 'debian_8_32bit',
+    # 'debian_8_64bit',
+    # 'debian_9_32bit',
+    # 'debian_9_64bit',
+    # 'fedora_26_64bit',
+    # 'fedora_27_64bit',
+    # 'fedora_28_64bit',
+    'fedora_29_64bit',
+    # 'opensuse_42.3_64bit',
+    # 'opensuse_15.0_64bit',
+    # 'msw-packager'
 ]
 
 
@@ -193,7 +193,7 @@ def run_build_vagrant():
         command('rm -f %s' % VAGRANT_DIR)
 
 
-def run_build():
+def run_build(locally=False):
     echo_msg('BuildBox started', code=STDOUT_MAGENTA)
     echo_msg('=' * 30, code=STDOUT_MAGENTA)
     if is_path(RELEASE_DIR):
@@ -207,10 +207,12 @@ def run_build():
             echo_msg('=' * 30 + '> FAIL', code=STDOUT_FAIL)
         else:
             echo_msg('=' * 30 + '> OK', code=STDOUT_GREEN)
+            if not locally:
+                sys.exit(1)
 
 
 def run_build_local():
-    run_build()
+    run_build(True)
     command('chmod -R 777 %s' % RELEASE_DIR)
 
 
