@@ -205,12 +205,10 @@ def run_build(locally=False, stop_on_error=True):
         if command('docker run --rm -v %s:%s %s%s %s' %
                    (PROJECT_DIR, VAGRANT_DIR, IMAGE_PREFIX, image, output)):
             echo_msg('=' * 30 + '> FAIL', code=STDOUT_FAIL)
-            if stop_on_error:
+            if stop_on_error or not locally:
                 sys.exit(1)
         else:
             echo_msg('=' * 30 + '> OK', code=STDOUT_GREEN)
-            if not locally:
-                sys.exit(1)
 
 
 def run_build_local():
@@ -470,4 +468,4 @@ option = sys.argv[1] if len(sys.argv) > 1 else ''
     'build': run_build,
     'build_local': run_build_local,
     'msw_build': build_msw_packages,
-}.get(option, run_build_local)()
+}.get(option, build_package)()
