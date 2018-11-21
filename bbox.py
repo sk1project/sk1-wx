@@ -99,26 +99,26 @@ RELEASE = False
 DEBUG_MODE = True
 
 IMAGES = [
-    # 'ubuntu_14.04_32bit',
-    # 'ubuntu_14.04_64bit',
-    # 'ubuntu_16.04_32bit',
-    # 'ubuntu_16.04_64bit',
-    # 'ubuntu_17.10_64bit',
-    # 'ubuntu_18.04_64bit',
-    # 'ubuntu_18.10_64bit',
-    # 'debian_7_32bit',
-    # 'debian_7_64bit',
-    # 'debian_8_32bit',
-    # 'debian_8_64bit',
-    # 'debian_9_32bit',
-    # 'debian_9_64bit',
-    # 'fedora_26_64bit',
-    # 'fedora_27_64bit',
-    # 'fedora_28_64bit',
-    'fedora_29_64bit',
-    # 'opensuse_42.3_64bit',
-    # 'opensuse_15.0_64bit',
-    # 'msw-packager'
+    'ubuntu_14.04_32bit',
+    'ubuntu_14.04_64bit',
+    'ubuntu_16.04_32bit',
+    'ubuntu_16.04_64bit',
+    'ubuntu_17.10_64bit',
+    'ubuntu_18.04_64bit',
+    'ubuntu_18.10_64bit',
+    'debian_7_32bit',
+    'debian_7_64bit',
+    'debian_8_32bit',
+    'debian_8_64bit',
+    'debian_9_32bit',
+    'debian_9_64bit',
+    'fedora_26_64bit',
+    'fedora_27_64bit',
+    'fedora_28_64bit',
+    # 'fedora_29_64bit',
+    'opensuse_42.3_64bit',
+    'opensuse_15.0_64bit',
+    'msw-packager'
 ]
 
 
@@ -193,7 +193,7 @@ def run_build_vagrant():
         command('rm -f %s' % VAGRANT_DIR)
 
 
-def run_build(locally=False):
+def run_build(locally=False, stop_on_error=True):
     echo_msg('BuildBox started', code=STDOUT_MAGENTA)
     echo_msg('=' * 30, code=STDOUT_MAGENTA)
     if is_path(RELEASE_DIR):
@@ -205,6 +205,8 @@ def run_build(locally=False):
         if command('docker run --rm -v %s:%s %s%s %s' %
                    (PROJECT_DIR, VAGRANT_DIR, IMAGE_PREFIX, image, output)):
             echo_msg('=' * 30 + '> FAIL', code=STDOUT_FAIL)
+            if stop_on_error:
+                sys.exit(1)
         else:
             echo_msg('=' * 30 + '> OK', code=STDOUT_GREEN)
             if not locally:
@@ -212,7 +214,7 @@ def run_build(locally=False):
 
 
 def run_build_local():
-    run_build(True)
+    run_build(locally=True, stop_on_error=False)
     command('chmod -R 777 %s' % RELEASE_DIR)
 
 
@@ -468,4 +470,4 @@ option = sys.argv[1] if len(sys.argv) > 1 else ''
     'build': run_build,
     'build_local': run_build_local,
     'msw_build': build_msw_packages,
-}.get(option, build_package)()
+}.get(option, run_build_local)()
