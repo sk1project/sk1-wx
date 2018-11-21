@@ -116,7 +116,7 @@ IMAGES = [
     # 'fedora_27_64bit',
     'fedora_28_64bit',
     'fedora_29_64bit',
-    # 'opensuse_42.3_64bit',
+    'opensuse_42.3_64bit',
     # 'opensuse_15.0_64bit',
     # 'msw-packager'
 ]
