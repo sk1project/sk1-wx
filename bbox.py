@@ -96,7 +96,7 @@ APP_REVISION = {SK1: sk1.appconst.REVISION,
 APP_VER = '%s%s' % (APP_MAJOR_VER, APP_REVISION)
 
 RELEASE = False
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 IMAGES = [
     # 'ubuntu_14.04_32bit',
@@ -115,7 +115,7 @@ IMAGES = [
     # 'fedora_26_64bit',
     # 'fedora_27_64bit',
     'fedora_28_64bit',
-    # 'fedora_29_64bit',
+    'fedora_29_64bit',
     # 'opensuse_42.3_64bit',
     # 'opensuse_15.0_64bit',
     # 'msw-packager'
