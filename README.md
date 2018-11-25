@@ -27,9 +27,6 @@ Uses sK1 2.0 model to convert one format to another.
 
 sK1 Project (http://sk1project.net)
 
-Copyright (C) 2004-2017 by Igor E. Novikov
-
-
 ### How to install: 
 
 ---
@@ -94,7 +91,7 @@ python-cairo-dev
 
 To run application you need installing also:
 ```
-python-wxgtk2.8 or python-wxgtk3.0 (for sK1 only)
+python-wxgtk3.0 (for sK1 only)
 python-pil 
 python-reportlab
 python-cairo
