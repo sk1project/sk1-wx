@@ -213,9 +213,9 @@ def run_build(locally=False, stop_on_error=True):
         echo_msg('#' * 30 , code=STDOUT_YELLOW)
         if os.system('sshpass -e rsync -a --delete-after -e \'ssh -p 22\' '
                      './release/ `echo $RHOST`%s/' % PROJECT):
-            echo_msg('FAIL in buld result publishing', code=STDOUT_FAIL)
+            echo_msg('FAIL in build result publishing', code=STDOUT_FAIL)
             sys.exit(1)
-        echo_msg('File publishing SUCCESSFUL', code=STDOUT_GREEN)
+        echo_msg('File publishing is SUCCESSFUL', code=STDOUT_GREEN)
 
 
 def run_build_local():
