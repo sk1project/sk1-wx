@@ -215,8 +215,10 @@ def run_build(locally=False, stop_on_error=True):
                      './release/ `echo $RHOST`%s/ '
                      '1> /dev/null  2> /dev/null' % PROJECT):
             echo_msg('FAIL in build result publishing', code=STDOUT_FAIL)
+            echo_msg('#' * 30 , code=STDOUT_YELLOW)
             sys.exit(1)
         echo_msg('File publishing is SUCCESSFUL', code=STDOUT_GREEN)
+        echo_msg('#' * 30 , code=STDOUT_YELLOW)
 
 
 def run_build_local():
