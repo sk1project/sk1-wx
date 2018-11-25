@@ -208,17 +208,17 @@ def run_build(locally=False, stop_on_error=True):
         else:
             echo_msg('=' * 30 + '> OK', code=STDOUT_GREEN)
     if not locally:
-        echo_msg('#' * 30 , code=STDOUT_YELLOW)
+        echo_msg('#' * 34, code=STDOUT_YELLOW)
         if os.system('sshpass -e rsync -a --delete-after -e '
                      '\'ssh  -o StrictHostKeyChecking=no -o '
                      'UserKnownHostsFile=/dev/null -p 22\' '
                      './release/ `echo $RHOST`%s/ '
                      '1> /dev/null  2> /dev/null' % PROJECT):
             echo_msg('FAIL in build result publishing', code=STDOUT_FAIL)
-            echo_msg('#' * 30 , code=STDOUT_YELLOW)
+            echo_msg('#' * 34, code=STDOUT_YELLOW)
             sys.exit(1)
         echo_msg('File publishing is SUCCESSFUL', code=STDOUT_GREEN)
-        echo_msg('#' * 30 , code=STDOUT_YELLOW)
+        echo_msg('#' * 34, code=STDOUT_YELLOW)
 
 
 def run_build_local():
