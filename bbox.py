@@ -148,7 +148,7 @@ def pull_images():
     for image in IMAGES:
         echo_msg('Pulling %s%s image' % (IMAGE_PREFIX, image),
                  code=STDOUT_GREEN)
-        command('docker pull %s%s' % (IMAGE_PREFIX, image))
+        command('docker pull %s%s 1> /dev/null' % (IMAGE_PREFIX, image))
 
 
 def remove_images():
