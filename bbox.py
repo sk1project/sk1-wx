@@ -139,6 +139,13 @@ def clear_files(folder, ext=None):
                 os.remove(path)
 
 
+def shell(cmd, times=1):
+    for _ in range(times):
+        if not os.system(cmd):
+            return 0
+    return 1
+
+
 ############################################################
 # Main functions
 ############################################################
@@ -146,9 +153,13 @@ def clear_files(folder, ext=None):
 
 def pull_images():
     for image in IMAGES:
-        echo_msg('Pulling %s%s image' % (IMAGE_PREFIX, image),
-                 code=STDOUT_GREEN)
-        command('docker pull %s%s 1> /dev/null' % (IMAGE_PREFIX, image))
+        msg = 'Pulling %s%s image' % (IMAGE_PREFIX, image)
+        msg += ' ' * (50 - len(msg)) + '...'
+        echo_msg(msg, newline=False)
+        if shell('docker pull %s%s 1> /dev/null' % (IMAGE_PREFIX, image), 3):
+            echo_msg('[ FAIL ]', code=STDOUT_FAIL)
+            sys.exit(1)
+        echo_msg('[  OK  ]', code=STDOUT_GREEN)
 
 
 def remove_images():
@@ -193,32 +204,34 @@ def run_build_vagrant():
 
 def run_build(locally=False, stop_on_error=True):
     echo_msg('BuildBox started', code=STDOUT_MAGENTA)
-    echo_msg('=' * 30, code=STDOUT_MAGENTA)
+    echo_msg('=' * 35, code=STDOUT_MAGENTA)
     if is_path(RELEASE_DIR):
         command('rm -rf %s' % RELEASE_DIR)
     for image in IMAGES:
         os_name = image.capitalize().replace('_', ' ')
-        echo_msg('Build on %s' % os_name, code=STDOUT_YELLOW)
+        msg = 'Build on %s' % os_name
+        echo_msg(msg + ' ' * (35 - len(msg)) + '...', newline=False)
         output = ' 1> /dev/null 2> /dev/null' if not DEBUG_MODE else ''
-        if command('docker run --rm -v %s:%s %s%s %s' %
-                   (PROJECT_DIR, VAGRANT_DIR, IMAGE_PREFIX, image, output)):
-            echo_msg('=' * 30 + '> FAIL', code=STDOUT_FAIL)
+        if shell('docker run --rm -v %s:%s %s%s %s' %
+                 (PROJECT_DIR, VAGRANT_DIR, IMAGE_PREFIX, image, output), 2):
+            echo_msg('[ FAIL ]', code=STDOUT_FAIL)
             if stop_on_error or not locally:
                 sys.exit(1)
         else:
-            echo_msg('=' * 30 + '> OK', code=STDOUT_GREEN)
+            echo_msg('[  OK  ]', code=STDOUT_GREEN)
     if not locally:
-        echo_msg('#' * 34, code=STDOUT_YELLOW)
+        msg = 'Publishing result'
+        msg = msg + ' ' * (35 - len(msg)) + '...'
+        echo_msg(msg, newline=False)
         if os.system('sshpass -e rsync -a --delete-after -e '
                      '\'ssh  -o StrictHostKeyChecking=no -o '
                      'UserKnownHostsFile=/dev/null -p 22\' '
                      './release/ `echo $RHOST`%s/ '
                      '1> /dev/null  2> /dev/null' % PROJECT):
-            echo_msg('FAIL in build result publishing', code=STDOUT_FAIL)
-            echo_msg('#' * 34, code=STDOUT_YELLOW)
+            echo_msg('[ FAIL ]', code=STDOUT_FAIL)
             sys.exit(1)
-        echo_msg('File publishing is SUCCESSFUL', code=STDOUT_GREEN)
-        echo_msg('#' * 34, code=STDOUT_YELLOW)
+        echo_msg('[  OK  ]', code=STDOUT_GREEN)
+    echo_msg('=' * 35, code=STDOUT_MAGENTA)
 
 
 def run_build_local():
