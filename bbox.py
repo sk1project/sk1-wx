@@ -61,6 +61,10 @@ sys.path.insert(1, os.path.join(CURRENT_PATH, 'src'))
 import sk1.appconst
 import uc2.uc2const
 
+# options processing
+ARGV = {item.split('=')[0][2:]: item.split('=')[1]
+        for item in sys.argv if item.startswith('--') and '=' in item}
+
 # Output colors
 STDOUT_MAGENTA = '\033[95m'
 STDOUT_BLUE = '\033[94m'
@@ -73,7 +77,7 @@ STDOUT_UNDERLINE = '\033[4m'
 
 SK1 = 'sk1'
 UC2 = 'uc2'
-PROJECT = SK1  # change point
+PROJECT = ARGV.get('project', SK1)  # change point
 
 # Build constants
 IMAGE_PREFIX = 'sk1project/'
@@ -212,8 +216,12 @@ def run_build(locally=False, stop_on_error=True):
         msg = 'Build on %s' % os_name
         echo_msg(msg + ' ' * (35 - len(msg)) + '...', newline=False)
         output = ' 1> /dev/null 2> /dev/null' if not DEBUG_MODE else ''
-        if shell('docker run --rm -v %s:%s %s%s %s' %
-                 (PROJECT_DIR, VAGRANT_DIR, IMAGE_PREFIX, image, output), 2):
+        cmd = '/vagrant/bbox.py build_package --project=%s' % PROJECT
+        if image == 'msw-packager':
+            cmd = '/vagrant/bbox.py msw_build --project=%s' % PROJECT
+        if shell('docker run --rm -v %s:%s %s%s %s %s' %
+                 (PROJECT_DIR, VAGRANT_DIR,
+                  IMAGE_PREFIX, image, cmd, output), 2):
             echo_msg('[ FAIL ]', code=STDOUT_FAIL)
             if stop_on_error or not locally:
                 sys.exit(1)
@@ -490,5 +498,6 @@ option = sys.argv[1] if len(sys.argv) > 1 else ''
     'rebuild_images': rebuild_images,
     'build': run_build,
     'build_local': run_build_local,
+    'build_package': build_package,
     'msw_build': build_msw_packages,
 }.get(option, build_package)()
