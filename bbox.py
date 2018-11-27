@@ -491,7 +491,8 @@ def build_msw_packages():
 # Main build procedure
 ############################################################
 
-option = sys.argv[1] if len(sys.argv) > 1 else ''
+option = sys.argv[1] if len(sys.argv) > 1 \
+                        and not sys.argv[1].startswith('--') else ''
 {
     'pull': pull_images,
     'rmi': remove_images,
