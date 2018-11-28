@@ -273,6 +273,8 @@ def build_package():
                 copies.append((prefix + '_elementary0.4_' + suffix, eos_folder))
         elif SYSFACTS.is_ubuntu and SYSFACTS.version == '18.04':
             copies.append((prefix + '_mint_19_' + suffix, mint_folder))
+            if SYSFACTS.is_64bit:
+                copies.append((prefix + '_elementary5.0_' + suffix, eos_folder))
 
     elif SYSFACTS.is_rpm:
         echo_msg('Building RPM package')
