@@ -184,7 +184,7 @@ def rebuild_images():
 
 
 def run_build_vagrant():
-    echo_msg('BuildBox started', code=STDOUT_MAGENTA)
+    echo_msg('Project %s build started' % PROJECT, code=STDOUT_MAGENTA)
     echo_msg('=' * 30, code=STDOUT_MAGENTA)
     if VAGRANT_DIR != PROJECT_DIR:
         if is_path(VAGRANT_DIR):
@@ -207,7 +207,7 @@ def run_build_vagrant():
 
 
 def run_build(locally=False, stop_on_error=True):
-    echo_msg('BuildBox started', code=STDOUT_MAGENTA)
+    echo_msg('Project %s build started' % PROJECT, code=STDOUT_MAGENTA)
     echo_msg('=' * 35, code=STDOUT_MAGENTA)
     if is_path(RELEASE_DIR):
         command('rm -rf %s' % RELEASE_DIR)
@@ -401,6 +401,8 @@ if PROJECT == SK1:
 
 
 def build_msw_packages():
+    if PROJECT == UC2:
+        return
     import wixpy
     distro_folder = os.path.join(RELEASE_DIR, 'MS_Windows')
 
