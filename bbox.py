@@ -191,7 +191,7 @@ def run_build_vagrant():
             command('rm -f %s' % VAGRANT_DIR)
         command('ln -s %s %s' % (PROJECT_DIR, VAGRANT_DIR))
     if is_path(RELEASE_DIR):
-        command('rm -rf %s' % RELEASE_DIR)
+        command('sudo rm -rf %s' % RELEASE_DIR)
     for image in IMAGES:
         os_name = image.capitalize().replace('_', ' ')
         echo_msg('Build on %s' % os_name, code=STDOUT_YELLOW)
@@ -210,7 +210,7 @@ def run_build(locally=False, stop_on_error=True):
     echo_msg('Project %s build started' % PROJECT, code=STDOUT_MAGENTA)
     echo_msg('=' * 35, code=STDOUT_MAGENTA)
     if is_path(RELEASE_DIR):
-        command('rm -rf %s' % RELEASE_DIR)
+        command('sudo rm -rf %s' % RELEASE_DIR)
     for image in IMAGES:
         os_name = image.capitalize().replace('_', ' ')
         msg = 'Build on %s' % os_name
