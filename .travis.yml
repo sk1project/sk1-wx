@@ -15,4 +15,5 @@ script:
   - git pull upstream master
   - sudo apt-get install -y sshpass
   - python bbox.py pull
-  - python bbox.py build
+  - python bbox.py build --project=sk1
+  - python bbox.py build --project=uc2
