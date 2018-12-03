@@ -419,6 +419,7 @@ elif PROJECT == UC2:
          'Target': 'readme.txt',
          },
     ]
+    MSI_DATA['_AddToPath'] = ['']
 
 
 def build_msw_packages():
