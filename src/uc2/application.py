@@ -144,7 +144,7 @@ class UCApplication(object):
             echo('For details see logs: %s\n' % self.log_filepath)
             sys.exit(1)
 
-    def run(self):
+    def run(self, cwd=None):
         if '--help' in sys.argv or '-help' in sys.argv or len(sys.argv) == 1:
             self.show_help()
         elif len(sys.argv) == 2:
@@ -160,7 +160,10 @@ class UCApplication(object):
             elif item.startswith('-'):
                 self.show_short_help('Unknown option "%s"' % item)
             else:
-                files.append(fsutils.get_utf8_path(item))
+                filename = fsutils.get_utf8_path(item)
+                if not os.path.dirname(filename) and cwd:
+                    filename = os.path.join(cwd, filename)
+                files.append(filename)
 
         if not files:
             self.show_short_help('File names are not provided!')

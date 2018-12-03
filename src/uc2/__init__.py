@@ -15,6 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import sys
 
 from uc2.utils import translator
@@ -36,8 +37,8 @@ def uc2_init():
     return app
 
 
-def uc2_run():
+def uc2_run(cwd=None):
     """UniConvertor launch routine."""
 
     app = uc2_init()
-    app.run()
+    app.run(cwd or os.getcwd())
