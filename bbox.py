@@ -102,6 +102,20 @@ APP_VER = '%s%s' % (APP_MAJOR_VER, APP_REVISION)
 RELEASE = os.environ.get('RELEASE', False)
 DEBUG_MODE = os.environ.get('DEBUG_MODE', False)
 
+README_TEMPLATE = """
+Universal vector graphics format translator
+copyright (C) 2007-%s sK1 Project Team (http://www.sk1project.net)
+
+Usage: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]
+Example: uniconvertor drawing.cdr drawing.svg
+
+ Available options:
+ --help      Display this help and exit
+ --verbose   Show internal logs
+ --log=      Logging level: DEBUG, INFO, WARN, ERROR (by default, INFO)
+ --format=   Type of output file format (values provided below)
+"""
+
 IMAGES = [
     'ubuntu_14.04_32bit',
     'ubuntu_14.04_64bit',
@@ -372,12 +386,13 @@ MSI_DATA = {
     'Keywords': 'Vector graphics, Prepress',
 
     # Structural elements
-    '_Icon': '/win32-devres/%s.ico' % PROJECT,
+    '_Icon': '/win32-devres/sk1.ico',
     '_OsCondition': '601',
     '_SourceDir': '',
     '_InstallDir': '%s-%s' % (APP_FULL_NAME, APP_VER),
     '_OutputName': '',
     '_OutputDir': '',
+    '_ProgramMenuFolder': 'sK1 Project',
 }
 
 if PROJECT == SK1:
@@ -397,12 +412,16 @@ if PROJECT == SK1:
                       '.jcw']
          },
     ]
-    MSI_DATA['_ProgramMenuFolder'] = 'sK1 Project'
+elif PROJECT == UC2:
+    MSI_DATA['_Shortcuts'] = [
+        {'Name': 'UniConvertor %s readme' % APP_VER,
+         'Description': 'ReadMe file',
+         'Target': 'readme.txt',
+         },
+    ]
 
 
 def build_msw_packages():
-    if PROJECT == UC2:
-        return
     import wixpy
     distro_folder = os.path.join(RELEASE_DIR, 'MS_Windows')
 
@@ -420,7 +439,7 @@ def build_msw_packages():
         if not is_path(distro_folder):
             os.makedirs(distro_folder)
 
-        # Portable package
+        # Package building
         echo_msg('Creating portable package')
 
         portable = os.path.join('/%s-devres' % arch, 'portable.zip')
@@ -428,7 +447,13 @@ def build_msw_packages():
         echo_msg('Extracting portable files from %s' % portable)
         ZipFile(portable, 'r').extractall(portable_folder)
 
-        for folder in ['stdlib/test/', 'stdlib/lib2to3/tests/']:
+        obsolete_folders = ['stdlib/test/', 'stdlib/lib2to3/tests/',
+                            'stdlib/unittest/', 'stdlib/msilib/',
+                            'stdlib/idlelib/', 'stdlib/ensurepip/',
+                            'stdlib/distutils/']
+        if PROJECT == UC2:
+            obsolete_folders.append('libs/wx/')
+        for folder in obsolete_folders:
             shutil.rmtree(os.path.join(portable_folder, folder), True)
 
         portable_libs = os.path.join(portable_folder, 'libs')
@@ -446,22 +471,33 @@ def build_msw_packages():
             dst = os.path.join(portable_libs, item)
             shutil.copy(src, dst)
 
-        portable_zip = os.path.join(distro_folder, portable_name + '.zip')
-        ziph = ZipFile(portable_zip, 'w', ZIP_DEFLATED)
+        # Portable package compressing (sk1 only)
+        if not PROJECT == UC2:
+            portable_zip = os.path.join(distro_folder, portable_name + '.zip')
+            ziph = ZipFile(portable_zip, 'w', ZIP_DEFLATED)
 
-        echo_msg('Compressing into %s' % portable_zip)
-        for root, dirs, files in os.walk(portable_folder):
-            for item in files:
-                path = os.path.join(root, item)
-                local_path = path.split(portable_name)[1][1:]
-                ziph.write(path, os.path.join(portable_name, local_path))
-        ziph.close()
+            echo_msg('Compressing into %s' % portable_zip)
+            for root, dirs, files in os.walk(portable_folder):
+                for item in files:
+                    path = os.path.join(root, item)
+                    local_path = path.split(portable_name)[1][1:]
+                    ziph.write(path, os.path.join(portable_name, local_path))
+            ziph.close()
 
         # MSI build
         echo_msg('Creating MSI package')
 
         clear_files(portable_folder, ['exe'])
-        nonportable = os.path.join('/%s-devres' % arch, '%s_msi.zip' % PROJECT)
+        if PROJECT == UC2:
+            nonportable = os.path.join('/%s-devres' % arch,
+                                       '%s.zip' % PROJECT)
+            readme = README_TEMPLATE % bbox.TIMESTAMP[:4]
+            readme_path = os.path.join(portable_folder, 'readme.txt')
+            with open(readme_path, 'wb') as fp:
+                fp.write(readme.replace('\n', '\r\n'))
+        else:
+            nonportable = os.path.join('/%s-devres' % arch, 
+                                       '%s_msi.zip' % PROJECT)
 
         echo_msg('Extracting non-portable executables from %s' % nonportable)
         ZipFile(nonportable, 'r').extractall(portable_folder)
@@ -474,9 +510,8 @@ def build_msw_packages():
             msi_data['Win64'] = 'yes'
             msi_data['_CheckX64'] = True
         msi_data['_OutputDir'] = distro_folder
-        suffix = '_headless.msi' if os.name != 'nt' else '.msi'
-        msi_data['_OutputName'] = msi_name + suffix
-        wixpy.build(msi_data)  # , xml_only=True)
+        msi_data['_OutputName'] = msi_name + '_headless.msi'
+        wixpy.build(msi_data)
 
         # Clearing
         shutil.rmtree(portable_folder, True)
