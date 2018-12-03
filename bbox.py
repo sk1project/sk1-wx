@@ -91,7 +91,7 @@ PKGBUILD_DIR = os.path.join(PROJECT_DIR, 'pkgbuild')
 ARCH_DIR = os.path.join(PROJECT_DIR, 'archlinux')
 
 SCRIPT = 'setup-%s.py' % PROJECT
-APP_NAME = {SK1: SK1, UC2: 'uniconvertor'}.get(PROJECT)
+APP_NAME = {SK1: SK1, UC2: 'uniconvertor'}[PROJECT]
 APP_FULL_NAME = {SK1: 'sK1', UC2: 'UniConvertor'}[PROJECT]
 APP_MAJOR_VER = {SK1: sk1.appconst.VERSION,
                  UC2: uc2.uc2const.VERSION}[PROJECT]
