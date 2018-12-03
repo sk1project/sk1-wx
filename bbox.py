@@ -100,7 +100,7 @@ APP_REVISION = {SK1: sk1.appconst.REVISION,
 APP_VER = '%s%s' % (APP_MAJOR_VER, APP_REVISION)
 
 RELEASE = os.environ.get('RELEASE', False)
-DEBUG_MODE = os.environ.get('DEBUG_MODE', True)
+DEBUG_MODE = os.environ.get('DEBUG_MODE', False)
 
 README_TEMPLATE = """
 Universal vector graphics format translator
@@ -117,23 +117,23 @@ Example: uniconvertor drawing.cdr drawing.svg
 """
 
 IMAGES = [
-    # 'ubuntu_14.04_32bit',
-    # 'ubuntu_14.04_64bit',
-    # 'ubuntu_16.04_32bit',
-    # 'ubuntu_16.04_64bit',
-    # 'ubuntu_18.04_64bit',
-    # 'ubuntu_18.10_64bit',
-    # 'debian_7_32bit',
-    # 'debian_7_64bit',
-    # 'debian_8_32bit',
-    # 'debian_8_64bit',
-    # 'debian_9_32bit',
-    # 'debian_9_64bit',
-    # 'fedora_27_64bit',
-    # 'fedora_28_64bit',
-    # 'fedora_29_64bit',
-    # 'opensuse_42.3_64bit',
-    # 'opensuse_15.0_64bit',
+    'ubuntu_14.04_32bit',
+    'ubuntu_14.04_64bit',
+    'ubuntu_16.04_32bit',
+    'ubuntu_16.04_64bit',
+    'ubuntu_18.04_64bit',
+    'ubuntu_18.10_64bit',
+    'debian_7_32bit',
+    'debian_7_64bit',
+    'debian_8_32bit',
+    'debian_8_64bit',
+    'debian_9_32bit',
+    'debian_9_64bit',
+    'fedora_27_64bit',
+    'fedora_28_64bit',
+    'fedora_29_64bit',
+    'opensuse_42.3_64bit',
+    'opensuse_15.0_64bit',
     'msw-packager'
 ]
 
