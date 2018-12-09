@@ -21,7 +21,7 @@ import os
 import sys
 
 import uc2
-from uc2 import cms, uc2const
+from uc2 import app_cms, uc2const
 from uc2 import events, msgconst
 from uc2.app_palettes import PaletteManager
 from uc2.formats import get_loader, get_saver, get_saver_by_id
@@ -191,7 +191,7 @@ class UCApplication(object):
         self.log_filepath = os.path.join(self.appdata.app_config_dir, 'uc2.log')
         config_logging(self.log_filepath, log_level)
 
-        self.default_cms = cms.ColorManager()
+        self.default_cms = app_cms.AppColorManager(self)
         self.palettes = PaletteManager(self)
 
         msg = 'Translation of "%s" into "%s"' % (files[0], files[1])
