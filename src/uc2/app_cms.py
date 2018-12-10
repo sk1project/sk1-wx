@@ -17,7 +17,7 @@
 
 import os
 
-from uc2 import uc2const, config
+from uc2 import uc2const
 from uc2.uc2const import COLOR_DISPLAY
 from uc2.utils import fsutils
 
@@ -34,6 +34,7 @@ class AppColorManager(ColorManager):
     def update(self):
         self.handles = {}
         self.clear_transforms()
+        config = self.app.config
         profiles = [config.cms_rgb_profile,
                     config.cms_cmyk_profile,
                     config.cms_lab_profile,
