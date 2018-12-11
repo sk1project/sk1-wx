@@ -113,7 +113,7 @@ Example: uniconvertor drawing.cdr drawing.svg
  --help      Display this help and exit
  --verbose   Show internal logs
  --log=      Logging level: DEBUG, INFO, WARN, ERROR (by default, INFO)
- --format=   Type of output file format (values provided below)
+ --format=   Type of output file format
 """
 
 IMAGES = [
@@ -393,6 +393,7 @@ MSI_DATA = {
     '_OutputName': '',
     '_OutputDir': '',
     '_ProgramMenuFolder': 'sK1 Project',
+    '_AddToPath': '',
 }
 
 if PROJECT == SK1:
@@ -420,7 +421,6 @@ elif PROJECT == UC2:
          'Open': [],
          },
     ]
-    MSI_DATA['_AddToPath'] = ['']
 
 
 def build_msw_packages():
@@ -434,6 +434,7 @@ def build_msw_packages():
             portable_name = '%s-%s-%s-%s-portable' % \
                             (APP_NAME, APP_VER, TIMESTAMP, arch)
         portable_folder = os.path.join(PROJECT_DIR, portable_name)
+        portable_libs = os.path.join(portable_folder, 'libs')
         if os.path.exists(portable_folder):
             shutil.rmtree(portable_folder, True)
         os.mkdir(portable_folder)
@@ -453,12 +454,16 @@ def build_msw_packages():
                             'stdlib/unittest/', 'stdlib/msilib/',
                             'stdlib/idlelib/', 'stdlib/ensurepip/',
                             'stdlib/distutils/']
-        if PROJECT == UC2:
-            obsolete_folders.append('libs/wx/')
         for folder in obsolete_folders:
             shutil.rmtree(os.path.join(portable_folder, folder), True)
 
-        portable_libs = os.path.join(portable_folder, 'libs')
+        if PROJECT == SK1:
+            wx_zip = os.path.join('/%s-devres' % arch, 'wx.zip')
+            ZipFile(wx_zip, 'r').extractall(portable_libs)
+            portable_exe_zip = os.path.join('/%s-devres' % arch, 
+                                            '%s_portable.zip' % PROJECT)
+            ZipFile(portable_exe_zip, 'r').extractall(portable_folder)
+
         for item in PKGS:
             src = os.path.join(SRC_DIR, item)
             echo_msg('Copying tree %s' % src)
@@ -474,7 +479,7 @@ def build_msw_packages():
             shutil.copy(src, dst)
 
         # Portable package compressing (sk1 only)
-        if not PROJECT == UC2:
+        if PROJECT == SK1:
             portable_zip = os.path.join(distro_folder, portable_name + '.zip')
             ziph = ZipFile(portable_zip, 'w', ZIP_DEFLATED)
 
