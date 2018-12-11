@@ -393,7 +393,7 @@ MSI_DATA = {
     '_OutputName': '',
     '_OutputDir': '',
     '_ProgramMenuFolder': 'sK1 Project',
-    '_AddToPath': '',
+    '_AddToPath': [''],
 }
 
 if PROJECT == SK1:
