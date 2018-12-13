@@ -101,6 +101,7 @@ APP_VER = '%s%s' % (APP_MAJOR_VER, APP_REVISION)
 
 RELEASE = os.environ.get('RELEASE', False)
 DEBUG_MODE = os.environ.get('DEBUG_MODE', False)
+CONST_FILES = ['src/sk1/appconst.py', 'src/uc2/uc2const.py']
 
 README_TEMPLATE = """
 Universal vector graphics format translator
@@ -220,9 +221,31 @@ def run_build_vagrant():
         command('rm -f %s' % VAGRANT_DIR)
 
 
+def _set_build_stamp():
+    if not RELEASE:
+        for filename in CONST_FILES:
+            with open(filename, 'rb') as fp:
+                lines = fp.readlines()
+            with open(filename, 'wb') as fp:
+                marked = False
+                for line in lines:
+                    if not marked and line.startswith('BUILD = '):
+                        line = 'BUILD = \'%s\'\n' % bbox.TIMESTAMP
+                        marked = True
+                    fp.write(line)
+
+
+def _revert_build_stamp():
+    if not RELEASE:
+        for filename in CONST_FILES:
+            os.remove(filename)
+            command('git checkout %s' % filename)
+
+
 def run_build(locally=False, stop_on_error=True):
     echo_msg('Project %s build started' % PROJECT, code=STDOUT_MAGENTA)
     echo_msg('=' * 35, code=STDOUT_MAGENTA)
+    _set_build_stamp()
     if is_path(RELEASE_DIR):
         command('sudo rm -rf %s' % RELEASE_DIR)
     for image in IMAGES:
@@ -238,8 +261,10 @@ def run_build(locally=False, stop_on_error=True):
                   IMAGE_PREFIX, image, cmd, output), 2):
             echo_msg('[ FAIL ]', code=STDOUT_FAIL)
             if stop_on_error or not locally:
+                _revert_build_stamp()
                 sys.exit(1)
         else:
+            _revert_build_stamp()
             echo_msg('[  OK  ]', code=STDOUT_GREEN)
     if not locally:
         msg = 'Publishing result'
