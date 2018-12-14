@@ -116,8 +116,10 @@ class UCApplication(object):
         return '\n   '.join(result)
 
     def show_help(self):
-        app_name = '%s %s%s' % (
-            self.appdata.app_name, self.appdata.version, self.appdata.revision)
+        mark = '' if not self.appdata.build \
+            else ' build %s' % self.appdata.build
+        app_name = '%s %s%s%s' % (self.appdata.app_name, self.appdata.version,
+                                  self.appdata.revision, mark)
         echo(HELP_TEMPLATE % (app_name, str(datetime.date.today().year),
                               self._get_infos(uc2const.MODEL_LOADERS),
                               self._get_infos(uc2const.PALETTE_LOADERS),
