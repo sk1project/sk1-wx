@@ -526,6 +526,9 @@ def build_msw_packages():
             readme = README_TEMPLATE % bbox.TIMESTAMP[:4]
             readme_path = os.path.join(portable_folder, 'readme.txt')
             with open(readme_path, 'wb') as fp:
+                mark = '' if RELEASE else ' build %s' % bbox.TIMESTAMP
+                fp.write('%s %s%s' % (APP_FULL_NAME, APP_VER, mark))
+                fp.write('\r\n\r\n')
                 fp.write(readme.replace('\n', '\r\n'))
         else:
             nonportable = os.path.join('/%s-devres' % arch, 
