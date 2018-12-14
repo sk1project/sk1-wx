@@ -32,6 +32,7 @@ class AppData(UCData):
     doc_icon = None
     version = appconst.VERSION
     revision = appconst.REVISION
+    build = appconst.BUILD
     app_config_dir = ''
     plugin_dir = ''
     app_palette_dir = ''
