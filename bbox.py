@@ -165,6 +165,20 @@ def shell(cmd, times=1):
     return 1
 
 
+def _set_build_stamp():
+    if not RELEASE:
+        for filename in CONST_FILES:
+            with open(filename, 'rb') as fp:
+                lines = fp.readlines()
+            with open(filename, 'wb') as fp:
+                marked = False
+                for line in lines:
+                    if not marked and line.startswith('BUILD = '):
+                        line = 'BUILD = \'%s\'\n' % bbox.TIMESTAMP
+                        marked = True
+                    fp.write(line)
+
+
 ############################################################
 # Main functions
 ############################################################
@@ -198,54 +212,11 @@ def rebuild_images():
             command('docker rmi $(docker images -a -q)')
 
 
-def run_build_vagrant():
-    echo_msg('Project %s build started' % PROJECT, code=STDOUT_MAGENTA)
-    echo_msg('=' * 30, code=STDOUT_MAGENTA)
-    if VAGRANT_DIR != PROJECT_DIR:
-        if is_path(VAGRANT_DIR):
-            command('rm -f %s' % VAGRANT_DIR)
-        command('ln -s %s %s' % (PROJECT_DIR, VAGRANT_DIR))
-    if is_path(RELEASE_DIR):
-        command('sudo rm -rf %s' % RELEASE_DIR)
-    for image in IMAGES:
-        os_name = image.capitalize().replace('_', ' ')
-        echo_msg('Build on %s' % os_name, code=STDOUT_YELLOW)
-        output = ' 1> /dev/null' if not DEBUG_MODE else ''
-        if command('docker run --rm -v %s:%s %s%s %s' %
-                   (PROJECT_DIR, VAGRANT_DIR, IMAGE_PREFIX, image, output)):
-            echo_msg('=' * 30 + '> FAIL', code=STDOUT_FAIL)
-        else:
-            echo_msg('=' * 30 + '> OK', code=STDOUT_GREEN)
-    command('chmod -R 777 %s' % RELEASE_DIR)
-    if VAGRANT_DIR != PROJECT_DIR:
-        command('rm -f %s' % VAGRANT_DIR)
-
-
-def _set_build_stamp():
-    if not RELEASE:
-        for filename in CONST_FILES:
-            with open(filename, 'rb') as fp:
-                lines = fp.readlines()
-            with open(filename, 'wb') as fp:
-                marked = False
-                for line in lines:
-                    if not marked and line.startswith('BUILD = '):
-                        line = 'BUILD = \'%s\'\n' % bbox.TIMESTAMP
-                        marked = True
-                    fp.write(line)
-
-
-def _revert_build_stamp():
-    if not RELEASE:
-        for filename in CONST_FILES:
-            os.remove(filename)
-            command('git checkout %s' % filename)
-
-
 def run_build(locally=False, stop_on_error=True):
     echo_msg('Project %s build started' % PROJECT, code=STDOUT_MAGENTA)
     echo_msg('=' * 35, code=STDOUT_MAGENTA)
-    _set_build_stamp()
+    if not locally:
+        _set_build_stamp()
     if is_path(RELEASE_DIR):
         command('sudo rm -rf %s' % RELEASE_DIR)
     for image in IMAGES:
@@ -261,10 +232,8 @@ def run_build(locally=False, stop_on_error=True):
                   IMAGE_PREFIX, image, cmd, output), 2):
             echo_msg('[ FAIL ]', code=STDOUT_FAIL)
             if stop_on_error or not locally:
-                _revert_build_stamp()
                 sys.exit(1)
         else:
-            _revert_build_stamp()
             echo_msg('[  OK  ]', code=STDOUT_GREEN)
     if not locally:
         msg = 'Publishing result'
