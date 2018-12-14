@@ -165,7 +165,7 @@ def shell(cmd, times=1):
     return 1
 
 
-def _set_build_stamp():
+def set_build_stamp():
     if not RELEASE:
         for filename in CONST_FILES:
             with open(filename, 'rb') as fp:
@@ -216,7 +216,7 @@ def run_build(locally=False, stop_on_error=True):
     echo_msg('Project %s build started' % PROJECT, code=STDOUT_MAGENTA)
     echo_msg('=' * 35, code=STDOUT_MAGENTA)
     if not locally:
-        _set_build_stamp()
+        set_build_stamp()
     if is_path(RELEASE_DIR):
         command('sudo rm -rf %s' % RELEASE_DIR)
     for image in IMAGES:
