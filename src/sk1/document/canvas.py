@@ -138,6 +138,7 @@ class AppCanvas(Painter):
 
     def set_mode(self, mode=modes.SELECT_MODE):
         if not mode == self.mode:
+            self.timer.stop()
             if self.previous_mode is not None:
                 self.restore_mode()
             if self.controller is not None:

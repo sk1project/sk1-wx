@@ -42,6 +42,7 @@ class PagePlugin(CtxPlugin):
         CtxPlugin.__init__(self, app, parent)
         events.connect(events.DOC_CHANGED, self.update)
         events.connect(events.DOC_MODIFIED, self.update)
+        events.connect(events.PAGE_CHANGED, self.update)
 
     def build(self):
         self.formats = [_('Custom'), ] + PAGE_FORMAT_NAMES

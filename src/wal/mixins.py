@@ -145,6 +145,9 @@ class WidgetMixin(object):
     def popup_menu(self, menu):
         self.PopupMenu(menu)
 
+    def set_drop_target(self, target):
+        self.SetDropTarget(target)
+
 
 class DataWidgetMixin(WidgetMixin):
     def set_value(self, value):

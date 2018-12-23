@@ -21,7 +21,7 @@ import os
 import sys
 
 import uc2
-from uc2 import cms, uc2const
+from uc2 import app_cms, uc2const
 from uc2 import events, msgconst
 from uc2.app_palettes import PaletteManager
 from uc2.formats import get_loader, get_saver, get_saver_by_id
@@ -116,8 +116,10 @@ class UCApplication(object):
         return '\n   '.join(result)
 
     def show_help(self):
-        app_name = '%s %s%s' % (
-            self.appdata.app_name, self.appdata.version, self.appdata.revision)
+        mark = '' if not self.appdata.build \
+            else ' build %s' % self.appdata.build
+        app_name = '%s %s%s%s' % (self.appdata.app_name, self.appdata.version,
+                                  self.appdata.revision, mark)
         echo(HELP_TEMPLATE % (app_name, str(datetime.date.today().year),
                               self._get_infos(uc2const.MODEL_LOADERS),
                               self._get_infos(uc2const.PALETTE_LOADERS),
@@ -144,7 +146,7 @@ class UCApplication(object):
             echo('For details see logs: %s\n' % self.log_filepath)
             sys.exit(1)
 
-    def run(self):
+    def run(self, cwd=None):
         if '--help' in sys.argv or '-help' in sys.argv or len(sys.argv) == 1:
             self.show_help()
         elif len(sys.argv) == 2:
@@ -160,7 +162,10 @@ class UCApplication(object):
             elif item.startswith('-'):
                 self.show_short_help('Unknown option "%s"' % item)
             else:
-                files.append(fsutils.get_utf8_path(item))
+                filename = fsutils.get_utf8_path(item)
+                if not os.path.dirname(filename) and cwd:
+                    filename = os.path.join(cwd, filename)
+                files.append(filename)
 
         if not files:
             self.show_short_help('File names are not provided!')
@@ -188,7 +193,7 @@ class UCApplication(object):
         self.log_filepath = os.path.join(self.appdata.app_config_dir, 'uc2.log')
         config_logging(self.log_filepath, log_level)
 
-        self.default_cms = cms.ColorManager()
+        self.default_cms = app_cms.AppColorManager(self)
         self.palettes = PaletteManager(self)
 
         msg = 'Translation of "%s" into "%s"' % (files[0], files[1])

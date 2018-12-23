@@ -51,7 +51,7 @@ import sys
 from zipfile import ZIP_DEFLATED
 from zipfile import ZipFile
 
-from utils import bbox, build, wixl
+from utils import bbox, build
 from utils.bbox import is_path, command, echo_msg, SYSFACTS, TIMESTAMP
 from utils.fsutils import get_files_tree
 
@@ -60,6 +60,10 @@ sys.path.insert(1, os.path.join(CURRENT_PATH, 'src'))
 
 import sk1.appconst
 import uc2.uc2const
+
+# options processing
+ARGV = {item.split('=')[0][2:]: item.split('=')[1]
+        for item in sys.argv if item.startswith('--') and '=' in item}
 
 # Output colors
 STDOUT_MAGENTA = '\033[95m'
@@ -73,7 +77,7 @@ STDOUT_UNDERLINE = '\033[4m'
 
 SK1 = 'sk1'
 UC2 = 'uc2'
-PROJECT = SK1  # change point
+PROJECT = ARGV.get('project', SK1)  # change point
 
 # Build constants
 IMAGE_PREFIX = 'sk1project/'
@@ -87,33 +91,48 @@ PKGBUILD_DIR = os.path.join(PROJECT_DIR, 'pkgbuild')
 ARCH_DIR = os.path.join(PROJECT_DIR, 'archlinux')
 
 SCRIPT = 'setup-%s.py' % PROJECT
-APP_NAME = PROJECT
+APP_NAME = {SK1: SK1, UC2: 'uniconvertor'}[PROJECT]
 APP_FULL_NAME = {SK1: 'sK1', UC2: 'UniConvertor'}[PROJECT]
 APP_MAJOR_VER = {SK1: sk1.appconst.VERSION,
                  UC2: uc2.uc2const.VERSION}[PROJECT]
 APP_REVISION = {SK1: sk1.appconst.REVISION,
-                 UC2: uc2.uc2const.REVISION}[PROJECT]
+                UC2: uc2.uc2const.REVISION}[PROJECT]
 APP_VER = '%s%s' % (APP_MAJOR_VER, APP_REVISION)
 
-RELEASE = False
-DEBUG_MODE = False
+RELEASE = os.environ.get('RELEASE', False)
+DEBUG_MODE = os.environ.get('DEBUG_MODE', False)
+CONST_FILES = ['src/sk1/appconst.py', 'src/uc2/uc2const.py']
+
+README_TEMPLATE = """
+Universal vector graphics format translator
+copyright (C) 2007-%s sK1 Project Team (http://www.sk1project.net)
+
+Usage: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]
+Example: uniconvertor drawing.cdr drawing.svg
+
+ Available options:
+ --help      Display this help and exit
+ --verbose   Show internal logs
+ --log=      Logging level: DEBUG, INFO, WARN, ERROR (by default, INFO)
+ --format=   Type of output file format
+"""
 
 IMAGES = [
     'ubuntu_14.04_32bit',
     'ubuntu_14.04_64bit',
     'ubuntu_16.04_32bit',
     'ubuntu_16.04_64bit',
-    'ubuntu_17.10_64bit',
     'ubuntu_18.04_64bit',
+    'ubuntu_18.10_64bit',
     'debian_7_32bit',
     'debian_7_64bit',
     'debian_8_32bit',
     'debian_8_64bit',
     'debian_9_32bit',
     'debian_9_64bit',
-    'fedora_26_64bit',
     'fedora_27_64bit',
     'fedora_28_64bit',
+    'fedora_29_64bit',
     'opensuse_42.3_64bit',
     'opensuse_15.0_64bit',
     'msw-packager'
@@ -139,6 +158,27 @@ def clear_files(folder, ext=None):
                 os.remove(path)
 
 
+def shell(cmd, times=1):
+    for _ in range(times):
+        if not os.system(cmd):
+            return 0
+    return 1
+
+
+def set_build_stamp():
+    if not RELEASE:
+        for filename in CONST_FILES:
+            with open(filename, 'rb') as fp:
+                lines = fp.readlines()
+            with open(filename, 'wb') as fp:
+                marked = False
+                for line in lines:
+                    if not marked and line.startswith('BUILD = '):
+                        line = 'BUILD = \'%s\'\n' % bbox.TIMESTAMP
+                        marked = True
+                    fp.write(line)
+
+
 ############################################################
 # Main functions
 ############################################################
@@ -146,9 +186,13 @@ def clear_files(folder, ext=None):
 
 def pull_images():
     for image in IMAGES:
-        echo_msg('Pulling %s%s image' % (IMAGE_PREFIX, image),
-                 code=STDOUT_GREEN)
-        command('docker pull %s%s' % (IMAGE_PREFIX, image))
+        msg = 'Pulling %s%s image' % (IMAGE_PREFIX, image)
+        msg += ' ' * (50 - len(msg)) + '...'
+        echo_msg(msg, newline=False)
+        if shell('docker pull %s%s 1> /dev/null' % (IMAGE_PREFIX, image), 3):
+            echo_msg('[ FAIL ]', code=STDOUT_FAIL)
+            sys.exit(1)
+        echo_msg('[  OK  ]', code=STDOUT_GREEN)
 
 
 def remove_images():
@@ -168,27 +212,48 @@ def rebuild_images():
             command('docker rmi $(docker images -a -q)')
 
 
-def run_build():
-    echo_msg('BuildBox started', code=STDOUT_MAGENTA)
-    echo_msg('=' * 30, code=STDOUT_MAGENTA)
-    if VAGRANT_DIR != PROJECT_DIR:
-        if is_path(VAGRANT_DIR):
-            command('rm -f %s' % VAGRANT_DIR)
-        command('ln -s %s %s' % (PROJECT_DIR, VAGRANT_DIR))
+def run_build(locally=False, stop_on_error=True):
+    echo_msg('Project %s build started' % PROJECT, code=STDOUT_MAGENTA)
+    echo_msg('=' * 35, code=STDOUT_MAGENTA)
+    if not locally:
+        set_build_stamp()
     if is_path(RELEASE_DIR):
-        command('rm -rf %s' % RELEASE_DIR)
+        command('sudo rm -rf %s' % RELEASE_DIR)
     for image in IMAGES:
         os_name = image.capitalize().replace('_', ' ')
-        echo_msg('Build on %s' % os_name, code=STDOUT_YELLOW)
-        output = ' 1> /dev/null' if not DEBUG_MODE else ''
-        if command('docker run --rm -v %s:%s %s%s %s' %
-                   (PROJECT_DIR, VAGRANT_DIR, IMAGE_PREFIX, image, output)):
-            echo_msg('=' * 30 + '> FAIL', code=STDOUT_FAIL)
+        msg = 'Build on %s' % os_name
+        echo_msg(msg + ' ' * (35 - len(msg)) + '...', newline=False)
+        output = ' 1> /dev/null 2> /dev/null' if not DEBUG_MODE else ''
+        cmd = '/vagrant/bbox.py build_package --project=%s' % PROJECT
+        if image == 'msw-packager':
+            cmd = '/vagrant/bbox.py msw_build --project=%s' % PROJECT
+        if shell('docker run --rm -v %s:%s %s%s %s %s' %
+                 (PROJECT_DIR, VAGRANT_DIR,
+                  IMAGE_PREFIX, image, cmd, output), 2):
+            echo_msg('[ FAIL ]', code=STDOUT_FAIL)
+            if stop_on_error or not locally:
+                sys.exit(1)
         else:
-            echo_msg('=' * 30 + '> OK', code=STDOUT_GREEN)
+            echo_msg('[  OK  ]', code=STDOUT_GREEN)
+    if not locally:
+        msg = 'Publishing result'
+        msg = msg + ' ' * (35 - len(msg)) + '...'
+        echo_msg(msg, newline=False)
+        folder = PROJECT + '-release' if RELEASE else PROJECT
+        if os.system('sshpass -e rsync -a --delete-after -e '
+                     '\'ssh  -o StrictHostKeyChecking=no -o '
+                     'UserKnownHostsFile=/dev/null -p 22\' '
+                     './release/ `echo $RHOST`%s/ '
+                     '1> /dev/null  2> /dev/null' % folder):
+            echo_msg('[ FAIL ]', code=STDOUT_FAIL)
+            sys.exit(1)
+        echo_msg('[  OK  ]', code=STDOUT_GREEN)
+    echo_msg('=' * 35, code=STDOUT_MAGENTA)
+
+
+def run_build_local():
+    run_build(locally=True, stop_on_error=False)
     command('chmod -R 777 %s' % RELEASE_DIR)
-    if VAGRANT_DIR != PROJECT_DIR:
-        command('rm -f %s' % VAGRANT_DIR)
 
 
 def build_package():
@@ -217,6 +282,8 @@ def build_package():
                 copies.append((prefix + '_elementary0.4_' + suffix, eos_folder))
         elif SYSFACTS.is_ubuntu and SYSFACTS.version == '18.04':
             copies.append((prefix + '_mint_19_' + suffix, mint_folder))
+            if SYSFACTS.is_64bit:
+                copies.append((prefix + '_elementary5.0_' + suffix, eos_folder))
 
     elif SYSFACTS.is_rpm:
         echo_msg('Building RPM package')
@@ -313,23 +380,45 @@ MSI_DATA = {
     'Keywords': 'Vector graphics, Prepress',
 
     # Structural elements
-    '_Icon': '/win32-devres/%s.ico' % PROJECT,
-    '_ProgramMenuFolder': 'sK1 Project',
-    '_Shortcuts': [
-        {'Name': {SK1: 'sK1 %s illustration program' % APP_VER,
-                  UC2: '%s %s' % (APP_FULL_NAME, APP_VER)}[PROJECT],
-         'Description': {SK1: 'Open source vector graphics editor',
-                         UC2: 'Universal vector graphics translator'}[PROJECT],
-         'Target': '%s.exe' % PROJECT},
-    ],
+    '_Icon': '/win32-devres/sk1.ico',
+    '_OsCondition': '601',
     '_SourceDir': '',
     '_InstallDir': '%s-%s' % (APP_FULL_NAME, APP_VER),
     '_OutputName': '',
     '_OutputDir': '',
+    '_ProgramMenuFolder': 'sK1 Project',
+    '_AddToPath': [''],
 }
+
+if PROJECT == SK1:
+    MSI_DATA['_Shortcuts'] = [
+        {'Name': 'sK1 %s illustration program' % APP_VER,
+         'Description': 'Open source vector graphics editor',
+         'Target': 'sk1.exe',
+         'AddOnDesktop': True,
+         'Open': [],
+         'OpenWith': ['.sk2', '.sk1', '.sk', '.svg', '.plt', '.wmf', '.fig',
+                      # '.cdr', '.cmx', '.cdt',
+                      # '.ai', '.ps', '.pdf', '.eps',
+                      '.bmp', '.jpg', '.jpeg', '.j2p', '.png', '.tif', '.tiff',
+                      '.gif', '.xcf', '.psd', '.pcx', '.xbm', '.xpm', '.ppm',
+                      '.webp',
+                      '.skp', '.gpl', '.xml', '.soc', '.ase', '.aco', '.cpl',
+                      '.jcw']
+         },
+    ]
+elif PROJECT == UC2:
+    MSI_DATA['_Shortcuts'] = [
+        {'Name': 'UniConvertor %s readme' % APP_VER,
+         'Description': 'ReadMe file',
+         'Target': 'readme.txt',
+         'Open': [],
+         },
+    ]
 
 
 def build_msw_packages():
+    import wixpy
     distro_folder = os.path.join(RELEASE_DIR, 'MS_Windows')
 
     for arch in ['win32', 'win64']:
@@ -339,6 +428,7 @@ def build_msw_packages():
             portable_name = '%s-%s-%s-%s-portable' % \
                             (APP_NAME, APP_VER, TIMESTAMP, arch)
         portable_folder = os.path.join(PROJECT_DIR, portable_name)
+        portable_libs = os.path.join(portable_folder, 'libs')
         if os.path.exists(portable_folder):
             shutil.rmtree(portable_folder, True)
         os.mkdir(portable_folder)
@@ -346,7 +436,7 @@ def build_msw_packages():
         if not is_path(distro_folder):
             os.makedirs(distro_folder)
 
-        # Portable package
+        # Package building
         echo_msg('Creating portable package')
 
         portable = os.path.join('/%s-devres' % arch, 'portable.zip')
@@ -354,10 +444,20 @@ def build_msw_packages():
         echo_msg('Extracting portable files from %s' % portable)
         ZipFile(portable, 'r').extractall(portable_folder)
 
-        for folder in ['stdlib/test/', 'stdlib/lib2to3/tests/']:
+        obsolete_folders = ['stdlib/test/', 'stdlib/lib2to3/tests/',
+                            'stdlib/unittest/', 'stdlib/msilib/',
+                            'stdlib/idlelib/', 'stdlib/ensurepip/',
+                            'stdlib/distutils/']
+        for folder in obsolete_folders:
             shutil.rmtree(os.path.join(portable_folder, folder), True)
 
-        portable_libs = os.path.join(portable_folder, 'libs')
+        if PROJECT == SK1:
+            wx_zip = os.path.join('/%s-devres' % arch, 'wx.zip')
+            ZipFile(wx_zip, 'r').extractall(portable_libs)
+            portable_exe_zip = os.path.join('/%s-devres' % arch, 
+                                            '%s_portable.zip' % PROJECT)
+            ZipFile(portable_exe_zip, 'r').extractall(portable_folder)
+
         for item in PKGS:
             src = os.path.join(SRC_DIR, item)
             echo_msg('Copying tree %s' % src)
@@ -372,22 +472,36 @@ def build_msw_packages():
             dst = os.path.join(portable_libs, item)
             shutil.copy(src, dst)
 
-        portable_zip = os.path.join(distro_folder, portable_name + '.zip')
-        ziph = ZipFile(portable_zip, 'w', ZIP_DEFLATED)
+        # Portable package compressing (sk1 only)
+        if PROJECT == SK1:
+            portable_zip = os.path.join(distro_folder, portable_name + '.zip')
+            ziph = ZipFile(portable_zip, 'w', ZIP_DEFLATED)
 
-        echo_msg('Compressing into %s' % portable_zip)
-        for root, dirs, files in os.walk(portable_folder):
-            for item in files:
-                path = os.path.join(root, item)
-                local_path = path.split(portable_name)[1][1:]
-                ziph.write(path, os.path.join(portable_name, local_path))
-        ziph.close()
+            echo_msg('Compressing into %s' % portable_zip)
+            for root, dirs, files in os.walk(portable_folder):
+                for item in files:
+                    path = os.path.join(root, item)
+                    local_path = path.split(portable_name)[1][1:]
+                    ziph.write(path, os.path.join(portable_name, local_path))
+            ziph.close()
 
         # MSI build
         echo_msg('Creating MSI package')
 
         clear_files(portable_folder, ['exe'])
-        nonportable = os.path.join('/%s-devres' % arch, '%s_msi.zip' % PROJECT)
+        if PROJECT == UC2:
+            nonportable = os.path.join('/%s-devres' % arch,
+                                       '%s.zip' % PROJECT)
+            readme = README_TEMPLATE % bbox.TIMESTAMP[:4]
+            readme_path = os.path.join(portable_folder, 'readme.txt')
+            with open(readme_path, 'wb') as fp:
+                mark = '' if RELEASE else ' build %s' % bbox.TIMESTAMP
+                fp.write('%s %s%s' % (APP_FULL_NAME, APP_VER, mark))
+                fp.write('\r\n\r\n')
+                fp.write(readme.replace('\n', '\r\n'))
+        else:
+            nonportable = os.path.join('/%s-devres' % arch, 
+                                       '%s_msi.zip' % PROJECT)
 
         echo_msg('Extracting non-portable executables from %s' % nonportable)
         ZipFile(nonportable, 'r').extractall(portable_folder)
@@ -398,10 +512,10 @@ def build_msw_packages():
         msi_data['_SourceDir'] = portable_folder
         if arch == 'win64':
             msi_data['Win64'] = 'yes'
+            msi_data['_CheckX64'] = True
         msi_data['_OutputDir'] = distro_folder
-        suffix = '_headless.msi' if os.name != 'nt' else '.msi'
-        msi_data['_OutputName'] = msi_name + suffix
-        wixl.build(msi_data) # , xml_only=True)
+        msi_data['_OutputName'] = msi_name + '_headless.msi'
+        wixpy.build(msi_data)
 
         # Clearing
         shutil.rmtree(portable_folder, True)
@@ -421,11 +535,14 @@ def build_msw_packages():
 # Main build procedure
 ############################################################
 
-option = sys.argv[1] if len(sys.argv) > 1 else ''
+option = sys.argv[1] if len(sys.argv) > 1 \
+                        and not sys.argv[1].startswith('--') else ''
 {
     'pull': pull_images,
     'rmi': remove_images,
     'rebuild_images': rebuild_images,
     'build': run_build,
+    'build_local': run_build_local,
+    'build_package': build_package,
     'msw_build': build_msw_packages,
 }.get(option, build_package)()

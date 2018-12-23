@@ -62,7 +62,8 @@ class AboutPage(wal.HPanel):
         box.pack(wal.Label(box, txt, True, 2), fill=True)
 
         data = app.appdata
-        txt = '%s: %s %s' % (_('Version'), data.version, data.revision)
+        mark = '' if not data.build else ' %s %s' % (_('build'), data.build)
+        txt = '%s: %s %s%s' % (_('Version'), data.version, data.revision, mark)
         box.pack(wal.Label(box, txt), fill=True)
         box.pack((35, 35))
 
@@ -71,7 +72,7 @@ class AboutPage(wal.HPanel):
         txt = '(C) 2011-%s sK1 Project team' % year + '\n'
         box.pack(wal.Label(box, txt), fill=True)
         p = wal.HPanel(box)
-        p.pack(wal.HtmlLabel(p, 'http://sk1project.net'))
+        p.pack(wal.HtmlLabel(p, 'https://sk1project.net'))
         box.pack(p, fill=True)
 
 
@@ -82,7 +83,8 @@ class ComponentsPage(wal.VPanel):
         import reportlab
 
         data = [[_('Component'), _('Version')]]
-        uc_ver = '%s %s' % (uc2const.VERSION, uc2const.REVISION)
+        mark = '' if not uc2const.BUILD else ' build %s' % uc2const.BUILD
+        uc_ver = '%s %s%s' % (uc2const.VERSION, uc2const.REVISION, mark)
         data.append(['Python', sys.version])
         data.append(['wxWidgets', wal.VERSION])
         data.append(['UniConvertor', uc_ver])

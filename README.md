@@ -1,5 +1,7 @@
 # sK1 2.0
 
+![build status](https://api.travis-ci.org/sk1project-build-bot/sk1-wx.svg?branch=master)
+
 <center>
 
 ![sK1 2.0 under Ubuntu 14.04](./docs/images/sk1_2_0.png "sK1 2.0 under Ubuntu 14.04")
@@ -8,9 +10,11 @@
 
 sK1 2.0 is an open source vector graphics editor similar to CorelDRAW, 
 Adobe Illustrator, or Freehand. sK1 is oriented for prepress industry, 
-so it works with CMYK colorspace and produces CMYK-based PDF and PS output. 
+so it works with CMYK color space and produces CMYK-based PDF and PS output.
 
 # UniConvertor 2.0
+
+![build status](https://api.travis-ci.org/sk1project-build-bot/sk1-wx.svg?branch=master)
 
 <center>
 
@@ -22,9 +26,6 @@ UniConvertor 2.0 is a multiplatform universal vector graphics translator.
 Uses sK1 2.0 model to convert one format to another. 
 
 sK1 Project (http://sk1project.net)
-
-Copyright (C) 2004-2017 by Igor E. Novikov
-
 
 ### How to install: 
 
@@ -90,7 +91,7 @@ python-cairo-dev
 
 To run application you need installing also:
 ```
-python-wxgtk2.8 or python-wxgtk3.0 (for sK1 only)
+python-wxgtk3.0 (for sK1 only)
 python-pil 
 python-reportlab
 python-cairo

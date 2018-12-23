@@ -116,7 +116,7 @@ class TextOnPathPlugin(RsPlugin):
         border.pack(self.pic_panel, padding_all=1)
         panel.pack(border, padding=10)
 
-        self.other_side = wal.Checkbox(panel, _('Place on other side'),
+        self.other_side = wal.Checkbox(panel, _('Place on the other side'),
                                        onclick=self.update_bmp)
         panel.pack(self.other_side, padding=5)
 

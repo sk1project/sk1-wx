@@ -62,6 +62,7 @@ UC2_RPM_DEPENDENCIES = {
     FEDORA26: 'lcms2 pango ImageMagick pycairo python2-pillow python2-reportlab',
     FEDORA27: 'lcms2 pango ImageMagick pycairo python2-pillow python2-reportlab',
     FEDORA28: 'lcms2 pango ImageMagick python2-cairo python2-pillow python2-reportlab',
+    FEDORA29: 'lcms2 pango ImageMagick python2-cairo python2-pillow python2-reportlab',
 
     OPENSUSE13: 'liblcms2-2 libpango-1_0-0 ImageMagick python-cairo '
                 'python-Pillow python-reportlab',
@@ -82,6 +83,7 @@ SK1_RPM_DEPENDENCIES = {
     FEDORA26: 'wxPython python2-cups',
     FEDORA27: 'wxPython python2-cups',
     FEDORA28: 'python2-wxpython python2-cups',
+    FEDORA29: 'python2-wxpython python2-cups',
 
     OPENSUSE13: 'python-wxWidgets python-cups',
     OPENSUSE42: 'python-wxWidgets python-cups',

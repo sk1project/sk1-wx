@@ -42,7 +42,7 @@ class FontPrefs(PrefPanel):
         grid = wal.GridPanel(self, rows=5, cols=2, hgap=5, vgap=5)
         grid.add_growable_col(1)
 
-        grid.pack(wal.Label(grid, _('Text filler:')))
+        grid.pack(wal.Label(grid, _('Placeholder text:')))
         self.filler = wal.Entry(grid, config.font_preview_text)
         grid.pack(self.filler, fill=True)
 

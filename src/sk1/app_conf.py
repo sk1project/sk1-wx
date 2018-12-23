@@ -32,6 +32,7 @@ class AppData(UCData):
     doc_icon = None
     version = appconst.VERSION
     revision = appconst.REVISION
+    build = appconst.BUILD
     app_config_dir = ''
     plugin_dir = ''
     app_palette_dir = ''
@@ -85,6 +86,7 @@ class AppConfig(UCConfig):
     system_encoding = 'utf-8'  # default encoding (GUI uses utf-8 only)
     log_level = 'INFO'
     language = 'system'
+    app_server = True
 
     show_splash = False
 

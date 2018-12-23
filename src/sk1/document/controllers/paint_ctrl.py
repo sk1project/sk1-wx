@@ -36,6 +36,7 @@ class PolyLineCreator(AbstractCreator):
     point = []
     doc_point = []
     ctrl_mask = False
+    alt_mask = False
 
     # Drawing timer to avoid repainting overhead
     timer = None
@@ -64,6 +65,8 @@ class PolyLineCreator(AbstractCreator):
         self.on_timer()
 
     def stop_(self):
+        if self.obj:
+            self.presenter.selection.set([self.obj])
         self.init_flags()
         self.init_data()
         self.init_timer()
@@ -179,6 +182,7 @@ class PolyLineCreator(AbstractCreator):
         self.point = []
         self.doc_point = []
         self.obj = None
+        self.timer_callback = None
 
     def clear_data(self):
         self.cursor = []
@@ -293,7 +297,8 @@ class PathsCreator(PolyLineCreator):
             self.control_point2_doc)
         self.on_timer()
 
-    def update_from_obj(self):
+    def update_from_obj(self, obj):
+        self.obj = obj
         self.paths = apply_trafo_to_paths(self.obj.paths, self.obj.trafo)
         path = self.paths[-1]
         if path[-1] == sk2const.CURVE_OPENED:

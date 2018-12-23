@@ -17,6 +17,8 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import print_function
+
 """
 Usage: 
 --------------------------------------------------------------------------
@@ -174,8 +176,8 @@ fileptr2.close()
 ############################################################
 
 if len(sys.argv) == 1:
-    print 'Please specify build options!'
-    print __doc__
+    print('Please specify build options!')
+    print(__doc__)
     sys.exit(0)
 
 if len(sys.argv) > 1:
@@ -200,12 +202,12 @@ if len(sys.argv) > 1:
     if sys.argv[1] == 'uninstall':
         if os.path.isdir(install_path):
             # removing UC2 folder
-            print 'REMOVE: ' + install_path
+            print('REMOVE: ' + install_path)
             os.system('rm -rf ' + install_path)
             # removing scripts
             for item in scripts:
                 filename = os.path.basename(item)
-                print 'REMOVE: /usr/bin/' + filename
+                print('REMOVE: /usr/bin/' + filename)
                 os.system('rm -rf /usr/bin/' + filename)
             # removing data files
             for item in data_files:
@@ -216,13 +218,13 @@ if len(sys.argv) > 1:
                     filepath = os.path.join(location, filename)
                     if not os.path.isfile(filepath):
                         continue
-                    print 'REMOVE: ' + filepath
+                    print('REMOVE: ' + filepath)
                     os.system('rm -rf ' + filepath)
-            print 'Desktop database update: ',
+            print('Desktop database update: ', end=' ')
             os.system('update-desktop-database')
-            print 'DONE!'
+            print('DONE!')
         else:
-            print 'UniConvertor installation is not found!'
+            print('UniConvertor installation is not found!')
         sys.exit(0)
 
 # Preparing MANIFEST.in and setup.cfg

@@ -30,6 +30,7 @@ class AppStubPanel(wal.StubPanel):
         wal.StubPanel.__init__(self, mw)
         bg = wal.DARK_GRAY
         self.set_bg(bg)
+        self.set_drop_target(wal.FileDropHandler(self, self.drop_file))
 
         items = ((wal.ID_NEW, icons.PD_STUB_NEW),
                  (wal.ID_OPEN, icons.PD_STUB_OPEN),
@@ -53,3 +54,6 @@ class AppStubPanel(wal.StubPanel):
 
     def check_history(self, *args):
         self.buttons[-1].set_active(self.app.history.is_history())
+
+    def drop_file(self, x, y, filename):
+        self.app.open(filename)

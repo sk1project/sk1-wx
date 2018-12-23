@@ -16,9 +16,9 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 GPL_HEADER = 'GIMP Palette'
-GIMP_SOURCE = 'GIMP (http://www.gimp.org)'
-INK_SOURCE = 'Inkscape (http://inkscape.org)'
-KDE_SOURCE = 'KDE Software Compilation (http://kde.org)'
+GIMP_SOURCE = 'GIMP (https://www.gimp.org)'
+INK_SOURCE = 'Inkscape (https://inkscape.org)'
+KDE_SOURCE = 'KDE Software Compilation (https://kde.org)'
 
 COL_STR = 'Columns:'
 NAME_STR = 'Name:'

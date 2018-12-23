@@ -1,17 +1,19 @@
-# using 'language: minimal' because 'language: python' ran into some trouble
-# lining up the versions of gtk, wxwidgets and wxpython correctly.
-language: minimal
+language: python
 
-addons:
-  apt:
-    packages:
-    - python-imaging
-    - python-cairo-dev
-    - libpango1.0-dev
-    - python-wxgtk2.8
-    - libgtk2.0-dev
-    - libmagickwand-dev
+matrix:
+  include:
+    - os: linux
+      sudo: required
+      dist: xenial
+      compiler: gcc
+      services:
+        - docker
 
 script:
-  - python setup-uc2.py build
-  - python setup-sk1.py build
+  - git remote add upstream https://github.com/sk1project/sk1-wx
+  - git fetch upstream
+  - git pull upstream master
+  - sudo apt-get install -y sshpass
+  - python bbox.py pull
+  - python bbox.py build --project=sk1
+  - python bbox.py build --project=uc2

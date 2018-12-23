@@ -37,6 +37,7 @@ class DocTabPanel(wal.HTabPanel):
         wal.HTabPanel.__init__(self, parent, draw_top=draw_top,
                                painter_index=config.tab_style)
         self.ctx_menu = ContextMenu(app, self, ITEMS)
+        self.set_drop_target(wal.FileDropHandler(self, self.drop_file))
         events.connect(events.CONFIG_MODIFIED, self.check_config)
 
     def check_config(self, *args):
@@ -69,6 +70,9 @@ class DocTabPanel(wal.HTabPanel):
         for tab in self.tabs:
             if doc == tab.doc:
                 return tab
+
+    def drop_file(self, x, y, filename):
+        self.app.open(filename)
 
 
 class DocTab(wal.HTab):

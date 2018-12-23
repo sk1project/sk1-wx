@@ -169,6 +169,12 @@ class MainWindow(wx.Frame, DialogMixin):
     def set_menubar(self, menubar):
         self.SetMenuBar(menubar)
 
+    def bind_timer(self, callback):
+        self.Bind(wx.EVT_TIMER, callback)
+
+    def raise_window(self):
+        self.Raise()
+
 
 class Panel(wx.Panel, WidgetMixin):
     def __init__(self, parent, border=False, allow_input=False,

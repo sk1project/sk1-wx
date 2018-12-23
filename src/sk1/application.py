@@ -27,6 +27,7 @@ from sk1 import _, config, events, modes, dialogs, appconst
 from sk1 import app_plugins, app_actions
 from sk1.app_cms import AppColorManager
 from sk1.app_conf import AppData
+from sk1.app_fsw import AppFileWatcher
 from sk1.app_history import AppHistoryManager
 from sk1.app_insp import AppInspector
 from sk1.app_palettes import AppPaletteManager
@@ -118,6 +119,7 @@ class SK1Application(wal.Application, UCApplication):
         LOG.info('Application is initialized')
         uc2.events.connect(uc2.events.MESSAGES, self.uc2_event_logging)
         events.connect(events.APP_STATUS, self.sk1_event_logging)
+        self.fsw = AppFileWatcher(self, self.mw)
 
         if wal.IS_WX2:
             events.emit(events.NO_DOCS)
@@ -135,7 +137,8 @@ class SK1Application(wal.Application, UCApplication):
     def call_after(self, *args):
         if self.docs:
             return
-        if config.new_doc_on_start:
+        docs = self._get_docs()
+        if config.new_doc_on_start and not docs:
             self.load_plugins()
             self.new()
         else:
@@ -145,6 +148,16 @@ class SK1Application(wal.Application, UCApplication):
             if not wal.IS_WX2:
                 events.emit(events.NO_DOCS)
         self.update_actions()
+        for item in docs:
+            self.open(item)
+
+    def _get_docs(self):
+        docs = []
+        if len(sys.argv) > 1:
+            for item in sys.argv[1:]:
+                if os.path.exists(item):
+                    docs.append(fsutils.get_utf8_path(item))
+        return docs
 
     def update_wal(self):
         wal.SPIN['overlay'] = config.spin_overlay
@@ -175,6 +188,7 @@ class SK1Application(wal.Application, UCApplication):
             self.mw.hide()
             self.update_config()
             self.mw.destroy()
+            self.fsw.destroy()
             wal.Application.exit(self)
             LOG.info('Application terminated')
             return True
@@ -231,7 +245,7 @@ class SK1Application(wal.Application, UCApplication):
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
                 msg += _('The file contains newer SK2 format.\n')
                 msg += _('Try updating sK1 application from '
-                         'http://www.sk1project.net')
+                         'https://sk1project.net')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
                 LOG.error('Cannot open file <%s>: newer SK2 format.', doc_file)
                 return
@@ -393,10 +407,12 @@ class SK1Application(wal.Application, UCApplication):
                     return False
         return True
 
-    def import_file(self):
-        doc_file = dialogs.get_open_file_name(self.mw, config.import_dir,
-                                              _('Select file to import'))
-        if fsutils.lexists(doc_file) and fsutils.isfile(doc_file):
+    def import_file(self, doc_file=None, point=None):
+        msg = _('Select file to import')
+        if not doc_file:
+            doc_file = dialogs.get_open_file_name(self.mw,
+                                                  config.import_dir, msg)
+        if doc_file and fsutils.lexists(doc_file) and fsutils.isfile(doc_file):
             try:
                 ret = self.current_doc.import_file(doc_file)
                 if not ret:
@@ -406,6 +422,14 @@ class SK1Application(wal.Application, UCApplication):
                              'contains unsupported objects.')
                     dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
                     LOG.warn('Cannot import graphics from file <%s>', doc_file)
+                elif point and self.current_doc.selection.bbox:
+                    x0, y0 = self.current_doc.canvas.win_to_doc(point)
+                    x1 = self.current_doc.selection.bbox[0]
+                    y1 = self.current_doc.selection.bbox[-1]
+                    dx = x0 - x1
+                    dy = y0 - y1
+                    self.current_doc.api.move_selected(dx, dy)
+
                 config.import_dir = str(os.path.dirname(doc_file))
             except Exception as e:
                 msg = _('Cannot import file:')
@@ -608,5 +632,5 @@ class SK1Application(wal.Application, UCApplication):
 
     def open_url(self, url):
         webbrowser.open(url, new=1, autoraise=True)
-        msg = _('Requested page is opened in default browser')
+        msg = _('Requested page was opened in the default browser')
         events.emit(events.APP_STATUS, msg)

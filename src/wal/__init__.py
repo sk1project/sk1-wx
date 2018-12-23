@@ -35,3 +35,4 @@ from tabs import HTabPanel, HTab, VTabPanel, VTab
 from togglectrls import HToggleKeeper, VToggleKeeper, ModeToggleButton
 from treewidgets import TreeElement, TreeWidget
 from widgets import *
+from dnd import FileDropHandler, TextDropHandler
