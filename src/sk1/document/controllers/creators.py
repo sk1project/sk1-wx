@@ -46,6 +46,11 @@ class AbstractCreator(AbstractController):
                     self.canvas.resize_marker = mark
                     self.canvas.set_temp_mode(modes.RESIZE_MODE)
 
+    def mouse_right_up(self, event):
+        if self.draw:
+            return
+        AbstractController.mouse_right_up(self, event)
+
     def _calc_points(self, event):
         self.end = event.get_point()
         ctrl = event.is_ctrl()
