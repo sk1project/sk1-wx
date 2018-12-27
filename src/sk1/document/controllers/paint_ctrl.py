@@ -326,8 +326,10 @@ class PathsCreator(PolyLineCreator):
             self.clear_data()
         p = event.get_point()
         self.curve_point, self.curve_point_doc = self.snap.snap_point(p)[1:]
-        self.control_point2 = []
-        self.control_point2_doc = []
+        # self.control_point2 = []
+        # self.control_point2_doc = []
+        self.control_point2 = self.curve_point
+        self.control_point2_doc = self.curve_point_doc
         self.create = True
         self.init_timer()
 
