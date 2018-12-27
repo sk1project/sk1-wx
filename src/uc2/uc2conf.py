@@ -32,6 +32,7 @@ class UCData:
     doc_icon = None
     version = uc2const.VERSION
     revision = uc2const.REVISION
+    build = uc2const.BUILD
     app_config = ''
     app_config_dir = ''
     app_color_profile_dir = ''

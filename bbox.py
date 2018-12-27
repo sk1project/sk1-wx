@@ -101,6 +101,7 @@ APP_VER = '%s%s' % (APP_MAJOR_VER, APP_REVISION)
 
 RELEASE = os.environ.get('RELEASE', False)
 DEBUG_MODE = os.environ.get('DEBUG_MODE', False)
+CONST_FILES = ['src/sk1/appconst.py', 'src/uc2/uc2const.py']
 
 README_TEMPLATE = """
 Universal vector graphics format translator
@@ -164,6 +165,20 @@ def shell(cmd, times=1):
     return 1
 
 
+def set_build_stamp():
+    if not RELEASE:
+        for filename in CONST_FILES:
+            with open(filename, 'rb') as fp:
+                lines = fp.readlines()
+            with open(filename, 'wb') as fp:
+                marked = False
+                for line in lines:
+                    if not marked and line.startswith('BUILD = '):
+                        line = 'BUILD = \'%s\'\n' % bbox.TIMESTAMP
+                        marked = True
+                    fp.write(line)
+
+
 ############################################################
 # Main functions
 ############################################################
@@ -197,32 +212,11 @@ def rebuild_images():
             command('docker rmi $(docker images -a -q)')
 
 
-def run_build_vagrant():
-    echo_msg('Project %s build started' % PROJECT, code=STDOUT_MAGENTA)
-    echo_msg('=' * 30, code=STDOUT_MAGENTA)
-    if VAGRANT_DIR != PROJECT_DIR:
-        if is_path(VAGRANT_DIR):
-            command('rm -f %s' % VAGRANT_DIR)
-        command('ln -s %s %s' % (PROJECT_DIR, VAGRANT_DIR))
-    if is_path(RELEASE_DIR):
-        command('sudo rm -rf %s' % RELEASE_DIR)
-    for image in IMAGES:
-        os_name = image.capitalize().replace('_', ' ')
-        echo_msg('Build on %s' % os_name, code=STDOUT_YELLOW)
-        output = ' 1> /dev/null' if not DEBUG_MODE else ''
-        if command('docker run --rm -v %s:%s %s%s %s' %
-                   (PROJECT_DIR, VAGRANT_DIR, IMAGE_PREFIX, image, output)):
-            echo_msg('=' * 30 + '> FAIL', code=STDOUT_FAIL)
-        else:
-            echo_msg('=' * 30 + '> OK', code=STDOUT_GREEN)
-    command('chmod -R 777 %s' % RELEASE_DIR)
-    if VAGRANT_DIR != PROJECT_DIR:
-        command('rm -f %s' % VAGRANT_DIR)
-
-
 def run_build(locally=False, stop_on_error=True):
     echo_msg('Project %s build started' % PROJECT, code=STDOUT_MAGENTA)
     echo_msg('=' * 35, code=STDOUT_MAGENTA)
+    if not locally:
+        set_build_stamp()
     if is_path(RELEASE_DIR):
         command('sudo rm -rf %s' % RELEASE_DIR)
     for image in IMAGES:
@@ -501,6 +495,9 @@ def build_msw_packages():
             readme = README_TEMPLATE % bbox.TIMESTAMP[:4]
             readme_path = os.path.join(portable_folder, 'readme.txt')
             with open(readme_path, 'wb') as fp:
+                mark = '' if RELEASE else ' build %s' % bbox.TIMESTAMP
+                fp.write('%s %s%s' % (APP_FULL_NAME, APP_VER, mark))
+                fp.write('\r\n\r\n')
                 fp.write(readme.replace('\n', '\r\n'))
         else:
             nonportable = os.path.join('/%s-devres' % arch, 
