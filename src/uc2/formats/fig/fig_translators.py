@@ -83,6 +83,14 @@ SK2_TO_FIG_TEXT_ALIGN = {
     sk2const.TEXT_ALIGN_RIGHT: fig_const.T_RIGHT_JUSTIFIED
 }
 
+SK2_TO_FIG_ARROW = {
+    0: 0,
+    1: 3,
+    2: 2,
+    5: 17,
+    7: 15,
+}
+
 
 class FIG_to_SK2_Translator(object):
     page = None
@@ -392,12 +400,14 @@ class FIG_to_SK2_Translator(object):
         behind_flag = 0
         scalable_flag = 0
         markers = [[], []]  # TODO: implement translation arrows
-        # farrow = [f for f in obj.childs if f.cid == fig_model.OBJ_FORWARD_ARROW]
-        # barrow = [f for f in obj.childs if f.cid == fig_model.OBJ_BACKWARD_ARROW]
-        # if farrow:
-        #     markers[1] = farrow[0].type + farrow[0].style*8
-        # if barrow:
-        #     markers[0] = barrow[0].type + barrow[0].style*8
+        childs = obj.childs
+        farrow = [f for f in childs if f.cid == fig_model.OBJ_FORWARD_ARROW]
+        barrow = [f for f in childs if f.cid == fig_model.OBJ_BACKWARD_ARROW]
+
+        if farrow:
+            markers[1] = SK2_TO_FIG_ARROW.get(farrow[0].type, 3)
+        if barrow:
+            markers[0] = SK2_TO_FIG_ARROW.get(barrow[0].type, 3)
         return [rule, width, color, dash, cap, join, miter_limit, behind_flag,
                 scalable_flag, markers]
 
