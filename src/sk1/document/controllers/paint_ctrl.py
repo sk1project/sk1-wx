@@ -434,6 +434,8 @@ class PathsCreator(PolyLineCreator):
                 self.curve_point, self.curve_point_doc = snapped
             path = []
             if self.control_point0:
+                if not self.control_point2_doc:
+                    return True
                 self.control_point1_doc = contra_point(self.control_point2_doc,
                                                        self.curve_point_doc)
                 path = [self.point_doc, [self.control_point0_doc,
