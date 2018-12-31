@@ -19,7 +19,6 @@
 
 from utils.dist import *
 
-
 DEB_GENERIC = 'liblcms2-2 (>=2.0), python (>=2.4), python (<<3.0), '
 DEB_GENERIC += 'python-cairo, python-reportlab, '
 
@@ -28,7 +27,10 @@ UC2_DEB_DEPENDENCIES = {
     UBUNTU15: DEB_GENERIC + 'libmagickwand5, python-pil',
     UBUNTU16: DEB_GENERIC + 'libmagickwand-6.q16-2, python-pil',
     UBUNTU17: DEB_GENERIC + 'libmagickwand-6.q16-3, python-pil',
-    UBUNTU18: DEB_GENERIC + 'libmagickwand-6.q16-3, python-pil',
+    UBUNTU18: DEB_GENERIC + 'libmagickwand-6.q16-3, python-pil'
+        # Workaround for Ubuntu 18.10
+        if platform.dist()[1] != '18.10' else
+        DEB_GENERIC + 'libmagickwand-6.q16-6, python-pil',
 
     MINT17: DEB_GENERIC + 'libmagickwand5, python-pil',
     MINT18: DEB_GENERIC + 'libmagickwand-6.q16-2, python-pil',
