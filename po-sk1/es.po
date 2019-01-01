@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SK2 Spanish Language Translation v 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-29 00:53+0300\n"
-"PO-Revision-Date: 2018-06-29 00:53+0300\n"
+"POT-Creation-Date: 2019-01-01 02:10+0200\n"
+"PO-Revision-Date: 2019-01-01 02:10+0200\n"
 "Last-Translator: Carlos Jesús Atagua Díaz <atacarlos@gmail.com>\n"
 "Language-Team: Carlos Atagua <atacarlos@gmail.com>\n"
 "Language: es\n"
@@ -106,201 +106,201 @@ msgstr "¿Desea cambiar el color de borde predeterminado para este documento?"
 msgid "Application logs"
 msgstr "Registros de la aplicación"
 
-#: src/sk1/application.py:79
+#: src/sk1/application.py:80
 msgid "WindowsXP platform is obsolete and not supported!"
 msgstr "¡Windows XP es obsoleto y no es admitido! (¡actualízate, por favor!)"
 
-#: src/sk1/application.py:142 src/sk1/application.py:373
+#: src/sk1/application.py:145 src/sk1/application.py:387
 msgid "To start, create new document or open existing"
 msgstr "Para comenzar, cree un nuevo documento o abra uno existente"
 
-#: src/sk1/application.py:185
+#: src/sk1/application.py:199
 msgid "Untitled"
 msgstr "Sin título"
 
-#: src/sk1/application.py:194
+#: src/sk1/application.py:208
 msgid "Document is changed"
 msgstr "El documento ha cambiado"
 
-#: src/sk1/application.py:202
+#: src/sk1/application.py:216
 msgid "New document created"
 msgstr "Nuevo documento creado"
 
-#: src/sk1/application.py:205
+#: src/sk1/application.py:219
 msgid "Select Template"
 msgstr "Elija la Plantilla"
 
-#: src/sk1/application.py:211
+#: src/sk1/application.py:225
 msgid "Cannot parse file:"
 msgstr "No se puede analizar el archivo:"
 
-#: src/sk1/application.py:213 src/sk1/application.py:241
-#: src/sk1/application.py:413 src/sk1/application.py:532
-#: src/sk1/application.py:571
+#: src/sk1/application.py:227 src/sk1/application.py:255
+#: src/sk1/application.py:437 src/sk1/application.py:556
+#: src/sk1/application.py:595
 msgid "The file may be corrupted or not supported format"
 msgstr "El archivo puede estar dañado o está en un formato no admitido"
 
-#: src/sk1/application.py:220
+#: src/sk1/application.py:234
 msgid "New document from template"
 msgstr "Nuevo documento a partir de Plantilla"
 
-#: src/sk1/application.py:230 src/sk1/application.py:239
+#: src/sk1/application.py:244 src/sk1/application.py:253
 msgid "Cannot open file:"
 msgstr "No se puede abrir el archivo:"
 
-#: src/sk1/application.py:232
+#: src/sk1/application.py:246
 msgid "The file contains newer SK2 format.\n"
 msgstr "El archivo contiene un formato SK2 más reciente.\n"
 
-#: src/sk1/application.py:233
-msgid "Try updating sK1 application from http://www.sk1project.net"
-msgstr "Intente actualizar la aplicación sK1 desde http://www.sk1project.net"
+#: src/sk1/application.py:247
+msgid "Try updating sK1 application from https://sk1project.net"
+msgstr ""
 
-#: src/sk1/application.py:243 src/sk1/application.py:415
-#: src/sk1/application.py:534 src/sk1/application.py:573
+#: src/sk1/application.py:257 src/sk1/application.py:439
+#: src/sk1/application.py:558 src/sk1/application.py:597
 msgid "Details see in application logs."
 msgstr "Ver detalles en los registros de la aplicación. "
 
-#: src/sk1/application.py:251
+#: src/sk1/application.py:265
 msgid "Document opened"
 msgstr "Documento abierto"
 
-#: src/sk1/application.py:269
+#: src/sk1/application.py:283
 msgid "Cannot save file:"
 msgstr "No se puede guardar el archivo:"
 
-#: src/sk1/application.py:271
+#: src/sk1/application.py:285
 msgid "Please check file write permissions"
 msgstr "Por favor revise los permisos de escritura"
 
-#: src/sk1/application.py:275 src/sk1/application.py:307
+#: src/sk1/application.py:289 src/sk1/application.py:321
 msgid "Document saved"
 msgstr "Documento guardado"
 
-#: src/sk1/application.py:298 src/sk1/application.py:331
-#: src/sk1/application.py:434
+#: src/sk1/application.py:312 src/sk1/application.py:345
+#: src/sk1/application.py:458
 msgid "Cannot save document:"
 msgstr "No se puede guardar el documento:"
 
-#: src/sk1/application.py:300 src/sk1/application.py:436
-#: src/sk1/application.py:458 src/sk1/application.py:496
-#: src/sk1/application.py:556 src/sk1/share/pd_plugins/iconizer/__init__.py:305
+#: src/sk1/application.py:314 src/sk1/application.py:460
+#: src/sk1/application.py:482 src/sk1/application.py:520
+#: src/sk1/application.py:580 src/sk1/share/pd_plugins/iconizer/__init__.py:305
 msgid "Please check file name and write permissions"
 msgstr "Por favor revise el nombre y los permisos de escritura"
 
-#: src/sk1/application.py:322
+#: src/sk1/application.py:336
 msgid "Save selected objects only as..."
 msgstr "Guardar objetos seleccionados solamente como..."
 
-#: src/sk1/application.py:333
+#: src/sk1/application.py:347
 msgid "Please check requested file format and write permissions"
 msgstr "Por favor revise el formato del archivo y los permisos de escritura"
 
-#: src/sk1/application.py:352
+#: src/sk1/application.py:366
 #, python-format
 msgid "Document '%s' has been modified."
 msgstr "El documento '%s' ha sido modificado."
 
-#: src/sk1/application.py:353
+#: src/sk1/application.py:367
 msgid "Do you want to save your changes?"
 msgstr "¿Desea guardar los cambios?"
 
-#: src/sk1/application.py:398
+#: src/sk1/application.py:411
 msgid "Select file to import"
 msgstr "Elija un archivo para importar"
 
-#: src/sk1/application.py:403
+#: src/sk1/application.py:419
 msgid "Cannot import graphics from file:"
 msgstr "No se pueden importar los gráficos del archivo:"
 
-#: src/sk1/application.py:405
+#: src/sk1/application.py:421
 msgid "It seems the document is empty or contains unsupported objects."
 msgstr "Al parecer el documento está vacío o contiene objetos no admitidos."
 
-#: src/sk1/application.py:411 src/sk1/application.py:530
+#: src/sk1/application.py:435 src/sk1/application.py:554
 msgid "Cannot import file:"
 msgstr "No se puede importar el archivo:"
 
-#: src/sk1/application.py:427
+#: src/sk1/application.py:451
 msgid "Export document As..."
 msgstr "Exportar documento Como:"
 
-#: src/sk1/application.py:441
+#: src/sk1/application.py:465
 msgid "Document is successfully exported"
 msgstr "Documento exportado satisfactoriamente"
 
-#: src/sk1/application.py:447
+#: src/sk1/application.py:471
 msgid "Extract selected bitmap as..."
 msgstr "Extraer el mapa de bits seleccionado como..."
 
-#: src/sk1/application.py:456
+#: src/sk1/application.py:480
 msgid "Cannot save bitmap:"
 msgstr "No se puede guardar el mapa de bits:"
 
-#: src/sk1/application.py:464
+#: src/sk1/application.py:488
 msgid "Bitmap is successfully extracted"
 msgstr "Mapa de bits satisfactoriamente extraído"
 
-#: src/sk1/application.py:472
+#: src/sk1/application.py:496
 msgid "Export palette as..."
 msgstr "Exportar paleta como..."
 
-#: src/sk1/application.py:485 src/sk1/document/presenter.py:226
+#: src/sk1/application.py:509 src/sk1/document/presenter.py:226
 msgid "Exporting..."
 msgstr "Exportando..."
 
-#: src/sk1/application.py:489 src/sk1/document/presenter.py:230
+#: src/sk1/application.py:513 src/sk1/document/presenter.py:230
 #, python-format
 msgid "Unknown file format is requested for export <%s>"
 msgstr "Se ha solicitado un formato de archivo desconocido para exportar <%s>"
 
-#: src/sk1/application.py:494
+#: src/sk1/application.py:518
 msgid "Cannot export palette:"
 msgstr "No se puede exportar la paleta:"
 
-#: src/sk1/application.py:504
+#: src/sk1/application.py:528
 msgid "Palette is successfully exported"
 msgstr "Paleta satisfactoriamente exportada"
 
-#: src/sk1/application.py:511
+#: src/sk1/application.py:535
 msgid "Select palette to import"
 msgstr "Seleccione la paleta a importar"
 
-#: src/sk1/application.py:515 src/sk1/document/presenter.py:76
+#: src/sk1/application.py:539 src/sk1/document/presenter.py:76
 msgid "Opening file..."
 msgstr "Abriendo archivo..."
 
-#: src/sk1/application.py:519 src/sk1/document/presenter.py:71
+#: src/sk1/application.py:543 src/sk1/document/presenter.py:71
 #: src/sk1/document/presenter.py:192
 #, python-format
 msgid "Loader is not found for <%s>"
 msgstr "Cargador no encontrado para <%s>"
 
-#: src/sk1/application.py:523
+#: src/sk1/application.py:547
 msgid "Error while opening"
 msgstr "Error mientras abría"
 
-#: src/sk1/application.py:526
+#: src/sk1/application.py:550
 msgid "Palette is successfully imported"
 msgstr "Paleta satisfactoriamente importada"
 
-#: src/sk1/application.py:545
+#: src/sk1/application.py:569
 msgid "Save pattern as..."
 msgstr "Guardar patrón como..."
 
-#: src/sk1/application.py:554
+#: src/sk1/application.py:578
 msgid "Cannot save pattern from:"
 msgstr "No se puede guardar patrón para:"
 
-#: src/sk1/application.py:566
+#: src/sk1/application.py:590
 msgid "Select pattern to load"
 msgstr "Elegir patrón para cargar"
 
-#: src/sk1/application.py:569
+#: src/sk1/application.py:593
 msgid "Cannot load pattern for:"
 msgstr "No se puede cargar el patrón para:"
 
-#: src/sk1/application.py:611
+#: src/sk1/application.py:635
 msgid "Requested page was opened in the default browser"
 msgstr "La página solicitada está abierta en el navegador por defecto"
 
@@ -352,7 +352,7 @@ msgstr "Super índice"
 msgid "Subscript"
 msgstr "Sub índice"
 
-#: src/sk1/context/page_format.py:47 src/sk1/context/page_format.py:98
+#: src/sk1/context/page_format.py:48 src/sk1/context/page_format.py:99
 #: src/sk1/dialogs/docprops.py:118
 msgid "Custom"
 msgstr "Personalizado"
@@ -397,7 +397,7 @@ msgstr "Rotar selección"
 msgid "Document units"
 msgstr "Unidades del documento"
 
-#: src/sk1/dialogs/aboutdlg.py:39 src/sk1/dialogs/aboutdlg.py:146
+#: src/sk1/dialogs/aboutdlg.py:39 src/sk1/dialogs/aboutdlg.py:148
 msgid "About"
 msgstr "Acerca de "
 
@@ -421,11 +421,15 @@ msgstr "Licencia"
 msgid "vector graphics editor"
 msgstr "Editor de Gráficos Vectoriales"
 
-#: src/sk1/dialogs/aboutdlg.py:65 src/sk1/dialogs/aboutdlg.py:84
+#: src/sk1/dialogs/aboutdlg.py:65
+msgid "build"
+msgstr ""
+
+#: src/sk1/dialogs/aboutdlg.py:66 src/sk1/dialogs/aboutdlg.py:85
 msgid "Version"
 msgstr "Versión"
 
-#: src/sk1/dialogs/aboutdlg.py:84
+#: src/sk1/dialogs/aboutdlg.py:85
 msgid "Component"
 msgstr "Componente"
 
@@ -754,7 +758,7 @@ msgstr ""
 msgid "Document properties"
 msgstr "Propiedades del documento"
 
-#: src/sk1/dialogs/filedlgs.py:32 src/uc2/uc2const.py:116
+#: src/sk1/dialogs/filedlgs.py:32 src/uc2/uc2const.py:118
 msgid "All supported formats"
 msgstr "Todos los formatos admitidos"
 
@@ -1106,7 +1110,7 @@ msgstr "Ir a la última página"
 msgid "Page %i of %i"
 msgstr "Página %i de %i"
 
-#: src/sk1/parts/stubpanel.py:39
+#: src/sk1/parts/stubpanel.py:40
 msgid "Open Recent"
 msgstr "Abrir reciente"
 
@@ -1414,27 +1418,31 @@ msgstr "Crear caché de fuentes al iniciar"
 msgid "Backup on export"
 msgstr "Respaldar al exportar"
 
-#: src/sk1/prefs/prefs_general.py:175
+#: src/sk1/prefs/prefs_general.py:171
+msgid "Run as server"
+msgstr ""
+
+#: src/sk1/prefs/prefs_general.py:179
 msgid "History log size:"
 msgstr "Tamaño de historial del registro:"
 
-#: src/sk1/prefs/prefs_general.py:178
+#: src/sk1/prefs/prefs_general.py:182
 msgid "History menu size:"
 msgstr "Tamaño de historial del menú:"
 
-#: src/sk1/prefs/prefs_general.py:183
+#: src/sk1/prefs/prefs_general.py:187
 msgid "Logging level (*):"
 msgstr "Nivel del registro (*):"
 
-#: src/sk1/prefs/prefs_general.py:188
+#: src/sk1/prefs/prefs_general.py:192
 msgid "Language (*):"
 msgstr "Idioma (*):"
 
-#: src/sk1/prefs/prefs_general.py:197
+#: src/sk1/prefs/prefs_general.py:201
 msgid "Generic features"
 msgstr "Funciones generales"
 
-#: src/sk1/prefs/prefs_general.py:200
+#: src/sk1/prefs/prefs_general.py:204
 msgid "(*) - A restart is required to apply these options"
 msgstr "(*) - Estas opciones requieren reiniciar la aplicación"
 
@@ -1472,7 +1480,7 @@ msgstr "Ancho de celda:"
 
 #: src/sk1/prefs/prefs_palettes.py:95 src/sk1/prefs/prefs_palettes.py:102
 #: src/sk1/prefs/prefs_palettes.py:118 src/sk1/prefs/prefs_palettes.py:126
-#: src/uc2/uc2const.py:378
+#: src/uc2/uc2const.py:383
 msgid "px"
 msgstr "px"
 
@@ -1538,8 +1546,8 @@ msgstr "Márgenes de impresión"
 
 #: src/sk1/prefs/prefs_printers.py:156
 msgid ""
-"To measure actual print area and vertical/horizontal printing shift, just print "
-"the calibration page on A4/Letter paper."
+"To measure actual print area and vertical/horizontal printing shift, just "
+"print the calibration page on A4/Letter paper."
 msgstr ""
 "Para medidas de área de impresión real e impresión vertical/horizontal solo "
 "imprima la página de calibración tamaño A4/Carta."
@@ -1777,55 +1785,55 @@ msgstr "Relleno degradado"
 msgid "Pattern Fill"
 msgstr "Relleno de patrón"
 
-#: src/sk1/pwidgets/gradientctrls.py:154
+#: src/sk1/pwidgets/gradientctrls.py:155
 msgid "Gradient stop"
 msgstr "Parada de degradado"
 
-#: src/sk1/pwidgets/gradientctrls.py:157
+#: src/sk1/pwidgets/gradientctrls.py:158
 msgid "Color value:"
 msgstr "Valor de color:"
 
-#: src/sk1/pwidgets/gradientctrls.py:160
+#: src/sk1/pwidgets/gradientctrls.py:161
 msgid "Change stop color"
 msgstr "Cambiar parada de color:"
 
-#: src/sk1/pwidgets/gradientctrls.py:166
+#: src/sk1/pwidgets/gradientctrls.py:167
 msgid "Position:"
 msgstr "Posición:"
 
-#: src/sk1/pwidgets/gradientctrls.py:360
+#: src/sk1/pwidgets/gradientctrls.py:362
 msgid "Select first stop"
 msgstr "Seleccionar primera parada"
 
-#: src/sk1/pwidgets/gradientctrls.py:366
+#: src/sk1/pwidgets/gradientctrls.py:368
 msgid "Select previous stop"
 msgstr "Seleccionar parada anterior"
 
-#: src/sk1/pwidgets/gradientctrls.py:372
+#: src/sk1/pwidgets/gradientctrls.py:374
 msgid "Select next stop"
 msgstr "Seleccionar próxima parada"
 
-#: src/sk1/pwidgets/gradientctrls.py:378
+#: src/sk1/pwidgets/gradientctrls.py:380
 msgid "Select last stop"
 msgstr "Seleccionar última parada"
 
-#: src/sk1/pwidgets/gradientctrls.py:388
+#: src/sk1/pwidgets/gradientctrls.py:390
 msgid "Add stop"
 msgstr "Añadir parada"
 
-#: src/sk1/pwidgets/gradientctrls.py:394
+#: src/sk1/pwidgets/gradientctrls.py:396
 msgid "Delete selected stop"
 msgstr "Eliminar parada seleccionada "
 
-#: src/sk1/pwidgets/gradientctrls.py:400
+#: src/sk1/pwidgets/gradientctrls.py:402
 msgid "Reverse gradient"
 msgstr "Invertir degradado"
 
-#: src/sk1/pwidgets/gradientctrls.py:401 src/sk1/printing/printdlg/panels.py:82
+#: src/sk1/pwidgets/gradientctrls.py:403 src/sk1/printing/printdlg/panels.py:82
 msgid "Reverse"
 msgstr "Invertido"
 
-#: src/sk1/pwidgets/gradientctrls.py:406
+#: src/sk1/pwidgets/gradientctrls.py:408
 msgid "Keep gradient vector"
 msgstr "Mantener ruta del degradado"
 
@@ -3094,299 +3102,303 @@ msgstr "Centro relativo"
 msgid "degrees"
 msgstr "grados"
 
-#: src/uc2/uc2const.py:117
+#: src/uc2/uc2const.py:119
 msgid "PDXF - PrintDesign XML Format graphics files"
 msgstr "PDXF - archivos de gráficos PrintDesign XML Format"
 
-#: src/uc2/uc2const.py:118
+#: src/uc2/uc2const.py:120
 msgid "SK1 - sK1 0.9.x graphics files"
 msgstr "SK1 - archivs de gráficos sK1 0.9.x"
 
-#: src/uc2/uc2const.py:119
+#: src/uc2/uc2const.py:121
 msgid "SK2 - sK1 2.x graphics files"
 msgstr "SK2 - archivos de gráficos sK1 2.x"
 
-#: src/uc2/uc2const.py:120
+#: src/uc2/uc2const.py:122
 msgid "SK - Sketch/Skencil files"
 msgstr "SK - archivos Sketch/Skencil"
 
-#: src/uc2/uc2const.py:121
+#: src/uc2/uc2const.py:123
 msgid "SVG - Scalable Vector Graphics files"
 msgstr "SVG - archivos de Gráficos Vectoriales Escalables"
 
-#: src/uc2/uc2const.py:122
+#: src/uc2/uc2const.py:124
 msgid "SVGZ - Compressed Scalable Vector Graphics files"
 msgstr "SVGZ - archivos  de Gráficos Vectoriales Escalables Comprimidos"
 
-#: src/uc2/uc2const.py:123
+#: src/uc2/uc2const.py:125
 msgid "ODG - Open Document Drawing files"
 msgstr "ODG - archivos Open Document Drawing"
 
-#: src/uc2/uc2const.py:124
+#: src/uc2/uc2const.py:126
 msgid "ORA - Open Raster Format files"
 msgstr "ORA - archivos Open Raster Format"
 
-#: src/uc2/uc2const.py:125
+#: src/uc2/uc2const.py:127
 msgid "XCF - GIMP files"
 msgstr "XCF - archivos de Imagen GIMP"
 
-#: src/uc2/uc2const.py:126
+#: src/uc2/uc2const.py:128
 msgid "SLA - Scribus documents"
 msgstr "SLA - documentos Scribus"
 
-#: src/uc2/uc2const.py:127 src/uc2/uc2const.py:129 src/uc2/uc2const.py:133
+#: src/uc2/uc2const.py:129 src/uc2/uc2const.py:131 src/uc2/uc2const.py:135
 msgid "CDR - CorelDRAW Graphics files"
 msgstr "CDR - archivos CorelDRAW Graphics"
 
-#: src/uc2/uc2const.py:128 src/uc2/uc2const.py:130
+#: src/uc2/uc2const.py:130 src/uc2/uc2const.py:132
 msgid "CDT - CorelDRAW Templates files"
 msgstr "CDT -archivos CorelDRAW Templates"
 
-#: src/uc2/uc2const.py:131
+#: src/uc2/uc2const.py:133
 msgid "CMX - CorelDRAW Presentation Exchange files"
 msgstr "CMX -archivos CorelDRAW Presentation Exchange"
 
-#: src/uc2/uc2const.py:132
+#: src/uc2/uc2const.py:134
 msgid "CCX - CorelDRAW Compressed Exchange files"
 msgstr "CCX - archivos CorelDRAW Compressed Exchange"
 
-#: src/uc2/uc2const.py:134
+#: src/uc2/uc2const.py:136
 msgid "XAR - Xara graphics files"
 msgstr "XAR - archivos de gráficos Xara"
 
-#: src/uc2/uc2const.py:135
+#: src/uc2/uc2const.py:137
 msgid "FIG - XFig files"
 msgstr "FIG - archivos XFig"
 
-#: src/uc2/uc2const.py:136 src/uc2/uc2const.py:137
+#: src/uc2/uc2const.py:138 src/uc2/uc2const.py:139
 msgid "AI - Adobe Illustrator files"
 msgstr "AI - Archivos de Adobe Illustrator"
 
-#: src/uc2/uc2const.py:138
+#: src/uc2/uc2const.py:140
 msgid "PS - PostScript files"
 msgstr "PS - archivos PostScript"
 
-#: src/uc2/uc2const.py:139
+#: src/uc2/uc2const.py:141
 msgid "EPS - Encapsulated PostScript files"
 msgstr "EPS - archivos PostScript Encapsulados"
 
-#: src/uc2/uc2const.py:140
+#: src/uc2/uc2const.py:142
 msgid "PDF - Portable Document Format files"
 msgstr "PDF - Archivos de Documentos Portables"
 
-#: src/uc2/uc2const.py:141
+#: src/uc2/uc2const.py:143
 msgid "PSD - Adobe Photoshop files"
 msgstr "PSD - archivos de Adobe Photoshop"
 
-#: src/uc2/uc2const.py:142
+#: src/uc2/uc2const.py:144
 msgid "CGM - Computer Graphics Metafile files"
 msgstr "CGM - archivos de Computer Graphics Metafile"
 
-#: src/uc2/uc2const.py:143
+#: src/uc2/uc2const.py:145
 msgid "WMF - Windows Metafile files"
 msgstr "WMF - archivos de dibujo de Windows Metafile"
 
-#: src/uc2/uc2const.py:144
+#: src/uc2/uc2const.py:146
 msgid "EMF - Windows Enhanced Metafile files"
 msgstr "EMF - archivos de Windows Enhanced Metafile"
 
-#: src/uc2/uc2const.py:145
+#: src/uc2/uc2const.py:147
 msgid "XPS - XML Paper Specification files"
 msgstr "XPS - archivos XML Paper Specification"
 
-#: src/uc2/uc2const.py:146
+#: src/uc2/uc2const.py:148
 msgid "VSD - Visio Drawing files"
 msgstr "VSD - archivos de dibujos Visio"
 
-#: src/uc2/uc2const.py:147
+#: src/uc2/uc2const.py:149
 msgid "PLT - HPGL cutting plotter files"
 msgstr "PLT - archivos de plotter de corte HPGL"
 
-#: src/uc2/uc2const.py:148
+#: src/uc2/uc2const.py:150
 msgid "HPGL - HPGL plotter files"
 msgstr "HPGL - archivos de plotter HPGL"
 
-#: src/uc2/uc2const.py:149
+#: src/uc2/uc2const.py:151
 msgid "DXF - AutoCAD files"
 msgstr "DXF - archivos de AutoCAD"
 
-#: src/uc2/uc2const.py:150
+#: src/uc2/uc2const.py:152
 msgid "DWG - AutoCAD files"
 msgstr "DWG - archivos de AutoCAD"
 
-#: src/uc2/uc2const.py:151
+#: src/uc2/uc2const.py:153
 msgid "RIF - RIFF files"
 msgstr "RIF - archivos RIFF"
 
-#: src/uc2/uc2const.py:154
+#: src/uc2/uc2const.py:156
 msgid "JPEG - Joint Photographic Experts Group files"
 msgstr "JPEG -  archivos de imagen Joint Photographic Experts Group"
 
-#: src/uc2/uc2const.py:155
+#: src/uc2/uc2const.py:157
 msgid "JPEG2000 - Joint Photographic Experts Group files"
 msgstr "JPEG2000 - archivos de imagen Joint Photographic Experts Group"
 
-#: src/uc2/uc2const.py:156
+#: src/uc2/uc2const.py:158
 msgid "TIFF - Tagged Image File Format files"
 msgstr "TIFF - archivos de imagen TIFF"
 
-#: src/uc2/uc2const.py:157
+#: src/uc2/uc2const.py:159
 msgid "BMP - Bitmap Picture files"
 msgstr "BMP - archivos de imagen de Mapa de Bits"
 
-#: src/uc2/uc2const.py:158
+#: src/uc2/uc2const.py:160
 msgid "PCX - PCeXchange files"
 msgstr "PCX - archivos PCeXchange"
 
-#: src/uc2/uc2const.py:159
+#: src/uc2/uc2const.py:161
 msgid "GIF - Graphics Interchange Format files"
 msgstr "GIF - archivos de imagen GIF"
 
-#: src/uc2/uc2const.py:160
+#: src/uc2/uc2const.py:162
 msgid "PNG - Portable Network Graphics files"
 msgstr "PNG - archivos de imagen PNG"
 
-#: src/uc2/uc2const.py:161
+#: src/uc2/uc2const.py:163
 msgid "PPM - Netpbm Color Image format files"
 msgstr "PPM - archivos de formato Netpbm Color Image"
 
-#: src/uc2/uc2const.py:162
+#: src/uc2/uc2const.py:164
 msgid "XBM - X bitmap files"
 msgstr "XBM - archivos X bitmap"
 
-#: src/uc2/uc2const.py:163
+#: src/uc2/uc2const.py:165
 msgid "XPM - X pixmap files"
 msgstr "XPM -archivos X pixmap"
 
 #: src/uc2/uc2const.py:166
+msgid "WebP - Google image format files"
+msgstr ""
+
+#: src/uc2/uc2const.py:169
 msgid "SKP - sK1 palette files"
 msgstr "SKP - archivos de paletas de sK1"
 
-#: src/uc2/uc2const.py:167
+#: src/uc2/uc2const.py:170
 msgid "GPL - GIMP palette files"
 msgstr "GPL - archivos de paletas de GIMP"
 
-#: src/uc2/uc2const.py:168
+#: src/uc2/uc2const.py:171
 msgid "CPL - CorelDRAW palette files"
 msgstr "CPL - archivos de paletas de CorelDRAW"
 
-#: src/uc2/uc2const.py:169
+#: src/uc2/uc2const.py:172
 msgid "XML - Scribus palette files"
 msgstr "XML - archivos de paletas de Scribus"
 
-#: src/uc2/uc2const.py:170
+#: src/uc2/uc2const.py:173
 msgid "SOC - LibreOffice palette files"
 msgstr "SOC - archivos de paletas de LibreOffice"
 
-#: src/uc2/uc2const.py:171
+#: src/uc2/uc2const.py:174
 msgid "XML - CorelDRAW X5-X7 palette files"
 msgstr "XML - archivos de paletas CorelDRAW X5-X7"
 
-#: src/uc2/uc2const.py:172
+#: src/uc2/uc2const.py:175
 msgid "ASE - Adobe Swatch Exchange files"
 msgstr "ASE - archivos Adobe Swatch Exchange"
 
-#: src/uc2/uc2const.py:173
+#: src/uc2/uc2const.py:176
 msgid "ACO - Adobe Color files"
 msgstr "ACO - archivos de color Adobe"
 
-#: src/uc2/uc2const.py:174
+#: src/uc2/uc2const.py:177
 msgid "JCW - Xara color palette files"
 msgstr "JCW - archivo de paletas de color XARA"
 
-#: src/uc2/uc2const.py:177
+#: src/uc2/uc2const.py:180
 msgid "ICC - International Color Consortium profiles"
 msgstr "ICC - Consorcio Internacional de perfiles de Color "
 
-#: src/uc2/uc2const.py:178
+#: src/uc2/uc2const.py:181
 msgid "ICM - Image Color Matching profiles"
 msgstr "ICM - Perfiles de Color de Imagen Correspondiente"
 
-#: src/uc2/uc2const.py:180
+#: src/uc2/uc2const.py:183
 msgid "XML - eXtensible Markup Language files"
 msgstr "XML - Archivos de Lenguaje de Marcado eXtensible"
 
-#: src/uc2/uc2const.py:181
+#: src/uc2/uc2const.py:184
 msgid "LOG - Log files"
 msgstr "LOG - Archivos de registro"
 
-#: src/uc2/uc2const.py:182
+#: src/uc2/uc2const.py:185
 msgid "MD - Markdown markup files"
 msgstr ""
 
-#: src/uc2/uc2const.py:367 src/uc2/uc2const.py:387
+#: src/uc2/uc2const.py:372 src/uc2/uc2const.py:392
 msgid "pixels"
 msgstr "píxeles (px)"
 
-#: src/uc2/uc2const.py:368 src/uc2/uc2const.py:393
+#: src/uc2/uc2const.py:373 src/uc2/uc2const.py:398
 msgid "millimeters"
 msgstr "milímetros (mm)"
 
-#: src/uc2/uc2const.py:369 src/uc2/uc2const.py:392
+#: src/uc2/uc2const.py:374 src/uc2/uc2const.py:397
 msgid "centimeters"
 msgstr "centímetros (cm)"
 
-#: src/uc2/uc2const.py:370 src/uc2/uc2const.py:391
+#: src/uc2/uc2const.py:375 src/uc2/uc2const.py:396
 msgid "meters"
 msgstr "metros (m)"
 
-#: src/uc2/uc2const.py:371 src/uc2/uc2const.py:388
+#: src/uc2/uc2const.py:376 src/uc2/uc2const.py:393
 msgid "points"
 msgstr "puntos (pt)"
 
-#: src/uc2/uc2const.py:372 src/uc2/uc2const.py:389
+#: src/uc2/uc2const.py:377 src/uc2/uc2const.py:394
 msgid "inches"
 msgstr "pulgadas (in) "
 
-#: src/uc2/uc2const.py:373 src/uc2/uc2const.py:390
+#: src/uc2/uc2const.py:378 src/uc2/uc2const.py:395
 msgid "feet"
 msgstr "pies (ft)"
 
-#: src/uc2/uc2const.py:377
+#: src/uc2/uc2const.py:382
 msgid "pt"
 msgstr "pt"
 
-#: src/uc2/uc2const.py:379
+#: src/uc2/uc2const.py:384
 msgid "in"
 msgstr "in"
 
-#: src/uc2/uc2const.py:380
+#: src/uc2/uc2const.py:385
 msgid "ft"
 msgstr "ft"
 
-#: src/uc2/uc2const.py:381
+#: src/uc2/uc2const.py:386
 msgid "m"
 msgstr "m"
 
-#: src/uc2/uc2const.py:382
+#: src/uc2/uc2const.py:387
 msgid "cm"
 msgstr "cm"
 
-#: src/uc2/uc2const.py:383
+#: src/uc2/uc2const.py:388
 msgid "mm"
 msgstr "mm"
 
-#: src/uc2/uc2const.py:451
+#: src/uc2/uc2const.py:456
 msgid "Portrait"
 msgstr "Vertical"
 
-#: src/uc2/uc2const.py:451
+#: src/uc2/uc2const.py:456
 msgid "Landscape"
 msgstr "Horizontal"
 
-#: src/uc2/uc2const.py:461
+#: src/uc2/uc2const.py:466
 msgid "Perceptual"
 msgstr "Perceptual"
 
-#: src/uc2/uc2const.py:462
+#: src/uc2/uc2const.py:467
 msgid "Relative Colorimetric"
 msgstr "Colorimetría relativa"
 
-#: src/uc2/uc2const.py:463
+#: src/uc2/uc2const.py:468
 msgid "Saturation"
 msgstr "Saturación"
 
-#: src/uc2/uc2const.py:464
+#: src/uc2/uc2const.py:469
 msgid "Absolute Colorimetric"
 msgstr "Colorimetría absoluta"
 
@@ -3650,6 +3662,10 @@ msgstr "Columna de texto "
 #: src/uc2/formats/sk2/sk2_cids.py:79
 msgid "Bitmap"
 msgstr "Mapa de bits "
+
+#~ msgid "Try updating sK1 application from http://www.sk1project.net"
+#~ msgstr ""
+#~ "Intente actualizar la aplicación sK1 desde http://www.sk1project.net"
 
 #~ msgid "The file may be corrupted or not supported format."
 #~ msgstr "El archivo puede estar dañado o está en un formato no admitido."
