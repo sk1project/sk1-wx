@@ -138,6 +138,10 @@ IMAGES = [
     'msw-packager'
 ]
 
+LOCAL_IMAGES = [
+    'ubuntu_16.04_64bit',
+    # 'msw-packager'
+]
 
 def clear_folders():
     # Clear build folders
@@ -219,7 +223,7 @@ def run_build(locally=False, stop_on_error=True):
         set_build_stamp()
     if is_path(RELEASE_DIR):
         command('sudo rm -rf %s' % RELEASE_DIR)
-    for image in IMAGES:
+    for image in IMAGES if not locally else LOCAL_IMAGES:
         os_name = image.capitalize().replace('_', ' ')
         msg = 'Build on %s' % os_name
         echo_msg(msg + ' ' * (35 - len(msg)) + '...', newline=False)
