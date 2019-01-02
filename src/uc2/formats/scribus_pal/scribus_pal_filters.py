@@ -13,7 +13,7 @@
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from uc2.formats.generic_filters import AbstractXMLLoader, AbstractSaver
 from uc2.formats.scribus_pal.scribus_pal_model import ScribusPalette, SPColor, \

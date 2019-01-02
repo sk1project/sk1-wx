@@ -13,7 +13,7 @@
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 SVG_COLORS = {'aliceblue': ['RGB', [0.9411764705882353, 0.9725490196078431, 1.0], 1.0, 'aliceblue'],
 'antiquewhite': ['RGB', [0.9803921568627451, 0.9215686274509803, 0.8431372549019608], 1.0, 'antiquewhite'],

@@ -13,7 +13,7 @@
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from uc2.formats.corel_pal.corel_pal_presenter import CorelPalette_Presenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter

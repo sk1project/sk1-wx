@@ -13,7 +13,7 @@
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from uc2.formats.jcw.jcw_const import JCW_ID
 from uc2.formats.jcw.jcw_presenter import JCW_Presenter

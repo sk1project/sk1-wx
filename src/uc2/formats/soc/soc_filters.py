@@ -13,7 +13,7 @@
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from uc2.formats.generic_filters import AbstractXMLLoader, AbstractSaver
 from uc2.formats.soc.soc_const import SOC_COLOR_TAG, SOC_COLOR_NAME_ATTR, \

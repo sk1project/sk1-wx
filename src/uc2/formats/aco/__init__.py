@@ -13,7 +13,7 @@
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from uc2.formats.aco.aco_const import ACO1_VER, ACO2_VER
 from uc2.formats.aco.aco_presenter import ACO_Presenter
