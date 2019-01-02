@@ -74,7 +74,7 @@ AUTHOR_EMAIL = 'sk1.project.org@gmail.com'
 MAINTAINER = AUTHOR
 MAINTAINER_EMAIL = AUTHOR_EMAIL
 LICENSE = 'GPL v3'
-URL = 'http://sk1project.net'
+URL = 'https://sk1project.net'
 DOWNLOAD_URL = URL
 CLASSIFIERS = [
     'Development Status :: 6 - Mature',
@@ -99,7 +99,7 @@ LONG_DESCRIPTION = '''
 UniConvertor is a multiplatform universal vector graphics translator.
 Uses SK2 model to convert one format to another. 
 
-sK1 Project (http://sk1project.net),
+sK1 Project (https://sk1project.net),
 Copyright (C) 2007-%s sK1 Project Team
 --------------------------------------------------------------------------------
 Supported input formats:  
@@ -115,7 +115,7 @@ Supported output formats:
 LONG_DEB_DESCRIPTION = ''' UniConvertor is a multiplatform universal vector graphics translator.
  Uses SK2 model to convert one format to another. 
  . 
- sK1 Project (http://sk1project.net),
+ sK1 Project (https://sk1project.net),
  Copyright (C) 2007-%s sK1 Project Team 
  .
  ##############################################

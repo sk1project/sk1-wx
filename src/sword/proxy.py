@@ -56,13 +56,13 @@ class AppProxy:
 		self.app.close_all()
 
 	def report_bug(self, *args):
-		self.app.open_url('http://www.sk1project.net/contact.php')
+		self.app.open_url('https://sk1project.net/contact.php')
 
 	def project_website(self, *args):
-		self.app.open_url('http://www.sk1project.net/')
+		self.app.open_url('https://sk1project.net/')
 
 	def project_forum(self, *args):
-		self.app.open_url('http://www.sk1project.net/forum/index.php')
+		self.app.open_url('https://sk1project.net/forum/index.php')
 
 	def about(self, *args):
 		dialogs.about_dialog(self.mw)

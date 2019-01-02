@@ -893,8 +893,8 @@ msgstr "Bitte überprüfen Sie ihre Internetverbindung"
 
 #: src/sk1/dialogs/palcoldlg.py:66
 #, fuzzy
-msgid "and access to http://sk1project.net"
-msgstr "und gehe zu http://sk1project.net"
+msgid "and access to https://sk1project.net"
+msgstr "und gehe zu https://sk1project.net"
 
 #: src/sk1/dialogs/palcoldlg.py:80
 msgid "Loading data..."

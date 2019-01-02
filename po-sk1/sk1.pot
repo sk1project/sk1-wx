@@ -875,7 +875,7 @@ msgid "Please check Internet connection"
 msgstr ""
 
 #: src/sk1/dialogs/palcoldlg.py:66
-msgid "and access to http://sk1project.net"
+msgid "and access to https://sk1project.net"
 msgstr ""
 
 #: src/sk1/dialogs/palcoldlg.py:80
