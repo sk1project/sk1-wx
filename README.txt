@@ -5,7 +5,7 @@ so it works with CMYK color space and produces CMYK-based PDF and PS output.
 UniConvertor 2.0 is a multiplatform universal vector graphics translator.
 Uses sK1 2.0 model to convert one format to another. 
 
-sK1 Project (http://sk1project.net),
+sK1 Project (https://sk1project.net),
 Copyright (C) 2004-2017 by Igor E. Novikov
 
 How to install: 

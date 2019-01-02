@@ -75,7 +75,7 @@ AUTHOR_EMAIL = 'sk1.project.org@gmail.com'
 MAINTAINER = AUTHOR
 MAINTAINER_EMAIL = AUTHOR_EMAIL
 LICENSE = 'GPL v3'
-URL = 'http://sk1project.net'
+URL = 'https://sk1project.net'
 DOWNLOAD_URL = URL
 CLASSIFIERS = [
     'Development Status :: 5 - Stable',
@@ -95,7 +95,7 @@ sK1 is an open source vector graphics editor similar to CorelDRAW,
 Adobe Illustrator, or Freehand. First of all sK1 is oriented for prepress 
 industry, therefore works with CMYK color space and produces CMYK-based PDF 
 and postscript output.
-sK1 Project (http://sk1project.net),
+sK1 Project (https://sk1project.net),
 Copyright (C) 2004-%s sK1 Project Team
 ''' % str(datetime.date.today().year)
 
@@ -105,7 +105,7 @@ LONG_DEB_DESCRIPTION = ''' .
  industry, therefore works with CMYK color space and produces CMYK-based PDF 
  and postscript output.
  . 
- sK1 Project (http://sk1project.net),
+ sK1 Project (https://sk1project.net),
  Copyright (C) 2004-%s sK1 Project Team
  .
 ''' % str(datetime.date.today().year)
