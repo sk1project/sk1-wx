@@ -19,7 +19,6 @@
 import errno
 import logging
 import os
-import sys
 
 from uc2 import _, events, msgconst
 from uc2.utils import system
@@ -30,8 +29,7 @@ LOG = logging.getLogger(__name__)
 IS_MSW = system.get_os_family() == system.WINDOWS
 IS_MAC = system.get_os_family() == system.MACOSX
 
-HOME = os.path.expanduser('~'). \
-    decode(sys.getfilesystemencoding()).encode('utf-8')
+HOME = os.path.expanduser(u'~').encode('utf-8')
 
 
 def expanduser(path=''):
@@ -41,15 +39,11 @@ def expanduser(path=''):
 
 
 def get_sys_path(path):
-    if IS_MSW:
-        path = path.decode('utf-8').encode(sys.getfilesystemencoding())
-    return path
+    return path if isinstance(path, unicode) else path.decode('utf-8')
 
 
 def get_utf8_path(path):
-    if IS_MSW:
-        path = path.decode(sys.getfilesystemencoding()).encode('utf-8')
-    return path
+    return path.encode('utf-8') if isinstance(path, unicode) else path
 
 
 def isfile(path):
