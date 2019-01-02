@@ -63,7 +63,7 @@ class PaletteCollectionDialog(wal.OkCancelDialog):
         else:
             msg = _('Cannot connect to server!')
             msg += '\n' + _('Please check Internet connection')
-            msg += '\n' + _('and access to http://sk1project.net')
+            msg += '\n' + _('and access to https://sk1project.net')
             wal.error_dialog(self, self.app.appdata.app_name, msg)
             self.on_cancel()
 

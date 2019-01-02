@@ -885,8 +885,8 @@ msgid "Please check Internet connection"
 msgstr "Por favor revise su conexión de Internet"
 
 #: src/sk1/dialogs/palcoldlg.py:66
-msgid "and access to http://sk1project.net"
-msgstr "y acceda a http://sk1project.net"
+msgid "and access to https://sk1project.net"
+msgstr "y acceda a https://sk1project.net"
 
 #: src/sk1/dialogs/palcoldlg.py:80
 msgid "Loading data..."
