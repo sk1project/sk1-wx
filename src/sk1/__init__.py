@@ -94,6 +94,7 @@ def sk1_run(cfgdir='~'):
     init_config(cfgdir)
     check_server(get_sys_path(cfgdir))
     os.environ["NO_AT_BRIDGE"] = "1"
+    os.environ["GTK_CSD"] = "0"
 
     if not config.ubuntu_global_menu:
         os.environ["UBUNTU_MENUPROXY"] = "0"
