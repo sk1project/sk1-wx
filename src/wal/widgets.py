@@ -740,6 +740,10 @@ class _MBtn(basic.Panel, basic.SensitiveCanvas):
         elif not self._enabled:
             flag = wx.CONTROL_DIRTY | wx.CONTROL_DISABLED
 
+        # Draw button bg
+        self.set_fill(const.UI_COLORS['bg'])
+        self.draw_rounded_rect(x, y, w - x, 2 * h, 3)
+
         # Draw button
         nr = wx.RendererNative.Get()
         nr.DrawPushButton(self, self.pdc, (x, y, w - x, 2 * h), flag)
