@@ -139,8 +139,8 @@ IMAGES = [
 ]
 
 LOCAL_IMAGES = [
-    # 'ubuntu_16.04_64bit',
-    'msw-packager',
+    'ubuntu_16.04_64bit',
+    # 'msw-packager',
 ]
 
 def clear_folders():
@@ -397,7 +397,7 @@ MSI_DATA = {
 if PROJECT == SK1:
     MSI_DATA['_Shortcuts'] = [
         {'Name': 'sK1 %s illustration program' % APP_VER,
-         'Description': 'Open source vector graphics editor',
+         'Description': 'Open source sK1 vector graphics editor',
          'Target': 'sk1.exe',
          'AddOnDesktop': True,
          'Open': [],
