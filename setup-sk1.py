@@ -127,6 +127,8 @@ data_files = [
     (install_path, ['LICENSE', ]),
 ]
 
+LOCALES_PATH = 'src/sk1/share/locales'
+
 EXCLUDES = ['sword', ]
 
 ############################################################
@@ -142,6 +144,13 @@ for item in dirs:
 package_data = {
     'sk1': share_dirs,
 }
+
+
+def build_locales():
+    src_path = 'po-sk1'
+    dest_path = LOCALES_PATH
+    po.build_locales(src_path, dest_path, 'sk1')
+
 
 ############################################################
 # Main build procedure
@@ -205,9 +214,7 @@ if len(sys.argv) > 1:
         sys.exit(0)
 
     elif sys.argv[1] == 'build_locales':
-        src_path = 'po-sk1'
-        dest_path = 'src/sk1/share/locales'
-        po.build_locales(src_path, dest_path, 'sk1')
+        build_locales()
         sys.exit(0)
 
 # Preparing start script
@@ -237,6 +244,11 @@ if rpm_depends:
 fileptr2.write(content)
 fileptr.close()
 fileptr2.close()
+
+# Preparing locales
+############################################################
+if not os.path.exists(LOCALES_PATH):
+    build_locales()
 
 ############################################################
 # Native extensions

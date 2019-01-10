@@ -89,6 +89,7 @@ DIST_DIR = os.path.join(PROJECT_DIR, 'dist')
 RELEASE_DIR = os.path.join(PROJECT_DIR, 'release')
 PKGBUILD_DIR = os.path.join(PROJECT_DIR, 'pkgbuild')
 ARCH_DIR = os.path.join(PROJECT_DIR, 'archlinux')
+LOCALES_DIR = os.path.join(PROJECT_DIR, 'src/sk1/share/locales')
 
 SCRIPT = 'setup-%s.py' % PROJECT
 APP_NAME = {SK1: SK1, UC2: 'uniconvertor'}[PROJECT]
@@ -223,6 +224,10 @@ def run_build(locally=False, stop_on_error=True):
         set_build_stamp()
     if is_path(RELEASE_DIR):
         command('sudo rm -rf %s' % RELEASE_DIR)
+    if is_path(LOCALES_DIR):
+        command('sudo rm -rf %s' % LOCALES_DIR)
+    if PROJECT == SK1:
+        command('cd %s && python setup-sk1.py build_locales')
     for image in IMAGES if not locally else LOCAL_IMAGES:
         os_name = image.capitalize().replace('_', ' ')
         msg = 'Build on %s' % os_name
