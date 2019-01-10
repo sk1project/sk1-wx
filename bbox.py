@@ -144,6 +144,7 @@ LOCAL_IMAGES = [
     # 'msw-packager',
 ]
 
+
 def clear_folders():
     # Clear build folders
     if is_path(BUILD_DIR):
@@ -463,7 +464,7 @@ def build_msw_packages():
         if PROJECT == SK1:
             wx_zip = os.path.join('/%s-devres' % arch, 'wx.zip')
             ZipFile(wx_zip, 'r').extractall(portable_libs)
-            portable_exe_zip = os.path.join('/%s-devres' % arch, 
+            portable_exe_zip = os.path.join('/%s-devres' % arch,
                                             '%s_portable.zip' % PROJECT)
             ZipFile(portable_exe_zip, 'r').extractall(portable_folder)
 
@@ -509,7 +510,7 @@ def build_msw_packages():
                 fp.write('\r\n\r\n')
                 fp.write(readme.replace('\n', '\r\n'))
         else:
-            nonportable = os.path.join('/%s-devres' % arch, 
+            nonportable = os.path.join('/%s-devres' % arch,
                                        '%s_msi.zip' % PROJECT)
 
         echo_msg('Extracting non-portable executables from %s' % nonportable)
