@@ -265,7 +265,7 @@ def run_build(locally=False, stop_on_error=True):
 def run_build_local():
     run_build(locally=True, stop_on_error=False)
     command('chmod -R 777 %s' % RELEASE_DIR)
-    command('chmod -R 777 %s' % LOCALES_DIR)
+    command('sudo rm -rf %s' % LOCALES_DIR)
 
 
 def build_package():
