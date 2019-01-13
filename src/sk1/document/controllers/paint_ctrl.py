@@ -151,11 +151,7 @@ class PolyLineCreator(AbstractCreator):
         if self.create and self.cursor:
             point, doc_point = self.snap.snap_point(self.cursor)[1:]
             self.add_point(point, doc_point)
-            self.repaint_draw()
-        else:
-            self.init_timer()
-            self.timer.start()
-        return True
+        return self.repaint_draw()
 
     def init_timer(self):
         self.timer.stop()
@@ -406,6 +402,7 @@ class PathsCreator(PolyLineCreator):
                 self.curve_point = [] + self.control_point2
                 self.curve_point_doc = [] + self.control_point2_doc
             self.set_repaint_timer()
+
         else:
             self.init_timer()
             self.counter += 1
