@@ -11,11 +11,11 @@ class MW(wal.MainWindow):
         wal.MainWindow.__init__(self)
         self.set_size(SIZE)
 
-        self.spin = wal.Spin(self, 5, (0, 20), width=3, onchange=self.onchange,
+        self.spin = wal.IntSpin(self, 5, (0, 20), width=3, onchange=self.onchange,
             onenter=self.onenter)
         self.pack(self.spin)
 
-        self.spin1 = wal.Spin(self, 5, (0, 20), onchange=self.onchange1)
+        self.spin1 = wal.IntSpin(self, 5, (0, 20), onchange=self.onchange1)
         self.pack(self.spin1)
 
     def onchange(self):
