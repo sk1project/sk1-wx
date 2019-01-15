@@ -59,19 +59,19 @@ class PltModelObject(TextModelObject):
 
 class PltHeader(PltModelObject):
     """
-    Represents PLT model root instance. Can contains some PLT commands, but 
-    usually is empthy. The main object role is to be parent instance for other
-    PLT model objects. 
-    
+    Represents PLT model root instance. Can contains some PLT commands, but
+    usually is empty. The main object role is to be parent instance for other
+    PLT model objects.
+
     The PLT file format is simplified version of HPGL file format and used for
-    cutting plotters like Roland vinyl cutters. 
+    cutting plotters like Roland vinyl cutters.
     (http://www.rolanddga.com/products/cutters/)
-    
+
     Actually PLT file format has no tree-like data structure inside. Internal
     data are a sequence of HPGL commands like this:
-    
+
     PU;PA0,0;SP;EC;PG1;EC1;OE;
-    
+
     We have divided artificially the data on following chunks:
     [Header][Start command][Cutting path]... [Cutting path][End command]
     By this way we can build tree-like DOM model and easy process cutting data.
@@ -133,19 +133,19 @@ class PltJob(PltModelObject):
     """
     Represents basic set of plotter commands. Corresponds a single unbreakable
     cutting path. Here is a sample of command set:
-    
+
     PU454,11258;PD4787,11258;PD4787,8711;PD454,8711;PD454,11258;
-    
-    The command set is stored in "string" field. First PU command moves pen in 
-    initial path point. Other commands are PD commands and put down pen and do 
+
+    The command set is stored in "string" field. First PU command moves pen in
+    initial path point. Other commands are PD commands and put down pen and do
     cutting job.
-    
-    Field "cache_path" store a path representation as SK2 path. Used for model 
+
+    Field "cache_path" store a path representation as SK2 path. Used for model
     translation into or from SK2 file format. Here is a sample of cache_path
     content:
-    
+
     [[454,11258],[[4787,11258],[4787,8711],[454,8711],[454,11258]],0]
-    
+
     cache_path point coordinates are in PLT coordinate system i.e. there is no
     negative values and all numbers are in 40 points per millimeter dimension.
     """
