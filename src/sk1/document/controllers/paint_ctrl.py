@@ -81,6 +81,9 @@ class PolyLineCreator(AbstractCreator):
         self.on_timer()
 
     def restore(self):
+        if self.point:
+            point = self.points[-1] if self.points else self.path[0]
+            self.point = self.canvas.point_doc_to_win(point)
         self.on_timer()
 
     def mouse_down(self, event):
@@ -125,6 +128,11 @@ class PolyLineCreator(AbstractCreator):
                     self.canvas.resize_marker = mark
                     self.cursor = []
                     self.canvas.set_temp_mode(modes.RESIZE_MODE)
+
+    def wheel(self, event):
+        self.init_timer()
+        AbstractCreator.wheel(self, event)
+        self.restore()
 
     def repaint(self):
         if self.timer_callback is not None:
