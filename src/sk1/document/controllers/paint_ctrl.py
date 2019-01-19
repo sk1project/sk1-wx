@@ -274,7 +274,7 @@ class PolyLineCreator(AbstractCreator):
                 # calculate the limiting angle
                 angle = get_point_angle(cursor, start)
                 fixed_angle = math.pi * 15.0 / 180.0  # TODO: configure 15
-                angle = angle // fixed_angle * fixed_angle
+                angle = (angle + fixed_angle / 2.0) // fixed_angle * fixed_angle
 
                 r = distance(cursor, start)
                 # calculate point on circle
