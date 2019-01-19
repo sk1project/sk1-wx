@@ -15,11 +15,13 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import math
 from creators import AbstractCreator
 from sk1 import modes, config
 from uc2 import sk2const
 from uc2.libgeom import apply_trafo_to_paths, is_point_in_rect2
 from uc2.libgeom import contra_point, bezier_base_point, midpoint
+from uc2.libgeom import get_point_angle, distance, add_points
 
 
 class PolyLineCreator(AbstractCreator):
@@ -85,8 +87,8 @@ class PolyLineCreator(AbstractCreator):
         if not self.draw:
             self.draw = True
             self.clear_data()
-        point = event.get_point()
-        self.point, self.doc_point = self.snap.snap_point(point)[1:]
+        self.point, self.doc_point = self._calc_points(event)
+        self.add_point(self.point, self.doc_point)
         self.create = True
         self.init_timer()
 
@@ -94,9 +96,7 @@ class PolyLineCreator(AbstractCreator):
         if self.draw:
             self.create = False
             self.ctrl_mask = event.is_ctrl()
-            point = event.get_point()
-            point, doc_point = self.snap.snap_point(point)[1:]
-            self.add_point(point, doc_point)
+            self.cursor = self._calc_points(event.get_point())[0]
             self.on_timer()
 
     def mouse_double_click(self, event):
@@ -108,15 +108,10 @@ class PolyLineCreator(AbstractCreator):
 
     def mouse_move(self, event):
         if self.draw:
+            self.cursor = self._calc_points(event)[0]
             if self.create:
-                if self.point:
-                    self.add_point(self.point, self.doc_point)
-                    self.point = []
-                    self.doc_point = []
-                self.cursor = event.get_point()
                 self.set_drawing_timer()
             else:
-                self.cursor = event.get_point()
                 self.set_repaint_timer()
         else:
             self.init_timer()
@@ -149,8 +144,8 @@ class PolyLineCreator(AbstractCreator):
 
     def continuous_draw(self):
         if self.create and self.cursor:
-            point, doc_point = self.snap.snap_point(self.cursor)[1:]
-            self.add_point(point, doc_point)
+            self.point, self.doc_point = self.snap.snap_point(self.cursor)[1:]
+            self.add_point(self.point, self.doc_point)
         return self.repaint_draw()
 
     def init_timer(self):
@@ -260,6 +255,25 @@ class PolyLineCreator(AbstractCreator):
                 self.api.update_curve(obj, paths)
             if not stop:
                 self.obj = obj
+
+    def _calc_points(self, event):
+        start = self.point
+        cursor = event.get_point()
+        ctrl = event.is_ctrl()
+
+        if start and cursor:
+            if ctrl:  # restrict movement to horizontal or vertical
+                # calculate the limiting angle
+                angle = get_point_angle(cursor, start)
+                fixed_angle = math.pi * 15.0 / 180.0  # TODO: configure 15
+                angle = angle // fixed_angle * fixed_angle
+
+                r = distance(cursor, start)
+                # calculate point on circle
+                x = r * math.cos(angle)
+                y = r * math.sin(angle)
+                cursor = add_points([x, y], start)
+        return self.snap.snap_point(cursor)[1:]
 
 
 class PathsCreator(PolyLineCreator):
