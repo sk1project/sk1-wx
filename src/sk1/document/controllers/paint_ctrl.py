@@ -96,7 +96,7 @@ class PolyLineCreator(AbstractCreator):
         if self.draw:
             self.create = False
             self.ctrl_mask = event.is_ctrl()
-            self.cursor = self._calc_points(event.get_point())[0]
+            self.cursor = self._calc_points(event)[0]
             self.on_timer()
 
     def mouse_double_click(self, event):
