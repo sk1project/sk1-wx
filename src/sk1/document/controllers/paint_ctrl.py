@@ -333,12 +333,9 @@ class PathsCreator(PolyLineCreator):
         if not self.draw:
             self.draw = True
             self.clear_data()
-        p = event.get_point()
-        self.curve_point, self.curve_point_doc = self.snap.snap_point(p)[1:]
-        # self.control_point2 = []
-        # self.control_point2_doc = []
-        self.control_point2 = self.curve_point
-        self.control_point2_doc = self.curve_point_doc
+        self.curve_point, self.curve_point_doc = self._calc_points(event)
+        self.control_point2 = [] + self.curve_point
+        self.control_point2_doc = [] + self.curve_point_doc
         self.create = True
         self.init_timer()
 
@@ -346,17 +343,13 @@ class PathsCreator(PolyLineCreator):
         if not self.draw:
             return
         self.create = False
-        self.ctrl_mask = False
-        self.alt_mask = False
-        p = event.get_point()
-        p1, p2 = self.snap.snap_point(p)[1:]
-        self.control_point2, self.control_point2_doc = p1, p2
+        self.control_point2, self.control_point2_doc = self._calc_points(event)
+        self.cursor = [] + self.control_point2
         self.ctrl_mask = event.is_ctrl()
         self.alt_mask = event.is_alt()
         if self.path[0]:
             if self.alt_mask:
-                p = event.get_point()
-                self.point, self.point_doc = self.snap.snap_point(p)[1:]
+                self.point, self.point_doc = self._calc_points(event)
                 self.add_point([] + self.point, [] + self.point_doc)
                 self.control_point0 = [] + self.point
                 self.cursor = event.get_point()
@@ -399,16 +392,17 @@ class PathsCreator(PolyLineCreator):
                 p1, p2 = self.snap.snap_point(p)[1:]
                 self.curve_point, self.curve_point_doc = p1, p2
         else:
-            p = event.get_point()
-            self.point, self.point_doc = self.snap.snap_point(p)[1:]
+            self.point, self.point_doc = self._calc_points(event)
             self.add_point(self.point, self.point_doc)
             self.control_point0 = [] + self.point
             self.control_point0_doc = [] + self.point_doc
         self.on_timer()
 
     def mouse_move(self, event):
+        self.ctrl_mask = event.is_ctrl()
+        self.alt_mask = event.is_alt()
         if self.draw:
-            self.cursor = event.get_point()
+            self.cursor = self._calc_points(event)[0]
             snapped = self.snap.snap_point(self.cursor)[1:]
             self.control_point2, self.control_point2_doc = snapped
             if not self.create:
@@ -429,10 +423,6 @@ class PathsCreator(PolyLineCreator):
                     self.cursor = []
                     self.canvas.set_temp_mode(modes.RESIZE_MODE)
 
-    def wheel(self, event):
-        self.cursor = event.get_point()
-        PolyLineCreator.wheel(self, event)
-
     def repaint_draw(self):
         if self.path[0] or self.paths:
             paths = self.canvas.paths_doc_to_win(self.paths)
@@ -443,14 +433,15 @@ class PathsCreator(PolyLineCreator):
                 snapped = self.snap.snap_point(cursor)[1:]
                 self.curve_point, self.curve_point_doc = snapped
             path = []
-            if self.control_point0:
+            if self.control_point0 and not self.alt_mask:
                 if not self.control_point2_doc:
                     return True
                 self.control_point1_doc = contra_point(self.control_point2_doc,
                                                        self.curve_point_doc)
                 path = [self.point_doc, [self.control_point0_doc,
                                          self.control_point1_doc,
-                                         self.curve_point_doc], 0]
+                                         self.curve_point_doc],
+                        sk2const.CURVE_OPENED]
                 path = self.canvas.paths_doc_to_win([path, ])[0]
             cpoint = []
             if self.create:
@@ -468,3 +459,17 @@ class PathsCreator(PolyLineCreator):
         self.control_point0_doc = []
         self.control_point1_doc = []
         self.control_point2_doc = []
+
+    def _calc_points(self, event):
+        if self.curve_point != self.control_point2:
+            start = self.curve_point
+        else:
+            start = self.point
+        cursor = event.get_point()
+        ctrl = event.is_ctrl()
+
+        if start and cursor:
+            if ctrl:  # restrict movement to horizontal or vertical
+                # TODO: configure limit angle 15.0
+                cursor = round_angle_point(start, cursor, 15.0)
+        return self.snap.snap_point(cursor)[1:]
