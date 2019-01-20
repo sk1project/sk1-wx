@@ -15,13 +15,12 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import math
 from creators import AbstractCreator
 from sk1 import modes, config
 from uc2 import sk2const
 from uc2.libgeom import apply_trafo_to_paths, is_point_in_rect2
 from uc2.libgeom import contra_point, bezier_base_point, midpoint
-from uc2.libgeom import get_point_angle, distance, add_points
+from uc2.libgeom import round_angle_point
 
 
 class PolyLineCreator(AbstractCreator):
@@ -271,16 +270,8 @@ class PolyLineCreator(AbstractCreator):
 
         if start and cursor:
             if ctrl:  # restrict movement to horizontal or vertical
-                # calculate the limiting angle
-                angle = get_point_angle(cursor, start)
-                fixed_angle = math.pi * 15.0 / 180.0  # TODO: configure 15
-                angle = (angle + fixed_angle / 2.0) // fixed_angle * fixed_angle
-
-                r = distance(cursor, start)
-                # calculate point on circle
-                x = r * math.cos(angle)
-                y = r * math.sin(angle)
-                cursor = add_points([x, y], start)
+                # TODO: configure limit angle 15.0
+                cursor = round_angle_point(start, cursor, 15.0)
         return self.snap.snap_point(cursor)[1:]
 
 
