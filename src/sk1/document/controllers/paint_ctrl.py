@@ -81,7 +81,7 @@ class PolyLineCreator(AbstractCreator):
         self.on_timer()
 
     def restore(self):
-        if self.point:
+        if self.path:
             point = self.points[-1] if self.points else self.path[0]
             self.point = self.canvas.point_doc_to_win(point)
         self.on_timer()
