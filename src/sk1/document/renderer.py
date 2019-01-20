@@ -637,15 +637,15 @@ class PDRenderer(CairoRenderer):
 
                 # Start point rendering
                 w = h = config.curve_point_sensitivity_size
-                # if cursor and libgeom.is_point_in_rect2(cursor, path[0], w, h):
-                #     self.draw_curve_point(path[0], 'active_point')
-                # else:
-                #     self.draw_curve_point(path[0], 'start_point')
-                #
-                # for point in points:
-                #     self.draw_curve_point(point, 'curve_point')
-                # if points:
-                #     self.draw_curve_point(points[-1], 'last_point')
+                if cursor and libgeom.is_point_in_rect2(cursor, path[0], w, h):
+                    self.draw_curve_point(path[0], 'active_point')
+                else:
+                    self.draw_curve_point(path[0], 'start_point')
+
+                for point in points:
+                    self.draw_curve_point(point, 'curve_point')
+                if points:
+                    self.draw_curve_point(points[-1], 'last_point')
         if cursor:
             self.ctx.set_source_rgb(*config.curve_trace_color)
             self.ctx.set_line_width(config.curve_stroke_width)
