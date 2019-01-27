@@ -21,7 +21,9 @@ import sys
 
 def merge_cnf(cnf=None, kw=None):
     cnf = cnf or {}
-    return cnf.update(kw) if kw else cnf
+    if kw:
+        cnf.update(kw)
+    return cnf
 
 
 LOGGING_MAP = {
