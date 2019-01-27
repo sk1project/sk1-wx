@@ -131,10 +131,11 @@ class SVG_to_SK2_Translator(object):
     def recalc_size(self, val):
         if not val:
             return None
+        dpi_scale = svg_const.SVG_DPI / self.svg_doc.config.svg_dpi
         mapping = {
-            'px': svg_const.svg_px_to_pt,
+            'px': svg_const.svg_px_to_pt * dpi_scale,
             'pt': 1.0,
-            'pc': 15.0 * svg_const.svg_px_to_pt,
+            'pc': 15.0 * svg_const.svg_px_to_pt * dpi_scale,
             'mm': uc2const.mm_to_pt,
             'cm': uc2const.cm_to_pt,
             'in': uc2const.in_to_pt,
