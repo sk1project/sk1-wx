@@ -18,10 +18,10 @@
 from copy import deepcopy
 
 from uc2 import _, events
-from uc2.formats.sk2 import sk2_model
+from uc2 import libgeom
 from uc2.formats.plt import plt_model
 from uc2.formats.plt.plt_const import SK2_to_PLT_TRAFO, PLT_to_SK2_TRAFO
-from uc2 import libgeom
+from uc2.formats.sk2 import sk2_model
 
 
 class PLT_to_SK2_Translator(object):
@@ -102,5 +102,24 @@ class SK2_to_PLT_Translator(object):
                     continue
 
                 for path in paths:
+                    if self.plt_doc.config.optimize:
+                        rl = self.plt_doc.config.rounding_level
+                        path[0] = [round(x / rl) * rl for x in path[0]]
+                        start0, start1 = [], path[0]
+                        points = []
+                        for point in path[1]:
+                            point = [round(x / rl) * rl for x in point]
+                            if not point == start1:
+                                if point == start0:
+                                    points = points[:-1]
+                                    if len(points) > 1:
+                                        start0, start1 = points[-1], start0
+                                    elif points:
+                                        start0, start1 = [], start0
+                                    continue
+                                start0, start1 = start1, point
+                                points.append(point)
+                        path[1] = points
+
                     if path and path[1]:
                         self.jobs.append(plt_model.PltJob('', path))

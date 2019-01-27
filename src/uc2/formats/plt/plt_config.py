@@ -23,3 +23,5 @@ class PLT_Config(XmlConfigParser):
 
     tolerance = 0.1
     force_zero = True
+    optimize = True
+    rounding_level = 1
