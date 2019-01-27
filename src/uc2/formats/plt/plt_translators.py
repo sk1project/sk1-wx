@@ -75,7 +75,7 @@ class SK2_to_PLT_Translator(object):
         if self.obj_stack:
             m11, m21, m12, m22, dx, dy = SK2_to_PLT_TRAFO
 
-            if self.plt_doc.config.force_zero:
+            if self.plt_doc.config.plt_force_zero:
                 bbox = []
                 bbox += self.obj_stack[0].cache_bbox
                 for obj in self.obj_stack:
@@ -96,14 +96,13 @@ class SK2_to_PLT_Translator(object):
                     events.emit(events.FILTER_INFO, msg, position)
                     self.position = position
 
-                paths = libgeom.get_flattened_path(obj, trafo,
-                                                   self.plt_doc.config.tolerance)
+                paths = libgeom.get_flattened_path(
+                    obj, trafo, self.plt_doc.config.plt_tolerance)
                 if paths is None:
                     continue
-
                 for path in paths:
-                    if self.plt_doc.config.optimize:
-                        rl = self.plt_doc.config.rounding_level
+                    if self.plt_doc.config.plt_optimize:
+                        rl = self.plt_doc.config.plt_rounding_level
                         path[0] = [round(x / rl) * rl for x in path[0]]
                         start0, start1 = [], path[0]
                         points = []
