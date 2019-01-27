@@ -84,7 +84,10 @@ class SK2_to_PLT_Translator(object):
                 dx = -bbox[0] * m11
                 dy = -bbox[1] * m22
 
-            trafo = [m11, m21, m12, m22, dx, dy]
+            trafo = [m11 * self.plt_doc.config.plt_scale,
+                     m21, m12, 
+                     m22 * self.plt_doc.config.plt_scale,
+                     dx, dy]
 
             obj_num = len(self.obj_stack)
             for obj in self.obj_stack:

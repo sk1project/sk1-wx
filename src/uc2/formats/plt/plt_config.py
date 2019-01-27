@@ -25,3 +25,4 @@ class PLT_Config(XmlConfigParser):
     plt_force_zero = True
     plt_optimize = True
     plt_rounding_level = 1
+    plt_scale = 1.0
