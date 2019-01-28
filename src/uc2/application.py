@@ -26,8 +26,8 @@ from uc2 import events, msgconst
 from uc2.app_palettes import PaletteManager
 from uc2.formats import get_loader, get_saver, get_saver_by_id
 from uc2.uc2conf import UCData, UCConfig
-from uc2.utils.mixutils import echo, config_logging
 from uc2.utils import fsutils
+from uc2.utils.mixutils import echo, config_logging
 
 LOG = logging.getLogger(__name__)
 
@@ -244,7 +244,7 @@ class UCApplication(object):
             try:
                 if loader_id in uc2const.PALETTE_LOADERS and \
                         saver_id in uc2const.PALETTE_SAVERS:
-                    saver(doc, files[1], translate=False, convert=True, 
+                    saver(doc, files[1], translate=False, convert=True,
                           **options)
                 else:
                     saver(doc, files[1], **options)
