@@ -45,6 +45,8 @@ def base_point(point):
 
 def check_flatness(p0, p1, p2, tlr=0.5):
     p0, p1, p2 = (base_point(p) for p in (p0, p1, p2))
+    if p0 == p1 or p1 == p2:
+        return True
     a1 = get_point_angle(p1, p0)
     a2 = get_point_angle(p2, p1)
     return abs(a2 - a1) < tlr

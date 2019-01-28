@@ -26,8 +26,8 @@ from uc2 import events, msgconst
 from uc2.app_palettes import PaletteManager
 from uc2.formats import get_loader, get_saver, get_saver_by_id
 from uc2.uc2conf import UCData, UCConfig
-from uc2.utils.mixutils import echo, config_logging
 from uc2.utils import fsutils
+from uc2.utils.mixutils import echo, config_logging
 
 LOG = logging.getLogger(__name__)
 
@@ -181,10 +181,12 @@ class UCApplication(object):
             else:
                 key, value = result
                 value = value.replace('"', '').replace("'", '')
-                if value.lower() == 'yes':
-                    value = True
-                if value.lower() == 'no':
-                    value = False
+                if value.isdigit():
+                    value = int(value)
+                elif value.replace('.', '').isdigit():
+                    value = float(value)
+                elif value.lower() in ('yes', 'no'):
+                    value = {'yes': True, 'no': False}[value.lower()]
                 options[key] = value
 
         self.do_verbose = options.get('verbose', False)
@@ -226,9 +228,9 @@ class UCApplication(object):
         try:
             if loader_id in uc2const.PALETTE_LOADERS and \
                     saver_id in uc2const.PALETTE_SAVERS:
-                doc = loader(self.appdata, files[0], convert=True)
+                doc = loader(self.appdata, files[0], convert=True, **options)
             else:
-                doc = loader(self.appdata, files[0])
+                doc = loader(self.appdata, files[0], **options)
         except Exception as e:
             msg = 'Error while loading "%s"' % files[0]
             msg += 'The file may be corrupted or contains unknown file format.'
@@ -242,9 +244,10 @@ class UCApplication(object):
             try:
                 if loader_id in uc2const.PALETTE_LOADERS and \
                         saver_id in uc2const.PALETTE_SAVERS:
-                    saver(doc, files[1], translate=False, convert=True)
+                    saver(doc, files[1], translate=False, convert=True,
+                          **options)
                 else:
-                    saver(doc, files[1])
+                    saver(doc, files[1], **options)
             except Exception as e:
                 msg = 'Error while translation and saving "%s"' % files[0]
                 events.emit(events.MESSAGES, msgconst.ERROR, msg)

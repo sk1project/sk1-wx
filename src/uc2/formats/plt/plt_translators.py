@@ -18,10 +18,10 @@
 from copy import deepcopy
 
 from uc2 import _, events
-from uc2.formats.sk2 import sk2_model
+from uc2 import libgeom
 from uc2.formats.plt import plt_model
 from uc2.formats.plt.plt_const import SK2_to_PLT_TRAFO, PLT_to_SK2_TRAFO
-from uc2 import libgeom
+from uc2.formats.sk2 import sk2_model
 
 
 class PLT_to_SK2_Translator(object):
@@ -75,7 +75,7 @@ class SK2_to_PLT_Translator(object):
         if self.obj_stack:
             m11, m21, m12, m22, dx, dy = SK2_to_PLT_TRAFO
 
-            if self.plt_doc.config.force_zero:
+            if self.plt_doc.config.plt_force_zero:
                 bbox = []
                 bbox += self.obj_stack[0].cache_bbox
                 for obj in self.obj_stack:
@@ -84,7 +84,10 @@ class SK2_to_PLT_Translator(object):
                 dx = -bbox[0] * m11
                 dy = -bbox[1] * m22
 
-            trafo = [m11, m21, m12, m22, dx, dy]
+            trafo = [m11 * self.plt_doc.config.plt_scale,
+                     m21, m12, 
+                     m22 * self.plt_doc.config.plt_scale,
+                     dx, dy]
 
             obj_num = len(self.obj_stack)
             for obj in self.obj_stack:
@@ -96,11 +99,29 @@ class SK2_to_PLT_Translator(object):
                     events.emit(events.FILTER_INFO, msg, position)
                     self.position = position
 
-                paths = libgeom.get_flattened_path(obj, trafo,
-                                                   self.plt_doc.config.tolerance)
+                paths = libgeom.get_flattened_path(
+                    obj, trafo, self.plt_doc.config.plt_tolerance)
                 if paths is None:
                     continue
-
                 for path in paths:
+                    if self.plt_doc.config.plt_optimize:
+                        rl = self.plt_doc.config.plt_rounding_level
+                        path[0] = [round(x / rl) * rl for x in path[0]]
+                        start0, start1 = [], path[0]
+                        points = []
+                        for point in path[1]:
+                            point = [round(x / rl) * rl for x in point]
+                            if not point == start1:
+                                if point == start0:
+                                    points = points[:-1]
+                                    if len(points) > 1:
+                                        start0, start1 = points[-1], start0
+                                    elif points:
+                                        start0, start1 = [], start0
+                                    continue
+                                start0, start1 = start1, point
+                                points.append(point)
+                        path[1] = points
+
                     if path and path[1]:
                         self.jobs.append(plt_model.PltJob('', path))

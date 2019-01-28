@@ -17,11 +17,9 @@
 
 import math
 
-from uc2 import libgeom
-
-from sk1 import modes, config
-
 from generic import AbstractController
+from sk1 import modes, config
+from uc2 import libgeom
 
 
 class MoveController(AbstractController):
@@ -192,6 +190,47 @@ class MoveController(AbstractController):
         return result
 
 
+DUPLICATE_MODES = {
+    0: modes.RESIZE_MODE1_COPY,
+    1: modes.RESIZE_MODE2_COPY,
+    2: modes.RESIZE_MODE3_COPY,
+    3: modes.RESIZE_MODE4_COPY,
+    5: modes.RESIZE_MODE4_COPY,
+    6: modes.RESIZE_MODE3_COPY,
+    7: modes.RESIZE_MODE2_COPY,
+    8: modes.RESIZE_MODE1_COPY,
+    9: modes.RESIZE_MODE,
+    10: modes.RESIZE_MODE10_COPY,
+    11: modes.RESIZE_MODE11_COPY,
+    12: modes.RESIZE_MODE10_COPY,
+    13: modes.RESIZE_MODE13_COPY,
+    14: modes.RESIZE_MODE13_COPY,
+    15: modes.RESIZE_MODE10_COPY,
+    16: modes.RESIZE_MODE11_COPY,
+    17: modes.RESIZE_MODE10_COPY,
+}
+
+REGULAR_MODES = {
+    0: modes.RESIZE_MODE1,
+    1: modes.RESIZE_MODE2,
+    2: modes.RESIZE_MODE3,
+    3: modes.RESIZE_MODE4,
+    5: modes.RESIZE_MODE4,
+    6: modes.RESIZE_MODE3,
+    7: modes.RESIZE_MODE2,
+    8: modes.RESIZE_MODE1,
+    9: modes.RESIZE_MODE,
+    10: modes.RESIZE_MODE10,
+    11: modes.RESIZE_MODE11,
+    12: modes.RESIZE_MODE10,
+    13: modes.RESIZE_MODE13,
+    14: modes.RESIZE_MODE13,
+    15: modes.RESIZE_MODE10,
+    16: modes.RESIZE_MODE11,
+    17: modes.RESIZE_MODE10,
+}
+
+
 class TransformController(AbstractController):
     mode = modes.RESIZE_MODE
     painter = None
@@ -271,46 +310,9 @@ class TransformController(AbstractController):
 
     def set_cursor(self):
         mark = self.canvas.resize_marker
-        mode = self.mode
-        if mark == 0 or mark == 8:
-            if self.copy:
-                mode = modes.RESIZE_MODE1_COPY
-            else:
-                mode = modes.RESIZE_MODE1
-        if mark == 1 or mark == 7:
-            if self.copy:
-                mode = modes.RESIZE_MODE2_COPY
-            else:
-                mode = modes.RESIZE_MODE2
-        if mark == 2 or mark == 6:
-            if self.copy:
-                mode = modes.RESIZE_MODE3_COPY
-            else:
-                mode = modes.RESIZE_MODE3
-        if mark == 3 or mark == 5:
-            if self.copy:
-                mode = modes.RESIZE_MODE4_COPY
-            else:
-                mode = modes.RESIZE_MODE4
-        if mark == 9:
-            mode = modes.RESIZE_MODE
-        if mark in [10, 12, 15, 17]:
-            if self.copy:
-                mode = modes.RESIZE_MODE10_COPY
-            else:
-                mode = modes.RESIZE_MODE10
-        if mark in [11, 16]:
-            if self.copy:
-                mode = modes.RESIZE_MODE11_COPY
-            else:
-                mode = modes.RESIZE_MODE11
-        if mark in [13, 14]:
-            if self.copy:
-                mode = modes.RESIZE_MODE13_COPY
-            else:
-                mode = modes.RESIZE_MODE13
-        self.mode = mode
-        self.canvas.set_canvas_cursor(mode)
+        self.mode = DUPLICATE_MODES.get(mark, self.mode) if self.copy \
+            else REGULAR_MODES.get(mark, self.mode)
+        self.canvas.set_canvas_cursor(self.mode)
 
     def _calc_trafo(self, event):
         control = event.is_ctrl()
@@ -331,8 +333,8 @@ class TransformController(AbstractController):
             dy = end_point[1] - start_point[1]
             if shift:
                 if control:
-                    m11 = (w + 2.0 * dx) / w
-                    m22 = (h + 2.0 * dy) / h
+                    m11 = (w + 2.0 * dx) / w if w else 1.0
+                    m22 = (h + 2.0 * dy) / h if h else 1.0
                     dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
                     dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
                     # ---- snapping
@@ -342,7 +344,7 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
                     if f:
                         dx = point[0] - p_doc[0]
-                        m11 = (w + 2.0 * dx) / w
+                        m11 = (w + 2.0 * dx) / w if w else 1.0
                         dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
                         snap[0] = self.snap.active_snap[0]
                     point = middle_points[1]
@@ -351,16 +353,16 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_x=False)
                     if f:
                         dy = p_doc[1] - point[1]
-                        m22 = (h + 2.0 * dy) / h
+                        m22 = (h + 2.0 * dy) / h if h else 1.0
                         dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
                         snap[1] = self.snap.active_snap[1]
                     self.snap.active_snap = snap
                 # ---- snapping
                 else:
                     if abs(dx) < abs(dy):
-                        m11 = m22 = (w + 2.0 * dx) / w
+                        m11 = m22 = (w + 2.0 * dx) / w if w else 1.0
                     else:
-                        m11 = m22 = (h + 2.0 * dy) / h
+                        m11 = m22 = (h + 2.0 * dy) / h if h else 1.0
                     dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
                     dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
                     # ---- snapping
@@ -370,7 +372,7 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
                     if f:
                         dx = point[0] - p_doc[0]
-                        m11 = m22 = (w + 2.0 * dx) / w
+                        m11 = m22 = (w + 2.0 * dx) / w if w else 1.0
                         dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
                         dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
                         snap[0] = self.snap.active_snap[0]
@@ -382,18 +384,18 @@ class TransformController(AbstractController):
                                                            snap_x=False)
                         if f:
                             dy = p_doc[1] - point[1]
-                            m11 = m22 = (h + 2.0 * dy) / h
+                            m11 = m22 = (h + 2.0 * dy) / h if h else 1.0
                             dx = -(bbox[2] * m11 - bbox[2]) + w * (
-                                m11 - 1.0) / 2.0
+                                    m11 - 1.0) / 2.0
                             dy = -(bbox[1] * m22 - bbox[1]) - h * (
-                                m22 - 1.0) / 2.0
+                                    m22 - 1.0) / 2.0
                             snap[1] = self.snap.active_snap[1]
                     self.snap.active_snap = snap
                     # ---- snapping
             else:
                 if control:
-                    m11 = (w + dx) / w
-                    m22 = (h + dy) / h
+                    m11 = (w + dx) / w if w else 1.0
+                    m22 = (h + dy) / h if h else 1.0
                     dx = -(bbox[2] * m11 - bbox[2])
                     dy = -(bbox[1] * m22 - bbox[1])
                     # ---- snapping
@@ -403,7 +405,7 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
                     if f:
                         dx = point[0] - p_doc[0]
-                        m11 = (w + dx) / w
+                        m11 = (w + dx) / w if w else 1.0
                         dx = -(bbox[2] * m11 - bbox[2])
                         snap[0] = self.snap.active_snap[0]
                     point = middle_points[1]
@@ -412,16 +414,16 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_x=False)
                     if f:
                         dy = p_doc[1] - point[1]
-                        m22 = (h + dy) / h
+                        m22 = (h + dy) / h if h else 1.0
                         dy = -(bbox[1] * m22 - bbox[1])
                         snap[1] = self.snap.active_snap[1]
                     self.snap.active_snap = snap
                 # ---- snapping
                 else:
                     if abs(dx) < abs(dy):
-                        m11 = m22 = (w + dx) / w
+                        m11 = m22 = (w + dx) / w if w else 1.0
                     else:
-                        m11 = m22 = (h + dy) / h
+                        m11 = m22 = (h + dy) / h if h else 1.0
                     dx = -(bbox[2] * m11 - bbox[2])
                     dy = -(bbox[1] * m22 - bbox[1])
                     # ---- snapping
@@ -431,7 +433,7 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
                     if f:
                         dx = point[0] - p_doc[0]
-                        m11 = m22 = (w + dx) / w
+                        m11 = m22 = (w + dx) / w if w else 1.0
                         dx = -(bbox[2] * m11 - bbox[2])
                         dy = -(bbox[1] * m22 - bbox[1])
                         snap[0] = self.snap.active_snap[0]
@@ -443,7 +445,7 @@ class TransformController(AbstractController):
                                                            snap_x=False)
                         if f:
                             dy = p_doc[1] - point[1]
-                            m11 = m22 = (h + dy) / h
+                            m11 = m22 = (h + dy) / h if h else 1.0
                             dx = -(bbox[2] * m11 - bbox[2])
                             dy = -(bbox[1] * m22 - bbox[1])
                             snap[1] = self.snap.active_snap[1]
@@ -452,7 +454,7 @@ class TransformController(AbstractController):
         if mark == 1:
             dy = end_point[1] - start_point[1]
             if shift:
-                m22 = (h + 2.0 * dy) / h
+                m22 = (h + 2.0 * dy) / h if h else 1.0
                 dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
                 # ---- snapping
                 point = middle_points[1]
@@ -460,11 +462,11 @@ class TransformController(AbstractController):
                 p = libgeom.apply_trafo_to_point(point, trafo)
                 f, p, p_doc = self.snap.snap_point(p, False)
                 dy = p_doc[1] - point[1]
-                m22 = (h + 2.0 * dy) / h
+                m22 = (h + 2.0 * dy) / h if h else 1.0
                 dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
             # ---- snapping
             else:
-                m22 = (h + dy) / h
+                m22 = (h + dy) / h if h else 1.0
                 dy = -(bbox[1] * m22 - bbox[1])
                 # ---- snapping
                 point = middle_points[1]
@@ -472,7 +474,7 @@ class TransformController(AbstractController):
                 p = libgeom.apply_trafo_to_point(point, trafo)
                 f, p, p_doc = self.snap.snap_point(p, False)
                 dy = p_doc[1] - point[1]
-                m22 = (h + dy) / h
+                m22 = (h + dy) / h if h else 1.0
                 dy = -(bbox[1] * m22 - bbox[1])
                 # ---- snapping
         if mark == 2:
@@ -480,8 +482,8 @@ class TransformController(AbstractController):
             dy = end_point[1] - start_point[1]
             if shift:
                 if control:
-                    m11 = (w + 2.0 * dx) / w
-                    m22 = (h + 2.0 * dy) / h
+                    m11 = (w + 2.0 * dx) / w if w else 1.0
+                    m22 = (h + 2.0 * dy) / h if h else 1.0
                     dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
                     dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
                     # ---- snapping
@@ -491,7 +493,7 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
                     if f:
                         dx = p_doc[0] - point[0]
-                        m11 = (w + 2.0 * dx) / w
+                        m11 = (w + 2.0 * dx) / w if w else 1.0
                         dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
                         snap[0] = self.snap.active_snap[0]
                     point = middle_points[1]
@@ -500,16 +502,16 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_x=False)
                     if f:
                         dy = p_doc[1] - point[1]
-                        m22 = (h + 2.0 * dy) / h
+                        m22 = (h + 2.0 * dy) / h if h else 1.0
                         dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
                         snap[1] = self.snap.active_snap[1]
                     self.snap.active_snap = snap
                 # ---- snapping
                 else:
                     if abs(dx) < abs(dy):
-                        m11 = m22 = (w + 2.0 * dx) / w
+                        m11 = m22 = (w + 2.0 * dx) / w if w else 1.0
                     else:
-                        m11 = m22 = (h + 2.0 * dy) / h
+                        m11 = m22 = (h + 2.0 * dy) / h if h else 1.0
                     dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
                     dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
                     # ---- snapping
@@ -519,7 +521,7 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
                     if f:
                         dx = p_doc[0] - point[0]
-                        m11 = m22 = (w + 2.0 * dx) / w
+                        m11 = m22 = (w + 2.0 * dx) / w if w else 1.0
                         dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
                         dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
                         snap[0] = self.snap.active_snap[0]
@@ -531,18 +533,18 @@ class TransformController(AbstractController):
                                                            snap_x=False)
                         if f:
                             dy = p_doc[1] - point[1]
-                            m11 = m22 = (h + 2.0 * dy) / h
+                            m11 = m22 = (h + 2.0 * dy) / h if h else 1.0
                             dx = -(bbox[0] * m11 - bbox[0]) - w * (
-                                m11 - 1.0) / 2.0
+                                    m11 - 1.0) / 2.0
                             dy = -(bbox[1] * m22 - bbox[1]) - h * (
-                                m22 - 1.0) / 2.0
+                                    m22 - 1.0) / 2.0
                             snap[1] = self.snap.active_snap[1]
                     self.snap.active_snap = snap
                     # ---- snapping
             else:
                 if control:
-                    m11 = (w + dx) / w
-                    m22 = (h + dy) / h
+                    m11 = (w + dx) / w if w else 1.0
+                    m22 = (h + dy) / h if h else 1.0
                     dx = -(bbox[0] * m11 - bbox[0])
                     dy = -(bbox[1] * m22 - bbox[1])
                     # ---- snapping
@@ -552,7 +554,7 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
                     if f:
                         dx = p_doc[0] - point[0]
-                        m11 = (w + dx) / w
+                        m11 = (w + dx) / w if w else 1.0
                         dx = -(bbox[0] * m11 - bbox[0])
                         snap[0] = self.snap.active_snap[0]
                     point = middle_points[1]
@@ -561,16 +563,16 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_x=False)
                     if f:
                         dy = p_doc[1] - point[1]
-                        m22 = (h + dy) / h
+                        m22 = (h + dy) / h if h else 1.0
                         dy = -(bbox[1] * m22 - bbox[1])
                         snap[1] = self.snap.active_snap[1]
                     self.snap.active_snap = snap
                 # ---- snapping
                 else:
                     if abs(dx) < abs(dy):
-                        m11 = m22 = (w + dx) / w
+                        m11 = m22 = (w + dx) / w if w else 1.0
                     else:
-                        m11 = m22 = (h + dy) / h
+                        m11 = m22 = (h + dy) / h if h else 1.0
                     dx = -(bbox[0] * m11 - bbox[0])
                     dy = -(bbox[1] * m22 - bbox[1])
                     # ---- snapping
@@ -580,7 +582,7 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
                     if f:
                         dx = p_doc[0] - point[0]
-                        m11 = m22 = (w + dx) / w
+                        m11 = m22 = (w + dx) / w if w else 1.0
                         dx = -(bbox[0] * m11 - bbox[0])
                         dy = -(bbox[1] * m22 - bbox[1])
                         snap[0] = self.snap.active_snap[0]
@@ -592,7 +594,7 @@ class TransformController(AbstractController):
                                                            snap_x=False)
                         if f:
                             dy = p_doc[1] - point[1]
-                            m11 = m22 = (h + dy) / h
+                            m11 = m22 = (h + dy) / h if h else 1.0
                             dx = -(bbox[0] * m11 - bbox[0])
                             dy = -(bbox[1] * m22 - bbox[1])
                             snap[1] = self.snap.active_snap[1]
@@ -601,7 +603,7 @@ class TransformController(AbstractController):
         if mark == 3:
             dx = start_point[0] - end_point[0]
             if shift:
-                m11 = (w + 2.0 * dx) / w
+                m11 = (w + 2.0 * dx) / w if w else 1.0
                 dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
                 # ---- snapping
                 point = middle_points[0]
@@ -609,11 +611,11 @@ class TransformController(AbstractController):
                 p = libgeom.apply_trafo_to_point(point, trafo)
                 f, p, p_doc = self.snap.snap_point(p, False)
                 dx = point[0] - p_doc[0]
-                m11 = (w + 2.0 * dx) / w
+                m11 = (w + 2.0 * dx) / w if w else 1.0
                 dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
             # ---- snapping
             else:
-                m11 = (w + dx) / w
+                m11 = (w + dx) / w if w else 1.0
                 dx = -(bbox[2] * m11 - bbox[2])
                 # ---- snapping
                 point = middle_points[0]
@@ -621,13 +623,13 @@ class TransformController(AbstractController):
                 p = libgeom.apply_trafo_to_point(point, trafo)
                 f, p, p_doc = self.snap.snap_point(p, False)
                 dx = point[0] - p_doc[0]
-                m11 = (w + dx) / w
+                m11 = (w + dx) / w if w else 1.0
                 dx = -(bbox[2] * m11 - bbox[2])
                 # ---- snapping
         if mark == 5:
             dx = end_point[0] - start_point[0]
             if shift:
-                m11 = (w + 2.0 * dx) / w
+                m11 = (w + 2.0 * dx) / w if w else 1.0
                 dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
                 # ---- snapping
                 point = middle_points[2]
@@ -635,11 +637,11 @@ class TransformController(AbstractController):
                 p = libgeom.apply_trafo_to_point(point, trafo)
                 f, p, p_doc = self.snap.snap_point(p, False)
                 dx = p_doc[0] - point[0]
-                m11 = (w + 2.0 * dx) / w
+                m11 = (w + 2.0 * dx) / w if w else 1.0
                 dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
             # ---- snapping
             else:
-                m11 = (w + dx) / w
+                m11 = (w + dx) / w if w else 1.0
                 dx = -(bbox[0] * m11 - bbox[0])
                 # ---- snapping
                 point = middle_points[2]
@@ -647,7 +649,7 @@ class TransformController(AbstractController):
                 p = libgeom.apply_trafo_to_point(point, trafo)
                 f, p, p_doc = self.snap.snap_point(p, False)
                 dx = p_doc[0] - point[0]
-                m11 = (w + dx) / w
+                m11 = (w + dx) / w if w else 1.0
                 dx = -(bbox[0] * m11 - bbox[0])
                 # ---- snapping
         if mark == 6:
@@ -655,8 +657,8 @@ class TransformController(AbstractController):
             dy = start_point[1] - end_point[1]
             if shift:
                 if control:
-                    m11 = (w + 2.0 * dx) / w
-                    m22 = (h + 2.0 * dy) / h
+                    m11 = (w + 2.0 * dx) / w if w else 1.0
+                    m22 = (h + 2.0 * dy) / h if h else 1.0
                     dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
                     dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
                     # ---- snapping
@@ -666,7 +668,7 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
                     if f:
                         dx = point[0] - p_doc[0]
-                        m11 = (w + 2.0 * dx) / w
+                        m11 = (w + 2.0 * dx) / w if w else 1.0
                         dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
                         snap[0] = self.snap.active_snap[0]
                     point = middle_points[3]
@@ -675,16 +677,16 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_x=False)
                     if f:
                         dy = point[1] - p_doc[1]
-                        m22 = (h + 2.0 * dy) / h
+                        m22 = (h + 2.0 * dy) / h if h else 1.0
                         dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
                         snap[1] = self.snap.active_snap[1]
                     self.snap.active_snap = snap
                 # ---- snapping
                 else:
                     if abs(dx) < abs(dy):
-                        m11 = m22 = (w + 2.0 * dx) / w
+                        m11 = m22 = (w + 2.0 * dx) / w if w else 1.0
                     else:
-                        m11 = m22 = (h + 2.0 * dy) / h
+                        m11 = m22 = (h + 2.0 * dy) / h if h else 1.0
                     dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
                     dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
                     # ---- snapping
@@ -694,7 +696,7 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
                     if f:
                         dx = point[0] - p_doc[0]
-                        m11 = m22 = (w + 2.0 * dx) / w
+                        m11 = m22 = (w + 2.0 * dx) / w if w else 1.0
                         dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
                         dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
                         snap[0] = self.snap.active_snap[0]
@@ -706,18 +708,18 @@ class TransformController(AbstractController):
                                                            snap_x=False)
                         if f:
                             dy = point[1] - p_doc[1]
-                            m11 = m22 = (h + 2.0 * dy) / h
+                            m11 = m22 = (h + 2.0 * dy) / h if h else 1.0
                             dx = -(bbox[2] * m11 - bbox[2]) + w * (
-                                m11 - 1.0) / 2.0
+                                    m11 - 1.0) / 2.0
                             dy = -(bbox[3] * m22 - bbox[3]) + h * (
-                                m22 - 1.0) / 2.0
+                                    m22 - 1.0) / 2.0
                             snap[1] = self.snap.active_snap[1]
                     self.snap.active_snap = snap
                     # ---- snapping
             else:
                 if control:
-                    m11 = (w + dx) / w
-                    m22 = (h + dy) / h
+                    m11 = (w + dx) / w if w else 1.0
+                    m22 = (h + dy) / h if h else 1.0
                     dx = -(bbox[2] * m11 - bbox[2])
                     dy = -(bbox[3] * m22 - bbox[3])
                     # ---- snapping
@@ -727,7 +729,7 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
                     if f:
                         dx = point[0] - p_doc[0]
-                        m11 = (w + dx) / w
+                        m11 = (w + dx) / w if w else 1.0
                         dx = -(bbox[2] * m11 - bbox[2])
                         snap[0] = self.snap.active_snap[0]
                     point = middle_points[3]
@@ -736,16 +738,16 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_x=False)
                     if f:
                         dy = point[1] - p_doc[1]
-                        m22 = (h + dy) / h
+                        m22 = (h + dy) / h if h else 1.0
                         dy = -(bbox[3] * m22 - bbox[3])
                         snap[1] = self.snap.active_snap[1]
                     self.snap.active_snap = snap
                 # ---- snapping
                 else:
                     if abs(dx) < abs(dy):
-                        m11 = m22 = (w + dx) / w
+                        m11 = m22 = (w + dx) / w if w else 1.0
                     else:
-                        m11 = m22 = (h + dy) / h
+                        m11 = m22 = (h + dy) / h if h else 1.0
                     dx = -(bbox[2] * m11 - bbox[2])
                     dy = -(bbox[3] * m22 - bbox[3])
                     # ---- snapping
@@ -755,7 +757,7 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
                     if f:
                         dx = point[0] - p_doc[0]
-                        m11 = m22 = (w + dx) / w
+                        m11 = m22 = (w + dx) / w if w else 1.0
                         dx = -(bbox[2] * m11 - bbox[2])
                         dy = -(bbox[3] * m22 - bbox[3])
                         snap[0] = self.snap.active_snap[0]
@@ -767,7 +769,7 @@ class TransformController(AbstractController):
                                                            snap_x=False)
                         if f:
                             dy = point[1] - p_doc[1]
-                            m11 = m22 = (h + dy) / h
+                            m11 = m22 = (h + dy) / h if h else 1.0
                             dx = -(bbox[2] * m11 - bbox[2])
                             dy = -(bbox[3] * m22 - bbox[3])
                             snap[1] = self.snap.active_snap[1]
@@ -776,7 +778,7 @@ class TransformController(AbstractController):
         if mark == 7:
             dy = start_point[1] - end_point[1]
             if shift:
-                m22 = (h + 2.0 * dy) / h
+                m22 = (h + 2.0 * dy) / h if h else 1.0
                 dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
                 # ---- snapping
                 point = middle_points[3]
@@ -784,11 +786,11 @@ class TransformController(AbstractController):
                 p = libgeom.apply_trafo_to_point(point, trafo)
                 f, p, p_doc = self.snap.snap_point(p, False)
                 dy = point[1] - p_doc[1]
-                m22 = (h + 2.0 * dy) / h
+                m22 = (h + 2.0 * dy) / h if h else 1.0
                 dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
             # ---- snapping
             else:
-                m22 = (h + dy) / h
+                m22 = (h + dy) / h if h else 1.0
                 dy = -(bbox[3] * m22 - bbox[3])
                 # ---- snapping
                 point = middle_points[3]
@@ -796,7 +798,7 @@ class TransformController(AbstractController):
                 p = libgeom.apply_trafo_to_point(point, trafo)
                 f, p, p_doc = self.snap.snap_point(p, False)
                 dy = point[1] - p_doc[1]
-                m22 = (h + dy) / h
+                m22 = (h + dy) / h if h else 1.0
                 dy = -(bbox[3] * m22 - bbox[3])
                 # ---- snapping
         if mark == 8:
@@ -804,8 +806,8 @@ class TransformController(AbstractController):
             dy = start_point[1] - end_point[1]
             if shift:
                 if control:
-                    m11 = (w + 2.0 * dx) / w
-                    m22 = (h + 2.0 * dy) / h
+                    m11 = (w + 2.0 * dx) / w if w else 1.0
+                    m22 = (h + 2.0 * dy) / h if h else 1.0
                     dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
                     dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
                     # ---- snapping
@@ -815,7 +817,7 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
                     if f:
                         dx = p_doc[0] - point[0]
-                        m11 = (w + 2.0 * dx) / w
+                        m11 = (w + 2.0 * dx) / w if w else 1.0
                         dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
                         snap[0] = self.snap.active_snap[0]
                     point = middle_points[3]
@@ -824,16 +826,16 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_x=False)
                     if f:
                         dy = point[1] - p_doc[1]
-                        m22 = (h + 2.0 * dy) / h
+                        m22 = (h + 2.0 * dy) / h if h else 1.0
                         dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
                         snap[1] = self.snap.active_snap[1]
                     self.snap.active_snap = snap
                 # ---- snapping
                 else:
                     if abs(dx) < abs(dy):
-                        m11 = m22 = (w + 2.0 * dx) / w
+                        m11 = m22 = (w + 2.0 * dx) / w if w else 1.0
                     else:
-                        m11 = m22 = (h + 2.0 * dy) / h
+                        m11 = m22 = (h + 2.0 * dy) / h if h else 1.0
                     dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
                     dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
                     # ---- snapping
@@ -843,7 +845,7 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
                     if f:
                         dx = p_doc[0] - point[0]
-                        m11 = m22 = (w + 2.0 * dx) / w
+                        m11 = m22 = (w + 2.0 * dx) / w if w else 1.0
                         dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
                         dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
                         snap[0] = self.snap.active_snap[0]
@@ -855,18 +857,18 @@ class TransformController(AbstractController):
                                                            snap_x=False)
                         if f:
                             dy = point[1] - p_doc[1]
-                            m11 = m22 = (h + 2.0 * dy) / h
+                            m11 = m22 = (h + 2.0 * dy) / h if h else 1.0
                             dx = -(bbox[0] * m11 - bbox[0]) - w * (
-                                m11 - 1.0) / 2.0
+                                    m11 - 1.0) / 2.0
                             dy = -(bbox[3] * m22 - bbox[3]) + h * (
-                                m22 - 1.0) / 2.0
+                                    m22 - 1.0) / 2.0
                             snap[1] = self.snap.active_snap[1]
                     self.snap.active_snap = snap
                     # ---- snapping
             else:
                 if control:
-                    m11 = (w + dx) / w
-                    m22 = (h + dy) / h
+                    m11 = (w + dx) / w if w else 1.0
+                    m22 = (h + dy) / h if h else 1.0
                     dx = -(bbox[0] * m11 - bbox[0])
                     dy = -(bbox[3] * m22 - bbox[3])
                     # ---- snapping
@@ -876,7 +878,7 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
                     if f:
                         dx = p_doc[0] - point[0]
-                        m11 = (w + dx) / w
+                        m11 = (w + dx) / w if w else 1.0
                         dx = -(bbox[0] * m11 - bbox[0])
                         snap[0] = self.snap.active_snap[0]
                     point = middle_points[3]
@@ -885,16 +887,16 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_x=False)
                     if f:
                         dy = point[1] - p_doc[1]
-                        m22 = (h + dy) / h
+                        m22 = (h + dy) / h if h else 1.0
                         dy = -(bbox[3] * m22 - bbox[3])
                         snap[1] = self.snap.active_snap[1]
                     self.snap.active_snap = snap
                 # ---- snapping
                 else:
                     if abs(dx) < abs(dy):
-                        m11 = m22 = (w + dx) / w
+                        m11 = m22 = (w + dx) / w if w else 1.0
                     else:
-                        m11 = m22 = (h + dy) / h
+                        m11 = m22 = (h + dy) / h if h else 1.0
                     dx = -(bbox[0] * m11 - bbox[0])
                     dy = -(bbox[3] * m22 - bbox[3])
                     # ---- snapping
@@ -904,7 +906,7 @@ class TransformController(AbstractController):
                     f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
                     if f:
                         dx = p_doc[0] - point[0]
-                        m11 = m22 = (w + dx) / w
+                        m11 = m22 = (w + dx) / w if w else 1.0
                         dx = -(bbox[0] * m11 - bbox[0])
                         dy = -(bbox[3] * m22 - bbox[3])
                         snap[0] = self.snap.active_snap[0]
@@ -916,7 +918,7 @@ class TransformController(AbstractController):
                                                            snap_x=False)
                         if f:
                             dy = point[1] - p_doc[1]
-                            m11 = m22 = (h + dy) / h
+                            m11 = m22 = (h + dy) / h if h else 1.0
                             dx = -(bbox[0] * m11 - bbox[0])
                             dy = -(bbox[3] * m22 - bbox[3])
                             snap[1] = self.snap.active_snap[1]
@@ -925,19 +927,19 @@ class TransformController(AbstractController):
 
         if mark == 11:
             change_x = end_point[0] - start_point[0]
-            m12 = change_x / h
+            m12 = change_x / h if h else 1.0
             dx = -bbox[1] * m12
         if mark == 16:
             change_x = start_point[0] - end_point[0]
-            m12 = change_x / h
+            m12 = change_x / h if h else 1.0
             dx = -bbox[3] * m12
         if mark == 13:
             change_y = start_point[1] - end_point[1]
-            m21 = change_y / w
+            m21 = change_y / w if w else 1.0
             dy = -bbox[2] * m21
         if mark == 14:
             change_y = end_point[1] - start_point[1]
-            m21 = change_y / w
+            m21 = change_y / w if w else 1.0
             dy = -bbox[0] * m21
 
         if mark in (10, 12, 15, 17):
