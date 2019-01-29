@@ -251,6 +251,7 @@ class PolyLineCreator(AbstractCreator):
 
     def release_curve(self, stop=True):
         if self.points:
+            self.cursor = []
             flag = config.curve_autoclose_flag
             if flag and self.path[2] == sk2const.CURVE_OPENED:
                 self.path[2] = sk2const.CURVE_CLOSED
