@@ -273,8 +273,8 @@ class PolyLineCreator(AbstractCreator):
         shift = event.is_shift()
         if not shift and start and cursor:
             if ctrl:  # restrict movement to horizontal or vertical
-                # TODO: configure limit angle 15.0
-                cursor = round_angle_point(start, cursor, 15.0)
+                fixed_angle = config.curve_fixed_angle
+                cursor = round_angle_point(start, cursor, fixed_angle)
         return self._snap(cursor)
 
     def _snap(self, point):
@@ -453,6 +453,12 @@ class PathsCreator(PolyLineCreator):
             if self.create:
                 cpoint = self.canvas.doc_to_win(self.control_point2_doc)
             self.canvas.renderer.paint_curve(paths, cursor, path, cpoint)
+            # if self.curve_point:
+            #     self.canvas.renderer.draw_regular_node(self.curve_point)
+            # if self.point:
+            #     self.canvas.renderer.draw_last_node(self.point)
+            # if self.cursor:
+            #     self.canvas.renderer.draw_new_node(self.cursor)
         return True
 
     def init_data(self):
@@ -476,6 +482,6 @@ class PathsCreator(PolyLineCreator):
         shift = event.is_shift()
         if not shift and start and cursor:
             if ctrl:  # restrict movement to horizontal or vertical
-                # TODO: configure limit angle 15.0
-                cursor = round_angle_point(start, cursor, 15.0)
+                fixed_angle = config.curve_fixed_angle
+                cursor = round_angle_point(start, cursor, fixed_angle)
         return self._snap(cursor)
