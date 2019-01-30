@@ -454,12 +454,6 @@ class PathsCreator(PolyLineCreator):
             if self.create:
                 cpoint = self.canvas.doc_to_win(self.control_point2_doc)
             self.canvas.renderer.paint_curve(paths, cursor, path, cpoint)
-            # if self.curve_point:
-            #     self.canvas.renderer.draw_regular_node(self.curve_point)
-            # if self.point:
-            #     self.canvas.renderer.draw_last_node(self.point)
-            # if self.cursor:
-            #     self.canvas.renderer.draw_new_node(self.cursor)
         return True
 
     def init_data(self):
