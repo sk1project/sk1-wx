@@ -78,12 +78,13 @@ SK2_GRAD_EXTEND = {
 class SVG_to_SK2_Translator(object):
     page = None
     layer = None
-    trafo = []
-    coeff = 1.25
+    traffo = []
+    dpi_coeff = 1.0
     user_space = []
     style_opts = {}
     classes = {}
     profiles = {}
+    unit_mapping = None
     current_color = ''
     svg_doc = None
     sk2_doc = None
@@ -104,6 +105,7 @@ class SVG_to_SK2_Translator(object):
         self.id_map = self.svg_mt.id_map
         self.profiles = {}
         self.current_color = ''
+        self.define_units()
         self.translate_units()
         self.translate_page()
         for item in self.svg_mt.childs:
@@ -123,37 +125,41 @@ class SVG_to_SK2_Translator(object):
                 self.__dict__[item] = {}
             else:
                 self.__dict__[item] = None
-        self.coeff = 1.25
+        self.dpi_coeff = 1.0
         self.current_color = ''
 
     # --- Utility methods
 
+    def define_units(self):
+        if not self.svg_doc.config.svg_dpi:
+            if 'width' in self.svg_mt.attrs and \
+                    self.svg_mtds.get_units(self.svg_mt.attrs['width']) not in \
+                    (svg_const.SVG_PX, svg_const.SVG_PC):
+                self.svg_doc.config.svg_dpi = 90.0
+
+        dpi_coeff = self.svg_doc.config.svg_dpi / svg_const.SVG_DPI \
+            if self.svg_doc.config.svg_dpi else 1.0
+
+        self.unit_mapping = {
+            svg_const.SVG_PX: svg_const.svg_px_to_pt / dpi_coeff,
+            svg_const.SVG_PT: 1.0,
+            svg_const.SVG_PC: 15.0 * svg_const.svg_px_to_pt / dpi_coeff,
+            svg_const.SVG_MM: uc2const.mm_to_pt,
+            svg_const.SVG_CM: uc2const.cm_to_pt,
+            svg_const.SVG_IN: uc2const.in_to_pt,
+            svg_const.SVG_M: uc2const.m_to_pt,
+        }
+        self.dpi_coeff = dpi_coeff
+
     def recalc_size(self, val):
         if not val:
             return None
-        dpi_scale = svg_const.SVG_DPI / self.svg_doc.config.svg_dpi
-        mapping = {
-            'px': svg_const.svg_px_to_pt * dpi_scale,
-            'pt': 1.0,
-            'pc': 15.0 * svg_const.svg_px_to_pt * dpi_scale,
-            'mm': uc2const.mm_to_pt,
-            'cm': uc2const.cm_to_pt,
-            'in': uc2const.in_to_pt,
-            'm': uc2const.m_to_pt,
-        }
-        if val[-1].isdigit():
-            size = float(val)
-            unit = 'px'
-        elif val[-2].isdigit():
-            size = float(val[:-1])
-            unit = val[-1] if val[-1] in mapping else 'px'
-        else:
-            size = float(val[:-2])
-            unit = val[-2:] if val[-2:] in mapping else 'px'
-        return size * mapping[unit] * self.coeff
+        unit = self.svg_mtds.get_units(val)
+        size = float(val.replace(unit, ''))
+        return size * self.unit_mapping[unit] * self.dpi_coeff
 
     def get_font_size(self, sval):
-        val = self.recalc_size(sval) / self.coeff
+        val = self.recalc_size(sval) / self.dpi_coeff
         pts = [[0.0, 0.0], [0.0, val]]
         pts = libgeom.apply_trafo_to_points(pts, self.trafo)
         return libgeom.distance(*pts)
@@ -369,6 +375,7 @@ class SVG_to_SK2_Translator(object):
             stroke = style['stroke'].replace('"', '')
             stroke_rule = sk2const.STROKE_MIDDLE
             stroke_width = self.recalc_size(style['stroke-width'])
+            stroke_width = stroke_width / self.dpi_coeff
             stroke_linecap = SK2_LINE_CAP[style['stroke-linecap']]
             stroke_linejoin = SK2_LINE_JOIN[style['stroke-linejoin']]
             stroke_miterlimit = float(style['stroke-miterlimit'])
@@ -531,7 +538,7 @@ class SVG_to_SK2_Translator(object):
         if not height:
             height = self.recalc_size('297mm')
 
-        page_fmt = ['Custom', (width, height),
+        page_fmt = ['Custom', (width / self.dpi_coeff, height / self.dpi_coeff),
                     uc2const.LANDSCAPE if width > height else uc2const.PORTRAIT]
 
         pages_obj = self.sk2_mtds.get_pages_obj()
@@ -544,10 +551,15 @@ class SVG_to_SK2_Translator(object):
         self.layer = sk2_model.Layer(self.page.config, self.page)
         self.page.childs = [self.layer, ]
 
+        # Document trafo calculation
+        self.trafo = [1 / self.dpi_coeff, 0.0, 0.0,
+                      1 / self.dpi_coeff, 0.0, 0.0]
+
         dx = -width / 2.0
         dy = height / 2.0
-        self.trafo = [1.0, 0.0, 0.0, -1.0, dx, dy]
+        tr = [1.0, 0.0, 0.0, -1.0, dx, dy]
         self.user_space = [0.0, 0.0, width, height]
+        self.trafo = libgeom.multiply_trafo(tr, self.trafo)
 
         if vbox:
             dx = -vbox[0]
@@ -1109,9 +1121,10 @@ class SK2_to_SVG_Translator(object):
                 break
         for item in self.sk2_mt.childs:
             if item.cid == sk2_model.PAGES:
-                w, h = item.childs[0].page_format[1]
-                self.svg_mt.attrs['width'] = str(w)
-                self.svg_mt.attrs['height'] = str(h)
+                page = item.childs[0]
+                w, h = page.page_format[1]
+                self.svg_mt.attrs['width'] = str(w) + 'pt'
+                self.svg_mt.attrs['height'] = str(h) + 'pt'
                 self.svg_mt.attrs['viewBox'] = '0 0 %s %s' % (str(w), str(h))
                 self.dx = w / 2.0
                 self.dy = h / 2.0

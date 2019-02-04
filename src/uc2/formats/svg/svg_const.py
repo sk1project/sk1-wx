@@ -29,7 +29,7 @@ SVG_ATTRS = {
     "version": "1.1",
 }
 
-SVG_DPI = 90.0
+SVG_DPI = 72.0
 
 in_to_pt = 72.0
 pt_to_in = 1.0 / 72.0
@@ -45,6 +45,8 @@ SVG_CM = 'cm'
 SVG_IN = 'in'
 SVG_FT = 'ft'
 SVG_M = 'm'
+
+SVG_UNITS = (SVG_PX, SVG_PC, SVG_PT, SVG_MM, SVG_CM, SVG_IN, SVG_FT, SVG_M)
 
 SVG_STYLE = {
     'opacity': '1',

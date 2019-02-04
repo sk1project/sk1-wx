@@ -41,9 +41,16 @@ class SVG_Methods:
         self.model = self.presenter.model
         self.config = self.presenter.config
 
+    def get_units(self, value):
+        if len(value) > 1:
+            for item in svg_const.SVG_UNITS:
+                if value.endswith(item):
+                    return item
+        return svg_const.SVG_PX
+
     def doc_units(self):
         for item in self.model.childs:
             if item.tag == 'sodipodi:namedview':
-                if 'inkscape:document-units' in item.attrs:
-                    return item.attrs['inkscape:document-units']
-        return 'px'
+                return item.attrs.get('inkscape:document-units',
+                                      svg_const.SVG_PX)
+        return self.get_units(self.model.attrs.get('width', ''))
