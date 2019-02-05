@@ -164,11 +164,9 @@ class SVG_to_SK2_Translator(object):
         pts = libgeom.apply_trafo_to_points(pts, self.trafo)
         return libgeom.distance(*pts)
 
-    def get_viewbox(self, svbox):
-        items = []
-        for item in svbox.split(' '):
-            items += item.split(',')
-        return [self.recalc_size(item) for item in items]
+    def get_viewbox(self, vbox):
+        vbox = vbox.replace(',', ' ').replace('  ', ' ')
+        return [self.recalc_size(item) for item in vbox.split()]
 
     def parse_def(self, svg_obj):
         if 'color' in svg_obj.attrs:
