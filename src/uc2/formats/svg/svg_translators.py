@@ -1095,7 +1095,7 @@ SVG_GRAD_EXTEND = {
 
 class SK2_to_SVG_Translator(object):
     dx = dy = page_dx = 0.0
-    ident_level = -1
+    indent_level = -1
     defs_count = 0
     trafo = None
     defs = None
@@ -1133,7 +1133,7 @@ class SK2_to_SVG_Translator(object):
                 self.page_dx = 0.0
                 for page in item.childs:
                     self.translate_page(self.svg_mt, page)
-        self.ident_level = 0
+        self.indent_level = 0
         if self.defs.childs:
             self.add_spacer(self.defs)
         else:
@@ -1147,7 +1147,7 @@ class SK2_to_SVG_Translator(object):
         self.svg_mtds = None
 
     def add_spacer(self, parent):
-        spacer = '\n' + '\t' * self.ident_level
+        spacer = '\n' + '\t' * self.indent_level
         parent.childs.append(svglib.create_spacer(spacer))
 
     def append_obj(self, parent, obj):
@@ -1165,7 +1165,7 @@ class SK2_to_SVG_Translator(object):
         self.page_dx += w + 30.0
 
     def translate_objs(self, dest_parent, source_objs):
-        self.ident_level += 1
+        self.indent_level += 1
         for source_obj in source_objs:
             if source_obj.is_layer:
                 self.translate_layer(dest_parent, source_obj)
@@ -1187,7 +1187,7 @@ class SK2_to_SVG_Translator(object):
                     self.translate_primitive(dest_parent, fill_obj)
                 else:
                     self.translate_primitive(dest_parent, source_obj)
-        self.ident_level -= 1
+        self.indent_level -= 1
 
     def translate_layer(self, dest_parent, source_obj):
         group = svglib.create_xmlobj('g')
@@ -1236,12 +1236,12 @@ class SK2_to_SVG_Translator(object):
         clippath.attrs['id'] = 'clipPath' + str(self.defs_count + 1)
         self.defs_count += 1
 
-        lvl = self.ident_level
-        self.ident_level = 1
+        lvl = self.indent_level
+        self.indent_level = 1
         self.append_obj(self.defs, clippath)
-        self.ident_level += 1
+        self.indent_level += 1
         self.translate_primitive(clippath, source_obj)
-        self.ident_level = lvl
+        self.indent_level = lvl
         return clippath.attrs['id']
 
     def translate_primitive(self, dest_parent, source_obj):
@@ -1373,12 +1373,12 @@ class SK2_to_SVG_Translator(object):
             attrs['x2'] = str(x2)
             attrs['y2'] = str(y2)
         grad_obj = svglib.create_xmlobj(tag, attrs)
-        lvl = self.ident_level
-        self.ident_level = 1
+        lvl = self.indent_level
+        self.indent_level = 1
         self.append_obj(self.defs, grad_obj)
-        self.ident_level += 1
+        self.indent_level += 1
         self.translate_stops(grad_obj, gradient[2])
-        self.ident_level = lvl
+        self.indent_level = lvl
         return grad_id
 
     def translate_stops(self, parent, stops):
@@ -1392,5 +1392,5 @@ class SK2_to_SVG_Translator(object):
             attrs['style'] = 'stop-color:%s;stop-opacity:%s;' % (clr, alpha)
             stop_obj = svglib.create_xmlobj('stop', attrs)
             self.append_obj(parent, stop_obj)
-        self.ident_level -= 1
+        self.indent_level -= 1
         self.add_spacer(parent)
