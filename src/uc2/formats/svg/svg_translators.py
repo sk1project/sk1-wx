@@ -23,7 +23,7 @@ from copy import deepcopy
 
 from PIL import Image
 
-from uc2 import uc2const, libgeom, libpango, cms, sk2const
+from uc2 import uc2const, libgeom, libpango, cms, sk2const, utils
 from uc2.formats.sk2 import sk2_model
 from uc2.formats.svg import svg_const, svglib
 from uc2.formats.svg.svglib import get_svg_trafo, check_svg_attr, \
@@ -1115,6 +1115,7 @@ class SK2_to_SVG_Translator(object):
         self.svg_mtds = svg_doc.methods
         self.defs_count = 0
         self.trafo = [1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
+        self.svg_mt.attrs['id'] = utils.generate_guid()
         for item in self.svg_mt.childs:
             if item.tag == 'defs':
                 self.defs = item
