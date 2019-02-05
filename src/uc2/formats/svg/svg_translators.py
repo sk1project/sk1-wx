@@ -1132,8 +1132,6 @@ class SK2_to_SVG_Translator(object):
                 svg_attrs['height'] = str(h) + units
                 if units != svg_const.SVG_PX:
                     svg_attrs['viewBox'] = '0 0 %s %s' % (str(w), str(h))
-                else:
-                    svg_attrs.pop('viewBox')
                 self.dx = w / 2.0
                 self.dy = h / 2.0
                 self.trafo[4] = self.dx
