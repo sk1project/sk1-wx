@@ -1114,8 +1114,12 @@ class SK2_to_SVG_Translator(object):
         self.sk2_mtds = sk2_doc.methods
         self.svg_mtds = svg_doc.methods
         self.defs_count = 0
+        svg_attrs = self.svg_mt.attrs
+
         self.trafo = [1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
-        self.svg_mt.attrs['id'] = utils.generate_guid()
+        svg_attrs['id'] = utils.generate_guid()
+        units = svg_const.SVG_PX if self.sk2_mt.doc_units == uc2const.UNIT_PX \
+            else svg_const.SVG_PT
         for item in self.svg_mt.childs:
             if item.tag == 'defs':
                 self.defs = item
@@ -1124,9 +1128,12 @@ class SK2_to_SVG_Translator(object):
             if item.cid == sk2_model.PAGES:
                 page = item.childs[0]
                 w, h = page.page_format[1]
-                self.svg_mt.attrs['width'] = str(w) + 'pt'
-                self.svg_mt.attrs['height'] = str(h) + 'pt'
-                self.svg_mt.attrs['viewBox'] = '0 0 %s %s' % (str(w), str(h))
+                svg_attrs['width'] = str(w) + units
+                svg_attrs['height'] = str(h) + units
+                if units != svg_const.SVG_PX:
+                    svg_attrs['viewBox'] = '0 0 %s %s' % (str(w), str(h))
+                else:
+                    svg_attrs.pop('viewBox')
                 self.dx = w / 2.0
                 self.dy = h / 2.0
                 self.trafo[4] = self.dx
