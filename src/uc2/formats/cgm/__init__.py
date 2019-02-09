@@ -57,4 +57,5 @@ def check_cgm(path):
     fileptr = get_fileptr(path)
     sign = fileptr.read(len(CGM_SIGNATURE))
     fileptr.close()
+    print len(sign), sign == CGM_SIGNATURE
     return sign == CGM_SIGNATURE

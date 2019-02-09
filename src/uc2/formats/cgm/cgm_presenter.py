@@ -30,23 +30,24 @@ class CGM_Presenter(BinaryModelPresenter):
     doc_file = ''
     model = None
 
-    def __init__(self, appdata, cnf={}):
+    def __init__(self, appdata, cnf=None):
+        cnf = cnf or {}
         self.config = CGM_Config()
         config_file = os.path.join(appdata.app_config_dir, 'cgm_config.xml')
         self.config.load(config_file)
         self.config.update(cnf)
         self.appdata = appdata
-        self.loader = wmf_filters.CGM_Loader()
-        self.saver = wmf_filters.CGM_Saver()
+        self.loader = cgm_filters.CgmLoader()
+        self.saver = cgm_filters.CgmSaver()
         self.new()
 
     def new(self):
         self.model = cgm_model.get_empty_cgm()
 
     def translate_from_sk2(self, sk2_doc):
-        translator = wmf_translators.SK2_to_CGM_Translator()
+        translator = cgm_translators.SK2_to_CGM_Translator()
         translator.translate(sk2_doc, self)
 
     def translate_to_sk2(self, sk2_doc):
-        translator = wmf_translators.CGM_to_SK2_Translator()
+        translator = cgm_translators.CGM_to_SK2_Translator()
         translator.translate(self, sk2_doc)

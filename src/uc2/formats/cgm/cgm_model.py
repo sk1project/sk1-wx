@@ -15,11 +15,39 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from struct import pack, unpack
+import struct
 
 from uc2 import utils
+from uc2.formats.cgm import cgm_const
 from uc2.formats.generic import BinaryModelObject
 
 
+class CgmMetafile(BinaryModelObject):
+    def __init__(self):
+        self.childs = []
+        self.chunk = ''
+
+    def resolve(self, name=''):
+        sz = '%d' % len(self.childs)
+        return False, 'CGM_METAFILE', sz
+
+
 def get_empty_cgm():
-    return BinaryModelObject()
+    return CgmMetafile()
+
+
+class CgmElement(BinaryModelObject):
+    def __init__(self, command_header, params):
+        self.cache_fields = []
+        self.command_header = command_header
+        self.params = params
+        self.chunk = command_header + params
+        self.element_id = self.u16(self.command_header[:2]) & 0xffe0
+
+    @staticmethod
+    def u16(chunk):
+        return struct.unpack("!H", chunk)[0]
+
+    def resolve(self, name=''):
+        return True, cgm_const.CGM_ID.get(
+            self.element_id, hex(self.element_id)), 0
