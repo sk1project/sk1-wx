@@ -16,15 +16,15 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-CGM_SIGNATURE = '\x00'
+CGM_SIGNATURE = 0x0020
 
 CGM_ID = {
     0x0000: 'noop',
-    0x0020: 'BEGMF',
-    0x0040: 'ENDMF',
-    0x0060: 'BEGPIC',
-    0x0080: 'BEGPICBODY',
-    0x00A0: 'ENDPIC',
+    0x0020: 'BEGIN MF',
+    0x0040: 'END MF',
+    0x0060: 'BEGIN PIC',
+    0x0080: 'BEGIN BODY',
+    0x00A0: 'END PIC',
     0x1020: 'mfversion',
     0x1040: 'mfdesc',
     0x1060: 'vdctype',

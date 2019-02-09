@@ -47,3 +47,6 @@ class CgmElement(BinaryModelObject):
     def resolve(self, name=''):
         return True, cgm_const.CGM_ID.get(
             self.element_id, hex(self.element_id)), 0
+
+    def update_for_sword(self):
+        self.cache_fields = ((0, len(self.command_header), 'Command Header'),)

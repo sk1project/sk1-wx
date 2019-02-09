@@ -16,7 +16,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from uc2 import uc2const
+from uc2 import uc2const, utils
 from uc2.formats.cgm.cgm_const import CGM_SIGNATURE
 from uc2.formats.cgm.cgm_presenter import CGM_Presenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
@@ -55,7 +55,6 @@ def cgm_saver(sk2_doc, filename=None, fileptr=None,
 
 def check_cgm(path):
     fileptr = get_fileptr(path)
-    sign = fileptr.read(len(CGM_SIGNATURE))
+    sign = fileptr.read(2)
     fileptr.close()
-    print len(sign), sign == CGM_SIGNATURE
-    return sign == CGM_SIGNATURE
+    return utils.uint16(sign) & 0xffe0 == CGM_SIGNATURE
