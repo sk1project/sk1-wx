@@ -17,6 +17,7 @@
 
 import struct
 
+from uc2 import utils
 from uc2.formats.cgm.cgm_model import CgmElement, CgmMetafile
 from uc2.formats.generic_filters import AbstractBinaryLoader, AbstractSaver
 
@@ -31,19 +32,15 @@ class CgmLoader(AbstractBinaryLoader):
         self.fileptr.seek(0, 0)
         while self.fileptr.tell() < filesz:
             header = self.fileptr.read(2)
-            size = self.u16(header) & 0x001f
+            size = utils.uint16(header) & 0x001f
 
             if size == 31:
                 header += self.fileptr.read(2)
-                size = self.u16(header[2:]) & 0x7fff
+                size = utils.uint16(header[2:]) & 0x7fff
 
             paramsz = ((size + 1) / 2) * 2
             params = self.fileptr.read(paramsz)
             self.model.childs.append(CgmElement(header, params))
-
-    @staticmethod
-    def u16(chunk):
-        return struct.unpack("!H", chunk)[0]
 
 
 class CgmSaver(AbstractSaver):

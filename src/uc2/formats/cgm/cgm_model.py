@@ -42,11 +42,7 @@ class CgmElement(BinaryModelObject):
         self.command_header = command_header
         self.params = params
         self.chunk = command_header + params
-        self.element_id = self.u16(self.command_header[:2]) & 0xffe0
-
-    @staticmethod
-    def u16(chunk):
-        return struct.unpack("!H", chunk)[0]
+        self.element_id = utils.uint16(self.command_header[:2]) & 0xffe0
 
     def resolve(self, name=''):
         return True, cgm_const.CGM_ID.get(
