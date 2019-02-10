@@ -213,9 +213,9 @@ class ProgressDialog(gtk.Dialog):
 			self.flag = True
 			try:
 				self.result = self.executable(*self.args)
-			except:
+			except Exception as e:
 				self.result = None
-				self.error_info = sys.exc_info()
+				self.error_info = e
 
 			self.progress_bar.set_text('100 %')
 			self.progress_bar.set_fraction(1.0)

@@ -54,7 +54,7 @@ class SW_Presenter:
 			if ret == gtk.RESPONSE_OK:
 				if pd.result is None:
 					pd.destroy()
-					raise IOError(*pd.error_info)
+					raise pd.error_info
 
 				self.doc_presenter = pd.result
 				pd.destroy()
