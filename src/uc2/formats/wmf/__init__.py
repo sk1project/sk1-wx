@@ -18,7 +18,7 @@
 from uc2 import uc2const
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2.formats.wmf.wmf_presenter import WMF_Presenter
-from uc2.formats.wmf.wmfconst import WMF_SIGNATURE, METAFILETYPES, METAVERSIONS
+from uc2.formats.wmf.wmf_const import WMF_SIGNATURE, METAFILETYPES, METAVERSIONS
 from uc2.utils.fsutils import get_fileptr
 from uc2.utils.mixutils import merge_cnf
 

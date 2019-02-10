@@ -18,20 +18,20 @@
 import math
 from struct import unpack, pack
 
-from uc2.formats.wmf import wmfconst
+from uc2.formats.wmf import wmf_const
 
 
 def get_markup(record):
-    markup = [] + wmfconst.GENERIC_FIELDS
-    if record.func in wmfconst.RECORD_MARKUPS:
-        markup += wmfconst.RECORD_MARKUPS[record.func]
+    markup = [] + wmf_const.GENERIC_FIELDS
+    if record.func in wmf_const.RECORD_MARKUPS:
+        markup += wmf_const.RECORD_MARKUPS[record.func]
 
-    if record.func == wmfconst.META_POLYGON:
+    if record.func == wmf_const.META_POLYGON:
         last = markup[-1]
         pos = last[0] + last[1]
         length = 4 * unpack('<h', record.chunk[last[0]:last[0] + 2])[0]
         markup.append((pos, length, 'aPoints (32-bit points)'))
-    elif record.func == wmfconst.META_POLYPOLYGON:
+    elif record.func == wmf_const.META_POLYPOLYGON:
         pos = 6
         markup.append((pos, 2, 'NumberofPolygons'))
         polygonnum = unpack('<h', record.chunk[pos:pos + 2])[0]
@@ -45,14 +45,14 @@ def get_markup(record):
             length = 4 * pointnum
             markup.append((pos, length, 'aPoints (32-bit points)'))
             pos += length
-    elif record.func == wmfconst.META_POLYLINE:
+    elif record.func == wmf_const.META_POLYLINE:
         pos = 6
         markup.append((pos, 2, 'NumberofPoints'))
         pointnum = unpack('<h', record.chunk[pos:pos + 2])[0]
         pos += 2
         length = 4 * pointnum
         markup.append((pos, length, 'aPoints (32-bit points)'))
-    elif record.func == wmfconst.META_TEXTOUT:
+    elif record.func == wmf_const.META_TEXTOUT:
         pos = 6
         markup.append((pos, 2, 'StringLength'))
         length = unpack('<h', record.chunk[pos:pos + 2])[0]
@@ -63,7 +63,7 @@ def get_markup(record):
         markup.append((pos, 2, 'YStart'))
         pos += 2
         markup.append((pos, 2, 'XStart'))
-    elif record.func == wmfconst.META_EXTTEXTOUT:
+    elif record.func == wmf_const.META_EXTTEXTOUT:
         pos = 6
         markup.append((pos, 2, 'Y'))
         pos += 2
@@ -85,7 +85,7 @@ def get_markup(record):
             if not len(record.chunk) == pos:
                 length = len(record.chunk) - pos
                 markup.append((pos, length, 'Dx'))
-    elif record.func == wmfconst.META_CREATEFONTINDIRECT:
+    elif record.func == wmf_const.META_CREATEFONTINDIRECT:
         pos = 6
         markup.append((pos, 2, 'Height'))
         pos += 2
@@ -115,7 +115,7 @@ def get_markup(record):
         pos += 1
         length = len(record.chunk) - pos
         markup.append((pos, length, 'Facename'))
-    elif record.func == wmfconst.META_DIBCREATEPATTERNBRUSH:
+    elif record.func == wmf_const.META_DIBCREATEPATTERNBRUSH:
         pos = 6
         markup.append((pos, 2, 'Style'))
         pos += 2
@@ -123,7 +123,7 @@ def get_markup(record):
         pos += 2
         length = len(record.chunk) - pos
         markup.append((pos, length, 'Variable-bit DIB Object'))
-    elif record.func == wmfconst.META_STRETCHDIB:
+    elif record.func == wmf_const.META_STRETCHDIB:
         pos = 6
         markup.append((pos, 4, 'RasterOperation'))
         pos += 4

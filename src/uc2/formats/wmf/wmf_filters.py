@@ -21,8 +21,8 @@ from struct import calcsize
 from uc2.formats.generic_filters import AbstractBinaryLoader, AbstractSaver
 from uc2.formats.wmf.wmf_model import META_Placeable_Record, \
     META_Header_Record, WMF_Record
-from uc2.formats.wmf.wmfconst import STRUCT_HEADER, STRUCT_PLACEABLE
-from uc2.formats.wmf.wmfconst import WMF_SIGNATURE, EOF_RECORD, META_EOF
+from uc2.formats.wmf.wmf_const import STRUCT_HEADER, STRUCT_PLACEABLE
+from uc2.formats.wmf.wmf_const import WMF_SIGNATURE, EOF_RECORD, META_EOF
 
 
 class WMF_Loader(AbstractBinaryLoader):
