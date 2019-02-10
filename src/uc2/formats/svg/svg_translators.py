@@ -25,8 +25,8 @@ from PIL import Image
 
 from uc2 import uc2const, libgeom, libpango, cms, sk2const, utils
 from uc2.formats.sk2 import sk2_model
-from uc2.formats.svg import svg_const, svglib
-from uc2.formats.svg.svglib import get_svg_trafo, check_svg_attr, \
+from uc2.formats.svg import svg_const, svg_utils
+from uc2.formats.svg.svg_utils import get_svg_trafo, check_svg_attr, \
     parse_svg_points, parse_svg_coords, parse_svg_color, parse_svg_stops, \
     get_svg_level_trafo
 
@@ -966,7 +966,7 @@ class SVG_to_SK2_Translator(object):
             curve.trafo = libgeom.multiply_trafo(curve.trafo, tr)
             self.append_obj(parent, svg_obj, curve, tr, sk2_style)
         elif 'd' in svg_obj.attrs:
-            paths = svglib.parse_svg_path_cmds(svg_obj.attrs['d'])
+            paths = svg_utils.parse_svg_path_cmds(svg_obj.attrs['d'])
             if not paths:
                 return
 
@@ -1003,7 +1003,7 @@ class SVG_to_SK2_Translator(object):
 
         if not svg_obj.childs:
             return
-        txt = svglib.parse_svg_text(svg_obj.childs)
+        txt = svg_utils.parse_svg_text(svg_obj.childs)
         if not txt:
             return
 
@@ -1152,7 +1152,7 @@ class SK2_to_SVG_Translator(object):
 
     def add_spacer(self, parent):
         spacer = '\n' + '\t' * self.indent_level
-        parent.childs.append(svglib.create_spacer(spacer))
+        parent.childs.append(svg_utils.create_spacer(spacer))
 
     def append_obj(self, parent, obj):
         self.add_spacer(parent)
@@ -1162,7 +1162,7 @@ class SK2_to_SVG_Translator(object):
         w, h = source_obj.page_format[1]
         self.trafo[4] = w / 2.0 + self.page_dx
         if self.page_dx:
-            rect = svglib.create_rect(self.page_dx, self.dy - h / 2.0, w, h)
+            rect = svg_utils.create_rect(self.page_dx, self.dy - h / 2.0, w, h)
             rect.attrs['style'] = 'fill:none;stroke:black;'
             self.append_obj(self.svg_mt, rect)
         self.translate_objs(self.svg_mt, source_obj.childs)
@@ -1194,7 +1194,7 @@ class SK2_to_SVG_Translator(object):
         self.indent_level -= 1
 
     def translate_layer(self, dest_parent, source_obj):
-        group = svglib.create_xmlobj('g')
+        group = svg_utils.create_xmlobj('g')
         if not source_obj.properties[0]:
             group.attrs['style'] = 'display:none;'
         self.translate_objs(group, source_obj.childs)
@@ -1217,7 +1217,7 @@ class SK2_to_SVG_Translator(object):
                 fill_obj.style[1] = []
                 self.translate_primitive(dest_parent, fill_obj)
 
-            group = svglib.create_xmlobj('g')
+            group = svg_utils.create_xmlobj('g')
             group.attrs['clip-path'] = 'url(#%s)' % clip_id
             self.translate_objs(group, source_obj.childs[1:])
             self.add_spacer(group)
@@ -1229,13 +1229,13 @@ class SK2_to_SVG_Translator(object):
                 stroke_obj.style[0] = []
                 self.translate_primitive(dest_parent, stroke_obj)
         else:
-            group = svglib.create_xmlobj('g')
+            group = svg_utils.create_xmlobj('g')
             self.translate_objs(group, source_obj.childs)
             self.add_spacer(group)
             self.append_obj(dest_parent, group)
 
     def make_clippath(self, source_obj):
-        clippath = svglib.create_xmlobj('clipPath')
+        clippath = svg_utils.create_xmlobj('clipPath')
         clippath.attrs['clipPathUnits'] = 'userSpaceOnUse'
         clippath.attrs['id'] = 'clipPath' + str(self.defs_count + 1)
         self.defs_count += 1
@@ -1257,9 +1257,9 @@ class SK2_to_SVG_Translator(object):
         style = self.translate_style(source_obj)
         trafo = libgeom.multiply_trafo(curve.trafo, self.trafo)
         paths = libgeom.apply_trafo_to_paths(curve.paths, trafo)
-        pth = svglib.create_xmlobj('path')
+        pth = svg_utils.create_xmlobj('path')
         pth.attrs['style'] = style
-        pth.attrs['d'] = svglib.translate_paths_to_d(paths)
+        pth.attrs['d'] = svg_utils.translate_paths_to_d(paths)
         self.append_obj(dest_parent, pth)
         arrows = curve.arrows_to_curve()
         if arrows:
@@ -1270,7 +1270,7 @@ class SK2_to_SVG_Translator(object):
         image_stream = StringIO()
         surface.write_to_png(image_stream)
         content = b64encode(image_stream.getvalue())
-        image = svglib.create_xmlobj('image')
+        image = svg_utils.create_xmlobj('image')
         w, h = source_obj.get_size()
         trafo = [1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
         trafo = libgeom.multiply_trafo(trafo, source_obj.trafo)
@@ -1287,7 +1287,7 @@ class SK2_to_SVG_Translator(object):
         style = {}
         self.set_fill(style, obj)
         self.set_stroke(style, obj)
-        return svglib.translate_style_dict(style)
+        return svg_utils.translate_style_dict(style)
 
     def set_stroke(self, svg_style, obj):
         if not obj.style[1]:
@@ -1376,7 +1376,7 @@ class SK2_to_SVG_Translator(object):
             attrs['y1'] = str(y1)
             attrs['x2'] = str(x2)
             attrs['y2'] = str(y2)
-        grad_obj = svglib.create_xmlobj(tag, attrs)
+        grad_obj = svg_utils.create_xmlobj(tag, attrs)
         lvl = self.indent_level
         self.indent_level = 1
         self.append_obj(self.defs, grad_obj)
@@ -1394,7 +1394,7 @@ class SK2_to_SVG_Translator(object):
             clr = cms.rgb_to_hexcolor(clr[1])
             alpha = str(color[2])
             attrs['style'] = 'stop-color:%s;stop-opacity:%s;' % (clr, alpha)
-            stop_obj = svglib.create_xmlobj('stop', attrs)
+            stop_obj = svg_utils.create_xmlobj('stop', attrs)
             self.append_obj(parent, stop_obj)
         self.indent_level -= 1
         self.add_spacer(parent)

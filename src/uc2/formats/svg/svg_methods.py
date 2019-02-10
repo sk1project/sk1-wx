@@ -18,7 +18,7 @@
 from copy import deepcopy
 
 from uc2.formats.svg import svg_const
-from uc2.formats.svg.svglib import create_xmlobj, create_nl
+from uc2.formats.svg.svg_utils import create_xmlobj, create_nl
 
 
 def create_new_svg(config):
