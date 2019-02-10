@@ -16,7 +16,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from uc2.formats.cgm import cgm_utils
-from uc2.formats.cgm.cgm_model import CgmElement, get_empty_cgm
+from uc2.formats.cgm.cgm_model import get_empty_cgm, element_factory
 from uc2.formats.generic_filters import AbstractBinaryLoader, AbstractSaver
 
 
@@ -35,7 +35,7 @@ class CgmLoader(AbstractBinaryLoader):
                 header += self.fileptr.read(2)
                 size = cgm_utils.parse_header(header)[2]
             params = self.fileptr.read(((size + 1) // 2) * 2)
-            self.model.childs.append(CgmElement(header, params))
+            self.model.add(element_factory(header, params))
 
 
 class CgmSaver(AbstractSaver):

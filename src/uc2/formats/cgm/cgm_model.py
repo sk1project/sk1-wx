@@ -49,5 +49,9 @@ class CgmElement(BinaryModelObject):
     def update_for_sword(self):
         msg = 'Command Header\n' \
               '  %d - element class\n' \
-              '  %s - element id' % (self.element_class, hex(self.element_id))
-        self.cache_fields = [(0, len(self.command_header), msg),]
+              '  0x%04x - element id' % (self.element_class, self.element_id)
+        self.cache_fields = [(0, len(self.command_header), msg), ]
+
+
+def element_factory(header, params):
+    return CgmElement(header, params)
