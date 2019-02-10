@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2017 by Igor E. Novikov
+#  Copyright (C) 2017-2019 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -17,6 +17,27 @@
 
 
 CGM_SIGNATURE = 0x0020
+
+_reserved = 'Reserved for future standardization'
+
+CGM_CLS = {
+    0: 'Delimiter elements',
+    1: 'Metafile Descriptor elements',
+    2: 'Picture Descriptor elements',
+    3: 'Control elements',
+    4: 'Graphical Primitive elements',
+    5: 'Attribute elements',
+    6: 'Escape element',
+    7: 'External elements',
+    8: 'Segment Control and Segment Attribute elements',
+    9: 'Application Structure Descriptor elements',
+    10: _reserved,
+    11: _reserved,
+    12: _reserved,
+    13: _reserved,
+    14: _reserved,
+    15: _reserved,
+}
 
 CGM_ID = {
     0x0000: "no-op",
