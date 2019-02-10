@@ -15,10 +15,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import struct
-
-from uc2 import utils
-from uc2.formats.cgm.cgm_model import CgmElement, CgmMetafile
+from uc2.formats.cgm import cgm_utils
+from uc2.formats.cgm.cgm_model import CgmElement, get_empty_cgm
 from uc2.formats.generic_filters import AbstractBinaryLoader, AbstractSaver
 
 
@@ -26,20 +24,17 @@ class CgmLoader(AbstractBinaryLoader):
     name = 'CGM_Loader'
 
     def do_load(self):
-        self.model = CgmMetafile()
+        self.model = get_empty_cgm()
         self.fileptr.seek(0, 2)
         filesz = self.fileptr.tell()
         self.fileptr.seek(0, 0)
         while self.fileptr.tell() < filesz:
             header = self.fileptr.read(2)
-            size = utils.uint16(header) & 0x001f
-
-            if size == 31:
+            size = cgm_utils.parse_header(header)[2]
+            if size == 0x1f:
                 header += self.fileptr.read(2)
-                size = utils.uint16(header[2:]) & 0x7fff
-
-            paramsz = ((size + 1) / 2) * 2
-            params = self.fileptr.read(paramsz)
+                size = cgm_utils.parse_header(header)[2]
+            params = self.fileptr.read(((size + 1) // 2) * 2)
             self.model.childs.append(CgmElement(header, params))
 
 

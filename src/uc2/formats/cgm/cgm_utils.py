@@ -21,8 +21,10 @@ from uc2 import utils
 
 
 def parse_header(chunk):
-    if len(chunk) == 2:
-        header = utils.uint16(chunk)
-        element_class = header >> 12
-        element_id = (header >> 5) & 0x7f
-        size = header & 0x001f
+    header = utils.uint16(chunk[:2])
+    element_class = header >> 12
+    element_id = header & 0xffe0
+    size = header & 0x001f
+    if len(chunk) == 4:
+        size = utils.uint16(chunk[2:]) & 0x7fff
+    return element_class, element_id, size

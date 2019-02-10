@@ -15,8 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from uc2 import utils
-from uc2.formats.cgm import cgm_const
+from uc2.formats.cgm import cgm_const, cgm_utils
 from uc2.formats.generic import BinaryModelObject
 
 
@@ -40,11 +39,15 @@ class CgmElement(BinaryModelObject):
         self.command_header = command_header
         self.params = params
         self.chunk = command_header + params
-        self.element_id = utils.uint16(self.command_header[:2]) & 0xffe0
+        self.element_class, self.element_id = cgm_utils.parse_header(
+            self.command_header)[:2]
 
     def resolve(self, name=''):
         return True, cgm_const.CGM_ID.get(
             self.element_id, hex(self.element_id)), 0
 
     def update_for_sword(self):
-        self.cache_fields = ((0, len(self.command_header), 'Command Header'),)
+        msg = 'Command Header\n' \
+              '  %d - element class\n' \
+              '  %s - element id' % (self.element_class, hex(self.element_id))
+        self.cache_fields = [(0, len(self.command_header), msg),]
