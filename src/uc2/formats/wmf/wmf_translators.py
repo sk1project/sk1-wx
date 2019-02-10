@@ -21,8 +21,8 @@ from cStringIO import StringIO
 
 from uc2 import uc2const, libgeom, libpango, libimg, sk2const
 from uc2.formats.sk2 import sk2_model
-from uc2.formats.wmf import wmf_const, wmf_hatches, wmflib, wmf_model
-from uc2.formats.wmf.wmflib import get_data, rndpoint
+from uc2.formats.wmf import wmf_const, wmf_hatches, wmf_utils, wmf_model
+from uc2.formats.wmf.wmf_utils import get_data, rndpoint
 from uc2.libgeom import multiply_trafo, apply_trafo_to_point
 
 LOG = logging.getLogger(__name__)
@@ -447,7 +447,7 @@ class WMF_to_SK2_Translator(object):
         else:
             charset = wmf_const.META_CHARSETS[wmf_const.ANSI_CHARSET]
 
-        fontface = wmflib.parse_nt_string(chunk[18:]).encode('utf-8')
+        fontface = wmf_utils.parse_nt_string(chunk[18:]).encode('utf-8')
         font_family = 'Sans'
         if fontface in libpango.get_fonts()[0]:
             font_family = fontface
@@ -457,7 +457,7 @@ class WMF_to_SK2_Translator(object):
 
     def tr_dibcreate_pat_brush(self, chunk):
         # style, colorusage = get_data('<hh', chunk[:4])
-        imagestr = wmflib.dib_to_imagestr(chunk[4:])
+        imagestr = wmf_utils.dib_to_imagestr(chunk[4:])
         bitsperpixel = get_data('<h', chunk[18:20])[0]
 
         ptrn, flag = libimg.read_pattern(imagestr)
@@ -714,7 +714,7 @@ class WMF_to_SK2_Translator(object):
     def tr_stretch_dib(self, chunk):
         src_h, src_w, = get_data('<hh', chunk[6:10])
         dst_h, dst_w, dst_y, dst_x = get_data('<hhhh', chunk[14:22])
-        imagestr = wmflib.dib_to_imagestr(chunk[22:])
+        imagestr = wmf_utils.dib_to_imagestr(chunk[22:])
 
         tr = self.get_trafo()
         p0 = apply_trafo_to_point([dst_x, dst_y], tr)
