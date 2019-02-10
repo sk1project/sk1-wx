@@ -18,7 +18,7 @@
 
 CGM_SIGNATURE = 0x0020
 
-_reserved = 'Reserved for future standardization'
+_reserved = 'Reserved for future'
 
 CGM_CLS = {
     0: 'Delimiter elements',
@@ -29,8 +29,8 @@ CGM_CLS = {
     5: 'Attribute elements',
     6: 'Escape element',
     7: 'External elements',
-    8: 'Segment Control and Segment Attribute elements',
-    9: 'Application Structure Descriptor elements',
+    8: 'Segment Control/Attribute',
+    9: 'Application Struct. Descriptor',
     10: _reserved,
     11: _reserved,
     12: _reserved,

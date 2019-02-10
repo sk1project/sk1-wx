@@ -18,6 +18,7 @@
 from uc2.formats.cgm import cgm_const, cgm_utils
 from uc2.formats.generic import BinaryModelObject
 
+parse_header = cgm_utils.parse_header
 
 class CgmMetafile(BinaryModelObject):
     def __init__(self):
@@ -39,17 +40,23 @@ class CgmElement(BinaryModelObject):
         self.command_header = command_header
         self.params = params
         self.chunk = command_header + params
-        self.element_class, self.element_id = cgm_utils.parse_header(
-            self.command_header)[:2]
+        self.element_class, self.element_id, self.params_sz = parse_header(
+            self.command_header)
 
     def resolve(self, name=''):
         return True, cgm_const.CGM_ID.get(
             self.element_id, hex(self.element_id)), 0
 
     def update_for_sword(self):
+        cgm_cls_name = cgm_const.CGM_CLS.get(self.element_class, '')
         msg = 'Command Header\n' \
               '  %d - element class\n' \
-              '  0x%04x - element id' % (self.element_class, self.element_id)
+              '  (%s)\n' \
+              '  0x%04x - element id\n' \
+              '  %d - parameter list size (bytes)' \
+              % (self.element_class, cgm_cls_name,
+                 self.element_id, self.params_sz)
+        msg += '\n' + '.' * 35
         self.cache_fields = [(0, len(self.command_header), msg), ]
 
 
