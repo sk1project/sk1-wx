@@ -222,7 +222,7 @@ class ProgressDialog(gtk.Dialog):
             try:
                 self.result = self.executable(*self.args)
             except Exception as e:
-                LOG.exception('Import error:')
+                LOG.exception('Execution error:')
                 self.result = None
                 self.error_info = e
 
