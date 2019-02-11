@@ -14,6 +14,9 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# Specification:
+# https://standards.iso.org/ittf/PubliclyAvailableStandards/c032380_ISO_IEC_8632-3_1999(E).zip
 
 
 from uc2 import uc2const, utils
