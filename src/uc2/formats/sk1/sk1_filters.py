@@ -19,7 +19,7 @@ import logging
 
 from uc2 import uc2const
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
-from uc2.formats.sk1 import sk1const
+from uc2.formats.sk1 import sk1_const
 from uc2.formats.sk1.model import SK1Document, SK1Layout, SK1Grid, SK1Pages, \
     SK1Page, SK1Layer, SK1MasterLayer, SK1GuideLayer, SK1Guide, SK1Group, \
     SK1MaskGroup, Rectangle, Ellipse, PolyBezier, SK1Text, SK1BitmapData, \
@@ -318,14 +318,14 @@ class SK1Loader(AbstractLoader):
         self.add_object(obj)
 
     def e(self, m11, m12, m21, m22, dx, dy, start_angle=0.0, end_angle=0.0,
-          arc_type=sk1const.ArcPieSlice):
+          arc_type=sk1_const.ArcPieSlice):
         trafo = Trafo(m11, m12, m21, m22, dx, dy)
         obj = Ellipse(trafo, start_angle, end_angle, arc_type)
         self.set_style(obj)
         self.add_object(obj)
 
     def b(self):
-        self.paths = [[None, [], sk1const.CURVE_OPENED]]
+        self.paths = [[None, [], sk1_const.CURVE_OPENED]]
         obj = PolyBezier(paths_list=self.paths)
         self.set_style(obj)
         self.add_object(obj)
@@ -349,10 +349,10 @@ class SK1Loader(AbstractLoader):
             points.append(point)
 
     def bn(self):
-        self.paths.append([None, [], sk1const.CURVE_OPENED])
+        self.paths.append([None, [], sk1_const.CURVE_OPENED])
 
     def bC(self):
-        self.paths[-1][2] = sk1const.CURVE_CLOSED
+        self.paths[-1][2] = sk1_const.CURVE_CLOSED
 
     def txt(self, text, trafo, horiz_align, vert_align, chargap, wordgap,
             linegap):
