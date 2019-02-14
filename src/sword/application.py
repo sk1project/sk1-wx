@@ -51,6 +51,7 @@ class Application:
     current_doc = None
     docs = []
     doc_counter = 0
+    last_error = None
 
     def __init__(self, path):
 
@@ -66,7 +67,7 @@ class Application:
         log_level = config.log_level
         self.log_filepath = os.path.join(self.appdata.app_config_dir, 'sword.log')
         config_logging(get_sys_path(self.log_filepath), log_level)
-        sys.stderr = StreamLogger()
+        sys.stderr = StreamLogger(self)
         LOG.info('Logging started')
 
         self.accelgroup = gtk.AccelGroup()
@@ -119,11 +120,6 @@ class Application:
     def new(self):
         pass
 
-    #		doc = SW_Presenter(self)
-    #		self.docs.append(doc)
-    #		self.set_current_doc(doc)
-    #		events.emit(events.APP_STATUS, _('New document created'))
-
     def open(self, doc_file=''):
         if not doc_file:
             doc_file = dialogs.get_open_file_name(self.mw, self,
@@ -136,8 +132,9 @@ class Application:
 
                 doc = SW_Presenter(self, doc_file)
             except:
-                details = sys.exc_info()[1].__str__() + '\n' + \
-                          traceback.format_tb(sys.exc_info()[2])[0]
+                details = self.last_error if self.last_error \
+                    else sys.exc_info()[1].__str__() + '\n' + \
+                    traceback.format_tb(sys.exc_info()[2])[0]
                 msg = _('Cannot open file')
                 msg = "%s '%s'" % (msg, doc_file)
                 sec = _('The file may be corrupted or not supported format')
@@ -177,7 +174,8 @@ class Application:
             doc.save()
             events.emit(events.DOC_SAVED, doc)
         except:
-            details = sys.exc_info()[1].__str__() + sys.exc_info()[2].__str__()
+            details = self.last_error if self.last_error \
+                else sys.exc_info()[1].__str__() + sys.exc_info()[2].__str__()
             msg = _('Cannot save file')
             msg = "%s '%s'" % (msg, self.current_doc.doc_file)
             sec = _('Please check file write permissions')
@@ -209,8 +207,9 @@ class Application:
                 self.current_doc.save()
             except IOError:
                 self.current_doc.set_doc_file(old_file, old_name)
-                details = sys.exc_info()[1].__str__() + sys.exc_info()[
-                    2].__str__()
+                details = self.last_error if self.last_error \
+                    else sys.exc_info()[1].__str__() + \
+                         sys.exc_info()[2].__str__()
                 first = _('Cannot save document')
                 sec = _('Please check file name and write permissions')
                 msg = ("%s '%s'.") % (first, self.current_doc.doc_name)

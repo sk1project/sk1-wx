@@ -25,8 +25,9 @@ class StreamLogger:
     msg = ''
     counter = 0
 
-    def __init__(self):
+    def __init__(self, app):
         self.logger = LOG.critical
+        self.app = app
 
     def write(self, msg):
         msg = fsutils.get_utf8_path(msg)
@@ -36,6 +37,7 @@ class StreamLogger:
                 self.counter += 1
             else:
                 self.logger(self.msg + msg)
+                self.app.last_error = self.msg + msg
                 self.msg = ''
                 self.counter = 0
         else:
