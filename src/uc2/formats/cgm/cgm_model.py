@@ -15,10 +15,12 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from uc2 import utils
 from uc2.formats.cgm import cgm_const, cgm_utils
 from uc2.formats.generic import BinaryModelObject
 
 parse_header = cgm_utils.parse_header
+
 
 class CgmMetafile(BinaryModelObject):
     def __init__(self):
@@ -42,6 +44,7 @@ class CgmElement(BinaryModelObject):
         self.chunk = command_header + params
         self.element_class, self.element_id, self.params_sz = parse_header(
             self.command_header)
+        self.is_padding = self.params_sz < len(self.params)
 
     def resolve(self, name=''):
         return True, cgm_const.CGM_ID.get(
@@ -59,6 +62,61 @@ class CgmElement(BinaryModelObject):
         msg += '\n' + '.' * 35
         self.cache_fields = [(0, len(self.command_header), msg), ]
 
+    def do_update(self, presenter=None, action=False):
+        BinaryModelObject.do_update(self, presenter, action)
+        if action and self.is_padding:
+            self.cache_fields.append((len(self.chunk) - 1, 1, 'padding byte'))
+
+
+class CgmBeginMetafile(CgmElement):
+    title_sz = 0
+    title = ''
+
+    def __init__(self, command_header, params):
+        CgmElement.__init__(self, command_header, params)
+        if params:
+            self.title_sz = utils.byte2py_int(self.params[0])
+            self.title = self.params[1:]
+
+    def update_for_sword(self):
+        CgmElement.update_for_sword(self)
+        pos = len(self.command_header)
+        if self.params:
+            self.cache_fields += [(pos, 1, 'text length'),
+                                  (pos + 1, self.title_sz, 'file title')]
+
+
+class CgmMetafileVersion(CgmElement):
+    def __init__(self, command_header, params):
+        CgmElement.__init__(self, command_header, params)
+
+    def update_for_sword(self):
+        CgmElement.update_for_sword(self)
+        pos = len(self.command_header)
+        if self.params:
+            self.cache_fields += [(pos, len(self.params), 'version'), ]
+
+
+class CgmMetafileDescription(CgmElement):
+    def __init__(self, command_header, params):
+        CgmElement.__init__(self, command_header, params)
+        if params:
+            pass
+
+    def update_for_sword(self):
+        CgmElement.update_for_sword(self)
+        pos = len(self.command_header)
+        if self.params:
+            self.cache_fields += [(pos, len(self.params), 'version'), ]
+
+
+ID_TO_CLS = {
+    0x0020: CgmBeginMetafile,
+    0x1020: CgmMetafileVersion,
+    0x1040: CgmMetafileDescription,
+}
+
 
 def element_factory(header, params):
-    return CgmElement(header, params)
+    element_id = parse_header(header)[1]
+    return ID_TO_CLS.get(element_id, CgmElement)(header, params)
