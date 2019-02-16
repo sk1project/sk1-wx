@@ -31,8 +31,8 @@ class Decoder(gtk.VBox):
     def __init__(self, app):
         gtk.VBox.__init__(self)
         self.app = app
-        self.caption_label = TabIconCaption(gtk.STOCK_INDEX, self.caption)
-        self.data = ''
+        self.caption_label = TabIconCaption(gtk.STOCK_SORT_ASCENDING,
+                                            self.caption)
 
         spacer = gtk.VBox()
         self.add(spacer)

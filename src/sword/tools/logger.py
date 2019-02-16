@@ -45,8 +45,7 @@ class Logger(gtk.VBox):
         self.app = app
         self.logs = []
         self.icon_theme = gtk.icon_theme_get_default()
-        self.caption_label = TabIconCaption(gtk.STOCK_MISSING_IMAGE,
-                                            self.caption)
+        self.caption_label = TabIconCaption(gtk.STOCK_INFO, self.caption)
 
         spacer = gtk.VBox()
         self.add(spacer)
