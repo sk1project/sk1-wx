@@ -29,7 +29,7 @@ FILE_ICON = gtk.Image().render_icon(gtk.STOCK_FILE, gtk.ICON_SIZE_MENU)
 try:
     from gnomevfs import get_mime_type
 except:
-    get_mime_type = lambda path: FILE_ICON
+    get_mime_type = lambda path: gtk.STOCK_FILE
 
 LOG = logging.getLogger(__name__)
 
