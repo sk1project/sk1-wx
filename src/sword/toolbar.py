@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2012 by Igor E. Novikov
+# Copyright (C) 2012-2019 by Igor E. Novikov
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,30 +26,28 @@ class AppToolbar(gtk.Toolbar):
         self.app = mw.app
         self.actions = self.app.actions
 
-        self.set_style(gtk.TOOLBAR_ICONS)
+        self.set_style(gtk.TOOLBAR_BOTH)
         self.build()
 
     def create_entries(self):
         return [
-            'NEW',
-            None,
             'OPEN',
             'SAVE',
             'SAVE_AS',
             'CLOSE',
-            None,
-            'CUT',
-            'COPY',
-            'PASTE',
-            'DELETE',
             None,
             'LOGS',
             'PREFERENCES',
         ]
 
     def build(self):
+        sep = gtk.SeparatorToolItem()
+        sep.set_draw(False)
+        sep.set_expand(True)
+        self.insert(sep, 0)
+
         entries = self.create_entries()
-        index = 0
+        index = 1
         for entry in entries:
             if entry is None:
                 button = gtk.SeparatorToolItem()
@@ -58,3 +56,8 @@ class AppToolbar(gtk.Toolbar):
                 button = action.create_tool_item()
             self.insert(button, index)
             index += 1
+
+        sep = gtk.SeparatorToolItem()
+        sep.set_draw(False)
+        sep.set_expand(True)
+        self.insert(sep, index)

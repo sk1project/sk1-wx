@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2012 by Igor E. Novikov
+# Copyright (C) 2012-2019 by Igor E. Novikov
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -101,6 +101,13 @@ def create_actions(app):
          proxy.root_object, [events.NO_DOCS, events.DOC_CHANGED,
                              events.SELECTION_CHANGED], insp.can_set_root],
 
+        ['COLLAPSE', _('Collapse model'), _('Collapse model'),
+         gtk.STOCK_LEAVE_FULLSCREEN, None,
+         proxy.collapse, None, None],
+        ['EXPAND', _('Expand model'), _('Expand model'),
+         gtk.STOCK_FULLSCREEN, None,
+         proxy.expand, None, None],
+
         ['CLEAR_HISTORY', _('Clear history'), _('Clear history'),
          gtk.STOCK_CLEAR,
          None, proxy.clear_history, [events.NO_DOCS, events.DOC_CHANGED,
@@ -140,11 +147,11 @@ def create_actions(app):
                                     events.SELECTION_CHANGED],
          insp.can_copy_to_clip],
 
-        ['PREFERENCES', _('Preferences...'), _('Preferences...'),
+        ['PREFERENCES', _('Preferences'), _('Preferences...'),
          gtk.STOCK_PREFERENCES, None,
          proxy.prefs, None, None],
 
-        ['LOGS', _('Show logs...'), _('Show logs...'), gtk.STOCK_INDEX, None,
+        ['LOGS', _('Logs'), _('Show logs...'), gtk.STOCK_INDEX, None,
          proxy.logs, None, None],
 
         ['REPORT_BUG', _('_Report bug'), _('Report bug'),

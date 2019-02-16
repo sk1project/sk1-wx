@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2012 by Igor E. Novikov
+# Copyright (C) 2012-2019 by Igor E. Novikov
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -97,7 +97,7 @@ class FileListModel(gtk.ListStore):
                 mime = get_mime_type(path)
                 sorted_files.append((get_image(mime), item))
             except RuntimeError:
-                LOG.exception('Error in file MIME detection')
+                LOG.exception('Error in file MIME detection %s', path)
                 sorted_files.append((FILE_ICON, item))
         self.files = sorted_files
 
