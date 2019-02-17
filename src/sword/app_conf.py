@@ -30,10 +30,10 @@ class AppData(UCData):
     app_domain = 'sk1project.net'
     app_icon = None
     doc_icon = None
-    version = "2.0"
+    version = "1.1"
     revision = ""
 
-    app_config_dir = expanduser_unicode(os.path.join('~', '.config', 'sword2'))
+    app_config_dir = expanduser_unicode(os.path.join('~', '.config', 'sword'))
     app_temp_dir = os.path.join(app_config_dir, 'temp')
 
     def __init__(self, app):

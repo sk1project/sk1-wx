@@ -19,7 +19,6 @@ import gtk
 import os
 
 from sword import config, events
-from sword.menubar import AppMenubar
 from sword.toolbar import AppToolbar
 from sword.tools import AppTools
 
@@ -32,9 +31,6 @@ class MainWindow(gtk.Window):
         self.app = app
 
         vbox = gtk.VBox(False, 0)
-
-        self.mb = AppMenubar(self)
-        vbox.pack_start(self.mb, False, False, 0)
 
         self.toolbar = AppToolbar(self)
         vbox.pack_start(self.toolbar, False, False, 0)
