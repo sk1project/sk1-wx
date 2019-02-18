@@ -16,11 +16,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import gtk
+import logging
 
 from sword import _, config
 from sword.widgets.buttons import NavigationButton
 from sword.widgets.captions import TabIconCaption
-from uc2 import events
+from uc2 import events, msgconst
 
 log_icons = {
     0: gtk.STOCK_EXECUTE,
@@ -30,6 +31,8 @@ log_icons = {
     4: gtk.STOCK_DIALOG_ERROR,
     5: gtk.STOCK_STOP,
 }
+
+LOG = logging.getLogger(__name__)
 
 
 class Logger(gtk.VBox):
@@ -140,4 +143,5 @@ class Logger(gtk.VBox):
 
     def listener(self, *args):
         self.logs.append(args)
+        LOG.info('UC2: %s - %s', msgconst.MESSAGES[args[0]], args[1])
         self.update_view()
