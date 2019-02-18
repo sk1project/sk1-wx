@@ -35,19 +35,16 @@ def get_prefs_dialog(app):
                          gtk.STOCK_APPLY, gtk.RESPONSE_ACCEPT))
     dialog.vbox.pack_start(nb)
 
-    bbox = gtk.HBox()
-    dialog.vbox.pack_start(bbox, True, False, 0)
-    about = gtk.Button('About...', stock=gtk.STOCK_ABOUT)
+    about = gtk.Button(stock=gtk.STOCK_ABOUT)
     about.connect('clicked', app.proxy.about)
     bbox_start = gtk.VBox()
     bbox_start.pack_start(about, False, False, 3)
+    bbox = gtk.HBox()
     bbox.pack_start(bbox_start, False, False, 3)
     dialog.vbox.remove(dialog.action_area)
     bbox.pack_end(dialog.action_area)
-    bbox_start.show()
-    bbox.show()
-    about.show()
-    nb.show()
+    dialog.vbox.pack_start(bbox, True, False, 0)
+    dialog.show_all()
 
     ret = dialog.run()
     if ret == gtk.RESPONSE_ACCEPT:
