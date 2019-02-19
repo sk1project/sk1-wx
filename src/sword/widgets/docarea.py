@@ -106,7 +106,7 @@ class DocToolbar(gtk.Toolbar):
             self.insert(button, index)
             index += 1
         btn = gtk.ToggleToolButton(gtk.STOCK_JUSTIFY_FILL)
-        btn.set_tooltip_text("Source view")
+        btn.set_tooltip_text("Data view")
         btn.set_active(config.bin_view)
         btn.connect("toggled", self.docarea.change_view)
         self.insert(btn, index)
