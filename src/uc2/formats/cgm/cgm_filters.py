@@ -31,12 +31,11 @@ class CgmLoader(AbstractBinaryLoader):
         self.fileptr.seek(0, 0)
         while self.fileptr.tell() < filesz:
             header = self.fileptr.read(2)
-            size = cgm_utils.parse_header(header)[2]
+            element_id, size = cgm_utils.parse_header(header)[1:]
             if size == 0x1f:
                 header += self.fileptr.read(2)
                 size = cgm_utils.parse_header(header)[2]
             params = self.fileptr.read(((size + 1) // 2) * 2)
-            element_id = cgm_utils.parse_header(header)[1]
             if element_id == cgm_const.BEGIN_PICTURE:
                 picture = cgm_model.CgmPicture()
                 self.parent_stack[-1].add(picture)
