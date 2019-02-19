@@ -311,6 +311,7 @@ THEME_ASCII = '#D99848'
 
 class BinaryDataViewer(gtk.HBox):
     current_obj = None
+    ascii_text = ''
 
     def __init__(self, parent, app, presenter):
 
@@ -351,16 +352,31 @@ class BinaryDataViewer(gtk.HBox):
         # Left lines --------------------
 
         # Right ASCII lines ======================
+        self.ascii_tb = gtk.TextBuffer()
+        self.ascii_editor = gtk.TextView(self.ascii_tb)
+        self.ascii_editor.connect("button-release-event",
+                                  self.check_ascii_selection)
+
+        self.set_ascii_tags()
+        self.ascii_editor.set_editable(False)
+        self.ascii_editor.set_sensitive(False)
+        self.ascii_editor.set_wrap_mode(gtk.WRAP_NONE)
+        self.ascii_editor.set_border_width(0)
+        self.ascii_editor.set_left_margin(3)
+        self.ascii_editor.set_right_margin(3)
+        editor_sz = config.fixed_font_width * 15 + 2 * BORDER
+        self.ascii_editor.set_size_request(editor_sz, -1)
+        self.ascii_editor.modify_base(gtk.STATE_INSENSITIVE,
+                                      gtk.gdk.Color(THEME_BG))
+        self.ascii_editor.modify_text(gtk.STATE_NORMAL,
+                                      gtk.gdk.Color(THEME_ASCII))
+
         ascii_panel = Panel(THEME_BG)
         ascii_panel_hbox = gtk.HBox()
         ascii_panel.add(ascii_panel_hbox)
-        self.ascii_label = gtk.Label()
-        self.ascii_label.modify_font(pango.FontDescription(LABEL_FNT))
-        self.ascii_label.modify_fg(gtk.STATE_NORMAL, gtk.gdk.Color(THEME_ASCII))
-        self.ascii_label.set_line_wrap(False)
         ascii_panel_hbox.pack_start(VLine(THEME_BRD), False, True)
         ascii_panel_vbox = gtk.VBox()
-        ascii_panel_vbox.pack_start(self.ascii_label, False, True)
+        ascii_panel_vbox.pack_start(self.ascii_editor, False, True)
         ascii_panel_hbox.pack_start(ascii_panel_vbox, False, True, 3)
         ascii_panel_hbox.pack_start(VLine(THEME_BRD), False, True)
         # Right ASCII lines end --------------------
@@ -402,18 +418,27 @@ class BinaryDataViewer(gtk.HBox):
 
         for item in COLORS:
             self.tb.create_tag(item[0],
-                               foreground=item[1], background=THEME_BG_ALT)
+                               foreground=item[1], background=THEME_PNL2)
+
+        self.ascii_tb.create_tag('selection',
+                                 foreground='#ffffff', background=THEME_PNL2)
 
         eventloop = self.presenter.eventloop
         eventloop.connect(eventloop.SELECTION_CHANGED, self.reflect_selection)
 
     def check_selection(self, *args):
         if self.tb.get_has_selection():
-            range = self.tb.get_selection_bounds()
-            if range:
-                events.emit(events.BIN_SELECTION, self.tb.get_text(*range))
+            rng = self.tb.get_selection_bounds()
+            self.set_ascii_selection(rng)
+            if rng:
+                events.emit(events.BIN_SELECTION, self.tb.get_text(*rng))
                 return
+        else:
+            self.set_ascii_selection()
         events.emit(events.BIN_SELECTION, '')
+
+    def check_ascii_selection(self, *args):
+        pass
 
     def reflect_selection(self, *args):
         self.current_obj = args[0][0][0]
@@ -423,6 +448,8 @@ class BinaryDataViewer(gtk.HBox):
         obj = self.current_obj
         self.tb.set_text('')
         self.iter = self.tb.get_iter_at_offset(0)
+        self.ascii_tb.set_text('')
+        self.ascii_iter = self.ascii_tb.get_iter_at_offset(0)
 
         chunk = obj.chunk.encode('hex')
         lines = split_string(chunk, 16 * 2, '')
@@ -455,9 +482,8 @@ class BinaryDataViewer(gtk.HBox):
 
         self.set_hex_data(formatted_chunk)
         self.num_label.set_text(num_str)
-        chunk_sz = len(orig_chunk)
-        self.ascii_label.set_text(orig_chunk if chunk_sz > 15
-                                  else orig_chunk + '\n' + ' ' * 16)
+        self.ascii_text = orig_chunk.strip()
+        self.set_ascii_data(self.ascii_text)
 
         self.set_hex_data('\n\n')
 
@@ -488,8 +514,41 @@ class BinaryDataViewer(gtk.HBox):
     def set_hex_data(self, text):
         self.tb.insert_with_tags_by_name(self.iter, text, "hex")
 
+    def set_ascii_data(self, text):
+        self.ascii_tb.insert_with_tags_by_name(self.ascii_iter, text, "ascii")
+
     def set_tags(self):
         self.tb.create_tag("hex",
                            weight=pango.WEIGHT_NORMAL,
                            font=config.fixed_font,
                            size=config.fixed_font_size * pango.SCALE)
+
+    def set_ascii_tags(self):
+        self.ascii_tb.create_tag("ascii",
+                                 weight=pango.WEIGHT_NORMAL,
+                                 font=config.fixed_font,
+                                 size=config.fixed_font_size * pango.SCALE)
+
+    def set_ascii_selection(self, rng=None):
+        self.ascii_tb.remove_tag_by_name('selection',
+                         self.ascii_tb.get_iter_at_offset(0),
+                         self.ascii_tb.get_iter_at_offset(len(self.ascii_text)))
+        if not rng:
+            return
+
+        def ascii_position(x):
+            g = (x + 1) // 9
+            x = (g * 8 + (x + 1 - g * 9)) // 2
+
+            if x < 16:
+                return x
+            g = x // 16
+            return g + x
+
+        x0 = ascii_position(rng[0].get_offset())
+        x1 = ascii_position(rng[1].get_offset())
+        if x0 < len(self.ascii_text) and x1 <= self.ascii_text:
+            self.ascii_tb.apply_tag_by_name('selection',
+                          self.ascii_tb.get_iter_at_offset(x0),
+                          self.ascii_tb.get_iter_at_offset(x1))
+
