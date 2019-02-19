@@ -19,6 +19,7 @@ import gtk
 
 NODE_ICON = gtk.Image().render_icon(gtk.STOCK_DIRECTORY, gtk.ICON_SIZE_MENU)
 LEAF_ICON = gtk.Image().render_icon(gtk.STOCK_FILE, gtk.ICON_SIZE_MENU)
+ICON_CACHE = {}
 COLOR = '#A7A7A7'
 
 
@@ -59,6 +60,15 @@ class ObjectTreeModel(gtk.TreeStore):
     def get_obj_by_path(self, path):
         return self.model_dict[path.__str__()]
 
-    def get_icon(self, type):
-        if type: return LEAF_ICON
-        return NODE_ICON
+    def get_icon(self, icon_type):
+        if isinstance(icon_type, str):
+            if icon_type not in ICON_CACHE:
+                try:
+                    ICON_CACHE[icon_type] = gtk.Image().render_icon(
+                        icon_type, gtk.ICON_SIZE_MENU)
+                except:
+                    ICON_CACHE[icon_type] = gtk.Image().render_icon(
+                        gtk.STOCK_DIALOG_WARNING, gtk.ICON_SIZE_MENU)
+            return ICON_CACHE[icon_type]
+
+        return LEAF_ICON if icon_type else NODE_ICON
