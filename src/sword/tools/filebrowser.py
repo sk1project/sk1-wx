@@ -29,10 +29,11 @@ from uc2 import uc2const
 
 def _get_open_filters():
     result = []
-    ext = uc2const.FORMAT_EXTENSION
+    ext_dict = uc2const.FORMAT_EXTENSION
     items = [] + uc2const.LOADER_FORMATS + uc2const.EXPERIMENTAL_LOADERS
     for item in items:
-        result.append(ext[item])
+        for ext in ext_dict.get(item, ()):
+            result.append(ext)
     return result
 
 
