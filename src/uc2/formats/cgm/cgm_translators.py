@@ -15,6 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from uc2 import utils
 from uc2.formats.cgm import cgm_const
 
 
@@ -23,20 +24,26 @@ class CGM_to_SK2_Translator(object):
     sk2_mtds = None
     page = None
     layer = None
+    cgm = None
 
     def translate(self, cgm_doc, sk2_doc):
         self.sk2_doc = sk2_doc
+        self.sk2_model = sk2_doc.model
         self.sk2_mtds = sk2_doc.methods
         self.page = self.sk2_mtds.get_page()
         self.layer = self.sk2_mtds.get_layer(self.page)
 
+        self.cgm = {
+            'vdc_type': cgm_const.VDC_TYPE_INT,
+        }
+
         for element in cgm_doc.childs:
             if element.element_id == cgm_const.END_METAFILE:
                 break
-            sig = cgm_const.CGM_ID.get(
+            signature = cgm_const.CGM_ID.get(
                 element.element_id, '').replace(' ', '_').lower()
-            if sig:
-                mtd = getattr(self, '_' + sig, None)
+            if signature:
+                mtd = getattr(self, '_' + signature, None)
                 if mtd:
                     mtd(element)
 
@@ -45,6 +52,31 @@ class CGM_to_SK2_Translator(object):
         self.page = None
         self.layer = None
 
+    def extract_title(self, element):
+        """Extracts first byte size defined title.
+
+        :param element: CgmElement
+        :return: str
+        """
+        if element.params:
+            sz = utils.byte2py_int(element.params[0])
+            return element.params[1:1 + sz]
+        return ''
+
+    # Metafile description
+    def _begin_metafile(self, element):
+        self.sk2_model.metainfo[3] = self.extract_title(element)
+
+    def _metafile_description(self, element):
+        if self.sk2_model.metainfo[3]:
+            self.sk2_model.metainfo[3] += '\n\n'
+        self.sk2_model.metainfo[3] += self.extract_title(element)
+
+    def _vdc_type(self, element):
+        if element.params:
+            self.cgm['vdc_type'] = utils.uint16_be(element.params[:2])
+
+    # Structural elements
     def _rectangle(self, element):
         pass
 

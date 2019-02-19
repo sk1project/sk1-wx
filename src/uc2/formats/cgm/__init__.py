@@ -59,4 +59,4 @@ def cgm_saver(sk2_doc, filename=None, fileptr=None,
 def check_cgm(path):
     with get_fileptr(path) as fileptr:
         sign = fileptr.read(2)
-    return utils.uint16(sign) & 0xffe0 == CGM_SIGNATURE
+    return utils.uint16_be(sign) & 0xffe0 == CGM_SIGNATURE

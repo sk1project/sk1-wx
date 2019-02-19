@@ -20,12 +20,12 @@ from uc2.formats.cgm import cgm_const
 
 
 def parse_header(chunk):
-    header = utils.uint16(chunk[:2])
+    header = utils.uint16_be(chunk[:2])
     element_class = header >> 12
     element_id = header & 0xffe0
     size = header & 0x001f
     if len(chunk) == 4:
-        size = utils.uint16(chunk[2:]) & 0x7fff
+        size = utils.uint16_be(chunk[2:]) & 0x7fff
     return element_class, element_id, size
 
 
@@ -53,6 +53,8 @@ def get_markup(header, params):
     elif element_id == cgm_const.METAFILE_DESCRIPTION and params:
         markup += [(hdsz, 1, 'text length'),
                    (hdsz + 1, params_sz, 'description'), ]
+    elif element_id == cgm_const.VDC_TYPE and params:
+        markup += [(hdsz, 2, 'VDC type (integer/real)'), ]
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]
