@@ -15,16 +15,17 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from uc2.formats.cgm import cgm_utils
-from uc2.formats.cgm.cgm_model import get_empty_cgm, element_factory
+from uc2.formats.cgm import cgm_utils, cgm_const, cgm_model
 from uc2.formats.generic_filters import AbstractBinaryLoader, AbstractSaver
 
 
 class CgmLoader(AbstractBinaryLoader):
     name = 'CGM_Loader'
+    parent_stack = None
 
     def do_load(self):
-        self.model = get_empty_cgm()
+        self.model = cgm_model.CgmMetafile()
+        self.parent_stack = [self.model]
         self.fileptr.seek(0, 2)
         filesz = self.fileptr.tell()
         self.fileptr.seek(0, 0)
@@ -35,7 +36,15 @@ class CgmLoader(AbstractBinaryLoader):
                 header += self.fileptr.read(2)
                 size = cgm_utils.parse_header(header)[2]
             params = self.fileptr.read(((size + 1) // 2) * 2)
-            self.model.add(element_factory(header, params))
+            element_id = cgm_utils.parse_header(header)[1]
+            if element_id == cgm_const.BEGIN_PICTURE:
+                picture = cgm_model.CgmPicture()
+                self.parent_stack[-1].add(picture)
+                self.parent_stack.append(picture)
+            self.parent_stack[-1].add(cgm_model.element_factory(header, params))
+            if element_id == cgm_const.END_PICTURE:
+                self.parent_stack = self.parent_stack[:-1]
+        self.parent_stack = None
 
 
 class CgmSaver(AbstractSaver):

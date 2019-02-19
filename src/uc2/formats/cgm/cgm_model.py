@@ -21,18 +21,38 @@ from uc2.formats.generic import BinaryModelObject
 parse_header = cgm_utils.parse_header
 
 
-class CgmMetafile(BinaryModelObject):
+class CgmFolder(BinaryModelObject):
+    cgm_folder_name = ''
+
     def __init__(self):
         self.childs = []
         self.chunk = ''
 
     def resolve(self, name=''):
         sz = '%d' % len(self.childs)
-        return False, 'CGM_METAFILE', sz
+        return False, self.cgm_folder_name, sz
+
+
+class CgmMetafile(CgmFolder):
+    cgm_folder_name = 'CGM_METAFILE'
+
+
+class CgmPicture(CgmFolder):
+    cgm_folder_name = 'CGM_PICTURE'
 
 
 def get_empty_cgm():
     return CgmMetafile()
+
+
+ICONS = {
+    cgm_const.BEGIN_METAFILE: 'gtk-media-play',
+    cgm_const.BEGIN_PICTURE: 'gtk-goto-bottom',
+    cgm_const.BEGIN_PICTURE_BODY: 'gtk-go-down',
+    cgm_const.END_PICTURE: 'gtk-goto-top',
+    cgm_const.END_METAFILE: 'gtk-media-stop',
+    cgm_const.NOOP: 'gtk-no',
+}
 
 
 class CgmElement(BinaryModelObject):
@@ -46,8 +66,8 @@ class CgmElement(BinaryModelObject):
         self.is_padding = self.params_sz < len(self.params)
 
     def resolve(self, name=''):
-        return True, cgm_const.CGM_ID.get(
-            self.element_id, hex(self.element_id)), 0
+        return ICONS.get(self.element_id, True), \
+               cgm_const.CGM_ID.get(self.element_id, hex(self.element_id)), 0
 
     def update_for_sword(self):
         self.cache_fields = cgm_utils.get_markup(
