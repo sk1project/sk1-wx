@@ -66,8 +66,12 @@ class CgmElement(BinaryModelObject):
         self.is_padding = self.params_sz < len(self.params)
 
     def resolve(self, name=''):
-        return ICONS.get(self.element_id, True), \
-               cgm_const.CGM_ID.get(self.element_id, hex(self.element_id)), 0
+        icon = ICONS.get(self.element_id, True)
+        if isinstance(icon, bool):
+            icon = 'gtk-new' if cgm_utils.check_status(self.element_id) \
+                else icon
+        title = cgm_const.CGM_ID.get(self.element_id, hex(self.element_id))
+        return icon, title, 0
 
     def update_for_sword(self):
         self.cache_fields = cgm_utils.get_markup(

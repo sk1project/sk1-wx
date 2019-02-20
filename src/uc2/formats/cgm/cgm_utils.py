@@ -29,6 +29,24 @@ def parse_header(chunk):
     return element_class, element_id, size
 
 
+_PROCESSED = (
+    cgm_const.BEGIN_METAFILE,
+    cgm_const.METAFILE_VERSION,
+    cgm_const.METAFILE_DESCRIPTION,
+    cgm_const.VDC_TYPE,
+    cgm_const.APPLICATION_DATA,
+    cgm_const.INTEGER_PRECISION,
+    cgm_const.REAL_PRECISION,
+    cgm_const.INDEX_PRECISION,
+    cgm_const.COLOUR_PRECISION,
+    cgm_const.COLOUR_INDEX_PRECISION,
+)
+
+
+def check_status(element_id):
+    return element_id in _PROCESSED
+
+
 def get_markup(header, params):
     chunk = header + params
     element_class, element_id, params_sz = parse_header(header)
