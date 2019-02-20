@@ -99,7 +99,7 @@ class FileBrowserTool(gtk.VBox):
         self.treeview = gtk.TreeView()
 
         self.column = gtk.TreeViewColumn()
-        self.column.set_title(_('Log Entries'))
+        self.column.set_title(_('Files'))
         render_pixbuf = gtk.CellRendererPixbuf()
         self.column.pack_start(render_pixbuf, expand=False)
         self.column.add_attribute(render_pixbuf, 'pixbuf', 0)
@@ -153,6 +153,8 @@ class FileBrowserTool(gtk.VBox):
         path = config.fb_current_directory
         if self.root:
             path = path.replace(self.root, '::')
+        home = os.path.expanduser('~')
+        path = path.replace(home,'~') if path.startswith(home) else path
         self.column.set_title(path)
 
         filters = _get_open_filters()
@@ -166,17 +168,10 @@ class FileBrowserTool(gtk.VBox):
                                   self.root)
         self.treeview.set_model(new_model)
 
-        if self.undo:
-            self.back_but.set_sensitive(True)
-        else:
-            self.back_but.set_sensitive(False)
-
-        if self.redo:
-            self.forward_but.set_sensitive(True)
-        else:
-            self.forward_but.set_sensitive(False)
-
+        self.back_but.set_sensitive(bool(self.undo))
+        self.forward_but.set_sensitive(bool(self.redo))
         self.home_but.set_sensitive(True)
+
         if self.current_dir == os.path.expanduser('~'):
             self.home_but.set_sensitive(False)
         if self.root and self.current_dir == self.root:
