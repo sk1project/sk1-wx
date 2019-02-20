@@ -101,6 +101,14 @@ class CGM_to_SK2_Translator(object):
             raise Exception('Unsupported real precision %s' % repr(prec))
         self.cgm['realprec'] = prec_type
 
+    def _colour_precision(self, element):
+        sz = element.params_sz
+        color_prec = utils.uint16_be(element.params[sz - 2:sz])
+        absstruct = cgm_const.COLOR_PRECISION_MAP.get(color_prec)
+        if absstruct is None:
+            raise Exception('Unsupported color precision %d' % color_prec)
+        self.cgm['color.absstruct'] = absstruct
+
     # Structural elements
     def _rectangle(self, element):
         pass
