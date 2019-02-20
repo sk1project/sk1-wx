@@ -17,6 +17,7 @@
 
 import gtk
 import os
+import pango
 import sys
 
 from sword import _, config
@@ -26,6 +27,7 @@ from sword.widgets.buttons import NavigationButton, NavigationToggleButton
 from sword.widgets.captions import TabIconCaption
 from uc2 import uc2const
 
+COLOR = '#A7A7A7'
 
 def _get_open_filters():
     result = []
@@ -104,9 +106,22 @@ class FileBrowserTool(gtk.VBox):
         self.column.pack_start(render_pixbuf, expand=False)
         self.column.add_attribute(render_pixbuf, 'pixbuf', 0)
         render_text = gtk.CellRendererText()
-        self.column.pack_start(render_text, expand=True)
+        self.column.pack_start(render_text, expand=False)
         self.column.add_attribute(render_text, 'text', 1)
+        self.column.set_expand(True)
+        self.column.set_resizable(True)
         self.treeview.append_column(self.column)
+
+        self.column_sz = gtk.TreeViewColumn()
+        self.column_sz.set_title(_('Size'))
+        render_text = gtk.CellRendererText()
+        render_text.set_properties(foreground=COLOR,
+                                   alignment=pango.ALIGN_RIGHT)
+        self.column_sz.pack_start(render_text, expand=False)
+        self.column_sz.add_attribute(render_text, 'text', 2)
+        self.column_sz.set_expand(False)
+        self.column_sz.set_resizable(True)
+        self.treeview.append_column(self.column_sz)
 
         self.treeview.connect('row-activated', self.open_file)
 

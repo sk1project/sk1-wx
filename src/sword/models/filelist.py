@@ -57,7 +57,7 @@ class FileListModel(gtk.ListStore):
 
     def __init__(self, cur_dir=None, file_types=None,
                  show_hidden=False, root=''):
-        gtk.ListStore.__init__(self, gtk.gdk.Pixbuf, str)
+        gtk.ListStore.__init__(self, gtk.gdk.Pixbuf, str, str)
         file_types = file_types or []
 
         self.root = root
@@ -92,18 +92,20 @@ class FileListModel(gtk.ListStore):
 
         sorted_files = []
         for item in self.files:
+            sz = ''
             try:
                 path = os.path.join(self.dirname, item)
+                sz = self.get_file_size(path)
                 mime = get_mime_type(path)
-                sorted_files.append((get_image(mime), item))
+                sorted_files.append((get_image(mime), item, sz))
             except RuntimeError:
                 LOG.exception('Error in file MIME detection %s', path)
-                sorted_files.append((FILE_ICON, item))
+                sorted_files.append((FILE_ICON, item, sz))
         self.files = sorted_files
 
         sorted_dirs = []
         for item in self.dirs:
-            sorted_dirs.append((FOLDER_ICON, item))
+            sorted_dirs.append((FOLDER_ICON, item, ''))
         self.dirs = sorted_dirs
 
         self.files = self.dirs + self.files
@@ -111,14 +113,28 @@ class FileListModel(gtk.ListStore):
             if self.dirname == root:
                 pass
             else:
-                self.files = [(FOLDER_ICON, '..'), ] + self.files
+                self.files = [(FOLDER_ICON, '..', ''), ] + self.files
         else:
             if not self.dirname == os.path.abspath(
                     os.path.join(self.dirname, '..')):
-                self.files = [(FOLDER_ICON, '..'), ] + self.files
+                self.files = [(FOLDER_ICON, '..', ''), ] + self.files
         for item in self.files:
-            icon, text = item
-            self.append((icon, text))
+            icon, text, sz = item
+            self.append((icon, text, sz))
 
     def get_pathname(self, path):
         return os.path.join(self.dirname, self.files[path[0]][1])
+
+    def get_file_size(self, path):
+        sz = ''
+        if os.path.isfile(path):
+            sz = int(os.stat(path).st_size)
+            if sz > 1024 ** 3:
+                sz = '%.2f Gb' % (round(sz / 1024.0 ** 3, 2))
+            elif sz > 1024 ** 2:
+                sz = '%.2f Mb' % (round(sz / 1024.0 ** 2, 2))
+            elif sz > 1024:
+                sz = '%.2f kb' % (round(sz / 1024.0, 2))
+            else:
+                sz = '%.d bytes' % sz
+        return sz
