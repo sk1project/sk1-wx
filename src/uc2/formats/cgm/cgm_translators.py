@@ -91,6 +91,9 @@ class CGM_to_SK2_Translator(object):
 
     def _integer_precision(self, element):
         self.cgm['intsize'] = utils.uint16_be(element.params) / 8
+        if self.cgm['intsize'] not in (8, 16, 24, 32):
+            raise Exception('Unsupported integer precision %s' %
+                            repr(self.cgm['intsize']))
         self.cgm['intprec'] = self.cgm['intsize'] - 1
 
     def _real_precision(self, element):
@@ -101,6 +104,13 @@ class CGM_to_SK2_Translator(object):
             raise Exception('Unsupported real precision %s' % repr(prec))
         self.cgm['realprec'] = prec_type
 
+    def _index_precision(self, element):
+        self.cgm['inxsize'] = utils.uint16_be(element.params) / 8
+        if self.cgm['inxsize'] not in (8, 16, 24, 32):
+            raise Exception('Unsupported index precision %s' %
+                            repr(self.cgm['intsize']))
+        self.cgm['inxprec'] = self.cgm['inxsize'] - 1
+
     def _colour_precision(self, element):
         sz = element.params_sz
         color_prec = utils.uint16_be(element.params[sz - 2:sz])
@@ -108,6 +118,15 @@ class CGM_to_SK2_Translator(object):
         if absstruct is None:
             raise Exception('Unsupported color precision %d' % color_prec)
         self.cgm['color.absstruct'] = absstruct
+
+    def _colour_index_precision(self, element):
+        sz = element.params_sz
+        index_prec = utils.uint16_be(element.params[sz - 2:sz])
+        absstruct = cgm_const.COLOR_INDEX_PRECISION_MAP.get(index_prec)
+        if absstruct is None:
+            raise Exception('Unsupported color index precision %d' %
+                            index_prec)
+        self.cgm['color.inxstruct'] = absstruct
 
     # Structural elements
     def _rectangle(self, element):

@@ -401,10 +401,18 @@ REAL_PRECISION_MAP = {
     (9, 23): 2,  # 32 bit floating point
     (12, 52): 3,  # 64 bit floating point
 }
+
 COLOR_PRECISION_MAP = {
     8: ">BBB",
     16: ">HHH",
     32: ">III",
+}
+
+
+COLOR_INDEX_PRECISION_MAP = {
+    8: ">B",
+    16: ">H",
+    32: ">I",
 }
 
 

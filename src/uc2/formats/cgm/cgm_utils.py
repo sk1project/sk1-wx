@@ -69,8 +69,14 @@ def get_markup(header, params):
             markup += [(hdsz, 2, 'real precision type'),
                        (hdsz + 2, 2, 'integer part size'),
                        (hdsz + 4, 2, 'fractional part size'), ]
+        elif element_id == cgm_const.INDEX_PRECISION:
+            markup += [(hdsz, 2, 'index precision\n       '
+                                 '(8, 16, 24, 32 bit)'), ]
         elif element_id == cgm_const.COLOUR_PRECISION:
             markup += [(hdsz + params_sz - 2, 2, 'color precision type'), ]
+        elif element_id == cgm_const.COLOUR_INDEX_PRECISION:
+            markup += [(hdsz + params_sz - 2, 2,
+                        'color index precision type'), ]
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]
