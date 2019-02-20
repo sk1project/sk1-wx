@@ -141,4 +141,4 @@ def uint16_be(chunk):
     """
     Converts 2 bytes to unsigned int (big endian)
     """
-    return struct.unpack("!H", chunk)[0]
+    return struct.unpack(">H", chunk)[0]

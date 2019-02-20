@@ -402,9 +402,9 @@ REAL_PRECISION_MAP = {
     (12, 52): 3,  # 64 bit floating point
 }
 COLOR_PRECISION_MAP = {
-    8: "!BBB",
-    16: "!HHH",
-    32: "!III",
+    8: ">BBB",
+    16: ">HHH",
+    32: ">III",
 }
 
 
@@ -445,8 +445,8 @@ CGM_INIT = {
     'realprec': 0,  # 32 bits fixed point
     'realsize': 4,
     'color': {},
-    'color.absstruct': "!BBB",
-    'color.inxstruct': "!B",
+    'color.absstruct': ">BBB",
+    'color.inxstruct': ">B",
     'color.mode': 0,
     'color.maxindex': 63,
     'color.table': create_color_table(64),
