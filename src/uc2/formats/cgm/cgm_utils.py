@@ -40,6 +40,7 @@ _PROCESSED = (
     cgm_const.INDEX_PRECISION,
     cgm_const.COLOUR_PRECISION,
     cgm_const.COLOUR_INDEX_PRECISION,
+    cgm_const.MAXIMUM_COLOUR_INDEX,
 )
 
 
@@ -95,6 +96,8 @@ def get_markup(header, params):
         elif element_id == cgm_const.COLOUR_INDEX_PRECISION:
             markup += [(hdsz + params_sz - 2, 2,
                         'color index precision type'), ]
+        elif element_id == cgm_const.MAXIMUM_COLOUR_INDEX:
+            markup += [(hdsz, 2, 'max color index'), ]
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]

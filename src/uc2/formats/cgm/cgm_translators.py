@@ -18,7 +18,7 @@
 import copy
 
 from uc2 import utils
-from uc2.formats.cgm import cgm_const
+from uc2.formats.cgm import cgm_const, cgm_utils
 
 
 class CGM_to_SK2_Translator(object):
@@ -127,6 +127,11 @@ class CGM_to_SK2_Translator(object):
             raise Exception('Unsupported color index precision %d' %
                             index_prec)
         self.cgm['color.inxstruct'] = absstruct
+
+    def _maximum_colour_index(self, element):
+        sz = utils.uint16_be(element.params)
+        self.cgm['color.maxindex'] = sz
+        self.cgm['color.table'] = cgm_const.create_color_table(sz)
 
     # Structural elements
     def _rectangle(self, element):
