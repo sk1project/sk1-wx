@@ -391,7 +391,9 @@ VDC_TYPE_INT = 0
 VDC_TYPE_REAL = 1
 
 LINE_DASHTABLE = ((), (4, 4), (1, 1), (4, 1, 1, 1), (4, 1, 1, 1, 1, 1))
-VDC_EXTEND = None  # ((0,0),(32767,32767))
+VDC_INT_EXTEND = ((0, 0), (32767, 32767))
+VDC_REAL_EXTEND = ((0.0, 0.0), (1.0, 1.0))
+BLACK_COLOR = (0.0, 0.0, 0.0)
 
 
 def create_color_table(sz):
@@ -446,21 +448,21 @@ CGM_INIT = {
     'vdc.intsize': 2,
     'vdc.prec': None,  # integers, 16 bit
     'vdc.size': None,
-    'vdc.intextend': ((0, 0), (32767, 32767)),
-    'vdc.realextend': ((0.0, 0.0), (1.0, 1.0)),
-    'vdc.extend': VDC_EXTEND,
+    'vdc.intextend': VDC_INT_EXTEND,
+    'vdc.realextend': VDC_REAL_EXTEND,
+    'vdc.extend': VDC_INT_EXTEND,
     'fill': {},
     'fill.type': 1,
-    'fill.color': (0.0, 0.0, 0.0),
+    'fill.color': BLACK_COLOR,
     'line': {},
     'line.type': 1,
-    'line.color': (0.0, 0.0, 0.0),
+    'line.color': BLACK_COLOR,
     'line.widthmode': 0,
     'line.width': None,
     'line.dashtable': LINE_DASHTABLE,
     'edge': {},
     'edge.type': 1,
-    'edge.color': (0.0, 0.0, 0.0),
+    'edge.color': BLACK_COLOR,
     'edge.widthmode': 0,
     'edge.width': None,
     'edge.dashtable': LINE_DASHTABLE,
@@ -473,14 +475,14 @@ CGM_INIT = {
     'text.orientation': ((0.0, 1.0), (1.0, 0.0)),  # Up , Base vector
     'text.path': 0,  # right
     'text.alignment': 0,  # Dont understand this yet
-    'text.color': (0.0, 0.0, 0.0),
+    'text.color': BLACK_COLOR,
     'marker': {},
     'marker.sizemode': 0,
     'marker.type': 3,
     'marker.size': None,
     'clip': {},
     'clip.mode': 1,
-    'clip.rect': VDC_EXTEND,
+    'clip.rect': VDC_INT_EXTEND,
     'scale': {},
     'scale.mode': 0,  # abstract
     'scale.metric': 0.0,
