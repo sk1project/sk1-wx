@@ -487,6 +487,7 @@ CGM_INIT = {
     'edge.width': None,
     'edge.dashtable': LINE_DASHTABLE,
     'edge.visible': 0,
+    'fonts': [],
     'text': {},
     'text.fontindex': 0,
     'text.height': None,

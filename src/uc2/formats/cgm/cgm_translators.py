@@ -144,6 +144,15 @@ class CGM_to_SK2_Translator(object):
         self.cgm['color.scale'] = tuple(
             l - r for l, r in zip(top, self.cgm['color.offset']))
 
+    def _font_list(self, element):
+        self.cgm['color.absstruct'] = fonts = []
+        pos = 0
+        while pos < element.params_sz:
+            sz = utils.byte2py_int(element.params[pos])
+            pos += 1
+            fonts.append(element.params[pos:pos + sz].strip())
+            pos += sz
+
     # Structural elements
     def _rectangle(self, element):
         pass
