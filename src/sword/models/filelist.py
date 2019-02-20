@@ -27,11 +27,15 @@ FOLDER_ICON = gtk.Image().render_icon(gtk.STOCK_DIRECTORY, gtk.ICON_SIZE_MENU)
 FILE_ICON = gtk.Image().render_icon(gtk.STOCK_FILE, gtk.ICON_SIZE_MENU)
 
 try:
-    from gnomevfs import get_mime_type
+    import gnomevfs
 except:
-    get_mime_type = lambda path: gtk.STOCK_FILE
+    gnomevfs = None
 
 LOG = logging.getLogger(__name__)
+
+
+def get_mime_type(path):
+    return gnomevfs.get_mime_type(path) if gnomevfs else gtk.STOCK_FILE
 
 
 def get_imagename(mime):
@@ -51,6 +55,21 @@ def get_image(mime):
     if icon not in ICONS_CACHE.keys():
         ICONS_CACHE[icon] = ICON_THEME.load_icon(icon, 16, 0)
     return ICONS_CACHE[icon]
+
+
+def get_file_size(path):
+    sz = ''
+    if os.path.isfile(path):
+        sz = int(os.stat(path).st_size)
+        if sz > 1024 ** 3:
+            sz = '%.2f Gb' % (round(sz / 1024.0 ** 3, 2))
+        elif sz > 1024 ** 2:
+            sz = '%.2f Mb' % (round(sz / 1024.0 ** 2, 2))
+        elif sz > 1024:
+            sz = '%.2f kb' % (round(sz / 1024.0, 2))
+        else:
+            sz = '%d bytes' % sz
+    return sz
 
 
 class FileListModel(gtk.ListStore):
@@ -92,10 +111,10 @@ class FileListModel(gtk.ListStore):
 
         sorted_files = []
         for item in self.files:
-            sz = ''
+            path = sz = ''
             try:
                 path = os.path.join(self.dirname, item)
-                sz = self.get_file_size(path)
+                sz = get_file_size(path)
                 mime = get_mime_type(path)
                 sorted_files.append((get_image(mime), item, sz))
             except RuntimeError:
@@ -124,17 +143,3 @@ class FileListModel(gtk.ListStore):
 
     def get_pathname(self, path):
         return os.path.join(self.dirname, self.files[path[0]][1])
-
-    def get_file_size(self, path):
-        sz = ''
-        if os.path.isfile(path):
-            sz = int(os.stat(path).st_size)
-            if sz > 1024 ** 3:
-                sz = '%.2f Gb' % (round(sz / 1024.0 ** 3, 2))
-            elif sz > 1024 ** 2:
-                sz = '%.2f Mb' % (round(sz / 1024.0 ** 2, 2))
-            elif sz > 1024:
-                sz = '%.2f kb' % (round(sz / 1024.0, 2))
-            else:
-                sz = '%.d bytes' % sz
-        return sz

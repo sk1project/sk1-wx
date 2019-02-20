@@ -115,8 +115,7 @@ class FileBrowserTool(gtk.VBox):
         self.column_sz = gtk.TreeViewColumn()
         self.column_sz.set_title(_('Size'))
         render_text = gtk.CellRendererText()
-        render_text.set_properties(foreground=COLOR,
-                                   alignment=pango.ALIGN_RIGHT)
+        render_text.set_properties(foreground=COLOR)
         self.column_sz.pack_start(render_text, expand=False)
         self.column_sz.add_attribute(render_text, 'text', 2)
         self.column_sz.set_expand(False)
