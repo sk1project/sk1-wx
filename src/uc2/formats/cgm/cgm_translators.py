@@ -16,9 +16,10 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import copy
+import struct
 
 from uc2 import utils
-from uc2.formats.cgm import cgm_const, cgm_utils
+from uc2.formats.cgm import cgm_const
 
 
 class CGM_to_SK2_Translator(object):
@@ -132,6 +133,16 @@ class CGM_to_SK2_Translator(object):
         sz = utils.uint16_be(element.params)
         self.cgm['color.maxindex'] = sz
         self.cgm['color.table'] = cgm_const.create_color_table(sz)
+
+    def _colour_value_extent(self, element):
+        fmt = self.cgm['color.absstruct']
+        sz = struct.calcsize(fmt)
+        bottom = struct.unpack(fmt, element.params[:sz])
+        top = struct.unpack(fmt, element.params[sz:2 * sz])
+        self.cgm['color.offset'] = tuple(
+            l * r for l, r in zip(bottom, (1.0, 1.0, 1.0)))
+        self.cgm['color.scale'] = tuple(
+            l - r for l, r in zip(top, self.cgm['color.offset']))
 
     # Structural elements
     def _rectangle(self, element):

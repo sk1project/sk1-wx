@@ -41,6 +41,9 @@ _PROCESSED = (
     cgm_const.COLOUR_PRECISION,
     cgm_const.COLOUR_INDEX_PRECISION,
     cgm_const.MAXIMUM_COLOUR_INDEX,
+    cgm_const.METAFILE_ELEMENT_LIST,
+    cgm_const.COLOUR_VALUE_EXTENT,
+    cgm_const.FONT_LIST,
 )
 
 
@@ -73,7 +76,7 @@ def get_markup(header, params):
             markup += [(hdsz, 2, 'version'), ]
         elif element_id == cgm_const.METAFILE_DESCRIPTION:
             markup += [(hdsz, 1, 'text length'),
-                       (hdsz + 1, params_sz, 'description'), ]
+                       (hdsz + 1, params_sz - 1, 'description'), ]
         elif element_id == cgm_const.VDC_TYPE:
             markup += [(hdsz, 2, 'VDC type (integer/real)'), ]
         elif element_id == cgm_const.APPLICATION_DATA:
@@ -98,6 +101,26 @@ def get_markup(header, params):
                         'color index precision type'), ]
         elif element_id == cgm_const.MAXIMUM_COLOUR_INDEX:
             markup += [(hdsz, 2, 'max color index'), ]
+        elif element_id == cgm_const.METAFILE_ELEMENT_LIST:
+            markup += [(hdsz, 2, 'list length'),
+                       (hdsz + 2, params_sz - 2, 'list of 2-byte elements'), ]
+        elif element_id == cgm_const.COLOUR_VALUE_EXTENT:
+            sz = params_sz / 2
+            markup += [(hdsz, sz, 'bottom 3-member tuple'),
+                       (hdsz + sz, sz, 'top 3-member tuple'), ]
+        elif element_id == cgm_const.FONT_LIST:
+            pos = 0
+            fonts = []
+            while pos < params_sz:
+                sz = utils.byte2py_int(params[pos])
+                pos += 1
+                fonts.append(params[pos:pos + sz].strip())
+                pos += sz
+            markup += [(hdsz, params_sz,
+                        'font list pairs:\n'
+                        '      1 byte - size of name\n'
+                        '      (sz) bytes - name string\n\nFonts:\n  ' +
+                        '\n  '.join(fonts) + '\n' + '.' * 35), ]
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]
