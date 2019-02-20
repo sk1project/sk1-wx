@@ -89,6 +89,18 @@ class CGM_to_SK2_Translator(object):
             self.sk2_model.metainfo[3] += '\n\n'
         self.sk2_model.metainfo[3] += self.extract_title(element.params[2:])
 
+    def _integer_precision(self, element):
+        self.cgm['intsize'] = utils.uint16_be(element.params) / 8
+        self.cgm['intprec'] = self.cgm['intsize'] - 1
+
+    def _real_precision(self, element):
+        prec = (utils.uint16_be(element.params[2:4]),
+                utils.uint16_be(element.params[4:]))
+        prec_type = cgm_const.REAL_PRECISION_MAP.get(prec)
+        if prec_type is None:
+            raise Exception('Unsupported real precision %s' % repr(prec))
+        self.cgm['realprec'] = prec_type
+
     # Structural elements
     def _rectangle(self, element):
         pass

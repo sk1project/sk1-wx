@@ -394,6 +394,13 @@ LINE_DASHTABLE = ((), (4, 4), (1, 1), (4, 1, 1, 1), (4, 1, 1, 1, 1, 1))
 VDC_INT_EXTEND = ((0, 0), (32767, 32767))
 VDC_REAL_EXTEND = ((0.0, 0.0), (1.0, 1.0))
 BLACK_COLOR = (0.0, 0.0, 0.0)
+FIXED_REAL_PRECISION = 1
+REAL_PRECISION_MAP = {
+    (16, 16): 0,  # 32 bit fixed precision
+    (32, 32): 1,  # 64 bit fixed precision
+    (9, 23): 2,   # 32 bit floating point
+    (12, 52): 3,  # 64 bit floating point
+}
 
 
 def create_color_table(sz):
