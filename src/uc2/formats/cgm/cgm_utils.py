@@ -45,16 +45,23 @@ def get_markup(header, params):
     markup = [(0, len(header), msg), ]
     hdsz = len(header)
 
-    if element_id == cgm_const.BEGIN_METAFILE and params:
-        title_sz = utils.byte2py_int(params[0])
-        markup += [(hdsz, 1, 'text length'), (hdsz + 1, title_sz, 'file title')]
-    elif element_id == cgm_const.METAFILE_VERSION and params:
-        markup += [(hdsz, 2, 'version'), ]
-    elif element_id == cgm_const.METAFILE_DESCRIPTION and params:
-        markup += [(hdsz, 1, 'text length'),
-                   (hdsz + 1, params_sz, 'description'), ]
-    elif element_id == cgm_const.VDC_TYPE and params:
-        markup += [(hdsz, 2, 'VDC type (integer/real)'), ]
+    if params:
+        if element_id == cgm_const.BEGIN_METAFILE:
+            title_sz = utils.byte2py_int(params[0])
+            markup += [(hdsz, 1, 'text length'),
+                       (hdsz + 1, title_sz, 'file title')]
+        elif element_id == cgm_const.METAFILE_VERSION:
+            markup += [(hdsz, 2, 'version'), ]
+        elif element_id == cgm_const.METAFILE_DESCRIPTION:
+            markup += [(hdsz, 1, 'text length'),
+                       (hdsz + 1, params_sz, 'description'), ]
+        elif element_id == cgm_const.VDC_TYPE:
+            markup += [(hdsz, 2, 'VDC type (integer/real)'), ]
+        elif element_id == cgm_const.APPLICATION_DATA:
+            txt_sz = utils.byte2py_int(params[2])
+            markup += [(hdsz, 2, 'identifier'),
+                       (hdsz + 2, 1, 'data length'),
+                       (hdsz + 3, txt_sz, 'application data'), ]
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]

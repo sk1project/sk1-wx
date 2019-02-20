@@ -15,6 +15,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import copy
+
 from uc2 import utils
 from uc2.formats.cgm import cgm_const
 
@@ -33,9 +35,7 @@ class CGM_to_SK2_Translator(object):
         self.page = self.sk2_mtds.get_page()
         self.layer = self.sk2_mtds.get_layer(self.page)
 
-        self.cgm = {
-            'vdc_type': cgm_const.VDC_TYPE_INT,
-        }
+        self.cgm = copy.deepcopy(cgm_const.CGM_INIT)
 
         for element in cgm_doc.childs:
             if element.element_id == cgm_const.END_METAFILE:
@@ -52,29 +52,42 @@ class CGM_to_SK2_Translator(object):
         self.page = None
         self.layer = None
 
-    def extract_title(self, element):
+    def extract_title(self, params):
         """Extracts first byte size defined title.
 
-        :param element: CgmElement
+        :param element: CgmElement params
         :return: str
         """
-        if element.params:
-            sz = utils.byte2py_int(element.params[0])
-            return element.params[1:1 + sz]
+        if params:
+            sz = utils.byte2py_int(params[0])
+            return params[1:1 + sz]
         return ''
 
     # Metafile description
     def _begin_metafile(self, element):
-        self.sk2_model.metainfo[3] = self.extract_title(element)
+        self.sk2_model.metainfo[3] = self.extract_title(element.params)
 
     def _metafile_description(self, element):
         if self.sk2_model.metainfo[3]:
             self.sk2_model.metainfo[3] += '\n\n'
-        self.sk2_model.metainfo[3] += self.extract_title(element)
+        self.sk2_model.metainfo[3] += self.extract_title(element.params)
 
     def _vdc_type(self, element):
         if element.params:
-            self.cgm['vdc_type'] = utils.uint16_be(element.params[:2])
+            self.cgm['vdc.type'] = utils.uint16_be(element.params[:2])
+        if self.cgm['vdc.type'] == cgm_const.VDC_TYPE_INT:
+            self.cgm['vdc.size'] = self.cgm['vdc.intsize']
+            self.cgm['vdc.prec'] = self.cgm['vdc.intprec']
+            self.cgm['vdc.extend'] = self.cgm['vdc.intextend']
+        else:
+            self.cgm['vdc.size'] = self.cgm['vdc.realsize']
+            self.cgm['vdc.prec'] = self.cgm['vdc.realprec']
+            self.cgm['vdc.extend'] = self.cgm['vdc.realextend']
+
+    def _application_data(self, element):
+        if self.sk2_model.metainfo[3]:
+            self.sk2_model.metainfo[3] += '\n\n'
+        self.sk2_model.metainfo[3] += self.extract_title(element.params[2:])
 
     # Structural elements
     def _rectangle(self, element):

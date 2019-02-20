@@ -212,7 +212,6 @@ SEGMENT_DISPLAY_PRIORITY = 0x80C0
 SEGMENT_PICK_PRIORITY = 0x80E0
 APPLICATION_STRUCTURE_ATTRIBUTE = 0x9020
 
-
 CGM_ID = {
     0x0000: "noop",
     0x0020: "BEGIN METAFILE",
@@ -390,3 +389,99 @@ CGM_ID = {
 
 VDC_TYPE_INT = 0
 VDC_TYPE_REAL = 1
+
+LINE_DASHTABLE = ((), (4, 4), (1, 1), (4, 1, 1, 1), (4, 1, 1, 1, 1, 1))
+VDC_EXTEND = None  # ((0,0),(32767,32767))
+
+
+def create_color_table(sz):
+    mx = 1
+    bs = 0
+    while mx < sz:
+        mx = mx * 2
+        bs = bs + 1
+    cb = bs / 3
+    tb = bs % 3
+    mc = (1 << (cb + tb)) - 1.0
+    table = mx * [(0.0, 0.0, 0.0)]
+    for i in range(mx):
+        j = i + mx - 1
+        j = j % mx
+        red, grn, blu = 0, 0, 0
+        for k in range(cb):
+            red = (red << 1) + j % 2
+            j = j >> 1
+            grn = (grn << 1) + j % 2
+            j = j >> 1
+            blu = (blu << 1) + j % 2
+            j = j >> 1
+        tint = j
+        red = (red << tb) + tint
+        grn = (grn << tb) + tint
+        blu = (blu << tb) + tint
+        table[i] = (red / mc, grn / mc, blu / mc)
+    return table
+
+
+CGM_INIT = {
+    'intprec': 1,  # 16 bits,
+    'intsize': 2,
+    'inxprec': 1,  # 16 bits,
+    'inxsize': 2,
+    'realprec': 0,  # 32 bits fixed point
+    'realsize': 4,
+    'color': {},
+    'color.absstruct': "!BBB",
+    'color.inxstruct': "!B",
+    'color.mode': 0,
+    'color.maxindex': 63,
+    'color.table': create_color_table(64),
+    'color.offset': (0.0, 0.0, 0.0),
+    'color.scale': (255.0, 255.0, 255.0),
+    'vdc': {},
+    'vdc.type': 0,  # integers,
+    'vdc.realprec': 0,  # 32 bits fixed point
+    'vdc.realsize': 4,
+    'vdc.intprec': 1,  # 16 bits,
+    'vdc.intsize': 2,
+    'vdc.prec': None,  # integers, 16 bit
+    'vdc.size': None,
+    'vdc.intextend': ((0, 0), (32767, 32767)),
+    'vdc.realextend': ((0.0, 0.0), (1.0, 1.0)),
+    'vdc.extend': VDC_EXTEND,
+    'fill': {},
+    'fill.type': 1,
+    'fill.color': (0.0, 0.0, 0.0),
+    'line': {},
+    'line.type': 1,
+    'line.color': (0.0, 0.0, 0.0),
+    'line.widthmode': 0,
+    'line.width': None,
+    'line.dashtable': LINE_DASHTABLE,
+    'edge': {},
+    'edge.type': 1,
+    'edge.color': (0.0, 0.0, 0.0),
+    'edge.widthmode': 0,
+    'edge.width': None,
+    'edge.dashtable': LINE_DASHTABLE,
+    'edge.visible': 0,
+    'text': {},
+    'text.fontindex': 0,
+    'text.height': None,
+    'text.expansion': 1.0,
+    'text.spacing': 0.0,
+    'text.orientation': ((0.0, 1.0), (1.0, 0.0)),  # Up , Base vector
+    'text.path': 0,  # right
+    'text.alignment': 0,  # Dont understand this yet
+    'text.color': (0.0, 0.0, 0.0),
+    'marker': {},
+    'marker.sizemode': 0,
+    'marker.type': 3,
+    'marker.size': None,
+    'clip': {},
+    'clip.mode': 1,
+    'clip.rect': VDC_EXTEND,
+    'scale': {},
+    'scale.mode': 0,  # abstract
+    'scale.metric': 0.0,
+}
