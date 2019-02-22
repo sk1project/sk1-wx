@@ -131,11 +131,6 @@ class PolyLineCreator(AbstractCreator):
                     self.cursor = []
                     self.canvas.set_temp_mode(modes.RESIZE_MODE)
 
-    def wheel(self, event):
-        self.init_timer()
-        AbstractCreator.wheel(self, event)
-        self.restore()
-
     def repaint(self):
         if self.timer_callback is not None:
             self.timer_callback()
