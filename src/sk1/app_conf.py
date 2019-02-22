@@ -256,6 +256,7 @@ class AppConfig(UCConfig):
     point_sensitivity_size = 9.0
 
     # ============== BEZIER CURVE OPTIONS ================
+    curve_fixed_angle = 15.0
     curve_autoclose_flag = 0
 
     curve_stroke_color = (0.0, 0.0, 0.0)

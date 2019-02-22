@@ -97,6 +97,19 @@ def rotate_point(center, point, angle):
     return apply_trafo_to_point(point, trafo)
 
 
+def round_angle_point(center, point, angle):
+    if angle:
+        angle = math.radians(angle)
+        point_angle = get_point_angle(point, center)
+        point_angle = (point_angle + angle / 2.0) // angle * angle
+        r = distance(point, center)
+        # calculate point on circle
+        x = r * math.cos(point_angle)
+        y = r * math.sin(point_angle)
+        point = add_points([x, y], center)
+    return point
+
+
 def get_point_radius(p, center=None):
     return distance(p, center or [0.5, 0.5])
 
