@@ -78,13 +78,38 @@ class CgmElement(BinaryModelObject):
             self.command_header, self.params)
 
 
-USE_FACTORY = False
+class CgmDefReplacement(CgmElement):
+    cgm_folder_name = ''
+
+    def __init__(self, command_header, params):
+        CgmElement.__init__(self, command_header, params)
+        self.childs = []
+        self.params = ''
+        self.chunk = command_header
+        self.cgm_folder_name = cgm_const.CGM_ID[self.element_id]
+        self.parse_childs(params)
+
+    def parse_childs(self, chunk):
+        while chunk:
+            header, chunk = chunk[:2], chunk[2:]
+            cls, eid, sz = parse_header(header)
+            if sz == 0x1f:
+                header += chunk[:2]
+                chunk = chunk[2:]
+                sz = parse_header(header)[2]
+            params, chunk = chunk[:sz], chunk[sz:]
+            self.add(CgmElement(header, params))
+
+    def resolve(self, name=''):
+        sz = '%d' % len(self.childs)
+        return False, self.cgm_folder_name, sz
+
 
 ID_TO_CLS = {
+    cgm_const.METAFILE_DEFAULTS_REPLACEMENT: CgmDefReplacement,
 }
 
 
 def element_factory(header, params):
     element_id = parse_header(header)[1]
-    return ID_TO_CLS.get(element_id, CgmElement)(header, params) \
-        if USE_FACTORY else CgmElement(header, params)
+    return ID_TO_CLS.get(element_id, CgmElement)(header, params)

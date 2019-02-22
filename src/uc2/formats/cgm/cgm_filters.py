@@ -40,7 +40,12 @@ class CgmLoader(AbstractBinaryLoader):
                 picture = cgm_model.CgmPicture()
                 self.parent_stack[-1].add(picture)
                 self.parent_stack.append(picture)
+            if element_id == cgm_const.END_METAFILE \
+                    and len(self.parent_stack) > 1:
+                self.parent_stack = self.parent_stack[:-1]
+
             self.parent_stack[-1].add(cgm_model.element_factory(header, params))
+
             if element_id == cgm_const.END_PICTURE:
                 self.parent_stack = self.parent_stack[:-1]
         self.parent_stack = None
