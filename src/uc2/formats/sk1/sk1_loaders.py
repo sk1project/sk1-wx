@@ -16,7 +16,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from uc2.formats.generic_filters import AbstractLoader
-from uc2.formats.sk1 import sk1const
+from uc2.formats.sk1 import sk1_const
 from uc2.formats.sk1.model import PolyBezier, Rectangle, Ellipse
 from uc2.formats.sk1.model import SK1Group
 from uc2.formats.sk1.model import Style
@@ -108,14 +108,14 @@ class GenericLoader(AbstractLoader):
         self.append_object(obj)
 
     def ellipse(self, m11, m21, m12, m22, v1, v2, start_angle=0.0,
-                end_angle=0.0, arc_type=sk1const.ArcPieSlice):
+                end_angle=0.0, arc_type=sk1_const.ArcPieSlice):
         trafo = Trafo(m11, m21, m12, m22, v1, v2)
         properties = self.get_prop_stack()
         obj = Ellipse(trafo, start_angle, end_angle, arc_type, properties)
         self.append_object(obj)
 
-    def simple_text(self, txt, trafo=None, valign=sk1const.ALIGN_BASE,
-                    halign=sk1const.ALIGN_LEFT):
+    def simple_text(self, txt, trafo=None, valign=sk1_const.ALIGN_BASE,
+                    halign=sk1_const.ALIGN_LEFT):
         pass
 
     def image(self, image, trafo):

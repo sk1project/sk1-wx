@@ -55,6 +55,13 @@ class ModelObject(object):
         if action:
             self.update_for_sword()
 
+    def add(self, child):
+        self.childs.append(child)
+
+    def remove(self, child):
+        if child in self.childs:
+            self.childs.remove(child)
+
     def count(self):
         val = len(self.childs)
         for child in self.childs:

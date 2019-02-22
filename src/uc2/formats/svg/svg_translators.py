@@ -23,10 +23,10 @@ from copy import deepcopy
 
 from PIL import Image
 
-from uc2 import uc2const, libgeom, libpango, cms, sk2const
+from uc2 import uc2const, libgeom, libpango, cms, sk2const, utils
 from uc2.formats.sk2 import sk2_model
-from uc2.formats.svg import svg_const, svglib
-from uc2.formats.svg.svglib import get_svg_trafo, check_svg_attr, \
+from uc2.formats.svg import svg_const, svg_utils
+from uc2.formats.svg.svg_utils import get_svg_trafo, check_svg_attr, \
     parse_svg_points, parse_svg_coords, parse_svg_color, parse_svg_stops, \
     get_svg_level_trafo
 
@@ -78,12 +78,13 @@ SK2_GRAD_EXTEND = {
 class SVG_to_SK2_Translator(object):
     page = None
     layer = None
-    trafo = []
-    coeff = 1.25
+    traffo = []
+    dpi_coeff = 1.0
     user_space = []
     style_opts = {}
     classes = {}
     profiles = {}
+    unit_mapping = None
     current_color = ''
     svg_doc = None
     sk2_doc = None
@@ -104,6 +105,7 @@ class SVG_to_SK2_Translator(object):
         self.id_map = self.svg_mt.id_map
         self.profiles = {}
         self.current_color = ''
+        self.define_units()
         self.translate_units()
         self.translate_page()
         for item in self.svg_mt.childs:
@@ -123,46 +125,48 @@ class SVG_to_SK2_Translator(object):
                 self.__dict__[item] = {}
             else:
                 self.__dict__[item] = None
-        self.coeff = 1.25
+        self.dpi_coeff = 1.0
         self.current_color = ''
 
     # --- Utility methods
 
+    def define_units(self):
+        if not self.svg_doc.config.svg_dpi:
+            if 'width' in self.svg_mt.attrs and \
+                    self.svg_mtds.get_units(self.svg_mt.attrs['width']) not in \
+                    (svg_const.SVG_PX, svg_const.SVG_PC):
+                self.svg_doc.config.svg_dpi = 90.0
+
+        dpi_coeff = self.svg_doc.config.svg_dpi / svg_const.SVG_DPI \
+            if self.svg_doc.config.svg_dpi else 1.0
+
+        self.unit_mapping = {
+            svg_const.SVG_PX: svg_const.svg_px_to_pt / dpi_coeff,
+            svg_const.SVG_PT: 1.0,
+            svg_const.SVG_PC: 15.0 * svg_const.svg_px_to_pt / dpi_coeff,
+            svg_const.SVG_MM: uc2const.mm_to_pt,
+            svg_const.SVG_CM: uc2const.cm_to_pt,
+            svg_const.SVG_IN: uc2const.in_to_pt,
+            svg_const.SVG_M: uc2const.m_to_pt,
+        }
+        self.dpi_coeff = dpi_coeff
+
     def recalc_size(self, val):
         if not val:
             return None
-        dpi_scale = svg_const.SVG_DPI / self.svg_doc.config.svg_dpi
-        mapping = {
-            'px': svg_const.svg_px_to_pt * dpi_scale,
-            'pt': 1.0,
-            'pc': 15.0 * svg_const.svg_px_to_pt * dpi_scale,
-            'mm': uc2const.mm_to_pt,
-            'cm': uc2const.cm_to_pt,
-            'in': uc2const.in_to_pt,
-            'm': uc2const.m_to_pt,
-        }
-        if val[-1].isdigit():
-            size = float(val)
-            unit = 'px'
-        elif val[-2].isdigit():
-            size = float(val[:-1])
-            unit = val[-1] if val[-1] in mapping else 'px'
-        else:
-            size = float(val[:-2])
-            unit = val[-2:] if val[-2:] in mapping else 'px'
-        return size * mapping[unit] * self.coeff
+        unit = self.svg_mtds.get_units(val)
+        size = float(val.replace(unit, ''))
+        return size * self.unit_mapping[unit] * self.dpi_coeff
 
     def get_font_size(self, sval):
-        val = self.recalc_size(sval) / self.coeff
+        val = self.recalc_size(sval) / self.dpi_coeff
         pts = [[0.0, 0.0], [0.0, val]]
         pts = libgeom.apply_trafo_to_points(pts, self.trafo)
         return libgeom.distance(*pts)
 
-    def get_viewbox(self, svbox):
-        items = []
-        for item in svbox.split(' '):
-            items += item.split(',')
-        return [self.recalc_size(item) for item in items]
+    def get_viewbox(self, vbox):
+        vbox = vbox.replace(',', ' ').replace('  ', ' ')
+        return [self.recalc_size(item) for item in vbox.split()]
 
     def parse_def(self, svg_obj):
         if 'color' in svg_obj.attrs:
@@ -369,6 +373,7 @@ class SVG_to_SK2_Translator(object):
             stroke = style['stroke'].replace('"', '')
             stroke_rule = sk2const.STROKE_MIDDLE
             stroke_width = self.recalc_size(style['stroke-width'])
+            stroke_width = stroke_width / self.dpi_coeff
             stroke_linecap = SK2_LINE_CAP[style['stroke-linecap']]
             stroke_linejoin = SK2_LINE_JOIN[style['stroke-linejoin']]
             stroke_miterlimit = float(style['stroke-miterlimit'])
@@ -531,7 +536,7 @@ class SVG_to_SK2_Translator(object):
         if not height:
             height = self.recalc_size('297mm')
 
-        page_fmt = ['Custom', (width, height),
+        page_fmt = ['Custom', (width / self.dpi_coeff, height / self.dpi_coeff),
                     uc2const.LANDSCAPE if width > height else uc2const.PORTRAIT]
 
         pages_obj = self.sk2_mtds.get_pages_obj()
@@ -544,10 +549,15 @@ class SVG_to_SK2_Translator(object):
         self.layer = sk2_model.Layer(self.page.config, self.page)
         self.page.childs = [self.layer, ]
 
+        # Document trafo calculation
+        self.trafo = [1 / self.dpi_coeff, 0.0, 0.0,
+                      1 / self.dpi_coeff, 0.0, 0.0]
+
         dx = -width / 2.0
         dy = height / 2.0
-        self.trafo = [1.0, 0.0, 0.0, -1.0, dx, dy]
+        tr = [1.0, 0.0, 0.0, -1.0, dx, dy]
         self.user_space = [0.0, 0.0, width, height]
+        self.trafo = libgeom.multiply_trafo(tr, self.trafo)
 
         if vbox:
             dx = -vbox[0]
@@ -956,7 +966,7 @@ class SVG_to_SK2_Translator(object):
             curve.trafo = libgeom.multiply_trafo(curve.trafo, tr)
             self.append_obj(parent, svg_obj, curve, tr, sk2_style)
         elif 'd' in svg_obj.attrs:
-            paths = svglib.parse_svg_path_cmds(svg_obj.attrs['d'])
+            paths = svg_utils.parse_svg_path_cmds(svg_obj.attrs['d'])
             if not paths:
                 return
 
@@ -993,7 +1003,7 @@ class SVG_to_SK2_Translator(object):
 
         if not svg_obj.childs:
             return
-        txt = svglib.parse_svg_text(svg_obj.childs)
+        txt = svg_utils.parse_svg_text(svg_obj.childs)
         if not txt:
             return
 
@@ -1083,7 +1093,7 @@ SVG_GRAD_EXTEND = {
 
 class SK2_to_SVG_Translator(object):
     dx = dy = page_dx = 0.0
-    ident_level = -1
+    indent_level = -1
     defs_count = 0
     trafo = None
     defs = None
@@ -1102,17 +1112,24 @@ class SK2_to_SVG_Translator(object):
         self.sk2_mtds = sk2_doc.methods
         self.svg_mtds = svg_doc.methods
         self.defs_count = 0
+        svg_attrs = self.svg_mt.attrs
+
         self.trafo = [1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
+        svg_attrs['id'] = utils.generate_guid()
+        units = svg_const.SVG_PX if self.sk2_mt.doc_units == uc2const.UNIT_PX \
+            else svg_const.SVG_PT
         for item in self.svg_mt.childs:
             if item.tag == 'defs':
                 self.defs = item
                 break
         for item in self.sk2_mt.childs:
             if item.cid == sk2_model.PAGES:
-                w, h = item.childs[0].page_format[1]
-                self.svg_mt.attrs['width'] = str(w)
-                self.svg_mt.attrs['height'] = str(h)
-                self.svg_mt.attrs['viewBox'] = '0 0 %s %s' % (str(w), str(h))
+                page = item.childs[0]
+                w, h = page.page_format[1]
+                svg_attrs['width'] = str(w) + units
+                svg_attrs['height'] = str(h) + units
+                if units != svg_const.SVG_PX:
+                    svg_attrs['viewBox'] = '0 0 %s %s' % (str(w), str(h))
                 self.dx = w / 2.0
                 self.dy = h / 2.0
                 self.trafo[4] = self.dx
@@ -1120,7 +1137,7 @@ class SK2_to_SVG_Translator(object):
                 self.page_dx = 0.0
                 for page in item.childs:
                     self.translate_page(self.svg_mt, page)
-        self.ident_level = 0
+        self.indent_level = 0
         if self.defs.childs:
             self.add_spacer(self.defs)
         else:
@@ -1134,8 +1151,8 @@ class SK2_to_SVG_Translator(object):
         self.svg_mtds = None
 
     def add_spacer(self, parent):
-        spacer = '\n' + '\t' * self.ident_level
-        parent.childs.append(svglib.create_spacer(spacer))
+        spacer = '\n' + '\t' * self.indent_level
+        parent.childs.append(svg_utils.create_spacer(spacer))
 
     def append_obj(self, parent, obj):
         self.add_spacer(parent)
@@ -1145,14 +1162,14 @@ class SK2_to_SVG_Translator(object):
         w, h = source_obj.page_format[1]
         self.trafo[4] = w / 2.0 + self.page_dx
         if self.page_dx:
-            rect = svglib.create_rect(self.page_dx, self.dy - h / 2.0, w, h)
+            rect = svg_utils.create_rect(self.page_dx, self.dy - h / 2.0, w, h)
             rect.attrs['style'] = 'fill:none;stroke:black;'
             self.append_obj(self.svg_mt, rect)
         self.translate_objs(self.svg_mt, source_obj.childs)
         self.page_dx += w + 30.0
 
     def translate_objs(self, dest_parent, source_objs):
-        self.ident_level += 1
+        self.indent_level += 1
         for source_obj in source_objs:
             if source_obj.is_layer:
                 self.translate_layer(dest_parent, source_obj)
@@ -1174,10 +1191,10 @@ class SK2_to_SVG_Translator(object):
                     self.translate_primitive(dest_parent, fill_obj)
                 else:
                     self.translate_primitive(dest_parent, source_obj)
-        self.ident_level -= 1
+        self.indent_level -= 1
 
     def translate_layer(self, dest_parent, source_obj):
-        group = svglib.create_xmlobj('g')
+        group = svg_utils.create_xmlobj('g')
         if not source_obj.properties[0]:
             group.attrs['style'] = 'display:none;'
         self.translate_objs(group, source_obj.childs)
@@ -1200,7 +1217,7 @@ class SK2_to_SVG_Translator(object):
                 fill_obj.style[1] = []
                 self.translate_primitive(dest_parent, fill_obj)
 
-            group = svglib.create_xmlobj('g')
+            group = svg_utils.create_xmlobj('g')
             group.attrs['clip-path'] = 'url(#%s)' % clip_id
             self.translate_objs(group, source_obj.childs[1:])
             self.add_spacer(group)
@@ -1212,23 +1229,23 @@ class SK2_to_SVG_Translator(object):
                 stroke_obj.style[0] = []
                 self.translate_primitive(dest_parent, stroke_obj)
         else:
-            group = svglib.create_xmlobj('g')
+            group = svg_utils.create_xmlobj('g')
             self.translate_objs(group, source_obj.childs)
             self.add_spacer(group)
             self.append_obj(dest_parent, group)
 
     def make_clippath(self, source_obj):
-        clippath = svglib.create_xmlobj('clipPath')
+        clippath = svg_utils.create_xmlobj('clipPath')
         clippath.attrs['clipPathUnits'] = 'userSpaceOnUse'
         clippath.attrs['id'] = 'clipPath' + str(self.defs_count + 1)
         self.defs_count += 1
 
-        lvl = self.ident_level
-        self.ident_level = 1
+        lvl = self.indent_level
+        self.indent_level = 1
         self.append_obj(self.defs, clippath)
-        self.ident_level += 1
+        self.indent_level += 1
         self.translate_primitive(clippath, source_obj)
-        self.ident_level = lvl
+        self.indent_level = lvl
         return clippath.attrs['id']
 
     def translate_primitive(self, dest_parent, source_obj):
@@ -1240,9 +1257,9 @@ class SK2_to_SVG_Translator(object):
         style = self.translate_style(source_obj)
         trafo = libgeom.multiply_trafo(curve.trafo, self.trafo)
         paths = libgeom.apply_trafo_to_paths(curve.paths, trafo)
-        pth = svglib.create_xmlobj('path')
+        pth = svg_utils.create_xmlobj('path')
         pth.attrs['style'] = style
-        pth.attrs['d'] = svglib.translate_paths_to_d(paths)
+        pth.attrs['d'] = svg_utils.translate_paths_to_d(paths)
         self.append_obj(dest_parent, pth)
         arrows = curve.arrows_to_curve()
         if arrows:
@@ -1253,7 +1270,7 @@ class SK2_to_SVG_Translator(object):
         image_stream = StringIO()
         surface.write_to_png(image_stream)
         content = b64encode(image_stream.getvalue())
-        image = svglib.create_xmlobj('image')
+        image = svg_utils.create_xmlobj('image')
         w, h = source_obj.get_size()
         trafo = [1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
         trafo = libgeom.multiply_trafo(trafo, source_obj.trafo)
@@ -1270,7 +1287,7 @@ class SK2_to_SVG_Translator(object):
         style = {}
         self.set_fill(style, obj)
         self.set_stroke(style, obj)
-        return svglib.translate_style_dict(style)
+        return svg_utils.translate_style_dict(style)
 
     def set_stroke(self, svg_style, obj):
         if not obj.style[1]:
@@ -1359,13 +1376,13 @@ class SK2_to_SVG_Translator(object):
             attrs['y1'] = str(y1)
             attrs['x2'] = str(x2)
             attrs['y2'] = str(y2)
-        grad_obj = svglib.create_xmlobj(tag, attrs)
-        lvl = self.ident_level
-        self.ident_level = 1
+        grad_obj = svg_utils.create_xmlobj(tag, attrs)
+        lvl = self.indent_level
+        self.indent_level = 1
         self.append_obj(self.defs, grad_obj)
-        self.ident_level += 1
+        self.indent_level += 1
         self.translate_stops(grad_obj, gradient[2])
-        self.ident_level = lvl
+        self.indent_level = lvl
         return grad_id
 
     def translate_stops(self, parent, stops):
@@ -1377,7 +1394,7 @@ class SK2_to_SVG_Translator(object):
             clr = cms.rgb_to_hexcolor(clr[1])
             alpha = str(color[2])
             attrs['style'] = 'stop-color:%s;stop-opacity:%s;' % (clr, alpha)
-            stop_obj = svglib.create_xmlobj('stop', attrs)
+            stop_obj = svg_utils.create_xmlobj('stop', attrs)
             self.append_obj(parent, stop_obj)
-        self.ident_level -= 1
+        self.indent_level -= 1
         self.add_spacer(parent)

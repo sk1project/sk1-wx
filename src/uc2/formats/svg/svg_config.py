@@ -23,4 +23,4 @@ class SVG_Config(XmlConfigParser):
     encoding = 'utf-8'
     indent = '\t'
     filename = 'svg_config.xml'
-    svg_dpi = 90
+    svg_dpi = 0.0

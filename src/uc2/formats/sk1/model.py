@@ -22,7 +22,7 @@ from copy import deepcopy
 
 from uc2 import _, uc2const
 from uc2.formats.generic import TextModelObject
-from uc2.formats.sk1 import sk1const
+from uc2.formats.sk1 import sk1_const
 
 # Document object enumeration
 DOCUMENT = 1
@@ -148,7 +148,7 @@ class SK1Document(SK1ModelObject):
     """
 
     string = '##sK1 1 2\ndocument()\n'
-    doc_origin = sk1const.DOC_ORIGIN_LL
+    doc_origin = sk1_const.DOC_ORIGIN_LL
     doc_units = uc2const.UNIT_MM
     cid = DOCUMENT
     layout = None
@@ -203,22 +203,22 @@ class SK1Grid(SK1ModelObject):
     """
     string = 'grid((0,0,2.83465,2.83465),0,("RGB",0.83,0.87,0.91),\'Grid\')\n'
     cid = GRID
-    geometry = sk1const.default_grid
+    geometry = sk1_const.default_grid
     visible = 0
     printable = 0
     locked = 0
-    grid_color = sk1const.default_grid_color
+    grid_color = sk1_const.default_grid_color
     name = 'Grid'
     is_GridLayer = 1
 
-    def __init__(self, geometry=sk1const.default_grid, visible=0,
-                 grid_color=sk1const.default_grid_color, name=_("Grid")):
+    def __init__(self, geometry=sk1_const.default_grid, visible=0,
+                 grid_color=sk1_const.default_grid_color, name=_("Grid")):
         if len(geometry) == 2:
             self.geometry = (0, 0) + geometry
         elif len(geometry) == 4:
             self.geometry = geometry
         else:
-            self.geometry = sk1const.default_grid
+            self.geometry = sk1_const.default_grid
         self.visible = visible
         self.grid_color = grid_color
         self.name = name
@@ -280,7 +280,7 @@ class SK1Layer(SK1ModelObject):
     cid = LAYER
     name = ''
     layer_properties = []
-    layer_color = sk1const.default_layer_color
+    layer_color = sk1_const.default_layer_color
     visible = 1
     printable = 1
     locked = 0
@@ -290,7 +290,7 @@ class SK1Layer(SK1ModelObject):
 
     def __init__(self, name=_("New Layer"),
                  visible=1, printable=1, locked=0,
-                 outlined=0, outline_color=sk1const.default_layer_color,
+                 outlined=0, outline_color=sk1_const.default_layer_color,
                  is_MasterLayer=0, is_Page=0):
         self.name = name
         self.visible = visible
@@ -319,7 +319,7 @@ class SK1MasterLayer(SK1ModelObject):
     cid = MASTERLAYER
     name = ''
     layer_properties = []
-    layer_color = sk1const.default_layer_color
+    layer_color = sk1_const.default_layer_color
     visible = 1
     printable = 1
     locked = 0
@@ -329,7 +329,7 @@ class SK1MasterLayer(SK1ModelObject):
 
     def __init__(self, name=_("MasterLayer"),
                  visible=1, printable=1, locked=0,
-                 outlined=0, outline_color=sk1const.default_layer_color,
+                 outlined=0, outline_color=sk1_const.default_layer_color,
                  is_MasterLayer=1, is_Page=0):
         self.name = name
         self.visible = visible
@@ -357,7 +357,7 @@ class SK1GuideLayer(SK1ModelObject):
     cid = GUIDELAYER
     name = 'GuideLayer'
     layer_properties = []
-    layer_color = sk1const.default_guidelayer_color
+    layer_color = sk1_const.default_guidelayer_color
     visible = 1
     printable = 0
     locked = 0
@@ -367,7 +367,7 @@ class SK1GuideLayer(SK1ModelObject):
 
     def __init__(self, name=_("GuideLayer"),
                  visible=1, printable=0, locked=0,
-                 outlined=0, outline_color=sk1const.default_layer_color,
+                 outlined=0, outline_color=sk1_const.default_layer_color,
                  is_MasterLayer=0, is_Page=0):
         self.name = name
         self.visible = visible
@@ -442,7 +442,7 @@ class SolidPattern(Pattern):
         if color:
             self.color = color
         else:
-            self.color = deepcopy(sk1const.fallback_sk1color)
+            self.color = deepcopy(sk1_const.fallback_sk1color)
 
     def copy(self):
         return SolidPattern(deepcopy(self.color))
@@ -454,8 +454,8 @@ class MultiGradient:
     def __init__(self, colors=None, duplicate=None):
         colors = colors or []
         if not colors:
-            start_color = deepcopy(sk1const.black_color)
-            end_color = deepcopy(sk1const.white_color)
+            start_color = deepcopy(sk1_const.black_color)
+            end_color = deepcopy(sk1_const.white_color)
             colors = [(0, start_color), (1, end_color)]
         self.colors = colors
 
@@ -549,10 +549,10 @@ class HatchingPattern(Pattern):
                  direction=Point(1, 0),
                  spacing=5.0, width=0.5, duplicate=None):
         if foreground is None:
-            foreground = deepcopy(sk1const.black_color)
+            foreground = deepcopy(sk1_const.black_color)
         self.foreground = foreground
         if background is None:
-            background = deepcopy(sk1const.white_color)
+            background = deepcopy(sk1_const.white_color)
         self.background = background
         self.spacing = spacing
         self.width = width
@@ -623,10 +623,10 @@ class Style:
 
     fill_pattern = EmptyPattern
     fill_transform = 1
-    line_pattern = SolidPattern(deepcopy(sk1const.black_color))
+    line_pattern = SolidPattern(deepcopy(sk1_const.black_color))
     line_width = 0.28
-    line_join = sk1const.JoinMiter
-    line_cap = sk1const.CapButt
+    line_join = sk1_const.JoinMiter
+    line_cap = sk1_const.CapButt
     line_dashes = ()
     line_arrow1 = None
     line_arrow2 = None
@@ -640,11 +640,11 @@ class Style:
         if base_style:
             self.fill_pattern = EmptyPattern
             self.fill_transform = 1
-            color = deepcopy(sk1const.black_color)
+            color = deepcopy(sk1_const.black_color)
             self.line_pattern = SolidPattern(color)
             self.line_width = 0.0
-            self.line_join = sk1const.JoinMiter
-            self.line_cap = sk1const.CapButt
+            self.line_join = sk1_const.JoinMiter
+            self.line_cap = sk1_const.CapButt
             self.line_dashes = ()
             self.line_arrow1 = None
             self.line_arrow2 = None
@@ -715,9 +715,9 @@ class Style:
                 write('lp()\n')
         if self.line_width:
             write('lw(%g)\n' % self.line_width)
-        if not self.line_cap == sk1const.CapButt:
+        if not self.line_cap == sk1_const.CapButt:
             write('lc(%d)\n' % self.line_cap)
-        if not self.line_join == sk1const.JoinMiter:
+        if not self.line_join == sk1_const.JoinMiter:
             write('lj(%d)\n' % self.line_join)
         if self.line_dashes:
             write('ld(' + self.line_dashes.__str__() + ')\n')
@@ -823,12 +823,12 @@ class Ellipse(SK1ModelObject):
     trafo = None
     start_angle = 0.0
     end_angle = 0.0
-    arc_type = sk1const.ArcPieSlice
+    arc_type = sk1_const.ArcPieSlice
 
     is_Ellipse = 1
 
     def __init__(self, trafo=None, start_angle=0.0, end_angle=0.0,
-                 arc_type=sk1const.ArcPieSlice, properties=None,
+                 arc_type=sk1_const.ArcPieSlice, properties=None,
                  duplicate=None):
 
         if trafo is not None and \
@@ -905,7 +905,7 @@ class PolyBezier(SK1ModelObject):
                     self.add_line(point)
                 else:
                     self.add_segment(point)
-            if path[2] == sk1const.CURVE_CLOSED:
+            if path[2] == sk1_const.CURVE_CLOSED:
                 self.string += 'bC()\n'
 
 

@@ -17,19 +17,11 @@
 
 SVG_ATTRS = {
     "xmlns": "http://www.w3.org/2000/svg",
-    "xmlns:dc": "http://purl.org/dc/elements/1.1/",
-    "xmlns:cc": "http://creativecommons.org/ns#",
-    "xmlns:rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-    "xmlns:svg": "http://www.w3.org/2000/svg",
     "xmlns:xlink": "http://www.w3.org/1999/xlink",
-    "width": "210mm",
-    "height": "297mm",
-    "viewBox": "0 0 744.09448819 1052.3622047",
-    "id": "svg2",
     "version": "1.1",
 }
 
-SVG_DPI = 90.0
+SVG_DPI = 72.0
 
 in_to_pt = 72.0
 pt_to_in = 1.0 / 72.0
@@ -45,6 +37,8 @@ SVG_CM = 'cm'
 SVG_IN = 'in'
 SVG_FT = 'ft'
 SVG_M = 'm'
+
+SVG_UNITS = (SVG_PX, SVG_PC, SVG_PT, SVG_MM, SVG_CM, SVG_IN, SVG_FT, SVG_M)
 
 SVG_STYLE = {
     'opacity': '1',

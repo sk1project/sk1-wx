@@ -21,27 +21,27 @@ from cStringIO import StringIO
 
 from uc2 import uc2const, libgeom, libpango, libimg, sk2const
 from uc2.formats.sk2 import sk2_model
-from uc2.formats.wmf import wmfconst, wmf_hatches, wmflib, wmf_model
-from uc2.formats.wmf.wmflib import get_data, rndpoint
+from uc2.formats.wmf import wmf_const, wmf_hatches, wmf_utils, wmf_model
+from uc2.formats.wmf.wmf_utils import get_data, rndpoint
 from uc2.libgeom import multiply_trafo, apply_trafo_to_point
 
 LOG = logging.getLogger(__name__)
 
 SK2_CAPS = {
-    wmfconst.PS_ENDCAP_FLAT: sk2const.CAP_BUTT,
-    wmfconst.PS_ENDCAP_ROUND: sk2const.CAP_ROUND,
-    wmfconst.PS_ENDCAP_SQUARE: sk2const.CAP_SQUARE,
+    wmf_const.PS_ENDCAP_FLAT: sk2const.CAP_BUTT,
+    wmf_const.PS_ENDCAP_ROUND: sk2const.CAP_ROUND,
+    wmf_const.PS_ENDCAP_SQUARE: sk2const.CAP_SQUARE,
 }
 
 SK2_JOIN = {
-    wmfconst.PS_JOIN_MITER: sk2const.JOIN_MITER,
-    wmfconst.PS_JOIN_ROUND: sk2const.JOIN_ROUND,
-    wmfconst.PS_JOIN_BEVEL: sk2const.JOIN_BEVEL,
+    wmf_const.PS_JOIN_MITER: sk2const.JOIN_MITER,
+    wmf_const.PS_JOIN_ROUND: sk2const.JOIN_ROUND,
+    wmf_const.PS_JOIN_BEVEL: sk2const.JOIN_BEVEL,
 }
 
 SK2_FILL_RULE = {
-    wmfconst.ALTERNATE: sk2const.FILL_EVENODD,
-    wmfconst.WINDING: sk2const.FILL_NONZERO,
+    wmf_const.ALTERNATE: sk2const.FILL_EVENODD,
+    wmf_const.WINDING: sk2const.FILL_NONZERO,
 }
 
 
@@ -93,10 +93,10 @@ class WMF_to_SK2_Translator(object):
         self.sk2_mt = sk2_doc.model
         self.sk2_mtds = sk2_doc.methods
 
-        inch = wmfconst.META_DPI
+        inch = wmf_const.META_DPI
         left = top = 0
-        right = wmfconst.META_W
-        bottom = wmfconst.META_H
+        right = wmf_const.META_W
+        bottom = wmf_const.META_H
         header = self.wmf_mt
         self.gdiobjects = []
         self.dcstack = []
@@ -104,7 +104,7 @@ class WMF_to_SK2_Translator(object):
 
         if self.wmf_mt.is_placeable():
             sig, handle, left, top, right, bottom, inch, rsvd, checksum \
-                = get_data(wmfconst.STRUCT_PLACEABLE, self.wmf_mt.chunk)
+                = get_data(wmf_const.STRUCT_PLACEABLE, self.wmf_mt.chunk)
 
             val = 0
             for word in get_data('<10h', self.wmf_mt.chunk[:20]):
@@ -130,45 +130,45 @@ class WMF_to_SK2_Translator(object):
         self.update_trafo()
 
         self.rec_funcs = {
-            wmfconst.META_SETWINDOWORG: self.tr_set_window_org,
-            wmfconst.META_SETWINDOWEXT: self.tr_set_window_ext,
-            wmfconst.META_SETPOLYFILLMODE: self.tr_set_polyfill_mode,
-            wmfconst.META_SETBKMODE: self.tr_set_bg_mode,
-            wmfconst.META_SETBKCOLOR: self.tr_set_bg_color,
-            wmfconst.META_SAVEDC: self.tr_save_dc,
-            wmfconst.META_RESTOREDC: self.tr_restore_dc,
+            wmf_const.META_SETWINDOWORG: self.tr_set_window_org,
+            wmf_const.META_SETWINDOWEXT: self.tr_set_window_ext,
+            wmf_const.META_SETPOLYFILLMODE: self.tr_set_polyfill_mode,
+            wmf_const.META_SETBKMODE: self.tr_set_bg_mode,
+            wmf_const.META_SETBKCOLOR: self.tr_set_bg_color,
+            wmf_const.META_SAVEDC: self.tr_save_dc,
+            wmf_const.META_RESTOREDC: self.tr_restore_dc,
 
-            wmfconst.META_CREATEPENINDIRECT: self.tr_create_pen_in,
-            wmfconst.META_CREATEBRUSHINDIRECT: self.tr_create_brush_in,
-            wmfconst.META_CREATEFONTINDIRECT: self.tr_create_font_in,
-            wmfconst.META_DIBCREATEPATTERNBRUSH: self.tr_dibcreate_pat_brush,
-            wmfconst.META_STRETCHDIB: self.tr_stretch_dib,
+            wmf_const.META_CREATEPENINDIRECT: self.tr_create_pen_in,
+            wmf_const.META_CREATEBRUSHINDIRECT: self.tr_create_brush_in,
+            wmf_const.META_CREATEFONTINDIRECT: self.tr_create_font_in,
+            wmf_const.META_DIBCREATEPATTERNBRUSH: self.tr_dibcreate_pat_brush,
+            wmf_const.META_STRETCHDIB: self.tr_stretch_dib,
             # ---------
-            wmfconst.META_CREATEPALETTE: self.tr_create_noop,
-            wmfconst.META_CREATEPATTERNBRUSH: self.tr_create_noop,
-            wmfconst.META_CREATEREGION: self.tr_create_noop,
+            wmf_const.META_CREATEPALETTE: self.tr_create_noop,
+            wmf_const.META_CREATEPATTERNBRUSH: self.tr_create_noop,
+            wmf_const.META_CREATEREGION: self.tr_create_noop,
             # ---------
-            wmfconst.META_SELECTOBJECT: self.tr_select_object,
-            wmfconst.META_DELETEOBJECT: self.tr_delete_object,
+            wmf_const.META_SELECTOBJECT: self.tr_select_object,
+            wmf_const.META_DELETEOBJECT: self.tr_delete_object,
 
-            wmfconst.META_ELLIPSE: self.tr_ellipse,
-            wmfconst.META_RECTANGLE: self.tr_rectangle,
-            wmfconst.META_ROUNDRECT: self.tr_round_rectangle,
-            wmfconst.META_POLYGON: self.tr_polygon,
-            wmfconst.META_POLYPOLYGON: self.tr_polypolygon,
-            wmfconst.META_POLYLINE: self.tr_polyline,
-            wmfconst.META_ARC: self.tr_arc,
-            wmfconst.META_CHORD: self.tr_chord,
-            wmfconst.META_PIE: self.tr_pie,
-            wmfconst.META_MOVETO: self.tr_moveto,
-            wmfconst.META_LINETO: self.tr_lineto,
+            wmf_const.META_ELLIPSE: self.tr_ellipse,
+            wmf_const.META_RECTANGLE: self.tr_rectangle,
+            wmf_const.META_ROUNDRECT: self.tr_round_rectangle,
+            wmf_const.META_POLYGON: self.tr_polygon,
+            wmf_const.META_POLYPOLYGON: self.tr_polypolygon,
+            wmf_const.META_POLYLINE: self.tr_polyline,
+            wmf_const.META_ARC: self.tr_arc,
+            wmf_const.META_CHORD: self.tr_chord,
+            wmf_const.META_PIE: self.tr_pie,
+            wmf_const.META_MOVETO: self.tr_moveto,
+            wmf_const.META_LINETO: self.tr_lineto,
 
-            wmfconst.META_TEXTOUT: self.tr_textout,
-            wmfconst.META_EXTTEXTOUT: self.tr_exttextout,
-            wmfconst.META_SETTEXTCOLOR: self.tr_set_text_color,
-            wmfconst.META_SETTEXTALIGN: self.tr_set_text_align,
-            wmfconst.META_SETTEXTCHAREXTRA: self.noop,
-            wmfconst.META_SETTEXTJUSTIFICATION: self.noop,
+            wmf_const.META_TEXTOUT: self.tr_textout,
+            wmf_const.META_EXTTEXTOUT: self.tr_exttextout,
+            wmf_const.META_SETTEXTCOLOR: self.tr_set_text_color,
+            wmf_const.META_SETTEXTALIGN: self.tr_set_text_align,
+            wmf_const.META_SETTEXTCHAREXTRA: self.noop,
+            wmf_const.META_SETTEXTJUSTIFICATION: self.noop,
         }
 
         self.translate_header(header)
@@ -288,7 +288,7 @@ class WMF_to_SK2_Translator(object):
             try:
                 self.translate_record(record)
             except Exception as e:
-                LOG.error('ERREC-->%s', wmfconst.WMF_RECORD_NAMES[record.func])
+                LOG.error('ERREC-->%s', wmf_const.WMF_RECORD_NAMES[record.func])
                 LOG.error('Record index %s', str(header.childs.index(record)))
                 LOG.error('Error: %s', e)
 
@@ -319,7 +319,7 @@ class WMF_to_SK2_Translator(object):
 
     def tr_set_bg_mode(self, chunk):
         mode = get_data('<h', chunk[:2])[0]
-        self.dc.opacity = mode == wmfconst.OPAQUE
+        self.dc.opacity = mode == wmf_const.OPAQUE
 
     def tr_set_bg_color(self, chunk):
         self.dc.bgcolor = [val / 255.0 for val in get_data('<BBBx', chunk)]
@@ -336,20 +336,20 @@ class WMF_to_SK2_Translator(object):
 
         lower = mode & 0x0007
         self.dc.text_align = sk2const.TEXT_ALIGN_LEFT
-        if lower & 0x0006 == wmfconst.TA_CENTER:
+        if lower & 0x0006 == wmf_const.TA_CENTER:
             self.dc.text_align = sk2const.TEXT_ALIGN_CENTER
-        elif lower & wmfconst.TA_RIGHT:
+        elif lower & wmf_const.TA_RIGHT:
             self.dc.text_align = sk2const.TEXT_ALIGN_RIGHT
 
-        if mode & wmfconst.TA_BASELINE == wmfconst.TA_BASELINE:
+        if mode & wmf_const.TA_BASELINE == wmf_const.TA_BASELINE:
             self.dc.text_valign = sk2const.TEXT_VALIGN_BASELINE
-        elif mode & wmfconst.TA_BOTTOM:
+        elif mode & wmf_const.TA_BOTTOM:
             self.dc.text_valign = sk2const.TEXT_VALIGN_BOTTOM
         else:
             self.dc.text_valign = sk2const.TEXT_VALIGN_TOP
 
         self.dc.text_rtl = False
-        if mode & wmfconst.TA_RTLREADING:
+        if mode & wmf_const.TA_RTLREADING:
             self.dc.text_rtl = True
 
     def tr_select_object(self, chunk):
@@ -374,7 +374,7 @@ class WMF_to_SK2_Translator(object):
         stroke = []
         style, width = get_data('<hh', chunk[:4])
         r, g, b = get_data('<BBBx', chunk[6:10])
-        if not style & 0x000F == wmfconst.PS_NULL:
+        if not style & 0x000F == wmf_const.PS_NULL:
             stroke_rule = sk2const.STROKE_MIDDLE
             color_vals = [r / 255.0, g / 255.0, b / 255.0]
             color = [uc2const.COLOR_RGB, color_vals, 1.0, '']
@@ -396,9 +396,9 @@ class WMF_to_SK2_Translator(object):
 
             dashes = []
             dash = style & 0x000F
-            for item in wmfconst.META_DASHES.keys():
+            for item in wmf_const.META_DASHES.keys():
                 if dash == item:
-                    dashes = [] + wmfconst.META_DASHES[item]
+                    dashes = [] + wmf_const.META_DASHES[item]
 
             stroke_miterlimit = 9.0
 
@@ -412,11 +412,11 @@ class WMF_to_SK2_Translator(object):
         style, r, g, b, hatch = get_data('<hBBBxh', chunk)
         color_vals = [r / 255.0, g / 255.0, b / 255.0]
         color = [uc2const.COLOR_RGB, color_vals, 1.0, '']
-        if style == wmfconst.BS_SOLID:
+        if style == wmf_const.BS_SOLID:
             fill = [sk2const.FILL_EVENODD, sk2const.FILL_SOLID, color]
-        elif style == wmfconst.BS_HATCHED:
+        elif style == wmf_const.BS_HATCHED:
             if hatch not in wmf_hatches.WMF_HATCHES:
-                hatch = wmfconst.HS_HORIZONTAL
+                hatch = wmf_const.HS_HORIZONTAL
             ptrn = wmf_hatches.WMF_HATCHES[hatch]
             ptrn_type = sk2const.PATTERN_IMG
 
@@ -438,16 +438,16 @@ class WMF_to_SK2_Translator(object):
         size = 5.0 if size < 5.0 else size
         fl_b = weight >= 500
         fl_i, fl_u, fl_s, charset = get_data('<BBBB', chunk[10:14])
-        fl_i = fl_i == wmfconst.META_TRUE
-        fl_u = fl_u == wmfconst.META_TRUE
-        fl_s = fl_s == wmfconst.META_TRUE
+        fl_i = fl_i == wmf_const.META_TRUE
+        fl_u = fl_u == wmf_const.META_TRUE
+        fl_s = fl_s == wmf_const.META_TRUE
 
-        if charset in wmfconst.META_CHARSETS:
-            charset = wmfconst.META_CHARSETS[charset]
+        if charset in wmf_const.META_CHARSETS:
+            charset = wmf_const.META_CHARSETS[charset]
         else:
-            charset = wmfconst.META_CHARSETS[wmfconst.ANSI_CHARSET]
+            charset = wmf_const.META_CHARSETS[wmf_const.ANSI_CHARSET]
 
-        fontface = wmflib.parse_nt_string(chunk[18:]).encode('utf-8')
+        fontface = wmf_utils.parse_nt_string(chunk[18:]).encode('utf-8')
         font_family = 'Sans'
         if fontface in libpango.get_fonts()[0]:
             font_family = fontface
@@ -457,7 +457,7 @@ class WMF_to_SK2_Translator(object):
 
     def tr_dibcreate_pat_brush(self, chunk):
         # style, colorusage = get_data('<hh', chunk[:4])
-        imagestr = wmflib.dib_to_imagestr(chunk[4:])
+        imagestr = wmf_utils.dib_to_imagestr(chunk[4:])
         bitsperpixel = get_data('<h', chunk[18:20])[0]
 
         ptrn, flag = libimg.read_pattern(imagestr)
@@ -714,7 +714,7 @@ class WMF_to_SK2_Translator(object):
     def tr_stretch_dib(self, chunk):
         src_h, src_w, = get_data('<hh', chunk[6:10])
         dst_h, dst_w, dst_y, dst_x = get_data('<hhhh', chunk[14:22])
-        imagestr = wmflib.dib_to_imagestr(chunk[22:])
+        imagestr = wmf_utils.dib_to_imagestr(chunk[22:])
 
         tr = self.get_trafo()
         p0 = apply_trafo_to_point([dst_x, dst_y], tr)
@@ -770,10 +770,10 @@ class SK2_to_WMF_Translator(object):
 
         self.add(wmf_model.set_window_org(self.bbox[0], self.bbox[3]))
         self.add(wmf_model.set_window_ext(self.bbox[2], self.bbox[1]))
-        self.add(wmf_model.set_bkmode(wmfconst.TRANSPARENT))
+        self.add(wmf_model.set_bkmode(wmf_const.TRANSPARENT))
         self.add(wmf_model.set_bkcolor([1.0, ] * 3))
-        self.add(wmf_model.set_rop2(wmfconst.R2_COPYPEN))
-        self.add(wmf_model.set_polyfillmode(wmfconst.ALTERNATE))
+        self.add(wmf_model.set_rop2(wmf_const.R2_COPYPEN))
+        self.add(wmf_model.set_polyfillmode(wmf_const.ALTERNATE))
 
         for layer in page.childs:
             if self.sk2_mtds.is_layer_visible(layer):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2017 by Igor E. Novikov
+#  Copyright (C) 2017-2019 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -14,9 +14,12 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# Specification:
+# https://standards.iso.org/ittf/PubliclyAvailableStandards/c032380_ISO_IEC_8632-3_1999(E).zip
 
 
-from uc2 import uc2const
+from uc2 import uc2const, utils
 from uc2.formats.cgm.cgm_const import CGM_SIGNATURE
 from uc2.formats.cgm.cgm_presenter import CGM_Presenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
@@ -54,7 +57,6 @@ def cgm_saver(sk2_doc, filename=None, fileptr=None,
 
 
 def check_cgm(path):
-    fileptr = get_fileptr(path)
-    sign = fileptr.read(len(CGM_SIGNATURE))
-    fileptr.close()
-    return sign == CGM_SIGNATURE
+    with get_fileptr(path) as fileptr:
+        sign = fileptr.read(2)
+    return utils.uint16_be(sign) & 0xffe0 == CGM_SIGNATURE

@@ -21,52 +21,52 @@ from copy import deepcopy
 
 import model
 from uc2 import uc2const, libgeom, libimg, sk2const
-from uc2.formats.sk1 import sk1const
+from uc2.formats.sk1 import sk1_const
 from uc2.formats.sk2 import sk2_model
 
 # --- SK1 to SK2 translation
 
 SK2_ARC_TYPES = {
-    sk1const.ArcArc: sk2const.ARC_ARC,
-    sk1const.ArcChord: sk2const.ARC_CHORD,
-    sk1const.ArcPieSlice: sk2const.ARC_PIE_SLICE,
+    sk1_const.ArcArc: sk2const.ARC_ARC,
+    sk1_const.ArcChord: sk2const.ARC_CHORD,
+    sk1_const.ArcPieSlice: sk2const.ARC_PIE_SLICE,
 }
 
 SK2_LINE_JOIN = {
-    sk1const.JoinMiter: sk2const.JOIN_MITER,
-    sk1const.JoinRound: sk2const.JOIN_ROUND,
-    sk1const.JoinBevel: sk2const.JOIN_BEVEL,
+    sk1_const.JoinMiter: sk2const.JOIN_MITER,
+    sk1_const.JoinRound: sk2const.JOIN_ROUND,
+    sk1_const.JoinBevel: sk2const.JOIN_BEVEL,
 }
 
 SK2_LINE_CAP = {
-    sk1const.CapButt: sk2const.CAP_BUTT,
-    sk1const.CapRound: sk2const.CAP_ROUND,
-    sk1const.CapProjecting: sk2const.CAP_SQUARE,
+    sk1_const.CapButt: sk2const.CAP_BUTT,
+    sk1_const.CapRound: sk2const.CAP_ROUND,
+    sk1_const.CapProjecting: sk2const.CAP_SQUARE,
 }
 
 SK2_TEXT_ALIGN = {
-    sk1const.ALIGN_LEFT: sk2const.TEXT_ALIGN_LEFT,
-    sk1const.ALIGN_RIGHT: sk2const.TEXT_ALIGN_RIGHT,
-    sk1const.ALIGN_CENTER: sk2const.TEXT_ALIGN_CENTER,
+    sk1_const.ALIGN_LEFT: sk2const.TEXT_ALIGN_LEFT,
+    sk1_const.ALIGN_RIGHT: sk2const.TEXT_ALIGN_RIGHT,
+    sk1_const.ALIGN_CENTER: sk2const.TEXT_ALIGN_CENTER,
 }
 
 
 def get_sk2_color(clr):
     if not clr:
-        return deepcopy(sk1const.fallback_color)
+        return deepcopy(sk1_const.fallback_color)
     color_spec = clr[0]
-    if color_spec == sk1const.RGB:
+    if color_spec == sk1_const.RGB:
         result = [uc2const.COLOR_RGB, [clr[1], clr[2], clr[3]], 1.0, '', '']
         if len(clr) == 5:
             result[2] = clr[4]
         return result
-    elif color_spec == sk1const.CMYK:
+    elif color_spec == sk1_const.CMYK:
         result = [uc2const.COLOR_CMYK,
                   [clr[1], clr[2], clr[3], clr[4]], 1.0, '', '']
         if len(clr) == 6:
             result[2] = clr[5]
         return result
-    elif color_spec == sk1const.SPOT:
+    elif color_spec == sk1_const.SPOT:
         result = [uc2const.COLOR_SPOT, [[clr[3], clr[4], clr[5]],
                                         [clr[6], clr[7], clr[8], clr[9]]], 1.0,
                   clr[2], clr[1]]
@@ -74,7 +74,7 @@ def get_sk2_color(clr):
             result[2] = clr[10]
         return result
     else:
-        return deepcopy(sk1const.fallback_color)
+        return deepcopy(sk1_const.fallback_color)
 
 
 def get_sk2_page(fmt, size, ornt):
@@ -301,66 +301,66 @@ class SK1_to_SK2_Translator(object):
 # --- SK2 to SK1 translation
 
 SK1_ARC_TYPES = {
-    sk2const.ARC_ARC: sk1const.ArcArc,
-    sk2const.ARC_CHORD: sk1const.ArcChord,
-    sk2const.ARC_PIE_SLICE: sk1const.ArcPieSlice,
+    sk2const.ARC_ARC: sk1_const.ArcArc,
+    sk2const.ARC_CHORD: sk1_const.ArcChord,
+    sk2const.ARC_PIE_SLICE: sk1_const.ArcPieSlice,
 }
 
 SK1_LINE_JOIN = {
-    sk2const.JOIN_MITER: sk1const.JoinMiter,
-    sk2const.JOIN_ROUND: sk1const.JoinRound,
-    sk2const.JOIN_BEVEL: sk1const.JoinBevel,
+    sk2const.JOIN_MITER: sk1_const.JoinMiter,
+    sk2const.JOIN_ROUND: sk1_const.JoinRound,
+    sk2const.JOIN_BEVEL: sk1_const.JoinBevel,
 }
 
 SK1_LINE_CAP = {
-    sk2const.CAP_BUTT: sk1const.CapButt,
-    sk2const.CAP_ROUND: sk1const.CapRound,
-    sk2const.CAP_SQUARE: sk1const.CapProjecting,
+    sk2const.CAP_BUTT: sk1_const.CapButt,
+    sk2const.CAP_ROUND: sk1_const.CapRound,
+    sk2const.CAP_SQUARE: sk1_const.CapProjecting,
 }
 
 SK1_TEXT_ALIGN = {
-    sk2const.TEXT_ALIGN_LEFT: sk1const.ALIGN_LEFT,
-    sk2const.TEXT_ALIGN_RIGHT: sk1const.ALIGN_RIGHT,
-    sk2const.TEXT_ALIGN_CENTER: sk1const.ALIGN_CENTER,
-    sk2const.TEXT_ALIGN_JUSTIFY: sk1const.ALIGN_LEFT,
+    sk2const.TEXT_ALIGN_LEFT: sk1_const.ALIGN_LEFT,
+    sk2const.TEXT_ALIGN_RIGHT: sk1_const.ALIGN_RIGHT,
+    sk2const.TEXT_ALIGN_CENTER: sk1_const.ALIGN_CENTER,
+    sk2const.TEXT_ALIGN_JUSTIFY: sk1_const.ALIGN_LEFT,
 }
 
 
 def get_sk1_color(clr, cms):
     if not clr:
-        return deepcopy(sk1const.fallback_sk1color)
+        return deepcopy(sk1_const.fallback_sk1color)
     color_spec = clr[0]
     val = clr[1]
     alpha = clr[2]
     if color_spec == uc2const.COLOR_RGB:
         if clr[2] == 1.0:
-            result = (sk1const.RGB, val[0], val[1], val[2])
+            result = (sk1_const.RGB, val[0], val[1], val[2])
         else:
-            result = (sk1const.RGB, val[0], val[1], val[2], alpha)
+            result = (sk1_const.RGB, val[0], val[1], val[2], alpha)
         return result
     elif color_spec == uc2const.COLOR_CMYK:
         if clr[2] == 1.0:
-            result = (sk1const.CMYK, val[0], val[1], val[2], val[3])
+            result = (sk1_const.CMYK, val[0], val[1], val[2], val[3])
         else:
-            result = (sk1const.CMYK, val[0], val[1], val[2], val[3], alpha)
+            result = (sk1_const.CMYK, val[0], val[1], val[2], val[3], alpha)
         return result
     elif color_spec == uc2const.COLOR_GRAY:
         if clr[2] == 1.0:
-            result = (sk1const.CMYK, 0.0, 0.0, 0.0, 1.0 - val[0])
+            result = (sk1_const.CMYK, 0.0, 0.0, 0.0, 1.0 - val[0])
         else:
-            result = (sk1const.CMYK, 0.0, 0.0, 0.0, 1.0 - val[0], alpha)
+            result = (sk1_const.CMYK, 0.0, 0.0, 0.0, 1.0 - val[0], alpha)
         return result
     elif color_spec == uc2const.COLOR_SPOT:
         clr = cms.get_rgb_color(clr)
         val = clr[1]
         alpha = clr[2]
         if clr[2] == 1.0:
-            result = (sk1const.RGB, val[0], val[1], val[2])
+            result = (sk1_const.RGB, val[0], val[1], val[2])
         else:
-            result = (sk1const.RGB, val[0], val[1], val[2], alpha)
+            result = (sk1_const.RGB, val[0], val[1], val[2], alpha)
         return result
     else:
-        return deepcopy(sk1const.fallback_sk1color)
+        return deepcopy(sk1_const.fallback_sk1color)
 
 
 def get_sk1_style(source_obj, cms):

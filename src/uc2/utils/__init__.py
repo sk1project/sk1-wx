@@ -135,3 +135,10 @@ def get_chunk_size(size_field):
     if not size % 2 == 0:
         size += 1
     return size
+
+
+def uint16_be(chunk):
+    """
+    Converts 2 bytes to unsigned int (big endian)
+    """
+    return struct.unpack(">H", chunk)[0]

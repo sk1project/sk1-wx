@@ -359,7 +359,7 @@ RECORD_MARKUPS = {
         (12, 2, 'left'), ],
     META_ROUNDRECT: [(6, 2, 'Height'), (8, 2, 'Width'), (10, 2, 'bottom'),
         (12, 2, 'right'), (14, 2, 'top'), (16, 2, 'left'), ],
-    META_POLYGON: [(6, 2, 'NumberofPoints'), ],
+    META_POLYGON: [(6, 2, 'Number o fPoints'), ],
     META_MOVETO: [(6, 2, 'Y'), (8, 2, 'X')],
     META_LINETO: [(6, 2, 'Y'), (8, 2, 'X')],
 }
