@@ -26,7 +26,7 @@ LOG = logging.getLogger(__name__)
 
 class ModelObject(object):
     """
-    Abstract parent class for all model 
+    Abstract parent class for all model
     objects. Provides common object properties.
     """
     cid = 0
@@ -92,10 +92,15 @@ class BinaryModelObject(ModelObject):
     chunk = ''
     cache_fields = []
 
+    def save(self, saver):
+        saver.write(self.chunk)
+        for child in self.childs:
+            child.save(saver)
+
 
 class ModelPresenter(object):
     """
-    Abstract parent class for all model 
+    Abstract parent class for all model
     presenters. Provides common functionality.
     """
 
