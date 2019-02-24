@@ -44,6 +44,7 @@ _PROCESSED = (
     cgm_const.METAFILE_ELEMENT_LIST,
     cgm_const.COLOUR_VALUE_EXTENT,
     cgm_const.FONT_LIST,
+    cgm_const.BEGIN_PICTURE,
 )
 
 
@@ -121,6 +122,10 @@ def get_markup(header, params):
                         '      1 byte - size of name\n'
                         '      (sz) bytes - name string\n\nFonts:\n  ' +
                         '\n  '.join(fonts) + '\n' + '.' * 35), ]
+        elif element_id == cgm_const.BEGIN_PICTURE:
+            markup += [(hdsz, 1, 'text length'),
+                       (hdsz + 1, params_sz - 1, 'description'), ]
+
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]

@@ -18,8 +18,13 @@
 import copy
 import struct
 
-from uc2 import utils
+from uc2 import utils, sk2const, libgeom
 from uc2.formats.cgm import cgm_const
+from uc2.formats.sk2 import sk2_model
+
+
+def sign(num):
+    return num / abs(num)
 
 
 class CGM_to_SK2_Translator(object):
@@ -28,15 +33,16 @@ class CGM_to_SK2_Translator(object):
     page = None
     layer = None
     cgm = None
+    cgm_defaults = None
+    trafo = None
+    scale = None
 
     def translate(self, cgm_doc, sk2_doc):
         self.sk2_doc = sk2_doc
         self.sk2_model = sk2_doc.model
         self.sk2_mtds = sk2_doc.methods
         self.page = self.sk2_mtds.get_page()
-        self.layer = self.sk2_mtds.get_layer(self.page)
-
-        self.cgm = copy.deepcopy(cgm_const.CGM_INIT)
+        self.page.childs = []
 
         for element in cgm_doc.childs:
             if element.element_id == cgm_const.END_METAFILE:
@@ -52,6 +58,8 @@ class CGM_to_SK2_Translator(object):
         self.sk2_mtds = None
         self.page = None
         self.layer = None
+        self.cgm = None
+        self.cgm_defaults = None
 
     def extract_title(self, params):
         """Extracts first byte size defined title.
@@ -64,9 +72,36 @@ class CGM_to_SK2_Translator(object):
             return params[1:1 + sz]
         return ''
 
+    def get_style(self):
+        # TODO: get real stroke style
+        return [[], [], [], []]
+
+    def set_trafo(self, extend):
+        if self.cgm['scale.mode'] == 0:
+            left, bottom = extend[0]
+            right, top = extend[1]
+            width = right - left
+            height = top - bottom
+            sc = 841 / (1.0 * max(abs(width), abs(height)))
+        else:
+            left = 0
+            bottom = 0
+            width = 1
+            height = 1
+            sc = self.cgm['scale.metric'] * 72 / 25.4
+        self.scale = sc
+        tr = [1.0, 0.0, 0.0, 1.0, -left, -bottom]
+        scale = [sign(width) * sc, 0.0, 0.0, sign(height) * sc, 0.0, 0.0]
+        # TODO: check trafo order
+        self.trafo = libgeom.multiply_trafo(scale, tr)
+
+    def get_trafo(self):
+        return copy.deepcopy(self.trafo)
+
     # Metafile description
     def _begin_metafile(self, element):
         self.sk2_model.metainfo[3] = self.extract_title(element.params)
+        self.cgm = self.cgm_defaults = copy.deepcopy(cgm_const.CGM_INIT)
 
     def _metafile_description(self, element):
         if self.sk2_model.metainfo[3]:
@@ -153,7 +188,77 @@ class CGM_to_SK2_Translator(object):
             fonts.append(element.params[pos:pos + sz].strip())
             pos += sz
 
+    # Picture references
+    def _begin_picture(self, element):
+        self.cgm = copy.deepcopy(self.cgm_defaults)
+        name = self.extract_title(element.params)
+        self.layer = self.sk2_mtds.add_layer(self.page, name)
+
+        if self.cgm['vdc.extend'] is None:
+            if self.cgm['vdc.type'] == 0:
+                self.cgm['vdc.extend'] = self.cgm['vdc.intextend']
+                self.cgm['vdc.size'] = self.cgm['vdc.intsize']
+                self.cgm['vdc.prec'] = self.cgm['vdc.intprec']
+            else:
+                self.cgm['vdc.extend'] = self.cgm['vdc.realextend']
+                self.cgm['vdc.size'] = self.cgm['vdc.realsize']
+                self.cgm['vdc.prec'] = self.cgm['vdc.realprec']
+        if self.cgm['vdc.prec'] is None:
+            if self.cgm['vdc.type'] == 0:
+                self.cgm['vdc.size'] = self.cgm['vdc.intsize']
+                self.cgm['vdc.prec'] = self.cgm['vdc.intprec']
+            else:
+                self.cgm['vdc.size'] = self.cgm['vdc.realsize']
+                self.cgm['vdc.prec'] = self.cgm['vdc.realprec']
+
+        vdc = self.cgm['vdc.extend']
+        height = vdc[1][1] - vdc[0][1]
+        width = vdc[1][0] - vdc[0][0]
+        maxsz = max(abs(height), abs(width))
+
+        if self.cgm['clip.rect'] is None:
+            self.cgm['clip.rect'] = vdc
+
+        if self.cgm['marker.size'] is None:
+            if self.cgm['marker.sizemode'] == 0:
+                self.cgm['marker.size'] = maxsz / 100.0
+            else:
+                self.cgm['marker.size'] = 3
+
+        if self.cgm['text.height'] is None:
+            self.cgm['text.height'] = maxsz / 100.0
+
+        if self.cgm['edge.width'] is None:
+            if self.cgm['edge.widthmode'] == 0:
+                self.cgm['edge.width'] = maxsz / 1000.0
+            else:
+                self.cgm['edge.width'] = 1
+
+        if self.cgm['line.width'] is None:
+            if self.cgm['line.widthmode'] == 0:
+                self.cgm['line.width'] = maxsz / 1000.0
+            else:
+                self.cgm['line.width'] = 1
+
+    def _begin_picture_body(self, _element):
+        self.set_trafo(self.cgm['vdc.extend'])
+
     # Structural elements
+    # ### Line related
+    def _line(self, element):
+        paths = [[[], [], sk2const.CURVE_OPENED], ]
+        # paths = [[points[0], points[1:], sk2const.CURVE_OPENED], ]
+
+        cfg = self.layer.config
+        sk2_style = self.get_style()
+        sk2_style[0] = []
+        curve = sk2_model.Curve(cfg, self.layer, paths,
+                                self.get_trafo(), sk2_style)
+        # self.layer.childs.append(curve)
+
+    def _polyline(self, element):
+        pass
+
     def _rectangle(self, element):
         pass
 
@@ -161,12 +266,6 @@ class CGM_to_SK2_Translator(object):
         pass
 
     def _ellipse(self, element):
-        pass
-
-    def _line(self, element):
-        pass
-
-    def _polyline(self, element):
         pass
 
     def _polygon(self, element):
