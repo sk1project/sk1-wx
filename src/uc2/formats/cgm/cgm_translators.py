@@ -47,12 +47,7 @@ class CGM_to_SK2_Translator(object):
         for element in cgm_doc.childs:
             if element.element_id == cgm_const.END_METAFILE:
                 break
-            signature = cgm_const.CGM_ID.get(
-                element.element_id, '').replace(' ', '_').lower()
-            if signature:
-                mtd = getattr(self, '_' + signature, None)
-                if mtd:
-                    mtd(element)
+            self.process_element(element)
 
         self.sk2_doc = None
         self.sk2_mtds = None
@@ -60,6 +55,16 @@ class CGM_to_SK2_Translator(object):
         self.layer = None
         self.cgm = None
         self.cgm_defaults = None
+
+    def process_element(self, element):
+        signature = cgm_const.CGM_ID.get(
+            element.element_id, '').replace(' ', '_').lower()
+        if signature:
+            mtd = getattr(self, '_' + signature, None)
+            if mtd:
+                mtd(element)
+        for child in element.childs:
+            self.process_element(child)
 
     def extract_title(self, params):
         """Extracts first byte size defined title.
