@@ -306,7 +306,10 @@ THEME_PNL2 = '#3C3F41'
 THEME_BRD = '#555555'
 THEME_FNT = '#7A7A7A'
 THEME_FNT2 = '#606366'
+THEME_FNT3 = '#FFFFFF'
 THEME_ASCII = '#D99848'
+
+BIN_TXT = 'Bin view:'
 
 
 class BinaryDataViewer(gtk.HBox):
@@ -390,8 +393,22 @@ class BinaryDataViewer(gtk.HBox):
         num_line.modify_fg(gtk.STATE_NORMAL, gtk.gdk.Color(THEME_FNT2))
         num_line.set_alignment(0, 0.5)
         panel_vbox.pack_start(num_line, False, True)
-        panel_vbox.pack_start(HLine(THEME_BRD), False, True)
         # Top line --------------------
+
+        # Bottom line ======================
+        bpanel = Panel(THEME_PNL2)
+        panel_hbox = gtk.HBox()
+        bpanel.add(panel_hbox)
+        l = gtk.Label(BIN_TXT)
+        l.modify_font(pango.FontDescription(LABEL_FNT))
+        l.modify_fg(gtk.STATE_NORMAL, gtk.gdk.Color(THEME_FNT2))
+        panel_hbox.pack_start(l, False, True, 3)
+
+        self.binview = gtk.Label('n/a')
+        self.binview.modify_font(pango.FontDescription(LABEL_FNT))
+        self.binview.modify_fg(gtk.STATE_NORMAL, gtk.gdk.Color(THEME_FNT3))
+        panel_hbox.pack_start(self.binview, False, True, 3)
+        # Bottom line --------------------
 
         vpack = gtk.VBox()
         hpack = gtk.HBox()
@@ -400,8 +417,10 @@ class BinaryDataViewer(gtk.HBox):
         hpack.pack_start(self.editor, False, True)
         hpack.pack_start(ascii_panel, True, True, 0)
         vpack.pack_start(panel, False, True)
-
         vpack.pack_start(hpack)
+        vpack.pack_start(HLine(THEME_BRD), False, True)
+        vpack.pack_start(bpanel, False, True)
+
         viewport = gtk.Viewport()
         viewport.set_border_width(0)
         viewport.set_shadow_type(gtk.SHADOW_NONE)
@@ -427,14 +446,13 @@ class BinaryDataViewer(gtk.HBox):
         eventloop.connect(eventloop.SELECTION_CHANGED, self.reflect_selection)
 
     def check_selection(self, *args):
+        self.set_ascii_selection()
         if self.tb.get_has_selection():
             rng = self.tb.get_selection_bounds()
             self.set_ascii_selection(rng)
             if rng:
                 events.emit(events.BIN_SELECTION, self.tb.get_text(*rng))
                 return
-        else:
-            self.set_ascii_selection()
         events.emit(events.BIN_SELECTION, '')
 
     def check_ascii_selection(self, *args):
@@ -530,25 +548,44 @@ class BinaryDataViewer(gtk.HBox):
                                  size=config.fixed_font_size * pango.SCALE)
 
     def set_ascii_selection(self, rng=None):
-        self.ascii_tb.remove_tag_by_name('selection',
-                         self.ascii_tb.get_iter_at_offset(0),
-                         self.ascii_tb.get_iter_at_offset(len(self.ascii_text)))
+        it0 = self.ascii_tb.get_iter_at_offset(0)
+        it1 = self.ascii_tb.get_iter_at_offset(len(self.ascii_text))
+        self.ascii_tb.remove_tag_by_name('selection', it0, it1)
+
         if not rng:
+            self.set_bin_view()
             return
 
-        def ascii_position(x):
+        def bin_position(x):
             g = (x + 1) // 9
-            x = (g * 8 + (x + 1 - g * 9)) // 2
+            return (g * 8 + (x + 1 - g * 9)) // 2
 
+        def ascii_position(x):
+            x = bin_position(x)
             if x < 16:
                 return x
             g = x // 16
             return g + x
 
-        x0 = ascii_position(rng[0].get_offset())
-        x1 = ascii_position(rng[1].get_offset())
-        if x0 < len(self.ascii_text) and x1 <= self.ascii_text:
-            self.ascii_tb.apply_tag_by_name('selection',
-                          self.ascii_tb.get_iter_at_offset(x0),
-                          self.ascii_tb.get_iter_at_offset(x1))
+        pos0 = rng[0].get_offset()
+        pos1 = rng[1].get_offset()
 
+        x0 = bin_position(pos0)
+        x1 = bin_position(pos1)
+        if x0 < x1 <= len(self.current_obj.chunk):
+            self.set_bin_view(self.current_obj.chunk[x0:x1])
+
+        x0 = ascii_position(pos0)
+        x1 = ascii_position(pos1)
+        if x0 < x1 <= len(self.ascii_text):
+            it0 = self.ascii_tb.get_iter_at_offset(x0)
+            it1 = self.ascii_tb.get_iter_at_offset(x1)
+            self.ascii_tb.apply_tag_by_name('selection', it0, it1)
+
+    def set_bin_view(self, txt=None):
+        if not txt:
+            self.binview.set_text('n/a')
+        else:
+            txt, suffix = (txt[:4], '...') if len(txt) > 4 else (txt, '')
+            self.binview.set_text(
+                '.'.join([format(ord(item), '08b') for item in txt]) + suffix)
