@@ -48,6 +48,11 @@ _PROCESSED = (
     cgm_const.FONT_LIST,
     cgm_const.BEGIN_PICTURE,
     cgm_const.VDC_EXTENT,
+    cgm_const.SCALING_MODE,
+    cgm_const.COLOUR_SELECTION_MODE,
+    cgm_const.LINE_WIDTH_SPECIFICATION_MODE,
+    cgm_const.MARKER_SIZE_SPECIFICATION_MODE,
+    cgm_const.EDGE_WIDTH_SPECIFICATION_MODE,
 )
 
 
@@ -132,6 +137,17 @@ def get_markup(header, params):
             sz = params_sz / 2
             markup += [(hdsz, sz, 'VDC lower left point'),
                        (hdsz + sz, sz, 'VDC upper right point'), ]
+        elif element_id == cgm_const.SCALING_MODE:
+            markup += [(hdsz, 2, 'scaling mode'),
+                       (hdsz + 2, 4, 'scaling metric'), ]
+        elif element_id == cgm_const.COLOUR_SELECTION_MODE:
+            markup += [(hdsz, 2, 'color mode'), ]
+        elif element_id == cgm_const.LINE_WIDTH_SPECIFICATION_MODE:
+            markup += [(hdsz, 2, 'line width specification mode'), ]
+        elif element_id == cgm_const.MARKER_SIZE_SPECIFICATION_MODE:
+            markup += [(hdsz, 2, 'marker size specification mode'), ]
+        elif element_id == cgm_const.EDGE_WIDTH_SPECIFICATION_MODE:
+            markup += [(hdsz, 2, 'edge width specification mode'), ]
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]

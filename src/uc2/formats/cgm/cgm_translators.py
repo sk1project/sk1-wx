@@ -74,6 +74,14 @@ class CGM_to_SK2_Translator(object):
         title = chunk[1:1 + sz]
         return title, chunk[sz:]
 
+    def read_real(self, chunk, precision=None):
+        precision = self.cgm['realprec'] if precision is None else precision
+        fmt, fn = cgm_utils.REAL_F[precision]
+        return fn(fmt, chunk)
+
+    def read_enum(self, chunk):
+        return cgm_utils._unpack('!h', chunk)
+
     # VDC()
     def read_vdc(self, chunk):
         fmt, fn = cgm_utils.VDC_F[self.cgm['vdc.type']][self.cgm['vdc.prec']]
@@ -266,6 +274,26 @@ class CGM_to_SK2_Translator(object):
         self.set_trafo(self.cgm['vdc.extend'])
 
     # Structural elements
+    def _scaling_mode(self, element):
+        chunk = element.params
+        self.cgm['scale.mode'], chunk = self.read_enum(chunk)
+        precision = None if self.cgm['realprec'] in (2, 3) else 2
+        self.cgm['scale.metric'], chunk = self.read_real(chunk, precision)
+        if self.cgm['scale.mode'] == 1 and self.cgm['scale.metric'] == 0:
+            self.cgm['scale.mode'] = 0
+
+    def _colour_selection_mode(self, element):
+        self.cgm['color.mode'] = self.read_enum(element.params)[0]
+
+    def _line_width_specification_mode(self, element):
+        self.cgm['line.widthmode'] = self.read_enum(element.params)[0]
+
+    def _marker_size_specification_mode(self, element):
+        self.cgm['marker.sizemode'] = self.read_enum(element.params)[0]
+
+    def _edge_width_specification_mode(self, element):
+        self.cgm['edge.widthmode'] = self.read_enum(element.params)[0]
+
     # ### Line related
     def _line(self, element):
         paths = [[[], [], sk2const.CURVE_OPENED], ]
