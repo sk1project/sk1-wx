@@ -15,6 +15,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import struct
+
 from uc2 import utils
 from uc2.formats.cgm import cgm_const
 
@@ -45,6 +47,7 @@ _PROCESSED = (
     cgm_const.COLOUR_VALUE_EXTENT,
     cgm_const.FONT_LIST,
     cgm_const.BEGIN_PICTURE,
+    cgm_const.VDC_EXTENT,
 )
 
 
@@ -125,8 +128,42 @@ def get_markup(header, params):
         elif element_id == cgm_const.BEGIN_PICTURE:
             markup += [(hdsz, 1, 'text length'),
                        (hdsz + 1, params_sz - 1, 'description'), ]
-
+        elif element_id == cgm_const.VDC_EXTENT:
+            sz = params_sz / 2
+            markup += [(hdsz, sz, 'VDC lower left point'),
+                       (hdsz + sz, sz, 'VDC upper right point'), ]
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]
     return markup
+
+
+def _unpack(fmt, chunk):
+    sz = struct.calcsize(fmt)
+    return struct.unpack(fmt, chunk[:sz])[0], chunk[sz:]
+
+
+def _unpack24(fmt, chunk):
+    sz = struct.calcsize(fmt)
+    res = struct.unpack(fmt, chunk[:sz])
+    return (res[0] << 16) | res[1], chunk[sz:]
+
+
+def _unpack_fip32(fmt, chunk):
+    sz = struct.calcsize(fmt)
+    res = struct.unpack(fmt, chunk[:sz])
+    return res[0] + res[1] / 65536.0, chunk[sz:]
+
+
+def _unpack_fip64(fmt, chunk):
+    sz = struct.calcsize(fmt)
+    res = struct.unpack(fmt, chunk[:sz])
+    return res[0] + res[1] / (65536.0 ** 2), chunk[sz:]
+
+
+CARD_F = (('!B', _unpack), ('!H', _unpack), ('!BH', _unpack24), ('!I', _unpack))
+INT_F = (('!b', _unpack), ('!h', _unpack), ('!bH', _unpack24), ('!i', _unpack))
+FLOAT_F = (('!f', _unpack), ('!d', _unpack))
+FIXED_F = (('!hH', _unpack_fip32), ('!hH', _unpack_fip64))
+REAL_F = FIXED_F + FLOAT_F
+VDC_F = (INT_F, REAL_F)

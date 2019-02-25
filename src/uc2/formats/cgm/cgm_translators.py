@@ -19,7 +19,7 @@ import copy
 import struct
 
 from uc2 import utils, sk2const, libgeom
-from uc2.formats.cgm import cgm_const
+from uc2.formats.cgm import cgm_const, cgm_utils
 from uc2.formats.sk2 import sk2_model
 
 
@@ -29,6 +29,7 @@ def sign(num):
 
 class CGM_to_SK2_Translator(object):
     sk2_doc = None
+    sk2_model = None
     sk2_mtds = None
     page = None
     layer = None
@@ -50,6 +51,7 @@ class CGM_to_SK2_Translator(object):
             self.process_element(element)
 
         self.sk2_doc = None
+        self.sk2_model = None
         self.sk2_mtds = None
         self.page = None
         self.layer = None
@@ -66,16 +68,24 @@ class CGM_to_SK2_Translator(object):
         for child in element.childs:
             self.process_element(child)
 
-    def extract_title(self, params):
-        """Extracts first byte size defined title.
+    # READER ------
+    def read_title(self, chunk):
+        sz = utils.byte2py_int(chunk[0])
+        title = chunk[1:1 + sz]
+        return title, chunk[sz:]
 
-        :param element: CgmElement params
-        :return: str
-        """
-        if params:
-            sz = utils.byte2py_int(params[0])
-            return params[1:1 + sz]
-        return ''
+    # VDC()
+    def read_vdc(self, chunk):
+        fmt, fn = cgm_utils.VDC_F[self.cgm['vdc.type']][self.cgm['vdc.prec']]
+        return fn(fmt, chunk)
+
+    # Pnt()
+    def read_point(self, chunk):
+        x, chunk = self.read_vdc(chunk)
+        y, chunk = self.read_vdc(chunk)
+        return (x, y), chunk
+
+    # READER END =====
 
     def get_style(self):
         # TODO: get real stroke style
@@ -105,13 +115,13 @@ class CGM_to_SK2_Translator(object):
 
     # Metafile description
     def _begin_metafile(self, element):
-        self.sk2_model.metainfo[3] = self.extract_title(element.params)
+        self.sk2_model.metainfo[3] = self.read_title(element.params)[0]
         self.cgm = self.cgm_defaults = copy.deepcopy(cgm_const.CGM_INIT)
 
     def _metafile_description(self, element):
         if self.sk2_model.metainfo[3]:
             self.sk2_model.metainfo[3] += '\n\n'
-        self.sk2_model.metainfo[3] += self.extract_title(element.params)
+        self.sk2_model.metainfo[3] += self.read_title(element.params)[0]
 
     def _vdc_type(self, element):
         if element.params:
@@ -128,7 +138,7 @@ class CGM_to_SK2_Translator(object):
     def _application_data(self, element):
         if self.sk2_model.metainfo[3]:
             self.sk2_model.metainfo[3] += '\n\n'
-        self.sk2_model.metainfo[3] += self.extract_title(element.params[2:])
+        self.sk2_model.metainfo[3] += self.read_title(element.params[2:])[0]
 
     def _integer_precision(self, element):
         self.cgm['intsize'] = utils.uint16_be(element.params) / 8
@@ -193,11 +203,15 @@ class CGM_to_SK2_Translator(object):
             fonts.append(element.params[pos:pos + sz].strip())
             pos += sz
 
+    def _vdc_extent(self, element):
+        chunk = element.params
+        ll, chunk = self.read_point(chunk)
+        ur, chunk = self.read_point(chunk)
+        self.cgm['vdc.extend'] = (ll, ur)
+
     # Picture references
     def _begin_picture(self, element):
         self.cgm = copy.deepcopy(self.cgm_defaults)
-        name = self.extract_title(element.params)
-        self.layer = self.sk2_mtds.add_layer(self.page, name)
 
         if self.cgm['vdc.extend'] is None:
             if self.cgm['vdc.type'] == 0:
@@ -244,6 +258,9 @@ class CGM_to_SK2_Translator(object):
                 self.cgm['line.width'] = maxsz / 1000.0
             else:
                 self.cgm['line.width'] = 1
+
+        name = self.read_title(element.params)[0]
+        self.layer = self.sk2_mtds.add_layer(self.page, name)
 
     def _begin_picture_body(self, _element):
         self.set_trafo(self.cgm['vdc.extend'])
