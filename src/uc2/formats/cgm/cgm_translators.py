@@ -69,6 +69,10 @@ class CGM_to_SK2_Translator(object):
             self.process_element(child)
 
     # READER ------
+    def read_fmt(self, fmt, chunk):
+        sz = struct.calcsize(fmt)
+        return struct.unpack(fmt, chunk[:sz]), chunk[sz:]
+
     def read_title(self, chunk):
         sz = utils.byte2py_int(chunk[0])
         title = chunk[1:1 + sz]
@@ -82,16 +86,24 @@ class CGM_to_SK2_Translator(object):
     def read_enum(self, chunk):
         return cgm_utils._unpack('!h', chunk)
 
-    # VDC()
     def read_vdc(self, chunk):
         fmt, fn = cgm_utils.VDC_F[self.cgm['vdc.type']][self.cgm['vdc.prec']]
         return fn(fmt, chunk)
 
-    # Pnt()
     def read_point(self, chunk):
         x, chunk = self.read_vdc(chunk)
         y, chunk = self.read_vdc(chunk)
         return (x, y), chunk
+
+    def read_color(self, chunk):
+        if self.cgm['color.mode'] == 1:
+            color, chunk = self.read_fmt(self.cgm['color.absstruct'], chunk)
+            color = [x - y for x, y in zip(color, self.cgm['color.offset'])]
+            color = [x / y for x, y in zip(color, self.cgm['color.scale'])]
+        else:
+            (indx,), chunk = self.read_fmt(self.cgm['color.inxstruct'], chunk)
+            color = self.cgm['color.table'][indx % self.cgm['color.maxindex']]
+        return color, chunk
 
     # READER END =====
 
@@ -293,6 +305,10 @@ class CGM_to_SK2_Translator(object):
 
     def _edge_width_specification_mode(self, element):
         self.cgm['edge.widthmode'] = self.read_enum(element.params)[0]
+
+    def _background_colour(self, element):
+        color = self.read_color(element.params)[0]
+        # TODO: create rect as bg
 
     # ### Line related
     def _line(self, element):

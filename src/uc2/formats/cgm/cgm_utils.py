@@ -53,6 +53,7 @@ _PROCESSED = (
     cgm_const.LINE_WIDTH_SPECIFICATION_MODE,
     cgm_const.MARKER_SIZE_SPECIFICATION_MODE,
     cgm_const.EDGE_WIDTH_SPECIFICATION_MODE,
+    cgm_const.BACKGROUND_COLOUR,
 )
 
 
@@ -148,6 +149,8 @@ def get_markup(header, params):
             markup += [(hdsz, 2, 'marker size specification mode'), ]
         elif element_id == cgm_const.EDGE_WIDTH_SPECIFICATION_MODE:
             markup += [(hdsz, 2, 'edge width specification mode'), ]
+        elif element_id == cgm_const.BACKGROUND_COLOUR:
+            markup += [(hdsz, params_sz, 'bg color'), ]
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]
