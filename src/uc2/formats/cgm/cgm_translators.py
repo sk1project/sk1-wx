@@ -73,6 +73,10 @@ class CGM_to_SK2_Translator(object):
         sz = struct.calcsize(fmt)
         return struct.unpack(fmt, chunk[:sz]), chunk[sz:]
 
+    def read_int(self, chunk):
+        fmt, fn = cgm_utils.INT_F[self.cgm['intprec']]
+        return fn(fmt, chunk)
+
     def read_title(self, chunk):
         sz = utils.byte2py_int(chunk[0])
         title = chunk[1:1 + sz]
@@ -309,6 +313,44 @@ class CGM_to_SK2_Translator(object):
     def _background_colour(self, element):
         color = self.read_color(element.params)[0]
         # TODO: create rect as bg
+
+    def _vdc_integer_precision(self, element):
+        bit_depth = self.read_int(element.params)
+        if bit_depth in (8, 16, 24, 32):
+            self.cgm['vdc.intsize'] = bit_depth / 8
+            self.cgm['vdc.intprec'] = self.cgm['vdc.intsize'] - 1
+            if self.cgm['vdc.type'] == 0:
+                self.cgm['vdc.size'] = self.cgm['vdc.intsize']
+                self.cgm['vdc.prec'] = self.cgm['vdc.intprec']
+        else:
+            raise Exception('Unsupported vdc integer precision %d' % bit_depth)
+
+    def _vdc_real_precision(self, element):
+        chunk = element.params
+        prec_type, chunk = self.read_enum(chunk)
+        x, chunk = self.read_int(chunk)
+        y, chunk = self.read_int(chunk)
+        precision = (x, y)
+        if prec_type == 1:
+            if precision == (16, 16):
+                self.cgm['vdc.realprec'] = 0  # 32 bit fixed precision
+            elif precision == (32, 32):
+                self.cgm['vdc.realprec'] = 1  # 64 bit fixed precision
+            else:
+                raise Exception(
+                    'Unsupported real precision (%d, %d)' % precision)
+        else:
+            if precision == (9, 23):
+                self.cgm['vdc.realprec'] = 2  # 32 bit floating point
+            elif precision == (12, 52):
+                self.cgm['vdc.realprec'] = 3  # 64 bit floating point
+            else:
+                raise Exception(
+                    'Unsupported real precision (%d, %d)' % precision)
+
+        if self.cgm['vdc.type'] == 1:
+            self.cgm['vdc.size'] = self.cgm['vdc.realsize']
+            self.cgm['vdc.prec'] = self.cgm['vdc.realprec']
 
     # ### Line related
     def _line(self, element):

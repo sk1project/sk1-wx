@@ -54,6 +54,8 @@ _PROCESSED = (
     cgm_const.MARKER_SIZE_SPECIFICATION_MODE,
     cgm_const.EDGE_WIDTH_SPECIFICATION_MODE,
     cgm_const.BACKGROUND_COLOUR,
+    cgm_const.VDC_INTEGER_PRECISION,
+    cgm_const.VDC_REAL_PRECISION,
 )
 
 
@@ -151,6 +153,11 @@ def get_markup(header, params):
             markup += [(hdsz, 2, 'edge width specification mode'), ]
         elif element_id == cgm_const.BACKGROUND_COLOUR:
             markup += [(hdsz, params_sz, 'bg color'), ]
+        elif element_id == cgm_const.VDC_INTEGER_PRECISION:
+            markup += [(hdsz, params_sz, 'vdc integer precision'), ]
+        elif element_id == cgm_const.VDC_REAL_PRECISION:
+            markup += [(hdsz, 2, ' precision type'),
+                       (hdsz + 2, params_sz - 2, ' 2 precision fields')]
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]
