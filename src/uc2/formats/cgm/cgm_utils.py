@@ -56,6 +56,7 @@ _PROCESSED = (
     cgm_const.BACKGROUND_COLOUR,
     cgm_const.VDC_INTEGER_PRECISION,
     cgm_const.VDC_REAL_PRECISION,
+    cgm_const.CLIP_RECTANGLE,
 )
 
 
@@ -158,6 +159,8 @@ def get_markup(header, params):
         elif element_id == cgm_const.VDC_REAL_PRECISION:
             markup += [(hdsz, 2, ' precision type'),
                        (hdsz + 2, params_sz - 2, ' 2 precision fields')]
+        elif element_id == cgm_const.CLIP_RECTANGLE:
+            markup += [(hdsz, params_sz, 'clip rectangle (2 points)'), ]
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]

@@ -68,7 +68,7 @@ class CGM_to_SK2_Translator(object):
         for child in element.childs:
             self.process_element(child)
 
-    # READER ------
+    # READER ------>
     def read_fmt(self, fmt, chunk):
         sz = struct.calcsize(fmt)
         return struct.unpack(fmt, chunk[:sz]), chunk[sz:]
@@ -98,6 +98,18 @@ class CGM_to_SK2_Translator(object):
         x, chunk = self.read_vdc(chunk)
         y, chunk = self.read_vdc(chunk)
         return (x, y), chunk
+
+    def read_points(self, chunk):
+        sz = 2 * self.cgm['vdc.size']
+        points = []
+        while len(chunk) >= sz:
+            point, chunk = self.read_point(chunk)
+            points.append(point)
+        return points
+
+    def read_path(self, chunk):
+        points = self.read_points(chunk)
+        return [points[0], points[1:], sk2const.CURVE_OPENED]
 
     def read_color(self, chunk):
         if self.cgm['color.mode'] == 1:
@@ -137,103 +149,14 @@ class CGM_to_SK2_Translator(object):
     def get_trafo(self):
         return copy.deepcopy(self.trafo)
 
-    # Metafile description
+    # METAFILE RECODRS ----->
+
+    # 0x0020
     def _begin_metafile(self, element):
         self.sk2_model.metainfo[3] = self.read_title(element.params)[0]
         self.cgm = self.cgm_defaults = copy.deepcopy(cgm_const.CGM_INIT)
 
-    def _metafile_description(self, element):
-        if self.sk2_model.metainfo[3]:
-            self.sk2_model.metainfo[3] += '\n\n'
-        self.sk2_model.metainfo[3] += self.read_title(element.params)[0]
-
-    def _vdc_type(self, element):
-        if element.params:
-            self.cgm['vdc.type'] = utils.uint16_be(element.params[:2])
-        if self.cgm['vdc.type'] == cgm_const.VDC_TYPE_INT:
-            self.cgm['vdc.size'] = self.cgm['vdc.intsize']
-            self.cgm['vdc.prec'] = self.cgm['vdc.intprec']
-            self.cgm['vdc.extend'] = self.cgm['vdc.intextend']
-        else:
-            self.cgm['vdc.size'] = self.cgm['vdc.realsize']
-            self.cgm['vdc.prec'] = self.cgm['vdc.realprec']
-            self.cgm['vdc.extend'] = self.cgm['vdc.realextend']
-
-    def _application_data(self, element):
-        if self.sk2_model.metainfo[3]:
-            self.sk2_model.metainfo[3] += '\n\n'
-        self.sk2_model.metainfo[3] += self.read_title(element.params[2:])[0]
-
-    def _integer_precision(self, element):
-        self.cgm['intsize'] = utils.uint16_be(element.params) / 8
-        if self.cgm['intsize'] not in (8, 16, 24, 32):
-            raise Exception('Unsupported integer precision %s' %
-                            repr(self.cgm['intsize']))
-        self.cgm['intprec'] = self.cgm['intsize'] - 1
-
-    def _real_precision(self, element):
-        prec = (utils.uint16_be(element.params[2:4]),
-                utils.uint16_be(element.params[4:]))
-        prec_type = cgm_const.REAL_PRECISION_MAP.get(prec)
-        if prec_type is None:
-            raise Exception('Unsupported real precision %s' % repr(prec))
-        self.cgm['realprec'] = prec_type
-
-    def _index_precision(self, element):
-        self.cgm['inxsize'] = utils.uint16_be(element.params) / 8
-        if self.cgm['inxsize'] not in (8, 16, 24, 32):
-            raise Exception('Unsupported index precision %s' %
-                            repr(self.cgm['intsize']))
-        self.cgm['inxprec'] = self.cgm['inxsize'] - 1
-
-    def _colour_precision(self, element):
-        sz = element.params_sz
-        color_prec = utils.uint16_be(element.params[sz - 2:sz])
-        absstruct = cgm_const.COLOR_PRECISION_MAP.get(color_prec)
-        if absstruct is None:
-            raise Exception('Unsupported color precision %d' % color_prec)
-        self.cgm['color.absstruct'] = absstruct
-
-    def _colour_index_precision(self, element):
-        sz = element.params_sz
-        index_prec = utils.uint16_be(element.params[sz - 2:sz])
-        absstruct = cgm_const.COLOR_INDEX_PRECISION_MAP.get(index_prec)
-        if absstruct is None:
-            raise Exception('Unsupported color index precision %d' %
-                            index_prec)
-        self.cgm['color.inxstruct'] = absstruct
-
-    def _maximum_colour_index(self, element):
-        sz = utils.uint16_be(element.params)
-        self.cgm['color.maxindex'] = sz
-        self.cgm['color.table'] = cgm_const.create_color_table(sz)
-
-    def _colour_value_extent(self, element):
-        fmt = self.cgm['color.absstruct']
-        sz = struct.calcsize(fmt)
-        bottom = struct.unpack(fmt, element.params[:sz])
-        top = struct.unpack(fmt, element.params[sz:2 * sz])
-        self.cgm['color.offset'] = tuple(
-            l * r for l, r in zip(bottom, (1.0, 1.0, 1.0)))
-        self.cgm['color.scale'] = tuple(
-            l - r for l, r in zip(top, self.cgm['color.offset']))
-
-    def _font_list(self, element):
-        self.cgm['color.absstruct'] = fonts = []
-        pos = 0
-        while pos < element.params_sz:
-            sz = utils.byte2py_int(element.params[pos])
-            pos += 1
-            fonts.append(element.params[pos:pos + sz].strip())
-            pos += sz
-
-    def _vdc_extent(self, element):
-        chunk = element.params
-        ll, chunk = self.read_point(chunk)
-        ur, chunk = self.read_point(chunk)
-        self.cgm['vdc.extend'] = (ll, ur)
-
-    # Picture references
+    # 0x0060
     def _begin_picture(self, element):
         self.cgm = copy.deepcopy(self.cgm_defaults)
 
@@ -286,10 +209,102 @@ class CGM_to_SK2_Translator(object):
         name = self.read_title(element.params)[0]
         self.layer = self.sk2_mtds.add_layer(self.page, name)
 
+    # 0x0080
     def _begin_picture_body(self, _element):
         self.set_trafo(self.cgm['vdc.extend'])
 
+    # 0x1040
+    def _metafile_description(self, element):
+        if self.sk2_model.metainfo[3]:
+            self.sk2_model.metainfo[3] += '\n\n'
+        self.sk2_model.metainfo[3] += self.read_title(element.params)[0]
+
+    # 0x1060
+    def _vdc_type(self, element):
+        if element.params:
+            self.cgm['vdc.type'] = utils.uint16_be(element.params[:2])
+        if self.cgm['vdc.type'] == cgm_const.VDC_TYPE_INT:
+            self.cgm['vdc.size'] = self.cgm['vdc.intsize']
+            self.cgm['vdc.prec'] = self.cgm['vdc.intprec']
+            self.cgm['vdc.extend'] = self.cgm['vdc.intextend']
+        else:
+            self.cgm['vdc.size'] = self.cgm['vdc.realsize']
+            self.cgm['vdc.prec'] = self.cgm['vdc.realprec']
+            self.cgm['vdc.extend'] = self.cgm['vdc.realextend']
+
+    # 0x1080
+    def _integer_precision(self, element):
+        self.cgm['intsize'] = utils.uint16_be(element.params) / 8
+        if self.cgm['intsize'] not in (8, 16, 24, 32):
+            raise Exception('Unsupported integer precision %s' %
+                            repr(self.cgm['intsize']))
+        self.cgm['intprec'] = self.cgm['intsize'] - 1
+
+    # 0x10a0
+    def _real_precision(self, element):
+        prec = (utils.uint16_be(element.params[2:4]),
+                utils.uint16_be(element.params[4:]))
+        prec_type = cgm_const.REAL_PRECISION_MAP.get(prec)
+        if prec_type is None:
+            raise Exception('Unsupported real precision %s' % repr(prec))
+        self.cgm['realprec'] = prec_type
+
+    # 0x10c0
+    def _index_precision(self, element):
+        self.cgm['inxsize'] = utils.uint16_be(element.params) / 8
+        if self.cgm['inxsize'] not in (8, 16, 24, 32):
+            raise Exception('Unsupported index precision %s' %
+                            repr(self.cgm['intsize']))
+        self.cgm['inxprec'] = self.cgm['inxsize'] - 1
+
+    # 0x10e0
+    def _colour_precision(self, element):
+        sz = element.params_sz
+        color_prec = utils.uint16_be(element.params[sz - 2:sz])
+        absstruct = cgm_const.COLOR_PRECISION_MAP.get(color_prec)
+        if absstruct is None:
+            raise Exception('Unsupported color precision %d' % color_prec)
+        self.cgm['color.absstruct'] = absstruct
+
+    # 0x1100
+    def _colour_index_precision(self, element):
+        sz = element.params_sz
+        index_prec = utils.uint16_be(element.params[sz - 2:sz])
+        absstruct = cgm_const.COLOR_INDEX_PRECISION_MAP.get(index_prec)
+        if absstruct is None:
+            raise Exception('Unsupported color index precision %d' %
+                            index_prec)
+        self.cgm['color.inxstruct'] = absstruct
+
+    # 0x1120
+    def _maximum_colour_index(self, element):
+        sz = utils.uint16_be(element.params)
+        self.cgm['color.maxindex'] = sz
+        self.cgm['color.table'] = cgm_const.create_color_table(sz)
+
+    # 0x1140
+    def _colour_value_extent(self, element):
+        fmt = self.cgm['color.absstruct']
+        sz = struct.calcsize(fmt)
+        bottom = struct.unpack(fmt, element.params[:sz])
+        top = struct.unpack(fmt, element.params[sz:2 * sz])
+        self.cgm['color.offset'] = tuple(
+            l * r for l, r in zip(bottom, (1.0, 1.0, 1.0)))
+        self.cgm['color.scale'] = tuple(
+            l - r for l, r in zip(top, self.cgm['color.offset']))
+
+    # 0x11a0
+    def _font_list(self, element):
+        self.cgm['color.absstruct'] = fonts = []
+        pos = 0
+        while pos < element.params_sz:
+            sz = utils.byte2py_int(element.params[pos])
+            pos += 1
+            fonts.append(element.params[pos:pos + sz].strip())
+            pos += sz
+
     # Structural elements
+    # 0x2020
     def _scaling_mode(self, element):
         chunk = element.params
         self.cgm['scale.mode'], chunk = self.read_enum(chunk)
@@ -298,22 +313,35 @@ class CGM_to_SK2_Translator(object):
         if self.cgm['scale.mode'] == 1 and self.cgm['scale.metric'] == 0:
             self.cgm['scale.mode'] = 0
 
+    # 0x2040
     def _colour_selection_mode(self, element):
         self.cgm['color.mode'] = self.read_enum(element.params)[0]
 
+    # 0x2060
     def _line_width_specification_mode(self, element):
         self.cgm['line.widthmode'] = self.read_enum(element.params)[0]
 
+    # 0x2080
     def _marker_size_specification_mode(self, element):
         self.cgm['marker.sizemode'] = self.read_enum(element.params)[0]
 
+    # 0x20a0
     def _edge_width_specification_mode(self, element):
         self.cgm['edge.widthmode'] = self.read_enum(element.params)[0]
 
+    # 0x20c0
+    def _vdc_extent(self, element):
+        chunk = element.params
+        ll, chunk = self.read_point(chunk)
+        ur, chunk = self.read_point(chunk)
+        self.cgm['vdc.extend'] = (ll, ur)
+
+    # 0x20e0
     def _background_colour(self, element):
         color = self.read_color(element.params)[0]
         # TODO: create rect as bg
 
+    # 0x3020
     def _vdc_integer_precision(self, element):
         bit_depth = self.read_int(element.params)
         if bit_depth in (8, 16, 24, 32):
@@ -325,6 +353,7 @@ class CGM_to_SK2_Translator(object):
         else:
             raise Exception('Unsupported vdc integer precision %d' % bit_depth)
 
+    # 0x3040
     def _vdc_real_precision(self, element):
         chunk = element.params
         prec_type, chunk = self.read_enum(chunk)
@@ -352,17 +381,21 @@ class CGM_to_SK2_Translator(object):
             self.cgm['vdc.size'] = self.cgm['vdc.realsize']
             self.cgm['vdc.prec'] = self.cgm['vdc.realprec']
 
-    # ### Line related
-    def _line(self, element):
-        paths = [[[], [], sk2const.CURVE_OPENED], ]
-        # paths = [[points[0], points[1:], sk2const.CURVE_OPENED], ]
+    # 0x30a0
+    def _clip_rectangle(self, element):
+        chunk = element.params
+        p0, chunk = self.read_point(chunk)
+        p1, chunk = self.read_point(chunk)
+        self.cgm['clip.rect'] = (p0, p1)
 
-        cfg = self.layer.config
+    # ### Line related
+    # 0x4020
+    def _line(self, element):
+        paths = [self.read_path(element.params), ]
         sk2_style = self.get_style()
-        sk2_style[0] = []
-        curve = sk2_model.Curve(cfg, self.layer, paths,
+        curve = sk2_model.Curve(self.layer.config, self.layer, paths,
                                 self.get_trafo(), sk2_style)
-        # self.layer.childs.append(curve)
+        self.layer.childs.append(curve)
 
     def _polyline(self, element):
         pass
@@ -378,6 +411,12 @@ class CGM_to_SK2_Translator(object):
 
     def _polygon(self, element):
         pass
+
+    # 0x7040
+    def _application_data(self, element):
+        if self.sk2_model.metainfo[3]:
+            self.sk2_model.metainfo[3] += '\n\n'
+        self.sk2_model.metainfo[3] += self.read_title(element.params[2:])[0]
 
 
 class SK2_to_CGM_Translator(object):
