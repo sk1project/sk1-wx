@@ -18,7 +18,7 @@
 import copy
 import struct
 
-from uc2 import utils, sk2const, libgeom
+from uc2 import utils, sk2const, libgeom, uc2const
 from uc2.formats.cgm import cgm_const, cgm_utils
 from uc2.formats.sk2 import sk2_model
 
@@ -45,7 +45,7 @@ class CGM_to_SK2_Translator(object):
         self.page = self.sk2_mtds.get_page()
         self.page.childs = []
 
-        for element in cgm_doc.childs:
+        for element in cgm_doc.model.childs:
             if element.element_id == cgm_const.END_METAFILE:
                 break
             self.process_element(element)
@@ -123,9 +123,32 @@ class CGM_to_SK2_Translator(object):
 
     # READER END =====
 
-    def get_style(self):
+    def get_fill_style(self):
+        return []
+
+    def get_stroke_style(self):
+        width = self.cgm['line.width']
+        if self.cgm['line.widthmode'] == 0:
+            width *= self.scale
+        color = [uc2const.COLOR_RGB, list(self.cgm['line.color']), 1.0, '']
+        dash = self.cgm['line.dashtable'][self.cgm['line.type'] - 1]
+        cap = sk2const.CAP_BUTT
+        join = sk2const.JOIN_MITER
+        miter_limit = 10.433
+        behind_flag = 0
+        scalable_flag = 0
+        markers = []
+        return [sk2const.STROKE_MIDDLE, width, color, dash, cap, join,
+                miter_limit, behind_flag, scalable_flag, markers]
+
+    def get_text_style(self):
+        return []
+
+    def get_style(self, fill=False, stroke=False, text=False):
         # TODO: get real stroke style
-        return [[], [], [], []]
+        return [self.get_fill_style() if fill else [],
+                self.get_stroke_style() if stroke else [],
+                self.get_text_style() if text else [], []]
 
     def set_trafo(self, extend):
         if self.cgm['scale.mode'] == 0:
@@ -390,15 +413,11 @@ class CGM_to_SK2_Translator(object):
 
     # ### Line related
     # 0x4020
-    def _line(self, element):
-        paths = [self.read_path(element.params), ]
-        sk2_style = self.get_style()
-        curve = sk2_model.Curve(self.layer.config, self.layer, paths,
-                                self.get_trafo(), sk2_style)
-        self.layer.childs.append(curve)
-
     def _polyline(self, element):
-        pass
+        curve = sk2_model.Curve(self.layer.config, self.layer,
+                                [self.read_path(element.params), ],
+                                self.get_trafo(), self.get_style(stroke=True))
+        self.layer.childs.append(curve)
 
     def _rectangle(self, element):
         pass

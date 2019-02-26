@@ -23,6 +23,7 @@ parse_header = cgm_utils.parse_header
 
 class CgmFolder(BinaryModelObject):
     cgm_folder_name = ''
+    element_id = -1
 
     def __init__(self):
         self.childs = []
