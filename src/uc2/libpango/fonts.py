@@ -17,8 +17,10 @@
 
 
 import cgi
+import string
 
 import _libpango
+
 from core import PANGO_LAYOUT
 
 FAMILIES_LIST = []
@@ -49,6 +51,25 @@ def get_fonts():
     if not FAMILIES_LIST:
         update_fonts()
     return FAMILIES_LIST, FAMILIES_DICT
+
+
+def find_font_family(family=None):
+    if not family or family not in FAMILIES_LIST:
+        # TODO: here should be substitution staff
+        if string.capwords(family) in FAMILIES_LIST:
+            family = string.capwords(family)
+        elif string.capwords(family.lower()) in FAMILIES_LIST:
+            family = string.capwords(family.lower())
+        else:
+            family = 'Sans'
+    return family, FAMILIES_DICT[family]
+
+
+def find_font_and_face(family=None):
+    family, faces = find_font_family(family)
+    a, b = 'Regular', 'Normal'
+    font_face = a if a in faces else b if b in faces else faces[0]
+    return family, font_face
 
 
 # ---Font sampling

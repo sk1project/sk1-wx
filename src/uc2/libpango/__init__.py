@@ -17,5 +17,6 @@
 
 
 from core import get_version
-from fonts import get_fonts, get_sample_size, render_sample
+from fonts import get_fonts, get_sample_size, render_sample, find_font_family, \
+    find_font_and_face
 from paths import get_text_paths
