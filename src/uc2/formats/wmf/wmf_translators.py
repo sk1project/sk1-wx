@@ -231,11 +231,8 @@ class WMF_to_SK2_Translator(object):
 
         font = deepcopy(self.dc.font)
         faces = libpango.get_fonts()[1][font[0]]
-        font_face = faces[0]
-        if 'Regular' in faces:
-            font_face = 'Regular'
-        elif 'Normal' in faces:
-            font_face = 'Normal'
+        a, b = 'Regular', 'Normal'
+        font_face = a if a in faces else b if b in faces else faces[0]
 
         sk2_style[2] = [font[0], font_face, font[1],
                         self.dc.text_align, [], True]
