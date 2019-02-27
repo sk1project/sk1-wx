@@ -18,7 +18,7 @@
 import copy
 import struct
 
-from uc2 import utils, sk2const, libgeom, uc2const
+from uc2 import utils, sk2const, libgeom, uc2const, libpango
 from uc2.formats.cgm import cgm_const, cgm_utils
 from uc2.formats.sk2 import sk2_model
 
@@ -128,7 +128,10 @@ class CGM_to_SK2_Translator(object):
 
     # READER END =====
 
-    def get_fill_style(self):
+    def get_fill_style(self, cgm_color=None):
+        if cgm_color:
+            color = [uc2const.COLOR_RGB, list(cgm_color), 1.0, '']
+            return [sk2const.FILL_EVENODD, sk2const.FILL_SOLID, color]
         return []
 
     def get_stroke_style(self):
@@ -147,9 +150,23 @@ class CGM_to_SK2_Translator(object):
                 miter_limit, behind_flag, scalable_flag, markers]
 
     def get_text_style(self):
-        return []
+        cgm_font = self.fontmap[self.cgm['text.fontindex']]
+        family, face = libpango.find_font_and_face(cgm_font)
+        size = self.cgm['text.height'] * self.scale
+        alignment = 0
+        spacing = []
+        cluster_flag = True
+        return [family, face, size, alignment, spacing, cluster_flag]
 
     def get_style(self, fill=False, stroke=False, text=False):
+        if (fill, stroke, text) == (False, True, False):
+            return [[], self.get_stroke_style(), [], []]
+
+        elif (fill, stroke, text) == (False, False, True):
+            fill_style = self.get_fill_style(cgm_color=self.cgm['text.color'])
+            text_style = self.get_text_style()
+            return [fill_style, [], text_style, []]
+
         # TODO: get real stroke style
         return [self.get_fill_style() if fill else [],
                 self.get_stroke_style() if stroke else [],
@@ -417,6 +434,25 @@ class CGM_to_SK2_Translator(object):
                                 [self.read_path(element.params), ],
                                 self.get_trafo(), self.get_style(stroke=True))
         self.layer.childs.append(curve)
+
+    # 0x4040
+    def _disjoint_polyline(self, element):
+        points = self.read_points(element.params)
+        first_point = points[0]
+        paths = []
+        for point in points[1:]:
+            paths.append([first_point, [point, ], sk2const.CURVE_OPENED])
+            first_point = point
+        curve = sk2_model.Curve(self.layer.config, self.layer, paths,
+                                self.get_trafo(), self.get_style(stroke=True))
+        self.layer.childs.append(curve)
+
+    # 0x4080
+    def _text(self, element):
+        (x, y), chunk = self.read_point(element.params)
+        flg, chunk = self.read_enum(chunk)
+        txt, chunk = self.read_str(chunk)
+        trafo = libgeom.multiply_trafo(self.trafo, [1.0, 0.0, 0.0, 1.0, x, y])
 
     def _rectangle(self, element):
         pass
