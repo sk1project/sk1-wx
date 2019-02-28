@@ -152,6 +152,7 @@ class CGM_to_SK2_Translator(object):
     def get_text_style(self):
         cgm_font = self.fontmap[self.cgm['text.fontindex']]
         family, face = libpango.find_font_and_face(cgm_font)
+        print family, face
         size = self.cgm['text.height'] * self.scale
         alignment = 0
         spacing = []
@@ -452,7 +453,18 @@ class CGM_to_SK2_Translator(object):
         (x, y), chunk = self.read_point(element.params)
         flg, chunk = self.read_enum(chunk)
         txt, chunk = self.read_str(chunk)
-        trafo = libgeom.multiply_trafo(self.trafo, [1.0, 0.0, 0.0, 1.0, x, y])
+        trafo = libgeom.multiply_trafo(self.get_trafo(),
+                                       [1.0, 0.0, 0.0, 1.0, x, y])
+        py, px = self.cgm['text.orientation']
+        py = libgeom.normalize_point(py)
+        px = libgeom.normalize_point(px)
+        p0 = [0.0, 0.0]
+        tr = libgeom.sub_points(px, p0) + libgeom.sub_points(py, p0) + p0
+        text = sk2_model.Text(self.layer.config, self.layer,
+                              p0, txt, -1,
+                              libgeom.multiply_trafo(trafo, tr),
+                              self.get_style(text=True))
+        self.layer.childs.append(text)
 
     def _rectangle(self, element):
         pass
