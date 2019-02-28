@@ -54,6 +54,8 @@ def get_fonts():
 
 
 def find_font_family(family=None):
+    if not FAMILIES_LIST:
+        update_fonts()
     if not family or family not in FAMILIES_LIST:
         # TODO: here should be substitution staff
         if string.capwords(family) in FAMILIES_LIST:
