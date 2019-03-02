@@ -149,6 +149,23 @@ class CGM_to_SK2_Translator(object):
         return [sk2const.STROKE_MIDDLE, width, color, dash, cap, join,
                 miter_limit, behind_flag, scalable_flag, markers]
 
+    def get_edge_style(self):
+        if not self.cgm['edge.width']:
+            return []
+        width = self.cgm['edge.width']
+        if self.cgm['edge.widthmode'] == 0:
+            width *= self.scale
+        color = [uc2const.COLOR_RGB, list(self.cgm['line.color']), 1.0, '']
+        dash = self.cgm['edge.dashtable'][self.cgm['edge.type'] - 1]
+        cap = sk2const.CAP_BUTT
+        join = sk2const.JOIN_MITER
+        miter_limit = 10.433
+        behind_flag = 0
+        scalable_flag = 0
+        markers = []
+        return [sk2const.STROKE_MIDDLE, width, color, dash, cap, join,
+                miter_limit, behind_flag, scalable_flag, markers]
+
     def get_text_style(self):
         cgm_font = self.fontmap[self.cgm['text.fontindex']]
         family, face = libpango.find_font_and_face(cgm_font)
@@ -160,13 +177,18 @@ class CGM_to_SK2_Translator(object):
         return [family, face, size, alignment, spacing, cluster_flag]
 
     def get_style(self, fill=False, stroke=False, text=False):
-        if (fill, stroke, text) == (False, True, False):
+        if stroke:
             return [[], self.get_stroke_style(), [], []]
 
-        elif (fill, stroke, text) == (False, False, True):
+        elif text:
             fill_style = self.get_fill_style(cgm_color=self.cgm['text.color'])
             text_style = self.get_text_style()
             return [fill_style, [], text_style, []]
+
+        elif fill:
+            fill_style = self.get_fill_style(cgm_color=self.cgm['fill.color'])
+            stroke_style = self.get_edge_style()
+            return [fill_style, stroke_style, [], []]
 
         # TODO: get real stroke style
         return [self.get_fill_style() if fill else [],
@@ -466,6 +488,20 @@ class CGM_to_SK2_Translator(object):
                               self.get_style(text=True))
         self.layer.childs.append(text)
 
+    # 0x40e0
+    def _polygon(self, element):
+        path = self.read_path(element.params)[0]
+        if path[0] != path[1][-1]:
+            path[1].append([] + path[0])
+        path[2] = sk2const.CURVE_CLOSED
+        curve = sk2_model.Curve(self.layer.config, self.layer, [path,],
+                                self.get_trafo(), self.get_style(fill=True))
+        self.layer.childs.append(curve)
+
+    # 0x4100
+    def _polygon_set(self):
+        pass
+
     def _rectangle(self, element):
         pass
 
@@ -473,9 +509,6 @@ class CGM_to_SK2_Translator(object):
         pass
 
     def _ellipse(self, element):
-        pass
-
-    def _polygon(self, element):
         pass
 
     # 0x7040

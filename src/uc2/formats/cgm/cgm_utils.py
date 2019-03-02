@@ -167,6 +167,10 @@ def get_markup(header, params):
             markup += [(hdsz, params_sz, 'polyline points'), ]
         elif element_id == cgm_const.DISJOINT_POLYLINE:
             markup += [(hdsz, params_sz, 'disjoint polyline points'), ]
+        elif element_id == cgm_const.TEXT:
+            markup += [(hdsz, params_sz, 'point + 2 byte flag + text'), ]
+        elif element_id == cgm_const.POLYGON:
+            markup += [(hdsz, params_sz, 'point + 2 byte flag + text'), ]
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]
