@@ -102,7 +102,7 @@ class CGM_to_SK2_Translator(object):
     def read_point(self, chunk):
         x, chunk = self.read_vdc(chunk)
         y, chunk = self.read_vdc(chunk)
-        return (x, y), chunk
+        return [x, y], chunk
 
     def read_points(self, chunk):
         sz = 2 * self.cgm['vdc.size']
@@ -490,7 +490,7 @@ class CGM_to_SK2_Translator(object):
 
     # 0x40e0
     def _polygon(self, element):
-        path = self.read_path(element.params)[0]
+        path = self.read_path(element.params)
         if path[0] != path[1][-1]:
             path[1].append([] + path[0])
         path[2] = sk2const.CURVE_CLOSED
