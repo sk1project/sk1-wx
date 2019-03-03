@@ -494,13 +494,36 @@ class CGM_to_SK2_Translator(object):
         if path[0] != path[1][-1]:
             path[1].append([] + path[0])
         path[2] = sk2const.CURVE_CLOSED
-        curve = sk2_model.Curve(self.layer.config, self.layer, [path,],
+        curve = sk2_model.Curve(self.layer.config, self.layer, [path, ],
                                 self.get_trafo(), self.get_style(fill=True))
         self.layer.childs.append(curve)
 
     # 0x4100
-    def _polygon_set(self):
-        pass
+    def _polygon_set(self, element):
+        paths = []
+        path = [None, [], sk2const.CURVE_CLOSED]
+        chunk = element.params
+        for _ in range(len(chunk) / (2 * self.cgm['vdc.size'] + 2)):
+            point, chunk = self.read_point(chunk)
+            flag, chunk = self.read_enum(chunk)
+            if not path[0]:
+                path[0] = point
+            else:
+                path[1].append(point)
+
+            if flag in (2, 3):
+                if path[0] != path[1][-1]:
+                    path[1].append([] + path[0])
+                paths.append(path)
+                path = [None, [], sk2const.CURVE_CLOSED]
+        if path[1]:
+            if path[0] != path[1][-1]:
+                path[1].append([] + path[0])
+            paths.append(path)
+        if paths:
+            curve = sk2_model.Curve(self.layer.config, self.layer, paths,
+                                    self.get_trafo(), self.get_style(fill=True))
+            self.layer.childs.append(curve)
 
     def _rectangle(self, element):
         pass

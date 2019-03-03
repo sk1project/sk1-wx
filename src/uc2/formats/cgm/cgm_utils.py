@@ -59,6 +59,9 @@ _PROCESSED = (
     cgm_const.CLIP_RECTANGLE,
     cgm_const.POLYLINE,
     cgm_const.DISJOINT_POLYLINE,
+    cgm_const.TEXT,
+    cgm_const.POLYGON,
+    cgm_const.POLYGON_SET,
 )
 
 
@@ -170,7 +173,9 @@ def get_markup(header, params):
         elif element_id == cgm_const.TEXT:
             markup += [(hdsz, params_sz, 'point + 2 byte flag + text'), ]
         elif element_id == cgm_const.POLYGON:
-            markup += [(hdsz, params_sz, 'point + 2 byte flag + text'), ]
+            markup += [(hdsz, params_sz, 'points'), ]
+        elif element_id == cgm_const.POLYGON_SET:
+            markup += [(hdsz, params_sz, 'point + 2 byte flag pairs'), ]
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]
