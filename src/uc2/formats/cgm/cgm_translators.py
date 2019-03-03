@@ -169,7 +169,6 @@ class CGM_to_SK2_Translator(object):
     def get_text_style(self):
         cgm_font = self.fontmap[self.cgm['text.fontindex']]
         family, face = libpango.find_font_and_face(cgm_font)
-        print family, face
         size = self.cgm['text.height'] * self.scale
         alignment = 0
         spacing = []
@@ -461,11 +460,14 @@ class CGM_to_SK2_Translator(object):
     # 0x4040
     def _disjoint_polyline(self, element):
         points = self.read_points(element.params)
-        first_point = points[0]
+        first_point = None
         paths = []
-        for point in points[1:]:
-            paths.append([first_point, [point, ], sk2const.CURVE_OPENED])
-            first_point = point
+        for point in points:
+            if first_point:
+                paths.append([first_point, [point, ], sk2const.CURVE_OPENED])
+                first_point = None
+            else:
+                first_point = point
         curve = sk2_model.Curve(self.layer.config, self.layer, paths,
                                 self.get_trafo(), self.get_style(stroke=True))
         self.layer.childs.append(curve)
@@ -534,8 +536,15 @@ class CGM_to_SK2_Translator(object):
                                    self.get_trafo(), self.get_style(fill=True))
         self.layer.childs.append(rect)
 
+    # 0x4180
     def _circle(self, element):
-        pass
+        center, chunk = self.read_point(element.params)
+        r = self.read_vdc(chunk)[0] * self.scale
+        x, y = libgeom.apply_trafo_to_point(center, self.get_trafo())
+        rect = [x - r, y - r, 2 * r, 2 * r]
+        circle = sk2_model.Circle(self.layer.config, self.layer, rect,
+                                  style=self.get_style(fill=True))
+        self.layer.childs.append(circle)
 
     def _ellipse(self, element):
         pass

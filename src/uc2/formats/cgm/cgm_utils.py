@@ -63,6 +63,7 @@ _PROCESSED = (
     cgm_const.POLYGON,
     cgm_const.POLYGON_SET,
     cgm_const.RECTANGLE,
+    cgm_const.CIRCLE,
 )
 
 
@@ -181,6 +182,11 @@ def get_markup(header, params):
             sz = params_sz / 2
             markup += [(hdsz, sz, 'rect lower left point'),
                        (hdsz + sz, sz, 'rect upper right point'), ]
+        elif element_id == cgm_const.CIRCLE:
+            sz = params_sz / 3
+            markup += [(hdsz, sz, 'center x'),
+                       (hdsz + sz, sz, 'center y'),
+                       (hdsz + 2 * sz, sz, 'radius'), ]
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]
