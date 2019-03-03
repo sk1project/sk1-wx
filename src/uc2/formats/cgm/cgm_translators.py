@@ -525,8 +525,14 @@ class CGM_to_SK2_Translator(object):
                                     self.get_trafo(), self.get_style(fill=True))
             self.layer.childs.append(curve)
 
+    # 0x4160
     def _rectangle(self, element):
-        pass
+        ll, chunk = self.read_point(element.params)
+        ur, chunk = self.read_point(chunk)
+        w, h = ur[0] - ll[0], ur[1] - ll[1]
+        rect = sk2_model.Rectangle(self.layer.config, self.layer, ll + [w, h],
+                                   self.get_trafo(), self.get_style(fill=True))
+        self.layer.childs.append(rect)
 
     def _circle(self, element):
         pass
