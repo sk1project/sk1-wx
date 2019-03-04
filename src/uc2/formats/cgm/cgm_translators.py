@@ -80,6 +80,10 @@ class CGM_to_SK2_Translator(object):
         fmt, fn = cgm_utils.INT_F[self.cgm['intprec']]
         return fn(fmt, chunk)
 
+    def read_inx(self, chunk):
+        fmt, fn = cgm_utils.INT_F[self.cgm['inxprec']]
+        return fn(fmt, chunk)
+
     def read_str(self, chunk):
         if not chunk:
             return '', chunk
@@ -546,8 +550,43 @@ class CGM_to_SK2_Translator(object):
                                   style=self.get_style(fill=True))
         self.layer.childs.append(circle)
 
+    # 0x41a0
+    def _circular_arc_3_point(self, element):
+        pass
+
+    # 0x41c0
+    def _circular_arc_3_point_close(self, element):
+        pass
+
+    # 0x41e0
+    def _circular_arc_centre(self, element):
+        pass
+
+    # 0x4200
+    def _circular_arc_centre_close(self, element):
+        pass
+
+    # 0x4220
     def _ellipse(self, element):
         pass
+
+    # 0x4240
+    def _elliptical_arc(self, element):
+        pass
+
+    # 0x4260
+    def _elliptical_arc_close(self, element):
+        pass
+
+    # 0x5040
+    def _line_type(self, element):
+        self.cgm['line.type'] = self.read_inx(element.params)[0]
+
+    # 0x5060
+    def _line_width(self, element):
+        chunk = element.params
+        self.cgm['line.width'] = self.read_vdc(chunk)[0] if \
+            self.cgm['line.widthmode'] == 0 else self.read_real(chunk)[0]
 
     # 0x7040
     def _application_data(self, element):

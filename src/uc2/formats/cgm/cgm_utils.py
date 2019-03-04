@@ -64,6 +64,8 @@ _PROCESSED = (
     cgm_const.POLYGON_SET,
     cgm_const.RECTANGLE,
     cgm_const.CIRCLE,
+    cgm_const.LINE_TYPE,
+    cgm_const.LINE_WIDTH,
 )
 
 
@@ -187,6 +189,11 @@ def get_markup(header, params):
             markup += [(hdsz, sz, 'center x'),
                        (hdsz + sz, sz, 'center y'),
                        (hdsz + 2 * sz, sz, 'radius'), ]
+
+        elif element_id == cgm_const.LINE_TYPE:
+            markup += [(hdsz, params_sz, 'line type'), ]
+        elif element_id == cgm_const.LINE_WIDTH:
+            markup += [(hdsz, params_sz, 'line width'), ]
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]
