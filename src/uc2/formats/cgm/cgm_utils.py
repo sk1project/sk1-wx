@@ -66,6 +66,12 @@ _PROCESSED = (
     cgm_const.CIRCLE,
     cgm_const.LINE_TYPE,
     cgm_const.LINE_WIDTH,
+    cgm_const.LINE_COLOUR,
+    cgm_const.MARKER_COLOUR,
+    cgm_const.TEXT_FONT_INDEX,
+    cgm_const.CHARACTER_EXPANSION_FACTOR,
+    cgm_const.CHARACTER_HEIGHT,
+    cgm_const.CHARACTER_ORIENTATION,
 )
 
 
@@ -194,6 +200,18 @@ def get_markup(header, params):
             markup += [(hdsz, params_sz, 'line type'), ]
         elif element_id == cgm_const.LINE_WIDTH:
             markup += [(hdsz, params_sz, 'line width'), ]
+        elif element_id == cgm_const.LINE_COLOUR:
+            markup += [(hdsz, params_sz, 'line color'), ]
+        elif element_id == cgm_const.MARKER_COLOUR:
+            markup += [(hdsz, params_sz, 'marker color'), ]
+        elif element_id == cgm_const.TEXT_FONT_INDEX:
+            markup += [(hdsz, params_sz, 'text font index'), ]
+        elif element_id == cgm_const.CHARACTER_EXPANSION_FACTOR:
+            markup += [(hdsz, params_sz, 'character expansion'), ]
+        elif element_id == cgm_const.CHARACTER_HEIGHT:
+            markup += [(hdsz, params_sz, 'character height'), ]
+        elif element_id == cgm_const.CHARACTER_ORIENTATION:
+            markup += [(hdsz, params_sz, 'character orientation'), ]
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]

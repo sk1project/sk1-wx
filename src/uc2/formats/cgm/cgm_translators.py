@@ -80,7 +80,7 @@ class CGM_to_SK2_Translator(object):
         fmt, fn = cgm_utils.INT_F[self.cgm['intprec']]
         return fn(fmt, chunk)
 
-    def read_inx(self, chunk):
+    def read_index(self, chunk):
         fmt, fn = cgm_utils.INT_F[self.cgm['inxprec']]
         return fn(fmt, chunk)
 
@@ -580,13 +580,43 @@ class CGM_to_SK2_Translator(object):
 
     # 0x5040
     def _line_type(self, element):
-        self.cgm['line.type'] = self.read_inx(element.params)[0]
+        self.cgm['line.type'] = self.read_index(element.params)[0]
 
     # 0x5060
     def _line_width(self, element):
         chunk = element.params
         self.cgm['line.width'] = self.read_vdc(chunk)[0] if \
             self.cgm['line.widthmode'] == 0 else self.read_real(chunk)[0]
+
+    # 0x5080
+    def _line_colour(self, element):
+        self.cgm['line.color'] = self.read_color(element.params)[0]
+
+    # 0x5100
+    def _marker_colour(self, element):
+        self.cgm['marker.color'] = self.read_color(element.params)[0]
+
+    # 0x5140
+    def _text_font_index(self, element):
+        self.cgm['text.fontindex'] = self.read_index(element.params)[0]
+
+    # 0x5180
+    def _character_expansion_factor(self, element):
+        self.cgm['text.expansion'] = self.read_real(element.params)[0]
+
+    # 0x51c0
+    def _text_colour(self, element):
+        self.cgm['text.color'] = self.read_color(element.params)[0]
+
+    # 0x51e0
+    def _character_height(self, element):
+        self.cgm['text.height'] = self.read_vdc(element.params)[0]
+
+    # 0x5200
+    def _character_orientation(self, element):
+        p0, chunk = self.read_point(element.params)
+        p1, chunk = self.read_point(chunk)
+        self.cgm['text.orientation'] = (p0, p1)
 
     # 0x7040
     def _application_data(self, element):
