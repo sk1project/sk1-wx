@@ -27,9 +27,13 @@ class ZipIO(object):
     When a ZipIO object is created, it can be initialized to an existing
     stream by passing the stream to the constructor.
     """
-    def __init__(self, raw_stream):
+    def __init__(self, raw_stream, wbits=-zlib.MAX_WBITS):
         self.raw_stream = raw_stream
-        self.decompressor = zlib.decompressobj(-zlib.MAX_WBITS)
+        self.mode = raw_stream.mode
+        if self.mode == 'rb':
+            self.decompressor = zlib.decompressobj(wbits)
+        else:
+            self.compressor = zlib.compressobj(-1, zlib.DEFLATED, wbits)
         self.uncompress_buf = b''
 
     @property
@@ -65,6 +69,7 @@ class ZipIO(object):
                 chunk = self.raw_stream.read(chunk_size)
                 if len(chunk) == 0:
                     r += self.decompressor.flush()
+                    del self.decompressor
                     break
                 chunk = self.decompressor.decompress(chunk, n - len(r))
                 r += chunk
@@ -75,11 +80,26 @@ class ZipIO(object):
     def write(self, s):
         """Write a string to the stream.
         """
-        raise NotImplementedError
+        self.uncompress_buf += s
+        data = self.compressor.compress(s)
+        self.raw_stream.write(data)
+
+    def flush(self):
+        """All pending input is processed
+
+        Free the memory compressor.
+        """
+        if self.mode == 'wb':
+            data = self.compressor.flush()
+            self.raw_stream.write(data)
+            del self.compressor
 
     def close(self):
         """Free the memory decompressor.
         """
-        unused_data = self.decompressor.unused_data
-        self.raw_stream.seek(-len(unused_data), os.SEEK_CUR)
-        del self.decompressor
+        if self.mode == 'rb':
+            unused_data = self.decompressor.unused_data
+            self.raw_stream.seek(-len(unused_data), os.SEEK_CUR)
+            del self.decompressor
+        else:
+            self.flush()
