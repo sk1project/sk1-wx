@@ -102,6 +102,7 @@ _PROCESSED = (
     cgm_const.CHARACTER_EXPANSION_FACTOR,
     cgm_const.CHARACTER_HEIGHT,
     cgm_const.CHARACTER_ORIENTATION,
+    cgm_const.TEXT_ALIGNMENT,
     cgm_const.INTERIOR_STYLE,
     cgm_const.FILL_COLOUR,
     cgm_const.EDGE_TYPE,
@@ -248,6 +249,8 @@ def get_markup(header, params):
             markup += [(hdsz, params_sz, 'character height'), ]
         elif element_id == cgm_const.CHARACTER_ORIENTATION:
             markup += [(hdsz, params_sz, 'character orientation'), ]
+        elif element_id == cgm_const.TEXT_ALIGNMENT:
+            markup += [(hdsz, 2, 'text alignment'), ]
         elif element_id == cgm_const.INTERIOR_STYLE:
             markup += [(hdsz, params_sz, 'fill type'), ]
         elif element_id == cgm_const.FILL_COLOUR:

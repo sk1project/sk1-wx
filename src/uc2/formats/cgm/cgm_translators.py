@@ -16,11 +16,14 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import copy
+import logging
 import struct
 
-from uc2 import utils, sk2const, libgeom, uc2const, libpango
+from uc2 import _, utils, sk2const, libgeom, uc2const, libpango
 from uc2.formats.cgm import cgm_const, cgm_utils
 from uc2.formats.sk2 import sk2_model
+
+LOG = logging.getLogger(__name__)
 
 
 def sign(num):
@@ -45,6 +48,7 @@ class CGM_to_SK2_Translator(object):
         self.sk2_mtds = sk2_doc.methods
         self.page = self.sk2_mtds.get_page()
         self.page.childs = []
+        self.page.layer_counter = 0
         self.fontmap = []
 
         for element in cgm_doc.model.childs:
@@ -89,7 +93,7 @@ class CGM_to_SK2_Translator(object):
             return '', chunk
         sz = utils.byte2py_int(chunk[0])
         title = chunk[1:1 + sz]
-        return title, chunk[sz:]
+        return title, chunk[1 + sz:]
 
     def read_real(self, chunk, precision=None):
         precision = self.cgm['realprec'] if precision is None else precision
@@ -138,29 +142,14 @@ class CGM_to_SK2_Translator(object):
             return [sk2const.FILL_EVENODD, sk2const.FILL_SOLID, color]
         return []
 
-    def get_stroke_style(self):
-        width = self.cgm['line.width']
-        if self.cgm['line.widthmode'] == 0:
-            width *= self.scale
-        color = [uc2const.COLOR_RGB, list(self.cgm['line.color']), 1.0, '']
-        dash = self.cgm['line.dashtable'][self.cgm['line.type'] - 1]
-        cap = sk2const.CAP_BUTT
-        join = sk2const.JOIN_MITER
-        miter_limit = 10.433
-        behind_flag = 0
-        scalable_flag = 0
-        markers = []
-        return [sk2const.STROKE_MIDDLE, width, color, dash, cap, join,
-                miter_limit, behind_flag, scalable_flag, markers]
-
-    def get_edge_style(self):
-        if not self.cgm['edge.width']:
+    def get_stroke_style(self, mode='line'):
+        if not self.cgm['%s.width' % mode]:
             return []
-        width = self.cgm['edge.width']
-        if self.cgm['edge.widthmode'] == 0:
+        width = self.cgm['%s.width' % mode]
+        if self.cgm['%s.widthmode' % mode] == 0:
             width *= self.scale
-        color = [uc2const.COLOR_RGB, list(self.cgm['line.color']), 1.0, '']
-        dash = self.cgm['edge.dashtable'][self.cgm['edge.type'] - 1]
+        color = [uc2const.COLOR_RGB, list(self.cgm['%s.color' % mode]), 1.0, '']
+        dash = self.cgm['%s.dashtable' % mode][self.cgm['%s.type' % mode] - 1]
         cap = sk2const.CAP_BUTT
         join = sk2const.JOIN_MITER
         miter_limit = 10.433
@@ -171,10 +160,11 @@ class CGM_to_SK2_Translator(object):
                 miter_limit, behind_flag, scalable_flag, markers]
 
     def get_text_style(self):
-        cgm_font = self.fontmap[self.cgm['text.fontindex']]
+        cgm_font = self.fontmap[self.cgm['text.fontindex'] - 1]
         family, face = libpango.find_font_and_face(cgm_font)
         size = self.cgm['text.height'] * self.scale
-        alignment = 0
+        alignment = cgm_const.TEXT_ALIGNMENT_MAP.get(
+            self.cgm['text.alignment'], 0)
         spacing = []
         cluster_flag = True
         return [family, face, size, alignment, spacing, cluster_flag]
@@ -190,7 +180,7 @@ class CGM_to_SK2_Translator(object):
 
         elif fill:
             fill_style = self.get_fill_style(cgm_color=self.cgm['fill.color'])
-            stroke_style = self.get_edge_style()
+            stroke_style = self.get_stroke_style('edge')
             return [fill_style, stroke_style, [], []]
 
         # TODO: get real stroke style
@@ -206,19 +196,33 @@ class CGM_to_SK2_Translator(object):
             height = top - bottom
             sc = 841 / (1.0 * max(abs(width), abs(height)))
         else:
-            left = 0
-            bottom = 0
-            width = 1
-            height = 1
+            left = bottom = 0
+            width = height = right = top = 1
             sc = self.cgm['scale.metric'] * 72 / 25.4
         self.scale = sc
-        tr = [1.0, 0.0, 0.0, 1.0, -left, -bottom]
+        tr = [1.0, 0.0, 0.0, 1.0,
+              -(right - left) / 2.0 - left,
+              -(top - bottom) / 2.0 - bottom]
         scale = [sign(width) * sc, 0.0, 0.0, sign(height) * sc, 0.0, 0.0]
-        # TODO: check trafo order
-        self.trafo = libgeom.multiply_trafo(scale, tr)
+        self.trafo = libgeom.multiply_trafo(tr, scale)
 
     def get_trafo(self):
         return copy.deepcopy(self.trafo)
+
+    def set_page(self, extend):
+        if self.cgm['scale.mode'] == 0:
+            left, bottom = extend[0]
+            right, top = extend[1]
+            width = right - left
+            height = top - bottom
+            scale = 841 / (1.0 * max(abs(width), abs(height)))
+        else:
+            width = height = 1
+            scale = self.cgm['scale.metric'] * 72 / 25.4
+        w, h = width * scale, height * scale
+        orient = uc2const.PORTRAIT if w < h else uc2const.LANDSCAPE
+        page_format = [_('Custom size'), (w, h), orient]
+        self.sk2_mtds.set_page_format(self.page, page_format)
 
     # METAFILE RECODRS ----->
 
@@ -283,6 +287,8 @@ class CGM_to_SK2_Translator(object):
     # 0x0080
     def _begin_picture_body(self, _element):
         self.set_trafo(self.cgm['vdc.extend'])
+        if len(self.page.childs) == 1:
+            self.set_page(self.cgm['vdc.extend'])
 
     # 0x1040
     def _metafile_description(self, element):
@@ -490,7 +496,6 @@ class CGM_to_SK2_Translator(object):
 
         text = sk2_model.Text(self.layer.config, self.layer,
                               p0, txt, -1,
-                              self.get_trafo(),
                               style=self.get_style(text=True))
         self.layer.childs.append(text)
 
@@ -617,6 +622,10 @@ class CGM_to_SK2_Translator(object):
         p0, chunk = self.read_point(element.params)
         p1, chunk = self.read_point(chunk)
         self.cgm['text.orientation'] = (p0, p1)
+
+    # 0x5240
+    def _text_alignment(self, element):
+        self.cgm['text.alignment'] = self.read_enum(element.params)[0]
 
     # 0x52c0
     def _interior_style(self, element):

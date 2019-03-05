@@ -15,6 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from uc2 import sk2const
 
 CGM_SIGNATURE = 0x0020
 
@@ -495,7 +496,7 @@ CGM_INIT = {
     'text.spacing': 0.0,
     'text.orientation': ((0.0, 1.0), (1.0, 0.0)),  # Up , Base vector
     'text.path': 0,  # right
-    'text.alignment': 0,  # Dont understand this yet
+    'text.alignment': 1,
     'text.color': BLACK_COLOR,
     'marker': {},
     'marker.sizemode': 0,
@@ -507,4 +508,10 @@ CGM_INIT = {
     'scale': {},
     'scale.mode': 0,  # abstract
     'scale.metric': 0.0,
+}
+
+TEXT_ALIGNMENT_MAP = {
+    1: sk2const.TEXT_ALIGN_LEFT,
+    2: sk2const.TEXT_ALIGN_CENTER,
+    3: sk2const.TEXT_ALIGN_RIGHT,
 }
