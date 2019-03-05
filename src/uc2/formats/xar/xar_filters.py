@@ -16,31 +16,26 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from uc2.formats.xar import xar_const, xar_model
-from uc2.formats.generic_filters import AbstractBinaryLoader, AbstractSaver
-
+from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 from uc2.formats.xar.zipio import ZipIO
-from uc2.formats.xar.xar_datatype import read_u4le
+from uc2.formats.xar.xar_method import make_record_header, parse_record
 
 
-class XARLoader(AbstractBinaryLoader):
+class XARLoader(AbstractLoader):
     name = 'XAR_Loader'
     parent_stack = None
 
     def do_load(self):
-        self.parse(self.fileptr)
-
-    def parse(self, raw_stream):
-        stream = raw_stream
+        stream = raw_stream = self.fileptr
 
         # read file header
-        read_u4le(stream)
-        read_u4le(stream)
+        self.model.chunk = stream.read(8)
 
         rec = self.model
-        self.parent_stack = [rec]
+        parent_stack = [rec]
 
         while rec.cid != xar_const.TAG_ENDOFFILE:
-            rec = self.parse_record(stream)
+            rec = parse_record(stream)
 
             if rec.cid == xar_const.TAG_STARTCOMPRESSION:
                 rec.update()
@@ -49,8 +44,8 @@ class XARLoader(AbstractBinaryLoader):
                 else:
                     msg = 'Unknown compression type %s' % rec.compression_type
                     raise Exception(msg)
-                self.parent_stack[-1].add(rec)
-                self.parent_stack.append(rec)
+                parent_stack[-1].add(rec)
+                parent_stack.append(rec)
 
             elif rec.cid == xar_const.TAG_ENDCOMPRESSION:
                 rec.update()
@@ -61,39 +56,56 @@ class XARLoader(AbstractBinaryLoader):
                 if rec.compression_crc != stream.crc32:
                     raise Exception('Invalid crc')
                 stream = raw_stream
-                self.parent_stack[-1].add(rec)
-                self.parent_stack = self.parent_stack[:-1]
+                parent_stack[-1].add(rec)
+                parent_stack = parent_stack[:-1]
 
             elif rec.cid == xar_const.TAG_DOWN:
-                parent_rec = self.parent_stack[-1].childs[-1]
-                self.parent_stack.append(parent_rec)
-                # self.parent_stack[-1].add(rec)
+                parent_rec = parent_stack[-1].childs[-1]
+                parent_stack.append(parent_rec)
+                # parent_stack[-1].add(rec)
 
             elif rec.cid == xar_const.TAG_UP:
-                # self.parent_stack[-1].add(rec)
-                self.parent_stack = self.parent_stack[:-1]
+                # parent_stack[-1].add(rec)
+                parent_stack = parent_stack[:-1]
 
             else:
-                self.parent_stack[-1].add(rec)
-
-    def parse_record(self, stream):
-        cid = read_u4le(stream)
-        size = read_u4le(stream)
-        chunk = b''
-
-        if cid == xar_const.TAG_ENDCOMPRESSION:
-            stream.close()
-            chunk = stream.raw_stream.read(size)
-        elif size > 0:
-            chunk = stream.read(size)
-            if len(chunk) < size:
-                raise IOError("Stream has ended unexpectedly")
-
-        return xar_model.XARRecord(cid, chunk)
+                parent_stack[-1].add(rec)
 
 
 class XARSaver(AbstractSaver):
     name = 'XAR_Saver'
 
     def do_save(self):
-        self.model.save(self)
+        stream = raw_stream = self.fileptr
+
+        # write file header
+        stream.write(self.model.chunk)
+
+        rec = self.model
+        stack = rec.childs[::-1]
+
+        while stack:
+
+            rec = stack.pop()
+
+            if rec.cid == xar_const.TAG_STARTCOMPRESSION:
+                stream.write(make_record_header(rec))
+                stream.write(rec.chunk)
+                stream = ZipIO(raw_stream)
+                s = rec.childs[::-1]
+                stack.extend(s)
+                continue
+            elif rec.cid == xar_const.TAG_ENDCOMPRESSION:
+                stream.write(make_record_header(rec))
+                stream.close()
+                # TODO: update rec.compression_crc, rec.num_bytes
+                stream = stream.raw_stream
+                stream.write(rec.chunk)
+                continue
+            elif rec.childs:
+                stack.append(xar_model.XARRecord(xar_const.TAG_UP))
+                stack.extend(rec.childs[::-1])
+                stack.append(xar_model.XARRecord(xar_const.TAG_DOWN))
+
+            stream.write(make_record_header(rec))
+            stream.write(rec.chunk)
