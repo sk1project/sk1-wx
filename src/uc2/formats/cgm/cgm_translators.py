@@ -120,8 +120,8 @@ class CGM_to_SK2_Translator(object):
         points = self.read_points(chunk)
         return [points[0], points[1:], sk2const.CURVE_OPENED]
 
-    def read_color(self, chunk):
-        if self.cgm['color.mode'] == 1:
+    def read_color(self, chunk, color_mode=None):
+        if self.cgm['color.mode'] == 1 or color_mode == 1:
             color, chunk = self.read_fmt(self.cgm['color.absstruct'], chunk)
             color = [x - y for x, y in zip(color, self.cgm['color.offset'])]
             color = [x / y for x, y in zip(color, self.cgm['color.scale'])]
@@ -643,6 +643,16 @@ class CGM_to_SK2_Translator(object):
     # 0x53c0
     def _edge_visibility(self, element):
         self.cgm['edge.visible'] = self.read_enum(element.params)[0]
+
+    # 0x5440
+    def _colour_table(self, element):
+        pos, chunk = cgm_utils._unpack(self.cgm['color.inxstruct'],
+                                       element.params)
+        sz = struct.calcsize(self.cgm['color.absstruct'])
+        while len(chunk) >= sz:
+            cgm_color, chunk = self.read_color(chunk, 1)
+            self.cgm['color.table'][pos] = cgm_color
+            pos += 1
 
     # 0x7040
     def _application_data(self, element):

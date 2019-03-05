@@ -260,6 +260,8 @@ def get_markup(header, params):
             markup += [(hdsz, params_sz, 'edge color'), ]
         elif element_id == cgm_const.EDGE_VISIBILITY:
             markup += [(hdsz, params_sz, 'edge visibility'), ]
+        elif element_id == cgm_const.COLOUR_TABLE:
+            markup += [(hdsz, params_sz, 'index + color values'), ]
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]
