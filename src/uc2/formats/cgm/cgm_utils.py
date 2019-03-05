@@ -31,6 +31,36 @@ def parse_header(chunk):
     return element_class, element_id, size
 
 
+def _unpack(fmt, chunk):
+    sz = struct.calcsize(fmt)
+    return struct.unpack(fmt, chunk[:sz])[0], chunk[sz:]
+
+
+def _unpack24(fmt, chunk):
+    sz = struct.calcsize(fmt)
+    res = struct.unpack(fmt, chunk[:sz])
+    return (res[0] << 16) | res[1], chunk[sz:]
+
+
+def _unpack_fip32(fmt, chunk):
+    sz = struct.calcsize(fmt)
+    res = struct.unpack(fmt, chunk[:sz])
+    return res[0] + res[1] / 65536.0, chunk[sz:]
+
+
+def _unpack_fip64(fmt, chunk):
+    sz = struct.calcsize(fmt)
+    res = struct.unpack(fmt, chunk[:sz])
+    return res[0] + res[1] / (65536.0 ** 2), chunk[sz:]
+
+
+CARD_F = (('!B', _unpack), ('!H', _unpack), ('!BH', _unpack24), ('!I', _unpack))
+INT_F = (('!b', _unpack), ('!h', _unpack), ('!bH', _unpack24), ('!i', _unpack))
+FLOAT_F = (('!f', _unpack), ('!d', _unpack))
+FIXED_F = (('!hH', _unpack_fip32), ('!hH', _unpack_fip64))
+REAL_F = FIXED_F + FLOAT_F
+VDC_F = (INT_F, REAL_F)
+
 _PROCESSED = (
     cgm_const.BEGIN_METAFILE,
     cgm_const.METAFILE_VERSION,
@@ -72,6 +102,12 @@ _PROCESSED = (
     cgm_const.CHARACTER_EXPANSION_FACTOR,
     cgm_const.CHARACTER_HEIGHT,
     cgm_const.CHARACTER_ORIENTATION,
+    cgm_const.INTERIOR_STYLE,
+    cgm_const.FILL_COLOUR,
+    cgm_const.EDGE_TYPE,
+    cgm_const.EDGE_WIDTH,
+    cgm_const.EDGE_COLOUR,
+    cgm_const.EDGE_VISIBILITY,
 )
 
 
@@ -212,38 +248,19 @@ def get_markup(header, params):
             markup += [(hdsz, params_sz, 'character height'), ]
         elif element_id == cgm_const.CHARACTER_ORIENTATION:
             markup += [(hdsz, params_sz, 'character orientation'), ]
+        elif element_id == cgm_const.INTERIOR_STYLE:
+            markup += [(hdsz, params_sz, 'fill type'), ]
+        elif element_id == cgm_const.FILL_COLOUR:
+            markup += [(hdsz, params_sz, 'fill color'), ]
+        elif element_id == cgm_const.EDGE_TYPE:
+            markup += [(hdsz, params_sz, 'edge type'), ]
+        elif element_id == cgm_const.EDGE_WIDTH:
+            markup += [(hdsz, params_sz, 'edge width'), ]
+        elif element_id == cgm_const.EDGE_COLOUR:
+            markup += [(hdsz, params_sz, 'edge color'), ]
+        elif element_id == cgm_const.EDGE_VISIBILITY:
+            markup += [(hdsz, params_sz, 'edge visibility'), ]
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]
     return markup
-
-
-def _unpack(fmt, chunk):
-    sz = struct.calcsize(fmt)
-    return struct.unpack(fmt, chunk[:sz])[0], chunk[sz:]
-
-
-def _unpack24(fmt, chunk):
-    sz = struct.calcsize(fmt)
-    res = struct.unpack(fmt, chunk[:sz])
-    return (res[0] << 16) | res[1], chunk[sz:]
-
-
-def _unpack_fip32(fmt, chunk):
-    sz = struct.calcsize(fmt)
-    res = struct.unpack(fmt, chunk[:sz])
-    return res[0] + res[1] / 65536.0, chunk[sz:]
-
-
-def _unpack_fip64(fmt, chunk):
-    sz = struct.calcsize(fmt)
-    res = struct.unpack(fmt, chunk[:sz])
-    return res[0] + res[1] / (65536.0 ** 2), chunk[sz:]
-
-
-CARD_F = (('!B', _unpack), ('!H', _unpack), ('!BH', _unpack24), ('!I', _unpack))
-INT_F = (('!b', _unpack), ('!h', _unpack), ('!bH', _unpack24), ('!i', _unpack))
-FLOAT_F = (('!f', _unpack), ('!d', _unpack))
-FIXED_F = (('!hH', _unpack_fip32), ('!hH', _unpack_fip64))
-REAL_F = FIXED_F + FLOAT_F
-VDC_F = (INT_F, REAL_F)

@@ -618,6 +618,32 @@ class CGM_to_SK2_Translator(object):
         p1, chunk = self.read_point(chunk)
         self.cgm['text.orientation'] = (p0, p1)
 
+    # 0x52c0
+    def _interior_style(self, element):
+        self.cgm['fill.type'] = self.read_enum(element.params)[0]
+
+    # 0x52e0
+    def _fill_colour(self, element):
+        self.cgm['fill.color'] = self.read_color(element.params)[0]
+
+    # 0x5360
+    def _edge_type(self, element):
+        self.cgm['edge.type'] = self.read_index(element.params)[0]
+
+    # 0x5380
+    def _edge_width(self, element):
+        chunk = element.params
+        self.cgm['edge.width'] = self.read_vdc(chunk)[0] if \
+            self.cgm['edge.widthmode'] == 0 else self.read_real(chunk)[0]
+
+    # 0x53a0
+    def _edge_colour(self, element):
+        self.cgm['edge.color'] = self.read_color(element.params)[0]
+
+    # 0x53c0
+    def _edge_visibility(self, element):
+        self.cgm['edge.visible'] = self.read_enum(element.params)[0]
+
     # 0x7040
     def _application_data(self, element):
         if self.sk2_model.metainfo[3]:
