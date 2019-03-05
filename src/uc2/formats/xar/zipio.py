@@ -35,16 +35,14 @@ class ZipIO(object):
         else:
             self.compressor = zlib.compressobj(-1, zlib.DEFLATED, wbits)
         self.uncompress_buf = b''
+        self.bytes = 0
+        self.crc32 = 0
 
-    @property
-    def crc32(self):
-        """ Compute a CRC-32 checksum of uncompress buffer.
+    def _update_statistics(self, s):
+        """Updates the amount of uncompressed data processed and the checksum
         """
-        return zlib.crc32(self.uncompress_buf) & 0xffffffff
-
-    @property
-    def bytes(self):
-        return len(self.uncompress_buf)
+        self.bytes += len(s)
+        self.crc32 = zlib.crc32(s, self.crc32)
 
     @property
     def buf(self):
@@ -74,13 +72,13 @@ class ZipIO(object):
                 chunk = self.decompressor.decompress(chunk, n - len(r))
                 r += chunk
 
-        self.uncompress_buf += r
+        self._update_statistics(r)
         return r
 
     def write(self, s):
         """Write a string to the stream.
         """
-        self.uncompress_buf += s
+        self._update_statistics(s)
         data = self.compressor.compress(s)
         self.raw_stream.write(data)
 
