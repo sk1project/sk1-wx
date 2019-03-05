@@ -53,7 +53,7 @@ class XARLoader(AbstractLoader):
                     msg = 'Expected %s bytes (%s given)' % \
                           (rec.num_bytes, stream.bytes)
                     raise Exception(msg)
-                if rec.compression_crc != stream.crc32:
+                if rec.compression_crc != stream.crc32 & 0xffffffff:
                     raise Exception('Invalid crc')
                 stream = raw_stream
                 parent_stack[-1].add(rec)
