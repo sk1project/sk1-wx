@@ -54,10 +54,10 @@ def _unpack_fip64(fmt, chunk):
     return res[0] + res[1] / (65536.0 ** 2), chunk[sz:]
 
 
-CARD_F = (('!B', _unpack), ('!H', _unpack), ('!BH', _unpack24), ('!I', _unpack))
-INT_F = (('!b', _unpack), ('!h', _unpack), ('!bH', _unpack24), ('!i', _unpack))
-FLOAT_F = (('!f', _unpack), ('!d', _unpack))
-FIXED_F = (('!hH', _unpack_fip32), ('!hH', _unpack_fip64))
+CARD_F = (('>B', _unpack), ('>H', _unpack), ('>BH', _unpack24), ('>I', _unpack))
+INT_F = (('>b', _unpack), ('>h', _unpack), ('>bH', _unpack24), ('>i', _unpack))
+FLOAT_F = (('>f', _unpack), ('>d', _unpack))
+FIXED_F = (('>hH', _unpack_fip32), ('>hH', _unpack_fip64))
 REAL_F = FIXED_F + FLOAT_F
 VDC_F = (INT_F, REAL_F)
 
@@ -109,6 +109,7 @@ _PROCESSED = (
     cgm_const.EDGE_WIDTH,
     cgm_const.EDGE_COLOUR,
     cgm_const.EDGE_VISIBILITY,
+    cgm_const.COLOUR_TABLE,
 )
 
 
