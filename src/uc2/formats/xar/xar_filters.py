@@ -45,7 +45,7 @@ class XARLoader(AbstractLoader):
                     msg = 'Unknown compression type %s' % rec.compression_type
                     raise Exception(msg)
                 parent_stack[-1].add(rec)
-                parent_stack.append(rec)
+                # parent_stack.append(rec)
 
             elif rec.cid == xar_const.TAG_ENDCOMPRESSION:
                 rec.update()
@@ -57,7 +57,7 @@ class XARLoader(AbstractLoader):
                     raise Exception('Invalid crc')
                 stream = raw_stream
                 parent_stack[-1].add(rec)
-                parent_stack = parent_stack[:-1]
+                # parent_stack = parent_stack[:-1]
 
             elif rec.cid == xar_const.TAG_DOWN:
                 parent_rec = parent_stack[-1].childs[-1]

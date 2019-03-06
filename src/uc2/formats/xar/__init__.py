@@ -18,7 +18,7 @@
 # Specification:
 # http://site.xara.com/support/docs/webformat/spec/
 
-from uc2.formats.xar.xar_const import XAR_SIGNATURE, XAR_DFC
+from uc2.formats.xar.xar_const import XAR_SIGNATURE
 from uc2.formats.xar.xar_presenter import XAR_Presenter
 from uc2.formats.xar.xar_datatype import read_u4le
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
@@ -58,5 +58,5 @@ def xar_saver(sk2_doc, filename=None, fileptr=None,
 
 def check_xar(path):
     with get_fileptr(path) as fileptr:
-        return read_u4le(fileptr) == XAR_SIGNATURE and \
-               read_u4le(fileptr) == XAR_DFC
+        size = len(XAR_SIGNATURE)
+        return XAR_SIGNATURE == fileptr.read(size)
