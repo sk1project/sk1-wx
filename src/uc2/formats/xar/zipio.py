@@ -20,6 +20,8 @@ import zlib
 
 __all__ = ["ZipIO"]
 
+PREREAD_BUFFER_SIZE = 4096
+
 
 class ZipIO(object):
     """class ZipIO(stream)
@@ -34,7 +36,6 @@ class ZipIO(object):
             self.decompressor = zlib.decompressobj(wbits)
         else:
             self.compressor = zlib.compressobj(-1, zlib.DEFLATED, wbits)
-        self.uncompress_buf = b''
         self.bytes = 0
         self.crc32 = 0
 
@@ -43,10 +44,6 @@ class ZipIO(object):
         """
         self.bytes += len(s)
         self.crc32 = zlib.crc32(s, self.crc32)
-
-    @property
-    def buf(self):
-        return self.decompressor.unconsumed_tail
 
     def read(self, n=-1):
         """Read at most size bytes from the stream
@@ -58,13 +55,13 @@ class ZipIO(object):
         if n is None or n < 0:
             n = len(self.raw_stream)
 
-        if len(self.buf) > 0:
-            r += self.decompressor.decompress(self.buf, n)
+        unconsumed_tail = self.decompressor.unconsumed_tail
+        if len(unconsumed_tail) > 0:
+            r += self.decompressor.decompress(unconsumed_tail, n)
 
         if len(r) != n:
-            chunk_size = n
             while len(r) < n:
-                chunk = self.raw_stream.read(chunk_size)
+                chunk = self.raw_stream.read(PREREAD_BUFFER_SIZE)
                 if len(chunk) == 0:
                     r += self.decompressor.flush()
                     del self.decompressor
@@ -76,28 +73,27 @@ class ZipIO(object):
         return r
 
     def write(self, s):
-        """Write a string to the stream.
+        """Write a bites to the stream.
         """
         self._update_statistics(s)
         data = self.compressor.compress(s)
         self.raw_stream.write(data)
 
     def flush(self):
-        """All pending input is processed
-
-        Free the memory compressor.
-        """
-        if self.mode == 'wb':
-            data = self.compressor.flush()
-            self.raw_stream.write(data)
-            del self.compressor
-
-    def close(self):
-        """Free the memory decompressor.
+        """All pending data is processed
         """
         if self.mode == 'rb':
             unused_data = self.decompressor.unused_data
             self.raw_stream.seek(-len(unused_data), os.SEEK_CUR)
+        else:
+            data = self.compressor.flush()
+            self.raw_stream.write(data)
+
+    def close(self):
+        """Free the memory compressor/decompressor.
+        """
+        self.flush()
+        if self.mode == 'rb':
             del self.decompressor
         else:
-            self.flush()
+            del self.compressor
