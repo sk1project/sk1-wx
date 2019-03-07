@@ -221,6 +221,12 @@ class CGM_to_SK2_Translator(object):
         orient = uc2const.PORTRAIT if w < h else uc2const.LANDSCAPE
         page_format = [_('Custom size'), (w, h), orient]
         self.sk2_mtds.set_page_format(self.page, page_format)
+        if self.cgm['color.bg']:
+            style = [self.get_fill_style(self.cgm['color.bg']),[],[],[]]
+            rect = sk2_model.Rectangle(self.layer.config, self.layer,
+                                       [-w / 2.0, -h / 2.0, w, h],
+                                       style=style)
+            self.layer.childs.append(rect)
 
     # METAFILE RECODRS ----->
 
@@ -395,8 +401,7 @@ class CGM_to_SK2_Translator(object):
 
     # 0x20e0
     def _background_colour(self, element):
-        color = self.read_color(element.params)[0]
-        # TODO: create rect as bg
+        self.cgm['color.bg'] = self.read_color(element.params)[0]
 
     # 0x3020
     def _vdc_integer_precision(self, element):

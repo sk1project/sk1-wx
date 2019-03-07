@@ -461,6 +461,7 @@ CGM_INIT = {
     'color.table': create_color_table(64),
     'color.offset': (0.0, 0.0, 0.0),
     'color.scale': (255.0, 255.0, 255.0),
+    'color.bg': None,
     'vdc': {},
     'vdc.type': 0,  # integers,
     'vdc.realprec': 0,  # 32 bits fixed point
