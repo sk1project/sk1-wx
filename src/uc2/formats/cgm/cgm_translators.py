@@ -210,14 +210,12 @@ class CGM_to_SK2_Translator(object):
         return copy.deepcopy(self.trafo)
 
     def set_page(self, extend):
-        if self.cgm['scale.mode'] == 0:
-            left, bottom = extend[0]
-            right, top = extend[1]
-            width = right - left
-            height = top - bottom
-            scale = 841 / (1.0 * max(abs(width), abs(height)))
-        else:
-            width = height = 1
+        left, bottom = extend[0]
+        right, top = extend[1]
+        width = right - left
+        height = top - bottom
+        scale = 841 / (1.0 * max(abs(width), abs(height)))
+        if self.cgm['scale.mode'] == 1:
             scale = self.cgm['scale.metric'] * 72 / 25.4
         w, h = width * scale, height * scale
         orient = uc2const.PORTRAIT if w < h else uc2const.LANDSCAPE
@@ -268,18 +266,6 @@ class CGM_to_SK2_Translator(object):
 
         if self.cgm['text.height'] is None:
             self.cgm['text.height'] = maxsz / 100.0
-
-        if self.cgm['edge.width'] is None:
-            if self.cgm['edge.widthmode'] == 0:
-                self.cgm['edge.width'] = maxsz / 1000.0
-            else:
-                self.cgm['edge.width'] = 1
-
-        if self.cgm['line.width'] is None:
-            if self.cgm['line.widthmode'] == 0:
-                self.cgm['line.width'] = maxsz / 1000.0
-            else:
-                self.cgm['line.width'] = 1
 
         name = self.read_str(element.params)[0]
         self.layer = self.sk2_mtds.add_layer(self.page, name)
