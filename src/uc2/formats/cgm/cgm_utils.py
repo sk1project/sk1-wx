@@ -31,6 +31,36 @@ def parse_header(chunk):
     return element_class, element_id, size
 
 
+def _unpack(fmt, chunk):
+    sz = struct.calcsize(fmt)
+    return struct.unpack(fmt, chunk[:sz])[0], chunk[sz:]
+
+
+def _unpack24(fmt, chunk):
+    sz = struct.calcsize(fmt)
+    res = struct.unpack(fmt, chunk[:sz])
+    return (res[0] << 16) | res[1], chunk[sz:]
+
+
+def _unpack_fip32(fmt, chunk):
+    sz = struct.calcsize(fmt)
+    res = struct.unpack(fmt, chunk[:sz])
+    return res[0] + res[1] / 65536.0, chunk[sz:]
+
+
+def _unpack_fip64(fmt, chunk):
+    sz = struct.calcsize(fmt)
+    res = struct.unpack(fmt, chunk[:sz])
+    return res[0] + res[1] / (65536.0 ** 2), chunk[sz:]
+
+
+CARD_F = (('>B', _unpack), ('>H', _unpack), ('>BH', _unpack24), ('>I', _unpack))
+INT_F = (('>b', _unpack), ('>h', _unpack), ('>bH', _unpack24), ('>i', _unpack))
+FLOAT_F = (('>f', _unpack), ('>d', _unpack))
+FIXED_F = (('>hH', _unpack_fip32), ('>hH', _unpack_fip64))
+REAL_F = FIXED_F + FLOAT_F
+VDC_F = (INT_F, REAL_F)
+
 _PROCESSED = (
     cgm_const.BEGIN_METAFILE,
     cgm_const.METAFILE_VERSION,
@@ -59,6 +89,27 @@ _PROCESSED = (
     cgm_const.CLIP_RECTANGLE,
     cgm_const.POLYLINE,
     cgm_const.DISJOINT_POLYLINE,
+    cgm_const.TEXT,
+    cgm_const.POLYGON,
+    cgm_const.POLYGON_SET,
+    cgm_const.RECTANGLE,
+    cgm_const.CIRCLE,
+    cgm_const.LINE_TYPE,
+    cgm_const.LINE_WIDTH,
+    cgm_const.LINE_COLOUR,
+    cgm_const.MARKER_COLOUR,
+    cgm_const.TEXT_FONT_INDEX,
+    cgm_const.CHARACTER_EXPANSION_FACTOR,
+    cgm_const.CHARACTER_HEIGHT,
+    cgm_const.CHARACTER_ORIENTATION,
+    cgm_const.TEXT_ALIGNMENT,
+    cgm_const.INTERIOR_STYLE,
+    cgm_const.FILL_COLOUR,
+    cgm_const.EDGE_TYPE,
+    cgm_const.EDGE_WIDTH,
+    cgm_const.EDGE_COLOUR,
+    cgm_const.EDGE_VISIBILITY,
+    cgm_const.COLOUR_TABLE,
 )
 
 
@@ -167,38 +218,55 @@ def get_markup(header, params):
             markup += [(hdsz, params_sz, 'polyline points'), ]
         elif element_id == cgm_const.DISJOINT_POLYLINE:
             markup += [(hdsz, params_sz, 'disjoint polyline points'), ]
+        elif element_id == cgm_const.TEXT:
+            markup += [(hdsz, params_sz, 'point + 2 byte flag + text'), ]
+        elif element_id == cgm_const.POLYGON:
+            markup += [(hdsz, params_sz, 'points'), ]
+        elif element_id == cgm_const.POLYGON_SET:
+            markup += [(hdsz, params_sz, 'point + 2 byte flag pairs'), ]
+        elif element_id == cgm_const.RECTANGLE:
+            sz = params_sz / 2
+            markup += [(hdsz, sz, 'rect lower left point'),
+                       (hdsz + sz, sz, 'rect upper right point'), ]
+        elif element_id == cgm_const.CIRCLE:
+            sz = params_sz / 3
+            markup += [(hdsz, sz, 'center x'),
+                       (hdsz + sz, sz, 'center y'),
+                       (hdsz + 2 * sz, sz, 'radius'), ]
+
+        elif element_id == cgm_const.LINE_TYPE:
+            markup += [(hdsz, params_sz, 'line type'), ]
+        elif element_id == cgm_const.LINE_WIDTH:
+            markup += [(hdsz, params_sz, 'line width'), ]
+        elif element_id == cgm_const.LINE_COLOUR:
+            markup += [(hdsz, params_sz, 'line color'), ]
+        elif element_id == cgm_const.MARKER_COLOUR:
+            markup += [(hdsz, params_sz, 'marker color'), ]
+        elif element_id == cgm_const.TEXT_FONT_INDEX:
+            markup += [(hdsz, params_sz, 'text font index'), ]
+        elif element_id == cgm_const.CHARACTER_EXPANSION_FACTOR:
+            markup += [(hdsz, params_sz, 'character expansion'), ]
+        elif element_id == cgm_const.CHARACTER_HEIGHT:
+            markup += [(hdsz, params_sz, 'character height'), ]
+        elif element_id == cgm_const.CHARACTER_ORIENTATION:
+            markup += [(hdsz, params_sz, 'character orientation'), ]
+        elif element_id == cgm_const.TEXT_ALIGNMENT:
+            markup += [(hdsz, 2, 'text alignment'), ]
+        elif element_id == cgm_const.INTERIOR_STYLE:
+            markup += [(hdsz, params_sz, 'fill type'), ]
+        elif element_id == cgm_const.FILL_COLOUR:
+            markup += [(hdsz, params_sz, 'fill color'), ]
+        elif element_id == cgm_const.EDGE_TYPE:
+            markup += [(hdsz, params_sz, 'edge type'), ]
+        elif element_id == cgm_const.EDGE_WIDTH:
+            markup += [(hdsz, params_sz, 'edge width'), ]
+        elif element_id == cgm_const.EDGE_COLOUR:
+            markup += [(hdsz, params_sz, 'edge color'), ]
+        elif element_id == cgm_const.EDGE_VISIBILITY:
+            markup += [(hdsz, params_sz, 'edge visibility'), ]
+        elif element_id == cgm_const.COLOUR_TABLE:
+            markup += [(hdsz, params_sz, 'index + color values'), ]
 
     if is_padding:
         markup += [(len(chunk) - 1, 1, 'padding byte')]
     return markup
-
-
-def _unpack(fmt, chunk):
-    sz = struct.calcsize(fmt)
-    return struct.unpack(fmt, chunk[:sz])[0], chunk[sz:]
-
-
-def _unpack24(fmt, chunk):
-    sz = struct.calcsize(fmt)
-    res = struct.unpack(fmt, chunk[:sz])
-    return (res[0] << 16) | res[1], chunk[sz:]
-
-
-def _unpack_fip32(fmt, chunk):
-    sz = struct.calcsize(fmt)
-    res = struct.unpack(fmt, chunk[:sz])
-    return res[0] + res[1] / 65536.0, chunk[sz:]
-
-
-def _unpack_fip64(fmt, chunk):
-    sz = struct.calcsize(fmt)
-    res = struct.unpack(fmt, chunk[:sz])
-    return res[0] + res[1] / (65536.0 ** 2), chunk[sz:]
-
-
-CARD_F = (('!B', _unpack), ('!H', _unpack), ('!BH', _unpack24), ('!I', _unpack))
-INT_F = (('!b', _unpack), ('!h', _unpack), ('!bH', _unpack24), ('!i', _unpack))
-FLOAT_F = (('!f', _unpack), ('!d', _unpack))
-FIXED_F = (('!hH', _unpack_fip32), ('!hH', _unpack_fip64))
-REAL_F = FIXED_F + FLOAT_F
-VDC_F = (INT_F, REAL_F)

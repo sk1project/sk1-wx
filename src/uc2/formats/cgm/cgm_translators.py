@@ -16,11 +16,14 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import copy
+import logging
 import struct
 
-from uc2 import utils, sk2const, libgeom, uc2const, libpango
+from uc2 import _, utils, sk2const, libgeom, uc2const, libpango
 from uc2.formats.cgm import cgm_const, cgm_utils
 from uc2.formats.sk2 import sk2_model
+
+LOG = logging.getLogger(__name__)
 
 
 def sign(num):
@@ -45,6 +48,7 @@ class CGM_to_SK2_Translator(object):
         self.sk2_mtds = sk2_doc.methods
         self.page = self.sk2_mtds.get_page()
         self.page.childs = []
+        self.page.layer_counter = 0
         self.fontmap = []
 
         for element in cgm_doc.model.childs:
@@ -80,12 +84,16 @@ class CGM_to_SK2_Translator(object):
         fmt, fn = cgm_utils.INT_F[self.cgm['intprec']]
         return fn(fmt, chunk)
 
+    def read_index(self, chunk):
+        fmt, fn = cgm_utils.INT_F[self.cgm['inxprec']]
+        return fn(fmt, chunk)
+
     def read_str(self, chunk):
         if not chunk:
             return '', chunk
         sz = utils.byte2py_int(chunk[0])
         title = chunk[1:1 + sz]
-        return title, chunk[sz:]
+        return title, chunk[1 + sz:]
 
     def read_real(self, chunk, precision=None):
         precision = self.cgm['realprec'] if precision is None else precision
@@ -102,7 +110,7 @@ class CGM_to_SK2_Translator(object):
     def read_point(self, chunk):
         x, chunk = self.read_vdc(chunk)
         y, chunk = self.read_vdc(chunk)
-        return (x, y), chunk
+        return [x, y], chunk
 
     def read_points(self, chunk):
         sz = 2 * self.cgm['vdc.size']
@@ -116,8 +124,8 @@ class CGM_to_SK2_Translator(object):
         points = self.read_points(chunk)
         return [points[0], points[1:], sk2const.CURVE_OPENED]
 
-    def read_color(self, chunk):
-        if self.cgm['color.mode'] == 1:
+    def read_color(self, chunk, color_mode=None):
+        if self.cgm['color.mode'] == 1 or color_mode == 1:
             color, chunk = self.read_fmt(self.cgm['color.absstruct'], chunk)
             color = [x - y for x, y in zip(color, self.cgm['color.offset'])]
             color = [x / y for x, y in zip(color, self.cgm['color.scale'])]
@@ -134,12 +142,14 @@ class CGM_to_SK2_Translator(object):
             return [sk2const.FILL_EVENODD, sk2const.FILL_SOLID, color]
         return []
 
-    def get_stroke_style(self):
-        width = self.cgm['line.width']
-        if self.cgm['line.widthmode'] == 0:
+    def get_stroke_style(self, mode='line'):
+        if not self.cgm['%s.width' % mode]:
+            return []
+        width = self.cgm['%s.width' % mode]
+        if self.cgm['%s.widthmode' % mode] == 0:
             width *= self.scale
-        color = [uc2const.COLOR_RGB, list(self.cgm['line.color']), 1.0, '']
-        dash = self.cgm['line.dashtable'][self.cgm['line.type'] - 1]
+        color = [uc2const.COLOR_RGB, list(self.cgm['%s.color' % mode]), 1.0, '']
+        dash = self.cgm['%s.dashtable' % mode][self.cgm['%s.type' % mode] - 1]
         cap = sk2const.CAP_BUTT
         join = sk2const.JOIN_MITER
         miter_limit = 10.433
@@ -150,22 +160,28 @@ class CGM_to_SK2_Translator(object):
                 miter_limit, behind_flag, scalable_flag, markers]
 
     def get_text_style(self):
-        cgm_font = self.fontmap[self.cgm['text.fontindex']]
+        cgm_font = self.fontmap[self.cgm['text.fontindex'] - 1]
         family, face = libpango.find_font_and_face(cgm_font)
         size = self.cgm['text.height'] * self.scale
-        alignment = 0
+        alignment = cgm_const.TEXT_ALIGNMENT_MAP.get(
+            self.cgm['text.alignment'], 0)
         spacing = []
         cluster_flag = True
         return [family, face, size, alignment, spacing, cluster_flag]
 
     def get_style(self, fill=False, stroke=False, text=False):
-        if (fill, stroke, text) == (False, True, False):
+        if stroke:
             return [[], self.get_stroke_style(), [], []]
 
-        elif (fill, stroke, text) == (False, False, True):
+        elif text:
             fill_style = self.get_fill_style(cgm_color=self.cgm['text.color'])
             text_style = self.get_text_style()
             return [fill_style, [], text_style, []]
+
+        elif fill:
+            fill_style = self.get_fill_style(cgm_color=self.cgm['fill.color'])
+            stroke_style = self.get_stroke_style('edge')
+            return [fill_style, stroke_style, [], []]
 
         # TODO: get real stroke style
         return [self.get_fill_style() if fill else [],
@@ -180,19 +196,37 @@ class CGM_to_SK2_Translator(object):
             height = top - bottom
             sc = 841 / (1.0 * max(abs(width), abs(height)))
         else:
-            left = 0
-            bottom = 0
-            width = 1
-            height = 1
+            left = bottom = 0
+            width = height = right = top = 1
             sc = self.cgm['scale.metric'] * 72 / 25.4
         self.scale = sc
-        tr = [1.0, 0.0, 0.0, 1.0, -left, -bottom]
+        tr = [1.0, 0.0, 0.0, 1.0,
+              -(right - left) / 2.0 - left,
+              -(top - bottom) / 2.0 - bottom]
         scale = [sign(width) * sc, 0.0, 0.0, sign(height) * sc, 0.0, 0.0]
-        # TODO: check trafo order
-        self.trafo = libgeom.multiply_trafo(scale, tr)
+        self.trafo = libgeom.multiply_trafo(tr, scale)
 
     def get_trafo(self):
         return copy.deepcopy(self.trafo)
+
+    def set_page(self, extend):
+        left, bottom = extend[0]
+        right, top = extend[1]
+        width = right - left
+        height = top - bottom
+        scale = 841 / (1.0 * max(abs(width), abs(height)))
+        if self.cgm['scale.mode'] == 1:
+            scale = self.cgm['scale.metric'] * 72 / 25.4
+        w, h = width * scale, height * scale
+        orient = uc2const.PORTRAIT if w < h else uc2const.LANDSCAPE
+        page_format = [_('Custom size'), (w, h), orient]
+        self.sk2_mtds.set_page_format(self.page, page_format)
+        if self.cgm['color.bg']:
+            style = [self.get_fill_style(self.cgm['color.bg']),[],[],[]]
+            rect = sk2_model.Rectangle(self.layer.config, self.layer,
+                                       [-w / 2.0, -h / 2.0, w, h],
+                                       style=style)
+            self.layer.childs.append(rect)
 
     # METAFILE RECODRS ----->
 
@@ -239,24 +273,14 @@ class CGM_to_SK2_Translator(object):
         if self.cgm['text.height'] is None:
             self.cgm['text.height'] = maxsz / 100.0
 
-        if self.cgm['edge.width'] is None:
-            if self.cgm['edge.widthmode'] == 0:
-                self.cgm['edge.width'] = maxsz / 1000.0
-            else:
-                self.cgm['edge.width'] = 1
-
-        if self.cgm['line.width'] is None:
-            if self.cgm['line.widthmode'] == 0:
-                self.cgm['line.width'] = maxsz / 1000.0
-            else:
-                self.cgm['line.width'] = 1
-
         name = self.read_str(element.params)[0]
         self.layer = self.sk2_mtds.add_layer(self.page, name)
 
     # 0x0080
     def _begin_picture_body(self, _element):
         self.set_trafo(self.cgm['vdc.extend'])
+        if len(self.page.childs) == 1:
+            self.set_page(self.cgm['vdc.extend'])
 
     # 0x1040
     def _metafile_description(self, element):
@@ -377,8 +401,7 @@ class CGM_to_SK2_Translator(object):
 
     # 0x20e0
     def _background_colour(self, element):
-        color = self.read_color(element.params)[0]
-        # TODO: create rect as bg
+        self.cgm['color.bg'] = self.read_color(element.params)[0]
 
     # 0x3020
     def _vdc_integer_precision(self, element):
@@ -438,11 +461,14 @@ class CGM_to_SK2_Translator(object):
     # 0x4040
     def _disjoint_polyline(self, element):
         points = self.read_points(element.params)
-        first_point = points[0]
+        first_point = None
         paths = []
-        for point in points[1:]:
-            paths.append([first_point, [point, ], sk2const.CURVE_OPENED])
-            first_point = point
+        for point in points:
+            if first_point:
+                paths.append([first_point, [point, ], sk2const.CURVE_OPENED])
+                first_point = None
+            else:
+                first_point = point
         curve = sk2_model.Curve(self.layer.config, self.layer, paths,
                                 self.get_trafo(), self.get_style(stroke=True))
         self.layer.childs.append(curve)
@@ -452,19 +478,181 @@ class CGM_to_SK2_Translator(object):
         (x, y), chunk = self.read_point(element.params)
         flg, chunk = self.read_enum(chunk)
         txt, chunk = self.read_str(chunk)
-        trafo = libgeom.multiply_trafo(self.trafo, [1.0, 0.0, 0.0, 1.0, x, y])
+        p0 = libgeom.apply_trafo_to_point([x, y], self.get_trafo())
 
+        py, px = self.cgm['text.orientation']
+        py = libgeom.normalize_point(py)
+        px = libgeom.normalize_point(px)
+        tr = libgeom.sub_points(px, p0) + libgeom.sub_points(py, p0) + p0
+
+        text = sk2_model.Text(self.layer.config, self.layer,
+                              p0, txt, -1,
+                              style=self.get_style(text=True))
+        self.layer.childs.append(text)
+
+    # 0x40e0
+    def _polygon(self, element):
+        path = self.read_path(element.params)
+        if path[0] != path[1][-1]:
+            path[1].append([] + path[0])
+        path[2] = sk2const.CURVE_CLOSED
+        curve = sk2_model.Curve(self.layer.config, self.layer, [path, ],
+                                self.get_trafo(), self.get_style(fill=True))
+        self.layer.childs.append(curve)
+
+    # 0x4100
+    def _polygon_set(self, element):
+        paths = []
+        path = [None, [], sk2const.CURVE_CLOSED]
+        chunk = element.params
+        for _ in range(len(chunk) / (2 * self.cgm['vdc.size'] + 2)):
+            point, chunk = self.read_point(chunk)
+            flag, chunk = self.read_enum(chunk)
+            if not path[0]:
+                path[0] = point
+            else:
+                path[1].append(point)
+
+            if flag in (2, 3):
+                if path[0] != path[1][-1]:
+                    path[1].append([] + path[0])
+                paths.append(path)
+                path = [None, [], sk2const.CURVE_CLOSED]
+        if path[1]:
+            if path[0] != path[1][-1]:
+                path[1].append([] + path[0])
+            paths.append(path)
+        if paths:
+            curve = sk2_model.Curve(self.layer.config, self.layer, paths,
+                                    self.get_trafo(), self.get_style(fill=True))
+            self.layer.childs.append(curve)
+
+    # 0x4160
     def _rectangle(self, element):
-        pass
+        ll, chunk = self.read_point(element.params)
+        ur, chunk = self.read_point(chunk)
+        w, h = ur[0] - ll[0], ur[1] - ll[1]
+        rect = sk2_model.Rectangle(self.layer.config, self.layer, ll + [w, h],
+                                   self.get_trafo(), self.get_style(fill=True))
+        self.layer.childs.append(rect)
 
+    # 0x4180
     def _circle(self, element):
+        center, chunk = self.read_point(element.params)
+        r = self.read_vdc(chunk)[0] * self.scale
+        x, y = libgeom.apply_trafo_to_point(center, self.get_trafo())
+        rect = [x - r, y - r, 2 * r, 2 * r]
+        circle = sk2_model.Circle(self.layer.config, self.layer, rect,
+                                  style=self.get_style(fill=True))
+        self.layer.childs.append(circle)
+
+    # 0x41a0
+    def _circular_arc_3_point(self, element):
         pass
 
+    # 0x41c0
+    def _circular_arc_3_point_close(self, element):
+        pass
+
+    # 0x41e0
+    def _circular_arc_centre(self, element):
+        pass
+
+    # 0x4200
+    def _circular_arc_centre_close(self, element):
+        pass
+
+    # 0x4220
     def _ellipse(self, element):
         pass
 
-    def _polygon(self, element):
+    # 0x4240
+    def _elliptical_arc(self, element):
         pass
+
+    # 0x4260
+    def _elliptical_arc_close(self, element):
+        pass
+
+    # 0x5040
+    def _line_type(self, element):
+        self.cgm['line.type'] = self.read_index(element.params)[0]
+
+    # 0x5060
+    def _line_width(self, element):
+        chunk = element.params
+        self.cgm['line.width'] = self.read_vdc(chunk)[0] if \
+            self.cgm['line.widthmode'] == 0 else self.read_real(chunk)[0]
+
+    # 0x5080
+    def _line_colour(self, element):
+        self.cgm['line.color'] = self.read_color(element.params)[0]
+
+    # 0x5100
+    def _marker_colour(self, element):
+        self.cgm['marker.color'] = self.read_color(element.params)[0]
+
+    # 0x5140
+    def _text_font_index(self, element):
+        self.cgm['text.fontindex'] = self.read_index(element.params)[0]
+
+    # 0x5180
+    def _character_expansion_factor(self, element):
+        self.cgm['text.expansion'] = self.read_real(element.params)[0]
+
+    # 0x51c0
+    def _text_colour(self, element):
+        self.cgm['text.color'] = self.read_color(element.params)[0]
+
+    # 0x51e0
+    def _character_height(self, element):
+        self.cgm['text.height'] = self.read_vdc(element.params)[0]
+
+    # 0x5200
+    def _character_orientation(self, element):
+        p0, chunk = self.read_point(element.params)
+        p1, chunk = self.read_point(chunk)
+        self.cgm['text.orientation'] = (p0, p1)
+
+    # 0x5240
+    def _text_alignment(self, element):
+        self.cgm['text.alignment'] = self.read_enum(element.params)[0]
+
+    # 0x52c0
+    def _interior_style(self, element):
+        self.cgm['fill.type'] = self.read_enum(element.params)[0]
+
+    # 0x52e0
+    def _fill_colour(self, element):
+        self.cgm['fill.color'] = self.read_color(element.params)[0]
+
+    # 0x5360
+    def _edge_type(self, element):
+        self.cgm['edge.type'] = self.read_index(element.params)[0]
+
+    # 0x5380
+    def _edge_width(self, element):
+        chunk = element.params
+        self.cgm['edge.width'] = self.read_vdc(chunk)[0] if \
+            self.cgm['edge.widthmode'] == 0 else self.read_real(chunk)[0]
+
+    # 0x53a0
+    def _edge_colour(self, element):
+        self.cgm['edge.color'] = self.read_color(element.params)[0]
+
+    # 0x53c0
+    def _edge_visibility(self, element):
+        self.cgm['edge.visible'] = self.read_enum(element.params)[0]
+
+    # 0x5440
+    def _colour_table(self, element):
+        pos, chunk = cgm_utils._unpack(self.cgm['color.inxstruct'],
+                                       element.params)
+        sz = struct.calcsize(self.cgm['color.absstruct'])
+        while len(chunk) >= sz:
+            cgm_color, chunk = self.read_color(chunk, 1)
+            self.cgm['color.table'][pos] = cgm_color
+            pos += 1
 
     # 0x7040
     def _application_data(self, element):
