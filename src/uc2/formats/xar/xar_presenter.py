@@ -20,8 +20,8 @@ import os
 from uc2 import uc2const
 from uc2.formats.generic import BinaryModelPresenter
 from uc2.formats.xar import xar_filters, xar_translators
-from uc2.formats.xar.xar_config import XAR_Config
 from uc2.formats.xar import xar_method
+from uc2.formats.xar.xar_config import XAR_Config
 
 
 class XAR_Presenter(BinaryModelPresenter):
@@ -40,6 +40,7 @@ class XAR_Presenter(BinaryModelPresenter):
         self.appdata = appdata
         self.loader = xar_filters.XARLoader()
         self.saver = xar_filters.XARSaver()
+        self.methods = xar_method.XARMethods(self)
         self.new()
 
     def new(self):

@@ -26,8 +26,8 @@ def create_new_doc(config):
 
 
 def make_record_header(rec):
-    r = xar_datatype.packer_u4le.pack(rec.cid)
-    r += xar_datatype.packer_u4le.pack(len(rec.chunk))
+    r = xar_datatype.packer_uint32_le.pack(rec.cid)
+    r += xar_datatype.packer_uint32_le.pack(len(rec.chunk))
     return r
 
 
@@ -45,3 +45,16 @@ def parse_record(stream):
         if len(chunk) < size:
             raise IOError("Stream has ended unexpectedly")
     return xar_model.XARRecord(cid, chunk)
+
+
+class XARMethods(object):
+    presenter = None
+    model = None
+    config = None
+
+    def __init__(self, presenter):
+        self.presenter = presenter
+
+    def update(self):
+        self.model = self.presenter.model
+        self.config = self.presenter.config
