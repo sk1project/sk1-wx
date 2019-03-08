@@ -659,7 +659,3 @@ class CGM_to_SK2_Translator(object):
         if self.sk2_model.metainfo[3]:
             self.sk2_model.metainfo[3] += '\n\n'
         self.sk2_model.metainfo[3] += self.read_str(element.params[2:])[0]
-
-
-class SK2_to_CGM_Translator(object):
-    def translate(self, sk2_doc, cgm_doc): pass
