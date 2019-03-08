@@ -15,8 +15,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from uc2.formats.xar import xar_const, xar_model
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
+from uc2.formats.xar import xar_const, xar_model
 from uc2.formats.xar.zipio import ZipIO
 from uc2.formats.xar.xar_method import make_record_header, parse_record
 
@@ -30,7 +30,7 @@ class XARLoader(AbstractLoader):
 
         # read file header
         self.model.chunk = stream.read(8)
-
+        self.model.childs = []
         rec = self.model
         parent_stack = [rec]
 
@@ -45,7 +45,6 @@ class XARLoader(AbstractLoader):
                     msg = 'Unknown compression type %s' % rec.compression_type
                     raise Exception(msg)
                 parent_stack[-1].add(rec)
-                # parent_stack.append(rec)
 
             elif rec.cid == xar_const.TAG_ENDCOMPRESSION:
                 rec.update()
@@ -57,15 +56,12 @@ class XARLoader(AbstractLoader):
                     raise Exception('Invalid crc')
                 stream = raw_stream
                 parent_stack[-1].add(rec)
-                # parent_stack = parent_stack[:-1]
 
             elif rec.cid == xar_const.TAG_DOWN:
                 parent_rec = parent_stack[-1].childs[-1]
                 parent_stack.append(parent_rec)
-                # parent_stack[-1].add(rec)
 
             elif rec.cid == xar_const.TAG_UP:
-                # parent_stack[-1].add(rec)
                 parent_stack = parent_stack[:-1]
 
             else:
