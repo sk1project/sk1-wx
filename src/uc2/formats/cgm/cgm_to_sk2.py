@@ -271,6 +271,17 @@ class CGM_to_SK2_Translator(object):
         if self.cgm['text.height'] is None:
             self.cgm['text.height'] = maxsz / 100.0
 
+        # if self.cgm['edge.width'] is None:
+        #     if self.cgm['edge.widthmode'] == 0:
+        #         self.cgm['edge.width'] = maxsz / 1000.0
+        #     else:
+        #         self.cgm['edge.width'] = 1
+        if self.cgm['line.width'] is None:
+            if self.cgm['line.widthmode'] == 0:
+                self.cgm['line.width'] = maxsz / 3000.0
+            else:
+                self.cgm['line.width'] = 1
+
         name = self.read_str(element.params)[0]
         self.page = self.sk2_mtds.add_page()
         self.layer = self.sk2_mtds.add_layer(self.page, name)
@@ -555,8 +566,8 @@ class CGM_to_SK2_Translator(object):
         if not center:
             return
         r = libgeom.distance(center, p1)
-        angle1 = libgeom.get_point_angle(p1, center)
-        angle2 = libgeom.get_point_angle(p2, center)
+        angle1 = libgeom.get_point_angle(p3, center)
+        angle2 = libgeom.get_point_angle(p1, center)
         x, y = center
         rect = [x - r, y - r, 2 * r, 2 * r]
         circle = sk2_model.Circle(self.layer.config, self.layer, rect,
@@ -578,8 +589,8 @@ class CGM_to_SK2_Translator(object):
         if not center:
             return
         r = libgeom.distance(center, p1)
-        angle1 = libgeom.get_point_angle(p1, center)
-        angle2 = libgeom.get_point_angle(p2, center)
+        angle1 = libgeom.get_point_angle(p3, center)
+        angle2 = libgeom.get_point_angle(p1, center)
         x, y = center
         rect = [x - r, y - r, 2 * r, 2 * r]
         flag = {0: sk2const.ARC_PIE_SLICE,
