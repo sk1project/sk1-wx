@@ -34,6 +34,16 @@ def normalize_bbox(bbox):
     return [min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)]
 
 
+def bbox_to_rect(bbox):
+    """Normalize bbox and transform it into rectangle
+
+    :param bbox:
+    :return: rectangle
+    """
+    x0, y0, x1, y1 = normalize_bbox(bbox)
+    return [x0, y0, x1 - x0, y1 - y0]
+
+
 def bbox_points(bbox):
     """Converts bounding box to list of four rectangle corners.
 
