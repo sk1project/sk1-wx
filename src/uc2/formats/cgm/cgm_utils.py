@@ -234,6 +234,10 @@ def get_markup(header, params):
             markup += [(hdsz, sz, 'center x'),
                        (hdsz + sz, sz, 'center y'),
                        (hdsz + 2 * sz, sz, 'radius'), ]
+        elif element_id == cgm_const.CIRCULAR_ARC_3_POINT:
+            markup += [(hdsz, params_sz, '3 points'), ]
+        elif element_id == cgm_const.CIRCULAR_ARC_3_POINT_CLOSE:
+            markup += [(hdsz, params_sz, '3 points + close flag'), ]
         elif element_id == cgm_const.ELLIPSE:
             markup += [(hdsz, params_sz, 'center + 2 cdp points'), ]
 

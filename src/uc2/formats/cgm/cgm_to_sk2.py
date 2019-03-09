@@ -546,11 +546,50 @@ class CGM_to_SK2_Translator(object):
 
     # 0x41a0
     def _circular_arc_3_point(self, element):
-        pass
+        p1, chunk = self.read_point(element.params)
+        p2, chunk = self.read_point(chunk)
+        p3, chunk = self.read_point(chunk)
+        p1, p2, p3 = libgeom.apply_trafo_to_points(
+            [p1, p2, p3], self.get_trafo())
+        center = libgeom.circle_center_by_3points(p1, p2, p3)
+        if not center:
+            return
+        r = libgeom.distance(center, p1)
+        angle1 = libgeom.get_point_angle(p1, center)
+        angle2 = libgeom.get_point_angle(p2, center)
+        x, y = center
+        rect = [x - r, y - r, 2 * r, 2 * r]
+        circle = sk2_model.Circle(self.layer.config, self.layer, rect,
+                                  angle1=angle1,
+                                  angle2=angle2,
+                                  circle_type=sk2const.ARC_ARC,
+                                  style=self.get_style(stroke=True))
+        self.layer.childs.append(circle)
 
     # 0x41c0
     def _circular_arc_3_point_close(self, element):
-        pass
+        p1, chunk = self.read_point(element.params)
+        p2, chunk = self.read_point(chunk)
+        p3, chunk = self.read_point(chunk)
+        flag = self.read_enum(chunk)[0]
+        p1, p2, p3 = libgeom.apply_trafo_to_points(
+            [p1, p2, p3], self.get_trafo())
+        center = libgeom.circle_center_by_3points(p1, p2, p3)
+        if not center:
+            return
+        r = libgeom.distance(center, p1)
+        angle1 = libgeom.get_point_angle(p1, center)
+        angle2 = libgeom.get_point_angle(p2, center)
+        x, y = center
+        rect = [x - r, y - r, 2 * r, 2 * r]
+        flag = {0: sk2const.ARC_PIE_SLICE,
+                1: sk2const.ARC_CHORD}.get(flag, sk2const.ARC_CHORD)
+        circle = sk2_model.Circle(self.layer.config, self.layer, rect,
+                                  angle1=angle1,
+                                  angle2=angle2,
+                                  circle_type=flag,
+                                  style=self.get_style(fill=True))
+        self.layer.childs.append(circle)
 
     # 0x41e0
     def _circular_arc_centre(self, element):
