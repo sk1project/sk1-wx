@@ -109,6 +109,7 @@ class LayersPlugin(RsPlugin):
 
         events.connect(events.DOC_CHANGED, self.update)
         events.connect(events.DOC_MODIFIED, self.update)
+        events.connect(events.PAGE_CHANGED, self.update)
         self.update()
 
     def get_data(self):
