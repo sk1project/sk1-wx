@@ -46,9 +46,7 @@ class CGM_to_SK2_Translator(object):
         self.sk2_doc = sk2_doc
         self.sk2_model = sk2_doc.model
         self.sk2_mtds = sk2_doc.methods
-        self.page = self.sk2_mtds.get_page()
-        self.page.childs = []
-        self.page.layer_counter = 0
+        self.sk2_mtds.delete_pages()
         self.fontmap = []
 
         for element in cgm_doc.model.childs:
@@ -274,13 +272,13 @@ class CGM_to_SK2_Translator(object):
             self.cgm['text.height'] = maxsz / 100.0
 
         name = self.read_str(element.params)[0]
+        self.page = self.sk2_mtds.add_page()
         self.layer = self.sk2_mtds.add_layer(self.page, name)
 
     # 0x0080
     def _begin_picture_body(self, _element):
         self.set_trafo(self.cgm['vdc.extend'])
-        if len(self.page.childs) == 1:
-            self.set_page(self.cgm['vdc.extend'])
+        self.set_page(self.cgm['vdc.extend'])
 
     # 0x1040
     def _metafile_description(self, element):
