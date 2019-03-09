@@ -220,7 +220,7 @@ class CGM_to_SK2_Translator(object):
         page_format = [_('Custom size'), (w, h), orient]
         self.sk2_mtds.set_page_format(self.page, page_format)
         if self.cgm['color.bg']:
-            style = [self.get_fill_style(self.cgm['color.bg']),[],[],[]]
+            style = [self.get_fill_style(self.cgm['color.bg']), [], [], []]
             rect = sk2_model.Rectangle(self.layer.config, self.layer,
                                        [-w / 2.0, -h / 2.0, w, h],
                                        style=style)
@@ -562,7 +562,17 @@ class CGM_to_SK2_Translator(object):
 
     # 0x4220
     def _ellipse(self, element):
-        pass
+        center, chunk = self.read_point(element.params)
+        cdp1, chunk = self.read_point(chunk)
+        cdp2, chunk = self.read_point(chunk)
+        cdp3 = libgeom.contra_point(cdp1, center)
+        cdp4 = libgeom.contra_point(cdp2, center)
+        bbox = libgeom.sum_bbox(cdp1 + cdp2, cdp3 + cdp4)
+        bbox = libgeom.apply_trafo_to_bbox(bbox, self.get_trafo())
+        rect = libgeom.bbox_to_rect(bbox)
+        circle = sk2_model.Circle(self.layer.config, self.layer, rect,
+                                  style=self.get_style(fill=True))
+        self.layer.childs.append(circle)
 
     # 0x4240
     def _elliptical_arc(self, element):

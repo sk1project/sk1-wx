@@ -94,6 +94,7 @@ _PROCESSED = (
     cgm_const.POLYGON_SET,
     cgm_const.RECTANGLE,
     cgm_const.CIRCLE,
+    cgm_const.ELLIPSE,
     cgm_const.LINE_TYPE,
     cgm_const.LINE_WIDTH,
     cgm_const.LINE_COLOUR,
@@ -233,6 +234,8 @@ def get_markup(header, params):
             markup += [(hdsz, sz, 'center x'),
                        (hdsz + sz, sz, 'center y'),
                        (hdsz + 2 * sz, sz, 'radius'), ]
+        elif element_id == cgm_const.ELLIPSE:
+            markup += [(hdsz, params_sz, 'center + 2 cdp points'), ]
 
         elif element_id == cgm_const.LINE_TYPE:
             markup += [(hdsz, params_sz, 'line type'), ]
