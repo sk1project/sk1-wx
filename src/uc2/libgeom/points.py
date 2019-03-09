@@ -140,3 +140,25 @@ def get_point_angle(p, center=None):
 def to_polar(point):
     r = distance(point)
     return r, get_point_angle(point, [0.0, 0.0]) if r else 0.0
+
+
+def circle_center_by_3points(p1, p2, p3):
+    x1, y1 = p1
+    x2, y2 = p2
+    x3, y3 = p3
+    if not x2 - x1 or not x3 - x2:
+        return None
+    ma = (y2 - y1) / (x2 - x1)
+    mb = (y3 - y2) / (x3 - x2)
+    if not mb - ma:
+        return None
+    d0 = ma * mb * (y1 - y3) + mb * (x1 + x2) - ma * (x2 + x3)
+    d1 = 2 * mb - 2 * ma
+    if not d1:
+        return None
+    x0 = d0 / d1
+    if ma:
+        y0 = -(x0 - (x1 + x2) / 2) / ma + (y1 + y2) / 2
+    else:
+        y0 = -(x0 - (x2 + x3) / 2) / mb + (y2 + y3) / 2
+    return [x0, y0]
