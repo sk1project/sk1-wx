@@ -68,27 +68,27 @@ class LayersPlugin(RsPlugin):
         self.panel.pack(wal.HLine(self.panel), fill=True)
 
         pnl = wal.HPanel(self.panel)
-        self.layer_new = wal.ImageButton(pnl, icons.PD_LAYER_NEW,
-                                         tooltip=_('Create new layer'),
-                                         onclick=self.new_layer)
-        self.layer_to_bottom = wal.ImageButton(pnl, icons.PD_LOWER_TO_BOTTOM,
-                                               tooltip=_('Move layer to bottom'),
-                                               onclick=self.lower_layer_to_bottom)
-        self.layer_lower = wal.ImageButton(pnl, icons.PD_LOWER,
-                                           tooltip=_('Move layer down'),
-                                           onclick=self.lower_layer)
-        self.layer_raise = wal.ImageButton(pnl, icons.PD_RAISE,
-                                           tooltip=_('Move layer up'),
-                                           onclick=self.raise_layer)
-        self.layer_to_top = wal.ImageButton(pnl, icons.PD_RAISE_TO_TOP,
-                                            tooltip=_('Move layer to top'),
-                                            onclick=self.raise_layer_to_top)
-        self.layer_delete = wal.ImageButton(pnl, icons.PD_LAYER_DELETE,
-                                            tooltip=_('Delete layer'),
-                                            onclick=self.delete_layer)
-        self.layer_edit = wal.ImageButton(pnl, icons.PD_EDIT,
-                                          tooltip=_('Rename layer'),
-                                          onclick=self.rename_layer)
+        self.layer_new = wal.ImageButton(
+            pnl, icons.PD_LAYER_NEW, tooltip=_('Create new layer'),
+            onclick=self.new_layer)
+        self.layer_to_bottom = wal.ImageButton(
+            pnl, icons.PD_LOWER_TO_BOTTOM, tooltip=_('Move layer to bottom'),
+            onclick=self.lower_layer_to_bottom)
+        self.layer_lower = wal.ImageButton(
+            pnl, icons.PD_LOWER, tooltip=_('Move layer down'),
+            onclick=self.lower_layer)
+        self.layer_raise = wal.ImageButton(
+            pnl, icons.PD_RAISE, tooltip=_('Move layer up'),
+            onclick=self.raise_layer)
+        self.layer_to_top = wal.ImageButton(
+            pnl, icons.PD_RAISE_TO_TOP, tooltip=_('Move layer to top'),
+            onclick=self.raise_layer_to_top)
+        self.layer_delete = wal.ImageButton(
+            pnl, icons.PD_LAYER_DELETE, tooltip=_('Delete layer'),
+            onclick=self.delete_layer)
+        self.layer_edit = wal.ImageButton(
+            pnl, icons.PD_EDIT, tooltip=_('Rename layer'),
+            onclick=self.rename_layer)
         pnl.pack(self.layer_new)
         pnl.pack(self.layer_to_bottom)
         pnl.pack(self.layer_lower)
@@ -147,7 +147,7 @@ class LayersPlugin(RsPlugin):
         index = layers.index(layer)
         return len(layers) - index - 1
 
-    def changed(self, item, col):
+    def changed(self, _item, col):
         doc = self.app.current_doc
         layers = doc.get_layers()
         index = self.get_selected_index()
@@ -209,7 +209,7 @@ class LayersPlugin(RsPlugin):
         if txt is not None and not layer.name == txt:
             self.app.current_doc.api.set_layer_name(layer, txt)
 
-    def update(self, *args):
+    def update(self, *_args):
         doc = self.app.current_doc
         if doc:
             layers = doc.get_layers()
