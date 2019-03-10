@@ -46,9 +46,7 @@ class CGM_to_SK2_Translator(object):
         self.sk2_doc = sk2_doc
         self.sk2_model = sk2_doc.model
         self.sk2_mtds = sk2_doc.methods
-        self.page = self.sk2_mtds.get_page()
-        self.page.childs = []
-        self.page.layer_counter = 0
+        self.sk2_mtds.delete_pages()
         self.fontmap = []
 
         for element in cgm_doc.model.childs:
@@ -222,7 +220,7 @@ class CGM_to_SK2_Translator(object):
         page_format = [_('Custom size'), (w, h), orient]
         self.sk2_mtds.set_page_format(self.page, page_format)
         if self.cgm['color.bg']:
-            style = [self.get_fill_style(self.cgm['color.bg']),[],[],[]]
+            style = [self.get_fill_style(self.cgm['color.bg']), [], [], []]
             rect = sk2_model.Rectangle(self.layer.config, self.layer,
                                        [-w / 2.0, -h / 2.0, w, h],
                                        style=style)
@@ -273,14 +271,25 @@ class CGM_to_SK2_Translator(object):
         if self.cgm['text.height'] is None:
             self.cgm['text.height'] = maxsz / 100.0
 
+        # if self.cgm['edge.width'] is None:
+        #     if self.cgm['edge.widthmode'] == 0:
+        #         self.cgm['edge.width'] = maxsz / 1000.0
+        #     else:
+        #         self.cgm['edge.width'] = 1
+        if self.cgm['line.width'] is None:
+            if self.cgm['line.widthmode'] == 0:
+                self.cgm['line.width'] = maxsz / 3000.0
+            else:
+                self.cgm['line.width'] = 1
+
         name = self.read_str(element.params)[0]
+        self.page = self.sk2_mtds.add_page()
         self.layer = self.sk2_mtds.add_layer(self.page, name)
 
     # 0x0080
     def _begin_picture_body(self, _element):
         self.set_trafo(self.cgm['vdc.extend'])
-        if len(self.page.childs) == 1:
-            self.set_page(self.cgm['vdc.extend'])
+        self.set_page(self.cgm['vdc.extend'])
 
     # 0x1040
     def _metafile_description(self, element):
@@ -548,23 +557,105 @@ class CGM_to_SK2_Translator(object):
 
     # 0x41a0
     def _circular_arc_3_point(self, element):
-        pass
+        p1, chunk = self.read_point(element.params)
+        p2, chunk = self.read_point(chunk)
+        p3, chunk = self.read_point(chunk)
+        p1, p2, p3 = libgeom.apply_trafo_to_points(
+            [p1, p2, p3], self.get_trafo())
+        center = libgeom.circle_center_by_3points(p1, p2, p3)
+        if not center:
+            return
+        r = libgeom.distance(center, p1)
+        angle1 = libgeom.get_point_angle(p3, center)
+        angle2 = libgeom.get_point_angle(p1, center)
+        x, y = center
+        rect = [x - r, y - r, 2 * r, 2 * r]
+        circle = sk2_model.Circle(self.layer.config, self.layer, rect,
+                                  angle1=angle1,
+                                  angle2=angle2,
+                                  circle_type=sk2const.ARC_ARC,
+                                  style=self.get_style(stroke=True))
+        self.layer.childs.append(circle)
 
     # 0x41c0
     def _circular_arc_3_point_close(self, element):
-        pass
+        p1, chunk = self.read_point(element.params)
+        p2, chunk = self.read_point(chunk)
+        p3, chunk = self.read_point(chunk)
+        flag = self.read_enum(chunk)[0]
+        p1, p2, p3 = libgeom.apply_trafo_to_points(
+            [p1, p2, p3], self.get_trafo())
+        center = libgeom.circle_center_by_3points(p1, p2, p3)
+        if not center:
+            return
+        r = libgeom.distance(center, p1)
+        angle1 = libgeom.get_point_angle(p3, center)
+        angle2 = libgeom.get_point_angle(p1, center)
+        x, y = center
+        rect = [x - r, y - r, 2 * r, 2 * r]
+        flag = {0: sk2const.ARC_PIE_SLICE,
+                1: sk2const.ARC_CHORD}.get(flag, sk2const.ARC_CHORD)
+        circle = sk2_model.Circle(self.layer.config, self.layer, rect,
+                                  angle1=angle1,
+                                  angle2=angle2,
+                                  circle_type=flag,
+                                  style=self.get_style(fill=True))
+        self.layer.childs.append(circle)
 
     # 0x41e0
     def _circular_arc_centre(self, element):
-        pass
+        center, chunk = self.read_point(element.params)
+        p1, chunk = self.read_point(chunk)
+        p2, chunk = self.read_point(chunk)
+        center, p1, p2 = libgeom.apply_trafo_to_points(
+            [center, p1, p2], self.get_trafo())
+        r = self.read_vdc(chunk)[0] * self.scale
+        angle1 = libgeom.get_point_angle(p1, center)
+        angle2 = libgeom.get_point_angle(p2, center)
+        x, y = center
+        rect = [x - r, y - r, 2 * r, 2 * r]
+        circle = sk2_model.Circle(self.layer.config, self.layer, rect,
+                                  angle1=angle1,
+                                  angle2=angle2,
+                                  circle_type=sk2const.ARC_ARC,
+                                  style=self.get_style(stroke=True))
+        self.layer.childs.append(circle)
 
     # 0x4200
     def _circular_arc_centre_close(self, element):
-        pass
+        center, chunk = self.read_point(element.params)
+        p1, chunk = self.read_point(chunk)
+        p2, chunk = self.read_point(chunk)
+        flag = self.read_enum(chunk)[0]
+        center, p1, p2 = libgeom.apply_trafo_to_points(
+            [center, p1, p2], self.get_trafo())
+        r = self.read_vdc(chunk)[0] * self.scale
+        angle1 = libgeom.get_point_angle(p1, center)
+        angle2 = libgeom.get_point_angle(p2, center)
+        x, y = center
+        rect = [x - r, y - r, 2 * r, 2 * r]
+        flag = {0: sk2const.ARC_PIE_SLICE,
+                1: sk2const.ARC_CHORD}.get(flag, sk2const.ARC_CHORD)
+        circle = sk2_model.Circle(self.layer.config, self.layer, rect,
+                                  angle1=angle1,
+                                  angle2=angle2,
+                                  circle_type=flag,
+                                  style=self.get_style(fill=True))
+        self.layer.childs.append(circle)
 
     # 0x4220
     def _ellipse(self, element):
-        pass
+        center, chunk = self.read_point(element.params)
+        cdp1, chunk = self.read_point(chunk)
+        cdp2, chunk = self.read_point(chunk)
+        cdp3 = libgeom.contra_point(cdp1, center)
+        cdp4 = libgeom.contra_point(cdp2, center)
+        bbox = libgeom.sum_bbox(cdp1 + cdp2, cdp3 + cdp4)
+        bbox = libgeom.apply_trafo_to_bbox(bbox, self.get_trafo())
+        rect = libgeom.bbox_to_rect(bbox)
+        circle = sk2_model.Circle(self.layer.config, self.layer, rect,
+                                  style=self.get_style(fill=True))
+        self.layer.childs.append(circle)
 
     # 0x4240
     def _elliptical_arc(self, element):
