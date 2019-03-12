@@ -83,14 +83,41 @@ class SK2_to_CGM_Translator(object):
     cgm_model = None
     sk2_doc = None
     sk2_mtds = None
-    picture = None
 
     def translate(self, sk2_doc, cgm_doc):
         self.cgm_doc = cgm_doc
         self.cgm_model = cgm_doc.model
         self.sk2_doc = sk2_doc
         self.sk2_mtds = sk2_doc.methods
-        self.picture = None
 
-    def add(self):
-        pass
+        self.add(cgm_const.BEGIN_METAFILE)
+        self.add(cgm_const.METAFILE_VERSION)
+        self.add(cgm_const.METAFILE_DESCRIPTION)
+        self.add(cgm_const.METAFILE_ELEMENT_LIST)
+        self.add(cgm_const.VDC_TYPE)
+        self.add(cgm_const.INTEGER_PRECISION)
+        self.add(cgm_const.REAL_PRECISION)
+        self.add(cgm_const.INDEX_PRECISION)
+        self.add(cgm_const.COLOUR_PRECISION)
+        self.add(cgm_const.COLOUR_INDEX_PRECISION)
+
+        index = 1
+        for page in self.sk2_mtds.get_pages():
+            self.process_page(page, index)
+            index += 1
+
+        self.add(cgm_const.END_METAFILE)
+
+        self.cgm_doc = None
+        self.cgm_model = None
+        self.sk2_doc = None
+        self.sk2_mtds = None
+
+    def add(self, element_id, **kwargs):
+        self.cgm_model.add(builder(element_id, **kwargs))
+
+    def process_page(self, page, index=1):
+        self.add(cgm_const.BEGIN_PICTURE, page_number=index)
+        self.add(cgm_const.BEGIN_PICTURE_BODY)
+
+        self.add(cgm_const.END_PICTURE)
