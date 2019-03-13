@@ -33,7 +33,7 @@ def builder(element_id, **kwargs):
         version = kwargs.get('version', 1)
         return elf('\x10\x22', utils.py_int2word(version, True))
     elif element_id == cgm_const.METAFILE_DESCRIPTION:
-        txt = kwargs.get('txt', 'Created by UniConvertor')
+        txt = kwargs.get('description', 'Created by UniConvertor')
         params = utils.py_int2byte(len(txt)) + txt
         header = '\x10\x5f' + utils.py_int2word(len(params), True)
         return elf(header, params)
@@ -66,9 +66,10 @@ def builder(element_id, **kwargs):
         params = '\x00\x08'
         return elf(header, params)
     elif element_id == cgm_const.BEGIN_PICTURE:
-        header = '\x00\x62'
         page_number = kwargs.get('page_number', 1)
-        params = '\x01' + utils.py_int2byte(page_number)
+        txt = 'Page %d' % page_number
+        params = utils.py_int2byte(len(txt)) + txt
+        header = '\x00' + utils.py_int2byte(len(params) + 0x60)
         return elf(header, params)
     elif element_id == cgm_const.BEGIN_PICTURE_BODY:
         header = '\x00\x80'
@@ -92,7 +93,9 @@ class SK2_to_CGM_Translator(object):
 
         self.add(cgm_const.BEGIN_METAFILE)
         self.add(cgm_const.METAFILE_VERSION)
-        self.add(cgm_const.METAFILE_DESCRIPTION)
+        d = self.sk2_doc.appdata
+        txt = 'Created by %s %s%s' %(d.app_name, d.version, d.revision)
+        self.add(cgm_const.METAFILE_DESCRIPTION, description=txt)
         self.add(cgm_const.METAFILE_ELEMENT_LIST)
         self.add(cgm_const.VDC_TYPE)
         self.add(cgm_const.INTEGER_PRECISION)
