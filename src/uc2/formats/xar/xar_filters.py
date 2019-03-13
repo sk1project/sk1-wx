@@ -16,9 +16,10 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
-from uc2.formats.xar import xar_const, xar_model
+from uc2.formats.xar import xar_const
 from uc2.formats.xar.zipio import ZipIO
-from uc2.formats.xar.xar_method import make_record_header, parse_record
+from uc2.formats.xar.xar_method import make_record_header
+from uc2.formats.xar import xar_datatype, xar_model
 
 
 class XARLoader(AbstractLoader):
@@ -33,9 +34,21 @@ class XARLoader(AbstractLoader):
         self.model.childs = []
         rec = self.model
         parent_stack = [rec]
-
+        record_idx = 0
         while rec.cid != xar_const.TAG_ENDOFFILE:
-            rec = parse_record(stream)
+
+            record_idx += 1
+            record_cid = xar_datatype.unpack_u4(stream.read(4))
+            record_size = xar_datatype.unpack_u4(stream.read(4))
+
+            if record_cid == xar_const.TAG_ENDCOMPRESSION:
+                compression_crc = stream.crc32 & 0xffffffff
+                num_bytes = stream.bytes
+                stream.close()
+                stream = raw_stream
+
+            chunk = stream.read(record_size) if record_size else b''
+            rec = xar_model.XARRecord(record_cid, record_idx, chunk)
 
             if rec.cid == xar_const.TAG_STARTCOMPRESSION:
                 rec.update()
@@ -44,26 +57,22 @@ class XARLoader(AbstractLoader):
                 else:
                     msg = 'Unknown compression type %s' % rec.compression_type
                     raise Exception(msg)
-                parent_stack[-1].add(rec)
-
             elif rec.cid == xar_const.TAG_ENDCOMPRESSION:
                 rec.update()
-                if rec.num_bytes != stream.bytes:
+                if rec.num_bytes != num_bytes:
                     msg = 'Expected %s bytes (%s given)' % \
                           (rec.num_bytes, stream.bytes)
                     raise Exception(msg)
-                if rec.compression_crc != stream.crc32 & 0xffffffff:
+                if rec.compression_crc != compression_crc:
                     raise Exception('Invalid crc')
-                stream = raw_stream
-                parent_stack[-1].add(rec)
 
-            elif rec.cid == xar_const.TAG_DOWN:
+            if rec.cid == xar_const.TAG_DOWN:
                 parent_rec = parent_stack[-1].childs[-1]
                 parent_stack.append(parent_rec)
-
+                parent_stack[-1].add(rec)
             elif rec.cid == xar_const.TAG_UP:
+                parent_stack[-1].add(rec)
                 parent_stack = parent_stack[:-1]
-
             else:
                 parent_stack[-1].add(rec)
 
@@ -99,9 +108,9 @@ class XARSaver(AbstractSaver):
                 stream.write(rec.chunk)
                 continue
             elif rec.childs:
-                stack.append(xar_model.XARRecord(xar_const.TAG_UP))
+                # stack.append(xar_model.XARRecord(xar_const.TAG_UP))
                 stack.extend(rec.childs[::-1])
-                stack.append(xar_model.XARRecord(xar_const.TAG_DOWN))
+                # stack.append(xar_model.XARRecord(xar_const.TAG_DOWN))
 
             stream.write(make_record_header(rec))
             stream.write(rec.chunk)

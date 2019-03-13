@@ -22,6 +22,7 @@ from uc2.formats.xar.xar_datatype import WRITER_DATA_TYPES_MAP
 
 
 class XARDocument(BinaryModelObject):
+    cid = 'signature'
     chunk = xar_const.XAR_SIGNATURE
 
     def __init__(self, config):
@@ -36,7 +37,7 @@ class XARRecord(BinaryModelObject):
     spec = None
     _types = {}
 
-    def __new__(cls, cid, *args, **kwargs):
+    def __new__(cls, cid, idx, *args, **kwargs):
         new_cls = cls._types.get(cid)
         if new_cls is None:
             spec = xar_const.XAR_TYPE_RECORD.get(cid, {})
@@ -46,10 +47,11 @@ class XARRecord(BinaryModelObject):
             }
             new_cls = type(b'XARRecord%s' % cid, (XARRecord,), attributedict)
             cls._types[cid] = new_cls
-        return BinaryModelObject.__new__(new_cls, cid, *args)
+        return BinaryModelObject.__new__(new_cls, cid, idx, *args)
 
-    def __init__(self, cid, chunk=None):
+    def __init__(self, cid, idx, chunk=None):
         self.cid = cid
+        self.idx = idx
         self.chunk = chunk or b''
         self.childs = []
 
