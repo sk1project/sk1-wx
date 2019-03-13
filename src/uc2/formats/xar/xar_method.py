@@ -31,22 +31,6 @@ def make_record_header(rec):
     return r
 
 
-def parse_record(stream):
-    record_tag = stream.read(4)
-    record_size = stream.read(4)
-    cid = xar_datatype.read_u4(record_tag)
-    size = xar_datatype.read_u4(record_size)
-    chunk = b''
-    if cid == xar_const.TAG_ENDCOMPRESSION:
-        stream.close()
-        chunk += stream.raw_stream.read(size)
-    elif size > 0:
-        chunk += stream.read(size)
-        if len(chunk) < size:
-            raise IOError("Stream has ended unexpectedly")
-    return xar_model.XARRecord(cid, chunk)
-
-
 class XARMethods(object):
     presenter = None
     model = None
@@ -58,3 +42,49 @@ class XARMethods(object):
     def update(self):
         self.model = self.presenter.model
         self.config = self.presenter.config
+
+    def read_path(self, rec):
+        data = rec.path
+        cx, cy = 0, 0
+        path = []
+        bez_count = 0
+        start_flag = True
+        for (verb, (x, y)) in data:
+            closed = verb & 0x1
+            verb = verb & 0xe
+            if verb == xar_const.PT_LINETO:
+                cx, cy = cx - x, cy - y
+                path.append([cx, cy])
+                if closed:
+                    yield closed, path
+                    path = []
+            elif verb == xar_const.PT_BEZIERTO:
+                if bez_count == 0:
+                    cx, cy = cx - x, cy - y
+                    cx1, cy1 = cx, cy
+                    bez_count += 1
+                elif bez_count == 1:
+                    cx, cy = cx - x, cy - y
+                    cx2, cy2 = cx, cy
+                    bez_count += 1
+                elif bez_count == 2:
+                    cx, cy = cx - x, cy - y
+                    cx3, cy3 = cx, cy
+                    bez_count = 0
+                    path.append(
+                        ([cx1, cy1], [cx2, cy2], [cx3, cy3])
+                    )
+                    if closed:
+                        yield closed, path
+                        path = []
+            elif verb == xar_const.PT_MOVETO:
+                if start_flag:
+                    start_flag = False
+                    cx, cy = x, y
+                    path.append([cx, cy])
+                else:
+                    cx, cy = cx - x, cy - y
+                    path.append([cx, cy])
+
+        if path:
+            yield closed, path
