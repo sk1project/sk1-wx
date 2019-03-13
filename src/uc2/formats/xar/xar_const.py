@@ -15,10 +15,14 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https:#www.gnu.org/licenses/>.
 
+
+from uc2.uc2const import COLOR_RGB, COLOR_CMYK
+
+
 XAR_SIGNATURE = b'XARA\xa3\xa3\r\n'
 
-STRING_TERMINATOR = b"\0\0"
-ASCII_STRING_TERMINATOR = b"\0"
+
+CO_ORDINATES_DPI = 72000.0
 
 # Navigation records
 TAG_UP = 0
@@ -57,17 +61,17 @@ TAG_DEFINERGBCOLOUR = 50
 TAG_DEFINECOMPLEXCOLOUR = 51
 
 # Bitmap reference tags
-RESERVED_60 = 60
+TAG_RESERVED_60 = 60
 TAG_PREVIEWBITMAP_GIF = 61
 TAG_PREVIEWBITMAP_JPEG = 62
 TAG_PREVIEWBITMAP_PNG = 63
-RESERVED_64 = 64
-RESERVED_65 = 65
-RESERVED_66 = 66
+TAG_RESERVED_64 = 64
+TAG_RESERVED_65 = 65
+TAG_RESERVED_66 = 66
 TAG_DEFINEBITMAP_JPEG = 67
 TAG_DEFINEBITMAP_PNG = 68
-RESERVED_69 = 69
-RESERVED_70 = 70
+TAG_RESERVED_69 = 69
+TAG_RESERVED_70 = 70
 TAG_DEFINEBITMAP_JPEG8BPP = 71
 
 # View tags
@@ -105,7 +109,7 @@ TAG_PATH_RELATIVE = 113
 TAG_PATH_RELATIVE_FILLED = 114
 TAG_PATH_RELATIVE_STROKED = 115
 TAG_PATH_RELATIVE_FILLED_STROKED = 116
-RESERVED_117 = 117
+TAG_RESERVED_117 = 117
 TAG_PATHREF_TRANSFORM = 118
 
 # Attribute tags
@@ -283,7 +287,7 @@ TAG_COLOURPLATE = 3508
 
 # Registration mark records
 TAG_PRINTMARKDEFAULT = 3509
-RESERVED_3510 = 3510
+TAG_RESERVED_3510 = 3510
 
 # Stroking records
 TAG_VARIABLEWIDTHFUNC = 4000  # This record is not currently used
@@ -452,6 +456,97 @@ FILE_TYPE_PAPER_PUBLISH = b'CXN'
 FILE_TYPE_WEB = b'CXW'
 
 
+# Colors
+RGB_BLACK = [COLOR_RGB, [0.0, 0.0, 0.0], 1.0, 'black']
+RGB_WHITE = [COLOR_RGB, [1.0, 1.0, 1.0], 1.0, 'white']
+
+XAR_COLORS = {
+    -1: None,
+    -2: [COLOR_RGB, [0.00, 0.00, 0.00], 1.0, 'black'],
+    -3: [COLOR_RGB, [1.00, 1.00, 1.00], 1.0, 'white'],
+    -4: [COLOR_RGB, [1.00, 0.00, 0.00], 1.0, 'red'],
+    -5: [COLOR_RGB, [0.00, 1.00, 0.00], 1.0, 'green'],
+    -6: [COLOR_RGB, [0.00, 0.00, 1.00], 1.0, 'blue'],
+    -7: [COLOR_CMYK, [1.00, 0.00, 0.00, 0.0], 1.0, 'cyan'],
+    -8: [COLOR_CMYK, [0.00, 1.00, 0.00, 0.0], 1.0, 'magenta'],
+    -9: [COLOR_CMYK, [0.00, 0.00, 1.00, 0.0], 1.0, 'yellow'],
+}
+
+
+# Default Units
+REF_UNIT_MILLIMETRES = -2
+REF_UNIT_CENTIMETRES = -3
+REF_UNIT_METRES = -4
+REF_UNIT_KILOMETRES = -5
+REF_UNIT_MILLIPOINTS = -6
+REF_UNIT_COMP_POINTS = -7
+REF_UNIT_PICAS = -8
+REF_UNIT_INCHES = -9
+REF_UNIT_FEET = -10
+REF_UNIT_YARDS = -11
+REF_UNIT_MILES = -12
+REF_UNIT_PIXELS = -13
+
+
+# Possible values for Peth Verb
+PT_MOVETO = 0x6
+PT_LINETO = 0x2
+PT_BEZIERTO = 0x4
+
+# Stroke props
+JOIN_MITRE = 0
+JOIN_ROUND = 1
+JOIN_BEVEL = 2
+
+CAP_BUTT = 0
+CAP_ROUND = 1
+CAP_SQUARE = 2
+
+FILL_NONZERO = 0
+FILL_EVENODD = 2
+
+# Ref Colors
+REF_DEFAULTCOLOUR_NONE = -1
+REF_DEFAULTCOLOUR_BLACK = -2
+REF_DEFAULTCOLOUR_WHITE = -3
+REF_DEFAULTCOLOUR_RED = -4
+REF_DEFAULTCOLOUR_GREEN = -5
+REF_DEFAULTCOLOUR_BLUE = -6
+REF_DEFAULTCOLOUR_CYAN = -7
+REF_DEFAULTCOLOUR_MAGENTA = -8
+REF_DEFAULTCOLOUR_YELLOW = -9
+
+
+# Defaults
+
+REF_DASH_SOLID = -21
+REF_DASH_1 = -1
+REF_DASH_2 = -2
+
+
+XAR_DEFAULT_STYLE = {
+    'mitre_limit': 4000,
+    'end_arrow': None,
+    'start_arrow': None,
+    'start_cap': CAP_BUTT,
+    'dash_pattern': REF_DASH_SOLID,
+    'quality': 110,
+    'join_type': JOIN_BEVEL,
+    'winding_rule': FILL_EVENODD,
+    'line_width': 0.501,
+    'fill_effect_fade': None,
+    'transp_fill_mapping_linear': None,
+    'fill_mapping_linear': None,
+    'flat_transp_fill': None,
+    'flat_colour_fill': None,
+    # 'StrokeTransp',
+    'stroke_transparency': 0.0,
+    'stroke_colour': RGB_WHITE,
+    'feather': None,
+    'stroke_type': 0x01000000,
+}
+
+
 XAR_TYPE_RECORD = {
 
     # Navigation records
@@ -544,8 +639,24 @@ XAR_TYPE_RECORD = {
     TAG_GRIDRULERORIGIN: {'name': 'GRIDRULERORIGIN'},
     TAG_LAYERDETAILS: {'name': 'LAYERDETAILS'},
     TAG_GUIDELAYERDETAILS: {'name': 'GUIDELAYERDETAILS'},
-    TAG_SPREADSCALING_ACTIVE: {'name': 'SPREADSCALING ACTIVE'},
-    TAG_SPREADSCALING_INACTIVE: {'name': 'SPREADSCALING INACTIVE'},
+    TAG_SPREADSCALING_ACTIVE: {
+        'name': 'SPREADSCALING ACTIVE',
+        'sec': [
+            {'type': 'double', 'id': 'drawing_scale'},
+            {'type': 'UNITSREF', 'id': 'drawing_units'},
+            {'type': 'double', 'id': 'real_scale'},
+            {'type': 'UNITSREF', 'id': 'real_units'},
+        ]
+    },
+    TAG_SPREADSCALING_INACTIVE: {
+        'name': 'SPREADSCALING INACTIVE',
+        'sec': [
+            {'type': 'double', 'id': 'drawing_scale'},
+            {'type': 'UNITSREF', 'id': 'drawing_units'},
+            {'type': 'double', 'id': 'real_scale'},
+            {'type': 'UNITSREF', 'id': 'real_units'},
+        ]
+    },
 
     # Colour reference tags
     TAG_DEFINERGBCOLOUR: {'name': 'DEFINERGBCOLOUR'},
@@ -557,7 +668,10 @@ XAR_TYPE_RECORD = {
             {'type': 'byte', 'id': 'colour_type'},
             {'type': 'uint32', 'id': 'entry_index'},
             {'type': 'COLOURREF', 'id': 'parent_colour'},
-            {'type': 'ColourDescription', 'id': 'colour_description'},
+            {'type': 'uint32', 'id': 'component1'},
+            {'type': 'uint32', 'id': 'component2'},
+            {'type': 'uint32', 'id': 'component3'},
+            {'type': 'uint32', 'id': 'component4'},
             {'type': 'STRING', 'id': 'colour_name'},
         ]
     },
@@ -566,7 +680,7 @@ XAR_TYPE_RECORD = {
     TAG_PREVIEWBITMAP_GIF: {
         'name': 'PREVIEWBITMAP GIF',
         'sec': [
-            {'type': 'bitmap_data', 'id': 'bitmap_data'},
+            {'type': 'BITMAP_DATA', 'id': 'bitmap_data'},
         ]
     },
     TAG_PREVIEWBITMAP_JPEG: {'name': 'PREVIEWBITMAP JPEG'},
@@ -577,7 +691,7 @@ XAR_TYPE_RECORD = {
         'name': 'DEFINEBITMAP PNG',
         'sec': [
             {'type': 'STRING', 'id': 'bitmap_name'},
-            {'type': 'bitmap_data', 'id': 'bitmap_data'},
+            {'type': 'BITMAP_DATA', 'id': 'bitmap_data'},
         ],
     },
 
@@ -606,7 +720,12 @@ XAR_TYPE_RECORD = {
     TAG_DOCUMENTFLAGS: {
         'name': 'DOCUMENTFLAGS',
         'sec': [
-            {'type': 'uint32', 'id': 'document_flags'}
+            {'type': 'uint32', 'id': 'document_flags',
+             'bitfield': {
+                    0: {'type': 'bool', 'id': 'multilayer_flag'},
+                    1: {'type': 'bool', 'id': 'all_layers_visible_flag'},
+                 }
+             }
         ]
     },
     TAG_DOCUMENTINFORMATION: {'name': 'DOCUMENTINFORMATION'},
@@ -625,16 +744,51 @@ XAR_TYPE_RECORD = {
     TAG_MOULD_PATH: {'name': 'MOULD PATH'},
     TAG_PATH_FLAGS: {'name': 'PATH FLAGS'},
     TAG_GUIDELINE: {'name': 'GUIDELINE'},
-    TAG_PATH_RELATIVE: {'name': 'PATH RELATIVE'},
-    TAG_PATH_RELATIVE_FILLED: {'name': 'PATH RELATIVE FILLED'},
-    TAG_PATH_RELATIVE_STROKED: {'name': 'PATH RELATIVE STROKED'},
-    TAG_PATH_RELATIVE_FILLED_STROKED: {'name': 'PATH RELATIVE FILLED STROKED'},
+    TAG_PATH_RELATIVE: {
+        'name': 'PATH RELATIVE',
+        'sec': [
+            {'type': 'Verb and Coord List', 'id': 'path'}
+        ]
+    },
+    TAG_PATH_RELATIVE_FILLED: {
+        'name': 'PATH RELATIVE FILLED',
+        'sec': [
+            {'type': 'Verb and Coord List', 'id': 'path'}
+        ]
+    },
+    TAG_PATH_RELATIVE_STROKED: {
+        'name': 'PATH RELATIVE STROKED',
+        'sec': [
+            {'type': 'Verb and Coord List', 'id': 'path'}
+        ]
+    },
+    TAG_PATH_RELATIVE_FILLED_STROKED: {
+        'name': 'PATH RELATIVE FILLED STROKED',
+        'sec': [
+            {'type': 'Verb and Coord List', 'id': 'path'}
+        ]
+    },
     TAG_PATHREF_TRANSFORM: {'name': 'PATHREF TRANSFORM'},
 
     # Attribute tags
-    TAG_FLATFILL: {'name': 'FLATFILL'},
-    TAG_LINECOLOUR: {'name': 'LINECOLOUR'},
-    TAG_LINEWIDTH: {'name': 'LINEWIDTH'},
+    TAG_FLATFILL: {
+        'name': 'FLATFILL',
+        'sec': [
+            {'type': 'COLOURREF', 'id': 'colour'}
+        ]
+    },
+    TAG_LINECOLOUR: {
+        'name': 'LINECOLOUR',
+        'sec': [
+            {'type': 'COLOURREF', 'id': 'colour'}
+        ]
+    },
+    TAG_LINEWIDTH: {
+        'name': 'LINEWIDTH',
+        'sec': [
+            {'type': 'MILLIPOINT', 'id': 'width'}
+        ]
+    },
     TAG_LINEARFILL: {'name': 'LINEARFILL'},
     TAG_CIRCULARFILL: {'name': 'CIRCULARFILL'},
     TAG_ELLIPTICALFILL: {'name': 'ELLIPTICALFILL'},
@@ -1026,5 +1180,4 @@ XAR_TYPE_RECORD = {
     TAG_TEXT_EXTRA_FONT_INFO: {'name': 'TEXT EXTRA FONT INFO'},
     TAG_TEXT_EXTRA_TT_FONT_DEF: {'name': 'TEXT EXTRA TT FONT DEF'},
     TAG_TEXT_EXTRA_ATM_FONT_DEF: {'name': 'TEXT EXTRA ATM FONT DEF'},
-
 }
