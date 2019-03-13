@@ -15,8 +15,18 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from uc2 import utils
+import logging
+
+from uc2 import utils, uc2const
 from uc2.formats.cgm import cgm_model, cgm_const
+
+LOG = logging.getLogger(__name__)
+
+SCALE = 39.37 * uc2const.pt_to_mm
+
+
+def cgm_unit(val):
+    return int(round(SCALE * val))
 
 
 def builder(element_id, **kwargs):
@@ -65,6 +75,7 @@ def builder(element_id, **kwargs):
         header = '\x11\x02'
         params = '\x00\x08'
         return elf(header, params)
+    # Page elements
     elif element_id == cgm_const.BEGIN_PICTURE:
         page_number = kwargs.get('page_number', 1)
         txt = 'Page %d' % page_number
@@ -77,6 +88,28 @@ def builder(element_id, **kwargs):
     elif element_id == cgm_const.END_PICTURE:
         header = '\x00\xa0'
         return elf(header, '')
+    elif element_id == cgm_const.SCALING_MODE:
+        header = '\x20\x26'
+        params = '\x00\x01' + '\x3c\xd0\x13\xa9'
+        return elf(header, params)
+    elif element_id == cgm_const.COLOUR_SELECTION_MODE:
+        header = '\x20\x42'
+        params = '\x00\x01'
+        return elf(header, params)
+    elif element_id == cgm_const.LINE_WIDTH_SPECIFICATION_MODE:
+        header = '\x20\x62'
+        params = '\x00\x01'
+        return elf(header, params)
+    elif element_id == cgm_const.EDGE_WIDTH_SPECIFICATION_MODE:
+        header = '\x20\xa2'
+        params = '\x00\x01'
+        return elf(header, params)
+    elif element_id == cgm_const.VDC_EXTENT:
+        bbox = kwargs.get('bbox', (0.0, 0.0, 1.0, 1.0))
+        header = '\x20\xc8'
+        params = ''.join([utils.py_int2signed_word(cgm_unit(val), True)
+                          for val in bbox])
+        return elf(header, params)
 
 
 class SK2_to_CGM_Translator(object):
@@ -94,7 +127,7 @@ class SK2_to_CGM_Translator(object):
         self.add(cgm_const.BEGIN_METAFILE)
         self.add(cgm_const.METAFILE_VERSION)
         d = self.sk2_doc.appdata
-        txt = 'Created by %s %s%s' %(d.app_name, d.version, d.revision)
+        txt = 'Created by %s %s%s' % (d.app_name, d.version, d.revision)
         self.add(cgm_const.METAFILE_DESCRIPTION, description=txt)
         self.add(cgm_const.METAFILE_ELEMENT_LIST)
         self.add(cgm_const.VDC_TYPE)
@@ -121,6 +154,16 @@ class SK2_to_CGM_Translator(object):
 
     def process_page(self, page, index=1):
         self.add(cgm_const.BEGIN_PICTURE, page_number=index)
+
+        self.add(cgm_const.SCALING_MODE)
+        self.add(cgm_const.COLOUR_SELECTION_MODE)
+        self.add(cgm_const.LINE_WIDTH_SPECIFICATION_MODE)
+        self.add(cgm_const.EDGE_WIDTH_SPECIFICATION_MODE)
+
+        w, h = self.sk2_mtds.get_page_size(page)
+        bbox = (-w / 2.0, -h / 2.0, w / 2.0, h / 2.0)
+        self.add(cgm_const.VDC_EXTENT, bbox=bbox)
+
         self.add(cgm_const.BEGIN_PICTURE_BODY)
 
         self.add(cgm_const.END_PICTURE)

@@ -212,7 +212,7 @@ class CGM_to_SK2_Translator(object):
         right, top = extend[1]
         width = right - left
         height = top - bottom
-        scale = 841 / (1.0 * max(abs(width), abs(height)))
+        scale = 841 / float(max(abs(width), abs(height)))
         if self.cgm['scale.mode'] == 1:
             scale = self.cgm['scale.metric'] * 72 / 25.4
         w, h = width * scale, height * scale
