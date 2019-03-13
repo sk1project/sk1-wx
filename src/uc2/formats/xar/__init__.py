@@ -20,7 +20,6 @@
 
 from uc2.formats.xar.xar_const import XAR_SIGNATURE
 from uc2.formats.xar.xar_presenter import XAR_Presenter
-from uc2.formats.xar.xar_datatype import read_u4le
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2.utils.fsutils import get_fileptr
 from uc2.utils.mixutils import merge_cnf
