@@ -19,7 +19,7 @@ import os
 
 from uc2 import uc2const
 from uc2.formats.generic import BinaryModelPresenter
-from uc2.formats.cgm import cgm_model, cgm_filters, cgm_translators
+from uc2.formats.cgm import cgm_model, cgm_filters, cgm_to_sk2, cgm_from_sk2
 from uc2.formats.cgm.cgm_config import CGM_Config
 
 
@@ -45,9 +45,9 @@ class CGM_Presenter(BinaryModelPresenter):
         self.model = cgm_model.get_empty_cgm()
 
     def translate_from_sk2(self, sk2_doc):
-        translator = cgm_translators.SK2_to_CGM_Translator()
+        translator = cgm_from_sk2.SK2_to_CGM_Translator()
         translator.translate(sk2_doc, self)
 
     def translate_to_sk2(self, sk2_doc):
-        translator = cgm_translators.CGM_to_SK2_Translator()
+        translator = cgm_to_sk2.CGM_to_SK2_Translator()
         translator.translate(self, sk2_doc)

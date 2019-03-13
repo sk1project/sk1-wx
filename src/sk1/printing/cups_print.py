@@ -16,6 +16,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import cups
+import logging
 import os
 import wal
 
@@ -31,6 +32,8 @@ from uc2.formats import get_loader
 from uc2.formats.pdf import pdfconst, pdfgen
 from uc2.utils import fsutils
 
+LOG = logging.getLogger(__name__)
+
 
 class CUPS_PS(AbstractPS):
     connection = None
@@ -40,8 +43,11 @@ class CUPS_PS(AbstractPS):
         self.printers = []
         prn_dict = self.connection.getPrinters()
         for item in prn_dict.keys():
-            prn = CUPS_Printer(self.connection, item, prn_dict[item])
-            self.printers.append(prn)
+            try:
+                prn = CUPS_Printer(self.connection, item, prn_dict[item])
+                self.printers.append(prn)
+            except Exception:
+                LOG.exception('Cannot add printer %s due to:', item)
         if not physical_only:
             self.printers.append(PDF_Printer())
         self.default_printer = self.connection.getDefault()

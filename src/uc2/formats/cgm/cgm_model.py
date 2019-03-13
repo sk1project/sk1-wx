@@ -111,6 +111,11 @@ ID_TO_CLS = {
 }
 
 
+def padding(params):
+    sz = len(params)
+    return params + '\x00' if sz > (sz // 2) * 2 else params
+
+
 def element_factory(header, params):
     element_id = parse_header(header)[1]
-    return ID_TO_CLS.get(element_id, CgmElement)(header, params)
+    return ID_TO_CLS.get(element_id, CgmElement)(header, padding(params))
