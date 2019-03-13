@@ -26,7 +26,7 @@ SCALE = 39.37 * uc2const.pt_to_mm
 
 
 def cgm_unit(val):
-    return int(round(SCALE * val))
+    return utils.py_int2signed_word(int(round(SCALE * val)), True)
 
 
 def builder(element_id, **kwargs):
@@ -61,7 +61,7 @@ def builder(element_id, **kwargs):
         return elf(header, params)
     elif element_id == cgm_const.REAL_PRECISION:
         header = '\x10\xa6'
-        params = '\x00\x08'
+        params = '\x00\x00\x00\x09\x00\x17'
         return elf(header, params)
     elif element_id == cgm_const.INDEX_PRECISION:
         header = '\x10\xc2'
@@ -107,8 +107,7 @@ def builder(element_id, **kwargs):
     elif element_id == cgm_const.VDC_EXTENT:
         bbox = kwargs.get('bbox', (0.0, 0.0, 1.0, 1.0))
         header = '\x20\xc8'
-        params = ''.join([utils.py_int2signed_word(cgm_unit(val), True)
-                          for val in bbox])
+        params = ''.join([cgm_unit(val) for val in bbox])
         return elf(header, params)
 
 
