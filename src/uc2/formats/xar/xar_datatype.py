@@ -123,7 +123,9 @@ def read_string(data, offset=0, **kw):
     idx = data.index(b'\0\0', offset)
     size = idx - offset
     size = (size + 1) // 2 * 2
-    return size+2, data[offset:offset+size]
+    string = data[offset:offset+size]
+    string = string.decode('utf_16_le').encode('utf-8')
+    return size+2, string
 
 
 def read_ascii_string(data, offset=0, **kw):
