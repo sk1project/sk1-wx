@@ -17,6 +17,9 @@
 
 from uc2.formats.xar import xar_model, xar_const
 from uc2.formats.sk2 import sk2_model
+from uc2.libgeom import multiply_trafo
+from uc2.libgeom.points import distance
+from uc2.libgeom.trafo import apply_trafo_to_points
 from uc2 import _, uc2const, sk2const, cms
 import copy
 
@@ -45,8 +48,10 @@ class XAR_to_SK2_Translator(object):
     scale = None
     fontmap = None
     colors = None
-    stack_style = None
     style = None
+    stack_style = None
+    stack = None
+    layer_name = ''
 
     def translate(self, xar_doc, sk2_doc):
         self.xar_mtds = xar_doc.methods
@@ -57,22 +62,35 @@ class XAR_to_SK2_Translator(object):
         self.trafo = [-1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
         self.colors = {}
 
-        style = copy.copy(xar_const.XAR_DEFAULT_STYLE)
-        self.stack_style = [style]
-
         rec = xar_doc.model
-        self.stack = rec.childs[::-1]
+        self.stack = []
+        self.stack_style = [copy.copy(xar_const.XAR_DEFAULT_STYLE)]
         self.handle_units()
-        self.handle_record()
+        self.handle_record([rec])
+        self.flush_stack(self.sk2_mtds.get_layer(self.page))
+        self.update_document()
 
-    def handle_record(self, stop_cid=None):
-        while self.stack:
-            if stop_cid is not None and self.stack[-1].cid == stop_cid:
-                break
-            rec = self.stack.pop()
-            # print '..'*len(self.stack_style), rec.cid
+    def update_document(self):
+        for page in self.sk2_mtds.get_pages():
+            for layer in self.sk2_mtds.get_layers(page):
+                for el in layer.childs:
+                    el.update()
+
+    def flush_stack(self, layer):
+        for el in self.stack:
+            el.parent = layer
+        layer.childs.extend(self.stack)
+        self.stack = []
+
+    def handle_record(self, stack):
+        while stack:
+            rec = stack.pop()
             if rec.childs:
-                self.stack.extend(rec.childs[::-1])
+                childs = rec.childs[::-1]
+                rec.childs = []
+                stack.append(childs[0])
+                stack.append(rec)
+                stack.extend(childs[1:])
             self.process_record(rec)
 
     def process_record(self, rec):
@@ -84,8 +102,11 @@ class XAR_to_SK2_Translator(object):
         elif rec.cid == xar_const.TAG_DOWN:
             self.handle_down(rec, cfg)
 
-        # Notes
         #TAG_LAYER
+        elif rec.cid == xar_const.TAG_LAYER:
+            self.handle_layer(rec, cfg)
+        elif rec.cid == xar_const.TAG_LAYERDETAILS:
+            self.handle_layerdetails(rec, cfg)
         elif rec.cid == xar_const.TAG_SPREADINFORMATION:
             self.handle_spred_information(rec, cfg)
 
@@ -96,6 +117,8 @@ class XAR_to_SK2_Translator(object):
         # Object tags
         elif rec.cid == xar_const.TAG_PATH:
             raise 1
+        elif rec.cid == xar_const.TAG_GROUP:
+            self.handle_group(rec, cfg)
         elif rec.cid == xar_const.TAG_PATH_RELATIVE_STROKED:
             self.handle_path_relative_stroked(rec, cfg)
         elif rec.cid == xar_const.TAG_PATH_RELATIVE_FILLED:
@@ -110,6 +133,10 @@ class XAR_to_SK2_Translator(object):
             self.handle_linecolour(rec, cfg)
         elif rec.cid == xar_const.TAG_LINEWIDTH:
             self.handle_linewidth(rec, cfg)
+        elif rec.cid == xar_const.TAG_LINEARFILL:
+            self.handle_linearfill(rec, cfg)
+        # elif rec.cid == xar_const.TAG_LINEARTRANSPARENTFILL:
+        #     self.handle_lineartransparentfill(rec, cfg)
 
         # special colour fills
         elif rec.cid == xar_const.TAG_FLATFILL_NONE:
@@ -125,12 +152,77 @@ class XAR_to_SK2_Translator(object):
         elif rec.cid == xar_const.TAG_LINECOLOUR_WHITE:
             self.handle_linecolour_white(rec, cfg)
 
+        # Regular shapes
+
+        # Ellipses
+        elif rec.cid == xar_const.TAG_ELLIPSE_SIMPLE:
+            self.handle_ellipse_simple(rec, cfg)
+        elif rec.cid == xar_const.TAG_ELLIPSE_COMPLEX:
+            self.handle_ellipse_complex(rec, cfg)
+
+        # Rectangles
+
+        # Polygons
+
+        # General regular shapes
+        elif rec.cid == xar_const.TAG_REGULAR_SHAPE_PHASE_2:
+            self.regular_shape_phase_2(rec, cfg)
+
     def handle_down(self, rec, cfg):
         self.style = copy.copy(self.stack_style[-1])
         self.stack_style.append(self.style)
 
     def handle_up(self, rec, cfg):
         self.style = self.stack_style.pop()
+
+    def handle_layer(self, rec, cfg):
+        if self.stack:
+            if self.layer:
+                layer = self.sk2_mtds.add_layer(self.page)
+                self.layer = layer
+            else:
+                layer = self.sk2_mtds.get_layer(self.page)
+
+            if self.layer_name:
+                layer.name = self.layer_name
+                self.layer_name = ''
+            self.flush_stack(layer)
+
+    def handle_layerdetails(self, rec, cfg):
+        # TODO: process layer_flags
+        self.layer_name = rec.layer_name
+
+    def regular_shape_phase_2(self, rec, cfg):
+
+        w = distance(rec.MinorAxes)
+        h = distance(rec.MajorAxes)
+
+        if rec.flags == 1:
+
+            box = [-w/2.0, -h/2.0, w, h]
+            el = sk2_model.Circle(
+                cfg, None,
+                rect=box,
+                angle1=0.0,
+                angle2=0.0,
+                circle_type=sk2const.ARC_CHORD,
+                style=self.get_style(rec, fill=True, stroke=True)
+            )
+
+            tr = [rec.a, rec.b, rec.c, rec.d, 0.0, 0.0]
+            el.trafo = multiply_trafo(el.trafo, tr)
+
+            tr = [1.0, 0.0, 0.0, 1.0, rec.e/1000.0, rec.f/1000.0]
+            el.trafo = multiply_trafo(el.trafo, tr)
+
+            el.trafo = multiply_trafo(el.trafo, self.get_trafo())
+            self.stack.append(el)
+
+    def handle_ellipse_simple(self, rec, cfg):
+        raise 1
+
+    def handle_ellipse_complex(self, rec, cfg):
+        raise 1
 
     def handle_units(self):
         self.sk2_mtds.set_doc_units(uc2const.UNIT_PT)
@@ -172,38 +264,77 @@ class XAR_to_SK2_Translator(object):
     def handle_linewidth(self, rec, cfg):
         self.style['line_width'] = rec.width
 
+    def handle_linearfill(self, rec, cfg):
+        trafo = self.get_trafo()
+        vector = apply_trafo_to_points([rec.start_point, rec.end_point], trafo)
+        start_colour = self.colors.get(rec.start_colour, xar_const.RGB_BLACK)
+        end_colour = self.colors.get(rec.end_colour, xar_const.RGB_BLACK)
+        self.style['linearfill'] = [
+            sk2const.GRADIENT_LINEAR,
+            vector,
+            [[0.0, start_colour], [1.0, end_colour]],
+            sk2const.GRADIENT_EXTEND_PAD
+        ]
+
+    # def handle_lineartransparentfill(self, rec, cfg):
+    #     trafo = self.get_trafo()
+    #
+    #     vector = apply_trafo_to_points([rec.start_point, rec.end_point], trafo)
+    #
+    #     linearfill = self.style.get('linearfill')
+    #     if linearfill:
+    #         start_colour = copy.deepcopy(linearfill[2][0][1])
+    #         end_colour = copy.deepcopy(linearfill[2][1][1])
+    #     else:
+    #         color = self.style.get('flat_colour_fill') or xar_const.RGB_WHITE
+    #         start_colour = copy.deepcopy(color)
+    #         end_colour = copy.deepcopy(color)
+    #
+    #     start_colour[2] = rec.start_transparency / 255.0
+    #     end_colour[2] = rec.end_transparency / 255.0
+    #
+    #     self.style['linearfill'] = [
+    #         sk2const.GRADIENT_LINEAR,
+    #         vector,
+    #         [[0.0, start_colour], [1.0, end_colour]],
+    #         sk2const.GRADIENT_EXTEND_PAD
+    #     ]
+
+    def handle_group(self, rec, cfg):
+        if self.stack and len(self.stack) > 1:
+            print 'handle_group', len(self.stack)
+            group = sk2_model.Group(cfg)
+            group.childs = self.stack
+            for el in self.stack:
+                el.parent = group
+            self.stack = [group]
+
     def handle_path_relative_stroked(self, rec, cfg):
-        self.handle_record(xar_const.TAG_UP)
-        self.layer = self.page.childs[0]
         curve = sk2_model.Curve(
-            cfg, self.layer,
+            cfg, None,
             self.get_path(rec),
             self.get_trafo(),
             self.get_style(rec, stroke=True)
         )
-        self.layer.childs.append(curve)
+        self.stack.append(curve)
 
     def handle_path_relative_filled(self, rec, cfg):
-        self.handle_record(xar_const.TAG_UP)
-        self.layer = self.page.childs[0]
         curve = sk2_model.Curve(
-            cfg, self.layer,
+            cfg, None,
             self.get_path(rec),
             self.get_trafo(),
             self.get_style(rec, fill=True)
         )
-        self.layer.childs.append(curve)
+        self.stack.append(curve)
 
     def handle_path_relative_filled_stroked(self, rec, cfg):
-        self.handle_record(xar_const.TAG_UP)
-        self.layer = self.page.childs[0]
         curve = sk2_model.Curve(
-            cfg, self.layer,
+            cfg, None,
             self.get_path(rec),
             self.get_trafo(),
             self.get_style(rec, stroke=True, fill=True)
         )
-        self.layer.childs.append(curve)
+        self.stack.append(curve)
 
     def handle_spred_information(self, rec, cfg):
         fmt = _('Custom')
@@ -231,8 +362,15 @@ class XAR_to_SK2_Translator(object):
 
     def get_fill(self, rec):
         fill_rule = sk2const.FILL_EVENODD
+        fill_data = []
         fill_type = sk2const.FILL_SOLID
-        fill_data = self.style['flat_colour_fill']
+        if self.style.get('linearfill'):
+            fill_type = sk2const.FILL_GRADIENT
+            fill_data = self.style['linearfill']
+        elif self.style.get('flat_colour_fill'):
+            fill_type = sk2const.FILL_SOLID
+            fill_data = self.style['flat_colour_fill']
+
         if fill_data:
             return [fill_rule, fill_type, fill_data]
         return []
