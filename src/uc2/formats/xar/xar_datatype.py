@@ -26,8 +26,14 @@ CO_ORDINATES = CO_ORDINATES_DPI / in_to_pt
 packer_s3_le = struct.Struct("<3s")
 
 packer_byte = struct.Struct('B')
+
+packer_uint16_le = struct.Struct("<H")
+packer_int16_le = struct.Struct("<h")
+
 packer_uint32_le = struct.Struct("<I")
 packer_int32_le = struct.Struct("<i")
+
+packer_float_le = struct.Struct("<f")
 packer_double_le = struct.Struct("<d")
 
 #######################################
@@ -46,6 +52,11 @@ def unpack_u1(data, offset=0, **kw):
     return packer_byte.unpack(string)[0]
 
 
+def unpack_float(data, offset=0, **kw):
+    string = data[offset:offset + 4]
+    return packer_float_le.unpack(string)[0]
+
+
 def unpack_double(data, offset=0, **kw):
     string = data[offset:offset + 8]
     return packer_double_le.unpack(string)[0]
@@ -56,12 +67,40 @@ def unpack_s4(data, offset=0, **kw):
     return packer_int32_le.unpack(string)[0]
 
 
+def unpack_s2(data, offset=0, **kw):
+    string = data[offset:offset + 2]
+    return packer_int16_le.unpack(string)[0]
+
+
+def unpack_u2(data, offset=0, **kw):
+    string = data[offset:offset + 2]
+    return packer_uint16_le.unpack(string)[0]
+
+
+def unpack_fixed16_32(data, offset=0, **kw):
+    string = data[offset:offset + 4]
+    val = packer_uint32_le.unpack(string)[0]
+    ret = 0.0
+    if val:
+        sing = (val & 0x80000000) >> 31
+        if not sing:
+            man = (val & 0xFFFF0000) >> 16
+            exp = (val & 0x0000FFFF) / 65536.0
+            ret = man + exp
+        else:
+            man = (~val & 0xFFFF0000) >> 16
+            exp = (val & 0x0000FFFF) / 65536.0
+            ret = ~man + exp
+            # print bin(val), bin(~man), val
+    return ret
+
+
 def unpack_u4(data, offset=0, **kw):
     string = data[offset:offset + 4]
     return packer_uint32_le.unpack(string)[0]
 
 
-def unpack_3s(data, offset=0, encoding=None, **kw):
+def unpack_3s(data, offset=0, encoding=None, **kw):  # XXX
     string = data[offset:offset + 3]
     data = packer_s3_le.unpack(string)[0]
     if encoding:
@@ -69,7 +108,7 @@ def unpack_3s(data, offset=0, encoding=None, **kw):
     return data
 
 
-def unpack_millipoint(data, offset=0, **kw):
+def unpack_millipoint(data, offset=0, **kw):  # XXX
     string = data[offset:offset + 4]
     return packer_int32_le.unpack(string)[0] / CO_ORDINATES
 
@@ -128,21 +167,27 @@ def read_bitmap_data(data, offset=0, **kw):
     return len(bitmap_data), bitmap_data
 
 
-# return (size, value)
+# return (size in byte, value)
 READER_DATA_TYPES_MAP = {
     'byte':                lambda *a, **b: (1, unpack_u1(*a, **b)),
+    'uint16':              lambda *a, **b: (2, unpack_u2(*a, **b)),
     'uint32':              lambda *a, **b: (4, unpack_u4(*a, **b)),
+
+    'fixed16':             lambda *a, **b: (4, unpack_fixed16_32(*a, **b)),
+    'float':               lambda *a, **b: (4, unpack_float(*a, **b)),
     'double':              lambda *a, **b: (8, unpack_double(*a, **b)),
 
-    'MILLIPOINT':          lambda *a, **b: (4, unpack_millipoint(*a, **b)),
-    'COORD':               lambda *a, **b: (8, unpack_coord(*a, **b)),
-    '3 bytes':             lambda *a, **b: (3, unpack_3s(*a, **b)),
-    'Simple RGBColour':    lambda *a, **b: (3, unpack_3s(*a, **b)),
-
+    'int16':               lambda *a, **b: (2, unpack_s2(*a, **b)),
+    'int32':               lambda *a, **b: (4, unpack_s4(*a, **b)),
     'DATAREF':             lambda *a, **b: (4, unpack_s4(*a, **b)),
     'COLOURREF':           lambda *a, **b: (4, unpack_s4(*a, **b)),
     'BITMAPREF':           lambda *a, **b: (4, unpack_s4(*a, **b)),
     'UNITSREF':            lambda *a, **b: (4, unpack_s4(*a, **b)),
+
+    'MILLIPOINT':          lambda *a, **b: (4, unpack_millipoint(*a, **b)),
+    '3 bytes':             lambda *a, **b: (3, unpack_3s(*a, **b)),
+    'Simple RGBColour':    lambda *a, **b: (3, unpack_3s(*a, **b)),
+    'COORD':               lambda *a, **b: (8, unpack_coord(*a, **b)),
 
     'STRING':              read_string,
     'ASCII_STRING':        read_ascii_string,
