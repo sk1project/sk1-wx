@@ -544,6 +544,9 @@ XAR_DEFAULT_STYLE = {
     'stroke_colour': RGB_WHITE,
     'feather': None,
     'stroke_type': 0x01000000,
+    # addition
+    'linearfill': None,
+
 }
 
 
@@ -637,7 +640,20 @@ XAR_TYPE_RECORD = {
     },
     TAG_GRIDRULERSETTINGS: {'name': 'GRIDRULERSETTINGS'},
     TAG_GRIDRULERORIGIN: {'name': 'GRIDRULERORIGIN'},
-    TAG_LAYERDETAILS: {'name': 'LAYERDETAILS'},
+    TAG_LAYERDETAILS: {
+        'name': 'LAYERDETAILS',
+        'sec': [
+            {'type': 'byte', 'id': 'layer_flags',
+                 'bitfield': {
+                     0: {'type': 'bool', 'id': 'is_visible'},
+                     1: {'type': 'bool', 'id': 'is_locked'},
+                     2: {'type': 'bool', 'id': 'is_printable'},
+                     3: {'type': 'bool', 'id': 'is_active'},
+                 }
+             },
+            {'type': 'STRING', 'id': 'layer_name'},
+        ]
+    },
     TAG_GUIDELAYERDETAILS: {'name': 'GUIDELAYERDETAILS'},
     TAG_SPREADSCALING_ACTIVE: {
         'name': 'SPREADSCALING ACTIVE',
@@ -735,7 +751,7 @@ XAR_TYPE_RECORD = {
     TAG_PATH_FILLED: {'name': 'PATH FILLED'},
     TAG_PATH_STROKED: {'name': 'PATH STROKED'},
     TAG_PATH_FILLED_STROKED: {'name': 'PATH FILLED STROKED'},
-    TAG_GROUP: {'name': 'GROUP'},
+    TAG_GROUP: {'name': 'GROUP', 'sec': None},
     TAG_BLEND: {'name': 'BLEND'},
     TAG_BLENDER: {'name': 'BLENDER'},
     TAG_MOULD_ENVELOPE: {'name': 'MOULD ENVELOPE'},
@@ -789,7 +805,18 @@ XAR_TYPE_RECORD = {
             {'type': 'MILLIPOINT', 'id': 'width'}
         ]
     },
-    TAG_LINEARFILL: {'name': 'LINEARFILL'},
+    TAG_LINEARFILL: {
+        'name': 'LINEARFILL',
+        'sec': [
+            {'type': 'COORD', 'id': 'start_point'},
+            {'type': 'COORD', 'id': 'end_point'},
+            {'type': 'COLOURREF', 'id': 'start_colour'},
+            {'type': 'COLOURREF', 'id': 'end_colour'},
+            {'type': 'double', 'id': 'bias'},
+            {'type': 'double', 'id': 'gain'},
+            # TODO: support 3 point
+        ]
+    },
     TAG_CIRCULARFILL: {'name': 'CIRCULARFILL'},
     TAG_ELLIPTICALFILL: {'name': 'ELLIPTICALFILL'},
     TAG_CONICALFILL: {'name': 'CONICALFILL'},
@@ -803,7 +830,19 @@ XAR_TYPE_RECORD = {
     TAG_FILL_NONREPEATING: {'name': 'FILL NONREPEATING'},
     TAG_FILL_REPEATINGINVERTED: {'name': 'FILL REPEATINGINVERTED'},
     TAG_FLATTRANSPARENTFILL: {'name': 'FLATTRANSPARENTFILL'},
-    TAG_LINEARTRANSPARENTFILL: {'name': 'LINEARTRANSPARENTFILL'},
+    TAG_LINEARTRANSPARENTFILL: {
+        'name': 'LINEARTRANSPARENTFILL',
+        'sec': [
+            {'type': 'COORD', 'id': 'start_point'},
+            {'type': 'COORD', 'id': 'end_point'},
+            {'type': 'byte', 'id': 'start_transparency'},
+            {'type': 'byte', 'id': 'end_transparency'},
+            {'type': 'byte', 'id': 'transparency_type'},
+            {'type': 'double', 'id': 'bias'},
+            {'type': 'double', 'id': 'gain'},
+            # TODO: support 3 point
+        ]
+    },
     TAG_CIRCULARTRANSPARENTFILL: {'name': 'CIRCULARTRANSPARENTFILL'},
     TAG_ELLIPTICALTRANSPARENTFILL: {'name': 'ELLIPTICALTRANSPARENTFILL'},
     TAG_CONICALTRANSPARENTFILL: {'name': 'CONICALTRANSPARENTFILL'},
@@ -930,7 +969,30 @@ XAR_TYPE_RECORD = {
 
     # General regular shapes
     TAG_REGULAR_SHAPE_PHASE_1: {'name': 'REGULAR SHAPE PHASE 1'},
-    TAG_REGULAR_SHAPE_PHASE_2: {'name': 'REGULAR SHAPE PHASE 2'},
+    TAG_REGULAR_SHAPE_PHASE_2: {
+        'name': 'REGULAR SHAPE PHASE 2',
+        'sec': [
+            {'type': 'byte', 'id': 'flags'},
+            {'type': 'uint16', 'id': 'NumberOfSides'},
+            {'type': 'COORD', 'id': 'MajorAxes'},
+            {'type': 'COORD', 'id': 'MinorAxes'},
+
+            {'type': 'fixed16', 'id': 'a'},
+            {'type': 'fixed16', 'id': 'b'},
+            {'type': 'fixed16', 'id': 'c'},
+            {'type': 'fixed16', 'id': 'd'},
+            {'type': 'int32', 'id': 'e'},
+            {'type': 'int32', 'id': 'f'},
+
+            {'type': 'double', 'id': 'StellRadiusToPrimary'},
+            {'type': 'double', 'id': 'StellOffsetRatio'},
+            {'type': 'double', 'id': 'PrimaryCurveToPrimary'},
+            {'type': 'double', 'id': 'StellCurveToPrimary'},
+            # # {'type': '??', 'id': 'EdgePath1'},
+            # # {'type': '??', 'id': 'EdgePath2'},
+            # # TODO: ...
+        ]
+    },
 
     # Text related records
     # Text definitions
@@ -1137,7 +1199,7 @@ XAR_TYPE_RECORD = {
     },
     TAG_CURRENTATTRIBUTEBOUNDS: {'name': 'CURRENTATTRIBUTEBOUNDS'},
 
-    # = 3-point linear fill records
+    # 3-point linear fill records
     TAG_LINEARFILL3POINT: {'name': 'LINEARFILL3POINT'},
     TAG_LINEARFILLMULTISTAGE3POINT: {'name': 'LINEARFILLMULTISTAGE3POINT'},
     TAG_LINEARTRANSPARENTFILL3POINT: {'name': 'LINEARTRANSPARENTFILL3POINT'},
