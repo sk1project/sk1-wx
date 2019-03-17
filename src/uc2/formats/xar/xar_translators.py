@@ -39,50 +39,44 @@ class XAR_to_SK2_Translator(object):
     sk2_doc = None
     sk2_model = None
     sk2_mtds = None
-    stack = None
-    page = None
-    layer = None
-    xar = None
-    xar_defaults = None
-    trafo = None
-    scale = None
+
     fontmap = None
     colors = None
-    style = None
+
     stack_style = None
     stack = None
+    pages = None
+    layers = None
+
+    style = None
+    trafo = None
+#    page = None
+
+    layer = None
     layer_name = ''
+    page_name = ''
+    page_format = None
 
     def translate(self, xar_doc, sk2_doc):
         self.xar_mtds = xar_doc.methods
         self.sk2_doc = sk2_doc
         self.sk2_model = sk2_doc.model
         self.sk2_mtds = sk2_doc.methods
-        self.page = self.sk2_mtds.get_page()
-        self.trafo = [-1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
-        self.colors = {}
+        self.sk2_mtds.delete_page()
 
-        rec = xar_doc.model
+        self.colors = {}
+        self.trafo = [-1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
+
         self.stack = []
         self.stack_style = [copy.copy(xar_const.XAR_DEFAULT_STYLE)]
-        self.handle_units()
-        self.handle_record([rec])
-        self.flush_stack(self.sk2_mtds.get_layer(self.page))
+        self.pages = []
+        self.layers = []
+
+        self.walk([xar_doc.model])
+        self.handle_endoffile()
         self.update_document()
 
-    def update_document(self):
-        for page in self.sk2_mtds.get_pages():
-            for layer in self.sk2_mtds.get_layers(page):
-                for el in layer.childs:
-                    el.update()
-
-    def flush_stack(self, layer):
-        for el in self.stack:
-            el.parent = layer
-        layer.childs.extend(self.stack)
-        self.stack = []
-
-    def handle_record(self, stack):
+    def walk(self, stack):
         while stack:
             rec = stack.pop()
             if rec.childs:
@@ -91,9 +85,10 @@ class XAR_to_SK2_Translator(object):
                 stack.append(childs[0])
                 stack.append(rec)
                 stack.extend(childs[1:])
-            self.process_record(rec)
+            else:
+                self.process(rec)
 
-    def process_record(self, rec):
+    def process(self, rec):
         cfg = self.sk2_doc.config
 
         # Navigation records
@@ -102,7 +97,11 @@ class XAR_to_SK2_Translator(object):
         elif rec.cid == xar_const.TAG_DOWN:
             self.handle_down(rec, cfg)
 
-        #TAG_LAYER
+        # Document tags
+        elif rec.cid == xar_const.TAG_SPREAD:
+            self.handle_spread(rec, cfg)
+
+        # Notes
         elif rec.cid == xar_const.TAG_LAYER:
             self.handle_layer(rec, cfg)
         elif rec.cid == xar_const.TAG_LAYERDETAILS:
@@ -168,32 +167,61 @@ class XAR_to_SK2_Translator(object):
         elif rec.cid == xar_const.TAG_REGULAR_SHAPE_PHASE_2:
             self.regular_shape_phase_2(rec, cfg)
 
-    def handle_down(self, rec, cfg):
-        self.style = copy.copy(self.stack_style[-1])
-        self.stack_style.append(self.style)
+        # Miscellaneous records
+        elif rec.cid == xar_const.TAG_SPREAD_PHASE2:
+            self.handle_spread_phase2(rec, cfg)
 
     def handle_up(self, rec, cfg):
         self.style = self.stack_style.pop()
 
-    def handle_layer(self, rec, cfg):
+    def handle_down(self, rec, cfg):
+        self.style = copy.copy(self.stack_style[-1])
+        self.stack_style.append(self.style)
+
+    def handle_endoffile(self, rec=None, cfg=None):
         if self.stack:
-            if self.layer:
-                layer = self.sk2_mtds.add_layer(self.page)
-                self.layer = layer
-            else:
-                layer = self.sk2_mtds.get_layer(self.page)
+            cfg = cfg or self.sk2_doc.config
+            self.handle_layer(rec, cfg)
+            self.handle_spread(rec, cfg)
+        parent = self.sk2_mtds.get_pages_obj()
 
-            if self.layer_name:
-                layer.name = self.layer_name
-                self.layer_name = ''
-            self.flush_stack(layer)
+        self.pages = [page for page in self.pages if page.childs]
+        for page in self.pages:
+            page.parent = parent
+        parent.page_counter += len(self.pages)
+        parent.childs.extend(self.pages)
+        self.pages = []
 
-    def handle_layerdetails(self, rec, cfg):
-        # TODO: process layer_flags
-        self.layer_name = rec.layer_name
+    def handle_spread(self, rec, cfg):
+        page = sk2_model.Page(cfg, name=self.page_name)
+        if self.page_format:
+            page.page_format = self.page_format
+        self.page_name = ''
+
+        for el in self.layers:
+            el.parent = page
+
+        page.layer_counter += len(self.layers)
+        page.childs.extend(self.layers)
+        self.layers = []
+        self.pages.append(page)
+
+    def handle_spread_phase2(self, rec, cfg):
+        self.handle_spread(rec, cfg)
+
+    def handle_layer(self, rec, cfg):
+        layer = sk2_model.Layer(cfg, name=self.layer_name)
+        self.layer_name = ''
+        self.flush_stack(layer)
+        self.layers.append(layer)
+
+    def handle_group(self, rec, cfg):
+        if self.stack and len(self.stack) > 1:
+            group = sk2_model.Group(cfg)
+            self.flush_stack(group)
+            self.stack = [group]
 
     def regular_shape_phase_2(self, rec, cfg):
-
         w = distance(rec.MinorAxes)
         h = distance(rec.MajorAxes)
 
@@ -206,7 +234,7 @@ class XAR_to_SK2_Translator(object):
                 angle1=0.0,
                 angle2=0.0,
                 circle_type=sk2const.ARC_CHORD,
-                style=self.get_style(rec, fill=True, stroke=True)
+                style=self.get_style(fill=True, stroke=True)
             )
 
             tr = [rec.a, rec.b, rec.c, rec.d, 0.0, 0.0]
@@ -227,6 +255,10 @@ class XAR_to_SK2_Translator(object):
     def handle_units(self):
         self.sk2_mtds.set_doc_units(uc2const.UNIT_PT)
 
+    def handle_layerdetails(self, rec, cfg):
+        # TODO: process layer_flags
+        self.layer_name = rec.layer_name
+
     def handle_definecomplexcolor(self, rec, cfg):
         # TODO: process colour_model, colour_type
         rgb = cms.hexcolor_to_rgb(b"#%s" % rec.rgbcolor)
@@ -237,7 +269,7 @@ class XAR_to_SK2_Translator(object):
         colour = self.colors.get(rec.colour)
         if colour:
             self.style['flat_colour_fill'] = colour
-            
+
     def handle_linecolour(self, rec, cfg):
         colour = self.colors.get(rec.colour)
         if colour:
@@ -300,21 +332,12 @@ class XAR_to_SK2_Translator(object):
     #         sk2const.GRADIENT_EXTEND_PAD
     #     ]
 
-    def handle_group(self, rec, cfg):
-        if self.stack and len(self.stack) > 1:
-            print 'handle_group', len(self.stack)
-            group = sk2_model.Group(cfg)
-            group.childs = self.stack
-            for el in self.stack:
-                el.parent = group
-            self.stack = [group]
-
     def handle_path_relative_stroked(self, rec, cfg):
         curve = sk2_model.Curve(
             cfg, None,
             self.get_path(rec),
             self.get_trafo(),
-            self.get_style(rec, stroke=True)
+            self.get_style(stroke=True)
         )
         self.stack.append(curve)
 
@@ -323,7 +346,7 @@ class XAR_to_SK2_Translator(object):
             cfg, None,
             self.get_path(rec),
             self.get_trafo(),
-            self.get_style(rec, fill=True)
+            self.get_style(fill=True)
         )
         self.stack.append(curve)
 
@@ -332,7 +355,7 @@ class XAR_to_SK2_Translator(object):
             cfg, None,
             self.get_path(rec),
             self.get_trafo(),
-            self.get_style(rec, stroke=True, fill=True)
+            self.get_style(stroke=True, fill=True)
         )
         self.stack.append(curve)
 
@@ -344,8 +367,7 @@ class XAR_to_SK2_Translator(object):
         orient = uc2const.PORTRAIT
         if width > height:
             orient = uc2const.LANDSCAPE
-        page_format = [fmt, size, orient]
-        self.sk2_mtds.set_page_format(self.page, page_format)
+        self.page_format = [fmt, size, orient]
         trafo = [1.0, 0.0, 0.0, 1.0, -1.0 * width / 2.0, -1.0 * height / 2.0]
         self.set_trafo(trafo)
 
@@ -355,12 +377,12 @@ class XAR_to_SK2_Translator(object):
     def get_trafo(self):
         return copy.deepcopy(self.trafo)
 
-    def get_style(self, rec, stroke=False, fill=False):
-        fill = fill and self.get_fill(rec) or []
-        stroke = stroke and self.get_stoke(rec) or []
+    def get_style(self, stroke=False, fill=False):
+        fill = fill and self.get_fill() or []
+        stroke = stroke and self.get_stoke() or []
         return [fill, stroke, [], []]
 
-    def get_fill(self, rec):
+    def get_fill(self):
         fill_rule = sk2const.FILL_EVENODD
         fill_data = []
         fill_type = sk2const.FILL_SOLID
@@ -375,7 +397,7 @@ class XAR_to_SK2_Translator(object):
             return [fill_rule, fill_type, fill_data]
         return []
 
-    def get_stoke(self, rec):
+    def get_stoke(self):
         colour = self.style['stroke_colour']
         if colour is None:
             return []
@@ -403,6 +425,18 @@ class XAR_to_SK2_Translator(object):
                 path.append(point)
             paths.append([path[0], path[1:], marker])
         return paths
+
+    def update_document(self):
+        for page in self.sk2_mtds.get_pages():
+            for layer in self.sk2_mtds.get_layers(page):
+                for el in layer.childs:
+                    el.update()
+
+    def flush_stack(self, parent):
+        for el in self.stack:
+            el.parent = parent
+        parent.childs.extend(self.stack)
+        self.stack = []
 
 
 class SK2_to_XAR_Translator(object):
