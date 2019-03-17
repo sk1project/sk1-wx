@@ -64,6 +64,8 @@ class SK2_to_PLT_Translator(object):
         for obj in objs:
             if obj.is_primitive:
                 curve = obj.to_curve()
+                if not curve:
+                    continue
                 if not curve.is_primitive:
                     self.recursive_processing(curve.childs)
                 else:
