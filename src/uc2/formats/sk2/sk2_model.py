@@ -881,7 +881,7 @@ class Curve(PrimitiveObject):
         return curve
 
     def update_arrows(self):
-        self.cache_a   rrows = []
+        self.cache_arrows = []
         if self.is_curve and self.style[1]:
             stroke = self.style[1]
             arrs = stroke[9]
