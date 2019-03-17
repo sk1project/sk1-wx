@@ -881,7 +881,7 @@ class Curve(PrimitiveObject):
         return curve
 
     def update_arrows(self):
-        self.cache_arrows = []
+        self.cache_a   rrows = []
         if self.is_curve and self.style[1]:
             stroke = self.style[1]
             arrs = stroke[9]
@@ -1218,6 +1218,9 @@ class Pixmap(PrimitiveObject):
 
     def clear_color_cache(self):
         self.handler.clear_cache()
+
+    def to_curve(self):
+        return None
 
 
 CID_TO_CLASS = {
