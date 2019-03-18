@@ -17,7 +17,7 @@
 
 import logging
 
-from uc2 import utils, uc2const
+from uc2 import utils, uc2const, libgeom
 from uc2.formats.cgm import cgm_model, cgm_const
 
 LOG = logging.getLogger(__name__)
@@ -25,89 +25,90 @@ LOG = logging.getLogger(__name__)
 SCALE = 39.37 * uc2const.pt_to_mm
 
 
-def cgm_unit(val):
-    return utils.py_int2signed_word(int(round(SCALE * val)), True)
+def cgm_unit(val, double=False):
+    func = utils.py_int2signed_dword if double else utils.py_int2signed_word
+    return func(int(round(SCALE * val)), True)
 
 
 def builder(element_id, **kwargs):
     elf = cgm_model.element_factory
+    header = params = ''
     if element_id == cgm_const.BEGIN_METAFILE:
         txt = kwargs.get('txt', 'Computer Graphics Metafile')
         params = utils.py_int2byte(len(txt)) + txt
         header = utils.py_int2word(0x0020 + len(params), True)
-        return elf(header, params)
     elif element_id == cgm_const.END_METAFILE:
         header = '\x00\x40'
-        return elf(header, '')
     elif element_id == cgm_const.METAFILE_VERSION:
         version = kwargs.get('version', 1)
-        return elf('\x10\x22', utils.py_int2word(version, True))
+        params = utils.py_int2word(version, True)
+        header = '\x10\x22'
     elif element_id == cgm_const.METAFILE_DESCRIPTION:
         txt = kwargs.get('description', 'Created by UniConvertor')
         params = utils.py_int2byte(len(txt)) + txt
         header = '\x10\x5f' + utils.py_int2word(len(params), True)
-        return elf(header, params)
     elif element_id == cgm_const.METAFILE_ELEMENT_LIST:
         header = '\x11\x66'
         params = '\x00\x01\xff\xff\x00\x01'
-        return elf(header, params)
     elif element_id == cgm_const.VDC_TYPE:
         header = '\x10\x62'
         params = '\x00\x00'
-        return elf(header, params)
     elif element_id == cgm_const.INTEGER_PRECISION:
         header = '\x10\x82'
         params = '\x00\x10'
-        return elf(header, params)
     elif element_id == cgm_const.REAL_PRECISION:
         header = '\x10\xa6'
         params = '\x00\x00\x00\x09\x00\x17'
-        return elf(header, params)
     elif element_id == cgm_const.INDEX_PRECISION:
         header = '\x10\xc2'
         params = '\x00\x08'
-        return elf(header, params)
     elif element_id == cgm_const.COLOUR_PRECISION:
         header = '\x10\xe2'
         params = '\x00\x08'
-        return elf(header, params)
     elif element_id == cgm_const.COLOUR_INDEX_PRECISION:
         header = '\x11\x02'
         params = '\x00\x08'
-        return elf(header, params)
     # Page elements
     elif element_id == cgm_const.BEGIN_PICTURE:
         page_number = kwargs.get('page_number', 1)
         txt = 'Page %d' % page_number
         params = utils.py_int2byte(len(txt)) + txt
         header = '\x00' + utils.py_int2byte(len(params) + 0x60)
-        return elf(header, params)
     elif element_id == cgm_const.BEGIN_PICTURE_BODY:
         header = '\x00\x80'
-        return elf(header, '')
     elif element_id == cgm_const.END_PICTURE:
         header = '\x00\xa0'
-        return elf(header, '')
     elif element_id == cgm_const.SCALING_MODE:
         header = '\x20\x26'
         params = '\x00\x01' + '\x3c\xd0\x13\xa9'
-        return elf(header, params)
     elif element_id == cgm_const.COLOUR_SELECTION_MODE:
         header = '\x20\x42'
         params = '\x00\x01'
-        return elf(header, params)
     elif element_id == cgm_const.LINE_WIDTH_SPECIFICATION_MODE:
         header = '\x20\x62'
         params = '\x00\x01'
-        return elf(header, params)
     elif element_id == cgm_const.EDGE_WIDTH_SPECIFICATION_MODE:
         header = '\x20\xa2'
         params = '\x00\x01'
-        return elf(header, params)
     elif element_id == cgm_const.VDC_EXTENT:
         bbox = kwargs.get('bbox', (0.0, 0.0, 1.0, 1.0))
         header = '\x20\xc8'
         params = ''.join([cgm_unit(val) for val in bbox])
+    # Polyline
+    elif element_id == cgm_const.LINE_WIDTH:
+        header = '\x50\x64'
+        val = kwargs.get('width', 2.5)
+        params = utils.py_float2float(val, True)
+    elif element_id == cgm_const.LINE_COLOUR:
+        header = '\x50\x83'
+        color = kwargs.get('color', (0, 0, 0))
+        params = ''.join([utils.py_int2byte(item) for item in color])
+    elif element_id == cgm_const.POLYLINE:
+        points = kwargs.get('points', [(0, 0), (1, 1)])
+        params = ''.join([cgm_unit(x) + cgm_unit(y) for x, y in points])
+        header = '\x40\x3f' + utils.py_int2word(len(params), True)
+
+    if header:
         return elf(header, params)
 
 
@@ -165,4 +166,38 @@ class SK2_to_CGM_Translator(object):
 
         self.add(cgm_const.BEGIN_PICTURE_BODY)
 
+        layers = self.sk2_mtds.get_visible_layers(page)
+        for layer in layers:
+            for obj in layer.childs:
+                self.process_obj(obj)
+
         self.add(cgm_const.END_PICTURE)
+
+    def process_obj(self, obj):
+        if obj.is_primitive:
+            curve = obj.to_curve()
+            if not curve:
+                return
+            if not curve.is_primitive:
+                self.process_obj(curve)
+                return
+            if curve.style[0]:
+                self.make_polygons(curve)
+            elif curve.style[1]:
+                self.make_polylines(curve)
+        else:
+            for item in obj.chils:
+                self.process_obj(item)
+
+    def make_polylines(self, obj):
+        stroke = obj.style[1]
+        self.add(cgm_const.LINE_WIDTH, width=stroke[1])
+        color = self.sk2_doc.cms.get_display_color255(stroke[2])
+        self.add(cgm_const.LINE_COLOUR, color=color)
+        paths = libgeom.get_flattened_path(obj)
+        for path in paths:
+            points = [path[0], ] + path[1]
+            self.add(cgm_const.POLYLINE, points=points)
+
+    def make_polygons(self, obj):
+        pass
