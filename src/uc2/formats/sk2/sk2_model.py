@@ -1219,6 +1219,9 @@ class Pixmap(PrimitiveObject):
     def clear_color_cache(self):
         self.handler.clear_cache()
 
+    def to_curve(self):
+        return None
+
 
 CID_TO_CLASS = {
     DOCUMENT: Document,

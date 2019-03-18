@@ -86,11 +86,20 @@ def dword2py_int(data):
     return struct.unpack('<I', data)[0]
 
 
-def py_int2dword(val):
+def py_int2dword(val, be=False):
     """
     Converts Python int value to double word of bytes.
     """
-    return struct.pack('<I', val)
+    sig = '>I' if be else '<I'
+    return struct.pack(sig, val)
+
+
+def py_int2signed_dword(val, be=False):
+    """
+    Converts Python int value to signed double word of bytes.
+    """
+    sig = '>i' if be else '<i'
+    return struct.pack(sig, val)
 
 
 def pair_dword2py_int(data):
@@ -107,11 +116,20 @@ def double2py_float(data):
     return struct.unpack('<d', data)[0]
 
 
-def py_float2double(val):
+def py_float2float(val, be=False):
+    """
+    Converts Python float to 4 bytes (double)
+    """
+    sig = '>f' if be else '<f'
+    return struct.pack(sig, val)
+
+
+def py_float2double(val, be=False):
     """
     Converts Python float to 8 bytes (double)
     """
-    return struct.pack('<d', val)
+    sig = '>d' if be else '<d'
+    return struct.pack(sig, val)
 
 
 def long2py_float(data):
