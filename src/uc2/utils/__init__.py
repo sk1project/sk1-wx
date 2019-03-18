@@ -116,11 +116,20 @@ def double2py_float(data):
     return struct.unpack('<d', data)[0]
 
 
-def py_float2double(val):
+def py_float2long(val, be=False):
+    """
+    Converts Python float to 4 bytes (double)
+    """
+    sig = '>l' if be else '<l'
+    return struct.pack(sig, val)
+
+
+def py_float2double(val, be=False):
     """
     Converts Python float to 8 bytes (double)
     """
-    return struct.pack('<d', val)
+    sig = '>d' if be else '<d'
+    return struct.pack(sig, val)
 
 
 def long2py_float(data):
