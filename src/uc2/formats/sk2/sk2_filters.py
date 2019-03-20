@@ -155,8 +155,8 @@ class SK2_Saver(AbstractSaver):
         bbox = mthds.count_bbox(layers)
         if bbox:
             x, y, x1, y1 = bbox
-            w = abs(x1 - x)
-            h = abs(y1 - y)
+            w = abs(x1 - x) or 1.0
+            h = abs(y1 - y) or 1.0
             coef = min(wp / w, hp / h) * 0.99
             trafo0 = [1.0, 0.0, 0.0, 1.0, -x - w / 2.0, -y - h / 2.0]
             trafo1 = [coef, 0.0, 0.0, -coef, 0.0, 0.0]
