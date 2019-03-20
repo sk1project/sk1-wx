@@ -61,6 +61,7 @@ class XAR_to_SK2_Translator(object):
 
     fontmap = None
     colors = None
+    atomic_tags = None
 
     stack_style = None
     stack = None
@@ -84,6 +85,7 @@ class XAR_to_SK2_Translator(object):
         self.sk2_mtds.delete_page()
 
         self.colors = copy.deepcopy(xar_const.XAR_COLOURS)
+        self.atomic_tags = set()
         self.trafo = [-1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
 
         self.stack = []
@@ -91,21 +93,29 @@ class XAR_to_SK2_Translator(object):
         self.pages = []
         self.layers = []
 
-        self.walk([xar_doc.model])
+        self.walk(xar_doc.model.childs[::-1])
         self.handle_endoffile()
         self.update_document()
 
     def walk(self, stack):
         while stack:
             rec = stack.pop()
-            if rec.childs:
-                childs = rec.childs[::-1]
-                rec.childs = []
-                stack.append(childs[0])
-                stack.append(rec)
-                stack.extend(childs[1:])
-            else:
-                self.process(rec)
+            if not self.is_atomic(rec.cid):
+                if rec.childs:
+                    childs = rec.childs[::-1]
+                    rec.childs = []
+                    stack.append(childs[0])
+                    stack.append(rec)
+                    stack.extend(childs[1:])
+                else:
+                    self.process(rec)
+
+    def is_atomic(self, cid):
+        if cid in self.atomic_tags:
+            return True
+        elif cid not in xar_const.XAR_TYPE_RECORD:
+            self.atomic_tags.add(cid)
+            return True
 
     def process(self, rec):
         cfg = self.sk2_doc.config
