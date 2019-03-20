@@ -16,7 +16,7 @@
 #  along with this program.  If not, see <https:#www.gnu.org/licenses/>.
 
 
-from uc2.uc2const import COLOR_RGB, COLOR_CMYK
+from uc2.uc2const import COLOR_RGB, COLOR_CMYK, COLOR_GRAY
 
 
 XAR_SIGNATURE = b'XARA\xa3\xa3\r\n'
@@ -460,7 +460,14 @@ FILE_TYPE_WEB = b'CXW'
 RGB_BLACK = [COLOR_RGB, [0.0, 0.0, 0.0], 1.0, 'black']
 RGB_WHITE = [COLOR_RGB, [1.0, 1.0, 1.0], 1.0, 'white']
 
-XAR_COLORS = {
+CMYK_BLACK = [COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, 'black']
+CMYK_WHITE = [COLOR_CMYK, [0.0, 0.0, 0.0, 0.0], 1.0, 'white']
+
+GREYSCALE_BLACK = [COLOR_GRAY, [1.0], 1.0, 'black']
+GREYSCALE_WHITE = [COLOR_GRAY, [0.0], 1.0, 'white']
+
+
+XAR_COLOURS = {
     -1: None,
     -2: [COLOR_RGB, [0.00, 0.00, 0.00], 1.0, 'black'],
     -3: [COLOR_RGB, [1.00, 1.00, 1.00], 1.0, 'white'],
@@ -472,6 +479,18 @@ XAR_COLORS = {
     -9: [COLOR_CMYK, [0.00, 0.00, 1.00, 0.0], 1.0, 'yellow'],
 }
 
+# Colour models
+COLOUR_MODEL_RGB = 2
+COLOUR_MODEL_CMYK = 3
+COLOUR_MODEL_HSV = 4
+COLOUR_MODEL_GREYSCALE = 5
+
+# Colour types
+COLOUR_TYPE_NORMAL = 0
+COLOUR_TYPE_SPOT = 1
+COLOUR_TYPE_TINT = 2
+COLOUR_TYPE_LINKED = 3
+COLOUR_TYPE_SHADE = 4
 
 # Default Units
 REF_UNIT_MILLIMETRES = -2
@@ -487,8 +506,7 @@ REF_UNIT_YARDS = -11
 REF_UNIT_MILES = -12
 REF_UNIT_PIXELS = -13
 
-
-# Possible values for Peth Verb
+# Possible values for Path Verb
 PT_MOVETO = 0x6
 PT_LINETO = 0x2
 PT_BEZIERTO = 0x4
@@ -684,10 +702,10 @@ XAR_TYPE_RECORD = {
             {'type': 'byte', 'id': 'colour_type'},
             {'type': 'uint32', 'id': 'entry_index'},
             {'type': 'COLOURREF', 'id': 'parent_colour'},
-            {'type': 'uint32', 'id': 'component1'},
-            {'type': 'uint32', 'id': 'component2'},
-            {'type': 'uint32', 'id': 'component3'},
-            {'type': 'uint32', 'id': 'component4'},
+            {'type': 'fixed24', 'id': 'component1'},
+            {'type': 'fixed24', 'id': 'component2'},
+            {'type': 'fixed24', 'id': 'component3'},
+            {'type': 'fixed24', 'id': 'component4'},
             {'type': 'STRING', 'id': 'colour_name'},
         ]
     },

@@ -91,7 +91,23 @@ def unpack_fixed16_32(data, offset=0, **kw):
             man = (~val & 0xFFFF0000) >> 16
             exp = (val & 0x0000FFFF) / 65536.0
             ret = ~man + exp
-            # print bin(val), bin(~man), val
+    return ret
+
+
+def unpack_fixed24_32(data, offset=0, **kw):
+    string = data[offset:offset + 4]
+    val = packer_uint32_le.unpack(string)[0]
+    ret = 0.0
+    if val:
+        sing = (val & 0x80000000) >> 31
+        if not sing:
+            man = (val & 0xFF000000) >> 24
+            exp = (val & 0x00FFFFFF) / 16777215.0
+            ret = man + exp
+        else:
+            man = (~val & 0xFF000000) >> 24
+            exp = (val & 0x00FFFFFF) / 16777215.0
+            ret = ~man + exp
     return ret
 
 
@@ -175,6 +191,7 @@ READER_DATA_TYPES_MAP = {
     'uint16':              lambda *a, **b: (2, unpack_u2(*a, **b)),
     'uint32':              lambda *a, **b: (4, unpack_u4(*a, **b)),
 
+    'fixed24':             lambda *a, **b: (4, unpack_fixed24_32(*a, **b)),
     'fixed16':             lambda *a, **b: (4, unpack_fixed16_32(*a, **b)),
     'float':               lambda *a, **b: (4, unpack_float(*a, **b)),
     'double':              lambda *a, **b: (8, unpack_double(*a, **b)),

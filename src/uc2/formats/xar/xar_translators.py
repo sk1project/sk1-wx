@@ -21,6 +21,7 @@ from uc2.libgeom import multiply_trafo
 from uc2.libgeom.points import distance
 from uc2.libgeom.trafo import apply_trafo_to_points
 from uc2 import _, uc2const, sk2const, cms
+from colorsys import hsv_to_rgb
 import copy
 
 
@@ -32,6 +33,24 @@ SK2_UNITS = {
     xar_const.REF_UNIT_INCHES: uc2const.UNIT_IN,
     xar_const.REF_UNIT_FEET: uc2const.UNIT_FT,
 }
+
+
+MODE_TINT = {
+    uc2const.COLOR_RGB: xar_const.RGB_WHITE,
+    uc2const.COLOR_CMYK: xar_const.CMYK_WHITE,
+    uc2const.COLOR_GRAY: xar_const.GREYSCALE_WHITE,
+}
+
+
+def color_tint(color1, coef=0.5, colour_name=''):
+    mode = color1[0]
+    color2 = MODE_TINT.get(mode)
+    if color2 is not None:
+        colour = cms.mix_lists(color2[1], color1[1], coef)
+        a = cms.mix_vals(color2[2], color1[2], coef)
+        return [mode, colour, a, colour_name]
+    raise NotImplemented()
+
 
 
 class XAR_to_SK2_Translator(object):
@@ -64,7 +83,7 @@ class XAR_to_SK2_Translator(object):
         self.sk2_mtds = sk2_doc.methods
         self.sk2_mtds.delete_page()
 
-        self.colors = {}
+        self.colors = copy.deepcopy(xar_const.XAR_COLOURS)
         self.trafo = [-1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
 
         self.stack = []
@@ -260,9 +279,41 @@ class XAR_to_SK2_Translator(object):
         self.layer_name = rec.layer_name
 
     def handle_definecomplexcolor(self, rec, cfg):
-        # TODO: process colour_model, colour_type
-        rgb = cms.hexcolor_to_rgb(b"#%s" % rec.rgbcolor)
-        colour = [uc2const.COLOR_RGB, rgb, 1.0, rec.colour_name]
+        colour = None
+
+        if rec.colour_type == xar_const.COLOUR_TYPE_NORMAL:
+            if rec.colour_model == xar_const.COLOUR_MODEL_GREYSCALE:
+                grey = [rec.component1]
+                colour = [uc2const.COLOR_GRAY, grey, 1.0, rec.colour_name]
+            elif rec.colour_model == xar_const.COLOUR_MODEL_RGB:
+                rgb = [rec.component1, rec.component2, rec.component3]
+                colour = [uc2const.COLOR_RGB, rgb, 1.0, rec.colour_name]
+            elif rec.colour_model == xar_const.COLOUR_MODEL_HSV:
+                rgb = hsv_to_rgb(rec.component1, rec.component2, rec.component3)
+                colour = [uc2const.COLOR_RGB, list(rgb), 1.0, rec.colour_name]
+            elif rec.colour_model == xar_const.COLOUR_MODEL_CMYK:
+                cmyk = [rec.component1, rec.component2,
+                        rec.component3, rec.component4]
+                colour = [uc2const.COLOR_CMYK, cmyk, 1.0, rec.colour_name]
+        elif rec.colour_type == xar_const.COLOUR_TYPE_SPOT:
+            pass  # TODO
+        elif rec.colour_type == xar_const.COLOUR_TYPE_TINT:
+            parent_color = self.colors.get(rec.parent_colour)
+            colour = color_tint(parent_color, rec.component1, rec.colour_name)
+        elif rec.colour_type == xar_const.COLOUR_TYPE_LINKED:
+            pass  # TODO
+        elif rec.colour_type == xar_const.COLOUR_TYPE_SHADE:
+            pass  # TODO
+
+        if not colour:
+            # TODO: process colour_model, colour_type
+            # n = self.sk2_doc.doc_file
+            # print '? color name:', rec.rgbcolor, rec.colour_name, n
+            # print '? color:', rec.colour_type, self.colors[rec.parent_colour]
+            # print '?', [rec.component1, rec.component2, rec.component3, rec.component4]
+            rgb = cms.hexcolor_to_rgb(b"#%s" % rec.rgbcolor)
+            colour = [uc2const.COLOR_RGB, rgb, 1.0, rec.colour_name]
+
         self.colors[rec.idx] = colour
 
     def handle_flatfill(self, rec, cfg):
