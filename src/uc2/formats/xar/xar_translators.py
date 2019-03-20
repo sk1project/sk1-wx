@@ -350,8 +350,8 @@ class XAR_to_SK2_Translator(object):
     def handle_linearfill(self, rec, cfg):
         trafo = self.get_trafo()
         vector = apply_trafo_to_points([rec.start_point, rec.end_point], trafo)
-        start_colour = self.colors.get(rec.start_colour, xar_const.RGB_BLACK)
-        end_colour = self.colors.get(rec.end_colour, xar_const.RGB_BLACK)
+        start_colour = self.colors.get(rec.start_colour) or xar_const.RGB_WHITE
+        end_colour = self.colors.get(rec.end_colour) or xar_const.RGB_WHITE
         self.style['linearfill'] = [
             sk2const.GRADIENT_LINEAR,
             vector,
@@ -373,8 +373,8 @@ class XAR_to_SK2_Translator(object):
     #         start_colour = copy.deepcopy(color)
     #         end_colour = copy.deepcopy(color)
     #
-    #     start_colour[2] = rec.start_transparency / 255.0
-    #     end_colour[2] = rec.end_transparency / 255.0
+    #     start_colour[2] = 1. - rec.start_transparency / 255.0
+    #     end_colour[2] = 1. - rec.end_transparency / 255.0
     #
     #     self.style['linearfill'] = [
     #         sk2const.GRADIENT_LINEAR,
