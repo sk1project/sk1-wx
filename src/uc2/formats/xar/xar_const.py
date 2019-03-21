@@ -998,9 +998,9 @@ XAR_TYPE_RECORD = {
         'name': 'REGULAR SHAPE PHASE 2',
         'sec': [
             {'type': 'byte', 'id': 'flags'},
-            {'type': 'uint16', 'id': 'NumberOfSides'},
-            {'type': 'COORD', 'id': 'MajorAxes'},
-            {'type': 'COORD', 'id': 'MinorAxes'},
+            {'type': 'uint16', 'id': 'number_of_sides'},
+            {'type': 'COORD', 'id': 'major_axes'},
+            {'type': 'COORD', 'id': 'minor_axes'},
 
             {'type': 'fixed16', 'id': 'a'},
             {'type': 'fixed16', 'id': 'b'},

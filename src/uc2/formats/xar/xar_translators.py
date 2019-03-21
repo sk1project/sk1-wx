@@ -17,7 +17,7 @@
 
 from uc2.formats.xar import xar_model, xar_const
 from uc2.formats.sk2 import sk2_model
-from uc2.libgeom import multiply_trafo
+from uc2.libgeom import multiply_trafo, trafo_rotate_grad
 from uc2.libgeom.points import distance
 from uc2.libgeom.trafo import apply_trafo_to_points
 from uc2 import _, uc2const, sk2const, cms
@@ -258,29 +258,34 @@ class XAR_to_SK2_Translator(object):
             self.stack = [group]
 
     def regular_shape_phase_2(self, rec, cfg):
-        w = distance(rec.MinorAxes)
-        h = distance(rec.MajorAxes)
+        w = distance(rec.minor_axes)
+        h = distance(rec.major_axes)
 
         if rec.flags == 1:
-
-            box = [-w/2.0, -h/2.0, w, h]
             el = sk2_model.Circle(
                 cfg, None,
-                rect=box,
+                rect=[-w, -h, w*2.0, h*2.0],
                 angle1=0.0,
                 angle2=0.0,
                 circle_type=sk2const.ARC_CHORD,
                 style=self.get_style(fill=True, stroke=True)
             )
-
-            tr = [rec.a, rec.b, rec.c, rec.d, 0.0, 0.0]
+        else:
+            el = sk2_model.Polygon(
+                cfg, None,
+                corners_num=rec.number_of_sides,
+                rect=[0.0, 0.0, 1.0, 1.0],
+                style=self.get_style(fill=True, stroke=True)
+            )
+            tr = trafo_rotate_grad(45.0, 0.5, 0.5)
+            el.trafo = multiply_trafo(el.trafo, tr)
+            tr = [w*2.0, 0.0, 0.0, h*2.0, -w, -h]
             el.trafo = multiply_trafo(el.trafo, tr)
 
-            tr = [1.0, 0.0, 0.0, 1.0, rec.e/1000.0, rec.f/1000.0]
-            el.trafo = multiply_trafo(el.trafo, tr)
-
-            el.trafo = multiply_trafo(el.trafo, self.get_trafo())
-            self.stack.append(el)
+        tr = [rec.a, rec.b, rec.c, rec.d, rec.e/1000.0, rec.f/1000.0]
+        el.trafo = multiply_trafo(el.trafo, tr)
+        el.trafo = multiply_trafo(el.trafo, self.get_trafo())
+        self.stack.append(el)
 
     def handle_ellipse_simple(self, rec, cfg):
         raise 1
