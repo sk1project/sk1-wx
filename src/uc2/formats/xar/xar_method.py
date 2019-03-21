@@ -43,7 +43,7 @@ class XARMethods(object):
         self.model = self.presenter.model
         self.config = self.presenter.config
 
-    def read_rel_path(self, data):
+    def read_path_relative(self, data):
         cx, cy = 0, 0
         path = []
         bez_count = 0
