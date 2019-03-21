@@ -19,6 +19,10 @@ from uc2.formats.xar import xar_const
 from uc2.formats.generic import BinaryModelObject
 from uc2.formats.xar.xar_datatype import READER_DATA_TYPES_MAP
 from uc2.formats.xar.xar_datatype import WRITER_DATA_TYPES_MAP
+import logging
+
+
+log = logging.getLogger(__name__)
 
 
 class XARDocument(BinaryModelObject):
@@ -58,12 +62,10 @@ class XARRecord(BinaryModelObject):
     def resolve(self):
         xar_record = xar_const.XAR_TYPE_RECORD.get(self.cid, {})
         icon_type = not bool(self.childs)
-        if not self._spec:
+        if not self._spec and self.chunk:
             icon_type = 'gtk-new' if icon_type else 'gtk-open'
-
-        if xar_record.get('deprecated', False):  # XXX
-            raise Exception('deprecated')
-
+        if xar_record.get('deprecated', False):
+            icon_type = 'gtk-media-record'
         name = xar_record.get('name') or str(self.cid)
         info = str(len(self.chunk))
         return icon_type, name, info
@@ -74,31 +76,56 @@ class XARRecord(BinaryModelObject):
         for item in self._spec or []:
             reader = READER_DATA_TYPES_MAP.get(item['type'])
             if reader:
-                size = reader(self.chunk, offset)[0]
-                text = item['id']
-                markup.append((offset, size, text))
-                offset += size
+                offset2, val = self._deserialize(reader, item, offset)
+                markup.append((offset, offset2-offset, item['id']))
+                offset = offset2
             else:
                 break
         self.cache_fields = markup
 
     def update(self):
         if self.chunk:
-            offset = 0
-            for item in self._spec or []:
-                reader = READER_DATA_TYPES_MAP.get(item['type'])
-                if reader:
-                    size, val = reader(self.chunk, offset=offset, **item)
-                    setattr(self, item['id'], val)
-                    offset += size
-                else:
-                    break
+            self.deserialize()
         else:
-            for item in self._spec or []:
-                default = item.get('enum', {}).get('0')  # XXX
-                data = getattr(self, item['id'], default)
-                writer = WRITER_DATA_TYPES_MAP.get(item['type'])
-                if writer:
-                    self.chunk += writer(data, **item)
-                else:
-                    break
+            self.serialize()
+
+    def serialize(self):
+        for item in self._spec or []:
+            default = item.get('enum', {}).get('0')  # XXX
+            data = getattr(self, item['id'], default)
+            writer = WRITER_DATA_TYPES_MAP.get(item['type'])
+            if writer:
+                self.chunk += writer(data, **item)
+            else:
+                log.warn('Unknown type %s', item['type'])
+                break
+
+    def deserialize(self):
+        offset = 0
+        for item in self._spec or []:
+            reader = READER_DATA_TYPES_MAP.get(item['type'])
+            if reader:
+                offset, val = self._deserialize(reader, item, offset)
+                setattr(self, item['id'], val)
+            else:
+                log.warn('Unknown type %s', item['type'])
+                break
+
+    def _deserialize(self, reader, item, offset):
+        number = self._get_element_number(item)
+        if number is None:
+            size, val = reader(self.chunk, offset=offset, **item)
+            offset += size
+        else:
+            val = []
+            for i in range(number):
+                size, v = reader(self.chunk, offset=offset, **item)
+                offset += size
+                val.append(v)
+        return offset, val
+
+    def _get_element_number(self, element):
+        number = element.get('number', None)
+        if number is not None and type(number) not in [int, float]:
+            number = getattr(self, number)
+        return number

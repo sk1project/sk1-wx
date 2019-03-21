@@ -768,7 +768,14 @@ XAR_TYPE_RECORD = {
     TAG_PATH: {'name': 'PATH'},
     TAG_PATH_FILLED: {'name': 'PATH FILLED'},
     TAG_PATH_STROKED: {'name': 'PATH STROKED'},
-    TAG_PATH_FILLED_STROKED: {'name': 'PATH FILLED STROKED'},
+    TAG_PATH_FILLED_STROKED: {
+        'name': 'PATH FILLED STROKED',
+        'sec': [
+            {'type': 'uint32', 'id': 'number_of_coords'},
+            {'type': 'byte', 'id': 'verb', 'number': 'number_of_coords'},
+            {'type': 'COORD', 'id': 'coord', 'number': 'number_of_coords'},
+        ]
+    },
     TAG_GROUP: {'name': 'GROUP', 'sec': None},
     TAG_BLEND: {'name': 'BLEND'},
     TAG_BLENDER: {'name': 'BLENDER'},
