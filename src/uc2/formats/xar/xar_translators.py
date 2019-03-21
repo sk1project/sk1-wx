@@ -144,7 +144,14 @@ class XAR_to_SK2_Translator(object):
 
         # Object tags
         elif rec.cid == xar_const.TAG_PATH:
-            raise 1
+            raise NotImplementedError
+        elif rec.cid == xar_const.TAG_PATH_FILLED:
+            self.handle_path_filled(rec, cfg)
+        elif rec.cid == xar_const.TAG_PATH_STROKED:
+            self.handle_path_stroked(rec, cfg)
+        elif rec.cid == xar_const.TAG_PATH_FILLED_STROKED:
+            self.handle_path_filled_stroked(rec, cfg)
+
         elif rec.cid == xar_const.TAG_GROUP:
             self.handle_group(rec, cfg)
         elif rec.cid == xar_const.TAG_PATH_RELATIVE_STROKED:
@@ -393,7 +400,7 @@ class XAR_to_SK2_Translator(object):
     #         sk2const.GRADIENT_EXTEND_PAD
     #     ]
 
-    def handle_path_relative_stroked(self, rec, cfg):
+    def handle_path_strokedled(self, rec, cfg):
         curve = sk2_model.Curve(
             cfg, None,
             self.get_path(rec),
@@ -402,7 +409,7 @@ class XAR_to_SK2_Translator(object):
         )
         self.stack.append(curve)
 
-    def handle_path_relative_filled(self, rec, cfg):
+    def handle_path_filled(self, rec, cfg):
         curve = sk2_model.Curve(
             cfg, None,
             self.get_path(rec),
@@ -411,10 +418,37 @@ class XAR_to_SK2_Translator(object):
         )
         self.stack.append(curve)
 
-    def handle_path_relative_filled_stroked(self, rec, cfg):
+    def handle_path_filled_stroked(self, rec, cfg):
         curve = sk2_model.Curve(
             cfg, None,
             self.get_path(rec),
+            self.get_trafo(),
+            self.get_style(stroke=True, fill=True)
+        )
+        self.stack.append(curve)
+
+    def handle_path_relative_stroked(self, rec, cfg):
+        curve = sk2_model.Curve(
+            cfg, None,
+            self.get_path_relative(rec),
+            self.get_trafo(),
+            self.get_style(stroke=True)
+        )
+        self.stack.append(curve)
+
+    def handle_path_relative_filled(self, rec, cfg):
+        curve = sk2_model.Curve(
+            cfg, None,
+            self.get_path_relative(rec),
+            self.get_trafo(),
+            self.get_style(fill=True)
+        )
+        self.stack.append(curve)
+
+    def handle_path_relative_filled_stroked(self, rec, cfg):
+        curve = sk2_model.Curve(
+            cfg, None,
+            self.get_path_relative(rec),
             self.get_trafo(),
             self.get_style(stroke=True, fill=True)
         )
@@ -477,7 +511,19 @@ class XAR_to_SK2_Translator(object):
 
     def get_path(self, rec):
         paths = []
-        for closed, points in self.xar_mtds.read_path(rec):
+        for closed, points in self.xar_mtds.read_path(zip(rec.verb, rec.coord)):
+            marker = sk2const.CURVE_CLOSED if closed else sk2const.CURVE_OPENED
+            path = []
+            for point in points:
+                if len(point) == 3:
+                    point = [point[0], point[1], point[2], sk2const.NODE_CUSP]
+                path.append(point)
+            paths.append([path[0], path[1:], marker])
+        return paths
+
+    def get_path_relative(self, rec):
+        paths = []
+        for closed, points in self.xar_mtds.read_path_relative(rec.path):
             marker = sk2const.CURVE_CLOSED if closed else sk2const.CURVE_OPENED
             path = []
             for point in points:

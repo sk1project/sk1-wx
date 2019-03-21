@@ -43,8 +43,7 @@ class XARMethods(object):
         self.model = self.presenter.model
         self.config = self.presenter.config
 
-    def read_path(self, rec):
-        data = rec.path
+    def read_rel_path(self, data):
         cx, cy = 0, 0
         path = []
         bez_count = 0
@@ -85,6 +84,39 @@ class XARMethods(object):
                 else:
                     cx, cy = cx - x, cy - y
                     path.append([cx, cy])
+
+        if path:
+            yield closed, path
+
+    def read_path(self, data):
+        path = []
+        bez_count = 0
+        for (verb, (x, y)) in data:
+            closed = verb & 0x1
+            verb = verb & 0xe
+            if verb == xar_const.PT_LINETO:
+                path.append([x, y])
+                if closed:
+                    yield closed, path
+                    path = []
+            elif verb == xar_const.PT_BEZIERTO:
+                if bez_count == 0:
+                    cx1, cy1 = x, y
+                    bez_count += 1
+                elif bez_count == 1:
+                    cx2, cy2 = x, y
+                    bez_count += 1
+                elif bez_count == 2:
+                    cx3, cy3 = x, y
+                    bez_count = 0
+                    path.append(
+                        ([cx1, cy1], [cx2, cy2], [cx3, cy3])
+                    )
+                    if closed:
+                        yield closed, path
+                        path = []
+            elif verb == xar_const.PT_MOVETO:
+                    path.append([x, y])
 
         if path:
             yield closed, path
