@@ -1009,7 +1009,7 @@ XAR_TYPE_RECORD = {
             {'type': 'int32', 'id': 'e'},
             {'type': 'int32', 'id': 'f'},
 
-            {'type': 'double', 'id': 'StellRadiusToPrimary'},
+            {'type': 'double', 'id': 'stell_radius_to_primary'},
             {'type': 'double', 'id': 'StellOffsetRatio'},
             {'type': 'double', 'id': 'PrimaryCurveToPrimary'},
             {'type': 'double', 'id': 'StellCurveToPrimary'},

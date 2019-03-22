@@ -201,7 +201,7 @@ class XAR_to_SK2_Translator(object):
 
         # General regular shapes
         elif rec.cid == xar_const.TAG_REGULAR_SHAPE_PHASE_2:
-            self.regular_shape_phase_2(rec, cfg)
+            self.handle_regular_shape_phase_2(rec, cfg)
 
         # Miscellaneous records
         elif rec.cid == xar_const.TAG_SPREAD_PHASE2:
@@ -257,7 +257,7 @@ class XAR_to_SK2_Translator(object):
             self.flush_stack(group)
             self.stack = [group]
 
-    def regular_shape_phase_2(self, rec, cfg):
+    def handle_regular_shape_phase_2(self, rec, cfg):
         w = distance(rec.minor_axes)
         h = distance(rec.major_axes)
 
@@ -274,10 +274,11 @@ class XAR_to_SK2_Translator(object):
             el = sk2_model.Polygon(
                 cfg, None,
                 corners_num=rec.number_of_sides,
-                rect=[0.0, 0.0, 1.0, 1.0],
+                coef2=rec.stell_radius_to_primary if rec.flags & 2 else 1.0,
                 style=self.get_style(fill=True, stroke=True)
             )
-            tr = trafo_rotate_grad(45.0, 0.5, 0.5)
+            angle = -90 + 360.0 / rec.number_of_sides / 2.0
+            tr = trafo_rotate_grad(angle, 0.5, 0.5)
             el.trafo = multiply_trafo(el.trafo, tr)
             tr = [w*2.0, 0.0, 0.0, h*2.0, -w, -h]
             el.trafo = multiply_trafo(el.trafo, tr)
