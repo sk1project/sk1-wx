@@ -73,6 +73,7 @@ class XARLoader(AbstractLoader):
             elif rec.cid == xar_const.TAG_UP:
                 parent_stack[-1].add(rec)
                 parent_stack = parent_stack[:-1]
+                self.check_loading()
             else:
                 parent_stack[-1].add(rec)
 
