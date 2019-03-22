@@ -760,8 +760,8 @@ class Polygon(PrimitiveObject):
 
     def __init__(self, config, parent=None,
                  rect=[] + sk2const.STUB_RECT,
-                 angel1=0.0,
-                 angel2=0.0,
+                 angle1=0.0,
+                 angle2=0.0,
                  coef1=1.0,
                  coef2=1.0,
                  corners_num=0,
@@ -773,8 +773,8 @@ class Polygon(PrimitiveObject):
         self.corners_num = corners_num
         if not corners_num:
             self.corners_num = config.default_polygon_num
-        self.angle1 = angel1
-        self.angle2 = angel2
+        self.angle1 = angle1
+        self.angle2 = angle2
         self.coef1 = coef1
         self.coef2 = coef2
         self.trafo = [rect[2], 0.0, 0.0, rect[3], rect[0], rect[1]]
