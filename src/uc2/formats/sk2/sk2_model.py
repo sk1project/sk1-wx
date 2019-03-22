@@ -32,7 +32,7 @@ LOG = logging.getLogger(__name__)
 
 class DocumentObject(TextModelObject):
     """
-    Abstract parent class for all document 
+    Abstract parent class for all document
     objects. Provides common object properties.
     """
     is_layer = False
@@ -148,8 +148,8 @@ class Document(DocumentObject):
 
 class Pages(DocumentObject):
     """
-    Represents container for pages. 
-    Stores default page format value and page objects in childs list. 
+    Represents container for pages.
+    Stores default page format value and page objects in childs list.
     Also has a page counter field.
     Page format: [format name, (width, height), orientation]
     """
@@ -274,7 +274,7 @@ class Layer(StructuralObject):
 class GuideLayer(Layer):
     """
     Represents guide line layer.
-    This is a special layer to store document guide lines. 
+    This is a special layer to store document guide lines.
     The object stores layer name and color used for guide line rendering.
     All child objects are in childs list.
     """
@@ -296,7 +296,7 @@ class GuideLayer(Layer):
 class GridLayer(Layer):
     """
     Represents guide line layer.
-    This is a special layer to manage document grid. 
+    This is a special layer to manage document grid.
     The object stores layer name and color used for grid rendering.
     All child objects are in childs list.
     """
@@ -320,7 +320,7 @@ class GridLayer(Layer):
 class LayerGroup(StructuralObject):
     """
     Represents container for regular layers.
-    The object is not used yet. 
+    The object is not used yet.
     All child layers are in childs list.
     """
     cid = LAYER_GROUP
@@ -386,7 +386,7 @@ class Guide(StructuralObject):
 # ================Selectable Objects==================
 class SelectableObject(DocumentObject):
     """
-    Abstract parent class for selectable objects. 
+    Abstract parent class for selectable objects.
     Provides common selectable object properties.
     """
     cid = SELECTABLE_CLASS
@@ -402,7 +402,7 @@ class SelectableObject(DocumentObject):
 # ---------------Compound objects---------------------
 class Group(SelectableObject):
     """
-    Represents group object. 
+    Represents group object.
     All child objects are in childs list.
     """
 
@@ -431,8 +431,6 @@ class Group(SelectableObject):
                                                    child.cache_bbox)
 
     def update(self):
-        for child in self.childs:
-            child.update()
         self.update_bbox()
 
     def get_trafo_snapshot(self):
@@ -449,8 +447,8 @@ class Group(SelectableObject):
 
 class TP_Group(Group):
     """
-    Represents text-on-path group object. 
-    All child objects are in childs list. First child object is a reference 
+    Represents text-on-path group object.
+    All child objects are in childs list. First child object is a reference
     path and this path is not closed.
     Other child objects are text objects.
     Each text object has according record in childs_data list.
@@ -481,10 +479,10 @@ class TP_Group(Group):
 
 class Container(Group):
     """
-    Represents container group object. 
-    All child objects are in childs list. 
+    Represents container group object.
+    All child objects are in childs list.
     First child object is a container.
-    Other child objects are container's content.	
+    Other child objects are container's content.
     """
 
     cid = CONTAINER
@@ -500,11 +498,6 @@ class Container(Group):
         self.parent = parent
         self.childs += childs
 
-    def update(self):
-        for child in self.childs:
-            child.update()
-        self.update_bbox()
-
     def update_bbox(self):
         self.cache_container = self.childs[0]
         self.cache_bbox = deepcopy(self.cache_container.cache_bbox)
@@ -512,7 +505,7 @@ class Container(Group):
 
 class PrimitiveObject(SelectableObject):
     """
-    Abstract parent class for graphics primitives. 
+    Abstract parent class for graphics primitives.
     Provides common primitive object properties.
     """
 
@@ -613,7 +606,7 @@ class PrimitiveObject(SelectableObject):
 
 class Rectangle(PrimitiveObject):
     """
-    Represents rectangle object. 
+    Represents rectangle object.
     The object is defined by start point (lower left corner)
     and width/height values (unsigned floats).
     'corners' list describes level of corner rounding (from 0.0 to 1.0).
@@ -693,7 +686,7 @@ class Rectangle(PrimitiveObject):
 
 class Circle(PrimitiveObject):
     """
-    Represents circle/ellipse object. 
+    Represents circle/ellipse object.
     It is assumed that initial object is a circle with 0.5 points radius and
     center at [0.5,0.5] point. Object is initialized by rect list:
     [x,y, width, height] where [x,y] is a circle/ellipse object center and
@@ -739,7 +732,7 @@ class Circle(PrimitiveObject):
 
 class Polygon(PrimitiveObject):
     """
-    Represents polygon object. 
+    Represents polygon object.
     It is assumed that initial object is a polygon with 0.5 points radius and
     center at [0.5,0.5] point. Object is initialized by rect list:
     [x,y, width, height] where [x,y] is a circle/ellipse object center and
@@ -812,24 +805,24 @@ class Polygon(PrimitiveObject):
 
 class Curve(PrimitiveObject):
     """
-    Represents curve object. 
-    
+    Represents curve object.
+
     It is assumed that curve is a list of paths:
     curve = [path0, path1, ...]
-    
+
     Where path is defined as:
     [start_point, points, end_marker]
     start_pont - [x,y]
     end_marker - is closed CURVE_CLOSED = 1, if not CURVE_OPENED = 0
-    
+
     Path points are defined as:
     [point0, point1,...]
     line point - [x,y]
     curve point - [[x1,y1],[x2,y2],[x3,y3], marker]
     marker - NODE_CUSP = 0; NODE_SMOOTH = 1; NODE_SYMMETRICAL = 2
-    
+
     Curve affine transformation is stored and collected separately,
-    i.e. curve points are not modified to avoid accurancy lost.	
+    i.e. curve points are not modified to avoid accurancy lost.
     """
 
     cid = CURVE
@@ -855,6 +848,12 @@ class Curve(PrimitiveObject):
             if path[2] == sk2const.CURVE_CLOSED:
                 return True
         return False
+
+    def is_closed_all(self):
+        for path in self.paths:
+            if path[2] == sk2const.CURVE_OPENED:
+                return False
+        return True
 
     def to_curve(self):
         return self
@@ -1118,16 +1117,16 @@ class Text(PrimitiveObject):
 
 class Pixmap(PrimitiveObject):
     """
-    Represents pixmap object. 
+    Represents pixmap object.
     Raster graphics is stored as a TIFF bitmaps for CMYK color space and as
     a PNG bitmap for others. 'bitmap' field contains raster info, but
     transparency data is stored as a grayscale image in 'alpha_channel'.
-    Images are stored as a base64 encoded string to resolve EOL and other 
-    special character issues. 'colorspace' describes 'bitmap' type. 
+    Images are stored as a base64 encoded string to resolve EOL and other
+    special character issues. 'colorspace' describes 'bitmap' type.
     Possible types are: monochrome, grayscale, RGB and CMYK.
     For monochrome and grayscale colorspaces is available duotone mode. Duotone
     colors (foreground and background) are defined in 'style' field.
-    It is assumed that initial lower left corner of pixmap is [0.0,0.0] point 
+    It is assumed that initial lower left corner of pixmap is [0.0,0.0] point
     and pixmap size is defined by 72 dpi resolution.
     """
 
