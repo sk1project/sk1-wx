@@ -107,6 +107,9 @@ def builder(element_id, **kwargs):
         points = kwargs.get('points', [(0, 0), (1, 1)])
         params = ''.join([cgm_unit(x) + cgm_unit(y) for x, y in points])
         header = '\x40\x3f' + utils.py_int2word(len(params), True)
+    # Polygon
+    elif element_id == cgm_const.INTERIOR_STYLE:
+        header = '\x52\xc2'
 
     if header:
         return elf(header, params)
@@ -189,15 +192,28 @@ class SK2_to_CGM_Translator(object):
             for item in obj.chils:
                 self.process_obj(item)
 
-    def make_polylines(self, obj):
+    def make_polylines(self, obj, paths=None):
         stroke = obj.style[1]
         self.add(cgm_const.LINE_WIDTH, width=stroke[1])
-        color = self.sk2_doc.cms.get_display_color255(stroke[2])
+        color = self.sk2_doc.cms.get_display_color255(stroke[2])[:3]
         self.add(cgm_const.LINE_COLOUR, color=color)
-        paths = libgeom.get_flattened_path(obj)
+        if not paths:
+            paths = libgeom.get_flattened_path(obj)
         for path in paths:
             points = [path[0], ] + path[1]
             self.add(cgm_const.POLYLINE, points=points)
 
     def make_polygons(self, obj):
+        fill = obj.style[0]
+        stroke = obj.style[1]
+        paths = libgeom.get_flattened_path(obj)
+        if stroke and stroke[7]:
+            self.make_polylines(obj, paths)
+        if fill:
+            pass
+        if stroke and not stroke[7]:
+            self.make_polylines(obj, paths)
+
+    def generate_polygons(self):
         pass
+
