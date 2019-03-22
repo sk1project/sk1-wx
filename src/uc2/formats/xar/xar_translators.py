@@ -95,7 +95,7 @@ class XAR_to_SK2_Translator(object):
 
         self.walk(xar_doc.model.childs[::-1])
         self.handle_endoffile()
-        self.update_document()
+        sk2_doc.model.do_update()
 
     def walk(self, stack):
         while stack:
@@ -537,12 +537,6 @@ class XAR_to_SK2_Translator(object):
                 path.append(point)
             paths.append([path[0], path[1:], marker])
         return paths
-
-    def update_document(self):
-        for page in self.sk2_mtds.get_pages():
-            for layer in self.sk2_mtds.get_layers(page):
-                for el in layer.childs:
-                    el.update()
 
     def flush_stack(self, parent):
         for el in self.stack:
