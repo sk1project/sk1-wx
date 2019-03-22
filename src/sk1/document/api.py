@@ -410,7 +410,7 @@ class AbstractAPI:
         tpgroup.childs_data[index] = data
         path = tpgroup.childs[0]
         tpgroup.set_text_on_path(path, text_obj, data)
-        tpgroup.update()
+        tpgroup.do_update()
 
 
 class PresenterAPI(AbstractAPI):
@@ -1084,7 +1084,7 @@ class PresenterAPI(AbstractAPI):
                 copied_objs = []
                 for obj in objs:
                     copied_obj = obj.copy()
-                    copied_obj.update()
+                    copied_obj.do_update()
                     copied_objs.append(copied_obj)
                 self._apply_trafo(copied_objs, trafo)
                 before = self._get_layers_snapshot()
@@ -1402,7 +1402,7 @@ class PresenterAPI(AbstractAPI):
 
             parent = objs[-1].parent
             group = sk2_model.Group(objs[-1].config, parent, objs)
-            group.update()
+            group.do_update()
             for obj in objs:
                 obj.parent.childs.remove(obj)
             parent.childs.append(group)
@@ -1514,7 +1514,7 @@ class PresenterAPI(AbstractAPI):
 
             parent = container.parent
             group = sk2_model.Container(container.config, parent, objs)
-            group.update()
+            group.do_update()
             for obj in objs:
                 obj.parent.childs.remove(obj)
             parent.childs.append(group)
@@ -2113,7 +2113,7 @@ class PresenterAPI(AbstractAPI):
         parent = text_obj.parent
         group = sk2_model.TP_Group(text_obj.config, parent, objs, childs_data)
         group.set_text_on_path(circle, text_obj, childs_data)
-        group.update()
+        group.do_update()
         for obj in objs:
             obj.parent.childs.remove(obj)
         parent.childs.append(group)
