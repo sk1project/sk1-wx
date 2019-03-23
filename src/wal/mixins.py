@@ -20,6 +20,7 @@ import wx
 import const
 from const import tr, untr
 
+
 class DialogMixin(object):
     def fit(self):
         self.Fit()
@@ -234,7 +235,10 @@ class GenericGWidget(wx.Panel, WidgetMixin):
     def _mouse_up(self, event):
         self.mouse_pressed = False
         if self.mouse_over:
-            if self.onclick and self.enabled: self.onclick()
+            if self.onclick and self.enabled:
+                self.mouse_over = False
+                self.onclick()
+                self.mouse_over = True
         self.refresh()
 
     def _on_timer(self, event):
