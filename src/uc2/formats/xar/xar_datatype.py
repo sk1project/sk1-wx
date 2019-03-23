@@ -180,6 +180,12 @@ def read_tag_description_list(data, offset=0, **kw):
     return size, descriptions
 
 
+def read_stop_colour(data, offset=0, **kw):
+    position = unpack_double(data, offset)
+    colour = unpack_s4(data, offset+8)
+    return 12, [position, colour]
+
+
 def read_bitmap_data(data, offset=0, **kw):
     bitmap_data = data[offset:]
     return len(bitmap_data), bitmap_data
@@ -213,6 +219,8 @@ READER_DATA_TYPES_MAP = {
     'BITMAP_DATA':         read_bitmap_data,
     'Tag Description*':    read_tag_description_list,
     'Verb and Coord List': read_verb_and_coord_list,
+    'StopColour':          read_stop_colour,
+
 }
 
 

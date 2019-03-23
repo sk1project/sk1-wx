@@ -1156,7 +1156,19 @@ XAR_TYPE_RECORD = {
     TAG_NODEBLENDPATH_FILLED: {'name': 'NODEBLENDPATH FILLED'},
 
     # Multi stage fill tags
-    TAG_LINEARFILLMULTISTAGE: {'name': 'LINEARFILLMULTISTAGE'},
+    TAG_LINEARFILLMULTISTAGE: {
+        'name': 'LINEARFILLMULTISTAGE',
+        'sec': [
+            {'type': 'COORD', 'id': 'start_point'},
+            {'type': 'COORD', 'id': 'end_point'},
+            {'type': 'COLOURREF', 'id': 'start_colour'},
+            {'type': 'COLOURREF', 'id': 'end_colour'},
+            {'type': 'uint32', 'id': 'num_cols'},
+            {'type': 'StopColour', 'id': 'stop_colors', 'number': 'num_cols'}
+            # {'type': 'double', 'id': 'position'},
+            # {'type': 'COLOURREF', 'id': 'colour'},
+        ]
+    },
     TAG_CIRCULARFILLMULTISTAGE: {'name': 'CIRCULARFILLMULTISTAGE'},
     TAG_ELLIPTICALFILLMULTISTAGE: {'name': 'ELLIPTICALFILLMULTISTAGE'},
     TAG_CONICALFILLMULTISTAGE: {'name': 'CONICALFILLMULTISTAGE'},

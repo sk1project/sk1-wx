@@ -217,6 +217,10 @@ class XAR_to_SK2_Translator(object):
         elif rec.cid == xar_const.TAG_SPREAD_PHASE2:
             self.handle_spread_phase2(rec, cfg)
 
+        # Multi stage fill tags
+        elif rec.cid == xar_const.TAG_LINEARFILLMULTISTAGE:
+            self.handle_linearfillmultistage(rec, cfg)
+
     def handle_up(self, rec, cfg):
         self.style = self.stack_style.pop()
 
@@ -383,13 +387,32 @@ class XAR_to_SK2_Translator(object):
     def handle_linearfill(self, rec, cfg):
         trafo = self.get_trafo()
         vector = apply_trafo_to_points([rec.start_point, rec.end_point], trafo)
-        start_colour = self.colors.get(rec.start_colour) or xar_const.RGB_WHITE
-        end_colour = self.colors.get(rec.end_colour) or xar_const.RGB_WHITE
+        start_colour = self.get_color(rec.start_colour)
+        end_colour = self.get_color(rec.end_colour)
+        stops = [[0.0, start_colour], [1.0, end_colour]]
         self.style['linearfill'] = [
             sk2const.GRADIENT_LINEAR,
             vector,
-            [[0.0, start_colour], [1.0, end_colour]],
-            sk2const.GRADIENT_EXTEND_PAD
+            stops,
+            sk2const.GRADIENT_EXTEND_PAD  # TODO
+        ]
+
+    def handle_linearfillmultistage(self, rec, cfg):
+        trafo = self.get_trafo()
+        vector = apply_trafo_to_points([rec.start_point, rec.end_point], trafo)
+        start_colour = self.get_color(rec.start_colour)
+        end_colour = self.get_color(rec.end_colour)
+
+        stops = [[0.0, start_colour]]
+        for p in rec.stop_colors:
+            stops.append([p[0], self.get_color(p[1])])
+        stops.append([1.0, end_colour])
+
+        self.style['linearfill'] = [
+            sk2const.GRADIENT_LINEAR,
+            vector,
+            stops,
+            sk2const.GRADIENT_EXTEND_PAD  # TODO
         ]
 
     # def handle_lineartransparentfill(self, rec, cfg):
@@ -481,6 +504,9 @@ class XAR_to_SK2_Translator(object):
         self.page_format = [fmt, size, orient]
         trafo = [1.0, 0.0, 0.0, 1.0, -1.0 * width / 2.0, -1.0 * height / 2.0]
         self.set_trafo(trafo)
+
+    def get_color(self, colour_ref):
+        return self.colors.get(colour_ref) or xar_const.RGB_WHITE
 
     def set_trafo(self, trafo):
         self.trafo = trafo
