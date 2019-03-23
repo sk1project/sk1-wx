@@ -18,7 +18,7 @@
 from uc2.formats.xar import xar_model, xar_const
 from uc2.formats.sk2 import sk2_model
 from uc2.libgeom import multiply_trafo, trafo_rotate_grad
-from uc2.libgeom.points import distance
+from uc2.libgeom.points import distance, is_equal_points
 from uc2.libgeom.trafo import apply_trafo_to_points
 from uc2 import _, uc2const, sk2const, cms
 from colorsys import hsv_to_rgb
@@ -51,6 +51,16 @@ def color_tint(color1, coef=0.5, colour_name=''):
         return [mode, colour, a, colour_name]
     raise NotImplemented()
 
+
+def pick_page_format_name(width, height):
+    if width > height:
+        size = (height, width)
+    else:
+        size = (width, height)
+    for name, fzise in uc2const.PAGE_FORMATS.items():
+        if is_equal_points(fzise, size, 2):
+            return name
+    return _('Custom')
 
 
 class XAR_to_SK2_Translator(object):
@@ -461,9 +471,9 @@ class XAR_to_SK2_Translator(object):
         self.stack.append(curve)
 
     def handle_spred_information(self, rec, cfg):
-        fmt = _('Custom')
         width = rec.width
         height = rec.height
+        fmt = pick_page_format_name(width, height)
         size = (width, height)
         orient = uc2const.PORTRAIT
         if width > height:
