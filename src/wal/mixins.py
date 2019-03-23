@@ -238,7 +238,6 @@ class GenericGWidget(wx.Panel, WidgetMixin):
             if self.onclick and self.enabled:
                 self.mouse_over = False
                 self.onclick()
-                self.mouse_over = True
         self.refresh()
 
     def _on_timer(self, event):
