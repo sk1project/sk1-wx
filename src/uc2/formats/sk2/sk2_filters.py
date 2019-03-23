@@ -69,6 +69,9 @@ class SK2_Loader(AbstractLoader):
             self.parent_stack[-1].childs.append(obj)
             self.parent_stack.append(obj)
 
+    def set(self, item, val):
+        self.set_field(item, val)
+
     def set_field(self, item, val):
         obj = self.parent_stack[-1]
         if item.startswith('is_'):
@@ -84,6 +87,9 @@ class SK2_Loader(AbstractLoader):
             elif item in ('size', 'colorspace'):
                 return
         obj.__dict__[item] = val
+
+    def end(self):
+        self.obj_end()
 
     def obj_end(self):
         self.parent_stack = self.parent_stack[:-1]
@@ -137,10 +143,10 @@ class SK2_Saver(AbstractSaver):
                 else:
                     item_str = self.field_to_str(props[item])
                 if item_str is not None:
-                    self.writeln("set_field('%s',%s)" % (item, item_str))
+                    self.writeln("set('%s',%s)" % (item, item_str))
         for child in obj.childs:
             self.save_obj(child)
-        self.writeln("obj_end()")
+        self.writeln("end()")
 
     def generate_preview(self):
         wp, hp = self.config.preview_size
