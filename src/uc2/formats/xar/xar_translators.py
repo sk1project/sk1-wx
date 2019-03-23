@@ -187,6 +187,9 @@ class XAR_to_SK2_Translator(object):
         elif rec.cid == xar_const.TAG_LINEARFILL:
             self.handle_linearfill(rec, cfg)
 
+        elif rec.cid == xar_const.TAG_CIRCULARFILL:
+            self.handle_circularfill(rec, cfg)
+
         elif rec.cid == xar_const.TAG_FILL_REPEATING:
             self.handle_fill_repeating(rec, cfg)
         elif rec.cid == xar_const.TAG_FILL_NONREPEATING:
@@ -407,8 +410,21 @@ class XAR_to_SK2_Translator(object):
         start_colour = self.get_color(rec.start_colour)
         end_colour = self.get_color(rec.end_colour)
         stops = [[0.0, start_colour], [1.0, end_colour]]
-        self.style['linearfill'] = [
+        self.style['gradient_fill'] = [
             sk2const.GRADIENT_LINEAR,
+            vector,
+            stops,
+            sk2const.GRADIENT_EXTEND_PAD  # TODO
+        ]
+
+    def handle_circularfill(self, rec, cfg):
+        trafo = self.get_trafo()
+        vector = apply_trafo_to_points([rec.centre_point, rec.edge_point], trafo)
+        start_colour = self.get_color(rec.start_colour)
+        end_colour = self.get_color(rec.end_colour)
+        stops = [[0.0, start_colour], [1.0, end_colour]]
+        self.style['gradient_fill'] = [
+            sk2const.GRADIENT_RADIAL,
             vector,
             stops,
             sk2const.GRADIENT_EXTEND_PAD  # TODO
@@ -437,7 +453,7 @@ class XAR_to_SK2_Translator(object):
             stops.append([p[0], self.get_color(p[1])])
         stops.append([1.0, end_colour])
 
-        self.style['linearfill'] = [
+        self.style['gradient_fill'] = [
             sk2const.GRADIENT_LINEAR,
             vector,
             stops,
@@ -449,7 +465,7 @@ class XAR_to_SK2_Translator(object):
     #
     #     vector = apply_trafo_to_points([rec.start_point, rec.end_point], trafo)
     #
-    #     linearfill = self.style.get('linearfill')
+    #     linearfill = self.style.get('gradient_fill')
     #     if linearfill:
     #         start_colour = copy.deepcopy(linearfill[2][0][1])
     #         end_colour = copy.deepcopy(linearfill[2][1][1])
@@ -461,7 +477,7 @@ class XAR_to_SK2_Translator(object):
     #     start_colour[2] = 1. - rec.start_transparency / 255.0
     #     end_colour[2] = 1. - rec.end_transparency / 255.0
     #
-    #     self.style['linearfill'] = [
+    #     self.style['gradient_fill'] = [
     #         sk2const.GRADIENT_LINEAR,
     #         vector,
     #         [[0.0, start_colour], [1.0, end_colour]],
@@ -552,9 +568,9 @@ class XAR_to_SK2_Translator(object):
         fill_rule = sk2const.FILL_EVENODD
         fill_data = []
         fill_type = sk2const.FILL_SOLID
-        if self.style.get('linearfill'):
+        if self.style.get('gradient_fill'):
             fill_type = sk2const.FILL_GRADIENT
-            fill_data = self.style['linearfill']
+            fill_data = self.style['gradient_fill']
         elif self.style.get('flat_colour_fill'):
             fill_type = sk2const.FILL_SOLID
             fill_data = self.style['flat_colour_fill']

@@ -563,7 +563,7 @@ XAR_DEFAULT_STYLE = {
     'feather': None,
     'stroke_type': 0x01000000,
     # addition
-    'linearfill': None,
+    'gradient_fill': None,
     'fill_repeating': None,
 }
 
@@ -842,7 +842,18 @@ XAR_TYPE_RECORD = {
             # TODO: support 3 point
         ]
     },
-    TAG_CIRCULARFILL: {'name': 'CIRCULARFILL'},
+    TAG_CIRCULARFILL: {
+        'name': 'CIRCULARFILL',
+        'sec': [
+            {'type': 'COORD', 'id': 'centre_point'},
+            {'type': 'COORD', 'id': 'edge_point'},
+            {'type': 'COLOURREF', 'id': 'start_colour'},
+            {'type': 'COLOURREF', 'id': 'end_colour'},
+            # PROFILE
+            {'type': 'double', 'id': 'bias'},
+            {'type': 'double', 'id': 'gain'},
+        ]
+    },
     TAG_ELLIPTICALFILL: {'name': 'ELLIPTICALFILL'},
     TAG_CONICALFILL: {'name': 'CONICALFILL'},
     TAG_BITMAPFILL: {'name': 'BITMAPFILL'},
@@ -863,6 +874,7 @@ XAR_TYPE_RECORD = {
             {'type': 'byte', 'id': 'start_transparency'},
             {'type': 'byte', 'id': 'end_transparency'},
             {'type': 'byte', 'id': 'transparency_type'},
+            #PROFILE
             {'type': 'double', 'id': 'bias'},
             {'type': 'double', 'id': 'gain'},
             # TODO: support 3 point
