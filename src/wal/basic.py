@@ -497,6 +497,7 @@ class Canvas(object):
 class SensitiveCanvas(Canvas):
     kbdproc = None
     mouse_captured = False
+    click_flag = False
 
     def __init__(self, check_move=False, kbdproc=None):
         Canvas.__init__(self)
@@ -538,7 +539,10 @@ class SensitiveCanvas(Canvas):
         self.mouse_left_down(event.GetPositionTuple())
 
     def _mouse_left_up(self, event):
-        self.mouse_left_up(event.GetPositionTuple())
+        if not self.click_flag:
+            self.click_flag = True
+            self.mouse_left_up(event.GetPositionTuple())
+            self.click_flag = False
 
     def _mouse_right_down(self, event):
         self.mouse_right_down(event.GetPositionTuple())
