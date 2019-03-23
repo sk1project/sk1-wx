@@ -84,7 +84,7 @@ class AbstractLoader(object):
 
     def check_loading(self):
         position = float(self.fileptr.tell()) / float(self.file_size) * 0.95
-        if position - self.position > 0.02:
+        if position - self.position > 0.05:
             self.position = position
             self.parsing_msg(position)
 

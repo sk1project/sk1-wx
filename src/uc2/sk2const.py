@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015 by Igor E. Novikov
+#  Copyright (C) 2015-2019 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ from uc2 import uc2const
 
 SK2DOC_ID = '##sK1 2 '
 SK2XML_ID = '<!-- sK1 2 '
-SK2VER = '0'
+SK2VER = '1'
 SK2XML_START = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>'
 SK2SVG_START = '<svg xmlns:svg="http://www.w3.org/2000/svg" ' + \
                'xmlns="http://www.w3.org/2000/svg" ' + \
