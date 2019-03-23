@@ -1181,7 +1181,17 @@ XAR_TYPE_RECORD = {
             # {'type': 'COLOURREF', 'id': 'colour'},
         ]
     },
-    TAG_CIRCULARFILLMULTISTAGE: {'name': 'CIRCULARFILLMULTISTAGE'},
+    TAG_CIRCULARFILLMULTISTAGE: {
+        'name': 'CIRCULARFILLMULTISTAGE',
+        'sec': [
+            {'type': 'COORD', 'id': 'centre_point'},
+            {'type': 'COORD', 'id': 'edge_point'},
+            {'type': 'COLOURREF', 'id': 'start_colour'},
+            {'type': 'COLOURREF', 'id': 'end_colour'},
+            {'type': 'uint32', 'id': 'num_cols'},
+            {'type': 'StopColour', 'id': 'stop_colors', 'number': 'num_cols'}
+        ]
+     },
     TAG_ELLIPTICALFILLMULTISTAGE: {'name': 'ELLIPTICALFILLMULTISTAGE'},
     TAG_CONICALFILLMULTISTAGE: {'name': 'CONICALFILLMULTISTAGE'},
 

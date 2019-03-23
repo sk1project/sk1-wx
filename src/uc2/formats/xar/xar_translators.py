@@ -189,6 +189,9 @@ class XAR_to_SK2_Translator(object):
 
         elif rec.cid == xar_const.TAG_CIRCULARFILL:
             self.handle_circularfill(rec, cfg)
+        elif rec.cid == xar_const.TAG_CIRCULARFILLMULTISTAGE:
+            self.handle_circularfillmultistage(rec, cfg)
+
 
         elif rec.cid == xar_const.TAG_FILL_REPEATING:
             self.handle_fill_repeating(rec, cfg)
@@ -423,6 +426,24 @@ class XAR_to_SK2_Translator(object):
         start_colour = self.get_color(rec.start_colour)
         end_colour = self.get_color(rec.end_colour)
         stops = [[0.0, start_colour], [1.0, end_colour]]
+        self.style['gradient_fill'] = [
+            sk2const.GRADIENT_RADIAL,
+            vector,
+            stops,
+            sk2const.GRADIENT_EXTEND_PAD  # TODO
+        ]
+
+    def handle_circularfillmultistage(self, rec, cfg):
+        trafo = self.get_trafo()
+        vector = apply_trafo_to_points([rec.centre_point, rec.edge_point], trafo)
+        start_colour = self.get_color(rec.start_colour)
+        end_colour = self.get_color(rec.end_colour)
+
+        stops = [[0.0, start_colour]]
+        for p in rec.stop_colors:
+            stops.append([p[0], self.get_color(p[1])])
+        stops.append([1.0, end_colour])
+
         self.style['gradient_fill'] = [
             sk2const.GRADIENT_RADIAL,
             vector,
