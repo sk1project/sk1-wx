@@ -34,6 +34,12 @@ SK2_UNITS = {
     xar_const.REF_UNIT_FEET: uc2const.UNIT_FT,
 }
 
+XAR_TO_SK2_FILL_REPEATING = {
+    xar_const.TAG_FILL_REPEATING: sk2const.GRADIENT_EXTEND_PAD,
+    xar_const.TAG_FILL_NONREPEATING: sk2const.GRADIENT_EXTEND_NONE,
+    xar_const.TAG_FILL_REPEATINGINVERTED: sk2const.GRADIENT_EXTEND_REFLECT,
+    xar_const.TAG_FILL_REPEATING_EXTRA: sk2const.GRADIENT_EXTEND_REPEAT,
+}
 
 MODE_TINT = {
     uc2const.COLOR_RGB: xar_const.RGB_WHITE,
@@ -180,6 +186,17 @@ class XAR_to_SK2_Translator(object):
             self.handle_linewidth(rec, cfg)
         elif rec.cid == xar_const.TAG_LINEARFILL:
             self.handle_linearfill(rec, cfg)
+
+        elif rec.cid == xar_const.TAG_FILL_REPEATING:
+            self.handle_fill_repeating(rec, cfg)
+        elif rec.cid == xar_const.TAG_FILL_NONREPEATING:
+            self.handle_fill_nonrepeating(rec, cfg)
+        elif rec.cid == xar_const.TAG_FILL_REPEATINGINVERTED:
+            self.handle_fill_repeatinginverted(rec, cfg)
+        elif rec.cid == xar_const.TAG_FILL_REPEATING_EXTRA:
+            self.handle_fill_repeating_extra(rec, cfg)
+
+
         # elif rec.cid == xar_const.TAG_LINEARTRANSPARENTFILL:
         #     self.handle_lineartransparentfill(rec, cfg)
 
@@ -397,6 +414,18 @@ class XAR_to_SK2_Translator(object):
             sk2const.GRADIENT_EXTEND_PAD  # TODO
         ]
 
+    def handle_fill_repeating(self, rec, cfg):
+        self.style['fill_repeating'] = xar_const.TAG_FILL_REPEATING
+
+    def handle_fill_nonrepeating(self, rec, cfg):
+        self.style['fill_repeating'] = xar_const.TAG_FILL_NONREPEATING
+
+    def handle_fill_repeatinginverted(self, rec, cfg):
+        self.style['fill_repeating'] = xar_const.TAG_FILL_REPEATINGINVERTED
+
+    def handle_fill_repeating_extra(self, rec, cfg):
+        self.style['fill_repeating'] = xar_const.TAG_FILL_REPEATING_EXTRA
+
     def handle_linearfillmultistage(self, rec, cfg):
         trafo = self.get_trafo()
         vector = apply_trafo_to_points([rec.start_point, rec.end_point], trafo)
@@ -531,6 +560,11 @@ class XAR_to_SK2_Translator(object):
             fill_data = self.style['flat_colour_fill']
 
         if fill_data:
+            fill_data = copy.deepcopy(fill_data)
+            fill_repeating = self.style.get('fill_repeating')
+            fill_repeating = XAR_TO_SK2_FILL_REPEATING.get(fill_repeating)
+            if fill_repeating is not None:
+                fill_data[3] = fill_repeating
             return [fill_rule, fill_type, fill_data]
         return []
 

@@ -564,7 +564,7 @@ XAR_DEFAULT_STYLE = {
     'stroke_type': 0x01000000,
     # addition
     'linearfill': None,
-
+    'fill_repeating': None,
 }
 
 
