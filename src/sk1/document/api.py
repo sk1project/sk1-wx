@@ -1402,14 +1402,13 @@ class PresenterAPI(AbstractAPI):
 
             parent = objs[-1].parent
             group = sk2_model.Group(objs[-1].config, parent, objs)
-            group.do_update()
             for obj in objs:
                 obj.parent.childs.remove(obj)
             parent.childs.append(group)
             parent_list = []
             for obj in objs:
                 parent_list.append([obj, obj.parent])
-                obj.parent = group
+            group.do_update()
 
             after = self._get_layers_snapshot()
             sel_after = [group]
@@ -1514,14 +1513,13 @@ class PresenterAPI(AbstractAPI):
 
             parent = container.parent
             group = sk2_model.Container(container.config, parent, objs)
-            group.do_update()
             for obj in objs:
                 obj.parent.childs.remove(obj)
             parent.childs.append(group)
             parent_list = []
             for obj in objs:
                 parent_list.append([obj, obj.parent])
-                obj.parent = group
+            group.do_update()
 
             after = self._get_layers_snapshot()
             sel_after = [group]
@@ -2113,14 +2111,13 @@ class PresenterAPI(AbstractAPI):
         parent = text_obj.parent
         group = sk2_model.TP_Group(text_obj.config, parent, objs, childs_data)
         group.set_text_on_path(circle, text_obj, childs_data)
-        group.do_update()
         for obj in objs:
             obj.parent.childs.remove(obj)
         parent.childs.append(group)
         parent_list = []
         for obj in objs:
             parent_list.append([obj, obj.parent])
-            obj.parent = group
+        group.do_update()
 
         after = self._get_layers_snapshot()
         trafos_after = deepcopy(text_obj.trafos)
