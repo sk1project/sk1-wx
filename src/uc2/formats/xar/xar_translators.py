@@ -17,7 +17,8 @@
 
 from uc2.formats.xar import xar_model, xar_const
 from uc2.formats.sk2 import sk2_model
-from uc2.libgeom import multiply_trafo, trafo_rotate_grad
+from uc2 import libimg
+from uc2.libgeom import multiply_trafo, trafo_rotate_grad, get_point_angle
 from uc2.libgeom.points import distance, is_equal_points
 from uc2.libgeom.trafo import apply_trafo_to_points
 from uc2 import _, uc2const, sk2const, cms
@@ -76,6 +77,7 @@ class XAR_to_SK2_Translator(object):
     sk2_mtds = None
 
     fontmap = None
+    bitmaps = None
     colors = None
     atomic_tags = None
 
@@ -86,7 +88,6 @@ class XAR_to_SK2_Translator(object):
 
     style = None
     trafo = None
-#    page = None
 
     layer = None
     layer_name = ''
@@ -100,6 +101,7 @@ class XAR_to_SK2_Translator(object):
         self.sk2_mtds = sk2_doc.methods
         self.sk2_mtds.delete_page()
 
+        self.bitmaps = {}
         self.colors = copy.deepcopy(xar_const.XAR_COLOURS)
         self.atomic_tags = set()
         self.trafo = [-1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
@@ -158,6 +160,14 @@ class XAR_to_SK2_Translator(object):
         elif rec.cid == xar_const.TAG_DEFINECOMPLEXCOLOUR:
             self.handle_definecomplexcolor(rec, cfg)
 
+        # Bitmap reference tags
+        elif rec.cid == xar_const.TAG_DEFINEBITMAP_JPEG:
+            self.handle_definebitmap_jpeg(rec, cfg)
+        elif rec.cid == xar_const.TAG_DEFINEBITMAP_PNG:
+            self.handle_definebitmap_png(rec, cfg)
+        elif rec.cid == xar_const.TAG_DEFINEBITMAP_PNG_REAL:
+            self.handle_definebitmap_png_real(rec, cfg)
+
         # Object tags
         elif rec.cid == xar_const.TAG_PATH:
             raise NotImplementedError
@@ -186,12 +196,13 @@ class XAR_to_SK2_Translator(object):
             self.handle_linewidth(rec, cfg)
         elif rec.cid == xar_const.TAG_LINEARFILL:
             self.handle_linearfill(rec, cfg)
-
         elif rec.cid == xar_const.TAG_CIRCULARFILL:
             self.handle_circularfill(rec, cfg)
         elif rec.cid == xar_const.TAG_CIRCULARFILLMULTISTAGE:
             self.handle_circularfillmultistage(rec, cfg)
 
+        elif rec.cid == xar_const.TAG_BITMAPFILL:
+            self.handle_bitmapfill(rec, cfg)
 
         elif rec.cid == xar_const.TAG_FILL_REPEATING:
             self.handle_fill_repeating(rec, cfg)
@@ -376,6 +387,15 @@ class XAR_to_SK2_Translator(object):
 
         self.colors[rec.idx] = colour
 
+    def handle_definebitmap_jpeg(self, rec, cfg):
+        self.bitmaps[rec.idx] = rec.bitmap_data
+
+    def handle_definebitmap_png(self, rec, cfg):
+        self.bitmaps[rec.idx] = rec.bitmap_data
+
+    def handle_definebitmap_png_real(self, rec, cfg):
+        self.bitmaps[rec.idx] = rec.bitmap_data
+
     def handle_flatfill(self, rec, cfg):
         colour = self.colors.get(rec.colour)
         if colour:
@@ -450,6 +470,23 @@ class XAR_to_SK2_Translator(object):
             stops,
             sk2const.GRADIENT_EXTEND_PAD  # TODO
         ]
+
+    def handle_bitmapfill(self, rec, cfg):
+        # TODO:  rotation, skew of pattern
+        imagestr = self.bitmaps.get(rec.bitmap)
+        if imagestr is None:
+            return
+        ptrn, flag = libimg.read_pattern(imagestr)
+        ptrn_type = sk2const.PATTERN_TRUECOLOR
+        angle1 = get_point_angle(rec.bottom_right, rec.bottom_left)
+        trafo1 = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+        trafo2 = trafo_rotate_grad(angle1)
+        ptrn_trafo = multiply_trafo(trafo1, trafo2)
+        ptrn_transf = [1.0, 1.0, 0.0, 0.0, angle1]
+        ptrn_style = [copy.deepcopy(sk2const.RGB_BLACK),
+                      copy.deepcopy(sk2const.RGB_WHITE)]
+        pattern = [ptrn_type, ptrn, ptrn_style, ptrn_trafo, ptrn_transf]
+        self.style['pattern_fill'] = pattern
 
     def handle_fill_repeating(self, rec, cfg):
         self.style['fill_repeating'] = xar_const.TAG_FILL_REPEATING
@@ -589,19 +626,23 @@ class XAR_to_SK2_Translator(object):
         fill_rule = sk2const.FILL_EVENODD
         fill_data = []
         fill_type = sk2const.FILL_SOLID
-        if self.style.get('gradient_fill'):
+        if self.style.get('pattern_fill'):
+            fill_type = sk2const.FILL_PATTERN
+            fill_data = copy.deepcopy(self.style['pattern_fill'])
+
+        elif self.style.get('gradient_fill'):
             fill_type = sk2const.FILL_GRADIENT
             fill_data = self.style['gradient_fill']
-        elif self.style.get('flat_colour_fill'):
-            fill_type = sk2const.FILL_SOLID
-            fill_data = self.style['flat_colour_fill']
-
-        if fill_data:
             fill_data = copy.deepcopy(fill_data)
             fill_repeating = self.style.get('fill_repeating')
             fill_repeating = XAR_TO_SK2_FILL_REPEATING.get(fill_repeating)
             if fill_repeating is not None:
                 fill_data[3] = fill_repeating
+        elif self.style.get('flat_colour_fill'):
+            fill_type = sk2const.FILL_SOLID
+            fill_data = copy.deepcopy(self.style['flat_colour_fill'])
+
+        if fill_data:
             return [fill_rule, fill_type, fill_data]
         return []
 
@@ -613,7 +654,7 @@ class XAR_to_SK2_Translator(object):
         join_style = sk2const.JOIN_MITER  # TODO
         rule = sk2const.STROKE_MIDDLE
         width = self.style['line_width']
-        colour = self.style['stroke_colour']
+        colour = copy.deepcopy(self.style['stroke_colour'])
         dash = []  # TODO
         miter_limit = self.style['mitre_limit'] / 1000.0
         behind_flag = 0  # TODO
