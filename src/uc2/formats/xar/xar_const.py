@@ -563,6 +563,7 @@ XAR_DEFAULT_STYLE = {
     'feather': None,
     'stroke_type': 0x01000000,
     # addition
+    'pattern_fill': None,
     'gradient_fill': None,
     'fill_repeating': None,
 }
@@ -711,24 +712,24 @@ XAR_TYPE_RECORD = {
     },
 
     # Bitmap reference tags
-    TAG_PREVIEWBITMAP_GIF: {
-        'name': 'PREVIEWBITMAP GIF',
-        'sec': [
-            {'type': 'BITMAP_DATA', 'id': 'bitmap_data'},
-        ]
-    },
+    TAG_PREVIEWBITMAP_GIF: {'name': 'PREVIEWBITMAP GIF'},
     TAG_PREVIEWBITMAP_JPEG: {'name': 'PREVIEWBITMAP JPEG'},
     TAG_PREVIEWBITMAP_PNG: {'name': 'PREVIEWBITMAP PNG'},
 
-    TAG_DEFINEBITMAP_JPEG: {'name': 'DEFINEBITMAP JPEG'},
+    TAG_DEFINEBITMAP_JPEG: {
+        'name': 'DEFINEBITMAP JPEG',
+        'sec': [
+            {'type': 'STRING', 'id': 'bitmap_name'},
+            {'type': 'BITMAP_DATA', 'id': 'bitmap_data'},
+        ]
+    },
     TAG_DEFINEBITMAP_PNG: {
         'name': 'DEFINEBITMAP PNG',
         'sec': [
             {'type': 'STRING', 'id': 'bitmap_name'},
             {'type': 'BITMAP_DATA', 'id': 'bitmap_data'},
-        ],
+        ]
     },
-
     TAG_DEFINEBITMAP_JPEG8BPP: {'name': 'DEFINEBITMAP JPEG8BPP'},
 
     # View tags
@@ -856,7 +857,18 @@ XAR_TYPE_RECORD = {
     },
     TAG_ELLIPTICALFILL: {'name': 'ELLIPTICALFILL'},
     TAG_CONICALFILL: {'name': 'CONICALFILL'},
-    TAG_BITMAPFILL: {'name': 'BITMAPFILL'},
+    TAG_BITMAPFILL: {
+        'name': 'BITMAPFILL',
+        'sec': [
+            {'type': 'COORD', 'id': 'bottom_left'},
+            {'type': 'COORD', 'id': 'bottom_right'},
+            {'type': 'COORD', 'id': 'top_left'},
+            {'type': 'BITMAPREF', 'id': 'bitmap'},
+            # PROFILE
+            {'type': 'double', 'id': 'bias'},
+            {'type': 'double', 'id': 'gain'},
+        ]
+    },
     TAG_CONTONEBITMAPFILL: {'name': 'CONTONEBITMAPFILL'},
     TAG_FRACTALFILL: {'name': 'FRACTALFILL'},
     TAG_FILLEFFECT_FADE: {'name': 'FILLEFFECT FADE'},
@@ -1280,7 +1292,13 @@ XAR_TYPE_RECORD = {
     TAG_PRINTERSETTINGS_PHASE2: {'name': 'PRINTERSETTINGS PHASE2'},
     TAG_DOCUMENTINFORMATION: {'name': 'DOCUMENTINFORMATION'},
     TAG_CLIPVIEW_PATH: {'name': 'CLIPVIEW PATH'},
-    TAG_DEFINEBITMAP_PNG_REAL: {'name': 'DEFINEBITMAP PNG REAL'},
+    TAG_DEFINEBITMAP_PNG_REAL: {
+        'name': 'DEFINEBITMAP PNG REAL',
+        'sec': [
+            {'type': 'STRING', 'id': 'bitmap_name'},
+            {'type': 'BITMAP_DATA', 'id': 'bitmap_data'},
+        ]
+    },
     TAG_TEXT_STRING_POS: {'name': 'TEXT STRING POS'},
     TAG_SPREAD_FLASHPROPS2: {'name': 'SPREAD FLASHPROPS2'},
     TAG_TEXT_LINESPACE_LEADING: {'name': 'TEXT LINESPACE LEADING'},
