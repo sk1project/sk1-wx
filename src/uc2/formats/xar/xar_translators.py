@@ -93,8 +93,10 @@ class XAR_to_SK2_Translator(object):
     layer_name = ''
     page_name = ''
     page_format = None
+    _handler = None
 
     def translate(self, xar_doc, sk2_doc):
+        self._handler = {}
         self.xar_mtds = xar_doc.methods
         self.sk2_doc = sk2_doc
         self.sk2_model = sk2_doc.model
@@ -136,124 +138,19 @@ class XAR_to_SK2_Translator(object):
             return True
 
     def process(self, rec):
-        cfg = self.sk2_doc.config
+        handler = self._handler.get(rec.cid)
+        if not handler:
+            rec_type = xar_const.XAR_TYPE_RECORD.get(rec.cid, {})
+            name = rec_type.get('name')
+            handler_name = 'handle_%s' % name.lower().replace(' ', '_')
+            handler = getattr(self, handler_name, None)
+            if handler:
+                self._handler[rec.cid] = handler
 
-        # Navigation records
-        if rec.cid == xar_const.TAG_UP:
-            self.handle_up(rec, cfg)
-        elif rec.cid == xar_const.TAG_DOWN:
-            self.handle_down(rec, cfg)
-
-        # Document tags
-        elif rec.cid == xar_const.TAG_SPREAD:
-            self.handle_spread(rec, cfg)
-
-        # Notes
-        elif rec.cid == xar_const.TAG_LAYER:
-            self.handle_layer(rec, cfg)
-        elif rec.cid == xar_const.TAG_LAYERDETAILS:
-            self.handle_layerdetails(rec, cfg)
-        elif rec.cid == xar_const.TAG_SPREADINFORMATION:
-            self.handle_spred_information(rec, cfg)
-
-        # Colour reference tags
-        elif rec.cid == xar_const.TAG_DEFINECOMPLEXCOLOUR:
-            self.handle_definecomplexcolor(rec, cfg)
-
-        # Bitmap reference tags
-        elif rec.cid == xar_const.TAG_DEFINEBITMAP_JPEG:
-            self.handle_definebitmap_jpeg(rec, cfg)
-        elif rec.cid == xar_const.TAG_DEFINEBITMAP_PNG:
-            self.handle_definebitmap_png(rec, cfg)
-        elif rec.cid == xar_const.TAG_DEFINEBITMAP_PNG_REAL:
-            self.handle_definebitmap_png_real(rec, cfg)
-
-        # Object tags
-        elif rec.cid == xar_const.TAG_PATH:
-            raise NotImplementedError
-        elif rec.cid == xar_const.TAG_PATH_FILLED:
-            self.handle_path_filled(rec, cfg)
-        elif rec.cid == xar_const.TAG_PATH_STROKED:
-            self.handle_path_stroked(rec, cfg)
-        elif rec.cid == xar_const.TAG_PATH_FILLED_STROKED:
-            self.handle_path_filled_stroked(rec, cfg)
-
-        elif rec.cid == xar_const.TAG_GROUP:
-            self.handle_group(rec, cfg)
-        elif rec.cid == xar_const.TAG_PATH_RELATIVE_STROKED:
-            self.handle_path_relative_stroked(rec, cfg)
-        elif rec.cid == xar_const.TAG_PATH_RELATIVE_FILLED:
-            self.handle_path_relative_filled(rec, cfg)
-        elif rec.cid == xar_const.TAG_PATH_RELATIVE_FILLED_STROKED:
-            self.handle_path_relative_filled_stroked(rec, cfg)
-
-        # Attribute tags
-        elif rec.cid == xar_const.TAG_FLATFILL:
-            self.handle_flatfill(rec, cfg)
-        elif rec.cid == xar_const.TAG_LINECOLOUR:
-            self.handle_linecolour(rec, cfg)
-        elif rec.cid == xar_const.TAG_LINEWIDTH:
-            self.handle_linewidth(rec, cfg)
-        elif rec.cid == xar_const.TAG_LINEARFILL:
-            self.handle_linearfill(rec, cfg)
-        elif rec.cid == xar_const.TAG_CIRCULARFILL:
-            self.handle_circularfill(rec, cfg)
-        elif rec.cid == xar_const.TAG_CIRCULARFILLMULTISTAGE:
-            self.handle_circularfillmultistage(rec, cfg)
-
-        elif rec.cid == xar_const.TAG_BITMAPFILL:
-            self.handle_bitmapfill(rec, cfg)
-
-        elif rec.cid == xar_const.TAG_FILL_REPEATING:
-            self.handle_fill_repeating(rec, cfg)
-        elif rec.cid == xar_const.TAG_FILL_NONREPEATING:
-            self.handle_fill_nonrepeating(rec, cfg)
-        elif rec.cid == xar_const.TAG_FILL_REPEATINGINVERTED:
-            self.handle_fill_repeatinginverted(rec, cfg)
-        elif rec.cid == xar_const.TAG_FILL_REPEATING_EXTRA:
-            self.handle_fill_repeating_extra(rec, cfg)
-
-
-        # elif rec.cid == xar_const.TAG_LINEARTRANSPARENTFILL:
-        #     self.handle_lineartransparentfill(rec, cfg)
-
-        # special colour fills
-        elif rec.cid == xar_const.TAG_FLATFILL_NONE:
-            self.handle_flatfill_none(rec, cfg)
-        elif rec.cid == xar_const.TAG_FLATFILL_BLACK:
-            self.handle_flatfill_black(rec, cfg)
-        elif rec.cid == xar_const.TAG_FLATFILL_WHITE:
-            self.handle_flatfill_white(rec, cfg)
-        elif rec.cid == xar_const.TAG_LINECOLOUR_NONE:
-            self.handle_linecolour_none(rec, cfg)
-        elif rec.cid == xar_const.TAG_LINECOLOUR_BLACK:
-            self.handle_linecolour_black(rec, cfg)
-        elif rec.cid == xar_const.TAG_LINECOLOUR_WHITE:
-            self.handle_linecolour_white(rec, cfg)
-
-        # Regular shapes
-
-        # Ellipses
-        elif rec.cid == xar_const.TAG_ELLIPSE_SIMPLE:
-            self.handle_ellipse_simple(rec, cfg)
-        elif rec.cid == xar_const.TAG_ELLIPSE_COMPLEX:
-            self.handle_ellipse_complex(rec, cfg)
-
-        # Rectangles
-
-        # Polygons
-
-        # General regular shapes
-        elif rec.cid == xar_const.TAG_REGULAR_SHAPE_PHASE_2:
-            self.handle_regular_shape_phase_2(rec, cfg)
-
-        # Miscellaneous records
-        elif rec.cid == xar_const.TAG_SPREAD_PHASE2:
-            self.handle_spread_phase2(rec, cfg)
-
-        # Multi stage fill tags
-        elif rec.cid == xar_const.TAG_LINEARFILLMULTISTAGE:
-            self.handle_linearfillmultistage(rec, cfg)
+        if handler:
+            handler(rec, self.sk2_doc.config)
+        else:
+            self.atomic_tags.add(rec.cid)
 
     def handle_up(self, rec, cfg):
         self.style = self.stack_style.pop()
@@ -336,6 +233,12 @@ class XAR_to_SK2_Translator(object):
         el.trafo = multiply_trafo(el.trafo, self.get_trafo())
         self.stack.append(el)
 
+    def handle_document(self, rec, cfg):
+        pass
+
+    def handle_chapter(self, rec, cfg):
+        pass
+
     def handle_ellipse_simple(self, rec, cfg):
         raise 1
 
@@ -349,7 +252,7 @@ class XAR_to_SK2_Translator(object):
         # TODO: process layer_flags
         self.layer_name = rec.layer_name
 
-    def handle_definecomplexcolor(self, rec, cfg):
+    def handle_definecomplexcolour(self, rec, cfg):
         colour = None
 
         if rec.colour_type == xar_const.COLOUR_TYPE_NORMAL:
@@ -369,7 +272,7 @@ class XAR_to_SK2_Translator(object):
         elif rec.colour_type == xar_const.COLOUR_TYPE_SPOT:
             pass  # TODO
         elif rec.colour_type == xar_const.COLOUR_TYPE_TINT:
-            parent_color = self.colors.get(rec.parent_colour)
+            parent_color = self.get_color(rec.parent_colour)
             colour = color_tint(parent_color, rec.component1, rec.colour_name)
         elif rec.colour_type == xar_const.COLOUR_TYPE_LINKED:
             pass  # TODO
@@ -596,7 +499,7 @@ class XAR_to_SK2_Translator(object):
         )
         self.stack.append(curve)
 
-    def handle_spred_information(self, rec, cfg):
+    def handle_spreadinformation(self, rec, cfg):
         width = rec.width
         height = rec.height
         fmt = pick_page_format_name(width, height)
