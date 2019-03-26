@@ -18,7 +18,8 @@
 from uc2.formats.xar import xar_model, xar_const
 from uc2.formats.sk2 import sk2_model
 from uc2 import libimg
-from uc2.libgeom import multiply_trafo, trafo_rotate_grad, get_point_angle
+from uc2.libgeom import multiply_trafo, get_point_angle, trafo_rotate
+from uc2.libgeom import trafo_rotate_grad
 from uc2.libgeom.points import distance, is_equal_points
 from uc2.libgeom.trafo import apply_trafo_to_points
 from uc2 import _, uc2const, sk2const, cms
@@ -376,20 +377,41 @@ class XAR_to_SK2_Translator(object):
 
     def handle_bitmapfill(self, rec, cfg):
         # TODO:  rotation, skew of pattern
-        imagestr = self.bitmaps.get(rec.bitmap)
-        if imagestr is None:
+        image_str = self.bitmaps.get(rec.bitmap)
+        if image_str is None:
             return
-        ptrn, flag = libimg.read_pattern(imagestr)
+        ptrn, flag = libimg.read_pattern(image_str)
         ptrn_type = sk2const.PATTERN_TRUECOLOR
         angle1 = get_point_angle(rec.bottom_right, rec.bottom_left)
         trafo1 = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
-        trafo2 = trafo_rotate_grad(angle1)
+        trafo2 = trafo_rotate(angle1)
         ptrn_trafo = multiply_trafo(trafo1, trafo2)
         ptrn_transf = [1.0, 1.0, 0.0, 0.0, angle1]
         ptrn_style = [copy.deepcopy(sk2const.RGB_BLACK),
                       copy.deepcopy(sk2const.RGB_WHITE)]
         pattern = [ptrn_type, ptrn, ptrn_style, ptrn_trafo, ptrn_transf]
         self.style['pattern_fill'] = pattern
+
+    def handle_node_bitmap(self, rec, cfg):
+        image_str = self.bitmaps.get(rec.bitmap)
+        if image_str is None:
+            return
+
+        el = sk2_model.Pixmap(cfg, None, bitmap=image_str)
+        # XXX: extract alpha channel from image looks very dirty
+        el.handler.load_from_images(self.sk2_doc.cms, el.handler.bitmap)
+        el.handler.invert_alpha()
+        w, h = el.size
+
+        w1 = distance(rec.bottom_left, rec.bottom_right)
+        h1 = distance(rec.bottom_left, rec.top_left)
+        angle1 = get_point_angle(rec.bottom_right, rec.bottom_left)
+
+        tr1 = trafo_rotate(angle1)
+        tr2 = [w1/w, 0.0, 0.0, h1/h, rec.top_left[0], rec.top_left[1]]
+        tr = multiply_trafo(tr1, tr2)
+        el.trafo = multiply_trafo(tr, self.get_trafo())
+        self.stack.append(el)
 
     def handle_fill_repeating(self, rec, cfg):
         self.style['fill_repeating'] = xar_const.TAG_FILL_REPEATING

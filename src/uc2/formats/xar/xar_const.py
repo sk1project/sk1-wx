@@ -930,7 +930,16 @@ XAR_TYPE_RECORD = {
     TAG_LINECOLOUR_WHITE: {'name': 'LINECOLOUR WHITE'},
 
     # Bitmaps
-    TAG_NODE_BITMAP: {'name': 'NODE BITMAP'},
+    TAG_NODE_BITMAP: {
+        'name': 'NODE BITMAP',
+        'sec': [
+            {'type': 'COORD', 'id': 'bottom_left'},
+            {'type': 'COORD', 'id': 'bottom_right'},
+            {'type': 'COORD', 'id': 'top_right'},
+            {'type': 'COORD', 'id': 'top_left'},
+            {'type': 'BITMAPREF', 'id': 'bitmap'}
+        ]
+    },
     TAG_NODE_CONTONEDBITMAP: {'name': 'NODE CONTONEDBITMAP'},
 
     # New fill type records
