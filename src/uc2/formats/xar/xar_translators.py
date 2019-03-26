@@ -282,10 +282,6 @@ class XAR_to_SK2_Translator(object):
 
         if not colour:
             # TODO: process colour_model, colour_type
-            # n = self.sk2_doc.doc_file
-            # print '? color name:', rec.rgbcolor, rec.colour_name, n
-            # print '? color:', rec.colour_type, self.colors[rec.parent_colour]
-            # print '?', [rec.component1, rec.component2, rec.component3, rec.component4]
             rgb = cms.hexcolor_to_rgb(b"#%s" % rec.rgbcolor)
             colour = [uc2const.COLOR_RGB, rgb, 1.0, rec.colour_name]
 
@@ -333,7 +329,8 @@ class XAR_to_SK2_Translator(object):
 
     def handle_linearfill(self, rec, cfg):
         trafo = self.get_trafo()
-        vector = apply_trafo_to_points([rec.start_point, rec.end_point], trafo)
+        points = [rec.start_point, rec.end_point]
+        vector = apply_trafo_to_points(points, trafo)
         start_colour = self.get_color(rec.start_colour)
         end_colour = self.get_color(rec.end_colour)
         stops = [[0.0, start_colour], [1.0, end_colour]]
@@ -346,7 +343,8 @@ class XAR_to_SK2_Translator(object):
 
     def handle_circularfill(self, rec, cfg):
         trafo = self.get_trafo()
-        vector = apply_trafo_to_points([rec.centre_point, rec.edge_point], trafo)
+        points = [rec.centre_point, rec.edge_point]
+        vector = apply_trafo_to_points(points, trafo)
         start_colour = self.get_color(rec.start_colour)
         end_colour = self.get_color(rec.end_colour)
         stops = [[0.0, start_colour], [1.0, end_colour]]
@@ -359,7 +357,8 @@ class XAR_to_SK2_Translator(object):
 
     def handle_circularfillmultistage(self, rec, cfg):
         trafo = self.get_trafo()
-        vector = apply_trafo_to_points([rec.centre_point, rec.edge_point], trafo)
+        points = [rec.centre_point, rec.edge_point]
+        vector = apply_trafo_to_points(points, trafo)
         start_colour = self.get_color(rec.start_colour)
         end_colour = self.get_color(rec.end_colour)
 
