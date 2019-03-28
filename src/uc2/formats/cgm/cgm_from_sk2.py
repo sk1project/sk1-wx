@@ -99,6 +99,14 @@ def builder(element_id, **kwargs):
         header = '\x50\x64'
         val = kwargs.get('width', 2.5)
         params = utils.py_float2float(val, True)
+    elif element_id == cgm_const.LINE_TYPE:
+        header = '\x50\x42'
+        dashes = tuple(kwargs.get('dashes', []))
+        index = 0
+        if dashes:
+            index = cgm_const.LINE_DASHTABLE.index(dashes) + 1 \
+                if dashes in cgm_const.LINE_DASHTABLE else 2
+        params = utils.py_int2word(index, True)
     elif element_id == cgm_const.LINE_COLOUR:
         header = '\x50\x83'
         color = kwargs.get('color', (0, 0, 0))
@@ -109,7 +117,33 @@ def builder(element_id, **kwargs):
         header = '\x40\x3f' + utils.py_int2word(len(params), True)
     # Polygon
     elif element_id == cgm_const.INTERIOR_STYLE:
+        empty = kwargs.get('empty', False)
         header = '\x52\xc2'
+        params = '\x00\x00' if empty else '\x00\x01'
+    elif element_id == cgm_const.FILL_COLOUR:
+        header = '\x52\xe3'
+        color = kwargs.get('color', (0, 0, 0))
+        params = ''.join([utils.py_int2byte(item) for item in color])
+    elif element_id == cgm_const.EDGE_VISIBILITY:
+        header = '\x52\xc2'
+        visible = kwargs.get('visible', True)
+        params = '\x00\x01' if visible else '\x00\x00'
+    elif element_id == cgm_const.EDGE_COLOUR:
+        header = '\x52\xa3'
+        color = kwargs.get('color', (0, 0, 0))
+        params = ''.join([utils.py_int2byte(item) for item in color])
+    elif element_id == cgm_const.EDGE_WIDTH:
+        header = '\x53\x84'
+        val = kwargs.get('width', 2.5)
+        params = utils.py_float2float(val, True)
+    elif element_id == cgm_const.EDGE_TYPE:
+        header = '\x53\x61'
+        dashes = tuple(kwargs.get('dashes', []))
+        index = 0
+        if dashes:
+            index = cgm_const.LINE_DASHTABLE.index(dashes) + 1 \
+                if dashes in cgm_const.LINE_DASHTABLE else 2
+        params = utils.py_int2word(index, True)
 
     if header:
         return elf(header, params)
