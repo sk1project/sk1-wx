@@ -27,7 +27,7 @@ from colorsys import hsv_to_rgb
 import copy
 
 
-SK2_UNITS = {
+XAR_TO_SK2_UNITS = {
     xar_const.REF_UNIT_PIXELS: uc2const.UNIT_PX,
     xar_const.REF_UNIT_MILLIMETRES: uc2const.UNIT_MM,
     xar_const.REF_UNIT_CENTIMETRES: uc2const.UNIT_CM,
@@ -41,6 +41,23 @@ XAR_TO_SK2_FILL_REPEATING = {
     xar_const.TAG_FILL_NONREPEATING: sk2const.GRADIENT_EXTEND_NONE,
     xar_const.TAG_FILL_REPEATINGINVERTED: sk2const.GRADIENT_EXTEND_REFLECT,
     xar_const.TAG_FILL_REPEATING_EXTRA: sk2const.GRADIENT_EXTEND_REPEAT,
+}
+
+XAR_TO_SK2_CAP = {
+    xar_const.CAP_BUTT: sk2const.CAP_BUTT,
+    xar_const.CAP_ROUND: sk2const.CAP_ROUND,
+    xar_const.CAP_SQUARE: sk2const.CAP_SQUARE,
+}
+
+XAR_TO_SK2_JOIN = {
+    xar_const.JOIN_BEVEL: sk2const.JOIN_BEVEL,
+    xar_const.JOIN_MITRE: sk2const.JOIN_MITER,
+    xar_const.JOIN_ROUND: sk2const.JOIN_ROUND
+}
+
+XAR_TO_SK2_WINDING = {
+    xar_const.FILL_EVENODD: sk2const.FILL_EVENODD,
+    xar_const.FILL_NONZERO: sk2const.FILL_NONZERO
 }
 
 MODE_TINT = {
@@ -455,11 +472,18 @@ class XAR_to_SK2_Translator(object):
 #    def handle_fractaltransparentfill(self, rec, cfg): pass
 #    def handle_linetransparency(self, rec, cfg): pass
 
-#    def handle_startcap(self, rec, cfg): pass
-#    def handle_endcap(self, rec, cfg): pass
-#    def handle_joinstyle(self, rec, cfg): pass
-#    def handle_mitrelimit(self, rec, cfg): pass
-#    def handle_windingrule(self, rec, cfg): pass
+    def handle_startcap(self, rec, cfg):
+        self.style['start_cap'] = rec.cap_style
+
+    def handle_joinstyle(self, rec, cfg):
+        self.style['join_type'] = rec.join_style
+
+    def handle_mitrelimit(self, rec, cfg):
+        self.style['mitre_limit'] = rec.mitre_limit
+
+    def handle_windingrule(self, rec, cfg):
+        self.style['winding_rule'] = rec.winding_rule
+
 #    def handle_quality(self, rec, cfg): pass
 
 #    def handle_transparentfill_repeating(self, rec, cfg): pass
@@ -880,7 +904,10 @@ class XAR_to_SK2_Translator(object):
         return [fill, stroke, [], []]
 
     def get_fill(self):
-        fill_rule = sk2const.FILL_EVENODD
+        fill_rule = XAR_TO_SK2_WINDING.get(
+            self.style['winding_rule'],
+            sk2const.FILL_EVENODD
+        )
         fill_data = []
         fill_type = sk2const.FILL_SOLID
         if self.style.get('pattern_fill'):
@@ -907,8 +934,12 @@ class XAR_to_SK2_Translator(object):
         colour = self.style['stroke_colour']
         if colour is None:
             return []
-        cap_style = sk2const.CAP_BUTT  # TODO
-        join_style = sk2const.JOIN_MITER  # TODO
+        cap_style = XAR_TO_SK2_CAP.get(
+            self.style['start_cap'], sk2const.CAP_BUTT
+        )
+        join_style = XAR_TO_SK2_JOIN.get(
+            self.style['join_type'], sk2const.JOIN_MITER
+        )
         rule = sk2const.STROKE_MIDDLE
         width = self.style['line_width']
         colour = copy.deepcopy(self.style['stroke_colour'])

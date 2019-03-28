@@ -898,11 +898,31 @@ XAR_TYPE_RECORD = {
     TAG_BITMAPTRANSPARENTFILL: {'name': 'BITMAPTRANSPARENTFILL'},
     TAG_FRACTALTRANSPARENTFILL: {'name': 'FRACTALTRANSPARENTFILL'},
     TAG_LINETRANSPARENCY: {'name': 'LINETRANSPARENCY'},
-    TAG_STARTCAP: {'name': 'STARTCAP'},
+    TAG_STARTCAP: {
+        'name': 'STARTCAP',
+        'sec': [
+            {'type': 'byte', 'id': 'cap_style'},
+        ]
+    },
     TAG_ENDCAP: {'name': 'ENDCAP'},
-    TAG_JOINSTYLE: {'name': 'JOINSTYLE'},
-    TAG_MITRELIMIT: {'name': 'MITRELIMIT'},
-    TAG_WINDINGRULE: {'name': 'WINDINGRULE'},
+    TAG_JOINSTYLE: {
+        'name': 'JOINSTYLE',
+        'sec': [
+            {'type': 'byte', 'id': 'join_style'},
+        ]
+    },
+    TAG_MITRELIMIT: {
+        'name': 'MITRELIMIT',
+        'sec': [
+            {'type': 'byte', 'id': 'mitre_limit'},
+        ]
+    },
+    TAG_WINDINGRULE: {
+        'name': 'WINDINGRULE',
+        'sec': [
+            {'type': 'byte', 'id': 'winding_rule'},
+        ]
+    },
     TAG_QUALITY: {'name': 'QUALITY'},
     TAG_TRANSPARENTFILL_REPEATING: {'name': 'TRANSPARENTFILL REPEATING'},
     TAG_TRANSPARENTFILL_NONREPEATING: {'name': 'TRANSPARENTFILL NONREPEATING'},
