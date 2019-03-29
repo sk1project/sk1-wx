@@ -22,6 +22,7 @@ from uc2.libgeom import multiply_trafo, get_point_angle, trafo_rotate
 from uc2.libgeom import trafo_rotate_grad
 from uc2.libgeom.points import distance, is_equal_points
 from uc2.libgeom.trafo import apply_trafo_to_points, apply_trafo_to_point
+from uc2.libgeom.bbox import bbox_to_rect
 from uc2 import _, uc2const, sk2const, cms
 from colorsys import hsv_to_rgb
 import copy
@@ -60,11 +61,21 @@ XAR_TO_SK2_WINDING = {
     xar_const.FILL_NONZERO: sk2const.FILL_NONZERO
 }
 
+XAR_TO_SK2_TEXT_ALIGN = {
+    xar_const.TEXT_ALIGN_LEFT: sk2const.TEXT_ALIGN_LEFT,
+    xar_const.TEXT_ALIGN_CENTRE: sk2const.TEXT_ALIGN_CENTER,
+    xar_const.TEXT_ALIGN_RIGHT: sk2const.TEXT_ALIGN_RIGHT,
+    xar_const.TEXT_ALIGN_FULL: sk2const.TEXT_ALIGN_JUSTIFY
+}
+
 MODE_TINT = {
     uc2const.COLOR_RGB: xar_const.RGB_WHITE,
     uc2const.COLOR_CMYK: xar_const.CMYK_WHITE,
     uc2const.COLOR_GRAY: xar_const.GREYSCALE_WHITE,
 }
+
+TEXT_ALIGN_NEED_FIX = [xar_const.TEXT_ALIGN_CENTRE, xar_const.TEXT_ALIGN_RIGHT]
+
 
 
 def color_tint(color1, coef=0.5, colour_name=''):
@@ -633,6 +644,7 @@ class XAR_to_SK2_Translator(object):
             text=text,
             style=self.get_text_style()
         )
+        # el = self.correct_text_basepoint(el)
         self.stack.append(el)
 
     def handle_text_story_complex(self, rec, cfg):
@@ -640,29 +652,25 @@ class XAR_to_SK2_Translator(object):
         self.buffer_text = []
         tr = [rec.a, rec.b, rec.c, rec.d, rec.e/1000.0, rec.f/1000.0]
         trafo = multiply_trafo(tr, self.get_trafo())
-
-        print '##', tr
-        print '"{}"'.format(text)
         el = sk2_model.Text(
             cfg,
             text=text,
             style=self.get_text_style(),
             trafo=trafo
         )
+        # el = self.correct_text_basepoint(el)
         self.stack.append(el)
 
-    def get_text_style(self):
-        fill = self.get_fill()
-        stroke = self.get_stoke()
-        font_family = self.style['text_font_family']
-        font_face = self.style['text_bold'] and 'Bold' or ''
-        font_face += self.style['text_italic'] and 'Italic' or ''
-        font_face = font_face or 'Regular'
-        font_size = self.style['text_script_size'] or 1.0
-        alignment = sk2const.TEXT_ALIGN_LEFT
-        image_style = []
-        text_style = [font_family, font_face, font_size, alignment, [], True]
-        return [fill, stroke, text_style, image_style]
+    def correct_text_basepoint(self, text_element):
+        text_justification = self.style['text_justification']
+        if text_justification in TEXT_ALIGN_NEED_FIX:
+            text_element.update()
+            rect = bbox_to_rect(text_element.cache_bbox)
+            shift = rect[2]
+            if text_justification == xar_const.TEXT_ALIGN_CENTRE:
+                shift /= 2.0
+            text_element.trafo[4] += shift
+        return text_element
 
     # text story objects on a path
 #    def handle_text_story_simple_start_left(self, rec, cfg): pass
@@ -702,10 +710,17 @@ class XAR_to_SK2_Translator(object):
     # Text attributes
 #    def handle_text_linespace_ratio(self, rec, cfg): pass
 #    def handle_text_linespace_absolute(self, rec, cfg): pass
-#    def handle_text_justification_left(self, rec, cfg): pass
-#    def handle_text_justification_centre(self, rec, cfg): pass
-#    def handle_text_justification_right(self, rec, cfg): pass
-#    def handle_text_justification_full(self, rec, cfg): pass
+    def handle_text_justification_left(self, rec, cfg):
+        self.style['text_justification'] = xar_const.TEXT_ALIGN_LEFT
+
+    def handle_text_justification_centre(self, rec, cfg):
+        self.style['text_justification'] = xar_const.TEXT_ALIGN_CENTRE
+
+    def handle_text_justification_right(self, rec, cfg):
+        self.style['text_justification'] = xar_const.TEXT_ALIGN_RIGHT
+
+    def handle_text_justification_full(self, rec, cfg):
+        self.style['text_justification'] = xar_const.TEXT_ALIGN_FULL
 
     def handle_text_font_size(self, rec, cfg):
         self.style['text_script_size'] = rec.font_size * 0.7  # XXX
@@ -956,6 +971,22 @@ class XAR_to_SK2_Translator(object):
 
     def get_trafo(self):
         return copy.deepcopy(self.trafo)
+
+    def get_text_style(self):
+        fill = self.get_fill()
+        stroke = self.get_stoke()
+        font_family = self.style['text_font_family']
+        font_face = self.style['text_bold'] and 'Bold' or ''
+        font_face += self.style['text_italic'] and 'Italic' or ''
+        font_face = font_face or 'Regular'
+        font_size = self.style['text_script_size'] or 1.0
+        alignment = XAR_TO_SK2_TEXT_ALIGN.get(
+            self.style['text_justification'],
+            sk2const.TEXT_ALIGN_LEFT
+        )
+        image_style = []
+        text_style = [font_family, font_face, font_size, alignment, [], True]
+        return [fill, stroke, text_style, image_style]
 
     def get_style(self, stroke=False, fill=False):
         fill = fill and self.get_fill() or []

@@ -541,12 +541,17 @@ REF_DASH_SOLID = -21
 REF_DASH_1 = -1
 REF_DASH_2 = -2
 
+TEXT_ALIGN_LEFT = 0
+TEXT_ALIGN_CENTRE = 1
+TEXT_ALIGN_RIGHT = 2
+TEXT_ALIGN_FULL = 3
 
 XAR_DEFAULT_STYLE = {
     'text_font_family': 'Time New Roman',
     'text_bold': False,
     'text_italic': False,
     'text_script_size': 1.0,
+    'text_justification': TEXT_ALIGN_LEFT,
     'mitre_limit': 4000,
     'end_arrow': None,
     'start_arrow': None,
