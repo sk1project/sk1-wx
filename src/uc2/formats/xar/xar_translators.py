@@ -21,7 +21,7 @@ from uc2 import libimg
 from uc2.libgeom import multiply_trafo, get_point_angle, trafo_rotate
 from uc2.libgeom import trafo_rotate_grad
 from uc2.libgeom.points import distance, is_equal_points
-from uc2.libgeom.trafo import apply_trafo_to_points
+from uc2.libgeom.trafo import apply_trafo_to_points, apply_trafo_to_point
 from uc2 import _, uc2const, sk2const, cms
 from colorsys import hsv_to_rgb
 import copy
@@ -99,6 +99,8 @@ class XAR_to_SK2_Translator(object):
     colors = None
     atomic_tags = None
 
+    buffer_text = None
+    buffer_text_line = None
     stack_style = None
     stack = None
     pages = None
@@ -126,6 +128,8 @@ class XAR_to_SK2_Translator(object):
         self.atomic_tags = set()
         self.trafo = [-1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
 
+        self.buffer_text = []
+        self.buffer_text_line = []
         self.stack = []
         self.stack_style = [copy.copy(xar_const.XAR_DEFAULT_STYLE)]
         self.pages = []
@@ -613,12 +617,52 @@ class XAR_to_SK2_Translator(object):
 
     # Text related records
     # Text definitions
-#    def handle_font_def_truetype(self, rec, cfg): pass
+    def handle_font_def_truetype(self, rec, cfg):
+        self.style['text_font_family'] = rec.typeface_name
+
 #    def handle_font_def_atm(self, rec, cfg): pass
 
     # vanilla text story objects
-#    def handle_text_story_simple(self, rec, cfg): pass
-#    def handle_text_story_complex(self, rec, cfg): pass
+    def handle_text_story_simple(self, rec, cfg):
+        text = b'\n'.join(self.buffer_text)
+        self.buffer_text = []
+        point = apply_trafo_to_point(rec.anchor, self.trafo)
+        el = sk2_model.Text(
+            cfg,
+            point=point,
+            text=text,
+            style=self.get_text_style()
+        )
+        self.stack.append(el)
+
+    def handle_text_story_complex(self, rec, cfg):
+        text = b'\n'.join(self.buffer_text)
+        self.buffer_text = []
+        tr = [rec.a, rec.b, rec.c, rec.d, rec.e/1000.0, rec.f/1000.0]
+        trafo = multiply_trafo(tr, self.get_trafo())
+
+        print '##', tr
+        print '"{}"'.format(text)
+        el = sk2_model.Text(
+            cfg,
+            text=text,
+            style=self.get_text_style(),
+            trafo=trafo
+        )
+        self.stack.append(el)
+
+    def get_text_style(self):
+        fill = self.get_fill()
+        stroke = self.get_stoke()
+        font_family = self.style['text_font_family']
+        font_face = self.style['text_bold'] and 'Bold' or ''
+        font_face += self.style['text_italic'] and 'Italic' or ''
+        font_face = font_face or 'Regular'
+        font_size = self.style['text_script_size'] or 1.0
+        alignment = sk2const.TEXT_ALIGN_LEFT
+        image_style = []
+        text_style = [font_family, font_face, font_size, alignment, [], True]
+        return [fill, stroke, text_style, image_style]
 
     # text story objects on a path
 #    def handle_text_story_simple_start_left(self, rec, cfg): pass
@@ -635,10 +679,22 @@ class XAR_to_SK2_Translator(object):
 #    def handle_text_story_indent_info(self, rec, cfg): pass
 
     # other text story related objects
-#    def handle_text_line(self, rec, cfg): pass
-#    def handle_text_string(self, rec, cfg): pass
-#    def handle_text_char(self, rec, cfg): pass
-#    def handle_text_eol(self, rec, cfg): pass
+    def handle_text_line(self, rec, cfg):
+        if self.buffer_text_line:
+            line = b''.join(self.buffer_text_line)
+            self.buffer_text_line = []
+            self.buffer_text.append(line)
+
+    def handle_text_string(self, rec, cfg):
+        string = rec.chunk.decode('utf_16_le').encode('utf-8')
+        self.buffer_text_line.append(string)
+
+    def handle_text_char(self, rec, cfg):
+        self.handle_text_string(rec, cfg)
+
+    def handle_text_eol(self, rec, cfg):
+        self.handle_text_line(rec, cfg)
+
 #    def handle_text_kern(self, rec, cfg): pass
 #    def handle_text_caret(self, rec, cfg): pass
 #    def handle_text_line_info(self, rec, cfg): pass
@@ -650,7 +706,10 @@ class XAR_to_SK2_Translator(object):
 #    def handle_text_justification_centre(self, rec, cfg): pass
 #    def handle_text_justification_right(self, rec, cfg): pass
 #    def handle_text_justification_full(self, rec, cfg): pass
-#    def handle_text_font_size(self, rec, cfg): pass
+
+    def handle_text_font_size(self, rec, cfg):
+        self.style['text_script_size'] = rec.font_size * 0.7  # XXX
+
 #    def handle_text_font_typeface(self, rec, cfg): pass
 #    def handle_text_bold_on(self, rec, cfg): pass
 #    def handle_text_bold_off(self, rec, cfg): pass

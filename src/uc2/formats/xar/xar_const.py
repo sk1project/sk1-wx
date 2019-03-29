@@ -543,6 +543,10 @@ REF_DASH_2 = -2
 
 
 XAR_DEFAULT_STYLE = {
+    'text_font_family': 'Time New Roman',
+    'text_bold': False,
+    'text_italic': False,
+    'text_script_size': 1.0,
     'mitre_limit': 4000,
     'end_arrow': None,
     'start_arrow': None,
@@ -1074,12 +1078,44 @@ XAR_TYPE_RECORD = {
 
     # Text related records
     # Text definitions
-    TAG_FONT_DEF_TRUETYPE: {'name': 'FONT DEF TRUETYPE'},
+    TAG_FONT_DEF_TRUETYPE: {
+        'name': 'FONT DEF TRUETYPE',
+        'sec': [
+            {'type': 'STRING', 'id': 'full_font_name'},
+            {'type': 'STRING', 'id': 'typeface_name'},
+            {'type': 'byte', 'id': 'panose', 'number': 10}
+        ]
+    },
     TAG_FONT_DEF_ATM: {'name': 'FONT DEF ATM'},
 
     # vanilla text story objects
-    TAG_TEXT_STORY_SIMPLE: {'name': 'TEXT STORY SIMPLE'},
-    TAG_TEXT_STORY_COMPLEX: {'name': 'TEXT STORY COMPLEX'},
+    TAG_TEXT_STORY_SIMPLE: {
+        'name': 'TEXT STORY SIMPLE',
+        'sec': [
+            {'type': 'COORD', 'id': 'anchor'},
+            {'type': 'int32', 'id': 'kerning_flag',
+             'bitfield': {
+                0: {'type': 'bool', 'id': 'automatic_kerning'},
+              }
+             }
+        ]
+    },
+    TAG_TEXT_STORY_COMPLEX: {
+        'name': 'TEXT STORY COMPLEX',
+        'sec': [
+            {'type': 'fixed16', 'id': 'a'},
+            {'type': 'fixed16', 'id': 'b'},
+            {'type': 'fixed16', 'id': 'c'},
+            {'type': 'fixed16', 'id': 'd'},
+            {'type': 'int32', 'id': 'e'},
+            {'type': 'int32', 'id': 'f'},
+            {'type': 'int32', 'id': 'kerning_flag',
+             'bitfield': {
+                 0: {'type': 'bool', 'id': 'automatic_kerning'},
+             }
+             }
+        ]
+    },
 
     # text story objects on a path
     TAG_TEXT_STORY_SIMPLE_START_LEFT: {'name': 'TEXT STORY SIMPLE START LEFT'},
@@ -1116,7 +1152,12 @@ XAR_TYPE_RECORD = {
     TAG_TEXT_JUSTIFICATION_CENTRE: {'name': 'TEXT JUSTIFICATION CENTRE'},
     TAG_TEXT_JUSTIFICATION_RIGHT: {'name': 'TEXT JUSTIFICATION RIGHT'},
     TAG_TEXT_JUSTIFICATION_FULL: {'name': 'TEXT JUSTIFICATION FULL'},
-    TAG_TEXT_FONT_SIZE: {'name': 'TEXT FONT SIZE'},
+    TAG_TEXT_FONT_SIZE: {
+        'name': 'TEXT FONT SIZE',
+        'sec': [
+            {'type': 'MILLIPOINT', 'id': 'font_size'}
+        ]
+    },
     TAG_TEXT_FONT_TYPEFACE: {'name': 'TEXT FONT TYPEFACE'},
     TAG_TEXT_BOLD_ON: {'name': 'TEXT BOLD ON'},
     TAG_TEXT_BOLD_OFF: {'name': 'TEXT BOLD OFF'},
