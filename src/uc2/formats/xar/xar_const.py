@@ -611,7 +611,8 @@ XAR_TYPE_RECORD = {
         'name': 'TAGDESCRIPTION',
         'sec': [
             {'type': 'uint32', 'id': 'number_of_tags'},
-            {'type': 'Tag Description*', 'id': 'description'}
+            {'type': 'Tag Description', 'id': 'description',
+             'number': 'number_of_tags'}
         ]
     },
 
@@ -758,7 +759,12 @@ XAR_TYPE_RECORD = {
     TAG_DEFINE_DEFAULTUNITS: {'name': 'DEFINE DEFAULTUNITS'},
 
     # Document info tags
-    TAG_DOCUMENTCOMMENT: {'name': 'DOCUMENTCOMMENT'},
+    TAG_DOCUMENTCOMMENT: {
+        'name': 'DOCUMENTCOMMENT',
+        'sec': [
+            {'type': 'STRING', 'id': 'comment'},
+        ]
+    },
     TAG_DOCUMENTDATES: {'name': 'DOCUMENTDATES'},
     TAG_DOCUMENTUNDOSIZE: {'name': 'DOCUMENTUNDOSIZE'},
     TAG_DOCUMENTFLAGS: {

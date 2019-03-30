@@ -164,20 +164,12 @@ def read_verb_and_coord_list(data, offset=0, **kw):
     return size, r
 
 
-def read_tag_description_list(data, offset=0, **kw):
-    length = len(data)
-    c_offset = offset
-    size = 0
-    descriptions = []
-    while length > c_offset:
-        string = data[c_offset:c_offset+4]
-        tag = packer_uint32_le.unpack(string)[0]
-        size += 4
-        string_size, string = read_string(data, c_offset+4)
-        size += string_size
-        descriptions.append([tag, string])
-        c_offset += size
-    return size, descriptions
+def read_tag_description(data, offset=0, **kw):
+    tag = unpack_u4(data, offset)
+    offset += 4
+    description_size, description = read_string(data, offset)
+    offset += description_size
+    return 4+description_size, [tag, description]
 
 
 def read_stop_colour(data, offset=0, **kw):
@@ -217,7 +209,7 @@ READER_DATA_TYPES_MAP = {
     'STRING':              read_string,
     'ASCII_STRING':        read_ascii_string,
     'BITMAP_DATA':         read_bitmap_data,
-    'Tag Description*':    read_tag_description_list,
+    'Tag Description':     read_tag_description,
     'Verb and Coord List': read_verb_and_coord_list,
     'StopColour':          read_stop_colour,
 
