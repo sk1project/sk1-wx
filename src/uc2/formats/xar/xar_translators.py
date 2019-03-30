@@ -77,7 +77,6 @@ MODE_TINT = {
 TEXT_ALIGN_NEED_FIX = [xar_const.TEXT_ALIGN_CENTRE, xar_const.TEXT_ALIGN_RIGHT]
 
 
-
 def color_tint(color1, coef=0.5, colour_name=''):
     mode = color1[0]
     color2 = MODE_TINT.get(mode)
@@ -196,11 +195,11 @@ class XAR_to_SK2_Translator(object):
     def handle_fileheader(self, rec, cfg): pass
 
     def handle_endoffile(self, rec=None, cfg=None):
-        if self.stack:
+        parent = self.sk2_mtds.get_pages_obj()
+        if self.stack or not self.pages and not parent.childs:
             cfg = cfg or self.sk2_doc.config
             self.handle_layer(rec, cfg)
             self.handle_spread(rec, cfg)
-        parent = self.sk2_mtds.get_pages_obj()
 
         self.pages = [page for page in self.pages if page.childs]
         for page in self.pages:
