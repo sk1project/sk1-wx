@@ -323,7 +323,14 @@ class XAR_to_SK2_Translator(object):
 #    def handle_documentinformation(self, rec, cfg): pass
 
     # Object tags
-#    def handle_path(self, rec, cfg): pass
+    def handle_path(self, rec, cfg):
+        curve = sk2_model.Curve(
+            cfg, None,
+            self.get_path(rec),
+            self.get_trafo(),
+            self.get_style()
+        )
+        self.stack.append(curve)
 
     def handle_path_filled(self, rec, cfg):
         curve = sk2_model.Curve(
@@ -369,7 +376,14 @@ class XAR_to_SK2_Translator(object):
 #    def handle_mould_path(self, rec, cfg): pass
 #    def handle_path_flags(self, rec, cfg): pass
 #    def handle_guideline(self, rec, cfg): pass
-#    def handle_path_relative(self, rec, cfg): pass
+    def handle_path_relative(self, rec, cfg):
+        curve = sk2_model.Curve(
+            cfg, None,
+            self.get_path_relative(rec),
+            self.get_trafo(),
+            self.get_style()
+        )
+        self.stack.append(curve)
 
     def handle_path_relative_filled(self, rec, cfg):
         curve = sk2_model.Curve(
