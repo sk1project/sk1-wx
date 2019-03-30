@@ -781,9 +781,30 @@ XAR_TYPE_RECORD = {
     TAG_DOCUMENTINFORMATION: {'name': 'DOCUMENTINFORMATION'},
 
     # Object tags
-    TAG_PATH: {'name': 'PATH'},
-    TAG_PATH_FILLED: {'name': 'PATH FILLED'},
-    TAG_PATH_STROKED: {'name': 'PATH STROKED'},
+    TAG_PATH: {
+        'name': 'PATH',
+        'sec': [
+            {'type': 'uint32', 'id': 'number_of_coords'},
+            {'type': 'byte', 'id': 'verb', 'number': 'number_of_coords'},
+            {'type': 'COORD', 'id': 'coord', 'number': 'number_of_coords'},
+        ]
+    },
+    TAG_PATH_FILLED: {
+        'name': 'PATH FILLED',
+        'sec': [
+            {'type': 'uint32', 'id': 'number_of_coords'},
+            {'type': 'byte', 'id': 'verb', 'number': 'number_of_coords'},
+            {'type': 'COORD', 'id': 'coord', 'number': 'number_of_coords'},
+        ]
+    },
+    TAG_PATH_STROKED: {
+        'name': 'PATH STROKED',
+        'sec': [
+            {'type': 'uint32', 'id': 'number_of_coords'},
+            {'type': 'byte', 'id': 'verb', 'number': 'number_of_coords'},
+            {'type': 'COORD', 'id': 'coord', 'number': 'number_of_coords'},
+        ]
+    },
     TAG_PATH_FILLED_STROKED: {
         'name': 'PATH FILLED STROKED',
         'sec': [
