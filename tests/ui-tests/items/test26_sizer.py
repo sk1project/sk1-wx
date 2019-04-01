@@ -1,9 +1,10 @@
-#The test should show Slider widget
-#on the main window
+# The test should show Slider widget
+# on the main window
 
 import wal
 
 SIZE = (500, 200)
+
 
 class MW(wal.MainWindow):
 
@@ -16,7 +17,7 @@ class MW(wal.MainWindow):
 
         lpanel = wal.VPanel(hpanel)
         client = wal.VPanel(lpanel)
-        client.pack((200,0))
+        client.pack((200, 0))
         lpanel.pack(client)
         lpanel.set_bg(wal.RED)
         hpanel.pack(lpanel, fill=True)
@@ -26,7 +27,7 @@ class MW(wal.MainWindow):
         hpanel.pack(hsizer, fill=True)
 
         rpanel = wal.VPanel(hpanel)
-        rpanel.pack((20,20))
+        rpanel.pack((20, 20))
         rpanel.set_bg(wal.BLUE)
         hpanel.pack(rpanel, fill=True, expand=True)
 

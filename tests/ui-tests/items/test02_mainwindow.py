@@ -1,4 +1,4 @@
-#The test should show main window which is:
+# The test should show main window which is:
 #   1)maximized
 #   2)centered after demaximizing
 #   3)has size 1000x500
