@@ -15,6 +15,7 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import time
 import wx
 
 import const
@@ -180,6 +181,7 @@ class GenericGWidget(wx.Panel, WidgetMixin):
     repeat = False
     flat = True
     buffer = None
+    counter = 0
 
     def __init__(self, parent, tooltip='', onclick=None, repeat=False):
         self.parent = parent
@@ -235,8 +237,8 @@ class GenericGWidget(wx.Panel, WidgetMixin):
     def _mouse_up(self, event):
         self.mouse_pressed = False
         if self.mouse_over:
-            if self.onclick and self.enabled:
-                self.mouse_over = False
+            if self.onclick and self.enabled and not self.counter:
+                self.counter = 5
                 self.onclick()
         self.refresh()
 
@@ -253,6 +255,7 @@ class GenericGWidget(wx.Panel, WidgetMixin):
                 self.refresh()
         else:
             if self.enabled:
+                self.counter = self.counter - 1 if self.counter else 0
                 if self.repeat and self.onclick and self.mouse_pressed:
                     self.onclick()
 
