@@ -1,9 +1,10 @@
-#The test should show three grouped radiobuttons
-#on the main window
+# The test should show three grouped radiobuttons
+# on the main window
 
 import wal
 
 SIZE = (300, 200)
+
 
 class MW(wal.MainWindow):
 
@@ -11,15 +12,15 @@ class MW(wal.MainWindow):
         wal.MainWindow.__init__(self)
         self.set_size(SIZE)
 
-        self.radio1 = wal.Radiobutton(self, 'Radiobutton 1', 
-            onclick=self.on_click, group=True)
+        self.radio1 = wal.Radiobutton(self, 'Radiobutton 1',
+                                      onclick=self.on_click, group=True)
         self.pack(self.radio1)
 
         self.radio2 = wal.Radiobutton(self, 'Radiobutton 2')
         self.pack(self.radio2)
 
-        self.radio3 = wal.Radiobutton(self, 'Radiobutton 3', 
-            onclick=self.on_click3)
+        self.radio3 = wal.Radiobutton(self, 'Radiobutton 3',
+                                      onclick=self.on_click3)
         self.pack(self.radio3)
 
     def on_click(self):

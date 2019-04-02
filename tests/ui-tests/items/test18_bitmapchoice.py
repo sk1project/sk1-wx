@@ -1,8 +1,9 @@
-#Needs to be implemented!
+# Needs to be implemented!
 
 import wal
 
 SIZE = (300, 200)
+
 
 class MW(wal.MainWindow):
 

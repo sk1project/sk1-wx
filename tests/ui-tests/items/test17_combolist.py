@@ -1,9 +1,10 @@
-#The test should show Combolist 
-#widget on the main window
+# The test should show Combolist
+# widget on the main window
 
 import wal
 
 SIZE = (300, 200)
+
 
 class MW(wal.MainWindow):
 
@@ -19,5 +20,6 @@ class MW(wal.MainWindow):
     def on_change(self):
         print self.clist.get_active()
         print self.clist.get_active_value()
+
 
 MW().run()

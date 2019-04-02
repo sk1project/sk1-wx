@@ -1,4 +1,4 @@
-#The test should show main window.
+# The test should show main window.
 
 import wal
 

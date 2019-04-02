@@ -1,9 +1,10 @@
-#The test should show Slider widget 
-#on the main window
+# The test should show Slider widget
+# on the main window
 
 import wal
 
 SIZE = (300, 200)
+
 
 class MW(wal.MainWindow):
 
@@ -11,8 +12,8 @@ class MW(wal.MainWindow):
         wal.MainWindow.__init__(self)
         self.set_size(SIZE)
 
-        self.slider = wal.Slider(self, onchange=self.on_change, 
-            on_final_change=self.on_final_change)
+        self.slider = wal.Slider(self, onchange=self.on_change,
+                                 on_final_change=self.on_final_change)
         self.pack(self.slider)
 
         self.slider2 = wal.Slider(self, vertical=True)
@@ -23,5 +24,6 @@ class MW(wal.MainWindow):
 
     def on_final_change(self):
         print 'final', self.slider.get_value()
+
 
 MW().run()

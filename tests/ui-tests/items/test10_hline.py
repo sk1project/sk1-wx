@@ -1,9 +1,10 @@
-#The test should show horizontal 
-#line (HLine) on the main window
+# The test should show horizontal
+# line (HLine) on the main window
 
 import wal
 
 SIZE = (300, 200)
+
 
 class MW(wal.MainWindow):
 

@@ -1,9 +1,10 @@
-#The test should show SimpleList widget
-#on the main window
+# The test should show SimpleList widget
+# on the main window
 
 import wal
 
 SIZE = (200, 400)
+
 
 class MW(wal.MainWindow):
 
