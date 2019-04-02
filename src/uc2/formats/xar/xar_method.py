@@ -82,6 +82,9 @@ class XARMethods(object):
                     cx, cy = x, y
                     path.append([cx, cy])
                 else:
+                    if path:
+                        yield closed, path
+                        path = []
                     cx, cy = cx - x, cy - y
                     path.append([cx, cy])
 
@@ -116,7 +119,10 @@ class XARMethods(object):
                         yield closed, path
                         path = []
             elif verb == xar_const.PT_MOVETO:
-                    path.append([x, y])
+                if path:
+                    yield closed, path
+                    path = []
+                path.append([x, y])
 
         if path:
             yield closed, path
