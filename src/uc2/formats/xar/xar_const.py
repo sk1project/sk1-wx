@@ -1,6 +1,6 @@
 # 
 #
-#  Copyright (C) = 2019 by Maxim S. Barabash
+#  Copyright (C) 2019 by Maxim S. Barabash
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -1102,9 +1102,14 @@ XAR_TYPE_RECORD = {
             {'type': 'double', 'id': 'StellOffsetRatio'},
             {'type': 'double', 'id': 'PrimaryCurveToPrimary'},
             {'type': 'double', 'id': 'StellCurveToPrimary'},
-            # # {'type': '??', 'id': 'EdgePath1'},
-            # # {'type': '??', 'id': 'EdgePath2'},
-            # # TODO: ...
+            # EdgePath1
+            {'type': 'uint32', 'id': 'number_of_coords'},
+            {'type': 'byte', 'id': 'verb', 'number': 'number_of_coords'},
+            {'type': 'COORD', 'id': 'coord', 'number': 'number_of_coords'},
+            # EdgePath2
+            {'type': 'uint32', 'id': 'number_of_coords2'},
+            {'type': 'byte', 'id': 'verb2', 'number': 'number_of_coords2'},
+            {'type': 'COORD', 'id': 'coord2', 'number': 'number_of_coords2'},
         ]
     },
 
