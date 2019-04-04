@@ -144,6 +144,13 @@ def builder(element_id, **kwargs):
             index = cgm_const.LINE_DASHTABLE.index(dashes) + 1 \
                 if dashes in cgm_const.LINE_DASHTABLE else 2
         params = utils.py_int2word(index, True)
+    elif element_id == cgm_const.POLYGON:
+        points = kwargs.get('points')
+        if points:
+            params = ''.join([cgm_unit(x) + cgm_unit(y) for x, y in points])
+            header = '\x40\xff' + utils.py_int2word(len(params), True)
+    elif element_id == cgm_const.POLYGON_SET:
+        pass
 
     if header:
         return elf(header, params)
