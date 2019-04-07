@@ -568,7 +568,7 @@ XAR_DEFAULT_STYLE = {
     'flat_colour_fill': None,
     # 'StrokeTransp',
     'stroke_transparency': 0.0,
-    'stroke_colour': RGB_WHITE,
+    'stroke_colour': RGB_BLACK,
     'feather': None,
     'stroke_type': 0x01000000,
     # addition
