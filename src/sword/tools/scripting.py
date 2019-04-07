@@ -127,8 +127,7 @@ class ScriptingTool(gtk.VBox):
         else:
             name = os.path.basename(pathname)[:-3]
             path = os.path.dirname(pathname)
-            f, filename, desc = imp.find_module(name, [path])
-            module = imp.load_module(name, f, filename, desc)
+            module = imp.load_module(name, *imp.find_module(name, [path]))
             module.run_script(self.app, self.mw)
 
     def set_path(self, pathname, undo=False):
