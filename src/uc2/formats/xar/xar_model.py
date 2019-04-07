@@ -38,7 +38,7 @@ class XARDocument(BinaryModelObject):
 
 
 class XARRecord(BinaryModelObject):
-    spec = None
+    _spec = None
     _types = {}
 
     def __new__(cls, cid, idx, *args, **kwargs):
@@ -73,9 +73,10 @@ class XARRecord(BinaryModelObject):
     def update_for_sword(self):
         markup = []
         offset = 0
+        chunk_length = len(self.chunk)
         for item in self._spec or []:
             reader = READER_DATA_TYPES_MAP.get(item['type'])
-            if reader:
+            if reader and chunk_length - offset > 0:
                 offset2, val = self._deserialize(reader, item, offset)
                 markup.append((offset, offset2-offset, item['id']))
                 offset = offset2
@@ -102,11 +103,15 @@ class XARRecord(BinaryModelObject):
 
     def deserialize(self):
         offset = 0
+        chunk_length = len(self.chunk)
         for item in self._spec or []:
             reader = READER_DATA_TYPES_MAP.get(item['type'])
             if reader:
-                offset, val = self._deserialize(reader, item, offset)
-                setattr(self, item['id'], val)
+                if chunk_length - offset > 0:
+                    offset, val = self._deserialize(reader, item, offset)
+                    setattr(self, item['id'], val)
+                else:
+                    break
             else:
                 log.warn('Unknown type %s', item['type'])
                 break

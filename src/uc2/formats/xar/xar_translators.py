@@ -225,7 +225,9 @@ class XAR_to_SK2_Translator(object):
 
     # Tag management
     def handle_tagdescription(self, rec=None, cfg=None):
-        print("# xar tagdescription %s" % rec.description)
+        for item in rec.description:
+            if item[0] not in xar_const.XAR_TYPE_RECORD:
+                print("# xar tagdescription %s" % item)
 
     # Document tags
     def handle_document(self, rec, cfg): pass
