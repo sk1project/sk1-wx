@@ -184,6 +184,21 @@ class XAR_to_SK2_Translator(object):
         else:
             self.atomic_tags.add(rec.cid)
 
+    def handle_previewbitmap_gif(self, rec, cfg):
+        fn = self.sk2_doc.doc_file.rsplit('.', 1)[0]
+        with open(fn + '.gif', 'wb') as f:
+            f.write(rec.chunk)
+
+    def handle_previewbitmap_jpeg(self, rec, cfg):
+        fn = self.sk2_doc.doc_file.rsplit('.', 1)[0]
+        with open(fn + '.jpeg', 'wb') as f:
+            f.write(rec.chunk)
+
+    def handle_previewbitmap_png(self, rec, cfg):
+        fn = self.sk2_doc.doc_file.rsplit('.', 1)[0]
+        with open(fn + '.png', 'wb') as f:
+            f.write(rec.chunk)
+
     # Navigation records
     def handle_up(self, rec, cfg):
         self.style = self.stack_style.pop()
