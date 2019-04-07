@@ -223,6 +223,10 @@ class XAR_to_SK2_Translator(object):
         parent.childs.extend(self.pages)
         self.pages = []
 
+    # Tag management
+    def handle_tagdescription(self, rec=None, cfg=None):
+        print("# xar tagdescription %s" % rec.description)
+
     # Document tags
     def handle_document(self, rec, cfg): pass
 
@@ -331,7 +335,9 @@ class XAR_to_SK2_Translator(object):
 #    def handle_define_defaultunits(self, rec, cfg): pass
 
     # Document info tags
-#    def handle_documentcomment(self, rec, cfg): pass
+    def handle_documentcomment(self, rec, cfg):
+        print('# xar documentcomment %s %s %s' % (len(rec.chunk), rec.comment,
+                                                  self.sk2_doc.doc_file))
 #    def handle_documentdates(self, rec, cfg): pass
 #    def handle_documentundosize(self, rec, cfg): pass
 #    def handle_documentflags(self, rec, cfg): pass
@@ -992,7 +998,7 @@ class XAR_to_SK2_Translator(object):
 #    #     self.sk2_mtds.set_doc_units(uc2const.UNIT_PT)
 
     def get_color(self, colour_ref):
-        return self.colors.get(colour_ref) or xar_const.RGB_WHITE
+        return self.colors.get(colour_ref) or xar_const.RGB_BLACK
 
     def set_trafo(self, trafo):
         self.trafo = trafo
