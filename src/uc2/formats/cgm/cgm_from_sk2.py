@@ -151,8 +151,16 @@ def builder(element_id, **kwargs):
             header = '\x40\xff' + utils.py_int2word(len(params), True)
     elif element_id == cgm_const.POLYGON_SET:
         polygons = kwargs.get('polygons')
+        params = ''
         for points in polygons:
-            pass
+            if points:
+                end = '\x00\x03'
+                if not points[0] == points[-1]:
+                    points += [points[0]]
+                    end = '\x00\x02'
+                params += '\x00\x01'.join(
+                    [cgm_unit(x) + cgm_unit(y) for x, y in points]) + end
+        header = '\x41\x1f' + utils.py_int2word(len(params), True)
 
     if header:
         return elf(header, params)
