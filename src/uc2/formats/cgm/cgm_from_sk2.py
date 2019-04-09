@@ -17,7 +17,7 @@
 
 import logging
 
-from uc2 import utils, uc2const, libgeom
+from uc2 import utils, uc2const, libgeom, sk2const
 from uc2.formats.cgm import cgm_model, cgm_const
 
 LOG = logging.getLogger(__name__)
@@ -125,7 +125,7 @@ def builder(element_id, **kwargs):
         color = kwargs.get('color', (0, 0, 0))
         params = ''.join([utils.py_int2byte(item) for item in color])
     elif element_id == cgm_const.EDGE_VISIBILITY:
-        header = '\x52\xc2'
+        header = '\x53\xc2'
         visible = kwargs.get('visible', True)
         params = '\x00\x01' if visible else '\x00\x00'
     elif element_id == cgm_const.EDGE_COLOUR:
@@ -240,7 +240,7 @@ class SK2_to_CGM_Translator(object):
             elif curve.style[1]:
                 self.make_polylines(curve)
         else:
-            for item in obj.chils:
+            for item in obj.childs:
                 self.process_obj(item)
 
     def make_polylines(self, obj, paths=None):
@@ -249,7 +249,7 @@ class SK2_to_CGM_Translator(object):
         color = self.sk2_doc.cms.get_display_color255(stroke[2])[:3]
         self.add(cgm_const.LINE_COLOUR, color=color)
         if not paths:
-            paths = libgeom.get_flattened_path(obj)
+            paths = libgeom.get_flattened_paths(obj)
         for path in paths:
             points = [path[0], ] + path[1]
             self.add(cgm_const.POLYLINE, points=points)
@@ -257,14 +257,26 @@ class SK2_to_CGM_Translator(object):
     def make_polygons(self, obj):
         fill = obj.style[0]
         stroke = obj.style[1]
-        paths = libgeom.get_flattened_path(obj)
+        paths = libgeom.get_flattened_paths(obj)
+        if not paths:
+            return
         if stroke and stroke[7]:
             self.make_polylines(obj, paths)
         if fill:
-            pass
+            self.add(cgm_const.INTERIOR_STYLE)
+            color = sk2const.RGB_BLACK
+            if fill[1] == sk2const.FILL_SOLID:
+                color = fill[2]
+            elif fill[1] == sk2const.FILL_GRADIENT:
+                color = fill[2][2][0][1]
+            elif fill[1] == sk2const.FILL_PATTERN:
+                color = fill[2][2][0]
+            color = self.sk2_doc.cms.get_display_color255(color)[:3]
+            self.add(cgm_const.FILL_COLOUR, color=color)
+            polygons = [[path[0], ] + path[1] for path in paths]
+            if len(polygons) == 1:
+                self.add(cgm_const.POLYGON, points=polygons[0])
+            else:
+                self.add(cgm_const.POLYGON_SET, polygons=polygons)
         if stroke and not stroke[7]:
             self.make_polylines(obj, paths)
-
-    def generate_polygons(self):
-        pass
-
