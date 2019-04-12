@@ -53,7 +53,7 @@ def cmx_saver(sk2_doc, filename=None, fileptr=None,
 
 def check_cmx(path):
     with get_fileptr(path) as fileptr:
-        riff_sign = fileptr.read(4) == 'RIFF'
+        riff_sign = fileptr.read(4) in ('RIFF', 'RIFX')
         _size = fileptr.read(4)
         cmx_sign = fileptr.read(3) == 'CMX'
     return riff_sign and cmx_sign
