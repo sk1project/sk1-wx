@@ -45,9 +45,7 @@ class CGM_Presenter(BinaryModelPresenter):
         self.model = cgm_model.get_empty_cgm()
 
     def translate_from_sk2(self, sk2_doc):
-        translator = cgm_from_sk2.SK2_to_CGM_Translator()
-        translator.translate(sk2_doc, self)
+        cgm_from_sk2.SK2_to_CGM_Translator().translate(sk2_doc, self)
 
     def translate_to_sk2(self, sk2_doc):
-        translator = cgm_to_sk2.CGM_to_SK2_Translator()
-        translator.translate(self, sk2_doc)
+        cgm_to_sk2.CGM_to_SK2_Translator().translate(self, sk2_doc)
