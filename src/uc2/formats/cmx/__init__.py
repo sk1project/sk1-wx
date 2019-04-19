@@ -57,4 +57,3 @@ def check_cmx(path):
         _size = fileptr.read(4)
         cmx_sign = fileptr.read(3) == 'CMX'
     return riff_sign and cmx_sign
-

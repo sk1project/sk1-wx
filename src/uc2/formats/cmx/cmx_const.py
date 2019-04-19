@@ -14,3 +14,8 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+LIST_ID = 'LIST'
+ROOT_ID = 'RIFF'
+ROOTX_ID = 'RIFX'
+LIST_IDS = (LIST_ID, ROOT_ID, ROOTX_ID)

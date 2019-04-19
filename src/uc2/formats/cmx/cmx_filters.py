@@ -15,7 +15,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from uc2 import utils
 from uc2.formats.generic_filters import AbstractBinaryLoader, AbstractSaver
+from uc2.formats.cmx import cmx_model, cmx_const
 
 
 class CmxLoader(AbstractBinaryLoader):
@@ -23,7 +25,37 @@ class CmxLoader(AbstractBinaryLoader):
     parent_stack = None
 
     def do_load(self):
-        pass
+        self.fileptr.seek(0, 0)
+        dwords, size = self.read_header()
+        self.model = cmx_model.CmxRoot(self.config, ''.join(dwords))
+        self.parent_stack = [self.model]
+        self.parse(size)
+
+    def read_header(self):
+        identifier = self.fileptr.read(4)
+        sz = self.fileptr.read(4)
+        name = self.fileptr.read(4) \
+            if identifier in cmx_const.LIST_IDS else ''
+        shift = 4 if name else 0
+        size = utils.dword2py_int(sz, self.config.rifx) - shift
+        size += 1 if size > (size // 2) * 2 else 0
+        return [identifier, sz, name], size
+
+    def parse(self, chunk_size):
+        position = self.fileptr.tell()
+        while self.fileptr.tell() - position < chunk_size:
+            dwords, size = self.read_header()
+
+            if not dwords[2]:
+                dwords.append(self.fileptr.read(size))
+
+            node = cmx_model.CmxRiffElement(''.join(dwords))
+            self.parent_stack[-1].add(node)
+
+            if dwords[2]:
+                self.parent_stack.append(node)
+                self.parse(size)
+                self.parent_stack = self.parent_stack[:-1]
 
 
 class CmxSaver(AbstractSaver):

@@ -42,11 +42,10 @@ class CMX_Presenter(BinaryModelPresenter):
         self.new()
 
     def new(self):
-        self.model = cmx_model.get_empty_cmx()
+        self.model = cmx_model.get_empty_cmx(self.config)
 
     def translate_from_sk2(self, sk2_doc):
         cmx_from_sk2.SK2_to_CMX_Translator().translate(sk2_doc, self)
 
     def translate_to_sk2(self, sk2_doc):
         cmx_to_sk2.CMX_to_SK2_Translator().translate(self, sk2_doc)
-
