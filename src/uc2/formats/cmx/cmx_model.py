@@ -17,7 +17,7 @@
 
 from uc2 import utils
 from uc2.formats.generic import BinaryModelObject
-from uc2.formats.cmx import cmx_const
+from uc2.formats.cmx import cmx_const, cmx_utils
 
 
 class CmxRiffElement(BinaryModelObject):
@@ -54,6 +54,9 @@ class CmxRiffElement(BinaryModelObject):
         sz = '%d' % self.get_chunk_size()
         name = '<%s>' % (self.name or self.identifier)
         return self.is_leaf(), name, sz
+
+    def update_for_sword(self):
+        self.cache_fields = cmx_utils.get_riff_markup(self)
 
 
 class CmxRoot(CmxRiffElement):
