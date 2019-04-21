@@ -569,7 +569,7 @@ XAR_DEFAULT_STYLE = {
     'join_type': JOIN_BEVEL,
     'winding_rule': FILL_EVENODD,
     'line_width': 0.501,
-    'fill_effect_fade': None,
+    'fill_effect': None,
     'transp_fill_mapping_linear': None,
     'fill_mapping_linear': None,
     'flat_transp_fill': None,

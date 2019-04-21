@@ -24,7 +24,7 @@ from uc2.libgeom.points import distance, is_equal_points
 from uc2.libgeom.trafo import apply_trafo_to_points, apply_trafo_to_point
 from uc2.libgeom.bbox import bbox_to_rect
 from uc2 import _, uc2const, sk2const, cms
-from colorsys import hsv_to_rgb
+from colorsys import hsv_to_rgb, rgb_to_hsv
 import copy
 
 
@@ -75,6 +75,11 @@ MODE_TINT = {
 }
 
 TEXT_ALIGN_NEED_FIX = [xar_const.TEXT_ALIGN_CENTRE, xar_const.TEXT_ALIGN_RIGHT]
+
+RAINBOW_EFFECT = [
+    xar_const.TAG_FILLEFFECT_RAINBOW,
+    xar_const.TAG_FILLEFFECT_ALTRAINBOW
+]
 
 
 def color_tint(color1, coef=0.5, colour_name=''):
@@ -501,18 +506,26 @@ class XAR_to_SK2_Translator(object):
 
 #    def handle_contonebitmapfill(self, rec, cfg): pass
 #    def handle_fractalfill(self, rec, cfg): pass
-#    def handle_filleffect_fade(self, rec, cfg): pass
-#    def handle_filleffect_rainbow(self, rec, cfg): pass
-#    def handle_filleffect_altrainbow(self, rec, cfg): pass
+    def handle_filleffect_fade(self, rec, cfg):
+        # print self.sk2_doc.doc_file, rec.cid
+        self.style['fill_effect'] = rec.cid
+
+    def handle_filleffect_rainbow(self, rec, cfg):
+        # print self.sk2_doc.doc_file,rec.cid
+        self.style['fill_effect'] = rec.cid
+
+    def handle_filleffect_altrainbow(self, rec, cfg):
+        # print self.sk2_doc.doc_file,rec.cid
+        self.style['fill_effect'] = rec.cid
 
     def handle_fill_repeating(self, rec, cfg):
-        self.style['fill_repeating'] = xar_const.TAG_FILL_REPEATING
+        self.style['fill_repeating'] = rec.cid
 
     def handle_fill_nonrepeating(self, rec, cfg):
-        self.style['fill_repeating'] = xar_const.TAG_FILL_NONREPEATING
+        self.style['fill_repeating'] = rec.cid
 
     def handle_fill_repeatinginverted(self, rec, cfg):
-        self.style['fill_repeating'] = xar_const.TAG_FILL_REPEATINGINVERTED
+        self.style['fill_repeating'] = rec.cid
 
 #    def handle_flattransparentfill(self, rec, cfg): pass
 #    def handle_lineartransparentfill(self, rec, cfg): pass
@@ -604,7 +617,7 @@ class XAR_to_SK2_Translator(object):
 #    def handle_fourcoltransparentfill(self, rec, cfg): pass
 
     def handle_fill_repeating_extra(self, rec, cfg):
-        self.style['fill_repeating'] = xar_const.TAG_FILL_REPEATING_EXTRA
+        self.style['fill_repeating'] = rec.cid
 
 #   def handle_transparentfill_repeating_extra(self, rec, cfg): pass
 
@@ -1042,12 +1055,16 @@ class XAR_to_SK2_Translator(object):
 
         elif self.style.get('gradient_fill'):
             fill_type = sk2const.FILL_GRADIENT
-            fill_data = self.style['gradient_fill']
-            fill_data = copy.deepcopy(fill_data)
+            fill_data = copy.deepcopy(self.style['gradient_fill'])
             fill_repeating = self.style.get('fill_repeating')
-            fill_repeating = XAR_TO_SK2_FILL_REPEATING.get(fill_repeating)
-            if fill_repeating is not None:
-                fill_data[3] = fill_repeating
+            fill_effect = self.style['fill_effect']
+
+            fill_data = self.apply_fill_effect(fill_data, fill_effect)
+            fill_data = self.apply_fill_repeating(fill_data, fill_repeating)
+
+            fill_data[3] = XAR_TO_SK2_FILL_REPEATING.get(fill_repeating)
+            fill_data[3] = fill_data[3] or sk2const.GRADIENT_EXTEND_PAD
+
         elif self.style.get('flat_colour_fill'):
             fill_type = sk2const.FILL_SOLID
             fill_data = copy.deepcopy(self.style['flat_colour_fill'])
@@ -1101,11 +1118,59 @@ class XAR_to_SK2_Translator(object):
             paths.append([path[0], path[1:], marker])
         return paths
 
+    def apply_fill_effect(self, fill_data, fill_effect):
+        """
+        TAG_FILLEFFECT_FADE: Transform the start colour into the end colour
+        by taking the shortest route between the 2 colours, in RGB colour space.
+        TAG_FILLEFFECT_RAINBOW: Transform the start colour into the end colour
+        by taking the shortest route in the H dimension of the HSV colour space.
+        TAG_FILLEFFECT_ALTRAINBOW: Transform the start colour into the end
+        colour by taking the longest route in the H dimension of the HSV
+        colour space.
+        """
+        if fill_effect in RAINBOW_EFFECT:
+            if fill_effect == xar_const.TAG_FILLEFFECT_RAINBOW:
+                shortest_route = True
+            elif fill_effect == xar_const.TAG_FILLEFFECT_ALTRAINBOW:
+                shortest_route = False
+            stops = fill_data[2]
+            new_stops = []
+            for piece in range(0, len(stops)-1):
+                start = stops[piece]
+                end = stops[piece+1]
+                new_stops.append(start)
+                new_stops.extend(
+                    self.get_rainbow_piece(start, end, shortest_route)
+                )
+            new_stops.append(end)
+            fill_data[2] = new_stops
+
+        return fill_data
+
     def flush_stack(self, parent):
         for el in self.stack:
             el.parent = parent
         parent.childs.extend(self.stack)
         self.stack = []
+
+    def apply_fill_repeating(self, fill_data, fill_repeating):
+        if fill_repeating == xar_const.TAG_FILL_REPEATING_EXTRA:
+            """ TAG_FILL_REPEATING_EXTRA: The fill is repeated with the start 
+            point being the start colour and a point half-way through the fill 
+            being the end colour. The fill then fades back to the start colour 
+            at the end point and then repeats indefinitely. This can apply to 
+            linear, circular, elliptical and diamond fills.
+            """
+            stops = fill_data[2]
+            s1 = [[a[0] / 2.0, a[1]] for a in stops[:-1]]
+            s2 = [[1.0 - a[0] / 2.0, a[1]] for a in reversed(stops)]
+            fill_data[2] = s1 + s2
+        return fill_data
+
+    def get_rainbow_piece(self, start_color, end_color, shortest_route=True):
+        # TODO: implement this
+        rainbow_piece = []
+        return rainbow_piece
 
 
 class SK2_to_XAR_Translator(object):
