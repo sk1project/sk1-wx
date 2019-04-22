@@ -15,10 +15,3 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
-def get_riff_markup(el):
-    markup = [(0, 4, 'Chunk identifier'),
-              (4, 4, 'Chunk data size')]
-    if not el.is_leaf():
-        markup += [(8, 4, 'Chunk name')]
-    return markup
