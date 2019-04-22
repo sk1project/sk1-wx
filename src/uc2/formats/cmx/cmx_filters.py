@@ -30,6 +30,8 @@ class CmxLoader(AbstractBinaryLoader):
         self.model = cmx_model.CmxRoot(self.config, ''.join(dwords))
         self.parent_stack = [self.model]
         self.parse(size)
+        self.parent_stack = None
+        print 'childs', self.model.childs
 
     def read_header(self):
         identifier = self.fileptr.read(4)

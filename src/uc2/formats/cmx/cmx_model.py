@@ -56,7 +56,10 @@ class CmxRiffElement(BinaryModelObject):
         return self.is_leaf(), name, sz
 
     def update_for_sword(self):
-        self.cache_fields = cmx_utils.get_riff_markup(self)
+        self.cache_fields = [(0, 4, 'Chunk identifier'),
+                             (4, 4, 'Chunk data size')]
+        if not self.is_leaf():
+            self.cache_fields += [(8, 4, 'Chunk name')]
 
 
 class CmxRoot(CmxRiffElement):

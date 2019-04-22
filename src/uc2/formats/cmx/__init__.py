@@ -40,7 +40,7 @@ def cmx_loader(appdata, filename=None, fileptr=None,
 def cmx_saver(sk2_doc, filename=None, fileptr=None,
               translate=True, cnf=None, **kw):
     cnf = merge_cnf(cnf, kw)
-    if sk2_doc.cid == uc2const.CGM:
+    if sk2_doc.cid == uc2const.CMX:
         translate = False
     if translate:
         cmx_doc = CMX_Presenter(sk2_doc.appdata, cnf)
