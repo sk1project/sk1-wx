@@ -72,7 +72,7 @@ def create_actions(app):
          insp.is_any_doc_not_saved],
         ['CLOSE', _('_Close'), _('Close'), gtk.STOCK_CLOSE, '<Control>W',
          proxy.close, [NO_DOCS, DOC_CHANGED], insp.is_doc],
-        ['CLOSE_ALL', _('_Close All'), _('Close All'), None, None,
+        ['CLOSE_ALL', _('_Close All'), _('Close All'), gtk.STOCK_CANCEL, None,
          proxy.close_all, [NO_DOCS, DOC_CHANGED], insp.is_doc],
         ['QUIT', _('_Exit'), _('Exit'), gtk.STOCK_QUIT, '<Alt>F4',
          proxy.exit, None, None],
