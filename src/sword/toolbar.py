@@ -35,6 +35,7 @@ class AppToolbar(gtk.Toolbar):
             'SAVE',
             'SAVE_AS',
             'CLOSE',
+            'CLOSE_ALL',
             None,
             'LOGS',
             'PREFERENCES',

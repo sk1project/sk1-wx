@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2017-2019 by Igor E. Novikov
+#  Copyright (C) 2019 by Igor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -19,12 +19,12 @@ import os
 
 from uc2 import uc2const
 from uc2.formats.generic import BinaryModelPresenter
-from uc2.formats.cgm import cgm_model, cgm_filters, cgm_to_sk2, cgm_from_sk2
-from uc2.formats.cgm.cgm_config import CGM_Config
+from uc2.formats.cmx import cmx_model, cmx_filters, cmx_to_sk2, cmx_from_sk2
+from uc2.formats.cmx.cmx_config import CMX_Config
 
 
-class CGM_Presenter(BinaryModelPresenter):
-    cid = uc2const.CGM
+class CMX_Presenter(BinaryModelPresenter):
+    cid = uc2const.CMX
 
     config = None
     doc_file = ''
@@ -32,20 +32,20 @@ class CGM_Presenter(BinaryModelPresenter):
 
     def __init__(self, appdata, cnf=None):
         cnf = cnf or {}
-        self.config = CGM_Config()
-        config_file = os.path.join(appdata.app_config_dir, 'cgm_config.xml')
+        self.config = CMX_Config()
+        config_file = os.path.join(appdata.app_config_dir, 'cmx_config.xml')
         self.config.load(config_file)
         self.config.update(cnf)
         self.appdata = appdata
-        self.loader = cgm_filters.CgmLoader()
-        self.saver = cgm_filters.CgmSaver()
+        self.loader = cmx_filters.CmxLoader()
+        self.saver = cmx_filters.CmxSaver()
         self.new()
 
     def new(self):
-        self.model = cgm_model.get_empty_cgm()
+        self.model = cmx_model.get_empty_cmx(self.config)
 
     def translate_from_sk2(self, sk2_doc):
-        cgm_from_sk2.SK2_to_CGM_Translator().translate(sk2_doc, self)
+        cmx_from_sk2.SK2_to_CMX_Translator().translate(sk2_doc, self)
 
     def translate_to_sk2(self, sk2_doc):
-        cgm_to_sk2.CGM_to_SK2_Translator().translate(self, sk2_doc)
+        cmx_to_sk2.CMX_to_SK2_Translator().translate(self, sk2_doc)

@@ -99,7 +99,7 @@ class CGM_to_SK2_Translator(object):
         return fn(fmt, chunk)
 
     def read_enum(self, chunk):
-        return cgm_utils._unpack('!h', chunk)
+        return cgm_utils._unpack('>h', chunk)
 
     def read_vdc(self, chunk):
         fmt, fn = cgm_utils.VDC_F[self.cgm['vdc.type']][self.cgm['vdc.prec']]

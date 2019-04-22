@@ -79,11 +79,12 @@ def py_int2signed_word(val, be=False):
     return struct.pack(sig, val)
 
 
-def dword2py_int(data):
+def dword2py_int(data, be=False):
     """
     Converts double word of bytes to Python int value.
     """
-    return struct.unpack('<I', data)[0]
+    sig = '>I' if be else '<I'
+    return struct.unpack(sig, data)[0]
 
 
 def py_int2dword(val, be=False):

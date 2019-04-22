@@ -19,7 +19,7 @@ from bbox import *
 from bezier_ops import *
 from contour import stroke_to_curve
 from cwrap import *
-from flattering import get_flattened_path, flat_paths, flat_path
+from flattering import get_flattened_paths, flat_paths, flat_path
 from objs import *
 from points import *
 from shaping import intersect_paths, fuse_paths, trim_paths, excluse_paths

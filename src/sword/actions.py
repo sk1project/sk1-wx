@@ -25,16 +25,16 @@ from sword.events import NO_DOCS, DOC_MODIFIED, \
 class AppAction(gtk.Action):
 
     def __init__(self, name, label, tooltip, icon, shortcut,
-                 callable, channels, validator, args=[]):
+                 callback, channels, validator, args=None):
 
         gtk.Action.__init__(self, name, label, tooltip, icon)
         self.menuitem = None
         self.tooltip = tooltip
         self.shortcut = shortcut
-        self.callable = callable
+        self.callable = callback
         self.events = events
         self.validator = validator
-        self.args = args
+        self.args = args or []
         self.icon = icon
 
         self.connect('activate', self.callable)
@@ -46,7 +46,7 @@ class AppAction(gtk.Action):
             for channel in channels:
                 events.connect(channel, self.receiver)
 
-    def receiver(self, *args):
+    def receiver(self, *_args):
         self.set_sensitive(self.validator())
 
 
@@ -72,7 +72,7 @@ def create_actions(app):
          insp.is_any_doc_not_saved],
         ['CLOSE', _('_Close'), _('Close'), gtk.STOCK_CLOSE, '<Control>W',
          proxy.close, [NO_DOCS, DOC_CHANGED], insp.is_doc],
-        ['CLOSE_ALL', _('_Close All'), _('Close All'), None, None,
+        ['CLOSE_ALL', _('_Close All'), _('Close All'), gtk.STOCK_CANCEL, None,
          proxy.close_all, [NO_DOCS, DOC_CHANGED], insp.is_doc],
         ['QUIT', _('_Exit'), _('Exit'), gtk.STOCK_QUIT, '<Alt>F4',
          proxy.exit, None, None],
@@ -137,9 +137,8 @@ def create_actions(app):
          insp.can_refresh_model],
 
         ['COPY_TO_COMPARE', _('_Copy to comparator'), _('Copy to comparator'),
-         gtk.STOCK_GOTO_LAST, None, proxy.copy_to_compare, [events.NO_DOCS,
-                                                            events.DOC_CHANGED,
-                                                            events.SELECTION_CHANGED],
+         gtk.STOCK_GOTO_LAST, None, proxy.copy_to_compare,
+         [events.NO_DOCS, events.DOC_CHANGED, events.SELECTION_CHANGED],
          insp.can_copy_to_compare],
         ['COPY_TO_CLIP', _('_Copy to clip'), _('Copy to clip'),
          gtk.STOCK_MEDIA_NEXT,
@@ -171,7 +170,7 @@ def create_actions(app):
                            entry[4], entry[5], entry[6], entry[7])
 
         actions[entry[0]] = action
-        if not action.shortcut is None:
+        if action.shortcut is not None:
             actiongroup.add_action_with_accel(action, action.shortcut)
             action.set_accel_group(accelgroup)
         else:

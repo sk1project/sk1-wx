@@ -80,10 +80,10 @@ def flat_path(path, tlr=0.1):
 
 
 def flat_paths(paths, tlr=0.1):
-    return [flat_path(path, tlr) for path in paths]
+    return [flat_path(path, tlr) for path in paths if path[1]]
 
 
-def get_flattened_path(curve_obj, trafo=NORMAL_TRAFO, tolerance=0.1):
+def get_flattened_paths(curve_obj, trafo=NORMAL_TRAFO, tolerance=0.1):
     paths = flat_paths(curve_obj.paths, tolerance)
     paths = apply_trafo_to_paths(paths, curve_obj.trafo)
     if trafo != NORMAL_TRAFO:
