@@ -26,6 +26,7 @@ from uc2.libgeom.bbox import bbox_to_rect
 from uc2 import _, uc2const, sk2const, cms
 from colorsys import hsv_to_rgb, rgb_to_hsv
 import copy
+import math
 
 
 XAR_TO_SK2_UNITS = {
@@ -101,6 +102,22 @@ def pick_page_format_name(width, height):
         if is_equal_points(fzise, size, 2):
             return name
     return _('Custom')
+
+
+def make_trafo(centre_point, major_axes, minor_axes, trafo):
+    width = distance(major_axes, centre_point)
+    c = distance(minor_axes, centre_point)
+    cx, cy = apply_trafo_to_point(centre_point, trafo)
+
+    angle1 = get_point_angle(major_axes, centre_point)
+    angle2 = get_point_angle(minor_axes, centre_point)
+    angle = abs(angle2 - angle1)
+    height = c * math.sin(angle)
+    tr = [width, 0.0, 0.0, height, cx, cy]
+    tr_rotate = trafo_rotate(angle1, cx, cy)
+    tr = multiply_trafo(tr, tr_rotate)
+    return tr
+
 
 
 class XAR_to_SK2_Translator(object):
@@ -367,6 +384,7 @@ class XAR_to_SK2_Translator(object):
             self.get_trafo(),
             self.get_style(fill=True)
         )
+        curve.fill_trafo = self.get_fill_trafo()
         self.stack.append(curve)
 
     def handle_path_strokedled(self, rec, cfg):
@@ -385,6 +403,7 @@ class XAR_to_SK2_Translator(object):
             self.get_trafo(),
             self.get_style(stroke=True, fill=True)
         )
+        curve.fill_trafo = self.get_fill_trafo()
         self.stack.append(curve)
 
     def handle_group(self, rec, cfg):
@@ -420,6 +439,7 @@ class XAR_to_SK2_Translator(object):
             self.get_trafo(),
             self.get_style(fill=True)
         )
+        curve.fill_trafo = self.get_fill_trafo()
         self.stack.append(curve)
 
     def handle_path_relative_stroked(self, rec, cfg):
@@ -438,6 +458,7 @@ class XAR_to_SK2_Translator(object):
             self.get_trafo(),
             self.get_style(stroke=True, fill=True)
         )
+        curve.fill_trafo = self.get_fill_trafo()
         self.stack.append(curve)
 
 #    def handle_pathref_transform(self, rec, cfg): pass
@@ -484,7 +505,21 @@ class XAR_to_SK2_Translator(object):
             sk2const.GRADIENT_EXTEND_PAD  # TODO
         ]
 
-#    def handle_ellipticalfill(self, rec, cfg): pass
+    def handle_ellipticalfill(self, rec, cfg):
+        trafo = self.get_trafo()
+        start_colour = self.get_color(rec.start_colour)
+        end_colour = self.get_color(rec.end_colour)
+        stops = [[0.0, start_colour], [1.0, end_colour]]
+
+        self.style['gradient_fill'] = [
+            sk2const.GRADIENT_RADIAL,
+            [[0.0, 0.0], [1.0, 0.0]],
+            stops,
+            sk2const.GRADIENT_EXTEND_PAD  # TODO
+        ]
+        tr = make_trafo(rec.centre_point, rec.major_axes, rec.minor_axes, trafo)
+        self.style['fill_trafo'] = tr
+
 #    def handle_conicalfill(self, rec, cfg): pass
 
     def handle_bitmapfill(self, rec, cfg):
@@ -673,6 +708,7 @@ class XAR_to_SK2_Translator(object):
         tr = [rec.a, rec.b, rec.c, rec.d, rec.e/1000.0, rec.f/1000.0]
         el.trafo = multiply_trafo(el.trafo, tr)
         el.trafo = multiply_trafo(el.trafo, self.get_trafo())
+        el.fill_trafo = self.get_fill_trafo()
         self.stack.append(el)
 
     # Text related records
@@ -694,6 +730,7 @@ class XAR_to_SK2_Translator(object):
             style=self.get_text_style()
         )
         # el = self.correct_text_basepoint(el)
+        el.fill_trafo = self.get_fill_trafo()
         self.stack.append(el)
 
     def handle_text_story_complex(self, rec, cfg):
@@ -708,6 +745,7 @@ class XAR_to_SK2_Translator(object):
             trafo=trafo
         )
         # el = self.correct_text_basepoint(el)
+        el.fill_trafo = self.get_fill_trafo()
         self.stack.append(el)
 
     def correct_text_basepoint(self, text_element):
@@ -903,8 +941,28 @@ class XAR_to_SK2_Translator(object):
             sk2const.GRADIENT_EXTEND_PAD
         ]
 
-#    def handle_ellipticalfillmultistage(self, rec, cfg): pass
-#    def handle_conicalfillmultistage(self, rec, cfg): pass
+    def handle_ellipticalfillmultistage(self, rec, cfg):
+        trafo = self.get_trafo()
+        start_colour = self.get_color(rec.start_colour)
+        end_colour = self.get_color(rec.end_colour)
+
+        stops = [[0.0, start_colour]]
+        for p in rec.stop_colors:
+            stops.append([p[0], self.get_color(p[1])])
+        stops.append([1.0, end_colour])
+
+        self.style['gradient_fill'] = [
+            sk2const.GRADIENT_RADIAL,
+            [[0.0, 0.0], [1.0, 0.0]],
+            stops,
+            sk2const.GRADIENT_EXTEND_PAD  # TODO
+        ]
+
+        # print self.sk2_doc.doc_file
+        tr = make_trafo(rec.centre_point, rec.major_axes, rec.minor_axes, trafo)
+        self.style['fill_trafo'] = tr
+
+    #    def handle_conicalfillmultistage(self, rec, cfg): pass
 
     # Brush attribute tags
 #    def handle_brushattr(self, rec, cfg): pass
@@ -1042,6 +1100,9 @@ class XAR_to_SK2_Translator(object):
         stroke = stroke and self.get_stoke() or []
         return [fill, stroke, [], []]
 
+    def get_fill_trafo(self):
+        return self.style.get('fill_trafo') or []
+
     def get_fill(self):
         fill_rule = XAR_TO_SK2_WINDING.get(
             self.style['winding_rule'],
@@ -1167,7 +1228,7 @@ class XAR_to_SK2_Translator(object):
             fill_data[2] = s1 + s2
         return fill_data
 
-    def get_rainbow_piece(self, start_color, end_color, shortest_route=True):
+    def get_rainbow_piece(self, start_colour, end_colour, shortest_route=True):
         # TODO: implement this
         rainbow_piece = []
         return rainbow_piece

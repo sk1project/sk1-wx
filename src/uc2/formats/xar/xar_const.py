@@ -583,6 +583,7 @@ XAR_DEFAULT_STYLE = {
     'pattern_fill': None,
     'gradient_fill': None,
     'fill_repeating': None,
+    'fill_trafo': None,
 }
 
 
@@ -899,7 +900,19 @@ XAR_TYPE_RECORD = {
             {'type': 'double', 'id': 'gain'},
         ]
     },
-    TAG_ELLIPTICALFILL: {'name': 'ELLIPTICALFILL'},
+    TAG_ELLIPTICALFILL: {
+        'name': 'ELLIPTICALFILL',
+        'sec': [
+            {'type': 'COORD', 'id': 'centre_point'},
+            {'type': 'COORD', 'id': 'major_axes'},
+            {'type': 'COORD', 'id': 'minor_axes'},
+            {'type': 'COLOURREF', 'id': 'start_colour'},
+            {'type': 'COLOURREF', 'id': 'end_colour'},
+            # PROFILE
+            {'type': 'double', 'id': 'bias'},
+            {'type': 'double', 'id': 'gain'},
+        ]
+    },
     TAG_CONICALFILL: {'name': 'CONICALFILL'},
     TAG_BITMAPFILL: {
         'name': 'BITMAPFILL',
@@ -1319,7 +1332,18 @@ XAR_TYPE_RECORD = {
             {'type': 'StopColour', 'id': 'stop_colors', 'number': 'num_cols'}
         ]
      },
-    TAG_ELLIPTICALFILLMULTISTAGE: {'name': 'ELLIPTICALFILLMULTISTAGE'},
+    TAG_ELLIPTICALFILLMULTISTAGE: {
+        'name': 'ELLIPTICALFILLMULTISTAGE',
+        'sec': [
+            {'type': 'COORD', 'id': 'centre_point'},
+            {'type': 'COORD', 'id': 'major_axes'},
+            {'type': 'COORD', 'id': 'minor_axes'},
+            {'type': 'COLOURREF', 'id': 'start_colour'},
+            {'type': 'COLOURREF', 'id': 'end_colour'},
+            {'type': 'uint32', 'id': 'num_cols'},
+            {'type': 'StopColour', 'id': 'stop_colors', 'number': 'num_cols'}
+        ]
+    },
     TAG_CONICALFILLMULTISTAGE: {'name': 'CONICALFILLMULTISTAGE'},
 
     # Brush attribute tags
