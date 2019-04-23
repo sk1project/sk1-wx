@@ -21,6 +21,7 @@ from uc2.formats.cmx import cmx_const, cmx_utils
 
 
 class CmxRiffElement(BinaryModelObject):
+    toplevel = False
     identifier = cmx_const.LIST_ID
     size = None
     name = None
@@ -39,6 +40,26 @@ class CmxRiffElement(BinaryModelObject):
         return sum([len(self.chunk)] + [item.get_chunk_size()
                                         for item in self.childs])
 
+    def get_name(self):
+        return self.name or self.identifier
+
+    def get_child_by_name(self, name):
+        for item in self.childs:
+            if item.get_name() == name:
+                return item
+        return None
+
+    def get_chunk_offset(self):
+        chunk = self
+        offset = 0
+        while not chunk.toplevel:
+            childs = chunk.parent.childs
+            index = childs.index(chunk)
+            offset += sum([item.get_chunk_size() for item in childs[:index]])
+            offset += len(chunk.parent.chunk)
+            chunk = chunk.parent
+        return offset
+
     def is_padding(self):
         sz = len(self.chunk)
         return sz > (sz // 2) * 2
@@ -50,10 +71,19 @@ class CmxRiffElement(BinaryModelObject):
         if self.is_leaf() and self.is_padding():
             self.chunk += '\x00'
 
+    def _get_icon(self):
+        icon_map = {
+            'DISP': 'gtk-missing-image',
+            'page': 'gtk-page-setup',
+        }
+        if self.is_leaf():
+            return icon_map.get(self.identifier, 'gtk-dnd')
+        return False
+
     def resolve(self, name=''):
         sz = '%d' % self.get_chunk_size()
-        name = '<%s>' % (self.name or self.identifier)
-        return self.is_leaf(), name, sz
+        name = '<%s>' % self.get_name()
+        return self._get_icon(), name, sz
 
     def update_for_sword(self):
         self.cache_fields = [(0, 4, 'Chunk identifier'),
@@ -63,6 +93,8 @@ class CmxRiffElement(BinaryModelObject):
 
 
 class CmxRoot(CmxRiffElement):
+    toplevel = True
+
     def __init__(self, config, chunk):
         self.config = config
         self.config.rifx = chunk.startswith(cmx_const.ROOTX_ID)
