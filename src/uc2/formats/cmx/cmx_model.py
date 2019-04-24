@@ -16,8 +16,8 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from uc2 import utils
+from uc2.formats.cmx import cmx_const
 from uc2.formats.generic import BinaryModelObject
-from uc2.formats.cmx import cmx_const, cmx_utils
 
 
 class CmxRiffElement(BinaryModelObject):
@@ -103,3 +103,44 @@ class CmxRoot(CmxRiffElement):
 
 def get_empty_cmx(config):
     return CmxRoot(config, cmx_const.ROOT_ID + 4 * '\x00' + 'CMX1')
+
+
+class CmxCont(CmxRiffElement):
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        self.cache_fields += [
+            (8, 32, 'file id'),
+            (40, 16, 'OS type'),
+            (56, 4, 'ByteOrder'),
+            (60, 2, 'CoordSize'),
+            (62, 4, 'Major'),
+            (66, 4, 'Minor'),
+            (70, 2, 'Unit'),
+            (72, 8, 'Factor'),
+
+            (80, 4, 'lOption (not used, zero)'),
+            (84, 4, 'lForeignKey (not used, zero)'),
+            (88, 4, 'lCapability (not used, zero)'),
+
+            (92, 4, 'lIndexSection offset'),
+            (96, 4, 'InfoSection offset'),
+            (100, 4, 'lThumbnail offset'),
+
+            (104, 4, 'lBBLeft - bbox x0'),
+            (108, 4, 'lBBTop - bbox y1'),
+            (112, 4, 'lBBRight - bbox x1'),
+            (116, 4, 'lBBBottom - bbox y0'),
+            (120, 4, 'lTally - instructions num'),
+
+            (124, 64, 'Reserved - set to zero'),
+        ]
+
+
+CHUNK_MAP = {
+    'cont': CmxCont,
+}
+
+
+def make_cmx_chunk(chunk):
+    identifier = chunk[:4]
+    return CHUNK_MAP.get(identifier, CmxRiffElement)(chunk)
