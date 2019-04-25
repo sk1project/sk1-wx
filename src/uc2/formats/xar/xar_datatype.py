@@ -36,20 +36,59 @@ packer_int32_le = struct.Struct("<i")
 packer_float_le = struct.Struct("<f")
 packer_double_le = struct.Struct("<d")
 
+
+class BitField(object):
+    val = None
+    bitfield = None
+
+    def __init__(self, val, bitfield):
+        self.val = val
+        self.bitfield = bitfield
+        print repr(self)
+
+    def __iter__(self):
+        for key in sorted(self.bitfield.keys()):
+            val = self.bitfield[key]
+            yield val.get('id'), self.__getattr__(val.get('id'))
+
+    def __getattr__(self, item):
+        for key, val in self.bitfield.items():
+            if item == val.get('id'):
+                return bool(self.val & 2**key)
+
+    def __setattr__(self, name, value):
+        if self.bitfield:
+            for index, val in self.bitfield.items():
+                if name == val.get('id'):
+                    mask = 1 << index
+                    if value:
+                        self.val |= mask  # Set the bit
+                    else:
+                        self.val &= ~mask  # Clear the bit
+                    return self.val
+        return super(BitField, self).__setattr__(name, value)
+
+    def __repr__(self):
+        return "%s: %s" % (bin(self.val), list(self))
+
+
 #######################################
 
 
 def list_chunks(items, size):
-    """Yield successive sized chunks from iteml."""
+    """Yield successive sized chunks from items."""
     for i in range(0, len(items), size):
         yield items[i:i + size]
 
 
 ########################################
 
-def unpack_u1(data, offset=0, **kw):
+def unpack_u1(data, offset=0, bitfield=None, **kw):
     string = data[offset:offset + 1]
-    return packer_byte.unpack(string)[0]
+    val = packer_byte.unpack(string)[0]
+    if bitfield:
+        val = BitField(val, bitfield)
+    return val
 
 
 def unpack_float(data, offset=0, **kw):
@@ -281,3 +320,4 @@ WRITER_DATA_TYPES_MAP = {
     # 'BITMAP_DATA':       pack_bitmap_data,
     'UNITSREF':          pack_s4,
 }
+
