@@ -143,6 +143,7 @@ class XAR_to_SK2_Translator(object):
 
     layer = None
     layer_name = ''
+    layer_flags = None
     page_name = ''
     page_format = None
     _handler = None
@@ -272,7 +273,16 @@ class XAR_to_SK2_Translator(object):
 
     # Notes
     def handle_layer(self, rec, cfg):
+        is_antialiased = True
         layer = sk2_model.Layer(cfg, name=self.layer_name)
+        if self.layer_flags is not None:
+            layer.properties = [
+                self.layer_flags.is_visible,
+                not self.layer_flags.is_locked,
+                self.layer_flags.is_printable,
+                is_antialiased
+            ]
+            self.layer_flags = None
         self.layer_name = ''
         self.flush_stack(layer)
         self.layers.append(layer)
@@ -295,7 +305,7 @@ class XAR_to_SK2_Translator(object):
 #    def handle_gridrulerorigin(self, rec, cfg): pass
 
     def handle_layerdetails(self, rec, cfg):
-        # TODO: process layer_flags
+        self.layer_flags = rec.layer_flags
         self.layer_name = rec.layer_name
 
 #    def handle_guidelayerdetails(self, rec, cfg): pass
