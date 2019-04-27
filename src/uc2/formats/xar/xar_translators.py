@@ -412,7 +412,7 @@ class XAR_to_SK2_Translator(object):
         # print 'documentflags', self.sk2_doc.doc_file
         # print rec.document_flags
 
-#    def handle_documentinformation(self, rec, cfg): pass
+    def handle_documentinformation(self, rec, cfg): pass
 
     # Object tags
     def handle_path(self, rec, cfg):
@@ -1113,7 +1113,6 @@ class XAR_to_SK2_Translator(object):
 #    def handle_currentattributes_phase2 = 4132
 #    def handle_spread_flashprops(self, rec, cfg): pass
 #    def handle_printersettings_phase2 = 4135
-#    def handle_documentinformation(self, rec, cfg): pass
 #    def handle_clipview_path(self, rec, cfg): pass
 
     def handle_definebitmap_png_real(self, rec, cfg):

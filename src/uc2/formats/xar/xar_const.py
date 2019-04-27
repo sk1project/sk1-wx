@@ -428,7 +428,6 @@ TAG_SPREAD_PHASE2 = 4131
 TAG_CURRENTATTRIBUTES_PHASE2 = 4132
 TAG_SPREAD_FLASHPROPS = 4134
 TAG_PRINTERSETTINGS_PHASE2 = 4135
-TAG_DOCUMENTINFORMATION = 4136
 TAG_CLIPVIEW_PATH = 4137
 TAG_DEFINEBITMAP_PNG_REAL = 4138
 TAG_TEXT_STRING_POS = 4139
@@ -586,6 +585,61 @@ XAR_DEFAULT_STYLE = {
     'fill_trafo': None,
 }
 
+
+"""
+description: Schema xar records
+type: object
+definitions:
+    type:
+        description: type of records
+        type: object
+        properties:
+            name:
+                description: 
+                type: string
+            doc: 
+                description: 
+                type: string
+            sec:
+                description: 
+                type: array
+                items:
+                    type: object
+                    allOf: {$ref: #/definitions/sec}
+            deprecated:
+                description: 
+                type: boolean
+    sec: 
+        description: properties
+        type: object
+        properties:
+            id:
+                description: 
+                type: string
+            type:
+                description: 
+                type: string
+            number:
+                description: 
+                type: string
+            bitfield:
+                description: 
+                type: object
+                allOf: {$ref: #/definitions/bitfield},
+    bitfield:
+        description: data structure any single bit or group of bits
+        type: object
+        propertyNames:
+            type: integer
+        properties:
+            id:
+                description: 
+                type: string
+            type:
+                description: 
+                type: string
+                enum: [bool]
+"""
 
 XAR_TYPE_RECORD = {
 
@@ -1450,7 +1504,6 @@ XAR_TYPE_RECORD = {
     TAG_CURRENTATTRIBUTES_PHASE2: {'name': 'CURRENTATTRIBUTES PHASE2'},
     TAG_SPREAD_FLASHPROPS: {'name': 'SPREAD FLASHPROPS'},
     TAG_PRINTERSETTINGS_PHASE2: {'name': 'PRINTERSETTINGS PHASE2'},
-    TAG_DOCUMENTINFORMATION: {'name': 'DOCUMENTINFORMATION'},
     TAG_CLIPVIEW_PATH: {'name': 'CLIPVIEW PATH'},
     TAG_DEFINEBITMAP_PNG_REAL: {
         'name': 'DEFINEBITMAP PNG REAL',
