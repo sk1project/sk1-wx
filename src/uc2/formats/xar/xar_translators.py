@@ -702,10 +702,26 @@ class XAR_to_SK2_Translator(object):
     # Regular shapes
     # Ellipses
     def handle_ellipse_simple(self, rec, cfg):
-        raise 1
+        h = rec.height
+        w = rec.width
+        cx, cy = rec.centre
+        el = sk2_model.Circle(
+            cfg, None,
+            rect=[-w/2.0, -h/2.0, w, h],
+            angle1=0.0,
+            angle2=0.0,
+            circle_type=sk2const.ARC_CHORD,
+            style=self.get_style(fill=True, stroke=True)
+        )
+        tr = [1.0, 0.0, 0.0, 1.0, cx, cy]
+        el.trafo = multiply_trafo(el.trafo, tr)
+        el.trafo = multiply_trafo(el.trafo, self.get_trafo())
+        el.fill_trafo = self.get_fill_trafo()
+        self.stack.append(el)
 
     def handle_ellipse_complex(self, rec, cfg):
-        raise 1
+        if self.debug_flag:
+            print("ellipse_complex %s" % self.sk2_doc.doc_file)
 
     # Rectangles
 #    def handle_rectangle_simple(self, rec, cfg): pass

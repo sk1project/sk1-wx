@@ -713,7 +713,14 @@ XAR_TYPE_RECORD = {
     },
 
     # Colour reference tags
-    TAG_DEFINERGBCOLOUR: {'name': 'DEFINERGBCOLOUR'},
+    TAG_DEFINERGBCOLOUR: {
+        'name': 'DEFINERGBCOLOUR',
+        'sec': [
+            {'type': 'byte', 'id': 'red'},
+            {'type': 'byte', 'id': 'green'},
+            {'type': 'byte', 'id': 'blue'}
+        ]
+    },
     TAG_DEFINECOMPLEXCOLOUR: {
         'name': 'DEFINECOMPLEXCOLOUR',
         'sec': [
@@ -1034,7 +1041,15 @@ XAR_TYPE_RECORD = {
     # Regular shapes
 
     # Ellipses
-    TAG_ELLIPSE_SIMPLE: {'name': 'ELLIPSE SIMPLE'},
+    TAG_ELLIPSE_SIMPLE: {
+        'name': 'ELLIPSE SIMPLE',
+        'sec': [
+            {'type': 'COORD', 'id': 'centre'},
+            {'type': 'MILLIPOINT', 'id': 'width'},
+            {'type': 'MILLIPOINT', 'id': 'height'}
+        ]
+
+    },
     TAG_ELLIPSE_COMPLEX: {'name': 'ELLIPSE COMPLEX'},
 
     # Rectangles
