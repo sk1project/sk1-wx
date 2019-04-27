@@ -337,8 +337,10 @@ class XAR_to_SK2_Translator(object):
 
     # Colour reference tags
     def handle_definergbcolour(self, rec, cfg):
-        if self.debug_flag:
-            print('RGBColour %s' % self.sk2_doc.doc_file)
+        rgb = cms.val_255_to_dec([rec.red, rec.green, rec.blue])
+        name = cms.rgb_to_hexcolor(rgb)
+        colour = [uc2const.COLOR_RGB, rgb, 1.0, name]
+        self.colors[rec.idx] = colour
 
     def handle_definecomplexcolour(self, rec, cfg):
         colour = None
