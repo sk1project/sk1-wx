@@ -248,10 +248,19 @@ class XAR_to_SK2_Translator(object):
         self.pages = []
 
     # Tag management
+    def handle_atomictags(self, rec, cfg): pass
+
+    def handle_essentialtags(self, rec, cfg): pass
+
     def handle_tagdescription(self, rec=None, cfg=None):
         for item in rec.description:
             if item[0] not in xar_const.XAR_TYPE_RECORD:
                 print("# xar tagdescription %s" % item)
+
+    # Compression tags
+    def handle_startcompression(self, rec, cfg): pass
+
+    def handle_endcompression(self, rec, cfg): pass
 
     # Document tags
     def handle_document(self, rec, cfg): pass
@@ -317,7 +326,8 @@ class XAR_to_SK2_Translator(object):
 #    def handle_spreadscaling_inactive(self, rec, cfg): pass
 
     # Colour reference tags
-#    def handle_definergbcolour(self, rec, cfg): pass
+    def handle_definergbcolour(self, rec, cfg):
+        print('RGBColour %s' % self.sk2_doc.doc_file)
 
     def handle_definecomplexcolour(self, rec, cfg):
         colour = None
@@ -380,7 +390,11 @@ class XAR_to_SK2_Translator(object):
 
 #    def handle_documentdates(self, rec, cfg): pass
 #    def handle_documentundosize(self, rec, cfg): pass
-#    def handle_documentflags(self, rec, cfg): pass
+
+    def handle_documentflags(self, rec, cfg):
+        print 'documentflags', self.sk2_doc.doc_file
+        print rec.document_flags
+
 #    def handle_documentinformation(self, rec, cfg): pass
 
     # Object tags
