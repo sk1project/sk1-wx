@@ -283,6 +283,9 @@ class XAR_to_SK2_Translator(object):
                 self.layer_flags.is_printable,
                 is_antialiased
             ]
+            # TODO: set active layer
+            # if self.layer_flags.is_active:
+            #     self.sk2_doc.active_layer = layer
             self.layer_flags = None
         self.layer_name = ''
         self.flush_stack(layer)
