@@ -1048,9 +1048,15 @@ XAR_TYPE_RECORD = {
             {'type': 'MILLIPOINT', 'id': 'width'},
             {'type': 'MILLIPOINT', 'id': 'height'}
         ]
-
     },
-    TAG_ELLIPSE_COMPLEX: {'name': 'ELLIPSE COMPLEX'},
+    TAG_ELLIPSE_COMPLEX: {
+        'name': 'ELLIPSE COMPLEX',
+        'sec': [
+            {'type': 'COORD', 'id': 'centre'},
+            {'type': 'COORD', 'id': 'major_axis'},
+            {'type': 'COORD', 'id': 'minor_axis'}
+        ]
+    },
 
     # Rectangles
     TAG_RECTANGLE_SIMPLE: {'name': 'RECTANGLE SIMPLE'},
