@@ -101,19 +101,28 @@ def unpack_double(data, offset=0, **kw):
     return packer_double_le.unpack(string)[0]
 
 
-def unpack_s4(data, offset=0, **kw):
+def unpack_s4(data, offset=0, bitfield=None, **kw):
     string = data[offset:offset + 4]
-    return packer_int32_le.unpack(string)[0]
+    val = packer_int32_le.unpack(string)[0]
+    if bitfield:
+        val = BitField(val, bitfield)
+    return val
 
 
-def unpack_s2(data, offset=0, **kw):
+def unpack_s2(data, offset=0, bitfield=None, **kw):
     string = data[offset:offset + 2]
-    return packer_int16_le.unpack(string)[0]
+    val = packer_int16_le.unpack(string)[0]
+    if bitfield:
+        val = BitField(val, bitfield)
+    return val
 
 
-def unpack_u2(data, offset=0, **kw):
+def unpack_u2(data, offset=0, bitfield=None, **kw):
     string = data[offset:offset + 2]
-    return packer_uint16_le.unpack(string)[0]
+    val = packer_uint16_le.unpack(string)[0]
+    if bitfield:
+        val = BitField(val, bitfield)
+    return val
 
 
 def unpack_fixed16_32(data, offset=0, **kw):
@@ -150,9 +159,12 @@ def unpack_fixed24_32(data, offset=0, **kw):
     return ret
 
 
-def unpack_u4(data, offset=0, **kw):
+def unpack_u4(data, offset=0, bitfield=None, **kw):
     string = data[offset:offset + 4]
-    return packer_uint32_le.unpack(string)[0]
+    val = packer_uint32_le.unpack(string)[0]
+    if bitfield:
+        val = BitField(val, bitfield)
+    return val
 
 
 def unpack_3s(data, offset=0, encoding=None, **kw):  # XXX
