@@ -25,6 +25,7 @@ from uc2.libgeom.trafo import apply_trafo_to_points, apply_trafo_to_point
 from uc2.libgeom.bbox import bbox_to_rect
 from uc2 import _, uc2const, sk2const, cms
 from colorsys import hsv_to_rgb, rgb_to_hsv
+from base64 import b64decode, b64encode
 import copy
 import math
 
@@ -370,8 +371,10 @@ class XAR_to_SK2_Translator(object):
 
     # Document info tags
     def handle_documentcomment(self, rec, cfg):
-        print('# xar documentcomment %s %s %s' % (len(rec.chunk), rec.comment,
-                                                  self.sk2_doc.doc_file))
+        metainfo = [b'', b'', b'', b'']
+        metainfo[3] = b64encode(rec.comment)
+        self.sk2_mtds.set_doc_metainfo(metainfo)
+
 #    def handle_documentdates(self, rec, cfg): pass
 #    def handle_documentundosize(self, rec, cfg): pass
 #    def handle_documentflags(self, rec, cfg): pass
