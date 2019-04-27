@@ -297,14 +297,18 @@ class XAR_to_SK2_Translator(object):
         layer = sk2_model.Layer(cfg, name=self.layer_name)
         if self.layer_flags is not None:
             layer.properties = [
-                self.layer_flags.is_visible,
-                not self.layer_flags.is_locked,
-                self.layer_flags.is_printable,
-                is_antialiased
+                1 if self.layer_flags.is_visible else 0,
+                0 if self.layer_flags.is_locked else 1,
+                1 if self.layer_flags.is_printable else 0,
+                1 if is_antialiased else 0
             ]
-            # TODO: set active layer
-            # if self.layer_flags.is_active:
-            #     self.sk2_doc.active_layer = layer
+            if self.layer_flags.is_active:
+                # XXX: sk2 engine requires that the active layer
+                # must be visible and editable
+                layer.properties[0] = 1
+                layer.properties[1] = 1
+                # TODO: set active layer
+                # self.sk2_doc.active_layer = layer
             self.layer_flags = None
         self.layer_name = ''
         self.flush_stack(layer)
