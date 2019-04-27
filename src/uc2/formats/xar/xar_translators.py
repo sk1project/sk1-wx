@@ -122,6 +122,7 @@ def make_trafo(centre_point, major_axes, minor_axes, trafo):
 
 
 class XAR_to_SK2_Translator(object):
+    xar_doc = None
     xar_mtds = None
     sk2_doc = None
     sk2_model = None
@@ -148,9 +149,11 @@ class XAR_to_SK2_Translator(object):
     page_name = ''
     page_format = None
     _handler = None
+    debug_flag = True
 
     def translate(self, xar_doc, sk2_doc):
         self._handler = {}
+        self.xar_doc = xar_doc
         self.xar_mtds = xar_doc.methods
         self.sk2_doc = sk2_doc
         self.sk2_model = sk2_doc.model
@@ -171,6 +174,9 @@ class XAR_to_SK2_Translator(object):
 
         self.walk(xar_doc.model.childs[::-1])
         self.handle_endoffile()
+        if self.debug_flag:
+            with open(self.sk2_doc.doc_file+".txt", 'w') as f:
+                f.write(str(sorted(list(self.atomic_tags))))
         sk2_doc.model.do_update()
 
     def walk(self, stack):
@@ -209,19 +215,22 @@ class XAR_to_SK2_Translator(object):
             self.atomic_tags.add(rec.cid)
 
     def handle_previewbitmap_gif(self, rec, cfg):
-        fn = self.sk2_doc.doc_file.rsplit('.', 1)[0]
-        with open(fn + '.gif', 'wb') as f:
-            f.write(rec.chunk)
+        if self.debug_flag:
+            fn = self.sk2_doc.doc_file.rsplit('.', 1)[0]
+            with open(fn + '.gif', 'wb') as f:
+                f.write(rec.chunk)
 
     def handle_previewbitmap_jpeg(self, rec, cfg):
-        fn = self.sk2_doc.doc_file.rsplit('.', 1)[0]
-        with open(fn + '.jpeg', 'wb') as f:
-            f.write(rec.chunk)
+        if self.debug_flag:
+            fn = self.sk2_doc.doc_file.rsplit('.', 1)[0]
+            with open(fn + '.jpeg', 'wb') as f:
+                f.write(rec.chunk)
 
     def handle_previewbitmap_png(self, rec, cfg):
-        fn = self.sk2_doc.doc_file.rsplit('.', 1)[0]
-        with open(fn + '.png', 'wb') as f:
-            f.write(rec.chunk)
+        if self.debug_flag:
+            fn = self.sk2_doc.doc_file.rsplit('.', 1)[0]
+            with open(fn + '.png', 'wb') as f:
+                f.write(rec.chunk)
 
     # Navigation records
     def handle_up(self, rec, cfg):
@@ -253,9 +262,10 @@ class XAR_to_SK2_Translator(object):
     def handle_essentialtags(self, rec, cfg): pass
 
     def handle_tagdescription(self, rec=None, cfg=None):
-        for item in rec.description:
-            if item[0] not in xar_const.XAR_TYPE_RECORD:
-                print("# xar tagdescription %s" % item)
+        if self.debug_flag:
+            for item in rec.description:
+                if item[0] not in xar_const.XAR_TYPE_RECORD:
+                    print("# xar tagdescription %s" % item)
 
     # Compression tags
     def handle_startcompression(self, rec, cfg): pass
@@ -327,7 +337,8 @@ class XAR_to_SK2_Translator(object):
 
     # Colour reference tags
     def handle_definergbcolour(self, rec, cfg):
-        print('RGBColour %s' % self.sk2_doc.doc_file)
+        if self.debug_flag:
+            print('RGBColour %s' % self.sk2_doc.doc_file)
 
     def handle_definecomplexcolour(self, rec, cfg):
         colour = None
@@ -391,9 +402,9 @@ class XAR_to_SK2_Translator(object):
 #    def handle_documentdates(self, rec, cfg): pass
 #    def handle_documentundosize(self, rec, cfg): pass
 
-    def handle_documentflags(self, rec, cfg):
-        print 'documentflags', self.sk2_doc.doc_file
-        print rec.document_flags
+    def handle_documentflags(self, rec, cfg): pass
+        # print 'documentflags', self.sk2_doc.doc_file
+        # print rec.document_flags
 
 #    def handle_documentinformation(self, rec, cfg): pass
 

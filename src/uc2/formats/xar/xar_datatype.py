@@ -44,7 +44,6 @@ class BitField(object):
     def __init__(self, val, bitfield):
         self.val = val
         self.bitfield = bitfield
-        print repr(self)
 
     def __iter__(self):
         for key in sorted(self.bitfield.keys()):
