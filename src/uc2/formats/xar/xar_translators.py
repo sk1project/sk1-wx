@@ -468,7 +468,10 @@ class XAR_to_SK2_Translator(object):
 #    def handle_mould_perspective(self, rec, cfg): pass
 #    def handle_mould_group(self, rec, cfg): pass
 #    def handle_mould_path(self, rec, cfg): pass
-#    def handle_path_flags(self, rec, cfg): pass
+
+    def handle_path_flags(self, rec, cfg):
+        self.style['path_flags'] = rec.flags
+
 #    def handle_guideline(self, rec, cfg): pass
     def handle_path_relative(self, rec, cfg):
         curve = sk2_model.Curve(
@@ -1228,6 +1231,7 @@ class XAR_to_SK2_Translator(object):
                 behind_flag, scalable_flag, markers]
 
     def get_path(self, rec):
+        # TODO: process style['path_flags']
         paths = []
         for closed, points in self.xar_mtds.read_path(zip(rec.verb, rec.coord)):
             marker = sk2const.CURVE_CLOSED if closed else sk2const.CURVE_OPENED
@@ -1240,6 +1244,7 @@ class XAR_to_SK2_Translator(object):
         return paths
 
     def get_path_relative(self, rec):
+        # TODO: process style['path_flags']
         paths = []
         for closed, points in self.xar_mtds.read_path_relative(rec.path):
             marker = sk2const.CURVE_CLOSED if closed else sk2const.CURVE_OPENED

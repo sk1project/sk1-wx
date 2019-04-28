@@ -123,6 +123,10 @@ class XARRecord(BinaryModelObject):
             offset += size
         else:
             val = []
+            if number < 0:
+                number = len(self.chunk[offset:number])
+                if item['type'] == 'byte':
+                    number /= 1
             for i in range(number):
                 size, v = reader(self.chunk, offset=offset, **item)
                 offset += size

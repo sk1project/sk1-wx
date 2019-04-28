@@ -583,6 +583,7 @@ XAR_DEFAULT_STYLE = {
     'gradient_fill': None,
     'fill_repeating': None,
     'fill_trafo': None,
+    'path_flags': None,
 }
 
 
@@ -890,7 +891,18 @@ XAR_TYPE_RECORD = {
     TAG_MOULD_PERSPECTIVE: {'name': 'MOULD PERSPECTIVE'},
     TAG_MOULD_GROUP: {'name': 'MOULD GROUP'},
     TAG_MOULD_PATH: {'name': 'MOULD PATH'},
-    TAG_PATH_FLAGS: {'name': 'PATH FLAGS'},
+    TAG_PATH_FLAGS: {
+        'name': 'PATH FLAGS',
+        'sec': [
+            {'type': 'byte', 'id': 'flags', "number": -1,
+             'bitfield': {
+                   0: {'type': 'bool', 'id': 'is_smooth'},
+                   1: {'type': 'bool', 'id': 'is_rotate'},
+                   2: {'type': 'bool', 'id': 'is_end_point'},
+                }
+            }
+        ]
+    },
     TAG_GUIDELINE: {'name': 'GUIDELINE'},
     TAG_PATH_RELATIVE: {
         'name': 'PATH RELATIVE',
