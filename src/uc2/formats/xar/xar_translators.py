@@ -1305,9 +1305,58 @@ class XAR_to_SK2_Translator(object):
             fill_data[2] = s1 + s2
         return fill_data
 
-    def get_rainbow_piece(self, start_colour, end_colour, shortest_route=True):
-        # TODO: implement this
+    def get_rainbow_piece(self, start, end, shortest_route=True):
         rainbow_piece = []
+        start_edge, start_colour = start
+        end_edge, end_colour = end
+        doc_cms = self.sk2_doc.cms
+        h1, s1, v1 = rgb_to_hsv(*doc_cms.get_rgb_color(start_colour)[1])
+        h2, s2, v2 = rgb_to_hsv(*doc_cms.get_rgb_color(end_colour)[1])
+
+        delta_h = abs(h2 - h1)
+        if shortest_route:
+            distance_h = (1.0 - delta_h) if delta_h > 0.5 else delta_h
+        else:
+            distance_h = (1.0 - delta_h) if delta_h < 0.5 else delta_h
+
+        if distance_h == 0.0:
+            return rainbow_piece
+
+        def direction_at_angles(h1, h2):
+            # FIXME: the direction is calculated incorrectly
+            if abs(h2 - h1) > 0.5:
+                direction = -1 if (h2 - h1) >= 0 else 1
+            else:
+                direction = 1 if (h2 - h1) >= 0 else -1
+            return direction
+
+        direction = direction_at_angles(h1, h2)
+        if not shortest_route:
+            direction = -1 * direction
+
+        delta_edge = abs(end_edge - start_edge)
+        scale = delta_edge / distance_h
+        overlap_distance = 1.0 / 124.0
+        step = 1.0 / 12.0 if shortest_route else 1.0 / 6.0
+
+        h = h1 // step * step
+        if abs(h - h1) < overlap_distance:
+            h += step * direction
+
+        alpha = 1.0
+        shift = start_edge
+        end_edge -= overlap_distance
+        offset = abs(h - h1)
+        while start_edge < (offset * scale + shift) < end_edge:
+            h = h % 1.0
+            s = cms.mix_vals(s1, s2, offset)
+            v = cms.mix_vals(v1, v2, offset)
+            rgb = list(hsv_to_rgb(h, s, v))
+            colour = [uc2const.COLOR_RGB, rgb, alpha, '']
+            rainbow_piece.append([offset * scale + shift, colour])
+            offset += step
+            h += step * direction
+
         return rainbow_piece
 
 
