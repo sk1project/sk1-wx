@@ -544,9 +544,55 @@ REF_DEFAULTCOLOUR_YELLOW = -9
 
 # Defaults
 
-REF_DASH_SOLID = -21
 REF_DASH_1 = -1
 REF_DASH_2 = -2
+REF_DASH_3 = -3
+REF_DASH_4 = -4
+REF_DASH_5 = -5
+REF_DASH_6 = -6
+REF_DASH_7 = -7
+REF_DASH_8 = -8
+REF_DASH_9 = -9
+REF_DASH_10 = -10
+REF_DASH_11 = -11
+REF_DASH_12 = -12
+REF_DASH_13 = -13
+REF_DASH_14 = -14
+REF_DASH_15 = -15
+REF_DASH_16 = -16
+REF_DASH_17 = -17
+REF_DASH_18 = -18
+REF_DASH_19 = -19
+REF_DASH_20 = -20
+REF_DASH_SOLID = -21
+REF_DASH_GUIDELAYER = -22
+
+XAR_DASHS = {
+    REF_DASH_1: [2, 2],
+    REF_DASH_2: [4, 2],
+    REF_DASH_3: [8, 2],
+    REF_DASH_4: [16, 2],
+    REF_DASH_5: [24, 2],
+    REF_DASH_6: [4, 4],
+    REF_DASH_7: [8, 4],
+    REF_DASH_8: [16, 4],
+    REF_DASH_9: [8, 8],
+    REF_DASH_10: [16, 8],
+    REF_DASH_11: [4, 2, 2, 2],
+    REF_DASH_12: [8, 2, 2, 2],
+    REF_DASH_13: [16, 2, 2, 2],
+    REF_DASH_14: [8, 2, 4, 2],
+    REF_DASH_15: [16, 2, 4, 2],
+    REF_DASH_16: [8, 2, 2, 2, 2, 2],
+    REF_DASH_17: [16, 2, 2, 2, 2, 2],
+    REF_DASH_18: [8, 2, 2, 2, 2, 2, 2, 2],
+    REF_DASH_19: [16, 2, 2, 2, 2, 2, 2, 2],
+    REF_DASH_20: [8, 2, 2, 2, 4, 2, 2, 2],
+    REF_DASH_SOLID: None,
+    REF_DASH_GUIDELAYER: [2, 2],
+}
+
+
 
 TEXT_ALIGN_LEFT = 0
 TEXT_ALIGN_CENTRE = 1
@@ -1061,12 +1107,33 @@ XAR_TYPE_RECORD = {
     },
 
     # Arrows and dash patterns
-    TAG_DASHSTYLE: {'name': 'DASHSTYLE'},
-    TAG_DEFINEDASH: {'name': 'DEFINEDASH'},
+    TAG_DASHSTYLE: {
+        'name': 'DASHSTYLE',
+        'sec': [
+            {'type': 'int32', 'id': 'dash_id'},
+        ]
+    },
+    TAG_DEFINEDASH: {
+        'name': 'DEFINEDASH',
+        'sec': [
+            {'type': 'MILLIPOINT', 'id': 'dash_start'},
+            {'type': 'MILLIPOINT', 'id': 'line_width'},
+            {'type': 'uint32', 'id': 'elements'},
+            {'type': 'MILLIPOINT', 'id': 'dash_def', 'number': 'elements'},
+        ]
+    },
     TAG_ARROWHEAD: {'name': 'ARROWHEAD'},
     TAG_ARROWTAIL: {'name': 'ARROWTAIL'},
     TAG_DEFINEARROW: {'name': 'DEFINEARROW'},
-    TAG_DEFINEDASH_SCALED: {'name': 'DEFINEDASH SCALED'},
+    TAG_DEFINEDASH_SCALED: {
+        'name': 'DEFINEDASH SCALED',
+        'sec': [
+            {'type': 'MILLIPOINT', 'id': 'dash_start'},
+            {'type': 'MILLIPOINT', 'id': 'line_width'},
+            {'type': 'uint32', 'id': 'elements'},
+            {'type': 'MILLIPOINT', 'id': 'dash_def', 'number': 'elements'},
+        ]
+    },
 
     # User Attributes
     TAG_USERVALUE: {'name': 'USERVALUE'},

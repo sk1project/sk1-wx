@@ -162,6 +162,7 @@ class XAR_to_SK2_Translator(object):
 
         self.bitmaps = {}
         self.colors = copy.deepcopy(xar_const.XAR_COLOURS)
+        self.dashs = copy.deepcopy(xar_const.XAR_DASHS)
         self.atomic_tags = set()
         self.trafo = [-1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
 
@@ -640,12 +641,24 @@ class XAR_to_SK2_Translator(object):
 #    def handle_transparentfill_repeatinginverted(self, rec, cfg): pass
 
     # Arrows and dash patterns
-#    def handle_dashstyle(self, rec, cfg): pass
-#    def handle_definedash(self, rec, cfg): pass
+    def handle_dashstyle(self, rec, cfg):
+        self.style['dash_pattern'] = rec.dash_id
+
+    def handle_definedash(self, rec, cfg):
+        if rec.elements:
+            line_width = rec.line_width or 1.0
+            self.dashs[rec.idx] = [a / 20.0 / line_width for a in rec.dash_def]
+            self.style['dash_pattern'] = rec.idx
+
 #    def handle_arrowhead(self, rec, cfg): pass
 #    def handle_arrowtail(self, rec, cfg): pass
 #    def handle_definearrow(self, rec, cfg): pass
-#    def handle_definedash_scaled(self, rec, cfg): pass
+
+    def handle_definedash_scaled(self, rec, cfg):
+        if rec.elements:
+            line_width = rec.line_width or 1.0
+            self.dashs[rec.idx] = [a / 4.0 / line_width for a in rec.dash_def]
+            self.style['dash_pattern'] = rec.idx
 
     # User Attributes
 #    def handle_uservalue(self, rec, cfg): pass
@@ -1222,13 +1235,22 @@ class XAR_to_SK2_Translator(object):
         rule = sk2const.STROKE_MIDDLE
         width = self.style['line_width']
         colour = copy.deepcopy(self.style['stroke_colour'])
-        dash = []  # TODO
+        dash = self.get_dash(width)
+        if dash:
+            colour = [uc2const.COLOR_RGB, [1.00, 0.00, 0.00], 1.0, 'red']
         miter_limit = self.style['mitre_limit'] / 1000.0
         behind_flag = 0  # TODO
         scalable_flag = 0  # TODO
         markers = [[], []]  # TODO
         return [rule, width, colour, dash, cap_style, join_style, miter_limit,
                 behind_flag, scalable_flag, markers]
+
+    def get_dash(self, line_width):
+        dash_id = self.style['dash_pattern']
+        dash = self.dashs.get(dash_id)
+        if dash:
+            dash = [d * line_width * 4.0 for d in dash]
+        return dash
 
     def get_path(self, rec):
         # TODO: process style['path_flags']
