@@ -315,7 +315,7 @@ class XAR_to_SK2_Translator(object):
         self.flush_stack(layer)
         self.layers.append(layer)
 
-    def handle_page(self, rec, cfg): pass
+    # def handle_page(self, rec, cfg): pass
 
     def handle_spreadinformation(self, rec, cfg):
         width = rec.width
@@ -1236,8 +1236,6 @@ class XAR_to_SK2_Translator(object):
         width = self.style['line_width']
         colour = copy.deepcopy(self.style['stroke_colour'])
         dash = self.get_dash(width)
-        if dash:
-            colour = [uc2const.COLOR_RGB, [1.00, 0.00, 0.00], 1.0, 'red']
         miter_limit = self.style['mitre_limit'] / 1000.0
         behind_flag = 0  # TODO
         scalable_flag = 0  # TODO
