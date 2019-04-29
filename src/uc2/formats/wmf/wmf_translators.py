@@ -19,7 +19,7 @@ import logging
 from copy import deepcopy
 from cStringIO import StringIO
 
-from uc2 import uc2const, libgeom, libpango, libimg, sk2const
+from uc2 import uc2const, libgeom, libpango, libimg, sk2const, utils
 from uc2.formats.sk2 import sk2_model
 from uc2.formats.wmf import wmf_const, wmf_hatches, wmf_utils, wmf_model
 from uc2.formats.wmf.wmf_utils import get_data, rndpoint
@@ -454,7 +454,7 @@ class WMF_to_SK2_Translator(object):
 
     def tr_dibcreate_pat_brush(self, chunk):
         # style, colorusage = get_data('<hh', chunk[:4])
-        imagestr = wmf_utils.dib_to_imagestr(chunk[4:])
+        imagestr = utils.dib_to_bmp(chunk[4:])
         bitsperpixel = get_data('<h', chunk[18:20])[0]
 
         ptrn, flag = libimg.read_pattern(imagestr)
@@ -711,7 +711,7 @@ class WMF_to_SK2_Translator(object):
     def tr_stretch_dib(self, chunk):
         src_h, src_w, = get_data('<hh', chunk[6:10])
         dst_h, dst_w, dst_y, dst_x = get_data('<hhhh', chunk[14:22])
-        imagestr = wmf_utils.dib_to_imagestr(chunk[22:])
+        imagestr = utils.dib_to_bmp(chunk[22:])
 
         tr = self.get_trafo()
         p0 = apply_trafo_to_point([dst_x, dst_y], tr)
