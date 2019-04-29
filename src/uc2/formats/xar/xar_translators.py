@@ -137,6 +137,7 @@ class XAR_to_SK2_Translator(object):
     buffer_text_line = None
     stack_style = None
     stack = None
+    s_stack = None
     pages = None
     layers = None
 
@@ -169,6 +170,7 @@ class XAR_to_SK2_Translator(object):
         self.buffer_text = []
         self.buffer_text_line = []
         self.stack = []
+        self.s_stack = []
         self.stack_style = [copy.copy(xar_const.XAR_DEFAULT_STYLE)]
         self.pages = []
         self.layers = []
@@ -239,9 +241,17 @@ class XAR_to_SK2_Translator(object):
     def handle_up(self, rec, cfg):
         self.style = self.stack_style.pop()
 
+        stack = self.s_stack.pop()
+        if self.stack:
+            stack.extend(self.stack)
+        self.stack = stack
+
     def handle_down(self, rec, cfg):
         self.style = copy.copy(self.stack_style[-1])
         self.stack_style.append(self.style)
+
+        self.s_stack.append(self.stack)
+        self.stack = []
 
     def handle_fileheader(self, rec, cfg): pass
 
@@ -1063,8 +1073,17 @@ class XAR_to_SK2_Translator(object):
 #    def handle_morebrushattr(self, rec, cfg): pass
 
     # ClipView tags
-#    def handle_clipviewcontroller(self, rec, cfg): pass
-#    def handle_clipview(self, rec, cfg): pass
+    def handle_clipviewcontroller(self, rec, cfg):
+        if self.stack and len(self.stack) > 1:
+            el = sk2_model.Container(cfg)
+            self.flush_stack(el)
+            self.stack = [el]
+
+    def handle_clipview(self, rec, cfg):
+        # FIXME: If there is more than one object in stack, then it is necessary
+        #       to combine their contours into one object.
+        if len(self.stack) > 1:
+            pass
 
     # Feathering tags
 #    def handle_feather(self, rec, cfg): pass
