@@ -178,6 +178,8 @@ class XAR_to_SK2_Translator(object):
         if self.debug_flag:
             with open(self.sk2_doc.doc_file+".txt", 'w') as f:
                 f.write(str(sorted(list(self.atomic_tags))))
+                # import sys
+                # sys.exit(0)
         sk2_doc.model.do_update()
 
     def walk(self, stack):
@@ -1248,7 +1250,7 @@ class XAR_to_SK2_Translator(object):
         dash = self.dashs.get(dash_id)
         if dash:
             dash = [d * line_width * 4.0 for d in dash]
-        return dash
+        return dash or []
 
     def get_path(self, rec):
         # TODO: process style['path_flags']
