@@ -22,26 +22,47 @@ from uc2.formats.generic import BinaryModelObject
 
 class CmxRiffElement(BinaryModelObject):
     toplevel = False
-    identifier = cmx_const.LIST_ID
     size = None
-    name = None
+    data = None
 
-    def __init__(self, chunk):
+    def __init__(self, chunk=None, **kwargs):
         self.childs = []
-        self.chunk = chunk
-        self.identifier = chunk[:4]
-        if not self.is_leaf():
-            self.name = chunk[8:12]
+        self.data = {}
+
+        if chunk:
+            self.chunk = chunk
+            self.data['identifier'] = chunk[:4]
+            if not self.is_leaf():
+                self.data['name'] = chunk[8:12]
+            self.update_from_chunk()
+        else:
+            self.data['identifier'] = cmx_const.LIST_ID
+            self.set_defaults()
+
+        if kwargs:
+            self.data.update(kwargs)
+
+    def set_defaults(self):
+        pass
+
+    def update_from_chunk(self):
+        pass
+
+    def get(self, name, default=None):
+        return self.data.get(name, default)
+
+    def set(self, name, value):
+        self.data[name] = value
 
     def is_leaf(self):
-        return self.identifier not in cmx_const.LIST_IDS
+        return self.data['identifier'] not in cmx_const.LIST_IDS
 
     def get_chunk_size(self):
         return sum([len(self.chunk)] + [item.get_chunk_size()
                                         for item in self.childs])
 
     def get_name(self):
-        return self.name or self.identifier
+        return self.data.get('name', self.data['identifier'])
 
     def get_child_by_name(self, name):
         for item in self.childs:
@@ -67,7 +88,7 @@ class CmxRiffElement(BinaryModelObject):
     def update(self):
         size = self.get_chunk_size() - 8
         sz = utils.py_int2dword(size, self.config.rifx)
-        self.chunk = self.identifier + sz + self.chunk[8:]
+        self.chunk = self.data['identifier'] + sz + self.chunk[8:]
         if self.is_leaf() and self.is_padding():
             self.chunk += '\x00'
 
@@ -77,7 +98,7 @@ class CmxRiffElement(BinaryModelObject):
             'page': 'gtk-page-setup',
         }
         if self.is_leaf():
-            return icon_map.get(self.identifier, 'gtk-dnd')
+            return icon_map.get(self.data['identifier'], 'gtk-dnd')
         return False
 
     def resolve(self, name=''):
@@ -92,20 +113,90 @@ class CmxRiffElement(BinaryModelObject):
             self.cache_fields += [(8, 4, 'Chunk name')]
 
 
+class CmxList(CmxRiffElement):
+    def __init__(self, chunk=None, **kwargs):
+        CmxRiffElement.__init__(self, chunk, **kwargs)
+
+
 class CmxRoot(CmxRiffElement):
     toplevel = True
 
-    def __init__(self, config, chunk):
+    def __init__(self, config, chunk=None, root_id=cmx_const.ROOT_ID):
         self.config = config
+        chunk = chunk or root_id + 4 * '\x00' + 'CMX1'
         self.config.rifx = chunk.startswith(cmx_const.ROOTX_ID)
         CmxRiffElement.__init__(self, chunk)
 
 
-def get_empty_cmx(config):
-    return CmxRoot(config, cmx_const.ROOT_ID + 4 * '\x00' + 'CMX1')
-
-
 class CmxCont(CmxRiffElement):
+    identifier = cmx_const.CONT_ID
+
+    def set_defaults(self):
+        self.data['file_id'] = cmx_const.FILE_ID
+        self.data['os_type'] = cmx_const.OS_ID_WIN
+        self.data['byte_order'] = cmx_const.BYTE_ORDER_LE
+        self.data['coord_size'] = cmx_const.COORDSIZE_32BIT
+        self.data['major'] = cmx_const.MAJOR_32BIT
+        self.data['minor'] = cmx_const.MINOR
+        self.data['unit'] = cmx_const.UNIT_MM
+        self.data['factor'] = cmx_const.FACTOR_MM
+
+        self.data['IndexSection'] = 4 * '\x00'
+        self.data['InfoSection'] = 4 * '\x00'
+        self.data['Thumbnail'] = 4 * '\x00'
+
+        self.data['bbox_x0'] = 4 * '\x00'
+        self.data['bbox_y1'] = 4 * '\x00'
+        self.data['bbox_x1'] = 4 * '\x00'
+        self.data['bbox_y0'] = 4 * '\x00'
+        self.data['tally'] = 4 * '\x00'
+
+    def update_from_chunk(self):
+        self.data['file_id'] = self.chunk[8:40].rstrip('\x00')
+        self.data['os_type'] = self.chunk[40:56].rstrip('\x00')
+        self.data['byte_order'] = self.chunk[56:60]
+        self.data['coord_size'] = self.chunk[60:62]
+        self.data['major'] = self.chunk[62:66]
+        self.data['minor'] = self.chunk[66:70]
+        self.data['unit'] = self.chunk[70:72]
+        self.data['factor'] = self.chunk[72:80]
+
+        self.data['IndexSection'] = self.chunk[92:96]
+        self.data['InfoSection'] = self.chunk[96:100]
+        self.data['Thumbnail'] = self.chunk[100:104]
+
+        self.data['bbox_x0'] = self.chunk[104:108]
+        self.data['bbox_y1'] = self.chunk[108:112]
+        self.data['bbox_x1'] = self.chunk[112:116]
+        self.data['bbox_y0'] = self.chunk[116:120]
+        self.data['tally'] = self.chunk[120:124]
+
+    def update(self):
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        self.chunk += self.data['file_id'] + \
+                      (32 - len(self.data['file_id'])) * '\x00'
+        self.chunk += self.data['os_type'] + \
+                      (16 - len(self.data['os_type'])) * '\x00'
+        self.chunk += self.data['byte_order']
+        self.chunk += self.data['coord_size']
+        self.chunk += self.data['major']
+        self.chunk += self.data['minor']
+        self.chunk += self.data['unit']
+        self.chunk += self.data['factor']
+        self.chunk += 12 * '\x00'
+        self.chunk += self.data['IndexSection']
+        self.chunk += self.data['InfoSection']
+        self.chunk += self.data['Thumbnail']
+
+        self.chunk += self.data['bbox_x0']
+        self.chunk += self.data['bbox_y1']
+        self.chunk += self.data['bbox_x1']
+        self.chunk += self.data['bbox_y0']
+        self.chunk += self.data['tally']
+        self.chunk += 64 * '\x00'
+
+        CmxRiffElement.update(self)
+
     def update_for_sword(self):
         CmxRiffElement.update_for_sword(self)
         self.cache_fields += [
@@ -137,6 +228,7 @@ class CmxCont(CmxRiffElement):
 
 
 CHUNK_MAP = {
+    'LIST': CmxList,
     'cont': CmxCont,
 }
 
