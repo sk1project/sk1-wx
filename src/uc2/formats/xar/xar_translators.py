@@ -586,21 +586,18 @@ class XAR_to_SK2_Translator(object):
 #    def handle_conicalfill(self, rec, cfg): pass
 
     def handle_bitmapfill(self, rec, cfg):
-        # TODO:  rotation, skew of pattern
-        image_str = self.bitmaps.get(rec.bitmap)
-        if image_str is None:
-            return
-        ptrn, flag = libimg.read_pattern(image_str)
-        ptrn_type = sk2const.PATTERN_TRUECOLOR
-        angle1 = get_point_angle(rec.bottom_right, rec.bottom_left)
-        trafo1 = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
-        trafo2 = trafo_rotate(angle1)
-        ptrn_trafo = multiply_trafo(trafo1, trafo2)
-        ptrn_transf = [1.0, 1.0, 0.0, 0.0, angle1]
-        ptrn_style = [copy.deepcopy(sk2const.RGB_BLACK),
-                      copy.deepcopy(sk2const.RGB_WHITE)]
-        pattern = [ptrn_type, ptrn, ptrn_style, ptrn_trafo, ptrn_transf]
-        self.style['pattern_fill'] = pattern
+        el = self.get_pixmap(rec, cfg)
+        if el:
+            ptrn = el.get_bitmap()
+            ptrn_type = sk2const.PATTERN_TRUECOLOR
+            ptrn_trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+            ptrn_transf = [1.0, 1.0, 0.0, 0.0, 0.0]
+            ptrn_style = [copy.deepcopy(sk2const.RGB_BLACK),
+                          copy.deepcopy(sk2const.RGB_WHITE)]
+            pattern = [ptrn_type, ptrn, ptrn_style, ptrn_trafo, ptrn_transf]
+
+            self.style['pattern_fill'] = pattern
+            self.style['fill_trafo'] = el.trafo
 
 #    def handle_contonebitmapfill(self, rec, cfg): pass
 #    def handle_fractalfill(self, rec, cfg): pass
@@ -696,6 +693,11 @@ class XAR_to_SK2_Translator(object):
 
     # Bitmaps
     def handle_node_bitmap(self, rec, cfg):
+        el = self.get_pixmap(rec, cfg)
+        if el:
+            self.stack.append(el)
+
+    def get_pixmap(self, rec, cfg):
         image_str = self.bitmaps.get(rec.bitmap)
         if image_str is None:
             return
@@ -714,7 +716,7 @@ class XAR_to_SK2_Translator(object):
         tr2 = [w1/w, 0.0, 0.0, h1/h, rec.top_left[0], rec.top_left[1]]
         tr = multiply_trafo(tr1, tr2)
         el.trafo = multiply_trafo(tr, self.get_trafo())
-        self.stack.append(el)
+        return el
 
 #    def handle_node_contonedbitmap(self, rec, cfg): pass
 
