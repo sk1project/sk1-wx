@@ -16,6 +16,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import base64
+import math
 import time
 import struct
 
@@ -170,3 +171,40 @@ def uint16_be(chunk):
     Converts 2 bytes to unsigned int (big endian)
     """
     return struct.unpack(">H", chunk)[0]
+
+
+def dib_to_bmp(dib):
+    """
+    Reconstructs BMP bitmap file header for DIB
+
+    :param dib: device-independent bitmap string
+    :return: BMP string
+    """
+    #
+    offset = dib_header_size = struct.unpack('<I', dib[:4])[0]
+    if dib_header_size == 12:
+        bitsperpixel = struct.unpack('<h', dib[10:12])[0]
+        if not bitsperpixel > 8:
+            offset += math.pow(2, bitsperpixel) * 3
+    else:
+        bitsperpixel = struct.unpack('<h', dib[14:16])[0]
+        colorsnum = struct.unpack('<I', dib[32:36])[0]
+        if bitsperpixel > 8:
+            offset += colorsnum * 3
+        else:
+            offset += math.pow(2, bitsperpixel) * 3
+    offset = math.ceil(offset / 4.0) * 4
+
+    pixel_offset = struct.pack('<I', 14 + offset)
+    file_size = struct.pack('<I', 14 + len(dib))
+    return 'BM' + file_size + '\x00\x00\x00\x00' + pixel_offset + dib
+
+
+def bmp_to_dib(bmp):
+    """
+    Extracts DIB from BMP
+
+    :param bmp: BMP string
+    :return: DIB string
+    """
+    return bmp[14:]

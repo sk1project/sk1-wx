@@ -255,20 +255,6 @@ COLORS = [
     ('color05', '#FFFF80'),
     ('color06', '#BAFFFA'),
     ('color07', '#F7AEFF'),
-    ('color08', '#80FF80'),
-    ('color09', '#FF8080'),
-    ('color10', '#B0B4FF'),
-    ('color11', '#D2D2D2'),
-    ('color12', '#FFFF80'),
-    ('color13', '#BAFFFA'),
-    ('color14', '#F7AEFF'),
-    ('color15', '#80FF80'),
-    ('color16', '#FF8080'),
-    ('color17', '#B0B4FF'),
-    ('color18', '#D2D2D2'),
-    ('color19', '#FFFF80'),
-    ('color20', '#BAFFFA'),
-    ('color21', '#F7AEFF'),
 ]
 
 LABEL_FG = '#BF5C00'
@@ -527,7 +513,7 @@ class BinaryDataViewer(gtk.HBox):
                                       self.tb.get_iter_at_offset(offset),
                                       self.tb.get_iter_at_offset(offset + 4))
 
-            index += 1
+            index = index + 1 if index < len(COLORS) - 1 else 0
 
     def set_hex_data(self, text):
         self.tb.insert_with_tags_by_name(self.iter, text, "hex")

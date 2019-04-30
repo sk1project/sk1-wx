@@ -163,27 +163,6 @@ def rndpoint(point):
     return [rnd2int(point[0]), rnd2int(point[1])]
 
 
-def dib_to_imagestr(dib):
-    # Reconstrution of BMP bitmap file header
-    offset = dib_header_size = get_data('<I', dib[:4])[0]
-    if dib_header_size == 12:
-        bitsperpixel = get_data('<h', dib[10:12])[0]
-        if not bitsperpixel > 8:
-            offset += math.pow(2, bitsperpixel) * 3
-    else:
-        bitsperpixel = get_data('<h', dib[14:16])[0]
-        colorsnum = get_data('<I', dib[32:36])[0]
-        if bitsperpixel > 8:
-            offset += colorsnum * 3
-        else:
-            offset += math.pow(2, bitsperpixel) * 3
-    offset = math.ceil(offset / 4.0) * 4
-
-    pixel_offset = pack('<I', 14 + offset)
-    file_size = pack('<I', 14 + len(dib))
-    return 'BM' + file_size + '\x00\x00\x00\x00' + pixel_offset + dib
-
-
 def parse_nt_string(ntstring):
     ret = ''
     for item in ntstring:

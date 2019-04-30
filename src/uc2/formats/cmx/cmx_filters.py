@@ -31,7 +31,6 @@ class CmxLoader(AbstractBinaryLoader):
         self.parent_stack = [self.model]
         self.parse(size)
         self.parent_stack = None
-        print 'childs', self.model.childs
 
     def read_header(self):
         identifier = self.fileptr.read(4)
@@ -51,7 +50,7 @@ class CmxLoader(AbstractBinaryLoader):
             if not dwords[2]:
                 dwords.append(self.fileptr.read(size))
 
-            node = cmx_model.CmxRiffElement(''.join(dwords))
+            node = cmx_model.make_cmx_chunk(''.join(dwords))
             self.parent_stack[-1].add(node)
 
             if dwords[2]:
