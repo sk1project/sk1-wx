@@ -179,7 +179,9 @@ class XAR_to_SK2_Translator(object):
         self.handle_endoffile()
         if self.debug_flag:
             with open(self.sk2_doc.doc_file+".txt", 'w') as f:
-                f.write(str(sorted(list(self.atomic_tags))))
+                for cid in sorted(list(self.atomic_tags)):
+                    name = xar_const.XAR_TYPE_RECORD.get(cid, {}).get('name')
+                    f.write(b'%s %s\n' % (cid, name))
                 # import sys
                 # sys.exit(0)
         sk2_doc.model.do_update()
@@ -1415,7 +1417,7 @@ class XAR_to_SK2_Translator(object):
 
         delta_edge = abs(end_edge - start_edge)
         scale = delta_edge / distance_h
-        overlap_distance = 1.0 / 124.0
+        overlap_distance = 1.0 / 100.0
         step = 1.0 / 12.0 if shortest_route else 1.0 / 6.0
 
         h = h1 // step * step
