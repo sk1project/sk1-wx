@@ -599,7 +599,24 @@ class XAR_to_SK2_Translator(object):
             self.style['pattern_fill'] = pattern
             self.style['fill_trafo'] = el.trafo
 
-#    def handle_contonebitmapfill(self, rec, cfg): pass
+    def handle_contonebitmapfill(self, rec, cfg):
+        el = self.get_pixmap(rec, cfg)
+        if el:
+            if el.colorspace not in uc2const.DUOTONES:
+                el.handler.convert_image(self.sk2_doc.cms, uc2const.IMAGE_GRAY)
+            ptrn = el.get_bitmap()
+            ptrn_type = sk2const.PATTERN_IMG
+            ptrn_trafo = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+            ptrn_transf = [1.0, 1.0, 0.0, 0.0, 0.0]
+            start_colour = self.get_color(rec.start_colour)
+            end_colour = self.get_color(rec.end_colour)
+            ptrn_style = [copy.deepcopy(end_colour),
+                          copy.deepcopy(start_colour)]
+            pattern = [ptrn_type, ptrn, ptrn_style, ptrn_trafo, ptrn_transf]
+
+            self.style['pattern_fill'] = pattern
+            self.style['fill_trafo'] = el.trafo
+
 #    def handle_fractalfill(self, rec, cfg): pass
     def handle_filleffect_fade(self, rec, cfg):
         # print self.sk2_doc.doc_file, rec.cid
