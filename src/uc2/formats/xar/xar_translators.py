@@ -692,7 +692,7 @@ class XAR_to_SK2_Translator(object):
     def handle_definedash(self, rec, cfg):
         if rec.elements:
             line_width = rec.line_width or 1.0
-            self.dashs[rec.idx] = [a / 20.0 / line_width for a in rec.dash_def]
+            self.dashs[rec.idx] = [a / (line_width / 20.0) for a in rec.dash_def]
             self.style['dash_pattern'] = rec.idx
 
 #    def handle_arrowhead(self, rec, cfg): pass
@@ -702,7 +702,7 @@ class XAR_to_SK2_Translator(object):
     def handle_definedash_scaled(self, rec, cfg):
         if rec.elements:
             line_width = rec.line_width or 1.0
-            self.dashs[rec.idx] = [a / 4.0 / line_width for a in rec.dash_def]
+            self.dashs[rec.idx] = [a / (line_width / 4.0) for a in rec.dash_def]
             self.style['dash_pattern'] = rec.idx
 
     # User Attributes
@@ -1306,7 +1306,7 @@ class XAR_to_SK2_Translator(object):
         dash_id = self.style['dash_pattern']
         dash = self.dashs.get(dash_id)
         if dash:
-            dash = [d * line_width * 4.0 for d in dash]
+            dash = [d * (line_width / 4.0) for d in dash]
         return dash or []
 
     def get_path(self, rec):
