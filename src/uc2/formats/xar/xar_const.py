@@ -1045,7 +1045,20 @@ XAR_TYPE_RECORD = {
             {'type': 'double', 'id': 'gain'},
         ]
     },
-    TAG_CONTONEBITMAPFILL: {'name': 'CONTONEBITMAPFILL'},
+    TAG_CONTONEBITMAPFILL: {
+        'name': 'CONTONEBITMAPFILL',
+        'sec': [
+            {'type': 'COORD', 'id': 'bottom_left'},
+            {'type': 'COORD', 'id': 'bottom_right'},
+            {'type': 'COORD', 'id': 'top_left'},
+            {'type': 'COLOURREF', 'id': 'start_colour'},
+            {'type': 'COLOURREF', 'id': 'end_colour'},
+            {'type': 'BITMAPREF', 'id': 'bitmap'},
+            # PROFILE
+            {'type': 'double', 'id': 'bias'},
+            {'type': 'double', 'id': 'gain'},
+        ]
+    },
     TAG_FRACTALFILL: {'name': 'FRACTALFILL'},
     TAG_FILLEFFECT_FADE: {'name': 'FILLEFFECT FADE'},
     TAG_FILLEFFECT_RAINBOW: {'name': 'FILLEFFECT RAINBOW'},
