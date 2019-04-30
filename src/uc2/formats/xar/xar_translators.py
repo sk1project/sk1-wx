@@ -485,7 +485,26 @@ class XAR_to_SK2_Translator(object):
     def handle_path_flags(self, rec, cfg):
         self.style['path_flags'] = rec.flags
 
-#    def handle_guideline(self, rec, cfg): pass
+    def handle_guideline(self, rec, cfg):
+        # XXX: sk2 model has a common guide layer for all pages
+        orientation = None
+        if rec.type == xar_const.GUIDELINE_VERTICAL:
+            orientation = uc2const.VERTICAL
+            point = [rec.ordinate, 0]
+            position = apply_trafo_to_point(point, self.trafo)[0]
+        elif rec.type == xar_const.GUIDELINE_HORIZONTAL:
+            orientation = uc2const.HORIZONTAL
+            point = [0, rec.ordinate]
+            position = apply_trafo_to_point(point, self.trafo)[1]
+
+        if orientation is not None:
+            guide_layer = self.sk2_mtds.get_guide_layer()
+            guide = sk2_model.Guide(
+                cfg, guide_layer,
+                position, orientation
+            )
+            guide_layer.childs.append(guide)
+
     def handle_path_relative(self, rec, cfg):
         curve = sk2_model.Curve(
             cfg, None,

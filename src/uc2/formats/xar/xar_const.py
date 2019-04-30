@@ -592,7 +592,8 @@ XAR_DASHS = {
     REF_DASH_GUIDELAYER: [2, 2],
 }
 
-
+GUIDELINE_VERTICAL = 1
+GUIDELINE_HORIZONTAL = 2
 
 TEXT_ALIGN_LEFT = 0
 TEXT_ALIGN_CENTRE = 1
@@ -949,7 +950,13 @@ XAR_TYPE_RECORD = {
             }
         ]
     },
-    TAG_GUIDELINE: {'name': 'GUIDELINE'},
+    TAG_GUIDELINE: {
+        'name': 'GUIDELINE',
+        'sec': [
+            {'type': 'byte', 'id': 'type'},
+            {'type': 'MILLIPOINT', 'id': 'ordinate'},
+        ]
+    },
     TAG_PATH_RELATIVE: {
         'name': 'PATH RELATIVE',
         'sec': [
