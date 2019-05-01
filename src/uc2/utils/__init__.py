@@ -65,6 +65,14 @@ def word2py_int(data, be=False):
     return struct.unpack(sig, data)[0]
 
 
+def signed_word2py_int(data, be=False):
+    """
+    Converts word of bytes to Python int value.
+    """
+    sig = '>h' if be else '<h'
+    return struct.unpack(sig, data)[0]
+
+
 def py_int2word(val, be=False):
     """
     Converts Python int value to word of bytes.
