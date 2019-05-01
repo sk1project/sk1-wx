@@ -15,12 +15,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import cairo
 import logging
-from base64 import b64encode
-from cStringIO import StringIO
 
-from uc2 import libgeom, sk2const
+from uc2 import libimg, sk2const
 from uc2.formats.generic_filters import AbstractLoader, AbstractSaver
 from uc2.formats.sk2 import sk2_model
 from uc2.formats.sk2.crenderer import CairoRenderer
@@ -149,32 +146,8 @@ class SK2_Saver(AbstractSaver):
         self.writeln("end()")
 
     def generate_preview(self):
-        wp, hp = self.config.preview_size
-        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(wp), int(hp))
-        ctx = cairo.Context(surface)
-        if not self.config.preview_transparent:
-            ctx.set_source_rgb(1.0, 1.0, 1.0)
-            ctx.paint()
-        # ---rendering
-        mthds = self.presenter.methods
-        layers = mthds.get_visible_layers(mthds.get_page())
-        bbox = mthds.count_bbox(layers)
-        if bbox:
-            x, y, x1, y1 = bbox
-            w = abs(x1 - x) or 1.0
-            h = abs(y1 - y) or 1.0
-            coef = min(wp / w, hp / h) * 0.99
-            trafo0 = [1.0, 0.0, 0.0, 1.0, -x - w / 2.0, -y - h / 2.0]
-            trafo1 = [coef, 0.0, 0.0, -coef, 0.0, 0.0]
-            trafo2 = [1.0, 0.0, 0.0, 1.0, wp / 2.0, hp / 2.0]
-            trafo = libgeom.multiply_trafo(trafo0, trafo1)
-            trafo = libgeom.multiply_trafo(trafo, trafo2)
-            ctx.set_matrix(cairo.Matrix(*trafo))
-            rend = CairoRenderer(self.presenter.cms)
-            rend.antialias_flag = True
-            for item in layers:
-                rend.render(ctx, item.childs)
-        # ---rendering
-        image_stream = StringIO()
-        surface.write_to_png(image_stream)
-        return b64encode(image_stream.getvalue())
+        return libimg.generate_preview(
+            self.presenter, CairoRenderer,
+            size=self.config.preview_size,
+            transparent=self.config.preview_transparent,
+            encoded=True)
