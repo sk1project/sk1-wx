@@ -15,6 +15,10 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import zlib
+
+from cStringIO import StringIO
+
 from uc2 import utils
 from uc2.formats.cmx import cmx_const
 from uc2.formats.generic import BinaryModelObject
@@ -98,6 +102,7 @@ class CmxRiffElement(BinaryModelObject):
             'ccmm': 'gtk-select-color',
             'DISP': 'gtk-missing-image',
             'page': 'gtk-page-setup',
+            'pack': 'gtk-paste',
         }
         if self.is_leaf():
             return icon_map.get(self.data['identifier'], 'gtk-dnd')
@@ -120,15 +125,6 @@ class CmxRiffElement(BinaryModelObject):
 class CmxList(CmxRiffElement):
     def __init__(self, config, chunk=None, **kwargs):
         CmxRiffElement.__init__(self, config, chunk, **kwargs)
-
-
-class CmxRoot(CmxRiffElement):
-    toplevel = True
-
-    def __init__(self, config, chunk=None, root_id=cmx_const.ROOT_ID):
-        chunk = chunk or root_id + 4 * '\x00' + 'CMX1'
-        config.rifx = chunk.startswith(cmx_const.ROOTX_ID)
-        CmxRiffElement.__init__(self, config, chunk)
 
 
 class CmxCont(CmxRiffElement):
@@ -361,13 +357,88 @@ class CmxPage(CmxRiffElement):
         self.chunk = self.chunk[:8]
 
 
+class CdrxPack(CmxRiffElement):
+    def update_from_chunk(self):
+        chunk = zlib.decompress(self.chunk[20:])
+        pos = 0
+        parent = self
+        while pos < len(chunk):
+            identifier = chunk[pos:pos + 4]
+            sz = chunk[pos + 4:pos + 8]
+            if identifier in cmx_const.LIST_IDS:
+                name = chunk[pos + 8:pos + 12]
+                obj = make_cmx_chunk(self.config, identifier + sz + name)
+                parent.add(obj)
+                parent = obj
+                pos += 12
+                continue
+            size = utils.dword2py_int(sz, self.config.rifx)
+            size += 1 if size > (size // 2) * 2 else 0
+            data = chunk[pos + 8:pos + 8 + size]
+            parent.add(make_cmx_chunk(self.config, identifier + sz + data))
+            pos += size + 8
+        self.data['cpng'] = self.chunk[20:]
+        self.chunk = self.chunk[:20]
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        self.cache_fields += [
+            (8, 4, 'Uncompressed size'),
+            (12, 4, 'Compressed stream header'),
+            (16, 4, 'Compression flags'),
+        ]
+
+    def get_chunk_size(self):
+        return len(self.chunk)
+
+    def get_childs_size(self):
+        return sum([item.get_chunk_size() for item in self.childs])
+
+    def update_cpng(self):
+        stream = StringIO()
+        for child in self.childs:
+            child.save(stream)
+        self.data['cpng'] = zlib.compress(stream.getvalue())
+
+    def update(self):
+        size = self.get_childs_size()
+        sz = utils.py_int2dword(size, self.config.rifx)
+        self.update_cpng()
+        compr_sz = len(self.data['cpng'])
+        compr_sz += 1 if compr_sz > (compr_sz // 2) * 2 else 0
+        compr_sz = utils.py_int2dword(compr_sz + 12, self.config.rifx)
+        self.chunk = self.data['identifier'] + compr_sz + sz + self.chunk[12:20]
+        self.chunk += self.data['cpng']
+        self.chunk += '\x00' if self.is_padding() else ''
+
+    def save(self, saver):
+        saver.write(self.chunk)
+
+
+class CmxRoot(CmxList):
+    toplevel = True
+
+    def __init__(self, config, chunk=None, root_id=cmx_const.ROOT_ID):
+        config.rifx = root_id == cmx_const.ROOTX_ID
+        chunk = chunk or self.make_new_doc(config, root_id)
+        CmxList.__init__(self, config, chunk)
+
+    def make_new_doc(self, config, root_id):
+        chunk = root_id + 4 * '\x00'
+        chunk += cmx_const.CDRX_ID if config.pack else cmx_const.CMX_ID
+
+        # TODO: here should be cmx doc creating
+
+        return chunk
+
+
 CHUNK_MAP = {
     cmx_const.LIST_ID: CmxList,
     cmx_const.CONT_ID: CmxCont,
     cmx_const.CCMM_ID: CmxCcmm,
     cmx_const.DISP_ID: CmxDisp,
     cmx_const.PAGE_ID: CmxPage,
-
+    cmx_const.PACK_ID: CdrxPack,
 }
 
 

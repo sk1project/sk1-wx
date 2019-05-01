@@ -17,6 +17,7 @@
 
 
 from uc2 import uc2const
+from uc2.formats.cmx import cmx_const
 from uc2.formats.cmx.cmx_presenter import CMX_Presenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2.utils.fsutils import get_fileptr
@@ -53,7 +54,7 @@ def cmx_saver(sk2_doc, filename=None, fileptr=None,
 
 def check_cmx(path):
     with get_fileptr(path) as fileptr:
-        riff_sign = fileptr.read(4) in ('RIFF', 'RIFX')
+        riff_sign = fileptr.read(4) in (cmx_const.ROOT_ID, cmx_const.ROOTX_ID)
         _size = fileptr.read(4)
-        cmx_sign = fileptr.read(3) == 'CMX'
+        cmx_sign = fileptr.read(4) in (cmx_const.CMX_ID, cmx_const.CDRX_ID)
     return riff_sign and cmx_sign

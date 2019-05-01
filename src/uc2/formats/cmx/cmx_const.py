@@ -18,6 +18,8 @@
 LIST_ID = 'LIST'
 ROOT_ID = 'RIFF'
 ROOTX_ID = 'RIFX'
+CMX_ID = 'CMX1'
+CDRX_ID = 'CDRX'
 LIST_IDS = (LIST_ID, ROOT_ID, ROOTX_ID)
 
 CONT_ID = 'cont'
@@ -38,6 +40,7 @@ FACTOR_MM = '\x48\xaf\xbc\x9a\xf2\xd7\x7a\x3e'
 DISP_ID = 'DISP'
 CCMM_ID = 'ccmm'
 PAGE_ID = 'page'
+PACK_ID = 'pack'
 
 INSTR_CODES = {
     88: 'AddClippingRegion',
