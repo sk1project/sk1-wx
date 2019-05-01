@@ -21,6 +21,7 @@ from base64 import b64encode
 from cStringIO import StringIO
 
 from PIL import Image
+
 from uc2 import libgeom
 from uc2.libimg import magickwand
 
