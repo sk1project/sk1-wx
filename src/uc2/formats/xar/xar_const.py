@@ -826,7 +826,7 @@ XAR_TYPE_RECORD = {
     TAG_DEFINECOMPLEXCOLOUR: {
         'name': 'DEFINECOMPLEXCOLOUR',
         'sec': [
-            {'type': 'Simple RGBColour', 'id': 'rgbcolor', 'encoding': 'hex'},
+            {'type': 'Simple RGBColour', 'id': 'rgbcolour', 'encoding': 'hex'},
             {'type': 'byte', 'id': 'colour_model'},
             {'type': 'byte', 'id': 'colour_type'},
             {'type': 'uint32', 'id': 'entry_index'},

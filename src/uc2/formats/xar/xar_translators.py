@@ -70,7 +70,7 @@ XAR_TO_SK2_TEXT_ALIGN = {
     xar_const.TEXT_ALIGN_FULL: sk2const.TEXT_ALIGN_JUSTIFY
 }
 
-MODE_TINT = {
+BASE_COLOUR_BY_TINT = {
     uc2const.COLOR_RGB: xar_const.RGB_WHITE,
     uc2const.COLOR_CMYK: xar_const.CMYK_WHITE,
     uc2const.COLOR_GRAY: xar_const.GREYSCALE_WHITE,
@@ -84,9 +84,27 @@ RAINBOW_EFFECT = [
 ]
 
 
-def color_tint(color1, coef=0.5, colour_name=''):
+def process_colour(colour_model, component1, component2, component3, component4,
+                   colour_name, alpha=1.0):
+    colour = None
+    if colour_model == xar_const.COLOUR_MODEL_RGB:
+        rgb = [component1, component2, component3]
+        colour = [uc2const.COLOR_RGB, rgb, alpha, colour_name]
+    elif colour_model == xar_const.COLOUR_MODEL_CMYK:
+        cmyk = [component1, component2, component3, component4]
+        colour = [uc2const.COLOR_CMYK, cmyk, alpha, colour_name]
+    elif colour_model == xar_const.COLOUR_MODEL_HSV:
+        rgb = hsv_to_rgb(component1, component2, component3)
+        colour = [uc2const.COLOR_RGB, list(rgb), alpha, colour_name]
+    elif colour_model == xar_const.COLOUR_MODEL_GREYSCALE:
+        grey = [component1]
+        colour = [uc2const.COLOR_GRAY, grey, alpha, colour_name]
+    return colour
+
+
+def tint_colour(color1, coef=0.5, colour_name=''):
     mode = color1[0]
-    color2 = MODE_TINT.get(mode)
+    color2 = BASE_COLOUR_BY_TINT.get(mode)
     if color2 is not None:
         colour = cms.mix_lists(color2[1], color1[1], coef)
         a = cms.mix_vals(color2[2], color1[2], coef)
@@ -365,32 +383,26 @@ class XAR_to_SK2_Translator(object):
         colour = None
 
         if rec.colour_type == xar_const.COLOUR_TYPE_NORMAL:
-            if rec.colour_model == xar_const.COLOUR_MODEL_GREYSCALE:
-                grey = [rec.component1]
-                colour = [uc2const.COLOR_GRAY, grey, 1.0, rec.colour_name]
-            elif rec.colour_model == xar_const.COLOUR_MODEL_RGB:
-                rgb = [rec.component1, rec.component2, rec.component3]
-                colour = [uc2const.COLOR_RGB, rgb, 1.0, rec.colour_name]
-            elif rec.colour_model == xar_const.COLOUR_MODEL_HSV:
-                rgb = hsv_to_rgb(rec.component1, rec.component2, rec.component3)
-                colour = [uc2const.COLOR_RGB, list(rgb), 1.0, rec.colour_name]
-            elif rec.colour_model == xar_const.COLOUR_MODEL_CMYK:
-                cmyk = [rec.component1, rec.component2,
-                        rec.component3, rec.component4]
-                colour = [uc2const.COLOR_CMYK, cmyk, 1.0, rec.colour_name]
+            colour = process_colour(
+                rec.colour_model, rec.component1, rec.component2,
+                rec.component3, rec.component4, rec.colour_name
+            )
         elif rec.colour_type == xar_const.COLOUR_TYPE_SPOT:
-            pass  # TODO
+            colour = process_colour(
+                rec.colour_model, rec.component1, rec.component2,
+                rec.component3, rec.component4, rec.colour_name
+            )
+            colour = colour and cms.color_to_spot(colour)
         elif rec.colour_type == xar_const.COLOUR_TYPE_TINT:
-            parent_color = self.get_color(rec.parent_colour)
-            colour = color_tint(parent_color, rec.component1, rec.colour_name)
+            parent_colour = self.get_color(rec.parent_colour)
+            colour = tint_colour(parent_colour, rec.component1, rec.colour_name)
         elif rec.colour_type == xar_const.COLOUR_TYPE_LINKED:
             pass  # TODO
         elif rec.colour_type == xar_const.COLOUR_TYPE_SHADE:
             pass  # TODO
 
-        if not colour:
-            # TODO: process colour_model, colour_type
-            rgb = cms.hexcolor_to_rgb(b"#%s" % rec.rgbcolor)
+        if colour is None:
+            rgb = cms.hexcolor_to_rgb(b"#%s" % rec.rgbcolour)
             colour = [uc2const.COLOR_RGB, rgb, 1.0, rec.colour_name]
 
         self.colors[rec.idx] = colour
