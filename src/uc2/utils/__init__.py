@@ -57,11 +57,12 @@ def py_int2byte(val):
     return struct.pack('B', val)
 
 
-def word2py_int(data):
+def word2py_int(data, be=False):
     """
     Converts word of bytes to Python int value.
     """
-    return struct.unpack('<H', data)[0]
+    sig = '>H' if be else '<H'
+    return struct.unpack(sig, data)[0]
 
 
 def py_int2word(val, be=False):
