@@ -50,7 +50,7 @@ class CmxLoader(AbstractBinaryLoader):
             if not dwords[2]:
                 dwords.append(self.fileptr.read(size))
 
-            node = cmx_model.make_cmx_chunk(''.join(dwords))
+            node = cmx_model.make_cmx_chunk(self.config, ''.join(dwords))
             self.parent_stack[-1].add(node)
 
             if dwords[2]:

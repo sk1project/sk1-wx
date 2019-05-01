@@ -25,7 +25,8 @@ class CmxRiffElement(BinaryModelObject):
     size = None
     data = None
 
-    def __init__(self, chunk=None, **kwargs):
+    def __init__(self, config, chunk=None, **kwargs):
+        self.config = config
         self.childs = []
         self.data = {}
 
@@ -94,6 +95,7 @@ class CmxRiffElement(BinaryModelObject):
 
     def _get_icon(self):
         icon_map = {
+            'ccmm': 'gtk-select-color',
             'DISP': 'gtk-missing-image',
             'page': 'gtk-page-setup',
         }
@@ -110,28 +112,28 @@ class CmxRiffElement(BinaryModelObject):
         self.cache_fields = [(0, 4, 'Chunk identifier'),
                              (4, 4, 'Chunk data size')]
         if not self.is_leaf():
-            self.cache_fields += [(8, 4, 'Chunk name')]
+            self.cache_fields += [(8, 4, 'List chunk name')]
+        else:
+            self.cache_fields[1] = (4, 4, 'Chunk data size\n')
 
 
 class CmxList(CmxRiffElement):
-    def __init__(self, chunk=None, **kwargs):
-        CmxRiffElement.__init__(self, chunk, **kwargs)
+    def __init__(self, config, chunk=None, **kwargs):
+        CmxRiffElement.__init__(self, config, chunk, **kwargs)
 
 
 class CmxRoot(CmxRiffElement):
     toplevel = True
 
     def __init__(self, config, chunk=None, root_id=cmx_const.ROOT_ID):
-        self.config = config
         chunk = chunk or root_id + 4 * '\x00' + 'CMX1'
-        self.config.rifx = chunk.startswith(cmx_const.ROOTX_ID)
-        CmxRiffElement.__init__(self, chunk)
+        config.rifx = chunk.startswith(cmx_const.ROOTX_ID)
+        CmxRiffElement.__init__(self, config, chunk)
 
 
 class CmxCont(CmxRiffElement):
-    identifier = cmx_const.CONT_ID
-
     def set_defaults(self):
+        self.data['identifier'] = cmx_const.CONT_ID
         self.data['file_id'] = cmx_const.FILE_ID
         self.data['os_type'] = cmx_const.OS_ID_WIN
         self.data['byte_order'] = cmx_const.BYTE_ORDER_LE
@@ -173,10 +175,10 @@ class CmxCont(CmxRiffElement):
 
     def update(self):
         self.chunk = self.data['identifier'] + 4 * '\x00'
-        self.chunk += self.data['file_id'] + \
-                      (32 - len(self.data['file_id'])) * '\x00'
-        self.chunk += self.data['os_type'] + \
-                      (16 - len(self.data['os_type'])) * '\x00'
+        padding_sz = 32 - len(self.data['file_id'])
+        self.chunk += self.data['file_id'] + padding_sz * '\x00'
+        padding_sz = 16 - len(self.data['os_type'])
+        self.chunk += self.data['os_type'] + padding_sz * '\x00'
         self.chunk += self.data['byte_order']
         self.chunk += self.data['coord_size']
         self.chunk += self.data['major']
@@ -227,12 +229,148 @@ class CmxCont(CmxRiffElement):
         ]
 
 
+class CmxCcmm(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.CCMM_ID
+        self.data['dump'] = \
+            '\x50\x50\x00\x00\x00\x04\x00\x00\x4c\x02\x00\x00\x00\x00\x00\x00' \
+            '\x04\x00\x00\x00\x80\x6a\xbc\x34\x80\x95\x43\x1b\x8c\x97\x6e\x02' \
+            '\xc0\xf1\xd2\x2d\x80\x1e\x85\x5b\x60\x64\x3b\x0f\x80\x3d\x0a\x17' \
+            '\xc0\x4b\x37\x09\x00\xc5\x8f\x79\x33\x33\x02\x00\x33\x33\x02\x00' \
+            '\x33\x33\x02\x00\x01\x00\x00\x00'
+
+    def update_from_chunk(self):
+        self.data['dump'] = self.chunk[8:]
+
+    def update(self):
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        self.chunk += self.data['dump']
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        self.cache_fields += [
+            (8, 4, 'lcsSignature'),
+            (12, 4, 'lcsVersion'),
+            (16, 4, 'lcsSize'),
+            (20, 4, 'lcsCSType'),
+            (24, 4, 'lcsIntent'),
+
+            (28, 12, 'Red Endpoint'),
+            (40, 12, 'Green Endpoint'),
+            (52, 12, 'Blue Endpoint'),
+
+            (64, 4, 'Red Gamma'),
+            (68, 4, 'Green Gamma'),
+            (72, 4, 'Blue Gamma'),
+
+            (76, 4, 'ulRcsCompandType'),
+        ]
+
+
+class CmxDisp(CmxRiffElement):
+    def __init__(self, config, chunk=None, **kwargs):
+        CmxRiffElement.__init__(self, config, chunk, **kwargs)
+
+    @staticmethod
+    def make_chunk_from_bitmap(bitmap_str):
+        chunk = cmx_const.DISP_ID + 4 * '\x00' + '\x08' + 3 * '\x00'
+        chunk += utils.bmp_to_dib(bitmap_str)
+        return chunk
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        clr_table_sz = 4 * utils.dword2py_int(self.chunk[44:48],
+                                              self.config.rifx)
+        pos = 52 + clr_table_sz
+        self.cache_fields += [
+            (8, 4, 'dwClipboardFormat'),
+            # BITMAPINFOHEADER
+            (12, 4, 'biSize - header size'),
+            (16, 4, 'biWidth - image width'),
+            (20, 4, 'biHeight - image height'),
+            (24, 2, 'biPlanes'),
+            (26, 2, 'biBitCount'),
+            (28, 4, 'biCompression'),
+            (32, 4, 'biSizeImage'),
+            (36, 4, 'biXPelsPerMeter'),
+            (40, 4, 'biYPelsPerMeter'),
+            (44, 4, 'biClrUsed'),
+            (48, 4, 'biClrImportant'),
+            # COLOR TABLE
+            (52, clr_table_sz, 'Color Table'),
+            # Pixels
+            (pos, len(self.chunk) - pos, 'Pixels'),
+        ]
+
+
+class CmxInstruction(BinaryModelObject):
+    def __init__(self, config, chunk=None, **kwargs):
+        self.config = config
+        self.childs = []
+        self.data = {}
+
+        if chunk:
+            self.chunk = chunk
+            self.data['code'] = self._get_code(chunk[2:4])
+            self.update_from_chunk()
+
+        if kwargs:
+            self.data.update(kwargs)
+
+    def update_from_chunk(self):
+        pass
+
+    def get_chunk_size(self):
+        return len(self.chunk)
+
+    def _get_code(self, code_str):
+        return abs(utils.signed_word2py_int(code_str, self.config.rifx))
+
+    def _get_code_str(self):
+        return utils.py_int2word(self.data['code'], self.config.rifx)
+
+    def get_name(self):
+        return cmx_const.INSTR_CODES.get(self.data['code'],
+                                         str(self.data['code']))
+
+    def resolve(self, name=''):
+        sz = '%d' % self.get_chunk_size()
+        name = '[%s]' % self.get_name()
+        return True, name, sz
+
+    def update(self):
+        size = self.get_chunk_size()
+        sz = utils.py_int2word(size, self.config.rifx)
+        self.chunk = sz + self._get_code_str() + self.chunk[4:]
+
+    def update_for_sword(self):
+        self.cache_fields = [(0, 2, 'Instruction Size'),
+                             (2, 2, 'Instruction Code')]
+
+
+class CmxPage(CmxRiffElement):
+    def update_from_chunk(self):
+        chunk = self.chunk[8:]
+        pos = 0
+        while pos < len(chunk):
+            size = utils.word2py_int(chunk[pos:pos + 2], self.config.rifx)
+            instr = chunk[pos:pos + size]
+            self.add(CmxInstruction(self.config, instr))
+            pos += size
+        self.chunk = self.chunk[:8]
+
+
 CHUNK_MAP = {
-    'LIST': CmxList,
-    'cont': CmxCont,
+    cmx_const.LIST_ID: CmxList,
+    cmx_const.CONT_ID: CmxCont,
+    cmx_const.CCMM_ID: CmxCcmm,
+    cmx_const.DISP_ID: CmxDisp,
+    cmx_const.PAGE_ID: CmxPage,
+
 }
 
 
-def make_cmx_chunk(chunk):
+def make_cmx_chunk(config, chunk):
     identifier = chunk[:4]
-    return CHUNK_MAP.get(identifier, CmxRiffElement)(chunk)
+    return CHUNK_MAP.get(identifier, CmxRiffElement)(config, chunk)
