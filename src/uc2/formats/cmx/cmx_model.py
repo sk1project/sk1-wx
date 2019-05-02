@@ -19,57 +19,8 @@ import zlib
 from cStringIO import StringIO
 
 from uc2 import utils
-from uc2.formats.cmx import cmx_const
+from uc2.formats.cmx import cmx_const, cmx_instr
 from uc2.formats.generic import BinaryModelObject
-
-
-class CmxInstruction(BinaryModelObject):
-    def __init__(self, config, chunk=None, **kwargs):
-        self.config = config
-        self.childs = []
-        self.data = {}
-
-        if chunk:
-            self.chunk = chunk
-            self.data['code'] = self._get_code(chunk[2:4])
-            self.update_from_chunk()
-
-        if kwargs:
-            self.data.update(kwargs)
-
-    def update_from_chunk(self):
-        pass
-
-    def get_chunk_size(self):
-        return len(self.chunk)
-
-    def _get_code(self, code_str):
-        return abs(utils.signed_word2py_int(code_str, self.config.rifx))
-
-    def _get_code_str(self):
-        return utils.py_int2word(self.data['code'], self.config.rifx)
-
-    def get_name(self):
-        return cmx_const.INSTR_CODES.get(self.data['code'],
-                                         str(self.data['code']))
-
-    def resolve(self, name=''):
-        sz = '%d' % self.get_chunk_size()
-        name = '[%s]' % self.get_name()
-        return len(self.childs) == 0, name, sz
-
-    def update(self):
-        size = self.get_chunk_size()
-        sz = utils.py_int2word(size, self.config.rifx)
-        self.chunk = sz + self._get_code_str() + self.chunk[4:]
-
-    def update_for_sword(self):
-        self.cache_fields = [(0, 2, 'Instruction Size'),
-                             (2, 2, 'Instruction Code')]
-
-
-def make_instruction(config, chunk):
-    return CmxInstruction(config, chunk)
 
 
 class CmxRiffElement(BinaryModelObject):
@@ -388,7 +339,7 @@ class CmxPage(CmxRiffElement):
             size = utils.word2py_int(chunk[pos:pos + 2], rifx)
             instr_id = utils.signed_word2py_int(chunk[pos + 2:pos + 4], rifx)
             instr = chunk[pos:pos + size]
-            obj = make_instruction(self.config, instr)
+            obj = cmx_instr.make_instruction(self.config, instr)
             name = cmx_const.INSTR_CODES.get(instr_id, '')
             if name.startswith('Begin'):
                 parents[-1].add(obj)
