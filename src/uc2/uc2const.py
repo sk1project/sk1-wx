@@ -62,8 +62,8 @@ CDT = 'cdt'
 CDRZ = 'cdrz'
 CDTZ = 'cdtz'
 CMX = 'cmx'
-CCX = 55
-CDRX = 'cdrx'
+CCX = 'ccx'
+CDRX = 56
 
 XAR = 66
 
@@ -132,7 +132,6 @@ FORMAT_DESCRIPTION = {
     CDTZ: _("CDT - CorelDRAW Templates files"),
     CMX: _("CMX - CorelDRAW Presentation Exchange files"),
     CCX: _("CCX - CorelDRAW Compressed Exchange files"),
-    CDRX: _("CDR - CorelDRAW Graphics files"),
     XAR: _("XAR - Xara graphics files"),
     FIG: _("FIG - XFig files"),
     AI_PS: _("AI - Adobe Illustrator files"),
@@ -203,7 +202,6 @@ FORMAT_NAMES = {
     CDTZ: "CDT",
     CMX: "CMX",
     CCX: "CCX",
-    CDRX: "CDR",
     XAR: "XAR",
     FIG: "FIG",
     AI_PS: "AI",
@@ -260,12 +258,12 @@ MODEL_LOADERS = [SK2, SVG, WMF, PLT, SK1, SK, CDR, FIG, CGM]  # CDT,
 BITMAP_LOADERS = [PNG, JPG, PSD, XCF, JP2, TIF, GIF, BMP, PCX, PPM, XBM, XPM,
                   WEBP]
 PALETTE_LOADERS = [SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL, ASE, ACO, JCW]
-EXPERIMENTAL_LOADERS = [CMX, MD, RIFF, CDRZ, XML, ]
+EXPERIMENTAL_LOADERS = [CMX, CCX, MD, RIFF, CDRZ, XML, ]
 
 MODEL_SAVERS = [SK2, SVG, PLT, PDF, SK1, SK, CGM, FIG]
 BITMAP_SAVERS = [PNG, ]
 PALETTE_SAVERS = [SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL, ASE, ACO, JCW]
-EXPERIMENTAL_SAVERS = [CMX, MD, RIFF, CDR, XML, WMF, ]
+EXPERIMENTAL_SAVERS = [CMX, CCX, MD, RIFF, CDR, XML, WMF, ]
 
 PATTERN_FORMATS = [EPS, PNG, JPG, JP2, TIF, GIF, BMP, PCX, PPM, XBM, XPM]
 
@@ -278,7 +276,7 @@ FORMAT_EXTENSION = {
     SVG: ('svg',), SVGZ: ('svgz',), ODG: ('odg',), ORA: ('ora',),
     XCF: ('xcf',), SLA: ('sla',), FIG: ('fig',),
     CDR: ('cdr',), CDT: ('cdt',), CDRZ: ('cdr',), CDTZ: ('cdt',),
-    CMX: ('cmx',), CCX: ('ccx',), CDRX: ('cdr',),
+    CMX: ('cmx',), CCX: ('ccx', 'cdr',),
     XAR: ('xar',),
     AI_PS: ('ai',), AI_PDF: ('ai',), PS: ('ps',), EPS: ('eps',), PDF: ('pdf',),
     PSD: ('psd',),
