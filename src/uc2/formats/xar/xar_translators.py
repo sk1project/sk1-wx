@@ -145,6 +145,16 @@ def make_trafo(centre_point, major_axes, minor_axes, trafo):
     return tr
 
 
+def direction_at_angles(h1, h2):
+    """ direction on the HSV color wheel from h1 to h2
+    """
+    # FIXME: the direction is calculated incorrectly
+    if abs(h2 - h1) > 0.5:
+        direction = -1 if (h2 - h1) >= 0 else 1
+    else:
+        direction = 1 if (h2 - h1) >= 0 else -1
+    return direction
+
 
 class XAR_to_SK2_Translator(object):
     xar_doc = None
@@ -1464,14 +1474,6 @@ class XAR_to_SK2_Translator(object):
 
         if distance_h == 0.0:
             return rainbow_piece
-
-        def direction_at_angles(h1, h2):
-            # FIXME: the direction is calculated incorrectly
-            if abs(h2 - h1) > 0.5:
-                direction = -1 if (h2 - h1) >= 0 else 1
-            else:
-                direction = 1 if (h2 - h1) >= 0 else -1
-            return direction
 
         direction = direction_at_angles(h1, h2)
         if not shortest_route:
