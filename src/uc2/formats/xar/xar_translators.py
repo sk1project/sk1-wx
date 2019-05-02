@@ -78,6 +78,13 @@ BASE_COLOUR_BY_TINT = {
 
 TEXT_ALIGN_NEED_FIX = [xar_const.TEXT_ALIGN_CENTRE, xar_const.TEXT_ALIGN_RIGHT]
 
+TEXT_ALIGN_BASEPOINT = {
+    sk2const.TEXT_ALIGN_LEFT: 0.0,
+    sk2const.TEXT_ALIGN_RIGHT: 0.1,
+    sk2const.TEXT_ALIGN_CENTER: 0.5,
+    sk2const.TEXT_ALIGN_JUSTIFY: 0.5,
+}
+
 RAINBOW_EFFECT = [
     xar_const.TAG_FILLEFFECT_RAINBOW,
     xar_const.TAG_FILLEFFECT_ALTRAINBOW
@@ -913,14 +920,57 @@ class XAR_to_SK2_Translator(object):
         return text_element
 
     # text story objects on a path
-#    def handle_text_story_simple_start_left(self, rec, cfg): pass
-#    def handle_text_story_simple_start_right(self, rec, cfg): pass
-#    def handle_text_story_simple_end_left(self, rec, cfg): pass
-#    def handle_text_story_simple_end_right(self, rec, cfg): pass
-#    def handle_text_story_complex_start_left(self, rec, cfg): pass
-#    def handle_text_story_complex_start_right(self, rec, cfg): pass
-#    def handle_text_story_complex_end_left(self, rec, cfg): pass
-#    def handle_text_story_complex_end_right(self, rec, cfg): pass
+    def _handle_text_story_on_path(self, rec, cfg, side_flag):
+        path_obj, text_obj = self.stack[0:2]
+
+        align = text_obj.style[2][3]
+        basepoint = TEXT_ALIGN_BASEPOINT.get(align, 0.5)
+        childs_data = (basepoint, align, side_flag)
+
+        el = sk2_model.TP_Group(
+            cfg,
+            childs=[path_obj, text_obj],
+            data=childs_data
+        )
+
+        # XXX: here it looks dirty. Perhaps this should be done in the model.
+        text_obj.update()
+        el.set_text_on_path(path_obj, text_obj, childs_data)
+
+        self.flush_stack(el)
+        self.stack.append(el)
+
+    def handle_text_story_simple_start_left(self, rec, cfg):
+        self.handle_text_story_simple(rec, cfg)
+        self._handle_text_story_on_path(rec, cfg, False)
+
+    def handle_text_story_simple_start_right(self, rec, cfg):
+        self.handle_text_story_simple(rec, cfg)
+        self._handle_text_story_on_path(rec, cfg, True)
+
+    def handle_text_story_simple_end_left(self, rec, cfg):
+        self.handle_text_story_simple(rec, cfg)
+        self._handle_text_story_on_path(rec, cfg, True)
+
+    def handle_text_story_simple_end_right(self, rec, cfg):
+        self.handle_text_story_simple(rec, cfg)
+        self._handle_text_story_on_path(rec, cfg, True)
+
+    def handle_text_story_complex_start_left(self, rec, cfg):
+        self.handle_text_story_complex(rec, cfg)
+        self._handle_text_story_on_path(rec, cfg, False)
+
+    def handle_text_story_complex_start_right(self, rec, cfg):
+        self.handle_text_story_complex(rec, cfg)
+        self._handle_text_story_on_path(rec, cfg, True)
+
+    def handle_text_story_complex_end_left(self, rec, cfg):
+        self.handle_text_story_complex(rec, cfg)
+        self._handle_text_story_on_path(rec, cfg, True)
+
+    def handle_text_story_complex_end_right(self, rec, cfg):
+        self.handle_text_story_complex(rec, cfg)
+        self._handle_text_story_on_path(rec, cfg, False)
 
     # Text story information records
 #    def handle_text_story_word_wrap_info(self, rec, cfg): pass

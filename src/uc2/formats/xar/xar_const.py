@@ -233,7 +233,7 @@ TAG_TEXT_STORY_SIMPLE_END_LEFT = 2112
 TAG_TEXT_STORY_SIMPLE_END_RIGHT = 2113
 TAG_TEXT_STORY_COMPLEX_START_LEFT = 2114
 TAG_TEXT_STORY_COMPLEX_START_RIGHT = 2115
-TAG_TEXT_STORY_COMPLEX_END_LEFT = 2116  # Deprecated
+TAG_TEXT_STORY_COMPLEX_END_LEFT = 2116
 TAG_TEXT_STORY_COMPLEX_END_RIGHT = 2117
 
 # Text story information records
@@ -604,7 +604,7 @@ XAR_DEFAULT_STYLE = {
     'text_font_family': 'Time New Roman',
     'text_bold': False,
     'text_italic': False,
-    'text_script_size': 1.0,
+    'text_script_size': 10.0,
     'text_justification': TEXT_ALIGN_LEFT,
     'mitre_limit': 4000,
     'end_arrow': None,
@@ -1325,11 +1325,7 @@ XAR_TYPE_RECORD = {
         'name': 'TEXT STORY SIMPLE',
         'sec': [
             {'type': 'COORD', 'id': 'anchor'},
-            {'type': 'int32', 'id': 'kerning_flag',
-             'bitfield': {
-                0: {'type': 'bool', 'id': 'automatic_kerning'},
-              }
-             }
+            {'type': 'int32', 'id': 'kerning_flag'}
         ]
     },
     TAG_TEXT_STORY_COMPLEX: {
@@ -1341,28 +1337,87 @@ XAR_TYPE_RECORD = {
             {'type': 'fixed16', 'id': 'd'},
             {'type': 'int32', 'id': 'e'},
             {'type': 'int32', 'id': 'f'},
-            {'type': 'int32', 'id': 'kerning_flag',
-             'bitfield': {
-                 0: {'type': 'bool', 'id': 'automatic_kerning'},
-             }
-             }
+            {'type': 'int32', 'id': 'kerning_flag'}
         ]
     },
 
     # text story objects on a path
-    TAG_TEXT_STORY_SIMPLE_START_LEFT: {'name': 'TEXT STORY SIMPLE START LEFT'},
-    TAG_TEXT_STORY_SIMPLE_START_RIGHT: {
-        'name': 'TEXT STORY SIMPLE START RIGHT'},
-    TAG_TEXT_STORY_SIMPLE_END_LEFT: {'name': 'TEXT STORY SIMPLE END LEFT'},
-    TAG_TEXT_STORY_SIMPLE_END_RIGHT: {'name': 'TEXT STORY SIMPLE END RIGHT'},
-    TAG_TEXT_STORY_COMPLEX_START_LEFT: {
-        'name': 'TEXT STORY COMPLEX START LEFT'},
-    TAG_TEXT_STORY_COMPLEX_START_RIGHT: {
-        'name': 'TEXT STORY COMPLEX START RIGHT'},
-    TAG_TEXT_STORY_COMPLEX_END_LEFT: {
-        'name': 'TEXT STORY COMPLEX END LEFT', 'deprecated': True
+    TAG_TEXT_STORY_SIMPLE_START_LEFT: {
+        'name': 'TEXT STORY SIMPLE START LEFT',
+        'sec': [
+            {'type': 'COORD', 'id': 'anchor'},
+            {'type': 'int32', 'id': 'kerning_flag'}
+        ]
     },
-    TAG_TEXT_STORY_COMPLEX_END_RIGHT: {'name': 'TEXT STORY COMPLEX END RIGHT'},
+    TAG_TEXT_STORY_SIMPLE_START_RIGHT: {
+        'name': 'TEXT STORY SIMPLE START RIGHT',
+        'sec': [
+            {'type': 'COORD', 'id': 'anchor'},
+            {'type': 'int32', 'id': 'kerning_flag'}
+        ]
+    },
+    TAG_TEXT_STORY_SIMPLE_END_LEFT: {
+        'name': 'TEXT STORY SIMPLE END LEFT',
+        'sec': [
+            {'type': 'COORD', 'id': 'anchor'},
+            {'type': 'int32', 'id': 'kerning_flag'}
+        ]
+    },
+    TAG_TEXT_STORY_SIMPLE_END_RIGHT: {
+        'name': 'TEXT STORY SIMPLE END RIGHT',
+        'sec': [
+            {'type': 'COORD', 'id': 'anchor'},
+            {'type': 'int32', 'id': 'kerning_flag'}
+        ]
+    },
+    TAG_TEXT_STORY_COMPLEX_START_LEFT: {
+        'name': 'TEXT STORY COMPLEX START LEFT',
+        'sec': [
+            {'type': 'fixed16', 'id': 'a'},
+            {'type': 'fixed16', 'id': 'b'},
+            {'type': 'fixed16', 'id': 'c'},
+            {'type': 'fixed16', 'id': 'd'},
+            {'type': 'int32', 'id': 'e'},
+            {'type': 'int32', 'id': 'f'},
+            {'type': 'int32', 'id': 'kerning_flag'}
+        ]
+    },
+    TAG_TEXT_STORY_COMPLEX_START_RIGHT: {
+        'name': 'TEXT STORY COMPLEX START RIGHT',
+        'sec': [
+            {'type': 'fixed16', 'id': 'a'},
+            {'type': 'fixed16', 'id': 'b'},
+            {'type': 'fixed16', 'id': 'c'},
+            {'type': 'fixed16', 'id': 'd'},
+            {'type': 'int32', 'id': 'e'},
+            {'type': 'int32', 'id': 'f'},
+            {'type': 'int32', 'id': 'kerning_flag'}
+        ]
+    },
+    TAG_TEXT_STORY_COMPLEX_END_LEFT: {
+        'name': 'TEXT STORY COMPLEX END LEFT',
+        'sec': [
+            {'type': 'fixed16', 'id': 'a'},
+            {'type': 'fixed16', 'id': 'b'},
+            {'type': 'fixed16', 'id': 'c'},
+            {'type': 'fixed16', 'id': 'd'},
+            {'type': 'int32', 'id': 'e'},
+            {'type': 'int32', 'id': 'f'},
+            {'type': 'int32', 'id': 'kerning_flag'}
+        ]
+    },
+    TAG_TEXT_STORY_COMPLEX_END_RIGHT: {
+        'name': 'TEXT STORY COMPLEX END RIGHT',
+        'sec': [
+            {'type': 'fixed16', 'id': 'a'},
+            {'type': 'fixed16', 'id': 'b'},
+            {'type': 'fixed16', 'id': 'c'},
+            {'type': 'fixed16', 'id': 'd'},
+            {'type': 'int32', 'id': 'e'},
+            {'type': 'int32', 'id': 'f'},
+            {'type': 'int32', 'id': 'kerning_flag'}
+        ]
+    },
 
     # Text story information records
     TAG_TEXT_STORY_WORD_WRAP_INFO: {'name': 'TEXT STORY WORD WRAP INFO'},
