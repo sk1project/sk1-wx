@@ -16,7 +16,6 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import zlib
-
 from cStringIO import StringIO
 
 from uc2 import utils
@@ -127,6 +126,33 @@ class CmxList(CmxRiffElement):
         CmxRiffElement.__init__(self, config, chunk, **kwargs)
 
 
+class CmxInfoElement(CmxRiffElement):
+    def __init__(self, config, chunk=None, **kwargs):
+        CmxRiffElement.__init__(self, config, chunk, **kwargs)
+
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.IKEY_ID
+        self.data['text'] = ''
+
+    def update_from_chunk(self):
+        self.data['text'] = self.chunk[8:].rstrip('\x00')
+
+    def update(self):
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        self.chunk += self.data['text']
+        text_sz = len(self.data['text'])
+        padding = (text_sz // 32 + 1) * 32 - text_sz
+        self.chunk += padding * '\x00'
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        sz = len(self.chunk) - 8
+        idnt = self.data['identifier']
+        msg = 'Notes' if idnt == cmx_const.ICMT_ID else 'Keys'
+        self.cache_fields += [(8, sz, msg), ]
+
+
 class CmxCont(CmxRiffElement):
     def set_defaults(self):
         self.data['identifier'] = cmx_const.CONT_ID
@@ -192,7 +218,6 @@ class CmxCont(CmxRiffElement):
         self.chunk += self.data['bbox_y0']
         self.chunk += self.data['tally']
         self.chunk += 64 * '\x00'
-
         CmxRiffElement.update(self)
 
     def update_for_sword(self):
@@ -439,6 +464,8 @@ CHUNK_MAP = {
     cmx_const.DISP_ID: CmxDisp,
     cmx_const.PAGE_ID: CmxPage,
     cmx_const.PACK_ID: CdrxPack,
+    cmx_const.IKEY_ID: CmxInfoElement,
+    cmx_const.ICMT_ID: CmxInfoElement,
 }
 
 

@@ -41,6 +41,10 @@ DISP_ID = 'DISP'
 CCMM_ID = 'ccmm'
 PAGE_ID = 'page'
 PACK_ID = 'pack'
+INFO_ID = 'INFO'
+IKEY_ID = 'IKEY'
+ICMT_ID = 'ICMT'
+
 
 INSTR_CODES = {
     88: 'AddClippingRegion',
