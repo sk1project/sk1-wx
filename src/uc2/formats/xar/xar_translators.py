@@ -414,9 +414,9 @@ class XAR_to_SK2_Translator(object):
             parent_colour = self.get_color(rec.parent_colour)
             colour = tint_colour(parent_colour, rec.component1, rec.colour_name)
         elif rec.colour_type == xar_const.COLOUR_TYPE_LINKED:
-            pass  # TODO
+            pass  # TODO: this type is not in the list of sk2 supported
         elif rec.colour_type == xar_const.COLOUR_TYPE_SHADE:
-            pass  # TODO
+            pass  # TODO: this type is not in the list of sk2 supported
 
         if colour is None:
             rgb = cms.hexcolor_to_rgb(b"#%s" % rec.rgbcolour)
@@ -503,9 +503,7 @@ class XAR_to_SK2_Translator(object):
             self.flush_stack(group)
             self.stack = [group]
 
-    def handle_blend(self, rec, cfg):
-        # TODO: implement this
-        pass
+    def handle_blend(self, rec, cfg): pass  # TODO: implement this
 
 #    def handle_blender(self, rec, cfg): pass
 #    def handle_mould_envelope(self, rec, cfg): pass
@@ -601,7 +599,7 @@ class XAR_to_SK2_Translator(object):
             sk2const.GRADIENT_LINEAR,
             vector,
             stops,
-            sk2const.GRADIENT_EXTEND_PAD  # TODO
+            sk2const.GRADIENT_EXTEND_PAD
         ]
 
     def handle_circularfill(self, rec, cfg):
@@ -615,7 +613,7 @@ class XAR_to_SK2_Translator(object):
             sk2const.GRADIENT_RADIAL,
             vector,
             stops,
-            sk2const.GRADIENT_EXTEND_PAD  # TODO
+            sk2const.GRADIENT_EXTEND_PAD
         ]
 
     def handle_ellipticalfill(self, rec, cfg):
@@ -628,7 +626,7 @@ class XAR_to_SK2_Translator(object):
             sk2const.GRADIENT_RADIAL,
             [[0.0, 0.0], [1.0, 0.0]],
             stops,
-            sk2const.GRADIENT_EXTEND_PAD  # TODO
+            sk2const.GRADIENT_EXTEND_PAD
         ]
         tr = make_trafo(rec.centre_point, rec.major_axes, rec.minor_axes, trafo)
         self.style['fill_trafo'] = tr
@@ -1168,7 +1166,7 @@ class XAR_to_SK2_Translator(object):
             sk2const.GRADIENT_RADIAL,
             [[0.0, 0.0], [1.0, 0.0]],
             stops,
-            sk2const.GRADIENT_EXTEND_PAD  # TODO
+            sk2const.GRADIENT_EXTEND_PAD
         ]
 
         # print self.sk2_doc.doc_file
@@ -1370,9 +1368,9 @@ class XAR_to_SK2_Translator(object):
         colour = copy.deepcopy(self.style['stroke_colour'])
         dash = self.get_dash(width)
         miter_limit = self.style['mitre_limit'] / 1000.0
-        behind_flag = 0  # TODO
-        scalable_flag = 0  # TODO
-        markers = [[], []]  # TODO
+        behind_flag = 0
+        scalable_flag = 0
+        markers = [[], []]  # TODO: markers supported, no samples to test
         return [rule, width, colour, dash, cap_style, join_style, miter_limit,
                 behind_flag, scalable_flag, markers]
 
@@ -1384,7 +1382,7 @@ class XAR_to_SK2_Translator(object):
         return dash or []
 
     def get_path(self, rec):
-        # TODO: process style['path_flags']
+        # TODO: process style['path_flags'], desirable but not necessary
         paths = []
         for closed, points in self.xar_mtds.read_path(zip(rec.verb, rec.coord)):
             marker = sk2const.CURVE_CLOSED if closed else sk2const.CURVE_OPENED
@@ -1397,7 +1395,7 @@ class XAR_to_SK2_Translator(object):
         return paths
 
     def get_path_relative(self, rec):
-        # TODO: process style['path_flags']
+        # TODO: process style['path_flags'], desirable but not necessary
         paths = []
         for closed, points in self.xar_mtds.read_path_relative(rec.path):
             marker = sk2const.CURVE_CLOSED if closed else sk2const.CURVE_OPENED
@@ -1439,6 +1437,8 @@ class XAR_to_SK2_Translator(object):
         return fill_data
 
     def flush_stack(self, parent):
+        """ assign a parent to everyone in the stack and create a new stack
+        """
         for el in self.stack:
             el.parent = parent
         parent.childs.extend(self.stack)
