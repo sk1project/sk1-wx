@@ -643,13 +643,13 @@ definitions:
         type: object
         properties:
             name:
-                description: 
+                description: record name
                 type: string
             doc: 
-                description: 
+                description: record description
                 type: string
             sec:
-                description: 
+                description: sequence of properties
                 type: array
                 items:
                     type: object
@@ -662,15 +662,16 @@ definitions:
         type: object
         properties:
             id:
-                description: 
+                description: property id
                 type: string
             type:
-                description: 
+                description: type of value
                 type: string
             number:
-                description: 
-                type: string
-            bitfield:
+                description: | property id comprising a number of values, 
+                               number of values or -1
+                type: [string, integer]
+            bitfield: is a data structure above value
                 description: 
                 type: object
                 allOf: {$ref: #/definitions/bitfield},
@@ -700,7 +701,7 @@ XAR_TYPE_RECORD = {
                'This should always be the first record in any file produced.',
         'sec': [
             {'type': '3 bytes', 'id': 'file_type',
-                'enum': {  # XXX
+                'enum': {  # XXX: not described and not used at the moment
                     '0': {'value': FILE_TYPE_PAPER_PUBLISH},
                     '1': {'value': FILE_TYPE_WEB}
                 }
@@ -1214,41 +1215,56 @@ XAR_TYPE_RECORD = {
     # Rectangles
     TAG_RECTANGLE_SIMPLE: {'name': 'RECTANGLE SIMPLE'},
     TAG_RECTANGLE_SIMPLE_REFORMED: {
-        'name': 'RECTANGLE SIMPLE REFORMED', 'deprecated': True
+        'name': 'RECTANGLE SIMPLE REFORMED',
+        'deprecated': True
     },
     TAG_RECTANGLE_SIMPLE_STELLATED: {
-        'name': 'RECTANGLE SIMPLE STELLATED', 'deprecated': True
+        'name': 'RECTANGLE SIMPLE STELLATED',
+        'deprecated': True
     },
     TAG_RECTANGLE_SIMPLE_STELLATED_REFORMED: {
-        'name': 'RECTANGLE SIMPLE STELLATED REFORMED', 'deprecated': True
+        'name': 'RECTANGLE SIMPLE STELLATED REFORMED',
+        'deprecated': True
     },
-    TAG_RECTANGLE_SIMPLE_ROUNDED: {'name': 'RECTANGLE SIMPLE ROUNDED'},
+    TAG_RECTANGLE_SIMPLE_ROUNDED: {
+        'name': 'RECTANGLE SIMPLE ROUNDED'
+    },
     TAG_RECTANGLE_SIMPLE_ROUNDED_REFORMED: {
-        'name': 'RECTANGLE SIMPLE ROUNDED REFORMED', 'deprecated': True
+        'name': 'RECTANGLE SIMPLE ROUNDED REFORMED',
+        'deprecated': True
     },
     TAG_RECTANGLE_SIMPLE_ROUNDED_STELLATED: {
-        'name': 'RECTANGLE SIMPLE ROUNDED STELLATED', 'deprecated': True
+        'name': 'RECTANGLE SIMPLE ROUNDED STELLATED',
+        'deprecated': True
     },
     TAG_RECTANGLE_SIMPLE_ROUNDED_STELLATED_REFORMED: {
         'name': 'RECTANGLE SIMPLE ROUNDED STELLATED REFORMED',
         'deprecated': True
     },
-    TAG_RECTANGLE_COMPLEX: {'name': 'RECTANGLE COMPLEX'},
+    TAG_RECTANGLE_COMPLEX: {
+        'name': 'RECTANGLE COMPLEX'
+    },
     TAG_RECTANGLE_COMPLEX_REFORMED: {
-        'name': 'RECTANGLE COMPLEX REFORMED', 'deprecated': True
+        'name': 'RECTANGLE COMPLEX REFORMED',
+        'deprecated': True
     },
     TAG_RECTANGLE_COMPLEX_STELLATED: {
         'name': 'RECTANGLE COMPLEX STELLATED'
     },
     TAG_RECTANGLE_COMPLEX_STELLATED_REFORMED: {
-        'name': 'RECTANGLE COMPLEX STELLATED REFORMED', 'deprecated': True
+        'name': 'RECTANGLE COMPLEX STELLATED REFORMED',
+        'deprecated': True
     },
-    TAG_RECTANGLE_COMPLEX_ROUNDED: {'name': 'RECTANGLE COMPLEX ROUNDED'},
+    TAG_RECTANGLE_COMPLEX_ROUNDED: {
+        'name': 'RECTANGLE COMPLEX ROUNDED'
+    },
     TAG_RECTANGLE_COMPLEX_ROUNDED_REFORMED: {
-        'name': 'RECTANGLE COMPLEX ROUNDED REFORMED', 'deprecated': True
+        'name': 'RECTANGLE COMPLEX ROUNDED REFORMED',
+        'deprecated': True
     },
     TAG_RECTANGLE_COMPLEX_ROUNDED_STELLATED: {
-        'name': 'RECTANGLE COMPLEX ROUNDED STELLATED', 'deprecated': True
+        'name': 'RECTANGLE COMPLEX ROUNDED STELLATED',
+        'deprecated': True
     },
     TAG_RECTANGLE_COMPLEX_ROUNDED_STELLATED_REFORMED: {
         'name': 'RECTANGLE COMPLEX ROUNDED STELLATED REFORMED',
@@ -1258,13 +1274,16 @@ XAR_TYPE_RECORD = {
     # Polygons
     TAG_POLYGON_COMPLEX: {'name': 'POLYGON COMPLEX'},
     TAG_POLYGON_COMPLEX_REFORMED: {
-        'name': 'POLYGON COMPLEX REFORMED', 'deprecated': True
+        'name': 'POLYGON COMPLEX REFORMED',
+        'deprecated': True
     },
     TAG_POLYGON_COMPLEX_STELLATED: {
-        'name': 'POLYGON COMPLEX STELLATED', 'deprecated': True
+        'name': 'POLYGON COMPLEX STELLATED',
+        'deprecated': True
     },
     TAG_POLYGON_COMPLEX_STELLATED_REFORMED: {
-        'name': 'POLYGON COMPLEX STELLATED REFORMED', 'deprecated': True
+        'name': 'POLYGON COMPLEX STELLATED REFORMED',
+        'deprecated': True
     },
     TAG_POLYGON_COMPLEX_ROUNDED: {'name': 'POLYGON COMPLEX ROUNDED'},
     TAG_POLYGON_COMPLEX_ROUNDED_REFORMED: {
