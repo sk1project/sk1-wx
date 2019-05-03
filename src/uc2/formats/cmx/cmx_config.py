@@ -21,3 +21,4 @@ from uc2.utils.config import XmlConfigParser
 class CMX_Config(XmlConfigParser):
     system_encoding = 'utf16'
     rifx = False
+    pack = False

@@ -24,37 +24,41 @@ from uc2.utils.fsutils import get_fileptr
 from uc2.utils.mixutils import merge_cnf
 
 
-def cmx_loader(appdata, filename=None, fileptr=None,
+def ccx_loader(appdata, filename=None, fileptr=None,
                translate=True, cnf=None, **kw):
+    kw['pack'] = True
     cnf = merge_cnf(cnf, kw)
-    cmx_doc = CMX_Presenter(appdata, cnf)
-    cmx_doc.load(filename, fileptr)
+    ccx_doc = CMX_Presenter(appdata, cnf)
+    ccx_doc.cid = uc2const.CCX
+    ccx_doc.load(filename, fileptr)
     if translate:
         sk2_doc = SK2_Presenter(appdata, cnf)
         sk2_doc.doc_file = filename
-        cmx_doc.translate_to_sk2(sk2_doc)
-        cmx_doc.close()
+        ccx_doc.translate_to_sk2(sk2_doc)
+        ccx_doc.close()
         return sk2_doc
-    return cmx_doc
+    return ccx_doc
 
 
-def cmx_saver(sk2_doc, filename=None, fileptr=None,
+def ccx_saver(sk2_doc, filename=None, fileptr=None,
               translate=True, cnf=None, **kw):
+    kw['pack'] = True
     cnf = merge_cnf(cnf, kw)
-    if sk2_doc.cid == uc2const.CMX:
+    if sk2_doc.cid == uc2const.CCX:
         translate = False
     if translate:
-        cmx_doc = CMX_Presenter(sk2_doc.appdata, cnf)
-        cmx_doc.translate_from_sk2(sk2_doc)
-        cmx_doc.save(filename, fileptr)
-        cmx_doc.close()
+        ccx_doc = CMX_Presenter(sk2_doc.appdata, cnf)
+        ccx_doc.cid = uc2const.CCX
+        ccx_doc.translate_from_sk2(sk2_doc)
+        ccx_doc.save(filename, fileptr)
+        ccx_doc.close()
     else:
         sk2_doc.save(filename, fileptr)
 
 
-def check_cmx(path):
+def check_ccx(path):
     with get_fileptr(path) as fileptr:
         riff_sign = fileptr.read(4) in (cmx_const.ROOT_ID, cmx_const.ROOTX_ID)
         _size = fileptr.read(4)
-        cmx_sign = fileptr.read(4) == cmx_const.CMX_ID
-    return riff_sign and cmx_sign
+        ccx_sign = fileptr.read(4) == cmx_const.CDRX_ID
+    return riff_sign and ccx_sign
