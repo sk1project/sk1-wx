@@ -22,3 +22,5 @@ class CMX_Config(XmlConfigParser):
     system_encoding = 'utf16'
     rifx = False
     pack = False
+    v16bit = False
+    v1 = False

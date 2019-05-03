@@ -66,5 +66,48 @@ class CmxInstruction(BinaryModelObject):
                              (2, 2, 'Instruction Code')]
 
 
+class Inst16BeginPage(CmxInstruction):
+    def update_for_sword(self):
+        CmxInstruction.update_for_sword(self)
+        self.cache_fields += [
+            (4, 2, 'Page number'),
+            (6, 4, 'Page flags'),
+            (10, 16, 'Drawing bbox on page'),
+        ]
+
+
+class Inst16BeginLayer(CmxInstruction):
+    def update_for_sword(self):
+        CmxInstruction.update_for_sword(self)
+        name_sz = utils.word2py_int(self.chunk[16:18], self.config.rifx)
+        self.cache_fields += [
+            (4, 2, 'Page number'),
+            (6, 2, 'Layer number'),
+            (8, 4, 'Layer flags'),
+            (12, 4, 'Tally'),
+            (16, 2, 'Layer name size'),
+            (18, name_sz, 'Layer name'),
+        ]
+
+
+
+class Inst16BeginGroup(CmxInstruction):
+    def update_for_sword(self):
+        CmxInstruction.update_for_sword(self)
+        self.cache_fields += [
+            (4, 16, 'Drawing bbox on page'),
+        ]
+
+
+INSTR_16bit = {
+    cmx_const.BEGIN_PAGE: Inst16BeginPage,
+    cmx_const.BEGIN_LAYER:Inst16BeginLayer,
+}
+
+INSTR_32bit = {}
+
+
 def make_instruction(config, chunk):
-    return CmxInstruction(config, chunk)
+    instructions = INSTR_16bit if config.v16bit else INSTR_32bit
+    identifier = abs(utils.signed_word2py_int(chunk[2:4], config.rifx))
+    return instructions.get(identifier, CmxInstruction)(config, chunk)

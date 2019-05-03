@@ -160,14 +160,14 @@ class CmxInfoElement(CmxRiffElement):
 class CmxCont(CmxRiffElement):
     def set_defaults(self):
         self.data['identifier'] = cmx_const.CONT_ID
-        self.data['file_id'] = cmx_const.FILE_ID
-        self.data['os_type'] = cmx_const.OS_ID_WIN
-        self.data['byte_order'] = cmx_const.BYTE_ORDER_LE
-        self.data['coord_size'] = cmx_const.COORDSIZE_32BIT
-        self.data['major'] = cmx_const.MAJOR_32BIT
-        self.data['minor'] = cmx_const.MINOR
-        self.data['unit'] = cmx_const.UNIT_MM
-        self.data['factor'] = cmx_const.FACTOR_MM
+        self.data['file_id'] = cmx_const.CONT_FILE_ID
+        self.data['os_type'] = cmx_const.CONT_OS_ID_WIN
+        self.data['byte_order'] = cmx_const.CONT_BYTE_ORDER_LE
+        self.data['coord_size'] = cmx_const.CONT_COORDSIZE_32BIT
+        self.data['major'] = cmx_const.CONT_MAJOR_V2
+        self.data['minor'] = cmx_const.CONT_MINOR
+        self.data['unit'] = cmx_const.CONT_UNIT_MM
+        self.data['factor'] = cmx_const.CONT_FACTOR_MM
 
         self.data['IndexSection'] = 4 * '\x00'
         self.data['InfoSection'] = 4 * '\x00'
@@ -183,8 +183,13 @@ class CmxCont(CmxRiffElement):
         self.data['file_id'] = self.chunk[8:40].rstrip('\x00')
         self.data['os_type'] = self.chunk[40:56].rstrip('\x00')
         self.data['byte_order'] = self.chunk[56:60]
+        if self.data['byte_order'] == cmx_const.CONT_BYTE_ORDER_BE:
+            self.config.rifx = True
         self.data['coord_size'] = self.chunk[60:62]
+        if self.data['coord_size'] == cmx_const.CONT_COORDSIZE_16BIT:
+            self.config.v16bit = True
         self.data['major'] = self.chunk[62:66]
+        self.config.v1 = self.data['major'].startswith('\x31')
         self.data['minor'] = self.chunk[66:70]
         self.data['unit'] = self.chunk[70:72]
         self.data['factor'] = self.chunk[72:80]
@@ -337,7 +342,8 @@ class CmxPage(CmxRiffElement):
         parents = [self]
         while pos < len(chunk):
             size = utils.word2py_int(chunk[pos:pos + 2], rifx)
-            instr_id = utils.signed_word2py_int(chunk[pos + 2:pos + 4], rifx)
+            instr_id = chunk[pos + 2:pos + 4]
+            instr_id = abs(utils.signed_word2py_int(instr_id, rifx))
             instr = chunk[pos:pos + size]
             obj = cmx_instr.make_instruction(self.config, instr)
             name = cmx_const.INSTR_CODES.get(instr_id, '')
@@ -413,6 +419,7 @@ class CdrxPack(CmxRiffElement):
 
 class CmxRoot(CmxList):
     toplevel = True
+    chunk_map = None
 
     def __init__(self, config, chunk=None, root_id=cmx_const.ROOT_ID):
         config.rifx = root_id == cmx_const.ROOTX_ID
@@ -426,6 +433,24 @@ class CmxRoot(CmxList):
         # TODO: here should be cmx doc creating
 
         return chunk
+
+    def update(self):
+        def _add_chunk(self, chunk):
+            if chunk.get_name() == cmx_const.PAGE_ID:
+                self.chunk_map['pages'].append([chunk,])
+            elif chunk.get_name() == cmx_const.RLST_ID:
+                self.chunk_map['pages'][-1].append(chunk)
+            else:
+                self.chunk_map[chunk.get_name()] = chunk
+
+        CmxList.update(self)
+        self.chunk_map = {'pages': []}
+        for child in self.childs:
+            if child.get_name() != cmx_const.PACK_ID:
+                _add_chunk(self, child)
+            else:
+                for item in child.childs:
+                    _add_chunk(self, item)
 
 
 CHUNK_MAP = {
