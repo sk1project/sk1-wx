@@ -72,6 +72,11 @@ class ZipIO(object):
         self._update_statistics(r)
         return r
 
+    def tell(self):
+        """Return the stream's file pointer position.
+        """
+        return self.raw_stream.tell()
+
     def write(self, s):
         """Write a bites to the stream.
         """

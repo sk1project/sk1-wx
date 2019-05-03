@@ -19,9 +19,7 @@ import struct
 from uc2.formats.xar.xar_const import CO_ORDINATES_DPI
 from uc2.uc2const import in_to_pt
 
-
 CO_ORDINATES = CO_ORDINATES_DPI / in_to_pt
-
 
 packer_s3_le = struct.Struct("<3s")
 
@@ -53,7 +51,7 @@ class BitField(object):
     def __getattr__(self, item):
         for key, val in self.bitfield.items():
             if item == val.get('id'):
-                return bool(self.val & 2**key)
+                return bool(self.val & 2 ** key)
 
     def __setattr__(self, name, value):
         if self.bitfield:
@@ -181,7 +179,7 @@ def unpack_millipoint(data, offset=0, **kw):  # XXX
 
 def unpack_coord(data, offset=0, **kw):
     p1 = unpack_millipoint(data, offset)
-    p2 = unpack_millipoint(data, offset+4)
+    p2 = unpack_millipoint(data, offset + 4)
     return [p1, p2]
 
 
@@ -189,15 +187,15 @@ def read_string(data, offset=0, **kw):
     idx = data.index(b'\0\0', offset)
     size = idx - offset
     size = (size + 1) // 2 * 2
-    string = data[offset:offset+size]
+    string = data[offset:offset + size]
     string = string.decode('utf_16_le').encode('utf-8')
-    return size+2, string
+    return size + 2, string
 
 
 def read_ascii_string(data, offset=0, **kw):
     idx = data.index(b'\0', offset)
     size = idx - offset
-    return size+1, data[offset:offset+size]
+    return size + 1, data[offset:offset + size]
 
 
 def read_verb_and_coord_list(data, offset=0, **kw):
@@ -207,7 +205,7 @@ def read_verb_and_coord_list(data, offset=0, **kw):
     for chunk in list_chunks(data, 9):
         verb = packer_byte.unpack(chunk[0:1])[0]
         s = chunk[1:]
-        coord_data  = s[6:7] + s[4:5] + s[2:3] + s[0:1]
+        coord_data = s[6:7] + s[4:5] + s[2:3] + s[0:1]
         coord_data += s[7:8] + s[5:6] + s[3:4] + s[1:2]
         coord = unpack_coord(coord_data, 0)
         r.append((verb, coord))
@@ -219,12 +217,12 @@ def read_tag_description(data, offset=0, **kw):
     offset += 4
     description_size, description = read_string(data, offset)
     offset += description_size
-    return 4+description_size, [tag, description]
+    return 4 + description_size, [tag, description]
 
 
 def read_stop_colour(data, offset=0, **kw):
     position = unpack_double(data, offset)
-    colour = unpack_s4(data, offset+8)
+    colour = unpack_s4(data, offset + 8)
     return 12, [position, colour]
 
 
@@ -235,36 +233,35 @@ def read_bitmap_data(data, offset=0, **kw):
 
 # return (size in byte, value)
 READER_DATA_TYPES_MAP = {
-    'byte':                lambda *a, **b: (1, unpack_u1(*a, **b)),
-    'uint16':              lambda *a, **b: (2, unpack_u2(*a, **b)),
-    'uint32':              lambda *a, **b: (4, unpack_u4(*a, **b)),
+    'byte': lambda *a, **b: (1, unpack_u1(*a, **b)),
+    'uint16': lambda *a, **b: (2, unpack_u2(*a, **b)),
+    'uint32': lambda *a, **b: (4, unpack_u4(*a, **b)),
 
-    'fixed24':             lambda *a, **b: (4, unpack_fixed24_32(*a, **b)),
-    'fixed16':             lambda *a, **b: (4, unpack_fixed16_32(*a, **b)),
-    'float':               lambda *a, **b: (4, unpack_float(*a, **b)),
-    'double':              lambda *a, **b: (8, unpack_double(*a, **b)),
+    'fixed24': lambda *a, **b: (4, unpack_fixed24_32(*a, **b)),
+    'fixed16': lambda *a, **b: (4, unpack_fixed16_32(*a, **b)),
+    'float': lambda *a, **b: (4, unpack_float(*a, **b)),
+    'double': lambda *a, **b: (8, unpack_double(*a, **b)),
 
-    'int16':               lambda *a, **b: (2, unpack_s2(*a, **b)),
-    'int32':               lambda *a, **b: (4, unpack_s4(*a, **b)),
-    'DATAREF':             lambda *a, **b: (4, unpack_s4(*a, **b)),
-    'COLOURREF':           lambda *a, **b: (4, unpack_s4(*a, **b)),
-    'BITMAPREF':           lambda *a, **b: (4, unpack_s4(*a, **b)),
-    'UNITSREF':            lambda *a, **b: (4, unpack_s4(*a, **b)),
+    'int16': lambda *a, **b: (2, unpack_s2(*a, **b)),
+    'int32': lambda *a, **b: (4, unpack_s4(*a, **b)),
+    'DATAREF': lambda *a, **b: (4, unpack_s4(*a, **b)),
+    'COLOURREF': lambda *a, **b: (4, unpack_s4(*a, **b)),
+    'BITMAPREF': lambda *a, **b: (4, unpack_s4(*a, **b)),
+    'UNITSREF': lambda *a, **b: (4, unpack_s4(*a, **b)),
 
-    'MILLIPOINT':          lambda *a, **b: (4, unpack_millipoint(*a, **b)),
-    '3 bytes':             lambda *a, **b: (3, unpack_3s(*a, **b)),
-    'Simple RGBColour':    lambda *a, **b: (3, unpack_3s(*a, **b)),
-    'COORD':               lambda *a, **b: (8, unpack_coord(*a, **b)),
+    'MILLIPOINT': lambda *a, **b: (4, unpack_millipoint(*a, **b)),
+    '3bytes': lambda *a, **b: (3, unpack_3s(*a, **b)),
+    'Simple RGBColour': lambda *a, **b: (3, unpack_3s(*a, **b)),
+    'COORD': lambda *a, **b: (8, unpack_coord(*a, **b)),
 
-    'STRING':              read_string,
-    'ASCII_STRING':        read_ascii_string,
-    'BITMAP_DATA':         read_bitmap_data,
-    'Tag Description':     read_tag_description,
+    'STRING': read_string,
+    'ASCII_STRING': read_ascii_string,
+    'BITMAP_DATA': read_bitmap_data,
+    'Tag Description': read_tag_description,
     'Verb and Coord List': read_verb_and_coord_list,
-    'StopColour':          read_stop_colour,
+    'StopColour': read_stop_colour,
 
 }
-
 
 
 def pack_u1(data, **kw):
@@ -318,17 +315,16 @@ def pack_millipoint(data, **kw):
 
 
 WRITER_DATA_TYPES_MAP = {
-    'byte':              pack_u1,
-    'uint32':            pack_u4,
-    'double':            pack_double,
-    '3 bytes':           pack_3s,
-    'STRING':            pack_string,
-    'ASCII_STRING':      pack_ascii_string,
-    'MILLIPOINT':        pack_millipoint,
-    'COORD':             pack_coord,
-    'Simple RGBColour':  pack_3s,
-    'COLOURREF':         pack_u4,
+    'byte': pack_u1,
+    'uint32': pack_u4,
+    'double': pack_double,
+    '3bytes': pack_3s,
+    'STRING': pack_string,
+    'ASCII_STRING': pack_ascii_string,
+    'MILLIPOINT': pack_millipoint,
+    'COORD': pack_coord,
+    'Simple RGBColour': pack_3s,
+    'COLOURREF': pack_u4,
     # 'BITMAP_DATA':       pack_bitmap_data,
-    'UNITSREF':          pack_s4,
+    'UNITSREF': pack_s4,
 }
-

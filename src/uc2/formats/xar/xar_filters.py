@@ -36,7 +36,6 @@ class XARLoader(AbstractLoader):
         parent_stack = [rec]
         record_idx = 0
         while rec.cid != xar_const.TAG_ENDOFFILE:
-
             record_idx += 1
             record_cid = xar_datatype.unpack_u4(stream.read(4))
             record_size = xar_datatype.unpack_u4(stream.read(4))
@@ -71,6 +70,8 @@ class XARLoader(AbstractLoader):
                 parent_stack.append(parent_rec)
                 parent_stack[-1].add(rec)
             elif rec.cid == xar_const.TAG_UP:
+                if len(parent_stack) == 1:
+                    break
                 parent_stack[-1].add(rec)
                 parent_stack = parent_stack[:-1]
                 self.check_loading()
@@ -98,8 +99,7 @@ class XARSaver(AbstractSaver):
                 stream.write(make_record_header(rec))
                 stream.write(rec.chunk)
                 stream = ZipIO(raw_stream)
-                s = rec.childs[::-1]
-                stack.extend(s)
+                stack.extend(rec.childs[::-1])
                 continue
             elif rec.cid == xar_const.TAG_ENDCOMPRESSION:
                 stream.write(make_record_header(rec))

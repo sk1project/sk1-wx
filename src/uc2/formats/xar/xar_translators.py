@@ -15,19 +15,18 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import copy
+import math
+from colorsys import hsv_to_rgb, rgb_to_hsv
+from base64 import b64decode, b64encode
 from uc2.formats.xar import xar_model, xar_const
 from uc2.formats.sk2 import sk2_model
-from uc2 import libimg
 from uc2.libgeom import multiply_trafo, get_point_angle, trafo_rotate
 from uc2.libgeom import trafo_rotate_grad
 from uc2.libgeom.points import distance, is_equal_points
 from uc2.libgeom.trafo import apply_trafo_to_points, apply_trafo_to_point
 from uc2.libgeom.bbox import bbox_to_rect
 from uc2 import _, uc2const, sk2const, cms
-from colorsys import hsv_to_rgb, rgb_to_hsv
-from base64 import b64decode, b64encode
-import copy
-import math
 
 
 XAR_TO_SK2_UNITS = {
@@ -91,8 +90,8 @@ RAINBOW_EFFECT = [
 ]
 
 
-def process_colour(colour_model, component1, component2, component3, component4,
-                   colour_name, alpha=1.0):
+def process_colour(colour_model, component1, component2, component3,
+                   component4, colour_name, alpha=1.0):
     colour = None
     if colour_model == xar_const.COLOUR_MODEL_RGB:
         rgb = [component1, component2, component3]
@@ -116,7 +115,7 @@ def tint_colour(color1, coef=0.5, colour_name=''):
         colour = cms.mix_lists(color2[1], color1[1], coef)
         a = cms.mix_vals(color2[2], color1[2], coef)
         return [mode, colour, a, colour_name]
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 def pick_page_format_name(width, height):
@@ -166,6 +165,7 @@ class XAR_to_SK2_Translator(object):
     fontmap = None
     bitmaps = None
     colors = None
+    dashs = None
     atomic_tags = None
 
     buffer_text = None
@@ -185,7 +185,7 @@ class XAR_to_SK2_Translator(object):
     page_name = ''
     page_format = None
     _handler = None
-    debug_flag = True
+    debug_flag = False
 
     def translate(self, xar_doc, sk2_doc):
         self._handler = {}
@@ -217,8 +217,6 @@ class XAR_to_SK2_Translator(object):
                 for cid in sorted(list(self.atomic_tags)):
                     name = xar_const.XAR_TYPE_RECORD.get(cid, {}).get('name')
                     f.write(b'%s %s\n' % (cid, name))
-                # import sys
-                # sys.exit(0)
         sk2_doc.model.do_update()
 
     def walk(self, stack):
@@ -431,7 +429,7 @@ class XAR_to_SK2_Translator(object):
     def handle_definebitmap_png(self, rec, cfg):
         self.bitmaps[rec.idx] = rec.bitmap_data
 
-#    def handle_definebitmap_jpeg8BPP = 71
+#    def handle_definebitmap_jpeg8BPP(self, rec, cfg): pass
 
     # View tags
 #    def handle_viewport(self, rec, cfg): pass
@@ -451,10 +449,7 @@ class XAR_to_SK2_Translator(object):
 
 #    def handle_documentdates(self, rec, cfg): pass
 #    def handle_documentundosize(self, rec, cfg): pass
-
-    def handle_documentflags(self, rec, cfg): pass
-        # print 'documentflags', self.sk2_doc.doc_file
-        # print rec.document_flags
+#    def handle_documentflags(self, rec, cfg): pass
 
     def handle_documentinformation(self, rec, cfg): pass
 
@@ -666,16 +661,14 @@ class XAR_to_SK2_Translator(object):
             self.style['fill_trafo'] = el.trafo
 
 #    def handle_fractalfill(self, rec, cfg): pass
+
     def handle_filleffect_fade(self, rec, cfg):
-        # print self.sk2_doc.doc_file, rec.cid
         self.style['fill_effect'] = rec.cid
 
     def handle_filleffect_rainbow(self, rec, cfg):
-        # print self.sk2_doc.doc_file,rec.cid
         self.style['fill_effect'] = rec.cid
 
     def handle_filleffect_altrainbow(self, rec, cfg):
-        # print self.sk2_doc.doc_file,rec.cid
         self.style['fill_effect'] = rec.cid
 
     def handle_fill_repeating(self, rec, cfg):
@@ -721,8 +714,8 @@ class XAR_to_SK2_Translator(object):
     def handle_definedash(self, rec, cfg):
         if rec.elements:
             line_width = rec.line_width or 1.0
-            self.dashs[rec.idx] = [a / (line_width / 20.0) for a in rec.dash_def]
-            self.style['dash_pattern'] = rec.idx
+            divider = line_width / 4.0
+            self.style['dash_pattern'] = [a / divider for a in rec.dash_def]
 
 #    def handle_arrowhead(self, rec, cfg): pass
 #    def handle_arrowtail(self, rec, cfg): pass
@@ -731,7 +724,8 @@ class XAR_to_SK2_Translator(object):
     def handle_definedash_scaled(self, rec, cfg):
         if rec.elements:
             line_width = rec.line_width or 1.0
-            self.dashs[rec.idx] = [a / (line_width / 4.0) for a in rec.dash_def]
+            divider = line_width / 4.0
+            self.dashs[rec.idx] = [a / divider for a in rec.dash_def]
             self.style['dash_pattern'] = rec.idx
 
     # User Attributes
@@ -1169,11 +1163,10 @@ class XAR_to_SK2_Translator(object):
             sk2const.GRADIENT_EXTEND_PAD
         ]
 
-        # print self.sk2_doc.doc_file
         tr = make_trafo(rec.centre_point, rec.major_axes, rec.minor_axes, trafo)
         self.style['fill_trafo'] = tr
 
-    #    def handle_conicalfillmultistage(self, rec, cfg): pass
+#    def handle_conicalfillmultistage(self, rec, cfg): pass
 
     # Brush attribute tags
 #    def handle_brushattr(self, rec, cfg): pass
@@ -1375,10 +1368,11 @@ class XAR_to_SK2_Translator(object):
                 behind_flag, scalable_flag, markers]
 
     def get_dash(self, line_width):
-        dash_id = self.style['dash_pattern']
-        dash = self.dashs.get(dash_id)
-        if dash:
-            dash = [d * (line_width / 4.0) for d in dash]
+        dash = self.style['dash_pattern']
+        if isinstance(dash, int):
+            dash = self.dashs.get(dash)
+            if dash:
+                dash = [d * (line_width / 4.0) for d in dash]
         return dash or []
 
     def get_path(self, rec):
@@ -1446,10 +1440,10 @@ class XAR_to_SK2_Translator(object):
 
     def apply_fill_repeating(self, fill_data, fill_repeating):
         if fill_repeating == xar_const.TAG_FILL_REPEATING_EXTRA:
-            """ TAG_FILL_REPEATING_EXTRA: The fill is repeated with the start 
-            point being the start colour and a point half-way through the fill 
-            being the end colour. The fill then fades back to the start colour 
-            at the end point and then repeats indefinitely. This can apply to 
+            """ TAG_FILL_REPEATING_EXTRA: The fill is repeated with the start
+            point being the start colour and a point half-way through the fill
+            being the end colour. The fill then fades back to the start colour
+            at the end point and then repeats indefinitely. This can apply to
             linear, circular, elliptical and diamond fills.
             """
             stops = fill_data[2]
@@ -1537,4 +1531,3 @@ class SK2_to_XAR_Translator(object):
 
     def _TAG_ENDOFFILE(self, sk2_doc):
         return xar_model.XARRecord(xar_const.TAG_ENDOFFILE, 1)
-

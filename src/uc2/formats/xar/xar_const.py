@@ -1,4 +1,3 @@
-# 
 #
 #  Copyright (C) 2019 by Maxim S. Barabash
 #
@@ -645,7 +644,7 @@ definitions:
             name:
                 description: record name
                 type: string
-            doc: 
+            doc:
                 description: record description
                 type: string
             sec:
@@ -655,9 +654,9 @@ definitions:
                     type: object
                     allOf: {$ref: #/definitions/sec}
             deprecated:
-                description: 
+                description:
                 type: boolean
-    sec: 
+    sec:
         description: properties
         type: object
         properties:
@@ -668,13 +667,17 @@ definitions:
                 description: type of value
                 type: string
             number:
-                description: | property id comprising a number of values, 
+                description: | property id comprising a number of values,
                                number of values or -1
                 type: [string, integer]
-            bitfield: is a data structure above value
-                description: 
+            bitfield:
+                description: is a data structure above value
                 type: object
-                allOf: {$ref: #/definitions/bitfield},
+                allOf: {$ref: #/definitions/bitfield}
+            encoding:
+                description: additional property used in some types
+                type: string
+
     bitfield:
         description: data structure any single bit or group of bits
         type: object
@@ -682,10 +685,11 @@ definitions:
             type: integer
         properties:
             id:
-                description: 
+                description: | bit identifier with which you can access
+                               the value of the flags
                 type: string
             type:
-                description: 
+                description:
                 type: string
                 enum: [bool]
 """
@@ -700,11 +704,11 @@ XAR_TYPE_RECORD = {
         'doc': 'This record gives useful information about the file. '
                'This should always be the first record in any file produced.',
         'sec': [
-            {'type': '3 bytes', 'id': 'file_type',
-                'enum': {  # XXX: not described and not used at the moment
-                    '0': {'value': FILE_TYPE_PAPER_PUBLISH},
-                    '1': {'value': FILE_TYPE_WEB}
-                }
+            {'type': '3bytes', 'id': 'file_type',
+             'enum': {
+                 '0': {'value': FILE_TYPE_PAPER_PUBLISH},
+                 '1': {'value': FILE_TYPE_WEB}
+             }
             },
             {'type': 'uint32', 'id': 'file_size'},
             {'type': 'uint32', 'id': 'web_link'},
@@ -732,7 +736,7 @@ XAR_TYPE_RECORD = {
     TAG_STARTCOMPRESSION: {
         'name': 'STARTCOMPRESSION',
         'sec': [
-            {'type': '3 bytes', 'id': 'compression_version', 'encoding': 'hex'},
+            {'type': '3bytes', 'id': 'compression_version', 'encoding': 'hex'},
             {'type': 'byte', 'id': 'compression_type'},
         ]
     },
@@ -750,7 +754,6 @@ XAR_TYPE_RECORD = {
     TAG_SPREAD: {'name': 'SPREAD'},
 
     # Notes
-
     TAG_LAYER: {'name': 'LAYER'},
     TAG_PAGE: {
         'name': 'PAGE',
@@ -768,14 +771,14 @@ XAR_TYPE_RECORD = {
             {'type': 'MILLIPOINT', 'id': 'margin'},
             {'type': 'MILLIPOINT', 'id': 'bleed'},
             {'type': 'byte', 'id': 'spread_flags',
-                 'bitfield': {
-                     0: {'type': 'bool', 'id': 'double_page_spread'},
-                     1: {'type': 'bool', 'id': 'show_drop_shadow'},
-                     2: {'type': 'bool', 'id': 'selected_spread'},
-                     3: {'type': 'bool', 'id': 'print_whole_spread'},
-                     4: {'type': 'bool', 'id': 'negate_x'},
-                     5: {'type': 'bool', 'id': 'negate_y'},
-                 }
+             'bitfield': {
+                 0: {'type': 'bool', 'id': 'double_page_spread'},
+                 1: {'type': 'bool', 'id': 'show_drop_shadow'},
+                 2: {'type': 'bool', 'id': 'selected_spread'},
+                 3: {'type': 'bool', 'id': 'print_whole_spread'},
+                 4: {'type': 'bool', 'id': 'negate_x'},
+                 5: {'type': 'bool', 'id': 'negate_y'},
+             }
             }
         ]
     },
@@ -785,13 +788,13 @@ XAR_TYPE_RECORD = {
         'name': 'LAYERDETAILS',
         'sec': [
             {'type': 'byte', 'id': 'layer_flags',
-                 'bitfield': {
-                     0: {'type': 'bool', 'id': 'is_visible'},
-                     1: {'type': 'bool', 'id': 'is_locked'},
-                     2: {'type': 'bool', 'id': 'is_printable'},
-                     3: {'type': 'bool', 'id': 'is_active'},
-                 }
-             },
+             'bitfield': {
+                 0: {'type': 'bool', 'id': 'is_visible'},
+                 1: {'type': 'bool', 'id': 'is_locked'},
+                 2: {'type': 'bool', 'id': 'is_printable'},
+                 3: {'type': 'bool', 'id': 'is_active'},
+             }
+            },
             {'type': 'STRING', 'id': 'layer_name'},
         ]
     },
@@ -891,10 +894,10 @@ XAR_TYPE_RECORD = {
         'sec': [
             {'type': 'uint32', 'id': 'document_flags',
              'bitfield': {
-                    0: {'type': 'bool', 'id': 'multilayer_flag'},
-                    1: {'type': 'bool', 'id': 'all_layers_visible_flag'},
-                 }
+                 0: {'type': 'bool', 'id': 'multilayer_flag'},
+                 1: {'type': 'bool', 'id': 'all_layers_visible_flag'},
              }
+            }
         ]
     },
     TAG_DOCUMENTINFORMATION: {'name': 'DOCUMENTINFORMATION'},
@@ -944,10 +947,10 @@ XAR_TYPE_RECORD = {
         'sec': [
             {'type': 'byte', 'id': 'flags', "number": -1,
              'bitfield': {
-                   0: {'type': 'bool', 'id': 'is_smooth'},
-                   1: {'type': 'bool', 'id': 'is_rotate'},
-                   2: {'type': 'bool', 'id': 'is_end_point'},
-                }
+                 0: {'type': 'bool', 'id': 'is_smooth'},
+                 1: {'type': 'bool', 'id': 'is_rotate'},
+                 2: {'type': 'bool', 'id': 'is_end_point'},
+             }
             }
         ]
     },
@@ -1083,7 +1086,7 @@ XAR_TYPE_RECORD = {
             {'type': 'byte', 'id': 'start_transparency'},
             {'type': 'byte', 'id': 'end_transparency'},
             {'type': 'byte', 'id': 'transparency_type'},
-            #PROFILE
+            # PROFILE
             {'type': 'double', 'id': 'bias'},
             {'type': 'double', 'id': 'gain'},
             # TODO: support 3 point
@@ -1579,7 +1582,7 @@ XAR_TYPE_RECORD = {
             {'type': 'uint32', 'id': 'num_cols'},
             {'type': 'StopColour', 'id': 'stop_colors', 'number': 'num_cols'}
         ]
-     },
+    },
     TAG_ELLIPTICALFILLMULTISTAGE: {
         'name': 'ELLIPTICALFILLMULTISTAGE',
         'sec': [

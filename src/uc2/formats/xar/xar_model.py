@@ -15,11 +15,11 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import logging
 from uc2.formats.xar import xar_const
 from uc2.formats.generic import BinaryModelObject
 from uc2.formats.xar.xar_datatype import READER_DATA_TYPES_MAP
 from uc2.formats.xar.xar_datatype import WRITER_DATA_TYPES_MAP
-import logging
 
 
 log = logging.getLogger(__name__)
@@ -77,7 +77,7 @@ class XARRecord(BinaryModelObject):
         for item in self._spec or []:
             reader = READER_DATA_TYPES_MAP.get(item['type'])
             if reader and chunk_length - offset > 0:
-                offset2, val = self._deserialize(reader, item, offset)
+                offset2 = self._deserialize(reader, item, offset)[0]
                 markup.append((offset, offset2-offset, item['id']))
                 offset = offset2
             else:
@@ -92,7 +92,7 @@ class XARRecord(BinaryModelObject):
 
     def serialize(self):
         for item in self._spec or []:
-            default = item.get('enum', {}).get('0')  # XXX
+            default = item.get('enum', {}).get('0')
             data = getattr(self, item['id'], default)
             writer = WRITER_DATA_TYPES_MAP.get(item['type'])
             if writer:
@@ -122,19 +122,19 @@ class XARRecord(BinaryModelObject):
             size, val = reader(self.chunk, offset=offset, **item)
             offset += size
         else:
-            val = []
             if number < 0:
                 number = len(self.chunk[offset:number])
-                if item['type'] == 'byte':
-                    number /= 1
+                # if item['type'] == 'byte':
+                #    number //= 1
+            val = []
             for i in range(number):
-                size, v = reader(self.chunk, offset=offset, **item)
+                size, val_item = reader(self.chunk, offset=offset, **item)
                 offset += size
-                val.append(v)
+                val.append(val_item)
         return offset, val
 
     def _get_element_number(self, element):
         number = element.get('number', None)
-        if number is not None and type(number) not in [int, float]:
+        if number is not None and not isinstance(number, (int, float)):
             number = getattr(self, number)
         return number
