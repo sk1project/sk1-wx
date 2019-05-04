@@ -15,12 +15,15 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import logging
 import zlib
 from cStringIO import StringIO
 
 from uc2 import utils
 from uc2.formats.cmx import cmx_const, cmx_instr
 from uc2.formats.generic import BinaryModelObject
+
+LOG = logging.getLogger(__name__)
 
 
 class CmxRiffElement(BinaryModelObject):
@@ -417,6 +420,46 @@ class CdrxPack(CmxRiffElement):
         saver.write(self.chunk)
 
 
+class CmxRclr(CmxRiffElement):
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        colors = self.data['colors'] = []
+        if self.config.v1:
+            pos = 10
+            for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+                model = utils.byte2py_int(self.chunk[pos])
+                palette = utils.byte2py_int(self.chunk[pos + 1])
+                if model < len(cmx_const.COLOR_BYTES):
+                    clr_sz = cmx_const.COLOR_BYTES[model]
+                else:
+                    LOG.error('Invalide or unknown color model %s', model)
+                    break
+                vals = tuple(utils.byte2py_int(val)
+                             for val in self.chunk[pos + 2: pos + 2 + clr_sz])
+                colors.append((model, palette, vals))
+                pos += clr_sz + 2
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        if self.config.v1:
+            self.cache_fields += [(8, 2, 'Number of colors\n'), ]
+            pos = 10
+            for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+                model = utils.byte2py_int(self.chunk[pos])
+                model_name = cmx_const.COLOR_MODEL_MAP.get(model, 'Unknown')
+                self.cache_fields += [(pos, 1, '%s color model' % model_name), ]
+                palette = utils.byte2py_int(self.chunk[pos + 1])
+                pals = cmx_const.COLOR_PALETTES
+                pal_name = pals[palette] if palette < len(pals) else 'Unknown'
+                self.cache_fields += [(pos + 1, 1, '%s palette' % pal_name), ]
+                if model >= len(cmx_const.COLOR_BYTES):
+                    break
+                clr_sz = cmx_const.COLOR_BYTES[model]
+                self.cache_fields += [(pos + 2, clr_sz, 'Color values\n'), ]
+                pos += clr_sz + 2
+
+
 class CmxRoot(CmxList):
     toplevel = True
     chunk_map = None
@@ -437,7 +480,7 @@ class CmxRoot(CmxList):
     def update(self):
         def _add_chunk(self, chunk):
             if chunk.get_name() == cmx_const.PAGE_ID:
-                self.chunk_map['pages'].append([chunk,])
+                self.chunk_map['pages'].append([chunk, ])
             elif chunk.get_name() == cmx_const.RLST_ID:
                 self.chunk_map['pages'][-1].append(chunk)
             else:
@@ -460,6 +503,7 @@ CHUNK_MAP = {
     cmx_const.DISP_ID: CmxDisp,
     cmx_const.PAGE_ID: CmxPage,
     cmx_const.PACK_ID: CdrxPack,
+    cmx_const.RCLR_ID: CmxRclr,
     cmx_const.IKEY_ID: CmxInfoElement,
     cmx_const.ICMT_ID: CmxInfoElement,
 }

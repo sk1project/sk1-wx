@@ -45,6 +45,7 @@ INFO_ID = 'INFO'
 IKEY_ID = 'IKEY'
 ICMT_ID = 'ICMT'
 RLST_ID = 'rlst'
+RCLR_ID = 'rclr'
 
 # INSTRUCTION CODES
 ADD_CLIPPING_REGION = 88
@@ -130,3 +131,53 @@ INSTR_CODES = {
     SIMPLE_WIDE_TEXT: 'SimpleWideText',
     TEXT_FRAME: 'TextFrame',
 }
+
+# COLOR SECTION
+CMX_INVALID = 'INVALID'
+CMX_PANTONE = 'PANTONE'
+CMX_CMYK = 'CMYK'
+CMX_CMYK255 = 'CMYK255'
+CMX_CMY = 'CMY'
+CMX_RGB = 'RGB'
+CMX_HSB = 'HSB'
+CMX_HLS = 'HLS'
+CMX_BW = 'BW'
+CMX_GRAY = 'GRAY'
+CMX_YIQ255 = 'YIQ255'
+CMX_LAB = 'LAB'
+
+COLOR_MODELS = (CMX_INVALID, CMX_PANTONE, CMX_CMYK, CMX_CMYK255, CMX_CMY,
+                CMX_RGB, CMX_HSB, CMX_HLS, CMX_BW, CMX_GRAY, CMX_YIQ255,
+                CMX_LAB)
+COLOR_MODEL_MAP = {
+    0: CMX_INVALID,
+    1: CMX_PANTONE,
+    2: CMX_CMYK,
+    3: CMX_CMYK255,
+    4: CMX_CMY,
+    5: CMX_RGB,
+    6: CMX_HSB,
+    7: CMX_HLS,
+    8: CMX_BW,
+    9: CMX_GRAY,
+    10: CMX_YIQ255,
+    11: CMX_LAB,
+}
+COLOR_BYTES_MAP = {
+    CMX_INVALID: 0,
+    CMX_PANTONE: 4,
+    CMX_CMYK: 4,
+    CMX_CMYK255: 4,
+    CMX_CMY: 4,
+    CMX_RGB: 3,
+    CMX_HSB: 4,
+    CMX_HLS: 4,
+    CMX_BW: 1,
+    CMX_GRAY: 1,
+    CMX_YIQ255: 4,
+    CMX_LAB: 4,
+}
+COLOR_BYTES = (0, 4, 4, 4, 4, 3, 4, 4, 1, 1, 4, 4)
+
+COLOR_PALETTES = ('Invalid', 'Truematch', 'PantoneProcess', 'PantoneSpot',
+                  'Image', 'User', 'CustomFixed')
