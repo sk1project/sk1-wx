@@ -20,7 +20,7 @@ import zlib
 
 __all__ = ["ZipIO"]
 
-PREREAD_BUFFER_SIZE = 4096
+PREREAD_BUFFER_SIZE = 0xFFFF
 
 
 class ZipIO(object):

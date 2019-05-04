@@ -37,9 +37,12 @@ class XARLoader(AbstractLoader):
         record_idx = 0
         while rec.cid != xar_const.TAG_ENDOFFILE:
             record_idx += 1
-            record_cid = xar_datatype.unpack_u4(stream.read(4))
-            record_size = xar_datatype.unpack_u4(stream.read(4))
-
+            try:
+                record_cid = xar_datatype.unpack_u4(stream.read(4))
+                record_size = xar_datatype.unpack_u4(stream.read(4))
+            except Exception:
+                self.send_warning('File is corrupted')
+                break
             if record_cid == xar_const.TAG_ENDCOMPRESSION:
                 compression_crc = stream.crc32 & 0xffffffff
                 num_bytes = stream.bytes
@@ -60,10 +63,11 @@ class XARLoader(AbstractLoader):
                 rec.update()
                 if rec.num_bytes != num_bytes:
                     msg = 'Expected %s bytes (%s given)' % \
-                          (rec.num_bytes, stream.bytes)
-                    raise Exception(msg)
+                          (rec.num_bytes, num_bytes)
+                    self.send_warning(msg)
                 if rec.compression_crc != compression_crc:
-                    raise Exception('Invalid crc')
+                    msg = 'Invalid crc'
+                    self.send_warning(msg)
 
             if rec.cid == xar_const.TAG_DOWN:
                 parent_rec = parent_stack[-1].childs[-1]
