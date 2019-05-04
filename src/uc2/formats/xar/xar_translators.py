@@ -93,6 +93,16 @@ RAINBOW_EFFECT = [
 
 def process_colour(colour_model, component1, component2, component3,
                    component4, colour_name, alpha=1.0):
+    """Create color from components.
+    :param colour_model: xar colour model
+    :param component1: actual data for the colour
+    :param component2: actual data for the colour
+    :param component3: actual data for the colour
+    :param component4: actual data for the colour
+    :param colour_name: string
+    :param alpha: actual data for the colour opacity
+    :return: uc2color or None
+    """
     colour = None
     if colour_model == xar_const.COLOUR_MODEL_RGB:
         rgb = [component1, component2, component3]
@@ -109,17 +119,28 @@ def process_colour(colour_model, component1, component2, component3,
     return colour
 
 
-def tint_colour(color1, coef=0.5, colour_name=''):
-    mode = color1[0]
-    color2 = BASE_COLOUR_BY_TINT.get(mode)
-    if color2 is not None:
-        colour = cms.mix_lists(color2[1], color1[1], coef)
-        a = cms.mix_vals(color2[2], color1[2], coef)
-        return [mode, colour, a, colour_name]
+def tint_colour(colour, coef=0.5, colour_name=''):
+    """A more white version of the colour.
+    :param colour: uc2color
+    :param coef: mixing coefficient 0.0 to 1.0
+    :param colour_name: string
+    :return: uc2color
+    """
+    mode = colour[0]
+    colour2 = BASE_COLOUR_BY_TINT.get(mode)
+    if colour2 is not None:
+        components = cms.mix_lists(colour2[1], colour[1], coef)
+        alpha = cms.mix_vals(colour2[2], colour[2], coef)
+        return [mode, components, alpha, colour_name]
     raise NotImplementedError()
 
 
 def pick_page_format_name(width, height):
+    """Choose the most suitable name of standard page formats.
+    :param width: in point
+    :param height: in point
+    :return: string
+    """
     if width > height:
         size = (height, width)
     else:
@@ -146,7 +167,7 @@ def make_trafo(centre_point, major_axes, minor_axes, trafo):
 
 
 def direction_at_angles(h1, h2):
-    """ direction on the HSV color wheel from h1 to h2
+    """Direction on the HSV color wheel from h1 to h2
     """
     # FIXME: the direction is calculated incorrectly
     if abs(h2 - h1) > 0.5:
