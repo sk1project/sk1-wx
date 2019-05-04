@@ -677,6 +677,10 @@ definitions:
             encoding:
                 description: additional property used in some types
                 type: string
+            enum:
+                description: additional property used in some types
+                type: object
+                allOf: {$ref: #/definitions/enum}
 
     bitfield:
         description: data structure any single bit or group of bits
@@ -692,6 +696,12 @@ definitions:
                 description:
                 type: string
                 enum: [bool]
+    enum:
+        type: object
+        properties:
+            value:
+                description:
+                type: [int, float, string]
 """
 
 XAR_TYPE_RECORD = {
@@ -878,7 +888,13 @@ XAR_TYPE_RECORD = {
     # Document unit tags
     TAG_DEFINE_PREFIXUSERUNIT: {'name': 'DEFINE PREFIXUSERUNIT'},
     TAG_DEFINE_SUFFIXUSERUNIT: {'name': 'DEFINE SUFFIXUSERUNIT'},
-    TAG_DEFINE_DEFAULTUNITS: {'name': 'DEFINE DEFAULTUNITS'},
+    TAG_DEFINE_DEFAULTUNITS: {
+        'name': 'DEFINE DEFAULTUNITS',
+        'sec': [
+            {'type': 'UNITSREF', 'id': 'page_units'},
+            {'type': 'UNITSREF', 'id': 'font_units'}
+        ]
+    },
 
     # Document info tags
     TAG_DOCUMENTCOMMENT: {

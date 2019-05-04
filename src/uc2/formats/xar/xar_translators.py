@@ -34,6 +34,7 @@ XAR_TO_SK2_UNITS = {
     xar_const.REF_UNIT_MILLIMETRES: uc2const.UNIT_MM,
     xar_const.REF_UNIT_CENTIMETRES: uc2const.UNIT_CM,
     xar_const.REF_UNIT_METRES: uc2const.UNIT_M,
+    xar_const.REF_UNIT_COMP_POINTS: uc2const.UNIT_PT,
     xar_const.REF_UNIT_INCHES: uc2const.UNIT_IN,
     xar_const.REF_UNIT_FEET: uc2const.UNIT_FT,
 }
@@ -439,7 +440,11 @@ class XAR_to_SK2_Translator(object):
     # Document unit tags
 #    def handle_define_prefixuserunit(self, rec, cfg): pass
 #    def handle_define_suffixuserunit(self, rec, cfg): pass
-#    def handle_define_defaultunits(self, rec, cfg): pass
+
+    def handle_define_defaultunits(self, rec, cfg):
+        page_units = XAR_TO_SK2_UNITS.get(rec.page_units)
+        if page_units is not None:
+            self.sk2_mtds.set_doc_units(page_units)
 
     # Document info tags
     def handle_documentcomment(self, rec, cfg):
@@ -1278,9 +1283,6 @@ class XAR_to_SK2_Translator(object):
 #    def handle_text_extra_font_info(self, rec, cfg): pass
 #    def handle_text_extra_tt_font_def(self, rec, cfg): pass
 #    def handle_text_extra_atm_font_def(self, rec, cfg): pass
-
-#    # def handle_units(self):
-#    #     self.sk2_mtds.set_doc_units(uc2const.UNIT_PT)
 
     def get_color(self, colour_ref):
         return self.colors.get(colour_ref) or xar_const.RGB_BLACK
