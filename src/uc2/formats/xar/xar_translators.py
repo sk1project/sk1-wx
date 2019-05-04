@@ -1209,10 +1209,14 @@ class XAR_to_SK2_Translator(object):
             self.stack = [el]
 
     def handle_clipview(self, rec, cfg):
-        # FIXME: If there is more than one object in stack, then it is necessary
-        #       to combine their contours into one object.
-        if len(self.stack) > 1:
-            pass
+        # FIXME: If there is more than one object in stack or group,
+        #        then it is necessary to combine their contours
+        #        into one object.
+        if self.stack:
+            if self.stack[0].is_container:
+                self.stack = self.stack[0].childs
+            elif self.stack[0].is_group:
+                self.stack = self.stack[0].childs
 
     # Feathering tags
 #    def handle_feather(self, rec, cfg): pass
