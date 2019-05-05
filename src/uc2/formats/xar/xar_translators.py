@@ -234,11 +234,6 @@ class XAR_to_SK2_Translator(object):
 
         self.walk(xar_doc.model.childs[::-1])
         self.handle_endoffile()
-        if self.debug_flag:
-            with open(self.sk2_doc.doc_file+".txt", 'w') as f:
-                for cid in sorted(list(self.atomic_tags)):
-                    name = xar_const.XAR_TYPE_RECORD.get(cid, {}).get('name')
-                    f.write(b'%s %s\n' % (cid, name))
         sk2_doc.model.do_update()
 
     def walk(self, stack):
@@ -257,14 +252,14 @@ class XAR_to_SK2_Translator(object):
     def is_atomic(self, cid):
         if cid in self.atomic_tags:
             return True
-        elif cid not in xar_const.XAR_TYPE_RECORD:
+        elif cid not in xar_const.XAR_RECORD_DATA_SPEC:
             self.atomic_tags.add(cid)
             return True
 
     def process(self, rec):
         handler = self._handler.get(rec.cid)
         if not handler:
-            rec_type = xar_const.XAR_TYPE_RECORD.get(rec.cid, {})
+            rec_type = xar_const.XAR_RECORD_DATA_SPEC.get(rec.cid, {})
             name = rec_type.get('name')
             handler_name = 'handle_%s' % name.lower().replace(' ', '_')
             handler = getattr(self, handler_name, None)
@@ -280,19 +275,19 @@ class XAR_to_SK2_Translator(object):
         if self.debug_flag:
             fn = self.sk2_doc.doc_file.rsplit('.', 1)[0]
             with open(fn + '.gif', 'wb') as f:
-                f.write(rec.chunk)
+                f.write(rec.chunk[8:])
 
     def handle_previewbitmap_jpeg(self, rec, cfg):
         if self.debug_flag:
             fn = self.sk2_doc.doc_file.rsplit('.', 1)[0]
             with open(fn + '.jpeg', 'wb') as f:
-                f.write(rec.chunk)
+                f.write(rec.chunk[8:])
 
     def handle_previewbitmap_png(self, rec, cfg):
         if self.debug_flag:
             fn = self.sk2_doc.doc_file.rsplit('.', 1)[0]
             with open(fn + '.png', 'wb') as f:
-                f.write(rec.chunk)
+                f.write(rec.chunk[8:])
 
     # Navigation records
     def handle_up(self, rec, cfg):
@@ -334,7 +329,7 @@ class XAR_to_SK2_Translator(object):
     def handle_tagdescription(self, rec=None, cfg=None):
         if self.debug_flag:
             for item in rec.description:
-                if item[0] not in xar_const.XAR_TYPE_RECORD:
+                if item[0] not in xar_const.XAR_RECORD_DATA_SPEC:
                     print("# xar tagdescription %s" % item)
 
     # Compression tags
@@ -1012,7 +1007,7 @@ class XAR_to_SK2_Translator(object):
             self.buffer_text.append(line)
 
     def handle_text_string(self, rec, cfg):
-        string = rec.chunk.decode('utf_16_le').encode('utf-8')
+        string = rec.chunk[8:].decode('utf_16_le').encode('utf-8')
         self.buffer_text_line.append(string)
 
     def handle_text_char(self, rec, cfg):

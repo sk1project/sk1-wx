@@ -38,19 +38,21 @@ class XARLoader(AbstractLoader):
         while rec.cid != xar_const.TAG_ENDOFFILE:
             record_idx += 1
             try:
-                record_cid = xar_datatype.unpack_u4(stream.read(4))
-                record_size = xar_datatype.unpack_u4(stream.read(4))
+                record_header = stream.read(8)
+                record_tag = xar_datatype.unpack_u4(record_header)
+                record_size = xar_datatype.unpack_u4(record_header, offset=4)
             except Exception:
                 self.send_warning('File is corrupted')
                 break
-            if record_cid == xar_const.TAG_ENDCOMPRESSION:
+            if record_tag == xar_const.TAG_ENDCOMPRESSION:
                 compression_crc = stream.crc32 & 0xffffffff
                 num_bytes = stream.bytes
                 stream.close()
                 stream = raw_stream
 
-            chunk = stream.read(record_size) if record_size else b''
-            rec = xar_model.XARRecord(record_cid, record_idx, chunk)
+            record_data = stream.read(record_size) if record_size else b''
+            chunk = record_header + record_data
+            rec = xar_model.XARRecord(record_tag, record_idx, chunk)
 
             if rec.cid == xar_const.TAG_STARTCOMPRESSION:
                 rec.update()

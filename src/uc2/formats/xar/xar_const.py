@@ -704,7 +704,14 @@ definitions:
                 type: [int, float, string]
 """
 
-XAR_TYPE_RECORD = {
+XAR_RECORD_HEADER = {
+    'sec': [
+        {'type': 'uint32', 'id': 'cid'},
+        {'type': 'uint32', 'id': 'record_size'},
+    ]
+}
+
+XAR_RECORD_DATA_SPEC = {
 
     # Navigation records
     TAG_UP: {'name': 'UP'},

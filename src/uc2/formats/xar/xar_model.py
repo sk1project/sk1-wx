@@ -17,6 +17,9 @@
 
 import logging
 from uc2.formats.xar import xar_const
+from uc2.formats.xar.xar_const import XAR_RECORD_HEADER
+from uc2.formats.xar.xar_const import XAR_RECORD_DATA_SPEC
+
 from uc2.formats.generic import BinaryModelObject
 from uc2.formats.xar.xar_datatype import READER_DATA_TYPES_MAP
 from uc2.formats.xar.xar_datatype import WRITER_DATA_TYPES_MAP
@@ -38,20 +41,6 @@ class XARDocument(BinaryModelObject):
 
 
 class XARRecord(BinaryModelObject):
-    _spec = None
-    _types = {}
-
-    def __new__(cls, cid, idx, *args, **kwargs):
-        new_cls = cls._types.get(cid)
-        if new_cls is None:
-            spec = xar_const.XAR_TYPE_RECORD.get(cid, {})
-            attributedict = {
-                '__doc__': spec.get('doc'),
-                '_spec': spec.get('sec')
-            }
-            new_cls = type(b'XARRecord%s' % cid, (XARRecord,), attributedict)
-            cls._types[cid] = new_cls
-        return BinaryModelObject.__new__(new_cls, cid, idx, *args)
 
     def __init__(self, cid, idx, chunk=None):
         self.cid = cid
@@ -59,10 +48,18 @@ class XARRecord(BinaryModelObject):
         self.chunk = chunk or b''
         self.childs = []
 
+    def _spec(self):
+        for sec in XAR_RECORD_HEADER['sec']:
+            yield sec
+        xar_record = XAR_RECORD_DATA_SPEC.get(self.cid, {})
+        for sec in xar_record.get('sec') or []:
+            yield sec
+
     def resolve(self):
-        xar_record = xar_const.XAR_TYPE_RECORD.get(self.cid, {})
         icon_type = not bool(self.childs)
-        if not self._spec and self.chunk:
+        xar_record = XAR_RECORD_DATA_SPEC.get(self.cid, {})
+        spec = xar_record.get('sec') or []
+        if not spec and self.chunk:
             icon_type = 'gtk-new' if icon_type else 'gtk-open'
         if xar_record.get('deprecated', False):
             icon_type = 'gtk-media-record'
@@ -74,7 +71,7 @@ class XARRecord(BinaryModelObject):
         markup = []
         offset = 0
         chunk_length = len(self.chunk)
-        for item in self._spec or []:
+        for item in self._spec():
             reader = READER_DATA_TYPES_MAP.get(item['type'])
             if reader and chunk_length - offset > 0:
                 offset2 = self._deserialize(reader, item, offset)[0]
@@ -87,11 +84,11 @@ class XARRecord(BinaryModelObject):
     def update(self):
         if self.chunk:
             self.deserialize()
-        else:
+        elif self.chunk is None:
             self.serialize()
 
     def serialize(self):
-        for item in self._spec or []:
+        for item in self._spec():
             default = item.get('enum', {}).get('0')
             data = getattr(self, item['id'], default)
             writer = WRITER_DATA_TYPES_MAP.get(item['type'])
@@ -104,7 +101,7 @@ class XARRecord(BinaryModelObject):
     def deserialize(self):
         offset = 0
         chunk_length = len(self.chunk)
-        for item in self._spec or []:
+        for item in self._spec():
             reader = READER_DATA_TYPES_MAP.get(item['type'])
             if reader:
                 if chunk_length - offset > 0:
