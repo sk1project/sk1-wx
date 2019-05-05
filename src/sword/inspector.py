@@ -121,6 +121,18 @@ class DocumentInspector:
                     return True
         return False
 
+    def can_save_chunk(self, doc=None):
+        if doc is None:
+            doc = self.app.current_doc
+        if doc is None:
+            return False
+        if self.is_selection(doc):
+            if self.app.current_doc.doc_presenter.model_type == \
+                    uc2const.BINARY_MODEL:
+                obj = self.app.current_doc.docarea.hexview.viewer.current_obj
+                return 1 if hasattr(obj, 'chunk') and obj.chunk else 0
+        return 0
+
     def can_refresh_model(self, doc=None):
         return self.is_doc()
 

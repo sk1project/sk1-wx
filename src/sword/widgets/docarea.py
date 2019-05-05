@@ -92,6 +92,8 @@ class DocToolbar(gtk.Toolbar):
                    'COLLAPSE',
                    'EXPAND',
                    None,
+                   'SAVE_CHUNK',
+                   None,
                ] + self.add_entries
 
     def build(self):

@@ -23,27 +23,40 @@ CDRX_ID = 'CDRX'
 LIST_IDS = (LIST_ID, ROOT_ID, ROOTX_ID)
 
 CONT_ID = 'cont'
-FILE_ID = '{Corel Binary Meta File}'
-OS_ID_WIN = 'Windows 3.1'
-OS_ID_MAC = 'Macintosh'
-BYTE_ORDER_LE = '\x32\x00\x00\x00'
-BYTE_ORDER_BE = '\x34\x00\x00\x00'
-COORDSIZE_16BIT = '\x32\x00'
-COORDSIZE_32BIT = '\x34\x00'
-MAJOR_16BIT = '\x31\x00\x00\x00'
-MAJOR_32BIT = '\x32\x00\x00\x00'
-MINOR = '\x30\x00\x00\x00'
-UNIT_MM = '\x23\x00'
-UNIT_IN = '\x40\x00'
-FACTOR_MM = '\x48\xaf\xbc\x9a\xf2\xd7\x7a\x3e'
+CONT_FILE_ID = '{Corel Binary Meta File}'
+CONT_OS_ID_WIN = 'Windows 3.1'
+CONT_OS_ID_MAC = 'Macintosh'
+CONT_BYTE_ORDER_LE = '\x32\x00\x00\x00'
+CONT_BYTE_ORDER_BE = '\x34\x00\x00\x00'
+CONT_COORDSIZE_16BIT = '\x32\x00'
+CONT_COORDSIZE_32BIT = '\x34\x00'
+CONT_MAJOR_V1 = '\x31\x00\x00\x00'
+CONT_MAJOR_V2 = '\x32\x00\x00\x00'
+CONT_MINOR = '\x30\x00\x00\x00'
+CONT_UNIT_MM = '\x23\x00'
+CONT_UNIT_IN = '\x40\x00'
+CONT_FACTOR_MM = '\x48\xaf\xbc\x9a\xf2\xd7\x7a\x3e'
+
+CCMM_ID = 'ccmm'
+CCMM_DUMP = \
+    '\x50\x50\x00\x00\x00\x04\x00\x00\x4c\x02\x00\x00\x00\x00\x00\x00' \
+    '\x04\x00\x00\x00\x80\x6a\xbc\x34\x80\x95\x43\x1b\x8c\x97\x6e\x02' \
+    '\xc0\xf1\xd2\x2d\x80\x1e\x85\x5b\x60\x64\x3b\x0f\x80\x3d\x0a\x17' \
+    '\xc0\x4b\x37\x09\x00\xc5\x8f\x79\x33\x33\x02\x00\x33\x33\x02\x00' \
+    '\x33\x33\x02\x00\x01\x00\x00\x00'
+
+
+PACK_ID = 'pack'
+CPNG_ID = 'CPng'
+CPNG_FLAGS = '\x01\x00\x04\x00'
 
 DISP_ID = 'DISP'
-CCMM_ID = 'ccmm'
 PAGE_ID = 'page'
-PACK_ID = 'pack'
 INFO_ID = 'INFO'
 IKEY_ID = 'IKEY'
 ICMT_ID = 'ICMT'
+RLST_ID = 'rlst'
+RCLR_ID = 'rclr'
 
 # INSTRUCTION CODES
 ADD_CLIPPING_REGION = 88
@@ -129,3 +142,53 @@ INSTR_CODES = {
     SIMPLE_WIDE_TEXT: 'SimpleWideText',
     TEXT_FRAME: 'TextFrame',
 }
+
+# COLOR SECTION
+CMX_INVALID = 'INVALID'
+CMX_PANTONE = 'PANTONE'
+CMX_CMYK = 'CMYK'
+CMX_CMYK255 = 'CMYK255'
+CMX_CMY = 'CMY'
+CMX_RGB = 'RGB'
+CMX_HSB = 'HSB'
+CMX_HLS = 'HLS'
+CMX_BW = 'BW'
+CMX_GRAY = 'GRAY'
+CMX_YIQ255 = 'YIQ255'
+CMX_LAB = 'LAB'
+
+COLOR_MODELS = (CMX_INVALID, CMX_PANTONE, CMX_CMYK, CMX_CMYK255, CMX_CMY,
+                CMX_RGB, CMX_HSB, CMX_HLS, CMX_BW, CMX_GRAY, CMX_YIQ255,
+                CMX_LAB)
+COLOR_MODEL_MAP = {
+    0: CMX_INVALID,
+    1: CMX_PANTONE,
+    2: CMX_CMYK,
+    3: CMX_CMYK255,
+    4: CMX_CMY,
+    5: CMX_RGB,
+    6: CMX_HSB,
+    7: CMX_HLS,
+    8: CMX_BW,
+    9: CMX_GRAY,
+    10: CMX_YIQ255,
+    11: CMX_LAB,
+}
+COLOR_BYTES_MAP = {
+    CMX_INVALID: 0,
+    CMX_PANTONE: 4,
+    CMX_CMYK: 4,
+    CMX_CMYK255: 4,
+    CMX_CMY: 4,
+    CMX_RGB: 3,
+    CMX_HSB: 4,
+    CMX_HLS: 4,
+    CMX_BW: 1,
+    CMX_GRAY: 1,
+    CMX_YIQ255: 4,
+    CMX_LAB: 4,
+}
+COLOR_BYTES = (0, 4, 4, 4, 4, 3, 4, 4, 1, 1, 4, 4)
+
+COLOR_PALETTES = ('Invalid', 'Truematch', 'PantoneProcess', 'PantoneSpot',
+                  'Image', 'User', 'CustomFixed')

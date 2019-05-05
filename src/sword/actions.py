@@ -108,6 +108,12 @@ def create_actions(app):
          gtk.STOCK_FULLSCREEN, None,
          proxy.expand, None, None],
 
+        ['SAVE_CHUNK', _('Save chunk'), _('Save chunk'),
+         gtk.STOCK_GOTO_BOTTOM, None,
+         proxy.save_chunk, [events.NO_DOCS, events.DOC_CHANGED,
+                            events.SELECTION_CHANGED],
+         insp.can_save_chunk],
+
         ['CLEAR_HISTORY', _('Clear history'), _('Clear history'),
          gtk.STOCK_CLEAR,
          None, proxy.clear_history, [events.NO_DOCS, events.DOC_CHANGED,

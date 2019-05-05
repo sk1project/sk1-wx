@@ -17,7 +17,7 @@
 
 import os
 
-from sword import _, dialogs, events
+from sword import _, dialogs, events, config
 from sword.dialogs import prefs
 
 
@@ -114,6 +114,20 @@ class AppProxy:
 
     def expand(self, *args):
         self.app.current_doc.docarea.modelbrowser.expand_all()
+
+    def save_chunk(self, *args):
+        selected = self.app.current_doc.selection.selected
+        if selected and hasattr(selected[0], 'chunk'):
+            obj = selected[0]
+            doc_file = os.path.join(config.save_dir, 'chunk')
+            doc_file = dialogs.get_save_file_name(self.mw, self.app, doc_file)
+            if doc_file:
+                res = dialogs.chunk_range_dlg(self.mw)
+                if res:
+                    start, end = res
+                    chunk = obj.chunk[start:len(obj.chunk) - end]
+                    with open(doc_file, 'wb') as fp:
+                        fp.write(chunk)
 
     def edit_object(self, *args):
         obj = self.app.current_doc.docarea.objectbrowser.visualizer.viewer.current_obj
