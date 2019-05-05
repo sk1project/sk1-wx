@@ -259,3 +259,30 @@ class ProgressDialog(gtk.Dialog):
         # 		gobject.source_remove(self.timer)
         self.timer = 0
         gtk.Dialog.destroy(self)
+
+
+def chunk_range_dlg(parent):
+    dialog = gtk.Dialog("Chunk saving range", parent,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
+                         gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
+    table = gtk.Table(2, 2, True)
+
+    table.attach(gtk.Label("Skip at start:"), 0, 1, 0, 1)
+    start = gtk.Entry()
+    start.set_text('0')
+    table.attach(start, 1, 2, 0, 1)
+
+    table.attach(gtk.Label("Skip at end:"), 0, 1, 1, 2)
+    end = gtk.Entry()
+    end.set_text('0')
+    table.attach(end, 1, 2, 1, 2)
+
+    dialog.vbox.add(table)
+    dialog.show_all()
+    ret = dialog.run()
+    result = None
+    if ret == gtk.RESPONSE_ACCEPT:
+        result = (int(start.get_text()), int(end.get_text()))
+    dialog.destroy()
+    return result
