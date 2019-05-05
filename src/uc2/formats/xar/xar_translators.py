@@ -778,10 +778,11 @@ class XAR_to_SK2_Translator(object):
             self.stack.append(el)
 
     def get_pixmap(self, rec, cfg):
-        image_str = self.bitmaps.get(rec.bitmap)
-        if image_str is None:
+        image_data = self.bitmaps.get(rec.bitmap)
+        if image_data is None:
             return
-
+        data, offset, length = image_data
+        image_str = data[offset:length+offset]
         el = sk2_model.Pixmap(cfg, None, bitmap=image_str)
         # XXX: extract alpha channel from image looks very dirty
         el.handler.load_from_images(self.sk2_doc.cms, el.handler.bitmap)

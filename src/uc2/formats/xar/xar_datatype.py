@@ -227,8 +227,8 @@ def read_stop_colour(data, offset=0, **kw):
 
 
 def read_bitmap_data(data, offset=0, **kw):
-    bitmap_data = data[offset:]
-    return len(bitmap_data), bitmap_data
+    length = len(data) - offset
+    return length, (data, offset, length)
 
 
 # return (size in byte, value)
