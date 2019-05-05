@@ -132,9 +132,10 @@ class ModelPresenter(object):
             self.parsing_msg(0.03)
             self.send_info(_('Parsing in progress...'))
             self.model = self.loader.load(self, filename, fileptr)
-        except Exception:
+        except Exception as e:
             self.close()
             LOG.error('Error loading %s', filename)
+            LOG.exception(e)
             raise
 
         model_name = uc2const.FORMAT_NAMES[self.cid]
@@ -148,8 +149,9 @@ class ModelPresenter(object):
             try:
                 self.model.config = self.config
                 self.model.do_update(self, action)
-            except Exception:
+            except Exception as e:
                 LOG.error(_('Error updating document model'))
+                LOG.exception(e)
                 raise
 
             model_name = uc2const.FORMAT_NAMES[self.cid]
@@ -169,9 +171,10 @@ class ModelPresenter(object):
             self.saving_msg(0.03)
             self.send_info(_('Saving is started...'))
             self.saver.save(self, filename, fileptr)
-        except Exception:
+        except Exception as e:
             msg = _('Error while saving') + ' ' + filename + ' %s'
             LOG.error(msg)
+            LOG.exception(e)
             raise
 
         model_name = uc2const.FORMAT_NAMES[self.cid]
@@ -199,6 +202,7 @@ class ModelPresenter(object):
                 msg = _('Cache clearing is unsuccessful')
                 self.send_error(msg)
                 LOG.warn(msg + ' %s', e)
+                LOG.exception(e)
 
     def update_msg(self, val):
         model_name = uc2const.FORMAT_NAMES[self.cid]
