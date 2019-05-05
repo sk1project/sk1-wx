@@ -120,7 +120,7 @@ class XARRecord(BinaryModelObject):
             offset += size
         else:
             if number < 0:
-                number = len(self.chunk[offset:number])
+                number = len(self.chunk[offset:number+1 or None])
                 # if item['type'] == 'byte':
                 #    number //= 1
             val = []
