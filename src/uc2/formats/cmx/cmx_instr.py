@@ -90,7 +90,6 @@ class Inst16BeginLayer(CmxInstruction):
         ]
 
 
-
 class Inst16BeginGroup(CmxInstruction):
     def update_for_sword(self):
         CmxInstruction.update_for_sword(self)
