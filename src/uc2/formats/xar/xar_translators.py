@@ -260,8 +260,8 @@ class XAR_to_SK2_Translator(object):
         handler = self._handler.get(rec.cid)
         if not handler:
             rec_type = xar_const.XAR_RECORD_DATA_SPEC.get(rec.cid, {})
-            name = rec_type.get('name')
-            handler_name = 'handle_%s' % name.lower().replace(' ', '_')
+            name = rec_type.get('id').replace('TAG_', '', 1)
+            handler_name = 'handle_%s' % name.lower()
             handler = getattr(self, handler_name, None)
             if handler:
                 self._handler[rec.cid] = handler

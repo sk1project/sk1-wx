@@ -63,7 +63,7 @@ class XARRecord(BinaryModelObject):
             icon_type = 'gtk-new' if icon_type else 'gtk-open'
         if xar_record.get('deprecated', False):
             icon_type = 'gtk-media-record'
-        name = xar_record.get('name') or str(self.cid)
+        name = xar_record.get('id') or str(self.cid)
         info = str(len(self.chunk))
         return icon_type, name, info
 

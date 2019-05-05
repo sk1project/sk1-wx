@@ -641,8 +641,8 @@ definitions:
         description: type of records
         type: object
         properties:
-            name:
-                description: record name
+            id:
+                description: string identifier as an alias to digital
                 type: string
             doc:
                 description: record description
@@ -714,10 +714,10 @@ XAR_RECORD_HEADER = {
 XAR_RECORD_DATA_SPEC = {
 
     # Navigation records
-    TAG_UP: {'name': 'UP'},
-    TAG_DOWN: {'name': 'DOWN'},
+    TAG_UP: {'id': 'TAG_UP'},
+    TAG_DOWN: {'id': 'TAG_DOWN'},
     TAG_FILEHEADER: {
-        'name': 'FILEHEADER',
+        'id': 'TAG_FILEHEADER',
         'doc': 'This record gives useful information about the file. '
                'This should always be the first record in any file produced.',
         'sec': [
@@ -735,13 +735,13 @@ XAR_RECORD_DATA_SPEC = {
             {'type': 'ASCII_STRING', 'id': 'producer_build'},
         ]
     },
-    TAG_ENDOFFILE: {'name': 'ENDOFFILE'},
+    TAG_ENDOFFILE: {'id': 'TAG_ENDOFFILE'},
 
     # Tag management
-    TAG_ATOMICTAGS: {'name': 'ATOMICTAGS'},
-    TAG_ESSENTIALTAGS: {'name': 'ESSENTIALTAGS'},
+    TAG_ATOMICTAGS: {'id': 'TAG_ATOMICTAGS'},
+    TAG_ESSENTIALTAGS: {'id': 'TAG_ESSENTIALTAGS'},
     TAG_TAGDESCRIPTION: {
-        'name': 'TAGDESCRIPTION',
+        'id': 'TAG_TAGDESCRIPTION',
         'sec': [
             {'type': 'uint32', 'id': 'number_of_tags'},
             {'type': 'Tag Description', 'id': 'description',
@@ -751,14 +751,14 @@ XAR_RECORD_DATA_SPEC = {
 
     # Compression tags
     TAG_STARTCOMPRESSION: {
-        'name': 'STARTCOMPRESSION',
+        'id': 'TAG_STARTCOMPRESSION',
         'sec': [
             {'type': '3bytes', 'id': 'compression_version', 'encoding': 'hex'},
             {'type': 'byte', 'id': 'compression_type'},
         ]
     },
     TAG_ENDCOMPRESSION: {
-        'name': 'ENDCOMPRESSION',
+        'id': 'TAG_ENDCOMPRESSION',
         'sec': [
             {'type': 'uint32', 'id': 'compression_crc'},
             {'type': 'uint32', 'id': 'num_bytes'}
@@ -766,14 +766,14 @@ XAR_RECORD_DATA_SPEC = {
     },
 
     # Document tags
-    TAG_DOCUMENT: {'name': 'DOCUMENT'},
-    TAG_CHAPTER: {'name': 'CHAPTER'},
-    TAG_SPREAD: {'name': 'SPREAD'},
+    TAG_DOCUMENT: {'id': 'TAG_DOCUMENT'},
+    TAG_CHAPTER: {'id': 'TAG_CHAPTER'},
+    TAG_SPREAD: {'id': 'TAG_SPREAD'},
 
     # Notes
-    TAG_LAYER: {'name': 'LAYER'},
+    TAG_LAYER: {'id': 'TAG_LAYER'},
     TAG_PAGE: {
-        'name': 'PAGE',
+        'id': 'TAG_PAGE',
         'sec': [
             {'type': 'COORD', 'id': 'bottom_left'},
             {'type': 'COORD', 'id': 'top_right'},
@@ -781,7 +781,7 @@ XAR_RECORD_DATA_SPEC = {
         ]
     },
     TAG_SPREADINFORMATION: {
-        'name': 'SPREADINFORMATION',
+        'id': 'TAG_SPREADINFORMATION',
         'sec': [
             {'type': 'MILLIPOINT', 'id': 'width'},
             {'type': 'MILLIPOINT', 'id': 'height'},
@@ -799,10 +799,10 @@ XAR_RECORD_DATA_SPEC = {
             }
         ]
     },
-    TAG_GRIDRULERSETTINGS: {'name': 'GRIDRULERSETTINGS'},
-    TAG_GRIDRULERORIGIN: {'name': 'GRIDRULERORIGIN'},
+    TAG_GRIDRULERSETTINGS: {'id': 'TAG_GRIDRULERSETTINGS'},
+    TAG_GRIDRULERORIGIN: {'id': 'TAG_GRIDRULERORIGIN'},
     TAG_LAYERDETAILS: {
-        'name': 'LAYERDETAILS',
+        'id': 'TAG_LAYERDETAILS',
         'sec': [
             {'type': 'byte', 'id': 'layer_flags',
              'bitfield': {
@@ -815,9 +815,9 @@ XAR_RECORD_DATA_SPEC = {
             {'type': 'STRING', 'id': 'layer_name'},
         ]
     },
-    TAG_GUIDELAYERDETAILS: {'name': 'GUIDELAYERDETAILS'},
+    TAG_GUIDELAYERDETAILS: {'id': 'TAG_GUIDELAYERDETAILS'},
     TAG_SPREADSCALING_ACTIVE: {
-        'name': 'SPREADSCALING ACTIVE',
+        'id': 'TAG_SPREADSCALING_ACTIVE',
         'sec': [
             {'type': 'double', 'id': 'drawing_scale'},
             {'type': 'UNITSREF', 'id': 'drawing_units'},
@@ -826,7 +826,7 @@ XAR_RECORD_DATA_SPEC = {
         ]
     },
     TAG_SPREADSCALING_INACTIVE: {
-        'name': 'SPREADSCALING INACTIVE',
+        'id': 'TAG_SPREADSCALING_INACTIVE',
         'sec': [
             {'type': 'double', 'id': 'drawing_scale'},
             {'type': 'UNITSREF', 'id': 'drawing_units'},
@@ -837,7 +837,7 @@ XAR_RECORD_DATA_SPEC = {
 
     # Colour reference tags
     TAG_DEFINERGBCOLOUR: {
-        'name': 'DEFINERGBCOLOUR',
+        'id': 'TAG_DEFINERGBCOLOUR',
         'sec': [
             {'type': 'byte', 'id': 'red'},
             {'type': 'byte', 'id': 'green'},
@@ -845,7 +845,7 @@ XAR_RECORD_DATA_SPEC = {
         ]
     },
     TAG_DEFINECOMPLEXCOLOUR: {
-        'name': 'DEFINECOMPLEXCOLOUR',
+        'id': 'TAG_DEFINECOMPLEXCOLOUR',
         'sec': [
             {'type': 'Simple RGBColour', 'id': 'rgbcolour', 'encoding': 'hex'},
             {'type': 'byte', 'id': 'colour_model'},
@@ -861,42 +861,42 @@ XAR_RECORD_DATA_SPEC = {
     },
 
     # Bitmap reference tags
-    TAG_PREVIEWBITMAP_GIF: {'name': 'PREVIEWBITMAP GIF'},
-    TAG_PREVIEWBITMAP_JPEG: {'name': 'PREVIEWBITMAP JPEG'},
-    TAG_PREVIEWBITMAP_PNG: {'name': 'PREVIEWBITMAP PNG'},
+    TAG_PREVIEWBITMAP_GIF: {'id': 'TAG_PREVIEWBITMAP_GIF'},
+    TAG_PREVIEWBITMAP_JPEG: {'id': 'TAG_PREVIEWBITMAP_JPEG'},
+    TAG_PREVIEWBITMAP_PNG: {'id': 'TAG_PREVIEWBITMAP_PNG'},
 
     TAG_DEFINEBITMAP_JPEG: {
-        'name': 'DEFINEBITMAP JPEG',
+        'id': 'TAG_DEFINEBITMAP_JPEG',
         'sec': [
             {'type': 'STRING', 'id': 'bitmap_name'},
             {'type': 'BITMAP_DATA', 'id': 'bitmap_data'},
         ]
     },
     TAG_DEFINEBITMAP_PNG: {
-        'name': 'DEFINEBITMAP PNG',
+        'id': 'TAG_DEFINEBITMAP_PNG',
         'sec': [
             {'type': 'STRING', 'id': 'bitmap_name'},
             {'type': 'BITMAP_DATA', 'id': 'bitmap_data'},
         ]
     },
-    TAG_DEFINEBITMAP_JPEG8BPP: {'name': 'DEFINEBITMAP JPEG8BPP'},
+    TAG_DEFINEBITMAP_JPEG8BPP: {'id': 'TAG_DEFINEBITMAP_JPEG8BPP'},
 
     # View tags
     TAG_VIEWPORT: {
-        'name': 'VIEWPORT',
+        'id': 'TAG_VIEWPORT',
         'sec': [
             {'type': 'COORD', 'id': 'bottom_left'},
             {'type': 'COORD', 'id': 'top_right'},
         ]
     },
-    TAG_VIEWQUALITY: {'name': 'VIEWQUALITY'},
-    TAG_DOCUMENTVIEW: {'name': 'DOCUMENTVIEW'},
+    TAG_VIEWQUALITY: {'id': 'TAG_VIEWQUALITY'},
+    TAG_DOCUMENTVIEW: {'id': 'TAG_DOCUMENTVIEW'},
 
     # Document unit tags
-    TAG_DEFINE_PREFIXUSERUNIT: {'name': 'DEFINE PREFIXUSERUNIT'},
-    TAG_DEFINE_SUFFIXUSERUNIT: {'name': 'DEFINE SUFFIXUSERUNIT'},
+    TAG_DEFINE_PREFIXUSERUNIT: {'id': 'TAG_DEFINE_PREFIXUSERUNIT'},
+    TAG_DEFINE_SUFFIXUSERUNIT: {'id': 'TAG_DEFINE_SUFFIXUSERUNIT'},
     TAG_DEFINE_DEFAULTUNITS: {
-        'name': 'DEFINE DEFAULTUNITS',
+        'id': 'TAG_DEFINE_DEFAULTUNITS',
         'sec': [
             {'type': 'UNITSREF', 'id': 'page_units'},
             {'type': 'UNITSREF', 'id': 'font_units'}
@@ -905,15 +905,15 @@ XAR_RECORD_DATA_SPEC = {
 
     # Document info tags
     TAG_DOCUMENTCOMMENT: {
-        'name': 'DOCUMENTCOMMENT',
+        'id': 'TAG_DOCUMENTCOMMENT',
         'sec': [
             {'type': 'STRING', 'id': 'comment'},
         ]
     },
-    TAG_DOCUMENTDATES: {'name': 'DOCUMENTDATES'},
-    TAG_DOCUMENTUNDOSIZE: {'name': 'DOCUMENTUNDOSIZE'},
+    TAG_DOCUMENTDATES: {'id': 'TAG_DOCUMENTDATES'},
+    TAG_DOCUMENTUNDOSIZE: {'id': 'TAG_DOCUMENTUNDOSIZE'},
     TAG_DOCUMENTFLAGS: {
-        'name': 'DOCUMENTFLAGS',
+        'id': 'TAG_DOCUMENTFLAGS',
         'sec': [
             {'type': 'uint32', 'id': 'document_flags',
              'bitfield': {
@@ -923,11 +923,11 @@ XAR_RECORD_DATA_SPEC = {
             }
         ]
     },
-    TAG_DOCUMENTINFORMATION: {'name': 'DOCUMENTINFORMATION'},
+    TAG_DOCUMENTINFORMATION: {'id': 'TAG_DOCUMENTINFORMATION'},
 
     # Object tags
     TAG_PATH: {
-        'name': 'PATH',
+        'id': 'TAG_PATH',
         'sec': [
             {'type': 'uint32', 'id': 'number_of_coords'},
             {'type': 'byte', 'id': 'verb', 'number': 'number_of_coords'},
@@ -935,7 +935,7 @@ XAR_RECORD_DATA_SPEC = {
         ]
     },
     TAG_PATH_FILLED: {
-        'name': 'PATH FILLED',
+        'id': 'TAG_PATH_FILLED',
         'sec': [
             {'type': 'uint32', 'id': 'number_of_coords'},
             {'type': 'byte', 'id': 'verb', 'number': 'number_of_coords'},
@@ -943,7 +943,7 @@ XAR_RECORD_DATA_SPEC = {
         ]
     },
     TAG_PATH_STROKED: {
-        'name': 'PATH STROKED',
+        'id': 'TAG_PATH_STROKED',
         'sec': [
             {'type': 'uint32', 'id': 'number_of_coords'},
             {'type': 'byte', 'id': 'verb', 'number': 'number_of_coords'},
@@ -951,22 +951,22 @@ XAR_RECORD_DATA_SPEC = {
         ]
     },
     TAG_PATH_FILLED_STROKED: {
-        'name': 'PATH FILLED STROKED',
+        'id': 'TAG_PATH_FILLED_STROKED',
         'sec': [
             {'type': 'uint32', 'id': 'number_of_coords'},
             {'type': 'byte', 'id': 'verb', 'number': 'number_of_coords'},
             {'type': 'COORD', 'id': 'coord', 'number': 'number_of_coords'},
         ]
     },
-    TAG_GROUP: {'name': 'GROUP', 'sec': None},
-    TAG_BLEND: {'name': 'BLEND'},
-    TAG_BLENDER: {'name': 'BLENDER'},
-    TAG_MOULD_ENVELOPE: {'name': 'MOULD ENVELOPE'},
-    TAG_MOULD_PERSPECTIVE: {'name': 'MOULD PERSPECTIVE'},
-    TAG_MOULD_GROUP: {'name': 'MOULD GROUP'},
-    TAG_MOULD_PATH: {'name': 'MOULD PATH'},
+    TAG_GROUP: {'id': 'TAG_GROUP', 'sec': None},
+    TAG_BLEND: {'id': 'TAG_BLEND'},
+    TAG_BLENDER: {'id': 'TAG_BLENDER'},
+    TAG_MOULD_ENVELOPE: {'id': 'TAG_MOULD_ENVELOPE'},
+    TAG_MOULD_PERSPECTIVE: {'id': 'TAG_MOULD_PERSPECTIVE'},
+    TAG_MOULD_GROUP: {'id': 'TAG_MOULD_GROUP'},
+    TAG_MOULD_PATH: {'id': 'TAG_MOULD_PATH'},
     TAG_PATH_FLAGS: {
-        'name': 'PATH FLAGS',
+        'id': 'TAG_PATH_FLAGS',
         'sec': [
             {'type': 'byte', 'id': 'flags', "number": -1,
              'bitfield': {
@@ -978,59 +978,59 @@ XAR_RECORD_DATA_SPEC = {
         ]
     },
     TAG_GUIDELINE: {
-        'name': 'GUIDELINE',
+        'id': 'TAG_GUIDELINE',
         'sec': [
             {'type': 'byte', 'id': 'type'},
             {'type': 'MILLIPOINT', 'id': 'ordinate'},
         ]
     },
     TAG_PATH_RELATIVE: {
-        'name': 'PATH RELATIVE',
+        'id': 'TAG_PATH_RELATIVE',
         'sec': [
             {'type': 'Verb and Coord List', 'id': 'path'}
         ]
     },
     TAG_PATH_RELATIVE_FILLED: {
-        'name': 'PATH RELATIVE FILLED',
+        'id': 'TAG_PATH_RELATIVE_FILLED',
         'sec': [
             {'type': 'Verb and Coord List', 'id': 'path'}
         ]
     },
     TAG_PATH_RELATIVE_STROKED: {
-        'name': 'PATH RELATIVE STROKED',
+        'id': 'TAG_PATH_RELATIVE_STROKED',
         'sec': [
             {'type': 'Verb and Coord List', 'id': 'path'}
         ]
     },
     TAG_PATH_RELATIVE_FILLED_STROKED: {
-        'name': 'PATH RELATIVE FILLED STROKED',
+        'id': 'TAG_PATH_RELATIVE_FILLED_STROKED',
         'sec': [
             {'type': 'Verb and Coord List', 'id': 'path'}
         ]
     },
-    TAG_PATHREF_TRANSFORM: {'name': 'PATHREF TRANSFORM'},
+    TAG_PATHREF_TRANSFORM: {'id': 'TAG_PATHREF_TRANSFORM'},
 
     # Attribute tags
     TAG_FLATFILL: {
-        'name': 'FLATFILL',
+        'id': 'TAG_FLATFILL',
         'sec': [
             {'type': 'COLOURREF', 'id': 'colour'}
         ]
     },
     TAG_LINECOLOUR: {
-        'name': 'LINECOLOUR',
+        'id': 'TAG_LINECOLOUR',
         'sec': [
             {'type': 'COLOURREF', 'id': 'colour'}
         ]
     },
     TAG_LINEWIDTH: {
-        'name': 'LINEWIDTH',
+        'id': 'TAG_LINEWIDTH',
         'sec': [
             {'type': 'MILLIPOINT', 'id': 'width'}
         ]
     },
     TAG_LINEARFILL: {
-        'name': 'LINEARFILL',
+        'id': 'TAG_LINEARFILL',
         'sec': [
             {'type': 'COORD', 'id': 'start_point'},
             {'type': 'COORD', 'id': 'end_point'},
@@ -1042,7 +1042,7 @@ XAR_RECORD_DATA_SPEC = {
         ]
     },
     TAG_CIRCULARFILL: {
-        'name': 'CIRCULARFILL',
+        'id': 'TAG_CIRCULARFILL',
         'sec': [
             {'type': 'COORD', 'id': 'centre_point'},
             {'type': 'COORD', 'id': 'edge_point'},
@@ -1054,7 +1054,7 @@ XAR_RECORD_DATA_SPEC = {
         ]
     },
     TAG_ELLIPTICALFILL: {
-        'name': 'ELLIPTICALFILL',
+        'id': 'TAG_ELLIPTICALFILL',
         'sec': [
             {'type': 'COORD', 'id': 'centre_point'},
             {'type': 'COORD', 'id': 'major_axes'},
@@ -1066,9 +1066,9 @@ XAR_RECORD_DATA_SPEC = {
             {'type': 'double', 'id': 'gain'},
         ]
     },
-    TAG_CONICALFILL: {'name': 'CONICALFILL'},
+    TAG_CONICALFILL: {'id': 'TAG_CONICALFILL'},
     TAG_BITMAPFILL: {
-        'name': 'BITMAPFILL',
+        'id': 'TAG_BITMAPFILL',
         'sec': [
             {'type': 'COORD', 'id': 'bottom_left'},
             {'type': 'COORD', 'id': 'bottom_right'},
@@ -1080,7 +1080,7 @@ XAR_RECORD_DATA_SPEC = {
         ]
     },
     TAG_CONTONEBITMAPFILL: {
-        'name': 'CONTONEBITMAPFILL',
+        'id': 'TAG_CONTONEBITMAPFILL',
         'sec': [
             {'type': 'COORD', 'id': 'bottom_left'},
             {'type': 'COORD', 'id': 'bottom_right'},
@@ -1093,16 +1093,16 @@ XAR_RECORD_DATA_SPEC = {
             {'type': 'double', 'id': 'gain'},
         ]
     },
-    TAG_FRACTALFILL: {'name': 'FRACTALFILL'},
-    TAG_FILLEFFECT_FADE: {'name': 'FILLEFFECT FADE'},
-    TAG_FILLEFFECT_RAINBOW: {'name': 'FILLEFFECT RAINBOW'},
-    TAG_FILLEFFECT_ALTRAINBOW: {'name': 'FILLEFFECT ALTRAINBOW'},
-    TAG_FILL_REPEATING: {'name': 'FILL REPEATING'},
-    TAG_FILL_NONREPEATING: {'name': 'FILL NONREPEATING'},
-    TAG_FILL_REPEATINGINVERTED: {'name': 'FILL REPEATINGINVERTED'},
-    TAG_FLATTRANSPARENTFILL: {'name': 'FLATTRANSPARENTFILL'},
+    TAG_FRACTALFILL: {'id': 'TAG_FRACTALFILL'},
+    TAG_FILLEFFECT_FADE: {'id': 'TAG_FILLEFFECT_FADE'},
+    TAG_FILLEFFECT_RAINBOW: {'id': 'TAG_FILLEFFECT_RAINBOW'},
+    TAG_FILLEFFECT_ALTRAINBOW: {'id': 'TAG_FILLEFFECT_ALTRAINBOW'},
+    TAG_FILL_REPEATING: {'id': 'TAG_FILL_REPEATING'},
+    TAG_FILL_NONREPEATING: {'id': 'TAG_FILL_NONREPEATING'},
+    TAG_FILL_REPEATINGINVERTED: {'id': 'TAG_FILL_REPEATINGINVERTED'},
+    TAG_FLATTRANSPARENTFILL: {'id': 'TAG_FLATTRANSPARENTFILL'},
     TAG_LINEARTRANSPARENTFILL: {
-        'name': 'LINEARTRANSPARENTFILL',
+        'id': 'TAG_LINEARTRANSPARENTFILL',
         'sec': [
             {'type': 'COORD', 'id': 'start_point'},
             {'type': 'COORD', 'id': 'end_point'},
@@ -1115,53 +1115,53 @@ XAR_RECORD_DATA_SPEC = {
             # TODO: support 3 point
         ]
     },
-    TAG_CIRCULARTRANSPARENTFILL: {'name': 'CIRCULARTRANSPARENTFILL'},
-    TAG_ELLIPTICALTRANSPARENTFILL: {'name': 'ELLIPTICALTRANSPARENTFILL'},
-    TAG_CONICALTRANSPARENTFILL: {'name': 'CONICALTRANSPARENTFILL'},
-    TAG_BITMAPTRANSPARENTFILL: {'name': 'BITMAPTRANSPARENTFILL'},
-    TAG_FRACTALTRANSPARENTFILL: {'name': 'FRACTALTRANSPARENTFILL'},
-    TAG_LINETRANSPARENCY: {'name': 'LINETRANSPARENCY'},
+    TAG_CIRCULARTRANSPARENTFILL: {'id': 'TAG_CIRCULARTRANSPARENTFILL'},
+    TAG_ELLIPTICALTRANSPARENTFILL: {'id': 'TAG_ELLIPTICALTRANSPARENTFILL'},
+    TAG_CONICALTRANSPARENTFILL: {'id': 'TAG_CONICALTRANSPARENTFILL'},
+    TAG_BITMAPTRANSPARENTFILL: {'id': 'TAG_BITMAPTRANSPARENTFILL'},
+    TAG_FRACTALTRANSPARENTFILL: {'id': 'TAG_FRACTALTRANSPARENTFILL'},
+    TAG_LINETRANSPARENCY: {'id': 'TAG_LINETRANSPARENCY'},
     TAG_STARTCAP: {
-        'name': 'STARTCAP',
+        'id': 'TAG_STARTCAP',
         'sec': [
             {'type': 'byte', 'id': 'cap_style'},
         ]
     },
-    TAG_ENDCAP: {'name': 'ENDCAP'},
+    TAG_ENDCAP: {'id': 'TAG_ENDCAP'},
     TAG_JOINSTYLE: {
-        'name': 'JOINSTYLE',
+        'id': 'TAG_JOINSTYLE',
         'sec': [
             {'type': 'byte', 'id': 'join_style'},
         ]
     },
     TAG_MITRELIMIT: {
-        'name': 'MITRELIMIT',
+        'id': 'TAG_MITRELIMIT',
         'sec': [
             {'type': 'byte', 'id': 'mitre_limit'},
         ]
     },
     TAG_WINDINGRULE: {
-        'name': 'WINDINGRULE',
+        'id': 'TAG_WINDINGRULE',
         'sec': [
             {'type': 'byte', 'id': 'winding_rule'},
         ]
     },
-    TAG_QUALITY: {'name': 'QUALITY'},
-    TAG_TRANSPARENTFILL_REPEATING: {'name': 'TRANSPARENTFILL REPEATING'},
-    TAG_TRANSPARENTFILL_NONREPEATING: {'name': 'TRANSPARENTFILL NONREPEATING'},
+    TAG_QUALITY: {'id': 'TAG_QUALITY'},
+    TAG_TRANSPARENTFILL_REPEATING: {'id': 'TAG_TRANSPARENTFILL_REPEATING'},
+    TAG_TRANSPARENTFILL_NONREPEATING: {'id': 'TAG_TRANSPARENTFILL_NONREPEATING'},
     TAG_TRANSPARENTFILL_REPEATINGINVERTED: {
-        'name': 'TRANSPARENTFILL REPEATINGINVERTED'
+        'id': 'TAG_TRANSPARENTFILL_REPEATINGINVERTED'
     },
 
     # Arrows and dash patterns
     TAG_DASHSTYLE: {
-        'name': 'DASHSTYLE',
+        'id': 'TAG_DASHSTYLE',
         'sec': [
             {'type': 'int32', 'id': 'dash_id'},
         ]
     },
     TAG_DEFINEDASH: {
-        'name': 'DEFINEDASH',
+        'id': 'TAG_DEFINEDASH',
         'sec': [
             {'type': 'MILLIPOINT', 'id': 'dash_start'},
             {'type': 'MILLIPOINT', 'id': 'line_width'},
@@ -1169,11 +1169,11 @@ XAR_RECORD_DATA_SPEC = {
             {'type': 'MILLIPOINT', 'id': 'dash_def', 'number': 'elements'},
         ]
     },
-    TAG_ARROWHEAD: {'name': 'ARROWHEAD'},
-    TAG_ARROWTAIL: {'name': 'ARROWTAIL'},
-    TAG_DEFINEARROW: {'name': 'DEFINEARROW'},
+    TAG_ARROWHEAD: {'id': 'TAG_ARROWHEAD'},
+    TAG_ARROWTAIL: {'id': 'TAG_ARROWTAIL'},
+    TAG_DEFINEARROW: {'id': 'TAG_DEFINEARROW'},
     TAG_DEFINEDASH_SCALED: {
-        'name': 'DEFINEDASH SCALED',
+        'id': 'TAG_DEFINEDASH_SCALED',
         'sec': [
             {'type': 'MILLIPOINT', 'id': 'dash_start'},
             {'type': 'MILLIPOINT', 'id': 'line_width'},
@@ -1183,19 +1183,19 @@ XAR_RECORD_DATA_SPEC = {
     },
 
     # User Attributes
-    TAG_USERVALUE: {'name': 'USERVALUE'},
+    TAG_USERVALUE: {'id': 'TAG_USERVALUE'},
 
     # special colour fills
-    TAG_FLATFILL_NONE: {'name': 'FLATFILL NONE'},
-    TAG_FLATFILL_BLACK: {'name': 'FLATFILL BLACK'},
-    TAG_FLATFILL_WHITE: {'name': 'FLATFILL WHITE'},
-    TAG_LINECOLOUR_NONE: {'name': 'LINECOLOUR NONE'},
-    TAG_LINECOLOUR_BLACK: {'name': 'LINECOLOUR BLACK'},
-    TAG_LINECOLOUR_WHITE: {'name': 'LINECOLOUR WHITE'},
+    TAG_FLATFILL_NONE: {'id': 'TAG_FLATFILL_NONE'},
+    TAG_FLATFILL_BLACK: {'id': 'TAG_FLATFILL_BLACK'},
+    TAG_FLATFILL_WHITE: {'id': 'TAG_FLATFILL_WHITE'},
+    TAG_LINECOLOUR_NONE: {'id': 'TAG_LINECOLOUR_NONE'},
+    TAG_LINECOLOUR_BLACK: {'id': 'TAG_LINECOLOUR_BLACK'},
+    TAG_LINECOLOUR_WHITE: {'id': 'TAG_LINECOLOUR_WHITE'},
 
     # Bitmaps
     TAG_NODE_BITMAP: {
-        'name': 'NODE BITMAP',
+        'id': 'TAG_NODE_BITMAP',
         'sec': [
             {'type': 'COORD', 'id': 'bottom_left'},
             {'type': 'COORD', 'id': 'bottom_right'},
@@ -1204,25 +1204,25 @@ XAR_RECORD_DATA_SPEC = {
             {'type': 'BITMAPREF', 'id': 'bitmap'}
         ]
     },
-    TAG_NODE_CONTONEDBITMAP: {'name': 'NODE CONTONEDBITMAP'},
+    TAG_NODE_CONTONEDBITMAP: {'id': 'TAG_NODE_CONTONEDBITMAP'},
 
     # New fill type records
-    TAG_DIAMONDFILL: {'name': 'DIAMONDFILL'},
-    TAG_DIAMONDTRANSPARENTFILL: {'name': 'DIAMONDTRANSPARENTFILL'},
-    TAG_THREECOLFILL: {'name': 'THREECOLFILL'},
-    TAG_THREECOLTRANSPARENTFILL: {'name': 'THREECOLTRANSPARENTFILL'},
-    TAG_FOURCOLFILL: {'name': 'FOURCOLFILL'},
-    TAG_FOURCOLTRANSPARENTFILL: {'name': 'FOURCOLTRANSPARENTFILL'},
-    TAG_FILL_REPEATING_EXTRA: {'name': 'FILL REPEATING EXTRA'},
+    TAG_DIAMONDFILL: {'id': 'TAG_DIAMONDFILL'},
+    TAG_DIAMONDTRANSPARENTFILL: {'id': 'TAG_DIAMONDTRANSPARENTFILL'},
+    TAG_THREECOLFILL: {'id': 'TAG_THREECOLFILL'},
+    TAG_THREECOLTRANSPARENTFILL: {'id': 'TAG_THREECOLTRANSPARENTFILL'},
+    TAG_FOURCOLFILL: {'id': 'TAG_FOURCOLFILL'},
+    TAG_FOURCOLTRANSPARENTFILL: {'id': 'TAG_FOURCOLTRANSPARENTFILL'},
+    TAG_FILL_REPEATING_EXTRA: {'id': 'TAG_FILL_REPEATING_EXTRA'},
     TAG_TRANSPARENTFILL_REPEATING_EXTRA: {
-        'name': 'TRANSPARENTFILL REPEATING EXTRA'
+        'id': 'TAG_TRANSPARENTFILL_REPEATING_EXTRA'
     },
 
     # Regular shapes
 
     # Ellipses
     TAG_ELLIPSE_SIMPLE: {
-        'name': 'ELLIPSE SIMPLE',
+        'id': 'TAG_ELLIPSE_SIMPLE',
         'sec': [
             {'type': 'COORD', 'id': 'centre'},
             {'type': 'MILLIPOINT', 'id': 'width'},
@@ -1230,7 +1230,7 @@ XAR_RECORD_DATA_SPEC = {
         ]
     },
     TAG_ELLIPSE_COMPLEX: {
-        'name': 'ELLIPSE COMPLEX',
+        'id': 'TAG_ELLIPSE_COMPLEX',
         'sec': [
             {'type': 'COORD', 'id': 'centre'},
             {'type': 'COORD', 'id': 'major_axis'},
@@ -1239,92 +1239,92 @@ XAR_RECORD_DATA_SPEC = {
     },
 
     # Rectangles
-    TAG_RECTANGLE_SIMPLE: {'name': 'RECTANGLE SIMPLE'},
+    TAG_RECTANGLE_SIMPLE: {'id': 'TAG_RECTANGLE_SIMPLE'},
     TAG_RECTANGLE_SIMPLE_REFORMED: {
-        'name': 'RECTANGLE SIMPLE REFORMED',
+        'id': 'TAG_RECTANGLE_SIMPLE_REFORMED',
         'deprecated': True
     },
     TAG_RECTANGLE_SIMPLE_STELLATED: {
-        'name': 'RECTANGLE SIMPLE STELLATED',
+        'id': 'TAG_RECTANGLE_SIMPLE_STELLATED',
         'deprecated': True
     },
     TAG_RECTANGLE_SIMPLE_STELLATED_REFORMED: {
-        'name': 'RECTANGLE SIMPLE STELLATED REFORMED',
+        'id': 'TAG_RECTANGLE_SIMPLE_STELLATED_REFORMED',
         'deprecated': True
     },
     TAG_RECTANGLE_SIMPLE_ROUNDED: {
-        'name': 'RECTANGLE SIMPLE ROUNDED'
+        'id': 'TAG_RECTANGLE_SIMPLE_ROUNDED'
     },
     TAG_RECTANGLE_SIMPLE_ROUNDED_REFORMED: {
-        'name': 'RECTANGLE SIMPLE ROUNDED REFORMED',
+        'id': 'TAG_RECTANGLE_SIMPLE_ROUNDED_REFORMED',
         'deprecated': True
     },
     TAG_RECTANGLE_SIMPLE_ROUNDED_STELLATED: {
-        'name': 'RECTANGLE SIMPLE ROUNDED STELLATED',
+        'id': 'TAG_RECTANGLE_SIMPLE_ROUNDED_STELLATED',
         'deprecated': True
     },
     TAG_RECTANGLE_SIMPLE_ROUNDED_STELLATED_REFORMED: {
-        'name': 'RECTANGLE SIMPLE ROUNDED STELLATED REFORMED',
+        'id': 'TAG_RECTANGLE_SIMPLE_ROUNDED_STELLATED_REFORMED',
         'deprecated': True
     },
     TAG_RECTANGLE_COMPLEX: {
-        'name': 'RECTANGLE COMPLEX'
+        'id': 'TAG_RECTANGLE_COMPLEX'
     },
     TAG_RECTANGLE_COMPLEX_REFORMED: {
-        'name': 'RECTANGLE COMPLEX REFORMED',
+        'id': 'TAG_RECTANGLE_COMPLEX_REFORMED',
         'deprecated': True
     },
     TAG_RECTANGLE_COMPLEX_STELLATED: {
-        'name': 'RECTANGLE COMPLEX STELLATED'
+        'id': 'TAG_RECTANGLE_COMPLEX_STELLATED'
     },
     TAG_RECTANGLE_COMPLEX_STELLATED_REFORMED: {
-        'name': 'RECTANGLE COMPLEX STELLATED REFORMED',
+        'id': 'TAG_RECTANGLE_COMPLEX_STELLATED_REFORMED',
         'deprecated': True
     },
     TAG_RECTANGLE_COMPLEX_ROUNDED: {
-        'name': 'RECTANGLE COMPLEX ROUNDED'
+        'id': 'TAG_RECTANGLE_COMPLEX_ROUNDED'
     },
     TAG_RECTANGLE_COMPLEX_ROUNDED_REFORMED: {
-        'name': 'RECTANGLE COMPLEX ROUNDED REFORMED',
+        'id': 'TAG_RECTANGLE_COMPLEX_ROUNDED_REFORMED',
         'deprecated': True
     },
     TAG_RECTANGLE_COMPLEX_ROUNDED_STELLATED: {
-        'name': 'RECTANGLE COMPLEX ROUNDED STELLATED',
+        'id': 'TAG_RECTANGLE_COMPLEX_ROUNDED_STELLATED',
         'deprecated': True
     },
     TAG_RECTANGLE_COMPLEX_ROUNDED_STELLATED_REFORMED: {
-        'name': 'RECTANGLE COMPLEX ROUNDED STELLATED REFORMED',
+        'id': 'TAG_RECTANGLE_COMPLEX_ROUNDED_STELLATED_REFORMED',
         'deprecated': True
     },
 
     # Polygons
-    TAG_POLYGON_COMPLEX: {'name': 'POLYGON COMPLEX'},
+    TAG_POLYGON_COMPLEX: {'id': 'TAG_POLYGON_COMPLEX'},
     TAG_POLYGON_COMPLEX_REFORMED: {
-        'name': 'POLYGON COMPLEX REFORMED',
+        'id': 'TAG_POLYGON_COMPLEX_REFORMED',
         'deprecated': True
     },
     TAG_POLYGON_COMPLEX_STELLATED: {
-        'name': 'POLYGON COMPLEX STELLATED',
+        'id': 'TAG_POLYGON_COMPLEX_STELLATED',
         'deprecated': True
     },
     TAG_POLYGON_COMPLEX_STELLATED_REFORMED: {
-        'name': 'POLYGON COMPLEX STELLATED REFORMED',
+        'id': 'TAG_POLYGON_COMPLEX_STELLATED_REFORMED',
         'deprecated': True
     },
-    TAG_POLYGON_COMPLEX_ROUNDED: {'name': 'POLYGON COMPLEX ROUNDED'},
+    TAG_POLYGON_COMPLEX_ROUNDED: {'id': 'TAG_POLYGON_COMPLEX_ROUNDED'},
     TAG_POLYGON_COMPLEX_ROUNDED_REFORMED: {
-        'name': 'POLYGON COMPLEX ROUNDED REFORMED'},
+        'id': 'TAG_POLYGON_COMPLEX_ROUNDED_REFORMED'},
     TAG_POLYGON_COMPLEX_ROUNDED_STELLATED: {
-        'name': 'POLYGON COMPLEX ROUNDED STELLATED'},
+        'id': 'TAG_POLYGON_COMPLEX_ROUNDED_STELLATED'},
     TAG_POLYGON_COMPLEX_ROUNDED_STELLATED_REFORMED: {
-        'name': 'POLYGON COMPLEX ROUNDED STELLATED REFORMED',
+        'id': 'TAG_POLYGON_COMPLEX_ROUNDED_STELLATED_REFORMED',
         'deprecated': True
     },
 
     # General regular shapes
-    TAG_REGULAR_SHAPE_PHASE_1: {'name': 'REGULAR SHAPE PHASE 1'},
+    TAG_REGULAR_SHAPE_PHASE_1: {'id': 'TAG_REGULAR_SHAPE_PHASE_1'},
     TAG_REGULAR_SHAPE_PHASE_2: {
-        'name': 'REGULAR SHAPE PHASE 2',
+        'id': 'TAG_REGULAR_SHAPE_PHASE_2',
         'sec': [
             {'type': 'byte', 'id': 'flags'},
             {'type': 'uint16', 'id': 'number_of_sides'},
@@ -1356,25 +1356,25 @@ XAR_RECORD_DATA_SPEC = {
     # Text related records
     # Text definitions
     TAG_FONT_DEF_TRUETYPE: {
-        'name': 'FONT DEF TRUETYPE',
+        'id': 'TAG_FONT_DEF_TRUETYPE',
         'sec': [
             {'type': 'STRING', 'id': 'full_font_name'},
             {'type': 'STRING', 'id': 'typeface_name'},
             {'type': 'byte', 'id': 'panose', 'number': 10}
         ]
     },
-    TAG_FONT_DEF_ATM: {'name': 'FONT DEF ATM'},
+    TAG_FONT_DEF_ATM: {'id': 'TAG_FONT_DEF_ATM'},
 
     # vanilla text story objects
     TAG_TEXT_STORY_SIMPLE: {
-        'name': 'TEXT STORY SIMPLE',
+        'id': 'TAG_TEXT_STORY_SIMPLE',
         'sec': [
             {'type': 'COORD', 'id': 'anchor'},
             {'type': 'int32', 'id': 'kerning_flag'}
         ]
     },
     TAG_TEXT_STORY_COMPLEX: {
-        'name': 'TEXT STORY COMPLEX',
+        'id': 'TAG_TEXT_STORY_COMPLEX',
         'sec': [
             {'type': 'fixed16', 'id': 'a'},
             {'type': 'fixed16', 'id': 'b'},
@@ -1388,35 +1388,35 @@ XAR_RECORD_DATA_SPEC = {
 
     # text story objects on a path
     TAG_TEXT_STORY_SIMPLE_START_LEFT: {
-        'name': 'TEXT STORY SIMPLE START LEFT',
+        'id': 'TAG_TEXT_STORY_SIMPLE_START_LEFT',
         'sec': [
             {'type': 'COORD', 'id': 'anchor'},
             {'type': 'int32', 'id': 'kerning_flag'}
         ]
     },
     TAG_TEXT_STORY_SIMPLE_START_RIGHT: {
-        'name': 'TEXT STORY SIMPLE START RIGHT',
+        'id': 'TAG_TEXT_STORY_SIMPLE_START_RIGHT',
         'sec': [
             {'type': 'COORD', 'id': 'anchor'},
             {'type': 'int32', 'id': 'kerning_flag'}
         ]
     },
     TAG_TEXT_STORY_SIMPLE_END_LEFT: {
-        'name': 'TEXT STORY SIMPLE END LEFT',
+        'id': 'TAG_TEXT_STORY_SIMPLE_END_LEFT',
         'sec': [
             {'type': 'COORD', 'id': 'anchor'},
             {'type': 'int32', 'id': 'kerning_flag'}
         ]
     },
     TAG_TEXT_STORY_SIMPLE_END_RIGHT: {
-        'name': 'TEXT STORY SIMPLE END RIGHT',
+        'id': 'TAG_TEXT_STORY_SIMPLE_END_RIGHT',
         'sec': [
             {'type': 'COORD', 'id': 'anchor'},
             {'type': 'int32', 'id': 'kerning_flag'}
         ]
     },
     TAG_TEXT_STORY_COMPLEX_START_LEFT: {
-        'name': 'TEXT STORY COMPLEX START LEFT',
+        'id': 'TAG_TEXT_STORY_COMPLEX_START_LEFT',
         'sec': [
             {'type': 'fixed16', 'id': 'a'},
             {'type': 'fixed16', 'id': 'b'},
@@ -1428,7 +1428,7 @@ XAR_RECORD_DATA_SPEC = {
         ]
     },
     TAG_TEXT_STORY_COMPLEX_START_RIGHT: {
-        'name': 'TEXT STORY COMPLEX START RIGHT',
+        'id': 'TAG_TEXT_STORY_COMPLEX_START_RIGHT',
         'sec': [
             {'type': 'fixed16', 'id': 'a'},
             {'type': 'fixed16', 'id': 'b'},
@@ -1440,7 +1440,7 @@ XAR_RECORD_DATA_SPEC = {
         ]
     },
     TAG_TEXT_STORY_COMPLEX_END_LEFT: {
-        'name': 'TEXT STORY COMPLEX END LEFT',
+        'id': 'TAG_TEXT_STORY_COMPLEX_END_LEFT',
         'sec': [
             {'type': 'fixed16', 'id': 'a'},
             {'type': 'fixed16', 'id': 'b'},
@@ -1452,7 +1452,7 @@ XAR_RECORD_DATA_SPEC = {
         ]
     },
     TAG_TEXT_STORY_COMPLEX_END_RIGHT: {
-        'name': 'TEXT STORY COMPLEX END RIGHT',
+        'id': 'TAG_TEXT_STORY_COMPLEX_END_RIGHT',
         'sec': [
             {'type': 'fixed16', 'id': 'a'},
             {'type': 'fixed16', 'id': 'b'},
@@ -1465,125 +1465,125 @@ XAR_RECORD_DATA_SPEC = {
     },
 
     # Text story information records
-    TAG_TEXT_STORY_WORD_WRAP_INFO: {'name': 'TEXT STORY WORD WRAP INFO'},
-    TAG_TEXT_STORY_INDENT_INFO: {'name': 'TEXT STORY INDENT INFO'},
+    TAG_TEXT_STORY_WORD_WRAP_INFO: {'id': 'TAG_TEXT_STORY_WORD_WRAP_INFO'},
+    TAG_TEXT_STORY_INDENT_INFO: {'id': 'TAG_TEXT_STORY_INDENT_INFO'},
 
     # other text story related objects
-    TAG_TEXT_LINE: {'name': 'TEXT LINE'},
-    TAG_TEXT_STRING: {'name': 'TEXT STRING'},
-    TAG_TEXT_CHAR: {'name': 'TEXT CHAR'},
-    TAG_TEXT_EOL: {'name': 'TEXT EOL'},
-    TAG_TEXT_KERN: {'name': 'TEXT KERN'},
-    TAG_TEXT_CARET: {'name': 'TEXT CARET'},
-    TAG_TEXT_LINE_INFO: {'name': 'TEXT LINE INFO'},
+    TAG_TEXT_LINE: {'id': 'TAG_TEXT_LINE'},
+    TAG_TEXT_STRING: {'id': 'TAG_TEXT_STRING'},
+    TAG_TEXT_CHAR: {'id': 'TAG_TEXT_CHAR'},
+    TAG_TEXT_EOL: {'id': 'TAG_TEXT_EOL'},
+    TAG_TEXT_KERN: {'id': 'TAG_TEXT_KERN'},
+    TAG_TEXT_CARET: {'id': 'TAG_TEXT_CARET'},
+    TAG_TEXT_LINE_INFO: {'id': 'TAG_TEXT_LINE_INFO'},
 
     # Text attributes
-    TAG_TEXT_LINESPACE_RATIO: {'name': 'TEXT LINESPACE RATIO'},
-    TAG_TEXT_LINESPACE_ABSOLUTE: {'name': 'TEXT LINESPACE ABSOLUTE'},
-    TAG_TEXT_JUSTIFICATION_LEFT: {'name': 'TEXT JUSTIFICATION LEFT'},
-    TAG_TEXT_JUSTIFICATION_CENTRE: {'name': 'TEXT JUSTIFICATION CENTRE'},
-    TAG_TEXT_JUSTIFICATION_RIGHT: {'name': 'TEXT JUSTIFICATION RIGHT'},
-    TAG_TEXT_JUSTIFICATION_FULL: {'name': 'TEXT JUSTIFICATION FULL'},
+    TAG_TEXT_LINESPACE_RATIO: {'id': 'TAG_TEXT_LINESPACE_RATIO'},
+    TAG_TEXT_LINESPACE_ABSOLUTE: {'id': 'TAG_TEXT_LINESPACE_ABSOLUTE'},
+    TAG_TEXT_JUSTIFICATION_LEFT: {'id': 'TAG_TEXT_JUSTIFICATION_LEFT'},
+    TAG_TEXT_JUSTIFICATION_CENTRE: {'id': 'TAG_TEXT_JUSTIFICATION_CENTRE'},
+    TAG_TEXT_JUSTIFICATION_RIGHT: {'id': 'TAG_TEXT_JUSTIFICATION_RIGHT'},
+    TAG_TEXT_JUSTIFICATION_FULL: {'id': 'TAG_TEXT_JUSTIFICATION_FULL'},
     TAG_TEXT_FONT_SIZE: {
-        'name': 'TEXT FONT SIZE',
+        'id': 'TAG_TEXT_FONT_SIZE',
         'sec': [
             {'type': 'MILLIPOINT', 'id': 'font_size'}
         ]
     },
-    TAG_TEXT_FONT_TYPEFACE: {'name': 'TEXT FONT TYPEFACE'},
-    TAG_TEXT_BOLD_ON: {'name': 'TEXT BOLD ON'},
-    TAG_TEXT_BOLD_OFF: {'name': 'TEXT BOLD OFF'},
-    TAG_TEXT_ITALIC_ON: {'name': 'TEXT ITALIC ON'},
-    TAG_TEXT_ITALIC_OFF: {'name': 'TEXT ITALIC OFF'},
-    TAG_TEXT_UNDERLINE_ON: {'name': 'TEXT UNDERLINE ON'},
-    TAG_TEXT_UNDERLINE_OFF: {'name': 'TEXT UNDERLINE OFF'},
-    TAG_TEXT_SCRIPT_ON: {'name': 'TEXT SCRIPT ON'},
-    TAG_TEXT_SCRIPT_OFF: {'name': 'TEXT SCRIPT OFF'},
-    TAG_TEXT_SUPERSCRIPT_ON: {'name': 'TEXT SUPERSCRIPT ON'},
-    TAG_TEXT_SUBSCRIPT_ON: {'name': 'TEXT SUBSCRIPT ON'},
-    TAG_TEXT_TRACKING: {'name': 'TEXT TRACKING'},
-    TAG_TEXT_ASPECT_RATIO: {'name': 'TEXT ASPECT RATIO'},
-    TAG_TEXT_BASELINE: {'name': 'TEXT BASELINE'},
+    TAG_TEXT_FONT_TYPEFACE: {'id': 'TAG_TEXT_FONT_TYPEFACE'},
+    TAG_TEXT_BOLD_ON: {'id': 'TAG_TEXT_BOLD_ON'},
+    TAG_TEXT_BOLD_OFF: {'id': 'TAG_TEXT_BOLD_OFF'},
+    TAG_TEXT_ITALIC_ON: {'id': 'TAG_TEXT_ITALIC_ON'},
+    TAG_TEXT_ITALIC_OFF: {'id': 'TAG_TEXT_ITALIC_OFF'},
+    TAG_TEXT_UNDERLINE_ON: {'id': 'TAG_TEXT_UNDERLINE_ON'},
+    TAG_TEXT_UNDERLINE_OFF: {'id': 'TAG_TEXT_UNDERLINE_OFF'},
+    TAG_TEXT_SCRIPT_ON: {'id': 'TAG_TEXT_SCRIPT_ON'},
+    TAG_TEXT_SCRIPT_OFF: {'id': 'TAG_TEXT_SCRIPT_OFF'},
+    TAG_TEXT_SUPERSCRIPT_ON: {'id': 'TAG_TEXT_SUPERSCRIPT_ON'},
+    TAG_TEXT_SUBSCRIPT_ON: {'id': 'TAG_TEXT_SUBSCRIPT_ON'},
+    TAG_TEXT_TRACKING: {'id': 'TAG_TEXT_TRACKING'},
+    TAG_TEXT_ASPECT_RATIO: {'id': 'TAG_TEXT_ASPECT_RATIO'},
+    TAG_TEXT_BASELINE: {'id': 'TAG_TEXT_BASELINE'},
 
     # Imagesetting attributes
-    TAG_OVERPRINTLINEON: {'name': 'OVERPRINTLINEON'},
-    TAG_OVERPRINTLINEOFF: {'name': 'OVERPRINTLINEOFF'},
-    TAG_OVERPRINTFILLON: {'name': 'OVERPRINTFILLON'},
-    TAG_OVERPRINTFILLOFF: {'name': 'OVERPRINTFILLOFF'},
-    TAG_PRINTONALLPLATESON: {'name': 'PRINTONALLPLATESON'},
-    TAG_PRINTONALLPLATESOFF: {'name': 'PRINTONALLPLATESOFF'},
+    TAG_OVERPRINTLINEON: {'id': 'TAG_OVERPRINTLINEON'},
+    TAG_OVERPRINTLINEOFF: {'id': 'TAG_OVERPRINTLINEOFF'},
+    TAG_OVERPRINTFILLON: {'id': 'TAG_OVERPRINTFILLON'},
+    TAG_OVERPRINTFILLOFF: {'id': 'TAG_OVERPRINTFILLOFF'},
+    TAG_PRINTONALLPLATESON: {'id': 'TAG_PRINTONALLPLATESON'},
+    TAG_PRINTONALLPLATESOFF: {'id': 'TAG_PRINTONALLPLATESOFF'},
 
     # Document Print/Image setting options
-    TAG_PRINTERSETTINGS: {'name': 'PRINTERSETTINGS'},
-    TAG_IMAGESETTING: {'name': 'IMAGESETTING'},
-    TAG_COLOURPLATE: {'name': 'COLOURPLATE'},
+    TAG_PRINTERSETTINGS: {'id': 'TAG_PRINTERSETTINGS'},
+    TAG_IMAGESETTING: {'id': 'TAG_IMAGESETTING'},
+    TAG_COLOURPLATE: {'id': 'TAG_COLOURPLATE'},
 
     # Registration mark records
-    TAG_PRINTMARKDEFAULT: {'name': 'PRINTMARKDEFAULT'},
+    TAG_PRINTMARKDEFAULT: {'id': 'TAG_PRINTMARKDEFAULT'},
 
     # Stroking records
-    TAG_VARIABLEWIDTHFUNC: {'name': 'VARIABLEWIDTHFUNC'},
-    TAG_VARIABLEWIDTHTABLE: {'name': 'VARIABLEWIDTHTABLE'},
-    TAG_STROKETYPE: {'name': 'STROKETYPE'},
-    TAG_STROKEDEFINITION: {'name': 'STROKEDEFINITION'},
-    TAG_STROKEAIRBRUSH: {'name': 'STROKEAIRBRUSH'},
+    TAG_VARIABLEWIDTHFUNC: {'id': 'TAG_VARIABLEWIDTHFUNC'},
+    TAG_VARIABLEWIDTHTABLE: {'id': 'TAG_VARIABLEWIDTHTABLE'},
+    TAG_STROKETYPE: {'id': 'TAG_STROKETYPE'},
+    TAG_STROKEDEFINITION: {'id': 'TAG_STROKEDEFINITION'},
+    TAG_STROKEAIRBRUSH: {'id': 'TAG_STROKEAIRBRUSH'},
 
     # Fractal Noise records
-    TAG_NOISEFILL: {'name': 'NOISEFILL'},
-    TAG_NOISETRANSPARENTFILL: {'name': 'NOISETRANSPARENTFILL'},
+    TAG_NOISEFILL: {'id': 'TAG_NOISEFILL'},
+    TAG_NOISETRANSPARENTFILL: {'id': 'TAG_NOISETRANSPARENTFILL'},
 
     # Mould bounds record
-    TAG_MOULD_BOUNDS: {'name': 'MOULD BOUNDS'},
+    TAG_MOULD_BOUNDS: {'id': 'TAG_MOULD_BOUNDS'},
 
     # Bitmap export hint record
-    TAG_EXPORT_HINT: {'name': 'EXPORT HINT'},
+    TAG_EXPORT_HINT: {'id': 'TAG_EXPORT_HINT'},
 
     # Web Address tags
-    TAG_WEBADDRESS: {'name': 'WEBADDRESS'},
-    TAG_WEBADDRESS_BOUNDINGBOX: {'name': 'WEBADDRESS BOUNDINGBOX'},
+    TAG_WEBADDRESS: {'id': 'TAG_WEBADDRESS'},
+    TAG_WEBADDRESS_BOUNDINGBOX: {'id': 'TAG_WEBADDRESS_BOUNDINGBOX'},
 
     # Frame layer tags
-    TAG_LAYER_FRAMEPROPS: {'name': 'LAYER FRAMEPROPS'},
-    TAG_SPREAD_ANIMPROPS: {'name': 'SPREAD ANIMPROPS'},
+    TAG_LAYER_FRAMEPROPS: {'id': 'TAG_LAYER_FRAMEPROPS'},
+    TAG_SPREAD_ANIMPROPS: {'id': 'TAG_SPREAD_ANIMPROPS'},
 
     # Wizard properties tags
-    TAG_WIZOP: {'name': 'WIZOP'},
-    TAG_WIZOP_STYLE: {'name': 'WIZOP STYLE'},
-    TAG_WIZOP_STYLEREF: {'name': 'WIZOP STYLEREF'},
+    TAG_WIZOP: {'id': 'TAG_WIZOP'},
+    TAG_WIZOP_STYLE: {'id': 'TAG_WIZOP_STYLE'},
+    TAG_WIZOP_STYLEREF: {'id': 'TAG_WIZOP_STYLEREF'},
 
     # Shadow tags
-    TAG_SHADOWCONTROLLER: {'name': 'SHADOWCONTROLLER'},
-    TAG_SHADOW: {'name': 'SHADOW'},
+    TAG_SHADOWCONTROLLER: {'id': 'TAG_SHADOWCONTROLLER'},
+    TAG_SHADOW: {'id': 'TAG_SHADOW'},
 
     # Bevel tags
-    TAG_BEVEL: {'name': 'BEVEL'},
-    TAG_BEVATTR_INDENT: {'name': 'BEVATTR INDENT', 'deprecated': True},
-    TAG_BEVATTR_LIGHTANGLE: {'name': 'BEVATTR LIGHTANGLE', 'deprecated': True},
-    TAG_BEVATTR_CONTRAST: {'name': 'BEVATTR CONTRAST', 'deprecated': True},
-    TAG_BEVATTR_TYPE: {'name': 'BEVATTR TYPE', 'deprecated': True},
-    TAG_BEVELINK: {'name': 'BEVELINK'},
+    TAG_BEVEL: {'id': 'TAG_BEVEL'},
+    TAG_BEVATTR_INDENT: {'id': 'TAG_BEVATTR_INDENT', 'deprecated': True},
+    TAG_BEVATTR_LIGHTANGLE: {'id': 'TAG_BEVATTR_LIGHTANGLE', 'deprecated': True},
+    TAG_BEVATTR_CONTRAST: {'id': 'TAG_BEVATTR_CONTRAST', 'deprecated': True},
+    TAG_BEVATTR_TYPE: {'id': 'TAG_BEVATTR_TYPE', 'deprecated': True},
+    TAG_BEVELINK: {'id': 'TAG_BEVELINK'},
 
     # Blend on a curve tags
-    TAG_BLENDER_CURVEPROP: {'name': 'BLENDER CURVEPROP'},
-    TAG_BLEND_PATH: {'name': 'BLEND PATH'},
-    TAG_BLENDER_CURVEANGLES: {'name': 'BLENDER CURVEANGLES'},
+    TAG_BLENDER_CURVEPROP: {'id': 'TAG_BLENDER_CURVEPROP'},
+    TAG_BLEND_PATH: {'id': 'TAG_BLEND_PATH'},
+    TAG_BLENDER_CURVEANGLES: {'id': 'TAG_BLENDER_CURVEANGLES'},
 
     # Contouring tags
-    TAG_CONTOURCONTROLLER: {'name': 'CONTOURCONTROLLER'},
-    TAG_CONTOUR: {'name': 'CONTOUR'},
+    TAG_CONTOURCONTROLLER: {'id': 'TAG_CONTOURCONTROLLER'},
+    TAG_CONTOUR: {'id': 'TAG_CONTOUR'},
 
     # Set tags
-    TAG_SETSENTINEL: {'name': 'SETSENTINEL'},
-    TAG_SETPROPERTY: {'name': 'SETPROPERTY'},
+    TAG_SETSENTINEL: {'id': 'TAG_SETSENTINEL'},
+    TAG_SETPROPERTY: {'id': 'TAG_SETPROPERTY'},
 
     # More Blend on a curve tags
-    TAG_BLENDPROFILES: {'name': 'BLENDPROFILES'},
-    TAG_BLENDERADDITIONAL: {'name': 'BLENDERADDITIONAL'},
-    TAG_NODEBLENDPATH_FILLED: {'name': 'NODEBLENDPATH FILLED'},
+    TAG_BLENDPROFILES: {'id': 'TAG_BLENDPROFILES'},
+    TAG_BLENDERADDITIONAL: {'id': 'TAG_BLENDERADDITIONAL'},
+    TAG_NODEBLENDPATH_FILLED: {'id': 'TAG_NODEBLENDPATH_FILLED'},
 
     # Multi stage fill tags
     TAG_LINEARFILLMULTISTAGE: {
-        'name': 'LINEARFILLMULTISTAGE',
+        'id': 'TAG_LINEARFILLMULTISTAGE',
         'sec': [
             {'type': 'COORD', 'id': 'start_point'},
             {'type': 'COORD', 'id': 'end_point'},
@@ -1596,7 +1596,7 @@ XAR_RECORD_DATA_SPEC = {
         ]
     },
     TAG_CIRCULARFILLMULTISTAGE: {
-        'name': 'CIRCULARFILLMULTISTAGE',
+        'id': 'TAG_CIRCULARFILLMULTISTAGE',
         'sec': [
             {'type': 'COORD', 'id': 'centre_point'},
             {'type': 'COORD', 'id': 'edge_point'},
@@ -1607,7 +1607,7 @@ XAR_RECORD_DATA_SPEC = {
         ]
     },
     TAG_ELLIPTICALFILLMULTISTAGE: {
-        'name': 'ELLIPTICALFILLMULTISTAGE',
+        'id': 'TAG_ELLIPTICALFILLMULTISTAGE',
         'sec': [
             {'type': 'COORD', 'id': 'centre_point'},
             {'type': 'COORD', 'id': 'major_axes'},
@@ -1618,123 +1618,123 @@ XAR_RECORD_DATA_SPEC = {
             {'type': 'StopColour', 'id': 'stop_colors', 'number': 'num_cols'}
         ]
     },
-    TAG_CONICALFILLMULTISTAGE: {'name': 'CONICALFILLMULTISTAGE'},
+    TAG_CONICALFILLMULTISTAGE: {'id': 'TAG_CONICALFILLMULTISTAGE'},
 
     # Brush attribute tags
-    TAG_BRUSHATTR: {'name': 'BRUSHATTR'},
-    TAG_BRUSHDEFINITION: {'name': 'BRUSHDEFINITION'},
-    TAG_BRUSHDATA: {'name': 'BRUSHDATA'},
-    TAG_MOREBRUSHDATA: {'name': 'MOREBRUSHDATA'},
-    TAG_MOREBRUSHATTR: {'name': 'MOREBRUSHATTR'},
+    TAG_BRUSHATTR: {'id': 'TAG_BRUSHATTR'},
+    TAG_BRUSHDEFINITION: {'id': 'TAG_BRUSHDEFINITION'},
+    TAG_BRUSHDATA: {'id': 'TAG_BRUSHDATA'},
+    TAG_MOREBRUSHDATA: {'id': 'TAG_MOREBRUSHDATA'},
+    TAG_MOREBRUSHATTR: {'id': 'TAG_MOREBRUSHATTR'},
 
     # ClipView tags
-    TAG_CLIPVIEWCONTROLLER: {'name': 'CLIPVIEWCONTROLLER'},
-    TAG_CLIPVIEW: {'name': 'CLIPVIEW'},
+    TAG_CLIPVIEWCONTROLLER: {'id': 'TAG_CLIPVIEWCONTROLLER'},
+    TAG_CLIPVIEW: {'id': 'TAG_CLIPVIEW'},
 
     # Feathering tags
-    TAG_FEATHER: {'name': 'FEATHER'},
+    TAG_FEATHER: {'id': 'TAG_FEATHER'},
 
     # Bar properties tag
-    TAG_BARPROPERTY: {'name': 'BARPROPERTY'},
+    TAG_BARPROPERTY: {'id': 'TAG_BARPROPERTY'},
 
     # Other multi stage fill tags
-    TAG_SQUAREFILLMULTISTAGE: {'name': 'SQUAREFILLMULTISTAGE'},
+    TAG_SQUAREFILLMULTISTAGE: {'id': 'TAG_SQUAREFILLMULTISTAGE'},
 
     # More brush tags
-    TAG_EVENMOREBRUSHDATA: {'name': 'EVENMOREBRUSHDATA'},
-    TAG_EVENMOREBRUSHATTR: {'name': 'EVENMOREBRUSHATTR'},
-    TAG_TIMESTAMPBRUSHDATA: {'name': 'TIMESTAMPBRUSHDATA'},
-    TAG_BRUSHPRESSUREINFO: {'name': 'BRUSHPRESSUREINFO'},
-    TAG_BRUSHPRESSUREDATA: {'name': 'BRUSHPRESSUREDATA'},
-    TAG_BRUSHATTRPRESSUREINFO: {'name': 'BRUSHATTRPRESSUREINFO'},
-    TAG_BRUSHCOLOURDATA: {'name': 'BRUSHCOLOURDATA'},
-    TAG_BRUSHPRESSURESAMPLEDATA: {'name': 'BRUSHPRESSURESAMPLEDATA'},
-    TAG_BRUSHTIMESAMPLEDATA: {'name': 'BRUSHTIMESAMPLEDATA'},
-    TAG_BRUSHATTRFILLFLAGS: {'name': 'BRUSHATTRFILLFLAGS'},
-    TAG_BRUSHTRANSPINFO: {'name': 'BRUSHTRANSPINFO'},
-    TAG_BRUSHATTRTRANSPINFO: {'name': 'BRUSHATTRTRANSPINFO'},
+    TAG_EVENMOREBRUSHDATA: {'id': 'TAG_EVENMOREBRUSHDATA'},
+    TAG_EVENMOREBRUSHATTR: {'id': 'TAG_EVENMOREBRUSHATTR'},
+    TAG_TIMESTAMPBRUSHDATA: {'id': 'TAG_TIMESTAMPBRUSHDATA'},
+    TAG_BRUSHPRESSUREINFO: {'id': 'TAG_BRUSHPRESSUREINFO'},
+    TAG_BRUSHPRESSUREDATA: {'id': 'TAG_BRUSHPRESSUREDATA'},
+    TAG_BRUSHATTRPRESSUREINFO: {'id': 'TAG_BRUSHATTRPRESSUREINFO'},
+    TAG_BRUSHCOLOURDATA: {'id': 'TAG_BRUSHCOLOURDATA'},
+    TAG_BRUSHPRESSURESAMPLEDATA: {'id': 'TAG_BRUSHPRESSURESAMPLEDATA'},
+    TAG_BRUSHTIMESAMPLEDATA: {'id': 'TAG_BRUSHTIMESAMPLEDATA'},
+    TAG_BRUSHATTRFILLFLAGS: {'id': 'TAG_BRUSHATTRFILLFLAGS'},
+    TAG_BRUSHTRANSPINFO: {'id': 'TAG_BRUSHTRANSPINFO'},
+    TAG_BRUSHATTRTRANSPINFO: {'id': 'TAG_BRUSHATTRTRANSPINFO'},
 
     # Nudge size record
     TAG_DOCUMENTNUDGE: {
-        'name': 'DOCUMENTNUDGE',
+        'id': 'TAG_DOCUMENTNUDGE',
         'sec': [
             {'type': 'MILLIPOINT', 'id': 'size'}
         ]
     },
 
     # Bitmap properties record
-    TAG_BITMAP_PROPERTIES: {'name': 'BITMAP PROPERTIES'},
+    TAG_BITMAP_PROPERTIES: {'id': 'TAG_BITMAP_PROPERTIES'},
 
     # Bitmap smoothing record
-    TAG_DOCUMENTBITMAPSMOOTHING: {'name': 'DOCUMENTBITMAPSMOOTHING'},
+    TAG_DOCUMENTBITMAPSMOOTHING: {'id': 'TAG_DOCUMENTBITMAPSMOOTHING'},
 
     # XPE bitmap processing record
-    TAG_XPE_BITMAP_PROPERTIES: {'name': 'XPE BITMAP PROPERTIES'},
+    TAG_XPE_BITMAP_PROPERTIES: {'id': 'TAG_XPE_BITMAP_PROPERTIES'},
 
     # XPE Bitmap file format placeholder record
-    TAG_DEFINEBITMAP_XPE: {'name': 'DEFINEBITMAP XPE'},
+    TAG_DEFINEBITMAP_XPE: {'id': 'TAG_DEFINEBITMAP_XPE'},
 
     # Current attributes records
     TAG_CURRENTATTRIBUTES: {
-        'name': 'CURRENTATTRIBUTES',
+        'id': 'TAG_CURRENTATTRIBUTES',
         'sec': [
             {'type': 'byte', 'id': 'group'}
         ]
     },
-    TAG_CURRENTATTRIBUTEBOUNDS: {'name': 'CURRENTATTRIBUTEBOUNDS'},
+    TAG_CURRENTATTRIBUTEBOUNDS: {'id': 'TAG_CURRENTATTRIBUTEBOUNDS'},
 
     # 3-point linear fill records
-    TAG_LINEARFILL3POINT: {'name': 'LINEARFILL3POINT'},
-    TAG_LINEARFILLMULTISTAGE3POINT: {'name': 'LINEARFILLMULTISTAGE3POINT'},
-    TAG_LINEARTRANSPARENTFILL3POINT: {'name': 'LINEARTRANSPARENTFILL3POINT'},
+    TAG_LINEARFILL3POINT: {'id': 'TAG_LINEARFILL3POINT'},
+    TAG_LINEARFILLMULTISTAGE3POINT: {'id': 'TAG_LINEARFILLMULTISTAGE3POINT'},
+    TAG_LINEARTRANSPARENTFILL3POINT: {'id': 'TAG_LINEARTRANSPARENTFILL3POINT'},
 
     # Duplication distance record
-    TAG_DUPLICATIONOFFSET: {'name': 'DUPLICATIONOFFSET'},
+    TAG_DUPLICATIONOFFSET: {'id': 'TAG_DUPLICATIONOFFSET'},
 
     # Bitmap effect tags
-    TAG_LIVE_EFFECT: {'name': 'LIVE EFFECT'},
-    TAG_LOCKED_EFFECT: {'name': 'LOCKED EFFECT'},
-    TAG_FEATHER_EFFECT: {'name': 'FEATHER EFFECT'},
+    TAG_LIVE_EFFECT: {'id': 'TAG_LIVE_EFFECT'},
+    TAG_LOCKED_EFFECT: {'id': 'TAG_LOCKED_EFFECT'},
+    TAG_FEATHER_EFFECT: {'id': 'TAG_FEATHER_EFFECT'},
 
     # Miscellaneous records
-    TAG_COMPOUNDRENDER: {'name': 'COMPOUNDRENDER'},
-    TAG_OBJECTBOUNDS: {'name': 'OBJECTBOUNDS'},
-    TAG_SPREAD_PHASE2: {'name': 'SPREAD PHASE2'},
-    TAG_CURRENTATTRIBUTES_PHASE2: {'name': 'CURRENTATTRIBUTES PHASE2'},
-    TAG_SPREAD_FLASHPROPS: {'name': 'SPREAD FLASHPROPS'},
-    TAG_PRINTERSETTINGS_PHASE2: {'name': 'PRINTERSETTINGS PHASE2'},
-    TAG_CLIPVIEW_PATH: {'name': 'CLIPVIEW PATH'},
+    TAG_COMPOUNDRENDER: {'id': 'TAG_COMPOUNDRENDER'},
+    TAG_OBJECTBOUNDS: {'id': 'TAG_OBJECTBOUNDS'},
+    TAG_SPREAD_PHASE2: {'id': 'TAG_SPREAD_PHASE2'},
+    TAG_CURRENTATTRIBUTES_PHASE2: {'id': 'TAG_CURRENTATTRIBUTES_PHASE2'},
+    TAG_SPREAD_FLASHPROPS: {'id': 'TAG_SPREAD_FLASHPROPS'},
+    TAG_PRINTERSETTINGS_PHASE2: {'id': 'TAG_PRINTERSETTINGS_PHASE2'},
+    TAG_CLIPVIEW_PATH: {'id': 'TAG_CLIPVIEW_PATH'},
     TAG_DEFINEBITMAP_PNG_REAL: {
-        'name': 'DEFINEBITMAP PNG REAL',
+        'id': 'TAG_DEFINEBITMAP_PNG_REAL',
         'sec': [
             {'type': 'STRING', 'id': 'bitmap_name'},
             {'type': 'BITMAP_DATA', 'id': 'bitmap_data'},
         ]
     },
-    TAG_TEXT_STRING_POS: {'name': 'TEXT STRING POS'},
-    TAG_SPREAD_FLASHPROPS2: {'name': 'SPREAD FLASHPROPS2'},
-    TAG_TEXT_LINESPACE_LEADING: {'name': 'TEXT LINESPACE LEADING'},
+    TAG_TEXT_STRING_POS: {'id': 'TAG_TEXT_STRING_POS'},
+    TAG_SPREAD_FLASHPROPS2: {'id': 'TAG_SPREAD_FLASHPROPS2'},
+    TAG_TEXT_LINESPACE_LEADING: {'id': 'TAG_TEXT_LINESPACE_LEADING'},
 
     # New text records
-    TAG_TEXT_TAB: {'name': 'TEXT TAB'},
-    TAG_TEXT_LEFT_INDENT: {'name': 'TEXT LEFT INDENT'},
-    TAG_TEXT_FIRST_INDENT: {'name': 'TEXT FIRST INDENT'},
-    TAG_TEXT_RIGHT_INDENT: {'name': 'TEXT RIGHT INDENT'},
-    TAG_TEXT_RULER: {'name': 'TEXT RULER'},
-    TAG_TEXT_STORY_HEIGHT_INFO: {'name': 'TEXT STORY HEIGHT INFO'},
-    TAG_TEXT_STORY_LINK_INFO: {'name': 'TEXT STORY LINK INFO'},
-    TAG_TEXT_STORY_TRANSLATION_INFO: {'name': 'TEXT STORY TRANSLATION INFO'},
-    TAG_TEXT_SPACE_BEFORE: {'name': 'TEXT SPACE BEFORE'},
-    TAG_TEXT_SPACE_AFTER: {'name': 'TEXT SPACE AFTER'},
-    TAG_TEXT_SPECIAL_HYPHEN: {'name': 'TEXT SPECIAL HYPHEN'},
-    TAG_TEXT_SOFT_RETURN: {'name': 'TEXT SOFT RETURN'},
-    TAG_TEXT_EXTRA_FONT_INFO: {'name': 'TEXT EXTRA FONT INFO'},
-    TAG_TEXT_EXTRA_TT_FONT_DEF: {'name': 'TEXT EXTRA TT FONT DEF'},
-    TAG_TEXT_EXTRA_ATM_FONT_DEF: {'name': 'TEXT EXTRA ATM FONT DEF'},
+    TAG_TEXT_TAB: {'id': 'TAG_TEXT_TAB'},
+    TAG_TEXT_LEFT_INDENT: {'id': 'TAG_TEXT_LEFT_INDENT'},
+    TAG_TEXT_FIRST_INDENT: {'id': 'TAG_TEXT_FIRST_INDENT'},
+    TAG_TEXT_RIGHT_INDENT: {'id': 'TAG_TEXT_RIGHT_INDENT'},
+    TAG_TEXT_RULER: {'id': 'TAG_TEXT_RULER'},
+    TAG_TEXT_STORY_HEIGHT_INFO: {'id': 'TAG_TEXT_STORY_HEIGHT_INFO'},
+    TAG_TEXT_STORY_LINK_INFO: {'id': 'TAG_TEXT_STORY_LINK_INFO'},
+    TAG_TEXT_STORY_TRANSLATION_INFO: {'id': 'TAG_TEXT_STORY_TRANSLATION_INFO'},
+    TAG_TEXT_SPACE_BEFORE: {'id': 'TAG_TEXT_SPACE_BEFORE'},
+    TAG_TEXT_SPACE_AFTER: {'id': 'TAG_TEXT_SPACE_AFTER'},
+    TAG_TEXT_SPECIAL_HYPHEN: {'id': 'TAG_TEXT_SPECIAL_HYPHEN'},
+    TAG_TEXT_SOFT_RETURN: {'id': 'TAG_TEXT_SOFT_RETURN'},
+    TAG_TEXT_EXTRA_FONT_INFO: {'id': 'TAG_TEXT_EXTRA_FONT_INFO'},
+    TAG_TEXT_EXTRA_TT_FONT_DEF: {'id': 'TAG_TEXT_EXTRA_TT_FONT_DEF'},
+    TAG_TEXT_EXTRA_ATM_FONT_DEF: {'id': 'TAG_TEXT_EXTRA_ATM_FONT_DEF'},
 
     # Tag that is not in specification
-    TAG_SPREAD_PHOTO_PROPERTIES: {'name': 'SPREAD_PHOTO_PROPERTIES'},
-    TAG_FLASH_PROPERTIES_4: {'name': 'FLASH_PROPERTIES_4'},
-    TAG_PAGE_PROPERTIES_2: {'name': 'PAGE_PROPERTIES_2'},
-    TAG_LIVE_SHARE_ATTRIBUTE: {'name': 'LIVE_SHARE_ATTRIBUTE'},
+    TAG_SPREAD_PHOTO_PROPERTIES: {'id': 'SPREAD_PHOTO_PROPERTIES'},
+    TAG_FLASH_PROPERTIES_4: {'id': 'FLASH_PROPERTIES_4'},
+    TAG_PAGE_PROPERTIES_2: {'id': 'PAGE_PROPERTIES_2'},
+    TAG_LIVE_SHARE_ATTRIBUTE: {'id': 'LIVE_SHARE_ATTRIBUTE'},
 }
