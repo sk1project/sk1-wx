@@ -27,7 +27,7 @@ def create_new_doc(config):
 
 def make_record_header(rec):
     r = xar_datatype.packer_uint32_le.pack(rec.cid)
-    r += xar_datatype.packer_uint32_le.pack(len(rec.chunk))
+    r += xar_datatype.packer_uint32_le.pack(len(rec.chunk)-8)
     return r
 
 

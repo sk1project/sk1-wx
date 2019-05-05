@@ -103,7 +103,7 @@ class XARSaver(AbstractSaver):
 
             if rec.cid == xar_const.TAG_STARTCOMPRESSION:
                 stream.write(make_record_header(rec))
-                stream.write(rec.chunk)
+                stream.write(rec.chunk[8:])
                 stream = ZipIO(raw_stream)
                 stack.extend(rec.childs[::-1])
                 continue
@@ -112,7 +112,7 @@ class XARSaver(AbstractSaver):
                 stream.close()
                 # TODO: update rec.compression_crc, rec.num_bytes
                 stream = stream.raw_stream
-                stream.write(rec.chunk)
+                stream.write(rec.chunk[8:])
                 continue
             elif rec.childs:
                 # stack.append(xar_model.XARRecord(xar_const.TAG_UP))
@@ -120,4 +120,4 @@ class XARSaver(AbstractSaver):
                 # stack.append(xar_model.XARRecord(xar_const.TAG_DOWN))
 
             stream.write(make_record_header(rec))
-            stream.write(rec.chunk)
+            stream.write(rec.chunk[8:])
