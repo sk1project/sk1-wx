@@ -434,6 +434,51 @@ class CdrxPack(CmxRiffElement):
         saver.write(self.chunk)
 
 
+class CmxRota(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.ROTA_ID
+        self.data['arrows'] = [(0, 0)]
+
+    def get_arrows(self, index):
+        return self.data['arrows'][index] \
+            if index < len(self.data['arrows']) else ()
+
+    def add_arrows(self, arrows):
+        if arrows in self.data['arrows']:
+            return self.data['arrows'].index(arrows)
+        else:
+            self.data['arrows'].append(arrows)
+            return len(self.data['arrows']) - 1
+
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        arrows = self.data['arrows'] = []
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            sig = '>hh' if rifx else '<hh'
+            arrows.append(struct.unpack(sig, self.chunk[pos:pos + 4]))
+            pos += 4
+
+    def update(self):
+        rifx = self.config.rifx
+        int2word = utils.py_int2word
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        self.chunk += int2word(len(self.data['arrows']), rifx)
+        for item in self.data['arrows']:
+            sig = '>hh' if rifx else '<hh'
+            self.chunk += struct.pack(sig, *item)
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        self.cache_fields += [(8, 2, 'Number of arrow records'), ]
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            self.cache_fields += [(pos, 4, 'Arrow record'), ]
+            pos += 4
+
+
 class CmxRclrV1(CmxRiffElement):
     def set_defaults(self):
         self.data['identifier'] = cmx_const.RCLR_ID
@@ -593,7 +638,7 @@ class CmxRpenV1(CmxRiffElement):
 
     def update_from_chunk(self):
         rifx = self.config.rifx
-        dashes = self.data['pens'] = []
+        pens = self.data['pens'] = []
         word2int = utils.word2py_int
         dword2int = utils.dword2py_int
         chunk = self.chunk
@@ -608,9 +653,9 @@ class CmxRpenV1(CmxRiffElement):
                 sig = '>dddddd' if rifx else '<dddddd'
                 matrix = struct.unpack(sig, chunk[pos:pos + 48])
                 pos += 48
-                dashes.append((width, aspect, angle, matrix_flag, matrix))
+                pens.append((width, aspect, angle, matrix_flag, matrix))
             else:
-                dashes.append((width, aspect, angle, matrix_flag))
+                pens.append((width, aspect, angle, matrix_flag))
 
     def update(self):
         rifx = self.config.rifx
@@ -729,6 +774,7 @@ GENERIC_CHUNK_MAP = {
     cmx_const.PACK_ID: CdrxPack,
     cmx_const.IKEY_ID: CmxInfoElement,
     cmx_const.ICMT_ID: CmxInfoElement,
+    cmx_const.ROTA_ID: CmxRota,
 }
 
 V1_CHUNK_MAP = {

@@ -61,6 +61,7 @@ RCLR_ID = 'rclr'
 RDOT_ID = 'rdot'
 RPEN_ID = 'rpen'
 ROTT_ID = 'rott'
+ROTA_ID = 'rota'
 
 RSCR_ID = 'rscr'
 RSCR_RECORD = '\x00\x00\x64\x00\x00\x00\x00\x00\xc2\x01\x00\x00\x00\x00'
