@@ -16,6 +16,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+import struct
 import zlib
 from cStringIO import StringIO
 
@@ -574,6 +575,68 @@ class CmxRdotV1(CmxRiffElement):
             pos += 2 + 2 * num
 
 
+class CmxRpenV1(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.RPEN_ID
+        self.data['pens'] = []
+
+    def get_pen(self, index):
+        return self.data['pens'][index] \
+            if index < len(self.data['pens']) else ()
+
+    def add_pen(self, pen):
+        if pen in self.data['pens']:
+            return self.data['pens'].index(pen)
+        else:
+            self.data['pens'].append(pen)
+            return len(self.data['pens']) - 1
+
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        dashes = self.data['pens'] = []
+        word2int = utils.word2py_int
+        dword2int = utils.dword2py_int
+        chunk = self.chunk
+        pos = 10
+        for _ in range(word2int(chunk[8:10], rifx)):
+            width = word2int(chunk[pos:pos + 2], rifx)
+            aspect = word2int(chunk[pos + 2:pos + 4], rifx)
+            angle = dword2int(chunk[pos + 4:pos + 8], rifx)
+            matrix_flag = word2int(chunk[pos + 8:pos + 10], rifx)
+            pos += 10
+            if matrix_flag != 1:
+                sig = '>dddddd' if rifx else '<dddddd'
+                matrix = struct.unpack(sig, chunk[pos:pos + 48])
+                pos += 48
+                dashes.append((width, aspect, angle, matrix_flag, matrix))
+            else:
+                dashes.append((width, aspect, angle, matrix_flag))
+
+    def update(self):
+        rifx = self.config.rifx
+        int2word = utils.py_int2word
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        self.chunk += int2word(len(self.data['pens']), rifx)
+        for item in self.data['pens']:
+            sig = '>hhih' if rifx else '<hhih'
+            self.chunk += struct.pack(sig, *item[:4])
+            if len(item) > 4:
+                sig = '>dddddd' if rifx else '<dddddd'
+                self.chunk += struct.pack(sig, *item[4])
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        self.cache_fields += [(8, 2, 'Number of pen records'), ]
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            self.cache_fields += [(pos, 10, 'Pen record'), ]
+            pos += 10
+            if utils.word2py_int(self.chunk[pos - 2:pos], rifx) != 1:
+                self.cache_fields += [(pos, 48, 'Pen matrix'), ]
+
+
 class CmxRoot(CmxList):
     toplevel = True
     chunk_map = None
@@ -625,6 +688,7 @@ V1_CHUNK_MAP = {
     cmx_const.RCLR_ID: CmxRclrV1,
     cmx_const.RSCR_ID: CmxRscrV1,
     cmx_const.RDOT_ID: CmxRdotV1,
+    cmx_const.RPEN_ID: CmxRpenV1,
 }
 
 V2_CHUNK_MAP = {
