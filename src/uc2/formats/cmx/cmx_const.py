@@ -57,6 +57,10 @@ IKEY_ID = 'IKEY'
 ICMT_ID = 'ICMT'
 RLST_ID = 'rlst'
 RCLR_ID = 'rclr'
+RDOT_ID = 'rdot'
+
+RSCR_ID = 'rscr'
+RSCR_RECORD = '\x00\x00\x64\x00\x00\x00\x00\x00\xc2\x01\x00\x00\x00\x00'
 
 # INSTRUCTION CODES
 ADD_CLIPPING_REGION = 88

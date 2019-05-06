@@ -339,6 +339,7 @@ class CmxPage(CmxRiffElement):
         def _get_recursive_size(el):
             return sum([len(el.chunk)] +
                        [_get_recursive_size(item) for item in el.childs])
+
         return _get_recursive_size(self)
 
     def update_from_chunk(self):
@@ -437,23 +438,33 @@ class CmxRclrV1(CmxRiffElement):
         self.data['identifier'] = cmx_const.RCLR_ID
         self.data['colors'] = []
 
+    def get_color(self, index):
+        return self.data['colors'][index] \
+            if index < len(self.data['colors']) else ()
+
+    def add_color(self, color):
+        if color in self.data['colors']:
+            return self.data['colors'].index(color)
+        else:
+            self.data['colors'].append(color)
+            return len(self.data['colors']) - 1
+
     def update_from_chunk(self):
         rifx = self.config.rifx
         colors = self.data['colors'] = []
-        if self.config.v1:
-            pos = 10
-            for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
-                model = utils.byte2py_int(self.chunk[pos])
-                palette = utils.byte2py_int(self.chunk[pos + 1])
-                if model < len(cmx_const.COLOR_BYTES):
-                    clr_sz = cmx_const.COLOR_BYTES[model]
-                else:
-                    LOG.error('Invalide or unknown color model %s', model)
-                    break
-                vals = tuple(utils.byte2py_int(val)
-                             for val in self.chunk[pos + 2: pos + 2 + clr_sz])
-                colors.append((model, palette, vals))
-                pos += clr_sz + 2
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            model = utils.byte2py_int(self.chunk[pos])
+            palette = utils.byte2py_int(self.chunk[pos + 1])
+            if model < len(cmx_const.COLOR_BYTES):
+                clr_sz = cmx_const.COLOR_BYTES[model]
+            else:
+                LOG.error('Invalide or unknown color model %s', model)
+                break
+            vals = tuple(utils.byte2py_int(val)
+                         for val in self.chunk[pos + 2: pos + 2 + clr_sz])
+            colors.append((model, palette, vals))
+            pos += clr_sz + 2
 
     def update(self):
         rifx = self.config.rifx
@@ -470,22 +481,97 @@ class CmxRclrV1(CmxRiffElement):
     def update_for_sword(self):
         CmxRiffElement.update_for_sword(self)
         rifx = self.config.rifx
-        if self.config.v1:
-            self.cache_fields += [(8, 2, 'Number of colors\n'), ]
-            pos = 10
-            for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
-                model = utils.byte2py_int(self.chunk[pos])
-                model_name = cmx_const.COLOR_MODEL_MAP.get(model, 'Unknown')
-                self.cache_fields += [(pos, 1, '%s color model' % model_name), ]
-                palette = utils.byte2py_int(self.chunk[pos + 1])
-                pals = cmx_const.COLOR_PALETTES
-                pal_name = pals[palette] if palette < len(pals) else 'Unknown'
-                self.cache_fields += [(pos + 1, 1, '%s palette' % pal_name), ]
-                if model >= len(cmx_const.COLOR_BYTES):
-                    break
-                clr_sz = cmx_const.COLOR_BYTES[model]
-                self.cache_fields += [(pos + 2, clr_sz, 'Color values\n'), ]
-                pos += clr_sz + 2
+        self.cache_fields += [(8, 2, 'Number of colors\n'), ]
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            model = utils.byte2py_int(self.chunk[pos])
+            model_name = cmx_const.COLOR_MODEL_MAP.get(model, 'Unknown')
+            self.cache_fields += [(pos, 1, '%s color model' % model_name), ]
+            palette = utils.byte2py_int(self.chunk[pos + 1])
+            pals = cmx_const.COLOR_PALETTES
+            pal_name = pals[palette] if palette < len(pals) else 'Unknown'
+            self.cache_fields += [(pos + 1, 1, '%s palette' % pal_name), ]
+            if model >= len(cmx_const.COLOR_BYTES):
+                break
+            clr_sz = cmx_const.COLOR_BYTES[model]
+            self.cache_fields += [(pos + 2, clr_sz, 'Color values\n'), ]
+            pos += clr_sz + 2
+
+
+class CmxRscrV1(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.RSCR_ID
+        self.data['rec_num'] = '\x01\00'
+        self.data['records'] = cmx_const.RSCR_RECORD
+
+    def update_from_chunk(self):
+        self.data['rec_num'] = self.chunk[8:10]
+        self.data['records'] = self.chunk[10:]
+
+    def update(self):
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        self.chunk += self.data['rec_num'] + self.data['records']
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        self.cache_fields += [(8, 2, 'Number of records'), ]
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            self.cache_fields += [(pos, 13, 'Screen record'), ]
+            pos += 13
+
+
+class CmxRdotV1(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.RDOT_ID
+        self.data['dashes'] = []
+
+    def get_dashes(self, index):
+        return self.data['dashes'][index] \
+            if index < len(self.data['dashes']) else ()
+
+    def add_dashes(self, dashes):
+        if dashes in self.data['dashes']:
+            return self.data['dashes'].index(dashes)
+        else:
+            self.data['dashes'].append(dashes)
+            return len(self.data['dashes']) - 1
+
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        dashes = self.data['dashes'] = []
+        word2int = utils.word2py_int
+        chunk = self.chunk
+        pos = 10
+        for _ in range(word2int(chunk[8:10], rifx)):
+            num = word2int(chunk[pos:pos + 2], rifx)
+            pos += 2
+            dashes.append(tuple(word2int(
+                chunk[pos + 2 * i:pos + 2 * i + 2], rifx) for i in range(num)))
+            pos += 2 * num
+
+    def update(self):
+        rifx = self.config.rifx
+        int2word = utils.py_int2word
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        self.chunk += int2word(len(self.data['dashes']), rifx)
+        for item in self.data['dashes']:
+            self.chunk += int2word(len(item), rifx)
+            self.chunk += ''.join([int2word(val, rifx) for val in item])
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        self.cache_fields += [(8, 2, 'Number of dash records'), ]
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            self.cache_fields += [(pos, 2, 'Number of dash elements'), ]
+            num = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
+            self.cache_fields += [(pos + 2, 2 * num, 'Dash elements'), ]
+            pos += 2 + 2 * num
 
 
 class CmxRoot(CmxList):
@@ -537,6 +623,8 @@ GENERIC_CHUNK_MAP = {
 
 V1_CHUNK_MAP = {
     cmx_const.RCLR_ID: CmxRclrV1,
+    cmx_const.RSCR_ID: CmxRscrV1,
+    cmx_const.RDOT_ID: CmxRdotV1,
 }
 
 V2_CHUNK_MAP = {
