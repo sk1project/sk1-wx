@@ -93,6 +93,7 @@ class DocToolbar(gtk.Toolbar):
                    'EXPAND',
                    None,
                    'SAVE_CHUNK',
+                   'DELETE',
                    None,
                ] + self.add_entries
 

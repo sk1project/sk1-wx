@@ -133,6 +133,13 @@ class DocumentInspector:
                 return 1 if hasattr(obj, 'chunk') and obj.chunk else 0
         return 0
 
+    def can_delete_obj(self, doc=None):
+        if doc is None:
+            doc = self.app.current_doc
+        if doc is None:
+            return False
+        return 1 if self.is_selection(doc) else 0
+
     def can_refresh_model(self, doc=None):
         return self.is_doc()
 

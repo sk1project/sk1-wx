@@ -83,7 +83,10 @@ class AppProxy:
         self._edit_stub()
 
     def delete(self, *args):
-        self._edit_stub()
+        obj = self.app.current_doc.selection.selected[0]
+        if obj and obj.parent:
+            obj.parent.childs.remove(obj)
+            self.refresh_model()
 
     def _edit_stub(self):
         msg = _('Model editor is not found for ')
@@ -160,7 +163,7 @@ class AppProxy:
         events.emit(events.SELECTION_CHANGED, selection.selected)
 
     def refresh_model(self, *args):
-        self.app.current_doc.docarea.modelbrowser.modeltree.update_view()
+        self.app.current_doc.docarea.modelbrowser.update_view()
         self.app.current_doc.selection.set_root()
 
     def copy_to_compare(self, *args):
