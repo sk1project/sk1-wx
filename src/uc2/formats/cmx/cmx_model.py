@@ -643,6 +643,7 @@ class CmxRpenV1(CmxRiffElement):
         dword2int = utils.dword2py_int
         chunk = self.chunk
         pos = 10
+        sig = '>dddddd' if rifx else '<dddddd'
         for _ in range(word2int(chunk[8:10], rifx)):
             width = word2int(chunk[pos:pos + 2], rifx)
             aspect = word2int(chunk[pos + 2:pos + 4], rifx)
@@ -650,7 +651,6 @@ class CmxRpenV1(CmxRiffElement):
             matrix_flag = word2int(chunk[pos + 8:pos + 10], rifx)
             pos += 10
             if matrix_flag != 1:
-                sig = '>dddddd' if rifx else '<dddddd'
                 matrix = struct.unpack(sig, chunk[pos:pos + 48])
                 pos += 48
                 pens.append((width, aspect, angle, matrix_flag, matrix))
@@ -687,15 +687,15 @@ class CmxRottV1(CmxRiffElement):
         self.data['identifier'] = cmx_const.ROTT_ID
         self.data['linestyles'] = []
 
-    def get_linestyles(self, index):
+    def get_linestyle(self, index):
         return self.data['linestyles'][index] \
             if index < len(self.data['linestyles']) else ()
 
-    def add_linestyles(self, linestyles):
-        if linestyles in self.data['linestyles']:
-            return self.data['linestyles'].index(linestyles)
+    def add_linestyle(self, linestyle):
+        if linestyle in self.data['linestyles']:
+            return self.data['linestyles'].index(linestyle)
         else:
-            self.data['linestyles'].append(linestyles)
+            self.data['linestyles'].append(linestyle)
             return len(self.data['linestyles']) - 1
 
     def update_from_chunk(self):
@@ -714,8 +714,8 @@ class CmxRottV1(CmxRiffElement):
         int2word = utils.py_int2word
         self.chunk = self.data['identifier'] + 4 * '\x00'
         self.chunk += int2word(len(self.data['linestyles']), rifx)
+        sig = '>BB' if rifx else '<BB'
         for item in self.data['linestyles']:
-            sig = '>BB' if rifx else '<BB'
             self.chunk += struct.pack(sig, *item)
         CmxRiffElement.update(self)
 
@@ -727,6 +727,54 @@ class CmxRottV1(CmxRiffElement):
         for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
             self.cache_fields += [(pos, 2, 'Line style record'), ]
             pos += 2
+
+
+class CmxRotlV1(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.ROTL_ID
+        self.data['outlines'] = []
+
+    def get_outline(self, index):
+        return self.data['outlines'][index] \
+            if index < len(self.data['outlines']) else ()
+
+    def add_outline(self, outline):
+        if outline in self.data['outlines']:
+            return self.data['outlines'].index(outline)
+        else:
+            self.data['outlines'].append(outline)
+            return len(self.data['outlines']) - 1
+
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        linestyles = self.data['outlines'] = []
+        word2int = utils.word2py_int
+        chunk = self.chunk
+        pos = 10
+        sig = '>HHHHHH' if rifx else '<HHHHHH'
+        for _ in range(word2int(chunk[8:10], rifx)):
+            linestyles.append(struct.unpack(sig, chunk[pos:pos + 12]))
+            pos += 12
+
+    def update(self):
+        rifx = self.config.rifx
+        int2word = utils.py_int2word
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        self.chunk += int2word(len(self.data['outlines']), rifx)
+        # style, screen, color, arrowheads, pen, dash
+        sig = '>HHHHHH' if rifx else '<HHHHHH'
+        for item in self.data['outlines']:
+            self.chunk += struct.pack(sig, *item)
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        self.cache_fields += [(8, 2, 'Number of outline records'), ]
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            self.cache_fields += [(pos, 12, 'Outline record'), ]
+            pos += 12
 
 
 class CmxRoot(CmxList):
@@ -783,6 +831,7 @@ V1_CHUNK_MAP = {
     cmx_const.RDOT_ID: CmxRdotV1,
     cmx_const.RPEN_ID: CmxRpenV1,
     cmx_const.ROTT_ID: CmxRottV1,
+    cmx_const.ROTL_ID: CmxRotlV1,
 }
 
 V2_CHUNK_MAP = {
