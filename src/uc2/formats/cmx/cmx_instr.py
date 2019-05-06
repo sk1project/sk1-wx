@@ -21,7 +21,41 @@ from uc2.formats.cmx import cmx_const
 from uc2.formats.generic import BinaryModelObject
 
 
-class CmxInstruction(BinaryModelObject):
+class CmxObject(BinaryModelObject):
+    toplevel = False
+
+    def get_root(self):
+        parent = self
+        while not parent.toplevel:
+            parent = parent.parent
+        return parent
+
+    def get_chunk_size(self):
+        return sum([len(self.chunk)] + [item.get_chunk_size()
+                                        for item in self.childs])
+
+    def get_offset(self):
+        offset = 0
+        parent = self.parent
+        obj = self
+        while parent:
+            index = parent.childs.index(obj)
+            offset += sum([item.get_chunk_size()
+                           for item in parent.childs[:index]])
+            obj = parent
+            parent = parent.parent if not parent.toplevel else None
+        return offset
+
+    def set_defaults(self):
+        pass
+
+    def update_from_chunk(self):
+        pass
+
+
+class CmxInstruction(CmxObject):
+    toplevel=False
+
     def __init__(self, config, chunk=None, **kwargs):
         self.config = config
         self.childs = []
@@ -35,12 +69,6 @@ class CmxInstruction(BinaryModelObject):
         if kwargs:
             self.data.update(kwargs)
 
-    def update_from_chunk(self):
-        pass
-
-    def get_chunk_size(self):
-        return len(self.chunk)
-
     def _get_code(self, code_str):
         return abs(utils.signed_word2py_int(code_str, self.config.rifx))
 
@@ -52,12 +80,12 @@ class CmxInstruction(BinaryModelObject):
                                          str(self.data['code']))
 
     def resolve(self, name=''):
-        sz = '%d' % self.get_chunk_size()
+        sz = '%d' % len(self.chunk)
         name = '[%s]' % self.get_name()
         return len(self.childs) == 0, name, sz
 
     def update(self):
-        size = self.get_chunk_size()
+        size = len(self.chunk)
         sz = utils.py_int2word(size, self.config.rifx)
         self.chunk = sz + self._get_code_str() + self.chunk[4:]
 

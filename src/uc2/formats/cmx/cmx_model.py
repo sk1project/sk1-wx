@@ -22,16 +22,11 @@ from cStringIO import StringIO
 
 from uc2 import utils
 from uc2.formats.cmx import cmx_const, cmx_instr
-from uc2.formats.generic import BinaryModelObject
 
 LOG = logging.getLogger(__name__)
 
 
-class CmxRiffElement(BinaryModelObject):
-    toplevel = False
-    size = None
-    data = None
-
+class CmxRiffElement(cmx_instr.CmxObject):
     def __init__(self, config, chunk=None, **kwargs):
         self.config = config
         self.childs = []
@@ -50,12 +45,6 @@ class CmxRiffElement(BinaryModelObject):
         if kwargs:
             self.data.update(kwargs)
 
-    def set_defaults(self):
-        pass
-
-    def update_from_chunk(self):
-        pass
-
     def update_from_kwargs(self, **kwargs):
         self.data.update(kwargs)
         self.update()
@@ -68,10 +57,6 @@ class CmxRiffElement(BinaryModelObject):
 
     def is_leaf(self):
         return self.data['identifier'] not in cmx_const.LIST_IDS
-
-    def get_chunk_size(self):
-        return sum([len(self.chunk)] + [item.get_chunk_size()
-                                        for item in self.childs])
 
     def get_name(self):
         return self.data.get('name', self.data['identifier'])
@@ -520,6 +505,15 @@ class CmxRota(CmxRiffElement):
         for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
             self.cache_fields += [(pos, 4, 'Arrow record'), ]
             pos += 4
+
+
+class CmxIxlr(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.IXLR_ID
+        self.data['pages'] = []
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
 
 
 class CmxRclrV1(CmxRiffElement):
