@@ -637,6 +637,53 @@ class CmxRpenV1(CmxRiffElement):
                 self.cache_fields += [(pos, 48, 'Pen matrix'), ]
 
 
+class CmxRottV1(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.ROTT_ID
+        self.data['linestyles'] = []
+
+    def get_linestyles(self, index):
+        return self.data['linestyles'][index] \
+            if index < len(self.data['linestyles']) else ()
+
+    def add_linestyles(self, linestyles):
+        if linestyles in self.data['linestyles']:
+            return self.data['linestyles'].index(linestyles)
+        else:
+            self.data['linestyles'].append(linestyles)
+            return len(self.data['linestyles']) - 1
+
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        linestyles = self.data['linestyles'] = []
+        word2int = utils.word2py_int
+        chunk = self.chunk
+        pos = 10
+        for _ in range(word2int(chunk[8:10], rifx)):
+            sig = '>BB' if rifx else '<BB'
+            linestyles.append(struct.unpack(sig, chunk[pos:pos + 2]))
+            pos += 2
+
+    def update(self):
+        rifx = self.config.rifx
+        int2word = utils.py_int2word
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        self.chunk += int2word(len(self.data['linestyles']), rifx)
+        for item in self.data['linestyles']:
+            sig = '>BB' if rifx else '<BB'
+            self.chunk += struct.pack(sig, *item)
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        self.cache_fields += [(8, 2, 'Number of line style records'), ]
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            self.cache_fields += [(pos, 2, 'Line style record'), ]
+            pos += 2
+
+
 class CmxRoot(CmxList):
     toplevel = True
     chunk_map = None
@@ -689,6 +736,7 @@ V1_CHUNK_MAP = {
     cmx_const.RSCR_ID: CmxRscrV1,
     cmx_const.RDOT_ID: CmxRdotV1,
     cmx_const.RPEN_ID: CmxRpenV1,
+    cmx_const.ROTT_ID: CmxRottV1,
 }
 
 V2_CHUNK_MAP = {
