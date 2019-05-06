@@ -434,6 +434,49 @@ class CdrxPack(CmxRiffElement):
         saver.write(self.chunk)
 
 
+class CmxRlst(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.RLST_ID
+        self.data['rlists'] = []
+
+    def get_rlist(self, index):
+        return self.data['rlists'][index] \
+            if index < len(self.data['rlists']) else ()
+
+    def add_rlist(self, rlist):
+        self.data['rlists'].append(rlist)
+        return len(self.data['rlists']) - 1
+
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        rlists = self.data['rlists'] = []
+        pos = 10
+        # Association, Type, ObjectID
+        sig = '>hhh' if rifx else '<hhh'
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            rlists.append(struct.unpack(sig, self.chunk[pos:pos + 6]))
+            pos += 6
+
+    def update(self):
+        rifx = self.config.rifx
+        int2word = utils.py_int2word
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        self.chunk += int2word(len(self.data['rlists']), rifx)
+        sig = '>hhh' if rifx else '<hhh'
+        for item in self.data['rlists']:
+            self.chunk += struct.pack(sig, *item)
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        self.cache_fields += [(8, 2, 'Number of rlists'), ]
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            self.cache_fields += [(pos, 6, 'rlist record'), ]
+            pos += 6
+
+
 class CmxRota(CmxRiffElement):
     def set_defaults(self):
         self.data['identifier'] = cmx_const.ROTA_ID
@@ -454,8 +497,8 @@ class CmxRota(CmxRiffElement):
         rifx = self.config.rifx
         arrows = self.data['arrows'] = []
         pos = 10
+        sig = '>hh' if rifx else '<hh'
         for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
-            sig = '>hh' if rifx else '<hh'
             arrows.append(struct.unpack(sig, self.chunk[pos:pos + 4]))
             pos += 4
 
@@ -464,8 +507,8 @@ class CmxRota(CmxRiffElement):
         int2word = utils.py_int2word
         self.chunk = self.data['identifier'] + 4 * '\x00'
         self.chunk += int2word(len(self.data['arrows']), rifx)
+        sig = '>hh' if rifx else '<hh'
         for item in self.data['arrows']:
-            sig = '>hh' if rifx else '<hh'
             self.chunk += struct.pack(sig, *item)
         CmxRiffElement.update(self)
 
@@ -751,6 +794,7 @@ class CmxRotlV1(CmxRiffElement):
         word2int = utils.word2py_int
         chunk = self.chunk
         pos = 10
+        # style, screen, color, arrowheads, pen, dash
         sig = '>HHHHHH' if rifx else '<HHHHHH'
         for _ in range(word2int(chunk[8:10], rifx)):
             linestyles.append(struct.unpack(sig, chunk[pos:pos + 12]))
@@ -761,7 +805,6 @@ class CmxRotlV1(CmxRiffElement):
         int2word = utils.py_int2word
         self.chunk = self.data['identifier'] + 4 * '\x00'
         self.chunk += int2word(len(self.data['outlines']), rifx)
-        # style, screen, color, arrowheads, pen, dash
         sig = '>HHHHHH' if rifx else '<HHHHHH'
         for item in self.data['outlines']:
             self.chunk += struct.pack(sig, *item)
@@ -822,6 +865,7 @@ GENERIC_CHUNK_MAP = {
     cmx_const.PACK_ID: CdrxPack,
     cmx_const.IKEY_ID: CmxInfoElement,
     cmx_const.ICMT_ID: CmxInfoElement,
+    cmx_const.RLST_ID: CmxRlst,
     cmx_const.ROTA_ID: CmxRota,
 }
 
