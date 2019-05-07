@@ -160,9 +160,18 @@ class Printout(wal.Printout):
 
         matrix = cairo.Matrix(*trafo)
 
-        surface = cairo.Win32PrintingSurface(dc.GetHDC())
+        surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
         ctx = cairo.Context(surface)
+        ctx.set_source_rgb(1, 1, 1)
+        ctx.paint()
         ctx.set_matrix(matrix)
 
         for group in page_obj.childs:
             self.renderer.render(ctx, group.childs)
+
+        win_surface = cairo.Win32PrintingSurface(dc.GetHDC())
+        win_ctx = cairo.Context(win_surface)
+
+        win_ctx.set_source_surface(surface, 0, 0)
+        win_ctx.paint()
+
