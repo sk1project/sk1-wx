@@ -275,19 +275,19 @@ class XAR_to_SK2_Translator(object):
         if self.debug_flag:
             fn = self.sk2_doc.doc_file.rsplit('.', 1)[0]
             with open(fn + '.gif', 'wb') as f:
-                f.write(rec.chunk[8:])
+                f.write(rec.chunk[xar_const.XAR_RECORD_HEADER_SIZE:])
 
     def handle_previewbitmap_jpeg(self, rec, cfg):
         if self.debug_flag:
             fn = self.sk2_doc.doc_file.rsplit('.', 1)[0]
             with open(fn + '.jpeg', 'wb') as f:
-                f.write(rec.chunk[8:])
+                f.write(rec.chunk[xar_const.XAR_RECORD_HEADER_SIZE:])
 
     def handle_previewbitmap_png(self, rec, cfg):
         if self.debug_flag:
             fn = self.sk2_doc.doc_file.rsplit('.', 1)[0]
             with open(fn + '.png', 'wb') as f:
-                f.write(rec.chunk[8:])
+                f.write(rec.chunk[xar_const.XAR_RECORD_HEADER_SIZE:])
 
     # Navigation records
     def handle_up(self, rec, cfg):
@@ -1008,7 +1008,8 @@ class XAR_to_SK2_Translator(object):
             self.buffer_text.append(line)
 
     def handle_text_string(self, rec, cfg):
-        string = rec.chunk[8:].decode('utf_16_le').encode('utf-8')
+        string = rec.chunk[xar_const.XAR_RECORD_HEADER_SIZE:]
+        string = string.decode('utf_16_le').encode('utf-8')
         self.buffer_text_line.append(string)
 
     def handle_text_char(self, rec, cfg):
@@ -1265,9 +1266,9 @@ class XAR_to_SK2_Translator(object):
 #    def handle_duplicationoffset(self, rec, cfg): pass
 
     # Bitmap effect tags
-#    def handle_live_effect(self, rec, cfg): pass
-#    def handle_locked_effect(self, rec, cfg): pass
-#    def handle_feather_effect(self, rec, cfg): pass
+#     def handle_live_effect(self, rec, cfg): pass  # TODO: implement this
+#     def handle_locked_effect(self, rec, cfg): pass  # TODO: implement this
+#     def handle_feather_effect(self, rec, cfg): pass  # TODO: implement this
 
     # Miscellaneous records
 #    def handle_compoundrender(self, rec, cfg): pass

@@ -38,7 +38,7 @@ class XARLoader(AbstractLoader):
         while rec.cid != xar_const.TAG_ENDOFFILE:
             record_idx += 1
             try:
-                record_header = stream.read(8)
+                record_header = stream.read(xar_const.XAR_RECORD_HEADER_SIZE)
                 record_tag = xar_datatype.unpack_u4(record_header)
                 record_size = xar_datatype.unpack_u4(record_header, offset=4)
             except Exception:
@@ -103,7 +103,7 @@ class XARSaver(AbstractSaver):
 
             if rec.cid == xar_const.TAG_STARTCOMPRESSION:
                 stream.write(make_record_header(rec))
-                stream.write(rec.chunk[8:])
+                stream.write(rec.chunk[xar_const.XAR_RECORD_HEADER_SIZE:])
                 stream = ZipIO(raw_stream)
                 stack.extend(rec.childs[::-1])
                 continue
@@ -112,7 +112,7 @@ class XARSaver(AbstractSaver):
                 stream.close()
                 # TODO: update rec.compression_crc, rec.num_bytes
                 stream = stream.raw_stream
-                stream.write(rec.chunk[8:])
+                stream.write(rec.chunk[xar_const.XAR_RECORD_HEADER_SIZE:])
                 continue
             elif rec.childs:
                 # stack.append(xar_model.XARRecord(xar_const.TAG_UP))
@@ -120,4 +120,4 @@ class XARSaver(AbstractSaver):
                 # stack.append(xar_model.XARRecord(xar_const.TAG_DOWN))
 
             stream.write(make_record_header(rec))
-            stream.write(rec.chunk[8:])
+            stream.write(rec.chunk[xar_const.XAR_RECORD_HEADER_SIZE:])

@@ -59,7 +59,7 @@ class XARRecord(BinaryModelObject):
         icon_type = not bool(self.childs)
         xar_record = XAR_RECORD_DATA_SPEC.get(self.cid, {})
         spec = xar_record.get('sec') or []
-        if not spec and self.chunk:
+        if not spec and len(self.chunk)>xar_const.XAR_RECORD_HEADER_SIZE:
             icon_type = 'gtk-new' if icon_type else 'gtk-open'
         if xar_record.get('deprecated', False):
             icon_type = 'gtk-media-record'

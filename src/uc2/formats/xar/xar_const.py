@@ -704,6 +704,7 @@ definitions:
                 type: [int, float, string]
 """
 
+XAR_RECORD_HEADER_SIZE = 8
 XAR_RECORD_HEADER = {
     'sec': [
         {'type': 'uint32', 'id': 'cid'},
