@@ -391,8 +391,10 @@ class CdrxPack(CmxRiffElement):
             (16, 4, 'Compression flags'),
         ]
 
-    def get_chunk_size(self):
-        return len(self.chunk)
+    def get_chunk_size(self, recursive=True):
+        if recursive:
+            return sum([12] + [item.get_chunk_size() for item in self.childs])
+        return 12
 
     def get_childs_size(self):
         return sum([item.get_chunk_size() for item in self.childs])

@@ -30,9 +30,11 @@ class CmxObject(BinaryModelObject):
             parent = parent.parent
         return parent
 
-    def get_chunk_size(self):
-        return sum([len(self.chunk)] + [item.get_chunk_size()
-                                        for item in self.childs])
+    def get_chunk_size(self, recursive=True):
+        if recursive:
+            return sum([len(self.chunk)] + [item.get_chunk_size()
+                                            for item in self.childs])
+        return len(self.chunk)
 
     def get_offset(self):
         offset = 0
@@ -42,6 +44,7 @@ class CmxObject(BinaryModelObject):
             index = parent.childs.index(obj)
             offset += sum([item.get_chunk_size()
                            for item in parent.childs[:index]])
+            offset += parent.get_chunk_size(recursive=False)
             obj = parent
             parent = parent.parent if not parent.toplevel else None
         return offset
