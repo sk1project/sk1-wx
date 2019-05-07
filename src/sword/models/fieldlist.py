@@ -26,7 +26,11 @@ B64_FIELDS = ['bitmap', 'alpha_channel']
 
 def rpr(val):
     if isinstance(val, str) or isinstance(val, unicode):
-        return repr(val.encode('utf-8'))
+        try:
+            res = repr(val.encode('utf-8'))
+        except:
+            res = val.encode('hex')
+        return res
     return repr(val)
 
 

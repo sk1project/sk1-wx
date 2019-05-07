@@ -16,21 +16,17 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+import struct
 import zlib
 from cStringIO import StringIO
 
 from uc2 import utils
 from uc2.formats.cmx import cmx_const, cmx_instr
-from uc2.formats.generic import BinaryModelObject
 
 LOG = logging.getLogger(__name__)
 
 
-class CmxRiffElement(BinaryModelObject):
-    toplevel = False
-    size = None
-    data = None
-
+class CmxRiffElement(cmx_instr.CmxObject):
     def __init__(self, config, chunk=None, **kwargs):
         self.config = config
         self.childs = []
@@ -49,12 +45,6 @@ class CmxRiffElement(BinaryModelObject):
         if kwargs:
             self.data.update(kwargs)
 
-    def set_defaults(self):
-        pass
-
-    def update_from_chunk(self):
-        pass
-
     def update_from_kwargs(self, **kwargs):
         self.data.update(kwargs)
         self.update()
@@ -67,10 +57,6 @@ class CmxRiffElement(BinaryModelObject):
 
     def is_leaf(self):
         return self.data['identifier'] not in cmx_const.LIST_IDS
-
-    def get_chunk_size(self):
-        return sum([len(self.chunk)] + [item.get_chunk_size()
-                                        for item in self.childs])
 
     def get_name(self):
         return self.data.get('name', self.data['identifier'])
@@ -339,6 +325,7 @@ class CmxPage(CmxRiffElement):
         def _get_recursive_size(el):
             return sum([len(el.chunk)] +
                        [_get_recursive_size(item) for item in el.childs])
+
         return _get_recursive_size(self)
 
     def update_from_chunk(self):
@@ -432,28 +419,135 @@ class CdrxPack(CmxRiffElement):
         saver.write(self.chunk)
 
 
+class CmxRlst(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.RLST_ID
+        self.data['rlists'] = []
+
+    def get_rlist(self, index):
+        return self.data['rlists'][index] \
+            if index < len(self.data['rlists']) else ()
+
+    def add_rlist(self, rlist):
+        self.data['rlists'].append(rlist)
+        return len(self.data['rlists']) - 1
+
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        rlists = self.data['rlists'] = []
+        pos = 10
+        # Association, Type, ObjectID
+        sig = '>hhh' if rifx else '<hhh'
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            rlists.append(struct.unpack(sig, self.chunk[pos:pos + 6]))
+            pos += 6
+
+    def update(self):
+        rifx = self.config.rifx
+        int2word = utils.py_int2word
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        self.chunk += int2word(len(self.data['rlists']), rifx)
+        sig = '>hhh' if rifx else '<hhh'
+        for item in self.data['rlists']:
+            self.chunk += struct.pack(sig, *item)
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        self.cache_fields += [(8, 2, 'Number of rlists'), ]
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            self.cache_fields += [(pos, 6, 'rlist record'), ]
+            pos += 6
+
+
+class CmxRota(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.ROTA_ID
+        self.data['arrows'] = [(0, 0)]
+
+    def get_arrows(self, index):
+        return self.data['arrows'][index] \
+            if index < len(self.data['arrows']) else ()
+
+    def add_arrows(self, arrows):
+        if arrows in self.data['arrows']:
+            return self.data['arrows'].index(arrows)
+        else:
+            self.data['arrows'].append(arrows)
+            return len(self.data['arrows']) - 1
+
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        arrows = self.data['arrows'] = []
+        pos = 10
+        sig = '>hh' if rifx else '<hh'
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            arrows.append(struct.unpack(sig, self.chunk[pos:pos + 4]))
+            pos += 4
+
+    def update(self):
+        rifx = self.config.rifx
+        int2word = utils.py_int2word
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        self.chunk += int2word(len(self.data['arrows']), rifx)
+        sig = '>hh' if rifx else '<hh'
+        for item in self.data['arrows']:
+            self.chunk += struct.pack(sig, *item)
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        self.cache_fields += [(8, 2, 'Number of arrow records'), ]
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            self.cache_fields += [(pos, 4, 'Arrow record'), ]
+            pos += 4
+
+
+class CmxIxlr(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.IXLR_ID
+        self.data['pages'] = []
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+
+
 class CmxRclrV1(CmxRiffElement):
     def set_defaults(self):
         self.data['identifier'] = cmx_const.RCLR_ID
         self.data['colors'] = []
 
+    def get_color(self, index):
+        return self.data['colors'][index] \
+            if index < len(self.data['colors']) else ()
+
+    def add_color(self, color):
+        if color in self.data['colors']:
+            return self.data['colors'].index(color)
+        else:
+            self.data['colors'].append(color)
+            return len(self.data['colors']) - 1
+
     def update_from_chunk(self):
         rifx = self.config.rifx
         colors = self.data['colors'] = []
-        if self.config.v1:
-            pos = 10
-            for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
-                model = utils.byte2py_int(self.chunk[pos])
-                palette = utils.byte2py_int(self.chunk[pos + 1])
-                if model < len(cmx_const.COLOR_BYTES):
-                    clr_sz = cmx_const.COLOR_BYTES[model]
-                else:
-                    LOG.error('Invalide or unknown color model %s', model)
-                    break
-                vals = tuple(utils.byte2py_int(val)
-                             for val in self.chunk[pos + 2: pos + 2 + clr_sz])
-                colors.append((model, palette, vals))
-                pos += clr_sz + 2
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            model = utils.byte2py_int(self.chunk[pos])
+            palette = utils.byte2py_int(self.chunk[pos + 1])
+            if model < len(cmx_const.COLOR_BYTES):
+                clr_sz = cmx_const.COLOR_BYTES[model]
+            else:
+                LOG.error('Invalide or unknown color model %s', model)
+                break
+            vals = tuple(utils.byte2py_int(val)
+                         for val in self.chunk[pos + 2: pos + 2 + clr_sz])
+            colors.append((model, palette, vals))
+            pos += clr_sz + 2
 
     def update(self):
         rifx = self.config.rifx
@@ -470,22 +564,254 @@ class CmxRclrV1(CmxRiffElement):
     def update_for_sword(self):
         CmxRiffElement.update_for_sword(self)
         rifx = self.config.rifx
-        if self.config.v1:
-            self.cache_fields += [(8, 2, 'Number of colors\n'), ]
-            pos = 10
-            for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
-                model = utils.byte2py_int(self.chunk[pos])
-                model_name = cmx_const.COLOR_MODEL_MAP.get(model, 'Unknown')
-                self.cache_fields += [(pos, 1, '%s color model' % model_name), ]
-                palette = utils.byte2py_int(self.chunk[pos + 1])
-                pals = cmx_const.COLOR_PALETTES
-                pal_name = pals[palette] if palette < len(pals) else 'Unknown'
-                self.cache_fields += [(pos + 1, 1, '%s palette' % pal_name), ]
-                if model >= len(cmx_const.COLOR_BYTES):
-                    break
-                clr_sz = cmx_const.COLOR_BYTES[model]
-                self.cache_fields += [(pos + 2, clr_sz, 'Color values\n'), ]
-                pos += clr_sz + 2
+        self.cache_fields += [(8, 2, 'Number of colors\n'), ]
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            model = utils.byte2py_int(self.chunk[pos])
+            model_name = cmx_const.COLOR_MODEL_MAP.get(model, 'Unknown')
+            self.cache_fields += [(pos, 1, '%s color model' % model_name), ]
+            palette = utils.byte2py_int(self.chunk[pos + 1])
+            pals = cmx_const.COLOR_PALETTES
+            pal_name = pals[palette] if palette < len(pals) else 'Unknown'
+            self.cache_fields += [(pos + 1, 1, '%s palette' % pal_name), ]
+            if model >= len(cmx_const.COLOR_BYTES):
+                break
+            clr_sz = cmx_const.COLOR_BYTES[model]
+            self.cache_fields += [(pos + 2, clr_sz, 'Color values\n'), ]
+            pos += clr_sz + 2
+
+
+class CmxRscrV1(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.RSCR_ID
+        self.data['rec_num'] = '\x01\00'
+        self.data['records'] = cmx_const.RSCR_RECORD
+
+    def update_from_chunk(self):
+        self.data['rec_num'] = self.chunk[8:10]
+        self.data['records'] = self.chunk[10:]
+
+    def update(self):
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        self.chunk += self.data['rec_num'] + self.data['records']
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        self.cache_fields += [(8, 2, 'Number of records'), ]
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            self.cache_fields += [(pos, 13, 'Screen record'), ]
+            pos += 13
+
+
+class CmxRdotV1(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.RDOT_ID
+        self.data['dashes'] = []
+
+    def get_dashes(self, index):
+        return self.data['dashes'][index] \
+            if index < len(self.data['dashes']) else ()
+
+    def add_dashes(self, dashes):
+        if dashes in self.data['dashes']:
+            return self.data['dashes'].index(dashes)
+        else:
+            self.data['dashes'].append(dashes)
+            return len(self.data['dashes']) - 1
+
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        dashes = self.data['dashes'] = []
+        word2int = utils.word2py_int
+        chunk = self.chunk
+        pos = 10
+        for _ in range(word2int(chunk[8:10], rifx)):
+            num = word2int(chunk[pos:pos + 2], rifx)
+            pos += 2
+            dashes.append(tuple(word2int(
+                chunk[pos + 2 * i:pos + 2 * i + 2], rifx) for i in range(num)))
+            pos += 2 * num
+
+    def update(self):
+        rifx = self.config.rifx
+        int2word = utils.py_int2word
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        self.chunk += int2word(len(self.data['dashes']), rifx)
+        for item in self.data['dashes']:
+            self.chunk += int2word(len(item), rifx)
+            self.chunk += ''.join([int2word(val, rifx) for val in item])
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        self.cache_fields += [(8, 2, 'Number of dash records'), ]
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            self.cache_fields += [(pos, 2, 'Number of dash elements'), ]
+            num = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
+            self.cache_fields += [(pos + 2, 2 * num, 'Dash elements'), ]
+            pos += 2 + 2 * num
+
+
+class CmxRpenV1(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.RPEN_ID
+        self.data['pens'] = []
+
+    def get_pen(self, index):
+        return self.data['pens'][index] \
+            if index < len(self.data['pens']) else ()
+
+    def add_pen(self, pen):
+        if pen in self.data['pens']:
+            return self.data['pens'].index(pen)
+        else:
+            self.data['pens'].append(pen)
+            return len(self.data['pens']) - 1
+
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        pens = self.data['pens'] = []
+        word2int = utils.word2py_int
+        dword2int = utils.dword2py_int
+        chunk = self.chunk
+        pos = 10
+        sig = '>dddddd' if rifx else '<dddddd'
+        for _ in range(word2int(chunk[8:10], rifx)):
+            width = word2int(chunk[pos:pos + 2], rifx)
+            aspect = word2int(chunk[pos + 2:pos + 4], rifx)
+            angle = dword2int(chunk[pos + 4:pos + 8], rifx)
+            matrix_flag = word2int(chunk[pos + 8:pos + 10], rifx)
+            pos += 10
+            if matrix_flag != 1:
+                matrix = struct.unpack(sig, chunk[pos:pos + 48])
+                pos += 48
+                pens.append((width, aspect, angle, matrix_flag, matrix))
+            else:
+                pens.append((width, aspect, angle, matrix_flag))
+
+    def update(self):
+        rifx = self.config.rifx
+        int2word = utils.py_int2word
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        self.chunk += int2word(len(self.data['pens']), rifx)
+        for item in self.data['pens']:
+            sig = '>hhih' if rifx else '<hhih'
+            self.chunk += struct.pack(sig, *item[:4])
+            if len(item) > 4:
+                sig = '>dddddd' if rifx else '<dddddd'
+                self.chunk += struct.pack(sig, *item[4])
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        self.cache_fields += [(8, 2, 'Number of pen records'), ]
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            self.cache_fields += [(pos, 10, 'Pen record'), ]
+            pos += 10
+            if utils.word2py_int(self.chunk[pos - 2:pos], rifx) != 1:
+                self.cache_fields += [(pos, 48, 'Pen matrix'), ]
+
+
+class CmxRottV1(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.ROTT_ID
+        self.data['linestyles'] = []
+
+    def get_linestyle(self, index):
+        return self.data['linestyles'][index] \
+            if index < len(self.data['linestyles']) else ()
+
+    def add_linestyle(self, linestyle):
+        if linestyle in self.data['linestyles']:
+            return self.data['linestyles'].index(linestyle)
+        else:
+            self.data['linestyles'].append(linestyle)
+            return len(self.data['linestyles']) - 1
+
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        linestyles = self.data['linestyles'] = []
+        word2int = utils.word2py_int
+        chunk = self.chunk
+        pos = 10
+        for _ in range(word2int(chunk[8:10], rifx)):
+            sig = '>BB' if rifx else '<BB'
+            linestyles.append(struct.unpack(sig, chunk[pos:pos + 2]))
+            pos += 2
+
+    def update(self):
+        rifx = self.config.rifx
+        int2word = utils.py_int2word
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        self.chunk += int2word(len(self.data['linestyles']), rifx)
+        sig = '>BB' if rifx else '<BB'
+        for item in self.data['linestyles']:
+            self.chunk += struct.pack(sig, *item)
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        self.cache_fields += [(8, 2, 'Number of line style records'), ]
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            self.cache_fields += [(pos, 2, 'Line style record'), ]
+            pos += 2
+
+
+class CmxRotlV1(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.ROTL_ID
+        self.data['outlines'] = []
+
+    def get_outline(self, index):
+        return self.data['outlines'][index] \
+            if index < len(self.data['outlines']) else ()
+
+    def add_outline(self, outline):
+        if outline in self.data['outlines']:
+            return self.data['outlines'].index(outline)
+        else:
+            self.data['outlines'].append(outline)
+            return len(self.data['outlines']) - 1
+
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        linestyles = self.data['outlines'] = []
+        word2int = utils.word2py_int
+        chunk = self.chunk
+        pos = 10
+        # style, screen, color, arrowheads, pen, dash
+        sig = '>HHHHHH' if rifx else '<HHHHHH'
+        for _ in range(word2int(chunk[8:10], rifx)):
+            linestyles.append(struct.unpack(sig, chunk[pos:pos + 12]))
+            pos += 12
+
+    def update(self):
+        rifx = self.config.rifx
+        int2word = utils.py_int2word
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        self.chunk += int2word(len(self.data['outlines']), rifx)
+        sig = '>HHHHHH' if rifx else '<HHHHHH'
+        for item in self.data['outlines']:
+            self.chunk += struct.pack(sig, *item)
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        self.cache_fields += [(8, 2, 'Number of outline records'), ]
+        pos = 10
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            self.cache_fields += [(pos, 12, 'Outline record'), ]
+            pos += 12
 
 
 class CmxRoot(CmxList):
@@ -533,10 +859,17 @@ GENERIC_CHUNK_MAP = {
     cmx_const.PACK_ID: CdrxPack,
     cmx_const.IKEY_ID: CmxInfoElement,
     cmx_const.ICMT_ID: CmxInfoElement,
+    cmx_const.RLST_ID: CmxRlst,
+    cmx_const.ROTA_ID: CmxRota,
 }
 
 V1_CHUNK_MAP = {
     cmx_const.RCLR_ID: CmxRclrV1,
+    cmx_const.RSCR_ID: CmxRscrV1,
+    cmx_const.RDOT_ID: CmxRdotV1,
+    cmx_const.RPEN_ID: CmxRpenV1,
+    cmx_const.ROTT_ID: CmxRottV1,
+    cmx_const.ROTL_ID: CmxRotlV1,
 }
 
 V2_CHUNK_MAP = {
