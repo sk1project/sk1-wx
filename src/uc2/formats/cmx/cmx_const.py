@@ -45,7 +45,6 @@ CCMM_DUMP = \
     '\xc0\x4b\x37\x09\x00\xc5\x8f\x79\x33\x33\x02\x00\x33\x33\x02\x00' \
     '\x33\x33\x02\x00\x01\x00\x00\x00'
 
-
 PACK_ID = 'pack'
 CPNG_ID = 'CPng'
 CPNG_FLAGS = '\x01\x00\x04\x00'
@@ -78,6 +77,7 @@ RLST_TYPE_LAYER = 9
 INDX_ID = 'indx'
 IXLR_ID = 'ixlr'
 IXPG_ID = 'ixpg'
+IXMR_ID = 'ixmr'
 
 # INSTRUCTION CODES
 ADD_CLIPPING_REGION = 88
@@ -213,3 +213,24 @@ COLOR_BYTES = (0, 4, 4, 4, 4, 3, 4, 4, 1, 1, 4, 4)
 
 COLOR_PALETTES = ('Invalid', 'Truematch', 'PantoneProcess', 'PantoneSpot',
                   'Image', 'User', 'CustomFixed')
+
+SECTIONS = {
+    1: 'Master Index Table',
+    2: 'Page Index Table',
+    3: 'Master Layer Table',
+    4: 'Procedure Index Table',
+    5: 'Bitmap Index Table',
+    6: 'Arrow Index Table',
+    7: 'Font Index Table',
+    8: 'Embedded File Index Table',
+    10: 'Thumbnail Section',
+    15: 'Outline Description Section',
+    16: 'Line Style Description Section',
+    17: 'Arrowheads Description Section',
+    18: 'Screen Description Section',
+    19: 'Pen Description Section',
+    20: 'Dot-Dash Description Section',
+    21: 'Color Description Section',
+    22: 'Color Correction Section',
+    23: 'Preview Box Section',
+}

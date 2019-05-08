@@ -165,7 +165,7 @@ def clear_files(folder, ext=None):
 
 
 def shell(cmd, times=1):
-    for _ in range(times):
+    for _i in range(times):
         if not os.system(cmd):
             return 0
     return 1
