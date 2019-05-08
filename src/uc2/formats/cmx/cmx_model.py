@@ -512,10 +512,50 @@ class CmxRota(CmxRiffElement):
 class CmxIxlr(CmxRiffElement):
     def set_defaults(self):
         self.data['identifier'] = cmx_const.IXLR_ID
-        self.data['pages'] = []
+        self.data['layers'] = []
+
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        layers = self.data['layers'] = []
+        pos = 12
+        self.data['page'] = utils.word2py_int(self.chunk[10:12], rifx)
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            offset = utils.dword2py_int(self.chunk[pos:pos + 4], rifx)
+            pos += 4
+            sz = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
+            pos += 2
+            name = self.chunk[pos:pos + sz]
+            pos += sz + 4
+            layers.append((offset, name))
+
+    def update(self):
+        rifx = self.config.rifx
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        sz = len(self.data['layers'])
+        self.chunk += utils.py_int2word(sz, rifx)
+        self.chunk += utils.py_int2word(self.data['page'], rifx)
+        for offset, name in self.data['layers']:
+            self.chunk += utils.py_int2dword(offset, rifx)
+            self.chunk += utils.py_int2word(len(name), rifx)
+            self.chunk += name + 4 * '\xff'
+        CmxRiffElement.update(self)
 
     def update_for_sword(self):
         CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        self.cache_fields += [(8, 2, 'Number of layer records'), ]
+        self.cache_fields += [(10, 2, 'Page index\n'), ]
+        pos = 12
+        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            self.cache_fields += [(pos, 4, 'Layer offset'), ]
+            pos += 4
+            self.cache_fields += [(pos, 2, 'Layer name size'), ]
+            sz = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
+            pos += 2
+            self.cache_fields += [(pos, sz, 'Layer name'), ]
+            pos += sz
+            self.cache_fields += [(pos, 4, 'Ref.list address\n'), ]
+            pos += 4
 
 
 class CmxRclrV1(CmxRiffElement):
@@ -863,6 +903,7 @@ GENERIC_CHUNK_MAP = {
     cmx_const.ICMT_ID: CmxInfoElement,
     cmx_const.RLST_ID: CmxRlst,
     cmx_const.ROTA_ID: CmxRota,
+    cmx_const.IXLR_ID: CmxIxlr,
 }
 
 V1_CHUNK_MAP = {
@@ -872,6 +913,7 @@ V1_CHUNK_MAP = {
     cmx_const.RPEN_ID: CmxRpenV1,
     cmx_const.ROTT_ID: CmxRottV1,
     cmx_const.ROTL_ID: CmxRotlV1,
+
 }
 
 V2_CHUNK_MAP = {
