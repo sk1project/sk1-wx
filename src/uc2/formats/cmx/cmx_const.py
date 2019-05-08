@@ -76,6 +76,7 @@ RLST_TYPE_LAYER = 9
 
 INDX_ID = 'indx'
 IXLR_ID = 'ixlr'
+IXTL_ID = 'ixtl'
 IXPG_ID = 'ixpg'
 IXMR_ID = 'ixmr'
 
@@ -214,15 +215,24 @@ COLOR_BYTES = (0, 4, 4, 4, 4, 3, 4, 4, 1, 1, 4, 4)
 COLOR_PALETTES = ('Invalid', 'Truematch', 'PantoneProcess', 'PantoneSpot',
                   'Image', 'User', 'CustomFixed')
 
+MASTER_INDEX_TABLE = 1
+PAGE_INDEX_TABLE = 2
+MASTER_LAYER_TABLE = 3
+PROCEDURE_INDEX_TABLE = 4
+BITMAP_INDEX_TABLE = 5
+ARROW_INDEX_TABLE = 6
+FONT_INDEX_TABLE = 7
+EMBEDDED_FILE_INDEX_TABLE = 8
+
 SECTIONS = {
-    1: 'Master Index Table',
-    2: 'Page Index Table',
-    3: 'Master Layer Table',
-    4: 'Procedure Index Table',
-    5: 'Bitmap Index Table',
-    6: 'Arrow Index Table',
-    7: 'Font Index Table',
-    8: 'Embedded File Index Table',
+    MASTER_INDEX_TABLE: 'Master Index Table',
+    PAGE_INDEX_TABLE: 'Page Index Table',
+    MASTER_LAYER_TABLE: 'Master Layer Table',
+    PROCEDURE_INDEX_TABLE: 'Procedure Index Table',
+    BITMAP_INDEX_TABLE: 'Bitmap Index Table',
+    ARROW_INDEX_TABLE: 'Arrow Index Table',
+    FONT_INDEX_TABLE: 'Font Index Table',
+    EMBEDDED_FILE_INDEX_TABLE: 'Embedded File Index Table',
     10: 'Thumbnail Section',
     15: 'Outline Description Section',
     16: 'Line Style Description Section',

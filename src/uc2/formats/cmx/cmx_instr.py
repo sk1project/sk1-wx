@@ -94,7 +94,7 @@ class CmxInstruction(CmxObject):
 
     def update_for_sword(self):
         self.cache_fields = [(0, 2, 'Instruction Size'),
-                             (2, 2, 'Instruction Code')]
+                             (2, 2, 'Instruction Code\n')]
 
 
 class Inst16BeginPage(CmxInstruction):
