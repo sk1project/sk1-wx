@@ -15,6 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import struct
 
 from uc2 import utils
 from uc2.formats.cmx import cmx_const
@@ -57,7 +58,7 @@ class CmxObject(BinaryModelObject):
 
 
 class CmxInstruction(CmxObject):
-    toplevel=False
+    toplevel = False
 
     def __init__(self, config, chunk=None, **kwargs):
         self.config = config
@@ -98,19 +99,69 @@ class CmxInstruction(CmxObject):
 
 
 class Inst16BeginPage(CmxInstruction):
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        word2int = utils.word2py_int
+        dword2int = utils.dword2py_int
+        self.data['page_number'] = word2int(self.chunk[4:6], rifx)
+        self.data['flags'] = dword2int(self.chunk[6:10], rifx)
+        sig = '>iiii' if rifx else '<iiii'
+        self.data['bbox'] = struct.unpack(sig, self.chunk[10:26])
+        self.data['tail'] = self.chunk[26:]
+
+    def update(self):
+        rifx = self.config.rifx
+        int2word = utils.py_int2word
+        int2dword = utils.py_int2dword
+        self.chunk = '\x00\x00' + int2word(self.data['code'], rifx)
+        self.chunk += int2word(self.data['page_number'], rifx)
+        self.chunk += int2dword(self.data['flags'], rifx)
+        sig = '>iiii' if rifx else '<iiii'
+        self.chunk += struct.pack(sig, *self.data['bbox'])
+        self.chunk += self.data['tail']
+        CmxInstruction.update(self)
+
     def update_for_sword(self):
         CmxInstruction.update_for_sword(self)
+        tail_sz = len(self.chunk) - 26
         self.cache_fields += [
             (4, 2, 'Page number'),
             (6, 4, 'Page flags'),
             (10, 16, 'Drawing bbox on page'),
+            (26, tail_sz, 'Page tail'),
         ]
 
 
 class Inst16BeginLayer(CmxInstruction):
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        word2int = utils.word2py_int
+        dword2int = utils.dword2py_int
+        self.data['page_number'] = word2int(self.chunk[4:6], rifx)
+        self.data['layer_number'] = word2int(self.chunk[6:8], rifx)
+        self.data['flags'] = dword2int(self.chunk[8:12], rifx)
+        self.data['tally'] = dword2int(self.chunk[12:16], rifx)
+        name_size = word2int(self.chunk[16:18], rifx)
+        self.data['layer_name'] = self.chunk[18:18 + name_size]
+        self.data['tail'] = self.chunk[18 + name_size:]
+
+    def update(self):
+        rifx = self.config.rifx
+        int2word = utils.py_int2word
+        int2dword = utils.py_int2dword
+        self.chunk = '\x00\x00' + int2word(self.data['code'], rifx)
+        self.chunk += int2word(self.data['page_number'], rifx)
+        self.chunk += int2word(self.data['layer_number'], rifx)
+        self.chunk += int2dword(self.data['flags'], rifx)
+        self.chunk += int2dword(self.data['tally'], rifx)
+        self.chunk += int2word(len(self.data['layer_name']), rifx)
+        self.chunk += self.data['layer_name'] +self.data['tail']
+        CmxInstruction.update(self)
+
     def update_for_sword(self):
         CmxInstruction.update_for_sword(self)
         name_sz = utils.word2py_int(self.chunk[16:18], self.config.rifx)
+        tail_sz = len(self.chunk) - 18 - name_sz
         self.cache_fields += [
             (4, 2, 'Page number'),
             (6, 2, 'Layer number'),
@@ -118,6 +169,7 @@ class Inst16BeginLayer(CmxInstruction):
             (12, 4, 'Tally'),
             (16, 2, 'Layer name size'),
             (18, name_sz, 'Layer name'),
+            (18 + name_sz, tail_sz, 'Layer tail'),
         ]
 
 
@@ -131,7 +183,7 @@ class Inst16BeginGroup(CmxInstruction):
 
 INSTR_16bit = {
     cmx_const.BEGIN_PAGE: Inst16BeginPage,
-    cmx_const.BEGIN_LAYER:Inst16BeginLayer,
+    cmx_const.BEGIN_LAYER: Inst16BeginLayer,
 }
 
 INSTR_32bit = {}
