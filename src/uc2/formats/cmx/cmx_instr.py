@@ -174,16 +174,31 @@ class Inst16BeginLayer(CmxInstruction):
 
 
 class Inst16BeginGroup(CmxInstruction):
+    def update_from_chunk(self):
+        sig = '>iiii' if self.config.rifx else '<iiii'
+        self.data['bbox'] = struct.unpack(sig, self.chunk[4:20])
+        self.data['tail'] = self.chunk[20:]
+
+    def update(self):
+        rifx = self.config.rifx
+        int2word = utils.py_int2word
+        self.chunk = '\x00\x00' + int2word(self.data['code'], rifx)
+        sig = '>iiii' if rifx else '<iiii'
+        self.chunk += struct.pack(sig, *self.data['bbox']) + self.data['tail']
+        CmxInstruction.update(self)
+
     def update_for_sword(self):
         CmxInstruction.update_for_sword(self)
         self.cache_fields += [
-            (4, 16, 'Drawing bbox on page'),
+            (4, 16, 'Group bbox'),
+            (20, 2, 'Group tail'),
         ]
 
 
 INSTR_16bit = {
     cmx_const.BEGIN_PAGE: Inst16BeginPage,
     cmx_const.BEGIN_LAYER: Inst16BeginLayer,
+    cmx_const.BEGIN_GROUP: Inst16BeginGroup,
 }
 
 INSTR_32bit = {}
