@@ -1211,7 +1211,18 @@ XAR_RECORD_DATA_SPEC = {
             {'type': 'BITMAPREF', 'id': 'bitmap'}
         ]
     },
-    TAG_NODE_CONTONEDBITMAP: {'id': 'TAG_NODE_CONTONEDBITMAP'},
+    TAG_NODE_CONTONEDBITMAP: {
+        'id': 'TAG_NODE_CONTONEDBITMAP',
+        'sec': [
+            {'type': 'COORD', 'id': 'bottom_left'},
+            {'type': 'COORD', 'id': 'bottom_right'},
+            {'type': 'COORD', 'id': 'top_right'},
+            {'type': 'COORD', 'id': 'top_left'},
+            {'type': 'BITMAPREF', 'id': 'bitmap'},
+            {'type': 'COLOURREF', 'id': 'start_colour'},
+            {'type': 'COLOURREF', 'id': 'end_colour'},
+        ]
+    },
 
     # New fill type records
     TAG_DIAMONDFILL: {'id': 'TAG_DIAMONDFILL'},

@@ -799,7 +799,15 @@ class XAR_to_SK2_Translator(object):
         el.trafo = multiply_trafo(tr, self.get_trafo())
         return el
 
-#    def handle_node_contonedbitmap(self, rec, cfg): pass
+    def handle_node_contonedbitmap(self, rec, cfg):
+        el = self.get_pixmap(rec, cfg)
+        if el:
+            if el.colorspace not in uc2const.DUOTONES:
+                el.handler.convert_image(self.sk2_doc.cms, uc2const.IMAGE_GRAY)
+                # TODO: color the image
+                # start_colour = self.get_color(rec.start_colour)
+                # end_colour = self.get_color(rec.end_colour)
+            self.stack.append(el)
 
     # New fill type records
 #    def handle_diamondfill(self, rec, cfg): pass
