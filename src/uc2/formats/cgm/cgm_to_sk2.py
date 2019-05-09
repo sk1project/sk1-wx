@@ -514,7 +514,7 @@ class CGM_to_SK2_Translator(object):
         paths = []
         path = [None, [], sk2const.CURVE_CLOSED]
         chunk = element.params
-        for _ in range(len(chunk) / (2 * self.cgm['vdc.size'] + 2)):
+        for _i in range(len(chunk) / (2 * self.cgm['vdc.size'] + 2)):
             point, chunk = self.read_point(chunk)
             flag, chunk = self.read_enum(chunk)
             if not path[0]:

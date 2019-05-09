@@ -391,8 +391,10 @@ class CdrxPack(CmxRiffElement):
             (16, 4, 'Compression flags'),
         ]
 
-    def get_chunk_size(self):
-        return len(self.chunk)
+    def get_chunk_size(self, recursive=True):
+        if recursive:
+            return sum([12] + [item.get_chunk_size() for item in self.childs])
+        return 12
 
     def get_childs_size(self):
         return sum([item.get_chunk_size() for item in self.childs])
@@ -438,7 +440,7 @@ class CmxRlst(CmxRiffElement):
         pos = 10
         # Association, Type, ObjectID
         sig = '>hhh' if rifx else '<hhh'
-        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+        for _i in range(utils.word2py_int(self.chunk[8:10], rifx)):
             rlists.append(struct.unpack(sig, self.chunk[pos:pos + 6]))
             pos += 6
 
@@ -457,7 +459,7 @@ class CmxRlst(CmxRiffElement):
         rifx = self.config.rifx
         self.cache_fields += [(8, 2, 'Number of rlists'), ]
         pos = 10
-        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+        for _i in range(utils.word2py_int(self.chunk[8:10], rifx)):
             self.cache_fields += [(pos, 6, 'rlist record'), ]
             pos += 6
 
@@ -483,7 +485,7 @@ class CmxRota(CmxRiffElement):
         arrows = self.data['arrows'] = []
         pos = 10
         sig = '>hh' if rifx else '<hh'
-        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+        for _i in range(utils.word2py_int(self.chunk[8:10], rifx)):
             arrows.append(struct.unpack(sig, self.chunk[pos:pos + 4]))
             pos += 4
 
@@ -502,7 +504,7 @@ class CmxRota(CmxRiffElement):
         rifx = self.config.rifx
         self.cache_fields += [(8, 2, 'Number of arrow records'), ]
         pos = 10
-        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+        for _i in range(utils.word2py_int(self.chunk[8:10], rifx)):
             self.cache_fields += [(pos, 4, 'Arrow record'), ]
             pos += 4
 
@@ -510,10 +512,205 @@ class CmxRota(CmxRiffElement):
 class CmxIxlr(CmxRiffElement):
     def set_defaults(self):
         self.data['identifier'] = cmx_const.IXLR_ID
-        self.data['pages'] = []
+        self.data['layers'] = []
+
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        layers = self.data['layers'] = []
+        pos = 12
+        self.data['page'] = utils.word2py_int(self.chunk[10:12], rifx)
+        for _i in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            offset = utils.dword2py_int(self.chunk[pos:pos + 4], rifx)
+            pos += 4
+            sz = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
+            pos += 2
+            name = self.chunk[pos:pos + sz]
+            pos += sz + 4
+            layers.append((offset, name))
+
+    def update(self):
+        rifx = self.config.rifx
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        sz = len(self.data['layers'])
+        self.chunk += utils.py_int2word(sz, rifx)
+        self.chunk += utils.py_int2word(self.data['page'], rifx)
+        for offset, name in self.data['layers']:
+            self.chunk += utils.py_int2dword(offset, rifx)
+            self.chunk += utils.py_int2word(len(name), rifx)
+            self.chunk += name + 4 * '\xff'
+        CmxRiffElement.update(self)
 
     def update_for_sword(self):
         CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        self.cache_fields += [(8, 2, 'Number of layer records'), ]
+        self.cache_fields += [(10, 2, 'Page index\n'), ]
+        pos = 12
+        for _i in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            self.cache_fields += [(pos, 4, 'Layer offset'), ]
+            pos += 4
+            self.cache_fields += [(pos, 2, 'Layer name size'), ]
+            sz = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
+            pos += 2
+            self.cache_fields += [(pos, sz, 'Layer name'), ]
+            pos += sz
+            self.cache_fields += [(pos, 4, 'Ref.list address\n'), ]
+            pos += 4
+
+
+class CmxIxtl(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.IXTL_ID
+        self.data['records'] = []
+
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        records = self.data['records'] = []
+        if self.config.v1:
+            pos, rec_sz, rec_sig = 12, 4, 'I'
+            self.data['rec_sz'] = rec_sz
+            self.data['table_id'] = utils.word2py_int(self.chunk[10:12], rifx)
+        else:
+            pos = 14
+            rec_sz = utils.word2py_int(self.chunk[10:12], rifx)
+            rec_sig = {2: 'H', 4: 'I', 8: 'Q'}.get(rec_sz)
+            self.data['rec_sz'] = rec_sz
+            self.data['table_id'] = utils.word2py_int(self.chunk[12:14], rifx)
+        sig = '>' + rec_sig if rifx else '<' + rec_sig
+        for _i in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            records.append(struct.unpack(sig, self.chunk[pos:pos + rec_sz])[0])
+            pos += rec_sz
+
+    def update(self):
+        rifx = self.config.rifx
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        rec_sz = self.data['rec_sz']
+        rec_sig = {2: 'H', 4: 'I', 8: 'Q'}.get(rec_sz)
+        sig = '>' + rec_sig if rifx else '<' + rec_sig
+        self.chunk += utils.py_int2word(len(self.data['records']), rifx)
+        if not self.config.v1:
+            self.chunk += utils.py_int2word(rec_sz, rifx)
+        self.chunk += utils.py_int2word(self.data['table_id'], rifx)
+        for rec in self.data['records']:
+            self.chunk += struct.pack(sig, rec)
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        self.cache_fields += [(8, 2, 'Record count'), ]
+        if self.config.v1:
+            pos, rec_sz = 12, 4
+        else:
+            self.cache_fields += [(10, 2, 'Record size'), ]
+            pos = 14
+            rec_sz = utils.word2py_int(self.chunk[10:12], rifx)
+        section = utils.word2py_int(self.chunk[pos - 2:pos], rifx)
+        section = cmx_const.SECTIONS.get(section, 'UNKNOWN')
+        self.cache_fields += [
+            (pos - 2, 2, 'Index Table ID\n' + 7 * ' ' + '(%s)\n' % section), ]
+        for _i in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            self.cache_fields += [(pos, rec_sz, 'Offset'), ]
+            pos += rec_sz
+
+
+class CmxIxpg(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.IXPG_ID
+        self.data['records'] = []
+
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        records = self.data['records'] = []
+        if self.config.v1:
+            pos, rec_sz, rec_sig = 10, 16, 'IIII'
+            self.data['rec_sz'] = rec_sz
+        else:
+            pos = 12
+            rec_sz = utils.word2py_int(self.chunk[10:12], rifx)
+            rec_sig = 4 * {2: 'H', 4: 'I', 8: 'Q'}.get(rec_sz / 4)
+            self.data['rec_sz'] = rec_sz
+        sig = '>' + rec_sig if rifx else '<' + rec_sig
+        for _i in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            records.append(struct.unpack(sig, self.chunk[pos:pos + rec_sz]))
+            pos += rec_sz
+
+    def update(self):
+        rifx = self.config.rifx
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        rec_sz = self.data['rec_sz']
+        rec_sig = 4 * {2: 'H', 4: 'I', 8: 'Q'}.get(rec_sz / 4)
+        sig = '>' + rec_sig if rifx else '<' + rec_sig
+        self.chunk += utils.py_int2word(len(self.data['records']), rifx)
+        if not self.config.v1:
+            self.chunk += utils.py_int2word(rec_sz, rifx)
+        for rec in self.data['records']:
+            self.chunk += struct.pack(sig, *rec)
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        if self.config.v1:
+            self.cache_fields += [(8, 2, 'Record count\n'), ]
+            pos, rec_sz = 10, 4
+        else:
+            self.cache_fields += [(8, 2, 'Record count'), ]
+            self.cache_fields += [(10, 2, 'Record size\n'), ]
+            pos = 12
+            rec_sz = utils.word2py_int(self.chunk[10:12], rifx) / 4
+        for _i in range(utils.word2py_int(self.chunk[8:10], rifx)):
+            self.cache_fields += [(pos, rec_sz, 'Page offset'), ]
+            pos += rec_sz
+            self.cache_fields += [(pos, rec_sz, 'Layer Table offset'), ]
+            pos += rec_sz
+            self.cache_fields += [(pos, rec_sz, 'Thumbnail offset'), ]
+            pos += rec_sz
+            self.cache_fields += [(pos, rec_sz, 'RefList offset\n'), ]
+            pos += rec_sz
+
+
+class CmxIxmr(CmxRiffElement):
+    def set_defaults(self):
+        self.data['identifier'] = cmx_const.IXMR_ID
+        self.data['records'] = []
+
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        records = self.data['records'] = []
+        pos = 14
+        for _i in range(utils.word2py_int(self.chunk[12:14], rifx)):
+            rec_id = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
+            pos += 2
+            offset = utils.dword2py_int(self.chunk[pos:pos + 4], rifx)
+            pos += 4
+            records.append((rec_id, offset))
+
+    def update(self):
+        rifx = self.config.rifx
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        sz = len(self.data['records'])
+        self.chunk += '\x01\x00\x18\x00'
+        self.chunk += utils.py_int2word(sz, rifx)
+        for rec_id, offset in self.data['records']:
+            self.chunk += utils.py_int2word(rec_id, rifx)
+            self.chunk += utils.py_int2dword(offset, rifx)
+        CmxRiffElement.update(self)
+
+    def update_for_sword(self):
+        CmxRiffElement.update_for_sword(self)
+        rifx = self.config.rifx
+        self.cache_fields += [(8, 2, 'MasterID'), ]
+        self.cache_fields += [(10, 2, 'Size'), ]
+        self.cache_fields += [(12, 2, 'Record count\n'), ]
+        pos = 14
+        for _i in range(utils.word2py_int(self.chunk[12:14], rifx)):
+            rec_id = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
+            rec_name = cmx_const.SECTIONS.get(rec_id, 'UNKNOWN')
+            self.cache_fields += [(pos, 2, rec_name), ]
+            pos += 2
+            self.cache_fields += [(pos, 4, 'Section address\n'), ]
+            pos += 4
 
 
 class CmxRclrV1(CmxRiffElement):
@@ -536,7 +733,7 @@ class CmxRclrV1(CmxRiffElement):
         rifx = self.config.rifx
         colors = self.data['colors'] = []
         pos = 10
-        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+        for _i in range(utils.word2py_int(self.chunk[8:10], rifx)):
             model = utils.byte2py_int(self.chunk[pos])
             palette = utils.byte2py_int(self.chunk[pos + 1])
             if model < len(cmx_const.COLOR_BYTES):
@@ -566,7 +763,7 @@ class CmxRclrV1(CmxRiffElement):
         rifx = self.config.rifx
         self.cache_fields += [(8, 2, 'Number of colors\n'), ]
         pos = 10
-        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+        for _i in range(utils.word2py_int(self.chunk[8:10], rifx)):
             model = utils.byte2py_int(self.chunk[pos])
             model_name = cmx_const.COLOR_MODEL_MAP.get(model, 'Unknown')
             self.cache_fields += [(pos, 1, '%s color model' % model_name), ]
@@ -601,7 +798,7 @@ class CmxRscrV1(CmxRiffElement):
         rifx = self.config.rifx
         self.cache_fields += [(8, 2, 'Number of records'), ]
         pos = 10
-        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+        for _i in range(utils.word2py_int(self.chunk[8:10], rifx)):
             self.cache_fields += [(pos, 13, 'Screen record'), ]
             pos += 13
 
@@ -628,7 +825,7 @@ class CmxRdotV1(CmxRiffElement):
         word2int = utils.word2py_int
         chunk = self.chunk
         pos = 10
-        for _ in range(word2int(chunk[8:10], rifx)):
+        for _i in range(word2int(chunk[8:10], rifx)):
             num = word2int(chunk[pos:pos + 2], rifx)
             pos += 2
             dashes.append(tuple(word2int(
@@ -650,7 +847,7 @@ class CmxRdotV1(CmxRiffElement):
         rifx = self.config.rifx
         self.cache_fields += [(8, 2, 'Number of dash records'), ]
         pos = 10
-        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+        for _i in range(utils.word2py_int(self.chunk[8:10], rifx)):
             self.cache_fields += [(pos, 2, 'Number of dash elements'), ]
             num = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
             self.cache_fields += [(pos + 2, 2 * num, 'Dash elements'), ]
@@ -681,7 +878,7 @@ class CmxRpenV1(CmxRiffElement):
         chunk = self.chunk
         pos = 10
         sig = '>dddddd' if rifx else '<dddddd'
-        for _ in range(word2int(chunk[8:10], rifx)):
+        for _i in range(word2int(chunk[8:10], rifx)):
             width = word2int(chunk[pos:pos + 2], rifx)
             aspect = word2int(chunk[pos + 2:pos + 4], rifx)
             angle = dword2int(chunk[pos + 4:pos + 8], rifx)
@@ -712,7 +909,7 @@ class CmxRpenV1(CmxRiffElement):
         rifx = self.config.rifx
         self.cache_fields += [(8, 2, 'Number of pen records'), ]
         pos = 10
-        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+        for _i in range(utils.word2py_int(self.chunk[8:10], rifx)):
             self.cache_fields += [(pos, 10, 'Pen record'), ]
             pos += 10
             if utils.word2py_int(self.chunk[pos - 2:pos], rifx) != 1:
@@ -741,7 +938,7 @@ class CmxRottV1(CmxRiffElement):
         word2int = utils.word2py_int
         chunk = self.chunk
         pos = 10
-        for _ in range(word2int(chunk[8:10], rifx)):
+        for _i in range(word2int(chunk[8:10], rifx)):
             sig = '>BB' if rifx else '<BB'
             linestyles.append(struct.unpack(sig, chunk[pos:pos + 2]))
             pos += 2
@@ -761,7 +958,7 @@ class CmxRottV1(CmxRiffElement):
         rifx = self.config.rifx
         self.cache_fields += [(8, 2, 'Number of line style records'), ]
         pos = 10
-        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+        for _i in range(utils.word2py_int(self.chunk[8:10], rifx)):
             self.cache_fields += [(pos, 2, 'Line style record'), ]
             pos += 2
 
@@ -790,7 +987,7 @@ class CmxRotlV1(CmxRiffElement):
         pos = 10
         # style, screen, color, arrowheads, pen, dash
         sig = '>HHHHHH' if rifx else '<HHHHHH'
-        for _ in range(word2int(chunk[8:10], rifx)):
+        for _i in range(word2int(chunk[8:10], rifx)):
             linestyles.append(struct.unpack(sig, chunk[pos:pos + 12]))
             pos += 12
 
@@ -809,7 +1006,7 @@ class CmxRotlV1(CmxRiffElement):
         rifx = self.config.rifx
         self.cache_fields += [(8, 2, 'Number of outline records'), ]
         pos = 10
-        for _ in range(utils.word2py_int(self.chunk[8:10], rifx)):
+        for _i in range(utils.word2py_int(self.chunk[8:10], rifx)):
             self.cache_fields += [(pos, 12, 'Outline record'), ]
             pos += 12
 
@@ -861,6 +1058,10 @@ GENERIC_CHUNK_MAP = {
     cmx_const.ICMT_ID: CmxInfoElement,
     cmx_const.RLST_ID: CmxRlst,
     cmx_const.ROTA_ID: CmxRota,
+    cmx_const.IXLR_ID: CmxIxlr,
+    cmx_const.IXTL_ID: CmxIxtl,
+    cmx_const.IXPG_ID: CmxIxpg,
+    cmx_const.IXMR_ID: CmxIxmr,
 }
 
 V1_CHUNK_MAP = {
