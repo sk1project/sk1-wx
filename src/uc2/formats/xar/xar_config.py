@@ -19,4 +19,7 @@ from uc2.utils.config import XmlConfigParser
 
 
 class XAR_Config(XmlConfigParser):
-    pass
+    system_encoding = 'utf-8'
+    encoding = 'utf-8'
+    filename = 'xar_config.xml'
+    userscale = None

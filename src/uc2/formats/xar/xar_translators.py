@@ -382,7 +382,7 @@ class XAR_to_SK2_Translator(object):
     # def handle_page(self, rec, cfg): pass
 
     def handle_spreadinformation(self, rec, cfg):
-        scale = 1.0
+        scale = rec.config.userscale or 1.0
         width = rec.width * scale
         height = rec.height * scale
 
