@@ -382,15 +382,25 @@ class XAR_to_SK2_Translator(object):
     # def handle_page(self, rec, cfg): pass
 
     def handle_spreadinformation(self, rec, cfg):
-        width = rec.width
-        height = rec.height
+        scale = 1.0
+        width = rec.width * scale
+        height = rec.height * scale
+
+        if rec.spread_flags.double_page_spread:
+            width = width * 2.0
+
         fmt = pick_page_format_name(width, height)
         size = (width, height)
         orient = uc2const.PORTRAIT
         if width > height:
             orient = uc2const.LANDSCAPE
         self.page_format = [fmt, size, orient]
-        trafo = [1.0, 0.0, 0.0, 1.0, -1.0 * width / 2.0, -1.0 * height / 2.0]
+
+        trafo = [
+            scale, 0.0, 0.0, scale,
+            -1.0 * width / 2.0,
+            -1.0 * height / 2.0
+        ]
         self.set_trafo(trafo)
 
 #    def handle_gridrulersettings(self, rec, cfg): pass
