@@ -591,8 +591,10 @@ XAR_DASHS = {
     REF_DASH_GUIDELAYER: [2, 2],
 }
 
-GUIDELINE_VERTICAL = 1
-GUIDELINE_HORIZONTAL = 2
+# in spec 'Whether the guide-line is vertical (1) or horizontal (2)'
+# but this is not true
+GUIDELINE_HORIZONTAL = 1
+GUIDELINE_VERTICAL = 2
 
 TEXT_ALIGN_LEFT = 0
 TEXT_ALIGN_CENTRE = 1
