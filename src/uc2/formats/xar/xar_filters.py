@@ -70,6 +70,11 @@ class XARLoader(AbstractLoader):
                 if rec.compression_crc != compression_crc:
                     msg = 'Invalid crc'
                     self.send_warning(msg)
+            elif rec.cid == xar_const.TAG_DEFINE_DEFAULTUNITS:
+                rec.update()
+                if rec.page_units == xar_const.REF_UNIT_PIXELS:
+                    userscale = self.config.userscale or 1000.0 / 750.0
+                    self.config.userscale = userscale
 
             if rec.cid == xar_const.TAG_DOWN:
                 parent_rec = parent_stack[-1].childs[-1]
