@@ -155,7 +155,7 @@ class Inst16BeginLayer(CmxInstruction):
         self.chunk += int2dword(self.data['flags'], rifx)
         self.chunk += int2dword(self.data['tally'], rifx)
         self.chunk += int2word(len(self.data['layer_name']), rifx)
-        self.chunk += self.data['layer_name'] +self.data['tail']
+        self.chunk += self.data['layer_name'] + self.data['tail']
         CmxInstruction.update(self)
 
     def update_for_sword(self):
@@ -195,10 +195,45 @@ class Inst16BeginGroup(CmxInstruction):
         ]
 
 
+class Inst16PolyCurve(CmxInstruction):
+    def update_for_sword(self):
+        rifx = self.config.rifx
+        CmxInstruction.update_for_sword(self)
+        flags = utils.byte2py_int(self.chunk[4])
+        self.cache_fields += [(4, 1, 'Style flags'), ]
+        pos = 5
+        if flags & cmx_const.INSTR_FILL_FLAG:
+            fill = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
+            self.cache_fields += [(pos, 2, 'Fill type'), ]
+            pos += 2
+            if fill == cmx_const.INSTR_FILL_EMPTY:
+                pass
+            elif fill == cmx_const.INSTR_FILL_UNIFORM:
+                self.cache_fields += [(pos, 2, 'Color ref.'), ]
+                pos += 2
+                self.cache_fields += [(pos, 2, 'Screen ref.'), ]
+                pos += 2
+
+        if flags & cmx_const.INSTR_STROKE_FLAG:
+            self.cache_fields += [(pos, 2, 'Outline ref.'), ]
+            pos += 2
+
+        count = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
+        self.cache_fields += [(pos, 2, 'Point count'), ]
+        pos += 2
+        self.cache_fields += [(pos, 4 * count, 'Points (x,y) int16'), ]
+        pos += 4 * count
+        self.cache_fields += [(pos, count, 'Nodes (byte)'), ]
+        pos += count
+        self.cache_fields += [(pos, 8, 'Curve bbox'), ]
+        pos += 8
+
+
 INSTR_16bit = {
     cmx_const.BEGIN_PAGE: Inst16BeginPage,
     cmx_const.BEGIN_LAYER: Inst16BeginLayer,
     cmx_const.BEGIN_GROUP: Inst16BeginGroup,
+    cmx_const.POLYCURVE: Inst16PolyCurve
 }
 
 INSTR_32bit = {}
