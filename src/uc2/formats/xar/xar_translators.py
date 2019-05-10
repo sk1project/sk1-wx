@@ -715,37 +715,9 @@ class XAR_to_SK2_Translator(object):
     def handle_fill_repeatinginverted(self, rec, cfg):
         self.style['fill_repeating'] = rec.cid
 
-    def handle_flattransparentfill(self, rec, cfg):
-        linearfill = self.style.get('gradient_fill')
-        fill_data = self.style.get('flat_colour_fill')
-        if fill_data:
-            fill_data[2] = rec.transparency
-
-    def handle_lineartransparentfill(self, rec, cfg):
-
-        trafo = self.get_trafo()
-        vector = apply_trafo_to_points([rec.start_point, rec.end_point], trafo)
-
-        linearfill = self.style.get('gradient_fill')
-        if linearfill:
-            start_colour = copy.deepcopy(linearfill[2][0][1])
-            end_colour = copy.deepcopy(linearfill[2][1][1])
-        else:
-            color = self.style.get('flat_colour_fill') or xar_const.RGB_WHITE
-            start_colour = copy.deepcopy(color)
-            end_colour = copy.deepcopy(color)
-
-        start_colour[2] = 1. - rec.start_transparency / 255.0
-        end_colour[2] = 1. - rec.end_transparency / 255.0
-
-        self.style['gradient_fill'] = [
-            sk2const.GRADIENT_LINEAR,
-            vector,
-            [[0.0, start_colour], [1.0, end_colour]],
-            sk2const.GRADIENT_EXTEND_PAD
-        ]
-
-    #    def handle_circulartransparentfill(self, rec, cfg): pass
+#    def handle_flattransparentfill(self, rec, cfg): pass
+#    def handle_lineartransparentfill(self, rec, cfg): pass
+#    def handle_circulartransparentfill(self, rec, cfg): pass
 #    def handle_ellipticaltransparentfill(self, rec, cfg): pass
 #    def handle_conicaltransparentfill(self, rec, cfg): pass
 #    def handle_bitmaptransparentfill(self, rec, cfg): pass
