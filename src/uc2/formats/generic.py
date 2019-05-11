@@ -57,6 +57,8 @@ class ModelObject(object):
 
     def add(self, child):
         self.childs.append(child)
+        child.parent = self
+        child.config = self.config
 
     def remove(self, child):
         if child in self.childs:

@@ -27,8 +27,9 @@ LOG = logging.getLogger(__name__)
 
 
 class CmxRiffElement(cmx_instr.CmxObject):
-    def __init__(self, config, chunk=None, **kwargs):
+    def __init__(self, config, chunk=None, offset=0, **kwargs):
         self.config = config
+        self.offset = offset
         self.childs = []
         self.data = {}
 
@@ -48,12 +49,6 @@ class CmxRiffElement(cmx_instr.CmxObject):
     def update_from_kwargs(self, **kwargs):
         self.data.update(kwargs)
         self.update()
-
-    def get(self, name, default=None):
-        return self.data.get(name, default)
-
-    def set(self, name, value):
-        self.data[name] = value
 
     def is_leaf(self):
         return self.data['identifier'] not in cmx_const.LIST_IDS
@@ -77,10 +72,6 @@ class CmxRiffElement(cmx_instr.CmxObject):
             offset += len(chunk.parent.chunk)
             chunk = chunk.parent
         return offset
-
-    def is_padding(self):
-        sz = len(self.chunk)
-        return sz > (sz // 2) * 2
 
     def update(self):
         size = self.get_chunk_size() - 8
@@ -115,13 +106,13 @@ class CmxRiffElement(cmx_instr.CmxObject):
 
 
 class CmxList(CmxRiffElement):
-    def __init__(self, config, chunk=None, **kwargs):
-        CmxRiffElement.__init__(self, config, chunk, **kwargs)
+    def __init__(self, config, chunk=None, offset=0, **kwargs):
+        CmxRiffElement.__init__(self, config, chunk, offset, **kwargs)
 
 
 class CmxInfoElement(CmxRiffElement):
-    def __init__(self, config, chunk=None, **kwargs):
-        CmxRiffElement.__init__(self, config, chunk, **kwargs)
+    def __init__(self, config, chunk=None, offset=0, **kwargs):
+        CmxRiffElement.__init__(self, config, chunk, offset, **kwargs)
 
     def set_defaults(self):
         self.data['identifier'] = cmx_const.IKEY_ID
@@ -285,8 +276,8 @@ class CmxCcmm(CmxRiffElement):
 
 
 class CmxDisp(CmxRiffElement):
-    def __init__(self, config, chunk=None, **kwargs):
-        CmxRiffElement.__init__(self, config, chunk, **kwargs)
+    def __init__(self, config, chunk=None, offset=0, **kwargs):
+        CmxRiffElement.__init__(self, config, chunk, offset, **kwargs)
 
     @staticmethod
     def make_chunk_from_bitmap(bitmap_str):
@@ -321,12 +312,12 @@ class CmxDisp(CmxRiffElement):
 
 
 class CmxPage(CmxRiffElement):
-    def get_chunk_size(self):
+    def get_chunk_size(self, recursive=True):
         def _get_recursive_size(el):
             return sum([len(el.chunk)] +
                        [_get_recursive_size(item) for item in el.childs])
 
-        return _get_recursive_size(self)
+        return _get_recursive_size(self) if recursive else 8
 
     def update_from_chunk(self):
         chunk = self.chunk[8:]
@@ -338,7 +329,8 @@ class CmxPage(CmxRiffElement):
             instr_id = chunk[pos + 2:pos + 4]
             instr_id = abs(utils.signed_word2py_int(instr_id, rifx))
             instr = chunk[pos:pos + size]
-            obj = cmx_instr.make_instruction(self.config, instr)
+            offset = self.offset + 8 + pos
+            obj = cmx_instr.make_instruction(self.config, instr, offset)
             name = cmx_const.INSTR_CODES.get(instr_id, '')
             if name.startswith('Begin'):
                 parents[-1].add(obj)
@@ -346,6 +338,12 @@ class CmxPage(CmxRiffElement):
             elif name.startswith('End'):
                 parents = parents[:-1]
                 parents[-1].add(obj)
+            elif instr_id == cmx_const.JUMP_ABSOLUTE:
+                parents[-1].add(obj)
+                sz = obj.get('jump') - offset - 8
+                LOG.info('JUMP OFFSET %s', offset)
+                obj.chunk += chunk[pos + 8:pos + 8 + sz]
+                size += sz
             else:
                 parents[-1].add(obj)
             pos += size
@@ -363,9 +361,11 @@ class CdrxPack(CmxRiffElement):
         while pos < len(chunk):
             identifier = chunk[pos:pos + 4]
             sz = chunk[pos + 4:pos + 8]
+            offset = self.offset + 12 + pos
             if identifier in cmx_const.LIST_IDS:
                 name = chunk[pos + 8:pos + 12]
-                obj = make_cmx_chunk(self.config, identifier + sz + name)
+                obj = make_cmx_chunk(self.config,
+                                     identifier + sz + name, offset)
                 parent.add(obj)
                 parent = obj
                 pos += 12
@@ -373,7 +373,8 @@ class CdrxPack(CmxRiffElement):
             size = utils.dword2py_int(sz, self.config.rifx)
             size += 1 if size > (size // 2) * 2 else 0
             data = chunk[pos + 8:pos + 8 + size]
-            parent.add(make_cmx_chunk(self.config, identifier + sz + data))
+            parent.add(make_cmx_chunk(self.config,
+                                      identifier + sz + data, offset))
             pos += size + 8
         self.data['cpng'] = self.chunk[20:]
         self.data['cpng_flags'] = self.chunk[16:20]
@@ -1015,10 +1016,10 @@ class CmxRoot(CmxList):
     toplevel = True
     chunk_map = None
 
-    def __init__(self, config, chunk=None, root_id=cmx_const.ROOT_ID):
+    def __init__(self, config, chunk=None, offset=0, root_id=cmx_const.ROOT_ID):
         config.rifx = root_id == cmx_const.ROOTX_ID
         chunk = chunk or self.make_new_doc(config, root_id)
-        CmxList.__init__(self, config, chunk)
+        CmxList.__init__(self, config, chunk, offset)
 
     def make_new_doc(self, config, root_id):
         chunk = root_id + 4 * '\x00'
@@ -1077,7 +1078,7 @@ V2_CHUNK_MAP = {
 }
 
 
-def make_cmx_chunk(config, chunk):
+def make_cmx_chunk(config, chunk, offset=0):
     identifier = chunk[:4]
     if identifier in GENERIC_CHUNK_MAP:
         mapping = GENERIC_CHUNK_MAP
@@ -1085,4 +1086,5 @@ def make_cmx_chunk(config, chunk):
         mapping = V1_CHUNK_MAP
     else:
         mapping = V2_CHUNK_MAP
-    return mapping.get(identifier, CmxRiffElement)(config, chunk)
+    LOG.info('OBJECT %s', repr(mapping.get(identifier, CmxRiffElement)))
+    return mapping.get(identifier, CmxRiffElement)(config, chunk, offset)

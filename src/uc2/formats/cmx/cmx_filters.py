@@ -45,12 +45,14 @@ class CmxLoader(AbstractBinaryLoader):
     def parse(self, chunk_size):
         position = self.fileptr.tell()
         while self.fileptr.tell() - position < chunk_size:
+            offset = self.fileptr.tell()
             dwords, size = self.read_header()
 
             if not dwords[2]:
                 dwords.append(self.fileptr.read(size))
 
-            node = cmx_model.make_cmx_chunk(self.config, ''.join(dwords))
+            chunk = ''.join(dwords)
+            node = cmx_model.make_cmx_chunk(self.config, chunk, offset)
             self.parent_stack[-1].add(node)
 
             if dwords[2]:

@@ -15,21 +15,36 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import logging
 import struct
 
 from uc2 import utils
 from uc2.formats.cmx import cmx_const
 from uc2.formats.generic import BinaryModelObject
 
+LOG = logging.getLogger(__name__)
+
 
 class CmxObject(BinaryModelObject):
     toplevel = False
+    data = None
+    offset = 0
 
     def get_root(self):
         parent = self
         while not parent.toplevel:
             parent = parent.parent
         return parent
+
+    def get(self, name, default=None):
+        return self.data.get(name, default)
+
+    def set(self, name, value):
+        self.data[name] = value
+
+    def is_padding(self):
+        sz = len(self.chunk)
+        return sz > (sz // 2) * 2
 
     def get_chunk_size(self, recursive=True):
         if recursive:
@@ -60,8 +75,9 @@ class CmxObject(BinaryModelObject):
 class CmxInstruction(CmxObject):
     toplevel = False
 
-    def __init__(self, config, chunk=None, **kwargs):
+    def __init__(self, config, chunk=None, offset=0, **kwargs):
         self.config = config
+        self.offset = offset
         self.childs = []
         self.data = {}
 
@@ -89,6 +105,8 @@ class CmxInstruction(CmxObject):
         return len(self.childs) == 0, name, sz
 
     def update(self):
+        if self.is_padding():
+            self.chunk += '\x00'
         size = len(self.chunk)
         sz = utils.py_int2word(size, self.config.rifx)
         self.chunk = sz + self._get_code_str() + self.chunk[4:]
@@ -195,6 +213,29 @@ class Inst16BeginGroup(CmxInstruction):
         ]
 
 
+class Inst16JumpAbsolute(CmxInstruction):
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        self.data['jump'] = utils.dword2py_int(self.chunk[4:8], rifx)
+
+    def update(self):
+        rifx = self.config.rifx
+        pos = self.get_offset()
+        LOG.info('Offset after update: %s', pos)
+        jump = self.data['jump'] = len(self.chunk) + pos
+        data = self.chunk[8:]
+        self.chunk = '\x08\x00\x6f\x00'
+        self.chunk += utils.py_int2dword(jump, rifx) + data
+
+    def update_for_sword(self):
+        CmxInstruction.update_for_sword(self)
+        sz = len(self.chunk) - 8
+        self.cache_fields += [
+            (4, 8, 'Jump absolute offset'),
+            (8, sz, 'Data'),
+        ]
+
+
 class Inst16PolyCurve(CmxInstruction):
     def update_for_sword(self):
         rifx = self.config.rifx
@@ -204,7 +245,8 @@ class Inst16PolyCurve(CmxInstruction):
         pos = 5
         if flags & cmx_const.INSTR_FILL_FLAG:
             fill = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
-            self.cache_fields += [(pos, 2, 'Fill type'), ]
+            f = cmx_const.FILL_TYPE_MAP.get(fill, 'UNKNOWN')
+            self.cache_fields += [(pos, 2, 'Fill type: %s' % f), ]
             pos += 2
             if fill == cmx_const.INSTR_FILL_EMPTY:
                 pass
@@ -213,6 +255,38 @@ class Inst16PolyCurve(CmxInstruction):
                 pos += 2
                 self.cache_fields += [(pos, 2, 'Screen ref.'), ]
                 pos += 2
+            elif fill == cmx_const.INSTR_FILL_FOUNTAIN:
+                f = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
+                grads = cmx_const.FILL_FOUNTAINS
+                f = grads[f] if f < len(grads) else 'unknown'
+                self.cache_fields += [(pos, 2, 'Fountain type: %s' % f), ]
+                pos += 2
+                self.cache_fields += [(pos, 2, 'Screen ref.'), ]
+                pos += 2
+                self.cache_fields += [(pos, 2, 'Padding'), ]
+                pos += 2
+                self.cache_fields += [(pos, 4, 'Angle'), ]
+                pos += 4
+                self.cache_fields += [(pos, 4, 'Offset (x,y) int32'), ]
+                pos += 4
+                self.cache_fields += [(pos, 2, 'Steps'), ]
+                pos += 2
+                self.cache_fields += [(pos, 2, 'Mode'), ]
+                pos += 2
+                color_count = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
+                self.cache_fields += [(pos, 2,
+                                       'Color count (%d)' % color_count), ]
+                pos += 2
+                for _i in range(color_count):
+                    self.cache_fields += [(pos, 2, 'Color ref.'), ]
+                    pos += 2
+                    self.cache_fields += [(pos, 2, 'Position'), ]
+                    pos += 2
+            else:
+                pos, sz, txt = self.cache_fields[-1]
+                txt += '\n       UNSUPPORTED FILL TYPE!'
+                self.cache_fields[-1] = (pos, sz, txt)
+                return
 
         if flags & cmx_const.INSTR_STROKE_FLAG:
             self.cache_fields += [(pos, 2, 'Outline ref.'), ]
@@ -233,13 +307,14 @@ INSTR_16bit = {
     cmx_const.BEGIN_PAGE: Inst16BeginPage,
     cmx_const.BEGIN_LAYER: Inst16BeginLayer,
     cmx_const.BEGIN_GROUP: Inst16BeginGroup,
-    cmx_const.POLYCURVE: Inst16PolyCurve
+    cmx_const.POLYCURVE: Inst16PolyCurve,
+    cmx_const.JUMP_ABSOLUTE: Inst16JumpAbsolute,
 }
 
 INSTR_32bit = {}
 
 
-def make_instruction(config, chunk):
+def make_instruction(config, chunk, offset=0):
     instructions = INSTR_16bit if config.v16bit else INSTR_32bit
     identifier = abs(utils.signed_word2py_int(chunk[2:4], config.rifx))
-    return instructions.get(identifier, CmxInstruction)(config, chunk)
+    return instructions.get(identifier, CmxInstruction)(config, chunk, offset)

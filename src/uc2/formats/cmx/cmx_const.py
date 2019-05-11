@@ -265,3 +265,17 @@ INSTR_FILL_MONOCHROME = 8
 INSTR_FILL_IMPORTED_BITMAP = 9
 INSTR_FILL_FULL_COLOR = 10
 INSTR_FILL_TEXTURE = 11
+
+FILL_TYPE_MAP = {
+    INSTR_FILL_EMPTY: 'No fill',
+    INSTR_FILL_UNIFORM: 'Uniform',
+    INSTR_FILL_FOUNTAIN: 'Fountain',
+    INSTR_FILL_PS: 'Postscript',
+    INSTR_FILL_DUOCOLOR: 'Two-color pattern',
+    INSTR_FILL_MONOCHROME: 'Monochrome pattern',
+    INSTR_FILL_IMPORTED_BITMAP: 'Imported bitmap',
+    INSTR_FILL_FULL_COLOR: 'Full color pattern',
+    INSTR_FILL_TEXTURE: 'Texture',
+}
+
+FILL_FOUNTAINS = ('linear', 'radial', 'conical', 'square')
