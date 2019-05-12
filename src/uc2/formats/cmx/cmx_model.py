@@ -213,14 +213,20 @@ class CmxCont(CmxRiffElement):
 
     def update_for_sword(self):
         CmxRiffElement.update_for_sword(self)
+        os_type = self.data['os_type']
+        byte_order = 'Little Endian' \
+            if self.data['byte_order'].startswith('\x32') else 'Big Endian'
+        coord_sz = '16bit' \
+            if self.data['coord_size'].startswith('\x32') else '32bit'
         self.cache_fields += [
             (8, 32, 'file id'),
-            (40, 16, 'OS type'),
-            (56, 4, 'ByteOrder'),
-            (60, 2, 'CoordSize'),
-            (62, 4, 'Major'),
-            (66, 4, 'Minor'),
-            (70, 2, 'Unit'),
+            (40, 16, 'OS type (%s)' % os_type),
+            (56, 4, 'ByteOrder (%s)' % byte_order),
+            (60, 2, 'CoordSize (%s)' % coord_sz),
+            (62, 4, 'Major (%s)' % self.data['major'].rstrip('\x00')),
+            (66, 4, 'Minor (%s)' % self.data['minor'].rstrip('\x00')),
+            (70, 2, 'Unit (%s)' % cmx_const.CONT_UNITS.get(
+                self.data['unit'], '??')),
             (72, 8, 'Factor'),
 
             (80, 4, 'lOption (not used, zero)'),

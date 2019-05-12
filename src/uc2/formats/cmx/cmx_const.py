@@ -35,6 +35,7 @@ CONT_MAJOR_V2 = '\x32\x00\x00\x00'
 CONT_MINOR = '\x30\x00\x00\x00'
 CONT_UNIT_MM = '\x23\x00'
 CONT_UNIT_IN = '\x40\x00'
+CONT_UNITS = {CONT_UNIT_IN: 'inches', CONT_UNIT_MM: 'mm'}
 CONT_FACTOR_MM = '\x48\xaf\xbc\x9a\xf2\xd7\x7a\x3e'
 
 CCMM_ID = 'ccmm'
