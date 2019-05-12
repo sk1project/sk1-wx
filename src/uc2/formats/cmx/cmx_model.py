@@ -1046,7 +1046,7 @@ class CmxRoot(CmxList):
         CmxList.update(self)
         self.chunk_map = {'pages': []}
         for child in self.childs:
-            if child.get_name() != cmx_const.PACK_ID:
+            if child.get_name() not in (cmx_const.PACK_ID, cmx_const.INFO_ID):
                 _add_chunk(self, child)
             else:
                 for item in child.childs:
