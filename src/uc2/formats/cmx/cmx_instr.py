@@ -221,7 +221,6 @@ class Inst16JumpAbsolute(CmxInstruction):
     def update(self):
         rifx = self.config.rifx
         pos = self.get_offset()
-        LOG.info('Offset after update: %s', pos)
         jump = self.data['jump'] = len(self.chunk) + pos
         data = self.chunk[8:]
         self.chunk = '\x08\x00\x6f\x00'
@@ -237,6 +236,107 @@ class Inst16JumpAbsolute(CmxInstruction):
 
 
 class Inst16PolyCurve(CmxInstruction):
+    def update_from_chunk(self):
+        rifx = self.config.rifx
+        self.data['tail'] = ''
+        flags = self.data['style_flags'] = utils.byte2py_int(self.chunk[4])
+        pos = 5
+        if flags & cmx_const.INSTR_FILL_FLAG:
+            fill = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
+            self.data['fill_type'] = fill
+            pos += 2
+            # FILL
+            if fill == cmx_const.INSTR_FILL_EMPTY:
+                pass
+            elif fill == cmx_const.INSTR_FILL_UNIFORM:
+                # (color, screen)
+                sig = '>hh' if rifx else '<hh'
+                self.data['fill'] = struct.unpack(sig, self.chunk[pos:pos + 4])
+                pos += 4
+            elif fill == cmx_const.INSTR_FILL_FOUNTAIN:
+                # (type, screen, padding, angle, x, y, steps, mode, clr_count)
+                sig = '>hhhihhhh' if rifx else '<hhhihhhh'
+                self.data['fill'] = struct.unpack(sig, self.chunk[pos:pos + 18])
+                pos += 18
+                # steps: [(color, pos)]
+                sig = '>hh' if rifx else '<hh'
+                steps = self.data['steps'] = []
+                for _ in range(self.data['fill'][-1]):
+                    steps.append(struct.unpack(sig, self.chunk[pos:pos + 4]))
+                    pos += 4
+            else:
+                self.data['tail'] = self.chunk[pos:]
+                return
+
+        # OUTLINE
+        if flags & cmx_const.INSTR_STROKE_FLAG:
+            self.data['outline'] = utils.word2py_int(
+                self.chunk[pos:pos + 2], rifx)
+            pos += 2
+
+        # POINTS & NODES
+        # points: [(x,y),...]
+        count = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
+        pos += 2
+        points = self.data['points'] = []
+        sig = '>hh' if rifx else '<hh'
+        for _ in range(count):
+            points.append(struct.unpack(sig, self.chunk[pos:pos + 4]))
+            pos += 4
+        # nodes: (node,...)
+        sig = count * 'b'
+        self.data['nodes'] = struct.unpack(sig, self.chunk[pos:pos + count])
+        pos += count
+        # BBOX
+        sig = '>hhhh' if rifx else '<hhhh'
+        self.data['bbox'] = struct.unpack(sig, self.chunk[pos:pos + 8])
+        pos += 8
+
+        if pos < len(self.chunk):
+            self.data['tail'] = self.chunk[pos:]
+
+    def update(self):
+        rifx = self.config.rifx
+        int2word = utils.py_int2word
+        self.chunk = '\x00\x00' + int2word(self.data['code'], rifx)
+        self.chunk += utils.py_int2byte(self.data['style_flags'])
+        skip = False
+        # FILL
+        if self.data['style_flags'] & cmx_const.INSTR_FILL_FLAG:
+            self.chunk += int2word(self.data['fill_type'], rifx)
+            if self.data['fill_type'] == cmx_const.INSTR_FILL_EMPTY:
+                pass
+            elif self.data['fill_type'] == cmx_const.INSTR_FILL_UNIFORM:
+                # (color, screen)
+                sig = '>hh' if rifx else '<hh'
+                self.chunk += struct.pack(sig, *self.data['fill'])
+            elif self.data['fill_type'] == cmx_const.INSTR_FILL_FOUNTAIN:
+                sig = '>hhhihhhh' if rifx else '<hhhihhhh'
+                self.chunk += struct.pack(sig, *self.data['fill'])
+                sig = '>hh' if rifx else '<hh'
+                for item in self.data['steps']:
+                    self.chunk += struct.pack(sig, *item)
+            else:
+                skip = True
+        if not skip:
+            # OUTLINE
+            if self.data['style_flags'] & cmx_const.INSTR_STROKE_FLAG:
+                self.chunk += int2word(self.data['outline'], rifx)
+            # POINTS
+            self.chunk += int2word(len(self.data['points']), rifx)
+            for point in self.data['points']:
+                sig = '>hh' if rifx else '<hh'
+                self.chunk += struct.pack(sig, *point)
+            # NODES
+            self.chunk += struct.pack('b' * len(self.data['nodes']),
+                                      *self.data['nodes'])
+            # BBOX
+            sig = '>hhhh' if rifx else '<hhhh'
+            self.chunk += struct.pack(sig, *self.data['bbox'])
+
+        self.chunk += self.data['tail']
+        CmxInstruction.update(self)
+
     def update_for_sword(self):
         rifx = self.config.rifx
         CmxInstruction.update_for_sword(self)
@@ -257,8 +357,7 @@ class Inst16PolyCurve(CmxInstruction):
                 pos += 2
             elif fill == cmx_const.INSTR_FILL_FOUNTAIN:
                 f = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
-                grads = cmx_const.FILL_FOUNTAINS
-                f = grads[f] if f < len(grads) else 'unknown'
+                f = cmx_const.FILL_FOUNTAINS.get(f, 'unknown')
                 self.cache_fields += [(pos, 2, 'Fountain type: %s' % f), ]
                 pos += 2
                 self.cache_fields += [(pos, 2, 'Screen ref.'), ]
@@ -267,7 +366,7 @@ class Inst16PolyCurve(CmxInstruction):
                 pos += 2
                 self.cache_fields += [(pos, 4, 'Angle'), ]
                 pos += 4
-                self.cache_fields += [(pos, 4, 'Offset (x,y) int32'), ]
+                self.cache_fields += [(pos, 4, 'Offset (x,y) int16'), ]
                 pos += 4
                 self.cache_fields += [(pos, 2, 'Steps'), ]
                 pos += 2
@@ -293,11 +392,11 @@ class Inst16PolyCurve(CmxInstruction):
             pos += 2
 
         count = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
-        self.cache_fields += [(pos, 2, 'Point count'), ]
+        self.cache_fields += [(pos, 2, 'Point count (%d)' % count), ]
         pos += 2
-        self.cache_fields += [(pos, 4 * count, 'Points (x,y) int16'), ]
+        self.cache_fields += [(pos, 4 * count, 'Points [(x,y),] int16'), ]
         pos += 4 * count
-        self.cache_fields += [(pos, count, 'Nodes (byte)'), ]
+        self.cache_fields += [(pos, count, 'Nodes [byte,]'), ]
         pos += count
         self.cache_fields += [(pos, 8, 'Curve bbox'), ]
         pos += 8

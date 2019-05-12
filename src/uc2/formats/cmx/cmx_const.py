@@ -278,4 +278,9 @@ FILL_TYPE_MAP = {
     INSTR_FILL_TEXTURE: 'Texture',
 }
 
-FILL_FOUNTAINS = ('linear', 'radial', 'conical', 'square')
+FILL_FOUNTAINS = {
+    0: 'linear',
+    1: 'radial',
+    2: 'conical',
+    3: 'square'
+}

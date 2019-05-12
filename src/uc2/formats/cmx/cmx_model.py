@@ -341,7 +341,6 @@ class CmxPage(CmxRiffElement):
             elif instr_id == cmx_const.JUMP_ABSOLUTE:
                 parents[-1].add(obj)
                 sz = obj.get('jump') - offset - 8
-                LOG.info('JUMP OFFSET %s', offset)
                 obj.chunk += chunk[pos + 8:pos + 8 + sz]
                 size += sz
             else:
@@ -1086,5 +1085,4 @@ def make_cmx_chunk(config, chunk, offset=0):
         mapping = V1_CHUNK_MAP
     else:
         mapping = V2_CHUNK_MAP
-    LOG.info('OBJECT %s', repr(mapping.get(identifier, CmxRiffElement)))
     return mapping.get(identifier, CmxRiffElement)(config, chunk, offset)
