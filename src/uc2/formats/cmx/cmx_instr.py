@@ -274,9 +274,7 @@ class Inst16PolyCurve(CmxInstruction):
                 self.chunk[pos:pos + 2], rifx)
             pos += 2
 
-        if any([flags & cmx_const.INSTR_LENS_FLAG,
-                flags & cmx_const.INSTR_CANVAS_FLAG,
-                flags & cmx_const.INSTR_CONTAINER_FLAG]):
+        if flags >= cmx_const.INSTR_LENS_FLAG:
             self.data['tail'] = self.chunk[pos:]
             return
 
@@ -331,9 +329,7 @@ class Inst16PolyCurve(CmxInstruction):
             if flags & cmx_const.INSTR_STROKE_FLAG:
                 self.chunk += int2word(self.data['outline'], rifx)
 
-            if not any([flags & cmx_const.INSTR_LENS_FLAG,
-                        flags & cmx_const.INSTR_CANVAS_FLAG,
-                        flags & cmx_const.INSTR_CONTAINER_FLAG]):
+            if not flags >= cmx_const.INSTR_LENS_FLAG:
                 # POINTS
                 self.chunk += int2word(len(self.data['points']), rifx)
                 for point in self.data['points']:
@@ -403,9 +399,7 @@ class Inst16PolyCurve(CmxInstruction):
             self.cache_fields += [(pos, 2, 'Outline ref.'), ]
             pos += 2
 
-        if any([flags & cmx_const.INSTR_LENS_FLAG,
-                flags & cmx_const.INSTR_CANVAS_FLAG,
-                flags & cmx_const.INSTR_CONTAINER_FLAG]):
+        if flags >= cmx_const.INSTR_LENS_FLAG:
             pos, sz, txt = self.cache_fields[-1]
             sp = '\n       '
             txt += '%sUNSUPPORTED LENS, CANVAS %sOR CONTAINER!' % (sp, sp)
