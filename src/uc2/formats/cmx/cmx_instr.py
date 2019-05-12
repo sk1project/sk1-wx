@@ -274,6 +274,12 @@ class Inst16PolyCurve(CmxInstruction):
                 self.chunk[pos:pos + 2], rifx)
             pos += 2
 
+        if any([flags & cmx_const.INSTR_LENS_FLAG,
+                flags & cmx_const.INSTR_CANVAS_FLAG,
+                flags & cmx_const.INSTR_CONTAINER_FLAG]):
+            self.data['tail'] = self.chunk[pos:]
+            return
+
         # POINTS & NODES
         # points: [(x,y),...]
         count = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
@@ -301,8 +307,9 @@ class Inst16PolyCurve(CmxInstruction):
         self.chunk = '\x00\x00' + int2word(self.data['code'], rifx)
         self.chunk += utils.py_int2byte(self.data['style_flags'])
         skip = False
+        flags = self.data['style_flags']
         # FILL
-        if self.data['style_flags'] & cmx_const.INSTR_FILL_FLAG:
+        if flags & cmx_const.INSTR_FILL_FLAG:
             self.chunk += int2word(self.data['fill_type'], rifx)
             if self.data['fill_type'] == cmx_const.INSTR_FILL_EMPTY:
                 pass
@@ -318,21 +325,26 @@ class Inst16PolyCurve(CmxInstruction):
                     self.chunk += struct.pack(sig, *item)
             else:
                 skip = True
+
         if not skip:
             # OUTLINE
-            if self.data['style_flags'] & cmx_const.INSTR_STROKE_FLAG:
+            if flags & cmx_const.INSTR_STROKE_FLAG:
                 self.chunk += int2word(self.data['outline'], rifx)
-            # POINTS
-            self.chunk += int2word(len(self.data['points']), rifx)
-            for point in self.data['points']:
-                sig = '>hh' if rifx else '<hh'
-                self.chunk += struct.pack(sig, *point)
-            # NODES
-            self.chunk += struct.pack('b' * len(self.data['nodes']),
-                                      *self.data['nodes'])
-            # BBOX
-            sig = '>hhhh' if rifx else '<hhhh'
-            self.chunk += struct.pack(sig, *self.data['bbox'])
+
+            if not any([flags & cmx_const.INSTR_LENS_FLAG,
+                        flags & cmx_const.INSTR_CANVAS_FLAG,
+                        flags & cmx_const.INSTR_CONTAINER_FLAG]):
+                # POINTS
+                self.chunk += int2word(len(self.data['points']), rifx)
+                for point in self.data['points']:
+                    sig = '>hh' if rifx else '<hh'
+                    self.chunk += struct.pack(sig, *point)
+                # NODES
+                self.chunk += struct.pack('b' * len(self.data['nodes']),
+                                          *self.data['nodes'])
+                # BBOX
+                sig = '>hhhh' if rifx else '<hhhh'
+                self.chunk += struct.pack(sig, *self.data['bbox'])
 
         self.chunk += self.data['tail']
         CmxInstruction.update(self)
@@ -390,6 +402,15 @@ class Inst16PolyCurve(CmxInstruction):
         if flags & cmx_const.INSTR_STROKE_FLAG:
             self.cache_fields += [(pos, 2, 'Outline ref.'), ]
             pos += 2
+
+        if any([flags & cmx_const.INSTR_LENS_FLAG,
+                flags & cmx_const.INSTR_CANVAS_FLAG,
+                flags & cmx_const.INSTR_CONTAINER_FLAG]):
+            pos, sz, txt = self.cache_fields[-1]
+            sp = '\n       '
+            txt += '%sUNSUPPORTED LENS, CANVAS %sOR CONTAINER!' % (sp, sp)
+            self.cache_fields[-1] = (pos, sz, txt)
+            return
 
         count = utils.word2py_int(self.chunk[pos:pos + 2], rifx)
         self.cache_fields += [(pos, 2, 'Point count (%d)' % count), ]
