@@ -342,8 +342,8 @@ class CmxPage(CmxRiffElement):
                 parents[-1].add(obj)
                 parents.append(obj)
             elif name.startswith('End'):
-                parents = parents[:-1]
                 parents[-1].add(obj)
+                parents = parents[:-1]
             elif instr_id == cmx_const.JUMP_ABSOLUTE:
                 parents[-1].add(obj)
                 sz = obj.get('jump') - offset - 8
