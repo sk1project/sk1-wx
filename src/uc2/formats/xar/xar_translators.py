@@ -602,14 +602,12 @@ class XAR_to_SK2_Translator(object):
 
     # Attribute tags
     def handle_flatfill(self, rec, cfg):
-        colour = self.colors.get(rec.colour)
-        if colour:
-            self.style['flat_colour_fill'] = colour
+        colour = self.get_color(rec.colour)
+        self.style['flat_colour_fill'] = colour
 
     def handle_linecolour(self, rec, cfg):
-        colour = self.colors.get(rec.colour)
-        if colour:
-            self.style['stroke_colour'] = colour
+        colour = self.get_color(rec.colour)
+        self.style['stroke_colour'] = colour
 
     def handle_linewidth(self, rec, cfg):
         self.style['line_width'] = rec.width
@@ -1329,13 +1327,13 @@ class XAR_to_SK2_Translator(object):
 #    def handle_text_extra_atm_font_def(self, rec, cfg): pass
 
     def get_color(self, colour_ref):
-        return self.colors.get(colour_ref) or xar_const.RGB_BLACK
+        return self.colors.get(colour_ref) or xar_const.REPLACEMENTCOLOUR
 
     def set_trafo(self, trafo):
-        self.trafo = trafo
+        self.trafo = trafo[:]
 
     def get_trafo(self):
-        return copy.deepcopy(self.trafo)
+        return self.trafo[:]
 
     def get_text_style(self):
         fill = self.get_fill()
