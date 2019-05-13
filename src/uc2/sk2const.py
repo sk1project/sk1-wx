@@ -128,6 +128,9 @@ CMYK_WHITE = [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 0.0], 1.0, 'White']
 RGB_BLACK = [uc2const.COLOR_RGB, [0.0, 0.0, 0.0], 1.0, 'Black']
 RGB_WHITE = [uc2const.COLOR_RGB, [1.0, 1.0, 1.0], 1.0, 'White']
 
+FALLBACK_OUTLINE = [STROKE_MIDDLE, 1.0, CMYK_BLACK, [], CAP_BUTT, JOIN_MITER,
+                    10.433, 0, 0, []]
+
 TEXTBLOCK_WIDTH = -1
 
 TEXT_ALIGN_LEFT = 0
