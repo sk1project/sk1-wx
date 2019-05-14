@@ -25,3 +25,4 @@ class CMX_Config(XmlConfigParser):
     pack = False
     v16bit = False
     v1 = False
+    preview_size = (96, 96)

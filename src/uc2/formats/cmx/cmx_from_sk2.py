@@ -17,12 +17,15 @@
 
 import logging
 
+from uc2 import libimg
 from uc2.formats.cmx import cmx_model, cmx_const
+from uc2.formats.sk2.crenderer import CairoRenderer
 
 LOG = logging.getLogger(__name__)
 
 
 class SK2_to_CMX_Translator(object):
+    root = None
     cmx_doc = None
     cmx_model = None
     sk2_doc = None
@@ -35,7 +38,7 @@ class SK2_to_CMX_Translator(object):
         self.cmx_model = cmx_doc.model
         self.cmx_cfg = cmx_doc.config
         self.sk2_doc = sk2_doc
-        self.sk2_model = sk2_doc.model
+        self.sk2_model = self.root = sk2_doc.model
         self.sk2_mtds = sk2_doc.methods
 
         self.make_template()
@@ -51,9 +54,36 @@ class SK2_to_CMX_Translator(object):
         self.sk2_model = None
         self.sk2_mtds = None
 
+    def _make_preview(self):
+        return libimg.generate_preview(
+            self.sk2_doc, CairoRenderer, size=self.cmx_cfg.preview_size,
+            transparent=False, img_format='BMP', encoded=False)
+
+    def make_el(self, cmx_id, **kwargs):
+        kwargs['identifier'] = cmx_id
+        return cmx_model.make_cmx_chunk(self.cmx_cfg, **kwargs)
+
     def make_template(self):
-        self.cmx_model.add(cmx_model.CmxCont(self.cmx_cfg))
-        self.cmx_model.add(cmx_model.CmxCcmm(self.cmx_cfg))
+        self.cmx_model.add(self.make_el(cmx_const.CONT_ID))
+        self.cmx_model.add(self.make_el(cmx_const.CCMM_ID))
+        self.cmx_model.add(self.make_el(cmx_const.DISP_ID,
+                                        bmp=self._make_preview()))
+        if self.cmx_cfg.pack:
+            self.root = self.make_el(cmx_const.PACK_ID)
+            self.cmx_model.add(self.root)
+
+        for _page in self.sk2_mtds.get_pages():
+            self.root.add(self.make_el(cmx_const.PAGE_ID))
+            self.root.add(self.make_el(cmx_const.RLST_ID))
+            if not self.cmx_cfg.v1:
+                self.root.add(self.make_el(cmx_const.RLST_ID))
+
+        cmx_ids = [cmx_const.ROTL_ID, cmx_const.ROTT_ID, cmx_const.RPEN_ID,
+                   cmx_const.RDOT_ID, cmx_const.ROTA_ID, cmx_const.RCLR_ID,
+                   cmx_const.RSCR_ID, cmx_const.INDX_ID]
+        for cmx_id in cmx_ids:
+            self.root.add(self.make_el(cmx_id))
+        self.cmx_model.update_map()
 
     def translate_doc(self):
         pass
@@ -69,13 +99,12 @@ class SK2_to_CMX_Translator(object):
         return "%s %s %s" % (name, ver, link)
 
     def add_info(self):
-        pass
-        info = cmx_model.CmxList(self.cmx_cfg, name=cmx_const.INFO_ID)
+        info = self.make_el(cmx_const.INFO_ID)
         self.cmx_model.add(info)
+
         metainfo = self.sk2_model.metainfo
         keys = metainfo[2] or ''
         notes = metainfo[3] or self._default_notes()
-        info.add(cmx_model.CmxInfoElement(
-            self.cmx_cfg, identifier=cmx_const.IKEY_ID, text=keys))
-        info.add(cmx_model.CmxInfoElement(
-            self.cmx_cfg, identifier=cmx_const.ICMT_ID, text=notes))
+
+        info.add(self.make_el(cmx_const.IKEY_ID, text=keys))
+        info.add(self.make_el(cmx_const.ICMT_ID, text=notes))

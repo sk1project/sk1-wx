@@ -52,7 +52,7 @@ class CmxLoader(AbstractBinaryLoader):
                 dwords.append(self.fileptr.read(size))
 
             chunk = ''.join(dwords)
-            node = cmx_model.make_cmx_chunk(self.config, chunk, offset)
+            node = cmx_model.make_cmx_chunk(self.config, chunk, offset=offset)
             self.parent_stack[-1].add(node)
 
             if dwords[2]:

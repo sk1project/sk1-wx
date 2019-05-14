@@ -107,13 +107,21 @@ class CmxRiffElement(cmx_instr.CmxObject):
 
 
 class CmxList(CmxRiffElement):
+    chunk_map = None
+
     def __init__(self, config, chunk=None, offset=0, **kwargs):
         CmxRiffElement.__init__(self, config, chunk, offset, **kwargs)
+
+    def update_map(self):
+        self.chunk_map = {}
+        for child in self.childs:
+            self.chunk_map[child.get_name()] = child
 
     def update(self):
         self.chunk = cmx_const.LIST_ID + 4 * '\x00'
         self.chunk += self.data['name']
         CmxRiffElement.update(self)
+        self.update_map()
 
 
 class CmxInfoElement(CmxRiffElement):
@@ -289,6 +297,8 @@ class CmxCcmm(CmxRiffElement):
 
 class CmxDisp(CmxRiffElement):
     def __init__(self, config, chunk=None, offset=0, **kwargs):
+        if 'bmp' in kwargs:
+            chunk = self.make_chunk_from_bitmap(kwargs.pop('bmp'))
         CmxRiffElement.__init__(self, config, chunk, offset, **kwargs)
 
     @staticmethod
@@ -363,6 +373,11 @@ class CmxPage(CmxRiffElement):
     def set_defaults(self):
         self.data['identifier'] = cmx_const.PAGE_ID
 
+    def update(self):
+        self.chunk = self.data['identifier'] + 4 * '\x00'
+        CmxRiffElement.update(self)
+
+
 
 class CdrxPack(CmxRiffElement):
     def update_from_chunk(self):
@@ -376,7 +391,7 @@ class CdrxPack(CmxRiffElement):
             if identifier in cmx_const.LIST_IDS:
                 name = chunk[pos + 8:pos + 12]
                 obj = make_cmx_chunk(self.config,
-                                     identifier + sz + name, offset)
+                                     identifier + sz + name, offset=offset)
                 parent.add(obj)
                 parent = obj
                 pos += 12
@@ -385,7 +400,7 @@ class CdrxPack(CmxRiffElement):
             size += 1 if size > (size // 2) * 2 else 0
             data = chunk[pos + 8:pos + 8 + size]
             parent.add(make_cmx_chunk(self.config,
-                                      identifier + sz + data, offset))
+                                      identifier + sz + data, offset=offset))
             pos += size + 8
         self.data['cpng'] = self.chunk[20:]
         self.data['cpng_flags'] = self.chunk[16:20]
@@ -1037,7 +1052,7 @@ class CmxRoot(CmxList):
         chunk += cmx_const.CDRX_ID if config.pack else cmx_const.CMX_ID
         return chunk
 
-    def update(self):
+    def update_map(self):
         def _add_chunk(self, chunk):
             if chunk.get_name() == cmx_const.PAGE_ID:
                 self.chunk_map['pages'].append([chunk, ])
@@ -1046,7 +1061,6 @@ class CmxRoot(CmxList):
             else:
                 self.chunk_map[chunk.get_name()] = chunk
 
-        CmxList.update(self)
         self.chunk_map = {'pages': []}
         for child in self.childs:
             if child.get_name() not in (cmx_const.PACK_ID, cmx_const.INFO_ID):
@@ -1055,22 +1069,31 @@ class CmxRoot(CmxList):
                 for item in child.childs:
                     _add_chunk(self, item)
 
+    def update(self):
+        CmxList.update(self)
+        self.update_map()
+
 
 GENERIC_CHUNK_MAP = {
     cmx_const.LIST_ID: CmxList,
     cmx_const.CONT_ID: CmxCont,
     cmx_const.CCMM_ID: CmxCcmm,
     cmx_const.DISP_ID: CmxDisp,
-    cmx_const.PAGE_ID: CmxPage,
     cmx_const.PACK_ID: CdrxPack,
-    cmx_const.IKEY_ID: CmxInfoElement,
-    cmx_const.ICMT_ID: CmxInfoElement,
+    cmx_const.PAGE_ID: CmxPage,
     cmx_const.RLST_ID: CmxRlst,
+
     cmx_const.ROTA_ID: CmxRota,
+
+    cmx_const.INDX_ID: CmxList,
     cmx_const.IXLR_ID: CmxIxlr,
     cmx_const.IXTL_ID: CmxIxtl,
     cmx_const.IXPG_ID: CmxIxpg,
     cmx_const.IXMR_ID: CmxIxmr,
+
+    cmx_const.INFO_ID: CmxList,
+    cmx_const.IKEY_ID: CmxInfoElement,
+    cmx_const.ICMT_ID: CmxInfoElement,
 }
 
 V1_CHUNK_MAP = {
@@ -1086,12 +1109,20 @@ V2_CHUNK_MAP = {
 }
 
 
-def make_cmx_chunk(config, chunk, offset=0):
-    identifier = chunk[:4]
+def make_cmx_chunk(config, chunk=None, identifier=None, offset=0, **kwargs):
+    identifier = chunk[:4] if chunk else identifier
+
     if identifier in GENERIC_CHUNK_MAP:
         mapping = GENERIC_CHUNK_MAP
     elif config.v1:
         mapping = V1_CHUNK_MAP
     else:
         mapping = V2_CHUNK_MAP
-    return mapping.get(identifier, CmxRiffElement)(config, chunk, offset)
+    cls = mapping.get(identifier, CmxRiffElement)
+
+    if cls == CmxList and chunk is None:
+        kwargs['name'] = identifier
+    else:
+        kwargs['identifier'] = identifier
+
+    return cls(config, chunk, offset, **kwargs)
