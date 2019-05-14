@@ -74,6 +74,7 @@ class CmxRiffElement(cmx_instr.CmxObject):
         return offset
 
     def update(self):
+        LOG.info('REPR %s', repr(self))
         size = self.get_chunk_size() - 8
         sz = utils.py_int2dword(size, self.config.rifx)
         self.chunk = self.data['identifier'] + sz + self.chunk[8:]
@@ -108,6 +109,11 @@ class CmxRiffElement(cmx_instr.CmxObject):
 class CmxList(CmxRiffElement):
     def __init__(self, config, chunk=None, offset=0, **kwargs):
         CmxRiffElement.__init__(self, config, chunk, offset, **kwargs)
+
+    def update(self):
+        self.chunk = cmx_const.LIST_ID + 4 * '\x00'
+        self.chunk += self.data['name']
+        CmxRiffElement.update(self)
 
 
 class CmxInfoElement(CmxRiffElement):
@@ -1029,9 +1035,6 @@ class CmxRoot(CmxList):
     def make_new_doc(self, config, root_id):
         chunk = root_id + 4 * '\x00'
         chunk += cmx_const.CDRX_ID if config.pack else cmx_const.CMX_ID
-
-        # TODO: here should be cmx doc creating
-
         return chunk
 
     def update(self):

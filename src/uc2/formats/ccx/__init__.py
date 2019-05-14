@@ -47,6 +47,8 @@ def ccx_saver(sk2_doc, filename=None, fileptr=None,
     if sk2_doc.cid == uc2const.CCX:
         translate = False
     if translate:
+        cnf['v1'] = True
+        cnf['v16bit'] = True
         ccx_doc = CMX_Presenter(sk2_doc.appdata, cnf)
         ccx_doc.cid = uc2const.CCX
         ccx_doc.translate_from_sk2(sk2_doc)
