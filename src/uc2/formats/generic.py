@@ -55,10 +55,23 @@ class ModelObject(object):
         if action:
             self.update_for_sword()
 
-    def add(self, child):
-        self.childs.append(child)
+    def add(self, child, before=False):
+        if before:
+            self.childs.insert(0, child)
+        else:
+            self.childs.append(child)
         child.parent = self
         child.config = self.config
+
+    def add_childs(self, childs, before=False):
+        if before:
+            self.childs = childs + self.childs
+        else:
+            self.childs += childs
+        for child in childs:
+            child.parent = self
+            child.config = self.config
+
 
     def remove(self, child):
         if child in self.childs:
