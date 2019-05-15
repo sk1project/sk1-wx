@@ -1348,7 +1348,14 @@ XAR_RECORD_DATA_SPEC = {
     TAG_REGULAR_SHAPE_PHASE_2: {
         'id': 'TAG_REGULAR_SHAPE_PHASE_2',
         'sec': [
-            {'type': 'byte', 'id': 'flags'},
+            {'type': 'byte', 'id': 'flags',
+             'bitfield': {
+                 0: {'type': 'bool', 'id': 'circular_flag'},
+                 1: {'type': 'bool', 'id': 'stellated_flag'},
+                 2: {'type': 'bool', 'id': 'primary_curvature_flag'},
+                 3: {'type': 'bool', 'id': 'stellation_curvature_flag'}
+             }
+             },
             {'type': 'uint16', 'id': 'number_of_sides'},
             {'type': 'COORD', 'id': 'major_axes'},
             {'type': 'COORD', 'id': 'minor_axes'},
