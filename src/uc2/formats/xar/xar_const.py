@@ -868,10 +868,24 @@ XAR_RECORD_DATA_SPEC = {
     },
 
     # Bitmap reference tags
-    TAG_PREVIEWBITMAP_GIF: {'id': 'TAG_PREVIEWBITMAP_GIF'},
-    TAG_PREVIEWBITMAP_JPEG: {'id': 'TAG_PREVIEWBITMAP_JPEG'},
-    TAG_PREVIEWBITMAP_PNG: {'id': 'TAG_PREVIEWBITMAP_PNG'},
-
+    TAG_PREVIEWBITMAP_GIF: {
+        'id': 'TAG_PREVIEWBITMAP_GIF',
+        'sec': [
+            {'type': 'BITMAP_DATA', 'id': 'bitmap_data'}
+        ]
+    },
+    TAG_PREVIEWBITMAP_JPEG: {
+        'id': 'TAG_PREVIEWBITMAP_JPEG',
+        'sec': [
+            {'type': 'BITMAP_DATA', 'id': 'bitmap_data'}
+        ]
+    },
+    TAG_PREVIEWBITMAP_PNG: {
+        'id': 'TAG_PREVIEWBITMAP_PNG',
+        'sec': [
+            {'type': 'BITMAP_DATA', 'id': 'bitmap_data'}
+        ]
+    },
     TAG_DEFINEBITMAP_JPEG: {
         'id': 'TAG_DEFINEBITMAP_JPEG',
         'sec': [
@@ -1100,14 +1114,38 @@ XAR_RECORD_DATA_SPEC = {
             {'type': 'double', 'id': 'gain'},
         ]
     },
-    TAG_FRACTALFILL: {'id': 'TAG_FRACTALFILL'},
+    TAG_FRACTALFILL: {
+        'id': 'TAG_FRACTALFILL',
+        'sec': [
+            {'type': 'COORD', 'id': 'bottom_left'},
+            {'type': 'COORD', 'id': 'bottom_right'},
+            {'type': 'COORD', 'id': 'top_left'},
+            {'type': 'COLOURREF', 'id': 'start_colour'},
+            {'type': 'COLOURREF', 'id': 'end_colour'},
+            {'type': 'int32', 'id': 'seed'},
+            {'type': 'fixed16', 'id': 'graininess'},
+            {'type': 'fixed16', 'id': 'gravity'},
+            {'type': 'fixed16', 'id': 'squash'},
+            {'type': 'uint32', 'id': 'resolution'},
+            {'type': 'byte', 'id': 'tileable'},
+            # PROFILE
+            {'type': 'double', 'id': 'bias'},
+            {'type': 'double', 'id': 'gain'},
+        ]
+    },
     TAG_FILLEFFECT_FADE: {'id': 'TAG_FILLEFFECT_FADE'},
     TAG_FILLEFFECT_RAINBOW: {'id': 'TAG_FILLEFFECT_RAINBOW'},
     TAG_FILLEFFECT_ALTRAINBOW: {'id': 'TAG_FILLEFFECT_ALTRAINBOW'},
     TAG_FILL_REPEATING: {'id': 'TAG_FILL_REPEATING'},
     TAG_FILL_NONREPEATING: {'id': 'TAG_FILL_NONREPEATING'},
     TAG_FILL_REPEATINGINVERTED: {'id': 'TAG_FILL_REPEATINGINVERTED'},
-    TAG_FLATTRANSPARENTFILL: {'id': 'TAG_FLATTRANSPARENTFILL'},
+    TAG_FLATTRANSPARENTFILL: {
+        'id': 'TAG_FLATTRANSPARENTFILL',
+        'sec': [
+            {'type': 'byte', 'id': 'transparency'},
+            {'type': 'byte', 'id': 'transparency_type'}
+        ]
+    },
     TAG_LINEARTRANSPARENTFILL: {
         'id': 'TAG_LINEARTRANSPARENTFILL',
         'sec': [
@@ -1558,7 +1596,23 @@ XAR_RECORD_DATA_SPEC = {
     TAG_STROKEAIRBRUSH: {'id': 'TAG_STROKEAIRBRUSH'},
 
     # Fractal Noise records
-    TAG_NOISEFILL: {'id': 'TAG_NOISEFILL'},
+    TAG_NOISEFILL: {
+        'id': 'TAG_NOISEFILL',
+        'sec': [
+            {'type': 'COORD', 'id': 'bottom_left'},
+            {'type': 'COORD', 'id': 'bottom_right'},
+            {'type': 'COORD', 'id': 'top_left'},
+            {'type': 'COLOURREF', 'id': 'start_colour'},
+            {'type': 'COLOURREF', 'id': 'end_colour'},
+            {'type': 'fixed16', 'id': 'graininess'},
+            {'type': 'int32', 'id': 'seed'},
+            {'type': 'uint32', 'id': 'resolution'},
+            {'type': 'byte', 'id': 'tileable'},
+            # PROFILE
+            {'type': 'double', 'id': 'bias'},
+            {'type': 'double', 'id': 'gain'},
+        ]
+    },
     TAG_NOISETRANSPARENTFILL: {'id': 'TAG_NOISETRANSPARENTFILL'},
 
     # Mould bounds record
