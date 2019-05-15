@@ -17,7 +17,6 @@
 
 import gtk
 import os
-import pango
 import sys
 
 from sword import _, config
@@ -28,6 +27,7 @@ from sword.widgets.captions import TabIconCaption
 from uc2 import uc2const
 
 COLOR = '#A7A7A7'
+
 
 def _get_open_filters():
     result = []
@@ -93,6 +93,13 @@ class FileBrowserTool(gtk.VBox):
                                                _('Show all files'))
         nav_panel.pack_start(self.find_but, False)
         self.find_but.connect('clicked', self.update_view)
+
+        separator = gtk.VSeparator()
+        nav_panel.pack_start(separator, False, padding=2)
+
+        self.del_but = NavigationButton(gtk.STOCK_DELETE, _('Delete file'))
+        nav_panel.pack_start(self.del_but, False)
+        self.del_but.connect('clicked', self.delete_selected_file)
 
         spacer.pack_start(nav_panel, False)
 
@@ -168,7 +175,7 @@ class FileBrowserTool(gtk.VBox):
         if self.root:
             path = path.replace(self.root, '::')
         home = os.path.expanduser('~')
-        path = path.replace(home,'~') if path.startswith(home) else path
+        path = path.replace(home, '~') if path.startswith(home) else path
         self.column.set_title(path)
 
         filters = _get_open_filters()
@@ -231,3 +238,12 @@ class FileBrowserTool(gtk.VBox):
             path = self.redo[0]
             self.redo = self.redo[1:]
             self.set_path(path)
+
+    def delete_selected_file(self, *args):
+        tree_selection = self.treeview.get_selection()
+        model, pathlist = tree_selection.get_selected_rows()
+        if pathlist:
+            pathname = os.path.abspath(model.get_pathname(pathlist[0]))
+            if os.path.lexists(pathname):
+                os.system('rm -rf %s' % pathname)
+            self.update_view()

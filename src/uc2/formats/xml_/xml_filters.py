@@ -68,9 +68,9 @@ class XML_Saver(AbstractSaver):
         cfg = self.model.config.encoding
         self.writeln('<?xml version="1.0" encoding="%s"?>' % cfg)
         appdata = self.presenter.appdata
-        name = "Created with %s" % appdata.app_name
+        name = "Created by %s" % appdata.app_name
         ver = "%s%s" % (appdata.version, appdata.revision)
-        link = "(http://%s/)" % appdata.app_domain
+        link = "(https://%s/)" % appdata.app_domain
         self.writeln("<!-- %s %s %s -->" % (name, ver, link))
         self.write_obj(self.model)
 

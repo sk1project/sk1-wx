@@ -205,6 +205,7 @@ class Application:
                 uc2.events.emit(uc2.events.MESSAGES, uc2.msgconst.JOB, msg)
 
                 self.current_doc.save()
+                self.mw.tools.fb_tool.update_view()
             except IOError:
                 self.current_doc.set_doc_file(old_file, old_name)
                 details = self.last_error if self.last_error \

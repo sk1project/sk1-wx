@@ -16,8 +16,8 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from uc2 import utils
-from uc2.formats.generic_filters import AbstractBinaryLoader, AbstractSaver
 from uc2.formats.cmx import cmx_model, cmx_const
+from uc2.formats.generic_filters import AbstractBinaryLoader, AbstractSaver
 
 
 class CmxLoader(AbstractBinaryLoader):
@@ -45,18 +45,23 @@ class CmxLoader(AbstractBinaryLoader):
     def parse(self, chunk_size):
         position = self.fileptr.tell()
         while self.fileptr.tell() - position < chunk_size:
+            offset = self.fileptr.tell()
             dwords, size = self.read_header()
 
             if not dwords[2]:
                 dwords.append(self.fileptr.read(size))
 
-            node = cmx_model.make_cmx_chunk(self.config, ''.join(dwords))
+            chunk = ''.join(dwords)
+            node = cmx_model.make_cmx_chunk(self.config, chunk, offset=offset)
             self.parent_stack[-1].add(node)
 
             if dwords[2]:
                 self.parent_stack.append(node)
                 self.parse(size)
                 self.parent_stack = self.parent_stack[:-1]
+
+            if dwords[2] == cmx_const.INFO_ID:
+                break
 
 
 class CmxSaver(AbstractSaver):

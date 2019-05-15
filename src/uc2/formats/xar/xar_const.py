@@ -472,9 +472,23 @@ CMYK_WHITE = [COLOR_CMYK, [0.0, 0.0, 0.0, 0.0], 1.0, 'white']
 GREYSCALE_BLACK = [COLOR_GRAY, [1.0], 1.0, 'black']
 GREYSCALE_WHITE = [COLOR_GRAY, [0.0], 1.0, 'white']
 
+# Ref Colors
+REF_DEFAULTCOLOUR_NONE = -1
+REF_DEFAULTCOLOUR_BLACK = -2
+REF_DEFAULTCOLOUR_WHITE = -3
+REF_DEFAULTCOLOUR_RED = -4
+REF_DEFAULTCOLOUR_GREEN = -5
+REF_DEFAULTCOLOUR_BLUE = -6
+REF_DEFAULTCOLOUR_CYAN = -7
+REF_DEFAULTCOLOUR_MAGENTA = -8
+REF_DEFAULTCOLOUR_YELLOW = -9
+REF_DEFAULTCOLOUR_KEY = -10
+
+
+REPLACEMENTCOLOUR = RGB_BLACK
 
 XAR_COLOURS = {
-    -1: None,
+    -1: [COLOR_RGB, [1.00, 1.00, 1.00], 0.0, 'transparent'],
     -2: [COLOR_RGB, [0.00, 0.00, 0.00], 1.0, 'black'],
     -3: [COLOR_RGB, [1.00, 1.00, 1.00], 1.0, 'white'],
     -4: [COLOR_RGB, [1.00, 0.00, 0.00], 1.0, 'red'],
@@ -483,6 +497,7 @@ XAR_COLOURS = {
     -7: [COLOR_CMYK, [1.00, 0.00, 0.00, 0.0], 1.0, 'cyan'],
     -8: [COLOR_CMYK, [0.00, 1.00, 0.00, 0.0], 1.0, 'magenta'],
     -9: [COLOR_CMYK, [0.00, 0.00, 1.00, 0.0], 1.0, 'yellow'],
+    -10: [COLOR_CMYK, [0.00, 0.00, 0.00, 1.0], 1.0, 'key']
 }
 
 # Colour models
@@ -528,17 +543,6 @@ CAP_SQUARE = 2
 
 FILL_NONZERO = 0
 FILL_EVENODD = 2
-
-# Ref Colors
-REF_DEFAULTCOLOUR_NONE = -1
-REF_DEFAULTCOLOUR_BLACK = -2
-REF_DEFAULTCOLOUR_WHITE = -3
-REF_DEFAULTCOLOUR_RED = -4
-REF_DEFAULTCOLOUR_GREEN = -5
-REF_DEFAULTCOLOUR_BLUE = -6
-REF_DEFAULTCOLOUR_CYAN = -7
-REF_DEFAULTCOLOUR_MAGENTA = -8
-REF_DEFAULTCOLOUR_YELLOW = -9
 
 
 # Defaults
@@ -1344,7 +1348,14 @@ XAR_RECORD_DATA_SPEC = {
     TAG_REGULAR_SHAPE_PHASE_2: {
         'id': 'TAG_REGULAR_SHAPE_PHASE_2',
         'sec': [
-            {'type': 'byte', 'id': 'flags'},
+            {'type': 'byte', 'id': 'flags',
+             'bitfield': {
+                 0: {'type': 'bool', 'id': 'circular_flag'},
+                 1: {'type': 'bool', 'id': 'stellated_flag'},
+                 2: {'type': 'bool', 'id': 'primary_curvature_flag'},
+                 3: {'type': 'bool', 'id': 'stellation_curvature_flag'}
+             }
+             },
             {'type': 'uint16', 'id': 'number_of_sides'},
             {'type': 'COORD', 'id': 'major_axes'},
             {'type': 'COORD', 'id': 'minor_axes'},

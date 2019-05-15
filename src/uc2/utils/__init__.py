@@ -120,10 +120,11 @@ def pair_dword2py_int(data):
     return struct.unpack('<2L', data)
 
 
-def double2py_float(data):
+def double2py_float(data, be=False):
     """
     Converts 8 bytes to Python float value.
     """
+    sig = '>d' if be else '<d'
     return struct.unpack('<d', data)[0]
 
 

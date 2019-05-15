@@ -35,6 +35,7 @@ CONT_MAJOR_V2 = '\x32\x00\x00\x00'
 CONT_MINOR = '\x30\x00\x00\x00'
 CONT_UNIT_MM = '\x23\x00'
 CONT_UNIT_IN = '\x40\x00'
+CONT_UNITS = {CONT_UNIT_IN: 'inches', CONT_UNIT_MM: 'mm'}
 CONT_FACTOR_MM = '\x48\xaf\xbc\x9a\xf2\xd7\x7a\x3e'
 
 CCMM_ID = 'ccmm'
@@ -253,6 +254,7 @@ INSTR_GROUP_TAIL = '\x00\x00'
 
 INSTR_FILL_FLAG = 0x01
 INSTR_STROKE_FLAG = 0x02
+INSTR_LENS_FLAG = 0x04
 INSTR_CANVAS_FLAG = 0x08
 INSTR_CONTAINER_FLAG = 0x10
 
@@ -265,3 +267,30 @@ INSTR_FILL_MONOCHROME = 8
 INSTR_FILL_IMPORTED_BITMAP = 9
 INSTR_FILL_FULL_COLOR = 10
 INSTR_FILL_TEXTURE = 11
+
+FILL_TYPE_MAP = {
+    INSTR_FILL_EMPTY: 'No fill',
+    INSTR_FILL_UNIFORM: 'Uniform',
+    INSTR_FILL_FOUNTAIN: 'Fountain',
+    INSTR_FILL_PS: 'Postscript',
+    INSTR_FILL_DUOCOLOR: 'Two-color pattern',
+    INSTR_FILL_MONOCHROME: 'Monochrome pattern',
+    INSTR_FILL_IMPORTED_BITMAP: 'Imported bitmap',
+    INSTR_FILL_FULL_COLOR: 'Full color pattern',
+    INSTR_FILL_TEXTURE: 'Texture',
+}
+
+FILL_FOUNTAINS = {
+    0: 'linear',
+    1: 'radial',
+    2: 'conical',
+    3: 'square'
+}
+
+CMX_MITER_CAP = 0x00
+CMX_ROUND_CAP = 0x01
+CMX_SQUARE_CAP = 0x02
+
+CMX_MITER_JOIN = 0x00
+CMX_ROUND_JOIN = 0x01
+CMX_BEVEL_JOIN = 0x02
