@@ -18,7 +18,7 @@
 import logging
 import struct
 
-from uc2 import utils
+from uc2 import utils, libgeom
 from uc2.formats.cmx import cmx_const
 from uc2.formats.generic import BinaryModelObject
 
@@ -74,12 +74,14 @@ class CmxObject(BinaryModelObject):
 
 class CmxInstruction(CmxObject):
     toplevel = False
+    bbox = None
 
     def __init__(self, config, chunk=None, offset=0, **kwargs):
         self.config = config
         self.offset = offset
         self.childs = []
         self.data = {}
+        self.bbox = None
 
         if chunk:
             self.chunk = chunk
@@ -98,6 +100,19 @@ class CmxInstruction(CmxObject):
     def get_name(self):
         return cmx_const.INSTR_CODES.get(self.data['code'],
                                          str(self.data['code']))
+
+    def get_bbox(self):
+        def _sum_bbox(bbox0, bbox1):
+            if bbox0 is None and bbox1 is None:
+                return None
+            if bbox0 is None:
+                return [] + bbox1
+            if bbox1 is None:
+                return [] + bbox0
+            return libgeom.sum_bbox(bbox0, bbox1)
+        for child in self.childs:
+            self.bbox = _sum_bbox(self.bbox, child.get_bbox())
+        return self.bbox
 
     def resolve(self, name=''):
         sz = '%d' % len(self.chunk)
@@ -428,7 +443,10 @@ INSTR_16bit = {
 INSTR_32bit = {}
 
 
-def make_instruction(config, chunk, offset=0):
+def make_instruction(config, chunk=None, offset=0, identifier=None, **kwargs):
     instructions = INSTR_16bit if config.v16bit else INSTR_32bit
-    identifier = abs(utils.signed_word2py_int(chunk[2:4], config.rifx))
-    return instructions.get(identifier, CmxInstruction)(config, chunk, offset)
+    if chunk is not None:
+        identifier = abs(utils.signed_word2py_int(chunk[2:4], config.rifx))
+    cls = instructions.get(identifier, CmxInstruction)
+    kwargs['code'] = identifier
+    return cls(config, chunk, offset, **kwargs)

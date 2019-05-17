@@ -18,7 +18,7 @@
 import logging
 
 from uc2 import libimg
-from uc2.formats.cmx import cmx_model, cmx_const
+from uc2.formats.cmx import cmx_model, cmx_const, cmx_instr
 from uc2.formats.sk2.crenderer import CairoRenderer
 
 LOG = logging.getLogger(__name__)
@@ -86,7 +86,51 @@ class SK2_to_CMX_Translator(object):
         self.cmx_model.update_map()
 
     def translate_doc(self):
-        pass
+        index = 0
+        cmx_pages = self.cmx_model.chunk_map['pages']
+        for page in self.sk2_mtds.get_pages():
+            cmx_page = cmx_pages[index][0]
+            rlsts = cmx_pages[index][1:]
+            if self.cmx_cfg.v1:
+                self.make_v1_page(page, index + 1, cmx_page, rlsts)
+
+            index += 1
+
+    def make_v1_page(self, page, page_num, cmx_page, rlst):
+        mkinstr = cmx_instr.make_instruction
+        kwargs = {
+            'page_number': page_num,
+            'flags': 0,
+            'bbox': (0, 0, 0, 0),
+            'tail': '\x00\x00\x01\x00\x00\x00',
+        }
+        page_instr = mkinstr(self.cmx_cfg,
+                             identifier=cmx_const.BEGIN_PAGE, **kwargs)
+        cmx_page.add(page_instr)
+
+        layer_count = 1
+        for layer in page.childs:
+            kwargs = {
+                'page_number': page_num,
+                'layer_number': layer_count,
+                'flags': 0,
+                'tally': 0,
+                'layer_name': layer.name,
+                'tail': '\x01\x00\x00\x00',
+            }
+            layer_instr = mkinstr(self.cmx_cfg,
+                                  identifier=cmx_const.BEGIN_LAYER, **kwargs)
+            page_instr.add(layer_instr)
+
+            # TODO: parsing
+
+            layer_count += 1
+
+            layer_instr.add(
+                mkinstr(self.cmx_cfg, identifier=cmx_const.END_LAYER))
+
+        page_instr.add(
+            mkinstr(self.cmx_cfg, identifier=cmx_const.END_PAGE))
 
     def index_model(self):
         pass
