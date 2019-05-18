@@ -887,7 +887,7 @@ class XAR_to_SK2_Translator(object):
         w = distance(rec.minor_axes)
         h = distance(rec.major_axes)
 
-        if rec.flags == 1:
+        if rec.flags.circular_flag:
             el = sk2_model.Circle(
                 cfg, None,
                 rect=[-w, -h, w*2.0, h*2.0],
@@ -897,10 +897,15 @@ class XAR_to_SK2_Translator(object):
                 style=self.get_style(fill=True, stroke=True)
             )
         else:
+            if rec.flags.stellated_flag:
+                coef2 = rec.stell_radius_to_primary
+            else:
+                coef2 = 1.0
+
             el = sk2_model.Polygon(
                 cfg, None,
                 corners_num=rec.number_of_sides,
-                coef2=rec.stell_radius_to_primary if rec.flags & 2 else 1.0,
+                coef2=coef2,
                 style=self.get_style(fill=True, stroke=True)
             )
             angle = -90 + 360.0 / rec.number_of_sides / 2.0
