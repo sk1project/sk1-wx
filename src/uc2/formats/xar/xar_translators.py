@@ -178,16 +178,44 @@ def direction_at_angles(h1, h2):
 
 
 class XAR_to_SK2_Translator(object):
+    """
+    xar_doc - object of XAR_Presenter
+    sk2_doc - object of SK2_Presenter
+
+    paths - index for references a path data record
+    bitmaps - index for references a bitmap data record
+    colors - index for references a colour record, or default colour
+    dashes - index for references a dash style, or default dash style
+    atomic_tags - atomic record set. records that are not processed
+
+    buffer_text - list of text lines
+    buffer_text_line - list of string in one line
+    stack - command output stack
+    s_stack - stack of output stack
+    pages - page list
+    layers - list of current page layers
+
+    style - current style context
+    trafo - document transformation matrix
+    layer_name - current layer name
+    layer_flags - bitfield, current layer properties
+
+    page_name - current page name
+    page_format - current page format. [name, (width, height), orientation]
+
+    _handler - index for record processor
+    debug_flag - if True, then additional actions are performed to help debug
+    """
     xar_doc = None
     xar_mtds = None
     sk2_doc = None
     sk2_model = None
     sk2_mtds = None
 
-    fontmap = None
+    paths = None
     bitmaps = None
     colors = None
-    dashs = None
+    dashes = None
     atomic_tags = None
 
     buffer_text = None
@@ -201,7 +229,6 @@ class XAR_to_SK2_Translator(object):
     style = None
     trafo = None
 
-    layer = None
     layer_name = ''
     layer_flags = None
     page_name = ''
@@ -218,9 +245,10 @@ class XAR_to_SK2_Translator(object):
         self.sk2_mtds = sk2_doc.methods
         self.sk2_mtds.delete_page()
 
+        self.paths = {}
         self.bitmaps = {}
         self.colors = copy.deepcopy(xar_const.XAR_COLOURS)
-        self.dashs = copy.deepcopy(xar_const.XAR_DASHS)
+        self.dashes = copy.deepcopy(xar_const.XAR_DASHS)
         self.atomic_tags = set()
         self.trafo = [-1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
 
@@ -529,7 +557,8 @@ class XAR_to_SK2_Translator(object):
             self.flush_stack(group)
             self.stack = [group]
 
-    def handle_blend(self, rec, cfg): pass  # TODO: implement this
+    def handle_blend(self, rec, cfg):
+        pass  # TODO: implement this
 
 #    def handle_blender(self, rec, cfg): pass
 #    def handle_mould_envelope(self, rec, cfg): pass
@@ -758,7 +787,7 @@ class XAR_to_SK2_Translator(object):
         if rec.elements:
             line_width = rec.line_width or 1.0
             divider = line_width / 4.0
-            self.dashs[rec.idx] = [a / divider for a in rec.dash_def]
+            self.dashes[rec.idx] = [a / divider for a in rec.dash_def]
             self.style['dash_pattern'] = rec.idx
 
     # User Attributes
@@ -1291,9 +1320,14 @@ class XAR_to_SK2_Translator(object):
 #    def handle_duplicationoffset(self, rec, cfg): pass
 
     # Bitmap effect tags
-#     def handle_live_effect(self, rec, cfg): pass  # TODO: implement this
-#     def handle_locked_effect(self, rec, cfg): pass  # TODO: implement this
-#     def handle_feather_effect(self, rec, cfg): pass  # TODO: implement this
+    def handle_live_effect(self, rec, cfg):
+        pass  # TODO: implement this
+
+    def handle_locked_effect(self, rec, cfg):
+        pass  # TODO: implement this
+
+    def handle_feather_effect(self, rec, cfg):
+        pass  # TODO: implement this
 
     # Miscellaneous records
 #    def handle_compoundrender(self, rec, cfg): pass
@@ -1419,7 +1453,7 @@ class XAR_to_SK2_Translator(object):
     def get_dash(self, line_width):
         dash = self.style['dash_pattern']
         if isinstance(dash, int):
-            dash = self.dashs.get(dash)
+            dash = self.dashes.get(dash)
             if dash:
                 dash = [d * (line_width / 4.0) for d in dash]
         return dash or []
