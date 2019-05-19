@@ -1029,7 +1029,19 @@ XAR_RECORD_DATA_SPEC = {
             {'type': 'Verb and Coord List', 'id': 'path'}
         ]
     },
-    TAG_PATHREF_TRANSFORM: {'id': 'TAG_PATHREF_TRANSFORM'},
+    TAG_PATHREF_TRANSFORM: {
+        'id': 'TAG_PATHREF_TRANSFORM',
+        'sec': [
+            {'type': 'DATAREF', 'id': 'path_ref'},
+            # MATRIX
+            {'type': 'fixed16', 'id': 'a'},
+            {'type': 'fixed16', 'id': 'b'},
+            {'type': 'fixed16', 'id': 'c'},
+            {'type': 'fixed16', 'id': 'd'},
+            {'type': 'int32', 'id': 'e'},
+            {'type': 'int32', 'id': 'f'},
+        ]
+    },
 
     # Attribute tags
     TAG_FLATFILL: {

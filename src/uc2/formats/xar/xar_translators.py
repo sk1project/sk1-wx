@@ -590,18 +590,20 @@ class XAR_to_SK2_Translator(object):
             guide_layer.childs.append(guide)
 
     def handle_path_relative(self, rec, cfg):
+        paths = self.get_path_relative(rec)
+        self.paths[rec.idx] = paths
         curve = sk2_model.Curve(
-            cfg, None,
-            self.get_path_relative(rec),
+            cfg, None, paths,
             self.get_trafo(),
             self.get_style()
         )
         self.stack.append(curve)
 
     def handle_path_relative_filled(self, rec, cfg):
+        paths = self.get_path_relative(rec)
+        self.paths[rec.idx] = paths
         curve = sk2_model.Curve(
-            cfg, None,
-            self.get_path_relative(rec),
+            cfg, None, paths,
             self.get_trafo(),
             self.get_style(fill=True)
         )
@@ -609,25 +611,38 @@ class XAR_to_SK2_Translator(object):
         self.stack.append(curve)
 
     def handle_path_relative_stroked(self, rec, cfg):
+        paths = self.get_path_relative(rec)
+        self.paths[rec.idx] = paths
         curve = sk2_model.Curve(
-            cfg, None,
-            self.get_path_relative(rec),
+            cfg, None, paths,
             self.get_trafo(),
             self.get_style(stroke=True)
         )
         self.stack.append(curve)
 
     def handle_path_relative_filled_stroked(self, rec, cfg):
+        paths = self.get_path_relative(rec)
+        self.paths[rec.idx] = paths
         curve = sk2_model.Curve(
-            cfg, None,
-            self.get_path_relative(rec),
+            cfg, None, paths,
             self.get_trafo(),
             self.get_style(stroke=True, fill=True)
         )
         curve.fill_trafo = self.get_fill_trafo()
         self.stack.append(curve)
 
-#    def handle_pathref_transform(self, rec, cfg): pass
+    def handle_pathref_transform(self, rec, cfg):
+        paths = [] + self.paths.get(rec.path_ref, [])
+        if paths:
+            curve = sk2_model.Curve(
+                cfg, None, paths,
+                self.get_trafo(),
+                self.get_style(stroke=True, fill=True)
+            )
+            tr = [rec.a, rec.b, rec.c, rec.d, rec.e/1000.0, rec.f/1000.0]
+            curve.trafo = multiply_trafo(tr, curve.trafo)
+            curve.fill_trafo = self.get_fill_trafo()
+            self.stack.append(curve)
 
     # Attribute tags
     def handle_flatfill(self, rec, cfg):
