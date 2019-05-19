@@ -22,6 +22,7 @@ from uc2.formats.cmx import cmx_model, cmx_const, cmx_instr
 from uc2.formats.sk2.crenderer import CairoRenderer
 
 LOG = logging.getLogger(__name__)
+mkinstr = cmx_instr.make_instruction
 
 
 class SK2_to_CMX_Translator(object):
@@ -97,7 +98,6 @@ class SK2_to_CMX_Translator(object):
             index += 1
 
     def make_v1_page(self, page, page_num, cmx_page, rlst):
-        mkinstr = cmx_instr.make_instruction
         kwargs = {
             'page_number': page_num,
             'flags': 0,
@@ -122,7 +122,8 @@ class SK2_to_CMX_Translator(object):
                                   identifier=cmx_const.BEGIN_LAYER, **kwargs)
             page_instr.add(layer_instr)
 
-            # TODO: parsing
+            for obj in layer.childs:
+                self.make_v1_objects(layer_instr, obj)
 
             layer_count += 1
 
@@ -131,6 +132,32 @@ class SK2_to_CMX_Translator(object):
 
         page_instr.add(
             mkinstr(self.cmx_cfg, identifier=cmx_const.END_PAGE))
+
+    def make_v1_objects(self, parent_instr, obj):
+        if obj.is_group and obj.childs:
+            kwargs = {
+                'bbox': (0, 0, 0, 0),
+                'tail': '\x00\x00',
+            }
+            group_instr = mkinstr(self.cmx_cfg,
+                                  identifier=cmx_const.BEGIN_GROUP, **kwargs)
+            parent_instr.add(group_instr)
+
+            for item in obj.childs:
+                self.make_v1_objects(group_instr, item)
+
+            group_instr.add(
+                mkinstr(self.cmx_cfg, identifier=cmx_const.END_PAGE))
+
+        elif obj.is_primitive:
+            curve = obj.to_curve()
+            if not curve:
+                return
+            elif curve.is_group:
+                self.make_v1_objects(parent_instr, curve)
+            else:
+                # TODO: curve processing
+                pass
 
     def index_model(self):
         pass
