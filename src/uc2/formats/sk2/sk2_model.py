@@ -36,6 +36,8 @@ class DocumentObject(TextModelObject):
     objects. Provides common object properties.
     """
     is_layer = False
+    is_guide_layer = False
+    is_grid_layer = False
     is_guide = False
     is_primitive = False
     is_curve = False
@@ -279,6 +281,7 @@ class GuideLayer(Layer):
     All child objects are in childs list.
     """
     cid = GUIDE_LAYER
+    is_guide_layer = True
 
     def __init__(self, config, parent=None, name=_('GuideLayer')):
         Layer.__init__(self, config, parent, name)
@@ -301,6 +304,7 @@ class GridLayer(Layer):
     All child objects are in childs list.
     """
     cid = GRID_LAYER
+    is_grid_layer = True
     grid = []
 
     def __init__(self, config, parent=None, name=_('GridLayer')):
