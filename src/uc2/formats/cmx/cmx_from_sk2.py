@@ -17,12 +17,25 @@
 
 import logging
 
-from uc2 import libimg
+from uc2 import libimg, libgeom, uc2const, utils, sk2const, cms
 from uc2.formats.cmx import cmx_model, cmx_const, cmx_instr
 from uc2.formats.sk2.crenderer import CairoRenderer
 
 LOG = logging.getLogger(__name__)
 mkinstr = cmx_instr.make_instruction
+
+
+SK2_CAP_MAP = {
+    sk2const.CAP_BUTT: cmx_const.CMX_MITER_CAP,
+    sk2const.CAP_ROUND: cmx_const.CMX_ROUND_CAP,
+    sk2const.CAP_SQUARE: cmx_const.CMX_SQUARE_CAP,
+}
+
+SK2_JOIN_MAP = {
+    sk2const.JOIN_MITER: cmx_const.CMX_MITER_JOIN,
+    sk2const.JOIN_ROUND: cmx_const.CMX_ROUND_JOIN,
+    sk2const.JOIN_BEVEL: cmx_const.CMX_BEVEL_JOIN,
+}
 
 
 class SK2_to_CMX_Translator(object):
@@ -33,6 +46,8 @@ class SK2_to_CMX_Translator(object):
     sk2_model = None
     sk2_mtds = None
     cmx_cfg = None
+    coef = 1.0
+    rifx = False
 
     def translate(self, sk2_doc, cmx_doc):
         self.cmx_doc = cmx_doc
@@ -64,8 +79,74 @@ class SK2_to_CMX_Translator(object):
         kwargs['identifier'] = cmx_id
         return cmx_model.make_cmx_chunk(self.cmx_cfg, **kwargs)
 
+    def _int2word(self, val):
+        return utils.py_int2signed_word(int(val * self.coef), self.rifx)
+
+    def _int2dword(self, val):
+        return utils.py_int2signed_dword(int(val * self.coef), self.rifx)
+
+    def _add_color(self, color):
+        doc_cms = self.sk2_doc.cms
+        rclr = self.cmx_model.chunk_map['rclr']
+        clr = (5, 5, (0, 0, 0))  # Fallback RGB black
+        if color[0] == uc2const.COLOR_RGB:
+            model = cmx_const.COLOR_MODELS.index(cmx_const.CMX_RGB)
+            palette = cmx_const.COLOR_PALETTES.index('User')
+            vals = cms.val_255(color[1])
+            clr = (model, palette, vals)
+        elif color[0] == uc2const.COLOR_CMYK:
+            model = cmx_const.COLOR_MODELS.index(cmx_const.CMX_RGB)
+            palette = cmx_const.COLOR_PALETTES.index('User')
+            vals = cms.val_100(color[1])
+            clr = (model, palette, vals)
+        else:
+            model = cmx_const.COLOR_MODELS.index(cmx_const.CMX_RGB)
+            palette = cmx_const.COLOR_PALETTES.index('User')
+            vals = doc_cms.get_rgb_color255(color)
+            clr = (model, palette, vals)
+        return rclr.add_color(clr)
+
+    def _add_line_style(self, outline):
+        rott = self.cmx_model.chunk_map['rott']
+        linestyle = 0x01 << 8 if self.rifx else 0x01
+        if not outline:
+            spec = 0x02
+            join = SK2_JOIN_MAP.get(outline[5], cmx_const.CMX_MITER_JOIN)
+            cap = SK2_JOIN_MAP.get(outline[4], cmx_const.CMX_MITER_CAP)
+            if self.rifx:
+                joincap = join << 4 + cap
+                linestyle = joincap + spec << 8
+            else:
+                joincap = (join << 4 + cap) << 8
+                linestyle = spec + joincap
+        return rott.add_linestyle(linestyle)
+
+    def _add_pen(self, outline):
+        rpen = self.cmx_model.chunk_map['rpen']
+        width = int(self.coef * outline[1])
+        aspect = 100
+        angle = 0
+        matrix_flag = 1
+        return rpen.add_pen((width, aspect, angle, matrix_flag))
+
+    def _add_dash(self, outline):
+        rdot = self.cmx_model.chunk_map['rdot']
+        return rdot.add_dashes([] + outline[3])
+
+    def _add_outline(self, outline):
+        rotl = self.cmx_model.chunk_map['rotl']
+        linestyle = self._add_line_style(outline)
+        screen = 1
+        color = self._add_color(outline[2])
+        arrowheads = 1
+        pen = self._add_pen(outline)
+        dashes = self._add_dash(outline)
+        return rotl.add((linestyle, screen, color, arrowheads, pen, dashes))
+
     def make_template(self):
-        self.cmx_model.add(self.make_el(cmx_const.CONT_ID))
+        self.rifx = self.cmx_cfg.rifx
+        cont_obj = self.make_el(cmx_const.CONT_ID)
+        self.cmx_model.add(cont_obj)
         self.cmx_model.add(self.make_el(cmx_const.CCMM_ID))
         self.cmx_model.add(self.make_el(cmx_const.DISP_ID,
                                         bmp=self._make_preview()))
@@ -73,11 +154,14 @@ class SK2_to_CMX_Translator(object):
             self.root = self.make_el(cmx_const.PACK_ID)
             self.cmx_model.add(self.root)
 
-        for _page in self.sk2_mtds.get_pages():
+        objs = []
+        for page in self.sk2_mtds.get_pages():
             self.root.add(self.make_el(cmx_const.PAGE_ID))
             self.root.add(self.make_el(cmx_const.RLST_ID))
             if not self.cmx_cfg.v1:
                 self.root.add(self.make_el(cmx_const.RLST_ID))
+            for layer in page.childs:
+                objs.extend(layer.childs)
 
         cmx_ids = [cmx_const.ROTL_ID, cmx_const.ROTT_ID, cmx_const.RPEN_ID,
                    cmx_const.RDOT_ID, cmx_const.ROTA_ID, cmx_const.RCLR_ID,
@@ -85,6 +169,28 @@ class SK2_to_CMX_Translator(object):
         for cmx_id in cmx_ids:
             self.root.add(self.make_el(cmx_id))
         self.cmx_model.update_map()
+
+        self.coef = 1.0
+
+        if objs:
+            bbox = [] + objs[0].cache_bbox
+            for obj in objs[1:]:
+                bbox = libgeom.sum_bbox(bbox, obj.cache_bbox)
+            max_value = max([abs(item) for item in bbox])
+            frame = 255 * 255 / 2.0
+            self.coef = uc2const.pt_to_mm * frame / max_value
+        else:
+            bbox = [0.0, 1.0, 1.0, 0.0]
+            self.coef = 1.0
+
+        cont_obj.set('factor',
+                     utils.py_float2double(1.0 / self.coef, self.rifx))
+        cont_obj.set('unit', cmx_const.CONT_UNIT_MM)
+
+        cont_obj.set('bbox_x0', self._int2dword(bbox[0]))
+        cont_obj.set('bbox_y1', self._int2dword(bbox[3]))
+        cont_obj.set('bbox_x1', self._int2dword(bbox[2]))
+        cont_obj.set('bbox_y0', self._int2dword(bbox[1]))
 
     def translate_doc(self):
         index = 0
@@ -156,8 +262,23 @@ class SK2_to_CMX_Translator(object):
             elif curve.is_group:
                 self.make_v1_objects(parent_instr, curve)
             else:
+
                 # TODO: curve processing
                 pass
+
+    def get_style_attrs(self, style):
+        attrs = {
+            'style_flags': 1 if style[0] else 0,
+            'fill_type': cmx_const.INSTR_FILL_EMPTY,
+        }
+        attrs['style_flags'] += 2 if style[1] else 0
+        if style[0][1] == sk2const.FILL_SOLID:
+            attrs['fill_type'] = cmx_const.INSTR_FILL_UNIFORM
+            attrs['fill'] = (self._add_color(style[0][2]), 1)
+        if style[1]:
+            attrs['outline'] = self._add_outline(style[1])
+        # TODO: points
+        return attrs
 
     def index_model(self):
         pass

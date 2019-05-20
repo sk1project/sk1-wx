@@ -37,6 +37,7 @@ CONT_UNIT_MM = '\x23\x00'
 CONT_UNIT_IN = '\x40\x00'
 CONT_UNITS = {CONT_UNIT_IN: 'inches', CONT_UNIT_MM: 'mm'}
 CONT_FACTOR_MM = '\x48\xaf\xbc\x9a\xf2\xd7\x7a\x3e'
+CONT_FACTOR_IN = '\xfc\xa9\xf1\xd2\x4d\x62\x50\x3f'
 
 CCMM_ID = 'ccmm'
 CCMM_DUMP = \
