@@ -59,12 +59,13 @@ class XARRecord(BinaryModelObject):
         icon_type = not bool(self.childs)
         xar_record = XAR_RECORD_DATA_SPEC.get(self.cid, {})
         spec = xar_record.get('sec') or []
-        if not spec and len(self.chunk)>xar_const.XAR_RECORD_HEADER_SIZE:
+        chunk_length = len(self.chunk)
+        if not spec and chunk_length>xar_const.XAR_RECORD_HEADER_SIZE:
             icon_type = 'gtk-new' if icon_type else 'gtk-open'
         if xar_record.get('deprecated', False):
             icon_type = 'gtk-media-record'
         name = xar_record.get('id') or str(self.cid)
-        info = str(len(self.chunk))
+        info = str(chunk_length)
         return icon_type, name, info
 
     def update_for_sword(self):
