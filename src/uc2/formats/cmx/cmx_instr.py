@@ -110,6 +110,7 @@ class CmxInstruction(CmxObject):
             if bbox1 is None:
                 return [] + bbox0
             return libgeom.sum_bbox(bbox0, bbox1)
+        self.bbox = None
         for child in self.childs:
             self.bbox = _sum_bbox(self.bbox, child.get_bbox())
         return self.bbox
@@ -431,6 +432,9 @@ class Inst16PolyCurve(CmxInstruction):
         self.cache_fields += [(pos, 8, 'Curve bbox'), ]
         pos += 8
 
+    def get_bbox(self):
+        bbox = self.data.get('bbox')
+        return list(bbox) if bbox else None
 
 INSTR_16bit = {
     cmx_const.BEGIN_PAGE: Inst16BeginPage,

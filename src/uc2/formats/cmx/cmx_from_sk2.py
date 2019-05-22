@@ -24,7 +24,6 @@ from uc2.formats.sk2.crenderer import CairoRenderer
 LOG = logging.getLogger(__name__)
 mkinstr = cmx_instr.make_instruction
 
-
 SK2_CAP_MAP = {
     sk2const.CAP_BUTT: cmx_const.CMX_MITER_CAP,
     sk2const.CAP_ROUND: cmx_const.CMX_ROUND_CAP,
@@ -108,17 +107,13 @@ class SK2_to_CMX_Translator(object):
 
     def _add_line_style(self, outline):
         rott = self.cmx_model.chunk_map['rott']
-        linestyle = 0x01 << 8 if self.rifx else 0x01
+        linestyle = (0x01, 0x00)
         if not outline:
             spec = 0x02
             join = SK2_JOIN_MAP.get(outline[5], cmx_const.CMX_MITER_JOIN)
             cap = SK2_JOIN_MAP.get(outline[4], cmx_const.CMX_MITER_CAP)
-            if self.rifx:
-                joincap = join << 4 + cap
-                linestyle = joincap + spec << 8
-            else:
-                joincap = (join << 4 + cap) << 8
-                linestyle = spec + joincap
+            joincap = join << 4 + cap
+            linestyle = (spec, joincap)
         return rott.add_linestyle(linestyle)
 
     def _add_pen(self, outline):
@@ -141,7 +136,12 @@ class SK2_to_CMX_Translator(object):
         arrowheads = 1
         pen = self._add_pen(outline)
         dashes = self._add_dash(outline)
-        return rotl.add((linestyle, screen, color, arrowheads, pen, dashes))
+        return rotl.add_outline(
+            (linestyle, screen, color, arrowheads, pen, dashes))
+
+    def _make_bbox(self, bbox):
+        x0, y0, x1, y1 = bbox
+        return x0 * self.coef, y1 * self.coef, x1 * self.coef, y0 * self.coef
 
     def make_template(self):
         self.rifx = self.cmx_cfg.rifx
@@ -194,14 +194,21 @@ class SK2_to_CMX_Translator(object):
 
     def translate_doc(self):
         index = 0
+        cont_obj = self.cmx_model.chunk_map['cont']
         cmx_pages = self.cmx_model.chunk_map['pages']
         for page in self.sk2_mtds.get_pages():
             cmx_page = cmx_pages[index][0]
             rlsts = cmx_pages[index][1:]
             if self.cmx_cfg.v1:
                 self.make_v1_page(page, index + 1, cmx_page, rlsts)
-
+                rlst = rlsts[0]
+                layers_num = len(cmx_page.childs[0].childs) - 1
+                for i in range(layers_num):
+                    rlst.add_rlist((2, 9, i + 1))
+                cont_obj.data['tally'] += cmx_page.count()
             index += 1
+        pg = cmx_pages[0][0].childs[0]
+        cont_obj.data['bbox'] = tuple(pg.get_bbox())
 
     def make_v1_page(self, page, page_num, cmx_page, rlst):
         kwargs = {
@@ -215,7 +222,7 @@ class SK2_to_CMX_Translator(object):
         cmx_page.add(page_instr)
 
         layer_count = 1
-        for layer in page.childs:
+        for layer in (x for x in page.childs if x.childs):
             kwargs = {
                 'page_number': page_num,
                 'layer_number': layer_count,
@@ -235,9 +242,11 @@ class SK2_to_CMX_Translator(object):
 
             layer_instr.add(
                 mkinstr(self.cmx_cfg, identifier=cmx_const.END_LAYER))
+            layer_instr.data['tally'] = layer_instr.count() + 1
 
         page_instr.add(
             mkinstr(self.cmx_cfg, identifier=cmx_const.END_PAGE))
+        page_instr.data['bbox'] = page_instr.get_bbox()
 
     def make_v1_objects(self, parent_instr, obj):
         if obj.is_group and obj.childs:
@@ -253,7 +262,9 @@ class SK2_to_CMX_Translator(object):
                 self.make_v1_objects(group_instr, item)
 
             group_instr.add(
-                mkinstr(self.cmx_cfg, identifier=cmx_const.END_PAGE))
+                mkinstr(self.cmx_cfg, identifier=cmx_const.END_GROUP))
+
+            group_instr.data['bbox'] = group_instr.get_bbox()
 
         elif obj.is_primitive:
             curve = obj.to_curve()
@@ -261,24 +272,58 @@ class SK2_to_CMX_Translator(object):
                 return
             elif curve.is_group:
                 self.make_v1_objects(parent_instr, curve)
-            else:
+            elif obj.paths:
+                style = obj.style
+                attrs = {
+                    'style_flags': 1 if style[0] else 0,
+                    'fill_type': cmx_const.INSTR_FILL_EMPTY,
+                }
+                attrs['style_flags'] += 2 if style[1] else 0
+                if style[0] and style[0][1] == sk2const.FILL_SOLID:
+                    attrs['fill_type'] = cmx_const.INSTR_FILL_UNIFORM
+                    attrs['fill'] = (self._add_color(style[0][2]), 1)
+                if style[1]:
+                    attrs['outline'] = self._add_outline(style[1])
+                trafo = libgeom.multiply_trafo(
+                    [self.coef, 0.0, 0.0, self.coef, 0.0, 0.0], obj.trafo)
+                paths = libgeom.apply_trafo_to_paths(obj.paths, trafo)
+                attrs['points'] = []
+                attrs['nodes'] = []
+                for path in paths:
+                    x, y = path[0]
+                    attrs['points'].append((int(x), int(y)))
+                    node = cmx_const.NODE_MOVE + cmx_const.NODE_USER
+                    if path[2] == sk2const.CURVE_CLOSED:
+                        node += cmx_const.NODE_CLOSED
+                    attrs['nodes'].append(node)
 
-                # TODO: curve processing
-                pass
+                    for point in path[1]:
+                        if len(point) == 2:
+                            x, y = point
+                            attrs['points'].append((int(x), int(y)))
+                            node = cmx_const.NODE_LINE + cmx_const.NODE_USER
+                            attrs['nodes'].append(node)
+                        else:
+                            p0, p1, p2, flag = point
+                            for item in (p0, p1, p2):
+                                x, y = item
+                                attrs['points'].append((int(x), int(y)))
+                            node = cmx_const.NODE_ARC
+                            attrs['nodes'].append(node)
+                            attrs['nodes'].append(node)
+                            node = cmx_const.NODE_CURVE + cmx_const.NODE_USER
+                            attrs['nodes'].append(node)
 
-    def get_style_attrs(self, style):
-        attrs = {
-            'style_flags': 1 if style[0] else 0,
-            'fill_type': cmx_const.INSTR_FILL_EMPTY,
-        }
-        attrs['style_flags'] += 2 if style[1] else 0
-        if style[0][1] == sk2const.FILL_SOLID:
-            attrs['fill_type'] = cmx_const.INSTR_FILL_UNIFORM
-            attrs['fill'] = (self._add_color(style[0][2]), 1)
-        if style[1]:
-            attrs['outline'] = self._add_outline(style[1])
-        # TODO: points
-        return attrs
+                    if path[2] == sk2const.CURVE_CLOSED:
+                        attrs['nodes'][-1] += cmx_const.NODE_CLOSED
+
+                attrs['bbox'] = self._make_bbox(obj.cache_bbox)
+
+                attrs['tail'] = ''
+
+                curve_instr = mkinstr(self.cmx_cfg,
+                                      identifier=cmx_const.POLYCURVE, **attrs)
+                parent_instr.add(curve_instr)
 
     def index_model(self):
         pass

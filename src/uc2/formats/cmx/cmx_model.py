@@ -169,13 +169,11 @@ class CmxCont(CmxRiffElement):
         self.data['InfoSection'] = 4 * '\x00'
         self.data['Thumbnail'] = 4 * '\x00'
 
-        self.data['bbox_x0'] = 4 * '\x00'
-        self.data['bbox_y1'] = 4 * '\x00'
-        self.data['bbox_x1'] = 4 * '\x00'
-        self.data['bbox_y0'] = 4 * '\x00'
-        self.data['tally'] = 4 * '\x00'
+        self.data['bbox'] = (0, 0, 0, 0)
+        self.data['tally'] = 0
 
     def update_from_chunk(self):
+        rifx = self.config.rifx
         self.data['file_id'] = self.chunk[8:40].rstrip('\x00')
         self.data['os_type'] = self.chunk[40:56].rstrip('\x00')
         self.data['byte_order'] = self.chunk[56:60]
@@ -194,13 +192,12 @@ class CmxCont(CmxRiffElement):
         self.data['InfoSection'] = self.chunk[96:100]
         self.data['Thumbnail'] = self.chunk[100:104]
 
-        self.data['bbox_x0'] = self.chunk[104:108]
-        self.data['bbox_y1'] = self.chunk[108:112]
-        self.data['bbox_x1'] = self.chunk[112:116]
-        self.data['bbox_y0'] = self.chunk[116:120]
-        self.data['tally'] = self.chunk[120:124]
+        sig = '>iiii' if rifx else '<iiii'
+        self.data['bbox'] = struct.unpack(sig, self.chunk[104:120])
+        self.data['tally'] = utils.dword2py_int(self.chunk[120:124], rifx)
 
     def update(self):
+        rifx = self.config.rifx
         self.chunk = self.data['identifier'] + 4 * '\x00'
         padding_sz = 32 - len(self.data['file_id'])
         self.chunk += self.data['file_id'] + padding_sz * '\x00'
@@ -217,11 +214,9 @@ class CmxCont(CmxRiffElement):
         self.chunk += self.data['InfoSection']
         self.chunk += self.data['Thumbnail']
 
-        self.chunk += self.data['bbox_x0']
-        self.chunk += self.data['bbox_y1']
-        self.chunk += self.data['bbox_x1']
-        self.chunk += self.data['bbox_y0']
-        self.chunk += self.data['tally']
+        sig = '>iiii' if rifx else '<iiii'
+        self.chunk += struct.pack(sig, *self.data['bbox'])
+        self.chunk += utils.py_int2dword(self.data['tally'], rifx)
         self.chunk += 64 * '\x00'
         CmxRiffElement.update(self)
 
@@ -746,7 +741,7 @@ class CmxRclrV1(CmxRiffElement):
 
     def get_color(self, index):
         return self.data['colors'][index - 1] \
-            if index - 1  < len(self.data['colors']) else ()
+            if index - 1 < len(self.data['colors']) else ()
 
     def add_color(self, color):
         if color in self.data['colors']:
