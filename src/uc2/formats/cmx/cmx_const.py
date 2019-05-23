@@ -65,7 +65,7 @@ ROTA_ID = 'rota'
 ROTL_ID = 'rotl'
 
 RSCR_ID = 'rscr'
-RSCR_RECORD = '\x00\x00\x64\x00\x00\x00\x00\x00\xc2\x01\x00\x00\x00\x00'
+RSCR_RECORD = '\x00\x00\x3c\x00\x00\x00\x00\x00\xc2\x01\x00\x00\x00\x00'
 
 RLST_ID = 'rlst'
 RLST_ASSOCIATION_LENS = 1
@@ -140,6 +140,16 @@ BITMAP_INDEX_TABLE = 5
 ARROW_INDEX_TABLE = 6
 FONT_INDEX_TABLE = 7
 EMBEDDED_FILE_INDEX_TABLE = 8
+THUMBNAIL_SECTION = 10
+OUTLINE_DESCRIPTION_SECTION = 15
+LINE_STYLE_DESCRIPTION_SECTION = 16
+ARROWHEADS_DESCRIPTION_SECTION = 17
+SCREEN_DESCRIPTION_SECTION = 18
+PEN_DESCRIPTION_SECTION = 19
+DOTDASH_DESCRIPTION_SECTION = 20
+COLOR_DESCRIPTION_SECTION = 21
+COLOR_CORRECTION_SECTION = 22
+PREVIEW_BOX_SECTION = 23
 
 SECTIONS = {
     MASTER_INDEX_TABLE: 'Master Index Table',
@@ -150,16 +160,16 @@ SECTIONS = {
     ARROW_INDEX_TABLE: 'Arrow Index Table',
     FONT_INDEX_TABLE: 'Font Index Table',
     EMBEDDED_FILE_INDEX_TABLE: 'Embedded File Index Table',
-    10: 'Thumbnail Section',
-    15: 'Outline Description Section',
-    16: 'Line Style Description Section',
-    17: 'Arrowheads Description Section',
-    18: 'Screen Description Section',
-    19: 'Pen Description Section',
-    20: 'Dot-Dash Description Section',
-    21: 'Color Description Section',
-    22: 'Color Correction Section',
-    23: 'Preview Box Section',
+    THUMBNAIL_SECTION: 'Thumbnail Section',
+    OUTLINE_DESCRIPTION_SECTION: 'Outline Description Section',
+    LINE_STYLE_DESCRIPTION_SECTION: 'Line Style Description Section',
+    ARROWHEADS_DESCRIPTION_SECTION: 'Arrowheads Description Section',
+    SCREEN_DESCRIPTION_SECTION: 'Screen Description Section',
+    PEN_DESCRIPTION_SECTION: 'Pen Description Section',
+    DOTDASH_DESCRIPTION_SECTION: 'Dot-Dash Description Section',
+    COLOR_DESCRIPTION_SECTION: 'Color Description Section',
+    COLOR_CORRECTION_SECTION: 'Color Correction Section',
+    PREVIEW_BOX_SECTION: 'Preview Box Section',
 }
 
 ######## INSTRUCTIONS ##############

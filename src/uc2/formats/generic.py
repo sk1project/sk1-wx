@@ -72,7 +72,6 @@ class ModelObject(object):
             child.parent = self
             child.config = self.config
 
-
     def remove(self, child):
         if child in self.childs:
             self.childs.remove(child)

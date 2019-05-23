@@ -50,16 +50,17 @@ class SK2_to_CMX_Translator(object):
 
     def translate(self, sk2_doc, cmx_doc):
         self.cmx_doc = cmx_doc
-        self.cmx_model = cmx_doc.model
+        self.cmx_model = self.root = cmx_doc.model
         self.cmx_cfg = cmx_doc.config
         self.sk2_doc = sk2_doc
-        self.sk2_model = self.root = sk2_doc.model
+        self.sk2_model = sk2_doc.model
         self.sk2_mtds = sk2_doc.methods
 
         self.make_template()
         self.translate_doc()
-        self.index_model()
+        self.cmx_doc.update()
         self.add_info()
+        self.index_model()
         self.cmx_doc.update()
 
         self.cmx_doc = None
@@ -94,7 +95,7 @@ class SK2_to_CMX_Translator(object):
             vals = cms.val_255(color[1])
             clr = (model, palette, vals)
         elif color[0] == uc2const.COLOR_CMYK:
-            model = cmx_const.COLOR_MODELS.index(cmx_const.CMX_RGB)
+            model = cmx_const.COLOR_MODELS.index(cmx_const.CMX_CMYK)
             palette = cmx_const.COLOR_PALETTES.index('User')
             vals = cms.val_100(color[1])
             clr = (model, palette, vals)
@@ -108,7 +109,7 @@ class SK2_to_CMX_Translator(object):
     def _add_line_style(self, outline):
         rott = self.cmx_model.chunk_map['rott']
         linestyle = (0x01, 0x00)
-        if not outline:
+        if outline:
             spec = 0x02
             join = SK2_JOIN_MAP.get(outline[5], cmx_const.CMX_MITER_JOIN)
             cap = SK2_JOIN_MAP.get(outline[4], cmx_const.CMX_MITER_CAP)
@@ -148,8 +149,9 @@ class SK2_to_CMX_Translator(object):
         cont_obj = self.make_el(cmx_const.CONT_ID)
         self.cmx_model.add(cont_obj)
         self.cmx_model.add(self.make_el(cmx_const.CCMM_ID))
-        self.cmx_model.add(self.make_el(cmx_const.DISP_ID,
-                                        bmp=self._make_preview()))
+        if self.cmx_cfg.save_preview:
+            self.cmx_model.add(self.make_el(cmx_const.DISP_ID,
+                                            bmp=self._make_preview()))
         if self.cmx_cfg.pack:
             self.root = self.make_el(cmx_const.PACK_ID)
             self.cmx_model.add(self.root)
@@ -170,7 +172,8 @@ class SK2_to_CMX_Translator(object):
             self.root.add(self.make_el(cmx_id))
         self.cmx_model.update_map()
 
-        self.coef = 1.0
+        self.coef = uc2const.pt_to_in * 1000.0
+        factor = 0.001
 
         if objs:
             bbox = [] + objs[0].cache_bbox
@@ -178,19 +181,12 @@ class SK2_to_CMX_Translator(object):
                 bbox = libgeom.sum_bbox(bbox, obj.cache_bbox)
             max_value = max([abs(item) for item in bbox])
             frame = 255 * 255 / 2.0
-            self.coef = uc2const.pt_to_mm * frame / max_value
-        else:
-            bbox = [0.0, 1.0, 1.0, 0.0]
-            self.coef = 1.0
+            self.coef = uc2const.pt_to_in * frame / max_value
+            factor = max_value / frame
 
-        cont_obj.set('factor',
-                     utils.py_float2double(1.0 / self.coef, self.rifx))
-        cont_obj.set('unit', cmx_const.CONT_UNIT_MM)
-
-        cont_obj.set('bbox_x0', self._int2dword(bbox[0]))
-        cont_obj.set('bbox_y1', self._int2dword(bbox[3]))
-        cont_obj.set('bbox_x1', self._int2dword(bbox[2]))
-        cont_obj.set('bbox_y0', self._int2dword(bbox[1]))
+        LOG.info('FACTOR %s', self.coef)
+        cont_obj.set('factor', utils.py_float2double(factor, self.rifx))
+        cont_obj.set('unit', cmx_const.CONT_UNIT_IN)
 
     def translate_doc(self):
         index = 0
@@ -222,14 +218,16 @@ class SK2_to_CMX_Translator(object):
         cmx_page.add(page_instr)
 
         layer_count = 1
-        for layer in (x for x in page.childs if x.childs):
+        for layer in page.childs:
+            if self.cmx_cfg.skip_empty and not layer.childs:
+                continue
             kwargs = {
                 'page_number': page_num,
                 'layer_number': layer_count,
                 'flags': 0,
                 'tally': 0,
                 'layer_name': layer.name,
-                'tail': '\x01\x00\x00\x00',
+                'tail': '\x01\x00\x00',
             }
             layer_instr = mkinstr(self.cmx_cfg,
                                   identifier=cmx_const.BEGIN_LAYER, **kwargs)
@@ -268,12 +266,13 @@ class SK2_to_CMX_Translator(object):
 
         elif obj.is_primitive:
             curve = obj.to_curve()
+            curve.update()
             if not curve:
                 return
             elif curve.is_group:
                 self.make_v1_objects(parent_instr, curve)
-            elif obj.paths:
-                style = obj.style
+            elif curve.paths:
+                style = curve.style
                 attrs = {
                     'style_flags': 1 if style[0] else 0,
                     'fill_type': cmx_const.INSTR_FILL_EMPTY,
@@ -285,8 +284,8 @@ class SK2_to_CMX_Translator(object):
                 if style[1]:
                     attrs['outline'] = self._add_outline(style[1])
                 trafo = libgeom.multiply_trafo(
-                    [self.coef, 0.0, 0.0, self.coef, 0.0, 0.0], obj.trafo)
-                paths = libgeom.apply_trafo_to_paths(obj.paths, trafo)
+                    [self.coef, 0.0, 0.0, self.coef, 0.0, 0.0], curve.trafo)
+                paths = libgeom.apply_trafo_to_paths(curve.paths, trafo)
                 attrs['points'] = []
                 attrs['nodes'] = []
                 for path in paths:
@@ -317,7 +316,7 @@ class SK2_to_CMX_Translator(object):
                     if path[2] == sk2const.CURVE_CLOSED:
                         attrs['nodes'][-1] += cmx_const.NODE_CLOSED
 
-                attrs['bbox'] = self._make_bbox(obj.cache_bbox)
+                attrs['bbox'] = self._make_bbox(curve.cache_bbox)
 
                 attrs['tail'] = ''
 
@@ -325,15 +324,12 @@ class SK2_to_CMX_Translator(object):
                                       identifier=cmx_const.POLYCURVE, **attrs)
                 parent_instr.add(curve_instr)
 
-    def index_model(self):
-        pass
-
     def _default_notes(self):
         appdata = self.sk2_doc.appdata
         name = "Created by %s" % appdata.app_name
         ver = "%s%s" % (appdata.version, appdata.revision)
         link = "(https://%s/)" % appdata.app_domain
-        return "%s %s %s" % (name, ver, link)
+        return "%s %s" % (name, ver)
 
     def add_info(self):
         info = self.make_el(cmx_const.INFO_ID)
@@ -345,3 +341,145 @@ class SK2_to_CMX_Translator(object):
 
         info.add(self.make_el(cmx_const.IKEY_ID, text=keys))
         info.add(self.make_el(cmx_const.ICMT_ID, text=notes))
+
+    def index_model(self):
+        indx = self.cmx_model.chunk_map['indx']
+        ixlrs = self.index_ixlr()
+        indx.do_update()
+        ixtl = self.index_ixtl(ixlrs)
+        indx.do_update()
+        ixpg = self.index_ixpg(ixlrs)
+        indx.do_update()
+        self.index_ixmr(ixpg, ixtl)
+
+    def index_ixlr(self):
+        index = 1
+        ixlrs = []
+        cmx_pages = self.cmx_model.chunk_map['pages']
+        indx = self.cmx_model.chunk_map['indx']
+        for item in cmx_pages:
+            kwargs = {
+                'page': index,
+                'layers': []
+            }
+            recs = kwargs['layers']
+            page = item[0]
+            for layer in page.childs[0].childs:
+                if not layer.is_layer:
+                    continue
+                recs.append((layer.get_offset(), layer.data['layer_name']))
+            ixlr = cmx_model.make_cmx_chunk(
+                self.cmx_cfg, identifier=cmx_const.IXLR_ID, **kwargs)
+            ixlrs.append(ixlr)
+            indx.add(ixlr)
+            index += 1
+        return ixlrs
+
+    def index_ixtl(self, ixlrs):
+        kwargs = {
+            'table_id': 3,
+            'rec_sz': 4,
+            'records': []
+        }
+        ixlrs = [] + ixlrs
+        ixlrs.reverse()
+        for item in ixlrs:
+            kwargs['records'].append(item.get_offset())
+        indx = self.cmx_model.chunk_map['indx']
+        ixtl = cmx_model.make_cmx_chunk(
+            self.cmx_cfg, identifier=cmx_const.IXTL_ID, **kwargs)
+        indx.add(ixtl)
+        return ixtl
+
+    def index_ixpg(self, ixlrs):
+        kwargs = {
+            'rec_sz': 16,
+            'records': []
+        }
+        cmx_pages = self.cmx_model.chunk_map['pages']
+        index = 0
+        for page in cmx_pages:
+            page_offset = page[0].get_offset()
+            ixl_offset = ixlrs[index].get_offset()
+            thmb_offset = 0xffffffff
+            ref_offset = page[1].get_offset()
+            kwargs['records'].append(
+                (page_offset, ixl_offset, thmb_offset, ref_offset))
+        indx = self.cmx_model.chunk_map['indx']
+        ixpg = cmx_model.make_cmx_chunk(
+            self.cmx_cfg, identifier=cmx_const.IXPG_ID, **kwargs)
+        indx.add(ixpg)
+        return ixpg
+
+    def index_ixmr(self, ixpg, ixtl):
+        kwargs = {
+            'records': []
+        }
+        recs = kwargs['records']
+
+        # Master Index Table
+        offset = ixpg.get_offset() + ixpg.get_chunk_size()
+        recs.append((cmx_const.MASTER_INDEX_TABLE, offset))
+
+        # Page Index Table
+        offset = ixpg.get_offset()
+        recs.append((cmx_const.PAGE_INDEX_TABLE, offset))
+
+        # Master Layer Table
+        offset = ixtl.get_offset()
+        recs.append((cmx_const.MASTER_LAYER_TABLE, offset))
+
+        # Outline Description Section
+        if 'rotl' in self.cmx_model.chunk_map:
+            offset = self.cmx_model.chunk_map['rotl'].get_offset()
+            recs.append((cmx_const.OUTLINE_DESCRIPTION_SECTION, offset))
+
+        # Line Style Description Section
+        if 'rott' in self.cmx_model.chunk_map:
+            offset = self.cmx_model.chunk_map['rott'].get_offset()
+            recs.append((cmx_const.LINE_STYLE_DESCRIPTION_SECTION, offset))
+
+        # Arrowheads Description Section
+        if 'rota' in self.cmx_model.chunk_map:
+            offset = self.cmx_model.chunk_map['rota'].get_offset()
+            recs.append((cmx_const.ARROWHEADS_DESCRIPTION_SECTION, offset))
+
+        # Screen Description Section
+        if 'rscr' in self.cmx_model.chunk_map:
+            offset = self.cmx_model.chunk_map['rscr'].get_offset()
+            recs.append((cmx_const.SCREEN_DESCRIPTION_SECTION, offset))
+
+        # Pen Description Section
+        if 'rpen' in self.cmx_model.chunk_map:
+            offset = self.cmx_model.chunk_map['rpen'].get_offset()
+            recs.append((cmx_const.PEN_DESCRIPTION_SECTION, offset))
+
+        # Dot-Dash Description Section
+        if 'rdot' in self.cmx_model.chunk_map:
+            offset = self.cmx_model.chunk_map['rdot'].get_offset()
+            recs.append((cmx_const.DOTDASH_DESCRIPTION_SECTION, offset))
+
+        # Color Description Section
+        if 'rclr' in self.cmx_model.chunk_map:
+            offset = self.cmx_model.chunk_map['rclr'].get_offset()
+            recs.append((cmx_const.COLOR_DESCRIPTION_SECTION, offset))
+
+        # Color Correction Section
+        if 'ccmm' in self.cmx_model.chunk_map:
+            offset = self.cmx_model.chunk_map['ccmm'].get_offset()
+            recs.append((cmx_const.COLOR_CORRECTION_SECTION, offset))
+
+        indx = self.cmx_model.chunk_map['indx']
+        ixmr = cmx_model.make_cmx_chunk(
+            self.cmx_cfg, identifier=cmx_const.IXMR_ID, **kwargs)
+        indx.add(ixmr)
+        self.cmx_model.do_update()
+
+        cont = self.cmx_model.chunk_map['cont']
+        offset = ixpg.get_offset() + ixpg.get_chunk_size()
+        cont.data['IndexSection'] = offset
+        cont.data['InfoSection'] = offset + ixmr.get_chunk_size()
+
+        if 'DISP' in self.cmx_model.chunk_map:
+            offset = self.cmx_model.chunk_map['DISP'].get_offset()
+            cont.data['Thumbnail'] = offset

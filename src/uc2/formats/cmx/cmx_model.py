@@ -74,7 +74,6 @@ class CmxRiffElement(cmx_instr.CmxObject):
         return offset
 
     def update(self):
-        LOG.info('REPR %s', repr(self))
         size = self.get_chunk_size() - 8
         sz = utils.py_int2dword(size, self.config.rifx)
         self.chunk = self.data['identifier'] + sz + self.chunk[8:]
@@ -94,8 +93,9 @@ class CmxRiffElement(cmx_instr.CmxObject):
 
     def resolve(self, name=''):
         sz = '%d' % self.get_chunk_size()
+        offset = hex(self.get_offset())
         name = '<%s>' % self.get_name()
-        return self._get_icon(), name, sz
+        return self._get_icon(), name, offset  # sz
 
     def update_for_sword(self):
         self.cache_fields = [(0, 4, 'Chunk identifier'),
@@ -165,9 +165,10 @@ class CmxCont(CmxRiffElement):
         self.data['unit'] = cmx_const.CONT_UNIT_MM
         self.data['factor'] = cmx_const.CONT_FACTOR_MM
 
-        self.data['IndexSection'] = 4 * '\x00'
-        self.data['InfoSection'] = 4 * '\x00'
-        self.data['Thumbnail'] = 4 * '\x00'
+        self.data['IndexSection'] = 0
+        self.data['InfoSection'] = 0
+        self.data['Thumbnail'] = utils.dword2py_int(4 * '\xff',
+                                                    self.config.rifx)
 
         self.data['bbox'] = (0, 0, 0, 0)
         self.data['tally'] = 0
@@ -188,9 +189,9 @@ class CmxCont(CmxRiffElement):
         self.data['unit'] = self.chunk[70:72]
         self.data['factor'] = self.chunk[72:80]
 
-        self.data['IndexSection'] = self.chunk[92:96]
-        self.data['InfoSection'] = self.chunk[96:100]
-        self.data['Thumbnail'] = self.chunk[100:104]
+        self.data['IndexSection'] = utils.dword2py_int(self.chunk[92:96], rifx)
+        self.data['InfoSection'] = utils.dword2py_int(self.chunk[96:100], rifx)
+        self.data['Thumbnail'] = utils.dword2py_int(self.chunk[100:104], rifx)
 
         sig = '>iiii' if rifx else '<iiii'
         self.data['bbox'] = struct.unpack(sig, self.chunk[104:120])
@@ -210,9 +211,9 @@ class CmxCont(CmxRiffElement):
         self.chunk += self.data['unit']
         self.chunk += self.data['factor']
         self.chunk += 12 * '\x00'
-        self.chunk += self.data['IndexSection']
-        self.chunk += self.data['InfoSection']
-        self.chunk += self.data['Thumbnail']
+        self.chunk += utils.py_int2dword(self.data['IndexSection'], rifx)
+        self.chunk += utils.py_int2dword(self.data['InfoSection'], rifx)
+        self.chunk += utils.py_int2dword(self.data['Thumbnail'], rifx)
 
         sig = '>iiii' if rifx else '<iiii'
         self.chunk += struct.pack(sig, *self.data['bbox'])
@@ -414,8 +415,8 @@ class CdrxPack(CmxRiffElement):
 
     def get_chunk_size(self, recursive=True):
         if recursive:
-            return sum([12] + [item.get_chunk_size() for item in self.childs])
-        return 12
+            return sum([item.get_chunk_size() for item in self.childs])
+        return 0
 
     def get_childs_size(self):
         return sum([item.get_chunk_size() for item in self.childs])

@@ -75,6 +75,8 @@ class CmxObject(BinaryModelObject):
 class CmxInstruction(CmxObject):
     toplevel = False
     bbox = None
+    is_layer = False
+    is_page = False
 
     def __init__(self, config, chunk=None, offset=0, **kwargs):
         self.config = config
@@ -117,8 +119,9 @@ class CmxInstruction(CmxObject):
 
     def resolve(self, name=''):
         sz = '%d' % len(self.chunk)
+        offset = hex(self.get_offset())
         name = '[%s]' % self.get_name()
-        return len(self.childs) == 0, name, sz
+        return len(self.childs) == 0, name, offset  # sz
 
     def update(self):
         if self.is_padding():
@@ -133,6 +136,8 @@ class CmxInstruction(CmxObject):
 
 
 class Inst16BeginPage(CmxInstruction):
+    is_page = True
+
     def update_from_chunk(self):
         rifx = self.config.rifx
         word2int = utils.word2py_int
@@ -167,6 +172,8 @@ class Inst16BeginPage(CmxInstruction):
 
 
 class Inst16BeginLayer(CmxInstruction):
+    is_layer = True
+
     def update_from_chunk(self):
         rifx = self.config.rifx
         word2int = utils.word2py_int
@@ -304,7 +311,7 @@ class Inst16PolyCurve(CmxInstruction):
             points.append(struct.unpack(sig, self.chunk[pos:pos + 4]))
             pos += 4
         # nodes: (node,...)
-        sig = count * 'b'
+        sig = count * 'B'
         self.data['nodes'] = struct.unpack(sig, self.chunk[pos:pos + count])
         pos += count
         # BBOX
@@ -352,7 +359,7 @@ class Inst16PolyCurve(CmxInstruction):
                     sig = '>hh' if rifx else '<hh'
                     self.chunk += struct.pack(sig, *point)
                 # NODES
-                self.chunk += struct.pack('b' * len(self.data['nodes']),
+                self.chunk += struct.pack('B' * len(self.data['nodes']),
                                           *self.data['nodes'])
                 # BBOX
                 sig = '>hhhh' if rifx else '<hhhh'
