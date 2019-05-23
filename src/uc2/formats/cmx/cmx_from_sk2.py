@@ -284,7 +284,7 @@ class SK2_to_CMX_Translator(object):
                 if style[1]:
                     attrs['outline'] = self._add_outline(style[1])
                 trafo = libgeom.multiply_trafo(
-                    [self.coef, 0.0, 0.0, self.coef, 0.0, 0.0], curve.trafo)
+                        curve.trafo, [self.coef, 0.0, 0.0, self.coef, 0.0, 0.0])
                 paths = libgeom.apply_trafo_to_paths(curve.paths, trafo)
                 attrs['points'] = []
                 attrs['nodes'] = []
