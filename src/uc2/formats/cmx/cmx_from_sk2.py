@@ -285,7 +285,12 @@ class SK2_to_CMX_Translator(object):
                     attrs['fill'] = (self._add_color(style[0][2]), 1)
                     close_flag = not style[0][0] & sk2const.FILL_CLOSED_ONLY
                 if style[1]:
-                    attrs['outline'] = self._add_outline(style[1])
+                    outline = style[1]
+                    if curve.stroke_trafo:
+                        coef = curve.stroke_trafo[0]
+                        outline = deepcopy(outline)
+                        outline[1] *= coef
+                    attrs['outline'] = self._add_outline(outline)
                 trafo = libgeom.multiply_trafo(
                     curve.trafo, [self.coef, 0.0, 0.0, self.coef, 0.0, 0.0])
                 paths = libgeom.apply_trafo_to_paths(curve.paths, trafo)
