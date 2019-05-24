@@ -15,8 +15,10 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from uc2 import uc2const
 from uc2.formats.cdr import cdr_const
 from uc2.formats.cdr.cdr_presenter import CDR_Presenter
+from uc2.formats.cmx.cmx_presenter import CMX_Presenter
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
 from uc2.utils.fsutils import get_fileptr
 from uc2.utils.mixutils import merge_cnf
@@ -36,10 +38,21 @@ def cdr_loader(appdata, filename=None, fileptr=None, translate=True, cnf=None,
     return doc
 
 
-def cdr_saver(cdr_doc, filename=None, fileptr=None, translate=True, cnf=None,
-              **kw):
+def cdr_saver(sk2_doc, filename=None, fileptr=None,
+              translate=True, cnf=None, **kw):
+    kw['pack'] = True
     cnf = merge_cnf(cnf, kw)
-    cdr_doc.save(filename)
+    if sk2_doc.cid == uc2const.CMX:
+        translate = False
+    if translate:
+        cnf['v1'] = True
+        cnf['v16bit'] = True
+        cmx_doc = CMX_Presenter(sk2_doc.appdata, cnf)
+        cmx_doc.translate_from_sk2(sk2_doc)
+        cmx_doc.save(filename, fileptr)
+        cmx_doc.close()
+    else:
+        sk2_doc.save(filename, fileptr)
 
 
 def check_cdr(path):

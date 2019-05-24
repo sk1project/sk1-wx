@@ -74,7 +74,6 @@ class CmxRiffElement(cmx_instr.CmxObject):
         return offset
 
     def update(self):
-        LOG.info('REPR %s', repr(self))
         size = self.get_chunk_size() - 8
         sz = utils.py_int2dword(size, self.config.rifx)
         self.chunk = self.data['identifier'] + sz + self.chunk[8:]
@@ -94,8 +93,9 @@ class CmxRiffElement(cmx_instr.CmxObject):
 
     def resolve(self, name=''):
         sz = '%d' % self.get_chunk_size()
+        offset = hex(self.get_offset())
         name = '<%s>' % self.get_name()
-        return self._get_icon(), name, sz
+        return self._get_icon(), name, offset  # sz
 
     def update_for_sword(self):
         self.cache_fields = [(0, 4, 'Chunk identifier'),
@@ -165,17 +165,16 @@ class CmxCont(CmxRiffElement):
         self.data['unit'] = cmx_const.CONT_UNIT_MM
         self.data['factor'] = cmx_const.CONT_FACTOR_MM
 
-        self.data['IndexSection'] = 4 * '\x00'
-        self.data['InfoSection'] = 4 * '\x00'
-        self.data['Thumbnail'] = 4 * '\x00'
+        self.data['IndexSection'] = 0
+        self.data['InfoSection'] = 0
+        self.data['Thumbnail'] = utils.dword2py_int(4 * '\xff',
+                                                    self.config.rifx)
 
-        self.data['bbox_x0'] = 4 * '\x00'
-        self.data['bbox_y1'] = 4 * '\x00'
-        self.data['bbox_x1'] = 4 * '\x00'
-        self.data['bbox_y0'] = 4 * '\x00'
-        self.data['tally'] = 4 * '\x00'
+        self.data['bbox'] = (0, 0, 0, 0)
+        self.data['tally'] = 0
 
     def update_from_chunk(self):
+        rifx = self.config.rifx
         self.data['file_id'] = self.chunk[8:40].rstrip('\x00')
         self.data['os_type'] = self.chunk[40:56].rstrip('\x00')
         self.data['byte_order'] = self.chunk[56:60]
@@ -190,17 +189,16 @@ class CmxCont(CmxRiffElement):
         self.data['unit'] = self.chunk[70:72]
         self.data['factor'] = self.chunk[72:80]
 
-        self.data['IndexSection'] = self.chunk[92:96]
-        self.data['InfoSection'] = self.chunk[96:100]
-        self.data['Thumbnail'] = self.chunk[100:104]
+        self.data['IndexSection'] = utils.dword2py_int(self.chunk[92:96], rifx)
+        self.data['InfoSection'] = utils.dword2py_int(self.chunk[96:100], rifx)
+        self.data['Thumbnail'] = utils.dword2py_int(self.chunk[100:104], rifx)
 
-        self.data['bbox_x0'] = self.chunk[104:108]
-        self.data['bbox_y1'] = self.chunk[108:112]
-        self.data['bbox_x1'] = self.chunk[112:116]
-        self.data['bbox_y0'] = self.chunk[116:120]
-        self.data['tally'] = self.chunk[120:124]
+        sig = '>iiii' if rifx else '<iiii'
+        self.data['bbox'] = struct.unpack(sig, self.chunk[104:120])
+        self.data['tally'] = utils.dword2py_int(self.chunk[120:124], rifx)
 
     def update(self):
+        rifx = self.config.rifx
         self.chunk = self.data['identifier'] + 4 * '\x00'
         padding_sz = 32 - len(self.data['file_id'])
         self.chunk += self.data['file_id'] + padding_sz * '\x00'
@@ -213,15 +211,13 @@ class CmxCont(CmxRiffElement):
         self.chunk += self.data['unit']
         self.chunk += self.data['factor']
         self.chunk += 12 * '\x00'
-        self.chunk += self.data['IndexSection']
-        self.chunk += self.data['InfoSection']
-        self.chunk += self.data['Thumbnail']
+        self.chunk += utils.py_int2dword(self.data['IndexSection'], rifx)
+        self.chunk += utils.py_int2dword(self.data['InfoSection'], rifx)
+        self.chunk += utils.py_int2dword(self.data['Thumbnail'], rifx)
 
-        self.chunk += self.data['bbox_x0']
-        self.chunk += self.data['bbox_y1']
-        self.chunk += self.data['bbox_x1']
-        self.chunk += self.data['bbox_y0']
-        self.chunk += self.data['tally']
+        sig = '>iiii' if rifx else '<iiii'
+        self.chunk += struct.pack(sig, *self.data['bbox'])
+        self.chunk += utils.py_int2dword(self.data['tally'], rifx)
         self.chunk += 64 * '\x00'
         CmxRiffElement.update(self)
 
@@ -378,7 +374,6 @@ class CmxPage(CmxRiffElement):
         CmxRiffElement.update(self)
 
 
-
 class CdrxPack(CmxRiffElement):
     def update_from_chunk(self):
         chunk = zlib.decompress(self.chunk[20:])
@@ -420,8 +415,8 @@ class CdrxPack(CmxRiffElement):
 
     def get_chunk_size(self, recursive=True):
         if recursive:
-            return sum([12] + [item.get_chunk_size() for item in self.childs])
-        return 12
+            return sum([item.get_chunk_size() for item in self.childs])
+        return 0
 
     def get_childs_size(self):
         return sum([item.get_chunk_size() for item in self.childs])
@@ -746,15 +741,15 @@ class CmxRclrV1(CmxRiffElement):
         self.data['colors'] = []
 
     def get_color(self, index):
-        return self.data['colors'][index] \
-            if index < len(self.data['colors']) else ()
+        return self.data['colors'][index - 1] \
+            if index - 1 < len(self.data['colors']) else ()
 
     def add_color(self, color):
         if color in self.data['colors']:
-            return self.data['colors'].index(color)
+            return self.data['colors'].index(color) + 1
         else:
             self.data['colors'].append(color)
-            return len(self.data['colors']) - 1
+            return len(self.data['colors'])
 
     def update_from_chunk(self):
         rifx = self.config.rifx
@@ -836,15 +831,15 @@ class CmxRdotV1(CmxRiffElement):
         self.data['dashes'] = []
 
     def get_dashes(self, index):
-        return self.data['dashes'][index] \
-            if index < len(self.data['dashes']) else ()
+        return self.data['dashes'][index - 1] \
+            if index - 1 < len(self.data['dashes']) else ()
 
     def add_dashes(self, dashes):
         if dashes in self.data['dashes']:
-            return self.data['dashes'].index(dashes)
+            return self.data['dashes'].index(dashes) + 1
         else:
             self.data['dashes'].append(dashes)
-            return len(self.data['dashes']) - 1
+            return len(self.data['dashes'])
 
     def update_from_chunk(self):
         rifx = self.config.rifx
@@ -887,15 +882,15 @@ class CmxRpenV1(CmxRiffElement):
         self.data['pens'] = []
 
     def get_pen(self, index):
-        return self.data['pens'][index] \
-            if index < len(self.data['pens']) else ()
+        return self.data['pens'][index - 1] \
+            if index - 1 < len(self.data['pens']) else ()
 
     def add_pen(self, pen):
         if pen in self.data['pens']:
-            return self.data['pens'].index(pen)
+            return self.data['pens'].index(pen) + 1
         else:
             self.data['pens'].append(pen)
-            return len(self.data['pens']) - 1
+            return len(self.data['pens'])
 
     def update_from_chunk(self):
         rifx = self.config.rifx
@@ -949,15 +944,15 @@ class CmxRottV1(CmxRiffElement):
         self.data['linestyles'] = []
 
     def get_linestyle(self, index):
-        return self.data['linestyles'][index] \
-            if index < len(self.data['linestyles']) else ()
+        return self.data['linestyles'][index - 1] \
+            if index - 1 < len(self.data['linestyles']) else ()
 
     def add_linestyle(self, linestyle):
         if linestyle in self.data['linestyles']:
-            return self.data['linestyles'].index(linestyle)
+            return self.data['linestyles'].index(linestyle) + 1
         else:
             self.data['linestyles'].append(linestyle)
-            return len(self.data['linestyles']) - 1
+            return len(self.data['linestyles'])
 
     def update_from_chunk(self):
         rifx = self.config.rifx
@@ -996,15 +991,15 @@ class CmxRotlV1(CmxRiffElement):
         self.data['outlines'] = []
 
     def get_outline(self, index):
-        return self.data['outlines'][index] \
-            if index < len(self.data['outlines']) else ()
+        return self.data['outlines'][index - 1] \
+            if index - 1 < len(self.data['outlines']) else ()
 
     def add_outline(self, outline):
         if outline in self.data['outlines']:
-            return self.data['outlines'].index(outline)
+            return self.data['outlines'].index(outline) + 1
         else:
             self.data['outlines'].append(outline)
-            return len(self.data['outlines']) - 1
+            return len(self.data['outlines'])
 
     def update_from_chunk(self):
         rifx = self.config.rifx

@@ -23,6 +23,8 @@ class CMX_Config(XmlConfigParser):
     fallback_encoding = 'cp1250'
     rifx = False
     pack = False
-    v16bit = False
-    v1 = False
+    v16bit = True
+    v1 = True
+    save_preview = True
     preview_size = (96, 96)
+    skip_empty = True

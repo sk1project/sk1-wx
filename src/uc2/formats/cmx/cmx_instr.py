@@ -18,7 +18,7 @@
 import logging
 import struct
 
-from uc2 import utils
+from uc2 import utils, libgeom
 from uc2.formats.cmx import cmx_const
 from uc2.formats.generic import BinaryModelObject
 
@@ -74,12 +74,16 @@ class CmxObject(BinaryModelObject):
 
 class CmxInstruction(CmxObject):
     toplevel = False
+    bbox = None
+    is_layer = False
+    is_page = False
 
     def __init__(self, config, chunk=None, offset=0, **kwargs):
         self.config = config
         self.offset = offset
         self.childs = []
         self.data = {}
+        self.bbox = None
 
         if chunk:
             self.chunk = chunk
@@ -99,10 +103,25 @@ class CmxInstruction(CmxObject):
         return cmx_const.INSTR_CODES.get(self.data['code'],
                                          str(self.data['code']))
 
+    def get_bbox(self):
+        def _sum_bbox(bbox0, bbox1):
+            if bbox0 is None and bbox1 is None:
+                return None
+            if bbox0 is None:
+                return [] + bbox1
+            if bbox1 is None:
+                return [] + bbox0
+            return libgeom.sum_bbox(bbox0, bbox1)
+        self.bbox = None
+        for child in self.childs:
+            self.bbox = _sum_bbox(self.bbox, child.get_bbox())
+        return self.bbox
+
     def resolve(self, name=''):
         sz = '%d' % len(self.chunk)
+        offset = hex(self.get_offset())
         name = '[%s]' % self.get_name()
-        return len(self.childs) == 0, name, sz
+        return len(self.childs) == 0, name, offset  # sz
 
     def update(self):
         if self.is_padding():
@@ -117,6 +136,8 @@ class CmxInstruction(CmxObject):
 
 
 class Inst16BeginPage(CmxInstruction):
+    is_page = True
+
     def update_from_chunk(self):
         rifx = self.config.rifx
         word2int = utils.word2py_int
@@ -151,6 +172,8 @@ class Inst16BeginPage(CmxInstruction):
 
 
 class Inst16BeginLayer(CmxInstruction):
+    is_layer = True
+
     def update_from_chunk(self):
         rifx = self.config.rifx
         word2int = utils.word2py_int
@@ -288,7 +311,7 @@ class Inst16PolyCurve(CmxInstruction):
             points.append(struct.unpack(sig, self.chunk[pos:pos + 4]))
             pos += 4
         # nodes: (node,...)
-        sig = count * 'b'
+        sig = count * 'B'
         self.data['nodes'] = struct.unpack(sig, self.chunk[pos:pos + count])
         pos += count
         # BBOX
@@ -336,7 +359,7 @@ class Inst16PolyCurve(CmxInstruction):
                     sig = '>hh' if rifx else '<hh'
                     self.chunk += struct.pack(sig, *point)
                 # NODES
-                self.chunk += struct.pack('b' * len(self.data['nodes']),
+                self.chunk += struct.pack('B' * len(self.data['nodes']),
                                           *self.data['nodes'])
                 # BBOX
                 sig = '>hhhh' if rifx else '<hhhh'
@@ -416,6 +439,9 @@ class Inst16PolyCurve(CmxInstruction):
         self.cache_fields += [(pos, 8, 'Curve bbox'), ]
         pos += 8
 
+    def get_bbox(self):
+        bbox = self.data.get('bbox')
+        return list(bbox) if bbox else None
 
 INSTR_16bit = {
     cmx_const.BEGIN_PAGE: Inst16BeginPage,
@@ -428,7 +454,10 @@ INSTR_16bit = {
 INSTR_32bit = {}
 
 
-def make_instruction(config, chunk, offset=0):
+def make_instruction(config, chunk=None, offset=0, identifier=None, **kwargs):
     instructions = INSTR_16bit if config.v16bit else INSTR_32bit
-    identifier = abs(utils.signed_word2py_int(chunk[2:4], config.rifx))
-    return instructions.get(identifier, CmxInstruction)(config, chunk, offset)
+    if chunk is not None:
+        identifier = abs(utils.signed_word2py_int(chunk[2:4], config.rifx))
+    cls = instructions.get(identifier, CmxInstruction)
+    kwargs['code'] = identifier
+    return cls(config, chunk, offset, **kwargs)
