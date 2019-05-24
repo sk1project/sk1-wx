@@ -16,6 +16,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+from copy import deepcopy
 
 from uc2 import libimg, libgeom, uc2const, utils, sk2const, cms
 from uc2.formats.cmx import cmx_model, cmx_const, cmx_instr
@@ -272,6 +273,7 @@ class SK2_to_CMX_Translator(object):
             elif curve.is_group:
                 self.make_v1_objects(parent_instr, curve)
             elif curve.paths:
+                close_flag = False
                 style = curve.style
                 attrs = {
                     'style_flags': 1 if style[0] else 0,
@@ -281,14 +283,23 @@ class SK2_to_CMX_Translator(object):
                 if style[0] and style[0][1] == sk2const.FILL_SOLID:
                     attrs['fill_type'] = cmx_const.INSTR_FILL_UNIFORM
                     attrs['fill'] = (self._add_color(style[0][2]), 1)
+                    close_flag = not style[0][0] & sk2const.FILL_CLOSED_ONLY
                 if style[1]:
                     attrs['outline'] = self._add_outline(style[1])
                 trafo = libgeom.multiply_trafo(
-                        curve.trafo, [self.coef, 0.0, 0.0, self.coef, 0.0, 0.0])
+                    curve.trafo, [self.coef, 0.0, 0.0, self.coef, 0.0, 0.0])
                 paths = libgeom.apply_trafo_to_paths(curve.paths, trafo)
                 attrs['points'] = []
                 attrs['nodes'] = []
                 for path in paths:
+                    # Force path closing
+                    if close_flag and not path[2] == sk2const.CURVE_CLOSED:
+                        path = deepcopy(path)
+                        path[2] = sk2const.CURVE_CLOSED
+                        p = path[1][-1] if len(path[1][-1]) == 2 \
+                            else path[1][-1][-1]
+                        if not path[0] == p:
+                            path[1].append([] + path[0])
                     x, y = path[0]
                     attrs['points'].append((int(x), int(y)))
                     node = cmx_const.NODE_MOVE + cmx_const.NODE_USER
