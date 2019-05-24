@@ -256,7 +256,7 @@ class SK1Application(wal.Application, UCApplication):
                 msg += '\n'
                 msg += _('Details see in application logs.')
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
-                LOG.error('Cannot open file <%s> %s', doc_file, e)
+                LOG.error('Cannot open file <%s> %s', doc_file, e, exc_info=True)
                 return
             self.docs.append(doc)
             config.open_dir = str(os.path.dirname(doc_file))
