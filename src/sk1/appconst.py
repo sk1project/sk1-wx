@@ -17,7 +17,7 @@
 
 APPNAME = 'sk1'
 VERSION = '2.0'
-REVISION = 'rc4'
+REVISION = 'rc5'
 BUILD = ''
 
 OPENED = 0

@@ -22,7 +22,7 @@ The package provides generic application constants
 """
 # Version
 VERSION = '2.0'
-REVISION = 'rc4'
+REVISION = 'rc5'
 BUILD = ''
 
 # Placement constants

@@ -185,7 +185,6 @@ class SK2_to_CMX_Translator(object):
             self.coef = uc2const.pt_to_in * frame / max_value
             factor = max_value / frame
 
-        LOG.info('FACTOR %s', self.coef)
         cont_obj.set('factor', utils.py_float2double(factor, self.rifx))
         cont_obj.set('unit', cmx_const.CONT_UNIT_IN)
 
