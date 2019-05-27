@@ -557,79 +557,82 @@ class NativeSpin(wx.SpinCtrl, RangeDataWidgetMixin):
         self.SetValue(int(value))
 
 
-class NativeSpinDouble(wx.SpinCtrlDouble, RangeDataWidgetMixin):
-    callback = None
-    callback1 = None
-    flag = True
-    ctxmenu_flag = False
-    digits = 2
-    step = 0
+NativeSpinDouble = NativeSpin
 
-    def __init__(
-            self, parent, value=0.0, range_val=(0.0, 1.0), step=0.01,
-            digits=2, size=DEF_SIZE, width=6,
-            onchange=None, onenter=None, check_focus=True):
+if not const.IS_WX2:
+    class NativeSpinDouble(wx.SpinCtrlDouble, RangeDataWidgetMixin):
+        callback = None
+        callback1 = None
+        flag = True
+        ctxmenu_flag = False
+        digits = 2
+        step = 0
 
-        self.range_val = range_val
-        width = 0 if const.IS_GTK3 else width
-        width = width + 2 if const.IS_MSW else width
-        size = self._set_width(size, width)
-        style = wx.SP_ARROW_KEYS | wx.ALIGN_LEFT | wx.TE_PROCESS_ENTER
-        wx.SpinCtrlDouble.__init__(self, parent, wx.ID_ANY, '',
-                                   size=size, style=style,
-                                   min=0, max=100, initial=value, inc=step)
-        self.set_range(range_val)
-        self.set_value(value)
-        self.set_step(step)
-        self.set_digits(digits)
-        if onchange:
-            self.callback = onchange
-            self.Bind(wx.EVT_SPINCTRLDOUBLE, self.on_change, self)
-        if onenter:
-            self.callback1 = onenter
-            self.Bind(wx.EVT_TEXT_ENTER, self.on_enter, self)
-        if check_focus:
-            self.Bind(
-                wx.EVT_KILL_FOCUS, self._entry_lost_focus, self)
-            self.Bind(wx.EVT_CONTEXT_MENU, self._ctxmenu, self)
+        def __init__(
+                self, parent, value=0.0, range_val=(0.0, 1.0), step=0.01,
+                digits=2, size=DEF_SIZE, width=6,
+                onchange=None, onenter=None, check_focus=True):
 
-    def set_step(self, step):
-        self.step = step
-        self.SetIncrement(step)
+            self.range_val = range_val
+            width = 0 if const.IS_GTK3 else width
+            width = width + 2 if const.IS_MSW else width
+            size = self._set_width(size, width)
+            style = wx.SP_ARROW_KEYS | wx.ALIGN_LEFT | wx.TE_PROCESS_ENTER
+            wx.SpinCtrlDouble.__init__(self, parent, wx.ID_ANY, '',
+                                       size=size, style=style,
+                                       min=0, max=100, initial=value, inc=step)
+            self.set_range(range_val)
+            self.set_value(value)
+            self.set_step(step)
+            self.set_digits(digits)
+            if onchange:
+                self.callback = onchange
+                self.Bind(wx.EVT_SPINCTRLDOUBLE, self.on_change, self)
+            if onenter:
+                self.callback1 = onenter
+                self.Bind(wx.EVT_TEXT_ENTER, self.on_enter, self)
+            if check_focus:
+                self.Bind(
+                    wx.EVT_KILL_FOCUS, self._entry_lost_focus, self)
+                self.Bind(wx.EVT_CONTEXT_MENU, self._ctxmenu, self)
 
-    def set_digits(self, digits):
-        self.digits = digits
-        self.SetDigits(digits)
+        def set_step(self, step):
+            self.step = step
+            self.SetIncrement(step)
 
-    def _set_digits(self, digits):
-        self.set_digits(digits)
+        def set_digits(self, digits):
+            self.digits = digits
+            self.SetDigits(digits)
 
-    def on_change(self, *args):
-        if self.callback:
-            self.callback()
+        def _set_digits(self, digits):
+            self.set_digits(digits)
 
-    def on_enter(self, event):
-        if self.callback1:
-            self.callback1()
-        event.Skip()
+        def on_change(self, *args):
+            if self.callback:
+                self.callback()
 
-    def _ctxmenu(self, event):
-        self.ctxmenu_flag = True
-        event.Skip()
+        def on_enter(self, event):
+            if self.callback1:
+                self.callback1()
+            event.Skip()
 
-    def _entry_lost_focus(self, event):
-        if not self.flag and not self.ctxmenu_flag:
-            self.on_change()
-        elif not self.flag and self.ctxmenu_flag:
-            self.ctxmenu_flag = False
-        event.Skip()
+        def _ctxmenu(self, event):
+            self.ctxmenu_flag = True
+            event.Skip()
 
-    def get_value(self):
-        return float(self.GetValue()) if self.digits \
-            else int(self.GetValue())
+        def _entry_lost_focus(self, event):
+            if not self.flag and not self.ctxmenu_flag:
+                self.on_change()
+            elif not self.flag and self.ctxmenu_flag:
+                self.ctxmenu_flag = False
+            event.Skip()
 
-    def set_value(self, value):
-        self.SetValue(float(value) if self.digits else int(value))
+        def get_value(self):
+            return float(self.GetValue()) if self.digits \
+                else int(self.GetValue())
+
+        def set_value(self, value):
+            self.SetValue(float(value) if self.digits else int(value))
 
 
 class NativeSpinButton(wx.SpinButton, RangeDataWidgetMixin):
