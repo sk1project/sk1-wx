@@ -48,7 +48,8 @@ class FillDialog(wal.OkCancelDialog):
                      ]
         for item in self.tabs:
             self.nb.add_page(item, item.name)
-            item.activate(self.orig_fill)
+            if wal.IS_GTK3:
+                item.activate(self.orig_fill)
         self.pack(self.nb, fill=True, expand=True)
 
         index = 0
@@ -57,6 +58,8 @@ class FillDialog(wal.OkCancelDialog):
                 index = 1
             elif self.orig_fill[1] == sk2const.FILL_PATTERN:
                 index = 2
+        if not wal.IS_GTK3:
+            self.tabs[index].activate(self.orig_fill)
         self.nb.set_active_index(index)
         self.start = False
 
