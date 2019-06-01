@@ -286,7 +286,10 @@ class SK2_to_CMX_Translator(object):
                 if style[1]:
                     outline = style[1]
                     if curve.stroke_trafo:
-                        coef = curve.stroke_trafo[0]
+                        points = [[0.0, 0.0], [1.0, 0.0]]
+                        points = libgeom.apply_trafo_to_points(points,
+                                                               obj.stroke_trafo)
+                        coef = libgeom.distance(*points)
                         outline = deepcopy(outline)
                         outline[1] *= coef
                     attrs['outline'] = self._add_outline(outline)

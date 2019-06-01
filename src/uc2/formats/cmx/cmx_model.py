@@ -919,7 +919,7 @@ class CmxRpenV1(CmxRiffElement):
         self.chunk = self.data['identifier'] + 4 * '\x00'
         self.chunk += int2word(len(self.data['pens']), rifx)
         for item in self.data['pens']:
-            sig = '>hhih' if rifx else '<hhih'
+            sig = '>Hhih' if rifx else '<Hhih'
             self.chunk += struct.pack(sig, *item[:4])
             if len(item) > 4:
                 sig = '>dddddd' if rifx else '<dddddd'
