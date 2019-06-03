@@ -18,8 +18,8 @@
 from uc2.formats.generic_filters import AbstractXMLLoader, AbstractSaver
 from uc2.formats.xml_.xml_model import XMLObject, XmlContentText
 
-class XML_Loader(AbstractXMLLoader):
 
+class XML_Loader(AbstractXMLLoader):
     name = 'XML_Loader'
     stack = []
 
@@ -50,16 +50,24 @@ class XML_Loader(AbstractXMLLoader):
         if self.stack and self.stack[-1].tag == name:
             self.stack = self.stack[:-1]
 
-class Advanced_XML_Loader(XML_Loader):
 
+class Advanced_XML_Loader(XML_Loader):
     name = 'Advanced_XML_Loader'
+
+    def start_element(self, name, attrs):
+        name = name[4:] if name.startswith('svg:') else name
+        XML_Loader.start_element(self, name, attrs)
+
+    def end_element(self, name):
+        name = name[4:] if name.startswith('svg:') else name
+        XML_Loader.end_element(self, name)
 
     def element_data(self, data):
         obj = XmlContentText(data)
         if self.stack: self.stack[-1].childs.append(obj)
 
-class XML_Saver(AbstractSaver):
 
+class XML_Saver(AbstractSaver):
     name = 'XML_Saver'
     indent = 0
 
@@ -97,13 +105,13 @@ class XML_Saver(AbstractSaver):
 
     def get_obj_attrs(self, obj):
         line = ''
-        if not obj.attrs:return line
+        if not obj.attrs: return line
         for item in obj.attrs.keys():
             line += ' %s="%s"' % (item, obj.attrs[item])
         return line
 
-class Advanced_XML_Saver(XML_Saver):
 
+class Advanced_XML_Saver(XML_Saver):
     name = 'Advanced_XML_Saver'
 
     def write_obj(self, obj):
@@ -123,5 +131,3 @@ class Advanced_XML_Saver(XML_Saver):
             self.write('</%s>' % obj.tag)
         else:
             self.write('<%s%s />' % (obj.tag, attrs))
-
-
