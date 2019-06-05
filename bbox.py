@@ -100,7 +100,7 @@ APP_REVISION = {SK1: sk1.appconst.REVISION,
                 UC2: uc2.uc2const.REVISION}[PROJECT]
 APP_VER = '%s%s' % (APP_MAJOR_VER, APP_REVISION)
 
-RELEASE = os.environ.get('RELEASE', False)
+RELEASE = 'RELEASE' in os.environ or 'release' in ARGV
 DEBUG_MODE = os.environ.get('DEBUG_MODE', False)
 CONST_FILES = ['src/sk1/appconst.py', 'src/uc2/uc2const.py']
 
@@ -238,6 +238,8 @@ def run_build(locally=False, stop_on_error=True):
         cmd = '/vagrant/bbox.py build_package --project=%s' % PROJECT
         if image == 'msw-packager':
             cmd = '/vagrant/bbox.py msw_build --project=%s' % PROJECT
+        if RELEASE:
+            cmd += ' --release=1'
         if shell('docker run --rm -v %s:%s %s%s %s %s' %
                  (PROJECT_DIR, VAGRANT_DIR,
                   IMAGE_PREFIX, image, cmd, output), 2):
