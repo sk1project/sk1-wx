@@ -412,7 +412,7 @@ if PROJECT == SK1:
          'AddOnDesktop': True,
          'Open': [],
          'OpenWith': ['.sk2', '.sk1', '.sk', '.svg', '.plt', '.wmf', '.fig',
-                      # '.cdr', '.cmx', '.cdt',
+                      '.cdr', '.cmx', '.cdt', '.ccx', '.xar', '.cgm',
                       # '.ai', '.ps', '.pdf', '.eps',
                       '.bmp', '.jpg', '.jpeg', '.j2p', '.png', '.tif', '.tiff',
                       '.gif', '.xcf', '.psd', '.pcx', '.xbm', '.xpm', '.ppm',
