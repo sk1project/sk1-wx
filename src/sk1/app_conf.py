@@ -96,7 +96,7 @@ class AppConfig(UCConfig):
     spin_overlay = True
     spin_sep = False
     spin_width = 0
-    sash_position = -270
+    sash_position = -280
     make_backup = True
     make_export_backup = False
     active_plugins = None
@@ -410,8 +410,14 @@ class WinConfig(AppConfig):
     history_dlg_size = (630, 350)
     history_dlg_minsize = (630, 350)
 
-    fill_dlg_size = (440, 395)
-    stroke_dlg_size = (430, 395)
+    fill_dlg_size = (485, 410)
+    fill_dlg_minsize = (485, 410)
+    stroke_dlg_size = (480, 430)
+    stroke_dlg_minsize = (480, 430)
+    change_color_dlg_size = (420, 345)
+    change_color_dlg_minsize = (420, 345)
+
+    sash_position = -280
 
 
 def get_app_config():
