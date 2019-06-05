@@ -101,7 +101,7 @@ APP_REVISION = {SK1: sk1.appconst.REVISION,
 APP_VER = '%s%s' % (APP_MAJOR_VER, APP_REVISION)
 
 RELEASE = 'RELEASE' in os.environ or 'release' in ARGV
-DEBUG_MODE = os.environ.get('DEBUG_MODE', False)
+DEBUG_MODE = 'DEBUG_MODE' in os.environ
 CONST_FILES = ['src/sk1/appconst.py', 'src/uc2/uc2const.py']
 
 README_TEMPLATE = """
