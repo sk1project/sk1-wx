@@ -1,3 +1,8 @@
+The repo represents three projects: sK1, UniConvertor and SWord. UniConvertor is
+a base package for sK1 and SWord. SWord is a special tool for file format visual
+analysis. We don't provide build scripts for SWord just because this tool for 
+internal usage only.
+
 # sK1 2.0
 
 ![build status](https://api.travis-ci.org/sk1project-build-bot/sk1-wx.svg?branch=master)
