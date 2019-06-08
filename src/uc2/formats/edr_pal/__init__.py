@@ -19,7 +19,6 @@
 # NOTE: The .edr format is an optional color file
 
 import os
-import struct
 
 REPLACEMENT_COLOR = "#000000"
 
@@ -47,8 +46,6 @@ DEFAULT_COLORS = {
     60: "#F0F970", 61: "#E3F35B", 62: "#FFC864",
     63: "#FFC896", 64: "#FFC8C8", 65: "#000000",
 }
-
-packer_s3_le = struct.Struct("<3s")
 
 
 class EDR_Palette(object):
@@ -80,11 +77,18 @@ class EDR_Palette(object):
             while index <= count:
                 data = stream.read(4)
                 if len(data) == 4:
-                    hex_str = packer_s3_le.unpack(data[:3])[0]
-                    self.colors[index] = '#%s' % hex_str.encode("hex")
+                    hex_str = data[:3]
+                    self.colors[index] = b'#%s' % hex_str.encode("hex")
                     index += 1
                 else:
                     break
+
+    def save_palette(self, filename):
+        with open(filename, 'wb') as stream:
+            for index in sorted(self.colors.keys()):
+                hex_color = self.colors[index]
+                record = b"%s\x00" % hex_color[1:].decode("hex")
+                stream.write(record)
 
     def next_color(self, index=None):
         self.index = self.index + 1 if index is None else index
