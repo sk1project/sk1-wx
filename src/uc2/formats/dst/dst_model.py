@@ -167,6 +167,6 @@ class DstStitch(BaseDstModel):
     def update_for_sword(self):
         self.cache_fields = []
         for i, c in enumerate(self.chunk, 0):
-            d = dst_datatype.unpack(c)[0]
+            d = dst_datatype.packer_b.unpack(c)[0]
             field = (i, 1, "d{} {:08b}".format(i+1, d))
             self.cache_fields.append(field)
