@@ -55,10 +55,11 @@ Usage: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]
 Example: uniconvertor drawing.cdr drawing.svg
 
  Available options:
- --help      Display this help and exit
- --verbose   Show internal logs
- --log=      Logging level: DEBUG, INFO, WARN, ERROR (by default, INFO)
- --format=   Type of output file format (values provided below)
+ -h, --help      Display this help and exit
+ -v, --verbose   Show internal logs
+ --log=          Logging level: DEBUG, INFO, WARN, ERROR (by default, INFO)
+ --format=       Type of output file format (values provided below)
+ --directory     Show installation directory (for import in Python)
 
 ---INPUT FILE FORMATS-------------------------------
 
@@ -146,11 +147,22 @@ class UCApplication(object):
             echo('For details see logs: %s\n' % self.log_filepath)
             sys.exit(1)
 
+    def _check_args(self, args):
+        return any([arg in sys.argv for arg in args])
+
     def run(self, cwd=None):
-        if '--help' in sys.argv or '-help' in sys.argv or len(sys.argv) == 1:
+        help_switches = ('--help', '-help', '--h', '-h')
+        dir_switches = ('--directory', '-directory', '--dir', '-dir')
+        if self._check_args(help_switches) or len(sys.argv) == 1:
             self.show_help()
+        elif self._check_args(dir_switches):
+            echo(os.path.dirname(os.path.dirname(__file__)))
+            sys.exit(0)
         elif len(sys.argv) == 2:
             self.show_short_help('Not enough arguments!')
+
+        verbose_switches = ('--verbose', '-verbose', '-v', '--v')
+        self.do_verbose = any([arg in sys.argv for arg in verbose_switches])
 
         files = []
         options_list = []
@@ -159,6 +171,8 @@ class UCApplication(object):
         for item in sys.argv[1:]:
             if item.startswith('--'):
                 options_list.append(item)
+            elif item in ('-v',):
+                continue
             elif item.startswith('-'):
                 self.show_short_help('Unknown option "%s"' % item)
             else:
@@ -189,7 +203,6 @@ class UCApplication(object):
                     value = {'yes': True, 'no': False}[value.lower()]
                 options[key] = value
 
-        self.do_verbose = options.get('verbose', False)
         events.connect(events.MESSAGES, self.verbose)
         log_level = options.get('log', self.config.log_level)
         self.log_filepath = os.path.join(self.appdata.app_config_dir, 'uc2.log')
