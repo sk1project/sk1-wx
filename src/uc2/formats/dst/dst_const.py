@@ -15,6 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+MAX_DISTANCE = 121  # 12.1mm
 
 DST_HEADER_SIZE = 512
 

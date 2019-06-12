@@ -16,8 +16,6 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-import struct
-
 from uc2.formats.generic import BinaryModelObject
 from uc2.formats.dst import dst_const
 from uc2.formats.dst import dst_datatype
@@ -28,9 +26,20 @@ class BaseDstModel(BinaryModelObject):
     x = 0
     y = 0
 
-    def __init__(self, config=None):
-        self.config = config
-        self.childs = []
+    def __init__(self, chunk=None):
+        self.chunk = chunk
+
+    def update(self):
+        if self.chunk:
+            self.parse()
+        else:
+            self.chunk = self.get_content()
+
+    def parse(self):
+        pass
+
+    def get_content(self):
+        pass
 
     def resolve(self):
         is_leaf = True
@@ -43,29 +52,6 @@ class BaseDstModel(BinaryModelObject):
 
 class DstDocument(BaseDstModel):
     cid = dst_const.DST_DOCUMENT
-
-    def parse(self, loader):
-        header = DstHeader(self.config)
-        header.parse(loader)
-        self.childs.append(header)
-        stream = loader.fileptr
-        while True:
-            data = stream.read(3)
-            if data:
-                stitch = DstStitch()
-                stitch.chunk = data
-                self.childs.append(stitch)
-            else:
-                break
-
-    def get_content(self):
-        header = b""
-        body = b""
-        if len(self.childs) > 1:
-            for i in self.childs[1:]:
-                body += i.chunk
-            header = self.childs[0].chunk  # b'\x20' * DST_HEADER_SIZE
-        return header + body
 
 
 class DstHeader(BaseDstModel):
@@ -113,14 +99,7 @@ class DstHeader(BaseDstModel):
     cid = dst_const.DST_HEADER
     metadata = None
 
-    def __init__(self, config):
-        self.config = config
-        self.metadata = {}
-
-    def parse(self, loader):
-        stream = loader.fileptr
-        stream.seek(0)
-        self.chunk = stream.read(dst_const.DST_HEADER_SIZE)
+    def parse(self):
         self.metadata = {}
         for i in self.chunk.split('\r'):
             if i[2] == ':':
@@ -134,6 +113,27 @@ class DstHeader(BaseDstModel):
             (len_meta, 1, 'end of metadata'),
             (len_meta + 1, len(self.chunk) - len_meta - 1, 'spaces 0x20'),
         ]
+
+    def get_content(self):
+        header = b""
+        header += b"LA:%-16s\r" % 'name'
+        header += b"ST:%7d\r" % 1
+        header += b"CO:%3d\r" % 2
+        header += b"+X:%5d\r" % 3
+        header += b"-X:%5d\r" % 4
+        header += b"+Y:%5d\r" % 5
+        header += b"-Y:%5d\r" % 6
+        header += b"AX:+%5d\r" % 0
+        header += b"AY:+%5d\r" % 0
+        header += b"MX:+%5d\r" % 0
+        header += b"AY:+%5d\r" % 0
+        header += b"PD:%6s\r" % b"******"
+        header += dst_const.DATA_TERMINATOR
+
+        spaces = dst_const.DST_HEADER_SIZE - len(header)
+        if spaces > 0:
+            header += b'\x20' * spaces
+        return header
 
 
 class DstStitch(BaseDstModel):
@@ -152,10 +152,8 @@ class DstStitch(BaseDstModel):
     0     1    Sequin Mode
     """
     cid = dst_const.DST_UNKNOWN
-    x = 0
-    y = 0
 
-    def update(self):
+    def parse(self):
         chunk_length = len(self.chunk)
         if chunk_length == 3:
             self.x, self.y, self.cid = dst_datatype.unpack_stitch(self.chunk)
@@ -170,3 +168,12 @@ class DstStitch(BaseDstModel):
             d = dst_datatype.packer_b.unpack(c)[0]
             field = (i, 1, "d{} {:08b}".format(i+1, d))
             self.cache_fields.append(field)
+
+    def get_content(self):
+        if self.cid == dst_const.DATA_TERMINATOR:
+            data = dst_const.DATA_TERMINATOR
+        elif self.cid == dst_const.DST_UNKNOWN:
+            data = self.chunk
+        else:
+            data = dst_datatype.pack_stitch(self.x, self.y, self.cid)
+        return data

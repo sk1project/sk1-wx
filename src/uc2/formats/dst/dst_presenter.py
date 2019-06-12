@@ -42,7 +42,8 @@ class DstPresenter(BinaryModelPresenter):
         self.new()
 
     def new(self):
-        self.model = dst_model.DstDocument(self.config)
+        self.model = dst_model.DstDocument()
+        self.model.childs = []
         # self.model.childs = [dst_model.DstHeader()]
 
     def translate_from_sk2(self, sk2_doc):

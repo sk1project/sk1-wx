@@ -21,22 +21,50 @@ from uc2.formats.dst import dst_const
 packer_b = struct.Struct("B")
 packer_b3 = struct.Struct("BBB")
 
+packer_uint32_be = struct.Struct(">I")
 
-def byte(num, i):
-    return num >> i & 1
+SEQUENCE_X = (81, 40, 2), (27, 13, 10), (9, 4, 18), (3, 1, 8), (1, 0, 16)
+SEQUENCE_Y = (81, 40, 5), (27, 13, 13), (9, 4, 21), (3, 1, 15), (1, 0, 23)
+
+
+def pack_24_be(val):
+    return packer_uint32_be.pack(val)[1:]
+
+
+def bit(num, index):
+    return num >> index & 1
+
+
+def set_bit(value, index):
+    mask = 1 << index
+    value |= mask  # Set the bit
+    return value
+
+
+def unpack_stitch(data):
+    d1, d2, d3 = packer_b3.unpack(data[:3])
+    x = decode_x(d1, d2, d3)
+    y = decode_y(d1, d2, d3)
+    cmd = decode_command(d3)
+    return x, y, cmd
+
+
+def pack_stitch(x, y, cmd):
+    val = code_x(x) | code_y(y) | cmd
+    return pack_24_be(val)
 
 
 def decode_x(d1, d2, d3):
-    x = 1 * byte(d1, 7) - 1 * byte(d1, 6) + 9 * byte(d1, 5) - 9 * byte(d1, 4)
-    x += 3 * byte(d2, 7) - 3 * byte(d2, 6) + 27 * byte(d2, 5) - 27 * byte(d2, 4)
-    x += 81 * byte(d3, 5) - 81 * byte(d3, 4)
+    x = 1 * bit(d1, 0) - 1 * bit(d1, 1) + 9 * bit(d1, 2) - 9 * bit(d1, 3)
+    x += 3 * bit(d2, 0) - 3 * bit(d2, 1) + 27 * bit(d2, 2) - 27 * bit(d2, 3)
+    x += 81 * bit(d3, 2) - 81 * bit(d3, 3)
     return x
 
 
 def decode_y(d1, d2, d3):
-    y = 1 * byte(d1, 0) - 1 * byte(d1, 1) + 9 * byte(d1, 2) - 9 * byte(d1, 3)
-    y += 3 * byte(d2, 0) - 3 * byte(d2, 1) + 27 * byte(d2, 2) - 27 * byte(d2, 3)
-    y += 81 * byte(d3, 2) - 81 * byte(d3, 3)
+    y = 1 * bit(d1, 7) - 1 * bit(d1, 6) + 9 * bit(d1, 5) - 9 * bit(d1, 4)
+    y += 3 * bit(d2, 7) - 3 * bit(d2, 6) + 27 * bit(d2, 5) - 27 * bit(d2, 4)
+    y += 81 * bit(d3, 5) - 81 * bit(d3, 4)
     return y
 
 
@@ -57,9 +85,36 @@ def decode_command(d3):
     return cmd if cmd in dst_const.KNOWN_CMD else dst_const.DST_UNKNOWN
 
 
-def unpack_stitch(data):
-    d1, d2, d3 = packer_b3.unpack(data[:3])
-    x = decode_x(d1, d2, d3)
-    y = decode_y(d1, d2, d3)
-    cmd = decode_command(d3)
-    return x, y, cmd
+def code_x(x, maximum=dst_const.MAX_DISTANCE, minimum=-dst_const.MAX_DISTANCE):
+    val = 0
+
+    if minimum > x or x > maximum:
+        msg = 'The value must be [%s:%s], given %s' % (minimum, maximum, x)
+        raise Exception(msg)
+
+    for cubic, quad, idx in SEQUENCE_X:
+        if x > quad:
+            val = set_bit(val, idx)
+            x -= cubic
+        elif x < -quad:
+            val = set_bit(val, idx + 1)
+            x += cubic
+    return val
+
+
+def code_y(y, maximum=dst_const.MAX_DISTANCE, minimum=-dst_const.MAX_DISTANCE):
+    val = 0
+
+    if minimum > y or y > maximum:
+        msg = 'The value must be [%s:%s], given %s' % (minimum, maximum, y)
+        raise Exception(msg)
+
+    for cubic, quad, idx in SEQUENCE_Y:
+        if y > quad:
+            val = set_bit(val, idx)
+            y -= cubic
+        elif y < -quad:
+            val = set_bit(val, idx - 1)
+            y += cubic
+    return val
+

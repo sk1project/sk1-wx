@@ -16,24 +16,19 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from base64 import b64encode
-from uc2.formats.dst import dst_const
+from uc2.formats.dst import dst_model, dst_const
 from uc2.formats.sk2 import sk2_model
 from uc2 import _, uc2const, sk2const, cms
 
-from uc2.libgeom.trafo import trafo_rotate_grad, apply_trafo_to_point
-from uc2.libgeom import multiply_trafo
+from uc2.libgeom.trafo import apply_trafo_to_point
 
-mm_to_pt = uc2const.mm_to_pt
-pt_to_mm = uc2const.pt_to_mm
 
-TRAFO_90_CLOCKWISE = trafo_rotate_grad(90.0)
-TRAFO_90_COUNTER_CLOCKWISE = trafo_rotate_grad(-90.0)
+IN_TO_DST = uc2const.pt_to_mm * 10.0
+DST_TO_IN = uc2const.mm_to_pt * 0.1
 
-SK2_to_DST_TRAFO = [-10.0 * pt_to_mm, 0.0, 0.0, 10.0 * pt_to_mm, 0.0, 0.0]
-SK2_to_DST_TRAFO = multiply_trafo(TRAFO_90_COUNTER_CLOCKWISE, SK2_to_DST_TRAFO)
 
-DST_to_SK2_TRAFO = [-0.1 * mm_to_pt, 0.0, 0.0, 0.1 * mm_to_pt, 0.0, 0.0]
-DST_to_SK2_TRAFO = multiply_trafo(TRAFO_90_CLOCKWISE, DST_to_SK2_TRAFO)
+DST_to_SK2_TRAFO = [DST_TO_IN, 0.0, 0.0, DST_TO_IN, 0.0, 0.0]
+SK2_to_DST_TRAFO = [IN_TO_DST, 0.0, 0.0, IN_TO_DST, 0.0, 0.0]
 
 
 class EmbroideryMachine(object):
@@ -157,14 +152,13 @@ class DST_to_SK2_Translator(object):
         # print 'stitch_count', out.stitch_count
 
     def handle_document_metainfo(self, rec):
-        # print 'header', rec.metadata
         metainfo = [b'', b'', b'', b'']
         metainfo[3] = b64encode(rec.chunk.split(dst_const.DATA_TERMINATOR)[0])
         self.sk2_mtds.set_doc_metainfo(metainfo)
 
     def handle_document_header(self, rec):
-        width = float(rec.metadata.get('+Y')) + float(rec.metadata.get('-Y'))
-        height = float(rec.metadata.get('+X')) + float(rec.metadata.get('-X'))
+        height = float(rec.metadata.get('+Y')) + float(rec.metadata.get('-Y'))
+        width = float(rec.metadata.get('+X')) + float(rec.metadata.get('-X'))
         width, height = apply_trafo_to_point([width, height], DST_to_SK2_TRAFO)
         orient = uc2const.PORTRAIT
         if width > height:
@@ -183,5 +177,21 @@ class SK2_to_DST_Translator(object):
         self.sk2_doc = sk2_doc
         self.dst_doc = dst_doc
 
-        self.dst_doc.model.do_update()
+        self.dst_doc.model.childs = []
+        header = dst_model.DstHeader()
+        self.dst_doc.model.childs.append(header)
+
+        s = dst_model.DstStitch()
+        s.cid = dst_const.CMD_STITCH
+        self.dst_doc.model.childs.append(s)
+
+        stop = dst_model.DstStitch()
+        stop.cid = dst_const.CMD_STOP
+        self.dst_doc.model.childs.append(stop)
+
+        data_term = dst_model.DstStitch()
+        data_term.cid = dst_const.DATA_TERMINATOR
+        self.dst_doc.model.childs.append(data_term)
+
+
 
