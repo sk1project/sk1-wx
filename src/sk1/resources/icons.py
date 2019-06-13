@@ -112,6 +112,7 @@ PD_SNAP_TO_PAGE_ON = 'snap-to-page-on'
 
 PD_PREFS_CMS = 'prefs-cms'
 PD_PREFS_CMS_BANNER = 'prefs-cms-banner'
+PD_PREFS_EDIT = 'prefs-edit'
 PD_PREFS_PALETTE = 'prefs-palette'
 PD_PREFS_RULER = 'prefs-ruler'
 PD_PREFS_GRID = 'prefs-grid'
