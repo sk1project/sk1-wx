@@ -18,7 +18,6 @@
 import gettext
 import os
 
-from . import fsutils
 
 class MsgTranslator(object):
     translate = None
@@ -30,7 +29,9 @@ class MsgTranslator(object):
         return msg
 
     def set_locale(self, textdomain, msgs_path, locale='system'):
-        if locale == 'en' or not fsutils.exists(msgs_path):
+        msgs_path = msgs_path.decode('utf8') \
+            if not (msgs_path, unicode) else msgs_path
+        if locale == 'en' or not os.path.exists(msgs_path):
             return
         if locale and not locale == 'system':
             os.environ['LANGUAGE'] = locale
