@@ -53,10 +53,10 @@ class AppData(UCData):
 
         # --- Check config directories
         paths = (self.app_palette_dir, self.plugin_dir, self.app_temp_dir)
-        [fsutils.makedirs(item) for item in paths if not fsutils.lexists(item)]
+        [fsutils.makedirs(item) for item in paths if not fsutils.exists(item)]
 
         plugin_dir_init = os.path.join(self.plugin_dir, '__init__.py')
-        if not fsutils.lexists(plugin_dir_init):
+        if not fsutils.exists(plugin_dir_init):
             fsutils.get_fileptr(plugin_dir_init, True).close()
 
 

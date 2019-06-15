@@ -20,6 +20,7 @@ import os
 
 from sk1 import _, config, get_sys_path
 from wal import VPanel
+from uc2.utils import fsutils
 
 LOG = logging.getLogger(__name__)
 
@@ -30,7 +31,7 @@ def check_package(path, name):
         return False
     py_file = os.path.join(full_path, '__init__.py')
     pyc_file = os.path.join(full_path, '__init__.pyc')
-    return os.path.lexists(py_file) or os.path.lexists(pyc_file)
+    return fsutils.exists(py_file) or fsutils.exists(pyc_file)
 
 
 def scan_plugins(app):

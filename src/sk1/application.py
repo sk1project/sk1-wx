@@ -218,7 +218,7 @@ class SK1Application(wal.Application, UCApplication):
     def new_from_template(self):
         msg = _('Select Template')
         doc_file = dialogs.get_open_file_name(self.mw, config.template_dir, msg)
-        if fsutils.lexists(doc_file) and fsutils.isfile(doc_file):
+        if fsutils.isfile(doc_file):
             try:
                 doc = SK1Presenter(self, doc_file, template=True)
             except Exception as e:
@@ -236,7 +236,7 @@ class SK1Application(wal.Application, UCApplication):
     def open(self, doc_file='', silent=False):
         doc_file = doc_file or \
                    dialogs.get_open_file_name(self.mw, config.open_dir)
-        if doc_file and fsutils.lexists(doc_file) and fsutils.isfile(doc_file):
+        if doc_file and fsutils.isfile(doc_file):
             try:
                 doc = SK1Presenter(self, doc_file, silent)
 
@@ -271,7 +271,7 @@ class SK1Application(wal.Application, UCApplication):
         ext = os.path.splitext(self.current_doc.doc_file)[1]
         if not ext == "." + uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
             return self.save_as()
-        if not fsutils.lexists(os.path.dirname(self.current_doc.doc_file)):
+        if not fsutils.exists(os.path.dirname(self.current_doc.doc_file)):
             return self.save_as()
 
         try:
@@ -296,7 +296,7 @@ class SK1Application(wal.Application, UCApplication):
                 uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
             doc_file = os.path.splitext(doc_file)[0] + "." + \
                        uc2const.FORMAT_EXTENSION[uc2const.SK2][0]
-        if not fsutils.lexists(os.path.dirname(doc_file)):
+        if not fsutils.exists(os.path.dirname(doc_file)):
             doc_file = os.path.join(config.save_dir,
                                     os.path.basename(doc_file))
         doc_file = dialogs.get_save_file_name(self.mw, doc_file, path_only=True)
@@ -330,7 +330,7 @@ class SK1Application(wal.Application, UCApplication):
                 uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
             doc_file = os.path.splitext(doc_file)[0] + "." + \
                        uc2const.FORMAT_EXTENSION[uc2const.SK2][0]
-        if not fsutils.lexists(os.path.dirname(doc_file)):
+        if not fsutils.exists(os.path.dirname(doc_file)):
             doc_file = os.path.join(config.save_dir,
                                     os.path.basename(doc_file))
         msg = _('Save selected objects only as...')
@@ -412,7 +412,7 @@ class SK1Application(wal.Application, UCApplication):
         if not doc_file:
             doc_file = dialogs.get_open_file_name(self.mw,
                                                   config.import_dir, msg)
-        if doc_file and fsutils.lexists(doc_file) and fsutils.isfile(doc_file):
+        if doc_file and fsutils.isfile(doc_file):
             try:
                 ret = self.current_doc.import_file(doc_file)
                 if not ret:
@@ -534,8 +534,7 @@ class SK1Application(wal.Application, UCApplication):
         doc_file = dialogs.get_open_file_name(parent, config.import_dir,
                                               _('Select palette to import'),
                                               file_types=file_types)
-        if fsutils.lexists(doc_file) and fsutils.isfile(doc_file):
-
+        if fsutils.isfile(doc_file):
             pd = dialogs.ProgressDialog(_('Opening file...'), parent)
             try:
                 loader = get_loader(doc_file)
@@ -589,7 +588,7 @@ class SK1Application(wal.Application, UCApplication):
         img_file = dialogs.get_open_file_name(parent, config.import_dir,
                                               _('Select pattern to load'),
                                               file_types=file_types)
-        if fsutils.lexists(img_file) and fsutils.isfile(img_file):
+        if fsutils.isfile(img_file):
             first = _('Cannot load pattern for:')
             msg = "%s\n'%s'." % (first, self.current_doc.doc_name) + '\n'
             msg += _('The file may be corrupted or not supported format')
@@ -611,8 +610,8 @@ class SK1Application(wal.Application, UCApplication):
             return
         if export and not config.make_export_backup:
             return
-        if fsutils.lexists(doc_file):
-            if fsutils.lexists(doc_file + '~'):
+        if fsutils.exists(doc_file):
+            if fsutils.exists(doc_file + '~'):
                 os.remove(get_sys_path(doc_file + '~'))
             os.rename(get_sys_path(doc_file), get_sys_path(doc_file + '~'))
 

@@ -84,3 +84,11 @@ def makedirs(path):
 
 def lexists(path):
     return os.path.lexists(get_sys_path(path))
+
+
+def exists(path):
+    return os.path.lexists(get_sys_path(path))
+
+
+
+

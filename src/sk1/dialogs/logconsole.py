@@ -23,7 +23,7 @@ from sk1 import _, config, appconst
 from sk1.dialogs import filedlgs
 from sk1.resources import icons
 from uc2 import uc2const
-from uc2.utils.fsutils import get_fileptr
+from uc2.utils import fsutils
 
 PINK = (144, 84, 141)
 YELLOW = (217, 175, 106)
@@ -97,9 +97,9 @@ class ConsoleDialog(wal.SimpleDialog):
         self.set_title('%s - [%s]' % (self.title, log_path))
 
     def load_logs(self, log_path):
-        if not os.path.lexists(log_path):
+        if not fsutils.exists(log_path):
             return
-        fileptr = get_fileptr(log_path)
+        fileptr = fsutils.get_fileptr(log_path)
         self.logs = []
         while True:
             line = fileptr.readline()
@@ -124,7 +124,7 @@ class ConsoleDialog(wal.SimpleDialog):
             self.entry.append(line)
 
     def write_log(self, log_path):
-        fileptr = get_fileptr(log_path, True)
+        fileptr = fsutils.get_fileptr(log_path, True)
         fileptr.write(self.entry.get_value())
         fileptr.close()
         self.change_title(log_path)

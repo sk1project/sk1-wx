@@ -24,11 +24,13 @@ from copy import deepcopy
 from PIL import Image
 
 from uc2 import uc2const, libgeom, libpango, cms, sk2const, utils
+from uc2.utils import fsutils
 from uc2.formats.sk2 import sk2_model
 from uc2.formats.svg import svg_const, svg_utils
 from uc2.formats.svg.svg_utils import get_svg_trafo, check_svg_attr, \
     parse_svg_points, parse_svg_coords, parse_svg_color, parse_svg_stops, \
     get_svg_level_trafo
+
 
 LOG = logging.getLogger(__name__)
 
@@ -497,7 +499,7 @@ class SVG_to_SK2_Translator(object):
             file_dir = os.path.dirname(self.svg_doc.doc_file)
             image_path = os.path.join(file_dir, link)
             image_path = os.path.abspath(image_path)
-            if os.path.lexists(image_path):
+            if fsutils.exists(image_path):
                 raw_image = Image.open(image_path)
                 raw_image.load()
                 return raw_image

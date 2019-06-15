@@ -39,6 +39,11 @@ def get_os_family():
         return GENERIC
 
 
+IS_WINDOWS = get_os_family() == WINDOWS
+IS_LINUX = get_os_family() == LINUX
+IS_MACOSX = get_os_family() == MACOSX
+
+
 P32BIT = '32bit'
 P64BIT = '64bit'
 P128BIT = '128bit'

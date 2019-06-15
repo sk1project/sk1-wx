@@ -185,7 +185,7 @@ class UCApplication(object):
             self.show_short_help('File names are not provided!')
         elif len(files) == 1:
             self.show_short_help('Destination file name is not provided!')
-        elif not os.path.lexists(files[0]):
+        elif not fsutils.exists(files[0]):
             self.show_short_help('Source file "%s" is not found!' % files[0])
 
         for item in options_list:

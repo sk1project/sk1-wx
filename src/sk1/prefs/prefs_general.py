@@ -42,7 +42,7 @@ def get_langs():
         LANGS.append(_('system'))
     path = os.path.join(config.resource_dir, 'locales')
     langs = ['en', ]
-    if fsutils.lexists(path):
+    if fsutils.exists(path):
         langs += [item for item in os.listdir(fsutils.get_sys_path(path))
                   if fsutils.isdir(os.path.join(path, item))]
     langs.sort()

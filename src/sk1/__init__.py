@@ -20,6 +20,7 @@ import sys
 import time
 
 import uc2
+from uc2.utils import fsutils
 
 _ = uc2._
 config = None
@@ -36,7 +37,7 @@ def get_utf8_path(path):
 def read_locale(cfg_file):
     cfg_file = get_sys_path(cfg_file)
     lang = 'system'
-    if os.path.lexists(cfg_file) and os.path.isfile(cfg_file):
+    if fsutils.isfile(cfg_file):
         try:
             with open(cfg_file) as fp:
                 while True:

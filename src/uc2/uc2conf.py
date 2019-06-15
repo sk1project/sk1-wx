@@ -48,7 +48,7 @@ class UCData:
 
     def check_config_dirs(self):
 
-        if not fsutils.lexists(self.app_config_dir):
+        if not fsutils.exists(self.app_config_dir):
             fsutils.makedirs(self.app_config_dir)
 
         self.app_config = os.path.join(self.app_config_dir, 'preferences.cfg')
@@ -56,7 +56,7 @@ class UCData:
         # Check color profiles directory
         self.app_color_profile_dir = os.path.join(self.app_config_dir,
                                                   'profiles')
-        if not fsutils.lexists(self.app_color_profile_dir):
+        if not fsutils.exists(self.app_color_profile_dir):
             fsutils.makedirs(self.app_color_profile_dir)
 
         from uc2.cms import libcms
@@ -64,7 +64,7 @@ class UCData:
         for item in uc2const.COLORSPACES + [uc2const.COLOR_DISPLAY, ]:
             filename = 'built-in_%s.icm' % item
             path = os.path.join(self.app_color_profile_dir, filename)
-            if not fsutils.lexists(path):
+            if not fsutils.exists(path):
                 path = fsutils.get_sys_path(path)
                 libcms.cms_save_default_profile(path, item)
 

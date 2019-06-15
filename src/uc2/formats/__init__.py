@@ -90,7 +90,7 @@ def get_loader_by_id(pid):
 
 
 def get_loader(path, experimental=False, return_id=False):
-    if not fsutils.lexists(path):
+    if not fsutils.exists(path):
         return None
     if not fsutils.isfile(path):
         return None

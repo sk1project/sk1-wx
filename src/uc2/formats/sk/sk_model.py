@@ -24,6 +24,7 @@ from copy import deepcopy
 from uc2 import _, uc2const
 from uc2.formats.generic import TextModelObject
 from uc2.formats.sk import sk_const
+from uc2.utils import fsutils
 
 # Document object enumeration
 DOCUMENT = 1
@@ -865,7 +866,7 @@ class SKBitmapData(SKModelObject):
         self.raw_image.load()
 
     def load_data(self, image_path):
-        if os.path.lexists(image_path):
+        if fsutils.exists(image_path):
             self.raw_image = Image.open(image_path)
             self.raw_image.load()
 

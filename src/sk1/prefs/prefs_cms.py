@@ -394,7 +394,7 @@ class ProfileManager(wal.CloseDialog):
         filename = os.path.basename(src)
         dst_dir = self.app.appdata.app_color_profile_dir
         dst = os.path.join(dst_dir, filename)
-        if fsutils.lexists(dst):
+        if fsutils.exists(dst):
             msg = _('Selected file has been added to profile pool')
             msg = "%s '%s'" % (msg, src)
             sec = _('If you still wish to import the file, try renaming it')

@@ -23,6 +23,8 @@ from copy import deepcopy
 
 from uc2 import uc2const, sk2const, cms, libgeom, libimg
 from uc2.formats.sk2 import sk2_model
+from uc2.utils import fsutils
+
 from . import fig_const, fig_model, figlib, trafolib, crenderer
 from .fig_colors import color_mix, FIG_COLORS
 from .fig_patterns import PATTERN
@@ -256,7 +258,7 @@ class FIG_to_SK2_Translator(object):
             file_dir = os.path.dirname(self.fig_doc.doc_file)
             image_path = os.path.join(file_dir, filename)
             image_path = os.path.abspath(image_path)
-            if os.path.lexists(image_path):
+            if fsutils.exists(image_path):
                 pixmap = sk2_model.Pixmap(cfg)
                 pixmap.handler.load_from_file(self.sk2_doc.cms, image_path)
                 img_w, img_h = pixmap.size

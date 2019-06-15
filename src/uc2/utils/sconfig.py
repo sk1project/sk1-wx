@@ -19,7 +19,7 @@ import logging
 import os
 
 from uc2.utils.fs import path_system, path_unicode
-from uc2.utils.fsutils import get_fileptr
+from uc2.utils import fsutils
 
 LOG = logging.getLogger(__name__)
 
@@ -39,9 +39,9 @@ class SerializedConfig(object):
 
     def load(self, filename=None):
         self.filename = filename
-        if os.path.lexists(filename):
+        if fsutils.exists(filename):
             try:
-                fileobj = get_fileptr(filename)
+                fileobj = fsutils.get_fileptr(filename)
             except Exception:
                 return
 
@@ -66,7 +66,7 @@ class SerializedConfig(object):
             return
 
         try:
-            fileobj = get_fileptr(filename, True)
+            fileobj = fsutils.get_fileptr(filename, True)
         except Exception:
             return
 

@@ -22,6 +22,7 @@ from collections import defaultdict
 import wal
 from sk1 import _, config
 from uc2 import uc2const, sk2const, libgeom
+from uc2.utils import fsutils
 
 
 def pt_to_units(val, units):
@@ -80,7 +81,7 @@ class DocInfoDialog(wal.CloseDialog):
             _('File'),
             [_('Name and location:'), doc_file or doc_name]
         ]
-        if doc_file and os.path.lexists(doc_file):
+        if doc_file and fsutils.exists(doc_file):
             doc_stat = os.stat(doc_file)
             st_size = '%s bytes' % doc_stat.st_size
             st_mtime = datetime.fromtimestamp(doc_stat.st_mtime).strftime('%c')

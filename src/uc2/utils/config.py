@@ -63,7 +63,7 @@ class XmlConfigParser(object):
 
     def load(self, filename=None):
         self.filename = filename
-        if fsutils.lexists(filename):
+        if fsutils.exists(filename):
             content_handler = XMLPrefReader(pref=self)
             error_handler = ErrorHandler()
             entity_resolver = EntityResolver()

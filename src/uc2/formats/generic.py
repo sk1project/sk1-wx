@@ -135,7 +135,7 @@ class ModelPresenter(object):
         pass
 
     def load(self, filename=None, fileptr=None):
-        if filename and fsutils.lexists(filename):
+        if filename and fsutils.exists(filename):
             self.doc_file = filename
         elif not fileptr:
             msg = _('Error while loading:') + ' ' + _('No file')
@@ -208,7 +208,7 @@ class ModelPresenter(object):
         self.send_ok(_('<%s> document model is destroyed for %s') %
                      (model_name, filename))
 
-        if self.doc_dir and fsutils.lexists(self.doc_dir):
+        if self.doc_dir and fsutils.exists(self.doc_dir):
             try:
                 fs.xremove_dir(fsutils.get_sys_path(self.doc_dir))
                 self.send_ok(_('Cache is cleared for') + ' %s' % filename)
