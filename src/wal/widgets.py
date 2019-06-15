@@ -1053,12 +1053,8 @@ class MegaSpin(MegaSpinDouble):
         pass
 
 
-IntSpin = NativeSpin
-FloatSpin = NativeSpinDouble
-
-if const.IS_WX2 or const.IS_GTK3 or const.IS_MAC:
-    IntSpin = MegaSpin
-    FloatSpin = MegaSpinDouble
+IntSpin = MegaSpin
+FloatSpin = MegaSpinDouble
 
 
 class Slider(wx.Slider, RangeDataWidgetMixin):
