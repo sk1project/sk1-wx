@@ -61,7 +61,6 @@ sys.path.insert(1, os.path.join(CURRENT_PATH, 'src'))
 import sk1.appconst
 import uc2.uc2const
 
-print os.environ['RHOST'], os.environ['SSHPASS']
 
 # options processing
 ARGV = {item.split('=')[0][2:]: item.split('=')[1]
@@ -193,6 +192,8 @@ def set_build_stamp():
 
 
 def pull_images():
+    echo_msg(os.environ['RHOST'])
+    echo_msg(os.environ['SSHPASS'])
     for image in IMAGES:
         msg = 'Pulling %s%s image' % (IMAGE_PREFIX, image)
         msg += ' ' * (50 - len(msg)) + '...'
