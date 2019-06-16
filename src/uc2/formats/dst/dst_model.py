@@ -23,8 +23,8 @@ from uc2.formats.dst import dst_datatype
 
 class BaseDstModel(BinaryModelObject):
     cid = dst_const.DST_UNKNOWN
-    x = 0
-    y = 0
+    dx = 0
+    dy = 0
 
     def __init__(self, chunk=None):
         self.chunk = chunk
@@ -156,11 +156,11 @@ class DstStitch(BaseDstModel):
     def parse(self):
         chunk_length = len(self.chunk)
         if chunk_length == 3:
-            self.x, self.y, self.cid = dst_datatype.unpack_stitch(self.chunk)
+            self.dx, self.dy, self.cid = dst_datatype.unpack_stitch(self.chunk)
         elif chunk_length == 1 and self.chunk == dst_const.DATA_TERMINATOR:
-            self.x, self.y, self.cid = 0, 0, dst_const.DATA_TERMINATOR
+            self.dx, self.dy, self.cid = 0, 0, dst_const.DATA_TERMINATOR
         else:
-            self.x, self.y, self.cid = 0, 0, dst_const.DST_UNKNOWN
+            self.dx, self.dy, self.cid = 0, 0, dst_const.DST_UNKNOWN
 
     def update_for_sword(self):
         self.cache_fields = []
@@ -175,5 +175,5 @@ class DstStitch(BaseDstModel):
         elif self.cid == dst_const.DST_UNKNOWN:
             data = self.chunk
         else:
-            data = dst_datatype.pack_stitch(self.x, self.y, self.cid)
+            data = dst_datatype.pack_stitch(self.dx, self.dy, self.cid)
         return data

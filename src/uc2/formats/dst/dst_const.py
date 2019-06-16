@@ -15,6 +15,17 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from uc2 import uc2const
+
+IN_TO_DST = uc2const.pt_to_mm * 10.0
+DST_TO_IN = uc2const.mm_to_pt * 0.1
+
+
+DST_to_SK2_TRAFO = [DST_TO_IN, 0.0, 0.0, DST_TO_IN, 0.0, 0.0]
+SK2_to_DST_TRAFO = [IN_TO_DST, 0.0, 0.0, IN_TO_DST, 0.0, 0.0]
+
+
+
 MAX_DISTANCE = 121  # 12.1mm
 
 DST_HEADER_SIZE = 512

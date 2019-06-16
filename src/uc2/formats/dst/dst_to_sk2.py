@@ -18,17 +18,9 @@
 from base64 import b64encode
 from uc2.formats.dst import dst_model, dst_const
 from uc2.formats.sk2 import sk2_model
-from uc2 import _, uc2const, sk2const, cms
+from uc2 import _, uc2const, sk2const, cms, libgeom
 
 from uc2.libgeom.trafo import apply_trafo_to_point
-
-
-IN_TO_DST = uc2const.pt_to_mm * 10.0
-DST_TO_IN = uc2const.mm_to_pt * 0.1
-
-
-DST_to_SK2_TRAFO = [DST_TO_IN, 0.0, 0.0, DST_TO_IN, 0.0, 0.0]
-SK2_to_DST_TRAFO = [IN_TO_DST, 0.0, 0.0, IN_TO_DST, 0.0, 0.0]
 
 
 class EmbroideryMachine(object):
@@ -85,7 +77,7 @@ class EmbroideryMachine(object):
                 parent=None,
                 style=self.get_style(),
                 paths=[[path[0], path[1:], sk2const.CURVE_OPENED]],
-                trafo=[] + DST_to_SK2_TRAFO
+                trafo=[] + dst_const.DST_to_SK2_TRAFO
             )
             methods.append_object(curve, self.layer)
             self.stitch_list = []
@@ -126,7 +118,7 @@ class DST_to_SK2_Translator(object):
         sequin_mode = False
         out = self.processor
         for cmd in stack:
-            dx, dy = cmd.x, cmd.y
+            dx, dy = cmd.dx, cmd.dy
             if cmd.cid == dst_const.CMD_STITCH:
                 out.stitch(dx, dy)
             elif cmd.cid == dst_const.CMD_JUMP:
@@ -159,7 +151,10 @@ class DST_to_SK2_Translator(object):
     def handle_document_header(self, rec):
         height = float(rec.metadata.get('+Y')) + float(rec.metadata.get('-Y'))
         width = float(rec.metadata.get('+X')) + float(rec.metadata.get('-X'))
-        width, height = apply_trafo_to_point([width, height], DST_to_SK2_TRAFO)
+        width, height = apply_trafo_to_point(
+            (width, height),
+            dst_const.DST_to_SK2_TRAFO
+        )
         orient = uc2const.PORTRAIT
         if width > height:
             orient = uc2const.LANDSCAPE
@@ -167,31 +162,4 @@ class DST_to_SK2_Translator(object):
 
         page = self.sk2_mtds.get_page()
         self.sk2_mtds.set_page_format(page, page_format)
-
-
-class SK2_to_DST_Translator(object):
-    sk2_doc = None
-    dst_doc = None
-
-    def translate(self, sk2_doc, dst_doc):
-        self.sk2_doc = sk2_doc
-        self.dst_doc = dst_doc
-
-        self.dst_doc.model.childs = []
-        header = dst_model.DstHeader()
-        self.dst_doc.model.childs.append(header)
-
-        s = dst_model.DstStitch()
-        s.cid = dst_const.CMD_STITCH
-        self.dst_doc.model.childs.append(s)
-
-        stop = dst_model.DstStitch()
-        stop.cid = dst_const.CMD_STOP
-        self.dst_doc.model.childs.append(stop)
-
-        data_term = dst_model.DstStitch()
-        data_term.cid = dst_const.DATA_TERMINATOR
-        self.dst_doc.model.childs.append(data_term)
-
-
 

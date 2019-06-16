@@ -23,8 +23,8 @@ from uc2.formats.generic import BinaryModelPresenter
 from uc2.formats.dst import dst_model
 from uc2.formats.dst.dst_config import DST_Config
 from uc2.formats.dst.dst_filters import DST_Loader, DST_Saver
-from uc2.formats.dst.dst_translators import DST_to_SK2_Translator
-from uc2.formats.dst.dst_translators import SK2_to_DST_Translator
+from uc2.formats.dst.dst_to_sk2 import DST_to_SK2_Translator
+from uc2.formats.dst.dst_from_sk2 import SK2_to_DST_Translator
 
 
 class DstPresenter(BinaryModelPresenter):
