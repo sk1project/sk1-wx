@@ -84,6 +84,8 @@ PLT = 'plt'
 HPGL = 111
 DXF = 120
 DWG = 121
+DST = 'dst'
+
 
 JPG = 300
 JP2 = 301
@@ -182,6 +184,9 @@ FORMAT_DESCRIPTION = {
     XML: _("XML - eXtensible Markup Language files"),
     LOG: _("LOG - Log files"),
     MD: _("MD - Markdown markup files"),
+
+    # Embroidery Formats
+    DST: _('DST - (Tajima) Design format'),
 }
 
 FORMAT_NAMES = {
@@ -221,6 +226,9 @@ FORMAT_NAMES = {
     DWG: "DWG",
     RIFF: "RIFF",
 
+    # Embroidery Formats
+    DST: "DST",
+
     # Bitmap file formats
     JPG: "JPEG",
     JP2: "JP2",
@@ -254,16 +262,18 @@ FORMAT_NAMES = {
     MD: "MD",
 }
 
-MODEL_LOADERS = [SK2, SVG, CDR, CMX, CCX, XAR, WMF, PLT, SK1, SK, FIG, CGM]  # CDT,
+MODEL_LOADERS = [
+    SK2, SVG, CDR, CMX, CCX, XAR, WMF, PLT, SK1, SK, FIG, CGM, DST,
+]  # CDT,
 BITMAP_LOADERS = [PNG, JPG, PSD, XCF, JP2, TIF, GIF, BMP, PCX, PPM, XBM, XPM,
                   WEBP]
 PALETTE_LOADERS = [SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL, ASE, ACO, JCW]
 EXPERIMENTAL_LOADERS = [MD, RIFF, XML, ]
 
-MODEL_SAVERS = [SK2, SVG, PLT, PDF, CDR, CMX, CCX, SK1, SK, CGM, FIG]
+MODEL_SAVERS = [SK2, SVG, PLT, PDF, CDR, CMX, CCX, SK1, SK, CGM, FIG, DST,]
 BITMAP_SAVERS = [PNG, ]
 PALETTE_SAVERS = [SKP, GPL, SCRIBUS_PAL, SOC, CPL, COREL_PAL, ASE, ACO, JCW]
-EXPERIMENTAL_SAVERS = [MD, RIFF, XML, WMF, ]
+EXPERIMENTAL_SAVERS = [MD, RIFF, XML, WMF, DST, ]
 
 PATTERN_FORMATS = [EPS, PNG, JPG, JP2, TIF, GIF, BMP, PCX, PPM, XBM, XPM]
 
@@ -298,6 +308,7 @@ FORMAT_EXTENSION = {
     XML: ('xml', 'svg', 'sla',),
     LOG: ('log',),
     MD: ('md',),
+    DST: ('dst',)
 }
 
 IMAGE_FORMATS = [JPG, TIF, BMP, PCX, GIF, PNG, PPM, XBM, XPM, WEBP, ]
