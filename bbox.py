@@ -51,6 +51,7 @@ from utils.fsutils import get_files_tree
 CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(1, os.path.join(CURRENT_PATH, 'src'))
 
+os.system('ls ./')
 os.system('ls src/')
 
 import sk1.appconst
