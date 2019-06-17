@@ -1,5 +1,5 @@
-include LICENSE README.txt MANIFEST.in_sk1 setup.cfg_sk1
-include dependencies.py native_mods.py src/script/sk1.tmpl
+include LICENSE README.txt MANIFEST.in setup.cfg.in
+include src/script/sk1.tmpl
 
 recursive-include utils *.py
 recursive-include src/uc2/libcairo *.c

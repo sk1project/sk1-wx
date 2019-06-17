@@ -36,13 +36,6 @@ To run build, just launch BuildBox:
 
 >python bbox.py build
 --------------------------------------------------------------------------
-BuildBox can be used alongside Vagrant VM. To run in VM:
-
->vagrant up ubuntu
->vagrant ssh ubuntu
->sudo -s
->/vagrant/bbox.py build
---------------------------------------------------------------------------
 """
 
 import os
@@ -59,7 +52,6 @@ CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(1, os.path.join(CURRENT_PATH, 'src'))
 
 import sk1.appconst
-import uc2.uc2const
 
 
 # options processing
@@ -77,8 +69,7 @@ STDOUT_BOLD = '\033[1m'
 STDOUT_UNDERLINE = '\033[4m'
 
 SK1 = 'sk1'
-UC2 = 'uc2'
-PROJECT = ARGV.get('project', SK1)  # change point
+PROJECT = SK1
 
 # Build constants
 IMAGE_PREFIX = 'sk1project/'
@@ -92,32 +83,17 @@ PKGBUILD_DIR = os.path.join(PROJECT_DIR, 'pkgbuild')
 ARCH_DIR = os.path.join(PROJECT_DIR, 'archlinux')
 LOCALES_DIR = os.path.join(PROJECT_DIR, 'src/sk1/share/locales')
 
-SCRIPT = 'setup-%s.py' % PROJECT
-APP_NAME = {SK1: SK1, UC2: 'uniconvertor'}[PROJECT]
-APP_FULL_NAME = {SK1: 'sK1', UC2: 'UniConvertor'}[PROJECT]
-APP_MAJOR_VER = {SK1: sk1.appconst.VERSION,
-                 UC2: uc2.uc2const.VERSION}[PROJECT]
-APP_REVISION = {SK1: sk1.appconst.REVISION,
-                UC2: uc2.uc2const.REVISION}[PROJECT]
+SCRIPT = 'setup.py'
+APP_NAME = SK1
+APP_FULL_NAME = 'sK1'
+APP_MAJOR_VER = sk1.appconst.VERSION
+APP_REVISION = sk1.appconst.REVISION
 APP_VER = '%s%s' % (APP_MAJOR_VER, APP_REVISION)
 
 RELEASE = 'RELEASE' in os.environ or 'release' in ARGV
 DEBUG_MODE = 'DEBUG_MODE' in os.environ
-CONST_FILES = ['src/sk1/appconst.py', 'src/uc2/uc2const.py']
+CONST_FILES = ['src/sk1/appconst.py',]
 
-README_TEMPLATE = """
-Universal vector graphics format translator
-copyright (C) 2007-%s sK1 Project Team (https://sk1project.net)
-
-Usage: uniconvertor [OPTIONS] [INPUT FILE] [OUTPUT FILE]
-Example: uniconvertor drawing.cdr drawing.svg
-
- Available options:
- --help      Display this help and exit
- --verbose   Show internal logs
- --log=      Logging level: DEBUG, INFO, WARN, ERROR (by default, INFO)
- --format=   Type of output file format
-"""
 
 IMAGES = [
     'ubuntu_14.04_32bit',
@@ -371,7 +347,7 @@ def build_package():
     clear_folders()
 
 
-PKGS = ['sk1', 'uc2', 'wal'] if PROJECT == SK1 else ['uc2']
+PKGS = ['sk1', 'uc2', 'wal']
 EXTENSIONS = [
     'uc2/cms/_cms.pyd',
     'uc2/libcairo/_libcairo.pyd',
@@ -385,8 +361,7 @@ MSI_APP_VERSION = APP_MAJOR_VER if RELEASE \
 MSI_DATA = {
     # Required
     'Name': '%s %s' % (APP_FULL_NAME, APP_VER),
-    'UpgradeCode': {SK1: '3AC4B4FF-10C4-4B8F-81AD-BAC3238BF693',
-                    UC2: '3AC4B4FF-10C4-4B8F-81AD-BAC3238BF695'}[PROJECT],
+    'UpgradeCode': '3AC4B4FF-10C4-4B8F-81AD-BAC3238BF693',
     'Version': MSI_APP_VERSION,
     'Manufacturer': 'sK1 Project',
     # Optional
@@ -403,10 +378,7 @@ MSI_DATA = {
     '_OutputDir': '',
     '_ProgramMenuFolder': 'sK1 Project',
     '_AddToPath': [''],
-}
-
-if PROJECT == SK1:
-    MSI_DATA['_Shortcuts'] = [
+    '_Shortcuts': [
         {'Name': 'sK1 %s illustration program' % APP_VER,
          'Description': 'Open source sK1 vector graphics editor',
          'Target': 'sk1.exe',
@@ -422,14 +394,7 @@ if PROJECT == SK1:
                       '.jcw']
          },
     ]
-elif PROJECT == UC2:
-    MSI_DATA['_Shortcuts'] = [
-        {'Name': 'UniConvertor %s readme' % APP_VER,
-         'Description': 'ReadMe file',
-         'Target': 'readme.txt',
-         'Open': [],
-         },
-    ]
+}
 
 
 def build_msw_packages():
@@ -466,12 +431,11 @@ def build_msw_packages():
         for folder in obsolete_folders:
             shutil.rmtree(os.path.join(portable_folder, folder), True)
 
-        if PROJECT == SK1:
-            wx_zip = os.path.join('/%s-devres' % arch, 'wx.zip')
-            ZipFile(wx_zip, 'r').extractall(portable_libs)
-            portable_exe_zip = os.path.join('/%s-devres' % arch,
-                                            '%s_portable.zip' % PROJECT)
-            ZipFile(portable_exe_zip, 'r').extractall(portable_folder)
+        wx_zip = os.path.join('/%s-devres' % arch, 'wx.zip')
+        ZipFile(wx_zip, 'r').extractall(portable_libs)
+        portable_exe_zip = os.path.join('/%s-devres' % arch,
+                                        '%s_portable.zip' % PROJECT)
+        ZipFile(portable_exe_zip, 'r').extractall(portable_folder)
 
         for item in PKGS:
             src = os.path.join(SRC_DIR, item)
@@ -487,36 +451,24 @@ def build_msw_packages():
             dst = os.path.join(portable_libs, item)
             shutil.copy(src, dst)
 
-        # Portable package compressing (sk1 only)
-        if PROJECT == SK1:
-            portable_zip = os.path.join(distro_folder, portable_name + '.zip')
-            ziph = ZipFile(portable_zip, 'w', ZIP_DEFLATED)
+        # Portable package compressing
+        portable_zip = os.path.join(distro_folder, portable_name + '.zip')
+        ziph = ZipFile(portable_zip, 'w', ZIP_DEFLATED)
 
-            echo_msg('Compressing into %s' % portable_zip)
-            for root, dirs, files in os.walk(portable_folder):
-                for item in files:
-                    path = os.path.join(root, item)
-                    local_path = path.split(portable_name)[1][1:]
-                    ziph.write(path, os.path.join(portable_name, local_path))
-            ziph.close()
+        echo_msg('Compressing into %s' % portable_zip)
+        for root, dirs, files in os.walk(portable_folder):
+            for item in files:
+                path = os.path.join(root, item)
+                local_path = path.split(portable_name)[1][1:]
+                ziph.write(path, os.path.join(portable_name, local_path))
+        ziph.close()
 
         # MSI build
         echo_msg('Creating MSI package')
 
         clear_files(portable_folder, ['exe'])
-        if PROJECT == UC2:
-            nonportable = os.path.join('/%s-devres' % arch,
-                                       '%s.zip' % PROJECT)
-            readme = README_TEMPLATE % bbox.TIMESTAMP[:4]
-            readme_path = os.path.join(portable_folder, 'readme.txt')
-            with open(readme_path, 'wb') as fp:
-                mark = '' if RELEASE else ' build %s' % bbox.TIMESTAMP
-                fp.write('%s %s%s' % (APP_FULL_NAME, APP_VER, mark))
-                fp.write('\r\n\r\n')
-                fp.write(readme.replace('\n', '\r\n'))
-        else:
-            nonportable = os.path.join('/%s-devres' % arch,
-                                       '%s_msi.zip' % PROJECT)
+
+        nonportable = os.path.join('/%s-devres' % arch, '%s_msi.zip' % PROJECT)
 
         echo_msg('Extracting non-portable executables from %s' % nonportable)
         ZipFile(nonportable, 'r').extractall(portable_folder)
@@ -539,8 +491,7 @@ def build_msw_packages():
 
     shutil.rmtree(BUILD_DIR, True)
 
-    for item in ['MANIFEST', 'MANIFEST.in', 'src/script/sk1',
-                 'src/script/uniconvertor', 'setup.cfg']:
+    for item in ['MANIFEST', 'src/script/sk1', 'setup.cfg']:
         item = os.path.join(PROJECT_DIR, item)
         if os.path.lexists(item):
             os.remove(item)
