@@ -52,7 +52,9 @@ CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(1, os.path.join(CURRENT_PATH, 'src'))
 
 os.system('ls src/ && echo "============"')
-os.system('ls src/uc2')
+os.system('ls src/uc2 && echo "============"')
+os.system('ls subproj/uniconvertor && echo "============"')
+os.system('ls subproj/uniconvertor/src/uc2 && echo "============"')
 
 import sk1.appconst
 
