@@ -1,22 +1,8 @@
-The repo represents three projects: sK1, UniConvertor and SWord. UniConvertor is
-a base package for sK1 and SWord. SWord is a special tool for file format visual
-analysis. We don't provide build scripts for SWord just because this tool for
-internal usage only.
-
 sK1 2.0
 --------------------------------------------------------------------------
 sK1 2.0 is an open source vector graphics editor similar to CorelDRAW,
 Adobe Illustrator, or Freehand. sK1 is oriented for prepress industry,
 so it works with CMYK color space and produces CMYK-based PDF and PS output.
-
-UniConvertor 2.0
---------------------------------------------------------------------------
-UniConvertor 2.0 is a multiplatform universal vector graphics translator.
-Uses sK1 2.0 model to convert one format to another.
-
-sK1 Project (https://sk1project.net),
-Copyright (C) 2004-2017 by Igor E. Novikov
-
 
 How to install:
 --------------------------------------------------------------------------
@@ -41,8 +27,6 @@ First option is a distutils install with commands:
 python setup-sk1.py build
 python setup-sk1.py install
 
-(for UniConvertor use setup-uc2.py)
-
 But this way is not recommended. The most preferred option is a package
 installation (deb or rpm). You can create package using command:
 
@@ -62,6 +46,7 @@ For successful build either distutils or deb|rpm package you need installing
 some development packages. We describe dev-packages for Ubuntu|Debian, but for
 other distros they have similar names. So, you need:
 
+git
 gettext
 libcairo2-dev
 liblcms2-dev
@@ -73,7 +58,7 @@ python-cairo-dev
 
 To run application you need installing also:
 
-python-wxgtk2.8 (for sK1 only)
+python-wxgtk3.0
 python-pil
 python-reportlab
 python-cairo
