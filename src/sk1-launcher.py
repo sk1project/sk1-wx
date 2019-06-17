@@ -23,6 +23,9 @@ import platform
 
 RESTRICTED = ('UniConvertor', 'Python', 'ImageMagick')
 
+sys.path.insert(1, os.path.abspath('../../uniconvertor/src'))
+sys.path.insert(1, os.path.abspath('../../wal/src'))
+
 
 def get_path_var():
     paths = os.environ["PATH"].split(os.pathsep)

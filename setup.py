@@ -41,14 +41,61 @@ import os
 import shutil
 import sys
 
+############################################################
+# Subprojects resolving
+
+CLEAR_UTILS = False
+
+if not os.path.exists('./utils'):
+    if os.path.exists('../build-utils/src/utils'):
+        os.system('ln -s ../build-utils/src/utils utils')
+    else:
+        if not os.path.exists('./subproj/build-utils/src/utils'):
+            if not os.path.exists('./subproj'):
+                os.makedirs('./subproj')
+            os.system('git clone https://github.com/sk1project/build-utils '
+                      'subproj/build-utils')
+        os.system('ln -s ./subproj/build-utils/src/utils utils')
+    CLEAR_UTILS = True
+
+CLEAR_UC2 = False
+
+if not os.path.exists('./src/uc2'):
+    if os.path.exists('../uniconvertor/src/uc2'):
+        os.system('ln -s ../uniconvertor/src/uc2 src/uc2')
+    else:
+        if not os.path.exists('./subproj/uniconvertor/src/uc2'):
+            if not os.path.exists('./subproj'):
+                os.makedirs('./subproj')
+            os.system('git clone https://github.com/sk1project/uniconvertor '
+                      'subproj/uniconvertor')
+        os.system('ln -s ./subproj/uniconvertor/src/uc2 src/uc2')
+    CLEAR_UC2 = True
+
+CLEAR_WAL = False
+
+if not os.path.exists('./src/wal'):
+    if os.path.exists('../wal/src/wal'):
+        os.system('ln -s ../wal/src/wal src/wal')
+    else:
+        if not os.path.exists('./subproj/wal/src/wal'):
+            if not os.path.exists('./subproj'):
+                os.makedirs('./subproj')
+            os.system('git clone https://github.com/sk1project/wal '
+                      'subproj/wal')
+        os.system('ln -s ./subproj/wal/src/wal src/wal')
+    CLEAR_WAL = True
+
+############################################################
+
 import utils.deb
 import utils.rpm
 from utils import build
 from utils import fsutils
 from utils import po
 
-import dependencies
-from native_mods import make_modules
+from utils import dependencies
+from utils.native_mods import make_modules
 
 sys.path.insert(1, os.path.abspath('./src'))
 
@@ -169,11 +216,6 @@ if len(sys.argv) > 1:
         sys.argv[1] = 'sdist'
         rpm_depends = dependencies.get_sk1_rpm_depend()
 
-    elif sys.argv[1] == 'build_update':
-        UPDATE_MODULES = True
-        CLEAR_BUILD = True
-        sys.argv[1] = 'build'
-
     elif sys.argv[1] == 'bdist_deb':
         DEB_PACKAGE = True
         CLEAR_BUILD = True
@@ -232,18 +274,16 @@ while True:
 fileptr.close()
 fileptr2.close()
 
-# Preparing MANIFEST.in and setup.cfg
+# Preparing setup.cfg
 ############################################################
-shutil.copy2('MANIFEST.in_sk1', 'MANIFEST.in')
 
-fileptr = open('setup.cfg_sk1', 'rb')
-fileptr2 = open('setup.cfg', 'wb')
-content = fileptr.read()
-if rpm_depends:
-    content += '\nrequires = ' + rpm_depends
-fileptr2.write(content)
-fileptr.close()
-fileptr2.close()
+with open('setup.cfg.in', 'rb') as fileptr:
+    content = fileptr.read()
+    if rpm_depends:
+        content += '\nrequires = ' + rpm_depends
+
+with open('setup.cfg', 'wb') as fileptr:
+    fileptr.write(content)
 
 # Preparing locales
 ############################################################
@@ -330,7 +370,7 @@ if RPM_PACKAGE:
         license=LICENSE,
         url=URL,
         depends=rpm_depends.split(' '),
-        build_script='setup-sk1.py',
+        build_script='setup.py',
         install_path=install_path,
         data_files=data_files, )
 
@@ -340,6 +380,10 @@ os.chdir(CURRENT_PATH)
 if CLEAR_BUILD:
     build.clear_build()
 
-for item in ['MANIFEST', 'MANIFEST.in', 'src/script/sk1', 'setup.cfg']:
+FOR_CLEAR = ['MANIFEST', 'src/script/sk1', 'setup.cfg']
+FOR_CLEAR += ['utils'] if CLEAR_UTILS else []
+FOR_CLEAR += ['src/uc2'] if CLEAR_UC2 else []
+FOR_CLEAR += ['src/wal'] if CLEAR_WAL else []
+for item in FOR_CLEAR:
     if os.path.lexists(item):
         os.remove(item)
