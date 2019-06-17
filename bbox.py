@@ -51,13 +51,7 @@ from utils.fsutils import get_files_tree
 CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(1, os.path.join(CURRENT_PATH, 'src'))
 
-os.system('ls src/ && echo "============"')
-os.system('ls src/uc2 && echo "============"')
-os.system('ls subproj/uniconvertor && echo "============"')
-os.system('ls subproj/uniconvertor/src/uc2 && echo "============"')
-
 import sk1.appconst
-
 
 # options processing
 ARGV = {item.split('=')[0][2:]: item.split('=')[1]
