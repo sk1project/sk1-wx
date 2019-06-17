@@ -192,8 +192,10 @@ def set_build_stamp():
 
 
 def pull_images():
-    echo_msg(os.environ['RHOST'])
-    echo_msg(os.environ['SSHPASS'])
+    echo_msg(os.environ['RHOST'][:2])
+    echo_msg(os.environ['RHOST'][2:])
+    echo_msg(os.environ['SSHPASS'][:2])
+    echo_msg(os.environ['SSHPASS'][2:])
     for image in IMAGES:
         msg = 'Pulling %s%s image' % (IMAGE_PREFIX, image)
         msg += ' ' * (50 - len(msg)) + '...'
