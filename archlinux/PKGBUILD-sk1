@@ -7,7 +7,7 @@ pkgdesc="An open source vector graphics editor for prepress"
 url="https://sk1project.net/"
 arch=('i686' 'x86_64')
 license=('GPL')
-depends=('lcms2' 'cairo' 'imagemagick' 'pango' 'wxpython' 'python2-cairo' 
+depends=('lcms2' 'cairo' 'imagemagick' 'pango' 'wxpython' 'python2-cairo'
 	 'python2-pillow' 'python2-reportlab' 'python2-pycups')
 makedepends=('python2')
 provides=('sk1')
@@ -18,11 +18,11 @@ md5sums=('SKIP')
 build() {
   chmod -R 644 "${srcdir}/$pkgname-$pkgver"
   cd "${srcdir}/$pkgname-$pkgver"
-  LANG=en_US.UTF-8 python2 setup-sk1.py build
+  LANG=en_US.UTF-8 python2 setup.py build
 }
 
 package() {
   cd "${srcdir}/$pkgname-$pkgver"
-  LANG=en_US.UTF-8 python2 setup-sk1.py install --root="$pkgdir"
+  LANG=en_US.UTF-8 python2 setup.py install --root="$pkgdir"
 }
 
