@@ -22,15 +22,15 @@ from __future__ import print_function
 """
 Usage: 
 --------------------------------------------------------------------------
- to build package:       python setup-sk1.py build
- to install package:     python setup-sk1.py install
- to remove installation: python setup-sk1.py uninstall
+ to build package:       python setup.py build
+ to install package:     python setup.py install
+ to remove installation: python setup.py uninstall
 --------------------------------------------------------------------------
- to create source distribution:   python setup-sk1.py sdist
+ to create source distribution:   python setup.py sdist
 --------------------------------------------------------------------------
- to create binary RPM distribution:  python setup-sk1.py bdist_rpm
+ to create binary RPM distribution:  python setup.py bdist_rpm
 --------------------------------------------------------------------------
- to create binary DEB distribution:  python setup-sk1.py bdist_deb
+ to create binary DEB distribution:  python setup.py bdist_deb
 --------------------------------------------------------------------------.
  Help on available distribution formats: --help-formats
 """

@@ -18,22 +18,22 @@ sK1 Project (https://sk1project.net)
 
 ---
 
-* to build package:   `python setup-sk1.py build`
-* to install package:   `python setup-sk1.py install`
-* to remove installation: `python setup-sk1.py uninstall`
+* to build package:   `python setup.py build`
+* to install package:   `python setup.py install`
+* to remove installation: `python setup.py uninstall`
 
 ---
 
-* to create source distribution:   `python setup-sk1.py sdist`
+* to create source distribution:   `python setup.py sdist`
 
 ---
 
-* to create binary RPM distribution:  `python setup-sk1.py bdist_rpm`
-* to create binary DEB distribution:  `python setup-sk1.py bdist_deb`
+* to create binary RPM distribution:  `python setup.py bdist_rpm`
+* to create binary DEB distribution:  `python setup.py bdist_deb`
 
 ---
 
-* help on available distribution formats: `python setup-sk1.py bdist --help-formats`
+* help on available distribution formats: `python setup.py bdist --help-formats`
 
 ---
 
@@ -43,14 +43,14 @@ sK1 Project (https://sk1project.net)
 If you wish testing sK1 you have two installation ways. 
 First option is a distutils install with commands:
 ```
-python setup-sk1.py build
-python setup-sk1.py install
+python setup.py build
+python setup.py install
 ```
 But this way is not recommended. The most preferred option is a package 
 installation (deb or rpm). You can create package using command:
 ```
-python setup-sk1.py bdist_deb (for Ubuntu|Mint|Debian etc.)
-python setup-sk1.py bdist_rpm (for Fedora|OpenSuse|Mageia etc.)
+python setup.py bdist_deb (for Ubuntu|Mint|Debian etc.)
+python setup.py bdist_rpm (for Fedora|OpenSuse|Mageia etc.)
 ```
 By installing the package you have full control over all the installed files 
 and can easily remove them from the system (it's important for application
