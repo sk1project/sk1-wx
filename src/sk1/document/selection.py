@@ -114,7 +114,7 @@ class Selection:
             for obj in layer.childs:
                 if rule(rect, obj.cache_bbox):
                     result.append(obj)
-        self.add(result) if add_flag else self.set(result)
+        self.add(result, True) if add_flag else self.set(result)
 
     def _get_fixed_bbox(self, obj):
         bbox = obj.cache_bbox
