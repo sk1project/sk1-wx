@@ -75,27 +75,27 @@ ET_ID = 'EDIT_TEXT_MODE'
 def connect(channel, receiver):
     """
     Connects signal receive method
-    to provided channel. 
+    to provided channel.
     """
     if callable(receiver):
         try:
             channel.append(receiver)
-        except Exception as e:
+        except Exception:
             msg = "Cannot connect to channel <%s> receiver: <%s> %s"
-            LOG.error(msg, channel, receiver, e)
+            LOG.exception(msg, channel, receiver)
 
 
 def disconnect(channel, receiver):
     """
     Disconnects signal receive method
-    from provided channel. 
+    from provided channel.
     """
     if callable(receiver):
         try:
             channel.remove(receiver)
-        except Exception as e:
+        except Exception:
             msg = "Cannot disconnect from channel <%s> receiver: <%s> %s"
-            LOG.error(msg, channel, receiver, e)
+            LOG.exception(msg, channel, receiver)
 
 
 def emit(channel, *args):
@@ -106,9 +106,9 @@ def emit(channel, *args):
         try:
             if callable(receiver):
                 receiver(*args)
-        except Exception as e:
+        except Exception:
             msg = 'Error calling <%s> receiver with %s %s'
-            LOG.error(msg, receiver, args, e)
+            LOG.exception(msg, receiver, args)
             continue
 
 
