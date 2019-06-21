@@ -70,7 +70,7 @@ def generate_fontsample_cache(fonts):
         FONTSAMPLE_CACHE.append(wal.invert_text_bitmap(bmp, color))
 
 
-def generate_fcache():
+def font_cache_update():
     fonts = libpango.get_fonts()[0]
     generate_fontname_cache(fonts)
     generate_fontsample_cache(fonts)

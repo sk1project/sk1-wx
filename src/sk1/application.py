@@ -37,7 +37,7 @@ from sk1.clipboard import AppClipboard
 from sk1.document.presenter import SK1Presenter
 from sk1.parts.artprovider import create_artprovider
 from sk1.parts.mw import AppMainWindow
-from sk1.pwidgets import generate_fcache
+from sk1.pwidgets import font_cache_update
 from uc2 import uc2const, libimg, msgconst
 from uc2.application import UCApplication
 from uc2.formats import get_saver_by_id, get_loader
@@ -123,8 +123,6 @@ class SK1Application(wal.Application, UCApplication):
 
         if wal.IS_WX2:
             events.emit(events.NO_DOCS)
-        if config.make_font_cache_on_start:
-            generate_fcache()
 
     def load_plugins(self):
         if config.active_plugins:
@@ -135,6 +133,8 @@ class SK1Application(wal.Application, UCApplication):
                     LOG.warn('Cannot load plugin <%s> %s', item, e)
 
     def call_after(self, *args):
+        if config.make_font_cache_on_start:
+            font_cache_update()
         if self.docs:
             return
         docs = self._get_docs()

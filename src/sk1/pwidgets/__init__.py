@@ -19,7 +19,7 @@ from actions import AppAction, ActionButton
 from colorctrls import SbStrokeSwatch, SbFillSwatch, StyleMonitor
 from ctxmenu import ContextMenu
 from fillctrls import SolidFill, GradientFill, PatternFill
-from fontctrl import FontChoice, generate_fcache
+from fontctrl import FontChoice, font_cache_update
 from minipalette import CBMiniPalette
 from palette import Palette
 from palette_viewer import PaletteViewer
