@@ -32,7 +32,7 @@ def load_font(color=(0, 0, 0)):
     fntdir = 'ruler-font%dpx' % config.ruler_font_size
     fntdir = os.path.join(config.resource_dir, 'fonts', fntdir)
 
-    def get_colored_surface(file_name, color):
+    def get_colored_surface(file_name, color, vertical=False):
         file_name = fsutils.get_sys_path(file_name)
         surface = cairo.ImageSurface.create_from_png(file_name)
         w, h = surface.get_width(), surface.get_height()
@@ -41,7 +41,7 @@ def load_font(color=(0, 0, 0)):
         cr.set_source_rgb(*color)
         cr.mask_surface(surface, 0, 0)
         cr.fill()
-        return w, res
+        return h if vertical else w, res
 
     for char in '.,-0123456789':
         file_name = 'hdot.png' if char in '.,' else 'h%s.png' % char
@@ -50,7 +50,7 @@ def load_font(color=(0, 0, 0)):
 
         file_name = 'vdot.png' if char in '.,' else 'v%s.png' % char
         file_name = os.path.join(fntdir, file_name)
-        VFONT[char] = get_colored_surface(file_name, color)
+        VFONT[char] = get_colored_surface(file_name, color, True)
 
 
 CAIRO_WHITE = [1.0, 1.0, 1.0]
