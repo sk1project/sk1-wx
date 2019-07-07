@@ -23,5 +23,6 @@ script:
   - ln -s ../subproj/uniconvertor/src/uc2 src/uc2
   - git clone https://github.com/sk1project/wal subproj/wal
   - ln -s ../subproj/wal/src/wal src/wal
+  - git clone https://github.com/sk1project/build-cache subproj/build-cache
   - python bbox.py pull
   - python bbox.py build

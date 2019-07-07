@@ -81,6 +81,7 @@ RELEASE_DIR = os.path.join(PROJECT_DIR, 'release')
 PKGBUILD_DIR = os.path.join(PROJECT_DIR, 'pkgbuild')
 ARCH_DIR = os.path.join(PROJECT_DIR, 'archlinux')
 LOCALES_DIR = os.path.join(PROJECT_DIR, 'src/sk1/share/locales')
+CACHE_DIR = os.path.join(PROJECT_DIR, 'subproj/build-cache')
 
 SCRIPT = 'setup.py'
 APP_NAME = SK1
@@ -114,7 +115,7 @@ IMAGES = [
     'fedora_30_64bit',
     'opensuse_42.3_64bit',
     'opensuse_15.0_64bit',
-    'msw-packager'
+    'packager'
 ]
 
 LOCAL_IMAGES = [
@@ -214,8 +215,8 @@ def run_build(locally=False, stop_on_error=True):
         echo_msg(msg + ' ' * (35 - len(msg)) + '...', newline=False)
         output = ' 1> /dev/null 2> /dev/null' if not DEBUG_MODE else ''
         cmd = '/vagrant/bbox.py build_package --project=%s' % PROJECT
-        if image == 'msw-packager':
-            cmd = '/vagrant/bbox.py msw_build --project=%s' % PROJECT
+        if image == 'packager':
+            cmd = '/vagrant/bbox.py packaging --project=%s' % PROJECT
         if RELEASE:
             cmd += ' --release=1'
         if shell('docker run --rm -v %s:%s %s%s %s %s' %
@@ -380,7 +381,7 @@ MSI_DATA = {
     'Keywords': 'Vector graphics, Prepress',
 
     # Structural elements
-    '_Icon': '/win32-devres/sk1.ico',
+    '_Icon': os.path.join(CACHE_DIR, 'common/sk1.ico'),
     '_OsCondition': '601',
     '_SourceDir': '',
     '_InstallDir': '%s-%s' % (APP_FULL_NAME, APP_VER),
@@ -407,6 +408,10 @@ MSI_DATA = {
 }
 
 
+def packaging():
+    build_msw_packages()
+
+
 def build_msw_packages():
     import wixpy
     distro_folder = os.path.join(RELEASE_DIR, 'MS_Windows')
@@ -429,7 +434,7 @@ def build_msw_packages():
         # Package building
         echo_msg('Creating portable package')
 
-        portable = os.path.join('/%s-devres' % arch, 'portable.zip')
+        portable = os.path.join(CACHE_DIR,  arch, 'portable.zip')
 
         echo_msg('Extracting portable files from %s' % portable)
         ZipFile(portable, 'r').extractall(portable_folder)
@@ -441,9 +446,9 @@ def build_msw_packages():
         for folder in obsolete_folders:
             shutil.rmtree(os.path.join(portable_folder, folder), True)
 
-        wx_zip = os.path.join('/%s-devres' % arch, 'wx.zip')
+        wx_zip = os.path.join(CACHE_DIR, arch, 'wx.zip')
         ZipFile(wx_zip, 'r').extractall(portable_libs)
-        portable_exe_zip = os.path.join('/%s-devres' % arch,
+        portable_exe_zip = os.path.join(CACHE_DIR, arch,
                                         '%s_portable.zip' % PROJECT)
         ZipFile(portable_exe_zip, 'r').extractall(portable_folder)
 
@@ -457,7 +462,7 @@ def build_msw_packages():
 
         for item in EXTENSIONS:
             filename = os.path.basename(item)
-            src = os.path.join('/%s-devres' % arch, 'pyd', filename)
+            src = os.path.join(CACHE_DIR, arch, 'pyd', filename)
             dst = os.path.join(portable_libs, item)
             shutil.copy(src, dst)
 
@@ -478,7 +483,7 @@ def build_msw_packages():
 
         clear_files(portable_folder, ['exe'])
 
-        nonportable = os.path.join('/%s-devres' % arch, '%s_msi.zip' % PROJECT)
+        nonportable = os.path.join(CACHE_DIR, arch, '%s_msi.zip' % PROJECT)
 
         echo_msg('Extracting non-portable executables from %s' % nonportable)
         ZipFile(nonportable, 'r').extractall(portable_folder)
@@ -521,4 +526,5 @@ option = sys.argv[1] if len(sys.argv) > 1 \
     'build_local': run_build_local,
     'build_package': build_package,
     'msw_build': build_msw_packages,
+    'packaging': packaging,
 }.get(option, build_package)()
