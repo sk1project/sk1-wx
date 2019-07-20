@@ -96,6 +96,13 @@ class ComponentsPage(wal.VPanel):
         data.append(['Pango', libpango.get_version()])
         data.append(['Reportlab', reportlab.Version])
 
+        if not wal.IS_MSW:
+            import cups
+            try:
+                cups.require('10.0')
+            except RuntimeError as e:
+                data.append(['pycups', str(e).split()[-1]])
+
         slist = wal.ReportList(self, data, border=False)
         self.pack(slist, expand=True, fill=True, padding=5)
         slist.set_column_width(0, wal.LIST_AUTOSIZE)
