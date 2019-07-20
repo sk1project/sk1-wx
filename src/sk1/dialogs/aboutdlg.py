@@ -79,7 +79,7 @@ class AboutPage(wal.HPanel):
 class ComponentsPage(wal.VPanel):
     def __init__(self, parent):
         wal.VPanel.__init__(self, parent)
-        from uc2 import libimg, libpango, libcairo
+        from uc2 import libimg, libpango, libcairo, cms
         import reportlab
 
         data = [[_('Component'), _('Version')]]
@@ -88,6 +88,7 @@ class ComponentsPage(wal.VPanel):
         data.append(['Python', sys.version])
         data.append(['wxWidgets', wal.VERSION])
         data.append(['UniConvertor', uc_ver])
+        data.append(['LCMS', cms.libcms.get_version()])
         data.append(['Cairo', libcairo.get_version()[0]])
         data.append(['pycairo', libcairo.get_version()[1]])
         data.append(['Pillow', libimg.get_version()])
