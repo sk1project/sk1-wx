@@ -54,6 +54,7 @@ COLORS = [
 ]
 
 SIZE = 190
+REFRESH_DELAY = 100
 
 
 class IconizerConfig(XmlConfigParser):
@@ -165,6 +166,7 @@ class IconizerPlugin(RsPlugin):
     border_check = None
     sel_check = None
     apply_btn = None
+    timer = None
 
     def build_ui(self):
         self.icon = get_icon(PLUGIN_ICON)
@@ -220,6 +222,10 @@ class IconizerPlugin(RsPlugin):
         events.connect(events.SELECTION_CHANGED, self.update)
         events.connect(events.DOC_MODIFIED, self.update)
 
+        self.timer = wal.CanvasTimer(self.panel,
+                                     delay=REFRESH_DELAY,
+                                     on_timer=self.repaint)
+
     def show_signal(self, *args):
         self.update()
 
@@ -267,23 +273,27 @@ class IconizerPlugin(RsPlugin):
         surface.write_to_png(image_stream)
         return image_stream
 
-    def update(self, *args):
+    def update(self, *_args):
         if self.is_shown():
-            color = self.bg_color_btn.get_value()
-            if not color == self.config.bg_color:
-                self.config.bg_color = color
-                self.save_config()
-                self.viewer.set_canvas_bg(self.config.bg_color)
-            if not self.sel_check.get_value() == self.config.draw_selected:
-                self.config.draw_selected = not self.config.draw_selected
-                self.save_config()
-            if not self.border_check.get_value() == self.config.draw_border:
-                self.config.draw_border = not self.config.draw_border
-                self.save_config()
-            self.viewer.set_border(self.config.draw_border)
-            self.picture = self.render(self.config.draw_selected)
-            self.viewer.set_picture(self.picture)
-            self.apply_btn.set_enable(self.picture is not None)
+            self.timer.restart()
+
+    def repaint(self, *_args):
+        color = self.bg_color_btn.get_value()
+        if not color == self.config.bg_color:
+            self.config.bg_color = color
+            self.save_config()
+            self.viewer.set_canvas_bg(self.config.bg_color)
+        if not self.sel_check.get_value() == self.config.draw_selected:
+            self.config.draw_selected = not self.config.draw_selected
+            self.save_config()
+        if not self.border_check.get_value() == self.config.draw_border:
+            self.config.draw_border = not self.config.draw_border
+            self.save_config()
+        self.viewer.set_border(self.config.draw_border)
+        self.picture = self.render(self.config.draw_selected)
+        self.viewer.set_picture(self.picture)
+        self.apply_btn.set_enable(self.picture is not None)
+        self.timer.stop()
 
     def apply_action(self):
         if not self.picture:

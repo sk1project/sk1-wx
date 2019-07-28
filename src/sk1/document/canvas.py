@@ -441,6 +441,7 @@ class AppCanvas(Painter):
             self.zoom_fit_to_page()
             self.set_mode(modes.SELECT_MODE)
         self._keep_center()
+        self.app.mw.mdi.statusbar.zoom.update(self.zoom)
 
         try:
             if self.soft_repaint and not self.full_repaint:

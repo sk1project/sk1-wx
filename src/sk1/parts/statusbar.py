@@ -18,7 +18,7 @@
 import wal
 from sk1 import _, config, events
 from sk1.pwidgets import SbFillSwatch, SbStrokeSwatch, ActionImageSwitch
-from sk1.resources import get_bmp, icons
+from sk1.resources import get_bmp, icons, get_icon
 from sk1.resources import pdids, get_tooltip_text
 from uc2.uc2const import IMAGE_NAMES, IMAGE_CMYK, IMAGE_RGB
 
@@ -48,6 +48,9 @@ class AppStatusbar(wal.HPanel):
         self.pack(self.mouse_info)
         self.mouse_info.hide()
 
+        self.zoom = ZoomMonitor(self)
+        self.pack(self.zoom)
+
         self.snap_monitor = SnapMonitor(self.mw.app, self)
         self.pack(self.snap_monitor)
 
@@ -71,6 +74,22 @@ class AppStatusbar(wal.HPanel):
         self.info.set_text(args[0])
         self.Layout()
         self.show()
+
+
+class ZoomMonitor(wal.HPanel):
+    def __init__(self, parent):
+        wal.HPanel.__init__(self, parent)
+        icon = get_icon(icons.PD_ZOOM_IN, size=wal.SIZE_16)
+        self.pack(wal.Bitmap(self, icon))
+
+        self.label = wal.Label(self, '10000%')
+        self.label.set_min_width(65 if wal.IS_MAC else 50)
+        self.pack(self.label, padding=2)
+
+        self.pack(wal.VLine(self.panel), fill=True, padding=2)
+
+    def update(self, zoom):
+        self.label.set_text('%s%%' % int(round(zoom * 100)))
 
 
 class SnapMonitor(wal.HPanel):
@@ -148,7 +167,7 @@ class ColorMonitor(wal.HPanel):
         events.connect(events.DOC_CHANGED, self.update)
         events.connect(events.NO_DOCS, self.update)
 
-    def update(self, *args):
+    def update(self, *_args):
         if not self.app.current_doc:
             return
         sel = self.app.current_doc.get_selected_objs()
@@ -179,13 +198,8 @@ class MouseMonitor(wal.HPanel):
         self.app = app
         wal.HPanel.__init__(self, parent)
         self.pack(get_bmp(self.panel, icons.PD_MOUSE_MONITOR))
-
-        width = 100
-        if wal.IS_MAC:
-            width = 130
-
         self.pointer_txt = wal.Label(self.panel, text=' ', fontsize=FONTSIZE[0])
-        self.pointer_txt.SetMinSize((width, -1))
+        self.pointer_txt.set_min_width(130 if wal.IS_MAC else 100)
         self.pack(self.pointer_txt)
         self.pack(wal.VLine(self.panel), fill=True, padding=2)
         events.connect(events.MOUSE_STATUS, self.set_value)
