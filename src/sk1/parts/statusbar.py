@@ -79,11 +79,12 @@ class AppStatusbar(wal.HPanel):
 class ZoomMonitor(wal.HPanel):
     def __init__(self, parent):
         wal.HPanel.__init__(self, parent)
-        icon = get_icon(icons.PD_ZOOM_IN, size=wal.SIZE_16)
-        self.pack(wal.Bitmap(self, icon))
+        icon = get_icon(icons.PD_ZOOM, size=wal.SIZE_16)
+        self.pack(wal.Bitmap(self, icon), padding=2)
 
         self.label = wal.Label(self, '10000%')
-        self.label.set_min_width(65 if wal.IS_MAC else 50)
+        self.label.set_min_width(70 if wal.IS_MAC else 55)
+        self.label.set_tooltip(_('Zoom level'))
         self.pack(self.label, padding=2)
 
         self.pack(wal.VLine(self.panel), fill=True, padding=2)
