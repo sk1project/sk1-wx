@@ -49,7 +49,6 @@ class ZoomController(AbstractController):
             change_y = abs(self.end[1] - self.start[1])
             if change_x < 5 and change_y < 5:
                 zoom = ZOOM_OUT if event.is_ctrl() else ZOOM_IN
-                print zoom
                 self.canvas.zoom_at_point(self.start, zoom)
             else:
                 self.canvas.zoom_to_rectangle(self.start, self.end)

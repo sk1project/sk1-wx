@@ -40,13 +40,13 @@ class JumpPlugin(CtxPlugin):
         self.jump_spin.set_point_value(config.obj_jump)
         self.add(self.jump_spin, 0, LEFT | CENTER, 2)
 
-    def user_changes(self, *args):
+    def user_changes(self, *_args):
         val = self.jump_spin.get_point_value()
         if not config.obj_jump == val:
             config.obj_jump = val
 
     def config_changed(self, *args):
-        if args[0][0] == 'obj_jump':
+        if args[0] == 'obj_jump':
             val = self.jump_spin.get_point_value()
             if not config.obj_jump == val:
                 self.jump_spin.set_point_value(config.obj_jump)

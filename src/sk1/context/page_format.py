@@ -15,8 +15,10 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from copy import deepcopy
+
 from uc2.uc2const import PAGE_FORMATS, PAGE_FORMAT_NAMES, PORTRAIT, LANDSCAPE
-from uc2.uc2const import ORIENTS_NAMES
+from uc2.uc2const import ORIENTS_NAMES, PAGE_FORMATS_MORE
 
 from wal import VLine, ALL, EXPAND
 from wal import Combolist, LEFT, CENTER, ImageToggleButton
@@ -30,7 +32,7 @@ from generic import CtxPlugin
 class PagePlugin(CtxPlugin):
     name = 'PagePlugin'
     update_flag = False
-    format = []
+    format = None
     formats = None
     combo = None
     width_spin = None
@@ -109,7 +111,7 @@ class PagePlugin(CtxPlugin):
                 self.height_spin.set_enable(True)
             self.update_flag = False
 
-    def combo_changed(self, *args):
+    def combo_changed(self, *_args):
         if self.update_flag:
             return
         if not self.format[0] == self.formats[self.combo.get_active()]:
@@ -133,7 +135,7 @@ class PagePlugin(CtxPlugin):
             self.update_flag = False
             self.changes()
 
-    def width_spin_changed(self, *args):
+    def width_spin_changed(self, *_args):
         if self.update_flag:
             return
         if not self.format[1][0] == self.width_spin.get_point_value():
@@ -149,7 +151,7 @@ class PagePlugin(CtxPlugin):
             self.update_flag = False
             self.changes()
 
-    def height_spin_changed(self, *args):
+    def height_spin_changed(self, *_args):
         if self.update_flag:
             return
         if not self.format[1][1] == self.height_spin.get_point_value():
@@ -165,7 +167,7 @@ class PagePlugin(CtxPlugin):
             self.update_flag = False
             self.changes()
 
-    def portrait_toggled(self, *args):
+    def portrait_toggled(self, *_args):
         if self.update_flag:
             return
         if self.portrait.get_active():
@@ -182,7 +184,7 @@ class PagePlugin(CtxPlugin):
             self.portrait.set_active(True)
             self.update_flag = False
 
-    def landscape_toggled(self, *args):
+    def landscape_toggled(self, *_args):
         if self.update_flag:
             return
         if self.landscape.get_active():
@@ -200,6 +202,7 @@ class PagePlugin(CtxPlugin):
             self.update_flag = False
 
     def changes(self):
+        doc = self.app.current_doc
         new_format = [self.formats[self.combo.get_active()], ]
         new_format += [(self.width_spin.get_point_value(),
                         self.height_spin.get_point_value())]
@@ -207,7 +210,18 @@ class PagePlugin(CtxPlugin):
             new_format += [PORTRAIT, ]
         else:
             new_format += [LANDSCAPE, ]
-        self.app.current_doc.api.set_page_format(new_format)
+        current_page_format = deepcopy(doc.active_page.page_format)
+        doc.api.set_page_format(new_format)
+
+        pdict = PAGE_FORMATS_MORE
+        if pdict[current_page_format[0]] != pdict[new_format[0]]:
+            units, jump = pdict[new_format[0]]
+            doc.api.set_doc_units(units)
+            geom = doc.methods.get_grid_values()[:2] + [jump, jump]
+            doc.api.set_grid_values(geom)
+            config.obj_jump = jump
+
+        doc.canvas.zoom_fit_to_page()
 
 
 class PageBorderPlugin(CtxPlugin):
@@ -241,7 +255,7 @@ class PageBorderPlugin(CtxPlugin):
         btn = ActionButton(self, self.actions[pdids.ID_REMOVE_ALL_GUIDES])
         self.add(btn, 0, LEFT | CENTER, 2)
 
-    def user_changes(self, *args):
+    def user_changes(self, *_args):
         val = self.page_border.get_point_value()
         if not config.page_border == val:
             config.page_border = val

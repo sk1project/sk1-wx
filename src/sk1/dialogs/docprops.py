@@ -101,6 +101,7 @@ class PageProps(DocPropsPanel):
     page_fill = None
     border_flag = False
     formats = None
+    as_current = None
 
     page_combo = None
     orient_keeper = None
@@ -115,6 +116,7 @@ class PageProps(DocPropsPanel):
 
     def build(self):
         self.page_format = self.doc.methods.get_default_page_format()
+
         self.formats = [_('Custom'), ] + uc2const.PAGE_FORMAT_NAMES
         self.pack((5, 10))
 
@@ -126,12 +128,6 @@ class PageProps(DocPropsPanel):
         hpanel.pack((5, 5))
         self.page_combo = wal.Combolist(self, items=self.formats,
                                         onchange=self.page_combo_changed)
-        index = 0
-        state = True
-        if self.page_format[0] in uc2const.PAGE_FORMAT_NAMES:
-            index = self.formats.index(self.page_format[0])
-            state = False
-        self.page_combo.set_active(index)
 
         hpanel.pack(self.page_combo)
 
@@ -140,34 +136,38 @@ class PageProps(DocPropsPanel):
         self.orient_keeper = wal.HToggleKeeper(self, ORIENTS, ORIENTS_ICONS,
                                                ORIENTS_NAMES,
                                                on_change=self.orient_changed)
-        self.orient_keeper.set_mode(self.page_format[2])
         hpanel.pack(self.orient_keeper)
+
+        hpanel.pack((5, 5))
+
+        self.as_current = wal.Button(hpanel, ' %s ' % _('As current page'),
+                               onclick=self.set_as_current)
+        hpanel.pack(self.as_current)
 
         self.pack(hpanel, fill=True)
 
         self.pack((5, 5))
 
         # ---
-        w, h = self.page_format[1]
         hpanel = wal.HPanel(self)
         dx = label.get_size()[0] + 10
         hpanel.pack((dx, 5))
 
-        self.page_width = UnitSpin(self.app, hpanel, w,
+        self.page_width = UnitSpin(self.app, hpanel, 0,
                                    onchange=self.page_spin_changed)
         hpanel.pack(self.page_width)
         hpanel.pack(get_bmp(self, icons.CTX_W_ON_H), padding=5)
-        self.page_height = UnitSpin(self.app, hpanel, h,
+        self.page_height = UnitSpin(self.app, hpanel, 0,
                                     onchange=self.page_spin_changed)
         hpanel.pack(self.page_height)
         hpanel.pack(StaticUnitLabel(self.app, hpanel), padding=5)
-        self.page_width.set_enable(state)
-        self.page_height.set_enable(state)
 
         self.pack(hpanel, fill=True)
         self.pack(wal.HLine(self), padding_all=5, fill=True)
 
-        # ---
+        self.set_page_format(self.page_format)
+
+        # --- COLORS
         hpanel = wal.HPanel(self)
         hpanel.pack((5, 5))
         self.desktop_bg = self.doc.methods.get_desktop_bg()
@@ -207,6 +207,7 @@ class PageProps(DocPropsPanel):
         hpanel.pack((5, 5))
         self.pack(hpanel, fill=True)
 
+
         # ---
         vpanel = wal.VPanel(self)
         if wal.IS_MSW:
@@ -227,6 +228,29 @@ class PageProps(DocPropsPanel):
                                          self.border_flag)
         vpanel.pack(self.border_check, align_center=False)
         self.pack(vpanel, fill=True, padding_all=5)
+
+    def set_page_format(self, page_format):
+        index = 0
+        state = True
+        if page_format[0] in uc2const.PAGE_FORMAT_NAMES:
+            index = self.formats.index(page_format[0])
+            state = False
+        self.page_combo.set_active(index)
+        self.orient_keeper.set_mode(page_format[2])
+
+        w, h = page_format[1]
+        self.page_width.set_point_value(w)
+        self.page_height.set_point_value(h)
+
+        self.page_width.set_enable(state)
+        self.page_height.set_enable(state)
+
+        current_page_format = self.app.current_doc.active_page.page_format
+        self.as_current.set_enable(current_page_format != page_format)
+
+    def set_as_current(self):
+        page_format = deepcopy(self.app.current_doc.active_page.page_format)
+        self.set_page_format(page_format)
 
     def page_combo_changed(self):
         state = False
@@ -263,13 +287,13 @@ class PageProps(DocPropsPanel):
 
     def save(self):
         page_format = [self.page_combo.get_active_value(),
-                       [self.page_width.get_point_value(),
-                        self.page_height.get_point_value(), ],
+                       (self.page_width.get_point_value(),
+                        self.page_height.get_point_value(), ),
                        self.orient_keeper.get_mode()]
-        if not self.page_format == page_format:
+        if self.page_format != page_format:
             self.api.set_default_page_format(page_format)
         desktop_bg = self.desktop_color_btn.get_value()
-        if not self.desktop_bg == desktop_bg:
+        if self.desktop_bg != desktop_bg:
             self.api.set_desktop_bg(desktop_bg)
 
         color1 = self.page_color1_btn.get_value()

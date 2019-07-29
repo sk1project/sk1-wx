@@ -17,7 +17,6 @@
 
 import logging
 import os
-import sys
 from copy import deepcopy
 
 from sk1 import _, events, modes
