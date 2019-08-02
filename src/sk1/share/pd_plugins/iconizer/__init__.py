@@ -21,7 +21,7 @@ import os
 from cStringIO import StringIO
 
 import wal
-from sk1 import _, events, config, dialogs
+from sk1 import _, events, dialogs
 from sk1.app_plugins import RsPlugin
 from sk1.pwidgets import CBMiniPalette
 from sk1.resources import get_icon
@@ -62,6 +62,7 @@ class IconizerConfig(XmlConfigParser):
     bg_color = (1.0, 1.0, 1.0)
     draw_selected = False
     draw_border = False
+    save_dir = '~'
 
 
 class ImageCanvas(wal.ScrolledCanvas, wal.Canvas):
@@ -299,7 +300,7 @@ class IconizerPlugin(RsPlugin):
         if not self.picture:
             return
         doc_file = 'image'
-        doc_file = os.path.join(config.save_dir, doc_file)
+        doc_file = os.path.join(self.config.save_dir, doc_file)
         doc_file = dialogs.get_save_file_name(self.app.mw, doc_file,
                                               _('Save image as...'),
                                               file_types=[uc2const.PNG],
@@ -316,5 +317,6 @@ class IconizerPlugin(RsPlugin):
                 dialogs.error_dialog(self.app.mw, self.app.appdata.app_name,
                                      msg)
                 return
-            config.save_dir = str(os.path.dirname(doc_file))
+            self.config.save_dir = str(os.path.dirname(doc_file))
+            self.save_config()
             events.emit(events.APP_STATUS, _('Image is successfully saved'))

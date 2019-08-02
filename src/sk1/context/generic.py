@@ -35,7 +35,7 @@ class CtxPlugin(wal.HPanel):
         self.actions = self.app.actions
         wal.HPanel.__init__(self, parent)
         self.build()
-        self.pack(wal.VLine(self), fill=True, padding=3)
+        self.pack(wal.PLine(self), fill=True, padding=3)
         self.hide()
 
     def update(self, *args): pass

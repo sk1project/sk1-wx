@@ -184,4 +184,6 @@ LABELS = {
     pdids.ID_APP_FORUM: (_('Project forum'),),
     pdids.ID_APP_FBPAGE: (_('Project page on Face&book'),),
     wal.ID_ABOUT: (_('&About sK1...'),),
+
+    pdids.ID_MANAGE_PALETTES: (_('Manage palettes...'),),
 }

@@ -18,9 +18,11 @@
 
 import wal
 
-from sk1 import _
+from sk1 import _, config
 from sk1.pwidgets import Palette
-from sk1.resources import icons
+from sk1.resources import icons, pdids
+
+from .menubar import ActionMenuItem
 
 
 class AppHPalette(wal.HPanel):
@@ -64,6 +66,19 @@ class AppHPalette(wal.HPanel):
                                          repeat=True)
         self.pack(self.right_but)
 
+        tip = _('Manage palettes')
+        self.menu_but = wal.ImageButton(self.panel, icons.POPUP_MENU,
+                                        tooltip=tip, decoration_padding=4,
+                                        native=wal.IS_GTK,
+                                        onclick=self.show_menu,
+                                        repeat=False)
+        self.pack(self.menu_but)
+        self.palette_menu = PaletteMenu(self.app.mw)
+
+    def show_menu(self):
+        self.palette_menu.rebuild()
+        self.popup_menu(self.palette_menu)
+
     def set_no_fill(self):
         self.app.proxy.fill_selected([])
 
@@ -77,6 +92,67 @@ class AppHPalette(wal.HPanel):
     def right_enable(self, value):
         if not value == self.right_but.get_enabled():
             self.right_but.set_enable(value)
+
+
+class PaletteMenu(wal.Menu):
+    app = None
+    mw = None
+    items = None
+    empty_item = None
+    persistent_items = None
+
+    def __init__(self, mw):
+        self.app = mw.app
+        self.mw = mw
+        wal.Menu.__init__(self)
+        self.items = []
+        self.persistent_items = []
+
+        self.items.append(self.append_separator())
+        action = self.app.actions[pdids.ID_MANAGE_PALETTES]
+        menuitem = ActionMenuItem(self.mw, self, action)
+        self.append_item(menuitem)
+        self.items.append(menuitem)
+
+        self.persistent_items += self.items
+
+    def rebuild(self, *_args):
+        for item in self.items:
+            self.remove_item(item)
+        self.items = []
+
+        entries = self.app.palettes.palettes.keys()
+        entries.sort()
+        for entry in entries:
+            menuitem = PaletteMenuItem(self.mw, self, entry)
+            self.items.append(menuitem)
+            self.append_item(menuitem)
+            menuitem.update()
+        for menuitem in self.persistent_items:
+            self.items.append(menuitem)
+            self.append_item(menuitem)
+
+
+class PaletteMenuItem(wal.MenuItem):
+    app = None
+    path = None
+    id = None
+
+    def __init__(self, mw, parent, palette_name):
+        self.app = mw.app
+        self.palette_name = palette_name
+        self.id = wal.new_id()
+        wal.MenuItem.__init__(self, parent, self.id, palette_name)
+        self.bind_to(mw, self.action, self.id)
+        if config.palette == self.palette_name:
+            self.set_checkable(True)
+
+    def update(self):
+        if self.is_checkable():
+            self.set_active(True)
+
+    def action(self, _event):
+        config.palette = self.palette_name
 
 
 class AppVPalette(wal.VPanel):

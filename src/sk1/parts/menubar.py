@@ -49,7 +49,7 @@ class AppMenuBar(wal.MenuBar):
         self.entries.append(entry)
 
         # ---View menu
-        sub = (pdids.ID_STROKE_VIEW, pdids.ID_DRAFT_VIEW, 
+        sub = (pdids.ID_STROKE_VIEW, pdids.ID_DRAFT_VIEW,
                pdids.ID_SIMULATE_PRINTER, None,
                wal.ID_ZOOM_100, wal.ID_ZOOM_IN, wal.ID_ZOOM_OUT,
                pdids.ID_PREV_ZOOM, None,
@@ -129,7 +129,7 @@ class AppMenuBar(wal.MenuBar):
 
         # ---Help menu
         sub = (pdids.ID_REPORT_BUG, pdids.ID_CONSOLE, None,
-               pdids.ID_APP_WEBSITE, # pdids.ID_APP_FORUM,
+               pdids.ID_APP_WEBSITE,
                pdids.ID_APP_FBPAGE,
                None, wal.ID_ABOUT,)
         entry = (_("&Help"), sub)
@@ -182,7 +182,7 @@ class HistoryMenu(wal.Menu):
         self.rebuild()
         events.connect(events.HISTORY_CHANGED, self.rebuild)
 
-    def rebuild(self, *args):
+    def rebuild(self, *_args):
         for item in self.items:
             self.remove_item(item)
         self.items = []
@@ -213,7 +213,7 @@ class HistoryMenuItem(wal.MenuItem):
         wal.MenuItem.__init__(self, parent, self.id, text)
         self.bind_to(mw, self.action, self.id)
 
-    def action(self, event):
+    def action(self, _event):
         self.app.open(self.path)
 
 

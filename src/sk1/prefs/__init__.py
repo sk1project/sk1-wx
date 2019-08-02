@@ -15,6 +15,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import logging
+
 import wal
 from generic import RootItem
 from prefs_canvas import CanvasPrefs
@@ -34,6 +36,8 @@ PREFS_APP = [GeneralPrefs, CMSPrefs, RulersPrefs,
              PrinterPrefs, ]
 
 PREFS_DOC = [GridPrefs, ]
+
+LOG = logging.getLogger(__name__)
 
 
 class PrefsAppItem(RootItem):
@@ -68,7 +72,7 @@ class PrefsDialog(wal.OkCancelDialog):
     container = None
     redo_btn = None
 
-    def __init__(self, parent, title, pid=''):
+    def __init__(self, parent, title, pid=None):
         self.app = parent.app
         size = config.prefs_dlg_size
         wal.OkCancelDialog.__init__(self, parent, title, size, resizable=True,
@@ -132,6 +136,7 @@ class PrefsDialog(wal.OkCancelDialog):
             if item.pid == pid:
                 ret = item
                 break
+        LOG.info('RET %s', ret)
         return ret
 
     def apply_changes(self):
@@ -157,7 +162,7 @@ class PrefsDialog(wal.OkCancelDialog):
         self.destroy()
 
 
-def get_prefs_dialog(parent, pid=''):
+def get_prefs_dialog(parent, pid=None):
     dlg = PrefsDialog(parent, _("sK1 Preferences"), pid)
     dlg.show()
     # 	PREFS_DATA.remove(PREFS_DATA[1])

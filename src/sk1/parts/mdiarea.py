@@ -45,12 +45,12 @@ class MDIArea(wal.VPanel):
         if config.ui_style == appconst.GUI_CLASSIC:
             if not wal.IS_MAC:
                 self.pack(wal.HLine(self), fill=True)
-            self.pack(self.ctxpanel, fill=True, padding=1)
+            self.pack(self.ctxpanel, fill=True)
             self.pack(self.doc_tabs, fill=True)
 
         if config.ui_style == appconst.GUI_TABBED:
             self.pack(self.doc_tabs, fill=True)
-            self.pack(self.ctxpanel, fill=True, padding=2)
+            self.pack(self.ctxpanel, fill=True)
             self.pack(wal.PLine(self), fill=True)
 
         # ===== Main part
@@ -122,7 +122,7 @@ class MDIArea(wal.VPanel):
         # ----- Status bar
         self.pack(wal.PLine(self), fill=True)
         self.statusbar = AppStatusbar(self)
-        self.pack(self.statusbar, fill=True, padding=2)
+        self.pack(self.statusbar, fill=True)
 
         self.layout()
         events.connect(events.CONFIG_MODIFIED, self.config_update)

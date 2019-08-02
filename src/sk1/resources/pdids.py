@@ -163,3 +163,5 @@ ID_CONSOLE = new_id()
 ID_APP_WEBSITE = new_id()
 ID_APP_FORUM = new_id()
 ID_APP_FBPAGE = new_id()
+
+ID_MANAGE_PALETTES = new_id()

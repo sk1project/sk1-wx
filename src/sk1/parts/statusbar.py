@@ -22,6 +22,8 @@ from sk1.resources import get_bmp, icons, get_icon
 from sk1.resources import pdids, get_tooltip_text
 from uc2.uc2const import IMAGE_NAMES, IMAGE_CMYK, IMAGE_RGB
 
+from .menubar import ActionMenuItem
+
 FONTSIZE = [str(config.statusbar_fontsize), ]
 
 
@@ -45,17 +47,17 @@ class AppStatusbar(wal.HPanel):
         self.pack((5, 20))
 
         self.mouse_info = MouseMonitor(self.mw.app, self)
-        self.pack(self.mouse_info)
+        self.pack(self.mouse_info, fill=True)
         self.mouse_info.hide()
 
         self.zoom = ZoomMonitor(self)
-        self.pack(self.zoom)
+        self.pack(self.zoom, fill=True)
 
         self.snap_monitor = SnapMonitor(self.mw.app, self)
-        self.pack(self.snap_monitor)
+        self.pack(self.snap_monitor, fill=True)
 
         self.page_info = PageMonitor(self.mw.app, self)
-        self.pack(self.page_info)
+        self.pack(self.page_info, fill=True)
         self.page_info.hide()
 
         info_panel = wal.HPanel(self)
@@ -80,17 +82,88 @@ class ZoomMonitor(wal.HPanel):
     def __init__(self, parent):
         wal.HPanel.__init__(self, parent)
         icon = get_icon(icons.PD_ZOOM, size=wal.SIZE_16)
-        self.pack(wal.Bitmap(self, icon), padding=2)
+        self.pack(wal.Bitmap(self, icon, on_left_click=self.show_menu))
 
-        self.label = wal.Label(self, '10000%')
+        self.label = wal.Label(self, '10000%', fontsize=FONTSIZE[0])
         self.label.set_min_width(70 if wal.IS_MAC else 55)
         self.label.set_tooltip(_('Zoom level'))
         self.pack(self.label, padding=2)
 
-        self.pack(wal.VLine(self.panel), fill=True, padding=2)
+        self.pack(wal.PLine(self.panel), fill=True, padding=3)
+        self.zoom_menu = ZoomMenu(parent.mw)
 
     def update(self, zoom):
         self.label.set_text('%s%%' % int(round(zoom * 100)))
+
+    def show_menu(self, _event):
+        self.zoom_menu.rebuild()
+        self.popup_menu(self.zoom_menu)
+
+
+class ZoomMenu(wal.Menu):
+    app = None
+    mw = None
+    items = None
+    empty_item = None
+    persistent_items = None
+
+    def __init__(self, mw):
+        self.app = mw.app
+        self.mw = mw
+        wal.Menu.__init__(self)
+        self.items = []
+        self.persistent_items = []
+
+        self.items.append(self.append_separator())
+        for pid in [pdids.ID_ZOOM_PAGE, wal.ID_ZOOM_FIT]:
+            action = self.app.actions[pid]
+            menuitem = ActionMenuItem(self.mw, self, action)
+            self.append_item(menuitem)
+            self.items.append(menuitem)
+
+        self.persistent_items += self.items
+
+    def rebuild(self, *_args):
+        for item in self.items:
+            self.remove_item(item)
+        self.items = []
+
+        entries = [10, 25, 33, 50, 75, 100, 200, 300, 400, 600, 800,
+                   1000, 1200, 1600, 2000]
+        for entry in entries:
+            menuitem = ZoomMenuItem(self.mw, self, entry)
+            self.items.append(menuitem)
+            self.append_item(menuitem)
+            menuitem.update()
+        for menuitem in self.persistent_items:
+            self.items.append(menuitem)
+            self.append_item(menuitem)
+
+
+class ZoomMenuItem(wal.MenuItem):
+    app = None
+    path = None
+    id = None
+
+    def __init__(self, mw, parent, zoom):
+        self.app = mw.app
+        self.zoom = zoom
+        self.id = wal.new_id()
+        wal.MenuItem.__init__(self, parent, self.id, '%d%%' % zoom)
+        self.bind_to(mw, self.action, self.id)
+        if int(round(self.get_zoom())) == self.zoom:
+            self.set_checkable(True)
+
+    def get_zoom(self):
+        return self.app.current_doc.canvas.zoom * 100.0
+
+    def update(self):
+        if self.is_checkable():
+            self.set_active(True)
+
+    def action(self, _event):
+        zoom = float(self.zoom) / self.get_zoom()
+        self.app.current_doc.canvas._zoom(zoom)
 
 
 class SnapMonitor(wal.HPanel):
@@ -131,7 +204,7 @@ class SnapMonitor(wal.HPanel):
         sw = ActionImageSwitch(self, actions[action_id], icons_dict)
         self.pack(sw, padding=2)
 
-        self.pack(wal.VLine(self.panel), fill=True, padding=2)
+        self.pack(wal.PLine(self.panel), fill=True, padding=5)
 
 
 class ColorMonitor(wal.HPanel):
@@ -198,11 +271,11 @@ class MouseMonitor(wal.HPanel):
     def __init__(self, app, parent):
         self.app = app
         wal.HPanel.__init__(self, parent)
-        self.pack(get_bmp(self.panel, icons.PD_MOUSE_MONITOR))
+        self.pack(get_bmp(self.panel, icons.PD_MOUSE_MONITOR), padding_all=3)
         self.pointer_txt = wal.Label(self.panel, text=' ', fontsize=FONTSIZE[0])
         self.pointer_txt.set_min_width(130 if wal.IS_MAC else 100)
         self.pack(self.pointer_txt)
-        self.pack(wal.VLine(self.panel), fill=True, padding=2)
+        self.pack(wal.PLine(self.panel), fill=True, padding=3)
         events.connect(events.MOUSE_STATUS, self.set_value)
         events.connect(events.NO_DOCS, self.hide_monitor)
         events.connect(events.DOC_CHANGED, self.doc_changed)

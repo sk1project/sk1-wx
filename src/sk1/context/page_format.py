@@ -240,6 +240,7 @@ class PageBorderPlugin(CtxPlugin):
 
         self.page_border = UnitSpin(self.app, self, onchange=self.user_changes,
                                     can_be_negative=True)
+        self.page_border.set_tooltip(_('Guide frame margin'))
         self.page_border.set_point_value(config.page_border)
         self.add(self.page_border, 0, LEFT | CENTER, 2)
 

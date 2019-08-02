@@ -359,6 +359,9 @@ class AppProxy:
     def preferences(self):
         get_prefs_dialog(self.mw)
 
+    def manage_palettes(self):
+        get_prefs_dialog(self.mw, pid='Palettes')
+
     def stroke_view(self):
         if self.insp.is_doc():
             canvas = self.app.current_doc.canvas

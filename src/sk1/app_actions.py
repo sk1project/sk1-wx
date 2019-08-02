@@ -116,7 +116,7 @@ def create_actions(app):
          insp.is_stroke_view),
         (pdids.ID_DRAFT_VIEW, proxy.draft_view, doc_chnls, insp.is_doc,
          insp.is_draft_view),
-        (pdids.ID_SIMULATE_PRINTER, proxy.simulate_printer, 
+        (pdids.ID_SIMULATE_PRINTER, proxy.simulate_printer,
          doc_chnls + [CONFIG_MODIFIED,], insp.is_cms, insp.is_cms_proofing),
         (wal.ID_ZOOM_100, proxy.zoom_100, doc_chnls, insp.is_doc),
         (wal.ID_ZOOM_IN, proxy.zoom_in, doc_chnls, insp.is_doc),
@@ -296,6 +296,7 @@ def create_actions(app):
         (pdids.ID_APP_FBPAGE, proxy.open_url, [], None, None,
          ('https://www.facebook.com/sK1-Project-308311182521658/',)),
         (wal.ID_ABOUT, proxy.about),
+        (pdids.ID_MANAGE_PALETTES, proxy.manage_palettes, [], None),
     ]
     # action_id, callback, channels, validator, checker,
     # callable_args, validator_args, checker_args
