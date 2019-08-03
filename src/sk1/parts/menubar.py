@@ -15,9 +15,13 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import logging
+
 import wal
 from sk1 import _, config, events
 from sk1.resources import pdids
+
+LOG = logging.getLogger(__name__)
 
 
 class AppMenuBar(wal.MenuBar):

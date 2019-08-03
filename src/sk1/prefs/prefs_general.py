@@ -78,8 +78,9 @@ class GeneralPrefs(PrefPanel):
     spin_sep = None
     ubuntu_gm = None
     ubuntu_overlay = None
+    server = None
 
-    def __init__(self, app, dlg, *args):
+    def __init__(self, app, dlg, *_args):
         PrefPanel.__init__(self, app, dlg)
 
     def build(self):
@@ -201,7 +202,7 @@ class GeneralPrefs(PrefPanel):
         self.nb.add_page(vpanel, _('Generic features'))
         self.pack(self.nb, fill=True, expand=True, padding=5)
 
-        txt = _('(*) - A restart is required to apply these options')
+        txt = _('(*) - Application restart is required to apply these options')
         self.pack(wal.Label(grid, txt, fontsize=-1), align_center=False)
 
         self.built = True

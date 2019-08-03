@@ -15,16 +15,18 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import logging
+
 import wal
 from sk1 import _, config, events
 from sk1.pwidgets import SbFillSwatch, SbStrokeSwatch, ActionImageSwitch
 from sk1.resources import get_bmp, icons, get_icon
 from sk1.resources import pdids, get_tooltip_text
 from uc2.uc2const import IMAGE_NAMES, IMAGE_CMYK, IMAGE_RGB
-
 from .menubar import ActionMenuItem
 
 FONTSIZE = [str(config.statusbar_fontsize), ]
+LOG = logging.getLogger(__name__)
 
 
 class AppStatusbar(wal.HPanel):
@@ -117,11 +119,15 @@ class ZoomMenu(wal.Menu):
         self.items.append(self.append_separator())
         for pid in [pdids.ID_ZOOM_PAGE, wal.ID_ZOOM_FIT]:
             action = self.app.actions[pid]
-            menuitem = ActionMenuItem(self.mw, self, action)
-            self.append_item(menuitem)
-            self.items.append(menuitem)
+            self.append_item(ActionMenuItem(self.mw, self, action))
 
         self.persistent_items += self.items
+
+    def append_item(self, item):
+        self.items.append(item)
+        wal.Menu.append_item(self, item)
+        if hasattr(item, 'is_separator'):
+            item.update()
 
     def rebuild(self, *_args):
         for item in self.items:
@@ -131,13 +137,10 @@ class ZoomMenu(wal.Menu):
         entries = [10, 25, 33, 50, 75, 100, 200, 300, 400, 600, 800,
                    1000, 1200, 1600, 2000]
         for entry in entries:
-            menuitem = ZoomMenuItem(self.mw, self, entry)
-            self.items.append(menuitem)
-            self.append_item(menuitem)
-            menuitem.update()
-        for menuitem in self.persistent_items:
-            self.items.append(menuitem)
-            self.append_item(menuitem)
+            self.append_item(ZoomMenuItem(self.mw, self, entry))
+
+        for item in self.persistent_items:
+            self.append_item(item)
 
 
 class ZoomMenuItem(wal.MenuItem):
@@ -283,14 +286,14 @@ class MouseMonitor(wal.HPanel):
     def clear(self):
         self.pointer_txt.set_text(' ' + _('No coords'))
 
-    def hide_monitor(self, *args):
+    def hide_monitor(self, *_args):
         self.hide()
         self.clear()
 
     def set_value(self, *args):
         self.pointer_txt.set_text(args[0])
 
-    def doc_changed(self, *args):
+    def doc_changed(self, *_args):
         self.clear()
         if not self.is_shown():
             self.show()
@@ -354,7 +357,7 @@ class PageMonitor(wal.HPanel):
         events.connect(events.DOC_MODIFIED, self.update)
         events.connect(events.PAGE_CHANGED, self.update)
 
-    def update(self, *args):
+    def update(self, *_args):
         if self.app.current_doc:
             presenter = self.app.current_doc
             pages = presenter.get_pages()
@@ -379,5 +382,5 @@ class PageMonitor(wal.HPanel):
             self.page_txt.set_text(' %s ' % text)
             self.show()
 
-    def hide_monitor(self, *args):
+    def hide_monitor(self, *_args):
         self.hide()
