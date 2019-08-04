@@ -51,6 +51,7 @@ GENERIC_KEYS = {
     pdids.ID_SIMULATE_PRINTER: (wal.ACCEL_NORMAL, wal.KEY_F9),
     pdids.ID_PREV_ZOOM: (wal.ACCEL_NORMAL, wal.KEY_F3),
     pdids.ID_ZOOM_PAGE: (wal.ACCEL_SHIFT, wal.KEY_F4),
+    wal.ID_ZOOM_100: (wal.ACCEL_CTRL, wal.KEY_F4),
     wal.ID_ZOOM_FIT: (wal.ACCEL_NORMAL, wal.KEY_F4),
     wal.ID_REFRESH: (wal.ACCEL_ALT, ord('R')),
     pdids.ID_SNAP_TO_GRID: (wal.ACCEL_ALT, ord('G')),

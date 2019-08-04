@@ -84,11 +84,15 @@ class ZoomMonitor(wal.HPanel):
     def __init__(self, parent):
         wal.HPanel.__init__(self, parent)
         icon = get_icon(icons.PD_ZOOM, size=wal.SIZE_16)
-        self.pack(wal.Bitmap(self, icon, on_left_click=self.show_menu))
+        self.pack(wal.Bitmap(self, icon, on_left_click=self.show_menu,
+                             on_right_click=self.show_menu))
 
-        self.label = wal.Label(self, '10000%', fontsize=FONTSIZE[0])
-        self.label.set_min_width(70 if wal.IS_MAC else 55)
+        self.label = wal.SensitiveLabel(self, '10000%', fontsize=FONTSIZE[0],
+                                        on_left_click=self.show_menu,
+                                        on_right_click=self.show_menu)
+        self.label.set_min_width(65 if wal.IS_MAC else 55)
         self.label.set_tooltip(_('Zoom level'))
+        self.label.set_bg(wal.RED)
         self.pack(self.label, padding=2)
 
         self.pack(wal.PLine(self.panel), fill=True, padding=3)
@@ -152,7 +156,8 @@ class ZoomMenuItem(wal.MenuItem):
         self.app = mw.app
         self.zoom = zoom
         self.id = wal.new_id()
-        wal.MenuItem.__init__(self, parent, self.id, '%d%%' % zoom)
+        txt = '%d%%\tCtrl+F4' % zoom if zoom == 100 else '%d%%' % zoom
+        wal.MenuItem.__init__(self, parent, self.id, txt)
         self.bind_to(mw, self.action, self.id)
         if int(round(self.get_zoom())) == self.zoom:
             self.set_checkable(True)
