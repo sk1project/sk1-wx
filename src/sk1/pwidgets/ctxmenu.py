@@ -57,7 +57,7 @@ class ContextMenu(wal.Menu):
                 self.items.append(self.append_separator())
             else:
                 action = self.app.actions[item]
-                menuitem = CtxActionMenuItem(self.parent, self, action)
+                menuitem = ActionMenuItem(self.parent, self, action)
                 self.append_item(menuitem)
                 menuitem.update()
                 self.items.append(menuitem)
@@ -66,7 +66,7 @@ class ContextMenu(wal.Menu):
         return self.entries
 
 
-class CtxActionMenuItem(wal.MenuItem):
+class ActionMenuItem(wal.MenuItem):
     def __init__(self, mw, parent, action):
         self.mw = mw
         self.parent = parent

@@ -18,7 +18,7 @@
 import wal
 from sk1 import modes
 from sk1.resources import pdids
-from sk1.pwidgets import ContextMenu
+from .ctxmenu import ContextMenu
 
 UNDO = [wal.ID_UNDO, wal.ID_REDO]
 EDIT = [None, wal.ID_CUT, wal.ID_COPY, wal.ID_PASTE,

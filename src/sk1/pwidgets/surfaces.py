@@ -22,7 +22,7 @@ from sk1.appconst import RENDERING_DELAY
 from uc2 import uc2const
 from uc2.uc2const import point_dict
 
-from .ctx_menu import CanvasCtxMenu
+from .canvas_menu import CanvasCtxMenu
 from .kbd_proc import KbdProcessor
 
 

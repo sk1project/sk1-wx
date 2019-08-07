@@ -134,6 +134,31 @@ class ZoomMenu(wal.Menu):
             item.update()
 
     def rebuild(self, *_args):
+        class ZoomMenuItem(wal.MenuItem):
+            app = None
+            path = None
+
+            def __init__(self, mw, parent, zoom):
+                self.app = mw.app
+                self.zoom = zoom
+                item_id = wal.new_id()
+                txt = '%d%%\tCtrl+F4' % zoom if zoom == 100 else '%d%%' % zoom
+                wal.MenuItem.__init__(self, parent, item_id, txt)
+                self.bind_to(mw, self.action, item_id)
+                if int(round(self.get_zoom())) == self.zoom:
+                    self.set_checkable(True)
+
+            def get_zoom(self):
+                return self.app.current_doc.canvas.zoom * 100.0
+
+            def update(self):
+                if self.is_checkable():
+                    self.set_active(True)
+
+            def action(self, _event):
+                zoom = float(self.zoom) / self.get_zoom()
+                self.app.current_doc.canvas._zoom(zoom)
+
         for item in self.items:
             self.remove_item(item)
         self.items = []
@@ -145,33 +170,6 @@ class ZoomMenu(wal.Menu):
 
         for item in self.persistent_items:
             self.append_item(item)
-
-
-class ZoomMenuItem(wal.MenuItem):
-    app = None
-    path = None
-    id = None
-
-    def __init__(self, mw, parent, zoom):
-        self.app = mw.app
-        self.zoom = zoom
-        self.id = wal.new_id()
-        txt = '%d%%\tCtrl+F4' % zoom if zoom == 100 else '%d%%' % zoom
-        wal.MenuItem.__init__(self, parent, self.id, txt)
-        self.bind_to(mw, self.action, self.id)
-        if int(round(self.get_zoom())) == self.zoom:
-            self.set_checkable(True)
-
-    def get_zoom(self):
-        return self.app.current_doc.canvas.zoom * 100.0
-
-    def update(self):
-        if self.is_checkable():
-            self.set_active(True)
-
-    def action(self, _event):
-        zoom = float(self.zoom) / self.get_zoom()
-        self.app.current_doc.canvas._zoom(zoom)
 
 
 class SnapMonitor(wal.HPanel):

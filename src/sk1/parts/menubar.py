@@ -20,6 +20,7 @@ import logging
 import wal
 from sk1 import _, config, events
 from sk1.resources import pdids
+from sk1.pwidgets.ctxmenu import ActionMenuItem
 
 LOG = logging.getLogger(__name__)
 
@@ -162,18 +163,18 @@ class AppMenuBar(wal.MenuBar):
 class HistoryMenu(wal.Menu):
     app = None
     mw = None
-    items = []
+    items = None
     empty_item = None
-    persistent_items = []
+    persistent_items = None
 
     def __init__(self, app, mw):
         self.app = app
         self.mw = mw
         wal.Menu.__init__(self)
+        self.items = []
+        self.persistent_items = []
 
         self.empty_item = wal.MenuItem(self, wal.new_id(), _('Empty'))
-        if not wal.IS_WX3:
-            self.empty_item.set_enable(False)
 
         self.items.append(self.append_separator())
         action = self.app.actions[pdids.ID_CLEAR_LOG]
@@ -187,6 +188,20 @@ class HistoryMenu(wal.Menu):
         events.connect(events.HISTORY_CHANGED, self.rebuild)
 
     def rebuild(self, *_args):
+        class HistoryMenuItem(wal.MenuItem):
+            app = None
+            path = None
+
+            def __init__(self, mw, parent, text, path):
+                self.app = mw.app
+                self.path = path
+                item_id = wal.new_id()
+                wal.MenuItem.__init__(self, parent, item_id, text)
+                self.bind_to(mw, self.action, item_id)
+
+            def action(self, _event):
+                self.app.open(self.path)
+
         for item in self.items:
             self.remove_item(item)
         self.items = []
@@ -205,40 +220,4 @@ class HistoryMenu(wal.Menu):
                 self.append_item(menuitem)
 
 
-class HistoryMenuItem(wal.MenuItem):
-    app = None
-    path = None
-    id = None
 
-    def __init__(self, mw, parent, text, path):
-        self.app = mw.app
-        self.path = path
-        self.id = wal.new_id()
-        wal.MenuItem.__init__(self, parent, self.id, text)
-        self.bind_to(mw, self.action, self.id)
-
-    def action(self, _event):
-        self.app.open(self.path)
-
-
-class ActionMenuItem(wal.MenuItem):
-    def __init__(self, mw, parent, action):
-        self.mw = mw
-        self.parent = parent
-        self.action = action
-        action_id = action.action_id
-        text = action.get_menu_text()
-        if action.is_acc:
-            text += '\t' + action.get_shortcut_text()
-        wal.MenuItem.__init__(self, parent, action_id, text=text)
-        if action.is_icon:
-            self.set_bitmap(action.get_icon(config.menu_size, wal.ART_MENU))
-        action.register_as_menuitem(self)
-        self.bind_to(self.mw, action, action_id)
-        if action.is_toggle():
-            self.set_checkable(True)
-
-    def update(self):
-        self.set_enable(self.action.enabled)
-        if self.action.is_toggle():
-            self.set_active(self.action.active)
