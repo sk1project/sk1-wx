@@ -83,7 +83,9 @@ class PrefsDialog(wal.OkCancelDialog):
         self.tree.set_item_by_reference(self.get_plugin_by_pid(pid))
 
     def build(self):
-        self.splitter = wal.Splitter(self.panel)
+        if wal.IS_GTK3:
+            self.panel.pack(wal.PLine(self.panel), fill=True)
+        self.splitter = wal.Splitter(self.panel, hidden=True)
         self.panel.pack(self.splitter, expand=True, fill=True)
         self.tree_container = wal.VPanel(self.splitter)
         if not PREFS_DATA:
@@ -95,16 +97,24 @@ class PrefsDialog(wal.OkCancelDialog):
                                    on_select=self.on_select, border=False)
         self.tree_container.pack(self.tree, fill=True, expand=True)
         cont = wal.VPanel(self.splitter)
-        cont.pack(wal.PLine(cont), fill=True)
-        self.container = wal.VPanel(cont)
+        if not wal.IS_GTK3:
+            cont.pack(wal.PLine(cont), fill=True)
+        self.container = wal.HPanel(cont)
+        if wal.IS_GTK3:
+            self.container.pack(wal.PLine(self.container), fill=True)
+        self.container.pack(
+            wal.SplitterSash(self.container, self.splitter), fill=True)
         cont.pack(self.container, fill=True, expand=True)
-        cont.pack(wal.PLine(cont), fill=True)
+        if not wal.IS_GTK3:
+            cont.pack(wal.PLine(cont), fill=True)
         sash_pos = config.prefs_sash_pos
         self.splitter.split_vertically(self.tree_container, cont, sash_pos)
         self.splitter.set_min_size(sash_pos)
         if not wal.IS_MSW:
             self.tree.set_indent(5)
         self.tree.expand_all()
+        if wal.IS_GTK3:
+            self.panel.pack(wal.PLine(self.panel), fill=True)
 
     def set_dialog_buttons(self):
         wal.OkCancelDialog.set_dialog_buttons(self)

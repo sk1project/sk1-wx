@@ -62,7 +62,7 @@ class MDIArea(wal.VPanel):
         hpanel.pack(self.tools, fill=True, padding_all=2)
         hpanel.pack(wal.PLine(hpanel), fill=True)
 
-        self.splitter = wal.Splitter(hpanel)
+        self.splitter = wal.Splitter(hpanel, hidden=True)
 
         # ----- Doc Area
         self.grid_panel = wal.GridPanel(self.splitter)

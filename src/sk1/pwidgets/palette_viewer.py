@@ -129,9 +129,9 @@ class ScrolledPalette(wal.ScrolledCanvas, wal.SensitiveCanvas):
         return None
 
     def paint(self):
+        w, h = self.get_size()
         if not self.colors:
             self.set_stroke(wal.LIGHT_GRAY)
-            w, h = self.get_size()
             self.draw_line(0, 0, w, h)
             self.draw_line(w, 0, 0, h)
             return
@@ -149,10 +149,11 @@ class ScrolledPalette(wal.ScrolledCanvas, wal.SensitiveCanvas):
             else:
                 self.normal_mode_paint()
 
-        self.set_stroke(wal.UI_COLORS['dark_shadow'])
-        self.set_fill(wal.UI_COLORS['bg'])
-        self.draw_rect(self.width - self.sb_width, -1,
-                       self.sb_width + 1, self.get_size()[1] + 2)
+        if not self.get_virtual_size()[1] > h:
+            self.set_stroke()
+            self.set_fill(wal.UI_COLORS['bg'])
+            self.draw_rect(self.width - self.sb_width, -3,
+                           self.sb_width + 5, self.get_size()[1] + 6)
 
     def normal_mode_paint(self):
         self.cell_in_line = 10
@@ -250,7 +251,7 @@ class PaletteViewer(wal.VPanel):
         if wal.IS_WX3:
             color = wal.GRAY
             if wal.IS_GTK:
-                color = wal.UI_COLORS['pressed_border']
+                color = wal.UI_COLORS['dark_shadow']
             border.set_bg(color)
         self.pack(border, expand=True, fill=True)
         self.win = ScrolledPalette(border, self.cms, onclick=self.select_color)
