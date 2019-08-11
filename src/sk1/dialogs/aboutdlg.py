@@ -72,7 +72,7 @@ class AboutPage(wal.HPanel):
         txt = '(C) 2011-%s sK1 Project team' % year + '\n'
         box.pack(wal.Label(box, txt), fill=True)
         p = wal.HPanel(box)
-        p.pack(wal.HtmlLabel(p, 'https://sk1project.net'))
+        p.pack(wal.HyperlinkLabel(p, 'https://sk1project.net'))
         box.pack(p, fill=True)
 
 
