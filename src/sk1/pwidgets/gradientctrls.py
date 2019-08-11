@@ -199,7 +199,7 @@ class StopPanel(wal.LabeledPanel):
         self.position.set_enable(self.selected_stop not in [0, last_indx])
 
 
-class StopsEditor(wal.VPanel, wal.SensitiveCanvas):
+class StopsEditor(wal.VPanel, wal.SensitiveDrawableWidget):
     stops = []
     selected_stop = 0
     bmp_knob = None
@@ -216,7 +216,7 @@ class StopsEditor(wal.VPanel, wal.SensitiveCanvas):
         self.callback = onchange
         self.callback2 = onmove
         wal.VPanel.__init__(self, parent)
-        wal.SensitiveCanvas.__init__(self, True)
+        wal.SensitiveDrawableWidget.__init__(self, True)
         self.pack(size)
         self.bmp_knob = get_icon(icons.SLIDER_KNOB, size=wal.DEF_SIZE)
         self.bmp_knob_s = get_icon(icons.SLIDER_KNOB_SEL, size=wal.DEF_SIZE)

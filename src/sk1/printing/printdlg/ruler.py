@@ -28,13 +28,13 @@ CORNER = ((3, 1, 3, 16), (2, 2, 5, 2), (1, 13, 16, 13),
           (9, 7, 10, 6), (11, 5, 12, 4), (13, 3, 14, 2))
 
 
-class PreviewCorner(wal.HPanel, wal.Canvas):
+class PreviewCorner(wal.HPanel, wal.DrawableWidget):
     icon = None
 
     def __init__(self, parent):
         size = config.ruler_size
         wal.HPanel.__init__(self, parent)
-        wal.Canvas.__init__(self)
+        wal.DrawableWidget.__init__(self)
         self.pack((size, size))
         self.set_bg(wal.WHITE)
         self.set_double_buffered()
@@ -60,7 +60,7 @@ class PreviewCorner(wal.HPanel, wal.Canvas):
             self.draw_line(x0 + shift, y0 + shift, x1 + shift, y1 + shift)
 
 
-class PreviewRuler(wal.HPanel, wal.Canvas):
+class PreviewRuler(wal.HPanel, wal.DrawableWidget):
     horizontal = True
     units = uc2const.UNIT_MM
     canvas = None
@@ -75,7 +75,7 @@ class PreviewRuler(wal.HPanel, wal.Canvas):
         self.horizontal = horizontal
         size = config.ruler_size
         wal.HPanel.__init__(self, parent)
-        wal.Canvas.__init__(self)
+        wal.DrawableWidget.__init__(self)
         self.pack((size, size))
         self.set_bg(wal.WHITE)
         self.set_double_buffered()

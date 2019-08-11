@@ -35,7 +35,7 @@ def generate_fontname_cache(fonts):
     height = 0
     for item in fonts:
         try:
-            bmp, size = wal.text_to_bitmap(item)
+            bmp, size = wal.text_to_bitmap(item, wal.UI_COLORS['text'])
         except Exception as e:
             LOG.error('Cannot process font <%s> %s', item, e)
             continue

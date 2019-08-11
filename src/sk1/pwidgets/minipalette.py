@@ -22,7 +22,7 @@ from uc2 import cms
 COLORS = ['#282828', '#424242', '#666666', '#989898', '#D5D5D5', '#FFFFFF']
 
 
-class ColorCell(wal.VPanel, wal.SensitiveCanvas):
+class ColorCell(wal.VPanel, wal.SensitiveDrawableWidget):
     color = None
     callback = None
     state = True
@@ -32,7 +32,7 @@ class ColorCell(wal.VPanel, wal.SensitiveCanvas):
         self.color = color
         self.callback = onclick
         wal.VPanel.__init__(self, parent)
-        wal.SensitiveCanvas.__init__(self)
+        wal.SensitiveDrawableWidget.__init__(self)
         self.pack(size)
         if tooltip:
             self.set_tooltip(tooltip)

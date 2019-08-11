@@ -199,7 +199,7 @@ class HexField(wal.Entry):
                 self.callback()
 
 
-class SwatchCanvas(wal.SensitiveCanvas):
+class SwatchCanvas(wal.SensitiveDrawableWidget):
     fill = None
     color = None
     cms = None
@@ -211,7 +211,7 @@ class SwatchCanvas(wal.SensitiveCanvas):
     def __init__(self, border='', even_odd=False):
         self.border = border
         self.even_odd = even_odd
-        wal.SensitiveCanvas.__init__(self)
+        wal.SensitiveDrawableWidget.__init__(self)
         self.set_double_buffered()
 
     def get_cairo_color(self, color):
@@ -633,7 +633,7 @@ class StyleMonitor(wal.VPanel):
         self.app.proxy.stroke_dialog(True)
 
 
-class ColoredSlider(wal.VPanel, wal.SensitiveCanvas):
+class ColoredSlider(wal.VPanel, wal.SensitiveDrawableWidget):
     start_clr = wal.BLACK
     stop_clr = wal.WHITE
     value = 0.0
@@ -643,7 +643,7 @@ class ColoredSlider(wal.VPanel, wal.SensitiveCanvas):
 
     def __init__(self, parent, size=20, onchange=None):
         wal.VPanel.__init__(self, parent)
-        wal.SensitiveCanvas.__init__(self, check_move=True)
+        wal.SensitiveDrawableWidget.__init__(self, check_move=True)
         self.set_double_buffered()
         self.pack((256 + 8, size + 10))
         self.knob = get_icon(icons.SLIDER_KNOB, size=wal.DEF_SIZE)

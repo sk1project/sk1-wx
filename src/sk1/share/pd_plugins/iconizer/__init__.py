@@ -65,13 +65,13 @@ class IconizerConfig(XmlConfigParser):
     save_dir = '~'
 
 
-class ImageCanvas(wal.ScrolledCanvas, wal.Canvas):
+class ImageCanvas(wal.ScrolledCanvas, wal.DrawableWidget):
     bitmap = None
     show_border = False
 
     def __init__(self, parent, bgcolor=None):
         wal.ScrolledCanvas.__init__(self, parent)
-        wal.Canvas.__init__(self)
+        wal.DrawableWidget.__init__(self)
         bgcolor = bgcolor or wal.WHITE
         self.set_bg(bgcolor)
 

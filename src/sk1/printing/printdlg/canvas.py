@@ -28,7 +28,7 @@ CAIRO_WHITE = [1.0, 1.0, 1.0]
 CAIRO_RED = [1.0, 0.0, 0.0]
 
 
-class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
+class PreviewCanvas(wal.Panel, wal.SensitiveDrawableWidget):
     printer = None
     printout = None
     renderer = None
@@ -57,7 +57,7 @@ class PreviewCanvas(wal.Panel, wal.SensitiveCanvas):
         self.printout = printout
         self.zoom_stack = []
         wal.Panel.__init__(self, parent, allow_input=True)
-        wal.SensitiveCanvas.__init__(self, True, Kbd_Processor(self))
+        wal.SensitiveDrawableWidget.__init__(self, True, Kbd_Processor(self))
         self.set_bg(wal.GRAY)
         self.pages = self.printout.get_print_pages()
         self.renderer = self.printout.renderer

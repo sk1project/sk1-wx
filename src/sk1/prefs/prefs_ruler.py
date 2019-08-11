@@ -161,7 +161,7 @@ TEXT_TICKS = [(15.017, '-100'), (53.729, '-75'), (92.441, '-50'),
               (247.289, '50'), (286.001, '75'), (324.714, '100'), ]
 
 
-class RulerTest(wal.HPanel, wal.Canvas):
+class RulerTest(wal.HPanel, wal.DrawableWidget):
     font = {}
     surface = None
     ctx = None
@@ -169,7 +169,7 @@ class RulerTest(wal.HPanel, wal.Canvas):
     def __init__(self, parent, prefs):
         self.prefs = prefs
         wal.HPanel.__init__(self, parent)
-        wal.Canvas.__init__(self)
+        wal.DrawableWidget.__init__(self)
         self.set_size()
         self.set_bg(wal.WHITE)
         self.load_font(self.prefs.ruler_font_size.get_value(),

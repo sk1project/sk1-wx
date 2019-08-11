@@ -371,7 +371,7 @@ class UnitsProps(DocPropsPanel):
 WIDTH = 300
 
 
-class GridPreview(wal.VPanel, wal.Canvas):
+class GridPreview(wal.VPanel, wal.DrawableWidget):
     color = []
     vgrid = range(0, WIDTH, 20)
     hgrid = range(0, WIDTH, 20)
@@ -379,7 +379,7 @@ class GridPreview(wal.VPanel, wal.Canvas):
     def __init__(self, parent, color):
         self.color = color
         wal.VPanel.__init__(self, parent, True)
-        wal.Canvas.__init__(self)
+        wal.DrawableWidget.__init__(self)
         self.set_bg(wal.WHITE)
 
     def set_color(self, color):
@@ -556,13 +556,13 @@ class GridProps(DocPropsPanel):
             self.app.actions[pdids.ID_SHOW_GRID]()
 
 
-class GuidePreview(wal.VPanel, wal.Canvas):
+class GuidePreview(wal.VPanel, wal.DrawableWidget):
     color = []
 
     def __init__(self, parent, color):
         self.color = color
         wal.VPanel.__init__(self, parent, True)
-        wal.Canvas.__init__(self)
+        wal.DrawableWidget.__init__(self)
         self.set_bg(wal.WHITE)
 
     def set_color(self, color):

@@ -43,7 +43,7 @@ MODE_NAME = {
 PREVIEW_MODES = [AUTO_MODE, NORMAL_MODE, LARGE_MODE, LIST_MODE]
 
 
-class ScrolledPalette(wal.ScrolledCanvas, wal.SensitiveCanvas):
+class ScrolledPalette(wal.ScrolledCanvas, wal.SensitiveDrawableWidget):
     mode = AUTO_MODE
     width = 10
     height = 10
@@ -62,7 +62,7 @@ class ScrolledPalette(wal.ScrolledCanvas, wal.SensitiveCanvas):
         self.parent = parent
         self.callback = onclick
         wal.ScrolledCanvas.__init__(self, parent, border)
-        wal.SensitiveCanvas.__init__(self, True)
+        wal.SensitiveDrawableWidget.__init__(self, True)
         sb = wal.ScrollBar(self)
         self.sb_width = sb.get_size()[0]
         sb.destroy()
