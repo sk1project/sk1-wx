@@ -192,8 +192,11 @@ class GeneralPrefs(PrefPanel):
 
         grid.pack(wal.Label(grid, _('Language (*):')))
         self.lang = wal.Combolist(grid, items=LANGS)
-        index = 0 if config.language == 'system' \
-            else LANGS.index(config.language)
+        try:
+            index = 0 if config.language == 'system' \
+                else LANGS.index(config.language)
+        except ValueError:
+            index = 0
         self.lang.set_active(index)
         grid.pack(self.lang)
 

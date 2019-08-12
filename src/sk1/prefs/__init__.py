@@ -20,6 +20,7 @@ import logging
 import wal
 from generic import RootItem
 from prefs_canvas import CanvasPrefs
+from prefs_edit import EditPrefs
 from prefs_cms import CMSPrefs
 from prefs_fonts import FontPrefs
 from prefs_general import GeneralPrefs
@@ -33,6 +34,7 @@ from templates import GridPrefs
 PREFS_APP = [GeneralPrefs, CMSPrefs, RulersPrefs,
              PalettesPrefs, FontPrefs,
              # CanvasPrefs,
+             EditPrefs,
              PrinterPrefs, ]
 
 PREFS_DOC = [GridPrefs, ]
