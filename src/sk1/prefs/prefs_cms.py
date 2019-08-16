@@ -279,11 +279,12 @@ class ManageButton(wal.ImageButton):
         self.owner = owner
         self.colorspace = colorspace
         txt = _('Add/remove %s profiles') % colorspace
-        art_size = wal.SIZE_16
+        art_size = wal.DEF_SIZE
         decoration_padding = 6
         if wal.IS_MSW:
             decoration_padding = 4
-        wal.ImageButton.__init__(self, parent, icons.PD_EDIT, art_size=art_size,
+        wal.ImageButton.__init__(self, parent, icons.PD_PREFS_EDIT,
+                                 art_size=art_size,
                                  decoration_padding=decoration_padding,
                                  tooltip=txt, flat=False, onclick=self.action)
 

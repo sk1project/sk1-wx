@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- sK1 2 1
+000006a8 -->
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="300" height="300">
+<image y="0.0"  x="0.0" xlink:href="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAIAAAD2HxkiAAAABmJLR0QA/wD/AP+gvaeTAAAEs0lEQVR4nO3dwY3jOBBAUc3CeYmREXZmUmTagwcD7K0Hbfn3yu8lwLKpD/BWv47jWIDOrR6AC9r3fdu2U48YY6zreuoRbyNCXm/btvv9fuoRc87LRPhPPQB8OhFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBC7LW9Z6cjPcY31mvu+Px6Peorv+n0Xx3Gcvc+RH2XOeZzMF/VFz7vwHIWYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiN2WZRljzDnrSXiTMUY9wgus63qBVafPu7gtV/k9fJR1XS+wqffJcxRiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIIXarB3iZfd+3bTv1iDGGRY5f8Ya1s9dYdfp0nQi3bbvf76ceMecU4VdYO/tXPEchJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGK35S3rNd9g3/d6hBe4xl3wRb/Xzh7HcfZuzcuYcx4ncxcf5flFeY5CTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRuy7KMMeac9STfte/7BfaEXuMu+KIxxvKMcF3XdV3jcb7t8XhcIMJr3AV/xXMUYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCF2qwd4mTes13yudDzVvu/btp16xBjDCsQf5ToRXmO95rZt9/v91CPmnBf4o67EcxRiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIIXZb3rKY8hqusV5z3/fH41FPwbL8+aKO4zh7K+VlzDmPk7mLj/L8ojxHISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBit2VZxhhzznqS/4ExRj3CC6zreoFVp9fw/KJui1v5MOu62tT7o3iOQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHEbvUA/McbFrZeY9Xplfw6jqOeAT7avwfVwIcgw6v+AAAAAElFTkSuQmCC
+"  height="300" width="300" />
+<!-- Encapsulated SK2
+obj('Document')
+set('styles',{'Default Style': [[], [0, 0.28346456692913385, ['CMYK', [0.0, 0.0, 0.0, 1.0], 1.0, 'Black'], [], 1, 0, 10.433, 0, 0, []], [], []], 'Default Text Style': [[1, 0, ['CMYK', [0.0, 0.0, 0.0, 1.0], 1.0, 'Black']], [], ['Sans', 'Regular', 12.0, 0, [], True]]})
+set('doc_units','px')
+set('metainfo',['', '', '', ''])
+set('doc_origin',1)
+set('resources',{})
+obj('Pages')
+set('page_counter',1)
+set('page_format',['A4', (595.275590551181, 841.8897637795275), 0])
+obj('Page')
+set('name','Page 1')
+set('page_format',['Icon 32x32', (32.0, 32.0), 1])
+set('layer_counter',1)
+obj('Layer')
+set('style',[[], [0, 0.28346456692913385, ['RGB', [0.19607843137254902, 0.3215686274509804, 0.6352941176470588], 1.0, ''], [], 1, 0, 10.433, 0, 0, []], [], []])
+set('name','Layer 1')
+set('color',[0.19607843137254902, 0.3215686274509804, 0.6352941176470588, 1.0])
+set('properties',[1, 1, 1, 1])
+obj('Curve')
+set('paths',[[[6.0, 34.0], [[6.0, 38.0], [18.0, 38.0], [18.0, 34.0], [6.0, 34.0]], 1], [[6.0, 10.0], [[6.0, 14.0], [26.0, 14.0], [26.0, 10.0], [6.0, 10.0]], 1], [[26.0, 42.0], [[26.0, 38.0], [42.0, 38.0], [42.0, 34.0], [26.0, 34.0], [26.0, 30.0], [22.0, 30.0], [22.0, 42.0], [26.0, 42.0]], 1], [[14.0, 18.0], [[14.0, 22.0], [6.0, 22.0], [6.0, 26.0], [14.0, 26.0], [14.0, 30.0], [18.0, 30.0], [18.0, 18.0], [14.0, 18.0]], 1], [[42.0, 26.0], [[42.0, 22.0], [22.0, 22.0], [22.0, 26.0], [42.0, 26.0]], 1], [[30.0, 18.0], [[34.0, 18.0], [34.0, 14.0], [42.0, 14.0], [42.0, 10.0], [34.0, 10.0], [34.0, 6.0], [30.0, 6.0], [30.0, 18.0]], 1]])
+set('style',[[0, 0, ['RGB', [0.0, 0.0, 0.0], 1.0, 'Black']], [], [], []])
+set('stroke_trafo',[0.8888888888888888, 0.0, 0.0, -0.8888888888888888, -21.332936981540882, 21.332939844102498])
+set('fill_trafo',[])
+set('trafo',[0.8888888888888888, 0.0, 0.0, -0.8888888888888888, -21.332936981540882, 21.332939844102498])
+end()
+end()
+end()
+end()
+obj('DesktopLayers')
+end()
+obj('MasterLayers')
+end()
+obj('GridLayer')
+set('style',[[], [0, 0.28346456692913385, ['RGB', [0.0, 0.0, 1.0], 0.15, ''], [], 1, 0, 10.433, 0, 0, []], [], []])
+set('name','GridLayer')
+set('color',[0.0, 0.0, 1.0, 0.15])
+set('grid',[0.0, 0.0, 1.0, 1.0])
+set('properties',[0, 0, 0, 1])
+end()
+obj('GuideLayer')
+set('style',[[], [0, 0.28346456692913385, ['RGB', [0.0, 0.3176470588235294, 1.0], 1.0, ''], [], 1, 0, 10.433, 0, 0, []], [], []])
+set('name','GuideLayer')
+set('color',[0.0, 0.3176470588235294, 1.0, 1.0])
+set('properties',[1, 1, 0, 0])
+end()
+end()
+-->
+</svg>

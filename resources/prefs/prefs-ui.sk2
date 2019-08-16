@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- sK1 2 1
+00000580 -->
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="300" height="300">
+<image y="0.0"  x="0.0" xlink:href="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAIAAAD2HxkiAAAABmJLR0QA/wD/AP+gvaeTAAAD1UlEQVR4nO3dwY3bQBBFwV5DgXVqzGwykw+iQ/A+AaxKgB9oPGBu/Hm/3wN0XjNzzjnn1EuYmdnd3f2vn3Du7/E59x3hdV31Hm6/EKFzf4/d/VNvgKcTIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBB71QP4bbtbT+D2uYUIH2d3dfhVPEchJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGL+T/g455xzTr2CmX//ihTh45xzruuqV3DbXc9RiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoSYCCEmQoiJEGIihJgIISZCiIkQYiKEmAghJkKIiRBiIoTYa2Z2t57BzS0e6I7Q7aHiOQoxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEHvNzDnnnFMvYca/Ih/pjvC6rnoJNxE+jecoxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxEQIMRFCTIQQEyHERAgxEUJMhBATIcRECDERQkyEEBMhxF4zs7v1DG6/cAvn/h6fW/y83+96CTzaX/k6O3OnuvFSAAAAAElFTkSuQmCC
+"  height="300" width="300" />
+<!-- Encapsulated SK2
+obj('Document')
+set('styles',{'Default Style': [[], [0, 0.28346456692913385, ['CMYK', [0.0, 0.0, 0.0, 1.0], 1.0, 'Black'], [], 1, 0, 10.433, 0, 0, []], [], []], 'Default Text Style': [[1, 0, ['CMYK', [0.0, 0.0, 0.0, 1.0], 1.0, 'Black']], [], ['Sans', 'Regular', 12.0, 0, [], True]]})
+set('doc_units','px')
+set('metainfo',['', '', '', ''])
+set('doc_origin',1)
+set('resources',{})
+obj('Pages')
+set('page_counter',1)
+set('page_format',['Custom', (48.0, 48.0), 0])
+obj('Page')
+set('name','SVG page')
+set('page_format',['Icon 32x32', (32.0, 32.0), 0])
+set('layer_counter',1)
+obj('Layer')
+set('style',[[], [0, 0.28346456692913385, ['RGB', [0.19607843137254902, 0.3215686274509804, 0.6352941176470588], 1.0, ''], [], 1, 0, 10.433, 0, 0, []], [], []])
+set('name','Layer 1')
+set('color',[0.19607843137254902, 0.3215686274509804, 0.6352941176470588, 1.0])
+set('properties',[1, 1, 1, 1])
+obj('Curve')
+set('paths',[[[6.0, 26.0], [[22.0, 26.0], [22.0, 6.0], [6.0, 6.0], [6.0, 26.0]], 1], [[6.0, 42.0], [[22.0, 42.0], [22.0, 30.0], [6.0, 30.0], [6.0, 42.0]], 1], [[26.0, 42.0], [[42.0, 42.0], [42.0, 22.0], [26.0, 22.0], [26.0, 42.0]], 1], [[26.0, 6.0], [[26.0, 18.0], [42.0, 18.0], [42.0, 6.0], [26.0, 6.0]], 1]])
+set('style',[[0, 0, ['RGB', [0.0, 0.0, 0.0], 1.0, 'Black']], [], [], []])
+set('stroke_trafo',[0.8888888888888888, 0.0, 0.0, -0.8888888888888888, -21.333333333333332, 21.333333333333332])
+set('fill_trafo',[])
+set('trafo',[0.8888888888888888, 0.0, 0.0, -0.8888888888888888, -21.333333333333332, 21.333333333333332])
+end()
+end()
+end()
+end()
+obj('DesktopLayers')
+end()
+obj('MasterLayers')
+end()
+obj('GridLayer')
+set('style',[[], [0, 0.28346456692913385, ['RGB', [0.0, 0.0, 1.0], 0.15, ''], [], 1, 0, 10.433, 0, 0, []], [], []])
+set('name','GridLayer')
+set('color',[0.0, 0.0, 1.0, 0.15])
+set('grid',[0.0, 0.0, 2.8346456692913384, 2.8346456692913384])
+set('properties',[0, 0, 0, 1])
+end()
+obj('GuideLayer')
+set('style',[[], [0, 0.28346456692913385, ['RGB', [0.0, 0.3176470588235294, 1.0], 1.0, ''], [], 1, 0, 10.433, 0, 0, []], [], []])
+set('name','GuideLayer')
+set('color',[0.0, 0.3176470588235294, 1.0, 1.0])
+set('properties',[1, 1, 0, 0])
+end()
+end()
+-->
+</svg>
