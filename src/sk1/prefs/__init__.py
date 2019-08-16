@@ -23,42 +23,19 @@ from prefs_canvas import CanvasPrefs
 from prefs_cms import CMSPrefs
 from prefs_fonts import FontPrefs
 from prefs_general import GeneralPrefs
+from prefs_ui import UiPrefs
 from prefs_palettes import PalettesPrefs
 from prefs_printers import PrinterPrefs
 from prefs_ruler import RulersPrefs
 from sk1 import _, config
-from sk1.resources import icons
 from templates import GridPrefs
 
-PREFS_APP = [GeneralPrefs, CMSPrefs, RulersPrefs,
+PREFS_APP = [GeneralPrefs, UiPrefs, CMSPrefs, RulersPrefs,
              PalettesPrefs, FontPrefs,
              # CanvasPrefs,
              PrinterPrefs, ]
 
-PREFS_DOC = [GridPrefs, ]
-
 LOG = logging.getLogger(__name__)
-
-
-class PrefsAppItem(RootItem):
-    pid = 'Application'
-    name = _('Application')
-    icon_id = icons.SK1_ICON16
-
-    def __init__(self, data=None):
-        data = data or []
-        RootItem.__init__(self, data)
-
-
-class PrefsDocItem(RootItem):
-    pid = 'NewDocument'
-    name = _('New document')
-    icon_id = icons.PD_NEW
-
-    def __init__(self, data=None):
-        data = data or []
-        RootItem.__init__(self, data)
-
 
 PREFS_DATA = []
 
@@ -80,41 +57,35 @@ class PrefsDialog(wal.OkCancelDialog):
                                     button_box_padding=5)
         self.set_minsize(config.prefs_dlg_minsize)
         pid = pid or 'General'
-        self.tree.set_item_by_reference(self.get_plugin_by_pid(pid))
+        for item in PREFS_DATA[0]:
+            if item.pid == pid:
+                self.tree.set_selected(PREFS_DATA[0].index(item))
 
     def build(self):
-        if wal.IS_GTK3:
-            self.panel.pack(wal.PLine(self.panel), fill=True)
+        self.panel.pack(wal.PLine(self.panel), fill=True)
         self.splitter = wal.Splitter(self.panel, hidden=True)
         self.panel.pack(self.splitter, expand=True, fill=True)
         self.tree_container = wal.VPanel(self.splitter)
         if not PREFS_DATA:
-            PREFS_DATA.append(PrefsAppItem(PREFS_APP))
-            # PREFS_DATA.append(PrefsDocItem(PREFS_DOC))
-            for item in PREFS_DATA:
-                item.init_prefs(self.app, self)
-        self.tree = wal.TreeWidget(self.tree_container, data=PREFS_DATA,
-                                   on_select=self.on_select, border=False)
+            items = []
+            for class_ in PREFS_APP:
+                item = class_(self.app, self, None)
+                item.hide()
+                items.append(item)
+            PREFS_DATA.append(items)
+        self.tree = wal.PrefsList(self.tree_container, data=PREFS_DATA[0],
+                                  on_select=self.on_select)
         self.tree_container.pack(self.tree, fill=True, expand=True)
         cont = wal.VPanel(self.splitter)
-        if not wal.IS_GTK3:
-            cont.pack(wal.PLine(cont), fill=True)
         self.container = wal.HPanel(cont)
-        if wal.IS_GTK3:
-            self.container.pack(wal.PLine(self.container), fill=True)
+        self.container.pack(wal.PLine(self.container), fill=True)
         self.container.pack(
             wal.SplitterSash(self.container, self.splitter), fill=True)
         cont.pack(self.container, fill=True, expand=True)
-        if not wal.IS_GTK3:
-            cont.pack(wal.PLine(cont), fill=True)
         sash_pos = config.prefs_sash_pos
         self.splitter.split_vertically(self.tree_container, cont, sash_pos)
         self.splitter.set_min_size(sash_pos)
-        if not wal.IS_MSW:
-            self.tree.set_indent(5)
-        self.tree.expand_all()
-        if wal.IS_GTK3:
-            self.panel.pack(wal.PLine(self.panel), fill=True)
+        self.panel.pack(wal.PLine(self.panel), fill=True)
 
     def set_dialog_buttons(self):
         wal.OkCancelDialog.set_dialog_buttons(self)
@@ -139,10 +110,7 @@ class PrefsDialog(wal.OkCancelDialog):
 
     def get_plugin_by_pid(self, pid):
         ret = None
-        plugins = []
-        for item in PREFS_DATA:
-            plugins += item.childs
-        for item in plugins:
+        for item in PREFS_DATA[0]:
             if item.pid == pid:
                 ret = item
                 break
@@ -150,10 +118,7 @@ class PrefsDialog(wal.OkCancelDialog):
         return ret
 
     def apply_changes(self):
-        plugins = []
-        for item in PREFS_DATA:
-            plugins += item.childs
-        for item in plugins:
+        for item in PREFS_DATA[0]:
             if item.built:
                 item.apply_changes()
 
@@ -175,5 +140,4 @@ class PrefsDialog(wal.OkCancelDialog):
 def get_prefs_dialog(parent, pid=None):
     dlg = PrefsDialog(parent, _("sK1 Preferences"), pid)
     dlg.show()
-    # 	PREFS_DATA.remove(PREFS_DATA[1])
     PREFS_DATA.remove(PREFS_DATA[0])

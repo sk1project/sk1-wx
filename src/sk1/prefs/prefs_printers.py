@@ -27,7 +27,7 @@ from uc2 import uc2const
 class PrinterPrefs(PrefPanel):
     pid = 'Printers'
     name = _('Printers')
-    title = _('Printer preferences')
+    title = _('Printer calibration')
     icon_id = icons.PD_PREFS_PRINTERS
 
     printsys = None

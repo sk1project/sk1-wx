@@ -32,8 +32,8 @@ COLORSPACES = [COLOR_RGB, COLOR_CMYK, COLOR_GRAY, COLOR_DISPLAY]
 
 class CMSPrefs(PrefPanel):
     pid = 'CMS'
-    name = _('Color management')
-    title = _('Color management and color profiles')
+    name = _('CMS')
+    title = _('Color management, profiles')
     icon_id = icons.PD_PREFS_CMS
     tabs = []
 
@@ -90,11 +90,12 @@ class CmsOptions(CmsTab):
         txt = _('Enable Color Management')
         panel = wal.VPanel(self)
         hp = wal.HPanel(panel)
-        self.cms_check = wal.Checkbox(hp, txt, config.cms_use,
-                                      onclick=self.activate_cms)
-
-        hp.pack(self.cms_check)
-        panel.pack(hp, fill=True, padding_all=3)
+        hp.pack(wal.Label(hp, txt))
+        hp.pack((1,1), expand=True)
+        self.cms_check = wal.Switch(hp, config.cms_use,
+                                    onclick=self.activate_cms)
+        hp.pack(self.cms_check, end_padding=1)
+        panel.pack(hp, fill=True, padding_all=5)
 
         self.banner = wal.VPanel(panel)
         self.banner.set_bg(wal.DARK_GRAY)

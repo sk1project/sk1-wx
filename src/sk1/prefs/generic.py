@@ -66,7 +66,7 @@ class PrefPanel(wal.VPanel):
         self.app = app
         self.dlg = dlg
         if self.icon_id:
-            self.icon = get_icon(self.icon_id)
+            self.icon = get_icon(self.icon_id, size=wal.SIZE_32)
         if not self.title:
             self.title = self.name
         self.pack(wal.Label(self, self.title, fontsize=3, fontbold=True))

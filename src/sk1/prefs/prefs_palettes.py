@@ -28,7 +28,7 @@ PAL_ORIENT = [_('Horizontal'), _('Vertical')]
 class PalettesPrefs(PrefPanel):
     pid = 'Palettes'
     name = _('Palettes')
-    title = _('Palette options and palette management')
+    title = _('Palette management')
     icon_id = icons.PD_PREFS_PALETTE
 
     nb = None

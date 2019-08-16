@@ -86,6 +86,9 @@ class ScrolledPalette(wal.ScrolledCanvas, wal.SensitiveDrawableWidget):
         if self.callback:
             self.callback()
 
+    def _mouse_wheel(self, event):
+        event.Skip()
+
     def get_color_index_in_point(self, point):
         if self.mode == NORMAL_MODE:
             return self.get_color_index_normal(point)

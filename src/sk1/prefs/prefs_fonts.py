@@ -27,7 +27,7 @@ class FontPrefs(PrefPanel):
     pid = 'Fonts'
     name = _('Fonts')
     title = _('Font preview preferences')
-    icon_id = icons.PD_FONT
+    icon_id = icons.PD_PREFS_FONTS
 
     filler = None
     fontsize = None

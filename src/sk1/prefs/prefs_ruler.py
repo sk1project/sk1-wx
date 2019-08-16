@@ -27,7 +27,8 @@ from uc2.utils import fsutils
 
 class RulersPrefs(PrefPanel):
     pid = 'Rulers'
-    name = _('Ruler preferences')
+    name = _('Rulers')
+    title = _('Ruler colors, fonts, sizes')
     icon_id = icons.PD_PREFS_RULER
 
     ruler_size = None
@@ -40,7 +41,7 @@ class RulersPrefs(PrefPanel):
     fg_btn = None
     ruler = None
 
-    def __init__(self, app, dlg, *args):
+    def __init__(self, app, dlg, *_args):
         PrefPanel.__init__(self, app, dlg)
 
     def build(self):
