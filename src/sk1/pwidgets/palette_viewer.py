@@ -71,7 +71,7 @@ class ScrolledPalette(wal.ScrolledCanvas, wal.SensitiveDrawableWidget):
         self.width = (self.cell_width - 1) * self.cell_in_line
         self.width += 3 + self.sb_width
         self.set_size((self.width, -1))
-        self.set_bg(wal.WHITE)
+        self.set_bg(wal.UI_COLORS['list_bg'])
 
     def mouse_move(self, point):
         if self.colors:
@@ -250,23 +250,11 @@ class PaletteViewer(wal.VPanel):
                                     MODE_NAME, on_change=self.set_mode)
         options.pack(changer)
         self.pack(options, fill=True)
-        border = wal.VPanel(self, border=True)
-        if wal.IS_WX3:
-            color = wal.GRAY
-            if wal.IS_GTK:
-                color = wal.UI_COLORS['disabled_text']
-            border.set_bg(color)
+        border = wal.VPanel(self)
+        border.set_bg(wal.UI_COLORS['border'])
         self.pack(border, expand=True, fill=True)
         self.win = ScrolledPalette(border, self.cms, onclick=self.select_color)
-        if wal.IS_WX3:
-            if wal.IS_GTK:
-                inner_border = wal.VPanel(self)
-                inner_border.pack(self.win, expand=True, fill=True)
-                border.pack(inner_border, expand=True, fill=True, padding_all=1)
-            else:
-                border.pack(self.win, expand=True, fill=True, padding_all=1)
-        else:
-            border.pack(self.win, expand=True, fill=True)
+        border.pack(self.win, expand=True, fill=True, padding_all=1)
         changer.set_mode(AUTO_MODE)
         if palette:
             self.draw_palette(palette)
