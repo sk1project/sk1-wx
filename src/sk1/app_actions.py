@@ -109,6 +109,8 @@ def create_actions(app):
          insp.can_be_selected),
         (pdids.COPY_FILL, proxy.copy_fill, sel_chnls, insp.is_selection),
         (pdids.COPY_STROKE, proxy.copy_stroke, sel_chnls, insp.is_selection),
+        (pdids.ID_LOCK_GUIDES, proxy.invert_guide_lock, doc_chnls, insp.is_doc,
+         insp.is_guide_lock),
         (wal.ID_PROPERTIES, proxy.properties, doc_chnls, insp.is_doc),
         (wal.ID_PREFERENCES, proxy.preferences),
         # ------ View menu -------

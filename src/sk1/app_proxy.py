@@ -380,6 +380,10 @@ class AppProxy:
     def simulate_printer(self):
         config.cms_proofing = not config.cms_proofing
 
+    def invert_guide_lock(self):
+        editable = self.app.insp.is_guides_editable()
+        self.app.current_doc.api.set_guide_editable(not editable)
+
     def show_snapping(self):
         if self.insp.is_doc():
             canvas = self.app.current_doc.canvas

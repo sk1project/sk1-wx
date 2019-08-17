@@ -15,7 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from actions import AppAction, ActionButton
+from actions import AppAction, ActionButton, ActionToggle
 from colorctrls import SbStrokeSwatch, SbFillSwatch, StyleMonitor
 from ctxmenu import ContextMenu
 from fillctrls import SolidFill, GradientFill, PatternFill

@@ -59,6 +59,7 @@ ID_CLEAR_UNDO = new_id()
 ID_DESELECT = new_id()
 ID_INV_SELECT = new_id()
 ID_DUPLICATE = new_id()
+ID_LOCK_GUIDES = new_id()
 # ----- View menu
 ID_STROKE_VIEW = new_id()
 ID_DRAFT_VIEW = new_id()

@@ -25,7 +25,7 @@ from wal import Combolist, LEFT, CENTER, ImageToggleButton
 
 from sk1 import _, events, config
 from sk1.resources import icons, get_bmp, pdids
-from sk1.pwidgets import UnitSpin, ActionButton
+from sk1.pwidgets import UnitSpin, ActionButton, ActionToggle
 from generic import CtxPlugin
 
 
@@ -255,6 +255,9 @@ class PageBorderPlugin(CtxPlugin):
         self.add(btn, 0, LEFT | CENTER, 2)
 
         btn = ActionButton(self, self.actions[pdids.ID_REMOVE_ALL_GUIDES])
+        self.add(btn, 0, LEFT | CENTER, 2)
+
+        btn = ActionToggle(self, self.actions[pdids.ID_LOCK_GUIDES])
         self.add(btn, 0, LEFT | CENTER, 2)
 
     def user_changes(self, *_args):

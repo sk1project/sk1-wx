@@ -53,6 +53,7 @@ PD_GUIDES_AT_CENTER = 'action-guides-at-center'
 PD_PAGE_FRAME = 'action-page-frame'
 PD_PAGE_GUIDE_FRAME = 'action-page-guide-frame'
 PD_REMOVE_ALL_GUIDES = 'action-remove-all-guides'
+PD_LOCK_GUIDES = 'action-lock-guides'
 PD_TO_CURVES = 'action-to-curves'
 PD_COMBINE = 'action-combine'
 PD_BREAK = 'action-break'
@@ -67,6 +68,7 @@ PD_UNGROUP_ALL = 'action-ungroup-all'
 PD_CONV_TO_CMYK = 'action-to-cmyk'
 PD_CONV_TO_RGB = 'action-to-rgb'
 PD_CONV_TO_LAB = 'action-to-lab'
+PD_CONV_FROM_PALETTE = 'action-from-palette'
 PD_CONV_TO_GRAY = 'action-to-gray'
 PD_CONV_TO_BW = 'action-to-bw'
 PD_CONV_TO_SPOT = 'action-to-spot'
@@ -293,7 +295,7 @@ GENERICS = [SK1_ICON16, SK1_ICON22, SK1_ICON32, SK1_ICON48, SK1_ICON64,
             L_ORIGIN_CENTER, L_ORIGIN_LL, L_ORIGIN_LU,
             PD_MOUSE_MONITOR, PD_PM_ARROW_END, PD_PM_ARROW_LEFT,
             PD_PM_ARROW_RIGHT, PD_PM_ARROW_START, PD_APP_STATUS,
-            PD_GUIDES_AT_CENTER,
+            PD_GUIDES_AT_CENTER, PD_LOCK_GUIDES,
             PD_INSERT_PAGE, PD_DELETE_PAGE, PD_GOTO_PAGE, PD_NEXT_PAGE,
             PD_PREV_PAGE, PD_ZOOM,
             PD_PAGE_FRAME, PD_PAGE_GUIDE_FRAME, PD_REMOVE_ALL_GUIDES,
@@ -306,7 +308,7 @@ GENERICS = [SK1_ICON16, SK1_ICON22, SK1_ICON32, SK1_ICON48, SK1_ICON64,
             PD_PATTERN_SHEAR_X, PD_PATTERN_SHEAR_Y, PD_PATHS_TRIM,
             PD_PATHS_INTERSECTION, PD_PATHS_EXCLUSION, PD_PATHS_FUSION,
             PD_POSITION_PLGN, PD_RESIZE_PLGN, PD_SCALE_PLGN, PD_ROTATE_PLGN,
-            PD_SHEAR_PLGN,
+            PD_SHEAR_PLGN, PD_CONV_FROM_PALETTE,
             PD_INVERT_BITMAP, PD_SNAP_TO_GRID_OFF, PD_SNAP_TO_GRID_ON,
             PD_SNAP_TO_GUIDE_OFF, PD_SNAP_TO_GUIDE_ON, PD_SNAP_TO_OBJ_OFF,
             PD_SNAP_TO_OBJ_ON, PD_SNAP_TO_PAGE_OFF, PD_SNAP_TO_PAGE_ON,

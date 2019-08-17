@@ -53,6 +53,7 @@ ART_IDS = {
     wal.ID_PASTE: wal.ART_PASTE,
     wal.ID_DELETE: wal.ART_DELETE,
     wal.ID_SELECTALL: icons.PD_SELECTALL,
+    pdids.ID_LOCK_GUIDES: icons.PD_LOCK_GUIDES,
     wal.ID_PROPERTIES: icons.PD_PROPERTIES,
     wal.ID_PREFERENCES: icons.PD_PREFERENCES,
     # ----- View menu

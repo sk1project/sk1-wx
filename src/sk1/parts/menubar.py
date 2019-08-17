@@ -48,7 +48,7 @@ class AppMenuBar(wal.MenuBar):
                wal.ID_COPY, wal.ID_PASTE, wal.ID_DELETE, pdids.ID_DUPLICATE,
                None, wal.ID_SELECTALL, pdids.ID_DESELECT, pdids.ID_INV_SELECT,
                None, pdids.FILL_MODE, pdids.COPY_FILL, pdids.STROKE_MODE,
-               pdids.COPY_STROKE,
+               pdids.COPY_STROKE, None, pdids.ID_LOCK_GUIDES,
                None, wal.ID_PROPERTIES, wal.ID_PREFERENCES,)
         entry = (_("&Edit"), sub)
         self.entries.append(entry)

@@ -301,6 +301,9 @@ class AppInspector:
             return False
         return doc.methods.is_guide_editable()
 
+    def is_guide_lock(self, doc=None):
+        return not self.is_guides_editable(doc)
+
     def is_grid_visible(self, doc=None):
         doc = doc or self.app.current_doc
         if doc is None:

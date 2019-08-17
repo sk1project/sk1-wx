@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- sK1 2 1
+00000ecc -->
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="300" height="300">
+<image y="0.0"  x="0.0" xlink:href="data:image/png;base64,
+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
+"  height="300" width="300" />
+<!-- Encapsulated SK2
+obj('Document')
+set('styles',{'Default Style': [[], [0, 0.28346456692913385, ['CMYK', [0.0, 0.0, 0.0, 1.0], 1.0, 'Black'], [], 1, 0, 10.433, 0, 0, []], [], []], 'Default Text Style': [[1, 0, ['CMYK', [0.0, 0.0, 0.0, 1.0], 1.0, 'Black']], [], ['Sans', 'Regular', 12.0, 0, [], True]]})
+set('doc_units','px')
+set('metainfo',['', '', '', ''])
+set('doc_origin',1)
+set('resources',{})
+obj('Pages')
+set('page_counter',1)
+set('page_format',['A4', (595.275590551181, 841.8897637795275), 0])
+obj('Page')
+set('name','Page 1')
+set('page_format',['Custom', (7.0, 7.0), 0])
+set('layer_counter',1)
+obj('Layer')
+set('style',[[], [0, 0.28346456692913385, ['RGB', [0.19607843137254902, 0.3215686274509804, 0.6352941176470588], 1.0, ''], [], 1, 0, 10.433, 0, 0, []], [], []])
+set('name','Layer 1')
+set('color',[0.19607843137254902, 0.3215686274509804, 0.6352941176470588, 1.0])
+set('properties',[1, 1, 1, 1])
+obj('Curve')
+set('paths',[[[7.0, -7.0], [[2.0, -2.0]], 0], [[2.0, -7.0], [[7.0, -2.0]], 0]])
+set('style',[[], [0, 1.0, ['RGB', [0.0, 0.0, 0.0], 1.0, 'Black'], [], 2, 0, 10.433, 0, 0, []], [], []])
+set('stroke_trafo',[])
+set('trafo',[1.0999999999999999, 0.0, 0.0, 1.0999999999999999, -4.948885687549252, 4.948417799448385])
+end()
+end()
+end()
+end()
+obj('DesktopLayers')
+end()
+obj('MasterLayers')
+end()
+obj('GridLayer')
+set('style',[[], [0, 0.28346456692913385, ['RGB', [0.0, 0.0, 1.0], 0.15, ''], [], 1, 0, 10.433, 0, 0, []], [], []])
+set('name','GridLayer')
+set('color',[0.0, 0.0, 1.0, 0.15])
+set('grid',[0.0, 0.0, 1.0, 1.0])
+set('properties',[1, 0, 0, 1])
+end()
+obj('GuideLayer')
+set('style',[[], [0, 0.28346456692913385, ['RGB', [0.0, 0.3176470588235294, 1.0], 1.0, ''], [], 1, 0, 10.433, 0, 0, []], [], []])
+set('name','GuideLayer')
+set('color',[0.0, 0.3176470588235294, 1.0, 1.0])
+set('properties',[1, 1, 0, 0])
+end()
+end()
+-->
+</svg>

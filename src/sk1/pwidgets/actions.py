@@ -188,3 +188,25 @@ class ActionButton(wal.ImageButton):
 
     def update(self):
         self.set_enable(self.action.enabled)
+
+
+class ActionToggle(wal.ImageToggleButton):
+    action = None
+
+    def __init__(self, parent, action):
+        self.action = action
+        artid = action.get_artid()
+        tooltip = action.get_tooltip_text()
+        text = tooltip if artid is None else ''
+        native = False if wal.IS_WINXP else True
+        size = wal.DEF_SIZE
+        value = action.checker()
+        super(ActionToggle, self).__init__(
+            parent, value, artid, size, text, tooltip,
+            native=native,
+            onchange=action)
+        action.register(self)
+
+    def update(self):
+        self.set_enable(self.action.enabled)
+        self.set_value(self.action.checker(), silent=True)
