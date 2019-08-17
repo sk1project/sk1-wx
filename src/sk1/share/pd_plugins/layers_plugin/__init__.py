@@ -99,7 +99,7 @@ class LayersPlugin(RsPlugin):
         self.panel.pack(pnl)
 
         bmp = [make_artid(item) for item in BITMAPS]
-        pnl = wal.VPanel(self.panel, border=True)
+        pnl = wal.VPanel(self.panel)
         self.viewer = wal.LayerList(pnl, self.get_data(), bmp,
                                     on_select=self.update,
                                     on_change=self.changed,
