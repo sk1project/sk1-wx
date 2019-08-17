@@ -92,7 +92,6 @@ class ZoomMonitor(wal.HPanel):
                                         on_right_click=self.show_menu)
         self.label.set_min_width(65 if wal.IS_MAC else 55)
         self.label.set_tooltip(_('Zoom level'))
-        self.label.set_bg(wal.RED)
         self.pack(self.label, padding=2)
 
         self.pack(wal.PLine(self.panel), fill=True, padding=3)
