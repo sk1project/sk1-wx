@@ -1149,9 +1149,10 @@ class ColorSticker(wal.VPanel):
 
         vf = wal.VPanel(inner_panel)
         vf.set_bg(wal.WHITE)
-        self.color_type = wal.Label(vf, '???', fontbold=True, fontsize=-1)
-        self.line1 = wal.Label(vf, '???', fontsize=-1)
-        self.line2 = wal.Label(vf, '???', fontsize=-1)
+        self.color_type = wal.Label(
+            vf, '???', fontbold=True, fontsize=-1, fg=wal.BLACK)
+        self.line1 = wal.Label(vf, '???', fontsize=-1, fg=wal.BLACK)
+        self.line2 = wal.Label(vf, '???', fontsize=-1, fg=wal.BLACK)
         vf.pack(self.color_type, padding_all=3)
         vf.pack(self.line1, padding_all=1)
         vf.pack(self.line2, padding_all=1)
