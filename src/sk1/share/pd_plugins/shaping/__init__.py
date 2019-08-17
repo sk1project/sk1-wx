@@ -78,7 +78,7 @@ class AbstractShapingPanel(wal.VPanel):
         self.pack(wal.Label(self, SHAPING_MODE_NAMES[self.pid], fontbold=True))
 
         border = wal.VPanel(self)
-        color = wal.UI_COLORS['pressed_border'] if wal.IS_GTK else wal.GRAY
+        color = wal.UI_COLORS['border'] if wal.IS_GTK else wal.GRAY
         border.set_bg(color)
         self.pic_panel = wal.VPanel(border)
         self.pic_panel.set_bg(wal.WHITE)

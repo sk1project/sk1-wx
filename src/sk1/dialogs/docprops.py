@@ -578,7 +578,7 @@ class GuidePreview(wal.VPanel, wal.DrawableWidget):
         for item in (0.3, 0.7):
             self.draw_line(0, int(item * h), w, int(item * h))
 
-        self.set_stroke(wal.UI_COLORS['hover_solid_border'])
+        self.set_stroke(wal.UI_COLORS['border'])
         self.set_fill(None)
         self.draw_rect(0, 0, w, h)
 

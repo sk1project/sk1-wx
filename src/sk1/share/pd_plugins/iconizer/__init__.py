@@ -88,7 +88,7 @@ class ImageCanvas(wal.ScrolledCanvas, wal.DrawableWidget):
                                max(SIZE - self.sb_width - 2, h)))
         self.prepare_dc(self.pdc)
         if self.bitmap is None:
-            self.set_gc_stroke(wal.UI_COLORS['pressed_border'][:3])
+            self.set_gc_stroke(wal.UI_COLORS['border'][:3])
             self.gc_draw_line(0, 0, SIZE, SIZE)
             self.gc_draw_line(SIZE, 0, 0, SIZE)
         else:
@@ -96,7 +96,7 @@ class ImageCanvas(wal.ScrolledCanvas, wal.DrawableWidget):
             y = (SIZE - h) / 2 if SIZE > h else 0
             self.draw_bitmap(self.bitmap, x, y)
             if self.show_border:
-                self.set_stroke(wal.UI_COLORS['pressed_border'][:3], 1.0,
+                self.set_stroke(wal.UI_COLORS['border'][:3], 1.0,
                                 [2, 2])
                 shift = 10
                 items = [(x - shift, y - 1, x + w + shift, y - 1),
@@ -111,13 +111,13 @@ class Spacer(wal.VPanel):
     def __init__(self, parent):
         wal.VPanel.__init__(self, parent)
         self.pack((SIZE, 1))
-        self.set_bg(wal.UI_COLORS['pressed_border'][:3])
+        self.set_bg(wal.UI_COLORS['border'][:3])
 
 
 class ImageViewer(wal.HPanel):
     def __init__(self, parent, bg):
         wal.HPanel.__init__(self, parent)
-        self.set_bg(wal.UI_COLORS['pressed_border'][:3])
+        self.set_bg(wal.UI_COLORS['border'][:3])
         self.pack((1, SIZE))
         panel = wal.VPanel(self)
         panel.set_bg(wal.UI_COLORS['bg'][:3])

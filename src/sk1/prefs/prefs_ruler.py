@@ -116,7 +116,7 @@ class RulersPrefs(PrefPanel):
                   padding_all=10)
         panel = wal.HPanel(self)
         panel.add((360, 1))
-        panel.set_bg(wal.UI_COLORS['dark_shadow'])
+        panel.set_bg(wal.UI_COLORS['disabled_text'])
         self.pack(panel)
 
         self.ruler = RulerTest(self, self)

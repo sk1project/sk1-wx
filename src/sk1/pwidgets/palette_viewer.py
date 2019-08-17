@@ -254,7 +254,7 @@ class PaletteViewer(wal.VPanel):
         if wal.IS_WX3:
             color = wal.GRAY
             if wal.IS_GTK:
-                color = wal.UI_COLORS['dark_shadow']
+                color = wal.UI_COLORS['disabled_text']
             border.set_bg(color)
         self.pack(border, expand=True, fill=True)
         self.win = ScrolledPalette(border, self.cms, onclick=self.select_color)

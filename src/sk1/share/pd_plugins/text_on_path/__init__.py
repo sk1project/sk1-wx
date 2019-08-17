@@ -106,7 +106,7 @@ class TextOnPathPlugin(RsPlugin):
         self.align_keeper.set_mode(TEXT_ALIGNS[1])
 
         border = wal.VPanel(panel)
-        color = wal.UI_COLORS['pressed_border'] if wal.IS_GTK else wal.GRAY
+        color = wal.UI_COLORS['border'] if wal.IS_GTK else wal.GRAY
         border.set_bg(color)
         self.pic_panel = wal.VPanel(border)
         self.pic_panel.set_bg(wal.WHITE)
