@@ -347,8 +347,8 @@ class SwatchCanvas(wal.SensitiveDrawableWidget):
         w, h = self.get_size()
         th = min(h, 12)
         th2 = th / 3
-        self.set_gc_stroke([0, 0, 0])
-        self.set_gc_fill([255, 255, 255])
+        self.set_gc_stroke(wal.GRAY)
+        self.set_gc_fill(wal.WHITE)
         self.gc_draw_polygon([[w, h], [w - th, h], [w, h - th]])
         self.gc_draw_rect(w - th2, h - th2, 2, 2)
 
@@ -1094,18 +1094,16 @@ class SpotMixer(wal.VPanel):
 
     def on_slider_change(self):
         self.color[2] = self.alpha_slider.get_value()
+        self.update()
         if self.callback:
             self.callback()
-        else:
-            self.update()
 
     def on_change(self):
         self.color[3] = self.name_field.get_value()
         self.color[2] = self.alpha_spin.get_value() / 100.0
+        self.update()
         if self.callback:
             self.callback()
-        else:
-            self.update()
 
     def get_color(self):
         return self.color
@@ -1139,7 +1137,7 @@ class SpotMixer(wal.VPanel):
         start_clr = self.cms.get_rgba_color255(start_clr)
         stop_clr = self.cms.get_rgba_color255(stop_clr)
         self.alpha_slider.set_value(self.color[2], start_clr, stop_clr)
-        self.alpha_spin.set_value(self.color[2] * 255.0)
+        self.alpha_spin.set_value(self.color[2] * 100.0)
 
 
 class ColorSticker(wal.VPanel):
