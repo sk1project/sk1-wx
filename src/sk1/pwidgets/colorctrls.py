@@ -271,6 +271,8 @@ class SwatchCanvas(wal.SensitiveDrawableWidget):
             x = (w - 19) / 2
             y = (h - 19) / 2
             self.draw_bitmap(self.reg_icon, x, y)
+        elif self.color[0] == uc2const.COLOR_SPOT:
+            self.draw_spot_marker()
 
     def draw_cairo_background(self, ctx):
         w, h = self.get_size()
@@ -340,6 +342,15 @@ class SwatchCanvas(wal.SensitiveDrawableWidget):
         ctx.rectangle(0, 0, w, h)
         ctx.fill()
         self.gc_draw_bitmap(wal.copy_surface_to_bitmap(surface), 0, 0)
+
+    def draw_spot_marker(self):
+        w, h = self.get_size()
+        th = min(h, 12)
+        th2 = th / 3
+        self.set_gc_stroke([0, 0, 0])
+        self.set_gc_fill([255, 255, 255])
+        self.gc_draw_polygon([[w, h], [w - th, h], [w, h - th]])
+        self.gc_draw_rect(w - th2, h - th2, 2, 2)
 
     def draw_empty_pattern(self):
         w, h = self.get_size()
