@@ -294,8 +294,12 @@ class DocInfoDialog(wal.CloseDialog):
         ]
         for item in sections:
             data += getattr(self, item)(self.get_objects())
-        slist = wal.ReportList(self, data)
-        self.pack(slist, expand=True, fill=True, padding_all=5)
+
+        vp = wal.VPanel(self)
+        vp.set_bg(wal.UI_COLORS['border'])
+        slist = wal.ReportList(vp, data)
+        vp.pack(slist, expand=True, fill=True, padding_all=1)
+        self.pack(vp, expand=True, fill=True, padding_all=5)
 
 
 def docinfo_dlg(app, parent):

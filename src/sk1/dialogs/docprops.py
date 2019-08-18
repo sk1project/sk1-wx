@@ -356,8 +356,12 @@ class UnitsProps(DocPropsPanel):
             name = uc2const.unit_full_names[item]
             value = _('%s points') % str(uc2const.unit_dict[item])
             data.append([name, value])
-        slist = wal.ReportList(self, data)
-        self.pack(slist, expand=True, fill=True, padding_all=5)
+
+        vp = wal.VPanel(self)
+        vp.set_bg(wal.UI_COLORS['border'])
+        slist = wal.ReportList(vp, data)
+        vp.pack(slist, expand=True, fill=True, padding_all=1)
+        self.pack(vp, expand=True, fill=True, padding_all=5)
         self.pack((5, 5))
 
     def save(self):

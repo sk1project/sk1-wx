@@ -102,9 +102,13 @@ class DataViewer(wal.HPanel):
         self.app = parent.app
         self.parent = parent
         wal.HPanel.__init__(self, parent)
-        self.pal_list = wal.SimpleList(self, self.parent.data,
+
+        vp = wal.VPanel(self)
+        vp.set_bg(wal.UI_COLORS['border'])
+        self.pal_list = wal.SimpleList(vp, self.parent.data,
                                        on_select=self.change_palette)
-        self.pack(self.pal_list, expand=True, fill=True, padding_all=5)
+        vp.pack(self.pal_list, expand=True, fill=True, padding_all=1)
+        self.pack(vp, expand=True, fill=True, padding_all=5)
         self.preview = PreViewer(self)
         self.pack(self.preview, fill=True, padding_all=5)
 

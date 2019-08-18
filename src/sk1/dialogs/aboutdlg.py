@@ -103,8 +103,11 @@ class ComponentsPage(wal.VPanel):
             except RuntimeError as e:
                 data.append(['pycups', str(e).split()[-1]])
 
-        slist = wal.ReportList(self, data, border=False)
-        self.pack(slist, expand=True, fill=True, padding=5)
+        vp = wal.VPanel(self)
+        vp.set_bg(wal.UI_COLORS['border'])
+        slist = wal.ReportList(vp, data, border=False)
+        vp.pack(slist, expand=True, fill=True, padding_all=1)
+        self.pack(vp, expand=True, fill=True, padding=5)
         slist.set_column_width(0, wal.LIST_AUTOSIZE)
 
 
@@ -122,8 +125,11 @@ TR_LIST = [
 class TranslatorsPage(wal.VPanel):
     def __init__(self, parent):
         wal.VPanel.__init__(self, parent)
-        tr_list = wal.ReportList(self, TR_LIST, border=False)
-        self.pack(tr_list, expand=True, fill=True, padding=5)
+        vp = wal.VPanel(self)
+        vp.set_bg(wal.UI_COLORS['border'])
+        tr_list = wal.ReportList(vp, TR_LIST, border=False)
+        vp.pack(tr_list, expand=True, fill=True, padding_all=1)
+        self.pack(vp, expand=True, fill=True, padding=5)
         tr_list.set_column_width(0, wal.LIST_AUTOSIZE)
 
 

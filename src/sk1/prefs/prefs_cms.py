@@ -351,9 +351,12 @@ class ProfileManager(wal.CloseDialog):
 
     def build(self):
         self.set_profiles()
-        self.viewer = wal.SimpleList(self.panel, self.pf_list,
+        vp = wal.VPanel(self.panel)
+        vp.set_bg(wal.UI_COLORS['border'])
+        self.viewer = wal.SimpleList(vp, self.pf_list,
                                      on_select=self.selection_changed)
-        self.panel.pack(self.viewer, expand=True, fill=True, padding_all=5)
+        vp.pack(self.viewer, expand=True, fill=True, padding_all=1)
+        self.panel.pack(vp, expand=True, fill=True, padding_all=5)
         btn_box = wal.VPanel(self.panel)
         self.panel.pack(btn_box, fill=True, padding_all=5)
 

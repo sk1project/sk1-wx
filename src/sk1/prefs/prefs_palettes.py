@@ -212,10 +212,13 @@ class PaletteManager(wal.HPanel):
         self.prefpanel = prefpanel
         wal.HPanel.__init__(self, parent)
 
+        vp = wal.VPanel(self)
+        vp.set_bg(wal.UI_COLORS['border'])
         data = self.get_palette_list()
-        self.pal_list = wal.SimpleList(self, data,
+        self.pal_list = wal.SimpleList(vp, data,
                                        on_select=self.change_palette)
-        self.pack(self.pal_list, expand=True, fill=True, padding_all=5)
+        vp.pack(self.pal_list, expand=True, fill=True, padding_all=1)
+        self.pack(vp, expand=True, fill=True, padding_all=5)
 
         self.pal_viewer = PaletteViewer(self, self.app.default_cms)
         self.pack(self.pal_viewer, fill=True, padding_all=5)
