@@ -170,13 +170,13 @@ class PageProps(DocPropsPanel):
         # --- COLORS
         hpanel = wal.HPanel(self)
         hpanel.pack((5, 5))
-        self.desktop_bg = self.doc.methods.get_desktop_bg()
 
         grid = wal.GridPanel(hpanel, 3, 3, 5, 5)
         grid.add_growable_col(2)
 
-        grid.pack(wal.Label(hpanel, _('Desktop:')))
-        self.desktop_color_btn = wal.ColorButton(hpanel, self.desktop_bg)
+        grid.pack(wal.Label(grid, _('Desktop:')))
+        self.desktop_bg = self.doc.methods.get_desktop_bg()
+        self.desktop_color_btn = wal.ColorButton(grid, self.desktop_bg)
         grid.pack(self.desktop_color_btn)
         grid.pack(CBMiniPalette(grid, onclick=self.desktop_color_btn.set_value))
 
@@ -188,13 +188,13 @@ class PageProps(DocPropsPanel):
             color1 = self.page_fill[1][0]
             color2 = self.page_fill[1][1]
 
-        grid.pack(wal.Label(hpanel, _('Page:')))
-        self.page_color1_btn = wal.ColorButton(hpanel, color1)
+        grid.pack(wal.Label(grid, _('Page:')))
+        self.page_color1_btn = wal.ColorButton(grid, color1)
         grid.pack(self.page_color1_btn)
         grid.pack(CBMiniPalette(grid, onclick=self.page_color1_btn.set_value))
 
         grid.pack((5, 5))
-        self.page_color2_btn = wal.ColorButton(hpanel, color2)
+        self.page_color2_btn = wal.ColorButton(grid, color2)
         grid.pack(self.page_color2_btn)
         self.colors2 = CBMiniPalette(grid,
                                      onclick=self.page_color2_btn.set_value)
