@@ -19,7 +19,7 @@ import wal
 
 from uc2 import cms
 
-COLORS = ['#282828', '#424242', '#666666', '#989898', '#D5D5D5', '#FFFFFF']
+COLORS = ('#282828', '#424242', '#666666', '#989898', '#D5D5D5', '#FFFFFF')
 
 
 class ColorCell(wal.VPanel, wal.SensitiveDrawableWidget):
@@ -67,7 +67,7 @@ class CBMiniPalette(wal.VPanel):
                 tooltip = item[1]
                 item = item[0]
             color = cms.val_255(cms.hexcolor_to_rgb(item))
-            cell = ColorCell(self, color, tooltip, size, onclick)
+            cell = ColorCell(self.grid, color, tooltip, size, onclick)
             self.grid.pack(cell)
             self.cells.append(cell)
         self.pack(self.grid, padding_all=1)
