@@ -91,7 +91,7 @@ class GeneralPrefs(PrefPanel):
         txt = _('Backup on export')
         table.pack(wal.Label(table, txt))
         table.pack(space)
-        self.expbackup = wal.Switch(table, txt, config.make_export_backup)
+        self.expbackup = wal.Switch(table, config.make_export_backup)
         table.pack(self.expbackup)
 
         txt = _('Make font cache on start')
