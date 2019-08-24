@@ -162,8 +162,6 @@ class SK1Application(wal.Application, UCApplication):
     def update_wal(self):
         wal.SPIN['overlay'] = config.spin_overlay
         wal.SPIN['sep'] = config.spin_sep
-        if config.selected_text_bg:
-            wal.UI_COLORS['selected_text_bg'] = () + config.selected_text_bg
 
     def update_config(self):
         config.resource_dir = ''
