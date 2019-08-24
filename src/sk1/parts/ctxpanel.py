@@ -33,8 +33,8 @@ class AppCtxPanel(wal.HPanel):
         self.app = app
         self.insp = app.insp
         wal.HPanel.__init__(self, parent)
-        spacer = (3, 34)
-        self.add(spacer)
+        self.fixator = wal.VFixator(self, 5, 20)
+        self.pack(self.fixator, fill=True)
 
         for item in PLUGINS:
             self.plugins_dict[item.name] = item
@@ -44,11 +44,13 @@ class AppCtxPanel(wal.HPanel):
         events.connect(events.SELECTION_CHANGED, self.rebuild)
         events.connect(events.MODE_CHANGED, self.rebuild)
         self.rebuild()
+        print self.get_size()
 
-    def rebuild(self, *args):
+    def rebuild(self, *_args):
         mode = self.get_mode()
         if mode == self.mode:
             return
+        self.fixator.update()
         self.hide(update=False)
         for item in self.plugins:
             item.hide()

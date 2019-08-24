@@ -49,18 +49,18 @@ class PagePlugin(CtxPlugin):
         self.formats = [_('Custom'), ] + PAGE_FORMAT_NAMES
         self.combo = Combolist(self, items=self.formats,
                                onchange=self.combo_changed)
-        self.pack(self.combo)
-        self.pack((3, 3))
+        self.pack(self.combo, padding_all=3)
 
         self.width_spin = UnitSpin(self.app, self,
                                    onchange=self.width_spin_changed)
         self.pack(self.width_spin)
+        self.pack((3, 3))
 
-        self.pack(get_bmp(self, icons.CTX_W_ON_H), padding=2)
+        self.pack(get_bmp(self, icons.CTX_W_ON_H))
 
         self.height_spin = UnitSpin(self.app, self,
                                     onchange=self.height_spin_changed)
-        self.pack(self.height_spin)
+        self.pack(self.height_spin, padding_all=3)
 
         self.pack((2, 2))
 
