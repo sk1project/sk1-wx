@@ -107,7 +107,7 @@ class ComponentsPage(wal.VPanel):
         vp.set_bg(wal.UI_COLORS['border'])
         slist = wal.ReportList(vp, data, border=False)
         vp.pack(slist, expand=True, fill=True, padding_all=1)
-        self.pack(vp, expand=True, fill=True, padding=5)
+        self.pack(vp, expand=True, fill=True, padding_all=5)
         slist.set_column_width(0, wal.LIST_AUTOSIZE)
 
 
@@ -129,7 +129,7 @@ class TranslatorsPage(wal.VPanel):
         vp.set_bg(wal.UI_COLORS['border'])
         tr_list = wal.ReportList(vp, TR_LIST, border=False)
         vp.pack(tr_list, expand=True, fill=True, padding_all=1)
-        self.pack(vp, expand=True, fill=True, padding=5)
+        self.pack(vp, expand=True, fill=True, padding_all=5)
         tr_list.set_column_width(0, wal.LIST_AUTOSIZE)
 
 
@@ -137,14 +137,14 @@ class ThanksPage(wal.VPanel):
     def __init__(self, parent):
         wal.VPanel.__init__(self, parent)
         entry = wal.Entry(self, CREDITS, multiline=True, editable=False)
-        self.pack(entry, expand=True, fill=True, padding=5)
+        self.pack(entry, expand=True, fill=True, padding_all=5)
 
 
 class LicensePage(wal.VPanel):
     def __init__(self, parent):
         wal.VPanel.__init__(self, parent)
         entry = wal.Entry(self, LICENSE, multiline=True, editable=False)
-        self.pack(entry, expand=True, fill=True, padding=5)
+        self.pack(entry, expand=True, fill=True, padding_all=5)
 
 
 class EvetLoopMonitor(wal.VPanel):
