@@ -15,8 +15,6 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from wal import LEFT, CENTER
-
 from sk1 import _
 from sk1.resources import icons, get_bmp, pdids
 from sk1.pwidgets import AngleSpin, ActionButton
@@ -33,20 +31,20 @@ class RotatePlugin(CtxPlugin):
 
     def build(self):
         bmp = get_bmp(self, icons.CTX_ROTATE, _('Rotate selection'))
-        self.add(bmp, 0, LEFT | CENTER, 2)
+        self.pack(bmp, padding=2)
 
         self.angle_spin = AngleSpin(self, onenter=self.apply_changes)
-        self.add(self.angle_spin, 0, LEFT | CENTER, 2)
+        self.pack(self.angle_spin, padding=2)
 
-        self.add((2, 2))
+        self.pack((2, 2))
 
         rot_left = ActionButton(self, self.actions[pdids.ID_ROTATE_LEFT])
-        self.add(rot_left, 0, LEFT | CENTER)
+        self.pack(rot_left)
 
         rot_right = ActionButton(self, self.actions[pdids.ID_ROTATE_RIGHT])
-        self.add(rot_right, 0, LEFT | CENTER)
+        self.pack(rot_right)
 
-    def apply_changes(self, *args):
+    def apply_changes(self, *_args):
         val = self.angle_spin.get_angle_value()
         if val != 0.0:
             self.app.current_doc.api.rotate_selected(val)

@@ -15,8 +15,6 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from wal import LEFT, CENTER
-
 from sk1 import _, events
 from sk1.resources import icons, get_bmp
 from sk1.pwidgets import UnitSpin, RatioToggle
@@ -38,24 +36,21 @@ class ResizePlugin(CtxPlugin):
 
     def build(self):
         bmp = get_bmp(self, icons.CTX_OBJECT_RESIZE, _('Selection size'))
-        self.add(bmp, 0, LEFT | CENTER, 2)
+        self.pack(bmp, padding=2)
+        self.pack((2, 2))
 
-        self.add((2, 2))
+        self.width_spin = UnitSpin(self.app, self, onchange=self.w_changes)
+        self.pack(self.width_spin, padding=2)
 
-        self.width_spin = UnitSpin(self.app, self,
-                                   onchange=self.w_changes)
-        self.add(self.width_spin, 0, LEFT | CENTER, 2)
+        self.pack(get_bmp(self, icons.CTX_W_ON_H), padding=1)
 
-        self.add(get_bmp(self, icons.CTX_W_ON_H), 0, LEFT | CENTER, 1)
+        self.height_spin = UnitSpin(self.app, self, onchange=self.h_changes)
+        self.pack(self.height_spin, padding=2)
 
-        self.height_spin = UnitSpin(self.app, self,
-                                    onchange=self.h_changes)
-        self.add(self.height_spin, 0, LEFT | CENTER, 2)
-
-        self.add((2, 2))
+        self.pack((2, 2))
 
         self.keep_ratio = RatioToggle(self)
-        self.add(self.keep_ratio, 0, LEFT | CENTER, 2)
+        self.pack(self.keep_ratio, padding=2)
 
     def update(self, *args):
         if self.insp.is_selection():
@@ -67,12 +62,12 @@ class ResizePlugin(CtxPlugin):
             self.height_spin.set_point_value(h)
             self.update_flag = False
 
-    def w_changes(self, *args):
+    def w_changes(self, *_args):
         if self.update_flag:
             return
         self.user_changes(True)
 
-    def h_changes(self, *args):
+    def h_changes(self, *_args):
         if self.update_flag:
             return
         self.user_changes(False)

@@ -21,7 +21,6 @@ from sk1 import _, events, modes
 from sk1.pwidgets import FontChoice
 from sk1.resources import icons, pdids
 from uc2 import libpango
-from wal import LEFT, CENTER
 
 from .base import ActionCtxPlugin
 from .base import CtxPlugin
@@ -60,21 +59,21 @@ class FontMarkupPlugin(CtxPlugin):
         self.families, self.faces_dict = libpango.get_fonts()
 
         self.families_combo = FontChoice(self, onchange=self.on_font_change)
-        self.add(self.families_combo, 0, LEFT | CENTER, 2)
-        self.add((3, 3))
+        self.pack(self.families_combo, padding=2)
+        self.pack((3, 3))
         self.families_combo.set_font_family('Sans')
 
         self.faces = self.faces_dict['Sans']
         self.faces_combo = wal.Combolist(self, items=self.faces,
                                          onchange=self.apply_changes)
         self.faces_combo.set_active(0)
-        self.add(self.faces_combo, 0, wal.LEFT | wal.CENTER, 2)
-        self.add((3, 3))
+        self.pack(self.faces_combo, padding=2)
+        self.pack((3, 3))
 
         self.size_combo = wal.FloatCombobox(self, 12,
                                             digits=2, items=FONT_SIZES,
                                             onchange=self.apply_changes)
-        self.add(self.size_combo, 0, wal.LEFT | wal.CENTER, 2)
+        self.pack(self.size_combo, padding=2)
 
     def update(self, *args):
         insp = self.app.insp
@@ -98,15 +97,16 @@ class FontMarkupPlugin(CtxPlugin):
             self.faces_combo.set_active(0)
 
         self.size_combo.set_value(size)
+        self.fit()
 
-    def on_font_change(self, *args):
+    def on_font_change(self, *_args):
         self.faces = self.faces_dict[self.families_combo.get_font_family()]
         face = self.faces[self.faces_combo.get_active()]
         if face not in self.faces:
             self.faces_combo.set_active(0)
         self.apply_changes()
 
-    def apply_changes(self, *args):
+    def apply_changes(self, *_args):
         insp = self.app.insp
         if not insp.is_mode(modes.TEXT_EDIT_MODE):
             return
@@ -115,6 +115,7 @@ class FontMarkupPlugin(CtxPlugin):
         size = self.size_combo.get_value()
         ctrl = self.app.current_doc.canvas.controller
         ctrl.set_fontdescr(family, face, size)
+        self.fit()
 
 
 class SimpleMarkupPlugin(CtxPlugin):
@@ -135,24 +136,24 @@ class SimpleMarkupPlugin(CtxPlugin):
         self.bold = wal.ImageToggleButton(self, art_id=icons.PD_TEXT_BOLD,
                                           tooltip=_('Bold'),
                                           onchange=self.bold_changed)
-        self.add(self.bold, 0, LEFT | CENTER, 2)
+        self.pack(self.bold, padding=2)
 
         self.italic = wal.ImageToggleButton(self, art_id=icons.PD_TEXT_ITALIC,
                                             tooltip=_('Italic'),
                                             onchange=self.italic_changed)
-        self.add(self.italic, 0, LEFT | CENTER, 2)
+        self.pack(self.italic, padding=2)
 
         self.underline = wal.ImageToggleButton(self,
                                                art_id=icons.PD_TEXT_UNDERLINE,
                                                tooltip=_('Underline'),
                                                onchange=self.underline_changed)
-        self.add(self.underline, 0, LEFT | CENTER, 2)
+        self.pack(self.underline, padding=2)
 
         self.strike = wal.ImageToggleButton(self,
                                             art_id=icons.PD_TEXT_STRIKETHROUGH,
                                             tooltip=_('Strikethrough'),
                                             onchange=self.strike_changed)
-        self.add(self.strike, 0, LEFT | CENTER, 2)
+        self.pack(self.strike, padding=2)
 
     def update(self, *args):
         insp = self.app.insp
@@ -199,12 +200,12 @@ class ScriptMarkupPlugin(CtxPlugin):
         self.sup = wal.ImageToggleButton(self, art_id=icons.PD_TEXT_SUPERSCRIPT,
                                          tooltip=_('Superscript'),
                                          onchange=self.sup_changed)
-        self.add(self.sup, 0, LEFT | CENTER, 2)
+        self.pack(self.sup, padding=2)
 
         self.sub = wal.ImageToggleButton(self, art_id=icons.PD_TEXT_SUBSCRIPT,
                                          tooltip=_('Subscript'),
                                          onchange=self.sub_changed)
-        self.add(self.sub, 0, LEFT | CENTER, 2)
+        self.pack(self.sub, padding=2)
 
     def update(self, *args):
         insp = self.app.insp

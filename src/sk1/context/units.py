@@ -38,7 +38,7 @@ class UnitsPlugin(CtxPlugin):
         bmp = get_bmp(self, icons.CTX_UNITS, _('Document units'))
         self.pack(bmp, padding=2)
 
-        self.add((2, 2))
+        self.pack((2, 2))
 
         names = [unit_full_names[item] for item in unit_names]
         self.combo = Combolist(self, items=names, onchange=self.changed)

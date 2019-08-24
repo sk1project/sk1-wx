@@ -19,9 +19,9 @@ import wal
 
 from sk1 import _, config, events
 from sk1.resources import icons, get_bmp
-from wal import LEFT, CENTER
 
 from .base import CtxPlugin
+
 
 class PolygonPlugin(CtxPlugin):
     name = 'PolygonPlugin'
@@ -36,12 +36,12 @@ class PolygonPlugin(CtxPlugin):
     def build(self):
         bmp = get_bmp(self, icons.CTX_POLYGON_NUM,
                       _('Number of polygon angles'))
-        self.add(bmp, 0, LEFT | CENTER, 2)
+        self.pack(bmp, padding=2)
 
         self.num_spin = wal.IntSpin(self, 5, (3, 1000), onchange=self.changes)
-        self.add(self.num_spin, 0, LEFT | CENTER, 2)
+        self.pack(self.num_spin, padding=2)
 
-    def changes(self, *args):
+    def changes(self, *_args):
         if self.update_flag:
             return
         val = self.num_spin.get_value()
@@ -70,13 +70,13 @@ class PolygonCfgPlugin(CtxPlugin):
     def build(self):
         bmp = get_bmp(self, icons.CTX_POLYGON_CFG,
                       _('Number of angles for newly created polygon'))
-        self.add(bmp, 0, LEFT | CENTER, 2)
+        self.pack(bmp, padding=2)
 
         self.num_spin = wal.IntSpin(self, config.default_polygon_num,
                                     (3, 1000), onchange=self.changes)
-        self.add(self.num_spin, 0, LEFT | CENTER, 2)
+        self.pack(self.num_spin, padding=2)
 
-    def changes(self, *args):
+    def changes(self, *_args):
         val = self.num_spin.get_value()
         if not config.default_polygon_num == val:
             config.default_polygon_num = val

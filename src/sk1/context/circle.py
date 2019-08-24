@@ -58,35 +58,35 @@ class CirclePlugin(CtxPlugin):
                                                       icons.CTX_CIRCLE_ARC,
                                                       onchange=self.toggled,
                                                       tooltip=_('Arc'))
-        self.add(self.toggles[ARC_ARC], 0, wal.LEFT | wal.CENTER)
+        self.pack(self.toggles[ARC_ARC])
 
         self.toggles[ARC_CHORD] = wal.ImageToggleButton(self, False,
                                                         icons.CTX_CIRCLE_CHORD,
                                                         onchange=self.toggled,
                                                         tooltip=_('Chord'))
-        self.add(self.toggles[ARC_CHORD], 0, wal.LEFT | wal.CENTER)
+        self.pack(self.toggles[ARC_CHORD])
 
         idx = ARC_PIE_SLICE
         self.toggles[idx] = wal.ImageToggleButton(self, False,
                                                   icons.CTX_CIRCLE_PIE_SLICE,
                                                   onchange=self.toggled,
                                                   tooltip=_('Pie slice'))
-        self.add(self.toggles[ARC_PIE_SLICE], 0, wal.LEFT | wal.CENTER)
+        self.pack(self.toggles[ARC_PIE_SLICE])
 
         self.slider = wal.Slider(self, 0, (0, 360),
                                  onchange=self.slider_changes,
                                  on_final_change=self.slider_final_changes)
-        self.add(self.slider, 0, wal.LEFT | wal.CENTER, 2)
+        self.pack(self.slider, padding=2)
 
         self.angle_spin = AngleSpin(self, onchange=self.angle_changes)
-        self.add(self.angle_spin, 0, wal.LEFT | wal.CENTER, 2)
+        self.pack(self.angle_spin, padding=2)
 
         txt1 = _('Start angle')
         txt2 = _('End angle')
         icons_dict = {True: [icons.CTX_CIRCLE_START_ANGLE, txt1, ],
                       False: [icons.CTX_CIRCLE_END_ANGLE, txt2, ], }
         self.switch = BitmapToggle(self, True, icons_dict, self.switched)
-        self.add(self.switch, 0, wal.LEFT | wal.CENTER, 2)
+        self.pack(self.switch, padding=2)
 
     def update(self, *args):
         if self.insp.is_selection():

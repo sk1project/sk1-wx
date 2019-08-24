@@ -70,44 +70,42 @@ class TextStylePlugin(CtxPlugin):
     def build(self):
         self.changes_flag = False
         self.styles = self._get_styles()
-        self.styles_combo = wal.Combolist(self, items=self.styles,
-                                          onchange=self.on_style_change)
-        self.add(self.styles_combo, 0, wal.LEFT | wal.CENTER, 2)
-        self.add((3, 3))
+        self.styles_combo = wal.Combolist(
+            self, items=self.styles, onchange=self.on_style_change)
+        self.pack(self.styles_combo, padding=2)
+        self.pack((3, 3))
 
         self.families, self.faces_dict = libpango.get_fonts()
 
         self.families_combo = FontChoice(self, onchange=self.on_font_change)
-        self.add(self.families_combo, 0, wal.LEFT | wal.CENTER, 2)
-        self.add((3, 3))
+        self.pack(self.families_combo, padding=2)
+        self.pack((3, 3))
 
         self.faces = self.faces_dict['Sans']
-        self.faces_combo = wal.Combolist(self, items=self.faces,
-                                         onchange=self.apply_changes)
+        self.faces_combo = wal.Combolist(
+            self, items=self.faces, onchange=self.apply_changes)
         self.faces_combo.set_active(0)
-        self.add(self.faces_combo, 0, wal.LEFT | wal.CENTER, 2)
-        self.add((3, 3))
+        self.pack(self.faces_combo, padding=2)
+        self.pack((3, 3))
 
-        self.size_combo = wal.FloatCombobox(self, 12,
-                                            digits=2, items=FONT_SIZES,
-                                            onchange=self.apply_changes)
-        self.add(self.size_combo, 0, wal.LEFT | wal.CENTER, 2)
+        self.size_combo = wal.FloatCombobox(
+            self, 12, digits=2, items=FONT_SIZES, onchange=self.apply_changes)
+        self.pack(self.size_combo, padding=2)
 
         self.pack(wal.VLine(self), fill=True, padding_all=3)
 
-        self.align = wal.HToggleKeeper(self, ALIGN_MODES,
-                                       ALIGN_MODE_ICONS, ALIGN_MODE_NAMES,
-                                       on_change=self.apply_changes,
-                                       allow_none=False)
+        self.align = wal.HToggleKeeper(
+            self, ALIGN_MODES, ALIGN_MODE_ICONS, ALIGN_MODE_NAMES,
+            on_change=self.apply_changes, allow_none=False)
         self.align.set_mode(sk2const.TEXT_ALIGN_LEFT)
-        self.add(self.align, 0, wal.LEFT | wal.CENTER, 2)
+        self.pack(self.align, padding=2)
 
         self.pack(wal.VLine(self), fill=True, padding_all=3)
 
         self.ligature = wal.ImageToggleButton(self, False, icons.PD_LIGATURE,
                                               tooltip=_('Use ligatures'),
                                               onchange=self.apply_changes)
-        self.add(self.ligature, 0, wal.LEFT | wal.CENTER, 2)
+        self.pack(self.ligature, padding=2)
 
     def _get_styles(self):
         ret = []
@@ -118,7 +116,7 @@ class TextStylePlugin(CtxPlugin):
                     ret.append(item)
         return ret
 
-    def show(self, update):
+    def show(self, update=True):
         CtxPlugin.show(self, update=True)
         self.update()
 
@@ -167,6 +165,7 @@ class TextStylePlugin(CtxPlugin):
             self.size_combo.set_value(text_style[2])
         self.align.set_mode(text_style[3])
         self.ligature.set_active(text_style[5])
+        self.fit()
 
     def on_style_change(self):
         style_name = self.styles[self.styles_combo.get_active()]
@@ -186,7 +185,7 @@ class TextStylePlugin(CtxPlugin):
         self.faces_combo.set_active(self.faces.index(face))
         self.apply_changes()
 
-    def apply_changes(self, *args):
+    def apply_changes(self, *_args):
         doc = self.app.current_doc
         family = self.families_combo.get_font_family()
         face = self.faces[self.faces_combo.get_active()]
@@ -208,3 +207,4 @@ class TextStylePlugin(CtxPlugin):
             new_style = deepcopy(doc.text_obj_style)
             new_style[2] = [family, face, size, align, spacing, cluster_flag]
             doc.text_obj_style = new_style
+        self.fit()
