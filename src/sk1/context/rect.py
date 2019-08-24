@@ -17,10 +17,11 @@
 
 import wal
 
-from generic import CtxPlugin
 from sk1 import _, events
 from sk1.pwidgets import RatioToggle, BitmapToggle
 from sk1.resources import icons, get_bmp
+
+from .base import CtxPlugin
 
 
 class RectanglePlugin(CtxPlugin):

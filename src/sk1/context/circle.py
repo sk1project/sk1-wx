@@ -25,7 +25,7 @@ from sk1 import _, events
 from sk1.resources import icons
 from sk1.pwidgets import BitmapToggle
 from sk1.pwidgets import AngleSpin
-from generic import CtxPlugin
+from .base import CtxPlugin
 
 CIRCLE_TYPES = [ARC_ARC, ARC_CHORD, ARC_PIE_SLICE]
 

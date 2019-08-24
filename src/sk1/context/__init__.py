@@ -15,21 +15,21 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from generic import CtxPlugin
-from page_format import PagePlugin, PageBorderPlugin
-from units import UnitsPlugin
-from jump import JumpPlugin
-from resize import ResizePlugin
-from transform import RotatePlugin, MirrorPlugin
-from combine import GroupPlugin, CombinePlugin, ToCurvePlugin
-from rect import RectanglePlugin
-from polygon import PolygonPlugin, PolygonCfgPlugin
-from order import OrderPlugin
-from circle import CirclePlugin
-from image_plgs import ImageTypePlugin
-from bezier import BezierPlugin
-from text import TextStylePlugin
-from markup import FontMarkupPlugin, SimpleMarkupPlugin, ScriptMarkupPlugin, \
+from .base import CtxPlugin
+from .page_format import PagePlugin, PageBorderPlugin
+from .units import UnitsPlugin
+from .jump import JumpPlugin
+from .resize import ResizePlugin
+from .transform import RotatePlugin, MirrorPlugin
+from .combine import GroupPlugin, CombinePlugin, ToCurvePlugin
+from .rect import RectanglePlugin
+from .polygon import PolygonPlugin, PolygonCfgPlugin
+from .order import OrderPlugin
+from .circle import CirclePlugin
+from .image_plgs import ImageTypePlugin
+from .bezier import BezierPlugin
+from .text import TextStylePlugin
+from .markup import FontMarkupPlugin, SimpleMarkupPlugin, ScriptMarkupPlugin, \
     ClearMarkupPlugin, TextCasePlugin
 
 PLUGINS = [PagePlugin, UnitsPlugin, JumpPlugin, ResizePlugin, RotatePlugin,

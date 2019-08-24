@@ -16,7 +16,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from sk1.resources import pdids
-from generic import ActionCtxPlugin
+from .base import ActionCtxPlugin
 
 BEZIER_ACTIONS = [
     pdids.ID_BEZIER_SEL_ALL_NODES, pdids.ID_BEZIER_REVERSE_ALL_PATHS, None,

@@ -15,13 +15,12 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from uc2.uc2const import unit_names, unit_full_names, UNIT_MM
-
-from wal import Combolist, LEFT, CENTER
-
 from sk1 import _, events
 from sk1.resources import icons, get_bmp
-from generic import CtxPlugin
+from uc2.uc2const import unit_names, unit_full_names, UNIT_MM
+from wal import Combolist
+
+from .base import CtxPlugin
 
 
 class UnitsPlugin(CtxPlugin):
@@ -37,13 +36,13 @@ class UnitsPlugin(CtxPlugin):
 
     def build(self):
         bmp = get_bmp(self, icons.CTX_UNITS, _('Document units'))
-        self.add(bmp, 0, LEFT | CENTER, 2)
+        self.pack(bmp, padding=2)
 
         self.add((2, 2))
 
         names = [unit_full_names[item] for item in unit_names]
         self.combo = Combolist(self, items=names, onchange=self.changed)
-        self.add(self.combo, 0, LEFT | CENTER, 2)
+        self.pack(self.combo, padding=2)
 
     def update(self, *args):
         if self.insp.is_doc():
@@ -52,7 +51,7 @@ class UnitsPlugin(CtxPlugin):
                 self.units = model.doc_units
                 self.combo.set_active(unit_names.index(self.units))
 
-    def changed(self, *args):
+    def changed(self, *_args):
         if self.insp.is_doc():
             if not self.units == unit_names[self.combo.get_active()]:
                 self.units = unit_names[self.combo.get_active()]

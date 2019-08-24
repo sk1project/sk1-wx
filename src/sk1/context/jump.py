@@ -15,13 +15,11 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from wal import LEFT, CENTER
-
 from sk1 import _, config, events
-from sk1.resources import icons, get_bmp
 from sk1.pwidgets import UnitSpin
-from generic import CtxPlugin
+from sk1.resources import icons, get_bmp
 
+from .base import CtxPlugin
 
 class JumpPlugin(CtxPlugin):
     name = 'JumpPlugin'
@@ -33,12 +31,12 @@ class JumpPlugin(CtxPlugin):
 
     def build(self):
         bmp = get_bmp(self, icons.CTX_OBJECT_JUMP, _('Default object jump'))
-        self.add(bmp, 0, LEFT | CENTER, 2)
+        self.pack(bmp, padding=2)
 
         self.jump_spin = UnitSpin(self.app, self, onenter=self.user_changes,
                                   onchange=self.user_changes)
         self.jump_spin.set_point_value(config.obj_jump)
-        self.add(self.jump_spin, 0, LEFT | CENTER, 2)
+        self.pack(self.jump_spin, padding=2)
 
     def user_changes(self, *_args):
         val = self.jump_spin.get_point_value()

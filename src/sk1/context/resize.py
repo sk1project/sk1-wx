@@ -20,7 +20,8 @@ from wal import LEFT, CENTER
 from sk1 import _, events
 from sk1.resources import icons, get_bmp
 from sk1.pwidgets import UnitSpin, RatioToggle
-from generic import CtxPlugin
+
+from .base import CtxPlugin
 
 
 class ResizePlugin(CtxPlugin):

@@ -16,13 +16,15 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-from generic import ActionCtxPlugin
-from generic import CtxPlugin
+
 from sk1 import _, events, modes
 from sk1.pwidgets import FontChoice
 from sk1.resources import icons, pdids
 from uc2 import libpango
 from wal import LEFT, CENTER
+
+from .base import ActionCtxPlugin
+from .base import CtxPlugin
 
 
 class TextCasePlugin(ActionCtxPlugin):

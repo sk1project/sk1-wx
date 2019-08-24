@@ -16,11 +16,12 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-from generic import CtxPlugin
+
 from sk1 import _, config, events
 from sk1.resources import icons, get_bmp
 from wal import LEFT, CENTER
 
+from .base import CtxPlugin
 
 class PolygonPlugin(CtxPlugin):
     name = 'PolygonPlugin'

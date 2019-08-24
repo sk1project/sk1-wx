@@ -17,16 +17,15 @@
 
 from copy import deepcopy
 
-from uc2.uc2const import PAGE_FORMATS, PAGE_FORMAT_NAMES, PORTRAIT, LANDSCAPE
-from uc2.uc2const import ORIENTS_NAMES, PAGE_FORMATS_MORE
-
-from wal import VLine, ALL, EXPAND
-from wal import Combolist, LEFT, CENTER, ImageToggleButton
-
 from sk1 import _, events, config
-from sk1.resources import icons, get_bmp, pdids
 from sk1.pwidgets import UnitSpin, ActionButton, ActionToggle
-from generic import CtxPlugin
+from sk1.resources import icons, get_bmp, pdids
+from uc2.uc2const import ORIENTS_NAMES, PAGE_FORMATS_MORE
+from uc2.uc2const import PAGE_FORMATS, PAGE_FORMAT_NAMES, PORTRAIT, LANDSCAPE
+from wal import Combolist, LEFT, CENTER, ImageToggleButton
+from wal import VLine, ALL, EXPAND
+
+from .base import CtxPlugin
 
 
 class PagePlugin(CtxPlugin):
@@ -50,31 +49,31 @@ class PagePlugin(CtxPlugin):
         self.formats = [_('Custom'), ] + PAGE_FORMAT_NAMES
         self.combo = Combolist(self, items=self.formats,
                                onchange=self.combo_changed)
-        self.add(self.combo, 0, LEFT | CENTER, 2)
-        self.add((3, 3))
+        self.pack(self.combo)
+        self.pack((3, 3))
 
         self.width_spin = UnitSpin(self.app, self,
                                    onchange=self.width_spin_changed)
-        self.add(self.width_spin, 0, LEFT | CENTER, 2)
+        self.pack(self.width_spin)
 
-        self.add(get_bmp(self, icons.CTX_W_ON_H), 0, LEFT | CENTER, 1)
+        self.pack(get_bmp(self, icons.CTX_W_ON_H), padding=2)
 
         self.height_spin = UnitSpin(self.app, self,
                                     onchange=self.height_spin_changed)
-        self.add(self.height_spin, 0, LEFT | CENTER, 2)
+        self.pack(self.height_spin)
 
-        self.add((2, 2))
+        self.pack((2, 2))
 
         self.portrait = ImageToggleButton(self, True, icons.CTX_PAGE_PORTRAIT,
                                           onchange=self.portrait_toggled,
                                           tooltip=ORIENTS_NAMES[0])
-        self.add(self.portrait, 0, LEFT | CENTER, 2)
+        self.pack(self.portrait, padding=2)
 
         self.landscape = ImageToggleButton(self, False,
                                            icons.CTX_PAGE_LANDSCAPE,
                                            onchange=self.landscape_toggled,
                                            tooltip=ORIENTS_NAMES[1])
-        self.add(self.landscape, 0, LEFT | CENTER, 2)
+        self.pack(self.landscape, padding=2)
 
         self.width_spin.set_enable(False)
         self.height_spin.set_enable(False)

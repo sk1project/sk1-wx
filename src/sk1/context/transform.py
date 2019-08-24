@@ -20,7 +20,8 @@ from wal import LEFT, CENTER
 from sk1 import _
 from sk1.resources import icons, get_bmp, pdids
 from sk1.pwidgets import AngleSpin, ActionButton
-from generic import CtxPlugin, ActionCtxPlugin
+
+from .base import CtxPlugin, ActionCtxPlugin
 
 
 class RotatePlugin(CtxPlugin):
