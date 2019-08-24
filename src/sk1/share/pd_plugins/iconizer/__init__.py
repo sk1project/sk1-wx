@@ -125,7 +125,7 @@ class ImageViewer(wal.HPanel):
         self.canvas = ImageCanvas(panel, cms.val_255(bg))
         panel.pack(self.canvas, fill=True, expand=True)
         info_panel = wal.VPanel(panel)
-        info_panel.set_bg(wal.WHITE)
+        info_panel.set_bg(wal.UI_COLORS['entry_bg'])
         self.info = wal.Label(info_panel, '---')
         info_panel.pack(self.info, padding_all=2)
         panel.pack(Spacer(panel))
