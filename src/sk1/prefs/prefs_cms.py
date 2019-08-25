@@ -102,7 +102,8 @@ class CmsOptions(CmsTab):
         bmp = get_bmp(self.banner, icons.PD_PREFS_CMS_BANNER)
         self.banner.pack(bmp, padding=2)
         panel.pack(self.banner, fill=True, expand=True)
-        txt = _('Note: If Color Management is disabled, color values will be inaccurate.')
+        txt = _('Note: If Color Management is disabled, '
+                'color values will be inaccurate.')
         label = wal.Label(panel, txt, fontsize=-1)
         panel.pack(label, fill=True, padding_all=5)
         self.pack(panel, fill=True, expand=True)
