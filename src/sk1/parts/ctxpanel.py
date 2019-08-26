@@ -44,7 +44,6 @@ class AppCtxPanel(wal.HPanel):
         events.connect(events.SELECTION_CHANGED, self.rebuild)
         events.connect(events.MODE_CHANGED, self.rebuild)
         self.rebuild()
-        print self.get_size()
 
     def rebuild(self, *_args):
         mode = self.get_mode()
