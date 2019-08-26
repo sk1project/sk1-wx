@@ -26,6 +26,40 @@ from uc2.formats.skp import skp_loader
 
 URL = 'http://104.237.146.215'
 
+PALETTE_LIST = []
+
+
+def init_palette_list():
+    url = '%s/palettes.php?action=get_list' % URL
+    data = []
+    # noinspection PyBroadException
+    try:
+        print 'Reading palette list'
+        txt = urllib2.urlopen(url).read()
+        code = compile('data=' + txt, '<string>', 'exec')
+        exec code
+    except Exception:
+        pass
+    if data:
+        PALETTE_LIST.extend(data)
+
+
+class PaletteHandler:
+    def __init__(self):
+        self.palettes = {}
+
+    def get(self, palette_name):
+        if palette_name not in self.palettes:
+            index = PALETTE_LIST.index(palette_name) + 1
+            pid = '0' * (4 - len(str(index))) + str(index)
+            url = '%s/palettes.php?action=read_palette&id=%s' % (URL, pid)
+            print 'Reading ', url
+            self.palettes[palette_name] = urllib2.urlopen(url).read()
+        return self.palettes.get(palette_name, '')
+
+
+PALETTES = PaletteHandler()
+
 
 class PaletteCollectionDialog(wal.OkCancelDialog):
     data = []
@@ -56,8 +90,8 @@ class PaletteCollectionDialog(wal.OkCancelDialog):
 
     def on_load(self, *_args):
         self._timer.Stop()
-        self.data = self.stub.get_palette_list()
-        if self.data:
+        self.stub.init_palette_list()
+        if PALETTE_LIST:
             self.stub.hide()
             self.viewer.show()
         else:
@@ -82,20 +116,13 @@ class DataStub(wal.HPanel):
         filepath = os.path.join(path, 'progress.gif')
         self.gif = wal.AnimatedGif(int_panel, filepath)
         int_panel.pack(self.gif, padding_all=10)
-        self.gif.play()
+        if not PALETTE_LIST:
+            self.gif.play()
 
-    def get_palette_list(self):
-        url = '%s/palettes.php?action=get_list' % URL
-        data = []
-        # noinspection PyBroadException
-        try:
-            txt = urllib2.urlopen(url).read()
-            code = compile('data=' + txt, '<string>', 'exec')
-            exec code
-        except Exception:
-            pass
-        self.gif.stop()
-        return data
+    def init_palette_list(self):
+        if not PALETTE_LIST:
+            init_palette_list()
+            self.gif.stop()
 
 
 class DataViewer(wal.HPanel):
@@ -106,7 +133,7 @@ class DataViewer(wal.HPanel):
 
         vp = wal.VPanel(self)
         vp.set_bg(wal.UI_COLORS['border'])
-        self.pal_list = wal.SimpleList(vp, self.parent.data,
+        self.pal_list = wal.SimpleList(vp, PALETTE_LIST,
                                        on_select=self.change_palette)
         vp.pack(self.pal_list, expand=True, fill=True, padding_all=1)
         self.pack(vp, expand=True, fill=True, padding_all=5)
@@ -115,16 +142,13 @@ class DataViewer(wal.HPanel):
 
     def show(self, _update=False):
         wal.HPanel.show(self)
-        self.pal_list.update(self.parent.data)
+        self.pal_list.update(PALETTE_LIST)
 
     def change_palette(self, name=''):
         palette = None
-        index = self.parent.data.index(name) + 1
-        pid = '0' * (4 - len(str(index))) + str(index)
-        url = '%s/palettes.php?action=read_palette&id=%s' % (URL, pid)
         # noinspection PyBroadException
         try:
-            pal_txt = urllib2.urlopen(url).read()
+            pal_txt = PALETTES.get(name)
             pal_stream = StringIO(pal_txt)
             pal_stream.seek(0)
             palette = skp_loader(self.app.appdata, None, pal_stream, False)
