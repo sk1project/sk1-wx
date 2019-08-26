@@ -54,7 +54,7 @@ class PaletteCollectionDialog(wal.OkCancelDialog):
         self.ok_btn.set_enable(False)
         return wal.OkCancelDialog.show(self)
 
-    def on_load(self, *args):
+    def on_load(self, *_args):
         self._timer.Stop()
         self.data = self.stub.get_palette_list()
         if self.data:
@@ -87,11 +87,12 @@ class DataStub(wal.HPanel):
     def get_palette_list(self):
         url = '%s/palettes.php?action=get_list' % URL
         data = []
+        # noinspection PyBroadException
         try:
             txt = urllib2.urlopen(url).read()
             code = compile('data=' + txt, '<string>', 'exec')
             exec code
-        except:
+        except Exception:
             pass
         self.gif.stop()
         return data
@@ -112,7 +113,7 @@ class DataViewer(wal.HPanel):
         self.preview = PreViewer(self)
         self.pack(self.preview, fill=True, padding_all=5)
 
-    def show(self):
+    def show(self, _update=False):
         wal.HPanel.show(self)
         self.pal_list.update(self.parent.data)
 
@@ -120,15 +121,15 @@ class DataViewer(wal.HPanel):
         palette = None
         index = self.parent.data.index(name) + 1
         pid = '0' * (4 - len(str(index))) + str(index)
-        url = '%s/palettes.php?action=get_palette&id=%s' % (URL, pid)
+        url = '%s/palettes.php?action=read_palette&id=%s' % (URL, pid)
+        # noinspection PyBroadException
         try:
-            pal_url = urllib2.urlopen(url).read()
-            pal_txt = urllib2.urlopen(pal_url).read()
+            pal_txt = urllib2.urlopen(url).read()
             pal_stream = StringIO(pal_txt)
             pal_stream.seek(0)
             palette = skp_loader(self.app.appdata, None, pal_stream, False)
             self.parent.ok_btn.set_enable(True)
-        except:
+        except Exception:
             self.parent.ok_btn.set_enable(False)
         self.parent.palette = palette
         self.preview.viewer.draw_palette(palette)
