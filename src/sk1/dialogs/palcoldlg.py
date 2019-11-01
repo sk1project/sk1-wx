@@ -24,7 +24,9 @@ from sk1 import _, config
 from sk1.pwidgets import PaletteViewer
 from uc2.formats.skp import skp_loader
 
-URL = 'http://104.237.146.215'
+URL = 'https://sk1project.net'
+USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 ' \
+             '(KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36'
 
 PALETTE_LIST = []
 
@@ -34,8 +36,8 @@ def init_palette_list():
     data = []
     # noinspection PyBroadException
     try:
-        print 'Reading palette list'
-        txt = urllib2.urlopen(url).read()
+        req = urllib2.Request(url, {}, {'User-Agent': USER_AGENT})
+        txt = urllib2.urlopen(req).read()
         code = compile('data=' + txt, '<string>', 'exec')
         exec code
     except Exception:
@@ -53,8 +55,8 @@ class PaletteHandler:
             index = PALETTE_LIST.index(palette_name) + 1
             pid = '0' * (4 - len(str(index))) + str(index)
             url = '%s/palettes.php?action=read_palette&id=%s' % (URL, pid)
-            print 'Reading ', url
-            self.palettes[palette_name] = urllib2.urlopen(url).read()
+            req = urllib2.Request(url, {}, {'User-Agent': USER_AGENT})
+            self.palettes[palette_name] = urllib2.urlopen(req).read()
         return self.palettes.get(palette_name, '')
 
 
