@@ -15,6 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import logging
 import os
 import urllib2
 from cStringIO import StringIO
@@ -29,19 +30,29 @@ USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 ' \
              '(KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36'
 
 PALETTE_LIST = []
+LOG = logging.getLogger(__name__)
 
 
-def init_palette_list():
-    url = '%s/palettes.php?action=get_list' % URL
-    data = []
+def request_server(url):
+    response = ''
     # noinspection PyBroadException
     try:
         req = urllib2.Request(url, {}, {'User-Agent': USER_AGENT})
-        txt = urllib2.urlopen(req).read()
+        response = urllib2.urlopen(req).read()
+    except Exception:
+        LOG.exception('Cannot read server response')
+    return response
+
+
+def init_palette_list():
+    data = []
+    # noinspection PyBroadException
+    try:
+        txt = request_server('%s/palettes.php?action=get_list' % URL)
         code = compile('data=' + txt, '<string>', 'exec')
         exec code
     except Exception:
-        pass
+        LOG.exception('Cannot deserialize server response')
     if data:
         PALETTE_LIST.extend(data)
 
@@ -54,9 +65,8 @@ class PaletteHandler:
         if palette_name not in self.palettes:
             index = PALETTE_LIST.index(palette_name) + 1
             pid = '0' * (4 - len(str(index))) + str(index)
-            url = '%s/palettes.php?action=read_palette&id=%s' % (URL, pid)
-            req = urllib2.Request(url, {}, {'User-Agent': USER_AGENT})
-            self.palettes[palette_name] = urllib2.urlopen(req).read()
+            url = '%s/palettes.php?action=get_palette&id=%s' % (URL, pid)
+            self.palettes[palette_name] = request_server(request_server(url))
         return self.palettes.get(palette_name, '')
 
 
