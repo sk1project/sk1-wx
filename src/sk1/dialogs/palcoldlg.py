@@ -166,6 +166,7 @@ class DataViewer(wal.HPanel):
             palette = skp_loader(self.app.appdata, None, pal_stream, False)
             self.parent.ok_btn.set_enable(True)
         except Exception:
+            LOG.exception('Cannot switch palette', name)
             self.parent.ok_btn.set_enable(False)
         self.parent.palette = palette
         self.preview.viewer.draw_palette(palette)
