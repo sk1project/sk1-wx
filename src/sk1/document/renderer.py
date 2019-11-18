@@ -129,15 +129,10 @@ class PDRenderer(CairoRenderer):
 
     def start(self):
         self.set_point_data()
-        width, height = self.canvas.dc.get_size()
-        if self.surface is None:
-            self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
-            self.width = width
-            self.height = height
-        elif self.width != width or self.height != height:
-            self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
-            self.width = width
-            self.height = height
+        w, h = self.canvas.dc.get_size()
+        if self.surface is None or self.width != w or self.height != h:
+            self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
+            self.width, self.height = w, h
         self.ctx = cairo.Context(self.surface)
         self.ctx.set_source_rgb(*self.doc_methods.get_desktop_bg())
         self.ctx.paint()
