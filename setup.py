@@ -128,7 +128,6 @@ CLASSIFIERS = [
     'Development Status :: 5 - Stable',
     'Environment :: Desktop',
     'Intended Audience :: End Users/Desktop',
-    'License :: OSI Approved :: LGPL v2',
     'License :: OSI Approved :: GPL v3',
     'Operating System :: POSIX',
     'Operating System :: MacOS :: MacOS X',
