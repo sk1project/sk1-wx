@@ -163,9 +163,8 @@ class AppAction(object):
         return txt
 
     def get_shortcut_text(self):
-        if self.is_acc:
-            return wal.untr(self.acc_entry.ToString())
-        return ''
+        return wal.untr(self.acc_entry.ToString()).replace(' ', '') \
+            if self.is_acc else ''
 
     def is_toggle(self):
         return self.checker is not None
