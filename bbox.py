@@ -103,18 +103,21 @@ IMAGES = [
     'ubuntu_18.04_64bit',
     'ubuntu_18.10_64bit',
     'ubuntu_19.04_64bit',
-    'debian_7_32bit',
-    'debian_7_64bit',
+    'ubuntu_19.10_64bit',
     'debian_8_32bit',
     'debian_8_64bit',
     'debian_9_32bit',
     'debian_9_64bit',
+    'debian_10_32bit',
+    'debian_10_64bit',
     'fedora_27_64bit',
     'fedora_28_64bit',
     'fedora_29_64bit',
     'fedora_30_64bit',
+    'fedora_31_64bit',
     'opensuse_42.3_64bit',
     'opensuse_15.0_64bit',
+    # 'opensuse_15.1_64bit',
     'packager'
 ]
 
