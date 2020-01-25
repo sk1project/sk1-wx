@@ -115,6 +115,7 @@ TR_LIST = [
     ['LANG', 'Translators'],
     ['Brazilian Portuguese','João Lima Neto <contato@joaolimaneto.com.br>'],
     ['German', 'Thore Sommer <mail@thson.de>'],
+    ['Italian', 'Tom Spaccavento <spcvntom@gmail.com>'],
     ['Russian', 'Igor Novikov <sk1.project.org@gmail.com>'],
     ['Spanish', 'Carlos Jesús Atagua Díaz <atacarlos@gmail.com>'],
     ['Ukrainian', 'Maxim Barabash <maxim.s.barabash@gmail.com>,'],
