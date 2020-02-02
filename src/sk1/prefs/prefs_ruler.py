@@ -45,9 +45,10 @@ class RulersPrefs(PrefPanel):
         PrefPanel.__init__(self, app, dlg)
 
     def build(self):
-        self.pack(wal.Label(self, _('Size (px):'), fontbold=True))
+        l = wal.Label(self, _('Size (px):'), fontbold=True)
+        self.pack(l)
 
-        grid = wal.GridPanel(self, rows=3, cols=4, hgap=10, vgap=5)
+        grid = wal.GridPanel(self, rows=2, cols=4, hgap=10, vgap=5)
 
         # Ruler size
         grid.pack(wal.Label(grid, _('Ruler:')))
@@ -73,7 +74,7 @@ class RulersPrefs(PrefPanel):
                                             (2, 30), onchange=self.update_ruler)
         grid.pack(self.ruler_large_tick)
 
-        self.pack(grid, padding_all=10)
+        self.pack(grid, padding=10)
 
         self.pack(wal.Label(self, _('Text shift (px):'), fontbold=True))
 
@@ -113,7 +114,7 @@ class RulersPrefs(PrefPanel):
 
         # Testing ruler
         self.pack(wal.Label(self, _('Ruler preview:'), fontbold=True),
-                  padding_all=10)
+                  padding=10)
         panel = wal.HPanel(self)
         panel.add((360, 1))
         panel.set_bg(wal.UI_COLORS['disabled_text'])

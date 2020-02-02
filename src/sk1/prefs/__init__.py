@@ -105,8 +105,8 @@ class PrefsDialog(wal.OkCancelDialog):
                 self.current_plugin.hide()
             plugin.show()
             self.current_plugin = plugin
-            self.container.layout()
             self.container.show()
+            plugin.layout()
 
     def get_plugin_by_pid(self, pid):
         ret = None
