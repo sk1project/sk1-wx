@@ -67,10 +67,7 @@ class AppMainWindow(wal.MainWindow):
 
     def set_title(self, title=''):
         appname = self.app.appdata.app_name
-        if title:
-            title = '[%s] - %s' % (title, appname)
-        else:
-            title = appname
+        title = '[%s] - %s' % (title, appname) if title else appname
         wal.MainWindow.set_title(self, title)
 
     def show_mdi(self, value):
