@@ -289,6 +289,8 @@ def build_package():
             elif ver == '9':
                 copies.append((prefix + '_mx17_' + suffix, mx_folder))
                 copies.append((prefix + '_mx18_' + suffix, mx_folder))
+            elif ver == '10':
+                copies.append((prefix + '_mx19_' + suffix, mx_folder))
 
     elif SYSFACTS.is_rpm:
         echo_msg('Building RPM package')
