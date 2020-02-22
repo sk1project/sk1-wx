@@ -45,8 +45,7 @@ class RulersPrefs(PrefPanel):
         PrefPanel.__init__(self, app, dlg)
 
     def build(self):
-        l = wal.Label(self, _('Size (px):'), fontbold=True)
-        self.pack(l)
+        self.pack(wal.Label(self, _('Size (px):'), fontbold=True))
 
         grid = wal.GridPanel(self, rows=2, cols=4, hgap=10, vgap=5)
 
@@ -186,13 +185,13 @@ class RulerTest(wal.HPanel, wal.DrawableWidget):
         fntdir = 'ruler-font%dpx' % font_size
         fntdir = os.path.join(config.resource_dir, 'fonts', fntdir)
 
-        def get_colored_surface(file_name, color):
-            file_name = fsutils.get_sys_path(file_name)
-            surface = cairo.ImageSurface.create_from_png(file_name)
+        def get_colored_surface(filename, clr):
+            filename = fsutils.get_sys_path(filename)
+            surface = cairo.ImageSurface.create_from_png(filename)
             w, h = surface.get_width(), surface.get_height()
             res = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
             cr = cairo.Context(res)
-            cr.set_source_rgb(*color)
+            cr.set_source_rgb(*clr)
             cr.mask_surface(surface, 0, 0)
             cr.fill()
             return w, res

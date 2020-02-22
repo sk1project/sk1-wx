@@ -15,9 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import wal
-
-from sk1 import _, config
+from sk1 import _
 from sk1.resources import icons
 
 from generic import PrefPanel
@@ -29,7 +27,7 @@ class CanvasPrefs(PrefPanel):
     title = _('Canvas marker preferences')
     icon_id = icons.PD_PREFS_PALETTE
 
-    def __init__(self, app, dlg, *args):
+    def __init__(self, app, dlg, *_args):
         PrefPanel.__init__(self, app, dlg)
 
     def build(self):

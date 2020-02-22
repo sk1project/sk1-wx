@@ -45,7 +45,7 @@ class PrinterPrefs(PrefPanel):
     a4_calibrate_btn = None
     letter_calibrate_btn = None
 
-    def __init__(self, app, dlg, *args):
+    def __init__(self, app, dlg, *_args):
         PrefPanel.__init__(self, app, dlg)
 
     def get_printsys(self):
@@ -161,16 +161,16 @@ class PrinterPrefs(PrefPanel):
             label.wrap(470)
             self.pack(label, fill=True, padding_all=5, align_center=False)
 
-            self.a4_calibrate_btn = wal.Button(self,
-                                           _('Print A4 calibration page'),
-                                           onclick=self.print_calibration_a4)
+            self.a4_calibrate_btn = wal.Button(
+                self, _('Print A4 calibration page'),
+                onclick=self.print_calibration_a4)
             self.pack(self.a4_calibrate_btn)
 
             self.pack((5, 5))
 
-            self.letter_calibrate_btn = wal.Button(self,
-                                        _('Print Letter calibration page'),
-                                        onclick=self.print_calibration_letter)
+            self.letter_calibrate_btn = wal.Button(
+                self, _('Print Letter calibration page'),
+                onclick=self.print_calibration_letter)
             self.pack(self.letter_calibrate_btn)
 
             self.pack((5, 5))

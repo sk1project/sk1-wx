@@ -27,5 +27,5 @@ class GridPrefs(PrefPanel):
     title = _('Grid and guides options')
     icon_id = icons.PD_PREFS_GRID
 
-    def __init__(self, app, dlg, *args):
+    def __init__(self, app, dlg, *_args):
         PrefPanel.__init__(self, app, dlg)

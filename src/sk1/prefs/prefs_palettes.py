@@ -41,7 +41,7 @@ class PalettesPrefs(PrefPanel):
     expand = None
     palviewer = None
 
-    def __init__(self, app, dlg, *args):
+    def __init__(self, app, dlg, *_args):
         PrefPanel.__init__(self, app, dlg)
 
     def build(self):
