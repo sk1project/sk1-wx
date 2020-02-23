@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-01 02:00+0200\n"
-"PO-Revision-Date: 2019-01-01 02:03+0200\n"
-"Last-Translator: Igor Novikov <sk1.project.org@gmail.com>\n"
+"POT-Creation-Date: 2020-02-23 01:13+0200\n"
+"PO-Revision-Date: 2020-02-23 02:01+0200\n"
+"Last-Translator: Ihor E. Novikov <sk1.project.org@gmail.com>\n"
 "Language-Team: \n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: src/sk1/app_plugins.py:56
+#: src/sk1/app_plugins.py:57
 msgid "plugin"
 msgstr "плагин"
 
@@ -27,7 +27,7 @@ msgstr "плагин"
 msgid "Default document fill"
 msgstr "Заливка по умолчанию"
 
-#: src/sk1/app_proxy.py:61 src/sk1/dialogs/filldlg.py:87
+#: src/sk1/app_proxy.py:61 src/sk1/dialogs/filldlg.py:90
 msgid "Fill"
 msgstr "Заливка"
 
@@ -35,8 +35,8 @@ msgstr "Заливка"
 msgid "Do you wish to change default fill style for this document?"
 msgstr "Изменить стиль заливки по умолчанию для документа?"
 
-#: src/sk1/app_proxy.py:76 src/sk1/app_proxy.py:131 src/sk1/app_proxy.py:726
-#: src/sk1/app_proxy.py:749
+#: src/sk1/app_proxy.py:76 src/sk1/app_proxy.py:131 src/sk1/app_proxy.py:733
+#: src/sk1/app_proxy.py:756
 msgid "This style will be applied to newly created objects."
 msgstr "Этот стиль будет применен к новым объектам."
 
@@ -60,7 +60,7 @@ msgstr "Не выбран объект для копирования свойс�
 msgid "Selected object cannot be source of fill property."
 msgstr "Выбранный объект не может быть образцом для свойств заливки."
 
-#: src/sk1/app_proxy.py:166 src/sk1/app_proxy.py:185 src/sk1/app_proxy.py:601
+#: src/sk1/app_proxy.py:166 src/sk1/app_proxy.py:185 src/sk1/app_proxy.py:608
 #: src/sk1/share/pd_plugins/shaping/__init__.py:168
 msgid "Do you want to try again?"
 msgstr "Хотите повторить снова?"
@@ -73,35 +73,35 @@ msgstr "Не выбран объект для копирования свойс�
 msgid "Selected object cannot be source of stroke property."
 msgstr "Выбранный объект не может быть образцом для свойств обводки."
 
-#: src/sk1/app_proxy.py:550 src/sk1/share/pd_plugins/shaping/__init__.py:179
+#: src/sk1/app_proxy.py:557 src/sk1/share/pd_plugins/shaping/__init__.py:179
 msgid "Error occurred during this operation."
 msgstr "Возникла ошибка в процессе выполнения операции."
 
-#: src/sk1/app_proxy.py:552 src/sk1/share/pd_plugins/shaping/__init__.py:180
+#: src/sk1/app_proxy.py:559 src/sk1/share/pd_plugins/shaping/__init__.py:180
 msgid "Perhaps this was due to the imperfection of the algorithm."
 msgstr "Возможно, это вследствии несовершенства алгоритма."
 
-#: src/sk1/app_proxy.py:595 src/sk1/share/pd_plugins/shaping/__init__.py:165
+#: src/sk1/app_proxy.py:602 src/sk1/share/pd_plugins/shaping/__init__.py:165
 msgid "There is no selected object."
 msgstr "Нет выбранного объекта."
 
-#: src/sk1/app_proxy.py:597
+#: src/sk1/app_proxy.py:604
 msgid "Object from current selection cannot be container."
 msgstr "Выбранный объект не может быть контейнером."
 
-#: src/sk1/app_proxy.py:599
+#: src/sk1/app_proxy.py:606
 msgid "Selected object cannot be container."
 msgstr "Выбранный объект не может быть контейнером."
 
-#: src/sk1/app_proxy.py:724
+#: src/sk1/app_proxy.py:731
 msgid "Do you wish to change default fill color for this document?"
 msgstr "Изменить цвет заливки по умолчанию для документа?"
 
-#: src/sk1/app_proxy.py:747
+#: src/sk1/app_proxy.py:754
 msgid "Do you wish to change default stroke color for this document?"
 msgstr "Изменить цвет обводки по умолчанию для документа?"
 
-#: src/sk1/app_proxy.py:803
+#: src/sk1/app_proxy.py:810
 msgid "Application logs"
 msgstr "Логи приложения"
 
@@ -109,197 +109,197 @@ msgstr "Логи приложения"
 msgid "WindowsXP platform is obsolete and not supported!"
 msgstr "Платформа WindowsXP устарела и не поддерживается!"
 
-#: src/sk1/application.py:145 src/sk1/application.py:387
+#: src/sk1/application.py:145 src/sk1/application.py:385
 msgid "To start, create new document or open existing"
 msgstr "Чтобы начать, создайте новый документ или откройте существующий"
 
-#: src/sk1/application.py:199
+#: src/sk1/application.py:197
 msgid "Untitled"
 msgstr "Документ"
 
-#: src/sk1/application.py:208
+#: src/sk1/application.py:206
 msgid "Document is changed"
 msgstr "Документ изменен"
 
-#: src/sk1/application.py:216
+#: src/sk1/application.py:214
 msgid "New document created"
 msgstr "Создан новый документ"
 
-#: src/sk1/application.py:219
+#: src/sk1/application.py:217
 msgid "Select Template"
 msgstr "Выберите шаблон"
 
-#: src/sk1/application.py:225
+#: src/sk1/application.py:223
 msgid "Cannot parse file:"
 msgstr "Не могу разобрать файл:"
 
-#: src/sk1/application.py:227 src/sk1/application.py:255
-#: src/sk1/application.py:437 src/sk1/application.py:556
-#: src/sk1/application.py:595
+#: src/sk1/application.py:225 src/sk1/application.py:253
+#: src/sk1/application.py:435 src/sk1/application.py:553
+#: src/sk1/application.py:592
 msgid "The file may be corrupted or not supported format"
 msgstr "Возможно файл поврежден или не поддерживаемого формата"
 
-#: src/sk1/application.py:234
+#: src/sk1/application.py:232
 msgid "New document from template"
 msgstr "Новый документ из шаблона"
 
-#: src/sk1/application.py:244 src/sk1/application.py:253
+#: src/sk1/application.py:242 src/sk1/application.py:251
 msgid "Cannot open file:"
 msgstr "Не могу открыть файл:"
 
-#: src/sk1/application.py:246
+#: src/sk1/application.py:244
 msgid "The file contains newer SK2 format.\n"
 msgstr "Файл содержит более новую версию SK2 формата.\n"
 
-#: src/sk1/application.py:247
+#: src/sk1/application.py:245
 msgid "Try updating sK1 application from https://sk1project.net"
 msgstr "Попробуйте обновить sK1 с сайта https://sk1project.net"
 
-#: src/sk1/application.py:257 src/sk1/application.py:439
-#: src/sk1/application.py:558 src/sk1/application.py:597
+#: src/sk1/application.py:255 src/sk1/application.py:437
+#: src/sk1/application.py:555 src/sk1/application.py:594
 msgid "Details see in application logs."
 msgstr "Детали см. в логах приложения."
 
-#: src/sk1/application.py:265
+#: src/sk1/application.py:263
 msgid "Document opened"
 msgstr "Документ открыт"
 
-#: src/sk1/application.py:283
+#: src/sk1/application.py:281
 msgid "Cannot save file:"
 msgstr "Не могу сохранить файл:"
 
-#: src/sk1/application.py:285
+#: src/sk1/application.py:283
 msgid "Please check file write permissions"
 msgstr "Проверьте у файла права на запись"
 
-#: src/sk1/application.py:289 src/sk1/application.py:321
+#: src/sk1/application.py:287 src/sk1/application.py:319
 msgid "Document saved"
 msgstr "Документ сохранен"
 
-#: src/sk1/application.py:312 src/sk1/application.py:345
-#: src/sk1/application.py:458
+#: src/sk1/application.py:310 src/sk1/application.py:343
+#: src/sk1/application.py:456
 msgid "Cannot save document:"
 msgstr "Не могу сохранить документ:"
 
-#: src/sk1/application.py:314 src/sk1/application.py:460
-#: src/sk1/application.py:482 src/sk1/application.py:520
-#: src/sk1/application.py:580 src/sk1/share/pd_plugins/iconizer/__init__.py:305
+#: src/sk1/application.py:312 src/sk1/application.py:458
+#: src/sk1/application.py:480 src/sk1/application.py:518
+#: src/sk1/application.py:577 src/sk1/share/pd_plugins/iconizer/__init__.py:316
 msgid "Please check file name and write permissions"
 msgstr "Проверьте корректность имени файла и права на запись"
 
-#: src/sk1/application.py:336
+#: src/sk1/application.py:334
 msgid "Save selected objects only as..."
 msgstr "Сохранить только выбранное как..."
 
-#: src/sk1/application.py:347
+#: src/sk1/application.py:345
 msgid "Please check requested file format and write permissions"
 msgstr "Проверьте запрошенный формат и права на запись"
 
-#: src/sk1/application.py:366
+#: src/sk1/application.py:364
 #, python-format
 msgid "Document '%s' has been modified."
 msgstr "Документ '%s' был изменен."
 
-#: src/sk1/application.py:367
+#: src/sk1/application.py:365
 msgid "Do you want to save your changes?"
 msgstr "Сохранить изменения?"
 
-#: src/sk1/application.py:411
+#: src/sk1/application.py:409
 msgid "Select file to import"
 msgstr "Выбрать файл для импорта"
 
-#: src/sk1/application.py:419
+#: src/sk1/application.py:417
 msgid "Cannot import graphics from file:"
 msgstr "Не могу импортировать графику из файла:"
 
-#: src/sk1/application.py:421
+#: src/sk1/application.py:419
 msgid "It seems the document is empty or contains unsupported objects."
 msgstr "Похоже, что документ пуст или содержит неподдерживаемый тип объектов."
 
-#: src/sk1/application.py:435 src/sk1/application.py:554
+#: src/sk1/application.py:433 src/sk1/application.py:551
 msgid "Cannot import file:"
 msgstr "Не могу импортировать файл:"
 
-#: src/sk1/application.py:451
+#: src/sk1/application.py:449
 msgid "Export document As..."
 msgstr "Экспортировать документ как..."
 
-#: src/sk1/application.py:465
+#: src/sk1/application.py:463
 msgid "Document is successfully exported"
 msgstr "Документ успешно экспортирован"
 
-#: src/sk1/application.py:471
+#: src/sk1/application.py:469
 msgid "Extract selected bitmap as..."
 msgstr "Сохранить изображение как..."
 
-#: src/sk1/application.py:480
+#: src/sk1/application.py:478
 msgid "Cannot save bitmap:"
 msgstr "Не могу сохранить изображение:"
 
-#: src/sk1/application.py:488
+#: src/sk1/application.py:486
 msgid "Bitmap is successfully extracted"
 msgstr "Изображение успешно сохранено"
 
-#: src/sk1/application.py:496
+#: src/sk1/application.py:494
 msgid "Export palette as..."
 msgstr "Экспортировать палитру как..."
 
-#: src/sk1/application.py:509 src/sk1/document/presenter.py:226
+#: src/sk1/application.py:507 src/sk1/document/presenter.py:225
 msgid "Exporting..."
 msgstr "Экспорт..."
 
-#: src/sk1/application.py:513 src/sk1/document/presenter.py:230
+#: src/sk1/application.py:511 src/sk1/document/presenter.py:229
 #, python-format
 msgid "Unknown file format is requested for export <%s>"
 msgstr "Для экспорта запрошен неизвестный файловый формат <%s>"
 
-#: src/sk1/application.py:518
+#: src/sk1/application.py:516
 msgid "Cannot export palette:"
 msgstr "Не могу экспортировать палитру:"
 
-#: src/sk1/application.py:528
+#: src/sk1/application.py:526
 msgid "Palette is successfully exported"
 msgstr "Палитра успешно экспортирована"
 
-#: src/sk1/application.py:535
+#: src/sk1/application.py:533
 msgid "Select palette to import"
 msgstr "Выберите палитру для импорта"
 
-#: src/sk1/application.py:539 src/sk1/document/presenter.py:76
+#: src/sk1/application.py:536 src/sk1/document/presenter.py:75
 msgid "Opening file..."
 msgstr "Открывается файл..."
 
-#: src/sk1/application.py:543 src/sk1/document/presenter.py:71
-#: src/sk1/document/presenter.py:192
+#: src/sk1/application.py:540 src/sk1/document/presenter.py:70
+#: src/sk1/document/presenter.py:191
 #, python-format
 msgid "Loader is not found for <%s>"
 msgstr "Загрузчик не найден для <%s>"
 
-#: src/sk1/application.py:547
+#: src/sk1/application.py:544
 msgid "Error while opening"
 msgstr "Ошибка при открытии"
 
-#: src/sk1/application.py:550
+#: src/sk1/application.py:547
 msgid "Palette is successfully imported"
 msgstr "Палитра успешно импортирована"
 
-#: src/sk1/application.py:569
+#: src/sk1/application.py:566
 msgid "Save pattern as..."
 msgstr "Сохранить паттерн как..."
 
-#: src/sk1/application.py:578
+#: src/sk1/application.py:575
 msgid "Cannot save pattern from:"
 msgstr "Не могу сохранить паттерн из:"
 
-#: src/sk1/application.py:590
+#: src/sk1/application.py:587
 msgid "Select pattern to load"
 msgstr "Выберите палитру для загрузки"
 
-#: src/sk1/application.py:593
+#: src/sk1/application.py:590
 msgid "Cannot load pattern for:"
 msgstr "Не могу загрузить паттерн для:"
 
-#: src/sk1/application.py:635
+#: src/sk1/application.py:632
 msgid "Requested page was opened in the default browser"
 msgstr "Запрошенная страница открыта в браузере"
 
@@ -323,64 +323,68 @@ msgstr "Стартовый угол"
 msgid "End angle"
 msgstr "Конечный угол"
 
-#: src/sk1/context/jump.py:35
+#: src/sk1/context/jump.py:33
 msgid "Default object jump"
 msgstr "Сдвиг объекта"
 
-#: src/sk1/context/markup.py:134
+#: src/sk1/context/markup.py:137
 msgid "Bold"
 msgstr "Жирный"
 
-#: src/sk1/context/markup.py:139
+#: src/sk1/context/markup.py:142
 msgid "Italic"
 msgstr "Наклонный"
 
-#: src/sk1/context/markup.py:145
+#: src/sk1/context/markup.py:148
 msgid "Underline"
 msgstr "Подчеркнутый"
 
-#: src/sk1/context/markup.py:151
+#: src/sk1/context/markup.py:154
 msgid "Strikethrough"
 msgstr "Перечеркнутый"
 
-#: src/sk1/context/markup.py:198
+#: src/sk1/context/markup.py:201
 msgid "Superscript"
 msgstr "Верхний регистр"
 
-#: src/sk1/context/markup.py:203
+#: src/sk1/context/markup.py:206
 msgid "Subscript"
 msgstr "Нижний регистр"
 
-#: src/sk1/context/page_format.py:48 src/sk1/context/page_format.py:99
-#: src/sk1/dialogs/docprops.py:118
+#: src/sk1/context/page_format.py:49 src/sk1/context/page_format.py:100
+#: src/sk1/dialogs/docprops.py:120 src/uc2/formats/xar/xar_translators.py:151
 msgid "Custom"
 msgstr "Пользовательский"
 
-#: src/sk1/context/polygon.py:37
+#: src/sk1/context/page_format.py:243
+msgid "Guide frame margin"
+msgstr "Отступ рамки направляющих"
+
+#: src/sk1/context/polygon.py:38
 msgid "Number of polygon angles"
 msgstr "Число углов полигона"
 
-#: src/sk1/context/polygon.py:71
+#: src/sk1/context/polygon.py:72
 msgid "Number of angles for newly created polygon"
 msgstr "Число углов вновь созданного полигона"
 
-#: src/sk1/context/rect.py:43
+#: src/sk1/context/rect.py:44
 msgid "Rounded rectangle"
 msgstr "Закругленный прямоугольник"
 
-#: src/sk1/context/resize.py:39
+#: src/sk1/context/resize.py:38
 msgid "Selection size"
 msgstr "Размер выделенного"
 
-#: src/sk1/context/text.py:40
+#: src/sk1/context/text.py:42
 msgid "Align Left"
 msgstr "Отбивка слева"
 
-#: src/sk1/context/text.py:41
+#: src/sk1/context/text.py:43
 msgid "Centered"
 msgstr "По центру"
 
-#: src/sk1/context/text.py:42
+#: src/sk1/context/text.py:44
 msgid "Align Right"
 msgstr "Отбивка справа"
 
@@ -388,15 +392,15 @@ msgstr "Отбивка справа"
 msgid "Use ligatures"
 msgstr "Использовать лигатуры"
 
-#: src/sk1/context/transform.py:34
+#: src/sk1/context/transform.py:33
 msgid "Rotate selection"
 msgstr "Повернуть выделенное"
 
-#: src/sk1/context/units.py:39 src/sk1/dialogs/docprops.py:308
+#: src/sk1/context/units.py:38 src/sk1/dialogs/docprops.py:332
 msgid "Document units"
 msgstr "Единицы документа"
 
-#: src/sk1/dialogs/aboutdlg.py:39 src/sk1/dialogs/aboutdlg.py:148
+#: src/sk1/dialogs/aboutdlg.py:39 src/sk1/dialogs/aboutdlg.py:163
 msgid "About"
 msgstr "О програме"
 
@@ -454,167 +458,167 @@ msgstr ""
 msgid "Edit dash pattern"
 msgstr "Редактировать паттерн"
 
-#: src/sk1/dialogs/docinfodlg.py:80 src/sk1/dialogs/filelogviewer.py:96
+#: src/sk1/dialogs/docinfodlg.py:81 src/sk1/dialogs/filelogviewer.py:96
 msgid "File"
 msgstr "Файл"
 
-#: src/sk1/dialogs/docinfodlg.py:81
+#: src/sk1/dialogs/docinfodlg.py:82
 msgid "Name and location:"
 msgstr "Имя и локация:"
 
-#: src/sk1/dialogs/docinfodlg.py:88
+#: src/sk1/dialogs/docinfodlg.py:89
 msgid "File size:"
 msgstr "Размер файла:"
 
-#: src/sk1/dialogs/docinfodlg.py:89
+#: src/sk1/dialogs/docinfodlg.py:90
 msgid "Modified:"
 msgstr "Изменено:"
 
-#: src/sk1/dialogs/docinfodlg.py:100 src/uc2/formats/sk/sk_model.py:49
+#: src/sk1/dialogs/docinfodlg.py:101 src/uc2/formats/sk/sk_model.py:50
 #: src/uc2/formats/sk1/model.py:51 src/uc2/formats/sk2/sk2_cids.py:62
 msgid "Document"
 msgstr "Документ"
 
-#: src/sk1/dialogs/docinfodlg.py:101 src/sk1/printing/printdlg/panels.py:141
+#: src/sk1/dialogs/docinfodlg.py:102 src/sk1/printing/printdlg/panels.py:141
 msgid "Pages:"
 msgstr "Страницы:"
 
-#: src/sk1/dialogs/docinfodlg.py:102
+#: src/sk1/dialogs/docinfodlg.py:103
 msgid "Layers:"
 msgstr "Слои:"
 
-#: src/sk1/dialogs/docinfodlg.py:103
+#: src/sk1/dialogs/docinfodlg.py:104
 #: src/sk1/printing/propsdlg/cupspropsdlg.py:112
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:93
 msgid "Page size:"
 msgstr "Размер:"
 
-#: src/sk1/dialogs/docinfodlg.py:104
+#: src/sk1/dialogs/docinfodlg.py:105
 msgid "Page orientation:"
 msgstr "Ориентация страницы:"
 
-#: src/sk1/dialogs/docinfodlg.py:128
+#: src/sk1/dialogs/docinfodlg.py:129
 #, python-format
 msgid "%i, opened %i, closed %i"
 msgstr "%i, открытых %i, замкнутых %i"
 
-#: src/sk1/dialogs/docinfodlg.py:135
+#: src/sk1/dialogs/docinfodlg.py:136
 msgid "Graphic Objects"
 msgstr "Графические объекты"
 
-#: src/sk1/dialogs/docinfodlg.py:136
+#: src/sk1/dialogs/docinfodlg.py:137
 msgid "Number of objects:"
 msgstr "Число объектов:"
 
-#: src/sk1/dialogs/docinfodlg.py:137
+#: src/sk1/dialogs/docinfodlg.py:138
 msgid "Number of points:"
 msgstr "Число точек:"
 
-#: src/sk1/dialogs/docinfodlg.py:138
+#: src/sk1/dialogs/docinfodlg.py:139
 msgid "Max. # of curve points:"
 msgstr "Макс. # точек кривых:"
 
-#: src/sk1/dialogs/docinfodlg.py:139
+#: src/sk1/dialogs/docinfodlg.py:140
 msgid "Max. # of curve subpaths:"
 msgstr "Макс. # компонентов кривых:"
 
-#: src/sk1/dialogs/docinfodlg.py:140
+#: src/sk1/dialogs/docinfodlg.py:141
 msgid "Groups:"
 msgstr "Группы:"
 
-#: src/sk1/dialogs/docinfodlg.py:141
+#: src/sk1/dialogs/docinfodlg.py:142
 msgid "Rectangles:"
 msgstr "Прямоугольники:"
 
-#: src/sk1/dialogs/docinfodlg.py:142
+#: src/sk1/dialogs/docinfodlg.py:143
 msgid "Ellipses:"
 msgstr "Эллипсы:"
 
-#: src/sk1/dialogs/docinfodlg.py:143
+#: src/sk1/dialogs/docinfodlg.py:144
 msgid "Containers:"
 msgstr "Контейнеры:"
 
-#: src/sk1/dialogs/docinfodlg.py:144
+#: src/sk1/dialogs/docinfodlg.py:145
 msgid "Polygons:"
 msgstr "Полигоны:"
 
-#: src/sk1/dialogs/docinfodlg.py:166
+#: src/sk1/dialogs/docinfodlg.py:167
 msgid "Text Statistics"
 msgstr "Статистика по тексту"
 
-#: src/sk1/dialogs/docinfodlg.py:168
+#: src/sk1/dialogs/docinfodlg.py:169
 msgid "No Text in this document."
-msgstr "Нет текста в этом документе"
+msgstr "Нет текста в этом документе."
 
-#: src/sk1/dialogs/docinfodlg.py:171
+#: src/sk1/dialogs/docinfodlg.py:172
 msgid "Artistic text:"
 msgstr "Фигурный текст:"
 
-#: src/sk1/dialogs/docinfodlg.py:172
+#: src/sk1/dialogs/docinfodlg.py:173
 msgid "Lines:"
 msgstr "Строки:"
 
-#: src/sk1/dialogs/docinfodlg.py:173
+#: src/sk1/dialogs/docinfodlg.py:174
 msgid "Words:"
 msgstr "Слова:"
 
-#: src/sk1/dialogs/docinfodlg.py:174
+#: src/sk1/dialogs/docinfodlg.py:175
 msgid "Characters:"
 msgstr "Символы:"
 
-#: src/sk1/dialogs/docinfodlg.py:176
+#: src/sk1/dialogs/docinfodlg.py:177
 msgid "Fonts used:"
 msgstr "Используемые шрифты:"
 
-#: src/sk1/dialogs/docinfodlg.py:196
+#: src/sk1/dialogs/docinfodlg.py:197
 msgid "Bitmap Objects"
 msgstr "Растровые объекты"
 
-#: src/sk1/dialogs/docinfodlg.py:200
+#: src/sk1/dialogs/docinfodlg.py:201
 msgid "No Bitmaps in this document."
 msgstr "Нет растра в этом документе."
 
-#: src/sk1/dialogs/docinfodlg.py:240
+#: src/sk1/dialogs/docinfodlg.py:241
 msgid "Fills"
 msgstr "Заливки"
 
-#: src/sk1/dialogs/docinfodlg.py:241
+#: src/sk1/dialogs/docinfodlg.py:242
 msgid "No fill:"
 msgstr "Без заливки:"
 
-#: src/sk1/dialogs/docinfodlg.py:242 src/sk1/dialogs/docinfodlg.py:279
+#: src/sk1/dialogs/docinfodlg.py:243 src/sk1/dialogs/docinfodlg.py:280
 msgid "Solid:"
 msgstr "Сплошная:"
 
-#: src/sk1/dialogs/docinfodlg.py:243
+#: src/sk1/dialogs/docinfodlg.py:244
 msgid "Gradients:"
 msgstr "Градиенты:"
 
-#: src/sk1/dialogs/docinfodlg.py:244
+#: src/sk1/dialogs/docinfodlg.py:245
 msgid "Patterns:"
 msgstr "Паттерны:"
 
-#: src/sk1/dialogs/docinfodlg.py:248 src/sk1/dialogs/docinfodlg.py:283
+#: src/sk1/dialogs/docinfodlg.py:249 src/sk1/dialogs/docinfodlg.py:284
 msgid "Objects and Color models"
 msgstr "Объекты и цветовые модели"
 
-#: src/sk1/dialogs/docinfodlg.py:277
+#: src/sk1/dialogs/docinfodlg.py:278
 msgid "Strokes"
 msgstr "Обводки"
 
-#: src/sk1/dialogs/docinfodlg.py:278
+#: src/sk1/dialogs/docinfodlg.py:279
 msgid "No stroke:"
 msgstr "Без обводки:"
 
-#: src/sk1/dialogs/docinfodlg.py:289
+#: src/sk1/dialogs/docinfodlg.py:290
 msgid "Property"
 msgstr "Свойство"
 
-#: src/sk1/dialogs/docinfodlg.py:289
+#: src/sk1/dialogs/docinfodlg.py:290
 msgid "Value"
 msgstr "Значение"
 
-#: src/sk1/dialogs/docinfodlg.py:301 src/sk1/dialogs/docprops.py:646
+#: src/sk1/dialogs/docinfodlg.py:306 src/sk1/dialogs/docprops.py:674
 msgid "Document info"
 msgstr "Статистика"
 
@@ -643,15 +647,19 @@ msgstr "Прим.:"
 #: src/uc2/formats/pdxf/methods.py:123 src/uc2/formats/pdxf/methods.py:140
 #: src/uc2/formats/pdxf/model.py:232 src/uc2/formats/sk1/model.py:52
 #: src/uc2/formats/sk2/sk2_cids.py:68 src/uc2/formats/sk2/sk2_methods.py:174
-#: src/uc2/formats/sk2/sk2_methods.py:191 src/uc2/formats/sk2/sk2_model.py:211
+#: src/uc2/formats/sk2/sk2_methods.py:191 src/uc2/formats/sk2/sk2_model.py:213
 msgid "Page"
 msgstr "Страница"
 
-#: src/sk1/dialogs/docprops.py:124
+#: src/sk1/dialogs/docprops.py:126
 msgid "Default page:"
 msgstr "Шаблон страницы:"
 
-#: src/sk1/dialogs/docprops.py:178
+#: src/sk1/dialogs/docprops.py:143
+msgid "As current page"
+msgstr "Как текущая страница"
+
+#: src/sk1/dialogs/docprops.py:177
 msgid "Desktop:"
 msgstr "Рабочий стол:"
 
@@ -659,102 +667,102 @@ msgstr "Рабочий стол:"
 msgid "Page:"
 msgstr "Страница:"
 
-#: src/sk1/dialogs/docprops.py:216
+#: src/sk1/dialogs/docprops.py:217
 msgid "Use pattern for page fill"
 msgstr "Использовать паттерн"
 
-#: src/sk1/dialogs/docprops.py:226 src/sk1/resources/labels.py:92
+#: src/sk1/dialogs/docprops.py:227 src/sk1/resources/labels.py:93
 msgid "Show page border"
 msgstr "Показывать страницу"
 
-#: src/sk1/dialogs/docprops.py:290
+#: src/sk1/dialogs/docprops.py:314
 msgid "Page center"
 msgstr "Центр страницы"
 
-#: src/sk1/dialogs/docprops.py:291
+#: src/sk1/dialogs/docprops.py:315
 msgid "Left lower page corner"
 msgstr "Нижний левый угол"
 
-#: src/sk1/dialogs/docprops.py:291
+#: src/sk1/dialogs/docprops.py:315
 msgid "Left upper page corner"
 msgstr "Верхний правый угол"
 
-#: src/sk1/dialogs/docprops.py:295
+#: src/sk1/dialogs/docprops.py:319
 msgid "Units"
 msgstr "Единицы"
 
-#: src/sk1/dialogs/docprops.py:320
+#: src/sk1/dialogs/docprops.py:344
 msgid "Document origin"
 msgstr "Центр координат"
 
-#: src/sk1/dialogs/docprops.py:330
+#: src/sk1/dialogs/docprops.py:354
 msgid "Unit"
 msgstr "Ед.измерения"
 
-#: src/sk1/dialogs/docprops.py:330
+#: src/sk1/dialogs/docprops.py:354
 msgid "Value in points"
 msgstr "Значение в точках"
 
-#: src/sk1/dialogs/docprops.py:333
+#: src/sk1/dialogs/docprops.py:357
 #, python-format
 msgid "%s points"
 msgstr "%s точек"
 
-#: src/sk1/dialogs/docprops.py:397 src/uc2/formats/sk/sk_model.py:49
-#: src/uc2/formats/sk/sk_model.py:278 src/uc2/formats/sk1/model.py:51
+#: src/sk1/dialogs/docprops.py:425 src/uc2/formats/sk/sk_model.py:50
+#: src/uc2/formats/sk/sk_model.py:279 src/uc2/formats/sk1/model.py:51
 #: src/uc2/formats/sk1/model.py:215
 msgid "Grid"
 msgstr "Сетка"
 
-#: src/sk1/dialogs/docprops.py:417
+#: src/sk1/dialogs/docprops.py:445
 msgid "Grid origin"
 msgstr "Нулевая точка сетки"
 
-#: src/sk1/dialogs/docprops.py:434
+#: src/sk1/dialogs/docprops.py:462
 msgid "Grid frequency"
 msgstr "Частота сетки"
 
-#: src/sk1/dialogs/docprops.py:462
+#: src/sk1/dialogs/docprops.py:490
 msgid "Grid color:"
 msgstr "Цвет сетки:"
 
-#: src/sk1/dialogs/docprops.py:471
+#: src/sk1/dialogs/docprops.py:499
 msgid "Grid opacity:"
 msgstr "Прозрачность:"
 
-#: src/sk1/dialogs/docprops.py:489
+#: src/sk1/dialogs/docprops.py:517
 msgid "Show grid on canvas"
 msgstr "Показывать сетку"
 
-#: src/sk1/dialogs/docprops.py:497
+#: src/sk1/dialogs/docprops.py:525
 msgid "Grid preview:"
 msgstr "Предосмотр сетки:"
 
-#: src/sk1/dialogs/docprops.py:567
+#: src/sk1/dialogs/docprops.py:595
 msgid "Guides"
 msgstr "Направляющие"
 
-#: src/sk1/dialogs/docprops.py:582
+#: src/sk1/dialogs/docprops.py:610
 msgid "Guide color:"
 msgstr "Цвет направляющих:"
 
-#: src/sk1/dialogs/docprops.py:596
+#: src/sk1/dialogs/docprops.py:624
 msgid "Show guides on canvas"
 msgstr "Показывать направляющие"
 
-#: src/sk1/dialogs/docprops.py:601
+#: src/sk1/dialogs/docprops.py:629
 msgid "Edit guides"
 msgstr "Правка направляющих"
 
-#: src/sk1/dialogs/docprops.py:645
+#: src/sk1/dialogs/docprops.py:673
 msgid "Statistics..."
 msgstr "Статистика..."
 
-#: src/sk1/dialogs/docprops.py:678
+#: src/sk1/dialogs/docprops.py:706
 msgid "Document properties"
 msgstr "Свойства документа"
 
-#: src/sk1/dialogs/filedlgs.py:32 src/uc2/uc2const.py:118
+#: src/sk1/dialogs/filedlgs.py:32 src/uc2/uc2const.py:122
 msgid "All supported formats"
 msgstr "Все поддерживаемые форматы"
 
@@ -818,19 +826,19 @@ msgstr "Сохранить лог как..."
 msgid "Open log file..."
 msgstr "Открыть лог-файл..."
 
-#: src/sk1/dialogs/logconsole.py:171 src/sk1/resources/labels.py:84
+#: src/sk1/dialogs/logconsole.py:171 src/sk1/resources/labels.py:85
 #: src/sk1/printing/printdlg/toolbar.py:50
 msgid "Zoom in"
 msgstr "Увеличить"
 
-#: src/sk1/dialogs/logconsole.py:172 src/sk1/resources/labels.py:85
+#: src/sk1/dialogs/logconsole.py:172 src/sk1/resources/labels.py:86
 #: src/sk1/printing/printdlg/toolbar.py:51
 msgid "Zoom out"
 msgstr "Уменьшить"
 
 #: src/sk1/dialogs/pagedlg.py:33
 msgid "Page No.:"
-msgstr "страницы №:"
+msgstr "Страница №:"
 
 #: src/sk1/dialogs/pagedlg.py:48
 msgid "Go to page"
@@ -868,23 +876,23 @@ msgstr "№ страницы:"
 msgid "Insert page"
 msgstr "Вставить страницу"
 
-#: src/sk1/dialogs/palcoldlg.py:39
+#: src/sk1/dialogs/palcoldlg.py:85
 msgid "Palette Collection"
 msgstr "Коллекция палитр"
 
-#: src/sk1/dialogs/palcoldlg.py:64
+#: src/sk1/dialogs/palcoldlg.py:110
 msgid "Cannot connect to server!"
 msgstr "Не могу соединиться с сервером!"
 
-#: src/sk1/dialogs/palcoldlg.py:65
+#: src/sk1/dialogs/palcoldlg.py:111
 msgid "Please check Internet connection"
 msgstr "Проверте подключение к Интернету"
 
-#: src/sk1/dialogs/palcoldlg.py:66
+#: src/sk1/dialogs/palcoldlg.py:112
 msgid "and access to https://sk1project.net"
 msgstr "и доступность https://sk1project.net"
 
-#: src/sk1/dialogs/palcoldlg.py:80
+#: src/sk1/dialogs/palcoldlg.py:126
 msgid "Loading data..."
 msgstr "Загрузка данных..."
 
@@ -900,7 +908,7 @@ msgstr "Источник:"
 msgid "Columns:"
 msgstr "Колонки:"
 
-#: src/sk1/dialogs/paletteinfo.py:57 src/sk1/prefs/prefs_cms.py:472
+#: src/sk1/dialogs/paletteinfo.py:57 src/sk1/prefs/prefs_cms.py:478
 msgid "Description:"
 msgstr "Описание:"
 
@@ -954,21 +962,21 @@ msgstr "До заливки"
 msgid "Scalable stroke"
 msgstr "Масштабируемость"
 
-#: src/sk1/document/presenter.py:81 src/sk1/document/presenter.py:196
+#: src/sk1/document/presenter.py:80 src/sk1/document/presenter.py:195
 #, python-format
 msgid "Cannot load <%s>"
 msgstr "Не могу загрузить <%s>"
 
-#: src/sk1/document/presenter.py:131 src/sk1/document/presenter.py:159
+#: src/sk1/document/presenter.py:130 src/sk1/document/presenter.py:158
 msgid "Saving file..."
 msgstr "Сохранение файла..."
 
-#: src/sk1/document/presenter.py:135 src/sk1/document/presenter.py:163
+#: src/sk1/document/presenter.py:134 src/sk1/document/presenter.py:162
 #, python-format
 msgid "Unknown file format is requested for saving <%s>"
 msgstr "Запрошен неизвестный формат для сохранения <%s>"
 
-#: src/sk1/document/presenter.py:188
+#: src/sk1/document/presenter.py:187
 msgid "Importing..."
 msgstr "Импортирование..."
 
@@ -984,124 +992,132 @@ msgstr "Нет выделенных объектов"
 msgid "objects in selection"
 msgstr "объектов выбрано"
 
-#: src/sk1/parts/menubar.py:32
+#: src/sk1/parts/menubar.py:37
 msgid "Open &Recent"
 msgstr "Последние файлы"
 
-#: src/sk1/parts/menubar.py:38
+#: src/sk1/parts/menubar.py:43
 msgid "&File"
 msgstr "&Файл"
 
-#: src/sk1/parts/menubar.py:48
+#: src/sk1/parts/menubar.py:53
 msgid "&Edit"
 msgstr "&Правка"
 
-#: src/sk1/parts/menubar.py:58
+#: src/sk1/parts/menubar.py:63
 msgid "&Show"
 msgstr "Показать или скрыть"
 
-#: src/sk1/parts/menubar.py:61
+#: src/sk1/parts/menubar.py:66
 msgid "S&nap to"
 msgstr "Прилипать к"
 
-#: src/sk1/parts/menubar.py:65
+#: src/sk1/parts/menubar.py:70
 msgid "&View"
 msgstr "&Вид"
 
-#: src/sk1/parts/menubar.py:74
+#: src/sk1/parts/menubar.py:79
 msgid "&Layout"
 msgstr "&Макет"
 
-#: src/sk1/parts/menubar.py:79
+#: src/sk1/parts/menubar.py:84
 msgid "Trans&form"
 msgstr "Преобразования"
 
-#: src/sk1/parts/menubar.py:87
+#: src/sk1/parts/menubar.py:92
 msgid "&Order"
 msgstr "Очередность"
 
-#: src/sk1/parts/menubar.py:91
+#: src/sk1/parts/menubar.py:96
 msgid "&Shaping"
 msgstr "Геометрия"
 
-#: src/sk1/parts/menubar.py:95
+#: src/sk1/parts/menubar.py:100
 msgid "&Arrange"
 msgstr "Поря&док"
 
-#: src/sk1/parts/menubar.py:109
+#: src/sk1/parts/menubar.py:114
 msgid "&Paths"
 msgstr "&Кривые"
 
-#: src/sk1/parts/menubar.py:119
+#: src/sk1/parts/menubar.py:124
 msgid "&Bitmaps"
 msgstr "&Растр"
 
-#: src/sk1/parts/menubar.py:127
+#: src/sk1/parts/menubar.py:132
 msgid "&Text"
 msgstr "&Текст"
 
-#: src/sk1/parts/menubar.py:134
+#: src/sk1/parts/menubar.py:140
 msgid "&Help"
 msgstr "&Справка"
 
-#: src/sk1/parts/menubar.py:169
+#: src/sk1/parts/menubar.py:177
 msgid "Empty"
 msgstr "Пусто"
 
-#: src/sk1/parts/palettepanel.py:43
+#: src/sk1/parts/palettepanel.py:45
 msgid "Scroll palette to left"
 msgstr "Пролистать палитру влево"
 
-#: src/sk1/parts/palettepanel.py:51 src/sk1/parts/palettepanel.py:107
+#: src/sk1/parts/palettepanel.py:53 src/sk1/parts/palettepanel.py:122
 #: src/sk1/pwidgets/fillctrls.py:311
 msgid "Empty pattern"
 msgstr "Пустой паттерн"
 
-#: src/sk1/parts/palettepanel.py:59
+#: src/sk1/parts/palettepanel.py:61
 msgid "Scroll palette to right"
 msgstr "Пролистать палитру вправо"
 
-#: src/sk1/parts/palettepanel.py:99
+#: src/sk1/parts/palettepanel.py:69 src/sk1/parts/palettepanel.py:140
+msgid "Manage palettes"
+msgstr "Управление палитрами"
+
+#: src/sk1/parts/palettepanel.py:114
 msgid "Scroll palette to top"
 msgstr "Пролистать палитру вверх"
 
-#: src/sk1/parts/palettepanel.py:116
+#: src/sk1/parts/palettepanel.py:131
 msgid "Scroll palette to bottom"
 msgstr "Пролистать палитру вниз"
 
-#: src/sk1/parts/statusbar.py:130 src/sk1/parts/statusbar.py:160
-msgid "Image type: "
-msgstr "Тип растра:"
+#: src/sk1/parts/statusbar.py:94
+msgid "Zoom level"
+msgstr "Масштаб"
 
-#: src/sk1/parts/statusbar.py:132 src/sk1/pwidgets/colorctrls.py:493
+#: src/sk1/parts/statusbar.py:228 src/sk1/parts/statusbar.py:258
+msgid "Image type: "
+msgstr "Тип растра: "
+
+#: src/sk1/parts/statusbar.py:230 src/sk1/pwidgets/colorctrls.py:504
 msgid "Fill:"
 msgstr "Заливка:"
 
-#: src/sk1/parts/statusbar.py:139 src/sk1/pwidgets/colorctrls.py:461
+#: src/sk1/parts/statusbar.py:237 src/sk1/pwidgets/colorctrls.py:472
 msgid "Stroke:"
 msgstr "Обводка:"
 
-#: src/sk1/parts/statusbar.py:196
+#: src/sk1/parts/statusbar.py:289
 msgid "No coords"
 msgstr "Нет координат"
 
-#: src/sk1/parts/statusbar.py:224
+#: src/sk1/parts/statusbar.py:317
 msgid "Go to fist page"
 msgstr "К первой странице"
 
-#: src/sk1/parts/statusbar.py:234
+#: src/sk1/parts/statusbar.py:327
 msgid "Go to previous page"
 msgstr "К предыдущей странице"
 
-#: src/sk1/parts/statusbar.py:247
+#: src/sk1/parts/statusbar.py:340
 msgid "Go to next page"
 msgstr "К следующей странице"
 
-#: src/sk1/parts/statusbar.py:257
+#: src/sk1/parts/statusbar.py:350
 msgid "Go to last page"
 msgstr "К последней странице"
 
-#: src/sk1/parts/statusbar.py:290
+#: src/sk1/parts/statusbar.py:383
 #, python-format
 msgid "Page %i of %i"
 msgstr "Страница %i из %i"
@@ -1110,191 +1126,187 @@ msgstr "Страница %i из %i"
 msgid "Open Recent"
 msgstr "Последние документы"
 
-#: src/sk1/prefs/__init__.py:41
-msgid "Application"
-msgstr "Приложение"
-
-#: src/sk1/prefs/__init__.py:51 src/sk1/resources/labels.py:46
-msgid "New document"
-msgstr "Новый документ"
-
-#: src/sk1/prefs/__init__.py:107
+#: src/sk1/prefs/__init__.py:92
 msgid "Restore defaults"
 msgstr "Исходные значения"
 
-#: src/sk1/prefs/__init__.py:161
+#: src/sk1/prefs/__init__.py:141
 msgid "sK1 Preferences"
 msgstr "Настройки sK1"
 
-#: src/sk1/prefs/prefs_canvas.py:28
+#: src/sk1/prefs/prefs_canvas.py:26
 msgid "Canvas"
 msgstr "Холст"
 
-#: src/sk1/prefs/prefs_canvas.py:29
+#: src/sk1/prefs/prefs_canvas.py:27
 msgid "Canvas marker preferences"
 msgstr "Настройки маркеров холста"
 
-#: src/sk1/prefs/prefs_cms.py:35 src/sk1/prefs/prefs_cms.py:86
-msgid "Color management"
-msgstr "Управление цветом"
+#: src/sk1/prefs/prefs_cms.py:35
+msgid "CMS"
+msgstr "CMS"
 
 #: src/sk1/prefs/prefs_cms.py:36
-msgid "Color management and color profiles"
-msgstr "Управление цветом и цветовые профайлы"
+msgid "Color management, profiles"
+msgstr "Управление цветом, профайлы"
+
+#: src/sk1/prefs/prefs_cms.py:86
+msgid "Color management"
+msgstr "Управление цветом"
 
 #: src/sk1/prefs/prefs_cms.py:90
 msgid "Enable Color Management"
 msgstr "Активировать управление цветом"
 
-#: src/sk1/prefs/prefs_cms.py:104
+#: src/sk1/prefs/prefs_cms.py:105
 msgid "Note: If Color Management is disabled, color values will be inaccurate."
 msgstr "Прим.: Если не активировано, цвет будет не точным."
 
-#: src/sk1/prefs/prefs_cms.py:128
+#: src/sk1/prefs/prefs_cms.py:130
 msgid "Color profiles"
 msgstr "Цветовые профайлы"
 
-#: src/sk1/prefs/prefs_cms.py:133
+#: src/sk1/prefs/prefs_cms.py:135
 msgid "Color space profiles"
 msgstr "Цветовые профайлы"
 
-#: src/sk1/prefs/prefs_cms.py:151
+#: src/sk1/prefs/prefs_cms.py:153
 #, python-format
 msgid "%s profile:"
 msgstr "%s профайл:"
 
-#: src/sk1/prefs/prefs_cms.py:161
+#: src/sk1/prefs/prefs_cms.py:163
 msgid "Hardware profiles"
 msgstr "Профайлы оборудования"
 
-#: src/sk1/prefs/prefs_cms.py:168
+#: src/sk1/prefs/prefs_cms.py:170
 msgid "Display profile:"
 msgstr "Профайл монитора:"
 
-#: src/sk1/prefs/prefs_cms.py:178
+#: src/sk1/prefs/prefs_cms.py:180
 msgid "Use display profile"
 msgstr "Использовать профайл монитора"
 
-#: src/sk1/prefs/prefs_cms.py:185
+#: src/sk1/prefs/prefs_cms.py:187
 msgid "Note: Display profile for your hardware can be found here:"
 msgstr "Профайл для вашего монитора вы можете взять тут:"
 
-#: src/sk1/prefs/prefs_cms.py:240 src/sk1/prefs/prefs_cms.py:347
+#: src/sk1/prefs/prefs_cms.py:242 src/sk1/prefs/prefs_cms.py:350
 #, python-format
 msgid "Built-in %s profile"
 msgstr "Встроенный %s профайл"
 
-#: src/sk1/prefs/prefs_cms.py:280
+#: src/sk1/prefs/prefs_cms.py:282
 #, python-format
 msgid "Add/remove %s profiles"
 msgstr "Добавить/удалить %s профайлы"
 
-#: src/sk1/prefs/prefs_cms.py:315
+#: src/sk1/prefs/prefs_cms.py:318
 #, python-format
 msgid "%s profiles"
 msgstr "%s профайлы"
 
-#: src/sk1/prefs/prefs_cms.py:358 src/sk1/prefs/prefs_palettes.py:226
+#: src/sk1/prefs/prefs_cms.py:364 src/sk1/prefs/prefs_palettes.py:229
 msgid "Import"
 msgstr "Импорт"
 
-#: src/sk1/prefs/prefs_cms.py:361 src/sk1/prefs/prefs_palettes.py:234
+#: src/sk1/prefs/prefs_cms.py:367 src/sk1/prefs/prefs_palettes.py:237
 msgid "Remove"
 msgstr "Удалить"
 
-#: src/sk1/prefs/prefs_cms.py:364
+#: src/sk1/prefs/prefs_cms.py:370
 msgid "Info"
 msgstr "Инфо"
 
-#: src/sk1/prefs/prefs_cms.py:376
+#: src/sk1/prefs/prefs_cms.py:382
 msgid "Select profile to import"
 msgstr "Выбрать профайл для импорта"
 
-#: src/sk1/prefs/prefs_cms.py:383
+#: src/sk1/prefs/prefs_cms.py:389
 msgid "Cannot open profile"
 msgstr "Не могу открыть профайл"
 
-#: src/sk1/prefs/prefs_cms.py:385
+#: src/sk1/prefs/prefs_cms.py:391
 msgid "The profile may be corrupted or in an unsupported format"
 msgstr "Профайл поврежден или не поддерживаемого формата"
 
-#: src/sk1/prefs/prefs_cms.py:389
+#: src/sk1/prefs/prefs_cms.py:395
 msgid "Selected profile cannot be added to profile list:"
 msgstr "Выбранный профайл не может быть добавлен:"
 
-#: src/sk1/prefs/prefs_cms.py:391
+#: src/sk1/prefs/prefs_cms.py:397
 msgid "It seems like you have already imported this profile"
 msgstr "Похоже, что профайл уже был импортирован"
 
-#: src/sk1/prefs/prefs_cms.py:398
+#: src/sk1/prefs/prefs_cms.py:404
 msgid "Selected file has been added to profile pool"
 msgstr "Выбранный файл был добавлен в набор профайлов"
 
-#: src/sk1/prefs/prefs_cms.py:400
+#: src/sk1/prefs/prefs_cms.py:406
 msgid "If you still wish to import the file, try renaming it"
 msgstr "Можете попробовать переименовать файл"
 
-#: src/sk1/prefs/prefs_cms.py:406
+#: src/sk1/prefs/prefs_cms.py:412
 msgid "Cannot copy file"
 msgstr "Не могу скопировать файл"
 
-#: src/sk1/prefs/prefs_cms.py:408
+#: src/sk1/prefs/prefs_cms.py:414
 msgid "Please check write permissions for config directory:"
 msgstr "Проверьте права на запись для папки настроек:"
 
-#: src/sk1/prefs/prefs_cms.py:447
+#: src/sk1/prefs/prefs_cms.py:453
 msgid "Profile info"
 msgstr "О профайле"
 
-#: src/sk1/prefs/prefs_cms.py:459
+#: src/sk1/prefs/prefs_cms.py:465
 msgid "Name:"
 msgstr "Имя:"
 
-#: src/sk1/prefs/prefs_cms.py:461
+#: src/sk1/prefs/prefs_cms.py:467
 msgid "File:"
 msgstr "Файл:"
 
-#: src/sk1/prefs/prefs_cms.py:465
+#: src/sk1/prefs/prefs_cms.py:471
 msgid "Copyright:"
 msgstr "Автор:"
 
-#: src/sk1/prefs/prefs_cms.py:481
+#: src/sk1/prefs/prefs_cms.py:487
 msgid "Settings"
 msgstr "Настройки"
 
-#: src/sk1/prefs/prefs_cms.py:495
+#: src/sk1/prefs/prefs_cms.py:501
 msgid "Rendering intents"
 msgstr "Цветопередача"
 
-#: src/sk1/prefs/prefs_cms.py:498
+#: src/sk1/prefs/prefs_cms.py:504
 msgid "Display/RGB intent:"
 msgstr "Монитора:"
 
-#: src/sk1/prefs/prefs_cms.py:503
+#: src/sk1/prefs/prefs_cms.py:509
 msgid "Printer/CMYK intent:"
 msgstr "Принтера:"
 
-#: src/sk1/prefs/prefs_cms.py:512
+#: src/sk1/prefs/prefs_cms.py:518
 msgid "Simulate printer on the screen"
 msgstr "Имитировать принтер на экране"
 
-#: src/sk1/prefs/prefs_cms.py:519
+#: src/sk1/prefs/prefs_cms.py:525
 msgid "Highlight colors that are outside of the printer's gamut"
 msgstr "Отмечать цвета вне цветового охвата принтера"
 
-#: src/sk1/prefs/prefs_cms.py:527
+#: src/sk1/prefs/prefs_cms.py:533
 msgid "Highlight color:"
 msgstr "Цвет отметки:"
 
-#: src/sk1/prefs/prefs_cms.py:533
+#: src/sk1/prefs/prefs_cms.py:539
 msgid "Separation for SPOT colors"
 msgstr "Цветоделение SPOT цветов"
 
-#: src/sk1/prefs/prefs_cms.py:542
+#: src/sk1/prefs/prefs_cms.py:548
 msgid "Use Blackpoint Compensation"
-msgstr "Использовать компенсацию \"черной точки\""
+msgstr "Использовать компенсацию \"черной точки\" "
 
-#: src/sk1/prefs/prefs_cms.py:550
+#: src/sk1/prefs/prefs_cms.py:556
 msgid "Use Black preserving transforms"
 msgstr "Использовать трансформацию сохранения черного"
 
@@ -1326,7 +1338,7 @@ msgstr "Цвет выделения:"
 msgid "Preview width:"
 msgstr "Ширина образца:"
 
-#: src/sk1/prefs/prefs_general.py:42
+#: src/sk1/prefs/prefs_general.py:42 src/sk1/prefs/prefs_ui.py:42
 msgid "system"
 msgstr "системный"
 
@@ -1338,108 +1350,40 @@ msgstr "Общие"
 msgid "General application preferences"
 msgstr "Общие настройки приложения"
 
-#: src/sk1/prefs/prefs_general.py:93
-msgid "UI style (*):"
-msgstr "Стиль UI (*):"
-
-#: src/sk1/prefs/prefs_general.py:94
-msgid "Classic"
-msgstr "Классический"
-
-#: src/sk1/prefs/prefs_general.py:94
-msgid "Tabbed"
-msgstr "На табах"
-
-#: src/sk1/prefs/prefs_general.py:99
-msgid "Tab style:"
-msgstr "Стиль табов:"
-
-#: src/sk1/prefs/prefs_general.py:100
-msgid "Rectangular tabs"
-msgstr "Прямоугольные табы"
-
-#: src/sk1/prefs/prefs_general.py:100
-msgid "Rounded tabs"
-msgstr "Закругленные табы"
-
-#: src/sk1/prefs/prefs_general.py:100
-msgid "Flat tabs"
-msgstr "Плоские табы"
-
-#: src/sk1/prefs/prefs_general.py:101
-msgid "Trapezoidal tabs"
-msgstr "Табы-трапеции"
-
-#: src/sk1/prefs/prefs_general.py:112
-msgid "Show quick access buttons"
-msgstr "Показывать кнопки быстрого доступа"
-
-#: src/sk1/prefs/prefs_general.py:120
-msgid "Use overlay for spinbox widgets (*)"
-msgstr "Использовать оверлей в спинбоксах (*)"
-
-#: src/sk1/prefs/prefs_general.py:125
-msgid "Separate spin in spinbox widgets (*)"
-msgstr "Отделять спин в спинбоксах (*)"
-
-#: src/sk1/prefs/prefs_general.py:130
-msgid "Unity related features"
-msgstr "Свойства для Unity"
-
-#: src/sk1/prefs/prefs_general.py:135
-msgid "Use Unity Global Menu (*)"
-msgstr "Использовать глобальное меню (*)"
-
-#: src/sk1/prefs/prefs_general.py:140
-msgid "Allow overlay for scrollbars (*)"
-msgstr "Разрешить оверлей полос прокрутки (*)"
-
-#: src/sk1/prefs/prefs_general.py:145
-msgid "UI style"
-msgstr "Стиль UI"
-
-#: src/sk1/prefs/prefs_general.py:155
+#: src/sk1/prefs/prefs_general.py:79
 msgid "New document on start"
 msgstr "Новый документ на старте"
 
-#: src/sk1/prefs/prefs_general.py:159
+#: src/sk1/prefs/prefs_general.py:85
 msgid "Backup on document save"
 msgstr "Резервная копия при сохранении"
 
-#: src/sk1/prefs/prefs_general.py:163
-msgid "Make font cache on start"
-msgstr "Кешировать шрифты на старте"
-
-#: src/sk1/prefs/prefs_general.py:167
+#: src/sk1/prefs/prefs_general.py:91
 msgid "Backup on export"
 msgstr "Резервная копия при экспорте"
 
-#: src/sk1/prefs/prefs_general.py:171
+#: src/sk1/prefs/prefs_general.py:97
+msgid "Make font cache on start"
+msgstr "Кешировать шрифты на старте"
+
+#: src/sk1/prefs/prefs_general.py:103
 msgid "Run as server"
 msgstr "Запускать как сервер"
 
-#: src/sk1/prefs/prefs_general.py:179
+#: src/sk1/prefs/prefs_general.py:109
 msgid "History log size:"
 msgstr "Файловая история:"
 
-#: src/sk1/prefs/prefs_general.py:182
+#: src/sk1/prefs/prefs_general.py:115
 msgid "History menu size:"
 msgstr "Меню истории:"
 
-#: src/sk1/prefs/prefs_general.py:187
+#: src/sk1/prefs/prefs_general.py:122
 msgid "Logging level (*):"
 msgstr "Уровень логов:"
 
-#: src/sk1/prefs/prefs_general.py:192
-msgid "Language (*):"
-msgstr "Язык (*):"
-
-#: src/sk1/prefs/prefs_general.py:201
-msgid "Generic features"
-msgstr "Общие опции"
-
-#: src/sk1/prefs/prefs_general.py:204
-msgid "(*) - A restart is required to apply these options"
+#: src/sk1/prefs/prefs_general.py:132 src/sk1/prefs/prefs_ui.py:153
+msgid "(*) - Application restart is required to apply these options"
 msgstr "(*) - Эти опции требуют повторного запуска приложения"
 
 #: src/sk1/prefs/prefs_palettes.py:25
@@ -1454,9 +1398,9 @@ msgstr "Вертикальная"
 msgid "Palettes"
 msgstr "Палитры"
 
-#: src/sk1/prefs/prefs_palettes.py:31
-msgid "Palette options and palette management"
-msgstr "Свойства палитр и управление ими"
+#: src/sk1/prefs/prefs_palettes.py:31 src/sk1/prefs/prefs_palettes.py:144
+msgid "Palette management"
+msgstr "Управление палитрами"
 
 #: src/sk1/prefs/prefs_palettes.py:58
 msgid "Current palette:"
@@ -1476,7 +1420,7 @@ msgstr "Ширина ячейки:"
 
 #: src/sk1/prefs/prefs_palettes.py:95 src/sk1/prefs/prefs_palettes.py:102
 #: src/sk1/prefs/prefs_palettes.py:118 src/sk1/prefs/prefs_palettes.py:126
-#: src/uc2/uc2const.py:383
+#: src/uc2/uc2const.py:399
 msgid "px"
 msgstr "px"
 
@@ -1496,19 +1440,15 @@ msgstr "Растянуть короткую палитру"
 msgid "Palette options"
 msgstr "Свойства палитры"
 
-#: src/sk1/prefs/prefs_palettes.py:144
-msgid "Palette management"
-msgstr "Управление палитрами"
-
-#: src/sk1/prefs/prefs_palettes.py:230
+#: src/sk1/prefs/prefs_palettes.py:233
 msgid "Export"
 msgstr "Экспорт"
 
-#: src/sk1/prefs/prefs_palettes.py:238
+#: src/sk1/prefs/prefs_palettes.py:241
 msgid "Edit info"
 msgstr "Правка"
 
-#: src/sk1/prefs/prefs_palettes.py:245
+#: src/sk1/prefs/prefs_palettes.py:248
 msgid "Download more palettes"
 msgstr "Загрузить дополнительные палитры"
 
@@ -1517,8 +1457,8 @@ msgid "Printers"
 msgstr "Принтеры"
 
 #: src/sk1/prefs/prefs_printers.py:30
-msgid "Printer preferences"
-msgstr "Настройки принтеров"
+msgid "Printer calibration"
+msgstr "Калибровка принтера"
 
 #: src/sk1/prefs/prefs_printers.py:65
 msgid "Printer:"
@@ -1558,55 +1498,127 @@ msgstr "Печатать калибровочную Letter страницу"
 
 #: src/sk1/prefs/prefs_printers.py:181
 msgid "No printers found"
-msgstr "Нет установленных принтеров!"
+msgstr "Принтеры не обнаружены"
 
 #: src/sk1/prefs/prefs_ruler.py:30
-msgid "Ruler preferences"
-msgstr "Настройки линеек"
+msgid "Rulers"
+msgstr "Линейки"
 
-#: src/sk1/prefs/prefs_ruler.py:47
+#: src/sk1/prefs/prefs_ruler.py:31
+msgid "Ruler colors, fonts, sizes"
+msgstr "Цвета, шрифты, размеры линеек"
+
+#: src/sk1/prefs/prefs_ruler.py:48
 msgid "Size (px):"
 msgstr "Размер (px):"
 
-#: src/sk1/prefs/prefs_ruler.py:52
+#: src/sk1/prefs/prefs_ruler.py:53
 msgid "Ruler:"
 msgstr "Линейка:"
 
-#: src/sk1/prefs/prefs_ruler.py:58
+#: src/sk1/prefs/prefs_ruler.py:59
 msgid "Ruler font:"
 msgstr "Шрифт:"
 
-#: src/sk1/prefs/prefs_ruler.py:64
+#: src/sk1/prefs/prefs_ruler.py:65
 msgid "Small tick:"
 msgstr "Малые риски:"
 
-#: src/sk1/prefs/prefs_ruler.py:70
+#: src/sk1/prefs/prefs_ruler.py:71
 msgid "Large tick:"
 msgstr "Большие риски:"
 
-#: src/sk1/prefs/prefs_ruler.py:77
+#: src/sk1/prefs/prefs_ruler.py:78
 msgid "Text shift (px):"
 msgstr "Смещение текста (px):"
 
-#: src/sk1/prefs/prefs_ruler.py:82
+#: src/sk1/prefs/prefs_ruler.py:83
 msgid "Vertical:"
 msgstr "Вертикальное:"
 
-#: src/sk1/prefs/prefs_ruler.py:89
+#: src/sk1/prefs/prefs_ruler.py:90
 msgid "Horizontal:"
 msgstr "Горизонтальное:"
 
-#: src/sk1/prefs/prefs_ruler.py:100
+#: src/sk1/prefs/prefs_ruler.py:101
 msgid "Ruler background color:"
 msgstr "Фон линейки:"
 
-#: src/sk1/prefs/prefs_ruler.py:106
+#: src/sk1/prefs/prefs_ruler.py:107
 msgid "Ruler mark color:"
 msgstr "Цвет рисок линейки:"
 
-#: src/sk1/prefs/prefs_ruler.py:114
+#: src/sk1/prefs/prefs_ruler.py:115
 msgid "Ruler preview:"
 msgstr "Линейка для тестирования:"
+
+#: src/sk1/prefs/prefs_ui.py:58
+msgid "UI"
+msgstr "UI"
+
+#: src/sk1/prefs/prefs_ui.py:59
+msgid "User interface preferences"
+msgstr "Настройки интерфейса"
+
+#: src/sk1/prefs/prefs_ui.py:82
+msgid "Language (*):"
+msgstr "Язык (*):"
+
+#: src/sk1/prefs/prefs_ui.py:91
+msgid "UI style (*):"
+msgstr "Стиль UI (*):"
+
+#: src/sk1/prefs/prefs_ui.py:94
+msgid "Classic"
+msgstr "Классический"
+
+#: src/sk1/prefs/prefs_ui.py:94
+msgid "Tabbed"
+msgstr "На табах"
+
+#: src/sk1/prefs/prefs_ui.py:99
+msgid "Tab style:"
+msgstr "Стиль табов:"
+
+#: src/sk1/prefs/prefs_ui.py:102
+msgid "Rectangular tabs"
+msgstr "Прямоугольные табы"
+
+#: src/sk1/prefs/prefs_ui.py:103
+msgid "Rounded tabs"
+msgstr "Закругленные табы"
+
+#: src/sk1/prefs/prefs_ui.py:104
+msgid "Flat tabs"
+msgstr "Плоские табы"
+
+#: src/sk1/prefs/prefs_ui.py:105
+msgid "Trapezoidal tabs"
+msgstr "Табы-трапеции"
+
+#: src/sk1/prefs/prefs_ui.py:111
+msgid "Show quick access buttons"
+msgstr "Показывать кнопки быстрого доступа"
+
+#: src/sk1/prefs/prefs_ui.py:125
+msgid "Use overlay for spinbox widgets (*)"
+msgstr "Использовать оверлей в спинбоксах (*)"
+
+#: src/sk1/prefs/prefs_ui.py:130
+msgid "Separate spin in spinbox widgets (*)"
+msgstr "Отделять спин в спинбоксах (*)"
+
+#: src/sk1/prefs/prefs_ui.py:135
+msgid "Unity related features"
+msgstr "Свойства для Unity"
+
+#: src/sk1/prefs/prefs_ui.py:140
+msgid "Use Unity Global Menu (*)"
+msgstr "Использовать глобальное меню (*)"
+
+#: src/sk1/prefs/prefs_ui.py:145
+msgid "Allow overlay for scrollbars (*)"
+msgstr "Разрешить оверлей полос прокрутки (*)"
 
 #: src/sk1/prefs/templates.py:26
 msgid "Grid and guides"
@@ -1616,36 +1628,39 @@ msgstr "Сетка и направляющие"
 msgid "Grid and guides options"
 msgstr "Свойства сетки и направляющих"
 
-#: src/sk1/printing/cups_print.py:50 src/sk1/printing/pdf_printer.py:30
-#: src/uc2/formats/pdxf/methods.py:101 src/uc2/formats/sk2/sk2_methods.py:148
+#: src/sk1/printing/cups_print.py:56 src/sk1/printing/pdf_printer.py:30
+#: src/uc2/formats/cgm/cgm_to_sk2.py:220 src/uc2/formats/dst/dst_to_sk2.py:146
+#: src/uc2/formats/pdxf/methods.py:101
+#: src/uc2/formats/pes/pes_translators.py:67
+#: src/uc2/formats/sk2/sk2_methods.py:148
 msgid "Custom size"
 msgstr "Пользовательский размер"
 
-#: src/sk1/printing/cups_print.py:194 src/sk1/printing/pdf_printer.py:75
+#: src/sk1/printing/cups_print.py:200 src/sk1/printing/pdf_printer.py:75
 msgid "Driver:"
 msgstr "Драйвер:"
 
-#: src/sk1/printing/cups_print.py:195 src/sk1/printing/pdf_printer.py:76
+#: src/sk1/printing/cups_print.py:201 src/sk1/printing/pdf_printer.py:76
 msgid "Connection"
 msgstr "Подключение"
 
-#: src/sk1/printing/cups_print.py:247 src/sk1/printing/pdf_printer.py:101
+#: src/sk1/printing/cups_print.py:253 src/sk1/printing/pdf_printer.py:101
 msgid "Printing in progress..."
 msgstr "Печать в процессе..."
 
-#: src/sk1/printing/cups_print.py:267 src/sk1/printing/msw_print.py:133
+#: src/sk1/printing/cups_print.py:273 src/sk1/printing/msw_print.py:133
 msgid "Loading calibration page..."
 msgstr "Загрузка калибровочной страницы..."
 
-#: src/sk1/printing/cups_print.py:272 src/sk1/printing/generic.py:149
+#: src/sk1/printing/cups_print.py:278 src/sk1/printing/generic.py:149
 msgid "Done"
 msgstr "Готово"
 
-#: src/sk1/printing/cups_print.py:274 src/sk1/printing/msw_print.py:139
+#: src/sk1/printing/cups_print.py:280 src/sk1/printing/msw_print.py:139
 msgid "Error while printing of calibration page!"
 msgstr "Ошибка при печати калибровочной страницы!"
 
-#: src/sk1/printing/cups_print.py:275 src/sk1/printing/msw_print.py:140
+#: src/sk1/printing/cups_print.py:281 src/sk1/printing/msw_print.py:140
 msgid "Check your printer status and connection."
 msgstr "Проверьте состояние и подключение принтера."
 
@@ -1697,43 +1712,43 @@ msgstr "Заливка чет-нечет"
 msgid "Nonzero fill"
 msgstr "Заливка без выборок"
 
-#: src/sk1/pwidgets/colorctrls.py:465 src/sk1/pwidgets/patternctrls.py:116
+#: src/sk1/pwidgets/colorctrls.py:476 src/sk1/pwidgets/patternctrls.py:116
 msgid "Bg:"
 msgstr "Фон:"
 
-#: src/sk1/pwidgets/colorctrls.py:477 src/sk1/pwidgets/colorctrls.py:506
+#: src/sk1/pwidgets/colorctrls.py:488 src/sk1/pwidgets/colorctrls.py:517
 msgid "None"
 msgstr "Нет"
 
-#: src/sk1/pwidgets/colorctrls.py:496 src/sk1/pwidgets/patternctrls.py:108
+#: src/sk1/pwidgets/colorctrls.py:507 src/sk1/pwidgets/patternctrls.py:108
 msgid "Fg:"
 msgstr "Фронт:"
 
-#: src/sk1/pwidgets/colorctrls.py:535
+#: src/sk1/pwidgets/colorctrls.py:546
 msgid "Old color:"
 msgstr "До:"
 
-#: src/sk1/pwidgets/colorctrls.py:541
+#: src/sk1/pwidgets/colorctrls.py:552
 msgid "New color:"
 msgstr "После:"
 
-#: src/sk1/pwidgets/colorctrls.py:558 src/sk1/pwidgets/colorctrls.py:580
+#: src/sk1/pwidgets/colorctrls.py:569 src/sk1/pwidgets/colorctrls.py:591
 msgid "Old fill:"
 msgstr "До:"
 
-#: src/sk1/pwidgets/colorctrls.py:564 src/sk1/pwidgets/colorctrls.py:586
+#: src/sk1/pwidgets/colorctrls.py:575 src/sk1/pwidgets/colorctrls.py:597
 msgid "New fill:"
 msgstr "После:"
 
-#: src/sk1/pwidgets/colorctrls.py:879
+#: src/sk1/pwidgets/colorctrls.py:890
 msgid "HTML notation:"
 msgstr "HTML нотация:"
 
-#: src/sk1/pwidgets/colorctrls.py:1177
+#: src/sk1/pwidgets/colorctrls.py:1187
 msgid "color"
 msgstr "цвет"
 
-#: src/sk1/pwidgets/colorctrls.py:1209
+#: src/sk1/pwidgets/colorctrls.py:1219
 msgid "Palette:"
 msgstr "Палитра:"
 
@@ -1849,7 +1864,7 @@ msgstr "Большие"
 msgid "List view"
 msgstr "Список"
 
-#: src/sk1/pwidgets/palette_viewer.py:244
+#: src/sk1/pwidgets/palette_viewer.py:248
 msgid "Palette preview:"
 msgstr "Обзор палитры:"
 
@@ -2011,6 +2026,10 @@ msgstr "Копирование обводки из..."
 msgid "&New"
 msgstr "&Создать"
 
+#: src/sk1/resources/labels.py:46
+msgid "New document"
+msgstr "Новый документ"
+
 #: src/sk1/resources/labels.py:48
 msgid "New From Template..."
 msgstr "Создать из шаблона..."
@@ -2077,7 +2096,7 @@ msgstr "&Экспорт как..."
 
 #: src/sk1/resources/labels.py:57
 msgid "Export graphics as..."
-msgstr "Экспорт графики как"
+msgstr "Экспорт графики как..."
 
 #: src/sk1/resources/labels.py:58
 msgid "&Close"
@@ -2105,7 +2124,7 @@ msgstr "Закрыть другие документы"
 
 #: src/sk1/resources/labels.py:61
 msgid "Page Setup for Print..."
-msgstr "Параметры страницы для печати"
+msgstr "Параметры страницы для печати..."
 
 #: src/sk1/resources/labels.py:62
 msgid "&Print..."
@@ -2172,401 +2191,409 @@ msgid "&File history logs..."
 msgstr "Файловая история..."
 
 #: src/sk1/resources/labels.py:77
+msgid "&Lock guides"
+msgstr "Заблокировать направляющие"
+
+#: src/sk1/resources/labels.py:78
 msgid "Document properties..."
 msgstr "Свойства документа..."
 
-#: src/sk1/resources/labels.py:78
+#: src/sk1/resources/labels.py:79
 msgid "Preferences..."
 msgstr "Настройки..."
 
-#: src/sk1/resources/labels.py:80
+#: src/sk1/resources/labels.py:81
 msgid "Stroke view"
 msgstr "Каркасный режим"
 
-#: src/sk1/resources/labels.py:81
+#: src/sk1/resources/labels.py:82
 msgid "Draft view"
 msgstr "Упрощенный режим"
 
-#: src/sk1/resources/labels.py:82
+#: src/sk1/resources/labels.py:83
 msgid "Simulate printer"
 msgstr "Имитировать принтер"
 
-#: src/sk1/resources/labels.py:83 src/sk1/printing/printdlg/toolbar.py:53
+#: src/sk1/resources/labels.py:84 src/sk1/printing/printdlg/toolbar.py:53
 msgid "Zoom 100%"
 msgstr "Масштаб 100%"
 
-#: src/sk1/resources/labels.py:86
+#: src/sk1/resources/labels.py:87
 msgid "Previous zoom"
 msgstr "Предыдущий масштаб"
 
-#: src/sk1/resources/labels.py:87
+#: src/sk1/resources/labels.py:88
 msgid "Fit zoom to page"
 msgstr "Вписать страницу"
 
-#: src/sk1/resources/labels.py:88
+#: src/sk1/resources/labels.py:89
 msgid "Zoom selected"
 msgstr "Показать выделенное"
 
-#: src/sk1/resources/labels.py:89
+#: src/sk1/resources/labels.py:90
 msgid "Show grid"
 msgstr "Показать сетку"
 
-#: src/sk1/resources/labels.py:90
+#: src/sk1/resources/labels.py:91
 msgid "Show guides"
 msgstr "Показать направляющие"
 
-#: src/sk1/resources/labels.py:91
+#: src/sk1/resources/labels.py:92
 msgid "Show active snapping"
 msgstr "Показать прилипание"
 
-#: src/sk1/resources/labels.py:93
+#: src/sk1/resources/labels.py:94
 msgid "Snap to grid"
 msgstr "Прилипать к сетке"
 
-#: src/sk1/resources/labels.py:94
+#: src/sk1/resources/labels.py:95
 msgid "Snap to guide"
 msgstr "Прилипать к направляющим"
 
-#: src/sk1/resources/labels.py:95
+#: src/sk1/resources/labels.py:96
 msgid "Snap to objects"
 msgstr "Прилипать к объектам"
 
-#: src/sk1/resources/labels.py:96
+#: src/sk1/resources/labels.py:97
 msgid "Snap to page"
 msgstr "Прилипать к странице"
 
-#: src/sk1/resources/labels.py:97
+#: src/sk1/resources/labels.py:98
 msgid "Iconizer..."
 msgstr "Иконайзер..."
 
-#: src/sk1/resources/labels.py:98
+#: src/sk1/resources/labels.py:99
 msgid "Redraw document"
 msgstr "Обновить документ"
 
-#: src/sk1/resources/labels.py:100
+#: src/sk1/resources/labels.py:101
 msgid "Insert page..."
 msgstr "Вставить страницу..."
 
-#: src/sk1/resources/labels.py:101
+#: src/sk1/resources/labels.py:102
 msgid "Delete page..."
 msgstr "Удалить страницу..."
 
-#: src/sk1/resources/labels.py:102
-msgid "Go to page..."
-msgstr "Перейти к странице"
-
 #: src/sk1/resources/labels.py:103
+msgid "Go to page..."
+msgstr "Перейти к странице..."
+
+#: src/sk1/resources/labels.py:104
 msgid "Next page"
 msgstr "Следующая страница"
 
-#: src/sk1/resources/labels.py:104
+#: src/sk1/resources/labels.py:105
 msgid "Previous page"
 msgstr "Предыдущая страница"
 
-#: src/sk1/resources/labels.py:105
+#: src/sk1/resources/labels.py:106
 msgid "Guides in page center"
 msgstr "Направляющие по осям страницы"
 
-#: src/sk1/resources/labels.py:106
+#: src/sk1/resources/labels.py:107
 msgid "Page frame"
 msgstr "Рамка страницы"
 
-#: src/sk1/resources/labels.py:107
+#: src/sk1/resources/labels.py:108
 msgid "Guides around page"
 msgstr "Направляющие вокруг страницы"
 
-#: src/sk1/resources/labels.py:108
+#: src/sk1/resources/labels.py:109
 msgid "Remove all guides"
 msgstr "Удалить все направляющие"
 
-#: src/sk1/resources/labels.py:110
+#: src/sk1/resources/labels.py:111
 msgid "Clear transformations"
 msgstr "Очистить преобразования"
 
-#: src/sk1/resources/labels.py:111
+#: src/sk1/resources/labels.py:112
 msgid "Inline transformations"
 msgstr "Встроить трансформацию"
 
-#: src/sk1/resources/labels.py:112
+#: src/sk1/resources/labels.py:113
 msgid "Position..."
 msgstr "Позиция..."
 
-#: src/sk1/resources/labels.py:113
+#: src/sk1/resources/labels.py:114
 msgid "Resizing..."
 msgstr "Размер..."
 
-#: src/sk1/resources/labels.py:114
+#: src/sk1/resources/labels.py:115
 msgid "Scale and mirror..."
 msgstr "Масштаб и отражение..."
 
-#: src/sk1/resources/labels.py:115
+#: src/sk1/resources/labels.py:116
 msgid "Rotation..."
 msgstr "Вращение..."
 
-#: src/sk1/resources/labels.py:116
+#: src/sk1/resources/labels.py:117
 msgid "Shearing..."
 msgstr "Сдвиг..."
 
-#: src/sk1/resources/labels.py:117
+#: src/sk1/resources/labels.py:118
 msgid "Rotate &left 90 degrees"
 msgstr "Повернуть влево на 90 градусов"
 
-#: src/sk1/resources/labels.py:118
+#: src/sk1/resources/labels.py:119
 msgid "Rotate &right 90 degrees"
 msgstr "Повернуть вправо на 90 градусов"
 
-#: src/sk1/resources/labels.py:119
+#: src/sk1/resources/labels.py:120
 msgid "&Flip horizontal"
 msgstr "Отразить горизонтально"
 
-#: src/sk1/resources/labels.py:120
+#: src/sk1/resources/labels.py:121
 msgid "&Flip vertical"
 msgstr "Отразить вертикально"
 
-#: src/sk1/resources/labels.py:121
+#: src/sk1/resources/labels.py:122
 msgid "Align and Distribute..."
 msgstr "Выровнять и разместить..."
 
-#: src/sk1/resources/labels.py:122
+#: src/sk1/resources/labels.py:123
 msgid "&Combine"
 msgstr "Комбинировать"
 
-#: src/sk1/resources/labels.py:123
+#: src/sk1/resources/labels.py:124
 msgid "&Break Apart"
 msgstr "Разбить"
 
-#: src/sk1/resources/labels.py:124
+#: src/sk1/resources/labels.py:125
 msgid "Move to &Top"
 msgstr "Поднять вверх"
 
-#: src/sk1/resources/labels.py:125
+#: src/sk1/resources/labels.py:126
 msgid "Move Up"
 msgstr "Поднять"
 
-#: src/sk1/resources/labels.py:126
+#: src/sk1/resources/labels.py:127
 msgid "Move Down"
 msgstr "Опустить"
 
-#: src/sk1/resources/labels.py:127
+#: src/sk1/resources/labels.py:128
 msgid "Move to &Bottom"
 msgstr "Опустить вниз"
 
-#: src/sk1/resources/labels.py:128
+#: src/sk1/resources/labels.py:129
 msgid "&Group"
 msgstr "Группировать"
 
-#: src/sk1/resources/labels.py:129
+#: src/sk1/resources/labels.py:130
 msgid "&Ungroup"
 msgstr "Разгруппировать"
 
-#: src/sk1/resources/labels.py:130
+#: src/sk1/resources/labels.py:131
 msgid "U&ngroup All"
 msgstr "Разгруппировать все"
 
-#: src/sk1/resources/labels.py:131
+#: src/sk1/resources/labels.py:132
 msgid "Trim..."
 msgstr "Обрезка..."
 
-#: src/sk1/resources/labels.py:132
+#: src/sk1/resources/labels.py:133
 msgid "Intersection..."
 msgstr "Пересечение..."
 
-#: src/sk1/resources/labels.py:133
+#: src/sk1/resources/labels.py:134
 msgid "Exclusion..."
 msgstr "Исключение..."
 
-#: src/sk1/resources/labels.py:134
+#: src/sk1/resources/labels.py:135
 msgid "Fusion..."
 msgstr "Слияние..."
 
-#: src/sk1/resources/labels.py:135
+#: src/sk1/resources/labels.py:136
 msgid "&Place into container"
 msgstr "Поместить в контейнер"
 
-#: src/sk1/resources/labels.py:136
+#: src/sk1/resources/labels.py:137
 msgid "&Extract from container"
 msgstr "Достать из контейнера"
 
-#: src/sk1/resources/labels.py:137
+#: src/sk1/resources/labels.py:138
 msgid "Con&vert to curves"
 msgstr "Конвертировать в кривые"
 
-#: src/sk1/resources/labels.py:138
+#: src/sk1/resources/labels.py:139
 msgid "Convert stroke to curves"
 msgstr "Конвертировать обводку в кривые"
 
-#: src/sk1/resources/labels.py:140
+#: src/sk1/resources/labels.py:141
 msgid "Select all nodes"
 msgstr "Выбрать все точки"
 
-#: src/sk1/resources/labels.py:141
+#: src/sk1/resources/labels.py:142
 msgid "Reverse all paths"
 msgstr "Перевернуть все кривые"
 
-#: src/sk1/resources/labels.py:142
+#: src/sk1/resources/labels.py:143
 msgid "Select all subpath nodes"
 msgstr "Выбрать все точки фрагмента"
 
-#: src/sk1/resources/labels.py:143
+#: src/sk1/resources/labels.py:144
 msgid "Delete subpaths"
 msgstr "Удалить фрагменты"
 
-#: src/sk1/resources/labels.py:144
+#: src/sk1/resources/labels.py:145
 msgid "Reverse subpaths"
 msgstr "Перевернуть фрагменты"
 
-#: src/sk1/resources/labels.py:145
+#: src/sk1/resources/labels.py:146
 msgid "Extract subpaths"
 msgstr "Экстрагировать фрагменты"
 
-#: src/sk1/resources/labels.py:146
+#: src/sk1/resources/labels.py:147
 msgid "Add node"
 msgstr "Добавить точку"
 
-#: src/sk1/resources/labels.py:147
+#: src/sk1/resources/labels.py:148
 msgid "Delete nodes"
 msgstr "Удалить точки"
 
-#: src/sk1/resources/labels.py:148
+#: src/sk1/resources/labels.py:149
 msgid "Create segment"
 msgstr "Создать сегмент"
 
-#: src/sk1/resources/labels.py:149
+#: src/sk1/resources/labels.py:150
 msgid "Delete segment"
 msgstr "Удалить сегмент"
 
-#: src/sk1/resources/labels.py:150
+#: src/sk1/resources/labels.py:151
 msgid "Join nodes"
 msgstr "Соединить точки"
 
-#: src/sk1/resources/labels.py:151
+#: src/sk1/resources/labels.py:152
 msgid "Split nodes"
 msgstr "Разъединить точки"
 
-#: src/sk1/resources/labels.py:152
+#: src/sk1/resources/labels.py:153
 msgid "Convert segments to line"
 msgstr "Сегменты в линии"
 
-#: src/sk1/resources/labels.py:153
+#: src/sk1/resources/labels.py:154
 msgid "Convert segments to curve"
 msgstr "Сегменты в кривые"
 
-#: src/sk1/resources/labels.py:154
+#: src/sk1/resources/labels.py:155
 msgid "Make nodes cusp"
 msgstr "Сделать точки независимыми"
 
-#: src/sk1/resources/labels.py:155
+#: src/sk1/resources/labels.py:156
 msgid "Make nodes smooth"
 msgstr "Сделать точки сглаженными"
 
-#: src/sk1/resources/labels.py:156
+#: src/sk1/resources/labels.py:157
 msgid "Make nodes symmetrical"
 msgstr "Сделать точки симметричными"
 
-#: src/sk1/resources/labels.py:158
+#: src/sk1/resources/labels.py:159
 msgid "Convert to CMYK"
 msgstr "Конвертировать в CMYK"
 
-#: src/sk1/resources/labels.py:159
+#: src/sk1/resources/labels.py:160
 msgid "Convert to RGB"
 msgstr "Конвертировать в RGB"
 
-#: src/sk1/resources/labels.py:160
+#: src/sk1/resources/labels.py:161
 msgid "Convert to LAB"
 msgstr "Конвертировать в LAB"
 
-#: src/sk1/resources/labels.py:161
+#: src/sk1/resources/labels.py:162
 msgid "Convert to Grayscale"
 msgstr "В оттенки серого"
 
-#: src/sk1/resources/labels.py:162
+#: src/sk1/resources/labels.py:163
 msgid "Convert to B&W"
 msgstr "В монохром"
 
-#: src/sk1/resources/labels.py:163
+#: src/sk1/resources/labels.py:164
 msgid "Invert bitmap"
 msgstr "Инвертировать"
 
-#: src/sk1/resources/labels.py:164
+#: src/sk1/resources/labels.py:165
 msgid "Remove alpha channel"
 msgstr "Удалить альфа-канал"
 
-#: src/sk1/resources/labels.py:165
+#: src/sk1/resources/labels.py:166
 msgid "Invert alpha channel"
 msgstr "Инвертировать альфа-канал"
 
-#: src/sk1/resources/labels.py:166
+#: src/sk1/resources/labels.py:167
 msgid "Extract embedded bitmap..."
 msgstr "Сохранить изображение..."
 
-#: src/sk1/resources/labels.py:168
+#: src/sk1/resources/labels.py:169
 msgid "&Edit text"
 msgstr "Правка текста"
 
-#: src/sk1/resources/labels.py:169
+#: src/sk1/resources/labels.py:170
 msgid "Text on path..."
 msgstr "Текст на кривой..."
 
-#: src/sk1/resources/labels.py:170
+#: src/sk1/resources/labels.py:171
 msgid "Text on circle..."
 msgstr "Текст на круге..."
 
-#: src/sk1/resources/labels.py:171
+#: src/sk1/resources/labels.py:172
 msgid "&Straighten text"
 msgstr "Выпрямить текст"
 
-#: src/sk1/resources/labels.py:172
+#: src/sk1/resources/labels.py:173
 msgid "Clear text markup"
 msgstr "Очистить разметку"
 
-#: src/sk1/resources/labels.py:173
+#: src/sk1/resources/labels.py:174
 msgid "Uppercase"
 msgstr "Верхний регистр"
 
-#: src/sk1/resources/labels.py:174
+#: src/sk1/resources/labels.py:175
 msgid "Lowercase"
 msgstr "Нижний регистр"
 
-#: src/sk1/resources/labels.py:175
+#: src/sk1/resources/labels.py:176
 msgid "Capitalize"
 msgstr "Все заглавными"
 
-#: src/sk1/resources/labels.py:177 src/uc2/formats/sk1/model.py:52
+#: src/sk1/resources/labels.py:178 src/uc2/formats/sk1/model.py:52
 #: src/uc2/formats/sk2/sk2_cids.py:68
 msgid "Pages"
 msgstr "Страницы"
 
-#: src/sk1/resources/labels.py:178
+#: src/sk1/resources/labels.py:179
 msgid "Layers..."
 msgstr "Слои..."
 
-#: src/sk1/resources/labels.py:179
+#: src/sk1/resources/labels.py:180
 msgid "Object browser"
 msgstr "Браузер объектов"
 
-#: src/sk1/resources/labels.py:181
+#: src/sk1/resources/labels.py:182
 msgid "&Report bug"
 msgstr "Сообщить об ошибке"
 
-#: src/sk1/resources/labels.py:182
+#: src/sk1/resources/labels.py:183
 msgid "&Log console"
 msgstr "Консоль логов"
 
-#: src/sk1/resources/labels.py:183
+#: src/sk1/resources/labels.py:184
 msgid "Project web site"
 msgstr "Сайт проекта"
 
-#: src/sk1/resources/labels.py:184
+#: src/sk1/resources/labels.py:185
 msgid "Project forum"
 msgstr "Форум проекта"
 
-#: src/sk1/resources/labels.py:185
+#: src/sk1/resources/labels.py:186
 msgid "Project page on Face&book"
 msgstr "Страница проекта в Facebook"
 
-#: src/sk1/resources/labels.py:186
+#: src/sk1/resources/labels.py:187
 msgid "&About sK1..."
 msgstr "О программе..."
+
+#: src/sk1/resources/labels.py:189
+msgid "Manage palettes..."
+msgstr "Управление палитрами..."
 
 #: src/sk1/document/controllers/editor_bezier.py:52
 #: src/sk1/document/controllers/editor_bezier.py:239
@@ -2860,39 +2887,39 @@ msgstr "Одинаковый зазор вертикально"
 msgid "Distribute"
 msgstr "Разместить"
 
-#: src/sk1/share/pd_plugins/iconizer/__init__.py:143
+#: src/sk1/share/pd_plugins/iconizer/__init__.py:145
 msgid "Size:"
 msgstr "Размер:"
 
-#: src/sk1/share/pd_plugins/iconizer/__init__.py:157
+#: src/sk1/share/pd_plugins/iconizer/__init__.py:159
 msgid "Iconizer"
 msgstr "Иконайзер"
 
-#: src/sk1/share/pd_plugins/iconizer/__init__.py:179
+#: src/sk1/share/pd_plugins/iconizer/__init__.py:182
 msgid "Background:"
 msgstr "Фон:"
 
-#: src/sk1/share/pd_plugins/iconizer/__init__.py:199
+#: src/sk1/share/pd_plugins/iconizer/__init__.py:202
 msgid "Show image border"
 msgstr "Граница картинки"
 
-#: src/sk1/share/pd_plugins/iconizer/__init__.py:204
+#: src/sk1/share/pd_plugins/iconizer/__init__.py:207
 msgid "Draw selected only"
 msgstr "Только выделенное"
 
-#: src/sk1/share/pd_plugins/iconizer/__init__.py:211
+#: src/sk1/share/pd_plugins/iconizer/__init__.py:214
 msgid "Save image"
 msgstr "Сохранить"
 
-#: src/sk1/share/pd_plugins/iconizer/__init__.py:294
+#: src/sk1/share/pd_plugins/iconizer/__init__.py:305
 msgid "Save image as..."
 msgstr "Сохранить изображение как..."
 
-#: src/sk1/share/pd_plugins/iconizer/__init__.py:303
+#: src/sk1/share/pd_plugins/iconizer/__init__.py:314
 msgid "Cannot save image:"
 msgstr "Не могу сохранить изображение:"
 
-#: src/sk1/share/pd_plugins/iconizer/__init__.py:310
+#: src/sk1/share/pd_plugins/iconizer/__init__.py:322
 msgid "Image is successfully saved"
 msgstr "Изображение успешно сохранено"
 
@@ -2926,7 +2953,7 @@ msgid "Delete layer"
 msgstr "Удалить слой"
 
 #: src/sk1/share/pd_plugins/layers_plugin/__init__.py:90
-#: src/sk1/share/pd_plugins/layers_plugin/__init__.py:207
+#: src/sk1/share/pd_plugins/layers_plugin/__init__.py:208
 msgid "Rename layer"
 msgstr "Переименовать слой"
 
@@ -3096,374 +3123,382 @@ msgstr "Относительный центр"
 msgid "degrees"
 msgstr "градусы"
 
-#: src/uc2/uc2const.py:119
+#: src/uc2/uc2const.py:123
 msgid "PDXF - PrintDesign XML Format graphics files"
 msgstr "PDXF - файлы PrintDesign XML Format"
 
-#: src/uc2/uc2const.py:120
+#: src/uc2/uc2const.py:124
 msgid "SK1 - sK1 0.9.x graphics files"
 msgstr "SK1 - файлы sK1 0.9.x"
 
-#: src/uc2/uc2const.py:121
+#: src/uc2/uc2const.py:125
 msgid "SK2 - sK1 2.x graphics files"
 msgstr "SK2 - файлы sK1 2.x"
 
-#: src/uc2/uc2const.py:122
+#: src/uc2/uc2const.py:126
 msgid "SK - Sketch/Skencil files"
 msgstr "SK - файлы Sketch/Skencil"
 
-#: src/uc2/uc2const.py:123
+#: src/uc2/uc2const.py:127
 msgid "SVG - Scalable Vector Graphics files"
 msgstr "SVG - файлы Scalable Vector Graphics"
 
-#: src/uc2/uc2const.py:124
+#: src/uc2/uc2const.py:128
 msgid "SVGZ - Compressed Scalable Vector Graphics files"
 msgstr "SVGZ - Сжатые файлы Scalable Vector Graphics"
 
-#: src/uc2/uc2const.py:125
+#: src/uc2/uc2const.py:129
 msgid "ODG - Open Document Drawing files"
 msgstr "ODG - файлы Open Document Drawing"
 
-#: src/uc2/uc2const.py:126
+#: src/uc2/uc2const.py:130
 msgid "ORA - Open Raster Format files"
 msgstr "ORA - файлы Open Raster Format"
 
-#: src/uc2/uc2const.py:127
+#: src/uc2/uc2const.py:131
 msgid "XCF - GIMP files"
 msgstr "XCF - файлы GIMP"
 
-#: src/uc2/uc2const.py:128
+#: src/uc2/uc2const.py:132
 msgid "SLA - Scribus documents"
 msgstr "SLA - файлы Scribus"
 
-#: src/uc2/uc2const.py:129 src/uc2/uc2const.py:131 src/uc2/uc2const.py:135
+#: src/uc2/uc2const.py:133 src/uc2/uc2const.py:135
 msgid "CDR - CorelDRAW Graphics files"
 msgstr "CDR - файлы графики CorelDRAW"
 
-#: src/uc2/uc2const.py:130 src/uc2/uc2const.py:132
+#: src/uc2/uc2const.py:134 src/uc2/uc2const.py:136
 msgid "CDT - CorelDRAW Templates files"
 msgstr "CDT - файлы шаблонов CorelDRAW"
 
-#: src/uc2/uc2const.py:133
+#: src/uc2/uc2const.py:137
 msgid "CMX - CorelDRAW Presentation Exchange files"
 msgstr "CMX - файлы клипарта CorelDRAW"
 
-#: src/uc2/uc2const.py:134
+#: src/uc2/uc2const.py:138
 msgid "CCX - CorelDRAW Compressed Exchange files"
 msgstr "CCX - сжатые файлы клипарта CorelDRAW"
 
-#: src/uc2/uc2const.py:136
+#: src/uc2/uc2const.py:139
 msgid "XAR - Xara graphics files"
 msgstr "XAR - файлы графики Xara"
 
-#: src/uc2/uc2const.py:137
+#: src/uc2/uc2const.py:140
 msgid "FIG - XFig files"
 msgstr "FIG - файлы XFig"
 
-#: src/uc2/uc2const.py:138 src/uc2/uc2const.py:139
+#: src/uc2/uc2const.py:141 src/uc2/uc2const.py:142
 msgid "AI - Adobe Illustrator files"
 msgstr "AI - файлы Adobe Illustrator"
 
-#: src/uc2/uc2const.py:140
+#: src/uc2/uc2const.py:143
 msgid "PS - PostScript files"
 msgstr "PS - PostScript файлы"
 
-#: src/uc2/uc2const.py:141
+#: src/uc2/uc2const.py:144
 msgid "EPS - Encapsulated PostScript files"
 msgstr "EPS - Encapsulated PostScript файлы"
 
-#: src/uc2/uc2const.py:142
+#: src/uc2/uc2const.py:145
 msgid "PDF - Portable Document Format files"
 msgstr "PDF - файлы Portable Document Format"
 
-#: src/uc2/uc2const.py:143
+#: src/uc2/uc2const.py:146
 msgid "PSD - Adobe Photoshop files"
 msgstr "PSD - файлы Adobe Photoshop"
 
-#: src/uc2/uc2const.py:144
+#: src/uc2/uc2const.py:147
 msgid "CGM - Computer Graphics Metafile files"
 msgstr "CGM - файлы Computer Graphics Metafile"
 
-#: src/uc2/uc2const.py:145
+#: src/uc2/uc2const.py:148
 msgid "WMF - Windows Metafile files"
 msgstr "WMF - файлы Windows Metafile"
 
-#: src/uc2/uc2const.py:146
+#: src/uc2/uc2const.py:149
 msgid "EMF - Windows Enhanced Metafile files"
 msgstr "EMF - файлы Windows Enhanced Metafile"
 
-#: src/uc2/uc2const.py:147
+#: src/uc2/uc2const.py:150
 msgid "XPS - XML Paper Specification files"
 msgstr "XPS - файлы XML Paper Specification"
 
-#: src/uc2/uc2const.py:148
+#: src/uc2/uc2const.py:151
 msgid "VSD - Visio Drawing files"
 msgstr "VSD - файлы Visio Drawing"
 
-#: src/uc2/uc2const.py:149
+#: src/uc2/uc2const.py:152
 msgid "PLT - HPGL cutting plotter files"
 msgstr "PLT - HPGL файлы режущего плоттера"
 
-#: src/uc2/uc2const.py:150
+#: src/uc2/uc2const.py:153
 msgid "HPGL - HPGL plotter files"
 msgstr "HPGL - HPGL файлы плоттера"
 
-#: src/uc2/uc2const.py:151
+#: src/uc2/uc2const.py:154
 msgid "DXF - AutoCAD files"
 msgstr "DXF - файлы AutoCAD"
 
-#: src/uc2/uc2const.py:152
+#: src/uc2/uc2const.py:155
 msgid "DWG - AutoCAD files"
 msgstr "DWG - файлы AutoCAD"
 
-#: src/uc2/uc2const.py:153
+#: src/uc2/uc2const.py:156
 msgid "RIF - RIFF files"
 msgstr "RIF - файлы RIFF"
 
-#: src/uc2/uc2const.py:156
+#: src/uc2/uc2const.py:159
 msgid "JPEG - Joint Photographic Experts Group files"
 msgstr "JPEG - файлы Joint Photographic Experts Group"
 
-#: src/uc2/uc2const.py:157
+#: src/uc2/uc2const.py:160
 msgid "JPEG2000 - Joint Photographic Experts Group files"
 msgstr "JPEG2000 - файлы Joint Photographic Experts Group"
 
-#: src/uc2/uc2const.py:158
+#: src/uc2/uc2const.py:161
 msgid "TIFF - Tagged Image File Format files"
 msgstr "TIFF - файлы Tagged Image File Format"
 
-#: src/uc2/uc2const.py:159
+#: src/uc2/uc2const.py:162
 msgid "BMP - Bitmap Picture files"
 msgstr "BMP - файлы Bitmap Picture"
 
-#: src/uc2/uc2const.py:160
+#: src/uc2/uc2const.py:163
 msgid "PCX - PCeXchange files"
 msgstr "PCX - файлы PCeXchange"
 
-#: src/uc2/uc2const.py:161
+#: src/uc2/uc2const.py:164
 msgid "GIF - Graphics Interchange Format files"
 msgstr "GIF - файлы Graphics Interchange Format"
 
-#: src/uc2/uc2const.py:162
+#: src/uc2/uc2const.py:165
 msgid "PNG - Portable Network Graphics files"
 msgstr "PNG - файлы Portable Network Graphics"
 
-#: src/uc2/uc2const.py:163
+#: src/uc2/uc2const.py:166
 msgid "PPM - Netpbm Color Image format files"
 msgstr "PPM - файлы Netpbm Color Image"
 
-#: src/uc2/uc2const.py:164
+#: src/uc2/uc2const.py:167
 msgid "XBM - X bitmap files"
 msgstr "XBM - файлы X bitmap"
 
-#: src/uc2/uc2const.py:165
+#: src/uc2/uc2const.py:168
 msgid "XPM - X pixmap files"
 msgstr "XPM - файлы X pixmap"
 
-#: src/uc2/uc2const.py:166
+#: src/uc2/uc2const.py:169
 msgid "WebP - Google image format files"
 msgstr "WebP - файлы изображений Google"
 
-#: src/uc2/uc2const.py:169
+#: src/uc2/uc2const.py:172
 msgid "SKP - sK1 palette files"
 msgstr "SKP - файлы палитр sK1"
 
-#: src/uc2/uc2const.py:170
+#: src/uc2/uc2const.py:173
 msgid "GPL - GIMP palette files"
 msgstr "GPL - файлы палитр GIMP"
 
-#: src/uc2/uc2const.py:171
+#: src/uc2/uc2const.py:174
 msgid "CPL - CorelDRAW palette files"
 msgstr "CPL - файлы палитр CorelDRAW"
 
-#: src/uc2/uc2const.py:172
+#: src/uc2/uc2const.py:175
 msgid "XML - Scribus palette files"
 msgstr "XML - файлы палитр Scribus"
 
-#: src/uc2/uc2const.py:173
+#: src/uc2/uc2const.py:176
 msgid "SOC - LibreOffice palette files"
 msgstr "SOC - файлы палитр LibreOffice"
 
-#: src/uc2/uc2const.py:174
+#: src/uc2/uc2const.py:177
 msgid "XML - CorelDRAW X5-X7 palette files"
 msgstr "XML - файлы палитр CorelDRAW X5-X7"
 
-#: src/uc2/uc2const.py:175
+#: src/uc2/uc2const.py:178
 msgid "ASE - Adobe Swatch Exchange files"
 msgstr "ASE - файлы Adobe Swatch Exchange"
 
-#: src/uc2/uc2const.py:176
+#: src/uc2/uc2const.py:179
 msgid "ACO - Adobe Color files"
 msgstr "ACO - файлы Adobe Color"
 
-#: src/uc2/uc2const.py:177
+#: src/uc2/uc2const.py:180
 msgid "JCW - Xara color palette files"
 msgstr "JCW - файлы палитр Xara"
 
-#: src/uc2/uc2const.py:180
+#: src/uc2/uc2const.py:183
 msgid "ICC - International Color Consortium profiles"
 msgstr "ICC - профайлы International Color Consortium"
 
-#: src/uc2/uc2const.py:181
+#: src/uc2/uc2const.py:184
 msgid "ICM - Image Color Matching profiles"
 msgstr "ICM - профайлы Image Color Matching"
 
-#: src/uc2/uc2const.py:183
+#: src/uc2/uc2const.py:186
 msgid "XML - eXtensible Markup Language files"
 msgstr "XML - файлы eXtensible Markup Language"
 
-#: src/uc2/uc2const.py:184
+#: src/uc2/uc2const.py:187
 msgid "LOG - Log files"
 msgstr "LOG - лог файлы"
 
-#: src/uc2/uc2const.py:185
+#: src/uc2/uc2const.py:188
 msgid "MD - Markdown markup files"
 msgstr "MD -  файлы с Markdown разметкой"
 
-#: src/uc2/uc2const.py:372 src/uc2/uc2const.py:392
+#: src/uc2/uc2const.py:191
+msgid "DST - (Tajima) Design format"
+msgstr "DST - (Tajima) Дизайн-формат"
+
+#: src/uc2/uc2const.py:192
+msgid "PES - (Brother) Embroidery file format"
+msgstr "PES - (Brother) файловый формат вышивки"
+
+#: src/uc2/uc2const.py:388 src/uc2/uc2const.py:408
 msgid "pixels"
 msgstr "пиксели"
 
-#: src/uc2/uc2const.py:373 src/uc2/uc2const.py:398
+#: src/uc2/uc2const.py:389 src/uc2/uc2const.py:414
 msgid "millimeters"
 msgstr "миллиметры"
 
-#: src/uc2/uc2const.py:374 src/uc2/uc2const.py:397
+#: src/uc2/uc2const.py:390 src/uc2/uc2const.py:413
 msgid "centimeters"
 msgstr "сантиметры"
 
-#: src/uc2/uc2const.py:375 src/uc2/uc2const.py:396
+#: src/uc2/uc2const.py:391 src/uc2/uc2const.py:412
 msgid "meters"
 msgstr "метры"
 
-#: src/uc2/uc2const.py:376 src/uc2/uc2const.py:393
+#: src/uc2/uc2const.py:392 src/uc2/uc2const.py:409
 msgid "points"
 msgstr "пункты"
 
-#: src/uc2/uc2const.py:377 src/uc2/uc2const.py:394
+#: src/uc2/uc2const.py:393 src/uc2/uc2const.py:410
 msgid "inches"
 msgstr "дюймы"
 
-#: src/uc2/uc2const.py:378 src/uc2/uc2const.py:395
+#: src/uc2/uc2const.py:394 src/uc2/uc2const.py:411
 msgid "feet"
 msgstr "футы"
 
-#: src/uc2/uc2const.py:382
+#: src/uc2/uc2const.py:398
 msgid "pt"
 msgstr "pt"
 
-#: src/uc2/uc2const.py:384
+#: src/uc2/uc2const.py:400
 msgid "in"
 msgstr "in"
 
-#: src/uc2/uc2const.py:385
+#: src/uc2/uc2const.py:401
 msgid "ft"
 msgstr "ft"
 
-#: src/uc2/uc2const.py:386
+#: src/uc2/uc2const.py:402
 msgid "m"
 msgstr "м"
 
-#: src/uc2/uc2const.py:387
+#: src/uc2/uc2const.py:403
 msgid "cm"
 msgstr "см"
 
-#: src/uc2/uc2const.py:388
+#: src/uc2/uc2const.py:404
 msgid "mm"
 msgstr "мм"
 
-#: src/uc2/uc2const.py:456
+#: src/uc2/uc2const.py:532
 msgid "Portrait"
 msgstr "Портретный"
 
-#: src/uc2/uc2const.py:456
+#: src/uc2/uc2const.py:532
 msgid "Landscape"
 msgstr "Альбомный"
 
-#: src/uc2/uc2const.py:466
+#: src/uc2/uc2const.py:542
 msgid "Perceptual"
 msgstr "Воспринимаемая"
 
-#: src/uc2/uc2const.py:467
+#: src/uc2/uc2const.py:543
 msgid "Relative Colorimetric"
 msgstr "Относительная колориметрическая"
 
-#: src/uc2/uc2const.py:468
+#: src/uc2/uc2const.py:544
 msgid "Saturation"
 msgstr "Насыщенная"
 
-#: src/uc2/uc2const.py:469
+#: src/uc2/uc2const.py:545
 msgid "Absolute Colorimetric"
 msgstr "Абсолютная  колориметрическая"
 
-#: src/uc2/formats/generic.py:115
+#: src/uc2/formats/generic.py:141
 msgid "Error while loading:"
 msgstr "Ошибка при загрузке:"
 
-#: src/uc2/formats/generic.py:115
+#: src/uc2/formats/generic.py:141
 msgid "No file"
 msgstr "Нет файла"
 
-#: src/uc2/formats/generic.py:121 src/uc2/formats/generic.py:197
-#: src/uc2/formats/generic_filters.py:95 src/uc2/formats/cdr/cdr_filters.py:46
+#: src/uc2/formats/generic.py:147 src/uc2/formats/generic.py:227
+#: src/uc2/formats/generic_filters.py:96 src/uc2/formats/cdr/cdr_filters.py:46
 msgid "Parsing in progress..."
 msgstr "Разбор продолжается..."
 
-#: src/uc2/formats/generic.py:129
+#: src/uc2/formats/generic.py:156
 #, python-format
 msgid "<%s> document model is created"
 msgstr "Модель документа <%s> создана"
 
-#: src/uc2/formats/generic.py:140
+#: src/uc2/formats/generic.py:167
 msgid "Error updating document model"
 msgstr "Ошибка обновления модели"
 
-#: src/uc2/formats/generic.py:144
+#: src/uc2/formats/generic.py:172
 #, python-format
 msgid "<%s> document model is updated successfully"
 msgstr "Модель документа <%s> успешно обновлена"
 
-#: src/uc2/formats/generic.py:152
+#: src/uc2/formats/generic.py:180
 msgid "Error while saving:"
 msgstr "Ошибка при сохранении:"
 
-#: src/uc2/formats/generic.py:152
+#: src/uc2/formats/generic.py:180
 msgid "No file object"
 msgstr "Нет файлового объекта"
 
-#: src/uc2/formats/generic.py:158
+#: src/uc2/formats/generic.py:186
 msgid "Saving is started..."
 msgstr "Сохранение начато..."
 
-#: src/uc2/formats/generic.py:161
+#: src/uc2/formats/generic.py:189
 msgid "Error while saving"
 msgstr "Ошибка при сохранении"
 
-#: src/uc2/formats/generic.py:166
+#: src/uc2/formats/generic.py:195
 #, python-format
 msgid "<%s> document model is saved successfully"
 msgstr "Модель документа <%s> успешно сохранена"
 
-#: src/uc2/formats/generic.py:179
+#: src/uc2/formats/generic.py:208
 #, python-format
 msgid "<%s> document model is destroyed for %s"
 msgstr "Модель документа <%s> для %s разрушена"
 
-#: src/uc2/formats/generic.py:185
+#: src/uc2/formats/generic.py:214
 msgid "Cache is cleared for"
 msgstr "Кеш очищен для"
 
-#: src/uc2/formats/generic.py:187
+#: src/uc2/formats/generic.py:216
 msgid "Cache clearing is unsuccessful"
 msgstr "Очистка кеша неуспешная"
 
-#: src/uc2/formats/generic.py:193
+#: src/uc2/formats/generic.py:223
 #, python-format
 msgid "%s model update in progress..."
-msgstr "Обновление модели %s продолжается... "
+msgstr "Обновление модели %s продолжается..."
 
-#: src/uc2/formats/generic.py:201 src/uc2/formats/generic_filters.py:237
-#: src/uc2/formats/pdf/pdfgen.py:61 src/uc2/formats/plt/plt_translators.py:95
+#: src/uc2/formats/generic.py:231 src/uc2/formats/generic_filters.py:238
+#: src/uc2/formats/pdf/pdfgen.py:64 src/uc2/formats/plt/plt_translators.py:100
 msgid "Saving in progress..."
 msgstr "Сохранение продолжается..."
 
@@ -3471,20 +3506,20 @@ msgstr "Сохранение продолжается..."
 msgid "There is no file for reading"
 msgstr "Нет файла для чтения"
 
-#: src/uc2/formats/generic_filters.py:203
+#: src/uc2/formats/generic_filters.py:204
 msgid "There is no file for writting"
 msgstr "Нет файла для записи"
 
-#: src/uc2/utils/fsutils.py:65
+#: src/uc2/utils/fsutils.py:64
 msgid "There is no file path"
 msgstr "Нет файлового пути"
 
-#: src/uc2/utils/fsutils.py:72 src/uc2/formats/cdrz/cdrz_filters.py:236
+#: src/uc2/utils/fsutils.py:71 src/uc2/formats/cdrz/cdrz_filters.py:236
 #, python-format
 msgid "Cannot open %s file for writing"
 msgstr "Не могу открыть файл %s для записи"
 
-#: src/uc2/utils/fsutils.py:80
+#: src/uc2/utils/fsutils.py:79
 #, python-format
 msgid "Cannot open %s file for reading"
 msgstr "Не могу открыть файл %s для чтения"
@@ -3506,74 +3541,74 @@ msgid "The file content is extracted successfully"
 msgstr "Содержание файла получено успешно"
 
 #: src/uc2/formats/pdxf/methods.py:151 src/uc2/formats/pdxf/methods.py:159
-#: src/uc2/formats/pdxf/model.py:267 src/uc2/formats/sk/sk_model.py:50
+#: src/uc2/formats/pdxf/model.py:267 src/uc2/formats/sk/sk_model.py:51
 #: src/uc2/formats/sk1/model.py:52 src/uc2/formats/sk2/sk2_cids.py:69
 #: src/uc2/formats/sk2/sk2_methods.py:204
-#: src/uc2/formats/sk2/sk2_methods.py:212 src/uc2/formats/sk2/sk2_model.py:248
+#: src/uc2/formats/sk2/sk2_methods.py:212 src/uc2/formats/sk2/sk2_model.py:250
 msgid "Layer"
 msgstr "Слой"
 
-#: src/uc2/formats/pdxf/model.py:303 src/uc2/formats/sk/sk_model.py:51
-#: src/uc2/formats/sk/sk_model.py:241 src/uc2/formats/sk1/model.py:54
-#: src/uc2/formats/sk1/model.py:368 src/uc2/formats/sk2/sk2_model.py:283
+#: src/uc2/formats/pdxf/model.py:303 src/uc2/formats/sk/sk_model.py:52
+#: src/uc2/formats/sk/sk_model.py:242 src/uc2/formats/sk1/model.py:54
+#: src/uc2/formats/sk1/model.py:368 src/uc2/formats/sk2/sk2_model.py:286
 msgid "GuideLayer"
 msgstr "Слой направляющих"
 
-#: src/uc2/formats/pdxf/model.py:327 src/uc2/formats/sk2/sk2_model.py:306
+#: src/uc2/formats/pdxf/model.py:327 src/uc2/formats/sk2/sk2_model.py:310
 msgid "GridLayer"
 msgstr "Слой сетки"
 
-#: src/uc2/formats/sk/sk_model.py:49 src/uc2/formats/sk1/model.py:51
+#: src/uc2/formats/sk/sk_model.py:50 src/uc2/formats/sk1/model.py:51
 msgid "Layout"
 msgstr "Макет"
 
-#: src/uc2/formats/sk/sk_model.py:51 src/uc2/formats/sk1/model.py:54
+#: src/uc2/formats/sk/sk_model.py:52 src/uc2/formats/sk1/model.py:54
 msgid "Guideline"
 msgstr "Направляющая"
 
-#: src/uc2/formats/sk/sk_model.py:53 src/uc2/formats/sk1/model.py:56
+#: src/uc2/formats/sk/sk_model.py:54 src/uc2/formats/sk1/model.py:56
 #: src/uc2/formats/sk2/sk2_cids.py:64
 msgid "Style"
 msgstr "Стиль"
 
-#: src/uc2/formats/sk/sk_model.py:54 src/uc2/formats/sk1/model.py:57
+#: src/uc2/formats/sk/sk_model.py:55 src/uc2/formats/sk1/model.py:57
 #: src/uc2/formats/sk2/sk2_cids.py:73
 msgid "Group"
 msgstr "Группа"
 
-#: src/uc2/formats/sk/sk_model.py:54 src/uc2/formats/sk1/model.py:57
+#: src/uc2/formats/sk/sk_model.py:55 src/uc2/formats/sk1/model.py:57
 msgid "MaskGroup"
 msgstr "Контейнер"
 
-#: src/uc2/formats/sk/sk_model.py:56 src/uc2/formats/sk1/model.py:59
+#: src/uc2/formats/sk/sk_model.py:57 src/uc2/formats/sk1/model.py:59
 #: src/uc2/formats/sk2/sk2_cids.py:76
 msgid "Rectangle"
 msgstr "Прямоугольник"
 
-#: src/uc2/formats/sk/sk_model.py:56 src/uc2/formats/sk1/model.py:59
+#: src/uc2/formats/sk/sk_model.py:57 src/uc2/formats/sk1/model.py:59
 #: src/uc2/formats/sk2/sk2_cids.py:76
 msgid "Ellipse"
 msgstr "Эллипс"
 
-#: src/uc2/formats/sk/sk_model.py:56 src/uc2/formats/sk1/model.py:59
+#: src/uc2/formats/sk/sk_model.py:57 src/uc2/formats/sk1/model.py:59
 #: src/uc2/formats/sk2/sk2_cids.py:77
 msgid "Curve"
 msgstr "Кривая"
 
-#: src/uc2/formats/sk/sk_model.py:57 src/uc2/formats/sk1/model.py:60
+#: src/uc2/formats/sk/sk_model.py:58 src/uc2/formats/sk1/model.py:60
 msgid "Text"
 msgstr "Текст"
 
-#: src/uc2/formats/sk/sk_model.py:57 src/uc2/formats/sk1/model.py:60
+#: src/uc2/formats/sk/sk_model.py:58 src/uc2/formats/sk1/model.py:60
 msgid "BitmapData"
 msgstr "Данные битмапа"
 
-#: src/uc2/formats/sk/sk_model.py:57 src/uc2/formats/sk1/model.py:60
+#: src/uc2/formats/sk/sk_model.py:58 src/uc2/formats/sk1/model.py:60
 #: src/uc2/formats/sk2/sk2_cids.py:66
 msgid "Image"
 msgstr "Изображение"
 
-#: src/uc2/formats/sk/sk_model.py:208 src/uc2/formats/sk1/model.py:291
+#: src/uc2/formats/sk/sk_model.py:209 src/uc2/formats/sk1/model.py:291
 msgid "New Layer"
 msgstr "Новый слой"
 
@@ -3656,6 +3691,21 @@ msgstr "Текстовая колонка"
 #: src/uc2/formats/sk2/sk2_cids.py:79
 msgid "Bitmap"
 msgstr "Битмап"
+
+#~ msgid "Application"
+#~ msgstr "Приложение"
+
+#~ msgid "UI style"
+#~ msgstr "Стиль UI"
+
+#~ msgid "Generic features"
+#~ msgstr "Общие опции"
+
+#~ msgid "Palette options and palette management"
+#~ msgstr "Свойства палитр и управление ими"
+
+#~ msgid "Ruler preferences"
+#~ msgstr "Настройки линеек"
 
 #~ msgid "Try updating sK1 application from http://www.sk1project.net"
 #~ msgstr "Обновите приложение sK1 с сайта http://www.sk1project.net"
