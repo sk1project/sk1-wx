@@ -1598,7 +1598,7 @@ msgstr "Табы-трапеции"
 
 #: src/sk1/prefs/prefs_ui.py:111
 msgid "Show quick access buttons"
-msgstr "Показывать кнопки быстрого доступа"
+msgstr "Кнопки быстрого доступа"
 
 #: src/sk1/prefs/prefs_ui.py:125
 msgid "Use overlay for spinbox widgets (*)"
