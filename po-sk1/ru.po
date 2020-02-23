@@ -1,6 +1,6 @@
-# Copyright (C) 2018, Igor Novikov
+# Copyright (C) 2018, Ihor Novikov
 # This file is distributed under the same license as the PACKAGE package.
-# Igor Novikov <sk1.project.org@gmail.com>, 2018.
+# Ihor Novikov <sk1.project.org@gmail.com>, 2018.
 #
 msgid ""
 msgstr ""

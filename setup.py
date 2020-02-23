@@ -2,7 +2,7 @@
 #
 #   Setup script for sK1 2.x
 #
-# 	Copyright (C) 2013-2018 by Igor E. Novikov
+# 	Copyright (C) 2013-2018 by Ihor E. Novikov
 #
 # 	This program is free software: you can redistribute it and/or modify
 # 	it under the terms of the GNU General Public License as published by
@@ -117,7 +117,7 @@ CLEAR_BUILD = False
 NAME = appconst.APPNAME
 VERSION = appconst.VERSION + appconst.REVISION
 DESCRIPTION = 'Vector graphics editor for prepress'
-AUTHOR = 'Igor E. Novikov'
+AUTHOR = 'Ihor E. Novikov'
 AUTHOR_EMAIL = 'sk1.project.org@gmail.com'
 MAINTAINER = AUTHOR
 MAINTAINER_EMAIL = AUTHOR_EMAIL

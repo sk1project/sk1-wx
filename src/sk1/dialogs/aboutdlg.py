@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013-2015 by Igor E. Novikov
+#  Copyright (C) 2013-2015 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -116,7 +116,7 @@ TR_LIST = [
     ['Brazilian Portuguese','João Lima Neto <contato@joaolimaneto.com.br>'],
     ['German', 'Thore Sommer <mail@thson.de>'],
     ['Italian', 'Tom Spaccavento <spcvntom@gmail.com>'],
-    ['Russian', 'Igor Novikov <sk1.project.org@gmail.com>'],
+    ['Russian', 'Ihor Novikov <sk1.project.org@gmail.com>'],
     ['Spanish', 'Carlos Jesús Atagua Díaz <atacarlos@gmail.com>'],
     ['Ukrainian', 'Maxim Barabash <maxim.s.barabash@gmail.com>,'],
     ['',          'Eugeniy Fedirets <evgeniy_fedirets@ukr.net>'],
