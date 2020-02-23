@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: sk1-wx\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-02-23 01:13+0200\n"
-"PO-Revision-Date: 2020-02-23 14:10+0200\n"
+"PO-Revision-Date: 2020-02-23 14:17+0200\n"
 "Last-Translator: Maxim Barabash <maxim.s.barabash@gmail.com>\n"
 "Language-Team: sk1project\n"
 "Language: uk\n"
@@ -1073,7 +1073,7 @@ msgstr "Прокрутити палітру праворич"
 
 #: src/sk1/parts/palettepanel.py:69 src/sk1/parts/palettepanel.py:140
 msgid "Manage palettes"
-msgstr "Керуйте палітрами"
+msgstr "Керування палітрами"
 
 #: src/sk1/parts/palettepanel.py:114
 msgid "Scroll palette to top"
