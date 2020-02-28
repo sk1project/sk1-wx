@@ -10,14 +10,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-02-23 01:13+0200\n"
-"PO-Revision-Date: 2020-02-23 02:03+0200\n"
-"Last-Translator: Ihor E. Novikov <sk1.project.org@gmail.com>\n"
+"PO-Revision-Date: 2020-02-28 15:51-0300\n"
+"Last-Translator: João Lima Neto <contato@joaolimaneto.com.br>\n"
 "Language-Team: pt_BR <>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/sk1/app_plugins.py:57
@@ -59,8 +59,7 @@ msgstr "O objeto selecionado não pode ser usado como preenchimento."
 
 #: src/sk1/app_proxy.py:165
 msgid "Selected object cannot be source of fill property."
-msgstr ""
-"O objeto selecionado não pode ser a fonte da propriedade de preenchimento."
+msgstr "O objeto selecionado não pode ser a fonte da propriedade de preenchimento."
 
 #: src/sk1/app_proxy.py:166 src/sk1/app_proxy.py:185 src/sk1/app_proxy.py:608
 #: src/sk1/share/pd_plugins/shaping/__init__.py:168
@@ -70,8 +69,7 @@ msgstr "Você quer tentar novamente?"
 #: src/sk1/app_proxy.py:182
 msgid "Source object is not selected to copy stroke property."
 msgstr ""
-"O objeto de origem não está selecionado para copiar a propriedade do "
-"contorno."
+"O objeto de origem não está selecionado para copiar a propriedade do contorno."
 
 #: src/sk1/app_proxy.py:184
 msgid "Selected object cannot be source of stroke property."
@@ -137,9 +135,8 @@ msgstr "Selecionar Modelo"
 msgid "Cannot parse file:"
 msgstr "Não é possível analisar o arquivo:"
 
-#: src/sk1/application.py:225 src/sk1/application.py:253
-#: src/sk1/application.py:435 src/sk1/application.py:553
-#: src/sk1/application.py:592
+#: src/sk1/application.py:225 src/sk1/application.py:253 src/sk1/application.py:435
+#: src/sk1/application.py:553 src/sk1/application.py:592
 msgid "The file may be corrupted or not supported format"
 msgstr "O arquivo pode estar corrompido ou o formato não é compatível"
 
@@ -159,8 +156,8 @@ msgstr "O arquivo contém o formato SK2 mais recente.\n"
 msgid "Try updating sK1 application from https://sk1project.net"
 msgstr "Tente atualizar o aplicativo sK1 em http://www.sk1project.net"
 
-#: src/sk1/application.py:255 src/sk1/application.py:437
-#: src/sk1/application.py:555 src/sk1/application.py:594
+#: src/sk1/application.py:255 src/sk1/application.py:437 src/sk1/application.py:555
+#: src/sk1/application.py:594
 msgid "Details see in application logs."
 msgstr "Ver detalhes nos logs do aplicativo."
 
@@ -180,14 +177,13 @@ msgstr "Por favor, verifique as permissões de gravação do arquivo"
 msgid "Document saved"
 msgstr "Documento salvo"
 
-#: src/sk1/application.py:310 src/sk1/application.py:343
-#: src/sk1/application.py:456
+#: src/sk1/application.py:310 src/sk1/application.py:343 src/sk1/application.py:456
 msgid "Cannot save document:"
 msgstr "Não é possível salvar o documento:"
 
-#: src/sk1/application.py:312 src/sk1/application.py:458
-#: src/sk1/application.py:480 src/sk1/application.py:518
-#: src/sk1/application.py:577 src/sk1/share/pd_plugins/iconizer/__init__.py:316
+#: src/sk1/application.py:312 src/sk1/application.py:458 src/sk1/application.py:480
+#: src/sk1/application.py:518 src/sk1/application.py:577
+#: src/sk1/share/pd_plugins/iconizer/__init__.py:316
 msgid "Please check file name and write permissions"
 msgstr "Por favor, verifique o nome do arquivo e as permissões de gravação"
 
@@ -198,8 +194,7 @@ msgstr "Salvar objetos selecionados apenas como..."
 #: src/sk1/application.py:345
 msgid "Please check requested file format and write permissions"
 msgstr ""
-"Por favor, verifique o formato de arquivo solicitado e as permissões de "
-"gravação"
+"Por favor, verifique o formato de arquivo solicitado e as permissões de gravação"
 
 #: src/sk1/application.py:364
 #, python-format
@@ -363,10 +358,8 @@ msgid "Custom"
 msgstr "Personalizado"
 
 #: src/sk1/context/page_format.py:243
-#, fuzzy
-#| msgid "Guide layer"
 msgid "Guide frame margin"
-msgstr "Camada de guia"
+msgstr "Margem do quadro de guia"
 
 #: src/sk1/context/polygon.py:38
 msgid "Number of polygon angles"
@@ -451,16 +444,12 @@ msgstr "Mudar cor"
 #: src/sk1/dialogs/dashedit_dlg.py:22
 msgid ""
 "Dash pattern is a sequence (stroke-space-stroke-space- etc.) of integer \n"
-"or float values separated by space which describes size of pattern "
-"elements. \n"
-"The values are relative to line width. Example: '2 1' or '5 1 1 1'. Empty "
-"value\n"
+"or float values separated by space which describes size of pattern elements. \n"
+"The values are relative to line width. Example: '2 1' or '5 1 1 1'. Empty value\n"
 "means no dash, i.e. solid line."
 msgstr ""
-"O padrão de contorno é uma sequência (contorno-espaço-contorno-espaço- "
-"etc.) \n"
-"de número inteiro ou números com vírgula, separados por espaço, que "
-"descrevem \n"
+"O padrão de contorno é uma sequência (contorno-espaço-contorno-espaço- etc.) \n"
+"de número inteiro ou números com vírgula, separados por espaço, que descrevem \n"
 "o tamanho dos elementos do padrão.\n"
 " Os valores são relativos à largura da linha. Exemplo: '2 1' ou '5 1 1 1'. \n"
 " Vazio significa sem traço, ou seja, linha sólida."
@@ -498,8 +487,7 @@ msgstr "Páginas:"
 msgid "Layers:"
 msgstr "Camadas:"
 
-#: src/sk1/dialogs/docinfodlg.py:104
-#: src/sk1/printing/propsdlg/cupspropsdlg.py:112
+#: src/sk1/dialogs/docinfodlg.py:104 src/sk1/printing/propsdlg/cupspropsdlg.py:112
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:93
 msgid "Page size:"
 msgstr "Tamanho da página:"
@@ -667,10 +655,8 @@ msgid "Default page:"
 msgstr "Formato da página:"
 
 #: src/sk1/dialogs/docprops.py:143
-#, fuzzy
-#| msgid "Current page"
 msgid "As current page"
-msgstr "Página atual"
+msgstr "Como a página atual"
 
 #: src/sk1/dialogs/docprops.py:177
 msgid "Desktop:"
@@ -937,8 +923,7 @@ msgstr "Cor do Contorno"
 msgid "Stroke Style"
 msgstr "Estilo do contorno"
 
-#: src/sk1/dialogs/strokedlg.py:113
-#: src/sk1/printing/propsdlg/cupspropsdlg.py:117
+#: src/sk1/dialogs/strokedlg.py:113 src/sk1/printing/propsdlg/cupspropsdlg.py:117
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:98
 msgid "Width:"
 msgstr "Largura:"
@@ -1083,10 +1068,8 @@ msgid "Scroll palette to right"
 msgstr "Role a paleta para a direita"
 
 #: src/sk1/parts/palettepanel.py:69 src/sk1/parts/palettepanel.py:140
-#, fuzzy
-#| msgid "Download more palettes"
 msgid "Manage palettes"
-msgstr "Faça o download de mais paletas"
+msgstr "Gerenciar paletas"
 
 #: src/sk1/parts/palettepanel.py:114
 msgid "Scroll palette to top"
@@ -1097,10 +1080,8 @@ msgid "Scroll palette to bottom"
 msgstr "Role a paleta para baixo"
 
 #: src/sk1/parts/statusbar.py:94
-#, fuzzy
-#| msgid "Zoom selected"
 msgid "Zoom level"
-msgstr "Zoom para selecão"
+msgstr "Nível de zoom"
 
 #: src/sk1/parts/statusbar.py:228 src/sk1/parts/statusbar.py:258
 msgid "Image type: "
@@ -1161,13 +1142,11 @@ msgstr "Preferências de marcadores do espaço de trabalho"
 
 #: src/sk1/prefs/prefs_cms.py:35
 msgid "CMS"
-msgstr ""
+msgstr "CMS"
 
 #: src/sk1/prefs/prefs_cms.py:36
-#, fuzzy
-#| msgid "Color management and color profiles"
 msgid "Color management, profiles"
-msgstr "Gerenciamento de cores e perfis"
+msgstr "Gerenciamento de cores, perfis"
 
 #: src/sk1/prefs/prefs_cms.py:86
 msgid "Color management"
@@ -1180,8 +1159,8 @@ msgstr "Ativar Gerenciamento de Cor"
 #: src/sk1/prefs/prefs_cms.py:105
 msgid "Note: If Color Management is disabled, color values will be inaccurate."
 msgstr ""
-"Nota: Se o Gerenciamento de Cores estiver desativado, os valores das cores "
-"serão imprecisos."
+"Nota: Se o Gerenciamento de Cores estiver desativado, os valores das coresserão "
+"imprecisos."
 
 #: src/sk1/prefs/prefs_cms.py:130
 msgid "Color profiles"
@@ -1194,7 +1173,7 @@ msgstr "Espaço de perfis de cores"
 #: src/sk1/prefs/prefs_cms.py:153
 #, python-format
 msgid "%s profile:"
-msgstr "Perfil %s:"
+msgstr "%s perfil:"
 
 #: src/sk1/prefs/prefs_cms.py:163
 msgid "Hardware profiles"
@@ -1225,7 +1204,7 @@ msgstr "Adicionar/remover perfis %s"
 #: src/sk1/prefs/prefs_cms.py:318
 #, python-format
 msgid "%s profiles"
-msgstr "Perfil %s"
+msgstr "%s perfil"
 
 #: src/sk1/prefs/prefs_cms.py:364 src/sk1/prefs/prefs_palettes.py:229
 msgid "Import"
@@ -1273,8 +1252,7 @@ msgstr "Não é possível copiar o arquivo"
 
 #: src/sk1/prefs/prefs_cms.py:414
 msgid "Please check write permissions for config directory:"
-msgstr ""
-"Por favor, verifique as permissões para salvar na pasta de configuração:"
+msgstr "Por favor, verifique as permissões para salvar na pasta de configuração:"
 
 #: src/sk1/prefs/prefs_cms.py:453
 msgid "Profile info"
@@ -1405,10 +1383,8 @@ msgid "Logging level (*):"
 msgstr "Nível de registro (*):"
 
 #: src/sk1/prefs/prefs_general.py:132 src/sk1/prefs/prefs_ui.py:153
-#, fuzzy
-#| msgid "(*) - A restart is required to apply these options"
 msgid "(*) - Application restart is required to apply these options"
-msgstr "(*) - É necessário reiniciar para aplicar essas opções"
+msgstr "(*) - É necessário reiniciar o SK1 para aplicar essas opções"
 
 #: src/sk1/prefs/prefs_palettes.py:25
 msgid "Horizontal"
@@ -1481,10 +1457,8 @@ msgid "Printers"
 msgstr "Impressoras"
 
 #: src/sk1/prefs/prefs_printers.py:30
-#, fuzzy
-#| msgid "Print Letter calibration page"
-msgid "Printer calibration"
-msgstr "Imprimir página de calibração Carta"
+msgid "Calibração da impressora"
+msgstr "Calibração da impressora"
 
 #: src/sk1/prefs/prefs_printers.py:65
 msgid "Printer:"
@@ -1508,8 +1482,8 @@ msgstr "Margens de impressão"
 
 #: src/sk1/prefs/prefs_printers.py:156
 msgid ""
-"To measure actual print area and vertical/horizontal printing shift, just "
-"print the calibration page on A4/Letter paper."
+"To measure actual print area and vertical/horizontal printing shift, just print "
+"the calibration page on A4/Letter paper."
 msgstr ""
 "Para medir a área de impressão real e a impressão vertical/horizontal, basta "
 "deslocar a página de calibração de impressão na folha A4/Carta."
@@ -1527,14 +1501,12 @@ msgid "No printers found"
 msgstr "Nenhuma impressora localizada"
 
 #: src/sk1/prefs/prefs_ruler.py:30
-#, fuzzy
-#| msgid "Ruler:"
 msgid "Rulers"
-msgstr "Régua:"
+msgstr "Réguas"
 
 #: src/sk1/prefs/prefs_ruler.py:31
 msgid "Ruler colors, fonts, sizes"
-msgstr ""
+msgstr "Cor da Régua, fontes, tamanhos"
 
 #: src/sk1/prefs/prefs_ruler.py:48
 msgid "Size (px):"
@@ -1582,13 +1554,11 @@ msgstr "Pré-visualização da régua:"
 
 #: src/sk1/prefs/prefs_ui.py:58
 msgid "UI"
-msgstr ""
+msgstr "Interface"
 
 #: src/sk1/prefs/prefs_ui.py:59
-#, fuzzy
-#| msgid "Printer preferences"
 msgid "User interface preferences"
-msgstr "Preferências de impressão"
+msgstr "Preferências da interface do usuário"
 
 #: src/sk1/prefs/prefs_ui.py:82
 msgid "Language (*):"
@@ -1596,7 +1566,7 @@ msgstr "Idioma (*):"
 
 #: src/sk1/prefs/prefs_ui.py:91
 msgid "UI style (*):"
-msgstr "Interface estilo (*):"
+msgstr "Estilo da Interface (*):"
 
 #: src/sk1/prefs/prefs_ui.py:94
 msgid "Classic"
@@ -1660,8 +1630,7 @@ msgstr "Opções para grade e guia"
 
 #: src/sk1/printing/cups_print.py:56 src/sk1/printing/pdf_printer.py:30
 #: src/uc2/formats/cgm/cgm_to_sk2.py:220 src/uc2/formats/dst/dst_to_sk2.py:146
-#: src/uc2/formats/pdxf/methods.py:101
-#: src/uc2/formats/pes/pes_translators.py:67
+#: src/uc2/formats/pdxf/methods.py:101 src/uc2/formats/pes/pes_translators.py:67
 #: src/uc2/formats/sk2/sk2_methods.py:148
 msgid "Custom size"
 msgstr "Tamanho personalizado"
@@ -1684,7 +1653,7 @@ msgstr "Carregando calibração de página..."
 
 #: src/sk1/printing/cups_print.py:278 src/sk1/printing/generic.py:149
 msgid "Done"
-msgstr "Aplica"
+msgstr "Aplicar"
 
 #: src/sk1/printing/cups_print.py:280 src/sk1/printing/msw_print.py:139
 msgid "Error while printing of calibration page!"
@@ -2221,10 +2190,8 @@ msgid "&File history logs..."
 msgstr "&Logs do histórico de arquivos..."
 
 #: src/sk1/resources/labels.py:77
-#, fuzzy
-#| msgid "Show guides"
 msgid "&Lock guides"
-msgstr "Guias"
+msgstr "&Bloquear guias"
 
 #: src/sk1/resources/labels.py:78
 msgid "Document properties..."
@@ -2624,10 +2591,8 @@ msgid "&About sK1..."
 msgstr "&Sobre o sK1..."
 
 #: src/sk1/resources/labels.py:189
-#, fuzzy
-#| msgid "Save pattern as..."
 msgid "Manage palettes..."
-msgstr "Salvar padrão de preenchimento como..."
+msgstr "Gerenciar paletas..."
 
 #: src/sk1/document/controllers/editor_bezier.py:52
 #: src/sk1/document/controllers/editor_bezier.py:239
@@ -2731,13 +2696,11 @@ msgstr "Colorida"
 msgid "Printer"
 msgstr "Impressora"
 
-#: src/sk1/printing/printdlg/panels.py:290
-#: src/sk1/printing/printdlg/toolbar.py:46
+#: src/sk1/printing/printdlg/panels.py:290 src/sk1/printing/printdlg/toolbar.py:46
 msgid "Print"
 msgstr "Imprimir"
 
-#: src/sk1/printing/printdlg/toolbar.py:48
-#: src/sk1/printing/propsdlg/generic.py:33
+#: src/sk1/printing/printdlg/toolbar.py:48 src/sk1/printing/propsdlg/generic.py:33
 msgid "Printer properties"
 msgstr "Propriedades de impressão"
 
@@ -2772,8 +2735,8 @@ msgid ""
 "Note: To adjust specific printer options you could use system configuration "
 "tools like 'system-config-printer'"
 msgstr ""
-"Nota: Para ajustar opções específicas da impressora, você pode usar "
-"ferramentas de configuração do sistema como 'system-config-printer'"
+"Nota: Para ajustar opções específicas da impressora, você pode usar ferramentas "
+"de configuração do sistema como 'system-config-printer'"
 
 #: src/sk1/printing/propsdlg/pdfpropsdlg.py:37
 msgid "Generation options"
@@ -3375,7 +3338,7 @@ msgstr "XML - Arquivo eXtensible Markup Language"
 
 #: src/uc2/uc2const.py:187
 msgid "LOG - Log files"
-msgstr "LOG - arquivo de Log"
+msgstr "LOG - Arquivo de Log"
 
 #: src/uc2/uc2const.py:188
 msgid "MD - Markdown markup files"
@@ -3383,11 +3346,11 @@ msgstr "MD - Arquivos de marcação Markdown"
 
 #: src/uc2/uc2const.py:191
 msgid "DST - (Tajima) Design format"
-msgstr ""
+msgstr "DST - Formato de design (Tajima)"
 
 #: src/uc2/uc2const.py:192
 msgid "PES - (Brother) Embroidery file format"
-msgstr ""
+msgstr "PES - Formato de arquivo Embroidery (Brother)"
 
 #: src/uc2/uc2const.py:388 src/uc2/uc2const.py:408
 msgid "pixels"
@@ -3577,8 +3540,8 @@ msgstr "O conteúdo do arquivo foi extraído com sucesso"
 #: src/uc2/formats/pdxf/methods.py:151 src/uc2/formats/pdxf/methods.py:159
 #: src/uc2/formats/pdxf/model.py:267 src/uc2/formats/sk/sk_model.py:51
 #: src/uc2/formats/sk1/model.py:52 src/uc2/formats/sk2/sk2_cids.py:69
-#: src/uc2/formats/sk2/sk2_methods.py:204
-#: src/uc2/formats/sk2/sk2_methods.py:212 src/uc2/formats/sk2/sk2_model.py:250
+#: src/uc2/formats/sk2/sk2_methods.py:204 src/uc2/formats/sk2/sk2_methods.py:212
+#: src/uc2/formats/sk2/sk2_model.py:250
 msgid "Layer"
 msgstr "Camada"
 
