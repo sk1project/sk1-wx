@@ -150,7 +150,7 @@ class TransformPlugin(RsPlugin):
         if doc and self.app.insp.is_selection():
             doc.api.transform_selected(self.active_transform.get_trafo(), copy)
 
-    def update(self, *args):
+    def update(self, *_args):
         state = False
         if self.app.insp.is_selection():
             state = True

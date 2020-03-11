@@ -44,7 +44,8 @@ class AbstractTransform(wal.VPanel):
         self.app = app
         self.callback = onreset
         wal.VPanel.__init__(self, parent)
-        self.pack(wal.Label(self, self.name, fontbold=True), padding_all=5)
+        self.caption = wal.Label(self, self.name, fontbold=True)
+        self.pack(self.caption, padding_all=5)
         self.build()
 
     def on_reset(self):
