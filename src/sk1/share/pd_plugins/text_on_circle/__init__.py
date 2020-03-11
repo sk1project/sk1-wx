@@ -204,7 +204,7 @@ class TextOnCirclePlugin(RsPlugin):
                 return 2
         return False
 
-    def update(self, *args):
+    def update(self, *_args):
         if self.is_shown():
             state = False
             if self.app.insp.is_selection():

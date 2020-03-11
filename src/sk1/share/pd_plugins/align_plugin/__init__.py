@@ -118,7 +118,7 @@ class AlignPlugin(RsPlugin):
         events.connect(events.DOC_MODIFIED, self.update)
         self.update()
 
-    def update(self, *args):
+    def update(self, *_args):
         self.apanel.update()
         self.dpanel.update()
         # self.fpanel.update()
@@ -170,7 +170,7 @@ class AlignPanel(wal.LabeledPanel):
         bbox = self.get_selection_bbox()
         return bbox[2] - bbox[0], bbox[3] - bbox[1]
 
-    def update(self, *args):
+    def update(self, *_args):
         self.source.set_enable(False)
         self.halign.set_enable(False)
         self.valign.set_enable(False)
@@ -193,7 +193,8 @@ class AlignPanel(wal.LabeledPanel):
         if self.valign.get_mode() is None and self.halign.get_mode() is None:
             self.apply_btn.set_enable(False)
 
-    def get_obj_areas(self, objs):
+    @staticmethod
+    def get_obj_areas(objs):
         areas = []
         for obj in objs:
             bbox = obj.cache_bbox
@@ -342,7 +343,7 @@ class DistributePanel(wal.LabeledPanel):
         self.apply_btn = wal.Button(self, _('Apply'), onclick=self.action)
         self.pack(self.apply_btn, padding_all=5, fill=True)
 
-    def update(self, *args):
+    def update(self, *_args):
         self.hdistrib.set_enable(False)
         self.vdistrib.set_enable(False)
         self.apply_btn.set_enable(False)
@@ -356,7 +357,8 @@ class DistributePanel(wal.LabeledPanel):
                 not self.vdistrib.get_mode() is None:
             self.apply_btn.set_enable(True)
 
-    def get_coord(self, obj, index):
+    @staticmethod
+    def get_coord(obj, index):
         bbox = obj.cache_bbox
         if index < 4:
             return bbox[index]
@@ -365,11 +367,13 @@ class DistributePanel(wal.LabeledPanel):
         else:
             return bbox[1] + (bbox[3] - bbox[1]) / 2.0
 
-    def get_obj_width(self, obj):
+    @staticmethod
+    def get_obj_width(obj):
         bbox = obj.cache_bbox
         return bbox[2] - bbox[0]
 
-    def get_obj_height(self, obj):
+    @staticmethod
+    def get_obj_height(obj):
         bbox = obj.cache_bbox
         return bbox[3] - bbox[1]
 
