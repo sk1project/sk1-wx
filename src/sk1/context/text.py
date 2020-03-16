@@ -137,6 +137,7 @@ class TextStylePlugin(CtxPlugin):
             self.target = None
             self.update_styles()
             self.styles_combo.show(True)
+        self.layout()
 
     def update_styles(self):
         self.styles = self._get_styles()
@@ -165,7 +166,7 @@ class TextStylePlugin(CtxPlugin):
             self.size_combo.set_value(text_style[2])
         self.align.set_mode(text_style[3])
         self.ligature.set_active(text_style[5])
-        self.fit()
+        self.layout()
 
     def on_style_change(self):
         style_name = self.styles[self.styles_combo.get_active()]
@@ -207,4 +208,4 @@ class TextStylePlugin(CtxPlugin):
             new_style = deepcopy(doc.text_obj_style)
             new_style[2] = [family, face, size, align, spacing, cluster_flag]
             doc.text_obj_style = new_style
-        self.fit()
+        self.layout()

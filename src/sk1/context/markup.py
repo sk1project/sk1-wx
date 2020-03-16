@@ -97,7 +97,7 @@ class FontMarkupPlugin(CtxPlugin):
             self.faces_combo.set_active(0)
 
         self.size_combo.set_value(size)
-        self.fit()
+        self.layout()
 
     def on_font_change(self, *_args):
         self.faces = self.faces_dict[self.families_combo.get_font_family()]
@@ -115,7 +115,7 @@ class FontMarkupPlugin(CtxPlugin):
         size = self.size_combo.get_value()
         ctrl = self.app.current_doc.canvas.controller
         ctrl.set_fontdescr(family, face, size)
-        self.fit()
+        self.layout()
 
 
 class SimpleMarkupPlugin(CtxPlugin):
