@@ -141,7 +141,7 @@ class PageProps(DocPropsPanel):
         hpanel.pack((5, 5))
 
         self.as_current = wal.Button(hpanel, ' %s ' % _('As current page'),
-                               onclick=self.set_as_current)
+                                     onclick=self.set_as_current)
         hpanel.pack(self.as_current)
 
         self.pack(hpanel, fill=True)
@@ -206,7 +206,6 @@ class PageProps(DocPropsPanel):
         hpanel.pack(grid, fill=True)
         hpanel.pack((5, 5))
         self.pack(hpanel, fill=True)
-
 
         # ---
         vpanel = wal.VPanel(self)
@@ -273,7 +272,7 @@ class PageProps(DocPropsPanel):
             mode = uc2const.LANDSCAPE
         self.orient_keeper.set_mode(mode)
 
-    def orient_changed(self, mode):
+    def orient_changed(self, _mode):
         w = self.page_width.get_point_value()
         h = self.page_height.get_point_value()
         w, h = h, w
@@ -288,7 +287,7 @@ class PageProps(DocPropsPanel):
     def save(self):
         page_format = [self.page_combo.get_active_value(),
                        (self.page_width.get_point_value(),
-                        self.page_height.get_point_value(), ),
+                        self.page_height.get_point_value(),),
                        self.orient_keeper.get_mode()]
         if self.page_format != page_format:
             self.api.set_default_page_format(page_format)
@@ -390,7 +389,8 @@ class GridPreview(wal.VPanel, wal.DrawableWidget):
         self.color = color
         self.refresh()
 
-    def _composite_color(self, color1, color2=None):
+    @staticmethod
+    def _composite_color(color1, color2=None):
         color2 = color2 or [1.0, 1.0, 1.0]
         r0, g0, b0, a0 = color1
         r1, g1, b1 = color2
@@ -532,6 +532,7 @@ class GridProps(DocPropsPanel):
         color_panel.pack((10, 10))
 
         self.pack(color_panel, fill=True, expand=True)
+        self.layout()
 
     def on_slider_change(self):
         self.alpha_spin.set_value(float(self.alpha_slider.get_value()))
