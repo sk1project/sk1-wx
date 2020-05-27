@@ -5,12 +5,12 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: sk1-wx\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-02-23 01:13+0200\n"
-"PO-Revision-Date: 2020-02-23 02:02+0200\n"
-"Last-Translator: Ihor E. Novikov <sk1.project.org@gmail.com>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2020-02-23 14:17+0200\n"
+"Last-Translator: Maxim Barabash <maxim.s.barabash@gmail.com>\n"
+"Language-Team: sk1project\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -359,10 +359,8 @@ msgid "Custom"
 msgstr "Інший"
 
 #: src/sk1/context/page_format.py:243
-#, fuzzy
-#| msgid "Guide layer"
 msgid "Guide frame margin"
-msgstr "Шар напрямних"
+msgstr "Відступ напрямних від межі сторінки"
 
 #: src/sk1/context/polygon.py:38
 msgid "Number of polygon angles"
@@ -660,10 +658,8 @@ msgid "Default page:"
 msgstr "Типова сторінка:"
 
 #: src/sk1/dialogs/docprops.py:143
-#, fuzzy
-#| msgid "Current page"
 msgid "As current page"
-msgstr "Поточна сторінка"
+msgstr "Як поточна сторінка"
 
 #: src/sk1/dialogs/docprops.py:177
 msgid "Desktop:"
@@ -1076,10 +1072,8 @@ msgid "Scroll palette to right"
 msgstr "Прокрутити палітру праворич"
 
 #: src/sk1/parts/palettepanel.py:69 src/sk1/parts/palettepanel.py:140
-#, fuzzy
-#| msgid "Download more palettes"
 msgid "Manage palettes"
-msgstr "Завантажте більше палітр"
+msgstr "Керування палітрами"
 
 #: src/sk1/parts/palettepanel.py:114
 msgid "Scroll palette to top"
@@ -1090,10 +1084,8 @@ msgid "Scroll palette to bottom"
 msgstr "Прокрутити палітру до низу"
 
 #: src/sk1/parts/statusbar.py:94
-#, fuzzy
-#| msgid "Zoom selected"
 msgid "Zoom level"
-msgstr "Показати позначене цілком"
+msgstr "Рівень масштабу"
 
 #: src/sk1/parts/statusbar.py:228 src/sk1/parts/statusbar.py:258
 msgid "Image type: "
@@ -1154,13 +1146,11 @@ msgstr "Параметри маркера полотна"
 
 #: src/sk1/prefs/prefs_cms.py:35
 msgid "CMS"
-msgstr ""
+msgstr "Кольори"
 
 #: src/sk1/prefs/prefs_cms.py:36
-#, fuzzy
-#| msgid "Color management and color profiles"
 msgid "Color management, profiles"
-msgstr "Керування кольором і кольорові профілі"
+msgstr "Керування кольором, профілі"
 
 #: src/sk1/prefs/prefs_cms.py:86
 msgid "Color management"
@@ -1395,10 +1385,8 @@ msgid "Logging level (*):"
 msgstr "Рівень журналу дій (*):"
 
 #: src/sk1/prefs/prefs_general.py:132 src/sk1/prefs/prefs_ui.py:153
-#, fuzzy
-#| msgid "(*) - A restart is required to apply these options"
 msgid "(*) - Application restart is required to apply these options"
-msgstr "(*) - Програму необхідно перезапустити, щоб активувати зміни"
+msgstr "(*) - Для застосування цих параметрів потрібен перезапуск програми"
 
 #: src/sk1/prefs/prefs_palettes.py:25
 msgid "Horizontal"
@@ -1471,10 +1459,8 @@ msgid "Printers"
 msgstr "Принтери"
 
 #: src/sk1/prefs/prefs_printers.py:30
-#, fuzzy
-#| msgid "Print Letter calibration page"
 msgid "Printer calibration"
-msgstr "Друк сторінки для калібрування Letter"
+msgstr "Калібрування принтеру"
 
 #: src/sk1/prefs/prefs_printers.py:65
 msgid "Printer:"
@@ -1514,17 +1500,15 @@ msgstr "Друк сторінки для калібрування Letter"
 
 #: src/sk1/prefs/prefs_printers.py:181
 msgid "No printers found"
-msgstr "Не вдалося знайти встановлені принтери!"
+msgstr "Не знайдено жодного принтера"
 
 #: src/sk1/prefs/prefs_ruler.py:30
-#, fuzzy
-#| msgid "Ruler:"
 msgid "Rulers"
-msgstr "Лінійки:"
+msgstr "Лінійки"
 
 #: src/sk1/prefs/prefs_ruler.py:31
 msgid "Ruler colors, fonts, sizes"
-msgstr ""
+msgstr "Кольори лінійки, шрифти, розміри"
 
 #: src/sk1/prefs/prefs_ruler.py:48
 msgid "Size (px):"
@@ -1572,13 +1556,11 @@ msgstr "Вигляд лінійки:"
 
 #: src/sk1/prefs/prefs_ui.py:58
 msgid "UI"
-msgstr ""
+msgstr "Інтерфейс"
 
 #: src/sk1/prefs/prefs_ui.py:59
-#, fuzzy
-#| msgid "Printer preferences"
 msgid "User interface preferences"
-msgstr "Параметри принтера"
+msgstr "Налаштування інтерфейсу користувача"
 
 #: src/sk1/prefs/prefs_ui.py:82
 msgid "Language (*):"
@@ -2211,8 +2193,6 @@ msgid "&File history logs..."
 msgstr "&Історія..."
 
 #: src/sk1/resources/labels.py:77
-#, fuzzy
-#| msgid "Show guides"
 msgid "&Lock guides"
 msgstr "Показати напрямні"
 
@@ -2614,10 +2594,8 @@ msgid "&About sK1..."
 msgstr "Про програму sK1..."
 
 #: src/sk1/resources/labels.py:189
-#, fuzzy
-#| msgid "Save pattern as..."
 msgid "Manage palettes..."
-msgstr "Зберегти палітру як..."
+msgstr "Керування палітрами ..."
 
 #: src/sk1/document/controllers/editor_bezier.py:52
 #: src/sk1/document/controllers/editor_bezier.py:239
@@ -3373,11 +3351,11 @@ msgstr "MD - файли з розміткою Markdown"
 
 #: src/uc2/uc2const.py:191
 msgid "DST - (Tajima) Design format"
-msgstr ""
+msgstr "DST - (Tajima) файли вишивки"
 
 #: src/uc2/uc2const.py:192
 msgid "PES - (Brother) Embroidery file format"
-msgstr ""
+msgstr "PES - (Brother) файли вишивки"
 
 #: src/uc2/uc2const.py:388 src/uc2/uc2const.py:408
 msgid "pixels"
