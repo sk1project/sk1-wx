@@ -1,6 +1,6 @@
 # sK1 2.0
 
-![build status](https://api.travis-ci.org/sk1project-build-bot/sk1-wx.svg?branch=master) ![platform](https://img.shields.io/badge/platform-Linux-blue.svg) ![platform](https://img.shields.io/badge/platform-Windows-blue.svg) ![license](https://img.shields.io/github/license/sk1project/sk1-wx)
+![build status](https://api.travis-ci.org/sk1project-build-bot/sk1-wx.svg?branch=master) ![platform](https://img.shields.io/badge/platform-Linux-blue.svg) ![platform](https://img.shields.io/badge/platform-Windows-blue.svg) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 <center>
 
@@ -83,3 +83,5 @@ python-reportlab
 python-cairo
 python-cups
 ```
+
+Also the project depends on several subprojects: `uniconvertor`, `wal`, `build-utils`. You don't need to clone these sources manualy because `setup.py` does it for you automatically.

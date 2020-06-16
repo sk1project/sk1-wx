@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015-2017 by Igor E. Novikov
+#  Copyright (C) 2015-2017 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ class RulersPrefs(PrefPanel):
     def build(self):
         self.pack(wal.Label(self, _('Size (px):'), fontbold=True))
 
-        grid = wal.GridPanel(self, rows=3, cols=4, hgap=10, vgap=5)
+        grid = wal.GridPanel(self, rows=2, cols=4, hgap=10, vgap=5)
 
         # Ruler size
         grid.pack(wal.Label(grid, _('Ruler:')))
@@ -73,7 +73,7 @@ class RulersPrefs(PrefPanel):
                                             (2, 30), onchange=self.update_ruler)
         grid.pack(self.ruler_large_tick)
 
-        self.pack(grid, padding_all=10)
+        self.pack(grid, padding=10)
 
         self.pack(wal.Label(self, _('Text shift (px):'), fontbold=True))
 
@@ -113,7 +113,7 @@ class RulersPrefs(PrefPanel):
 
         # Testing ruler
         self.pack(wal.Label(self, _('Ruler preview:'), fontbold=True),
-                  padding_all=10)
+                  padding=10)
         panel = wal.HPanel(self)
         panel.add((360, 1))
         panel.set_bg(wal.UI_COLORS['disabled_text'])
@@ -185,13 +185,13 @@ class RulerTest(wal.HPanel, wal.DrawableWidget):
         fntdir = 'ruler-font%dpx' % font_size
         fntdir = os.path.join(config.resource_dir, 'fonts', fntdir)
 
-        def get_colored_surface(file_name, color):
-            file_name = fsutils.get_sys_path(file_name)
-            surface = cairo.ImageSurface.create_from_png(file_name)
+        def get_colored_surface(filename, clr):
+            filename = fsutils.get_sys_path(filename)
+            surface = cairo.ImageSurface.create_from_png(filename)
             w, h = surface.get_width(), surface.get_height()
             res = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
             cr = cairo.Context(res)
-            cr.set_source_rgb(*color)
+            cr.set_source_rgb(*clr)
             cr.mask_surface(surface, 0, 0)
             cr.fill()
             return w, res

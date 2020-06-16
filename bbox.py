@@ -2,7 +2,7 @@
 #
 #   BuildBox for sK1/UniConvertor 2.x
 #
-# 	Copyright (C) 2018 by Igor E. Novikov
+# 	Copyright (C) 2018 by Ihor E. Novikov
 #
 # 	This program is free software: you can redistribute it and/or modify
 # 	it under the terms of the GNU General Public License as published by
@@ -289,6 +289,8 @@ def build_package():
             elif ver == '9':
                 copies.append((prefix + '_mx17_' + suffix, mx_folder))
                 copies.append((prefix + '_mx18_' + suffix, mx_folder))
+            elif ver == '10':
+                copies.append((prefix + '_mx19_' + suffix, mx_folder))
 
     elif SYSFACTS.is_rpm:
         echo_msg('Building RPM package')

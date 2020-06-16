@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2016 by Igor E. Novikov
+#  Copyright (C) 2016 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -204,7 +204,7 @@ class TextOnCirclePlugin(RsPlugin):
                 return 2
         return False
 
-    def update(self, *args):
+    def update(self, *_args):
         if self.is_shown():
             state = False
             if self.app.insp.is_selection():

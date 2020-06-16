@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015-2016 by Igor E. Novikov
+#  Copyright (C) 2015-2016 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -105,8 +105,8 @@ class PrefsDialog(wal.OkCancelDialog):
                 self.current_plugin.hide()
             plugin.show()
             self.current_plugin = plugin
-            self.container.layout()
             self.container.show()
+            plugin.layout()
 
     def get_plugin_by_pid(self, pid):
         ret = None

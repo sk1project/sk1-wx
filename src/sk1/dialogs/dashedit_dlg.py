@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015 by Igor E. Novikov
+#  Copyright (C) 2015 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,8 @@ import wal
 
 from sk1 import _
 
-TXT = _("""Dash pattern is a sequence (stroke-space-stroke-space- etc.) of integer 
+TXT = _(
+    """Dash pattern is a sequence (stroke-space-stroke-space- etc.) of integer 
 or float values separated by space which describes size of pattern elements. 
 The values are relative to line width. Example: '2 1' or '5 1 1 1'. Empty value
 means no dash, i.e. solid line.""")

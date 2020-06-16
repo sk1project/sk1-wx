@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015 by Igor E. Novikov
+#  Copyright (C) 2015 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -44,7 +44,8 @@ class AbstractTransform(wal.VPanel):
         self.app = app
         self.callback = onreset
         wal.VPanel.__init__(self, parent)
-        self.pack(wal.Label(self, self.name, fontbold=True), padding_all=5)
+        self.caption = wal.Label(self, self.name, fontbold=True)
+        self.pack(self.caption, padding_all=5)
         self.build()
 
     def on_reset(self):

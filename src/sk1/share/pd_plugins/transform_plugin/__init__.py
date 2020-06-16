@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015 by Igor E. Novikov
+#  Copyright (C) 2015 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -150,7 +150,7 @@ class TransformPlugin(RsPlugin):
         if doc and self.app.insp.is_selection():
             doc.api.transform_selected(self.active_transform.get_trafo(), copy)
 
-    def update(self, *args):
+    def update(self, *_args):
         state = False
         if self.app.insp.is_selection():
             state = True

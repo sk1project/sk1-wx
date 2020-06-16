@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015-2018 by Igor E. Novikov
+#  Copyright (C) 2015-2018 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -72,56 +72,47 @@ class GeneralPrefs(PrefPanel):
         PrefPanel.__init__(self, app, dlg)
 
     def build(self):
-        space = (120, 1)
 
-        table = wal.GridPanel(self, rows=8, cols=3, hgap=5, vgap=7)
+        table = wal.GridPanel(self, rows=8, cols=2, hgap=25, vgap=7)
 
         txt = _('New document on start')
         table.pack(wal.Label(table, txt))
-        table.pack(space)
         self.newdoc = wal.Switch(table, config.new_doc_on_start)
         table.pack(self.newdoc)
 
         txt = _('Backup on document save')
         table.pack(wal.Label(table, txt))
-        table.pack(space)
         self.backup = wal.Switch(table, config.make_backup)
         table.pack(self.backup)
 
         txt = _('Backup on export')
         table.pack(wal.Label(table, txt))
-        table.pack(space)
         self.expbackup = wal.Switch(table, config.make_export_backup)
         table.pack(self.expbackup)
 
         txt = _('Make font cache on start')
         table.pack(wal.Label(table, txt))
-        table.pack(space)
         self.fcache = wal.Switch(table, config.make_font_cache_on_start)
         table.pack(self.fcache)
 
         txt = _('Run as server')
         table.pack(wal.Label(table, txt))
-        table.pack(space)
         self.server = wal.Switch(table, config.app_server)
         table.pack(self.server)
 
         txt = _('History log size:')
         table.pack(wal.Label(table, txt))
-        table.pack(space)
         self.hist_size = wal.IntSpin(table, config.history_size, (10, 1000))
         table.pack(self.hist_size)
 
         txt = _('History menu size:')
         table.pack(wal.Label(table, txt))
-        table.pack(space)
         self.hist_menu_size = wal.IntSpin(
             table, config.history_list_size, (5, 20))
         table.pack(self.hist_menu_size)
 
         txt = _('Logging level (*):')
         table.pack(wal.Label(table, txt))
-        table.pack(space)
         self.log_level = wal.Combolist(table, items=LEVELS)
         self.log_level.set_active(LEVELS.index(config.log_level))
         table.pack(self.log_level)

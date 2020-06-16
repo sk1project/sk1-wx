@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2016 by Igor E. Novikov
+#  Copyright (C) 2016 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ class FontPrefs(PrefPanel):
     selcolor = None
     pwidth = None
 
-    def __init__(self, app, dlg, *args):
+    def __init__(self, app, dlg, *_args):
         PrefPanel.__init__(self, app, dlg)
 
     def build(self):

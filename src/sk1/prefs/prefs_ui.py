@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015-2018 by Igor E. Novikov
+#  Copyright (C) 2015-2018 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -73,15 +73,11 @@ class UiPrefs(PrefPanel):
         PrefPanel.__init__(self, app, dlg)
 
     def build(self):
-        space = (90, 1)
-        # ----------------------
-
         vpanel = wal.VPanel(self)
-        grid = wal.GridPanel(vpanel, rows=4, cols=3, hgap=5, vgap=7)
+        grid = wal.GridPanel(vpanel, rows=4, cols=2, hgap=25, vgap=7)
 
         txt = _('Language (*):')
         grid.pack(wal.Label(grid, txt))
-        grid.pack(space)
         self.lang = wal.Combolist(grid, items=LANGS)
         index = 0 if config.language == 'system' \
             else LANGS.index(config.language)
@@ -90,7 +86,6 @@ class UiPrefs(PrefPanel):
 
         txt = _('UI style (*):')
         grid.pack(wal.Label(grid, txt))
-        grid.pack(space)
         items = [_('Classic'), _('Tabbed')]
         self.ui_style = wal.Combolist(grid, items=items)
         self.ui_style.set_active(config.ui_style)
@@ -98,7 +93,6 @@ class UiPrefs(PrefPanel):
 
         txt = _('Tab style:')
         grid.pack(wal.Label(grid, txt))
-        grid.pack(space)
         items = [_('Rectangular tabs'),
                  _('Rounded tabs'),
                  _('Flat tabs'),
@@ -110,7 +104,6 @@ class UiPrefs(PrefPanel):
 
         txt = _('Show quick access buttons')
         grid.pack(wal.Label(grid, txt))
-        grid.pack(space)
         self.stub_buttons = wal.Switch(grid, config.show_stub_buttons)
         grid.pack(self.stub_buttons)
 

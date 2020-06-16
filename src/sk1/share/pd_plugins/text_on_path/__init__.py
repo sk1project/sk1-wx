@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2016 by Igor E. Novikov
+#  Copyright (C) 2016 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -142,7 +142,8 @@ class TextOnPathPlugin(RsPlugin):
         self.bmp.set_enable(state)
         self.other_side.set_enable(state)
 
-    def is_path(self, obj):
+    @staticmethod
+    def is_path(obj):
         if obj.is_curve and not len(obj.paths) == 1:
             return False
         return obj.is_primitive and not obj.is_text and not obj.is_pixmap
@@ -160,7 +161,7 @@ class TextOnPathPlugin(RsPlugin):
                 return 2
         return False
 
-    def update_bmp(self, *args):
+    def update_bmp(self, *_args):
         mode = self.align_keeper.get_mode()
         if self.other_side.get_value():
             bmp = get_icon(TEXT_ALIGN_PICS_OTHERSIDE[mode], size=wal.DEF_SIZE)
@@ -178,7 +179,7 @@ class TextOnPathPlugin(RsPlugin):
             self.other_side.set_value(data[2])
             self.update_bmp()
 
-    def update(self, *args):
+    def update(self, *_args):
         if self.is_shown():
             state = False
             if self.app.insp.is_selection():

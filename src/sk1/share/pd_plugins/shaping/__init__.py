@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2016 by Igor E. Novikov
+#  Copyright (C) 2016 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -108,12 +108,12 @@ class AbstractShapingPanel(wal.VPanel):
             return 0
         return len(doc.selection.objs)
 
-    def check_selection(self, sel):
-        ret = True
+    @staticmethod
+    def check_selection(sel):
         for obj in sel:
             if not obj.is_primitive:
-                ret = False
-        return ret
+                return False
+        return True
 
     def get_selection(self):
         doc = self.app.current_doc
@@ -125,12 +125,10 @@ class AbstractShapingPanel(wal.VPanel):
             objs = []
         return objs
 
-    def get_paths_list(self, objs):
-        paths_list = []
-        for obj in objs:
-            paths = apply_trafo_to_paths(obj.get_initial_paths(), obj.trafo)
-            paths_list.append(paths)
-        return paths_list
+    @staticmethod
+    def get_paths_list(objs):
+        return [apply_trafo_to_paths(obj.get_initial_paths(), obj.trafo)
+                for obj in objs]
 
     def update(self):
         if self.get_sel_count() >= self.obj_num:
@@ -286,7 +284,7 @@ class ShapingPlugin(RsPlugin):
         events.connect(events.DOC_MODIFIED, self.update)
         self.update()
 
-    def update(self, *args):
+    def update(self, *_args):
         if self.active_panel:
             self.active_panel.update()
 

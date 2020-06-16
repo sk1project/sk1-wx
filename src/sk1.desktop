@@ -33,4 +33,5 @@ Exec=sk1 %f
 TryExec=sk1
 Terminal=false
 StartupNotify=true
+StartupWMClass=sk1
 Icon=sk1

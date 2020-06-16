@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015 by Igor E. Novikov
+#  Copyright (C) 2015 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ class CMSPrefs(PrefPanel):
     page1 = None
     page2 = None
 
-    def __init__(self, app, dlg, *args):
+    def __init__(self, app, dlg, *_args):
         PrefPanel.__init__(self, app, dlg)
 
     def build(self):
@@ -91,7 +91,7 @@ class CmsOptions(CmsTab):
         panel = wal.VPanel(self)
         hp = wal.HPanel(panel)
         hp.pack(wal.Label(hp, txt))
-        hp.pack((1,1), expand=True)
+        hp.pack((1, 1), expand=True)
         self.cms_check = wal.Switch(hp, config.cms_use,
                                     onclick=self.activate_cms)
         hp.pack(self.cms_check, end_padding=1)
@@ -372,7 +372,7 @@ class ProfileManager(wal.CloseDialog):
         btn_box.pack(self.info_btn, fill=True, end_padding=5)
         self.viewer.set_active(0)
 
-    def selection_changed(self, ret):
+    def selection_changed(self, _ret):
         index = self.viewer.get_active()
         self.remove_btn.set_enable(index not in (0, -1))
         self.info_btn.set_enable(index not in (0, -1))

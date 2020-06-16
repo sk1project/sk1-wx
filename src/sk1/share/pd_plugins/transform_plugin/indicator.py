@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015 by Igor E. Novikov
+#  Copyright (C) 2015 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ class OIToggle(BitmapToggle):
     def on_change(self, event):
         if not self.state and self.get_enabled():
             self.set_active(not self.state)
-            if self.callback: self.callback(self.val)
+            self.callback(self.val) if self.callback else None
 
 
 class OrientationIndicator(wal.GridPanel):
@@ -67,8 +67,7 @@ class OrientationIndicator(wal.GridPanel):
         wal.GridPanel.__init__(self, parent, 5, 5, 2, 2)
         for y in REV_VALS:
             for x in VALS:
-                state = False
-                if (x, y) == (0.0, 0.0): state = True
+                state = (x, y) == (0.0, 0.0)
                 toggle = OIToggle(self, (x, y), state, self.on_change)
                 self.pack(toggle)
                 self.toggles[x][y] = toggle
@@ -81,13 +80,13 @@ class OrientationIndicator(wal.GridPanel):
                     panel = wal.VPanel(self)
                     panel.pack(wal.VLine(panel), expand=True)
                     self.pack(panel, fill=True)
-                    if i < 2: self.pack(CELL_SIZE)
+                    self.pack(CELL_SIZE) if i < 2 else None
 
     def on_change(self, val):
         x, y = self.val
         self.toggles[x][y].set_active(False)
         self.val = val
-        if self.callback: self.callback(self.val)
+        self.callback(self.val) if self.callback else None
 
     def reset(self):
         x, y = self.val
@@ -119,7 +118,7 @@ class OriginIndicator(wal.Bitmap):
         events.connect(events.DOC_CHANGED, self.update)
         events.connect(events.DOC_MODIFIED, self.update)
 
-    def update(self, *args):
+    def update(self, *_args):
         if self.app.current_doc:
             mode = self.app.current_doc.methods.get_doc_origin()
             self.set_bitmap(get_icon(ORIGIN_ICONS[mode], size=wal.DEF_SIZE))
