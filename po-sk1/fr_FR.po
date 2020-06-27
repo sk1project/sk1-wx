@@ -1,0 +1,2654 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2020-06-18 02:05+0100\n"
+"Last-Translator: French <nobody@nowhere.com>\n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.6\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid " object in selection"
+msgstr " objet dans la sélection"
+
+msgid "%i, opened %i, closed %i"
+msgstr "%i, ouvert %i, fermé %i"
+
+msgid "%s model update in progress..."
+msgstr "mise à jour du modèle %s en cours..."
+
+msgid "%s points"
+msgstr "%s points"
+
+msgid "%s profile:"
+msgstr "Profil %s :"
+
+msgid "%s profiles"
+msgstr "Profils %s"
+
+msgid "&About sK1..."
+msgstr "&À propos de sK1.."
+
+msgid "&Arrange"
+msgstr "&Organiser"
+
+msgid "&Bitmaps"
+msgstr "&Bitmaps"
+
+msgid "&Break Apart"
+msgstr "&Séparer"
+
+msgid "&Clear history"
+msgstr "&Supprimer l'historique"
+
+msgid "&Close"
+msgstr "&Fermer"
+
+msgid "&Combine"
+msgstr "&Combiner"
+
+msgid "&Copy"
+msgstr "&Copier"
+
+msgid "&Delete"
+msgstr "&Supprimer"
+
+msgid "&Edit"
+msgstr "&Édition"
+
+msgid "&Edit text"
+msgstr "&Éditer le texte"
+
+msgid "&Exit"
+msgstr "&Quitter"
+
+msgid "&Extract from container"
+msgstr "&Extraire du conteneur"
+
+msgid "&File"
+msgstr "&Fichier"
+
+msgid "&File history logs..."
+msgstr "Historique des &fichiers..."
+
+msgid "&Flip horizontal"
+msgstr "Retournement &horizontal"
+
+msgid "&Flip vertical"
+msgstr "Retournement &vertical"
+
+msgid "&Group"
+msgstr "&Grouper"
+
+msgid "&Help"
+msgstr "&Aide"
+
+msgid "&Import..."
+msgstr "&Importer..."
+
+msgid "&Invert selection"
+msgstr "&Inverser la sélection"
+
+msgid "&Layout"
+msgstr "&Mise en page"
+
+msgid "&Lock guides"
+msgstr "Verroui&ller guides"
+
+msgid "&Log console"
+msgstr "&Console de journalisation"
+
+msgid "&New"
+msgstr "&Nouveau"
+
+msgid "&Open..."
+msgstr "&Ouvrir..."
+
+msgid "&Order"
+msgstr "&Trier"
+
+msgid "&Paste"
+msgstr "&Coller"
+
+msgid "&Paths"
+msgstr "&Chemins"
+
+msgid "&Place into container"
+msgstr "&Placer dans un conteneur"
+
+msgid "&Print..."
+msgstr "&Imprimer..."
+
+msgid "&Redo"
+msgstr "&Rétablir"
+
+msgid "&Report bug"
+msgstr "&Annoncer un bug"
+
+msgid "&Save"
+msgstr "&Enregistrer"
+
+msgid "&Select All"
+msgstr "&Sélectionner tout"
+
+msgid "&Shaping"
+msgstr "&Mise en forme"
+
+msgid "&Show"
+msgstr "&Afficher/cacher"
+
+msgid "&Straighten text"
+msgstr "&Redresser le texte"
+
+msgid "&Text"
+msgstr "&Texte"
+
+msgid "&Undo"
+msgstr "&Annuler"
+
+msgid "&Ungroup"
+msgstr "&Dégrouper"
+
+msgid "&View"
+msgstr "&Affichage"
+
+msgid "(*) - Application restart is required to apply these options"
+msgstr "(*) - Redémarrage de l'application nécessaire pour appliquer ces options"
+
+msgid "<%s> document model is created"
+msgstr "Modèle de document créé <%s>"
+
+msgid "<%s> document model is destroyed for %s"
+msgstr "Modèle de document <%s> supprimé pour %s"
+
+msgid "<%s> document model is saved successfully"
+msgstr "Modèle de document <%s> sauvé avec succès"
+
+msgid "<%s> document model is updated successfully"
+msgstr "Modèle de document <%s> mise à jour avec succès"
+
+msgid "ACO - Adobe Color files"
+msgstr "ACO - Fichiers Adobe Color"
+
+msgid "AI - Adobe Illustrator files"
+msgstr "AI - Fichiers Adobe Illustrator"
+
+msgid "ASE - Adobe Swatch Exchange files"
+msgstr "ASE - Fichiers Adobe Swatch Exchange"
+
+msgid "About"
+msgstr "À propos"
+
+msgid "Absolute Colorimetric"
+msgstr "Colorimétrie absolue"
+
+msgid "Absolute position"
+msgstr "Position absolue"
+
+msgid "Add node"
+msgstr "Ajouter noeud"
+
+msgid "Add stop"
+msgstr "Ajouter arrêt"
+
+msgid "Add/remove %s profiles"
+msgstr "Ajouter/supprimer profils %s"
+
+msgid "After"
+msgstr "Après"
+
+msgid "Align"
+msgstr "Aligner"
+
+msgid "Align Left"
+msgstr "Aligner à gauche"
+
+msgid "Align Right"
+msgstr "Aligner à droite"
+
+msgid "Align and Distribute"
+msgstr "Aligner et Distribuer"
+
+msgid "Align and Distribute..."
+msgstr "Aligner et Distribuer..."
+
+msgid "Align to bottom"
+msgstr "Aligner sur le bas"
+
+msgid "Align to center horizontally"
+msgstr "Centrer horizontalement"
+
+msgid "Align to center vertically"
+msgstr "Centrer verticalement"
+
+msgid "Align to left side"
+msgstr "Aligner sur la gauche"
+
+msgid "Align to path center"
+msgstr "Aligner sur le centre du chemin"
+
+msgid "Align to path end"
+msgstr "Aligner sur la fin du chemin"
+
+msgid "Align to path start"
+msgstr "Aligner sur le début du chemin"
+
+msgid "Align to right side"
+msgstr "Aligner sur la droite"
+
+msgid "Align to top"
+msgstr "Aligner sur le haut"
+
+msgid "All"
+msgstr "Tous"
+
+msgid "All files (*.*)"
+msgstr "Tous les fichiers (*.*)"
+
+msgid "All supported formats"
+msgstr "Tous les formats supportés"
+
+msgid "Allow overlay for scrollbars (*)"
+msgstr "Autoriser superposition des barres de défilement (*)"
+
+msgid "Angle:"
+msgstr "Angle :"
+
+msgid "Application logs"
+msgstr "Journaux de l'application"
+
+msgid "Apply"
+msgstr "Appliquer"
+
+msgid "Apply to copy"
+msgstr "Appliquer à la copie"
+
+msgid "Apply to..."
+msgstr "Appliquer à..."
+
+msgid "Arc"
+msgstr "Arc"
+
+msgid "Artistic text:"
+msgstr "Texte artistique :"
+
+msgid "As current page"
+msgstr "Comme page actuelle"
+
+msgid "Author:"
+msgstr "Auteur :"
+
+msgid "Auto mode"
+msgstr "Modèle automatique"
+
+msgid "BMP - Bitmap Picture files"
+msgstr "BMP - Fichiers Bitmap Picture"
+
+msgid "Background:"
+msgstr "Arrière plan :"
+
+msgid "Backup on document save"
+msgstr "Backup à l'enregistrement"
+
+msgid "Backup on export"
+msgstr "Backup à l'exportation"
+
+msgid "Base point:"
+msgstr "Point de base :"
+
+msgid "Before"
+msgstr "Avant"
+
+msgid "Behind fill"
+msgstr "Derrière le remplissage"
+
+msgid "Bg:"
+msgstr "Ap:"
+
+msgid "Bitmap Objects"
+msgstr "Objets Bitmap"
+
+msgid "Bitmap is successfully extracted"
+msgstr "Bitmap extraction réussie"
+
+msgid "BitmapData"
+msgstr "Données Bitmap"
+
+msgid "Bold"
+msgstr "Gras"
+
+msgid "CCX - CorelDRAW Compressed Exchange files"
+msgstr "CCX - Fichiers CorelDRAW Compressed Exchange"
+
+msgid "CDR - CorelDRAW Graphics files"
+msgstr "CDR - Fichiers CorelDRAW Graphics"
+
+msgid "CDT - CorelDRAW Templates files"
+msgstr "CDT - Fichiers CorelDRAW Templates"
+
+msgid "CGM - Computer Graphics Metafile files"
+msgstr "CGM - Fichiers Computer Graphics Metafile"
+
+msgid "CMX - CorelDRAW Presentation Exchange files"
+msgstr "CMX - Fichiers CorelDRAW Presentation Exchange"
+
+msgid "CMYK color space"
+msgstr "Espace de couleur CMYK"
+
+msgid "CPL - CorelDRAW palette files"
+msgstr "CPL - Fichiers CorelDRAW palette"
+
+msgid "Cache clearing is unsuccessful"
+msgstr "Cancellazione cache non riuscita"
+
+msgid "Cache is cleared for"
+msgstr "Cache cancellata per"
+
+msgid "Cannot connect to server!"
+msgstr "Impossible de se connecter au serveur !"
+
+msgid "Cannot copy file"
+msgstr "Impossible de copier le fichier"
+
+msgid "Cannot export palette:"
+msgstr "Impossible d'exporter la palette :"
+
+msgid "Cannot import file:"
+msgstr "Impossible d'importer le fichier :"
+
+msgid "Cannot import graphics from file:"
+msgstr "Impossible d'importer graphiques du fichier :"
+
+msgid "Cannot load <%s>"
+msgstr "Impossible de charger <%s>"
+
+msgid "Cannot load pattern for:"
+msgstr "Impossible de charger le modèle pour :"
+
+msgid "Cannot open %s file for reading"
+msgstr "Impossible d'ouvrir le fichier %s en lecture"
+
+msgid "Cannot open %s file for writing"
+msgstr "Impossible d'ouvrir le fichier %s en écriture"
+
+msgid "Cannot open file:"
+msgstr "Impossible d'ouvrir le fichier :"
+
+msgid "Cannot open profile"
+msgstr "Impossible d'ouvrir le profil"
+
+msgid "Cannot parse file:"
+msgstr "Impossible d'analyser le fichier :"
+
+msgid "Cannot save bitmap:"
+msgstr "Impossible d'enregister le bitmap:"
+
+msgid "Cannot save document:"
+msgstr "Impossible d'enregister le document :"
+
+msgid "Cannot save file:"
+msgstr "Impossible d'enregister le fichier :"
+
+msgid "Cannot save image:"
+msgstr "Impossible d'enregister l'image :"
+
+msgid "Cannot save pattern from:"
+msgstr "Impossible d'enregister le modèle :"
+
+msgid "Canvas"
+msgstr "Canvas"
+
+msgid "Canvas marker preferences"
+msgstr "Préférences pour marqueurs"
+
+msgid "Capitalize"
+msgstr "Capitaliser"
+
+msgid "Caps:"
+msgstr "Limites :"
+
+msgid "Cell height:"
+msgstr "Hauteur de cellule :"
+
+msgid "Cell width:"
+msgstr "Largeur de cellule :"
+
+msgid "Center:"
+msgstr "Centre :"
+
+msgid "Centered"
+msgstr "Centré"
+
+msgid "Change color"
+msgstr "Changer la couleur"
+
+msgid "Change pattern background color"
+msgstr "Changer couleur de fond du motif"
+
+msgid "Change pattern foreground color"
+msgstr "Changer couleur de l'avant-plan du motif"
+
+msgid "Change stop color"
+msgstr "Changer couleur d'arrêt"
+
+msgid "Characters:"
+msgstr "Caractères :"
+
+msgid "Check your printer status and connection."
+msgstr "Vérifiez l'état et la connexion de votre imprimante."
+
+msgid "Chord"
+msgstr "Accord"
+
+msgid "Cisaillement"
+msgstr "Inclinazione"
+
+msgid "Cisaillement..."
+msgstr "Inclinazione..."
+
+msgid "Classic"
+msgstr "Classique"
+
+msgid "Clear log"
+msgstr "Effacer le journal"
+
+msgid "Clear text markup"
+msgstr "Annuler marqueur du texte"
+
+msgid "Clear transformations"
+msgstr "Annuler transformations"
+
+msgid "Clear undo history"
+msgstr "Vider cronologie d'annulation"
+
+msgid "Close All"
+msgstr "Fermer tous"
+
+msgid "Close Others"
+msgstr "Fermer autres"
+
+msgid "Close all documents"
+msgstr "Fermer tous les documents"
+
+msgid "Close document"
+msgstr "Fermer le document"
+
+msgid "Close other documents"
+msgstr "Fermer autres documents"
+
+msgid "Collate"
+msgstr "Rassembler"
+
+msgid "Color"
+msgstr "Couleur"
+
+msgid "Color from palette"
+msgstr "Couleur de la palette"
+
+msgid "Color management"
+msgstr "Gestion des couleurs"
+
+msgid "Color profiles"
+msgstr "Profils des couleurs"
+
+msgid "Color space profiles"
+msgstr "Profils d'espaces de couleurs"
+
+msgid "Color space:"
+msgstr "Espace de couleurs :"
+
+msgid "Color value:"
+msgstr "Couleurs :"
+
+msgid "Columns:"
+msgstr "Colonnes :"
+
+msgid "Component"
+msgstr "Composant"
+
+msgid "Components"
+msgstr "Composants"
+
+msgid "Con&vert to curves"
+msgstr "Con&vertir en courbes"
+
+msgid "Connection"
+msgstr "Connexion"
+
+msgid "Container"
+msgstr "Conteneur"
+
+msgid "Containers:"
+msgstr "Conteneur(s) :"
+
+msgid "Convert segments to curve"
+msgstr "Convertir segments en courbe"
+
+msgid "Convert segments to line"
+msgstr "Convertir segments en ligne"
+
+msgid "Convert stroke to curves"
+msgstr "Convertir trait en courbes"
+
+msgid "Convert to B&W"
+msgstr "Convertir en N/B"
+
+msgid "Convert to CMYK"
+msgstr "Convertir en CMYK"
+
+msgid "Convert to Grayscale"
+msgstr "Convertir en niveaux de gris"
+
+msgid "Convert to LAB"
+msgstr "Convertir en LAB"
+
+msgid "Convert to RGB"
+msgstr "Convertir en RGB"
+
+msgid "Copies"
+msgstr "Copies"
+
+msgid "Copy fill from..."
+msgstr "Copie du remplissage de..."
+
+msgid "Copy mode"
+msgstr "Mode copie"
+
+msgid "Copy stroke from..."
+msgstr "Copier trait de..."
+
+msgid "Copyright:"
+msgstr "Droit d'auteur :"
+
+msgid "Create curve"
+msgstr "Créer courbe"
+
+msgid "Create ellipse"
+msgstr "Créer ellipse"
+
+msgid "Create new layer"
+msgstr "Créer nouveau calque"
+
+msgid "Create polygon"
+msgstr "Créer polygone"
+
+msgid "Create polyline"
+msgstr "Créer polyligne"
+
+msgid "Create rectangle"
+msgstr "Créer rectangle"
+
+msgid "Create segment"
+msgstr "Créer segment"
+
+msgid "Create text (F8)"
+msgstr "Créer texte (F8)"
+
+msgid "Cu&t"
+msgstr "Cou&per"
+
+msgid "Current page"
+msgstr "Page actuelle"
+
+msgid "Current palette:"
+msgstr "Palette actuelle :"
+
+msgid "Curve"
+msgstr "Courbe"
+
+msgid "Custom"
+msgstr "Personnalisé"
+
+msgid "Custom size"
+msgstr "Taille personnalisée"
+
+msgid "Cut-off join"
+msgstr "Couper jointure"
+
+msgid "D&eselect"
+msgstr "D&esélectionner"
+
+msgid "DWG - AutoCAD files"
+msgstr "DWG - Fichiers AutoCAD"
+
+msgid "DXF - AutoCAD files"
+msgstr "DXF - Fichiers AutoCAD"
+
+msgid ""
+"Dash pattern is a sequence (stroke-space-stroke-space- etc.) of integer \n"
+"or float values separated by space which describes size of pattern "
+"elements. \n"
+"The values are relative to line width. Example: '2 1' or '5 1 1 1'. Empty "
+"value\n"
+"means no dash, i.e. solid line."
+msgstr ""
+"Le motif de tiret est une séquence (trait-espace-trait-espace- etc.) \n"
+"de valeurs entières ou flottantes séparées par un \n"
+"espace qui décrit la taille des éléments du motif. \n"
+"Les valeurs sont relatives à la largeur de la ligne. Exemple : '2 1' ou '5 1 "
+"1'. Valeur vide \n"
+"Signifie pas de tiret, c'est-à-dire une ligne continue."
+
+msgid "Dashes:"
+msgstr "Tirets :"
+
+msgid "Default document fill"
+msgstr "Remplissage par défaut du document"
+
+msgid "Default document stroke"
+msgstr "Trait par défaut du document"
+
+msgid "Default object jump"
+msgstr "Objet par défaut"
+
+msgid "Default page:"
+msgstr "Page par défaut :"
+
+msgid "Default printer"
+msgstr "Imprimante par défaut"
+
+msgid "Delete layer"
+msgstr "Supprimer calque"
+
+msgid "Delete nodes"
+msgstr "Supprimer noeuds"
+
+msgid "Delete originals"
+msgstr "Supprimer originaux"
+
+msgid "Delete page"
+msgstr "Supprimer page"
+
+msgid "Delete page No.:"
+msgstr "Supprimer page no.:"
+
+msgid "Delete page..."
+msgstr "Supprimer page..."
+
+msgid "Delete segment"
+msgstr "Supprimer segment"
+
+msgid "Delete selected stop"
+msgstr "Supprimer arrêt sélectionné"
+
+msgid "Delete subpaths"
+msgstr "Supprimer sous-chemin"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Description:"
+msgstr "Description :"
+
+msgid "Desktop layers"
+msgstr "Calques desktop"
+
+msgid "Desktop:"
+msgstr "Desktop :"
+
+msgid "Details see in application logs."
+msgstr "Pour les détails, voir journal de l'application."
+
+msgid "Display profile:"
+msgstr "Profil d'affichage :"
+
+msgid "Display/RGB intent:"
+msgstr "Intensité affichage/RGB:"
+
+msgid "Distribute"
+msgstr "Distribuer"
+
+msgid "Distribute by bottom side vertically"
+msgstr "Distribuer verticalement par la face inférieure"
+
+msgid "Distribute by center horizontally"
+msgstr "Distribuer horizontalement du centre"
+
+msgid "Distribute by center vertically"
+msgstr "Distribuer verticalement du centre"
+
+msgid "Distribute by left side horizontally"
+msgstr "Distribuer horizontalement depuis la gauche"
+
+msgid "Distribute by right side horizontally"
+msgstr "Distribuer horizontalement depuis la droite"
+
+msgid "Distribute by top side vertically"
+msgstr "Distribuer verticalement depuis le haut"
+
+msgid "Do you want to save your changes?"
+msgstr "Voulez-vous enregister vos modifications ?"
+
+msgid "Do you want to try again?"
+msgstr "Voulez-vous réessayer ?"
+
+msgid "Do you wish to change default fill color for this document?"
+msgstr ""
+"Voulez-vous changer la couleur de remplissage par défaut de ce document ?"
+
+msgid "Do you wish to change default fill style for this document?"
+msgstr ""
+"Voulez-vous changer le style de remplissage par défaut de ce document ?"
+
+msgid "Do you wish to change default stroke color for this document?"
+msgstr "Voulez-vous changer la couleur du trait par défaut de ce document ?"
+
+msgid "Do you wish to change default stroke style for this document?"
+msgstr "Voulez-vous changer le style de trait par défaut de ce document ?"
+
+msgid "Document"
+msgstr "Document"
+
+msgid "Document '%s' has been modified."
+msgstr "Le document '%s' a été modifié."
+
+msgid "Document info"
+msgstr "Informations du document"
+
+msgid "Document is changed"
+msgstr "Document a été modifié"
+
+msgid "Document is successfully exported"
+msgstr "Document exporté avec succès"
+
+msgid "Document metainfo"
+msgstr "Meta info du document"
+
+msgid "Document opened"
+msgstr "Document ouvert"
+
+msgid "Document origin"
+msgstr "Origine du document"
+
+msgid "Document page"
+msgstr "Page du document"
+
+msgid "Document properties"
+msgstr "Propriétés du document"
+
+msgid "Document properties..."
+msgstr "Propriétés du document..."
+
+msgid "Document saved"
+msgstr "Document sauvé"
+
+msgid "Document units"
+msgstr "Unités du document"
+
+msgid "Don't keep ratio"
+msgstr "Ne pas garder le ratio"
+
+msgid "Done"
+msgstr "Terminé"
+
+msgid "Download more palettes"
+msgstr "Télécharger plus de palettes"
+
+msgid "Draft view"
+msgstr "Vue d'ensemble"
+
+msgid "Draw selected only"
+msgstr "Seulement sélection"
+
+msgid "Duplicate"
+msgstr "Dupliquer"
+
+msgid "E&xport As..."
+msgstr "E&xporter sous..."
+
+msgid "EMF - Windows Enhanced Metafile files"
+msgstr "EMF - Fichiers Windows Enhanced Metafile"
+
+msgid "EPS - Encapsulated PostScript files"
+msgstr "EPS - Fichiers Encapsulated PostScript"
+
+msgid "Edit dash pattern"
+msgstr "Modifier le motif du tiret"
+
+msgid "Edit gradient"
+msgstr "Modifier le gradient"
+
+msgid "Edit guides"
+msgstr "Modifier guides"
+
+msgid "Edit info"
+msgstr "Modifier informations"
+
+msgid "Edit mode (Space)"
+msgstr "Modifier mode (Espace)"
+
+msgid "Ellipse"
+msgstr "Ellipse"
+
+msgid "Ellipse in editing"
+msgstr "Ellipse en modification"
+
+msgid "Ellipses:"
+msgstr "Ellipse(s) :"
+
+msgid "Empty"
+msgstr "Vide"
+
+msgid "Empty pattern"
+msgstr "Vider motif"
+
+msgid "Empty pattern selected"
+msgstr "Vider motif sélectionné"
+
+msgid "Enable Color Management"
+msgstr "Activer Gestion Couleurs"
+
+msgid "End angle"
+msgstr "Angle final"
+
+msgid "Enter page numbers or page ranges."
+msgstr "Entrer nombre ou intervale de page."
+
+msgid "Equal gap horizontally"
+msgstr "Écart horizontal égal"
+
+msgid "Equal gap vertically"
+msgstr "Écart vertical égal"
+
+msgid "Error occurred during this operation."
+msgstr "Une erreur s'est produite lors de cette opération."
+
+msgid "Error updating document model"
+msgstr "Erreur de mise à jour du modèle de document"
+
+msgid "Error while loading:"
+msgstr "Erreur lors du chargement :"
+
+msgid "Error while opening"
+msgstr "Erreur à l'ouverture"
+
+msgid "Error while printing of calibration page!"
+msgstr "Erreur lors de l'impression de la page d'étalonnage !"
+
+msgid "Error while printing!"
+msgstr "Erreur lors de l'impression !"
+
+msgid "Error while saving"
+msgstr "Erreur lors de l'enregistrement"
+
+msgid "Error while saving:"
+msgstr "Erreur lors de l'enregistrement :"
+
+msgid "Evenodd fill"
+msgstr "Remplissage uniforme"
+
+msgid "Exclusion"
+msgstr "Exclusion"
+
+msgid "Exclusion..."
+msgstr "Exclusion..."
+
+msgid "Exit application"
+msgstr "Quitter l'application"
+
+msgid "Expand short palettes"
+msgstr "Développer les palettes courtes"
+
+msgid "Export"
+msgstr "Exporter"
+
+msgid "Export document As..."
+msgstr "Exporter document sous..."
+
+msgid "Export graphics as..."
+msgstr "Exporter grafiques sous..."
+
+msgid "Export palette as..."
+msgstr "Exporter palette sous..."
+
+msgid "Exporting..."
+msgstr "Exporter..."
+
+msgid "Extract embedded bitmap..."
+msgstr "Extraire bitmap intégré..."
+
+msgid "Extract selected bitmap as..."
+msgstr "Extraire bitmap sélectionné vers..."
+
+msgid "Extract subpaths"
+msgstr "Extraire sous-chemin"
+
+msgid "FIG - XFig files"
+msgstr "FIG - Fichiers XFig"
+
+msgid "Fg:"
+msgstr "Fg:"
+
+msgid "File"
+msgstr "Fichier"
+
+msgid "File name"
+msgstr "Nom fichier"
+
+msgid "File not found"
+msgstr "Fichier non trouvé"
+
+msgid "File size:"
+msgstr "Taille du fichier :"
+
+msgid "File:"
+msgstr "Fichier :"
+
+msgid "Fill"
+msgstr "Remplir"
+
+msgid "Fill any contour"
+msgstr "Remplir tous les contours"
+
+msgid "Fill closed only"
+msgstr "Remplir seul. fermé"
+
+msgid "Fill..."
+msgstr "Remplir..."
+
+msgid "Fill:"
+msgstr "Remplir :"
+
+msgid "Fills"
+msgstr "Remplissages"
+
+msgid "First selected"
+msgstr "Premier sélectionné"
+
+msgid "Fit to page"
+msgstr "Adapter à la page"
+
+msgid "Fit zoom to page"
+msgstr "Adapter zoom à la page"
+
+msgid "Flat tabs"
+msgstr "Tabulateurs plats"
+
+msgid "Flip horizontal"
+msgstr "Retournement horizontal"
+
+msgid "Flip vertical"
+msgstr "Retournement vertical"
+
+msgid "Font color:"
+msgstr "Couleur de la police :"
+
+msgid "Font preview preferences"
+msgstr "Préférences d'apperçu des polices"
+
+msgid "Font size:"
+msgstr "Taille de la police :"
+
+msgid "Fonts"
+msgstr "Polices"
+
+msgid "Fonts used:"
+msgstr "Polices utilisées :"
+
+msgid "For example: 1,2,5-6"
+msgstr "Par exemple : 1,2,5-6"
+
+msgid "Fusion"
+msgstr "Union"
+
+msgid "Fusion..."
+msgstr "Union..."
+
+msgid "GIF - Graphics Interchange Format files"
+msgstr "GIF - Fichiers Graphics Interchange Format"
+
+msgid "GPL - GIMP palette files"
+msgstr "GPL - Fichiers GIMP palette"
+
+msgid "General"
+msgstr "Général"
+
+msgid "General application preferences"
+msgstr "Préférences générales de l'application"
+
+msgid "Generation options"
+msgstr "Options de génération"
+
+msgid "Go to fist page"
+msgstr "Aller à la 1ère page"
+
+msgid "Go to last page"
+msgstr "Aller à la dernière page"
+
+msgid "Go to next page"
+msgstr "Aller à la page suivante"
+
+msgid "Go to page"
+msgstr "Aller à la page"
+
+msgid "Go to page..."
+msgstr "Aller à la page..."
+
+msgid "Go to previous page"
+msgstr "Aller à la page précédente"
+
+msgid "Gradient Fill"
+msgstr "Rempl. gradient"
+
+msgid "Gradient creating"
+msgstr "Créer Gradient"
+
+msgid "Gradient in editing"
+msgstr "Gradient en modification"
+
+msgid "Gradient stop"
+msgstr "Arrêt Gradient"
+
+msgid "Gradients:"
+msgstr "Gradient(s) :"
+
+msgid "Graphic Objects"
+msgstr "Objets graphiques"
+
+msgid "Grayscale color space"
+msgstr "Espace de couleur en niveaux de gris"
+
+msgid "Grid"
+msgstr "Grille"
+
+msgid "Grid and guides"
+msgstr "Grille et guides"
+
+msgid "Grid and guides options"
+msgstr "Options de grille et guides"
+
+msgid "Grid color:"
+msgstr "Couleur de la grille :"
+
+msgid "Grid frequency"
+msgstr "Intervale de la grille"
+
+msgid "Grid layer"
+msgstr "Calque de la grille"
+
+msgid "Grid opacity:"
+msgstr "Opacité de la grille :"
+
+msgid "Grid origin"
+msgstr "Origine de la grille"
+
+msgid "Grid preview:"
+msgstr "Apperçu de la grille :"
+
+msgid "GridLayer"
+msgstr "Calque de la grille"
+
+msgid "Group"
+msgstr "Groupe"
+
+msgid "Groups:"
+msgstr "Groupe(s) :"
+
+msgid "Guide"
+msgstr "Guide"
+
+msgid "Guide color:"
+msgstr "Couleur du guide :"
+
+msgid "Guide layer"
+msgstr "Guide calque"
+
+msgid "GuideLayer"
+msgstr "Guide calque"
+
+msgid "Guideline"
+msgstr "Ligne directrice"
+
+msgid "Guides"
+msgstr "Guides"
+
+msgid "Guides around page"
+msgstr "Guides autour de la page"
+
+msgid "Guides in page center"
+msgstr "Guides au centre de la page"
+
+msgid "HPGL - HPGL plotter files"
+msgstr "HPGL - Fichiers HPGL plotter"
+
+msgid "HTML notation:"
+msgstr "Notation HTML :"
+
+msgid "Hardware profiles"
+msgstr "Profils hardware"
+
+msgid "Height:"
+msgstr "Hauteur :"
+
+msgid "Highlight color:"
+msgstr "Couleur de surlignage :"
+
+msgid "Highlight colors that are outside of the printer's gamut"
+msgstr "Couleur de surlignage en dehors du gamut de l'imprimante"
+
+msgid "History log size:"
+msgstr "Taille fichier de journalisation :"
+
+msgid "History menu size:"
+msgstr "Taille menu historique :"
+
+msgid "Horizontal"
+msgstr "Horizontal"
+
+msgid "Horizontal origin shift"
+msgstr "Décalage horizontal de l'origine"
+
+msgid "Horizontal palette"
+msgstr "Palette horizontale"
+
+msgid "Horizontal shift:"
+msgstr "Décalage horizontal :"
+
+msgid "Horizontal:"
+msgstr "Horizontal :"
+
+msgid "ICC - International Color Consortium profiles"
+msgstr "ICC - Profils International Color Consortium"
+
+msgid "ICM - Image Color Matching profiles"
+msgstr "ICM - Profils Image Color Matching"
+
+msgid "Iconizer"
+msgstr "Miniature"
+
+msgid "Iconizer..."
+msgstr "Miniature..."
+
+msgid "Idle"
+msgstr "Enable attente"
+
+msgid "If you still wish to import the file, try renaming it"
+msgstr "Si vous souhaitez toujours importer le fichier, renommer le renommer"
+
+msgid "Image"
+msgstr "Image"
+
+msgid "Image is successfully saved"
+msgstr "Image sauvée avec succès"
+
+msgid "Image type: "
+msgstr "Type d'image : "
+
+msgid "Images"
+msgstr "Images"
+
+msgid "Import"
+msgstr "Importer"
+
+msgid "Import graphics..."
+msgstr "Importer graphiques..."
+
+msgid "Importing..."
+msgstr "Importer..."
+
+msgid "Inline transformations"
+msgstr "Transformations en ligne"
+
+msgid "Insert page"
+msgstr "Insérer page"
+
+msgid "Insert page..."
+msgstr "Insérer page..."
+
+msgid "Insert:"
+msgstr "Insérer :"
+
+msgid "Internal PDF writer"
+msgstr "Convertion PDF interne"
+
+msgid "Intersection"
+msgstr "Intersection"
+
+msgid "Intersection..."
+msgstr "Intersection..."
+
+msgid "Invert alpha channel"
+msgstr "Inverser canal alpha"
+
+msgid "Invert bitmap"
+msgstr "Inverser bitmap"
+
+msgid "It seems like you have already imported this profile"
+msgstr "Il semble que vous ayez déjà importé ce profil"
+
+msgid "It seems the CDR file is corrupted"
+msgstr "Il semble que le fichier CDR soit corrompu"
+
+msgid "It seems the document is empty or contains unsupported objects."
+msgstr ""
+"Il semble que le document soit vide ou qu'il contienne des objets non "
+"supportés."
+
+msgid "It seems the file is not CDRZ file"
+msgstr "Il semble que le fichier ne soit pas un CDRZ"
+
+msgid "Italic"
+msgstr "Italique"
+
+msgid "JCW - Xara color palette files"
+msgstr "JCW - Fichiers Xara color palette"
+
+msgid "JPEG - Joint Photographic Experts Group files"
+msgstr "JPEG - Fichiers Joint Photographic Experts Group"
+
+msgid "JPEG2000 - Joint Photographic Experts Group files"
+msgstr "JPEG2000 - Fichiers Joint Photographic Experts Group"
+
+msgid "Join nodes"
+msgstr "Joindre noeuds"
+
+msgid "Join:"
+msgstr "Joindre :"
+
+msgid "Keep gradient vector"
+msgstr "Garder gradient vectoriel"
+
+msgid "Keep ratio"
+msgstr "Garder ratio"
+
+msgid "Keywords:"
+msgstr "Mots-clés :"
+
+msgid "Landscape"
+msgstr "Format paysage"
+
+msgid "Language (*):"
+msgstr "Langue (*) :"
+
+msgid "Large cells"
+msgstr "Élargir cellules"
+
+msgid "Large tick:"
+msgstr "Grande coche :"
+
+msgid "Largest object"
+msgstr "Objet le plus grand"
+
+msgid "Last selected"
+msgstr "Sélectionné en dernier"
+
+msgid "Layer"
+msgstr "Calque"
+
+msgid "Layer group"
+msgstr "Goupe calque"
+
+msgid "Layers"
+msgstr "Calques"
+
+msgid "Layers..."
+msgstr "Calques..."
+
+msgid "Layers:"
+msgstr "Calque(s) :"
+
+msgid "Left lower page corner"
+msgstr "Angle inférieur gauche"
+
+msgid "Left upper page corner"
+msgstr "Angle supérieur gauche"
+
+msgid "License"
+msgstr "Licence"
+
+msgid "License:"
+msgstr "Licence :"
+
+msgid "Line exactly at the point"
+msgstr "Ligne au point précis"
+
+msgid "Linear gradient"
+msgstr "Gradient linéaire"
+
+msgid "Lines:"
+msgstr "Lignes :"
+
+msgid "List view"
+msgstr "Vue d'ensemble"
+
+msgid "Load pattern from file"
+msgstr "Charger modèle à partir du fichier"
+
+msgid "Loader is not found for <%s>"
+msgstr "Loader non trouvé pour <%s>"
+
+msgid "Loading calibration page..."
+msgstr "Charger page de calibration..."
+
+msgid "Loading data..."
+msgstr "Charge données..."
+
+msgid "Logging level (*):"
+msgstr "Niveau de journalisation (*)"
+
+msgid "Lowercase"
+msgstr "Minuscules"
+
+msgid "MD - Markdown markup files"
+msgstr "MD - Fichiers Markdown markup"
+
+msgid "Make font cache on start"
+msgstr "Créer cache de police au démarrage"
+
+msgid "Make nodes cusp"
+msgstr "Rendre noeuds pointus"
+
+msgid "Make nodes smooth"
+msgstr "Rendre noeuds lisses"
+
+msgid "Make nodes symmetrical"
+msgstr "Rendre noeuds symmétiques"
+
+msgid "Manage palettes"
+msgstr "Gérer palettes"
+
+msgid "Manage palettes..."
+msgstr "Gérer palettes..."
+
+msgid "Margins"
+msgstr "Marges"
+
+msgid "Markers:"
+msgstr "Délimiteurs :"
+
+msgid "MaskGroup"
+msgstr "Groupe masqué"
+
+msgid "Master layers"
+msgstr "Calques maître"
+
+msgid "MasterLayer"
+msgstr "Page Maître"
+
+msgid "Max. # of curve points:"
+msgstr "Max. # points par courbe :"
+
+msgid "Max. # of curve subpaths:"
+msgstr "Max. # sous-chemins par courbe :"
+
+msgid "Miter limit:"
+msgstr "Limite d'onglets :"
+
+msgid "Modified:"
+msgstr "Modifié le :"
+
+msgid "Monochrome"
+msgstr "Monochrome"
+
+msgid "Move Down"
+msgstr "Descendre"
+
+msgid "Move Up"
+msgstr "Monter"
+
+msgid "Move layer down"
+msgstr "Descendre calque"
+
+msgid "Move layer to bottom"
+msgstr "Placer calque au fond"
+
+msgid "Move layer to top"
+msgstr "Placer calque sur le dessus"
+
+msgid "Move layer up"
+msgstr "Monter calque"
+
+msgid "Move mode"
+msgstr "Mode de mouvement"
+
+msgid "Move to &Bottom"
+msgstr "Placer au &fond"
+
+msgid "Move to &Top"
+msgstr "Placer sur le &dessus"
+
+msgid "Name and location:"
+msgstr "Nom et emplacement :"
+
+msgid "Name:"
+msgstr "Nom :"
+
+msgid "New From Template..."
+msgstr "Nouveau à partir du modèle..."
+
+msgid "New Layer"
+msgstr "Nouveau calque"
+
+msgid "New color:"
+msgstr "Nouvelle couleur :"
+
+msgid "New document"
+msgstr "Nouveau document"
+
+msgid "New document created"
+msgstr "Nouveau document créé"
+
+msgid "New document from template"
+msgstr "Nouveau document à partir du modèle"
+
+msgid "New document from template..."
+msgstr "Nouveau document à partir du modèle..."
+
+msgid "New document on start"
+msgstr "Créer nouveau document au démarrage"
+
+msgid "New fill:"
+msgstr "Nouveau remplissage :"
+
+msgid "Newer version of SK2 format is found!"
+msgstr "Une nouvelle version du format SK2 est disponible !"
+
+msgid "Next page"
+msgstr "Page suivante"
+
+msgid "No Bitmaps in this document."
+msgstr "Pas de Bitmaps dans ce document."
+
+msgid "No Text in this document."
+msgstr "Pas de texte dans ce document."
+
+msgid "No coords"
+msgstr "Pas de coordonnées"
+
+msgid "No file"
+msgstr "Pas de fichier"
+
+msgid "No file object"
+msgstr "Pas d'objet de fichier"
+
+msgid "No fill:"
+msgstr "Pas de remplissage :"
+
+msgid "No printers found"
+msgstr "Pas trouvé d'imprimante"
+
+msgid "No selected nodes"
+msgstr "Pas de noeuds sélectionnés"
+
+msgid "No selection"
+msgstr "Pas de sélection"
+
+msgid "No stroke:"
+msgstr "Pas de trait :"
+
+msgid "None"
+msgstr "Pas de"
+
+msgid "Nonzero fill"
+msgstr "Remplissage non nul"
+
+msgid "Note: Display profile for your hardware can be found here:"
+msgstr "Remarque : Profil d'affichage de votre matériel se trouve ici :"
+
+msgid "Note: If Color Management is disabled, color values will be inaccurate."
+msgstr ""
+"Si la gestion des couleurs est désactivée, les valeurs des couleurs seront "
+"inexactes."
+
+msgid ""
+"Note: To adjust specific printer options you could use system configuration "
+"tools like 'system-config-printer'"
+msgstr ""
+"Remarque : Pour ajuster les options spécifiques de l'imprimante, vous pouvez "
+"utiliser des outils de configuration du système comme 'system-config-printer'"
+
+msgid "Notes:"
+msgstr "Remarques :"
+
+msgid "Number of angles for newly created polygon"
+msgstr "Nombre d'angles pour le nouveau polygone"
+
+msgid "Number of copies:"
+msgstr "Nombre de copies :"
+
+msgid "Number of objects:"
+msgstr "Nombre d'objet(s) :"
+
+msgid "Number of points:"
+msgstr "Nombre de point(s) :"
+
+msgid "Number of polygon angles"
+msgstr "Nombre d'angles pour le polygone"
+
+msgid "ODG - Open Document Drawing files"
+msgstr "ODG - Fichiers Open Document Drawing"
+
+msgid "ORA - Open Raster Format files"
+msgstr "ORA - Fichiers Open Raster Format"
+
+msgid "Object browser"
+msgstr "Navigateur d'objets"
+
+msgid "Object from current selection cannot be container."
+msgstr "L'objet de la sélection actuelle ne peut pas être conteneur."
+
+msgid "Objects and Color models"
+msgstr "Objets et modèles de Couleurs"
+
+msgid "Old color:"
+msgstr "Ancienne couleur :"
+
+msgid "Old fill:"
+msgstr "Ancien remplissage :"
+
+msgid "Open &Recent"
+msgstr "Ouvrir &récent(s)"
+
+msgid "Open Recent"
+msgstr "Ouvrir récent(s)"
+
+msgid "Open document"
+msgstr "Ouvrir document"
+
+msgid "Open log file..."
+msgstr "Ouvrir le fichier journal..."
+
+msgid "Opened"
+msgstr "Ouvert"
+
+msgid "Opening file..."
+msgstr "Ouvrir fichier...."
+
+msgid "Options:"
+msgstr "Options :"
+
+msgid "Orientation"
+msgstr "Orientation"
+
+msgid "Orientation:"
+msgstr "Orientation :"
+
+msgid "PCX - PCeXchange files"
+msgstr "PCX - Fichiers PCeXchange"
+
+msgid "PDF - Portable Document Format files"
+msgstr "PDF - Fichiers Portable Document Format"
+
+msgid "PDF version:"
+msgstr "Version PDF :"
+
+msgid "PDXF - PrintDesign XML Format graphics files"
+msgstr "PDXF - Fichiers PrintDesign XML Format graphics"
+
+msgid "PLT - HPGL cutting plotter files"
+msgstr "PLT - Fichiers HPGL cutting plotter"
+
+msgid "PNG - Portable Network Graphics files"
+msgstr "PNG - Fichiers Portable Network Graphics"
+
+msgid "PPM - Netpbm Color Image format files"
+msgstr "PPM - Fichiers Netpbm Color Image format"
+
+msgid "PS - PostScript files"
+msgstr "PS - Fichiers PostScript"
+
+msgid "PSD - Adobe Photoshop files"
+msgstr "PSD - Fichiers Adobe Photoshop"
+
+msgid "Page"
+msgstr "Page"
+
+msgid "Page %i of %i"
+msgstr "Page %i de %i"
+
+msgid "Page No.:"
+msgstr "Page no.:"
+
+msgid "Page Setup for Print..."
+msgstr "Mise en page pour l'impression..."
+
+msgid "Page center"
+msgstr "Centre de la page"
+
+msgid "Page frame"
+msgstr "Cadre de la page"
+
+msgid "Page orientation:"
+msgstr "Orientation de la page :"
+
+msgid "Page range"
+msgstr "Nombre de pages"
+
+msgid "Page size:"
+msgstr "Taille de la page :"
+
+msgid "Page:"
+msgstr "Page :"
+
+msgid "Pages"
+msgstr "Pages"
+
+msgid "Pages:"
+msgstr "Page(s) :"
+
+msgid "Palette Collection"
+msgstr "Collection de Palettes"
+
+msgid "Palette info"
+msgstr "Info palette"
+
+msgid "Palette is successfully exported"
+msgstr "Palette exportée avec succès"
+
+msgid "Palette is successfully imported"
+msgstr "Palette importée avec succès"
+
+msgid "Palette management"
+msgstr "Gestion de la palette"
+
+msgid "Palette name:"
+msgstr "Nom de la palette :"
+
+msgid "Palette options"
+msgstr "Options de la palette"
+
+msgid "Palette orientation:"
+msgstr "Orientation palette :"
+
+msgid "Palette preview:"
+msgstr "Aperçu de la palette :"
+
+msgid "Palette source:"
+msgstr "Source de la palette:"
+
+msgid "Palettes"
+msgstr "Palettes"
+
+msgid "Pan mode"
+msgstr "Mode panoramique"
+
+msgid "Paper"
+msgstr "Papier"
+
+msgid "Parsing in progress..."
+msgstr "Analyse en cours..."
+
+msgid "Path"
+msgstr "Chemin"
+
+msgid "Pattern Fill"
+msgstr "Motif de rempl."
+
+msgid "Patterns:"
+msgstr "Motif(s) :"
+
+msgid "Perceptual"
+msgstr "Perceptuel"
+
+msgid "Perhaps this was due to the imperfection of the algorithm."
+msgstr "Cela est peut-être dû à l'imperfection de l'algorithme."
+
+msgid "Pie slice"
+msgstr "Tranche"
+
+msgid "Place on the other side"
+msgstr "Placer sur l'autre côté"
+
+msgid "Placeholder text:"
+msgstr "Texte de remplacement :"
+
+msgid "Please check Internet connection"
+msgstr "Veuillez vérifier la connexion Internet"
+
+msgid "Please check file name and write permissions"
+msgstr "Veuillez vérifier le nom du fichier et les autorisations d'écriture"
+
+msgid "Please check file write permissions"
+msgstr "Veuillez vérifier les autorisations d'écriture de fichiers"
+
+msgid "Please check requested file format and write permissions"
+msgstr ""
+"Veuillez vérifier le format de fichier demandé et les autorisations "
+"d'écriture"
+
+msgid "Please check write permissions for config directory:"
+msgstr ""
+"Veuillez vérifier les permissions d'écriture pour le répertoire config :"
+
+msgid "Polygon"
+msgstr "Polygone"
+
+msgid "Polygon in editing"
+msgstr "Polygone en édition"
+
+msgid "Polygons:"
+msgstr "Polygone(s) :"
+
+msgid "Portrait"
+msgstr "Portrait"
+
+msgid "Position"
+msgstr "Position"
+
+msgid "Position..."
+msgstr "Position..."
+
+msgid "Position:"
+msgstr "Position :"
+
+msgid "Preferences..."
+msgstr "Préférences..."
+
+msgid "Preview width:"
+msgstr "Largeur de l'aperçu :"
+
+msgid "Previous page"
+msgstr "Page precédente"
+
+msgid "Previous zoom"
+msgstr "Zoom precédent"
+
+msgid "Print"
+msgstr "Imprimer"
+
+msgid "Print A4 calibration page"
+msgstr "Imprimer page d'étalonnage A4"
+
+msgid "Print Letter calibration page"
+msgstr "Imprimer page d'étalonnage Letter"
+
+msgid "Print document"
+msgstr "Imprimer le document"
+
+msgid "Print mode"
+msgstr "Mode d'impression"
+
+msgid "Print preview"
+msgstr "Aperçu avant impression"
+
+msgid "Print to file (PDF)"
+msgstr "Imprimer dans un fichier (PDF)"
+
+msgid "Printer"
+msgstr "Imprimante"
+
+msgid "Printer calibration"
+msgstr "Calibration de l'imprimante"
+
+msgid "Printer properties"
+msgstr "Propriétés de l'imprimante"
+
+msgid "Printer/CMYK intent:"
+msgstr "Intent. imprimer/CMYK:"
+
+msgid "Printer:"
+msgstr "Imprimante :"
+
+msgid "Printers"
+msgstr "Imprimante(s)"
+
+msgid "Printing in progress..."
+msgstr "Impresion en cours..."
+
+msgid "Printing margins"
+msgstr "Marges d'impression"
+
+msgid "Printing shift"
+msgstr "Changement d'impression"
+
+msgid "Printing..."
+msgstr "Impression..."
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Profile info"
+msgstr "Info profil"
+
+msgid "Profiles"
+msgstr "Profils"
+
+msgid "Project forum"
+msgstr "Forum du projet"
+
+msgid "Project page on Face&book"
+msgstr "Page du projet sur Face&book"
+
+msgid "Project web site"
+msgstr "Site web du projet"
+
+msgid "Property"
+msgstr "Propriété"
+
+msgid "RGB color space"
+msgstr "Espace de couleur RGB"
+
+msgid "RIF - RIFF files"
+msgstr "RIF - Fichiers RIFF"
+
+msgid "Radial gradient"
+msgstr "Gradient radial"
+
+msgid "Recent documents"
+msgstr "Documents récents"
+
+msgid "Rectangle"
+msgstr "Rectangle"
+
+msgid "Rectangle in editing"
+msgstr "Rectangle en modification"
+
+msgid "Rectangles:"
+msgstr "Rectangle(s) :"
+
+msgid "Rectangular tabs"
+msgstr "Onglets rectangulaires"
+
+msgid "Redraw document"
+msgstr "Atualiser document"
+
+msgid "Relative Colorimetric"
+msgstr "Colorimétrie relative"
+
+msgid "Relative center"
+msgstr "Centre relatif"
+
+msgid "Relative to:"
+msgstr "Relatif à :"
+
+msgid "Remove"
+msgstr "Supprimer"
+
+msgid "Remove all guides"
+msgstr "Supprimer tous les guides"
+
+msgid "Remove alpha channel"
+msgstr "Supprimer le canal alpha"
+
+msgid "Rename layer"
+msgstr "Renommer le calque"
+
+msgid "Rendering intents"
+msgstr "Intentions de rendu"
+
+msgid "Requested page was opened in the default browser"
+msgstr "La page demandée a été ouverte dans le navigateur par défaut"
+
+msgid "Resizing"
+msgstr "Redimensionner"
+
+msgid "Resizing..."
+msgstr "Redimensionner..."
+
+msgid "Restore defaults"
+msgstr "Rétablir param. par défaut"
+
+msgid "Reverse"
+msgstr "Inverser"
+
+msgid "Reverse all paths"
+msgstr "Inverser tous les chemins"
+
+msgid "Reverse gradient"
+msgstr "Inverser gradient"
+
+msgid "Reverse subpaths"
+msgstr "Inverser sous-chemins"
+
+msgid "Rotate &left 90 degrees"
+msgstr "Rotation à &gauche 90°"
+
+msgid "Rotate &right 90 degrees"
+msgstr "Rotation à &droite 90°"
+
+msgid "Rotate pattern"
+msgstr "Modif de rotation"
+
+msgid "Rotate selection"
+msgstr "Rotation sélection"
+
+msgid "Rotating"
+msgstr "Rotation"
+
+msgid "Rotation"
+msgstr "Rotazione"
+
+msgid "Rotation..."
+msgstr "Rotation..."
+
+msgid "Round ending"
+msgstr "Fin arrondie"
+
+msgid "Rounded join"
+msgstr "Jointure arrondie"
+
+msgid "Rounded rectangle"
+msgstr "Rectangle arrondi"
+
+msgid "Rounded tabs"
+msgstr "Onglet arrondi"
+
+msgid "Ruler background color:"
+msgstr "Couleur de fond de la règle :"
+
+msgid "Ruler colors, fonts, sizes"
+msgstr "Règle couleurs, polices, tailles"
+
+msgid "Ruler font:"
+msgstr "Polices de la règle:"
+
+msgid "Ruler mark color:"
+msgstr "Couleur du texte de la règle :"
+
+msgid "Ruler preview:"
+msgstr "Apperçu de la règle :"
+
+msgid "Ruler:"
+msgstr "Règle :"
+
+msgid "Rulers"
+msgstr "Règles"
+
+msgid "Run as server"
+msgstr "Exécuter en tant que serveur"
+
+msgid "S&nap to"
+msgstr "Aligner &sur"
+
+msgid "SK - Sketch/Skencil files"
+msgstr "SK - Fichiers Sketch/Skencil"
+
+msgid "SK1 - sK1 0.9.x graphics files"
+msgstr "SK1- Fichiers sK1 0.9.x graphics"
+
+msgid "SK2 - sK1 2.x graphics files"
+msgstr "SK2 - Fichiers sK1 2.x graphics"
+
+msgid "SKP - sK1 palette files"
+msgstr "SKP - Fichiers sK1 palette"
+
+msgid "SLA - Scribus documents"
+msgstr "SLA - Documents Scribus"
+
+msgid "SOC - LibreOffice palette files"
+msgstr "SOC - Fichiers LibreOffice palette"
+
+msgid "SPOT colors"
+msgstr "Couleurs SPOT"
+
+msgid "SVG - Scalable Vector Graphics files"
+msgstr "SVG - Fichiers Scalable Vector Graphics"
+
+msgid "SVGZ - Compressed Scalable Vector Graphics files"
+msgstr "SVGZ - Fichiers Compressed Scalable Vector Graphics"
+
+msgid "Saturation"
+msgstr "Saturation"
+
+msgid "Save &As..."
+msgstr "Enregistrer &sous..."
+
+msgid "Save All"
+msgstr "Enregistrer tout"
+
+msgid "Save Selected Only..."
+msgstr "Enregistrer seulement sélection..."
+
+msgid "Save all documents"
+msgstr "Enregistrer tous les documents"
+
+msgid "Save document"
+msgstr "Enregistrer le document"
+
+msgid "Save document as..."
+msgstr "Enregistrer le document sous..."
+
+msgid "Save image"
+msgstr "Enregistrer l'image"
+
+msgid "Save image as..."
+msgstr "Enregistrer l'image sous..."
+
+msgid "Save logs as..."
+msgstr "Enregistrer le journal sous..."
+
+msgid "Save pattern as..."
+msgstr "Enregistrer le modèle sous..."
+
+msgid "Save pattern into file"
+msgstr "Enregistrer le motif dans le fichier"
+
+msgid "Save selected objects only as..."
+msgstr "Enregistrer seulement les objets sélectionnés sous..."
+
+msgid "Save selected objects only..."
+msgstr "Enregistrer seulement les objets sélectionnés..."
+
+msgid "Saved"
+msgstr "Enregistré(s)"
+
+msgid "Saving file..."
+msgstr "Enregistre le fichier..."
+
+msgid "Saving in progress..."
+msgstr "Enregistrement en cours..."
+
+msgid "Saving is started..."
+msgstr "Enregistrement démarré..."
+
+msgid "Scalable stroke"
+msgstr "Trait ajustable"
+
+msgid "Scale and mirror"
+msgstr "Ajuster et miroir"
+
+msgid "Scale and mirror..."
+msgstr "Ajuster et miroir..."
+
+msgid "Scale horizontally"
+msgstr "Ajuster horizontalement"
+
+msgid "Scale vertically"
+msgstr "Ajuster verticalement"
+
+msgid "Scroll palette to bottom"
+msgstr "Faire défiler la palette vers le bas"
+
+msgid "Scroll palette to left"
+msgstr "Faire défiler la palette vers la gauche"
+
+msgid "Scroll palette to right"
+msgstr "Faire défiler la palette vers la droite"
+
+msgid "Scroll palette to top"
+msgstr "Faire défiler la palette vers le haut"
+
+msgid "Select Template"
+msgstr "Sélectionner modèle"
+
+msgid "Select all nodes"
+msgstr "Sélectionner tous les noeuds"
+
+msgid "Select all subpath nodes"
+msgstr "Sélectionner tous les sous-noeuds"
+
+msgid "Select directory"
+msgstr "Sélectionner répertoire"
+
+msgid "Select file to import"
+msgstr "Sélectionner fichier à importer"
+
+msgid "Select first stop"
+msgstr "Sélectionner premier arrêt"
+
+msgid "Select last stop"
+msgstr "Sélectionner dernier arrêt"
+
+msgid "Select log to open"
+msgstr "Sélectionner journal à ouvrir"
+
+msgid "Select next stop"
+msgstr "Sélectionner arrêt suivant"
+
+msgid "Select output file"
+msgstr "Sélectionner fichier de sortie"
+
+msgid "Select palette to import"
+msgstr "Sélectionner palette à importer"
+
+msgid "Select pattern to load"
+msgstr "Sélectionner motif à charger"
+
+msgid "Select previous stop"
+msgstr "Sélectionner arrêt précédent"
+
+msgid "Select profile to import"
+msgstr "Sélectionner profil à importer"
+
+msgid "Selected %d node(s)"
+msgstr "%d noeud(s) sélectionné(s)"
+
+msgid "Selected file has been added to profile pool"
+msgstr "Fichier sélectionné a été ajouté au pool de profils"
+
+msgid "Selected object cannot be container."
+msgstr "L'objet sélectionné ne peut pas être un conteneur."
+
+msgid "Selected object cannot be source of fill property."
+msgstr ""
+"L'objet sélectionné ne peut pas être une source de propriété de remplissage."
+
+msgid "Selected object cannot be source of stroke property."
+msgstr "L'objet sélectionné ne peut pas être une source de propriété de trait."
+
+msgid "Selected object cannot be target for trim operation."
+msgstr "L'objet sélectionné ne peut pas être la cible d'une réduction."
+
+msgid "Selected objects cannot be intersected."
+msgstr "Les objets sélectionnés ne peuvent pas être croisés."
+
+msgid "Selected objects cannot be used for this operation."
+msgstr ""
+"Les objets sélectionnés ne peuvent pas être utilisés pour cette opération."
+
+msgid "Selected profile cannot be added to profile list:"
+msgstr "Le profil sélectionné ne peut pas être ajouté à la liste des profils :"
+
+msgid "Selection"
+msgstr "Sélection"
+
+msgid "Selection as group"
+msgstr "Sélection comme groupe"
+
+msgid "Selection color:"
+msgstr "Couleur de sélection :"
+
+msgid "Selection mode (Esc)"
+msgstr "Mode de sélection (Esc)"
+
+msgid "Selection size"
+msgstr "Taille de sélection"
+
+msgid "Separate spin in spinbox widgets (*)"
+msgstr "Spin séparés dans spinbox widgets (*)"
+
+msgid "Separation for SPOT colors"
+msgstr "Séparation des couleurs SPOT"
+
+msgid "Set metainfo"
+msgstr "Définir données meta"
+
+msgid "Set metainfo from current document"
+msgstr "Définir données meta du document actuel"
+
+msgid "Settings"
+msgstr "Paramètres"
+
+msgid "Shaping"
+msgstr "Mise en forme"
+
+msgid "Sharp (angled) corner"
+msgstr "Coin aigu (angle)"
+
+msgid "Shear horizontally"
+msgstr "Cisaillement horizontal"
+
+msgid "Shear vertically"
+msgstr "Cisaillement vertical"
+
+msgid "Shearing"
+msgstr "Cisaillement"
+
+msgid "Shearing..."
+msgstr "Cisaillement..."
+
+msgid "Show active snapping"
+msgstr "Afficher l'accroche active"
+
+msgid "Show grid"
+msgstr "Afficher grille"
+
+msgid "Show grid on canvas"
+msgstr "Afficher grille sur canvas"
+
+msgid "Show guides"
+msgstr "Afficher guides"
+
+msgid "Show guides on canvas"
+msgstr "Afficher guides sur canvas"
+
+msgid "Show image border"
+msgstr "Afficher bordure d'image"
+
+msgid "Show page border"
+msgstr "Afficher bordure de page"
+
+msgid "Show quick access buttons"
+msgstr "Afficher boutons d'accès rapide"
+
+msgid "Simulate printer"
+msgstr "Simuler imprimante"
+
+msgid "Simulate printer on the screen"
+msgstr "Simuler imprimante sur l'écran"
+
+msgid "Size (px):"
+msgstr "Taille (px) :"
+
+msgid "Size:"
+msgstr "Taille :"
+
+msgid "Small cells"
+msgstr "Petites cellules"
+
+msgid "Small tick:"
+msgstr "Petite coche :"
+
+msgid "Smallest object"
+msgstr "Objet le plus petit"
+
+msgid "Snap to grid"
+msgstr "Aligner à la grille"
+
+msgid "Snap to guide"
+msgstr "Aligner au guide"
+
+msgid "Snap to objects"
+msgstr "Aligner aux objets"
+
+msgid "Snap to page"
+msgstr "Aligner à la page"
+
+msgid "Software interface"
+msgstr "Interface logicielle"
+
+msgid "Solid Fill"
+msgstr "Rempl. solide"
+
+msgid "Solid:"
+msgstr "Solide(s) :"
+
+msgid "Source object is not selected to copy fill property."
+msgstr ""
+"L'objet source n'est pas sélectionné pour copier la propriété de remplissage."
+
+msgid "Source object is not selected to copy stroke property."
+msgstr ""
+"L'objet source n'est pas sélectionné pour copier la propriété du trait."
+
+msgid "Split nodes"
+msgstr "Séparer noeuds"
+
+msgid "Squared ending"
+msgstr "Fin au carré"
+
+msgid "Start angle"
+msgstr "Angle initial"
+
+msgid "Statistics..."
+msgstr "Statistiques..."
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Stretch along path"
+msgstr "Étirer le long du chemin"
+
+msgid "Strikethrough"
+msgstr "Rayer/Biffer"
+
+msgid "Stroke"
+msgstr "Trait"
+
+msgid "Stroke Color"
+msgstr "Couleur du trait"
+
+msgid "Stroke Style"
+msgstr "Style du trait"
+
+msgid "Stroke view"
+msgstr "Vue du trait"
+
+msgid "Stroke..."
+msgstr "Trait..."
+
+msgid "Stroke:"
+msgstr "Trait :"
+
+msgid "Strokes"
+msgstr "Trait(s)"
+
+msgid "Style"
+msgstr "Style"
+
+msgid "Styles"
+msgstr "Stili"
+
+msgid "Subject:"
+msgstr "Sujet :"
+
+msgid "Subscript"
+msgstr "Indice"
+
+msgid "Superscript"
+msgstr "Exposant"
+
+msgid "TIFF - Tagged Image File Format files"
+msgstr "TIFF - Fichiers Tagged Image File Format"
+
+msgid "Tab style:"
+msgstr "Style d'onglets :"
+
+msgid "Tabbed"
+msgstr "Onglets"
+
+msgid "Text"
+msgstr "Texte"
+
+msgid "Text Statistics"
+msgstr "Statistiques du texte"
+
+msgid "Text at bottom"
+msgstr "Texte en bas"
+
+msgid "Text at top"
+msgstr "Texte en haut"
+
+msgid "Text block"
+msgstr "Bloc de texte"
+
+msgid "Text column"
+msgstr "Colonne de texte"
+
+msgid "Text in editing"
+msgstr "Texte en édition"
+
+msgid "Text in shaping"
+msgstr "Texte en forme"
+
+msgid "Text on Circle"
+msgstr "Texte sur Cercle"
+
+msgid "Text on Path"
+msgstr "Texte sur Chemin"
+
+msgid "Text on Path Group"
+msgstr "Texte sur Groupe de Chemin"
+
+msgid "Text on circle..."
+msgstr "Texte sur cercle..."
+
+msgid "Text on left side"
+msgstr "Texte sur la gauche"
+
+msgid "Text on path..."
+msgstr "Texte sur chemin..."
+
+msgid "Text on right side"
+msgstr "Texte sur la droite"
+
+msgid "Text position on circle"
+msgstr "Position du texte sur cercle"
+
+msgid "Text position on path"
+msgstr "Position du texte sur chemin"
+
+msgid "Text shift (px):"
+msgstr "Décalage du texte (px)"
+
+msgid "Thanks to"
+msgstr "Grâce à"
+
+msgid "The file contains newer SK2 format.\n"
+msgstr "Le fichier contient un format SK2 plus récent.\n"
+
+msgid "The file content is extracted successfully"
+msgstr "Contenu du fichier extrait avec succès"
+
+msgid "The file may be corrupted or not supported format"
+msgstr "Fichier peut être corrompu ou format non pris en charge"
+
+msgid "The profile may be corrupted or in an unsupported format"
+msgstr "Profil peut être corrompu ou format non pris en charge"
+
+msgid "There is no file for reading"
+msgstr "Pas de fichier à lire"
+
+msgid "There is no file for writting"
+msgstr "Pas de fichier à écrire"
+
+msgid "There is no file path"
+msgstr "Pas de chemin d'accès au fichier"
+
+msgid "There is no selected object."
+msgstr "Pas d'objet sélectionné."
+
+msgid "This style will be applied to newly created objects."
+msgstr "Ce style sera appliqué aux objets nouvellement créés."
+
+msgid "Time"
+msgstr "Heure"
+
+msgid "Title:"
+msgstr "Titre :"
+
+msgid ""
+"To measure actual print area and vertical/horizontal printing shift, just "
+"print the calibration page on A4/Letter paper."
+msgstr ""
+"Pour mesurer la surface d'impression réelle et le décalage d'impression "
+"vertical/horizontal, il suffit d'imprimer la page de calibrage sur du papier "
+"A4/Letter."
+
+msgid "To start, create new document or open existing"
+msgstr "Pour commencer, créer un nouveau document ou en ouvrir un existant"
+
+msgid "Trans&form"
+msgstr "Trans&former"
+
+msgid "Transformation matrix:"
+msgstr "Matrice de transformation :"
+
+msgid "Transformations"
+msgstr "Transformations"
+
+msgid "Translation is under process..."
+msgstr "Traduction en cours..."
+
+msgid "Translators"
+msgstr "Traducteurs"
+
+msgid "Trapezoidal tabs"
+msgstr "Onglet trapézoïdal"
+
+msgid "Trim"
+msgstr "Différence"
+
+msgid "Trim..."
+msgstr "Différence..."
+
+msgid "Try ungroup selection."
+msgstr "Essayez de dégrouper la sélection."
+
+msgid "Try updating sK1 application from https://sk1project.net"
+msgstr "Essayez de mettre à jour sK1 à partir de https://sk1project.net"
+
+msgid "U&ngroup All"
+msgstr "&Dégrouper Tout"
+
+msgid "UI"
+msgstr "Interface Utilisateur"
+
+msgid "UI style (*):"
+msgstr "Style de l'interface (*):"
+
+msgid "Underline"
+msgstr "Souligner"
+
+msgid "Unit"
+msgstr "Unité"
+
+msgid "Units"
+msgstr "Unités"
+
+msgid "Unity related features"
+msgstr "Caractéristiques de l'unité"
+
+msgid "Unknown file format is requested for export <%s>"
+msgstr "Format de fichier inconnu demandé pour l'export de <%s>"
+
+msgid "Unknown file format is requested for saving <%s>"
+msgstr "Format de fichier inconnu demandé pour enregistrement <%s>"
+
+msgid "Untitled"
+msgstr "Sans titre"
+
+msgid "Uppercase"
+msgstr "Majuscules"
+
+msgid "Use Black preserving transforms"
+msgstr "Utiliser la transformation préservant le Noir"
+
+msgid "Use Blackpoint Compensation"
+msgstr "Utiliser compensation du point Noir"
+
+msgid "Use SPOT colors"
+msgstr "Utiliser les couleurs SPOT"
+
+msgid "Use Unity Global Menu (*)"
+msgstr "Utiliser unité du menu global (*)"
+
+msgid "Use compression"
+msgstr "Utiliser compression"
+
+msgid "Use display profile"
+msgstr "Utiliser profil d'affichage"
+
+msgid "Use ligatures"
+msgstr "Utiliser ligatures"
+
+msgid "Use overlay for spinbox widgets (*)"
+msgstr "Utiliser superposition pour spinbox (*)"
+
+msgid "Use pattern for page fill"
+msgstr "Utiliser modèle pour remplissage des pages"
+
+msgid "User interface preferences"
+msgstr "Préférences de l'interface utilisateur"
+
+msgid "VSD - Visio Drawing files"
+msgstr "VSD - Fichiers Visio Drawing"
+
+msgid "Value"
+msgstr "Valeur"
+
+msgid "Value in points"
+msgstr "Valeur en points"
+
+msgid "Version"
+msgstr "Version"
+
+msgid "Vertical"
+msgstr "Vertical"
+
+msgid "Vertical origin shift"
+msgstr "Décalage vertical de l'orgine"
+
+msgid "Vertical palette"
+msgstr "Palette verticale"
+
+msgid "Vertical shift:"
+msgstr "Décalage vertical :"
+
+msgid "Vertical:"
+msgstr "Vertical :"
+
+msgid "WMF - Windows Metafile files"
+msgstr "WMF - Fichiers Windows Metafile"
+
+msgid "WebP - Google image format files"
+msgstr "WebP - Google image format"
+
+msgid "Width:"
+msgstr "Largeur :"
+
+msgid "WindowsXP platform is obsolete and not supported!"
+msgstr "La plateforme WindowsXP est obsolète et non prise en charge !"
+
+msgid "Words:"
+msgstr "Mots :"
+
+msgid "XAR - Xara graphics files"
+msgstr "XAR - Fichiers Xara graphics"
+
+msgid "XBM - X bitmap files"
+msgstr "XBM - Fichiers X bitmap"
+
+msgid "XCF - GIMP files"
+msgstr "XCF - Fichiers GIMP"
+
+msgid "XML - CorelDRAW X5-X7 palette files"
+msgstr "XML - Fichiers CorelDRAW X5-X7 palette"
+
+msgid "XML - Scribus palette files"
+msgstr "XML - Fichiers Scribus palette"
+
+msgid "XML - eXtensible Markup Language files"
+msgstr "XML - Fichiers eXtensible Markup Language"
+
+msgid "XPM - X pixmap files"
+msgstr "XPM - Fichiers X pixmap"
+
+msgid "XPS - XML Paper Specification files"
+msgstr "XPS - Fichiers XML Paper Specification"
+
+msgid "Zoom in"
+msgstr "Zoom avant"
+
+msgid "Zoom mode (F2)"
+msgstr "Mode zoom (F2)"
+
+msgid "Zoom out"
+msgstr "Zoom arrière"
+
+msgid "Zoom out mode"
+msgstr "Mode zoom arrière"
+
+msgid "Zoom selected"
+msgstr "Zoom sélectionné"
+
+msgid "and access to https://sk1project.net"
+msgstr "et accéder à https://sk1project.net"
+
+msgid "build"
+msgstr "build"
+
+msgid "centimeters"
+msgstr "centimètres"
+
+msgid "color"
+msgstr "couleur"
+
+msgid "degrees"
+msgstr "degrés"
+
+msgid "feet"
+msgstr "pied"
+
+msgid "inches"
+msgstr "pouces"
+
+msgid "is not found."
+msgstr "n'a pas été trouvé."
+
+msgid "meters"
+msgstr "mètres"
+
+msgid "millimeters"
+msgstr "millimètres"
+
+msgid "objects in selection"
+msgstr "objets dans la sélection"
+
+msgid "page No.:"
+msgstr "page no.:"
+
+msgid "page(s)"
+msgstr "page(s)"
+
+msgid "pixels"
+msgstr "pixels"
+
+msgid "plugin"
+msgstr "extension"
+
+msgid "points"
+msgstr "points"
+
+msgid "sK1 Preferences"
+msgstr "sK1 Préférences"
+
+msgid "system"
+msgstr "système"
+
+msgid "vector graphics editor"
+msgstr "éditeur graphique vectoriel"
