@@ -114,6 +114,7 @@ class ComponentsPage(wal.VPanel):
 TR_LIST = [
     ['LANG', 'Translators'],
     ['Brazilian Portuguese', 'João Lima Neto <contato@joaolimaneto.com.br>'],
+    ['French', 'anonymous <nobody@nowhere.com>'],
     ['German', 'Thore Sommer <mail@thson.de>'],
     ['Italian', 'Tom Spaccavento <spcvntom@gmail.com>'],
     ['Russian', 'Ihor Novikov <sk1.project.org@gmail.com>'],
