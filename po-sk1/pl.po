@@ -400,7 +400,7 @@ msgstr "Jednostki dokumentu"
 
 #: src/sk1/dialogs/aboutdlg.py:39 src/sk1/dialogs/aboutdlg.py:163
 msgid "About"
-msgstr "O nas"
+msgstr "O aplikacji"
 
 #: src/sk1/dialogs/aboutdlg.py:40
 msgid "Components"
@@ -1157,9 +1157,7 @@ msgstr "Włącz zarządzanie kolorami"
 
 #: src/sk1/prefs/prefs_cms.py:105
 msgid "Note: If Color Management is disabled, color values will be inaccurate."
-msgstr ""
-"Uwaga: Jeśli zarządzanie kolorami jest wyłączone, wartości kolorów będą "
-"niedokładne."
+msgstr "Uwaga: bez zarządzania kolorem wartości kolorów będą niedokładne."
 
 #: src/sk1/prefs/prefs_cms.py:130
 msgid "Color profiles"
@@ -2018,7 +2016,7 @@ msgstr "Skopiuj wypełnienie z..."
 
 #: src/sk1/resources/labels.py:44
 msgid "Copy stroke from..."
-msgstr "Skopiuj obrys z…"
+msgstr "Skopiuj kontur z…"
 
 #: src/sk1/resources/labels.py:46
 msgid "&New"
@@ -2554,7 +2552,7 @@ msgstr "Małe litery"
 
 #: src/sk1/resources/labels.py:176
 msgid "Capitalize"
-msgstr "Wielkie Litery"
+msgstr "Wielkie litery"
 
 #: src/sk1/resources/labels.py:178 src/uc2/formats/sk1/model.py:52
 #: src/uc2/formats/sk2/sk2_cids.py:68
@@ -2591,7 +2589,7 @@ msgstr "Strona projektu na Facebooku"
 
 #: src/sk1/resources/labels.py:187
 msgid "&About sK1..."
-msgstr "O sK1..."
+msgstr "O aplikacji sK1..."
 
 #: src/sk1/resources/labels.py:189
 msgid "Manage palettes..."
@@ -3061,7 +3059,7 @@ msgstr "Punkt bazowy:"
 #: src/sk1/share/pd_plugins/transform_plugin/__init__.py:55
 #: src/sk1/share/pd_plugins/transform_plugin/transforms.py:122
 msgid "Position"
-msgstr "Lokalizacja"
+msgstr "Pozycja"
 
 #: src/sk1/share/pd_plugins/transform_plugin/__init__.py:56
 #: src/sk1/share/pd_plugins/transform_plugin/transforms.py:191
