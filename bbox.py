@@ -92,7 +92,7 @@ APP_VER = '%s%s' % (APP_MAJOR_VER, APP_REVISION)
 
 RELEASE = 'RELEASE' in os.environ or 'release' in ARGV
 DEBUG_MODE = 'DEBUG_MODE' in os.environ
-CONST_FILES = ['src/sk1/appconst.py',]
+CONST_FILES = ['src/sk1/appconst.py', ]
 
 
 IMAGES = [
@@ -104,6 +104,7 @@ IMAGES = [
     'ubuntu_18.10_64bit',
     'ubuntu_19.04_64bit',
     'ubuntu_19.10_64bit',
+    'ubuntu_20.04_64bit',
     'debian_8_32bit',
     'debian_8_64bit',
     'debian_9_32bit',
@@ -281,6 +282,8 @@ def build_package():
             copies.append((prefix + '_mint_19_' + suffix, mint_folder))
             if SYSFACTS.is_64bit:
                 copies.append((prefix + '_elementary5.0_' + suffix, eos_folder))
+        elif SYSFACTS.is_ubuntu and SYSFACTS.version == '20.04':
+            copies.append((prefix + '_mint_20_' + suffix, mint_folder))
         elif SYSFACTS.is_debian:
             ver = SYSFACTS.version.split('.')[0]
             if ver == '8':

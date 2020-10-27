@@ -2,6 +2,7 @@ include LICENSE README.txt MANIFEST.in setup.cfg.in
 include src/script/sk1.tmpl
 
 recursive-include utils *.py
+recursive-include utils/packages *.tar.gz
 recursive-include src/uc2/libcairo *.c
 recursive-include src/uc2/libcairo *.h
 recursive-include src/uc2/libimg *.c
