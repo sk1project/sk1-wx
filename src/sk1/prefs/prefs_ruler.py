@@ -191,7 +191,7 @@ class RulerTest(wal.HPanel, wal.DrawableWidget):
             w, h = surface.get_width(), surface.get_height()
             res = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
             cr = cairo.Context(res)
-            cr.set_source_rgb(*clr)
+            cr.set_source_rgb(*clr[:3])
             cr.mask_surface(surface, 0, 0)
             cr.fill()
             return w, res

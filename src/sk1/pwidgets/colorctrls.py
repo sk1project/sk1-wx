@@ -284,7 +284,7 @@ class SwatchCanvas(wal.SensitiveDrawableWidget):
                 clr = wal.WHITE
                 if not flag_x:
                     clr = wal.LIGHT_GRAY
-                ctx.set_source_rgb(*val_255_to_dec(clr.Get()))
+                ctx.set_source_rgb(*val_255_to_dec(clr.Get()[:3]))
                 ctx.rectangle(x1, y1, self.pattern_size, self.pattern_size)
                 ctx.fill()
                 flag_x = not flag_x

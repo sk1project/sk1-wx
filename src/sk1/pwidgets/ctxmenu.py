@@ -75,11 +75,12 @@ class ActionMenuItem(wal.MenuItem):
         text = action.get_menu_text()
         if action.is_acc:
             text += '\t' + action.get_shortcut_text()
-        wal.MenuItem.__init__(self, parent, action_id, text=text)
-        if action.is_icon:
+        wal.MenuItem.__init__(self, parent, action_id, text=text, checkable=action.is_toggle())
+        if action.is_icon and not action.is_toggle():
             self.set_bitmap(action.get_icon(config.menu_size, wal.ART_MENU))
         action.register_as_menuitem(self)
         self.bind_to(self.mw, action, action_id)
+        # For WX<4
         if action.is_toggle():
             self.set_checkable(True)
 

@@ -100,22 +100,34 @@ class SK1Application(wal.Application, UCApplication):
         self.history = AppHistoryManager(self)
 
         self.artprovider = create_artprovider()
+        print 'Provider registered'
         self.cursors = modes.get_cursors()
+        print 'Cursors created'
 
         self.proxy = AppProxy(self)
+        print 'Proxy'
         self.insp = AppInspector(self)
+        print 'Inspector'
         self.plugins = app_plugins.scan_plugins(self)
+        print 'Plugins'
         self.actions = app_actions.create_actions(self)
+        print 'Actions'
 
         self.default_cms = AppColorManager(self)
+        print 'CMS'
         self.palettes = AppPaletteManager(self)
+        print 'Palettes'
         self.clipboard = AppClipboard(self)
+        print 'Clipboard'
 
         self.mw = AppMainWindow(self)
+        print 'MainWindow'
         self.mw.set_global_shortcuts(self.actions)
 
         self.proxy.update()
+        print 'Proxy updated'
         self.insp.update()
+        print 'Inspector updated'
         LOG.info('Application is initialized')
         uc2.events.connect(uc2.events.MESSAGES, self.uc2_event_logging)
         events.connect(events.APP_STATUS, self.sk1_event_logging)
@@ -123,6 +135,7 @@ class SK1Application(wal.Application, UCApplication):
 
         if wal.IS_WX2:
             events.emit(events.NO_DOCS)
+        print 'Application is initialized'
 
     def load_plugins(self):
         if config.active_plugins:
@@ -133,6 +146,7 @@ class SK1Application(wal.Application, UCApplication):
                     LOG.warn('Cannot load plugin <%s> %s', item, e)
 
     def call_after(self, *args):
+        print 'Calling after'
         if config.make_font_cache_on_start:
             font_cache_update()
         if self.docs:

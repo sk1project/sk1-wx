@@ -142,8 +142,10 @@ class ZoomMenu(wal.Menu):
                 self.zoom = zoom
                 item_id = wal.new_id()
                 txt = '%d%%\tCtrl+F4' % zoom if zoom == 100 else '%d%%' % zoom
-                wal.MenuItem.__init__(self, parent, item_id, txt)
+                wal.MenuItem.__init__(self, parent, item_id, txt,
+                                      checkable=int(round(self.get_zoom())) == self.zoom)
                 self.bind_to(mw, self.action, item_id)
+                # For WX<4
                 if int(round(self.get_zoom())) == self.zoom:
                     self.set_checkable(True)
 

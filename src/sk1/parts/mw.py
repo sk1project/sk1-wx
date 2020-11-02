@@ -46,22 +46,27 @@ class AppMainWindow(wal.MainWindow):
     def build(self):
         # ----- Menubar
         self.menubar = AppMenuBar(self.app, self)
+        print 'AppMenuBar'
         self.set_menubar(self.menubar)
+        print 'Menubar'
         # ----- Toolbar
         if config.ui_style == appconst.GUI_CLASSIC:
             self.toolbar = build_toolbar(self)
+        print 'Toolbar'
 
         # ----- MDI Area
         self.mdi = MDIArea(self.app, self)
         self.pack(self.mdi, expand=True, fill=True)
         if not config.new_doc_on_start:
             self.mdi.hide()
+        print 'MDI Area'
 
         # ----- Stub panel
         self.stub = AppStubPanel(self)
         self.pack(self.stub, expand=True, fill=True)
         if config.new_doc_on_start:
             self.stub.hide()
+        print 'Stub'
 
         self.layout()
 

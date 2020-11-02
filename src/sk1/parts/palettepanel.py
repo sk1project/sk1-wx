@@ -194,8 +194,10 @@ class PaletteMenu(wal.Menu):
             def __init__(self, mw, parent, palette_name):
                 self.palette_name = palette_name
                 item_id = wal.new_id()
-                wal.MenuItem.__init__(self, parent, item_id, palette_name)
+                wal.MenuItem.__init__(self, parent, item_id, palette_name,
+                                      checkable=config.palette == self.palette_name)
                 self.bind_to(mw, self.action, item_id)
+                # For WX<4
                 if config.palette == self.palette_name:
                     self.set_checkable(True)
 
