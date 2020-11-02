@@ -67,6 +67,7 @@ other distros they have similar names. So, you need:
 ```
 git
 gettext
+curl
 libcairo2-dev
 liblcms2-dev
 libmagickwand-dev
