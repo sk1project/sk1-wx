@@ -155,7 +155,6 @@ class AppMenuBar(wal.MenuBar):
                     self.create_menu(menu, (item,))
                 else:
                     action = self.app.actions[item]
-                    print action.get_menu_text()
                     menuitem = ActionMenuItem(self.mw, menu, action)
                     menu.append_item(menuitem)
             parent.append_menu(wal.new_id(), entry[0], menu)

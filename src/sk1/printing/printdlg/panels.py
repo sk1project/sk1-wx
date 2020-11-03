@@ -32,7 +32,8 @@ class FLabeledPanel(wal.VPanel):
         hpanel = wal.HPanel(self)
         hpanel.pack(SPACER)
         self.cont = wal.VPanel(hpanel)
-        self.cont.pack(wal.Label(self.cont, self.title, fontsize=3),
+        fontsize = 1 if wal.IS_WX4 else 3
+        self.cont.pack(wal.Label(self.cont, self.title, fontsize=fontsize),
                        padding=5, align_center=False)
 
         self.build()

@@ -86,7 +86,7 @@ class ComponentsPage(wal.VPanel):
         mark = '' if not uc2const.BUILD else ' build %s' % uc2const.BUILD
         uc_ver = '%s %s%s' % (uc2const.VERSION, uc2const.REVISION, mark)
         data.append(['Python', sys.version])
-        data.append(['wxWidgets', wal.VERSION])
+        data.append(['wxPython', wal.VERSION])
         data.append(['UniConvertor', uc_ver])
         data.append(['LCMS', cms.libcms.get_version()])
         data.append(['Cairo', libcairo.get_version()[0]])

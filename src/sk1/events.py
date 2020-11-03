@@ -81,8 +81,8 @@ def connect(channel, receiver):
         try:
             channel.append(receiver)
         except Exception:
-            msg = "Cannot connect to channel <%s> receiver: <%s> %s"
-            LOG.exception(msg, channel, receiver)
+            msg = "Cannot connect to channel <%s> receiver: %s"
+            LOG.exception(msg, channel[0], receiver)
 
 
 def disconnect(channel, receiver):
@@ -94,8 +94,8 @@ def disconnect(channel, receiver):
         try:
             channel.remove(receiver)
         except Exception:
-            msg = "Cannot disconnect from channel <%s> receiver: <%s> %s"
-            LOG.exception(msg, channel, receiver)
+            msg = "Cannot disconnect from channel <%s> receiver: <%s>"
+            LOG.exception(msg, channel[0], receiver)
 
 
 def emit(channel, *args):
@@ -107,8 +107,8 @@ def emit(channel, *args):
             if callable(receiver):
                 receiver(*args)
         except Exception:
-            msg = 'Error calling <%s> receiver with %s %s'
-            LOG.exception(msg, receiver, args)
+            msg = 'Error calling <%s> receiver %s with %s'
+            LOG.exception(msg, channel[0], receiver, args)
             continue
 
 

@@ -317,9 +317,9 @@ class MainPanel(wal.VPanel):
                  "you could "
                  "use system configuration tools like 'system-config-printer'")
 
-        label = wal.Label(self, text, fontsize=-2)
+        label = wal.Label(self, text, fontsize=-1 if wal.IS_WX4 else -2)
         label.wrap(380)
-        self.pack(label, fill=True, padding_all=5, align_center=False)
+        self.pack(label, padding_all=5)
 
         self.panels = [
             self.prnmode_panel, self.paper_panel,

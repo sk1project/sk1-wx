@@ -40,33 +40,27 @@ class AppMainWindow(wal.MainWindow):
             maximized=config.mw_maximized,
             on_close=self.app.exit)
         self.set_minsize(config.mw_min_size)
-        self.set_icons(os.path.join(config.resource_dir, 'icons',
-                                    'generic', 'sk1-icon.ico'))
+        self.set_icons(os.path.join(config.resource_dir, 'icons', 'generic', 'sk1-icon.ico'))
 
     def build(self):
         # ----- Menubar
         self.menubar = AppMenuBar(self.app, self)
-        print 'AppMenuBar'
         self.set_menubar(self.menubar)
-        print 'Menubar'
         # ----- Toolbar
         if config.ui_style == appconst.GUI_CLASSIC:
             self.toolbar = build_toolbar(self)
-        print 'Toolbar'
 
         # ----- MDI Area
         self.mdi = MDIArea(self.app, self)
         self.pack(self.mdi, expand=True, fill=True)
         if not config.new_doc_on_start:
             self.mdi.hide()
-        print 'MDI Area'
 
         # ----- Stub panel
         self.stub = AppStubPanel(self)
         self.pack(self.stub, expand=True, fill=True)
         if config.new_doc_on_start:
             self.stub.hide()
-        print 'Stub'
 
         self.layout()
 

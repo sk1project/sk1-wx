@@ -182,12 +182,12 @@ class CmsProfiles(CmsTab):
                                           config.cms_use_display_profile,
                                           onclick=self.activate_display)
         self.pack(self.display_check, align_center=False)
-        self.pack(wal.HLine(self), fill=True, padding_all=2)
-
-        txt = _('Note: Display profile for your hardware can be found here:')
-        label = wal.Label(self, txt, fontsize=-1)
-        self.pack(label, fill=True, padding_all=5)
-        self.pack(wal.HyperlinkLabel(self, 'https://icc.opensuse.org/'))
+        # self.pack(wal.HLine(self), fill=True, padding_all=2)
+        #
+        # txt = _('Note: Display profile for your hardware can be found here:')
+        # label = wal.Label(self, txt, fontsize=-1)
+        # self.pack(label, fill=True, padding_all=5)
+        # self.pack(wal.HyperlinkLabel(self, 'https://icc.opensuse.org/'))
         self.activate_display()
 
     def activate_display(self):
