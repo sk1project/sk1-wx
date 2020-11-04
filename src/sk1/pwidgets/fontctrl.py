@@ -56,18 +56,15 @@ def generate_fontsample_cache(fonts):
         if not h:
             h = 10
             LOG.warn('Incorrect font <%s>: zero font height', item)
-        surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
         ctx = cairo.Context(surface)
         ctx.set_source_rgb(0.0, 0.0, 0.0)
-        ctx.paint()
-        matrix = cairo.Matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
-        ctx.set_matrix(matrix)
-        ctx.set_source_rgb(1.0, 1.0, 1.0)
+        ctx.set_matrix(cairo.Matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0))
         ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
         libpango.render_sample(ctx, text, item, fontsize)
         ctx.fill()
         bmp = wal.copy_surface_to_bitmap(surface)
-        FONTSAMPLE_CACHE.append(wal.invert_text_bitmap(bmp, color))
+        FONTSAMPLE_CACHE.append(bmp)
 
 
 def font_cache_update():
