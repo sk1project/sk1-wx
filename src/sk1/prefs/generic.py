@@ -67,10 +67,8 @@ class PrefPanel(wal.VPanel):
         self.dlg = dlg
         if self.icon_id:
             self.icon = get_icon(self.icon_id, size=wal.SIZE_32)
-        if not self.title:
-            self.title = self.name
-        fontsize = 1 if wal.IS_WX4 else 3
-        self.pack(wal.Label(self, self.title, fontsize=fontsize, fontbold=True))
+        self.title = self.title or self.name
+        self.pack(wal.Label(self, self.title, fontsize=1, fontbold=True))
         self.pack(wal.HLine(self), fill=True, padding=5)
 
     def build(self):

@@ -71,11 +71,7 @@ class PaletteInfoDialog(wal.OkCancelDialog):
             pal.source = self.source_entry.get_value()
             pal.columns = self.cols.get_value()
             pal.comments = self.comm_entry.get_value()
-
-        w, h = self.get_size()
-        if wal.is_unity_16_04():
-            h = max(h - 28, config.palinfo_dlg_minsize[1])
-        config.palinfo_dlg_size = (w, h)
+        config.palinfo_dlg_size = self.get_size()
         self.destroy()
         return ret
 

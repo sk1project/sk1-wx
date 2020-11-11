@@ -39,12 +39,7 @@ class AppStatusbar(wal.HPanel):
 
     def __init__(self, mw):
 
-        if wal.IS_MSW:
-            FONTSIZE[0] = 0
-        elif wal.IS_WX4:
-            FONTSIZE[0] = -1
-        elif not FONTSIZE[0]:
-            FONTSIZE[0] = str(wal.get_system_fontsize()[1])
+        FONTSIZE[0] = 0 if wal.IS_MSW else -1
         self.mw = mw
         wal.HPanel.__init__(self, mw)
         self.pack((5, 20))

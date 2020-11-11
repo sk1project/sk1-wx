@@ -49,13 +49,12 @@ def build_toolbar(mw):
                 bmp = action.get_icon(icon_size, wal.ART_TOOLBAR)
                 if not bmp:
                     continue
-                add_tool = tb.AddTool if wal.IS_WX4 else tb.AddLabelTool
                 if wal.IS_MSW:
-                    add_tool(aid, label_txt, bmp,
-                             bmpDisabled=wal.disabled_bmp(bmp),
-                             shortHelp=hlp_txt)
+                    tb.AddTool(aid, label_txt, bmp,
+                               bmpDisabled=wal.disabled_bmp(bmp),
+                               shortHelp=hlp_txt)
                 else:
-                    add_tool(aid, label_txt, bmp, shortHelp=hlp_txt)
+                    tb.AddTool(aid, label_txt, bmp, shortHelp=hlp_txt)
                 action.register_as_tool(tb)
     tb.Realize()
     return tb

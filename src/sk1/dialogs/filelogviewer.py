@@ -103,14 +103,7 @@ class LogViewerDialog(wal.OkCancelDialog):
         ret = None
         if self.show_modal() == wal.BUTTON_OK:
             ret = self.get_result()
-        if wal.is_unity_16_04():
-            w, h = self.get_size()
-            h -= 28
-            if h < config.history_dlg_minsize[1]:
-                h = config.history_dlg_minsize[1]
-            config.history_dlg_size = (w, h)
-        else:
-            config.history_dlg_size = self.get_size()
+        config.history_dlg_size = self.get_size()
         self.destroy()
         return ret
 

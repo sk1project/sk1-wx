@@ -129,10 +129,7 @@ class PrefsDialog(wal.OkCancelDialog):
     def show(self):
         if self.show_modal() == wal.BUTTON_OK:
             self.apply_changes()
-        w, h = self.get_size()
-        if wal.is_unity_16_04():
-            h = max(h - 28, config.prefs_dlg_minsize[1])
-        config.prefs_dlg_size = (w, h)
+        config.prefs_dlg_size = self.get_size()
         config.prefs_sash_pos = self.splitter.get_sash_position()
         self.destroy()
 

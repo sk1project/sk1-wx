@@ -121,9 +121,6 @@ class SK1Application(wal.Application, UCApplication):
         events.connect(events.APP_STATUS, self.sk1_event_logging)
         self.fsw = AppFileWatcher(self, self.mw)
 
-        if wal.IS_WX2:
-            events.emit(events.NO_DOCS)
-
     def load_plugins(self):
         if config.active_plugins:
             for item in config.active_plugins:
@@ -145,8 +142,7 @@ class SK1Application(wal.Application, UCApplication):
             txt = _('To start, create new document or open existing')
             events.emit(events.APP_STATUS, txt)
             self.load_plugins()
-            if not wal.IS_WX2:
-                events.emit(events.NO_DOCS)
+            events.emit(events.NO_DOCS)
         self.update_actions()
         for item in docs:
             self.open(item)
@@ -166,8 +162,6 @@ class SK1Application(wal.Application, UCApplication):
     def update_config(self):
         config.resource_dir = ''
         w, h = self.mw.get_size()
-        if wal.is_unity_16_04():
-            h = max(h - 28, config.mw_min_size[1])
         config.mw_size = (w, h)
         config.mw_maximized = self.mw.is_maximized()
         if self.mw.is_maximized():

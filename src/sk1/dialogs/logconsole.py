@@ -148,10 +148,7 @@ class ConsoleDialog(wal.SimpleDialog):
 
     def show(self):
         self.show_modal()
-        w, h = self.get_size()
-        if wal.IS_UNITY_16:
-            h = max(h - 28, config.console_dlg_minsize[1])
-        config.console_dlg_size = (w, h)
+        config.console_dlg_size = self.get_size()
         config.console_dlg_zoom = self.zoom
         self.destroy()
 

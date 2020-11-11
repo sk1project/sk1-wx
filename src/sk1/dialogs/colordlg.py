@@ -88,10 +88,7 @@ class ChangeColorDialog(wal.OkCancelDialog):
         ret = None
         if self.show_modal() == wal.BUTTON_OK:
             ret = self.get_result()
-        w, h = self.get_size()
-        if wal.is_unity_16_04():
-            h = max(h - 28, config.change_color_dlg_minsize[1])
-        config.change_color_dlg_size = (w, h)
+        config.change_color_dlg_size = self.get_size()
         self.destroy()
         return ret
 

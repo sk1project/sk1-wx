@@ -150,7 +150,7 @@ class Printout(wal.Printout):
     def on_print_page(self, page):
         page_obj = self.get_print_pages()[page - 1]
         dc = self.GetDC()
-        w, h = dc.GetSize() if wal.IS_WX4 else dc.GetSizeTuple()
+        w, h = dc.GetSize()
         pw, ph = self.GetPageSizeMM()
         pw *= uc2const.mm_to_pt
         ph *= uc2const.mm_to_pt

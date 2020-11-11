@@ -68,10 +68,7 @@ class AppAction(object):
 
     def update(self):
         for widget in self.widgets:
-            if not wal.IS_WX2:
-                if widget not in self.menuitem:
-                    widget.update()
-            else:
+            if widget not in self.menuitem:
                 widget.update()
         if self.toolbar is not None and not wal.IS_MAC:
             self.toolbar.EnableTool(self.action_id, self.enabled)
@@ -88,8 +85,6 @@ class AppAction(object):
     def register_as_menuitem(self, item):
         self.menuitem.append(item)
         self.widgets.append(item)
-        if wal.IS_WX2:
-            self.update()
 
     def unregister(self, widget):
         if widget in self.widgets:
