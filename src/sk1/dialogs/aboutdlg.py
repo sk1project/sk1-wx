@@ -117,7 +117,7 @@ TR_LIST = [
     ['French', 'anonymous <nobody@nowhere.com>'],
     ['German', 'Thore Sommer <mail@thson.de>'],
     ['Italian', 'Tom Spaccavento <spcvntom@gmail.com>'],
-    ['Polish', 'Krzysztof Broński <nobody@nowhere.com>'],
+    ['Polish', 'Krzysztof Broński <krzysztof.p.bronski@gmail.com>'],
     ['Russian', 'Ihor Novikov <sk1.project.org@gmail.com>'],
     ['Spanish', 'Carlos Jesús Atagua Díaz <atacarlos@gmail.com>'],
     ['Ukrainian', 'Maxim Barabash <maxim.s.barabash@gmail.com>,'],
