@@ -48,7 +48,7 @@ class UnitLabel(StaticUnitLabel):
         events.disconnect(events.DOC_MODIFIED, self.update)
         events.disconnect(events.DOC_CHANGED, self.update)
 
-    def update(self, *args):
+    def update(self, *_args):
         if not self.insp.is_doc():
             return
         if self.units == self.app.current_doc.model.doc_units:
@@ -88,7 +88,7 @@ class StaticUnitSpin(wal.FloatSpin):
         self._set_digits(unit_accuracy[self.units])
         self.set_value(self.point_value * point_dict[self.units])
 
-    def update_point_value(self, *args):
+    def update_point_value(self, *_args):
         self.point_value = self.get_value() * unit_dict[self.units]
         if self.ucallback:
             self.ucallback()
@@ -122,7 +122,7 @@ class UnitSpin(StaticUnitSpin):
         events.disconnect(events.DOC_MODIFIED, self.update_units)
         events.disconnect(events.DOC_CHANGED, self.update_units)
 
-    def update_units(self, *args):
+    def update_units(self, *_args):
         if not self.insp.is_doc():
             return
         if self.units == self.app.current_doc.model.doc_units:
@@ -229,7 +229,7 @@ class AngleSpin(wal.FloatSpin):
                                         onenter=onenter,
                                         check_focus=check_focus)
 
-    def update_angle_value(self, *args):
+    def update_angle_value(self, *_args):
         self.angle_value = self.get_value() * math.pi / 180.0
         if self.ucallback:
             self.ucallback()
