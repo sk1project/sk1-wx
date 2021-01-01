@@ -149,25 +149,23 @@ class PositionTransform(AbstractTransform):
 
         self.active_widgets = [self.h_spin, self.v_spin, self.abs_pos]
 
+    def on_reset(self):
+        self.user_changes = True
+        if not self.abs_pos.get_value():
+            AbstractTransform.on_reset(self)
+
     def update(self):
-        if not self.app.insp.is_selection():
-            return
-        if self.user_changes:
-            return
-        bbox = self.get_selection_bbox()
-        w = bbox[2] - bbox[0]
-        h = bbox[3] - bbox[1]
-        dx = self.orientation[0] * w
-        dy = self.orientation[1] * h
-        if self.is_lu_coords() and dy:
-            dy *= -1.0
-        if self.abs_pos.get_value():
-            new_x = bbox[0] + dx
-            new_y = bbox[1] + dy
-            new_x, new_y = self.doc_to_coords([new_x, new_y])
-            self.h_spin.set_point_value(new_x)
-            self.v_spin.set_point_value(new_y)
-        else:
+        if self.app.insp.is_selection() and not self.user_changes:
+            bbox = self.get_selection_bbox()
+            w, h = self.get_selection_size()
+            if self.abs_pos.get_value():
+                new_x = bbox[2] + bbox[0] + self.orientation[0] * w
+                new_y = bbox[3] + bbox[1] + self.orientation[1] * h
+                dx, dy = self.doc_to_coords([new_x / 2.0, new_y / 2.0])
+            else:
+                dx = self.orientation[0] * w
+                dy = self.orientation[1] * h
+                dy *= -1.0 if self.is_lu_coords() else 1.0
             self.h_spin.set_point_value(dx)
             self.v_spin.set_point_value(dy)
 
@@ -175,16 +173,18 @@ class PositionTransform(AbstractTransform):
         trafo = [] + sk2const.NORMAL_TRAFO
         if self.abs_pos.get_value():
             bbox = self.get_selection_bbox()
+            w, h = self.get_selection_size()
             new_x = self.h_spin.get_point_value()
             new_y = self.v_spin.get_point_value()
             new_x, new_y = self.coords_to_doc([new_x, new_y])
-            trafo[4] = new_x - bbox[0]
-            trafo[5] = new_y - bbox[1]
+            old_x = (bbox[2] + bbox[0] + self.orientation[0] * w) / 2.0
+            old_y = (bbox[3] + bbox[1] + self.orientation[1] * h) / 2.0
+            trafo[4] = new_x - old_x
+            trafo[5] = new_y - old_y
         else:
             trafo[4] = self.h_spin.get_point_value()
             trafo[5] = self.v_spin.get_point_value()
-            if self.is_lu_coords() and trafo[5]:
-                trafo[5] *= -1.0
+            trafo[5] *= -1.0 if self.is_lu_coords() else 1.0
         return trafo
 
 
