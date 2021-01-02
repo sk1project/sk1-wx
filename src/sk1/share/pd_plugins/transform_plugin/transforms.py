@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015 by Ihor E. Novikov
+#  Copyright (C) 2015-2021 by Ihor E. Novikov
+#  Copyright (C) 2020 fixed by Michael Schorcht
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
