@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013 by Ihor E. Novikov
+#  Copyright (C) 2013-2021 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -63,19 +63,13 @@ class ResizePlugin(CtxPlugin):
             self.update_flag = False
 
     def w_changes(self, *_args):
-        if self.update_flag:
-            return
         self.user_changes(True)
 
     def h_changes(self, *_args):
-        if self.update_flag:
-            return
         self.user_changes(False)
 
     def user_changes(self, hr=True):
-        if self.update_flag:
-            return
-        if self.insp.is_selection():
+        if not self.update_flag and self.insp.is_selection():
             doc = self.app.current_doc
             bbox = doc.selection.bbox
             w = bbox[2] - bbox[0]
@@ -114,5 +108,4 @@ class ResizePlugin(CtxPlugin):
                     dy = center_y * (1 - m22)
                     trafo = [m11, 0.0, 0.0, m22, dx, dy]
 
-                if trafo:
-                    doc.api.transform_selected(trafo)
+                doc.api.transform_selected(trafo)
