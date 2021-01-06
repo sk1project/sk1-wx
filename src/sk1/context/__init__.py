@@ -20,6 +20,7 @@ from .page_format import PagePlugin, PageBorderPlugin
 from .units import UnitsPlugin
 from .jump import JumpPlugin
 from .resize import ResizePlugin
+from .position import PositionPlugin
 from .transform import RotatePlugin, MirrorPlugin
 from .combine import GroupPlugin, CombinePlugin, ToCurvePlugin
 from .rect import RectanglePlugin
@@ -32,8 +33,8 @@ from .text import TextStylePlugin
 from .markup import FontMarkupPlugin, SimpleMarkupPlugin, ScriptMarkupPlugin, \
     ClearMarkupPlugin, TextCasePlugin
 
-PLUGINS = [PagePlugin, UnitsPlugin, JumpPlugin, ResizePlugin, RotatePlugin,
-           MirrorPlugin, GroupPlugin, CombinePlugin, ToCurvePlugin,
+PLUGINS = [PagePlugin, UnitsPlugin, JumpPlugin, ResizePlugin, PositionPlugin,
+           RotatePlugin, MirrorPlugin, GroupPlugin, CombinePlugin, ToCurvePlugin,
            PolygonPlugin, PolygonCfgPlugin, PageBorderPlugin, RectanglePlugin,
            OrderPlugin, CirclePlugin, ImageTypePlugin, BezierPlugin,
            TextStylePlugin, FontMarkupPlugin, SimpleMarkupPlugin,
@@ -41,23 +42,23 @@ PLUGINS = [PagePlugin, UnitsPlugin, JumpPlugin, ResizePlugin, RotatePlugin,
 
 NO_DOC = []
 DEFAULT = ['PagePlugin', 'UnitsPlugin', 'JumpPlugin', 'PageBorderPlugin']
-MULTIPLE = ['ResizePlugin', 'CombinePlugin', 'GroupPlugin', 'RotatePlugin',
+MULTIPLE = ['PositionPlugin', 'ResizePlugin', 'CombinePlugin', 'GroupPlugin', 'RotatePlugin',
             'MirrorPlugin', 'ToCurvePlugin']
-GROUP = ['ResizePlugin', 'GroupPlugin', 'RotatePlugin', 'MirrorPlugin',
+GROUP = ['PositionPlugin', 'ResizePlugin', 'GroupPlugin', 'RotatePlugin', 'MirrorPlugin',
          'ToCurvePlugin', 'OrderPlugin']
-RECTANGLE = ['ResizePlugin', 'RectanglePlugin', 'RotatePlugin', 'MirrorPlugin',
+RECTANGLE = ['PositionPlugin', 'ResizePlugin', 'RectanglePlugin', 'RotatePlugin', 'MirrorPlugin',
              'ToCurvePlugin', 'OrderPlugin']
-CIRCLE = ['ResizePlugin', 'CirclePlugin', 'RotatePlugin', 'MirrorPlugin',
+CIRCLE = ['PositionPlugin', 'ResizePlugin', 'CirclePlugin', 'RotatePlugin', 'MirrorPlugin',
           'ToCurvePlugin', 'OrderPlugin']
-POLYGON = ['ResizePlugin', 'PolygonPlugin', 'RotatePlugin', 'MirrorPlugin',
+POLYGON = ['PositionPlugin', 'ResizePlugin', 'PolygonPlugin', 'RotatePlugin', 'MirrorPlugin',
            'ToCurvePlugin', 'OrderPlugin']
-CURVE = ['ResizePlugin', 'CombinePlugin', 'RotatePlugin', 'MirrorPlugin',
+CURVE = ['PositionPlugin', 'ResizePlugin', 'CombinePlugin', 'RotatePlugin', 'MirrorPlugin',
          'OrderPlugin']
 TEXT_CREATING = ['TextStylePlugin', ]
 TEXT = ['ResizePlugin', 'TextStylePlugin', 'RotatePlugin', 'MirrorPlugin',
         'ToCurvePlugin', 'OrderPlugin']
 TEXT_EDIT = ['FontMarkupPlugin', 'SimpleMarkupPlugin', 'ScriptMarkupPlugin',
              'TextCasePlugin', 'ClearMarkupPlugin']
-PIXMAP = ['ResizePlugin', 'ImageTypePlugin', 'RotatePlugin', 'MirrorPlugin',
+PIXMAP = ['PositionPlugin', 'ResizePlugin', 'ImageTypePlugin', 'RotatePlugin', 'MirrorPlugin',
           'OrderPlugin']
 BEZIER = ['BezierPlugin', 'PageBorderPlugin']
