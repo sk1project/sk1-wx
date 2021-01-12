@@ -49,7 +49,12 @@ class BezierEditor(AbstractController):
         self.update_paths()
         self.api.set_mode()
         self.selection.clear()
+        self.update_status()
+
+    def update_status(self):
         msg = _('No selected nodes')
+        if self.selected_nodes:
+            msg = _('Selected %d node(s)') % len(self.selected_nodes)
         events.emit(events.APP_STATUS, msg)
 
     def update_paths(self):
@@ -236,10 +241,7 @@ class BezierEditor(AbstractController):
         else:
             self.clear_control_points()
         events.emit(events.SELECTION_CHANGED, self.presenter)
-        msg = _('No selected nodes')
-        if self.selected_nodes:
-            msg = _('Selected %d node(s)') % len(self.selected_nodes)
-        events.emit(events.APP_STATUS, msg)
+        self.update_status()
         self.canvas.selection_redraw()
 
     def clear_control_points(self):
@@ -284,6 +286,13 @@ class BezierEditor(AbstractController):
             x0, y0 = [] + base_point.point[2]
         trafo = [1.0, 0.0, 0.0, 1.0, x1 - x0, y1 - y0]
         self.apply_trafo_to_selected_points(trafo, undable)
+        self.update_status()
+
+    def move_selected_points_by_kbd(self, dx, dy):
+        if self.selected_nodes:
+            trafo = [1.0, 0.0, 0.0, 1.0, dx * config.obj_jump, dy * config.obj_jump]
+            self.apply_trafo_to_selected_points(trafo, True)
+            self.update_status()
 
     def apply_trafo_to_selected_points(self, trafo, undable=False):
         for item in self.selected_nodes:
@@ -300,18 +309,17 @@ class BezierEditor(AbstractController):
             self.api.set_temp_paths(self.target, paths)
 
     def move_control_point(self, win_point, undable=False):
-        if not self.cpoint:
-            return
-        x1, y1 = self.snap.snap_point(win_point)[2]
-        x0, y0 = self.cpoint.get_point()
-        trafo = [1.0, 0.0, 0.0, 1.0, x1 - x0, y1 - y0]
-        self.cpoint.apply_trafo(trafo)
-        paths = self.get_paths()
-        if undable:
-            self.api.set_new_paths(self.target, paths, self.orig_paths)
-            self.orig_paths = paths
-        else:
-            self.api.set_temp_paths(self.target, paths)
+        if self.cpoint:
+            x1, y1 = self.snap.snap_point(win_point)[2]
+            x0, y0 = self.cpoint.get_point()
+            trafo = [1.0, 0.0, 0.0, 1.0, x1 - x0, y1 - y0]
+            self.cpoint.apply_trafo(trafo)
+            paths = self.get_paths()
+            if undable:
+                self.api.set_new_paths(self.target, paths, self.orig_paths)
+                self.orig_paths = paths
+            else:
+                self.api.set_temp_paths(self.target, paths)
 
     def get_paths(self):
         ret = []
@@ -390,7 +398,6 @@ class BezierEditor(AbstractController):
             self.new_node.after.point = self.new_node.new_end_point
             self.apply_changes()
             return np
-        return None
 
     def can_be_line(self):
         if self.selected_nodes:
@@ -455,9 +462,7 @@ class BezierEditor(AbstractController):
             for item in self.selected_nodes:
                 if not item.is_terminal():
                     return True
-        elif self.new_node:
-            return True
-        return False
+        return bool(self.new_node)
 
     def can_be_joined_nodes(self):
         if len(self.selected_nodes) == 2:
@@ -474,9 +479,7 @@ class BezierEditor(AbstractController):
             if item0.get_point_before() == item1 or \
                item0.get_point_after() == item1:
                 return True
-        elif self.new_node:
-            return True
-        return False
+        return bool(self.new_node)
 
     def split_nodes(self):
         if self.selected_nodes:
@@ -657,11 +660,9 @@ class BezierEditor(AbstractController):
     def is_subpath_selected(self):
         if len(self.paths) < 2:
             return False
-        if self.new_node:
-            return True
-        elif self.selected_nodes:
+        if self.selected_nodes:
             return len(self._get_selected_subpaths()) < len(self.paths)
-        return False
+        return bool(self.new_node)
 
     def select_all_nodes_in_subpaths(self):
         subpaths = self._get_selected_subpaths()
