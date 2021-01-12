@@ -335,28 +335,27 @@ class BezierEditor(AbstractController):
         self.orig_paths = paths
 
     def delete_selected_nodes(self):
-        if not self.selected_nodes:
-            return
-        for item in self.selected_nodes:
-            path = item.path
-            if path in self.paths:
-                if item.is_end() and path.is_closed():
-                    start = path.start_point
-                    path.delete_point(start)
-                    start.destroy()
-                path.delete_point(item)
-                item.destroy()
-                if not path.points:
-                    self.paths.remove(path)
-        self.set_selected_nodes()
-        if not self.get_paths():
-            parent = self.target.parent
-            index = parent.childs.index(self.target)
-            self.api.delete_objects([[self.target, parent, index], ])
-            self.target = None
-            self.canvas.set_mode(modes.SHAPER_MODE)
-        else:
-            self.apply_changes()
+        if self.selected_nodes:
+            for item in self.selected_nodes:
+                path = item.path
+                if path in self.paths:
+                    if item.is_end() and path.is_closed():
+                        start = path.start_point
+                        path.delete_point(start)
+                        start.destroy()
+                    path.delete_point(item)
+                    item.destroy()
+                    if not path.points:
+                        self.paths.remove(path)
+            self.set_selected_nodes()
+            if not self.get_paths():
+                parent = self.target.parent
+                index = parent.childs.index(self.target)
+                self.api.delete_objects([[self.target, parent, index], ])
+                self.target = None
+                self.canvas.set_mode(modes.SHAPER_MODE)
+            else:
+                self.apply_changes()
 
     def set_new_node(self, win_point):
         path = self.is_path_clicked(win_point)
@@ -398,6 +397,40 @@ class BezierEditor(AbstractController):
             self.new_node.after.point = self.new_node.new_end_point
             self.apply_changes()
             return np
+
+    def insert_new_node_by_kbd(self):
+        if self.new_node:
+            self.insert_new_node()
+        elif self.selected_nodes:
+            all_np = [[]] * len(self.selected_nodes)
+            for i in range(0, len(self.selected_nodes)):
+                node = self.selected_nodes[i]
+                path = node.path
+                n0 = node
+                if path.get_point_index(n0) == 0:
+                    n1 = path.points[len(node.path.points) - 1]
+                    if not path.is_closed():
+                        n1 = path.points[0]
+                        n0 = n1.get_point_before()
+                else:
+                    n1 = n0.get_point_before()
+                if not len(node.point) == 2:
+                    x0, y0 = n0.point[2]
+                    cx00, cy00 = n0.point[0]
+                    cx01, cy01 = n0.point[1]
+                    x1, y1 = n1.point[2]
+                    x_new = ((x0 + x1) / 8.0) + ((cx00 + cx01) / 8.0 * 3.0)
+                    y_new = ((y0 + y1) / 8.0) + ((cy00 + cy01) / 8.0 * 3.0)
+                else:
+                    x0, y0 = n0.point
+                    x1, y1 = n1.point
+                    x_new = (x0 + x1) / 2.0
+                    y_new = (y0 + y1) / 2.0
+                np = [x_new, y_new]
+                all_np[i] = self.canvas.point_doc_to_win(np)
+            for i in range(0, len(all_np)):
+                self.set_new_node(all_np[i])
+                self.insert_new_node()
 
     def can_be_line(self):
         if self.selected_nodes:

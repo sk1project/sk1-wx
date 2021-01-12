@@ -95,9 +95,13 @@ class KbdProcessor:
             if key_code in (wal.KEY_LEFT, wal.KEY_NUMPAD_LEFT):
                 self.painter.controller.move_selected_points_by_kbd(-1.0, 0.0)
                 return
-            # if key_code == ord('+'):
-            #     self.painter.controller.insert_new_node_by_kbd()
-            #     return
+
+            if key_code in (wal.KEY_ADD, wal.KEY_NUMPAD_ADD) or key_code == ord('='):
+                self.painter.controller.insert_new_node_by_kbd()
+                return
+            if key_code in (ord('-'), wal.KEY_SUBTRACT, wal.KEY_NUMPAD_SUBTRACT):
+                self.painter.controller.delete_selected_nodes()
+                return
             # if key_code == wal.KEY_TAB:
             #     self.painter.controller.select_next_node_by_kbd()
             #     return
