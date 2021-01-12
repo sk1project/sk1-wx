@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015-2018 by Ihor E. Novikov
+#  Copyright (C) 2015-2021 by Ihor E. Novikov
+#  Copyright (C) 2020 by Michael Schorcht
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -102,9 +103,6 @@ class KbdProcessor:
             if key_code in (ord('-'), wal.KEY_SUBTRACT, wal.KEY_NUMPAD_SUBTRACT):
                 self.painter.controller.delete_selected_nodes()
                 return
-            # if key_code == wal.KEY_TAB:
-            #     self.painter.controller.select_next_node_by_kbd()
-            #     return
 
         return True
 
