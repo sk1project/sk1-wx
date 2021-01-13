@@ -403,35 +403,29 @@ class BezierEditor(AbstractController):
         if self.new_node:
             self.insert_new_node()
         elif self.selected_nodes:
-            all_np = [[]] * len(self.selected_nodes)
-            for i in range(0, len(self.selected_nodes)):
-                node = self.selected_nodes[i]
-                path = node.path
-                n0 = node
-                if path.get_point_index(n0) == 0:
-                    n1 = path.points[len(node.path.points) - 1]
-                    if not path.is_closed():
-                        n1 = path.points[0]
-                        n0 = n1.get_point_before()
-                else:
-                    n1 = n0.get_point_before()
-                if not len(node.point) == 2:
+            new_nodes = []
+            new_selection = [] + self.selected_nodes
+            for n0 in self.selected_nodes:
+                path = n0.path
+                if not path.get_point_index(n0):
+                    continue
+                n1 = n0.get_point_before()
+
+                if n0.is_curve():
                     x0, y0 = n0.point[2]
                     cx00, cy00 = n0.point[0]
                     cx01, cy01 = n0.point[1]
-                    x1, y1 = n1.point[2]
+                    x1, y1 = n1.get_base_point()
                     x_new = ((x0 + x1) / 8.0) + ((cx00 + cx01) / 8.0 * 3.0)
                     y_new = ((y0 + y1) / 8.0) + ((cy00 + cy01) / 8.0 * 3.0)
                 else:
-                    x0, y0 = n0.point
-                    x1, y1 = n1.point
-                    x_new = (x0 + x1) / 2.0
-                    y_new = (y0 + y1) / 2.0
-                np = [x_new, y_new]
-                all_np[i] = self.canvas.point_doc_to_win(np)
-            for i in range(0, len(all_np)):
-                self.set_new_node(all_np[i])
-                self.insert_new_node()
+                    x_new, y_new = libgeom.midpoint(n0.point, n1.get_base_point())
+
+                new_nodes.append(self.canvas.point_doc_to_win([x_new, y_new]))
+            for node in new_nodes:
+                self.set_new_node(node)
+                new_selection.append(self.insert_new_node())
+            self.set_selected_nodes(new_selection)
 
     def can_be_line(self):
         if self.selected_nodes:
