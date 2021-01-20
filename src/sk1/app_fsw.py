@@ -36,7 +36,7 @@ class AppFileWatcher(object):
         events.connect(events.CONFIG_MODIFIED, self.check_config)
         if config.app_server:
             self.timer.start()
-            with open(fsutils.get_sys_path(self.lock), 'wb') as fp:
+            with fsutils.uopen(self.lock, 'wb') as fp:
                 fp.write('\n')
 
     def destroy(self):
@@ -54,12 +54,12 @@ class AppFileWatcher(object):
     def on_timer(self, *_args):
         if fsutils.exists(self.socket):
             self.mw.raise_window()
-            with open(fsutils.get_sys_path(self.socket), 'rb') as fp:
+            with fsutils.uopen(self.socket, 'rb') as fp:
                 lines = fp.readlines()
             fsutils.remove(self.socket)
             [self.app.open(item.strip('\n'))
              for item in lines
              if fsutils.exists(item.strip('\n'))]
         if not fsutils.exists(self.lock):
-            with open(fsutils.get_sys_path(self.lock), 'wb') as fp:
+            with fsutils.uopen(self.lock, 'wb') as fp:
                 fp.write('\n')

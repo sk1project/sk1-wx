@@ -38,7 +38,7 @@ def read_locale(cfg_file):
     lang = 'system'
     if fsutils.isfile(cfg_file):
         try:
-            with open(get_sys_path(cfg_file)) as fp:
+            with fsutils.uopen(cfg_file) as fp:
                 while True:
                     line = fp.readline()
                     if not line:
@@ -75,7 +75,7 @@ def check_server(cfgdir):
     lock = os.path.join(cfg_dir, 'lock')
     if config.app_server and fsutils.exists(lock):
         socket = os.path.join(cfg_dir, 'socket')
-        with open(get_sys_path(socket), 'wb') as fp:
+        with fsutils.uopen(socket, 'wb') as fp:
             for item in sys.argv[1:]:
                 fp.write('%s\n' % item)
         time.sleep(2)
@@ -88,11 +88,11 @@ def check_server(cfgdir):
 def sk1_run(cfgdir='~'):
     """sK1 application launch routine"""
 
-    cfgdir = get_utf8_path(os.path.expanduser(cfgdir))
+    cfgdir = fsutils.expanduser(get_utf8_path(cfgdir))
     _pkgdir = get_utf8_path(__path__[0])
 
     init_config(cfgdir)
-    check_server(get_sys_path(cfgdir))
+    check_server(cfgdir)
     os.environ["NO_AT_BRIDGE"] = "1"
     os.environ["GTK_CSD"] = "0"
 
