@@ -75,12 +75,12 @@ def check_server(cfgdir):
     lock = os.path.join(cfg_dir, 'lock')
     if config.app_server and os.path.exists(lock):
         socket = os.path.join(cfg_dir, 'socket')
-        with open(socket, 'wb') as fp:
+        with open(get_sys_path(socket), 'wb') as fp:
             for item in sys.argv[1:]:
                 fp.write('%s\n' % item)
         time.sleep(2)
-        if os.path.exists(socket):
-            os.remove(socket)
+        if fsutils.exists(socket):
+            fsutils.remove(socket)
         else:
             sys.exit(0)
 
