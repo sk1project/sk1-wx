@@ -35,11 +35,10 @@ def get_utf8_path(path):
 
 
 def read_locale(cfg_file):
-    cfg_file = get_sys_path(cfg_file)
     lang = 'system'
     if fsutils.isfile(cfg_file):
         try:
-            with open(cfg_file) as fp:
+            with open(get_sys_path(cfg_file)) as fp:
                 while True:
                     line = fp.readline()
                     if not line:
