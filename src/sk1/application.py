@@ -610,8 +610,8 @@ class SK1Application(wal.Application, UCApplication):
             return
         if fsutils.exists(doc_file):
             if fsutils.exists(doc_file + '~'):
-                os.remove(get_sys_path(doc_file + '~'))
-            os.rename(get_sys_path(doc_file), get_sys_path(doc_file + '~'))
+                fsutils.remove(doc_file + '~')
+            fsutils.rename(doc_file, doc_file + '~')
 
     def uc2_event_logging(self, *args):
         log_map = {

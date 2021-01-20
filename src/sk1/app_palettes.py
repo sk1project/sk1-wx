@@ -68,7 +68,7 @@ class AppPaletteManager(PaletteManager):
                                              False, True)
             except Exception:
                 if fsutils.isfile(filepath):
-                    os.remove(fsutils.get_sys_path(filepath))
+                    fsutils.remove(filepath)
                 del config.palette_files[item]
 
     def update(self, *args):
@@ -107,6 +107,6 @@ class AppPaletteManager(PaletteManager):
         filepath = os.path.join(self.app.appdata.app_palette_dir,
                                 config.palette_files[palette_name])
         if fsutils.isfile(filepath):
-            os.remove(fsutils.get_sys_path(filepath))
+            fsutils.remove(filepath)
         del self.palettes[palette_name]
         del config.palette_files[palette_name]

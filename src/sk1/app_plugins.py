@@ -37,7 +37,7 @@ def check_package(path, name):
 def scan_plugins(app):
     ret = {}
     for path in config.plugin_dirs:
-        plgs = [item for item in os.listdir(get_sys_path(path)) if check_package(path, item)]
+        plgs = [item for item in fsutils.listdir(path) if check_package(path, item)]
         if plgs:
             bn = os.path.basename(path)
             for item in plgs:
