@@ -30,6 +30,7 @@ class BezierEditor(AbstractController):
     paths = []
     orig_paths = []
     selected_nodes = []
+    origin_nodes = None
     move_flag = False
     moved_node = None
     selected_obj = None
@@ -85,6 +86,8 @@ class BezierEditor(AbstractController):
         self.selected_nodes = []
 
     def escape_pressed(self):
+        if self.selected_nodes:
+            return self.set_selected_nodes()
         self.canvas.set_mode()
 
     # ----- REPAINT
@@ -222,6 +225,7 @@ class BezierEditor(AbstractController):
 
     def set_selected_nodes(self, points=None, add_flag=False):
         points = points or []
+        self.origin_nodes = None
         if points:
             self.new_node = None
         if not add_flag:
@@ -244,6 +248,66 @@ class BezierEditor(AbstractController):
         events.emit(events.SELECTION_CHANGED, self.presenter)
         self.update_status()
         self.canvas.selection_redraw()
+
+    def change_selection_by_kbd(self, back=False):
+        new_selection = []
+        if self.selected_nodes:
+            for node in self.selected_nodes:
+                if back:
+                    next_point = node.get_point_before()
+                    if next_point is None:
+                        next_point = node.path.points[-1]
+                    elif next_point == node.path.start_point and node.path.is_closed():
+                        next_point = node.path.points[-1]
+                else:
+                    next_point = node.get_point_after()
+                    if next_point is None:
+                        next_point = node.path.points[0] if node.path.is_closed() \
+                            else node.path.start_point
+                new_selection.append(next_point)
+        else:
+            path = self.paths[0]
+            new_selection.append(path.points[0] if path.is_closed() else path.start_point)
+        self.set_selected_nodes(new_selection)
+        self.update_status()
+
+    def change_path_by_kbd(self, back=False):
+        if len(self.paths) > 1:
+            path = self.paths[0]
+            if self.selected_nodes:
+                path_index = self.paths.index(self.selected_nodes[0].path)
+                path_index += -1 if back else 1
+                if path_index == len(self.paths):
+                    path_index = 0
+                path = self.paths[path_index]
+            point = path.points[-1] if path.is_closed() else path.start_point
+            self.set_selected_nodes([point])
+            self.update_status()
+
+    def _set_origin_nodes(self):
+        if not self.selected_nodes:
+            path = self.paths[0]
+            origin = [path.points[0] if path.is_closed() else path.start_point]
+            self.set_selected_nodes(origin)
+            self.origin_nodes = origin
+
+    def _sort_selected(self):
+        selected_dict = {}
+        for node in self.selected_nodes:
+            selected_dict[node.path.points.index(node)] = node
+        return [selected_dict[index] for index in sorted(selected_dict.keys())]
+
+    def add_selected_by_kbd(self, back=False):
+        if not self.origin_nodes:
+            self._set_origin_nodes()
+        origin = self.origin_nodes
+        selected = self._sort_selected()
+        if back:
+            pass
+        else:
+            pass
+
+        self.origin_nodes = origin
 
     def clear_control_points(self):
         if self.control_points:

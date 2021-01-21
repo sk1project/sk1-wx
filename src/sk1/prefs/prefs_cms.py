@@ -407,7 +407,7 @@ class ProfileManager(wal.CloseDialog):
             wal.error_dialog(self, title, msg + '\n' + sec)
             return
         try:
-            shutil.copy(fsutils.get_sys_path(src), fsutils.get_sys_path(dst))
+            fsutils.copy(src, dst)
         except Exception:
             msg = _('Cannot copy file')
             msg = "%s '%s'" % (msg, src)
@@ -427,7 +427,7 @@ class ProfileManager(wal.CloseDialog):
         dst_dir = self.app.appdata.app_color_profile_dir
         dst = os.path.join(dst_dir, filename)
         if fsutils.isfile(dst):
-            os.remove(fsutils.get_sys_path(dst))
+            fsutils.remove(dst)
         self.profiles.pop(name)
         self.apply_changes()
         self.viewer.set_active(index - 1)
