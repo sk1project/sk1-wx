@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013-2018 by Ihor E. Novikov
+#  Copyright (C) 2013-2021 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -136,7 +136,7 @@ class SK1Application(wal.Application, UCApplication):
             font_cache_update()
         if self.docs:
             return
-        docs = self._get_docs()
+        docs = [fsutils.get_utf8_path(item) for item in sys.argv[1:] if os.path.exists(item)]
         if config.new_doc_on_start and not docs:
             self.load_plugins()
             self.new()
