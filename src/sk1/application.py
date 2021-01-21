@@ -87,7 +87,9 @@ class SK1Application(wal.Application, UCApplication):
         sys.stderr = StreamLogger()
         LOG.info('Logging started')
 
-        self.update_wal()
+        wal.SPIN['overlay'] = config.spin_overlay
+        wal.SPIN['sep'] = config.spin_sep
+
         plg_dir = os.path.join(self.path, 'share', 'pd_plugins')
         custom_plg_dir = self.appdata.plugin_dir
         config.plugin_dirs = [plg_dir, custom_plg_dir]
@@ -149,20 +151,6 @@ class SK1Application(wal.Application, UCApplication):
         self.update_actions()
         for item in docs:
             self.open(item)
-
-    @staticmethod
-    def _get_docs():
-        docs = []
-        if len(sys.argv) > 1:
-            for item in sys.argv[1:]:
-                if os.path.exists(item):
-                    docs.append(fsutils.get_utf8_path(item))
-        return docs
-
-    @staticmethod
-    def update_wal():
-        wal.SPIN['overlay'] = config.spin_overlay
-        wal.SPIN['sep'] = config.spin_sep
 
     def update_config(self):
         config.resource_dir = ''
