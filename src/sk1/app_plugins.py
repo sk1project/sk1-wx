@@ -27,7 +27,7 @@ LOG = logging.getLogger(__name__)
 
 def check_package(path, name):
     full_path = os.path.join(path, name)
-    if not os.path.isdir(full_path) or name[0] == '.':
+    if not fsutils.isdir(full_path) or name[0] == '.':
         return False
     py_file = os.path.join(full_path, '__init__.py')
     pyc_file = os.path.join(full_path, '__init__.pyc')
