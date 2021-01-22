@@ -1103,10 +1103,7 @@ class BezierPoint:
     def convert_to_curve(self):
         before = self.get_point_before()
         if before is not None and not self.is_curve():
-            if before.is_curve():
-                before_point = [] + before.point[2]
-            else:
-                before_point = [] + before.point
+            before_point = before.get_base_point()
             point = [] + self.point
             x0 = 1.0 / 3.0 * (point[0] - before_point[0]) + before_point[0]
             y0 = 1.0 / 3.0 * (point[1] - before_point[1]) + before_point[1]
