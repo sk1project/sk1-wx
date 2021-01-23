@@ -284,28 +284,102 @@ class BezierEditor(AbstractController):
             self.set_selected_nodes([point])
             self.update_status()
 
-    def _set_origin_nodes(self):
+    def _sort_selected(self, nodes=None):
+        nodes = nodes or self.selected_nodes
+        selected_dict = {}
+        for node in nodes:
+            selected_dict[node.path.points.index(node)] = node
+        return [selected_dict[index] for index in sorted(selected_dict.keys())]
+
+    def _set_origin_nodes(self, back=False):
         if not self.selected_nodes:
             path = self.paths[0]
             origin = [path.points[0] if path.is_closed() else path.start_point]
-            self.set_selected_nodes(origin)
-            self.origin_nodes = origin
-
-    def _sort_selected(self):
-        selected_dict = {}
-        for node in self.selected_nodes:
-            selected_dict[node.path.points.index(node)] = node
-        return [selected_dict[index] for index in sorted(selected_dict.keys())]
+        else:
+            path_count = len(self.paths) * [0]
+            for node in self.selected_nodes:
+                path_index = self.paths.index(node.path)
+                path_count[path_index] += 1
+            path = self.paths[path_count.index(max(path_count))]
+            origin = [node for node in self.selected_nodes if node.path == path]
+            sorted_origin = self._sort_selected(origin)
+            origin = [sorted_origin[-1] if back else sorted_origin[0]]
+            while True:
+                if back:
+                    before = origin[0].get_point_before()
+                    if before in sorted_origin:
+                        origin = [before] + origin
+                    else:
+                        break
+                else:
+                    after = origin[-1].get_point_after()
+                    if after in sorted_origin:
+                        origin += [after]
+                    else:
+                        break
+        self.set_selected_nodes(origin)
+        self.origin_nodes = origin
 
     def add_selected_by_kbd(self, back=False):
         if not self.origin_nodes:
             self._set_origin_nodes()
         origin = self.origin_nodes
-        selected = self._sort_selected()
-        if back:
-            pass
-        else:
-            pass
+        selected = origin != self.selected_nodes
+
+        # <-- OOO
+        if back and not selected:
+            new_node = origin[0].get_point_before()
+            if new_node.is_start() and origin[0].path.is_closed():
+                new_node = origin[0].path.points[-1]
+                if new_node not in self.selected_nodes:
+                    self.set_selected_nodes([new_node] + origin)
+            elif not new_node and not origin[0].path.is_closed():
+                pass
+            else:
+                if new_node not in self.selected_nodes:
+                    self.set_selected_nodes([new_node] + origin)
+        # OOO -->
+        elif not back and not selected:
+            new_node = origin[-1].get_point_after()
+            if not new_node and origin[0].path.is_closed():
+                new_node = origin[0].path.points[0]
+                if new_node not in self.selected_nodes:
+                    self.set_selected_nodes(origin + [new_node])
+            elif not new_node and not origin[0].path.is_closed():
+                pass
+            else:
+                if new_node not in self.selected_nodes:
+                    self.set_selected_nodes(origin + [new_node])
+        # <-- SSSOOO
+        elif back and origin[-1] == self.selected_nodes[-1]:
+            new_node = self.selected_nodes[0].get_point_before()
+            if new_node.is_start() and origin[0].path.is_closed():
+                new_node = origin[0].path.points[-1]
+                if new_node not in self.selected_nodes:
+                    self.set_selected_nodes([new_node] + self.selected_nodes)
+            elif not new_node and not origin[0].path.is_closed():
+                pass
+            else:
+                if new_node not in self.selected_nodes:
+                    self.set_selected_nodes([new_node] + self.selected_nodes)
+        # OOOSSS -->
+        elif not back and origin[0] == self.selected_nodes[0]:
+            new_node = self.selected_nodes[-1].get_point_after()
+            if not new_node and origin[0].path.is_closed():
+                new_node = origin[0].path.points[0]
+                if new_node not in self.selected_nodes:
+                    self.set_selected_nodes(self.selected_nodes + [new_node])
+            elif not new_node and not origin[0].path.is_closed():
+                pass
+            else:
+                if new_node not in self.selected_nodes:
+                    self.set_selected_nodes(self.selected_nodes + [new_node])
+        # --> SSSOOO
+        elif not back and origin[-1] == self.selected_nodes[-1]:
+            self.set_selected_nodes(self.selected_nodes[1:])
+        # OOOSSS <--
+        elif back and origin[0] == self.selected_nodes[0]:
+            self.set_selected_nodes(self.selected_nodes[:-1])
 
         self.origin_nodes = origin
 

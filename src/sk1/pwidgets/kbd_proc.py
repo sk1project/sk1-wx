@@ -95,7 +95,7 @@ class KbdProcessor:
             if key_code == wal.KEY_TAB:
                 return self.painter.controller.change_selection_by_kbd()
 
-        if key_code == wal.KEY_TAB and modifiers == wal.ACCEL_CTRL:
+        if key_code == wal.KEY_TAB and modifiers == wal.ACCEL_SHIFT:
             return self.painter.controller.change_selection_by_kbd(back=True)
 
         if key_code in (wal.KEY_UP, wal.KEY_NUMPAD_UP) and modifiers == wal.ACCEL_SHIFT:
