@@ -611,8 +611,10 @@ class BezierEditor(AbstractController):
                     item.convert_to_curve()
                     flag = True
         elif self.new_node:
-            if not self.new_node.after.is_curve():
-                self.new_node.after.convert_to_curve()
+            after = self.new_node.after
+            if not after.is_curve():
+                after.convert_to_curve()
+                self.set_selected_nodes([after])
                 flag = True
         if flag:
             self.apply_changes()
@@ -1178,12 +1180,11 @@ class BezierPoint:
         before = self.get_point_before()
         if before is not None and not self.is_curve():
             before_point = before.get_base_point()
-            point = [] + self.point
-            x0 = 1.0 / 3.0 * (point[0] - before_point[0]) + before_point[0]
-            y0 = 1.0 / 3.0 * (point[1] - before_point[1]) + before_point[1]
-            x1 = 2.0 / 3.0 * (point[0] - before_point[0]) + before_point[0]
-            y1 = 2.0 / 3.0 * (point[1] - before_point[1]) + before_point[1]
-            self.point = [[x0, y0], [x1, y1], point, sk2const.NODE_CUSP]
+            x0 = 1.0 / 3.0 * (self.point[0] - before_point[0]) + before_point[0]
+            y0 = 1.0 / 3.0 * (self.point[1] - before_point[1]) + before_point[1]
+            x1 = 2.0 / 3.0 * (self.point[0] - before_point[0]) + before_point[0]
+            y1 = 2.0 / 3.0 * (self.point[1] - before_point[1]) + before_point[1]
+            self.point = [[x0, y0], [x1, y1], self.point, sk2const.NODE_CUSP]
 
     def get_connection_type(self):
         if self.is_curve():
