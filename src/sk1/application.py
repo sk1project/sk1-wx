@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013-2018 by Ihor E. Novikov
+#  Copyright (C) 2013-2021 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -42,8 +42,7 @@ from uc2 import uc2const, libimg, msgconst
 from uc2.application import UCApplication
 from uc2.formats import get_saver_by_id, get_loader
 from uc2.utils import fsutils
-from uc2.utils.fsutils import get_sys_path
-from uc2.utils.mixutils import config_logging
+from uc2.utils import mixutils
 
 LOG = logging.getLogger(__name__)
 
@@ -84,16 +83,18 @@ class SK1Application(wal.Application, UCApplication):
         self.appdata = AppData(self, cfgdir)
         log_level = config.log_level
         self.log_filepath = os.path.join(self.appdata.app_config_dir, 'sk1.log')
-        config_logging(get_sys_path(self.log_filepath), log_level)
+        mixutils.config_logging(fsutils.get_sys_path(self.log_filepath), log_level)
         sys.stderr = StreamLogger()
         LOG.info('Logging started')
 
-        self.update_wal()
+        wal.SPIN['overlay'] = config.spin_overlay
+        wal.SPIN['sep'] = config.spin_sep
+
         plg_dir = os.path.join(self.path, 'share', 'pd_plugins')
         custom_plg_dir = self.appdata.plugin_dir
         config.plugin_dirs = [plg_dir, custom_plg_dir]
-        sys.path.insert(1, get_sys_path(self.appdata.app_config_dir))
-        sys.path.insert(1, get_sys_path(os.path.join(self.path, 'share')))
+        sys.path.insert(1, fsutils.get_sys_path(self.appdata.app_config_dir))
+        sys.path.insert(1, fsutils.get_sys_path(os.path.join(self.path, 'share')))
         config.app = self
         LOG.info('Config is updated')
 
@@ -134,7 +135,7 @@ class SK1Application(wal.Application, UCApplication):
             font_cache_update()
         if self.docs:
             return
-        docs = self._get_docs()
+        docs = [fsutils.get_utf8_path(item) for item in sys.argv[1:] if os.path.exists(item)]
         if config.new_doc_on_start and not docs:
             self.load_plugins()
             self.new()
@@ -146,18 +147,6 @@ class SK1Application(wal.Application, UCApplication):
         self.update_actions()
         for item in docs:
             self.open(item)
-
-    def _get_docs(self):
-        docs = []
-        if len(sys.argv) > 1:
-            for item in sys.argv[1:]:
-                if os.path.exists(item):
-                    docs.append(fsutils.get_utf8_path(item))
-        return docs
-
-    def update_wal(self):
-        wal.SPIN['overlay'] = config.spin_overlay
-        wal.SPIN['sep'] = config.spin_sep
 
     def update_config(self):
         config.resource_dir = ''
@@ -597,17 +586,19 @@ class SK1Application(wal.Application, UCApplication):
                 dialogs.error_dialog(parent, self.appdata.app_name, msg)
                 LOG.error('Cannot load pattern <%s> %s', img_file, e)
 
-    def make_backup(self, doc_file, export=False):
+    @staticmethod
+    def make_backup(doc_file, export=False):
         if not export and not config.make_backup:
             return
         if export and not config.make_export_backup:
             return
         if fsutils.exists(doc_file):
             if fsutils.exists(doc_file + '~'):
-                os.remove(get_sys_path(doc_file + '~'))
-            os.rename(get_sys_path(doc_file), get_sys_path(doc_file + '~'))
+                fsutils.remove(doc_file + '~')
+            fsutils.rename(doc_file, doc_file + '~')
 
-    def uc2_event_logging(self, *args):
+    @staticmethod
+    def uc2_event_logging(*args):
         log_map = {
             msgconst.JOB: LOG.info,
             msgconst.INFO: LOG.info,
@@ -618,10 +609,12 @@ class SK1Application(wal.Application, UCApplication):
         }
         log_map[args[0]](args[1])
 
-    def sk1_event_logging(self, msg):
+    @staticmethod
+    def sk1_event_logging(msg):
         LOG.info(msg)
 
-    def open_url(self, url):
+    @staticmethod
+    def open_url(url):
         webbrowser.open(url, new=1, autoraise=True)
         msg = _('Requested page was opened in the default browser')
         events.emit(events.APP_STATUS, msg)

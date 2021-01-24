@@ -27,7 +27,7 @@ LOG = logging.getLogger(__name__)
 
 def check_package(path, name):
     full_path = os.path.join(path, name)
-    if not os.path.isdir(full_path) or name[0] == '.':
+    if not fsutils.isdir(full_path) or name[0] == '.':
         return False
     py_file = os.path.join(full_path, '__init__.py')
     pyc_file = os.path.join(full_path, '__init__.pyc')
@@ -37,8 +37,7 @@ def check_package(path, name):
 def scan_plugins(app):
     ret = {}
     for path in config.plugin_dirs:
-        path = get_sys_path(path)
-        plgs = [item for item in os.listdir(path) if check_package(path, item)]
+        plgs = [item for item in fsutils.listdir(path) if check_package(path, item)]
         if plgs:
             bn = os.path.basename(path)
             for item in plgs:

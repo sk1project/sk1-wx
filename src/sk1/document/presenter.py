@@ -22,15 +22,15 @@ from copy import deepcopy
 from sk1 import _, events, modes
 from sk1.dialogs import ProgressDialog
 from sk1.document.api import PresenterAPI
+from sk1.document.canvas import AppCanvas
 from sk1.document.eventloop import EventLoop
+from sk1.document.ruler import RulerCorner, Ruler
 from sk1.document.selection import Selection
 from sk1.document.snapping import SnapManager
-from sk1.document.ruler import RulerCorner, Ruler
-from sk1.document.canvas import AppCanvas
 from uc2 import uc2const
 from uc2.formats import get_loader, get_saver
 from uc2.formats.sk2.sk2_presenter import SK2_Presenter
-from uc2.utils.fs import change_file_extension
+from uc2.utils.fsutils import change_file_extension
 
 LOG = logging.getLogger(__name__)
 

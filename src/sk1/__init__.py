@@ -35,11 +35,10 @@ def get_utf8_path(path):
 
 
 def read_locale(cfg_file):
-    cfg_file = get_sys_path(cfg_file)
     lang = 'system'
     if fsutils.isfile(cfg_file):
         try:
-            with open(cfg_file) as fp:
+            with fsutils.uopen(cfg_file) as fp:
                 while True:
                     line = fp.readline()
                     if not line:
@@ -74,14 +73,14 @@ def init_config(cfgdir='~'):
 def check_server(cfgdir):
     cfg_dir = os.path.join(cfgdir, '.config', 'sk1-wx')
     lock = os.path.join(cfg_dir, 'lock')
-    if config.app_server and os.path.exists(lock):
+    if config.app_server and fsutils.exists(lock):
         socket = os.path.join(cfg_dir, 'socket')
-        with open(socket, 'wb') as fp:
+        with fsutils.uopen(socket, 'wb') as fp:
             for item in sys.argv[1:]:
                 fp.write('%s\n' % item)
         time.sleep(2)
-        if os.path.exists(socket):
-            os.remove(socket)
+        if fsutils.exists(socket):
+            fsutils.remove(socket)
         else:
             sys.exit(0)
 
@@ -89,11 +88,11 @@ def check_server(cfgdir):
 def sk1_run(cfgdir='~'):
     """sK1 application launch routine"""
 
-    cfgdir = get_utf8_path(os.path.expanduser(cfgdir))
+    cfgdir = fsutils.expanduser(get_utf8_path(cfgdir))
     _pkgdir = get_utf8_path(__path__[0])
 
     init_config(cfgdir)
-    check_server(get_sys_path(cfgdir))
+    check_server(cfgdir)
     os.environ["NO_AT_BRIDGE"] = "1"
     os.environ["GTK_CSD"] = "0"
 

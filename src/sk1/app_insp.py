@@ -354,7 +354,7 @@ class AppInspector:
 
     @verify_call
     def can_be_combined(self, doc=None):
-        if self.is_selection(doc) and len(doc.selection.objs) > 2:
+        if self.is_selection(doc) and len(doc.selection.objs) > 1:
             return all([obj.is_primitive and not obj.is_pixmap for obj in doc.selection.objs])
 
     @verify_call

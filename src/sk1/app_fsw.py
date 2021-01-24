@@ -18,6 +18,7 @@
 import os
 
 import wal
+from uc2.utils import fsutils
 from sk1 import config, events
 
 
@@ -35,30 +36,30 @@ class AppFileWatcher(object):
         events.connect(events.CONFIG_MODIFIED, self.check_config)
         if config.app_server:
             self.timer.start()
-            with open(self.lock, 'wb') as fp:
+            with fsutils.uopen(self.lock, 'wb') as fp:
                 fp.write('\n')
 
     def destroy(self):
-        if os.path.exists(self.lock):
-            os.remove(self.lock)
+        if fsutils.exists(self.lock):
+            fsutils.remove(self.lock)
         if self.timer.is_running():
             self.timer.stop()
 
-    def check_config(self, *args):
+    def check_config(self, *_args):
         if config.app_server and not self.timer.is_running():
             self.timer.start()
         elif not config.app_server and self.timer.is_running():
             self.timer.stop()
 
-    def on_timer(self, *args):
-        if os.path.exists(self.socket):
+    def on_timer(self, *_args):
+        if fsutils.exists(self.socket):
             self.mw.raise_window()
-            with open(self.socket, 'rb') as fp:
+            with fsutils.uopen(self.socket, 'rb') as fp:
                 lines = fp.readlines()
-            os.remove(self.socket)
+            fsutils.remove(self.socket)
             [self.app.open(item.strip('\n'))
              for item in lines
-             if os.path.exists(item.strip('\n'))]
-        if not os.path.exists(self.lock):
-            with open(self.lock, 'wb') as fp:
+             if fsutils.exists(item.strip('\n'))]
+        if not fsutils.exists(self.lock):
+            with fsutils.uopen(self.lock, 'wb') as fp:
                 fp.write('\n')

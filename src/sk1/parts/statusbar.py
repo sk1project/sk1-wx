@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013 by Ihor E. Novikov
+#  Copyright (C) 2013-2021 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@ class AppStatusbar(wal.HPanel):
     mouse_info = None
     page_info = None
     info = None
+    info_txt = ''
     panel2 = None
     clr_monitor = None
 
@@ -71,9 +72,11 @@ class AppStatusbar(wal.HPanel):
         events.connect(events.APP_STATUS, self._on_event)
 
     def _on_event(self, *args):
-        self.info.set_text(args[0])
-        self.Layout()
-        self.show()
+        if self.info_txt != args[0]:
+            self.info_txt = args[0]
+            self.info.set_text(args[0])
+            self.Layout()
+            self.show()
 
 
 class ZoomMonitor(wal.HPanel):

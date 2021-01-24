@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2015 by Ihor E. Novikov
+#  Copyright (C) 2015-2021 by Ihor E. Novikov
+#  Copyright (C) 2020 by Michael Schorcht
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -29,6 +30,7 @@ class BezierEditor(AbstractController):
     paths = []
     orig_paths = []
     selected_nodes = []
+    origin_nodes = None
     move_flag = False
     moved_node = None
     selected_obj = None
@@ -49,7 +51,12 @@ class BezierEditor(AbstractController):
         self.update_paths()
         self.api.set_mode()
         self.selection.clear()
+        self.update_status()
+
+    def update_status(self):
         msg = _('No selected nodes')
+        if self.selected_nodes:
+            msg = _('Selected %d node(s)') % len(self.selected_nodes)
         events.emit(events.APP_STATUS, msg)
 
     def update_paths(self):
@@ -79,6 +86,8 @@ class BezierEditor(AbstractController):
         self.selected_nodes = []
 
     def escape_pressed(self):
+        if self.selected_nodes:
+            return self.set_selected_nodes()
         self.canvas.set_mode()
 
     # ----- REPAINT
@@ -216,6 +225,7 @@ class BezierEditor(AbstractController):
 
     def set_selected_nodes(self, points=None, add_flag=False):
         points = points or []
+        self.origin_nodes = None
         if points:
             self.new_node = None
         if not add_flag:
@@ -236,11 +246,142 @@ class BezierEditor(AbstractController):
         else:
             self.clear_control_points()
         events.emit(events.SELECTION_CHANGED, self.presenter)
-        msg = _('No selected nodes')
-        if self.selected_nodes:
-            msg = _('Selected %d node(s)') % len(self.selected_nodes)
-        events.emit(events.APP_STATUS, msg)
+        self.update_status()
         self.canvas.selection_redraw()
+
+    def change_selection_by_kbd(self, back=False):
+        new_selection = []
+        if self.selected_nodes:
+            for node in self.selected_nodes:
+                if back:
+                    next_point = node.get_point_before()
+                    if next_point is None:
+                        next_point = node.path.points[-1]
+                    elif next_point == node.path.start_point and node.path.is_closed():
+                        next_point = node.path.points[-1]
+                else:
+                    next_point = node.get_point_after()
+                    if next_point is None:
+                        next_point = node.path.points[0] if node.path.is_closed() \
+                            else node.path.start_point
+                new_selection.append(next_point)
+        else:
+            path = self.paths[0]
+            new_selection.append(path.points[0] if path.is_closed() else path.start_point)
+        self.set_selected_nodes(new_selection)
+        self.update_status()
+
+    def change_path_by_kbd(self, back=False):
+        if len(self.paths) > 1:
+            path = self.paths[0]
+            if self.selected_nodes:
+                path_index = self.paths.index(self.selected_nodes[0].path)
+                path_index += -1 if back else 1
+                if path_index == len(self.paths):
+                    path_index = 0
+                path = self.paths[path_index]
+            point = path.points[-1] if path.is_closed() else path.start_point
+            self.set_selected_nodes([point])
+            self.update_status()
+
+    def _sort_selected(self, nodes=None):
+        nodes = nodes or self.selected_nodes
+        selected_dict = {}
+        for node in nodes:
+            selected_dict[node.path.points.index(node)] = node
+        return [selected_dict[index] for index in sorted(selected_dict.keys())]
+
+    def _set_origin_nodes(self, back=False):
+        if not self.selected_nodes:
+            path = self.paths[0]
+            origin = [path.points[0] if path.is_closed() else path.start_point]
+        else:
+            path_count = len(self.paths) * [0]
+            for node in self.selected_nodes:
+                path_index = self.paths.index(node.path)
+                path_count[path_index] += 1
+            path = self.paths[path_count.index(max(path_count))]
+            origin = [node for node in self.selected_nodes if node.path == path]
+            sorted_origin = self._sort_selected(origin)
+            origin = [sorted_origin[-1] if back else sorted_origin[0]]
+            while True:
+                if back:
+                    before = origin[0].get_point_before()
+                    if before in sorted_origin:
+                        origin = [before] + origin
+                    else:
+                        break
+                else:
+                    after = origin[-1].get_point_after()
+                    if after in sorted_origin:
+                        origin += [after]
+                    else:
+                        break
+        self.set_selected_nodes(origin)
+        self.origin_nodes = origin
+
+    def add_selected_by_kbd(self, back=False):
+        if not self.origin_nodes:
+            self._set_origin_nodes()
+        origin = self.origin_nodes
+        selected = origin != self.selected_nodes
+
+        # <-- OOO
+        if back and not selected:
+            new_node = origin[0].get_point_before()
+            if new_node.is_start() and origin[0].path.is_closed():
+                new_node = origin[0].path.points[-1]
+                if new_node not in self.selected_nodes:
+                    self.set_selected_nodes([new_node] + origin)
+            elif not new_node and not origin[0].path.is_closed():
+                pass
+            else:
+                if new_node not in self.selected_nodes:
+                    self.set_selected_nodes([new_node] + origin)
+        # OOO -->
+        elif not back and not selected:
+            new_node = origin[-1].get_point_after()
+            if not new_node and origin[0].path.is_closed():
+                new_node = origin[0].path.points[0]
+                if new_node not in self.selected_nodes:
+                    self.set_selected_nodes(origin + [new_node])
+            elif not new_node and not origin[0].path.is_closed():
+                pass
+            else:
+                if new_node not in self.selected_nodes:
+                    self.set_selected_nodes(origin + [new_node])
+        # <-- SSSOOO
+        elif back and origin[-1] == self.selected_nodes[-1]:
+            new_node = self.selected_nodes[0].get_point_before()
+            if new_node.is_start() and origin[0].path.is_closed():
+                new_node = origin[0].path.points[-1]
+                if new_node not in self.selected_nodes:
+                    self.set_selected_nodes([new_node] + self.selected_nodes)
+            elif not new_node and not origin[0].path.is_closed():
+                pass
+            else:
+                if new_node not in self.selected_nodes:
+                    self.set_selected_nodes([new_node] + self.selected_nodes)
+        # OOOSSS -->
+        elif not back and origin[0] == self.selected_nodes[0]:
+            new_node = self.selected_nodes[-1].get_point_after()
+            if not new_node and origin[0].path.is_closed():
+                new_node = origin[0].path.points[0]
+                if new_node not in self.selected_nodes:
+                    self.set_selected_nodes(self.selected_nodes + [new_node])
+            elif not new_node and not origin[0].path.is_closed():
+                pass
+            else:
+                if new_node not in self.selected_nodes:
+                    self.set_selected_nodes(self.selected_nodes + [new_node])
+        # --> SSSOOO
+        elif not back and origin[-1] == self.selected_nodes[-1]:
+            self.set_selected_nodes(self.selected_nodes[1:])
+        # OOOSSS <--
+        elif back and origin[0] == self.selected_nodes[0]:
+            self.set_selected_nodes(self.selected_nodes[:-1])
+
+        self.origin_nodes = origin
 
     def clear_control_points(self):
         if self.control_points:
@@ -284,6 +425,13 @@ class BezierEditor(AbstractController):
             x0, y0 = [] + base_point.point[2]
         trafo = [1.0, 0.0, 0.0, 1.0, x1 - x0, y1 - y0]
         self.apply_trafo_to_selected_points(trafo, undable)
+        self.update_status()
+
+    def move_selected_points_by_kbd(self, dx, dy):
+        if self.selected_nodes:
+            trafo = [1.0, 0.0, 0.0, 1.0, dx * config.obj_jump, dy * config.obj_jump]
+            self.apply_trafo_to_selected_points(trafo, True)
+            self.update_status()
 
     def apply_trafo_to_selected_points(self, trafo, undable=False):
         for item in self.selected_nodes:
@@ -300,18 +448,17 @@ class BezierEditor(AbstractController):
             self.api.set_temp_paths(self.target, paths)
 
     def move_control_point(self, win_point, undable=False):
-        if not self.cpoint:
-            return
-        x1, y1 = self.snap.snap_point(win_point)[2]
-        x0, y0 = self.cpoint.get_point()
-        trafo = [1.0, 0.0, 0.0, 1.0, x1 - x0, y1 - y0]
-        self.cpoint.apply_trafo(trafo)
-        paths = self.get_paths()
-        if undable:
-            self.api.set_new_paths(self.target, paths, self.orig_paths)
-            self.orig_paths = paths
-        else:
-            self.api.set_temp_paths(self.target, paths)
+        if self.cpoint:
+            x1, y1 = self.snap.snap_point(win_point)[2]
+            x0, y0 = self.cpoint.get_point()
+            trafo = [1.0, 0.0, 0.0, 1.0, x1 - x0, y1 - y0]
+            self.cpoint.apply_trafo(trafo)
+            paths = self.get_paths()
+            if undable:
+                self.api.set_new_paths(self.target, paths, self.orig_paths)
+                self.orig_paths = paths
+            else:
+                self.api.set_temp_paths(self.target, paths)
 
     def get_paths(self):
         ret = []
@@ -327,28 +474,27 @@ class BezierEditor(AbstractController):
         self.orig_paths = paths
 
     def delete_selected_nodes(self):
-        if not self.selected_nodes:
-            return
-        for item in self.selected_nodes:
-            path = item.path
-            if path in self.paths:
-                if item.is_end() and path.is_closed():
-                    start = path.start_point
-                    path.delete_point(start)
-                    start.destroy()
-                path.delete_point(item)
-                item.destroy()
-                if not path.points:
-                    self.paths.remove(path)
-        self.set_selected_nodes()
-        if not self.get_paths():
-            parent = self.target.parent
-            index = parent.childs.index(self.target)
-            self.api.delete_objects([[self.target, parent, index], ])
-            self.target = None
-            self.canvas.set_mode(modes.SHAPER_MODE)
-        else:
-            self.apply_changes()
+        if self.selected_nodes:
+            for item in self.selected_nodes:
+                path = item.path
+                if path in self.paths:
+                    if item.is_end() and path.is_closed():
+                        start = path.start_point
+                        path.delete_point(start)
+                        start.destroy()
+                    path.delete_point(item)
+                    item.destroy()
+                    if not path.points:
+                        self.paths.remove(path)
+            self.set_selected_nodes()
+            if not self.get_paths():
+                parent = self.target.parent
+                index = parent.childs.index(self.target)
+                self.api.delete_objects([[self.target, parent, index], ])
+                self.target = None
+                self.canvas.set_mode(modes.SHAPER_MODE)
+            else:
+                self.apply_changes()
 
     def set_new_node(self, win_point):
         path = self.is_path_clicked(win_point)
@@ -390,7 +536,34 @@ class BezierEditor(AbstractController):
             self.new_node.after.point = self.new_node.new_end_point
             self.apply_changes()
             return np
-        return None
+
+    def insert_new_node_by_kbd(self):
+        if self.new_node:
+            self.insert_new_node()
+        elif self.selected_nodes:
+            new_nodes = []
+            new_selection = [] + self.selected_nodes
+            for n0 in self.selected_nodes:
+                path = n0.path
+                if not path.get_point_index(n0):
+                    continue
+                n1 = n0.get_point_before()
+
+                if n0.is_curve():
+                    x0, y0 = n0.point[2]
+                    cx00, cy00 = n0.point[0]
+                    cx01, cy01 = n0.point[1]
+                    x1, y1 = n1.get_base_point()
+                    x_new = ((x0 + x1) / 8.0) + ((cx00 + cx01) / 8.0 * 3.0)
+                    y_new = ((y0 + y1) / 8.0) + ((cy00 + cy01) / 8.0 * 3.0)
+                else:
+                    x_new, y_new = libgeom.midpoint(n0.point, n1.get_base_point())
+
+                new_nodes.append(self.canvas.point_doc_to_win([x_new, y_new]))
+            for node in new_nodes:
+                self.set_new_node(node)
+                new_selection.append(self.insert_new_node())
+            self.set_selected_nodes(new_selection)
 
     def can_be_line(self):
         if self.selected_nodes:
@@ -438,8 +611,10 @@ class BezierEditor(AbstractController):
                     item.convert_to_curve()
                     flag = True
         elif self.new_node:
-            if not self.new_node.after.is_curve():
-                self.new_node.after.convert_to_curve()
+            after = self.new_node.after
+            if not after.is_curve():
+                after.convert_to_curve()
+                self.set_selected_nodes([after])
                 flag = True
         if flag:
             self.apply_changes()
@@ -455,9 +630,7 @@ class BezierEditor(AbstractController):
             for item in self.selected_nodes:
                 if not item.is_terminal():
                     return True
-        elif self.new_node:
-            return True
-        return False
+        return bool(self.new_node)
 
     def can_be_joined_nodes(self):
         if len(self.selected_nodes) == 2:
@@ -474,9 +647,7 @@ class BezierEditor(AbstractController):
             if item0.get_point_before() == item1 or \
                item0.get_point_after() == item1:
                 return True
-        elif self.new_node:
-            return True
-        return False
+        return bool(self.new_node)
 
     def split_nodes(self):
         if self.selected_nodes:
@@ -657,11 +828,9 @@ class BezierEditor(AbstractController):
     def is_subpath_selected(self):
         if len(self.paths) < 2:
             return False
-        if self.new_node:
-            return True
-        elif self.selected_nodes:
+        if self.selected_nodes:
             return len(self._get_selected_subpaths()) < len(self.paths)
-        return False
+        return bool(self.new_node)
 
     def select_all_nodes_in_subpaths(self):
         subpaths = self._get_selected_subpaths()
@@ -1010,16 +1179,12 @@ class BezierPoint:
     def convert_to_curve(self):
         before = self.get_point_before()
         if before is not None and not self.is_curve():
-            if before.is_curve():
-                before_point = [] + before.point[2]
-            else:
-                before_point = [] + before.point
-            point = [] + self.point
-            x0 = 1.0 / 3.0 * (point[0] - before_point[0]) + before_point[0]
-            y0 = 1.0 / 3.0 * (point[1] - before_point[1]) + before_point[1]
-            x1 = 2.0 / 3.0 * (point[0] - before_point[0]) + before_point[0]
-            y1 = 2.0 / 3.0 * (point[1] - before_point[1]) + before_point[1]
-            self.point = [[x0, y0], [x1, y1], point, sk2const.NODE_CUSP]
+            before_point = before.get_base_point()
+            x0 = 1.0 / 3.0 * (self.point[0] - before_point[0]) + before_point[0]
+            y0 = 1.0 / 3.0 * (self.point[1] - before_point[1]) + before_point[1]
+            x1 = 2.0 / 3.0 * (self.point[0] - before_point[0]) + before_point[0]
+            y1 = 2.0 / 3.0 * (self.point[1] - before_point[1]) + before_point[1]
+            self.point = [[x0, y0], [x1, y1], self.point, sk2const.NODE_CUSP]
 
     def get_connection_type(self):
         if self.is_curve():
