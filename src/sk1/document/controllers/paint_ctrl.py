@@ -15,12 +15,13 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from creators import AbstractCreator
 from sk1 import modes, config
 from uc2 import sk2const
 from uc2.libgeom import apply_trafo_to_paths, is_point_in_rect2
 from uc2.libgeom import contra_point, bezier_base_point, midpoint
 from uc2.libgeom import round_angle_point
+
+from .creators import AbstractCreator
 
 
 class PolyLineCreator(AbstractCreator):

@@ -15,14 +15,12 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
 from copy import deepcopy
 
 from uc2 import libgeom
-
 from sk1 import _, modes, events
 
-from generic import AbstractController
+from .generic import AbstractController
 
 NON_WORD_CHARS = ' \n\t!"#$%&\'()*+,-./:;<=>?@[\]^_`{|}~'
 NON_WORD_CHARS += '¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿÷'

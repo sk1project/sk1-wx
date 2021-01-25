@@ -17,9 +17,10 @@
 
 import math
 
-from generic import AbstractController
 from sk1 import modes, config
 from uc2 import libgeom
+
+from .generic import AbstractController
 
 
 class MoveController(AbstractController):

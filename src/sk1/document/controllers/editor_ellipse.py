@@ -20,7 +20,7 @@ import math
 from uc2 import libgeom, sk2const
 
 from sk1 import _, modes, config, events
-from generic import AbstractController
+from .generic import AbstractController
 
 
 class EllipseEditor(AbstractController):

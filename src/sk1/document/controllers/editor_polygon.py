@@ -20,7 +20,7 @@ import math
 from uc2 import libgeom
 
 from sk1 import _, modes, config, events
-from generic import AbstractController
+from .generic import AbstractController
 
 
 class PolygonEditor(AbstractController):

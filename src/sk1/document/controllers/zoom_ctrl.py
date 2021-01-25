@@ -15,9 +15,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
 from sk1 import modes
-from generic import AbstractController
+
+from .generic import AbstractController
 
 ZOOM_IN = 1.25
 ZOOM_OUT = 0.8

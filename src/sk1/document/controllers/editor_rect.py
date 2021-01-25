@@ -15,9 +15,10 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from generic import AbstractController
 from sk1 import _, modes, config, events
 from uc2 import libgeom
+
+from .generic import AbstractController
 
 H_ORIENT = ['00', '11', '20', '31']
 

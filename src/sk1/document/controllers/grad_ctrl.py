@@ -18,9 +18,9 @@
 from copy import deepcopy
 
 from uc2 import uc2const, libgeom, sk2const
-
 from sk1 import _, modes, config, events
-from generic import AbstractController
+
+from .generic import AbstractController
 
 GRADIENT_CLR_MODES = [uc2const.COLOR_CMYK, uc2const.COLOR_RGB,
                       uc2const.COLOR_GRAY]
