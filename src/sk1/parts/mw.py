@@ -35,11 +35,13 @@ class AppMainWindow(wal.MainWindow):
 
     def __init__(self, app):
         self.app = app
+        w,h = config.mw_size
+        w_min, h_min = config.mw_min_size
         wal.MainWindow.__init__(
-            self, app, '', config.mw_size,
-            maximized=config.mw_maximized,
+            self, app, '', [max(w, w_min), max(h, h_min)],
+            maximized=int(config.mw_maximized),
             on_close=self.app.exit)
-        self.set_minsize(config.mw_min_size)
+        self.set_minsize([w_min, h_min])
         self.set_icons(os.path.join(config.resource_dir, 'icons', 'generic', 'sk1-icon.ico'))
 
     def build(self):
