@@ -166,19 +166,19 @@ class PolyLineCreator(AbstractCreator):
             self.timer.start()
 
     def init_data(self):
-        self.cursor = []
         self.paths = []
-        self.points = []
         self.path = [[], [], sk2const.CURVE_OPENED]
+        self.points = []
+        self.cursor = []
+        self.obj = None
         self.point = []
         self.doc_point = []
-        self.obj = None
         self.timer_callback = None
 
     def clear_data(self):
-        self.cursor = []
-        self.points = []
         self.path = [[], [], sk2const.CURVE_OPENED]
+        self.points = []
+        self.cursor = []
         self.point = []
         self.doc_point = []
 
@@ -203,6 +203,9 @@ class PolyLineCreator(AbstractCreator):
         if path[-1] == sk2const.CURVE_OPENED:
             self.path = path
             self.points = self.path[1]
+            last = bezier_base_point(self.points[-1])
+            self.doc_point = [] + last
+            self.point = [] + self.canvas.point_doc_to_win(last)
             paths = self.canvas.paths_doc_to_win(self.paths)
             self.canvas.renderer.paint_curve(paths)
         else:
@@ -283,6 +286,8 @@ class PolyLineCreator(AbstractCreator):
 
 class PathsCreator(PolyLineCreator):
     mode = modes.CURVE_MODE
+
+    # Actual curve event point
     curve_point = []
     control_point0 = []
     control_point1 = []
@@ -291,7 +296,6 @@ class PathsCreator(PolyLineCreator):
     control_point0_doc = []
     control_point1_doc = []
     control_point2_doc = []
-    point_doc = []
 
     def __init__(self, canvas, presenter):
         PolyLineCreator.__init__(self, canvas, presenter)
@@ -302,7 +306,7 @@ class PathsCreator(PolyLineCreator):
         self.on_timer()
 
     def restore(self):
-        self.point = self.canvas.point_doc_to_win(self.point_doc)
+        self.point = self.canvas.point_doc_to_win(self.doc_point)
         self.curve_point = self.canvas.point_doc_to_win(self.curve_point_doc)
         self.control_point0 = self.canvas.point_doc_to_win(
             self.control_point0_doc)
@@ -325,7 +329,7 @@ class PathsCreator(PolyLineCreator):
             self.control_point0 = self.canvas.point_doc_to_win(last)
             self.control_point0_doc = [] + last
             self.point = [] + self.control_point0
-            self.point_doc = [] + last
+            self.doc_point = [] + last
             self.control_point2 = [] + self.control_point0
             self.control_point2_doc = [] + last
             self.curve_point = [] + self.control_point0
@@ -354,14 +358,14 @@ class PathsCreator(PolyLineCreator):
         self.cursor = [] + self.control_point2
         if self.path[0]:
             if self.alt_mask:
-                self.point, self.point_doc = self._calc_points(event)
-                self.add_point([] + self.point, [] + self.point_doc)
+                self.point, self.doc_point = self._calc_points(event)
+                self.add_point([] + self.point, [] + self.doc_point)
                 self.control_point0 = [] + self.point
                 self.cursor = event.get_point()
                 self.curve_point = [] + self.point
             elif self.control_point2:
                 self.point = [] + self.curve_point
-                self.point_doc = [] + self.curve_point_doc
+                self.doc_point = [] + self.curve_point_doc
                 self.control_point1 = contra_point(self.control_point2,
                                                    self.curve_point)
                 self.control_point1_doc = contra_point(
@@ -396,10 +400,10 @@ class PathsCreator(PolyLineCreator):
                 self.cursor = [] + snapped[0]
                 self.curve_point, self.curve_point_doc = snapped
         else:
-            self.point, self.point_doc = self._calc_points(event)
-            self.add_point(self.point, self.point_doc)
+            self.point, self.doc_point = self._calc_points(event)
+            self.add_point(self.point, self.doc_point)
             self.control_point0 = [] + self.point
-            self.control_point0_doc = [] + self.point_doc
+            self.control_point0_doc = [] + self.doc_point
         self.on_timer()
 
     def mouse_move(self, event):
@@ -440,7 +444,7 @@ class PathsCreator(PolyLineCreator):
                     return True
                 self.control_point1_doc = contra_point(self.control_point2_doc,
                                                        self.curve_point_doc)
-                path = [self.point_doc, [self.control_point0_doc,
+                path = [self.doc_point, [self.control_point0_doc,
                                          self.control_point1_doc,
                                          self.curve_point_doc],
                         sk2const.CURVE_OPENED]
