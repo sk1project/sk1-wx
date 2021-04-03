@@ -115,13 +115,12 @@ class BezierEditor(AbstractController):
 
     def mouse_down(self, event):
         self.timer.stop()
-        self.start = []
-        self.end = []
+        self.start = event.get_point()
+        self.end = event.get_point()
         self.draw = False
         self.move_flag = False
         self.new_node_flag = False
         self.selected_obj = None
-        self.start = event.get_point()
         self.cpoint = self.select_control_points_by_click(self.start)
         if not self.cpoint:
             points = self.select_point_by_click(self.start)
@@ -144,23 +143,22 @@ class BezierEditor(AbstractController):
 
     def mouse_up(self, event):
         self.timer.stop()
-        self.end = event.get_point()
         if self.draw:
             self.draw = False
             points = self.select_points_by_bbox(self.start + self.end)
             self.set_selected_nodes(points, event.is_shift())
-            self.start = []
-            self.end = []
             self.canvas.selection_redraw()
         elif self.move_flag:
             if not self.start == self.end:
-                self.move_selected_points(self.moved_node, self.end, True)
+                win_point = self.canvas.win_to_doc(self.end)
+                self.move_selected_points(self.moved_node, win_point, True)
             self.moved_node = None
             self.canvas.selection_redraw()
             self.move_flag = False
         elif self.cpoint:
             if not self.start == self.end:
-                self.move_control_point(self.end, True)
+                win_point = self.canvas.win_to_doc(self.end)
+                self.move_control_point(win_point, True)
         elif self.new_node_flag:
             self.new_node_flag = False
             self.set_new_node(self.end)
@@ -174,17 +172,42 @@ class BezierEditor(AbstractController):
         self.selected_obj = None
         self.cpoint = None
         self.start = []
+        self.end = []
 
     def mouse_move(self, event):
         if self.start:
+            cursor = event.get_point()
             if self.cpoint:
-                self.move_control_point(event.get_point())
-            elif not self.move_flag:
-                self.end = event.get_point()
-                self.draw = True
+
+                if event.is_ctrl():
+                    fixed_angle = config.curve_fixed_angle
+                    start = self.cpoint.get_screen_points()[0]
+                    cursor = libgeom.round_angle_point(start, cursor, fixed_angle)
+
+                if not event.is_shift():
+                    cursor = self.snap.snap_point(cursor)[1]
+
+                self.end = cursor
+                win_point = self.canvas.win_to_doc(self.end)
+                self.move_control_point(win_point)
+
             elif self.move_flag:
-                self.move_selected_points(self.moved_node, event.get_point())
-                self.move_flag = True
+
+                if event.is_ctrl():
+                    fixed_angle = 90
+                    start = self.start
+                    cursor = libgeom.round_angle_point(start, cursor, fixed_angle)
+
+                if not event.is_shift():
+                    cursor = self.snap.snap_point(cursor)[1]
+ 
+                self.end = cursor
+                win_point = self.canvas.win_to_doc(self.end)
+                self.move_selected_points(self.moved_node, win_point)
+
+            elif not self.move_flag:
+                self.end = cursor
+                self.draw = True
 
     def mouse_double_click(self, event):
         if self.new_node:
@@ -417,12 +440,9 @@ class BezierEditor(AbstractController):
             points += item.get_all_points()
         return len(points)
 
-    def move_selected_points(self, base_point, win_point, undable=False):
-        x1, y1 = self.snap.snap_point(win_point)[2]
-        if len(base_point.point) == 2:
-            x0, y0 = [] + base_point.point
-        else:
-            x0, y0 = [] + base_point.point[2]
+    def move_selected_points(self, original_point, win_point, undable=False):
+        x1, y1 = win_point
+        x0, y0 = original_point.get_base_point()
         trafo = [1.0, 0.0, 0.0, 1.0, x1 - x0, y1 - y0]
         self.apply_trafo_to_selected_points(trafo, undable)
         self.update_status()
@@ -449,7 +469,7 @@ class BezierEditor(AbstractController):
 
     def move_control_point(self, win_point, undable=False):
         if self.cpoint:
-            x1, y1 = self.snap.snap_point(win_point)[2]
+            x1, y1 = win_point
             x0, y0 = self.cpoint.get_point()
             trafo = [1.0, 0.0, 0.0, 1.0, x1 - x0, y1 - y0]
             self.cpoint.apply_trafo(trafo)
