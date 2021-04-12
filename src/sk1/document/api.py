@@ -135,8 +135,7 @@ class AbstractAPI:
         guide.orientation = orient
 
     def _set_selection(self, objs):
-        self.selection.objs = [] + objs
-        self.selection.update()
+        self.selection.set([]+objs)
 
     def _selection_update(self):
         self.selection.update()
@@ -1078,6 +1077,13 @@ class PresenterAPI(AbstractAPI):
 
     def transform_selected(self, trafo, copy=False):
         if self.selection.objs:
+            # keep the center of rotation
+            center_offset = self.selection.center_offset
+            bbox_center = libgeom.bbox_center(self.selection.bbox)
+            center_point = libgeom.add_points(bbox_center, center_offset)
+            center_point = libgeom.apply_trafo_to_point(center_point, trafo)
+
+            # apply trafo
             sel_before = [] + self.selection.objs
             objs = [] + self.selection.objs
             if copy:
@@ -1111,6 +1117,11 @@ class PresenterAPI(AbstractAPI):
                     False]
                 self.add_undo(transaction)
             self.selection.update()
+
+            # update selection center_offset from center of rotation
+            bbox_center = libgeom.bbox_center(self.selection.bbox)
+            center_offset = libgeom.sub_points(center_point, bbox_center)
+            self.selection.center_offset = center_offset
 
     def trasform_objs(self, obj_trafo_list):
         before, after = self._apply_trafos(obj_trafo_list)
