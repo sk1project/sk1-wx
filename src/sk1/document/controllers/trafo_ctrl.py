@@ -157,6 +157,9 @@ class MoveController(AbstractController):
         else:
             AbstractController.mouse_right_up(self, event)
 
+    def mouse_double_click(self, event):
+        self.canvas.set_mode(modes.SHAPER_MODE)
+
     def _snap(self, bbox, trafo):
         result = [] + trafo
         points = libgeom.bbox_middle_points(bbox)

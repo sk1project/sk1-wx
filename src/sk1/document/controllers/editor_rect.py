@@ -280,6 +280,9 @@ class RectEditor(AbstractController):
         elif self.rounding:
             self.apply_rounding(event.get_point(), inplace=event.is_ctrl())
 
+    def mouse_double_click(self, event):
+        self.canvas.set_mode()
+
 
 class ControlPoint:
     canvas = None

@@ -164,6 +164,9 @@ class TextEditor(AbstractController):
                 self.canvas.selection_redraw()
         self.start = []
 
+    def mouse_double_click(self, event):
+        self.canvas.set_mode()
+
     # ----- POINT PROCESSING
 
     def set_selected_points(self, points, add=False):

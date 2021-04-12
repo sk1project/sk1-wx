@@ -164,6 +164,9 @@ class EllipseEditor(AbstractController):
         if self.selected_point:
             self.apply_moving(event, self.selected_point.start)
 
+    def mouse_double_click(self, event):
+        self.canvas.set_mode()
+
 
 class ControlPoint:
     canvas = None

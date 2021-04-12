@@ -212,6 +212,8 @@ class BezierEditor(AbstractController):
     def mouse_double_click(self, event):
         if self.new_node:
             self.insert_new_node()
+        else:
+            self.canvas.set_mode()
 
     # ----- POINT METHODS
 
