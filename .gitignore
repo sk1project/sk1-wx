@@ -6,7 +6,11 @@
 *.pyc
 *.mo
 /.idea
+/.vscode
 .vagrant
 /utils
 /src/uc2
 /src/wal
+/src/reportlab
+/build
+/subproj
