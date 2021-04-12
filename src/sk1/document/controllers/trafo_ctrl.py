@@ -46,17 +46,20 @@ MARK_BOTTOM_RIGHT_ROTATE = 17
 
 
 class MoveController(AbstractController):
-    start = None
-    end = None
-    trafo = []
     mode = modes.MOVE_MODE
+
+    # drawing data
+    trafo = []
     old_selection = []
+
+    # Flags
+    copy = False  # entering into copy mode
+    moved = False  # entering into moving mode
 
     def __init__(self, canvas, presenter):
         AbstractController.__init__(self, canvas, presenter)
-        self.moved = False
-        self.copy = False
         self.trafo = []
+        self.old_selection = []
 
     def repaint(self):
         if self.end:
@@ -257,14 +260,21 @@ REGULAR_MODES = {
 
 class TransformController(AbstractController):
     mode = modes.RESIZE_MODE
+
+    # drawing data
+    frame = []
     painter = None
     trafo = None
+
+    # Actual event point
     offset_start = None
+
+    # Flags
+    copy = False  # entering into copy mode
+    moved = False  # entering into moving mode
 
     def __init__(self, canvas, presenter):
         AbstractController.__init__(self, canvas, presenter)
-        self.moved = False
-        self.copy = False
         self.frame = []
         self._calc_trafo_handlers = {
             MARK_TOP_LEFT_TRAFO: self._calc_top_left_scale_trafo,
