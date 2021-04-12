@@ -520,9 +520,16 @@ class PDRenderer(CairoRenderer):
             # Selection markers
             markers = selection.markers
             size = config.sel_marker_size / zoom
-            i = 0
-            for marker in markers:
-                if i == 9:
+            for i, marker in enumerate(markers):
+                if i in [0, 1, 2, 3, 5, 6, 7, 8]:
+                    self.ctx.set_source_rgb(*config.sel_marker_fill)
+                    self.ctx.rectangle(marker[0], marker[1], size, size)
+                    self.ctx.fill_preserve()
+                    self.ctx.set_source_rgb(*config.sel_marker_stroke)
+                    self.ctx.set_line_width(1.0 / zoom)
+                    self.ctx.set_dash([])
+                    self.ctx.stroke()
+                elif i == 9:
                     cs = 3.0 / (2.0 * zoom)
                     self.ctx.set_source_rgb(*config.sel_marker_fill)
                     self.ctx.rectangle(marker[0], marker[1] + size / 2.0 - cs,
@@ -537,15 +544,6 @@ class PDRenderer(CairoRenderer):
                     self.ctx.move_to(marker[0], marker[1] + size / 2.0)
                     self.ctx.line_to(marker[0] + size, marker[1] + size / 2.0)
                     self.ctx.stroke()
-                elif i in [0, 1, 2, 3, 5, 6, 7, 8]:
-                    self.ctx.set_source_rgb(*config.sel_marker_fill)
-                    self.ctx.rectangle(marker[0], marker[1], size, size)
-                    self.ctx.fill_preserve()
-                    self.ctx.set_source_rgb(*config.sel_marker_stroke)
-                    self.ctx.set_line_width(1.0 / zoom)
-                    self.ctx.set_dash([])
-                    self.ctx.stroke()
-                i += 1
 
                 # Object markers
             objs = selection.objs
