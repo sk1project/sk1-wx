@@ -209,18 +209,17 @@ class Selection:
     def is_point_over_marker(self, point):
         result = []
         rect = point + point
-        i = 0
-        for marker in self.markers:
+        for i, marker in enumerate(self.markers):
             if not i == 4 and libgeom.is_bbox_in_rect(marker, rect):
                 result.append(i)
                 break
-            i += 1
         return result
 
     def remove(self, objs):
         for obj in objs:
             if obj in self.objs:
                 self.objs.remove(obj)
+        self.center_offset = [0.0, 0.0]
         self.update()
 
     def _sort_objs_by_zorder(self):
@@ -243,15 +242,18 @@ class Selection:
                 self.objs.remove(obj)
         if added:
             self._sort_objs_by_zorder()
+        self.center_offset = [0.0, 0.0]
         self.update()
 
     def set(self, objs):
         if objs and not objs[0]:
             objs = []
-        self.center_offset = [0.0, 0.0]
+        if objs and self.objs and objs is not self.objs:
+            self.center_offset = [0.0, 0.0]
         self.objs = objs
         self.update()
 
     def clear(self):
         self.objs = []
+        self.center_offset = [0.0, 0.0]
         self.update()

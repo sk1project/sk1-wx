@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013 by Ihor E. Novikov
+#  Copyright (C) 2013-2021 by Ihor E. Novikov
+#  Copyright (C) 2021 by Maxim S. Barabash
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -19,38 +20,46 @@ import math
 
 from generic import AbstractController
 from sk1 import modes, config
-from uc2 import libgeom
+from uc2 import libgeom, sk2const
+
+EPSILON = 0.0001
+MAX_RATIO_TRAFO = 15.0
+
+MARK_TOP_LEFT_TRAFO = 0
+MARK_TOP_TRAFO = 1
+MARK_TOP_RIGHT_TRAFO = 2
+MARK_LEFT_TRAFO = 3
+MARK_TRAFO = 4
+MARK_RIGHT_TRAFO = 5
+MARK_BOTTOM_LEFT_TRAFO = 6
+MARK_BOTTOM_TRAFO = 7
+MARK_BOTTOM_RIGHT_TRAFO = 8
+MARK_ROTATE = 9
+MARK_TOP_LEFT_ROTATE = 10
+MARK_TOP_SKEW = 11
+MARK_TOP_RIGHT_ROTATE = 12
+MARK_LEFT_SKEW = 13
+MARK_RIGHT_SKEW = 14
+MARK_BOTTOM_LEFT_ROTATE = 15
+MARK_BOTTOM_SKEW = 16
+MARK_BOTTOM_RIGHT_ROTATE = 17
 
 
 class MoveController(AbstractController):
-    start = None
-    end = None
-    trafo = []
     mode = modes.MOVE_MODE
+
+    # drawing data
+    trafo = []
     old_selection = []
+
+    # Flags
+    copy = False  # entering into copy mode
+    moved = False  # entering into moving mode
 
     def __init__(self, canvas, presenter):
         AbstractController.__init__(self, canvas, presenter)
-        self.move = False
-        self.moved = False
-        self.copy = False
         self.trafo = []
-
-    def mouse_down(self, event):
-        self.snap = self.presenter.snap
-        self.start = event.get_point()
-        self.move = True
-        dpoint = self.canvas.win_to_doc(self.start)
-        sel = self.selection.pick_at_point(dpoint, True)
-        self.old_selection = [] + self.selection.objs
-        if sel and sel[0] not in self.selection.objs:
-            self.selection.clear()
-            self.canvas.renderer.paint_selection()
-            self.canvas.selection_repaint = False
-            self.selection.set(sel)
-        self.canvas.selection_repaint = False
-        self.canvas.renderer.cdc_paint_doc()
-        self.timer.start()
+        self.old_selection = []
 
     def repaint(self):
         if self.end:
@@ -64,8 +73,24 @@ class MoveController(AbstractController):
         dy = end_point[1] - start_point[1]
         return [1.0, 0.0, 0.0, 1.0, dx, dy]
 
+    def mouse_down(self, event):
+        self.snap = self.presenter.snap
+        self.start = event.get_point()
+        self.timer.stop()
+        dpoint = self.canvas.win_to_doc(self.start)
+        sel = self.selection.pick_at_point(dpoint, True)
+        self.old_selection = [] + self.selection.objs
+        if sel and sel[0] not in self.selection.objs:
+            self.selection.clear()
+            self.canvas.renderer.paint_selection()
+            self.canvas.selection_repaint = False
+            self.selection.set(sel)
+        self.canvas.selection_repaint = False
+        self.canvas.renderer.cdc_paint_doc()
+        self.timer.start()
+
     def mouse_move(self, event):
-        if self.move:
+        if self.start:
             self.moved = True
             new = event.get_point()
             if event.is_ctrl():
@@ -95,7 +120,7 @@ class MoveController(AbstractController):
                 self.canvas.restore_mode()
 
     def mouse_up(self, event):
-        if self.move:
+        if self.start:
             self.timer.stop()
             new = event.get_point()
             if event.is_ctrl():
@@ -106,7 +131,6 @@ class MoveController(AbstractController):
                     new[0] = self.start[0]
             self.end = new
             self.canvas.selection_repaint = True
-            self.move = False
             if self.moved:
                 self.trafo = self._calc_trafo(self.start, self.end)
                 bbox = self.presenter.selection.bbox
@@ -136,6 +160,9 @@ class MoveController(AbstractController):
         else:
             AbstractController.mouse_right_up(self, event)
 
+    def mouse_double_click(self, event):
+        self.canvas.set_mode(modes.SHAPER_MODE)
+
     def _snap(self, bbox, trafo):
         result = [] + trafo
         points = libgeom.bbox_middle_points(bbox)
@@ -145,7 +172,7 @@ class MoveController(AbstractController):
         shift_x = []
         snap_x = []
         for point in [tr_points[0], tr_points[2], tr_points[1]]:
-            flag, wp, dp = self.snap.snap_point(point, False, snap_y=False)
+            flag, _wp, dp = self.snap.snap_point(point, False, snap_y=False)
             if flag:
                 shift_x.append(dp[0] - point[0])
                 snap_x.append(dp[0])
@@ -169,7 +196,7 @@ class MoveController(AbstractController):
             line_points = self.selection.objs[0].get_line_points()
             pnts = libgeom.apply_trafo_to_points(line_points, trafo) + pnts
         for point in pnts:
-            flag, wp, dp = self.snap.snap_point(point, False, snap_x=False)
+            flag, _wp, dp = self.snap.snap_point(point, False, snap_x=False)
             if flag:
                 shift_y.append(dp[1] - point[1])
                 snap_y.append(dp[1])
@@ -191,65 +218,92 @@ class MoveController(AbstractController):
 
 
 DUPLICATE_MODES = {
-    0: modes.RESIZE_MODE1_COPY,
-    1: modes.RESIZE_MODE2_COPY,
-    2: modes.RESIZE_MODE3_COPY,
-    3: modes.RESIZE_MODE4_COPY,
-    5: modes.RESIZE_MODE4_COPY,
-    6: modes.RESIZE_MODE3_COPY,
-    7: modes.RESIZE_MODE2_COPY,
-    8: modes.RESIZE_MODE1_COPY,
-    9: modes.RESIZE_MODE,
-    10: modes.RESIZE_MODE10_COPY,
-    11: modes.RESIZE_MODE11_COPY,
-    12: modes.RESIZE_MODE10_COPY,
-    13: modes.RESIZE_MODE13_COPY,
-    14: modes.RESIZE_MODE13_COPY,
-    15: modes.RESIZE_MODE10_COPY,
-    16: modes.RESIZE_MODE11_COPY,
-    17: modes.RESIZE_MODE10_COPY,
+    MARK_TOP_LEFT_TRAFO: modes.RESIZE_MODE1_COPY,
+    MARK_TOP_TRAFO: modes.RESIZE_MODE2_COPY,
+    MARK_TOP_RIGHT_TRAFO: modes.RESIZE_MODE3_COPY,
+    MARK_LEFT_TRAFO: modes.RESIZE_MODE4_COPY,
+    MARK_RIGHT_TRAFO: modes.RESIZE_MODE4_COPY,
+    MARK_BOTTOM_LEFT_TRAFO: modes.RESIZE_MODE3_COPY,
+    MARK_BOTTOM_TRAFO: modes.RESIZE_MODE2_COPY,
+    MARK_BOTTOM_RIGHT_TRAFO: modes.RESIZE_MODE1_COPY,
+    MARK_ROTATE: modes.RESIZE_MODE,
+    MARK_TOP_LEFT_ROTATE: modes.RESIZE_MODE10_COPY,
+    MARK_TOP_SKEW: modes.RESIZE_MODE11_COPY,
+    MARK_TOP_RIGHT_ROTATE: modes.RESIZE_MODE10_COPY,
+    MARK_LEFT_SKEW: modes.RESIZE_MODE13_COPY,
+    MARK_RIGHT_SKEW: modes.RESIZE_MODE13_COPY,
+    MARK_BOTTOM_LEFT_ROTATE: modes.RESIZE_MODE10_COPY,
+    MARK_BOTTOM_SKEW: modes.RESIZE_MODE11_COPY,
+    MARK_BOTTOM_RIGHT_ROTATE: modes.RESIZE_MODE10_COPY,
 }
 
 REGULAR_MODES = {
-    0: modes.RESIZE_MODE1,
-    1: modes.RESIZE_MODE2,
-    2: modes.RESIZE_MODE3,
-    3: modes.RESIZE_MODE4,
-    5: modes.RESIZE_MODE4,
-    6: modes.RESIZE_MODE3,
-    7: modes.RESIZE_MODE2,
-    8: modes.RESIZE_MODE1,
-    9: modes.RESIZE_MODE,
-    10: modes.RESIZE_MODE10,
-    11: modes.RESIZE_MODE11,
-    12: modes.RESIZE_MODE10,
-    13: modes.RESIZE_MODE13,
-    14: modes.RESIZE_MODE13,
-    15: modes.RESIZE_MODE10,
-    16: modes.RESIZE_MODE11,
-    17: modes.RESIZE_MODE10,
+    MARK_TOP_LEFT_TRAFO: modes.RESIZE_MODE1,
+    MARK_TOP_TRAFO: modes.RESIZE_MODE2,
+    MARK_TOP_RIGHT_TRAFO: modes.RESIZE_MODE3,
+    MARK_LEFT_TRAFO: modes.RESIZE_MODE4,
+    MARK_RIGHT_TRAFO: modes.RESIZE_MODE4,
+    MARK_BOTTOM_LEFT_TRAFO: modes.RESIZE_MODE3,
+    MARK_BOTTOM_TRAFO: modes.RESIZE_MODE2,
+    MARK_BOTTOM_RIGHT_TRAFO: modes.RESIZE_MODE1,
+    MARK_ROTATE: modes.RESIZE_MODE,
+    MARK_TOP_LEFT_ROTATE: modes.RESIZE_MODE10,
+    MARK_TOP_SKEW: modes.RESIZE_MODE11,
+    MARK_TOP_RIGHT_ROTATE: modes.RESIZE_MODE10,
+    MARK_LEFT_SKEW: modes.RESIZE_MODE13,
+    MARK_RIGHT_SKEW: modes.RESIZE_MODE13,
+    MARK_BOTTOM_LEFT_ROTATE: modes.RESIZE_MODE10,
+    MARK_BOTTOM_SKEW: modes.RESIZE_MODE11,
+    MARK_BOTTOM_RIGHT_ROTATE: modes.RESIZE_MODE10,
 }
 
 
 class TransformController(AbstractController):
     mode = modes.RESIZE_MODE
+
+    # drawing data
+    frame = []
     painter = None
     trafo = None
+
+    # Actual event point
     offset_start = None
+
+    # Flags
+    copy = False  # entering into copy mode
+    moved = False  # entering into moving mode
 
     def __init__(self, canvas, presenter):
         AbstractController.__init__(self, canvas, presenter)
-        self.move = False
-        self.moved = False
-        self.copy = False
         self.frame = []
+        self._calc_trafo_handlers = {
+            MARK_TOP_LEFT_TRAFO: self._calc_top_left_scale_trafo,
+            MARK_TOP_TRAFO: self._calc_top_scale_trafo,
+            MARK_TOP_RIGHT_TRAFO: self._calc_top_right_scale_trafo,
+            MARK_LEFT_TRAFO: self._calc_left_scale_trafo,
+            MARK_RIGHT_TRAFO: self._calc_right_scale_trafo,
+            MARK_BOTTOM_LEFT_TRAFO: self._calc_bottom_left_scale_trafo,
+            MARK_BOTTOM_TRAFO: self._calc_bottom_scale_trafo,
+            MARK_BOTTOM_RIGHT_TRAFO: self._calc_bottom_right_scale_trafo,
+            MARK_TOP_SKEW: self._calc_top_skew_trafo,
+            MARK_BOTTOM_SKEW: self._calc_bottom_skew_trafo,
+            MARK_LEFT_SKEW: self._calc_left_skew_trafo,
+            MARK_RIGHT_SKEW: self._calc_right_skew_trafo,
+            MARK_TOP_LEFT_ROTATE: self._calc_top_left_rotate_trafo,
+            MARK_TOP_RIGHT_ROTATE: self._calc_top_right_rotate_trafo,
+            MARK_BOTTOM_LEFT_ROTATE: self._calc_bottom_left_rotate_trafo,
+            MARK_BOTTOM_RIGHT_ROTATE: self._calc_bottom_right_rotate_trafo,
+        }
 
     def repaint(self):
         if self.painter is not None:
             self.painter()
 
     def mouse_move(self, event):
-        if not self.move:
+        is_constraining = event.is_ctrl()
+        is_snapping = not event.is_shift()
+
+        if not self.start:
             point = self.canvas.win_to_doc(event.get_point())
             ret = self.selection.is_point_over_marker(point)
             if not ret:
@@ -260,46 +314,62 @@ class TransformController(AbstractController):
 
         else:
             self.end = event.get_point()
-            self.trafo = self._calc_trafo(event)
-            self.moved = True
+            if not self.canvas.resize_marker == MARK_ROTATE:
+                self.trafo = self._calc_trafo(event)
+                self.moved = True
+            else:
+                start = self.canvas.win_to_doc(self.start)
+                end = self.canvas.win_to_doc(self.end)
+
+                center = libgeom.bbox_center(self.selection.bbox)
+                offset = libgeom.add_points(center, self.offset_start)
+                dp = libgeom.sub_points(end, start)
+                cursor = libgeom.add_points(offset, dp)
+
+                if is_constraining:
+                    step = config.rotation_step
+                    cursor = libgeom.round_angle_point(center, cursor, step)
+                if is_snapping:
+                    cursor = self.snap.snap_point(cursor, False)[2]
+
+                center_offset = libgeom.sub_points(cursor, center)
+                self.selection.center_offset = center_offset
+                self.canvas.selection_redraw()
 
     def mouse_down(self, event):
         self.snap = self.presenter.snap
         self.start = event.get_point()
-        self.move = True
-        self.canvas.selection_repaint = False
-        if not self.canvas.resize_marker == 9:
+        self.timer.stop()
+        if not self.canvas.resize_marker == MARK_ROTATE:
             self.painter = self._draw_frame
             self.canvas.renderer.cdc_paint_doc()
+            self.canvas.selection_repaint = False
         else:
+            self.painter = None  # draw center
             self.offset_start = [] + self.selection.center_offset
-            self.painter = self._draw_center
             self.canvas.selection_repaint = True
         self.timer.start()
 
     def mouse_up(self, event):
         self.timer.stop()
         self.end = event.get_point()
-        self.move = False
-        self.canvas.selection_repaint = True
-        if not self.canvas.resize_marker == 9:
-            self.canvas.renderer.hide_move_frame()
+        if not self.canvas.resize_marker == MARK_ROTATE:
+            self.canvas.selection_repaint = True
             if self.moved:
+                self.canvas.renderer.hide_move_frame()
                 self.trafo = self._calc_trafo(event)
                 self.api.transform_selected(self.trafo, self.copy)
-            self.moved = False
-            self.copy = False
-            self.start = []
-            self.end = []
+
             point = self.canvas.win_to_doc(event.get_point())
             if not self.selection.is_point_over_marker(point):
                 self.canvas.restore_mode()
-        else:
-            self._draw_center()
-            self.moved = False
-            self.copy = False
-            self.start = []
-            self.end = []
+            else:
+                self.selection.update()
+        self.moved = False
+        self.copy = False
+        self.start = []
+        self.end = []
+        self.offset_start = []
 
     def mouse_right_up(self, event):
         if self.moved:
@@ -315,672 +385,661 @@ class TransformController(AbstractController):
         self.canvas.set_canvas_cursor(self.mode)
 
     def _calc_trafo(self, event):
-        control = event.is_ctrl()
-        shift = event.is_shift()
         mark = self.canvas.resize_marker
+        handler = self._calc_trafo_handlers.get(mark)
+        if handler:
+            trafo = handler(event)
+        else:
+            trafo = [] + sk2const.NORMAL_TRAFO
+        return trafo
+
+    def _calc_top_left_scale_trafo(self, event):
+        is_centering = event.is_shift()
+        is_constraining = event.is_ctrl()
+        is_snapping = True
+
+        m11, m21, m12, m22, dx, dy = sk2const.NORMAL_TRAFO
+        start_point = self.canvas.win_to_doc(self.start)
+        end_point = self.canvas.win_to_doc(self.end)
+        bbox = self.presenter.selection.bbox
+        bbox_points = libgeom.bbox_points(bbox)
+        point = bbox_points[1]
+        base_x, base_y = bbox_points[2]
+        w, h = libgeom.bbox_size(bbox)
+
+        if is_centering:
+            shift_x = w / 2.0 + self.selection.center_offset[0]
+            shift_y = h / 2.0 - self.selection.center_offset[1]
+
+            ratio_x = w / shift_x if shift_x else 1.0
+            ratio_y = h / shift_y if shift_y else 1.0
+
+            ratio_x = ratio_x if abs(ratio_x) < MAX_RATIO_TRAFO else 1.0
+            ratio_y = ratio_y if abs(ratio_y) < MAX_RATIO_TRAFO else 1.0
+
+            shift_x = w - shift_x
+            shift_y = shift_y - h
+        else:
+            shift_x, ratio_x = 0.0, 1.0
+            shift_y, ratio_y = 0.0, 1.0
+
+        change_x = w + (start_point[0] - end_point[0]) * ratio_x
+        change_y = h + (end_point[1] - start_point[1]) * ratio_y
+
+        if is_constraining:
+            if w < h:
+                m11 = m22 = change_x / w if w and change_x else 1.0
+            else:
+                m11 = m22 = change_y / h if h and change_y else 1.0
+        else:
+            m11 = change_x / w if w and change_x else 1.0
+            m22 = change_y / h if h and change_y else 1.0
+
+        dx = base_x - base_x * m11 + shift_x * (m11 - 1.0)
+        dy = base_y - base_y * m22 + shift_y * (m22 - 1.0)
+
+        if is_snapping:
+            trafo = [m11, m21, m12, m22, dx, dy]
+            p = libgeom.apply_trafo_to_point(point, trafo)
+            flag, _wp, end_point = self.snap.snap_point(p, False)
+            start_point = point
+            if flag:
+                change_x = w + (start_point[0] - end_point[0]) * ratio_x
+                change_y = h + (end_point[1] - start_point[1]) * ratio_y
+
+                if is_constraining:
+                    if self.snap.active_snap[0]:
+                        m11 = m22 = change_x / w if w and change_x else 1.0
+                    else:
+                        m11 = m22 = change_y / h if h and change_y else 1.0
+                else:
+                    m11 = change_x / w if w and change_x else 1.0
+                    m22 = change_y / h if h and change_y else 1.0
+
+                dx = base_x - base_x * m11 + shift_x * (m11 - 1.0)
+                dy = base_y - base_y * m22 + shift_y * (m22 - 1.0)
+
+        return [m11 or EPSILON, m21, m12, m22 or EPSILON, dx, dy]
+
+    def _calc_bottom_left_scale_trafo(self, event):
+        is_centering = event.is_shift()
+        is_constraining = event.is_ctrl()
+        is_snapping = True
+
+        m11, m21, m12, m22, dx, dy = sk2const.NORMAL_TRAFO
+        start_point = self.canvas.win_to_doc(self.start)
+        end_point = self.canvas.win_to_doc(self.end)
+        bbox = self.presenter.selection.bbox
+        bbox_points = libgeom.bbox_points(bbox)
+        point = bbox_points[0]
+        base_x, base_y = bbox_points[3]
+        w, h = libgeom.bbox_size(bbox)
+
+        if is_centering:
+            shift_x = w / 2.0 + self.selection.center_offset[0]
+            shift_y = h / 2.0 + self.selection.center_offset[1]
+
+            ratio_x = w / shift_x if shift_x else 1.0
+            ratio_y = h / shift_y if shift_y else 1.0
+
+            ratio_x = ratio_x if abs(ratio_x) < MAX_RATIO_TRAFO else 1.0
+            ratio_y = ratio_y if abs(ratio_y) < MAX_RATIO_TRAFO else 1.0
+
+            shift_x = w - shift_x
+            shift_y = h - shift_y
+        else:
+            shift_x, ratio_x = 0.0, 1.0
+            shift_y, ratio_y = 0.0, 1.0
+
+        change_x = w + (start_point[0] - end_point[0]) * ratio_x
+        change_y = h + (start_point[1] - end_point[1]) * ratio_y
+
+        if is_constraining:
+            if w < h:
+                m11 = m22 = change_x / w if w and change_x else 1.0
+            else:
+                m11 = m22 = change_y / h if h and change_y else 1.0
+        else:
+            m11 = change_x / w if w and change_x else 1.0
+            m22 = change_y / h if h and change_y else 1.0
+
+        dx = base_x - base_x * m11 + shift_x * (m11 - 1.0)
+        dy = base_y - base_y * m22 + shift_y * (m22 - 1.0)
+
+        if is_snapping:
+            trafo = [m11, m21, m12, m22, dx, dy]
+            p = libgeom.apply_trafo_to_point(point, trafo)
+            flag, _wp, end_point = self.snap.snap_point(p, False)
+            start_point = point
+            if flag:
+                change_x = w + (start_point[0] - end_point[0]) * ratio_x
+                change_y = h + (start_point[1] - end_point[1]) * ratio_y
+
+                if is_constraining:
+                    if self.snap.active_snap[0]:
+                        m11 = m22 = change_x / w if w and change_x else 1.0
+                    else:
+                        m11 = m22 = change_y / h if h and change_y else 1.0
+                else:
+                    m11 = change_x / w if w and change_x else 1.0
+                    m22 = change_y / h if h and change_y else 1.0
+
+                dx = base_x - base_x * m11 + shift_x * (m11 - 1.0)
+                dy = base_y - base_y * m22 + shift_y * (m22 - 1.0)
+
+        return [m11 or EPSILON, m21, m12, m22 or EPSILON, dx, dy]
+
+    def _calc_top_right_scale_trafo(self, event):
+        is_centering = event.is_shift()
+        is_constraining = event.is_ctrl()
+        is_snapping = True
+
+        m11, m21, m12, m22, dx, dy = sk2const.NORMAL_TRAFO
+        start_point = self.canvas.win_to_doc(self.start)
+        end_point = self.canvas.win_to_doc(self.end)
+        bbox = self.presenter.selection.bbox
+        bbox_points = libgeom.bbox_points(bbox)
+        point = bbox_points[3]
+        base_x, base_y = bbox_points[0]
+        w, h = libgeom.bbox_size(bbox)
+
+        if is_centering:
+            shift_x = w / 2.0 - self.selection.center_offset[0]
+            shift_y = h / 2.0 - self.selection.center_offset[1]
+
+            ratio_x = w / shift_x if shift_x else 1.0
+            ratio_y = h / shift_y if shift_y else 1.0
+
+            ratio_x = ratio_x if abs(ratio_x) < MAX_RATIO_TRAFO else 1.0
+            ratio_y = ratio_y if abs(ratio_y) < MAX_RATIO_TRAFO else 1.0
+
+            shift_x = shift_x - w
+            shift_y = shift_y - h
+        else:
+            shift_x, ratio_x = 0.0, 1.0
+            shift_y, ratio_y = 0.0, 1.0
+
+        change_x = w + (end_point[0] - start_point[0]) * ratio_x
+        change_y = h + (end_point[1] - start_point[1]) * ratio_y
+
+        if is_constraining:
+            if w < h:
+                m11 = m22 = change_x / w if w and change_x else 1.0
+            else:
+                m11 = m22 = change_y / h if h and change_y else 1.0
+        else:
+            m11 = change_x / w if w and change_x else 1.0
+            m22 = change_y / h if h and change_y else 1.0
+
+        dx = base_x - base_x * m11 + shift_x * (m11 - 1.0)
+        dy = base_y - base_y * m22 + shift_y * (m22 - 1.0)
+
+        if is_snapping:
+            trafo = [m11, m21, m12, m22, dx, dy]
+            p = libgeom.apply_trafo_to_point(point, trafo)
+            flag, _wp, end_point = self.snap.snap_point(p, False)
+            start_point = point
+            if flag:
+                change_x = w + (end_point[0] - start_point[0]) * ratio_x
+                change_y = h + (end_point[1] - start_point[1]) * ratio_y
+
+                if is_constraining:
+                    if self.snap.active_snap[0]:
+                        m11 = m22 = change_x / w if w and change_x else 1.0
+                    else:
+                        m11 = m22 = change_y / h if h and change_y else 1.0
+                else:
+                    m11 = change_x / w if w and change_x else 1.0
+                    m22 = change_y / h if h and change_y else 1.0
+
+                dx = base_x - base_x * m11 + shift_x * (m11 - 1.0)
+                dy = base_y - base_y * m22 + shift_y * (m22 - 1.0)
+
+        return [m11 or EPSILON, m21, m12, m22 or EPSILON, dx, dy]
+
+    def _calc_bottom_right_scale_trafo(self, event):
+        is_centering = event.is_shift()
+        is_constraining = event.is_ctrl()
+        is_snapping = True
+
+        m11, m21, m12, m22, dx, dy = sk2const.NORMAL_TRAFO
+        start_point = self.canvas.win_to_doc(self.start)
+        end_point = self.canvas.win_to_doc(self.end)
+        bbox = self.presenter.selection.bbox
+        bbox_points = libgeom.bbox_points(bbox)
+        point = bbox_points[2]
+        base_x, base_y = bbox_points[1]
+        w, h = libgeom.bbox_size(bbox)
+
+        if is_centering:
+            shift_x = w / 2.0 - self.selection.center_offset[0]
+            shift_y = h / 2.0 + self.selection.center_offset[1]
+
+            ratio_x = w / shift_x if shift_x else 1.0
+            ratio_y = h / shift_y if shift_y else 1.0
+
+            ratio_x = ratio_x if abs(ratio_x) < MAX_RATIO_TRAFO else 1.0
+            ratio_y = ratio_y if abs(ratio_y) < MAX_RATIO_TRAFO else 1.0
+
+            shift_x = shift_x - w
+            shift_y = h - shift_y
+        else:
+            shift_x, ratio_x = 0.0, 1.0
+            shift_y, ratio_y = 0.0, 1.0
+
+        change_x = w + (end_point[0] - start_point[0]) * ratio_x
+        change_y = h + (start_point[1] - end_point[1]) * ratio_y
+        if is_constraining:
+            if w < h:
+                m11 = m22 = change_x / w if w and change_x else 1.0
+            else:
+                m11 = m22 = change_y / h if h and change_y else 1.0
+        else:
+            m11 = change_x / w if w and change_x else 1.0
+            m22 = change_y / h if h and change_y else 1.0
+
+        dx = base_x - base_x * m11 + shift_x * (m11 - 1.0)
+        dy = base_y - base_y * m22 + shift_y * (m22 - 1.0)
+
+        if is_snapping:
+            trafo = [m11, m21, m12, m22, dx, dy]
+            p = libgeom.apply_trafo_to_point(point, trafo)
+            flag, _wp, end_point = self.snap.snap_point(p, False)
+            start_point = point
+            if flag:
+                change_x = w + (end_point[0] - start_point[0]) * ratio_x
+                change_y = h + (start_point[1] - end_point[1]) * ratio_y
+
+                if is_constraining:
+                    if self.snap.active_snap[0]:
+                        m11 = m22 = change_x / w if w and change_x else 1.0
+                    else:
+                        m11 = m22 = change_y / h if h and change_y else 1.0
+                else:
+                    m11 = change_x / w if w and change_x else 1.0
+                    m22 = change_y / h if h and change_y else 1.0
+
+                dx = base_x - base_x * m11 + shift_x * (m11 - 1.0)
+                dy = base_y - base_y * m22 + shift_y * (m22 - 1.0)
+
+        return [m11 or EPSILON, m21, m12, m22 or EPSILON, dx, dy]
+
+    def _calc_top_scale_trafo(self, event):
+        is_centering = event.is_shift()
+        is_constraining = event.is_ctrl()
+        is_snapping = not is_constraining
+
+        m11, m21, m12, m22, dx, dy = sk2const.NORMAL_TRAFO
         start_point = self.canvas.win_to_doc(self.start)
         end_point = self.canvas.win_to_doc(self.end)
         bbox = self.presenter.selection.bbox
         middle_points = libgeom.bbox_middle_points(bbox)
-        w = bbox[2] - bbox[0]
-        h = bbox[3] - bbox[1]
-        m11 = m22 = 1.0
-        m12 = m21 = 0.0
-        dx = dy = 0.0
-        snap = [None, None]
-        if mark == 0:
-            dx = start_point[0] - end_point[0]
-            dy = end_point[1] - start_point[1]
-            if shift:
-                if control:
-                    m11 = (w + 2.0 * dx) / w if w else 1.0
-                    m22 = (h + 2.0 * dy) / h if h else 1.0
-                    dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
-                    dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
-                    # ---- snapping
-                    point = middle_points[0]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
-                    if f:
-                        dx = point[0] - p_doc[0]
-                        m11 = (w + 2.0 * dx) / w if w else 1.0
-                        dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
-                        snap[0] = self.snap.active_snap[0]
-                    point = middle_points[1]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_x=False)
-                    if f:
-                        dy = p_doc[1] - point[1]
-                        m22 = (h + 2.0 * dy) / h if h else 1.0
-                        dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
-                        snap[1] = self.snap.active_snap[1]
-                    self.snap.active_snap = snap
-                # ---- snapping
-                else:
-                    if abs(dx) < abs(dy):
-                        m11 = m22 = (w + 2.0 * dx) / w if w else 1.0
-                    else:
-                        m11 = m22 = (h + 2.0 * dy) / h if h else 1.0
-                    dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
-                    dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
-                    # ---- snapping
-                    point = middle_points[0]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
-                    if f:
-                        dx = point[0] - p_doc[0]
-                        m11 = m22 = (w + 2.0 * dx) / w if w else 1.0
-                        dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
-                        dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
-                        snap[0] = self.snap.active_snap[0]
-                    else:
-                        point = middle_points[1]
-                        trafo = [m11, m21, m12, m22, dx, dy]
-                        p = libgeom.apply_trafo_to_point(point, trafo)
-                        f, p, p_doc = self.snap.snap_point(p, False,
-                                                           snap_x=False)
-                        if f:
-                            dy = p_doc[1] - point[1]
-                            m11 = m22 = (h + 2.0 * dy) / h if h else 1.0
-                            dx = -(bbox[2] * m11 - bbox[2]) + w * (
-                                    m11 - 1.0) / 2.0
-                            dy = -(bbox[1] * m22 - bbox[1]) - h * (
-                                    m22 - 1.0) / 2.0
-                            snap[1] = self.snap.active_snap[1]
-                    self.snap.active_snap = snap
-                    # ---- snapping
-            else:
-                if control:
-                    m11 = (w + dx) / w if w else 1.0
-                    m22 = (h + dy) / h if h else 1.0
-                    dx = -(bbox[2] * m11 - bbox[2])
-                    dy = -(bbox[1] * m22 - bbox[1])
-                    # ---- snapping
-                    point = middle_points[0]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
-                    if f:
-                        dx = point[0] - p_doc[0]
-                        m11 = (w + dx) / w if w else 1.0
-                        dx = -(bbox[2] * m11 - bbox[2])
-                        snap[0] = self.snap.active_snap[0]
-                    point = middle_points[1]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_x=False)
-                    if f:
-                        dy = p_doc[1] - point[1]
-                        m22 = (h + dy) / h if h else 1.0
-                        dy = -(bbox[1] * m22 - bbox[1])
-                        snap[1] = self.snap.active_snap[1]
-                    self.snap.active_snap = snap
-                # ---- snapping
-                else:
-                    if abs(dx) < abs(dy):
-                        m11 = m22 = (w + dx) / w if w else 1.0
-                    else:
-                        m11 = m22 = (h + dy) / h if h else 1.0
-                    dx = -(bbox[2] * m11 - bbox[2])
-                    dy = -(bbox[1] * m22 - bbox[1])
-                    # ---- snapping
-                    point = middle_points[0]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
-                    if f:
-                        dx = point[0] - p_doc[0]
-                        m11 = m22 = (w + dx) / w if w else 1.0
-                        dx = -(bbox[2] * m11 - bbox[2])
-                        dy = -(bbox[1] * m22 - bbox[1])
-                        snap[0] = self.snap.active_snap[0]
-                    else:
-                        point = middle_points[1]
-                        trafo = [m11, m21, m12, m22, dx, dy]
-                        p = libgeom.apply_trafo_to_point(point, trafo)
-                        f, p, p_doc = self.snap.snap_point(p, False,
-                                                           snap_x=False)
-                        if f:
-                            dy = p_doc[1] - point[1]
-                            m11 = m22 = (h + dy) / h if h else 1.0
-                            dx = -(bbox[2] * m11 - bbox[2])
-                            dy = -(bbox[1] * m22 - bbox[1])
-                            snap[1] = self.snap.active_snap[1]
-                    self.snap.active_snap = snap
-                    # ---- snapping
-        if mark == 1:
-            dy = end_point[1] - start_point[1]
-            if shift:
-                m22 = (h + 2.0 * dy) / h if h else 1.0
-                dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
-                # ---- snapping
-                point = middle_points[1]
-                trafo = [m11, m21, m12, m22, dx, dy]
-                p = libgeom.apply_trafo_to_point(point, trafo)
-                f, p, p_doc = self.snap.snap_point(p, False)
-                dy = p_doc[1] - point[1]
-                m22 = (h + 2.0 * dy) / h if h else 1.0
-                dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
-            # ---- snapping
-            else:
-                m22 = (h + dy) / h if h else 1.0
-                dy = -(bbox[1] * m22 - bbox[1])
-                # ---- snapping
-                point = middle_points[1]
-                trafo = [m11, m21, m12, m22, dx, dy]
-                p = libgeom.apply_trafo_to_point(point, trafo)
-                f, p, p_doc = self.snap.snap_point(p, False)
-                dy = p_doc[1] - point[1]
-                m22 = (h + dy) / h if h else 1.0
-                dy = -(bbox[1] * m22 - bbox[1])
-                # ---- snapping
-        if mark == 2:
-            dx = end_point[0] - start_point[0]
-            dy = end_point[1] - start_point[1]
-            if shift:
-                if control:
-                    m11 = (w + 2.0 * dx) / w if w else 1.0
-                    m22 = (h + 2.0 * dy) / h if h else 1.0
-                    dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
-                    dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
-                    # ---- snapping
-                    point = middle_points[2]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
-                    if f:
-                        dx = p_doc[0] - point[0]
-                        m11 = (w + 2.0 * dx) / w if w else 1.0
-                        dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
-                        snap[0] = self.snap.active_snap[0]
-                    point = middle_points[1]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_x=False)
-                    if f:
-                        dy = p_doc[1] - point[1]
-                        m22 = (h + 2.0 * dy) / h if h else 1.0
-                        dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
-                        snap[1] = self.snap.active_snap[1]
-                    self.snap.active_snap = snap
-                # ---- snapping
-                else:
-                    if abs(dx) < abs(dy):
-                        m11 = m22 = (w + 2.0 * dx) / w if w else 1.0
-                    else:
-                        m11 = m22 = (h + 2.0 * dy) / h if h else 1.0
-                    dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
-                    dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
-                    # ---- snapping
-                    point = middle_points[2]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
-                    if f:
-                        dx = p_doc[0] - point[0]
-                        m11 = m22 = (w + 2.0 * dx) / w if w else 1.0
-                        dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
-                        dy = -(bbox[1] * m22 - bbox[1]) - h * (m22 - 1.0) / 2.0
-                        snap[0] = self.snap.active_snap[0]
-                    else:
-                        point = middle_points[1]
-                        trafo = [m11, m21, m12, m22, dx, dy]
-                        p = libgeom.apply_trafo_to_point(point, trafo)
-                        f, p, p_doc = self.snap.snap_point(p, False,
-                                                           snap_x=False)
-                        if f:
-                            dy = p_doc[1] - point[1]
-                            m11 = m22 = (h + 2.0 * dy) / h if h else 1.0
-                            dx = -(bbox[0] * m11 - bbox[0]) - w * (
-                                    m11 - 1.0) / 2.0
-                            dy = -(bbox[1] * m22 - bbox[1]) - h * (
-                                    m22 - 1.0) / 2.0
-                            snap[1] = self.snap.active_snap[1]
-                    self.snap.active_snap = snap
-                    # ---- snapping
-            else:
-                if control:
-                    m11 = (w + dx) / w if w else 1.0
-                    m22 = (h + dy) / h if h else 1.0
-                    dx = -(bbox[0] * m11 - bbox[0])
-                    dy = -(bbox[1] * m22 - bbox[1])
-                    # ---- snapping
-                    point = middle_points[2]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
-                    if f:
-                        dx = p_doc[0] - point[0]
-                        m11 = (w + dx) / w if w else 1.0
-                        dx = -(bbox[0] * m11 - bbox[0])
-                        snap[0] = self.snap.active_snap[0]
-                    point = middle_points[1]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_x=False)
-                    if f:
-                        dy = p_doc[1] - point[1]
-                        m22 = (h + dy) / h if h else 1.0
-                        dy = -(bbox[1] * m22 - bbox[1])
-                        snap[1] = self.snap.active_snap[1]
-                    self.snap.active_snap = snap
-                # ---- snapping
-                else:
-                    if abs(dx) < abs(dy):
-                        m11 = m22 = (w + dx) / w if w else 1.0
-                    else:
-                        m11 = m22 = (h + dy) / h if h else 1.0
-                    dx = -(bbox[0] * m11 - bbox[0])
-                    dy = -(bbox[1] * m22 - bbox[1])
-                    # ---- snapping
-                    point = middle_points[2]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
-                    if f:
-                        dx = p_doc[0] - point[0]
-                        m11 = m22 = (w + dx) / w if w else 1.0
-                        dx = -(bbox[0] * m11 - bbox[0])
-                        dy = -(bbox[1] * m22 - bbox[1])
-                        snap[0] = self.snap.active_snap[0]
-                    else:
-                        point = middle_points[1]
-                        trafo = [m11, m21, m12, m22, dx, dy]
-                        p = libgeom.apply_trafo_to_point(point, trafo)
-                        f, p, p_doc = self.snap.snap_point(p, False,
-                                                           snap_x=False)
-                        if f:
-                            dy = p_doc[1] - point[1]
-                            m11 = m22 = (h + dy) / h if h else 1.0
-                            dx = -(bbox[0] * m11 - bbox[0])
-                            dy = -(bbox[1] * m22 - bbox[1])
-                            snap[1] = self.snap.active_snap[1]
-                    self.snap.active_snap = snap
-                    # ---- snapping
-        if mark == 3:
-            dx = start_point[0] - end_point[0]
-            if shift:
-                m11 = (w + 2.0 * dx) / w if w else 1.0
-                dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
-                # ---- snapping
-                point = middle_points[0]
-                trafo = [m11, m21, m12, m22, dx, dy]
-                p = libgeom.apply_trafo_to_point(point, trafo)
-                f, p, p_doc = self.snap.snap_point(p, False)
-                dx = point[0] - p_doc[0]
-                m11 = (w + 2.0 * dx) / w if w else 1.0
-                dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
-            # ---- snapping
-            else:
-                m11 = (w + dx) / w if w else 1.0
-                dx = -(bbox[2] * m11 - bbox[2])
-                # ---- snapping
-                point = middle_points[0]
-                trafo = [m11, m21, m12, m22, dx, dy]
-                p = libgeom.apply_trafo_to_point(point, trafo)
-                f, p, p_doc = self.snap.snap_point(p, False)
-                dx = point[0] - p_doc[0]
-                m11 = (w + dx) / w if w else 1.0
-                dx = -(bbox[2] * m11 - bbox[2])
-                # ---- snapping
-        if mark == 5:
-            dx = end_point[0] - start_point[0]
-            if shift:
-                m11 = (w + 2.0 * dx) / w if w else 1.0
-                dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
-                # ---- snapping
-                point = middle_points[2]
-                trafo = [m11, m21, m12, m22, dx, dy]
-                p = libgeom.apply_trafo_to_point(point, trafo)
-                f, p, p_doc = self.snap.snap_point(p, False)
-                dx = p_doc[0] - point[0]
-                m11 = (w + 2.0 * dx) / w if w else 1.0
-                dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
-            # ---- snapping
-            else:
-                m11 = (w + dx) / w if w else 1.0
-                dx = -(bbox[0] * m11 - bbox[0])
-                # ---- snapping
-                point = middle_points[2]
-                trafo = [m11, m21, m12, m22, dx, dy]
-                p = libgeom.apply_trafo_to_point(point, trafo)
-                f, p, p_doc = self.snap.snap_point(p, False)
-                dx = p_doc[0] - point[0]
-                m11 = (w + dx) / w if w else 1.0
-                dx = -(bbox[0] * m11 - bbox[0])
-                # ---- snapping
-        if mark == 6:
-            dx = start_point[0] - end_point[0]
-            dy = start_point[1] - end_point[1]
-            if shift:
-                if control:
-                    m11 = (w + 2.0 * dx) / w if w else 1.0
-                    m22 = (h + 2.0 * dy) / h if h else 1.0
-                    dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
-                    dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
-                    # ---- snapping
-                    point = middle_points[0]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
-                    if f:
-                        dx = point[0] - p_doc[0]
-                        m11 = (w + 2.0 * dx) / w if w else 1.0
-                        dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
-                        snap[0] = self.snap.active_snap[0]
-                    point = middle_points[3]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_x=False)
-                    if f:
-                        dy = point[1] - p_doc[1]
-                        m22 = (h + 2.0 * dy) / h if h else 1.0
-                        dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
-                        snap[1] = self.snap.active_snap[1]
-                    self.snap.active_snap = snap
-                # ---- snapping
-                else:
-                    if abs(dx) < abs(dy):
-                        m11 = m22 = (w + 2.0 * dx) / w if w else 1.0
-                    else:
-                        m11 = m22 = (h + 2.0 * dy) / h if h else 1.0
-                    dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
-                    dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
-                    # ---- snapping
-                    point = middle_points[0]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
-                    if f:
-                        dx = point[0] - p_doc[0]
-                        m11 = m22 = (w + 2.0 * dx) / w if w else 1.0
-                        dx = -(bbox[2] * m11 - bbox[2]) + w * (m11 - 1.0) / 2.0
-                        dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
-                        snap[0] = self.snap.active_snap[0]
-                    else:
-                        point = middle_points[3]
-                        trafo = [m11, m21, m12, m22, dx, dy]
-                        p = libgeom.apply_trafo_to_point(point, trafo)
-                        f, p, p_doc = self.snap.snap_point(p, False,
-                                                           snap_x=False)
-                        if f:
-                            dy = point[1] - p_doc[1]
-                            m11 = m22 = (h + 2.0 * dy) / h if h else 1.0
-                            dx = -(bbox[2] * m11 - bbox[2]) + w * (
-                                    m11 - 1.0) / 2.0
-                            dy = -(bbox[3] * m22 - bbox[3]) + h * (
-                                    m22 - 1.0) / 2.0
-                            snap[1] = self.snap.active_snap[1]
-                    self.snap.active_snap = snap
-                    # ---- snapping
-            else:
-                if control:
-                    m11 = (w + dx) / w if w else 1.0
-                    m22 = (h + dy) / h if h else 1.0
-                    dx = -(bbox[2] * m11 - bbox[2])
-                    dy = -(bbox[3] * m22 - bbox[3])
-                    # ---- snapping
-                    point = middle_points[0]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
-                    if f:
-                        dx = point[0] - p_doc[0]
-                        m11 = (w + dx) / w if w else 1.0
-                        dx = -(bbox[2] * m11 - bbox[2])
-                        snap[0] = self.snap.active_snap[0]
-                    point = middle_points[3]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_x=False)
-                    if f:
-                        dy = point[1] - p_doc[1]
-                        m22 = (h + dy) / h if h else 1.0
-                        dy = -(bbox[3] * m22 - bbox[3])
-                        snap[1] = self.snap.active_snap[1]
-                    self.snap.active_snap = snap
-                # ---- snapping
-                else:
-                    if abs(dx) < abs(dy):
-                        m11 = m22 = (w + dx) / w if w else 1.0
-                    else:
-                        m11 = m22 = (h + dy) / h if h else 1.0
-                    dx = -(bbox[2] * m11 - bbox[2])
-                    dy = -(bbox[3] * m22 - bbox[3])
-                    # ---- snapping
-                    point = middle_points[0]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
-                    if f:
-                        dx = point[0] - p_doc[0]
-                        m11 = m22 = (w + dx) / w if w else 1.0
-                        dx = -(bbox[2] * m11 - bbox[2])
-                        dy = -(bbox[3] * m22 - bbox[3])
-                        snap[0] = self.snap.active_snap[0]
-                    else:
-                        point = middle_points[3]
-                        trafo = [m11, m21, m12, m22, dx, dy]
-                        p = libgeom.apply_trafo_to_point(point, trafo)
-                        f, p, p_doc = self.snap.snap_point(p, False,
-                                                           snap_x=False)
-                        if f:
-                            dy = point[1] - p_doc[1]
-                            m11 = m22 = (h + dy) / h if h else 1.0
-                            dx = -(bbox[2] * m11 - bbox[2])
-                            dy = -(bbox[3] * m22 - bbox[3])
-                            snap[1] = self.snap.active_snap[1]
-                    self.snap.active_snap = snap
-                    # ---- snapping
-        if mark == 7:
-            dy = start_point[1] - end_point[1]
-            if shift:
-                m22 = (h + 2.0 * dy) / h if h else 1.0
-                dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
-                # ---- snapping
-                point = middle_points[3]
-                trafo = [m11, m21, m12, m22, dx, dy]
-                p = libgeom.apply_trafo_to_point(point, trafo)
-                f, p, p_doc = self.snap.snap_point(p, False)
-                dy = point[1] - p_doc[1]
-                m22 = (h + 2.0 * dy) / h if h else 1.0
-                dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
-            # ---- snapping
-            else:
-                m22 = (h + dy) / h if h else 1.0
-                dy = -(bbox[3] * m22 - bbox[3])
-                # ---- snapping
-                point = middle_points[3]
-                trafo = [m11, m21, m12, m22, dx, dy]
-                p = libgeom.apply_trafo_to_point(point, trafo)
-                f, p, p_doc = self.snap.snap_point(p, False)
-                dy = point[1] - p_doc[1]
-                m22 = (h + dy) / h if h else 1.0
-                dy = -(bbox[3] * m22 - bbox[3])
-                # ---- snapping
-        if mark == 8:
-            dx = end_point[0] - start_point[0]
-            dy = start_point[1] - end_point[1]
-            if shift:
-                if control:
-                    m11 = (w + 2.0 * dx) / w if w else 1.0
-                    m22 = (h + 2.0 * dy) / h if h else 1.0
-                    dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
-                    dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
-                    # ---- snapping
-                    point = middle_points[2]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
-                    if f:
-                        dx = p_doc[0] - point[0]
-                        m11 = (w + 2.0 * dx) / w if w else 1.0
-                        dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
-                        snap[0] = self.snap.active_snap[0]
-                    point = middle_points[3]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_x=False)
-                    if f:
-                        dy = point[1] - p_doc[1]
-                        m22 = (h + 2.0 * dy) / h if h else 1.0
-                        dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
-                        snap[1] = self.snap.active_snap[1]
-                    self.snap.active_snap = snap
-                # ---- snapping
-                else:
-                    if abs(dx) < abs(dy):
-                        m11 = m22 = (w + 2.0 * dx) / w if w else 1.0
-                    else:
-                        m11 = m22 = (h + 2.0 * dy) / h if h else 1.0
-                    dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
-                    dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
-                    # ---- snapping
-                    point = middle_points[2]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
-                    if f:
-                        dx = p_doc[0] - point[0]
-                        m11 = m22 = (w + 2.0 * dx) / w if w else 1.0
-                        dx = -(bbox[0] * m11 - bbox[0]) - w * (m11 - 1.0) / 2.0
-                        dy = -(bbox[3] * m22 - bbox[3]) + h * (m22 - 1.0) / 2.0
-                        snap[0] = self.snap.active_snap[0]
-                    else:
-                        point = middle_points[3]
-                        trafo = [m11, m21, m12, m22, dx, dy]
-                        p = libgeom.apply_trafo_to_point(point, trafo)
-                        f, p, p_doc = self.snap.snap_point(p, False,
-                                                           snap_x=False)
-                        if f:
-                            dy = point[1] - p_doc[1]
-                            m11 = m22 = (h + 2.0 * dy) / h if h else 1.0
-                            dx = -(bbox[0] * m11 - bbox[0]) - w * (
-                                    m11 - 1.0) / 2.0
-                            dy = -(bbox[3] * m22 - bbox[3]) + h * (
-                                    m22 - 1.0) / 2.0
-                            snap[1] = self.snap.active_snap[1]
-                    self.snap.active_snap = snap
-                    # ---- snapping
-            else:
-                if control:
-                    m11 = (w + dx) / w if w else 1.0
-                    m22 = (h + dy) / h if h else 1.0
-                    dx = -(bbox[0] * m11 - bbox[0])
-                    dy = -(bbox[3] * m22 - bbox[3])
-                    # ---- snapping
-                    point = middle_points[2]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
-                    if f:
-                        dx = p_doc[0] - point[0]
-                        m11 = (w + dx) / w if w else 1.0
-                        dx = -(bbox[0] * m11 - bbox[0])
-                        snap[0] = self.snap.active_snap[0]
-                    point = middle_points[3]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_x=False)
-                    if f:
-                        dy = point[1] - p_doc[1]
-                        m22 = (h + dy) / h if h else 1.0
-                        dy = -(bbox[3] * m22 - bbox[3])
-                        snap[1] = self.snap.active_snap[1]
-                    self.snap.active_snap = snap
-                # ---- snapping
-                else:
-                    if abs(dx) < abs(dy):
-                        m11 = m22 = (w + dx) / w if w else 1.0
-                    else:
-                        m11 = m22 = (h + dy) / h if h else 1.0
-                    dx = -(bbox[0] * m11 - bbox[0])
-                    dy = -(bbox[3] * m22 - bbox[3])
-                    # ---- snapping
-                    point = middle_points[2]
-                    trafo = [m11, m21, m12, m22, dx, dy]
-                    p = libgeom.apply_trafo_to_point(point, trafo)
-                    f, p, p_doc = self.snap.snap_point(p, False, snap_y=False)
-                    if f:
-                        dx = p_doc[0] - point[0]
-                        m11 = m22 = (w + dx) / w if w else 1.0
-                        dx = -(bbox[0] * m11 - bbox[0])
-                        dy = -(bbox[3] * m22 - bbox[3])
-                        snap[0] = self.snap.active_snap[0]
-                    else:
-                        point = middle_points[3]
-                        trafo = [m11, m21, m12, m22, dx, dy]
-                        p = libgeom.apply_trafo_to_point(point, trafo)
-                        f, p, p_doc = self.snap.snap_point(p, False,
-                                                           snap_x=False)
-                        if f:
-                            dy = point[1] - p_doc[1]
-                            m11 = m22 = (h + dy) / h if h else 1.0
-                            dx = -(bbox[0] * m11 - bbox[0])
-                            dy = -(bbox[3] * m22 - bbox[3])
-                            snap[1] = self.snap.active_snap[1]
-                    self.snap.active_snap = snap
-                    # ---- snapping
+        point = middle_points[1]
+        base_y = bbox[1]
+        w, h = libgeom.bbox_size(bbox)
 
-        if mark == 11:
-            change_x = end_point[0] - start_point[0]
+        if is_centering:
+            shift_y = h / 2.0 - self.selection.center_offset[1]
+            ratio_y = h / shift_y if shift_y else 1.0
+            ratio_y = ratio_y if abs(ratio_y) < MAX_RATIO_TRAFO else 1.0
+            shift_y = shift_y - h
+        else:
+            shift_y, ratio_y = 0.0, 1.0
+
+        change_y = h + (end_point[1] - start_point[1]) * ratio_y
+        if is_constraining and h and change_y:
+            if -h < change_y < h:
+                change_y = 1.0 / (h // change_y) * h
+            else:
+                change_y = h + (change_y - h / 2) // h * h
+
+        m22 = change_y / h if h and change_y else 1.0
+        dy = base_y - base_y * m22 + shift_y * (m22 - 1.0)
+
+        if is_snapping:
+            trafo = [m11, m21, m12, m22, dx, dy]
+            p = libgeom.apply_trafo_to_point(point, trafo)
+            flag, _wp, end_point = self.snap.snap_point(p, False)
+            start_point = point
+            if flag:
+                change_y = h + (end_point[1] - start_point[1]) * ratio_y
+                m22 = change_y / h if h else 1.0
+                dy = base_y - base_y * m22 + shift_y * (m22 - 1.0)
+
+        return [m11 or EPSILON, m21, m12, m22 or EPSILON, dx, dy]
+
+    def _calc_left_scale_trafo(self, event):
+        is_centering = event.is_shift()
+        is_constraining = event.is_ctrl()
+        is_snapping = not is_constraining
+
+        m11, m21, m12, m22, dx, dy = sk2const.NORMAL_TRAFO
+        start_point = self.canvas.win_to_doc(self.start)
+        end_point = self.canvas.win_to_doc(self.end)
+        bbox = self.presenter.selection.bbox
+        middle_points = libgeom.bbox_middle_points(bbox)
+        point = middle_points[0]
+        base_x = bbox[2]
+        w = libgeom.bbox_size(bbox)[0]
+
+        if is_centering:
+            shift_x = w / 2.0 + self.selection.center_offset[0]
+            ratio_x = w / shift_x if shift_x else 1.0
+            ratio_x = ratio_x if abs(ratio_x) < MAX_RATIO_TRAFO else 1.0
+            shift_x = w - shift_x
+        else:
+            shift_x, ratio_x = 0.0, 1.0
+
+        change_x = w + (start_point[0] - end_point[0]) * ratio_x
+        if is_constraining and w and change_x:
+            if -w < change_x < w:
+                change_x = 1.0 / (w // change_x) * w
+            else:
+                change_x = w + (change_x - w / 2) // w * w
+
+        m11 = change_x / w if w and change_x else 1.0
+        dx = base_x - base_x * m11 + shift_x * (m11 - 1.0)
+
+        if is_snapping:
+            trafo = [m11, m21, m12, m22, dx, dy]
+            p = libgeom.apply_trafo_to_point(point, trafo)
+            flag, _wp, end_point = self.snap.snap_point(p, False)
+            start_point = point
+            if flag:
+                change_x = w + (start_point[0] - end_point[0]) * ratio_x
+                m11 = change_x / w if w else 1.0
+                dx = base_x - base_x * m11 + shift_x * (m11 - 1.0)
+
+        return [m11 or EPSILON, m21, m12, m22 or EPSILON, dx, dy]
+
+    def _calc_right_scale_trafo(self, event):
+        is_centering = event.is_shift()
+        is_constraining = event.is_ctrl()
+        is_snapping = not is_constraining
+
+        m11, m21, m12, m22, dx, dy = sk2const.NORMAL_TRAFO
+        start_point = self.canvas.win_to_doc(self.start)
+        end_point = self.canvas.win_to_doc(self.end)
+        bbox = self.presenter.selection.bbox
+        point = libgeom.bbox_middle_points(bbox)[2]
+        base_x = bbox[0]
+        w = libgeom.bbox_size(bbox)[0]
+
+        if is_centering:
+            shift_x = w / 2.0 - self.selection.center_offset[0]
+            ratio_x = w / shift_x if shift_x else 1.0
+            ratio_x = ratio_x if abs(ratio_x) < MAX_RATIO_TRAFO else 1.0
+            shift_x = shift_x - w
+        else:
+            shift_x, ratio_x = 0.0, 1.0
+
+        change_x = w + (end_point[0] - start_point[0]) * ratio_x
+        if is_constraining and w and change_x:
+            if -w < change_x < w:
+                change_x = 1.0 / (w // change_x) * w
+            else:
+                change_x = w + (change_x - w / 2) // w * w
+
+        m11 = change_x / w if w and change_x else 1.0
+        dx = base_x - base_x * m11 + shift_x * (m11 - 1.0)
+
+        if is_snapping:
+            trafo = [m11, m21, m12, m22, dx, dy]
+            p = libgeom.apply_trafo_to_point(point, trafo)
+            flag, _wp, end_point = self.snap.snap_point(p, False)
+            start_point = point
+            if flag:
+                change_x = w + (end_point[0] - start_point[0]) * ratio_x
+                m11 = change_x / w if w else 1.0
+                dx = base_x - base_x * m11 + shift_x * (m11 - 1.0)
+
+        return [m11 or EPSILON, m21, m12, m22 or EPSILON, dx, dy]
+
+    def _calc_bottom_scale_trafo(self, event):
+        is_centering = event.is_shift()
+        is_constraining = event.is_ctrl()
+        is_snapping = not is_constraining
+
+        m11, m21, m12, m22, dx, dy = sk2const.NORMAL_TRAFO
+        start_point = self.canvas.win_to_doc(self.start)
+        end_point = self.canvas.win_to_doc(self.end)
+        bbox = self.presenter.selection.bbox
+        middle_points = libgeom.bbox_middle_points(bbox)
+        point = middle_points[3]
+        base_y = bbox[3]
+        h = libgeom.bbox_size(bbox)[1]
+
+        if is_centering:
+            shift_y = h / 2.0 + self.selection.center_offset[1]
+            ratio_y = h / shift_y if shift_y else 1.0
+            ratio_y = ratio_y if abs(ratio_y) < MAX_RATIO_TRAFO else 1.0
+            shift_y = h - shift_y
+        else:
+            shift_y, ratio_y = 0.0, 1.0
+
+        change_y = h + (start_point[1] - end_point[1]) * ratio_y
+        if is_constraining and h and change_y:
+            if -h < change_y < h:
+                change_y = 1.0 / (h // change_y) * h
+            else:
+                change_y = h + (change_y - h / 2) // h * h
+
+        m22 = change_y / h if h and change_y else 1.0
+        dy = base_y - base_y * m22 + shift_y * (m22 - 1.0)
+
+        if is_snapping:
+            trafo = [m11, m21, m12, m22, dx, dy]
+            p = libgeom.apply_trafo_to_point(point, trafo)
+            flag, _wp, end_point = self.snap.snap_point(p, False)
+            start_point = point
+            if flag:
+                change_y = h + (start_point[1] - end_point[1]) * ratio_y
+                m22 = change_y / h if h else 1.0
+                dy = base_y - base_y * m22 + shift_y * (m22 - 1.0)
+
+        return [m11 or EPSILON, m21, m12, m22 or EPSILON, dx, dy]
+
+    def _calc_top_skew_trafo(self, event):
+        is_centering = event.is_shift()
+        is_constraining = event.is_ctrl()
+
+        start_point = self.canvas.win_to_doc(self.start)
+        end_point = self.canvas.win_to_doc(self.end)
+        bbox = self.presenter.selection.bbox
+        h = libgeom.bbox_size(bbox)[1]
+        m11, m21, m12, m22, dx, dy = sk2const.NORMAL_TRAFO
+        change_x = end_point[0] - start_point[0]
+
+        cy = bbox[1]
+        if is_centering:
+            center_offset = self.presenter.selection.center_offset
+            cy = libgeom.add_points(libgeom.bbox_center(bbox), center_offset)[1]
+
+        if is_constraining:
+            step = math.radians(config.skew_fixed_angle)
+            angle = (math.atan2(change_x, h) + step / 2.0) // step * step
+            m12 = math.tan(angle)
+        else:
             m12 = change_x / h if h else 1.0
-            dx = -bbox[1] * m12
-        if mark == 16:
-            change_x = start_point[0] - end_point[0]
+
+        dx = -cy * m12
+        return [m11 or EPSILON, m21, m12, m22 or EPSILON, dx, dy]
+
+    def _calc_bottom_skew_trafo(self, event):
+        is_centering = event.is_shift()
+        is_constraining = event.is_ctrl()
+
+        start_point = self.canvas.win_to_doc(self.start)
+        end_point = self.canvas.win_to_doc(self.end)
+        bbox = self.presenter.selection.bbox
+        h = libgeom.bbox_size(bbox)[1]
+        m11, m21, m12, m22, dx, dy = sk2const.NORMAL_TRAFO
+        change_x = start_point[0] - end_point[0]
+
+        cy = bbox[3]
+        if is_centering:
+            center_offset = self.presenter.selection.center_offset
+            cy = libgeom.add_points(libgeom.bbox_center(bbox), center_offset)[1]
+
+        if is_constraining:
+            step = math.radians(config.skew_fixed_angle)
+            angle = (math.atan2(change_x, h) + step / 2.0) // step * step
+            m12 = math.tan(angle)
+        else:
             m12 = change_x / h if h else 1.0
-            dx = -bbox[3] * m12
-        if mark == 13:
-            change_y = start_point[1] - end_point[1]
-            m21 = change_y / w if w else 1.0
-            dy = -bbox[2] * m21
-        if mark == 14:
-            change_y = end_point[1] - start_point[1]
-            m21 = change_y / w if w else 1.0
-            dy = -bbox[0] * m21
 
-        if mark in (10, 12, 15, 17):
-            x0, y0 = bbox[:2]
-            shift_x, shift_y = self.selection.center_offset
-            center_x = x0 + w / 2.0 + shift_x
-            center_y = y0 + h / 2.0 + shift_y
-            a1 = math.atan2(start_point[1] - center_y,
-                            start_point[0] - center_x)
-            a2 = math.atan2(end_point[1] - center_y, end_point[0] - center_x)
-            angle = a2 - a1
-            if control:
-                step = config.rotation_step * math.pi / 180.0
-                angle = round(angle / step) * step
-            m21 = math.sin(angle)
-            m11 = m22 = math.cos(angle)
-            m12 = -m21
-            dx = center_x - m11 * center_x + m21 * center_y
-            dy = center_y - m21 * center_x - m11 * center_y
+        dx = -cy * m12
+        return [m11 or EPSILON, m21, m12, m22 or EPSILON, dx, dy]
 
-        m11 = m11 or .000001
-        m22 = m22 or .000001
-        return [m11, m21, m12, m22, dx, dy]
+    def _calc_left_skew_trafo(self, event):
+        is_centering = event.is_shift()
+        is_constraining = event.is_ctrl()
 
-    def _draw_frame(self, *args):
+        start_point = self.canvas.win_to_doc(self.start)
+        end_point = self.canvas.win_to_doc(self.end)
+        bbox = self.presenter.selection.bbox
+        h = libgeom.bbox_size(bbox)[1]
+        m11, m21, m12, m22, dx, dy = sk2const.NORMAL_TRAFO
+        change_y = start_point[1] - end_point[1]
+
+        cx = bbox[2]
+        if is_centering:
+            center_offset = self.presenter.selection.center_offset
+            cx = libgeom.add_points(libgeom.bbox_center(bbox), center_offset)[0]
+
+        if is_constraining:
+            step = math.radians(config.skew_fixed_angle)
+            angle = (math.atan2(change_y, h) + step / 2.0) // step * step
+            m21 = math.tan(angle)
+        else:
+            m21 = change_y / h if h else 1.0
+
+        dy = -cx * m21
+        return [m11 or EPSILON, m21, m12, m22 or EPSILON, dx, dy]
+
+    def _calc_right_skew_trafo(self, event):
+        is_centering = event.is_shift()
+        is_constraining = event.is_ctrl()
+
+        start_point = self.canvas.win_to_doc(self.start)
+        end_point = self.canvas.win_to_doc(self.end)
+        bbox = self.presenter.selection.bbox
+        h = libgeom.bbox_size(bbox)[1]
+        m11, m21, m12, m22, dx, dy = sk2const.NORMAL_TRAFO
+        change_y = end_point[1] - start_point[1]
+
+        cx = bbox[0]
+        if is_centering:
+            center_offset = self.presenter.selection.center_offset
+            cx = libgeom.add_points(libgeom.bbox_center(bbox), center_offset)[0]
+
+        if is_constraining:
+            step = math.radians(config.skew_fixed_angle)
+            angle = (math.atan2(change_y, h) + step / 2.0) // step * step
+            m21 = math.tan(angle)
+        else:
+            m21 = change_y / h if h else 1.0
+
+        dy = -cx * m21
+        return [m11 or EPSILON, m21, m12, m22 or EPSILON, dx, dy]
+
+    def _calc_top_left_rotate_trafo(self, event):
+        is_centering = not event.is_shift()
+        is_constraining = event.is_ctrl()
+
+        start_point = self.canvas.win_to_doc(self.start)
+        end_point = self.canvas.win_to_doc(self.end)
+        bbox = self.presenter.selection.bbox
+
+        if is_centering:
+            bbox_center = libgeom.bbox_center(bbox)
+            center_offset = self.selection.center_offset
+            center = libgeom.add_points(bbox_center, center_offset)
+        else:
+            center = libgeom.bbox_points(bbox)[2]
+
+        a1 = libgeom.get_point_angle(start_point, center)
+        a2 = libgeom.get_point_angle(end_point, center)
+        angle = a2 - a1
+        if is_constraining:
+            step = math.radians(config.rotation_step)
+            angle = (angle + step / 2.0) // step * step
+
+        return libgeom.trafo_rotate(angle, center[0], center[1])
+
+    def _calc_top_right_rotate_trafo(self, event):
+        is_centering = not event.is_shift()
+        is_constraining = event.is_ctrl()
+
+        start_point = self.canvas.win_to_doc(self.start)
+        end_point = self.canvas.win_to_doc(self.end)
+        bbox = self.presenter.selection.bbox
+
+        if is_centering:
+            bbox_center = libgeom.bbox_center(bbox)
+            center_offset = self.selection.center_offset
+            center = libgeom.add_points(bbox_center, center_offset)
+        else:
+            center = libgeom.bbox_points(bbox)[0]
+
+        a1 = libgeom.get_point_angle(start_point, center)
+        a2 = libgeom.get_point_angle(end_point, center)
+        angle = a2 - a1
+        if is_constraining:
+            step = math.radians(config.rotation_step)
+            angle = (angle + step / 2.0) // step * step
+
+        return libgeom.trafo_rotate(angle, center[0], center[1])
+
+    def _calc_bottom_left_rotate_trafo(self, event):
+        is_centering = not event.is_shift()
+        is_constraining = event.is_ctrl()
+
+        start_point = self.canvas.win_to_doc(self.start)
+        end_point = self.canvas.win_to_doc(self.end)
+        bbox = self.presenter.selection.bbox
+
+        if is_centering:
+            bbox_center = libgeom.bbox_center(bbox)
+            center_offset = self.selection.center_offset
+            center = libgeom.add_points(bbox_center, center_offset)
+        else:
+            center = libgeom.bbox_points(bbox)[3]
+
+        a1 = libgeom.get_point_angle(start_point, center)
+        a2 = libgeom.get_point_angle(end_point, center)
+        angle = a2 - a1
+        if is_constraining:
+            step = math.radians(config.rotation_step)
+            angle = (angle + step / 2.0) // step * step
+
+        return libgeom.trafo_rotate(angle, center[0], center[1])
+
+    def _calc_bottom_right_rotate_trafo(self, event):
+        is_centering = not event.is_shift()
+        is_constraining = event.is_ctrl()
+
+        start_point = self.canvas.win_to_doc(self.start)
+        end_point = self.canvas.win_to_doc(self.end)
+        bbox = self.presenter.selection.bbox
+
+        if is_centering:
+            bbox_center = libgeom.bbox_center(bbox)
+            center_offset = self.selection.center_offset
+            center = libgeom.add_points(bbox_center, center_offset)
+        else:
+            center = libgeom.bbox_points(bbox)[1]
+
+        a1 = libgeom.get_point_angle(start_point, center)
+        a2 = libgeom.get_point_angle(end_point, center)
+        angle = a2 - a1
+        if is_constraining:
+            step = math.radians(config.rotation_step)
+            angle = (angle + step / 2.0) // step * step
+
+        return libgeom.trafo_rotate(angle, center[0], center[1])
+
+    def _draw_frame(self, *_args):
         if self.end:
             self.canvas.renderer.cdc_draw_move_frame(self.trafo)
             self.end = []
-        return True
-
-    def _draw_center(self, *args):
-        if self.end:
-            start = self.canvas.win_to_doc(self.start)
-            end = self.canvas.win_to_doc(self.end)
-            dx = end[0] - start[0]
-            dy = end[1] - start[1]
-            x, y = self.offset_start
-            cp = libgeom.bbox_center(self.selection.bbox)
-            doc_p = \
-                self.snap.snap_point([cp[0] + x + dx, cp[1] + y + dy], False)[2]
-            self.selection.center_offset = [doc_p[0] - cp[0], doc_p[1] - cp[1]]
-            self.canvas.selection_redraw()
-        # self.canvas.renderer.paint_selection()
-        return True

@@ -226,6 +226,7 @@ class AppConfig(UCConfig):
     sel_object_marker_color = (0.0, 0.0, 0.0)
 
     rotation_step = 5.0  # in degrees
+    skew_fixed_angle = 15.0  # in degrees
     stroke_sensitive_size = 5.0  # in pixels
 
     # ============== SNAPPING OPTIONS ================

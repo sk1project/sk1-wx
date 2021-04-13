@@ -194,6 +194,9 @@ class PolygonEditor(AbstractController):
             self.apply_midpoint_change(event.get_point(), self.midpoint_index,
                                        event.is_ctrl())
 
+    def mouse_double_click(self, event):
+        self.canvas.set_mode()
+
 
 class CornerPoint:
     canvas = None
