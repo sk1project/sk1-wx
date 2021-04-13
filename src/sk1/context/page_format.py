@@ -213,7 +213,7 @@ class PagePlugin(CtxPlugin):
         doc.api.set_page_format(new_format)
 
         pdict = PAGE_FORMATS_MORE
-        if new_format[0] in pdict and current_page_format[0] in pdids and \
+        if new_format[0] in pdict and current_page_format[0] in pdict and \
                 pdict[current_page_format[0]] != pdict[new_format[0]]:
             units, jump = pdict[new_format[0]]
             doc.api.set_doc_units(units)
