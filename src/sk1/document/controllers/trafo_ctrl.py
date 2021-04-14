@@ -113,7 +113,8 @@ class MoveController(AbstractController):
                 self.canvas.set_temp_mode(modes.RESIZE_MODE)
             elif event.is_shift():
                 self.canvas.set_temp_mode(modes.SELECT_MODE)
-            elif self.presenter.snap.is_over_guide(point)[0]:
+            elif self.presenter.methods.is_guide_editable() and \
+                    self.presenter.snap.is_over_guide(point)[0]:
                 self.canvas.restore_mode()
                 self.canvas.set_temp_mode(modes.GUIDE_MODE)
             elif not self.selection.pick_at_point(dpoint, True):
