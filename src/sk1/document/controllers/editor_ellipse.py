@@ -43,7 +43,6 @@ class EllipseEditor(AbstractController):
         self.target = self.selection.objs[0]
         self.selected_obj = None
         self.update_points()
-        self.api.set_mode()
         self.selection.clear()
         msg = _('Ellipse in editing')
         events.emit(events.APP_STATUS, msg)

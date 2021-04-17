@@ -49,7 +49,6 @@ class BezierEditor(AbstractController):
         self.snap = self.presenter.snap
         self.target = self.selection.objs[0]
         self.update_paths()
-        self.api.set_mode()
         self.selection.clear()
         self.update_status()
 

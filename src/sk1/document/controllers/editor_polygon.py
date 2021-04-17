@@ -46,7 +46,6 @@ class PolygonEditor(AbstractController):
         self.snap = self.presenter.snap
         self.target = self.selection.objs[0]
         self.selected_obj = None
-        self.api.set_mode()
         self.update_points()
         self.selection.clear()
         msg = _('Polygon in editing')

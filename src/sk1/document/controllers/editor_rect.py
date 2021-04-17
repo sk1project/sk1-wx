@@ -52,7 +52,6 @@ class RectEditor(AbstractController):
         self.rounding = False
         self.selected_obj = None
         self.update_points()
-        self.api.set_mode()
         self.selection.clear()
         msg = _('Rectangle in editing')
         events.emit(events.APP_STATUS, msg)
