@@ -153,7 +153,7 @@ class TextEditor(AbstractController):
             self.canvas.selection_redraw()
         else:
             objs = self.canvas.pick_at_point(self.end)
-            if objs and objs[0].is_primitive and not objs[0].is_pixmap:
+            if objs and objs[0].is_primitive:
                 self.selected_obj = objs[0]
                 self.start = []
                 self.canvas.set_mode(modes.SHAPER_MODE)

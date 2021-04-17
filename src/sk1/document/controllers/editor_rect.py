@@ -56,7 +56,13 @@ class RectEditor(AbstractController):
         msg = _('Rectangle in editing')
         events.emit(events.APP_STATUS, msg)
 
+    def stop_(self):
+        self.selection.set([self.target, ])
+        self.target = None
+        self.selected_obj = None
+
     def update_points(self):
+        print("rect.update_points")
         self.points = []
         self.midpoints = []
         mps = self.target.get_midpoints()
@@ -240,8 +246,9 @@ class RectEditor(AbstractController):
         self.resizing = False
         self.rounding = False
         self.selected_obj = None
+        point = event.get_point()
         for item in self.points:
-            if item.is_pressed(event.get_point()):
+            if item.is_pressed(point):
                 self.rounding = True
                 self.rnd_index = item.index
                 self.rnd_subindex = item.subindex
@@ -252,14 +259,15 @@ class RectEditor(AbstractController):
                 self.stop2 = [] + item.stop2
                 return
         for item in self.midpoints:
-            if item.is_pressed(event.get_point()):
+            if item.is_pressed(point):
                 self.resizing = True
                 self.res_index = self.midpoints.index(item)
                 self.orig_rect = self.target.get_rect()
                 self.orig_corners = [] + self.target.corners
                 return
-        objs = self.canvas.pick_at_point(event.get_point())
-        if objs and not objs[0] == self.target and objs[0].is_primitive:
+        objs = self.canvas.pick_at_point(point)
+
+        if objs and not objs[0] == self.target:
             self.selected_obj = objs[0]
 
     def mouse_up(self, event):
@@ -281,6 +289,16 @@ class RectEditor(AbstractController):
 
     def mouse_double_click(self, event):
         self.canvas.set_mode()
+
+    # def _snap_point(self, event):
+    #     is_snapping = not event.is_shift()
+    #     point = event.get_point()
+    #     if is_snapping:
+    #         point = self.snap.snap_point(point)[1]
+    #     return point
+
+    def _snap_point(self, point):
+        return self.snap.snap_point(point, True)[1]
 
 
 class ControlPoint:
