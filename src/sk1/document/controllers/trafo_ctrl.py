@@ -449,7 +449,7 @@ class TransformController(AbstractController):
                 change_y = h + (end_point[1] - start_point[1]) * ratio_y
 
                 if is_constraining:
-                    if self.snap.active_snap[0]:
+                    if self.snap.active_snap[0] is not None:
                         m11 = m22 = change_x / w if w and change_x else 1.0
                     else:
                         m11 = m22 = change_y / h if h and change_y else 1.0
@@ -517,7 +517,7 @@ class TransformController(AbstractController):
                 change_y = h + (start_point[1] - end_point[1]) * ratio_y
 
                 if is_constraining:
-                    if self.snap.active_snap[0]:
+                    if self.snap.active_snap[0] is not None:
                         m11 = m22 = change_x / w if w and change_x else 1.0
                     else:
                         m11 = m22 = change_y / h if h and change_y else 1.0
@@ -585,7 +585,7 @@ class TransformController(AbstractController):
                 change_y = h + (end_point[1] - start_point[1]) * ratio_y
 
                 if is_constraining:
-                    if self.snap.active_snap[0]:
+                    if self.snap.active_snap[0] is not None:
                         m11 = m22 = change_x / w if w and change_x else 1.0
                     else:
                         m11 = m22 = change_y / h if h and change_y else 1.0
@@ -652,7 +652,7 @@ class TransformController(AbstractController):
                 change_y = h + (start_point[1] - end_point[1]) * ratio_y
 
                 if is_constraining:
-                    if self.snap.active_snap[0]:
+                    if self.snap.active_snap[0] is not None:
                         m11 = m22 = change_x / w if w and change_x else 1.0
                     else:
                         m11 = m22 = change_y / h if h and change_y else 1.0

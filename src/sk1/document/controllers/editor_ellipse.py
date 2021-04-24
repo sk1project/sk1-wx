@@ -43,7 +43,6 @@ class EllipseEditor(AbstractController):
         self.target = self.selection.objs[0]
         self.selected_obj = None
         self.update_points()
-        self.api.set_mode()
         self.selection.clear()
         msg = _('Ellipse in editing')
         events.emit(events.APP_STATUS, msg)
@@ -148,7 +147,7 @@ class EllipseEditor(AbstractController):
             self.store_props()
             return
         objs = self.canvas.pick_at_point(event.get_point())
-        if objs and not objs[0] == self.target and objs[0].is_primitive:
+        if objs and not objs[0] == self.target:
             self.selected_obj = objs[0]
 
     def mouse_up(self, event):

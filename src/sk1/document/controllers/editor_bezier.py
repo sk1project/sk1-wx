@@ -49,7 +49,6 @@ class BezierEditor(AbstractController):
         self.snap = self.presenter.snap
         self.target = self.selection.objs[0]
         self.update_paths()
-        self.api.set_mode()
         self.selection.clear()
         self.update_status()
 
@@ -136,8 +135,7 @@ class BezierEditor(AbstractController):
                 else:
                     self.new_node = None
                     objs = self.canvas.pick_at_point(self.start)
-                    if objs and not objs[0] == self.target and \
-                            objs[0].is_primitive:
+                    if objs and not objs[0] == self.target:
                         self.selected_obj = objs[0]
                     self.timer.start()
 

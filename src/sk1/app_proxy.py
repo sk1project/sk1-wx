@@ -260,6 +260,12 @@ class AppProxy:
         canvas = self.app.current_doc.canvas
         if canvas.mode == modes.BEZIER_EDITOR_MODE:
             canvas.controller.update_paths()
+        elif canvas.mode == modes.ELLIPSE_EDITOR_MODE:
+            canvas.controller.update_points()
+        elif canvas.mode == modes.RECT_EDITOR_MODE:
+            canvas.controller.update_points()
+        elif canvas.mode == modes.POLYGON_EDITOR_MODE:
+            canvas.controller.update_points()
         elif canvas.mode == modes.TEXT_EDITOR_MODE:
             canvas.controller.update_points()
 
@@ -268,6 +274,12 @@ class AppProxy:
         canvas = self.app.current_doc.canvas
         if canvas.mode == modes.BEZIER_EDITOR_MODE:
             canvas.controller.update_paths()
+        elif canvas.mode == modes.ELLIPSE_EDITOR_MODE:
+            canvas.controller.update_points()
+        elif canvas.mode == modes.RECT_EDITOR_MODE:
+            canvas.controller.update_points()
+        elif canvas.mode == modes.POLYGON_EDITOR_MODE:
+            canvas.controller.update_points()
         elif canvas.mode == modes.TEXT_EDITOR_MODE:
             canvas.controller.update_points()
 

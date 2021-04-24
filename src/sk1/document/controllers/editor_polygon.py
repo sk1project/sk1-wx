@@ -46,7 +46,6 @@ class PolygonEditor(AbstractController):
         self.snap = self.presenter.snap
         self.target = self.selection.objs[0]
         self.selected_obj = None
-        self.api.set_mode()
         self.update_points()
         self.selection.clear()
         msg = _('Polygon in editing')
@@ -158,41 +157,56 @@ class PolygonEditor(AbstractController):
         self.selected_obj = None
         self.corner_index = None
         self.midpoint_index = None
+        self.end = event.get_point()
         for item in self.corner_points:
-            if item.is_pressed(event.get_point()):
+            if item.is_pressed(self.end):
                 self.corner_index = item.index
                 self.store_props()
                 return
         for item in self.midpoints:
-            if item.is_pressed(event.get_point()):
+            if item.is_pressed(self.end):
                 self.midpoint_index = item.index
                 self.store_props()
                 return
-        objs = self.canvas.pick_at_point(event.get_point())
-        if objs and not objs[0] == self.target and objs[0].is_primitive:
+        objs = self.canvas.pick_at_point(self.end)
+        if objs and not objs[0] == self.target:
             self.selected_obj = objs[0]
 
     def mouse_up(self, event):
+        is_constraining = event.is_ctrl()
+        final = True
         if self.corner_index is not None:
-            self.apply_corner_change(event.get_point(), self.corner_index,
-                                     event.is_ctrl(), True)
+            self.apply_corner_change(
+                self.end, self.corner_index, is_constraining, final
+            )
             self.corner_index = None
         elif self.midpoint_index is not None:
-            self.apply_midpoint_change(event.get_point(), self.midpoint_index,
-                                       event.is_ctrl(), True)
+            self.apply_midpoint_change(
+                self.end, self.midpoint_index, is_constraining, final
+            )
             self.midpoint_index = None
         elif self.selected_obj:
             self.target = self.selected_obj
             self.selected_obj = None
             self.canvas.set_mode(modes.SHAPER_MODE)
+        self.end = []
 
     def mouse_move(self, event):
+        is_constraining = event.is_ctrl()
+        is_snapping = not event.is_shift() and not event.is_ctrl()
+        self.end = event.get_point()
+
+        if is_snapping:
+            self.end = self.snap.snap_point(self.end)[1]
+
         if self.corner_index is not None:
-            self.apply_corner_change(event.get_point(), self.corner_index,
-                                     event.is_ctrl())
+            self.apply_corner_change(
+                self.end, self.corner_index, is_constraining
+            )
         elif self.midpoint_index is not None:
-            self.apply_midpoint_change(event.get_point(), self.midpoint_index,
-                                       event.is_ctrl())
+            self.apply_midpoint_change(
+                self.end, self.midpoint_index, is_constraining
+            )
 
     def mouse_double_click(self, event):
         self.canvas.set_mode()

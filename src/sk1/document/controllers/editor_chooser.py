@@ -31,25 +31,43 @@ class EditorChooser(AbstractController):
         if not sel_objs:
             self.selection.clear()
         else:
-            obj = sel_objs[0]
+            set_mode = self.canvas.set_mode
+            self.target = obj = self.selection.objs[0]
+
+            if self.target.is_container:
+                set_mode = self.canvas.set_temp_mode
+                self.selection.set([self.target.childs[0], ])
+                obj = self.selection.objs[0]
+            elif self.target.is_group:
+                return
+            elif self.target.is_pixmap:
+                return
+
             if obj.is_curve:
-                self.canvas.set_mode(modes.BEZIER_EDITOR_MODE)
+                set_mode(modes.BEZIER_EDITOR_MODE)
             elif obj.is_rect:
-                self.canvas.set_mode(modes.RECT_EDITOR_MODE)
+                set_mode(modes.RECT_EDITOR_MODE)
             elif obj.is_circle:
-                self.canvas.set_mode(modes.ELLIPSE_EDITOR_MODE)
+                set_mode(modes.ELLIPSE_EDITOR_MODE)
             elif obj.is_polygon:
-                self.canvas.set_mode(modes.POLYGON_EDITOR_MODE)
+                set_mode(modes.POLYGON_EDITOR_MODE)
             elif obj.is_text:
-                self.canvas.set_mode(modes.TEXT_EDITOR_MODE)
+                set_mode(modes.TEXT_EDITOR_MODE)
             else:
                 self.selection.clear()
 
     def restore(self):
-        self.timer.start()
+        if self.target and self.target.is_container:
+            self.target.childs[0].update()
+            self.target.update()
+            if self.target.childs[0] == self.selection.objs[0]:
+                self.selection.set([self.target, ])
+        self.target = None
 
     def stop_(self):
-        pass
+        if self.target:
+            self.selection.set([self.target, ])
+            self.target = None
 
     def on_timer(self):
         self.timer.stop()
@@ -67,6 +85,6 @@ class EditorChooser(AbstractController):
 
     def do_action(self, event=None):
         objs = self.canvas.pick_at_point(self.end)
-        if objs and objs[0].is_primitive and not objs[0].is_pixmap:
+        if objs and not objs[0] == self.target:
             self.selection.set([objs[0], ])
-            self.start_()
+            self.timer.start()

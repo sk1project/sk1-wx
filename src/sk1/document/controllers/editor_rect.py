@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# 	Copyright (C) 2015 by Ihor E. Novikov
+# 	Copyright (C) 2015-2021 by Ihor E. Novikov
+# 	Copyright (C) 2021 by Maxim S. Barabash
 #
 # 	This program is free software: you can redistribute it and/or modify
 # 	it under the terms of the GNU General Public License as published by
@@ -20,6 +21,7 @@ from sk1 import _, modes, config, events
 from uc2 import libgeom
 
 H_ORIENT = ['00', '11', '20', '31']
+EPSILON = 0.000001
 
 
 class RectEditor(AbstractController):
@@ -52,10 +54,14 @@ class RectEditor(AbstractController):
         self.rounding = False
         self.selected_obj = None
         self.update_points()
-        self.api.set_mode()
         self.selection.clear()
         msg = _('Rectangle in editing')
         events.emit(events.APP_STATUS, msg)
+
+    def stop_(self):
+        self.selection.set([self.target, ])
+        self.target = None
+        self.selected_obj = None
 
     def update_points(self):
         self.points = []
@@ -241,8 +247,9 @@ class RectEditor(AbstractController):
         self.resizing = False
         self.rounding = False
         self.selected_obj = None
+        self.end = event.get_point()
         for item in self.points:
-            if item.is_pressed(event.get_point()):
+            if item.is_pressed(self.end):
                 self.rounding = True
                 self.rnd_index = item.index
                 self.rnd_subindex = item.subindex
@@ -253,35 +260,121 @@ class RectEditor(AbstractController):
                 self.stop2 = [] + item.stop2
                 return
         for item in self.midpoints:
-            if item.is_pressed(event.get_point()):
+            if item.is_pressed(self.end):
                 self.resizing = True
                 self.res_index = self.midpoints.index(item)
                 self.orig_rect = self.target.get_rect()
                 self.orig_corners = [] + self.target.corners
                 return
-        objs = self.canvas.pick_at_point(event.get_point())
-        if objs and not objs[0] == self.target and objs[0].is_primitive:
+        objs = self.canvas.pick_at_point(self.end)
+
+        if objs and not objs[0] == self.target:
             self.selected_obj = objs[0]
 
     def mouse_up(self, event):
         if self.resizing:
             self.resizing = False
-            self.apply_resizing(event.get_point(), True)
+            self.apply_resizing(self.end, True)
         elif self.rounding:
             self.rounding = False
-            self.apply_rounding(event.get_point(), True, event.is_ctrl())
+            self.apply_rounding(self.end, True, event.is_ctrl())
         elif self.selected_obj:
             self.target = self.selected_obj
             self.canvas.set_mode(modes.SHAPER_MODE)
+        self.end = []
 
     def mouse_move(self, event):
+        self.end = event.get_point()
+        is_snapping = not event.is_shift()
         if self.resizing:
-            self.apply_resizing(event.get_point())
+            if is_snapping:
+                self.end = self._snap_midpoints(self.end)
+            self.apply_resizing(self.end)
         elif self.rounding:
-            self.apply_rounding(event.get_point(), inplace=event.is_ctrl())
+            if is_snapping:
+                self.end = self._snap_respoints(self.end)
+            self.apply_rounding(self.end, inplace=event.is_ctrl())
 
     def mouse_double_click(self, event):
         self.canvas.set_mode()
+
+    def _snap_respoints(self, point):
+        p0 = None
+        rnd_index = self.rnd_index
+        rnd_subindex = self.rnd_subindex
+
+        if self.stop2:
+            for item in self.points:
+                if item.is_pressed(self.end):
+                    p0 = item.get_screen_point()
+                    rnd_index = item.index
+                    rnd_subindex = item.subindex
+                    break
+
+        if p0 is None:
+            for p in self.points:
+                if p.index == rnd_index and p.subindex == rnd_subindex:
+                    p0 = p.get_screen_point()
+                    break
+
+        if p0:
+            cp = None
+            index = rnd_index - (1 - rnd_subindex)
+            p1 = self.midpoints[index].get_screen_point()
+            flag, wp, dp = self.snap.snap_point(p0, snap_x=False)
+            self.snap.active_snap = [None, None]
+            if flag:
+                cp = x_intersect(p0, p1, wp[1])
+            if cp:
+                closest_point = project_point_to_line(point, p0, p1)
+                d = libgeom.distance(cp, closest_point)
+                if d < config.point_sensitivity_size * 2:
+                    self.snap.active_snap = [None, dp[1]]
+                    point = cp
+            else:
+                flag, wp, dp = self.snap.snap_point(p0, snap_y=False)
+                self.snap.active_snap = [None, None]
+                if flag:
+                    cp = y_intersect(p0, p1, wp[0])
+                if cp:
+                    closest_point = project_point_to_line(point, p0, p1)
+                    d = libgeom.distance(cp, closest_point)
+                    if d < config.point_sensitivity_size * 2:
+                        self.snap.active_snap = [dp[0], None]
+                        point = cp
+        return point
+
+    def _snap_midpoints(self, point):
+        p0 = None
+        p1 = None
+        if self.res_index == 1:
+            p0 = self.midpoints[1].get_screen_point()
+            p1 = self.midpoints[3].get_screen_point()
+        elif self.res_index == 3:
+            p0 = self.midpoints[3].get_screen_point()
+            p1 = self.midpoints[1].get_screen_point()
+        elif self.res_index == 2:
+            p0 = self.midpoints[2].get_screen_point()
+            p1 = self.midpoints[0].get_screen_point()
+        elif self.res_index == 0:
+            p0 = self.midpoints[0].get_screen_point()
+            p1 = self.midpoints[2].get_screen_point()
+
+        if p0 is not None:
+            cp = None
+            flag, wp, dp = self.snap.snap_point(p0)
+            if flag and self.snap.active_snap[1] is not None:
+                cp = x_intersect(p0, p1, wp[1])
+            if not cp and flag and self.snap.active_snap[0] is not None:
+                cp = y_intersect(p0, p1, wp[0])
+            if cp:
+                closest_point = project_point_to_line(point, p0, p1)
+                d = libgeom.distance(cp, closest_point)
+                if d < config.point_sensitivity_size * 2:
+                    point = cp
+            else:
+                self.snap.active_snap = [None, None]
+        return point
 
 
 class ControlPoint:
@@ -347,3 +440,66 @@ class MidPoint:
 
     def repaint(self):
         self.canvas.renderer.draw_rect_midpoint(self.get_screen_point())
+
+
+def x_intersect(p0, p1, y=0):
+    """
+    Calculates the coordinates of the intersect line and horizontal line.
+    Horizontal line defined by y coordinate.
+    :param p0: Start point of the line.
+    :param p1: End point of the line.
+    :param y: Horizontal line coordinate.
+    :return: intersect point or None
+    """
+    dx = p1[0] - p0[0]
+    dy = p0[1] - p1[1]
+    # If the line is parallel to the horizontal
+    if abs(dy) < EPSILON:
+        return None
+    c1 = p0[0] * p1[1] - p1[0] * p0[1]
+    return [(-y * dx - c1) / dy, y]
+
+
+def y_intersect(p0, p1, x=0):
+    """
+    Calculates the coordinates of the intersect line and vertical line.
+    Vertical line defined by x coordinate.
+    :param p0: Start point of the line.
+    :param p1: End point of the line.
+    :param x: Vertical line coordinate.
+    :return: intersect point or None
+    """
+    dx = p1[0] - p0[0]
+    dy = p0[1] - p1[1]
+    # If the line is parallel to the vertical
+    if abs(dx) < EPSILON:
+        return None
+    c1 = p0[0] * p1[1] - p1[0] * p0[1]
+    return [x, (-x * dy - c1) / dx]
+
+
+def project_point_to_line(point, p0, p1):
+    """
+    Calculates the coordinates of the orthogonal projection to line.
+    Line defined by two coordinate.
+    :param p0: Start point of the line on that the point is projected.
+    :param p1: End point of the line on that the point is projected.
+    :param point: Point to project.
+    :return: project point
+    """
+    x1, y1 = p0
+    x2, y2 = p1
+    x3, y3 = point
+
+    dx = x2 - x1
+    dy = y2 - y1
+
+    v = dx * dx + dy * dy
+    # If the segment has length 0 the projection is equal to that point
+    if v < EPSILON:
+        return [x3, y3]
+
+    k = (dy * (x3 - x1) - dx * (y3 - y1)) / v
+    x4 = x3 - k * dy
+    y4 = y3 + k * dx
+    return [x4, y4]

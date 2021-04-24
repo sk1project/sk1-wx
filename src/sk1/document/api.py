@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  Copyright (C) 2013 by Ihor E. Novikov
+#  Copyright (C) 2013-2021 by Ihor E. Novikov
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -1617,9 +1617,9 @@ class PresenterAPI(AbstractAPI):
         self._set_paths(obj, new_paths)
         transaction = [
             [[self._set_paths, obj, old_paths],
-             [self._selection_update, ]],
+             [self._set_selection, [obj, ]], ],
             [[self._set_paths, obj, new_paths],
-             [self._selection_update, ]],
+             [self._set_selection, [obj, ]], ],
             False]
         self.add_undo(transaction)
         self.selection.update()
@@ -1798,41 +1798,31 @@ class PresenterAPI(AbstractAPI):
             rect_before = obj.get_rect()
         self.methods.set_rect(obj, rect)
         transaction = [
-            [[self.methods.set_rect, obj, rect_before], ],
-            [[self.methods.set_rect, obj, rect], ],
+            [[self.methods.set_rect, obj, rect_before],
+             [self._set_selection, [obj, ]], ],
+            [[self.methods.set_rect, obj, rect],
+             [self._set_selection, [obj, ]], ],
             False]
         self.add_undo(transaction)
         self.selection.update()
 
     def set_rect_corners(self, corners, obj=None):
-        if obj is None:
-            sel = [] + self.selection.objs
-            obj = sel[0]
+        obj = obj or self.selection.objs[0]
         self.methods.set_rect_corners(obj, corners)
         self.eventloop.emit(self.eventloop.DOC_MODIFIED)
         self.selection.update()
 
     def set_rect_corners_final(self, corners, corners_before=None, obj=None):
-        if obj is None:
-            sel = [] + self.selection.objs
-            obj = sel[0]
-            if not corners_before:
-                corners_before = obj.corners
-            self.methods.set_rect_corners(obj, corners)
-            transaction = [
-                [[self.methods.set_rect_corners, obj, corners_before],
-                 [self._set_selection, sel], ],
-                [[self.methods.set_rect_corners, obj, corners],
-                 [self._set_selection, sel]],
-                False]
-        else:
-            if not corners_before:
-                corners_before = obj.corners
-            self.methods.set_rect_corners(obj, corners)
-            transaction = [
-                [[self.methods.set_rect_corners, obj, corners_before], ],
-                [[self.methods.set_rect_corners, obj, corners], ],
-                False]
+        obj = obj or self.selection.objs[0]
+        if not corners_before:
+            corners_before = obj.corners
+        self.methods.set_rect_corners(obj, corners)
+        transaction = [
+            [[self.methods.set_rect_corners, obj, corners_before],
+             [self._set_selection, [obj, ]], ],
+            [[self.methods.set_rect_corners, obj, corners],
+             [self._set_selection, [obj, ]], ],
+            False]
         self.add_undo(transaction)
         self.selection.update()
 
@@ -1858,39 +1848,23 @@ class PresenterAPI(AbstractAPI):
     def set_circle_properties_final(self, circle_type, angle1, angle2,
                                     type_before=None, angle1_before=None,
                                     angle2_before=None, obj=None):
-        if obj is None:
-            sel = [] + self.selection.objs
-            obj = sel[0]
-            if type_before is None:
-                type_before = obj.circle_type
-                angle1_before = obj.angle1
-                angle2_before = obj.angle2
-            mtds = self.methods
-            mtds.set_circle_properties(obj, circle_type, angle1, angle2)
-            transaction = [
-                [[mtds.set_circle_properties, obj, type_before,
-                  angle1_before, angle2_before],
-                 [self._set_selection, sel], ],
-                [[mtds.set_circle_properties, obj, circle_type, angle1, angle2],
-                 [self._set_selection, sel]],
-                False]
-            self.add_undo(transaction)
-            self.selection.update()
-        else:
-            if type_before is None:
-                type_before = obj.circle_type
-                angle1_before = obj.angle1
-                angle2_before = obj.angle2
-            mtds = self.methods
-            mtds.set_circle_properties(obj, circle_type, angle1, angle2)
-            transaction = [
-                [[mtds.set_circle_properties, obj, type_before,
-                  angle1_before, angle2_before], ],
-                [[mtds.set_circle_properties, obj, circle_type,
-                  angle1, angle2], ],
-                False]
-            self.add_undo(transaction)
-            self.selection.update()
+        obj = obj or self.selection.objs[0]
+
+        if type_before is None:
+            type_before = obj.circle_type
+            angle1_before = obj.angle1
+            angle2_before = obj.angle2
+        mtds = self.methods
+        mtds.set_circle_properties(obj, circle_type, angle1, angle2)
+        transaction = [
+            [[mtds.set_circle_properties, obj, type_before,
+              angle1_before, angle2_before],
+             [self._set_selection, [obj, ]], ],
+            [[mtds.set_circle_properties, obj, circle_type, angle1, angle2],
+             [self._set_selection, [obj, ]], ],
+            False]
+        self.add_undo(transaction)
+        self.selection.update()
 
     # --- POLYGON
 
@@ -1904,52 +1878,37 @@ class PresenterAPI(AbstractAPI):
         self.insert_object(obj, parent, len(parent.childs))
 
     def set_polygon_corners_num(self, num):
-        sel = [] + self.selection.objs
-        obj = sel[0]
+        obj = self.selection.objs[0]
         num_before = obj.corners_num
         self.methods.set_polygon_corners_num(obj, num)
         transaction = [
             [[self.methods.set_polygon_corners_num, obj, num_before],
-             [self._set_selection, sel], ],
+             [self._set_selection, [obj, ]], ],
             [[self.methods.set_polygon_corners_num, obj, num],
-             [self._set_selection, sel]],
+             [self._set_selection, [obj, ]], ],
             False]
         self.add_undo(transaction)
         self.selection.update()
 
     def set_polygon_properties(self, props, obj=None):
-        if obj is None:
-            sel = [] + self.selection.objs
-            obj = sel[0]
+        obj = obj or self.selection.objs[0]
         self.methods.set_polygon_properties(obj, *props)
         self.eventloop.emit(self.eventloop.DOC_MODIFIED)
         self.selection.update()
 
     def set_polygon_properties_final(self, props, props_before=None, obj=None):
-        if obj is None:
-            sel = [] + self.selection.objs
-            obj = sel[0]
-            if not props_before:
-                props_before = [obj.angle1, obj.angle2, obj.coef1, obj.coef2]
-            self.methods.set_polygon_properties(obj, *props)
-            transaction = [
-                [[self.methods.set_rect_corners, obj, ] + props_before,
-                 [self._set_selection, sel], ],
-                [[self.methods.set_rect_corners, obj, ] + props,
-                 [self._set_selection, sel]],
-                False]
-            self.add_undo(transaction)
-            self.selection.update()
-        else:
-            if not props_before:
-                props_before = [obj.angle1, obj.angle2, obj.coef1, obj.coef2]
-            self.methods.set_polygon_properties(obj, *props)
-            transaction = [
-                [[self.methods.set_rect_corners, obj, ] + props_before, ],
-                [[self.methods.set_rect_corners, obj, ] + props, ],
-                False]
-            self.add_undo(transaction)
-            self.selection.update()
+        obj = obj or self.selection.objs[0]
+        if not props_before:
+            props_before = [obj.angle1, obj.angle2, obj.coef1, obj.coef2]
+        self.methods.set_polygon_properties(obj, *props)
+        transaction = [
+            [[self.methods.set_polygon_properties, obj, ] + props_before,
+             [self._set_selection, [obj, ]], ],
+            [[self.methods.set_polygon_properties, obj, ] + props,
+             [self._set_selection, [obj, ]], ],
+            False]
+        self.add_undo(transaction)
+        self.selection.update()
 
     # --- PIXMAP
 

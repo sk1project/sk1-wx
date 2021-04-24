@@ -43,7 +43,6 @@ class TextEditor(AbstractController):
         self.snap = self.presenter.snap
         self.target = self.selection.objs[0]
         self.selected_obj = None
-        self.api.set_mode()
         self.update_points()
         self.selection.clear()
         self.trafo_mode = modes.ET_MOVING_MODE
@@ -154,7 +153,7 @@ class TextEditor(AbstractController):
             self.canvas.selection_redraw()
         else:
             objs = self.canvas.pick_at_point(self.end)
-            if objs and objs[0].is_primitive and not objs[0].is_pixmap:
+            if objs and objs[0].is_primitive:
                 self.selected_obj = objs[0]
                 self.start = []
                 self.canvas.set_mode(modes.SHAPER_MODE)
