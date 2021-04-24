@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # 	Copyright (C) 2015-2021 by Ihor E. Novikov
-#   Copyright (C) 2021 by Maxim S. Barabash
+# 	Copyright (C) 2021 by Maxim S. Barabash
 #
 # 	This program is free software: you can redistribute it and/or modify
 # 	it under the terms of the GNU General Public License as published by
@@ -303,12 +303,13 @@ class RectEditor(AbstractController):
         rnd_index = self.rnd_index
         rnd_subindex = self.rnd_subindex
 
-        for item in self.points:
-            if item.is_pressed(self.end):
-                p0 = item.get_screen_point()
-                rnd_index = item.index
-                rnd_subindex = item.subindex
-                break
+        if self.stop2:
+            for item in self.points:
+                if item.is_pressed(self.end):
+                    p0 = item.get_screen_point()
+                    rnd_index = item.index
+                    rnd_subindex = item.subindex
+                    break
 
         if p0 is None:
             for p in self.points:
