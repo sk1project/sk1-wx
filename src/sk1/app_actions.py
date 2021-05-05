@@ -96,7 +96,8 @@ def create_actions(app):
         # ------ Edit menu -------
         (wal.ID_UNDO, proxy.undo, doc_save_chnls, insp.is_undo),
         (wal.ID_REDO, proxy.redo, doc_save_chnls, insp.is_redo),
-        (pdids.ID_CLEAR_UNDO, proxy.clear_history, doc_chnls, insp.is_history),
+        (pdids.ID_CLEAR_UNDO, proxy.clear_history, doc_save_chnls,
+         insp.is_history),
         (wal.ID_CUT, proxy.cut, sel_chnls, insp.is_obj_selection),
         (wal.ID_COPY, proxy.copy, sel_chnls, insp.is_obj_selection),
         (wal.ID_PASTE, proxy.paste, tool_chnls + [CLIPBOARD, ],
