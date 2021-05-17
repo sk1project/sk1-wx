@@ -1,15 +1,15 @@
-# SOME DESCRIPTIVE TITLE.
+# ITALIAN TRANSLATION FOR SK1-WX.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2021.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-02-23 01:13+0200\n"
-"PO-Revision-Date: 2020-02-23 02:04+0200\n"
-"Last-Translator: Ihor E. Novikov <sk1.project.org@gmail.com>\n"
+"PO-Revision-Date: 2020-05-17 16:04+0100\n"
+"Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: \n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -367,10 +367,9 @@ msgid "Custom"
 msgstr "Personalizzato"
 
 #: src/sk1/context/page_format.py:243
-#, fuzzy
 #| msgid "Guide layer"
 msgid "Guide frame margin"
-msgstr "Livello guida"
+msgstr "Margine della cornice guida"
 
 #: src/sk1/context/polygon.py:38
 msgid "Number of polygon angles"
@@ -671,10 +670,9 @@ msgid "Default page:"
 msgstr "Pagina standard:"
 
 #: src/sk1/dialogs/docprops.py:143
-#, fuzzy
 #| msgid "Current page"
 msgid "As current page"
-msgstr "Pagina corrente"
+msgstr "Come pagina corrente"
 
 #: src/sk1/dialogs/docprops.py:177
 msgid "Desktop:"
@@ -887,7 +885,7 @@ msgstr "Dopo"
 
 #: src/sk1/dialogs/pagedlg.py:122
 msgid "page No.:"
-msgstr "pag N0.:"
+msgstr "pag No.:"
 
 #: src/sk1/dialogs/pagedlg.py:142
 msgid "Insert page"
@@ -1087,10 +1085,9 @@ msgid "Scroll palette to right"
 msgstr "Scorri la palette verso destra"
 
 #: src/sk1/parts/palettepanel.py:69 src/sk1/parts/palettepanel.py:140
-#, fuzzy
 #| msgid "Download more palettes"
 msgid "Manage palettes"
-msgstr "Scarica altre palette"
+msgstr "Gestisci palette"
 
 #: src/sk1/parts/palettepanel.py:114
 msgid "Scroll palette to top"
@@ -1101,10 +1098,9 @@ msgid "Scroll palette to bottom"
 msgstr "Scorri la palette verso il basso"
 
 #: src/sk1/parts/statusbar.py:94
-#, fuzzy
 #| msgid "Zoom selected"
 msgid "Zoom level"
-msgstr "Zoom su selezione"
+msgstr "Livello di Zoom"
 
 #: src/sk1/parts/statusbar.py:228 src/sk1/parts/statusbar.py:258
 msgid "Image type: "
@@ -1165,7 +1161,7 @@ msgstr "Preferenze marker"
 
 #: src/sk1/prefs/prefs_cms.py:35
 msgid "CMS"
-msgstr ""
+msgstr "CMS"
 
 #: src/sk1/prefs/prefs_cms.py:36
 #, fuzzy
@@ -1219,7 +1215,7 @@ msgstr "Nota: Puoi trovare il profilo display per il tuo hardware qui:"
 #: src/sk1/prefs/prefs_cms.py:242 src/sk1/prefs/prefs_cms.py:350
 #, python-format
 msgid "Built-in %s profile"
-msgstr ""
+msgstr "Profilo %s integrato"
 
 #: src/sk1/prefs/prefs_cms.py:282
 #, python-format
@@ -1229,7 +1225,7 @@ msgstr "Aggiungi/rimuovi profili %s"
 #: src/sk1/prefs/prefs_cms.py:318
 #, python-format
 msgid "%s profiles"
-msgstr "Profili %s"
+msgstr "%s profili"
 
 #: src/sk1/prefs/prefs_cms.py:364 src/sk1/prefs/prefs_palettes.py:229
 msgid "Import"
@@ -1241,7 +1237,7 @@ msgstr "Rimuovi"
 
 #: src/sk1/prefs/prefs_cms.py:370
 msgid "Info"
-msgstr ""
+msgstr "Informazioni"
 
 #: src/sk1/prefs/prefs_cms.py:382
 msgid "Select profile to import"
@@ -1408,10 +1404,9 @@ msgid "Logging level (*):"
 msgstr "Livello di registro (*)"
 
 #: src/sk1/prefs/prefs_general.py:132 src/sk1/prefs/prefs_ui.py:153
-#, fuzzy
 #| msgid "(*) - A restart is required to apply these options"
 msgid "(*) - Application restart is required to apply these options"
-msgstr "(*) - È necessario un riavvio per applicare queste opzioni"
+msgstr "(*) - È necessario riavviare l'applicazione per applicare queste opzioni"
 
 #: src/sk1/prefs/prefs_palettes.py:25
 msgid "Horizontal"
@@ -1449,7 +1444,7 @@ msgstr "Larghezza celle:"
 #: src/sk1/prefs/prefs_palettes.py:118 src/sk1/prefs/prefs_palettes.py:126
 #: src/uc2/uc2const.py:399
 msgid "px"
-msgstr ""
+msgstr "px"
 
 #: src/sk1/prefs/prefs_palettes.py:98 src/sk1/prefs/prefs_palettes.py:121
 msgid "Cell height:"
@@ -1531,14 +1526,13 @@ msgid "No printers found"
 msgstr "Nessuna stampante rilevata"
 
 #: src/sk1/prefs/prefs_ruler.py:30
-#, fuzzy
 #| msgid "Ruler:"
 msgid "Rulers"
-msgstr "Righello:"
+msgstr "Righelli:"
 
 #: src/sk1/prefs/prefs_ruler.py:31
 msgid "Ruler colors, fonts, sizes"
-msgstr ""
+msgstr "Colori del righello, caratteri, dimensioni"
 
 #: src/sk1/prefs/prefs_ruler.py:48
 msgid "Size (px):"
@@ -1589,10 +1583,9 @@ msgid "UI"
 msgstr ""
 
 #: src/sk1/prefs/prefs_ui.py:59
-#, fuzzy
 #| msgid "Printer preferences"
 msgid "User interface preferences"
-msgstr "Preferenze stampante"
+msgstr "Preferenze dell'interfaccia utente"
 
 #: src/sk1/prefs/prefs_ui.py:82
 msgid "Language (*):"
@@ -2225,10 +2218,9 @@ msgid "&File history logs..."
 msgstr "Cronologia registri &File..."
 
 #: src/sk1/resources/labels.py:77
-#, fuzzy
 #| msgid "Show guides"
 msgid "&Lock guides"
-msgstr "Mostra guide"
+msgstr "&Blocca guide"
 
 #: src/sk1/resources/labels.py:78
 msgid "Document properties..."
@@ -2252,7 +2244,7 @@ msgstr "Simula stampante"
 
 #: src/sk1/resources/labels.py:84 src/sk1/printing/printdlg/toolbar.py:53
 msgid "Zoom 100%"
-msgstr ""
+msgstr "Zoom 100%"
 
 #: src/sk1/resources/labels.py:87
 msgid "Previous zoom"
@@ -2296,7 +2288,7 @@ msgstr "Aggancia a pagina"
 
 #: src/sk1/resources/labels.py:98
 msgid "Iconizer..."
-msgstr ""
+msgstr "Iconizza..."
 
 #: src/sk1/resources/labels.py:99
 msgid "Redraw document"
@@ -2628,10 +2620,9 @@ msgid "&About sK1..."
 msgstr "&Informazioni su sK1..."
 
 #: src/sk1/resources/labels.py:189
-#, fuzzy
 #| msgid "Save pattern as..."
 msgid "Manage palettes..."
-msgstr "Salva motivo come..."
+msgstr "Gestisci palette..."
 
 #: src/sk1/document/controllers/editor_bezier.py:52
 #: src/sk1/document/controllers/editor_bezier.py:239
@@ -2932,7 +2923,7 @@ msgstr "Misura:"
 
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:159
 msgid "Iconizer"
-msgstr "Iconizer"
+msgstr "Iconizza"
 
 #: src/sk1/share/pd_plugins/iconizer/__init__.py:182
 msgid "Background:"
@@ -3381,7 +3372,7 @@ msgstr "XML - eXtensible Markup Language"
 
 #: src/uc2/uc2const.py:187
 msgid "LOG - Log files"
-msgstr ""
+msgstr "LOG - File di registro"
 
 #: src/uc2/uc2const.py:188
 msgid "MD - Markdown markup files"
@@ -3389,11 +3380,11 @@ msgstr "MD - Markdown markup"
 
 #: src/uc2/uc2const.py:191
 msgid "DST - (Tajima) Design format"
-msgstr ""
+msgstr "DST - (Tajima) Formato design"
 
 #: src/uc2/uc2const.py:192
 msgid "PES - (Brother) Embroidery file format"
-msgstr ""
+msgstr "PES - Formato del file di ricamo (Brother)"
 
 #: src/uc2/uc2const.py:388 src/uc2/uc2const.py:408
 msgid "pixels"
@@ -3678,7 +3669,7 @@ msgstr "Profilo"
 
 #: src/uc2/formats/sk2/sk2_cids.py:66
 msgid "Font"
-msgstr ""
+msgstr "Carattere"
 
 #: src/uc2/formats/sk2/sk2_cids.py:66
 msgid "Images"
@@ -3730,7 +3721,7 @@ msgstr "Colonna testo"
 
 #: src/uc2/formats/sk2/sk2_cids.py:79
 msgid "Bitmap"
-msgstr ""
+msgstr "Bitmap"
 
 #~ msgid "Application"
 #~ msgstr "Applicazione"
