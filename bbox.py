@@ -234,19 +234,19 @@ def run_build(locally=False, stop_on_error=True):
                 sys.exit(1)
         else:
             echo_msg('[  OK  ]', code=STDOUT_GREEN)
-#    if not locally:
-#        msg = 'Publishing result'
-#        msg = msg + ' ' * (35 - len(msg)) + '...'
-#        echo_msg(msg, newline=False)
-#        folder = PROJECT + '-release' if RELEASE else PROJECT
-#        if os.system('sshpass -e rsync -a --delete-after -e '
-#                     '\'ssh  -o StrictHostKeyChecking=no -o '
-#                     'UserKnownHostsFile=/dev/null -p 22\' '
-#                     './release/ `echo $RHOST`%s/ '
-#                     '1> /dev/null  2> /dev/null' % folder):
-#            echo_msg('[ FAIL ]', code=STDOUT_FAIL)
-#            sys.exit(1)
-#        echo_msg('[  OK  ]', code=STDOUT_GREEN)
+    if not locally:
+        msg = 'Publishing result'
+        msg = msg + ' ' * (35 - len(msg)) + '...'
+        echo_msg(msg, newline=False)
+        folder = PROJECT + '-release' if RELEASE else PROJECT
+        if os.system('sshpass -e rsync -a --delete-after -e '
+                     '\'ssh  -o StrictHostKeyChecking=no -o '
+                     'UserKnownHostsFile=/dev/null -p 22\' '
+                     './release/ `echo $RHOST`%s/ '
+                     '1> /dev/null  2> /dev/null' % folder):
+            echo_msg('[ FAIL ]', code=STDOUT_FAIL)
+            sys.exit(1)
+        echo_msg('[  OK  ]', code=STDOUT_GREEN)
     echo_msg('=' * 35, code=STDOUT_MAGENTA)
 
 
