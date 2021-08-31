@@ -242,8 +242,7 @@ def run_build(locally=False, stop_on_error=True):
         if os.system('sshpass -e rsync -a --delete-after -e '
                      '\'ssh  -o StrictHostKeyChecking=no -o '
                      'UserKnownHostsFile=/dev/null -p 22\' '
-                     './release/ `echo $RHOST`%s/ '
-                     '1> /dev/null  2> /dev/null' % folder):
+                     './release/ `echo $RHOST`%s/' % folder):
             echo_msg('[ FAIL ]', code=STDOUT_FAIL)
             sys.exit(1)
         echo_msg('[  OK  ]', code=STDOUT_GREEN)
