@@ -1,6 +1,6 @@
 # sK1 2.0
 
-![build status](https://api.travis-ci.org/sk1project-build-bot/sk1-wx.svg?branch=master) ![platform](https://img.shields.io/badge/platform-Linux-blue.svg) ![platform](https://img.shields.io/badge/platform-Windows-blue.svg) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Build Status](https://app.travis-ci.com/sk1project/sk1-wx.svg?branch=master)](https://app.travis-ci.com/sk1project/sk1-wx) ![platform](https://img.shields.io/badge/platform-Linux-blue.svg) ![platform](https://img.shields.io/badge/platform-Windows-blue.svg) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 <center>
 
