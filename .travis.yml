@@ -1,21 +1,13 @@
+os: linux
+sudo: required
+dist: xenial
+compiler: gcc
 language: python
 python:
   - "2.7"
-
-matrix:
-  include:
-    - os: linux
-      sudo: required
-      dist: xenial
-      compiler: gcc
-      services:
-        - docker
-
+  
 script:
-  - git remote add upstream https://github.com/sk1project/sk1-wx
-  - git fetch upstream
-  - git pull upstream master
-  - sudo apt-get install -y sshpass gettext
+  - sudo apt-get install -y sshpass gettext python-cairo-dev libpango1.0-dev
   - mkdir subproj
   - git clone https://github.com/sk1project/build-utils subproj/build-utils
   - ln -s subproj/build-utils/src/utils utils
@@ -23,6 +15,30 @@ script:
   - ln -s ../subproj/uniconvertor/src/uc2 src/uc2
   - git clone https://github.com/sk1project/wal subproj/wal
   - ln -s ../subproj/wal/src/wal src/wal
-  - git clone https://github.com/sk1project/build-cache subproj/build-cache
-  - python bbox.py pull
-  - python bbox.py build
+  - python setup.py bdist_deb
+  - ( mkdir appdir ; cd appdir/ ; dpkg-deb -x $(find .. -name 'python-sk1-*.deb') . )
+  # Bundle Python
+  - cd appdir/
+  - apt-get download libcairo2 libpango1.0 python-wxgtk3.0 python-reportlab python-cups python-pil python-cairo libpng12-0 libpython2.7-stdlib python2.7 python2.7-minimal libpython2.7-minimal python-wxgtk3.0 libwxgtk3.0-0v5 libwxbase3.0-0v5
+  - find *.deb -exec dpkg-deb -x {} . \;
+  - rm *deb
+  - cd ..
+  - wget -c -nv "https://github.com/AppImage/AppImageKit/releases/download/continuous/AppRun-x86_64" -O ./appdir/AppRun ; chmod +x ./appdir/AppRun
+  - cp appdir/usr/lib/sk1-wx-*/sk1/share/icons/generic/sk1-icon-64x64.png appdir/sk1.png
+  # FIXME: Icon naming in appdir/usr/share probably still broken
+  - cp appdir/usr/share/applications/sk1.desktop appdir/
+  - ( cd appdir/usr/lib/python2.7/dist-packages/ ; ln -s ../../sk1-wx-*/* . )
+  - ( cd appdir/usr/lib/python2.7/dist-packages/ ; ln -s wx-3.0-gtk2/* . )
+  - find appdir/
+  - wget -c -nv "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+  - chmod a+x appimagetool-x86_64.AppImage
+  - ./appimagetool-x86_64.AppImage -g appdir/
+
+after_success:
+  - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+  - bash upload.sh sK1*.AppImage*
+  
+branches:
+  except:
+    - # Do not build tags that we create when we upload to GitHub Releases
+    - /^(?i:continuous)/
