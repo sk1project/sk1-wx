@@ -16,7 +16,8 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-from printdlg import PrintDialog
+
+from .printdlg import PrintDialog
 
 
 def print_dlg(parent, presenter):

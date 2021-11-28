@@ -16,11 +16,9 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-
-from uc2 import uc2const
-
 from sk1 import _, config
 from sk1.dialogs import ProgressDialog, error_dialog
+from uc2 import uc2const
 
 
 class AbstractPS(object):

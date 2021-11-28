@@ -17,7 +17,6 @@
 
 
 import wal
-
 from sk1 import _, config
 
 

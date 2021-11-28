@@ -16,22 +16,27 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from .base import CtxPlugin
-from .page_format import PagePlugin, PageBorderPlugin
-from .units import UnitsPlugin
-from .jump import JumpPlugin
-from .resize import ResizePlugin
-from .position import PositionPlugin
-from .transform import RotatePlugin, MirrorPlugin
-from .combine import GroupPlugin, CombinePlugin, ToCurvePlugin
-from .rect import RectanglePlugin
-from .polygon import PolygonPlugin, PolygonCfgPlugin
-from .order import OrderPlugin
-from .circle import CirclePlugin
-from .image_plgs import ImageTypePlugin
 from .bezier import BezierPlugin
+from .circle import CirclePlugin
+from .combine import CombinePlugin, GroupPlugin, ToCurvePlugin
+from .image_plgs import ImageTypePlugin
+from .jump import JumpPlugin
+from .markup import (
+    ClearMarkupPlugin,
+    FontMarkupPlugin,
+    ScriptMarkupPlugin,
+    SimpleMarkupPlugin,
+    TextCasePlugin,
+)
+from .order import OrderPlugin
+from .page_format import PageBorderPlugin, PagePlugin
+from .polygon import PolygonCfgPlugin, PolygonPlugin
+from .position import PositionPlugin
+from .rect import RectanglePlugin
+from .resize import ResizePlugin
 from .text import TextStylePlugin
-from .markup import FontMarkupPlugin, SimpleMarkupPlugin, ScriptMarkupPlugin, \
-    ClearMarkupPlugin, TextCasePlugin
+from .transform import MirrorPlugin, RotatePlugin
+from .units import UnitsPlugin
 
 PLUGINS = [PagePlugin, UnitsPlugin, JumpPlugin, ResizePlugin, PositionPlugin,
            RotatePlugin, MirrorPlugin, GroupPlugin, CombinePlugin, ToCurvePlugin,

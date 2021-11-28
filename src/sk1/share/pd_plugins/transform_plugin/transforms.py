@@ -21,7 +21,7 @@ import os
 
 import wal
 from sk1 import _
-from sk1.pwidgets import UnitSpin, UnitLabel, AngleSpin
+from sk1.pwidgets import AngleSpin, UnitLabel, UnitSpin
 from sk1.resources import get_bmp
 from uc2 import libgeom, sk2const
 

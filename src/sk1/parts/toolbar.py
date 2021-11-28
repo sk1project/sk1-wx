@@ -44,8 +44,10 @@ def build_toolbar(mw):
             for item in items:
                 action = mw.app.actions[item]
                 aid = action.action_id
-                label_txt = wal.tr(action.get_tooltip_text())
-                hlp_txt = wal.tr(action.get_descr_text())
+                # label_txt = wal.tr(action.get_tooltip_te`xt()
+                label_txt = action.get_tooltip_text()
+                #hlp_txt = wal.tr(action.get_descr_text())
+                hlp_txt = action.get_descr_text()
                 bmp = action.get_icon(icon_size, wal.ART_TOOLBAR)
                 if not bmp:
                     continue

@@ -16,12 +16,13 @@
 # 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-from generic import PrefPanel
 from sk1 import _, config
 from sk1.printing.generic import STD_MARGINS, STD_SHIFTS
 from sk1.pwidgets import StaticUnitSpin
-from sk1.resources import icons, get_bmp
+from sk1.resources import get_bmp, icons
 from uc2 import uc2const
+
+from .generic import PrefPanel
 
 
 class PrinterPrefs(PrefPanel):

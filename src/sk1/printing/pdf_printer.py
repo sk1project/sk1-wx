@@ -17,15 +17,14 @@
 
 import os
 
+from sk1 import _, config
+from sk1.dialogs import get_save_file_name
+from sk1.printing import prn_events
 from uc2 import uc2const
 from uc2.formats.pdf import pdfconst, pdfgen
 
-from sk1 import _, config
-from sk1.printing import prn_events
-from sk1.dialogs import get_save_file_name
-
-from generic import AbstractPrinter, COLOR_MODE
-from propsdlg import PDF_PrnPropsDialog
+from .generic import COLOR_MODE, AbstractPrinter
+from .propsdlg import PDF_PrnPropsDialog
 
 CUSTOM_SIZE = _('Custom size')
 

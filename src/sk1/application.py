@@ -18,13 +18,22 @@
 import logging
 import os
 import sys
+import typing as tp
 import webbrowser
 from base64 import b64decode
 
 import uc2.events
 import wal
-from sk1 import _, config, events, modes, dialogs, appconst
-from sk1 import app_plugins, app_actions
+from sk1 import (
+    _,
+    app_actions,
+    app_plugins,
+    appconst,
+    config,
+    dialogs,
+    events,
+    modes,
+)
 from sk1.app_cms import AppColorManager
 from sk1.app_conf import AppData
 from sk1.app_fsw import AppFileWatcher
@@ -35,14 +44,13 @@ from sk1.app_proxy import AppProxy
 from sk1.app_stdout import StreamLogger
 from sk1.clipboard import AppClipboard
 from sk1.document.presenter import SK1Presenter
-from sk1.parts.artprovider import create_artprovider
+from sk1.parts.artprovider import AbstractArtProvider, create_artprovider
 from sk1.parts.mw import AppMainWindow
 from sk1.pwidgets import font_cache_update
-from uc2 import uc2const, libimg, msgconst
+from uc2 import libimg, msgconst, uc2const
 from uc2.application import UCApplication
-from uc2.formats import get_saver_by_id, get_loader
-from uc2.utils import fsutils
-from uc2.utils import mixutils
+from uc2.formats import get_loader, get_saver_by_id
+from uc2.utils import fsutils, mixutils
 
 LOG = logging.getLogger(__name__)
 
@@ -80,6 +88,7 @@ class SK1Application(wal.Application, UCApplication):
             dialogs.error_dialog(self.mw, 'sK1', msg)
             sys.exit()
 
+        self.docs = []
         self.appdata = AppData(self, cfgdir)
         log_level = config.log_level
         self.log_filepath = os.path.join(self.appdata.app_config_dir, 'sk1.log')
@@ -135,7 +144,7 @@ class SK1Application(wal.Application, UCApplication):
             font_cache_update()
         if self.docs:
             return
-        docs = [fsutils.get_utf8_path(item) for item in sys.argv[1:] if os.path.exists(item)]
+        docs = [item for item in sys.argv[1:] if fsutils.exists(item)]
         if config.new_doc_on_start and not docs:
             self.load_plugins()
             self.new()
@@ -210,7 +219,7 @@ class SK1Application(wal.Application, UCApplication):
                 LOG.error('Cannot parse file <%s> %s', doc_file, e)
                 return
             self.docs.append(doc)
-            config.template_dir = str(os.path.dirname(doc_file))
+            config.template_dir = fsutils.dirname(doc_file)
             self.set_current_doc(doc)
             events.emit(events.APP_STATUS, _('New document from template'))
 
@@ -240,7 +249,7 @@ class SK1Application(wal.Application, UCApplication):
                 LOG.error('Cannot open file <%s> %s', doc_file, e, exc_info=True)
                 return
             self.docs.append(doc)
-            config.open_dir = str(os.path.dirname(doc_file))
+            config.open_dir = fsutils.dirname(doc_file)
             self.history.add_entry(doc_file)
             self.set_current_doc(doc)
             events.emit(events.APP_STATUS, _('Document opened'))
@@ -252,7 +261,7 @@ class SK1Application(wal.Application, UCApplication):
         ext = os.path.splitext(self.current_doc.doc_file)[1]
         if not ext == "." + uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
             return self.save_as()
-        if not fsutils.exists(os.path.dirname(self.current_doc.doc_file)):
+        if not fsutils.exists(fsutils.dirname(self.current_doc.doc_file)):
             return self.save_as()
 
         try:
@@ -277,7 +286,7 @@ class SK1Application(wal.Application, UCApplication):
                 uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
             doc_file = os.path.splitext(doc_file)[0] + "." + \
                        uc2const.FORMAT_EXTENSION[uc2const.SK2][0]
-        if not fsutils.exists(os.path.dirname(doc_file)):
+        if not fsutils.exists(fsutils.dirname(doc_file)):
             doc_file = os.path.join(config.save_dir,
                                     os.path.basename(doc_file))
         doc_file = dialogs.get_save_file_name(self.mw, doc_file, path_only=True)
@@ -296,7 +305,7 @@ class SK1Application(wal.Application, UCApplication):
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
                 LOG.error('Cannot save file <%s> %s', doc_file, e)
                 return False
-            config.save_dir = str(os.path.dirname(doc_file))
+            config.save_dir = fsutils.dirname(doc_file)
             self.history.add_entry(doc_file, appconst.SAVED)
             events.emit(events.DOC_SAVED, self.current_doc)
             events.emit(events.APP_STATUS, _('Document saved'))
@@ -311,7 +320,7 @@ class SK1Application(wal.Application, UCApplication):
                 uc2const.FORMAT_EXTENSION[uc2const.SK2][0]:
             doc_file = os.path.splitext(doc_file)[0] + "." + \
                        uc2const.FORMAT_EXTENSION[uc2const.SK2][0]
-        if not fsutils.exists(os.path.dirname(doc_file)):
+        if not fsutils.exists(fsutils.dirname(doc_file)):
             doc_file = os.path.join(config.save_dir,
                                     os.path.basename(doc_file))
         msg = _('Save selected objects only as...')
@@ -411,7 +420,7 @@ class SK1Application(wal.Application, UCApplication):
                     dy = y0 - y1
                     self.current_doc.api.move_selected(dx, dy)
 
-                config.import_dir = str(os.path.dirname(doc_file))
+                config.import_dir = str(fsutils.dirname(doc_file))
             except Exception as e:
                 msg = _('Cannot import file:')
                 msg = "%s\n'%s'" % (msg, doc_file) + '\n'
@@ -442,7 +451,7 @@ class SK1Application(wal.Application, UCApplication):
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
                 LOG.warn('Cannot save file <%s>', doc_file, e)
                 return
-            config.export_dir = str(os.path.dirname(doc_file))
+            config.export_dir = fsutils.dirname(doc_file)
             msg = _('Document is successfully exported')
             events.emit(events.APP_STATUS, msg)
 
@@ -464,7 +473,7 @@ class SK1Application(wal.Application, UCApplication):
                 dialogs.error_dialog(self.mw, self.appdata.app_name, msg)
                 LOG.warn('Cannot save bitmap in <%s>', doc_file, e)
                 return
-            config.save_dir = str(os.path.dirname(doc_file))
+            config.save_dir = fsutils.dirname(doc_file)
             events.emit(events.APP_STATUS,
                         _('Bitmap is successfully extracted'))
 
@@ -505,7 +514,7 @@ class SK1Application(wal.Application, UCApplication):
             finally:
                 pd.destroy()
 
-            config.export_dir = str(os.path.dirname(doc_file))
+            config.export_dir = fsutils.dirname(doc_file)
             msg = _('Palette is successfully exported')
             events.emit(events.APP_STATUS, msg)
 
@@ -526,7 +535,7 @@ class SK1Application(wal.Application, UCApplication):
                 if not palette:
                     raise IOError(_('Error while opening'), doc_file)
                 self.palettes.add_palette(palette)
-                config.import_dir = str(os.path.dirname(doc_file))
+                config.import_dir = fsutils.dirname(doc_file)
                 msg = _('Palette is successfully imported')
                 events.emit(events.APP_STATUS, msg)
                 return palette.model.name
@@ -561,7 +570,7 @@ class SK1Application(wal.Application, UCApplication):
                 dialogs.error_dialog(parent, self.appdata.app_name, msg)
                 LOG.error('Cannot save pattern in <%s> %s', img_file, e)
                 return
-            config.save_dir = str(os.path.dirname(img_file))
+            config.save_dir = fsutils.dirname(img_file)
 
     def import_pattern(self, parent=None):
         parent = parent or self.mw
@@ -577,7 +586,7 @@ class SK1Application(wal.Application, UCApplication):
             msg += _('Details see in application logs.')
             try:
                 if libimg.check_image(img_file):
-                    config.import_dir = str(os.path.dirname(img_file))
+                    config.import_dir = fsutils.dirname(img_file)
                     return img_file
                 else:
                     dialogs.error_dialog(parent, self.appdata.app_name, msg)

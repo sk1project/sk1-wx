@@ -16,9 +16,10 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
+import typing as tp
 
 import wal
-from sk1 import config, appconst
+from sk1 import appconst, config
 from sk1.parts.mdiarea import MDIArea
 from sk1.parts.menubar import AppMenuBar
 from sk1.parts.stubpanel import AppStubPanel

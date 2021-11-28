@@ -16,19 +16,20 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-import cairo
 import os
-from cStringIO import StringIO
+from io import StringIO
+
+import cairo
 
 import wal
-from sk1 import _, events, dialogs
+from sk1 import _, dialogs, events
 from sk1.app_plugins import RsPlugin
 from sk1.pwidgets import CBMiniPalette
 from sk1.resources import get_icon
 from uc2 import cms, libgeom, uc2const
 from uc2.formats.sk2 import crenderer
 from uc2.utils import fsutils
-from uc2.utils.config import XmlConfigParser
+from uc2.utils.sconfig import SerializedConfig
 
 PLG_DIR = __path__[0]
 IMG_DIR = os.path.join(PLG_DIR, 'images')
@@ -57,7 +58,7 @@ SIZE = 190
 REFRESH_DELAY = 100
 
 
-class IconizerConfig(XmlConfigParser):
+class IconizerConfig(SerializedConfig):
     system_encoding = 'utf-8'
     bg_color = (1.0, 1.0, 1.0)
     draw_selected = False

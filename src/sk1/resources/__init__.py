@@ -16,9 +16,10 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-from acc_keys import GENERIC_KEYS
-from artids import ART_IDS
-from labels import LABELS
+
+from .acc_keys import GENERIC_KEYS
+from .artids import ART_IDS
+from .labels import LABELS
 
 ACC_KEYS = {}
 ACC_KEYS.update(GENERIC_KEYS)

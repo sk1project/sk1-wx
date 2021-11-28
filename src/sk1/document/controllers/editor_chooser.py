@@ -16,6 +16,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from sk1 import modes
+
 from .generic import AbstractController
 
 

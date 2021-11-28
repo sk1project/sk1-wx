@@ -17,8 +17,8 @@
 
 import os
 
-from sk1 import config
 import wal
+from sk1 import config
 
 # Canvas mode enumeration
 SELECT_MODE = 0

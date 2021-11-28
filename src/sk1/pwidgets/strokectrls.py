@@ -15,8 +15,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import cairo
 from copy import deepcopy
+
+import cairo
 
 import wal
 from sk1 import _

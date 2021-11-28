@@ -19,8 +19,16 @@ from copy import deepcopy
 
 import wal
 from sk1 import _, config
-from sk1.pwidgets.colorctrls import CmykMixer, RgbMixer, GrayMixer, \
-    ColorColorRefPanel, MiniPalette, CMYK_PALETTE, RGB_PALETTE, GRAY_PALETTE
+from sk1.pwidgets.colorctrls import (
+    CMYK_PALETTE,
+    GRAY_PALETTE,
+    RGB_PALETTE,
+    CmykMixer,
+    ColorColorRefPanel,
+    GrayMixer,
+    MiniPalette,
+    RgbMixer,
+)
 from uc2 import uc2const
 
 MIXERS = {

@@ -16,8 +16,8 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from sk1 import _, events
-from sk1.resources import icons, get_bmp
-from uc2.uc2const import unit_names, unit_full_names, UNIT_MM
+from sk1.resources import get_bmp, icons
+from uc2.uc2const import UNIT_MM, unit_full_names, unit_names
 from wal import Combolist
 
 from .base import CtxPlugin

@@ -16,9 +16,8 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-
-from sk1 import _, events, config
-from sk1.resources import icons, get_icon, pdids
+from sk1 import _, config, events
+from sk1.resources import get_icon, icons, pdids
 
 
 class AppStubPanel(wal.StubPanel):

@@ -16,12 +16,36 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-from sk1.events import CLIPBOARD, DOC_CHANGED, PAGE_CHANGED, \
-    DOC_MODIFIED, DOC_SAVED, NO_DOCS, SELECTION_CHANGED, MODE_CHANGED, \
-    HISTORY_CHANGED, SNAP_CHANGED, CONFIG_MODIFIED
-from sk1.modes import SELECT_MODE, SHAPER_MODE, ZOOM_MODE, FLEUR_MODE, \
-    LINE_MODE, CURVE_MODE, RECT_MODE, ELLIPSE_MODE, TEXT_MODE, POLYGON_MODE, \
-    ZOOM_OUT_MODE, GR_SELECT_MODE, GRAD_MODES, EDIT_MODES, TEXT_MODES
+from sk1.events import (
+    CLIPBOARD,
+    CONFIG_MODIFIED,
+    DOC_CHANGED,
+    DOC_MODIFIED,
+    DOC_SAVED,
+    HISTORY_CHANGED,
+    MODE_CHANGED,
+    NO_DOCS,
+    PAGE_CHANGED,
+    SELECTION_CHANGED,
+    SNAP_CHANGED,
+)
+from sk1.modes import (
+    CURVE_MODE,
+    EDIT_MODES,
+    ELLIPSE_MODE,
+    FLEUR_MODE,
+    GR_SELECT_MODE,
+    GRAD_MODES,
+    LINE_MODE,
+    POLYGON_MODE,
+    RECT_MODE,
+    SELECT_MODE,
+    SHAPER_MODE,
+    TEXT_MODE,
+    TEXT_MODES,
+    ZOOM_MODE,
+    ZOOM_OUT_MODE,
+)
 from sk1.pwidgets import AppAction
 from sk1.resources import pdids
 

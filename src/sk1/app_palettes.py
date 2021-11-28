@@ -23,7 +23,7 @@ from uc2 import uc2const
 from uc2.app_palettes import PaletteManager
 from uc2.formats import get_loader_by_id
 from uc2.formats.skp.skp_presenter import SKP_Presenter
-from uc2.utils import generate_id, fsutils
+from uc2.utils import fsutils, generate_id
 
 STD_CMYK_PALETTE = 'sK1 CMYK palette'
 STD_RGB_PALETTE = 'sK1 RGB palette'

@@ -17,8 +17,8 @@
 
 import logging
 import os
-import urllib2
-from cStringIO import StringIO
+from io import StringIO
+from urllib.request import Request, urlopen
 
 import wal
 from sk1 import _, config
@@ -37,8 +37,8 @@ def request_server(url):
     response = ''
     # noinspection PyBroadException
     try:
-        req = urllib2.Request(url, {}, {'User-Agent': USER_AGENT})
-        response = urllib2.urlopen(req).read()
+        req = Request(url, {}, {'User-Agent': USER_AGENT})
+        response = urlopen(req).read()
     except Exception:
         LOG.exception('Cannot read server response')
     return response
@@ -50,7 +50,7 @@ def init_palette_list():
     try:
         txt = request_server('%s/palettes.php?action=get_list' % URL)
         code = compile('data=' + txt, '<string>', 'exec')
-        exec code
+        exec(code)
     except Exception:
         LOG.exception('Cannot deserialize server response')
     if data:

@@ -41,7 +41,7 @@ class AbstractArtProvider(wal.ArtProvider):
         self.match_keys = self.iconmatch.keys()
 
     def create_bitmap(self, artid, client, size):
-        artid = wal.untr(artid)
+        # artid = wal.untr(artid)
         if artid in self.match_keys:
             filename = self.iconmatch[artid] + self.file_ext
             size_dir = '%sx%s' % (size[0], size[0])

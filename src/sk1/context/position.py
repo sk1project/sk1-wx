@@ -17,10 +17,10 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-
 from sk1 import events
 from sk1.pwidgets import UnitSpin
 from uc2 import sk2const
+
 from .base import CtxPlugin
 
 

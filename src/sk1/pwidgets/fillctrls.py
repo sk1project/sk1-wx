@@ -17,20 +17,31 @@
 
 from copy import deepcopy
 
-from uc2.cms import get_registration_black, color_to_spot, rgb_to_hexcolor
-
 import wal
-from colorctrls import FillColorRefPanel, MiniPalette, FillFillRefPanel, \
-    FillRuleKeeper, CMYK_PALETTE, RGB_PALETTE, GRAY_PALETTE, SPOT_PALETTE
-from colorctrls import PaletteSwatch, CmykMixer, RgbMixer, GrayMixer, \
-    SpotMixer, PaletteMixer
-from gradientctrls import GradientEditor, GradientMiniPalette
-from patternctrls import PatternMiniPalette, PatternEditor
-from patterns import DEFAULT_PATTERN
 from sk1 import _
 from sk1.resources import icons
-from uc2 import uc2const, sk2const
+from uc2 import sk2const, uc2const
+from uc2.cms import color_to_spot, get_registration_black, rgb_to_hexcolor
 
+from .colorctrls import (
+    CMYK_PALETTE,
+    GRAY_PALETTE,
+    RGB_PALETTE,
+    SPOT_PALETTE,
+    CmykMixer,
+    FillColorRefPanel,
+    FillFillRefPanel,
+    FillRuleKeeper,
+    GrayMixer,
+    MiniPalette,
+    PaletteMixer,
+    PaletteSwatch,
+    RgbMixer,
+    SpotMixer,
+)
+from .gradientctrls import GradientEditor, GradientMiniPalette
+from .patternctrls import PatternEditor, PatternMiniPalette
+from .patterns import DEFAULT_PATTERN
 
 # --- Solid fill panels
 

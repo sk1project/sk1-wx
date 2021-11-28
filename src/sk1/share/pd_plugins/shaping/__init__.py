@@ -22,10 +22,15 @@ from copy import deepcopy
 import wal
 from sk1 import _, events, modes
 from sk1.app_plugins import RsPlugin
-from sk1.dialogs import msg_dialog, yesno_dialog, error_dialog
-from sk1.resources import icons, get_icon, get_bmp
-from uc2.libgeom import apply_trafo_to_paths
-from uc2.libgeom import intersect_paths, fuse_paths, trim_paths, excluse_paths
+from sk1.dialogs import error_dialog, msg_dialog, yesno_dialog
+from sk1.resources import get_bmp, get_icon, icons
+from uc2.libgeom import (
+    apply_trafo_to_paths,
+    excluse_paths,
+    fuse_paths,
+    intersect_paths,
+    trim_paths,
+)
 
 PLG_DIR = __path__[0]
 IMG_DIR = os.path.join(PLG_DIR, 'images')

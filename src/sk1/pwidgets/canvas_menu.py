@@ -18,6 +18,7 @@
 import wal
 from sk1 import modes
 from sk1.resources import pdids
+
 from .ctxmenu import ContextMenu
 
 UNDO = [wal.ID_UNDO, wal.ID_REDO]

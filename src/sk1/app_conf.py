@@ -16,11 +16,12 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
+from typing import Union
 
-from sk1 import events, appconst
+from sk1 import appconst, events
 from uc2 import uc2const
 from uc2.uc2conf import UCConfig, UCData
-from uc2.utils import system, fsutils
+from uc2.utils import fsutils, system
 
 
 class AppData(UCData):
@@ -40,11 +41,12 @@ class AppData(UCData):
     plugin_dirs = []
 
     def __init__(self, app, cfgdir='~'):
+        UCData.__init__(self, app, check=False)
+
         # --- Init paths
-        path = fsutils.expanduser(os.path.join(cfgdir, '.config', 'sk1-wx'))
+        path = fsutils.expanduser(os.path.join(cfgdir, '.config', 'sk1-wx-py3'))
         self.app_config_dir = path
 
-        UCData.__init__(self, app, check=False)
         self.check_config_dirs()
 
         self.app_palette_dir = os.path.join(path, 'palettes')
@@ -371,7 +373,7 @@ class AppConfig(UCConfig):
         return self.os_name == system.UBUNTU
 
     def is_mac(self):
-        return self.os == system.MACOSX
+        return self.os == system.MACOS
 
     def is_win(self):
         return self.os == system.WINDOWS
@@ -385,8 +387,8 @@ class LinuxConfig(AppConfig):
     tabs_use_bold = False
 
 
-class MacosxConfig(AppConfig):
-    os = system.MACOSX
+class MacosConfig(AppConfig):
+    os = system.MACOS
     os_name = system.get_os_name()
     toolbar_size = (16, 16)
     toolbar_icon_size = (16, 16)
@@ -416,6 +418,6 @@ class WinConfig(AppConfig):
     sash_position = -280
 
 
-def get_app_config():
-    os_mapping = {system.MACOSX: MacosxConfig, system.WINDOWS: WinConfig}
+def get_app_config() -> Union[LinuxConfig, WinConfig, MacosConfig]:
+    os_mapping = {system.MACOS: MacosConfig, system.WINDOWS: WinConfig}
     return os_mapping.get(system.get_os_family(), LinuxConfig)()

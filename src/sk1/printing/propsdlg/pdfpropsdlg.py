@@ -15,16 +15,14 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import wal
+from generic import PrnProsDialog
 
+import wal
+from sk1 import _
+from sk1.pwidgets import StaticUnitLabel, StaticUnitSpin
+from sk1.resources import get_icon, icons
 from uc2 import uc2const
 from uc2.formats.pdf import pdfconst
-
-from sk1 import _
-from sk1.resources import get_icon, icons
-from sk1.pwidgets import StaticUnitLabel, StaticUnitSpin
-
-from generic import PrnProsDialog
 
 CS = [uc2const.COLOR_GRAY, uc2const.COLOR_CMYK, uc2const.COLOR_RGB]
 

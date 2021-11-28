@@ -16,15 +16,19 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-from sk1 import config, events, appconst
+from sk1 import appconst, config, events
 from sk1.parts.ctxpanel import AppCtxPanel
 from sk1.parts.doctabs import DocTabPanel
 from sk1.parts.palettepanel import AppHPalette, AppVPalette
 from sk1.parts.plgarea import PlgArea
 from sk1.parts.statusbar import AppStatusbar
 from sk1.parts.tools import AppTools
-from sk1.pwidgets import RulerSurface, HRulerSurface, VRulerSurface
-from sk1.pwidgets import CanvasSurface
+from sk1.pwidgets import (
+    CanvasSurface,
+    HRulerSurface,
+    RulerSurface,
+    VRulerSurface,
+)
 from uc2 import uc2const
 
 

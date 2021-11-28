@@ -18,12 +18,20 @@
 from copy import deepcopy
 
 import wal
-from dashedit_dlg import dash_editor_dlg
 from sk1 import _, config
-from sk1.pwidgets import SolidFill, StaticUnitLabel, UnitSpin, DashChoice, \
-    CapChoice, JoinChoice, ArrowChoice
+from sk1.pwidgets import (
+    ArrowChoice,
+    CapChoice,
+    DashChoice,
+    JoinChoice,
+    SolidFill,
+    StaticUnitLabel,
+    UnitSpin,
+)
 from sk1.resources import icons
 from uc2 import uc2const
+
+from .dashedit_dlg import dash_editor_dlg
 
 FALLBACK_STROKE = [0, 0.28346456692913385,
                    [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, ''],

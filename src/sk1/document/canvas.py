@@ -15,11 +15,12 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import cairo
 import inspect
 import logging
 
-from sk1 import events, modes, config
+import cairo
+
+from sk1 import config, events, modes
 from sk1.appconst import PAGEFIT, ZOOM_IN, ZOOM_OUT
 from sk1.document import controllers
 from sk1.document.renderer import PDRenderer

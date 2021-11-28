@@ -15,12 +15,13 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import cairo
 import math
+
+import cairo
 
 import wal
 from sk1 import config
-from sk1.document.ruler import VFONT, HFONT
+from sk1.document.ruler import HFONT, VFONT
 from uc2 import cms, uc2const
 
 CORNER = ((3, 1, 3, 16), (2, 2, 5, 2), (1, 13, 16, 13),

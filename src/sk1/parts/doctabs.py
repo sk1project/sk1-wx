@@ -16,8 +16,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-
-from sk1 import events, config
+from sk1 import config, events
 from sk1.pwidgets import ContextMenu
 from sk1.resources import pdids
 

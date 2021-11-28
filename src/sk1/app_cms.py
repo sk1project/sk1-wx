@@ -17,22 +17,20 @@
 
 import os
 
+from sk1 import config, events
 from uc2 import uc2const
-from uc2.uc2const import COLOR_DISPLAY
+from uc2.cms import DefaultColorManager, libcms, val_255
 from uc2.utils import fsutils
 
-from uc2.cms import ColorManager, CS, libcms, val_255
-from sk1 import config, events
 
-
-class AppColorManager(ColorManager):
+class AppColorManager(DefaultColorManager):
     color_mngrs = None
     app = None
 
     def __init__(self, app):
         self.app = app
         self.color_mngrs = []
-        ColorManager.__init__(self)
+        DefaultColorManager.__init__(self)
         events.connect(events.CONFIG_MODIFIED, self.config_changed)
 
     def config_changed(self, *args):
@@ -44,9 +42,10 @@ class AppColorManager(ColorManager):
                 item.model.clear_color_cache()
             self.app.current_doc.canvas.force_redraw()
 
-    def update(self):
-        self.handles = {}
-        self.clear_transforms()
+    def update_profiles(self) -> None:
+        """Profile update method
+        """
+        config = self.app.config
         profiles = [config.cms_rgb_profile,
                     config.cms_cmyk_profile,
                     config.cms_lab_profile,
@@ -59,22 +58,26 @@ class AppColorManager(ColorManager):
                          config.cms_display_profiles]
         index = 0
         profile_dir = self.app.appdata.app_color_profile_dir
-        for item in CS + [COLOR_DISPLAY, ]:
+        for item in uc2const.COLORSPACES + [uc2const.COLOR_DISPLAY, ]:
             path = None
             profile = profiles[index]
             if profile and profile in profile_dicts[index]:
                 profile_filename = profile_dicts[index][profile]
                 path = os.path.join(profile_dir, profile_filename)
             if path:
-                path = fsutils.get_sys_path(path)
                 self.handles[item] = libcms.cms_open_profile_from_file(path)
             else:
                 profile_dir = self.app.appdata.app_color_profile_dir
                 filename = 'built-in_%s.icm' % item
                 path = os.path.join(profile_dir, filename)
-                path = fsutils.get_sys_path(path)
                 self.handles[item] = libcms.cms_open_profile_from_file(path)
             index += 1
+            
+
+    def _update_opts(self) -> None:
+        """Color management options update method
+        """
+        config = self.app.config
         self.use_cms = config.cms_use
         self.use_display_profile = config.cms_use_display_profile
         self.rgb_intent = config.cms_rgb_intent
@@ -87,13 +90,22 @@ class AppColorManager(ColorManager):
             libcms.cms_set_alarm_codes(*val_255(self.alarm_codes))
         self.proof_for_spot = config.cms_proof_for_spot
         if self.proofing:
-            self.flags = self.flags | uc2const.cmsFLAGS_SOFTPROOFING
+            self.flags |= uc2const.cmsFLAGS_SOFTPROOFING
         if self.gamutcheck:
-            self.flags = self.flags | uc2const.cmsFLAGS_GAMUTCHECK
+            self.flags |= uc2const.cmsFLAGS_GAMUTCHECK
         if config.cms_bpc_flag:
-            self.flags = self.flags | uc2const.cmsFLAGS_BLACKPOINTCOMPENSATION
+            self.flags |= uc2const.cmsFLAGS_BLACKPOINTCOMPENSATION
         if config.cms_bpt_flag:
-            self.flags = self.flags | uc2const.cmsFLAGS_PRESERVEBLACK
+            self.flags |= uc2const.cmsFLAGS_PRESERVEBLACK
+
+    def update(self):
+        """Event callable update method. Updates application color management 
+        after changes in preferences
+        """
+        self.handles = {}
+        self.clear_transforms()
+        self.update_profiles()
+        self._update_opts()
 
     def registry_cm(self, cm):
         self.color_mngrs.append(cm)
@@ -104,6 +116,7 @@ class AppColorManager(ColorManager):
 
     def apply_cm_settings(self, cm):
         if self.use_display_profile:
+            COLOR_DISPLAY = uc2const.COLOR_DISPLAY
             cm.use_display_profile = True
             cm.handles[COLOR_DISPLAY] = self.handles[COLOR_DISPLAY]
         else:

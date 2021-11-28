@@ -18,8 +18,8 @@
 import os
 
 import wal
-from uc2.utils import fsutils
 from sk1 import config, events
+from uc2.utils import fsutils
 
 
 class AppFileWatcher(object):
@@ -37,7 +37,7 @@ class AppFileWatcher(object):
         if config.app_server:
             self.timer.start()
             with fsutils.uopen(self.lock, 'wb') as fp:
-                fp.write('\n')
+                fp.write(b'\n')
 
     def destroy(self):
         if fsutils.exists(self.lock):
@@ -57,9 +57,9 @@ class AppFileWatcher(object):
             with fsutils.uopen(self.socket, 'rb') as fp:
                 lines = fp.readlines()
             fsutils.remove(self.socket)
-            [self.app.open(item.strip('\n'))
-             for item in lines
-             if fsutils.exists(item.strip('\n'))]
+            for item in lines:
+                if fsutils.exists(item.strip('\n')):
+                    self.app.open(item.strip('\n'))
         if not fsutils.exists(self.lock):
             with fsutils.uopen(self.lock, 'wb') as fp:
-                fp.write('\n')
+                fp.write(b'\n')

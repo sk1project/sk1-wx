@@ -16,12 +16,13 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+
 import cairo
 
 import wal
 from sk1 import _, config, events
-from sk1.resources import icons, get_icon
-from uc2 import libpango, cms
+from sk1.resources import get_icon, icons
+from uc2 import cms, libpango
 
 FONTNAME_CACHE = []
 FONTSAMPLE_CACHE = []

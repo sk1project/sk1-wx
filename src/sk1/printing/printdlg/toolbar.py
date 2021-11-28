@@ -16,10 +16,9 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-
 from sk1 import _
-from sk1.resources import icons
 from sk1.printing import prn_events
+from sk1.resources import icons
 
 
 class PreviewToolbar(wal.HPanel):

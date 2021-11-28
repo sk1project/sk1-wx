@@ -16,12 +16,12 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import sys
-import wal
 
-from sk1 import _, events, config
+import wal
+from sk1 import _, config, events
 from sk1.dialogs.aboutdlg_credits import CREDITS
 from sk1.dialogs.aboutdlg_license import LICENSE
-from sk1.resources import icons, get_bmp
+from sk1.resources import get_bmp, icons
 from uc2 import uc2const
 
 
@@ -79,8 +79,8 @@ class AboutPage(wal.HPanel):
 class ComponentsPage(wal.VPanel):
     def __init__(self, parent):
         wal.VPanel.__init__(self, parent)
-        from uc2 import libimg, libpango, libcairo, cms
         import reportlab
+        from uc2 import cms, libcairo, libimg, libpango
 
         data = [[_('Component'), _('Version')]]
         mark = '' if not uc2const.BUILD else ' build %s' % uc2const.BUILD
@@ -96,12 +96,13 @@ class ComponentsPage(wal.VPanel):
         data.append(['Pango', libpango.get_version()])
         data.append(['Reportlab', reportlab.Version])
 
-        if not wal.IS_MSW:
-            import cups
-            try:
-                cups.require('10.0')
-            except RuntimeError as e:
-                data.append(['pycups', str(e).split()[-1]])
+        # FIXME: import cups
+        # if not wal.IS_MSW:
+        #     import cups
+        #     try:
+        #         cups.require('10.0')
+        #     except RuntimeError as e:
+        #         data.append(['pycups', str(e).split()[-1]])
 
         vp = wal.VPanel(self)
         vp.set_bg(wal.UI_COLORS['border'])

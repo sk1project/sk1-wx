@@ -18,10 +18,9 @@
 import math
 from copy import deepcopy
 
-from uc2 import libgeom, uc2const, libimg, sk2const
+from sk1 import config, events, modes
+from uc2 import libgeom, libimg, sk2const, uc2const
 from uc2.formats.sk2 import sk2_model
-
-from sk1 import events, config, modes
 
 
 class AbstractAPI:

@@ -16,8 +16,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-
-from sk1.resources import pdids, icons
+from sk1.resources import icons, pdids
 
 ART_IDS = {
     # ----- Tools

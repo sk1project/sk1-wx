@@ -16,12 +16,13 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import cairo
-import wal
 
-from uc2 import uc2const
+import wal
 from sk1.printing import prn_events
 from sk1.printing.printrend import PrintRenderer
-from generic import STD_SHIFTS
+from uc2 import uc2const
+
+from .generic import STD_SHIFTS
 
 
 class PrnPage(object):

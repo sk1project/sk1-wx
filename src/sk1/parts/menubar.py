@@ -19,8 +19,8 @@ import logging
 
 import wal
 from sk1 import _, config, events
-from sk1.resources import pdids
 from sk1.pwidgets.ctxmenu import ActionMenuItem
+from sk1.resources import pdids
 
 LOG = logging.getLogger(__name__)
 

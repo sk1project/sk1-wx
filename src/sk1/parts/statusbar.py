@@ -19,10 +19,10 @@ import logging
 
 import wal
 from sk1 import _, config, events
-from sk1.pwidgets import SbFillSwatch, SbStrokeSwatch, ActionImageSwitch
-from sk1.resources import get_bmp, icons, get_icon
-from sk1.resources import pdids, get_tooltip_text
-from uc2.uc2const import IMAGE_NAMES, IMAGE_CMYK, IMAGE_RGB
+from sk1.pwidgets import ActionImageSwitch, SbFillSwatch, SbStrokeSwatch
+from sk1.resources import get_bmp, get_icon, get_tooltip_text, icons, pdids
+from uc2.uc2const import IMAGE_CMYK, IMAGE_NAMES, IMAGE_RGB
+
 from .menubar import ActionMenuItem
 
 FONTSIZE = [str(config.statusbar_fontsize), ]

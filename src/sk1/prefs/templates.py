@@ -18,7 +18,7 @@
 from sk1 import _
 from sk1.resources import icons
 
-from generic import PrefPanel
+from .generic import PrefPanel
 
 
 class GridPrefs(PrefPanel):

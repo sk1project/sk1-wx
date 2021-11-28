@@ -18,15 +18,16 @@
 import os
 
 import wal
-import winspool
-from generic import AbstractPrinter, AbstractPS, COLOR_MODE, MONOCHROME_MODE
-from pdf_printer import PDF_Printer
-from printout import Printout
 from sk1 import _, config
 from sk1.dialogs import ProgressDialog, error_dialog
 from sk1.printing import prn_events
 from uc2 import uc2const
 from uc2.formats import get_loader
+
+from . import winspool
+from .generic import COLOR_MODE, MONOCHROME_MODE, AbstractPrinter, AbstractPS
+from .pdf_printer import PDF_Printer
+from .printout import Printout
 
 
 def get_print_data(app):

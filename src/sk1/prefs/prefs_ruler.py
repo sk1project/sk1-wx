@@ -15,14 +15,16 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import cairo
 import os
 
+import cairo
+
 import wal
-from generic import PrefPanel
 from sk1 import _, config
 from sk1.resources import icons
 from uc2.utils import fsutils
+
+from .generic import PrefPanel
 
 
 class RulersPrefs(PrefPanel):

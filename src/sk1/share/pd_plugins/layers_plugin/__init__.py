@@ -21,7 +21,7 @@ import wal
 from sk1 import _, events
 from sk1.app_plugins import RsPlugin
 from sk1.dialogs import edit_dlg
-from sk1.resources import icons, get_icon
+from sk1.resources import get_icon, icons
 
 PLG_DIR = __path__[0]
 IMG_DIR = os.path.join(PLG_DIR, 'images')

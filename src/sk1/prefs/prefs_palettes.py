@@ -14,13 +14,12 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-
 from sk1 import _, config
-from sk1.resources import icons
+from sk1.dialogs import palette_collection_dlg, palette_info_dlg
 from sk1.pwidgets import PaletteViewer
-from sk1.dialogs import palette_info_dlg, palette_collection_dlg
+from sk1.resources import icons
 
-from generic import PrefPanel
+from .generic import PrefPanel
 
 PAL_ORIENT = [_('Horizontal'), _('Vertical')]
 

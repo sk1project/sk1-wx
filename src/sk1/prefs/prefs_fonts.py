@@ -16,11 +16,10 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-
 from sk1 import _, config
 from sk1.resources import icons
 
-from generic import PrefPanel
+from .generic import PrefPanel
 
 
 class FontPrefs(PrefPanel):

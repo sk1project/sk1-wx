@@ -18,10 +18,11 @@
 import os
 
 import wal
-from generic import PrefPanel
 from sk1 import _, config
 from sk1.resources import icons
 from uc2.utils import fsutils
+
+from .generic import PrefPanel
 
 COLORS = [
     ('#FFFFFF', 'White'),

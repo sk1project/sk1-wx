@@ -18,10 +18,10 @@
 from copy import deepcopy
 
 import wal
-from colorctrls import AlphaColorSwatch
-from sk1.dialogs.colordlg import change_color_dlg
 from sk1.resources import icons
 from uc2 import sk2const
+
+from .colorctrls import AlphaColorSwatch
 
 
 class PDColorButton(wal.HPanel):
@@ -55,6 +55,7 @@ class PDColorButton(wal.HPanel):
         return deepcopy(self.color)
 
     def edit_color(self):
+        from sk1.dialogs.colordlg import change_color_dlg
         ret = change_color_dlg(self.dlg, self.cms, self.color)
         if ret:
             self.color = ret

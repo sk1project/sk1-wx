@@ -19,8 +19,8 @@ import logging
 import os
 
 from sk1 import _, config, get_sys_path
-from wal import VPanel
 from uc2.utils import fsutils
+from wal import VPanel
 
 LOG = logging.getLogger(__name__)
 

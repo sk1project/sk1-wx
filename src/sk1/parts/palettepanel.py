@@ -17,7 +17,6 @@
 
 
 import wal
-
 from sk1 import _, config
 from sk1.pwidgets import Palette
 from sk1.resources import icons, pdids

@@ -15,15 +15,11 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import cups
 import logging
 import os
-import wal
 
-from generic import AbstractPrinter, AbstractPS, COLOR_MODE
-from pdf_printer import PDF_Printer
-from printout import Printout
-from propsdlg import CUPS_PrnPropsDialog
+import cups
+import wal
 from sk1 import _, config
 from sk1.dialogs import ProgressDialog, error_dialog
 from sk1.printing import prn_events
@@ -31,6 +27,11 @@ from uc2 import uc2const
 from uc2.formats import get_loader
 from uc2.formats.pdf import pdfconst, pdfgen
 from uc2.utils import fsutils
+
+from .generic import COLOR_MODE, AbstractPrinter, AbstractPS
+from .pdf_printer import PDF_Printer
+from .printout import Printout
+from .propsdlg import CUPS_PrnPropsDialog
 
 LOG = logging.getLogger(__name__)
 

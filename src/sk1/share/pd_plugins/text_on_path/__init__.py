@@ -21,7 +21,7 @@ import os
 import wal
 from sk1 import _, events
 from sk1.app_plugins import RsPlugin
-from sk1.resources import get_icon, icons, get_bmp
+from sk1.resources import get_bmp, get_icon, icons
 from uc2 import sk2const
 
 PLG_DIR = __path__[0]

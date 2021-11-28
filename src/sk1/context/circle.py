@@ -18,13 +18,11 @@
 import math
 
 import wal
-
+from sk1 import _, events
+from sk1.pwidgets import AngleSpin, BitmapToggle
+from sk1.resources import icons
 from uc2.sk2const import ARC_ARC, ARC_CHORD, ARC_PIE_SLICE
 
-from sk1 import _, events
-from sk1.resources import icons
-from sk1.pwidgets import BitmapToggle
-from sk1.pwidgets import AngleSpin
 from .base import CtxPlugin
 
 CIRCLE_TYPES = [ARC_ARC, ARC_CHORD, ARC_PIE_SLICE]

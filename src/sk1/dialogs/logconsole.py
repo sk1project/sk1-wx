@@ -17,9 +17,9 @@
 
 import datetime
 import os
-import wal
 
-from sk1 import _, config, appconst
+import wal
+from sk1 import _, appconst, config
 from sk1.dialogs import filedlgs
 from sk1.resources import icons
 from uc2 import uc2const
@@ -34,11 +34,11 @@ LIGHT = (170, 181, 189)
 GREEN = (165, 194, 97)
 
 COLOR_MAP = {
-    'CRITICAL': GREEN,
-    'ERROR': RED,
-    'WARNING': YELLOW,
-    'INFO': LIGHT,
-    'DEBUG': DARK,
+    b'CRITICAL': GREEN,
+    b'ERROR': RED,
+    b'WARNING': YELLOW,
+    b'INFO': LIGHT,
+    b'DEBUG': DARK,
 }
 
 FG_COLOR = LIGHT

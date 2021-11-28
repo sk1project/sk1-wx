@@ -17,13 +17,18 @@
 
 from copy import deepcopy
 
-from sk1 import _, events, config
-from sk1.pwidgets import UnitSpin, ActionButton, ActionToggle
-from sk1.resources import icons, get_bmp, pdids
-from uc2.uc2const import ORIENTS_NAMES, PAGE_FORMATS_MORE
-from uc2.uc2const import PAGE_FORMATS, PAGE_FORMAT_NAMES, PORTRAIT, LANDSCAPE
-from wal import Combolist, LEFT, CENTER, ImageToggleButton
-from wal import VLine, ALL, EXPAND
+from sk1 import _, config, events
+from sk1.pwidgets import ActionButton, ActionToggle, UnitSpin
+from sk1.resources import get_bmp, icons, pdids
+from uc2.uc2const import (
+    LANDSCAPE,
+    ORIENTS_NAMES,
+    PAGE_FORMAT_NAMES,
+    PAGE_FORMATS,
+    PAGE_FORMATS_MORE,
+    PORTRAIT,
+)
+from wal import ALL, CENTER, EXPAND, LEFT, Combolist, ImageToggleButton, VLine
 
 from .base import CtxPlugin
 

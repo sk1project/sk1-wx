@@ -16,10 +16,10 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from sk1 import _
-from sk1.resources import icons, get_bmp, pdids
-from sk1.pwidgets import AngleSpin, ActionButton
+from sk1.pwidgets import ActionButton, AngleSpin
+from sk1.resources import get_bmp, icons, pdids
 
-from .base import CtxPlugin, ActionCtxPlugin
+from .base import ActionCtxPlugin, CtxPlugin
 
 
 class RotatePlugin(CtxPlugin):

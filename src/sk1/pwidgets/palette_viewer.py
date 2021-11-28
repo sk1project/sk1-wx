@@ -19,7 +19,7 @@ from copy import deepcopy
 
 import wal
 from sk1 import _
-from sk1.resources import icons, get_icon
+from sk1.resources import get_icon, icons
 
 AUTO_MODE = 0
 NORMAL_MODE = 1

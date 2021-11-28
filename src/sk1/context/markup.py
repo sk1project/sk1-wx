@@ -16,14 +16,12 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-
 from sk1 import _, events, modes
 from sk1.pwidgets import FontChoice
 from sk1.resources import icons, pdids
 from uc2 import libpango
 
-from .base import ActionCtxPlugin
-from .base import CtxPlugin
+from .base import ActionCtxPlugin, CtxPlugin
 
 
 class TextCasePlugin(ActionCtxPlugin):
@@ -36,7 +34,7 @@ class ClearMarkupPlugin(ActionCtxPlugin):
     ids = [pdids.ID_CLEAR_MARKUP]
 
 
-FONT_SIZES = range(5, 14) + range(14, 30, 2) + [32, 36, 40, 48, 56, 64, 72]
+FONT_SIZES = list(range(5, 14)) + list(range(14, 30, 2)) + [32, 36, 40, 48, 56, 64, 72]
 
 
 class FontMarkupPlugin(CtxPlugin):

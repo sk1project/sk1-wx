@@ -16,8 +16,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-
-from sk1 import _, config, appconst
+from sk1 import _, appconst, config
 from uc2.utils import fsutils
 
 

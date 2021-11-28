@@ -16,8 +16,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-from sk1 import events
-from sk1 import resources
+from sk1 import events, resources
 
 
 class AppAction(object):
@@ -72,8 +71,8 @@ class AppAction(object):
                 widget.update()
         if self.toolbar is not None and not wal.IS_MAC:
             self.toolbar.EnableTool(self.action_id, self.enabled)
-            self.toolbar.SetToolShortHelp(self.action_id,
-                                          wal.tr(self.get_descr_text()))
+            # self.toolbar.SetToolShortHelp(self.action_id, wal.tr(self.get_descr_text()))
+            self.toolbar.SetToolShortHelp(self.action_id, self.get_descr_text())
 
     def register(self, widget):
         self.widgets.append(widget)
@@ -158,8 +157,7 @@ class AppAction(object):
         return txt
 
     def get_shortcut_text(self):
-        return wal.untr(self.acc_entry.ToString()).replace(' ', '') \
-            if self.is_acc else ''
+        return self.acc_entry.ToString().replace(' ', '') if self.is_acc else ''
 
     def is_toggle(self):
         return self.checker is not None

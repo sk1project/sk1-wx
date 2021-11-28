@@ -16,9 +16,8 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-
 from sk1 import _, config
-from sk1.pwidgets import SolidFill, GradientFill, PatternFill
+from sk1.pwidgets import GradientFill, PatternFill, SolidFill
 from uc2 import sk2const
 
 

@@ -16,10 +16,9 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-
 from sk1 import _, events
-from sk1.pwidgets import RatioToggle, BitmapToggle
-from sk1.resources import icons, get_bmp
+from sk1.pwidgets import BitmapToggle, RatioToggle
+from sk1.resources import get_bmp, icons
 
 from .base import CtxPlugin
 

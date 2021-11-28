@@ -19,12 +19,18 @@
 import os
 
 import wal
-from indicator import OrientationIndicator, OriginIndicator
 from sk1 import _, events
 from sk1.app_plugins import RsPlugin
 from sk1.resources import get_icon, icons
-from transforms import PositionTransform, ResizeTransform, ScaleTransform, \
-    RotateTransform, ShearTransform
+
+from .indicator import OrientationIndicator, OriginIndicator
+from .transforms import (
+    PositionTransform,
+    ResizeTransform,
+    RotateTransform,
+    ScaleTransform,
+    ShearTransform,
+)
 
 PLG_DIR = __path__[0]
 IMG_DIR = os.path.join(PLG_DIR, 'images')

@@ -16,16 +16,26 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
+
 import cairo
 
 import wal
-
-from uc2.uc2const import FORMAT_EXTENSION, PNG, FORMAT_NAMES
-from uc2.uc2const import SKP, GPL, SCRIBUS_PAL, SOC, COREL_PAL, ASE, CPL, JCW
-from uc2.formats import get_saver_by_id, get_loader_by_id
-from uc2.formats.sk2.sk2_presenter import SK2_Presenter
-
 from sk1.resources import icons
+from uc2.formats import get_loader_by_id, get_saver_by_id
+from uc2.formats.sk2.sk2_presenter import SK2_Presenter
+from uc2.uc2const import (
+    ASE,
+    COREL_PAL,
+    CPL,
+    FORMAT_EXTENSION,
+    FORMAT_NAMES,
+    GPL,
+    JCW,
+    PNG,
+    SCRIBUS_PAL,
+    SKP,
+    SOC,
+)
 
 saver_ids = [SKP, GPL, SOC, SCRIBUS_PAL, COREL_PAL, ASE, CPL, JCW]
 
@@ -53,7 +63,7 @@ class CollectionButton(wal.ImageButton):
         loader = get_loader_by_id(SKP)
 
         for item in files:
-            print item,
+            print(item)
             pal_id = '0' * (4 - len(str(pid))) + str(pid)
             dir_path = os.path.join(OUT_PATH, 'id' + pal_id)
             palfile = os.path.join(IN_PATH, item)
@@ -62,10 +72,10 @@ class CollectionButton(wal.ImageButton):
             try:
                 palette = loader(self.app.appdata, palfile, None, False, False)
                 self.process_palette(dir_path, palette, pal_id)
-                print ' => OK'
+                print(' => OK')
                 pid += 1
             except:
-                print ' => False'
+                print(' => False')
 
     def process_palette(self, dir_path, palette, pal_id):
         palette_name = palette.model.name

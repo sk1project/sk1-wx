@@ -17,7 +17,7 @@
 
 import math
 
-from sk1 import modes, config
+from sk1 import config, modes
 from uc2 import libgeom
 
 from .generic import AbstractController

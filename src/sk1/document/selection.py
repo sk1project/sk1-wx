@@ -15,10 +15,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from sk1 import _, config, events
 from uc2 import libgeom
-
-from sk1 import _, config
-from sk1 import events
 
 
 class Selection:

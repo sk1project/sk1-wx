@@ -17,14 +17,14 @@
 
 from copy import deepcopy
 
+from sk1 import _, events, modes
 from uc2 import libgeom
-from sk1 import _, modes, events
 
 from .generic import AbstractController
 
 NON_WORD_CHARS = ' \n\t!"#$%&\'()*+,-./:;<=>?@[\]^_`{|}~'
 NON_WORD_CHARS += '¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿÷'
-NON_WORD_CHARS = NON_WORD_CHARS.decode('utf-8')
+# NON_WORD_CHARS = NON_WORD_CHARS.decode('utf-8')
 
 
 class TextEditController(AbstractController):

@@ -15,17 +15,29 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from actions import AppAction, ActionButton, ActionToggle
-from colorctrls import SbStrokeSwatch, SbFillSwatch, StyleMonitor
-from ctxmenu import ContextMenu
-from fillctrls import SolidFill, GradientFill, PatternFill
-from fontctrl import FontChoice, font_cache_update
-from minipalette import CBMiniPalette
-from palette import Palette
-from palette_viewer import PaletteViewer
-from strokectrls import DashChoice, CapChoice, JoinChoice, ArrowChoice
-from surfaces import Painter, RulerSurface, HRulerSurface, VRulerSurface, \
-    CanvasSurface
-from unitctrls import RatioToggle, BitmapToggle, ActionImageSwitch
-from unitctrls import StaticUnitLabel, StaticUnitSpin
-from unitctrls import UnitLabel, UnitSpin, AngleSpin
+from .actions import ActionButton, ActionToggle, AppAction
+from .colorctrls import SbFillSwatch, SbStrokeSwatch, StyleMonitor
+from .ctxmenu import ContextMenu
+from .fillctrls import GradientFill, PatternFill, SolidFill
+from .fontctrl import FontChoice, font_cache_update
+from .minipalette import CBMiniPalette
+from .palette import Palette
+from .palette_viewer import PaletteViewer
+from .strokectrls import ArrowChoice, CapChoice, DashChoice, JoinChoice
+from .surfaces import (
+    CanvasSurface,
+    HRulerSurface,
+    Painter,
+    RulerSurface,
+    VRulerSurface,
+)
+from .unitctrls import (
+    ActionImageSwitch,
+    AngleSpin,
+    BitmapToggle,
+    RatioToggle,
+    StaticUnitLabel,
+    StaticUnitSpin,
+    UnitLabel,
+    UnitSpin,
+)

@@ -16,13 +16,14 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-from canvas import PreviewCanvas
-from panels import PrinterPanel, PageRangePanel, CopiesPanel, PrintModePanel
-from ruler import PreviewCorner, PreviewRuler
 from sk1 import _, config
 from sk1.printing import prn_events
 from sk1.printing.printout import Printout
-from toolbar import PreviewToolbar
+
+from .canvas import PreviewCanvas
+from .panels import CopiesPanel, PageRangePanel, PrinterPanel, PrintModePanel
+from .ruler import PreviewCorner, PreviewRuler
+from .toolbar import PreviewToolbar
 
 
 def get_printsys(app):

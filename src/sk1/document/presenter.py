@@ -24,7 +24,7 @@ from sk1.dialogs import ProgressDialog
 from sk1.document.api import PresenterAPI
 from sk1.document.canvas import AppCanvas
 from sk1.document.eventloop import EventLoop
-from sk1.document.ruler import RulerCorner, Ruler
+from sk1.document.ruler import Ruler, RulerCorner
 from sk1.document.selection import Selection
 from sk1.document.snapping import SnapManager
 from uc2 import uc2const

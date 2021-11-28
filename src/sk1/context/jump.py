@@ -17,9 +17,10 @@
 
 from sk1 import _, config, events
 from sk1.pwidgets import UnitSpin
-from sk1.resources import icons, get_bmp
+from sk1.resources import get_bmp, icons
 
 from .base import CtxPlugin
+
 
 class JumpPlugin(CtxPlugin):
     name = 'JumpPlugin'

@@ -15,7 +15,7 @@
 # 	You should have received a copy of the GNU General Public License
 # 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from sk1 import _, modes, config, events
+from sk1 import _, config, events, modes
 from uc2 import libgeom
 
 from .generic import AbstractController

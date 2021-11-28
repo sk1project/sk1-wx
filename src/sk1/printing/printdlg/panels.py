@@ -16,11 +16,10 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-
 from sk1 import _
-from sk1.resources import get_icon, icons
-from sk1.printing import prn_events, printout
+from sk1.printing import printout, prn_events
 from sk1.printing.generic import MONOCHROME_MODE
+from sk1.resources import get_icon, icons
 
 SPACER = (10, 10)
 

@@ -18,17 +18,18 @@
 import logging
 
 import wal
-from generic import RootItem
-from prefs_canvas import CanvasPrefs
-from prefs_cms import CMSPrefs
-from prefs_fonts import FontPrefs
-from prefs_general import GeneralPrefs
-from prefs_ui import UiPrefs
-from prefs_palettes import PalettesPrefs
-from prefs_printers import PrinterPrefs
-from prefs_ruler import RulersPrefs
 from sk1 import _, config
-from templates import GridPrefs
+
+from .generic import RootItem
+from .prefs_canvas import CanvasPrefs
+from .prefs_cms import CMSPrefs
+from .prefs_fonts import FontPrefs
+from .prefs_general import GeneralPrefs
+from .prefs_palettes import PalettesPrefs
+from .prefs_printers import PrinterPrefs
+from .prefs_ruler import RulersPrefs
+from .prefs_ui import UiPrefs
+from .templates import GridPrefs
 
 PREFS_APP = [GeneralPrefs, UiPrefs, CMSPrefs, RulersPrefs,
              PalettesPrefs, FontPrefs,

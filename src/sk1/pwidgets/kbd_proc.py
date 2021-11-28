@@ -17,10 +17,8 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-
 from sk1 import modes
 from sk1.resources import pdids
-
 
 MAPPING = {
     (wal.KEY_DELETE, wal.ACCEL_NORMAL): wal.ID_DELETE,

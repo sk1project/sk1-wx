@@ -16,8 +16,8 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from sk1 import modes, config
-from uc2 import uc2const, sk2const
+from sk1 import config, modes
+from uc2 import sk2const, uc2const
 
 
 def verify_call(fn):

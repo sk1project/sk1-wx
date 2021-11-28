@@ -19,13 +19,22 @@ import os
 import shutil
 
 import wal
-from generic import PrefPanel
 from sk1 import _, config, dialogs
-from sk1.resources import icons, get_bmp
-from uc2.cms import get_profile_name, get_profile_descr
-from uc2.uc2const import COLOR_RGB, COLOR_CMYK, COLOR_LAB, \
-    COLOR_GRAY, COLOR_DISPLAY, ICC, ICM, INTENTS
+from sk1.resources import get_bmp, icons
+from uc2.cms import get_profile_descr, get_profile_name
+from uc2.uc2const import (
+    COLOR_CMYK,
+    COLOR_DISPLAY,
+    COLOR_GRAY,
+    COLOR_LAB,
+    COLOR_RGB,
+    ICC,
+    ICM,
+    INTENTS,
+)
 from uc2.utils import fsutils
+
+from .generic import PrefPanel
 
 COLORSPACES = [COLOR_RGB, COLOR_CMYK, COLOR_GRAY, COLOR_DISPLAY]
 

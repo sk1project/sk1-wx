@@ -19,9 +19,9 @@ import math
 
 import wal
 from sk1 import _, events
-from sk1.resources import icons, get_icon
+from sk1.resources import get_icon, icons
 from uc2 import uc2const
-from uc2.uc2const import point_dict, unit_dict, unit_accuracy
+from uc2.uc2const import point_dict, unit_accuracy, unit_dict
 
 
 class StaticUnitLabel(wal.Label):

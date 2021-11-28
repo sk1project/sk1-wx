@@ -16,12 +16,12 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
-from datetime import datetime
 from collections import defaultdict
+from datetime import datetime
 
 import wal
 from sk1 import _, config
-from uc2 import uc2const, sk2const, libgeom
+from uc2 import libgeom, sk2const, uc2const
 from uc2.utils import fsutils
 
 

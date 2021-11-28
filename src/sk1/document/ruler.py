@@ -15,13 +15,14 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import cairo
 import math
 import os
 
-from sk1 import config, modes, events
+import cairo
+
+from sk1 import config, events, modes
 from sk1.pwidgets import Painter
-from uc2 import uc2const, cms, sk2const
+from uc2 import cms, sk2const, uc2const
 from uc2.utils import fsutils
 
 HFONT = {}

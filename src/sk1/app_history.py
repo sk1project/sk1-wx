@@ -19,28 +19,30 @@ import datetime
 import os
 import sys
 import time
+import typing as tp
 
-from sk1 import config, appconst, events
+from sk1 import appconst, config, events
 from uc2.utils import fsutils
 
 
 class AppHistoryManager:
     app = None
-    history = []
-    history_file = None
+    history: tp.List[tp.Tuple[int, str, int]]
+    history_file: str
 
     def __init__(self, app):
         self.app = app
         config_dir = self.app.appdata.app_config_dir
         self.history_file = os.path.join(config_dir, 'history.cfg')
+        self.history = []
         self.read_history()
 
     def read_history(self):
         if fsutils.isfile(self.history_file):
             fp = fsutils.get_fileptr(self.history_file)
-            lines = [line.strip(' \n\r') for line in fp.readlines()]
+            lines = [line.strip(b' \n\r') for line in fp.readlines()]
             for line in lines:
-                items = line.split('\t')
+                items = line.split(b'\t')
                 if len(items) == 3:
                     status = int(items[0])
                     path = items[1]
@@ -48,24 +50,25 @@ class AppHistoryManager:
                         path = path.decode('utf-8')
                     except Exception:
                         path = path.decode(sys.getfilesystemencoding())
-                    finally:
-                        path = path.encode('utf-8')
+                    # finally:
+                    #     path = path.encode('utf-8')
                     timestamp = int(items[2])
-                    self.history.append([status, path, timestamp])
+                    self.history.append((status, path, timestamp))
             fp.close()
 
     def save_history(self):
         fp = fsutils.get_fileptr(self.history_file, True)
         for item in self.history:
             state, path, timestamp = str(item[0]), item[1], str(item[2])
-            fp.write('%s\t%s\t%s\n' % (state, path, timestamp))
+            line = '%s\t%s\t%s\n' % (state, path, timestamp)
+            fp.write(line.encode(encoding = 'utf-8'))
         fp.close()
         events.emit(events.HISTORY_CHANGED)
 
     def add_entry(self, path, operation=appconst.OPENED):
         if not len(self.history) < config.history_size:
             self.history = self.history[1:]
-        self.history.append([operation, path, int(time.time())])
+        self.history.append((operation, path, int(time.time())))
         self.save_history()
 
     def clear_history(self):

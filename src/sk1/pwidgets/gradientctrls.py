@@ -18,11 +18,12 @@
 from copy import deepcopy
 
 import wal
-from colorbtn import PDColorButton
-from colorctrls import SwatchCanvas
 from sk1 import _
-from sk1.resources import icons, get_icon
-from uc2 import uc2const, sk2const
+from sk1.resources import get_icon, icons
+from uc2 import sk2const, uc2const
+
+from .colorbtn import PDColorButton
+from .colorctrls import SwatchCanvas
 
 CMYK_PALETTE = [
     [[0.0, [uc2const.COLOR_CMYK, [0.0, 0.0, 0.0, 1.0], 1.0, 'Black']],

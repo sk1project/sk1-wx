@@ -16,7 +16,6 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wal
-
 from uc2 import cms
 
 COLORS = ('#282828', '#424242', '#666666', '#989898', '#D5D5D5', '#FFFFFF')

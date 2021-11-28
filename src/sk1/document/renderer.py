@@ -15,13 +15,13 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import cairo
 import math
 from copy import deepcopy
 
+import cairo
+
 from sk1 import config
-from uc2 import libcairo, libgeom
-from uc2 import uc2const, sk2const
+from uc2 import libcairo, libgeom, sk2const, uc2const
 from uc2.formats.sk2.crenderer import CairoRenderer
 
 CAIRO_BLACK = [0.0, 0.0, 0.0]

@@ -17,8 +17,8 @@
 
 from copy import deepcopy
 
-from uc2 import uc2const, libgeom, sk2const
-from sk1 import _, modes, config, events
+from sk1 import _, config, events, modes
+from uc2 import libgeom, sk2const, uc2const
 
 from .generic import AbstractController
 

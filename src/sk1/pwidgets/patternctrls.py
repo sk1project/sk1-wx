@@ -19,14 +19,15 @@ import math
 from copy import deepcopy
 
 import wal
-from colorbtn import PDColorButton
-from colorctrls import SwatchCanvas
-from patterns import PATTERN_PRESETS
 from sk1 import _
-from sk1.resources import icons, get_bmp
+from sk1.resources import get_bmp, icons
 from uc2 import libgeom, libimg, sk2const
 from uc2.utils import fsutils
-from unitctrls import UnitSpin, StaticUnitLabel
+
+from .colorbtn import PDColorButton
+from .colorctrls import SwatchCanvas
+from .patterns import PATTERN_PRESETS
+from .unitctrls import StaticUnitLabel, UnitSpin
 
 
 class PatternPaletteSwatch(wal.VPanel, SwatchCanvas):

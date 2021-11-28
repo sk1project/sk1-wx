@@ -20,7 +20,7 @@ import os
 import wal
 from sk1 import events
 from sk1.pwidgets import BitmapToggle
-from sk1.resources import icons, get_icon
+from sk1.resources import get_icon, icons
 from uc2 import sk2const
 
 PLG_DIR = os.path.dirname(__file__)

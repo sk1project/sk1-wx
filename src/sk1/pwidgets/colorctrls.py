@@ -15,19 +15,20 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import cairo
 import os
 from base64 import b64decode
 from copy import deepcopy
 
-from uc2.cms import get_registration_black, verbose_color, val_255_to_dec
+import cairo
 
 import wal
-from palette_viewer import PaletteViewer
 from sk1 import _, config, events
-from sk1.resources import icons, get_icon
-from uc2 import uc2const, cms, libimg, sk2const, libgeom
-from uc2.formats.sk2 import sk2_model, sk2_config
+from sk1.resources import get_icon, icons
+from uc2 import cms, libgeom, libimg, sk2const, uc2const
+from uc2.cms import get_registration_black, val_255_to_dec, verbose_color
+from uc2.formats.sk2 import sk2_config, sk2_model
+
+from .palette_viewer import PaletteViewer
 
 FILL_MODES = [sk2const.FILL_ANY, sk2const.FILL_CLOSED_ONLY]
 RULE_MODES = [sk2const.FILL_EVENODD, sk2const.FILL_NONZERO]

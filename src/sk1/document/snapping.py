@@ -17,11 +17,14 @@
 
 import math
 
-from uc2 import libgeom, uc2const, sk2const
-
 from sk1 import config
-from sk1.appconst import SNAP_TO_GRID, SNAP_TO_GUIDES, SNAP_TO_OBJECTS, \
-    SNAP_TO_PAGE
+from sk1.appconst import (
+    SNAP_TO_GRID,
+    SNAP_TO_GUIDES,
+    SNAP_TO_OBJECTS,
+    SNAP_TO_PAGE,
+)
+from uc2 import libgeom, sk2const, uc2const
 
 
 class SnapManager:

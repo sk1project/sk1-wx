@@ -20,11 +20,11 @@ import math
 from copy import deepcopy
 
 import wal
-from sk1 import _, dialogs, modes, events, config
-from sk1.dialogs import yesno_dialog, error_dialog
+from sk1 import _, config, dialogs, events, modes
+from sk1.dialogs import error_dialog, yesno_dialog
 from sk1.prefs import get_prefs_dialog
 from sk1.printing import print_dlg
-from uc2 import uc2const, sk2const, libgeom, libcairo
+from uc2 import libcairo, libgeom, sk2const, uc2const
 
 LOG = logging.getLogger(__name__)
 

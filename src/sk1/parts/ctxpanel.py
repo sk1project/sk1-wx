@@ -16,11 +16,25 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import inspect
+
 import wal
 from sk1 import events, modes
-from sk1.context import PLUGINS, NO_DOC, DEFAULT, MULTIPLE, GROUP, \
-    RECTANGLE, CIRCLE, POLYGON, CURVE, TEXT, PIXMAP, BEZIER, TEXT_CREATING, \
-    TEXT_EDIT
+from sk1.context import (
+    BEZIER,
+    CIRCLE,
+    CURVE,
+    DEFAULT,
+    GROUP,
+    MULTIPLE,
+    NO_DOC,
+    PIXMAP,
+    PLUGINS,
+    POLYGON,
+    RECTANGLE,
+    TEXT,
+    TEXT_CREATING,
+    TEXT_EDIT,
+)
 
 
 class AppCtxPanel(wal.HPanel):

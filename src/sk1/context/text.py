@@ -18,7 +18,6 @@
 from copy import deepcopy
 
 import wal
-
 from sk1 import _, events
 from sk1.pwidgets import FontChoice
 from sk1.resources import icons
@@ -26,7 +25,7 @@ from uc2 import libpango, sk2const
 
 from .base import CtxPlugin
 
-FONT_SIZES = range(5, 14) + range(14, 30, 2) + [32, 36, 40, 48, 56, 64, 72]
+FONT_SIZES = list(range(5, 14)) + list(range(14, 30, 2)) + [32, 36, 40, 48, 56, 64, 72]
 
 ALIGN_MODES = [sk2const.TEXT_ALIGN_LEFT,
                sk2const.TEXT_ALIGN_CENTER,

@@ -20,11 +20,12 @@ from copy import deepcopy
 
 import wal
 from sk1 import _, config
-from sk1.pwidgets import StaticUnitLabel, UnitSpin, CBMiniPalette
-from sk1.resources import icons, get_bmp, pdids
+from sk1.pwidgets import CBMiniPalette, StaticUnitLabel, UnitSpin
+from sk1.resources import get_bmp, icons, pdids
 from uc2 import cms, uc2const
-from uc2.sk2const import ORIGINS, FILL_SOLID, FILL_PATTERN
-from uc2.uc2const import unit_names, unit_full_names, ORIENTS_NAMES
+from uc2.sk2const import FILL_PATTERN, FILL_SOLID, ORIGINS
+from uc2.uc2const import ORIENTS_NAMES, unit_full_names, unit_names
+
 from . import docinfodlg
 
 
