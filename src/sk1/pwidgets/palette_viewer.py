@@ -16,6 +16,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from copy import deepcopy
+import math
 
 import wal
 from sk1 import _
@@ -171,19 +172,29 @@ class ScrolledPalette(wal.ScrolledCanvas, wal.SensitiveDrawableWidget):
         self.cell_mode_paint()
 
     def cell_mode_paint(self):
-        self.height = round(1.0 * len(self.colors) / self.cell_in_line) + 1
-        self.height = int(self.height * (self.cell_height - 1))
+        col_width = self.cell_width - 1
+        row_height = self.cell_height - 1
+        row_width = col_width * self.cell_in_line
+        row_count = int(math.ceil(1.0 * len(self.colors) / self.cell_in_line))
+
+        self.height = row_count * row_height
         self.set_virtual_size((self.width - self.sb_width, self.height))
-        self.set_scroll_rate(self.cell_width - 1, self.cell_height - 1)
+        self.set_scroll_rate(col_width - 1, row_height)
 
         self.prepare_dc(self.pdc)
 
+        top_row = self.GetViewStart()[1]  # TODO: implement proxy method for self.GetViewStart
+        bottom_row = top_row + int(math.ceil(1.0 * self.get_size()[1] / row_height))
+
+        start_item = top_row * self.cell_in_line
+        end_item = bottom_row * self.cell_in_line
+
         w = self.cell_width
         h = self.cell_height
-        y = x = 1
-        i = 0
-        for color in self.colors:
-            self.set_stroke(wal.BLACK)
+        x = 0
+        y = top_row * row_height
+        self.set_stroke(wal.BLACK)
+        for i, color in enumerate(self.colors[start_item:end_item], start_item):
             self.set_fill(self.cms.get_display_color255(color))
             self.draw_rect(x, y, w, h)
             if i == self.selected_index:
@@ -191,47 +202,44 @@ class ScrolledPalette(wal.ScrolledCanvas, wal.SensitiveDrawableWidget):
                 if self.cell_width == 31:
                     bmp = self.large_sel
                 self.draw_bitmap(bmp, x, y)
-            x += w - 1
-            if x > (w - 1) * self.cell_in_line:
-                x = 1
-                y += h - 1
-            i += 1
+            x += col_width
+            if x >= row_width:
+                x = 0
+                y += row_height
 
     def list_mode_paint(self):
         self.cell_width = 20
         self.cell_height = 20
-        row = self.cell_height + 4
+        row_height = self.cell_height + 4
+        row_count = len(self.colors)
 
-        self.height = len(self.colors) * row
+        self.height = row_count * row_height
         self.set_virtual_size((self.width - self.sb_width, self.height))
-        self.set_scroll_rate(self.cell_width - 1, self.cell_height - 1)
+        self.set_scroll_rate(self.cell_width - 1, row_height)
 
         self.prepare_dc(self.pdc)
 
-        w = self.cell_width
-        h = self.cell_height
-        i = 0
         txt_height = self.set_font()
         txt_x = 5 + self.cell_width + 5
         txt_y = 2 + round((self.cell_height - txt_height) / 2.0)
-        self.set_text_color(wal.BLACK)
 
-        for color in self.colors:
+        top_row = self.GetViewStart()[1]  # TODO: implement proxy method for self.GetViewStart
+        bottom_row = top_row + int(self.get_size()[1] / row_height)
+        for i, color in enumerate(self.colors[top_row:bottom_row], top_row):
             if i == self.selected_index:
                 self.set_stroke()
                 self.set_fill(wal.UI_COLORS['selected_text_bg'])
-                self.draw_rect(0, row * i, self.width - self.sb_width, h + 4)
+                self.draw_rect(0, row_height * i, self.width - self.sb_width, row_height)
             self.set_stroke(wal.BLACK)
             self.set_fill(self.cms.get_display_color255(color))
-            self.draw_rect(5, 2 + row * i, w, h)
+            self.draw_rect(5, 2 + row_height * i, self.cell_width, self.cell_height)
             txt = color[3]
             if txt:
                 if i == self.selected_index:
                     self.set_text_color(wal.UI_COLORS['selected_text'])
                 else:
-                    self.set_text_color(wal.BLACK)
-                self.draw_text(txt, txt_x, txt_y + row * i)
-            i += 1
+                    self.set_text_color(wal.UI_COLORS['text'])
+                self.draw_text(txt, txt_x, txt_y + row_height * i)
 
 
 class PaletteViewer(wal.VPanel):
